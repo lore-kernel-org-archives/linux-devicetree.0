@@ -1,1234 +1,4754 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/5] mfd: rk808: Add RK817 and RK809 support
-Date: Tue, 24 Jul 2018 05:59:31 +0800
-Message-ID: <201807240507.gtlOvDOH%fengguang.wu@intel.com>
-References: <1532315945-1094-2-git-send-email-tony.xie@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] dt-bindings: remove 'interrupt-parent' from bindings
+Date: Mon, 23 Jul 2018 16:13:17 -0600
+Message-ID: <20180723221317.16394-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="x+6KMIRAuhnl3hBn"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1532315945-1094-2-git-send-email-tony.xie@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: linux-rtc@vger.kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, tony.xie@rock-chips.com, huangtao@rock-chips.com, heiko@sntech.de, devicetree@vger.kernel.org, sboyd@kernel.org, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, xsf@rock-chips.com, linux-rockchip@lists.infradead.org, broonie@kernel.org, kbuild-all@01.org, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chenjh@rock-chips.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+'interrupt-parent' is often documented as part of define bindings, but
+it is really outside the scope of a device binding. It's never required
+in a given node as it is often inherited from a parent node. Or it can
+be implicit if a parent node is an 'interrupt-controller' node. So
+remove it from all the binding files.
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Tony,
-
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on ljones-mfd/for-mfd-next]
-[also build test WARNING on v4.18-rc6 next-20180723]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Tony-Xie/mfd-rk808-Add-RK817-and-RK809-support/20180724-040547
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-config: xtensa-allyesconfig (attached as .config)
-compiler: xtensa-linux-gcc (GCC) 8.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        GCC_VERSION=8.1.0 make.cross ARCH=xtensa 
-
-Note: it may well be a FALSE warning. FWIW you are at least aware of it now.
-http://gcc.gnu.org/wiki/Better_Uninitialized_Warnings
-
-All warnings (new ones prefixed by >>):
-
-   drivers//mfd/rk808.c: In function 'rk808_probe':
->> drivers//mfd/rk808.c:715:16: warning: 'pm_pwroff_fn' may be used uninitialized in this function [-Wmaybe-uninitialized]
-      pm_power_off = pm_pwroff_fn;
-      ~~~~~~~~~~~~~^~~~~~~~~~~~~~
-
-vim +/pm_pwroff_fn +715 drivers//mfd/rk808.c
-
-2eedcbfc0 Wadim Egorov    2016-08-29  581  
-f69a7cf74 Chris Zhong     2014-09-03  582  static int rk808_probe(struct i2c_client *client,
-f69a7cf74 Chris Zhong     2014-09-03  583  		       const struct i2c_device_id *id)
-f69a7cf74 Chris Zhong     2014-09-03  584  {
-f69a7cf74 Chris Zhong     2014-09-03  585  	struct device_node *np = client->dev.of_node;
-f69a7cf74 Chris Zhong     2014-09-03  586  	struct rk808 *rk808;
-2eedcbfc0 Wadim Egorov    2016-08-29  587  	const struct rk808_reg_data *pre_init_reg;
-2eedcbfc0 Wadim Egorov    2016-08-29  588  	const struct mfd_cell *cells;
-b2e2c8509 Jianhong Chen   2016-10-17  589  	void (*pm_pwroff_fn)(void);
-2eedcbfc0 Wadim Egorov    2016-08-29  590  	int nr_pre_init_regs;
-2eedcbfc0 Wadim Egorov    2016-08-29  591  	int nr_cells;
-9d6105e19 Elaine Zhang    2017-08-21  592  	int pm_off = 0, msb, lsb;
-1e99c2e53 Tony Xie        2018-07-23  593  	unsigned char pmic_id_msb = RK808_ID_MSB, pmic_id_lsb = RK808_ID_LSB;
-f69a7cf74 Chris Zhong     2014-09-03  594  	int ret;
-f69a7cf74 Chris Zhong     2014-09-03  595  	int i;
-f69a7cf74 Chris Zhong     2014-09-03  596  
-f69a7cf74 Chris Zhong     2014-09-03  597  	rk808 = devm_kzalloc(&client->dev, sizeof(*rk808), GFP_KERNEL);
-f69a7cf74 Chris Zhong     2014-09-03  598  	if (!rk808)
-f69a7cf74 Chris Zhong     2014-09-03  599  		return -ENOMEM;
-f69a7cf74 Chris Zhong     2014-09-03  600  
-1e99c2e53 Tony Xie        2018-07-23  601  	if (of_device_is_compatible(np, "rockchip,rk817") ||
-1e99c2e53 Tony Xie        2018-07-23  602  	    of_device_is_compatible(np, "rockchip,rk809")) {
-1e99c2e53 Tony Xie        2018-07-23  603  		pmic_id_msb = RK817_ID_MSB;
-1e99c2e53 Tony Xie        2018-07-23  604  		pmic_id_lsb = RK817_ID_LSB;
-1e99c2e53 Tony Xie        2018-07-23  605  	}
-9d6105e19 Elaine Zhang    2017-08-21  606  	/* Read chip variant */
-1e99c2e53 Tony Xie        2018-07-23  607  	msb = i2c_smbus_read_byte_data(client, pmic_id_msb);
-9d6105e19 Elaine Zhang    2017-08-21  608  	if (msb < 0) {
-9d6105e19 Elaine Zhang    2017-08-21  609  		dev_err(&client->dev, "failed to read the chip id at 0x%x\n",
-2eedcbfc0 Wadim Egorov    2016-08-29  610  			RK808_ID_MSB);
-9d6105e19 Elaine Zhang    2017-08-21  611  		return msb;
-2eedcbfc0 Wadim Egorov    2016-08-29  612  	}
-2eedcbfc0 Wadim Egorov    2016-08-29  613  
-1e99c2e53 Tony Xie        2018-07-23  614  	lsb = i2c_smbus_read_byte_data(client, pmic_id_lsb);
-9d6105e19 Elaine Zhang    2017-08-21  615  	if (lsb < 0) {
-9d6105e19 Elaine Zhang    2017-08-21  616  		dev_err(&client->dev, "failed to read the chip id at 0x%x\n",
-9d6105e19 Elaine Zhang    2017-08-21  617  			RK808_ID_LSB);
-9d6105e19 Elaine Zhang    2017-08-21  618  		return lsb;
-9d6105e19 Elaine Zhang    2017-08-21  619  	}
-9d6105e19 Elaine Zhang    2017-08-21  620  
-9d6105e19 Elaine Zhang    2017-08-21  621  	rk808->variant = ((msb << 8) | lsb) & RK8XX_ID_MSK;
-9d6105e19 Elaine Zhang    2017-08-21  622  	dev_info(&client->dev, "chip id: 0x%x\n", (unsigned int)rk808->variant);
-2eedcbfc0 Wadim Egorov    2016-08-29  623  
-2eedcbfc0 Wadim Egorov    2016-08-29  624  	switch (rk808->variant) {
-990f05f6a Elaine Zhang    2017-08-21  625  	case RK805_ID:
-990f05f6a Elaine Zhang    2017-08-21  626  		rk808->regmap_cfg = &rk805_regmap_config;
-990f05f6a Elaine Zhang    2017-08-21  627  		rk808->regmap_irq_chip = &rk805_irq_chip;
-990f05f6a Elaine Zhang    2017-08-21  628  		pre_init_reg = rk805_pre_init_reg;
-990f05f6a Elaine Zhang    2017-08-21  629  		nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
-990f05f6a Elaine Zhang    2017-08-21  630  		cells = rk805s;
-990f05f6a Elaine Zhang    2017-08-21  631  		nr_cells = ARRAY_SIZE(rk805s);
-990f05f6a Elaine Zhang    2017-08-21  632  		pm_pwroff_fn = rk805_device_shutdown;
-990f05f6a Elaine Zhang    2017-08-21  633  		break;
-2eedcbfc0 Wadim Egorov    2016-08-29  634  	case RK808_ID:
-2eedcbfc0 Wadim Egorov    2016-08-29  635  		rk808->regmap_cfg = &rk808_regmap_config;
-2eedcbfc0 Wadim Egorov    2016-08-29  636  		rk808->regmap_irq_chip = &rk808_irq_chip;
-2eedcbfc0 Wadim Egorov    2016-08-29  637  		pre_init_reg = rk808_pre_init_reg;
-2eedcbfc0 Wadim Egorov    2016-08-29  638  		nr_pre_init_regs = ARRAY_SIZE(rk808_pre_init_reg);
-2eedcbfc0 Wadim Egorov    2016-08-29  639  		cells = rk808s;
-2eedcbfc0 Wadim Egorov    2016-08-29  640  		nr_cells = ARRAY_SIZE(rk808s);
-b2e2c8509 Jianhong Chen   2016-10-17  641  		pm_pwroff_fn = rk808_device_shutdown;
-2eedcbfc0 Wadim Egorov    2016-08-29  642  		break;
-2eedcbfc0 Wadim Egorov    2016-08-29  643  	case RK818_ID:
-2eedcbfc0 Wadim Egorov    2016-08-29  644  		rk808->regmap_cfg = &rk818_regmap_config;
-2eedcbfc0 Wadim Egorov    2016-08-29  645  		rk808->regmap_irq_chip = &rk818_irq_chip;
-2eedcbfc0 Wadim Egorov    2016-08-29  646  		pre_init_reg = rk818_pre_init_reg;
-2eedcbfc0 Wadim Egorov    2016-08-29  647  		nr_pre_init_regs = ARRAY_SIZE(rk818_pre_init_reg);
-2eedcbfc0 Wadim Egorov    2016-08-29  648  		cells = rk818s;
-2eedcbfc0 Wadim Egorov    2016-08-29  649  		nr_cells = ARRAY_SIZE(rk818s);
-b2e2c8509 Jianhong Chen   2016-10-17  650  		pm_pwroff_fn = rk818_device_shutdown;
-2eedcbfc0 Wadim Egorov    2016-08-29  651  		break;
-1e99c2e53 Tony Xie        2018-07-23  652  	case RK809_ID:
-1e99c2e53 Tony Xie        2018-07-23  653  	case RK817_ID:
-1e99c2e53 Tony Xie        2018-07-23  654  		rk808->regmap_cfg = &rk817_regmap_config;
-1e99c2e53 Tony Xie        2018-07-23  655  		rk808->regmap_irq_chip = &rk817_irq_chip;
-1e99c2e53 Tony Xie        2018-07-23  656  		pre_init_reg = rk817_pre_init_reg;
-1e99c2e53 Tony Xie        2018-07-23  657  		nr_pre_init_regs = ARRAY_SIZE(rk817_pre_init_reg);
-1e99c2e53 Tony Xie        2018-07-23  658  		cells = rk817s;
-1e99c2e53 Tony Xie        2018-07-23  659  		nr_cells = ARRAY_SIZE(rk817s);
-1e99c2e53 Tony Xie        2018-07-23  660  		pm_power_off_prepare = rk8xx_device_shutdown_prepare;
-1e99c2e53 Tony Xie        2018-07-23  661  		break;
-2eedcbfc0 Wadim Egorov    2016-08-29  662  	default:
-2eedcbfc0 Wadim Egorov    2016-08-29  663  		dev_err(&client->dev, "Unsupported RK8XX ID %lu\n",
-2eedcbfc0 Wadim Egorov    2016-08-29  664  			rk808->variant);
-2eedcbfc0 Wadim Egorov    2016-08-29  665  		return -EINVAL;
-2eedcbfc0 Wadim Egorov    2016-08-29  666  	}
-2eedcbfc0 Wadim Egorov    2016-08-29  667  
-2eedcbfc0 Wadim Egorov    2016-08-29  668  	rk808->i2c = client;
-2eedcbfc0 Wadim Egorov    2016-08-29  669  	i2c_set_clientdata(client, rk808);
-2eedcbfc0 Wadim Egorov    2016-08-29  670  
-2eedcbfc0 Wadim Egorov    2016-08-29  671  	rk808->regmap = devm_regmap_init_i2c(client, rk808->regmap_cfg);
-f69a7cf74 Chris Zhong     2014-09-03  672  	if (IS_ERR(rk808->regmap)) {
-f69a7cf74 Chris Zhong     2014-09-03  673  		dev_err(&client->dev, "regmap initialization failed\n");
-f69a7cf74 Chris Zhong     2014-09-03  674  		return PTR_ERR(rk808->regmap);
-f69a7cf74 Chris Zhong     2014-09-03  675  	}
-f69a7cf74 Chris Zhong     2014-09-03  676  
-2eedcbfc0 Wadim Egorov    2016-08-29  677  	if (!client->irq) {
-2eedcbfc0 Wadim Egorov    2016-08-29  678  		dev_err(&client->dev, "No interrupt support, no core IRQ\n");
-2eedcbfc0 Wadim Egorov    2016-08-29  679  		return -EINVAL;
-f69a7cf74 Chris Zhong     2014-09-03  680  	}
-f69a7cf74 Chris Zhong     2014-09-03  681  
-f69a7cf74 Chris Zhong     2014-09-03  682  	ret = regmap_add_irq_chip(rk808->regmap, client->irq,
-f69a7cf74 Chris Zhong     2014-09-03  683  				  IRQF_ONESHOT, -1,
-2eedcbfc0 Wadim Egorov    2016-08-29  684  				  rk808->regmap_irq_chip, &rk808->irq_data);
-f69a7cf74 Chris Zhong     2014-09-03  685  	if (ret) {
-f69a7cf74 Chris Zhong     2014-09-03  686  		dev_err(&client->dev, "Failed to add irq_chip %d\n", ret);
-f69a7cf74 Chris Zhong     2014-09-03  687  		return ret;
-f69a7cf74 Chris Zhong     2014-09-03  688  	}
-f69a7cf74 Chris Zhong     2014-09-03  689  
-2eedcbfc0 Wadim Egorov    2016-08-29  690  	for (i = 0; i < nr_pre_init_regs; i++) {
-2eedcbfc0 Wadim Egorov    2016-08-29  691  		ret = regmap_update_bits(rk808->regmap,
-2eedcbfc0 Wadim Egorov    2016-08-29  692  					pre_init_reg[i].addr,
-2eedcbfc0 Wadim Egorov    2016-08-29  693  					pre_init_reg[i].mask,
-2eedcbfc0 Wadim Egorov    2016-08-29  694  					pre_init_reg[i].value);
-2eedcbfc0 Wadim Egorov    2016-08-29  695  		if (ret) {
-2eedcbfc0 Wadim Egorov    2016-08-29  696  			dev_err(&client->dev,
-2eedcbfc0 Wadim Egorov    2016-08-29  697  				"0x%x write err\n",
-2eedcbfc0 Wadim Egorov    2016-08-29  698  				pre_init_reg[i].addr);
-2eedcbfc0 Wadim Egorov    2016-08-29  699  			return ret;
-2eedcbfc0 Wadim Egorov    2016-08-29  700  		}
-2eedcbfc0 Wadim Egorov    2016-08-29  701  	}
-f69a7cf74 Chris Zhong     2014-09-03  702  
-2eedcbfc0 Wadim Egorov    2016-08-29  703  	ret = devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_NONE,
-2eedcbfc0 Wadim Egorov    2016-08-29  704  			      cells, nr_cells, NULL, 0,
-d5623161a Laxman Dewangan 2016-04-08  705  			      regmap_irq_get_domain(rk808->irq_data));
-f69a7cf74 Chris Zhong     2014-09-03  706  	if (ret) {
-f69a7cf74 Chris Zhong     2014-09-03  707  		dev_err(&client->dev, "failed to add MFD devices %d\n", ret);
-f69a7cf74 Chris Zhong     2014-09-03  708  		goto err_irq;
-f69a7cf74 Chris Zhong     2014-09-03  709  	}
-f69a7cf74 Chris Zhong     2014-09-03  710  
-f69a7cf74 Chris Zhong     2014-09-03  711  	pm_off = of_property_read_bool(np,
-f69a7cf74 Chris Zhong     2014-09-03  712  				"rockchip,system-power-controller");
-f69a7cf74 Chris Zhong     2014-09-03  713  	if (pm_off && !pm_power_off) {
-f69a7cf74 Chris Zhong     2014-09-03  714  		rk808_i2c_client = client;
-b2e2c8509 Jianhong Chen   2016-10-17 @715  		pm_power_off = pm_pwroff_fn;
-f69a7cf74 Chris Zhong     2014-09-03  716  	}
-f69a7cf74 Chris Zhong     2014-09-03  717  
-f69a7cf74 Chris Zhong     2014-09-03  718  	return 0;
-f69a7cf74 Chris Zhong     2014-09-03  719  
-f69a7cf74 Chris Zhong     2014-09-03  720  err_irq:
-f69a7cf74 Chris Zhong     2014-09-03  721  	regmap_del_irq_chip(client->irq, rk808->irq_data);
-f69a7cf74 Chris Zhong     2014-09-03  722  	return ret;
-f69a7cf74 Chris Zhong     2014-09-03  723  }
-f69a7cf74 Chris Zhong     2014-09-03  724  
-
-:::::: The code at line 715 was first introduced by commit
-:::::: b2e2c85091710159b305735d557f4ef4695f5dff mfd: rk808: RK818 uses DEV_OFF to power off supplies
-
-:::::: TO: Jianhong Chen <chenjh@rock-chips.com>
-:::::: CC: Lee Jones <lee.jones@linaro.org>
-
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ .../arm/freescale/fsl,vf610-mscm-ir.txt       |  3 ---
+ .../devicetree/bindings/arm/omap/crossbar.txt |  1 -
+ .../devicetree/bindings/arm/samsung/pmu.txt   |  3 ---
+ .../devicetree/bindings/ata/fsl-sata.txt      |  1 -
+ .../devicetree/bindings/ata/pata-arasan.txt   |  2 --
+ .../devicetree/bindings/board/fsl-board.txt   |  1 -
+ .../devicetree/bindings/bus/brcm,gisb-arb.txt |  2 --
+ .../devicetree/bindings/clock/at91-clock.txt  |  7 -------
+ .../cpufreq/brcm,stb-avs-cpu-freq.txt         |  2 --
+ .../devicetree/bindings/crypto/amd-ccp.txt    |  2 --
+ .../bindings/crypto/arm-cryptocell.txt        |  2 --
+ .../devicetree/bindings/crypto/fsl-sec2.txt   |  5 -----
+ .../devicetree/bindings/crypto/fsl-sec4.txt   | 21 -------------------
+ .../bindings/crypto/picochip-spacc.txt        |  2 --
+ .../bindings/display/bridge/analogix_dp.txt   |  2 --
+ .../bindings/display/bridge/anx7814.txt       |  2 --
+ .../megachips-stdpxxxx-ge-b850v3-fw.txt       |  2 --
+ .../bindings/display/bridge/sii902x.txt       |  4 ++--
+ .../bindings/display/bridge/sii9234.txt       |  2 +-
+ .../bindings/display/bridge/sil-sii8620.txt   |  2 +-
+ .../bindings/display/exynos/exynos7-decon.txt |  3 ---
+ .../bindings/display/exynos/exynos_dp.txt     |  2 --
+ .../bindings/display/exynos/samsung-fimd.txt  |  3 ---
+ .../devicetree/bindings/display/ht16k33.txt   |  2 --
+ .../devicetree/bindings/display/msm/dsi.txt   |  2 --
+ .../devicetree/bindings/display/msm/edp.txt   |  4 ----
+ .../devicetree/bindings/display/msm/mdp5.txt  |  2 --
+ .../bindings/display/renesas,du.txt           |  1 -
+ .../devicetree/bindings/display/sm501fb.txt   |  2 --
+ .../bindings/display/tilcdc/tilcdc.txt        |  2 --
+ .../devicetree/bindings/dma/jz4780-dma.txt    |  1 -
+ .../bindings/dma/nvidia,tegra210-adma.txt     |  1 -
+ .../bindings/dma/snps,dw-axi-dmac.txt         |  2 --
+ .../devicetree/bindings/dma/snps-dma.txt      |  2 --
+ .../devicetree/bindings/dma/ti-edma.txt       |  1 -
+ .../bindings/dma/xilinx/zynqmp_dma.txt        |  1 -
+ .../bindings/extcon/extcon-rt8973a.txt        |  2 --
+ .../bindings/extcon/extcon-sm5502.txt         |  2 --
+ .../devicetree/bindings/gpio/8xxx_gpio.txt    |  2 --
+ .../bindings/gpio/abilis,tb10x-gpio.txt       |  1 -
+ .../bindings/gpio/brcm,brcmstb-gpio.txt       |  3 ---
+ .../devicetree/bindings/gpio/gpio-adnp.txt    |  1 -
+ .../devicetree/bindings/gpio/gpio-aspeed.txt  |  1 -
+ .../devicetree/bindings/gpio/gpio-ath79.txt   |  1 -
+ .../devicetree/bindings/gpio/gpio-davinci.txt |  2 --
+ .../devicetree/bindings/gpio/gpio-max732x.txt |  1 -
+ .../devicetree/bindings/gpio/gpio-pcf857x.txt |  1 -
+ .../bindings/gpio/gpio-uniphier.txt           |  1 -
+ .../bindings/gpio/gpio-xgene-sb.txt           |  1 -
+ .../devicetree/bindings/gpio/gpio-xilinx.txt  |  2 --
+ .../devicetree/bindings/gpio/gpio-xlp.txt     |  1 -
+ .../devicetree/bindings/gpio/gpio-zynq.txt    |  1 -
+ .../bindings/gpio/nintendo,hollywood-gpio.txt |  1 -
+ .../bindings/gpio/renesas,gpio-rcar.txt       |  1 -
+ .../bindings/gpio/snps-dwapb-gpio.txt         |  1 -
+ .../devicetree/bindings/hsi/omap-ssi.txt      |  1 -
+ .../devicetree/bindings/i2c/i2c-aspeed.txt    |  3 ---
+ .../devicetree/bindings/i2c/i2c-brcmstb.txt   |  2 --
+ .../devicetree/bindings/i2c/i2c-imx-lpi2c.txt |  1 -
+ .../devicetree/bindings/i2c/i2c-jz4780.txt    |  4 ----
+ .../devicetree/bindings/i2c/i2c-mpc.txt       |  2 --
+ .../bindings/i2c/i2c-mux-pca954x.txt          |  2 --
+ .../bindings/i2c/i2c-pca-platform.txt         |  2 --
+ .../devicetree/bindings/i2c/i2c-pnx.txt       |  2 --
+ .../devicetree/bindings/i2c/i2c-pxa.txt       |  3 ---
+ .../devicetree/bindings/iio/accel/adxl345.txt |  2 --
+ .../devicetree/bindings/iio/accel/bma180.txt  |  2 --
+ .../devicetree/bindings/iio/accel/mma8452.txt |  2 --
+ .../devicetree/bindings/iio/adc/cpcap-adc.txt |  1 -
+ .../bindings/iio/adc/fsl,imx25-gcq.txt        |  1 -
+ .../bindings/iio/adc/max1027-adc.txt          |  2 --
+ .../bindings/iio/adc/st,stm32-adc.txt         |  1 -
+ .../bindings/iio/adc/xilinx-xadc.txt          |  1 -
+ .../bindings/iio/chemical/atlas,ec-sm.txt     |  1 -
+ .../bindings/iio/chemical/atlas,orp-sm.txt    |  1 -
+ .../bindings/iio/chemical/atlas,ph-sm.txt     |  1 -
+ .../iio/gyroscope/invensense,mpu3050.txt      |  1 -
+ .../bindings/iio/health/afe4403.txt           |  1 -
+ .../bindings/iio/health/afe4404.txt           |  1 -
+ .../bindings/iio/health/max30100.txt          |  1 -
+ .../bindings/iio/health/max30102.txt          |  1 -
+ .../bindings/iio/humidity/hts221.txt          |  1 -
+ .../devicetree/bindings/iio/imu/bmi160.txt    |  1 -
+ .../bindings/iio/imu/inv_mpu6050.txt          |  1 -
+ .../bindings/iio/imu/st_lsm6dsx.txt           |  1 -
+ .../bindings/iio/light/apds9300.txt           |  1 -
+ .../bindings/iio/light/apds9960.txt           |  1 -
+ .../bindings/iio/light/isl29018.txt           |  1 -
+ .../devicetree/bindings/iio/light/opt3001.txt |  1 -
+ .../devicetree/bindings/iio/light/tsl2583.txt |  1 -
+ .../devicetree/bindings/iio/light/uvis25.txt  |  1 -
+ .../bindings/iio/magnetometer/bmc150_magn.txt |  1 -
+ .../bindings/iio/pressure/bmp085.txt          |  1 -
+ .../bindings/iio/pressure/zpa2326.txt         |  2 --
+ .../bindings/iio/proximity/as3935.txt         |  1 -
+ .../bindings/iio/proximity/sx9500.txt         |  1 -
+ .../devicetree/bindings/iio/sensorhub.txt     |  1 -
+ .../bindings/iio/temperature/tmp007.txt       |  2 --
+ .../infiniband/hisilicon-hns-roce.txt         |  1 -
+ .../bindings/input/cypress,cyapa.txt          |  2 --
+ .../bindings/input/cypress,tm2-touchkey.txt   |  2 --
+ .../devicetree/bindings/input/e3x0-button.txt |  2 --
+ .../devicetree/bindings/input/elan_i2c.txt    |  2 --
+ .../devicetree/bindings/input/elants_i2c.txt  |  2 --
+ .../bindings/input/hid-over-i2c.txt           |  1 -
+ .../bindings/input/raydium_i2c_ts.txt         |  1 -
+ .../bindings/input/rmi4/rmi_i2c.txt           |  1 -
+ .../bindings/input/rmi4/rmi_spi.txt           |  1 -
+ .../bindings/input/ti,palmas-pwrbutton.txt    |  1 -
+ .../bindings/input/touchscreen/ad7879.txt     |  1 -
+ .../bindings/input/touchscreen/ads7846.txt    |  1 -
+ .../bindings/input/touchscreen/ar1021.txt     |  1 -
+ .../input/touchscreen/chipone_icn8318.txt     |  2 --
+ .../input/touchscreen/colibri-vf50-ts.txt     |  1 -
+ .../bindings/input/touchscreen/cyttsp.txt     |  2 --
+ .../bindings/input/touchscreen/edt-ft5x06.txt |  2 --
+ .../bindings/input/touchscreen/egalax-ts.txt  |  1 -
+ .../bindings/input/touchscreen/ektf2127.txt   |  2 --
+ .../bindings/input/touchscreen/exc3000.txt    |  1 -
+ .../input/touchscreen/fsl-mx25-tcq.txt        |  1 -
+ .../bindings/input/touchscreen/goodix.txt     |  1 -
+ .../bindings/input/touchscreen/hideep.txt     |  1 -
+ .../input/touchscreen/max11801-ts.txt         |  1 -
+ .../input/touchscreen/melfas_mip4.txt         |  1 -
+ .../input/touchscreen/samsung,s6sy761.txt     |  2 --
+ .../input/touchscreen/silead_gsl1680.txt      |  2 --
+ .../bindings/input/touchscreen/sis_i2c.txt    |  2 --
+ .../bindings/input/touchscreen/st,stmfts.txt  |  2 --
+ .../bindings/input/touchscreen/sx8654.txt     |  1 -
+ .../bindings/input/touchscreen/tsc2007.txt    |  2 --
+ .../bindings/input/touchscreen/zet6223.txt    |  2 --
+ .../abilis,tb10x-ictl.txt                     |  1 -
+ .../interrupt-controller/al,alpine-msix.txt   |  1 -
+ .../allwinner,sunxi-nmi.txt                   |  1 -
+ .../amlogic,meson-gpio-intc.txt               |  3 ---
+ .../interrupt-controller/atmel,aic.txt        |  2 --
+ .../brcm,bcm2835-armctrl-ic.txt               |  2 --
+ .../brcm,bcm3380-l2-intc.txt                  |  2 --
+ .../brcm,bcm6345-l1-intc.txt                  |  2 --
+ .../brcm,bcm7038-l1-intc.txt                  |  2 --
+ .../brcm,bcm7120-l2-intc.txt                  |  2 --
+ .../interrupt-controller/brcm,l2-intc.txt     |  2 --
+ .../interrupt-controller/fsl,ls-scfg-msi.txt  |  3 ---
+ .../hisilicon,mbigen-v2.txt                   |  2 --
+ .../interrupt-controller/ingenic,intc.txt     |  1 -
+ .../marvell,odmi-controller.txt               |  2 --
+ .../interrupt-controller/mediatek,cirq.txt    |  2 --
+ .../interrupt-controller/mediatek,sysirq.txt  |  2 --
+ .../mscc,ocelot-icpu-intr.txt                 |  1 -
+ .../nvidia,tegra20-ictlr.txt                  |  2 --
+ .../interrupt-controller/nxp,lpc3220-mic.txt  |  2 --
+ .../qca,ath79-misc-intc.txt                   |  1 -
+ .../interrupt-controller/qcom,pdc.txt         |  6 ------
+ .../samsung,exynos4210-combiner.txt           |  2 --
+ .../sigma,smp8642-intc.txt                    |  1 -
+ .../snps,archs-idu-intc.txt                   |  1 -
+ .../interrupt-controller/snps,dw-apb-ictl.txt |  1 -
+ .../socionext,synquacer-exiu.txt              |  1 -
+ .../st,spear3xx-shirq.txt                     |  4 ----
+ .../technologic,ts4800.txt                    |  2 --
+ .../ti,c64x+megamod-pic.txt                   |  1 -
+ .../interrupt-controller/ti,omap4-wugen-mpu   |  2 --
+ .../bindings/iommu/samsung,sysmmu.txt         |  1 -
+ .../bindings/mailbox/altera-mailbox.txt       |  1 -
+ .../bindings/media/i2c/tc358743.txt           |  2 +-
+ .../bindings/media/sh_mobile_ceu.txt          |  1 -
+ .../devicetree/bindings/mfd/ac100.txt         |  4 ----
+ .../devicetree/bindings/mfd/altera-a10sr.txt  |  1 -
+ .../devicetree/bindings/mfd/arizona.txt       |  1 -
+ .../devicetree/bindings/mfd/axp20x.txt        |  1 -
+ .../devicetree/bindings/mfd/bd9571mwv.txt     |  1 -
+ .../devicetree/bindings/mfd/bfticu.txt        |  1 -
+ .../devicetree/bindings/mfd/da9055.txt        |  2 --
+ .../devicetree/bindings/mfd/da9062.txt        |  2 --
+ .../devicetree/bindings/mfd/da9063.txt        |  2 --
+ .../devicetree/bindings/mfd/da9150.txt        |  2 --
+ .../devicetree/bindings/mfd/max14577.txt      |  1 -
+ .../devicetree/bindings/mfd/max77686.txt      |  1 -
+ .../devicetree/bindings/mfd/max77693.txt      |  1 -
+ .../devicetree/bindings/mfd/max77802.txt      |  1 -
+ .../devicetree/bindings/mfd/max8998.txt       |  2 --
+ .../bindings/mfd/motorola-cpcap.txt           |  1 -
+ .../devicetree/bindings/mfd/palmas.txt        |  1 -
+ .../devicetree/bindings/mfd/retu.txt          |  1 -
+ .../devicetree/bindings/mfd/rk808.txt         |  1 -
+ .../bindings/mfd/samsung,sec-core.txt         |  2 --
+ .../devicetree/bindings/mfd/stmpe.txt         |  1 -
+ .../devicetree/bindings/mfd/tc3589x.txt       |  1 -
+ .../devicetree/bindings/mfd/tps65086.txt      |  1 -
+ .../devicetree/bindings/mfd/tps65912.txt      |  1 -
+ .../devicetree/bindings/mfd/twl-familly.txt   |  1 -
+ .../devicetree/bindings/mfd/twl6040.txt       |  1 -
+ .../devicetree/bindings/mfd/wm831x.txt        |  1 -
+ .../devicetree/bindings/mips/cavium/cib.txt   |  2 --
+ .../devicetree/bindings/mmc/arasan,sdhci.txt  |  2 --
+ .../devicetree/bindings/mmc/fsl-esdhc.txt     |  1 -
+ .../devicetree/bindings/mmc/mmc-spi-slot.txt  |  2 --
+ .../devicetree/bindings/mtd/brcm,brcmnand.txt |  1 -
+ .../devicetree/bindings/mtd/gpmc-nand.txt     |  1 -
+ .../devicetree/bindings/mtd/spear_smi.txt     |  2 --
+ .../devicetree/bindings/net/amd-xgbe.txt      |  2 --
+ .../devicetree/bindings/net/btusb.txt         |  1 -
+ .../bindings/net/can/holt_hi311x.txt          |  1 -
+ .../bindings/net/can/microchip,mcp251x.txt    |  1 -
+ .../bindings/net/can/xilinx_can.txt           |  1 -
+ .../devicetree/bindings/net/cpsw.txt          |  1 -
+ .../bindings/net/davicom-dm9000.txt           |  1 -
+ .../devicetree/bindings/net/dsa/marvell.txt   |  1 -
+ .../bindings/net/hisilicon-hns-dsaf.txt       |  1 -
+ .../devicetree/bindings/net/ibm,emac.txt      |  1 -
+ .../bindings/net/marvell-bt-8xxx.txt          |  1 -
+ .../bindings/net/mediatek,mt7620-gsw.txt      |  2 --
+ .../devicetree/bindings/net/mediatek-net.txt  |  3 ---
+ .../bindings/net/microchip,enc28j60.txt       |  3 ---
+ .../devicetree/bindings/net/nfc/nxp-nci.txt   |  1 -
+ .../devicetree/bindings/net/nfc/pn533-i2c.txt |  1 -
+ .../devicetree/bindings/net/nfc/pn544.txt     |  1 -
+ .../devicetree/bindings/net/nfc/s3fwrn5.txt   |  1 -
+ .../bindings/net/nfc/st-nci-i2c.txt           |  1 -
+ .../bindings/net/nfc/st-nci-spi.txt           |  1 -
+ .../devicetree/bindings/net/nfc/st21nfca.txt  |  2 --
+ .../devicetree/bindings/net/nfc/st95hf.txt    |  3 ---
+ .../devicetree/bindings/net/nfc/trf7970a.txt  |  1 -
+ Documentation/devicetree/bindings/net/phy.txt |  2 --
+ .../devicetree/bindings/net/qca,qca7000.txt   |  1 -
+ .../bindings/net/ralink,rt2880-net.txt        |  2 --
+ .../bindings/net/ralink,rt3050-esw.txt        |  2 --
+ .../devicetree/bindings/net/renesas,ravb.txt  |  2 --
+ .../devicetree/bindings/net/samsung-sxgbe.txt |  2 --
+ .../devicetree/bindings/net/sh_eth.txt        |  2 --
+ .../bindings/net/snps,dwc-qos-ethernet.txt    |  2 --
+ .../devicetree/bindings/net/stmmac.txt        |  2 --
+ .../net/wireless/brcm,bcm43xx-fmac.txt        |  2 --
+ .../bindings/net/wireless/marvell-8xxx.txt    |  1 -
+ .../bindings/net/wireless/ti,wl1251.txt       |  2 --
+ .../bindings/net/wireless/ti,wlcore,spi.txt   |  4 +---
+ .../bindings/net/wireless/ti,wlcore.txt       |  2 --
+ .../bindings/pci/altera-pcie-msi.txt          |  1 -
+ .../devicetree/bindings/pci/altera-pcie.txt   |  1 -
+ .../bindings/pci/brcm,iproc-pcie.txt          |  1 -
+ .../bindings/pci/faraday,ftpci100.txt         |  1 -
+ .../devicetree/bindings/pci/mobiveil-pcie.txt |  3 ---
+ .../devicetree/bindings/pci/pci-keystone.txt  |  3 ---
+ .../bindings/pci/ralink,rt3883-pci.txt        |  3 ---
+ .../bindings/pinctrl/pinctrl-mt7622.txt       |  2 --
+ .../bindings/pinctrl/pinctrl-sx150x.txt       |  2 --
+ .../bindings/pinctrl/samsung-pinctrl.txt      |  6 ------
+ .../bindings/pinctrl/st,stm32-pinctrl.txt     |  2 --
+ .../power/supply/act8945a-charger.txt         |  2 --
+ .../bindings/power/supply/bq24257.txt         |  2 --
+ .../bindings/power/supply/lp8727_charger.txt  |  1 -
+ .../bindings/power/supply/maxim,max14656.txt  |  1 -
+ .../bindings/power/supply/rt9455_charger.txt  |  2 --
+ .../bindings/power/supply/sbs_sbs-charger.txt |  2 --
+ .../bindings/powerpc/4xx/akebono.txt          |  2 --
+ .../devicetree/bindings/powerpc/4xx/hsta.txt  |  1 -
+ .../bindings/powerpc/4xx/ppc440spe-adma.txt   |  2 --
+ .../devicetree/bindings/powerpc/fsl/dcsr.txt  |  7 -------
+ .../devicetree/bindings/powerpc/fsl/diu.txt   |  2 --
+ .../devicetree/bindings/powerpc/fsl/dma.txt   |  4 ----
+ .../devicetree/bindings/powerpc/fsl/ecm.txt   |  4 ----
+ .../devicetree/bindings/powerpc/fsl/mcm.txt   |  4 ----
+ .../bindings/powerpc/fsl/mpc5121-psc.txt      |  4 ----
+ .../bindings/powerpc/fsl/msi-pic.txt          |  5 -----
+ .../devicetree/bindings/powerpc/fsl/pamu.txt  |  2 --
+ .../bindings/powerpc/nintendo/wii.txt         |  1 -
+ .../bindings/regulator/max8997-regulator.txt  |  2 --
+ .../bindings/regulator/palmas-pmic.txt        |  1 -
+ .../bindings/remoteproc/ti,davinci-rproc.txt  |  6 ------
+ .../bindings/remoteproc/ti,keystone-rproc.txt |  6 ------
+ .../bindings/rtc/brcm,brcmstb-waketimer.txt   |  2 --
+ .../devicetree/bindings/rtc/isil,isl12057.txt |  3 ---
+ .../devicetree/bindings/rtc/rtc-cmos.txt      |  1 -
+ .../devicetree/bindings/rtc/rtc-ds1307.txt    |  1 -
+ .../devicetree/bindings/rtc/rtc-m41t80.txt    |  1 -
+ .../devicetree/bindings/rtc/rtc-omap.txt      |  1 -
+ .../devicetree/bindings/rtc/rtc-palmas.txt    |  1 -
+ .../devicetree/bindings/rtc/spear-rtc.txt     |  2 --
+ .../bindings/rtc/sprd,sc27xx-rtc.txt          |  1 -
+ .../devicetree/bindings/rtc/st,stm32-rtc.txt  |  2 --
+ .../bindings/rtc/stericsson,coh901331.txt     |  1 -
+ .../bindings/security/tpm/st33zp24-i2c.txt    |  1 -
+ .../bindings/security/tpm/st33zp24-spi.txt    |  1 -
+ .../bindings/security/tpm/tpm_tis_mmio.txt    |  2 +-
+ .../bindings/serial/maxim,max310x.txt         |  2 --
+ .../bindings/serial/nxp,sc16is7xx.txt         |  4 ----
+ .../bindings/serial/qca,ar9330-uart.txt       |  3 ---
+ .../bindings/soc/fsl/cpm_qe/gpio.txt          |  1 -
+ .../bindings/soc/fsl/cpm_qe/qe/ucc.txt        |  2 --
+ .../bindings/soc/fsl/cpm_qe/qe/usb.txt        |  1 -
+ .../devicetree/bindings/sound/cs35l33.txt     |  2 --
+ .../devicetree/bindings/sound/cs35l34.txt     |  2 --
+ .../devicetree/bindings/sound/cs35l35.txt     |  2 --
+ .../devicetree/bindings/sound/cs42l42.txt     |  5 +----
+ .../devicetree/bindings/sound/da7218.txt      |  2 --
+ .../devicetree/bindings/sound/da7219.txt      |  2 --
+ .../devicetree/bindings/sound/fsl,ssi.txt     |  2 --
+ .../devicetree/bindings/sound/omap-dmic.txt   |  1 -
+ .../devicetree/bindings/sound/omap-mcbsp.txt  |  1 -
+ .../devicetree/bindings/sound/omap-mcpdm.txt  |  1 -
+ .../sound/qcom,msm8916-wcd-analog.txt         |  1 -
+ .../devicetree/bindings/sound/rt5514.txt      |  1 -
+ .../devicetree/bindings/sound/ts3a227e.txt    |  1 -
+ .../devicetree/bindings/sound/ux500-msp.txt   |  1 -
+ .../devicetree/bindings/sound/wm8994.txt      |  1 -
+ .../devicetree/bindings/spi/fsl-spi.txt       |  2 --
+ .../devicetree/bindings/spi/sh-hspi.txt       |  2 --
+ .../devicetree/bindings/spi/sh-msiof.txt      |  2 --
+ .../devicetree/bindings/spi/spi-cadence.txt   |  1 -
+ .../devicetree/bindings/spi/spi-fsl-lpspi.txt |  1 -
+ .../devicetree/bindings/spi/spi-rspi.txt      |  2 --
+ .../devicetree/bindings/spi/spi-xilinx.txt    |  1 -
+ .../devicetree/bindings/spi/spi-xlp.txt       |  1 -
+ .../bindings/spi/spi-zynqmp-qspi.txt          |  1 -
+ .../bindings/staging/iio/adc/spear-adc.txt    |  2 --
+ .../bindings/thermal/brcm,avs-tmon.txt        |  1 -
+ .../bindings/thermal/exynos-thermal.txt       |  1 -
+ .../bindings/timer/altr,timer-1.0.txt         |  1 -
+ .../devicetree/bindings/timer/fsl,gtm.txt     |  1 -
+ .../bindings/timer/marvell,orion-timer.txt    |  1 -
+ .../bindings/timer/snps,arc-timer.txt         |  4 ----
+ .../bindings/timer/st,spear-timer.txt         |  2 --
+ .../bindings/timer/ti,c64x+timer64.txt        |  1 -
+ .../devicetree/bindings/usb/fsl-usb.txt       |  2 --
+ .../devicetree/bindings/usb/maxim,max3421.txt |  3 ---
+ .../bindings/usb/richtek,rt1711h.txt          |  2 --
+ .../devicetree/bindings/usb/samsung-hsotg.txt |  2 --
+ .../devicetree/bindings/usb/spear-usb.txt     |  4 ----
+ .../bindings/watchdog/cadence-wdt.txt         |  1 -
+ .../bindings/watchdog/rt2880-wdt.txt          |  1 -
+ Documentation/devicetree/bindings/xilinx.txt  |  2 +-
+ .../devicetree/bindings/xillybus/xillybus.txt |  2 --
+ 332 files changed, 9 insertions(+), 588 deletions(-)
 
---x+6KMIRAuhnl3hBn
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-H4sICIE6VlsAAy5jb25maWcAlFzZc+M20n/PX6GavOxWbRIfE2WyX/kBBEEJK5LgEKAOv7A0
-tmbiikfySnKO//7rBi9clGe3Utnw142r0egLkL//7vsJeT0fvm7PTw/b5+e/J192+91xe949
-Tj4/Pe/+bxKLSS7UhMVc/QjM6dP+9a+f/jrv9qft5P2P1x9+vPrh+HA9WeyO+93zhB72n5++
-vEIHT4f9d99/B/98D+DXF+jr+O9J0+6HZ+zkhy8PD5N/zCj95+TDj9c/XgErFXnCZ/W9yFkd
-Z+Tu7w5ZK5ZL47tcSZbVazqfkTiuSToTJVfzbGCYsZyVnNbzFeOzuRoI8/u766ur7ovSmssa
-5mC0BGzJSslFfvfhyuRNST7rSQMscqnKiipRyqEXXn6sV6JcDEhU8TRWPGM1WysSpayWosSJ
-aRHNtNSfJ6fd+fVlkERUigXLa5HXMiuM3nOuapYva1LO6pRnXN3d3gwTygoO3SsmjXWngpK0
-m/y7dx0cs4RUqarnQqqcZOzu3T/2h/3unz2DXBFjYLmRS15QD8D/pyod8EJIvq6zjxWrWBj1
-mtBSSFlnLBPlpiZKETofiJVkKY+Gb1KBPnbCA2FPTq+fTn+fzruvg/A6HcC9kHOx8rUDKXTO
-C3vfYpERntuY5FmIqZ5zVpKSzjd+55nkyBkeNWZRNUukT6SwUQu2ZLmS3fLU09fd8RRaoeJ0
-AcrBYHXGVucCtBzVIBO4Cjh/nerXBYwhYk4nT6fJ/nBGdbNb8ThlTk/G2YGjVJdM1qjGZT8/
-WlQ/qe3p98kZJjrZ7h8np/P2fJpsHx4Or/vz0/6LM2NoUBNKRZUrns9sueoTEiJGMq6LUlAG
-SgJ0NU6pl7cDURG5kIooaUOwASnZOB1pwjqAcRGcEq6DS5ESxbWktTRKWk1kaKvyTQ00w4bR
-CkwB7IgxmrQ4dBsHwuXY/WjDUkc8vzHOJV80/+EjWlSmXcAeEjggPFF317/0R7XkuVrUkiTM
-5bl1dVbSOYsbzTWEMytFVRhiL8iM1VqIrBxQOO905nw6RmfAwOah5YyNxaeLdqQB02crSGm+
-6xU4CxYRf7bNSgY0IbysgxSayDoiebzisTLMVKlG2Bu04LH0wNLydC2YlIzdm3Jq8ZgtOWXm
-qW4JoIuouIGD3Y3NysTrLip8TIvPUElBFz2JKGOq6C9kQeDcGXZayTo3/SD4BvMb7HhpASAS
-6ztnyvpudItUSjh7Ce4D9iBmRckoUaawXUq9vDF2CM+9rT8gU+1RS6MP/U0y6EeKqgSJDy6z
-jOvZvekzAIgAuLGQ9N7cVQDW9w5dON/vjZ2gtSjAEvJ7Viei1HsnyozkztY7bBL+I6AArqMl
-OcQTPBexuXGWJrhmKYMQgePWGUKeMZWhbcTeSZq64g/BMAsfT+ZwjFIvSOhdjGWPTKtn6ChL
-E7AspdFJRCTIpLIGqhRbO5+gfkYvhbAmzGc5SRNDKfScTED7aROQczBWhqS5sckkXnLJOgEY
-S4MmESlLbh33OaOLQsCa0eEqa20LbL7JpI/UlmR7VAsDFV/xJbO23N8O3GUdElrrzCIWx+YZ
-m5Ml02pZ97FKt1EIQi/1MoOOTVdT0Our952bbPOFYnf8fDh+3e4fdhP2x24PYQOBAIJi4ABB
-z+A/g2M1ln58xGXWNOncjmlX0iryTB1irbfRSiyMKBDDaqIgIl+YR1CmJAodOejJZhNhNoID
-luAY20DcnAzQ0A2kXIISwCER2Rh1TsoYfLFtAxVkSGiwMWXhCaddlDKEAQlPrXgGLB5lWukM
-QYmGkTl7PwKDL8OMSPFZJSrpEGm6cJD5CgTKSKPpxlGBiLpeEdg49B8FKXFz29xlWEBazTAC
-h8wF8rfBPuuOIeSD81MKxTAxsyzrnEiHDHFubixkrK3TCLI+YUpPj3sxhM1EXKUQPqOuosnC
-I2msZ9akhSmoLJiHG6tftoaMT81BVmZUkWKijIHMChTAkHbJEj16ZwGbFJOK5Q+ftifI7H9v
-Dt/L8QA5vhWfI1O9YGXODJugQe2AVP2+/sUKdzI0o5YjQWMj8SQOOXK7cFcS2CfF8NJcVEuq
-8iDctOiJ/QEDcqsg0jxnJh2bQzDdsqGpDJzIjo9724ZYM3yQYhlRA5dzcu1M1CDd3Ly/ON2W
-6+fpN3DdfviWvn6+vrm4bDwe87t3p9+21+8cKlpAcEb+NnaELi5yh+7p6/vRsSGpBGsGuiAW
-ZpQX2UlFGsUkMakQf1DIs0v2sbLKHV1cF8lZELSKCUMQqNgMcoNAfIglqdiH4UQKpWwr6tNg
-VSubTrMYCKwxbaVNW0XKA2r50ceyj+6g6A3NooKWDwTAoiC9GSi2x/MTVucm6u+XnelhSam4
-0kcjXmKoaayXQHSVDxyjhJpWEKWScTpjUqzHyZzKcSKJkwvUQqwgZmV0nKPkknJzcAgzA0sS
-MgmuNOMzEiQoUvIQISM0CMtYyBAB6xgxlwtw7ab1zSAXWdeyigJNsPgAy6rXH6ahHitoCa6B
-hbpN4yzUBGE3LJoFlwfRShmWoKyCurIg4EFCBJYEB8Da4vRDiGIcH0+IoPLZR4g1uYctOXAL
-D27z76aSKCby4bfd4+uzFXxy0aShuRBmrbBFY3DKOB2fQhPjiMJHWxxoyaal7OqwXV8BO9mx
-NJ16LXFuF1p1Y757+PzfwbB/vLAIg7jYRKaV6uDIXF4UWF53QmR+bSllrndPFhC+oSs3LbxX
-+EAy5PKgVEUhrFoZhmM6ZPVpDQzBWJKSmfTpWVaZeilJjr4xFqtaJIlk6u7qr+nu/RX+r7Wa
-x8PD7nQ6HCdnsJq6yPl5tz2/Hk0L2txS1Es4khi7JjIxN8qhxvTm9iYKeuwA5y39Fk5aQaqY
-BbTA4Wsq/Z9Pn985DBVkvJD2wt7a2T64b5YVqguU+/E7fClSCDdJuQnOsuUKzKtrr6NVY0d0
-AKoDQ7D6sQ46rv56hN24vRouZJY6DpfDll05DO2iFpLpHbfqQFjLtnL1hEAi1abD3n2TRQS9
-hX+XbAapl5VTtuMBE49KoiDwcdYFMuUk1VdGQqdOWrei19Pk8IIu2fTGpgGDD4YKHFkplVCY
-AiFRM9jsxNq+BoAA5z/MLG4jXjNaUodVFpmPuG7BwLvUddjxjqa9soQMJqwYFhse029iHqph
-IZXCNRWZI446LpxF1oWyF4kXNjbwseLlQtqYLwTQBF12aIvTulZpM0hVRTaClRcPtC4pEGCU
-OFPkYul0VDpzLojkcVBJwppDRylyrkXWmD/KJw+H/fl4eAbPOHk8Pv3ROMjmAmj7uMMCDnDt
-DDa8snp5ORzPllbDqSAxy6m7QS2q8/kREivstSYK/n19dWWj2MFw++US2jsLZ4Q1VkLWNvsa
-WW1oeQtHOHMOJqR+YAZIYCw1r/KYYfk2u0D1dpnVJfg8+17SghtBaNHHu9PTl/1qe9TSn9AD
-/IcMSj1euSdi5QoUllKqgtFpGDWGxbHY/vHl8LS3x4FDEDvFHBOtGyxxFR3OQ3td3Xd/+vPp
-/PBbWOvMs7WCf7ii8yb0b5o/b89YVfStamuhi5QoNCE119ms60578lrdgDu55HkN1qSYkYA9
-6i92e68Q21cQXTAbCZF6KMRrsIDD8+7ufP5bXv0LknyY0PFwON/99Lj746fj9mvvw7GsJMzs
-uOKpghArVpFRHuvSU8kzzAr8vLUltD65L0O18FWNVb8mgHjn0K5DNIjAlO1oAajx9gFLrZAk
-GTqoS11YDrdjwlygcOxe2ncC5vVrN5ki5Qqseyqaq2Z5995pFKG9tpKGBmhqvNTJNQIYpIKl
-M2oE0jJtGiYbtYKJmy4bg5BcKJ5Ytf6FNNbVxesZCAZTPx3/3L2/+nXaS4NBeAY+UF8/L4ym
-NGXgEwnE3mY4LXJlX6dS67oRMjLHpfWQeUoRhESSyLv+hvje7va+sPT3PqoMN3R/m4jU/Jbe
-5UBb/YRlF1Y5pWPFeN+wKvhQoblSxlh/YTVJSlDBNjw0RmAlSsx5DDDDW1DwLvOMmK91mjpj
-Rta68iNKMNR319eD4aHEvC0saEY5cb+b+JVyU4zQrNGI1s798LA9Pk4+HZ8ev5iZxIbl5k2r
-/qzFjYuAXRFzF1TcRcAC1aoynVnLKeScR+a84+kvN78aQv5wc/XrjbkuXABmAShF3htc9tfu
-4fW8/fS804/GJvpK52ysJ+J5kikseg+dwYd9Z4dfdVxlRX8IsEg+h8TUirLbviQteaE8OOOS
-2l1ij73AD3+CI/m63W+/7L7u9udA3G36Yj/mzfrimEuKgbYi4IhiMYLqiwFRqbvrmyujQ+tW
-BL47h9G8MDIWvvrYxsksSTj4ZUwN3Vsjv73lEnKmrA/ICGZ2SRdB1mFaZvnu/Ofh+PvT/ktA
-WnD0zC6b7zrmxJABVqHsL4dBmbeh8DG8cuicbVJm9hcmffYFgUbxJaAD2YmshmQVgSRTTjcO
-obHrzGVHXZfKqk1qAi/QOdiyW7CNB/j9yoxaH45A1nGh310w01Jxa/MgCtS38pRIG+31swRV
-s6o2BbjnCMwlZ64R7Dor8NkgmmGbpntqOYj53KWnLVkZCckCFJoSaWUkQCnywv2u4zn1QfT6
-PlqS0hE6L7iHzNCYsKxauwQ0hdb1Vs8f6iIqQcs8IWft4pwso6eEmC9JuOCZzOrldQg07K/c
-YIwiFpxJd65L0+wjVMXhlSai8oBBKo6+1WTuAEwWPuKfRt7Myj4fGtQnx52YpgTB5lxitAh+
-Ppd2Gc/luNxBxJjb1j52zSxoEYJRnAG4JKsQjBBoH14RG+YAu4b/nAUuWHpSZOamPUqrML6C
-IVZChDqaK/NADbAcwTeReRnd40s2IzKA58sAiPUxVO4AKQ0NumS5CMAbZqpdD/MUMiLBQ7OJ
-aXhVNJ6FZByhWfQq6FHwXWxfdm+3wGuGgg6miD0DivYihxbyGxy5uMjQacJFJi2mixwgsIt0
-EN1FeunM0yF3WwBp7eunp4d35tZk8c/WtTvYtKn91bo0rBonIQqcvUQ4hOaBHHrvOnYN1NQz
-b1Pfvk3HDdzUt3A4ZMYLd+LcPFtN01E7OB1B37SE0zdM4fSiLTSpWprt00Inz9XLsZyNRiRX
-PlJPrSeViOYxxOc6+1ebgjlEb9IIWn5ZI5YH65Bw4ws+F6dYRfjowIV9F96Db3Toe+xmHDab
-1ukqOENNg+SThnDrUSbskXOFCwj+xgR4qZ29ogsqVNEGX8nGb1LMNzodgUAws/Nt4Eh4akWO
-PRRwXFHJY0jCzVbtb36OO0wdIB88Q8rl/i7I6zmUiLQkXDjPFyFSQjKebtpJXGBwI0a7Z+dn
-AD7d+RmLz5CaOV+Oj1HzXNclLBTf0bshYwtDR5D0hIbArpxrJHOA2tl5k+TrhUnFwoYcoeFv
-BJIxovsK0yJ2Oe44VavcCF0ruNO1wtkoAc6LFmGKHbobBEnVSBMI51Ku2Mg0SEbymIwQE7fP
-njK/vbkdIXHzjs2iBBIMiw6aEHFhv6q3dzkfFWdRjM5Vknxs9ZKPNVLe2lXgdJpwWB8G8pyl
-RdjUdByztIJEy+4gJ963LouahqmFR3RnIIU0YaB6GoSkgHog7AoHMXffEXPli5gnWQRLFvOS
-hU0TpIIww/XGaiRkYn27TqqHnGLCgHt2KAHJVtmM5TZmbwisPW3eTthBElIkZknaz/q4fmvo
-oRFX1q2AHs/93VAD5nnz60cLdoyxqgM8GTFf1CGihe0snDitRPQfK/REzPUNGhLW72R07/bN
-+4B5W6Hap+Y25osqMZ8wtkCgs6aOZO11XBXBjR7Dk1UcxmFAH290oanme2o20EJKve4VVscQ
-a11SPk0eDl8/Pe13j5OvB3yZdQrFD2vlekKThJpygSyZcsc8b49fduexoRQpZ1gdaX+FeoFF
-/5BDVtkbXKFAzee6vAqDKxQR+oxvTD2WNBg1DRzz9A3625PAexz9u5rLbNaP/oIMIhTDGgwX
-pmKf80DbnDkWKcSTvDmFPBkNJA0m4QaOASasJlvvnYNMF9zHwKXYGxNSrp8J8eB7u8ss36SS
-ihZZOAmweCA1larkhXtov27PD79dsA+KzvV9qp17BpjcxMuluz8sDbGklRzJogYeSAZYPrZB
-HU+eRxvFxqQycPnZYZDLcYZhrgtbNTBdUtSWq6gu0p24LMDAlm+L+oKhahgYzS/T5eX26Hzf
-ltt4LDuwXN6fwIWSz1KSPJzrGjzLy9qS3qjLo6Qsn5kXPSGWN+VhFTWC9Dd0rCm2WHWuAFee
-jKXvPYsdFwfoq/yNjXOvC0Ms840cyeEHnoV60/a40aPPcdn6tzyMpGNBR8dB37I9TvYTYHCD
-ywCLsm4+Rzh0hfYNrjJcpxpYLnqPloVnlydT3VrVuzY0tL7xWcjdzc9TB23Sltr6ayIOxSnz
-mUSnnFv0+VGowxa3D5BNu9Qf0sZ7RWoeWHU/qL8GTRolQGcX+7xEuEQbXyIQeWJFJC1V/1rW
-3dKldD69qwfEnOceDQj5Cm6gvLu+aX9AAqZ3cj5u9yd8gom/sDwfHg7Pk+fD9nHyafu83T/g
-QwrvYWzTXVNzUM5NeE+o4hECcVyYSRslkHkYbw/9sJxT94sYd7pl6faw8qGUekw+ZF/bICKW
-iddT5DdEzBsy9lYmPSTzeVjsQvlHSxByPi4L0LpeGT4YbbILbbKmDc9jtrY1aPvy8vz0oIvl
-k992zy9+20R525on1FXsumBtuant+9/fUJNP8LquJPoiwvijFHY90yU1nsDHm+whgLd1KAfH
-hBn/rlJ7n+dRu5qJR8DahY/qksjI0PadgF22cJuEetd1e7cTxDzGkUk3BcIRAYRoGsTKVcVK
-EofEg8Sg1CATDHeH1WP8zTb365Th4rqmuHVlBO3qN6gf4LwIPHYBvE3F5mHcCtdNQlm4V1Mm
-VanUJYTZ+/zYrslZRL++2pCtWoHVYtiYEQa3iuBMxk3Wu6Xls3SsxzbH5GOdBgTZJdG+rEqy
-ciHI2Sv799ANDlof3lcytkNAGJbS2qI/pv+rNZpaSmdZI5s0WCMbH6yRg/fWaGqfHMcaBant
-UXVo3VF04P4oenhnIxxCa3octDVs9ipsC2bTQt2MDdpZMRsMLTNgkazAaTpmBKZjVsAgsIpP
-34/QUCNGSFgcGiHN0xECzrt5aDzCkI1NMqTwJlmNEGTp9xioqraUkTFGDZlJDVmyadi0TAN2
-YDpmCKYBc2iOG7aHJkde9GX3mNH97vwN9gAYc11KBcdEoiol1hv/4Sh7TwIS1b1V8O9imr9w
-57ToXjYkNYtcBW5pQMD7W+u1iEFS3r5ZREt2BuXD1U19G6SQzPqLMybFjEMMnI/B0yDuFHUM
-ip1rGgSvpGHQpAoPv0xJPraMkhXpJkiMxwSGc6vDJN+tmtMb69Cq5Bu4U+OPvLPfIXXl5Bd2
-obN5I0qHl6bNGQBgQimPT2PK33ZUI9NNICPtibcj8FgblZS0tv4mikXpWg3TbP9813z78Lv1
-94O6Zv44di0Jv+o4muGVKrV+Iq0J3WtE/dZZP4/C54F35l/UGuPDP7gTfKI42gJ/1B7641zI
-789gjNr+oR9zh5sRrdfB9p9piqXz1x8RsdJ/BBxZKusP8OJX/f+MXVtz2ziy/iuqeTg1U7U5
-o6stbVUewJuEmCBpgpLovLB8MsrGNU6csp3dmfPrFw2QVHcD8sxW7Tj6uon7pdFodCszykWH
-uw/BRGtgcVokgd9Bmx9GqsSrxoDAKzwZK0bJiRkJIKoqBUWien61XoYwMy74DKKqafjlP0az
-KHbyagHJv0uxBpssRVuyXCp/7fRmv9yaY5IGHxsysALDetav9dJzCWbnuqYa3SDQ5elWMCWz
-xRsBOcXqMgVMYqu0SMIcwcyAkF6k3OiPYYKp6WYxXYSJqrkJE4yYLnOmYh+JtzEqhG1KswPO
-bkNYtz3gzkIERQhOSuC/vScxOVYomR9zPEgFfpcFD2NFVeUphWWVUJ2c+dmlRYyPee0cLRu5
-qPCr/11JinllBPgKb4094E+BgVDs4iBoHx+EKSA601tHTN1hDzeYQEV7TFFlJHMiHGIqtDmZ
-FJhI1qaBsDWEtDVycFKHi7N960tYo0IlxamGGwdz0PNFiIMbCadpCiNxtQxhXZH3/7CuVSW0
-v8iDnPxKBZG84WH2HZ6n23ec+x27Xd/+OP04mT36196xEdmue+4ujm69JLpdEwXATMc+SvaQ
-Aaxq7G1pQO2lXiC3mll4WFBngSLoLPB5k97mATTKfDCOtA9ug/kn2jesBtz8TQM1Tuo6UOHb
-cEPEu/Im9eHbUO3iMuHvuADObi9TAl23CzRGJQNlCL4Ktdz5fhuotu8AZpCzstu3n5tA6d/k
-GKr4JpOm2TCqkTGy0rrwwet57zXLVeH9T98/P3x+6j7fv7z+1BuwP96/vDx87rXwdMrEOWsb
-A3hK1B5uYqff9wh2AVn6eHb0MXIr2QPco3eP+gPWZqYPVRi9CpSA+Csc0IDNi6s3s5UZk+D7
-PeBW+UF8ZQIltXAIc16+UHQLRIr529set+YyQQppRoSrlN24D4TGrPZBQiwKmQQpstL8kfVI
-afwGEcx0AQBnbZD6+JZwb4UzZ498RiVrbz0DXAtV5YGEvaIByM3iXNFSbvLoEpa8Myx6E4XZ
-Y24RaVGqFhhQb3zZBEI2SkOeqgxUXWaBersnOf6jbcNsE/Jy6An+it4TLs52yYVzu0pLfPGZ
-xKgnk0KD5+8SYrag84bZaIV10BnChn9eIOI3aAhPiBLkjBdxEFb0rQJOiAupnHamlOawcnB+
-e4IgvXXChENLBgn5Ji1S7N/84D2hHxB2AnaOIUP8lOA/3unfKNDkzBRj2wMg3VaXlMcXjS1q
-5mLg2XaBr7B3mssZtgW49VGXL0ALC/ooQrqtm5r+6rRKGGIKwUoQY/9ou2OEXc84z4/ARqcG
-InieAOyJrAUPOXcddb0fYVnOuqlv6lSos7tc7Jhi8np6efWk2uqmoY8W4MBZl5U5rRSS6Ix3
-QtUisYXuHeR++v30Oqnvf3t4Gg04kE2pIAc6+GWmkBLgkv1Al5gae2yvnX8Em4Vo/3e+mnzr
-y//b6d8Pn06+eyt1I7EMdlURa8uouk2bHV0c7swABSeDXZa0QXwXwE2jelhaodX8Dvsni/Hs
-Mz/odQEAUUzZu+1xqLf5NUlcbRNeW+A8eKkfWg/SuQeR0Q1ALPIYbDHgBSuJ2GNoeUqCsMAC
-1WxmrMi1l8cHUXw0h0tRLFhx9sVSUsh5kyMpVE5mYKW8AI1exYK0mOUWx9fX0wDUSazcOcPh
-xGUm4S+O+gCw8otYpeLG+oXjvPqDmE2n0yDoF2YghIuTKu15VTrjMlgin3so6oUKxBS/OQiY
-Iz5/3vqgLrPGG1o92MXn2FhmxOtKTh4gnMXn+08nNuJ3cjGbtazN42q+suCYxF5HF5OAJjF0
-1k4aXLhGczasA5x9rT3ctpKHrkER5qEqjoSPOn/kzpcPlgqw9AD3Z2lSE6TOYJ8NQF1DXLOb
-bwvswbAHTGn8e7ee5ExaAtRYNTSlnUwYQKrQYSna/PRUM5Ylod/oNM9oVD4EdmmM7dYwhcT+
-g4uwUdBy/mMff5xen55ev1zcSeDGr2iwSAENErM2biidqGWhAWIZNaSTEWi9nuq9pkpozMCz
-Gwk8X0vQCfHUbdG9qJsQBjsb2QEQabcMwkV5I73aWUoU6ypIEM1ucROk5F75Lbw4yjoNUvy+
-OOfuNZLFA33hCrW9atsgRdUHv1ljNZ8uPP6oMiuxj2aBvk6afOZ31iL2sHyfUhd5Dj/siF/2
-QDEB6Lze9xv/KOmrYztgS0XkWJdnjcVWkRmRs8YXaAPCFNxn2PpM7vISy2IjlZ1r6vYGv381
-bDe4R7kY28NgzFPTACkwdnKighuQjqgkjql93YgHmoVokD8L6erOY5JYbsq2oExG/euU1jPr
-mhX8gvi8sLqneQneKI+iLszepwNMcVo3YwSiriz2ISYI4WGqaMNugfeydJtEATZwctq7B7cs
-cHYPJWfqV4szC7ztPfskRZmaH2me73NhhGMa+IgwQaie1l6B1sFW6DWNoc99X5pju9SJ8H3T
-j+Qj6WkCwzUC+SiXEeu8ATG53FXgH6i6SIuJJo0RmxsZIrKB399EzHzExlvCr+BHQh2Dg1OY
-E/nb1A4H8A0yHC5xjO5U38xoUGD/9PXh28vr8+mx+/L6k8eoUnwGH2G6zY+w1+04HT04LqXH
-f/Kt4Sv2AWJRuvgJAVLvhu9S53QqV5eJuvFcwZ77sLlIKmMvjtpIk5H2zBdGYnWZpKr8DZrZ
-DC5Td0flWZ+QHgR7OG/dphyxvtwSluGNojdJfpno+tUPRkf6oH9M09pwjucYWkcJz47+JD/7
-BG3EsPfrcRPKbiSWSdxvNk57UBYVds7Ro9uKqzc3Ff/thVPpYWrQ0oPcxbCQGf0V4oCP2cle
-ZuyYkVY7arc0IGARYY4LPNmBCttIWMVaZMQSHqxltpJc1gJYYDmmByAwhA9SqRXQHf9W75J8
-9KVbnO6fJ9nD6RGiIH79+uPb8A7kZ8P6Sy/i4yfOJoGmzq4311PBksUxqwGALYO4ywcww+ec
-HujknDVCVayWywAU5FwsAhDtuDPsJaBkXJc00B2BA18QIXJA/Awd6vWHhYOJ+j2qm/nM/OUt
-3aN+Krrxh4rDLvEGRlFbBcabAwOpLLJjXayCYCjPzQpfC1ehGyJydeL7MRsQelOTQBQG6ox8
-W5dW2sJhOMFJ+0HkMgHP+C1/UgzyJZXzlbhzk5cTrC9w6oM8EzIvD2eFsad6dHERT99Ozw+f
-enhSch/HexdClL/uJnBn/eKeBUxTukZVePcfkE6xkDAN+BLKSQBKs3TZtDNZKxu+y4b4HmqR
-PTx//Q8EfIA3hfhhWHa0HsdxIZ0UPKSDvfIPvC4iM69ckGzaM89p2GwboxNUQsjRdk8Cp+3H
-C7RLqNUXmUMJLsqoRapTzVGrHXEfmJVclVj/bmnCbfaOA65K0/df0dCj3vmNnE/e57jfnYg3
-1x5IJlKPkYk7YsoHjzMPUgpvpUMmNbLigMiqemd6MYFY7BlpIkPKbIQU5ofDRmM9RzdLTp/v
-fzy+2pgaD//68fTjZfL19PXp+c+JGU73k5eH/z/9E+kWIUMILa2c+4nZlUfRZtKrwTnFOSw1
-JoPXfTB22oaD+tCkZPE3mEQbCnIO8QkgdJW1bFufAyt5++Wtvd+IJHarLGHNA9/pZDyYPwWP
-IVBDnB/m/041Cflhh54+DzSATLeBM2sbsY5+OpKcobqNT2HDX7ybXUzAxukyTDTuuc8G22VZ
-YHN64MHR81hZyiyEivo6BEexulq07Uhi4SW/3z+/0Pss841TfZhx2tK0YGRXOqdp7c33E+V8
-Ptmw0A08rH504lB+/6eXepTfmIWCF5MFmGuIrMB/dTV+/ULpdZbQz7XOEuLInZJti5YVKw8N
-m9E3igtjaOa2u68dWqAW6te6VL9mj/cvXyafvjx8D1wTQpdmkib5IU3S2C14BN+mRReAzff2
-mh58vpaF9olF2Rf7HNu1p0RmezIrgK1WOP5sz5hfYGRs27RUaVOzMQvLYSSKG3PuSczxb/Ym
-df4mdfkmdf12vldvkhdzv+XkLICF+JYBjJWGeMMfmUCbTFRFY48qI4QlPm5kDuGj+0aysVvj
-i18LlAwQkXaWxHa0qvvv38G7QT9EIQyIG7P3nyB4IhuyJSy67RDwhY05cKaivHniQM8/HqaZ
-utUQC3A9ddEbAyx5WrwPEqAnbUeeox5hMg6kQXEbnFw0JBw649imEMeVrQTxaj6NE1ZLI/Za
-AttT9Go1ZRi5lHQAvQM9Y50oyuJOkZjsdj0wJ30XYojAdkx1B4iMzihwXeuNi3z0rDUMBX16
-/PwO5Ix767jPMF02c4BUVbxasYnisA60aLINkriaxVAg4H2WE1+JBO6OtXTxKoi3PcrjTTM1
-X1Vr1vgq3lXzxc18xZYEbQ6DKzaRdO41WbXzIPN/jpnfXVM2InfKIBwGqqemtY23DtTZfI2T
-s/ve3AknTvx7ePn9XfntXQxT8pIZhm2JMt7iB4jO3ZcRp9X72dJHGxRgCxapIi1EwZadHuwb
-3vVCmMML0IeJXs8MhHkL29rWa1NLTOM4jNI4LAMlwBvFuwspeBQjBHAzsfGDJIX4qhcJ/oTG
-xKQJ0KimboRZYKgRN4fNbYgforeVBQ05GCA60SHgBfwt3j5861+zQkjWt5OMoiYwchyXGbPL
-AB6LLMSuRH1I8zxAgf8QzRlqayUvDRDfimUklW0hdAA/ZFezKVU3jjSzCGV5zGVJS9pJLVfT
-UFXd6ys71fPKNPvkf9zf+cTsAcNJL7j8Wjaa4i3EUgiJiuaU6+8KqlnP/vjDx3tmq7FZWofk
-ELEXScyGLnQFEe1oSKRKjlE/b/ciIUdrIGbmrBAkQPN0OmNpgbbM/M0Ys27UYu6nAyXfRz7Q
-HfOu2ZnhvINgdmwxtgxRGvVvqOdTToMHCJ5IAwTwcB3KjR1ckgZVCssiRrrYF7KhliUGhFjF
-SYMfu5SZjb5InTEbMBV1fhcm3ZTRBwIkd4VQMqY59ZMcY0R5UWbUy5f5rcgdfwnOKMzJ8ABH
-IPy0xhFAR08wUOuRKJrmDEVvRHugE+16fb258glmu1z6aAGHZ2zP4KJiekBX7E3zRvgxIKd0
-feR1a0BAY0omRJIePgSbNK1hNslqMbeGHeMp6qPZ2gKnpuHTRMSbq6mf5J405oDmJI49Rm3I
-SRduYM3p9j64DH+b1BFaFuHX5dqP7YQ/GaOPtmsfJNs6AvuSnjVTmOZJTLbVwTA4Tg4J64wB
-7nVr+lx7Sj4ylbaAuIygXCSPjXu7cTI6zpiR+7FJyljmUHPUuh0NAYuDSv3gvoAyC5CxgQ/E
-2SEwBoK4WTwTUU0C3FmU3eVZxpgBzpdHEGTjDFMCKfeUCxkYvE/NHTUfXj75uj1zGNUQET6X
-epEfpnNsipOs5qu2S6qyCYJUo4sJZGtI9krd0bWt2omiwdPZHZ6UNFIBjpOjtxC/O0ZrTiMz
-xbrOQtdti10JxHqzmOvldIaHnTJZaPwU0+yVean3YEFjllFqcrmrOpmj1dbqQONSFjGRgUSV
-6M16OhckDJzO55spfvHtEHxAHdq9MRRzTPUJ0W5GjJQH3Oa4wcZnOxVfLVZIP5Lo2dWaxCAF
-V6s4djoYEfZPQDItNkt8UoMtTULo8Lha9MGnUSnIutLLIXkVd3FT50GC9QCAy4JCW9P9F+KQ
-dnWjsW3vvN+hXMzU1AhXyvcE6XDTw3M0Us7gygO514AeVqK9Wl/77JtF3F4F0LZd+rBMmm69
-2VUpqUd0bQRXFrvVYvy2/QyaRtR7NWoXbQs0pz/uXyYSLG5+QDDWl8nLl/vn02/If+bjw7fT
-5Dcz1x++wz/PrdSA8OaPJ5j4dMISCp3jNmw7KIyqfCiS/PZ6epwY8cbIzs+nx/tXU5pzDzEW
-uF5w5+eBpmOZBeBDWQXQc0K7p5fXi8QYAgQHsrnI//T9+QnUbU/PE/1qajBR53C3P8elVr/w
-G1Ao35jcsF3ZGPXUnUUa78rACGfH1hF29+99ibUcFEDeiAdiR97s1cIsniCM4qMC2TTtN2QP
-sUjBg9G4tG/9QLmWYK9zzobUtpR98Savf34/TX42Y+/3f0xe77+f/jGJk3dmTvyCzKoHmQVL
-E7vaYY2PlZrYfg9f1yEMIv4l+Dg1JrwNYFgJYWs27gYMj23oZnJ9ZfG83G5JX1tU29cxcIdK
-mqgZ5ucL60R7nPO7zezdQVja/4YoWuiLeC4jLcIf8OEAqB3HxILekeoqmENeHp05FdruAKdO
-eS1kL9r0nc54GnG7jRaOKUBZBilR0c4vElrTgiUW8NI5Yx0GzuLYteZ/dgaxhHaV5u1juDct
-NiAfUL+BBTXndpiIA/kIGV+TRHsA7h21DVzfh3c+P+oeOOAICPYE5mTXKf1+hRT4A4vbTdKC
-hpChVCX0zXvvSzDjdUZhYPhc8LUA2Da82Ju/LPbmr4u9ebPYmzeKvflbxd4sWbEB4HuxGwLS
-TYoLMF3I3dJ58NktFkzfURpTjzzlBVWHvfIW8Ark7pJXCdSL+s4bgXWs8Frp1jmT4RwrnYww
-ZHePIj2S958jAb8sOoNC5lHZBihcuhoJgXapmkUQnUOrWIvOLdHS46/eos8D650SdVPd8gbd
-Z3oX8wnpwEDnGkKXHGOztoWJ9itPsel9GubYgbBHLcfx0c7+xGsa/eUqWWA90wj108VbdhPV
-LmabGa++rLx9p5DEcnUABTGOdPk1KV8e9Z1aLeK1mWLzixQwvOmVYvAe0D6emF3iHWLjii02
-smFcMDwsx9XyEofy61Tx+WIQbiQ04tQay8K3Ri4wDW7GJG+Y21yQo3oTK8DmZOVHYHC9gETY
-RnabJvQXKDqRDz/YoqssFKjZjYF4sVn9wVcOaKLN9ZLBha4WvAuPyfVsw3s8VPRKhfa+Sq2n
-+JzudvCMNpUFufW0Ew92aa5lGZoLg1zi3fEO97s7MVvN27PVUY8XsvggnPDMSa5zPdiNKLhs
-/kpbgcuYya6rE8ErZtBdZc7jPpyqAK/I91wqKXXipij17TrS9jlvdkATuzva8x6fa5ZM+5DI
-iqDEG55OpHVNMgVapUa9U/z07fX56fERzBv+8/D6xQzCb+90lk2+3b+aA9T5kS6SjCEJQYy+
-LWTdpqVmNKshuszU+ySwuFpYqpYhcXoQDGrhKpVht2WNnW/ZjLhpggUNEs+u5i2DrRgYqo2W
-OVZYWCjLxmODaaFPvOk+/Xh5ffo6MWtlqNmqxBwa6AkPEr3Vjdc/umU5Ryo5Wz0CS7gAlg05
-doCulpJX2WxzPtKVedL5pQMKXy0G/BAiwJ0nmJ3wsXFgQMEBUM9InTK0joXXONiqp0c0Rw5H
-huxz3sEHySt7kI3Z30anFtXfbefKDiScgUPw002H1EKD24LMwxuihbNYY3rOB6v11XXLUCPQ
-Xy09UK+Izc0ILoLgFQfvKnoDZlGzs9cMMmLR4op/DaBXTADbeRFCF0GQjkdLkM16PuPcFuS5
-fbDvK3hu3jW5RYu0iQMo7DR4Q3WoXl8vZyuGmtlDZ5pDjcjo18EsBPPp3GseWB/KnA8Z8ORC
-jg4OxVaaFtHxbD7lPUvUKA6BG8kaIqbzJM20ulp7CUjO1pR6JyNepaaWWZ7yGpEZZpGjLKKy
-GA14Klm+e/r2+CefZWxq2fE9pSK9681Am7v+4RUpyc2Fa28ud1jQ257c59klSv2xdxFCnl58
-vn98/L/7T79Pfp08nv51/ylgpuA2KmYaZJP0TmiBazSMqcQ6K0jShvgFNzBYReMJqxKrR5l6
-yMxHfKYlsQxLQldvqr8lJaX3I0dG7NLR/eYbTY/2ej/vgD7e1Cr7nKSRgRvZBHWX4QvpTQ3M
-ErYJZliWHXicBQPEGRDbtO7gB9ExMj7r6s9/FQvpSzBFkRqvTwau0trMuAaeyiREoDO0fWEj
-hGIjJYPaK2yC6EJUeldSsNlJayZ9kEYaL3hpWG8MiDmTk+cazsjNZ05rWlLw1VeS1xw2HAE8
-vNEVe87B9HoG+JjWtOUDwwyjHXatRQia9zKxr4AmtQ8fCJTlgvjOMxBY+DUhqMuwwx1oeub/
-ra+4bTZNYLhR3XrJfgSD+TMyhj8m96nmBCqZIQ1gmRG98ZAFrKInUYCgE9COBjfQkR2k7NLb
-JomDkzmdMePCqFMFI4kqqjz+bK+J4YT7Te+3egxnPrBhpVGPBZRMPYUYm/UY8bQ3YONFgbt3
-StN0Mlts/svYtzTHjSPr/hVF3M1M3DPRRbLIYi16wSJZVbT4Msl6SBuG2tZMK45tddjyOT33
-118kQLIyEwn1LLqt+j68iGcCSGSu7/62f/n+fFH//d2+4dkXXU6toczI2JCtxAKr6vAFmCgR
-3dCmp/YbLZtDVVGQAFxhQi2ydJTDNf/tZ/7xpOTVR27QlLQ4t1Q85PhyeUb0URD4DEkyakeR
-BuiaU511aoNYO0MkddY4M0jSoTjn0FW5xdZbGHjgt0tK0OREFZWk1AonAAP1WkUDqN+EZwYa
-uVHGA9HgTdIeTwogWDZ137AHqBNmq57V4ASSG5MFBO65hk79QZpssN3VEyuH5DsUM551V+ma
-vif2ns6Ssg/pmnXJ7USOZ2ystz/VatcN7wNuWNJRm/Xm96jkVM8GV6ENEkt8E0Ys0c9YU21X
-f/7pwvG0OKdcqFlUCq9kaLxpYgQVQTmJtY3AJYR5pclBOhABIjdxkw+KpKBQXtuAfQRkYNXQ
-8MK2w6Nx5jQ8DtfRiy7vsPF75Po90neS3buZdu9l2r2XaWdnChOpMU1E8UfLNcijbhO7Husi
-hYc3IqiVf1WHL9xskQ2bjerTNIRGfawLhFGpGAvXpeeRWJkmrFygpNolfZ+QS3eKS1kem654
-xGMdgWIRE/5bCqV2TrkaJbmM6g+wbtlIiAEuDuEV3e1CgfAmzxUpNMvtmDsqSs3FDTJwWOyR
-wo61b9M2O4jdPo1o7WtqMPWGP2DTwxo+YsFMI8v5+fy05e37y28/QV+n/9+Xt0+/3yXfP/3+
-8vb86e3nd8kiXogfuIRaach6eg44qCnLBDzskoi+S3YWUU/+TnZKUOz3vk0wVckJrYYNOYBa
-8HMc59EKa/zq8xv9SoL4biGw+JU0TXJ/Y1HjoWyUzCCU/xakHYQP+ZgmseAbpq/61O1SBrPM
-dIUUgmqUa+O4ZEGlvF6TtY7NGKRYkpquQYI0xDdGNzTeorW/6cgF4fDQHhtr5Te5JFnSDjlR
-MtWAfrK4J9IxjqV2zjn+Ki/wrnLIMkn1jhPf05RF2nBHDkv4IScTV5qT+1bze2yqQq1UxUFN
-Z3geMMpzQ+8odZU8uqoBn8WoH7EH1tqwQNWCnEAOEqerrColoqWKPKpNVG4j1JQ6ZM7uQhZo
-PPtyKZXEXw9FIpPYnJn6AQb+U7almGHUdBBIjcV7+swKpwtdtiESUElWv9Kjv3L6kyg3OjrJ
-qWvw+YP5Pda7OF6txBhmr0KeK2BLQOqHVoPV9j/zkrraMxxUzHs8AtIKGgUHqa/Yhi3poLpT
-Bvz3eLwQ2VvrT7Gfao4uGvym40BaSv+EwiQcE3QdHvohr+jTE5UH+2VlCJjxkTE2+z1sxRhp
-9eBbc6TEpeauZp10ejeF5r0EpwW/9MJ+vKiJp2oZQ9rDJFde8yxRw4XUESpSmpwL7s5hpsyF
-NmrB6YZ78CRs9A4CHAjYWsJopSGc3qffCOxjfkaJNTH8KUWf4uWl5s5e5nCqKxS4Tcz1qrAe
-pdcxT/E79qzmnkOmNDO2SVZ7FuKjL8t9b4WvtCZArZHlTchjkfTPsboUFkQUSQxWJ60VDjDV
-i5SIoUZeQt/4ZPn6isT56SJjjNdoksmqrbdCo1slGvoRvqAw8/616FJ+1DFXDNX2zUof36Se
-6oyebswI+0SUYF6dyMXMLvfpfKR/8zkGJ/BIp3fze6zbfjoHBwM1Y+5q6X3SKbEAScv7QQ07
-ope0Hw4cwgl0ed6rMYvP2nDvgYeT+4oc7IHZlY9MOgJQj3iGH4qkJpeaOOvTh2LoT1b77avz
-By+W1yNQPQQZBZXnWFzDY+aPdL7ROor7nGHtak1lh2PdsxIfsTkToJXcuKcIbQ2FBPTXeExL
-7BNSY2SuuYU67+XvRF3i2Loa73hKLnkhUkXsh1w0nylqTjonqefUJL/+id3WHXbkB+/ZCsJf
-VFxJeCp96Z9WArY8piGS6poUab3iERRCwuMxva+81b1YL/mVKEP4uFecr7hB4ddsUgyU4+jZ
-wYdKFnLtN+TnaA0GkUiPrM60P1ZwqAgqKpY2sGGEkBhq8bl4e028KGaOTu/xl8EvSyMFMJCz
-qCLI/YNPf/F4+NPVdyc1UZgtr2oo1hZAW1KDVFDWELfkMQeDYvoED+3oodqqpMS0L2D79pAI
-MXkZw5Ha6dNQzq+mcHTriyamaJuCEyo0+ANLbXgoaab9xf6wCeNDCjEgU1RJyTn6IEdDZPts
-IPORrMwLfvUtvFXSe4clPYpbFdODbFAXvIDcwd3cp4qUGGi+7+N47dPf+NTb/FYJkjiPKtLV
-lmJRHg1boOvUjz/gk5QZMTeR3FSMYq/+WtHklWG9WQfy7Kyz7HOs+171qdpXqy7bDNYlqM1N
-v+TEHzqcrvrlrQ5k6U/KWi5XnQy0VDbQx0HsyyuV9m5UN2Rm3BNDsi34y7X9AE54stMnwJRw
-zze13JxxsMWaK5Mm7JVeo/D3/xPAH0LWuc98xUzptalLWKvPRYaPCNTOMM0zMhuj0M09Sfs4
-ksVTxWqYkA/+nsB7YH0g1r6PiRKCjiithxxMbe75XeGU7aTlu1AfyyQgh3wfS7qtNr/5jnVC
-yRCfMDY9fSSykirJVU13NAd8bf8RntbiYw4AeOY53vFCAFtrnG3yAGkaWciH21zqYuZjmmyI
-nDQB9K59BqkJYWNQkgimXeXqMkQTrYtWa3l4dTkcsCGxJvaCLb73gt8D/rwJGIk9oBnUV1zD
-paBqRTMbe/6Wolq7tZseNqHyxl60dZS3zukjlSOVSrrkLG+r4UAMF4r/RkH7pIJ7U5SJli1d
-463P848y0ZRJty8T8jiSKOiD+WdsOE8DaQavVGuKso66BLTfU4Jlbeh2tYTR7HBZC3Lk2adb
-fxV4jqC4/ot+Sx6zFL23lfsanKGjgFW69ew9uIZV5mjCagu6CYV0tsSZlUbWjhWkb1KweIlP
-yvq6GMmVEABgDo8ff8xJDHpxReGHCrasVB42mH1yl10AB83sj01P4xjKUjc0sNrFd/SsQ8NF
-+zFe4dMLA5dtqva+FlzlvZ0EsxRlQPvE2OCq/qiIO8FYcXOGKnyaPoGn+mqHPNVxYVedQ5jq
-se7EUa3qD1WORT2j5HD7nYL/R7KSFyc54Ye6aYkWL7TStaQnAjfMWcIhP55wffDfOCgOVoxZ
-ci7AvDqd1xFBN3WISFuiwjwAAiL58QHMF9sEOaqZQAbg19oTQN/LD5bj3OmriEqx+jF2RyJL
-LBA7EQMcHPukROcOJXwpHskSZ36Pl5BMCQsaaHR5xjXhu1M/WT0WDceiUEVth7NDJfWDXCJm
-U//2GfxoEZ04+vjZ4D7Dr9KyfE9GNPzkz+/usTSshi+xDd4kWQcm8zsJU7uJTm3QO2YUVd9D
-mxfIFCQ2qw0CSo/UA9SCn2A/ZhHFsEuIJ5op4bE6XWXUncnEM8uEmIKq6nKenRBBOvTTBN3N
-AlI1VyKVGRA2U1VBrPkBznx2aozdEKrxyvwLAIBkmP5CtLdKJW8OXXEARWdDGDtFRXGnfjqN
-n/a4m8D1JVUJm24hGdoXV4YM8SpgmGof/eydg/FGAMf04VCr1rFwvQ9hXz7fCNLQaZEmGSvp
-dBdCQZgordhZC3tN3waHNAZfQVbYdSyA0YaC++Kasyot0rbkH2oMNl0vyQPFS3hgPngrz0sZ
-cR0oMB0FyqDakjMCFv/xcOXh9QGIjRn1DQc8eAID+3gK1/p+JmGpf7QDTjsPDmrxnoGTYEJR
-rZFBkSH3VvhpFmgOqH5VpCzB6T0ZBY0v3fGgBpLfHYge71Rf93283Ybk2RC552pb+mPc9dB7
-GagmcSUh5hTkjkIBq9qWhdIq9GyyaNuGKM8BQKINNP+m9Bmy2F1BkPZmQZSpevKpfXlMKadt
-ZcPLNLzl1oS2IMAwrRcMf6FzEbCupdVtuHomEGmCjVICcp9ciCgNWJsfkv7EonZDGXvYVtgN
-9CkIp2tEhAZQ/UcEkLmYcLrjba4uYjt6mzix2TRLmTdtxIw5FmMxUacCYW5x3DwQ1a4QmKza
-Rljbd8b7brtZrUQ8FnE1CDchr7KZ2YrMoYz8lVAzNcyAsZAJzKM7G67SfhMHQvhOyXDGHI9c
-Jf1p1+vjLnorYgehHJhGrsIoYJ0mqf2Nz0qxy8t7fEqmw3WVGronViF5q2ZoP45j1rlTn+yi
-57I9JqeO929d5mvsB95qtEYEkPdJWRVChX9UU/LlkrByHvvGDqoWrtC7sg4DFdUeG2t0FO3R
-Kkdf5F2XjFbYcxlJ/So9bsmryQvZdyweSi/Y0RyEuanAVeRUS/2OidNIeIfErWeTBPAHCH4A
-AdI3eNokX08JsKQzPSEwbo0AOP4H4cB/qTbvR050VNDwnv0UyhOaJ215x1GqHG8Cgs+i9JiA
-Ny1aqO39eLxwhNcURoWSKC7b97ZjSkPthrTJr7Y7Us3ywLzsCkqOOys3Oad+MI5g9b/9UKRW
-iOG63UpFnxzJ4rVsIlVzpVYpL41VZdw34lRlpsr1qxFyIjV/bZNXVnPglW+BXN98vHS11RpT
-S5n7M3xykiZdufWwwcwZYV4cF9h2MjszF2zNeEHt8kT3Jf/N/DBPIJn1J8zubIBaTzknHLzy
-NlWCp+KkC0MfqV1cCrUceSsLGIteq1jZhJXZTEgtQlQGzO8Rb6wniHdzwHg/B8yqJwB5PQFm
-19OC2iUUOsZESBWrE5LHyCWtA+InfALsjOlcW+X0BQX+qXU+OWTu33i8TZSGqyutD5yRpGEa
-kB9cF1MhPXFODkHUVN3rgKO2oK/55SyJhhCPm25BVFzJ1Lbi3ZquwV9ougbcqfn0VfTCRqdj
-AceH8WBDtQ2VrY0dWTHoBAIImwsA4m/H1wF/Zb9A79XJLcR7NTOFsgo24XbxJsJVSGoHAxWD
-VewttO4xrT5F0heNuE+gUMC6us4tDyvYHKhLK+pjCZCeah4rZC8i8Bx9gCO8zE1W/WF32gs0
-63ozTEbkLa20yClszzeAZjs82aLxzDRlkwLcfjomGaa7VrQXn5wgTwBcvBXE8M9MsE4AsM8T
-8F0JAAEWQxr2wtUwxsROeiJOk2byYyOArDBlsVMM/20V+cLHlkLW2ygkQLBdA6APFV/+9wv8
-vPsF/oKQd9nzbz//9S/wvWW5L52Td2VrLwKKuRBXGRPARqhCs3NFflfst461g4fO01EK6URz
-AOhwauffVr8ufirf+xodx/6YGyx8y3RyLggJrC92xFwSbFZxzzC/b/5UXcRYn4lp8Ylu8aOM
-GcMixoThwQIKXrn1W1vDqCzU2KHYX0Z4rFNjX7oqayupocosrIYHTaUFwxxvY3q5d8C2slij
-Wr9JGzrrtOHa2sYAZgWimjkKIFc6E7DYUjTmyylPe6+uwHAt9wRLs1ONXCVW4cvZGaElXdBU
-Ckqn4RuMv2RB7bnE4OCAXoDBZAl0v3coZ5JLAPItFQwcrAs/AewzZpQuGzPKUizxI0BS43lW
-JORsoFJy48o7UYDrSCroTz+Xk1SCMzmT7Qb/ilcG9Xu9WpF+paDQgiKPh4ntaAZSfwUBFrQJ
-E7qY0B3H36548UiVdsMmYADEliFH8SZGKN7MbAKZkQo+MY7UTvV93VxqTtFXNzeM+0XWTfg+
-wVtmxnmVXIVc57D2BI9I4wZHpOgUgwhrXZo4NiJJ9+UqYPpsPF5xYGMBVjFK2PczKPa2fppb
-UG9DGYM2fpDY0I5HjOPcTotDse/xtKBcJwJRYWQCeDsbkDWyKCvMmVjrzvQlEm4Oxwp8dA2h
-r9fryUZUJ4eDPLIDxw2LFRfVj5HoW3W9IMUASGddQOjHauP+eLrGeRJvBBdq+s78NsFpJoTB
-ixROeiC452MVbfObxzUYyQlAckBRUqWpS0knfvObJ2wwmrC+mFu0v5idMPwdjw8ZXt9hsnrM
-qPEV+O152EH0jLw3kPUdfl7jJ4Efh5ru8iZgbMETG1tKJ4GqSx5SW8xSG4MQF1ElEq9UkeB1
-p3TDZC5hpnN7LWxfXsCjOhhu+vL848fd7vvr0+ffnr59tr0rXQowH1XAqlnhGr6h7IwHM+Z1
-jXGtsNieIrccqkxaCkBSbVam9Be1cTMj7AkYoGwPqrF9xwByM6yRK/avo5pBdf/+Ad9FJPWV
-nHgFqxVRw90nHb22zfo0XSNLyiUoUfd+FPo+CwT5CXG17E2M06iCFvQX2PW61WqZtDt2mam+
-C+6TbwDY7YKOouRi62IXcfvkPi93IpUMcdTtfXzTJ7HCluwWqlJB1h/WchJp6hOLrCR10tEw
-k+03Pn41ghNMYnKkbFHvlzXtyP3ouYJ3Bvj5+fFUZ2BFuhyYMShtc4oMRxiK+6QoG2KJo+iz
-mv4ai3XJENJpZ2Q8f2BgRYJJygxLXEsfQjPJiUykGgMnFPvkylAzaIw5OPX77p/PT9royo+f
-v319/fzzC55DdISs4y4IDaz7oVGtXVJbly/ffv559/vT98//+0QsuRiTqE8/foDd7U+Kl7I5
-Fn2yONDL/vHp96dv356/3P3x/fXt9dPrl7msKKqOMeYnYlYxHxOs6GbC1A1YG8+MI3OsOrLQ
-ZSlFus8fWvze3xDe0EVWYOw83kAwpRppLjYfdXzpn/6cTe49f+Y1MSUejQFPqV8RjxcG3HfF
-8EjPJDSenKsx8SwjsFNllb2FZUV+LFWLWkSfZ+UuOeGeOH9sig/BDLi7V/muByuRdNBuW3Ej
-GeaQPOIDRQNeogirrhvwCOr7VgXMCzmqW/PRumLvfjx/14p8VsdmH0fPcJZaEuCpZm1igMt0
-g5OG/m0aA84yDOE6tvqN+loyZy7ouo+trHUvgIWnrfkgTYkhAPjF/UkswfT/yAy+MFWRZWVO
-t1g0nhq871Czuf5fFytUbSHNEbiYCTmcnCcIhe68cUf3+BJ7Xr/L03HBAkAb4wZm9PBu7thj
-pP6QnL6Xn+fOxMoAsHHXFULqmmrdFPyfNjUiQSmiyGQOrnWHm7yzfMuhOCREd2cCWIea0V2C
-d6IzWhEbcQj1bJRJ5McHWFy/kp8s74quv5Upe99yqPSaYnEI8VUvee6uZ6Koccad5BlU6w4K
-OD03MwvyudLjkuPaOyVZlQ0OZ3o1sfBkcDYZGlAJJB+IrSyTREs0rw3WJ1yIoHJ6jceZ+mE9
-61RQa1zjTq4L//j55nQOWNTtCZvQhZ/8IkJj+z04ji6JEX7DgEFQYvTTwH2rZPX8nrjkNkyV
-DF1xnRhdxpOa97/ApmhxVPGDFXGsGjUshGxmfGz7BKuZMbZPuzxXstSv3spfvx/m4ddNFNMg
-H5oHIev8LIJogTN1n5m6z3jfNRGUuLJriPO3GVHSdiqiLfWlQBmsVMeYrcQM9zsp74+Dt9pI
-mXwcfC+SiLRs+w15oLZQ2o4MvEWJ4lCgy3u5DPTJAoF1r8ulSEOaRGsvkpl47UnVY3qkVLIq
-DrDeDCECiVAC5CYIpZqu8BJ1Q9vO8z2BqPPLgGeXhWjavIajGCm1tirAWZX0Kdbzzlt9NmW2
-L+BJKRggl5Lth+aSXLDdHETB3+DJUiJPtdyyKjMdS0ywwhrgt89W88VabNVA9Wzpi4fKH4fm
-lB6JDfUbfSnXq0DqyVfHmADV/zGXCq1WOtXzpULssIryrdWHe91W4nyFlgT4qWY2X4DGpMRP
-qG747iGTYHinrv7F+9Yb2T/USUtVBQVy7Cv6GmoJYvlnuVEgvt5rfVGJzUs4vSMWGizOna3a
-HyoxHlcjyle3fCHmum9SOP2XsxVzA5GM2NnQaNLC1hQy4oxq9pC4RDNw+pC0CQfhO9mTK4K/
-y4mlPfdqDkisjNgTMPNhS+MKudxIeiA0L4qgXYquUGYE3vCq7iYRQSahWNhd0LTZYVOKC37Y
-+1Kehw4/1SDwWInMqVBLSIVNfyyc1lVIUonqiyy/FHAUJZBDhZfsW3LadIWToLXLSR/r3i+k
-2tx1RSOVoUoO2nyQVHZweNF0Umaa2lHDTAsHmtny916KTP0QmMdjXh9PUvtlu63UGkmVp41U
-6OGk9qKHLtlfpa7Thyus4b4QILKdxHa/ktMhAo/7vYuhMjFqhvJe9RQlKkmFaHsdl9yjCKSc
-bXvtrPVhgMcb2DGG/m1eWqR5mmQyVbTkqhNRhwGf4yPimNQX8mYVcfc79UNkrKdIE2emT1Vb
-aVOtrY+CCdQI3yjiDQRNsRbUbol2DeLjuK3iaHWV2STrN/E6cpGbeLN5h9u+x9E5U+BJyxO+
-UxsR7534oOU7VlhZXqTHIXCV/gTWSq5p0cn87uSrjX0gk/DwsKnzsUjrOMAiMwn0EKdDdfDw
-oT/lh6FvuccYO4CzEibeWYmG5xbPpBB/kcXanUeWbFfB2s3h13SEg6UTn59i8phUbX8sXKXO
-88FRGjW8ysTRzw1nSSokyBVu1BzNZdmXxOShabLCkfFRrYh5K3NFWahu5ojI3rdjqo/6h03k
-OQpzqh9dVXc/7H3Pd4yJnCyLlHE0lZ6yxgv1O2sHcHYwtR/0vNgVWe0JQ2eDVFXveY6up4b/
-Ho4Di9YVgImlpN6ra3Qqx6F3lLmo82vhqI/qfuM5urzalyqxsXZMWXk2jPshvK4cM3FVHBrH
-VKX/7orD0ZG0/vtSOJp2AA/FQRBe3R98Snfe2tUM702il2zQD/6dzX+pYmJQnnLbzfUdDh/G
-cs7VBppzTOr69WJTtU1fDI7hU137sezIuROlfUeZqtQLNvE7Gb83c2nJIak/FI72BT6o3Fwx
-vEPmWn508+9MJkBnVQr9xrXG6ey7d8aaDpBxZTOrEGALSQlIf5HQoSGeWTn9IemJBwSrKlyT
-nCZ9x5qjVXUewB5h8V7ag5JF0nVItjI80Dvzik4j6R/eqQH9dzH4rv499OvYNYhVE+qV0ZG7
-ov3V6vqOJGFCOCZbQzqGhiEdK9JEjoWrZC1xMYWZrhoHh0DcF2VO9gKE693TVT94ZLtJuWrv
-zJAe2hGKGoOhVLd2tJei9mpHE7gFs/4aR6GrPdo+Clcbx3TzmA+R7zs60SPbqhNhsSmLXVeM
-533oKHbXHCsjWeP0p7O9orf2c/POZWxqckiJWBepdhje2rrwMChtYMKQ+pwY7U0pARtj9Ahw
-ovVeQ3VDNjQNu6sSYmZiugUJritVDwM5wZ6ui6p4u/bG9tIJH6VIMKpzVtVMvdPPtDnedsSG
-s/dNtA2mLxHoeOuHcnVqcrtxRTXLG+Qrf1VVJfHarodD6yc2BraalMScW9+nqSxPm8zmUpgJ
-3AVIlJjTwWlW7nMKTtrV8jrRFnsdPmxFcLpjmV/t0ZYAu7NVYif3kLN3AVPpK29l5dLlh1MJ
-7eyo9U6t3e4v1oPc9+J36uTa+mr4tLlVnOns/53EpwC6JwokmBaVyZN4pdomZQUqAa782lTN
-KVGgelh1EriYOEua4Evl6EbAiGXr7uNV6Bg8uu91zZB0D2CEWeqCZr8rjx/NOcYWcFEgc0ZA
-HqUasW+Ok+xaBtKkp2F51jOUMO0VlWqP1KrttEroHpnAUh59k05znZpKu8T+/O7swxzvmF81
-HYXv0xsXrW246dEoVG6XnEGLW+p2XVXwgxMNke/TCKk6g1Q7huyxf7EZ4QKXxv0Mbm16PLeb
-8PgUd0J8juDbuglZcyS0kUV/8jjrkRS/NHegCIFNxdHC6p/wf2quw8Bt0pEbwglNC3JVZ1Al
-MggoUbQ20OTzSwisoIp4CZ8idKkUOmmlDJuyTRWF1W2mTwT5TErHXLNj/MTqCM7safXMyFj3
-YRgLeLkWwLw6eat7T2D2lTk6MVpovz99f/r09vzd1p0nRrvO+DXG5Nt26JK6L7VhlB6HnAPc
-sOPFxs4DgsddwdwZn+riulXr0IBtqs4v1h2gSg2OSvwwwrWutoC1ymVI6oyohGizzQOt6/Qh
-LZMMn4mnD49wc4WGFphtNI/AS3r1d02MhTLS5R/qFNZufGsyY+MBa1w3j01F9NOw+U+urzQe
-8FNa4wCka05EWdqgPfU2lJ8rbBdG/b43gO4N/fP3l6cvgslHU43w0uMhJeagDRH7WExDoMqg
-7cBjFJg2b1lPweH2UKH3Mmd1HZIBNpyACaK8hgnmYwVn5ChcpQ9jdjJZd9q4ev/rWmI71SGL
-Kn8vSH4d8jrLM0feSa36dtMNjrIlWpduPFMD7zhEf4Tn3UX30dVCQ54Obr7rHRW8Sys/DkKi
-IUYSvjgSHPw4dsSxTE9jUk0J7bHIHY0H16nkNIWm27vatnBVvBrPFtPssVVuPWbq12//gAig
-Zw2DR/uUtXQCp/jM0AxGnd3csG1mf5ph1Dyd2E1va44xwpmf2rUF1Eo6xu0Ei0rEnOlDTy3J
-aSkj/jLmbcx5LER/HHth3Bv4Fs2XeVe+E+2c/iZemoqoNIhAZ2Yf8Mw+Ydpfw4F4COeMu/Bp
-Wl9bB/xOLC8qejiGF79god+JSKReiyUS8MSqmXKXd1kilEdNNlEgZDfh7sFjBMAPQ3IQZ0jG
-/6fp3OSWhzYRppYp+HtZ6mTUmDJzO18ZcKBdcso6OBbwvNBfrd4J6Sp9sb9G18ge0uDSRSzj
-TLgniWs/JmLUhXHGnezjtr2cN6XdJQC9sv8shN0EnTCZdqm79RWnJg/TVHzO6VrfiqCw22wT
-8OkGPBWWrViyG+UsTAouKJJa7WKLQ5E2ZWMviHYQ90BX+/leGKgadlctnOp6QSjEI44bMOpO
-7JzvTnJDGcoVsbnYa6nC3BmlQ1cyjb2JAl11ovSHcB1LrbJ0qwAPC9tOia3YhnKnldzQ3kSY
-YduWqLgfz6nl39x4irejFm1VgBZRVpKDJEDbBPwaaW1jkekHZskIqMnEkC70nr6IAhpvQQzQ
-F3sGXZIhPWYNT1mfnjR7Hvo+7cddha1QGvEVcB2AkHWrDcI72CnqbhA4tbNUm9MM29NZIFhm
-YM9NNkI31tS9xLC+fSOYZxRE4M5xg/PrQ41tcXXBNkJ7eNCALYxxQfNgdHrM596qLztKvIOB
-J5dq9zCuycnbDcXXRH3a+eQMsJ0t46JSJhero8LTTo3n5x7vu4dU/dfKtY9hHa7o+R2hQe1g
-9OJqAkFjl8nVmLLfFGG2Pp2bgZNCamdVbNCZuz4IpRqC4LH1126GXQ5ylnyWqko60aj1sHwg
-c9OMMKsLC9zs566j8hXeJ5HjVlUJWn9e1VNDYdBrwDsLjanNJH2ho0DjccM4j/j55e3ljy/P
-f6puCpmnv7/8IZZArak7cxymkizLvMYe2KZE2VR9Q4mLjxkuh3QdYE2YmWjTZBuuPRfxp0AU
-NUz6NkFcgACY5e+Gr8pr2pYZJY552eadNi1JCaZ3rmupPDS7YrBBVXbcyMsp7O7nD1Tf0/xx
-p1JW+O+vP97uPr1+e/v++uULzCPW6ymdeOGFeGVfwCgQwCsHq2wTRhYWex5rgMlnMgULotWl
-kZ7cjyqkLYrrmkK1vmBmafVFH4bb0AIjYv/BYNuIdSjihWgCjOrhbVz9+8fb89e731TFThV5
-97evqoa//Pvu+etvz58/P3+++2UK9Y/Xb//4pIbC31ld6yWMVdb1yvMW/NZoGGxxDjsKpkmW
-EwfiGoRZwR5MWd4Xh1pb/6MTMCNtR2QsQF8SH2g8Onmwq7h8TxZSDR38FevleZWfWSj7E/QM
-YgzoFfWHPKUX3NB/qgMH1FTRWnPgh8f1JmYd4z6vrMFbtil+KqEHOl3+NTRExJoYYA17YKb7
-cpo4arcrClbC7j5gKfbHsVKzQ5nz/lwRlSWNgeyyX0vghoGnOlLym39hjaZkjI8nahQeYPtQ
-DqPjnuJgLSMZrBKbLR/DynbLq7BL9dGtHoL5n0oU+vb0BcbiL2Z+e/r89Meba17Ligbe95x4
-w2dlzXpZm7ALKgSOJVWZ1KVqds2wPz0+jg2VjxU3JPC87cwadyjqB/b8R08xLZgIMJcU+hub
-t9/NOjp9IJpr6MdNr+jAa2adl7yVTzv0uh0Qe7hqyLJBaQYyWEGS5gfAYSmScLqXImc9rWXe
-DKAqoZ4+NYZuJtrirnr6Aa2b3hYw6/kvxDIHIjSlpKvA01NAXJJogh3IAnQt9L/ciS1g05m3
-CNKDcIOzM6sbOB57q1Zgmv9oo9zRmQZPA2zZygcKW5O/Bu2TYN0E8/zMcOaKe8KqImPnmxNO
-XcgBSMaTrsh2a1WDOeewPpbtzRWi5m/1777gKEvvAzumVFBZge8BbF9co20cr72xw64QlgIR
-Z2kTaJURwMxCjYMs9VeaOog9J9gaoUsHvtM+qn02C9uYOYOBVaJ2DzyJoRA6EQQdvRV2IaBh
-6hUUIPUBgS9AY/+RpdleE59nbjC7B9keQTVqlbMP0sj6oj71YiW2rVixYPXri2bPUSvU0c6m
-1e/3OcrOrjQEbbFmINW+nKCIQUN+6BLy1mBB/dXY78uEF3XhqLKXppS8Xxb7PRzMMuZ63VLk
-Sv1Ea4itrxrjIwOuIftE/UN9tAL1qNb+qh0PU8daZuR2tkllpmY2Eav/yFZRd/CmaXdJavzG
-IBtz8CVlHvlXNj+zpWqB9CGOhPcPah2ptFuUriEze1XQX6r3VFr7EbaiN+qIT73UD7I7Nhov
-fYF2UYtdLw1/eXn+hjVgIAHYM9+SbPELc/WDmm9SwJyIvW2G0Kob5PUw3utDLJrQRJUZUYpF
-jCXYIG6aeZdC/Ov52/P3p7fX7/Z2cmhVEV8//bdQwEHNMmEcq0Qb/IiZ4mNGnNZR7qOak9BN
-NPhIjNYr6mCPRSFjwtqKTy6RZ2I8dM2JNEFRk+MEFB528PuTikb1FiAl9ZecBSGMLGQVaS5K
-0gcbbFNxwUHHcivgVWaDWRKDtsOpFTjrOn0mqrT1g34V20z3mHg22hf1gZxhz/jVC1dS+lpr
-GBtUmRmjtGnj1vX9UiDQr7ThJs1L/Mx8wS9CRVPH4rfqp7tvio+HtZsSCqSlQE+qbL11Z6LN
-zE1OTEkPnLm6bx2x6t53RxGJXd6V+DEXxcfdYZ0KldliFQgE+qGQBeAbqS/gC+2lIrXrcamG
-gYgFomg/rleeMCoKV1Ka2AiEKlEcRUKPAGIrEuDm0BNaHWJcXXlssckcQmxdMbbOGMJY1Zf/
-eimjdk8o3+9cfJ9V8Vr4KBCPZFTJYttYqiAmOxF4v/aFZpuoyElt1kJdTJQz1nGD/TARqmq9
-cGNzSl4umiwvsY7xzNmHG5xRq63QlAurRv57dF9mQrPi2ELr3OhrL1Q5Klm0e5f2hIke0dLs
-jfMOZnGhev788jQ8//fdHy/fPr19F/QH80JJGOQybOnbMugT2w83PCZ3zhj3haaFdDyhisAH
-g7TuQjobofuonVqwldJX2+1OmCHTfr0ppYJqInYR2G8CzPtkOzoB4z7phxZcPpZFVQy/ht6i
-XNDs2WoxRym6j3TvZcQSOzAIz9iUsMYm4Yah2iTX6nbt8/z19fu/774+/fHH8+c7CGF3Ah1v
-s7b8zmucH9oYkC3QBhyO2ICEeWKhQqqVrHuA0was7GTeBaXVeN/UPHXr+NzcRlmnJeYB0SVp
-edAcrtXJVGngigNE4dScWA/wz8pbyZUtnAkbuhMa7VheeBEsYcqgDa8ZSz40bbuLo35joXn9
-SEaZQZUAfuLJVi0zmGbU3mGr5aiz6WCX9EU7lOqeKT6v0KDeNUuYF0ccZo9ZNWjP8Ro+X+Mw
-ZBjfRhuw5J//uAwLuCbSg+H5zz+evn22h4NlXRCjVCd3YmqrsvVI5F+lUd9qQ4MKCeur0MBq
-MoOK4eH9FA8/tEWqhGBeGFXvRgA3c8U++w8qxeeJTC8q+SDOtuHGqy5nhnMzIjeQNyo9r9TQ
-h6R+HIehZDC/DpqGULDFIscExhurMgEMI549X0OWdqLbJ1PpbO80DZ1wCGNeAvZ42DQDt+pn
-UEHpcmpMePBrD6LpiaAEx5HdIxS8tXuEgXnFW+YDZzQi2ipm3HL7EhrltiEWMBRCGjF8uiMv
-/qJT8jts01Bql9EceTOlNqKEzEz94fHa1I7kNIX1R0zDZmnge8tcAudt75ZQLa1exBPRSttb
-q0bMpGF9TRoEcWz1uqJvej49XtX8ul4tIuCp371fOHK3NREX7HbFG9ObFX3vH//7MukyWCeL
-KqS5K9IWRrE5+BuT9f4aS1OUiX2Jqa6pHMG7VBKBD8ym8vZfnv7nmRZ1OqwEj3Mkkemwkuig
-LTAUEp95UCJ2EuCAKdsRr9IkBDbyQKNGDsJ3xIidxQs8F+HKPAjGtEtdpONrN9HKQcROwlGy
-OMcmKCjjYakfVBrH5NxzqMuJlXAE2id8iAP5k4qlnCXSKSYPeVXUkpIlCUSPjhgDfw5E5RaH
-MKdr732Z1sL5ixKUQ+pvQ8fnv5s/PK8fGnz7ilkuB9rcXxSs42oTmHzErq3yXdMM7LX+lIXI
-kaKkPnkhYTjwVo/vbTHKL8bbLDE8mn2nHUKSpeMugVtglNZsjYHFmd6Dw8yAZfUJFgLDgTJF
-4bqGY1P2gqnAmUnSId6uw8RmUvoUfYb5yMZ47MI9B+7beJkf1H7sHNgMNxw14/0Oq9Qek+4A
-rYXBKqkTC5yj7z5CHxDSnQiqjMnJY/bRTWbDeFIdRLUMtV+/1AFY2ZPqjInG80cpnFgdQeEJ
-Poc3liCERmf4bDGCdh5A1RZnf8rL8ZCcsPbnnBCYedsQwY8xQgNrxveEYs3WJypiiWv+GLsP
-z8xsRcJOsbtix3FzeNazZ7joWyiyTegxi5/6z4QlDM8EbCTwRhzjeC8543QhuOWru62QjNon
-RNKXQd2uw42Qs3lD2kxBIqz/iSJrOzKOCtgKqRpC+CBzrl3tdjalBsfaC4Vm1MRWqE0g/FDI
-HogNPsVDhNpHCUmpIgVrISWzk5JiTJupjd259JgwK+hamOBm+/JCrxzCVSBUczeomRh9zfFS
-0UcL6qcS0zMOTfpfx5v/kPrpDfxXCa/EwQZFD1aRAqL3cMPXTjyW8AoMurqI0EVELmLrIAI5
-j61PnkgsxLC5eg4icBFrNyFmrojIdxAbV1IbqUr6dBOJlcgOVxd8uLZC8Kwn5xE32BNTn8za
-JPTVMuKEohbhvdpm72xiv/HUhmMvE7G/P0hMGGzC3iZmq1NiyfaD2tqdBlhTbfJQhl5MH+cu
-hL8SCSXLJCIsNO2kyVzbzLE4Rl4gVH6xq5JcyFfhLXaruuBwWkyH/UIN2CvvjH5I10JJ1Ure
-eb7UG8qizpNDLhB6HhPaXBNbKakhVRO50LOA8D05qbXvC+XVhCPztR85MvcjIXNteVYasUBE
-q0jIRDOeMPVoIhLmPSC2Qmvos5yN9IWKicRhqIlAzjyKpMbVRCjUiSbcxZLasErbQJzAh5SY
-GVzC5/Xe93ZV6uqlatBehX5dVvhpyg2VJkqFymGl/lFthO9VqNBoZRWLucVibrGYmzQEy0oc
-HdVW6ujVVsxN7cEDobo1sZaGmCaEIrZpvAmkAQPE2heKXw+pOf0q+oE+VJ74dFBjQCg1EBup
-URShtoLC1wOxXQnfWfdJIM1W+g5ji++ZK/YEeAonwyA6+FIJ1fQ7pvt9K8QpuiD0pRFRVr7a
-ZQiSi54gxQ5niJvBPzFIEEtT5TRbSUMwufqrjTTvmmEudVxg1mtJVgIJPoqFwiu5d632b0Ir
-KiYMoo0wZZ3SbLtaCbkA4UvEYxl5Eg62/MSVtj8OUnUpWGozBQd/inAqhebP0RZxqMq9TSCM
-nVzJKuuVMDYU4XsOIroQ/99L7lWfrjfVO4w0oRhuF0jTfp8ew0hb3qjEuVrz0pSgiUDo6v0w
-9GLX66sqkpZWtRx4fpzF8uah91ZSY2rXFb4cYxNvJElZ1WosdYCiToieJsaldUrhgTj6h3Qj
-jMXhWKXSSjxUrSdNgBoXeoXGpUFYtWuprwAulfJcJFEcCQLteQCX8hIe+9Le6hIHm00gSO1A
-xJ6wKQFi6yR8FyFUhsaFbmFwmBaori7iSzX7DcKkbqiolj9IjYGjsHUxTC5S7A4T48RIMqyr
-xC2FAdRASoaip5YtZy6v8u6Q12AwbzoiH7Xy21j1v654YCaGzTB+czFjl67QfmnGoStaId8s
-N680D81ZlS9vx0uhvbL9n7t3Au6TojP2y+5eftx9e327+/H89n4UsKdoHC/9x1Gmi52ybFJY
-R3E8FouWyf5I/nECDW+5RvqgC9O34ss8K+stkFGFt7pElp/3Xf7R3Vfy6mRMON4obf7UigDv
-Zi1wVlSwGa3Hb8N9myedDc/vgwQmFcMDqrpxYFP3RXd/aZpMqItmvorF6PQ00A4NBnZ9hOuz
-ryRti7uiHoL16noHrzO/SvYSwRUhi7j7/vr0+dPrV3ek6RmhXZLpKlAg0koJtzyn4fnPpx93
-xbcfb99/ftUPSZxZDoU2tGt3DqH94QmZUN3ahaQMC5+SdckmtCq1f/r64+e3f7nLaQymCOVU
-46gR+t6iFz3kVatGS0I06dANGivIx59PX1QbvdNIOukBZuRbgo9Xfxtt7GIsyrIWYxvNmRH2
-0HaB6+aSPDTYBvZCGXtAo76MzGuYgzMh1Kzaqb/z8vT26ffPr/9yutHtm/0glJLAY9vl8AqJ
-lGo697OjTrasZSIKXISUlFHfeR8Gk11HJXAVQ0r8792OGOwEdG+6So1jLkplIlwJxGTDzCYe
-i0IbkLaZ2a60zSS92u1HUjbJsPW6CjY/DrJPqq1UDIUnYbYWmOkJscDsh0s2rDwpqz5I/bXI
-ZBcBNA+CBUI/U5V6wrmoU8nWVFeHQ+TFUpFO9VWKMduUEpp/uiAU0lIScQBXrt0g9Zv6lG7F
-FjD6piKx8cUywCGbXDXLSisY3KquPnhNQtUCRv6FNJorGJYjQfui28MaIH016AdLpQftWgHX
-cyNJ3Lx9Plx3O6k0mpTwrEiG/F7qCIs5O5ubdJnFgVAm/UbqPWol6JOe150Bu8eE4NPTLzuV
-ZZoXMhgyz5MHIDymEYpaFtVG7VtZG6UhNDyGiihYrfJ+R1Gjocq+x6gRUlBJDms9ChioBRAO
-auV5N8qVVhS3WQUxK291aNV6S3tHC9/FPqw6R+trxEHwveizWjlVJa7BWY3zH789/Xj+fFvi
-0qfvn9HKBgblU2EmzwbzaH1WZ/yLZFQIkgxdVtvvz28vX59ff77dHV7VyvrtlWgw2gsoyPZ4
-MyQFwVuWumlaYZ/yV9G0KUBBOKAF0an/dSiWWA8Ox5q+L3bE8iI2cgJBemphBKAdbF2I3QdI
-Ki2OjdY5EpKcWZbOOtCatruuyA5WBLCh926KcwBW3qxo3ok20wwtSmKHETBjOg8KqM3/ysnR
-QCJHtTnUYEuEtABmgaxa1qj5tLRwpLHwEtxjg1QavhWfEdzcAQ59qJJ0TKvawdqfSx7Ma4Nz
-//z57dPby+u3yTKisCHbZ0yyBsRWT9NoH2zwadaMET1ObTaAv1PQIZPBjzcrKTdtrXtf5tcU
-j4AbdSxTfCkNhHZ5vsJniRq1Hz3oVJji1Q1jfsihMozBIBF0hqa2UDBhmQUEkj9tuGF2DhNu
-Z8Cf0i1gLIH4rky3kVaCuwog1oCD6NPGxSrAhFsF5koMMxYJ6eLbyQkjGnUaI89QAJk2vSU1
-MK0rK/WCK+8UE2h/wUzYdW47pjSwr3buvYUfi2it1mD6lHgiwvDKiOMANrP6Ig0opkpBHtGA
-iFngBxMAEJt/kIV+kZNWTUY8biiCv8kBzLh4W0lgKIARHzO2ntuEsjc5NxQ/krmh20BA47WN
-xtuVnRko8grgVgqJleQ0yB6samze+d7g/PHKXELpgWRD0usNwGGfQRFbW3LxwkU61ILS+X16
-1CPMnsaLHcWEp++6VMvDGQwytTiN8adTGryPV6w6p10myxymPauYfbHeRNxoviaqcOUJEKsA
-jd8/xKoD+jx0z77T6JezCkh219CqwGQHHh1ksBlYY89Px8zR3FC9fPr++vzl+dPb99dvL59+
-3Gn+rvj29vz9n0/i4REEYOb/NWRNTVyRHzDiWtiahPhzO4NRvdcplbLifZM9nwPlS2+FlUWN
-oibxS2t5vdSpW0/jbuh2JaBExXMuH3skiGDyTBAlwj/SenO3oOTJHUJ9GbUXh4WxGk0xanbF
-93rzyYnd62cmOZGZe3b2Z0e4lJ6/CQSirIKQj1/p6aLG+UNHPYfRB71aOOJPShFo18hMyDIK
-fr6nP6QKySXtjPF20c8QNwIWW9iar2n8ovCG2aWfcKvw/FLxholpEMslZra4rGNeCGPvv2yZ
-kaobpQliW9wcfjLnebZqy829JTt1uBH74goOkZpyIKqItwBg4f1kvCT0J1LAWxi4h9PXcO+G
-UvLDgYw/QlEhhFERXvJvHGxJYjz6KUV3K4jLwgD3GMTUCfFvjRizUxGpHfUAhJhpEJRZ473H
-qzUJnjSJQdj+ijJ4l4UYtrW5MfYOCXH2PulGMjEHdSy2ZaBMKJaP7wYoEznj4J0BYXxPrH7N
-iHW3T+owCOUyUBEDeYjVEr2bOYeBWAoj8EtM0ZfbYCUWQlGRv/HE7qsm90iucljvN2IRNSNW
-rH4f40iNLrmUkSvPWo8pFYujrjRLkIuKNpFE2RsPyoWxKxrbmRAujtZiQTQVOWNt5QnK2pkw
-Sh4fmtqInd3a1XBKrGB738W5rSu3DVUfRdy0UXYsQvPTARcVb+VU1V5MHrLA+HJyionllmE7
-uxvDpVvE7AoH4ZgB7U0c4vanx9yxOLTnOF7JPUpT8idpaitT+On9DV7u9yXS2tQhim7tEME3
-eIhi+8Yb0/tVm6zElgWqlxu9D6t4E4ktCPu5QI5k7QgRpwWqc5fvd6e9HEBLaOO5wnt/xKu0
-V5E4L4MyrhcFYr727olyfiD3BLNLkvu9vdvinDzi7Z0X4zz3N9C9mcWJncJwa3c5HUKhvTWz
-OFc52ZYLcfyZKBJ0qSrjjeAbB8qEYmJ8A0IYsi1IrZMRQOpmKPbEzhKgLTZK2fF4CqjwFFUW
-2FDErt1rRD/B90msLNfO1rG3hW6s84UguJoxHHgk4h/Ocjp9Uz/IRFI/NDJzTLpWZCq19bjf
-ZSJ3reQ4hXmvyQhdHeDnqydYMhSqDasG2+JVaeQ1/W27aTH52BkT99vmC6iLAxUOnHsWtNDc
-8y/EZA41OmomEJqSu22C5srBS2JA65e4qIe5sMuT6hH3KYVeinrX1JlVtOLQdG15OlifcTgl
-+NhAQcOgArHo9H24rqYD/23VGmBHG6qJQw+DqX5oYdAHbRB6mY1Cr7TLk4YCFpGuMxvxJgGN
-9TxWBcZ+05Vg8PoCQx24qKCtBLo7FNHe+ATIOCGvimHgI4uVRCt3EQTb+dA6J9oIh7GPfbta
-/ArGLe8+vX5/ts1dm1hpUumrqyUyYVVHKZvDOJxdAUCnZYAPcYbokkz7lBfJPutcFMyv71B4
-Kp2m4jHvOtiq1R+sCMaeOvE7yJkxO6Nxci6yHCa9M4fO69JX5dqBa8UEj88bzbEkO/PzHkOY
-s56qqEFSUy2M5zgTAu62+/u8zMl0YbjhVBOvi1CwKq989R8rODD6CnssVX5pSa7kDHupiSEY
-nYOSyEDdVEAzuBTnnwPEudLK3Y4oUNkFVog679iSCUhFFk1AamzGZwBVF8vXi46YXFVdJ+0A
-S6cXYSp7qBO4O9V13dNoxglan2tD6Wp26Hv1P1bKU5mzi3s9sOybet2pTqBEQUfj5fm3T09f
-bd+HENQ0J2sWRqhe3Z6GMT+TloVAh944U0NQFRJ3E7o4w3kV4XMmHbUk1pCX1MZdXn+U8BQ8
-s4pEW2DD6zciG9Ke7EBulOrTVS8R4PGwLcR8PuSgmvpBpEp/tQp3aSaR9ypJbCIcMU1d8Poz
-TJV0YvGqbguWEsQ49SVeiQVvziF+RU0I/LqVEaMYp01SH59vEGYT8LZHlCc2Up+Tl1SIqLcq
-J/zcjHPix6plvLjunIzYfPC/cCX2RkPJBdRU6KYiNyV/FVCRMy8vdFTGx62jFECkDiZwVN9w
-v/LEPqEYj9iQxpQa4LFcf6dayYFiXx4iTxybQ2PcBQrEqSUCL6LOcRiIXe+crog1V8SosVdJ
-xLXojEvYQhy1j2nAJ7P2kloAX3ZnWJxMp9lWzWTsIx67gLr1MRPq/SXfWaXvfR8fxJo0FTGc
-55Ug+fb05fVfd8NZm520FoRp3T93irUkiQnmlq4pKcgxCwXVQVw5Gf6YqRBCqc9FX9iCh+6F
-0cp6O0tYDh+azQrPWRilzuQIUzYJ2Q7yaLrCVyPxO2dq+JfPL/96eXv68hc1nZxW5D0tRmVp
-zlCdVYnp1Q+IBw0CuyOMSdknLk5ozKGKyENyjIppTZRJStdQ9hdVo0Ue3CYTwMfTAhe7QGWB
-T+hmKiHXiCiCFlSkLGbKOMZ8cIcQclPUaiNleKqGkahGzER6FT8UnqVcpfTVduds4+d2s8Im
-JzDuC+kc2rjt7228bs5qIh3p2J9JvUsX8GwYlOhzsommVVs7T2iT/Xa1EkprcOtcZabbdDiv
-Q19gsotP1AWWylViV3d4GAex1Eokkppq3xX4wm8p3KMSajdCreTpsS76xFVrZwGDD/UcFRBI
-eP3Q58J3J6cokjoVlHUllDXNIz8Qwueph03pLL1EyedC85VV7odSttW19Dyv39tMN5R+fL0K
-fUT9298Lg+wx84iJZcB1Bxx3p+yAN2Q3JsPHPH3Vmww6Nl52fupPisStPctwVppykt70NrSz
-+i+Yy/72RGb+v78376uNcmxP1gYV5/2JkibYiRLm6onRc7/RSHv955v2dP35+Z8v354/331/
-+vzyKhdU96Si61vUPIAdk/S+21Os6gs/vFmph/SOWVXcpXk6O5ZlKbenss9jODuhKXVJUffH
-JGsulDNbW30gwQ6azBmTyuOndMxkKqLKH/jxgtoMlE1EjdENiX/1PNDYtBaxSxhjky8zGllr
-N2DRVSzdL0+L8OUoZ3EeLJEQMNUN2y5PkyHPxqJJh9ISv3QoqXfsd2Kqx/xanKrJGLKDZB4u
-p6q82udUQ+BpsdP5yb/8/u/fvr98fufL06tnVSVgTvEkJjrs5rhQ+0EZU+t7VPiQGCEhsCOL
-WChP7CqPInalGhi7Aqv5IlYYnRo3j47VSh2sQqt/6RDvUFWbW6d6uyFes8lcQfZc0yfJxgus
-dCdY/MyZs2XJmRG+cqZkCVyz9sBKm51qTNqjkEANDgcSa1rRc/N543mrEZ9f32AJG5s+Y7Wl
-FxjhZFBaeebAhQgnfO0xcAuPwt5Zd1orOcZKq5LaYw8NEzaySn0hEyjaweMA1gwFH7q9dCyq
-CYodm7bNWU2D8xwWNcv4ozKMwtphBgHl+6oA/w4s9Xw4tfBoVOhoRXsKVEPgOlAL6eINaHoT
-ZU2cabLPxzQtrD5dVe10PcGZ83JxYSfGfEgTeEzVMtnZWzTEDhY7v98+t8VebQD6ljhbE8Kk
-STucOqsMWRWt15H60sz60qwKwtDFROFYEM/sPMtd7iqW9rE8nuHN47nbWw12o61Z4QiwXe0W
-RNw13lINRFC+BdGeF//kqNaSUW3cW/2lD1Ig7BoxuiRZWlnLz/wqOs3RB8C7cd6JbtjYp4la
-FtIOq58i2vZxtdScMc9PM5sn26o/1bNFkPVYWB93Y1zHK2E77ovKXgAUrgZsAZ3YkaqON5bF
-YHXNOVcd4L1CteYeR+7gSbUONkp4bvcWxX1PYXQcWqtPTMx5sL5T286BgSoS58KqMPM6kTgV
-poTVWwZwRY+ua2ESWy7WHHNYk1lTEZgcOmeNhS8WAj4IwsNCnlt7rM1clVni8S0e6E/YU+ly
-Lwj6Cl2Z2FPk3DehIx18S4bCtFRwzFf2CSMYecjhZq+zik4HxXiwW6pXLbKDKU4ijmdbTDKw
-mW7sg1Kgs7wcxHiaGCvxExfa9AJp0rTH/Dz37LPWkn9n7oPd2Eu01PrqmTr3QoqzKaruYJ8D
-wmJhtbtB5alZT8LnvD5ZdahjZZWUh91+MKAIqgaUdsnhGE1nYX47F+fC6pQapNtUTMCFcJaf
-+1+jtZWBzy6P3VKKvqWO4X6YTGxa6eCvRJv5gbE0IsF+SNJQDhKl+u726BIS0x1ebfdlDlZF
-F2usodgsKGb81dfpGVdx+3mb0Jud5fPnu6pKfwHjAsLZA5wLAUUPhoyWyHJ7z/AhT8INUdY0
-SiXFesOv0DhW+KmF3WLz2y+OLVXAiTlZjN2SjVihqi7mV5tZv+t4VNVfC/2XleYx6e5FkF1V
-3edE+DfnOXCeW7PbvCrZEuXfWzXjvSCBx+tAjNiZQqjt42YVHe04+ygmL0cMLLx5M4x5Over
-0woc8PGfd/tqUrq4+1s/3GkrJ3+/9a1bUjEWNtR0Y5iiT+zOvFAcgm3BwMFu6IjuGEZHfSwW
-rP4pkVZdTPAc6RMbCo9wsG0NEI1OUcIVJQ95Ra5mMTpFWX+Sya7ZWS3S771oT7TUEdzZTZt3
-nZJAUgvvTr1Vixp0fMbw0B4bLPgSeIp0U++hbHVSPa/LP/4ab8IVS/ixKYeusOaBCTYJ+6od
-2Fy2f/n+fAEHeX8r8jy/84Lt+u+Ow4990eUZvx+aQHPpfKNm/TMQ8semBeWjxcIdWPEDeyCm
-p7/+AdZBrBNsOINbe5ZQPZy5blT60HZ5D+J/V10SS27fnfY+O2+44cJJuMaVMNm0fEXQjKTo
-hdJzKYj5TqUydqPNj2PcjCzT6AMv7JydwOMZtZ5eqoqkVjMzadUb3qUS6pA7taad2eygU7Wn
-b59evnx5+v7vWZvs7m9vP7+pf//r7sfztx+v8MeL/0n9+uPlv+7++f3129vzt88//s6VzkAn
-sTuPyWlo+rwk2k7T4ewwJHhGmXYp3fRSdnH5m3/79PpZ5//5ef5rKokq7Oe7VzAveff785c/
-1D+ffn/5A3qmuXj/CXcZt1h/fH/99Pxjifj15U8yYub+yp5XT3CWbNaBtctT8DZe27ffWeJt
-txt7MORJtPZCQexRuG8lU/VtsLbv1tM+CFb2YXQfBmtL1wPQMvBtwbg8B/4qKVI/sM5hTqr0
-wdr61ksVEx8CNxT7xJj6Vutv+qq1D5lBq3837EfD6Wbqsn5pJN4aahhExqWzDnp++fz86gyc
-ZGfwbcPzNLB1BATwOrZKCHC0sg6gJ1iSWYGK7eqaYCnGbog9q8oUGFrTgAIjC7zvV8R3+NRZ
-yjhSZYwsIsnC2O5b2WW78eTTfs8KbGC7O8O7zM3aqtoZFyX8cxt6a2GZUHBoDyTQWFjZw+7i
-x3YbDZct8f2GUKsOAbW/89xeA+OLB3U3mCueyFQi9NKNZ492fZ20Zqk9f3snDbtVNRxbo073
-6Y3c1e0xCnBgN5OGtyIcetZWfoLlEbAN4q01jyT3cSx0mmMf+7er4fTp6/P3p2lGd2pFKXmk
-hkPO0qqfqkjaVmLAkGdozZKAbqye05z9yJ7FAQ2tcQqo3SDNORRTUKgc1mrp5kxdBd3C2u0M
-6FZId+OHVrsplDzgXlCxvBsxt81GCrsVy+sFsV3t5z6KfKvaq2FbrexFFWDP7oAKbsmzvQUe
-VisR9jwp7fNKTPsslKTvVsGqTQPrM2sl3K88karCqrGv4/vwPkrsEz5ArQGo0HWeHuzFM7wP
-d4l9z6CHAEfzIc7vrXbow3QTVMu+dv/l6cfvzkGXtV4UWqUD2zG2PiUYHdBSLJrqXr4qiet/
-nmHDvAhmVNBoM9UJA8+qF0PESzm1JPeLSVVtRv74rsQ4sFAopgoywyb0j8v2pc+6Oy3D8vBw
-qgQ+esyUaYTglx+fnpX8++359ecPLlXyeWwT2MtNFfrEfdc07dxk2n6SXX+CRVT1DT9eP42f
-zCRoJO5ZfEXEPDvalsWXCyA9logDEspRR2uEo+OEcueVL3N6EnNRdMYh1JZMO5TaOKjuQ7iu
-5eIv67ip27Z4t80OvRdFi6qW2fBAHHv7nF4zP45X8OaRngyazcv82MksYT9/vL1+ffl/z6CK
-YDZLfDekw6vtWNUS80qIgy1D7BPjQZSN/e17JLGqZaWLrX4wdhtjT2mE1AdtrpiadMSs+oL0
-RcINPrXBybjI8ZWaC5ycj+VkxnmBoywfB49o4WLuyp6aUC4kOs+UWzu56lqqiNiTps1urJ3y
-xKbrdR+vXDUA01hkaUDhPuA5PmafrsiKaHH+O5yjOFOOjpi5u4b2qRLaXLUXx10PuuOOGhpO
-ydbZ7frC90JHdy2GrRc4umSnhFVXi1zLYOVh1UfStyov81QVrR2VoPmd+po1m0d+PN9l593d
-fj5amdcD/YL2x5vajjx9/3z3tx9Pb2qhenl7/vvtFIYe//XDbhVvkQA7gZGl5wyvdbarPwWQ
-K0kpMFIbRDtoRBYYrSGkujMe6BqL46wPjGMt6aM+Pf325fnu/96pyVit8W/fX0Bt1vF5WXdl
-KuvzXJf6GdPhgtaPmOJTVcfxeuNL4FI8Bf2j/0/qWu311pZGmQaxcQ6dwxB4LNPHUrXI/6fs
-Wpojt5H0X9Fpd+YwO3wUq8iN8AFFsqpo8SWCVaL6wmjbst0RGsmhbu/s/PvNBPhCIqGePdit
-+j4AxCORSAAJYPuI2wrS1osuvrFQNDdUsPVOnNvZ49o5sCVCNSknEZ5Vv7EXh3ale8ZVInPQ
-gHqL33LpDwmNP3XBzLeyqyldtfZXIf2Bhhe2bOvoew48cM1FKwIkh0pxL2FoIOFArK38V8d4
-L+indX2pAXkRsf7uL/+OxMs2Nu6YW7DBKkhgHTvRYMDIU0i9BLuBdJ8S5qsx9b5X5diRT9dD
-b4sdiHzEiHwYkUadz+0ceTi14APCLNpaaGKLly4B6TjqMAbJWJ6yKjPcWxIEVmPgdQy686ln
-pDoEQY9faDBgQZyvMGqN5h9PI4wn4iipz0/g4fKGtK0++2NFmAzgrZSmk352yif275h2DF3L
-ASs9VDdq/XSYPyp6Cd+s396//X4nYCL05efPr3+/f3t//vx616/95e+pGjWy/ubMGYhl4NET
-VE0XmU8tzqBPG+CYwqSXqsjynPVhSBOd0IhFtxdDaTgwziYuXdIjOlpc4ygIOGy0Nvgm/LYr
-mYT9Re8UMvv3FU9C2w86VMzru8CTxifM4fM//l/f7VO8I3KZsM3nBDdRYQb98q9p0vX3tizN
-+May4Dqi4LE8jyrSDZWsE8o8vfsZsvb+9jIvk9z9CjNxZRdY5kiYDE8/khauj5eACkN9bGl9
-Kow0MF7yuKOSpEAaW4OkM+GMMaTyJuNzackmgHSIE/0RbDWqnaDX7vcRMf6KAaatERFCZasH
-loSoE20kU5emu8qQ9Awh06anZ/suean9SbS5rHel17uz/5LXkRcE/l/nJnt5ZtZMZuXmWXZQ
-uwha//b28vXuG674/8/zy9sfd6/P/3SaodeqetLqU8U9v3/+43e82ts+2HIWo+i2y+QaUI5h
-5/a6vSUEvTWL9nqjtzdnWxdf+KGdbLOt1yiiWQtqYLBfklAcbgePVcWhMi9P6ApncveVxLo3
-ffsn/HRkqZO6kYZ5D3Mlm1ve6d13f3WNQBoPWY8wU8oYFwHk+57k/ZxXo3pIxZFHF3cj6cj0
-ki/HtnHvedqsuXuzNpg3sdD3Kr2A0bE3U9M+WaVxmmXG66FVay/JdgPSIrerQUh2IstpXWpM
-XbHc9qR8osrOW1fOFRupwExwWtyz+AfJj2d8Bm31MZhf9rz7i95/T9/aed/9r/Dj9dcvv/35
-/hldSMxqhNRGobxLJ13/9Y+Xz/+6y19/+/L6/L2I25MKKwaCtsWVhN/nXZ2XOoLOapXdlV9+
-ekeXh/e3P7/B17brgBfjqR31Uz0JLC2Q7Tp1c73lYtMGEzA5g0QsPD8z9UPI01V1Zb8y4j1i
-ZXG+kEzcoIOYyDUrSYXRjFdncTbegUcwLTrQ1eNDTjOgfS8flecmw5S3TJrww0AycGzSCwmD
-V4ujUxgV4VZAC1I5aT+/Pr+QnqkC4pu0I7rYgSIqcyYlJncap8u1K1PgqYV7+CcJjUF7DVDX
-TQkKuPUOyaftfT5rkB+zYix7MEOq3DNXEzc5mPxsyyzxdmyIEsjzLtreBrySTVfIXHnoNT3e
-n56wGYH/C7wIJx1vt8H3Tl64q/nsdEK2x7zrnmDI6ZsrNFja5XnNB33K8MhoV+1jS4zMwsl9
-Hl4EW42bIPvwR2/w2GJuQsVC8N/Ki/tm3IWPt5N/ZgOouyPLB9/zO18OxlFzGkh6u7D3y9wR
-qOg7vFYItMThECdk8LVOvi3xFsYQ69W6Ob5/+eW3ZyLh+kI8+Jioh4NxqFN116yWjG1wrY7K
-9MgE0ZrYEca8JldeKm2QnwX68UsoVdYOeLHzOR+PceSBhXJ6NAPj+NX2dbjbW22Bo9XYynhP
-uw0MlPBfERs3b2uiSMw7KyYwCMm42l+KGp+kTvchFAQmwZRv5KU4isk7xZi6IwsifWp3Pvk8
-jseWQwQh6IMcBh2G7niGK4VqGk6DTuAoLkfuSzNdBPIj2vrWLcwIkO4swBFXdGl7JlpZPXQO
-FVyRsNUgLWB79k9Xfv1kWLYTMFm3x8JmQAUnwXZmtUbxgjh86G2my1th2IAzAT3VuA1+gx/C
-iHSFtvSpLPS33NJxJfaYJxIuOxFB7vztFtM07tJRkABS3ASvQkDf53WvDO7x4Vp096TmywL9
-7+tMeeNqB4D3z/94vvvpz19/Bds2o34A22aaTXFlmG9gmExVWVls3fxPR30/8ZMBZVsbDX6r
-J7ZvuWQu+8RET+ipXJad4Tk6EWnTPkFWhEUUFdTMsSzMKPJJ8mkhwaaFBJ/WCWZjxbkGLZkV
-oiYF6i8rvrw+igz8o4ntM6PbEPCZvsyZQKQUhpMzVmp+gvFYXQJhFgD0O7S2mT/bOAQUr3ue
-Jkdm0mgtYfGhM5xZcfn98/sv+u4QOsXG1lCWopFgWwX0NzTLqcHTwoDWVkuXrTS9DhF8AgPE
-XFfYopaUCRhYoErNlItK9iZyRUE0kKbFgbDLzTJIPyOvBaKw34qsEAxkPvqzwsQRfCX4JuqK
-m7AAK20F2ikrmE+3MPwtUBYEmC4DA4FSLcu8BoOOJZ9kXzxcc447cyDN+pyOuOVml6IT3gWy
-S69hRwVq0q4c0T8ZCniBHAmJ/on+HlMrCN5Sm3dgT5dpZnODBfHfkiH5ack2HQgWyKqdCRZp
-mpcmUUj6ewxJ51LY9nqq09EclPRv6MaoYPHwTnqSFosvgVQtjE1HnDyZ1VjnDSjbwszz/VNn
-6rTQGD0ngCmTgmkN3Joma7avLCHWg7lp1nIPRnhOtIVx1k3pLTMOTHArOv5NGIy6ohrzmzqo
-tuh7g0yvsm8qXuX3FVHrCOgSk2Y030NUiEyvpL6MST/2/2MF4tjvItLg56bMTsV22UO1oXrn
-y+y3OU51mor0/CNUK1GRE6buKjkTMZ452mTHrhGZvOQ56RdkVo66Gi+OsJF5TZMxLzRfX3Et
-Uq7LLGtMdcVxwUXKpORRRr8Q7uSKmeKV39B3iu6BLi6ZqWxv+DYY0Jypg9ImPLm9YQqxW0JY
-VOSmdLoyczHGlNNgQO7HE55MVA9b3//g8SmXed6O4tRDKCwYWO4yX27/wXCno17wUc750wkh
-++3MJdFpTguDugj3nKTMAegU0A7QZn4gPaIOdZjJiMGXxW5cBay8o1bXAMtF90wobevzojBx
-MBNLKyetDuGIdIj2kbh3ByvP7QV0Ncz5y6MXRg8eV3FkYSQ83A7ZI9FF25B9i6ejYIbW93n6
-3WC7sOpz4Q6Gj5DUZezt4kvpEwUoccf7YGLVYet6s4y7OFDbagJBfdm5fvHDZMrdyfOCXdBv
-16QUUUmYf55P2407hfe3MPIebiaqp7GDDYbbhRAE+6wJdpWJ3c7nYBcGYmfC9mUwqoC4iFaR
-VOnKImKikuE+OZ23GxpTyWCYuT/REl+GONy61iHW4DH/YPu+4lrbfKWu/GQ+sQ1FHi5dGeN1
-qxWm7w+aTMRKg/Uq2+YrVZzs/PGxzDOOpk8BrYz1vL1BxcbF94Q6sJT92vYml9aTY5sk6UOV
-RuXuQ49tMkUlLNPGxvOFBmM86LfJH65BdOyH7Me5Vs5+YGpTLPIO5kaajPsrNtm7QXscypbj
-jtne9/jvdOmQ1jVHTc+urhTMwXEwpweZ+Rn3NCRMO9uvX99eYGI9LQJPB6/ZDWX4UzZbewhA
-+AuU/AlqM8XHRMzXZXgezKpP+fZiEj4U5rmQPZjI80WFx6dlt2r5hN4St3JmwGjzXKta/hB7
-PN81j/KHYNkgO4GxDDbU6YQegTRlhoRc9Xo6UlSie/o4bNf0ZJsaRt/G/DWWRX2FSapxd8WG
-gBrbuvptmLS89sF2NVo21zojP8dG0mv2THzECz9LUWzUnDRSqbORPBGMUJtWFjDmZWaDRZ4m
-25NbiGeVyOszTlasdC6PWd6akMwfLLWOeCceq2JrLSKI00F1D0BzOuGOv8n+aMjsjEw35Rsu
-DVLXEboamGBVDGjybc31uaguEC9NhNIyJFOzl44BXS+7qAyJAed+GUw4AqPatOUxwrTLfMNH
-fRym0+OJpHTLu2Mjc2uubXJF3ZM6JDOUBZoj2eUeuqu1cKK+UoFuo4WH9r/izYU2rPu2I7Td
-HBhjql5bu8wBUKRgbm1M17ecK4YlKEjB9NaOU7XXneePV9GRTzRtGY7G+uoWxQRJbQ12aJEm
-h5HcjqYahF4Io0C7+gQ+HEY+wxaib8WNQnLrlKLrQD0AdvX30dbrZK0FIhogr5Wog2HHFKpt
-HvHABQyHH5JLy3qm0JH8i8yPt4//6rJLY5VKY0W0i0g+QasXQ8thauGbqDRxjWOfJgtYwGAh
-xR4DAnzqwzAg+vTYG87aC6ScodKyoUovFZ6/NcMVpi5CJaI3PIHVzIikwkl8uQti38KM55hW
-DOZYjzChbCkXRWFEthsV0Q8nkrdMdKWgVQha1sJK8WQH1LF3TOwdF5uAMFoLghQEyNNLExLt
-VtRZcW44jJZXo9mPfNiBD0xg0Ei+d++zoK1LJoKmUUs/PHgcSBOWfhLGNrZnMXpN0IYhV4Mh
-c6piqikUNN+Yhpt+RPletGxpp4e31//8hv61vz1/Q+/Lz7/8cvfTn19evv3ty+vdr1/e/4Hb
-TdoBF6Ot52VJeqRbgz3iGxP/BaTigrdRlvHg8ShJ9r7pzn5A0y2bkghYOex3+11uGQO57Lsm
-5FGu2sGesQaiugoioh7adLiQAbgr2r7IqFFW5WFgQcmegSISTnkL3YojLZO1eq4HJREHVLdM
-IKeE1UJzI4lk3YYgILl4qk5aDyrZuWR/U/6GVBoEFTeh29OGGYMWYbC6FcClg8boMedirZwq
-4w8+DaDu/LbeE5pZZRfAp/EG+3sXrRcJXawszpVgC6r5G1WEK2UuT5oc3dglLL7IJ6gIbHgY
-z+gIa7JUJilrj0WbEOp8pbtCzHvzZ9Zablqa6Dumik66y+2YkEdn0+YDvUt++R62N9gAdC6u
-evUgsL9YA7yk8wXRH8I08EMeHXvR4Y3zx6LH2/F+2OEhjm1A4wGUCaBuRTN8FT7V9upVGVGI
-BwfM6TWVlPSDoLTxPd5WZ8OX4iToJPOYZqZfwBwYnVP2Ntw2GQteGLgHsTYXh2fmJsBuJsoN
-8/xo5XtG7TbMrAlzM2x96tQYJM0N4iXFxvDyURWRH5uj49v4YJRxDspgeyGNF+QMsmr6q03Z
-7QCzxpR2wtvQgmmbk/y3mRKs9EREukktQM8djlTxIDNvtn+wVKHui5iWG5ikramiBkcxKK86
-NynbrLAzv/FkZ4j0E5i0h8BPqiHBZXMY8re34JGgXY8XCDFh9G3hVlUtMFSuk5LyQ9q4RtmO
-+TFNqcTXjKiSc+Dp2+KsOdocH9jEozPKbRJD9J0U1NZC5q6Tiur5lbRa+phWAbQQT6qPPZ1r
-KpF5m4Sgp62GydV1khSdH01gP7Elq1TQYS/LQSXUyiXPjrpyujNMjz2l052IaEGf3p+fv/78
-+eX5Lm2vyyUD06GqNeh02ycT5b9NU0uqdapyFLJj+i8yUjAdTRHSRfAdDKmcTQ2PTeGylSWk
-Mwkax3gjQunWam4wUk3Tgjsp+5f/qoa7n94+v//CVQEmlsvYmvnPnDz3ZWSNUwvrLrDQt950
-RLrR7fdS7AN85IaKwY+fdoedZ4vdin8UZ3woxvK4pzllBRk3ZSflQXvYQlXpkcrwhoO+6eC0
-87NtgiwB1B/9Y7nz6KKMGUQccwy2NzY8Mdh90d0/Ng0z9GwZPEgiMgGz7DGjVphqvjMLqhYq
-ajfXUINoJtFdvizRr9cVQomLM3HNupMvJN7AipdN4yMMMJkwTwQsYXG6BH20x2d4y/xGpxRr
-GHuYqgbJj+eKYLvCZOmysfABABstW9xPTturi7L3w02+aB9ibz+4aIG0v7dp2bOJTuFHeWSK
-ML+I4Gb4wWZhrY5isA4FsvCVALPDSxj1sz7V0JuXFi4B7kGpxVN3ZKaeU5gwScZzd7U2ueY6
-04d1CDGd4LEtt/loD1OsiWJra4lXZfdoMhh3CrkCJQldFMdAlej6h+9EdtT6JmHeKJVt/iSt
-lRlk+uaYd1XT0T0ToI55WTJFLpvHUnA1rn3L0YOXyUDdPNpok3VNwaQkuhrvylcSEuIzeSn+
-666bvgqg+JG/uaCNHVu759fnr5+/IvvVHlHlZQcDIDPY49FC5uNFxzUFoNwgYnKjPclbAlzp
-4KU1wLIAJfvqy8/vb88vzz9/e397xRPg6q2LOwg33R9rbeCvyeCjGKxFoyleyHUslL2OUV7T
-+1MnmS0WoHh5+eeXV7wJ0WoIkqlrvSu43Skg4u8RvHZQKdrlULCj/6jXQBwwTCZwTuhmM8FU
-2Uyy9TmTH+UmhM9erszwP7PulLViZfSQZnFiE4UfsMbdxpRNrAXule27opKltciwBtAd2Rnf
-PWas5Tq4WuIDg/daF+2lsHaLN8wouP66sGXmM9pnodtBMmVaaLBkBCvJEGjoT+1ZmI35yTLP
-Pw1WiJ4bndWZv3perNPzLPwuc6HnrGnLUmeNESbb82vVz8Una8NLT6xHEFomLSCEtaCqksKz
-nZ6relx714rL/DhkjCXAk5DLtMLthcwNZ3iGbzluVBfZIQw5uQDb/Tpe+4IbPJHzwwPTwRRz
-oOucKzM4mf0HjKtIE+uoDGTpzu2W+SjV+KNUE677zszH8dzfNC9u3zC3mBVeRfClu8Wc7gPJ
-9X26na6I+51P15EmfEc9nCY8ChmLF3G6YzDhe7rCPuM7rgSIc3UBON2e1XgUxlwXuo8iNv+o
-vwMuQy7FfsyCmI1xRHc/RuembSoYNZE+eF4S3hgJSGUYldynNcF8WhNMdWuCaR/0ZCi5ilUE
-9QXZELzQatKZHNMgiuC0BhJ7R47pLv2CO/J7+CC7B0evRm4YGFGZCGeKoU/XUGZil7D4oaSb
-6JrAZ0e4lIbA23FNNq07OQaVkqljtYzOfELhrvBMlejleBYPA0a7KMdxpm1h/hD4AUdYa2KI
-Tsdy2OLm0nyKe8XjkFuIcC04apxv7IljxefcV3tOFV8ywe0OKxtHyQjX4fEuFFwY8DiroJAC
-57OMaVpWu2THGcTaHI2Z4roN1YlhGkcxYXRgrCZNcd1SMRE3xChmz4ymikg48ZgYpnImxpUa
-a69MWXPljCMkzC38/fiIRz8c6zrbMLiHaDy9Nwdq08rfc/YJEgfqw7cheAFVZMJ0wIn4MBYv
-10jG3ELfRLiTRNKVZOh5jDAiAdXByNXMOL+mWdfnIt8L+FQjP/hfJ+H8miLZj3Ul2AhMewIe
-7rge0/XG4yobmDNnAE6Yiut637g/c8WjyGdTR9xRApiacgpTr2DxODdFd66JAs7ZGQpnBB5x
-rg8qnOnNCnd8lzrszThnX7im6Brn6849cadviq74ueKnkzPDC+HCdjn8wUZfVugcI6ZrBVZW
-AStMSEScNYDEnpu4TISjriaSL56sdhE3JshesBYG4pwKBzwKGKnCfZzksGd3KIpRsgthQgYR
-Z+sCEXlcb0XiQN1OF4K67U4ETHuYHqse0+NMrv4kkvjAEetzdR+SfANsA7DNtwbgCj6ToU/d
-GE3a8oa36O9kTwX5OIPcCoomwTTjZlW9DEUQHLi1P6knAw6Gm/iym6wTYW+rIqHfEmS+oQhu
-/WZ5eZfi+LwNF74Co9sb8xujhh8r2yVswgMej3wnznSWZXPDwmO2AwO+49OPI0c6ESfxCmfa
-x7XThWvL3JIY4px5qXBGOXLONwvuSIdbEFFr3Y58cia/enrSEf7AdFnEY7a94piz2jXO986J
-Y7ulWpXn88Wu1nMOTjPO9R7Euakm4pwZoXC+vpM9Xx8JN79RuCOfB14ukthR3tiRf24Cp/ZK
-HeVKHPlMHN/lNnMV7sgP9XxfcF6uE850fawSj5sAIc6XKzlw1olrP0fhTHk/KcemZN9SH3kk
-YSIdR4455IEzUhXBWZdqCsmZkVXqhwdOAKoy2Pucpqr6fcgZzjXeXs91hZo7nLUQ3Cc0wdRu
-34o9TDEErSt1sYxysWK3CVaaJWR6ZUhttJ470V6+w/Lx5VONt8oZPmsbX1h99KHI7F3cy/8x
-dm3NbeNK+q+45umch6kRSYmSdus8gBdJGPFmgpTlvLA8iSbjOh4n6zi1J/9+0eBF6EZT2ZfE
-+j4QlwbQuHfbB/j6RxeJpknrRz0lrNNi3xwQWwvrGkDrfHu9It8fdX+9fATb+5Cwc4QF4cUS
-e4s3WBy3xmgshWu7bBPU7XYErZDZnwmSNQGVfSfTIC1crCfSSLOjfW+qx5qyctKND2DxlmJS
-/6JgWStBc1PVZSKP6SPJEn2pYLDKR474DPZILi0DqGtrXxZg2/eKXzGnAClYaadYJgqKpOhy
-VY+VBPigi0KbRh7JmraXXU2iOpT4JUv/28nXviz3ui8dRI5eVhuqCTcBwXRumCZ1fCTtpI3B
-SG6MwQeRNfYDWpPGY03sAAAqY5GQGGVDgN9FVJP6bB5kcaBiPqaFkrr70TSy2Lw2IWCaUKAo
-T6ROoGhubxvRzn6aiAj9w/YaOuF2lQBYt3mUpZVIfIfa60mLAz4c0jRzW5wx8JaXrUop/rjL
-kI11QOu0b9AkrIzrEkxSELiE+4u0YeZt1kimdRSNpEBtv+4CqKxxY4WOLLQiTuustNu6BToF
-rtJCF7doKNqI7LEgGq/S6gQZC7TAzrbCauOM2UCbno1PtyrFM7GjvbSaMNasY/oFWNU40zrT
-QWlHqcs4FiSHWks64nWuBRoQ6VhjtopKWVVpCuZnaXRNKnIH0u1SD2MpKYtOt8romFHnpJXs
-wdK5ULbSniA3V3Bp8PfyEcdro84njaQdW2snlVINAEau9znF6lY11CCDjTqptTDid5VtY7LX
-ic4Y8CBlXlJtd5a6bWPoQ1qXuLgj4iT+4THRQzzt3EprRjCN1kYs3ttJHH6R8T2rprlQqyJ+
-PtQ/G3O6hAUMIXrjIpMLEDYyuNDTR9aHe32/vNxJdZgJbS5HaxpnANIrD7HExn8x7xglMy/p
-iC0/80SvBpUuVHeIcRI4GDIcYL4rCq2k4rR/5m9st0yyxL6QQbLDYxAs1eFt5GgbCMc/Zw/F
-FL7ZO0D3cNDKIXPiASrKjMZTDW4kI71TOQZB0cHlt/1e9wANuJJ0xPjgSOzBSBy53UbwZBzl
-2vy+fHsHE06jByLHLKH5NFyfFwuntrozNAgeTaI9uoMxEU6l9qhz6f0av5ZhxOC5bS/mip50
-CRkcX78FOGUzb9AarH3rauuahmGbBtrf6H6Hsk75xnRmylieW99bHCo3K1JVnheeeSIIfZfY
-6ZYFb2scQg9/wdL3XKJkhVBOWaaFmRhFm155u5gtm1ALb6QdVGUbj8nrBGsBlBwVky5bb8AB
-mF5+OlHpRWWqtP7Rfx9cLaS7NZfZw4NgwNi8vRMu6kgIQPC507+xn8+P3T17K/d38cvTt2/u
-6tXoxJhI2phSSkljf0hIqCafFsiFHjH/686IsSn1RDa9+3T5Cq7DwOG7ipW8++P7+12UHUHl
-diq5+/vpx/gC7+nl25e7Py53r5fLp8un/777drmgmA6Xl6/m1vzfX94ud8+vf37BuR/Ckdrs
-QWrJyaYcYwMDoJfPeiaSz8QnGrETEU/u9PwIzSdsUqoEbcHbnP5bNDylkqS2nSNSzt4ttbnf
-27xSh3ImVpGJNhE8VxYpWUXY7BEehfHUsHbvtIjiGQnpNtq1UYjcvvcv61GTlX8/fX5+/Tx6
-IMT1nSfxhgrSLJRQZWpUVsTuQI+duJ55xc2TCPWvDUMWeramFYSHqUNJxm4I3trPjXuMaYp5
-08KEdDKUPWImTtZ1whRiL5J92jBmtKcQSSsyPQxlqZsmmxejXxLzlhUnZ4ibGYJ/bmfITI2s
-DJmqrl6e3nXH/vtu//L9cpc9/bBt20yfNfqfEJ2EXWNUlWLg9rxyGojRc3kQrMBJoMymqWxu
-VGQutHb5dLmmbsJXstS9IXvEUSUPceAiXZuZAxMkGEPcFJ0JcVN0JsRPRNfPuO4UtwYw35c5
-nUgZOD0/FqViCNjAAxsQDFXuHIvkE+dMhgG8d1Sihn1GVL4jqt6/5NOnz5f335LvTy+/voGV
-UKipu7fL/3x/BuNIUH99kOmJ1bsZTy6v4CX30/D6ACekp+6yOoA7xnmp+3M9qI+BTmv6L9x+
-ZXDH3ODENDWYecylUims/3dubYxm3SHPZSKxXoHGrBd1qeBRXVszhJP/iaGq68o4ms76KKtI
-fDDDXIcLFuTno/AQoE8cVdj0jU7d1MZsZxpD9v3JCcuEdPoVtCbThtiJUqsUuvhhhjZjSJDD
-XLOtFucY4bE4rn8NlJB6FRLNkfUxQJ7fLY7u/9vZPAT2mbXFmLXpIXXmJj0L9yJ75wypu9Ic
-4670YuLMU8N0Id+wdJpXKZ259cyuSaSWEZ2/9+RJou0Si5GVbaXHJvjwqW5Es+Uaya6RfB43
-nm/fDcbUKuBFsjeOMmZy/8DjbcvioMErUYDNmVs8z2WKL9WxjMBtXczLJI+brp0rtXGdwTOl
-Ws/0qp7zVmAZYLYqIMxmOfP9uZ39rhCnfEYAVeYHi4ClykaGmxXfZO9j0fIVe6/1DOxi8d29
-iqvNmc7jB07s+L4OhBZLktAdhEmHpHUtwJBRhs7T7CCPeVTymmumVRu3U9hSscWetW5yVj+D
-InmYkXRZ4eMnm8oLWaR83cFn8cx3Z9gy1dNcPiNSHSJnYjMKRLWes0QbKrDhm3VbJevNbrEO
-+M+cvTK8xcgOMmkuQ5KYhnyi1kXSNm5jOymqM/WcwZkMZ+m+bPDpm4HpoDxq6PhxHYcB5eAg
-iNS2TMiBF4BGXePzV1MAOMtO9ECcCTLBVlLp/057qrhGuHNqPiMZ15OqIk5PMqpFQ0cDWT6I
-WkuFwNiTsRH6QelJhNlt2clz05KV5GChbEfU8qMOR6ol/WDEcCaVCpuD+n9/5Z3pLo+SMfwR
-rKgSGpllaN+qMiKQxRFMwoLLFqco8UGUCp1kmxpoaGeFsyVm7R+f4YYCxtpU7LPUieLcwlZG
-bjf56q8f354/Pr30Czy+zVcHK2/j4sNlirLqU4lTaZl4Htd1JZzdZRDC4XQ0GIdowFNCd0JG
-1hpxOJU45AT1M1DO/v84pQwWZB7Vz0Q5jFsqDAy7WLC/AueOqbrF8yQUtTNXX3yGHfdowElU
-7y5AWeHcOe21gi9vz1//urzpKr6eAuD63UFrpmpo3Gp2Fhz72sXGjViCok1Y96MrTToSGN1Z
-k36an9wYAAvoCFswG0sG1Z+bvWsSB2ScdP4oiYfE8HKeXcJDYPcgK09WqyB0cqyHTN9f+yyI
-zYRNxIZUzL48kt6e7v0F34zPUmseIkhhFEl3ck6teocXzuIvkxFYKywVumVimoi7N73Tw3SX
-kYjH5knRFAYpChKrKEOkzPe7royoMt91hZuj1IWqQ+lMXnTA1C1NGyk3YF0kUlEwB+NM7Hb3
-zunyu64VscdhjqfeifId7BQ7eUD29nvMOeXd8ScIu66hgur/pJkfUbZWJtJpGhPjVttEObU3
-MU4l2gxbTVMAprauH9MqnxiuiUzkfF1PQXa6G3R0bm+xs1Ll2gYh2UaCw/izpNtGLNJpLHas
-tL1ZHNuiLL5vWmg/CC5kzG4WGS0wsz2UNmQGpAGukgHu6xdFvYdWNptwrzh3ajbAri1iWBXd
-CGK3jp8kNFhAng81dLL5tMCJiLtFTSIZqmc2RJz0JmmNkr8RT1EepbjB607f5fOC2ffX4G7w
-cGNlnk2ifXWDfkijWHDOS5vHyn6lZ37qJmkfI/ZYPxPyKdzG9pbL8Dm4/9puzvZcq/nx9fJr
-fJd/f3l//vpy+c/l7bfkYv26U//7/P7xL/dOTh9l3uqpsAxMHlZ0p0Yvxzp8NdCMl1klsSFi
-M7MCL1LqQTZorfAQoR9w3I0BOBXHiPSWm4U128hzS4zVQw2+alIOVMlmvVm7MNk71Z92EfYz
-MkHjJZ3prE/B7XTs/QYCDwuq/rwoj39TyW8Q8ucXX+BjMs8HSCVIDBPUDc5ulUJXh658RT+r
-ZVwesMys0Fmzyzmi1NOqWih7RY7Jxn57cqXgWnARp2xaZ3EK5gifI3bwv71tYokB3DxhIk9V
-WXRgMBbN3YAypk4PRF6N3OkxO8Gg6+fXpFk5ddGLNaZx5uY5bu0KwK1MadzX6+m2WzPSMj/q
-8HG09ohMwJm0Spw6Th7ob67CNRplbbqTyAPawNDjvwE+yGC93cQndF1h4I6Bm6rTlk2LtF8n
-m2K0eAUIWKsOMUW0gEKtXUjI8W6G2wMGAi3ZjSTvnU7WlOogI+FGMli+Jk2uOXKN85wWJd9x
-0BlrnuaqkUjtDAjeFMwvf395+6Henz/+290amT5pC7PfW6eqtZ1P50r3FEe9qQlxUvi5xhpT
-NB0oV0z2fzeXLYou2JwZtkZL3SvM1h9lUSXCBU18ddvcbzQWzzmsI9fqDRPVsElXwC7m4QH2
-wYp9Op396xCuzM1nrsk5AwvReL79rq1HVRAubc+vfcpxHiIbNVd0RVFibKrH6sXCW3q2AQiD
-G4+wNAvUTewIIitcE7j1acEAXXgUhTdrPo1VZ3WLpg42SpyPGoqBsirYLp2CaXDlZLdarc5n
-5wbwxPkeBzqS0GDoRr1BTuRHEPlwHUFkSOZa4hUV2YByhQYqDOgHvQdd4wS9pc2avqo2IHXw
-O4GO7BK9jvOXamE/SO1zYrsONkid7tsM75X3zTXxNwtHcE2w2lIRO/5++xZE30n2V5RjEa5s
-d7M9msWrLbI40Echzut16KRnfBZvaRzQD1b/IWDZoJGs/zwtdr4X2YOqwY9N4odbWmKpAm+X
-Bd6WZm4gfCfXKvbXut1GWTPt8V21jbnN+MfL8+u//+H900zr631keL2w+P4Krt2ZF4d3/7i+
-h/gn0VcRbP/TStUzkNjpNFqvLRz9k2fn2j44MmCrzGp7ynvz9vz5s6sqh/vmtO2O19CJy1DE
-lVovoyuKiNWr7eMMlTfJDHNI9ew9QjcWEM+8IUI8MqqOGKHX5CfZPM7QTIefCjK8FzB1YcT5
-/PUd7iZ9u3vvZXqt9+Ly/ufzy7v+6+OX1z+fP9/9A0T//gQe4milTyKuRaEk8kOGyyR0FdDh
-aSQrUUjaCUauSBvkebZfm8hIZkgOwvMe9UArZGa8HJM7L1L/W+hZl22p+4qZVqY78w2yT5Xl
-03M1bFSZQxNl5gwtcinrJGVvx1lkCV5fc/irEntpP8yyAokkGcT9E5rZ17TC5c0hFvMMXTJa
-fHze2ycZhFmyjFwupL1WyMAsC1Mpmlj9rLaKlC+Rxm/kuoxrdPBgUae8d9pymg0hq9L2H0WZ
-Lubrsyfn82Tx5lI3G0jV1Rze8LEqW9kRwvoEStvVZ7abdFFxbjp7lVk3MXaiBQCZBwN0iPUK
-55EHRz/Vv7y9f1z8YgdQcNpqr8MscP4rIlmAilPfuYyK08Dd86tWZH8+oRvcEFCvf3eQwo5k
-1eB47T/BSBHZaNfKlPg4NvmrT2jfBp62QZ6c+f4Y2J3yI4YjRBStPqT2m8Irc2a/iOo4R0+R
-pg9UsLZtWYx4orzAnilhXK9p0LSYsLEeE1r7Kb/N2+ZOMN49JA3LhWsmh4fHfLMKGRnQqfSI
-65lbiIzIWMRmyxXWELZhC0Rs+TTw7NAi9GzSNvc1MvVxs2BiqtUqDrhyS5V5PvdFT3CVOTBM
-4meNM+Wr4h22h4SIBSd1wwSzzCyxYYh86TUbrqIMzjeT6D7wjy7sGNKaEhdZLhTzAWx+I9OV
-iNl6TFya2SwWtr2mqRbjVcMWUel183YhXGKXY8vAU0y6Y3Npa3y14VLW4bmmm+bBwmcaaH3a
-INvfU0ZXV7dmlbytyqB+tjP1uZ3p9os55cPkHfAlE7/BZ5TVlu/w4dbj+uIWGaC/ynI5I+PQ
-Y+sE+u5yVgUxJdZdwfe4DpfH1XpLRMF4OYCqeXr99PPRJlEBuimL8Tm93mePbTW6ArcxE2HP
-TBHi2yY/yaLnc4pS4yuPqQXAV3yrCDerbidymfFjUWh2KKajNsRs2dM4K8ja36x+Gmb5/wiz
-wWHsEH0JYGYCOyVUW/Wsmc9w9JgFtrb95YLrkGQ7B+Fch9Q4p9lVc/TWjeB6wHLTcJULeMCN
-tBq3TWdNuMpDnytadL/ccD2srlYx17ehmTJduN8e4/EVE77fd2HwKrUfb1sdCoZRdgYXeNwk
-pWhjdvLy4bG4zysXBwMuXTptAn15/TWu2tsdT6h864dMGoODTIaQe7BoUjIlxKcS12EvdsHe
-lSdTNfXS43A4Jqx1VjlxAAcOTF3GefgyJdNsVlxUqi1CpswaPjNwc15uA66hnphM9v4NN0zZ
-do3+ix3o4/KwXXgBN8tQDdcC8N7+dUDxtLCZlHu/ANx0OvaX3AeawBuQU8L5hk2BeJmacl+c
-GNWVl2d0Hj7hTRiwE+xmHXJz3zPUO6MO1gGnDYwrL0b2vCzrJvH6vdnJPJy6vH4DR2u3+pll
-bAV2Ka/x6sX51TKIg9Glr8Wc0NEevCpN6AtmoR6LWLfSLi3gHZc5kirA3SS5SwEbBL17Z4yd
-ZN205tGW+Q7nED33gyM1cGal9mhrBfw443PnCK63RaKrhX01a2jntsloSIE2zxHbEEwJzztT
-DPfk5IHJzOBPGGXZuL/F+0P5Ht6Bd2TTyJid0VhojanHAIfKc+NSkiANRnR7tZUpOO9EAYqo
-2g15v4IVWB9Dfnh7h3QshJ3yGjTHIas6Id8GRgMQgfVO3LxFJ1Bg3aIj/LnpgRj6QASdN8fu
-oBAEr3ehp+jqy/f2o5orgWoUMkcuSQyoGwwdBh9UizMzXt7GMjAiTrtI2BfkB9T6NhY1SdS6
-C04Y1RKJStLaTM9C42hjqt4M7rrnTMck0OPjl+fL6zvX42mc+J3GtcOPHXGMMmp3riEiEym8
-A7DK8WBQq6u3Z+eBzSFZ4s4KXUmoWEpiQK3xwqM9MapEYTvCNT+nd3kLAtelydoKw/3xO9zl
-UehWa89GYDFn5H6ZNhv1RzV+mYQub8OVHPuqCQDVMM+Q9T0mkjzNWULYl/cAUGkdl/bOnok3
-lsy7XU0UaXMmQesW3czVUL4LbautoMj1MCRP6OwMULt8/W84rmwdEHWfK+Zc3R2oSGRZaa8q
-B1wWle0xeUwx57JhbkDlYH8udY1nfXz78u3Ln+93hx9fL2+/nu4+f798e2fcbTbkgKWqpcp9
-fPlDK5fUvkTc/6ZD74T2B2y6o3RKfki7Y/Qvf7Hc3AiWi7MdckGC5lLFbuUMZFQWiQPizjyA
-zrPVAe9v3PrIX9xIKT2dLyoHl0rMZqiKM2Tt3ILtFmfDIQvbG15XeOO52TQwG8nGnjFMcB5w
-WRF5lcXGj9RiASWcCaBnvkF4mw8DltetFtmKsWG3UImIWVQv8HNXvBpfbNhUzRccyuUFAs/g
-4ZLLTuMjr4EWzLQBA7uCN/CKh9csbF8ZGuFcz1qE27p32YppMQLUrCw9v3PbB3BS1mXHiE2a
-a6/+4hg7VByeYeVbOkRexSHX3JJ7z3eUTFdopun0HGrl1sLAuUkYImfSHgkvdJWE5jIRVTHb
-anQnEe4nGk0E2wFzLnUNt5xA4FL8feDgasVqAjmrajb+aoUHnkm2+p8HodcwSelqaMMKiNhb
-BEzbuNIrpivYNNNCbDrkan2iw7Pbiq+0fztr2IOGQweef5NeMZ3Wos9s1jKQdYiOmTC3Pgez
-32kFzUnDcFuPURZXjksPdjKkh64nU46VwMi5re/KcfkcuHA2zi5hWjoaUtiGag0pN3k9pNzi
-pT87oAHJDKUxmG2OZ3PejydckkkTLLgR4rEwd5m9BdN29noCc6iYKZSehp7djMu46pUEk637
-qBR14nNZ+L3mhXSEi0Atfq81SsEYZTWj2zw3xySu2uyZfP6jnPsqT5dceXKw8HfvwFpvhyvf
-HRgNzggfcHSVwMLXPN6PC5wsC6ORuRbTM9wwUDfJiumMKmTUfY5e3V6j1hN+PfZwI0ws5+ei
-WuZm+oNeT6AWzhCFaWbdGhxwz7LQp5czfC89njNrFpe5b0VvL17cVxxv9glmCpk0W25SXJiv
-Qk7Tazxp3Yrv4d3/UXYtzY3jSPqv6DgTsb3Nt6jDHCiSEtkiJRQBySpfGG5bXaVo2/Larpiu
-+fWLBEgpE4DsnotlfJkAQRCPBJCPzLF30CQVKc6i7dpV6hr0cnW2BxUs2e513CGErPQv0TZy
-zKwfzaruz371q13pehe4E3JPMQu2/3pCCFTQSPd595UJ+a3zll2jiVV9lXZTUhI8tKSIXMTm
-HEHp1A/QvryTe5+0RBWFlFzfDW+tXZoGwZwWfVMvht0tcaLXCSmh4cbbiSSRn/OJpBOZ1kpO
-9Wby9j74zjwfeytSdn9/eDy8np4O7+QwPCtqOVoDrHIwQOqUV+d9vns8fQO3eg/Hb8f3u0dQ
-TpWFmyXJtTrBxUC6rxdZDp6Kuqxp8AESIRMbLEkhJ1QyTfaaMu1jFW2Z1i4McGXHmv5+/OXh
-+Hq4h+OzK9UW05AWrwCzThrUEbO0T8G7l7t7+Yzn+8PfaBqyuVBp+gbTKBkLLlR95Y8ukP98
-fv9+eDuS8mZpSPLLdHTJrzN++/l6ers/vRwmb+o2xPrqXnJutfXh/d+n1z9V6/38z+H1fyb1
-08vhQb1c7nyjeKZOB4fO9S472+TwfHj99nOiuhh0wTrHGcppimenAaAxyEYQqVR0h7fTIyjN
-f9rGAZ+RNg64T+JlL+Y9b0kYNonslxfljZfD3Z8/XqD0N/Az+fZyONx/RwdXrMxWWxytUwND
-zKIsXwuefUTFk51BZZsGx54xqNuCie4adY61kSmpKHPRrD6glnvxAVXW9+kK8YNiV+XX6y/a
-fJCRBjoxaGy12V6lij3rrr8IOB1BRH382MNagy+PAm0G6GF9oV1dlHBqHCZxv2PYE5um1O3+
-XI5W7P/fdh//mkzaw8PxbsJ//G67ML7kJCbfEKdLK+oDzSPB6C6kVswEUXDTpcHlBMqgroTg
-MtLku9102doJ9kWOdyyYctuFw0zhIM63t9fK869kadoG3ytYpO5axmzHk/Lr5cQ5e354PR0f
-8E1LRdT7s3XRbeqi33GsUkz8zcmE0nUuWzAdYZSQZ92ulN3ORaq265ULbzMDHfub2kRd4EaU
-/bJo5dZ3fxlki7orwWWf5fdkcSPEVzi07sVGgINC5aM6iWy6iuamyeHZe1MrlJbaWpsYBDNs
-motIm3VRl2WOb+qW+D5pyfsFW2ZwUXMBt+taNiBnGd3qtdAYzarfN+s9/HNzi99eTrwCD3ad
-7rNl6wdJtOoXjUWbFwkE4Y4sQrWXa583X7sJU+upCo/DK7iDX0rDMx+rVyE8DLwreOzGoyv8
-2AMrwqP0Gp5YOMsLuXbaDdRlaTq1q8OTwgsyu3iJ+37gwCvf9+yncl74AY51j3CiPUpwdzlE
-qwbjsQMX02kYd048ne0sXNTrr+QeccQbngae3Wrb3E98+7ESJrqpI8wKyT51lHOjwhBuBO3t
-iwZ7KBpYF3P4O5hcnIk3dSPnUrznGhHDGcIFxpLrGa1u+s1mDloSWLOBuHSGVJ8TUwsFETdF
-CuGbLbEdAkzN1QZW1G1gQETgUwi5+VvxKdG7WnblV+J+ZAD6kgc2aPj2GmGYsjrsm3QkyBlX
-WSDZFOKnaAQN08EzjI+8L+CGzYmv1JFiRL4bYRKTcgRtJ5bnd+rqYlkW1EPiSKTmiCNKmv5c
-mxtHu3BnM5KONYLUX8oZxd/0/HW6vEJNDYpHqtNQfZHBG0O/y6sancVpUeDiquHif/D0b3Bl
-cHiEDe9PpX89uMmxVL/OfnnwOZsGO+FPfR9pYLE6wnIK6MZQJxwSyMqyX0kBk1l8PYSxkUI9
-WhQr2QPLc2wbfKqkdUR7KazbIJNzBx5VZdNk683eESNHW/H21UawhtySNyuwk5L9kexeqmxX
-qiWadSUjQ+CyfI/NnJ+enuT+OX883f85WbzePR1gt3hpV7Tgmxq7iARnaZkgOisAc0bi3AJU
-8WLlLMK230FEw4QHUao6Ibb6iMTztr5CYFcIdUwWJEoyblsRJbpKmXpOSl7k5dRzvyvQiE0U
-pnE4rO9z5qQuy7Zeu99MO2501zJoGSd3RhIUN03iRe7Kg3qc/F2Wa5rny6arvzhzGCqiiGIa
-CWESnr0Qvtmvr+TY5TGtUaa8rXEKbm6anhNNb0BhxkqIkvSIrjbrzPk4w5nRyJ9/Xa633Mar
-LrDBNWcu0MHJ3VJ4Vcsem+S70HN/LEWfXSMlydVctqMgOuoCotRfgkflqib7XrGdO5kR4WoF
-5htOAssiEopgomcwNXUh/wtqiy4Of074KXdOZGpjT2IKYaIIpp57DtAkuQYQU1yboW6Xn3DI
-HXz+CUtVLz7hKEX1Cce8YJ9wSKnqE45l+CGHcVlCSZ9VQHJ80laS4ze2/KS1JFO7WOaL5Ycc
-H341yfDZNwGWcv0BSzKdTT8gfVgDxfBhWyiOj+uoWT6sI1Xht0gf9ynF8WG/VBwf9qnUD91L
-G5CmSCpTWsjLgudObhp6SPFmcciwVKZAtQqwnIM5U0osEjP2pV/meS8Fi4iiUsYz4Xpgjjw8
-l9bnIrA1K6CNE9W8+KBD1kqjZB48o6TCF9TkbWy00LyzBOuCAdrYqCxBv7JVsH6cWeGB2fke
-s5kbTZxFmPDAjCQ9PrxIGsUU1LsLk8DaumcQpBUkY+xIXgmRWk/cCVqqtUAr23JnrMTdbWZI
-Sl2aTcMsskFiTHEBQxcYu8CpK/80dYEzBzhzZZ85aj+dmS+pQNcrzVwVxV8RgU5W5zvNUifq
-fgGzCrySzW9ygpGAlDnN9xphKUAv3aTwCknuRmUu5VqU47tO3IVkTtmLiZxmUQVzU2Vnde8G
-rGji2rUjWLglEd3PGQxyFuZ604AFKWVq4nvOnJoWXKdFoZsGBi1XCTyfpYlnEMDEr8/zLYFi
-r+4zeCsHXiXX4M4iRLIYeEWT335iIjlD34JTCQehEw7dcBoKF145uXchd8FFGbjgLrJfZQaP
-tGHgpiDqSQLU68gKCeh2XbOqxodW1Q3cGmA/k1rC5qcfr/cHx8kL+AEj9mkakbujOT0P4F1u
-WB+MB0KGL7Fx22XiZ2tYi3AjV+65iS6EaDtP9gQDVy5nExOFfaEB6b5kg7InVdyAtZGrybxm
-eQvu4gx48LfbC5GbpMFG2Mqhm6+YQwRM2bZ5i79yw/jU963HZKLJ+NR6/T03IdbVbRZYlZcd
-oStNFIzxlurkEhRgPq9mr4Jh68nTYmQ1F1leEUU3TZHdlfgbGeA143afYnjDnHVDm3IX1ifR
-vBaY0g79lbMUH/JLwm7aqitE4uw1Ey0YdQqrFsNMTc8twMBxIVqrr8EZRt8x60PAGaPZ32AS
-dTfzb3C8KtsQ35BXw+vkrQttxRZb3w6rj9xstw5mgftYeW4nokqqK+I+/1MfeI8OT6o0hCHS
-dqkDw7LuALKt3coCzKLx58jl+/v2yGuzuplvkAQ+Hqv2bYU1u2SvhFiXfUuYRxNbAurzCguE
-0w0DHB5u2A7pbQrsRmpmWOmyIjeKqOXMLcfOlg12RjpiKijiHO8nijhhd98Oyt2gHVxG5waz
-saWgUSVNiu7o/FMGkHsW2O9Wd3g6vR9eXk/3DkPsst2Icjgf09wvT2/fHIys5djZGCSVYaCJ
-6e2gioW1lj1tV37A0GHn/JpqWt+pWy64kB/rJ1e354eb4+sBGXZrwiaf/IP/fHs/PE02z5P8
-+/Hln6BAdH/8Q34Iy80yrCKs7YuN7AJr3ldlw8xF5kIeH549PZ6+ydL4yXGzoR2kL/egLVKv
-F+TGYKCQEgmxdWQDDw5K9eRiizp/Pd093J+e3DUA3ot/s7M6jJu5bvdTxyviQznHO8ppT1ay
-y8ghDqBqN3fTZcY9DM+HgyVV+Jcfd4+y9leqrw8CZK8GTYhiboxHMBrticmx8gVjbBXB46q9
-gUNo7ETxducC4+3aBZ05efGGDaGBE42cqLNqeNOGUTez+z3Ivg3BV96EeFmCiL85HuaakUDn
-uXnZLRyoq9fDx7u2ZbrGT0JiKrmFDo798fH4/Je7b+kgWf2OCOIy9y3WvL/dB7Nk6nw+YOVu
-0ZVfxqcNycnyJJ/0THQ7B1K/3OyGaBig2KN8myJRGDHJqQdWvIyEdiAMcF/Ns90VMvhV5Sy7
-mjvjXM/EpObWnAgy1vANVJy68wtbjdCXO+LtlsBjGesNvv9ysjBGRJe9yC8+ssq/3u9Pz8M0
-b1dWM8utkhSvyB3/SOjqW3IjNOD0Xn4A22zvR/F06iKEIdbev+CGT2xMSCMngTpEHHDzZm2A
-1ZynzsnAEtoidyKdTUP77Xgbx9hkdYDHWIsuQo48JJ3XpHaDvVaOInNLKqK+ICdKHTV+RA0m
-7yqMoQvr87kThiABmzVEWTCyrRb1QnFReHCVLHcurmfpf4kX4Esei1U9lcNwPLMEmIXfWLpB
-A+ws8VK1cbj8LUMAtJKMEFqI5m3m4/lcpsmt3bzN/djTUcHdKFVCIRSiXlJkJC5hkYX49rlo
-s67AV+MamBkA1itA7n7047AKoPoEg8aFpppHvas9L2ZGktZYQ+T1Vvv8t5Xv+ViPJA8DGvYm
-k3JBbAGGntQAGsFqsim9EmizNMKGBRKYxbHfm1FrFGoCuJL7PPKw8p4EEmJHxPOMGiVysUpD
-fM8HwDyL/2srkl7ZPMmu3mCvzGDkkVAjkGDmG+mUpKMp5Z8a+adG/imeUMHoBIeXkulZQOkz
-HA5giHmZFWTXCSJ01mZxERiUPQu8vY2lKcVg06cUCCicK40+3wDBORaFimwGo2vJKNqsjeqU
-613ZbBj49BBlTrTNxnNizA5HQ00Hax+B4RSj3QcxRatarkeo41R74qsCNgJGs2nHwSaW++l+
-b4Hg+cwARR5EU98ASAwMAPBaCOsvccYKgE/c/2kkpQBxsyuBGVEYbXMWBtjYE4AIX6yOGgZw
-KSuXf/DXQ9u5XPe3vtkUesvGs46g62w7JT4t9Mpufnu1sO8yHYyP+BhVFO0yrt9v7ExKGqiv
-4DuC62uSr92GVlz5YDQg9enBPs4MP6JdYumK4rnrjJtQsYALPxezppAs6pQ791LfgWHDqhGL
-uIc1ojXsB36YWqCXct+zivCDlBOXngOc+NQmV8Fc7sY8E0uT1HiYjmxtvpdo8ijG2uSD62UI
-spATNAHU6B+7RaJciWGoZhCQGuwKCD5saoYui6f4xevp+X1SPj/gDb9cYLtSrhqX2NHZ08vj
-8Y+jMf2nYXK2hMu/H55U6HBuGbDBmXXPqmFFx1MjJ35Q6uwL7RO72xTP23jh12VxoxM5OMb6
-VceH0dMgmF5qLclLJZHEoUU8OuIMslOIa/m5Vsj0kHM2Ptd8ppIIOUPvAg81JNALAwnRrEjC
-eKCbRuQQgzY036A4+uOZLvB6TDZsOH++CKaj2aIUEO50P3LLB7GHPQfIdIhFIEhT49E4Cnya
-jhIjPSPpeBZ0hoO5ATWA0AA8Wq8kiDraULDyJNRwMybKrDptmp7GySwx7STjKZbGIJ34RprW
-xpR2QmrymxKnQgXbCHCHhBAeRdjhxbggE6Y2CUL8enJNjH26rsZpQNfIaIq1WAGYBUSKVFN4
-Zs/3lp9BoT04pQENeaXhOMYygZ7mdKlny+mHH09PP4fDGzqgdNzyckeUWVWv1+crhomhSdEb
-MHMMYobz5lFVZvF6+L8fh+f7n2fb3/9A/Kei4L+yphmPnPV9qzrrv3s/vf5aHN/eX4+//wBL
-Z2IqrCMIaM/f3+/eDr80MuPhYdKcTi+Tf8gS/zn54/zEN/REXMoiCi+i/N+3MKZDESDiVX+E
-EhMK6JjedzyKyTZz6SdW2txaKoyMJTTlKvkEbwFbtg09/JABcM6DOne2r82vOpDAnPQDsqyU
-RRbLUCvS6qXlcPf4/h0tfCP6+j7p7t4Pk/b0fHynTb4oo4iMagVEZPyFninXAhKcH/vj6fhw
-fP/p+KBtEGKFsKISeJ2tQPTx9s6mrrYQQxqHjKoED/A8oNO0pQeMfj+xxdl4PSW7VEgH5yas
-5ch4hyBqT4e7tx+vh6eDlEp+yFazumnkWX0yoqcctdHdakd3q63utmr3eFau1zvoVInqVOSs
-ChNIb0ME15Lb8DYp+P4a7uy6I80qD16cxhnCqDFHNcdv399dw/43+dnJUU3WyDUBh9jIWMFn
-RBNdIUSvcF75xFIf0kT/Sy4BPraNBIC475LSMXE5BREuY5pO8BkIFvOUmReopqCWXbIgY7J3
-ZZ6HzgDPshJvgpmHN4iUggOBKsTHqx4+msIunRFOK/Mbz+TuA9/Rs84jwTDHx1uRQUVHo17u
-5PCPSKjjbB9R50gbBg6oUCYmnx54FOO175P7LbEKQ58cEPXbXc2D2AHRjnqBSR8VOQ8jbF6j
-ABybZ3xpIVuYhLpRQGoAU5xVAlGMzU+3PPbTAK0Pu3zd0HbZla3cROFbr12TkOPRW9l0gT5T
-1febd9+eD+/67NUxeFZUX1alsZS38mYzPLSG09M2W66doPOsVRHoOWK2DP0rR6XAXYpNWwop
-rYc0hnQYB1h7dZhfVPnutW+s00dkx9I4ftaqzWNyuWEQjF5kEJFPkfbH4/vx5fHwF72Thv3W
-9uxGvn6+fzw+X/tWePO2zuVO2NFEiEcf3PfdRmSivtwyjTE1J7+A357nB7nteT7QGlXdoGbj
-2h6qSOLdlgk3me61PmD5gEHAXAi2rFfyq7AnFxKRD19O73LNPTruGuIAD74CXKDSs7SYWL5r
-AO8k5D6BTLcA+KGxtSADWrAGSzpmHWX7Y8GgadlssLrWkvPr4Q2ECMeonTMv8dolHmgsoOID
-pM3BqDBrER6XoHnWbZw9iXUkGmbFSMOxxida+yptXCVojM4ArAlpRh7Tw0yVNgrSGC1IYuHU
-7GJmpTHqlFE0hc7+MZFtKxZ4Ccp4yzK5/icWQIsfQTQXKEHmGdwV2V+Wh7OLqTF7Pf11fALZ
-GCyMH45v2vWTlaupi6yTf0XZY7uAbgFOnvDJIO8WWDjn+xlxfgrkdHz4f+MFyUfbCHF4eoH9
-obPnylFVt72oyq7d5JstwwpgODhGSeybm/3MS/AyrBFybNoyD1/OqTTqFULOGlh2UGm81q5x
-jESZ6Gscaw4AHS9D4HtjgFm9XrINVusAVGw2jcFXYmURxQNxW6m37l1b9tr1gGpLmZzMX48P
-3xz6AMCaZzM/3+NgSIAKKRgRn0ISW2SrkpR6unt9cBVaA7cUfGPMfU0nAXi3JAApUTKVCTPo
-JkBaU7Vq8iK3+c/3TxQeNYkN1LzIB3BQbaVgVc93gkI1nkABUDHiQ4qBThdENDBQy1ATUBVu
-HZ8DAUg1hxQyKLcSLVLVVDQEzRmSFbNQVhoQaIRTSNw0FgDRls/SRvdlcv/9+GL7y5cUUGRC
-YmDX9ss6V+5+1t2//BH/Ten5Zjg4geByH+v1JN5BebtmHApAs2735aziLwsosLuPmmX5qice
-OPRlgFBuufGEpZwWQWTdXGDnRdrsVyZEt2ka3D81JRMV1nUbwD33SQRVhc7LTopaJkq9BWgM
-7hVNrMnWAtueD6g+yTRhdc1mgg5FdE3Qp3kWCh2mZX5sVcWMXqVAUVsx2zXBNr/QOAQdu2CD
-FcdoZe20mh6J1NZ6gVVrZEJNUMQNDIBSyNtRr1QtKF3CQleCFm9LKaCfq8vQy2f1FRyivSkd
-2UvvHuJpUC8mMnE+YAbloY1YUqLhKgAg9b3SubLBclD65b75jBZSmjbRBxe7hs8SZXSibL2s
-WmvDfMeDLgTjKWseGI8YUe2BtjDK6cDKnwSsBnjQLydeVzTO5domP/7cqirY4csNxHrjqK0e
-KXK63BrEIWTaNFa6W82Ww57HKrrdlfNtnzNfm5BZdLbP+iBdy4WA42mIkOxKaQUH6xXbjLFq
-sy7BcFV2eY9S1eRiZ1JX1yRg3wW1n6xw+BwVv0owX6TLlJa59eSLDaHdF85Kq1c+y0Wp1eow
-Z5LyZkNpgw5HwUwXTYjY1nLffZ1sP3DUyrNrCVeBcNUvt2MelGt+/Qs9ukKvq8ib2k2n118J
-ywR6RfB+OC4vdl8U/9/Y1TXFjezs+/MrKK7eU3U2YQZC4CIX/pxxxl+4bRi4cbFkNqF2gRSQ
-c7L//pW6bY+kltlUpYrMI/Wn1Wp1t1oN/DwOqHVnZQ/JFdQbsHBhwzngbpM4RbZ7xsdTrfH/
-4Dbh/Um7oU6V7borYzxDz/deeF7sQherkIy0IXhhmGFafhdE0MaXeA5/v3/8snv+z7f/Df/5
-7+MX97/D+VzpjY2BKQ7IbDi+6k5/2vCVWabCsJKg11cdYVTmcp7gVCUhuhqJHNEITNKOHs+6
-cZvyvKcRIZhdxqiPRcaTBaQmcEeGsi7j9Qk1Cb6oCI1b1XTixqhLpt73hDt2uTp4fb69s6tQ
-/70keuuqLfyApgVeVGmixDqRVnmi0tYw4towoe+1EGoKyx/mWGrf0mvXPsLHxoSuVF6joqA4
-tHxbLV/x4hPGn+S/+mLVoDP92xS86kvGj7u3VeMAEIfIHsneCFMyHhnFNoWkR5e1QkTDba4t
-g1+NniuM85OjGVoBlum2WipUFypuDw5F1Kg63MK/ESmaZMXipFapjqc0lg/8gEpYk4C7exMC
-czhB3LAYHW0yLYzhv8oVIHyjAuq73W82ks1cjR89pFYfz5f0mUMAeQUR4XeOa1APNQ3jmtHz
-F/zV+3H2TJ4VbKWEwHCzqG3yscbpPUaXtoYwqWpq8FIdnZaSbbvs6Xp9APpt0NIgjiNcVyaD
-5ka5TzJJ1DXsCBYoxzLz4/lcjmdzOZG5nMzncvJGLklpA/Ez8RqTzNKEevgcxkv+y1MgYOqE
-UcDiEDZJBmtXoNCGTCCwRhsFt265/M4cyUh+I0pS+oaS/f75LOr2Wc/k82xi2U3IiCcReGuZ
-5LsV5eDvi66ii42tXjTCdOsMf1elfSfQRA0d84SCcQezhpNETREKDHRNC2tStquwSg0fHAPQ
-4w1yDLgc50SvwCwg2Eekr5bU+pvg6VZTPyxzFB7sQy9L94oDqLsNCwtKibQeYSslb0S0fp5o
-ViqHW/bsc08cTYdewiUQ7QVjrwDR0w50fa3llqR4fztLSVFllsteTZeiMRbAftLY5CAZYaXh
-I8mXb0tx3aEVoakOS7Mul8zocUnsG5FZ+TmJRCLDDeM5JYd7yFwjOqQPbWCYioYmwFdSR4El
-sxFY6egNfT1Dn2uVKauWfaBYApkDxDZxGki+EbF3YYy9k1RkxvAwiUIz2J8YKtiue+3JZMq6
-t24AHNiugqZkbXKwkEkHtk1Cbf20aPvLhQSWIhWLpRp0bZUaPlE5jIsMdAsDImbUVyD/eXDN
-tciEwQiJswaEpo+pTtMYgvwquIai8c2HK5UVV2dblVLix9/ycwpC3sIXtk0bbY3o9u7bjlkZ
-YvIbAKnLRhg3kKpVExQ+yZtZHVyFOHT6PGPRL5CE0mw0zHvXdU+h5bsGxb/Bwul9fBlbO8oz
-ozJTnWP8BTZfVnlG97RvgInSuzh1/O5kuDLvYbJ5X7Z6CalQZoWBFAy5lCz4e3x+NqpimPfA
-HD85/qjRswp3Tg3U9/D+5ens7MP5b4tDjbFrU3KuVLZCmi0gOtZizdXY0vpl9+PL08EfWiut
-ecMOixDY8NWSxXDPmo42C2IL+6KC6Yd651sSLMrzuKGutJukKWlR4piqLWrvp6Z7HUHMKbAQ
-T+M+amDly4LL4h/RY/bVXyt29kUIOswbfLlasAexDrgOHrFUMCVWcevQ8Pw1U4xrkR5+13k3
-h6k2g6y4BeT0L6vpmZxyqh+RIacjD7dHA/Ja7J6KzzBLi8JRTVcUQePB/redcNUYHo00xSJG
-Em5Mo5sBPttR1SIEsGO5Yd6QDstvKglZDx0P7EJ7UgUai5WKb4H1ZVUmB/cvB49P6EP5+i+F
-BWbLaqi2mgU+X02zUJnS4LLqGqiyUhjUT3zjEcEHNjEaQOz6SGFgnTChvLscHGDfkAA1Mo1m
-yExE/9NFMBOwGdr+dqYVO7AaCEVLtlTNRReYNVM0A+IMrXFmnLqSk93srfTkxIa7KUUNn6Zc
-5XpGA4fdxlC/nsqJ9ldUd28VLUbGhPNvMsH5zYmKVgq6vdHyNVrP9icb3I0ObVjzm0RhSIow
-ieNES5s2warA8AyDQYIZHE9TqlybYhDzrYoMoX9AtOKMPndUFVKV1gK4KLcnPnSqQ0KBNl72
-DsEnIDA8wLUTUioVkgGEVZUJL6OqXSuy4NhAm4U8iFoNFhSbtO1vNCNymBMnPegxgDS8RTx5
-k7iO5slnJ8t54ixB1ne0g2iPKjUf2dSeVRrzi/ykfb+SgjZZ49f7YGri4ZfdH3/dvu4OPUax
-4T/gPF7WAMo9/gFmtj1YPpd8TpBzhNPMdm7nqBgPyVYurxwi2JhkwuLxqmo2ug1WSvsWftNl
-n/19LH9zo8BiJ/y3uaJ7ro6jX3gIPeQsxykBVl3sWTpLkcPPcufJlqZ4kOX11oEE1Z91EO6z
-eAgD9Onwz93z4+6vd0/PXw+9VEWGQRbZ7DnQxrkTX1mlsTiaqmr7Unaktyws3RbYEAajj0uR
-QC4sUhPzX/BtvL6P5QeKtS8Uy08U2z4UkO1l2f+WYiKTqYTxI6jEN7rMJZ7bF1o19oFTsGQr
-+r4bGiTipyd60HLfNEKCvCpsurJhjyra3/2KqskBw2kCFpBlSVsw0LioAwItxkz6TRN+8LjF
-Jx5QfGqxb2L2KnFSr/m+iQOESA2oZqxHGUue+Xure2wpwKskwGdA+jVYEYLU1VGQi2KkpWQx
-WyWBeRX0dikmTFbJ7fLiu0D2HQpJnauZKUJ2c2oEB8tTEPz+reKAr0fl+tRvQ6BldF6zZPan
-xqJ9SUfwDfeS3muCH/upzd/kQPK4S9KfUHdyRvk4T6G3ZhjljF4qE5TlLGU+t7kanJ3OlkNv
-BArKbA3oXSZBOZmlzNaaxsERlPMZyvnxXJrz2R49P55rz/nJXDlnH0V7MlOhdPRnMwkWy9ny
-gSS6OjBRlun5L3R4qcPHOjxT9w86fKrDH3X4fKbeM1VZzNRlISqzqbKzvlGwjmNFEOECg66n
-RjhKYIkaaXjZJh29xjJRmgqMFjWv6ybLcy23VZDoeJNQ1+8RzqBWLOLhRCg7GgmZtU2tUts1
-m4xOLUjge6/sqBF+TFrW7rJurP128O327s/7x6/jVe7vz/ePr3+6uyQPu5evB0/f8eY+24HN
-yiHQM1Xy1uLHJwfz5DLJJz067SW7PUSFY3otFl9DHHOP0Roilb8uA4ylyhoQPT18v/9r99vr
-/cPu4O7b7u7PF1vvO4c/+1VPShsTGE95ICtYy0SwciMfY6AXHb43yc/XU1iPuJSfzhbnUwA8
-0zZZjWHPYYlCVwVNEsQu/rAh36ArwXaNkTWs6MRj9UJ1VbKo8N6R7BryxEh8omaO0Tj7DzeL
-i6CNiFxIimt+Veakf/EFRMDLdmhnXdmDMiPbP+BeLSt01nIWD0ZPoZcWigAvBcCyiTr7E3A6
-N3Cd/+no50Ljkk8Pu4Jxhz6ZHFiK3cPT898H8e73H1+/OpmmHZxs26Q0zEh2uSAVzB56nUQQ
-RsnYr+1pxtArpuLnhhzvy2o4857luEmoRtoXjyfcEndHWWYG1jwnGT1lB5ecJmPPcyqugudo
-6JSNEjpHd3uFoCg6TYJGLtHPkyiYvAtHVroAQViY5PYByUE8iqTIQSo9sfkHvE+CJr9GVeW2
-+06OjmYYbT8/zBBHya5S7xPifQ30wg5W3qe4LHwE/gXC1J1ITaiA9SrNg5X3IV0MU5hsMk86
-1tmKP1Nu+9Eqhk1g6Ayk/exh5YrOM5/IrpcjZNapRtlUwq4b8po6MIpwvYRjJaounR9EX3vD
-0qzdzSF3LIqj/QBjx/z47vT/+vbxK734CGvcrlZiCJoqbWeJOBnVASg9ylbDGI5+hae/DPIu
-2Yuvy79fo2d6GxgmeE5GJpIdgrgPsFge+QXt2WbrIlhkVa4u8O3naB1XTF0hJ544MT8QBsuM
-HHGs7VRX92CGXKRbkHulWUyMXcfnBkdSxvpUh0VukqR2CtfdlsWYQ5PeP/i/l+/3jxiH6OU/
-Bw8/Xnc/d/Cf3evdu3fv/s0Fw2WJR5v+jkfdVJeKm4t7R6kNvBHUtGA5tMk28YYdeZOGD0ed
-/erKUUC9VVd1QJ2VHYOtgpix3FFTrbEqcNBWaE+ZPNGTYIcEdTbNJUa0H8YKGKCJeCNiX3Fv
-CnJjGcat0Ev2W4sdYGugQPPAXjJJEoNENGAzV55e3LhZYwaGmRO0sPFUJvcAGWbaTIXpbrVD
-rP9RpkyRUQMVLWH1kE8OGzAjqraIFauGBl3XexNnVLwQrMDzCURXIpRcePsrg5xdDJZbI2w2
-R3aOYWA14dkZXZsMfdAnTWPjTHh7j3WhM+05qhQ+z1v5keKSFt+J/geuef+4IMtNHoQccbaV
-GEKWUAQbNLouOta1lmTDTjh1xwkpCv1sXRRT3pVURFpBPO1+fODWPrOc8NipjK7bip4T2IAY
-wE3fxMKJPO1Kl6Gkut/21q6QHVeqePqoQc0gvSdc+HrkZ5oS/rQoPu5SvFcyycp+iSuxEezl
-N17K1JqganB5tDTbCaCXYApPPdzNR16HXkHXz3WkKYParCup+vaEcYkkWhuCjoNOAu1gD2TK
-ihtTIx6UJQZrwRNXmyAx+vneyA5aVGOk2tdrCZ6T45BTXFHHDhzyb2RfK5p/JLQB6KxaqKy9
-5DhlZr22oNJGdJ9dePYhyPu6CBpdHv+JrNfAlZ2AcYNXNu35mS9ZLlKiuFYRF4GdI6VupTCb
-QhpY+qDbCVYAcy2SkijdfBO37MqJcd6KYFxSmXa9xKBwUhHY+3JSCNFRVYB2FY9NVmjDQo2v
-bJy9cHqifN/AXJegyIIsPpVdi1VdJ1s8cZANaO2XcS8MGUHcALWl91osaneGUgGGWcvupliw
-6+iNRQuhL2rK3Fot3ODpjHhjytWandq48vGScSk/0KbYd5Ir3ODwruprgYd1ukfSrMTLjqpE
-W+40awowg2S1pE+jK1Fslg0dHLSgKu05D6/IpqjiPQRLPv7R3BK7j4M2wItmGMXJzad7X6AA
-z4Q1ddKFbGVof4IKylZlwV5GcYSyy72mhGw5ONj7eejtnuQx7qmAhUdd383xMlpkvXzry+zu
-fjxjgBxvP5CfgqEkwnhDhQQElE/qnOixtw3ev4gFOjiOeTj86uN1X0EhgXDqm8534yIxNoYC
-DA5q2/jHVlMSdHiwOybrqtooeaZaOYM/g0KBFVpWZiHboZbJ+m3aFAqZL1Ry+1AyKNQiw/do
-4ubT6YcPx6fMJrGRGEroKhwzOGScQcYjrntMb5DAesrzkD184/Og5WdqKqfDWEEOdE+Uz56p
-ZNfcw/cvv98/vv/xsnt+ePqy++3b7q/v5Frz1DcgklnZbZVeGyj79fuv8MiluMcZZ4YrNZ8j
-sW8rvMERXEZya83jsetzsGHBHGiHSh35zAX7IhzHS6DlqlMrYukgddLwFRxBXeNegQE1w8JU
-Tmwwd1XX1SzB2r54o6TGTei2uf60PDo5e5O5i0F34z2qxdHyZI4TZsyW3NfKK9y+V2oB9Yep
-pXqL9AuffmLlU5dO9zeyfT65haMzDFeztG4XjMMBkMaJXVPTADqSMuwLa1rpOqA+H8rNswly
-EoLrZo0IZkxRJKh5hebesxCN37CFCckFJYMQWN3AMCySwODCvY5gCRtvQX4oFZVm07nbKNN0
-iwSMdYbLPWXORTJu+A0cMqXJVv+UetyCnLI4vH+4/e1x79ZFmaz0mLV9SJ4VJBmWH07VlYnG
-+2Gx/DXeq1qwzjB+Onz5drtgDXARgeoqz+jzSUjBszqVAAIMZi3dQaKoprLtt5qVEiCOhoW7
-utZakRy8ZzvQciDpMF4M7ozE7KoBpg1z0HZ2RaBmjUOl336gj00hjMg4We1e797/ufv75f1P
-BOErv6NBOFjjhorxk4KEnk3Ajx59lvrUcIMbCbDsb4JBP1vPJiMSxrGKK41AeL4Ru/8+sEaM
-UqBMvZNY+TxYT1UCPVan23+Nd1SAv8YdB5Ei2ZINJHv31/3jj59Ti7c4PeAmDXWpsmsyEULC
-YmDvR9SGcuiWzj4Oqi8k4pZ4uG13KUntZHJAOpyieuaJ5zFhnT0uazjvbwg+//399eng7ul5
-d/D0fOAsq73p7pjBYFwFNK4Eg5c+zg4oCeizhvkmyuo1e7haUPxEwtlvD/qsDdspmzCV0Z+u
-x6rP1iSYq/2mrn3uDY0pMeaA7t5KdYz3yWBh40FJpICwfg5WSp0G3C+MXwjm3JMwifOJgWuV
-LpZnRZd7BL7sJKBfPC53LrqkSzyK/eOLUjGDB127hpWhh/NNlrHrypU7SXUhmX68fsNIwHe3
-r7svB8njHY4LWMYe/O/+9dtB8PLydHdvSfHt6603PqKo8HtGwaJ1AP+WRzANXi+OWUT6cZCs
-MrOg8eIFwe9TSwEzwO+lCqbIUxqjmxIWLEjxQDHJRXapCNk6gBlqCuYX2rdHcCX24vdE6Hd/
-lIY+1voSFynylUR+2pxesRywWit4q2QIk/rwVLSLvXT78m2uKUXgZ7nWwK1W+GWxf2Amvv+6
-e3n1S2ii46XSXwhraLs4irPUlzRVH87KWBGfKJjCl8F3T3L866unItakFOFTX6wA1gQU4OOl
-IoTO7PVALQtn1WrwsQ8WPtaumsW5opFql6ubIu+/f2NhhaaB50sXYOyt6BEuuzBTuJvI/xRg
-ZFylmfJBR4J3P2AUkKBI8jzz540oQEe7uUSm9T89on5nx0qDU/vXH2Xr4EaxAUyQm0D55KNe
-VBRSouSSNDXb6Jw+sN+bpmauDdOE4PdSe1Wp3T7g+w6cvCIxKDx7bmnqpzTn980HvUUvWA7Y
-2Ykvfex65h5b+8NwuIfpzsFvH788PRyUPx5+3z2PL0Np1QtKk/VRrVlGcRPK8xJKUZWfo2ga
-yFI0RY8ED/yctW3S4M4Q230kJkqv2aAjQa/CRDVzhtrEofXHRFQtWrtW5t42I8WfoPCkb52l
-Zf/x/MP2bapaFeSos6jaRoliWCF1CNY5l9h88I1PxF0I8DnTiXAoo39PbTXlsCeDQn6DmkR6
-wReRP4jsiWmxapNoRuiA7scEJ8RoneSGHjAOQJ/VeCHKOdK9lbJvc72pl1nTZr4w2KQR8wbl
-u2A2aqtKrLswH3hMF3I2u1iPkgb9NdDBGk/OePz3TWQ+Tg7hOtUdVSX0zMPtSNSJu+NoYzRg
-/uTdkghf1vrDmsovB39gANT7r4/ulQHrH878cOzrrnajw5ZzeAeJX95jCmDr/9z9/e777mG/
-lW/vfc5v7vh08+lQpna7IqRrvPQex+iAej4dnUy7Q/9YmTc2jDwOqzKsD9S+1mFWYjHTwevw
-MMXvz7fPfx88P/14vX+k1qnbH6D7BmHWNgl8KLqF5o6/WMi0wa3DtE0Z4SFOY6MXU5kYWUqM
-Ot5mVMynSN1RJgMVYgj8Xr5ND9YqCD2odAYtTjmHb9DCAGy7nqfixjD8VI7HBxxGSxJeo2E6
-7QAxyom6STSwBM2V2L4VHNDRyt5RJKy4iNzhybPQN/IjYjhvt1yLuTOPobfp50TPPLXl+n16
-RF0QCY5jRAics7iBYlHPbNFDACCq5azHBJgLBoDcav3AolHYLazxb28Qlr/7LX1XdcBs5Ofa
-580Ceo1uAAN6+LrH2nVXhB7BgHL18w2jzx4mLwxMd/1XN1mtEkIgLFVKfkO39QiBhuxg/NUM
-Tpo/jnPliLjBJ+5NlVcFf6Ngj+Kx/NkMCQp8g0QVQ0iv1cAPe+vJOoYE9O4P+ryZBD3nNazf
-cGeYCQ8LFU7pBaKQB51jbjx0njZVlLloI0HTBOzI3IZz5X7+CKHjXM+0J+Jsf9ascukxWWJv
-ocMTnvTjYTH1tgUYDQ8eWtBFRFRO4uILOiXkVch/KfqlzPmV6UlCBl8lMqabrpe3kvObvqVe
-oVHVxFSxocvCvqObC9y2IDUs6oyHsPFbBPSUvg+EAc4xULFp6clOWpWt4rlYsZd5LdPZzzMP
-oeJpodOf9Kq2hT7+pLcuLYRx7nMlwwB6oVRwjGHTn/xUCjsS0OLo50KmNl2p1BTQxfIne1QZ
-PeVzeuBkMCw+fSTJOizGSU39K410ApOeWmDAFElfgoJkvmaDDxoRrP8H/0LwvYZtAwA=
-
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---x+6KMIRAuhnl3hBn--
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
+index 669808b2af49..6dd6f399236d 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-ir.txt
+@@ -18,9 +18,6 @@ Required properties:
+ 			assignment of the interrupt router is required.
+ 			Flags get passed only when using GIC as parent. Flags
+ 			encoding as documented by the GIC bindings.
+-- interrupt-parent:	Should be the phandle for the interrupt controller of
+-			the CPU the device tree is intended to be used on. This
+-			is either the node of the GIC or NVIC controller.
+ 
+ Example:
+ 	mscm_ir: interrupt-controller@40001800 {
+diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+index ecb360ed0e33..4cd5d873fc3a 100644
+--- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
++++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+@@ -10,7 +10,6 @@ Required properties:
+ - compatible : Should be "ti,irq-crossbar"
+ - reg: Base address and the size of the crossbar registers.
+ - interrupt-controller: indicates that this block is an interrupt controller.
+-- interrupt-parent: the interrupt controller this block is connected to.
+ - ti,max-irqs: Total number of irqs available at the parent interrupt controller.
+ - ti,max-crossbar-sources: Maximum number of crossbar sources that can be routed.
+ - ti,reg-size: Size of a individual register in bytes. Every individual
+diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+index 16685787d2bd..433bfd7593ac 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+@@ -40,9 +40,6 @@ following properties:
+ - #interrupt-cells: must be identical to the that of the parent interrupt
+   controller.
+ 
+-- interrupt-parent: a phandle indicating which interrupt controller
+-  this PMU signals interrupts to.
+-
+ 
+ Optional nodes:
+ 
+diff --git a/Documentation/devicetree/bindings/ata/fsl-sata.txt b/Documentation/devicetree/bindings/ata/fsl-sata.txt
+index b46bcf46c3d8..fd63bb3becc9 100644
+--- a/Documentation/devicetree/bindings/ata/fsl-sata.txt
++++ b/Documentation/devicetree/bindings/ata/fsl-sata.txt
+@@ -16,7 +16,6 @@ Required properties:
+                           4 for controller @ 0x1b000
+ 
+ Optional properties:
+-- interrupt-parent  : optional, if needed for interrupt mapping
+ - reg               : <registers mapping>
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/ata/pata-arasan.txt b/Documentation/devicetree/bindings/ata/pata-arasan.txt
+index 2aff154be84e..872edc105680 100644
+--- a/Documentation/devicetree/bindings/ata/pata-arasan.txt
++++ b/Documentation/devicetree/bindings/ata/pata-arasan.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+ - compatible: "arasan,cf-spear1340"
+ - reg: Address range of the CF registers
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupt: Should contain the CF interrupt number
+ - clock-frequency: Interface clock rate, in Hz, one of
+        25000000
+diff --git a/Documentation/devicetree/bindings/board/fsl-board.txt b/Documentation/devicetree/bindings/board/fsl-board.txt
+index fb7b03ec2071..eb52f6b35159 100644
+--- a/Documentation/devicetree/bindings/board/fsl-board.txt
++++ b/Documentation/devicetree/bindings/board/fsl-board.txt
+@@ -29,7 +29,6 @@ Required properties:
+ - reg: should contain the address and the length of the FPGA register set.
+ 
+ Optional properties:
+-- interrupt-parent: should specify phandle for the interrupt controller.
+ - interrupts: should specify event (wakeup) IRQ.
+ 
+ Example (P1022DS):
+diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+index 8a6c3c2e58fe..729def62f0c5 100644
+--- a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
++++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+@@ -9,8 +9,6 @@ Required properties:
+     "brcm,bcm7400-gisb-arb" for older 40nm chips and all 65nm chips
+     "brcm,bcm7038-gisb-arb" for 130nm chips
+ - reg: specifies the base physical address and size of the registers
+-- interrupt-parent: specifies the phandle to the parent interrupt controller
+-  this arbiter gets interrupt line from
+ - interrupts: specifies the two interrupts (timeout and TEA) to be used from
+   the parent interrupt controller
+ 
+diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+index 51c259a92d02..33fe9591e904 100644
+--- a/Documentation/devicetree/bindings/clock/at91-clock.txt
++++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+@@ -180,7 +180,6 @@ For example:
+ 	};
+ 
+ Required properties for main clock internal RC oscillator:
+-- interrupt-parent : must reference the PMC node.
+ - interrupts : shall be set to "<0>".
+ - clock-frequency : define the internal RC oscillator frequency.
+ 
+@@ -197,7 +196,6 @@ For example:
+ 	};
+ 
+ Required properties for main clock oscillator:
+-- interrupt-parent : must reference the PMC node.
+ - interrupts : shall be set to "<0>".
+ - #clock-cells : from common clock binding; shall be set to 0.
+ - clocks : shall encode the main osc source clk sources (see atmel datasheet).
+@@ -218,7 +216,6 @@ For example:
+ 	};
+ 
+ Required properties for main clock:
+-- interrupt-parent : must reference the PMC node.
+ - interrupts : shall be set to "<0>".
+ - #clock-cells : from common clock binding; shall be set to 0.
+ - clocks : shall encode the main clk sources (see atmel datasheet).
+@@ -233,7 +230,6 @@ For example:
+ 	};
+ 
+ Required properties for master clock:
+-- interrupt-parent : must reference the PMC node.
+ - interrupts : shall be set to "<3>".
+ - #clock-cells : from common clock binding; shall be set to 0.
+ - clocks : shall be the master clock sources (see atmel datasheet) phandles.
+@@ -292,7 +288,6 @@ For example:
+ 
+ 
+ Required properties for pll clocks:
+-- interrupt-parent : must reference the PMC node.
+ - interrupts : shall be set to "<1>".
+ - #clock-cells : from common clock binding; shall be set to 0.
+ - clocks : shall be the main clock phandle.
+@@ -348,7 +343,6 @@ For example:
+ 	};
+ 
+ Required properties for programmable clocks:
+-- interrupt-parent : must reference the PMC node.
+ - #size-cells : shall be 0 (reg is used to encode clk id).
+ - #address-cells : shall be 1 (reg is used to encode clk id).
+ - clocks : shall be the programmable clock source phandles.
+@@ -451,7 +445,6 @@ For example:
+ 
+ 
+ Required properties for utmi clock:
+-- interrupt-parent : must reference the PMC node.
+ - interrupts : shall be set to "<AT91_PMC_LOCKU IRQ_TYPE_LEVEL_HIGH>".
+ - #clock-cells : from common clock binding; shall be set to 0.
+ - clocks : shall be the main clock source phandle.
+diff --git a/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt b/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+index af2385795d78..73470ecd1f12 100644
+--- a/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
++++ b/Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+@@ -29,8 +29,6 @@ Required properties:
+ - reg: Specifies base physical address and size of the registers.
+ - interrupts: The interrupt that the AVS CPU will use to interrupt the host
+               when a command completed.
+-- interrupt-parent: The interrupt controller the above interrupt is routed
+-                    through.
+ - interrupt-names: The name of the interrupt used to interrupt the host.
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/crypto/amd-ccp.txt b/Documentation/devicetree/bindings/crypto/amd-ccp.txt
+index 8c61183b41e0..d87579d63da6 100644
+--- a/Documentation/devicetree/bindings/crypto/amd-ccp.txt
++++ b/Documentation/devicetree/bindings/crypto/amd-ccp.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+ - compatible: Should be "amd,ccp-seattle-v1a"
+ - reg: Address and length of the register set for the device
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the CCP interrupt
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+index c2598ab27f2e..999fb2a810f6 100644
+--- a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
++++ b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+@@ -7,8 +7,6 @@ Required properties:
+ - interrupts: Interrupt number for the device.
+ 
+ Optional properties:
+-- interrupt-parent: The phandle for the interrupt controller that services
+-  interrupts for this device.
+ - clocks: Reference to the crypto engine clock.
+ - dma-coherent: Present if dma operations are coherent.
+ 
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+index f0d926bf9f36..125f155d00d0 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec2.txt
+@@ -50,11 +50,6 @@ remaining bits are reserved for future SEC EUs.
+ 
+   ..and so on and so forth.
+ 
+-Optional properties:
+-
+-- interrupt-parent : the phandle for the interrupt controller that
+-  services interrupts for this device.
+-
+ Example:
+ 
+ 	/* MPC8548E */
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index 3c1f3a229eab..2fe245ca816a 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -99,13 +99,6 @@ PROPERTIES
+            of the specifier is defined by the binding document
+            describing the node's interrupt parent.
+ 
+-   - interrupt-parent
+-      Usage: (required if interrupt property is defined)
+-      Value type: <phandle>
+-      Definition: A single <phandle> value that points
+-          to the interrupt parent to which the child domain
+-          is being mapped.
+-
+    - clocks
+       Usage: required if SEC 4.0 requires explicit enablement of clocks
+       Value type: <prop_encoded-array>
+@@ -199,13 +192,6 @@ Job Ring (JR) Node
+            of the specifier is defined by the binding document
+            describing the node's interrupt parent.
+ 
+-   - interrupt-parent
+-      Usage: (required if interrupt property is defined)
+-      Value type: <phandle>
+-      Definition: A single <phandle> value that points
+-          to the interrupt parent to which the child domain
+-          is being mapped.
+-
+ EXAMPLE
+ 	jr@1000 {
+ 		compatible = "fsl,sec-v4.0-job-ring";
+@@ -370,13 +356,6 @@ Secure Non-Volatile Storage (SNVS) Node
+            of the specifier is defined by the binding document
+            describing the node's interrupt parent.
+ 
+-   - interrupt-parent
+-      Usage: (required if interrupt property is defined)
+-      Value type: <phandle>
+-      Definition: A single <phandle> value that points
+-          to the interrupt parent to which the child domain
+-          is being mapped.
+-
+ EXAMPLE
+ 	sec_mon@314000 {
+ 		compatible = "fsl,sec-v4.0-mon", "syscon";
+diff --git a/Documentation/devicetree/bindings/crypto/picochip-spacc.txt b/Documentation/devicetree/bindings/crypto/picochip-spacc.txt
+index d8609ece1f4c..df1151f87745 100644
+--- a/Documentation/devicetree/bindings/crypto/picochip-spacc.txt
++++ b/Documentation/devicetree/bindings/crypto/picochip-spacc.txt
+@@ -7,8 +7,6 @@ Required properties:
+   - compatible : "picochip,spacc-ipsec" for the IPSEC offload engine
+     "picochip,spacc-l2" for the femtocell layer 2 ciphering engine.
+   - reg : Offset and length of the register set for this device
+-  - interrupt-parent : The interrupt controller that controls the SPAcc
+-    interrupt.
+   - interrupts : The interrupt line from the SPAcc.
+   - ref-clock : The input clock that drives the SPAcc.
+ 
+diff --git a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+index 0c7473dd0e51..027d76c27a41 100644
+--- a/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
++++ b/Documentation/devicetree/bindings/display/bridge/analogix_dp.txt
+@@ -15,8 +15,6 @@ Required properties for dp-controller:
+ 		from common clock binding: handle to dp clock.
+ 	-clock-names:
+ 		from common clock binding: Shall be "dp".
+-	-interrupt-parent:
+-		phandle to Interrupt combiner node.
+ 	-phys:
+ 		from general PHY binding: the phandle for the PHY device.
+ 	-phy-names:
+diff --git a/Documentation/devicetree/bindings/display/bridge/anx7814.txt b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
+index b2a22c28c9b3..dbd7c84ee584 100644
+--- a/Documentation/devicetree/bindings/display/bridge/anx7814.txt
++++ b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
+@@ -8,8 +8,6 @@ Required properties:
+ 
+  - compatible		: "analogix,anx7814"
+  - reg			: I2C address of the device
+- - interrupt-parent	: Should be the phandle of the interrupt controller
+-			  that services interrupts for this device
+  - interrupts		: Should contain the INTP interrupt
+  - hpd-gpios		: Which GPIO to use for hpd
+  - pd-gpios		: Which GPIO to use for power down
+diff --git a/Documentation/devicetree/bindings/display/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt b/Documentation/devicetree/bindings/display/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
+index aacc8b92968c..09e0a21f705e 100644
+--- a/Documentation/devicetree/bindings/display/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
++++ b/Documentation/devicetree/bindings/display/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
+@@ -19,8 +19,6 @@ hardware are EDID, HPD, and interrupts.
+ stdp4028-ge-b850v3-fw required properties:
+   - compatible : "megachips,stdp4028-ge-b850v3-fw"
+   - reg : I2C bus address
+-  - interrupt-parent : phandle of the interrupt controller that services
+-    interrupts to the device
+   - interrupts : one interrupt should be described here, as in
+     <0 IRQ_TYPE_LEVEL_HIGH>
+   - ports : One input port(reg = <0>) and one output port(reg = <1>)
+diff --git a/Documentation/devicetree/bindings/display/bridge/sii902x.txt b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+index 56a3e68ccb80..72d2dc6c3e6b 100644
+--- a/Documentation/devicetree/bindings/display/bridge/sii902x.txt
++++ b/Documentation/devicetree/bindings/display/bridge/sii902x.txt
+@@ -5,8 +5,8 @@ Required properties:
+ 	- reg: i2c address of the bridge
+ 
+ Optional properties:
+-	- interrupts-extended or interrupt-parent + interrupts: describe
+-	  the interrupt line used to inform the host about hotplug events.
++	- interrupts: describe the interrupt line used to inform the host 
++	  about hotplug events.
+ 	- reset-gpios: OF device-tree gpio specification for RST_N pin.
+ 
+ Optional subnodes:
+diff --git a/Documentation/devicetree/bindings/display/bridge/sii9234.txt b/Documentation/devicetree/bindings/display/bridge/sii9234.txt
+index 88041ba23d56..a55bf77bd960 100644
+--- a/Documentation/devicetree/bindings/display/bridge/sii9234.txt
++++ b/Documentation/devicetree/bindings/display/bridge/sii9234.txt
+@@ -7,7 +7,7 @@ Required properties:
+ 	- iovcc18-supply : I/O Supply Voltage (1.8V)
+ 	- avcc12-supply : TMDS Analog Supply Voltage (1.2V)
+ 	- cvcc12-supply : Digital Core Supply Voltage (1.2V)
+-	- interrupts, interrupt-parent: interrupt specifier of INT pin
++	- interrupts: interrupt specifier of INT pin
+ 	- reset-gpios: gpio specifier of RESET pin (active low)
+ 	- video interfaces: Device node can contain two video interface port
+ 			    nodes for HDMI encoder and connector according to [1].
+diff --git a/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+index 9409d9c6a260..b05052f7d62f 100644
+--- a/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
++++ b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+@@ -5,7 +5,7 @@ Required properties:
+ 	- reg: i2c address of the bridge
+ 	- cvcc10-supply: Digital Core Supply Voltage (1.0V)
+ 	- iovcc18-supply: I/O Supply Voltage (1.8V)
+-	- interrupts, interrupt-parent: interrupt specifier of INT pin
++	- interrupts: interrupt specifier of INT pin
+ 	- reset-gpios: gpio specifier of RESET pin
+ 	- clocks, clock-names: specification and name of "xtal" clock
+ 	- video interfaces: Device node can contain video interface port
+diff --git a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
+index 9e2e7f6f7609..53912c99ec38 100644
+--- a/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
++++ b/Documentation/devicetree/bindings/display/exynos/exynos7-decon.txt
+@@ -9,9 +9,6 @@ Required properties:
+ 
+ - reg: physical base address and length of the DECON registers set.
+ 
+-- interrupt-parent: should be the phandle of the decon controller's
+-		parent interrupt controller.
+-
+ - interrupts: should contain a list of all DECON IP block interrupts in the
+ 		 order: FIFO Level, VSYNC, LCD_SYSTEM. The interrupt specifier
+ 		 format depends on the interrupt controller used.
+diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt b/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
+index ade5d8eebf85..9b6cba3f82af 100644
+--- a/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
++++ b/Documentation/devicetree/bindings/display/exynos/exynos_dp.txt
+@@ -25,8 +25,6 @@ Required properties for dp-controller:
+ 		from common clock binding: handle to dp clock.
+ 	-clock-names:
+ 		from common clock binding: Shall be "dp".
+-	-interrupt-parent:
+-		phandle to Interrupt combiner node.
+ 	-phys:
+ 		from general PHY binding: the phandle for the PHY device.
+ 	-phy-names:
+diff --git a/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt b/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
+index 5837402c3ade..b3096421d42b 100644
+--- a/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
++++ b/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
+@@ -16,9 +16,6 @@ Required properties:
+ 
+ - reg: physical base address and length of the FIMD registers set.
+ 
+-- interrupt-parent: should be the phandle of the fimd controller's
+-		parent interrupt controller.
+-
+ - interrupts: should contain a list of all FIMD IP block interrupts in the
+ 		 order: FIFO Level, VSYNC, LCD_SYSTEM. The interrupt specifier
+ 		 format depends on the interrupt controller used.
+diff --git a/Documentation/devicetree/bindings/display/ht16k33.txt b/Documentation/devicetree/bindings/display/ht16k33.txt
+index 8e5b30b87754..d5a8b070b467 100644
+--- a/Documentation/devicetree/bindings/display/ht16k33.txt
++++ b/Documentation/devicetree/bindings/display/ht16k33.txt
+@@ -4,8 +4,6 @@ Holtek ht16k33 RAM mapping 16*8 LED controller driver with keyscan
+ Required properties:
+ - compatible:		"holtek,ht16k33"
+ - reg:			I2C slave address of the chip.
+-- interrupt-parent:	A phandle pointing to the interrupt controller
+-			serving the interrupt for this chip.
+ - interrupts:		Interrupt specification for the key pressed interrupt.
+ - refresh-rate-hz:	Display update interval in HZ.
+ - debounce-delay-ms:	Debouncing interval time in milliseconds.
+diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+index 518e9cdf0d4b..5eaffca2e28c 100644
+--- a/Documentation/devicetree/bindings/display/msm/dsi.txt
++++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+@@ -43,8 +43,6 @@ Optional properties:
+   the master link of the 2-DSI panel.
+ - qcom,sync-dual-dsi: Boolean value indicating if the DSI controller is
+   driving a 2-DSI panel whose 2 links need receive command simultaneously.
+-- interrupt-parent: phandle to the MDP block if the interrupt signal is routed
+-  through MDP block
+ - pinctrl-names: the pin control state names; should contain "default"
+ - pinctrl-0: the default pinctrl state (active)
+ - pinctrl-n: the "sleep" pinctrl state
+diff --git a/Documentation/devicetree/bindings/display/msm/edp.txt b/Documentation/devicetree/bindings/display/msm/edp.txt
+index 95ce19ca7bc5..eff9daff418c 100644
+--- a/Documentation/devicetree/bindings/display/msm/edp.txt
++++ b/Documentation/devicetree/bindings/display/msm/edp.txt
+@@ -25,10 +25,6 @@ Required properties:
+ - panel-hpd-gpios: GPIO pin used for eDP hpd.
+ 
+ 
+-Optional properties:
+-- interrupt-parent: phandle to the MDP block if the interrupt signal is routed
+-  through MDP block
+-
+ Example:
+ 	mdss_edp: qcom,mdss_edp@fd923400 {
+ 			compatible = "qcom,mdss-edp";
+diff --git a/Documentation/devicetree/bindings/display/msm/mdp5.txt b/Documentation/devicetree/bindings/display/msm/mdp5.txt
+index 1b31977a68ba..4e11338548aa 100644
+--- a/Documentation/devicetree/bindings/display/msm/mdp5.txt
++++ b/Documentation/devicetree/bindings/display/msm/mdp5.txt
+@@ -41,8 +41,6 @@ Required properties:
+ - reg-names: The names of register regions. The following regions are required:
+   * "mdp_phys"
+ - interrupts: Interrupt line from MDP5 to MDSS interrupt controller.
+-- interrupt-parent: phandle to the MDSS block
+-  through MDP block
+ - clocks: device clocks. See ../clocks/clock-bindings.txt for details.
+ - clock-names: the following clocks are required.
+ -   * "bus"
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index 7c6854bd0a04..ec9d34be2ff7 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -19,7 +19,6 @@ Required Properties:
+ 
+   - reg: the memory-mapped I/O registers base address and length
+ 
+-  - interrupt-parent: phandle of the parent interrupt controller.
+   - interrupts: Interrupt specifiers for the DU interrupts.
+ 
+   - clocks: A list of phandles + clock-specifier pairs, one for each entry in
+diff --git a/Documentation/devicetree/bindings/display/sm501fb.txt b/Documentation/devicetree/bindings/display/sm501fb.txt
+index 9d9f0098092b..1c79c267a57f 100644
+--- a/Documentation/devicetree/bindings/display/sm501fb.txt
++++ b/Documentation/devicetree/bindings/display/sm501fb.txt
+@@ -9,8 +9,6 @@ Required properties:
+     - First entry: System Configuration register
+     - Second entry: IO space (Display Controller register)
+ - interrupts : SMI interrupt to the cpu should be described here.
+-- interrupt-parent : the phandle for the interrupt controller that
+-  services interrupts for this device.
+ 
+ Optional properties:
+ - mode : select a video mode:
+diff --git a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+index 3055d5c2c04e..7bf1bb444812 100644
+--- a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
++++ b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
+@@ -8,8 +8,6 @@ Required properties:
+  - reg: base address and size of the LCDC device
+ 
+ Recommended properties:
+- - interrupt-parent: the phandle for the interrupt controller that
+-   services interrupts for this device.
+  - ti,hwmods: Name of the hwmod associated to the LCDC
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+index f25feee62b15..03e9cf7b42e0 100644
+--- a/Documentation/devicetree/bindings/dma/jz4780-dma.txt
++++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+@@ -5,7 +5,6 @@ Required properties:
+ - compatible: Should be "ingenic,jz4780-dma"
+ - reg: Should contain the DMA controller registers location and length.
+ - interrupts: Should contain the interrupt specifier of the DMA controller.
+-- interrupt-parent: Should be the phandle of the interrupt controller that
+ - clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
+ - #dma-cells: Must be <2>. Number of integer cells in the dmas property of
+   DMA clients (see below).
+diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+index 1e1dc8f972e4..2f35b047f772 100644
+--- a/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
++++ b/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+@@ -8,7 +8,6 @@ Required properties:
+ - reg: Should contain DMA registers location and length. This should be
+   a single entry that includes all of the per-channel registers in one
+   contiguous bank.
+-- interrupt-parent: Phandle to the interrupt parent controller.
+ - interrupts: Should contain all of the per-channel DMA interrupts in
+   ascending order with respect to the DMA channel index.
+ - clocks: Must contain one entry for the ADMA module clock
+diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+index f237b7928283..dbe160400adc 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
++++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+@@ -5,8 +5,6 @@ Required properties:
+ - reg: Address range of the DMAC registers. This should include
+   all of the per-channel registers.
+ - interrupt: Should contain the DMAC interrupt number.
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device.
+ - dma-channels: Number of channels supported by hardware.
+ - snps,dma-masters: Number of AXI masters supported by the hardware.
+ - snps,data-width: Maximum AXI data width supported by hardware.
+diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
+index 99acc712f83a..39e2b26be344 100644
+--- a/Documentation/devicetree/bindings/dma/snps-dma.txt
++++ b/Documentation/devicetree/bindings/dma/snps-dma.txt
+@@ -23,8 +23,6 @@ Deprecated properties:
+ 
+ 
+ Optional properties:
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - is_private: The device channels should be marked as private and not for by the
+   general purpose DMA channel allocator. False if not passed.
+ - multi-block: Multi block transfers supported by hardware. Array property with
+diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+index 3f15f6644527..4bbc94d829c8 100644
+--- a/Documentation/devicetree/bindings/dma/ti-edma.txt
++++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+@@ -201,7 +201,6 @@ Required properties:
+ - #dma-cells: Should be set to <1>
+               Clients should use a single channel number per DMA request.
+ - reg: Memory map for accessing module
+-- interrupt-parent: Interrupt controller the interrupt is routed through
+ - interrupts: Exactly 3 interrupts need to be specified in the order:
+               1. Transfer completion interrupt.
+               2. Memory protection interrupt.
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+index a784cdd94790..07a5a7aa9ea0 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
++++ b/Documentation/devicetree/bindings/dma/xilinx/zynqmp_dma.txt
+@@ -5,7 +5,6 @@ control and rate control support for slave/peripheral dma access.
+ Required properties:
+ - compatible		: Should be "xlnx,zynqmp-dma-1.0"
+ - reg			: Memory map for gdma/adma module access.
+-- interrupt-parent	: Interrupt controller the interrupt is routed through
+ - interrupts		: Should contain DMA channel interrupt.
+ - xlnx,bus-width	: Axi buswidth in bits. Should contain 128 or 64
+ - clock-names		: List of input clocks "clk_main", "clk_apb"
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-rt8973a.txt b/Documentation/devicetree/bindings/extcon/extcon-rt8973a.txt
+index 6dede7d11532..cfcf455ad4de 100644
+--- a/Documentation/devicetree/bindings/extcon/extcon-rt8973a.txt
++++ b/Documentation/devicetree/bindings/extcon/extcon-rt8973a.txt
+@@ -11,8 +11,6 @@ for USB D-/D+ switching.
+ Required properties:
+ - compatible: Should be "richtek,rt8973a-muic"
+ - reg: Specifies the I2C slave address of the MUIC block. It should be 0x14
+-- interrupt-parent: Specifies the phandle of the interrupt controller to which
+-  the interrupts from rt8973a are delivered to.
+ - interrupts: Interrupt specifiers for detection interrupt sources.
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-sm5502.txt b/Documentation/devicetree/bindings/extcon/extcon-sm5502.txt
+index 4ecda224955f..fc3888e09549 100644
+--- a/Documentation/devicetree/bindings/extcon/extcon-sm5502.txt
++++ b/Documentation/devicetree/bindings/extcon/extcon-sm5502.txt
+@@ -9,8 +9,6 @@ the host controller using an I2C interface.
+ Required properties:
+ - compatible: Should be "siliconmitus,sm5502-muic"
+ - reg: Specifies the I2C slave address of the MUIC block. It should be 0x25
+-- interrupt-parent: Specifies the phandle of the interrupt controller to which
+-  the interrupts from sm5502 are delivered to.
+ - interrupts: Interrupt specifiers for detection interrupt sources.
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt b/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
+index 798cfc9d3839..973362eb3f1e 100644
+--- a/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/8xxx_gpio.txt
+@@ -25,8 +25,6 @@ Required properties:
+ - #gpio-cells:		Should be two. The first cell is the pin number
+ 			and the second cell is used to specify optional
+ 			parameters (currently unused).
+-- interrupt-parent:	Phandle for the interrupt controller that
+-			services interrupts for this device.
+ - interrupts:		Interrupt mapping for GPIO IRQ.
+ - gpio-controller:	Marks the port as GPIO controller.
+ 
+diff --git a/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt b/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt
+index a25c87b650e5..ce19c5660aca 100644
+--- a/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt
+@@ -14,7 +14,6 @@ Optional Properties:
+ - #interrupt-cells: Should be <1>. Interrupts are triggered on both edges.
+ - interrupts: Defines the interrupt line connecting this GPIO controller to
+   its parent interrupt controller.
+-- interrupt-parent: Defines the parent interrupt controller.
+ 
+ GPIO ranges are specified as described in
+ Documentation/devicetree/bindings/gpio/gpio.txt
+diff --git a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+index b405b4410bfb..5d468ecd1809 100644
+--- a/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+@@ -30,9 +30,6 @@ Optional properties:
+ - interrupts:
+     The interrupt shared by all GPIO lines for this controller.
+ 
+-- interrupt-parent:
+-    phandle of the parent interrupt controller
+-
+ - interrupts-extended:
+     Alternate form of specifying interrupts and parents that allows for
+     multiple parents.  This takes precedence over 'interrupts' and
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
+index af66b2724837..a28902a65a62 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
+@@ -3,7 +3,6 @@ Avionic Design N-bit GPIO expander bindings
+ Required properties:
+ - compatible: should be "ad,gpio-adnp"
+ - reg: The I2C slave address for this device.
+-- interrupt-parent: phandle of the parent interrupt controller.
+ - interrupts: Interrupt specifier for the controllers interrupt.
+ - #gpio-cells: Should be 2. The first cell is the GPIO number and the
+   second cell is used to specify optional parameters:
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+index fc6378c778c5..7e9b586770b0 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+@@ -17,7 +17,6 @@ Required properties:
+ 
+ Optional properties:
+ 
+-- interrupt-parent      : The parent interrupt controller, optional if inherited
+ - clocks                : A phandle to the clock to use for debounce timings
+ 
+ The gpio and interrupt properties are further described in their respective
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-ath79.txt b/Documentation/devicetree/bindings/gpio/gpio-ath79.txt
+index c522851017ae..cf71f3ec969d 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-ath79.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-ath79.txt
+@@ -12,7 +12,6 @@ Required properties:
+ - ngpios: Should be set to the number of GPIOs available on the SoC.
+ 
+ Optional properties:
+-- interrupt-parent: phandle of the parent interrupt controller.
+ - interrupts: Interrupt specifier for the controllers interrupt.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode interrupt
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+index 8beb0539b6d8..553b92a7e87b 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+@@ -15,8 +15,6 @@ Required Properties:
+   - first cell is the pin number
+   - second cell is used to specify optional parameters (unused)
+ 
+-- interrupt-parent: phandle of the parent interrupt controller.
+-
+ - interrupts: Array of GPIO interrupt number. Only banked or unbanked IRQs are
+ 	      supported at a time.
+ 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt b/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
+index 5fdc843b4542..b3a9c0c32823 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-max732x.txt
+@@ -30,7 +30,6 @@ Optional properties:
+   - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
+     - first cell is the pin number
+     - second cell is used to specify flags
+-  - interrupt-parent: phandle of the parent interrupt controller.
+   - interrupts: Interrupt specifier for the controllers interrupt.
+ 
+ Please refer to gpio.txt in this directory for details of the common GPIO
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+index 7d3bd631d011..a482455a205b 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+@@ -49,7 +49,6 @@ Optional Properties:
+ 
+   - interrupt-controller: Identifies the node as an interrupt controller.
+   - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
+-  - interrupt-parent: phandle of the parent interrupt controller.
+   - interrupts: Interrupt specifier for the controllers interrupt.
+ 
+ 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+index fed9158dd913..f281f12dac18 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+@@ -6,7 +6,6 @@ Required properties:
+ - gpio-controller: Marks the device node as a GPIO controller.
+ - #gpio-cells: Should be 2.  The first cell is the pin number and the second
+   cell is used to specify optional parameters.
+-- interrupt-parent: Specifies the parent interrupt controller.
+ - interrupt-controller: Marks the device node as an interrupt controller.
+ - #interrupt-cells: Should be 2.  The first cell defines the interrupt number.
+   The second cell bits[3:0] is used to specify trigger type as follows:
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+index 5490c1d68981..e90fb987e25f 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-xgene-sb.txt
+@@ -26,7 +26,6 @@ Required properties:
+ 		1 = active low
+ - gpio-controller: Marks the device node as a GPIO controller.
+ - interrupts: The EXT_INT_0 parent interrupt resource must be listed first.
+-- interrupt-parent: Phandle of the parent interrupt controller.
+ - interrupt-cells: Should be two.
+        - first cell is 0-N coresponding for EXT_INT_0 to EXT_INT_N.
+        - second cell is used to specify flags.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+index 63bf4becd5f0..08eed2335db0 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+@@ -14,8 +14,6 @@ Required properties:
+ 
+ Optional properties:
+ - interrupts : Interrupt mapping for GPIO IRQ.
+-- interrupt-parent : Phandle for the interrupt controller that
+-  services interrupts for this device.
+ - xlnx,all-inputs : if n-th bit is setup, GPIO-n is input
+ - xlnx,dout-default : if n-th bit is 1, GPIO-n default value is 1
+ - xlnx,gpio-width : gpio width
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-xlp.txt b/Documentation/devicetree/bindings/gpio/gpio-xlp.txt
+index 28662d83a43e..47fc64922fe0 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-xlp.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-xlp.txt
+@@ -30,7 +30,6 @@ Required properties:
+ 	4 = active high level-sensitive.
+ 	8 = active low level-sensitive.
+ - interrupts: Interrupt number for this device.
+-- interrupt-parent: phandle of the parent interrupt controller.
+ - interrupt-controller: Identifies the node as an interrupt controller.
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
+index 7b542657f259..4fa4eb5507cd 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
+@@ -11,7 +11,6 @@ Required properties:
+ - gpio-controller	: Marks the device node as a GPIO controller.
+ - interrupts		: Interrupt specifier (see interrupt bindings for
+ 			  details)
+-- interrupt-parent	: Must be core interrupt controller
+ - interrupt-controller	: Marks the device node as an interrupt controller.
+ - #interrupt-cells 	: Should be 2.  The first cell is the GPIO number.
+ 			  The second cell bits[3:0] is used to specify trigger type and level flags:
+diff --git a/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+index 20fc72d9e61e..8c9e4c3d788d 100644
+--- a/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/nintendo,hollywood-gpio.txt
+@@ -14,7 +14,6 @@ Optional properties:
+ - #interrupt-cells: Should be two.
+ - interrupts: Interrupt specifier for the controller's Broadway (PowerPC)
+   interrupt.
+-- interrupt-parent: phandle of the parent interrupt controller.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+index 378f1322211e..fe1bf24104d3 100644
+--- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -31,7 +31,6 @@ Required Properties:
+   - reg: Base address and length of each memory resource used by the GPIO
+     controller hardware module.
+ 
+-  - interrupt-parent: phandle of the parent interrupt controller.
+   - interrupts: Interrupt specifier for the controllers interrupt.
+ 
+   - gpio-controller: Marks the device node as a gpio controller.
+diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+index 3c1118bc67f5..7276b50c3506 100644
+--- a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+@@ -25,7 +25,6 @@ controller.
+   interrupt.  Shall be set to 2.  The first cell defines the interrupt number,
+   the second encodes the triger flags encoded as described in
+   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+-- interrupt-parent : The parent interrupt controller.
+ - interrupts : The interrupts to the parent controller raised when GPIOs
+   generate the interrupts. If the controller provides one combined interrupt
+   for all GPIOs, specify a single interrupt. If the controller provides one
+diff --git a/Documentation/devicetree/bindings/hsi/omap-ssi.txt b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+index 955e335e7e56..77a0c3c3036e 100644
+--- a/Documentation/devicetree/bindings/hsi/omap-ssi.txt
++++ b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+@@ -33,7 +33,6 @@ Required Port sub-node properties:
+ - reg-names:		Contains the values "tx" and "rx" (in this order).
+ - reg:			Contains a matching register specifier for each entry
+ 			in reg-names.
+-- interrupt-parent	Should be a phandle for the interrupt controller
+ - interrupts:		Should contain interrupt specifiers for mpu interrupts
+ 			0 and 1 (in this order).
+ - ti,ssi-cawake-gpio:	Defines which GPIO pin is used to signify CAWAKE
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+index e7106bfc1f13..8fbd8633a387 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+@@ -11,9 +11,6 @@ Required Properties:
+ - resets		: phandle to reset controller with the reset number in
+ 			  the second cell
+ - interrupts		: interrupt number
+-- interrupt-parent	: interrupt controller for bus, should reference a
+-			  aspeed,ast2400-i2c-ic or aspeed,ast2500-i2c-ic
+-			  interrupt controller
+ 
+ Optional Properties:
+ - bus-frequency	: frequency of the bus clock in Hz defaults to 100 kHz when not
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt b/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
+index aeceaceba3c5..0380609b177a 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-brcmstb.txt
+@@ -10,8 +10,6 @@ Required properties:
+ 
+ Optional properties :
+ 
+-- interrupt-parent: specifies the phandle to the parent interrupt controller
+-  this one is cascaded from
+ - interrupts: specifies the interrupt number, the irq line to be used
+ - interrupt-names: Interrupt name string
+ 
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+index 60fe90d69f4e..00e4365d7206 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+@@ -5,7 +5,6 @@ Required properties:
+   - "fsl,imx7ulp-lpi2c" for LPI2C compatible with the one integrated on i.MX7ULP soc
+   - "fsl,imx8dv-lpi2c" for LPI2C compatible with the one integrated on i.MX8DV soc
+ - reg : address and length of the lpi2c master registers
+-- interrupt-parent : core interrupt controller
+ - interrupts : lpi2c interrupt
+ - clocks : lpi2c clock specifier
+ 
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt b/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
+index d4a082acf92f..3738cfbf863f 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-jz4780.txt
+@@ -11,10 +11,6 @@ Recommended properties:
+ - pinctrl-names: should be "default";
+ - pinctrl-0: phandle to pinctrl function
+ 
+-Optional properties:
+-- interrupt-parent: Should be the phandle of the interrupt controller that
+-  delivers interrupts to the I2C block.
+-
+ Example
+ 
+ / {
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mpc.txt b/Documentation/devicetree/bindings/i2c/i2c-mpc.txt
+index 1eacd6b20ed5..42a390526957 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mpc.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mpc.txt
+@@ -15,8 +15,6 @@ Recommended properties :
+    information for the interrupt.  This should be encoded based on
+    the information in section 2) depending on the type of interrupt
+    controller you have.
+- - interrupt-parent : the phandle for the interrupt controller that
+-   services interrupts for this device.
+  - fsl,preserve-clocking : boolean; if defined, the clock settings
+    from the bootloader are preserved (not touched).
+  - clock-frequency : desired I2C bus clock frequency in Hz.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+index 34d91501342e..ccf6c86ed076 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -28,8 +28,6 @@ Optional Properties:
+   - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
+     children in idle state. This is necessary for example, if there are several
+     multiplexers on the bus and the devices behind them use same I2C addresses.
+-  - interrupt-parent: Phandle for the interrupt controller that services
+-    interrupts for this device.
+   - interrupts: Interrupt mapping for IRQ.
+   - interrupt-controller: Marks the device node as an interrupt controller.
+   - #interrupt-cells : Should be two.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt b/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
+index f1f3876bb8e8..73a693d66ef7 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
+@@ -12,8 +12,6 @@ Required properties :
+ 
+ Optional properties
+  - interrupts : the interrupt number
+- - interrupt-parent : the phandle for the interrupt controller.
+-   If an interrupt is not specified polling will be used.
+  - reset-gpios : gpio specifier for gpio connected to RESET_N pin. As the line
+    is active low, it should be marked GPIO_ACTIVE_LOW.
+  - clock-frequency : I2C bus frequency.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pnx.txt b/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
+index fe98ada33ee4..2a59006cf79e 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
+@@ -7,8 +7,6 @@ Required properties:
+  - interrupts: configure one interrupt line
+  - #address-cells: always 1 (for i2c addresses)
+  - #size-cells: always 0
+- - interrupt-parent: the phandle for the interrupt controller that
+-   services interrupts for this device.
+ 
+ Optional properties:
+ 
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+index d30f0b11d853..c30783c0eca0 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+@@ -12,9 +12,6 @@ Required properties :
+ Recommended properties :
+ 
+  - interrupts : the interrupt number
+- - interrupt-parent : the phandle for the interrupt controller that
+-   services interrupts for this device. If the parent is the default
+-   interrupt controller in device tree, it could be ignored.
+  - mrvl,i2c-polling : Disable interrupt of i2c controller. Polling
+    status register of i2c controller instead.
+  - mrvl,i2c-fast-mode : Enable fast mode of i2c controller.
+diff --git a/Documentation/devicetree/bindings/iio/accel/adxl345.txt b/Documentation/devicetree/bindings/iio/accel/adxl345.txt
+index e7111b02c02c..ae09a046bc72 100644
+--- a/Documentation/devicetree/bindings/iio/accel/adxl345.txt
++++ b/Documentation/devicetree/bindings/iio/accel/adxl345.txt
+@@ -11,8 +11,6 @@ Required properties for SPI bus usage:
+  - spi-cpol and spi-cpha : must be defined for adxl345 to enable SPI mode 3
+ 
+ Optional properties:
+- - interrupt-parent : phandle to the parent interrupt controller as documented
+-   in Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+  - interrupts: interrupt mapping for IRQ as documented in
+    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ 
+diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+index 4a3679d54457..3b25b4c4d446 100644
+--- a/Documentation/devicetree/bindings/iio/accel/bma180.txt
++++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+@@ -10,8 +10,6 @@ Required properties:
+ 
+ Optional properties:
+ 
+-  - interrupt-parent : should be the phandle for the interrupt controller
+-
+   - interrupts : interrupt mapping for GPIO IRQ, it should by configured with
+ 		flags IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING
+ 		For the bma250 the first interrupt listed must be the one
+diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+index 45f5c5c5929c..2100e9af379c 100644
+--- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
++++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
+@@ -15,8 +15,6 @@ Required properties:
+ 
+ Optional properties:
+ 
+-  - interrupt-parent: should be the phandle for the interrupt controller
+-
+   - interrupts: interrupt mapping for GPIO IRQ
+ 
+   - interrupt-names: should contain "INT1" and/or "INT2", the accelerometer's
+diff --git a/Documentation/devicetree/bindings/iio/adc/cpcap-adc.txt b/Documentation/devicetree/bindings/iio/adc/cpcap-adc.txt
+index 487ea966858e..ec04008e8f4f 100644
+--- a/Documentation/devicetree/bindings/iio/adc/cpcap-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/cpcap-adc.txt
+@@ -2,7 +2,6 @@ Motorola CPCAP PMIC ADC binding
+ 
+ Required properties:
+ - compatible: Should be "motorola,cpcap-adc" or "motorola,mapphone-cpcap-adc"
+-- interrupt-parent: The interrupt controller
+ - interrupts: The interrupt number for the ADC device
+ - interrupt-names: Should be "adcdone"
+ - #io-channel-cells: Number of cells in an IIO specifier
+diff --git a/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt b/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+index b0866d36a307..eebdcec3dab5 100644
+--- a/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
++++ b/Documentation/devicetree/bindings/iio/adc/fsl,imx25-gcq.txt
+@@ -8,7 +8,6 @@ Required properties:
+  - reg: Should be the register range of the module.
+  - interrupts: Should be the interrupt number of the module.
+    Typically this is <1>.
+- - interrupt-parent: phandle to the tsadc module of the i.MX25.
+  - #address-cells: Should be <1> (setting for the subnodes)
+  - #size-cells: Should be <0> (setting for the subnodes)
+ 
+diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+index a8770cc6bcad..e680c61dfb84 100644
+--- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+   - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
+   - reg: SPI chip select number for the device
+-  - interrupt-parent: phandle to the parent interrupt controller
+-  see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+   - interrupts: IRQ line for the ADC
+   see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ 
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+index f1ead43a1a95..8346bcb04ad7 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+@@ -60,7 +60,6 @@ Required properties:
+ - reg: Offset of ADC instance in ADC block (e.g. may be 0x0, 0x100, 0x200).
+ - clocks: Input clock private to this ADC instance. It's required only on
+   stm32f4, that has per instance clock input for registers access.
+-- interrupt-parent: Phandle to the parent interrupt controller.
+ - interrupts: IRQ Line for the ADC (e.g. may be 0 for adc@0, 1 for adc@100 or
+   2 for adc@200).
+ - st,adc-channels: List of single-ended channels muxed for this ADC.
+diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+index d71258e2d456..e0e0755cabd8 100644
+--- a/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/xilinx-xadc.txt
+@@ -22,7 +22,6 @@ Required properties:
+ 	  clock to the AXI bus interface of the core.
+ 
+ Optional properties:
+-	- interrupt-parent: phandle to the parent interrupt controller
+ 	- xlnx,external-mux:
+ 		* "none": No external multiplexer is used, this is the default
+ 		  if the property is omitted.
+diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
+index 2962bd9a2b3d..f4320595b851 100644
+--- a/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
++++ b/Documentation/devicetree/bindings/iio/chemical/atlas,ec-sm.txt
+@@ -6,7 +6,6 @@ Required properties:
+ 
+   - compatible: must be "atlas,ec-sm"
+   - reg: the I2C address of the sensor
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: the sole interrupt generated by the device
+ 
+   Refer to interrupt-controller/interrupts.txt for generic interrupt client
+diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
+index 5d8b687d5edc..af1f5a9aa4da 100644
+--- a/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
++++ b/Documentation/devicetree/bindings/iio/chemical/atlas,orp-sm.txt
+@@ -6,7 +6,6 @@ Required properties:
+ 
+   - compatible: must be "atlas,orp-sm"
+   - reg: the I2C address of the sensor
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: the sole interrupt generated by the device
+ 
+   Refer to interrupt-controller/interrupts.txt for generic interrupt client
+diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
+index cffa1907463a..79d90f060327 100644
+--- a/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
++++ b/Documentation/devicetree/bindings/iio/chemical/atlas,ph-sm.txt
+@@ -6,7 +6,6 @@ Required properties:
+ 
+   - compatible: must be "atlas,ph-sm"
+   - reg: the I2C address of the sensor
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: the sole interrupt generated by the device
+ 
+   Refer to interrupt-controller/interrupts.txt for generic interrupt client
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+index b0d3b59966bc..233fe207aded 100644
+--- a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
++++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+@@ -5,7 +5,6 @@ Required properties:
+   - reg : the I2C address of the sensor
+ 
+ Optional properties:
+-  - interrupt-parent : should be the phandle for the interrupt controller
+   - interrupts : interrupt mapping for the trigger interrupt from the
+     internal oscillator. The following IRQ modes are supported:
+     IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, IRQ_TYPE_LEVEL_HIGH and
+diff --git a/Documentation/devicetree/bindings/iio/health/afe4403.txt b/Documentation/devicetree/bindings/iio/health/afe4403.txt
+index 2fffd70336ba..8e412054d6d5 100644
+--- a/Documentation/devicetree/bindings/iio/health/afe4403.txt
++++ b/Documentation/devicetree/bindings/iio/health/afe4403.txt
+@@ -4,7 +4,6 @@ Required properties:
+  - compatible		: Should be "ti,afe4403".
+  - reg			: SPI chip select address of device.
+  - tx-supply		: Regulator supply to transmitting LEDs.
+- - interrupt-parent	: Phandle to he parent interrupt controller.
+  - interrupts		: The interrupt line the device ADC_RDY pin is
+ 			  connected to. For details refer to,
+ 			  ../../interrupt-controller/interrupts.txt.
+diff --git a/Documentation/devicetree/bindings/iio/health/afe4404.txt b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+index de69f203edfa..0b52830a0d9c 100644
+--- a/Documentation/devicetree/bindings/iio/health/afe4404.txt
++++ b/Documentation/devicetree/bindings/iio/health/afe4404.txt
+@@ -4,7 +4,6 @@ Required properties:
+  - compatible		: Should be "ti,afe4404".
+  - reg			: I2C address of the device.
+  - tx-supply		: Regulator supply to transmitting LEDs.
+- - interrupt-parent	: Phandle to he parent interrupt controller.
+  - interrupts		: The interrupt line the device ADC_RDY pin is
+ 			  connected to. For details refer to,
+ 			  ../interrupt-controller/interrupts.txt.
+diff --git a/Documentation/devicetree/bindings/iio/health/max30100.txt b/Documentation/devicetree/bindings/iio/health/max30100.txt
+index 8d8176459d09..0054908a6e74 100644
+--- a/Documentation/devicetree/bindings/iio/health/max30100.txt
++++ b/Documentation/devicetree/bindings/iio/health/max30100.txt
+@@ -5,7 +5,6 @@ Maxim MAX30100 heart rate and pulse oximeter sensor
+ Required properties:
+   - compatible: must be "maxim,max30100"
+   - reg: the I2C address of the sensor
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: the sole interrupt generated by the device
+ 
+   Refer to interrupt-controller/interrupts.txt for generic
+diff --git a/Documentation/devicetree/bindings/iio/health/max30102.txt b/Documentation/devicetree/bindings/iio/health/max30102.txt
+index ef2ca0a0306f..7ef7ae40ae4f 100644
+--- a/Documentation/devicetree/bindings/iio/health/max30102.txt
++++ b/Documentation/devicetree/bindings/iio/health/max30102.txt
+@@ -7,7 +7,6 @@ Maxim MAX30105 optical particle-sensing module
+ Required properties:
+   - compatible: must be "maxim,max30102" or "maxim,max30105"
+   - reg: the I2C address of the sensor
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: the sole interrupt generated by the device
+ 
+   Refer to interrupt-controller/interrupts.txt for generic
+diff --git a/Documentation/devicetree/bindings/iio/humidity/hts221.txt b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+index 10adeb0d703d..84d029372260 100644
+--- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
++++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+@@ -13,7 +13,6 @@ Optional properties:
+   when it is not active, whereas a pull-up one is needed when interrupt
+   line is configured as IRQ_TYPE_LEVEL_LOW or IRQ_TYPE_EDGE_FALLING.
+   Refer to pinctrl/pinctrl-bindings.txt for the property description.
+-- interrupt-parent: should be the phandle for the interrupt controller
+ - interrupts: interrupt mapping for IRQ. It should be configured with
+   flags IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
+   IRQ_TYPE_EDGE_FALLING.
+diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+index ae0112c7debc..0c1c105fb503 100644
+--- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
++++ b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
+@@ -9,7 +9,6 @@ Required properties:
+  - spi-max-frequency : set maximum clock frequency (only for SPI)
+ 
+ Optional properties:
+- - interrupt-parent : should be the phandle of the interrupt controller
+  - interrupts : interrupt mapping for IRQ, must be IRQ_TYPE_LEVEL_LOW
+  - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
+    input, set to "INT2" if INT2 pin should be used instead
+diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+index 5f4777e8cc9e..d33c19d68de3 100644
+--- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
++++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+@@ -11,7 +11,6 @@ Required properties:
+ 		"invensense,mpu9255"
+ 		"invensense,icm20608"
+  - reg : the I2C address of the sensor
+- - interrupt-parent : should be the phandle for the interrupt controller
+  - interrupts: interrupt mapping for IRQ. It should be configured with flags
+    IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
+    IRQ_TYPE_EDGE_FALLING.
+diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+index ef8a8566c63f..ea2d6e0ae4c5 100644
+--- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
++++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+@@ -20,7 +20,6 @@ Optional properties:
+   IRQ_TYPE_EDGE_RISING a pull-down resistor is needed to drive the line
+   when it is not active, whereas a pull-up one is needed when interrupt
+   line is configured as IRQ_TYPE_LEVEL_LOW or IRQ_TYPE_EDGE_FALLING.
+-- interrupt-parent: should be the phandle for the interrupt controller
+ - interrupts: interrupt mapping for IRQ. It should be configured with
+   flags IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
+   IRQ_TYPE_EDGE_FALLING.
+diff --git a/Documentation/devicetree/bindings/iio/light/apds9300.txt b/Documentation/devicetree/bindings/iio/light/apds9300.txt
+index d6f66c73ddbf..aa199e09a493 100644
+--- a/Documentation/devicetree/bindings/iio/light/apds9300.txt
++++ b/Documentation/devicetree/bindings/iio/light/apds9300.txt
+@@ -9,7 +9,6 @@ Required properties:
+ 
+ Optional properties:
+ 
+-  - interrupt-parent : should be the phandle for the interrupt controller
+   - interrupts : interrupt mapping for GPIO IRQ
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/iio/light/apds9960.txt b/Documentation/devicetree/bindings/iio/light/apds9960.txt
+index 174b709f16db..3af325ad194b 100644
+--- a/Documentation/devicetree/bindings/iio/light/apds9960.txt
++++ b/Documentation/devicetree/bindings/iio/light/apds9960.txt
+@@ -6,7 +6,6 @@ Required properties:
+ 
+   - compatible: must be "avago,apds9960"
+   - reg: the I2c address of the sensor
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts : the sole interrupt generated by the device
+ 
+   Refer to interrupt-controller/interrupts.txt for generic interrupt client
+diff --git a/Documentation/devicetree/bindings/iio/light/isl29018.txt b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+index 425ab459e209..b9bbde3e13ed 100644
+--- a/Documentation/devicetree/bindings/iio/light/isl29018.txt
++++ b/Documentation/devicetree/bindings/iio/light/isl29018.txt
+@@ -10,7 +10,6 @@ Required properties:
+ 
+ Optional properties:
+ 
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: the sole interrupt generated by the device
+ 
+   Refer to interrupt-controller/interrupts.txt for generic interrupt client
+diff --git a/Documentation/devicetree/bindings/iio/light/opt3001.txt b/Documentation/devicetree/bindings/iio/light/opt3001.txt
+index eac30d508849..47b13eb8f4ec 100644
+--- a/Documentation/devicetree/bindings/iio/light/opt3001.txt
++++ b/Documentation/devicetree/bindings/iio/light/opt3001.txt
+@@ -13,7 +13,6 @@ Required properties:
+   - reg: the I2C address of the sensor
+ 
+ Optional properties:
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: interrupt mapping for GPIO IRQ (configure for falling edge)
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.txt b/Documentation/devicetree/bindings/iio/light/tsl2583.txt
+index 8e2066c83f70..059dffa1829a 100644
+--- a/Documentation/devicetree/bindings/iio/light/tsl2583.txt
++++ b/Documentation/devicetree/bindings/iio/light/tsl2583.txt
+@@ -10,7 +10,6 @@ Required properties:
+ 
+ Optional properties:
+ 
+-  - interrupt-parent: should be the phandle for the interrupt controller
+   - interrupts: the sole interrupt generated by the device
+ 
+   Refer to interrupt-controller/interrupts.txt for generic interrupt client
+diff --git a/Documentation/devicetree/bindings/iio/light/uvis25.txt b/Documentation/devicetree/bindings/iio/light/uvis25.txt
+index 3041207e3f3c..043c139d91e6 100644
+--- a/Documentation/devicetree/bindings/iio/light/uvis25.txt
++++ b/Documentation/devicetree/bindings/iio/light/uvis25.txt
+@@ -5,7 +5,6 @@ Required properties:
+ - reg: i2c address of the sensor / spi cs line
+ 
+ Optional properties:
+-- interrupt-parent: should be the phandle for the interrupt controller
+ - interrupts: interrupt mapping for IRQ. It should be configured with
+   flags IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
+   IRQ_TYPE_EDGE_FALLING.
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+index 9f263b7df162..fd5fca90fb39 100644
+--- a/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
++++ b/Documentation/devicetree/bindings/iio/magnetometer/bmc150_magn.txt
+@@ -9,7 +9,6 @@ Required properties:
+ 
+ Optional properties:
+ 
+-  - interrupt-parent : phandle to the parent interrupt controller
+   - interrupts : interrupt mapping for GPIO IRQ
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+index c7198a03c906..5498b0688b6f 100644
+--- a/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
++++ b/Documentation/devicetree/bindings/iio/pressure/bmp085.txt
+@@ -12,7 +12,6 @@ Optional properties:
+ - temp-measurement-period: temperature measurement period (milliseconds)
+ - default-oversampling: default oversampling value to be used at startup,
+   value range is 0-3 with rising sensitivity.
+-- interrupt-parent: should be the phandle for the interrupt controller
+ - interrupts: interrupt mapping for IRQ
+ - reset-gpios: a GPIO line handling reset of the sensor: as the line is
+   active low, it should be marked GPIO_ACTIVE_LOW (see gpio/gpio.txt)
+diff --git a/Documentation/devicetree/bindings/iio/pressure/zpa2326.txt b/Documentation/devicetree/bindings/iio/pressure/zpa2326.txt
+index fb85de676e03..a36ab3e0c3f7 100644
+--- a/Documentation/devicetree/bindings/iio/pressure/zpa2326.txt
++++ b/Documentation/devicetree/bindings/iio/pressure/zpa2326.txt
+@@ -15,8 +15,6 @@ Optional properties:
+   power to the sensor
+ - vdd-supply: an optional regulator that needs to be on to provide VDD
+   power to the sensor
+-- interrupt-parent: phandle to the parent interrupt controller as documented in
+-  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ - interrupts: interrupt mapping for IRQ as documented in
+   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ 
+diff --git a/Documentation/devicetree/bindings/iio/proximity/as3935.txt b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+index b6c1afa6f02d..849115585d55 100644
+--- a/Documentation/devicetree/bindings/iio/proximity/as3935.txt
++++ b/Documentation/devicetree/bindings/iio/proximity/as3935.txt
+@@ -6,7 +6,6 @@ Required properties:
+ 	- spi-max-frequency: specifies maximum SPI clock frequency
+ 	- spi-cpha: SPI Mode 1. Refer to spi/spi-bus.txt for generic SPI
+ 	slave node bindings.
+-	- interrupt-parent : should be the phandle for the interrupt controller
+ 	- interrupts : the sole interrupt generated by the device
+ 
+ 	Refer to interrupt-controller/interrupts.txt for generic
+diff --git a/Documentation/devicetree/bindings/iio/proximity/sx9500.txt b/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
+index b301dd2b35da..c54455db3bec 100644
+--- a/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
++++ b/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
+@@ -3,7 +3,6 @@ Semtech's SX9500 capacitive proximity button device driver
+ Required properties:
+ 	- compatible: must be "semtech,sx9500"
+ 	- reg: i2c address where to find the device
+-	- interrupt-parent : should be the phandle for the interrupt controller
+ 	- interrupts : the sole interrupt generated by the device
+ 
+ 	Refer to interrupt-controller/interrupts.txt for generic
+diff --git a/Documentation/devicetree/bindings/iio/sensorhub.txt b/Documentation/devicetree/bindings/iio/sensorhub.txt
+index 8d57571d5c0b..b6ac0457d4ea 100644
+--- a/Documentation/devicetree/bindings/iio/sensorhub.txt
++++ b/Documentation/devicetree/bindings/iio/sensorhub.txt
+@@ -6,7 +6,6 @@ of a virtual sensor device.
+ Required properties:
+ - compatible: "samsung,sensorhub-rinato" or "samsung,sensorhub-thermostat"
+ - spi-max-frequency: max SPI clock frequency
+-- interrupt-parent: interrupt parent
+ - interrupts: communication interrupt
+ - ap-mcu-gpios: [out] ap to sensorhub line - used during communication
+ - mcu-ap-gpios: [in] sensorhub to ap - used during communication
+diff --git a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
+index b63aba91ef03..da0af234a357 100644
+--- a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
++++ b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
+@@ -20,8 +20,6 @@ Required properties:
+ 
+ Optional properties:
+ 
+-  - interrupt-parent: should be the phandle for the interrupt controller
+-
+   - interrupts: interrupt mapping for GPIO IRQ (level active low)
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/infiniband/hisilicon-hns-roce.txt b/Documentation/devicetree/bindings/infiniband/hisilicon-hns-roce.txt
+index d3b273e4336a..84f1a1b505d2 100644
+--- a/Documentation/devicetree/bindings/infiniband/hisilicon-hns-roce.txt
++++ b/Documentation/devicetree/bindings/infiniband/hisilicon-hns-roce.txt
+@@ -19,7 +19,6 @@ representing a dsaf device.
+ - #size-cells: must be 2
+ Optional properties:
+ - dma-coherent: Present if DMA operations are coherent.
+-- interrupt-parent: the interrupt parent of this device.
+ - interrupts: should contain 32 completion event irq,1 async event irq
+ and 1 event overflow irq.
+ - interrupt-names:should be one of 34 irqs for roce device
+diff --git a/Documentation/devicetree/bindings/input/cypress,cyapa.txt b/Documentation/devicetree/bindings/input/cypress,cyapa.txt
+index 8d91ba9ff2fd..d3db65916a36 100644
+--- a/Documentation/devicetree/bindings/input/cypress,cyapa.txt
++++ b/Documentation/devicetree/bindings/input/cypress,cyapa.txt
+@@ -3,8 +3,6 @@ Cypress I2C Touchpad
+ Required properties:
+ - compatible: must be "cypress,cyapa".
+ - reg: I2C address of the chip.
+-- interrupt-parent: a phandle for the interrupt controller (see interrupt
+-	binding[0]).
+ - interrupts: interrupt to which the chip is connected (see interrupt
+ 	binding[0]).
+ 
+diff --git a/Documentation/devicetree/bindings/input/cypress,tm2-touchkey.txt b/Documentation/devicetree/bindings/input/cypress,tm2-touchkey.txt
+index 635f62c756ee..0c252d9306da 100644
+--- a/Documentation/devicetree/bindings/input/cypress,tm2-touchkey.txt
++++ b/Documentation/devicetree/bindings/input/cypress,tm2-touchkey.txt
+@@ -3,8 +3,6 @@ Samsung tm2-touchkey
+ Required properties:
+ - compatible: must be "cypress,tm2-touchkey"
+ - reg: I2C address of the chip.
+-- interrupt-parent: a phandle for the interrupt controller (see interrupt
+-	binding[0]).
+ - interrupts: interrupt to which the chip is connected (see interrupt
+ 	binding[0]).
+ - vcc-supply : internal regulator output. 1.8V
+diff --git a/Documentation/devicetree/bindings/input/e3x0-button.txt b/Documentation/devicetree/bindings/input/e3x0-button.txt
+index 751665e8e47a..907b195f2eaa 100644
+--- a/Documentation/devicetree/bindings/input/e3x0-button.txt
++++ b/Documentation/devicetree/bindings/input/e3x0-button.txt
+@@ -7,8 +7,6 @@ This module provides a simple power button event via two interrupts.
+ Required properties:
+ - compatible: should be one of the following
+   - "ettus,e3x0-button": For devices such as the NI Ettus Research USRP E3x0
+-- interrupt-parent:
+-  - a phandle to the interrupt controller that it is attached to.
+ - interrupts: should be one of the following
+   - <0 30 1>, <0 31 1>: For devices such as the NI Ettus Research USRP E3x0
+ - interrupt-names: should be one of the following
+diff --git a/Documentation/devicetree/bindings/input/elan_i2c.txt b/Documentation/devicetree/bindings/input/elan_i2c.txt
+index d80a83583238..797607460735 100644
+--- a/Documentation/devicetree/bindings/input/elan_i2c.txt
++++ b/Documentation/devicetree/bindings/input/elan_i2c.txt
+@@ -3,8 +3,6 @@ Elantech I2C Touchpad
+ Required properties:
+ - compatible: must be "elan,ekth3000".
+ - reg: I2C address of the chip.
+-- interrupt-parent: a phandle for the interrupt controller (see interrupt
+-  binding[0]).
+ - interrupts: interrupt to which the chip is connected (see interrupt
+   binding[0]).
+ 
+diff --git a/Documentation/devicetree/bindings/input/elants_i2c.txt b/Documentation/devicetree/bindings/input/elants_i2c.txt
+index 8a71038f3489..5edac8be0802 100644
+--- a/Documentation/devicetree/bindings/input/elants_i2c.txt
++++ b/Documentation/devicetree/bindings/input/elants_i2c.txt
+@@ -3,8 +3,6 @@ Elantech I2C Touchscreen
+ Required properties:
+ - compatible: must be "elan,ekth3500".
+ - reg: I2C address of the chip.
+-- interrupt-parent: a phandle for the interrupt controller (see interrupt
+-  binding[0]).
+ - interrupts: interrupt to which the chip is connected (see interrupt
+   binding[0]).
+ 
+diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+index 4d3da9d91de4..f1cb9f8d7692 100644
+--- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
++++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+@@ -14,7 +14,6 @@ Required properties:
+ - compatible: must be "hid-over-i2c"
+ - reg: i2c slave address
+ - hid-descr-addr: HID descriptor address
+-- interrupt-parent: the phandle for the interrupt controller
+ - interrupts: interrupt line
+ 
+ Additional optional properties:
+diff --git a/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt b/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
+index 5b6232db7c61..99a4f2ab5557 100644
+--- a/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
++++ b/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
+@@ -3,7 +3,6 @@ Raydium I2C touchscreen
+ Required properties:
+ - compatible: must be "raydium,rm32380"
+ - reg: The I2C address of the device
+-- interrupt-parent: the phandle for the interrupt controller
+ - interrupts: interrupt to which the chip is connected
+     See ../interrupt-controller/interrupts.txt
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+index ec908b91fd90..dcb012f5b3ee 100644
+--- a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
++++ b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+@@ -16,7 +16,6 @@ Required Properties:
+ 
+ Optional Properties:
+ - interrupts: interrupt which the rmi device is connected to.
+-- interrupt-parent: The interrupt controller.
+ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ 
+ - syna,reset-delay-ms: The number of milliseconds to wait after resetting the
+diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+index a4ca7828f21d..632f473db65b 100644
+--- a/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
++++ b/Documentation/devicetree/bindings/input/rmi4/rmi_spi.txt
+@@ -16,7 +16,6 @@ Required Properties:
+ 
+ Optional Properties:
+ - interrupts: interrupt which the rmi device is connected to.
+-- interrupt-parent: The interrupt controller.
+ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ 
+ - spi-rx-delay-us: microsecond delay after a read transfer.
+diff --git a/Documentation/devicetree/bindings/input/ti,palmas-pwrbutton.txt b/Documentation/devicetree/bindings/input/ti,palmas-pwrbutton.txt
+index a3dde8c30e67..c829e18e1a05 100644
+--- a/Documentation/devicetree/bindings/input/ti,palmas-pwrbutton.txt
++++ b/Documentation/devicetree/bindings/input/ti,palmas-pwrbutton.txt
+@@ -9,7 +9,6 @@ This module provides a simple power button event via an Interrupt.
+ Required properties:
+ - compatible: should be one of the following
+    - "ti,palmas-pwrbutton": For Palmas compatible power on button
+-- interrupt-parent: Parent interrupt device, must be handle of palmas node.
+ - interrupts: Interrupt number of power button submodule on device.
+ 
+ Optional Properties:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ad7879.txt b/Documentation/devicetree/bindings/input/touchscreen/ad7879.txt
+index 3c8614c451f2..cdd743a1f2d5 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ad7879.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/ad7879.txt
+@@ -5,7 +5,6 @@ Required properties:
+ 				  for I2C slave, use "adi,ad7879-1"
+ - reg				: SPI chipselect/I2C slave address
+ 				  See spi-bus.txt for more SPI slave properties
+-- interrupt-parent		: the phandle for the interrupt controller
+ - interrupts			: touch controller interrupt
+ - touchscreen-max-pressure	: maximum reported pressure
+ - adi,resistance-plate-x	: total resistance of X-plate (for pressure
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
+index 9fc47b006fd1..04413da51391 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/ads7846.txt
+@@ -18,7 +18,6 @@ Additional required properties:
+ 					"ti,ads7846"
+ 					"ti,ads7873"
+ 
+-	interrupt-parent
+ 	interrupts		An interrupt node describing the IRQ line the chip's
+ 				!PENIRQ pin is connected to.
+ 	vcc-supply		A regulator node for the supply voltage.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ar1021.txt b/Documentation/devicetree/bindings/input/touchscreen/ar1021.txt
+index e459e8546f34..82019bd6094e 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ar1021.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/ar1021.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible		: "microchip,ar1021-i2c"
+ - reg			: I2C slave address
+-- interrupt-parent	: the phandle for the interrupt controller
+ - interrupts		: touch controller interrupt
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/chipone_icn8318.txt b/Documentation/devicetree/bindings/input/touchscreen/chipone_icn8318.txt
+index d11f8d615b5d..38b0603f65f3 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/chipone_icn8318.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/chipone_icn8318.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+  - compatible		  : "chipone,icn8318"
+  - reg			  : I2C slave address of the chip (0x40)
+- - interrupt-parent	  : a phandle pointing to the interrupt controller
+-			    serving the interrupt for this chip
+  - interrupts		  : interrupt specification for the icn8318 interrupt
+  - wake-gpios		  : GPIO specification for the WAKE input
+  - touchscreen-size-x	  : horizontal resolution of touchscreen (in pixels)
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
+index df531b5b6a0d..2e1490a8fe74 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/colibri-vf50-ts.txt
+@@ -7,7 +7,6 @@ Required Properties:
+ - xm-gpios: FET gate driver for input of X-
+ - yp-gpios: FET gate driver for input of Y+
+ - ym-gpios: FET gate driver for input of Y-
+-- interrupt-parent: phandle for the interrupt controller
+ - interrupts: pen irq interrupt for touch detection
+ - pinctrl-names: "idle", "default", "gpios"
+ - pinctrl-0: pinctrl node for pen/touch detection state pinmux
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+index b75d4cfd2c36..6ee274aa8b03 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/cyttsp.txt
+@@ -4,8 +4,6 @@ Required properties:
+  - compatible		: must be "cypress,cyttsp-i2c" or "cypress,cyttsp-spi"
+  - reg			: Device I2C address or SPI chip select number
+  - spi-max-frequency	: Maximum SPI clocking speed of the device (for cyttsp-spi)
+- - interrupt-parent	: the phandle for the gpio controller
+-			  (see interrupt binding[0]).
+  - interrupts		: (gpio) interrupt to which the chip is connected
+ 			  (see interrupt binding[0]).
+  - bootloader-key	: the 8-byte bootloader key that is required to switch
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+index 025cf8c9324a..da2dc5d6c98b 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+@@ -22,8 +22,6 @@ Required properties:
+            or:  "focaltech,ft6236"
+ 
+  - reg:         I2C slave address of the chip (0x38)
+- - interrupt-parent: a phandle pointing to the interrupt controller
+-                     serving the interrupt for this chip
+  - interrupts:       interrupt specification for the touchdetect
+                      interrupt
+ 
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+index 298e3442f143..92fb2620f5e2 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible: must be "eeti,egalax_ts"
+ - reg: i2c slave address
+-- interrupt-parent: the phandle for the interrupt controller
+ - interrupts: touch controller interrupt
+ - wakeup-gpios: the gpio pin to be used for waking up the controller
+   and also used as irq pin
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt b/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
+index 5a19f4c3e9d7..94c4fc644940 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+  - compatible		  : "elan,ektf2127"
+  - reg			  : I2C slave address of the chip (0x40)
+- - interrupt-parent	  : a phandle pointing to the interrupt controller
+-			    serving the interrupt for this chip
+  - interrupts		  : interrupt specification for the ektf2127 interrupt
+  - power-gpios		  : GPIO specification for the pin connected to the
+ 			    ektf2127's wake input. This needs to be driven high
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
+index 1dcff4a43eaa..68291b94fec2 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible: must be "eeti,exc3000"
+ - reg: i2c slave address
+-- interrupt-parent: the phandle for the interrupt controller
+ - interrupts: touch controller interrupt
+ - touchscreen-size-x: See touchscreen.txt
+ - touchscreen-size-y: See touchscreen.txt
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
+index abfcab3edc66..99d6f9d25335 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/fsl-mx25-tcq.txt
+@@ -8,7 +8,6 @@ Required properties:
+  - reg: Memory range of the device.
+  - interrupts: Should be the interrupt number associated with this module within
+    the tscadc unit (<0>).
+- - interrupt-parent: Should be a phandle to the tscadc unit.
+  - fsl,wires: Should be '<4>' or '<5>'
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+index 0c369d8ebcab..f7e95c52f3c7 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+@@ -11,7 +11,6 @@ Required properties:
+ 				 or "goodix,gt928"
+ 				 or "goodix,gt967"
+  - reg			: I2C address of the chip. Should be 0x5d or 0x14
+- - interrupt-parent	: Interrupt controller to which the chip is connected
+  - interrupts		: Interrupt to which the chip is connected
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/hideep.txt b/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+index 121d9b7c79a2..b0c4cfdf7cd6 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible		: must be "hideep,hideep-ts"
+ - reg			: I2C slave address, (e.g. 0x6C).
+-- interrupt-parent : Interrupt controller to which the chip is connected.
+ - interrupts : Interrupt to which the chip is connected.
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
+index 40ac0fe94df6..05e982c3454e 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible: must be "maxim,max11801"
+ - reg: i2c slave address
+-- interrupt-parent: the phandle for the interrupt controller
+ - interrupts: touch controller interrupt
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/melfas_mip4.txt b/Documentation/devicetree/bindings/input/touchscreen/melfas_mip4.txt
+index 7b8944c2cb31..b2ab5498e519 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/melfas_mip4.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/melfas_mip4.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible: must be "melfas,mip4_ts"
+ - reg: I2C slave address of the chip (0x48 or 0x34)
+-- interrupt-parent: interrupt controller to which the chip is connected
+ - interrupts: interrupt to which the chip is connected
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt b/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
+index d9b7c2ff611e..6805d10d226d 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/samsung,s6sy761.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+ - compatible		: must be "samsung,s6sy761"
+ - reg			: I2C slave address, (e.g. 0x48)
+-- interrupt-parent	: the phandle to the interrupt controller which provides
+-			  the interrupt
+ - interrupts		: interrupt specification
+ - avdd-supply		: analogic power supply
+ - vdd-supply		: power supply
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+index 84752de12412..d67e558e5ab5 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+@@ -8,8 +8,6 @@ Required properties:
+ 			    "silead,gsl3675"
+ 			    "silead,gsl3692"
+ - reg			  : I2C slave address of the chip (0x40)
+-- interrupt-parent	  : a phandle pointing to the interrupt controller
+-			    serving the interrupt for this chip
+ - interrupts		  : interrupt specification for the gsl1680 interrupt
+ - power-gpios		  : Specification for the pin connected to the gsl1680's
+ 			    shutdown input. This needs to be driven high to take the
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/sis_i2c.txt b/Documentation/devicetree/bindings/input/touchscreen/sis_i2c.txt
+index d87ad14f1efe..8f5322e01024 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/sis_i2c.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/sis_i2c.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+ - compatible: must be "sis,9200-ts"
+ - reg: i2c slave address
+-- interrupt-parent: the phandle for the interrupt controller
+-  (see interrupt binding [0])
+ - interrupts: touch controller interrupt (see interrupt
+   binding [0])
+ 
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt b/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
+index 9683595cd0f5..0a5d0cb4a280 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
+@@ -10,8 +10,6 @@ coordinates.
+ Required properties:
+ - compatible		: must be "st,stmfts"
+ - reg			: I2C slave address, (e.g. 0x49)
+-- interrupt-parent	: the phandle to the interrupt controller which provides
+-			  the interrupt
+ - interrupts		: interrupt specification
+ - avdd-supply		: analogic power supply
+ - vdd-supply		: power supply
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/sx8654.txt b/Documentation/devicetree/bindings/input/touchscreen/sx8654.txt
+index 5aaa6b3aa90c..4886c4aa2906 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/sx8654.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/sx8654.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible: must be "semtech,sx8654"
+ - reg: i2c slave address
+-- interrupt-parent: the phandle for the interrupt controller
+ - interrupts: touch controller interrupt
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+index ec365e172236..ed00f61b8c08 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+@@ -9,8 +9,6 @@ Optional properties:
+ - gpios: the interrupt gpio the chip is connected to (trough the penirq pin).
+   The penirq pin goes to low when the panel is touched.
+   (see GPIO binding[1] for more details).
+-- interrupt-parent: the phandle for the gpio controller
+-  (see interrupt binding[0]).
+ - interrupts: (gpio) interrupt to which the chip is connected
+   (see interrupt binding[0]).
+ - ti,max-rt: maximum pressure.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/zet6223.txt b/Documentation/devicetree/bindings/input/touchscreen/zet6223.txt
+index fe6a1feef703..27d55a506f18 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/zet6223.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/zet6223.txt
+@@ -3,8 +3,6 @@ Zeitec ZET6223 I2C touchscreen controller
+ Required properties:
+ - compatible		  : "zeitec,zet6223"
+ - reg			  : I2C slave address of the chip (0x76)
+-- interrupt-parent	  : a phandle pointing to the interrupt controller
+-			    serving the interrupt for this chip
+ - interrupts		  : interrupt specification for the zet6223 interrupt
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.txt
+index 9d52d5afe3e9..5a4dd263fc12 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x-ictl.txt
+@@ -13,7 +13,6 @@ Required properties
+ - interrupt-congroller: Identifies the node as an interrupt controller.
+ - #interrupt cells: Specifies the number of cells used to encode an interrupt
+   source connected to this controller. The value shall be 2.
+-- interrupt-parent: Specifies the parent interrupt controller.
+ - interrupts: Specifies the list of interrupt lines which are handled by
+   the interrupt controller in the parent controller's notation. Interrupts
+   are mapped one-to-one to parent interrupts.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/al,alpine-msix.txt b/Documentation/devicetree/bindings/interrupt-controller/al,alpine-msix.txt
+index f6f1c14bf99b..5669764f9cc9 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/al,alpine-msix.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/al,alpine-msix.txt
+@@ -6,7 +6,6 @@ Required properties:
+ 
+ - compatible: should be "al,alpine-msix"
+ - reg: physical base address and size of the registers
+-- interrupt-parent: specifies the parent interrupt controller.
+ - interrupt-controller: identifies the node as an interrupt controller
+ - msi-controller: identifies the node as an PCI Message Signaled Interrupt
+ 		  controller
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
+index 4903fb72d883..24beadf7ba83 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
+@@ -13,7 +13,6 @@ Required properties:
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source. The value shall be 2. The first cell is the IRQ number, the
+   second cell the trigger type as defined in interrupt.txt in this directory.
+-- interrupt-parent: Specifies the parent interrupt controller.
+ - interrupts: Specifies the interrupt line (NMI) which is handled by
+   the interrupt controller in the parent controller's notation. This value
+   shall be the NMI.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+index 89674ad8a097..1502a51548bb 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+@@ -15,9 +15,6 @@ Required properties:
+     "amlogic,meson-gxbb-gpio-intc" for GXBB SoCs (S905) or
+     "amlogic,meson-gxl-gpio-intc" for GXL SoCs (S905X, S912)
+     "amlogic,meson-axg-gpio-intc" for AXG SoCs (A113D, A113X)
+-- interrupt-parent : a phandle to the GIC the interrupts are routed to.
+-   Usually this is provided at the root level of the device tree as it is
+-   common to most of the SoC.
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+index 0e9f09a6a2fe..f4c5d34c4111 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+@@ -4,7 +4,6 @@ Required properties:
+ - compatible: Should be "atmel,<chip>-aic"
+   <chip> can be "at91rm9200", "sama5d2", "sama5d3" or "sama5d4"
+ - interrupt-controller: Identifies the node as an interrupt controller.
+-- interrupt-parent: For single AIC system, it is an empty property.
+ - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
+   The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
+   The second cell is used to specify flags:
+@@ -27,7 +26,6 @@ Examples:
+ 	aic: interrupt-controller@fffff000 {
+ 		compatible = "atmel,at91rm9200-aic";
+ 		interrupt-controller;
+-		interrupt-parent;
+ 		#interrupt-cells = <3>;
+ 		reg = <0xfffff000 0x200>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+index 6428a6ba9f4a..0f1af5a1c12e 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+@@ -26,8 +26,6 @@ Required properties:
+   are 0..7 for bank 0, and 0..31 for bank 1.
+ 
+ Additional required properties for brcm,bcm2836-armctrl-ic:
+-- interrupt-parent : Specifies the parent interrupt controller when this
+-  controller is the second level.
+ - interrupts : Specifies the interrupt on the parent for this interrupt
+   controller to handle.
+ 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
+index 8f48aad50868..37aea40d5430 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm3380-l2-intc.txt
+@@ -18,8 +18,6 @@ Required properties:
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: specifies the number of cells needed to encode an interrupt
+   source, should be 1.
+-- interrupt-parent: specifies the phandle to the parent interrupt controller
+-  this one is cascaded from
+ - interrupts: specifies the interrupt line in the interrupt-parent controller
+   node, valid values depend on the type of parent interrupt controller
+ 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
+index 4040905388d9..2bc19b1ac877 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm6345-l1-intc.txt
+@@ -29,8 +29,6 @@ Required properties:
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: specifies the number of cells needed to encode an interrupt
+   source, should be 1.
+-- interrupt-parent: specifies the phandle to the parent interrupt controller(s)
+-  this one is cascaded from
+ - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
+   node; valid values depend on the type of parent interrupt controller
+ 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+index cc217b22dccd..2117d4ac1ae5 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+@@ -28,8 +28,6 @@ Required properties:
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: specifies the number of cells needed to encode an interrupt
+   source, should be 1.
+-- interrupt-parent: specifies the phandle to the parent interrupt controller(s)
+-  this one is cascaded from
+ - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
+   node; valid values depend on the type of parent interrupt controller
+ 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+index 44a9bb15dd56..addd86b6ca2f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+@@ -56,8 +56,6 @@ Required properties:
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: specifies the number of cells needed to encode an interrupt
+   source, should be 1.
+-- interrupt-parent: specifies the phandle to the parent interrupt controller
+-  this one is cascaded from
+ - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
+   node, valid values depend on the type of parent interrupt controller
+ - brcm,int-map-mask: 32-bits bit mask describing how many and which interrupts
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+index 36df06c5c567..d514ec060a4a 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+@@ -8,8 +8,6 @@ Required properties:
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: specifies the number of cells needed to encode an
+   interrupt source. Should be 1.
+-- interrupt-parent: specifies the phandle to the parent interrupt controller
+-  this controller is cacaded from
+ - interrupts: specifies the interrupt line in the interrupt-parent irq space
+   to be used for cascading
+ 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+index a4ff93d6b7f3..454ce04d6787 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+@@ -13,9 +13,6 @@ Required properties:
+ - reg: physical base address of the controller and length of memory mapped.
+ - interrupts: an interrupt to the parent interrupt controller.
+ 
+-Optional properties:
+-- interrupt-parent: the phandle to the parent interrupt controller.
+-
+ This interrupt controller hardware is a second level interrupt controller that
+ is hooked to a parent interrupt controller: e.g: ARM GIC for ARM-based
+ platforms. If interrupt-parent is not provided, the default parent interrupt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/hisilicon,mbigen-v2.txt b/Documentation/devicetree/bindings/interrupt-controller/hisilicon,mbigen-v2.txt
+index 3b2f4c43ad8d..a6813a071f15 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/hisilicon,mbigen-v2.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/hisilicon,mbigen-v2.txt
+@@ -68,8 +68,6 @@ Examples:
+ 
+ Devices connect to mbigen required properties:
+ ----------------------------------------------------
+--interrupt-parent: Specifies the mbigen device node which device connected.
+-
+ -interrupts:Specifies the interrupt source.
+  For the specific information of each cell in this property,please refer to
+  the "interrupt-cells" description mentioned above.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+index 5f89fb635a1b..ecebaf19d4fd 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+@@ -11,7 +11,6 @@ Required properties:
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source. The value shall be 1.
+-- interrupt-parent : phandle of the CPU interrupt controller.
+ - interrupts : Specifies the CPU interrupt the controller is connected to.
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
+index 3f6442c7f867..930fb462fd9f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
+@@ -26,8 +26,6 @@ Required properties:
+                          See Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
+                          for details about the GIC Device Tree binding.
+ 
+-- interrupt-parent     : Reference to the parent interrupt controller.
+-
+ Example:
+ 
+ 	odmi: odmi@300000 {
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
+index a7efdbc3de5b..5865f4f2c69d 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
+@@ -16,8 +16,6 @@ Required properties:
+   and "mediatek,cirq" as a fallback.
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+-- interrupt-parent: phandle of irq parent for cirq. The parent must
+-  use the same interrupt-cells format as GIC.
+ - reg: Physical base address of the cirq registers and length of memory
+   mapped region.
+ - mediatek,ext-irq-range: Identifies external irq number range in different
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+index 07bf0b9a5139..6a32922a55b8 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+@@ -21,8 +21,6 @@ Required properties:
+ 	"mediatek,mt2701-sysirq", "mediatek,mt6577-sysirq": for MT2701
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+-- interrupt-parent: phandle of irq parent for sysirq. The parent must
+-  use the same interrupt-cells format as GIC.
+ - reg: Physical base address of the intpol registers and length of memory
+   mapped region. Could be multiple bases here. Ex: mt6797 needs 2 reg, others
+   need 1.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt
+index b47a8a02b17b..f5baeccb689f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt
+@@ -7,7 +7,6 @@ Required properties:
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source. The value shall be 1.
+-- interrupt-parent : phandle of the CPU interrupt controller.
+ - interrupts : Specifies the CPU interrupt the controller is connected to.
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
+index 1099fe0788fa..803d35de9aac 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
+@@ -19,8 +19,6 @@ Required properties:
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source. The value must be 3.
+-- interrupt-parent : a phandle to the GIC these interrupts are routed
+-  to.
+ 
+ Notes:
+ 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
+index 38211f344dc8..0bfb3ba55f4c 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
+@@ -14,8 +14,6 @@ Required properties:
+   Reset value is IRQ_TYPE_LEVEL_LOW.
+ 
+ Optional properties:
+-- interrupt-parent: empty for MIC interrupt controller, link to parent
+-  MIC interrupt controller for SIC1 and SIC2
+ - interrupts: empty for MIC interrupt controller, cascaded MIC
+   hardware interrupts for SIC1 and SIC2
+ 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+index 475ae9bd562b..ad70006c1848 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/qca,ath79-misc-intc.txt
+@@ -7,7 +7,6 @@ Required Properties:
+ - compatible: has to be "qca,<soctype>-cpu-intc", "qca,ar7100-misc-intc" or
+   "qca,<soctype>-cpu-intc", "qca,ar7240-misc-intc"
+ - reg: Base address and size of the controllers memory area
+-- interrupt-parent: phandle of the parent interrupt controller.
+ - interrupts: Interrupt specifier for the controllers interrupt.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode interrupt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+index 0b2c97ddb520..8e0797cb1487 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+@@ -35,12 +35,6 @@ Properties:
+ 		    interrupt.
+ 		    The second element is the trigger type.
+ 
+-- interrupt-parent:
+-	Usage: required
+-	Value type: <phandle>
+-	Definition: Specifies the interrupt parent necessary for hierarchical
+-		    domain to operate.
+-
+ - interrupt-controller:
+ 	Usage: required
+ 	Value type: <bool>
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/samsung,exynos4210-combiner.txt b/Documentation/devicetree/bindings/interrupt-controller/samsung,exynos4210-combiner.txt
+index 9e5f73412cd7..19af687858a1 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/samsung,exynos4210-combiner.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/samsung,exynos4210-combiner.txt
+@@ -32,8 +32,6 @@ Optional properties:
+ - samsung,combiner-nr: The number of interrupt combiners supported. If this
+   property is not specified, the default number of combiners is assumed
+   to be 16.
+-- interrupt-parent: pHandle of the parent interrupt controller, if not
+-  inherited from the parent node.
+ 
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
+index 1f441fa0ad40..355c18a3a4d3 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/sigma,smp8642-intc.txt
+@@ -4,7 +4,6 @@ Required properties:
+ - compatible: should be "sigma,smp8642-intc"
+ - reg: physical address of MMIO region
+ - ranges: address space mapping of child nodes
+-- interrupt-parent: phandle of parent interrupt controller
+ - interrupt-controller: boolean
+ - #address-cells: should be <1>
+ - #size-cells: should be <1>
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
+index 8b46a34e05f1..09fc02b99845 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-idu-intc.txt
+@@ -7,7 +7,6 @@ Properties:
+ 
+ - compatible: "snps,archs-idu-intc"
+ - interrupt-controller: This is an interrupt controller.
+-- interrupt-parent: <reference to parent core intc>
+ - #interrupt-cells: Must be <1>.
+ 
+   Value of the cell specifies the "common" IRQ from peripheral to IDU. Number N
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+index 492911744ca3..086ff08322db 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/snps,dw-apb-ictl.txt
+@@ -11,7 +11,6 @@ Required properties:
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: number of cells to encode an interrupt-specifier, shall be 1
+ - interrupts: interrupt reference to primary interrupt controller
+-- interrupt-parent: (optional) reference specific primary interrupt controller
+ 
+ The interrupt sources map to the corresponding bits in the interrupt
+ registers, i.e.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/socionext,synquacer-exiu.txt b/Documentation/devicetree/bindings/interrupt-controller/socionext,synquacer-exiu.txt
+index 8b2faefe29ca..dac0846fe789 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/socionext,synquacer-exiu.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/socionext,synquacer-exiu.txt
+@@ -12,7 +12,6 @@ Required properties:
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells     : Specifies the number of cells needed to encode an
+                          interrupt source. The value must be 3.
+-- interrupt-parent     : phandle of the GIC these interrupts are routed to.
+ - socionext,spi-base   : The SPI number of the first SPI of the 32 adjacent
+                          ones the EXIU forwards its interrups to.
+ 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,spear3xx-shirq.txt b/Documentation/devicetree/bindings/interrupt-controller/st,spear3xx-shirq.txt
+index 2ab0ea39867b..a407c499b3cc 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/st,spear3xx-shirq.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/st,spear3xx-shirq.txt
+@@ -31,10 +31,6 @@ Required properties:
+     parent) is equal to number of groups. The format of the interrupt
+     specifier depends in the interrupt parent controller.
+ 
+-  Optional properties:
+-  - interrupt-parent: pHandle of the parent interrupt controller, if not
+-    inherited from the parent node.
+-
+ Example:
+ 
+ The following is an example from the SPEAr320 SoC dtsi file.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/technologic,ts4800.txt b/Documentation/devicetree/bindings/interrupt-controller/technologic,ts4800.txt
+index 7f15f1b0325b..341ae5909333 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/technologic,ts4800.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/technologic,ts4800.txt
+@@ -11,6 +11,4 @@ Required properties:
+   region
+ - #interrupt-cells: specifies the number of cells needed to encode an interrupt
+   source, should be 1.
+-- interrupt-parent: phandle to the parent interrupt controller this one is
+-  cascaded from
+ - interrupts: specifies the interrupt line in the interrupt-parent controller
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,c64x+megamod-pic.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,c64x+megamod-pic.txt
+index 42bb796cc4ad..ee3f9c351501 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/ti,c64x+megamod-pic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/ti,c64x+megamod-pic.txt
+@@ -46,7 +46,6 @@ C6X Interrupt Chips
+   - interrupt-controller
+   - #interrupt-cells: <1>
+   - reg: base address and size of register area
+-  - interrupt-parent: must be core interrupt controller
+   - interrupts: This should have four cells; one for each interrupt combiner.
+                 The cells contain the core priority interrupt to which the
+                 corresponding combiner output is wired.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu b/Documentation/devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu
+index 18d4f407bf0e..422d6908f8b2 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu
++++ b/Documentation/devicetree/bindings/interrupt-controller/ti,omap4-wugen-mpu
+@@ -12,8 +12,6 @@ Required properties:
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+   interrupt source. The value must be 3.
+-- interrupt-parent : a phandle to the GIC these interrupts are routed
+-  to.
+ 
+ Notes:
+ 
+diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+index b1682c80b490..525ec82615a6 100644
+--- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
++++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+@@ -31,7 +31,6 @@ Required properties:
+ - compatible: Should be "samsung,exynos-sysmmu"
+ - reg: A tuple of base address and size of System MMU registers.
+ - #iommu-cells: Should be <0>.
+-- interrupt-parent: The phandle of the interrupt controller of System MMU
+ - interrupts: An interrupt specifier for interrupt signal of System MMU,
+ 	      according to the format defined by a particular interrupt
+ 	      controller.
+diff --git a/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+index 49cfc8c337c4..c4dd93f1fed2 100644
+--- a/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
++++ b/Documentation/devicetree/bindings/mailbox/altera-mailbox.txt
+@@ -9,7 +9,6 @@ Required properties:
+ 		of cells required for the mailbox specifier. Should be 1.
+ 
+ Optional properties:
+-- interrupt-parent :	interrupt source phandle.
+ - interrupts :		interrupt number. The interrupt specifier format
+ 			depends on the interrupt controller parent.
+ 
+diff --git a/Documentation/devicetree/bindings/media/i2c/tc358743.txt b/Documentation/devicetree/bindings/media/i2c/tc358743.txt
+index 49f8bcc2ea4d..59102edcf01e 100644
+--- a/Documentation/devicetree/bindings/media/i2c/tc358743.txt
++++ b/Documentation/devicetree/bindings/media/i2c/tc358743.txt
+@@ -12,7 +12,7 @@ Required Properties:
+ Optional Properties:
+ 
+ - reset-gpios: gpio phandle GPIO connected to the reset pin
+-- interrupts, interrupt-parent: GPIO connected to the interrupt pin
++- interrupts: GPIO connected to the interrupt pin
+ - data-lanes: should be <1 2 3 4> for four-lane operation,
+ 	      or <1 2> for two-lane operation
+ - clock-lanes: should be <0>
+diff --git a/Documentation/devicetree/bindings/media/sh_mobile_ceu.txt b/Documentation/devicetree/bindings/media/sh_mobile_ceu.txt
+index 17a8e81ca0cc..cfa4ffada8ae 100644
+--- a/Documentation/devicetree/bindings/media/sh_mobile_ceu.txt
++++ b/Documentation/devicetree/bindings/media/sh_mobile_ceu.txt
+@@ -2,7 +2,6 @@ Bindings, specific for the sh_mobile_ceu_camera.c driver:
+  - compatible: Should be "renesas,sh-mobile-ceu"
+  - reg: register base and size
+  - interrupts: the interrupt number
+- - interrupt-parent: the interrupt controller
+  - renesas,max-width: maximum image width, supported on this SoC
+  - renesas,max-height: maximum image height, supported on this SoC
+ 
+diff --git a/Documentation/devicetree/bindings/mfd/ac100.txt b/Documentation/devicetree/bindings/mfd/ac100.txt
+index b8ef00667599..dff219f07493 100644
+--- a/Documentation/devicetree/bindings/mfd/ac100.txt
++++ b/Documentation/devicetree/bindings/mfd/ac100.txt
+@@ -10,7 +10,6 @@ Required properties:
+ - sub-nodes:
+   - codec
+     - compatible:		"x-powers,ac100-codec"
+-    - interrupt-parent:		The parent interrupt controller
+     - interrupts:		SoC NMI / GPIO interrupt connected to the
+     				IRQ_AUDIO pin
+     - #clock-cells:		Shall be 0
+@@ -20,9 +19,6 @@ Required properties:
+ 
+   - rtc
+     - compatible:		"x-powers,ac100-rtc"
+-    - interrupt-parent:		The parent interrupt controller
+-    - interrupts:		SoC NMI / GPIO interrupt connected to the
+-    				IRQ_RTC pin
+     - clocks:			A phandle to the codec's "4M_adda" clock
+     - #clock-cells:		Shall be 1
+     - clock-output-names:	"cko1_rtc", "cko2_rtc", "cko3_rtc"
+diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+index c8a736554b4b..a688520dd87d 100644
+--- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
++++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+@@ -5,7 +5,6 @@ Required parent device properties:
+ - spi-max-frequency	: Maximum SPI frequency.
+ - reg			: The SPI Chip Select address for the Arria10
+ 			  System Resource chip
+-- interrupt-parent	: The parent interrupt controller.
+ - interrupts		: The interrupt line the device is connected to.
+ - interrupt-controller	: Marks the device node as an interrupt controller.
+ - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+index a014afb07902..9b62831fdf3e 100644
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
++++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+@@ -22,7 +22,6 @@ Required properties:
+     connected to.
+   - interrupt-controller : Arizona class devices contain interrupt controllers
+     and may provide interrupt services to other devices.
+-  - interrupt-parent : The parent interrupt controller.
+   - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
+     The first cell is the IRQ number.
+     The second cell is the flags, encoded as the trigger masks from
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index d1762f3b30af..62091f6b025e 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -28,7 +28,6 @@ Required properties:
+     * "x-powers,axp809"
+     * "x-powers,axp813"
+ - reg: The I2C slave address or RSB hardware address for the AXP chip
+-- interrupt-parent: The parent interrupt controller
+ - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+ - interrupt-controller: The PMIC has its own internal IRQs
+ - #interrupt-cells: Should be set to 1
+diff --git a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+index 25d1f697eb25..8c4678650d1a 100644
+--- a/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
++++ b/Documentation/devicetree/bindings/mfd/bd9571mwv.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+  - compatible		: Should be "rohm,bd9571mwv".
+  - reg			: I2C slave address.
+- - interrupt-parent	: Phandle to the parent interrupt controller.
+  - interrupts		: The interrupt line the device is connected to.
+  - interrupt-controller	: Marks the device node as an interrupt controller.
+  - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
+diff --git a/Documentation/devicetree/bindings/mfd/bfticu.txt b/Documentation/devicetree/bindings/mfd/bfticu.txt
+index 65c90776c620..538192fda9ae 100644
+--- a/Documentation/devicetree/bindings/mfd/bfticu.txt
++++ b/Documentation/devicetree/bindings/mfd/bfticu.txt
+@@ -10,7 +10,6 @@ Required properties:
+ - interrupts: the main IRQ line to signal the collected IRQs
+ - #interrupt-cells : is 2 and their usage is compliant to the 2 cells variant
+   of Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+-- interrupt-parent: the parent IRQ ctrl the main IRQ is connected to
+ - reg: access on the parent local bus (chip select, offset in chip select, size)
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/mfd/da9055.txt b/Documentation/devicetree/bindings/mfd/da9055.txt
+index 6dab34d34fce..131a53283e17 100644
+--- a/Documentation/devicetree/bindings/mfd/da9055.txt
++++ b/Documentation/devicetree/bindings/mfd/da9055.txt
+@@ -22,8 +22,6 @@ Documentation/devicetree/bindings/sound/da9055.txt
+ Required properties:
+ - compatible : Should be "dlg,da9055-pmic"
+ - reg: Specifies the I2C slave address (defaults to 0x5a but can be modified)
+-- interrupt-parent: Specifies the phandle of the interrupt controller to which
+-  the IRQs from da9055 are delivered to.
+ - interrupts: IRQ line info for da9055 chip.
+ - interrupt-controller: da9055 has internal IRQs (has own IRQ domain).
+ - #interrupt-cells: Should be 1, is the local IRQ number for da9055.
+diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
+index c0a418c27e9d..edca653a5777 100644
+--- a/Documentation/devicetree/bindings/mfd/da9062.txt
++++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+@@ -32,8 +32,6 @@ Required properties:
+     "dlg,da9061" for DA9061
+ - reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
+   modified to match the chip's OTP settings).
+-- interrupt-parent : Specifies the reference to the interrupt controller for
+-  the DA9062 or DA9061.
+ - interrupts : IRQ line information.
+ - interrupt-controller
+ 
+diff --git a/Documentation/devicetree/bindings/mfd/da9063.txt b/Documentation/devicetree/bindings/mfd/da9063.txt
+index 443e68286957..8da879935c59 100644
+--- a/Documentation/devicetree/bindings/mfd/da9063.txt
++++ b/Documentation/devicetree/bindings/mfd/da9063.txt
+@@ -16,8 +16,6 @@ Required properties:
+ - compatible : Should be "dlg,da9063" or "dlg,da9063l"
+ - reg : Specifies the I2C slave address (this defaults to 0x58 but it can be
+   modified to match the chip's OTP settings).
+-- interrupt-parent : Specifies the reference to the interrupt controller for
+-  the DA9063.
+ - interrupts : IRQ line information.
+ - interrupt-controller
+ 
+diff --git a/Documentation/devicetree/bindings/mfd/da9150.txt b/Documentation/devicetree/bindings/mfd/da9150.txt
+index fd4dca7f4aba..f09b41fbdf47 100644
+--- a/Documentation/devicetree/bindings/mfd/da9150.txt
++++ b/Documentation/devicetree/bindings/mfd/da9150.txt
+@@ -13,8 +13,6 @@ da9150-fg		: Battery Fuel-Gauge
+ Required properties:
+ - compatible : Should be "dlg,da9150"
+ - reg: Specifies the I2C slave address
+-- interrupt-parent: Specifies the phandle of the interrupt controller to which
+-  the IRQs from da9150 are delivered to.
+ - interrupts: IRQ line info for da9150 chip.
+ - interrupt-controller: da9150 has internal IRQs (own IRQ domain).
+   (See ../interrupt-controller/interrupts.txt for
+diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
+index 236264c10b92..fc6f0f4e8beb 100644
+--- a/Documentation/devicetree/bindings/mfd/max14577.txt
++++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+@@ -11,7 +11,6 @@ Required properties:
+ - compatible : Must be "maxim,max14577" or "maxim,max77836".
+ - reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
+ - interrupts : IRQ line for the chip.
+-- interrupt-parent :  The parent interrupt controller.
+ 
+ 
+ Required nodes:
+diff --git a/Documentation/devicetree/bindings/mfd/max77686.txt b/Documentation/devicetree/bindings/mfd/max77686.txt
+index 0f2587fa42cb..42968b7144e0 100644
+--- a/Documentation/devicetree/bindings/mfd/max77686.txt
++++ b/Documentation/devicetree/bindings/mfd/max77686.txt
+@@ -15,7 +15,6 @@ Required properties:
+ - compatible : Must be "maxim,max77686";
+ - reg : Specifies the i2c slave address of PMIC block.
+ - interrupts : This i2c device has an IRQ line connected to the main SoC.
+-- interrupt-parent : The parent interrupt controller.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+index e6754974a745..a3c60a7a3be1 100644
+--- a/Documentation/devicetree/bindings/mfd/max77693.txt
++++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+@@ -14,7 +14,6 @@ Required properties:
+ - compatible : Must be "maxim,max77693".
+ - reg : Specifies the i2c slave address of PMIC block.
+ - interrupts : This i2c device has an IRQ line connected to the main SoC.
+-- interrupt-parent :  The parent interrupt controller.
+ 
+ Optional properties:
+ - regulators : The regulators of max77693 have to be instantiated under subnode
+diff --git a/Documentation/devicetree/bindings/mfd/max77802.txt b/Documentation/devicetree/bindings/mfd/max77802.txt
+index f2f3fe75901c..09decac20d91 100644
+--- a/Documentation/devicetree/bindings/mfd/max77802.txt
++++ b/Documentation/devicetree/bindings/mfd/max77802.txt
+@@ -14,7 +14,6 @@ Required properties:
+ - compatible		: Must be "maxim,max77802"
+ - reg			: Specifies the I2C slave address of PMIC block.
+ - interrupts		: I2C device IRQ line connected to the main SoC.
+-- interrupt-parent	: The parent interrupt controller.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Documentation/devicetree/bindings/mfd/max8998.txt
+index 23a3650ff2a2..5f2f07c09c90 100644
+--- a/Documentation/devicetree/bindings/mfd/max8998.txt
++++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+@@ -20,8 +20,6 @@ Required properties:
+ - reg: Specifies the i2c slave address of the pmic block. It should be 0x66.
+ 
+ Optional properties:
+-- interrupt-parent: Specifies the phandle of the interrupt controller to which
+-  the interrupts from MAX8998 are routed to.
+ - interrupts: Interrupt specifiers for two interrupt sources.
+   - First interrupt specifier is for main interrupt.
+   - Second interrupt specifier is for power-on/-off interrupt.
+diff --git a/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt b/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt
+index c639705a98ef..5ddcc8f4febc 100644
+--- a/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt
++++ b/Documentation/devicetree/bindings/mfd/motorola-cpcap.txt
+@@ -3,7 +3,6 @@ Motorola CPCAP PMIC device tree binding
+ Required properties:
+ - compatible		: One or both of "motorola,cpcap" or "ste,6556002"
+ - reg			: SPI chip select
+-- interrupt-parent	: The parent interrupt controller
+ - interrupts		: The interrupt line the device is connected to
+ - interrupt-controller	: Marks the device node as an interrupt controller
+ - #interrupt-cells	: The number of cells to describe an IRQ, should be 2
+diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
+index 8ae1a32bfb7e..e736ab3012a6 100644
+--- a/Documentation/devicetree/bindings/mfd/palmas.txt
++++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+@@ -25,7 +25,6 @@ and also the generic series names
+   The first cell is the IRQ number.
+   The second cell is the flags, encoded as the trigger masks from
+   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+-- interrupt-parent : The parent interrupt controller.
+ 
+ Optional properties:
+   ti,mux-padX : set the pad register X (1-2) to the correct muxing for the
+diff --git a/Documentation/devicetree/bindings/mfd/retu.txt b/Documentation/devicetree/bindings/mfd/retu.txt
+index 876242394a16..df3005dd3e3c 100644
+--- a/Documentation/devicetree/bindings/mfd/retu.txt
++++ b/Documentation/devicetree/bindings/mfd/retu.txt
+@@ -9,7 +9,6 @@ Required properties:
+ - compatible:		"nokia,retu" or "nokia,tahvo"
+ - reg:			Specifies the CBUS slave address of the ASIC chip
+ - interrupts: 		The interrupt line the device is connected to
+-- interrupt-parent:	The parent interrupt controller
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+index 91b65227afeb..1683ec3245bc 100644
+--- a/Documentation/devicetree/bindings/mfd/rk808.txt
++++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+@@ -10,7 +10,6 @@ Required properties:
+ - compatible: "rockchip,rk808"
+ - compatible: "rockchip,rk818"
+ - reg: I2C slave address
+-- interrupt-parent: The parent interrupt controller.
+ - interrupts: the interrupt outputs of the controller.
+ - #clock-cells: from common clock binding; shall be set to 1 (multiple clock
+   outputs). See <dt-bindings/clock/rockchip,rk808.h> for clock IDs.
+diff --git a/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt b/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
+index cdd079bfc287..c68cdd365153 100644
+--- a/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
++++ b/Documentation/devicetree/bindings/mfd/samsung,sec-core.txt
+@@ -31,8 +31,6 @@ Required properties:
+  - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+ 
+ Optional properties:
+- - interrupt-parent: Specifies the phandle of the interrupt controller to which
+-   the interrupts from s2mps11 are delivered to.
+  - interrupts: Interrupt specifiers for interrupt sources.
+  - samsung,s2mps11-wrstbi-ground: Indicates that WRSTBI pin of PMIC is pulled
+    down. When the system is suspended it will always go down thus triggerring
+diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
+index f9065a5781a2..c797c05cd3c2 100644
+--- a/Documentation/devicetree/bindings/mfd/stmpe.txt
++++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
+@@ -10,7 +10,6 @@ Required properties:
+ Optional properties:
+  - interrupts                   : The interrupt outputs from the controller
+  - interrupt-controller         : Marks the device node as an interrupt controller
+- - interrupt-parent             : Specifies which IRQ controller we're connected to
+  - wakeup-source                : Marks the input device as wakable
+  - st,autosleep-timeout         : Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
+  - irq-gpio                     : If present, which GPIO to use for event IRQ
+diff --git a/Documentation/devicetree/bindings/mfd/tc3589x.txt b/Documentation/devicetree/bindings/mfd/tc3589x.txt
+index 23fc2f21f5a4..4f22b2b07dc5 100644
+--- a/Documentation/devicetree/bindings/mfd/tc3589x.txt
++++ b/Documentation/devicetree/bindings/mfd/tc3589x.txt
+@@ -15,7 +15,6 @@ Required properties:
+  - compatible : must be "toshiba,tc35890", "toshiba,tc35892", "toshiba,tc35893",
+    "toshiba,tc35894", "toshiba,tc35895" or "toshiba,tc35896"
+  - reg : I2C address of the device
+- - interrupt-parent : specifies which IRQ controller we're connected to
+  - interrupts : the interrupt on the parent the controller is connected to
+  - interrupt-controller : marks the device node as an interrupt controller
+  - #interrupt-cells : should be <1>, the first cell is the IRQ offset on this
+diff --git a/Documentation/devicetree/bindings/mfd/tps65086.txt b/Documentation/devicetree/bindings/mfd/tps65086.txt
+index 9cfa886fe99f..67eac0ed32df 100644
+--- a/Documentation/devicetree/bindings/mfd/tps65086.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65086.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+  - compatible		: Should be "ti,tps65086".
+  - reg			: I2C slave address.
+- - interrupt-parent	: Phandle to the parent interrupt controller.
+  - interrupts		: The interrupt line the device is connected to.
+  - interrupt-controller	: Marks the device node as an interrupt controller.
+  - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
+diff --git a/Documentation/devicetree/bindings/mfd/tps65912.txt b/Documentation/devicetree/bindings/mfd/tps65912.txt
+index 717e66d23142..8becb183a48e 100644
+--- a/Documentation/devicetree/bindings/mfd/tps65912.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65912.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+  - compatible		: Should be "ti,tps65912".
+  - reg			: Slave address or chip select number (I2C / SPI).
+- - interrupt-parent	: The parent interrupt controller.
+  - interrupts		: The interrupt line the device is connected to.
+  - interrupt-controller	: Marks the device node as an interrupt controller.
+  - #interrupt-cells	: The number of cells to describe an IRQ, should be 2.
+diff --git a/Documentation/devicetree/bindings/mfd/twl-familly.txt b/Documentation/devicetree/bindings/mfd/twl-familly.txt
+index a66fcf946759..56f244b5d8a4 100644
+--- a/Documentation/devicetree/bindings/mfd/twl-familly.txt
++++ b/Documentation/devicetree/bindings/mfd/twl-familly.txt
+@@ -16,7 +16,6 @@ Required properties:
+ - interrupt-controller : Since the twl support several interrupts internally,
+   it is considered as an interrupt controller cascaded to the SoC one.
+ - #interrupt-cells = <1>;
+-- interrupt-parent : The parent interrupt controller.
+ 
+ Optional node:
+ - Child nodes contain in the twl. The twl family is made of several variants
+diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Documentation/devicetree/bindings/mfd/twl6040.txt
+index 9a98ee7c323d..06e9dd7a0d96 100644
+--- a/Documentation/devicetree/bindings/mfd/twl6040.txt
++++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
+@@ -9,7 +9,6 @@ Required properties:
+ - compatible : "ti,twl6040" for twl6040, "ti,twl6041" for twl6041
+ - reg: must be 0x4b for i2c address
+ - interrupts: twl6040 has one interrupt line connecteded to the main SoC
+-- interrupt-parent: The parent interrupt controller
+ - gpio-controller:
+ - #gpio-cells = <1>: twl6040 provides GPO lines.
+ - #clock-cells = <0>; twl6040 is a provider of pdmclk which is used by McPDM
+diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
+index 505709403d3f..6b84b1b0d018 100644
+--- a/Documentation/devicetree/bindings/mfd/wm831x.txt
++++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
+@@ -22,7 +22,6 @@ Required properties:
+ 
+   - interrupts : The interrupt line the IRQ signal for the device is
+     connected to.
+-  - interrupt-parent : The parent interrupt controller.
+ 
+   - interrupt-controller : wm831x devices contain interrupt controllers and
+     may provide interrupt services to other devices.
+diff --git a/Documentation/devicetree/bindings/mips/cavium/cib.txt b/Documentation/devicetree/bindings/mips/cavium/cib.txt
+index f39a1aa2852b..410efa322254 100644
+--- a/Documentation/devicetree/bindings/mips/cavium/cib.txt
++++ b/Documentation/devicetree/bindings/mips/cavium/cib.txt
+@@ -13,8 +13,6 @@ Properties:
+ - cavium,max-bits: The index (zero based) of the highest numbered bit
+   in the CIB block.
+ 
+-- interrupt-parent:  Always the CIU on the SoC.
+-
+ - interrupts: The CIU line to which the CIB block is connected.
+ 
+ - #interrupt-cells: Must be <2>.  The first cell is the bit within the
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index 60481bfc3d31..5f3c02522c17 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -19,8 +19,6 @@ Required Properties:
+   - clocks: From clock bindings: Handles to clock inputs.
+   - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
+   - interrupts: Interrupt specifier
+-  - interrupt-parent: Phandle for the interrupt controller that services
+-		      interrupts for this device.
+ 
+ Required Properties for "arasan,sdhci-5.1":
+   - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
+diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+index a2cf5e1c87d8..99c5cf8507e8 100644
+--- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
++++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+@@ -21,7 +21,6 @@ Required properties:
+ 	"fsl,ls1043a-esdhc"
+ 	"fsl,ls1046a-esdhc"
+ 	"fsl,ls2080a-esdhc"
+-  - interrupt-parent : interrupt source phandle.
+   - clock-frequency : specifies eSDHC base clock frequency.
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-spi-slot.txt b/Documentation/devicetree/bindings/mmc/mmc-spi-slot.txt
+index 0e5e2ec4001d..75486cca8054 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-spi-slot.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc-spi-slot.txt
+@@ -13,8 +13,6 @@ Optional properties:
+ - gpios : may specify GPIOs in this order: Card-Detect GPIO,
+   Write-Protect GPIO. Note that this does not follow the
+   binding from mmc.txt, for historical reasons.
+-- interrupt-parent : the phandle for the interrupt controller that
+-  services interrupts for this device.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+index b40f3a492800..bcda1dfc4bac 100644
+--- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
++++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
+@@ -42,7 +42,6 @@ Required properties:
+                      May be "nand", if the SoC has the individual NAND
+                      interrupts multiplexed behind another custom piece of
+                      hardware
+-- interrupt-parent : See standard interrupt bindings
+ - #address-cells   : <1> - subnodes give the chip-select number
+ - #size-cells      : <0>
+ 
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index dd559045593d..c059ab74ed88 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -16,7 +16,6 @@ Required properties:
+  - compatible:	"ti,omap2-nand"
+  - reg:		range id (CS number), base offset and length of the
+ 		NAND I/O space
+- - interrupt-parent: must point to gpmc node
+  - interrupts:	Two interrupt specifiers, one for fifoevent, one for termcount.
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/mtd/spear_smi.txt b/Documentation/devicetree/bindings/mtd/spear_smi.txt
+index 7248aadd89e4..c41873e92d26 100644
+--- a/Documentation/devicetree/bindings/mtd/spear_smi.txt
++++ b/Documentation/devicetree/bindings/mtd/spear_smi.txt
+@@ -5,8 +5,6 @@ Required properties:
+ - reg : Address range of the mtd chip
+ - #address-cells, #size-cells : Must be present if the device has sub-nodes
+   representing partitions.
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the STMMAC interrupts
+ - clock-rate : Functional clock rate of SMI in Hz
+ 
+diff --git a/Documentation/devicetree/bindings/net/amd-xgbe.txt b/Documentation/devicetree/bindings/net/amd-xgbe.txt
+index 4bb624a73b54..93dcb79a5f16 100644
+--- a/Documentation/devicetree/bindings/net/amd-xgbe.txt
++++ b/Documentation/devicetree/bindings/net/amd-xgbe.txt
+@@ -8,8 +8,6 @@ Required properties:
+    - SerDes Rx/Tx registers
+    - SerDes integration registers (1/2)
+    - SerDes integration registers (2/2)
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the amd-xgbe interrupt(s). The first interrupt
+   listed is required and is the general device interrupt. If the optional
+   amd,per-channel-interrupt property is specified, then one additional
+diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
+index 9c5e663fa1af..37d67926dd6d 100644
+--- a/Documentation/devicetree/bindings/net/btusb.txt
++++ b/Documentation/devicetree/bindings/net/btusb.txt
+@@ -15,7 +15,6 @@ Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
+ 
+ Optional properties:
+ 
+-  - interrupt-parent: phandle of the parent interrupt controller
+   - interrupt-names: (see below)
+   - interrupts : The interrupt specified by the name "wakeup" is the interrupt
+ 		 that shall be used for out-of-band wake-on-bt. Driver will
+diff --git a/Documentation/devicetree/bindings/net/can/holt_hi311x.txt b/Documentation/devicetree/bindings/net/can/holt_hi311x.txt
+index 23aa94eab207..903a78da65be 100644
+--- a/Documentation/devicetree/bindings/net/can/holt_hi311x.txt
++++ b/Documentation/devicetree/bindings/net/can/holt_hi311x.txt
+@@ -5,7 +5,6 @@ Required properties:
+    - "holt,hi3110" for HI-3110
+  - reg: SPI chip select.
+  - clocks: The clock feeding the CAN controller.
+- - interrupt-parent: The parent interrupt controller.
+  - interrupts: Should contain IRQ line for the CAN controller.
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+index ee3723beb701..188c8bd4eb67 100644
+--- a/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251x.txt
+@@ -6,7 +6,6 @@ Required properties:
+    - "microchip,mcp2515" for MCP2515.
+  - reg: SPI chip select.
+  - clocks: The clock feeding the CAN controller.
+- - interrupt-parent: The parent interrupt controller.
+  - interrupts: Should contain IRQ line for the CAN controller.
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+index fe38847d8e26..9264d2f6a89d 100644
+--- a/Documentation/devicetree/bindings/net/can/xilinx_can.txt
++++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+@@ -9,7 +9,6 @@ Required properties:
+ 			  CANPS registers map.
+ - interrupts		: Property with a value describing the interrupt
+ 			  number.
+-- interrupt-parent	: Must be core interrupt controller
+ - clock-names		: List of input clock names - "can_clk", "pclk"
+ 			  (For CANPS), "can_clk" , "s_axi_aclk"(For AXI CAN)
+ 			  (See clock bindings for details).
+diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+index 4cb4925a28ab..41089369f891 100644
+--- a/Documentation/devicetree/bindings/net/cpsw.txt
++++ b/Documentation/devicetree/bindings/net/cpsw.txt
+@@ -11,7 +11,6 @@ Required properties:
+ 			  registers map
+ - interrupts		: property with a value describing the interrupt
+ 			  number
+-- interrupt-parent	: The parent interrupt controller
+ - cpdma_channels 	: Specifies number of channels in CPDMA
+ - ale_entries		: Specifies No of entries ALE can hold
+ - bd_ram_size		: Specifies internal descriptor RAM size
+diff --git a/Documentation/devicetree/bindings/net/davicom-dm9000.txt b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
+index 5224bf05f6f8..64c159e9cbf7 100644
+--- a/Documentation/devicetree/bindings/net/davicom-dm9000.txt
++++ b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
+@@ -5,7 +5,6 @@ Required properties:
+ - reg : physical addresses and sizes of registers, must contain 2 entries:
+     first entry : address register,
+     second entry : data register.
+-- interrupt-parent : interrupt controller to which the device is connected
+ - interrupts : interrupt specifier specific to interrupt controller
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+index 60d50a2b0323..feb007af13cb 100644
+--- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
++++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+@@ -30,7 +30,6 @@ Required properties:
+ Optional properties:
+ 
+ - reset-gpios		: Should be a gpio specifier for a reset line
+-- interrupt-parent	: Parent interrupt controller
+ - interrupts		: Interrupt from the switch
+ - interrupt-controller	: Indicates the switch is itself an interrupt
+ 			  controller. This is used for the PHY interrupts.
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+index abfbeecbcf39..8ee4b1cedae8 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hns-dsaf.txt
+@@ -9,7 +9,6 @@ Required properties:
+ 		"6port-16rss",
+ 		"6port-16vf",
+ 		"single-port".
+-- interrupt-parent: the interrupt parent of this device.
+ - interrupts: should contain the DSA Fabric and rcb interrupt.
+ - reg: specifies base physical address(es) and size of the device registers.
+   The first region is external interface control register base and size(optional,
+diff --git a/Documentation/devicetree/bindings/net/ibm,emac.txt b/Documentation/devicetree/bindings/net/ibm,emac.txt
+index 44b842b6ca15..c0c14aa3f97c 100644
+--- a/Documentation/devicetree/bindings/net/ibm,emac.txt
++++ b/Documentation/devicetree/bindings/net/ibm,emac.txt
+@@ -18,7 +18,6 @@
+ 			  "ibm,emac4".  For Axon, thus, we have: "ibm,emac-axon",
+ 			  "ibm,emac4"
+     - interrupts        : <interrupt mapping for EMAC IRQ and WOL IRQ>
+-    - interrupt-parent  : optional, if needed for interrupt mapping
+     - reg               : <registers mapping>
+     - local-mac-address : 6 bytes, MAC address
+     - mal-device        : phandle of the associated McMAL node
+diff --git a/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
+index 3d27c68613a6..957e5e5c2927 100644
+--- a/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
++++ b/Documentation/devicetree/bindings/net/marvell-bt-8xxx.txt
+@@ -22,7 +22,6 @@ Optional properties:
+   - marvell,wakeup-gap-ms: wakeup gap represents wakeup latency of the host
+ 		      platform. The value will be configured to firmware. This
+ 		      is needed to work chip's sleep feature as expected (u16).
+-  - interrupt-parent: phandle of the parent interrupt controller
+   - interrupt-names: Used only for USB based devices (See below)
+   - interrupts : specifies the interrupt pin number to the cpu. For SDIO, the
+ 		 driver will use the first interrupt specified in the interrupt
+diff --git a/Documentation/devicetree/bindings/net/mediatek,mt7620-gsw.txt b/Documentation/devicetree/bindings/net/mediatek,mt7620-gsw.txt
+index aa6313024176..358fed2fab43 100644
+--- a/Documentation/devicetree/bindings/net/mediatek,mt7620-gsw.txt
++++ b/Documentation/devicetree/bindings/net/mediatek,mt7620-gsw.txt
+@@ -6,8 +6,6 @@ The mediatek gigabit switch can be found on Mediatek SoCs (mt7620, mt7621).
+ Required properties:
+ - compatible: Should be "mediatek,mt7620-gsw" or "mediatek,mt7621-gsw"
+ - reg: Address and length of the register set for the device
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the gigabit switches interrupt
+ - resets: Should contain the gigabit switches resets
+ - reset-names: Should contain the reset names "gsw"
+diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
+index 53c13ee384a4..503f2b9194e2 100644
+--- a/Documentation/devicetree/bindings/net/mediatek-net.txt
++++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
+@@ -30,9 +30,6 @@ Required properties:
+ - mediatek,pctl: phandle to the syscon node that handles the ports slew rate
+ 	and driver current: only for MT2701 and MT7623 SoC
+ 
+-Optional properties:
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ * Ethernet MAC node
+ 
+ Required properties:
+diff --git a/Documentation/devicetree/bindings/net/microchip,enc28j60.txt b/Documentation/devicetree/bindings/net/microchip,enc28j60.txt
+index 44dff53d4dda..24626e082b83 100644
+--- a/Documentation/devicetree/bindings/net/microchip,enc28j60.txt
++++ b/Documentation/devicetree/bindings/net/microchip,enc28j60.txt
+@@ -8,9 +8,6 @@ the SPI master node.
+ Required properties:
+ - compatible: Should be "microchip,enc28j60"
+ - reg: Specify the SPI chip select the ENC28J60 is wired to
+-- interrupt-parent: Specify the phandle of the source interrupt, see interrupt
+-                    binding documentation for details. Usually this is the GPIO bank
+-                    the interrupt line is wired to.
+ - interrupts: Specify the interrupt index within the interrupt controller (referred
+               to above in interrupt-parent) and interrupt type. The ENC28J60 natively
+               generates falling edge interrupts, however, additional board logic
+diff --git a/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt b/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
+index 92486733df71..cfaf88998918 100644
+--- a/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
++++ b/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
+@@ -4,7 +4,6 @@ Required properties:
+ - compatible: Should be "nxp,nxp-nci-i2c".
+ - clock-frequency: I²C work frequency.
+ - reg: address on the bus
+-- interrupt-parent: phandle for the interrupt gpio controller
+ - interrupts: GPIO interrupt to which the chip is connected
+ - enable-gpios: Output GPIO pin used for enabling/disabling the chip
+ - firmware-gpios: Output GPIO pin used to enter firmware download mode
+diff --git a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt b/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
+index 122460e42e3c..2efe3886b95b 100644
+--- a/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
++++ b/Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
+@@ -4,7 +4,6 @@ Required properties:
+ - compatible: Should be "nxp,pn532-i2c" or "nxp,pn533-i2c".
+ - clock-frequency: I²C work frequency.
+ - reg: address on the bus
+-- interrupt-parent: phandle for the interrupt gpio controller
+ - interrupts: GPIO interrupt to which the chip is connected
+ 
+ Optional SoC Specific Properties:
+diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Documentation/devicetree/bindings/net/nfc/pn544.txt
+index 538a86f7b2b0..5b937403fed6 100644
+--- a/Documentation/devicetree/bindings/net/nfc/pn544.txt
++++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
+@@ -4,7 +4,6 @@ Required properties:
+ - compatible: Should be "nxp,pn544-i2c".
+ - clock-frequency: I�C work frequency.
+ - reg: address on the bus
+-- interrupt-parent: phandle for the interrupt gpio controller
+ - interrupts: GPIO interrupt to which the chip is connected
+ - enable-gpios: Output GPIO pin used for enabling/disabling the PN544
+ - firmware-gpios: Output GPIO pin used to enter firmware download mode
+diff --git a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
+index ed5b3eaadb39..f02f6fb7f81c 100644
+--- a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
++++ b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible: Should be "samsung,s3fwrn5-i2c".
+ - reg: address on the bus
+-- interrupt-parent: phandle for the interrupt gpio controller
+ - interrupts: GPIO interrupt to which the chip is connected
+ - s3fwrn5,en-gpios: Output GPIO pin used for enabling/disabling the chip
+ - s3fwrn5,fw-gpios: Output GPIO pin used to enter firmware mode and
+diff --git a/Documentation/devicetree/bindings/net/nfc/st-nci-i2c.txt b/Documentation/devicetree/bindings/net/nfc/st-nci-i2c.txt
+index b46d473be425..baa8f8133d19 100644
+--- a/Documentation/devicetree/bindings/net/nfc/st-nci-i2c.txt
++++ b/Documentation/devicetree/bindings/net/nfc/st-nci-i2c.txt
+@@ -4,7 +4,6 @@ Required properties:
+ - compatible: Should be "st,st21nfcb-i2c" or "st,st21nfcc-i2c".
+ - clock-frequency: I²C work frequency.
+ - reg: address on the bus
+-- interrupt-parent: phandle for the interrupt gpio controller
+ - interrupts: GPIO interrupt to which the chip is connected
+ - reset-gpios: Output GPIO pin used to reset the ST21NFCB
+ 
+diff --git a/Documentation/devicetree/bindings/net/nfc/st-nci-spi.txt b/Documentation/devicetree/bindings/net/nfc/st-nci-spi.txt
+index 54ce8e7ac681..d33343330b94 100644
+--- a/Documentation/devicetree/bindings/net/nfc/st-nci-spi.txt
++++ b/Documentation/devicetree/bindings/net/nfc/st-nci-spi.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible: Should be "st,st21nfcb-spi"
+ - spi-max-frequency: Maximum SPI frequency (<= 4000000).
+-- interrupt-parent: phandle for the interrupt gpio controller
+ - interrupts: GPIO interrupt to which the chip is connected
+ - reset-gpios: Output GPIO pin used to reset the ST21NFCB
+ 
+diff --git a/Documentation/devicetree/bindings/net/nfc/st21nfca.txt b/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
+index 5ee9440fa9ad..b8bd90f80e12 100644
+--- a/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
++++ b/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
+@@ -4,8 +4,6 @@ Required properties:
+ - compatible: Should be "st,st21nfca-i2c".
+ - clock-frequency: I²C work frequency.
+ - reg: address on the bus
+-- interrupt-parent: phandle for the interrupt gpio controller
+-- interrupts: GPIO interrupt to which the chip is connected
+ - enable-gpios: Output GPIO pin used for enabling/disabling the ST21NFCA
+ 
+ Optional SoC Specific Properties:
+diff --git a/Documentation/devicetree/bindings/net/nfc/st95hf.txt b/Documentation/devicetree/bindings/net/nfc/st95hf.txt
+index 08a202e00d47..3f373a1e20ff 100644
+--- a/Documentation/devicetree/bindings/net/nfc/st95hf.txt
++++ b/Documentation/devicetree/bindings/net/nfc/st95hf.txt
+@@ -17,9 +17,6 @@ Required properties:
+ 
+ - enable-gpio: GPIO line to enable ST95HF transceiver.
+ 
+-- interrupt-parent : Standard way to specify the controller to which
+-	ST95HF transceiver's interrupt is routed.
+-
+ - interrupts : Standard way to define ST95HF transceiver's out
+ 	interrupt.
+ 
+diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+index 5ca9362ef127..ba1934b950e5 100644
+--- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
++++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+@@ -3,7 +3,6 @@
+ Required properties:
+ - compatible: Should be "ti,trf7970a".
+ - spi-max-frequency: Maximum SPI frequency (<= 2000000).
+-- interrupt-parent: phandle of parent interrupt handler.
+ - interrupts: A single interrupt specifier.
+ - ti,enable-gpios: One or two GPIO entries used for 'EN' and 'EN2' pins on the
+   TRF7970A. EN2 is optional.
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index d2169a56f5e3..17c1d2bd00f6 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -3,8 +3,6 @@ PHY nodes
+ Required properties:
+ 
+  - interrupts : interrupt specifier for the sole interrupt.
+- - interrupt-parent : the phandle for the interrupt controller that
+-   services interrupts for this device.
+  - reg : The ID number for the phy, usually a small integer
+ 
+ Optional Properties:
+diff --git a/Documentation/devicetree/bindings/net/qca,qca7000.txt b/Documentation/devicetree/bindings/net/qca,qca7000.txt
+index 3987846b3fd3..e4a8a51086df 100644
+--- a/Documentation/devicetree/bindings/net/qca,qca7000.txt
++++ b/Documentation/devicetree/bindings/net/qca,qca7000.txt
+@@ -19,7 +19,6 @@ Required properties:
+ - spi-cpol	    : Must be set
+ 
+ Optional properties:
+-- interrupt-parent  : Specify the pHandle of the source interrupt
+ - spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
+ 		      Numbers smaller than 1000000 or greater than 16000000
+ 		      are invalid. Missing the property will set the SPI
+diff --git a/Documentation/devicetree/bindings/net/ralink,rt2880-net.txt b/Documentation/devicetree/bindings/net/ralink,rt2880-net.txt
+index 88b095d1f13b..9fe1a0a22e44 100644
+--- a/Documentation/devicetree/bindings/net/ralink,rt2880-net.txt
++++ b/Documentation/devicetree/bindings/net/ralink,rt2880-net.txt
+@@ -14,8 +14,6 @@ Required properties:
+   "ralink,rt3050-eth", "ralink,rt3883-eth", "ralink,rt5350-eth",
+   "mediatek,mt7620-eth", "mediatek,mt7621-eth"
+ - reg: Address and length of the register set for the device
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the frame engines interrupt
+ - resets: Should contain the frame engines resets
+ - reset-names: Should contain the reset names "fe". If a switch is present
+diff --git a/Documentation/devicetree/bindings/net/ralink,rt3050-esw.txt b/Documentation/devicetree/bindings/net/ralink,rt3050-esw.txt
+index 2e79bd376c56..87e315856efa 100644
+--- a/Documentation/devicetree/bindings/net/ralink,rt3050-esw.txt
++++ b/Documentation/devicetree/bindings/net/ralink,rt3050-esw.txt
+@@ -7,8 +7,6 @@ SoCs (RT3x5x, RT5350, MT76x8).
+ Required properties:
+ - compatible: Should be "ralink,rt3050-esw"
+ - reg: Address and length of the register set for the device
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the embedded switches interrupt
+ - resets: Should contain the embedded switches resets
+ - reset-names: Should contain the reset names "esw"
+diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+index fac897d54423..19740d01cab0 100644
+--- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
++++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+@@ -47,8 +47,6 @@ Required properties:
+ - pinctrl-0: phandle, referring to a default pin configuration node.
+ 
+ Optional properties:
+-- interrupt-parent: the phandle for the interrupt controller that services
+-		    interrupts for this device.
+ - interrupt-names: A list of interrupt names.
+ 		   For the R-Car Gen 3 SoCs this property is mandatory;
+ 		   it should include one entry per channel, named "ch%u",
+diff --git a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+index 888c250197fe..46e591178911 100644
+--- a/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
++++ b/Documentation/devicetree/bindings/net/samsung-sxgbe.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+ - compatible: Should be "samsung,sxgbe-v2.0a"
+ - reg: Address and length of the register set for the device
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the SXGBE interrupts
+   These interrupts are ordered by fixed and follows variable
+   trasmit DMA interrupts, receive DMA interrupts and lpi interrupt.
+diff --git a/Documentation/devicetree/bindings/net/sh_eth.txt b/Documentation/devicetree/bindings/net/sh_eth.txt
+index 82a4cf2c145d..76db9f13ad96 100644
+--- a/Documentation/devicetree/bindings/net/sh_eth.txt
++++ b/Documentation/devicetree/bindings/net/sh_eth.txt
+@@ -35,8 +35,6 @@ Required properties:
+ - pinctrl-0: phandle, referring to a default pin configuration node.
+ 
+ Optional properties:
+-- interrupt-parent: the phandle for the interrupt controller that services
+-		    interrupts for this device.
+ - pinctrl-names: pin configuration state name ("default").
+ - renesas,no-ether-link: boolean, specify when a board does not provide a proper
+ 			 Ether LINK signal.
+diff --git a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+index 21d27aa4c68c..36f1aef585f0 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
++++ b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+@@ -83,8 +83,6 @@ Required properties:
+   - "snps,dwc-qos-ethernet-4.10" (deprecated):
+     - "phy_ref_clk"
+     - "apb_clk"
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the core's combined interrupt signal
+ - phy-mode: See ethernet.txt file in the same directory
+ - resets: Phandle and reset specifiers for each entry in reset-names, in the
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index 3a28a5d8857d..8bdb1c231d08 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -4,8 +4,6 @@ Required properties:
+ - compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac"
+ 	For backwards compatibility: "st,spear600-gmac" is also supported.
+ - reg: Address and length of the register set for the device
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the STMMAC interrupts
+ - interrupt-names: Should contain a list of interrupt names corresponding to
+ 	the interrupts in the interrupts property, if available.
+diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+index 86602f264dce..cffb2d6876e3 100644
+--- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
++++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+@@ -11,8 +11,6 @@ Required properties:
+ Optional properties:
+  - brcm,drive-strength : drive strength used for SDIO pins on device in mA
+ 	(default = 6).
+- - interrupt-parent : the phandle for the interrupt controller to which the
+-	device interrupts are connected.
+  - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
+ 	When not specified the device will use in-band SDIO interrupts.
+  - interrupt-names : name of the out-of-band interrupt, which must be set
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+index 59de8646862d..9bf9bbac16e2 100644
+--- a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+@@ -29,7 +29,6 @@ Optional properties:
+   - marvell,wakeup-pin : a wakeup pin number of wifi chip which will be configured
+ 		      to firmware. Firmware will wakeup the host using this pin
+ 		      during suspend/resume.
+-  - interrupt-parent: phandle of the parent interrupt controller
+   - interrupts : interrupt pin number to the cpu. driver will request an irq based on
+ 		 this interrupt number. during system suspend, the irq will be enabled
+ 		 so that the wifi chip can wakeup host platform under certain condition.
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+index 189ae5cad8f7..bb2fcde6f7ff 100644
+--- a/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt
+@@ -8,8 +8,6 @@ Required properties:
+ - reg :               Chip select address of device
+ - spi-max-frequency : Maximum SPI clocking speed of device in Hz
+ - interrupts :        Should contain interrupt line
+-- interrupt-parent :  Should be the phandle for the interrupt controller
+-                      that services interrupts for this device
+ - vio-supply :        phandle to regulator providing VIO
+ - ti,power-gpio :     GPIO connected to chip's PMEN pin
+ 
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+index 8f9ced076fe1..cb5c9e1569ca 100644
+--- a/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore,spi.txt
+@@ -17,9 +17,7 @@ Required properties:
+     * "ti,wl1837"
+ - reg :                 Chip select address of device
+ - spi-max-frequency :   Maximum SPI clocking speed of device in Hz
+-- interrupt-parent, interrupts :
+-                        Should contain parameters for 1 interrupt line.
+-                        Interrupt parameters: parent, line number, type.
++- interrupts :          Should contain parameters for 1 interrupt line.
+ - vwlan-supply :        Point the node of the regulator that powers/enable the
+                         wl12xx/wl18xx chip
+ 
+diff --git a/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt b/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
+index f42f6b0f1bc7..9306c4dadd46 100644
+--- a/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
++++ b/Documentation/devicetree/bindings/net/wireless/ti,wlcore.txt
+@@ -20,8 +20,6 @@ Required properties:
+  - interrupts : specifies attributes for the out-of-band interrupt.
+ 
+ Optional properties:
+- - interrupt-parent : the phandle for the interrupt controller to which the
+-	device interrupts are connected.
+  - ref-clock-frequency : ref clock frequency in Hz
+  - tcxo-clock-frequency : tcxo clock frequency in Hz
+ 
+diff --git a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+index 09cd3bc4d038..9514c327d31b 100644
+--- a/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
++++ b/Documentation/devicetree/bindings/pci/altera-pcie-msi.txt
+@@ -7,7 +7,6 @@ Required properties:
+ - reg-names:	must include the following entries:
+ 		"csr": CSR registers
+ 		"vector_slave": vectors slave port region
+-- interrupt-parent:	interrupt source phandle.
+ - interrupts:	specifies the interrupt source of the parent interrupt
+ 		controller. The format of the interrupt specifier depends on the
+ 		parent interrupt controller.
+diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+index a1dc9366a8fc..6c396f17c91a 100644
+--- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+@@ -6,7 +6,6 @@ Required properties:
+ - reg-names:	must include the following entries:
+ 		"Txs": TX slave port region
+ 		"Cra": Control register access region
+-- interrupt-parent:	interrupt source phandle.
+ - interrupts:	specifies the interrupt source of the parent interrupt
+ 		controller.  The format of the interrupt specifier depends
+ 		on the parent interrupt controller.
+diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+index b8e48b4762b2..df065aa53a83 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+@@ -65,7 +65,6 @@ When the iProc event queue based MSI is used, one needs to define the
+ following properties in the MSI device node:
+ - compatible: Must be "brcm,iproc-msi"
+ - msi-controller: claims itself as an MSI controller
+-- interrupt-parent: Link to its parent interrupt device
+ - interrupts: List of interrupt IDs from its parent interrupt device
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt b/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+index 89a84f8aa621..5f8cb4962f8d 100644
+--- a/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
++++ b/Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+@@ -41,7 +41,6 @@ Mandatory subnodes:
+ - For "faraday,ftpci100" a node representing the interrupt-controller inside the
+   host bridge is mandatory. It has the following mandatory properties:
+   - interrupt: see interrupt-controller/interrupts.txt
+-  - interrupt-parent: see interrupt-controller/interrupts.txt
+   - interrupt-controller: see interrupt-controller/interrupts.txt
+   - #address-cells: set to <0>
+   - #interrupt-cells: set to <1>
+diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+index 65038aa642e5..a618d4787dd7 100644
+--- a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+@@ -26,9 +26,6 @@ Required properties:
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: specifies the number of cells needed to encode an
+ 	interrupt source. The value must be 1.
+-- interrupt-parent : phandle to the interrupt controller that
+-		it is attached to, it should be set to gic to point to
+-		ARM's Generic Interrupt Controller node in system DT.
+ - interrupts: The interrupt line of the PCIe controller
+ 		last cell of this field is set to 4 to
+ 		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
+diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+index 3d4a209b0fd0..4dd17de549a7 100644
+--- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
++++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+@@ -17,7 +17,6 @@ reg:	index 1 is the base address and length of DW application registers.
+ 
+ pcie_msi_intc : Interrupt controller device node for MSI IRQ chip
+ 	interrupt-cells: should be set to 1
+-	interrupt-parent: Parent interrupt controller phandle
+ 	interrupts: GIC interrupt lines connected to PCI MSI interrupt lines
+ 
+  Example:
+@@ -37,8 +36,6 @@ pcie_msi_intc : Interrupt controller device node for MSI IRQ chip
+ 
+ pcie_intc: Interrupt controller device node for Legacy IRQ chip
+ 	interrupt-cells: should be set to 1
+-	interrupt-parent: Parent interrupt controller phandle
+-	interrupts: GIC interrupt lines connected to PCI Legacy interrupt lines
+ 
+  Example:
+ 	pcie_intc: legacy-interrupt-controller {
+diff --git a/Documentation/devicetree/bindings/pci/ralink,rt3883-pci.txt b/Documentation/devicetree/bindings/pci/ralink,rt3883-pci.txt
+index a04ab1b76211..ffba4f63d71f 100644
+--- a/Documentation/devicetree/bindings/pci/ralink,rt3883-pci.txt
++++ b/Documentation/devicetree/bindings/pci/ralink,rt3883-pci.txt
+@@ -41,9 +41,6 @@
+    - #interrupt-cells: specifies the number of cells needed to encode an
+      interrupt source. The value must be 1.
+ 
+-   - interrupt-parent: the phandle for the interrupt controller that
+-     services interrupts for this device.
+-
+    - interrupts: specifies the interrupt source of the parent interrupt
+      controller. The format of the interrupt specifier depends on the
+      parent interrupt controller.
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+index def8fcad8941..3b695131c51b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+@@ -16,8 +16,6 @@ If the property interrupt-controller is defined, following property is required
+ - reg-names: A string describing the "reg" entries. Must contain "eint".
+ - interrupts : The interrupt output from the controller.
+ - #interrupt-cells: Should be two.
+-- interrupt-parent: Phandle of the interrupt parent to which the external
+-  GPIO interrupts are forwarded to.
+ 
+ Please refer to pinctrl-bindings.txt in this directory for details of the
+ common pinctrl bindings used by client devices, including the meaning of the
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
+index bf76867168e9..4023bad2fe39 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
+@@ -25,8 +25,6 @@ Required properties:
+ - gpio-controller: Marks the device as a GPIO controller.
+ 
+ Optional properties :
+-- interrupt-parent: phandle of the parent interrupt controller.
+-
+ - interrupts: Interrupt specifier for the controllers interrupt.
+ 
+ - interrupt-controller: Marks the device as a interrupt controller.
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+index 5e00a21de2bf..decc16abd379 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+@@ -124,8 +124,6 @@ used as system wakeup events.
+ A. External GPIO Interrupts: For supporting external gpio interrupts, the
+    following properties should be specified in the pin-controller device node.
+ 
+-   - interrupt-parent: phandle of the interrupt parent to which the external
+-     GPIO interrupts are forwarded to.
+    - interrupts: interrupt specifier for the controller. The format and value of
+      the interrupt specifier depends on the interrupt parent for the controller.
+ 
+@@ -160,8 +158,6 @@ B. External Wakeup Interrupts: For supporting external wakeup interrupts, a
+        found on Samsung Exynos4210 and S5PC110/S5PV210 SoCs.
+      - samsung,exynos7-wakeup-eint: represents wakeup interrupt controller
+        found on Samsung Exynos7 SoC.
+-   - interrupt-parent: phandle of the interrupt parent to which the external
+-     wakeup interrupts are forwarded to.
+    - interrupts: interrupt used by multiplexed wakeup interrupts.
+ 
+    In addition, following properties must be present in node of every bank
+@@ -181,8 +177,6 @@ B. External Wakeup Interrupts: For supporting external wakeup interrupts, a
+    Node of every bank of pins supporting direct wake-up interrupts (without
+    multiplexing) must contain following properties:
+ 
+-   - interrupt-parent: phandle of the interrupt parent to which the external
+-     wakeup interrupts are forwarded to.
+    - interrupts: interrupts of the interrupt parent which are used for external
+      wakeup interrupts from pins of the bank, must contain interrupts for all
+      pins of the bank.
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index 9a06e1fdbc42..a8bb36b4f9fd 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -37,8 +37,6 @@ Required properties:
+ 
+ Optional properties:
+  - reset:	  : Reference to the reset controller
+- - interrupt-parent: phandle of the interrupt parent to which the external
+-   GPIO interrupts are forwarded to.
+  - st,syscfg: Should be phandle/offset pair. The phandle to the syscon node
+    which includes IRQ mux selection register, and the offset of the IRQ mux
+    selection register.
+diff --git a/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt b/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
+index b86ecada4f84..c7dfb7cecf40 100644
+--- a/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
++++ b/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
+@@ -9,8 +9,6 @@ Required properties:
+  - interrupts: <a b> where a is the interrupt number and b is a
+    field that represents an encoding of the sense and level
+    information for the interrupt.
+- - interrupt-parent: the phandle for the interrupt controller that
+-   services interrupts for this device.
+ 
+ Optional properties:
+  - active-semi,input-voltage-threshold-microvolt: unit: mV;
+diff --git a/Documentation/devicetree/bindings/power/supply/bq24257.txt b/Documentation/devicetree/bindings/power/supply/bq24257.txt
+index d693702c9c1e..f8f5a1685bb9 100644
+--- a/Documentation/devicetree/bindings/power/supply/bq24257.txt
++++ b/Documentation/devicetree/bindings/power/supply/bq24257.txt
+@@ -6,8 +6,6 @@ Required properties:
+  * "ti,bq24251"
+  * "ti,bq24257"
+ - reg: integer, i2c address of the device.
+-- interrupt-parent: Should be the phandle for the interrupt controller. Use in
+-    conjunction with "interrupts".
+ - interrupts: Interrupt mapping for GPIO IRQ (configure for both edges). Use in
+     conjunction with "interrupt-parent".
+ - ti,battery-regulation-voltage: integer, maximum charging voltage in uV.
+diff --git a/Documentation/devicetree/bindings/power/supply/lp8727_charger.txt b/Documentation/devicetree/bindings/power/supply/lp8727_charger.txt
+index 2246bc5c874b..0355a4b68f79 100644
+--- a/Documentation/devicetree/bindings/power/supply/lp8727_charger.txt
++++ b/Documentation/devicetree/bindings/power/supply/lp8727_charger.txt
+@@ -5,7 +5,6 @@ Required properties:
+ - reg: I2C slave address 27h
+ 
+ Optional properties:
+-- interrupt-parent: interrupt controller node (see interrupt binding[0])
+ - interrupts: interrupt specifier (see interrupt binding[0])
+ - debounce-ms: interrupt debounce time. (u32)
+ 
+diff --git a/Documentation/devicetree/bindings/power/supply/maxim,max14656.txt b/Documentation/devicetree/bindings/power/supply/maxim,max14656.txt
+index d6e8dfd0a581..f956247d493e 100644
+--- a/Documentation/devicetree/bindings/power/supply/maxim,max14656.txt
++++ b/Documentation/devicetree/bindings/power/supply/maxim,max14656.txt
+@@ -3,7 +3,6 @@ Maxim MAX14656 / AL32 USB Charger Detector
+ Required properties :
+ - compatible : "maxim,max14656";
+ - reg: i2c slave address
+-- interrupt-parent: the phandle for the interrupt controller
+ - interrupts: interrupt line
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/power/supply/rt9455_charger.txt b/Documentation/devicetree/bindings/power/supply/rt9455_charger.txt
+index 5d9ad5cf2c5a..1e6107c7578e 100644
+--- a/Documentation/devicetree/bindings/power/supply/rt9455_charger.txt
++++ b/Documentation/devicetree/bindings/power/supply/rt9455_charger.txt
+@@ -4,8 +4,6 @@ Required properties:
+ - compatible:				it should contain one of the following:
+ 					"richtek,rt9455".
+ - reg:					integer, i2c address of the device.
+-- interrupt-parent:			the phandle for the interrupt controller that
+-					services interrupts for this device.
+ - interrupts:				interrupt mapping for GPIO IRQ, it should be
+ 					configured with IRQ_TYPE_LEVEL_LOW flag.
+ - richtek,output-charge-current:	integer, output current from the charger to the
+diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
+index a3719623a94f..84e74151eef2 100644
+--- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
++++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-charger.txt
+@@ -7,8 +7,6 @@ Required properties:
+      specific registers.
+ 
+ Optional properties:
+-- interrupt-parent: Should be the phandle for the interrupt controller. Use in
+-    conjunction with "interrupts".
+ - interrupts: Interrupt mapping for GPIO IRQ. Use in conjunction with
+     "interrupt-parent". If an interrupt is not provided the driver will switch
+     automatically to polling.
+diff --git a/Documentation/devicetree/bindings/powerpc/4xx/akebono.txt b/Documentation/devicetree/bindings/powerpc/4xx/akebono.txt
+index db939210e29d..940fd78e3363 100644
+--- a/Documentation/devicetree/bindings/powerpc/4xx/akebono.txt
++++ b/Documentation/devicetree/bindings/powerpc/4xx/akebono.txt
+@@ -19,7 +19,6 @@ The IBM Akebono board is a development board for the PPC476GTR SoC.
+ 
+    - compatible : should be "ibm,476gtr-sdhci","generic-sdhci".
+    - reg : should contain the SDHCI registers location and length.
+-   - interrupt-parent : a phandle for the interrupt controller.
+    - interrupts : should contain the SDHCI interrupt.
+ 
+ 1.b) The Advanced Host Controller Interface (AHCI) SATA node
+@@ -30,7 +29,6 @@ The IBM Akebono board is a development board for the PPC476GTR SoC.
+ 
+    - compatible : should be "ibm,476gtr-ahci".
+    - reg : should contain the AHCI registers location and length.
+-   - interrupt-parent : a phandle for the interrupt controller.
+    - interrupts : should contain the AHCI interrupt.
+ 
+ 1.c) The FPGA node
+diff --git a/Documentation/devicetree/bindings/powerpc/4xx/hsta.txt b/Documentation/devicetree/bindings/powerpc/4xx/hsta.txt
+index c737c8338705..66dbd9ff56f7 100644
+--- a/Documentation/devicetree/bindings/powerpc/4xx/hsta.txt
++++ b/Documentation/devicetree/bindings/powerpc/4xx/hsta.txt
+@@ -13,7 +13,6 @@ device tree entries:
+ Require properties:
+ - compatible		: "ibm,476gtr-hsta-msi", "ibm,hsta-msi"
+ - reg			: register mapping for the HSTA MSI space
+-- interrupt-parent	: parent controller for mapping interrupts
+ - interrupts		: ordered interrupt mapping for each MSI in the register
+ 			  space. The first interrupt should be associated with a
+ 			  register offset of 0x00, the second to 0x10, etc.
+diff --git a/Documentation/devicetree/bindings/powerpc/4xx/ppc440spe-adma.txt b/Documentation/devicetree/bindings/powerpc/4xx/ppc440spe-adma.txt
+index 515ebcf1b97d..de6a5f7d4aa4 100644
+--- a/Documentation/devicetree/bindings/powerpc/4xx/ppc440spe-adma.txt
++++ b/Documentation/devicetree/bindings/powerpc/4xx/ppc440spe-adma.txt
+@@ -38,7 +38,6 @@ DMA devices.
+ 			   2 sources: DMAx CS FIFO Needs Service IRQ (on UIC0)
+ 			   and DMA Error IRQ (on UIC1). The latter is common
+ 			   for both DMA engines>.
+- - interrupt-parent	: needed for interrupt mapping
+ 
+  Example:
+ 
+@@ -65,7 +64,6 @@ DMA devices.
+  - compatible		: "amcc,xor-accelerator";
+  - reg			: <registers mapping>
+  - interrupts		: <interrupt mapping for XOR interrupt source>
+- - interrupt-parent	: for interrupt mapping
+ 
+  Example:
+ 
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dcsr.txt b/Documentation/devicetree/bindings/powerpc/fsl/dcsr.txt
+index 18a88100af94..4b01e1afafda 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/dcsr.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/dcsr.txt
+@@ -84,13 +84,6 @@ PROPERTIES
+ 
+ 	Interrupt numbers are listed in order (perfmon, event0, event1).
+ 
+-	- interrupt-parent
+-	Usage: required
+-	Value type: <phandle>
+-	Definition: A single <phandle> value that points
+-	to the interrupt parent to which the child domain
+-	is being mapped. Value must be "&mpic"
+-
+ 	- reg
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/diu.txt b/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
+index b66cb6d31d69..eb45db1ecee5 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
+@@ -8,8 +8,6 @@ Required properties:
+ - reg : should contain at least address and length of the DIU register
+   set.
+ - interrupts : one DIU interrupt should be described here.
+-- interrupt-parent : the phandle for the interrupt controller that
+-  services interrupts for this device.
+ 
+ Optional properties:
+ - edid : verbatim EDID data block describing attached display.
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+index 7fc1b010fa75..c11ad5c6db21 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+@@ -13,7 +13,6 @@ Required properties:
+                       DMA channels and the address space of the DMA controller
+ - cell-index        : controller index.  0 for controller @ 0x8100
+ - interrupts        : interrupt specifier for DMA IRQ
+-- interrupt-parent  : optional, if needed for interrupt mapping
+ 
+ - DMA channel nodes:
+         - compatible        : must include "fsl,elo-dma-channel"
+@@ -25,7 +24,6 @@ Optional properties:
+         - interrupts        : interrupt specifier for DMA channel IRQ
+                               (on 83xx this is expected to be identical to
+                               the interrupts property of the parent node)
+-        - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+ Example:
+ 	dma@82a8 {
+@@ -88,7 +86,6 @@ Required properties:
+         - cell-index        : DMA channel index starts at 0.
+         - reg               : DMA channel specific registers
+         - interrupts        : interrupt specifier for DMA channel IRQ
+-        - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+ Example:
+ 	dma@21300 {
+@@ -146,7 +143,6 @@ Required properties:
+         - compatible        : must include "fsl,eloplus-dma-channel"
+         - reg               : DMA channel specific registers
+         - interrupts        : interrupt specifier for DMA channel IRQ
+-        - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+ Example:
+ dma@100300 {
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/ecm.txt b/Documentation/devicetree/bindings/powerpc/fsl/ecm.txt
+index f514f29c67d6..76dc547bc492 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/ecm.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/ecm.txt
+@@ -57,8 +57,4 @@ PROPERTIES
+       Usage: required
+       Value type: <prop-encoded-array>
+ 
+-   - interrupt-parent
+-      Usage: required
+-      Value type: <phandle>
+-
+ =====================================================================
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mcm.txt b/Documentation/devicetree/bindings/powerpc/fsl/mcm.txt
+index 4ceda9b3b413..a5dae6b1f545 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/mcm.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/mcm.txt
+@@ -57,8 +57,4 @@ PROPERTIES
+       Usage: required
+       Value type: <prop-encoded-array>
+ 
+-   - interrupt-parent
+-      Usage: required
+-      Value type: <phandle>
+-
+ =====================================================================
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mpc5121-psc.txt b/Documentation/devicetree/bindings/powerpc/fsl/mpc5121-psc.txt
+index 647817527c88..5dfd68f1a423 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/mpc5121-psc.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/mpc5121-psc.txt
+@@ -18,8 +18,6 @@ Required properties :
+  - interrupts : <a b> where a is the interrupt number of the
+    PSC FIFO Controller and b is a field that represents an
+    encoding of the sense and level information for the interrupt.
+- - interrupt-parent : the phandle for the interrupt controller that
+-   services interrupts for this device.
+ 
+ Recommended properties :
+  - fsl,rx-fifo-size : the size of the RX fifo slice (a multiple of 4)
+@@ -45,8 +43,6 @@ Required properties :
+  - interrupts : <a b> where a is the interrupt number of the
+    PSC FIFO Controller and b is a field that represents an
+    encoding of the sense and level information for the interrupt.
+- - interrupt-parent : the phandle for the interrupt controller that
+-   services interrupts for this device.
+ 
+ Recommended properties :
+  - clocks : specifies the clock needed to operate the fifo controller
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/msi-pic.txt b/Documentation/devicetree/bindings/powerpc/fsl/msi-pic.txt
+index 82dd5b65cf48..f8d2b7fe06d6 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/msi-pic.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/msi-pic.txt
+@@ -21,11 +21,6 @@ Required properties:
+   be set as edge sensitive.  If msi-available-ranges is present, only
+   the interrupts that correspond to available ranges shall be present.
+ 
+-- interrupt-parent: the phandle for the interrupt controller
+-  that services interrupts for this device. for 83xx cpu, the interrupts
+-  are routed to IPIC, and for 85xx/86xx cpu the interrupts are routed
+-  to MPIC.
+-
+ Optional properties:
+ - msi-available-ranges: use <start count> style section to define which
+   msi interrupt can be used in the 256 msi interrupts. This property is
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt b/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
+index c2b2899885f2..b21ab85de6e7 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
+@@ -32,8 +32,6 @@ Optional properties:
+ 		  A standard property.   It represents the CCSR registers of
+ 		  all child PAMUs combined.  Include it to provide support
+ 		  for legacy drivers.
+-- interrupt-parent : <phandle>
+-		  Phandle to interrupt controller
+ - fsl,portid-mapping : <u32>
+ 		  The Coherency Subdomain ID Port Mapping Registers and
+ 		  Snoop ID Port Mapping registers, which are part of the
+diff --git a/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt b/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
+index a3dc4b9fa11a..c4d78f28d23c 100644
+--- a/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
++++ b/Documentation/devicetree/bindings/powerpc/nintendo/wii.txt
+@@ -148,7 +148,6 @@ Nintendo Wii device tree
+   - reg : should contain the controller registers location and length
+   - interrupt-controller
+   - interrupts : should contain the cascade interrupt of the "flipper" pic
+-  - interrupt-parent: should contain the phandle of the "flipper" pic
+ 
+ 1.l) The General Purpose I/O (GPIO) controller node
+ 
+diff --git a/Documentation/devicetree/bindings/regulator/max8997-regulator.txt b/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
+index 5c186a7a77ba..6fe825b8ac1b 100644
+--- a/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
+@@ -32,8 +32,6 @@ Required properties:
+     'max8997,pmic-buck[1/2/5]-dvs-voltage' should be specified.
+ 
+ Optional properties:
+-- interrupt-parent: Specifies the phandle of the interrupt controller to which
+-  the interrupts from max8997 are delivered to.
+ - interrupts: Interrupt specifiers for two interrupt sources.
+   - First interrupt specifier is for 'irq1' interrupt.
+   - Second interrupt specifier is for 'alert' interrupt.
+diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+index 99872819604f..84bc76a7c39e 100644
+--- a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
++++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+@@ -18,7 +18,6 @@ Required properties:
+   ti,tps659038-pmic
+ and also the generic series names
+   ti,palmas-pmic
+-- interrupt-parent : The parent interrupt controller which is palmas.
+ - interrupts : The interrupt number and the type which can be looked up here:
+ 	       arch/arm/boot/dts/include/dt-bindings/interrupt-controller/irq.h
+ - interrupts-name: The names of the individual interrupts.
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
+index e44a97e21164..25f8658e216f 100644
+--- a/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
++++ b/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
+@@ -45,12 +45,6 @@ The following are the mandatory properties:
+ 			per the bindings in
+ 			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+ 
+-Optional properties:
+---------------------
+-- interrupt-parent:	phandle to the interrupt controller node. This property
+-			is needed if the device node hierarchy doesn't have an
+-			interrupt controller.
+-
+ 
+ Example:
+ --------
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
+index 1eb72874130b..461dc1d8d570 100644
+--- a/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
++++ b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
+@@ -51,12 +51,6 @@ The following are the mandatory properties:
+ 			Documentation/devicetree/bindings/reset/ti,sci-reset.txt
+ 			    for 66AK2G SoCs
+ 
+-- interrupt-parent:	Should contain a phandle to the Keystone 2 IRQ controller
+-			IP node that is used by the ARM CorePac processor to
+-			receive interrupts from the DSP remote processors. See
+-			Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
+-			for details.
+-
+ - interrupts: 		Should contain an entry for each value in 'interrupt-names'.
+ 			Each entry should have the interrupt source number used by
+ 			the remote processor to the host processor. The values should
+diff --git a/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt b/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
+index 1d990bcc0baf..d946f28502b3 100644
+--- a/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
++++ b/Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
+@@ -7,8 +7,6 @@ Required properties:
+ - compatible     : should contain "brcm,brcmstb-waketimer"
+ - reg            : the register start and length for the WKTMR block
+ - interrupts     : The TIMER interrupt
+-- interrupt-parent: The phandle to the Always-On (AON) Power Management (PM) L2
+-                    interrupt controller node
+ - clocks	 : The phandle to the UPG fixed clock (27Mhz domain)
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/rtc/isil,isl12057.txt b/Documentation/devicetree/bindings/rtc/isil,isl12057.txt
+index fbbdd92e5af9..ff7c43555199 100644
+--- a/Documentation/devicetree/bindings/rtc/isil,isl12057.txt
++++ b/Documentation/devicetree/bindings/rtc/isil,isl12057.txt
+@@ -25,9 +25,6 @@ Optional properties:
+  - "wakeup-source": mark the chip as a wakeup source, independently of
+     the availability of an IRQ line connected to the SoC.
+ 
+- - "interrupt-parent", "interrupts": for passing the interrupt line
+-   of the SoC connected to IRQ#2 of the RTC chip.
+-
+ 
+ Example isl12057 node without IRQ#2 pin connected (no alarm support):
+ 
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-cmos.txt b/Documentation/devicetree/bindings/rtc/rtc-cmos.txt
+index 7382989b3052..b94b35f3600b 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-cmos.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-cmos.txt
+@@ -7,7 +7,6 @@ Required properties:
+ 
+ Optional properties:
+   - interrupts : should contain interrupt.
+-  - interrupt-parent : interrupt source phandle.
+   - ctrl-reg : Contains the initial value of the control register also
+     called "Register B".
+   - freq-reg : Contains the initial value of the frequency register also
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+index d28d6e7f6ae8..226cc93df875 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+@@ -21,7 +21,6 @@ Required properties:
+ - reg: I2C bus address of the device
+ 
+ Optional properties:
+-- interrupt-parent: phandle for the interrupt controller.
+ - interrupts: rtc alarm interrupt.
+ - clock-output-names: From common clock binding to override the default output
+                       clock name
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-m41t80.txt b/Documentation/devicetree/bindings/rtc/rtc-m41t80.txt
+index 717d93860af1..c746cb221210 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-m41t80.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-m41t80.txt
+@@ -16,7 +16,6 @@ Required properties:
+ - reg: I2C bus address of the device
+ 
+ Optional properties:
+-- interrupt-parent: phandle for the interrupt controller.
+ - interrupts: rtc alarm interrupt.
+ - clock-output-names: From common clock binding to override the default output
+                       clock name
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+index bee41f97044e..062ebb14cecf 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+@@ -11,7 +11,6 @@ Required properties:
+ 	- "ti,am4372-rtc" - for RTC IP used similar to that on AM437X SoC family.
+ - reg: Address range of rtc register set
+ - interrupts: rtc timer, alarm interrupts in order
+-- interrupt-parent: phandle for the interrupt controller
+ 
+ Optional properties:
+ - system-power-controller: whether the rtc is controlling the system power
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-palmas.txt b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
+index eb1c7fdeb413..c6cf37758a77 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
+@@ -3,7 +3,6 @@ Palmas RTC controller bindings
+ Required properties:
+ - compatible:
+   - "ti,palmas-rtc" for palma series of the RTC controller
+-- interrupt-parent: Parent interrupt device, must be handle of palmas node.
+ - interrupts: Interrupt number of RTC submodule on device.
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/rtc/spear-rtc.txt b/Documentation/devicetree/bindings/rtc/spear-rtc.txt
+index ca67ac62108e..fecf8e4ad4b4 100644
+--- a/Documentation/devicetree/bindings/rtc/spear-rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/spear-rtc.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+ - compatible : "st,spear600-rtc"
+ - reg : Address range of the rtc registers
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupt: Should contain the rtc interrupt number
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt b/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
+index 7c170da0d4b7..1f5754299d31 100644
+--- a/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
+@@ -3,7 +3,6 @@ Spreadtrum SC27xx Real Time Clock
+ Required properties:
+ - compatible: should be "sprd,sc2731-rtc".
+ - reg: address offset of rtc register.
+-- interrupt-parent: phandle for the interrupt controller.
+ - interrupts: rtc alarm interrupt.
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+index c920e2736991..130ca5b98253 100644
+--- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
+@@ -13,8 +13,6 @@ Required properties:
+     It is required on stm32(h7/mp1).
+ - clock-names: must be "rtc_ck" and "pclk".
+     It is required on stm32(h7/mp1).
+-- interrupt-parent: phandle for the interrupt controller.
+-    It is required on stm32(f4/f7/h7).
+ - interrupts: rtc alarm interrupt. On stm32mp1, a second interrupt is required
+   for rtc alarm wakeup interrupt.
+ - st,syscfg: phandle/offset/mask triplet. The phandle to pwrcfg used to
+diff --git a/Documentation/devicetree/bindings/rtc/stericsson,coh901331.txt b/Documentation/devicetree/bindings/rtc/stericsson,coh901331.txt
+index 3ebeb311335f..e615a897b20e 100644
+--- a/Documentation/devicetree/bindings/rtc/stericsson,coh901331.txt
++++ b/Documentation/devicetree/bindings/rtc/stericsson,coh901331.txt
+@@ -3,7 +3,6 @@ ST-Ericsson COH 901 331 Real Time Clock
+ Required properties:
+ - compatible: must be "stericsson,coh901331"
+ - reg: address range of rtc register set.
+-- interrupt-parent: phandle for the interrupt controller.
+ - interrupts: rtc alarm interrupt.
+ - clocks: phandle to the rtc clock source
+ 
+diff --git a/Documentation/devicetree/bindings/security/tpm/st33zp24-i2c.txt b/Documentation/devicetree/bindings/security/tpm/st33zp24-i2c.txt
+index 6a4e0d30d8c4..0dc121b6eace 100644
+--- a/Documentation/devicetree/bindings/security/tpm/st33zp24-i2c.txt
++++ b/Documentation/devicetree/bindings/security/tpm/st33zp24-i2c.txt
+@@ -6,7 +6,6 @@ Required properties:
+ - reg: address on the bus
+ 
+ Optional ST33ZP24 Properties:
+-- interrupt-parent: phandle for the interrupt gpio controller
+ - interrupts: GPIO interrupt to which the chip is connected
+ - lpcpd-gpios: Output GPIO pin used for ST33ZP24 power management D1/D2 state.
+ If set, power must be present when the platform is going into sleep/hibernate mode.
+diff --git a/Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt b/Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
+index 604dce901b60..37198971f17b 100644
+--- a/Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
++++ b/Documentation/devicetree/bindings/security/tpm/st33zp24-spi.txt
+@@ -5,7 +5,6 @@ Required properties:
+ - spi-max-frequency: Maximum SPI frequency (<= 10000000).
+ 
+ Optional ST33ZP24 Properties:
+-- interrupt-parent: phandle for the interrupt gpio controller
+ - interrupts: GPIO interrupt to which the chip is connected
+ - lpcpd-gpios: Output GPIO pin used for ST33ZP24 power management D1/D2 state.
+ If set, power must be present when the platform is going into sleep/hibernate mode.
+diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+index 41d740545189..7c6304426da1 100644
+--- a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
++++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+@@ -13,7 +13,7 @@ Required properties:
+               "tcg,tpm-tis-mmio". Valid chip strings are:
+ 	          * "atmel,at97sc3204"
+ - reg: The location of the MMIO registers, should be at least 0x5000 bytes
+-- interrupt-parent/interrupts: An optional interrupt indicating command completion.
++- interrupts: An optional interrupt indicating command completion.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/serial/maxim,max310x.txt b/Documentation/devicetree/bindings/serial/maxim,max310x.txt
+index 823f77dd7978..79e10a05a96a 100644
+--- a/Documentation/devicetree/bindings/serial/maxim,max310x.txt
++++ b/Documentation/devicetree/bindings/serial/maxim,max310x.txt
+@@ -7,8 +7,6 @@ Required properties:
+   - "maxim,max3109" for Maxim MAX3109,
+   - "maxim,max14830" for Maxim MAX14830.
+ - reg: SPI chip select number.
+-- interrupt-parent: The phandle for the interrupt controller that
+-  services interrupts for this IC.
+ - interrupts: Specifies the interrupt source of the parent interrupt
+   controller. The format of the interrupt specifier depends on the
+   parent interrupt controller.
+diff --git a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+index fbfe53635a3a..e7921a8e276b 100644
+--- a/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
++++ b/Documentation/devicetree/bindings/serial/nxp,sc16is7xx.txt
+@@ -10,8 +10,6 @@ Required properties:
+   - "nxp,sc16is760" for NXP SC16IS760,
+   - "nxp,sc16is762" for NXP SC16IS762.
+ - reg: I2C address of the SC16IS7xx device.
+-- interrupt-parent: The phandle for the interrupt controller that
+-  services interrupts for this IC.
+ - interrupts: Should contain the UART interrupt
+ - clocks: Reference to the IC source clock.
+ 
+@@ -44,8 +42,6 @@ Required properties:
+   - "nxp,sc16is760" for NXP SC16IS760,
+   - "nxp,sc16is762" for NXP SC16IS762.
+ - reg: SPI chip select number.
+-- interrupt-parent: The phandle for the interrupt controller that
+-  services interrupts for this IC.
+ - interrupts: Specifies the interrupt source of the parent interrupt
+   controller. The format of the interrupt specifier depends on the
+   parent interrupt controller.
+diff --git a/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt b/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
+index c5e032c85bf9..7d65126bd1d7 100644
+--- a/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
++++ b/Documentation/devicetree/bindings/serial/qca,ar9330-uart.txt
+@@ -7,9 +7,6 @@ Required properties:
+ - reg: Specifies the physical base address of the controller and
+   the length of the memory mapped region.
+ 
+-- interrupt-parent: The phandle for the interrupt controller that
+-  services interrupts for this device.
+-
+ - interrupts: Specifies the interrupt source of the parent interrupt
+   controller. The format of the interrupt specifier depends on the
+   parent interrupt controller.
+diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
+index 626e1afa64a6..cce3cd71e85a 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
+@@ -21,7 +21,6 @@ Optional properties:
+   one as described by the fsl,cpm1-gpio-irq-mask property. There should be as
+   many interrupts as number of ones in the mask property. The first interrupt in
+   the list corresponds to the most significant bit of the mask.
+-- interrupt-parent : Parent for the above interrupt property.
+ 
+ Example of four SOC GPIO banks defined as gpio-controller nodes:
+ 
+diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/ucc.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/ucc.txt
+index e47734bee3f0..5efb7ac94c79 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/ucc.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/ucc.txt
+@@ -11,8 +11,6 @@ Required properties:
+   information for the interrupt.  This should be encoded based on
+   the information in section 2) depending on the type of interrupt
+   controller you have.
+-- interrupt-parent : the phandle for the interrupt controller that
+-  services interrupts for this device.
+ - pio-handle : The phandle for the Parallel I/O port configuration.
+ - port-number : for UART drivers, the port number to use, between 0 and 3.
+   This usually corresponds to the /dev/ttyQE device, e.g. <0> = /dev/ttyQE0.
+diff --git a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/usb.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/usb.txt
+index 9ccd5f30405b..da13999337a4 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/usb.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/usb.txt
+@@ -6,7 +6,6 @@ Required properties:
+   length, the next two two cells should contain PRAM location and
+   length.
+ - interrupts : should contain USB interrupt.
+-- interrupt-parent : interrupt source phandle.
+ - fsl,fullspeed-clock : specifies the full speed USB clock source:
+   "none": clock source is disabled
+   "brg1" through "brg16": clock source is BRG1-BRG16, respectively
+diff --git a/Documentation/devicetree/bindings/sound/cs35l33.txt b/Documentation/devicetree/bindings/sound/cs35l33.txt
+index acfb47525b49..dc5a355d1a19 100644
+--- a/Documentation/devicetree/bindings/sound/cs35l33.txt
++++ b/Documentation/devicetree/bindings/sound/cs35l33.txt
+@@ -14,8 +14,6 @@ Optional properties:
+ 
+   - reset-gpios : gpio used to reset the amplifier
+ 
+-  - interrupt-parent : Specifies the phandle of the interrupt controller to
+-    which the IRQs from CS35L33 are delivered to.
+  -  interrupts : IRQ line info CS35L33.
+     (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+     for further information relating to interrupt properties)
+diff --git a/Documentation/devicetree/bindings/sound/cs35l34.txt b/Documentation/devicetree/bindings/sound/cs35l34.txt
+index b218ead2e68e..2f7606b7d542 100644
+--- a/Documentation/devicetree/bindings/sound/cs35l34.txt
++++ b/Documentation/devicetree/bindings/sound/cs35l34.txt
+@@ -21,8 +21,6 @@ Optional properties:
+ 
+   - reset-gpios: GPIO used to reset the amplifier.
+ 
+-  - interrupt-parent : Specifies the phandle of the interrupt controller to
+-    which the IRQs from CS35L34 are delivered to.
+   - interrupts : IRQ line info CS35L34.
+     (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+     for further information relating to interrupt properties)
+diff --git a/Documentation/devicetree/bindings/sound/cs35l35.txt b/Documentation/devicetree/bindings/sound/cs35l35.txt
+index 77ee75c39233..7915897f8a81 100644
+--- a/Documentation/devicetree/bindings/sound/cs35l35.txt
++++ b/Documentation/devicetree/bindings/sound/cs35l35.txt
+@@ -10,8 +10,6 @@ Required properties:
+     as covered in
+     Documentation/devicetree/bindings/regulator/regulator.txt.
+ 
+-  - interrupt-parent : Specifies the phandle of the interrupt controller to
+-    which the IRQs from CS35L35 are delivered to.
+   - interrupts : IRQ line info CS35L35.
+     (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+     for further information relating to interrupt properties)
+diff --git a/Documentation/devicetree/bindings/sound/cs42l42.txt b/Documentation/devicetree/bindings/sound/cs42l42.txt
+index 9a2c5e2423d5..7dfaa2ab906f 100644
+--- a/Documentation/devicetree/bindings/sound/cs42l42.txt
++++ b/Documentation/devicetree/bindings/sound/cs42l42.txt
+@@ -15,9 +15,6 @@ Optional properties:
+   - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
+   deasserted before communication to the codec starts.
+ 
+-  - interrupt-parent : Specifies the phandle of the interrupt controller to
+-  which the IRQs from CS42L42 are delivered to.
+-
+   - interrupts : IRQ line info CS42L42.
+   (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+   for further information relating to interrupt properties)
+@@ -107,4 +104,4 @@ cs42l42: cs42l42@48 {
+ 	cirrus,btn-det-event-dbnce = <10>;
+ 	cirrus,bias-lvls = <0x0F 0x08 0x04 0x01>;
+ 	cirrus,hs-bias-ramp-rate = <0x02>;
+-};
+\ No newline at end of file
++};
+diff --git a/Documentation/devicetree/bindings/sound/da7218.txt b/Documentation/devicetree/bindings/sound/da7218.txt
+index 3ab9dfef38d1..2cf30899bd0d 100644
+--- a/Documentation/devicetree/bindings/sound/da7218.txt
++++ b/Documentation/devicetree/bindings/sound/da7218.txt
+@@ -15,8 +15,6 @@ Required properties:
+    information relating to regulators)
+ 
+ Optional properties:
+-- interrupt-parent: Specifies the phandle of the interrupt controller to which
+-  the IRQs from DA7218 are delivered to.
+ - interrupts: IRQ line info for DA7218 chip.
+   (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
+    further information relating to interrupt properties)
+diff --git a/Documentation/devicetree/bindings/sound/da7219.txt b/Documentation/devicetree/bindings/sound/da7219.txt
+index c3df92d31c4b..e9d0baeb94e2 100644
+--- a/Documentation/devicetree/bindings/sound/da7219.txt
++++ b/Documentation/devicetree/bindings/sound/da7219.txt
+@@ -8,8 +8,6 @@ Required properties:
+ - compatible : Should be "dlg,da7219"
+ - reg: Specifies the I2C slave address
+ 
+-- interrupt-parent : Specifies the phandle of the interrupt controller to which
+-  the IRQs from DA7219 are delivered to.
+ - interrupts : IRQ line info for DA7219.
+   (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
+    further information relating to interrupt properties)
+diff --git a/Documentation/devicetree/bindings/sound/fsl,ssi.txt b/Documentation/devicetree/bindings/sound/fsl,ssi.txt
+index d415888e1316..7e15a85cecd2 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,ssi.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,ssi.txt
+@@ -18,8 +18,6 @@ Required properties:
+                     encoded based on the information in section 2)
+                     depending on the type of interrupt controller you
+                     have.
+-- interrupt-parent: The phandle for the interrupt controller that
+-                    services interrupts for this device.
+ - fsl,fifo-depth:   The number of elements in the transmit and receive FIFOs.
+                     This number is the maximum allowed value for SFCSR[TFWM0].
+  - clocks:          "ipg" - Required clock for the SSI unit
+diff --git a/Documentation/devicetree/bindings/sound/omap-dmic.txt b/Documentation/devicetree/bindings/sound/omap-dmic.txt
+index fd8105f18978..418e30e72e89 100644
+--- a/Documentation/devicetree/bindings/sound/omap-dmic.txt
++++ b/Documentation/devicetree/bindings/sound/omap-dmic.txt
+@@ -6,7 +6,6 @@ Required properties:
+        <MPU access base address, size>,
+        <L3 interconnect address, size>;
+ - interrupts: Interrupt number for DMIC
+-- interrupt-parent: The parent interrupt controller
+ - ti,hwmods: Name of the hwmod associated with OMAP dmic IP
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/sound/omap-mcbsp.txt b/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
+index 17cce4490456..ae8bf703ce7a 100644
+--- a/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
++++ b/Documentation/devicetree/bindings/sound/omap-mcbsp.txt
+@@ -15,7 +15,6 @@ Required properties:
+ 	<TX irq>,
+ 	<RX irq>;
+ - interrupt-names: Array of strings associated with the interrupt numbers
+-- interrupt-parent: The parent interrupt controller
+ - ti,buffer-size: Size of the FIFO on the port (OMAP2430 and newer SoC)
+ - ti,hwmods: Name of the hwmod associated to the McBSP port
+ 
+diff --git a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt b/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+index 0741dff048dd..5f4e68ca228c 100644
+--- a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
++++ b/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
+@@ -6,7 +6,6 @@ Required properties:
+        <MPU access base address, size>,
+        <L3 interconnect address, size>;
+ - interrupts: Interrupt number for McPDM
+-- interrupt-parent: The parent interrupt controller
+ - ti,hwmods: Name of the hwmod associated to the McPDM
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
+index 551ecab67efe..fdcea3d12ee5 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,msm8916-wcd-analog.txt
+@@ -7,7 +7,6 @@ Bindings for codec Analog IP which is integrated in pmic pm8916,
+ Required properties
+  - compatible = "qcom,pm8916-wcd-analog-codec";
+  - reg: represents the slave base address provided to the peripheral.
+- - interrupt-parent : The parent interrupt controller.
+  - interrupts: List of interrupts in given SPMI peripheral.
+  - interrupt-names: Names specified to above list of interrupts in same
+ 		    order. List of supported interrupt names are:
+diff --git a/Documentation/devicetree/bindings/sound/rt5514.txt b/Documentation/devicetree/bindings/sound/rt5514.txt
+index b25ed08c7a5a..d2cc171f22f2 100644
+--- a/Documentation/devicetree/bindings/sound/rt5514.txt
++++ b/Documentation/devicetree/bindings/sound/rt5514.txt
+@@ -14,7 +14,6 @@ Optional properties:
+ - clocks: The phandle of the master clock to the CODEC
+ - clock-names: Should be "mclk"
+ 
+-- interrupt-parent: The phandle for the interrupt controller.
+ - interrupts: The interrupt number to the cpu. The interrupt specifier format
+ 	      depends on the interrupt controller.
+ 
+diff --git a/Documentation/devicetree/bindings/sound/ts3a227e.txt b/Documentation/devicetree/bindings/sound/ts3a227e.txt
+index a836881d9608..3ed8359144d3 100644
+--- a/Documentation/devicetree/bindings/sound/ts3a227e.txt
++++ b/Documentation/devicetree/bindings/sound/ts3a227e.txt
+@@ -10,7 +10,6 @@ Required properties:
+ 
+  - compatible:		Should contain "ti,ts3a227e".
+  - reg:			The i2c address. Should contain <0x3b>.
+- - interrupt-parent:	The parent interrupt controller
+  - interrupts:		Interrupt number for /INT pin from the 227e
+ 
+ Optional properies:
+diff --git a/Documentation/devicetree/bindings/sound/ux500-msp.txt b/Documentation/devicetree/bindings/sound/ux500-msp.txt
+index 99acd9c774e1..7dd1b96160f5 100644
+--- a/Documentation/devicetree/bindings/sound/ux500-msp.txt
++++ b/Documentation/devicetree/bindings/sound/ux500-msp.txt
+@@ -6,7 +6,6 @@ Required properties:
+ 
+ Optional properties:
+  - interrupts       : The interrupt output from the device.
+- - interrupt-parent : The parent interrupt controller.
+  - <name>-supply    : Phandle to the regulator <name> supply
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Documentation/devicetree/bindings/sound/wm8994.txt
+index 0795931c38a2..68cccc4653ba 100644
+--- a/Documentation/devicetree/bindings/sound/wm8994.txt
++++ b/Documentation/devicetree/bindings/sound/wm8994.txt
+@@ -26,7 +26,6 @@ Optional properties:
+   - interrupt-controller : These devices contain interrupt controllers
+     and may provide interrupt services to other devices if they have an
+     interrupt line connected.
+-  - interrupt-parent : The parent interrupt controller.
+   - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
+     The first cell is the IRQ number.
+     The second cell is the flags, encoded as the trigger masks from
+diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentation/devicetree/bindings/spi/fsl-spi.txt
+index a2331372068c..8854004a1d3a 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
++++ b/Documentation/devicetree/bindings/spi/fsl-spi.txt
+@@ -12,8 +12,6 @@ Required properties:
+   information for the interrupt.  This should be encoded based on
+   the information in section 2) depending on the type of interrupt
+   controller you have.
+-- interrupt-parent : the phandle for the interrupt controller that
+-  services interrupts for this device.
+ - clock-frequency : input clock frequency to non FSL_SOC cores
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/spi/sh-hspi.txt b/Documentation/devicetree/bindings/spi/sh-hspi.txt
+index 585fed90376e..b9d1e4d11a77 100644
+--- a/Documentation/devicetree/bindings/spi/sh-hspi.txt
++++ b/Documentation/devicetree/bindings/spi/sh-hspi.txt
+@@ -6,8 +6,6 @@ Required properties:
+ 		       - "renesas,hspi-r8a7778" (R-Car M1)
+ 		       - "renesas,hspi-r8a7779" (R-Car H1)
+ - reg              : Offset and length of the register set for the device
+-- interrupt-parent : The phandle for the interrupt controller that
+-		     services interrupts for this device
+ - interrupts       : Interrupt specifier
+ - #address-cells   : Must be <1>
+ - #size-cells      : Must be <0>
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index 39806329c193..bfbc2035fb6b 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -29,8 +29,6 @@ Required properties:
+ 			 If two register sets are present, the first is to be
+ 			 used by the CPU, and the second is to be used by the
+ 			 DMA engine.
+-- interrupt-parent     : The phandle for the interrupt controller that
+-			 services interrupts for this device
+ - interrupts           : Interrupt specifier
+ - #address-cells       : Must be <1>
+ - #size-cells          : Must be <0>
+diff --git a/Documentation/devicetree/bindings/spi/spi-cadence.txt b/Documentation/devicetree/bindings/spi/spi-cadence.txt
+index 94f09141a4f0..05a2ef945664 100644
+--- a/Documentation/devicetree/bindings/spi/spi-cadence.txt
++++ b/Documentation/devicetree/bindings/spi/spi-cadence.txt
+@@ -6,7 +6,6 @@ Required properties:
+ - reg			: Physical base address and size of SPI registers map.
+ - interrupts		: Property with a value describing the interrupt
+ 			  number.
+-- interrupt-parent	: Must be core interrupt controller
+ - clock-names		: List of input clock names - "ref_clk", "pclk"
+ 			  (See clock bindings for details).
+ - clocks		: Clock phandles (see clock bindings for details).
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+index 225ace1d0c65..4af132606b37 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.txt
+@@ -4,7 +4,6 @@ Required properties:
+ - compatible :
+   - "fsl,imx7ulp-spi" for LPSPI compatible with the one integrated on i.MX7ULP soc
+ - reg : address and length of the lpspi master registers
+-- interrupt-parent : core interrupt controller
+ - interrupts : lpspi interrupt
+ - clocks : lpspi clock specifier
+ 
+diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+index 3b02b3a7cfb2..96fd58548f69 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+@@ -28,8 +28,6 @@ Required properties:
+ 		       - "rx" for SPRI,
+ 		       - "tx" to SPTI,
+ 		       - "mux" for a single muxed interrupt.
+-- interrupt-parent : The phandle for the interrupt controller that
+-		     services interrupts for this device.
+ - num-cs	   : Number of chip selects. Some RSPI cores have more than 1.
+ - #address-cells   : Must be <1>
+ - #size-cells      : Must be <0>
+diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+index 7bf61efc66c8..dc924a5f71db 100644
+--- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
++++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+@@ -6,7 +6,6 @@ Required properties:
+ - reg			: Physical base address and size of SPI registers map.
+ - interrupts		: Property with a value describing the interrupt
+ 			  number.
+-- interrupt-parent	: Must be core interrupt controller
+ 
+ Optional properties:
+ - xlnx,num-ss-bits	: Number of chip selects used.
+diff --git a/Documentation/devicetree/bindings/spi/spi-xlp.txt b/Documentation/devicetree/bindings/spi/spi-xlp.txt
+index 40e82d51efec..f4925ec0ed33 100644
+--- a/Documentation/devicetree/bindings/spi/spi-xlp.txt
++++ b/Documentation/devicetree/bindings/spi/spi-xlp.txt
+@@ -13,7 +13,6 @@ Required properties:
+ - reg			: Should contain register location and length.
+ - clocks		: Phandle of the spi clock
+ - interrupts		: Interrupt number used by this controller.
+-- interrupt-parent	: Phandle of the parent interrupt controller.
+ 
+ SPI slave nodes must be children of the SPI master node and can contain
+ properties described in Documentation/devicetree/bindings/spi/spi-bus.txt.
+diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
+index c8f50e5cf70b..0f6d37ff541c 100644
+--- a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.txt
+@@ -6,7 +6,6 @@ Required properties:
+ - reg			: Physical base address and size of GQSPI registers map.
+ - interrupts		: Property with a value describing the interrupt
+ 			  number.
+-- interrupt-parent	: Must be core interrupt controller.
+ - clock-names		: List of input clock names - "ref_clk", "pclk"
+ 			  (See clock bindings for details).
+ - clocks		: Clock phandles (see clock bindings for details).
+diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
+index 02ea23a63f20..88bc94fe1f6d 100644
+--- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
++++ b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
+@@ -3,8 +3,6 @@
+ Required properties:
+ - compatible: Should be "st,spear600-adc"
+ - reg: Address and length of the register set for the device
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the ADC interrupt
+ - sampling-frequency: Default sampling frequency
+ 
+diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+index 9d43553a8d39..43a9ed545944 100644
+--- a/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
++++ b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+@@ -7,7 +7,6 @@ Required properties:
+ - reg: address range for the AVS TMON registers
+ - interrupts: temperature monitor interrupt, for high/low threshold triggers
+ - interrupt-names: should be "tmon"
+-- interrupt-parent: the parent interrupt controller
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+index ad648d93d961..33004ce7e5df 100644
+--- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+@@ -13,7 +13,6 @@
+ 			Exynos5420 (Must pass triminfo base and triminfo clock)
+                "samsung,exynos5433-tmu"
+ 	       "samsung,exynos7-tmu"
+-- interrupt-parent : The phandle for the interrupt controller
+ - reg : Address range of the thermal registers. For soc's which has multiple
+ 	instances of TMU and some registers are shared across all TMU's like
+ 	interrupt related then 2 set of register has to supplied. First set
+diff --git a/Documentation/devicetree/bindings/timer/altr,timer-1.0.txt b/Documentation/devicetree/bindings/timer/altr,timer-1.0.txt
+index 904a5846d7ac..e698e3488735 100644
+--- a/Documentation/devicetree/bindings/timer/altr,timer-1.0.txt
++++ b/Documentation/devicetree/bindings/timer/altr,timer-1.0.txt
+@@ -4,7 +4,6 @@ Required properties:
+ 
+ - compatible : should be "altr,timer-1.0"
+ - reg : Specifies base physical address and size of the registers.
+-- interrupt-parent: phandle of the interrupt controller
+ - interrupts : Should contain the timer interrupt number
+ - clock-frequency : The frequency of the clock that drives the counter, in Hz.
+ 
+diff --git a/Documentation/devicetree/bindings/timer/fsl,gtm.txt b/Documentation/devicetree/bindings/timer/fsl,gtm.txt
+index 9a33efded4bc..fc1c571f7412 100644
+--- a/Documentation/devicetree/bindings/timer/fsl,gtm.txt
++++ b/Documentation/devicetree/bindings/timer/fsl,gtm.txt
+@@ -7,7 +7,6 @@ Required properties:
+     "fsl,<chip>-cpm2-gtm", "fsl,cpm2-gtm", "fsl,gtm" for CPM2 GTMs
+   - reg : should contain gtm registers location and length (0x40).
+   - interrupts : should contain four interrupts.
+-  - interrupt-parent : interrupt source phandle.
+   - clock-frequency : specifies the frequency driving the timer.
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/timer/marvell,orion-timer.txt b/Documentation/devicetree/bindings/timer/marvell,orion-timer.txt
+index 62bb8260cf6a..cd1a0c256f94 100644
+--- a/Documentation/devicetree/bindings/timer/marvell,orion-timer.txt
++++ b/Documentation/devicetree/bindings/timer/marvell,orion-timer.txt
+@@ -3,7 +3,6 @@ Marvell Orion SoC timer
+ Required properties:
+ - compatible: shall be "marvell,orion-timer"
+ - reg: base address of the timer register starting with TIMERS CONTROL register
+-- interrupt-parent: phandle of the bridge interrupt controller
+ - interrupts: should contain the interrupts for Timer0 and Timer1
+ - clocks: phandle of timer reference clock (tclk)
+ 
+diff --git a/Documentation/devicetree/bindings/timer/snps,arc-timer.txt b/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
+index 4ef024630d61..147ef3e74452 100644
+--- a/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
++++ b/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
+@@ -12,10 +12,6 @@ Required properties:
+ 	       (16 for ARCHS cores, 3 for ARC700 cores)
+ - clocks     : phandle to the source clock
+ 
+-Optional properties:
+-
+-- interrupt-parent : phandle to parent intc
+-
+ Example:
+ 
+ 	timer0 {
+diff --git a/Documentation/devicetree/bindings/timer/st,spear-timer.txt b/Documentation/devicetree/bindings/timer/st,spear-timer.txt
+index c0017221cf55..b5238a07da17 100644
+--- a/Documentation/devicetree/bindings/timer/st,spear-timer.txt
++++ b/Documentation/devicetree/bindings/timer/st,spear-timer.txt
+@@ -5,8 +5,6 @@
+ - compatible : Should be:
+ 	"st,spear-timer"
+ - reg: Address range of the timer registers
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupt: Should contain the timer interrupt number
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/timer/ti,c64x+timer64.txt b/Documentation/devicetree/bindings/timer/ti,c64x+timer64.txt
+index 95911fe70224..d96c1e283e73 100644
+--- a/Documentation/devicetree/bindings/timer/ti,c64x+timer64.txt
++++ b/Documentation/devicetree/bindings/timer/ti,c64x+timer64.txt
+@@ -7,7 +7,6 @@ Required properties:
+ 
+ - compatible: must be "ti,c64x+timer64"
+ - reg: base address and size of register region
+-- interrupt-parent: interrupt controller
+ - interrupts: interrupt id
+ 
+ Optional properties:
+diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.txt b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+index 4779c029b675..0b08b006c5ea 100644
+--- a/Documentation/devicetree/bindings/usb/fsl-usb.txt
++++ b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+@@ -33,8 +33,6 @@ Recommended properties :
+    information for the interrupt.  This should be encoded based on
+    the information in section 2) depending on the type of interrupt
+    controller you have.
+- - interrupt-parent : the phandle for the interrupt controller that
+-   services interrupts for this device.
+ 
+ Optional properties :
+  - fsl,invert-drvvbus : boolean; for MPC5121 USB0 only. Indicates the
+diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421.txt b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
+index 8cdbe0c85188..90495b1aeec2 100644
+--- a/Documentation/devicetree/bindings/usb/maxim,max3421.txt
++++ b/Documentation/devicetree/bindings/usb/maxim,max3421.txt
+@@ -11,9 +11,6 @@ Required properties:
+    The driver configures MAX3421E for active low level triggered interrupts,
+    configure your interrupt line accordingly.
+ 
+-Optional property:
+- - interrupt-parent: the phandle to the associated interrupt controller.
+-
+ Example:
+ 
+ 	usb@0 {
+diff --git a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+index 09e847e92e5e..d4cf53c071d9 100644
+--- a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
++++ b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
+@@ -3,8 +3,6 @@ Richtek RT1711H TypeC PD Controller.
+ Required properties:
+  - compatible : Must be "richtek,rt1711h".
+  - reg : Must be 0x4e, it's slave address of RT1711H.
+- - interrupt-parent : the phandle for the interrupt controller that
+-   provides interrupts for this device.
+  - interrupts : <a b> where a is the interrupt number and b represents an
+    encoding of the sense and level information for the interrupt.
+ 
+diff --git a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+index b83d428a265e..0388634598ce 100644
+--- a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
++++ b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+@@ -14,8 +14,6 @@ Binding details
+ Required properties:
+ - compatible: "samsung,s3c6400-hsotg" should be used for all currently
+     supported SoC,
+-- interrupt-parent: phandle for the interrupt controller to which the
+-    interrupt signal of the HSOTG block is routed,
+ - interrupts: specifier of interrupt signal of interrupt controller,
+     according to bindings of interrupt controller,
+ - clocks: contains an array of clock specifiers:
+diff --git a/Documentation/devicetree/bindings/usb/spear-usb.txt b/Documentation/devicetree/bindings/usb/spear-usb.txt
+index f8a464a25653..1dc91cc459c0 100644
+--- a/Documentation/devicetree/bindings/usb/spear-usb.txt
++++ b/Documentation/devicetree/bindings/usb/spear-usb.txt
+@@ -6,8 +6,6 @@ EHCI:
+ 
+ Required properties:
+ - compatible: "st,spear600-ehci"
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the EHCI interrupt
+ 
+ Example:
+@@ -25,8 +23,6 @@ OHCI:
+ 
+ Required properties:
+ - compatible: "st,spear600-ohci"
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupts: Should contain the OHCI interrupt
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+index c3a36ee45552..750a87657448 100644
+--- a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+@@ -5,7 +5,6 @@ Required properties:
+ - compatible		: Should be "cdns,wdt-r1p2".
+ - clocks		: This is pclk (APB clock).
+ - interrupts		: This is wd_irq - watchdog timeout interrupt.
+-- interrupt-parent	: Must be core interrupt controller.
+ 
+ Optional properties
+ - reset-on-timeout	: If this property exists, then a reset is done
+diff --git a/Documentation/devicetree/bindings/watchdog/rt2880-wdt.txt b/Documentation/devicetree/bindings/watchdog/rt2880-wdt.txt
+index d7bab3db9d1f..05b95bfa2a89 100644
+--- a/Documentation/devicetree/bindings/watchdog/rt2880-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/rt2880-wdt.txt
+@@ -5,7 +5,6 @@ Required properties:
+ - reg: physical base address of the controller and length of the register range
+ 
+ Optional properties:
+-- interrupt-parent: phandle to the INTC device node
+ - interrupts: Specify the INTC interrupt number
+ 
+ Example:
+diff --git a/Documentation/devicetree/bindings/xilinx.txt b/Documentation/devicetree/bindings/xilinx.txt
+index 1d11b9002ef8..d058ace29345 100644
+--- a/Documentation/devicetree/bindings/xilinx.txt
++++ b/Documentation/devicetree/bindings/xilinx.txt
+@@ -49,7 +49,7 @@
+    followed by an older IP core version which implements the same
+    interface or any other device with the same interface.
+ 
+-   'reg', 'interrupt-parent' and 'interrupts' are all optional properties.
++   'reg' and 'interrupts' are all optional properties.
+ 
+    For example, the following block from system.mhs:
+ 
+diff --git a/Documentation/devicetree/bindings/xillybus/xillybus.txt b/Documentation/devicetree/bindings/xillybus/xillybus.txt
+index 9e316dc2e40f..e65d1f94b49c 100644
+--- a/Documentation/devicetree/bindings/xillybus/xillybus.txt
++++ b/Documentation/devicetree/bindings/xillybus/xillybus.txt
+@@ -4,8 +4,6 @@ Required properties:
+ - compatible: Should be "xillybus,xillybus-1.00.a"
+ - reg: Address and length of the register set for the device
+ - interrupts: Contains one interrupt node, typically consisting of three cells.
+-- interrupt-parent: the phandle for the interrupt controller that
+-                    services interrupts for this device.
+ 
+ Optional properties:
+ - dma-coherent: Present if DMA operations are coherent
+-- 
+2.17.1
