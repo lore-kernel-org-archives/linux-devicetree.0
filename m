@@ -1,45 +1,26 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v9 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
-Date: Mon, 23 Jul 2018 13:09:05 -0700
-Message-ID: <CAD=FV=VmfqWRGRMEn+0dzZ8x4R5vVaHbkthXAN91Lm-XmP9Gqg@mail.gmail.com>
-References: <cover.1531531808.git.collinsd@codeaurora.org> <56b9d5c38cfe46da1228c54f001a49773c3e31dc.1531531808.git.collinsd@codeaurora.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pfuze100: add optional disable
+ switch-regulators binding
+Date: Mon, 23 Jul 2018 17:48:09 -0300
+Message-ID: <CAOMZO5CPqLDJTSYYRmVci_NMqooSLSQrHOYb4FvHLxMzRB-c3g@mail.gmail.com>
+References: <20180723074747.9328-1-m.felsch@pengutronix.de> <20180723074747.9328-2-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56b9d5c38cfe46da1228c54f001a49773c3e31dc.1531531808.git.collinsd@codeaurora.org>
+In-Reply-To: <20180723074747.9328-2-m.felsch@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, David Collins <collinsd@codeaurora.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Yongcai Huang <Anson.Huang@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Fri, Jul 13, 2018 at 6:50 PM, David Collins <collinsd@codeaurora.org> wrote:
-> Introduce bindings for RPMh regulator devices found on some
-> Qualcomm Technlogies, Inc. SoCs.  These devices allow a given
-> processor within the SoC to make PMIC regulator requests which
-> are aggregated within the RPMh hardware block along with requests
-> from other processors in the SoC to determine the final PMIC
-> regulator hardware state.
+On Mon, Jul 23, 2018 at 4:47 AM, Marco Felsch <m.felsch@pengutronix.de> wrote:
+> This binding is used to keep the backward compatibility with the current
+> dtb's [1]. The binding informs the driver that the unused switch regulators
+> can be disabled.
+> If it is not specified, the driver doesn't disable the switch regulators.
 >
-> Signed-off-by: David Collins <collinsd@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> ---
->  .../bindings/regulator/qcom,rpmh-regulator.txt     | 160 +++++++++++++++++++++
->  .../dt-bindings/regulator/qcom,rpmh-regulator.h    |  36 +++++
->  2 files changed, 196 insertions(+)
+> [1] https://patchwork.kernel.org/patch/10490381/
+>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-I know you are still looking for time to review the RPMh-regulator
-driver and that's fine.  One idea I had though: if the bindings look
-OK to you and are less controversial, is there any chance they could
-land in the meantime?
-
-Specifically it would be very handy to be able to post up device tree
-files that refer to regulators and even get those landed, but they
-can't land without the bindings.
-
-If that's not possible then no worries, but I figured I'd check.
-
-
--Doug
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
