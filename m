@@ -1,92 +1,140 @@
-Return-Path: <SRS0=r8rx=KJ=nxp.com=wen.he_1@kernel.org>
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v7 1/7] dmaengine: fsldma: Replace DMA_IN/OUT by FSL_DMA_IN/OUT
-Date: Wed, 25 Jul 2018 19:29:13 +0800
-Message-Id: <20180725112919.31340-1-wen.he_1@nxp.com>
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56356 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388304AbeGWOsb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:31 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 12/21] v4l: fwnode: Support default CSI-2 lane mapping for drivers
+Date: Mon, 23 Jul 2018 16:46:57 +0300
+Message-Id: <20180723134706.15334-13-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-This patch implement a standard macro call functions is
-used to NXP dma drivers.
+Most hardware doesn't support re-mapping of the CSI-2 lanes. Especially
+sensor drivers have a default number of lanes. Instead of requiring the
+caller (the driver) to provide such a unit mapping, provide one if no
+mapping is configured.
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/dma/fsldma.c |   16 ++++++++--------
- drivers/dma/fsldma.h |    4 ++--
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 60 +++++++++++++++++++++++++++--------
+ 1 file changed, 46 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 1117b51..39871e0 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -53,42 +53,42 @@
- 
- static void set_sr(struct fsldma_chan *chan, u32 val)
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index ed147b6fd315..19f4e331c7d8 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -47,20 +47,35 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 					       enum v4l2_fwnode_bus_type bus_type)
  {
--	DMA_OUT(chan, &chan->regs->sr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->sr, val, 32);
- }
+ 	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vep->bus.mipi_csi2;
+-	bool have_clk_lane = false, have_lane_polarities = false;
++	bool have_clk_lane = false, have_data_lanes = false,
++		have_lane_polarities = false;
+ 	unsigned int flags = 0, lanes_used = 0;
+ 	u32 array[1 + V4L2_FWNODE_CSI2_MAX_DATA_LANES];
++	u32 clock_lane = 0;
+ 	unsigned int num_data_lanes = 0;
++	bool use_default_lane_mapping = false;
+ 	unsigned int i;
+ 	u32 v;
+ 	int rval;
  
- static u32 get_sr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->sr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->sr, 32);
- }
+ 	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY) {
++		use_default_lane_mapping = true;
++
+ 		num_data_lanes = min_t(u32, bus->num_data_lanes,
+ 				       V4L2_FWNODE_CSI2_MAX_DATA_LANES);
  
- static void set_mr(struct fsldma_chan *chan, u32 val)
- {
--	DMA_OUT(chan, &chan->regs->mr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->mr, val, 32);
- }
+-		for (i = 0; i < num_data_lanes; i++)
++		clock_lane = bus->clock_lane;
++		if (clock_lane)
++			use_default_lane_mapping = false;
++
++		for (i = 0; i < num_data_lanes; i++) {
+ 			array[i] = bus->data_lanes[i];
++			if (array[i])
++				use_default_lane_mapping = false;
++		}
++
++		if (use_default_lane_mapping)
++			pr_debug("using default lane mapping\n");
+ 	}
  
- static u32 get_mr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->mr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->mr, 32);
- }
+ 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
+@@ -70,15 +85,21 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
  
- static void set_cdar(struct fsldma_chan *chan, dma_addr_t addr)
- {
--	DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
-+	FSL_DMA_OUT(chan, &chan->regs->cdar, addr | FSL_DMA_SNEN, 64);
- }
+ 		fwnode_property_read_u32_array(fwnode, "data-lanes", array,
+ 					       num_data_lanes);
++
++		have_data_lanes = true;
+ 	}
  
- static dma_addr_t get_cdar(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
-+	return FSL_DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
- }
+ 	for (i = 0; i < num_data_lanes; i++) {
+-		if (lanes_used & BIT(array[i]))
+-			pr_warn("duplicated lane %u in data-lanes\n",
+-				array[i]);
++		if (lanes_used & BIT(array[i])) {
++			if (have_data_lanes || !use_default_lane_mapping)
++				pr_warn("duplicated lane %u in data-lanes, using defaults\n",
++					array[i]);
++			use_default_lane_mapping = true;
++		}
+ 		lanes_used |= BIT(array[i]);
  
- static void set_bcr(struct fsldma_chan *chan, u32 val)
- {
--	DMA_OUT(chan, &chan->regs->bcr, val, 32);
-+	FSL_DMA_OUT(chan, &chan->regs->bcr, val, 32);
- }
+-		pr_debug("lane %u position %u\n", i, array[i]);
++		if (have_data_lanes)
++			pr_debug("lane %u position %u\n", i, array[i]);
+ 	}
  
- static u32 get_bcr(struct fsldma_chan *chan)
- {
--	return DMA_IN(chan, &chan->regs->bcr, 32);
-+	return FSL_DMA_IN(chan, &chan->regs->bcr, 32);
- }
+ 	rval = fwnode_property_read_u32_array(fwnode, "lane-polarities", NULL,
+@@ -94,13 +115,16 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 	}
  
- /*
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 4787d48..982845b 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -223,10 +223,10 @@ static void out_le64(u64 __iomem *addr, u64 val)
- }
- #endif
+ 	if (!fwnode_property_read_u32(fwnode, "clock-lanes", &v)) {
+-		if (lanes_used & BIT(v))
+-			pr_warn("duplicated lane %u in clock-lanes\n", v);
+-		lanes_used |= BIT(v);
+-
+-		bus->clock_lane = v;
+-		have_clk_lane = true;
++		clock_lane = v;
+ 		pr_debug("clock lane position %u\n", v);
++		have_clk_lane = true;
++	}
++
++	if (lanes_used & BIT(clock_lane)) {
++		if (have_clk_lane || !use_default_lane_mapping)
++			pr_warn("duplicated lane %u in clock-lanes, using defaults\n",
++			v);
++		use_default_lane_mapping = true;
+ 	}
  
--#define DMA_IN(fsl_chan, addr, width)					\
-+#define FSL_DMA_IN(fsl_chan, addr, width)				\
- 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
- 			in_be##width(addr) : in_le##width(addr))
--#define DMA_OUT(fsl_chan, addr, val, width)				\
-+#define FSL_DMA_OUT(fsl_chan, addr, val, width)			\
- 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
- 			out_be##width(addr, val) : out_le##width(addr, val))
+ 	if (fwnode_property_present(fwnode, "clock-noncontinuous")) {
+@@ -115,8 +139,16 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 		bus->flags = flags;
+ 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
+ 		bus->num_data_lanes = num_data_lanes;
+-		for (i = 0; i < num_data_lanes; i++)
+-			bus->data_lanes[i] = array[i];
++
++		if (use_default_lane_mapping) {
++			bus->clock_lane = 0;
++			for (i = 0; i < num_data_lanes; i++)
++				bus->data_lanes[i] = 1 + i;
++		} else {
++			bus->clock_lane = clock_lane;
++			for (i = 0; i < num_data_lanes; i++)
++				bus->data_lanes[i] = array[i];
++		}
  
+ 		if (have_lane_polarities) {
+ 			fwnode_property_read_u32_array(fwnode,
 -- 
-1.7.1
+2.11.0
+
