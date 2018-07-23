@@ -1,83 +1,120 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH v3 08/35] media: dt-bindings: media: qcom,camss: Unify the clock names
-Date: Mon, 23 Jul 2018 14:02:25 +0300
-Message-ID: <1532343772-27382-9-git-send-email-todor.tomov@linaro.org>
-References: <1532343772-27382-1-git-send-email-todor.tomov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532343772-27382-1-git-send-email-todor.tomov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v4 0/6] *** Add support for wifi QMI client handshakes ***
+Date: Mon, 23 Jul 2018 18:04:22 +0530
+Message-ID: <20180723123428.12993-1-govinds@codeaurora.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use more logical clock names - similar to the names in documentation.
-This will allow better handling of the clocks in the driver when support
-for more hardware versions is added - equivalent clocks on different
-hardware versions will have the same name.
+Add QMI client handshakes for Q6 integrated WLAN connectivity subsystem.
+This module is responsible for communicating WLAN control messages to FW
+over QMI interface. This patch series enables the qmi handshakes required for
+WCN3990 chipset.
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
----
- .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+QUALCOMM MSM Interface(QMI) provides the control interface between
+components running b/w remote processors with underlying transport layer
+based on integrated chipset(shared memory) or discrete chipset(PCI/USB/SDIO/UART).
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
-index cadeceb..032e8ed 100644
---- a/Documentation/devicetree/bindings/media/qcom,camss.txt
-+++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
-@@ -53,7 +53,7 @@ Qualcomm Camera Subsystem
- 	Usage: required
- 	Value type: <stringlist>
- 	Definition: Should contain the following entries:
--                - "camss_top_ahb"
-+                - "top_ahb"
-                 - "ispif_ahb"
-                 - "csiphy0_timer"
-                 - "csiphy1_timer"
-@@ -67,11 +67,11 @@ Qualcomm Camera Subsystem
-                 - "csi1_phy"
-                 - "csi1_pix"
-                 - "csi1_rdi"
--                - "camss_ahb"
--                - "camss_vfe_vfe"
--                - "camss_csi_vfe"
--                - "iface"
--                - "bus"
-+                - "ahb"
-+                - "vfe0"
-+                - "csi_vfe0"
-+                - "vfe_ahb"
-+                - "vfe_axi"
- - vdda-supply:
- 	Usage: required
- 	Value type: <phandle>
-@@ -161,7 +161,7 @@ Qualcomm Camera Subsystem
- 			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
- 			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
- 			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
--                clock-names = "camss_top_ahb",
-+                clock-names = "top_ahb",
-                         "ispif_ahb",
-                         "csiphy0_timer",
-                         "csiphy1_timer",
-@@ -175,11 +175,11 @@ Qualcomm Camera Subsystem
-                         "csi1_phy",
-                         "csi1_pix",
-                         "csi1_rdi",
--                        "camss_ahb",
--                        "camss_vfe_vfe",
--                        "camss_csi_vfe",
--                        "iface",
--                        "bus";
-+                        "ahb",
-+                        "vfe0",
-+                        "csi_vfe0",
-+                        "vfe_ahb",
-+                        "vfe_axi";
- 		vdda-supply = <&pm8916_l2>;
- 		iommus = <&apps_iommu 3>;
- 		ports {
+QMI client driver implementation is based on qmi framework https://lwn.net/Articles/729924/.
+
+Below is the sequence of qmi handshake.
+
+       QMI CLIENT(APPS)                                         QMI SERVER(FW in Q6)
+
+                         <------wlan service discoverd----
+
+                       -----connect to wlam qmi service----->
+
+                       ------------wlan info request----->
+
+                       <------------wlan info resp------------
+
+                       ------------msa info req-------->
+
+                     <------------msa info resp------------
+
+                     ------------msa ready req-------->
+
+                     <------------msa ready resp------------
+
+                     <------------msa ready indication-------
+
+                     ------------capability req------->
+
+                    <------------capability resp------------
+
+                    ------------qmi bdf req--------->
+
+                     <------------qmi bdf resp------------
+
+                      ------------qmi cal trigger------->
+
+                  <------------ QMI FW ready indication-------
+
+WLAN fw is running in modem Q6 dsp as user PD(protection domain).
+Sequence of user PD loading is as following.
+
+1) Remote proc PIL driver loads the modem fw/ROOT PD.
+2) As part of ROOT pd boot-up it queries to a daemon(pd_mapper) running in apps
+processor to determine how many usre pd's to be loaded by the remote processor(Q6).
+3) Once user pd info is known to remote processor it loads the user pd via tftp
+protocol.
+
+https://github.com/andersson/pd-mapper
+https://github.com/andersson/tqftpserv
+
+
+Changes since V3:
+	Removed msa memory child node and used only memory-region property.
+	Fixed sparse warning reported in v3 change.
+	Changed qmi board id data type to u32 to align with fw defined value.
+
+Changes since V2:
+	Addressed review comments from v2 version.
+	Removed msa-size from dt binding and added reference to reserved-memory/reserved-memory.txt.
+
+Changes since V1:
+	Removed qmi client driver and integrated qmi client handshakes in snoc platform driver.
+	Addressed comments on v1 version.
+	Switched to ath10k bdf download infra(board-2.bin)
+	Added MSA fixed region support to support unload use-case.
+	Unified logging.
+
+Testing:
+	Tested all qmi handshakes, driver load/unload and STA/SAP sanity testing.
+	Tested HW: SDM845(WCN3990)
+	Tested FW: WLAN.HL.2.0-01192-QCAHLSWMTPLZ-1
+
+Govind Singh (5):
+  ath10k: Add qmi service helpers for wcn3990 qmi client
+  dt: bindings: add bindings for msa memory region
+  firmware: qcom: scm: Add WLAN VMID for Qualcomm SCM interface
+  ath10k: Add debug mask for QMI layer
+  ath10k: Add QMI message handshake for wcn3990 client
+
+Rakesh Pillai (1):
+  ath10k: Add support to create boardname for non-bmi target
+
+ .../bindings/net/wireless/qcom,ath10k.txt     |    6 +
+ drivers/net/wireless/ath/ath10k/Kconfig       |    1 +
+ drivers/net/wireless/ath/ath10k/Makefile      |    4 +-
+ drivers/net/wireless/ath/ath10k/core.c        |   14 +-
+ drivers/net/wireless/ath/ath10k/core.h        |    4 +
+ drivers/net/wireless/ath/ath10k/debug.h       |    1 +
+ drivers/net/wireless/ath/ath10k/qmi.c         | 1019 ++++++++
+ drivers/net/wireless/ath/ath10k/qmi.h         |  129 +
+ .../net/wireless/ath/ath10k/qmi_wlfw_v01.c    | 2072 +++++++++++++++++
+ .../net/wireless/ath/ath10k/qmi_wlfw_v01.h    |  677 ++++++
+ drivers/net/wireless/ath/ath10k/snoc.c        |  262 ++-
+ drivers/net/wireless/ath/ath10k/snoc.h        |    4 +
+ include/linux/qcom_scm.h                      |    4 +-
+ 13 files changed, 4186 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/net/wireless/ath/ath10k/qmi.c
+ create mode 100644 drivers/net/wireless/ath/ath10k/qmi.h
+ create mode 100644 drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.c
+ create mode 100644 drivers/net/wireless/ath/ath10k/qmi_wlfw_v01.h
+
 -- 
-2.7.4
+2.17.0
