@@ -1,69 +1,49 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH V2 0/6] mailbox: ti-msgmgr: Add support for AM654 Secure Proxy
-Date: Mon, 23 Jul 2018 19:26:08 +0530
-Message-ID: <CABb+yY1_SBTDPyUNGSr8=tpU4oObz060nJ3NrgR8JyQye23cfg@mail.gmail.com>
-References: <20180716180607.16526-1-nm@ti.com> <20180723132956.tcsuxychhlhiwz6v@kahuna>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723132956.tcsuxychhlhiwz6v@kahuna>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, ", linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>
+From: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 10/10] NFC: st95hf: add of match table
+Date: Mon, 23 Jul 2018 16:00:15 +0200
+Message-ID: <20180723140015.11663-11-daniel@zonque.org>
+References: <20180723140015.11663-1-daniel@zonque.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180723140015.11663-1-daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, shikha.singh-qxv4g6HH51o@public.gmane.org, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 23, 2018 at 6:59 PM, Nishanth Menon <nm@ti.com> wrote:
-> On 18:06-20180716, Nishanth Menon wrote:
->> The V2 of the series updates a minor comment in binding and picks up Rob's Reviewed-by
->>
->> Since I have'nt seen additional comments, I am assuming things are fine for v4.19.
->>
->> The following series enables support for Secure Proxy in newest addition in TI's SoC
->> portfolio - AM654 SoC (posted previously as RFC).
->>
->> The series is based on v4.18-rc1 and is available here:
->> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-1-am6-sproxy
->>
->> There are a couple of follow on patches to be posted as well (Kconfig changes
->> for K3_ARCH and actual dts node changes).
->>
->> Changes since RFC are highlighted in each of the patches, but overall:
->> * The K3 dependency has been broken out into a seperate series independent of
->>   this.
->> * Binding has been seperated out as it's own file (even though the driver is
->>   reused).
->>
->> Consolidated all patches (including all series) are available here:
->> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-am6-integ
->>
->> Full Boot log  on AM654 (integrated with all patch series) is available here:
->>    https://pastebin.ubuntu.com/p/bBFmnzYtCd/
->>
->> Nishanth Menon (6):
->>   mailbox: ti-msgmgr: Get rid of unused structure members
->>   mailbox: ti-msgmgr: Allocate Rx channel resources only on request
->>   mailbox: ti-msgmgr: Change message count mask to be descriptor based
->>   mailbox: ti-msgmgr: Move the memory region name to descriptor
->>   dt-bindings: mailbox: Add support for secure proxy threads
->>   mailbox: ti-msgmgr: Add support for Secure Proxy
->>
->>  .../bindings/mailbox/ti,secure-proxy.txt           |  50 +++
->>  drivers/mailbox/ti-msgmgr.c                        | 353 +++++++++++++++++----
->>  2 files changed, 336 insertions(+), 67 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/ti,secure-proxy.txt
->
->
-> Jassi,
->
-> I dont see this in next-20180723. You'd asked me to hold off on pings
-> https://lkml.org/lkml/2017/12/16/353 -> so, held off as much as I could
-> before wondering on the status.
->
-I didn't ask you to not ping me. I said I didn't miss your patchset. I
-still didn't.
+Add a match table for device tree compatible strings. Interestingly, a
+document describing the bindings already exists since a while, but users
+currently reply on the implicit matching in the drivers core.
 
-Especially for purely platform specific changes, that I don't have
-knowledge about, I leave them to cook in public as long as possible,
-before pulling them in around rc7.
-You submitted V2, 7days ago only and we are at rc6 today. So chill.
+Signed-off-by: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ drivers/nfc/st95hf/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
+index 4db3c020921c..5a01b454fbc4 100644
+--- a/drivers/nfc/st95hf/core.c
++++ b/drivers/nfc/st95hf/core.c
+@@ -1012,6 +1012,12 @@ static const struct spi_device_id st95hf_id[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, st95hf_id);
+ 
++static const struct of_device_id st95hf_of_match[] = {
++	{ .compatible = "st,st95hf", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, st95hf_of_match);
++
+ static int st95hf_probe(struct spi_device *nfc_spi_dev)
+ {
+ 	int ret;
+@@ -1189,6 +1195,7 @@ static struct spi_driver st95hf_driver = {
+ 	.driver = {
+ 		.name = "st95hf",
+ 		.owner = THIS_MODULE,
++		.of_match_table = st95hf_of_match,
+ 	},
+ 	.id_table = st95hf_id,
+ 	.probe = st95hf_probe,
+-- 
+2.17.1
