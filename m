@@ -1,111 +1,186 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 4/9] scsi: ufs: add option to change default UFS power
- management level
-Date: Mon, 23 Jul 2018 08:36:48 -0600
-Message-ID: <CAL_JsqLXUvUj8n=1Xv-_ssqB6rayMvxOTnGzeN1vS9yx4-jqOQ@mail.gmail.com>
-References: <cover.1530880006.git.asutoshd@codeaurora.org> <ff2b648007a400c60ba804a0c5cab0166bd268e7.1530880006.git.asutoshd@codeaurora.org>
- <20180711203317.GA14983@rob-hp-laptop> <4b85de8b-d03e-da93-704b-e70922a9fbea@codeaurora.org>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH 1/3] iio: adc: add support for mcp3911
+Date: Mon, 23 Jul 2018 15:55:14 +0100
+Message-ID: <20180723155514.00006820@huawei.com>
+References: <20180721195923.7610-1-marcus.folkesson@gmail.com>
+        <alpine.DEB.2.21.1807212259480.13457@vps.pmeerw.net>
+        <20180722090838.0080aaf5@archlinux>
+        <20180722190051.GB27516@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4b85de8b-d03e-da93-704b-e70922a9fbea@codeaurora.org>
+In-Reply-To: <20180722190051.GB27516@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Asutosh Das <asutoshd@codeaurora.org>
-Cc: Subhash Jadavani <subhashj@codeaurora.org>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Kent Gustavsson <kent@minoris.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 22, 2018 at 9:20 PM Asutosh Das (asd)
-<asutoshd@codeaurora.org> wrote:
+On Sun, 22 Jul 2018 21:00:51 +0200
+Marcus Folkesson <marcus.folkesson@gmail.com> wrote:
+
+> Hi Jonathan,
+> 
+> Thanks, all good catches.
+> 
+> On Sun, Jul 22, 2018 at 09:08:38AM +0100, Jonathan Cameron wrote:
+> > On Sat, 21 Jul 2018 23:19:48 +0200 (CEST)
+> > Peter Meerwald-Stadler <pmeerw@pmeerw.net> wrote:
+> >   
+> > > Hello,
+> > >   
+> > > > MCP3911 is a dual channel Analog Front End (AFE) containing two
+> > > > synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).    
+> > > 
+> > > some comments below...  
+> > 
+> > +CC Mark for the unusual SPI addressing stuff.  I'm mostly interested in what
+> > precedent there is for bindings etc.
+> >   
+> 
+> Yep, I'm not entirely sure that the SPI framework can handle multiple
+> clients on the same CS.
+> The reason why we created device-addr is that the chip supports that and
+> may have hardcoded chip address from factory.
+> The chip address is also part of the protocol so we have to specify it.
+
+It will certainly be 'interesting' if we ever try to support it.
+
+> 
+...
+
+...
+> > > > +static int mcp3911_write(struct mcp3911 *adc, u8 reg, u32 val, u8 len)
+> > > > +{
+> > > > +	dev_dbg(&adc->spi->dev, "Writing 0x%x to register 0x%x\n", val, reg);
+> > > > +
+> > > > +	cpu_to_be32s(&val);
+> > > > +	val >>= (3-len)*8;  
+> > Hmm. It might be worth considering regmap here to handle all this stuff for
+> > you rather than re rolling the same stuff.
+> >   
+> 
+> We were looking at regmap, but it does not seems to support registers of
+> different size.
+> This chip has register values of 8, 16 and 24 bits.
+
+Fair enough. I thought we were really looking at autoincrement, of
+the address for a fixed sized register - which is fine in regmap.
+Those wider registers are described as having ADDR and ADDR+1 etc.
+
+> 
+> > > > +	val |= REG_WRITE(reg, adc->dev_addr);
+> > > > +
+> > > > +	return spi_write(adc->spi, &val, len+1);
+> > > > +}
+> > > > +
+
+> > > > +
+> > > > +static int mcp3911_read_raw(struct iio_dev *indio_dev,
+> > > > +			    struct iio_chan_spec const *channel, int *val,
+> > > > +			    int *val2, long mask)
+> > > > +{
+> > > > +	struct mcp3911 *adc = iio_priv(indio_dev);
+> > > > +	int ret = -EINVAL;
+> > > > +
+> > > > +	mutex_lock(&adc->lock);
+> > > > +	switch (mask) {
+> > > > +	case IIO_CHAN_INFO_RAW:
+> > > > +		ret = mcp3911_read(adc,
+> > > > +				MCP3911_CHANNEL(channel->channel), val, 3);
+> > > > +		if (ret)
+> > > > +			goto out;
+> > > > +
+> > > > +		ret = IIO_VAL_INT;
+> > > > +		break;
+> > > > +
+> > > > +	case IIO_CHAN_INFO_OFFSET:
+> > > > +		ret = mcp3911_read(adc,
+> > > > +				MCP3911_OFFCAL(channel->channel), val, 3);
+> > > > +		if (ret)
+> > > > +			goto out;
+> > > > +
+> > > > +		ret = IIO_VAL_INT;
+> > > > +		break;
+> > > > +
+> > > > +	case IIO_CHAN_INFO_HARDWAREGAIN:
+> > > > +		ret = mcp3911_get_hwgain(adc, channel->channel, val);  
+> > 
+> > I'm not convinced it's useful to expose this as it right control for this
+> > is scale.
+> >   
+> 
+> Hmm, all other drivers that are using HARDWAREGAIN (ina2xx-adc, stx104 +
+> a few more that are not ADC:s) are, what I can tell, exposing it.
+> 
+> But maybe it should'nt.
+
+Yup, as ever things are a bit messy.  However, best to not expose it unless
+there is a very good reason.
+> > > > +
+> > > > +		break;
+> > > > +
+> > > > +	case IIO_CHAN_INFO_HARDWAREGAIN:    
+> > 
+> > Default choice (by precedent) is to control variable gain
+> > front ends via the scale parameter.   Hardware gain
+> > is not meant to have any 'visible' impact on the output
+> > value - most commonly used when the thing we are measuring
+> > is not amplitude of anything.  
+> 
+> Hmm, Ok. I'm not sure I understand how hardware gain is supposed to work
+> then.
+
+For this use case it isn't. 
+
+> Maybe I just remove it.
+
+That's the best plan.
+
+...
+> > > > +
+> > > > +static int mcp3911_config_of(struct mcp3911 *adc)
+> > > > +{
+> > > > +	u32 configreg;
+> > > > +	u32 statuscomreg;
+> > > > +	int ret;
+> > > > +
+> > > > +	of_property_read_u32(adc->np, "device-addr", &adc->dev_addr);  
+> > This is 'interesting' - I wonder if there is any precedence for it.
+> >   
+> 
+> I guess we still need it since the device may have a hardcoded (from
+> factory) address that we need to deal with.
+
+Fair enough.  Still good to hear from Mark on whether there are other similar
+devices so the binding can be consistent.
+
+
+> > > > +
+> > > > +	of_property_read_u32(adc->np, "ch0-width", &adc->width[0]);
+> > > > +	switch (adc->width[0]) {
+> > > > +	case 24:
+> > > > +		statuscomreg &= ~MCP3911_STATUSCOM_CH0_24WIDTH;
+> > > > +		dev_dbg(&adc->spi->dev, "set channel 0 into 24bit mode\n");
+> > > > +		break;
+> > > > +	case 16:
+> > > > +		statuscomreg |= MCP3911_STATUSCOM_CH0_24WIDTH;
+> > > > +		dev_dbg(&adc->spi->dev, "set channel 0 into 16bit mode\n");
+> > > > +		break;
+> > > > +	default:
+> > > > +		adc->width[0] = 24;
+> > > > +		dev_info(&adc->spi->dev, "invalid width for channel 0. Use 24bit.\n");
+> > > > +		break;
+> > > > +	}  
+> > This feels like something that isn't really a dt choice, as it's not down to
+> > wiring but rather down to precision desired.  
+> 
+> You are right. I will remove them and stick to 24bit width.
 >
-> On 7/12/2018 2:03 AM, Rob Herring wrote:
-> > On Fri, Jul 06, 2018 at 06:00:31PM +0530, Asutosh Das wrote:
-> >> From: Subhash Jadavani <subhashj@codeaurora.org>
-> >>
-> >> UFS device and link can be put in multiple different low power modes hence
-> >> UFS driver supports multiple different low power modes. By default UFS
-> >> driver selects the default (optimal) low power mode (which gives moderate
-> >> power savings and have relatively less enter and exit latencies) but
-> >> we might have to tune this default power mode for different chipset
-> >> platforms to meet the low power requirements/goals. Hence this patch
-> >> adds option to change default UFS low power mode (level).
-> >>
-> >> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> >> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
-> >> Signed-off-by: Can Guo <cang@codeaurora.org>
-> >> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> >> ---
-> >>   .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 11 ++++++++
-> >>   drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 +++++++++++
-> >>   drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++-------
-> >>   drivers/scsi/ufs/ufshcd.h                          |  4 +--
-> >>   4 files changed, 47 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> >> index c39dfef..f564d9a 100644
-> >> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> >> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> >> @@ -38,6 +38,15 @@ Optional properties:
-> >>                        defined or a value in the array is "0" then it is assumed
-> >>                        that the frequency is set by the parent clock or a
-> >>                        fixed rate clock source.
-> >> +- rpm-level         : UFS Runtime power management level. Following PM levels are supported:
-> >> +                      0 - Both UFS device and Link in active state (Highest power consumption)
-> >> +                      1 - UFS device in active state but Link in Hibern8 state
-> >> +                      2 - UFS device in Sleep state but Link in active state
-> >> +                      3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
-> >> +                      4 - UFS device in Power-down state and Link in Hibern8 state
-> >> +                      5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
-> >> +- spm-level         : UFS System power management level. Allowed PM levels are same as rpm-level.
-> >
-> > What's the default?
-> >
-> > I assume these are minimums? The OS can pick higher power states. This
-> > seems to be a bit Linux specific (as 'runtime PM' could be considered
-> > Linux specific). For every other device, we don't put this type of
-> > information in DT, but is user controlled.
-> I didn't completely understand your comment.
-> Do you not want these properties to be in DT file?
+That's the easiest option.  If anyone 'really' wants 16bit we'll figure it out
+later.
+ 
+..
+Thanks
 
-Right, not if it is a user decision.
-
-> When you say user-controlled, do you mean control it through sysfs entries?
-
-Yes.
-
-> > So really, wouldn't 1
-> > property be sufficient for cases where a mode doesn't work due to
-> > some h/w limitation. Otherwise, it is an OS or user decision.
-> I didn't completely understand this. Could you please elaborate on your
-> intent here?
-
-The case that makes sense for this to be in DT is if there are h/w
-limitations that prevent some low power modes. In such a case, that
-limit is not likely specific to runtime PM or system suspend.
-
-> >>   -lanes-per-direction       : number of lanes available per direction - either 1 or 2.
-> >>                        Note that it is assume same number of lanes is used both
-> >>                        directions at once. If not specified, default is 2 lanes per direction.
-> >> @@ -66,4 +75,6 @@ Example:
-> >>              freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
-> >>              phys = <&ufsphy1>;
-> >>              phy-names = "ufsphy";
-> >> +            rpm-level = <3>;
-> >
-> > Why specified if 3 is the default?
-> Ah yes - that should be removed.
-> I'll remove it in v2.
->
-> >
-> >> +            spm-level = <5>;
-> >
-> > These seem like sane defaults. When and why would you use some
-> > different?
-> I think each of the deeper sleep modes are associated with an increasing
-> wakeup latency. For e.g. '0' would have the highest power-consumption
-> and no resume latency at all as compared to '5'.
-> So depending on use-cases other modes may be chosen.
-
-The use-case can change in a running system. For example if you are
-plugged in, then you probably don't want to enter a lower power mode.
-
-Rob
+Jonathan
