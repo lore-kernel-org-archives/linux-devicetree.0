@@ -1,80 +1,86 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v2 1/3] clk: meson: add DT documentation for emmc clock
- controller
-Date: Mon, 23 Jul 2018 22:28:36 +0800
-Message-ID: <405ff057-a14e-f9eb-19e0-8d467dda35a1@amlogic.com>
-References: <20180710163658.6175-1-yixun.lan@amlogic.com>
- <20180710163658.6175-2-yixun.lan@amlogic.com>
- <20180711194346.GA32414@rob-hp-laptop>
- <f2eb8632-1113-3bb8-506f-ac0d4e838fd4@amlogic.com>
- <CABGGisw64MpYx7Pvp+XGt6gfZzie6EKeHdchqS6CPDjmAHBuVA@mail.gmail.com>
- <5442a2e8-eb49-2aa8-e53e-8db88cd0bd58@amlogic.com>
- <CAL_Jsq+r+7BaJAPBn3L26sdxATVyDiuC=V3xE+yz0-27q0RJhA@mail.gmail.com>
- <8bf565d3-dbfd-e06d-7076-ba78d7a2e766@amlogic.com>
- <7hbmay3ut6.fsf@baylibre.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 1/2] dt-bindings: media: i2c: Document MT9V111 bindings
+Date: Mon, 23 Jul 2018 17:29:55 +0300
+Message-ID: <20180723142955.fdbeenlz6fltww46@valkosipuli.retiisi.org.uk>
+References: <1528730253-25135-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1528730253-25135-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hbmay3ut6.fsf@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <1528730253-25135-2-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: yixun.lan@amlogic.com, Rob Herring <robh@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk <linux-clk@vger.kernel.org>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>de
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: mchehab@kernel.org, robh@kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-HI Kevin
+Hi Jacopo,
 
-On 07/23/2018 10:12 PM, Kevin Hilman wrote:
-> Yixun Lan <yixun.lan@amlogic.com> writes:
+On Mon, Jun 11, 2018 at 05:17:32PM +0200, Jacopo Mondi wrote:
+> Add documentation for Aptina MT9V111 image sensor.
 > 
-> [...]
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../bindings/media/i2c/aptina,mt9v111.txt          | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
 > 
->>>
->>>> Second, we might like to convert eMMC driver to also use mmc-clkc model.
->>>
->>> IMO, this should be done as part of merging this series. Otherwise, we
->>> have duplicated code for the same thing.
->>
->> IMO, I'd leave this out of this series, since this patch series is quite
->> complete as itself. Although, the downside is code duplication.
->>
->> Still, I need to hear Jerome, or Kevin's option, to see if or how we
->> should proceed the eMMC's clock conversion.
->>
->> I could think of three option myself
->> 1) don't do the conversion, downside is code duplication, upside is NO
->> DT change, no compatibility issue
->> 2) add a syscon node into eMMC DT node, then only convert clock part
->> into this mmc-clkc model, while still leave other eMMC register access
->> as the usual iomap way (still no race condition)
->> 3) convert all eMMC register access by using regmap interface.
->>
->> both 2) and 3) need to update the DT.
->>
->> and probably 2) is a compromise way, and 1) is also OK, 3) is probably
->> the worst way due to dramatically change (I think this was already
->> rejected in the previous discussion)
-> 
-> Because the devices (NAND and eMMC_C) are mutually exclusive, taking the
-> step-by-step approach is fine (and preferred) by me.
-> 
-> Phase 1:
-> - add new mmc-clk provider
-> - add NAND driver using new mmc-clk provider
-> - boards using NAND should ensure emmc_c is disabled in DT
-> 
-> This allows us to not touch the MMC driver or existing upstream
-> bindings.  Yes, this means there is duplicate code in the MMC driver and
-> the new mmc-clk provider, but that can be removed in the next phase.
-> 
-Great, the approach to address this issue is reasonable.
-We'd like to focus on phase 1 first, thanks
+> diff --git a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
+> new file mode 100644
+> index 0000000..bac4bf0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
+> @@ -0,0 +1,46 @@
+> +* Aptina MT9V111 CMOS sensor
+> +----------------------------
+> +
+> +The Aptina MT9V111 is a 1/4-Inch VGA-format digital image sensor with a core
+> +based on Aptina MT9V011 sensor and an integrated Image Flow Processor (IFP).
+> +
+> +The sensor has an active pixel array of 649x489 pixels and can output a number
 
-> Phase 2:
-> - convert MMC driver to use new mmc-clk provider
-> - update MMC users in DT and bindings
-> 
-Ok.
+640x480 ?
 
+> +of image resolution and formats controllable through a simple two-wires
+> +interface.
+> +
+> +Required properties:
+> +--------------------
+> +
+> +- compatible: shall be "aptina,mt9v111".
+> +- clocks: reference to the system clock input provider.
+> +
+> +Optional properties:
+> +--------------------
+> +
+> +- enable-gpios: output enable signal, pin name "OE#". Active low.
+> +- standby-gpios: low power state control signal, pin name "STANDBY".
+> +  Active high.
+> +- reset-gpios: chip reset signal, pin name "RESET#". Active low.
+> +
+> +The device node must contain one 'port' child node with one 'endpoint' child
+> +sub-node for its digital output video port, in accordance with the video
+> +interface bindings defined in:
+> +Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +--------
+> +
+> +        &i2c1 {
+> +                camera@48 {
+> +                        compatible = "aptina,mt9v111";
+> +                        reg = <0x48>;
+> +
+> +                        clocks = <&camera_clk>;
+> +
+> +                        port {
+> +                                mt9v111_out: endpoint {
+> +                                        remote-endpoint = <&ceu_in>;
+> +                                };
+> +                        };
+> +                };
+> +        };
 
-Yixun
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
