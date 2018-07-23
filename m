@@ -1,13 +1,13 @@
 Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56350 "EHLO
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56368 "EHLO
         hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388300AbeGWOsa (ORCPT
+        by vger.kernel.org with ESMTP id S2388311AbeGWOsb (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Jul 2018 10:48:30 -0400
+        Mon, 23 Jul 2018 10:48:31 -0400
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 11/21] v4l: fwnode: Support driver-defined lane mapping defaults
-Date: Mon, 23 Jul 2018 16:46:56 +0300
-Message-Id: <20180723134706.15334-12-sakari.ailus@linux.intel.com>
+Subject: [PATCH 14/21] v4l: fwnode: Use default parallel flags
+Date: Mon, 23 Jul 2018 16:46:59 +0300
+Message-Id: <20180723134706.15334-15-sakari.ailus@linux.intel.com>
 In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
 References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
@@ -15,57 +15,91 @@ To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-Make use of the default CSI-2 lane mapping from caller-passed
-configuration.
+The caller may provide default flags for the endpoint. Change the
+configuration based on what is available through the fwnode property API.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 7c6513625f13..ed147b6fd315 100644
+index 1e64182b74dd..539f7ca940fd 100644
 --- a/drivers/media/v4l2-core/v4l2-fwnode.c
 +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -55,10 +55,14 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+@@ -184,31 +184,44 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 	bool is_parallel = false;
  	u32 v;
- 	int rval;
  
--	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY)
-+	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY) {
- 		num_data_lanes = min_t(u32, bus->num_data_lanes,
- 				       V4L2_FWNODE_CSI2_MAX_DATA_LANES);
- 
-+		for (i = 0; i < num_data_lanes; i++)
-+			array[i] = bus->data_lanes[i];
-+	}
++	if (bus_type == V4L2_MBUS_PARALLEL || bus_type == V4L2_MBUS_BT656)
++		flags = bus->flags;
 +
- 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
- 	if (rval > 0) {
- 		num_data_lanes =
-@@ -66,15 +70,15 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 
- 		fwnode_property_read_u32_array(fwnode, "data-lanes", array,
- 					       num_data_lanes);
-+	}
- 
--		for (i = 0; i < num_data_lanes; i++) {
--			if (lanes_used & BIT(array[i]))
--				pr_warn("duplicated lane %u in data-lanes\n",
--					array[i]);
--			lanes_used |= BIT(array[i]);
-+	for (i = 0; i < num_data_lanes; i++) {
-+		if (lanes_used & BIT(array[i]))
-+			pr_warn("duplicated lane %u in data-lanes\n",
-+				array[i]);
-+		lanes_used |= BIT(array[i]);
- 
--			pr_debug("lane %u position %u\n", i, array[i]);
--		}
-+		pr_debug("lane %u position %u\n", i, array[i]);
+ 	if (!fwnode_property_read_u32(fwnode, "hsync-active", &v)) {
++		flags &= ~(V4L2_MBUS_HSYNC_ACTIVE_HIGH |
++			   V4L2_MBUS_HSYNC_ACTIVE_LOW);
+ 		flags |= v ? V4L2_MBUS_HSYNC_ACTIVE_HIGH :
+ 			V4L2_MBUS_HSYNC_ACTIVE_LOW;
+ 		pr_debug("hsync-active %s\n", v ? "high" : "low");
  	}
  
- 	rval = fwnode_property_read_u32_array(fwnode, "lane-polarities", NULL,
+ 	if (!fwnode_property_read_u32(fwnode, "vsync-active", &v)) {
++		flags &= ~(V4L2_MBUS_VSYNC_ACTIVE_HIGH |
++			   V4L2_MBUS_VSYNC_ACTIVE_LOW);
+ 		flags |= v ? V4L2_MBUS_VSYNC_ACTIVE_HIGH :
+ 			V4L2_MBUS_VSYNC_ACTIVE_LOW;
+ 		pr_debug("vsync-active %s\n", v ? "high" : "low");
+ 	}
+ 
+ 	if (!fwnode_property_read_u32(fwnode, "field-even-active", &v)) {
++		flags &= ~(V4L2_MBUS_FIELD_EVEN_HIGH |
++			   V4L2_MBUS_FIELD_EVEN_LOW);
+ 		flags |= v ? V4L2_MBUS_FIELD_EVEN_HIGH :
+ 			V4L2_MBUS_FIELD_EVEN_LOW;
+ 		pr_debug("field-even-active %s\n", v ? "high" : "low");
+ 	}
+ 
+ 	if (!fwnode_property_read_u32(fwnode, "pclk-sample", &v)) {
++		flags &= ~(V4L2_MBUS_PCLK_SAMPLE_RISING |
++			   V4L2_MBUS_PCLK_SAMPLE_FALLING);
+ 		flags |= v ? V4L2_MBUS_PCLK_SAMPLE_RISING :
+ 			V4L2_MBUS_PCLK_SAMPLE_FALLING;
+ 		pr_debug("pclk-sample %s\n", v ? "high" : "low");
+ 	}
+ 
+ 	if (!fwnode_property_read_u32(fwnode, "data-active", &v)) {
++		flags &= ~(V4L2_MBUS_PCLK_SAMPLE_RISING |
++			   V4L2_MBUS_PCLK_SAMPLE_FALLING);
+ 		flags |= v ? V4L2_MBUS_DATA_ACTIVE_HIGH :
+ 			V4L2_MBUS_DATA_ACTIVE_LOW;
+ 		pr_debug("data-active %s\n", v ? "high" : "low");
+@@ -216,8 +229,10 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 
+ 	if (fwnode_property_present(fwnode, "slave-mode")) {
+ 		pr_debug("slave mode\n");
++		flags &= ~V4L2_MBUS_MASTER;
+ 		flags |= V4L2_MBUS_SLAVE;
+ 	} else {
++		flags &= ~V4L2_MBUS_SLAVE;
+ 		flags |= V4L2_MBUS_MASTER;
+ 	}
+ 
+@@ -234,12 +249,16 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 	}
+ 
+ 	if (!fwnode_property_read_u32(fwnode, "sync-on-green-active", &v)) {
++		flags &= ~(V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH |
++			   V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW);
+ 		flags |= v ? V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH :
+ 			V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW;
+ 		pr_debug("sync-on-green-active %s\n", v ? "high" : "low");
+ 	}
+ 
+ 	if (!fwnode_property_read_u32(fwnode, "data-enable-active", &v)) {
++		flags &= ~(V4L2_MBUS_DATA_ENABLE_HIGH |
++			   V4L2_MBUS_DATA_ENABLE_LOW);
+ 		flags |= v ? V4L2_MBUS_DATA_ENABLE_HIGH :
+ 			V4L2_MBUS_DATA_ENABLE_LOW;
+ 		pr_debug("data-enable-active %s\n", v ? "high" : "low");
 -- 
 2.11.0
 
