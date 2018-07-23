@@ -1,165 +1,48 @@
-From: Pengbo Mu <pengbo.mu@nxp.com>
-Subject: [PATCH v6 4/4] arm: arm64: dts: add property snps incr burst type adjustment
-Date: Mon, 23 Jul 2018 11:11:27 +0800
-Message-ID: <1532315487-23137-4-git-send-email-pengbo.mu@nxp.com>
-References: <1532315487-23137-1-git-send-email-pengbo.mu@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532315487-23137-1-git-send-email-pengbo.mu@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ran.wang_1@nxp.com, pengbo.mu@nxp.com
+From: Tony Xie <tony.xie@rock-chips.com>
+Subject: [PATCH 0/5] support a new type of PMIC，including two chips(rk817 and rk809)
+Date: Mon, 23 Jul 2018 11:19:00 +0800
+Message-ID: <1532315945-1094-1-git-send-email-tony.xie@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de
+Cc: linux-rtc@vger.kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, tony.xie@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, sboyd@kernel.org, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, xsf@rock-chips.com, linux-rockchip@lists.infradead.org, broonie@kernel.org, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chenjh@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Property "snps,incr-burst-type-adjustment = <x>, <y>..." for USB3.0
-DWC3.When only one value means INCRx mode with fix burst type.
-When more than one value, means undefined length burst mode, USB
-controller can use the length less than or equal to the largest
-enabled burst length.
-
-While enabling undefined length INCR burst type and INCR16 burst type,
-get better write performance on NXP Layerscape platforms: around 3%
-improvement (from 364MB/s to 375MB/s).
-
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Signed-off-by: Pengbo Mu <pengbo.mu@nxp.com>
----
-Changes in v6:
- - delete snps,incr-burst-type-adjustment = <1>
-Changes in v5:
- - add support for ls1021a, ls1012a, ls1046a, ls1088a, ls1021a
- - update ls208xa support according to code base change
-Changes in v4:
- - change definition for this property.
-Changes in v3:
- - add new property for INCR burst in usb node.
----
- arch/arm/boot/dts/ls1021a.dtsi                 | 1 +
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 1 +
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 +++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 2 ++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 2 ++
- 6 files changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index c55d479..7c328f3 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -706,6 +706,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		pcie@3400000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 205f0f4..8e3d66f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -482,6 +482,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		sata: sata@3200000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 1109f22..f826d20 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -643,6 +643,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb1: usb3@3000000 {
-@@ -652,6 +653,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb2: usb3@3100000 {
-@@ -661,6 +663,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		sata: sata@3200000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 136ebfa..9226be8 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -604,6 +604,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb1: usb@3000000 {
-@@ -613,6 +614,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb2: usb@3100000 {
-@@ -622,6 +624,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		sata: sata@3200000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 1c6556b..34671ee0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -479,6 +479,7 @@
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			status = "disabled";
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb1: usb3@3110000 {
-@@ -489,6 +490,7 @@
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			status = "disabled";
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		sata: sata@3200000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 137ef4d..c0762cc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -754,6 +754,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		usb1: usb3@3110000 {
-@@ -764,6 +765,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
- 		};
- 
- 		ccn@4000000 {
--- 
-2.7.4
+TW9zdCBvZiBmdW5jdGlvbnMgYW5kIHJlZ2lzdGVycyBvZiB0aGUgcms4MTcgYW5kIHJrODA4IGFy
+ZSB0aGUgc2FtZSwKc28gdGhleSBjYW4gc2hhcmUgYWxsbW9zdCBhbGwgY29kZXMuCgpUaGVpciBz
+cGVjaWZpY2F0aW9ucyBhcmUgYXMgZm9sbG93c++8mgogIDEpIFRoZSBSSzgwOSBhbmQgUks4MDkg
+Y29uc2lzdCBvZiA1IERDRENzLCA5IExET3MgYW5kIGhhdmUgdGhlIHNhbWUgcmVnaXN0ZXJzCiAg
+ICAgZm9yIHRoZXNlIGNvbXBvbmVudHMgZXhjZXB0IGRjZGM1LgogIDIpIFRoZSBkY2RjNSBpcyBh
+IGJvb3N0IGRjZGMgZm9yIFJLODE3IGFuZCBpcyBhIGJ1Y2sgZm9yIFJLODA5LgogIDMpIFRoZSBS
+SzgxNyBoYXMgb25lIHN3aXRjaCBidXQgVGhlIFJrODA5IGhhcyB0d28uCgpUb255IFhpZSAoNSk6
+CiAgbWZkOiByazgwODogQWRkIFJLODE3IGFuZCBSSzgwOSBzdXBwb3J0CiAgcmVndWxhdG9yOiBy
+azgwODogQWRkIHJlZ3VsYXRvciBkcml2ZXIgZm9yIFJLODA5IGFuZCBSSzgxNy4KICBtZmQ6IGR0
+LWJpbmRpbmdzOiBBZGQgUks4MDkgYW5kIFJLODE3IGRldmljZSB0cmVlIGJpbmRpbmdzIGRvY3Vt
+ZW50CiAgUlRDOiBSSzgwODogYWRkIFJUQyBkcml2ZXIgZm9yIFJLODA5IGFuZCBSSzgxNy4KICBj
+bGs6IFJLODA4OiBhZGQgY2xrb3V0IGRyaXZlciBmb3IgUks4MDkgYW5kIFJLODE3LgoKIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcms4MDgudHh0IHwgIDU1ICsrCiBkcml2
+ZXJzL2Nsay9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNiArLQogZHJp
+dmVycy9jbGsvY2xrLXJrODA4LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNjIgKystCiBk
+cml2ZXJzL21mZC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNiArLQog
+ZHJpdmVycy9tZmQvcms4MDguYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyMTYgKysr
+KysrKy0KIGRyaXZlcnMvcmVndWxhdG9yL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICA0ICstCiBkcml2ZXJzL3JlZ3VsYXRvci9yazgwOC1yZWd1bGF0b3IuYyAgICAgICAgICAgICB8
+IDYzMyArKysrKysrKysrKysrKysrKysrKysrKy0KIGRyaXZlcnMvcnRjL0tjb25maWcgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICstCiBkcml2ZXJzL3J0Yy9ydGMtcms4MDguYyAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICA2OCArKy0KIGluY2x1ZGUvbGludXgvbWZkL3JrODA4
+LmggICAgICAgICAgICAgICAgICAgICAgIHwgMTc1ICsrKysrKysKIDEwIGZpbGVzIGNoYW5nZWQs
+IDEyMDEgaW5zZXJ0aW9ucygrKSwgMjggZGVsZXRpb25zKC0pCgotLSAKMS45LjEKCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
