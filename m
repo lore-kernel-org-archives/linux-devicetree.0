@@ -1,40 +1,112 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V4 6/8] backlight: qcom-wled: Add support for WLED4
- peripheral
-Date: Mon, 23 Jul 2018 11:46:19 +0530
-Message-ID: <038029fded9ee724097685a3f0e8bdf9@codeaurora.org>
-References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
- <1531131741-19971-7-git-send-email-kgunda@codeaurora.org>
- <e5bdf2fe-321a-f2e5-22f5-c886f019ac1a@linaro.org>
- <20180720212128.GA13883@amd>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v3 00/18] arm64: allwinner: Add A64 DE2 HDMI support
+Date: Mon, 23 Jul 2018 14:32:43 +0800
+Message-ID: <f1e7e44df225728bd966dfc4034c57de67470ebe.camel@aosc.io>
+References: <20180718105458.22304-1-jagan@amarulasolutions.com>
+	 <20180718124448.2s2b3jxbsqt46cgu@flea>
+	 <CAD6G_RQQyS=zeqvhBP8vVf5sHZgLwqX1SP0SKLHea_L4Od3woQ@mail.gmail.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720212128.GA13883@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPXN2XNAKGQE53JMADQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAD6G_RQQyS=zeqvhBP8vVf5sHZgLwqX1SP0SKLHea_L4Od3woQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-07-21 02:51, Pavel Machek wrote:
-> Hi!
-> 
->> >@@ -332,6 +529,7 @@ static u32 wled_values(const struct wled_var_cfg *cfg, u32 idx)
->> >  }
->> >  #define	WLED3	3
->> >+#define	WLED4	4
->> 
->> Are these macros always going to define 3 to be 3 and 4 to be 4. If so 
->> we
->> probably don't need them (and they should be removed from patch 5/8 
->> too).
->> 
->> There is a degree of nitpicking here however. The rest looks OK to me.
-> 
-> Really nitpicking, and I don't care much either way, but as natural
-> numbering would be 0-based, I'd keep the defines.
-> 									Pavel
-Thanks Pavale/Daniel! I will remove the macros and use the number 3 and 
-4 instead.
+=E5=9C=A8 2018-07-18=E4=B8=89=E7=9A=84 18:26 +0530=EF=BC=8CJagan Teki=E5=86=
+=99=E9=81=93=EF=BC=9A
+> On Wed, Jul 18, 2018 at 6:14 PM, Maxime Ripard
+> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > On Wed, Jul 18, 2018 at 04:24:40PM +0530, Jagan Teki wrote:
+> > > Allwinner A64 has display engine pipeline like other Allwinner
+> > > SOC's A83T/H3/H5.
+> > >=20
+> > > A64 behaviour similar to Allwinner A83T where
+> > > Mixer0 =3D> TCON0 =3D> LVDS/RGB/MIPI-DSI
+> > > Mixer1 =3D> TCON1 =3D> HDMI
+> > > as per Display System Block Diagram from
+> > > Allwinner_A64_User_Manual_V1.1.pdf
+> > >=20
+> > > This is third patch-set followed with previous RFC[1], first and
+> > > second
+> > > series[2][3] and merely concentrated on HDMI pipeline through
+> > > TCON1 and
+> > > rest will add eventually.
+> > >=20
+> > > This series fixed previous version comments
+> > > - Rebasing on linux-next
+> > > - sqash all pipeline components in one patch
+> > > - Enable all pipeline components in board dts
+> > > - about documenting fallback compatibles
+> > > - adding new compatible for mixer1
+> >=20
+> > You still haven't figured out the SRAM parts. We asked you to fix
+> > this
+> > in the v1 and the v2 already, and we're not going to merge this
+> > without those bits figured out properly.
+>=20
+> Sorry I'm not sure what I'm trying to do on SRAM here because the
+> last
+> mail, I have waited for Icenowy changes about simple_fb with sram_c
+> on
+> ccu node and those are merged. can you elaborate please.
+
+Would you mind me advance the patchset a bit and send a PATCH v3.1?
+
+I won't finally take the maintainership of the patchset.
+
+>=20
+> >=20
+> > > Log:
+> > > [    1.450984] Jagan: sun8i_mixer_probe
+> > > [    1.464981] sun4i-drm display-engine: bound 1200000.mixer (ops
+> > > sun8i_mixer_ops)
+> > > [    1.472572] sun4i-drm display-engine: bound 1c0d000.lcd-
+> > > controller (ops sun4i_tcon_ops)
+> > > [    1.480676] sun8i-dw-hdmi 1ee0000.hdmi: Linked as a consumer
+> > > to regulator.10
+> > > [    1.488738] sun8i-dw-hdmi 1ee0000.hdmi: Detected HDMI TX
+> > > controller v1.32a with HDCP (sun8i_dw_hdmi_phy)
+> > > [    1.498879] sun8i-dw-hdmi 1ee0000.hdmi: registered DesignWare
+> > > HDMI I2C bus driver
+> > > [    1.507372] sun4i-drm display-engine: bound 1ee0000.hdmi (ops
+> > > sun8i_dw_hdmi_ops)
+> > > [    1.514778] [drm] Supports vblank timestamp caching Rev 2
+> > > (21.10.2013).
+> > > [    1.521398] [drm] No driver support for vblank timestamp
+> > > query.
+> > > [    1.684611] random: fast init done
+> > > [    2.011575] Console: switching to colour frame buffer device
+> > > 180x56
+> > > [    2.049858] sun4i-drm display-engine: fb0: DRM emulated frame
+> > > buffer device
+> > > [    2.057268] [drm] Initialized sun4i-drm 1.0.0 20150629 for
+> > > display-engine on minor 0
+> > >=20
+> > > Note:
+> > > Pine64 boards are unable to get edid by default like other A64
+> > > boards,
+> > > but forcing 'video=3DHDMI-A-1:1920x1080@60D' kernel command line
+> > > can
+> > > create edid with display on penel
+> >=20
+> > Then that needs to be figured out before it's enabled, instead of
+> > having a hack that barely works.
+>=20
+> Any suggestion to work.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
