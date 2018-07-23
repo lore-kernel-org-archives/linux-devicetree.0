@@ -1,90 +1,123 @@
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: adc: add bindings for mcp3911
-Date: Mon, 23 Jul 2018 10:36:13 +0200
-Message-ID: <20180723083613.GA13016@gmail.com>
-References: <20180721195923.7610-1-marcus.folkesson@gmail.com>
- <20180721195923.7610-2-marcus.folkesson@gmail.com>
- <20180722091111.6c55602f@archlinux>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+From: Tony Xie <tony.xie@rock-chips.com>
+Subject: [PATCH 5/5] clk: RK808: add clkout driver for RK809 and RK817.
+Date: Mon, 23 Jul 2018 16:40:33 +0800
+Message-ID: <1532335234-23765-1-git-send-email-tony.xie@rock-chips.com>
+References: <1532315945-1094-1-git-send-email-tony.xie@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180722091111.6c55602f@archlinux>
+In-Reply-To: <1532315945-1094-1-git-send-email-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Kent Gustavsson <kent@minoris.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: heiko@sntech.de
+Cc: broonie@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+RK809 and RK817 are power management IC chips for multimedia products.
+most of their functions and registers are same, including the clkout
+funciton.
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+---
+ drivers/clk/Kconfig     |  6 ++---
+ drivers/clk/clk-rk808.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 64 insertions(+), 4 deletions(-)
 
-Hi Jonathan,
-
-On Sun, Jul 22, 2018 at 09:11:11AM +0100, Jonathan Cameron wrote:
-> On Sat, 21 Jul 2018 21:59:22 +0200
-> Marcus Folkesson <marcus.folkesson@gmail.com> wrote:
->=20
-
-[snip]
-
-> > +Optional properties:
-> > + - device-addr: Device address when multiple MCP3911 chips are present=
- on the
-> > +	same SPI bus. Valid values are 0-3. Defaults to 0.
-> > + - external-clock: Use external clock instead of crystal oscillator.
-> As mentioned, in the code, can we use the standard fixed clock bindings h=
-ere.
-> We don't actually care what the value is, but it might be nice to be able=
- to
-> power down the clock if we are suspending or something..
->=20
-> > + - external-vref: Use external voltage reference
-> > + - vref-supply:	Phandle to the external reference voltage supply. (onl=
-y valid in combination with `external-vref`)
->=20
-> Just use the optional regulator stuff and get rid of the bool.
->=20
-> > + - ch0-width: width for channel0. Valid widths are 16 and 24bits.
-> > + - ch1-width: width for channel1. Valid widths are 16 and 24bits.
->=20
-> As I asked in the code, are these a function of the wiring etc or are
-> they something we should really be leaving up to userspace (with a sensib=
-le
-> default).
->=20
-
-
-I agree with all of your comments.
-I will remove the channel width properties and fix the regulator/clock
-bindings.
-
-Thanks,
-
-Best regards
-Marcus Folkesson
-
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAltVk3gACgkQiIBOb1ld
-UjKoRg/9EfioKOruahSRmFCbX8GMzfRfNv2zyqdbKgaOCYSvBex1mYdNRbvmWCyA
-pGFmyXsrrXhB0t0UY/tsRdio92vxhfdhUgcYtVbt6dcwLXd9tTESeQ7sjsLTkm+i
-OxnmgKLwXX5VfS31rq4nZPExvY0XI0Qiz6gaVn9tmp0ioJZZ1MM0EO6rlSNhAdGT
-3nVlyhWqfNe8KRjEMSUGsdvFZYIlMMoDxqkRMid8WkqnLi5WkW+h3cZ7645ROARz
-161w8Dx2HJDdfNMFCzkKcYtVt/tPYCkImNsbDQ2DR6USNmnwMDlwtKEw/uRBRnYz
-y7Vl4CYX295uIN3bmSnHRo4DMrSnBstn1w0fCfbx8bZk0mX5GvIHitWSwCRvuuOc
-3gJSJtuk1mDufvceUhf4ZayOvzla3/o+NiCBxr4DhHPWVBfPdEHPUMVHISidw+bG
-hP17n9qy/L1xGIVKNcY958M3EB2H7oy7FGAkZsGOSuEYD8mtP0O2aJrVbIope0lz
-ty/huysyVoTb2LQj3FVXdfQCO46JxyoIqqDeA1v1hc8pGgUuaROIKdsJxkolaNSg
-DxMmIcMyHx8B51Avn8fQhr+WQZmaLkKSInotpvm/dz9fcLH34xYkMSUaTLohb9/P
-PRsLexWLC4noPMrCIJrNm7EFZH6GoDl6sUeJKgN6u+0G+Q9Ms58=
-=Wv8b
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 721572a..fc1427c 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -46,11 +46,11 @@ config COMMON_CLK_MAX77686
+ 	  clock.
+ 
+ config COMMON_CLK_RK808
+-	tristate "Clock driver for RK805/RK808/RK818"
++	tristate "Clock driver for RK805/RK808/RK809/RK817/RK818"
+ 	depends on MFD_RK808
+ 	---help---
+-	  This driver supports RK805, RK808 and RK818 crystal oscillator clock. These
+-	  multi-function devices have two fixed-rate oscillators,
++	  This driver supports RK805, RK809 and RK817, RK808 and RK818 crystal oscillator clock.
++          These multi-function devices have two fixed-rate oscillators,
+ 	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
+ 	  by control register.
+ 
+diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
+index 6461f28..c5d3492 100644
+--- a/drivers/clk/clk-rk808.c
++++ b/drivers/clk/clk-rk808.c
+@@ -96,6 +96,66 @@ static int rk808_clkout2_is_prepared(struct clk_hw *hw)
+ 	return idx ? &rk808_clkout->clkout2_hw : &rk808_clkout->clkout1_hw;
+ }
+ 
++static int rk817_clkout2_enable(struct clk_hw *hw, bool enable)
++{
++	struct rk808_clkout *rk808_clkout = container_of(hw,
++							 struct rk808_clkout,
++							 clkout2_hw);
++	struct rk808 *rk808 = rk808_clkout->rk808;
++
++	return regmap_update_bits(rk808->regmap, RK817_SYS_CFG(1),
++				  RK817_CLK32KOUT2_EN,
++				  enable ? RK817_CLK32KOUT2_EN : 0);
++}
++
++static int rk817_clkout2_prepare(struct clk_hw *hw)
++{
++	return rk817_clkout2_enable(hw, true);
++}
++
++static void rk817_clkout2_unprepare(struct clk_hw *hw)
++{
++	rk817_clkout2_enable(hw, false);
++}
++
++static int rk817_clkout2_is_prepared(struct clk_hw *hw)
++{
++	struct rk808_clkout *rk808_clkout = container_of(hw,
++							 struct rk808_clkout,
++							 clkout2_hw);
++	struct rk808 *rk808 = rk808_clkout->rk808;
++	unsigned int val;
++
++	int ret = regmap_read(rk808->regmap, RK817_SYS_CFG(1), &val);
++
++	if (ret < 0)
++		return ret;
++
++	return (val & RK817_CLK32KOUT2_EN) ? 1 : 0;
++}
++
++static const struct clk_ops rk817_clkout2_ops = {
++	.prepare = rk817_clkout2_prepare,
++	.unprepare = rk817_clkout2_unprepare,
++	.is_prepared = rk817_clkout2_is_prepared,
++	.recalc_rate = rk808_clkout_recalc_rate,
++};
++
++static const struct clk_ops *rkpmic_get_ops(long variant)
++{
++	switch (variant) {
++	case RK809_ID:
++	case RK817_ID:
++		return &rk817_clkout2_ops;
++	case RK805_ID:
++	case RK808_ID:
++	case RK818_ID:
++		return &rk808_clkout2_ops;
++	}
++
++	return &rk808_clkout2_ops;
++}
++
+ static int rk808_clkout_probe(struct platform_device *pdev)
+ {
+ 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+@@ -127,7 +187,7 @@ static int rk808_clkout_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	init.name = "rk808-clkout2";
+-	init.ops = &rk808_clkout2_ops;
++	init.ops = rkpmic_get_ops(rk808->variant);
+ 	rk808_clkout->clkout2_hw.init = &init;
+ 
+ 	/* optional override of the clockname */
+-- 
+1.9.1
