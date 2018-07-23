@@ -1,101 +1,61 @@
-From: Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH 2/4] power: supply: max17040: Config alert SOC low level threshold from FDT
-Date: Mon, 23 Jul 2018 00:08:14 -0400
-Message-ID: <20180723040816.19455-3-matheus@castello.eng.br>
-References: <20180723040816.19455-1-matheus@castello.eng.br>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723040816.19455-1-matheus@castello.eng.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matheus Castello <matheus@castello.eng.br>
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: Re: [PATCH] ARM: dts: spear: fix stmpe811 interrupt properties
+Date: Mon, 23 Jul 2018 06:34:31 +0200
+Message-ID: <883F78E9-45F8-4AA7-9702-330027ADD741@ziswiler.com>
+References: <20180720075356.26156-1-marcel@ziswiler.com>
+ <20180723025747.ykxeqogyfn6wskvo@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180723025747.ykxeqogyfn6wskvo@vireshk-i7>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Viresh Kumar <vireshk@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-For configuration of fuel gauge alert for a low level state of charge
-interrupt we add a function to config level threshold and a device tree
-binding property to set it in flatned device tree node.
 
-Now we can use "maxim,alert-soc-level" property with the values from
-1 up to 32 to configure alert interrupt threshold.
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- drivers/power/supply/max17040_battery.c | 36 +++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+On July 23, 2018 4:57:47 AM GMT+02:00, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>On 20-07-18, 09:53, Marcel Ziswiler wrote:
+>> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>> 
+>> The property "irq-over-gpio" simply does not exist (this is nowadays
+>> actually auto detected) and the property "irq-gpios" is actually
+>called
+>> "irq-gpios".
+>
+>  "irq-gpio" ?
 
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 6e54e58814a9..3efa52d32b44 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -47,6 +47,8 @@ struct max17040_chip {
- 	int soc;
- 	/* State Of Charge */
- 	int status;
-+	/* Alert threshold */
-+	int alert_threshold;
- };
- 
- static int max17040_get_property(struct power_supply *psy,
-@@ -123,6 +125,28 @@ static void max17040_get_soc(struct i2c_client *client)
- 	chip->soc = (soc >> 8);
- }
- 
-+static int max17040_set_soc_threshold(struct i2c_client *client, u8 level)
-+{
-+	int ret;
-+	u16 data;
-+
-+	/* check if level is between 1% and 32% */
-+	if (level > 0 && level < 33) {
-+		/* alert threshold use LSb 5 bits from RCOMP */
-+		/* two's-complements form: 00000 = 32% and 11111 = 1% */
-+		level = 32 - level;
-+		data = max17040_read_reg(client, MAX17040_RCOMP);
-+		data &= 0xFFE0;
-+		data |= level;
-+		max17040_write_reg(client, MAX17040_RCOMP, data);
-+		ret = 0;
-+	} else {
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
- static void max17040_get_version(struct i2c_client *client)
- {
- 	u16 version;
-@@ -165,6 +189,16 @@ static void max17040_get_status(struct i2c_client *client)
- 		chip->status = POWER_SUPPLY_STATUS_FULL;
- }
- 
-+static void max17040_get_of_data(struct max17040_chip *chip)
-+{
-+	struct device *dev = &chip->client->dev;
-+	struct device_node *np = dev->of_node;
-+
-+	if (of_property_read_s32(np, "maxim,alert-soc-level",
-+			&chip->alert_threshold))
-+		chip->alert_threshold = 4;
-+}
-+
- static void max17040_work(struct work_struct *work)
- {
- 	struct max17040_chip *chip;
-@@ -231,6 +265,7 @@ static int max17040_probe(struct i2c_client *client,
- 
- 	chip->client = client;
- 	chip->pdata = client->dev.platform_data;
-+	max17040_get_of_data(chip);
- 
- 	i2c_set_clientdata(client, chip);
- 	psy_cfg.drv_data = chip;
-@@ -262,6 +297,7 @@ static int max17040_probe(struct i2c_client *client,
- 
- 	max17040_reset(client);
- 	max17040_get_version(client);
-+	max17040_set_soc_threshold(client, chip->alert_threshold);
- 
- 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
--- 
-2.13.3
+Yes, of course. Too many s' (;-p).
+
+>> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>> 
+>> ---
+>> 
+>>  arch/arm/boot/dts/spear320-hmi.dts | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>> 
+>> diff --git a/arch/arm/boot/dts/spear320-hmi.dts
+>b/arch/arm/boot/dts/spear320-hmi.dts
+>> index 0d0da1f65f0e..d2d1fe944407 100644
+>> --- a/arch/arm/boot/dts/spear320-hmi.dts
+>> +++ b/arch/arm/boot/dts/spear320-hmi.dts
+>> @@ -241,8 +241,7 @@
+>>  					#address-cells = <1>;
+>>  					#size-cells = <0>;
+>>  					reg = <0x41>;
+>> -					irq-over-gpio;
+>> -					irq-gpios = <&gpiopinctrl 29 0x4>;
+>> +					irq-gpio = <&gpiopinctrl 29 0x4>;
+>>  					id = <0>;
+>>  					blocks = <0x5>;
+>>  					irq-trigger = <0x1>;
