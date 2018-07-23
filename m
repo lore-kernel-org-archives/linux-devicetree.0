@@ -1,45 +1,146 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v3 0/2] Re-Enable support to disable switch regulators
-Date: Mon, 23 Jul 2018 09:47:45 +0200
-Message-ID: <20180723074747.9328-1-m.felsch@pengutronix.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v7 1/4] remoteproc/davinci: use the reset framework
+Date: Mon, 23 Jul 2018 10:03:20 +0200
+Message-ID: <CAMRc=Mcqe7VgkckL3e9GmM7fNYe=a7OO1hEv-Nyh1yiMNwfzfw@mail.gmail.com>
+References: <20180621073706.22812-1-brgl@bgdev.pl> <20180621073706.22812-2-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180621073706.22812-2-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org
-Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, kernel@pengutronix.de, Anson.Huang@nxp.com, linux-kernel@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+2018-06-21 9:37 GMT+02:00 Bartosz Golaszewski <brgl@bgdev.pl>:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Switch to using the reset framework instead of handcoded reset routines
+> we used so far.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  drivers/remoteproc/da8xx_remoteproc.c | 34 +++++++++++++++++++++++----
+>  1 file changed, 29 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+> index b668e32996e2..76c06b70a1c6 100644
+> --- a/drivers/remoteproc/da8xx_remoteproc.c
+> +++ b/drivers/remoteproc/da8xx_remoteproc.c
+> @@ -10,6 +10,7 @@
+>
+>  #include <linux/bitops.h>
+>  #include <linux/clk.h>
+> +#include <linux/reset.h>
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> @@ -20,8 +21,6 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/remoteproc.h>
+>
+> -#include <mach/clock.h>   /* for davinci_clk_reset_assert/deassert() */
+> -
+>  #include "remoteproc_internal.h"
+>
+>  static char *da8xx_fw_name;
+> @@ -72,6 +71,7 @@ struct da8xx_rproc {
+>         struct da8xx_rproc_mem *mem;
+>         int num_mems;
+>         struct clk *dsp_clk;
+> +       struct reset_control *dsp_reset;
+>         void (*ack_fxn)(struct irq_data *data);
+>         struct irq_data *irq_data;
+>         void __iomem *chipsig;
+> @@ -138,6 +138,7 @@ static int da8xx_rproc_start(struct rproc *rproc)
+>         struct device *dev = rproc->dev.parent;
+>         struct da8xx_rproc *drproc = (struct da8xx_rproc *)rproc->priv;
+>         struct clk *dsp_clk = drproc->dsp_clk;
+> +       struct reset_control *dsp_reset = drproc->dsp_reset;
+>         int ret;
+>
+>         /* hw requires the start (boot) address be on 1KB boundary */
+> @@ -155,7 +156,12 @@ static int da8xx_rproc_start(struct rproc *rproc)
+>                 return ret;
+>         }
+>
+> -       davinci_clk_reset_deassert(dsp_clk);
+> +       ret = reset_control_deassert(dsp_reset);
+> +       if (ret) {
+> +               dev_err(dev, "reset_control_deassert() failed: %d\n", ret);
+> +               clk_disable_unprepare(dsp_clk);
+> +               return ret;
+> +       }
+>
+>         return 0;
+>  }
+> @@ -163,8 +169,15 @@ static int da8xx_rproc_start(struct rproc *rproc)
+>  static int da8xx_rproc_stop(struct rproc *rproc)
+>  {
+>         struct da8xx_rproc *drproc = rproc->priv;
+> +       struct device *dev = rproc->dev.parent;
+> +       int ret;
+> +
+> +       ret = reset_control_assert(drproc->dsp_reset);
+> +       if (ret) {
+> +               dev_err(dev, "reset_control_assert() failed: %d\n", ret);
+> +               return ret;
+> +       }
+>
+> -       davinci_clk_reset_assert(drproc->dsp_clk);
+>         clk_disable_unprepare(drproc->dsp_clk);
+>
+>         return 0;
+> @@ -232,6 +245,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
+>         struct resource *bootreg_res;
+>         struct resource *chipsig_res;
+>         struct clk *dsp_clk;
+> +       struct reset_control *dsp_reset;
+>         void __iomem *chipsig;
+>         void __iomem *bootreg;
+>         int irq;
+> @@ -268,6 +282,15 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
+>                 return PTR_ERR(dsp_clk);
+>         }
+>
+> +       dsp_reset = devm_reset_control_get_exclusive(dev, NULL);
+> +       if (IS_ERR(dsp_reset)) {
+> +               if (PTR_ERR(dsp_reset) != -EPROBE_DEFER)
+> +                       dev_err(dev, "unable to get reset control: %ld\n",
+> +                               PTR_ERR(dsp_reset));
+> +
+> +               return PTR_ERR(dsp_reset);
+> +       }
+> +
+>         if (dev->of_node) {
+>                 ret = of_reserved_mem_device_init(dev);
+>                 if (ret) {
+> @@ -287,6 +310,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
+>         drproc = rproc->priv;
+>         drproc->rproc = rproc;
+>         drproc->dsp_clk = dsp_clk;
+> +       drproc->dsp_reset = dsp_reset;
+>         rproc->has_iommu = false;
+>
+>         ret = da8xx_rproc_get_internal_memories(pdev, drproc);
+> @@ -309,7 +333,7 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
+>          * *not* in reset, but da8xx_rproc_start() needs the DSP to be
+>          * held in reset at the time it is called.
+>          */
+> -       ret = davinci_clk_reset_assert(drproc->dsp_clk);
+> +       ret = reset_control_assert(dsp_reset);
+>         if (ret)
+>                 goto free_rproc;
+>
+> --
+> 2.17.1
+>
 
-Anson had added the support to disable the switched regulators, but
-there were regressions [1] with old dtb's, so the commit was reverted [2].
-At all, the support to disable the switch regulators seems to me to be a
-good feature. But we have to add a special dt-property to avoid
-regressions with older kernels. The property allows the user to decide if
-the switch regulators should be disabled or not.
+Hi Bjorn, Sekhar,
 
-Since the revert patch is on Marks regulator repo, my patches are based
-on his repo too. Each commit has a changelog, so I ommit it here. I
-tested it on a custom board.
+I'm not seeing this patch in next, did you agree on how to pick it up for 4.19?
 
-Used Kernel:
-Repo:
-git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
-Branch:
-regulator/for-4.19
-
-Regards,
-Marco
-
-[1] https://patchwork.kernel.org/patch/10490381/
-[2] https://patchwork.kernel.org/patch/10500333/
-
-Marco Felsch (2):
-  dt-bindings: pfuze100: add optional disable switch-regulators binding
-  regulator: pfuze100: add support to en-/disable switch regulators
-
- .../bindings/regulator/pfuze100.txt           |  9 +++++
- drivers/regulator/pfuze100-regulator.c        | 36 +++++++++++++++++++
- 2 files changed, 45 insertions(+)
-
--- 
-2.18.0
+Thanks in advance,
+Bartosz
