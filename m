@@ -1,47 +1,42 @@
-Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56350 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388132AbeGWOsc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Jul 2018 10:48:32 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 21/21] smiapp: Query the V4L2 endpoint for a specific bus type
-Date: Mon, 23 Jul 2018 16:47:06 +0300
-Message-Id: <20180723134706.15334-22-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+MIME-Version: 1.0
+Date: Mon, 23 Jul 2018 07:20:00 -0600
+References: <20180717125729.23045-1-vkoul@kernel.org>
+	<20180717125729.23045-2-vkoul@kernel.org>
+	<20180720180318.GA14573@rob-hp-laptop>
+	<20180723035436.GV3219@vkoul-mobl>
+In-Reply-To: <20180723035436.GV3219@vkoul-mobl>
+Message-ID: <CAL_Jsq+WOMp2ZtEkk9rp42tzfVD=2-4yJKz1BerbQ=O4BW_Uow@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i2c: Add binding document for
+ Qualcomm CCI
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Vinod <vkoul@kernel.org>
+Cc: Linux I2C <linux-i2c@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Instead of opportunistically trying to gather some information from the
-V4L2 endpoint, set the bus type and let the V4L2 fwnode framework figure
-out the configuration.
+On Sun, Jul 22, 2018 at 9:54 PM Vinod <vkoul@kernel.org> wrote:
+>
+> On 20-07-18, 12:03, Rob Herring wrote:
+> > On Tue, Jul 17, 2018 at 06:27:28PM +0530, Vinod Koul wrote:
+> > > From: Todor Tomov <todor.tomov@linaro.org>
+>
+> > > +Required properties:
+> > > + - compatible: Should be one of:
+> > > +   - "qcom,cci-v1.0.8" for 8916;
+> > > +   - "qcom,cci-v1.4.0" for 8996.
+> >
+> > It's not very convincing to use version numbers instead of normal SoC
+> > part# convention when there is a 1-1 mapping.
+>
+> I was under the impression that we don't have 1-1 mapping. An IP version
+> is found in multiple SoCs
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/i2c/smiapp/smiapp-core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Maybe so, but I'm only looking at what is getting upstream. We already
+discussed this at length on the thermal binding[1].
 
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 048ab6cfaa97..0d660349b13c 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -2775,7 +2775,13 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
- 	if (!ep)
- 		return NULL;
- 
-+	bus_cfg.bus_type = V4L2_MBUS_CSI2_DPHY;
- 	rval = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
-+	if (rval == -ENXIO) {
-+		bus_cfg = (struct v4l2_fwnode_endpoint)
-+			{ .bus_type = V4L2_MBUS_CCP2 };
-+		rval = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
-+	}
- 	if (rval)
- 		goto out_err;
- 
--- 
-2.11.0
+As you've written it, we'll still have to update the doc to add other
+chips for an already documented version.
 
+Rob
+
+[1] https://lkml.org/lkml/2018/7/5/830
