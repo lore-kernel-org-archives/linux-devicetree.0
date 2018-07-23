@@ -1,234 +1,91 @@
-Return-Path: <SRS0=htSe=KB=monstr.eu=monstr@kernel.org>
-Reply-To: monstr@monstr.eu
-Subject: Re: [PATCHv3] arm: dts: zynq: Add support for Z-turn board
-References: <20180306213008.32448-1-tossel@gmail.com>
- <20180328141734.9811-1-tossel@gmail.com>
- <9050d8e3-ed4b-bae7-504d-5106de14e82d@xilinx.com>
-From: Michal Simek <monstr@monstr.eu>
-Message-ID: <74de5e95-230e-d9db-78fd-f8a5d3f40a71@monstr.eu>
-Date: Tue, 17 Jul 2018 15:49:39 +0200
-MIME-Version: 1.0
-In-Reply-To: <9050d8e3-ed4b-bae7-504d-5106de14e82d@xilinx.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="D7ElqfjmNXPeS06vklCSxhNhybN8qw7nN"
-To: Michal Simek <michals@xilinx.com>, Anton Gerasimov <tossel@gmail.com>, devicetree@vger.kernel.org
-Cc: michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56342 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388287AbeGWOsc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Jul 2018 10:48:32 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 20/21] v4l: fwnode: Update V4L2 fwnode endpoint parsing documentation
+Date: Mon, 23 Jul 2018 16:47:05 +0300
+Message-Id: <20180723134706.15334-21-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-ID: <devicetree@vger.kernel.org>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---D7ElqfjmNXPeS06vklCSxhNhybN8qw7nN
-Content-Type: multipart/mixed; boundary="4W3M6yMPh7eh3xAfbFX2xDurFt8VsYSB0";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-Reply-To: monstr@monstr.eu
-To: Michal Simek <michals@xilinx.com>, Anton Gerasimov <tossel@gmail.com>,
- devicetree@vger.kernel.org
-Cc: michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com,
- linux@armlinux.org.uk
-Message-ID: <74de5e95-230e-d9db-78fd-f8a5d3f40a71@monstr.eu>
-Subject: Re: [PATCHv3] arm: dts: zynq: Add support for Z-turn board
-References: <20180306213008.32448-1-tossel@gmail.com>
- <20180328141734.9811-1-tossel@gmail.com>
- <9050d8e3-ed4b-bae7-504d-5106de14e82d@xilinx.com>
-In-Reply-To: <9050d8e3-ed4b-bae7-504d-5106de14e82d@xilinx.com>
+The semantics of v4l2_fwnode_endpoint_parse() and
+v4l2_fwnode_endpoint_alloc_parse() have changed slightly: they now take
+the bus type from the user as well as a default configuration for the bus
+that shall reflect the DT binding defaults. Document this.
 
---4W3M6yMPh7eh3xAfbFX2xDurFt8VsYSB0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/v4l2-core/v4l2-fwnode.c |  3 ++-
+ include/media/v4l2-fwnode.h           | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 29 insertions(+), 2 deletions(-)
 
-On 4.4.2018 08:56, Michal Simek wrote:
-> On 28.3.2018 16:17, Anton Gerasimov wrote:
->> Add a dts for MYIR Z-turn board and respective target in Makefile.
->>
->> Signed-off-by: Anton Gerasimov <tossel@gmail.com>
->> ---
->>  arch/arm/boot/dts/Makefile       |   1 +
->>  arch/arm/boot/dts/zynq-zturn.dts | 124 ++++++++++++++++++++++++++++++=
-+++++++++
->>  2 files changed, 125 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/zynq-zturn.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index ade7a38543dc..4daa7d5d4db4 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -1067,6 +1067,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
->>  	zynq-zc702.dtb \
->>  	zynq-zc706.dtb \
->>  	zynq-zed.dtb \
->> +	zynq-zturn.dtb \
->>  	zynq-zybo.dtb
->>  dtb-$(CONFIG_MACH_ARMADA_370) +=3D \
->>  	armada-370-db.dtb \
->> diff --git a/arch/arm/boot/dts/zynq-zturn.dts b/arch/arm/boot/dts/zynq=
--zturn.dts
->> new file mode 100644
->> index 000000000000..8aa384b59b7f
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/zynq-zturn.dts
->> @@ -0,0 +1,124 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + *  Copyright (C) 2015 Andrea Merello <adnrea.merello@gmail.com>
->> + *  Copyright (C) 2017 Alexander Graf <agraf@suse.de>
->> + *
->> + *  Based on zynq-zed.dts which is:
->> + *  Copyright (C) 2011 - 2014 Xilinx
->> + *  Copyright (C) 2012 National Instruments Corp.
->> + *
->> + */
->> +
->> +/dts-v1/;
->> +/include/ "zynq-7000.dtsi"
->> +
->> +/ {
->> +	model =3D "Zynq Z-Turn MYIR Board";
->> +	compatible =3D "myir,zynq-zturn", "xlnx,zynq-7000";
->> +
->> +	aliases {
->> +		ethernet0 =3D &gem0;
->> +		serial0 =3D &uart1;
->> +		serial1 =3D &uart0;
->> +		mmc0 =3D &sdhci0;
->> +	};
->> +
->> +	memory@0 {
->> +		device_type =3D "memory";
->> +		reg =3D <0x0 0x40000000>;
->> +	};
->> +
->> +	chosen {
->> +		stdout-path =3D "serial0:115200n8";
->> +	};
->> +
->> +	gpio-leds {
->> +		compatible =3D "gpio-leds";
->> +		usr-led1 {
->> +			label =3D "usr-led1";
->> +			gpios =3D <&gpio0 0x0 0x1>;
->> +			default-state =3D "off";
->> +		};
->> +
->> +		usr-led2 {
->> +			label =3D "usr-led2";
->> +			gpios =3D <&gpio0 0x9 0x1>;
->> +			default-state =3D "off";
->> +		};
->> +	};
->> +
->> +	gpio-keys {
->> +		compatible =3D "gpio-keys";
->> +		#address-cells =3D <1>;
->> +		#size-cells =3D <0>;
->> +		autorepeat;
->> +		K1 {
->> +			label =3D "K1";
->> +			gpios =3D <&gpio0 0x32 0x1>;
->> +			linux,code =3D <0x66>;
->> +			gpio-key,wakeup;
->> +			autorepeat;
->> +		};
->> +	};
->> +};
->> +
->> +&clkc {
->> +	ps-clk-frequency =3D <33333333>;
->> +};
->> +
->> +&qspi {
->> +	u-boot,dm-pre-reloc;
->> +	status =3D "okay";
->> +};
->> +
->> +&gem0 {
->> +	status =3D "okay";
->> +	phy-mode =3D "rgmii-id";
->> +	phy-handle =3D <&ethernet_phy>;
->> +
->> +	ethernet_phy: ethernet-phy@0 {
->> +		reg =3D <0x0>;
->> +	};
->> +};
->> +
->> +&sdhci0 {
->> +	u-boot,dm-pre-reloc;
->> +	status =3D "okay";
->> +};
->> +
->> +&uart0 {
->> +	u-boot,dm-pre-reloc;
->> +	status =3D "okay";
->> +};
->> +
->> +&uart1 {
->> +	u-boot,dm-pre-reloc;
->> +	status =3D "okay";
->> +};
->> +
->> +&usb0 {
->> +	status =3D "okay";
->> +	dr_mode =3D "host";
->> +};
->> +
->> +&can0 {
->> +	status =3D "okay";
->> +};
->> +
->> +&i2c0 {
->> +	status =3D "okay";
->> +	clock-frequency =3D <400000>;
->> +
->> +	stlm75@49 {
->> +		status =3D "okay";
->> +		compatible =3D "lm75";
->> +		reg =3D <0x49>;
->> +	};
->> +
->> +	accelerometer@53 {
->> +		compatible =3D "adi,adxl345", "adxl345", "adi,adxl34x", "adxl34x";
->> +		reg =3D <0x53>;
->> +		interrupt-parent =3D <&intc>;
->> +		interrupts =3D <0x0 0x1e 0x4>;
->> +	};
->> +};
->>
->=20
-> Thanks for v3 and sync with U-Boot.
->=20
-> Applied.
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 04ddac86aec2..39491c6435ce 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -484,7 +484,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		break;
+ 	case V4L2_MBUS_PARALLEL:
+ 	case V4L2_MBUS_BT656:
+-		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, vep->bus_type);
++		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep,
++							vep->bus_type);
+ 
+ 		break;
+ 	default:
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index 4cef723a6ad9..7cad3b2756ec 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -139,6 +139,20 @@ struct v4l2_fwnode_link {
+  * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
+  * reference to @fwnode.
+  *
++ * The caller is responsible for assigning @vep.bus_type to a valid media bus
++ * type, or alternatively V4L2_MBUS_UNKNOWN. Depending on the hardware, the
++ * information may also be read from the firmware. As a compatibility means
++ * guessing the bus type is also supported. Mismatching bus types in the V4L2
++ * fwnode endpoint and in firmware will also yield an error (-ENXIO).
++ *
++ * The user may also set the default parameters for the bus if the bus type is
++ * explicitly set by the user. In particular, the user may set the default
++ * number of CSI-2 lanes but without assigning lane mapping, in which case the
++ * defaults (clock lane 0, data lanes from 1 onwards) will be used. The defaults
++ * shall reflect the defaults defined in the DT binding documentation.
++ *
++ * The function does not change the V4L2 fwnode endpoint state if it fails.
++ *
+  * NOTE: This function does not parse properties the size of which is variable
+  * without a low fixed limit. Please use v4l2_fwnode_endpoint_alloc_parse() in
+  * new drivers instead.
+@@ -171,7 +185,19 @@ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
+  * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
+  * reference to @fwnode.
+  *
+- * The caller must set the bus_type field of @vep to zero.
++ * The caller is responsible for assigning @vep.bus_type to a valid media bus
++ * type, or alternatively V4L2_MBUS_UNKNOWN. Depending on the hardware, the
++ * information may also be read from the firmware. As a compatibility means
++ * guessing the bus type is also supported. Mismatching bus types in the V4L2
++ * fwnode endpoint and in firmware will also yield an error (-ENXIO).
++ *
++ * The user may also set the default parameters for the bus if the bus type is
++ * explicitly set by the user. In particular, the user may set the default
++ * number of CSI-2 lanes but without assigning lane mapping, in which case the
++ * defaults (clock lane 0, data lanes from 1 onwards) will be used. The defaults
++ * shall reflect the defaults defined in the DT binding documentation.
++ *
++ * The function does not change the V4L2 fwnode endpoint state if it fails.
+  *
+  * v4l2_fwnode_endpoint_alloc_parse() has two important differences to
+  * v4l2_fwnode_endpoint_parse():
+-- 
+2.11.0
 
-FYI: I just find out that qspi(mainline linux is missing driver) and
-u-boot things shouldn't be here. I have updated this patch before
-sending pull request to arm-soc guys.
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
-
-
-
---4W3M6yMPh7eh3xAfbFX2xDurFt8VsYSB0--
-
---D7ElqfjmNXPeS06vklCSxhNhybN8qw7nN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEARECAAYFAltN8/QACgkQykllyylKDCGrdQCfQp/v37+csj+W+COXQkvRxGpK
-/rIAnA7gIRci2lcNUCfmo+4jeDTe+DQ1
-=DU4/
------END PGP SIGNATURE-----
-
---D7ElqfjmNXPeS06vklCSxhNhybN8qw7nN--
