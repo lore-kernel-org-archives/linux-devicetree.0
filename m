@@ -1,71 +1,57 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v10 3/7] Bluetooth: btqca: Redefine qca_uart_setup() to
- generic function.
-Date: Mon, 23 Jul 2018 10:40:18 -0700
-Message-ID: <20180723174018.GK129942@google.com>
-References: <20180720133243.6851-1-bgodavar@codeaurora.org>
- <20180720133243.6851-4-bgodavar@codeaurora.org>
+From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH V2 0/2] firmware: ti_sci: Add host-id as an optional
+ parameter
+Date: Mon, 23 Jul 2018 10:42:47 -0700
+Message-ID: <ea7691ab-db22-bea0-9753-b7a2765a22b8@oracle.com>
+References: <20180716171328.11674-1-nm@ti.com>
+ <20180723133303.ijekyffgnmesrhhv@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180720133243.6851-4-bgodavar@codeaurora.org>
+In-Reply-To: <20180723133303.ijekyffgnmesrhhv@kahuna>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2018 at 07:02:39PM +0530, Balakrishna Godavarthi wrote:
-> Redefinition of qca_uart_setup will help future Qualcomm Bluetooth
-> SoC, to use the same function instead of duplicating the function.
-> Added new arguments soc_type and soc_ver to the functions.
+On 7/23/2018 6:33 AM, Nishanth Menon wrote:
+> On 17:13-20180716, Nishanth Menon wrote:
+>> Please find attached series to enable host-id as an optional dt property.
+>>
+>> This is a minor update to V1 -> Mostly to pick up Greet's feedback and Rob's Ack.
+>>
+>> V1: https://patchwork.ozlabs.org/cover/931822/
+>>
+>> The series is based on v4.18-rc1 and is available here:
+>> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-1-am6-tisci
+>>
+>> Consolidated all patches (including all series) are available here:
+>> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v4.18-rc1/k3-am6-integ
+>>
+>> Full Boot log (integrated of all series for AM654) is available here:
+>>     https://pastebin.ubuntu.com/p/bBFmnzYtCd/
+>>
+>> Nishanth Menon (2):
+>>    Documentation: dt: keystone: ti-sci: Add optional host-id parameter
+>>    firmware: ti_sci: Provide host-id as an optional dt parameter
+>>
+>>   .../devicetree/bindings/arm/keystone/ti,sci.txt    |  4 ++++
+>>   drivers/firmware/ti_sci.c                          | 24 ++++++++++++++++++----
+>>   2 files changed, 24 insertions(+), 4 deletions(-)
 > 
-> These arguments will help to decide type of firmware files
-> to be loaded into Bluetooth chip.
-> soc_type holds the Bluetooth chip connected to APPS processor.
-> soc_ver holds the Bluetooth chip version.
+> Santosh,
 > 
-> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  drivers/bluetooth/btqca.c   | 20 +++++++-------------
->  drivers/bluetooth/btqca.h   | 13 +++++++++++--
->  drivers/bluetooth/hci_qca.c | 10 +++++++++-
->  3 files changed, 27 insertions(+), 16 deletions(-)
+> Apologies, I see you have already send your PR for v4.19. Was
+> just wondering if this is something we can consider for rc
+> cycle OR if you'd consider a followup PR for the same.
 > 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index c5cf9cab438a..b556710ee1bd 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -85,6 +85,9 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version)
->  out:
->  	kfree_skb(skb);
->  
-> +	if (err < 0 || *soc_version == 0)
-> +		bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
+NP. Patch(s) doesn't look RC material so don't plan to send
+it as part of RC. Please let me know if its o.w
 
-You also have to set 'err' if soc_version is 0, so the caller can skip
-the check for soc_version == 0
+This will have to wait for next cycle. Will merge this
+early once v4.19-rc1 comes out.
 
-I'd suggest:
-
-  // directly after setting soc_version
-  if (*soc_version == 0)
-    err = -EILSEQ; // or should it be a different error code?
-
-  ...
-
-  if (err)
-    bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
-
-You could also limit the error log to the 'if (*soc_version == 0)'
-branch, for all other errors there will already be a more specific log
-entry.
-
-> +
->  	return err;
->  }
-
-Cheers
-
-Matthias
+Regards,
+Santosh
