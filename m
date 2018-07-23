@@ -1,142 +1,40 @@
-From: Peter Geis <pgwipeout@gmail.com>
-Subject: [PATCH 2/2] Add support for CPCAP regulators on Tegra devices.
-Date: Mon, 23 Jul 2018 13:58:33 -0400
-Message-ID: <6545601f-c0f1-501b-dcc8-ad252d5b9b8a@gmail.com>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH v3 00/18] JZ4780 DMA patchset v3
+Date: Mon, 23 Jul 2018 10:58:46 -0700
+Message-ID: <20180723175846.udmjtkx7fsaf52wa@pburton-laptop>
+References: <20180721110643.19624-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180721110643.19624-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com
-Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>, Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Added support for the CPCAP power management regulator functions on
-Tegra devices.
-Added sw2_sw4 value tables, which provide power to the Tegra core and
-aux devices.
-Added the Tegra init tables and device tree compatibility match.
+Hi Paul & Vinod,
 
-Signed-off-by: Peter Geis <pgwipeout@gmail.com>
----
-  .../bindings/regulator/cpcap-regulator.txt    |  1 +
-  drivers/regulator/cpcap-regulator.c           | 80 +++++++++++++++++++
-  2 files changed, 81 insertions(+)
+On Sat, Jul 21, 2018 at 01:06:25PM +0200, Paul Cercueil wrote:
+> This is the version 3 of my jz4780-dma driver update patchset.
+> 
+> Apologies to the DMA people, the v2 of this patchset did not make it to
+> their mailing-list; see the bottom of this email for a description of
+> what happened in v2.
+> 
+> Changelog from v2 to v3:
+> 
+> - Modified the devicetree bindings to comply with the specification
+> 
+> - New patch [06/18] allows the JZ4780 DMA driver to be compiled within a
+>   generic MIPS kernel.
 
-diff --git 
-a/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt 
-b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
-index 675f4437ce92..3e2d33ab1731 100644
---- a/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
-@@ -4,6 +4,7 @@ Motorola CPCAP PMIC voltage regulators
-  Requires node properties:
-  - "compatible" value one of:
-      "motorola,cpcap-regulator"
-+    "motorola,tegra-cpcap-regulator"
-      "motorola,mapphone-cpcap-regulator"
+Would you prefer to take the MIPS .dts changes in patches 16-18 through
+the DMA tree with the rest of the series?
 
-  Required regulator properties:
-diff --git a/drivers/regulator/cpcap-regulator.c 
-b/drivers/regulator/cpcap-regulator.c
-index c0b1e04bd90f..cb3774be445d 100644
---- a/drivers/regulator/cpcap-regulator.c
-+++ b/drivers/regulator/cpcap-regulator.c
-@@ -412,6 +412,82 @@ static struct cpcap_regulator omap4_regulators[] = {
-  	{ /* sentinel */ },
-  };
+If so then for patches 16-18:
 
-+static struct cpcap_regulator tegra_regulators[] = {
-+	CPCAP_REG(SW1, CPCAP_REG_S1C1, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW1_SEL, unknown_val_tbl,
-+		  0, 0, 0, 0, 0, 0),
-+	CPCAP_REG(SW2, CPCAP_REG_S2C1, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW2_SEL, sw2_sw4_val_tbl,
-+		  0xf00, 0x7f, 0, 0x800, 0, 120),
-+	CPCAP_REG(SW3, CPCAP_REG_S3C, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW3_SEL, unknown_val_tbl,
-+		  0, 0, 0, 0, 0, 0),
-+	CPCAP_REG(SW4, CPCAP_REG_S4C1, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW4_SEL, sw2_sw4_val_tbl,
-+		  0xf00, 0x7f, 0, 0x900, 0, 100),
-+	CPCAP_REG(SW5, CPCAP_REG_S5C, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW5_SEL, sw5_val_tbl,
-+		  0x2a, 0, 0, 0x22, 0, 0),
-+	CPCAP_REG(SW6, CPCAP_REG_S6C, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW6_SEL, unknown_val_tbl,
-+		  0, 0, 0, 0, 0, 0),
-+	CPCAP_REG(VCAM, CPCAP_REG_VCAMC, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_VCAM_SEL, vcam_val_tbl,
-+		  0x87, 0x30, 4, 0x7, 0, 420),
-+	CPCAP_REG(VCSI, CPCAP_REG_VCSIC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VCSI_SEL, vcsi_val_tbl,
-+		  0x47, 0x10, 4, 0x7, 0, 350),
-+	CPCAP_REG(VDAC, CPCAP_REG_VDACC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VDAC_SEL, vdac_val_tbl,
-+		  0x87, 0x30, 4, 0x3, 0, 420),
-+	CPCAP_REG(VDIG, CPCAP_REG_VDIGC, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_VDIG_SEL, vdig_val_tbl,
-+		  0x87, 0x30, 4, 0x5, 0, 420),
-+	CPCAP_REG(VFUSE, CPCAP_REG_VFUSEC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VFUSE_SEL, vfuse_val_tbl,
-+		  0x80, 0xf, 0, 0x80, 0, 420),
-+	CPCAP_REG(VHVIO, CPCAP_REG_VHVIOC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VHVIO_SEL, vhvio_val_tbl,
-+		  0x17, 0, 0, 0x2, 0, 0),
-+	CPCAP_REG(VSDIO, CPCAP_REG_VSDIOC, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_VSDIO_SEL, vsdio_val_tbl,
-+		  0x87, 0x38, 3, 0x2, 0, 420),
-+	CPCAP_REG(VPLL, CPCAP_REG_VPLLC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VPLL_SEL, vpll_val_tbl,
-+		  0x43, 0x18, 3, 0x1, 0, 420),
-+	CPCAP_REG(VRF1, CPCAP_REG_VRF1C, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VRF1_SEL, vrf1_val_tbl,
-+		  0xac, 0x2, 1, 0xc, 0, 10),
-+	CPCAP_REG(VRF2, CPCAP_REG_VRF2C, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VRF2_SEL, vrf2_val_tbl,
-+		  0x23, 0x8, 3, 0x3, 0, 10),
-+	CPCAP_REG(VRFREF, CPCAP_REG_VRFREFC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VRFREF_SEL, vrfref_val_tbl,
-+		  0x23, 0x8, 3, 0x3, 0, 420),
-+	CPCAP_REG(VWLAN1, CPCAP_REG_VWLAN1C, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VWLAN1_SEL, vwlan1_val_tbl,
-+		  0x47, 0x10, 4, 0x5, 0, 420),
-+	CPCAP_REG(VWLAN2, CPCAP_REG_VWLAN2C, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VWLAN2_SEL, vwlan2_val_tbl,
-+		  0x20c, 0xc0, 6, 0x8, 0, 420),
-+	CPCAP_REG(VSIM, CPCAP_REG_VSIMC, CPCAP_REG_ASSIGN3,
-+		  0xffff, vsim_val_tbl,
-+		  0x23, 0x8, 3, 0x3, 0, 420),
-+	CPCAP_REG(VSIMCARD, CPCAP_REG_VSIMC, CPCAP_REG_ASSIGN3,
-+		  0xffff, vsimcard_val_tbl,
-+		  0x1e80, 0x8, 3, 0x1e00, 0, 420),
-+	CPCAP_REG(VVIB, CPCAP_REG_VVIBC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VVIB_SEL, vvib_val_tbl,
-+		  0x1, 0xc, 2, 0, 0x1, 500),
-+	CPCAP_REG(VUSB, CPCAP_REG_VUSBC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VUSB_SEL, vusb_val_tbl,
-+		  0x11c, 0x40, 6, 0xc, 0, 0),
-+	CPCAP_REG(VAUDIO, CPCAP_REG_VAUDIOC, CPCAP_REG_ASSIGN4,
-+		  CPCAP_BIT_VAUDIO_SEL, vaudio_val_tbl,
-+		  0x16, 0x1, 0, 0x4, 0, 0),
-+	{ /* sentinel */ },
-+};
-+
-  static const struct of_device_id cpcap_regulator_id_table[] = {
-  	{
-  		.compatible = "motorola,cpcap-regulator",
-@@ -420,6 +496,10 @@ static const struct of_device_id 
-cpcap_regulator_id_table[] = {
-  		.compatible = "motorola,mapphone-cpcap-regulator",
-  		.data = omap4_regulators,
-  	},
-+	{
-+		.compatible = "motorola,tegra-cpcap-regulator",
-+		.data = tegra_regulators,
-+	},
-  	{},
-  };
-  MODULE_DEVICE_TABLE(of, cpcap_regulator_id_table);
--- 
-2.17.1
+    Acked-by: Paul Burton <paul.burton@mips.com>
+
+Thanks,
+    Paul
