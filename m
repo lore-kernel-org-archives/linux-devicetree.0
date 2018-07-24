@@ -1,145 +1,91 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 1/4] dt-bindings: phy: add DT bindings for UniPhier USB3 PHY driver
-Date: Tue, 24 Jul 2018 20:10:39 +0900
-Message-ID: <20180724201039.F6E6.4A936039@socionext.com>
-References: <20180717195531.8587.4A936039@socionext.com> <CAL_JsqKjC3J16uk2GTQyTquMbvO5Aw6kr4BfdNLAfZHD3MuBgQ@mail.gmail.com>
+From: Damian Kos <dkos@cadence.com>
+Subject: [PATCH v2 0/5] drm: add support for Cadence MHDP DPI/DP bridge.
+Date: Tue, 24 Jul 2018 12:13:31 +0100
+Message-ID: <1532430824-23477-1-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKjC3J16uk2GTQyTquMbvO5Aw6kr4BfdNLAfZHD3MuBgQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Damian Kos <dkos@cadence.com>, Quentin Schulz <quentin.schulz@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: pgaj@cadence.com, ltyrala@cadence.com, stelford@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello!
 
-On Tue, 17 Jul 2018 08:16:23 -0600 <robh@kernel.org> wrote:
+This is the series of patches that will add support for the Cadence's DPI/DP
+bridge. Please note that this is a preliminary version of the driver and there
+will be more patches in the future with updates, fixes and improvements.
+Please keep that in mind when looking at FIXME/TODO/XXX comments.
 
-> On Tue, Jul 17, 2018 at 4:55 AM Kunihiko Hayashi
-> <hayashi.kunihiko@socionext.com> wrote:
-> >
-> > Hi Rob,
-> > Thank you for your comments.
-> >
-> > On Mon, 16 Jul 2018 14:50:49 -0600 <robh@kernel.org> wrote:
-> >
-> > > On Fri, Jun 29, 2018 at 05:38:58PM +0900, Kunihiko Hayashi wrote:
-> > > > Add DT bindings for PHY interface built into USB3 controller
-> > > > implemented in UniPhier SoCs.
-> > > >
-> > > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > > > ---
-> > > >  .../devicetree/bindings/phy/uniphier-usb3-phy.txt  | 118 +++++++++++++++++++++
-> 
-> [...]
-> 
-> > > > +Optional properties:
-> > > > +- phy-supply: A phandle to the regulator for USB VBUS.
-> > >
-> > > The phy actually needs Vbus or you just want to control Vbus from the
-> > > phy driver?
-> >
-> > To enable each USB port correspond with phy, we must enable Vbus for each port.
-> > However, the host driver doesn't have the way to control regulators directly,
-> > then I think it is reasonable to control Vbus by using phy regulator.
-> 
-> DT should reflect the h/w. If Vbus rail is powering the phy then it
-> should be in the phy node. If you just happen to want to put Vbus
-> control in the phy driver, that's an OS problem and doesn't belong in
-> DT. In that case, Vbus should be described as part of a USB connector
-> node and any driver can walk the tree or graph and get Vbus regulator.
+Initially, MHDP driver was developed as a DRM bridge driver and was planed to
+be placed in drivers/gpu/drm/bridge/mhdp.c.  However, there was already
+a driver for Cadence's DP controller developed by RockChip, but that driver
+uses the different DRM framework and looks like a part of a bigger system.
+Both controllers (including firmware) are quite different internally
+(MST/FEC/DSC support, link training done by driver, additional commands, IRQ's
+etc.) but they have similar register map, except for Framer/Streamer (which is
+noticeably different), so they appear similar.
 
-I think it's difficult to describe port nodes related to connectors that
-has vbus regulator.
+The following patches contain:
+- Moving common code to drivers/gpu/drm/bridge/cdns-mhdp-common.* and
+  modifying it a bit (mostly new prefixes for functions and data types) so it
+  can be used by two, higher level, drivers.
+- Modifying existing RockChip's DP driver to use the common code after changes
+  made to it (use the new cdns_mhdp_device structure and new function names).
+- Modifying DRM helpers a bit. Some are required for new driver, some are
+  updates from DP 1.2 to 1.3 or 1.4.
+- Adding documentation for device tree bindings.
+- Adding preliminary Cadence DPI/DP bridge driver.
 
-This controller has a glue layer, that consists of "reset", "regulator",
-and "phy", and there are their respective drivers and their own nodes,
-but no glue layer driver [1].
+Some of the things that will be added later on include (but are not limited
+to):
+- Support for Cadence SD0801 PHY (PHY's driver should be on the way by now)
+- SST audio support
+- MST support
+- DSC support
+- FEC support
+- HDCP support
 
-[1] https://www.spinics.net/lists/linux-usb/msg165060.html
+Changes in v2:
+- Added actual description of what the patch contains, what is it for and
+  what's going on here in general.
+- New structure. Now we have one common low level driver + two high level
+  drivers - one for RockChip with minimum changes and one, more general, for
+  Cadence.
+- Dropped some changes made to DRM helpers.
+- Updated the device tree bindings document.
 
-For example, when the glue layer node has each port that includes vbus,
-we will describe like that:
 
---------------------------------
-usb {
-	...
-	resets = <&usb_reset>;
-	phys = <&usb_phy0>, <&usb_phy1>;
-};
+Damian Kos (1):
+  drm/rockchip: moved cdns mhdp dpi/dp bridge low driver to a new
+    location
 
-usb-glue {
-	usb_reset: reset {
-		...
-	};
-	usb_vbus0: regulator {
-		...
-	};
-	usb_vbus1: regulator {
-		...
-	};
-	usb_phy0: phy {
-		...
-	};
-	usb_phy1: phy {
-		...
-	};
+Quentin Schulz (4):
+  drm/dp: fix link probing for devices supporting DP 1.4+
+  drm/dp: make dp_link_status and dp_get_lane_status usable from outside
+    of the core
+  dt-bindings: drm/bridge Document Cadence MHDP DPI/DP bridge bindings
+  drm/bridge: add preliminary driver for cadence dpi/dp bridge
 
-	ports {
-		port@0 {
-			...
-			vbus-supply = <&usb_vbus0>;
-		};
-		port@1 {
-			...
-			vbus-supply = <&usb_vbus1>;
-		};
-	};
-};
---------------------------------
+ .../bindings/display/bridge/cdns,mhdp.txt     |   43 +
+ drivers/gpu/drm/bridge/Kconfig                |    7 +
+ drivers/gpu/drm/bridge/Makefile               |    1 +
+ drivers/gpu/drm/bridge/cdns-mhdp-common.c     | 1087 +++++++++++++++
+ .../cdns-mhdp-common.h}                       |  134 +-
+ drivers/gpu/drm/bridge/cdns-mhdp.c            | 1233 +++++++++++++++++
+ drivers/gpu/drm/drm_dp_helper.c               |   50 +-
+ drivers/gpu/drm/rockchip/Kconfig              |    1 +
+ drivers/gpu/drm/rockchip/Makefile             |    4 +-
+ drivers/gpu/drm/rockchip/cdn-dp-core.c        |  220 +--
+ drivers/gpu/drm/rockchip/cdn-dp-core.h        |   40 +-
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c         |  969 -------------
+ include/drm/drm_dp_helper.h                   |    4 +
+ 13 files changed, 2648 insertions(+), 1145 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.txt
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-common.c
+ rename drivers/gpu/drm/{rockchip/cdn-dp-reg.h => bridge/cdns-mhdp-common.h} (80%)
+ create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp.c
+ delete mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
 
-However, there is no driver that can walk the tree to get vbus regulator,
-and we can't describe that the vbus and phy are related.
-
-In this controller, each port with vbus corresponds to each phy,
-and we need to enable the phy and control the vbus.
-
-For the above reasons, and since vbus is not phy's power,
-I think it's reasonable to add "vbus-supply" only instead of "phy-supply"
-in the phy node like sun4i-usb-phy, rockchip-usb-phy, etc.
-
---------------------------------
-usb {
-	...
-	resets = <&usb_reset>;
-	phys = <&usb_phy0>, <&usb_phy1>;
-};
-
-usb-glue {
-	usb_reset: reset {
-		...
-	};
-	usb_vbus0: regulator {
-		...
-	};
-	usb_vbus1: regulator {
-		...
-	};
-	usb_phy0: phy {
-		...
-		vbus-supply = <&usb_vbus0>;
-	};
-	usb_phy1: phy {
-		...
-		vbus-supply = <&usb_vbus1>;
-	};
-};
---------------------------------
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+-- 
+2.17.1
