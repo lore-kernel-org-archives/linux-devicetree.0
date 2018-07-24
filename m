@@ -1,65 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Tue, 24 Jul 2018 16:14:36 +0200
-Message-ID: <CAK8P3a0+8a9LCyW2WX6gO2Pi3GJa_ofznC07LMHjWmxZ4HaX7Q@mail.gmail.com>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
- <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
- <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se> <20180720101206.tv7nsoanwo5ftnia@ninjato>
- <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
- <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se> <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
- <a74a7472-e900-d031-d10b-b12f03ea9ff1@axentia.se> <20180720154132.2fwmwpiwtxa73ljf@ninjato>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH 00/15] ARM: dts: tegra: apalis-tk1: major revamp
+Date: Tue, 24 Jul 2018 14:16:33 +0000
+Message-ID: <1532441791.6124.20.camel@toradex.com>
+References: <20180724104309.21741-1-marcel@ziswiler.com>
+         <1532435072.6124.1.camel@toradex.com> <2532956.xKQ6NZiSWF@dimapc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720154132.2fwmwpiwtxa73ljf@ninjato>
+In-Reply-To: <2532956.xKQ6NZiSWF@dimapc>
+Content-Language: en-US
+Content-ID: <4CBBE2B1DED11D4D972A2617A39218F4@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.c>
+To: "digetx@gmail.com" <digetx@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2018 at 5:41 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
->
->> I don't have an actual example for I2C, maybe Wolfram does? But I can
->> invent a case. E.g. the speedy DMA-enabled master cannot generate
->> RESTART, which is a must for (re-)configuration, but not for passing
->> data to the device.
->
-> DMA capable controllers may also not react adequate to the slave doing
-> clock stretching (which is forbidden in I3C).
->
-> Renesas R-Car Gen2 has two I2C IP cores. One can do DMA and automatic
-> transfers to the PMIC, the other has I2C slave functionality. One cannot
-> do I2C_SMBUS_QUICK, the other can. And some more kind of quirks.
-> Sometimes you can mux the pins to GPIO, so you have a third option.
->
-> This setup is the reason the demux driver exists.
-
-Have you run into scenarios where you dynamically switch between
-the two masters in order to do different things (on one slave, or
-on multiple slaves), or could you always decide on one of them
-at boot time with that particular chip?
-
->> Also consider some future HW that has several I3C blocks, but they
->> are not identical. There's one beefy kind and one slim kind (I'm sure
->> you can find HW with different flavors of I2C blocks). Even if the
->> HW designers intended for one type of block to be superior in every
->> aspect, they might have made a mistake? This HW also has a pinmux, so
->> the SW is free to route different I3C blocks to the actual I3C bus.
->
-> So, basically this is what happened with R-Car. Now, I tend to think
-> that I3C is much more complex and noone would put two I3C IP cores into
-> on SoC. But it was not too long ago that I wouldn't believe someone put
-> two different I2C IP cores into a SoC. Then again, it happened when I2C
-> was around for 35 years...
-
-I think an SoC design we will likely see is an i3c master multiplexed with
-an i2c master to access one bus. The i2c master can then use clock
-stretching and other things that may not work in the i3c master, and it
-may be used in the absence of proper i3c drivers in the OS.
-
-However, that case cannot be handled with the abstraction in the
-proposed i3c framework, which can only deal with multiple i3c
-standard compliant masters. I'm also not sure if it can be added
-to the i2c-demux-pinctrl driver.
-
-        Arnd
+T24gVHVlLCAyMDE4LTA3LTI0IGF0IDE1OjQ0ICswMzAwLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6
+DQo+IE9uIFR1ZXNkYXksIDI0IEp1bHkgMjAxOCAxNToyNDozNCBNU0sgTWFyY2VsIFppc3dpbGVy
+IHdyb3RlOg0KPiA+IFNvcnJ5LCBJIG1lYW50IHRvIHdyaXRlICJtaW5vciByZXZhbXAiIGluIHRo
+ZSBzdWJqZWN0IGxpbmUgaGVyZSBhcw0KPiA+IEFwYWxpcyBUSzEgd2FzIGFscmVhZHkgaW4gcXVp
+dGUgZ29vZCBhIHNoYXBlIGJ1dCB0aGlzIGFyZSBzdGlsbA0KPiA+IHNvbWUNCj4gPiB3b3J0aHkg
+aW1wcm92ZW1lbnRzICg7LXApLg0KPiA+IA0KPiA+IE9uIFR1ZSwgMjAxOC0wNy0yNCBhdCAxMjo0
+MiArMDIwMCwgTWFyY2VsIFppc3dpbGVyIHdyb3RlOg0KPiA+IA0KPiANCj4gTWFyY2VsLA0KPiAN
+Cj4gQWxsIHlvdXIgZW1haWxzIHRoYXQgYXJlIHNlbnQgZnJvbSAidG9yYWRleC5jb20iIGFyZSB0
+cmVhdGVkIGFzIHNwYW0NCj4gYnkgR21haWwgDQo+IGJlY2F1c2UgIlRoaXMgbWVzc2FnZSBoYXMg
+YSBmcm9tIGFkZHJlc3MgaW4gdG9yYWRleC5jb20gYnV0IGhhcw0KPiBmYWlsZWQgDQo+IHRvcmFk
+ZXguY29tJ3MgcmVxdWlyZWQgdGVzdHMgZm9yIGF1dGhlbnRpY2F0aW9uLiIsIGlzIHRoZXJlIGFu
+eXRoaW5nDQo+IHlvdSBjb3VsZCANCj4gZG8gdG8gZml4IHRoYXQ/DQoNCkhpIERtaXRyeQ0KDQpI
+bSwgdW5mb3J0dW5hdGVseSwgVG9yYWRleCB3YXMgYW4gTSQgb25seSBzaG9wIHdoZW4gSSBqb2lu
+ZWQgbW9yZSB0aGVuDQo3IHllYXJzIGFnbyBhbmQgc28gZmFyIEkgd2FzIHVuYWJsZSB0byBjb252
+aW5jZSBvdXIgSVQgdG8gc3dpdGNoIHRvDQpzb21lIGdyb3duIHVwIGVtYWlsIHN5c3RlbS4gVGhl
+cmVmb3JlLCBJIGFtIHN0dWNrIHdpdGggRXhjaGFuZ2UsIE9mZmljZQ0KMzY1IG9yIHdoYXRldmVy
+IE0kIG5vd2FkYXlzIHNlZW0gdG8gY2FsbCBpdC4gQW55d2F5LCBJIHJlYWxseSB0aG91Z2h0DQpz
+ZW5kaW5nIGZyb20gQW5kcm9pZCBvciBFdm9sdXRpb24gdmlhIHRoZWlyIHJlc3AuIEV4Y2hhbmdl
+IGNvbm5lY3RvcnMNCndvdWxkIHByb3Blcmx5IGRvIFNQRiwgREtJTSBhbmQgZXZlbiBETUFSQy4g
+SSBqdXN0IGNvbmZpcm1lZCB0aGlzIHdoZW4NCnNlbmRpbmcgc29tZXRoaW5nIHRvIG15IGdtYWls
+IGFkZHJlc3MgYW5kIGRvaW5nICJTaG93IG9yaWdpbmFsIi4NCg0KU2luY2UgTGludXMgaGltc2Vs
+ZiBwb2ludGVkIG91dCBhbnkgb2YgbXkgcGF0Y2hlcyBlbmRpbmcgdXAgaW4gaGlzIHNwYW0NCmZv
+bGRlciBJIGRvIHNlbmQgdGhlbSB2aWEgbXkgcHJpdmF0ZSBlbWFpbCB3aGljaCB3aGlsZSBub3Qg
+aGF2aW5nIGFueQ0KYWR2YW5jZWQgc2VjdXJpdHkgY29uZmlndXJlZCBzaG91bGQgc3RpbGwgYmUg
+dmFsaWQuIE1vdmluZyBpdCB0byBhDQpmdWxseSBzZWN1cmUgY29uZmlndXJhdGlvbiBpbmNsdWRp
+bmcgRE5TU0VDIGFuZCBzdHVmZiBpcyBzdGlsbCBwZW5kaW5nDQpvbiBteSBzaWRlLg0KDQpDYW4g
+eW91IHBsZWFzZSB0ZWxsIG1lIHdoaWNoIGV4YWN0IGVtYWlsIGl0IGlzIHRoYXQgeW91IGdvdCB0
+aGlzDQpyZXBvcnRlZCBvbiBzbyBJIG1heSBmdXJ0aGVyIGludmVzdGlnYXRlIHdoYXQgaXMgZ29p
+bmcgb24/DQoNCkNoZWVycw0KDQpNYXJjZWw=
