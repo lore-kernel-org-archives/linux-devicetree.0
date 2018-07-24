@@ -1,35 +1,46 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 1/4] dt-bindings: dma: Add binding for Actions Semi Owl
- SoCs
-Date: Tue, 24 Jul 2018 14:19:05 +0200
-Message-ID: <b3db9b84-d01a-408d-e3f7-fdc61bbedb38@suse.de>
-References: <20180723041743.32024-1-manivannan.sadhasivam@linaro.org>
- <20180723041743.32024-2-manivannan.sadhasivam@linaro.org>
- <20180724121604.GA2587@vkoul-mobl>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH 00/15] ARM: dts: tegra: apalis-tk1: major revamp
+Date: Tue, 24 Jul 2018 12:24:34 +0000
+Message-ID: <1532435072.6124.1.camel@toradex.com>
+References: <20180724104309.21741-1-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724121604.GA2587@vkoul-mobl>
+In-Reply-To: <20180724104309.21741-1-marcel@ziswiler.com>
 Content-Language: en-US
+Content-ID: <BA8A2111B93A6C45BBE0D4D2A9CF0B36@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, dan.j.williams@intel.com, robh+dt@kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-Am 24.07.2018 um 14:16 schrieb Vinod:
-> Patch title should be dmaengine: ... Please always use the apt tags and
-> one can find them using git log <subsystem>
-
-Do you mean dt-bindings: dmaengine: ...? Because this is clearly a DT
-binding and not a driver patch.
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+U29ycnksIEkgbWVhbnQgdG8gd3JpdGUgIm1pbm9yIHJldmFtcCIgaW4gdGhlIHN1YmplY3QgbGlu
+ZSBoZXJlIGFzDQpBcGFsaXMgVEsxIHdhcyBhbHJlYWR5IGluIHF1aXRlIGdvb2QgYSBzaGFwZSBi
+dXQgdGhpcyBhcmUgc3RpbGwgc29tZQ0Kd29ydGh5IGltcHJvdmVtZW50cyAoOy1wKS4NCg0KT24g
+VHVlLCAyMDE4LTA3LTI0IGF0IDEyOjQyICswMjAwLCBNYXJjZWwgWmlzd2lsZXIgd3JvdGU6DQo+
+IFRoaXMgc2VyaWVzIGlzIGEgbWlub3Igb3ZlcmhhdWwgZm9yIHRoZSBUb3JhZGV4IEFwYWxpcyBU
+SzEgc3lzdGVtIG9uDQo+IG1vZHVsZS4NCj4gDQo+IE1hcmNlbCBaaXN3aWxlciAoMTUpOg0KPiAg
+IEFSTTogdGVncmE6IGFwYWxpcy10azE6IGFkZCBsb2NhbC1tYWMtYWRkcmVzcyBwcm9wZXJ0eQ0K
+PiAgIEFSTTogdGVncmE6IGFwYWxpcy10azE6IHJlb3JkZXIgcGNpZSBwcm9wZXJ0aWVzDQo+ICAg
+QVJNOiB0ZWdyYTogYXBhbGlzLXRrMTogcmVvcmRlciBob3N0MXgvaGRtaSBwcm9wZXJ0aWVzDQo+
+ICAgQVJNOiB0ZWdyYTogYXBhbGlzLXRrMTogcmVvcmRlciBwYWRjdGwgcHJvcGVydGllcw0KPiAg
+IEFSTTogdGVncmE6IGFwYWxpcy10azE6IHJlZ3VsYXRvciBjbGVhbi11cA0KPiAgIEFSTTogdGVn
+cmE6IGFwYWxpcy10azE6IGFkZCBtaXNzaW5nIHJlZ3VsYXRvcnMNCj4gICBBUk06IHRlZ3JhOiBh
+cGFsaXMtdGsxOiBkcm9wIHVudXNlZCBwaW5tdXggbGFiZWwNCj4gICBBUk06IHRlZ3JhOiBhcGFs
+aXMtdGsxOiB3aGl0ZS1zcGFjZSBjbGVhbi11cA0KPiAgIEFSTTogdGVncmE6IGFwYWxpcy10azE6
+IHJlb3JkZXIgYmFja2xpZ2h0IHByb3BlcnRpZXMNCj4gICBBUk06IHRlZ3JhOiBhcGFsaXMtdGsx
+OiBhZGQgcHJvcGVyIGVtbWMgdm1tYyBhbmQgdnFtbWMgc3VwcGxpZXMNCj4gICBBUk06IHRlZ3Jh
+OiBhcGFsaXMtdGsxOiBlbmFibGUgZW1tYyBkZHI1MiBtb2RlDQo+ICAgQVJNOiB0ZWdyYTogYXBh
+bGlzLXRrMTogYWRkIHRvcmFkZXgsYXBhbGlzLXRrMS12MS4yIGNvbXBhdGlibGUNCj4gICBBUk06
+IHRlZ3JhOiBhcGFsaXMtdGsxOiBmaXggcGNpZSBzd2l0Y2ggdmVuZG9yIGNvbXBhdGlibGUNCj4g
+ICBBUk06IHRlZ3JhOiBhcGFsaXMtdGsxOiByZW9yZGVyIGNwdSBkZmxsIGNsb2NrIHByb3BlcnRp
+ZXMNCj4gICBBUk06IHRlZ3JhOiBhcGFsaXMtdGsxOiByZW9yZGVyIFNEIGNhcmQgcHJvcGVydGll
+cw0KPiANCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vdGVncmEudHh0
+IHwgICAyICsNCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTI0LWFwYWxpcy1ldmFsLmR0cyAg
+ICAgIHwgIDI2ICsrKystDQo+ICBhcmNoL2FybS9ib290L2R0cy90ZWdyYTEyNC1hcGFsaXMtdjEu
+Mi1ldmFsLmR0cyB8ICAyOSArKysrLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvdGVncmExMjQtYXBh
+bGlzLXYxLjIuZHRzaSAgICAgfCAxNDMgKysrKysrKysrKysrKy0NCj4gLS0tLS0tLS0tLQ0KPiAg
+YXJjaC9hcm0vYm9vdC9kdHMvdGVncmExMjQtYXBhbGlzLmR0c2kgICAgICAgICAgfCAxNDMgKysr
+KysrKysrKysrKy0NCj4gLS0tLS0tLS0tLQ0KPiAgNSBmaWxlcyBjaGFuZ2VkLCAyMDggaW5zZXJ0
+aW9ucygrKSwgMTM1IGRlbGV0aW9ucygtKQ==
