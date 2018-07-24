@@ -1,50 +1,105 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH 01/28] ARM: tegra: apalis_t30: enable broken-hpi on emmc
-Date: Tue, 24 Jul 2018 17:55:14 +0300
-Message-ID: <3879609.rmqHIZXFHx@dimapc>
-References: <20180722164936.20581-1-marcel@ziswiler.com> <1992775.WBgY65Ajyy@dimapc> <1532442416.6124.28.camel@toradex.com>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 18/22] media: platform: Add Sunxi-Cedrus
+ VPU decoder driver
+Date: Tue, 24 Jul 2018 16:56:57 +0200
+Message-ID: <25fee2b5ad35f46ccadf56b93d1a9261c9855f97.camel@bootlin.com>
+References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
+	 <20180710080114.31469-19-paul.kocialkowski@bootlin.com>
+	 <20180710084223.jguogmvlwloi2utf@flea>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532442416.6124.28.camel@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-K/4/n7VHwkFtfdOG6klo"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBRX43TNAKGQEKHYQKQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180710084223.jguogmvlwloi2utf@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jacob
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, 24 July 2018 17:26:58 MSK Marcel Ziswiler wrote:
-> On Tue, 2018-07-24 at 17:03 +0300, Dmitry Osipenko wrote:
-> 
-> > On Sunday, 22 July 2018 19:49:09 MSK Marcel Ziswiler wrote:
-> > 
-> > > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> > > 
-> > > Avoid eMMC issues by specifying broken-hpi.
-> > > 
-> > > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> > > 
-> > > ---
-> > 
-> > 
-> > Is it a specific eMMC card model that has broken HPI or it is a host 
-> > controller bug?
-> 
-> 
-> That is a very good question. So far we only have confirmation that at
-> least some eMMCs from Hynix resp. SKHynix definitely do have bad
-> firmware. I also found out that ASUS resp. Google did disable HPI on
-> their Nexus 7 tablet. Therefore, we also disabled HPI quite a while ago
-> in our downstream BSPs which we successfully validated & verified doing
-> power cuts and running stress tests in our temperature chambers. I
-> guess we would have to run more extensive tests with mainline with and
-> without this setting to be able to really answer your question. For now
-> I just successfully run a few Apalis T30 and Colibri T30 modules with
-> this setting over the weekend doing both hdparm -t as well as dding
-> some urandom files to the eMMC in a loop without seeing any issues.
 
-The broken-hpi quirk was added for the Hynix cards specifically in [0]. Maybe 
-you should just extend the mmc_ext_csd_fixups list in [1] with another OEM ID?
+--=-K/4/n7VHwkFtfdOG6klo
+Content-Type: text/plain; charset="UTF-8"
 
-[0] https://patchwork.kernel.org/patch/9168455/
-[1] drivers/mmc/core/quirks.h
+Hi,
+
+On Tue, 2018-07-10 at 10:42 +0200, Maxime Ripard wrote:
+> On Tue, Jul 10, 2018 at 10:01:10AM +0200, Paul Kocialkowski wrote:
+> > +static int cedrus_remove(struct platform_device *pdev)
+> > +{
+> > +       struct cedrus_dev *dev = platform_get_drvdata(pdev);
+> > +
+> > +       v4l2_info(&dev->v4l2_dev, "Removing " CEDRUS_NAME);
+> 
+> That log is kind of pointless.
+
+Fair enough, I'll get rid of it.
+
+> > +static void cedrus_hw_set_capabilities(struct cedrus_dev *dev)
+> > +{
+> > +	unsigned int engine_version;
+> > +
+> > +	engine_version = cedrus_read(dev, VE_VERSION) >> VE_VERSION_SHIFT;
+> > +
+> > +	if (engine_version >= 0x1667)
+> > +		dev->capabilities |= CEDRUS_CAPABILITY_UNTILED;
+> 
+> The version used here would need a define, but I'm wondering if this
+> is the right solution here. You are using at the same time the version
+> ID returned by the register and the compatible in various places, and
+> they are both redundant. If you want to base the capabilities on the
+> compatible, then you can do it for all of those properties and
+> capabilities, and if you want to use the version register, then you
+> don't need all those compatibles but just one.
+> 
+> I think that basing all our capabilities on the compatible makes more
+> sense, since you need to have access to the registers in order to read
+> the version register, and this changes from one SoC generation to the
+> other (for example, keeping the reset line asserted would prevent you
+> from reading it, and the fact that there is a reset line depends on
+> the SoC).
+
+I concur, let's move this to a compatible-based logic instead!
+
+> > +int cedrus_hw_probe(struct cedrus_dev *dev)
+> > +{
+> > +	struct resource *res;
+> > +	int irq_dec;
+> > +	int ret;
+> > +
+> > +	irq_dec = platform_get_irq(dev->pdev, 0);
+> > +	if (irq_dec <= 0) {
+> > +		v4l2_err(&dev->v4l2_dev, "Failed to get IRQ\n");
+> > +		return -ENXIO;
+> > +	}
+> 
+> You already have an error code returned by platform_get_irq, there's
+> no point in masking it and returning -ENXIO. This can even lead to
+> some bugs, for example when the error code is EPROBE_DEFER.
+
+Right, I'll fix this and all the similar issues you mentionned.
+
+[...]
+
+> There's also a bunch of warnings/checks reported by checkpatch that
+> should be fixed in the next iteration: the spaces after a cast, the
+> NULL comparison, macros arguments precedence, parenthesis alignments
+> issues, etc.)
+
+Thanks, I'll look into that for the next revision.
+
+Cheers,
+
+Paul
+
+-- 
+Paul Kocialkowski, Bootlin (formerly Free Electrons)
+Embedded Linux and kernel engineering
+https://bootlin.com
+--=-K/4/n7VHwkFtfdOG6klo--
