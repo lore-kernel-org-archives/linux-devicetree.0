@@ -1,52 +1,145 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 00/18] JZ4780 DMA patchset v3
-Date: Tue, 24 Jul 2018 13:09:34 +0200
-Message-ID: <1532430574.2610.0@smtp.crapouillou.net>
-References: <20180721110643.19624-1-paul@crapouillou.net>
-        <20180723175846.udmjtkx7fsaf52wa@pburton-laptop>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: add DT bindings for UniPhier USB3 PHY driver
+Date: Tue, 24 Jul 2018 20:10:39 +0900
+Message-ID: <20180724201039.F6E6.4A936039@socionext.com>
+References: <20180717195531.8587.4A936039@socionext.com> <CAL_JsqKjC3J16uk2GTQyTquMbvO5Aw6kr4BfdNLAfZHD3MuBgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723175846.udmjtkx7fsaf52wa@pburton-laptop>
+In-Reply-To: <CAL_JsqKjC3J16uk2GTQyTquMbvO5Aw6kr4BfdNLAfZHD3MuBgQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Burton <paul.burton@mips.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-Le lun. 23 juil. 2018 =E0 19:58, Paul Burton <paul.burton@mips.com> a=20
-=E9crit :
-> Hi Paul & Vinod,
->=20
-> On Sat, Jul 21, 2018 at 01:06:25PM +0200, Paul Cercueil wrote:
->>  This is the version 3 of my jz4780-dma driver update patchset.
->>=20
->>  Apologies to the DMA people, the v2 of this patchset did not make=20
->> it to
->>  their mailing-list; see the bottom of this email for a description=20
->> of
->>  what happened in v2.
->>=20
->>  Changelog from v2 to v3:
->>=20
->>  - Modified the devicetree bindings to comply with the specification
->>=20
->>  - New patch [06/18] allows the JZ4780 DMA driver to be compiled=20
->> within a
->>    generic MIPS kernel.
->=20
-> Would you prefer to take the MIPS .dts changes in patches 16-18=20
-> through
-> the DMA tree with the rest of the series?
+On Tue, 17 Jul 2018 08:16:23 -0600 <robh@kernel.org> wrote:
 
-I think it would make sense yes.
+> On Tue, Jul 17, 2018 at 4:55 AM Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com> wrote:
+> >
+> > Hi Rob,
+> > Thank you for your comments.
+> >
+> > On Mon, 16 Jul 2018 14:50:49 -0600 <robh@kernel.org> wrote:
+> >
+> > > On Fri, Jun 29, 2018 at 05:38:58PM +0900, Kunihiko Hayashi wrote:
+> > > > Add DT bindings for PHY interface built into USB3 controller
+> > > > implemented in UniPhier SoCs.
+> > > >
+> > > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > > ---
+> > > >  .../devicetree/bindings/phy/uniphier-usb3-phy.txt  | 118 +++++++++++++++++++++
+> 
+> [...]
+> 
+> > > > +Optional properties:
+> > > > +- phy-supply: A phandle to the regulator for USB VBUS.
+> > >
+> > > The phy actually needs Vbus or you just want to control Vbus from the
+> > > phy driver?
+> >
+> > To enable each USB port correspond with phy, we must enable Vbus for each port.
+> > However, the host driver doesn't have the way to control regulators directly,
+> > then I think it is reasonable to control Vbus by using phy regulator.
+> 
+> DT should reflect the h/w. If Vbus rail is powering the phy then it
+> should be in the phy node. If you just happen to want to put Vbus
+> control in the phy driver, that's an OS problem and doesn't belong in
+> DT. In that case, Vbus should be described as part of a USB connector
+> node and any driver can walk the tree or graph and get Vbus regulator.
 
-> If so then for patches 16-18:
->=20
->     Acked-by: Paul Burton <paul.burton@mips.com>
->=20
-> Thanks,
->     Paul
-=
+I think it's difficult to describe port nodes related to connectors that
+has vbus regulator.
+
+This controller has a glue layer, that consists of "reset", "regulator",
+and "phy", and there are their respective drivers and their own nodes,
+but no glue layer driver [1].
+
+[1] https://www.spinics.net/lists/linux-usb/msg165060.html
+
+For example, when the glue layer node has each port that includes vbus,
+we will describe like that:
+
+--------------------------------
+usb {
+	...
+	resets = <&usb_reset>;
+	phys = <&usb_phy0>, <&usb_phy1>;
+};
+
+usb-glue {
+	usb_reset: reset {
+		...
+	};
+	usb_vbus0: regulator {
+		...
+	};
+	usb_vbus1: regulator {
+		...
+	};
+	usb_phy0: phy {
+		...
+	};
+	usb_phy1: phy {
+		...
+	};
+
+	ports {
+		port@0 {
+			...
+			vbus-supply = <&usb_vbus0>;
+		};
+		port@1 {
+			...
+			vbus-supply = <&usb_vbus1>;
+		};
+	};
+};
+--------------------------------
+
+However, there is no driver that can walk the tree to get vbus regulator,
+and we can't describe that the vbus and phy are related.
+
+In this controller, each port with vbus corresponds to each phy,
+and we need to enable the phy and control the vbus.
+
+For the above reasons, and since vbus is not phy's power,
+I think it's reasonable to add "vbus-supply" only instead of "phy-supply"
+in the phy node like sun4i-usb-phy, rockchip-usb-phy, etc.
+
+--------------------------------
+usb {
+	...
+	resets = <&usb_reset>;
+	phys = <&usb_phy0>, <&usb_phy1>;
+};
+
+usb-glue {
+	usb_reset: reset {
+		...
+	};
+	usb_vbus0: regulator {
+		...
+	};
+	usb_vbus1: regulator {
+		...
+	};
+	usb_phy0: phy {
+		...
+		vbus-supply = <&usb_vbus0>;
+	};
+	usb_phy1: phy {
+		...
+		vbus-supply = <&usb_vbus1>;
+	};
+};
+--------------------------------
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
