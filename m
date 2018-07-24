@@ -1,69 +1,50 @@
-From: Emmanuel Vadot <manu@bidouilliste.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: allwinner: h5: Add SID for H5
-Date: Tue, 24 Jul 2018 16:55:01 +0200
-Message-ID: <20180724165501.d8f01bf20c7cc43e7ed7fc62@bidouilliste.com>
-References: <20180724101522.68165-1-manu@freebsd.org>
-        <20180724101522.68165-5-manu@freebsd.org>
-        <20180724130004.ynaiabshexrrbvo4@flea>
-        <20180724153432.e398bddfe63e51e8dcebfc46@bidouilliste.com>
-        <20180724144218.jdvgrcqkz2kmohqx@flea>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH 01/28] ARM: tegra: apalis_t30: enable broken-hpi on emmc
+Date: Tue, 24 Jul 2018 17:55:14 +0300
+Message-ID: <3879609.rmqHIZXFHx@dimapc>
+References: <20180722164936.20581-1-marcel@ziswiler.com> <1992775.WBgY65Ajyy@dimapc> <1532442416.6124.28.camel@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724144218.jdvgrcqkz2kmohqx@flea>
+In-Reply-To: <1532442416.6124.28.camel@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>, wens@csie.org, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Jul 2018 16:42:18 +0200
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-
-> On Tue, Jul 24, 2018 at 03:34:32PM +0200, Emmanuel Vadot wrote:
-> > On Tue, 24 Jul 2018 15:00:04 +0200
-> > Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+On Tuesday, 24 July 2018 17:26:58 MSK Marcel Ziswiler wrote:
+> On Tue, 2018-07-24 at 17:03 +0300, Dmitry Osipenko wrote:
+> 
+> > On Sunday, 22 July 2018 19:49:09 MSK Marcel Ziswiler wrote:
 > > 
-> > > On Tue, Jul 24, 2018 at 12:15:22PM +0200, Emmanuel Vadot wrote:
-> > > > The SID controller on H5 look the same as the one present in the A64.
-> > > > But in case we find some difference one day at a compatible string
-> > > > of it's own and a fallback to the A64 one.
-> > > > 
-> > > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-> > > > ---
-> > > >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > index 62d646baac3c..28183bf77164 100644
-> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > @@ -129,3 +129,8 @@
-> > > >  		     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-> > > >  	compatible = "allwinner,sun50i-h5-pinctrl";
-> > > >  };
-> > > > +
-> > > > +&sid {
-> > > > +	compatible = "allwinner,sun50i-h5-sid",
-> > > > +		     "allwinner,sun50i-a64-sid";
-> > > > +};
+> > > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 > > > 
-> > > This is still a bit pointless, please remove the common node.
+> > > Avoid eMMC issues by specifying broken-hpi.
+> > > 
+> > > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> > > 
+> > > ---
 > > 
-> >  You mean directly declare sid controller in the SoC dtsi and not
-> > have a common node in sunxi-h3-h5.dtsi ?
+> > 
+> > Is it a specific eMMC card model that has broken HPI or it is a host 
+> > controller bug?
 > 
-> Yep
 > 
-> -- 
-> Maxime Ripard, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> That is a very good question. So far we only have confirmation that at
+> least some eMMCs from Hynix resp. SKHynix definitely do have bad
+> firmware. I also found out that ASUS resp. Google did disable HPI on
+> their Nexus 7 tablet. Therefore, we also disabled HPI quite a while ago
+> in our downstream BSPs which we successfully validated & verified doing
+> power cuts and running stress tests in our temperature chambers. I
+> guess we would have to run more extensive tests with mainline with and
+> without this setting to be able to really answer your question. For now
+> I just successfully run a few Apalis T30 and Colibri T30 modules with
+> this setting over the weekend doing both hdparm -t as well as dding
+> some urandom files to the eMMC in a loop without seeing any issues.
 
- The reason I've put it in the common file is because I'll send patches
-for the nvmem-cells needed for thermal, and those are common between
-the two. Other nvmem-cells are also common (like the chipid and
-probably other).
+The broken-hpi quirk was added for the Hynix cards specifically in [0]. Maybe 
+you should just extend the mmc_ext_csd_fixups list in [1] with another OEM ID?
 
--- 
-Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
+[0] https://patchwork.kernel.org/patch/9168455/
+[1] drivers/mmc/core/quirks.h
