@@ -1,62 +1,50 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/5] dt-bindings: sunxi-sram: add binding
- for Allwinner H6 SRAM C
-Date: Tue, 24 Jul 2018 10:41:53 +0200
-Message-ID: <20180724084153.in6jl5mi3x4f3y3a@flea>
-References: <20180722053955.25266-1-icenowy@aosc.io>
- <20180722053955.25266-3-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wo2rk2ph6hkxnnma"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXGM3PNAKGQEZZ3XVVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180722053955.25266-3-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 10/10] NFC: st95hf: add of match table
+Date: Tue, 24 Jul 2018 10:54:26 +0200
+Message-ID: <20180724085426.23999-11-daniel@zonque.org>
+References: <20180724085426.23999-1-daniel@zonque.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180724085426.23999-1-daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, shikha.singh-qxv4g6HH51o@public.gmane.org, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add a match table for device tree compatible strings. Interestingly, a
+document describing the bindings already exists since a while, but users
+currently rely on the implicit matching in the drivers core. Let's be
+explicit and add a real match table.
 
---wo2rk2ph6hkxnnma
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Signed-off-by: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ drivers/nfc/st95hf/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On Sun, Jul 22, 2018 at 01:39:52PM +0800, Icenowy Zheng wrote:
-> The Allwinner H6 SoC's DE3 needs the SRAM C section being claimed in the
-> system controller to work, like A64 DE2.
-> 
-> As H6 and A64 system controller are quite similar, code is reused now,
-> and the A64 fallback compatible string is added after the H6 compatible
-> string.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sram/sunxi-sram.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> index c51ade86578c..6527a1a535a3 100644
-> --- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> +++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-> @@ -18,6 +18,7 @@ Required properties:
->      - "allwinner,sun8i-h3-system-control"
->      - "allwinner,sun50i-a64-sram-controller" (deprecated)
->      - "allwinner,sun50i-a64-system-control"
-> +    - "allwinner,sun50i-h6-system-contorl", "allwinner,sun50i-a64-system-control"
-
-                                     ^ control
-
-Maxime
-
+diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
+index 4db3c020921c..5a01b454fbc4 100644
+--- a/drivers/nfc/st95hf/core.c
++++ b/drivers/nfc/st95hf/core.c
+@@ -1012,6 +1012,12 @@ static const struct spi_device_id st95hf_id[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, st95hf_id);
+ 
++static const struct of_device_id st95hf_of_match[] = {
++	{ .compatible = "st,st95hf", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, st95hf_of_match);
++
+ static int st95hf_probe(struct spi_device *nfc_spi_dev)
+ {
+ 	int ret;
+@@ -1189,6 +1195,7 @@ static struct spi_driver st95hf_driver = {
+ 	.driver = {
+ 		.name = "st95hf",
+ 		.owner = THIS_MODULE,
++		.of_match_table = st95hf_of_match,
+ 	},
+ 	.id_table = st95hf_id,
+ 	.probe = st95hf_probe,
 -- 
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
---wo2rk2ph6hkxnnma--
+2.17.1
