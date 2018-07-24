@@ -1,33 +1,27 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 1/3] MIPS: jz4780: Allow access to jz4740-i2s
-Date: Tue, 24 Jul 2018 13:47:57 -0700
-Message-ID: <20180724204757.qrgjttepzcfdzxlv@pburton-laptop>
-References: <20180606193811.16007-1-malat@debian.org>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/4] treewide: convert ISO_8859-1 text comments to utf-8
+Date: Tue, 24 Jul 2018 14:00:10 -0700
+Message-ID: <20180724140010.e24a9964fd340afe2d98a994@linux-foundation.org>
+References: <20180724111600.4158975-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180606193811.16007-1-malat@debian.org>
+In-Reply-To: <20180724111600.4158975-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>
-Cc: James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Joe Perches <joe@perches.com>, Samuel Ortiz <sameo@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Cameron <jic23@kernel.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthieu,
+On Tue, 24 Jul 2018 13:13:25 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
 
-On Wed, Jun 06, 2018 at 09:38:08PM +0200, Mathieu Malaterre wrote:
-> diff --git a/sound/soc/jz4740/Kconfig b/sound/soc/jz4740/Kconfig
-> index 1a354a6b6e87..35d82d96e781 100644
-> --- a/sound/soc/jz4740/Kconfig
-> +++ b/sound/soc/jz4740/Kconfig
-> @@ -1,20 +1,20 @@
->  config SND_JZ4740_SOC
-> -	tristate "SoC Audio for Ingenic JZ4740 SoC"
-> -	depends on MACH_JZ4740 || COMPILE_TEST
-> +	tristate "SoC Audio for Ingenic JZ4740/JZ4780 SoC"
-> +	depends on MACH_JZ4740 || MACH_JZ4780 || COMPILE_TEST
+> Almost all files in the kernel are either plain text or UTF-8
+> encoded. A couple however are ISO_8859-1, usually just a few
+> characters in a C comments, for historic reasons.
+> 
+> This converts them all to UTF-8 for consistency.
 
-Perhaps this could be MACH_INGENIC, or even just MIPS?
+Was "consistency" the only rationale?  The discussion is now outside my
+memory horizon but I thought there were other reasons.
 
-Thanks,
-    Paul
+Will we be getting a checkpatch rule to keep things this way?
