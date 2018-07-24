@@ -1,31 +1,34 @@
-Return-Path: <SRS0=Qj0e=KK=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1532447238-13486-1-git-send-email-biju.das@bp.renesas.com> <1532447238-13486-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1532447238-13486-2-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 26 Jul 2018 13:44:13 +0200
-Message-ID: <CAMuHMdV3RW1wez4=WwROpLuvwbnkAT7D3X1DQVy4NEs8W0Me-w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: arm: Document RZ/G2M SoC DT bindings
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=JVBZ=KI=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 1/3] dt-bindings: arm: Document RZ/G2M SoC DT bindings
+Date: Tue, 24 Jul 2018 16:47:16 +0100
+Message-Id: <1532447238-13486-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1532447238-13486-1-git-send-email-biju.das@bp.renesas.com>
+References: <1532447238-13486-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jul 24, 2018 at 5:53 PM Biju Das <biju.das@bp.renesas.com> wrote:
-> Add device tree bindings documentation for Renesas RZ/G2M (r8a774a1) SoC.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+Add device tree bindings documentation for Renesas RZ/G2M (r8a774a1) SoC.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 89b4a38..8acd3cd 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -23,6 +23,8 @@ SoCs:
+     compatible = "renesas,r8a7745"
+   - RZ/G1C (R8A77470)
+     compatible = "renesas,r8a77470"
++  - RZ/G2M (R8A774A1)
++    compatible = "renesas,r8a774a1"
+   - R-Car M1A (R8A77781)
+     compatible = "renesas,r8a7778"
+   - R-Car H1 (R8A77790)
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
