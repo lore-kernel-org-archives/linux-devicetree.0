@@ -1,66 +1,41 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v3 03/18] dmaengine: dma-jz4780: Avoid hardcoding number
- of channels
-Date: Tue, 24 Jul 2018 18:52:59 +0530
-Message-ID: <20180724132259.GF3661@vkoul-mobl>
-References: <20180721110643.19624-1-paul@crapouillou.net>
- <20180721110643.19624-4-paul@crapouillou.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Peter Geis <pgwipeout@gmail.com>
+Subject: [PATCH v3 0/2] Add support for cpcap regulators on Tegra based Xoom devices.
+Date: Tue, 24 Jul 2018 09:25:39 -0400
+Message-ID: <20180724132541.17039-1-pgwipeout@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180721110643.19624-4-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Peter Geis <pgwipeout@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21-07-18, 13:06, Paul Cercueil wrote:
+Good Morning,
 
-> +static const struct jz4780_dma_soc_data jz4780_dma_soc_data[] = {
-> +	[ID_JZ4780] = { .nb_channels = 32, },
+This is revision three of the patch.
+I have changed the device match from Tegra to Xoom as per Dmitry's
+suggestion, to be more accurate.
 
-why the array of structs?
+The CPCAP regulator driver can support various devices, but currently only supports Omap4 devices.
+Adds the sw2 and sw4 voltage tables, which power the Tegra core, and a DT match for the Tegra device.
+Tested on the Motorola Xoom MZ602, but supports the MZ600 (CDMA), MZ602 (LTE), and
+MZ604 (Wifi).
 
-> +};
-> +
-> +static const struct of_device_id jz4780_dma_dt_match[] = {
-> +	{ .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+v3:
+Changed the devicetree match from Tegra to Xoom.
 
-the data should be jz4780_dma_soc_data? as you would add more data
-later.. and not the enum..
+v2:
+Stopped reinventing the wheel, using git email now.
+Rebased against regulator for-next branch.
 
-> -	jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
-> +	version = (enum jz_version)of_id->data;
-> +	soc_data = &jz4780_dma_soc_data[version];
+v1:
+Fix conversion of tabulation to spaces.
 
-this can be simplified if we do:
+Peter Geis (2):
+  Add sw2_sw4 voltage table to cpcap regulator.
+  Add support for CPCAP regulators on Motorola Xoom devices.
 
-        soc_data = device_get_match_data(pdev);
-
-with:
-
-static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
-        .nb_channels = 32,
-};
-
-and
-        { .compatible = "ingenic,jz4780-dma", .data = (void *)jz4780_dma_soc_data },
-
-You add more parameters in future patches and store soc_data in driver
-object and use as is..
-
-> +	jzdma = devm_kzalloc(dev, sizeof(*jzdma)
-> +				+ sizeof(*jzdma->chan) * soc_data->nb_channels,
-> +				GFP_KERNEL);
->  	if (!jzdma)
->  		return -ENOMEM;
->  
-> +	jzdma->soc_data = soc_data;
-> +	jzdma->version = version;
-
-why do you need to store version, driver should handle values and not
-versions..
+ .../bindings/regulator/cpcap-regulator.txt    |   1 +
+ drivers/regulator/cpcap-regulator.c           | 103 ++++++++++++++++++
+ 2 files changed, 104 insertions(+)
 
 -- 
-~Vinod
+2.17.1
