@@ -1,64 +1,53 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v3 07/18] dmaengine: dma-jz4780: Add support for the
- JZ4770 SoC
-Date: Tue, 24 Jul 2018 21:31:40 +0530
-Message-ID: <20180724160140.GI3661@vkoul-mobl>
-References: <20180721110643.19624-1-paul@crapouillou.net>
- <20180721110643.19624-8-paul@crapouillou.net>
- <20180724133229.GG3661@vkoul-mobl>
- <1532444695.2610.1@smtp.crapouillou.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] Add sw2_sw4 voltage table to cpcap regulator.
+Date: Tue, 24 Jul 2018 17:02:19 +0100
+Message-ID: <20180724160219.GL13268@sirena.org.uk>
+References: <20180724132541.17039-1-pgwipeout@gmail.com>
+ <20180724132541.17039-2-pgwipeout@gmail.com>
+ <20180724143634.GD13268@sirena.org.uk>
+ <2ae14535-c14f-c50f-c76a-4406f67fc682@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rfwNdt5cNUUjB/69"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1532444695.2610.1@smtp.crapouillou.net>
+In-Reply-To: <2ae14535-c14f-c50f-c76a-4406f67fc682@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: Peter Geis <pgwipeout@gmail.com>
+Cc: lgirdwood@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24-07-18, 17:04, Paul Cercueil wrote:
-> Hi Vinod,
-> 
-> Le mar. 24 juil. 2018 à 15:32, Vinod <vkoul@kernel.org> a écrit :
-> > On 21-07-18, 13:06, Paul Cercueil wrote:
-> > >  +static inline void jz4780_dma_chan_enable(struct jz4780_dma_dev
-> > > *jzdma,
-> > >  +	unsigned int chn)
-> > 
-> > right justified and aligned with preceding please. While adding new
-> > code to a existing driver it is a good idea to conform to existing style
-> 
-> OK.
-> 
-> > >  +{
-> > >  +	if (jzdma->version == ID_JZ4770)
-> > >  +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKES, BIT(chn));
-> > >  +}
-> > >  +
-> > >  +static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev
-> > > *jzdma,
-> > >  +	unsigned int chn)
-> > >  +{
-> > >  +	if (jzdma->version == ID_JZ4770)
-> > >  +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
-> > 
-> > so if another version has this feature we would do:
-> >         if (jzdma->version == ID_JZ4770) ||
-> >                 if (jzdma->version == ID_JZXXXX))
-> > 
-> > and so on.. why not add a value, clk_enable in the description and use
-> > that. For each controller it is set to true or false
-> 
-> I agree with what you said in your other answers.
-> However here I still need to check the "version", because on JZ4725B and
-> JZ4770+
-> the way to start/stop each DMA channel's clock is different, so I can't use
-> a boolean
 
-sure describe the behavior and use that. Versions is not a very scalable
-way..
+--rfwNdt5cNUUjB/69
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-~Vinod
+On Tue, Jul 24, 2018 at 11:52:48AM -0400, Peter Geis wrote:
+> On 07/24/2018 10:36 AM, Mark Brown wrote:
+
+> > Please submit patches using subject lines reflecting the style for the
+> > subsystem.  This makes it easier for people to identify relevant
+> > patches.  Look at what existing commits in the area you're changing are
+> > doing and make sure your subject lines visually resemble what they're
+> > doing.
+
+> Copy, should I resubmit?
+
+No, it's OK - I already applied.
+
+--rfwNdt5cNUUjB/69
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltXTYsACgkQJNaLcl1U
+h9Ai8Qf/RJGQcOwXjcpvABiVn1wmCoRrkiXmueWqczSJ/GSU4F6q38txXbk9uL3E
+GnDO5cQ39uCtFTVxRMOY2//m7tkcKMFOvolXH1+irYBuu8WGw+fBySOXw8siE+yT
+9DmVQvM89Crl2QW2gUqbCRoCH0rq6YJOyK4scLlY7+7edvQP66NWzr46qYezSbCg
+GBHP8AoxptMzPexi8ZnrKQB6DGsIeNAHJNibvAv+yiY5ixGBVPgQlGuQDmUQ83Tt
+Dr5Zl/k9tk3tURLC5wNCHwoOFH4Etbdfearaq3+GnBz3htisWWDoDjRDqES0LAaN
+arm6fX3YdnsP3jzAkAlPE1ThcOIXmQ==
+=XWM1
+-----END PGP SIGNATURE-----
+
+--rfwNdt5cNUUjB/69--
