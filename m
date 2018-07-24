@@ -1,253 +1,153 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH 06/15] ARM: tegra: apalis-tk1: add missing regulators
-Date: Tue, 24 Jul 2018 12:43:00 +0200
-Message-ID: <20180724104309.21741-7-marcel@ziswiler.com>
-References: <20180724104309.21741-1-marcel@ziswiler.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 2/4] phy: socionext: add USB3 PHY driver for UniPhier SoC
+Date: Tue, 24 Jul 2018 20:02:42 +0900
+Message-ID: <20180724200241.F6E2.4A936039@socionext.com>
+References: <20180717202757.858B.4A936039@socionext.com> <419fd0cd-9df7-9581-124d-f7ca876eb8af@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724104309.21741-1-marcel@ziswiler.com>
+In-Reply-To: <419fd0cd-9df7-9581-124d-f7ca876eb8af@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Hi Kishon,
 
-Add missing regulators:
-- reg_module_3v3_audio being VDDA supply of SGTL5000
-- VDDD supply of SGTL5000 actually being reg_1v8_vio
-- TMP451 temperature sensor vcc supply being reg_module_3v3
-- usb3-0 vbus supply being reg_usbh_vbus
-- usb3-1 vbus supply being reg_usbo1_vbus
-- carrier board HDMI supply being reg_5v0
-- carrier board sata target 5v supply being reg_5v0
-- carrier board sata target 12v supply being reg_12v0
-- carrier board reg_3v3 actually being backlight power supply
+On Tue, 24 Jul 2018 09:31:34 +0530 <kishon@ti.com> wrote:
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> Hi,
+> 
+> On Tuesday 17 July 2018 04:57 PM, Kunihiko Hayashi wrote:
+> > Hi Kishon,
+> > 
+> > On Fri, 13 Jul 2018 12:45:06 +0530 <kishon@ti.com> wrote:
+> > 
+> >> Hi,
+> >>
+> >> On Wednesday 11 July 2018 05:35 PM, Kunihiko Hayashi wrote:
+> >>> On Mon, 9 Jul 2018 20:23:19 +0900 <hayashi.kunihiko@socionext.com> wrote:
+> >>>
+> >>>> Hi Kishon,
+> >>>> Thank you for your comments.
+> >>>>
+> >>>> On Mon, 9 Jul 2018 10:49:50 +0530 <kishon@ti.com> wrote:
+> >>>>
+> >>>>> Hi,
+> >>>>>
+> >>>>> On Friday 29 June 2018 02:08 PM, Kunihiko Hayashi wrote:
+> >>>>>> Add a driver for PHY interface built into USB3 controller
+> >>>>>> implemented in UniPhier SoCs.
+> >>>>>> This driver supports High-Speed PHY and Super-Speed PHY.
+> >>>>>>
+> >>>>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> >>>>>> Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
+> >>>>>> Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> >>>>>> ---
+> >>>>>>  drivers/phy/Kconfig                         |   1 +
+> >>>>>>  drivers/phy/Makefile                        |   1 +
+> >>>>>>  drivers/phy/socionext/Kconfig               |  12 +
+> >>>>>>  drivers/phy/socionext/Makefile              |   6 +
+> >>>>>>  drivers/phy/socionext/phy-uniphier-usb3hs.c | 422 ++++++++++++++++++++++++++++
+> >>>>>>  drivers/phy/socionext/phy-uniphier-usb3ss.c | 369 ++++++++++++++++++++++++
+> >>>>>>  6 files changed, 811 insertions(+)
+> >>>>>>  create mode 100644 drivers/phy/socionext/Kconfig
+> >>>>>>  create mode 100644 drivers/phy/socionext/Makefile
+> >>>>>>  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3hs.c
+> >>>>>>  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3ss.c
+> >>>>
+> >>>> (snip...)
+> >>>>
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
+> >>>>>> @@ -0,0 +1,422 @@
+> >>>>>> +// SPDX-License-Identifier: GPL-2.0
+> >>>>>> +/*
+> >>>>>> + * phy-uniphier-usb3hs.c - HS-PHY driver for Socionext UniPhier USB3 controller
+> >>>>>> + * Copyright 2015-2018 Socionext Inc.
+> >>>>>> + * Author:
+> >>>>>> + *	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> >>>>>> + * Contributors:
+> >>>>>> + *      Motoya Tanigawa <tanigawa.motoya@socionext.com>
+> >>>>>> + *      Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> >>>>>> + */
+> >>>>>> +
+> >>>>>> +#include <linux/bitfield.h>
+> >>>>>> +#include <linux/bitops.h>
+> >>>>>> +#include <linux/clk.h>
+> >>>>>> +#include <linux/io.h>
+> >>>>>> +#include <linux/mfd/syscon.h>
+> >>>>>> +#include <linux/module.h>
+> >>>>>> +#include <linux/nvmem-consumer.h>
+> >>>>>> +#include <linux/of.h>
+> >>>>>> +#include <linux/of_platform.h>
+> >>>>>> +#include <linux/phy/phy.h>
+> >>>>>> +#include <linux/platform_device.h>
+> >>>>>> +#include <linux/reset.h>
+> >>>>>> +#include <linux/slab.h>
+> >>>>>> +
+> >>>>>> +#define HSPHY_CFG0		0x0
+> >>>>>> +#define HSPHY_CFG0_HS_I_MASK	GENMASK(31, 28)
+> >>>>>> +#define HSPHY_CFG0_HSDISC_MASK	GENMASK(27, 26)
+> >>>>>> +#define HSPHY_CFG0_SWING_MASK	GENMASK(17, 16)
+> >>>>>> +#define HSPHY_CFG0_SEL_T_MASK	GENMASK(15, 12)
+> >>>>>> +#define HSPHY_CFG0_RTERM_MASK	GENMASK(7, 6)
+> >>>>>> +#define HSPHY_CFG0_TRIMMASK	(HSPHY_CFG0_HS_I_MASK \
+> >>>>>> +				 | HSPHY_CFG0_SEL_T_MASK \
+> >>>>>> +				 | HSPHY_CFG0_RTERM_MASK)
+> >>>>>> +
+> >>>>>> +#define HSPHY_CFG1		0x4
+> >>>>>> +#define HSPHY_CFG1_DAT_EN	BIT(29)
+> >>>>>> +#define HSPHY_CFG1_ADR_EN	BIT(28)
+> >>>>>> +#define HSPHY_CFG1_ADR_MASK	GENMASK(27, 16)
+> >>>>>> +#define HSPHY_CFG1_DAT_MASK	GENMASK(23, 16)
+> >>>>>> +
+> >>>>>> +#define MAX_CLKS	3
+> >>>>>> +#define MAX_RSTS	2
+> >>>>>> +#define MAX_PHY_PARAMS	1
+> >>>>>> +
+> >>>>>> +struct uniphier_u3hsphy_param {
+> >>>>>> +	u32 addr;
+> >>>>>> +	u32 mask;
+> >>>>>> +	u32 val;
+> >>>>>> +};
+> >>>>>
+> >>>>> I'd like to avoid configure the PHY this way, since it's impossible to know
+> >>>>> which register is being configured.
+> >>>>
+> >>>
+> >>> This way might be misunderstood.
+> >>> These HS-PHY and SS-PHY have "internal" registers, which are not memory-mapped.
+> >>>
+> >>> And to access these internal registers, we need to specify the number
+> >>> corresponding to the register.
+> >>>
+> >>> The "addr" in "uniphier_u3hsphy_param" is just the number of the register.
+> >>> The "mask" shows a bitfield of the register, that means one of PHY parameters.
+> >>> The "value" shows a parameter value to set to the bitfield.
+> >>
+> >> What does each of these bitfields represent? Which PHY parameter does it
+> >> configure. Are they really PHY parameters or they also configure clocks/mux
+> >> etc? I would like the configurations to be more descriptive so that we get to
+> >> know at least what's getting configured here.
+> > 
+> > These bitfields represent phy parameters only, not include clocks/mux etc.
+> > We can express the register (bitfield) name with macros.
+> > 
+> > However, only recommended values are noted for the bitfields in the specsheet,
+> > because there are the trimmed values that aren't set as power-on values,
+> > and we should use the values for stable operation.
+> 
+> Calibration values are fine but at least the registers and bitfields has to be
+> described using names.
+
+I see. I'll describe bitfields using defined macros.
+The register numbers are like a page number, so they have no names even
+in the specsheet because there are various phy parameters in one register.
+
+Thank you,
 
 ---
-
- arch/arm/boot/dts/tegra124-apalis-eval.dts      | 18 ++++++++++++++++++
- arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts | 18 ++++++++++++++++++
- arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi     | 14 +++++++++++++-
- arch/arm/boot/dts/tegra124-apalis.dtsi          | 14 +++++++++++++-
- 4 files changed, 62 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts b/arch/arm/boot/dts/tegra124-apalis-eval.dts
-index a6ad759dddb4..c2e918d345de 100644
---- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
-+++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
-@@ -72,6 +72,7 @@
- 	host1x@50000000 {
- 		hdmi@54280000 {
- 			status = "okay";
-+			hdmi-supply = <&reg_5v0>;
- 		};
- 	};
- 
-@@ -164,6 +165,8 @@
- 	/* Apalis Serial ATA */
- 	sata@70020000 {
- 		status = "okay";
-+		target-5v-supply = <&reg_5v0>;
-+		target-12v-supply = <&reg_12v0>;
- 	};
- 
- 	hda@70030000 {
-@@ -230,6 +233,7 @@
- 		default-brightness-level = <6>;
- 		/* BKL1_ON */
- 		enable-gpios = <&gpio TEGRA_GPIO(BB, 5) GPIO_ACTIVE_HIGH>;
-+		power-supply = <&reg_3v3>;
- 	};
- 
- 	gpio-keys {
-@@ -244,6 +248,13 @@
- 		};
- 	};
- 
-+	reg_3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3.3V_SW";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	reg_5v0: regulator-5v0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "5V_SW";
-@@ -251,6 +262,13 @@
- 		regulator-max-microvolt = <5000000>;
- 	};
- 
-+	reg_12v0: regulator-12v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "12V_SW";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
- 	/* USBO1_EN */
- 	reg_usbo1_vbus: regulator-usbo1-vbus {
- 		compatible = "regulator-fixed";
-diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts b/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
-index 8a8d5fa0ecd1..eebcc013771e 100644
---- a/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
-+++ b/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
-@@ -36,6 +36,7 @@
- 	host1x@50000000 {
- 		hdmi@54280000 {
- 			status = "okay";
-+			hdmi-supply = <&reg_5v0>;
- 		};
- 	};
- 
-@@ -129,6 +130,8 @@
- 	/* Apalis Serial ATA */
- 	sata@70020000 {
- 		status = "okay";
-+		target-5v-supply = <&reg_5v0>;
-+		target-12v-supply = <&reg_12v0>;
- 	};
- 
- 	hda@70030000 {
-@@ -195,6 +198,7 @@
- 		default-brightness-level = <6>;
- 		/* BKL1_ON */
- 		enable-gpios = <&gpio TEGRA_GPIO(BB, 5) GPIO_ACTIVE_HIGH>;
-+		power-supply = <&reg_3v3>;
- 	};
- 
- 	gpio-keys {
-@@ -209,6 +213,13 @@
- 		};
- 	};
- 
-+	reg_3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3.3V_SW";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
- 	reg_5v0: regulator-5v0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "5V_SW";
-@@ -216,6 +227,13 @@
- 		regulator-max-microvolt = <5000000>;
- 	};
- 
-+	reg_12v0: regulator-12v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "12V_SW";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
- 	/* USBO1_EN */
- 	reg_usbo1_vbus: regulator-usbo1-vbus {
- 		compatible = "regulator-fixed";
-diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-index 8323fddceed8..a8dcf960e44f 100644
---- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-@@ -1565,7 +1565,8 @@
- 		sgtl5000: codec@a {
- 			compatible = "fsl,sgtl5000";
- 			reg = <0x0a>;
--			VDDA-supply = <&reg_module_3v3>;
-+			VDDA-supply = <&reg_module_3v3_audio>;
-+			VDDD-supply = <&reg_1v8_vddio>;
- 			VDDIO-supply = <&reg_1v8_vddio>;
- 			clocks = <&tegra_car TEGRA124_CLK_EXTERN1>;
- 		};
-@@ -1754,6 +1755,7 @@
- 			interrupt-parent = <&gpio>;
- 			interrupts = <TEGRA_GPIO(I, 6) IRQ_TYPE_LEVEL_LOW>;
- 			#thermal-sensor-cells = <1>;
-+			vcc-supply = <&reg_module_3v3>;
- 		};
- 	};
- 
-@@ -1902,11 +1904,13 @@
- 			usb3-0 {
- 				status = "okay";
- 				nvidia,usb2-companion = <2>;
-+				vbus-supply = <&reg_usbh_vbus>;
- 			};
- 
- 			usb3-1 {
- 				status = "okay";
- 				nvidia,usb2-companion = <0>;
-+				vbus-supply = <&reg_usbo1_vbus>;
- 			};
- 		};
- 	};
-@@ -1989,6 +1993,14 @@
- 		vin-supply = <&reg_3v3_mxm>;
- 	};
- 
-+	reg_module_3v3_audio: regulator-module-3v3-audio {
-+		compatible = "regulator-fixed";
-+		regulator-name = "+V3.3_AUDIO_AVDD_S";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
- 	sound {
- 		compatible = "toradex,tegra-audio-sgtl5000-apalis_tk1",
- 			     "nvidia,tegra-audio-sgtl5000";
-diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
-index 4ad14c7a64db..b2aca71f96e7 100644
---- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-@@ -1594,7 +1594,8 @@
- 		sgtl5000: codec@a {
- 			compatible = "fsl,sgtl5000";
- 			reg = <0x0a>;
--			VDDA-supply = <&reg_module_3v3>;
-+			VDDA-supply = <&reg_module_3v3_audio>;
-+			VDDD-supply = <&reg_1v8_vddio>;
- 			VDDIO-supply = <&reg_1v8_vddio>;
- 			clocks = <&tegra_car TEGRA124_CLK_EXTERN1>;
- 		};
-@@ -1783,6 +1784,7 @@
- 			interrupt-parent = <&gpio>;
- 			interrupts = <TEGRA_GPIO(I, 6) IRQ_TYPE_LEVEL_LOW>;
- 			#thermal-sensor-cells = <1>;
-+			vcc-supply = <&reg_module_3v3>;
- 		};
- 	};
- 
-@@ -1931,11 +1933,13 @@
- 			usb3-0 {
- 				status = "okay";
- 				nvidia,usb2-companion = <2>;
-+				vbus-supply = <&reg_usbh_vbus>;
- 			};
- 
- 			usb3-1 {
- 				status = "okay";
- 				nvidia,usb2-companion = <0>;
-+				vbus-supply = <&reg_usbo1_vbus>;
- 			};
- 		};
- 	};
-@@ -2018,6 +2022,14 @@
- 		vin-supply = <&reg_3v3_mxm>;
- 	};
- 
-+	reg_module_3v3_audio: regulator-module-3v3-audio {
-+		compatible = "regulator-fixed";
-+		regulator-name = "+V3.3_AUDIO_AVDD_S";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
- 	sound {
- 		compatible = "toradex,tegra-audio-sgtl5000-apalis_tk1",
- 			     "nvidia,tegra-audio-sgtl5000";
--- 
-2.14.4
+Best Regards,
+Kunihiko Hayashi
