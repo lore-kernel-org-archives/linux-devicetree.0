@@ -1,94 +1,93 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v3 2/9] drm/exynos: move connector creation to attach
- callback
-Date: Tue, 24 Jul 2018 17:10:04 +0900
-Message-ID: <20180724081004epcas1p2d5a43c556b831d6fe8cde9a24b284507~EP7F_T9mK0982409824epcas1p2Z@epcas1p2.samsung.com>
-References: <1529396370-18761-1-git-send-email-m.purski@samsung.com>
- <CGME20180619081958eucas1p16911ee9962441735d929dc588e70ce70@eucas1p1.samsung.com>
- <1529396370-18761-3-git-send-email-m.purski@samsung.com>
- <5B56DD97.3030508@samsung.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 3/3] iommu/arm-smmu: Error out only if not enough context
+ interrupts
+Date: Tue, 24 Jul 2018 09:36:34 +0100
+Message-ID: <20180724083633.GA19324@arm.com>
+References: <20180719175356.14753-1-vivek.gautam@codeaurora.org>
+ <20180719175356.14753-4-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5B56DD97.3030508@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Purski <m.purski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180719175356.14753-4-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: joro@8bytes.org, robh+dt@kernel.org, robin.murphy@arm.com, andy.gross@linaro.org, mark.rutland@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tfiga@chromium.org, sricharan@codeaurora.org, linux-arm-msm@vger.kernel.org, david.brown@linaro.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CgoyMDE464WEIDA37JuUIDI07J28IDE3OjA07JeQIElua2kgRGFlIOydtCjqsIApIOyTtCDquIA6
-Cj4gSGksCj4gCj4gMjAxOOuFhCAwNuyblCAxOeydvCAxNzoxOeyXkCBNYWNpZWogUHVyc2tpIOyd
-tCjqsIApIOyTtCDquIA6Cj4+IFRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIGFzc3VtZXMgdGhh
-dCB0aGUgb25seSBwb3NzaWJsZSBwZXJpcGhlcmFsCj4+IGRldmljZSBmb3IgRFNJTSBpcyBhIHBh
-bmVsLiBVc2luZyBhbiBvdXRwdXQgYnJpZGdlIGNoaWxkIGRldmljZQo+PiBzaG91bGQgYWxzbyBi
-ZSBwb3NzaWJsZS4KPj4KPj4gSWYgYW4gb3V0cHV0IGJyaWRnZSBpcyBhdmFpbGFibGUsIGRvbid0
-IGNyZWF0ZSBhIG5ldyBjb25uZWN0b3IuCj4+IEluc3RlYWQsIGNhbGwgZHJtX2JyaWRnZV9hdHRh
-Y2goKSBhbmQgc2V0IGVuY29kZXIncyBicmlkZ2UgdG8gTlVMTAo+PiBpbiBvcmRlciB0byBhdm9p
-ZCBhbiBvdXQgYnJpZGdlIGZyb20gYmVpbmcgdmlzaWJsZSBieSB0aGUgZnJhbWV3b3JrLCBhcwo+
-PiB0aGUgRFNJIGJ1cyBuZWVkcyBjb250cm9sIG9uIGVuYWJsaW5nIGl0cyBjaGlsZCBvdXRwdXQg
-YnJpZGdlLgo+Pgo+PiBTdWNoIHNlcXVlbmNlIGlzIHJlcXVpcmVkIGJ5IFRvc2hpYmEgVEMzNTg3
-NjQgYnJpZGdlLCB3aGljaCBpcyBhIERTSQo+PiBwZXJpcGhlcmFsIGJyaWRnZSBkZXZpY2UuCj4g
-Cj4gUmlnaHQsIHdlIHNob3VsZCBjb25zaWRlciBEU0kgdG8gTFZEUyBicmlkZ2UuCgpJbiBhZGRp
-dGlvbiwgY291bGQgeW91IHVwZGF0ZSBiZWxvdyBiaW5kaW5nIGRvY3VtZW50PwpEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9leHlub3MvZXh5bm9zX2RzaW0udHh0CgpU
-aGFua3MsCklua2kgRGFlCgo+IAo+IFRoYW5rcywKPiBJbmtpIERhZQo+IAo+Pgo+PiBTaWduZWQt
-b2ZmLWJ5OiBNYWNpZWogUHVyc2tpIDxtLnB1cnNraUBzYW1zdW5nLmNvbT4KPj4gLS0tCj4+ICBk
-cml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMgfCAzOCArKysrKysrKysrKysr
-KysrKysrKysrLS0tLS0tLS0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCsp
-LCAxMyBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlu
-b3MvZXh5bm9zX2RybV9kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9k
-c2kuYwo+PiBpbmRleCA5NTk5ZTZiLi5jMDQwOGMwIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2V4
-eW5vcy9leHlub3NfZHJtX2RzaS5jCj4+IEBAIC0yNTUsNiArMjU1LDcgQEAgc3RydWN0IGV4eW5v
-c19kc2kgewo+PiAgCXN0cnVjdCBtaXBpX2RzaV9ob3N0IGRzaV9ob3N0Owo+PiAgCXN0cnVjdCBk
-cm1fY29ubmVjdG9yIGNvbm5lY3RvcjsKPj4gIAlzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbDsKPj4g
-KwlzdHJ1Y3QgZHJtX2JyaWRnZSAqb3V0X2JyaWRnZTsKPj4gIAlzdHJ1Y3QgZGV2aWNlICpkZXY7
-Cj4+ICAKPj4gIAl2b2lkIF9faW9tZW0gKnJlZ19iYXNlOwo+PiBAQCAtMTQ5OSw3ICsxNTAwLDMw
-IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9ob3N0X2F0dGFjaChzdHJ1Y3QgbWlwaV9kc2lfaG9z
-dCAqaG9zdCwKPj4gIAkJCQkgIHN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRldmljZSkKPj4gIHsK
-Pj4gIAlzdHJ1Y3QgZXh5bm9zX2RzaSAqZHNpID0gaG9zdF90b19kc2koaG9zdCk7Cj4+IC0Jc3Ry
-dWN0IGRybV9kZXZpY2UgKmRybSA9IGRzaS0+Y29ubmVjdG9yLmRldjsKPj4gKwlzdHJ1Y3QgZHJt
-X2VuY29kZXIgKmVuY29kZXIgPSAmZHNpLT5lbmNvZGVyOwo+PiArCXN0cnVjdCBkcm1fZGV2aWNl
-ICpkcm0gPSBlbmNvZGVyLT5kZXY7Cj4+ICsJc3RydWN0IGRybV9icmlkZ2UgKm91dF9icmlkZ2U7
-Cj4+ICsKPj4gKwlvdXRfYnJpZGdlICA9IG9mX2RybV9maW5kX2JyaWRnZShkZXZpY2UtPmRldi5v
-Zl9ub2RlKTsKPj4gKwlpZiAob3V0X2JyaWRnZSkgewo+PiArCQlkcm1fYnJpZGdlX2F0dGFjaChl
-bmNvZGVyLCBvdXRfYnJpZGdlLCBOVUxMKTsKPj4gKwkJZHNpLT5vdXRfYnJpZGdlID0gb3V0X2Jy
-aWRnZTsKPj4gKwkJZW5jb2Rlci0+YnJpZGdlID0gTlVMTDsKPj4gKwl9IGVsc2Ugewo+PiArCQlp
-bnQgcmV0ID0gZXh5bm9zX2RzaV9jcmVhdGVfY29ubmVjdG9yKGVuY29kZXIpOwo+PiArCj4+ICsJ
-CWlmIChyZXQpIHsKPj4gKwkJCURSTV9FUlJPUigiZmFpbGVkIHRvIGNyZWF0ZSBjb25uZWN0b3Ig
-cmV0ID0gJWRcbiIsIHJldCk7Cj4+ICsJCQlkcm1fZW5jb2Rlcl9jbGVhbnVwKGVuY29kZXIpOwo+
-PiArCQkJcmV0dXJuIHJldDsKPj4gKwkJfQo+PiArCj4+ICsJCWRzaS0+cGFuZWwgPSBvZl9kcm1f
-ZmluZF9wYW5lbChkZXZpY2UtPmRldi5vZl9ub2RlKTsKPj4gKwkJaWYgKGRzaS0+cGFuZWwpIHsK
-Pj4gKwkJCWRybV9wYW5lbF9hdHRhY2goZHNpLT5wYW5lbCwgJmRzaS0+Y29ubmVjdG9yKTsKPj4g
-KwkJCWRzaS0+Y29ubmVjdG9yLnN0YXR1cyA9IGNvbm5lY3Rvcl9zdGF0dXNfY29ubmVjdGVkOwo+
-PiArCQl9Cj4+ICsJfQo+PiAgCj4+ICAJLyoKPj4gIAkgKiBUaGlzIGlzIGEgdGVtcG9yYXJ5IHNv
-bHV0aW9uIGFuZCBzaG91bGQgYmUgbWFkZSBieSBtb3JlIGdlbmVyaWMgd2F5Lgo+PiBAQCAtMTUx
-OCwxMSArMTU0Miw2IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9ob3N0X2F0dGFjaChzdHJ1Y3Qg
-bWlwaV9kc2lfaG9zdCAqaG9zdCwKPj4gIAlkc2ktPmxhbmVzID0gZGV2aWNlLT5sYW5lczsKPj4g
-IAlkc2ktPmZvcm1hdCA9IGRldmljZS0+Zm9ybWF0Owo+PiAgCWRzaS0+bW9kZV9mbGFncyA9IGRl
-dmljZS0+bW9kZV9mbGFnczsKPj4gLQlkc2ktPnBhbmVsID0gb2ZfZHJtX2ZpbmRfcGFuZWwoZGV2
-aWNlLT5kZXYub2Zfbm9kZSk7Cj4+IC0JaWYgKGRzaS0+cGFuZWwpIHsKPj4gLQkJZHJtX3BhbmVs
-X2F0dGFjaChkc2ktPnBhbmVsLCAmZHNpLT5jb25uZWN0b3IpOwo+PiAtCQlkc2ktPmNvbm5lY3Rv
-ci5zdGF0dXMgPSBjb25uZWN0b3Jfc3RhdHVzX2Nvbm5lY3RlZDsKPj4gLQl9Cj4+ICAJZXh5bm9z
-X2RybV9jcnRjX2dldF9ieV90eXBlKGRybSwgRVhZTk9TX0RJU1BMQVlfVFlQRV9MQ0QpLT5pODBf
-bW9kZSA9Cj4+ICAJCQkhKGRzaS0+bW9kZV9mbGFncyAmIE1JUElfRFNJX01PREVfVklERU8pOwo+
-PiAgCj4+IEBAIC0xNjU0LDEzICsxNjczLDYgQEAgc3RhdGljIGludCBleHlub3NfZHNpX2JpbmQo
-c3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4+ICAJaWYgKHJldCA8
-IDApCj4+ICAJCXJldHVybiByZXQ7Cj4+ICAKPj4gLQlyZXQgPSBleHlub3NfZHNpX2NyZWF0ZV9j
-b25uZWN0b3IoZW5jb2Rlcik7Cj4+IC0JaWYgKHJldCkgewo+PiAtCQlEUk1fRVJST1IoImZhaWxl
-ZCB0byBjcmVhdGUgY29ubmVjdG9yIHJldCA9ICVkXG4iLCByZXQpOwo+PiAtCQlkcm1fZW5jb2Rl
-cl9jbGVhbnVwKGVuY29kZXIpOwo+PiAtCQlyZXR1cm4gcmV0Owo+PiAtCX0KPj4gLQo+PiAgCWlm
-IChkc2ktPm1pY19icmlkZ2Vfbm9kZSkgewo+PiAgCQltaWNfYnJpZGdlID0gb2ZfZHJtX2ZpbmRf
-YnJpZGdlKGRzaS0+bWljX2JyaWRnZV9ub2RlKTsKPj4gIAkJaWYgKG1pY19icmlkZ2UpCj4+Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Jul 19, 2018 at 11:23:56PM +0530, Vivek Gautam wrote:
+> Currently we check if the number of context banks is not equal to
+> num_context_interrupts. However, there are booloaders such as, one
+> on sdm845 that reserves few context banks and thus kernel views
+> less than the total available context banks.
+> So, although the hardware definition in device tree would mention
+> the correct number of context interrupts, this number can be
+> greater than the number of context banks visible to smmu in kernel.
+> We should therefore error out only when the number of context banks
+> is greater than the available number of context interrupts.
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Suggested-by: Tomasz Figa <tfiga@chromium.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> ---
+>  drivers/iommu/arm-smmu.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 7c69736a30f8..4cb53bf4f423 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -2229,12 +2229,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>  	if (err)
+>  		return err;
+>  
+> -	if (smmu->version == ARM_SMMU_V2 &&
+> -	    smmu->num_context_banks != smmu->num_context_irqs) {
+> -		dev_err(dev,
+> -			"found only %d context interrupt(s) but %d required\n",
+> -			smmu->num_context_irqs, smmu->num_context_banks);
+> -		return -ENODEV;
+> +	if (smmu->version == ARM_SMMU_V2) {
+> +		if (smmu->num_context_banks > smmu->num_context_irqs) {
+> +			dev_err(dev,
+> +			      "found only %d context irq(s) but %d required\n",
+> +			      smmu->num_context_irqs, smmu->num_context_banks);
+> +			return -ENODEV;
+> +		} else if (smmu->num_context_banks < smmu->num_context_irqs) {
+> +			/* loose extra context interrupts */
+> +			dev_notice(dev,
+> +			      "found %d context irq(s) but only %d required\n",
+> +			      smmu->num_context_irqs, smmu->num_context_banks);
+> +			smmu->num_context_irqs = smmu->num_context_banks;
+> +		}
+
+I don't see the utility in the new message. Can you simplify with the patch
+below on top? It's a bit weird that we only decide to ignore the extra irqs
+after calling platform_get_irq() on them, but that seems to be harmless.
+
+Will
+
+--->8
+
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index aa46c1ed5bf9..5349e22b5c78 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -2109,13 +2109,10 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 			      "found only %d context irq(s) but %d required\n",
+ 			      smmu->num_context_irqs, smmu->num_context_banks);
+ 			return -ENODEV;
+-		} else if (smmu->num_context_banks < smmu->num_context_irqs) {
+-			/* loose extra context interrupts */
+-			dev_notice(dev,
+-			      "found %d context irq(s) but only %d required\n",
+-			      smmu->num_context_irqs, smmu->num_context_banks);
+-			smmu->num_context_irqs = smmu->num_context_banks;
+ 		}
++
++		/* Ignore superfluous interrupts */
++		smmu->num_context_irqs = smmu->num_context_banks;
+ 	}
+ 
+ 	for (i = 0; i < smmu->num_global_irqs; ++i) {
