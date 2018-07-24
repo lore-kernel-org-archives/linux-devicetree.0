@@ -1,74 +1,88 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 4/4] arm: dts: ls1021a: Enable I2C DMA support
-Date: Tue, 24 Jul 2018 10:02:48 +0200
-Message-ID: <20180724080248.gncihyhiibzkvkzg@pengutronix.de>
-References: <20180709094304.8814-1-esben.haabendal@gmail.com>
- <20180709094304.8814-5-esben.haabendal@gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v3 2/9] drm/exynos: move connector creation to attach
+ callback
+Date: Tue, 24 Jul 2018 17:04:39 +0900
+Message-ID: <20180724080439epcas1p3a19bce196acc4611327aa2a78a8e5060~EP2W7G7Vi0942109421epcas1p36@epcas1p3.samsung.com>
+References: <1529396370-18761-1-git-send-email-m.purski@samsung.com>
+ <CGME20180619081958eucas1p16911ee9962441735d929dc588e70ce70@eucas1p1.samsung.com>
+ <1529396370-18761-3-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180709094304.8814-5-esben.haabendal@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Esben Haabendal <esben.haabendal@gmail.com>
-Cc: linux-i2c@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yuan Yao <yao.yuan@freescale.com>, Esben Haabendal <eha@deif.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1529396370-18761-3-git-send-email-m.purski@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maciej Purski <m.purski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-expanding Cc a bit to include Shawn and the kernel teams of Pengutronix
-and NXP.
-
-On Mon, Jul 09, 2018 at 11:43:04AM +0200, Esben Haabendal wrote:
-> From: Esben Haabendal <eha@deif.com>
-> 
-> Gives substantial performance improvement for transfers larger than 16
-> bytes (DMA_THRESHOLD).  Smaller transfers are unaffected.
-> 
-> Signed-off-by: Esben Haabendal <eha@deif.com>
-> ---
->  arch/arm/boot/dts/ls1021a.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index c55d479971cc..1e5640701c65 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -363,6 +363,8 @@
->  			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
->  			clock-names = "i2c";
->  			clocks = <&clockgen 4 1>;
-> +			dma-names = "tx", "rx";
-> +			dmas = <&edma0 1 39>, <&edma0 1 38>;
->  			status = "disabled";
->  		};
->  
-> @@ -374,6 +376,8 @@
->  			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
->  			clock-names = "i2c";
->  			clocks = <&clockgen 4 1>;
-> +			dma-names = "tx", "rx";
-> +			dmas = <&edma0 1 37>, <&edma0 1 36>;
->  			status = "disabled";
->  		};
->  
-> @@ -385,6 +389,8 @@
->  			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
->  			clock-names = "i2c";
->  			clocks = <&clockgen 4 1>;
-> +			dma-names = "tx", "rx";
-> +			dmas = <&edma0 1 35>, <&edma0 1 34>;
->  			status = "disabled";
->  		};
-
-This is a bit orthogonal to the other changes in this series and needs
-at least an ack from Shawn. Looks ok in my eyes.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+SGksCgoyMDE464WEIDA27JuUIDE57J28IDE3OjE57JeQIE1hY2llaiBQdXJza2kg7J20KOqwgCkg
+7JO0IOq4gDoKPiBUaGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBhc3N1bWVzIHRoYXQgdGhlIG9u
+bHkgcG9zc2libGUgcGVyaXBoZXJhbAo+IGRldmljZSBmb3IgRFNJTSBpcyBhIHBhbmVsLiBVc2lu
+ZyBhbiBvdXRwdXQgYnJpZGdlIGNoaWxkIGRldmljZQo+IHNob3VsZCBhbHNvIGJlIHBvc3NpYmxl
+Lgo+IAo+IElmIGFuIG91dHB1dCBicmlkZ2UgaXMgYXZhaWxhYmxlLCBkb24ndCBjcmVhdGUgYSBu
+ZXcgY29ubmVjdG9yLgo+IEluc3RlYWQsIGNhbGwgZHJtX2JyaWRnZV9hdHRhY2goKSBhbmQgc2V0
+IGVuY29kZXIncyBicmlkZ2UgdG8gTlVMTAo+IGluIG9yZGVyIHRvIGF2b2lkIGFuIG91dCBicmlk
+Z2UgZnJvbSBiZWluZyB2aXNpYmxlIGJ5IHRoZSBmcmFtZXdvcmssIGFzCj4gdGhlIERTSSBidXMg
+bmVlZHMgY29udHJvbCBvbiBlbmFibGluZyBpdHMgY2hpbGQgb3V0cHV0IGJyaWRnZS4KPiAKPiBT
+dWNoIHNlcXVlbmNlIGlzIHJlcXVpcmVkIGJ5IFRvc2hpYmEgVEMzNTg3NjQgYnJpZGdlLCB3aGlj
+aCBpcyBhIERTSQo+IHBlcmlwaGVyYWwgYnJpZGdlIGRldmljZS4KClJpZ2h0LCB3ZSBzaG91bGQg
+Y29uc2lkZXIgRFNJIHRvIExWRFMgYnJpZGdlLgoKVGhhbmtzLApJbmtpIERhZQoKPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBNYWNpZWogUHVyc2tpIDxtLnB1cnNraUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAg
+ZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIHwgMzggKysrKysrKysrKysr
+KysrKysrKysrKy0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCsp
+LCAxMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5v
+cy9leHlub3NfZHJtX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2Rz
+aS5jCj4gaW5kZXggOTU5OWU2Yi4uYzA0MDhjMCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9z
+L2V4eW5vc19kcm1fZHNpLmMKPiBAQCAtMjU1LDYgKzI1NSw3IEBAIHN0cnVjdCBleHlub3NfZHNp
+IHsKPiAgCXN0cnVjdCBtaXBpX2RzaV9ob3N0IGRzaV9ob3N0Owo+ICAJc3RydWN0IGRybV9jb25u
+ZWN0b3IgY29ubmVjdG9yOwo+ICAJc3RydWN0IGRybV9wYW5lbCAqcGFuZWw7Cj4gKwlzdHJ1Y3Qg
+ZHJtX2JyaWRnZSAqb3V0X2JyaWRnZTsKPiAgCXN0cnVjdCBkZXZpY2UgKmRldjsKPiAgCj4gIAl2
+b2lkIF9faW9tZW0gKnJlZ19iYXNlOwo+IEBAIC0xNDk5LDcgKzE1MDAsMzAgQEAgc3RhdGljIGlu
+dCBleHlub3NfZHNpX2hvc3RfYXR0YWNoKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0LAo+ICAJ
+CQkJICBzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkZXZpY2UpCj4gIHsKPiAgCXN0cnVjdCBleHlu
+b3NfZHNpICpkc2kgPSBob3N0X3RvX2RzaShob3N0KTsKPiAtCXN0cnVjdCBkcm1fZGV2aWNlICpk
+cm0gPSBkc2ktPmNvbm5lY3Rvci5kZXY7Cj4gKwlzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIg
+PSAmZHNpLT5lbmNvZGVyOwo+ICsJc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IGVuY29kZXItPmRl
+djsKPiArCXN0cnVjdCBkcm1fYnJpZGdlICpvdXRfYnJpZGdlOwo+ICsKPiArCW91dF9icmlkZ2Ug
+ID0gb2ZfZHJtX2ZpbmRfYnJpZGdlKGRldmljZS0+ZGV2Lm9mX25vZGUpOwo+ICsJaWYgKG91dF9i
+cmlkZ2UpIHsKPiArCQlkcm1fYnJpZGdlX2F0dGFjaChlbmNvZGVyLCBvdXRfYnJpZGdlLCBOVUxM
+KTsKPiArCQlkc2ktPm91dF9icmlkZ2UgPSBvdXRfYnJpZGdlOwo+ICsJCWVuY29kZXItPmJyaWRn
+ZSA9IE5VTEw7Cj4gKwl9IGVsc2Ugewo+ICsJCWludCByZXQgPSBleHlub3NfZHNpX2NyZWF0ZV9j
+b25uZWN0b3IoZW5jb2Rlcik7Cj4gKwo+ICsJCWlmIChyZXQpIHsKPiArCQkJRFJNX0VSUk9SKCJm
+YWlsZWQgdG8gY3JlYXRlIGNvbm5lY3RvciByZXQgPSAlZFxuIiwgcmV0KTsKPiArCQkJZHJtX2Vu
+Y29kZXJfY2xlYW51cChlbmNvZGVyKTsKPiArCQkJcmV0dXJuIHJldDsKPiArCQl9Cj4gKwo+ICsJ
+CWRzaS0+cGFuZWwgPSBvZl9kcm1fZmluZF9wYW5lbChkZXZpY2UtPmRldi5vZl9ub2RlKTsKPiAr
+CQlpZiAoZHNpLT5wYW5lbCkgewo+ICsJCQlkcm1fcGFuZWxfYXR0YWNoKGRzaS0+cGFuZWwsICZk
+c2ktPmNvbm5lY3Rvcik7Cj4gKwkJCWRzaS0+Y29ubmVjdG9yLnN0YXR1cyA9IGNvbm5lY3Rvcl9z
+dGF0dXNfY29ubmVjdGVkOwo+ICsJCX0KPiArCX0KPiAgCj4gIAkvKgo+ICAJICogVGhpcyBpcyBh
+IHRlbXBvcmFyeSBzb2x1dGlvbiBhbmQgc2hvdWxkIGJlIG1hZGUgYnkgbW9yZSBnZW5lcmljIHdh
+eS4KPiBAQCAtMTUxOCwxMSArMTU0Miw2IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9ob3N0X2F0
+dGFjaChzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAqaG9zdCwKPiAgCWRzaS0+bGFuZXMgPSBkZXZpY2Ut
+PmxhbmVzOwo+ICAJZHNpLT5mb3JtYXQgPSBkZXZpY2UtPmZvcm1hdDsKPiAgCWRzaS0+bW9kZV9m
+bGFncyA9IGRldmljZS0+bW9kZV9mbGFnczsKPiAtCWRzaS0+cGFuZWwgPSBvZl9kcm1fZmluZF9w
+YW5lbChkZXZpY2UtPmRldi5vZl9ub2RlKTsKPiAtCWlmIChkc2ktPnBhbmVsKSB7Cj4gLQkJZHJt
+X3BhbmVsX2F0dGFjaChkc2ktPnBhbmVsLCAmZHNpLT5jb25uZWN0b3IpOwo+IC0JCWRzaS0+Y29u
+bmVjdG9yLnN0YXR1cyA9IGNvbm5lY3Rvcl9zdGF0dXNfY29ubmVjdGVkOwo+IC0JfQo+ICAJZXh5
+bm9zX2RybV9jcnRjX2dldF9ieV90eXBlKGRybSwgRVhZTk9TX0RJU1BMQVlfVFlQRV9MQ0QpLT5p
+ODBfbW9kZSA9Cj4gIAkJCSEoZHNpLT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9ERV9WSURFTyk7
+Cj4gIAo+IEBAIC0xNjU0LDEzICsxNjczLDYgQEAgc3RhdGljIGludCBleHlub3NfZHNpX2JpbmQo
+c3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4gIAlpZiAocmV0IDwg
+MCkKPiAgCQlyZXR1cm4gcmV0Owo+ICAKPiAtCXJldCA9IGV4eW5vc19kc2lfY3JlYXRlX2Nvbm5l
+Y3RvcihlbmNvZGVyKTsKPiAtCWlmIChyZXQpIHsKPiAtCQlEUk1fRVJST1IoImZhaWxlZCB0byBj
+cmVhdGUgY29ubmVjdG9yIHJldCA9ICVkXG4iLCByZXQpOwo+IC0JCWRybV9lbmNvZGVyX2NsZWFu
+dXAoZW5jb2Rlcik7Cj4gLQkJcmV0dXJuIHJldDsKPiAtCX0KPiAtCj4gIAlpZiAoZHNpLT5taWNf
+YnJpZGdlX25vZGUpIHsKPiAgCQltaWNfYnJpZGdlID0gb2ZfZHJtX2ZpbmRfYnJpZGdlKGRzaS0+
+bWljX2JyaWRnZV9ub2RlKTsKPiAgCQlpZiAobWljX2JyaWRnZSkKPiAKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
