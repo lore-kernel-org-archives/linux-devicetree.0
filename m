@@ -1,105 +1,58 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 18/22] media: platform: Add Sunxi-Cedrus
- VPU decoder driver
-Date: Tue, 24 Jul 2018 16:56:57 +0200
-Message-ID: <25fee2b5ad35f46ccadf56b93d1a9261c9855f97.camel@bootlin.com>
-References: <20180710080114.31469-1-paul.kocialkowski@bootlin.com>
-	 <20180710080114.31469-19-paul.kocialkowski@bootlin.com>
-	 <20180710084223.jguogmvlwloi2utf@flea>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Tue, 24 Jul 2018 15:57:55 +0100
+Message-ID: <20180724145755.GF13268@sirena.org.uk>
+References: <cover.1531531808.git.collinsd@codeaurora.org>
+ <56b9d5c38cfe46da1228c54f001a49773c3e31dc.1531531808.git.collinsd@codeaurora.org>
+ <CAD=FV=VmfqWRGRMEn+0dzZ8x4R5vVaHbkthXAN91Lm-XmP9Gqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-K/4/n7VHwkFtfdOG6klo"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBRX43TNAKGQEKHYQKQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180710084223.jguogmvlwloi2utf@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Keiichi Watanabe <keiichiw-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Smitha T Murthy <smitha.t-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tom Saeger <tom.saeger-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jacob
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oPmsXEqKQNHCSXW7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=VmfqWRGRMEn+0dzZ8x4R5vVaHbkthXAN91Lm-XmP9Gqg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
 
---=-K/4/n7VHwkFtfdOG6klo
-Content-Type: text/plain; charset="UTF-8"
+--oPmsXEqKQNHCSXW7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+On Mon, Jul 23, 2018 at 01:09:05PM -0700, Doug Anderson wrote:
 
-On Tue, 2018-07-10 at 10:42 +0200, Maxime Ripard wrote:
-> On Tue, Jul 10, 2018 at 10:01:10AM +0200, Paul Kocialkowski wrote:
-> > +static int cedrus_remove(struct platform_device *pdev)
-> > +{
-> > +       struct cedrus_dev *dev = platform_get_drvdata(pdev);
-> > +
-> > +       v4l2_info(&dev->v4l2_dev, "Removing " CEDRUS_NAME);
-> 
-> That log is kind of pointless.
+> I know you are still looking for time to review the RPMh-regulator
+> driver and that's fine.  One idea I had though: if the bindings look
+> OK to you and are less controversial, is there any chance they could
+> land in the meantime?
 
-Fair enough, I'll get rid of it.
+This appears to have a bunch of dependencies which I've got no idea
+what's going on with the merging of and no idea if they'll affect the
+bindings or anything, nobody's said anything and last I looked it was
+unclear what was going on.  I'm kind of hoping that things might have
+sorted themselves out of the merge window.
 
-> > +static void cedrus_hw_set_capabilities(struct cedrus_dev *dev)
-> > +{
-> > +	unsigned int engine_version;
-> > +
-> > +	engine_version = cedrus_read(dev, VE_VERSION) >> VE_VERSION_SHIFT;
-> > +
-> > +	if (engine_version >= 0x1667)
-> > +		dev->capabilities |= CEDRUS_CAPABILITY_UNTILED;
-> 
-> The version used here would need a define, but I'm wondering if this
-> is the right solution here. You are using at the same time the version
-> ID returned by the register and the compatible in various places, and
-> they are both redundant. If you want to base the capabilities on the
-> compatible, then you can do it for all of those properties and
-> capabilities, and if you want to use the version register, then you
-> don't need all those compatibles but just one.
-> 
-> I think that basing all our capabilities on the compatible makes more
-> sense, since you need to have access to the registers in order to read
-> the version register, and this changes from one SoC generation to the
-> other (for example, keeping the reset line asserted would prevent you
-> from reading it, and the fact that there is a reset line depends on
-> the SoC).
+Some of the decisions in the code have flowed out into the bindings
+before so I'm not keen to merge the bindings separately, and if the
+driver for the thing used to communicate with the device is still in
+review then that's definitely a red flag.
 
-I concur, let's move this to a compatible-based logic instead!
+--oPmsXEqKQNHCSXW7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > +int cedrus_hw_probe(struct cedrus_dev *dev)
-> > +{
-> > +	struct resource *res;
-> > +	int irq_dec;
-> > +	int ret;
-> > +
-> > +	irq_dec = platform_get_irq(dev->pdev, 0);
-> > +	if (irq_dec <= 0) {
-> > +		v4l2_err(&dev->v4l2_dev, "Failed to get IRQ\n");
-> > +		return -ENXIO;
-> > +	}
-> 
-> You already have an error code returned by platform_get_irq, there's
-> no point in masking it and returning -ENXIO. This can even lead to
-> some bugs, for example when the error code is EPROBE_DEFER.
+-----BEGIN PGP SIGNATURE-----
 
-Right, I'll fix this and all the similar issues you mentionned.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltXPnIACgkQJNaLcl1U
+h9Cnlgf/Us+o70Zq0Iaws8EPizNkIFJTyo9hKNBJLy2nFBa6j3aAcDXTget3QCfT
+2Pii23L4yQvr+6M2JoO4eOcuL9HtiJKkbKtqdf/P0MfMWGRSmI9IBVypILXlb95n
+qsqghZ6Fd2Iu16zelRHgpfxlezB1vz+O3/Z3TURqmPH/ntaY/FVjZu31+ciaA6xR
+zn5MfgmJpnYPQNJpLFndEc7AS6aszgvxKwgZ3rggIhG/uMJd0lrAGBsA2/w1Mrd+
+umLdkg53zKwjVN3wnqdaqKlwh7d3eQdbw9uL+lS+p1JXZXgHQTmZnHw0nCkEcu88
+do3PmjMP3V6yplJh9S6pRNTMgn+/ag==
+=ElU3
+-----END PGP SIGNATURE-----
 
-[...]
-
-> There's also a bunch of warnings/checks reported by checkpatch that
-> should be fixed in the next iteration: the spaces after a cast, the
-> NULL comparison, macros arguments precedence, parenthesis alignments
-> issues, etc.)
-
-Thanks, I'll look into that for the next revision.
-
-Cheers,
-
-Paul
-
--- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-K/4/n7VHwkFtfdOG6klo--
+--oPmsXEqKQNHCSXW7--
