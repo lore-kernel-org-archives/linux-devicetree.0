@@ -1,63 +1,42 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCHv2 2/9] dt-bindings: display/ti: add k2g-dss bindings
-Date: Tue, 24 Jul 2018 17:29:13 +0300
-Message-ID: <2654733.mVEzccOoVi@avalon>
-References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
- <20180618132242.8673-3-tomi.valkeinen@ti.com>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: [PATCH 00/10] Update the pad autocal procedure
+Date: Tue, 24 Jul 2018 17:29:41 +0300
+Message-ID: <1532442591-5640-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180618132242.8673-3-tomi.valkeinen@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9taSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gTW9uZGF5LCAxOCBKdW5lIDIw
-MTggMTY6MjI6MzUgRUVTVCBUb21pIFZhbGtlaW5lbiB3cm90ZToKPiBBZGQgRFQgYmluZGluZ3Mg
-Zm9yIFRleGFzIEluc3RydW1lbnRzIEsyRyBTb0MgRGlzcGxheSBTdWJzeXN0ZW0uIFRoZSBEU1MK
-PiBpcyBxdWl0ZSBzaW1wbGUsIHdpdGggYSBzaW5nbGUgcGxhbmUgYW5kIGEgc2luZ2xlIG91dHB1
-dC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGku
-Y29tPgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IFJldmlld2VkLWJ5OiBSb2Ig
-SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3RpL3RpLGsyZy1kc3MudHh0IHwgMTUgKysrKysrKysrKysrKysrCj4gIDEgZmls
-ZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGsyZy1kc3MudHh0Cj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3RpL3RpLGsyZy1kc3MudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS90aS90aSxrMmctZHNzLnR4dCBuZXcgZmlsZSBtb2RlCj4gMTAwNjQ0Cj4gaW5kZXgg
-MDAwMDAwMDAwMDAwLi4xYWYxMTQyNWVkYTMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksazJnLWRzcy50eHQKPiBA
-QCAtMCwwICsxLDE1IEBACj4gK1RleGFzIEluc3RydW1lbnRzIEsyRyBEaXNwbGF5IFN1YnN5c3Rl
-bQo+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1JlcXVp
-cmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogInRpLGsyZy1kc3MiCj4gKy0gcmVnOiBh
-ZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIHNwYWNlcyBmb3IgRFNTIHN1Ym1vZHVs
-ZXMKPiArLSByZWctbmFtZXM6ICJjZmciLCAiY29tbW9uIiwgInZpZDEiLCAib3ZyMSIsICJ2cDEi
-CgpXaGVuIHNlZWluZyBtdWx0aXBsZSByZWdpc3RlciByYW5nZXMgZm9yIGEgRFQgbm9kZSBJIGFs
-d2F5cyBzdXNwZWN0IHRoYXQgd2UgCmRlc2NyaWJlIG11bHRpcGxlIElQIGNvcmVzIHRoYXQgY291
-bGQgYmUgYmV0dGVyIG1vZGVsZWQgYXMgaW5kZXBlbmRlbnQgbm9kZXMuIApXaGF0IHByb21wdGVk
-IHlvdSBub3QgdG8gbW9kZWwgdGhlIERJU1BDIGFzIGEgc2VwYXJhdGUgRFQgbm9kZSAocG9zc2li
-bHkgYSAKY2hpbGQgb2YgdGhlIERTUyBEVCBub2RlKSA/CgpGdXJ0aGVybW9yZSwgImNmZyIgY29y
-cmVzcG9uZHMgdG8gdGhlIERTUyByZWdpc3RlcnMsIHNvIEkgd29uZGVyIHdoZXRoZXIgaXQgCnNo
-b3VsZG4ndCBiZSBuYW1lZCAiZHNzIi4gU2ltaWxhcmx5LCAiY29tbW9uIiByZWFsbHkgc291bmRz
-IGxpa2UgRFNTIGNvbW1vbiAKcmVnaXN0ZXJzLCB3aGlsZSBpdCByZWxhdGVzIHRvIHRoZSBESVNQ
-Qy4KCj4gKy0gY2xvY2tzOiBwaGFuZGxlIHRvIGZjbGsgYW5kIHZwMSBjbG9ja3MKPiArLSBjbG9j
-ay1uYW1lczogImZjayIsICJ2cDEiCj4gKy0gaW50ZXJydXB0czogcGhhbmRsZSB0byB0aGUgRElT
-UEMgaW50ZXJydXB0Cj4gKwo+ICtUaGUgRFNTIG91dHB1dHMgYXJlIGRlc2NyaWJlZCB1c2luZyB0
-aGUgZGV2aWNlIGdyYXBocyBhcyBkb2N1bWVudGVkIGluCj4gK0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuIEsyRyBEU1MgaGFzIGEgc2luZ2xlIERQSQo+IG91dHB1
-dCBhcwo+ICtwb3J0IDAuCgpCb3RoIFNQUlVIWThIIGFuZCBTUFJTUDA3RCBkb2N1bWVudCBhIERQ
-SSBvdXRwdXQgYW5kIGEgREJJIG91dHB1dC4gQW0gSSAKbG9va2luZyBhdCB0aGUgd3JvbmcgZG9j
-dW1lbnQgPwoKPiArCgpFeHRyYSBibGFuayBsaW5lID8KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQ
-aW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi all,
+
+Update the tegra_sdhci_pad_autocalib() pad drive strength calibration
+procedure to match the ones specified in the TRMs of the more recent
+SoCs. This was tested on Tegra186, Tegra210, and Tegra124, although it
+should not break things older generations either.
+
+This series depends on the "Tegra SDHCI enable 1.8 V signaling on
+Tegar210 and Tegra186" series posted earlier.
+
+Aapo Vienamo (10):
+  mmc: tegra: Poll for calibration completion
+  mmc: tegra: Set calibration pad voltage reference
+  mmc: tegra: Power on the calibration pad
+  mmc: tegra: Disable card clock during pad calibration
+  dt-bindings: Add Tegra SDHCI pad pdpu offset bindings
+  mmc: tegra: Program pad autocal offsets from dt
+  arm64: dts: tegra186: Add sdmmc pad auto calibration offsets
+  arm64: dts: tegra210: Add sdmmc pad auto calibration offsets
+  mmc: tegra: Perform pad calibration after voltage switch
+  mmc: tegra: Enable pad calibration on Tegra210 and Tegra186
+
+ .../bindings/mmc/nvidia,tegra20-sdhci.txt          |  32 +++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  20 ++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  12 +
+ drivers/mmc/host/sdhci-tegra.c                     | 242 ++++++++++++++++++++-
+ 4 files changed, 297 insertions(+), 9 deletions(-)
+
+-- 
+2.7.4
