@@ -1,93 +1,62 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 3/3] iommu/arm-smmu: Error out only if not enough context
- interrupts
-Date: Tue, 24 Jul 2018 09:36:34 +0100
-Message-ID: <20180724083633.GA19324@arm.com>
-References: <20180719175356.14753-1-vivek.gautam@codeaurora.org>
- <20180719175356.14753-4-vivek.gautam@codeaurora.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/5] dt-bindings: sunxi-sram: add binding
+ for Allwinner H6 SRAM C
+Date: Tue, 24 Jul 2018 10:41:53 +0200
+Message-ID: <20180724084153.in6jl5mi3x4f3y3a@flea>
+References: <20180722053955.25266-1-icenowy@aosc.io>
+ <20180722053955.25266-3-icenowy@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wo2rk2ph6hkxnnma"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXGM3PNAKGQEZZ3XVVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180719175356.14753-4-vivek.gautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: joro@8bytes.org, robh+dt@kernel.org, robin.murphy@arm.com, andy.gross@linaro.org, mark.rutland@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tfiga@chromium.org, sricharan@codeaurora.org, linux-arm-msm@vger.kernel.org, david.brown@linaro.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180722053955.25266-3-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 19, 2018 at 11:23:56PM +0530, Vivek Gautam wrote:
-> Currently we check if the number of context banks is not equal to
-> num_context_interrupts. However, there are booloaders such as, one
-> on sdm845 that reserves few context banks and thus kernel views
-> less than the total available context banks.
-> So, although the hardware definition in device tree would mention
-> the correct number of context interrupts, this number can be
-> greater than the number of context banks visible to smmu in kernel.
-> We should therefore error out only when the number of context banks
-> is greater than the available number of context interrupts.
+
+--wo2rk2ph6hkxnnma
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Sun, Jul 22, 2018 at 01:39:52PM +0800, Icenowy Zheng wrote:
+> The Allwinner H6 SoC's DE3 needs the SRAM C section being claimed in the
+> system controller to work, like A64 DE2.
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Suggested-by: Tomasz Figa <tfiga@chromium.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
+> As H6 and A64 system controller are quite similar, code is reused now,
+> and the A64 fallback compatible string is added after the H6 compatible
+> string.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
->  drivers/iommu/arm-smmu.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
+>  Documentation/devicetree/bindings/sram/sunxi-sram.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 7c69736a30f8..4cb53bf4f423 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -2229,12 +2229,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->  	if (err)
->  		return err;
->  
-> -	if (smmu->version == ARM_SMMU_V2 &&
-> -	    smmu->num_context_banks != smmu->num_context_irqs) {
-> -		dev_err(dev,
-> -			"found only %d context interrupt(s) but %d required\n",
-> -			smmu->num_context_irqs, smmu->num_context_banks);
-> -		return -ENODEV;
-> +	if (smmu->version == ARM_SMMU_V2) {
-> +		if (smmu->num_context_banks > smmu->num_context_irqs) {
-> +			dev_err(dev,
-> +			      "found only %d context irq(s) but %d required\n",
-> +			      smmu->num_context_irqs, smmu->num_context_banks);
-> +			return -ENODEV;
-> +		} else if (smmu->num_context_banks < smmu->num_context_irqs) {
-> +			/* loose extra context interrupts */
-> +			dev_notice(dev,
-> +			      "found %d context irq(s) but only %d required\n",
-> +			      smmu->num_context_irqs, smmu->num_context_banks);
-> +			smmu->num_context_irqs = smmu->num_context_banks;
-> +		}
+> diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+> index c51ade86578c..6527a1a535a3 100644
+> --- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+> +++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
+> @@ -18,6 +18,7 @@ Required properties:
+>      - "allwinner,sun8i-h3-system-control"
+>      - "allwinner,sun50i-a64-sram-controller" (deprecated)
+>      - "allwinner,sun50i-a64-system-control"
+> +    - "allwinner,sun50i-h6-system-contorl", "allwinner,sun50i-a64-system-control"
 
-I don't see the utility in the new message. Can you simplify with the patch
-below on top? It's a bit weird that we only decide to ignore the extra irqs
-after calling platform_get_irq() on them, but that seems to be harmless.
+                                     ^ control
 
-Will
+Maxime
 
---->8
-
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index aa46c1ed5bf9..5349e22b5c78 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -2109,13 +2109,10 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
- 			      "found only %d context irq(s) but %d required\n",
- 			      smmu->num_context_irqs, smmu->num_context_banks);
- 			return -ENODEV;
--		} else if (smmu->num_context_banks < smmu->num_context_irqs) {
--			/* loose extra context interrupts */
--			dev_notice(dev,
--			      "found %d context irq(s) but only %d required\n",
--			      smmu->num_context_irqs, smmu->num_context_banks);
--			smmu->num_context_irqs = smmu->num_context_banks;
- 		}
-+
-+		/* Ignore superfluous interrupts */
-+		smmu->num_context_irqs = smmu->num_context_banks;
- 	}
- 
- 	for (i = 0; i < smmu->num_global_irqs; ++i) {
+-- 
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--wo2rk2ph6hkxnnma--
