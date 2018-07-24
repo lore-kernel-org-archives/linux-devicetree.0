@@ -1,78 +1,211 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Tue, 24 Jul 2018 18:25:22 +0200
-Message-ID: <CAK8P3a0wcmeFKvRf7=FTNvePayc2AxniHoNkLOuzQQCt=MiLjQ@mail.gmail.com>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
- <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
- <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se> <20180720101206.tv7nsoanwo5ftnia@ninjato>
- <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
- <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se> <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
- <20180720151751.242d4809@bbrezillon> <CAK8P3a14_6uf9VLYU0YnmFp0Q=DZBKc0cAesBh0opanGDZMFRA@mail.gmail.com>
- <20180724162806.318a92c6@bbrezillon> <CAK8P3a3YQbiiJMTHTVh63fOvtA1sa0J5Eb4z7xbnpBPwUDkqxg@mail.gmail.com>
- <CAMuHMdXif_iufXx0Y+UJjKs9TNLfrTONoFvUSyrpkfaT0=ydRQ@mail.gmail.com>
- <CAK8P3a0jc1k9weTNbqSJXkCSFefus9OPyU5_v5=mTFxiDd0q5Q@mail.gmail.com>
- <CAMuHMdXJ_FGXXwNx8h0ZfskJGRWES1xLuTQpD59Vw1Smp6FTRg@mail.gmail.com>
- <CAK8P3a17t=_o04GsowS2RnTwKKVxt8KuJtT36N=Ea-SOq7fTow@mail.gmail.com> <20180724181437.1d1b27a8@bbrezillon>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun8i: r40/v40: rewrite BPi M2 Berry
+ DTS to rebase on M2 Ultra
+Date: Wed, 25 Jul 2018 00:36:55 +0800
+Message-ID: <20180724163655.61365-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724181437.1d1b27a8@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBVFL3XNAKGQEWI7GDYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 6:14 PM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> On Tue, 24 Jul 2018 17:58:29 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
->
->> On Tue, Jul 24, 2018 at 5:46 PM, Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->> > On Tue, Jul 24, 2018 at 5:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
->> >> On Tue, Jul 24, 2018 at 5:15 PM, Geert Uytterhoeven
->> >> <geert@linux-m68k.org> wrote:
->> >> > On Tue, Jul 24, 2018 at 5:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
->> The second case is the one that started the discussion, and
->> this is where I said I'd prefer to associate each slave with at
->> most one master at boot time, while the current v6 patch
->> is prepared for having one slave be accessed alternatingly
->> by multiple masters using the master handover, though so
->> far nobody has been able to describe exactly how we'd pick
->> which master is active at what point,
->
-> Even if it's not yet implemented, I have everything in place to figure
-> this out (see the ->cur_master field in the i3c_bus object). Now,
-> what's missing is a list of possible masters attached to an i3c device
-> so that the framework can pick the most appropriate one at runtime and
-> initiate mastership handover if required (if the selected master is not
-> the currently active one).
->
-> The selection logic should look like this:
->
->         if (active_master supports requested feature)
->                 use active master
->         else
->                 pick an inactive one that has relevant caps and initiate
->                 mastership handover (+ update bus->cur_master)
+Banana Pi designs the BPi M2 Berry board to be software compatible with
+BPi M2 Ultra, so it's based on M2 Ultra with some function cuts,
+including:
 
-How would you deal with soft requirements like performance?
-E.g. if you have one master that can do large transfers faster
-through a special DMA engine, and other master that can
-be faster for small transfers, but both support all capabilities
-for that device, won't you need some complex logic to avoid
-being stuck with a slow master indefinitely?
+- 2048MiB DRAM -> 1024MiB (this should be proceed by the bootloader);
+- dropped a LED;
+- dropped eMMC;
+- dropped USB2 and connect USB1 to a 4-port HUB.
 
->> or what specific scenario
->> would require it.
->
-> I think I described a scenario (masters having different
-> capabilities all connected to the same bus), though I don't know how
-> likely this use case is :-/.
+Thus we can make the M2 Berry device tree based on the M2 Ultra, rather
+than write one from scratch.
 
-I was looking for something more specific here. What (lack of)
-capabilities could two i3c controllers have that require you to
-use both of them for the same device, rather than picking
-a master for each slave with the right feature set?
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ .../boot/dts/sun8i-v40-bananapi-m2-berry.dts  | 141 +++---------------
+ 1 file changed, 24 insertions(+), 117 deletions(-)
 
-     Arnd
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+index 35859d8f3267..b740c659e623 100644
+--- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -40,143 +40,50 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-/dts-v1/;
+-#include "sun8i-r40.dtsi"
+-
+-#include <dt-bindings/gpio/gpio.h>
++#include "sun8i-r40-bananapi-m2-ultra.dts"
+ 
+ / {
+ 	model = "Banana Pi M2 Berry";
+ 	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
+ 
+-	aliases {
+-		serial0 = &uart0;
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+ 	leds {
+-		compatible = "gpio-leds";
+-
+-		pwr-led {
+-			label = "bananapi:red:pwr";
+-			gpios = <&pio 7 20 GPIO_ACTIVE_HIGH>;
+-			default-state = "on";
+-		};
+-
+-		user-led {
+-			label = "bananapi:green:user";
+-			gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>;
+-		};
+-	};
+-
+-	reg_vcc5v0: vcc5v0 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vcc5v0";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
+-		enable-active-high;
+-	};
+-
+-	wifi_pwrseq: wifi_pwrseq {
+-		compatible = "mmc-pwrseq-simple";
+-		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
++		/* M2 Berry dropped blue LED due to size */
++		/delete-node/ user-led-blue;
+ 	};
+ };
+ 
+ &ehci1 {
+ 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
+-	status = "okay";
+-};
+-
+-&i2c0 {
+-	status = "okay";
+-
+-	axp22x: pmic@68 {
+-		compatible = "x-powers,axp221";
+-		reg = <0x34>;
+-		interrupt-parent = <&nmi_intc>;
+-		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-	};
+-};
+-
+-#include "axp22x.dtsi"
+-
+-&reg_aldo3 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <2700000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "avcc";
+-};
+-
+-&reg_dcdc1 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <3000000>;
+-	regulator-max-microvolt = <3000000>;
+-	regulator-name = "vcc-3v0";
+-};
+-
+-&reg_dcdc2 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <1000000>;
+-	regulator-max-microvolt = <1300000>;
+-	regulator-name = "vdd-cpu";
+-};
+-
+-&reg_dcdc3 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <1000000>;
+-	regulator-max-microvolt = <1300000>;
+-	regulator-name = "vdd-sys";
+-};
+-
+-&reg_dcdc5 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <1500000>;
+-	regulator-max-microvolt = <1500000>;
+-	regulator-name = "vcc-dram";
+-};
+-
+-&reg_dldo1 {
+-	regulator-min-microvolt = <1800000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "vcc-wifi-io";
+ };
+ 
+-&reg_dldo2 {
+-	regulator-min-microvolt = <3300000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "vcc-wifi";
++&ehci2 {
++	/*
++	 * M2 Berry dropped wiring out USB2, due to all USB port is
++	 * from a hub at USB1.
++	 */
++	status = "disabled";
+ };
+ 
+-&mmc0 {
+-	vmmc-supply = <&reg_dcdc1>;
+-	bus-width = <4>;
+-	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
+-	status = "okay";
++&mmc2 {
++	/* M2 Berry has no eMMC */
++	status = "disabled";
+ };
+ 
+-&mmc1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc1_pg_pins>;
+-	vmmc-supply = <&reg_dldo2>;
+-	vqmmc-supply = <&reg_dldo1>;
+-	mmc-pwrseq = <&wifi_pwrseq>;
+-	bus-width = <4>;
+-	non-removable;
+-	status = "okay";
++&ohci1 {
++	/*
++	 * M2 Berry have a Hub connected to the USB1 pins, so no USB1.1 device
++	 * can be directly connected to the USB1 port, thus the OHCI controller
++	 * can be disabled.
++	 */
++	status = "disabled";
+ };
+ 
+-&uart0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pb_pins>;
+-	status = "okay";
++&ohci2 {
++	/* See comments at &ehci2 */
++	status = "disabled";
+ };
+ 
+ &usbphy {
+-	usb1_vbus-supply = <&reg_vcc5v0>;
+-	status = "okay";
++	/* See comments at &ehci2 */
++	/delete-property/ usb2_vbus-supply;
+ };
+-- 
+2.18.0
