@@ -1,63 +1,85 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 1/2] regulator: dt-bindings: add QCOM RPMh regulator
- bindings
-Date: Tue, 24 Jul 2018 17:59:42 +0100
-Message-ID: <20180724165942.GP13268@sirena.org.uk>
-References: <cover.1531531808.git.collinsd@codeaurora.org>
- <56b9d5c38cfe46da1228c54f001a49773c3e31dc.1531531808.git.collinsd@codeaurora.org>
- <CAD=FV=VmfqWRGRMEn+0dzZ8x4R5vVaHbkthXAN91Lm-XmP9Gqg@mail.gmail.com>
- <20180724145755.GF13268@sirena.org.uk>
- <CAD=FV=Uo8sT72a0gRitOVoK0SfC-_QixsovW94_LnL6H7QdKvA@mail.gmail.com>
- <20180724152514.GJ13268@sirena.org.uk>
- <CAD=FV=WHJcAoR7Y_uhi7_GbVzy6K8FnovVFVRz8js0REONox=w@mail.gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH 00/15] ARM: dts: tegra: apalis-tk1: major revamp
+Date: Tue, 24 Jul 2018 20:03:18 +0300
+Message-ID: <2665137.5yJaStjver@dimapc>
+References: <20180724104309.21741-1-marcel@ziswiler.com> <4715215.NZcU7pUVUy@dimapc> <79afd852-af93-dfa1-0d65-11be7507f81f@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YolNsh7G+K7zsfIR"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WHJcAoR7Y_uhi7_GbVzy6K8FnovVFVRz8js0REONox=w@mail.gmail.com>
+In-Reply-To: <79afd852-af93-dfa1-0d65-11be7507f81f@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Peter Geis <pgwipeout@gmail.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday, 24 July 2018 18:47:41 MSK Peter Geis wrote:
+> On 07/24/2018 10:48 AM, Dmitry Osipenko wrote:
+> > On Tuesday, 24 July 2018 17:45:01 MSK Marcel Ziswiler wrote:
+> >> On Tue, 2018-07-24 at 17:31 +0300, Dmitry Osipenko wrote:
+> >>> On Tuesday, 24 July 2018 17:16:33 MSK Marcel Ziswiler wrote:
+> >>>> On Tue, 2018-07-24 at 15:44 +0300, Dmitry Osipenko wrote:
+> >>>>> On Tuesday, 24 July 2018 15:24:34 MSK Marcel Ziswiler wrote:
+> >>>>>> Sorry, I meant to write "minor revamp" in the subject line here
+> >>>>>> as
+> >>>>>> Apalis TK1 was already in quite good a shape but this are still
+> >>>>>> some
+> >>>>>> worthy improvements (;-p).
+> >>>>> 
+> >>>>>> On Tue, 2018-07-24 at 12:42 +0200, Marcel Ziswiler wrote:
+> >>>>> Marcel,
+> >>>>> 
+> >>>>> All your emails that are sent from "toradex.com" are treated as
+> >>>>> spam
+> >>>>> by Gmail
+> >>>>> because "This message has a from address in toradex.com but has
+> >>>>> failed
+> >>>>> toradex.com's required tests for authentication.", is there
+> >>>>> anything
+> >>>>> you could
+> >>>>> do to fix that?
+> >>>> 
+> >>>> Hi Dmitry
+> >>>> 
+> >>>> Hm, unfortunately, Toradex was an M$ only shop when I joined more
+> >>>> then
+> >>>> 7 years ago and so far I was unable to convince our IT to switch to
+> >>>> some grown up email system. Therefore, I am stuck with Exchange,
+> >>>> Office
+> >>>> 365 or whatever M$ nowadays seem to call it. Anyway, I really
+> >>>> thought
+> >>>> sending from Android or Evolution via their resp. Exchange
+> >>>> connectors
+> >>>> would properly do SPF, DKIM and even DMARC. I just confirmed this
+> >>>> when
+> >>>> sending something to my gmail address and doing "Show original".
+> >>>> 
+> >>>> Since Linus himself pointed out any of my patches ending up in his
+> >>>> spam
+> >>>> folder I do send them via my private email which while not having
+> >>>> any
+> >>>> advanced security configured should still be valid. Moving it to a
+> >>>> fully secure configuration including DNSSEC and stuff is still
+> >>>> pending
+> >>>> on my side.
+> >>>> 
+> >>>> Can you please tell me which exact email it is that you got this
+> >>>> reported on so I may further investigate what is going on?
+> >>> 
+> >>> This email from you looks okay. Unfortunately all of your previous
+> >>> emails from
+> >>> "toradex.com" were getting into the spam folder.
+> >> 
+> >> You sure they were from "toradex.com"? The patches should have been
+> >> coming from "ziswiler.com" resp. "perfora.net".
+> > 
+> > The patches from "ziswiler.com" are fine, only your emails specifically
+> > from "toradex.com" had an issue. Looks like you've resolved it now.
+> 
+> Dmitry,
+> Gmail normally suspends flagging emails as spam from addresses you
+> respond to.
+> It may pick up again though, so I would add toradex.com to your allow list.
 
---YolNsh7G+K7zsfIR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jul 24, 2018 at 08:43:46AM -0700, Doug Anderson wrote:
-> On Tue, Jul 24, 2018 at 8:25 AM, Mark Brown <broonie@kernel.org> wrote:
-
-> > There was also some other thing called command DB as well which was a
-> > separate series.  Ideally there'd be a branch I could pull as there's a
-> > build dependency on rpmh so I can't apply until the code has landed in
-> > my tree, don't know what command DB is exactly.
-
-> Yup.  That one landed in May and is already in mainline Linux.  Refer
-> to commit 312416d9171a ("drivers: qcom: add command DB driver").
-
-That's good at least - the cover letter said it was still under review,
-guess it just hadn't been updated.
-
-> Adding Andy to this thread (I guess he wasn't on it?).  Hopefully he
-> can provide you with the branch.
-
-Andy?
-
---YolNsh7G+K7zsfIR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltXWv0ACgkQJNaLcl1U
-h9BuHgf9GRH5tb+1FbNT9oKVHDnQgIn4bP+9Wfh0QYbjjzaRVriOVKEOsImplY9A
-L6DDe4zYGa8cyKNFMwf+Zy8nd2IT4pv2Ko1DsK4/iSkrfvT2GEi7u0S3g2ipv7Wc
-xVZHtDJf3SYdsjefueAPydmUlndUASHoz7Cvs9RZmqJKo/5H2S9rRdjp/zZQM7bI
-qO6h1RVB5sk/bfUB7AM9CfyWPCUNBdR6okiopiJywjLdrOcnPlfXbsIj2JPDzu4e
-KdH7tEoejUOtYtrbflKplNt+NnNv7kGOF0v+6OO1MzlsHk3MH3BYtNNYwHZTBewX
-XwHvI3U08/h54RUL2z0EViHU9PLk3g==
-=hLlJ
------END PGP SIGNATURE-----
-
---YolNsh7G+K7zsfIR--
+Yes, probably I could add a custom filter for the domain name. But It is not 
+really a problem for me, I just wanted to point Marcel at it.
