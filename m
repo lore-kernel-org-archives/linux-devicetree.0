@@ -1,102 +1,59 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [PATCH 3/3] arm64: allwinner: dts: h6: add
- Wi-Fi support for Pine H64 model A/B
-Date: Tue, 24 Jul 2018 22:42:32 +0800
-Message-ID: <198DB486-4789-4777-9596-2BD6FAFFB741@aosc.io>
-References: <20180724011551.49603-1-icenowy@aosc.io> <20180724011551.49603-4-icenowy@aosc.io> <CAGb2v67zR-Q9n7L6CaFKDUJFHFEC_h8-RYxkdyeyJb_GbNmkJw@mail.gmail.com> <CEA43CB7-1DA6-4983-BF18-82C4A48FB92B@aosc.io> <CAGb2v64Qae4O430kP30DQNhp0Dt774OHt0nMe35ckp8X=CTFLg@mail.gmail.com> <AC678B03-19B7-4110-B333-72188CE71296@aosc.io> <CAGb2v656oPmAX=_y88b05xqrona3HFtU-VmNQhHxK_n-4gD+aw@mail.gmail.com> <20180724144151.myyg7slocsfjjsfi@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH 00/15] ARM: dts: tegra: apalis-tk1: major revamp
+Date: Tue, 24 Jul 2018 14:45:01 +0000
+Message-ID: <1532443499.6124.31.camel@toradex.com>
+References: <20180724104309.21741-1-marcel@ziswiler.com>
+         <2532956.xKQ6NZiSWF@dimapc> <1532441791.6124.20.camel@toradex.com>
+         <2076484.gx54F3eiOq@dimapc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBQHW3TNAKGQEOHX2HXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180724144151.myyg7slocsfjjsfi@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.orgMaxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2076484.gx54F3eiOq@dimapc>
+Content-Language: en-US
+Content-ID: <DA222C87A9DB254DBE90FAC48CA42C3C@eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "digetx@gmail.com" <digetx@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-=E4=BA=8E 2018=E5=B9=B47=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=8810=
-:41:51, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Tue, Jul 24, 2018 at 10:37:51AM +0800, Chen-Yu Tsai wrote:
->> On Tue, Jul 24, 2018 at 10:28 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->wrote:
->> >
->> >
->> > =E4=BA=8E 2018=E5=B9=B47=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=8810:26:02, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> =E5=86=99=E5=88=B0:
->> >>On Tue, Jul 24, 2018 at 10:23 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> >>wrote:
->> >>>
->> >>>
->> >>> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=
-=8D=8810:21:59, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->=E5=86=99=E5=88=B0:
->> >>>>On Tue, Jul 24, 2018 at 9:15 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> >>wrote:
->> >>>>> The Pine H64 model A has a Wi-Fi module connector and the model
->B
->> >>has
->> >>>>an
->> >>>>> on-board RTL8723BS Wi-Fi module.
->> >>>>>
->> >>>>> Add support for them. For model A, as it's not defaultly
->present,
->> >>>>keep
->> >>>>> it disabled now.
->> >>>>
->> >>>>Nope. Pine64 actually has two WiFi/BT modules. And they require
->> >>>>different
->> >>>>device tree snippets for both the WiFi and BT side. This is
->better
->> >>>>resolved
->> >>>>with device tree overlays.
->> >>>>
->> >>>>I have both, though I've yet found time to work on them.
->> >>>
->> >>> I have also both.
->> >>>
->> >>> The skeleton here can get the Wi-Fi of both to work.
->> >>
->> >>Cool. Then I can put away my RTL module for now. :)
->> >
->> > P.S. SDIO is auto detectable, and for BCM chips, the OOB interrupt
->> > is only a bonus function and it can fall back to standard in-band
->> > interrupt (which doesn't need special binding, and is currently
->> > used by mainline r8723bs driver.)
->>=20
->> Correct. With BT you'll have serdev device nodes with different
->> compatibles. Then you'll have to resort to overlays, and you'd
->probably
->> end up adding WiFi OOB interrupt bits as well.
->>=20
->> So the question remaining is: should we enable the MMC part, along
->> with power sequencing and regulator supplies, by default? Thinking
->> more about it, I'm actually OK with it. The board connectors are
->> clearly marked as being for a WiFi+BT module. The whole space on
->> the board is surrounded by a box in silkscreen. Sorry for the
->> initial nack.
->>=20
->> Maxime, any thoughts?
->
->If there's a need for an overlay anyway, there's no real reason to
->enable it by default, especially if not everything is there.
-
-Everything is there, for model B support.
-
->
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+T24gVHVlLCAyMDE4LTA3LTI0IGF0IDE3OjMxICswMzAwLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6
+DQo+IE9uIFR1ZXNkYXksIDI0IEp1bHkgMjAxOCAxNzoxNjozMyBNU0sgTWFyY2VsIFppc3dpbGVy
+IHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxOC0wNy0yNCBhdCAxNTo0NCArMDMwMCwgRG1pdHJ5IE9z
+aXBlbmtvIHdyb3RlOg0KPiA+IA0KPiA+ID4gT24gVHVlc2RheSwgMjQgSnVseSAyMDE4IDE1OjI0
+OjM0IE1TSyBNYXJjZWwgWmlzd2lsZXIgd3JvdGU6DQo+ID4gPiANCj4gPiA+ID4gU29ycnksIEkg
+bWVhbnQgdG8gd3JpdGUgIm1pbm9yIHJldmFtcCIgaW4gdGhlIHN1YmplY3QgbGluZSBoZXJlDQo+
+ID4gPiA+IGFzDQo+ID4gPiA+IEFwYWxpcyBUSzEgd2FzIGFscmVhZHkgaW4gcXVpdGUgZ29vZCBh
+IHNoYXBlIGJ1dCB0aGlzIGFyZSBzdGlsbA0KPiA+ID4gPiBzb21lDQo+ID4gPiA+IHdvcnRoeSBp
+bXByb3ZlbWVudHMgKDstcCkuDQo+ID4gPiA+IA0KPiA+ID4gPiBPbiBUdWUsIDIwMTgtMDctMjQg
+YXQgMTI6NDIgKzAyMDAsIE1hcmNlbCBaaXN3aWxlciB3cm90ZToNCj4gPiA+ID4gDQo+ID4gPiAN
+Cj4gPiA+IA0KPiA+ID4gTWFyY2VsLA0KPiA+ID4gDQo+ID4gPiBBbGwgeW91ciBlbWFpbHMgdGhh
+dCBhcmUgc2VudCBmcm9tICJ0b3JhZGV4LmNvbSIgYXJlIHRyZWF0ZWQgYXMNCj4gPiA+IHNwYW0N
+Cj4gPiA+IGJ5IEdtYWlsIA0KPiA+ID4gYmVjYXVzZSAiVGhpcyBtZXNzYWdlIGhhcyBhIGZyb20g
+YWRkcmVzcyBpbiB0b3JhZGV4LmNvbSBidXQgaGFzDQo+ID4gPiBmYWlsZWQgDQo+ID4gPiB0b3Jh
+ZGV4LmNvbSdzIHJlcXVpcmVkIHRlc3RzIGZvciBhdXRoZW50aWNhdGlvbi4iLCBpcyB0aGVyZQ0K
+PiA+ID4gYW55dGhpbmcNCj4gPiA+IHlvdSBjb3VsZCANCj4gPiA+IGRvIHRvIGZpeCB0aGF0Pw0K
+PiA+IA0KPiA+IA0KPiA+IEhpIERtaXRyeQ0KPiA+IA0KPiA+IEhtLCB1bmZvcnR1bmF0ZWx5LCBU
+b3JhZGV4IHdhcyBhbiBNJCBvbmx5IHNob3Agd2hlbiBJIGpvaW5lZCBtb3JlDQo+ID4gdGhlbg0K
+PiA+IDcgeWVhcnMgYWdvIGFuZCBzbyBmYXIgSSB3YXMgdW5hYmxlIHRvIGNvbnZpbmNlIG91ciBJ
+VCB0byBzd2l0Y2ggdG8NCj4gPiBzb21lIGdyb3duIHVwIGVtYWlsIHN5c3RlbS4gVGhlcmVmb3Jl
+LCBJIGFtIHN0dWNrIHdpdGggRXhjaGFuZ2UsDQo+ID4gT2ZmaWNlDQo+ID4gMzY1IG9yIHdoYXRl
+dmVyIE0kIG5vd2FkYXlzIHNlZW0gdG8gY2FsbCBpdC4gQW55d2F5LCBJIHJlYWxseQ0KPiA+IHRo
+b3VnaHQNCj4gPiBzZW5kaW5nIGZyb20gQW5kcm9pZCBvciBFdm9sdXRpb24gdmlhIHRoZWlyIHJl
+c3AuIEV4Y2hhbmdlDQo+ID4gY29ubmVjdG9ycw0KPiA+IHdvdWxkIHByb3Blcmx5IGRvIFNQRiwg
+REtJTSBhbmQgZXZlbiBETUFSQy4gSSBqdXN0IGNvbmZpcm1lZCB0aGlzDQo+ID4gd2hlbg0KPiA+
+IHNlbmRpbmcgc29tZXRoaW5nIHRvIG15IGdtYWlsIGFkZHJlc3MgYW5kIGRvaW5nICJTaG93IG9y
+aWdpbmFsIi4NCj4gPiANCj4gPiBTaW5jZSBMaW51cyBoaW1zZWxmIHBvaW50ZWQgb3V0IGFueSBv
+ZiBteSBwYXRjaGVzIGVuZGluZyB1cCBpbiBoaXMNCj4gPiBzcGFtDQo+ID4gZm9sZGVyIEkgZG8g
+c2VuZCB0aGVtIHZpYSBteSBwcml2YXRlIGVtYWlsIHdoaWNoIHdoaWxlIG5vdCBoYXZpbmcNCj4g
+PiBhbnkNCj4gPiBhZHZhbmNlZCBzZWN1cml0eSBjb25maWd1cmVkIHNob3VsZCBzdGlsbCBiZSB2
+YWxpZC4gTW92aW5nIGl0IHRvIGENCj4gPiBmdWxseSBzZWN1cmUgY29uZmlndXJhdGlvbiBpbmNs
+dWRpbmcgRE5TU0VDIGFuZCBzdHVmZiBpcyBzdGlsbA0KPiA+IHBlbmRpbmcNCj4gPiBvbiBteSBz
+aWRlLg0KPiA+IA0KPiA+IENhbiB5b3UgcGxlYXNlIHRlbGwgbWUgd2hpY2ggZXhhY3QgZW1haWwg
+aXQgaXMgdGhhdCB5b3UgZ290IHRoaXMNCj4gPiByZXBvcnRlZCBvbiBzbyBJIG1heSBmdXJ0aGVy
+IGludmVzdGlnYXRlIHdoYXQgaXMgZ29pbmcgb24/DQo+IA0KPiBUaGlzIGVtYWlsIGZyb20geW91
+IGxvb2tzIG9rYXkuIFVuZm9ydHVuYXRlbHkgYWxsIG9mIHlvdXIgcHJldmlvdXMNCj4gZW1haWxz
+IGZyb20gDQo+ICJ0b3JhZGV4LmNvbSIgd2VyZSBnZXR0aW5nIGludG8gdGhlIHNwYW0gZm9sZGVy
+Lg0KDQpZb3Ugc3VyZSB0aGV5IHdlcmUgZnJvbSAidG9yYWRleC5jb20iPyBUaGUgcGF0Y2hlcyBz
+aG91bGQgaGF2ZSBiZWVuDQpjb21pbmcgZnJvbSAiemlzd2lsZXIuY29tIiByZXNwLiAicGVyZm9y
+YS5uZXQiLg==
