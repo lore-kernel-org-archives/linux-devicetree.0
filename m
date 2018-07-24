@@ -1,91 +1,95 @@
 From: Damian Kos <dkos@cadence.com>
-Subject: [PATCH v2 0/5] drm: add support for Cadence MHDP DPI/DP bridge.
-Date: Tue, 24 Jul 2018 12:13:31 +0100
-Message-ID: <1532430824-23477-1-git-send-email-dkos@cadence.com>
+Subject: [PATCH v2 2/5] drm/dp: fix link probing for devices supporting DP 1.4+
+Date: Tue, 24 Jul 2018 12:13:33 +0100
+Message-ID: <1532430824-23477-3-git-send-email-dkos@cadence.com>
+References: <1532430824-23477-1-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532430824-23477-1-git-send-email-dkos@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <seanpaul@chromium.org>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Damian Kos <dkos@cadence.com>, Quentin Schulz <quentin.schulz@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 Cc: pgaj@cadence.com, ltyrala@cadence.com, stelford@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+From: Quentin Schulz <quentin.schulz@bootlin.com>
 
-This is the series of patches that will add support for the Cadence's DPI/DP
-bridge. Please note that this is a preliminary version of the driver and there
-will be more patches in the future with updates, fixes and improvements.
-Please keep that in mind when looking at FIXME/TODO/XXX comments.
+DP 1.4 introduced a DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit in
+DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from DP_DPCD_REV
+to DP_ADAPTER_CAP should be retrieved starting from DP_DPCD_REV_EXTENDED.
+All registers are copied except DP_DPCD_REV, DP_MAX_LINK_RATE and
+DP_DOWNSTREAMPORT_PRESENT which represent the "true capabilities" of DPRX
+device.
 
-Initially, MHDP driver was developed as a DRM bridge driver and was planed to
-be placed in drivers/gpu/drm/bridge/mhdp.c.  However, there was already
-a driver for Cadence's DP controller developed by RockChip, but that driver
-uses the different DRM framework and looks like a part of a bigger system.
-Both controllers (including firmware) are quite different internally
-(MST/FEC/DSC support, link training done by driver, additional commands, IRQ's
-etc.) but they have similar register map, except for Framer/Streamer (which is
-noticeably different), so they appear similar.
+Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT might
+falsely return lower capabilities to "avoid interoperability issues with some
+of the existing DP Source devices that malfunction when they discover the
+higher capabilities within those three registers.".
 
-The following patches contain:
-- Moving common code to drivers/gpu/drm/bridge/cdns-mhdp-common.* and
-  modifying it a bit (mostly new prefixes for functions and data types) so it
-  can be used by two, higher level, drivers.
-- Modifying existing RockChip's DP driver to use the common code after changes
-  made to it (use the new cdns_mhdp_device structure and new function names).
-- Modifying DRM helpers a bit. Some are required for new driver, some are
-  updates from DP 1.2 to 1.3 or 1.4.
-- Adding documentation for device tree bindings.
-- Adding preliminary Cadence DPI/DP bridge driver.
+Before DP 1.4, DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit was reserved and read 0
+so it's safe to check against it even if DP revision is <1.4
 
-Some of the things that will be added later on include (but are not limited
-to):
-- Support for Cadence SD0801 PHY (PHY's driver should be on the way by now)
-- SST audio support
-- MST support
-- DSC support
-- FEC support
-- HDCP support
+Signed-off-by: Damian Kos <dkos@cadence.com>
+---
+ drivers/gpu/drm/drm_dp_helper.c | 30 +++++++++++++++++++++++++++++-
+ include/drm/drm_dp_helper.h     |  1 +
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- Added actual description of what the patch contains, what is it for and
-  what's going on here in general.
-- New structure. Now we have one common low level driver + two high level
-  drivers - one for RockChip with minimum changes and one, more general, for
-  Cadence.
-- Dropped some changes made to DRM helpers.
-- Updated the device tree bindings document.
-
-
-Damian Kos (1):
-  drm/rockchip: moved cdns mhdp dpi/dp bridge low driver to a new
-    location
-
-Quentin Schulz (4):
-  drm/dp: fix link probing for devices supporting DP 1.4+
-  drm/dp: make dp_link_status and dp_get_lane_status usable from outside
-    of the core
-  dt-bindings: drm/bridge Document Cadence MHDP DPI/DP bridge bindings
-  drm/bridge: add preliminary driver for cadence dpi/dp bridge
-
- .../bindings/display/bridge/cdns,mhdp.txt     |   43 +
- drivers/gpu/drm/bridge/Kconfig                |    7 +
- drivers/gpu/drm/bridge/Makefile               |    1 +
- drivers/gpu/drm/bridge/cdns-mhdp-common.c     | 1087 +++++++++++++++
- .../cdns-mhdp-common.h}                       |  134 +-
- drivers/gpu/drm/bridge/cdns-mhdp.c            | 1233 +++++++++++++++++
- drivers/gpu/drm/drm_dp_helper.c               |   50 +-
- drivers/gpu/drm/rockchip/Kconfig              |    1 +
- drivers/gpu/drm/rockchip/Makefile             |    4 +-
- drivers/gpu/drm/rockchip/cdn-dp-core.c        |  220 +--
- drivers/gpu/drm/rockchip/cdn-dp-core.h        |   40 +-
- drivers/gpu/drm/rockchip/cdn-dp-reg.c         |  969 -------------
- include/drm/drm_dp_helper.h                   |    4 +
- 13 files changed, 2648 insertions(+), 1145 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.txt
- create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-common.c
- rename drivers/gpu/drm/{rockchip/cdn-dp-reg.h => bridge/cdns-mhdp-common.h} (80%)
- create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp.c
- delete mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
-
+diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+index 0cccbcb2d03e..86a070269c87 100644
+--- a/drivers/gpu/drm/drm_dp_helper.c
++++ b/drivers/gpu/drm/drm_dp_helper.c
+@@ -370,10 +370,38 @@ int drm_dp_link_probe(struct drm_dp_aux *aux, struct drm_dp_link *link)
+ {
+ 	u8 values[3];
+ 	int err;
++	unsigned int addr;
+ 
+ 	memset(link, 0, sizeof(*link));
+ 
+-	err = drm_dp_dpcd_read(aux, DP_DPCD_REV, values, sizeof(values));
++	/*
++	 * DP 1.4 introduced a DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit in
++	 * DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
++	 * DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
++	 * DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
++	 * DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
++	 * "true capabilities" of DPRX device.
++	 *
++	 * Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
++	 * might falsely return lower capabilities to "avoid interoperability
++	 * issues with some of the existing DP Source devices that malfunction
++	 * when they discover the higher capabilities within those three
++	 * registers.".
++	 *
++	 * Before DP 1.4, DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit was reserved
++	 * and read 0 so it's safe to check against it even if DP revision is
++	 * <1.4
++	 */
++	err = drm_dp_dpcd_readb(aux, DP_TRAINING_AUX_RD_INTERVAL, values);
++	if (err < 0)
++		return err;
++
++	if (values[0] & DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT)
++		addr = DP_DP13_DPCD_REV;
++	else
++		addr = DP_DPCD_REV;
++
++	err = drm_dp_dpcd_read(aux, addr, values, sizeof(values));
+ 	if (err < 0)
+ 		return err;
+ 
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 05cc31b5db16..92800f2241b1 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -125,6 +125,7 @@
+ 
+ #define DP_TRAINING_AUX_RD_INTERVAL         0x00e   /* XXX 1.2? */
+ # define DP_TRAINING_AUX_RD_MASK            0x7F    /* XXX 1.2? */
++# define DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT BIT(7) /* 1.3 */
+ 
+ #define DP_ADAPTER_CAP			    0x00f   /* 1.2 */
+ # define DP_FORCE_LOAD_SENSE_CAP	    (1 << 0)
 -- 
 2.17.1
