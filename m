@@ -1,117 +1,43 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 05/14] arm64: dts: meson-axg: add audio fifos
-Date: Tue, 24 Jul 2018 14:52:29 +0200
-Message-ID: <20180724125238.14567-6-jbrunet@baylibre.com>
+Subject: [PATCH 06/14] arm64: dts: meson-axg: add spdifout
+Date: Tue, 24 Jul 2018 14:52:30 +0200
+Message-ID: <20180724125238.14567-7-jbrunet@baylibre.com>
 References: <20180724125238.14567-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add TODDR and FRDDR audio fifos of the AXG SoC.
-These fifos are the capture and playback memory interfaces of audio
-subsystem of the AXG.
+Add the SPDIF output device of the axg audio subsystem
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
-
- Kevin,
-
- As you will see below, this patch depends on the ARB reset bindings which
- have been accepted by Philip recently.
-
- Cheers
- Jerome
-
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 3893c630d969..a20189844d92 100644
+index a20189844d92..c56016a48cc4 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/clock/axg-aoclkc.h>
- #include <dt-bindings/gpio/meson-axg-gpio.h>
- #include <dt-bindings/reset/amlogic,meson-axg-reset.h>
-+#include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
- 
- / {
- 	compatible = "amlogic,meson-axg";
-@@ -190,6 +191,72 @@
- 				resets = <&reset RESET_AUDIO>;
+@@ -263,6 +263,17 @@
+ 				#reset-cells = <1>;
+ 				clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
  			};
++
++			spdifout: audio-controller@480 {
++				compatible = "amlogic,axg-spdifout";
++				reg = <0x0 0x480 0x0 0x50>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "SPDIFOUT";
++				clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
++					 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
++				clock-names = "pclk", "mclk";
++				status = "disabled";
++			};
+ 		};
  
-+			toddr_a: audio-controller@100 {
-+				compatible = "amlogic,axg-toddr";
-+				reg = <0x0 0x100 0x0 0x1c>;
-+				#sound-dai-cells = <0>;
-+				sound-name-prefix = "TODDR_A";
-+				interrupts = <GIC_SPI 84 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
-+				resets = <&arb AXG_ARB_TODDR_A>;
-+				status = "disabled";
-+			};
-+
-+			toddr_b: audio-controller@140 {
-+				compatible = "amlogic,axg-toddr";
-+				reg = <0x0 0x140 0x0 0x1c>;
-+				#sound-dai-cells = <0>;
-+				sound-name-prefix = "TODDR_B";
-+				interrupts = <GIC_SPI 85 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
-+				resets = <&arb AXG_ARB_TODDR_B>;
-+				status = "disabled";
-+			};
-+
-+			toddr_c: audio-controller@180 {
-+				compatible = "amlogic,axg-toddr";
-+				reg = <0x0 0x180 0x0 0x1c>;
-+				#sound-dai-cells = <0>;
-+				sound-name-prefix = "TODDR_C";
-+				interrupts = <GIC_SPI 86 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
-+				resets = <&arb AXG_ARB_TODDR_C>;
-+				status = "disabled";
-+			};
-+
-+			frddr_a: audio-controller@1c0 {
-+				compatible = "amlogic,axg-frddr";
-+				reg = <0x0 0x1c0 0x0 0x1c>;
-+				#sound-dai-cells = <0>;
-+				sound-name-prefix = "FRDDR_A";
-+				interrupts = <GIC_SPI 88 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
-+				resets = <&arb AXG_ARB_FRDDR_A>;
-+				status = "disabled";
-+			};
-+
-+			frddr_b: audio-controller@200 {
-+				compatible = "amlogic,axg-frddr";
-+				reg = <0x0 0x200 0x0 0x1c>;
-+				#sound-dai-cells = <0>;
-+				sound-name-prefix = "FRDDR_B";
-+				interrupts = <GIC_SPI 89 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
-+				resets = <&arb AXG_ARB_FRDDR_B>;
-+				status = "disabled";
-+			};
-+
-+			frddr_c: audio-controller@240 {
-+				compatible = "amlogic,axg-frddr";
-+				reg = <0x0 0x240 0x0 0x1c>;
-+				#sound-dai-cells = <0>;
-+				sound-name-prefix = "FRDDR_C";
-+				interrupts = <GIC_SPI 90 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
-+				resets = <&arb AXG_ARB_FRDDR_C>;
-+				status = "disabled";
-+			};
-+
- 			arb: reset-controller@280 {
- 				compatible = "amlogic,meson-axg-audio-arb";
- 				reg = <0x0 0x280 0x0 0x4>;
+ 		cbus: bus@ffd00000 {
 -- 
 2.17.1
