@@ -1,475 +1,93 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v10 7/7] Bluetooth: hci_qca: Add support for Qualcomm
- Bluetooth chip wcn3990
-Date: Tue, 24 Jul 2018 21:25:16 +0530
-Message-ID: <81c324ee9104508cf5c862de3f697e4c@codeaurora.org>
-References: <20180720133243.6851-1-bgodavar@codeaurora.org>
- <20180720133243.6851-8-bgodavar@codeaurora.org>
- <20180723195441.GM129942@google.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
+Date: Tue, 24 Jul 2018 17:57:17 +0200
+Message-ID: <20180724155717.aodl6xehacparo7b@katana>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
+ <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
+ <20180720101206.tv7nsoanwo5ftnia@ninjato>
+ <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
+ <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se>
+ <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
+ <a74a7472-e900-d031-d10b-b12f03ea9ff1@axentia.se>
+ <20180720154132.2fwmwpiwtxa73ljf@ninjato>
+ <CAK8P3a0+8a9LCyW2WX6gO2Pi3GJa_ofznC07LMHjWmxZ4HaX7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i6qv4o2lf76sjo7x"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723195441.GM129942@google.com>
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0+8a9LCyW2WX6gO2Pi3GJa_ofznC07LMHjWmxZ4HaX7Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.c>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
 
-On 2018-07-24 01:24, Matthias Kaehlcke wrote:
-> On Fri, Jul 20, 2018 at 07:02:43PM +0530, Balakrishna Godavarthi wrote:
->> Add support to set voltage/current of various regulators
->> to power up/down Bluetooth chip wcn3990.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> ---
->> changes in v10:
->>     * added support to read regulator currents from dts.
-> 
-> I commented on this below
-> 
->>     * added support to try to connect with chip if it fails to respond 
->> to initial commands
->>     * updated review comments.
->> 
->> changes in v9:
->>     * moved flow control to vendor and set_baudarte functions.
->>     * removed parent regs.
->> 
->> changes in v8:
->>     * closing qca buffer, if qca_power_setup fails
->>     * chnaged ibs start timer function call location.
->>     * updated review comments.
->> 
->> changes in v7:
->>     * addressed review comments.
->> 
->> changes in v6:
->>     * Hooked up qca_power to qca_serdev.
->>     * renamed all the naming inconsistency functions with qca_*
->>     * leveraged common code of ROME for wcn3990.
->>     * created wrapper functions for re-usable blocks.
->>     * updated function of _*regulator_enable and _*regualtor_disable.
->>     * removed redundant comments and functions.
->>     * addressed review comments.
->> 
->> Changes in v5:
->>     * updated regulator vddpa min_uV to 1304000.
->>       * addressed review comments.
->> 
->> Changes in v4:
->>     * Segregated the changes of btqca from hci_qca
->>     * rebased all changes on top of bluetooth-next.
->>     * addressed review comments.
->> 
->> ---
->>  drivers/bluetooth/btqca.h   |   4 +
->>  drivers/bluetooth/hci_qca.c | 481 
->> ++++++++++++++++++++++++++++++++----
->>  2 files changed, 439 insertions(+), 46 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
->> index a9c2779f3e07..9e2bbcf5c002 100644
->> --- a/drivers/bluetooth/btqca.h
->> +++ b/drivers/bluetooth/btqca.h
->> @@ -37,6 +37,10 @@
->>  #define EDL_TAG_ID_HCI			(17)
->>  #define EDL_TAG_ID_DEEP_SLEEP		(27)
->> 
->> +#define QCA_WCN3990_POWERON_PULSE	0xFC
->> +#define QCA_WCN3990_POWEROFF_PULSE	0xC0
->> +#define QCA_WCN3990_FORCE_BOOT_PULSE	0xC0
-> 
-> This is the same value as QCA_WCN3990_POWEROFF_PULSE. From the usage
-> it seems it's really just a power off pulse, so let's stick to this
-> name, instead of having two names for the same thing.
-> 
-[Bala] : will update.
+--i6qv4o2lf76sjo7x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +static int qca_send_vendor_pulse(struct hci_dev *hdev, u8 cmd)
-> 
-> My understanding from earlier discussion is that these pulses are
-> limited to power on/off. If that is correct this should probably be
-> called qca_send_power_pulse().
-> 
-[Bala]: will update the function name to qca_send_power_pulse().
 
->> +{
->> +	struct hci_uart *hu = hci_get_drvdata(hdev);
->> +	struct qca_data *qca = hu->priv;
->> +	struct sk_buff *skb;
->> +
->> +	/* These vendor pulses are single byte command which are sent
->> +	 * at required baudrate to WCN3990. on WCN3990, we have an external
-> 
-> s/on/On/
-[Bala]: will update.
+> > Renesas R-Car Gen2 has two I2C IP cores. One can do DMA and automatic
+> > transfers to the PMIC, the other has I2C slave functionality. One cannot
+> > do I2C_SMBUS_QUICK, the other can. And some more kind of quirks.
+> > Sometimes you can mux the pins to GPIO, so you have a third option.
+> >
+> > This setup is the reason the demux driver exists.
+>=20
+> Have you run into scenarios where you dynamically switch between
+> the two masters in order to do different things (on one slave, or
+> on multiple slaves), or could you always decide on one of them
+> at boot time with that particular chip?
 
-> 
->> +	 * circuit at Tx pin which decodes the pulse sent at specific 
->> baudrate.
->> +	 * For example, as WCN3990 supports RF COEX frequency for both 
->> Wi-Fi/BT
->> +	 * and also, we use the same power inputs to turn ON and OFF for
-> 
-> nit: not sure how much value is added by (sometimes) using upper case
-> for certain things (ON, OFF, COLD, HOST, ...).
-> 
-[Bala] : will use lower case.
+My personal use case is debugging. R-Car H2 is great because I can
+always pinmux this or that I2C IP core to the same set of pins, and in 2
+out of 4 cases even GPIO bitbang on top of that. So, it is great to
+compare behaviour, do scopes with the same type of setup, etc...
+For that, I do runtime switches, but the slaves are not really under
+real usage.
 
->> +	 * Wi-Fi/BT. Powering up the power sources will not enable BT, until
->> +	 * we send a POWER ON pulse at 115200. This algorithm will help to
-> 
-> 115200 what? bps I guess.
-> 
-[Bala] : will add bps.
+I have absolutely no idea how $customers use it, sadly.
 
->> +static int qca_wcn3990_init(struct hci_uart *hu, u32 *soc_ver)
->> +{
->> +	struct hci_dev *hdev = hu->hdev;
->> +	int i, ret = 1;
-> 
-> Initialization not necessary, more details below.
-> 
->> +
->> +	/* WCN3990 is a discrete Bluetooth chip connected to APPS processor.
-> 
-> APPS is a Qualcomm specific term, and some QCA docs also call it
-> APSS. Just say 'SoC' which is universally understood.
-> 
-[Bala]: will update to SoC.
+> I think an SoC design we will likely see is an i3c master multiplexed with
+> an i2c master to access one bus. The i2c master can then use clock
+> stretching and other things that may not work in the i3c master, and it
+> may be used in the absence of proper i3c drivers in the OS.
 
->> +	 * sometimes we will face communication synchronization issues,
->> +	 * like reading version command timeouts. In which HCI_SETUP fails,
->> +	 * to overcome these issues, we try to communicate by performing an
->> +	 * COLD power OFF and ON.
->> +	 */
->> +	for (i = 1; i <= 10 && ret; i++) {
-> 
-> Is it really that bad that more than say 3 iterations might be needed?
-> 
-[Bala]: will restrict to 3 iterations.
+Multiplexed? Well, as soon you want to use I3C features like IBI, this
+is not going to work, right? It will not even work with Linux being an
+I2C slave itself. Or do you mean running the I3C and I2C controller
+simultaneously using the same wires?
 
-> Common practice is to start loops with index 0.
-> 
+> However, that case cannot be handled with the abstraction in the
+> proposed i3c framework, which can only deal with multiple i3c
+> standard compliant masters. I'm also not sure if it can be added
+> to the i2c-demux-pinctrl driver.
 
-[Bala] : will init i=0
+The I2C demuxer maps the whole bus to an i2c_adapter. You cannot select
+a master per client.
 
-> The check for ret is not needed. All jumps to 'regs_off' are done
-> when an error is detected. The loop is left when 'ret == 0' at the
-> bottom.
-> 
-[Bala]: will update.
 
->> +		/* This helper will turn ON chip if it is powered off.
->> +		 * if the chip is already powered ON, function call will
->> +		 * return zero.
->> +		 */
-> 
-> Comments are great when they add value, IMO this one doesn't and just
-> adds distraction. Most readers will assume that after
-> qca_power_setup(hu, true) the chip is powered on, regardless of the
-> previous power state.
-> 
-[Bala] : will remove the comment.
+--i6qv4o2lf76sjo7x
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> +		ret = qca_power_setup(hu, true);
->> +		if (ret)
->> +			goto regs_off;
->> +
->> +		/* Forcefully enable wcn3990 to enter in to boot mode. */
-> 
-> nit: Sometimes the comments and logs name the chip wcn3990, others
-> WCN3990. Personally I don't care which spelling is used, but please be
-> consistent.
-> 
-[Bala]: will use "wcn3990" through our the code.
+-----BEGIN PGP SIGNATURE-----
 
->> +		host_set_baudrate(hu, 2400);
->> +		ret = qca_send_vendor_pulse(hdev, QCA_WCN3990_FORCE_BOOT_PULSE);
->> +		if (ret)
->> +			goto regs_off;
->> +
->> +		qca_set_speed(hu, QCA_INIT_SPEED);
->> +		ret = qca_send_vendor_pulse(hdev, QCA_WCN3990_POWERON_PULSE);
->> +		if (ret)
->> +			goto regs_off;
->> +
->> +		/* Wait for 100 ms for SoC to boot */
->> +		msleep(100);
->> +
->> +		/* Now the device is in ready state to communicate with host.
->> +		 * To sync HOST with device we need to reopen port.
->> +		 * Without this, we will have RTS and CTS synchronization
->> +		 * issues.
->> +		 */
->> +		serdev_device_close(hu->serdev);
->> +		ret = serdev_device_open(hu->serdev);
->> +		if (ret) {
->> +			bt_dev_err(hu->hdev, "failed to open port");
->> +			break;
->> +		}
->> +
->> +		hci_uart_set_flow_control(hu, false);
->> +		ret = qca_read_soc_version(hdev, soc_ver);
->> +		if (ret < 0 || soc_ver == 0)
->> +			bt_dev_err(hdev, "Failed to get version:%d", ret);
-> 
-> The check for soc_ver is/should be done in qca_read_soc_version(),
-> same for the error log.
-> 
-[Bala]: will remove the check here.
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltXTF0ACgkQFA3kzBSg
+KbYVlg/7Bu8HOA8vNgSwokh1EIbhJ2F5B1TAS9MbdWMQUsvRm3WXDaCsQjjXS1JT
+x8YJ3JNpaAd9LpsvvklSu2HFJ8oqRFSvyj4phy6jENzQgVpX99EgKU5opORUrpX/
+lftSUltKMSnC97TgT3g4nn3atIau+qQI452/Cnugm10XaFKyeqk3neUtK+Tc0Lhs
+RvU+MRc0fB4T4/1MIVEVc7xTXNjMKBnvzEslvP9K3VNrD65Itb2LKsaH3TqHqJkc
+9Sn2sfH+6EZoLWvtBC0gvQ0EEd06PjO9UIMY1Kqzz3LgcMVE9BevvFSIOsWTlVtl
+EaqHiVBUJf4iiAYCAOIp6OkxXiYbgizk1VUEP9dX4Kmc4zSYWzOalzlP251vKbGI
+kvqn1onOHJly6WBvZApkiffqAMVrQ8qZsxRs5AdUz95Y/REjHGTssF67AuGVABnB
+OyqhY4FmIEuSPzpQkXgj8d9MKj7ys02GcBIFj2Ho9MwcMNaZpUUZZGCj0zeTAcsi
+uckxRSIIEk/PXIPNoT5VMmtLUyOvfU2NLerEHbghZr/v3KM9vq9ACDsxnb/d2h6H
+BM1g/NyBqMGOa0Fk+y7maNtQDKYkUeZCNuLbhjMRdGwux+hwLiZdX+gU+WsF7sDM
+wRNq7yIVmgb8yv2NGiE+FnUZE6N5sa8lmlgbhPG2PRRMw7s7Y7k=
+=+Hcu
+-----END PGP SIGNATURE-----
 
->> +		if (!ret)
->> +			break;
->> +
->> +regs_off:
->> +		bt_dev_err(hdev, "retrying to establish communication: %d", i);
-> 
-> Use i + 1 if starting the loop at 0.
-> 
-
-[Bala] : will update.
-
->> +static const struct qca_vreg_data qca_soc_data = {
->> +	.soc_type = QCA_WCN3990,
->> +	.vregs = (struct qca_vreg []) {
->> +		{ "vddio",   1800000, 1800000,  15000  },
->> +		{ "vddxo",   1800000, 1800000,  80000  },
->> +		{ "vddrf",   1304000, 1304000,  300000 },
->> +		{ "vddch0",  3000000, 3312000,  450000 },
->> +	},
-> 
-> The currents of 300mA and 450mA seem high for Bluetooth, I'm not an
-> expert in this area though, they might be reasonable peak currents for
-> certain use cases.
-> 
-
-[Bala]: rf and ch0 are required for rf antenna of wcn3990. will double 
-confirm on this.
-
->> +static int qca_power_shutdown(struct hci_dev *hdev)
->> +{
->> +	struct hci_uart *hu = hci_get_drvdata(hdev);
->> +
->> +	host_set_baudrate(hu, 2400);
->> +	qca_send_vendor_pulse(hdev, QCA_WCN3990_POWEROFF_PULSE);
->> +	return qca_power_setup(hu, false);
->> +}
-> 
-> The return value changed from void to int, but nobody ever checks it 
-> ...
-> 
-[Bala] : will update.
-
->> +static void qca_regulator_get_current(struct device *dev,
->> +				      struct qca_vreg *vregs)
->> +{
->> +	char prop_name[32]; /* 32 is max size of property name */
->> +
->> +	/* We have different platforms where the load value is controlled
->> +	 * via PMIC controllers. In such cases load required to power ON
->> +	 * Bluetooth chips are defined in the PMIC. We have option to set
->> +	 * operation mode like high or low power modes.
->> +	 * We do have some platforms where driver need to enable the load 
->> for
->> +	 * WCN3990. Based on the current property value defined for the
->> +	 * regulators, driver will decide the regulator output load.
->> +	 * If the current property for the regulator is defined in the dts
->> +	 * we will read from dts tree, else from the default load values.
->> +	 */
-> 
-> Let's make sure we all really understand why this is needed. You
-> mentioned RPMh regulators earlier and said a special value of 1uA
-> would be needed to enable high power mode. Later when I pointed to the
-> RPMh regulator code you agreed that this special value wouldn't make
-> any difference.
-> 
-> Now the defaults are higher:
-> 
-[Bala]: today i got the info from the power teams here, currently in the 
-downstream what we have is different wrt to the
-         patch "https://patchwork.kernel.org/patch/10524299/" by David 
-Collins.
-         prior to his patch we have different architecture where 1uA will 
-change the mode to HPM mode.
-         which is not valid, so 1uA will not work any more. we have go 
-with actual current values.
-
-         coming back to reading current values from dts. we have reason 
-for it.
-         let us assume that later stages of wcn3990 if we have less 
-current values than default values.
-         instead of updating the driver again, we can assign the current 
-no in the dts, which we will read.
-
-         This is how it works.
-
-         if(current value for the reg is declared in dts tree)
-               consider the current value from the dts.
-         else
-            go with default value.
-
-       pls let me know if you any queries.
-
->> +		{ "vddio",   1800000, 1800000,  15000  },
->> +		{ "vddxo",   1800000, 1800000,  80000  },
->> +		{ "vddrf",   1304000, 1304000,  300000 },
->> +		{ "vddch0",  3000000, 3312000,  450000 },
-> 
-> What would supposedly go wrong if these values were passed to one of
-> the PMICs you are concerned about? Please be more specific than the
-> above comment.
-> 
-
->> +	snprintf(prop_name, 32, "%s-current", vregs->name);
->> +	BT_DBG("Looking up %s from device tree\n", prop_name);
-> 
-> '\n' not needed with BT_DBG()
-> 
-[Bala]: will update.
->> +
->> +	if (device_property_read_bool(dev, prop_name))
->> +		device_property_read_u32(dev, prop_name, &vregs->load_uA);
-> 
-> Why device_property_read_bool()?
-> 
-[Bala]: if the current prop is present we read from dts. else we go with 
-default current no's.
-         if block  is used to check whether the property is present in 
-dts or not.
-         this is required because before calling _regualtor_get_current() 
-we hold the default current in the vregs[].
-         if we skip the read bool here, if the current property is not 
-present then the function call of device_property_read_u32() will assign 
-zero the vregs[].
-         so we miss the default current values.
-
-         this how it work if we miss read_bool check
-
-         //vregs hold default current
-          device_property_read_u32(dev, prop_name, &vregs->load_uA);
-          the above will read the current property value from dts store 
-in the vregs.. if the property is missing in dts it will store zero.
-
->> +	BT_DBG("current %duA selected for regulator %s", vregs->load_uA,
->> +		vregs->name);
->> +}
->> +
->> +static int qca_init_regulators(struct qca_power *qca,
->> +				const struct qca_vreg_data *data)
->> +{
->> +	int i, num_vregs;
->> +	int load_uA;
->> +
->> +	num_vregs = data->num_vregs;
->> +	qca->vreg_bulk = devm_kzalloc(qca->dev, num_vregs *
->> +				      sizeof(struct regulator_bulk_data),
->> +				      GFP_KERNEL);
->> +	if (!qca->vreg_bulk)
->> +		return -ENOMEM;
->> +
->> +	qca->vreg_data = devm_kzalloc(qca->dev, sizeof(struct 
->> qca_vreg_data),
->> +				      GFP_KERNEL);
->> +	if (!qca->vreg_data)
->> +		return -ENOMEM;
->> +
->> +	qca->vreg_data->num_vregs = data->num_vregs;
->> +	qca->vreg_data->soc_type = data->soc_type;
->> +
->> +	qca->vreg_data->vregs = devm_kzalloc(qca->dev, num_vregs *
->> +				      sizeof(struct qca_vreg_data),
-> 
-> sizeof(struct qca_vreg)
-> 
->> +				      GFP_KERNEL);
->> +
->> +	if (!qca->vreg_data->vregs)
->> +		return -ENOMEM;
->> +
->> +	for (i = 0; i < num_vregs; i++) {
->> +		/* copy regulator name, min voltage, max voltage */
->> +		qca->vreg_data->vregs[i].name = data->vregs[i].name;
->> +		qca->vreg_data->vregs[i].min_uV = data->vregs[i].min_uV;
->> +		qca->vreg_data->vregs[i].max_uV = data->vregs[i].max_uV;
->> +		load_uA = data->vregs[i].load_uA;
->> +		qca->vreg_data->vregs[i].load_uA = load_uA;
-> 
-> memcpy(&qca->vreg_data->vregs[i], &data->vregs[i]); ?
-> 
-> Or do it outside of the loop for all regulators at once.
-> 
-[Bala] : will use memcpy
-
->>  static int qca_serdev_probe(struct serdev_device *serdev)
->>  {
->>  	struct qca_serdev *qcadev;
->> +	const struct qca_vreg_data *data;
->>  	int err;
->> 
->>  	qcadev = devm_kzalloc(&serdev->dev, sizeof(*qcadev), GFP_KERNEL);
->> @@ -1069,47 +1418,87 @@ static int qca_serdev_probe(struct 
->> serdev_device *serdev)
->>  		return -ENOMEM;
->> 
->>  	qcadev->serdev_hu.serdev = serdev;
->> +	data = of_device_get_match_data(&serdev->dev);
->>  	serdev_device_set_drvdata(serdev, qcadev);
->> +	if (data && data->soc_type == QCA_WCN3990) {
->> +		qcadev->btsoc_type = QCA_WCN3990;
->> +		qcadev->bt_power = devm_kzalloc(&serdev->dev,
->> +						sizeof(struct qca_power),
->> +						GFP_KERNEL);
->> +		if (!qcadev->bt_power)
->> +			return -ENOMEM;
->> +
->> +		qcadev->bt_power->dev = &serdev->dev;
->> +		err = qca_init_regulators(qcadev->bt_power, data);
->> +		if (err) {
->> +			BT_ERR("Failed to init regulators:%d", err);
->> +			goto out;
->> +		}
->> 
->> -	qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
->> -				       GPIOD_OUT_LOW);
->> -	if (IS_ERR(qcadev->bt_en)) {
->> -		dev_err(&serdev->dev, "failed to acquire enable gpio\n");
->> -		return PTR_ERR(qcadev->bt_en);
->> -	}
->> +		qcadev->bt_power->vregs_on = false;
->> 
->> -	qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
->> -	if (IS_ERR(qcadev->susclk)) {
->> -		dev_err(&serdev->dev, "failed to acquire clk\n");
->> -		return PTR_ERR(qcadev->susclk);
->> -	}
->> +		/* Read max speed supported by wcn3990 from dts
->> +		 * tree. if max-speed property is not enabled in
->> +		 * dts, QCA driver will use default operating speed
->> +		 * from proto structure.
->> +		 */
-> 
-> The comment doesn't add much value.
-
-[Bala]: will remove the comment.
-
-> 
->> +		device_property_read_u32(&serdev->dev, "max-speed",
->> +					 &qcadev->oper_speed);
->> +		if (!qcadev->oper_speed)
->> +			BT_INFO("UART will pick default operating speed");
-> 
-> Not a change in this version, but BT_INFO seems a bit verbose, we
-> should avoid spamming the kernel log.
-[Bala] : will move above BT_INFO to BT_DBG.
-
-Thanks for reviewing the patch. Pls let me know if you have quires.
-will send v11 with updated comments
-
--- 
-Regards
-Balakrishna.
+--i6qv4o2lf76sjo7x--
