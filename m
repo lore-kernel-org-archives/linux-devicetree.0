@@ -1,43 +1,66 @@
-From: liuxiang <liuxiang_1999@126.com>
-Subject: Re:Re: [PATCH] of: irq: Add a helper function for
- irq_of_parse_and_map
-Date: Tue, 24 Jul 2018 21:19:20 +0800 (CST)
-Message-ID: <549a231a.a051.164cc71b1c8.Coremail.liuxiang_1999@126.com>
-References: <1532187494-2704-1-git-send-email-liu.xiang6@zte.com.cn>
- <CAL_JsqLozSJ-0YeajN=qHuR69KCjeR_xO21MyZxr-n6tR5G0cw@mail.gmail.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v3 03/18] dmaengine: dma-jz4780: Avoid hardcoding number
+ of channels
+Date: Tue, 24 Jul 2018 18:52:59 +0530
+Message-ID: <20180724132259.GF3661@vkoul-mobl>
+References: <20180721110643.19624-1-paul@crapouillou.net>
+ <20180721110643.19624-4-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLozSJ-0YeajN=qHuR69KCjeR_xO21MyZxr-n6tR5G0cw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180721110643.19624-4-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: liu.xiang6@zte.com.cn, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-CkkgZm91bmQgaW4gcHJvYmUgZnVuY3Rpb24gc29tZSBkcml2ZXJzIHVzZSBpcnFfb2ZfcGFyc2Vf
-YW5kX21hcAphbmQgZG8gbm90IGNhbGwgaXJxX2Rpc3Bvc2VfbWFwcGluZyBpbiBlcnIgcGF0aCwg
-d2hpbGUgb3RoZXIgZHJpdmVycyBkby4KU28gSSB0aGluayBhIHJlc291cmNlIG1hbmFnZWQgaXJx
-X29mX3BhcnNlX2FuZF9tYXAgZnVuY3Rpb24gY2FuIApiZSBiZXR0ZXIgdG8gZmluaXNoIHRoaXMg
-am9iLgoKQXQgMjAxOC0wNy0yMyAyMzoyODo1MiwgIlJvYiBIZXJyaW5nIiA8cm9iaCtkdEBrZXJu
-ZWwub3JnPiB3cm90ZToKPk9uIFNhdCwgSnVsIDIxLCAyMDE4IGF0IDk6MzggQU0gTGl1IFhpYW5n
-IDxsaXUueGlhbmc2QHp0ZS5jb20uY24+IHdyb3RlOgo+Pgo+PiBJbXBsZW1lbnQgYSByZXNvdXJj
-ZSBtYW5hZ2VkIGlycV9vZl9wYXJzZV9hbmRfbWFwIGZ1bmN0aW9uLgo+Cj5UaGF0IGlzIG9idmlv
-dXMgZnJvbSB0aGUgZGlmZi4gV2h5IGRvIHlvdSBuZWVkIHRoaXM/Cj4KPkFueXRoaW5nIHRoYXQg
-aXMgYSBwbGF0Zm9ybSBkZXZpY2Ugc2hvdWxkIHVzZSBwbGF0Zm9ybV9nZXRfaXJxLiBUaGUKPm1h
-cHBpbmcgaXMgY3JlYXRlZCBieSB0aGUgY29yZSBBbHNvLCBvZl9pcnFfZ2V0KCkgaXMgcHJlZmVy
-cmVkIG92ZXIKPmlycV9vZl9wYXJzZV9hbmRfbWFwKCkgZm9yIG5ldyB1c2VycyBhcyBpdCBoYXMg
-YmV0dGVyIGVycm9yIHJldHVybgo+aGFuZGxpbmcuCj4KPj4KPj4gU2lnbmVkLW9mZi1ieTogTGl1
-IFhpYW5nIDxsaXUueGlhbmc2QHp0ZS5jb20uY24+Cj4+IC0tLQo+PiAgZHJpdmVycy9vZi9pcnEu
-YyAgICAgICB8IDM4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICBp
-bmNsdWRlL2xpbnV4L29mX2lycS5oIHwgIDcgKysrKysrKwo+PiAgMiBmaWxlcyBjaGFuZ2VkLCA0
-NSBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2lycS5jIGIvZHJp
-dmVycy9vZi9pcnEuYwo+PiBpbmRleCAwMmFkOTNhLi45NDdmZTQxIDEwMDY0NAo+PiAtLS0gYS9k
-cml2ZXJzL29mL2lycS5jCj4+ICsrKyBiL2RyaXZlcnMvb2YvaXJxLmMKPj4gQEAgLTQ1LDYgKzQ1
-LDQ0IEBAIHVuc2lnbmVkIGludCBpcnFfb2ZfcGFyc2VfYW5kX21hcChzdHJ1Y3QgZGV2aWNlX25v
-ZGUgKmRldiwgaW50IGluZGV4KQo+PiAgfQo+PiAgRVhQT1JUX1NZTUJPTF9HUEwoaXJxX29mX3Bh
-cnNlX2FuZF9tYXApOwo+Pgo+PiArc3RhdGljIHZvaWQgZGV2bV9pcnFfZGlzcG9zZV9tYXBwaW5n
-KHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAqcmVzKQo+PiArewo+PiArICAgICAgIGlycV9kaXNw
-b3NlX21hcHBpbmcoKih1bnNpZ25lZCBpbnQgKilyZXMpOwo+Cj5XZSBkb24ndCByZWYgY291bnQg
-Y3JlYXRpbmcgbWFwcGluZ3MsIHNvIHRoaXMgd291bGQgYnJlYWsgZm9yIGFueSBzaGFyZWQgaXJx
-Lgo+Cj5Sb2IK
+On 21-07-18, 13:06, Paul Cercueil wrote:
+
+> +static const struct jz4780_dma_soc_data jz4780_dma_soc_data[] = {
+> +	[ID_JZ4780] = { .nb_channels = 32, },
+
+why the array of structs?
+
+> +};
+> +
+> +static const struct of_device_id jz4780_dma_dt_match[] = {
+> +	{ .compatible = "ingenic,jz4780-dma", .data = (void *)ID_JZ4780 },
+
+the data should be jz4780_dma_soc_data? as you would add more data
+later.. and not the enum..
+
+> -	jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
+> +	version = (enum jz_version)of_id->data;
+> +	soc_data = &jz4780_dma_soc_data[version];
+
+this can be simplified if we do:
+
+        soc_data = device_get_match_data(pdev);
+
+with:
+
+static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
+        .nb_channels = 32,
+};
+
+and
+        { .compatible = "ingenic,jz4780-dma", .data = (void *)jz4780_dma_soc_data },
+
+You add more parameters in future patches and store soc_data in driver
+object and use as is..
+
+> +	jzdma = devm_kzalloc(dev, sizeof(*jzdma)
+> +				+ sizeof(*jzdma->chan) * soc_data->nb_channels,
+> +				GFP_KERNEL);
+>  	if (!jzdma)
+>  		return -ENOMEM;
+>  
+> +	jzdma->soc_data = soc_data;
+> +	jzdma->version = version;
+
+why do you need to store version, driver should handle values and not
+versions..
+
+-- 
+~Vinod
