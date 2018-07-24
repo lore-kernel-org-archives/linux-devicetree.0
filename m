@@ -1,79 +1,49 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: Re: [PATCH 2/3] dt-bindings: arm: syna: add support for the AS370 SoC
-Date: Tue, 24 Jul 2018 13:40:04 +0800
-Message-ID: <20180724134004.4fc660d6@xhacker.debian>
-References: <20180713171712.05f58a74@xhacker.debian>
- <20180713172457.6193a92f@xhacker.debian>
- <20180720151529.GA26487@rob-hp-laptop>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 00/12] mfd: Add support to WCD9335 Audio Codec
+Date: Tue, 24 Jul 2018 11:23:58 +0530
+Message-ID: <20180724055358.GI3219@vkoul-mobl>
+References: <20180723155410.9494-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180720151529.GA26487@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180723155410.9494-1-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
-
-On Fri, 20 Jul 2018 09:15:29 -0600 Rob Herring wrote:
-
-> On Fri, Jul 13, 2018 at 05:24:57PM +0800, Jisheng Zhang wrote:
-> > The AS370 SoC is a new derivative of the berlin family. The only
-> > difference is the SoC isn't named as berlin*.  
+On 23-07-18, 16:53, Srinivas Kandagatla wrote:
+> Qualcomm WCD9335 Codec is a standalone Hi-Fi audio codec IC.
+> It is integrated in multiple Qualcomm SoCs like: MSM8996, MSM8976,
+> and MSM8956 chipsets.
 > 
-> So is it a derivative or just rebranded?
+> WCD9335 had multiple functional blocks, like: Soundwire controller,
+> interrupt mux, pin controller, Audio codec, MBHC, MAD(Mic activity Detection),
 
-A derivative new generation SoC.
+MBHC ??
 
+> Ultrasonic proximity and pen detection, Battery-voltage monitoring and
+> Codec processing engine.
 > 
-> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/syna.txt | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/syna.txt b/Documentation/devicetree/bindings/arm/syna.txt
-> > index 3bab18409b7a..3ba1d7b5ee74 100644
-> > --- a/Documentation/devicetree/bindings/arm/syna.txt
-> > +++ b/Documentation/devicetree/bindings/arm/syna.txt
-> > @@ -1,4 +1,4 @@
-> > -Marvell Berlin SoC Family Device Tree Bindings
-> > +Synaptics SoC Device Tree Bindings  
-> 
-> Perhaps some note about what has happened here. Otherwise it looks 
-> strange having "Marvell Berlin" in the document when the title says 
-> Synaptics SoC.
+> Currently this patchset has been only tested with SLIMbus interface due
+> to hardware avaiablity, but it can be easily made to work with both SLIMbus
 
-Good idea. will do in v2
+typo avaiablity
 
+> and I2C/I2S.    
 > 
-> >  ---------------------------------------------------------------
-> >  
-> >  Work in progress statement:
-> > @@ -13,6 +13,10 @@ stable binding/ABI.
-> >  
-> >  ---------------------------------------------------------------
-> >  
-> > +Boards with the Synaptics AS370 SoC shall have the following properties:
-> > +  Required root node property:
-> > +    compatible: "syna,as370"
-> > +
-> >  Boards with a SoC of the Marvell Berlin family, e.g. Armada 1500
-> >  shall have the following properties:
-> >  
-> > -- 
-> > 2.18.0
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html  
+> This patchset adds very basic playback and capture support witout much
+> fancy features. New features will be added once the basic support is in.
+> This patchset is tested on top of linux-next on DB820c for both playback
+> and capture paths.
+> 
+> This patchset also depends on the SLIMbus Stream apis which is already merged
+> via char-misc tree for 4.19.
+> 
+> Some parts of the code has been inherited from Qualcomm andriod kernel,
+
+typo andriod
+
+-- 
+~Vinod
