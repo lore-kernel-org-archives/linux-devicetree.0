@@ -1,48 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 18/19] dt-bindings: msm/disp: Add bindings for
- Snapdragon 845 DPU
-Date: Tue, 24 Jul 2018 17:31:52 -0600
-Message-ID: <20180724233151.GA29062@rob-hp-laptop>
-References: <20180720204315.19054-1-seanpaul@chromium.org>
- <20180720204315.19054-19-seanpaul@chromium.org>
+Subject: Re: [PATCH v3 01/18] doc: dt-bindings: jz4780-dma: Update bindings
+ to reflect driver changes
+Date: Tue, 24 Jul 2018 17:35:58 -0600
+Message-ID: <20180724233558.GA30764@rob-hp-laptop>
+References: <20180721110643.19624-1-paul@crapouillou.net>
+ <20180721110643.19624-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180720204315.19054-19-seanpaul@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, ryadav@codeaurora.org, airlied@linux.ie, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, abhinavk@codeaurora.org, skolluku@codeaurora.org, dovizu@chromium.org, freedreno@lists.freedesktop.org, hoegsberg@chromium.org, chandanu@codeaurora.org
+In-Reply-To: <20180721110643.19624-2-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMjAsIDIwMTggYXQgMDQ6NDM6MDlQTSAtMDQwMCwgU2VhbiBQYXVsIHdyb3Rl
-Ogo+IEZyb206IEpleWt1bWFyIFNhbmthcmFuIDxqc2Fua2FAY29kZWF1cm9yYS5vcmc+Cj4gCj4g
-QWRkcyBiaW5kaW5ncyBmb3IgU25hcGRyYWdvbiA4NDUgZGlzcGxheSBwcm9jZXNzaW5nIHVuaXQK
-PiAKPiBDaGFuZ2VzIGluIHYyOgo+IC0gVXNlIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxlcyBmb3Ig
-bWRzcyBhbmQgZHB1IChSb2IgSGVycmluZykKPiAtIFVzZSBhc3NpZ25lZC1jbG9ja3MgdG8gc2V0
-IGluaXRpYWwgY2xvY2sgZnJlcXVlbmN5IChSb2IgSGVycmluZykKPiAKPiBDaGFuZ2VzIGluIHYz
-IChhbGwgc3VnZ2VzdGVkIGJ5IFJvYiBIZXJyaW5nKToKPiAtIFJlbmFtZSBtZHNzX3BoeXMgdG8g
-bWRzcwo+IC0gQ29ycmVjdCBkZXNjcmlwdGlvbiBmb3IgY2xvY2tzL2Fzc2lnbmVkLWNsb2Nrcwo+
-IC0gUmVuYW1lIG1kcF9waHlzIHRvIG1kcAo+IC0gUmVuYW1lIHZiaWZfcGh5cyB0byB2YmlmCj4g
-LSBSZW1vdmUgcmVkdW5kYW50IGludGVycnVwdC1wYXJlbnQgZnJvbSBtZHNzX21kcAo+IC0gRnVs
-bHkgc3BlY2lmeSAncmFuZ2VzJyBhbmQgdXNlIHJlbGF0aXZlIHJlZyBhZGRyZXNzIGluIG1kc3Nf
-bWRwCj4gCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gU2lnbmVkLW9m
-Zi1ieTogSmV5a3VtYXIgU2Fua2FyYW4gPGpzYW5rYUBjb2RlYXVyb3JhLm9yZz4KPiBTaWduZWQt
-b2ZmLWJ5OiBSYWplc2ggWWFkYXYgPHJ5YWRhdkBjb2RlYXVyb3JhLm9yZz4KPiBTaWduZWQtb2Zm
-LWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KPiAtLS0KPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHB1LnR4dCAgIHwgMTMxICsrKysrKysrKysrKysr
-KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTMxIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUu
-dHh0CgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Sat, Jul 21, 2018 at 01:06:26PM +0200, Paul Cercueil wrote:
+> The driver is now compatible with four SoCs: JZ4780, JZ4770, JZ4725B and
+> JZ4740.
+
+What the driver supports is irrelevant to the binding.
+>
+> Besides, it now expects the devicetree to supply a second memory
+> resource. This resource is mandatory on the newly supported SoCs.
+> For the JZ4780, new devicetree code must also provide it, although the
+> driver is still compatible with older devicetree binaries.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> ---
+>  Documentation/devicetree/bindings/dma/jz4780-dma.txt | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+>  v2: New patch in this series; regroups the changes made to the
+>  jz4780-dma.txt doc file in the previous version of the patchset.
+> 
+>  v3: Updated example to comply with devicetree specification
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+> index f25feee62b15..14f33305e194 100644
+> --- a/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
+> @@ -2,8 +2,13 @@
+>  
+>  Required properties:
+>  
+> -- compatible: Should be "ingenic,jz4780-dma"
+> -- reg: Should contain the DMA controller registers location and length.
+> +- compatible: Should be one of:
+> +  * ingenic,jz4740-dma
+> +  * ingenic,jz4725b-dma
+> +  * ingenic,jz4770-dma
+> +  * ingenic,jz4780-dma
+
+So none of these are compatible with each other? It should be one valid 
+combination per line.
+
+> +- reg: Should contain the DMA channel registers location and length, followed
+> +  by the DMA controller registers location and length.
+>  - interrupts: Should contain the interrupt specifier of the DMA controller.
+>  - interrupt-parent: Should be the phandle of the interrupt controller that
+>  - clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
+> @@ -20,9 +25,10 @@ Optional properties:
+>  
+>  Example:
+>  
+> -dma: dma@13420000 {
+> +dma: dma-controller@13420000 {
+>  	compatible = "ingenic,jz4780-dma";
+> -	reg = <0x13420000 0x10000>;
+> +	reg = <0x13420000 0x400
+> +	       0x13421000 0x40>;
+>  
+>  	interrupt-parent = <&intc>;
+>  	interrupts = <10>;
+> -- 
+> 2.11.0
+> 
