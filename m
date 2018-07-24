@@ -1,56 +1,148 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 06/15] MIPS: dts: img: pistachio_marduk: Add 6Lowpan node
-Date: Mon, 23 Jul 2018 17:06:47 -0700
-Message-ID: <20180724000647.okbjmghv4w66bl7u@pburton-laptop>
-References: <20180722212010.3979-1-afaerber@suse.de>
- <20180722212010.3979-7-afaerber@suse.de>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH 2/2 v2] Add support for CPCAP regulators on Tegra devices.
+Date: Tue, 24 Jul 2018 03:27:13 +0300
+Message-ID: <4588004.Gnq6nbUl2V@dimapc>
+References: <20180723193848.32491-1-pgwipeout@gmail.com> <20180723193848.32491-3-pgwipeout@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180722212010.3979-7-afaerber@suse.de>
+In-Reply-To: <20180723193848.32491-3-pgwipeout@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Rahul Bedarkar <rahulbedarkar89@gmail.com>, James Hartley <james.hartley@sondrel.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Harry Morris <h.morris@cascoda.com>, Stefan Schmidt <stefan@osg.samsung.com>, Marcel Holtmann <marcel@holtmann.org>, David Gibson <david@gibson.dropbear.id.au>
+To: Peter Geis <pgwipeout@gmail.com>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-
-On Sun, Jul 22, 2018 at 11:20:01PM +0200, Andreas Färber wrote:
-> diff --git a/arch/mips/boot/dts/img/pistachio_marduk.dts b/arch/mips/boot/dts/img/pistachio_marduk.dts
-> index d723b68084c9..b0b6b534a41f 100644
-> --- a/arch/mips/boot/dts/img/pistachio_marduk.dts
-> +++ b/arch/mips/boot/dts/img/pistachio_marduk.dts
-> @@ -158,6 +158,20 @@
->  		   <&gpio1 12 GPIO_ACTIVE_HIGH>,
->  		   <&gpio1 13 GPIO_ACTIVE_HIGH>,
->  		   <&gpio1 14 GPIO_ACTIVE_HIGH>;
+On Monday, 23 July 2018 22:38:48 MSK Peter Geis wrote:
+> Added support for the CPCAP power management regulator functions on
+> Tegra devices.
+> Added sw2_sw4 value tables, which provide power to the Tegra core and
+> aux devices.
+> Added the Tegra init tables and device tree compatibility match.
+> 
+> Signed-off-by: Peter Geis <pgwipeout@gmail.com>
+> ---
+>  .../bindings/regulator/cpcap-regulator.txt    |  1 +
+>  drivers/regulator/cpcap-regulator.c           | 80 +++++++++++++++++++
+>  2 files changed, 81 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+> b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt index
+> 675f4437ce92..3e2d33ab1731 100644
+> --- a/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+> @@ -4,6 +4,7 @@ Motorola CPCAP PMIC voltage regulators
+>  Requires node properties:
+>  - "compatible" value one of:
+>      "motorola,cpcap-regulator"
+> +    "motorola,tegra-cpcap-regulator"
+>      "motorola,mapphone-cpcap-regulator"
+> 
+>  Required regulator properties:
+> diff --git a/drivers/regulator/cpcap-regulator.c
+> b/drivers/regulator/cpcap-regulator.c index c0b1e04bd90f..cb3774be445d
+> 100644
+> --- a/drivers/regulator/cpcap-regulator.c
+> +++ b/drivers/regulator/cpcap-regulator.c
+> @@ -412,6 +412,82 @@ static struct cpcap_regulator omap4_regulators[] = {
+>  	{ /* sentinel */ },
+>  };
+> 
+> +static struct cpcap_regulator tegra_regulators[] = {
+> +	CPCAP_REG(SW1, CPCAP_REG_S1C1, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_SW1_SEL, unknown_val_tbl,
+> +		  0, 0, 0, 0, 0, 0),
+> +	CPCAP_REG(SW2, CPCAP_REG_S2C1, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_SW2_SEL, sw2_sw4_val_tbl,
+> +		  0xf00, 0x7f, 0, 0x800, 0, 120),
+> +	CPCAP_REG(SW3, CPCAP_REG_S3C, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_SW3_SEL, unknown_val_tbl,
+> +		  0, 0, 0, 0, 0, 0),
+> +	CPCAP_REG(SW4, CPCAP_REG_S4C1, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_SW4_SEL, sw2_sw4_val_tbl,
+> +		  0xf00, 0x7f, 0, 0x900, 0, 100),
+> +	CPCAP_REG(SW5, CPCAP_REG_S5C, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_SW5_SEL, sw5_val_tbl,
+> +		  0x2a, 0, 0, 0x22, 0, 0),
+> +	CPCAP_REG(SW6, CPCAP_REG_S6C, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_SW6_SEL, unknown_val_tbl,
+> +		  0, 0, 0, 0, 0, 0),
+> +	CPCAP_REG(VCAM, CPCAP_REG_VCAMC, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_VCAM_SEL, vcam_val_tbl,
+> +		  0x87, 0x30, 4, 0x7, 0, 420),
+> +	CPCAP_REG(VCSI, CPCAP_REG_VCSIC, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VCSI_SEL, vcsi_val_tbl,
+> +		  0x47, 0x10, 4, 0x7, 0, 350),
+> +	CPCAP_REG(VDAC, CPCAP_REG_VDACC, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VDAC_SEL, vdac_val_tbl,
+> +		  0x87, 0x30, 4, 0x3, 0, 420),
+> +	CPCAP_REG(VDIG, CPCAP_REG_VDIGC, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_VDIG_SEL, vdig_val_tbl,
+> +		  0x87, 0x30, 4, 0x5, 0, 420),
+> +	CPCAP_REG(VFUSE, CPCAP_REG_VFUSEC, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VFUSE_SEL, vfuse_val_tbl,
+> +		  0x80, 0xf, 0, 0x80, 0, 420),
+> +	CPCAP_REG(VHVIO, CPCAP_REG_VHVIOC, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VHVIO_SEL, vhvio_val_tbl,
+> +		  0x17, 0, 0, 0x2, 0, 0),
+> +	CPCAP_REG(VSDIO, CPCAP_REG_VSDIOC, CPCAP_REG_ASSIGN2,
+> +		  CPCAP_BIT_VSDIO_SEL, vsdio_val_tbl,
+> +		  0x87, 0x38, 3, 0x2, 0, 420),
+> +	CPCAP_REG(VPLL, CPCAP_REG_VPLLC, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VPLL_SEL, vpll_val_tbl,
+> +		  0x43, 0x18, 3, 0x1, 0, 420),
+> +	CPCAP_REG(VRF1, CPCAP_REG_VRF1C, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VRF1_SEL, vrf1_val_tbl,
+> +		  0xac, 0x2, 1, 0xc, 0, 10),
+> +	CPCAP_REG(VRF2, CPCAP_REG_VRF2C, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VRF2_SEL, vrf2_val_tbl,
+> +		  0x23, 0x8, 3, 0x3, 0, 10),
+> +	CPCAP_REG(VRFREF, CPCAP_REG_VRFREFC, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VRFREF_SEL, vrfref_val_tbl,
+> +		  0x23, 0x8, 3, 0x3, 0, 420),
+> +	CPCAP_REG(VWLAN1, CPCAP_REG_VWLAN1C, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VWLAN1_SEL, vwlan1_val_tbl,
+> +		  0x47, 0x10, 4, 0x5, 0, 420),
+> +	CPCAP_REG(VWLAN2, CPCAP_REG_VWLAN2C, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VWLAN2_SEL, vwlan2_val_tbl,
+> +		  0x20c, 0xc0, 6, 0x8, 0, 420),
+> +	CPCAP_REG(VSIM, CPCAP_REG_VSIMC, CPCAP_REG_ASSIGN3,
+> +		  0xffff, vsim_val_tbl,
+> +		  0x23, 0x8, 3, 0x3, 0, 420),
+> +	CPCAP_REG(VSIMCARD, CPCAP_REG_VSIMC, CPCAP_REG_ASSIGN3,
+> +		  0xffff, vsimcard_val_tbl,
+> +		  0x1e80, 0x8, 3, 0x1e00, 0, 420),
+> +	CPCAP_REG(VVIB, CPCAP_REG_VVIBC, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VVIB_SEL, vvib_val_tbl,
+> +		  0x1, 0xc, 2, 0, 0x1, 500),
+> +	CPCAP_REG(VUSB, CPCAP_REG_VUSBC, CPCAP_REG_ASSIGN3,
+> +		  CPCAP_BIT_VUSB_SEL, vusb_val_tbl,
+> +		  0x11c, 0x40, 6, 0xc, 0, 0),
+> +	CPCAP_REG(VAUDIO, CPCAP_REG_VAUDIOC, CPCAP_REG_ASSIGN4,
+> +		  CPCAP_BIT_VAUDIO_SEL, vaudio_val_tbl,
+> +		  0x16, 0x1, 0, 0x4, 0, 0),
+> +	{ /* sentinel */ },
+> +};
 > +
-> +	ca8210: sixlowpan@4 {
-> +		compatible = "cascoda,ca8210";
-> +		reg = <4>;
-> +		spi-max-frequency = <3000000>;
-> +		spi-cpol;
-> +		reset-gpio = <&gpio0 12 GPIO_ACTIVE_HIGH>;
-> +		irq-gpio = <&gpio2 12 GPIO_ACTIVE_HIGH>;
-> +
-> +		extclock-enable;
-> +		extclock-freq = <16000000>;
-> +		extclock-gpio = <2>; /* spiuart_clk */
-> +		#clock-cells = <0>;
-> +	};
+>  static const struct of_device_id cpcap_regulator_id_table[] = {
+>  	{
+>  		.compatible = "motorola,cpcap-regulator",
+> @@ -420,6 +496,10 @@ static const struct of_device_id
+> cpcap_regulator_id_table[] = { .compatible =
+> "motorola,mapphone-cpcap-regulator",
+>  		.data = omap4_regulators,
+>  	},
+> +	{
+> +		.compatible = "motorola,tegra-cpcap-regulator",
+> +		.data = tegra_regulators,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, cpcap_regulator_id_table);
 
-dtc complains about the extclock-gpio property because it expects a
-property named *-gpio to contain a gpio-list:
+Are those cpcap_regulator values really common for all Tegra's? Probably 
+better to name the DT compatible like "motorola,xoom-cpcap-regulator" or 
+"motorola,mz602-cpcap-regulator".
 
-    DTC     arch/mips/boot/dts/img/pistachio_marduk.dtb
-  arch/mips/boot/dts/img/pistachio_marduk.dtb: Warning (gpios_property):
-    /spi@18100f00/sixlowpan@4: Missing property '#gpio-cells' in node
-    /clk@18144000 or bad phandle (referred from extclock-gpio[0])
-
-Rob, perhaps this should be added as a second false-positive case in
-dtc's prop_is_gpio()?
-
-Thanks,
-    Paul
+The DT binding documentation should be updated with the new compatible value 
+in the Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
