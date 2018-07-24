@@ -1,216 +1,56 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v2 02/10] coresight: platform: Refactor graph endpoint parsing
-Date: Tue, 24 Jul 2018 15:34:07 -0600
-Message-ID: <CANLsYkwDTM2pT0JCCnLdetKoYe6xsmj48Gyb5OJFxJMmRLrZ_g@mail.gmail.com>
-References: <1531997715-6767-1-git-send-email-suzuki.poulose@arm.com>
- <1531997715-6767-3-git-send-email-suzuki.poulose@arm.com> <20180724213031.GA22451@xps15>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 04/15] MIPS: dts: img: pistachio_marduk: Switch mmc to 1
+ bit mode
+Date: Wed, 25 Jul 2018 00:15:44 +0200
+Message-ID: <1b7064bc-7008-2c1c-2398-143401bbc368@suse.de>
+References: <20180722212010.3979-1-afaerber@suse.de>
+ <20180722212010.3979-5-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724213031.GA22451@xps15>
+In-Reply-To: <20180722212010.3979-5-afaerber@suse.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matt Sealey <matt.sealey@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, coresight@lists.linaro.org, John Horley <john.horley@arm.com>, Mike Leach <mike.leach@linaro.org>
+To: linux-mips@linux-mips.org
+Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Ian Pozella <Ian.Pozella@imgtec.com>, James Hartley <james.hartley@sondrel.com>, Rahul Bedarkar <rahulbedarkar89@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Jul 2018 at 15:30, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> Good afternoon,
->
-> On Thu, Jul 19, 2018 at 11:55:06AM +0100, Suzuki K Poulose wrote:
-> > Refactor the of graph endpoint parsing code, to make the error
-> > handling easier.
-> >
-> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > ---
-> > Changes since v1:
-> >  - Splitted from the of_node refcounting fix, part1
-> > ---
-> >  drivers/hwtracing/coresight/of_coresight.c | 129 +++++++++++++++++------------
-> >  1 file changed, 75 insertions(+), 54 deletions(-)
-> >
-> > diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> > index 6880bee..68faaf8 100644
-> > --- a/drivers/hwtracing/coresight/of_coresight.c
-> > +++ b/drivers/hwtracing/coresight/of_coresight.c
-> > @@ -114,17 +114,69 @@ int of_coresight_get_cpu(const struct device_node *node)
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
-> >
-> > +/*
-> > + * of_coresight_parse_endpoint : Parse the given output endpoint @ep
-> > + * and fill the connection information in @pdata[*@i].
-> > + *
-> > + * Parses the local port, remote device name and the remote port. Also
-> > + * updates *@i to point to the next index, when an entry is added.
-> > + *
-> > + * Returns :
-> > + *    0      - If the parsing completed without any fatal errors.
-> > + *   -Errno  - Fatal error, abort the scanning.
-> > + */
-> > +static int of_coresight_parse_endpoint(struct device *dev,
-> > +                                    struct device_node *ep,
-> > +                                    struct coresight_platform_data *pdata,
-> > +                                    int *i)
-> > +{
-> > +     int ret = 0;
-> > +     struct of_endpoint endpoint, rendpoint;
-> > +     struct device_node *rparent = NULL;
-> > +     struct device_node *rport = NULL;
-> > +     struct device *rdev = NULL;
-> > +
-> > +     do {
-> > +             /* Parse the local port details */
-> > +             if (of_graph_parse_endpoint(ep, &endpoint))
-> > +                     break;
-> > +             /*
-> > +              * Get a handle on the remote port and parent
-> > +              * attached to it.
-> > +              */
-> > +             rparent = of_graph_get_remote_port_parent(ep);
-> > +             if (!rparent)
-> > +                     break;
-> > +             rport = of_graph_get_remote_port(ep);
-> > +             if (!rport)
-> > +                     break;
-> > +             if (of_graph_parse_endpoint(rport, &rendpoint))
-> > +                     break;
-> > +
-> > +             /* If the remote device is not available, defer probing */
-> > +             rdev = of_coresight_get_endpoint_device(rparent);
-> > +             if (!rdev) {
-> > +                     ret = -EPROBE_DEFER;
-> > +                     break;
-> > +             }
-> > +
-> > +             pdata->outports[*i] = endpoint.port;
-> > +             pdata->child_names[*i] = dev_name(rdev);
-> > +             pdata->child_ports[*i] = rendpoint.id;
-> > +             /* Move the index */
-> > +             (*i)++;
->
-> Not a big fan, makes the code needlessly complex.  Incrementation of the index
-> can be done in the while loop of of_get_coresight_platform_data().  See below.
+Am 22.07.2018 um 23:19 schrieb Andreas Färber:
+> From: Ian Pozella <Ian.Pozella@imgtec.com>
+> 
+> The mmc block in Pistachio allows 1 to 8 data bits to be used.
+> Marduk uses 4 bits allowing the upper 4 bits to be allocated
+> to the Mikrobus ports. However these bits are still connected
+> internally meaning the mmc block recieves signals on all data lines
 
-Void that - it properly deals with the first of_parse_endpoint().
+"receives"
 
->
-> > +     } while (0);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  struct coresight_platform_data *
-> >  of_get_coresight_platform_data(struct device *dev,
-> >                              const struct device_node *node)
-> >  {
-> >       int i = 0, ret = 0;
-> >       struct coresight_platform_data *pdata;
-> > -     struct of_endpoint endpoint, rendpoint;
-> > -     struct device *rdev;
-> >       struct device_node *ep = NULL;
-> > -     struct device_node *rparent = NULL;
-> > -     struct device_node *rport = NULL;
-> >
-> >       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> >       if (!pdata)
-> > @@ -132,64 +184,33 @@ of_get_coresight_platform_data(struct device *dev,
-> >
-> >       /* Use device name as sysfs handle */
-> >       pdata->name = dev_name(dev);
-> > +     pdata->cpu = of_coresight_get_cpu(node);
-> >
-> >       /* Get the number of input and output port for this component */
-> >       of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
-> >
-> > -     if (pdata->nr_outport) {
-> > -             ret = of_coresight_alloc_memory(dev, pdata);
-> > +     /* If there are no output connections, we are done */
-> > +     if (!pdata->nr_outport)
-> > +             return pdata;
-> > +
-> > +     ret = of_coresight_alloc_memory(dev, pdata);
-> > +     if (ret)
-> > +             return ERR_PTR(ret);
-> > +
-> > +     /* Iterate through each port to discover topology */
-> > +     while ((ep = of_graph_get_next_endpoint(node, ep))) {
-> > +             /*
-> > +              * No need to deal with input ports, processing for as
-> > +              * processing for output ports will deal with them.
-> > +              */
->
-> This comment has been broken for a while... It should read:
->
->                 /*
->                  * No need to deal with input ports, as processing
->                  * for output ports will deal with them.
->                  */
->
-> > +             if (of_find_property(ep, "slave-mode", NULL))
-> > +                     continue;
-> > +
-> > +             ret = of_coresight_parse_endpoint(dev, ep, pdata, &i);
-> >               if (ret)
-> >                       return ERR_PTR(ret);
->
->                 i++;
->
-> > -
-> > -             /* Iterate through each port to discover topology */
-> > -             do {
-> > -                     /* Get a handle on a port */
-> > -                     ep = of_graph_get_next_endpoint(node, ep);
-> > -                     if (!ep)
-> > -                             break;
-> > -
-> > -                     /*
-> > -                      * No need to deal with input ports, processing for as
-> > -                      * processing for output ports will deal with them.
-> > -                      */
-> > -                     if (of_find_property(ep, "slave-mode", NULL))
-> > -                             continue;
-> > -
-> > -                     /* Get a handle on the local endpoint */
-> > -                     ret = of_graph_parse_endpoint(ep, &endpoint);
-> > -
-> > -                     if (ret)
-> > -                             continue;
-> > -
-> > -                     /* The local out port number */
-> > -                     pdata->outports[i] = endpoint.port;
-> > -
-> > -                     /*
-> > -                      * Get a handle on the remote port and parent
-> > -                      * attached to it.
-> > -                      */
-> > -                     rparent = of_graph_get_remote_port_parent(ep);
-> > -                     rport = of_graph_get_remote_port(ep);
-> > -
-> > -                     if (!rparent || !rport)
-> > -                             continue;
-> > -
-> > -                     if (of_graph_parse_endpoint(rport, &rendpoint))
-> > -                             continue;
-> > -
-> > -                     rdev = of_coresight_get_endpoint_device(rparent);
-> > -                     if (!rdev)
-> > -                             return ERR_PTR(-EPROBE_DEFER);
-> > -
-> > -                     pdata->child_names[i] = dev_name(rdev);
-> > -                     pdata->child_ports[i] = rendpoint.id;
-> > -
-> > -                     i++;
-> > -             } while (ep);
-> >       }
-> >
-> > -     pdata->cpu = of_coresight_get_cpu(node);
-> > -
-> >       return pdata;
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_get_coresight_platform_data);
-> > --
-> > 2.7.4
-> >
+I had fixed a number of typos from the downstream patches already, but
+this one slipped through.
+
+Regards,
+Andreas
+
+> and seems the internal HW CRC checks get corrupted by this erroneous
+> data.
+> 
+> We cannot control what data is sent on these lines because they go
+> to external ports. 1 bit mode does not exhibit the issue hence the
+> safe default is to use this. If a user knows that in their use case
+> they will not use the upper bits then they can set to 4 bit mode in
+> order to improve performance.
+> 
+> Also make sure that the upper 4 bits don't get allocated to the mmc
+> driver (the default is to assign all 8 pins) so they can be allocated
+> to other drivers. Allocating all 4 despite setting 1 bit mode as this
+> matches what is there in hardware.
+> 
+> Signed-off-by: Ian Pozella <Ian.Pozella@imgtec.com>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+[snip]
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
