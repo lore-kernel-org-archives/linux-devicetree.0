@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 02/14] arm64: dts: meson-axg: add vcc 5v regulator on the s400
-Date: Tue, 24 Jul 2018 14:52:26 +0200
-Message-ID: <20180724125238.14567-3-jbrunet@baylibre.com>
+Subject: [PATCH 03/14] arm64: dts: meson-axg: add usb power regulator
+Date: Tue, 24 Jul 2018 14:52:27 +0200
+Message-ID: <20180724125238.14567-4-jbrunet@baylibre.com>
 References: <20180724125238.14567-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
@@ -10,9 +10,8 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This regulator is controlled by a GPIO and supplies various devices
-on the board, such as the lineout codec, the usb supply or the lcd
-controller.
+The usb power regulator is supplied by the vcc 5v regulator and
+controlled by a GPIO. This will be needed to enable usb.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
@@ -20,21 +19,21 @@ Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
  1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 09c7909a78ea..5937d8c3a6ed 100644
+index 5937d8c3a6ed..7489b88f27d7 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -104,6 +104,17 @@
- 		regulator-always-on;
+@@ -115,6 +115,17 @@
+ 		enable-active-high;
  	};
  
-+	vcc_5v: regulator-vcc_5v {
++	usb_pwr: regulator-usb_pwr {
 +		compatible = "regulator-fixed";
-+		regulator-name = "VCC5V";
++		regulator-name = "USB_PWR";
 +		regulator-min-microvolt = <5000000>;
 +		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&main_12v>;
++		vin-supply = <&vcc_5v>;
 +
-+		gpio = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
 +		enable-active-high;
 +	};
 +
