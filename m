@@ -1,43 +1,59 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Tue, 24 Jul 2018 18:07:29 +0200
-Message-ID: <20180724180729.4aed4a7a@bbrezillon>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
-        <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
-        <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se>
-        <20180720101206.tv7nsoanwo5ftnia@ninjato>
-        <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
-        <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se>
-        <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
-        <a74a7472-e900-d031-d10b-b12f03ea9ff1@axentia.se>
-        <20180720154132.2fwmwpiwtxa73ljf@ninjato>
-        <CAK8P3a0+8a9LCyW2WX6gO2Pi3GJa_ofznC07LMHjWmxZ4HaX7Q@mail.gmail.com>
-        <20180724155717.aodl6xehacparo7b@katana>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 1/2] pinctrl: stm32: fix bank io port number
+Date: Tue, 24 Jul 2018 18:07:48 +0200
+Message-ID: <ed56c8d3-f354-d311-8407-66268bcdf7a6@st.com>
+References: <1531745857-5561-1-git-send-email-alexandre.torgue@st.com>
+ <1531745857-5561-2-git-send-email-alexandre.torgue@st.com>
+ <20180720163515.GA16515@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724155717.aodl6xehacparo7b@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180720163515.GA16515@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, amelie.delaunay@st.com, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Jul 2018 17:57:17 +0200
-Wolfram Sang <wsa@the-dreams.de> wrote:
+Hi Rob
 
-> > I think an SoC design we will likely see is an i3c master multiplexed with
-> > an i2c master to access one bus. The i2c master can then use clock
-> > stretching and other things that may not work in the i3c master, and it
-> > may be used in the absence of proper i3c drivers in the OS.  
+On 07/20/2018 06:35 PM, Rob Herring wrote:
+> On Mon, Jul 16, 2018 at 02:57:36PM +0200, Alexandre Torgue wrote:
+>> In case the exti line is not in line with the bank number (that is the case
+>> when there is an hole between two banks, for example GPIOK and then GPIOZ),
+>> use "st,bank-ioport" DT property to get the right exti line.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>> index 9a06e1f..60c678a 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+>> @@ -55,6 +55,8 @@ Optional properties:
+>>      NOTE: If "gpio-ranges" is used for a gpio controller, all gpio-controller
+>>      have to use a "gpio-ranges" entry.
+>>      More details in Documentation/devicetree/bindings/gpio/gpio.txt.
+>> + - st,bank-ioport: should correspond to the EXTI IOport selection (EXTI line
+>> +   used to select GPIOs as interrupts).
 > 
-> Multiplexed? Well, as soon you want to use I3C features like IBI, this
-> is not going to work, right? It will not even work with Linux being an
-> I2C slave itself. Or do you mean running the I3C and I2C controller
-> simultaneously using the same wires?
+> ioport sounds like something else. Perhaps '-exti-line'?
 
-I think we should switch to an I3C mindset. It seems the use cases
-we're discussing so far are I2C use cases. Keep in mind that I3C bus
-management is completely different from I2C one (event if I3C is
-backward compatible with I2C, it's just a feature, not the foundation
-of the I3C protocol).
+IOport is actually what is described in our datasheet. I could change it 
+to -exti-line but I would prefer to match with the datasheet.
+
+Regards
+Alex
+> 
+>>   
+>>   Example 1:
+>>   #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
