@@ -1,76 +1,91 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Tue, 24 Jul 2018 18:04:52 +0200
-Message-ID: <CAK8P3a1KU+KMOQ+iqpmsn2MqQpOdH-tiN0tbOmSKeaBs8DMVgw@mail.gmail.com>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
- <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
- <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se> <20180720101206.tv7nsoanwo5ftnia@ninjato>
- <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
- <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se> <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
- <a74a7472-e900-d031-d10b-b12f03ea9ff1@axentia.se> <20180720154132.2fwmwpiwtxa73ljf@ninjato>
- <CAK8P3a0+8a9LCyW2WX6gO2Pi3GJa_ofznC07LMHjWmxZ4HaX7Q@mail.gmail.com> <20180724155717.aodl6xehacparo7b@katana>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v2 00/18] Allwinner R40 HDMI refactoring
+Date: Wed, 25 Jul 2018 00:04:49 +0800
+Message-ID: <f77bcb551d60e9d5332dad20c1ef1a1e83ddcc5b.camel@aosc.io>
+References: <20180710203511.18454-1-jernej.skrabec@siol.net>
+	 <20180711083036.7attjq4hm5ay5gmn@flea> <2309112.TTVI9Fv1ar@jernej-laptop>
+	 <20180724123741.bbkjgy2uwmzsj45k@flea>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724155717.aodl6xehacparo7b@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBQE43XNAKGQE2RVQYRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180724123741.bbkjgy2uwmzsj45k@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Jernej =?gb2312?Q?=810=947krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 5:57 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
->
->> > Renesas R-Car Gen2 has two I2C IP cores. One can do DMA and automatic
->> > transfers to the PMIC, the other has I2C slave functionality. One cannot
->> > do I2C_SMBUS_QUICK, the other can. And some more kind of quirks.
->> > Sometimes you can mux the pins to GPIO, so you have a third option.
->> >
->> > This setup is the reason the demux driver exists.
->>
->> Have you run into scenarios where you dynamically switch between
->> the two masters in order to do different things (on one slave, or
->> on multiple slaves), or could you always decide on one of them
->> at boot time with that particular chip?
->
-> My personal use case is debugging. R-Car H2 is great because I can
-> always pinmux this or that I2C IP core to the same set of pins, and in 2
-> out of 4 cases even GPIO bitbang on top of that. So, it is great to
-> compare behaviour, do scopes with the same type of setup, etc...
-> For that, I do runtime switches, but the slaves are not really under
-> real usage.
+=E5=9C=A8 2018-07-24=E4=BA=8C=E7=9A=84 14:37 +0200=EF=BC=8CMaxime Ripard=E5=
+=86=99=E9=81=93=EF=BC=9A
+> On Sun, Jul 22, 2018 at 04:43:56PM +0200, Jernej =C5=A0krabec wrote:
+> > Hi Maxime,
+> >=20
+> > Dne sreda, 11. julij 2018 ob 10:30:36 CEST je Maxime Ripard
+> > napisal(a):
+> > > On Tue, Jul 10, 2018 at 10:34:53PM +0200, Jernej Skrabec wrote:
+> > > > This series fixes several issues found in R40 HDMI patch series
+> > > > after
+> > > > it was applied. Conversation can be found here:
+> > > >=20
+http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/586011.htm
+> > > > l
+> > > >=20
+> > > > Patches are based on latest linux-next (next-20180710) and are
+> > > > ordered
+> > > > in such way that they don't break R40 HDMI at any time. Because
+> > > > of that
+> > > > I suggest that whole series goes through drm-misc to preserve
+> > > > that order.
+> > > >=20
+> > > > I also tested those patches on H3 to make sure it doesn't break
+> > > > other
+> > > > platforms. However, it would be nice to test for regressions
+> > > > also on
+> > > > older SoCs (with DE1).
+> > > >=20
+> > > > Best regards,
+> > > > Jernej
+> > >=20
+> > > Applied all patches but the patch 10, thanks!
+> > > Maxime
+> >=20
+> > It seems that you forgot to merge some patches:
+> >=20
+> > [PATCH v2 12/18] drm/sun4i: tcon: Add another way for matching
+> > mixers with=20
+> > tcon
+> > [PATCH v2 13/18] drm/sun4i: tcon: Add support for R40 TCON
+> >=20
+> > Without them, R40 display pipeline can't work.
+> >=20
+> > Maybe they are in your spam folder?
+>=20
+> Thanks for telling me, I'm not quite sure what happened.
+>=20
+> I've applied them.
 
-Ok, so runtime here still means it's chosen by an operator (i.e. you),
-not part of regular operation.
+BTW without them the board cannot boot because of dead loop in
+sun4i_drv_probe().
 
-> I have absolutely no idea how $customers use it, sadly.
+>=20
+> Sorry,
+> Maxime
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Right.
-
->> I think an SoC design we will likely see is an i3c master multiplexed with
->> an i2c master to access one bus. The i2c master can then use clock
->> stretching and other things that may not work in the i3c master, and it
->> may be used in the absence of proper i3c drivers in the OS.
->
-> Multiplexed? Well, as soon you want to use I3C features like IBI, this
-> is not going to work, right? It will not even work with Linux being an
-> I2C slave itself. Or do you mean running the I3C and I2C controller
-> simultaneously using the same wires?
-
-I meant multiplexing it through the pinmux framework, with one of the
-two being active at any time. Obviously this makes no sense for
-i3c slaves, but it can be useful if the bus only contains i2c slaves.
-
->> However, that case cannot be handled with the abstraction in the
->> proposed i3c framework, which can only deal with multiple i3c
->> standard compliant masters. I'm also not sure if it can be added
->> to the i2c-demux-pinctrl driver.
->
-> The I2C demuxer maps the whole bus to an i2c_adapter. You cannot select
-> a master per client.
-
-What I meant here was switching the bus between an i2c master and an
-i3c master like you do with the i2c demuxer. Right now, this wouldn't
-work because i2c and i3c use different representations in DT and in
-Linux for the same devices.
-
-     Arnd
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
