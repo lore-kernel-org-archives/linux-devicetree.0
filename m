@@ -1,7 +1,7 @@
 From: Denis OSTERLAND <denis.osterland@diehl.com>
-Subject: [PATCH v5 4/5] rtc: isl1208: set ev-evienb bit from device tree
-Date: Tue, 24 Jul 2018 11:31:21 +0000
-Message-ID: <20180724095437.6016-5-Denis.Osterland@diehl.com>
+Subject: [PATCH v5 1/5] rtc: sysfs: facilitate attribute add to rtc device
+Date: Tue, 24 Jul 2018 11:31:22 +0000
+Message-ID: <20180724095437.6016-2-Denis.Osterland@diehl.com>
 References: <20180724095437.6016-1-Denis.Osterland@diehl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -16,59 +16,103 @@ List-Id: devicetree@vger.kernel.org
 
 From: Denis Osterland <Denis.Osterland@diehl.com>
 
-Add support to disable event in pull-up.
+This patches addresses following problem:
+rtc_allocate_device
+devm_device_add_group  <-- kernel oops / null pointer, because
+			sysfs entry does not yet exist
+rtc_register_device
+rc = devm_device_add_group
+if (rc)
+	return rc;     <-- forbidden to return error code
+			after device register
+
+This patch adds rtc_add_group(s) functions.
+The functions store the sum of attribute groups as device resource.
 
 Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
 ---
- drivers/rtc/rtc-isl1208.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-core.h  | 13 +++++++++++++
+ drivers/rtc/rtc-sysfs.c | 43 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
 
-diff --git a/drivers/rtc/rtc-isl1208.c b/drivers/rtc/rtc-isl1208.c
-index 0812a14c2d5c..fa744c7ad5b3 100644
---- a/drivers/rtc/rtc-isl1208.c
-+++ b/drivers/rtc/rtc-isl1208.c
-@@ -44,6 +44,7 @@
- #define ISL1208_REG_INT_IM     (1<<7)   /* interrupt/alarm mode */
- #define ISL1219_REG_EV  0x09
- #define ISL1219_REG_EV_EVEN    (1<<4)   /* event detection enable */
-+#define ISL1219_REG_EV_EVIENB  (1<<7)   /* event in pull-up disable */
- #define ISL1208_REG_ATR 0x0a
- #define ISL1208_REG_DTR 0x0b
+diff --git a/drivers/rtc/rtc-core.h b/drivers/rtc/rtc-core.h
+index 0abf98983e13..c74537d03644 100644
+--- a/drivers/rtc/rtc-core.h
++++ b/drivers/rtc/rtc-core.h
+@@ -40,9 +40,22 @@ static inline void rtc_proc_del_device(struct rtc_device *rtc)
  
-@@ -777,8 +778,22 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 			 "please set clock.\n");
- 
- 	if (id->driver_data == TYPE_ISL1219) {
--		rc = i2c_smbus_write_byte_data(client, ISL1219_REG_EV,
--							ISL1219_REG_EV_EVEN);
-+		struct device_node *np = client->dev.of_node;
-+		u32 evienb;
+ #ifdef CONFIG_RTC_INTF_SYSFS
+ const struct attribute_group **rtc_get_dev_attribute_groups(void);
++int rtc_add_group(struct rtc_device *rtc, const struct attribute_group *grp);
++int rtc_add_groups(struct rtc_device *rtc,
++					const struct attribute_group **grps);
+ #else
+ static inline const struct attribute_group **rtc_get_dev_attribute_groups(void)
+ {
+ 	return NULL;
+ }
++static inline
++int rtc_add_group(struct rtc_device *rtc, const struct attribute_group *grp)
++{
++	return 0;
++}
++static inline
++int rtc_add_groups(struct rtc_device *rtc, const struct attribute_group **grps)
++{
++	return 0;
++}
+ #endif
+diff --git a/drivers/rtc/rtc-sysfs.c b/drivers/rtc/rtc-sysfs.c
+index 454da38c6012..498e65f13686 100644
+--- a/drivers/rtc/rtc-sysfs.c
++++ b/drivers/rtc/rtc-sysfs.c
+@@ -317,3 +317,46 @@ const struct attribute_group **rtc_get_dev_attribute_groups(void)
+ {
+ 	return rtc_attr_groups;
+ }
 +
-+		rc = i2c_smbus_read_byte_data(client, ISL1219_REG_EV);
-+		if (rc < 0) {
-+			dev_err(&client->dev, "failed to read EV reg\n");
-+			return rc;
-+		}
-+		rc |= ISL1219_REG_EV_EVEN;
-+		if (!of_property_read_u32(np, "isil,ev-evienb", &evienb)) {
-+			if (evienb)
-+				rc |= ISL1219_REG_EV_EVIENB;
-+			else
-+				rc &= ~ISL1219_REG_EV_EVIENB;
-+		}
-+		rc = i2c_smbus_write_byte_data(client, ISL1219_REG_EV, rc);
- 		if (rc < 0) {
- 			dev_err(&client->dev, "could not enable tamper detection\n");
- 			return rc;
-@@ -786,7 +801,7 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		rc = rtc_add_group(rtc, &isl1219_rtc_sysfs_files);
- 		if (rc)
- 			return rc;
--		evdet_irq = of_irq_get_byname(client->dev.of_node, "evdet");
-+		evdet_irq = of_irq_get_byname(np, "evdet");
- 	}
- 
- 	rc = sysfs_create_group(&client->dev.kobj, &isl1208_rtc_sysfs_files);
++int rtc_add_groups(struct rtc_device *rtc, const struct attribute_group **grps)
++{
++	size_t old_cnt = 0, add_cnt = 0, new_cnt;
++	const struct attribute_group **groups, **old;
++
++	if (rtc->registered)
++		return -EINVAL;
++	if (!grps)
++		return -EINVAL;
++
++	groups = rtc->dev.groups;
++	if (groups)
++		for (; *groups; groups++)
++			old_cnt++;
++
++	for (groups = grps; *groups; groups++)
++		add_cnt++;
++
++	new_cnt = old_cnt + add_cnt + 1;
++	groups = devm_kcalloc(&rtc->dev, new_cnt, sizeof(*groups), GFP_KERNEL);
++	if (IS_ERR_OR_NULL(groups))
++		return PTR_ERR(groups);
++	memcpy(groups, rtc->dev.groups, old_cnt*sizeof(*groups));
++	memcpy(groups+old_cnt, grps, add_cnt*sizeof(*groups));
++	groups[old_cnt+add_cnt] = NULL;
++
++	old = rtc->dev.groups;
++	rtc->dev.groups = groups;
++	if (old && old != rtc_attr_groups)
++		devm_kfree(&rtc->dev, old);
++
++	return 0;
++}
++EXPORT_SYMBOL(rtc_add_groups);
++
++int rtc_add_group(struct rtc_device *rtc, const struct attribute_group *grp)
++{
++	const struct attribute_group *groups[] = { grp, NULL };
++
++	return rtc_add_groups(rtc, groups);
++}
++EXPORT_SYMBOL(rtc_add_group);
 -- 
 2.18.0
 
