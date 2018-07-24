@@ -1,119 +1,343 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [RFT v2 00/10] pinctrl: samsung: Remove ugly hack for sharing
- eint_wakeup_mask
-Date: Tue, 24 Jul 2018 11:18:13 +0200
-Message-ID: <20180724091816eucas1p29790b3c45492b261ff154db8056fbb88~EQ2otAHnr1142511425eucas1p2l@eucas1p2.samsung.com>
-References: <CGME20180723175334epcas5p3e46820b4d356d4f1ea718ec1a6c093a6@epcas5p3.samsung.com>
-        <20180723175302.22535-1-krzk@kernel.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v0] arm64: dts: rockchip: add support for ROC-RK3399-PC board
+Date: Tue, 24 Jul 2018 11:28:45 +0200
+Message-ID: <139327780.KNaNigg5Hs@phil>
+References: <1532161826-2537-1-git-send-email-djw@t-chip.com.cn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723175302.22535-1-krzk@kernel.org>
-Content-Language: en-US
+In-Reply-To: <1532161826-2537-1-git-send-email-djw@t-chip.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
+To: djw@t-chip.com.cn
+Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>, Shawn Lin <shawn.lin@rock-chips.com>, Ezequiel Garcia <ezequiel@collabora.com>, Jagan Teki <jagan@amarulasolutions.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi Levin,
 
-On 2018-07-23 19:52, Krzysztof Kozlowski wrote:
-> Hi All,
->
-> Changes since v1
-> ================
-> 1. Add Tomasz's ack.
-> 2. Reword description in patch 6/10.
->
->
-> Tests
-> =====
-> This is both request for comments and requests for tests. Only basic
-> tests were done, including suspend to RAM on Odroid U3 (Exynos4412)
-> with max7768 RTC wakeup. Please kindly test it with devices capable of
-> suspending and resuming. I am mostly thinking about S5Pv210-based (Aria),
-> Trats, Trats2 and TM2 (Exynos5433). Existing platforms should not be
-> broken however changing external interrupt wakeup mask was not done
-> on Exynos5433.
+Am Samstag, 21. Juli 2018, 10:30:26 CEST schrieb djw@t-chip.com.cn:
+> From: Levin Du <djw@t-chip.com.cn>
+> 
+> ROC-RK3399-PC is the first power efficient 4GB DDR4 single board
 
-Works fine on Exynos5433 TM2 with some additional patches related to
-suspend/resume handling of the PMU. It handles only EINT0..EINT31 pins
-for now. Exynos5433 has more external interrupt wakeup lines: EINT32-63
-located at banks GPF1[0..7], GPF2[0..3], GPF3[0..3], GPF4[0..7] and
-GPF5[0..7]. They can be configured as wakeup sources in
-EXYNOS5433_EINT_WAKEUP_MASK1 (0x062C) PMU register. Handling of them
-can be added later when it will be really needed.
+maybe "is a power efficient" instead of "the first" ;-)
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+[...]
 
-> Description
-> ===========
-> The Exynos/S5Pv210 machine suspend code needs to write the external
-> interrupt mask during suspend.  The mask is controlled by pin controller
-> driver: the exynos_wkup_irq_set_wake() in IRQ chip for these wakeup
-> interrupts.
->
-> Therefore pinctrl driver code exposed an exynos_get_eint_wake_mask()
-> function which was later used as an extern in machine code.
->
-> This is quite ugly way of combining driver and machine code,
-> not portable triggering Sparse and GCC warnings.
->
->
-> This might break suspend capability S5Pv210 on with older DTBs (thus
-> breaks DTB compatibility), however:
-> 1. just "might" because in case of using older DTB, the wakeup mask
->     will not be changed during suspend and default reset value (all
->     interrupts non-masked) should work,
-> 2. mainline support for S5Pv210 with DTB is limited and suspend
->     to RAM already might be broken.
->
->
-> Dependencies
-> ============
-> 1. The first seven patches should be taken through one tree,
->     preferably samsung-pinctrl,
-> 2. The DTS patch (7/10) for S5Pv210 should go into next cycle,
-> 3. The remaining patches (8-10) should go after all previous,
->     so probably another release cycle.
->
->
-> Best regards,
-> Krzysztof
->
-> Krzysztof Kozlowski (10):
->    pinctrl: samsung: Define suspend and resume callbacks for all banks
->      and SoCs
->    pinctrl: samsung: Document suspend and resume members
->    pinctrl: samsung: Document hidden requirement about one external
->      wakeup
->    pinctrl: samsung: Add dedicated compatible for S5Pv210 wakeup
->      interrupts
->    ARM: exynos: Define EINT_WAKEUP_MASK registers for S5Pv210 and
->      Exynos5433
->    pinctrl: samsung: Write external wakeup interrupt mask
->    ARM: dts: s5pv210: Switch to S5Pv210 specific pinctrl wakeup
->      compatible
->    ARM: s5pv210: Remove legacy setting of external wakeup interrupts
->    ARM: exynos: Remove legacy setting of external wakeup interrupts
->    pinctrl: samsung: Remove legacy API for handling external wakeup
->      interrupts mask
->
->   .../bindings/pinctrl/samsung-pinctrl.txt           | 11 ++-
->   arch/arm/boot/dts/s5pv210.dtsi                     |  2 +-
->   arch/arm/mach-exynos/common.h                      |  2 -
->   arch/arm/mach-exynos/suspend.c                     | 16 +++--
->   arch/arm/mach-s5pv210/common.h                     |  1 -
->   arch/arm/mach-s5pv210/pm.c                         | 16 +++--
->   drivers/pinctrl/samsung/pinctrl-exynos-arm.c       | 16 +++++
->   drivers/pinctrl/samsung/pinctrl-exynos.c           | 78 +++++++++++++++++++---
->   drivers/pinctrl/samsung/pinctrl-samsung.h          | 11 +++
->   include/linux/soc/samsung/exynos-regs-pmu.h        |  8 ++-
->   10 files changed, 136 insertions(+), 25 deletions(-)
->
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> new file mode 100644
+> index 0000000..207f2e3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> @@ -0,0 +1,717 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include "rk3399.dtsi"
+> +#include "rk3399-opp.dtsi"
+> +
+> +/ {
+> +	model = "Firefly ROC-RK3399-PC Board";
+> +	compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
+> +
+> +	chosen {
+> +		bootargs = "earlycon=uart8250,mmio32,0xff1a0000 swiotlb=1";
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I don't think we want to hard-code linux bootargs in the generic devicetree
+
+> +		stdout-path = "serial2:1500000n8";
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		enable-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
+> +		pwms = <&pwm0 0 25000 0>;
+> +		brightness-levels = <
+> +			  0   1   2   3   4   5   6   7
+
+As Rob noted in the px30 evb patch, there is now a property helping
+to drop these long lists of brightness levels, see
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1e5e7cc794b5a332c23216dade0a2e937d694b7f
+
+
+> +			  8   9  10  11  12  13  14  15
+> +			 16  17  18  19  20  21  22  23
+> +			 24  25  26  27  28  29  30  31
+> +			 32  33  34  35  36  37  38  39
+> +			 40  41  42  43  44  45  46  47
+> +			 48  49  50  51  52  53  54  55
+> +			 56  57  58  59  60  61  62  63
+> +			 64  65  66  67  68  69  70  71
+> +			 72  73  74  75  76  77  78  79
+> +			 80  81  82  83  84  85  86  87
+> +			 88  89  90  91  92  93  94  95
+> +			 96  97  98  99 100 101 102 103
+> +			104 105 106 107 108 109 110 111
+> +			112 113 114 115 116 117 118 119
+> +			120 121 122 123 124 125 126 127
+> +			128 129 130 131 132 133 134 135
+> +			136 137 138 139 140 141 142 143
+> +			144 145 146 147 148 149 150 151
+> +			152 153 154 155 156 157 158 159
+> +			160 161 162 163 164 165 166 167
+> +			168 169 170 171 172 173 174 175
+> +			176 177 178 179 180 181 182 183
+> +			184 185 186 187 188 189 190 191
+> +			192 193 194 195 196 197 198 199
+> +			200 201 202 203 204 205 206 207
+> +			208 209 210 211 212 213 214 215
+> +			216 217 218 219 220 221 222 223
+> +			224 225 226 227 228 229 230 231
+> +			232 233 234 235 236 237 238 239
+> +			240 241 242 243 244 245 246 247
+> +			248 249 250 251 252 253 254 255>;
+> +		default-brightness-level = <200>;
+> +	};
+
+[...]
+
+> +	vcc_vbus_typec0: vcc-vbus-typec0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_vbus_typec0";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +
+> +	vcc12v_sys: mp8859-dcdc1 {
+
+The mp8859 seems to be an i2c-device, as also shown by the
+nearly empty mp8859 entry below, so shouldn't this regulator
+be defined there?
+
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc12v_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
+> +		vin-supply = <&vcc_vbus_typec0>;
+> +	};
+
+[...]
+
+> +	vcc_hub_en: vcc_hub_en-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&hub_rst>;
+> +		regulator-name = "vcc_hub_en";
+> +		regulator-always-on;
+
+missing vin-supply
+
+> +	};
+> +
+
+[...]
+
+> +	vdd_cpu_b: regulator@40 {
+> +		compatible = "silergy,syr827";
+> +		reg = <0x40>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vsel1_gpio>;
+> +		regulator-name = "vdd_cpu_b";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <1000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vsel-gpios = <&gpio1 18 GPIO_ACTIVE_HIGH>;
+
+vsel-gpios is not defined in the mainline dt-binding of the fan5355/syr82*
+
+> +		vin-supply = <&vcc3v3_sys>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +	vdd_gpu: regulator@41 {
+> +		compatible = "silergy,syr828";
+> +		reg = <0x41>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vsel2_gpio>;
+> +		regulator-name = "vdd_gpu";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <1000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		vsel-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
+
+same as above
+
+> +		vin-supply = <&vcc3v3_sys>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	i2c-scl-rising-time-ns = <300>;
+> +	i2c-scl-falling-time-ns = <15>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	i2c-scl-rising-time-ns = <450>;
+> +	i2c-scl-falling-time-ns = <15>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c4 {
+> +	i2c-scl-rising-time-ns = <600>;
+> +	i2c-scl-falling-time-ns = <20>;
+> +	status = "okay";
+> +
+> +	mp8859: mp8859@66 {
+> +		compatible = "mps,mp8859";
+
+missing a dt-binding and also a real regulator implementation?
+
+> +		reg = <0x66>;
+> +	};
+> +
+> +	fusb1: usb-typec@22 {
+> +		compatible = "fcs,fusb302";
+> +		reg = <0x22>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&fusb1_int>;
+> +		fcs,int-n = <&gpio1 RK_PA1 GPIO_ACTIVE_HIGH>;
+
+mainline binding expects an "interrupts" property not the
+fcs,int-n from above
+
+> +		status = "okay";
+> +	};
+> +
+> +};
+> +
+> +&i2c7 {
+> +	i2c-scl-rising-time-ns = <600>;
+> +	i2c-scl-falling-time-ns = <20>;
+> +	status = "okay";
+> +
+> +	fusb0: usb-typec@22 {
+> +		compatible = "fcs,fusb302";
+> +		reg = <0x22>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&fusb0_int>;
+> +		fcs,int-n = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
+
+same as above
+
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&i2s0 {
+> +	rockchip,playback-channels = <8>;
+> +	rockchip,capture-channels = <8>;
+> +	#sound-dai-cells = <0>;
+
+sound-dai-cells are in rk3399.dtsi now ... see
+https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?id=4486baca66e7a96a6ded3957cb522872a49870ce
+
+> +	status = "okay";
+> +};
+> +
+> +&i2s1 {
+> +	rockchip,playback-channels = <2>;
+> +	rockchip,capture-channels = <2>;
+> +	#sound-dai-cells = <0>;
+
+same as above
+
+> +	status = "okay";
+> +};
+> +
+> +&i2s2 {
+> +	#sound-dai-cells = <0>;
+
+same as above
+
+> +	status = "okay";
+> +};
+> +
+
+> +&tcphy0 {
+> +	extcon = <&fusb0>;
+
+the extcon is not described in the mainline fusb302 binding.
+
+> +	status = "okay";
+> +};
+> +
+> +&tcphy1 {
+> +	extcon = <&fusb1>;
+
+same as above
+
+> +	status = "okay";
+> +};
+> +
+> +&tsadc {
+> +	/* tshut mode 0:CRU 1:GPIO */
+> +	rockchip,hw-tshut-mode = <1>;
+> +	/* tshut polarity 0:LOW 1:HIGH */
+> +	rockchip,hw-tshut-polarity = <1>;
+> +	status = "okay";
+> +};
+> +
+> +&u2phy0 {
+> +	status = "okay";
+> +
+> +	u2phy0_otg: otg-port {
+> +		phy-supply = <&vcc5v0_host>;
+> +		//status = "disabled";
+
+don't leave commented stuff in the dt please.
+
+> +		status = "okay";
+> +	};
+> +
+> +	u2phy0_host: host-port {
+> +		phy-supply = <&vcc5v0_host>;
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&u2phy1 {
+> +	status = "okay";
+> +
+> +	u2phy1_otg: otg-port {
+> +		phy-supply = <&vcc5v0_host>;
+> +		//status = "disabled";
+
+same as above
+
+> +		status = "okay";
+> +	};
+> +
+> +	u2phy1_host: host-port {
+> +		phy-supply = <&vcc5v0_host>;
+> +		status = "okay";
+> +	};
+> +};
+
+
+Thanks
+Heiko
