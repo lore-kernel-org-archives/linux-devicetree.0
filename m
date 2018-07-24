@@ -1,89 +1,47 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v10 3/7] Bluetooth: btqca: Redefine qca_uart_setup() to
- generic function.
-Date: Tue, 24 Jul 2018 12:26:50 +0530
-Message-ID: <d5764fcd8becc0b04373bc1113d2049a@codeaurora.org>
-References: <20180720133243.6851-1-bgodavar@codeaurora.org>
- <20180720133243.6851-4-bgodavar@codeaurora.org>
- <20180723174018.GK129942@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add RWDT support
+Date: Tue, 24 Jul 2018 09:01:59 +0200
+Message-ID: <CAMuHMdVeyaU9iKnubhzkjN8Fd-Z-=r+yoF+_jGoFxDzPdwbSpQ@mail.gmail.com>
+References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
+ <175a491f-a827-4a92-1884-2f1490d38a52@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723174018.GK129942@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <175a491f-a827-4a92-1884-2f1490d38a52@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Will Deacon <will.deacon@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+On Fri, Jul 20, 2018 at 9:21 PM Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Describe RWDT in the R8A77980 SoC device tree.
+>
+> Enable RWDT on the Condor and V3H Starter Kit boards.
+>
+> Based on the original (and large) patch by Vladimir Barinov.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-On 2018-07-23 23:10, Matthias Kaehlcke wrote:
-> On Fri, Jul 20, 2018 at 07:02:39PM +0530, Balakrishna Godavarthi wrote:
->> Redefinition of qca_uart_setup will help future Qualcomm Bluetooth
->> SoC, to use the same function instead of duplicating the function.
->> Added new arguments soc_type and soc_ver to the functions.
->> 
->> These arguments will help to decide type of firmware files
->> to be loaded into Bluetooth chip.
->> soc_type holds the Bluetooth chip connected to APPS processor.
->> soc_ver holds the Bluetooth chip version.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->>  drivers/bluetooth/btqca.c   | 20 +++++++-------------
->>  drivers/bluetooth/btqca.h   | 13 +++++++++++--
->>  drivers/bluetooth/hci_qca.c | 10 +++++++++-
->>  3 files changed, 27 insertions(+), 16 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
->> index c5cf9cab438a..b556710ee1bd 100644
->> --- a/drivers/bluetooth/btqca.c
->> +++ b/drivers/bluetooth/btqca.c
->> @@ -85,6 +85,9 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 
->> *soc_version)
->>  out:
->>  	kfree_skb(skb);
->> 
->> +	if (err < 0 || *soc_version == 0)
->> +		bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
-> 
-> You also have to set 'err' if soc_version is 0, so the caller can skip
-> the check for soc_version == 0
-> 
-> I'd suggest:
-> 
->   // directly after setting soc_version
->   if (*soc_version == 0)
->     err = -EILSEQ; // or should it be a different error code?
-> 
->   ...
-> 
->   if (err)
->     bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
-> 
-> You could also limit the error log to the 'if (*soc_version == 0)'
-> branch, for all other errors there will already be a more specific log
-> entry.
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[Bala]: will update.
+Gr{oetje,eeting}s,
 
-     if(!err && *soc_version == 0)
-         err = -EINVAL; // as soc_version zero is invalid.
+                        Geert
 
-    if (err)
-       bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
-
->> +
->>  	return err;
->>  }
-> 
-> Cheers
-> 
-> Matthias
 -- 
-Regards
-Balakrishna.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
