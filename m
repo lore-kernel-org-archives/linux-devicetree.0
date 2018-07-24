@@ -1,211 +1,76 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun8i: r40/v40: rewrite BPi M2 Berry
- DTS to rebase on M2 Ultra
-Date: Wed, 25 Jul 2018 00:36:55 +0800
-Message-ID: <20180724163655.61365-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBVFL3XNAKGQEWI7GDYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v5 0/8] Tegra20 External Memory Controller driver
+Date: Tue, 24 Jul 2018 19:42:13 +0300
+Message-ID: <20180724164221.3307-1-digetx@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Banana Pi designs the BPi M2 Berry board to be software compatible with
-BPi M2 Ultra, so it's based on M2 Ultra with some function cuts,
-including:
+Changelog:
 
-- 2048MiB DRAM -> 1024MiB (this should be proceed by the bootloader);
-- dropped a LED;
-- dropped eMMC;
-- dropped USB2 and connect USB1 to a 4-port HUB.
+v5:
+        - Fixed wrong EMC clock divider type in the "Turn EMC clock gate into
+          divider" patch. It is a Tegra's fractional 7.1 divider and not a
+          simple integer divider. Peter, please take a look at the change.
 
-Thus we can make the M2 Berry device tree based on the M2 Ultra, rather
-than write one from scratch.
+v4:
+        - Fixed "bad of_node_put()" error which was revealed by enabling
+          some extra kernel debug config options.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- .../boot/dts/sun8i-v40-bananapi-m2-berry.dts  | 141 +++---------------
- 1 file changed, 24 insertions(+), 117 deletions(-)
+        - The "emc-table" DT nodes are now parsed starting from the "emc"
+          node instead of the DT root.
 
-diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index 35859d8f3267..b740c659e623 100644
---- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-+++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -40,143 +40,50 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
--/dts-v1/;
--#include "sun8i-r40.dtsi"
--
--#include <dt-bindings/gpio/gpio.h>
-+#include "sun8i-r40-bananapi-m2-ultra.dts"
- 
- / {
- 	model = "Banana Pi M2 Berry";
- 	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
- 
--	aliases {
--		serial0 = &uart0;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--
- 	leds {
--		compatible = "gpio-leds";
--
--		pwr-led {
--			label = "bananapi:red:pwr";
--			gpios = <&pio 7 20 GPIO_ACTIVE_HIGH>;
--			default-state = "on";
--		};
--
--		user-led {
--			label = "bananapi:green:user";
--			gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>;
--		};
--	};
--
--	reg_vcc5v0: vcc5v0 {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc5v0";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
--		enable-active-high;
--	};
--
--	wifi_pwrseq: wifi_pwrseq {
--		compatible = "mmc-pwrseq-simple";
--		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
-+		/* M2 Berry dropped blue LED due to size */
-+		/delete-node/ user-led-blue;
- 	};
- };
- 
- &ehci1 {
- 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
--	status = "okay";
--};
--
--&i2c0 {
--	status = "okay";
--
--	axp22x: pmic@68 {
--		compatible = "x-powers,axp221";
--		reg = <0x34>;
--		interrupt-parent = <&nmi_intc>;
--		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--	};
--};
--
--#include "axp22x.dtsi"
--
--&reg_aldo3 {
--	regulator-always-on;
--	regulator-min-microvolt = <2700000>;
--	regulator-max-microvolt = <3300000>;
--	regulator-name = "avcc";
--};
--
--&reg_dcdc1 {
--	regulator-always-on;
--	regulator-min-microvolt = <3000000>;
--	regulator-max-microvolt = <3000000>;
--	regulator-name = "vcc-3v0";
--};
--
--&reg_dcdc2 {
--	regulator-always-on;
--	regulator-min-microvolt = <1000000>;
--	regulator-max-microvolt = <1300000>;
--	regulator-name = "vdd-cpu";
--};
--
--&reg_dcdc3 {
--	regulator-always-on;
--	regulator-min-microvolt = <1000000>;
--	regulator-max-microvolt = <1300000>;
--	regulator-name = "vdd-sys";
--};
--
--&reg_dcdc5 {
--	regulator-always-on;
--	regulator-min-microvolt = <1500000>;
--	regulator-max-microvolt = <1500000>;
--	regulator-name = "vcc-dram";
--};
--
--&reg_dldo1 {
--	regulator-min-microvolt = <1800000>;
--	regulator-max-microvolt = <3300000>;
--	regulator-name = "vcc-wifi-io";
- };
- 
--&reg_dldo2 {
--	regulator-min-microvolt = <3300000>;
--	regulator-max-microvolt = <3300000>;
--	regulator-name = "vcc-wifi";
-+&ehci2 {
-+	/*
-+	 * M2 Berry dropped wiring out USB2, due to all USB port is
-+	 * from a hub at USB1.
-+	 */
-+	status = "disabled";
- };
- 
--&mmc0 {
--	vmmc-supply = <&reg_dcdc1>;
--	bus-width = <4>;
--	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
--	status = "okay";
-+&mmc2 {
-+	/* M2 Berry has no eMMC */
-+	status = "disabled";
- };
- 
--&mmc1 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&mmc1_pg_pins>;
--	vmmc-supply = <&reg_dldo2>;
--	vqmmc-supply = <&reg_dldo1>;
--	mmc-pwrseq = <&wifi_pwrseq>;
--	bus-width = <4>;
--	non-removable;
--	status = "okay";
-+&ohci1 {
-+	/*
-+	 * M2 Berry have a Hub connected to the USB1 pins, so no USB1.1 device
-+	 * can be directly connected to the USB1 port, thus the OHCI controller
-+	 * can be disabled.
-+	 */
-+	status = "disabled";
- };
- 
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_pb_pins>;
--	status = "okay";
-+&ohci2 {
-+	/* See comments at &ehci2 */
-+	status = "disabled";
- };
- 
- &usbphy {
--	usb1_vbus-supply = <&reg_vcc5v0>;
--	status = "okay";
-+	/* See comments at &ehci2 */
-+	/delete-property/ usb2_vbus-supply;
- };
+        - Adjusted code comment in the "Turn EMC clock gate into divider"
+          patch as was suggested by Stephen Boyd to the v3.
+
+v3:
+        - Handle "nvidia,use-ram-code" DT property, its handling was missed
+          in the previous versions.
+
+        - Honor "emc-tables" DT node naming which is explicitly specified
+          in the DT binding, also was missed in the previous versions.
+
+        - Two new DT binding patches: one adds the EMC clock property,
+          other relocates the binding doc file to the appropriate directory.
+          One new patch that adds EMC clock property to the DTS file.
+
+        - Addressed v2 review comments from Thierry Reding. Driver does not
+          preserve backwards compatibility with older device tree binding.
+
+        - The PLL_M and PLL_P clocks are kept internal to the driver because
+          after some more considering I couldn't find a really good reason why
+          these clocks should be in the device tree.
+
+        - Some minor cleanups and fixes in the drivers code.
+
+v2:
+        - Minor code cleanups like consistent use of writel_relaxed instead
+          of non-relaxed version, reworded error messages, etc.
+
+        - Factored out use_pllm_ud bit checking into a standalone patch for
+          consistency.
+
+Dmitry Osipenko (8):
+  dt: bindings: tegra20-emc: Document interrupt property
+  dt: bindings: tegra20-emc: Document clock property
+  dt: bindings: Move tegra20-emc binding to memory-controllers directory
+  ARM: dts: tegra20: Add interrupt entry to External Memory Controller
+  ARM: dts: tegra20: Add clock entry to External Memory Controller
+  clk: tegra20: Turn EMC clock gate into divider
+  clk: tegra20: Check whether direct PLLM sourcing is turned off for EMC
+  memory: tegra: Introduce Tegra20 EMC driver
+
+ .../nvidia,tegra20-emc.txt                    |   4 +
+ arch/arm/boot/dts/tegra20.dtsi                |   2 +
+ drivers/clk/tegra/clk-tegra20.c               |  46 +-
+ drivers/memory/tegra/Kconfig                  |  10 +
+ drivers/memory/tegra/Makefile                 |   1 +
+ drivers/memory/tegra/tegra20-emc.c            | 575 ++++++++++++++++++
+ 6 files changed, 628 insertions(+), 10 deletions(-)
+ rename Documentation/devicetree/bindings/{arm/tegra => memory-controllers}/nvidia,tegra20-emc.txt (95%)
+ create mode 100644 drivers/memory/tegra/tegra20-emc.c
+
 -- 
 2.18.0
