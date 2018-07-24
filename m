@@ -1,193 +1,89 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: Re: [PATCH 3/3] arm64: dts: synaptics: add dtsi file for Synaptics
- AS370 SoC
-Date: Tue, 24 Jul 2018 13:58:37 +0800
-Message-ID: <20180724135837.7a85fedc@xhacker.debian>
-References: <20180713171712.05f58a74@xhacker.debian>
-        <20180713172626.5ca0e30f@xhacker.debian>
-        <20180720152117.GB26487@rob-hp-laptop>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v10 3/7] Bluetooth: btqca: Redefine qca_uart_setup() to
+ generic function.
+Date: Tue, 24 Jul 2018 12:26:50 +0530
+Message-ID: <d5764fcd8becc0b04373bc1113d2049a@codeaurora.org>
+References: <20180720133243.6851-1-bgodavar@codeaurora.org>
+ <20180720133243.6851-4-bgodavar@codeaurora.org>
+ <20180723174018.GK129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720152117.GB26487@rob-hp-laptop>
+In-Reply-To: <20180723174018.GK129942@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Matthias,
 
-On Fri, 20 Jul 2018 09:21:17 -0600 Rob Herring wrote:
-
-> On Fri, Jul 13, 2018 at 05:26:26PM +0800, Jisheng Zhang wrote:
-> > Add initial dtsi file to support Synaptics AS370 SoC with quad
-> > Cortex-A53 CPUs.
-> > 
-> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> > ---
-> >  arch/arm64/boot/dts/synaptics/as370.dtsi | 177 +++++++++++++++++++++++
-> >  1 file changed, 177 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/synaptics/as370.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/synaptics/as370.dtsi b/arch/arm64/boot/dts/synaptics/as370.dtsi
-> > new file mode 100644
-> > index 000000000000..20f3d658c566
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/synaptics/as370.dtsi
-> > @@ -0,0 +1,177 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > +/*
-> > + * Copyright (C) 2018 Synaptics Incorporated
-> > + *
-> > + * Author: Jisheng Zhang <jszhang@kernel.org>
-> > + */
-> > +
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +/ {
-> > +	compatible = "syna,as370";
-> > +	interrupt-parent = <&gic>;
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	aliases {
-> > +		serial0 = &uart0;  
+On 2018-07-23 23:10, Matthias Kaehlcke wrote:
+> On Fri, Jul 20, 2018 at 07:02:39PM +0530, Balakrishna Godavarthi wrote:
+>> Redefinition of qca_uart_setup will help future Qualcomm Bluetooth
+>> SoC, to use the same function instead of duplicating the function.
+>> Added new arguments soc_type and soc_ver to the functions.
+>> 
+>> These arguments will help to decide type of firmware files
+>> to be loaded into Bluetooth chip.
+>> soc_type holds the Bluetooth chip connected to APPS processor.
+>> soc_ver holds the Bluetooth chip version.
+>> 
+>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>>  drivers/bluetooth/btqca.c   | 20 +++++++-------------
+>>  drivers/bluetooth/btqca.h   | 13 +++++++++++--
+>>  drivers/bluetooth/hci_qca.c | 10 +++++++++-
+>>  3 files changed, 27 insertions(+), 16 deletions(-)
+>> 
+>> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+>> index c5cf9cab438a..b556710ee1bd 100644
+>> --- a/drivers/bluetooth/btqca.c
+>> +++ b/drivers/bluetooth/btqca.c
+>> @@ -85,6 +85,9 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 
+>> *soc_version)
+>>  out:
+>>  	kfree_skb(skb);
+>> 
+>> +	if (err < 0 || *soc_version == 0)
+>> +		bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
 > 
-> This normally goes in the board file. All boards will use this?
-
-Yes. AFAIK, all boards will use uart0 as the serial console. But I could
-move it to the board file.
-
+> You also have to set 'err' if soc_version is 0, so the caller can skip
+> the check for soc_version == 0
 > 
-> > +	};
-> > +
-> > +	psci {
-> > +		compatible = "arm,psci-1.0";
-> > +		method = "smc";
-> > +	};
-> > +
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu0: cpu@0 {
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			device_type = "cpu";
-> > +			reg = <0x0>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&l2>;
-> > +			cpu-idle-states = <&CPU_SLEEP_0>;
-> > +		};
-> > +
-> > +		cpu1: cpu@1 {
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			device_type = "cpu";
-> > +			reg = <0x1>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&l2>;
-> > +			cpu-idle-states = <&CPU_SLEEP_0>;
-> > +		};
-> > +
-> > +		cpu2: cpu@2 {
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			device_type = "cpu";
-> > +			reg = <0x2>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&l2>;
-> > +			cpu-idle-states = <&CPU_SLEEP_0>;
-> > +		};
-> > +
-> > +		cpu3: cpu@3 {
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			device_type = "cpu";
-> > +			reg = <0x3>;
-> > +			enable-method = "psci";
-> > +			next-level-cache = <&l2>;
-> > +			cpu-idle-states = <&CPU_SLEEP_0>;
-> > +		};
-> > +
-> > +		l2: cache {
-> > +			compatible = "cache";  
+> I'd suggest:
 > 
-> Why do you need this node? Doesn't define 
-
-If the l2 node is missing, I will get below warning:
-
-[    1.364795] Unable to detect cache hierarchy for CPU 0
-
-reported by drivers/base/cacheinfo.c
-
-
+>   // directly after setting soc_version
+>   if (*soc_version == 0)
+>     err = -EILSEQ; // or should it be a different error code?
 > 
-> > +		};
-> > +
-> > +		idle-states {
-> > +			entry-method = "psci";
-> > +			CPU_SLEEP_0: cpu-sleep-0 {
-> > +				compatible = "arm,idle-state";
-> > +				local-timer-stop;
-> > +				arm,psci-suspend-param = <0x0010000>;
-> > +				entry-latency-us = <75>;
-> > +				exit-latency-us = <155>;
-> > +				min-residency-us = <1000>;
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +	osc: osc {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <25000000>;
-> > +	};
-> > +
-> > +	pmu {
-> > +		compatible = "arm,cortex-a53-pmu";
-> > +		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-affinity = <&cpu0>,
-> > +				     <&cpu1>,
-> > +				     <&cpu2>,
-> > +				     <&cpu3>;
-> > +	};
-> > +
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> > +	};
-> > +
-> > +	soc@f7000000 {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges = <0 0 0xf7000000 0x1000000>;
-> > +
-> > +		gic: interrupt-controller@901000 {
-> > +			compatible = "arm,gic-400";
-> > +			#interrupt-cells = <3>;
-> > +			interrupt-controller;
-> > +			reg = <0x901000 0x1000>,
-> > +			      <0x902000 0x2000>,
-> > +			      <0x904000 0x2000>,
-> > +			      <0x906000 0x2000>;
-> > +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> > +		};
-> > +
-> > +		apb@e80000 {
-> > +			compatible = "simple-bus";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <1>;
-> > +			ranges = <0 0xe80000 0x10000>;
-> > +
-> > +			uart0: uart@0c00 {  
+>   ...
 > 
-> serial@c00
+>   if (err)
+>     bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
+> 
+> You could also limit the error log to the 'if (*soc_version == 0)'
+> branch, for all other errors there will already be a more specific log
+> entry.
+> 
 
-will do in v2
+[Bala]: will update.
 
-Thanks a lot
+     if(!err && *soc_version == 0)
+         err = -EINVAL; // as soc_version zero is invalid.
+
+    if (err)
+       bt_dev_err(hdev, "QCA Failed to get version (%d)", err);
+
+>> +
+>>  	return err;
+>>  }
+> 
+> Cheers
+> 
+> Matthias
+-- 
+Regards
+Balakrishna.
