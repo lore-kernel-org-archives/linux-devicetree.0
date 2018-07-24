@@ -1,71 +1,62 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 01/14] arm64: dts: meson-axg: improve power supplies description
-Date: Tue, 24 Jul 2018 14:52:25 +0200
-Message-ID: <20180724125238.14567-2-jbrunet@baylibre.com>
-References: <20180724125238.14567-1-jbrunet@baylibre.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] sun4i: dts: add gpu node to sun4i-a10 platform
+Date: Tue, 24 Jul 2018 14:53:57 +0200
+Message-ID: <20180724125357.g7dddqwjouwv2dnj@flea>
+References: <20180723160954.14115-1-stevenvandenbrandenstift@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nhgclqhun6yotmsy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20180723160954.14115-1-stevenvandenbrandenstift@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: stevenvandenbrandenstift@gmail.com
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the parent supply of the s400 power supplies.
-Also add 'regulator-always-on' property on the regulators which can't
-be disabled
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+--nhgclqhun6yotmsy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index fd90fa4a282c..09c7909a78ea 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -65,6 +65,7 @@
- 		regulator-name = "12V";
- 		regulator-min-microvolt = <12000000>;
- 		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
- 	};
- 
- 	vddio_boot: regulator-vddio_boot {
-@@ -72,6 +73,8 @@
- 		regulator-name = "VDDIO_BOOT";
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
- 	};
- 
- 	vddao_3v3: regulator-vddao_3v3 {
-@@ -79,6 +82,8 @@
- 		regulator-name = "VDDAO_3V3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&main_12v>;
-+		regulator-always-on;
- 	};
- 
- 	vddio_ao18: regulator-vddio_ao18 {
-@@ -86,6 +91,8 @@
- 		regulator-name = "VDDIO_AO18";
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
- 	};
- 
- 	vcc_3v3: regulator-vcc_3v3 {
-@@ -93,6 +100,8 @@
- 		regulator-name = "VCC_3V3";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vddao_3v3>;
-+		regulator-always-on;
- 	};
- 
- 	emmc_pwrseq: emmc-pwrseq {
--- 
-2.17.1
+On Mon, Jul 23, 2018 at 06:09:54PM +0200, stevenvandenbrandenstift@gmail.co=
+m wrote:
+> From: Steven Vanden Branden <stevenvandenbrandenstift@gmail.com>
+>=20
+> Add mali gpu node to sun4i a10 platforms.
+> Tested with offscreen rendering with lima mesa (freedesktop gitlab)
+>=20
+> Signed-off-by: Steven Vanden Branden <stevenvandenbrandenstift@gmail.com>
+
+Applied (while slighly changing your commit title, the prefix should
+be "ARM: dts: sun4i: ..")
+
+Thanks!
+Maxime
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nhgclqhun6yotmsy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltXIWQACgkQ0rTAlCFN
+r3RoVQ//cKcHuxcfdpqlLhIhlcQaF1M9s9HWJ9GmB/dOLW1LWKMd+tdSMgdVG0iY
+VrG47xQDhNjAnYoJzRaEFZqtSqLX5QsbvXhCk29AUoXbo2f6wYvq+nr7cj74PJoj
+N587uwjoqFBK/MTb/n2C0r0bZRWLMbcbe2iE6pu+kmQQsUS5eB0t7LShT5AtIBIo
+9ZN03BAzo1OyihjRGiqdf9z5ZcNI5ChkPjBQoedBm+S+urHydl1Odi5wgp2vDsby
+gcQc5+6RfHSYO7pCA3us5j7/t35YLR9xwQIgY7ep6HzfKz96oQ+AX1PSOmvGSrHU
+VjhsrcbLmVySHEnYBikLN35E6QbTc4JDgB0PbjXZWgZ9luwubPSY/oR+9aS2C4Rd
+I1RBuKZRhIm02rRIwF5diBpFBv5PoZNXLnGNvTPsxow/pVGKz2FQKUA1FHBP7c1V
+kgw7t9StPPAv4J7Stwk3U+E73QBrGoZHIOdwFyEGjll1JCh4BTIL9YhvAM8Ihh9+
+YEu2Yo1UbkMTEA1PImIC8qwFLQY1RacD76YIp2iPsqbKp1aaNzzAjFn8w5LZck92
+MFFtRzm0sZPj1WKViEIbmCa/SLcCf7ZFyurnuspdTDiAzM500bWlVu2YemCP+fDy
+JWJ/QCjzUQwCKVjGCggaHhIDg5+p4GITkt9EMgLmUM4CuZSwUBo=
+=b4HL
+-----END PGP SIGNATURE-----
+
+--nhgclqhun6yotmsy--
