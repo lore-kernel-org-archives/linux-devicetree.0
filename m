@@ -1,56 +1,66 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 04/15] MIPS: dts: img: pistachio_marduk: Switch mmc to 1
- bit mode
-Date: Wed, 25 Jul 2018 00:15:44 +0200
-Message-ID: <1b7064bc-7008-2c1c-2398-143401bbc368@suse.de>
-References: <20180722212010.3979-1-afaerber@suse.de>
- <20180722212010.3979-5-afaerber@suse.de>
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/3] Docs: dt: arm-smmu: Add optional clock parameter
+Date: Tue, 24 Jul 2018 17:25:22 -0500
+Message-ID: <7a8041ff-ce54-6640-9c9b-d018b0534ff8@linux.intel.com>
+References: <1531499278-32132-1-git-send-email-thor.thayer@linux.intel.com>
+	<1531499278-32132-2-git-send-email-thor.thayer@linux.intel.com>
+	<20180720161507.GA24992@rob-hp-laptop>
+Reply-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180722212010.3979-5-afaerber@suse.de>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180720161507.GA24992@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Ian Pozella <Ian.Pozella@imgtec.com>, James Hartley <james.hartley@sondrel.com>, Rahul Bedarkar <rahulbedarkar89@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 22.07.2018 um 23:19 schrieb Andreas Färber:
-> From: Ian Pozella <Ian.Pozella@imgtec.com>
+Hi Rob,
+
+On 07/20/2018 11:15 AM, Rob Herring wrote:
+> On Fri, Jul 13, 2018 at 11:27:56AM -0500, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>
+>> Add a clock to the SMMU node bindings.
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> index 8a6ffce12af5..356fd9f41e1b 100644
+>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> @@ -71,6 +71,8 @@ conditions.
+>>                     or using stream matching with #iommu-cells = <2>, and
+>>                     may be ignored if present in such cases.
+>>   
+>> +- clock:          clock provider specifier
+>> +
 > 
-> The mmc block in Pistachio allows 1 to 8 data bits to be used.
-> Marduk uses 4 bits allowing the upper 4 bits to be allocated
-> to the Mikrobus ports. However these bits are still connected
-> internally meaning the mmc block recieves signals on all data lines
-
-"receives"
-
-I had fixed a number of typos from the downstream patches already, but
-this one slipped through.
-
-Regards,
-Andreas
-
-> and seems the internal HW CRC checks get corrupted by this erroneous
-> data.
+> The TRM says there is a TCU clock and clock per TBU.
 > 
-> We cannot control what data is sent on these lines because they go
-> to external ports. 1 bit mode does not exhibit the issue hence the
-> safe default is to use this. If a user knows that in their use case
-> they will not use the upper bits then they can set to 4 bit mode in
-> order to improve performance.
+> Rob
 > 
-> Also make sure that the upper 4 bits don't get allocated to the mmc
-> driver (the default is to assign all 8 pins) so they can be allocated
-> to other drivers. Allocating all 4 despite setting 1 bit mode as this
-> matches what is there in hardware.
-> 
-> Signed-off-by: Ian Pozella <Ian.Pozella@imgtec.com>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-[snip]
+Yes, good point. I'm abandoning this review and will use the bulk clock 
+suggested in [1].
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+In our case, the TCU clock is always on and we have 1 clock for the
+TBU masters.
+
+Thanks for reviewing!
+
+Thor
+
+[1] https://patchwork.kernel.org/patch/10534089/
