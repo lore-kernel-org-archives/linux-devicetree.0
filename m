@@ -1,43 +1,59 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v9 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
-Date: Tue, 24 Jul 2018 08:43:46 -0700
-Message-ID: <CAD=FV=WHJcAoR7Y_uhi7_GbVzy6K8FnovVFVRz8js0REONox=w@mail.gmail.com>
-References: <cover.1531531808.git.collinsd@codeaurora.org> <56b9d5c38cfe46da1228c54f001a49773c3e31dc.1531531808.git.collinsd@codeaurora.org>
- <CAD=FV=VmfqWRGRMEn+0dzZ8x4R5vVaHbkthXAN91Lm-XmP9Gqg@mail.gmail.com>
- <20180724145755.GF13268@sirena.org.uk> <CAD=FV=Uo8sT72a0gRitOVoK0SfC-_QixsovW94_LnL6H7QdKvA@mail.gmail.com>
- <20180724152514.GJ13268@sirena.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
+Date: Tue, 24 Jul 2018 17:46:09 +0200
+Message-ID: <CAMuHMdXJ_FGXXwNx8h0ZfskJGRWES1xLuTQpD59Vw1Smp6FTRg@mail.gmail.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
+ <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se> <20180720101206.tv7nsoanwo5ftnia@ninjato>
+ <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
+ <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se> <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
+ <20180720151751.242d4809@bbrezillon> <CAK8P3a14_6uf9VLYU0YnmFp0Q=DZBKc0cAesBh0opanGDZMFRA@mail.gmail.com>
+ <20180724162806.318a92c6@bbrezillon> <CAK8P3a3YQbiiJMTHTVh63fOvtA1sa0J5Eb4z7xbnpBPwUDkqxg@mail.gmail.com>
+ <CAMuHMdXif_iufXx0Y+UJjKs9TNLfrTONoFvUSyrpkfaT0=ydRQ@mail.gmail.com> <CAK8P3a0jc1k9weTNbqSJXkCSFefus9OPyU5_v5=mTFxiDd0q5Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724152514.GJ13268@sirena.org.uk>
+In-Reply-To: <CAK8P3a0jc1k9weTNbqSJXkCSFefus9OPyU5_v5=mTFxiDd0q5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Andy Gross <andy.gross@linaro.org>
-Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Arnd,
 
-On Tue, Jul 24, 2018 at 8:25 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Jul 24, 2018 at 08:11:30AM -0700, Doug Anderson wrote:
+On Tue, Jul 24, 2018 at 5:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tue, Jul 24, 2018 at 5:15 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Tue, Jul 24, 2018 at 5:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
->> RPMh itself landed in Andy's tree and he sent a pull request on
->> Saturday.  Feel free to refer to the request ("[GIT PULL] Qualcomm
->> Driver updates for 4.19") AKA
->> <https://patchwork.kernel.org/patch/10539125/>.
+> >> That's not the case I was describing here, I was thinking of what
+> >> Wolfram described with the Renesas SoC that has two i2c masters
+> >> multiplexed through the pinmux layer. I would assume that we
+> >> can still do the same thing in i3c by shutting down the current
+> >> master without a handover, and reprobing everything from scratch.
+> >
+> > The major disadvantage of reprobing is that it may cause visual disturbances
+> > when i2c slaves are involved with e.g. the display pipeline (think HDMI encoders
+> > etc.).
 >
->> It doesn't look like arm-soc has picked up Andy's pull request yet
->> though.  If having it in arm-soc is a requirement then I'm happy to
->> monitor arm-soc and ping this thread again when it's there.
+> Do you mean we should reuse the device pointer and association with
+> the driver even when we switch out the i3c master using the pinmux?
 >
-> There was also some other thing called command DB as well which was a
-> separate series.  Ideally there'd be a branch I could pull as there's a
-> build dependency on rpmh so I can't apply until the code has landed in
-> my tree, don't know what command DB is exactly.
+> Or do you mean we need to be prepared for driving a single
+> slave through multiple masters over the lifetime of that device,
+> but using the i3c master handover protocol?
+> In the second case, how do we decide which master to use
+> for accessing a device for a given request?
 
-Yup.  That one landed in May and is already in mainline Linux.  Refer
-to commit 312416d9171a ("drivers: qcom: add command DB driver").
+I'll have to defer to Wolfram. He's the i2c and muxing expert.
 
-Adding Andy to this thread (I guess he wasn't on it?).  Hopefully he
-can provide you with the branch.
+Gr{oetje,eeting}s,
 
--Doug
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
