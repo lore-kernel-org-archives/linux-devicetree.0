@@ -1,39 +1,34 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v3 1/3] Input: edt-ft5x06 - Add support for regulator
-Date: Tue, 24 Jul 2018 15:07:16 +0200
-Message-ID: <20180724150716.4cb7c3b8@dell-desktop.home>
-References: <20180718182719.29663-1-mylene.josserand@bootlin.com>
-        <20180718182719.29663-2-mylene.josserand@bootlin.com>
-        <20180720134355.GA24750@rob-hp-laptop>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: dma: Add binding for Actions Semi
+ Owl SoCs
+Date: Tue, 24 Jul 2018 18:38:16 +0530
+Message-ID: <20180724130816.GC3661@vkoul-mobl>
+References: <20180723041743.32024-1-manivannan.sadhasivam@linaro.org>
+ <20180723041743.32024-2-manivannan.sadhasivam@linaro.org>
+ <20180724121604.GA2587@vkoul-mobl>
+ <b3db9b84-d01a-408d-e3f7-fdc61bbedb38@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720134355.GA24750@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <b3db9b84-d01a-408d-e3f7-fdc61bbedb38@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dmitry.torokhov@gmail.com, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@bootlin.com
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, dan.j.williams@intel.com, robh+dt@kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Fri, 20 Jul 2018 07:43:55 -0600
-Rob Herring <robh@kernel.org> wrote:
-
-> On Wed, Jul 18, 2018 at 08:27:17PM +0200, Mylène Josserand wrote:
-> > Add the support of regulator to use it as VCC source.
-> > 
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> > ---
-> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |  1 +  
+On 24-07-18, 14:19, Andreas F�rber wrote:
+> Hi Vinod,
 > 
-> Please add acks when posting new versions.
+> Am 24.07.2018 um 14:16 schrieb Vinod:
+> > Patch title should be dmaengine: ... Please always use the apt tags and
+> > one can find them using git log <subsystem>
+> 
+> Do you mean dt-bindings: dmaengine: ...? Because this is clearly a DT
+> binding and not a driver patch.
 
-Yes, sorry, I missed it. I will be more careful, next time.
-
-Best regards,
+for the driver patch :)
 
 -- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+~Vinod
