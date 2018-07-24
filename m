@@ -1,46 +1,45 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 00/14] arm64: dts: meson-axg: add audio support
-Date: Tue, 24 Jul 2018 14:52:24 +0200
-Message-ID: <20180724125238.14567-1-jbrunet@baylibre.com>
+Subject: [PATCH 02/14] arm64: dts: meson-axg: add vcc 5v regulator on the s400
+Date: Tue, 24 Jul 2018 14:52:26 +0200
+Message-ID: <20180724125238.14567-3-jbrunet@baylibre.com>
+References: <20180724125238.14567-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The main purpose of this patchset is to add the audio devices on amlogic's
-AXG SoCs.
+This regulator is controlled by a GPIO and supplies various devices
+on the board, such as the lineout codec, the usb supply or the lcd
+controller.
 
-Some codecs require some power supplies. This is why the 3 first patches
-deal with the S400 power supplies, even if some are not related to audio.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-In term of dependency, apart from the clock bindings you have already
-pulled for your second PR to arm-soc, this patchset requires the ARB
-reset bindings [0] for patch 5. I don't know if Philip can make it
-available somewhere ?
-
-Of course, if the dependencies make this patchset too complicated to
-merge in this cycle, I'll resubmit once the next rc1 is out.
-
-Jerome Brunet (14):
-  arm64: dts: meson-axg: improve power supplies description
-  arm64: dts: meson-axg: add vcc 5v regulator on the s400
-  arm64: dts: meson-axg: add usb power regulator
-  arm64: dts: meson-axg: add audio arb reset controller
-  arm64: dts: meson-axg: add audio fifos
-  arm64: dts: meson-axg: add spdifout
-  arm64: dts: meson-axg: add tdmin formatters
-  arm64: dts: meson-axg: add tdmout formatters
-  arm64: dts: meson-axg: add tdm interfaces
-  arm64: dts: meson-axg: add linein codec
-  arm64: dts: meson-axg: add lineout codec
-  arm64: dts: meson-axg: add spdif-dit codec
-  arm64: dts: meson-axg: s400: enable audio devices
-  arm64: dts: meson-axg: add s400 sound card
-
- .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 237 ++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi    | 216 ++++++++++++++++
- 2 files changed, 453 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 09c7909a78ea..5937d8c3a6ed 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -104,6 +104,17 @@
+ 		regulator-always-on;
+ 	};
+ 
++	vcc_5v: regulator-vcc_5v {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&main_12v>;
++
++		gpio = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	emmc_pwrseq: emmc-pwrseq {
+ 		compatible = "mmc-pwrseq-emmc";
+ 		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
 -- 
 2.17.1
