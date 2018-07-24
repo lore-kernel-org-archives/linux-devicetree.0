@@ -1,51 +1,43 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 04/14] arm64: dts: meson-axg: add audio arb reset controller
-Date: Tue, 24 Jul 2018 14:52:28 +0200
-Message-ID: <20180724125238.14567-5-jbrunet@baylibre.com>
+Subject: [PATCH 10/14] arm64: dts: meson-axg: add linein codec
+Date: Tue, 24 Jul 2018 14:52:34 +0200
+Message-ID: <20180724125238.14567-11-jbrunet@baylibre.com>
 References: <20180724125238.14567-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the audio memory arbiter which control the access of the audio
-fifos to the DDR.
+Add the es7241 analog to digital converter which is fed by the
+lienin jack of the s400
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 6adc8d3dbf0a..3893c630d969 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -189,6 +189,13 @@
- 
- 				resets = <&reset RESET_AUDIO>;
- 			};
-+
-+			arb: reset-controller@280 {
-+				compatible = "amlogic,meson-axg-audio-arb";
-+				reg = <0x0 0x280 0x0 0x4>;
-+				#reset-cells = <1>;
-+				clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
-+			};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 7489b88f27d7..fb101a1c6660 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -178,6 +178,16 @@
+ 			gpios = <&gpio_speaker 2 0>;
  		};
+ 	};
++
++	linein: audio-codec@0 {
++		#sound-dai-cells = <0>;
++		compatible = "everest,es7241";
++		VDDA-supply = <&vcc_3v3>;
++		VDDP-supply = <&vcc_3v3>;
++		VDDD-supply = <&vcc_3v3>;
++		status = "okay";
++		sound-name-prefix = "Linein";
++	};
+ };
  
- 		cbus: bus@ffd00000 {
+ &ethmac {
 -- 
 2.17.1
