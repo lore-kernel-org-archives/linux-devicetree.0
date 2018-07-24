@@ -1,219 +1,130 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [PATCH 3/3] arm64: allwinner: dts: h6: add
- Wi-Fi support for Pine H64 model A/B
-Date: Tue, 24 Jul 2018 10:39:10 +0800
-Message-ID: <9F54A9DF-CB83-407E-802C-4B30CBE193AD@aosc.io>
-References: <20180724011551.49603-1-icenowy@aosc.io> <20180724011551.49603-4-icenowy@aosc.io> <CAGb2v67zR-Q9n7L6CaFKDUJFHFEC_h8-RYxkdyeyJb_GbNmkJw@mail.gmail.com> <CEA43CB7-1DA6-4983-BF18-82C4A48FB92B@aosc.io> <CAGb2v64Qae4O430kP30DQNhp0Dt774OHt0nMe35ckp8X=CTFLg@mail.gmail.com> <AC678B03-19B7-4110-B333-72188CE71296@aosc.io> <CAGb2v656oPmAX=_y88b05xqrona3HFtU-VmNQhHxK_n-4gD+aw@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Subject: Re: [PATCH v1 4/9] scsi: ufs: add option to change default UFS power
+ management level
+Date: Tue, 24 Jul 2018 09:04:34 +0530
+Message-ID: <f1d3af9d-3ff0-c15b-013d-013ba6dde287@codeaurora.org>
+References: <cover.1530880006.git.asutoshd@codeaurora.org>
+ <ff2b648007a400c60ba804a0c5cab0166bd268e7.1530880006.git.asutoshd@codeaurora.org>
+ <20180711203317.GA14983@rob-hp-laptop>
+ <4b85de8b-d03e-da93-704b-e70922a9fbea@codeaurora.org>
+ <CAL_JsqLXUvUj8n=1Xv-_ssqB6rayMvxOTnGzeN1vS9yx4-jqOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBYNC3LNAKGQEL7APQEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v656oPmAX=_y88b05xqrona3HFtU-VmNQhHxK_n-4gD+aw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: wens-jdAy2FN1RRM@public.gmane.orgChen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLXUvUj8n=1Xv-_ssqB6rayMvxOTnGzeN1vS9yx4-jqOQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Subhash Jadavani <subhashj@codeaurora.org>, Can Guo <cang@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-=E4=BA=8E 2018=E5=B9=B47=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8810=
-:37:51, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> =E5=86=99=E5=88=B0:
->On Tue, Jul 24, 2018 at 10:28 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->wrote:
+On 7/23/2018 8:06 PM, Rob Herring wrote:
+> On Sun, Jul 22, 2018 at 9:20 PM Asutosh Das (asd)
+> <asutoshd@codeaurora.org> wrote:
 >>
->>
->> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=8810:26:02, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> =E5=86=99=E5=88=B0:
->>>On Tue, Jul 24, 2018 at 10:23 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>wrote:
+>> On 7/12/2018 2:03 AM, Rob Herring wrote:
+>>> On Fri, Jul 06, 2018 at 06:00:31PM +0530, Asutosh Das wrote:
+>>>> From: Subhash Jadavani <subhashj@codeaurora.org>
 >>>>
+>>>> UFS device and link can be put in multiple different low power modes hence
+>>>> UFS driver supports multiple different low power modes. By default UFS
+>>>> driver selects the default (optimal) low power mode (which gives moderate
+>>>> power savings and have relatively less enter and exit latencies) but
+>>>> we might have to tune this default power mode for different chipset
+>>>> platforms to meet the low power requirements/goals. Hence this patch
+>>>> adds option to change default UFS low power mode (level).
 >>>>
->>>> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=8810:21:59, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> =E5=86=99=E5=88=B0:
->>>>>On Tue, Jul 24, 2018 at 9:15 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>wrote:
->>>>>> The Pine H64 model A has a Wi-Fi module connector and the model B
->>>has
->>>>>an
->>>>>> on-board RTL8723BS Wi-Fi module.
->>>>>>
->>>>>> Add support for them. For model A, as it's not defaultly present,
->>>>>keep
->>>>>> it disabled now.
->>>>>
->>>>>Nope. Pine64 actually has two WiFi/BT modules. And they require
->>>>>different
->>>>>device tree snippets for both the WiFi and BT side. This is better
->>>>>resolved
->>>>>with device tree overlays.
->>>>>
->>>>>I have both, though I've yet found time to work on them.
+>>>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>>>> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+>>>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>>>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+>>>> ---
+>>>>    .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      | 11 ++++++++
+>>>>    drivers/scsi/ufs/ufshcd-pltfrm.c                   | 14 +++++++++++
+>>>>    drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++-------
+>>>>    drivers/scsi/ufs/ufshcd.h                          |  4 +--
+>>>>    4 files changed, 47 insertions(+), 11 deletions(-)
 >>>>
->>>> I have also both.
->>>>
->>>> The skeleton here can get the Wi-Fi of both to work.
+>>>> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>>>> index c39dfef..f564d9a 100644
+>>>> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>>>> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>>>> @@ -38,6 +38,15 @@ Optional properties:
+>>>>                         defined or a value in the array is "0" then it is assumed
+>>>>                         that the frequency is set by the parent clock or a
+>>>>                         fixed rate clock source.
+>>>> +- rpm-level         : UFS Runtime power management level. Following PM levels are supported:
+>>>> +                      0 - Both UFS device and Link in active state (Highest power consumption)
+>>>> +                      1 - UFS device in active state but Link in Hibern8 state
+>>>> +                      2 - UFS device in Sleep state but Link in active state
+>>>> +                      3 - UFS device in Sleep state and Link in hibern8 state (default PM level)
+>>>> +                      4 - UFS device in Power-down state and Link in Hibern8 state
+>>>> +                      5 - UFS device in Power-down state and Link in OFF state (Lowest power consumption)
+>>>> +- spm-level         : UFS System power management level. Allowed PM levels are same as rpm-level.
 >>>
->>>Cool. Then I can put away my RTL module for now. :)
->>
->> P.S. SDIO is auto detectable, and for BCM chips, the OOB interrupt
->> is only a bonus function and it can fall back to standard in-band
->> interrupt (which doesn't need special binding, and is currently
->> used by mainline r8723bs driver.)
->
->Correct. With BT you'll have serdev device nodes with different
->compatibles. Then you'll have to resort to overlays, and you'd probably
->end up adding WiFi OOB interrupt bits as well.
->
->So the question remaining is: should we enable the MMC part, along
->with power sequencing and regulator supplies, by default? Thinking
->more about it, I'm actually OK with it. The board connectors are
->clearly marked as being for a WiFi+BT module. The whole space on
->the board is surrounded by a box in silkscreen. Sorry for the
->initial nack.
->
->Maxime, any thoughts?
-
-I remember he refused it for Pine A64.
-
->
+>>> What's the default?
 >>>
->>>ChenYu
+>>> I assume these are minimums? The OS can pick higher power states. This
+>>> seems to be a bit Linux specific (as 'runtime PM' could be considered
+>>> Linux specific). For every other device, we don't put this type of
+>>> information in DT, but is user controlled.
+>> I didn't completely understand your comment.
+>> Do you not want these properties to be in DT file?
+> 
+> Right, not if it is a user decision.
+> 
+>> When you say user-controlled, do you mean control it through sysfs entries?
+> 
+> Yes.
+> 
+>>> So really, wouldn't 1
+>>> property be sufficient for cases where a mode doesn't work due to
+>>> some h/w limitation. Otherwise, it is an OS or user decision.
+>> I didn't completely understand this. Could you please elaborate on your
+>> intent here?
+> 
+> The case that makes sense for this to be in DT is if there are h/w
+> limitations that prevent some low power modes. In such a case, that
+> limit is not likely specific to runtime PM or system suspend.
+> 
+>>>>    -lanes-per-direction       : number of lanes available per direction - either 1 or 2.
+>>>>                         Note that it is assume same number of lanes is used both
+>>>>                         directions at once. If not specified, default is 2 lanes per direction.
+>>>> @@ -66,4 +75,6 @@ Example:
+>>>>               freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
+>>>>               phys = <&ufsphy1>;
+>>>>               phy-names = "ufsphy";
+>>>> +            rpm-level = <3>;
 >>>
->>>>
->>>>>
->>>>>ChenYu
->>>>>
->>>>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>>>> ---
->>>>>>  .../allwinner/sun50i-h6-pine-h64-model-b.dts  |  8 +++++
->>>>>>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 29
->>>>>+++++++++++++++++++
->>>>>>  2 files changed, 37 insertions(+)
->>>>>>
->>>>>> diff --git
->>>>>a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-model-b.dts
->>>>>b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-model-b.dts
->>>>>> index d0fcc25efb00..d0f775613c9b 100644
->>>>>> ---
->a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-model-b.dts
->>>>>> +++
->b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64-model-b.dts
->>>>>> @@ -18,3 +18,11 @@
->>>>>>                 };
->>>>>>         };
->>>>>>  };
->>>>>> +
->>>>>> +&mmc1 {
->>>>>> +       status =3D "okay";
->>>>>> +};
->>>>>> +
->>>>>> +&wifi_pwrseq {
->>>>>> +       status =3D "okay";
->>>>>> +};
->>>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
->>>>>b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
->>>>>> index a85867f8b684..75db6d4139bf 100644
->>>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
->>>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
->>>>>> @@ -40,6 +40,12 @@
->>>>>>                         gpios =3D <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /*
->>>PL7
->>>>>*/
->>>>>>                 };
->>>>>>         };
->>>>>> +
->>>>>> +       wifi_pwrseq: wifi_pwrseq {
->>>>>> +               compatible =3D "mmc-pwrseq-simple";
->>>>>> +               reset-gpios =3D <&r_pio 1 3 GPIO_ACTIVE_LOW>; /*
->PL2
->>>*/
->>>>>> +               status =3D "disabled";
->>>>>> +       };
->>>>>>  };
->>>>>>
->>>>>>  &mmc0 {
->>>>>> @@ -50,6 +56,17 @@
->>>>>>         status =3D "okay";
->>>>>>  };
->>>>>>
->>>>>> +&mmc1 {
->>>>>> +       pinctrl-names =3D "default";
->>>>>> +       pinctrl-0 =3D <&mmc1_pins>;
->>>>>> +       vmmc-supply =3D <&reg_cldo2>;
->>>>>> +       vqmmc-supply =3D <&reg_bldo2>;
->>>>>> +       mmc-pwrseq =3D <&wifi_pwrseq>;
->>>>>> +       bus-width =3D <4>;
->>>>>> +       non-removable;
->>>>>> +       status =3D "disabled";
->>>>>> +};
->>>>>> +
->>>>>>  &mmc2 {
->>>>>>         pinctrl-names =3D "default";
->>>>>>         pinctrl-0 =3D <&mmc2_pins>;
->>>>>> @@ -128,12 +145,24 @@
->>>>>>                         };
->>>>>>
->>>>>>                         reg_cldo2: cldo2 {
->>>>>> +                               /*
->>>>>> +                                * This regulator is connected
->with
->>>>>CLDO3.
->>>>>> +                                * Before the kernel can support
->>>>>synchronized
->>>>>> +                                * enable of coupled regulators,
->>>keep
->>>>>them
->>>>>> +                                * both always on as a ugly hack.
->>>>>> +                                */
->>>>>> +                               regulator-always-on;
->>>>>>                                 regulator-min-microvolt =3D
->>><3300000>;
->>>>>>                                 regulator-max-microvolt =3D
->>><3300000>;
->>>>>>                                 regulator-name =3D "vcc-wifi-1";
->>>>>>                         };
->>>>>>
->>>>>>                         reg_cldo3: cldo3 {
->>>>>> +                               /*
->>>>>> +                                * This regulator is connected
->with
->>>>>CLDO2.
->>>>>> +                                * See the comments for CLDO2.
->>>>>> +                                */
->>>>>> +                               regulator-always-on;
->>>>>>                                 regulator-min-microvolt =3D
->>><3300000>;
->>>>>>                                 regulator-max-microvolt =3D
->>><3300000>;
->>>>>>                                 regulator-name =3D "vcc-wifi-2";
->>>>>> --
->>>>>> 2.18.0
->>>>>>
->>>>
->>>> --
->>>> You received this message because you are subscribed to the Google
->>>Groups "linux-sunxi" group.
->>>> To unsubscribe from this group and stop receiving emails from it,
->>>send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->>>> For more options, visit https://groups.google.com/d/optout.
+>>> Why specified if 3 is the default?
+>> Ah yes - that should be removed.
+>> I'll remove it in v2.
 >>
->> --
->> You received this message because you are subscribed to the Google
->Groups "linux-sunxi" group.
->> To unsubscribe from this group and stop receiving emails from it,
->send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->> For more options, visit https://groups.google.com/d/optout.
+>>>
+>>>> +            spm-level = <5>;
+>>>
+>>> These seem like sane defaults. When and why would you use some
+>>> different?
+>> I think each of the deeper sleep modes are associated with an increasing
+>> wakeup latency. For e.g. '0' would have the highest power-consumption
+>> and no resume latency at all as compared to '5'.
+>> So depending on use-cases other modes may be chosen.
+> 
+> The use-case can change in a running system. For example if you are
+> plugged in, then you probably don't want to enter a lower power mode.
+> 
+> Rob
+> 
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Ok - Thanks.
+I'm gonna make the following changes in v2:
+1. Remove these entries from DT
+2. Add support for these entries in sysfs.
+3. Keep 3 as the default value for [rpm/spm]-levels
+
+-asd
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
