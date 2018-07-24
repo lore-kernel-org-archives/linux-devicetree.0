@@ -1,34 +1,52 @@
-From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
-Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: at24: Add address-width
- property
-Date: Tue, 24 Jul 2018 14:07:12 +0300
-Message-ID: <20180724110712.2f26evp3kdbnhyhd@paasikivi.fi.intel.com>
-References: <1530522740-2798-1-git-send-email-alanx.chiang@intel.com>
- <1530522740-2798-2-git-send-email-alanx.chiang@intel.com>
- <20180705212204.GA10449@rob-hp-laptop>
- <alpine.LFD.2.21.1807051623400.12206@localhost.localdomain>
- <0772C36F3434E145A062D024A4869A09010B1E4D@PGSMSX101.gar.corp.intel.com>
- <CAMRc=Mc4s6tJw6dAHYCPQdsPox9V8sBTqY3LHi5XMWALwOZdyA@mail.gmail.com>
- <CAMRc=MfNa0OwMbJ6ibbCJJD0pV9tKtyTZ3cQi34ra5oc_-5jYw@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 00/18] JZ4780 DMA patchset v3
+Date: Tue, 24 Jul 2018 13:09:34 +0200
+Message-ID: <1532430574.2610.0@smtp.crapouillou.net>
+References: <20180721110643.19624-1-paul@crapouillou.net>
+        <20180723175846.udmjtkx7fsaf52wa@pburton-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfNa0OwMbJ6ibbCJJD0pV9tKtyTZ3cQi34ra5oc_-5jYw@mail.gmail.com>
+In-Reply-To: <20180723175846.udmjtkx7fsaf52wa@pburton-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Chiang, AlanX" <alanx.chiang@intel.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, "Robert P. J. Day" <rpjday@crashcourse.ca>, Rob Herring <robh@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "Yeh, Andy" <andy.yeh@intel.com>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Mani, Rajmohan" <rajmohan.mani@intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "tfiga@chromium.org" <tfiga@chromium.org>, "jcliang@chromium.org" <jcliang@chromium.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.>
+To: Paul Burton <paul.burton@mips.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2018 at 10:01:17AM +0200, Bartosz Golaszewski wrote:
-> I will soon be sending my pull request to Wolfram, so if you still
-> want that applied for 4.19 - please resend with the commit message
-> fixed.
+Hi,
 
-Alan?
+Le lun. 23 juil. 2018 =E0 19:58, Paul Burton <paul.burton@mips.com> a=20
+=E9crit :
+> Hi Paul & Vinod,
+>=20
+> On Sat, Jul 21, 2018 at 01:06:25PM +0200, Paul Cercueil wrote:
+>>  This is the version 3 of my jz4780-dma driver update patchset.
+>>=20
+>>  Apologies to the DMA people, the v2 of this patchset did not make=20
+>> it to
+>>  their mailing-list; see the bottom of this email for a description=20
+>> of
+>>  what happened in v2.
+>>=20
+>>  Changelog from v2 to v3:
+>>=20
+>>  - Modified the devicetree bindings to comply with the specification
+>>=20
+>>  - New patch [06/18] allows the JZ4780 DMA driver to be compiled=20
+>> within a
+>>    generic MIPS kernel.
+>=20
+> Would you prefer to take the MIPS .dts changes in patches 16-18=20
+> through
+> the DMA tree with the rest of the series?
 
-Not sure whether it's too late for 4.19 now though.
+I think it would make sense yes.
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> If so then for patches 16-18:
+>=20
+>     Acked-by: Paul Burton <paul.burton@mips.com>
+>=20
+> Thanks,
+>     Paul
+=
