@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 06/14] arm64: dts: meson-axg: add spdifout
-Date: Tue, 24 Jul 2018 14:52:30 +0200
-Message-ID: <20180724125238.14567-7-jbrunet@baylibre.com>
+Subject: [PATCH 09/14] arm64: dts: meson-axg: add tdm interfaces
+Date: Tue, 24 Jul 2018 14:52:33 +0200
+Message-ID: <20180724125238.14567-10-jbrunet@baylibre.com>
 References: <20180724125238.14567-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
@@ -10,34 +10,56 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the SPDIF output device of the axg audio subsystem
+Add the devices reponsible for managing the i2s/tdm clocks and pads
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index a20189844d92..c56016a48cc4 100644
+index 67b6d4ec980e..32f6dcacc2bc 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -263,6 +263,17 @@
- 				#reset-cells = <1>;
- 				clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
- 			};
-+
-+			spdifout: audio-controller@480 {
-+				compatible = "amlogic,axg-spdifout";
-+				reg = <0x0 0x480 0x0 0x50>;
-+				#sound-dai-cells = <0>;
-+				sound-name-prefix = "SPDIFOUT";
-+				clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
-+					 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
-+				clock-names = "pclk", "mclk";
-+				status = "disabled";
-+			};
- 		};
+@@ -93,6 +93,39 @@
+ 		method = "smc";
+ 	};
  
- 		cbus: bus@ffd00000 {
++	tdmif_a: audio-controller@0 {
++		compatible = "amlogic,axg-tdm-iface";
++		#sound-dai-cells = <0>;
++		sound-name-prefix = "TDM_A";
++		clocks = <&clkc_audio AUD_CLKID_MST_A_MCLK>,
++			 <&clkc_audio AUD_CLKID_MST_A_SCLK>,
++			 <&clkc_audio AUD_CLKID_MST_A_LRCLK>;
++		clock-names = "mclk", "sclk", "lrclk";
++		status = "disabled";
++	};
++
++	tdmif_b: audio-controller@1 {
++		compatible = "amlogic,axg-tdm-iface";
++		#sound-dai-cells = <0>;
++		sound-name-prefix = "TDM_B";
++		clocks = <&clkc_audio AUD_CLKID_MST_B_MCLK>,
++			 <&clkc_audio AUD_CLKID_MST_B_SCLK>,
++			 <&clkc_audio AUD_CLKID_MST_B_LRCLK>;
++		clock-names = "mclk", "sclk", "lrclk";
++		status = "disabled";
++	};
++
++	tdmif_c: audio-controller@2 {
++		compatible = "amlogic,axg-tdm-iface";
++		#sound-dai-cells = <0>;
++		sound-name-prefix = "TDM_C";
++		clocks = <&clkc_audio AUD_CLKID_MST_C_MCLK>,
++			 <&clkc_audio AUD_CLKID_MST_C_SCLK>,
++			 <&clkc_audio AUD_CLKID_MST_C_LRCLK>;
++		clock-names = "mclk", "sclk", "lrclk";
++		status = "disabled";
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts = <GIC_PPI 13
 -- 
 2.17.1
