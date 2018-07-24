@@ -1,68 +1,44 @@
 From: Denis OSTERLAND <denis.osterland@diehl.com>
-Subject: [PATCH v5 5/5] rtc: isl1219: add device tree docu
-Date: Tue, 24 Jul 2018 11:31:22 +0000
-Message-ID: <20180724095437.6016-6-Denis.Osterland@diehl.com>
-References: <20180724095437.6016-1-Denis.Osterland@diehl.com>
+Subject: [PATCH v5 0/5] rtc: isl1208: fixes, documentation and isl1219 support
+Date: Tue, 24 Jul 2018 11:31:21 +0000
+Message-ID: <20180724095437.6016-1-Denis.Osterland@diehl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724095437.6016-1-Denis.Osterland@diehl.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Denis OSTERLAND <denis.osterland@diehl.com>
+To: "mark.rutland@arm.com" <mark.rutland@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, Denis OSTERLAND <denis.osterland@diehl.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Denis Osterland <Denis.Osterland@diehl.com>
+changes since v4:
+ - fix 'souces' typo and change interrupt documentation
+ - change "isil,ev-evienb" type to int and do not touch bit if not present
+ - pass ISL1219_REG_EV_EVEN directly instead of assigning it to rc
+ - fix module build by adding EXPORT_SYMBOL to rtc_add_group(s)
+ - use kcalloc
+ - return error if device is already registered
+ - include helper functions into rtc_add_groups
 
-The devicetree documentation for the ISL1219 device tree
-binding is added with an short example. It is not a trivial
-device, because it supports two interrupt sources.
+Michael Grzeschik (1):
+    rtc: isl1208: add support for isl1219 with tamper detection
 
-Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
----
- .../devicetree/bindings/rtc/isil,isl1219.txt  | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1219.txt
+Denis Osterland (4):
+    rtc: sysfs: facilitate attribute add to rtc device
+    rtc: isl1208: Add "evdet" interrupt source for isl1219.
+    rtc: isl1208: set ev-evienb bit from device tree
+    rtc: isl1219: add device tree docu
 
-diff --git a/Documentation/devicetree/bindings/rtc/isil,isl1219.txt b/Documentation/devicetree/bindings/rtc/isil,isl1219.txt
-new file mode 100644
-index 000000000000..c3efd48e91c2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/isil,isl1219.txt
-@@ -0,0 +1,29 @@
-+Intersil ISL1219 I2C RTC/Alarm chip with event in
-+
-+ISL1219 has additional pins EVIN and #EVDET for tamper detection.
-+
-+Required properties supported by the device:
-+
-+ - "compatible": must be "isil,isl1219"
-+ - "reg": I2C bus address of the device
-+
-+Optional properties:
-+
-+ - "interrupt-names": list which may contains "irq" and "evdet"
-+ - "interrupts": list of interrupts for "irq" and "evdet"
-+ - "isil,ev-evienb": if present EV.EVIENB bit is set to the specified
-+                     value for proper operation.
-+
-+
-+Example isl1219 node with #IRQ pin connected to SoC gpio1 pin12
-+ and #EVDET pin connected to SoC gpio2 pin 24:
-+
-+	isl1219: rtc@68 {
-+		compatible = "isil,isl1219";
-+		reg = <0x68>;
-+		interrupt-names = "irq", "evdet";
-+		interrupts-extended = <&gpio1 12 IRQ_TYPE_EDGE_FALLING>,
-+			<&gpio2 24 IRQ_TYPE_EDGE_FALLING>;
-+		isil,ev-evienb = <1>;
-+	};
-+
--- 
-2.18.0
+ .../devicetree/bindings/rtc/isil,isl1219.txt       |  29 ++++
+ drivers/rtc/rtc-core.h                             |  13 ++
+ drivers/rtc/rtc-isl1208.c                          | 192 ++++++++++++++++++---
+ drivers/rtc/rtc-sysfs.c                            |  43 +++++
+ 4 files changed, 254 insertions(+), 23 deletions(-)
+
+Message-Id: 20180710090710.9066-1-Denis.Osterland@diehl.com
+
+
 
 
 
