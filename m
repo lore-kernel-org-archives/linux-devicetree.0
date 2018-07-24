@@ -1,98 +1,109 @@
-Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56344 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388299AbeGWOsc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Jul 2018 10:48:32 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 18/21] v4l: fwnode: Use V4L2 fwnode endpoint media bus type if set
-Date: Mon, 23 Jul 2018 16:47:03 +0300
-Message-Id: <20180723134706.15334-19-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
+Return-Path: <SRS0=zuy1=KI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-qk0-f195.google.com ([209.85.220.195]:34236 "EHLO
+        mail-qk0-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388334AbeGXRaX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Jul 2018 13:30:23 -0400
+Received: by mail-qk0-f195.google.com with SMTP id b66-v6so2996255qkj.1
+        for <devicetree@vger.kernel.org>; Tue, 24 Jul 2018 09:23:09 -0700 (PDT)
+Subject: Re: [PATCH 00/15] ARM: dts: tegra: apalis-tk1: major revamp
+References: <20180724104309.21741-1-marcel@ziswiler.com>
+ <2076484.gx54F3eiOq@dimapc> <1532443499.6124.31.camel@toradex.com>
+ <4715215.NZcU7pUVUy@dimapc>
+From: Peter Geis <pgwipeout@gmail.com>
+Message-ID: <cead13fe-4927-0807-affc-ce974222bb72@gmail.com>
+Date: Tue, 24 Jul 2018 12:23:05 -0400
+MIME-Version: 1.0
+In-Reply-To: <4715215.NZcU7pUVUy@dimapc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+To: Dmitry Osipenko <digetx@gmail.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Use the given media bus type set by the caller. If none is given (i.e. the
-mbus type is V4L2_MBUS_UNKNOWN, or 0), fall back to the old behaviour.
-This is to obtain the information from the DT or try to guess the bus
-type.
 
--ENXIO is returned if the caller sets the bus type but that does not match
-with what's in DT.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+On 07/24/2018 10:48 AM, Dmitry Osipenko wrote:
+> On Tuesday, 24 July 2018 17:45:01 MSK Marcel Ziswiler wrote:
+>> On Tue, 2018-07-24 at 17:31 +0300, Dmitry Osipenko wrote:
+>>
+>>> On Tuesday, 24 July 2018 17:16:33 MSK Marcel Ziswiler wrote:
+>>>
+>>>> On Tue, 2018-07-24 at 15:44 +0300, Dmitry Osipenko wrote:
+>>>>
+>>>>
+>>>>> On Tuesday, 24 July 2018 15:24:34 MSK Marcel Ziswiler wrote:
+>>>>>
+>>>>>
+>>>>>> Sorry, I meant to write "minor revamp" in the subject line here
+>>>>>> as
+>>>>>> Apalis TK1 was already in quite good a shape but this are still
+>>>>>> some
+>>>>>> worthy improvements (;-p).
+>>>>>>
+>>>>>> On Tue, 2018-07-24 at 12:42 +0200, Marcel Ziswiler wrote:
+>>>>>>
+>>>>>
+>>>>>
+>>>>>
+>>>>> Marcel,
+>>>>>
+>>>>> All your emails that are sent from "toradex.com" are treated as
+>>>>> spam
+>>>>> by Gmail
+>>>>> because "This message has a from address in toradex.com but has
+>>>>> failed
+>>>>> toradex.com's required tests for authentication.", is there
+>>>>> anything
+>>>>> you could
+>>>>> do to fix that?
+>>>>
+>>>>
+>>>>
+>>>> Hi Dmitry
+>>>>
+>>>> Hm, unfortunately, Toradex was an M$ only shop when I joined more
+>>>> then
+>>>> 7 years ago and so far I was unable to convince our IT to switch to
+>>>> some grown up email system. Therefore, I am stuck with Exchange,
+>>>> Office
+>>>> 365 or whatever M$ nowadays seem to call it. Anyway, I really
+>>>> thought
+>>>> sending from Android or Evolution via their resp. Exchange
+>>>> connectors
+>>>> would properly do SPF, DKIM and even DMARC. I just confirmed this
+>>>> when
+>>>> sending something to my gmail address and doing "Show original".
+>>>>
+>>>> Since Linus himself pointed out any of my patches ending up in his
+>>>> spam
+>>>> folder I do send them via my private email which while not having
+>>>> any
+>>>> advanced security configured should still be valid. Moving it to a
+>>>> fully secure configuration including DNSSEC and stuff is still
+>>>> pending
+>>>> on my side.
+>>>>
+>>>> Can you please tell me which exact email it is that you got this
+>>>> reported on so I may further investigate what is going on?
+>>>
+>>>
+>>> This email from you looks okay. Unfortunately all of your previous
+>>> emails from
+>>> "toradex.com" were getting into the spam folder.
+>>
+>>
+>> You sure they were from "toradex.com"? The patches should have been
+>> coming from "ziswiler.com" resp. "perfora.net".
+> 
+> The patches from "ziswiler.com" are fine, only your emails specifically from
+> "toradex.com" had an issue. Looks like you've resolved it now.
+> 
+> 
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 8914abd20ee8..56e3b6395171 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -409,7 +409,7 @@ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
- static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 					struct v4l2_fwnode_endpoint *vep)
- {
--	u32 bus_type = 0;
-+	u32 bus_type = V4L2_FWNODE_BUS_TYPE_GUESS;
- 	enum v4l2_mbus_type mbus_type;
- 	int rval;
- 
-@@ -432,13 +432,24 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 		 v4l2_fwnode_bus_type_to_string(bus_type), bus_type,
- 		 v4l2_fwnode_mbus_type_to_string(vep->bus_type),
- 		 vep->bus_type);
--
- 	mbus_type = v4l2_fwnode_bus_type_to_mbus(bus_type);
- 
--	switch (mbus_type) {
-+	if (vep->bus_type != V4L2_MBUS_UNKNOWN) {
-+		if (mbus_type != V4L2_MBUS_UNKNOWN &&
-+		    vep->bus_type != mbus_type) {
-+			pr_debug("expecting bus type %s\n",
-+				 v4l2_fwnode_mbus_type_to_string(
-+					 vep->bus_type));
-+			return -ENXIO;
-+		}
-+	} else {
-+		vep->bus_type = mbus_type;
-+	}
-+
-+	switch (vep->bus_type) {
- 	case V4L2_MBUS_UNKNOWN:
- 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
--							   mbus_type);
-+							   V4L2_MBUS_UNKNOWN);
- 		if (rval)
- 			return rval;
- 
-@@ -457,20 +468,19 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 
- 	case V4L2_MBUS_CCP2:
- 	case V4L2_MBUS_CSI1:
--		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, mbus_type);
-+		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, vep->bus_type);
- 		break;
- 
- 	case V4L2_MBUS_CSI2_DPHY:
--		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
- 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
--							   mbus_type);
-+							   vep->bus_type);
- 		if (rval)
- 			return rval;
- 
- 		break;
- 	case V4L2_MBUS_PARALLEL:
- 	case V4L2_MBUS_BT656:
--		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, mbus_type);
-+		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, vep->bus_type);
- 
- 		break;
- 	default:
--- 
-2.11.0
-
+For just the three of us, I had a handful of Marcel's emails in my spam 
+folder as well. Gmail had them tagged as phishing attempts because they 
+could not verify the emails came from toradex.com.
+It seems like verification is intermittently failing, otherwise all of 
+the emails would be tagged as such.
