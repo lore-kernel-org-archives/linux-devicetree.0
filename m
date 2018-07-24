@@ -1,44 +1,67 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v3 07/18] dmaengine: dma-jz4780: Add support for the
- JZ4770 SoC
-Date: Tue, 24 Jul 2018 19:02:29 +0530
-Message-ID: <20180724133229.GG3661@vkoul-mobl>
-References: <20180721110643.19624-1-paul@crapouillou.net>
- <20180721110643.19624-8-paul@crapouillou.net>
+From: Emmanuel Vadot <manu@bidouilliste.com>
+Subject: Re: [PATCH v2 5/5] arm64: dts: allwinner: h5: Add SID for H5
+Date: Tue, 24 Jul 2018 15:34:32 +0200
+Message-ID: <20180724153432.e398bddfe63e51e8dcebfc46@bidouilliste.com>
+References: <20180724101522.68165-1-manu@freebsd.org>
+ <20180724101522.68165-5-manu@freebsd.org>
+ <20180724130004.ynaiabshexrrbvo4@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180721110643.19624-8-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180724130004.ynaiabshexrrbvo4@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>, wens@csie.org, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21-07-18, 13:06, Paul Cercueil wrote:
-> +static inline void jz4780_dma_chan_enable(struct jz4780_dma_dev *jzdma,
-> +	unsigned int chn)
+On Tue, 24 Jul 2018 15:00:04 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 
-right justified and aligned with preceding please. While adding new
-code to a existing driver it is a good idea to conform to existing style
+> On Tue, Jul 24, 2018 at 12:15:22PM +0200, Emmanuel Vadot wrote:
+> > The SID controller on H5 look the same as the one present in the A64.
+> > But in case we find some difference one day at a compatible string
+> > of it's own and a fallback to the A64 one.
+> > 
+> > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> > ---
+> >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> > index 62d646baac3c..28183bf77164 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> > @@ -129,3 +129,8 @@
+> >  		     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> >  	compatible = "allwinner,sun50i-h5-pinctrl";
+> >  };
+> > +
+> > +&sid {
+> > +	compatible = "allwinner,sun50i-h5-sid",
+> > +		     "allwinner,sun50i-a64-sid";
+> > +};
+> 
+> This is still a bit pointless, please remove the common node.
 
-> +{
-> +	if (jzdma->version == ID_JZ4770)
-> +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKES, BIT(chn));
-> +}
-> +
-> +static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev *jzdma,
-> +	unsigned int chn)
-> +{
-> +	if (jzdma->version == ID_JZ4770)
-> +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
+ You mean directly declare sid controller in the SoC dtsi and not have
+a common node in sunxi-h3-h5.dtsi ?
 
-so if another version has this feature we would do:
-        if (jzdma->version == ID_JZ4770) ||
-                if (jzdma->version == ID_JZXXXX))
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-and so on.. why not add a value, clk_enable in the description and use
-that. For each controller it is set to true or false
 
 -- 
-~Vinod
+Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
