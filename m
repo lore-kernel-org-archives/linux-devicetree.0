@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 08/14] arm64: dts: meson-axg: add tdmout formatters
-Date: Tue, 24 Jul 2018 14:52:32 +0200
-Message-ID: <20180724125238.14567-9-jbrunet@baylibre.com>
+Subject: [PATCH 01/14] arm64: dts: meson-axg: improve power supplies description
+Date: Tue, 24 Jul 2018 14:52:25 +0200
+Message-ID: <20180724125238.14567-2-jbrunet@baylibre.com>
 References: <20180724125238.14567-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
@@ -10,66 +10,62 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the tdm devices responsible for serializing audio samples
-for i2s/tdm interfaces
+Add the parent supply of the s400 power supplies.
+Also add 'regulator-always-on' property on the regulators which can't
+be disabled
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 55e4ac734023..67b6d4ec980e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -330,6 +330,48 @@
- 				clock-names = "pclk", "mclk";
- 				status = "disabled";
- 			};
-+
-+			tdmout_a: audio-controller@500 {
-+				compatible = "amlogic,axg-tdmout";
-+				reg = <0x0 0x500 0x0 0x40>;
-+				sound-name-prefix = "TDMOUT_A";
-+				clocks = <&clkc_audio AUD_CLKID_TDMOUT_A>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_A_SCLK_SEL>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_A_LRCLK>;
-+				clock-names = "pclk", "sclk", "sclk_sel",
-+					      "lrclk", "lrclk_sel";
-+				status = "disabled";
-+			};
-+
-+			tdmout_b: audio-controller@540 {
-+				compatible = "amlogic,axg-tdmout";
-+				reg = <0x0 0x540 0x0 0x40>;
-+				sound-name-prefix = "TDMOUT_B";
-+				clocks = <&clkc_audio AUD_CLKID_TDMOUT_B>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_B_SCLK_SEL>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_B_LRCLK>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_B_LRCLK>;
-+				clock-names = "pclk", "sclk", "sclk_sel",
-+					      "lrclk", "lrclk_sel";
-+				status = "disabled";
-+			};
-+
-+			tdmout_c: audio-controller@580 {
-+				compatible = "amlogic,axg-tdmout";
-+				reg = <0x0 0x580 0x0 0x40>;
-+				sound-name-prefix = "TDMOUT_C";
-+				clocks = <&clkc_audio AUD_CLKID_TDMOUT_C>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_C_SCLK_SEL>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_C_LRCLK>,
-+					 <&clkc_audio AUD_CLKID_TDMOUT_C_LRCLK>;
-+				clock-names = "pclk", "sclk", "sclk_sel",
-+					      "lrclk", "lrclk_sel";
-+				status = "disabled";
-+			};
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index fd90fa4a282c..09c7909a78ea 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -65,6 +65,7 @@
+ 		regulator-name = "12V";
+ 		regulator-min-microvolt = <12000000>;
+ 		regulator-max-microvolt = <12000000>;
++		regulator-always-on;
+ 	};
  
- 		cbus: bus@ffd00000 {
+ 	vddio_boot: regulator-vddio_boot {
+@@ -72,6 +73,8 @@
+ 		regulator-name = "VDDIO_BOOT";
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
+ 	};
+ 
+ 	vddao_3v3: regulator-vddao_3v3 {
+@@ -79,6 +82,8 @@
+ 		regulator-name = "VDDAO_3V3";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
++		vin-supply = <&main_12v>;
++		regulator-always-on;
+ 	};
+ 
+ 	vddio_ao18: regulator-vddio_ao18 {
+@@ -86,6 +91,8 @@
+ 		regulator-name = "VDDIO_AO18";
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
+ 	};
+ 
+ 	vcc_3v3: regulator-vcc_3v3 {
+@@ -93,6 +100,8 @@
+ 		regulator-name = "VCC_3V3";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
+ 	};
+ 
+ 	emmc_pwrseq: emmc-pwrseq {
 -- 
 2.17.1
