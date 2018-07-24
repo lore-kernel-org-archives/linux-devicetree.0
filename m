@@ -1,116 +1,54 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v6 0/2] Input: Add Cypress Gen5 Touchscreen driver
-Date: Tue, 24 Jul 2018 10:40:53 -0700
-Message-ID: <20180724174053.GA61165@dtor-ws>
-References: <20180703094309.18514-1-mylene.josserand@bootlin.com>
- <20180704162158.euiw2v3hyv3hzofn@penguin>
- <20180724150046.7d70786c@dell-desktop.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v3 0/2] clk: qcom: Quad SPI (qspi) clock support for sdm845
+Date: Tue, 24 Jul 2018 10:45:11 -0700
+Message-ID: <20180724174513.174018-1-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180724150046.7d70786c@dell-desktop.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: sboyd@kernel.org, andy.gross@linaro.org
+Cc: tdas@codeaurora.org, girishm@codeaurora.org, linux-arm-msm@vger.kernel.org, anischal@codeaurora.org, bjorn.andersson@linaro.org, grahamr@codeaurora.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mylène,
 
-On Tue, Jul 24, 2018 at 03:00:46PM +0200, Mylène Josserand wrote:
-> Hello Dmitry,
-> 
-> On Wed, 4 Jul 2018 16:21:58 +0000
-> Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> 
-> > Hi Mylène,
-> > 
-> > On Tue, Jul 03, 2018 at 11:43:07AM +0200, Mylène Josserand wrote:
-> > > Hello,
-> > > 
-> > > Here is a V6 series to add the driver of the touchscreen Cypress,
-> > > TrueTouch Generation 5.
-> > > Based on v4.18-rc3.
-> > > 
-> > > This patch series has already been posted in several iterations:
-> > >     - v1: Sent on 2017/05/29
-> > >     - v2: Sent on 2017/08/18
-> > >     - v3: Sent on 2017/09/27
-> > >     - v4: Sent on 2017/12/01
-> > >     - v5: Sent on 2017/12/20
-> > > 
-> > > I did not have any comments the last 4 versions.
-> > > And no reviews on my v5 during 6 months. Could I have any updates
-> > > or feedback on my series to know why it is not merged (to be able to
-> > > correct what is wrong)?  
-> > 
-> > Sorry, I must have missed the v5, sorry about that.
-> > 
-> > I probably asked this question before, but just to make sure - I see
-> > references to HID in the patch - the device is really not HID
-> > compatible? Is there any hope it could be made work with i2c-hid +
-> > hid-multitouch?
-> > 
-> > Thanks.
-> > 
-> 
-> I have checked and, for what I have seen, all the HID descriptor stuff
-> is HID compliant. We could definitely use i2c-hid and hid-multitouch
-> (there is the "hid-cypress" driver that exists also).
-> 
-> The only problem is that this touchscreen has two modes: a bootloader
-> mode and an application mode (which is the one where we can send
-> HID commands). After a power-on-reset, it is always in "bootloader"
-> mode so we need to send some commands (called "bootloader commands") to
-> switch to application mode.
+This two-series patch adds the needed clock bits to use the Quad SPI
+(qspi) part on sdm845.  It's expected that the bindings part of this
+patch could land in the clock tree with an immutable git hash and then
+be pulled into the Qualcomm tree so it could be used by dts files.
 
-Is this a documented or observed behavior? In my practice devices (I am
-talking in general, not about Cypress) that have proper configuration
-loaded and that were brought up with appropriate power up sequence and
-timings automatically switch to application mode. They only end up in
-bootloader mode when proper power up sequence is not respected and they
-are unhappy.
+>From the reply to my v1, the clock plan for this clock is:
+- MinSVS@19.2
+- LowSVS@75
+- SVS@150
+- Nominal@300
+...and intermediate frequencies can be used at frequences less than
+300.  I didn't see a need for 75 MHz and it was unclear from previous
+replies if this should come from MAIN or EVEN so I left it out.  I
+have added 100 MHz here since it is useful (/ 4 = 25 MHz is a useful
+clock for SPI flash)
 
-> These commands are not HID-compliant as the
-> datasheet indicates:
-> 
-> "Bootloader commands are not HID-over-I2C compliant."
+OTHER NOTES:
+- From probing lines, it appears that the Quad SPI block has a divide
+  by 4 somewhere inside it (probably so it can oversample the lines,
+  or possibly so it can generate phase-offset clocks).  Thus we need
+  the core to go 4 times faster than we'd expect to run the SPI bus.
+- SPI devices usually specify the MAX frequency they should be clocked
+  at, so it's important that we use the clk_rcg2_floor_ops here rather
+  than the clk_rcg2_ops
 
-Any chance you could share the datasheet?
+Changes in v3:
+- Removed gcc_parent_names_9 which I had left in (doh!).
 
-> 
-> I think that if the touchscreen would start directly in "application"
-> mode, we could directly use i2c-hid and hid-cypress drivers.
-> Unfortunately, this is not the case.
-> 
-> In bootloader mode, the ProductID is 0xc101 and in application mode, it
-> is 0xc001 (already available in hid-ids.h:
-> USB_DEVICE_ID_CYPRESS_TRUETOUCH but not handled)
-> 
-> What would be the better approach here?
-> Should I add a new product ID to detect the bootloader mode in
-> hid-cypress driver and send non-HID commands to switch to
-> "application" mode in this driver?
-> Anyway, I guess that I will drop this cyttsp5 driver and update the
-> existing one, right?
+Changes in v2:
+- Only 19.2, 100, 150, and 300 MHz now.
+- All clocks come from MAIN rather than EVEN.
+- Use parent map 0 instead of new parent map 9.
 
-So it still accessible through HID, even when in bootloader mode? OK,
-then I guess there are 2 options:
+Douglas Anderson (2):
+  clk: qcom: Add qspi (Quad SPI) clock defines for sdm845 to header
+  clk: qcom: Add qspi (Quad SPI) clocks for sdm845
 
-- if device is documented to always start in bootloader mode, you could
-  have a small stub driver that switches it into application mode in its
-  probe() code. The "bootloader" device will disappear and
-  "application" device will appear, and standard driver (hid-multitouch)
-  will bind to it.
-
-- if device supposed to come up in application mode unless configuration
-  is damaged: I'd recommend doing what we do on Chrome OS and have some
-  userspace software that runs on boot (or whenever device is
-  discovered) and check if it has the latest firmware/configuration, and
-  repair device if needed.
-
-Thanks.
+ drivers/clk/qcom/gcc-sdm845.c               | 56 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-sdm845.h |  3 ++
+ 2 files changed, 59 insertions(+)
 
 -- 
-Dmitry
+2.18.0.233.g985f88cf7e-goog
