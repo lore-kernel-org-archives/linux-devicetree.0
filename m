@@ -1,154 +1,43 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v3 1/3] Input: edt-ft5x06 - Add support for regulator
-Date: Tue, 24 Jul 2018 15:13:19 +0200
-Message-ID: <20180724151319.3139c5ae@dell-desktop.home>
-References: <20180718182719.29663-1-mylene.josserand@bootlin.com>
-        <20180718182719.29663-2-mylene.josserand@bootlin.com>
-        <20180718224645.ns7nvqxvqc6huxcz@core>
+From: liuxiang <liuxiang_1999@126.com>
+Subject: Re:Re: [PATCH] of: irq: Add a helper function for
+ irq_of_parse_and_map
+Date: Tue, 24 Jul 2018 21:19:20 +0800 (CST)
+Message-ID: <549a231a.a051.164cc71b1c8.Coremail.liuxiang_1999@126.com>
+References: <1532187494-2704-1-git-send-email-liu.xiang6@zte.com.cn>
+ <CAL_JsqLozSJ-0YeajN=qHuR69KCjeR_xO21MyZxr-n6tR5G0cw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180718224645.ns7nvqxvqc6huxcz@core>
+In-Reply-To: <CAL_JsqLozSJ-0YeajN=qHuR69KCjeR_xO21MyZxr-n6tR5G0cw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: liu.xiang6@zte.com.cn, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-Thank you for your review.
-
-On Thu, 19 Jul 2018 00:46:45 +0200
-Ondřej Jirman <megous@megous.com> wrote:
-
-> Hello Mylène,
-> 
-> On Wed, Jul 18, 2018 at 08:27:17PM +0200, Mylène Josserand wrote:
-> > Add the support of regulator to use it as VCC source.
-> > 
-> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> > ---
-> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |  1 +
-> >  drivers/input/touchscreen/edt-ft5x06.c             | 29 ++++++++++++++++++++++
-> >  2 files changed, 30 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> > index 025cf8c9324a..48e975b9c1aa 100644
-> > --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> > @@ -30,6 +30,7 @@ Required properties:
-> >  Optional properties:
-> >   - reset-gpios: GPIO specification for the RESET input
-> >   - wake-gpios:  GPIO specification for the WAKE input
-> > + - vcc-supply:  Regulator that supplies the touchscreen
-> >  
-> >   - pinctrl-names: should be "default"
-> >   - pinctrl-0:   a phandle pointing to the pin settings for the
-> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > index 1e18ca0d1b4e..aa94494b06b5 100644
-> > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > @@ -39,6 +39,7 @@
-> >  #include <linux/input/mt.h>
-> >  #include <linux/input/touchscreen.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/regulator/consumer.h>
-> >  
-> >  #define WORK_REGISTER_THRESHOLD		0x00
-> >  #define WORK_REGISTER_REPORT_RATE	0x08
-> > @@ -91,6 +92,7 @@ struct edt_ft5x06_ts_data {
-> >  	struct touchscreen_properties prop;
-> >  	u16 num_x;
-> >  	u16 num_y;
-> > +	struct regulator *vcc;
-> >  
-> >  	struct gpio_desc *reset_gpio;
-> >  	struct gpio_desc *wake_gpio;
-> > @@ -991,6 +993,22 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
-> >  
-> >  	tsdata->max_support_points = chip_data->max_support_points;
-> >  
-> > +	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
-> > +	if (IS_ERR(tsdata->vcc)) {
-> > +		error = PTR_ERR(tsdata->vcc);
-> > +		if (error != -EPROBE_DEFER)
-> > +			dev_err(&client->dev, "failed to request regulator: %d\n",
-> > +				error);
-> > +		return error;
-> > +	}
-> > +
-> > +	error = regulator_enable(tsdata->vcc);
-> > +	if (error < 0) {
-> > +		dev_err(&client->dev, "failed to enable vcc: %d\n",
-> > +			error);
-> > +		return error;
-> > +	}
-> > +
-> >  	tsdata->reset_gpio = devm_gpiod_get_optional(&client->dev,
-> >  						     "reset", GPIOD_OUT_HIGH);
-> >  	if (IS_ERR(tsdata->reset_gpio)) {
-> > @@ -1120,20 +1138,31 @@ static int edt_ft5x06_ts_remove(struct i2c_client *client)
-> >  static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
-> >  {
-> >  	struct i2c_client *client = to_i2c_client(dev);
-> > +	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
-> >  
-> >  	if (device_may_wakeup(dev))
-> >  		enable_irq_wake(client->irq);
-> >  
-> > +	regulator_disable(tsdata->vcc);
-> > +  
-> 
-> How will the touchscreen wakeup the system with interrupt if you power it off
-> on suspend? Perhaps guard this with device_may_wakeup() too? 
-
-True, thank you for pointing it out.
-
-> 
-> >  	return 0;
-> >  }
-> >  
-> >  static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
-> >  {
-> >  	struct i2c_client *client = to_i2c_client(dev);
-> > +	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
-> > +	int ret;
-> >  
-> >  	if (device_may_wakeup(dev))
-> >  		disable_irq_wake(client->irq);
-> >  
-> > +	ret = regulator_enable(tsdata->vcc);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "failed to enable vcc: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +  
-> 
-> Ditto.
-
-ack
-
-> 
-> Regards,
->   o.
-> 
-> >  	return 0;
-> >  }
-> >  
-> > -- 
-> > 2.11.0
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel  
-
-
-Best regards,
-
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+CkkgZm91bmQgaW4gcHJvYmUgZnVuY3Rpb24gc29tZSBkcml2ZXJzIHVzZSBpcnFfb2ZfcGFyc2Vf
+YW5kX21hcAphbmQgZG8gbm90IGNhbGwgaXJxX2Rpc3Bvc2VfbWFwcGluZyBpbiBlcnIgcGF0aCwg
+d2hpbGUgb3RoZXIgZHJpdmVycyBkby4KU28gSSB0aGluayBhIHJlc291cmNlIG1hbmFnZWQgaXJx
+X29mX3BhcnNlX2FuZF9tYXAgZnVuY3Rpb24gY2FuIApiZSBiZXR0ZXIgdG8gZmluaXNoIHRoaXMg
+am9iLgoKQXQgMjAxOC0wNy0yMyAyMzoyODo1MiwgIlJvYiBIZXJyaW5nIiA8cm9iaCtkdEBrZXJu
+ZWwub3JnPiB3cm90ZToKPk9uIFNhdCwgSnVsIDIxLCAyMDE4IGF0IDk6MzggQU0gTGl1IFhpYW5n
+IDxsaXUueGlhbmc2QHp0ZS5jb20uY24+IHdyb3RlOgo+Pgo+PiBJbXBsZW1lbnQgYSByZXNvdXJj
+ZSBtYW5hZ2VkIGlycV9vZl9wYXJzZV9hbmRfbWFwIGZ1bmN0aW9uLgo+Cj5UaGF0IGlzIG9idmlv
+dXMgZnJvbSB0aGUgZGlmZi4gV2h5IGRvIHlvdSBuZWVkIHRoaXM/Cj4KPkFueXRoaW5nIHRoYXQg
+aXMgYSBwbGF0Zm9ybSBkZXZpY2Ugc2hvdWxkIHVzZSBwbGF0Zm9ybV9nZXRfaXJxLiBUaGUKPm1h
+cHBpbmcgaXMgY3JlYXRlZCBieSB0aGUgY29yZSBBbHNvLCBvZl9pcnFfZ2V0KCkgaXMgcHJlZmVy
+cmVkIG92ZXIKPmlycV9vZl9wYXJzZV9hbmRfbWFwKCkgZm9yIG5ldyB1c2VycyBhcyBpdCBoYXMg
+YmV0dGVyIGVycm9yIHJldHVybgo+aGFuZGxpbmcuCj4KPj4KPj4gU2lnbmVkLW9mZi1ieTogTGl1
+IFhpYW5nIDxsaXUueGlhbmc2QHp0ZS5jb20uY24+Cj4+IC0tLQo+PiAgZHJpdmVycy9vZi9pcnEu
+YyAgICAgICB8IDM4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICBp
+bmNsdWRlL2xpbnV4L29mX2lycS5oIHwgIDcgKysrKysrKwo+PiAgMiBmaWxlcyBjaGFuZ2VkLCA0
+NSBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2lycS5jIGIvZHJp
+dmVycy9vZi9pcnEuYwo+PiBpbmRleCAwMmFkOTNhLi45NDdmZTQxIDEwMDY0NAo+PiAtLS0gYS9k
+cml2ZXJzL29mL2lycS5jCj4+ICsrKyBiL2RyaXZlcnMvb2YvaXJxLmMKPj4gQEAgLTQ1LDYgKzQ1
+LDQ0IEBAIHVuc2lnbmVkIGludCBpcnFfb2ZfcGFyc2VfYW5kX21hcChzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKmRldiwgaW50IGluZGV4KQo+PiAgfQo+PiAgRVhQT1JUX1NZTUJPTF9HUEwoaXJxX29mX3Bh
+cnNlX2FuZF9tYXApOwo+Pgo+PiArc3RhdGljIHZvaWQgZGV2bV9pcnFfZGlzcG9zZV9tYXBwaW5n
+KHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAqcmVzKQo+PiArewo+PiArICAgICAgIGlycV9kaXNw
+b3NlX21hcHBpbmcoKih1bnNpZ25lZCBpbnQgKilyZXMpOwo+Cj5XZSBkb24ndCByZWYgY291bnQg
+Y3JlYXRpbmcgbWFwcGluZ3MsIHNvIHRoaXMgd291bGQgYnJlYWsgZm9yIGFueSBzaGFyZWQgaXJx
+Lgo+Cj5Sb2IK
