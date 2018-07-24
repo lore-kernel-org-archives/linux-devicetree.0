@@ -1,15 +1,15 @@
 From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v6 4/5] ARM: dts: imx7s: add i.MX7 messaging unit support
-Date: Tue, 24 Jul 2018 02:04:57 +0000
-Message-ID: <AM0PR04MB4211AAB88B1F694BF70D729A80550@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH v6 5/5] mailbox: Add support for i.MX7D messaging unit
+Date: Tue, 24 Jul 2018 02:09:40 +0000
+Message-ID: <AM0PR04MB42118449D7120FE8578824A880550@AM0PR04MB4211.eurprd04.prod.outlook.com>
 References: <20180722063923.30222-1-o.rempel@pengutronix.de>
- <20180722063923.30222-5-o.rempel@pengutronix.de>
- <1532365033.3163.107.camel@pengutronix.de>
+ <20180722063923.30222-6-o.rempel@pengutronix.de>
+ <1532366380.3163.109.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1532365033.3163.107.camel@pengutronix.de>
+In-Reply-To: <1532366380.3163.109.camel@pengutronix.de>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -24,49 +24,41 @@ To: Lucas Stach <l.stach@pengutronix.de>, Oleksij Rempel <o.rempel@pengutronix.d
 Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRv
-Omwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+IFNlbnQ6IFR1ZXNkYXksIEp1bHkgMjQsIDIwMTgg
-MTI6NTcgQU0NCj4gVG86IE9sZWtzaWogUmVtcGVsIDxvLnJlbXBlbEBwZW5ndXRyb25peC5kZT47
-IFNoYXduIEd1bw0KPiA8c2hhd25ndW9Aa2VybmVsLm9yZz47IEZhYmlvIEVzdGV2YW0gPGZhYmlv
-LmVzdGV2YW1AbnhwLmNvbT47IFJvYg0KPiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBN
-YXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgQS5zLg0KPiBEb25nIDxhaXNoZW5n
-LmRvbmdAbnhwLmNvbT47IFZsYWRpbWlyIFphcG9sc2tpeQ0KPiA8dmxhZGltaXJfemFwb2xza2l5
-QG1lbnRvci5jb20+DQo+IENjOiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBrZXJuZWxAcGVuZ3V0cm9uaXgu
-ZGU7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjYg
-NC81XSBBUk06IGR0czogaW14N3M6IGFkZCBpLk1YNyBtZXNzYWdpbmcgdW5pdA0KPiBzdXBwb3J0
-DQo+IA0KPiBBbSBTb25udGFnLCBkZW4gMjIuMDcuMjAxOCwgMDg6MzkgKzAyMDAgc2NocmllYiBP
-bGVrc2lqIFJlbXBlbDoNCj4gPiBEZWZpbmUgdGhlIE1lc3NhZ2luZyBVbml0IChNVSkgZm9yIGku
-TVg3IGluIHRoZSBwcm9jZXNzb3IncyBkdHNpLg0KPiA+IFRoZSByZXNwZWN0aXZlIGRyaXZlciBp
-cyBhZGRlZCBpbiB0aGUgbmV4dCBjb21taXQuDQo+ID4NCj4gPiA+IFJldmlld2VkLWJ5OiBEb25n
-IEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogT2xl
-a3NpaiBSZW1wZWwgPG8ucmVtcGVsQHBlbmd1dHJvbml4LmRlPg0KPiA+IC0tLQ0KPiA+IMKgYXJj
-aC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaSB8IDE5ICsrKysrKysrKysrKysrKysrKysNCj4gPiDC
-oDEgZmlsZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14N3MuZHRzaQ0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14
-N3MuZHRzaSBpbmRleCBjZTg1YjNjYTFhNTUuLjE5MWEwMjg2ZmEzYiAxMDA2NDQNCj4gPiAtLS0g
-YS9hcmNoL2FybS9ib290L2R0cy9pbXg3cy5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvaW14N3MuZHRzaQ0KPiA+IEBAIC0xMDAxLDYgKzEwMDEsMjUgQEANCj4gPiA+IMKgCQkJCXN0
-YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gPiDCoAkJCX07DQo+ID4NCj4gPiA+ID4gKwkJCW11MGE6
-IG1haWxib3hAMzBhYTAwMDAgew0KPiA+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14N3MtbXUi
-LCAiZnNsLGlteDZzeC1tdSI7DQo+IA0KPiBUaG9zZSBjb21wYXRpYmxlcyBhcmUgbWlzc2luZyBk
-b2N1bWVudGF0aW9uIGluIHRoZSBiaW5kaW5nLg0KPiANCg0KU29ycnkgZm9yIHRoZSBvdmVybG9v
-a2luZy4NClRoZXkgc2VlbSB0byBiZSBnb3QgbWlzc2VkIGR1cmluZyBhIHVwZGF0ZWQgYmluZGlu
-ZyBkb2MgcmV2aWV3Lg0KDQpPbGVrc2lqLA0KV291bGQgeW91IGFkZCB0aGVtIGJhY2sgYW5kIHJl
-c2VuZCB0aGUgcGF0Y2ggc2VyaWVzPw0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0KPiA+ICsJ
-CQkJcmVnID0gPDB4MzBhYTAwMDAgMHgxMDAwMD47DQo+ID4gPiArCQkJCWludGVycnVwdHMgPSA8
-R0lDX1NQSSA4OA0KPiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiA+ICsJCQkJY2xvY2tzID0g
-PCZjbGtzIElNWDdEX01VX1JPT1RfQ0xLPjsNCj4gPiA+ICsJCQkJI21ib3gtY2VsbHMgPSA8MT47
-DQo+ID4gPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gPiArCQkJfTsNCj4gPiArDQo+
-ID4gPiA+ICsJCQltdTBiOiBtYWlsYm94QDMwYWIwMDAwIHsNCj4gPiA+ICsJCQkJY29tcGF0aWJs
-ZSA9ICJmc2wsaW14N3MtbXUiLCAiZnNsLGlteDZzeC1tdSI7DQo+ID4gPiArCQkJCXJlZyA9IDww
-eDMwYWIwMDAwIDB4MTAwMDA+Ow0KPiA+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOTcN
-Cj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gPiArCQkJCWNsb2NrcyA9IDwmY2xrcyBJTVg3
-RF9NVV9ST09UX0NMSz47DQo+ID4gPiArCQkJCSNtYm94LWNlbGxzID0gPDE+Ow0KPiA+ID4gKwkJ
-CQlmc2wsbXUtc2lkZS1iOw0KPiA+ID4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ID4g
-KwkJCX07DQo+ID4gKw0KPiA+ID4gPiDCoAkJCXVzYm90ZzE6IHVzYkAzMGIxMDAwMCB7DQo+ID4g
-PiDCoAkJCQljb21wYXRpYmxlID0gImZzbCxpbXg3ZC11c2IiLCAiZnNsLGlteDI3LXVzYiI7DQo+
-ID4gPiDCoAkJCQlyZWcgPSA8MHgzMGIxMDAwMCAweDIwMD47DQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+> -----Original Message-----
+> From: Lucas Stach [mailto:l.stach@pengutronix.de]
+> Sent: Tuesday, July 24, 2018 1:20 AM
+> To: Oleksij Rempel <o.rempel@pengutronix.de>; Shawn Guo
+> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>; Rob
+> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; A.s.
+> Dong <aisheng.dong@nxp.com>; Vladimir Zapolskiy
+> <vladimir_zapolskiy@mentor.com>
+> Cc: dl-linux-imx <linux-imx@nxp.com>; linux-arm-kernel@lists.infradead.org;
+> kernel@pengutronix.de; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v6 5/5] mailbox: Add support for i.MX7D messaging unit
+> 
+
+[...]
+
+> > +}
+> > +
+> > +static int imx_mu_send_data(struct mbox_chan *chan, void *data) {
+> > > +	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+> > > +	struct imx_mu_con_priv *cp = chan->con_priv;
+> > > +	u32 *arg = data;
+> > +
+> > > +	if (!imx_mu_last_tx_done(chan))
+> > > +		return -EBUSY;
+> > +
+> > > +	imx_mu_write(priv, *arg, IMX_MU_xTRn(cp->idx));
+> > +	imx_mu_rmw(priv, IMX_MU_xCR, IMX_MU_xSR_TEn(cp->idx), 0);
+> 
+> In multi-channel mode this RMW cycle needs some kind of locking. As this
+> register is also changed from the irq handler, this probably needs to be a
+> irqsave spinlock.
+> 
+
+Good catch!
+They do need to be protected.
+
+Regards
+Dong Aisheng
