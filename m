@@ -1,61 +1,90 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 4/5] nvmem: sunxi-sid: add support for H5's SID
- controller
-Date: Tue, 24 Jul 2018 15:00:35 +0200
-Message-ID: <20180724130035.cll6mdqiqjbglotj@flea>
-References: <20180724101522.68165-1-manu@freebsd.org>
- <20180724101522.68165-4-manu@freebsd.org>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v6 0/2] Input: Add Cypress Gen5 Touchscreen driver
+Date: Tue, 24 Jul 2018 15:00:46 +0200
+Message-ID: <20180724150046.7d70786c@dell-desktop.home>
+References: <20180703094309.18514-1-mylene.josserand@bootlin.com>
+        <20180704162158.euiw2v3hyv3hzofn@penguin>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nm3mmu4m4ctttuip"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180724101522.68165-4-manu@freebsd.org>
+In-Reply-To: <20180704162158.euiw2v3hyv3hzofn@penguin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@freebsd.org>
-Cc: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Dmitry,
 
---nm3mmu4m4ctttuip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 4 Jul 2018 16:21:58 +0000
+Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-On Tue, Jul 24, 2018 at 12:15:21PM +0200, Emmanuel Vadot wrote:
-> The H5 SoC have a SID controller that looks like the one in A64, but
-> in case we find some difference in the futur at a binding for it.
->=20
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> Hi Mylène,
+> 
+> On Tue, Jul 03, 2018 at 11:43:07AM +0200, Mylène Josserand wrote:
+> > Hello,
+> > 
+> > Here is a V6 series to add the driver of the touchscreen Cypress,
+> > TrueTouch Generation 5.
+> > Based on v4.18-rc3.
+> > 
+> > This patch series has already been posted in several iterations:
+> >     - v1: Sent on 2017/05/29
+> >     - v2: Sent on 2017/08/18
+> >     - v3: Sent on 2017/09/27
+> >     - v4: Sent on 2017/12/01
+> >     - v5: Sent on 2017/12/20
+> > 
+> > I did not have any comments the last 4 versions.
+> > And no reviews on my v5 during 6 months. Could I have any updates
+> > or feedback on my series to know why it is not merged (to be able to
+> > correct what is wrong)?  
+> 
+> Sorry, I must have missed the v5, sorry about that.
+> 
+> I probably asked this question before, but just to make sure - I see
+> references to HID in the patch - the device is really not HID
+> compatible? Is there any hope it could be made work with i2c-hid +
+> hid-multitouch?
+> 
+> Thanks.
+> 
 
-The prefix in your commit title should start with dt-bindings: ...
+I have checked and, for what I have seen, all the HID descriptor stuff
+is HID compliant. We could definitely use i2c-hid and hid-multitouch
+(there is the "hid-cypress" driver that exists also).
 
-Thanks!
-Maxime
+The only problem is that this touchscreen has two modes: a bootloader
+mode and an application mode (which is the one where we can send
+HID commands). After a power-on-reset, it is always in "bootloader"
+mode so we need to send some commands (called "bootloader commands") to
+switch to application mode. These commands are not HID-compliant as the
+datasheet indicates:
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
+"Bootloader commands are not HID-over-I2C compliant."
+
+I think that if the touchscreen would start directly in "application"
+mode, we could directly use i2c-hid and hid-cypress drivers.
+Unfortunately, this is not the case.
+
+In bootloader mode, the ProductID is 0xc101 and in application mode, it
+is 0xc001 (already available in hid-ids.h:
+USB_DEVICE_ID_CYPRESS_TRUETOUCH but not handled)
+
+What would be the better approach here?
+Should I add a new product ID to detect the bootloader mode in
+hid-cypress driver and send non-HID commands to switch to
+"application" mode in this driver?
+Anyway, I guess that I will drop this cyttsp5 driver and update the
+existing one, right?
+
+Let me know what you think about it.
+
+Thank you in advance,
+
+Best regards,
+
+-- 
+Mylène Josserand, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---nm3mmu4m4ctttuip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltXIvIACgkQ0rTAlCFN
-r3S2Ww//SZXZFeHH0RfRbLisSsuK1uOTqOmE+jhFVncjJ/8tJ07hLBN321sPnED0
-e3sG8H2w8ZddGLPFoGpLnIr6kC0Q0pA/Igp1V0yLMo+IVdSMKUNeg8qWkYbX/0sR
-CZ1yGIn8TOjkUYlxuMTgKNUQYAtBoK16YCh5+6zszIYUWiw4lKojfjV7XXiHw19D
-et8Qk4GOVsTVf98Ae4NIFuHh9nkr/eaZHH6GTI4N9kYCo8GCymEbQXLZd26GjIu8
-RqNi5sWqc/XowXGeUz8Hao6mNQKiiP4kR9CEWBhCPrrcg1TOXewgV7rdAqT+T/sL
-b14O5m7ewhY4Cd4ti/O/zuUB+UZoYjcAoYuJzH10aImbGEfTgsITkOMZiAqRBcI/
-nfmjBv7XyJiqufZNBAQMDKnl0nQicKT4Gk7L4n15onS6Hw95OJBMbhiEka/Q1y0z
-WB6XdEk5Qo/HoWbRYgA98xpfe6whjmSAxGAeXR/KMrL6jcib2QKYPmp20XSBM/oY
-8BHclVOclH1/E7nV26Wm5Hv8yuzrXDBEGYaxawEE4lRi2Xzv8Z5vwhFb5XaAsOiD
-tuDzX+JwRwoxl8k/mes32Aylzzxlzxk3YqAduB5wvvTiVewCsaRmRl0A5Uf9opI2
-XWttK00vtT9gxAcWAwG/HAx1MI6hG40AUk1IcCww5tBipUT1Gy8=
-=Ataw
------END PGP SIGNATURE-----
-
---nm3mmu4m4ctttuip--
