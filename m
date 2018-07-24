@@ -1,39 +1,36 @@
 From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH v2 2/5] ARM: dts: sunxi: h3/h5: Add SID node
-Date: Tue, 24 Jul 2018 12:15:19 +0200
-Message-ID: <20180724101522.68165-2-manu@freebsd.org>
-References: <20180724101522.68165-1-manu@freebsd.org>
+Subject: [PATCH v2 1/5] arm64: dts: allwinner: a64: Add SID node
+Date: Tue, 24 Jul 2018 12:15:18 +0200
+Message-ID: <20180724101522.68165-1-manu@freebsd.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724101522.68165-1-manu@freebsd.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
 List-Id: devicetree@vger.kernel.org
 
-Both H3 and H5 and a SID controller at the same address.
-They are know to be different, the H5 one is the same as the A64 so add
-a node in the common dtsi and we will override the compatible string in
-the SoC dts.
+The A64 have a SID controller which consist on EFUSE (starting at 0x200)
+and three registers to read/write the efuses.
 
 Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index c3bff1105e5d..2b3c629644a0 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -644,6 +644,10 @@
- 			status = "disabled";
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 1b2ef28c42bd..69c0d9362553 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -227,6 +227,11 @@
+ 			#size-cells = <0>;
  		};
  
 +		sid: eeprom@1c14000 {
++			compatible = "allwinner,sun50i-a64-sid";
 +			reg = <0x1c14000 0x400>;
 +		};
 +
- 		uart0: serial@1c28000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01c28000 0x400>;
+ 		usb_otg: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-a33-musb";
+ 			reg = <0x01c19000 0x0400>;
 -- 
 2.17.0
