@@ -1,69 +1,384 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Tue, 24 Jul 2018 17:58:29 +0200
-Message-ID: <CAK8P3a17t=_o04GsowS2RnTwKKVxt8KuJtT36N=Ea-SOq7fTow@mail.gmail.com>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
- <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
- <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se> <20180720101206.tv7nsoanwo5ftnia@ninjato>
- <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
- <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se> <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
- <20180720151751.242d4809@bbrezillon> <CAK8P3a14_6uf9VLYU0YnmFp0Q=DZBKc0cAesBh0opanGDZMFRA@mail.gmail.com>
- <20180724162806.318a92c6@bbrezillon> <CAK8P3a3YQbiiJMTHTVh63fOvtA1sa0J5Eb4z7xbnpBPwUDkqxg@mail.gmail.com>
- <CAMuHMdXif_iufXx0Y+UJjKs9TNLfrTONoFvUSyrpkfaT0=ydRQ@mail.gmail.com>
- <CAK8P3a0jc1k9weTNbqSJXkCSFefus9OPyU5_v5=mTFxiDd0q5Q@mail.gmail.com> <CAMuHMdXJ_FGXXwNx8h0ZfskJGRWES1xLuTQpD59Vw1Smp6FTRg@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 2/3] drivers/irqchip: Add Actions external interrupts
+ support
+Date: Tue, 24 Jul 2018 16:59:57 +0100
+Message-ID: <46c0e4e7-7599-2d3f-7188-b5624fe5c389@arm.com>
+References: <20180724150219.1807724-1-pn@denx.de>
+ <20180724150219.1807724-3-pn@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXJ_FGXXwNx8h0ZfskJGRWES1xLuTQpD59Vw1Smp6FTRg@mail.gmail.com>
+In-Reply-To: <20180724150219.1807724-3-pn@denx.de>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll>
+To: Parthiban Nallathambi <pn@denx.de>, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, manivannan.sadhasivam@linaro.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sravanhome@gmail.com, thomas.liau@actions-semi.com, mp-cs@actions-semi.com, linux@cubietech.com, edgar.righi@lsitec.org.br, laisa.costa@lsitec.org.br, guilherme.simoes@lsitec.org.br, mkzuffo@lsi.usp.br
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 5:46 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Arnd,
->
-> On Tue, Jul 24, 2018 at 5:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
->> On Tue, Jul 24, 2018 at 5:15 PM, Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->> > On Tue, Jul 24, 2018 at 5:05 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> >> That's not the case I was describing here, I was thinking of what
->> >> Wolfram described with the Renesas SoC that has two i2c masters
->> >> multiplexed through the pinmux layer. I would assume that we
->> >> can still do the same thing in i3c by shutting down the current
->> >> master without a handover, and reprobing everything from scratch.
->> >
->> > The major disadvantage of reprobing is that it may cause visual disturbances
->> > when i2c slaves are involved with e.g. the display pipeline (think HDMI encoders
->> > etc.).
->>
->> Do you mean we should reuse the device pointer and association with
->> the driver even when we switch out the i3c master using the pinmux?
->>
->> Or do you mean we need to be prepared for driving a single
->> slave through multiple masters over the lifetime of that device,
->> but using the i3c master handover protocol?
->> In the second case, how do we decide which master to use
->> for accessing a device for a given request?
->
-> I'll have to defer to Wolfram. He's the i2c and muxing expert.
+On 24/07/18 16:02, Parthiban Nallathambi wrote:
+> Actions Semi Owl family SoC's S500, S700 and S900 provides support
+> for 3 external interrupt controllers through SIRQ pins.
+> 
+> Each line can be independently configured as interrupt or wake-up source,
+> and triggers either on rising, falling or both edges. Each line can also
+> be masked independently.
+> 
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  drivers/irqchip/Makefile       |   1 +
+>  drivers/irqchip/irq-owl-sirq.c | 275 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 276 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-owl-sirq.c
+> 
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 15f268f646bf..072c4409e7c4 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
+>  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+>  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
+>  obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
+> +obj-$(CONFIG_ARCH_ACTIONS)		+= irq-owl-sirq.o
+>  obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
+>  obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
+>  obj-$(CONFIG_ARCH_LPC32XX)		+= irq-lpc32xx.o
+> diff --git a/drivers/irqchip/irq-owl-sirq.c b/drivers/irqchip/irq-owl-sirq.c
+> new file mode 100644
+> index 000000000000..8605da99d77d
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-owl-sirq.c
+> @@ -0,0 +1,275 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + *
+> + * Actions Semi Owl SoCs SIRQ interrupt controller driver
+> + *
+> + * Copyright (C) 2014 Actions Semi Inc.
+> + * David Liu <liuwei@actions-semi.com>
+> + *
+> + * Author: Parthiban Nallathambi <pn@denx.de>
+> + * Author: Saravanan Sekar <sravanhome@gmail.com>
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_address.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +
+> +#define OWL_MAX_NR_SIRQS	3
+> +
+> +/* INTC_EXTCTL register offset for S900 */
+> +#define S900_INTC_EXTCTL0	0x200
+> +#define S900_INTC_EXTCTL1	0x528
+> +#define S900_INTC_EXTCTL2	0x52C
+> +
+> +/* INTC_EXTCTL register offset for S700 */
+> +#define S700_INTC_EXTCTL	0x200
+> +
+> +#define INTC_EXTCTL_PENDING		BIT(0)
+> +#define INTC_EXTCTL_CLK_SEL		BIT(4)
+> +#define INTC_EXTCTL_EN			BIT(5)
+> +#define	INTC_EXTCTL_TYPE_MASK		GENMASK(6, 7)
+> +#define	INTC_EXTCTL_TYPE_HIGH		0
+> +#define	INTC_EXTCTL_TYPE_LOW		BIT(6)
+> +#define	INTC_EXTCTL_TYPE_RISING		BIT(7)
+> +#define	INTC_EXTCTL_TYPE_FALLING	(BIT(6) | BIT(7))
+> +
+> +struct owl_sirq_info {
+> +	void __iomem		*base;
+> +	struct irq_domain	*irq_domain;
 
-On i2c, we only have the first case, and Wolfram said that it
-intentionally does the reprobe to avoid the problems we discussed.
-The question is what to do about this if it happens again on i3c.
-Peter seemed to think that it was possibly something we might
-have to handle, while Boris said that it wouldn't be because it's
-not coverered by the i3c spec.
+This is completely global, right? Why do you have this in a
+per-interrupt structure?
 
-The second case is the one that started the discussion, and
-this is where I said I'd prefer to associate each slave with at
-most one master at boot time, while the current v6 patch
-is prepared for having one slave be accessed alternatingly
-by multiple masters using the master handover, though so
-far nobody has been able to describe exactly how we'd pick
-which master is active at what point, or what specific scenario
-would require it.
+> +	unsigned long		reg;
+> +	unsigned long		hwirq;
+> +	unsigned int		virq;
+> +	unsigned int		parent_irq;
+> +	bool			share_reg;
+> +	spinlock_t		lock;
 
-       Arnd
+This should be a raw_spinlock_t for the sake of making RT's life easier.
+
+> +};
+> +
+> +/* s900 has INTC_EXTCTL individual register to handle each line */
+> +static struct owl_sirq_info s900_sirq_info[OWL_MAX_NR_SIRQS] = {
+> +	{ .reg = S900_INTC_EXTCTL0, .share_reg = false },
+> +	{ .reg = S900_INTC_EXTCTL1, .share_reg = false },
+> +	{ .reg = S900_INTC_EXTCTL2, .share_reg = false },
+> +};
+> +
+> +/* s500 and s700 shares the 32 bit (24 usable) register for each line */
+> +static struct owl_sirq_info s700_sirq_info[OWL_MAX_NR_SIRQS] = {
+> +	{ .reg = S700_INTC_EXTCTL, .share_reg = true },
+> +	{ .reg = S700_INTC_EXTCTL, .share_reg = true },
+> +	{ .reg = S700_INTC_EXTCTL, .share_reg = true },
+> +};
+> +
+> +static unsigned int sirq_read_extctl(struct owl_sirq_info *sirq)
+> +{
+> +	unsigned int val;
+> +
+> +	val = readl_relaxed(sirq->base + sirq->reg);
+> +	if (sirq->share_reg)
+
+Is there a system that can have both "shared" and "non-shared"
+controllers? If that's not the case (which I strongly suspect), why
+isn't that a global property, a static key, or even a different set of
+operations altogether?
+
+> +		val = (val >> (2 - sirq->hwirq) * 8) & 0xff;
+> +
+> +	return val;
+> +}
+> +
+> +static void sirq_write_extctl(struct owl_sirq_info *sirq, unsigned int extctl)
+> +{
+> +	unsigned int val;
+> +
+> +	if (sirq->share_reg) {
+> +		val = readl_relaxed(sirq->base + sirq->reg);
+> +		val &= ~(0xff << (2 - sirq->hwirq) * 8);
+> +		extctl &= 0xff;
+> +		extctl = (extctl << (2 - sirq->hwirq) * 8) | val;
+> +	}
+> +
+> +	writel_relaxed(extctl, sirq->base + sirq->reg);
+> +}
+> +
+> +static void owl_sirq_ack(struct irq_data *d)
+> +{
+> +	struct owl_sirq_info *sirq = irq_data_get_irq_chip_data(d);
+> +	unsigned int extctl;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&sirq->lock, flags);
+> +
+> +	extctl = sirq_read_extctl(sirq);
+> +	extctl |= INTC_EXTCTL_PENDING;
+> +	sirq_write_extctl(sirq, extctl);
+> +
+> +	spin_unlock_irqrestore(&sirq->lock, flags);
+> +}
+> +
+> +static void owl_sirq_mask(struct irq_data *d)
+> +{
+> +	struct owl_sirq_info *sirq = irq_data_get_irq_chip_data(d);
+> +	unsigned int extctl;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&sirq->lock, flags);
+> +
+> +	extctl = sirq_read_extctl(sirq);
+> +	extctl &= ~(INTC_EXTCTL_EN);
+> +	sirq_write_extctl(sirq, extctl);
+> +
+> +	spin_unlock_irqrestore(&sirq->lock, flags);
+> +}
+> +
+> +static void owl_sirq_unmask(struct irq_data *d)
+> +{
+> +	struct owl_sirq_info *sirq = irq_data_get_irq_chip_data(d);
+> +	unsigned int extctl;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&sirq->lock, flags);
+> +
+> +	/* we don't hold the irq pending generated before irq enabled */
+
+What do you mean here?
+
+> +	extctl = sirq_read_extctl(sirq);
+> +	extctl |= INTC_EXTCTL_EN;
+> +	sirq_write_extctl(sirq, extctl);
+> +
+> +	spin_unlock_irqrestore(&sirq->lock, flags);
+> +}
+> +
+> +/* PAD_PULLCTL needs to be defined in pinctrl */
+> +static int owl_sirq_set_type(struct irq_data *d, unsigned int flow_type)
+> +{
+> +	struct owl_sirq_info *sirq = irq_data_get_irq_chip_data(d);
+> +	unsigned int extctl, type;
+> +	unsigned long flags;
+> +
+> +	switch (flow_type) {
+> +	case IRQF_TRIGGER_LOW:
+> +		type = INTC_EXTCTL_TYPE_LOW;
+> +		break;
+> +	case IRQF_TRIGGER_HIGH:
+> +		type = INTC_EXTCTL_TYPE_HIGH;
+> +		break;
+> +	case IRQF_TRIGGER_FALLING:
+> +		type = INTC_EXTCTL_TYPE_FALLING;
+> +		break;
+> +	case IRQF_TRIGGER_RISING:
+> +		type = INTC_EXTCTL_TYPE_RISING;
+
+You advertise being able to trigger on both edges in your commit
+description, but this doesn't seem to be the case here.
+
+> +		break;
+> +	default:
+> +		return  -EINVAL;
+> +	}
+> +
+> +	spin_lock_irqsave(&sirq->lock, flags);
+> +
+> +	extctl = sirq_read_extctl(sirq);
+> +	extctl &= ~(INTC_EXTCTL_PENDING | INTC_EXTCTL_TYPE_MASK);
+> +	extctl |= type;
+> +	sirq_write_extctl(sirq, extctl);
+> +
+> +	spin_unlock_irqrestore(&sirq->lock, flags);
+
+And what about the parent IRQ? is the signalling always level?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void owl_sirq_handler(struct irq_desc *desc)
+> +{
+> +	struct owl_sirq_info *sirq = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned int extctl;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	extctl = sirq_read_extctl(sirq);
+> +	if (extctl & INTC_EXTCTL_PENDING)
+> +		generic_handle_irq(sirq->virq);
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static struct irq_chip owl_irq_chip = {
+> +	.name = "owl-sirq",
+> +	.irq_ack = owl_sirq_ack,
+> +	.irq_mask = owl_sirq_mask,
+> +	.irq_unmask = owl_sirq_unmask,
+> +	.irq_set_type = owl_sirq_set_type,
+
+Where is the wake-up handling that you advertised above?
+
+> +};
+> +
+> +static int __init owl_sirq_init(struct owl_sirq_info *sirq_info, int nr_sirq,
+> +				struct device_node *np)
+> +{
+> +	struct owl_sirq_info *sirq;
+> +	void __iomem *base;
+> +	struct irq_domain *irq_domain;
+> +	int i, irq_base;
+> +	unsigned int extctl;
+> +	u8 sample_clk[OWL_MAX_NR_SIRQS];
+> +
+> +	base = of_iomap(np, 0);
+> +	if (!base)
+> +		return -ENOMEM;
+> +
+> +	irq_base = irq_alloc_descs(-1, 32, nr_sirq, 0);
+
+No. Descriptors are supposed to be allocated on demand by core code, and
+not by irqchip drivers.
+
+> +	if (irq_base < 0) {
+> +		pr_err("sirq: failed to allocate IRQ numbers\n");
+> +		goto out_unmap;
+> +	}
+> +
+> +	irq_domain = irq_domain_add_legacy(np, nr_sirq, irq_base, 0,
+> +					&irq_domain_simple_ops, NULL);
+
+Legacy? What legacy? A modern DT platform has no need for this, so
+please stick to a linear domain (though see below).
+
+> +	if (!irq_domain) {
+> +		pr_err("sirq: irq domain init failed\n");
+> +		goto out_free_desc;
+> +	}
+> +
+> +	memset(sample_clk, 0, sizeof(sample_clk));
+> +	of_property_read_u8_array(np, "sampling-rate-24m", sample_clk,
+> +				nr_sirq);
+
+I find this most bizarre. Why is the sampling rate configurable? How do
+you even decide which sample rate you want? Frankly, I'd rather see
+24MHz being the default (because 32KHz feels incredibly low).
+
+> +
+> +	for (i = 0; i < nr_sirq; i++) {
+> +		sirq = &sirq_info[i];
+> +
+> +		sirq->base = base;
+> +		sirq->irq_domain = irq_domain;
+> +		sirq->hwirq = i;
+> +		sirq->virq = irq_base + i;
+> +
+> +		sirq->parent_irq = irq_of_parse_and_map(np, i);
+> +		irq_set_handler_data(sirq->parent_irq, sirq);
+> +		irq_set_chained_handler_and_data(sirq->parent_irq,
+> +						owl_sirq_handler, sirq);
+> +
+> +		irq_set_chip_and_handler(sirq->virq, &owl_irq_chip,
+> +				handle_level_irq);
+> +		irq_set_chip_data(sirq->virq, sirq);
+> +
+> +		if (sample_clk[i]) {
+> +			extctl = sirq_read_extctl(sirq);
+> +			extctl |= INTC_EXTCTL_CLK_SEL;
+> +			sirq_write_extctl(sirq, extctl);
+> +		}
+> +		spin_lock_init(&sirq->lock);
+> +	}
+
+I have the feeling you may have the wrong end of the stick here. The way
+I understand your system, you have 3 SPIs that are brought out of the
+SoC, with a tiny bit of glue logic that allows the interrupt polarity to
+be tweaked.
+
+If I understood it right, then this should be represented as a
+hierarchical irqchip, such as drivers/irqchip/irq-mtk-sysirq.c which
+does the same thing. The whole ack/mask dance feels completely
+pointless, as we already have the same controls at the GIC level.
+
+> +
+> +	return 0;
+> +
+> +out_free_desc:
+> +	irq_free_descs(irq_base, nr_sirq);
+> +out_unmap:
+> +	iounmap(base);
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int __init s700_sirq_of_init(struct device_node *np,
+> +					struct device_node *parent)
+> +{
+> +	return owl_sirq_init(s700_sirq_info, ARRAY_SIZE(s700_sirq_info), np);
+> +}
+> +IRQCHIP_DECLARE(s700_sirq, "actions,s700-sirq", s700_sirq_of_init);
+> +
+> +static int __init s900_sirq_of_init(struct device_node *np,
+> +					struct device_node *parent)
+> +{
+> +	return owl_sirq_init(s900_sirq_info, ARRAY_SIZE(s900_sirq_info), np);
+> +}
+> +IRQCHIP_DECLARE(s900_sirq, "actions,s900-sirq", s900_sirq_of_init);
+> 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
