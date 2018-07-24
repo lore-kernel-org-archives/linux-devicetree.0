@@ -1,96 +1,97 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 07/12] ASoC: wcd9335: add CLASS-H Controller support
-Date: Tue, 24 Jul 2018 13:05:27 +0100
-Message-ID: <7c54601c-f445-99d6-9092-2fccf16cbd24@linaro.org>
-References: <20180723155410.9494-1-srinivas.kandagatla@linaro.org>
- <20180723155410.9494-8-srinivas.kandagatla@linaro.org>
- <20180724115908.GC2414@sirena.org.uk>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: dma: Add binding for Actions Semi
+ Owl SoCs
+Date: Tue, 24 Jul 2018 17:46:04 +0530
+Message-ID: <20180724121604.GA2587@vkoul-mobl>
+References: <20180723041743.32024-1-manivannan.sadhasivam@linaro.org>
+ <20180723041743.32024-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724115908.GC2414@sirena.org.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180723041743.32024-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review!
+Hi Mani,
 
-On 24/07/18 12:59, Mark Brown wrote:
-> On Mon, Jul 23, 2018 at 04:54:05PM +0100, Srinivas Kandagatla wrote:
-> 
->> +static inline int wcd_clsh_get_int_mode(struct wcd_clsh_ctrl *ctrl,
->> +					int clsh_state)
->> +{
->> +	int mode;
->> +
->> +	if ((clsh_state != WCD_CLSH_STATE_EAR) &&
->> +	    (clsh_state != WCD_CLSH_STATE_HPHL) &&
->> +	    (clsh_state != WCD_CLSH_STATE_HPHR) &&
->> +	    (clsh_state != WCD_CLSH_STATE_LO))
->> +		mode = CLS_NONE;
->> +	else
->> +		mode = ctrl->interpolator_modes[ffs(clsh_state)];
->> +
->> +	return mode;
-> 
-> This looks like it wants to be a switch statement.
-Yep, Will do that in next version.
+Patch title should be dmaengine: ... Please always use the apt tags and
+one can find them using git log <subsystem>
+
+On 23-07-18, 09:47, Manivannan Sadhasivam wrote:
+> Add devicetree binding for Actions Semi Owl SoCs DMA controller.
+
+
+It would help for review to describe the controller here
 
 > 
->> +static void wcd_clsh_state_hph_lo(struct wcd_clsh_ctrl *ctrl, int req_state,
->> +				  bool is_enable, int mode)
->> +{
->> +	struct snd_soc_component *comp = ctrl->comp;
->> +	int hph_mode = 0;
->> +
->> +	if (is_enable) {
->> +		/*
->> +		 * If requested state is LO, put regulator
->> +		 * in class-AB or if requested state is HPH,
->> +		 * which means LO is already enabled, keep
->> +		 * the regulator config the same at class-AB
->> +		 * and just set the power modes for flyback
->> +		 * and buck.
->> +		 */
->> +		if (req_state == WCD_CLSH_STATE_LO)
->> +			wcd_clsh_set_buck_regulator_mode(comp, CLS_AB);
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/dma/owl-dma.txt       | 46 +++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
 > 
-> This seems like there's a pretty confusing state machine, or possibly
-> that we might end up in different states depending on how we transition.
-> Whatever is going on it really feels like this code is more complex than
-> it needs to be.  Some of this is the use of lots of nested if statements,
-> some of it is the lack of any clear description of what we're trying to
-> achieve.  It's hard to tell if the code is doing what's expected because
-> it's hard to tell what it is expected to do.
+> diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
+> new file mode 100644
+> index 000000000000..dd6ce237b216
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/owl-dma.txt
+> @@ -0,0 +1,46 @@
+> +* Actions Semi Owl SoCs DMA controller
+> +
+> +This binding follows the generic DMA bindings defined in dma.txt.
+> +
+> +Required properties:
+> +- compatible: Should be "actions,s900-dma".
+> +- reg: Should contain DMA registers location and length.
+> +- interrupts: Should contain 4 interrupts shared by all channel.
+> +- #dma-cells: Must be <1>. Used to represent the number of integer
+> +              cells in the dmas property of client device.
+> +- dma-channels: Physical channels supported.
+> +- dma-requests: Virtual channels supported.
 
-I agree, I will rework and simplify this code/state-machine before 
-posting next version!
-> 
->> +		else {
-> 
-> If there's braces on one side of an if/else there should be braces on
-> both sides.
-Opps! will fix that and any such instances in next version!
+not really, virtual channel is a software concepts. On the other hand
+you may have request lines in hw and you can describe that, if not skip
+this one
 
-> 
->> +			if (req_state == WCD_CLSH_STATE_HPHL)
->> +				snd_soc_component_update_bits(comp,
->> +					WCD9XXX_A_CDC_RX1_RX_PATH_CFG0,
->> +					WCD9XXX_A_CDC_RX_PATH_CLSH_EN_MASK,
->> +					WCD9XXX_A_CDC_RX_PATH_CLSH_ENABLE);
->> +			if (req_state == WCD_CLSH_STATE_HPHR)
->> +				snd_soc_component_update_bits(comp,
->> +					WCD9XXX_A_CDC_RX2_RX_PATH_CFG0,
->> +					WCD9XXX_A_CDC_RX_PATH_CLSH_EN_MASK,
->> +					WCD9XXX_A_CDC_RX_PATH_CLSH_ENABLE);
->> +		}
-> 
-> Switch statement?
-Okay!
+> +- clocks: Phandle and Specifier of the clock feeding the DMA controller.
+> +
+> +Example:
+> +
+> +Controller:
+> +                dma: dma-controller@e0260000 {
+> +                        compatible = "actions,s900-dma";
+> +                        reg = <0x0 0xe0260000 0x0 0x1000>;
+> +                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> +                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> +                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> +                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+> +                        #dma-cells = <1>;
+> +                        dma-channels = <12>;
+> +                        dma-requests = <46>;
+> +                        clocks = <&clock CLK_DMAC>;
+> +                };
+> +
+> +Client:
+> +
+> +DMA clients connected to the Actions Semi Owl SoCs DMA controller must
+> +use the format described in the dma.txt file, using a two-cell specifier
+> +for each channel.
+> +
+> +The two cells in order are:
+> +1. A phandle pointing to the DMA controller.
+> +2. The channel id.
+> +
+> +uart5: serial@e012a000 {
+> +        ...
+> +        dma-names = "tx", "rx";
+> +        dmas = <&dma 26>, <&dma 27>;
+> +        ...
+> +};
+> -- 
+> 2.17.1
 
-thanks,
-srini
-> 
+-- 
+~Vinod
