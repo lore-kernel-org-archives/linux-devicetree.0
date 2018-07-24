@@ -1,30 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 5/5] rtc: isl1219: add device tree docu
-Date: Tue, 24 Jul 2018 17:25:01 -0600
-Message-ID: <20180724232501.GA22127@rob-hp-laptop>
-References: <20180724095437.6016-1-Denis.Osterland@diehl.com>
- <20180724095437.6016-6-Denis.Osterland@diehl.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] dt: bindings: add bindings for msa memory region
+Date: Tue, 24 Jul 2018 17:28:18 -0600
+Message-ID: <20180724232818.GA26318@rob-hp-laptop>
+References: <20180723123428.12993-1-govinds@codeaurora.org>
+ <20180723123428.12993-4-govinds@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180724095437.6016-6-Denis.Osterland@diehl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Denis OSTERLAND <denis.osterland@diehl.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+In-Reply-To: <20180723123428.12993-4-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 11:31:22AM +0000, Denis OSTERLAND wrote:
-> From: Denis Osterland <Denis.Osterland@diehl.com>
+On Mon, Jul 23, 2018 at 06:04:25PM +0530, Govind Singh wrote:
+> Add device tree binding documentation details of msa
+> memory region for ath10k qmi client for SDM845/APQ8098
+> SoC into "qcom,ath10k.txt".
 > 
-> The devicetree documentation for the ISL1219 device tree
-> binding is added with an short example. It is not a trivial
-> device, because it supports two interrupt sources.
-> 
-> Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
+> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/rtc/isil,isl1219.txt  | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl1219.txt
+>  .../devicetree/bindings/net/wireless/qcom,ath10k.txt        | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
