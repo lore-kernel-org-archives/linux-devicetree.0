@@ -1,111 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: activate spi flash on pine64 LTS board
-Date: Tue, 24 Jul 2018 14:51:51 +0200
-Message-ID: <20180724125151.plhn5g3x37ah62xu@flea>
-References: <Akash_Gajjar@mentor.com>
- <1532274409-9921-1-git-send-email-Akash_Gajjar@mentor.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="73kd7dr4snfa6aze"
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 00/14] arm64: dts: meson-axg: add audio support
+Date: Tue, 24 Jul 2018 14:52:24 +0200
+Message-ID: <20180724125238.14567-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1532274409-9921-1-git-send-email-Akash_Gajjar@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Akash Gajjar <gajjar04akash@gmail.com>
-Cc: icenowy@aosc.xyz, Akash Gajjar <Akash_Gajjar@mentor.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+The main purpose of this patchset is to add the audio devices on amlogic's
+AXG SoCs.
 
---73kd7dr4snfa6aze
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Some codecs require some power supplies. This is why the 3 first patches
+deal with the S400 power supplies, even if some are not related to audio.
 
-Hi!
+In term of dependency, apart from the clock bindings you have already
+pulled for your second PR to arm-soc, this patchset requires the ARB
+reset bindings [0] for patch 5. I don't know if Philip can make it
+available somewhere ?
 
-On Sun, Jul 22, 2018 at 09:16:49PM +0530, Akash Gajjar wrote:
-> This board has a 128M SPI flash. add spi flash support in device tree.
->=20
-> Tested on pine64 LTS.
->=20
-> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
+Of course, if the dependencies make this patchset too complicated to
+merge in this cycle, I'll resubmit once the next rc1 is out.
 
-The author email should match the one in the SoB, and the prefix of
-your commit title should be "arm64: dts: allwinner: ..."
+Jerome Brunet (14):
+  arm64: dts: meson-axg: improve power supplies description
+  arm64: dts: meson-axg: add vcc 5v regulator on the s400
+  arm64: dts: meson-axg: add usb power regulator
+  arm64: dts: meson-axg: add audio arb reset controller
+  arm64: dts: meson-axg: add audio fifos
+  arm64: dts: meson-axg: add spdifout
+  arm64: dts: meson-axg: add tdmin formatters
+  arm64: dts: meson-axg: add tdmout formatters
+  arm64: dts: meson-axg: add tdm interfaces
+  arm64: dts: meson-axg: add linein codec
+  arm64: dts: meson-axg: add lineout codec
+  arm64: dts: meson-axg: add spdif-dit codec
+  arm64: dts: meson-axg: s400: enable audio devices
+  arm64: dts: meson-axg: add s400 sound card
 
-> ---
->  .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  | 23 ++++++++++++++++=
-++++++
->  1 file changed, 23 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dt=
-s b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> index abe179d..d54637d 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> @@ -134,6 +134,29 @@
->  	regulator-name =3D "vcc-wifi";
->  };
-> =20
-> +&spi0  {
-> +	status =3D "okay";
-> +
-> +	m25p80@0 {
+ .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 237 ++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    | 216 ++++++++++++++++
+ 2 files changed, 453 insertions(+)
 
-The node-name should be the device class, not the device model
-
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		compatible =3D "w25q128";
-
-According to the binding, this should have "jedec,spi-nor", and you
-should put the vendor name before the model name as well.
-
-> +		reg =3D <0x0>;
-> +		linux,modalias =3D "m25p80", "w25q128";
-
-This property isn
-
-> +		spi-max-frequency =3D <40000000>;
-> +
-> +		uboot@0 {
-> +			label =3D "uboot";
-> +			reg =3D <0x0 0x100000>;
-> +		};
-> +
-> +		rootfs@0 {
-> +			label =3D "rootfs";
-> +			reg =3D <0x100000 0x7F00000>;
-> +		};
-
-This forces a partition scheme on users that might feel
-differently. This should be removed.
-
-maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---73kd7dr4snfa6aze
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltXIOYACgkQ0rTAlCFN
-r3TtXA/8D7eQ91HzEaD+i3PJCzhswl3ZGc/fabyKdh+7Y4Zvct3UTfj7MWRq16rH
-nvZnKHW060DaDfDYy8WrIuaP0DWCMhoXvlnqUP2OW/fVpuwnuuDj5iD1oyxt2PcV
-4cn4JcWB8hGkZ2KZxIc8RqqllQ0nltBedbXHbEMdygrRx8DQGFgGFM+YXZVaVW/l
-wINs6ODG7u3z26Fxl4bSP/xwp13xWQRZC853Dh1UbG4YpCrMlJUDd+yfQnVz5kWt
-yivzzd0TyHgVgKQSGl/w5BF3OybtHgDjkExTtrUpzVpisOttw2xy3D8ZDcjaoCCO
-4FVyJ++ZnE/z485In/a3uCec8ASiIRLQ1Vb1knRu+vrWYFv4cVKaBLsTjafz4Zlr
-K0jq5RJKkda/mnKuES5YUWRJeb/TEfdDzjNUXpILqTtyMaUMnJvpCnObT0NbpS7O
-65FUhrxDkjVXaaD7oKbfd4C26ZoYEARl5UG24rxIiDz3GNdym12x9RM0+JvvwVvh
-OczG8rZb60lphVSJNTVz8eREVVJkN0B03Tn+JIW6GmDfbFYvusCVipmbtcuJfQsS
-UnqyUIUdSP7b/gHIkWnYzhcV1K0ZmL10qObgeEcEpAarKfmIeJqgd77foFfEa+sP
-jbXrg2h0SLEYvNbLpkes5/VMNgAWPM3KhxhSDe/9PFGzEOYqbVw=
-=rgUq
------END PGP SIGNATURE-----
-
---73kd7dr4snfa6aze--
+-- 
+2.17.1
