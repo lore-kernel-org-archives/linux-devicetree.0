@@ -1,108 +1,51 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 13/14] arm64: dts: meson-axg: s400: enable audio devices
-Date: Tue, 24 Jul 2018 14:52:37 +0200
-Message-ID: <20180724125238.14567-14-jbrunet@baylibre.com>
+Subject: [PATCH 04/14] arm64: dts: meson-axg: add audio arb reset controller
+Date: Tue, 24 Jul 2018 14:52:28 +0200
+Message-ID: <20180724125238.14567-5-jbrunet@baylibre.com>
 References: <20180724125238.14567-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable the audio devices on the s400.
+Add the audio memory arbiter which control the access of the audio
+fifos to the DDR.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 72 +++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index d5c01427a5ca..9f5d81c3ee29 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -226,6 +226,18 @@
- 	};
- };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 6adc8d3dbf0a..3893c630d969 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -189,6 +189,13 @@
  
-+&frddr_a {
-+	status = "okay";
-+};
+ 				resets = <&reset RESET_AUDIO>;
+ 			};
 +
-+&frddr_b {
-+	status = "okay";
-+};
-+
-+&frddr_c {
-+	status = "okay";
-+};
-+
- &uart_A {
- 	status = "okay";
- 	pinctrl-0 = <&uart_a_pins>;
-@@ -334,3 +346,63 @@
- 	status = "okay";
- 	vref-supply = <&vddio_ao18>;
- };
-+
-+&spdifout {
-+	pinctrl-0 = <&spdif_out_a20_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&tdmin_a {
-+	status = "okay";
-+};
-+
-+&tdmin_b {
-+	status = "okay";
-+};
-+
-+&tdmin_c {
-+	status = "okay";
-+};
-+
-+&tdmin_lb {
-+	status = "okay";
-+};
-+
-+&tdmout_c {
-+	status = "okay";
-+};
-+
-+&tdmif_a {
-+	pinctrl-0 = <&tdma_sclk_pins>, <&tdma_fs_pins>,
-+		    <&tdma_din0_pins>, <&tdma_dout0_x15_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&tdmif_b {
-+	pinctrl-0 = <&tdmb_sclk_pins>, <&tdmb_fs_pins>,
-+		    <&tdmb_din3_pins>, <&mclk_b_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&tdmif_c {
-+	pinctrl-0 = <&tdmc_sclk_pins>, <&tdmc_fs_pins>,
-+		    <&tdmc_din1_pins>, <&tdmc_dout2_pins>,
-+		    <&mclk_c_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&toddr_a {
-+	status = "okay";
-+};
-+
-+&toddr_b {
-+	status = "okay";
-+};
-+
-+&toddr_c {
-+	status = "okay";
-+};
++			arb: reset-controller@280 {
++				compatible = "amlogic,meson-axg-audio-arb";
++				reg = <0x0 0x280 0x0 0x4>;
++				#reset-cells = <1>;
++				clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
++			};
+ 		};
+ 
+ 		cbus: bus@ffd00000 {
 -- 
 2.17.1
