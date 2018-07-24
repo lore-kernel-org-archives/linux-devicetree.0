@@ -1,46 +1,119 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH 00/15] ARM: dts: tegra: apalis-tk1: major revamp
-Date: Tue, 24 Jul 2018 12:24:34 +0000
-Message-ID: <1532435072.6124.1.camel@toradex.com>
-References: <20180724104309.21741-1-marcel@ziswiler.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 00/18] Allwinner R40 HDMI refactoring
+Date: Tue, 24 Jul 2018 14:37:41 +0200
+Message-ID: <20180724123741.bbkjgy2uwmzsj45k@flea>
+References: <20180710203511.18454-1-jernej.skrabec@siol.net>
+ <20180711083036.7attjq4hm5ay5gmn@flea>
+ <2309112.TTVI9Fv1ar@jernej-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724104309.21741-1-marcel@ziswiler.com>
-Content-Language: en-US
-Content-ID: <BA8A2111B93A6C45BBE0D4D2A9CF0B36@eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Content-Type: multipart/mixed; boundary="===============1857858563=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2309112.TTVI9Fv1ar@jernej-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-U29ycnksIEkgbWVhbnQgdG8gd3JpdGUgIm1pbm9yIHJldmFtcCIgaW4gdGhlIHN1YmplY3QgbGlu
-ZSBoZXJlIGFzDQpBcGFsaXMgVEsxIHdhcyBhbHJlYWR5IGluIHF1aXRlIGdvb2QgYSBzaGFwZSBi
-dXQgdGhpcyBhcmUgc3RpbGwgc29tZQ0Kd29ydGh5IGltcHJvdmVtZW50cyAoOy1wKS4NCg0KT24g
-VHVlLCAyMDE4LTA3LTI0IGF0IDEyOjQyICswMjAwLCBNYXJjZWwgWmlzd2lsZXIgd3JvdGU6DQo+
-IFRoaXMgc2VyaWVzIGlzIGEgbWlub3Igb3ZlcmhhdWwgZm9yIHRoZSBUb3JhZGV4IEFwYWxpcyBU
-SzEgc3lzdGVtIG9uDQo+IG1vZHVsZS4NCj4gDQo+IE1hcmNlbCBaaXN3aWxlciAoMTUpOg0KPiAg
-IEFSTTogdGVncmE6IGFwYWxpcy10azE6IGFkZCBsb2NhbC1tYWMtYWRkcmVzcyBwcm9wZXJ0eQ0K
-PiAgIEFSTTogdGVncmE6IGFwYWxpcy10azE6IHJlb3JkZXIgcGNpZSBwcm9wZXJ0aWVzDQo+ICAg
-QVJNOiB0ZWdyYTogYXBhbGlzLXRrMTogcmVvcmRlciBob3N0MXgvaGRtaSBwcm9wZXJ0aWVzDQo+
-ICAgQVJNOiB0ZWdyYTogYXBhbGlzLXRrMTogcmVvcmRlciBwYWRjdGwgcHJvcGVydGllcw0KPiAg
-IEFSTTogdGVncmE6IGFwYWxpcy10azE6IHJlZ3VsYXRvciBjbGVhbi11cA0KPiAgIEFSTTogdGVn
-cmE6IGFwYWxpcy10azE6IGFkZCBtaXNzaW5nIHJlZ3VsYXRvcnMNCj4gICBBUk06IHRlZ3JhOiBh
-cGFsaXMtdGsxOiBkcm9wIHVudXNlZCBwaW5tdXggbGFiZWwNCj4gICBBUk06IHRlZ3JhOiBhcGFs
-aXMtdGsxOiB3aGl0ZS1zcGFjZSBjbGVhbi11cA0KPiAgIEFSTTogdGVncmE6IGFwYWxpcy10azE6
-IHJlb3JkZXIgYmFja2xpZ2h0IHByb3BlcnRpZXMNCj4gICBBUk06IHRlZ3JhOiBhcGFsaXMtdGsx
-OiBhZGQgcHJvcGVyIGVtbWMgdm1tYyBhbmQgdnFtbWMgc3VwcGxpZXMNCj4gICBBUk06IHRlZ3Jh
-OiBhcGFsaXMtdGsxOiBlbmFibGUgZW1tYyBkZHI1MiBtb2RlDQo+ICAgQVJNOiB0ZWdyYTogYXBh
-bGlzLXRrMTogYWRkIHRvcmFkZXgsYXBhbGlzLXRrMS12MS4yIGNvbXBhdGlibGUNCj4gICBBUk06
-IHRlZ3JhOiBhcGFsaXMtdGsxOiBmaXggcGNpZSBzd2l0Y2ggdmVuZG9yIGNvbXBhdGlibGUNCj4g
-ICBBUk06IHRlZ3JhOiBhcGFsaXMtdGsxOiByZW9yZGVyIGNwdSBkZmxsIGNsb2NrIHByb3BlcnRp
-ZXMNCj4gICBBUk06IHRlZ3JhOiBhcGFsaXMtdGsxOiByZW9yZGVyIFNEIGNhcmQgcHJvcGVydGll
-cw0KPiANCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vdGVncmEudHh0
-IHwgICAyICsNCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTI0LWFwYWxpcy1ldmFsLmR0cyAg
-ICAgIHwgIDI2ICsrKystDQo+ICBhcmNoL2FybS9ib290L2R0cy90ZWdyYTEyNC1hcGFsaXMtdjEu
-Mi1ldmFsLmR0cyB8ICAyOSArKysrLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvdGVncmExMjQtYXBh
-bGlzLXYxLjIuZHRzaSAgICAgfCAxNDMgKysrKysrKysrKysrKy0NCj4gLS0tLS0tLS0tLQ0KPiAg
-YXJjaC9hcm0vYm9vdC9kdHMvdGVncmExMjQtYXBhbGlzLmR0c2kgICAgICAgICAgfCAxNDMgKysr
-KysrKysrKysrKy0NCj4gLS0tLS0tLS0tLQ0KPiAgNSBmaWxlcyBjaGFuZ2VkLCAyMDggaW5zZXJ0
-aW9ucygrKSwgMTM1IGRlbGV0aW9ucygtKQ==
+
+--===============1857858563==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="32fdg44zyqfmmwtk"
+Content-Disposition: inline
+
+
+--32fdg44zyqfmmwtk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jul 22, 2018 at 04:43:56PM +0200, Jernej =C5=A0krabec wrote:
+> Hi Maxime,
+>=20
+> Dne sreda, 11. julij 2018 ob 10:30:36 CEST je Maxime Ripard napisal(a):
+> > On Tue, Jul 10, 2018 at 10:34:53PM +0200, Jernej Skrabec wrote:
+> > > This series fixes several issues found in R40 HDMI patch series after
+> > > it was applied. Conversation can be found here:
+> > > http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/58601=
+1.htm
+> > > l
+> > >=20
+> > > Patches are based on latest linux-next (next-20180710) and are ordered
+> > > in such way that they don't break R40 HDMI at any time. Because of th=
+at
+> > > I suggest that whole series goes through drm-misc to preserve that or=
+der.
+> > >=20
+> > > I also tested those patches on H3 to make sure it doesn't break other
+> > > platforms. However, it would be nice to test for regressions also on
+> > > older SoCs (with DE1).
+> > >=20
+> > > Best regards,
+> > > Jernej
+> >=20
+> > Applied all patches but the patch 10, thanks!
+> > Maxime
+>=20
+> It seems that you forgot to merge some patches:
+>=20
+> [PATCH v2 12/18] drm/sun4i: tcon: Add another way for matching mixers wit=
+h=20
+> tcon
+> [PATCH v2 13/18] drm/sun4i: tcon: Add support for R40 TCON
+>=20
+> Without them, R40 display pipeline can't work.
+>=20
+> Maybe they are in your spam folder?
+
+Thanks for telling me, I'm not quite sure what happened.
+
+I've applied them.
+
+Sorry,
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--32fdg44zyqfmmwtk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltXHZQACgkQ0rTAlCFN
+r3QoKg//UALd/tvBxAnyMwMcVQrsMpdkYoevVrEcfZbviWMAEosEF/6v539iNm3l
+/FKgAY2hemnAmn7lgRXH9mPOLZCVaPtHjeWgOw8HjwVnDF49jNJJn3t8xWGkLsrj
+WNCixZsjNFHx3+ZpN66r0fVfhIUVVaCmuTFpX5rdBw05KEGJ+T7d4GJYLvzYJs0u
+IhklxPqKcYqrb5apfWZ8t9ZokrvJADL2djZGVlFq5sJHElmxGbYkJ1QpwjgiftuB
+OnLd9HLqbKoUIj+7J1S2wMGtzUW/9Bj5xYyAEjw3VBUKIQPgCpTTbDna4XyMJizU
+TkH+HEYxrY2S9WpJ+Inm7x29/r0xw6DmGbdYENec4OckKWcz2G0nvYpoStnubKaU
+KVLkCrEORKc/jcvA/DdqcyGDPwSMddMChDYQm558czXtIFq9j/fMqUWTZr54+FFa
+EqURxkX+hkj5l/H98wsok2sAXkXJCigLawOxlSEbM5bWFEX2n89mZrO3IW6f/QIZ
+WjI94eo5alyqnZkf/Gpy7QYMxmM88f9m2brWBPH3TwM9dBsZWiY3rhe+JVuVMXsc
+E7wCxF6e92CkSyi5+K8yt3MaTQ4iTBDp5AJcdT+s8rxJ7G9p3+qGYMLuRlEvnFlR
+3XACHOnbYiWyunWndvSVNjlFrlABHjwdPALt5IbR2b5DTl5akS8=
+=NVTJ
+-----END PGP SIGNATURE-----
+
+--32fdg44zyqfmmwtk--
+
+--===============1857858563==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1857858563==--
