@@ -1,100 +1,76 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v10 4/7] Bluetooth: hci_qca: Add wrapper functions for
- setting UART speed
-Date: Tue, 24 Jul 2018 12:32:36 +0530
-Message-ID: <12b59e77a4ee99c3de7bbd73ff10ce4b@codeaurora.org>
-References: <20180720133243.6851-1-bgodavar@codeaurora.org>
- <20180720133243.6851-5-bgodavar@codeaurora.org>
- <20180723175611.GL129942@google.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v3 1/9] drm/exynos: rename "bridge_node" to
+ "mic_bridge_node"
+Date: Tue, 24 Jul 2018 16:49:11 +0900
+Message-ID: <20180724074912epcas1p2e47dba6793b91a90b183e6cd809200bb~EPo3hWbma0369303693epcas1p2F@epcas1p2.samsung.com>
+References: <1529396370-18761-1-git-send-email-m.purski@samsung.com>
+ <CGME20180619081957eucas1p2d2b9075a9b7a90837b40e4529ab31888@eucas1p2.samsung.com>
+ <1529396370-18761-2-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723175611.GL129942@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1529396370-18761-2-git-send-email-m.purski@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maciej Purski <m.purski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On 2018-07-23 23:26, Matthias Kaehlcke wrote:
-> On Fri, Jul 20, 2018 at 07:02:40PM +0530, Balakrishna Godavarthi wrote:
->> In function qca_setup, we set initial and operating speeds for 
->> Qualcomm
->> Bluetooth SoC's. This block of code is common across different
->> Qualcomm Bluetooth SoC's. Instead of duplicating the code, created
->> a wrapper function to set the speeds. So that future coming SoC's
->> can use these wrapper functions to set speeds.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 93 
->> ++++++++++++++++++++++++++++---------
->>  1 file changed, 70 insertions(+), 23 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index 5f1c0a8fd5cd..5f8a74d65bec 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -119,6 +119,11 @@ struct qca_data {
->>  	u64 votes_off;
->>  };
->> 
->> +enum qca_speed_type {
->> +	QCA_INIT_SPEED = 1,
->> +	QCA_OPER_SPEED
->> +};
->> +
->>  struct qca_serdev {
->>  	struct hci_uart	 serdev_hu;
->>  	struct gpio_desc *bt_en;
->> @@ -923,6 +928,61 @@ static inline void host_set_baudrate(struct 
->> hci_uart *hu, unsigned int speed)
->>  		hci_uart_set_baudrate(hu, speed);
->>  }
->> 
->> +static unsigned int qca_get_speed(struct hci_uart *hu,
->> +				  enum qca_speed_type speed_type)
->> +{
->> +	unsigned int speed = 0;
->> +
->> +	if (speed_type == QCA_INIT_SPEED) {
->> +		if (hu->init_speed)
->> +			speed = hu->init_speed;
->> +		else if (hu->proto->init_speed)
->> +			speed = hu->proto->init_speed;
->> +	} else {
->> +		if (hu->oper_speed)
->> +			speed = hu->oper_speed;
->> +		else if (hu->proto->oper_speed)
->> +			speed = hu->proto->oper_speed;
->> +	}
->> +
->> +	return speed;
->> +}
->> +
->> +static int qca_check_speeds(struct hci_uart *hu)
->> +{
->> +	if (!qca_get_speed(hu, QCA_INIT_SPEED) ||
->> +	    !qca_get_speed(hu, QCA_OPER_SPEED))
->> +		return -EINVAL;
-> 
-> You changed this from:
-> 
-> 	/* One or the other speeds should be non zero. */
-> 	if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
-> 	    !qca_get_speed(hu, QCA_OPER_SPEED))
-> 		return -EINVAL;
-> 
-> There is no entry in the change log. What is the reason for this
-> change?
-
-[Bala] : My bad i missed to add the log,as the above  if for ROME chip, 
-having INIT or OPER speed is fine.
-
--- 
-Regards
-Balakrishna.
+SGksCgoyMDE464WEIDA27JuUIDE57J28IDE3OjE57JeQIE1hY2llaiBQdXJza2kg7J20KOqwgCkg
+7JO0IOq4gDoKPiBXaGVuIGFkZGluZyBzdXBwb3J0IGZvciBwZXJpcGhlcmFsIG91dCBicmlkZ2Vz
+LCB0aGUgImJyaWRnZSIgbmFtZQo+IGJlY29tZXMgaW1wcmVjaXNlIGFzIGl0IHJlZmVycyB0byBh
+IGRpZmZlcmVudCBkZXZpY2UgdGhhbiB0aGUKPiAib3V0X2JyaWRnZSIuCgpDb3VsZCB5b3UgZ2l2
+ZSBtZSBtb3JlIGRldGFpbHM/IEknbSBhZnJpYWQgdGhhdCBJIGRvbid0IHVuZGVyc3RhbmQgd2hh
+dCB5b3Ugc2F5LgoKQW5kIGluIGNhc2Ugb2YgRXh5bm9zNTQzMyBTb0MsIFNNSUVTKFNhbXN1bmcg
+TW9iaWxlIEltYWdlIEVuaGFuY2VtZW50IFN5c3RlbSkgY2FuIGJlIGxvY2F0ZWQgYmV0d2VlbiBE
+RUNPTiBhbmQgTUlQSS1EU0kgZGV2aWNlcyBhbHNvLgpUaGVyZWZvcmUsIGhhdmluZyBzcGVjaWZp
+YyBuYW1lIGlzbid0IHJlYXNvbmFibGUuCgpUaGFua3MsCklua2kgRGFlCgo+IAo+IFNpZ25lZC1v
+ZmYtYnk6IE1hY2llaiBQdXJza2kgPG0ucHVyc2tpQHNhbXN1bmcuY29tPgo+IC0tLQo+ICBkcml2
+ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMgfCAxNiArKysrKysrKy0tLS0tLS0t
+Cj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4gCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYyBiL2Ry
+aXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYwo+IGluZGV4IGVhZTQ0ZmQuLjk1
+OTllNmIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2Rz
+aS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jCj4gQEAg
+LTI3OSw3ICsyNzksNyBAQCBzdHJ1Y3QgZXh5bm9zX2RzaSB7Cj4gIAlzdHJ1Y3QgbGlzdF9oZWFk
+IHRyYW5zZmVyX2xpc3Q7Cj4gIAo+ICAJY29uc3Qgc3RydWN0IGV4eW5vc19kc2lfZHJpdmVyX2Rh
+dGEgKmRyaXZlcl9kYXRhOwo+IC0Jc3RydWN0IGRldmljZV9ub2RlICpicmlkZ2Vfbm9kZTsKPiAr
+CXN0cnVjdCBkZXZpY2Vfbm9kZSAqbWljX2JyaWRnZV9ub2RlOwo+ICB9Owo+ICAKPiAgI2RlZmlu
+ZSBob3N0X3RvX2RzaShob3N0KSBjb250YWluZXJfb2YoaG9zdCwgc3RydWN0IGV4eW5vc19kc2ks
+IGRzaV9ob3N0KQo+IEBAIC0xNjMxLDcgKzE2MzEsNyBAQCBzdGF0aWMgaW50IGV4eW5vc19kc2lf
+cGFyc2VfZHQoc3RydWN0IGV4eW5vc19kc2kgKmRzaSkKPiAgCWlmIChyZXQgPCAwKQo+ICAJCXJl
+dHVybiByZXQ7Cj4gIAo+IC0JZHNpLT5icmlkZ2Vfbm9kZSA9IG9mX2dyYXBoX2dldF9yZW1vdGVf
+bm9kZShub2RlLCBEU0lfUE9SVF9JTiwgMCk7Cj4gKwlkc2ktPm1pY19icmlkZ2Vfbm9kZSA9IG9m
+X2dyYXBoX2dldF9yZW1vdGVfbm9kZShub2RlLCBEU0lfUE9SVF9JTiwgMCk7Cj4gIAo+ICAJcmV0
+dXJuIDA7Cj4gIH0KPiBAQCAtMTY0Miw3ICsxNjQyLDcgQEAgc3RhdGljIGludCBleHlub3NfZHNp
+X2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4gIAlzdHJ1
+Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiAgCXN0cnVj
+dCBleHlub3NfZHNpICpkc2kgPSBlbmNvZGVyX3RvX2RzaShlbmNvZGVyKTsKPiAgCXN0cnVjdCBk
+cm1fZGV2aWNlICpkcm1fZGV2ID0gZGF0YTsKPiAtCXN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2U7
+Cj4gKwlzdHJ1Y3QgZHJtX2JyaWRnZSAqbWljX2JyaWRnZTsKPiAgCWludCByZXQ7Cj4gIAo+ICAJ
+ZHJtX2VuY29kZXJfaW5pdChkcm1fZGV2LCBlbmNvZGVyLCAmZXh5bm9zX2RzaV9lbmNvZGVyX2Z1
+bmNzLAo+IEBAIC0xNjYxLDEwICsxNjYxLDEwIEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9iaW5k
+KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+ICAJCXJldHVybiBy
+ZXQ7Cj4gIAl9Cj4gIAo+IC0JaWYgKGRzaS0+YnJpZGdlX25vZGUpIHsKPiAtCQlicmlkZ2UgPSBv
+Zl9kcm1fZmluZF9icmlkZ2UoZHNpLT5icmlkZ2Vfbm9kZSk7Cj4gLQkJaWYgKGJyaWRnZSkKPiAt
+CQkJZHJtX2JyaWRnZV9hdHRhY2goZW5jb2RlciwgYnJpZGdlLCBOVUxMKTsKPiArCWlmIChkc2kt
+Pm1pY19icmlkZ2Vfbm9kZSkgewo+ICsJCW1pY19icmlkZ2UgPSBvZl9kcm1fZmluZF9icmlkZ2Uo
+ZHNpLT5taWNfYnJpZGdlX25vZGUpOwo+ICsJCWlmIChtaWNfYnJpZGdlKQo+ICsJCQlkcm1fYnJp
+ZGdlX2F0dGFjaChlbmNvZGVyLCBtaWNfYnJpZGdlLCBOVUxMKTsKPiAgCX0KPiAgCj4gIAlyZXR1
+cm4gbWlwaV9kc2lfaG9zdF9yZWdpc3RlcigmZHNpLT5kc2lfaG9zdCk7Cj4gQEAgLTE3ODMsNyAr
+MTc4Myw3IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikKPiAgewo+ICAJc3RydWN0IGV4eW5vc19kc2kgKmRzaSA9IHBsYXRmb3JtX2dl
+dF9kcnZkYXRhKHBkZXYpOwo+ICAKPiAtCW9mX25vZGVfcHV0KGRzaS0+YnJpZGdlX25vZGUpOwo+
+ICsJb2Zfbm9kZV9wdXQoZHNpLT5taWNfYnJpZGdlX25vZGUpOwo+ICAKPiAgCXBtX3J1bnRpbWVf
+ZGlzYWJsZSgmcGRldi0+ZGV2KTsKPiAgCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
