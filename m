@@ -1,147 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
-Date: Tue, 24 Jul 2018 17:05:45 +0200
-Message-ID: <CAK8P3a3YQbiiJMTHTVh63fOvtA1sa0J5Eb4z7xbnpBPwUDkqxg@mail.gmail.com>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
- <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
- <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se> <20180720101206.tv7nsoanwo5ftnia@ninjato>
- <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
- <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se> <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
- <20180720151751.242d4809@bbrezillon> <CAK8P3a14_6uf9VLYU0YnmFp0Q=DZBKc0cAesBh0opanGDZMFRA@mail.gmail.com>
- <20180724162806.318a92c6@bbrezillon>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v9 1/2] regulator: dt-bindings: add QCOM RPMh regulator bindings
+Date: Tue, 24 Jul 2018 08:11:30 -0700
+Message-ID: <CAD=FV=Uo8sT72a0gRitOVoK0SfC-_QixsovW94_LnL6H7QdKvA@mail.gmail.com>
+References: <cover.1531531808.git.collinsd@codeaurora.org> <56b9d5c38cfe46da1228c54f001a49773c3e31dc.1531531808.git.collinsd@codeaurora.org>
+ <CAD=FV=VmfqWRGRMEn+0dzZ8x4R5vVaHbkthXAN91Lm-XmP9Gqg@mail.gmail.com> <20180724145755.GF13268@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724162806.318a92c6@bbrezillon>
+In-Reply-To: <20180724145755.GF13268@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
+To: Mark Brown <broonie@kernel.org>
+Cc: David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 4:28 PM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> Hi Arnd,
+Hi,
+
+On Tue, Jul 24, 2018 at 7:57 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Mon, Jul 23, 2018 at 01:09:05PM -0700, Doug Anderson wrote:
 >
-> On Tue, 24 Jul 2018 16:03:38 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
+>> I know you are still looking for time to review the RPMh-regulator
+>> driver and that's fine.  One idea I had though: if the bindings look
+>> OK to you and are less controversial, is there any chance they could
+>> land in the meantime?
 >
->> On Fri, Jul 20, 2018 at 3:17 PM, Boris Brezillon
->> <boris.brezillon@bootlin.com> wrote:
->> > On Fri, 20 Jul 2018 13:28:10 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
->> >
->> >> On Fri, Jul 20, 2018 at 1:13 PM, Peter Rosin <peda@axentia.se> wrote:
->> >> > On 2018-07-20 12:57, Arnd Bergmann wrote:
->> >> >> * What I understand from reading i2c-demux-pinctrl.c, a slave device
->> >> >>   will only ever be observable from one master at a time, when you
->> >> >>   switch over, all children get removed on one master and added to
->> >> >>   the other one, to be probed again by their respective drivers.
->> >> >>   I can see this as a useful feature on i3c as well, in particular to
->> >> >>   deal with the situation where we have i2c slaves connected to a
->> >> >>   pinmux that can switch them between an i3c master and an
->> >> >>   i2c-only master (possibly a gpio based one). That particular use
->> >> >>   case however doesn't seem to fix well in the current code, which
->> >> >>   is structure around i3c buses.
->> >> >
->> >> > It's pretty easy to come up with examples where this reprobing is
->> >> > not desirable at all. E.g. if one of the involved I2C devices is
->> >> > a HDMI encoder (I have a TDA19988 here) sitting in the middle of the
->> >> > graphics pipeline. Blink-blink on the screen because some *other*
->> >> > unrelated device needed to be accessed by an alternative master. Not
->> >> > pretty.
->> >>
->> >> Agreed, we definitely don't want to reprobe all devices during normal
->> >> operation for i3c master handover.
->> >>
->> >
->> > Re-probing would not happen, no matter the solution we choose. It's
->> > that, in one case, you would have X virtual/linux devices representing
->> > the same physical device and in the other case, you would just have
->> > one, and everytime a transfer is requested by the driver, the core
->> > would pick the appropriate master to do it (most likely the one in
->> > control of the bus at that time)
->>
->> I think this is one of the cases I'd want to avoid: controlling multiple
->> masters that are active at the same time without going through
->> the handover.
+> This appears to have a bunch of dependencies which I've got no idea
+> what's going on with the merging of and no idea if they'll affect the
+> bindings or anything, nobody's said anything and last I looked it was
+> unclear what was going on.
+
+RPMh itself landed in Andy's tree and he sent a pull request on
+Saturday.  Feel free to refer to the request ("[GIT PULL] Qualcomm
+Driver updates for 4.19") AKA
+<https://patchwork.kernel.org/patch/10539125/>.
+
+It doesn't look like arm-soc has picked up Andy's pull request yet
+though.  If having it in arm-soc is a requirement then I'm happy to
+monitor arm-soc and ping this thread again when it's there.
+
+
+> I'm kind of hoping that things might have
+> sorted themselves out of the merge window.
 >
-> That's simply not possible, the I3C protocol forbids it. There can only
-> be one active master on the bus at any point in time.
+> Some of the decisions in the code have flowed out into the bindings
+> before so I'm not keen to merge the bindings separately,
 
-Ok, it sounded like that's what you wanted to do here.
+Fair point.  I was thinking that we had pared the driver down enough
+now that the bindings were no longer anything other than just
+boilerplate bits describing the hardware, but it's obviously your
+decision when you're happy to land them.
 
->> If we have an actual pinmux between two masters and only one
->> of them can even see the bus, I think we should go through a
->> complete remove/probe cycle the way that the i2c-demux-pinctrl
->> does today. If OTOH we a primary/secondary master pair with
->> handover capability, I would prefer to not see one slave on
->> both devices at the same time, or (ideally) only use one of the
->> two masters and disable the other one completely.
->
-> Again, you don't have a choice because it's part of the protocol. At
-> any time, you only have one active master on the bus, and other masters
-> are acting as slaves until they gain bus ownership (if they ever do).
-> Say that device A wants to do an HDR transfer on the bus, and HDR is
-> only supported by master X, but master Y is currently owning the bus.
-> Master X will first have to request bus ownership before doing the
-> transfer requested by device A.
->
-> Now, imagine that device A wants to do an SDR transfer which is
-> supported by both master X and master Y, and master Y is in control.
-> Instead of requesting a bus handover, the framework would just
-> automatically decide to do the transfer through master Y. That's the
-> sort of things this separate bus/master representation allows.
 
-That's not the case I was describing here, I was thinking of what
-Wolfram described with the Renesas SoC that has two i2c masters
-multiplexed through the pinmux layer. I would assume that we
-can still do the same thing in i3c by shutting down the current
-master without a handover, and reprobing everything from scratch.
+> and if the
+> driver for the thing used to communicate with the device is still in
+> review then that's definitely a red flag.
 
-If only one of the two masters is physically connected to the
-bus at any time, the handover protocol certainly wouldn't
-apply.
+As per above it's been landed, so hopefully this red flag is removed?
 
->> >> - mark each slave as status="enabled" in at most one of the
->> >>   buses, and as disabled everywhere else
->> >
->> > We shouldn't need to do that. We can just let the driver check whether
->> > the master provides the necessary capabilities to efficiently
->> > communicate with the device, and if it does not just return -ENOTSUPP
->> > in the ->probe() function. This way you'll have a device, but not
->> > driver controlling it on one bus, and on the other bus, you'll have
->> > another device (which points to the same physical device) this time
->> > with a driver attached to it.
->>
->> I'd still hope that we can completely avoid that case and never
->> have the case where one physical device has two live
->> representations in the kernel. It /could/ still be done of course,
->> but would not always do the right thing, depending on the
->> type of device (a temperature sensor could just be probed
->> twice without problems, a network device probably cannot)
->
-> Not really feasible if we don't share the same bus representation. So,
-> that means you hope we'll never have a real case where 2 masters are
-> connected to the same physical bus and both exposed to the same Linux
-> instance.
 
-Why not? As I described in my earlier mail, we just need to make
-sure that either one of the two masters gets all the devices and
-the other master is completely disabled, or each master gets
-a subset of the devices and all other devices are marked as
-status="disabled" in DT to prevent them from being bound to
-a driver more than once.
-
-> I'm still unsure what you think adds complexity in the current
-> approach. When I implemented it, it looked like is was almost the same
-> (in term of complexity) to have a bus object separated from the master,
-> but I'm probably missing something.
->
-> Anyway, here's what I propose. I'll work on a v7 where the bus object
-> is tied to the master (and not exposed in sysfs or the DT
-> representation) and the master itself is not represented as a device on
-> the bus. This way you'll have both solutions to compare them and take a
-> decision.
-
-That sounds helpful, thanks a lot!
-
-      Arnd
+-Doug
