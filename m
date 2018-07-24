@@ -1,71 +1,74 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v3 3/9] drm/exynos: enable out_bridge in
- exynos_dsi_enable()
-Date: Tue, 24 Jul 2018 17:02:50 +0900
-Message-ID: <20180724080250epcas1p399b546f087dc1acd81dd5824f4498433~EP0x1jr7b1293312933epcas1p3z@epcas1p3.samsung.com>
-References: <1529396370-18761-1-git-send-email-m.purski@samsung.com>
- <CGME20180619081959eucas1p14aee2dfc0231d2f645e3c9071b92341e@eucas1p1.samsung.com>
- <1529396370-18761-4-git-send-email-m.purski@samsung.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 4/4] arm: dts: ls1021a: Enable I2C DMA support
+Date: Tue, 24 Jul 2018 10:02:48 +0200
+Message-ID: <20180724080248.gncihyhiibzkvkzg@pengutronix.de>
+References: <20180709094304.8814-1-esben.haabendal@gmail.com>
+ <20180709094304.8814-5-esben.haabendal@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1529396370-18761-4-git-send-email-m.purski@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Purski <m.purski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180709094304.8814-5-esben.haabendal@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Esben Haabendal <esben.haabendal@gmail.com>
+Cc: linux-i2c@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yuan Yao <yao.yuan@freescale.com>, Esben Haabendal <eha@deif.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgoyMDE464WEIDA27JuUIDE57J28IDE3OjE57JeQIE1hY2llaiBQdXJza2kg7J20KOqwgCkg
-7JO0IOq4gDoKPiBBcyB0aGUgb3V0IGJyaWRnZSB3aWxsIG5vdCBiZSBlbmFibGVkIGRpcmVjdGx5
-IGJ5IHRoZSBmcmFtZXdvcmssCj4gaXQgc2hvdWxkIGJlIGVuYWJsZWQgYnkgRFNJLiBFeHlub3Nf
-ZHNpX2VuYWJsZSgpIHNob3VsZCBoYW5kbGUgYSBjYXNlLAo+IHdoZW4gdGhlcmUgaXMgYW4gb3V0
-X2JyaWRnZSBjb25uZWN0ZWQgYXMgYSBEU0kgcGVyaXBoZXJhbC4KPiAKPiBTaWduZWQtb2ZmLWJ5
-OiBNYWNpZWogUHVyc2tpIDxtLnB1cnNraUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9n
-cHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIHwgMzQgKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCAxMiBkZWxl
-dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3Nf
-ZHJtX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jCj4gaW5k
-ZXggYzA0MDhjMC4uOGFhN2FjZSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9z
-L2V4eW5vc19kcm1fZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19k
-cm1fZHNpLmMKPiBAQCAtMTM4NiwyNSArMTM4NiwzMyBAQCBzdGF0aWMgdm9pZCBleHlub3NfZHNp
-X2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gIAo+ICAJZHNpLT5zdGF0ZSB8
-PSBEU0lNX1NUQVRFX0VOQUJMRUQ7Cj4gIAo+IC0JcmV0ID0gZHJtX3BhbmVsX3ByZXBhcmUoZHNp
-LT5wYW5lbCk7Cj4gLQlpZiAocmV0IDwgMCkgewo+IC0JCWRzaS0+c3RhdGUgJj0gfkRTSU1fU1RB
-VEVfRU5BQkxFRDsKPiAtCQlwbV9ydW50aW1lX3B1dF9zeW5jKGRzaS0+ZGV2KTsKPiAtCQlyZXR1
-cm47Cj4gKwlpZiAoZHNpLT5wYW5lbCkgewo+ICsJCXJldCA9IGRybV9wYW5lbF9wcmVwYXJlKGRz
-aS0+cGFuZWwpOwo+ICsJCWlmIChyZXQgPCAwKSB7Cj4gKwkJCWRzaS0+c3RhdGUgJj0gfkRTSU1f
-U1RBVEVfRU5BQkxFRDsKCldoeSBkaWQgeW91IHJlbW92ZSBwbV9ydW50aW1lX3B1dF9zeW5jIGNh
-bGw/Cgo+ICsJCQlyZXR1cm47Cj4gKwkJfQo+ICAJfQo+ICAKPiArCWlmIChkc2ktPm91dF9icmlk
-Z2UpCj4gKwkJZHJtX2JyaWRnZV9wcmVfZW5hYmxlKGRzaS0+b3V0X2JyaWRnZSk7Cj4gKwo+ICAJ
-ZXh5bm9zX2RzaV9zZXRfZGlzcGxheV9tb2RlKGRzaSk7Cj4gIAlleHlub3NfZHNpX3NldF9kaXNw
-bGF5X2VuYWJsZShkc2ksIHRydWUpOwo+ICAKPiAtCXJldCA9IGRybV9wYW5lbF9lbmFibGUoZHNp
-LT5wYW5lbCk7Cj4gLQlpZiAocmV0IDwgMCkgewo+IC0JCWRzaS0+c3RhdGUgJj0gfkRTSU1fU1RB
-VEVfRU5BQkxFRDsKPiAtCQlleHlub3NfZHNpX3NldF9kaXNwbGF5X2VuYWJsZShkc2ksIGZhbHNl
-KTsKPiAtCQlkcm1fcGFuZWxfdW5wcmVwYXJlKGRzaS0+cGFuZWwpOwo+IC0JCXBtX3J1bnRpbWVf
-cHV0X3N5bmMoZHNpLT5kZXYpOwo+IC0JCXJldHVybjsKPiArCWlmIChkc2ktPnBhbmVsKSB7Cj4g
-KwkJcmV0ID0gZHJtX3BhbmVsX2VuYWJsZShkc2ktPnBhbmVsKTsKPiArCQlpZiAocmV0IDwgMCkg
-ewo+ICsJCQlkc2ktPnN0YXRlICY9IH5EU0lNX1NUQVRFX0VOQUJMRUQ7Cj4gKwkJCWV4eW5vc19k
-c2lfc2V0X2Rpc3BsYXlfZW5hYmxlKGRzaSwgZmFsc2UpOwo+ICsJCQlkcm1fcGFuZWxfdW5wcmVw
-YXJlKGRzaS0+cGFuZWwpOwoKRGl0dG8uCgpUaGFua3MsCklua2kgRGFlCgo+ICsJCQlyZXR1cm47
-Cj4gKwkJfQo+ICAJfQo+ICAKPiArCWlmIChkc2ktPm91dF9icmlkZ2UpCj4gKwkJZHJtX2JyaWRn
-ZV9lbmFibGUoZHNpLT5vdXRfYnJpZGdlKTsKPiArCj4gIAlkc2ktPnN0YXRlIHw9IERTSU1fU1RB
-VEVfVklET1VUX0FWQUlMQUJMRTsKPiAgfQo+ICAKPiBAQCAtMTQxOCw4ICsxNDI2LDEwIEBAIHN0
-YXRpYyB2b2lkIGV4eW5vc19kc2lfZGlzYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIp
-Cj4gIAlkc2ktPnN0YXRlICY9IH5EU0lNX1NUQVRFX1ZJRE9VVF9BVkFJTEFCTEU7Cj4gIAo+ICAJ
-ZHJtX3BhbmVsX2Rpc2FibGUoZHNpLT5wYW5lbCk7Cj4gKwlkcm1fYnJpZGdlX2Rpc2FibGUoZHNp
-LT5vdXRfYnJpZGdlKTsKPiAgCWV4eW5vc19kc2lfc2V0X2Rpc3BsYXlfZW5hYmxlKGRzaSwgZmFs
-c2UpOwo+ICAJZHJtX3BhbmVsX3VucHJlcGFyZShkc2ktPnBhbmVsKTsKPiArCWRybV9icmlkZ2Vf
-cG9zdF9kaXNhYmxlKGRzaS0+b3V0X2JyaWRnZSk7Cj4gIAo+ICAJZHNpLT5zdGF0ZSAmPSB+RFNJ
-TV9TVEFURV9FTkFCTEVEOwo+ICAKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+Hello,
+
+expanding Cc a bit to include Shawn and the kernel teams of Pengutronix
+and NXP.
+
+On Mon, Jul 09, 2018 at 11:43:04AM +0200, Esben Haabendal wrote:
+> From: Esben Haabendal <eha@deif.com>
+> 
+> Gives substantial performance improvement for transfers larger than 16
+> bytes (DMA_THRESHOLD).  Smaller transfers are unaffected.
+> 
+> Signed-off-by: Esben Haabendal <eha@deif.com>
+> ---
+>  arch/arm/boot/dts/ls1021a.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index c55d479971cc..1e5640701c65 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -363,6 +363,8 @@
+>  			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+>  			clock-names = "i2c";
+>  			clocks = <&clockgen 4 1>;
+> +			dma-names = "tx", "rx";
+> +			dmas = <&edma0 1 39>, <&edma0 1 38>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -374,6 +376,8 @@
+>  			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+>  			clock-names = "i2c";
+>  			clocks = <&clockgen 4 1>;
+> +			dma-names = "tx", "rx";
+> +			dmas = <&edma0 1 37>, <&edma0 1 36>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -385,6 +389,8 @@
+>  			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+>  			clock-names = "i2c";
+>  			clocks = <&clockgen 4 1>;
+> +			dma-names = "tx", "rx";
+> +			dmas = <&edma0 1 35>, <&edma0 1 34>;
+>  			status = "disabled";
+>  		};
+
+This is a bit orthogonal to the other changes in this series and needs
+at least an ack from Shawn. Looks ok in my eyes.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
