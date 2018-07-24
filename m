@@ -1,63 +1,147 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 07/18] dmaengine: dma-jz4780: Add support for the
- JZ4770 SoC
-Date: Tue, 24 Jul 2018 17:04:55 +0200
-Message-ID: <1532444695.2610.1@smtp.crapouillou.net>
-References: <20180721110643.19624-1-paul@crapouillou.net>
-        <20180721110643.19624-8-paul@crapouillou.net>
-        <20180724133229.GG3661@vkoul-mobl>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 00/10] Add the I3C subsystem
+Date: Tue, 24 Jul 2018 17:05:45 +0200
+Message-ID: <CAK8P3a3YQbiiJMTHTVh63fOvtA1sa0J5Eb4z7xbnpBPwUDkqxg@mail.gmail.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <CAK8P3a2MP5+oFz--e+BM24D8Ahw7H_RKgN1S6wY1nQE6JL0dmw@mail.gmail.com>
+ <2ab0ab75-2df0-2714-f007-c33b25481016@axentia.se> <20180720101206.tv7nsoanwo5ftnia@ninjato>
+ <CAK8P3a2Pqo5DuYBb09+w4nGWGOw+e_tZPxnA06qjNO_6Hw6NvQ@mail.gmail.com>
+ <21b269c5-a3a7-c5de-c81e-c9c9301ae13e@axentia.se> <CAK8P3a1t2fhdw7HwxNkOs9o2pBECZ0ZdOysA=r2SPTWEvx76kw@mail.gmail.com>
+ <20180720151751.242d4809@bbrezillon> <CAK8P3a14_6uf9VLYU0YnmFp0Q=DZBKc0cAesBh0opanGDZMFRA@mail.gmail.com>
+ <20180724162806.318a92c6@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724133229.GG3661@vkoul-mobl>
+In-Reply-To: <20180724162806.318a92c6@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Mathieu Malaterre <malat@debian.org>, Daniel Silsby <dansilsby@gmail.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Tue, Jul 24, 2018 at 4:28 PM, Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> Hi Arnd,
+>
+> On Tue, 24 Jul 2018 16:03:38 +0200
+> Arnd Bergmann <arnd@arndb.de> wrote:
+>
+>> On Fri, Jul 20, 2018 at 3:17 PM, Boris Brezillon
+>> <boris.brezillon@bootlin.com> wrote:
+>> > On Fri, 20 Jul 2018 13:28:10 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+>> >
+>> >> On Fri, Jul 20, 2018 at 1:13 PM, Peter Rosin <peda@axentia.se> wrote:
+>> >> > On 2018-07-20 12:57, Arnd Bergmann wrote:
+>> >> >> * What I understand from reading i2c-demux-pinctrl.c, a slave device
+>> >> >>   will only ever be observable from one master at a time, when you
+>> >> >>   switch over, all children get removed on one master and added to
+>> >> >>   the other one, to be probed again by their respective drivers.
+>> >> >>   I can see this as a useful feature on i3c as well, in particular to
+>> >> >>   deal with the situation where we have i2c slaves connected to a
+>> >> >>   pinmux that can switch them between an i3c master and an
+>> >> >>   i2c-only master (possibly a gpio based one). That particular use
+>> >> >>   case however doesn't seem to fix well in the current code, which
+>> >> >>   is structure around i3c buses.
+>> >> >
+>> >> > It's pretty easy to come up with examples where this reprobing is
+>> >> > not desirable at all. E.g. if one of the involved I2C devices is
+>> >> > a HDMI encoder (I have a TDA19988 here) sitting in the middle of the
+>> >> > graphics pipeline. Blink-blink on the screen because some *other*
+>> >> > unrelated device needed to be accessed by an alternative master. Not
+>> >> > pretty.
+>> >>
+>> >> Agreed, we definitely don't want to reprobe all devices during normal
+>> >> operation for i3c master handover.
+>> >>
+>> >
+>> > Re-probing would not happen, no matter the solution we choose. It's
+>> > that, in one case, you would have X virtual/linux devices representing
+>> > the same physical device and in the other case, you would just have
+>> > one, and everytime a transfer is requested by the driver, the core
+>> > would pick the appropriate master to do it (most likely the one in
+>> > control of the bus at that time)
+>>
+>> I think this is one of the cases I'd want to avoid: controlling multiple
+>> masters that are active at the same time without going through
+>> the handover.
+>
+> That's simply not possible, the I3C protocol forbids it. There can only
+> be one active master on the bus at any point in time.
 
-Le mar. 24 juil. 2018 =E0 15:32, Vinod <vkoul@kernel.org> a =E9crit :
-> On 21-07-18, 13:06, Paul Cercueil wrote:
->>  +static inline void jz4780_dma_chan_enable(struct jz4780_dma_dev=20
->> *jzdma,
->>  +	unsigned int chn)
->=20
-> right justified and aligned with preceding please. While adding new
-> code to a existing driver it is a good idea to conform to existing=20
-> style
+Ok, it sounded like that's what you wanted to do here.
 
-OK.
+>> If we have an actual pinmux between two masters and only one
+>> of them can even see the bus, I think we should go through a
+>> complete remove/probe cycle the way that the i2c-demux-pinctrl
+>> does today. If OTOH we a primary/secondary master pair with
+>> handover capability, I would prefer to not see one slave on
+>> both devices at the same time, or (ideally) only use one of the
+>> two masters and disable the other one completely.
+>
+> Again, you don't have a choice because it's part of the protocol. At
+> any time, you only have one active master on the bus, and other masters
+> are acting as slaves until they gain bus ownership (if they ever do).
+> Say that device A wants to do an HDR transfer on the bus, and HDR is
+> only supported by master X, but master Y is currently owning the bus.
+> Master X will first have to request bus ownership before doing the
+> transfer requested by device A.
+>
+> Now, imagine that device A wants to do an SDR transfer which is
+> supported by both master X and master Y, and master Y is in control.
+> Instead of requesting a bus handover, the framework would just
+> automatically decide to do the transfer through master Y. That's the
+> sort of things this separate bus/master representation allows.
 
->>  +{
->>  +	if (jzdma->version =3D=3D ID_JZ4770)
->>  +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKES, BIT(chn));
->>  +}
->>  +
->>  +static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev=20
->> *jzdma,
->>  +	unsigned int chn)
->>  +{
->>  +	if (jzdma->version =3D=3D ID_JZ4770)
->>  +		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
->=20
-> so if another version has this feature we would do:
->         if (jzdma->version =3D=3D ID_JZ4770) ||
->                 if (jzdma->version =3D=3D ID_JZXXXX))
->=20
-> and so on.. why not add a value, clk_enable in the description and use
-> that. For each controller it is set to true or false
+That's not the case I was describing here, I was thinking of what
+Wolfram described with the Renesas SoC that has two i2c masters
+multiplexed through the pinmux layer. I would assume that we
+can still do the same thing in i3c by shutting down the current
+master without a handover, and reprobing everything from scratch.
 
-I agree with what you said in your other answers.
-However here I still need to check the "version", because on JZ4725B=20
-and JZ4770+
-the way to start/stop each DMA channel's clock is different, so I can't=20
-use a boolean.
+If only one of the two masters is physically connected to the
+bus at any time, the handover protocol certainly wouldn't
+apply.
 
-> --
-> ~Vinod
+>> >> - mark each slave as status="enabled" in at most one of the
+>> >>   buses, and as disabled everywhere else
+>> >
+>> > We shouldn't need to do that. We can just let the driver check whether
+>> > the master provides the necessary capabilities to efficiently
+>> > communicate with the device, and if it does not just return -ENOTSUPP
+>> > in the ->probe() function. This way you'll have a device, but not
+>> > driver controlling it on one bus, and on the other bus, you'll have
+>> > another device (which points to the same physical device) this time
+>> > with a driver attached to it.
+>>
+>> I'd still hope that we can completely avoid that case and never
+>> have the case where one physical device has two live
+>> representations in the kernel. It /could/ still be done of course,
+>> but would not always do the right thing, depending on the
+>> type of device (a temperature sensor could just be probed
+>> twice without problems, a network device probably cannot)
+>
+> Not really feasible if we don't share the same bus representation. So,
+> that means you hope we'll never have a real case where 2 masters are
+> connected to the same physical bus and both exposed to the same Linux
+> instance.
 
-Thanks,
--Paul
-=
+Why not? As I described in my earlier mail, we just need to make
+sure that either one of the two masters gets all the devices and
+the other master is completely disabled, or each master gets
+a subset of the devices and all other devices are marked as
+status="disabled" in DT to prevent them from being bound to
+a driver more than once.
+
+> I'm still unsure what you think adds complexity in the current
+> approach. When I implemented it, it looked like is was almost the same
+> (in term of complexity) to have a bus object separated from the master,
+> but I'm probably missing something.
+>
+> Anyway, here's what I propose. I'll work on a v7 where the bus object
+> is tied to the master (and not exposed in sysfs or the DT
+> representation) and the master itself is not represented as a device on
+> the bus. This way you'll have both solutions to compare them and take a
+> decision.
+
+That sounds helpful, thanks a lot!
+
+      Arnd
