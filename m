@@ -1,138 +1,106 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 2/4] power: supply: max17040: Config alert SOC low level
- threshold from FDT
-Date: Wed, 25 Jul 2018 12:42:34 +0200
-Message-ID: <CAJKOXPd93QKfUQvruwGe3WL52_yhbCG_mPSwt74thPNqdJ7qxg@mail.gmail.com>
-References: <20180723040816.19455-1-matheus@castello.eng.br> <20180723040816.19455-3-matheus@castello.eng.br>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v10 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Wed, 25 Jul 2018 18:42:24 +0800
+Message-ID: <20180725184224.cab5172f8558162cc74bde9e@magewell.com>
+References: <1525417745-37964-1-git-send-email-yong.deng@magewell.com>
+	<20180626110821.wkal6fcnoncsze6y@valkosipuli.retiisi.org.uk>
+	<20180705154802.03604f156709be11892b19c0@magewell.com>
+	<20180718095513.4cm77g2iuilvfmd6@paasikivi.fi.intel.com>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723040816.19455-3-matheus@castello.eng.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Castello <matheus@castello.eng.br>
-Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBBI5I4HNAKGQERU74LIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180718095513.4cm77g2iuilvfmd6-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-fy+rA21nqHI@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23 July 2018 at 06:08, Matheus Castello <matheus@castello.eng.br> wrote:
-> For configuration of fuel gauge alert for a low level state of charge
-> interrupt we add a function to config level threshold and a device tree
-> binding property to set it in flatned device tree node.
->
-> Now we can use "maxim,alert-soc-level" property with the values from
-> 1 up to 32 to configure alert interrupt threshold.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 36 +++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
+Hi Sakari,
 
-Hi Matheus,
+On Wed, 18 Jul 2018 12:55:14 +0300
+Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
 
-In series, bindings describing new DT property should go before
-introducing them in the driver.
+> Hi Yong,
+> 
+> On Thu, Jul 05, 2018 at 03:48:02PM +0800, Yong wrote:
+> > > > +
+> > > > +/* -----------------------------------------------------------------------------
+> > > > + * Media Operations
+> > > > + */
+> > > > +static int sun6i_video_formats_init(struct sun6i_video *video,
+> > > > +				    const struct media_pad *remote)
+> > > > +{
+> > > > +	struct v4l2_subdev_mbus_code_enum mbus_code = { 0 };
+> > > > +	struct sun6i_csi *csi = video->csi;
+> > > > +	struct v4l2_format format;
+> > > > +	struct v4l2_subdev *subdev;
+> > > > +	u32 pad;
+> > > > +	const u32 *pixformats;
+> > > > +	int pixformat_count = 0;
+> > > > +	u32 subdev_codes[32]; /* subdev format codes, 32 should be enough */
+> > > > +	int codes_count = 0;
+> > > > +	int num_fmts = 0;
+> > > > +	int i, j;
+> > > > +
+> > > > +	pad = remote->index;
+> > > > +	subdev = media_entity_to_v4l2_subdev(remote->entity);
+> > > > +	if (subdev == NULL)
+> > > > +		return -ENXIO;
+> > > > +
+> > > > +	/* Get supported pixformats of CSI */
+> > > > +	pixformat_count = sun6i_csi_get_supported_pixformats(csi, &pixformats);
+> > > > +	if (pixformat_count <= 0)
+> > > > +		return -ENXIO;
+> > > > +
+> > > > +	/* Get subdev formats codes */
+> > > > +	mbus_code.pad = pad;
+> > > > +	mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> > > > +	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code, NULL,
+> > > > +				 &mbus_code)) {
+> > > 
+> > > The formats supported by the external sub-device may depend on horizontal
+> > > and vertical flipping. You shouldn't assume any particular configuration
+> > > here: instead, bridge drivers generally just need to make sure the formats
+> > > match in link validation when streaming is started. At least the CSI-2
+> > > receiver driver and the DMA engine driver (video device) should check the
+> > > configuration is valid. See e.g. the IPU3 driver:
+> > > drivers/media/pci/intel/ipu3/ipu3-cio2.c .
+> > 
+> > Can mbus_code be added dynamically ?
+> > The code here only enum the mbus code and get the possible supported
+> > pairs of pixformat and mbus by SoC. Not try to check if the formats
+> > (width height ...) is valid or not. The formats validation will be 
+> > in link validation when streaming is started as per your advise. 
+> 
+> The formats that can be enumerated from the sensor here are those settable
+> using SUBDEV_S_FMT. The enumeration will change on raw sensors if you use
+> the flipping controls. As the bridge driver implements MC as well as subdev
+> APIs, generally the sensor configuration is out of scope of this driver
+> since it's directly configured from the user space.
+> 
+> Just check that the pipeline is valid before starting streaming in your
+> driver.
 
->
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index 6e54e58814a9..3efa52d32b44 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -47,6 +47,8 @@ struct max17040_chip {
->         int soc;
->         /* State Of Charge */
->         int status;
-> +       /* Alert threshold */
+Sorry. I am still confused.
+As the CSI driver does not enum the formats supported by sensor.
+How to get a valid format if I do not want to open the subdev? 
+Many applications still only open /dev/video*.
 
-Threshold in what units?
+> 
+> -- 
+> Kind regards,
+> 
+> Sakari Ailus
+> sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 
-> +       int alert_threshold;
->  };
->
->  static int max17040_get_property(struct power_supply *psy,
-> @@ -123,6 +125,28 @@ static void max17040_get_soc(struct i2c_client *client)
->         chip->soc = (soc >> 8);
->  }
->
-> +static int max17040_set_soc_threshold(struct i2c_client *client, u8 level)
-> +{
-> +       int ret;
-> +       u16 data;
-> +
-> +       /* check if level is between 1% and 32% */
-> +       if (level > 0 && level < 33) {
-> +               /* alert threshold use LSb 5 bits from RCOMP */
-> +               /* two's-complements form: 00000 = 32% and 11111 = 1% */
 
-Please use Linux style comments.
-
-> +               level = 32 - level;
-> +               data = max17040_read_reg(client, MAX17040_RCOMP);
-> +               data &= 0xFFE0;
-
-Please define the mask.
-
-> +               data |= level;
-> +               max17040_write_reg(client, MAX17040_RCOMP, data);
-> +               ret = 0;
-> +       } else {
-> +               ret = -EINVAL;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
->  static void max17040_get_version(struct i2c_client *client)
->  {
->         u16 version;
-> @@ -165,6 +189,16 @@ static void max17040_get_status(struct i2c_client *client)
->                 chip->status = POWER_SUPPLY_STATUS_FULL;
->  }
->
-> +static void max17040_get_of_data(struct max17040_chip *chip)
-> +{
-> +       struct device *dev = &chip->client->dev;
-> +       struct device_node *np = dev->of_node;
-> +
-> +       if (of_property_read_s32(np, "maxim,alert-soc-level",
-> +                       &chip->alert_threshold))
-> +               chip->alert_threshold = 4;
-
-1. You read s32 and later cast it to u8. Either some validation of
-possible values or of_property_read_u8().
-2. You have hard-coded default value - please put it in some define.
-There are already defines, e.g.: MAX17040_BATTERY_FULL
-3. Also the bindings say something about power up value... not 4.
-4, I think that  default - missing - value should mean "no interrupt warnings".
-
-> +}
-> +
->  static void max17040_work(struct work_struct *work)
->  {
->         struct max17040_chip *chip;
-> @@ -231,6 +265,7 @@ static int max17040_probe(struct i2c_client *client,
->
->         chip->client = client;
->         chip->pdata = client->dev.platform_data;
-> +       max17040_get_of_data(chip);
->
->         i2c_set_clientdata(client, chip);
->         psy_cfg.drv_data = chip;
-> @@ -262,6 +297,7 @@ static int max17040_probe(struct i2c_client *client,
->
->         max17040_reset(client);
->         max17040_get_version(client);
-> +       max17040_set_soc_threshold(client, chip->alert_threshold);
-
-1. Return value ignored.
-2. First you enable interrupts for whatever default value of alerts
-and then you set the alerts threshold. You might generate false
-warning in such case so this should be in reverse order.
-
-Best regards,
-Krzysztof
-
->
->         INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
->         queue_delayed_work(system_power_efficient_wq, &chip->work,
-> --
-> 2.13.3
->
+Thanks,
+Yong
