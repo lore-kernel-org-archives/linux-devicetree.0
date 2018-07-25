@@ -1,66 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 12/12] ASoC: apq8096: Add support to Analog
- audio via WCD9335 slim
-Date: Wed, 25 Jul 2018 17:24:55 +0100
-Message-ID: <20180725162455.GC6315@sirena.org.uk>
-References: <20180723155410.9494-1-srinivas.kandagatla@linaro.org>
- <20180723155410.9494-13-srinivas.kandagatla@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] dt-bindings: thermal: samsung: Add SPDX license identifier
+Date: Wed, 25 Jul 2018 18:27:59 +0200
+Message-ID: <CAJKOXPfTBE-tW81tocCfObb-pAwNmDjjv-BY6kHNkEuazm0pAA@mail.gmail.com>
+References: <CGME20180718200318epcas3p16aed6c1725d6c1e63ea6b1ad209c5756@epcas3p1.samsung.com>
+ <2442216.oppRSGRAaL@amdc3058> <20180724200312.xs6u4nvhjckukkig@kozik-lap> <2385592.z8yee4uxt4@amdc3058>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4212930171213953266=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180723155410.9494-13-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, vkoul@kernel.org, robh+dt@kernel.org, lee.jones@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2385592.z8yee4uxt4@amdc3058>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 25 July 2018 at 16:43, Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
+> On Tuesday, July 24, 2018 10:03:12 PM Krzysztof Kozlowski wrote:
+>> On Tue, Jul 24, 2018 at 06:46:35PM +0200, Bartlomiej Zolnierkiewicz wrote:
+>> >
+>> > Hi,
+>> >
+>> > On Wednesday, July 18, 2018 10:02:50 PM Krzysztof Kozlowski wrote:
+>> > > Replace GPL license statement with SPDX license identifier (GPL-2.0+).
+>> > >
+>> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> > > ---
+>> > >  include/dt-bindings/thermal/thermal_exynos.h | 12 +-----------
+>> > >  1 file changed, 1 insertion(+), 11 deletions(-)
+>> > >
+>> > > diff --git a/include/dt-bindings/thermal/thermal_exynos.h b/include/dt-bindings/thermal/thermal_exynos.h
+>> > > index 0646500bca69..642e4e7f4084 100644
+>> > > --- a/include/dt-bindings/thermal/thermal_exynos.h
+>> > > +++ b/include/dt-bindings/thermal/thermal_exynos.h
+>> > > @@ -1,19 +1,9 @@
+>> > > +/* SPDX-License-Identifier: GPL-2.0+ */
+>> >
+>> > This code should be GPL-2.0 only, original license statement is most
+>> > likely result of using wrong file as the source of copy-paste. So I
+>> > would like to have the license fixed first before doing conversion to
+>> > SPDX.
+>>
+>> If you think that's the case, then it makes sense and please go ahead.
+>> As fair as I remember this required signed-off from all contributors...
+>> so probably just Lukasz and Eduardo?
+>
+> git blame shows just Lukasz so his Ack should be enough.
+>
+> I'm also fine with doing it in one patch like i.e. in commit a80ea4cb944e
+> ("pata_bk3710: clarify license version and use SPDX header"), if you are
+> also fine with it could you please re-spin the patch (+Cc: Lukasz)?
 
---===============4212930171213953266==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NKoe5XOeduwbEQHU"
-Content-Disposition: inline
+I do not have interest in changing the license, I do not want to deal
+with possible legal issues so I'll skip it.
 
+I am fine however with abandoning this patch if you or someone else
+sends license change + SPDX.
 
---NKoe5XOeduwbEQHU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jul 23, 2018 at 04:54:10PM +0100, Srinivas Kandagatla wrote:
-> This patch adds support Analog audio via WCD9335 Codec connected via SLIMBus.
-> Tested it on DB820c.
-
-This looks good as do the other patches I didn't explicitly comment on.
-
---NKoe5XOeduwbEQHU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltYpFcACgkQJNaLcl1U
-h9AYRQf+MlUMS9lvwVmMrSYMa3FS+HFCLO01K7ckUMy9KOIoYIzpEnhXlK7NN2dH
-aIjGIBNJcYBrKlzQTg859xt9XX2LE+lnxwVPIF7lPz/czeIPsYkCdg28GtzEDF0q
-RGK1yc6yBoNjIOpQtpu7KSdGlz08Ve3YcfOqZvT3CLyvHqwol8ath8MJuBKOsIu5
-susi5HEu9xeLH4/MSviqja5VDmaqQGIMes7mlJPa99GrjWWNCbrabv1MVc3JGwzF
-4qgv+xS8wjnQxvXRY6hWQGBOK0wMRHaECdLVS2aZZ1Qjrp86TGFSvsHnIWcK83Kh
-gcaNIBmlVZxTmUgObR4oCrXErF8I8w==
-=uYAY
------END PGP SIGNATURE-----
-
---NKoe5XOeduwbEQHU--
-
---===============4212930171213953266==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============4212930171213953266==--
+Best regards,
+Krzysztof
