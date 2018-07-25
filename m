@@ -1,66 +1,95 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] iommu/arm-smmu: Error out only if not enough context
-	interrupts
-Date: Wed, 25 Jul 2018 12:57:30 +0100
-Message-ID: <20180725115729.GA31576@arm.com>
-References: <20180719175356.14753-1-vivek.gautam@codeaurora.org>
-	<20180719175356.14753-4-vivek.gautam@codeaurora.org>
-	<20180724083633.GA19324@arm.com>
-	<d6796a00-17da-c03e-ca7f-7a67139ad99a@codeaurora.org>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH 08/12] ASoC: wcd9335: add basic controls
+Date: Wed, 25 Jul 2018 17:34:07 +0530
+Message-ID: <20180725120407.GO3661@vkoul-mobl>
+References: <20180723155410.9494-1-srinivas.kandagatla@linaro.org>
+ <20180723155410.9494-9-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d6796a00-17da-c03e-ca7f-7a67139ad99a-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20180723155410.9494-9-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 03:09:41PM +0530, Vivek Gautam wrote:
-> On 7/24/2018 2:06 PM, Will Deacon wrote:
-> >On Thu, Jul 19, 2018 at 11:23:56PM +0530, Vivek Gautam wrote:
-> >>diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> >>index 7c69736a30f8..4cb53bf4f423 100644
-> >>--- a/drivers/iommu/arm-smmu.c
-> >>+++ b/drivers/iommu/arm-smmu.c
-> >>@@ -2229,12 +2229,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
-> >>  	if (err)
-> >>  		return err;
-> >>-	if (smmu->version == ARM_SMMU_V2 &&
-> >>-	    smmu->num_context_banks != smmu->num_context_irqs) {
-> >>-		dev_err(dev,
-> >>-			"found only %d context interrupt(s) but %d required\n",
-> >>-			smmu->num_context_irqs, smmu->num_context_banks);
-> >>-		return -ENODEV;
-> >>+	if (smmu->version == ARM_SMMU_V2) {
-> >>+		if (smmu->num_context_banks > smmu->num_context_irqs) {
-> >>+			dev_err(dev,
-> >>+			      "found only %d context irq(s) but %d required\n",
-> >>+			      smmu->num_context_irqs, smmu->num_context_banks);
-> >>+			return -ENODEV;
-> >>+		} else if (smmu->num_context_banks < smmu->num_context_irqs) {
-> >>+			/* loose extra context interrupts */
-> >>+			dev_notice(dev,
-> >>+			      "found %d context irq(s) but only %d required\n",
-> >>+			      smmu->num_context_irqs, smmu->num_context_banks);
-> >>+			smmu->num_context_irqs = smmu->num_context_banks;
-> >>+		}
-> >I don't see the utility in the new message. Can you simplify with the patch
-> >below on top? It's a bit weird that we only decide to ignore the extra irqs
-> >after calling platform_get_irq() on them, but that seems to be harmless.
-> 
-> Thanks. I will modify as suggested below and respin.
+On 23-07-18, 16:54, Srinivas Kandagatla wrote:
 
-It's ok, I can make the change locally.
+> +static int wcd9335_set_compander(struct snd_kcontrol *kc,
+> +				 struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
+> +	struct wcd9335_codec *wcd = dev_get_drvdata(component->dev);
+> +	int comp = ((struct soc_mixer_control *) kc->private_value)->shift;
+> +	int value = ucontrol->value.integer.value[0];
+> +	int sel;
+> +
+> +	wcd->comp_enabled[comp] = value;
+> +	sel = value ? WCD9335_HPH_GAIN_SRC_SEL_COMPANDER :
+> +		WCD9335_HPH_GAIN_SRC_SEL_REGISTER;
+> +
+> +	/* Any specific register configuration for compander */
+> +	switch (comp) {
+> +	case COMPANDER_1:
+> +		/* Set Gain Source Select based on compander enable/disable */
+> +		snd_soc_component_update_bits(component, WCD9335_HPH_L_EN,
+> +				      WCD9335_HPH_GAIN_SRC_SEL_MASK, sel);
+> +		break;
+> +	case COMPANDER_2:
+> +		snd_soc_component_update_bits(component, WCD9335_HPH_R_EN,
+> +				      WCD9335_HPH_GAIN_SRC_SEL_MASK, sel);
+> +		break;
+> +	case COMPANDER_3:
+> +		break;
+> +	case COMPANDER_4:
+> +		break;
+> +	case COMPANDER_5:
+> +		snd_soc_component_update_bits(component, WCD9335_SE_LO_LO3_GAIN,
+> +				      WCD9335_HPH_GAIN_SRC_SEL_MASK, sel);
+> +		break;
+> +	case COMPANDER_6:
+> +		snd_soc_component_update_bits(component, WCD9335_SE_LO_LO4_GAIN,
+> +				      WCD9335_HPH_GAIN_SRC_SEL_MASK, sel);
+> +		break;
+> +	case COMPANDER_7:
+> +		break;
+> +	case COMPANDER_8:
+> +		break;
 
-Will
+why not do:
+
+        case COMPANDER_3:
+        case COMPANDER_4:
+        case COMPANDER_7:
+        case COMPANDER_8:
+                break;
+
+thereby clubbing all the ones not handled together..
+
+> +static int wcd9335_rx_hph_mode_get(struct snd_kcontrol *kc,
+> +				 struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
+> +	struct wcd9335_codec *wcd = dev_get_drvdata(component->dev);
+> +
+> +	ucontrol->value.integer.value[0] = wcd->hph_mode;
+
+i think this is an enum so shouldn't value.enumerated.item[0] be used?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int wcd9335_rx_hph_mode_put(struct snd_kcontrol *kc,
+> +				 struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
+> +	struct wcd9335_codec *wcd = dev_get_drvdata(component->dev);
+> +	u32 mode_val;
+> +
+> +	mode_val = ucontrol->value.enumerated.item[0];
+
+yaaay
+-- 
+~Vinod
