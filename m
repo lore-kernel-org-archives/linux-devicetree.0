@@ -1,72 +1,69 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/4] treewide: convert ISO_8859-1 text comments to utf-8
-Date: Wed, 25 Jul 2018 15:12:11 +0200
-Message-ID: <CAK8P3a3tOuP1FVS7oD1UhO5s4C+fLkL8VT3eCpRnSxBZxKzf6A@mail.gmail.com>
-References: <20180724111600.4158975-1-arnd@arndb.de> <20180724140010.e24a9964fd340afe2d98a994@linux-foundation.org>
- <aa39b6d15f44555cb79d5ebdef74aeab19003d6a.camel@perches.com> <20180724175531.75276cf4e539124aa9e27177@linux-foundation.org>
+From: Ladislav Michl <ladis@linux-mips.org>
+Subject: Re: [PATCH 09/32] ARM: dts: omap3-gta04: make NAND partitions
+ compatible with recent U-Boot
+Date: Wed, 25 Jul 2018 15:26:03 +0200
+Message-ID: <20180725132603.GA21902@lenoch>
+References: <cover.1532501910.git.hns@goldelico.com>
+ <8dcf3efd3270451314a663c125841ca87ed2b387.1532501910.git.hns@goldelico.com>
+ <20180725080735.GA7467@lenoch>
+ <EECC7962-DEAB-4C21-98A7-EBAE4AEA312B@goldelico.com>
+ <20180725083305.GB8303@lenoch>
+ <85BC9F70-2E58-4915-9405-7CC1855975C4@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724175531.75276cf4e539124aa9e27177@linux-foundation.org>
+Content-Disposition: inline
+In-Reply-To: <85BC9F70-2E58-4915-9405-7CC1855975C4@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Joe Perches <joe@perches.com>, Samuel Ortiz <sameo@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Cameron <jic23@kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-iio@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Marek Belisko <marek@goldelico.com>, =?iso-8859-2?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-tools/perf/tests/.gitignore:
-                            LLVM byte-codes, uncompressed
-On Wed, Jul 25, 2018 at 2:55 AM, Andrew Morton
-<akpm@linux-foundation.org> wrote:
-> On Tue, 24 Jul 2018 17:13:20 -0700 Joe Perches <joe@perches.com> wrote:
->
->> On Tue, 2018-07-24 at 14:00 -0700, Andrew Morton wrote:
->> > On Tue, 24 Jul 2018 13:13:25 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
->> > > Almost all files in the kernel are either plain text or UTF-8
->> > > encoded. A couple however are ISO_8859-1, usually just a few
->> > > characters in a C comments, for historic reasons.
->> > > This converts them all to UTF-8 for consistency.
->> []
->> > Will we be getting a checkpatch rule to keep things this way?
->>
->> How would that be done?
->
-> I'm using this, seems to work.
->
->         if ! file $p | grep -q -P ", ASCII text|, UTF-8 Unicode text"
->         then
->                 echo $p: weird charset
->         fi
+On Wed, Jul 25, 2018 at 02:27:31PM +0200, H. Nikolaus Schaller wrote:
+> 
+> > Am 25.07.2018 um 10:33 schrieb Ladislav Michl <ladis@linux-mips.org>:
+> > 
+> > On Wed, Jul 25, 2018 at 10:18:28AM +0200, H. Nikolaus Schaller wrote:
+> >> 
+> >>> Am 25.07.2018 um 10:07 schrieb Ladislav Michl <ladis@linux-mips.org>:
+> >>> 
+> >>> On Wed, Jul 25, 2018 at 08:58:41AM +0200, H. Nikolaus Schaller wrote:
+> >>>> Vendor defined U-Boot has changed the partition scheme a while ago:
+> >>>> 
+> >>>> * kernel partition 6MB
+> >>>> * file system partition uses the remainder up to end of the NAND
+> >>>> * increased size of the environment partition (to get an OneNAND compatible base address)
+> >>>> * shrink the U-Boot partition
+> >>>> 
+> >>>> Let's be compatible (e.g. Debian kernel built from upstream).
+> >>> 
+> >>> That, in fact, is breaking compatibility.
+> >> 
+> >> With what? Nobody is using the old u-boot partition scheme any more
+> >> (it is >5 years old).
+> >> 
+> >>> So once you are touching this
+> >>> what about relying on partitioning provided by bootloader just to prevent
+> >>> something like this happening again?
+> >> 
+> >> Well, we define what compatible means here (since we are the vendor).
+> >> And people complain with us. We simply recommend them to upgrade the
+> >> boot-loader.
+> > 
+> > Fair enough. Suggestion was to remove partitioning scheme from DTB alltogether
+> > and let U-Boot provide one. But you being vendor you decide, of course :)
+> > (I'd use only two partitions: MLO and UBI, latter one with BCH8, and store
+> > everything in UBI volumes. That's a bit more flexible approach)
+> 
+> Yes, that is a good goal for a future setup and would of course be better.
+> Like U-Boot already provides the memory layout for RAM.
+> 
+> Hopefully, someone will work out patches for u-boot plus kernel (which is always
+> painful to keep these two in sync and tested). But I don't want to do that now.
 
-There are a couple of files that my version of 'find' incorrectly identified as
-something completely different, like:
+At kernel side the only patch needed is to remove partitioning scheme from DTB
+and u-boot setup can be merely copied from board/isee/igep00x0
+Not having hardware I cannot really test it ;-)
 
-Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt:
-            SemOne archive data
-Documentation/devicetree/bindings/rtc/epson,rtc7301.txt:
-            Microsoft Document Imaging Format
-Documentation/filesystems/nfs/pnfs-block-server.txt:
-            PPMN archive data
-arch/arm/boot/dts/bcm283x-rpi-usb-host.dtsi:
-        Sendmail frozen configuration  - version = "host";
-Documentation/networking/segmentation-offloads.txt:
-        StuffIt Deluxe Segment (data) : gmentation Offloads in the
-Linux Networking Stack
-arch/sparc/include/asm/visasm.h:                              SAS 7+
-arch/xtensa/kernel/setup.c:                                         ,
-init=0x454c, stat=0x090a, dev=0x2009, bas=0x2020
-drivers/cpufreq/powernow-k8.c:
-TI-XX Graphing Calculator (FLASH)
-tools/testing/selftests/net/forwarding/tc_shblocks.sh:
-                            Minix filesystem, V2 (big endian)
-tools/perf/tests/.gitignore:
-                            LLVM byte-codes, uncompressed
-
-All of the above seem to be valid ASCII or UTF-8 files, so the check
-above will lead
-to false-positives, but it may be good enough as they are the
-exception, and may be
-bugs in 'file'.
-
-Not sure if we need to worry about 'file' not being installed.
-
-       Arnd
+Best regards,
+	ladis
