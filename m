@@ -1,56 +1,36 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 00/14] arm64: dts: meson-axg: add audio support
-Date: Wed, 25 Jul 2018 21:11:23 +0200
-Message-ID: <CAFBinCBh-b=ie4hBMWdHG8KoLQ7qiRfo8vXfJ1PRcN4UPtg+uA@mail.gmail.com>
-References: <20180724125238.14567-1-jbrunet@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: samsung: Add SPDX license identifiers
+Date: Wed, 25 Jul 2018 13:13:07 -0600
+Message-ID: <20180725191307.GA32217@rob-hp-laptop>
+References: <20180718200216.6389-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20180718200216.6389-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jbrunet@baylibre.com
-Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
+On Wed, Jul 18, 2018 at 10:02:16PM +0200, Krzysztof Kozlowski wrote:
+> Replace GPL license statements with SPDX license identifiers (GPL-2.0).
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  include/dt-bindings/clock/exynos3250.h            | 5 +----
+>  include/dt-bindings/clock/exynos4.h               | 7 ++-----
+>  include/dt-bindings/clock/exynos5250.h            | 7 ++-----
+>  include/dt-bindings/clock/exynos5260-clk.h        | 7 ++-----
+>  include/dt-bindings/clock/exynos5410.h            | 7 ++-----
+>  include/dt-bindings/clock/exynos5420.h            | 7 ++-----
+>  include/dt-bindings/clock/exynos5433.h            | 5 +----
+>  include/dt-bindings/clock/exynos7-clk.h           | 7 ++-----
+>  include/dt-bindings/clock/s3c2410.h               | 5 +----
+>  include/dt-bindings/clock/s3c2412.h               | 5 +----
+>  include/dt-bindings/clock/s3c2443.h               | 5 +----
+>  include/dt-bindings/clock/samsung,s2mps11.h       | 5 +----
+>  include/dt-bindings/clock/samsung,s3c64xx-clock.h | 7 ++-----
+>  13 files changed, 20 insertions(+), 59 deletions(-)
 
-On Tue, Jul 24, 2018 at 2:53 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> The main purpose of this patchset is to add the audio devices on amlogic's
-> AXG SoCs.
->
-> Some codecs require some power supplies. This is why the 3 first patches
-> deal with the S400 power supplies, even if some are not related to audio.
->
-> In term of dependency, apart from the clock bindings you have already
-> pulled for your second PR to arm-soc, this patchset requires the ARB
-> reset bindings [0] for patch 5. I don't know if Philip can make it
-> available somewhere ?
->
-> Of course, if the dependencies make this patchset too complicated to
-> merge in this cycle, I'll resubmit once the next rc1 is out.
->
-> Jerome Brunet (14):
->   arm64: dts: meson-axg: improve power supplies description
->   arm64: dts: meson-axg: add vcc 5v regulator on the s400
->   arm64: dts: meson-axg: add usb power regulator
->   arm64: dts: meson-axg: add audio arb reset controller
->   arm64: dts: meson-axg: add audio fifos
->   arm64: dts: meson-axg: add spdifout
->   arm64: dts: meson-axg: add tdmin formatters
->   arm64: dts: meson-axg: add tdmout formatters
->   arm64: dts: meson-axg: add tdm interfaces
->   arm64: dts: meson-axg: add linein codec
->   arm64: dts: meson-axg: add lineout codec
->   arm64: dts: meson-axg: add spdif-dit codec
->   arm64: dts: meson-axg: s400: enable audio devices
->   arm64: dts: meson-axg: add s400 sound card
-nit-pick: one patch uses "arm64: dts: meson-axg: s400" in the subject
-while other patches that are touching the s400 board aren't
-if you have to re-send this series: can you please use the "arm64:
-dts: meson-axg: s400:" prefix for all patches touching the s400 board?
-
-
-Thank you!
-Regards
-Martin
+Reviewed-by: Rob Herring <robh@kernel.org>
