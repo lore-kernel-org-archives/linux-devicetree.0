@@ -1,7 +1,8 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5/6] irqchip: New RISC-V PLIC Driver
-Date: Wed, 25 Jul 2018 11:36:48 +0200
-Message-ID: <20180725093649.32332-6-hch@lst.de>
+Subject: [PATCH 6/6] dt-bindings: interrupt-controller: RISC-V PLIC
+ documentation
+Date: Wed, 25 Jul 2018 11:36:49 +0200
+Message-ID: <20180725093649.32332-7-hch@lst.de>
 References: <20180725093649.32332-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,351 +24,80 @@ List-Id: devicetree@vger.kernel.org
 
 From: Palmer Dabbelt <palmer@dabbelt.com>
 
-This patch adds a driver for the Platform Level Interrupt Controller
-(PLIC) specified as part of the RISC-V supervisor level ISA manual.
-The PLIC connects global interrupt sources to the local interrupt
-controller on each hart.
+This patch adds documentation for the platform-level interrupt
+controller (PLIC) found in all RISC-V systems.  This interrupt
+controller routes interrupts from all the devices in the system to each
+hart-local interrupt controller.
+
+Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
+want to change how we're specifying holes in the hart list.
 
 Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-[hch: various cleanups, fixed typos, added SPDX tag]
-Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/irqchip/Kconfig          |  13 ++
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-riscv-plic.c | 295 +++++++++++++++++++++++++++++++
- 3 files changed, 309 insertions(+)
- create mode 100644 drivers/irqchip/irq-riscv-plic.c
+ .../interrupt-controller/riscv,plic0.txt      | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 8460fdcecc2c..d1afac8829ae 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -376,3 +376,16 @@ endmenu
- config RISCV_INTC
- 	def_bool y
- 	depends on RISCV
-+
-+config RISCV_PLIC
-+	bool "Platform-Level Interrupt Controller"
-+	depends on RISCV
-+	default y
-+	help
-+	   This enables support for the PLIC chip found in standard RISC-V
-+	   systems.  The PLIC controls devices interrupts and connects them to
-+	   each core's local interrupt controller.  Aside from timer and
-+	   software interrupts, all other interrupt sources (MSI, GPIO, etc)
-+	   are subordinate to the PLIC.
-+
-+	   If you don't know what to do here, say Y.
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 74e333cc274c..7954f4c4a629 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -88,3 +88,4 @@ obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
- obj-$(CONFIG_NDS32)			+= irq-ativic32.o
- obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
- obj-$(CONFIG_RISCV_INTC)		+= irq-riscv-intc.o
-+obj-$(CONFIG_RISCV_PLIC)		+= irq-riscv-plic.o
-diff --git a/drivers/irqchip/irq-riscv-plic.c b/drivers/irqchip/irq-riscv-plic.c
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
 new file mode 100644
-index 000000000000..7b80b73c28a0
+index 000000000000..99cd359dbd43
 --- /dev/null
-+++ b/drivers/irqchip/irq-riscv-plic.c
-@@ -0,0 +1,295 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 SiFive
-+ */
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
++++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+@@ -0,0 +1,55 @@
++RISC-V Platform-Level Interrupt Controller (PLIC)
++-------------------------------------------------
 +
-+/*
-+ * From the RISC-V Priviledged Spec v1.10:
-+ *
-+ * Global interrupt sources are assigned small unsigned integer identifiers,
-+ * beginning at the value 1.  An interrupt ID of 0 is reserved to mean "no
-+ * interrupt".  Interrupt identifiers are also used to break ties when two or
-+ * more interrupt sources have the same assigned priority. Smaller values of
-+ * interrupt ID take precedence over larger values of interrupt ID.
-+ *
-+ * While the RISC-V supervisor spec doesn't define the maximum number of
-+ * devices supported by the PLIC, the largest number supported by devices
-+ * marked as 'riscv,plic0' (which is the only device type this driver supports,
-+ * and is the only extant PLIC as of now) is 1024.  As mentioned above, device
-+ * 0 is defined to be non-existent so this device really only supports 1023
-+ * devices.
-+ */
-+#define MAX_DEVICES	1024
-+#define MAX_CONTEXTS	15872
++The RISC-V supervisor ISA specification allows for the presence of a
++platform-level interrupt controller (PLIC).   The PLIC connects all external
++interrupts in the system to all hart contexts in the system, via the external
++interrupt source in each hart's hart-local interrupt controller (HLIC).  A hart
++context is a privilege mode in a hardware execution thread.  For example, in
++an 4 core system with 2-way SMT, you have 8 harts and probably at least two
++privilege modes per hart; machine mode and supervisor mode.
 +
-+struct plic_handler {
-+	bool			present;
-+	int			contextid;
-+	struct plic_data	*data;
-+};
++Each interrupt can be enabled on per-context basis. Any context can claim
++a pending enabled interrupt and then release it once it has been handled.
 +
-+/*
-+ * PLIC devices are named like 'riscv,plic0,%llx', this is enough space to
-+ * store that name.
-+ */
-+#define PLIC_DATA_NAME_SIZE 30
++Each interrupt has a configurable priority. Higher priority interrupts are
++serviced firs. Each context can specify a priority threshold. Interrupts
++with priority below this threshold will not cause the PLIC to raise its
++interrupt line leading to the context.
 +
-+struct plic_data {
-+	struct irq_chip		chip;
-+	struct irq_domain	*domain;
-+	u32			ndev;
-+	void __iomem		*reg;
-+	int			handlers;
-+	struct plic_handler	*handler;
-+	char			name[PLIC_DATA_NAME_SIZE];
-+	spinlock_t		lock;
-+};
++While the PLIC supports both edge-triggered and level-triggered interrupts,
++interrupt handlers are oblivious to this distinction and therefor it is not
++specific in the PLIC device-tree binding.
 +
-+/*
-+ * Each interrupt source has a priority register associated with it.
-+ * We always hardwire it to one in Linux.
-+ */
-+static inline u32 __iomem *plic_priority(struct plic_data *data, int hwirq)
-+{
-+	return data->reg + hwirq * 0x04;
-+}
++While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
++"riscv,plic0" device is a concrete implementation of the PLIC that contains a
++specific memory layout.  More details about the memory layout of the
++"riscv,plic0" device can be found as a comment in the device driver, or as part
++of the SiFive U5 Coreplex Series Manual (page 22 of the PDF of version 1.0)
++<https://www.sifive.com/documentation/coreplex/u5-coreplex-series-manual/>
 +
-+/*
-+ * Each hart context has a vector of interrupt enable bits associated with it.
-+ * There is one bit for each interrupt source.
-+ */
-+static inline u32 __iomem *plic_enable_vector(struct plic_data *data,
-+		int contextid)
-+{
-+	return data->reg + (1 << 13) + contextid * 0x80;
-+}
++Required properties:
++- compatible : "riscv,plic0"
++- #address-cells : should be <0>
++- #interrupt-cells : should be <1>
++- interrupt-controller : Identifies the node as an interrupt controller
++- reg : Should contain 1 register range (address and length)
++- interrupts-extended : Specifies which contexts are connected to the PLIC,
++  with "-1" specifying that a context is not present.
 +
-+/*
-+ * Each hart context has a set of control registers associated with it.  Right
-+ * now there's only two: a source priority threshold over which the hart will
-+ * take an interrupt, and a register to claim interrupts.
-+ */
-+#define CONTEXT_THRESHOLD	0
-+#define CONTEXT_CLAIM		4
++Example:
 +
-+static inline u32 __iomem *plic_hart_data(struct plic_data *data,
-+		int contextid)
-+{
-+	return data->reg + (1 << 21) + contextid * 0x1000;
-+}
-+
-+/* Explicit interrupt masking. */
-+static void plic_disable(struct plic_data *data, int contextid, int hwirq)
-+{
-+	u32 __iomem *reg = plic_enable_vector(data, contextid) + (hwirq / 32);
-+	u32 mask = ~(1 << (hwirq % 32));
-+
-+	spin_lock(&data->lock);
-+	writel(readl(reg) & mask, reg);
-+	spin_unlock(&data->lock);
-+}
-+
-+static void plic_enable(struct plic_data *data, int contextid, int hwirq)
-+{
-+	u32 __iomem *reg = plic_enable_vector(data, contextid) + (hwirq / 32);
-+	u32 bit = 1 << (hwirq % 32);
-+
-+	spin_lock(&data->lock);
-+	writel(readl(reg) | bit, reg);
-+	spin_unlock(&data->lock);
-+}
-+
-+/*
-+ * There is no need to mask/unmask PLIC interrupts
-+ * They are "masked" by reading claim and "unmasked" when writing it back.
-+ */
-+static void plic_irq_mask(struct irq_data *d)
-+{
-+}
-+
-+static void plic_irq_unmask(struct irq_data *d)
-+{
-+}
-+
-+static void plic_irq_enable(struct irq_data *d)
-+{
-+	struct plic_data *data = irq_data_get_irq_chip_data(d);
-+	int i;
-+
-+	writel(1, plic_priority(data, d->hwirq));
-+	for (i = 0; i < data->handlers; ++i)
-+		if (data->handler[i].present)
-+			plic_enable(data, i, d->hwirq);
-+}
-+
-+static void plic_irq_disable(struct irq_data *d)
-+{
-+	struct plic_data *data = irq_data_get_irq_chip_data(d);
-+	int i;
-+
-+	writel(0, plic_priority(data, d->hwirq));
-+	for (i = 0; i < data->handlers; ++i)
-+		if (data->handler[i].present)
-+			plic_disable(data, i, d->hwirq);
-+}
-+
-+static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
-+			      irq_hw_number_t hwirq)
-+{
-+	struct plic_data *data = d->host_data;
-+
-+	irq_set_chip_and_handler(irq, &data->chip, handle_simple_irq);
-+	irq_set_chip_data(irq, data);
-+	irq_set_noprobe(irq);
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops plic_irqdomain_ops = {
-+	.map	= plic_irqdomain_map,
-+	.xlate	= irq_domain_xlate_onecell,
-+};
-+
-+/*
-+ * Handling an interrupt is a two-step process: first you claim the interrupt
-+ * by reading the claim register, then you complete the interrupt by writing
-+ * that source ID back to the same claim register.  This automatically enables
-+ * and disables the interrupt, so there's nothing else to do.
-+ */
-+static void plic_chained_handle_irq(struct irq_desc *desc)
-+{
-+	struct plic_handler *handler = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct irq_domain *domain = handler->data->domain;
-+	void __iomem *ph = plic_hart_data(handler->data, handler->contextid);
-+	u32 what;
-+
-+	chained_irq_enter(chip, desc);
-+	while ((what = readl(ph + CONTEXT_CLAIM))) {
-+		int irq = irq_find_mapping(domain, what);
-+
-+		if (irq > 0)
-+			generic_handle_irq(irq);
-+		else
-+			handle_bad_irq(desc);
-+		writel(what, ph + CONTEXT_CLAIM);
-+	}
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static int plic_init(struct device_node *node, struct device_node *parent)
-+{
-+	struct plic_data *data;
-+	struct resource resource;
-+	int i, ok = 0;
-+	int out = -1;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (WARN_ON(!data))
-+		return -ENOMEM;
-+
-+	spin_lock_init(&data->lock);
-+
-+	data->reg = of_iomap(node, 0);
-+	if (WARN_ON(!data->reg)) {
-+		out = -EIO;
-+		goto free_data;
-+	}
-+
-+	of_property_read_u32(node, "riscv,ndev", &data->ndev);
-+	if (WARN_ON(!data->ndev)) {
-+		out = -EINVAL;
-+		goto free_reg;
-+	}
-+
-+	data->handlers = of_irq_count(node);
-+	if (WARN_ON(!data->handlers)) {
-+		out = -EINVAL;
-+		goto free_reg;
-+	}
-+
-+	data->handler =
-+		kcalloc(data->handlers, sizeof(*data->handler), GFP_KERNEL);
-+	if (WARN_ON(!data->handler)) {
-+		out = -ENOMEM;
-+		goto free_reg;
-+	}
-+
-+	data->domain = irq_domain_add_linear(node, data->ndev + 1,
-+			&plic_irqdomain_ops, data);
-+	if (WARN_ON(!data->domain)) {
-+		out = -ENOMEM;
-+		goto free_handler;
-+	}
-+
-+	of_address_to_resource(node, 0, &resource);
-+	snprintf(data->name, sizeof(data->name),
-+		 "riscv,plic0,%llx", resource.start);
-+	data->chip.name = data->name;
-+	data->chip.irq_mask = plic_irq_mask;
-+	data->chip.irq_unmask = plic_irq_unmask;
-+	data->chip.irq_enable = plic_irq_enable;
-+	data->chip.irq_disable = plic_irq_disable;
-+
-+	for (i = 0; i < data->handlers; ++i) {
-+		struct plic_handler *handler = &data->handler[i];
-+		struct of_phandle_args parent;
-+		int parent_irq, hwirq;
-+
-+		handler->present = false;
-+
-+		if (of_irq_parse_one(node, i, &parent))
-+			continue;
-+		/* skip context holes */
-+		if (parent.args[0] == -1)
-+			continue;
-+
-+		/* skip any contexts that lead to inactive harts */
-+		if (of_device_is_compatible(parent.np, "riscv,cpu-intc") &&
-+		    parent.np->parent &&
-+		    riscv_of_processor_hart(parent.np->parent) < 0)
-+			continue;
-+
-+		parent_irq = irq_create_of_mapping(&parent);
-+		if (!parent_irq)
-+			continue;
-+
-+		handler->present = true;
-+		handler->contextid = i;
-+		handler->data = data;
-+		/* hwirq prio must be > this to trigger an interrupt */
-+		writel(0, plic_hart_data(data, i) + CONTEXT_THRESHOLD);
-+
-+		for (hwirq = 1; hwirq <= data->ndev; ++hwirq)
-+			plic_disable(data, i, hwirq);
-+		irq_set_chained_handler_and_data(parent_irq,
-+				plic_chained_handle_irq, handler);
-+		++ok;
-+	}
-+
-+	pr_info("%s: mapped %d interrupts to %d/%d handlers\n",
-+		data->name, data->ndev, ok, data->handlers);
-+	WARN_ON(!ok);
-+	return 0;
-+
-+free_handler:
-+	kfree(data->handler);
-+free_reg:
-+	iounmap(data->reg);
-+free_data:
-+	kfree(data);
-+	return out;
-+}
-+
-+IRQCHIP_DECLARE(plic0, "riscv,plic0", plic_init);
++	plic: interrupt-controller@c000000 {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		compatible = "riscv,plic0";
++		interrupt-controller;
++		interrupts-extended = <
++			&cpu0-intc 11
++			&cpu1-intc 11 &cpu1-intc 9
++			&cpu2-intc 11 &cpu2-intc 9
++			&cpu3-intc 11 &cpu3-intc 9
++			&cpu4-intc 11 &cpu4-intc 9>;
++		reg = <0xc000000 0x4000000>;
++		riscv,ndev = <10>;
++	};
 -- 
 2.18.0
