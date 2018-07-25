@@ -1,32 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] Add support for CPCAP regulators on Motorola Xoom
- devices.
-Date: Wed, 25 Jul 2018 09:35:14 -0600
-Message-ID: <20180725153514.GA21550@rob-hp-laptop>
-References: <20180724132541.17039-1-pgwipeout@gmail.com>
- <20180724132541.17039-3-pgwipeout@gmail.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [linux-sunxi] [PATCH v3 6/9] dt-bindings: phy: add binding for Allwinner USB3 PHY
+Date: Wed, 25 Jul 2018 23:38:06 +0800
+Message-ID: <75A6FEBC-FDCE-459E-93C5-60F4B0E6D44D@aosc.io>
+References: <20180722055739.26464-1-icenowy@aosc.io> <20180722055739.26464-7-icenowy@aosc.io> <CAGb2v65m6AEW=DO-cqLMyjfnaiZudm38hXufJL6LXdOrJqir_g@mail.gmail.com> <20180725153126.GA8350@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180724132541.17039-3-pgwipeout@gmail.com>
+In-Reply-To: <20180725153126.GA8350@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Geis <pgwipeout@gmail.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 09:25:41AM -0400, Peter Geis wrote:
-> Added support for the CPCAP power management regulator functions on
-> Tegra based Motorola Xoom devices.
-> Added sw2_sw4 value tables, which provide power to the Tegra core and
-> aux devices.
-> Added the Xoom init tables and device tree compatibility match.
-> 
-> Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-> ---
->  .../bindings/regulator/cpcap-regulator.txt    |  1 +
 
-Acked-by: Rob Herring <robh@kernel.org>
 
->  drivers/regulator/cpcap-regulator.c           | 80 +++++++++++++++++++
->  2 files changed, 81 insertions(+)
+于 2018年7月25日 GMT+08:00 下午11:31:26, Rob Herring <robh@kernel.org> 写到:
+>On Sun, Jul 22, 2018 at 02:10:33PM +0800, Chen-Yu Tsai wrote:
+>> On Sun, Jul 22, 2018 at 1:57 PM, Icenowy Zheng <icenowy@aosc.io>
+>wrote:
+>> > The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
+>> > external USB3 pins of the SoC.
+>> >
+>> > Add a device tree binding for the PHY.
+>> >
+>> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+>> > ---
+>> > Changes in v3:
+>> > - Added Chen-Yu's Review tag.
+>> >
+>> > Rob,
+>> > Although you mentioned that the supply is for the port, not the
+>phy;
+>> > currently in USB situation "powering on the PHY" also indicates
+>> > "powering on the port" and nearly all usages of phy-supply is for
+>Vbus.
+>> >
+>> > Maybe we should change the overall phy-supply to satisfy this.
+>> 
+>> Or maybe change it to vbus-supply, like we have for phy-sun4i-usb,
+>> until USB port power sequencing is added. (I remember there were
+>> patches for this. What happened?)
+>
+>Once it is in the binding, we are stuck with it.
+>
+>Connector bindings have landed. We should add vbus-supply to that. You 
+>don't have to have a property in the node associated with a driver. The
+
+How should the phy DT node reference the connector?
+
+>
+>phy driver can walk the tree and get the Vbus supply.
+>
+>UniPhier has the same issue.
+>
+>Rob
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
