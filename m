@@ -1,50 +1,44 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: RISC-V irqchip drivers
-Date: Wed, 25 Jul 2018 14:26:38 -0700 (PDT)
-Message-ID: <mhng-670ecc27-6fdd-491b-8db4-4ce8f93bfb94@palmer-si-x1c4>
-References: <20180725093649.32332-1-hch@lst.de>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 00/14] arm64: dts: meson-axg: add audio support
+Date: Wed, 25 Jul 2018 23:26:27 +0200
+Message-ID: <CAFBinCB_fULnmrpyzNwnfAiL9QGco_6QW957Wroj8o6ZhNwmWA@mail.gmail.com>
+References: <20180724125238.14567-1-jbrunet@baylibre.com> <CAFBinCBh-b=ie4hBMWdHG8KoLQ7qiRfo8vXfJ1PRcN4UPtg+uA@mail.gmail.com>
+ <705e31bf0d978b7d356b2f077179ab0e3db6f092.camel@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725093649.32332-1-hch@lst.de>
+In-Reply-To: <705e31bf0d978b7d356b2f077179ab0e3db6f092.camel@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
+To: jbrunet@baylibre.com
+Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Jul 2018 02:36:43 PDT (-0700), Christoph Hellwig wrote:
-> The RISC-V ISA mandantes the presence of a simple, per-hart (hardware
-> thread) interrupt controller availiable to supervisor mode.  In addition
-> the RISC-V specification contains the definition of a programmable
-> interrupt controller that is present on all current RISC-V cores (at
-> least as far as a I know).
->
-> This series adds both of them.  For the per-hart controller this series
-> tries to address all comments vs the last posting from Palmr in June,
-> and for the PLIC it has a lot of cleanups which I think should address
-> all outstanding comments, but it has been a while since it was last
-> posted.
->
-> Without these irqchip drivers the RISC-V port in mainline is rather
-> useless as it can't boot on any SOC or emulator.  With it it still is
-> almost as useless as a clocksource driver is still missing, but at least
-> we're only a patch or two away from a booting system, and the
-> clocksource  driver will need the per-hart interrupt driver to work as
-> well.
->
-> Palmer: I assume you are ok with me pushing this forward.  If not I'll
-> happily drop this series.
+Hi Jerome,
 
-Thanks for taking this over, and sorry I've dropped the ball a bit here -- 
-there's just a bit too much to do!
+On Wed, Jul 25, 2018 at 11:19 PM <jbrunet@baylibre.com> wrote:
+>
+> On Wed, 2018-07-25 at 21:11 +0200, Martin Blumenstingl wrote:
+> > nit-pick: one patch uses "arm64: dts: meson-axg: s400" in the subject
+> > while other patches that are touching the s400 board aren't
+> > if you have to re-send this series: can you please use the "arm64:
+> > dts: meson-axg: s400:" prefix for all patches touching the s400 board?
+>
+> hum, do we really have such rule, or do you think we should add one ?
+looking at the git history in arch/arm64/boot/dts/amlogic: it seems
+that we don't have a rule yet, even though some (some of
+your's/Neil's/my) patches were using that naming schema in the past
 
-> A git tree with the patches in this series, the missing clocksource
-> driver a few pending patches to allow booting a RISC-V kernel in qemu
-> is available here:
+> Kevin, do you have opinion ?
 >
->     git://git.infradead.org/users/hch/riscv.git riscv-linux-4.18
->
-> Gitweb:
->
->     http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-linux-4.18
+> Not that I really mind either way, but prefixes rules are usually there to help
+> maintainer filter the patches. Will such rule help in any way ?
+maybe it's just a problem of a false initial impression
+I read "arm64: dts: meson-axg: add usb power regulator" in the
+cover-letter and came to the conclusion that this patch must be wrong
+since meson-axg.dtsi should not have any regulators (unless they're
+built into the SoC). only when looking at the patch itself I realized
+that it's fine because it patches the s400.dts
+
+
+Regards
+Martin
