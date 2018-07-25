@@ -1,31 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 09/16] clk: at91: add new DT lookup function
-Date: Wed, 25 Jul 2018 13:10:34 -0600
-Message-ID: <20180725191034.GA29658@rob-hp-laptop>
-References: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
- <20180717222757.10253-10-alexandre.belloni@bootlin.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 00/14] arm64: dts: meson-axg: add audio support
+Date: Wed, 25 Jul 2018 21:11:23 +0200
+Message-ID: <CAFBinCBh-b=ie4hBMWdHG8KoLQ7qiRfo8vXfJ1PRcN4UPtg+uA@mail.gmail.com>
+References: <20180724125238.14567-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180717222757.10253-10-alexandre.belloni@bootlin.com>
+In-Reply-To: <20180724125238.14567-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Michael Turquette <mturquette@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: jbrunet@baylibre.com
+Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 18, 2018 at 12:27:50AM +0200, Alexandre Belloni wrote:
-> Add a new DT lookup function to lookup for PMC clocks.
-> 
-> Note that the #ifndef AT91_PMC_MOSCS section will be removed once all the
-> platforms are converted.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/clk/at91/pmc.c           | 34 ++++++++++++++++++++++++++++++++
+Hi Jerome,
 
->  include/dt-bindings/clock/at91.h | 14 +++++++++++++
+On Tue, Jul 24, 2018 at 2:53 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+> The main purpose of this patchset is to add the audio devices on amlogic's
+> AXG SoCs.
+>
+> Some codecs require some power supplies. This is why the 3 first patches
+> deal with the S400 power supplies, even if some are not related to audio.
+>
+> In term of dependency, apart from the clock bindings you have already
+> pulled for your second PR to arm-soc, this patchset requires the ARB
+> reset bindings [0] for patch 5. I don't know if Philip can make it
+> available somewhere ?
+>
+> Of course, if the dependencies make this patchset too complicated to
+> merge in this cycle, I'll resubmit once the next rc1 is out.
+>
+> Jerome Brunet (14):
+>   arm64: dts: meson-axg: improve power supplies description
+>   arm64: dts: meson-axg: add vcc 5v regulator on the s400
+>   arm64: dts: meson-axg: add usb power regulator
+>   arm64: dts: meson-axg: add audio arb reset controller
+>   arm64: dts: meson-axg: add audio fifos
+>   arm64: dts: meson-axg: add spdifout
+>   arm64: dts: meson-axg: add tdmin formatters
+>   arm64: dts: meson-axg: add tdmout formatters
+>   arm64: dts: meson-axg: add tdm interfaces
+>   arm64: dts: meson-axg: add linein codec
+>   arm64: dts: meson-axg: add lineout codec
+>   arm64: dts: meson-axg: add spdif-dit codec
+>   arm64: dts: meson-axg: s400: enable audio devices
+>   arm64: dts: meson-axg: add s400 sound card
+nit-pick: one patch uses "arm64: dts: meson-axg: s400" in the subject
+while other patches that are touching the s400 board aren't
+if you have to re-send this series: can you please use the "arm64:
+dts: meson-axg: s400:" prefix for all patches touching the s400 board?
 
-Acked-by: Rob Herring <robh@kernel.org>
 
->  2 files changed, 48 insertions(+)
+Thank you!
+Regards
+Martin
