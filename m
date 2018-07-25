@@ -1,65 +1,113 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 04/32] ARM: dts: omap3-gta04: fixes for tvout / venc
-Date: Wed, 25 Jul 2018 13:40:32 +0200
-Message-ID: <1E64094B-7037-4409-A9EA-81648F8F51B4@goldelico.com>
-References: <cover.1532501910.git.hns@goldelico.com> <73e5b1fd4cc27e3148c6bc2e8f8281f3996ccf68.1532501910.git.hns@goldelico.com> <20180725103750.4yltpfswd52fpw63@earth.universe>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: multipart/signed; boundary="Apple-Mail=_B017C245-8EDD-407D-AF80-B4EC89087852"; protocol="application/pgp-signature"; micalg=pgp-sha256
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v10 2/2] media: V3s: Add support for Allwinner CSI.
+Date: Wed, 25 Jul 2018 14:43:44 +0300
+Message-ID: <20180725114344.eyra7g52xwagqkcv@paasikivi.fi.intel.com>
+References: <1525417745-37964-1-git-send-email-yong.deng@magewell.com>
+ <20180626110821.wkal6fcnoncsze6y@valkosipuli.retiisi.org.uk>
+ <20180705154802.03604f156709be11892b19c0@magewell.com>
+ <20180718095513.4cm77g2iuilvfmd6@paasikivi.fi.intel.com>
+ <20180725184224.cab5172f8558162cc74bde9e@magewell.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725103750.4yltpfswd52fpw63@earth.universe>
+Content-Disposition: inline
+In-Reply-To: <20180725184224.cab5172f8558162cc74bde9e@magewell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Marek Belisko <marek@goldelico.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+To: Yong <yong.deng@magewell.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Jacob Chen <jacob-chen@iotwrt.com>, Yannick Fertre <yannick.fertre@st.com>, Thierry
 List-Id: devicetree@vger.kernel.org
 
+Hi Yong,
 
---Apple-Mail=_B017C245-8EDD-407D-AF80-B4EC89087852
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+On Wed, Jul 25, 2018 at 06:42:24PM +0800, Yong wrote:
+> Hi Sakari,
+> 
+> On Wed, 18 Jul 2018 12:55:14 +0300
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> 
+> > Hi Yong,
+> > 
+> > On Thu, Jul 05, 2018 at 03:48:02PM +0800, Yong wrote:
+> > > > > +
+> > > > > +/* -----------------------------------------------------------------------------
+> > > > > + * Media Operations
+> > > > > + */
+> > > > > +static int sun6i_video_formats_init(struct sun6i_video *video,
+> > > > > +				    const struct media_pad *remote)
+> > > > > +{
+> > > > > +	struct v4l2_subdev_mbus_code_enum mbus_code = { 0 };
+> > > > > +	struct sun6i_csi *csi = video->csi;
+> > > > > +	struct v4l2_format format;
+> > > > > +	struct v4l2_subdev *subdev;
+> > > > > +	u32 pad;
+> > > > > +	const u32 *pixformats;
+> > > > > +	int pixformat_count = 0;
+> > > > > +	u32 subdev_codes[32]; /* subdev format codes, 32 should be enough */
+> > > > > +	int codes_count = 0;
+> > > > > +	int num_fmts = 0;
+> > > > > +	int i, j;
+> > > > > +
+> > > > > +	pad = remote->index;
+> > > > > +	subdev = media_entity_to_v4l2_subdev(remote->entity);
+> > > > > +	if (subdev == NULL)
+> > > > > +		return -ENXIO;
+> > > > > +
+> > > > > +	/* Get supported pixformats of CSI */
+> > > > > +	pixformat_count = sun6i_csi_get_supported_pixformats(csi, &pixformats);
+> > > > > +	if (pixformat_count <= 0)
+> > > > > +		return -ENXIO;
+> > > > > +
+> > > > > +	/* Get subdev formats codes */
+> > > > > +	mbus_code.pad = pad;
+> > > > > +	mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> > > > > +	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code, NULL,
+> > > > > +				 &mbus_code)) {
+> > > > 
+> > > > The formats supported by the external sub-device may depend on horizontal
+> > > > and vertical flipping. You shouldn't assume any particular configuration
+> > > > here: instead, bridge drivers generally just need to make sure the formats
+> > > > match in link validation when streaming is started. At least the CSI-2
+> > > > receiver driver and the DMA engine driver (video device) should check the
+> > > > configuration is valid. See e.g. the IPU3 driver:
+> > > > drivers/media/pci/intel/ipu3/ipu3-cio2.c .
+> > > 
+> > > Can mbus_code be added dynamically ?
+> > > The code here only enum the mbus code and get the possible supported
+> > > pairs of pixformat and mbus by SoC. Not try to check if the formats
+> > > (width height ...) is valid or not. The formats validation will be 
+> > > in link validation when streaming is started as per your advise. 
+> > 
+> > The formats that can be enumerated from the sensor here are those settable
+> > using SUBDEV_S_FMT. The enumeration will change on raw sensors if you use
+> > the flipping controls. As the bridge driver implements MC as well as subdev
+> > APIs, generally the sensor configuration is out of scope of this driver
+> > since it's directly configured from the user space.
+> > 
+> > Just check that the pipeline is valid before starting streaming in your
+> > driver.
+> 
+> Sorry. I am still confused.
+> As the CSI driver does not enum the formats supported by sensor.
+> How to get a valid format if I do not want to open the subdev? 
 
+For MC-enabled drivers that expose the pipeline, the user is responsible
+for configuring the pipeline.
 
-> Am 25.07.2018 um 12:37 schrieb Sebastian Reichel =
-<sebastian.reichel@collabora.co.uk>:
->=20
-> Hi,
->=20
-> On Wed, Jul 25, 2018 at 08:58:36AM +0200, H. Nikolaus Schaller wrote:
->> 			port@1 {
->> -				reg =3D <1>;
->> +				reg =3D <0>;
->=20
-> You should also update the node name.
+There are bridge drivers that do not expose the pipeline but that will
+exclude the use of e.g. some sensor drivers with those bridge drivers.
 
-AH, indeed. Thanks for your eagle's eyes :)
+> Many applications still only open /dev/video*.
 
-BR,
-Nikolaus
+That's true, and this is indeed a known gap:
 
+<URL:https://www.spinics.net/lists/linux-media/msg137668.html>
 
---Apple-Mail=_B017C245-8EDD-407D-AF80-B4EC89087852
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP using GPGMail
+So in other words, there is no solution for that issue right now, but this
+is in no way specific to your driver, and it is known that this needs to be
+addressed.
 
------BEGIN PGP SIGNATURE-----
+-- 
+Kind regards,
 
-iQIcBAEBCAAGBQJbWGGxAAoJEIl79TGLgAm6CYwP/j4Nm4zbRcm/+Fjhr/VpH0kL
-81ZrYN0MQ1i1YUGuRtmXgtbhewe5Pm9ZaXZmRVlTW3LO4cM6WTEZyEyAyRznL1r3
-Yi4wBjzse1YXDVcSMlI6jPBKZT7DPaF16Ak7UcQYWL89z/3awMOOJR6ni1JVXceJ
-WNmEzuKzOCy+Jr82/oTrbdzemCr+r9nLOLA7fNvlLiV6oF99jzPi/U7k7ZevdZZm
-VJ99M83vg5fbr4Qv+DzJICbpDd5bko+ZwGeRyMeeQ1WmyYIuZzDvc1B1TYaFN1MW
-47LZmJNxgLMTICDs9/q3NMiaYEh6H5TEK3fN/zPzUoRYngEl1ekZdNHudY4CR/9W
-2HcUOo3dJdt3noQbduaFvt7rjLxVyDfI6f8izC+sIrUFHKySQKkVtkC80iidh3Wk
-ubvQGt+FExKgao6mXDVVj6ZghmpynSw8KPf6k8THkap/K01DPo+QUbnhoax8AhZC
-ZIR7y+9GRu6S48uo/CpfvpzpvEzKPiowIXladLqTs8q4PK0XzYs8nTj2NYKf9faf
-4lyswMkJnZHvkx029jVYNVMVIn4WJMzkf22zcjHh5OXvLZ1Bv2Z/dgiI2Xaaql3h
-UjsfRKGFAlCRN26pDfgkwz4bYQPk+Eh2BGkOaVI8JvHL04Hxkp1Pt6KCsnq2gwdw
-Hm3mDB7es7V9vKZChiw9
-=FDD3
------END PGP SIGNATURE-----
-
---Apple-Mail=_B017C245-8EDD-407D-AF80-B4EC89087852--
+Sakari Ailus
+sakari.ailus@linux.intel.com
