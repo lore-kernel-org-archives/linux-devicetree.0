@@ -1,76 +1,118 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: Re: [PATCH 02/10] mmc: tegra: Set calibration pad voltage reference
-Date: Wed, 25 Jul 2018 13:00:13 +0300
-Message-ID: <20180725130013.7c86bfea@dhcp-10-21-25-168>
-References: <1532442591-5640-1-git-send-email-avienamo@nvidia.com>
-        <1532442865-6391-1-git-send-email-avienamo@nvidia.com>
-        <d5018027-f333-8432-f8ed-81a2cdfedea8@kapsi.fi>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v0] arm64: dts: rockchip: add support for ROC-RK3399-PC board
+Date: Wed, 25 Jul 2018 12:02:34 +0200
+Message-ID: <2859712.DISUneb7pN@phil>
+References: <1532161826-2537-1-git-send-email-djw@t-chip.com.cn> <139327780.KNaNigg5Hs@phil> <87in54ge68.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d5018027-f333-8432-f8ed-81a2cdfedea8@kapsi.fi>
+In-Reply-To: <87in54ge68.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <cyndis@kapsi.fi>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: djw@t-chip.com.cn
+Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>, Shawn Lin <shawn.lin@rock-chips.com>, Ezequiel Garcia <ezequiel@collabora.com>, Jagan Teki <jagan@amarulasolutions.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Jul 2018 10:08:46 +0300
-Mikko Perttunen <cyndis@kapsi.fi> wrote:
+Hi Levin,
 
-> On 24.07.2018 17:34, Aapo Vienamo wrote:
-> > Configure the voltage reference used by the automatic pad drive strength
-> > calibration procedure. The value is a magic number from the TRM.
-> > 
-> > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> > ---
-> >   drivers/mmc/host/sdhci-tegra.c | 14 ++++++++++++--
-> >   1 file changed, 12 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> > index e40ca43..6008e2f 100644
-> > --- a/drivers/mmc/host/sdhci-tegra.c
-> > +++ b/drivers/mmc/host/sdhci-tegra.c
-> > @@ -49,6 +49,10 @@
-> >   #define SDHCI_AUTO_CAL_START			BIT(31)
-> >   #define SDHCI_AUTO_CAL_ENABLE			BIT(29)
-> >   
-> > +#define SDHCI_TEGRA_SDMEM_COMP_PADCTRL			0x1e0
-> > +#define SDHCI_TEGRA_SDMEM_COMP_PADCTRL_VREF_SEL_MASK	0x0000000f
-> > +#define SDHCI_TEGRA_SDMEM_COMP_PADCTRL_VREF_SEL_VAL	0x7
-> > +
-> >   #define SDHCI_TEGRA_AUTO_CAL_STATUS     0x1ec
-> >   #define SDHCI_TEGRA_AUTO_CAL_ACTIVE     BIT(31)
-> >   
-> > @@ -152,7 +156,7 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
-> >   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> >   	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-> >   	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
-> > -	u32 misc_ctrl, clk_ctrl;
-> > +	u32 misc_ctrl, clk_ctrl, pad_ctrl;
-> >   
-> >   	sdhci_reset(host, mask);
-> >   
-> > @@ -193,8 +197,14 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
-> >   	sdhci_writel(host, misc_ctrl, SDHCI_TEGRA_VENDOR_MISC_CTRL);
-> >   	sdhci_writel(host, clk_ctrl, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
-> >   
-> > -	if (soc_data->nvquirks & NVQUIRK_HAS_PADCALIB)
-> > +	if (soc_data->nvquirks & NVQUIRK_HAS_PADCALIB) {
-> > +		pad_ctrl = sdhci_readl(host, SDHCI_TEGRA_SDMEM_COMP_PADCTRL);
-> > +		pad_ctrl &= ~SDHCI_TEGRA_SDMEM_COMP_PADCTRL_VREF_SEL_MASK;
-> > +		pad_ctrl |= SDHCI_TEGRA_SDMEM_COMP_PADCTRL_VREF_SEL_VAL;
-> > +		sdhci_writel(host, pad_ctrl, SDHCI_TEGRA_SDMEM_COMP_PADCTRL);
-> > +  
+Am Mittwoch, 25. Juli 2018, 05:57:51 CEST schrieb djw@t-chip.com.cn:
+> >> +	vcc_vbus_typec0: vcc-vbus-typec0 {
+> >> +		compatible = "regulator-fixed";
+> >> +		regulator-name = "vcc_vbus_typec0";
+> >> +		regulator-always-on;
+> >> +		regulator-boot-on;
+> >> +		regulator-min-microvolt = <5000000>;
+> >> +		regulator-max-microvolt = <5000000>;
+> >> +	};
+> >> +
+> >> +	vcc12v_sys: mp8859-dcdc1 {
+> >
+> > The mp8859 seems to be an i2c-device, as also shown by the
+> > nearly empty mp8859 entry below, so shouldn't this regulator
+> > be defined there?
 > 
-> Will this happen to only eMMC controllers or for all controllers? My 
-> docs are saying this should be set to 0x7 for SDMMC2/4 and 0x1 or 0x2 
-> for SDMMC1/3 depending on voltage. Not sure how downstream is 
-> programming it, though.
+> Question here. Since mp8859 driver is not mainlined yet. Shall I leave
+> the regulator here (mp8859 defaults to output 5V) and remove the
+> mp8859 from the i2c?
 
-The Tegra210 TRM specifies that VREF_SEL should be set 0x7 for all of
-the controllers, there's no mention of this depending on the mode. The
-same value is also programmed by the downstream kernels for Tegra210
-and Tegra186.
+Yep, sounds good ... also please add a comment of sorts that this is
+temporary until the mp8859 has its own dt-binding.
 
- -Aapo
+> > [...]
+> >
+> >> +	vcc_hub_en: vcc_hub_en-regulator {
+> >> +		compatible = "regulator-fixed";
+> >> +		enable-active-high;
+> >> +		gpio = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
+> >> +		pinctrl-names = "default";
+> >> +		pinctrl-0 = <&hub_rst>;
+> >> +		regulator-name = "vcc_hub_en";
+> >> +		regulator-always-on;
+> >
+> > missing vin-supply
+> This just comes in need of setting GPIO2_A4 (HUB_RST) to high 
+> This dummy regulator should be removed.
+> 
+> I modify the pinctrl of hub_rst to output high:
+> 
+>                hub_rst: hub-rst {                                                                                                                 
+>                         rockchip,pins = <2 RK_PA4 RK_FUNC_GPIO &pcfg_output_high>;                                                                 
+>                };                                                                                                                                 
+> 
+> and add hub_rst to the pinctrl-0 of vcc5v0_host:
+> 
+>     vcc5v0_host: vcc5v0-host-regulator {                                                                                                       
+>             compatible = "regulator-fixed";                                                                                                    
+>             enable-active-high;                                                                                                                
+>             gpio = <&gpio1 RK_PA0 GPIO_ACTIVE_HIGH>;                                                                                           
+>             pinctrl-names = "default";                                                                                                         
+>             pinctrl-0 = <&vcc5v0_host_en &hub_rst>;                                                                                            
+>             regulator-name = "vcc5v0_host";                                                                                                    
+>             regulator-always-on;                                                                                                               
+>             vin-supply = <&vcc_sys>;                                                                                                           
+>     };
+> 
+> Tested show that it works. But is it the recommended way to set this
+>  gpio (HUB_RST) high? BTW, vcc5v0_host is the usb host voltage,
+>  and HUB_RST needs to set high for the usb hub chip to work.
+
+It seems you can also model usb-hirarchy internals via the devicetree.
+I guess for these things like soc-gpios and such. See
+Documentation/devicetree/bindings/usb/usb-device.txt
+
+While I don't know if this can handle such reset gpios yet, you
+could at least move the pinctrl setting there.
+
+
+> >> +		reg = <0x66>;
+> >> +	};
+> >> +
+> >> +	fusb1: usb-typec@22 {
+> >> +		compatible = "fcs,fusb302";
+> >> +		reg = <0x22>;
+> >> +		pinctrl-names = "default";
+> >> +		pinctrl-0 = <&fusb1_int>;
+> >> +		fcs,int-n = <&gpio1 RK_PA1 GPIO_ACTIVE_HIGH>;
+> >
+> > mainline binding expects an "interrupts" property not the
+> > fcs,int-n from above
+> >
+> It seems no existing user of fusb302 yet. I take that fcs,int-n
+> from the driver code. But I look up the binding doc, and come
+> with this result:
+> 
+>     fusb1: usb-typec@22 {                                                                                                                      
+>             compatible = "fcs,fusb302";                                                                                                        
+>             reg = <0x22>;                                                                                                                      
+>             pinctrl-names = "default";                                                                                                         
+>             pinctrl-0 = <&fusb1_int>;                                                                                                          
+>             interrupt-parent = <&gpio1>;                                                                                                       
+>             interrupts = <1 IRQ_TYPE_LEVEL_LOW>;                                                                                               
+>             status = "okay";                                                                                                                   
+>     };                                                                                                                                         
+
+looks good, except please move the interrupt* properties between reg
+and pinctrl
+
+
+Heiko
