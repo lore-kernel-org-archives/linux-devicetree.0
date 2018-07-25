@@ -1,54 +1,46 @@
-Return-Path: <SRS0=koBt=JU=zonque.org=daniel@kernel.org>
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH v2 2/2] video: fbdev: pxa3xx_gcu: add devicetree bindings
-Date: Wed,  4 Jul 2018 21:35:02 +0200
-Message-Id: <20180704193502.3805-2-daniel@zonque.org>
-In-Reply-To: <20180704193502.3805-1-daniel@zonque.org>
-References: <20180704193502.3805-1-daniel@zonque.org>
-To: robh+dt@kernel.org, airlied@linux.ie, mark.rutland@arm.com, b.zolnierkie@samsung.com
-Cc: linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, robert.jarzmik@free.fr, Daniel Mack <daniel@zonque.org>
+Return-Path: <SRS0=r8rx=KJ=nxp.com=wen.he_1@kernel.org>
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v7 6/7] arm64: dts: ls1046a: add qdma device tree nodes
+Date: Wed, 25 Jul 2018 19:29:18 +0800
+Message-Id: <20180725112919.31340-6-wen.he_1@nxp.com>
+In-Reply-To: <20180725112919.31340-1-wen.he_1@nxp.com>
+References: <20180725112919.31340-1-wen.he_1@nxp.com>
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add a device tree match table for this hardware graphics acceleration
-driver so it can be used by pxa3xx boards booted with a devicetree.
+add the qDMA device tree nodes for LS1046A devices.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- drivers/video/fbdev/pxa3xx-gcu.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/video/fbdev/pxa3xx-gcu.c b/drivers/video/fbdev/pxa3xx-gcu.c
-index 0955622a1227..69cfb337c857 100644
---- a/drivers/video/fbdev/pxa3xx-gcu.c
-+++ b/drivers/video/fbdev/pxa3xx-gcu.c
-@@ -44,6 +44,7 @@
- #include <linux/clk.h>
- #include <linux/fs.h>
- #include <linux/io.h>
-+#include <linux/of.h>
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 136ebfa..27988e2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -597,6 +597,21 @@
+ 				 <&clockgen 4 1>;
+ 		};
  
- #include "pxa3xx-gcu.h"
- 
-@@ -703,11 +704,20 @@ static int pxa3xx_gcu_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id pxa3xx_gcu_of_match[] = {
-+	{ .compatible = "marvell,pxa300-gcu", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pxa3xx_gcu_of_match);
-+#endif
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1021a-qdma", "fsl,ls1046a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
++				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue";
++			dma-channels = <8>;
++			fsl,queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++			big-endian;
++		};
 +
- static struct platform_driver pxa3xx_gcu_driver = {
- 	.probe	  = pxa3xx_gcu_probe,
- 	.remove	 = pxa3xx_gcu_remove,
- 	.driver	 = {
- 		.name   = DRV_NAME,
-+		.of_match_table = of_match_ptr(pxa3xx_gcu_of_match),
- 	},
- };
- 
+ 		usb0: usb@2f00000 {
+ 			compatible = "snps,dwc3";
+ 			reg = <0x0 0x2f00000 0x0 0x10000>;
 -- 
-2.17.1
+1.7.1
