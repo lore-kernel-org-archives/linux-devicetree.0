@@ -1,52 +1,66 @@
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Subject: [PATCH v0 4/4] dt-bindigs: Update documentation of qcom,llcc
-Date: Wed, 25 Jul 2018 10:44:57 -0700
-Message-ID: <1532540697-26630-5-git-send-email-vnkgutta@codeaurora.org>
-References: <1532540697-26630-1-git-send-email-vnkgutta@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: adc: add bindings for mcp3911
+Date: Wed, 25 Jul 2018 11:51:17 -0600
+Message-ID: <20180725175117.GA825@rob-hp-laptop>
+References: <20180724183004.20279-1-marcus.folkesson@gmail.com>
+ <20180724183004.20279-2-marcus.folkesson@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532540697-26630-1-git-send-email-vnkgutta@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180724183004.20279-2-marcus.folkesson@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: evgreen@chromium.org, robh@kernel.org, bp@alien8.de, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org
-Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Kent Gustavsson <kent@minoris.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add reg-names and interrupts for LLCC documentation and the usage
-examples. llcc broadcast base is added in addition to llcc base,
-which is used for llcc broadcast writes.
+On Tue, Jul 24, 2018 at 08:30:03PM +0200, Marcus Folkesson wrote:
+> MCP3911 is a dual channel Analog Front End (AFE) containing two
+> synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> Signed-off-by: Kent Gustavsson <kent@minoris.se>
+> ---
+> 
+> Notes:
+>     v2:
+>     	- drop channel width
+>     	- drop `external_vref`
+>     	- replace `external-clock` with proper clock bindings
+> 
+>  .../devicetree/bindings/iio/adc/mcp3911.txt        | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> new file mode 100644
+> index 000000000000..af5472f51a84
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> @@ -0,0 +1,28 @@
+> +* Microchip MCP3911 Dual channel analog front end (ADC)
+> +
+> +Required properties:
+> + - compatible: Should be "microchip,mcp3911"
+> + - reg: SPI chip select number for the device
+> +
+> +Recommended properties:
+> + - spi-max-frequency: Definition as per
+> +	 Documentation/devicetree/bindings/spi/spi-bus.txt.
+> +	 Max frequency for this chip is 20MHz.
+> +
+> +Optional properties:
+> + - device-addr: Device address when multiple MCP3911 chips are present on the
+> +	same SPI bus. Valid values are 0-3. Defaults to 0.
 
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+Isn't this the reg value?
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-index 5e85749..b4b1c86 100644
---- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-+++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-@@ -18,9 +18,22 @@ Properties:
- 	Value Type: <prop-encoded-array>
- 	Definition: Start address and the the size of the register region.
- 
-+- reg-names:
-+        Usage: required
-+        Value Type: <stringlist>
-+        Definition: Register region names. Must be "llcc_base", "llcc_bcast_base".
-+
-+- interrupts:
-+	Usage: required
-+	Definition: The interrupt is associated with the llcc edac device.
-+			It's used for llcc cache single and double bit error detection
-+			and reporting.
-+
- Example:
- 
- 	cache-controller@1100000 {
- 		compatible = "qcom,sdm845-llcc";
--		reg = <0x1100000 0x250000>;
-+		reg = <0x1100000 0x200000>, <0x1300000 0x50000> ;
-+		reg-names = "llcc_base", "llcc_bcast_base";
-+		interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
- 	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> + - vref-supply: Phandle to the external reference voltage supply.
+> + - clocks: Phandle and clock identifier (see clock-names)
+> + - clock-names: "adc_clk" for the ADC (sampling) clock
+
+Datasheet calls this clki (or mclk internally). Or just drop clock-names 
+as it is pointless 
+when there is only 1 clock. 
+
+Also DR handling as an IRQ is missing.
