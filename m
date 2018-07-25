@@ -1,28 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] Input: atmel_mxt_ts: Document optional voltage
- regulators
-Date: Wed, 25 Jul 2018 10:02:23 -0600
-Message-ID: <20180725160223.GA19907@rob-hp-laptop>
-References: <1531851386-17840-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
- <1531851386-17840-3-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-binding: pinctrl: berlin: document AS370 SoC
+ pinctrl
+Date: Wed, 25 Jul 2018 10:04:09 -0600
+Message-ID: <20180725160409.GA20922@rob-hp-laptop>
+References: <20180718135613.1c559b9c@xhacker.debian>
+ <20180718135709.35128a54@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1531851386-17840-3-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <20180718135709.35128a54@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: nick@shmanahar.org, dmitry.torokhov@gmail.com, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 17, 2018 at 08:16:26PM +0200, Paweł Chmiel wrote:
-> Document new optional voltage regulators, which can be used
-> to power down/up touchscreen.
+On Wed, Jul 18, 2018 at 01:57:09PM +0800, Jisheng Zhang wrote:
+> Add as370 to existing berlin pinctrl device tree binding.
 > 
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 > ---
->  Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  Documentation/devicetree/bindings/pinctrl/berlin,pinctrl.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
