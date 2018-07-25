@@ -1,96 +1,51 @@
-Return-Path: <SRS0=3X8U=KJ=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=GvcF=KJ=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
+Date: Wed, 25 Jul 2018 12:04:50 +0000
+Message-ID: 
+ <TYXPR01MB1568D38DAAF110EAB44417228A540@TYXPR01MB1568.jpnprd01.prod.outlook.com>
 References: <20180711144131.73552-1-chris.brandt@renesas.com>
- <20180711144131.73552-3-chris.brandt@renesas.com> <CAMuHMdVCA0MrD4QRZb7VPR_Dqmghfd83j4WY_oZnfqVyx++rEw@mail.gmail.com>
+ <20180711144131.73552-3-chris.brandt@renesas.com>
+ <CAMuHMdVCA0MrD4QRZb7VPR_Dqmghfd83j4WY_oZnfqVyx++rEw@mail.gmail.com>
  <CAMuHMdWdOoEbwPOzOfEAHH0MXNr-Wf_-37i8Qj6WdphgyKLe7g@mail.gmail.com>
  <TY1PR01MB1562A582DB067740B7D012ED8A530@TY1PR01MB1562.jpnprd01.prod.outlook.com>
  <CAMuHMdVKcGhDwdp3=+JFLONThnBpp7yT9DProNmzNp0V7fN8pQ@mail.gmail.com>
  <TY1PR01MB1562380998FE5D1AA4B8E5128A540@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <CAMuHMdWzyoqBsUDe8TqVCYq6kSmDCa6W0X-KPm0O5ewTysWSEA@mail.gmail.com> <TYXPR01MB1568D38DAAF110EAB44417228A540@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYXPR01MB1568D38DAAF110EAB44417228A540@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 25 Jul 2018 14:34:46 +0200
-Message-ID: <CAMuHMdW45_pDZeon=DorEbqoP+_BttQ41-33cmNP-w15K=MMJA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+ <CAMuHMdWzyoqBsUDe8TqVCYq6kSmDCa6W0X-KPm0O5ewTysWSEA@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdWzyoqBsUDe8TqVCYq6kSmDCa6W0X-KPm0O5ewTysWSEA@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris,
-
-On Wed, Jul 25, 2018 at 2:05 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Wednesday, July 25, 2018, Geert Uytterhoeven wrote:
-> > > However, if "interrupt-names" is specified in DT, then the driver
-> > > determines what the interrupt are based on their names, not the order in
-> > which
-> > > they are listed.
-> > >
-> > > Correct?
-> >
-> > Correct.
->
-> One final note on this before I submit v2 of the patch.
->
-> I just coded up something that works and is more simple and I don't even
-> need "interrupt-names".
->
-> Basically by using your suggestion from the code review made everything
-> work.
->
-> On Friday, July 20, 2018, Geert Uytterhoeven wrote:
-> > > --- a/drivers/tty/serial/sh-sci.c
-> > > +++ b/drivers/tty/serial/sh-sci.c
-> > > @@ -65,6 +65,7 @@ enum {
-> > >         SCIx_RXI_IRQ,
-> > >         SCIx_TXI_IRQ,
-> > >         SCIx_BRI_IRQ,
-> > > +       SCIx_TEIDRI_IRQ,
-> >
-> > Why not separate enum values for TEI and DRI? According to the RZ/A2 docs,
-> > there are 6 separate interrupts, but they are multiplexed at the interrupt
-> > controller level.
->
->
-> enum {
->         SCIx_ERI_IRQ,
->         SCIx_RXI_IRQ,
->         SCIx_TXI_IRQ,
->         SCIx_BRI_IRQ,
-> +       SCIx_DRI_IRQ,
-> +       SCIx_TEI_IRQ,
->         SCIx_NR_IRQS,
->
->         SCIx_MUX_IRQ = SCIx_NR_IRQS,    /* special case */
-> };
->
-> Listing the same interrupt ID number twice in the DT (because it is
-> muxed) is fine because the driver will check for that.
->
-> This seems to satisfy all the SCI/SCIF variants in all the SH and ARM
-> SoCs in the kernel today (DT and non-DT).
->
-> So as long as I describe the interrupt order in the DT Documentation,
-> all seems good.
-
-Yes, that should work too.
-
-"interrupt-names" is handy for DTS writers, so they don't have to look up the
-order in the bindings, and it's less likely they make mistakes in the
-order of the
-interrupts.
-
-However, as soon as there will be an SoC where you will need a "hole"
-in the list,
-you're gonna need interrupt-names anyway.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgSnVseSAyNSwgMjAxOCwgR2VlcnQgVXl0dGVyaG9l
+dmVuIHdyb3RlOg0KPiA+IEhvd2V2ZXIsIGlmICJpbnRlcnJ1cHQtbmFtZXMiIGlzIHNwZWNpZmll
+ZCBpbiBEVCwgdGhlbiB0aGUgZHJpdmVyDQo+ID4gZGV0ZXJtaW5lcyB3aGF0IHRoZSBpbnRlcnJ1
+cHQgYXJlIGJhc2VkIG9uIHRoZWlyIG5hbWVzLCBub3QgdGhlIG9yZGVyIGluDQo+IHdoaWNoDQo+
+ID4gdGhleSBhcmUgbGlzdGVkLg0KPiA+DQo+ID4gQ29ycmVjdD8NCj4gDQo+IENvcnJlY3QuDQoN
+Ck9uZSBmaW5hbCBub3RlIG9uIHRoaXMgYmVmb3JlIEkgc3VibWl0IHYyIG9mIHRoZSBwYXRjaC4N
+Cg0KSSBqdXN0IGNvZGVkIHVwIHNvbWV0aGluZyB0aGF0IHdvcmtzIGFuZCBpcyBtb3JlIHNpbXBs
+ZSBhbmQgSSBkb24ndCBldmVuDQpuZWVkICJpbnRlcnJ1cHQtbmFtZXMiLg0KDQpCYXNpY2FsbHkg
+YnkgdXNpbmcgeW91ciBzdWdnZXN0aW9uIGZyb20gdGhlIGNvZGUgcmV2aWV3IG1hZGUgZXZlcnl0
+aGluZyANCndvcmsuDQoNCk9uIEZyaWRheSwgSnVseSAyMCwgMjAxOCwgR2VlcnQgVXl0dGVyaG9l
+dmVuIHdyb3RlOg0KPiA+IC0tLSBhL2RyaXZlcnMvdHR5L3NlcmlhbC9zaC1zY2kuYw0KPiA+ICsr
+KyBiL2RyaXZlcnMvdHR5L3NlcmlhbC9zaC1zY2kuYw0KPiA+IEBAIC02NSw2ICs2NSw3IEBAIGVu
+dW0gew0KPiA+ICAgICAgICAgU0NJeF9SWElfSVJRLA0KPiA+ICAgICAgICAgU0NJeF9UWElfSVJR
+LA0KPiA+ICAgICAgICAgU0NJeF9CUklfSVJRLA0KPiA+ICsgICAgICAgU0NJeF9URUlEUklfSVJR
+LA0KPiANCj4gV2h5IG5vdCBzZXBhcmF0ZSBlbnVtIHZhbHVlcyBmb3IgVEVJIGFuZCBEUkk/IEFj
+Y29yZGluZyB0byB0aGUgUlovQTIgZG9jcywNCj4gdGhlcmUgYXJlIDYgc2VwYXJhdGUgaW50ZXJy
+dXB0cywgYnV0IHRoZXkgYXJlIG11bHRpcGxleGVkIGF0IHRoZSBpbnRlcnJ1cHQNCj4gY29udHJv
+bGxlciBsZXZlbC4NCg0KDQplbnVtIHsNCglTQ0l4X0VSSV9JUlEsDQoJU0NJeF9SWElfSVJRLA0K
+CVNDSXhfVFhJX0lSUSwNCglTQ0l4X0JSSV9JUlEsDQorCVNDSXhfRFJJX0lSUSwNCisJU0NJeF9U
+RUlfSVJRLA0KCVNDSXhfTlJfSVJRUywNCg0KCVNDSXhfTVVYX0lSUSA9IFNDSXhfTlJfSVJRUywJ
+Lyogc3BlY2lhbCBjYXNlICovDQp9Ow0KDQpMaXN0aW5nIHRoZSBzYW1lIGludGVycnVwdCBJRCBu
+dW1iZXIgdHdpY2UgaW4gdGhlIERUIChiZWNhdXNlIGl0IGlzIA0KbXV4ZWQpIGlzIGZpbmUgYmVj
+YXVzZSB0aGUgZHJpdmVyIHdpbGwgY2hlY2sgZm9yIHRoYXQuDQoNClRoaXMgc2VlbXMgdG8gc2F0
+aXNmeSBhbGwgdGhlIFNDSS9TQ0lGIHZhcmlhbnRzIGluIGFsbCB0aGUgU0ggYW5kIEFSTQ0KU29D
+cyBpbiB0aGUga2VybmVsIHRvZGF5IChEVCBhbmQgbm9uLURUKS4NCg0KU28gYXMgbG9uZyBhcyBJ
+IGRlc2NyaWJlIHRoZSBpbnRlcnJ1cHQgb3JkZXIgaW4gdGhlIERUIERvY3VtZW50YXRpb24sDQph
+bGwgc2VlbXMgZ29vZC4NCg0KQ2hyaXMNCg0K
