@@ -1,106 +1,69 @@
-From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v10 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Wed, 25 Jul 2018 18:42:24 +0800
-Message-ID: <20180725184224.cab5172f8558162cc74bde9e@magewell.com>
-References: <1525417745-37964-1-git-send-email-yong.deng@magewell.com>
-	<20180626110821.wkal6fcnoncsze6y@valkosipuli.retiisi.org.uk>
-	<20180705154802.03604f156709be11892b19c0@magewell.com>
-	<20180718095513.4cm77g2iuilvfmd6@paasikivi.fi.intel.com>
-Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: Re: [PATCH 09/10] mmc: tegra: Perform pad calibration after voltage
+ switch
+Date: Wed, 25 Jul 2018 13:43:00 +0300
+Message-ID: <20180725134300.7e537ceb@dhcp-10-21-25-168>
+References: <1532442591-5640-1-git-send-email-avienamo@nvidia.com>
+        <1532442865-6391-1-git-send-email-avienamo@nvidia.com>
+        <1532442865-6391-8-git-send-email-avienamo@nvidia.com>
+        <b44d6ae5-7965-16db-7ad3-39ff682755ca@kapsi.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD2JNYHK4MEBBI5I4HNAKGQERU74LIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180718095513.4cm77g2iuilvfmd6-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-fy+rA21nqHI@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b44d6ae5-7965-16db-7ad3-39ff682755ca@kapsi.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mikko Perttunen <cyndis@kapsi.fi>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On Wed, 25 Jul 2018 10:25:16 +0300
+Mikko Perttunen <cyndis@kapsi.fi> wrote:
 
-On Wed, 18 Jul 2018 12:55:14 +0300
-Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-
-> Hi Yong,
-> 
-> On Thu, Jul 05, 2018 at 03:48:02PM +0800, Yong wrote:
-> > > > +
-> > > > +/* -----------------------------------------------------------------------------
-> > > > + * Media Operations
-> > > > + */
-> > > > +static int sun6i_video_formats_init(struct sun6i_video *video,
-> > > > +				    const struct media_pad *remote)
-> > > > +{
-> > > > +	struct v4l2_subdev_mbus_code_enum mbus_code = { 0 };
-> > > > +	struct sun6i_csi *csi = video->csi;
-> > > > +	struct v4l2_format format;
-> > > > +	struct v4l2_subdev *subdev;
-> > > > +	u32 pad;
-> > > > +	const u32 *pixformats;
-> > > > +	int pixformat_count = 0;
-> > > > +	u32 subdev_codes[32]; /* subdev format codes, 32 should be enough */
-> > > > +	int codes_count = 0;
-> > > > +	int num_fmts = 0;
-> > > > +	int i, j;
-> > > > +
-> > > > +	pad = remote->index;
-> > > > +	subdev = media_entity_to_v4l2_subdev(remote->entity);
-> > > > +	if (subdev == NULL)
-> > > > +		return -ENXIO;
-> > > > +
-> > > > +	/* Get supported pixformats of CSI */
-> > > > +	pixformat_count = sun6i_csi_get_supported_pixformats(csi, &pixformats);
-> > > > +	if (pixformat_count <= 0)
-> > > > +		return -ENXIO;
-> > > > +
-> > > > +	/* Get subdev formats codes */
-> > > > +	mbus_code.pad = pad;
-> > > > +	mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-> > > > +	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code, NULL,
-> > > > +				 &mbus_code)) {
-> > > 
-> > > The formats supported by the external sub-device may depend on horizontal
-> > > and vertical flipping. You shouldn't assume any particular configuration
-> > > here: instead, bridge drivers generally just need to make sure the formats
-> > > match in link validation when streaming is started. At least the CSI-2
-> > > receiver driver and the DMA engine driver (video device) should check the
-> > > configuration is valid. See e.g. the IPU3 driver:
-> > > drivers/media/pci/intel/ipu3/ipu3-cio2.c .
+> On 24.07.2018 17:34, Aapo Vienamo wrote:
+> > Run the automatic pad calibration after voltage switching if
+> > tegra_host->pad_calib_required is set.
 > > 
-> > Can mbus_code be added dynamically ?
-> > The code here only enum the mbus code and get the possible supported
-> > pairs of pixformat and mbus by SoC. Not try to check if the formats
-> > (width height ...) is valid or not. The formats validation will be 
-> > in link validation when streaming is started as per your advise. 
+> > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> > ---
+> >   drivers/mmc/host/sdhci-tegra.c | 5 +++++
+> >   1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> > index 78781bd..529aa4e7 100644
+> > --- a/drivers/mmc/host/sdhci-tegra.c
+> > +++ b/drivers/mmc/host/sdhci-tegra.c
+> > @@ -537,6 +537,8 @@ static int sdhci_tegra_start_signal_voltage_switch(struct mmc_host *mmc,
+> >   						   struct mmc_ios *ios)
+> >   {
+> >   	struct sdhci_host *host = mmc_priv(mmc);
+> > +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> > +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
+> >   	int ret = 0;
+> >   
+> >   	if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
+> > @@ -551,6 +553,9 @@ static int sdhci_tegra_start_signal_voltage_switch(struct mmc_host *mmc,
+> >   		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage);
+> >   	}
+> >   
+> > +	if (tegra_host->pad_calib_required)
+> > +		tegra_sdhci_pad_autocalib(host);  
 > 
-> The formats that can be enumerated from the sensor here are those settable
-> using SUBDEV_S_FMT. The enumeration will change on raw sensors if you use
-> the flipping controls. As the bridge driver implements MC as well as subdev
-> APIs, generally the sensor configuration is out of scope of this driver
-> since it's directly configured from the user space.
-> 
-> Just check that the pipeline is valid before starting streaming in your
-> driver.
+> What if the autocalibration fails? Should we return an error?
 
-Sorry. I am still confused.
-As the CSI driver does not enum the formats supported by sensor.
-How to get a valid format if I do not want to open the subdev? 
-Many applications still only open /dev/video*.
+I would assume that aborting the signal voltage switch due to a
+calibration timeout would not be necessary as the TRM specifies drive
+strength values which are to be programmed in case a timeout occurs.
 
-> 
-> -- 
-> Kind regards,
-> 
-> Sakari Ailus
-> sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+However, I don't know what are the exact implications of running the bus
+with the timeout values instead of the calibrated ones. The TRM does not
+comment on that. I guess tuning would fail and catch the error that way
+in case the timeout default values aren't sufficient.
 
+ -Aapo
 
-Thanks,
-Yong
+> > +
+> >   	return ret;
+> >   }
+> >   
+> >   
