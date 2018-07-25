@@ -1,142 +1,184 @@
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: adc: add bindings for mcp3911
-Date: Wed, 25 Jul 2018 21:04:41 +0200
-Message-ID: <20180725190441.GA3373@gmail.com>
-References: <20180724183004.20279-1-marcus.folkesson@gmail.com>
- <20180724183004.20279-2-marcus.folkesson@gmail.com>
- <20180725175117.GA825@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 14/15] ASoC: meson: add axg sound card DT
+ binding documentation
+Date: Wed, 25 Jul 2018 13:06:19 -0600
+Message-ID: <20180725190619.GA20234@rob-hp-laptop>
+References: <20180717153643.8806-1-jbrunet@baylibre.com>
+ <20180717153643.8806-18-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20180725175117.GA825@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kent Gustavsson <kent@minoris.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+In-Reply-To: <20180717153643.8806-18-jbrunet@baylibre.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 17, 2018 at 05:36:41PM +0200, Jerome Brunet wrote:
+> Add the DT binding documentation for axg sound card
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I see Mark already applied, but...
 
-Hello Rob,
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  .../bindings/sound/amlogic,axg-sound-card.txt      | 124 +++++++++++++++++++++
+>  1 file changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.txt
+> new file mode 100644
+> index 000000000000..39e005da0407
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.txt
+> @@ -0,0 +1,124 @@
+> +Amlogic AXG sound card:
+> +
+> +Required properties:
+> +
+> +- compatible: "amlogic,axg-sound-card"
+> +- amlogic,name : User specified audio sound card name, one string
 
-Thank you for the review.
+Just using "model" for new bindings.
 
-On Wed, Jul 25, 2018 at 11:51:17AM -0600, Rob Herring wrote:
-> On Tue, Jul 24, 2018 at 08:30:03PM +0200, Marcus Folkesson wrote:
-> > MCP3911 is a dual channel Analog Front End (AFE) containing two
-> > synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
-> >=20
-> > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> > Signed-off-by: Kent Gustavsson <kent@minoris.se>
-> > ---
-> >=20
-> > Notes:
-> >     v2:
-> >     	- drop channel width
-> >     	- drop `external_vref`
-> >     	- replace `external-clock` with proper clock bindings
-> >=20
-> >  .../devicetree/bindings/iio/adc/mcp3911.txt        | 28 ++++++++++++++=
-++++++++
-> >  1 file changed, 28 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.t=
-xt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Do=
-cumentation/devicetree/bindings/iio/adc/mcp3911.txt
-> > new file mode 100644
-> > index 000000000000..af5472f51a84
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
-> > @@ -0,0 +1,28 @@
-> > +* Microchip MCP3911 Dual channel analog front end (ADC)
-> > +
-> > +Required properties:
-> > + - compatible: Should be "microchip,mcp3911"
-> > + - reg: SPI chip select number for the device
-> > +
-> > +Recommended properties:
-> > + - spi-max-frequency: Definition as per
-> > +	 Documentation/devicetree/bindings/spi/spi-bus.txt.
-> > +	 Max frequency for this chip is 20MHz.
-> > +
-> > +Optional properties:
-> > + - device-addr: Device address when multiple MCP3911 chips are present=
- on the
-> > +	same SPI bus. Valid values are 0-3. Defaults to 0.
->=20
-> Isn't this the reg value?
->=20
+> +
+> +Optional properties:
+> +
+> +- amlogic,aux-devs : List of phandles pointing to auxiliary devices
+> +- amlogic,widgets : Please refer to widgets.txt.
+> +- amlogic,routing : A list of the connections between audio components.
 
-The reg value defines which chip select the chip hangs on.
-The chip has support to connect up to four chips on the same SPI bus,
-including the same chip select signal.
+audio-routing IIRC
 
-The chips are separated by the device-addr as it is part of the
-communication protocol.
+> +
+> +Subnodes:
+> +
+> +- amlogic,dai-link: Container for dai-link level properties and the
+> +		    CODEC sub-nodes. There should be at least one (and
+> +		    probably) subnode of this type.
 
-When reading the description for device-addr, I agree that it fits well
-for the reg property as well..
+Just 'dai-link'
 
-
-> > + - vref-supply: Phandle to the external reference voltage supply.
-> > + - clocks: Phandle and clock identifier (see clock-names)
-> > + - clock-names: "adc_clk" for the ADC (sampling) clock
->=20
-> Datasheet calls this clki (or mclk internally). Or just drop clock-names=
-=20
-> as it is pointless=20
-> when there is only 1 clock.=20
-
-I will drop the clock-names, thanks!
-
->=20
-> Also DR handling as an IRQ is missing.
-
-I have considered using the DR signal, but as we not support buffering
-yet I did not see any point in using it.
-
-=46rom the datasheet, section 7.1 ::
-
-	These registers [channel registers] are latched when an
-	ADC read communication occurs. When a data ready
-	event occurs during a read communication, the most
-	current ADC data is also latched to avoid data
-	corruption issues. The three bytes of each channel are
-	updated synchronously at a DRCLK rate. The three
-	bytes can be accessed separately if needed but are
-	refreshed synchronously.
-
-So it should be safe to read the values independently of the DR signal.
-Or maybe I'm missing something.
-
-
-Best regards
-Marcus Folkesson
-
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAltYycQACgkQiIBOb1ld
-UjJHZw/8CMIIsAbrC+kAnKC22Si3zdJ0wI2utMTjCdlmdRwDSKxUdw1kNM0+vlDR
-Er66pJ6okfPp1Y7+kXTYa8QKcoXwAp6+wIeCoAGRZ1gP6ZeK2IPIED0d/tPa62xO
-4f/Z68+P936iQp1avmY0ncgu2JtGIxmQDC+wa1aPqATgMm/RGrGjnDJnU9NCNAHx
-l3JhP/4Gd0WCZOfZu+UaAF1tU4ZCbr/FR3u8XVOJeg6c7cnMA7YeUtGnjv1pi7du
-Yqy2mPLqdVdux3SwXZ60UzZ06G+AgswkOvGcVcNHPTn4fawkrbeZ0staPd2FkGCn
-LTQ07nnGc717C6O16axSqmnC1Bk/tzFXQYazruhTQ3pJ+I0fzLovdUN0rBHnSJ/e
-jzqGcDKRTp41XiNaUHGo1GgCILxoSvCMWT8Ja5zNW2Zmn38jK8cqv4wA/sqVAUXj
-2K8HMmL3GNNy5IysRKSnofWc5347u76cF2SowwsXz0CH9lT2qkk7p7Fdy+pFEJVl
-6nGrzY5+MS0MJwkFb7iWDiC6rBA5Saw5xOo5ZECvMv0u9v0oo6i9qOQhpyS4Ezdl
-Rqt3CXEfkZhebNA+Mekqafie832Z6U3Ai8Gri6ZNjdEPxzEppRufovvXmI8CB1xT
-v3+tzULwxbJ1blSUhzp9kfJECzcK1ia9yCHpbCCw0EIDUqxgwes=
-=xhv2
------END PGP SIGNATURE-----
-
---dDRMvlgZJXvWKvBx--
+> +
+> +Required dai-link properties:
+> +
+> +- sound-dai: phandle and port of the CPU DAI.
+> +
+> +Required TDM Backend dai-link properties:
+> +- dai-format : CPU/CODEC common audio format
+> +
+> +Optional TDM Backend dai-link properties:
+> +- dai-tdm-slot-rx-mask-{0,1,2,3}: Receive direction slot masks
+> +- dai-tdm-slot-tx-mask-{0,1,2,3}: Transmit direction slot masks
+> +				  When omitted, mask is assumed to have to no
+> +				  slots. A valid must have at one slot, so at
+> +				  least one these mask should be provided with
+> +				  an enabled slot.
+> +- dai-tdm-slot-num : Please refer to tdm-slot.txt.
+> +		     If omitted, slot number is set to accommodate the largest
+> +		     mask provided.
+> +- dai-tdm-slot-width : Please refer to tdm-slot.txt. default to 32 if omitted.
+> +- mclk-fs : Multiplication factor between stream rate and mclk
+> +
+> +Backend dai-link subnodes:
+> +
+> +- codec: dai-link representing backend links should have at least one subnode.
+> +	 One subnode for each codec of the dai-link.
+> +	 dai-link representing frontend links have no codec, therefore have no
+> +	 subnodes
+> +
+> +Required codec subnodes properties:
+> +
+> +- sound-dai: phandle and port of the CODEC DAI.
+> +
+> +Optional codec subnodes properties:
+> +
+> +- dai-tdm-slot-tx-mask : Please refer to tdm-slot.txt.
+> +- dai-tdm-slot-rx-mask : Please refer to tdm-slot.txt.
+> +
+> +Example:
+> +
+> +sound {
+> +	compatible = "amlogic,axg-sound-card";
+> +	amlogic,name = "AXG-S420";
+> +	amlogic,aux-devs = <&tdmin_a>, <&tdmout_c>;
+> +	amlogic,widgets = "Line", "Lineout",
+> +			  "Line", "Linein",
+> +			  "Speaker", "Speaker1 Left",
+> +			  "Speaker", "Speaker1 Right";
+> +			  "Speaker", "Speaker2 Left",
+> +			  "Speaker", "Speaker2 Right";
+> +	amlogic,routing = "TDMOUT_C IN 0", "FRDDR_A OUT 2",
+> +			  "SPDIFOUT IN 0", "FRDDR_A OUT 3",
+> +			  "TDM_C Playback", "TDMOUT_C OUT",
+> +			  "TDMIN_A IN 2", "TDM_C Capture",
+> +			  "TDMIN_A IN 5", "TDM_C Loopback",
+> +			  "TODDR_A IN 0", "TDMIN_A OUT",
+> +			  "Lineout", "Lineout AOUTL",
+> +			  "Lineout", "Lineout AOUTR",
+> +			  "Speaker1 Left", "SPK1 OUT_A",
+> +			  "Speaker2 Left", "SPK2 OUT_A",
+> +			  "Speaker1 Right", "SPK1 OUT_B",
+> +			  "Speaker2 Right", "SPK2 OUT_B",
+> +			  "Linein AINL", "Linein",
+> +			  "Linein AINR", "Linein";
+> +
+> +	amlogic,dai-link@0 {
+> +		sound-dai = <&frddr_a>;
+> +	};
+> +
+> +	amlogic,dai-link@1 {
+> +		sound-dai = <&toddr_a>;
+> +	};
+> +
+> +	amlogic,dai-link@2 {
+> +		sound-dai = <&tdmif_c>;
+> +		dai-format = "i2s";
+> +		dai-tdm-slot-tx-mask-2 = <1 1>;
+> +		dai-tdm-slot-tx-mask-3 = <1 1>;
+> +		dai-tdm-slot-rx-mask-1 = <1 1>;
+> +		mclk-fs = <256>;
+> +
+> +		codec@0 {
+> +			sound-dai = <&lineout>;
+> +		};
+> +
+> +		codec@1 {
+> +			sound-dai = <&speaker_amp1>;
+> +		};
+> +
+> +		codec@2 {
+> +			sound-dai = <&speaker_amp2>;
+> +		};
+> +
+> +		codec@3 {
+> +			sound-dai = <&linein>;
+> +		};
+> +
+> +	};
+> +
+> +	amlogic,dai-link@4 {
+> +		sound-dai = <&spdifout>;
+> +
+> +		codec {
+> +			sound-dai = <&spdif_dit>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.14.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
