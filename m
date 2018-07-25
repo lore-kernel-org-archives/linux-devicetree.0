@@ -1,99 +1,116 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v3 1/4] venus: firmware: add routine to reset ARM9
-Date: Wed, 25 Jul 2018 14:14:47 +0300
-Message-ID: <a9e7aee2-7320-affa-4887-c090b3ce289d@linaro.org>
-References: <1530731212-30474-1-git-send-email-vgarodia@codeaurora.org>
- <1530731212-30474-2-git-send-email-vgarodia@codeaurora.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 3/6] irqchip: RISC-V Local Interrupt Controller Driver
+Date: Wed, 25 Jul 2018 12:18:39 +0100
+Message-ID: <c3ccb953-cd75-4a37-636a-ca643602053a@arm.com>
+References: <20180725093649.32332-1-hch@lst.de>
+ <20180725093649.32332-4-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1530731212-30474-2-git-send-email-vgarodia@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20180725093649.32332-4-hch@lst.de>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vikash Garodia <vgarodia@codeaurora.org>, stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+To: Christoph Hellwig <hch@lst.de>, tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 07/04/2018 10:06 PM, Vikash Garodia wrote:
-> Add routine to reset the ARM9 and brings it out of reset. Also
-> abstract the Venus CPU state handling with a new function. This
-> is in preparation to add PIL functionality in venus driver.
+On 25/07/18 10:36, Christoph Hellwig wrote:
+> From: Palmer Dabbelt <palmer@dabbelt.com>
 > 
-> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> This patch adds a driver that manages the local interrupts on each
+> RISC-V hart, as specifiec by the RISC-V supervisor level ISA manual.
+> The local interrupt controller manages software interrupts, timer
+> interrupts, and hardware interrupts (which are routed via the
+> platform level interrupt controller).  Per-hart local interrupt
+> controllers are found on all RISC-V systems.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> [hch: Kconfig simplifications, various cleanups]
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  drivers/media/platform/qcom/venus/core.h         |  1 +
->  drivers/media/platform/qcom/venus/firmware.c     | 36 ++++++++++++++++++++++++
->  drivers/media/platform/qcom/venus/firmware.h     |  1 +
->  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++------
->  drivers/media/platform/qcom/venus/hfi_venus_io.h |  5 ++++
->  5 files changed, 47 insertions(+), 9 deletions(-)
+>  drivers/irqchip/Kconfig          |   4 +
+>  drivers/irqchip/Makefile         |   1 +
+>  drivers/irqchip/irq-riscv-intc.c | 197 +++++++++++++++++++++++++++++++
+>  3 files changed, 202 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-riscv-intc.c
 > 
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-> index 2f02365..eb5ee66 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -129,6 +129,7 @@ struct venus_core {
->  	struct device *dev;
->  	struct device *dev_dec;
->  	struct device *dev_enc;
-> +	bool no_tz;
->  	struct mutex lock;
->  	struct list_head instances;
->  	atomic_t insts_count;
-> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-> index 521d4b3..3968553d 100644
-> --- a/drivers/media/platform/qcom/venus/firmware.c
-> +++ b/drivers/media/platform/qcom/venus/firmware.c
-> @@ -22,11 +22,47 @@
->  #include <linux/sizes.h>
->  #include <linux/soc/qcom/mdt_loader.h>
->  
-> +#include "core.h"
->  #include "firmware.h"
-> +#include "hfi_venus_io.h"
->  
->  #define VENUS_PAS_ID			9
->  #define VENUS_FW_MEM_SIZE		(6 * SZ_1M)
->  
-> +static void venus_reset_cpu(struct venus_core *core)
+
+[...]
+
+> +/*
+> + * On RISC-V systems local interrupts are masked or unmasked by writing the SIE
+> + * (Supervisor Interrupt Enable) CSR.  As CSRs can only be written on the local
+> + * hart, these functions can only be called on the hart that corresponds to the
+> + * IRQ chip.  They are only called internally to this module, so they BUG_ON if
+> + * this condition is violated rather than attempting to handle the error by
+> + * forwarding to the target hart, as that's already expected to have been done.
+> + */
+> +static void riscv_irq_mask(struct irq_data *d)
 > +{
-> +	void __iomem *base = core->base;
+> +	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
 > +
-> +	writel(0, base + WRAPPER_FW_START_ADDR);
-> +	writel(VENUS_FW_MEM_SIZE, base + WRAPPER_FW_END_ADDR);
-> +	writel(0, base + WRAPPER_CPA_START_ADDR);
-> +	writel(VENUS_FW_MEM_SIZE, base + WRAPPER_CPA_END_ADDR);
-> +	writel(0x0, base + WRAPPER_CPU_CGC_DIS);
-> +	writel(0x0, base + WRAPPER_CPU_CLOCK_CONFIG);
-> +
-> +	/* Make sure all register writes are committed. */
-> +	mb();
-> +
-> +	/* Bring ARM9 out of reset */
-> +	writel_relaxed(0, base + WRAPPER_A9SS_SW_RESET);
+> +	BUG_ON(smp_processor_id() != data->hart);
+> +	csr_clear(sie, 1 << d->hwirq);
 > +}
 > +
-> +int venus_set_hw_state(struct venus_core *core, bool resume)
+> +static void riscv_irq_unmask(struct irq_data *d)
 > +{
-> +	void __iomem *base = core->base;
+> +	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
 > +
-> +	if (!core->no_tz)
-> +		return qcom_scm_set_remote_state(resume, 0);
-> +
-> +	if (resume)
-> +		venus_reset_cpu(core);
-> +	else
-> +		writel(1, base + WRAPPER_A9SS_SW_RESET);
-> +
-> +	return 0;
+> +	BUG_ON(smp_processor_id() != data->hart);
+> +	csr_set(sie, 1 << d->hwirq);
 > +}
-> +EXPORT_SYMBOL_GPL(venus_set_hw_state);
+> +
+> +/* Callbacks for twiddling SIE on another hart. */
+> +static void riscv_irq_enable_helper(void *d)
+> +{
+> +	riscv_irq_unmask(d);
+> +}
+> +
+> +static void riscv_irq_disable_helper(void *d)
+> +{
+> +	riscv_irq_mask(d);
+> +}
+> +
+> +static void riscv_remote_ctrl(unsigned int cpu, void (*fn)(void *d),
+> +			      struct irq_data *data)
+> +{
+> +	smp_call_function_single(cpu, fn, data, true);
+> +}
+> +
+> +static void riscv_irq_enable(struct irq_data *d)
+> +{
+> +	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
+> +
+> +	/*
+> +	 * It's only possible to write SIE on the current hart.  This jumps
+> +	 * over to the target hart if it's not the current one.  It's invalid
+> +	 * to write SIE on a hart that's not currently running.
+> +	 */
+> +	if (data->hart == smp_processor_id())
+> +		riscv_irq_unmask(d);
+> +	else if (cpu_online(data->hart))
+> +		riscv_remote_ctrl(data->hart, riscv_irq_enable_helper, d);
 
-This export_symbol shouldn't be needed
+This feels odd. It means that you cannot have the following sequence:
 
+	local_irq_disable();
+	enable_irq(x); // where x is owned by a remote hart
+
+as smp_call_function_single() requires interrupts to be enabled.
+
+More fundamentally, why are you trying to make these interrupts look
+global while they aren't? arm/arm64 have similar restrictions with GICv2
+and earlier, and treats these interrupts as per-cpu.
+
+Given that the drivers that deal with drivers connected to the per-hart
+irqchip are themselves likely to be aware of the per-cpu aspect, it
+would make sense to align things (we've been through that same
+discussion about the clocksource driver a few weeks back).
+
+Thanks,
+
+	M.
 -- 
-regards,
-Stan
+Jazz is not dead. It just smells funny...
