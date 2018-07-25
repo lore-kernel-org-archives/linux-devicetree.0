@@ -1,36 +1,48 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 15/15] clk: pistachio: Fix wrong SDHost card speed
-Date: Wed, 25 Jul 2018 16:43:30 -0700
-Message-ID: <153256221029.48062.5074371246522411479@swboyd.mtv.corp.google.com>
-References: <20180722212010.3979-1-afaerber@suse.de>
- <20180722212010.3979-16-afaerber@suse.de>
+Subject: Re: [PATCH 1/3] clk: s2mps11: Fix matching when built as module and DT node
+ contains compatible
+Date: Wed, 25 Jul 2018 16:48:32 -0700
+Message-ID: <153256251231.48062.2127272830110571402@swboyd.mtv.corp.google.com>
+References: <20180725155517.4872-1-krzk@kernel.org>
+ <20180725155517.4872-2-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180722212010.3979-16-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Govindraj Raja <Govindraj.Raja@imgtec.com>, =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180725155517.4872-2-krzk@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Andreas F=C3=A4rber (2018-07-22 14:20:10)
-> From: Govindraj Raja <Govindraj.Raja@imgtec.com>
+Quoting Krzysztof Kozlowski (2018-07-25 08:55:15)
+> When driver is built as module and DT node contains clocks compatible
+> (e.g. "samsung,s2mps11-clk"), the module will not be autoloaded because
+> module aliases won't match.
 > =
 
-> The SDHost currently clocks the card 4x slower than it
-> should do, because there is a fixed divide by 4 in the
-> sdhost wrapper that is not present in the clock tree.
-> To model this, add a fixed divide by 4 clock node in
-> the SDHost clock path.
+> The modalias from uevent: of:NclocksT<NULL>Csamsung,s2mps11-clk
+> The modalias from driver: platform:s2mps11-clk
 > =
 
-> This will ensure the right clock frequency is selected when
-> the mmc driver tries to configure frequency on card insert.
+> The devices are instantiated by parent's MFD.  However both Device Tree
+> bindings and parent define the compatible for clocks devices.  In case
+> of module matching this DT compatible will be used.
 > =
 
-> Signed-off-by: Govindraj Raja <Govindraj.Raja@imgtec.com>
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> The issue will not happen if this is built-in (no need for module
+> matching) or when clocks DT node does not contain compatible (not
+> correct from bindings perspective but working for driver).
+> =
+
+> Note when backporting to stable kernels: adjust the list of device ID
+> entries.
+> =
+
+> Cc: <stable@vger.kernel.org>
+> Fixes: 53c31b3437a6 ("mfd: sec-core: Add of_compatible strings for clock =
+MFD cells")
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
 
 Acked-by: Stephen Boyd <sboyd@kernel.org>
