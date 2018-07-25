@@ -1,590 +1,1173 @@
-Return-Path: <SRS0=Ye4W=JW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.bitwise.fi ([109.204.228.163]:41614 "EHLO mail.bitwise.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S932692AbeGFOSi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Jul 2018 10:18:38 -0400
-From: Anssi Hannula <anssi.hannula@bitwise.fi>
-Subject: [PATCH 3/3] can: xilinx_can: add support for Xilinx CAN FD core
-Date: Fri,  6 Jul 2018 17:18:17 +0300
-Message-Id: <20180706141817.19729-4-anssi.hannula@bitwise.fi>
-In-Reply-To: <20180706141817.19729-1-anssi.hannula@bitwise.fi>
-References: <20180706141817.19729-1-anssi.hannula@bitwise.fi>
-Sender: devicetree-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-can@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=r8rx=KJ=nxp.com=wen.he_1@kernel.org>
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v7 3/7] dmaengine: fsl-qdma: Add qDMA controller driver for Layerscape SoCs
+Date: Wed, 25 Jul 2018 19:29:15 +0800
+Message-Id: <20180725112919.31340-3-wen.he_1@nxp.com>
+In-Reply-To: <20180725112919.31340-1-wen.he_1@nxp.com>
+References: <20180725112919.31340-1-wen.he_1@nxp.com>
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for Xilinx CAN FD core.
+NXP Queue DMA controller(qDMA) on Layerscape SoCs supports channel
+virtuallization by allowing DMA jobs to be enqueued into different
+command queues.
 
-The major difference from the previously supported cores is that there
-are TX mailboxes instead of a TX FIFO and the RX FIFO access method is
-different.
-
-We only transmit one frame at a time to prevent the HW from reordering
-frames (it uses CAN ID priority order).
-
-Support for CAN FD protocol is not added yet.
-
-v2: Removed unnecessary "rx-mode" DT property and wrapped some long
-    lines.
-
-Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
-Cc: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+Signed-off-by: Jiaheng Fan <jiaheng.fan@nxp.com>
 ---
- drivers/net/can/xilinx_can.c | 303 ++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 259 insertions(+), 44 deletions(-)
+ drivers/dma/Kconfig    |   13 +
+ drivers/dma/Makefile   |    1 +
+ drivers/dma/fsl-qdma.c | 1105 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 1119 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/dma/fsl-qdma.c
 
-diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-index b2b55eaea872..7f8c9262c210 100644
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -2,7 +2,7 @@
-  *
-  * Copyright (C) 2012 - 2014 Xilinx, Inc.
-  * Copyright (C) 2009 PetaLogix. All rights reserved.
-- * Copyright (C) 2017 Sandvik Mining and Construction Oy
-+ * Copyright (C) 2017 - 2018 Sandvik Mining and Construction Oy
-  *
-  * Description:
-  * This driver is developed for Axi CAN IP and for Zynq CANPS Controller.
-@@ -51,8 +51,18 @@ enum xcan_reg {
- 	XCAN_ISR_OFFSET		= 0x1C, /* Interrupt status */
- 	XCAN_IER_OFFSET		= 0x20, /* Interrupt enable */
- 	XCAN_ICR_OFFSET		= 0x24, /* Interrupt clear */
-+
-+	/* not on CAN FD cores */
- 	XCAN_TXFIFO_OFFSET	= 0x30, /* TX FIFO base */
- 	XCAN_RXFIFO_OFFSET	= 0x50, /* RX FIFO base */
-+	XCAN_AFR_OFFSET		= 0x60, /* Acceptance Filter */
-+
-+	/* only on CAN FD cores */
-+	XCAN_TRR_OFFSET		= 0x0090, /* TX Buffer Ready Request */
-+	XCAN_AFR_EXT_OFFSET	= 0x00E0, /* Acceptance Filter */
-+	XCAN_FSR_OFFSET		= 0x00E8, /* RX FIFO Status */
-+	XCAN_TXMSG_BASE_OFFSET	= 0x0100, /* TX Message Space */
-+	XCAN_RXMSG_BASE_OFFSET	= 0x1100, /* RX Message Space */
- };
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index ca1680a..2914caf 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -218,6 +218,19 @@ config FSL_EDMA
+ 	  multiplexing capability for DMA request sources(slot).
+ 	  This module can be found on Freescale Vybrid and LS-1 SoCs.
  
- #define XCAN_FRAME_ID_OFFSET(frame_base)	((frame_base) + 0x00)
-@@ -60,6 +70,15 @@ enum xcan_reg {
- #define XCAN_FRAME_DW1_OFFSET(frame_base)	((frame_base) + 0x08)
- #define XCAN_FRAME_DW2_OFFSET(frame_base)	((frame_base) + 0x0C)
- 
-+#define XCAN_CANFD_FRAME_SIZE		0x48
-+#define XCAN_TXMSG_FRAME_OFFSET(n)	(XCAN_TXMSG_BASE_OFFSET + \
-+					 XCAN_CANFD_FRAME_SIZE * (n))
-+#define XCAN_RXMSG_FRAME_OFFSET(n)	(XCAN_RXMSG_BASE_OFFSET + \
-+					 XCAN_CANFD_FRAME_SIZE * (n))
++config FSL_QDMA
++       tristate "NXP Layerscape qDMA engine support"
++       depends on ARM || ARM64
++       select DMA_ENGINE
++       select DMA_VIRTUAL_CHANNELS
++       select DMA_ENGINE_RAID
++       select ASYNC_TX_ENABLE_CHANNEL_SWITCH
++       help
++         Support the NXP Layerscape qDMA engine with command queue and legacy mode.
++         Channel virtualization is supported through enqueuing of DMA jobs to,
++         or dequeuing DMA jobs from, different work queues.
++         This module can be found on NXP Layerscape SoCs.
 +
-+/* the single TX mailbox used by this driver on CAN FD HW */
-+#define XCAN_TX_MAILBOX_IDX		0
+ config FSL_RAID
+         tristate "Freescale RAID engine Support"
+         depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index 203a99d..0556f9d 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -32,6 +32,7 @@ obj-$(CONFIG_DW_DMAC_CORE) += dw/
+ obj-$(CONFIG_EP93XX_DMA) += ep93xx_dma.o
+ obj-$(CONFIG_FSL_DMA) += fsldma.o
+ obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
++obj-$(CONFIG_FSL_QDMA) += fsl-qdma.o
+ obj-$(CONFIG_FSL_RAID) += fsl_raid.o
+ obj-$(CONFIG_HSU_DMA) += hsu/
+ obj-$(CONFIG_IMG_MDC_DMA) += img-mdc-dma.o
+diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+new file mode 100644
+index 0000000..1cecf9b
+--- /dev/null
++++ b/drivers/dma/fsl-qdma.c
+@@ -0,0 +1,1105 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright 2018 NXP
 +
- /* CAN register bit masks - XCAN_<REG>_<BIT>_MASK */
- #define XCAN_SRR_CEN_MASK		0x00000002 /* CAN enable */
- #define XCAN_SRR_RESET_MASK		0x00000001 /* Soft Reset the CAN core */
-@@ -69,6 +88,9 @@ enum xcan_reg {
- #define XCAN_BTR_SJW_MASK		0x00000180 /* Synchronous jump width */
- #define XCAN_BTR_TS2_MASK		0x00000070 /* Time segment 2 */
- #define XCAN_BTR_TS1_MASK		0x0000000F /* Time segment 1 */
-+#define XCAN_BTR_SJW_MASK_CANFD		0x000F0000 /* Synchronous jump width */
-+#define XCAN_BTR_TS2_MASK_CANFD		0x00000F00 /* Time segment 2 */
-+#define XCAN_BTR_TS1_MASK_CANFD		0x0000003F /* Time segment 1 */
- #define XCAN_ECR_REC_MASK		0x0000FF00 /* Receive error counter */
- #define XCAN_ECR_TEC_MASK		0x000000FF /* Transmit error counter */
- #define XCAN_ESR_ACKER_MASK		0x00000010 /* ACK error */
-@@ -82,6 +104,7 @@ enum xcan_reg {
- #define XCAN_SR_NORMAL_MASK		0x00000008 /* Normal mode */
- #define XCAN_SR_LBACK_MASK		0x00000002 /* Loop back mode */
- #define XCAN_SR_CONFIG_MASK		0x00000001 /* Configuration mode */
-+#define XCAN_IXR_RXMNF_MASK		0x00020000 /* RX match not finished */
- #define XCAN_IXR_TXFEMP_MASK		0x00004000 /* TX FIFO Empty */
- #define XCAN_IXR_WKUP_MASK		0x00000800 /* Wake up interrupt */
- #define XCAN_IXR_SLP_MASK		0x00000400 /* Sleep interrupt */
-@@ -99,10 +122,15 @@ enum xcan_reg {
- #define XCAN_IDR_ID2_MASK		0x0007FFFE /* Extended message ident */
- #define XCAN_IDR_RTR_MASK		0x00000001 /* Remote TX request */
- #define XCAN_DLCR_DLC_MASK		0xF0000000 /* Data length code */
-+#define XCAN_FSR_FL_MASK		0x00003F00 /* RX Fill Level */
-+#define XCAN_FSR_IRI_MASK		0x00000080 /* RX Increment Read Index */
-+#define XCAN_FSR_RI_MASK		0x0000001F /* RX Read Index */
- 
- /* CAN register bit shift - XCAN_<REG>_<BIT>_SHIFT */
- #define XCAN_BTR_SJW_SHIFT		7  /* Synchronous jump width */
- #define XCAN_BTR_TS2_SHIFT		4  /* Time segment 2 */
-+#define XCAN_BTR_SJW_SHIFT_CANFD	16 /* Synchronous jump width */
-+#define XCAN_BTR_TS2_SHIFT_CANFD	8  /* Time segment 2 */
- #define XCAN_IDR_ID1_SHIFT		21 /* Standard Messg Identifier */
- #define XCAN_IDR_ID2_SHIFT		1  /* Extended Message Identifier */
- #define XCAN_DLCR_DLC_SHIFT		28 /* Data length code */
-@@ -114,11 +142,23 @@ enum xcan_reg {
- 
- /* TX-FIFO-empty interrupt available */
- #define XCAN_FLAG_TXFEMP	0x0001
-+/* RX Match Not Finished interrupt available */
-+#define XCAN_FLAG_RXMNF		0x0002
-+/* Extended acceptance filters with control at 0xE0 */
-+#define XCAN_FLAG_EXT_FILTERS	0x0004
-+/* TX mailboxes instead of TX FIFO */
-+#define XCAN_FLAG_TX_MAILBOXES	0x0008
-+/* RX FIFO with each buffer in separate registers at 0x1100
-+ * instead of the regular FIFO at 0x50
++/*
++ * Driver for NXP Layerscape Queue Direct Memory Access Controller
++ *
++ * Author:
++ *  Wen He <wen.he_1@nxp.com>
++ *  Jiaheng Fan <jiaheng.fan@nxp.com>
++ *
 + */
-+#define XCAN_FLAG_RX_FIFO_MULTI	0x0010
- 
- struct xcan_devtype_data {
- 	unsigned int flags;
- 	const struct can_bittiming_const *bittiming_const;
- 	const char *bus_clk_name;
-+	unsigned int btr_ts2_shift;
-+	unsigned int btr_sjw_shift;
- };
- 
- /**
-@@ -169,6 +209,18 @@ static const struct can_bittiming_const xcan_bittiming_const = {
- 	.brp_inc = 1,
- };
- 
-+static const struct can_bittiming_const xcan_bittiming_const_canfd = {
-+	.name = DRIVER_NAME,
-+	.tseg1_min = 1,
-+	.tseg1_max = 64,
-+	.tseg2_min = 1,
-+	.tseg2_max = 16,
-+	.sjw_max = 16,
-+	.brp_min = 1,
-+	.brp_max = 256,
-+	.brp_inc = 1,
++
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/delay.h>
++#include <linux/of_irq.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
++#include <linux/of_dma.h>
++#include <linux/dma-mapping.h>
++#include <linux/dmapool.h>
++#include <linux/dmaengine.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++
++#include "virt-dma.h"
++#include "fsldma.h"
++
++/* Register related definition */
++#define FSL_QDMA_DMR			0x0
++#define FSL_QDMA_DSR			0x4
++#define FSL_QDMA_DEIER			0xe00
++#define FSL_QDMA_DEDR			0xe04
++#define FSL_QDMA_DECFDW0R		0xe10
++#define FSL_QDMA_DECFDW1R		0xe14
++#define FSL_QDMA_DECFDW2R		0xe18
++#define FSL_QDMA_DECFDW3R		0xe1c
++#define FSL_QDMA_DECFQIDR		0xe30
++#define FSL_QDMA_DECBR			0xe34
++
++#define FSL_QDMA_BCQMR(x)		(0xc0 + 0x100 * (x))
++#define FSL_QDMA_BCQSR(x)		(0xc4 + 0x100 * (x))
++#define FSL_QDMA_BCQEDPA_SADDR(x)	(0xc8 + 0x100 * (x))
++#define FSL_QDMA_BCQDPA_SADDR(x)	(0xcc + 0x100 * (x))
++#define FSL_QDMA_BCQEEPA_SADDR(x)	(0xd0 + 0x100 * (x))
++#define FSL_QDMA_BCQEPA_SADDR(x)	(0xd4 + 0x100 * (x))
++#define FSL_QDMA_BCQIER(x)		(0xe0 + 0x100 * (x))
++#define FSL_QDMA_BCQIDR(x)		(0xe4 + 0x100 * (x))
++
++#define FSL_QDMA_SQDPAR			0x80c
++#define FSL_QDMA_SQEPAR			0x814
++#define FSL_QDMA_BSQMR			0x800
++#define FSL_QDMA_BSQSR			0x804
++#define FSL_QDMA_BSQICR			0x828
++#define FSL_QDMA_CQMR			0xa00
++#define FSL_QDMA_CQDSCR1		0xa08
++#define FSL_QDMA_CQDSCR2                0xa0c
++#define FSL_QDMA_CQIER			0xa10
++#define FSL_QDMA_CQEDR			0xa14
++#define FSL_QDMA_SQCCMR			0xa20
++
++/* Registers for bit and genmask */
++#define FSL_QDMA_CQIDR_SQT		BIT(15)
++#define QDMA_CCDF_FOTMAT		BIT(29)
++#define QDMA_CCDF_SER			BIT(30)
++#define QDMA_SG_FIN			BIT(30)
++#define QDMA_SG_EXT			BIT(31)
++#define QDMA_SG_LEN_MASK		GENMASK(29, 0)
++#define QDMA_CCDF_MASK			GENMASK(28, 20)
++
++#define FSL_QDMA_DEDR_CLEAR		GENMASK(31, 0)
++#define FSL_QDMA_BCQIDR_CLEAR		GENMASK(31, 0)
++#define FSL_QDMA_DEIER_CLEAR		GENMASK(31, 0)
++
++#define FSL_QDMA_BCQIER_CQTIE		BIT(15)
++#define FSL_QDMA_BCQIER_CQPEIE		BIT(23)
++#define FSL_QDMA_BSQICR_ICEN		BIT(31)
++
++#define FSL_QDMA_BSQICR_ICST(x)		((x) << 16)
++#define FSL_QDMA_CQIER_MEIE		BIT(31)
++#define FSL_QDMA_CQIER_TEIE		BIT(0)
++#define FSL_QDMA_SQCCMR_ENTER_WM	BIT(21)
++
++#define FSL_QDMA_BCQMR_EN		BIT(31)
++#define FSL_QDMA_BCQMR_EI		BIT(30)
++#define FSL_QDMA_BCQMR_CD_THLD(x)	((x) << 20)
++#define FSL_QDMA_BCQMR_CQ_SIZE(x)	((x) << 16)
++
++#define FSL_QDMA_BCQSR_QF		BIT(16)
++#define FSL_QDMA_BCQSR_XOFF		BIT(0)
++
++#define FSL_QDMA_BSQMR_EN		BIT(31)
++#define FSL_QDMA_BSQMR_DI		BIT(30)
++#define FSL_QDMA_BSQMR_CQ_SIZE(x)	((x) << 16)
++
++#define FSL_QDMA_BSQSR_QE		BIT(17)
++
++#define FSL_QDMA_DMR_DQD		BIT(30)
++#define FSL_QDMA_DSR_DB		BIT(31)
++
++/* Size related definition */
++#define FSL_QDMA_QUEUE_MAX		8
++#define FSL_QDMA_BASE_BUFFER_SIZE	96
++#define FSL_QDMA_CIRCULAR_DESC_SIZE_MIN	64
++#define FSL_QDMA_CIRCULAR_DESC_SIZE_MAX	16384
++#define FSL_QDMA_QUEUE_NUM_MAX		8
++
++/* Field definition for CMD */
++#define FSL_QDMA_CMD_RWTTYPE		0x4
++#define FSL_QDMA_CMD_LWC                0x2
++#define FSL_QDMA_CMD_RWTTYPE_OFFSET	28
++#define FSL_QDMA_CMD_NS_OFFSET		27
++#define FSL_QDMA_CMD_DQOS_OFFSET	24
++#define FSL_QDMA_CMD_WTHROTL_OFFSET	20
++#define FSL_QDMA_CMD_DSEN_OFFSET	19
++#define FSL_QDMA_CMD_LWC_OFFSET		16
++
++#define FSL_QDMA_E_SG_TABLE		1
++#define FSL_QDMA_E_DATA_BUFFER		0
++#define FSL_QDMA_F_LAST_ENTRY		1
++
++/* Field definition for safe loop count*/
++#define FSL_QDMA_HALT_COUNT		1500
++#define FSL_QDMA_MAX_SIZE		16385
++
++/* Field definition for Descriptor offset */
++#define QDMA_CCDF_STATUS		20
++#define QDMA_CCDF_OFFSET		20
++
++/**
++ * struct fsl_qdma_format - This is the struct holding describing compound
++ *			    descriptor format with qDMA.
++ * @status:		    Command status and enqueue status notification.
++ * @cfg:		    Frame offset and frame format.
++ * @addr_lo:		    Holding the compound descriptor of the lower
++ *			    32-bits address in memory 40-bit address.
++ * @addr_hi:		    Same as above member, but point high 8-bits in
++ *			    memory 40-bit address.
++ * @__reserved1:	    Reserved field.
++ * @cfg8b_w1:		    Compound descriptor command queue origin produced
++ *			    by qDMA and dynamic debug field.
++ * @data		    Pointer to the memory 40-bit address, describes DMA
++ *			    source information and DMA destination information.
++ */
++struct fsl_qdma_format {
++	__le32 status;
++	__le32 cfg;
++	union {
++		struct {
++			__le32 addr_lo;
++			u8 addr_hi;
++			u8 __reserved1[2];
++			u8 cfg8b_w1;
++		} __packed;
++		__le64 data;
++	};
++} __packed;
++
++/* qDMA status notification pre information */
++struct fsl_pre_status {
++	u64 queue;
++	u64 addr;
 +};
 +
- /**
-  * xcan_write_reg_le - Write a value to the device register little endian
-  * @priv:	Driver private data structure
-@@ -223,6 +275,23 @@ static u32 xcan_read_reg_be(const struct xcan_priv *priv, enum xcan_reg reg)
- 	return ioread32be(priv->reg_base + reg);
- }
- 
-+/**
-+ * xcan_rx_int_mask - Get the mask for the receive interrupt
-+ * @priv:	Driver private data structure
-+ *
-+ * Return: The receive interrupt mask used by the driver on this HW
-+ */
-+static u32 xcan_rx_int_mask(const struct xcan_priv *priv)
++struct fsl_qdma_chan {
++	struct virt_dma_chan		vchan;
++	struct virt_dma_desc		vdesc;
++	enum dma_status			status;
++	u32				slave_id;
++	struct fsl_qdma_engine		*qdma;
++	struct fsl_qdma_queue		*queue;
++	struct list_head		qcomp;
++};
++
++struct fsl_qdma_queue {
++	struct fsl_qdma_format	*virt_head;
++	struct fsl_qdma_format	*virt_tail;
++	struct list_head	comp_used;
++	struct list_head	comp_free;
++	struct dma_pool		*comp_pool;
++	spinlock_t		queue_lock;
++	dma_addr_t		bus_addr;
++	u32                     n_cq;
++	u32			id;
++	struct fsl_qdma_format	*cq;
++};
++
++struct fsl_qdma_comp {
++	dma_addr_t              bus_addr;
++	struct fsl_qdma_format	*virt_addr;
++	struct fsl_qdma_chan	*qchan;
++	struct virt_dma_desc    vdesc;
++	struct list_head	list;
++};
++
++struct fsl_qdma_engine {
++	struct dma_device	dma_dev;
++	void __iomem		*ctrl_base;
++	void __iomem            *status_base;
++	void __iomem		*block_base;
++	u32			n_chans;
++	u32			n_queues;
++	struct mutex            fsl_qdma_mutex;
++	int			error_irq;
++	int			queue_irq;
++	bool			feature;
++	struct fsl_qdma_queue	*queue;
++	struct fsl_qdma_queue	*status;
++	struct fsl_qdma_chan	chans[];
++
++};
++
++static inline u64
++qdma_ccdf_addr_get64(const struct fsl_qdma_format *ccdf)
 +{
-+	/* RXNEMP is better suited for our use case as it cannot be cleared
-+	 * while the FIFO is non-empty, but CAN FD HW does not have it
-+	 */
-+	if (priv->devtype.flags & XCAN_FLAG_RX_FIFO_MULTI)
-+		return XCAN_IXR_RXOK_MASK;
-+	else
-+		return XCAN_IXR_RXNEMP_MASK;
++	return le64_to_cpu(ccdf->data) & (U64_MAX >> 24);
 +}
 +
- /**
-  * set_reset_mode - Resets the CAN device mode
-  * @ndev:	Pointer to net_device structure
-@@ -287,10 +356,10 @@ static int xcan_set_bittiming(struct net_device *ndev)
- 	btr1 = (bt->prop_seg + bt->phase_seg1 - 1);
- 
- 	/* Setting Time Segment 2 in BTR Register */
--	btr1 |= (bt->phase_seg2 - 1) << XCAN_BTR_TS2_SHIFT;
-+	btr1 |= (bt->phase_seg2 - 1) << priv->devtype.btr_ts2_shift;
- 
- 	/* Setting Synchronous jump width in BTR Register */
--	btr1 |= (bt->sjw - 1) << XCAN_BTR_SJW_SHIFT;
-+	btr1 |= (bt->sjw - 1) << priv->devtype.btr_sjw_shift;
- 
- 	priv->write_reg(priv, XCAN_BRPR_OFFSET, btr0);
- 	priv->write_reg(priv, XCAN_BTR_OFFSET, btr1);
-@@ -318,6 +387,7 @@ static int xcan_chip_start(struct net_device *ndev)
- 	u32 reg_msr, reg_sr_mask;
- 	int err;
- 	unsigned long timeout;
-+	u32 ier;
- 
- 	/* Check if it is in reset mode */
- 	err = set_reset_mode(ndev);
-@@ -329,11 +399,15 @@ static int xcan_chip_start(struct net_device *ndev)
- 		return err;
- 
- 	/* Enable interrupts */
--	priv->write_reg(priv, XCAN_IER_OFFSET,
--			XCAN_IXR_TXOK_MASK | XCAN_IXR_BSOFF_MASK |
--			XCAN_IXR_WKUP_MASK | XCAN_IXR_SLP_MASK |
--			XCAN_IXR_RXNEMP_MASK | XCAN_IXR_ERROR_MASK |
--			XCAN_IXR_RXOFLW_MASK | XCAN_IXR_ARBLST_MASK);
-+	ier = XCAN_IXR_TXOK_MASK | XCAN_IXR_BSOFF_MASK |
-+		XCAN_IXR_WKUP_MASK | XCAN_IXR_SLP_MASK |
-+		XCAN_IXR_ERROR_MASK | XCAN_IXR_RXOFLW_MASK |
-+		XCAN_IXR_ARBLST_MASK | xcan_rx_int_mask(priv);
-+
-+	if (priv->devtype.flags & XCAN_FLAG_RXMNF)
-+		ier |= XCAN_IXR_RXMNF_MASK;
-+
-+	priv->write_reg(priv, XCAN_IER_OFFSET, ier);
- 
- 	/* Check whether it is loopback mode or normal mode  */
- 	if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK) {
-@@ -344,6 +418,12 @@ static int xcan_chip_start(struct net_device *ndev)
- 		reg_sr_mask = XCAN_SR_NORMAL_MASK;
- 	}
- 
-+	/* enable the first extended filter, if any, as cores with extended
-+	 * filtering default to non-receipt if all filters are disabled
-+	 */
-+	if (priv->devtype.flags & XCAN_FLAG_EXT_FILTERS)
-+		priv->write_reg(priv, XCAN_AFR_EXT_OFFSET, 0x00000001);
-+
- 	priv->write_reg(priv, XCAN_MSR_OFFSET, reg_msr);
- 	priv->write_reg(priv, XCAN_SRR_OFFSET, XCAN_SRR_CEN_MASK);
- 
-@@ -439,13 +519,15 @@ static void xcan_write_frame(struct xcan_priv *priv, struct sk_buff *skb,
- 		data[1] = be32_to_cpup((__be32 *)(cf->data + 4));
- 
- 	priv->write_reg(priv, XCAN_FRAME_ID_OFFSET(frame_offset), id);
--	/* If the CAN frame is RTR frame this write triggers transmission */
-+	/* If the CAN frame is RTR frame this write triggers transmission
-+	 * (not on CAN FD)
-+	 */
- 	priv->write_reg(priv, XCAN_FRAME_DLC_OFFSET(frame_offset), dlc);
- 	if (!(cf->can_id & CAN_RTR_FLAG)) {
- 		priv->write_reg(priv, XCAN_FRAME_DW1_OFFSET(frame_offset),
- 				data[0]);
- 		/* If the CAN frame is Standard/Extended frame this
--		 * write triggers transmission
-+		 * write triggers transmission (not on CAN FD)
- 		 */
- 		priv->write_reg(priv, XCAN_FRAME_DW2_OFFSET(frame_offset),
- 				data[1]);
-@@ -488,25 +570,60 @@ static int xcan_start_xmit_fifo(struct sk_buff *skb, struct net_device *ndev)
- 	return 0;
- }
- 
-+/**
-+ * xcan_start_xmit_mailbox - Starts the transmission (mailbox mode)
-+ *
-+ * Return: 0 on success, -ENOSPC if there is no space
-+ */
-+static int xcan_start_xmit_mailbox(struct sk_buff *skb, struct net_device *ndev)
++static inline void
++qdma_desc_addr_set64(struct fsl_qdma_format *ccdf, u64 addr)
 +{
-+	struct xcan_priv *priv = netdev_priv(ndev);
++	ccdf->addr_hi = upper_32_bits(addr);
++	ccdf->addr_lo = cpu_to_le32(lower_32_bits(addr));
++}
++
++static inline u64
++qdma_ccdf_get_queue(const struct fsl_qdma_format *ccdf)
++{
++	return ccdf->cfg8b_w1 & U8_MAX;
++}
++
++static inline int
++qdma_ccdf_get_offset(const struct fsl_qdma_format *ccdf)
++{
++	return (le32_to_cpu(ccdf->cfg) & QDMA_CCDF_MASK) >> QDMA_CCDF_OFFSET;
++}
++
++static inline void
++qdma_ccdf_set_format(struct fsl_qdma_format *ccdf, int offset)
++{
++	ccdf->cfg = cpu_to_le32(QDMA_CCDF_FOTMAT | offset);
++}
++
++static inline int
++qdma_ccdf_get_status(const struct fsl_qdma_format *ccdf)
++{
++	return (le32_to_cpu(ccdf->status) & QDMA_CCDF_MASK) >> QDMA_CCDF_STATUS;
++}
++
++static inline void
++qdma_ccdf_set_ser(struct fsl_qdma_format *ccdf, int status)
++{
++	ccdf->status = cpu_to_le32(QDMA_CCDF_SER | status);
++}
++
++static inline void qdma_csgf_set_len(struct fsl_qdma_format *csgf, int len)
++{
++	csgf->cfg = cpu_to_le32(len & QDMA_SG_LEN_MASK);
++}
++
++static inline void qdma_csgf_set_f(struct fsl_qdma_format *csgf, int len)
++{
++	csgf->cfg = cpu_to_le32(QDMA_SG_FIN | (len & QDMA_SG_LEN_MASK));
++}
++
++static inline void qdma_csgf_set_e(struct fsl_qdma_format *csgf, int len)
++{
++	csgf->cfg = cpu_to_le32(QDMA_SG_EXT | (len & QDMA_SG_LEN_MASK));
++}
++
++static u32 qdma_readl(struct fsl_qdma_engine *qdma, void __iomem *addr)
++{
++	return FSL_DMA_IN(qdma, addr, 32);
++}
++
++static void qdma_writel(struct fsl_qdma_engine *qdma, u32 val,
++						void __iomem *addr)
++{
++	FSL_DMA_OUT(qdma, addr, val, 32);
++}
++
++static struct fsl_qdma_chan *to_fsl_qdma_chan(struct dma_chan *chan)
++{
++	return container_of(chan, struct fsl_qdma_chan, vchan.chan);
++}
++
++static struct fsl_qdma_comp *to_fsl_qdma_comp(struct virt_dma_desc *vd)
++{
++	return container_of(vd, struct fsl_qdma_comp, vdesc);
++}
++
++static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
++{
++	struct fsl_qdma_chan *fsl_chan = to_fsl_qdma_chan(chan);
++	unsigned long flags;
++	LIST_HEAD(head);
++
++	spin_lock_irqsave(&fsl_chan->vchan.lock, flags);
++	vchan_get_all_descriptors(&fsl_chan->vchan, &head);
++	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
++
++	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
++}
++
++static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
++					dma_addr_t dst, dma_addr_t src, u32 len)
++{
++	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
++	struct fsl_qdma_format *sdf, *ddf;
++
++	ccdf = fsl_comp->virt_addr;
++	csgf_desc = fsl_comp->virt_addr + 1;
++	csgf_src = fsl_comp->virt_addr + 2;
++	csgf_dest = fsl_comp->virt_addr + 3;
++	sdf = fsl_comp->virt_addr + 4;
++	ddf = fsl_comp->virt_addr + 5;
++
++	memset(fsl_comp->virt_addr, 0, FSL_QDMA_BASE_BUFFER_SIZE);
++	/* Head Command Descriptor(Frame Descriptor) */
++	qdma_desc_addr_set64(ccdf, fsl_comp->bus_addr + 16);
++	qdma_ccdf_set_format(ccdf, qdma_ccdf_get_offset(ccdf));
++	qdma_ccdf_set_ser(ccdf, qdma_ccdf_get_status(ccdf));
++
++	/* Status notification is enqueued to status queue. */
++	/* Compound Command Descriptor(Frame List Table) */
++	qdma_desc_addr_set64(csgf_desc, fsl_comp->bus_addr + 64);
++	/* It must be 32 as Compound S/G Descriptor */
++	qdma_csgf_set_len(csgf_desc, 32);
++	qdma_desc_addr_set64(csgf_src, src);
++	qdma_csgf_set_len(csgf_src, len);
++	qdma_desc_addr_set64(csgf_dest, dst);
++	qdma_csgf_set_len(csgf_dest, len);
++	/* This entry is the last entry. */
++	qdma_csgf_set_f(csgf_dest, len);
++	/* Descriptor Buffer */
++	sdf->data = cpu_to_le64(
++			FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET);
++	ddf->data = cpu_to_le64(
++			FSL_QDMA_CMD_RWTTYPE << FSL_QDMA_CMD_RWTTYPE_OFFSET);
++	ddf->data |= cpu_to_le64(
++			FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
++}
++
++/*
++ * Pre-request full command descriptor for enqueue.
++ */
++static int fsl_qdma_pre_request_enqueue_desc(struct fsl_qdma_queue *queue)
++{
++	struct fsl_qdma_comp *comp_temp, *_comp_temp;
++	int i;
++
++	for (i = 0; i < queue->n_cq; i++) {
++		comp_temp = kzalloc(sizeof(*comp_temp), GFP_NOWAIT);
++		if (!comp_temp)
++			goto err;
++
++		comp_temp->virt_addr = dma_pool_alloc(queue->comp_pool,
++						      GFP_NOWAIT,
++						      &comp_temp->bus_addr);
++		if (!comp_temp->virt_addr)
++			goto err;
++
++		list_add_tail(&comp_temp->list, &queue->comp_free);
++	}
++	return 0;
++
++err:
++	if (i == 0 && comp_temp) {
++		kfree(comp_temp);
++		return -ENOMEM;
++	}
++
++	while (--i >= 1) {
++		list_for_each_entry_safe(comp_temp, _comp_temp,
++				&queue->comp_free, list) {
++			dma_pool_free(queue->comp_pool,
++					comp_temp->virt_addr,
++					comp_temp->bus_addr);
++			list_del(&comp_temp->list);
++			kfree(comp_temp);
++		}
++	}
++	return -ENOMEM;
++}
++
++/*
++ * Request a command descriptor for enqueue.
++ */
++static struct fsl_qdma_comp *fsl_qdma_request_enqueue_desc(
++					struct fsl_qdma_chan *fsl_chan,
++					unsigned int dst_nents,
++					unsigned int src_nents)
++{
++	struct fsl_qdma_comp *comp_temp;
++	struct fsl_qdma_queue *queue = fsl_chan->queue;
 +	unsigned long flags;
 +
-+	if (unlikely(priv->read_reg(priv, XCAN_TRR_OFFSET) &
-+		     BIT(XCAN_TX_MAILBOX_IDX)))
-+		return -ENOSPC;
++	spin_lock_irqsave(&queue->queue_lock, flags);
++	if (list_empty(&queue->comp_free)) {
++		spin_unlock_irqrestore(&queue->queue_lock, flags);
++		comp_temp = kzalloc(sizeof(*comp_temp), GFP_KERNEL);
++		if (!comp_temp)
++			return NULL;
 +
-+	can_put_echo_skb(skb, ndev, 0);
++		comp_temp->virt_addr = dma_pool_alloc(queue->comp_pool,
++						      GFP_KERNEL,
++						      &comp_temp->bus_addr);
++		if (!comp_temp->virt_addr) {
++			kfree(comp_temp);
++			return NULL;
++		}
 +
-+	spin_lock_irqsave(&priv->tx_lock, flags);
++	} else {
++		comp_temp = list_first_entry(&queue->comp_free,
++					     struct fsl_qdma_comp,
++					     list);
++		list_del(&comp_temp->list);
++		spin_unlock_irqrestore(&queue->queue_lock, flags);
++	}
 +
-+	priv->tx_head++;
++	comp_temp->qchan = fsl_chan;
 +
-+	xcan_write_frame(priv, skb,
-+			 XCAN_TXMSG_FRAME_OFFSET(XCAN_TX_MAILBOX_IDX));
++	return comp_temp;
++}
 +
-+	/* Mark buffer as ready for transmit */
-+	priv->write_reg(priv, XCAN_TRR_OFFSET, BIT(XCAN_TX_MAILBOX_IDX));
++static struct fsl_qdma_queue *fsl_qdma_alloc_queue_resources(
++					struct platform_device *pdev,
++					unsigned int queue_num)
++{
++	struct fsl_qdma_queue *queue_head, *queue_temp;
++	int ret, i;
++	unsigned int queue_size[FSL_QDMA_QUEUE_MAX];
 +
-+	netif_stop_queue(ndev);
++	if (queue_num > FSL_QDMA_QUEUE_MAX)
++		queue_num = FSL_QDMA_QUEUE_MAX;
++	queue_head = devm_kcalloc(&pdev->dev, queue_num,
++				sizeof(*queue_head), GFP_KERNEL);
++	if (!queue_head)
++		return NULL;
 +
-+	spin_unlock_irqrestore(&priv->tx_lock, flags);
++	ret = device_property_read_u32_array(&pdev->dev, "queue-sizes",
++					queue_size, queue_num);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't get queue-sizes.\n");
++		return NULL;
++	}
++
++	for (i = 0; i < queue_num; i++) {
++		if (queue_size[i] > FSL_QDMA_CIRCULAR_DESC_SIZE_MAX ||
++			    queue_size[i] < FSL_QDMA_CIRCULAR_DESC_SIZE_MIN) {
++			dev_err(&pdev->dev, "Get wrong queue-sizes.\n");
++			return NULL;
++		}
++		queue_temp = queue_head + i;
++		queue_temp->cq = dma_alloc_coherent(&pdev->dev,
++						sizeof(struct fsl_qdma_format) *
++						queue_size[i],
++						&queue_temp->bus_addr,
++						GFP_KERNEL);
++		if (!queue_temp->cq) {
++			devm_kfree(&pdev->dev, queue_head);
++			return NULL;
++		}
++		queue_temp->n_cq = queue_size[i];
++		queue_temp->id = i;
++		queue_temp->virt_head = queue_temp->cq;
++		queue_temp->virt_tail = queue_temp->cq;
++
++		/*
++		 * Create a comp dma pool that size
++		 * is 'FSL_QDMA_BASE_BUFFER_SIZE'.
++		 * The dma pool for queue command buffer.
++		 */
++		queue_temp->comp_pool = dma_pool_create("comp_pool",
++						&pdev->dev,
++						FSL_QDMA_BASE_BUFFER_SIZE,
++						16, 0);
++		if (!queue_temp->comp_pool)
++			goto err;
++
++		/*
++		 * List for queue command buffer
++		 */
++		INIT_LIST_HEAD(&queue_temp->comp_used);
++		INIT_LIST_HEAD(&queue_temp->comp_free);
++		spin_lock_init(&queue_temp->queue_lock);
++	}
++
++	return queue_head;
++
++err:
++	if (i == 0 && queue_temp->comp_pool)
++		dma_pool_destroy(queue_temp->comp_pool);
++	while (--i >= 1) {
++		queue_temp = queue_head + i;
++		if (i == 1 && unlikely(queue_temp->comp_pool))
++			dma_pool_destroy(queue_temp->comp_pool);
++	}
++
++	dev_err(&pdev->dev,
++		"unable to allocate channel %d descriptor pool\n",
++		queue_temp->id);
++
++	while (--i >= 0) {
++		queue_temp = queue_head + i;
++		dma_free_coherent(&pdev->dev,
++				sizeof(struct fsl_qdma_format) *
++				queue_size[i],
++				queue_temp->cq,
++				queue_temp->bus_addr);
++	}
++	devm_kfree(&pdev->dev, queue_head);
++	return NULL;
++}
++
++static struct fsl_qdma_queue *fsl_qdma_prep_status_queue(
++						struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct fsl_qdma_queue *status_head;
++	unsigned int status_size;
++	int ret;
++
++	ret = of_property_read_u32(np, "status-sizes", &status_size);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't get status-sizes.\n");
++		return NULL;
++	}
++	if (status_size > FSL_QDMA_CIRCULAR_DESC_SIZE_MAX
++			|| status_size < FSL_QDMA_CIRCULAR_DESC_SIZE_MIN) {
++		dev_err(&pdev->dev, "Get wrong status_size.\n");
++		return NULL;
++	}
++	status_head = devm_kzalloc(&pdev->dev, sizeof(*status_head),
++								GFP_KERNEL);
++	if (!status_head)
++		return NULL;
++
++	/*
++	 * Buffer for queue command
++	 */
++	status_head->cq = dma_alloc_coherent(&pdev->dev,
++						sizeof(struct fsl_qdma_format) *
++						status_size,
++						&status_head->bus_addr,
++						GFP_KERNEL);
++	if (!status_head->cq) {
++		devm_kfree(&pdev->dev, status_head);
++		return NULL;
++	}
++
++	status_head->n_cq = status_size;
++	status_head->virt_head = status_head->cq;
++	status_head->virt_tail = status_head->cq;
++	status_head->comp_pool = NULL;
++
++	return status_head;
++}
++
++static int fsl_qdma_halt(struct fsl_qdma_engine *fsl_qdma)
++{
++	void __iomem *ctrl = fsl_qdma->ctrl_base;
++	void __iomem *block = fsl_qdma->block_base;
++	int i, count = FSL_QDMA_HALT_COUNT;
++	u32 reg;
++
++	/* Disable the command queue and wait for idle state. */
++	reg = qdma_readl(fsl_qdma, ctrl + FSL_QDMA_DMR);
++	reg |= FSL_QDMA_DMR_DQD;
++	qdma_writel(fsl_qdma, reg, ctrl + FSL_QDMA_DMR);
++	for (i = 0; i < FSL_QDMA_QUEUE_NUM_MAX; i++)
++		qdma_writel(fsl_qdma, 0, block + FSL_QDMA_BCQMR(i));
++
++	while (1) {
++		reg = qdma_readl(fsl_qdma, ctrl + FSL_QDMA_DSR);
++		if (!(reg & FSL_QDMA_DSR_DB))
++			break;
++		if (count-- < 0)
++			return -EBUSY;
++		udelay(100);
++	}
++
++	/* Disable status queue. */
++	qdma_writel(fsl_qdma, 0, block + FSL_QDMA_BSQMR);
++
++	/* Clear all detected events and interrupts for all queues. */
++	qdma_writel(fsl_qdma, FSL_QDMA_BCQIDR_CLEAR,
++				block + FSL_QDMA_BCQIDR(0));
 +
 +	return 0;
 +}
 +
- /**
-  * xcan_start_xmit - Starts the transmission
-  * @skb:	sk_buff pointer that contains data to be Txed
-  * @ndev:	Pointer to net_device structure
-  *
-- * This function is invoked from upper layers to initiate transmission. This
-- * function uses the next available free txbuff and populates their fields to
-- * start the transmission.
-+ * This function is invoked from upper layers to initiate transmission.
-  *
-  * Return: 0 on success and failure value on error
-  */
- static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- {
-+	struct xcan_priv *priv = netdev_priv(ndev);
- 	int ret;
- 
- 	if (can_dropped_invalid_skb(ndev, skb))
- 		return NETDEV_TX_OK;
- 
--	ret = xcan_start_xmit_fifo(skb, ndev);
-+	if (priv->devtype.flags & XCAN_FLAG_TX_MAILBOXES)
-+		ret = xcan_start_xmit_mailbox(skb, ndev);
-+	else
-+		ret = xcan_start_xmit_fifo(skb, ndev);
- 
- 	if (ret < 0) {
- 		netdev_err(ndev, "BUG!, TX full when queue awake!\n");
-@@ -739,6 +856,17 @@ static void xcan_err_interrupt(struct net_device *ndev, u32 isr)
- 		}
- 	}
- 
-+	/* Check for RX Match Not Finished interrupt */
-+	if (isr & XCAN_IXR_RXMNF_MASK) {
-+		stats->rx_dropped++;
-+		stats->rx_errors++;
-+		netdev_err(ndev, "RX match not finished, frame discarded\n");
-+		if (skb) {
-+			cf->can_id |= CAN_ERR_CRTL;
-+			cf->data[1] |= CAN_ERR_CRTL_UNSPEC;
-+		}
-+	}
-+
- 	/* Check for error interrupt */
- 	if (isr & XCAN_IXR_ERROR_MASK) {
- 		if (skb)
-@@ -822,6 +950,44 @@ static void xcan_state_interrupt(struct net_device *ndev, u32 isr)
- 		priv->can.state = CAN_STATE_ERROR_ACTIVE;
- }
- 
-+/**
-+ * xcan_rx_fifo_get_next_frame - Get register offset of next RX frame
-+ *
-+ * Return: Register offset of the next frame in RX FIFO.
-+ */
-+static int xcan_rx_fifo_get_next_frame(struct xcan_priv *priv)
++static int fsl_qdma_queue_transfer_complete(struct fsl_qdma_engine *fsl_qdma)
 +{
-+	int offset;
++	struct fsl_qdma_queue *fsl_queue = fsl_qdma->queue;
++	struct fsl_qdma_queue *fsl_status = fsl_qdma->status;
++	struct fsl_qdma_queue *temp_queue;
++	struct fsl_qdma_comp *fsl_comp;
++	struct fsl_qdma_format *status_addr;
++	struct fsl_qdma_format *csgf_src;
++	struct fsl_pre_status pre;
++	void __iomem *block = fsl_qdma->block_base;
++	u32 reg, i, count;
++	bool duplicate, duplicate_handle;
 +
-+	if (priv->devtype.flags & XCAN_FLAG_RX_FIFO_MULTI) {
-+		u32 fsr;
++	memset(&pre, 0, sizeof(struct fsl_pre_status));
++	count = FSL_QDMA_MAX_SIZE;
 +
-+		/* clear RXOK before the is-empty check so that any newly
-+		 * received frame will reassert it without a race
-+		 */
-+		priv->write_reg(priv, XCAN_ICR_OFFSET, XCAN_IXR_RXOK_MASK);
++	while (count--) {
++		duplicate = 0;
 +
-+		fsr = priv->read_reg(priv, XCAN_FSR_OFFSET);
++		reg = qdma_readl(fsl_qdma, block + FSL_QDMA_BSQSR);
++		if (reg & FSL_QDMA_BSQSR_QE)
++			return 0;
 +
-+		/* check if RX FIFO is empty */
-+		if (!(fsr & XCAN_FSR_FL_MASK))
-+			return -ENOENT;
++		status_addr = fsl_status->virt_head;
++		if (qdma_ccdf_get_queue(status_addr) == pre.queue &&
++			qdma_ccdf_addr_get64(status_addr) == pre.addr)
++			duplicate = 1;
 +
-+		offset = XCAN_RXMSG_FRAME_OFFSET(fsr & XCAN_FSR_RI_MASK);
++		i = qdma_ccdf_get_queue(status_addr);
++		pre.queue = qdma_ccdf_get_queue(status_addr);
++		pre.addr = qdma_ccdf_addr_get64(status_addr);
++		temp_queue = fsl_queue + i;
++		spin_lock(&temp_queue->queue_lock);
++		if (list_empty(&temp_queue->comp_used)) {
++			if (!duplicate) {
++				spin_unlock(&temp_queue->queue_lock);
++				return -EAGAIN;
++			}
++		} else {
++			fsl_comp = list_first_entry(&temp_queue->comp_used,
++							struct fsl_qdma_comp,
++							list);
++			csgf_src = fsl_comp->virt_addr + 2;
++			if (fsl_comp->bus_addr + 16 != pre.addr) {
++				if (duplicate) {
++					spin_unlock(&temp_queue->queue_lock);
++					return -EAGAIN;
++				}
++			}
++		}
 +
-+	} else {
-+		/* check if RX FIFO is empty */
-+		if (!(priv->read_reg(priv, XCAN_ISR_OFFSET) &
-+		      XCAN_IXR_RXNEMP_MASK))
-+			return -ENOENT;
++			if (duplicate) {
++				reg = qdma_readl(fsl_qdma, block +
++						FSL_QDMA_BSQMR);
++			reg |= FSL_QDMA_BSQMR_DI;
++			qdma_desc_addr_set64(status_addr, 0x0);
++			fsl_status->virt_head++;
++			if (fsl_status->virt_head == fsl_status->cq
++						   + fsl_status->n_cq)
++				fsl_status->virt_head = fsl_status->cq;
++			qdma_writel(fsl_qdma, reg, block + FSL_QDMA_BSQMR);
++			spin_unlock(&temp_queue->queue_lock);
++			continue;
++		}
++		list_del(&fsl_comp->list);
 +
-+		/* frames are read from a static offset */
-+		offset = XCAN_RXFIFO_OFFSET;
++		reg = qdma_readl(fsl_qdma, block + FSL_QDMA_BSQMR);
++		reg |= FSL_QDMA_BSQMR_DI;
++		qdma_desc_addr_set64(status_addr, 0x0);
++		fsl_status->virt_head++;
++		if (fsl_status->virt_head == fsl_status->cq + fsl_status->n_cq)
++			fsl_status->virt_head = fsl_status->cq;
++		qdma_writel(fsl_qdma, reg, block + FSL_QDMA_BSQMR);
++		spin_unlock(&temp_queue->queue_lock);
++
++		spin_lock(&fsl_comp->qchan->vchan.lock);
++		vchan_cookie_complete(&fsl_comp->vdesc);
++		fsl_comp->qchan->status = DMA_COMPLETE;
++		spin_unlock(&fsl_comp->qchan->vchan.lock);
 +	}
 +
-+	return offset;
++	return 0;
 +}
 +
- /**
-  * xcan_rx_poll - Poll routine for rx packets (NAPI)
-  * @napi:	napi structure pointer
-@@ -836,14 +1002,24 @@ static int xcan_rx_poll(struct napi_struct *napi, int quota)
- {
- 	struct net_device *ndev = napi->dev;
- 	struct xcan_priv *priv = netdev_priv(ndev);
--	u32 isr, ier;
-+	u32 ier;
- 	int work_done = 0;
--
--	isr = priv->read_reg(priv, XCAN_ISR_OFFSET);
--	while ((isr & XCAN_IXR_RXNEMP_MASK) && (work_done < quota)) {
--		work_done += xcan_rx(ndev, XCAN_RXFIFO_OFFSET);
--		priv->write_reg(priv, XCAN_ICR_OFFSET, XCAN_IXR_RXNEMP_MASK);
--		isr = priv->read_reg(priv, XCAN_ISR_OFFSET);
-+	int frame_offset;
++static irqreturn_t fsl_qdma_error_handler(int irq, void *dev_id)
++{
++	struct fsl_qdma_engine *fsl_qdma = dev_id;
++	unsigned int intr;
++	void __iomem *status = fsl_qdma->status_base;
 +
-+	while ((frame_offset = xcan_rx_fifo_get_next_frame(priv)) >= 0 &&
-+	       (work_done < quota)) {
-+		work_done += xcan_rx(ndev, frame_offset);
++	intr = qdma_readl(fsl_qdma, status + FSL_QDMA_DEDR);
 +
-+		if (priv->devtype.flags & XCAN_FLAG_RX_FIFO_MULTI)
-+			/* increment read index */
-+			priv->write_reg(priv, XCAN_FSR_OFFSET,
-+					XCAN_FSR_IRI_MASK);
-+		else
-+			/* clear rx-not-empty (will actually clear only if
-+			 * empty)
-+			 */
-+			priv->write_reg(priv, XCAN_ICR_OFFSET,
-+					XCAN_IXR_RXNEMP_MASK);
- 	}
- 
- 	if (work_done) {
-@@ -854,7 +1030,7 @@ static int xcan_rx_poll(struct napi_struct *napi, int quota)
- 	if (work_done < quota) {
- 		napi_complete_done(napi, work_done);
- 		ier = priv->read_reg(priv, XCAN_IER_OFFSET);
--		ier |= XCAN_IXR_RXNEMP_MASK;
-+		ier |= xcan_rx_int_mask(priv);
- 		priv->write_reg(priv, XCAN_IER_OFFSET, ier);
- 	}
- 	return work_done;
-@@ -953,6 +1129,7 @@ static irqreturn_t xcan_interrupt(int irq, void *dev_id)
- 	struct xcan_priv *priv = netdev_priv(ndev);
- 	u32 isr, ier;
- 	u32 isr_errors;
-+	u32 rx_int_mask = xcan_rx_int_mask(priv);
- 
- 	/* Get the interrupt status from Xilinx CAN */
- 	isr = priv->read_reg(priv, XCAN_ISR_OFFSET);
-@@ -972,16 +1149,17 @@ static irqreturn_t xcan_interrupt(int irq, void *dev_id)
- 
- 	/* Check for the type of error interrupt and Processing it */
- 	isr_errors = isr & (XCAN_IXR_ERROR_MASK | XCAN_IXR_RXOFLW_MASK |
--			    XCAN_IXR_BSOFF_MASK | XCAN_IXR_ARBLST_MASK);
-+			    XCAN_IXR_BSOFF_MASK | XCAN_IXR_ARBLST_MASK |
-+			    XCAN_IXR_RXMNF_MASK);
- 	if (isr_errors) {
- 		priv->write_reg(priv, XCAN_ICR_OFFSET, isr_errors);
- 		xcan_err_interrupt(ndev, isr);
- 	}
- 
- 	/* Check for the type of receive interrupt and Processing it */
--	if (isr & XCAN_IXR_RXNEMP_MASK) {
-+	if (isr & rx_int_mask) {
- 		ier = priv->read_reg(priv, XCAN_IER_OFFSET);
--		ier &= ~XCAN_IXR_RXNEMP_MASK;
-+		ier &= ~rx_int_mask;
- 		priv->write_reg(priv, XCAN_IER_OFFSET, ier);
- 		napi_schedule(&priv->napi);
- 	}
-@@ -1228,14 +1406,27 @@ static const struct dev_pm_ops xcan_dev_pm_ops = {
- };
- 
- static const struct xcan_devtype_data xcan_zynq_data = {
--	.flags = XCAN_FLAG_TXFEMP,
- 	.bittiming_const = &xcan_bittiming_const,
-+	.btr_ts2_shift = XCAN_BTR_TS2_SHIFT,
-+	.btr_sjw_shift = XCAN_BTR_SJW_SHIFT,
- 	.bus_clk_name = "pclk",
- };
- 
- static const struct xcan_devtype_data xcan_axi_data = {
--	.flags = 0,
- 	.bittiming_const = &xcan_bittiming_const,
-+	.btr_ts2_shift = XCAN_BTR_TS2_SHIFT,
-+	.btr_sjw_shift = XCAN_BTR_SJW_SHIFT,
-+	.bus_clk_name = "s_axi_aclk",
++	if (intr)
++		dev_err(fsl_qdma->dma_dev.dev, "DMA transaction error!\n");
++
++	/* Clear all error conditions and interrupts. */
++	qdma_writel(fsl_qdma, FSL_QDMA_DEDR_CLEAR, status + FSL_QDMA_DEDR);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t fsl_qdma_queue_handler(int irq, void *dev_id)
++{
++	struct fsl_qdma_engine *fsl_qdma = dev_id;
++	unsigned int intr, reg;
++	void __iomem *block = fsl_qdma->block_base;
++	void __iomem *ctrl = fsl_qdma->ctrl_base;
++
++	intr = qdma_readl(fsl_qdma, block + FSL_QDMA_BCQIDR(0));
++
++	if ((intr & FSL_QDMA_CQIDR_SQT) != 0)
++		intr = fsl_qdma_queue_transfer_complete(fsl_qdma);
++
++	if (intr != 0) {
++		reg = qdma_readl(fsl_qdma, ctrl + FSL_QDMA_DMR);
++		reg |= FSL_QDMA_DMR_DQD;
++		qdma_writel(fsl_qdma, reg, ctrl + FSL_QDMA_DMR);
++		qdma_writel(fsl_qdma, 0, block + FSL_QDMA_BCQIER(0));
++		dev_err(fsl_qdma->dma_dev.dev, "QDMA: status err!\n");
++	}
++
++	/* Clear all detected events and interrupts. */
++	qdma_writel(fsl_qdma, FSL_QDMA_BCQIDR_CLEAR,
++				block + FSL_QDMA_BCQIDR(0));
++
++	return IRQ_HANDLED;
++}
++
++static int
++fsl_qdma_irq_init(struct platform_device *pdev,
++		  struct fsl_qdma_engine *fsl_qdma)
++{
++	int ret;
++
++	fsl_qdma->error_irq = platform_get_irq_byname(pdev,
++							"qdma-error");
++	if (fsl_qdma->error_irq < 0) {
++		dev_err(&pdev->dev, "Can't get qdma controller irq.\n");
++		return fsl_qdma->error_irq;
++	}
++
++	fsl_qdma->queue_irq = platform_get_irq_byname(pdev, "qdma-queue");
++	if (fsl_qdma->queue_irq < 0) {
++		dev_err(&pdev->dev, "Can't get qdma queue irq.\n");
++		return fsl_qdma->queue_irq;
++	}
++
++	ret = devm_request_irq(&pdev->dev, fsl_qdma->error_irq,
++			fsl_qdma_error_handler, 0, "qDMA error", fsl_qdma);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't register qDMA controller IRQ.\n");
++		return  ret;
++	}
++	ret = devm_request_irq(&pdev->dev, fsl_qdma->queue_irq,
++			fsl_qdma_queue_handler, 0, "qDMA queue", fsl_qdma);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't register qDMA queue IRQ.\n");
++		return  ret;
++	}
++
++	return 0;
++}
++
++static void fsl_qdma_irq_exit(
++		struct platform_device *pdev, struct fsl_qdma_engine *fsl_qdma)
++{
++	if (fsl_qdma->queue_irq == fsl_qdma->error_irq) {
++		devm_free_irq(&pdev->dev, fsl_qdma->queue_irq, fsl_qdma);
++	} else {
++		devm_free_irq(&pdev->dev, fsl_qdma->queue_irq, fsl_qdma);
++		devm_free_irq(&pdev->dev, fsl_qdma->error_irq, fsl_qdma);
++	}
++}
++
++static int fsl_qdma_reg_init(struct fsl_qdma_engine *fsl_qdma)
++{
++	struct fsl_qdma_queue *fsl_queue = fsl_qdma->queue;
++	struct fsl_qdma_queue *temp;
++	void __iomem *ctrl = fsl_qdma->ctrl_base;
++	void __iomem *status = fsl_qdma->status_base;
++	void __iomem *block = fsl_qdma->block_base;
++	int i, ret;
++	u32 reg;
++
++	/* Try to halt the qDMA engine first. */
++	ret = fsl_qdma_halt(fsl_qdma);
++	if (ret) {
++		dev_err(fsl_qdma->dma_dev.dev, "DMA halt failed!");
++		return ret;
++	}
++
++	/* Clear all detected events and interrupts for all queues. */
++	qdma_writel(fsl_qdma, FSL_QDMA_BCQIDR_CLEAR,
++				block + FSL_QDMA_BCQIDR(0));
++
++	for (i = 0; i < fsl_qdma->n_queues; i++) {
++		temp = fsl_queue + i;
++		/*
++		 * Initialize Command Queue registers to point to the first
++		 * command descriptor in memory.
++		 * Dequeue Pointer Address Registers
++		 * Enqueue Pointer Address Registers
++		 */
++		qdma_writel(fsl_qdma, temp->bus_addr,
++				block + FSL_QDMA_BCQDPA_SADDR(i));
++		qdma_writel(fsl_qdma, temp->bus_addr,
++				block + FSL_QDMA_BCQEPA_SADDR(i));
++
++		/* Initialize the queue mode. */
++		reg = FSL_QDMA_BCQMR_EN;
++		reg |= FSL_QDMA_BCQMR_CD_THLD(ilog2(temp->n_cq) - 4);
++		reg |= FSL_QDMA_BCQMR_CQ_SIZE(ilog2(temp->n_cq) - 6);
++		qdma_writel(fsl_qdma, reg, block + FSL_QDMA_BCQMR(i));
++	}
++
++	/*
++	 * Workaround for erratum: ERR010812.
++	 * We must enable XOFF to avoid the enqueue rejection occurs.
++	 * Setting SQCCMR ENTER_WM to 0x20.
++	 */
++	qdma_writel(fsl_qdma, FSL_QDMA_SQCCMR_ENTER_WM,
++			      block + FSL_QDMA_SQCCMR);
++	/*
++	 * Initialize status queue registers to point to the first
++	 * command descriptor in memory.
++	 * Dequeue Pointer Address Registers
++	 * Enqueue Pointer Address Registers
++	 */
++	qdma_writel(fsl_qdma, fsl_qdma->status->bus_addr,
++					block + FSL_QDMA_SQEPAR);
++	qdma_writel(fsl_qdma, fsl_qdma->status->bus_addr,
++					block + FSL_QDMA_SQDPAR);
++	/* Initialize status queue interrupt. */
++	qdma_writel(fsl_qdma, FSL_QDMA_BCQIER_CQTIE,
++			      block + FSL_QDMA_BCQIER(0));
++	qdma_writel(fsl_qdma, FSL_QDMA_BSQICR_ICEN | FSL_QDMA_BSQICR_ICST(5)
++						   | 0x8000,
++			      block + FSL_QDMA_BSQICR);
++	qdma_writel(fsl_qdma, FSL_QDMA_CQIER_MEIE | FSL_QDMA_CQIER_TEIE,
++			      block + FSL_QDMA_CQIER);
++	/* Initialize controller interrupt register. */
++	qdma_writel(fsl_qdma, FSL_QDMA_DEDR_CLEAR, status + FSL_QDMA_DEDR);
++	qdma_writel(fsl_qdma, FSL_QDMA_DEIER_CLEAR, status + FSL_QDMA_DEIER);
++
++	/* Initialize the status queue mode. */
++	reg = FSL_QDMA_BSQMR_EN;
++	reg |= FSL_QDMA_BSQMR_CQ_SIZE(ilog2(fsl_qdma->status->n_cq)-6);
++	qdma_writel(fsl_qdma, reg, block + FSL_QDMA_BSQMR);
++
++	reg = qdma_readl(fsl_qdma, ctrl + FSL_QDMA_DMR);
++	reg &= ~FSL_QDMA_DMR_DQD;
++	qdma_writel(fsl_qdma, reg, ctrl + FSL_QDMA_DMR);
++
++	return 0;
++}
++
++static struct dma_async_tx_descriptor *
++fsl_qdma_prep_memcpy(struct dma_chan *chan, dma_addr_t dst,
++		dma_addr_t src, size_t len, unsigned long flags)
++{
++	struct fsl_qdma_chan *fsl_chan = to_fsl_qdma_chan(chan);
++	struct fsl_qdma_comp *fsl_comp;
++
++	fsl_comp = fsl_qdma_request_enqueue_desc(fsl_chan, 0, 0);
++	fsl_qdma_comp_fill_memcpy(fsl_comp, dst, src, len);
++
++	return vchan_tx_prep(&fsl_chan->vchan, &fsl_comp->vdesc, flags);
++}
++
++static void fsl_qdma_enqueue_desc(struct fsl_qdma_chan *fsl_chan)
++{
++	void __iomem *block = fsl_chan->qdma->block_base;
++	struct fsl_qdma_queue *fsl_queue = fsl_chan->queue;
++	struct fsl_qdma_comp *fsl_comp;
++	struct virt_dma_desc *vdesc;
++	u32 reg;
++
++	reg = qdma_readl(fsl_chan->qdma, block + FSL_QDMA_BCQSR(fsl_queue->id));
++	if (reg & (FSL_QDMA_BCQSR_QF | FSL_QDMA_BCQSR_XOFF))
++		return;
++	vdesc = vchan_next_desc(&fsl_chan->vchan);
++	if (!vdesc)
++		return;
++	list_del(&vdesc->node);
++	fsl_comp = to_fsl_qdma_comp(vdesc);
++
++	memcpy(fsl_queue->virt_head++, fsl_comp->virt_addr,
++					sizeof(struct fsl_qdma_format));
++	if (fsl_queue->virt_head == fsl_queue->cq + fsl_queue->n_cq)
++		fsl_queue->virt_head = fsl_queue->cq;
++
++	list_add_tail(&fsl_comp->list, &fsl_queue->comp_used);
++	barrier();
++	reg = qdma_readl(fsl_chan->qdma, block + FSL_QDMA_BCQMR(fsl_queue->id));
++	reg |= FSL_QDMA_BCQMR_EI;
++	qdma_writel(fsl_chan->qdma, reg, block + FSL_QDMA_BCQMR(fsl_queue->id));
++	fsl_chan->status = DMA_IN_PROGRESS;
++}
++
++static enum dma_status fsl_qdma_tx_status(struct dma_chan *chan,
++		dma_cookie_t cookie, struct dma_tx_state *txstate)
++{
++	enum dma_status ret;
++
++	ret = dma_cookie_status(chan, cookie, txstate);
++	if (ret == DMA_COMPLETE || !txstate)
++		return ret;
++
++	return ret;
++}
++
++static void fsl_qdma_free_desc(struct virt_dma_desc *vdesc)
++{
++	struct fsl_qdma_comp *fsl_comp;
++	struct fsl_qdma_queue *fsl_queue;
++	unsigned long flags;
++
++	fsl_comp = to_fsl_qdma_comp(vdesc);
++	fsl_queue = fsl_comp->qchan->queue;
++
++	spin_lock_irqsave(&fsl_queue->queue_lock, flags);
++	list_add_tail(&fsl_comp->list, &fsl_queue->comp_free);
++	spin_unlock_irqrestore(&fsl_queue->queue_lock, flags);
++}
++
++static void fsl_qdma_issue_pending(struct dma_chan *chan)
++{
++	struct fsl_qdma_chan *fsl_chan = to_fsl_qdma_chan(chan);
++	struct fsl_qdma_queue *fsl_queue = fsl_chan->queue;
++	unsigned long flags;
++
++	spin_lock_irqsave(&fsl_queue->queue_lock, flags);
++	spin_lock(&fsl_chan->vchan.lock);
++	if (vchan_issue_pending(&fsl_chan->vchan))
++		fsl_qdma_enqueue_desc(fsl_chan);
++	spin_unlock(&fsl_chan->vchan.lock);
++	spin_unlock_irqrestore(&fsl_queue->queue_lock, flags);
++}
++
++static int fsl_qdma_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct fsl_qdma_engine *fsl_qdma;
++	struct fsl_qdma_chan *fsl_chan;
++	struct resource *res;
++	unsigned int len, chans, queues;
++	int ret, i;
++
++	ret = of_property_read_u32(np, "dma-channels", &chans);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't get dma-channels.\n");
++		return ret;
++	}
++
++	len = sizeof(*fsl_qdma) + sizeof(*fsl_chan) * chans;
++	fsl_qdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
++	if (!fsl_qdma)
++		return -ENOMEM;
++
++	ret = of_property_read_u32(np, "fsl,queues", &queues);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't get queues.\n");
++		return ret;
++	}
++
++	fsl_qdma->queue = fsl_qdma_alloc_queue_resources(pdev, queues);
++	if (!fsl_qdma->queue)
++		return -ENOMEM;
++
++	fsl_qdma->status = fsl_qdma_prep_status_queue(pdev);
++	if (!fsl_qdma->status)
++		return -ENOMEM;
++
++	fsl_qdma->n_chans = chans;
++	fsl_qdma->n_queues = queues;
++	mutex_init(&fsl_qdma->fsl_qdma_mutex);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	fsl_qdma->ctrl_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(fsl_qdma->ctrl_base))
++		return PTR_ERR(fsl_qdma->ctrl_base);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	fsl_qdma->status_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(fsl_qdma->status_base))
++		return PTR_ERR(fsl_qdma->status_base);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
++	fsl_qdma->block_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(fsl_qdma->block_base))
++		return PTR_ERR(fsl_qdma->block_base);
++
++	ret = fsl_qdma_irq_init(pdev, fsl_qdma);
++	if (ret)
++		return ret;
++
++	fsl_qdma->feature = of_property_read_bool(np, "big-endian");
++	INIT_LIST_HEAD(&fsl_qdma->dma_dev.channels);
++	for (i = 0; i < fsl_qdma->n_chans; i++) {
++		struct fsl_qdma_chan *fsl_chan = &fsl_qdma->chans[i];
++
++		fsl_chan->qdma = fsl_qdma;
++		fsl_chan->queue = fsl_qdma->queue + i % fsl_qdma->n_queues;
++		fsl_chan->vchan.desc_free = fsl_qdma_free_desc;
++		INIT_LIST_HEAD(&fsl_chan->qcomp);
++		vchan_init(&fsl_chan->vchan, &fsl_qdma->dma_dev);
++	}
++	for (i = 0; i < fsl_qdma->n_queues; i++)
++		fsl_qdma_pre_request_enqueue_desc(fsl_qdma->queue + i);
++
++	dma_cap_set(DMA_MEMCPY, fsl_qdma->dma_dev.cap_mask);
++
++	fsl_qdma->dma_dev.dev = &pdev->dev;
++	fsl_qdma->dma_dev.device_free_chan_resources
++		= fsl_qdma_free_chan_resources;
++	fsl_qdma->dma_dev.device_tx_status = fsl_qdma_tx_status;
++	fsl_qdma->dma_dev.device_prep_dma_memcpy = fsl_qdma_prep_memcpy;
++	fsl_qdma->dma_dev.device_issue_pending = fsl_qdma_issue_pending;
++
++	dma_set_mask(&pdev->dev, DMA_BIT_MASK(40));
++
++	platform_set_drvdata(pdev, fsl_qdma);
++
++	ret = dma_async_device_register(&fsl_qdma->dma_dev);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't register NXP Layerscape qDMA engine.\n");
++		return ret;
++	}
++
++	ret = fsl_qdma_reg_init(fsl_qdma);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't Initialize the qDMA engine.\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static void fsl_qdma_cleanup_vchan(struct dma_device *dmadev)
++{
++	struct fsl_qdma_chan *chan, *_chan;
++
++	list_for_each_entry_safe(chan, _chan,
++				&dmadev->channels, vchan.chan.device_node) {
++		list_del(&chan->vchan.chan.device_node);
++		tasklet_kill(&chan->vchan.task);
++	}
++}
++
++static int fsl_qdma_remove(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct fsl_qdma_engine *fsl_qdma = platform_get_drvdata(pdev);
++	struct fsl_qdma_queue *queue_temp;
++	struct fsl_qdma_queue *status = fsl_qdma->status;
++	struct fsl_qdma_comp *comp_temp, *_comp_temp;
++	int i;
++
++	fsl_qdma_irq_exit(pdev, fsl_qdma);
++	fsl_qdma_cleanup_vchan(&fsl_qdma->dma_dev);
++	of_dma_controller_free(np);
++	dma_async_device_unregister(&fsl_qdma->dma_dev);
++
++	/* Free descriptor areas */
++	for (i = 0; i < fsl_qdma->n_queues; i++) {
++		queue_temp = fsl_qdma->queue + i;
++		list_for_each_entry_safe(comp_temp, _comp_temp,
++					&queue_temp->comp_used,	list) {
++			dma_pool_free(queue_temp->comp_pool,
++					comp_temp->virt_addr,
++					comp_temp->bus_addr);
++			list_del(&comp_temp->list);
++			kfree(comp_temp);
++		}
++		list_for_each_entry_safe(comp_temp, _comp_temp,
++					&queue_temp->comp_free, list) {
++			dma_pool_free(queue_temp->comp_pool,
++					comp_temp->virt_addr,
++					comp_temp->bus_addr);
++			list_del(&comp_temp->list);
++			kfree(comp_temp);
++		}
++		dma_free_coherent(&pdev->dev, sizeof(struct fsl_qdma_format) *
++					queue_temp->n_cq, queue_temp->cq,
++					queue_temp->bus_addr);
++		dma_pool_destroy(queue_temp->comp_pool);
++	}
++
++	dma_free_coherent(&pdev->dev, sizeof(struct fsl_qdma_format) *
++				status->n_cq, status->cq, status->bus_addr);
++	return 0;
++}
++
++static const struct of_device_id fsl_qdma_dt_ids[] = {
++	{ .compatible = "fsl,ls1021a-qdma", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, fsl_qdma_dt_ids);
++
++static struct platform_driver fsl_qdma_driver = {
++	.driver		= {
++		.name	= "fsl-qdma",
++		.of_match_table = fsl_qdma_dt_ids,
++	},
++	.probe          = fsl_qdma_probe,
++	.remove		= fsl_qdma_remove,
 +};
 +
-+static const struct xcan_devtype_data xcan_canfd_data = {
-+	.flags = XCAN_FLAG_EXT_FILTERS |
-+		 XCAN_FLAG_RXMNF |
-+		 XCAN_FLAG_TX_MAILBOXES |
-+		 XCAN_FLAG_RX_FIFO_MULTI,
-+	.bittiming_const = &xcan_bittiming_const,
-+	.btr_ts2_shift = XCAN_BTR_TS2_SHIFT_CANFD,
-+	.btr_sjw_shift = XCAN_BTR_SJW_SHIFT_CANFD,
- 	.bus_clk_name = "s_axi_aclk",
- };
- 
-@@ -1243,6 +1434,7 @@ static const struct xcan_devtype_data xcan_axi_data = {
- static const struct of_device_id xcan_of_match[] = {
- 	{ .compatible = "xlnx,zynq-can-1.0", .data = &xcan_zynq_data },
- 	{ .compatible = "xlnx,axi-can-1.00.a", .data = &xcan_axi_data },
-+	{ .compatible = "xlnx,canfd-1.0", .data = &xcan_canfd_data },
- 	{ /* end of list */ },
- };
- MODULE_DEVICE_TABLE(of, xcan_of_match);
-@@ -1264,7 +1456,10 @@ static int xcan_probe(struct platform_device *pdev)
- 	const struct of_device_id *of_id;
- 	const struct xcan_devtype_data *devtype = &xcan_axi_data;
- 	void __iomem *addr;
--	int ret, rx_max, tx_max, tx_fifo_depth;
-+	int ret;
-+	int rx_max, tx_max;
-+	int hw_tx_max, hw_rx_max;
-+	const char *hw_tx_max_property;
- 
- 	/* Get the virtual base address for the device */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -1274,21 +1469,33 @@ static int xcan_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	ret = of_property_read_u32(pdev->dev.of_node, "tx-fifo-depth",
--				   &tx_fifo_depth);
--	if (ret < 0)
--		goto err;
--
--	ret = of_property_read_u32(pdev->dev.of_node, "rx-fifo-depth", &rx_max);
--	if (ret < 0)
--		goto err;
--
- 	of_id = of_match_device(xcan_of_match, &pdev->dev);
- 	if (of_id && of_id->data)
- 		devtype = of_id->data;
- 
--	/* There is no way to directly figure out how many frames have been
--	 * sent when the TXOK interrupt is processed. If watermark programming
-+	hw_tx_max_property = devtype->flags & XCAN_FLAG_TX_MAILBOXES ?
-+			     "tx-mailbox-count" : "tx-fifo-depth";
++module_platform_driver(fsl_qdma_driver);
 +
-+	ret = of_property_read_u32(pdev->dev.of_node, hw_tx_max_property,
-+				   &hw_tx_max);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "missing %s property\n",
-+			hw_tx_max_property);
-+		goto err;
-+	}
-+
-+	ret = of_property_read_u32(pdev->dev.of_node, "rx-fifo-depth",
-+				   &hw_rx_max);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev,
-+			"missing rx-fifo-depth property (mailbox mode is not supported)\n");
-+		goto err;
-+	}
-+
-+	/* With TX FIFO:
-+	 *
-+	 * There is no way to directly figure out how many frames have been
-+	 * sent when the TXOK interrupt is processed. If TXFEMP
- 	 * is supported, we can have 2 frames in the FIFO and use TXFEMP
- 	 * to determine if 1 or 2 frames have been sent.
- 	 * Theoretically we should be able to use TXFWMEMP to determine up
-@@ -1297,12 +1504,20 @@ static int xcan_probe(struct platform_device *pdev)
- 	 * than 2 frames in FIFO) is set anyway with no TXOK (a frame was
- 	 * sent), which is not a sensible state - possibly TXFWMEMP is not
- 	 * completely synchronized with the rest of the bits?
-+	 *
-+	 * With TX mailboxes:
-+	 *
-+	 * HW sends frames in CAN ID priority order. To preserve FIFO ordering
-+	 * we submit frames one at a time.
- 	 */
--	if (devtype->flags & XCAN_FLAG_TXFEMP)
--		tx_max = min(tx_fifo_depth, 2);
-+	if (!(devtype->flags & XCAN_FLAG_TX_MAILBOXES) &&
-+	    (devtype->flags & XCAN_FLAG_TXFEMP))
-+		tx_max = min(hw_tx_max, 2);
- 	else
- 		tx_max = 1;
- 
-+	rx_max = hw_rx_max;
-+
- 	/* Create a CAN device instance */
- 	ndev = alloc_candev(sizeof(struct xcan_priv), tx_max);
- 	if (!ndev)
-@@ -1373,9 +1588,9 @@ static int xcan_probe(struct platform_device *pdev)
- 
- 	pm_runtime_put(&pdev->dev);
- 
--	netdev_dbg(ndev, "reg_base=0x%p irq=%d clock=%d, tx fifo depth: actual %d, using %d\n",
--			priv->reg_base, ndev->irq, priv->can.clock.freq,
--			tx_fifo_depth, priv->tx_max);
-+	netdev_dbg(ndev, "reg_base=0x%p irq=%d clock=%d, tx buffers: actual %d, using %d\n",
-+		   priv->reg_base, ndev->irq, priv->can.clock.freq,
-+		   hw_tx_max, priv->tx_max);
- 
- 	return 0;
- 
++MODULE_ALIAS("platform:fsl-qdma");
++MODULE_DESCRIPTION("NXP Layerscape qDMA engine driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.16.3
-
+1.7.1
