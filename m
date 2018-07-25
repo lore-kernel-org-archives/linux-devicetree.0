@@ -1,46 +1,62 @@
-Return-Path: <SRS0=r8rx=KJ=nxp.com=wen.he_1@kernel.org>
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v7 7/7] arm: dts: ls1021a: add qdma device tree nodes
-Date: Wed, 25 Jul 2018 19:29:19 +0800
-Message-Id: <20180725112919.31340-7-wen.he_1@nxp.com>
-In-Reply-To: <20180725112919.31340-1-wen.he_1@nxp.com>
-References: <20180725112919.31340-1-wen.he_1@nxp.com>
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Return-Path: <SRS0=N8v/=KJ=mediatek.com=yong.wu@kernel.org>
+Message-ID: <1532509635.22373.6.camel@mhfsdcap03>
+Subject: Re: [PATCH v5 07/11] soc: mediatek: add MT6765 subdomain support
+From: Yong Wu <yong.wu@mediatek.com>
+Date: Wed, 25 Jul 2018 17:07:15 +0800
+In-Reply-To: <ce7724590f4e4551be88b76a7355738c@MTKMBS31N1.mediatek.inc>
+References: <1531817552-17221-1-git-send-email-mars.cheng@mediatek.com>
+	 <1531817552-17221-8-git-send-email-mars.cheng@mediatek.com>
+	 <ce7724590f4e4551be88b76a7355738c@MTKMBS31N1.mediatek.inc>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+To: Mars Cheng <Mars.Cheng@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, "; Rob Herring" <robh+dt@kernel.org>, "; Marc Zyngier" <marc.zyngier@arm.com>, Ryder, Stephen, "Sean Wang =?UTF-8?Q?=28=E7=8E=8B=E5=BF=97=E4=BA=98=29?=  <sean.wang@mediatek.com>, ;devicetree@vger.kernel.org; CC Hwang =?UTF-8?Q?=28S=E8=87=B4=29?=" <cc.hwang@mediatek.com>, "; wsd_upstream" <wsd_upstream@mediatek.com>, "; Loda Chou =?UTF-8?Q?=28=E5=91=A8=E5=AE=8F=E9=9C=96=29?= " <Loda.Chou@mediatek.com>, "; linux-kernel@vger.kernel.org;" linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, "Owen Chen =?UTF-8?Q?=28=E5=B3=BB=E6=96=8C=29?=  <owen.chen@mediatek.com>," <"; linux-clk"@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-add the qDMA device tree nodes for LS1021A devices.
+Hi Mars,
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
- arch/arm/boot/dts/ls1021a.dtsi |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
+> -----Original Message-----
+> From: Linux-mediatek [mailto:linux-mediatek-bounces@lists.infradead.org] On Behalf Of Mars Cheng
+> Sent: Tuesday, July 17, 2018 4:52 PM
+> To: Matthias Brugger <matthias.bgg@gmail.com>; Rob Herring <robh+dt@kernel.org>; Marc Zyngier <marc.zyngier@arm.com>; Ryder Lee (李庚V) <Ryder.Lee@mediatek.com>; Stephen Boyd <sboyd@kernel.org>; Sean Wang (王志亘) <sean.wang@mediatek.com>
+> Cc: devicetree@vger.kernel.org; CC Hwang (S致) <cc.hwang@mediatek.com>; wsd_upstream <wsd_upstream@mediatek.com>; Loda Chou (周宏霖) <Loda.Chou@mediatek.com>; linux-kernel@vger.kernel.org; linux-mediatek@lists.infradead.org; linux-serial@vger.kernel.org; Mars Cheng (森友) <Mars.Cheng@mediatek.com>; Owen Chen (峻斌) <owen.chen@mediatek.com>; linux-clk@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: [PATCH v5 07/11] soc: mediatek: add MT6765 subdomain support
+> 
+> add extend data, parent_n for domain-subdomain corresponse.
+> 
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Owen Chen <owen.chen@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-scpsys-ext.c |  132 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 131 insertions(+), 1 deletion(-)
+> 
+[...]
+> +
+> +#define SMI_COMMON_SMI_CLAMP_MT6765		0x03C0
+> +#define SMI_COMMON_SMI_CLAMP_SET_MT6765	0x03C4
+> +#define SMI_COMMON_SMI_CLAMP_CLR_MT6765	0x03C8
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index c55d479..061c839 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -571,6 +571,21 @@
- 				 <&clockgen 4 1>;
- 		};
- 
-+		qdma: dma-controller@8390000 {
-+			compatible = "fsl,ls1021a-qdma";
-+			reg = <0x0 0x8398000 0x0 0x1000>, /* Controller regs */
-+				<0x0 0x8399000 0x0 0x1000>, /* Status regs */
-+				<0x0 0x839a000 0x0 0x2000>; /* Block regs */
-+			interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "qdma-error", "qdma-queue";
-+			dma-channels = <8>;
-+			fsl,queues = <2>;
-+			status-sizes = <64>;
-+			queue-sizes = <64 64>;
-+			big-endian;
-+		};
-+
- 		dcu: dcu@2ce0000 {
- 			compatible = "fsl,ls1021a-dcu";
- 			reg = <0x0 0x2ce0000 0x0 0x10000>;
--- 
-1.7.1
+  From my understanding, this smi register could clamp the dummy
+commands after the larb power down for the sake of safe,
+is it right?
+
+   If it's yes, I guess we could put this in the larb device's
+runtime_resume/runtime_suspend callback.
+   we can enable the clamp in the larb's runtime_suspend and clear it in
+the larb's runtime_resume.
+
+   then we don't need add "syscon" for smi-common node.
+
+   please tell me if I miss something.
+
+   Thanks.
+
+> +
+[...]
+> 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
