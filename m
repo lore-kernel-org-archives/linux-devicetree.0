@@ -1,220 +1,211 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v13 1/4] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 25 Jul 2018 15:28:37 +0900
-Message-ID: <CAAFQd5AwrNL7CbBXMYEWcHMuSsENhDuQEJvuypn3nbCzWw5v4Q@mail.gmail.com>
-References: <20180719101539.6104-1-vivek.gautam@codeaurora.org>
-	<20180719101539.6104-2-vivek.gautam@codeaurora.org>
-	<e17fdcb7-2632-753f-4e2e-f81bcded36f1@arm.com>
+From: Mikko Perttunen <cyndis@kapsi.fi>
+Subject: Re: [PATCH 2/7] mmc: tegra: Reconfigure pad voltages during voltage
+ switching
+Date: Wed, 25 Jul 2018 09:41:05 +0300
+Message-ID: <45dff1ef-c86e-0265-3386-fe95251b9130@kapsi.fi>
+References: <1532090746-15863-1-git-send-email-avienamo@nvidia.com>
+ <1532090746-15863-3-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <e17fdcb7-2632-753f-4e2e-f81bcded36f1-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532090746-15863-3-git-send-email-avienamo@nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 12:21 AM Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
->
-> On 19/07/18 11:15, Vivek Gautam wrote:
-> > From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >
-> > The smmu needs to be functional only when the respective
-> > master's using it are active. The device_link feature
-> > helps to track such functional dependencies, so that the
-> > iommu gets powered when the master device enables itself
-> > using pm_runtime. So by adapting the smmu driver for
-> > runtime pm, above said dependency can be addressed.
-> >
-> > This patch adds the pm runtime/sleep callbacks to the
-> > driver and also the functions to parse the smmu clocks
-> > from DT and enable them in resume/suspend.
-> >
-> > Also, while we enable the runtime pm add a pm sleep suspend
-> > callback that pushes devices to low power state by turning
-> > the clocks off in a system sleep.
-> > Also add corresponding clock enable path in resume callback.
-> >
-> > Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > [vivek: rework for clock and pm ops]
-> > Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> >
-> > Changes since v12:
-> >   - Added pm sleep .suspend callback. This disables the clocks.
-> >   - Added corresponding change to enable clocks in .resume
-> >    pm sleep callback.
-> >
-> >   drivers/iommu/arm-smmu.c | 75 ++++++++++++++++++++++++++++++++++++++++++++++--
-> >   1 file changed, 73 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> > index c73cfce1ccc0..9138a6fffe04 100644
-> > --- a/drivers/iommu/arm-smmu.c
-> > +++ b/drivers/iommu/arm-smmu.c
-> > @@ -48,6 +48,7 @@
-> >   #include <linux/of_iommu.h>
-> >   #include <linux/pci.h>
-> >   #include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> >   #include <linux/slab.h>
-> >   #include <linux/spinlock.h>
-> >
-> > @@ -205,6 +206,8 @@ struct arm_smmu_device {
-> >       u32                             num_global_irqs;
-> >       u32                             num_context_irqs;
-> >       unsigned int                    *irqs;
-> > +     struct clk_bulk_data            *clks;
-> > +     int                             num_clks;
-> >
-> >       u32                             cavium_id_base; /* Specific to Cavium */
-> >
-> > @@ -1897,10 +1900,12 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
-> >   struct arm_smmu_match_data {
-> >       enum arm_smmu_arch_version version;
-> >       enum arm_smmu_implementation model;
-> > +     const char * const *clks;
-> > +     int num_clks;
-> >   };
-> >
-> >   #define ARM_SMMU_MATCH_DATA(name, ver, imp) \
-> > -static struct arm_smmu_match_data name = { .version = ver, .model = imp }
-> > +static const struct arm_smmu_match_data name = { .version = ver, .model = imp }
-> >
-> >   ARM_SMMU_MATCH_DATA(smmu_generic_v1, ARM_SMMU_V1, GENERIC_SMMU);
-> >   ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
-> > @@ -1919,6 +1924,23 @@ static const struct of_device_id arm_smmu_of_match[] = {
-> >   };
-> >   MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
-> >
-> > +static void arm_smmu_fill_clk_data(struct arm_smmu_device *smmu,
-> > +                                const char * const *clks)
-> > +{
-> > +     int i;
-> > +
-> > +     if (smmu->num_clks < 1)
-> > +             return;
-> > +
-> > +     smmu->clks = devm_kcalloc(smmu->dev, smmu->num_clks,
-> > +                               sizeof(*smmu->clks), GFP_KERNEL);
-> > +     if (!smmu->clks)
-> > +             return;
-> > +
-> > +     for (i = 0; i < smmu->num_clks; i++)
-> > +             smmu->clks[i].id = clks[i];
-> > +}
-> > +
-> >   #ifdef CONFIG_ACPI
-> >   static int acpi_smmu_get_data(u32 model, struct arm_smmu_device *smmu)
-> >   {
-> > @@ -2001,6 +2023,9 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
-> >       data = of_device_get_match_data(dev);
-> >       smmu->version = data->version;
-> >       smmu->model = data->model;
-> > +     smmu->num_clks = data->num_clks;
-> > +
-> > +     arm_smmu_fill_clk_data(smmu, data->clks);
-> >
-> >       parse_driver_options(smmu);
-> >
-> > @@ -2099,6 +2124,14 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
-> >               smmu->irqs[i] = irq;
-> >       }
-> >
-> > +     err = devm_clk_bulk_get(smmu->dev, smmu->num_clks, smmu->clks);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     err = clk_bulk_prepare(smmu->num_clks, smmu->clks);
-> > +     if (err)
-> > +             return err;
-> > +
-> >       err = arm_smmu_device_cfg_probe(smmu);
-> >       if (err)
-> >               return err;
-> > @@ -2181,6 +2214,9 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
-> >
-> >       /* Turn the thing off */
-> >       writel(sCR0_CLIENTPD, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
-> > +
-> > +     clk_bulk_unprepare(smmu->num_clks, smmu->clks);
-> > +
-> >       return 0;
-> >   }
-> >
-> > @@ -2189,15 +2225,50 @@ static void arm_smmu_device_shutdown(struct platform_device *pdev)
-> >       arm_smmu_device_remove(pdev);
-> >   }
-> >
-> > +static int __maybe_unused arm_smmu_runtime_resume(struct device *dev)
-> > +{
-> > +     struct arm_smmu_device *smmu = dev_get_drvdata(dev);
-> > +
-> > +     return clk_bulk_enable(smmu->num_clks, smmu->clks);
->
-> If there's a power domain being automatically switched by genpd then we
-> need a reset here because we may have lost state entirely. Since I
-> remembered the otherwise-useless GPU SMMU on Juno is in a separate power
-> domain, I gave it a poking via sysfs with some debug stuff to dump sCR0
-> in these callbacks, and the problem is clear:
->
-> ...
-> [    4.625551] arm-smmu 2b400000.iommu: genpd_runtime_suspend()
-> [    4.631163] arm-smmu 2b400000.iommu: arm_smmu_runtime_suspend: 0x00201936
-> [    4.637897] arm-smmu 2b400000.iommu: suspend latency exceeded, 6733980 ns
-> [   21.566983] arm-smmu 2b400000.iommu: genpd_runtime_resume()
-> [   21.584796] arm-smmu 2b400000.iommu: arm_smmu_runtime_resume: 0x00220101
-> [   21.591452] arm-smmu 2b400000.iommu: resume latency exceeded, 6658020 ns
-> ...
->
-> > +}
-> > +
-> > +static int __maybe_unused arm_smmu_runtime_suspend(struct device *dev)
-> > +{
-> > +     struct arm_smmu_device *smmu = dev_get_drvdata(dev);
-> > +
-> > +     clk_bulk_disable(smmu->num_clks, smmu->clks);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >   static int __maybe_unused arm_smmu_pm_resume(struct device *dev)
-> >   {
-> >       struct arm_smmu_device *smmu = dev_get_drvdata(dev);
-> > +     int ret;
-> > +
-> > +     if (!pm_runtime_suspended(dev)) {
-> > +             ret = arm_smmu_runtime_resume(dev);
-> > +             if (ret)
-> > +                     return ret;
-> > +     }
-> >
-> >       arm_smmu_device_reset(smmu);
->
-> This looks a bit off too - if we wake from sleep when the SMMU was also
-> runtime-suspended, it appears we might end up trying to restore the
-> register state without clocks enabled. Surely we need to always enable
-> clocks for the reset, then restore the previous suspended state?
-> Although given my previous point, it's probably not worth doing anything
-> at all here for that case.
+On 20.07.2018 15:45, Aapo Vienamo wrote:
+> Parse the pinctrl states from the device tree and implement pad voltage
+> state reconfiguration in the mmc start_signal_voltage_switch() callback.
+> This is done in the mmc callback because the order of pad
+> reconfiguration and sdhci voltage switch depend on the voltage to which
+> the transition occurs.
+> 
+> Add NVQUIRK_NEEDS_PAD_CONTROL and add set it for Tegra210 and Tegra186.
+> 
+> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> ---
+>   drivers/mmc/host/sdhci-tegra.c | 91 +++++++++++++++++++++++++++++++++++++++---
+>   1 file changed, 85 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index ddf00166..f108c48 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -21,6 +21,7 @@
+>   #include <linux/io.h>
+>   #include <linux/of.h>
+>   #include <linux/of_device.h>
+> +#include <linux/pinctrl/consumer.h>
+>   #include <linux/reset.h>
+>   #include <linux/mmc/card.h>
+>   #include <linux/mmc/host.h>
+> @@ -55,6 +56,7 @@
+>   #define NVQUIRK_ENABLE_SDR104		BIT(4)
+>   #define NVQUIRK_ENABLE_DDR50		BIT(5)
+>   #define NVQUIRK_HAS_PADCALIB		BIT(6)
+> +#define NVQUIRK_NEEDS_PAD_CONTROL	BIT(7)
+>   
+>   struct sdhci_tegra_soc_data {
+>   	const struct sdhci_pltfm_data *pdata;
+> @@ -66,8 +68,12 @@ struct sdhci_tegra {
+>   	struct gpio_desc *power_gpio;
+>   	bool ddr_signaling;
+>   	bool pad_calib_required;
+> +	bool pad_control_required;
+>   
+>   	struct reset_control *rst;
+> +	struct pinctrl *pinctrl_sdmmc;
+> +	struct pinctrl_state *pinctrl_state_3v3;
+> +	struct pinctrl_state *pinctrl_state_1v8;
+>   };
+>   
+>   static u16 tegra_sdhci_readw(struct sdhci_host *host, int reg)
+> @@ -286,14 +292,80 @@ static int tegra_sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
+>   	return mmc_send_tuning(host->mmc, opcode, NULL);
+>   }
+>   
+> -static void tegra_sdhci_voltage_switch(struct sdhci_host *host)
+> +static int tegra_sdhci_set_padctrl(struct sdhci_host *host, int voltage)
+>   {
+>   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>   	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
+> -	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
+> +	int ret;
+> +
+> +	if (!tegra_host->pad_control_required)
+> +		return 0;
+> +
+> +	if (voltage == MMC_SIGNAL_VOLTAGE_180) {
+> +		ret = pinctrl_select_state(tegra_host->pinctrl_sdmmc,
+> +					   tegra_host->pinctrl_state_1v8);
+> +		if (ret < 0)
+> +			dev_err(mmc_dev(host->mmc),
+> +				"setting 1.8V failed, ret: %d\n", ret);
+> +	} else {
+> +		ret = pinctrl_select_state(tegra_host->pinctrl_sdmmc,
+> +					   tegra_host->pinctrl_state_3v3);
+> +		if (ret < 0)
+> +			dev_err(mmc_dev(host->mmc),
+> +				"setting 3.3V failed, ret: %d\n", ret);
+> +	}
+>   
+> -	if (soc_data->nvquirks & NVQUIRK_HAS_PADCALIB)
+> -		tegra_host->pad_calib_required = true;
+> +	return ret;
+> +}
+> +
+> +static int sdhci_tegra_start_signal_voltage_switch(struct mmc_host *mmc,
+> +						   struct mmc_ios *ios)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +	int ret = 0;
+> +
+> +	if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
+> +		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage);
+> +		if (ret < 0)
+> +			return ret;
+> +		ret = sdhci_start_signal_voltage_switch(mmc, ios);
+> +	} else if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
+> +		ret = sdhci_start_signal_voltage_switch(mmc, ios);
+> +		if (ret < 0)
+> +			return ret;
+> +		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void tegra_sdhci_init_pinctrl_info(struct device *dev,
+> +					  struct sdhci_tegra *tegra_host)
+> +{
+> +	tegra_host->pinctrl_sdmmc = devm_pinctrl_get(dev);
+> +	if (IS_ERR_OR_NULL(tegra_host->pinctrl_sdmmc)) {
 
-With a reset added to arm_smmu_runtime_resume(), we wouldn't need the
-reset here anymore. With that, the code below should work.
+Can this ever return NULL, considering ARCH_TEGRA selects PINCTRL? 
+IS_ERR is probably better. Same for the two other checks in this function.
 
-    if (pm_runtime_suspended(dev))
-        return 0;
-    return arm_smmu_runtime_resume(dev);
+> +		dev_dbg(dev, "No pinctrl info, err: %ld\n",
+> +			PTR_ERR(tegra_host->pinctrl_sdmmc));
+> +		return;
+> +	}
+> +
+> +	tegra_host->pinctrl_state_3v3 =
+> +		pinctrl_lookup_state(tegra_host->pinctrl_sdmmc, "sdmmc-3v3");
+> +	if (IS_ERR_OR_NULL(tegra_host->pinctrl_state_3v3)) {
+> +		dev_err(dev, "Missing 3.3V pad state, err: %ld\n",
+> +			PTR_ERR(tegra_host->pinctrl_state_3v3));
+> +		return;
+> +	}
+> +
+> +	tegra_host->pinctrl_state_1v8 =
+> +		pinctrl_lookup_state(tegra_host->pinctrl_sdmmc, "sdmmc-1v8");
+> +	if (IS_ERR_OR_NULL(tegra_host->pinctrl_state_1v8)) {
+> +		dev_err(dev, "Missing 1.8V pad state, err: %ld\n",
+> +			  PTR_ERR(tegra_host->pinctrl_state_3v3));
+> +		return;
+> +	}
+> +
+> +	tegra_host->pad_control_required = true; >   }
+>   
+>   static const struct sdhci_ops tegra_sdhci_ops = {
+> @@ -305,7 +377,6 @@ static const struct sdhci_ops tegra_sdhci_ops = {
+>   	.reset      = tegra_sdhci_reset,
+>   	.platform_execute_tuning = tegra_sdhci_execute_tuning,
+>   	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
+> -	.voltage_switch = tegra_sdhci_voltage_switch,
+>   	.get_max_clock = tegra_sdhci_get_max_clock,
+>   };
+>   
+> @@ -362,7 +433,6 @@ static const struct sdhci_ops tegra114_sdhci_ops = {
+>   	.reset      = tegra_sdhci_reset,
+>   	.platform_execute_tuning = tegra_sdhci_execute_tuning,
+>   	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
+> -	.voltage_switch = tegra_sdhci_voltage_switch,
+>   	.get_max_clock = tegra_sdhci_get_max_clock,
+>   };
+>   
+> @@ -419,6 +489,7 @@ static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
+>   
+>   static const struct sdhci_tegra_soc_data soc_data_tegra210 = {
+>   	.pdata = &sdhci_tegra210_pdata,
+> +	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL,
+>   };
+>   
+>   static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
+> @@ -442,6 +513,7 @@ static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
+>   
+>   static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
+>   	.pdata = &sdhci_tegra186_pdata,
+> +	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL,
+>   };
+>   
+>   static const struct of_device_id sdhci_tegra_dt_match[] = {
+> @@ -478,8 +550,15 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>   	tegra_host = sdhci_pltfm_priv(pltfm_host);
+>   	tegra_host->ddr_signaling = false;
+>   	tegra_host->pad_calib_required = false;
+> +	tegra_host->pad_control_required = false;
+>   	tegra_host->soc_data = soc_data;
+>   
+> +	if (soc_data->nvquirks & NVQUIRK_NEEDS_PAD_CONTROL) {
+> +		host->mmc_host_ops.start_signal_voltage_switch =
+> +			sdhci_tegra_start_signal_voltage_switch;
+> +		tegra_sdhci_init_pinctrl_info(&pdev->dev, tegra_host);
+> +	}
+> +
 
-Best regards,
-Tomasz
+Do we know here if the controller is for eMMC or SD? If it's for SD we 
+should probably print a warning if the pinctrl info is not available. 
+Later we would also need to disable 1.8V modes if we fail to get the 
+pinctrl info.
+
+Cheers,
+Mikko
+
+>   	rc = mmc_of_parse(host->mmc);
+>   	if (rc)
+>   		goto err_parse_dt;
+> 
