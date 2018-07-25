@@ -1,25 +1,26 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 14/21] clk: jz4740: Add TCU clock
-Date: Wed, 25 Jul 2018 16:30:30 -0700
-Message-ID: <153256143066.48062.8671703408424915070@swboyd.mtv.corp.google.com>
-References: <20180724231958.20659-1-paul@crapouillou.net>
- <20180724231958.20659-15-paul@crapouillou.net>
+Subject: Re: [PATCH v7 3/5] clk: actions: Add S700 SoC clock support
+Date: Wed, 25 Jul 2018 16:42:15 -0700
+Message-ID: <153256213520.48062.5943585068946301775@swboyd.mtv.corp.google.com>
+References: <20180719090649.12460-1-sravanhome@gmail.com>
+ <20180719090649.12460-4-sravanhome@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724231958.20659-15-paul@crapouillou.net>
+In-Reply-To: <20180719090649.12460-4-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Paul Cercueil <paul@crapouillou.net>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+To: afaerber@suse.de, manivannan.sadhasivam@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, sravanhome@gmail.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Paul Cercueil (2018-07-24 16:19:51)
-> Add the missing TCU clock to the list of clocks supplied by the CGU for
-> the JZ4740 SoC.
+Quoting Saravanan Sekar (2018-07-19 02:06:47)
+> Add Actions Semi S700 SoC clock support
 > =
 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Applied to clk-next
