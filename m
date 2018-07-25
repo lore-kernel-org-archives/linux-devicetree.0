@@ -1,91 +1,60 @@
-Return-Path: <SRS0=K2f+=KA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-bl2nam02on0044.outbound.protection.outlook.com ([104.47.38.44]:19021
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726627AbeGPFup (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Jul 2018 01:50:45 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv3 3/4] tty: serial: uartlite: Add support for suspend and resume
-Date: Mon, 16 Jul 2018 10:53:53 +0530
-Message-ID: <1531718634-17939-3-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1531718634-17939-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1531718634-17939-1-git-send-email-shubhrajyoti.datta@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Return-Path: <SRS0=Gjn+=KJ=codeaurora.org=smohanad@kernel.org>
+From: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Subject: [PATCH v3 0/3] Add QCOM PMIC5 ADC driver
+Date: Wed, 25 Jul 2018 16:42:42 -0700
+Message-Id: <1532562162-6350-1-git-send-email-smohanad@codeaurora.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+This patch series adds the PMIC5 ADC family of chipset
+that supports clients to measure voltage on
+inputs connected to the PMIC ADC AMUX. Clients include
+reading voltage phone power and on board system thermistors
+for thermal management.
 
-Add suspend and resume handlers for uartlite
+The v3 patchset addresses most of the review comments from
+prior patchset.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-v2:
-patch added
+Changes since patchset v2
+* Removed support for current channel as part of this series.
+* Fix pointer arithmetic for iio_chan.
+* Few minor changes.
+* Update license to SPDX format for ADC header file.
 
- drivers/tty/serial/uartlite.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Changes since patchset v1
+* Merged DT bindings with prior PMIC family instead of a
+  seperate DT file for PMIC5 family.
+* Updated documentation for 'label' and 'value' property.
+* Updated using unique prefix adc5 for functions and defines
+  specific for this family of chipset.
+* Refactored scaling functions to use function pointer for
+  scaling lookup.
+* Added documentation comments as requested in the
+  scaling functions as applicable.
+* Added utility functions in the scaling API to avoid some of
+  the code repetitions.
+* Use consistent hex format for adc_data and use specific length
+  while assigning data.
+* Added support to determine controller version and check against
+  supported hardware settling delay values.
+* Various minor changes.
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index b3a12be..98d3ead 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -690,9 +690,44 @@ static int ulite_release(struct device *dev)
- 	return rc;
- }
- 
-+/**
-+ * ulite_suspend - Stop the device.
-+ *
-+ * @dev: handle to the device structure.
-+ * Return: 0 always.
-+ */
-+static int __maybe_unused ulite_suspend(struct device *dev)
-+{
-+	struct uart_port *port = dev_get_drvdata(dev);
-+
-+	if (port)
-+		uart_suspend_port(&ulite_uart_driver, port);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ulite_resume - Resume the device.
-+ *
-+ * @dev: handle to the device structure.
-+ * Return: 0 on success, errno otherwise.
-+ */
-+static int __maybe_unused ulite_resume(struct device *dev)
-+{
-+	struct uart_port *port = dev_get_drvdata(dev);
-+
-+	if (port)
-+		uart_resume_port(&ulite_uart_driver, port);
-+
-+	return 0;
-+}
-+
- /* ---------------------------------------------------------------------
-  * Platform bus binding
-  */
-+
-+static SIMPLE_DEV_PM_OPS(ulite_pm_ops, ulite_suspend, ulite_resume);
-+
- #if defined(CONFIG_OF)
- /* Match table for of_platform binding */
- static const struct of_device_id ulite_of_match[] = {
-@@ -768,6 +803,7 @@ static struct platform_driver ulite_platform_driver = {
- 	.driver = {
- 		.name  = "uartlite",
- 		.of_match_table = of_match_ptr(ulite_of_match),
-+		.pm = &ulite_pm_ops,
- 	},
- };
- 
+Siddartha Mohanadoss (3):
+  dt-bindings: iio: adc: Add DT binding document for PMIC5 ADC
+  iio: adc: Add QCOM SPMI PMIC5 ADC driver
+  iio: adc: Update QCOM ADC license to SPDX format
+
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 +-
+ drivers/iio/adc/Kconfig                            |  20 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/qcom-spmi-adc5.c                   | 864 +++++++++++++++++++++
+ drivers/iio/adc/qcom-vadc-common.c                 | 189 ++++-
+ drivers/iio/adc/qcom-vadc-common.h                 |  54 ++
+ include/dt-bindings/iio/qcom,spmi-vadc.h           | 125 ++-
+ 7 files changed, 1296 insertions(+), 34 deletions(-)
+ create mode 100644 drivers/iio/adc/qcom-spmi-adc5.c
+
 -- 
-2.7.4
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
