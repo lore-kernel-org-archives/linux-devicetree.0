@@ -1,31 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v23 1/4] dt-bindings: soc: Add documentation for the
- MediaTek GCE unit
-Date: Wed, 25 Jul 2018 08:47:16 -0600
-Message-ID: <20180725144716.GA29676@rob-hp-laptop>
-References: <1532482002-11164-1-git-send-email-houlong.wei@mediatek.com>
- <1532482002-11164-2-git-send-email-houlong.wei@mediatek.com>
+Subject: Re: [PATCH v5 5/7] dt-bindings: Add Tegra PMC pad configuration
+ bindings
+Date: Wed, 25 Jul 2018 08:50:49 -0600
+Message-ID: <20180725145049.GA2407@rob-hp-laptop>
+References: <1532084355-31482-1-git-send-email-avienamo@nvidia.com>
+ <1532084355-31482-6-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1532482002-11164-2-git-send-email-houlong.wei@mediatek.com>
+In-Reply-To: <1532084355-31482-6-git-send-email-avienamo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Houlong Wei <houlong.wei@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao@mediatek.com>, ginny.chen@m
+To: Aapo Vienamo <avienamo@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 09:26:39AM +0800, Houlong Wei wrote:
-> This adds documentation for the MediaTek Global Command Engine (GCE) unit
-> found in MT8173 SoCs.
+On Fri, Jul 20, 2018 at 01:59:13PM +0300, Aapo Vienamo wrote:
+> Document the pinctrl bindings used by the PMC driver for performing pad
+> configuration. Both nvidia,tegra186-pmc.txt and nvidia,tegra20-pmc.txt
+> are modified as they both cover SoC generations for which these bindings
+> apply.
 > 
-> Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> Signed-off-by: HS Liao <hs.liao@mediatek.com>
+> Add a header defining Tegra PMC pad voltage configurations.
+> 
+> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
 > ---
->  .../devicetree/bindings/mailbox/mtk-gce.txt        |   57 ++++++++++++++++++++
->  include/dt-bindings/gce/mt8173-gce.h               |   44 +++++++++++++++
->  2 files changed, 101 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
->  create mode 100644 include/dt-bindings/gce/mt8173-gce.h
+>  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  92 ++++++++++++++++++
+>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 103 +++++++++++++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h |  18 ++++
+>  3 files changed, 213 insertions(+)
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
 
 Reviewed-by: Rob Herring <robh@kernel.org>
