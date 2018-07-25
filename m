@@ -1,51 +1,73 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add RWDT support
-Date: Wed, 25 Jul 2018 18:08:36 +0200
-Message-ID: <20180725160835.4z3zmrfnfwrca5st@verge.net.au>
-References: <20180724114552.aybrijeonsj2tmcw@verge.net.au>
- <8f72716f-75b4-e8c0-3a77-9d709959e45d@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 09/10] coresight: Cleanup coresight DT bindings
+Date: Wed, 25 Jul 2018 10:09:39 -0600
+Message-ID: <20180725160939.GA24323@rob-hp-laptop>
+References: <1531997715-6767-1-git-send-email-suzuki.poulose@arm.com>
+ <1531997715-6767-10-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8f72716f-75b4-e8c0-3a77-9d709959e45d@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1531997715-6767-10-git-send-email-suzuki.poulose@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, sudeep.holla@arm.com, frowand.list@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com, matt.sealey@arm.com, charles.garcia-tobin@arm.com, coresight@lists.linaro.org, john.horley@arm.com, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 06:08:21PM +0300, Sergei Shtylyov wrote:
-> Hello!
+On Thu, Jul 19, 2018 at 11:55:13AM +0100, Suzuki K Poulose wrote:
+> The coresight drivers relied on default bindings for graph
+> in DT, while reusing the "reg" field of the "ports" to indicate
+> the actual hardware port number for the connections. This can
+> cause duplicate ports with same addresses, but different
+> direction. However, with the rules getting stricter w.r.t to the
+> address mismatch with the label, it is no longer possible to use
+> the port address field for the hardware port number.
 > 
-> On 07/24/2018 02:45 PM, Simon Horman wrote:
+> This patch introduces new DT binding rules for coresight
+> components, based on the same generic DT graph bindings, but
+> avoiding the address duplication.
 > 
-> [...]
-> > On Tue, Jul 24, 2018 at 09:01:59AM +0200, Geert Uytterhoeven wrote:
-> >> On Fri, Jul 20, 2018 at 9:21 PM Sergei Shtylyov
-> >> <sergei.shtylyov@cogentembedded.com> wrote:
-> >>> Describe RWDT in the R8A77980 SoC device tree.
-> >>>
-> >>> Enable RWDT on the Condor and V3H Starter Kit boards.
-> >>>
-> >>> Based on the original (and large) patch by Vladimir Barinov.
-> >>>
-> >>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> >>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >>
-> >> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > 
-> > Thanks, applied for v4.20.
+> - All output ports must be specified under a child node with
+>   name "out-ports".
+> - All input ports must be specified under a childe node with
+>   name "in-ports".
+> - Port address should match the hardware port number.
 > 
->    Sorry, still not seeing any 'devel' branch updates... forgot to push?
+> The support for legacy bindings is retained, with a warning.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  .../devicetree/bindings/arm/coresight.txt          | 91 ++++++++++----------
+>  drivers/hwtracing/coresight/of_coresight.c         | 97 +++++++++++++++++++---
+>  2 files changed, 129 insertions(+), 59 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index 8e21512..f39d2c6 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -104,19 +104,9 @@ The connections must be described via generic DT graph bindings as described
+>  by the "bindings/graph.txt", where each "port" along with an "endpoint"
+>  component represents a hardware port and the connection.
+>  
+> -Since it is possible to have multiple connections for any coresight component
+> -with a specific direction of data flow, each connection must define the
+> -following properties to uniquely identify the connection details.
+> -
+> - * Direction of the data flow w.r.t the component :
+> -   Each input port must have the following property defined at the "endpoint"
+> -   for the port.
+> -	"slave-mode"
+> -
+> - * Hardware Port number at the component:
+> -     -  The hardware port number is assumed to be the address of the "port"
+> -         component.
+> -
 
-I did push but, as discussed elsewhere, it seems that there was a glitch
-in The Matrix. Updates are now there after repushing them.
+Why do you add this in the previous patch and then remove it here?
+
+> + * All output ports must be listed inside a child node named "out-ports"
+> + * All input ports must be listed inside a child node named "in-ports".
+> + * Port address must match the hardware port number.
