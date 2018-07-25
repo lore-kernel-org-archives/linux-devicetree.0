@@ -1,69 +1,74 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: Re: [PATCH 09/10] mmc: tegra: Perform pad calibration after voltage
- switch
-Date: Wed, 25 Jul 2018 13:43:00 +0300
-Message-ID: <20180725134300.7e537ceb@dhcp-10-21-25-168>
-References: <1532442591-5640-1-git-send-email-avienamo@nvidia.com>
-        <1532442865-6391-1-git-send-email-avienamo@nvidia.com>
-        <1532442865-6391-8-git-send-email-avienamo@nvidia.com>
-        <b44d6ae5-7965-16db-7ad3-39ff682755ca@kapsi.fi>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: power: supply: Max17040: Add low level
+ SOC alert threshold
+Date: Wed, 25 Jul 2018 12:45:59 +0200
+Message-ID: <CAJKOXPdfxeDR0ovNbNZYAAouxfnpAa6GccZsPMLAYJETKT5Szg@mail.gmail.com>
+References: <20180723040816.19455-1-matheus@castello.eng.br> <20180723040816.19455-4-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b44d6ae5-7965-16db-7ad3-39ff682755ca@kapsi.fi>
+In-Reply-To: <20180723040816.19455-4-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <cyndis@kapsi.fi>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Jul 2018 10:25:16 +0300
-Mikko Perttunen <cyndis@kapsi.fi> wrote:
+On 23 July 2018 at 06:08, Matheus Castello <matheus@castello.eng.br> wrote:
+> For configure low level state of charge threshold alert signaled from
+> max17040 we add "maxim,alert-soc-level" property.
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  .../bindings/power/supply/max17040_battery.txt     | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> new file mode 100644
+> index 000000000000..e6e4e46c03c4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -0,0 +1,24 @@
+> +max17040_battery
+> +~~~~~~~~~~~~~~~~
 
-> On 24.07.2018 17:34, Aapo Vienamo wrote:
-> > Run the automatic pad calibration after voltage switching if
-> > tegra_host->pad_calib_required is set.
-> > 
-> > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> > ---
-> >   drivers/mmc/host/sdhci-tegra.c | 5 +++++
-> >   1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> > index 78781bd..529aa4e7 100644
-> > --- a/drivers/mmc/host/sdhci-tegra.c
-> > +++ b/drivers/mmc/host/sdhci-tegra.c
-> > @@ -537,6 +537,8 @@ static int sdhci_tegra_start_signal_voltage_switch(struct mmc_host *mmc,
-> >   						   struct mmc_ios *ios)
-> >   {
-> >   	struct sdhci_host *host = mmc_priv(mmc);
-> > +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> > +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-> >   	int ret = 0;
-> >   
-> >   	if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
-> > @@ -551,6 +553,9 @@ static int sdhci_tegra_start_signal_voltage_switch(struct mmc_host *mmc,
-> >   		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage);
-> >   	}
-> >   
-> > +	if (tegra_host->pad_calib_required)
-> > +		tegra_sdhci_pad_autocalib(host);  
-> 
-> What if the autocalibration fails? Should we return an error?
+> +
+> +Required properties :
+> + - compatible : "maxim,max17040"
 
-I would assume that aborting the signal voltage switch due to a
-calibration timeout would not be necessary as the TRM specifies drive
-strength values which are to be programmed in case a timeout occurs.
+Why you skipped "maxim,max77836-battery"?
 
-However, I don't know what are the exact implications of running the bus
-with the timeout values instead of the calibrated ones. The TRM does not
-comment on that. I guess tuning would fail and catch the error that way
-in case the timeout default values aren't sufficient.
+> +
+> +Optional threshold properties :
+> + If skipped the power up default value will be used
+> + - maxim,alert-soc-level :     The alert threshold that sets the state of
+> +                               charge level where an interrupt is generated.
+> +                               max17040 can be configured from 1 up to 32.
+> +
+> +Remembering that for the interrupt to be handled it must also be described the
+> +information of the interruption in the node.
 
- -Aapo
+Just mention interrupts in optional properties, including the flags.
+BTW, the driver hard-codes the flags which is in contrast with DT
+here.
 
-> > +
-> >   	return ret;
-> >   }
-> >   
-> >   
+Best regards,
+Krzysztof
+
+> +
+> +Example:
+> +
+> +       battery-charger@36 {
+> +               compatible = "maxim,max17040";
+> +               reg = <0x36>;
+> +               maxim,alert-soc-level = <10>;
+> +               interrupt-parent = <&gpio>;
+> +               interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+> +       };
+> --
+> 2.13.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
