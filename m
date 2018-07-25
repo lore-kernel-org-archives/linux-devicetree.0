@@ -1,66 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: drm/bridge Document Cadence MHDP
- DPI/DP bridge bindings
-Date: Wed, 25 Jul 2018 11:43:30 -0600
-Message-ID: <20180725174330.GA31540@rob-hp-laptop>
-References: <1532430824-23477-1-git-send-email-dkos@cadence.com>
- <1532430824-23477-5-git-send-email-dkos@cadence.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1532430824-23477-5-git-send-email-dkos@cadence.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Damian Kos <dkos@cadence.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, pgaj@cadence.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, stelford@cadence.com, ltyrala@cadence.com, linux-arm-kernel@lists.infradead.org, Quentin Schulz <quentin.schulz@bootlin.com>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Subject: [PATCH v0 0/4] Add cache erp driver for Last Level Cache Controller (LLCC)
+Date: Wed, 25 Jul 2018 10:44:53 -0700
+Message-ID: <1532540697-26630-1-git-send-email-vnkgutta@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: evgreen@chromium.org, robh@kernel.org, bp@alien8.de, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMjQsIDIwMTggYXQgMTI6MTM6MzVQTSArMDEwMCwgRGFtaWFuIEtvcyB3cm90
-ZToKPiBGcm9tOiBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5zY2h1bHpAYm9vdGxpbi5jb20+Cj4g
-Cj4gU2lnbmVkLW9mZi1ieTogRGFtaWFuIEtvcyA8ZGtvc0BjYWRlbmNlLmNvbT4KPiAtLS0KPiAg
-Li4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsbWhkcC50eHQgICAgIHwgNDMgKysrKysr
-KysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygrKQo+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnJpZGdlL2NkbnMsbWhkcC50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsbWhkcC50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2RucyxtaGRwLnR4dAo+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5kYzdiZTc1OTAwNDgKPiAt
-LS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL2NkbnMsbWhkcC50eHQKPiBAQCAtMCwwICsxLDQzIEBACj4gK0NhZGVuY2Ug
-TUhEUCBicmlkZ2UKPiArPT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1RoZSBDYWRl
-bmNlIE1IRFAgYnJpZGdlIGlzIGEgRFBJIHRvIERQIGJyaWRnZS4KPiArCj4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJjZG5zLG1oZHA4NTQ2IiwKPiAr
-LSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVy
-J3MgcmVnaXN0ZXJzLAo+ICstIGNsb2NrczogRFAgYnJpZGdlIGNsb2NrLCBpdCdzIHVzZWQgYnkg
-dGhlIElQIHRvIGtub3cgaG93IHRvIHRyYW5zbGF0ZQo+ICsJYSBudW1iZXIgb2YgY2xvY2sgY3lj
-bGVzIGludG8gYSB0aW1lICh3aGljaCBpcyB1c2VkIHRvIGNvbXBseQo+ICsJd2l0aCBEUCBzdGFu
-ZGFyZCB0aW1pbmdzIGFuZCBkZWxheXMpLAo+ICsKPiArUmVxdWlyZWQgc3Vibm9kZXM6Cj4gKy0g
-cG9ydHM6IFBvcnRzIGFzIGRlc2NyaWJlZCBpbiBEb2N1bWVudGF0aW9uL2RldmljdHJlZS9iaW5k
-aW5ncy9ncmFwaC50eHQKPiArCVBvcnQgMCAtIGlucHV0IHBvcnQgcmVwcmVzZW50aW5nIHRoZSBW
-R0EgYnJpZGdlIGlucHV0Cj4gKwlQb3J0IDEgLSBvdXRwdXQgcG9ydCByZXByZXNlbnRpbmcgdGhl
-IFZHQSBicmlkZ2Ugb3V0cHV0CgpWR0E/Cgo+ICsKPiArRXhhbXBsZToKPiArCj4gKwltaGRwOiBk
-cC1icmlkZ2VAZjBmYjAwMDAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJjZG5zLG1oZHA4NTQ2IjsK
-PiArCQlyZWcgPSA8MHhmMCAweGZiMDAwMDAwIDB4MCAweDEwMDAwMDA+Owo+ICsJCWNsb2NrcyA9
-IDwmbWhkcF9jbG9jaz47Cj4gKwo+ICsJCXBvcnRzIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQkJcG9ydEAwIHsKPiArCQkJCXJl
-ZyA9IDwwPjsKPiArCQkJCXZnYV9icmlkZ2VfaW5wdXQ6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1v
-dGUtZW5kcG9pbnQgPSA8Jnh4eF9kcGlfb3V0cHV0PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+
-ICsJCQlwb3J0QDEgewo+ICsJCQkJcmVnID0gPDE+Owo+ICsJCQkJdmdhX2JyaWRnZV9vdXRwdXQ6
-IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jnh4eF92Z2FfY29ubmVjdG9y
-X2lucHV0PjsKCnZnYT8KCj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+IC0tIAo+
-IDIuMTcuMQo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhl
-IGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdl
-IHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBo
-dHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This series implements cache erp driver for Last Level Cache Controller 
+(LLCC). Cache erp driver is to detect and report single and double bit
+errors on Last Level Cache Controller (LLCC) cache. This driver also takes
+care of dumping registers and have config options to enable and disable
+panic when these errors happen in LLCC.
+
+The driver functionality is implemented in:
+qcom_llcc_edac.c : This platform driver registers to edac framework and
+handles the single and double bit errors in llcc cache by registering
+interrupt handlers. 
+
+llcc-slice.c: It invokes the llcc cache erp driver and passes platform
+data to it. 
+
+This patchset depends on the LLCC driver, which is yet to be merged.
+Link: https://patchwork.kernel.org/patch/10422531/
+Link: Link: http://lists-archives.com/linux-kernel/29157082-dt-bindings-documentation-for-qcom-llcc.html
+
+Venkata Narendra Kumar Gutta (4):
+  drivers: soc: Add broadcast base for Last Level Cache Controller
+    (LLCC)
+  drivers: soc: Support to add cache erp driver for Last Level Cache
+    Controller (LLCC)
+  drivers: edac: Add cache erp driver for Last Level Cache Controller
+    (LLCC)
+  dt-bindigs: Update documentation of qcom,llcc
+
+ .../devicetree/bindings/arm/msm/qcom,llcc.txt      |  41 ++
+ drivers/edac/Kconfig                               |  21 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/qcom_llcc_edac.c                      | 523 +++++++++++++++++++++
+ drivers/soc/qcom/llcc-slice.c                      |  74 ++-
+ include/linux/soc/qcom/llcc-qcom.h                 |   6 +-
+ 6 files changed, 640 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+ create mode 100644 drivers/edac/qcom_llcc_edac.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
