@@ -1,33 +1,46 @@
-Return-Path: <SRS0=u8po=KB=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] DT: irqchip: renesas-irqc: document R8A77980 support
-Message-ID: <71e2be51-5699-1b26-c2a1-fca7897817d1@cogentembedded.com>
-Date: Tue, 17 Jul 2018 22:23:17 +0300
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=r8rx=KJ=nxp.com=wen.he_1@kernel.org>
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v7 5/7] arm64: dts: ls1043a: add qdma device tree nodes
+Date: Wed, 25 Jul 2018 19:29:17 +0800
+Message-Id: <20180725112919.31340-5-wen.he_1@nxp.com>
+In-Reply-To: <20180725112919.31340-1-wen.he_1@nxp.com>
+References: <20180725112919.31340-1-wen.he_1@nxp.com>
+To: vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Document R-Car V3H (AKA R8A77980) SoC bindings.
+add the qDMA device tree nodes for LS1043A devices.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
+Signed-off-by: Wen He <wen.he_1@nxp.com>
 ---
- Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
 
-Index: renesas/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-===================================================================
---- renesas.orig/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-+++ renesas/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-@@ -16,6 +16,7 @@ Required properties:
-     - "renesas,intc-ex-r8a7796" (R-Car M3-W)
-     - "renesas,intc-ex-r8a77965" (R-Car M3-N)
-     - "renesas,intc-ex-r8a77970" (R-Car V3M)
-+    - "renesas,intc-ex-r8a77980" (R-Car V3H)
-     - "renesas,intc-ex-r8a77995" (R-Car D3)
- - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
-   interrupts.txt in this directory
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 1109f22..48f9165 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -673,6 +673,21 @@
+ 			dma-coherent;
+ 		};
+ 
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1021a-qdma", "fsl,ls1043a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
++				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue";
++			dma-channels = <8>;
++			fsl,queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++			big-endian;
++		};
++
+ 		msi1: msi-controller1@1571000 {
+ 			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1571000 0x0 0x8>;
+-- 
+1.7.1
