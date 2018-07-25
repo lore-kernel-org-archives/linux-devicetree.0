@@ -1,29 +1,36 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v7 2/5] dt-bindings: clock: Add S700 support for Actions Semi
- Soc's
-Date: Wed, 25 Jul 2018 16:42:12 -0700
-Message-ID: <153256213239.48062.2379132769313194226@swboyd.mtv.corp.google.com>
-References: <20180719090649.12460-1-sravanhome@gmail.com>
- <20180719090649.12460-3-sravanhome@gmail.com>
+Subject: Re: [PATCH 15/15] clk: pistachio: Fix wrong SDHost card speed
+Date: Wed, 25 Jul 2018 16:43:30 -0700
+Message-ID: <153256221029.48062.5074371246522411479@swboyd.mtv.corp.google.com>
+References: <20180722212010.3979-1-afaerber@suse.de>
+ <20180722212010.3979-16-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180719090649.12460-3-sravanhome@gmail.com>
+In-Reply-To: <20180722212010.3979-16-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, manivannan.sadhasivam@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, sravanhome@gmail.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, linux-clk@vger.kernel.org, jeff.chen@actions-semi.com, mp-cs@actions-semi.com
+To: linux-mips@linux-mips.org
+Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Govindraj Raja <Govindraj.Raja@imgtec.com>, =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Saravanan Sekar (2018-07-19 02:06:46)
-> Add clock bindings constants for action S700
-> Maintain common clock dt-bindings for Actions Semi SoC's
-> S700 and S900.
+Quoting Andreas F=C3=A4rber (2018-07-22 14:20:10)
+> From: Govindraj Raja <Govindraj.Raja@imgtec.com>
 > =
 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> The SDHost currently clocks the card 4x slower than it
+> should do, because there is a fixed divide by 4 in the
+> sdhost wrapper that is not present in the clock tree.
+> To model this, add a fixed divide by 4 clock node in
+> the SDHost clock path.
+> =
+
+> This will ensure the right clock frequency is selected when
+> the mmc driver tries to configure frequency on card insert.
+> =
+
+> Signed-off-by: Govindraj Raja <Govindraj.Raja@imgtec.com>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 > ---
 
-Applied to clk-next
+Acked-by: Stephen Boyd <sboyd@kernel.org>
