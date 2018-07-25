@@ -1,359 +1,415 @@
-From: Janek Kotas <jank@cadence.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: ufs: Add UFS platform driver for
- Cadence UFS
-Date: Wed, 25 Jul 2018 13:47:24 +0000
-Message-ID: <25498DDC-2690-4B36-85ED-B9F3C93500CD@global.cadence.com>
-References: <B652B768-D5BC-460F-B0A4-64A2A76064CC@cadence.com>
- <20180716161112.GA16292@rob-hp-laptop>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH V1 3/3] mmc: sdhci-msm: Use internal voltage control
+Date: Wed, 25 Jul 2018 17:04:22 +0300
+Message-ID: <0a5317f1-b75a-5286-2a53-2fe14b67a77a@intel.com>
+References: <1532083566-43215-1-git-send-email-vviswana@codeaurora.org>
+ <1532083566-43215-4-git-send-email-vviswana@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="_000_25498DDC26904B3685EDB9F3C93500CDglobalcadencecom_"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180716161112.GA16292@rob-hp-laptop>
+In-Reply-To: <1532083566-43215-4-git-send-email-vviswana@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Vijay Viswanath <vviswana@codeaurora.org>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, evgreen@chromium.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
---_000_25498DDC26904B3685EDB9F3C93500CDglobalcadencecom_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+On 20/07/18 13:46, Vijay Viswanath wrote:
+> Some sdhci-msm controllers require that voltage switching be done after
+> the HW is ready for it. The HW informs its readiness through power irq.
+> The voltage switching should happen only then.
+> 
+> Use the quirk for internal voltage switching and then control the
+> voltage switching using power irq.
+> 
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+> Signed-off-by: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 220 ++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 209 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index a0dc3e1..47732a2 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -43,7 +43,9 @@
+>  #define CORE_PWRCTL_IO_LOW	BIT(2)
+>  #define CORE_PWRCTL_IO_HIGH	BIT(3)
+>  #define CORE_PWRCTL_BUS_SUCCESS BIT(0)
+> +#define CORE_PWRCTL_BUS_FAIL    BIT(1)
+>  #define CORE_PWRCTL_IO_SUCCESS	BIT(2)
+> +#define CORE_PWRCTL_IO_FAIL     BIT(3)
+>  #define REQ_BUS_OFF		BIT(0)
+>  #define REQ_BUS_ON		BIT(1)
+>  #define REQ_IO_LOW		BIT(2)
+> @@ -236,6 +238,14 @@ struct sdhci_msm_variant_info {
+>  	const struct sdhci_msm_offset *offset;
+>  };
+>  
+> +/* Holds voltage regulator information to be used by the driver*/
+> +struct sdhci_msm_vreg_info {
+> +	bool vmmc_load;
+> +	u32 vmmc_level[2];
+> +	bool vqmmc_load;
+> +	u32 vqmmc_level[2];
+> +};
 
-VGhhbmsgeW91IGEgbG90IGZvciB5b3VyIGNvbW1lbnRzLA0KSSB3aWxsIGZpeCB0aGVzZSBpbiB0
-aGUgbmV4dCB2ZXJzaW9uIG9mIHRoZSBwYXRjaC4NCg0KSmFuDQoNCk9uIDE2IEp1bCAyMDE4LCBh
-dCAxODoxMSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZzxtYWlsdG86cm9iaEBrZXJuZWwu
-b3JnPj4gd3JvdGU6DQoNCg0KT24gVGh1LCBKdWwgMTIsIDIwMTggYXQgMTE6NTg6MDRBTSArMDAw
-MCwgSmFuZWsgS290YXMgd3JvdGU6DQpUaGlzIHBhdGNoIGFkZHMgYSBkZXZpY2UgdHJlZSBwbGF0
-Zm9ybQ0KZHJpdmVyIGRlc2NyaXB0aW9uIGZvciBDYWRlbmNlIFVGUyBDb250cm9sbGVyLg0KDQpC
-aW5kaW5ncyBhcmUgbm90IHBsYXRmb3JtIGRyaXZlcnPigKYNCg0KT0ssIEkgd2lsbCBmaXggaXQu
-DQoNCg0KU2lnbmVkLW9mZi1ieTogSmFuIEtvdGFzIDxqYW5rQGNhZGVuY2UuY29tPG1haWx0bzpq
-YW5rQGNhZGVuY2UuY29tPj4NCi0tLQ0KLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2NkbnMs
-dWZzaGMudHh0ICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKysrDQoxIGZpbGUgY2hh
-bmdlZCwgMzEgaW5zZXJ0aW9ucygrKQ0KY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucyx1ZnNoYy50eHQNCg0KZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvY2Rucyx1ZnNoYy50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2NkbnMsdWZzaGMudHh0DQpuZXcgZmls
-ZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAwMC4uY2I2ZDYyYQ0KLS0tIC9kZXYvbnVsbA0KKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9jZG5zLHVmc2hjLnR4dA0K
-QEAgLTAsMCArMSwzMSBAQA0KKyogQ2FkZW5jZSBVbml2ZXJzYWwgRmxhc2ggU3RvcmFnZSAoVUZT
-KSBDb250cm9sbGVyDQorDQorVUZTIG5vZGVzIGFyZSBkZWZpbmVkIHRvIGRlc2NyaWJlIG9uLWNo
-aXAgVUZTIGhvc3QgY29udHJvbGxlcnMuDQorRWFjaCBVRlMgY29udHJvbGxlciBpbnN0YW5jZSBz
-aG91bGQgaGF2ZSBpdHMgb3duIG5vZGUuDQorDQorUmVxdWlyZWQgcHJvcGVydGllczoNCistIGNv
-bXBhdGlibGUgOiBjb21wYXRpYmxlIGxpc3QsIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgY29udHJv
-bGxlcjoNCisgImNkbnMsdWZzaGMiDQorICAgY29tcGxlbWVudGVkIHdpdGggdGhlIEpFREVDIHZl
-cnNpb246DQorICJqZWRlYyx1ZnMtMi4wIg0KKw0KKy0gcmVnIDogYWRkcmVzcyBhbmQgbGVuZ3Ro
-IG9mIHRoZSBVRlMgcmVnaXN0ZXIgc2V0DQorLSBpbnRlcnJ1cHRzIDogb25lIGludGVycnVwdCBt
-YXBwaW5nDQorLSBjbG9ja3MgOiBMaXN0IG9mIHBoYW5kbGUgYW5kIGNsb2NrIHNwZWNpZmllciBw
-YWlycy4NCistIGNsb2NrLW5hbWVzIDogTGlzdCBvZiBjbG9jayBpbnB1dCBuYW1lIHN0cmluZ3Mg
-c29ydGVkIGluIHRoZSBzYW1lDQorICAgb3JkZXIgYXMgdGhlIGNsb2NrcyBwcm9wZXJ0eS4gImNv
-cmUiIGlzIG1hbmRhdG9yeS4NCg0KQW5kIHBoeT8NCg0KSXQgZGVwZW5kcyBvbiBhIHR5cGUgb2Yg
-dGhlIFBIWS4gSXTigJlzIG5vdCBzdHJpY3RseSBuZWVkZWQgYnkgdGhlIGRyaXZlci4NCkluIHNp
-bXVsYXRpb24gYW5kIGVtdWxhdGlvbiwgaXTigJlzIHBvc3NpYmxlIHRvIHJ1biBhIHN5c3RlbSB3
-aXRob3V0IHByb3BlciBNLVBIWS4NCkkgd2lsbCBjbGFyaWZ5IHRoaXMuDQoNCistIGZyZXEtdGFi
-bGUtaHogOiBBcnJheSBvZiA8bWluIG1heD4gb3BlcmF0aW5nIGZyZXF1ZW5jaWVzIHN0b3JlZCBp
-biB0aGUgc2FtZQ0KKyAgIG9yZGVyIGFzIHRoZSBjbG9ja3MgcHJvcGVydHkuIElmIHRoaXMgcHJv
-cGVydHkgaXMgbm90DQorICAgZGVmaW5lZCBvciBhIHZhbHVlIGluIHRoZSBhcnJheSBpcyAiMCIg
-dGhlbiBpdCBpcyBhc3N1bWVkDQorICAgdGhhdCB0aGUgZnJlcXVlbmN5IGlzIHNldCBieSB0aGUg
-cGFyZW50IGNsb2NrIG9yIGENCisgICBmaXhlZCByYXRlIGNsb2NrIHNvdXJjZS4NCg0KRG9uJ3Qg
-ZGVmaW5lIGFnYWluIGhlcmUuIEp1c3QgcmVmZXIgdG8gdGhlIGNvbW1vbiBkZWZpbml0aW9uLg0K
-DQpPSywgSSB3aWxsIGNoYW5nZSB0aGF0Lg0KDQorDQorRXhhbXBsZToNCisgdWZzQGZkMDMwMDAw
-IHsNCisgY29tcGF0aWJsZSA9ICJjZG5zLHVmc2hjIiwgImplZGVjLHVmcy0yLjAiOw0KKyByZWcg
-PSA8MHhmZDAzMDAwMCAweDEwMDAwPjsNCisgaW50ZXJydXB0cyA9IDwwIDEgSVJRX1RZUEVfTEVW
-RUxfSElHSD47DQorIGZyZXEtdGFibGUtaHogPSA8MCAwPiwgPDAgMD47DQorIGNsb2NrcyA9IDwm
-dWZzX2NvcmVfY2xrPiwgPCZ1ZnNfcGh5X2Nsaz47DQorIGNsb2NrLW5hbWVzID0gImNvcmVfY2xr
-IiwgInBoeV9jbGsiOw0KDQpEb2VzbuKAmXQgbWF0Y2ggdGhlIGRvYy4NCg0KVGhhbmsgeW91IGZv
-ciBzcG90dGluZyB0aGF0LCBJIHdpbGwgdXBkYXRlIHRoZSBkZXNjcmlwdGlvbi4NCg0KKyB9Ow0K
-LS0NCjEuOS4wDQoNCi0tDQpUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUg
-bGluZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSIgaW4NCnRoZSBib2R5IG9mIGEgbWVzc2FnZSB0
-byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnPG1haWx0bzptYWpvcmRvbW9Admdlci5rZXJuZWwu
-b3JnPg0KTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9p
-bnQuY29tL3YyL3VybD91PWh0dHAtM0FfX3ZnZXIua2VybmVsLm9yZ19tYWpvcmRvbW8tMkRpbmZv
-Lmh0bWwmZD1Ed0lCQWcmYz1hVXE5ODNMMnB1ZTJGcUtGb1A2UEdITUpReW9KN2tsM3MzR1otX2hh
-WHFZJnI9ZzdHQVFFTlZYeF9SUWR5WEhJblBNZyZtPVJfRVV2MVoxeU03X1FESVpqb2t1ZUZPUnIx
-MnJGeWFvNVJsVUFmQ3J6THcmcz1ZenhvMi11bGMxR1NrTTBoUld6QU1zZEFoN0FkXzN1YnV3LWdQ
-Z2VlQWh3JmU9DQoNCg==
+Kernel style is not to introduce structures that are only ever wholly
+contained within one other structure i.e. the members of struct
+sdhci_msm_vreg_info could just be in struct sdhci_msm_host instead.
 
---_000_25498DDC26904B3685EDB9F3C93500CDglobalcadencecom_
-Content-Type: text/html; charset="utf-8"
-Content-ID: <31CE6C051DCF9D4CA4408539F0E61B0A@namprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+> +
+>  struct sdhci_msm_host {
+>  	struct platform_device *pdev;
+>  	void __iomem *core_mem;	/* MSM SDCC mapped address */
+> @@ -258,6 +268,8 @@ struct sdhci_msm_host {
+>  	bool mci_removed;
+>  	const struct sdhci_msm_variant_ops *var_ops;
+>  	const struct sdhci_msm_offset *offset;
+> +	struct sdhci_msm_vreg_info vreg_info;
+> +	bool pltfm_init_done;
+>  };
+>  
+>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
+> @@ -1314,11 +1326,13 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>  {
+>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>  	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+> +	struct mmc_host *mmc = host->mmc;
+>  	u32 irq_status, irq_ack = 0;
+> -	int retry = 10;
+> +	int retry = 10, ret = 0;
+>  	u32 pwr_state = 0, io_level = 0;
+>  	u32 config;
+>  	const struct sdhci_msm_offset *msm_offset = msm_host->offset;
+> +	struct sdhci_msm_vreg_info vreg_info = msm_host->vreg_info;
+>  
+>  	irq_status = msm_host_readl(msm_host, host,
+>  			msm_offset->core_pwrctl_status);
+> @@ -1351,14 +1365,91 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>  
+>  	/* Handle BUS ON/OFF*/
+>  	if (irq_status & CORE_PWRCTL_BUS_ON) {
+> -		pwr_state = REQ_BUS_ON;
+> -		io_level = REQ_IO_HIGH;
+> -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> +		if (!IS_ERR(mmc->supply.vmmc)) {
+> +			if (vreg_info.vmmc_load)
+> +				ret = regulator_set_load(mmc->supply.vmmc,
+> +						vreg_info.vmmc_level[1]);
+> +			ret |= mmc_regulator_set_ocr(mmc, mmc->supply.vmmc,
+> +					mmc->ios.vdd);
 
-PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
-dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IHN0eWxlPSJ3b3JkLXdy
-YXA6IGJyZWFrLXdvcmQ7IC13ZWJraXQtbmJzcC1tb2RlOiBzcGFjZTsgbGluZS1icmVhazogYWZ0
-ZXItd2hpdGUtc3BhY2U7IiBjbGFzcz0iIj4NCjxkaXYgY2xhc3M9IiI+DQo8ZGl2IGRpcj0iYXV0
-byIgc3R5bGU9ImNvbG9yOiByZ2IoMCwgMCwgMCk7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRl
-eHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsg
-d2hpdGUtc3BhY2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJv
-a2Utd2lkdGg6IDBweDsgd29yZC13cmFwOiBicmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTog
-c3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdoaXRlLXNwYWNlOyIgY2xhc3M9IiI+DQpUaGFuayB5
-b3UgYSBsb3QgZm9yIHlvdXIgY29tbWVudHMsJm5ic3A7PC9kaXY+DQo8ZGl2IGRpcj0iYXV0byIg
-c3R5bGU9ImNvbG9yOiByZ2IoMCwgMCwgMCk7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQt
-YWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hp
-dGUtc3BhY2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Ut
-d2lkdGg6IDBweDsgd29yZC13cmFwOiBicmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3Bh
-Y2U7IGxpbmUtYnJlYWs6IGFmdGVyLXdoaXRlLXNwYWNlOyIgY2xhc3M9IiI+DQpJIHdpbGwgZml4
-IHRoZXNlIGluIHRoZSBuZXh0IHZlcnNpb24gb2YgdGhlIHBhdGNoLjwvZGl2Pg0KPGRpdiBkaXI9
-ImF1dG8iIHN0eWxlPSJjb2xvcjogcmdiKDAsIDAsIDApOyBsZXR0ZXItc3BhY2luZzogbm9ybWFs
-OyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5v
-bmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQt
-c3Ryb2tlLXdpZHRoOiAwcHg7IHdvcmQtd3JhcDogYnJlYWstd29yZDsgLXdlYmtpdC1uYnNwLW1v
-ZGU6IHNwYWNlOyBsaW5lLWJyZWFrOiBhZnRlci13aGl0ZS1zcGFjZTsiIGNsYXNzPSIiPg0KPGJy
-IGNsYXNzPSIiPg0KPC9kaXY+DQo8ZGl2IGRpcj0iYXV0byIgc3R5bGU9ImNvbG9yOiByZ2IoMCwg
-MCwgMCk7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWlu
-ZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd29y
-ZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgd29yZC13cmFw
-OiBicmVhay13b3JkOyAtd2Via2l0LW5ic3AtbW9kZTogc3BhY2U7IGxpbmUtYnJlYWs6IGFmdGVy
-LXdoaXRlLXNwYWNlOyIgY2xhc3M9IiI+DQpKYW48L2Rpdj4NCjwvZGl2Pg0KPGRpdj48YnIgY2xh
-c3M9IiI+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBjbGFzcz0iIj4NCjxkaXYgY2xhc3M9IiI+
-T24gMTYgSnVsIDIwMTgsIGF0IDE4OjExLCBSb2IgSGVycmluZyAmbHQ7PGEgaHJlZj0ibWFpbHRv
-OnJvYmhAa2VybmVsLm9yZyIgY2xhc3M9IiI+cm9iaEBrZXJuZWwub3JnPC9hPiZndDsgd3JvdGU6
-PC9kaXY+DQo8ZGl2IGNsYXNzPSIiPjxiciBzdHlsZT0iY2FyZXQtY29sb3I6IHJnYigwLCAwLCAw
-KTsgZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1zaXplOiAxMnB4OyBmb250LXN0eWxlOiBu
-b3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxl
-dHRlci1zcGFjaW5nOiBub3JtYWw7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4
-OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd29yZC1zcGFjaW5n
-OiAwcHg7IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBu
-b25lOyIgY2xhc3M9IiI+DQo8YnIgc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZv
-bnQtZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTJweDsgZm9udC1zdHlsZTogbm9ybWFs
-OyBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXIt
-c3BhY2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4
-dC10cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4
-OyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsi
-IGNsYXNzPSIiPg0KPHNwYW4gc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQt
-ZmFtaWx5OiBIZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTJweDsgZm9udC1zdHlsZTogbm9ybWFsOyBm
-b250LXZhcmlhbnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3Bh
-Y2luZzogbm9ybWFsOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10
-cmFuc2Zvcm06IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAt
-d2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgZmxv
-YXQ6IG5vbmU7IGRpc3BsYXk6IGlubGluZSAhaW1wb3J0YW50OyIgY2xhc3M9IiI+T24NCiBUaHUs
-IEp1bCAxMiwgMjAxOCBhdCAxMTo1ODowNEFNICYjNDM7MDAwMCwgSmFuZWsgS290YXMgd3JvdGU6
-PC9zcGFuPjxiciBzdHlsZT0iY2FyZXQtY29sb3I6IHJnYigwLCAwLCAwKTsgZm9udC1mYW1pbHk6
-IEhlbHZldGljYTsgZm9udC1zaXplOiAxMnB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFy
-aWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBu
-b3JtYWw7IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9y
-bTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd29yZC1zcGFjaW5nOiAwcHg7IC13ZWJraXQt
-dGV4dC1zdHJva2Utd2lkdGg6IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyIgY2xhc3M9IiI+
-DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBzdHlsZT0iZm9udC1mYW1pbHk6IEhlbHZldGljYTsg
-Zm9udC1zaXplOiAxMnB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBu
-b3JtYWw7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhh
-bnM6IGF1dG87IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5z
-Zm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd2lkb3dzOiBhdXRvOyB3b3JkLXNwYWNp
-bmc6IDBweDsgLXdlYmtpdC10ZXh0LXNpemUtYWRqdXN0OiBhdXRvOyAtd2Via2l0LXRleHQtc3Ry
-b2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0KVGhpcyBw
-YXRjaCBhZGRzIGEgZGV2aWNlIHRyZWUgcGxhdGZvcm08YnIgY2xhc3M9IiI+DQpkcml2ZXIgZGVz
-Y3JpcHRpb24gZm9yIENhZGVuY2UgVUZTIENvbnRyb2xsZXIuPGJyIGNsYXNzPSIiPg0KPC9ibG9j
-a3F1b3RlPg0KPGJyIHN0eWxlPSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWls
-eTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEycHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12
-YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6
-IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNm
-b3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtp
-dC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBjbGFzcz0i
-Ij4NCjxzcGFuIHN0eWxlPSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTog
-SGVsdmV0aWNhOyBmb250LXNpemU6IDEycHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJp
-YW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5v
-cm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3Jt
-OiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10
-ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IGZsb2F0OiBub25l
-OyBkaXNwbGF5OiBpbmxpbmUgIWltcG9ydGFudDsiIGNsYXNzPSIiPkJpbmRpbmdzDQogYXJlIG5v
-dCBwbGF0Zm9ybSBkcml2ZXJz4oCmPC9zcGFuPjwvZGl2Pg0KPC9ibG9ja3F1b3RlPg0KPGRpdj48
-YnIgY2xhc3M9IiI+DQo8L2Rpdj4NCjxkaXY+T0ssIEkgd2lsbCBmaXggaXQuPC9kaXY+DQo8YnIg
-Y2xhc3M9IiI+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBjbGFzcz0iIj4NCjxkaXYgY2xhc3M9
-IiI+DQo8YmxvY2txdW90ZSB0eXBlPSJjaXRlIiBzdHlsZT0iZm9udC1mYW1pbHk6IEhlbHZldGlj
-YTsgZm9udC1zaXplOiAxMnB4OyBmb250LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBz
-OiBub3JtYWw7IGZvbnQtd2VpZ2h0OiBub3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9y
-cGhhbnM6IGF1dG87IHRleHQtYWxpZ246IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRy
-YW5zZm9ybTogbm9uZTsgd2hpdGUtc3BhY2U6IG5vcm1hbDsgd2lkb3dzOiBhdXRvOyB3b3JkLXNw
-YWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXNpemUtYWRqdXN0OiBhdXRvOyAtd2Via2l0LXRleHQt
-c3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0KPGJy
-IGNsYXNzPSIiPg0KU2lnbmVkLW9mZi1ieTogSmFuIEtvdGFzICZsdDs8YSBocmVmPSJtYWlsdG86
-amFua0BjYWRlbmNlLmNvbSIgY2xhc3M9IiI+amFua0BjYWRlbmNlLmNvbTwvYT4mZ3Q7PGJyIGNs
-YXNzPSIiPg0KLS0tPGJyIGNsYXNzPSIiPg0KLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2Nk
-bnMsdWZzaGMudHh0ICZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwO3wgMzEgJiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0
-MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7
-JiM0Mzs8YnIgY2xhc3M9IiI+DQoxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygmIzQzOyk8
-YnIgY2xhc3M9IiI+DQpjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3Vmcy9jZG5zLHVmc2hjLnR4dDxiciBjbGFzcz0iIj4NCjxiciBjbGFzcz0iIj4N
-CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2NkbnMs
-dWZzaGMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9jZG5zLHVm
-c2hjLnR4dDxiciBjbGFzcz0iIj4NCm5ldyBmaWxlIG1vZGUgMTAwNjQ0PGJyIGNsYXNzPSIiPg0K
-aW5kZXggMDAwMDAwMC4uY2I2ZDYyYTxiciBjbGFzcz0iIj4NCi0tLSAvZGV2L251bGw8YnIgY2xh
-c3M9IiI+DQomIzQzOyYjNDM7JiM0MzsgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdWZzL2NkbnMsdWZzaGMudHh0PGJyIGNsYXNzPSIiPg0KQEAgLTAsMCAmIzQzOzEsMzEgQEA8
-YnIgY2xhc3M9IiI+DQomIzQzOyogQ2FkZW5jZSBVbml2ZXJzYWwgRmxhc2ggU3RvcmFnZSAoVUZT
-KSBDb250cm9sbGVyPGJyIGNsYXNzPSIiPg0KJiM0Mzs8YnIgY2xhc3M9IiI+DQomIzQzO1VGUyBu
-b2RlcyBhcmUgZGVmaW5lZCB0byBkZXNjcmliZSBvbi1jaGlwIFVGUyBob3N0IGNvbnRyb2xsZXJz
-LjxiciBjbGFzcz0iIj4NCiYjNDM7RWFjaCBVRlMgY29udHJvbGxlciBpbnN0YW5jZSBzaG91bGQg
-aGF2ZSBpdHMgb3duIG5vZGUuPGJyIGNsYXNzPSIiPg0KJiM0Mzs8YnIgY2xhc3M9IiI+DQomIzQz
-O1JlcXVpcmVkIHByb3BlcnRpZXM6PGJyIGNsYXNzPSIiPg0KJiM0MzstIGNvbXBhdGlibGU8c3Bh
-biBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+IDwvc3Bh
-bj46IGNvbXBhdGlibGUgbGlzdCwgY29udGFpbnMgdGhlIGZvbGxvd2luZyBjb250cm9sbGVyOjxi
-ciBjbGFzcz0iIj4NCiYjNDM7PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0id2hp
-dGUtc3BhY2U6IHByZTsiPiA8L3NwYW4+PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHls
-ZT0id2hpdGUtc3BhY2U6IHByZTsiPjwvc3Bhbj48c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4i
-IHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+PC9zcGFuPiZxdW90O2NkbnMsdWZzaGMmcXVvdDs8
-YnIgY2xhc3M9IiI+DQomIzQzOzxzcGFuIGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5bGU9Indo
-aXRlLXNwYWNlOiBwcmU7Ij4gPC9zcGFuPjxzcGFuIGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5
-bGU9IndoaXRlLXNwYWNlOiBwcmU7Ij48L3NwYW4+PHNwYW4gY2xhc3M9IkFwcGxlLWNvbnZlcnRl
-ZC1zcGFjZSI+Jm5ic3A7PC9zcGFuPiZuYnNwO2NvbXBsZW1lbnRlZCB3aXRoIHRoZSBKRURFQyB2
-ZXJzaW9uOjxiciBjbGFzcz0iIj4NCiYjNDM7PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBz
-dHlsZT0id2hpdGUtc3BhY2U6IHByZTsiPiA8L3NwYW4+PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1z
-cGFuIiBzdHlsZT0id2hpdGUtc3BhY2U6IHByZTsiPjwvc3Bhbj48c3BhbiBjbGFzcz0iQXBwbGUt
-dGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+PC9zcGFuPiZxdW90O2plZGVjLHVm
-cy0yLjAmcXVvdDs8YnIgY2xhc3M9IiI+DQomIzQzOzxiciBjbGFzcz0iIj4NCiYjNDM7LSByZWc8
-c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+IDwv
-c3Bhbj48c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJl
-OyI+PC9zcGFuPjogYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBVRlMgcmVnaXN0ZXIgc2V0PGJy
-IGNsYXNzPSIiPg0KJiM0MzstIGludGVycnVwdHM8c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4i
-IHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+IDwvc3Bhbj46IG9uZSBpbnRlcnJ1cHQgbWFwcGlu
-ZzxiciBjbGFzcz0iIj4NCiYjNDM7LSBjbG9ja3M8c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4i
-IHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+IDwvc3Bhbj46IExpc3Qgb2YgcGhhbmRsZSBhbmQg
-Y2xvY2sgc3BlY2lmaWVyIHBhaXJzLjxiciBjbGFzcz0iIj4NCiYjNDM7LSBjbG9jay1uYW1lczxz
-cGFuIGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5bGU9IndoaXRlLXNwYWNlOiBwcmU7Ij4gPC9z
-cGFuPjogTGlzdCBvZiBjbG9jayBpbnB1dCBuYW1lIHN0cmluZ3Mgc29ydGVkIGluIHRoZSBzYW1l
-PGJyIGNsYXNzPSIiPg0KJiM0Mzs8c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3
-aGl0ZS1zcGFjZTogcHJlOyI+IDwvc3Bhbj48c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0
-eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+PC9zcGFuPjxzcGFuIGNsYXNzPSJBcHBsZS1jb252ZXJ0
-ZWQtc3BhY2UiPiZuYnNwOzwvc3Bhbj4mbmJzcDtvcmRlciBhcyB0aGUgY2xvY2tzIHByb3BlcnR5
-LiAmcXVvdDtjb3JlJnF1b3Q7IGlzIG1hbmRhdG9yeS48YnIgY2xhc3M9IiI+DQo8L2Jsb2NrcXVv
-dGU+DQo8YnIgc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBI
-ZWx2ZXRpY2E7IGZvbnQtc2l6ZTogMTJweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlh
-bnQtY2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9y
-bWFsOyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06
-IG5vbmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRl
-eHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0K
-PHNwYW4gc3R5bGU9ImNhcmV0LWNvbG9yOiByZ2IoMCwgMCwgMCk7IGZvbnQtZmFtaWx5OiBIZWx2
-ZXRpY2E7IGZvbnQtc2l6ZTogMTJweDsgZm9udC1zdHlsZTogbm9ybWFsOyBmb250LXZhcmlhbnQt
-Y2Fwczogbm9ybWFsOyBmb250LXdlaWdodDogbm9ybWFsOyBsZXR0ZXItc3BhY2luZzogbm9ybWFs
-OyB0ZXh0LWFsaWduOiBzdGFydDsgdGV4dC1pbmRlbnQ6IDBweDsgdGV4dC10cmFuc2Zvcm06IG5v
-bmU7IHdoaXRlLXNwYWNlOiBub3JtYWw7IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQt
-c3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgZmxvYXQ6IG5vbmU7IGRp
-c3BsYXk6IGlubGluZSAhaW1wb3J0YW50OyIgY2xhc3M9IiI+QW5kDQogcGh5Pzwvc3Bhbj48L2Rp
-dj4NCjwvYmxvY2txdW90ZT4NCjxkaXY+PGJyIGNsYXNzPSIiPg0KPC9kaXY+DQo8ZGl2Pkl0IGRl
-cGVuZHMgb24gYSB0eXBlIG9mIHRoZSBQSFkuIEl04oCZcyBub3Qgc3RyaWN0bHkgbmVlZGVkIGJ5
-IHRoZSBkcml2ZXIuPC9kaXY+DQo8ZGl2PkluIHNpbXVsYXRpb24gYW5kIGVtdWxhdGlvbiwgaXTi
-gJlzIHBvc3NpYmxlIHRvIHJ1biBhIHN5c3RlbSB3aXRob3V0IHByb3BlciBNLVBIWS48L2Rpdj4N
-CjxkaXY+SSB3aWxsIGNsYXJpZnkgdGhpcy48L2Rpdj4NCjxiciBjbGFzcz0iIj4NCjxibG9ja3F1
-b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSIiPg0KPGRpdiBjbGFzcz0iIj4NCjxibG9ja3F1b3RlIHR5
-cGU9ImNpdGUiIHN0eWxlPSJmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEycHg7
-IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWln
-aHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgb3JwaGFuczogYXV0bzsgdGV4dC1h
-bGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0
-ZS1zcGFjZTogbm9ybWFsOyB3aWRvd3M6IGF1dG87IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0
-LXRleHQtc2l6ZS1hZGp1c3Q6IGF1dG87IC13ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsg
-dGV4dC1kZWNvcmF0aW9uOiBub25lOyIgY2xhc3M9IiI+DQomIzQzOy0gZnJlcS10YWJsZS1oejxz
-cGFuIGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5bGU9IndoaXRlLXNwYWNlOiBwcmU7Ij4gPC9z
-cGFuPjogQXJyYXkgb2YgJmx0O21pbiBtYXgmZ3Q7IG9wZXJhdGluZyBmcmVxdWVuY2llcyBzdG9y
-ZWQgaW4gdGhlIHNhbWU8YnIgY2xhc3M9IiI+DQomIzQzOzxzcGFuIGNsYXNzPSJBcHBsZS10YWIt
-c3BhbiIgc3R5bGU9IndoaXRlLXNwYWNlOiBwcmU7Ij4gPC9zcGFuPjxzcGFuIGNsYXNzPSJBcHBs
-ZS10YWItc3BhbiIgc3R5bGU9IndoaXRlLXNwYWNlOiBwcmU7Ij48L3NwYW4+PHNwYW4gY2xhc3M9
-IkFwcGxlLWNvbnZlcnRlZC1zcGFjZSI+Jm5ic3A7PC9zcGFuPiZuYnNwO29yZGVyIGFzIHRoZSBj
-bG9ja3MgcHJvcGVydHkuIElmIHRoaXMgcHJvcGVydHkgaXMgbm90PGJyIGNsYXNzPSIiPg0KJiM0
-Mzs8c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+
-IDwvc3Bhbj48c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTog
-cHJlOyI+PC9zcGFuPjxzcGFuIGNsYXNzPSJBcHBsZS1jb252ZXJ0ZWQtc3BhY2UiPiZuYnNwOzwv
-c3Bhbj4mbmJzcDtkZWZpbmVkIG9yIGEgdmFsdWUgaW4gdGhlIGFycmF5IGlzICZxdW90OzAmcXVv
-dDsgdGhlbiBpdCBpcyBhc3N1bWVkPGJyIGNsYXNzPSIiPg0KJiM0Mzs8c3BhbiBjbGFzcz0iQXBw
-bGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+IDwvc3Bhbj48c3BhbiBjbGFz
-cz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+PC9zcGFuPjxzcGFu
-IGNsYXNzPSJBcHBsZS1jb252ZXJ0ZWQtc3BhY2UiPiZuYnNwOzwvc3Bhbj4mbmJzcDt0aGF0IHRo
-ZSBmcmVxdWVuY3kgaXMgc2V0IGJ5IHRoZSBwYXJlbnQgY2xvY2sgb3IgYTxiciBjbGFzcz0iIj4N
-CiYjNDM7PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0id2hpdGUtc3BhY2U6IHBy
-ZTsiPiA8L3NwYW4+PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0id2hpdGUtc3Bh
-Y2U6IHByZTsiPjwvc3Bhbj48c3BhbiBjbGFzcz0iQXBwbGUtY29udmVydGVkLXNwYWNlIj4mbmJz
-cDs8L3NwYW4+Jm5ic3A7Zml4ZWQgcmF0ZSBjbG9jayBzb3VyY2UuPGJyIGNsYXNzPSIiPg0KPC9i
-bG9ja3F1b3RlPg0KPGJyIHN0eWxlPSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZh
-bWlseTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEycHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9u
-dC12YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNp
-bmc6IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJh
-bnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdl
-YmtpdC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBjbGFz
-cz0iIj4NCjxzcGFuIHN0eWxlPSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWls
-eTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEycHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12
-YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6
-IG5vcm1hbDsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNm
-b3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtp
-dC10ZXh0LXN0cm9rZS13aWR0aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IGZsb2F0OiBu
-b25lOyBkaXNwbGF5OiBpbmxpbmUgIWltcG9ydGFudDsiIGNsYXNzPSIiPkRvbid0DQogZGVmaW5l
-IGFnYWluIGhlcmUuIEp1c3QgcmVmZXIgdG8gdGhlIGNvbW1vbiBkZWZpbml0aW9uLjwvc3Bhbj48
-L2Rpdj4NCjwvYmxvY2txdW90ZT4NCjxkaXY+PGJyIGNsYXNzPSIiPg0KPC9kaXY+DQo8ZGl2Pk9L
-LCBJIHdpbGwgY2hhbmdlIHRoYXQuPC9kaXY+DQo8YnIgY2xhc3M9IiI+DQo8YmxvY2txdW90ZSB0
-eXBlPSJjaXRlIiBjbGFzcz0iIj4NCjxkaXYgY2xhc3M9IiI+DQo8YmxvY2txdW90ZSB0eXBlPSJj
-aXRlIiBzdHlsZT0iZm9udC1mYW1pbHk6IEhlbHZldGljYTsgZm9udC1zaXplOiAxMnB4OyBmb250
-LXN0eWxlOiBub3JtYWw7IGZvbnQtdmFyaWFudC1jYXBzOiBub3JtYWw7IGZvbnQtd2VpZ2h0OiBu
-b3JtYWw7IGxldHRlci1zcGFjaW5nOiBub3JtYWw7IG9ycGhhbnM6IGF1dG87IHRleHQtYWxpZ246
-IHN0YXJ0OyB0ZXh0LWluZGVudDogMHB4OyB0ZXh0LXRyYW5zZm9ybTogbm9uZTsgd2hpdGUtc3Bh
-Y2U6IG5vcm1hbDsgd2lkb3dzOiBhdXRvOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0
-LXNpemUtYWRqdXN0OiBhdXRvOyAtd2Via2l0LXRleHQtc3Ryb2tlLXdpZHRoOiAwcHg7IHRleHQt
-ZGVjb3JhdGlvbjogbm9uZTsiIGNsYXNzPSIiPg0KJiM0Mzs8YnIgY2xhc3M9IiI+DQomIzQzO0V4
-YW1wbGU6PGJyIGNsYXNzPSIiPg0KJiM0Mzs8c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0
-eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+IDwvc3Bhbj51ZnNAZmQwMzAwMDAgezxiciBjbGFzcz0i
-Ij4NCiYjNDM7PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0id2hpdGUtc3BhY2U6
-IHByZTsiPiA8L3NwYW4+PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0id2hpdGUt
-c3BhY2U6IHByZTsiPjwvc3Bhbj5jb21wYXRpYmxlID0gJnF1b3Q7Y2Rucyx1ZnNoYyZxdW90Oywg
-JnF1b3Q7amVkZWMsdWZzLTIuMCZxdW90Ozs8YnIgY2xhc3M9IiI+DQomIzQzOzxzcGFuIGNsYXNz
-PSJBcHBsZS10YWItc3BhbiIgc3R5bGU9IndoaXRlLXNwYWNlOiBwcmU7Ij4gPC9zcGFuPjxzcGFu
-IGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5bGU9IndoaXRlLXNwYWNlOiBwcmU7Ij48L3NwYW4+
-cmVnID0gJmx0OzB4ZmQwMzAwMDAgMHgxMDAwMCZndDs7PGJyIGNsYXNzPSIiPg0KJiM0Mzs8c3Bh
-biBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+IDwvc3Bh
-bj48c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyI+
-PC9zcGFuPmludGVycnVwdHMgPSAmbHQ7MCAxIElSUV9UWVBFX0xFVkVMX0hJR0gmZ3Q7OzxiciBj
-bGFzcz0iIj4NCiYjNDM7PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0id2hpdGUt
-c3BhY2U6IHByZTsiPiA8L3NwYW4+PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFuIiBzdHlsZT0i
-d2hpdGUtc3BhY2U6IHByZTsiPjwvc3Bhbj5mcmVxLXRhYmxlLWh6ID0gJmx0OzAgMCZndDssICZs
-dDswIDAmZ3Q7OzxiciBjbGFzcz0iIj4NCiYjNDM7PHNwYW4gY2xhc3M9IkFwcGxlLXRhYi1zcGFu
-IiBzdHlsZT0id2hpdGUtc3BhY2U6IHByZTsiPiA8L3NwYW4+PHNwYW4gY2xhc3M9IkFwcGxlLXRh
-Yi1zcGFuIiBzdHlsZT0id2hpdGUtc3BhY2U6IHByZTsiPjwvc3Bhbj5jbG9ja3MgPSAmbHQ7JmFt
-cDt1ZnNfY29yZV9jbGsmZ3Q7LCAmbHQ7JmFtcDt1ZnNfcGh5X2NsayZndDs7PGJyIGNsYXNzPSIi
-Pg0KJiM0Mzs8c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1zcGFjZTog
-cHJlOyI+IDwvc3Bhbj48c3BhbiBjbGFzcz0iQXBwbGUtdGFiLXNwYW4iIHN0eWxlPSJ3aGl0ZS1z
-cGFjZTogcHJlOyI+PC9zcGFuPmNsb2NrLW5hbWVzID0gJnF1b3Q7Y29yZV9jbGsmcXVvdDssICZx
-dW90O3BoeV9jbGsmcXVvdDs7PGJyIGNsYXNzPSIiPg0KPC9ibG9ja3F1b3RlPg0KPGJyIHN0eWxl
-PSJjYXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250
-LXNpemU6IDEycHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1h
-bDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGln
-bjogc3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1z
-cGFjZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0
-aDogMHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IiBjbGFzcz0iIj4NCjxzcGFuIHN0eWxlPSJj
-YXJldC1jb2xvcjogcmdiKDAsIDAsIDApOyBmb250LWZhbWlseTogSGVsdmV0aWNhOyBmb250LXNp
-emU6IDEycHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12YXJpYW50LWNhcHM6IG5vcm1hbDsg
-Zm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6IG5vcm1hbDsgdGV4dC1hbGlnbjog
-c3RhcnQ7IHRleHQtaW5kZW50OiAwcHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFj
-ZTogbm9ybWFsOyB3b3JkLXNwYWNpbmc6IDBweDsgLXdlYmtpdC10ZXh0LXN0cm9rZS13aWR0aDog
-MHB4OyB0ZXh0LWRlY29yYXRpb246IG5vbmU7IGZsb2F0OiBub25lOyBkaXNwbGF5OiBpbmxpbmUg
-IWltcG9ydGFudDsiIGNsYXNzPSIiPkRvZXNu4oCZdA0KIG1hdGNoIHRoZSBkb2MuPC9zcGFuPjwv
-ZGl2Pg0KPC9ibG9ja3F1b3RlPg0KPGRpdj48YnIgY2xhc3M9IiI+DQo8L2Rpdj4NCjxkaXY+VGhh
-bmsgeW91IGZvciBzcG90dGluZyB0aGF0LCBJIHdpbGwgdXBkYXRlIHRoZSBkZXNjcmlwdGlvbi48
-L2Rpdj4NCjxiciBjbGFzcz0iIj4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIGNsYXNzPSIiPg0K
-PGRpdiBjbGFzcz0iIj4NCjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiIHN0eWxlPSJmb250LWZhbWls
-eTogSGVsdmV0aWNhOyBmb250LXNpemU6IDEycHg7IGZvbnQtc3R5bGU6IG5vcm1hbDsgZm9udC12
-YXJpYW50LWNhcHM6IG5vcm1hbDsgZm9udC13ZWlnaHQ6IG5vcm1hbDsgbGV0dGVyLXNwYWNpbmc6
-IG5vcm1hbDsgb3JwaGFuczogYXV0bzsgdGV4dC1hbGlnbjogc3RhcnQ7IHRleHQtaW5kZW50OiAw
-cHg7IHRleHQtdHJhbnNmb3JtOiBub25lOyB3aGl0ZS1zcGFjZTogbm9ybWFsOyB3aWRvd3M6IGF1
-dG87IHdvcmQtc3BhY2luZzogMHB4OyAtd2Via2l0LXRleHQtc2l6ZS1hZGp1c3Q6IGF1dG87IC13
-ZWJraXQtdGV4dC1zdHJva2Utd2lkdGg6IDBweDsgdGV4dC1kZWNvcmF0aW9uOiBub25lOyIgY2xh
-c3M9IiI+DQomIzQzOzxzcGFuIGNsYXNzPSJBcHBsZS10YWItc3BhbiIgc3R5bGU9IndoaXRlLXNw
-YWNlOiBwcmU7Ij4gPC9zcGFuPn07PGJyIGNsYXNzPSIiPg0KLS08c3BhbiBjbGFzcz0iQXBwbGUt
-Y29udmVydGVkLXNwYWNlIj4mbmJzcDs8L3NwYW4+PGJyIGNsYXNzPSIiPg0KMS45LjA8YnIgY2xh
-c3M9IiI+DQo8YnIgY2xhc3M9IiI+DQotLTxiciBjbGFzcz0iIj4NClRvIHVuc3Vic2NyaWJlIGZy
-b20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICZxdW90O3Vuc3Vic2NyaWJlIGRldmljZXRyZWUm
-cXVvdDsgaW48YnIgY2xhc3M9IiI+DQp0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG88c3BhbiBjbGFz
-cz0iQXBwbGUtY29udmVydGVkLXNwYWNlIj4mbmJzcDs8L3NwYW4+PGEgaHJlZj0ibWFpbHRvOm1h
-am9yZG9tb0B2Z2VyLmtlcm5lbC5vcmciIGNsYXNzPSIiPm1ham9yZG9tb0B2Z2VyLmtlcm5lbC5v
-cmc8L2E+PGJyIGNsYXNzPSIiPg0KTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAmbmJzcDs8YSBocmVm
-PSJodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fdmdl
-ci5rZXJuZWwub3JnX21ham9yZG9tby0yRGluZm8uaHRtbCZhbXA7ZD1Ed0lCQWcmYW1wO2M9YVVx
-OTgzTDJwdWUyRnFLRm9QNlBHSE1KUXlvSjdrbDNzM0daLV9oYVhxWSZhbXA7cj1nN0dBUUVOVlh4
-X1JRZHlYSEluUE1nJmFtcDttPVJfRVV2MVoxeU03X1FESVpqb2t1ZUZPUnIxMnJGeWFvNVJsVUFm
-Q3J6THcmYW1wO3M9WXp4bzItdWxjMUdTa00waFJXekFNc2RBaDdBZF8zdWJ1dy1nUGdlZUFodyZh
-bXA7ZT0iIGNsYXNzPSIiPmh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92Mi91cmw/
-dT1odHRwLTNBX192Z2VyLmtlcm5lbC5vcmdfbWFqb3Jkb21vLTJEaW5mby5odG1sJmFtcDtkPUR3
-SUJBZyZhbXA7Yz1hVXE5ODNMMnB1ZTJGcUtGb1A2UEdITUpReW9KN2tsM3MzR1otX2hhWHFZJmFt
-cDtyPWc3R0FRRU5WWHhfUlFkeVhISW5QTWcmYW1wO209Ul9FVXYxWjF5TTdfUURJWmpva3VlRk9S
-cjEyckZ5YW81UmxVQWZDcnpMdyZhbXA7cz1ZenhvMi11bGMxR1NrTTBoUld6QU1zZEFoN0FkXzN1
-YnV3LWdQZ2VlQWh3JmFtcDtlPTwvYT48L2Jsb2NrcXVvdGU+DQo8L2Rpdj4NCjwvYmxvY2txdW90
-ZT4NCjwvZGl2Pg0KPGJyIGNsYXNzPSIiPg0KPC9ib2R5Pg0KPC9odG1sPg0K
+Or-ing error numbers seems a bit weird.  The code is a bit crammed also,
+so I suggest adding helper functions.  For example consider something like:
 
---_000_25498DDC26904B3685EDB9F3C93500CDglobalcadencecom_--
+static int sdhci_msm_set_vmmc(struct sdhci_msm_host *msm_host,
+			      struct mmc_host *mmc, int level)
+{
+	int load = msm_host->vmmc_level[level];
+	int ret;
+
+	if (IS_ERR(mmc->supply.vmmc))
+		return 0;
+
+	if (msm_host->vmmc_load) {
+		ret = regulator_set_load(mmc->supply.vmmc, load);
+		if (ret)
+			goto out;
+	}
+
+	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
+out:
+	if (ret)
+		pr_err("%s: vmmc failed: %d\n", mmc_hostname(mmc), ret);
+
+	return ret;
+}
+
+> +			if (ret)
+> +				pr_err("%s: vmmc enable failed: %d\n",
+> +						mmc_hostname(mmc), ret);
+> +		}
+> +
+> +		if (!IS_ERR(mmc->supply.vqmmc) && !ret) {
+> +			struct mmc_ios ios;
+> +
+> +			if (vreg_info.vqmmc_load)
+> +				ret = regulator_set_load(mmc->supply.vqmmc,
+> +						vreg_info.vqmmc_level[1]);
+> +			/*
+> +			 * The IO voltage regulator maynot always support
+> +			 * a voltage close to vdd. Set IO voltage based on
+> +			 * capability of the regulator.
+> +			 */
+> +			if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
+> +				ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
+> +			else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
+> +				ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
+> +			if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
+> +				pr_err("%s: %s: setting signal voltage: %d\n",
+> +						mmc_hostname(mmc), __func__,
+> +						ios.signal_voltage);
+
+Why pr_err()?
+
+> +				ret |= mmc_regulator_set_vqmmc(mmc, &ios);
+
+Again I suggest createing a helper function and not or-ing error numbers.
+
+> +			}
+> +
+> +			if (!ret)
+> +				ret = regulator_enable(mmc->supply.vqmmc);
+> +			if (ret)
+> +				pr_err("%s: vqmmc enable failed: %d\n",
+> +						mmc_hostname(mmc), ret);
+> +		}
+> +		if (!ret) {
+> +			pwr_state = REQ_BUS_ON;
+> +			io_level = REQ_IO_HIGH;
+> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> +		} else {
+> +			pr_err("%s: BUS_ON req failed(%d). irq_status: 0x%08x\n",
+> +					mmc_hostname(mmc), ret, irq_status);
+> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
+> +		}
+>  	}
+>  	if (irq_status & CORE_PWRCTL_BUS_OFF) {
+> -		pwr_state = REQ_BUS_OFF;
+> -		io_level = REQ_IO_LOW;
+> -		irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> +		/*
+> +		 * During platform initialization, we may get BUS_OFF request
+> +		 * and turn off the supply. EMMC devices expect Power off
+> +		 * notification before being turned off. So wait till platform
+> +		 * initialization is over to actually turn off power.
+> +		 */
+> +		if (!IS_ERR(mmc->supply.vmmc) && msm_host->pltfm_init_done) {
+> +			if (vreg_info.vmmc_load)
+> +				ret = regulator_set_load(mmc->supply.vmmc,
+> +						vreg_info.vmmc_level[0]);
+> +			ret |= mmc_regulator_set_ocr(mmc, mmc->supply.vmmc,
+> +					mmc->ios.vdd);
+> +			if (ret)
+> +				pr_err("%s: vmmc disabling failed: %d\n",
+> +						mmc_hostname(mmc), ret);
+> +		}
+
+So with the function above, that would be:
+
+		if (msm_host->pltfm_init_done)
+			ret = sdhci_msm_set_vmmc(msm_host, mmc, 0)
+
+> +		if (!IS_ERR(mmc->supply.vqmmc) && msm_host->pltfm_init_done &&
+> +				!ret) {
+> +			if (vreg_info.vqmmc_load)
+> +				ret = regulator_set_load(mmc->supply.vqmmc,
+> +						vreg_info.vqmmc_level[0]);
+> +			ret |= regulator_disable(mmc->supply.vqmmc);
+> +			if (ret)
+> +				pr_err("%s: vqmmc disabling failed: %d\n",
+> +						mmc_hostname(mmc), ret);
+> +		}
+> +		if (!ret) {
+> +			pwr_state = REQ_BUS_OFF;
+> +			io_level = REQ_IO_LOW;
+> +			irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
+> +		} else {
+> +			pr_err("%s: BUS_ON req failed(%d). irq_status: 0x%08x\n",
+> +					mmc_hostname(mmc), ret, irq_status);
+> +			irq_ack |= CORE_PWRCTL_BUS_FAIL;
+> +		}
+>  	}
+>  	/* Handle IO LOW/HIGH */
+>  	if (irq_status & CORE_PWRCTL_IO_LOW) {
+> @@ -1370,6 +1461,15 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>  		irq_ack |= CORE_PWRCTL_IO_SUCCESS;
+>  	}
+>  
+> +	if (io_level && !IS_ERR(mmc->supply.vqmmc) && !pwr_state) {
+> +		ret = mmc_regulator_set_vqmmc(mmc, &mmc->ios);
+> +		if (ret)
+> +			pr_err("%s: IO_level setting failed(%d). signal_voltage: %d, vdd: %d irq_status: 0x%08x\n",
+> +					mmc_hostname(mmc), ret,
+> +					mmc->ios.signal_voltage, mmc->ios.vdd,
+> +					irq_status);
+> +	}
+> +
+>  	/*
+>  	 * The driver has to acknowledge the interrupt, switch voltages and
+>  	 * report back if it succeded or not to this register. The voltage
+> @@ -1415,10 +1515,9 @@ static void sdhci_msm_handle_pwr_irq(struct sdhci_host *host, int irq)
+>  		msm_host->curr_pwr_state = pwr_state;
+>  	if (io_level)
+>  		msm_host->curr_io_level = io_level;
+> -
+>  	pr_debug("%s: %s: Handled IRQ(%d), irq_status=0x%x, ack=0x%x\n",
+> -		mmc_hostname(msm_host->mmc), __func__, irq, irq_status,
+> -		irq_ack);
+> +			mmc_hostname(msm_host->mmc), __func__,
+> +			irq, irq_status, irq_ack);
+
+Seem to be some unrelated whitespace changes here.
+
+>  }
+>  
+>  static irqreturn_t sdhci_msm_pwr_irq(int irq, void *data)
+> @@ -1563,6 +1662,13 @@ static void sdhci_msm_writeb(struct sdhci_host *host, u8 val, int reg)
+>  		sdhci_msm_check_power_status(host, req_type);
+>  }
+>  
+> +static void sdhci_msm_set_power(struct sdhci_host *host, unsigned char mode,
+> +		     unsigned short vdd)
+> +{
+> +	sdhci_set_power_noreg(host, mode, vdd);
+
+Why not just have .set_power = sdhci_set_power_noreg()
+
+> +
+> +}
+> +
+>  static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  {
+>  	struct mmc_host *mmc = msm_host->mmc;
+> @@ -1605,6 +1711,91 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>  }
+>  
+> +static int sdhci_msm_register_vreg(struct sdhci_msm_host *msm_host)
+> +{
+> +	int ret = 0;
+> +
+> +	ret = mmc_regulator_get_supply(msm_host->mmc);
+> +	if (ret)
+> +		return ret;
+> +	if (device_property_read_u32_array(&msm_host->pdev->dev,
+> +			"vmmc-current-level",
+> +			msm_host->vreg_info.vmmc_level, 2) >= 0)
+> +		msm_host->vreg_info.vmmc_load = true;
+> +	if (device_property_read_u32_array(&msm_host->pdev->dev,
+> +			"vqmmc-current-level",
+> +			msm_host->vreg_info.vqmmc_level, 2) >= 0)
+> +		msm_host->vreg_info.vqmmc_load = true;
+> +
+> +	sdhci_msm_set_regulator_caps(msm_host);
+> +
+> +	return 0;
+> +
+> +}
+> +
+> +static int sdhci_msm_start_signal_voltage_switch(struct mmc_host *mmc,
+> +				      struct mmc_ios *ios)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +	u16 ctrl;
+> +
+> +	/*
+> +	 * Signal Voltage Switching is only applicable for Host Controllers
+> +	 * v3.00 and above.
+> +	 */
+> +	if (host->version < SDHCI_SPEC_300)
+> +		return 0;
+> +
+> +	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +
+> +	switch (ios->signal_voltage) {
+> +	case MMC_SIGNAL_VOLTAGE_330:
+> +		if (!(host->flags & SDHCI_SIGNALING_330))
+> +			return -EINVAL;
+> +		/* Set 1.8V Signal Enable in the Host Control2 register to 0 */
+> +		ctrl &= ~SDHCI_CTRL_VDD_180;
+> +		sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
+> +
+> +		/* 3.3V regulator output should be stable within 5 ms */
+> +		ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +		if (!(ctrl & SDHCI_CTRL_VDD_180))
+> +			return 0;
+> +
+> +		pr_warn("%s: 3.3V regulator output did not became stable\n",
+> +			mmc_hostname(mmc));
+> +
+> +		return -EAGAIN;
+> +	case MMC_SIGNAL_VOLTAGE_180:
+> +		if (!(host->flags & SDHCI_SIGNALING_180))
+> +			return -EINVAL;
+> +
+> +		/*
+> +		 * Enable 1.8V Signal Enable in the Host Control2
+> +		 * register
+> +		 */
+> +		ctrl |= SDHCI_CTRL_VDD_180;
+> +		sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
+> +
+> +		/* 1.8V regulator output should be stable within 5 ms */
+> +		ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +		if (ctrl & SDHCI_CTRL_VDD_180)
+> +			return 0;
+> +
+> +		pr_warn("%s: 1.8V regulator output did not became stable\n",
+> +			mmc_hostname(mmc));
+> +
+> +		return -EAGAIN;
+> +	case MMC_SIGNAL_VOLTAGE_120:
+> +		if (!(host->flags & SDHCI_SIGNALING_120))
+> +			return -EINVAL;
+> +		return 0;
+> +	default:
+> +		/* No signal voltage switch required */
+> +		return 0;
+> +	}
+> +
+> +}
+> +
+>  static const struct sdhci_msm_variant_ops mci_var_ops = {
+>  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+> @@ -1644,6 +1835,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  	.set_uhs_signaling = sdhci_msm_set_uhs_signaling,
+>  	.write_w = sdhci_msm_writew,
+>  	.write_b = sdhci_msm_writeb,
+> +	.set_power = sdhci_msm_set_power,
+>  };
+>  
+>  static const struct sdhci_pltfm_data sdhci_msm_pdata = {
+> @@ -1672,6 +1864,8 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  	if (IS_ERR(host))
+>  		return PTR_ERR(host);
+>  
+> +	host->mmc_host_ops.start_signal_voltage_switch =
+> +		sdhci_msm_start_signal_voltage_switch;
+
+Perhaps put this where the other mmc_host_ops assignment is.
+
+>  	host->sdma_boundary = 0;
+>  	pltfm_host = sdhci_priv(host);
+>  	msm_host = sdhci_pltfm_priv(pltfm_host);
+> @@ -1819,6 +2013,10 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  				msm_offset->core_vendor_spec_capabilities0);
+>  	}
+>  
+> +	ret = sdhci_msm_register_vreg(msm_host);
+> +	if (ret == -EPROBE_DEFER)
+
+Why not just:
+
+	if (ret)
+
+> +		goto clk_disable;
+> +
+>  	/*
+>  	 * Power on reset state may trigger power irq if previous status of
+>  	 * PWRCTL was either BUS_ON or IO_HIGH_V. So before enabling pwr irq
+> @@ -1867,7 +2065,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+>  	ret = sdhci_add_host(host);
+>  	if (ret)
+>  		goto pm_runtime_disable;
+> -	sdhci_msm_set_regulator_caps(msm_host);
+> +	msm_host->pltfm_init_done = true;
+>  
+>  	pm_runtime_mark_last_busy(&pdev->dev);
+>  	pm_runtime_put_autosuspend(&pdev->dev);
+> 
