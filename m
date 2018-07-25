@@ -1,93 +1,120 @@
-From: jbrunet@baylibre.com
-Subject: Re: [PATCH 10/14] arm64: dts: meson-axg: add linein codec
-Date: Thu, 26 Jul 2018 00:07:21 +0200
-Message-ID: <90780f5a6b974ee9a4f9f9f2580fc83ef6bdd805.camel@baylibre.com>
-References: <20180724125238.14567-1-jbrunet@baylibre.com>
-         <20180724125238.14567-11-jbrunet@baylibre.com>
-         <CAFBinCAgMhVOpCipV2D_UPqX7z0bcT=qnfRXTWpO7zigzS_TAQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 1/3] thermal: qcom-spmi: Use PMIC thermal stage 2 for
+ critical trip points
+Date: Wed, 25 Jul 2018 16:19:56 -0700
+Message-ID: <CAD=FV=VODGOE=qvJVeLGBs8xXQvbHZu7S9rqSpMY4AetUjd3fQ@mail.gmail.com>
+References: <20180724234636.57137-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCAgMhVOpCipV2D_UPqX7z0bcT=qnfRXTWpO7zigzS_TAQ@mail.gmail.com>
+In-Reply-To: <20180724234636.57137-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>
-Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Collins <collinsd@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-07-25 at 21:18 +0200, Martin Blumenstingl wrote:
-> Hi Jerome,
-> 
-> On Tue, Jul 24, 2018 at 3:09 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > 
-> > Add the es7241 analog to digital converter which is fed by the
-> > lienin jack of the s400
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > index 7489b88f27d7..fb101a1c6660 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > @@ -178,6 +178,16 @@
-> >                         gpios = <&gpio_speaker 2 0>;
-> >                 };
-> >         };
-> > +
-> > +       linein: audio-codec@0 {
-> 
-> there is a unit-address but no reg property - I am wondering if this is allowed?
-> for the regulators we're using regulator-<unique-name> instead of
-> regulator@<unique number>
-> 
-> (this applies to other patches in this series as well)
+Hi,
 
-I did that because I tried to keep node-name generic as described in the DT
-spec. The idea of numbering the nodes (without a reg property) in such a way
-came from :
-Documentation/devicetree/bindings/sound/simple-card.txt:
-=> look at the multi dai link example. I'm doing exactly the same on the axg
-card's dai-links. Nothing new here.
+On Tue, Jul 24, 2018 at 4:46 PM, Matthias Kaehlcke <mka@chromium.org> wrote=
+:
+> +static int qpnp_tm_update_critical_trip_temp(struct qpnp_tm_chip *chip,
+> +                                            int temp)
+> +{
+> +       u8 reg;
+> +       bool disable_s2_shutdown =3D false;
+> +       int ret;
+> +
+> +       WARN_ON(!mutex_is_locked(&chip->lock));
+> +
+> +       /*
+> +        * Default: S2 and S3 shutdown enabled, thresholds at
+> +        * 105C/125C/145C, monitoring at 25Hz
+> +        */
+> +       reg =3D SHUTDOWN_CTRL1_RATE_25HZ;
+> +
+> +       if ((temp =3D=3D THERMAL_TEMP_INVALID) ||
+> +           (temp < STAGE2_THRESHOLD_MIN)) {
+> +               chip->thresh =3D THRESH_MIN;
+> +               goto skip;
+> +       }
+> +
+> +       if (temp <=3D STAGE2_THRESHOLD_MAX) {
+> +               chip->thresh =3D THRESH_MAX -
+> +                       ((STAGE2_THRESHOLD_MAX - temp) /
+> +                        TEMP_THRESH_STEP);
+> +               disable_s2_shutdown =3D true;
+> +       } else {
+> +               chip->thresh =3D THRESH_MAX;
+> +
+> +               if (!IS_ERR(chip->adc))
+> +                       disable_s2_shutdown =3D true;
+> +               else
+> +                       dev_warn(chip->dev,
+> +                                "No ADC is configured and critical tempe=
+rature is above the maximum stage 2 threshold of 140=C2=B0C! Configuring st=
+age 2 shutdown at 140=C2=B0C.\n");
 
-that being said, section 2.2.1 of the DT specs says:
+Putting a non-ASCII character (the degree symbol) in your commit
+message is one thing, but are you sure it's wise to put it in the
+kernel logs?
 
-" If the node has no reg property, the @unit-address must be omitted and the
-node-name alone differentiates the node from other nodes at the same level in
-the tree "
 
-So apparently, this is used but not ok ?
-I could make 'linein' the node-name instead of the label but that wouldn't be
-very generic.
-We could also have dai-link-2 instead dai-link@2 (audio-codec-3 instead of 
-audio-codec@3). I seems to be OK with the spec, but it also looks weird ...
+> +       }
+> +
+> +skip:
+> +       reg |=3D chip->thresh;
+> +       if (disable_s2_shutdown)
+> +               reg |=3D SHUTDOWN_CTRL1_OVERRIDE_S2;
+> +
+> +       ret =3D qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return ret;
 
-Rob, do you have opinion on this ? 
+Simplify the above lines to:
 
-> 
-> > +               #sound-dai-cells = <0>;
-> > +               compatible = "everest,es7241";
-> > +               VDDA-supply = <&vcc_3v3>;
-> > +               VDDP-supply = <&vcc_3v3>;
-> > +               VDDD-supply = <&vcc_3v3>;
-> > +               status = "okay";
-> > +               sound-name-prefix = "Linein";
-> 
-> SPDIF output uses capital letters "SPDIFOUT"
-> I am not familiar with the sound subsystem (thus I'm not sure where
-> this shows up) so I am wondering if the naming should be consistent?
+return qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
 
-This string is used to prefix the name of the different widgets and controls
-provided. It is useful when several devices provides component and control with
-the same names. It happens when several instances of a component are used but
-also with classic names, such as "Playback"
 
-I don't think there is a rule regarding capitalization.
-Some name are all capital in ASoC, some just have the first letter in upper
-case. It doesn't change anything technically, and I personally don't care.
+> @@ -313,12 +441,7 @@ static int qpnp_tm_probe(struct platform_device *pde=
+v)
+>         if (ret < 0)
+>                 return ret;
+>
+> -       chip->tz_dev =3D devm_thermal_zone_of_sensor_register(&pdev->dev,=
+ 0, chip,
+> -                                                       &qpnp_tm_sensor_o=
+ps);
+> -       if (IS_ERR(chip->tz_dev)) {
+> -               dev_err(&pdev->dev, "failed to register sensor\n");
+> -               return PTR_ERR(chip->tz_dev);
+> -       }
+> +       chip->initialized =3D true;
 
-> 
-> Regards
-> Martin
+Should we add "thermal_zone_device_update(chip->tz_dev,
+THERMAL_EVENT_UNSPECIFIED);" here
+
+...also: do we care about any type of locking for chip->initialized?
+Technically we can be running on weakly ordered memory so if
+qpnp_tm_update_temp_no_adc() is running on a different processor then
+possibly it could still keep returning the default temperature for a
+little while.  We could try to analyze whether there's some sort of
+implicit barrier or we could add manual memory barriers, but generally
+I try to avoid that and just do the simple locking...  What about just
+setting chip-Initialized =3D true at the end of qpnp_tm_init() while the
+mutex is still held?
+
+
+I'd also love to hear from someone with more thermal framework
+experience to make sure it's legit to return a default value if
+someone calls us while we're initting.  It seems sane to me but nice
+to confirm it's OK.
+
+
+Overall I like the idea of this patch so hopefully others do too.
+Thanks for sending it out!
+
+
+-Doug
