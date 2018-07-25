@@ -1,95 +1,27 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 08/12] ASoC: wcd9335: add basic controls
-Date: Wed, 25 Jul 2018 17:34:07 +0530
-Message-ID: <20180725120407.GO3661@vkoul-mobl>
-References: <20180723155410.9494-1-srinivas.kandagatla@linaro.org>
- <20180723155410.9494-9-srinivas.kandagatla@linaro.org>
+From: Peter Geis <pgwipeout@gmail.com>
+Subject: Re: [PATCH 00/10] Update the pad autocal procedure
+Date: Wed, 25 Jul 2018 08:06:18 -0400
+Message-ID: <f41a905c-5364-14a5-122b-09cbd1efa2f9@gmail.com>
+References: <1532442591-5640-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180723155410.9494-9-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1532442591-5640-1-git-send-email-avienamo@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+To: Aapo Vienamo <avienamo@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23-07-18, 16:54, Srinivas Kandagatla wrote:
+On 07/24/2018 10:29 AM, Aapo Vienamo wrote:
+> Aapo Vienamo (10):
+> 
+>    mmc: tegra: Enable pad calibration on Tegra210 and Tegra186
 
-> +static int wcd9335_set_compander(struct snd_kcontrol *kc,
-> +				 struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
-> +	struct wcd9335_codec *wcd = dev_get_drvdata(component->dev);
-> +	int comp = ((struct soc_mixer_control *) kc->private_value)->shift;
-> +	int value = ucontrol->value.integer.value[0];
-> +	int sel;
-> +
-> +	wcd->comp_enabled[comp] = value;
-> +	sel = value ? WCD9335_HPH_GAIN_SRC_SEL_COMPANDER :
-> +		WCD9335_HPH_GAIN_SRC_SEL_REGISTER;
-> +
-> +	/* Any specific register configuration for compander */
-> +	switch (comp) {
-> +	case COMPANDER_1:
-> +		/* Set Gain Source Select based on compander enable/disable */
-> +		snd_soc_component_update_bits(component, WCD9335_HPH_L_EN,
-> +				      WCD9335_HPH_GAIN_SRC_SEL_MASK, sel);
-> +		break;
-> +	case COMPANDER_2:
-> +		snd_soc_component_update_bits(component, WCD9335_HPH_R_EN,
-> +				      WCD9335_HPH_GAIN_SRC_SEL_MASK, sel);
-> +		break;
-> +	case COMPANDER_3:
-> +		break;
-> +	case COMPANDER_4:
-> +		break;
-> +	case COMPANDER_5:
-> +		snd_soc_component_update_bits(component, WCD9335_SE_LO_LO3_GAIN,
-> +				      WCD9335_HPH_GAIN_SRC_SEL_MASK, sel);
-> +		break;
-> +	case COMPANDER_6:
-> +		snd_soc_component_update_bits(component, WCD9335_SE_LO_LO4_GAIN,
-> +				      WCD9335_HPH_GAIN_SRC_SEL_MASK, sel);
-> +		break;
-> +	case COMPANDER_7:
-> +		break;
-> +	case COMPANDER_8:
-> +		break;
+Good Morning,
 
-why not do:
-
-        case COMPANDER_3:
-        case COMPANDER_4:
-        case COMPANDER_7:
-        case COMPANDER_8:
-                break;
-
-thereby clubbing all the ones not handled together..
-
-> +static int wcd9335_rx_hph_mode_get(struct snd_kcontrol *kc,
-> +				 struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
-> +	struct wcd9335_codec *wcd = dev_get_drvdata(component->dev);
-> +
-> +	ucontrol->value.integer.value[0] = wcd->hph_mode;
-
-i think this is an enum so shouldn't value.enumerated.item[0] be used?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int wcd9335_rx_hph_mode_put(struct snd_kcontrol *kc,
-> +				 struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_component *component = snd_soc_kcontrol_component(kc);
-> +	struct wcd9335_codec *wcd = dev_get_drvdata(component->dev);
-> +	u32 mode_val;
-> +
-> +	mode_val = ucontrol->value.enumerated.item[0];
-
-yaaay
--- 
-~Vinod
+You seem to be missing patch 10/10.
+Checked 
+https://lore.kernel.org/patchwork/project/lkml/list/?series=360525 to be 
+sure.
