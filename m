@@ -1,64 +1,33 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [linux-sunxi] [PATCH v3 6/9] dt-bindings: phy: add binding for Allwinner USB3 PHY
-Date: Wed, 25 Jul 2018 23:38:06 +0800
-Message-ID: <75A6FEBC-FDCE-459E-93C5-60F4B0E6D44D@aosc.io>
-References: <20180722055739.26464-1-icenowy@aosc.io> <20180722055739.26464-7-icenowy@aosc.io> <CAGb2v65m6AEW=DO-cqLMyjfnaiZudm38hXufJL6LXdOrJqir_g@mail.gmail.com> <20180725153126.GA8350@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 0/3] clk/dts: s2mps11: Fix matching as module
+Date: Wed, 25 Jul 2018 17:55:14 +0200
+Message-ID: <20180725155517.4872-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725153126.GA8350@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
+The DTS patches depend on 1st clock patch.  I will take them through
+samsung-soc tree in next release.
+
+Best regards,
+Krzysztof
 
 
-于 2018年7月25日 GMT+08:00 下午11:31:26, Rob Herring <robh@kernel.org> 写到:
->On Sun, Jul 22, 2018 at 02:10:33PM +0800, Chen-Yu Tsai wrote:
->> On Sun, Jul 22, 2018 at 1:57 PM, Icenowy Zheng <icenowy@aosc.io>
->wrote:
->> > The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
->> > external USB3 pins of the SoC.
->> >
->> > Add a device tree binding for the PHY.
->> >
->> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
->> > ---
->> > Changes in v3:
->> > - Added Chen-Yu's Review tag.
->> >
->> > Rob,
->> > Although you mentioned that the supply is for the port, not the
->phy;
->> > currently in USB situation "powering on the PHY" also indicates
->> > "powering on the port" and nearly all usages of phy-supply is for
->Vbus.
->> >
->> > Maybe we should change the overall phy-supply to satisfy this.
->> 
->> Or maybe change it to vbus-supply, like we have for phy-sun4i-usb,
->> until USB port power sequencing is added. (I remember there were
->> patches for this. What happened?)
->
->Once it is in the binding, we are stuck with it.
->
->Connector bindings have landed. We should add vbus-supply to that. You 
->don't have to have a property in the node associated with a driver. The
+Krzysztof Kozlowski (3):
+  clk: s2mps11: Fix matching when built as module and DT node contains
+    compatible
+  ARM: dts: exynos: Add compatible for s2mps11 clocks node on Exynos542x
+  ARM: dts: exynos: Add compatible for s5m8767 clocks node on Itop Core
 
-How should the phy DT node reference the connector?
+ arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi |  1 +
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts   |  1 +
+ arch/arm/boot/dts/exynos5420-smdk5420.dts       |  1 +
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi   |  1 +
+ drivers/clk/clk-s2mps11.c                       | 30 +++++++++++++++++++++++++
+ 5 files changed, 34 insertions(+)
 
->
->phy driver can walk the tree and get the Vbus supply.
->
->UniPhier has the same issue.
->
->Rob
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+2.14.1
