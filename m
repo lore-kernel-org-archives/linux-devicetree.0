@@ -1,113 +1,123 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v10 2/2] media: V3s: Add support for Allwinner CSI.
-Date: Wed, 25 Jul 2018 14:43:44 +0300
-Message-ID: <20180725114344.eyra7g52xwagqkcv@paasikivi.fi.intel.com>
-References: <1525417745-37964-1-git-send-email-yong.deng@magewell.com>
- <20180626110821.wkal6fcnoncsze6y@valkosipuli.retiisi.org.uk>
- <20180705154802.03604f156709be11892b19c0@magewell.com>
- <20180718095513.4cm77g2iuilvfmd6@paasikivi.fi.intel.com>
- <20180725184224.cab5172f8558162cc74bde9e@magewell.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH V1 1/3] mmc: sdhci: Allow platform controlled voltage
+ switching
+Date: Wed, 25 Jul 2018 14:53:59 +0300
+Message-ID: <33e12e51-4b96-032f-845f-7910d654018c@intel.com>
+References: <1532083566-43215-1-git-send-email-vviswana@codeaurora.org>
+ <1532083566-43215-2-git-send-email-vviswana@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180725184224.cab5172f8558162cc74bde9e@magewell.com>
+In-Reply-To: <1532083566-43215-2-git-send-email-vviswana@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong <yong.deng@magewell.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Jacob Chen <jacob-chen@iotwrt.com>, Yannick Fertre <yannick.fertre@st.com>, Thierry
+To: Vijay Viswanath <vviswana@codeaurora.org>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, evgreen@chromium.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong,
-
-On Wed, Jul 25, 2018 at 06:42:24PM +0800, Yong wrote:
-> Hi Sakari,
+On 20/07/18 13:46, Vijay Viswanath wrote:
+> Some controllers can have internal mechanism to inform the SW that it
+> is ready for voltage switching. For such controllers, changing voltage
+> before the HW is ready can result in various issues.
 > 
-> On Wed, 18 Jul 2018 12:55:14 +0300
-> Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> During setup/cleanup of host, check whether regulator enable/disable
+> was already done by platform driver.
 > 
-> > Hi Yong,
-> > 
-> > On Thu, Jul 05, 2018 at 03:48:02PM +0800, Yong wrote:
-> > > > > +
-> > > > > +/* -----------------------------------------------------------------------------
-> > > > > + * Media Operations
-> > > > > + */
-> > > > > +static int sun6i_video_formats_init(struct sun6i_video *video,
-> > > > > +				    const struct media_pad *remote)
-> > > > > +{
-> > > > > +	struct v4l2_subdev_mbus_code_enum mbus_code = { 0 };
-> > > > > +	struct sun6i_csi *csi = video->csi;
-> > > > > +	struct v4l2_format format;
-> > > > > +	struct v4l2_subdev *subdev;
-> > > > > +	u32 pad;
-> > > > > +	const u32 *pixformats;
-> > > > > +	int pixformat_count = 0;
-> > > > > +	u32 subdev_codes[32]; /* subdev format codes, 32 should be enough */
-> > > > > +	int codes_count = 0;
-> > > > > +	int num_fmts = 0;
-> > > > > +	int i, j;
-> > > > > +
-> > > > > +	pad = remote->index;
-> > > > > +	subdev = media_entity_to_v4l2_subdev(remote->entity);
-> > > > > +	if (subdev == NULL)
-> > > > > +		return -ENXIO;
-> > > > > +
-> > > > > +	/* Get supported pixformats of CSI */
-> > > > > +	pixformat_count = sun6i_csi_get_supported_pixformats(csi, &pixformats);
-> > > > > +	if (pixformat_count <= 0)
-> > > > > +		return -ENXIO;
-> > > > > +
-> > > > > +	/* Get subdev formats codes */
-> > > > > +	mbus_code.pad = pad;
-> > > > > +	mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-> > > > > +	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code, NULL,
-> > > > > +				 &mbus_code)) {
-> > > > 
-> > > > The formats supported by the external sub-device may depend on horizontal
-> > > > and vertical flipping. You shouldn't assume any particular configuration
-> > > > here: instead, bridge drivers generally just need to make sure the formats
-> > > > match in link validation when streaming is started. At least the CSI-2
-> > > > receiver driver and the DMA engine driver (video device) should check the
-> > > > configuration is valid. See e.g. the IPU3 driver:
-> > > > drivers/media/pci/intel/ipu3/ipu3-cio2.c .
-> > > 
-> > > Can mbus_code be added dynamically ?
-> > > The code here only enum the mbus code and get the possible supported
-> > > pairs of pixformat and mbus by SoC. Not try to check if the formats
-> > > (width height ...) is valid or not. The formats validation will be 
-> > > in link validation when streaming is started as per your advise. 
-> > 
-> > The formats that can be enumerated from the sensor here are those settable
-> > using SUBDEV_S_FMT. The enumeration will change on raw sensors if you use
-> > the flipping controls. As the bridge driver implements MC as well as subdev
-> > APIs, generally the sensor configuration is out of scope of this driver
-> > since it's directly configured from the user space.
-> > 
-> > Just check that the pipeline is valid before starting streaming in your
-> > driver.
+> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+> ---
+>  drivers/mmc/host/sdhci.c | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
 > 
-> Sorry. I am still confused.
-> As the CSI driver does not enum the formats supported by sensor.
-> How to get a valid format if I do not want to open the subdev? 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 1c828e0..494a1e2 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -3472,6 +3472,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  	unsigned int override_timeout_clk;
+>  	u32 max_clk;
+>  	int ret;
+> +	bool enable_vqmmc = false;
+>  
+>  	WARN_ON(host == NULL);
+>  	if (host == NULL)
+> @@ -3485,7 +3486,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  	 * the host can take the appropriate action if regulators are not
+>  	 * available.
+>  	 */
+> -	ret = mmc_regulator_get_supply(mmc);
+> +	if (!mmc->supply.vmmc) {
+> +		ret = mmc_regulator_get_supply(mmc);
+> +		enable_vqmmc  = true;
+> +	} else {
+> +		ret = 0;
+> +	}
+>  	if (ret)
+>  		return ret;
 
-For MC-enabled drivers that expose the pipeline, the user is responsible
-for configuring the pipeline.
+Why not
 
-There are bridge drivers that do not expose the pipeline but that will
-exclude the use of e.g. some sensor drivers with those bridge drivers.
+	if (!mmc->supply.vmmc) {
+		ret = mmc_regulator_get_supply(mmc);
+	  	if (ret)
+  			return ret;
+		enable_vqmmc  = true;
+	}
 
-> Many applications still only open /dev/video*.
+>  
+> @@ -3736,7 +3742,10 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  
+>  	/* If vqmmc regulator and no 1.8V signalling, then there's no UHS */
+>  	if (!IS_ERR(mmc->supply.vqmmc)) {
+> -		ret = regulator_enable(mmc->supply.vqmmc);
+> +		if (enable_vqmmc)
+> +			ret = regulator_enable(mmc->supply.vqmmc);
 
-That's true, and this is indeed a known gap:
+Please introduce host->vqmmc_enabled = !ret;
 
-<URL:https://www.spinics.net/lists/linux-media/msg137668.html>
+> +		else
+> +			ret = 0;
+>  		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
+>  						    1950000))
+>  			host->caps1 &= ~(SDHCI_SUPPORT_SDR104 |
+> @@ -3984,7 +3993,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+>  	return 0;
+>  
+>  unreg:
+> -	if (!IS_ERR(mmc->supply.vqmmc))
+> +	if (!IS_ERR(mmc->supply.vqmmc) && enable_vqmmc)
 
-So in other words, there is no solution for that issue right now, but this
-is in no way specific to your driver, and it is known that this needs to be
-addressed.
+And just make this
 
--- 
-Kind regards,
+	if (host->vqmmc_enabled)
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+>  		regulator_disable(mmc->supply.vqmmc);
+>  undma:
+>  	if (host->align_buffer)
+> @@ -4002,7 +4011,8 @@ void sdhci_cleanup_host(struct sdhci_host *host)
+>  {
+>  	struct mmc_host *mmc = host->mmc;
+>  
+> -	if (!IS_ERR(mmc->supply.vqmmc))
+> +	if (!IS_ERR(mmc->supply.vqmmc) &&
+> +			(regulator_is_enabled(mmc->supply.vqmmc) > 0))
+
+	if (host->vqmmc_enabled)
+
+>  		regulator_disable(mmc->supply.vqmmc);
+>  
+>  	if (host->align_buffer)
+> @@ -4135,7 +4145,8 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
+>  
+>  	tasklet_kill(&host->finish_tasklet);
+>  
+> -	if (!IS_ERR(mmc->supply.vqmmc))
+> +	if (!IS_ERR(mmc->supply.vqmmc) &&
+> +			(regulator_is_enabled(mmc->supply.vqmmc) > 0))
+
+	if (host->vqmmc_enabled)
+
+>  		regulator_disable(mmc->supply.vqmmc);
+>  
+>  	if (host->align_buffer)
+> 
