@@ -1,93 +1,64 @@
-From: djw@t-chip.com.cn
-Subject: Re: [PATCH v0] arm64: dts: rockchip: add support for ROC-RK3399-PC board
-Date: Wed, 25 Jul 2018 12:01:43 +0800
-Message-ID: <87effsgdzs.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
-References: <1532161826-2537-1-git-send-email-djw@t-chip.com.cn>
-        <139327780.KNaNigg5Hs@phil>
-        <CAFqH_52baP9yt35yfAdU5wk8DiK67_etPALsmb5K1JPmnW_kqQ@mail.gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 1/4] treewide: convert ISO_8859-1 text comments to utf-8
+Date: Wed, 25 Jul 2018 14:20:25 +1000
+Message-ID: <87o9ewx7xy.fsf@concordia.ellerman.id.au>
+References: <20180724111600.4158975-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFqH_52baP9yt35yfAdU5wk8DiK67_etPALsmb5K1JPmnW_kqQ@mail.gmail.com>
-        (Enric Balletbo Serra's message of "Tue, 24 Jul 2018 11:53:40 +0200")
+In-Reply-To: <20180724111600.4158975-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, djw@t-chip.com.cn, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, zxf@t-chip.com.cn, Masahiro Yamada <yamada.masahiro@socionext.com>, ezequiel@collabora.com, xypron.glpk@gmx.de, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, jacob-chen@iotwrt.com, klaus.goger@theobroma-systems.com, jagan@amarulasolutions.com, Catalin Marinas <catalin.marinas@arm.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, jay.xu@rock-chips.comLinux ARM <linux->
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Joe Perches <joe@perches.com>, Arnd Bergmann <arnd@arndb.de>, Samuel Ortiz <sameo@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org
 List-Id: devicetree@vger.kernel.org
 
-Enric Balletbo Serra <eballetbo@gmail.com> writes:
+Arnd Bergmann <arnd@arndb.de> writes:
 
-> Hi Levin,
+> Almost all files in the kernel are either plain text or UTF-8
+> encoded. A couple however are ISO_8859-1, usually just a few
+> characters in a C comments, for historic reasons.
 >
-> Missatge de Heiko Stuebner <heiko@sntech.de> del dia dt., 24 de jul.
-> 2018 a les 11:29:
->>
->> Hi Levin,
->>
->> Am Samstag, 21. Juli 2018, 10:30:26 CEST schrieb djw@t-chip.com.cn:
->> > From: Levin Du <djw@t-chip.com.cn>
->> >
->> > ROC-RK3399-PC is the first power efficient 4GB DDR4 single board
->>
->> maybe "is a power efficient" instead of "the first" ;-)
->>
->> [...]
->>
->> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
->> > new file mode 100644
->> > index 0000000..207f2e3
->> > --- /dev/null
->> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
->> > @@ -0,0 +1,717 @@
->> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> > +/*
->> > + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
->> > + */
->> > +
->> > +/dts-v1/;
->> > +#include <dt-bindings/pwm/pwm.h>
->> > +#include "rk3399.dtsi"
->> > +#include "rk3399-opp.dtsi"
->> > +
->> > +/ {
->> > +     model = "Firefly ROC-RK3399-PC Board";
->> > +     compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
->> > +
->> > +     chosen {
->> > +             bootargs = "earlycon=uart8250,mmio32,0xff1a0000 swiotlb=1";
->>
->> I don't think we want to hard-code linux bootargs in the generic devicetree
->>
->> > +             stdout-path = "serial2:1500000n8";
->> > +     };
->> > +
->> > +     backlight: backlight {
->> > +             compatible = "pwm-backlight";
->> > +             enable-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
->> > +             pwms = <&pwm0 0 25000 0>;
->> > +             brightness-levels = <
->> > +                       0   1   2   3   4   5   6   7
->>
->> As Rob noted in the px30 evb patch, there is now a property helping
->> to drop these long lists of brightness levels, see
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=1e5e7cc794b5a332c23216dade0a2e937d694b7f
+> This converts them all to UTF-8 for consistency.
 >
-> Adding to the Heiko information. Did you try to just remove brightness-levels?
-> Without this property, the driver computes a default table with the
-> brightness levels filled with the numbers provided by the CIE 1931
-> algorithm. That algorithm is used to dim a led for human perception.
->
-> Note that the patches needed did not land yet, are in linux-next, and
-> you will also be interested in apply this patch [1].
->
-> [1] https://lkml.org/lkml/2018/7/24/116
->
->
-> Best regards,
->  Enric
->
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+...
+>  drivers/crypto/vmx/ghashp8-ppc.pl             |  12 +-
+...
+> diff --git a/drivers/crypto/vmx/ghashp8-ppc.pl b/drivers/crypto/vmx/ghashp8-ppc.pl
+> index f746af271460..38b06503ede0 100644
+> --- a/drivers/crypto/vmx/ghashp8-ppc.pl
+> +++ b/drivers/crypto/vmx/ghashp8-ppc.pl
+> @@ -129,9 +129,9 @@ $code=<<___;
+>  	 le?vperm	$IN,$IN,$IN,$lemask
+>  	vxor		$zero,$zero,$zero
+>  
+> -	vpmsumd		$Xl,$IN,$Hl		# H.loXi.lo
+> -	vpmsumd		$Xm,$IN,$H		# H.hiXi.lo+H.loXi.hi
+> -	vpmsumd		$Xh,$IN,$Hh		# H.hiXi.hi
+> +	vpmsumd		$Xl,$IN,$Hl		# H.lo·Xi.lo
+> +	vpmsumd		$Xm,$IN,$H		# H.hi·Xi.lo+H.lo·Xi.hi
+> +	vpmsumd		$Xh,$IN,$Hh		# H.hi·Xi.hi
+>  
+>  	vpmsumd		$t2,$Xl,$xC2		# 1st phase
+>  
+> @@ -187,11 +187,11 @@ $code=<<___;
+>  .align	5
+>  Loop:
+>  	 subic		$len,$len,16
+> -	vpmsumd		$Xl,$IN,$Hl		# H.loXi.lo
+> +	vpmsumd		$Xl,$IN,$Hl		# H.lo·Xi.lo
+>  	 subfe.		r0,r0,r0		# borrow?-1:0
+> -	vpmsumd		$Xm,$IN,$H		# H.hiXi.lo+H.loXi.hi
+> +	vpmsumd		$Xm,$IN,$H		# H.hi·Xi.lo+H.lo·Xi.hi
+>  	 and		r0,r0,$len
+> -	vpmsumd		$Xh,$IN,$Hh		# H.hiXi.hi
+> +	vpmsumd		$Xh,$IN,$Hh		# H.hi·Xi.hi
+>  	 add		$inp,$inp,r0
+>  
+>  	vpmsumd		$t2,$Xl,$xC2		# 1st phase
 
-Thanks you for the note, Enric. I'll test that later.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Regards,
-Levin
+cheers
