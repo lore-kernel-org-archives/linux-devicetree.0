@@ -1,44 +1,41 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 00/14] arm64: dts: meson-axg: add audio support
-Date: Wed, 25 Jul 2018 23:26:27 +0200
-Message-ID: <CAFBinCB_fULnmrpyzNwnfAiL9QGco_6QW957Wroj8o6ZhNwmWA@mail.gmail.com>
-References: <20180724125238.14567-1-jbrunet@baylibre.com> <CAFBinCBh-b=ie4hBMWdHG8KoLQ7qiRfo8vXfJ1PRcN4UPtg+uA@mail.gmail.com>
- <705e31bf0d978b7d356b2f077179ab0e3db6f092.camel@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH 2/6] RISC-V: remove INTERRUPT_CAUSE_* defines from asm/irq.h
+Date: Wed, 25 Jul 2018 14:44:35 -0700 (PDT)
+Message-ID: <mhng-a0410fc4-7f2e-4818-acf0-6a7616ba0010@palmer-si-x1c4>
+References: <20180725093649.32332-3-hch@lst.de>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <705e31bf0d978b7d356b2f077179ab0e3db6f092.camel@baylibre.com>
+In-Reply-To: <20180725093649.32332-3-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jbrunet@baylibre.com
-Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
-
-On Wed, Jul 25, 2018 at 11:19 PM <jbrunet@baylibre.com> wrote:
+On Wed, 25 Jul 2018 02:36:45 PDT (-0700), Christoph Hellwig wrote:
+> These are only of use to the local irq controller driver, so add them in
+> that driver implementation instead, which will be submitted soon.
 >
-> On Wed, 2018-07-25 at 21:11 +0200, Martin Blumenstingl wrote:
-> > nit-pick: one patch uses "arm64: dts: meson-axg: s400" in the subject
-> > while other patches that are touching the s400 board aren't
-> > if you have to re-send this series: can you please use the "arm64:
-> > dts: meson-axg: s400:" prefix for all patches touching the s400 board?
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/include/asm/irq.h | 4 ----
+>  1 file changed, 4 deletions(-)
 >
-> hum, do we really have such rule, or do you think we should add one ?
-looking at the git history in arch/arm64/boot/dts/amlogic: it seems
-that we don't have a rule yet, even though some (some of
-your's/Neil's/my) patches were using that naming schema in the past
-
-> Kevin, do you have opinion ?
+> diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
+> index 4dee9d4c13c0..93eb75eac4ff 100644
+> --- a/arch/riscv/include/asm/irq.h
+> +++ b/arch/riscv/include/asm/irq.h
+> @@ -17,10 +17,6 @@
 >
-> Not that I really mind either way, but prefixes rules are usually there to help
-> maintainer filter the patches. Will such rule help in any way ?
-maybe it's just a problem of a false initial impression
-I read "arm64: dts: meson-axg: add usb power regulator" in the
-cover-letter and came to the conclusion that this patch must be wrong
-since meson-axg.dtsi should not have any regulators (unless they're
-built into the SoC). only when looking at the patch itself I realized
-that it's fine because it patches the s400.dts
+>  #define NR_IRQS         0
+>
+> -#define INTERRUPT_CAUSE_SOFTWARE    1
+> -#define INTERRUPT_CAUSE_TIMER       5
+> -#define INTERRUPT_CAUSE_EXTERNAL    9
+> -
+>  void riscv_timer_interrupt(void);
+>
+>  #include <asm-generic/irq.h>
 
-
-Regards
-Martin
+Acked-by: Palmer Dabbelt <palmer@sifive.com>
