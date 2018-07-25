@@ -1,59 +1,159 @@
-From: thor.thayer@linux.intel.com
-Subject: [PATCH 2/2] iommu/arm-smmu: Add support for Stratix10 smmu-v2 variant
-Date: Wed, 25 Jul 2018 13:24:37 -0500
-Message-ID: <1532543077-8933-3-git-send-email-thor.thayer@linux.intel.com>
-References: <1532543077-8933-1-git-send-email-thor.thayer@linux.intel.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v10 7/7] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth chip wcn3990
+Date: Wed, 25 Jul 2018 11:31:44 -0700
+Message-ID: <20180725183144.GQ129942@google.com>
+References: <20180720133243.6851-1-bgodavar@codeaurora.org>
+ <20180720133243.6851-8-bgodavar@codeaurora.org>
+ <20180723195441.GM129942@google.com>
+ <81c324ee9104508cf5c862de3f697e4c@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532543077-8933-1-git-send-email-thor.thayer@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <81c324ee9104508cf5c862de3f697e4c@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, will.deacon@arm.com, robin.murphy@arm.com
-Cc: iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thor Thayer <thor.thayer@linux.intel.com>
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On Tue, Jul 24, 2018 at 09:25:16PM +0530, Balakrishna Godavarthi wrote:
+> Hi Matthias,
+> 
+> On 2018-07-24 01:24, Matthias Kaehlcke wrote:
+> > On Fri, Jul 20, 2018 at 07:02:43PM +0530, Balakrishna Godavarthi wrote:
+> > > +	 * sometimes we will face communication synchronization issues,
+> > > +	 * like reading version command timeouts. In which HCI_SETUP fails,
+> > > +	 * to overcome these issues, we try to communicate by performing an
+> > > +	 * COLD power OFF and ON.
+> > > +	 */
+> > > +	for (i = 1; i <= 10 && ret; i++) {
+> > 
+> > Is it really that bad that more than say 3 iterations might be needed?
+> > 
+> [Bala]: will restrict to 3 iterations.
 
-Add the clocks required for the Stratix10 SMMU. Define the
-clock names in the SMMU name array and add DT compatible
-matching element.
+Is 3x expected to be enough to 'guarantee' as successful
+initialization? Just wondered about the 10x since it suddendly changed
+from 1x. What is the failure rate without retries?
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
-This patch is dependent on the patch series
-"iommu/arm-smmu: Add runtime pm/sleep support"
-(https://patchwork.ozlabs.org/cover/946160/)
----
- drivers/iommu/arm-smmu.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Could you provide more information about the 'communication
+synchronization issues'? Is the root cause understood? Maybe there is
+a better way than retries.
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 7c69736a30f8..d46216b34a77 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1983,6 +1983,17 @@ static const struct arm_smmu_match_data qcom_smmuv2 = {
- 	.num_clks = ARRAY_SIZE(qcom_smmuv2_clks),
- };
- 
-+static const char * const altr_smmuv2_clks[] = {
-+	"masters"
-+};
-+
-+static const struct arm_smmu_match_data altr_smmuv2 = {
-+	.version = ARM_SMMU_V2,
-+	.model = ARM_MMU500,
-+	.clks = altr_smmuv2_clks,
-+	.num_clks = ARRAY_SIZE(altr_smmuv2_clks),
-+};
-+
- static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,smmu-v1", .data = &smmu_generic_v1 },
- 	{ .compatible = "arm,smmu-v2", .data = &smmu_generic_v2 },
-@@ -1991,6 +2002,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
- 	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
- 	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
-+	{ .compatible = "altr,smmu-v2", .data = &altr_smmuv2 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
--- 
-2.7.4
+> > > +static void qca_regulator_get_current(struct device *dev,
+> > > +				      struct qca_vreg *vregs)
+> > > +{
+> > > +	char prop_name[32]; /* 32 is max size of property name */
+> > > +
+> > > +	/* We have different platforms where the load value is controlled
+> > > +	 * via PMIC controllers. In such cases load required to power ON
+> > > +	 * Bluetooth chips are defined in the PMIC. We have option to set
+> > > +	 * operation mode like high or low power modes.
+> > > +	 * We do have some platforms where driver need to enable the load
+> > > for
+> > > +	 * WCN3990. Based on the current property value defined for the
+> > > +	 * regulators, driver will decide the regulator output load.
+> > > +	 * If the current property for the regulator is defined in the dts
+> > > +	 * we will read from dts tree, else from the default load values.
+> > > +	 */
+> > 
+> > Let's make sure we all really understand why this is needed. You
+> > mentioned RPMh regulators earlier and said a special value of 1uA
+> > would be needed to enable high power mode. Later when I pointed to the
+> > RPMh regulator code you agreed that this special value wouldn't make
+> > any difference.
+> > 
+> > Now the defaults are higher:
+> > 
+> [Bala]: today i got the info from the power teams here, currently in the
+> downstream what we have is different wrt to the
+>         patch "https://patchwork.kernel.org/patch/10524299/" by David
+> Collins.
+>         prior to his patch we have different architecture where 1uA will
+> change the mode to HPM mode.
+>         which is not valid, so 1uA will not work any more. we have go with
+> actual current values.
+
+Ok, in any case downstream drivers shouldn't impact the design of
+upstream drivers. If there are incompatibilities the BT driver needs
+to be hacked in the downstream tree.
+
+>         coming back to reading current values from dts. we have reason for
+> it.
+>         let us assume that later stages of wcn3990 if we have less current
+> values than default values.
+>         instead of updating the driver again, we can assign the current no
+> in the dts, which we will read.
+> 
+>         This is how it works.
+> 
+>         if(current value for the reg is declared in dts tree)
+>               consider the current value from the dts.
+>         else
+>            go with default value.
+> 
+>       pls let me know if you any queries.
+
+If I understand correctly you describe a hypothetical situation of a
+future wcn3990 variant having lower power requirements. I'd say let's
+deal with this when these chips actually exist and need to be
+supported by Linux. As of now it seems there is no need for current
+limits in the DT.
+
+> > > +	if (device_property_read_bool(dev, prop_name))
+> > > +		device_property_read_u32(dev, prop_name, &vregs->load_uA);
+> > 
+> > Why device_property_read_bool()?
+> > 
+> [Bala]: if the current prop is present we read from dts. else we go with
+> default current no's.
+>         if block  is used to check whether the property is present in dts or
+> not.
+>         this is required because before calling _regualtor_get_current() we
+> hold the default current in the vregs[].
+>         if we skip the read bool here, if the current property is not
+> present then the function call of device_property_read_u32() will assign
+> zero the vregs[].
+>         so we miss the default current values.
+> 
+>         this how it work if we miss read_bool check
+> 
+>         //vregs hold default current
+>          device_property_read_u32(dev, prop_name, &vregs->load_uA);
+>          the above will read the current property value from dts store in
+> the vregs.. if the property is missing in dts it will store zero.
+
+Where does of_property_read_u32() set the value to zero when the
+property does not exist?
+
+A simple test in a probe function:
+
+{
+	u32 v = 123;
+	of_property_read_u32(node, "no-such-property", &v);
+	printk("DBG: v = %d\n", v);
+}
+
+[    7.598366] DBG: v = 123
+
+And looking at the code, of_property_read_u32() ends up in a call to
+of_property_read_variable_u32_array():
+
+int of_property_read_variable_u32_array(const struct device_node *np,
+			       const char *propname, u32 *out_values,
+			       size_t sz_min, size_t sz_max)
+{
+	size_t sz, count;
+	const __be32 *val = of_find_property_value_of_size(np, propname,
+						(sz_min * sizeof(*out_values)),
+						(sz_max * sizeof(*out_values)),
+						&sz);
+
+	if (IS_ERR(val))
+		return PTR_ERR(val);
+
+	...
+}
+
+i.e. 'out_values' is not modified when the property does not exit.
