@@ -1,35 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 5/7] dt-bindings: Add Tegra PMC pad configuration
- bindings
-Date: Wed, 25 Jul 2018 08:50:49 -0600
-Message-ID: <20180725145049.GA2407@rob-hp-laptop>
-References: <1532084355-31482-1-git-send-email-avienamo@nvidia.com>
- <1532084355-31482-6-git-send-email-avienamo@nvidia.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add RWDT support
+Date: Wed, 25 Jul 2018 18:08:21 +0300
+Message-ID: <8f72716f-75b4-e8c0-3a77-9d709959e45d@cogentembedded.com>
+References: <20180724114552.aybrijeonsj2tmcw@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1532084355-31482-6-git-send-email-avienamo@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180724114552.aybrijeonsj2tmcw@verge.net.au>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2018 at 01:59:13PM +0300, Aapo Vienamo wrote:
-> Document the pinctrl bindings used by the PMC driver for performing pad
-> configuration. Both nvidia,tegra186-pmc.txt and nvidia,tegra20-pmc.txt
-> are modified as they both cover SoC generations for which these bindings
-> apply.
-> 
-> Add a header defining Tegra PMC pad voltage configurations.
-> 
-> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  92 ++++++++++++++++++
->  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 103 +++++++++++++++++++++
->  include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h |  18 ++++
->  3 files changed, 213 insertions(+)
->  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+Hello!
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 07/24/2018 02:45 PM, Simon Horman wrote:
+
+[...]
+> On Tue, Jul 24, 2018 at 09:01:59AM +0200, Geert Uytterhoeven wrote:
+>> On Fri, Jul 20, 2018 at 9:21 PM Sergei Shtylyov
+>> <sergei.shtylyov@cogentembedded.com> wrote:
+>>> Describe RWDT in the R8A77980 SoC device tree.
+>>>
+>>> Enable RWDT on the Condor and V3H Starter Kit boards.
+>>>
+>>> Based on the original (and large) patch by Vladimir Barinov.
+>>>
+>>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Thanks, applied for v4.20.
+
+   Sorry, still not seeing any 'devel' branch updates... forgot to push?
+
+MBR, Sergei
