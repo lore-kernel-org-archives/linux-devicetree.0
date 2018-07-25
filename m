@@ -1,69 +1,50 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 3/6] irqchip: RISC-V Local Interrupt Controller Driver
-Date: Wed, 25 Jul 2018 10:54:41 -0700
-Message-ID: <afef2fc3-de3a-66f5-36c7-7341931b8a29@wdc.com>
-References: <20180725093649.32332-1-hch@lst.de>
- <20180725093649.32332-4-hch@lst.de>
- <c3ccb953-cd75-4a37-636a-ca643602053a@arm.com>
- <20180725112457.GA24502@lst.de>
- <53518395-83bb-9c2f-bd96-287cc83a1c63@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V1 2/3] Documentation: sdhci-msm: Add entries for passing
+ load values
+Date: Wed, 25 Jul 2018 11:55:22 -0600
+Message-ID: <20180725175522.GA10185@rob-hp-laptop>
+References: <1532083566-43215-1-git-send-email-vviswana@codeaurora.org>
+ <1532083566-43215-3-git-send-email-vviswana@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53518395-83bb-9c2f-bd96-287cc83a1c63@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1532083566-43215-3-git-send-email-vviswana@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Christoph Hellwig <hch@lst.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "palmer@sifive.com" <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, "shorne@gmail.com" <shorne@gmail.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+To: Vijay Viswanath <vviswana@codeaurora.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, evgreen@chromium.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/25/18 4:37 AM, Marc Zyngier wrote:
-> On 25/07/18 12:24, Christoph Hellwig wrote:
->> On Wed, Jul 25, 2018 at 12:18:39PM +0100, Marc Zyngier wrote:
->>> This feels odd. It means that you cannot have the following sequence:
->>>
->>> 	local_irq_disable();
->>> 	enable_irq(x); // where x is owned by a remote hart
->>>
->>> as smp_call_function_single() requires interrupts to be enabled.
->>>
->>> More fundamentally, why are you trying to make these interrupts look
->>> global while they aren't? arm/arm64 have similar restrictions with GICv2
->>> and earlier, and treats these interrupts as per-cpu.
->>>
->>> Given that the drivers that deal with drivers connected to the per-hart
->>> irqchip are themselves likely to be aware of the per-cpu aspect, it
->>> would make sense to align things (we've been through that same
->>> discussion about the clocksource driver a few weeks back).
->>
->> Right now the only direct consumers are said clocksource, the PLIC
->> driver later in this series and the RISC-V arch IPI code.  None of them
->> is going to do a manual enable_irq, so I guess the remote case of the
->> code is simply dead code.  I'll take a look at converting them to
->> per-cpu.  I guess the GICv2 driver is the best template?
-> 
-> I think you can do a much better job than the GICv2 driver ;-). You have
-> the chance of a clean slate, and no legacy (or ACPI) junk to deal with!
-> 
-> I think this is just a matter of moving the HLIC declaration in DT to be
-> outside of the cpu nodes (you just have a single HLIC node that is valid
-> for all the CPUs in the system), and making the interrupts percpu_devid
-> in your mapping function (see gic_irq_domain_map for reference).
-> 
+On Fri, Jul 20, 2018 at 04:16:05PM +0530, Vijay Viswanath wrote:
+> The load a particular sdhc controller should request from a regulator
+> is device specific and hence each device should individually vote for
+> the required load.
 
-If I am not wrong, we need to change the interrupt-extended property in 
-PLIC DT entry as well. Currently, there are 5 entries corresponding to 
-individual HLIC. I was also planning to start working on converting HLIC 
-to per-cpu but it got delayed because of travel.
+"dt-bindings: mmc: ..." for the subject.
 
-Christoph: I am not sure if you have access to HighFive Unleashed board. 
-If not I would be happy to test it on the board whenever your patches 
-are ready.
+> 
+> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 502b3b8..ee34f28 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -26,6 +26,11 @@ Required properties:
+>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>  
+> +Optional properties:
+> +- <supply>-current-level - specifies load levels for supply during BUS_ON
+> +			and BUS_OFF states in power irq. Should be specified in
+> +			pairs (lpm, hpm), for BUS_OFF and BUS_ON respectively.
+> +			Units uA.
 
-Regards,
-Atish
-> Thanks,
-> 
-> 	M.
-> 
+This should probably be a common regulator property (or maybe one exists 
+already).
+
+It is missing vendor prefix and unit suffix as-is.
+
+Rob
