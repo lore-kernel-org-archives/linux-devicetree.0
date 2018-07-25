@@ -1,102 +1,38 @@
-Return-Path: <SRS0=r8rx=KJ=nxp.com=wen.he_1@kernel.org>
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v7 2/7] dmaengine: fsldma: Adding macro FSL_DMA_IN/OUT implement for ARM platform
-Date: Wed, 25 Jul 2018 19:29:14 +0800
-Message-Id: <20180725112919.31340-2-wen.he_1@nxp.com>
-In-Reply-To: <20180725112919.31340-1-wen.he_1@nxp.com>
-References: <20180725112919.31340-1-wen.he_1@nxp.com>
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 25 Jul 2018 13:07:27 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] DT: irqchip: renesas-irqc: document R8A77980 support
+Message-ID: <20180725190727.GA26363@rob-hp-laptop>
+References: <71e2be51-5699-1b26-c2a1-fca7897817d1@cogentembedded.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71e2be51-5699-1b26-c2a1-fca7897817d1@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch add the macro FSL_DMA_IN/OUT implement for ARM platform.
+On Tue, Jul 17, 2018 at 10:23:17PM +0300, Sergei Shtylyov wrote:
+> Document R-Car V3H (AKA R8A77980) SoC bindings.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+>  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt |    1 +
+>  1 file changed, 1 insertion(+)
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
- drivers/dma/fsldma.h |   57 +++++++++++++++++++++++++++++++++----------------
- 1 files changed, 38 insertions(+), 19 deletions(-)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 982845b..1dc64c9 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -196,39 +196,58 @@ struct fsldma_chan {
- #define to_fsl_desc(lh) container_of(lh, struct fsl_desc_sw, node)
- #define tx_to_fsl_desc(tx) container_of(tx, struct fsl_desc_sw, async_tx)
- 
-+#ifdef	CONFIG_PPC
-+#define fsl_ioread32(p)		in_le32(p)
-+#define fsl_ioread32be(p)	in_be32(p)
-+#define fsl_iowrite32(v, p)	out_le32(p, v)
-+#define fsl_iowrite32be(v, p)	out_be32(p, v)
-+
- #ifndef __powerpc64__
--static u64 in_be64(const u64 __iomem *addr)
-+static u64 fsl_ioread64(const u64 __iomem *addr)
- {
--	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
--		(in_be32((u32 __iomem *)addr + 1));
-+	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
-+		(in_le32((u32 __iomem *)addr));
- }
- 
--static void out_be64(u64 __iomem *addr, u64 val)
-+static void fsl_iowrite64(u64 val, u64 __iomem *addr)
- {
--	out_be32((u32 __iomem *)addr, val >> 32);
--	out_be32((u32 __iomem *)addr + 1, (u32)val);
-+	out_le32((u32 __iomem *)addr + 1, val >> 32);
-+	out_le32((u32 __iomem *)addr, (u32)val);
- }
- 
--/* There is no asm instructions for 64 bits reverse loads and stores */
--static u64 in_le64(const u64 __iomem *addr)
-+static u64 fsl_ioread64be(const u64 __iomem *addr)
- {
--	return ((u64)in_le32((u32 __iomem *)addr + 1) << 32) |
--		(in_le32((u32 __iomem *)addr));
-+	return ((u64)in_be32((u32 __iomem *)addr) << 32) |
-+		(in_be32((u32 __iomem *)addr + 1));
- }
- 
--static void out_le64(u64 __iomem *addr, u64 val)
-+static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
- {
--	out_le32((u32 __iomem *)addr + 1, val >> 32);
--	out_le32((u32 __iomem *)addr, (u32)val);
-+	out_be32((u32 __iomem *)addr, val >> 32);
-+	out_be32((u32 __iomem *)addr + 1, (u32)val);
- }
- #endif
-+#endif
- 
--#define FSL_DMA_IN(fsl_chan, addr, width)				\
--		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
--			in_be##width(addr) : in_le##width(addr))
--#define FSL_DMA_OUT(fsl_chan, addr, val, width)			\
--		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
--			out_be##width(addr, val) : out_le##width(addr, val))
-+#if defined(CONFIG_ARM64) || defined(CONFIG_ARM)
-+#define fsl_ioread32(p)		ioread32(p)
-+#define fsl_ioread32be(p)	ioread32be(p)
-+#define fsl_iowrite32(v, p)	iowrite32(v, p)
-+#define fsl_iowrite32be(v, p)	iowrite32be(v, p)
-+#define fsl_ioread64(p)		ioread64(p)
-+#define fsl_ioread64be(p)	ioread64be(p)
-+#define fsl_iowrite64(v, p)	iowrite64(v, p)
-+#define fsl_iowrite64be(v, p)	iowrite64be(v, p)
-+#endif
-+
-+#define FSL_DMA_IN(fsl_dma, addr, width)			\
-+		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?	\
-+			fsl_ioread##width##be(addr) : fsl_ioread##width(addr))
-+
-+#define FSL_DMA_OUT(fsl_dma, addr, val, width)			\
-+		(((fsl_dma)->feature & FSL_DMA_BIG_ENDIAN) ?	\
-+			fsl_iowrite##width##be(val, addr) : fsl_iowrite	\
-+		##width(val, addr))
- 
- #define DMA_TO_CPU(fsl_chan, d, width)					\
- 		(((fsl_chan)->feature & FSL_DMA_BIG_ENDIAN) ?		\
--- 
-1.7.1
+> 
+> Index: renesas/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+> ===================================================================
+> --- renesas.orig/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+> +++ renesas/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+> @@ -16,6 +16,7 @@ Required properties:
+>      - "renesas,intc-ex-r8a7796" (R-Car M3-W)
+>      - "renesas,intc-ex-r8a77965" (R-Car M3-N)
+>      - "renesas,intc-ex-r8a77970" (R-Car V3M)
+> +    - "renesas,intc-ex-r8a77980" (R-Car V3H)
+>      - "renesas,intc-ex-r8a77995" (R-Car D3)
+>  - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
+>    interrupts.txt in this directory
