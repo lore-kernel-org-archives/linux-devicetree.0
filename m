@@ -1,118 +1,194 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v0] arm64: dts: rockchip: add support for ROC-RK3399-PC board
-Date: Wed, 25 Jul 2018 12:02:34 +0200
-Message-ID: <2859712.DISUneb7pN@phil>
-References: <1532161826-2537-1-git-send-email-djw@t-chip.com.cn> <139327780.KNaNigg5Hs@phil> <87in54ge68.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 0/8] Cedrus driver for the Allwinner Video
+ Engine, using media requests
+Date: Wed, 25 Jul 2018 12:02:48 +0200
+Message-ID: <20180725100256.22833-1-paul.kocialkowski@bootlin.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87in54ge68.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
-Sender: linux-kernel-owner@vger.kernel.org
-To: djw@t-chip.com.cn
-Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>, Shawn Lin <shawn.lin@rock-chips.com>, Ezequiel Garcia <ezequiel@collabora.com>, Jagan Teki <jagan@amarulasolutions.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBMEW4HNAKGQEHFEY4ZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Levin,
+This is the sixth iteration of the updated Cedrus driver,
+that supports the Video Engine found in most Allwinner SoCs, starting
+with the A10. It was tested on the A13, A20, A33 and H3.
 
-Am Mittwoch, 25. Juli 2018, 05:57:51 CEST schrieb djw@t-chip.com.cn:
-> >> +	vcc_vbus_typec0: vcc-vbus-typec0 {
-> >> +		compatible = "regulator-fixed";
-> >> +		regulator-name = "vcc_vbus_typec0";
-> >> +		regulator-always-on;
-> >> +		regulator-boot-on;
-> >> +		regulator-min-microvolt = <5000000>;
-> >> +		regulator-max-microvolt = <5000000>;
-> >> +	};
-> >> +
-> >> +	vcc12v_sys: mp8859-dcdc1 {
-> >
-> > The mp8859 seems to be an i2c-device, as also shown by the
-> > nearly empty mp8859 entry below, so shouldn't this regulator
-> > be defined there?
-> 
-> Question here. Since mp8859 driver is not mainlined yet. Shall I leave
-> the regulator here (mp8859 defaults to output 5V) and remove the
-> mp8859 from the i2c?
+The initial version of this driver[0] was originally written and
+submitted by Florent Revest using a previous version of the request API
+that is necessary to provide coherency between controls and the buffers
+they apply to.
 
-Yep, sounds good ... also please add a comment of sorts that this is
-temporary until the mp8859 has its own dt-binding.
+The driver was adapted to use the latest version of the media request
+API[1], as submitted by Hand Verkuil. Media request API support is a
+hard requirement for the Cedrus driver.
 
-> > [...]
-> >
-> >> +	vcc_hub_en: vcc_hub_en-regulator {
-> >> +		compatible = "regulator-fixed";
-> >> +		enable-active-high;
-> >> +		gpio = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
-> >> +		pinctrl-names = "default";
-> >> +		pinctrl-0 = <&hub_rst>;
-> >> +		regulator-name = "vcc_hub_en";
-> >> +		regulator-always-on;
-> >
-> > missing vin-supply
-> This just comes in need of setting GPIO2_A4 (HUB_RST) to high 
-> This dummy regulator should be removed.
-> 
-> I modify the pinctrl of hub_rst to output high:
-> 
->                hub_rst: hub-rst {                                                                                                                 
->                         rockchip,pins = <2 RK_PA4 RK_FUNC_GPIO &pcfg_output_high>;                                                                 
->                };                                                                                                                                 
-> 
-> and add hub_rst to the pinctrl-0 of vcc5v0_host:
-> 
->     vcc5v0_host: vcc5v0-host-regulator {                                                                                                       
->             compatible = "regulator-fixed";                                                                                                    
->             enable-active-high;                                                                                                                
->             gpio = <&gpio1 RK_PA0 GPIO_ACTIVE_HIGH>;                                                                                           
->             pinctrl-names = "default";                                                                                                         
->             pinctrl-0 = <&vcc5v0_host_en &hub_rst>;                                                                                            
->             regulator-name = "vcc5v0_host";                                                                                                    
->             regulator-always-on;                                                                                                               
->             vin-supply = <&vcc_sys>;                                                                                                           
->     };
-> 
-> Tested show that it works. But is it the recommended way to set this
->  gpio (HUB_RST) high? BTW, vcc5v0_host is the usb host voltage,
->  and HUB_RST needs to set high for the usb hub chip to work.
+The driver itself currently only supports MPEG2 and more codecs will be
+added to the driver eventually. The output frames provided by the
+Video Engine are in a multi-planar 32x32-tiled YUV format, with a plane
+for luminance (Y) and a plane for chrominance (UV). A specific format is
+introduced in the V4L2 API to describe it.
 
-It seems you can also model usb-hirarchy internals via the devicetree.
-I guess for these things like soc-gpios and such. See
-Documentation/devicetree/bindings/usb/usb-device.txt
+This implementation is based on the significant work that was conducted
+by various members of the linux-sunxi community for understanding and
+documenting the Video Engine's innards.
 
-While I don't know if this can handle such reset gpios yet, you
-could at least move the pinctrl setting there.
+In addition to the media requests API, the following series are required
+for Cedrus:
+* vicodec: the Virtual Codec driver
+* allwinner: a64: add SRAM controller / system control
+* SRAM patches from the Cedrus VPU driver series version 5
 
+Changes since v5:
+* Added MPEG2 quantization matrices definitions and support;
+* Cleaned up registers definitions;
+* Moved the driver to staging as requested;
+* Removed label and newline in device-tree sources;
+* Made it possible to build the driver for COMPILE_TEST;
+* Fixed various strict checkpatch warnings;
+* Used v4l2_m2m_register_media_controller and MEDIA_ENT_F_PROC_VIDEO_DECODER;
+* Moved capabilities to compatible-specific variants;
+* Removed overkill buffer checks in device_run;
+* Renamed from Sunxi-Cedrus to Cedrus.
 
-> >> +		reg = <0x66>;
-> >> +	};
-> >> +
-> >> +	fusb1: usb-typec@22 {
-> >> +		compatible = "fcs,fusb302";
-> >> +		reg = <0x22>;
-> >> +		pinctrl-names = "default";
-> >> +		pinctrl-0 = <&fusb1_int>;
-> >> +		fcs,int-n = <&gpio1 RK_PA1 GPIO_ACTIVE_HIGH>;
-> >
-> > mainline binding expects an "interrupts" property not the
-> > fcs,int-n from above
-> >
-> It seems no existing user of fusb302 yet. I take that fcs,int-n
-> from the driver code. But I look up the binding doc, and come
-> with this result:
-> 
->     fusb1: usb-typec@22 {                                                                                                                      
->             compatible = "fcs,fusb302";                                                                                                        
->             reg = <0x22>;                                                                                                                      
->             pinctrl-names = "default";                                                                                                         
->             pinctrl-0 = <&fusb1_int>;                                                                                                          
->             interrupt-parent = <&gpio1>;                                                                                                       
->             interrupts = <1 IRQ_TYPE_LEVEL_LOW>;                                                                                               
->             status = "okay";                                                                                                                   
->     };                                                                                                                                         
+Changes since v4:
+* updated to version 16 of the media requests API;
+* added support for VPU-based untiling (starting with the A33);
+* added support for the H3, with SRAM support;
+* reworked SRAM support and associated compatibles;
+* improved failure paths;
+* added some MPEG2 input data validation;
+* reworked video/format functions to handle multiple formats;
+* removed in-driver buffer queues;
+* used a threaded irq instead of a workqueue;
+* merged various improvements and cleanups from Maxime;
+* renamed MPEG2_SLICE_HEADER to MPEG2_SLICE_PARAMS;
+* added prefixes to MPEG2 picture coding types;
+* used single-buffer allocations to ensure contiguous planes
 
-looks good, except please move the interrupt* properties between reg
-and pinctrl
+Changes since v3:
+* updated to version 15 of the media request API;
+* got rid of untested MPEG1 support;
+* added definitons for picture coding types;
+* added documentation about MPEG2 slice header fields;
+* added documentation about MPEG2 slice format;
+* added documentation about the MB32 NV12 format;
+* added MPEG2 slice header validation;
+* removed the assigned-clocks property;
+* reworked and fixed error paths;
+* harmonized debug prints, with v4l2 helpers when applicable;
+* checked the series through checkpatch;
+* switched to SPDX license headers;
+* renamed MPEG2 frame header to slice header for consistency and clarity;
+* removed A20 SRAM compatible from the driver's list.
 
+Changes since v2:
+* updated to version 13 of the media request API;
+* integrated various changes from Maxime Ripard;
+* reworked memory reservation to use CMA, dynamic allocation and allow
+  DMABUF;
+* removed reserved memory binding since the CMA pool is the default one
+  (and allow ENODEV in the driver, for that use case);
+* added SRAM controller support for the SRAM region used by the VE;
+* updated the device-tree bindings the for SRAM region;
+* added per-platform bindings;
+* added A13 support;
+* renamed VE node name and label;
+* fixed Florent's authorship for the MPEG2 headers;
+* added a MAINTAINERS entry.
 
-Heiko
+Changes since v1:
+* use the latest version of the request API for Hans Verkuil;
+* added media controller support and dependency
+* renamed v4l2 format to the more explicit V4L2_PIX_FMT_MB32_NV12;
+* reworked bindings documentation;
+* moved driver to drivers/media/platforms/sunxi/cedrus to pair with
+  incoming CSI support ;
+* added a workqueue and lists to schedule buffer completion, since it
+  cannot be done in interrupt context;
+* split mpeg2 support into a setup and a trigger function to avoid race
+  condition;
+* split video-related ops to a dedicated sunxi_cedrus_video file;
+* cleaned up the included headers for each file;
+* used device PFN offset instead of subtracting PHYS_BASE;
+* used reset_control_reset instead of assert+deassert;
+* put the device in reset when removing driver;
+* changed dt bindings to use the last 96 Mib of the first 256 MiB of
+  DRAM;
+* made it clear in the mpeg frame header structure that forward and
+  backward indexes are used as reference frames for motion vectors;
+* lots of small cosmetic and consistency changes, including naming
+  harmonization and headers text rework.
+
+Cheers!
+
+[0]: https://patchwork.kernel.org/patch/9299073/
+[1]: https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=reqv16
+
+Paul Kocialkowski (8):
+  media: v4l: Add definitions for MPEG2 slice format and metadata
+  media: v4l: Add definition for Allwinner's MB32-tiled NV12 format
+  dt-bindings: media: Document bindings for the Cedrus VPU driver
+  media: platform: Add Cedrus VPU decoder driver
+  ARM: dts: sun5i: Add Video Engine and reserved memory nodes
+  ARM: dts: sun7i-a20: Add Video Engine and reserved memory nodes
+  ARM: dts: sun8i-a33: Add Video Engine and reserved memory nodes
+  ARM: dts: sun8i-h3: Add Video Engine and reserved memory nodes
+
+ .../devicetree/bindings/media/cedrus.txt      |  54 ++
+ .../media/uapi/v4l/extended-controls.rst      | 122 ++++
+ .../media/uapi/v4l/pixfmt-compressed.rst      |   5 +
+ .../media/uapi/v4l/pixfmt-reserved.rst        |  15 +-
+ MAINTAINERS                                   |   7 +
+ arch/arm/boot/dts/sun5i.dtsi                  |  26 +
+ arch/arm/boot/dts/sun7i-a20.dtsi              |  26 +
+ arch/arm/boot/dts/sun8i-a33.dtsi              |  26 +
+ arch/arm/boot/dts/sun8i-h3.dtsi               |  25 +
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  54 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +
+ drivers/staging/media/Kconfig                 |   2 +
+ drivers/staging/media/Makefile                |   1 +
+ drivers/staging/media/sunxi/Kconfig           |  15 +
+ drivers/staging/media/sunxi/Makefile          |   1 +
+ drivers/staging/media/sunxi/cedrus/Kconfig    |  14 +
+ drivers/staging/media/sunxi/cedrus/Makefile   |   3 +
+ drivers/staging/media/sunxi/cedrus/cedrus.c   | 419 +++++++++++++
+ drivers/staging/media/sunxi/cedrus/cedrus.h   | 166 +++++
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   | 114 ++++
+ .../staging/media/sunxi/cedrus/cedrus_dec.h   |  27 +
+ .../staging/media/sunxi/cedrus/cedrus_hw.c    | 319 ++++++++++
+ .../staging/media/sunxi/cedrus/cedrus_hw.h    |  29 +
+ .../staging/media/sunxi/cedrus/cedrus_mpeg2.c | 240 ++++++++
+ .../staging/media/sunxi/cedrus/cedrus_regs.h  | 235 ++++++++
+ .../staging/media/sunxi/cedrus/cedrus_video.c | 566 ++++++++++++++++++
+ .../staging/media/sunxi/cedrus/cedrus_video.h |  31 +
+ include/media/v4l2-ctrls.h                    |  18 +-
+ include/uapi/linux/v4l2-controls.h            |  43 ++
+ include/uapi/linux/videodev2.h                |   6 +
+ 30 files changed, 2603 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/cedrus.txt
+ create mode 100644 drivers/staging/media/sunxi/Kconfig
+ create mode 100644 drivers/staging/media/sunxi/Makefile
+ create mode 100644 drivers/staging/media/sunxi/cedrus/Kconfig
+ create mode 100644 drivers/staging/media/sunxi/cedrus/Makefile
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus.c
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus.h
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_dec.h
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_hw.h
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_video.c
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_video.h
+
+-- 
+2.18.0
