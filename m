@@ -1,91 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: i3c: Document Synopsys DesignWare I3C
- master bindings
-Date: Wed, 25 Jul 2018 13:57:33 -0600
-Message-ID: <20180725195733.GA14450@rob-hp-laptop>
-References: <1532120272-17157-1-git-send-email-soares@synopsys.com>
- <1532120272-17157-3-git-send-email-soares@synopsys.com>
+Subject: Re: [PATCH] usb: dwc3: core: Add quirk for enabling AutoRetry
+ feature in the controller
+Date: Wed, 25 Jul 2018 14:03:25 -0600
+Message-ID: <20180725200325.GA21007@rob-hp-laptop>
+References: <1532168920-3269-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1532120272-17157-3-git-send-email-soares@synopsys.com>
+In-Reply-To: <1532168920-3269-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor soares <Vitor.Soares@synopsys.com>
-Cc: boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, Joao.Pinto@synopsys.com
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, balbi@kernel.org, v.anuragkumar@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2018 at 09:57:51PM +0100, Vitor soares wrote:
-> This patch document Synopsys DesignWare I3C master DT bindings.
+On Sat, Jul 21, 2018 at 03:58:40PM +0530, Anurag Kumar Vulisha wrote:
+> By default when core sees any transaction error(CRC or overflow)
+> it replies with terminating retry ACK (Retry=1 and Nump == 0).
+> Enabling this Auto Retry feature in controller, on seeing any
+> transaction errors makes the core to send an non-terminating ACK
+> transaction packet (that is, ACK TP with Retry=1 and Nump != 0).
+> Doing so will give controller a chance to recover from the error
+> condition.
 > 
-> Signed-off-by: Vitor soares <soares@synopsys.com>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 > ---
->  .../devicetree/bindings/i3c/snps,dw-i3c-master.txt | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
+>  Documentation/devicetree/bindings/usb/dwc3.txt |  5 +++++
+>  drivers/usb/dwc3/core.c                        | 16 ++++++++++++++++
+>  drivers/usb/dwc3/core.h                        |  6 ++++++
+>  3 files changed, 27 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt b/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
-> new file mode 100644
-> index 0000000..7f5c8b0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
-> @@ -0,0 +1,43 @@
-> +Bindings for Synopsys DesignWare I3C master block
-> +=================================================
-> +
-> +Required properties:
-> +--------------------
-> +- compatible: shall be "snps,dw-i3c-master"
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 7f13ebe..2ba2bc2 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -94,6 +94,11 @@ Optional properties:
+>  			this and tx-thr-num-pkt-prd to a valid, non-zero value
+>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
+>  			enable periodic ESS TX threshold.
+> + - snps,enable_auto_retry: Set to enable Auto retry Feature to make the
 
-Only one version and no version number?
+s/_/-/
 
-... and an SoC specific compatible string.
+> +			controller operating in Host mode on seeing transaction
+> +			errors(CRC errors or internal overrun scenerios) on IN
+> +			transfers to reply to the device with a non-terminating
+> +			retry ACK (i.e, an ACK TP with Retry=1 & Nump != 0)
 
-> +- clocks: shall reference the core_clk
-> +- clock-names: shall contain "core_clk"
+Seems like the property is unnecessary. When would you not want this 
+retry behavior? Why not just enable unconditionally in the driver?
 
-"_clk" is redundant and *-names with a single entry is kind of 
-pointless.
-
-> +- interrupts: the interrupt line connected to this I3C master
-> +- reg:  Offset and length of I3C master registers
-> +
-> +Mandatory properties defined by the generic binding (see
-> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> +
-> +- #address-cells: shall be set to 3
-> +- #size-cells: shall be set to 0
-> +
-> +Optional properties defined by the generic binding (see
-> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
-> +
-> +- i2c-scl-hz
-> +- i3c-scl-hz
-> +
-> +I3C device connected on the bus follow the generic description (see
-> +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
-> +
-> +Example:
-> +
-> +	i3c-master@0x2000 {
-
-Drop the '0x'
-
-> +		compatible = "snps,dw-i3c-master";
-> +		#address-cells = <3>;
-> +		#size-cells = <0>;
-> +		reg = <0x02000 0x1000>;
-> +		interrupts = <0>;
-> +		clocks = <&i3cclk>;
-> +		clock-names = "core_clk";
-> +
-> +		eeprom@0x57{
-> +			compatible = "atmel,24c01";
-> +			reg = < 0x57 0x80000010 0x0>;
-> +			pagesize = <0x8>;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
-> 
+Rob
