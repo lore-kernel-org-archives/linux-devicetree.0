@@ -1,8 +1,7 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4/6] dt-bindings: interrupt-controller: RISC-V local interrupt
- controller docs
-Date: Wed, 25 Jul 2018 11:36:47 +0200
-Message-ID: <20180725093649.32332-5-hch@lst.de>
+Subject: [PATCH 3/6] irqchip: RISC-V Local Interrupt Controller Driver
+Date: Wed, 25 Jul 2018 11:36:46 +0200
+Message-ID: <20180725093649.32332-4-hch@lst.de>
 References: <20180725093649.32332-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,63 +23,246 @@ List-Id: devicetree@vger.kernel.org
 
 From: Palmer Dabbelt <palmer@dabbelt.com>
 
-This patch adds documentation on the RISC-V local interrupt controller,
-which is a per-hart interrupt controller that manages all interrupts
-entering a RISC-V hart.  This interrupt controller is present on all
-RISC-V systems.
+This patch adds a driver that manages the local interrupts on each
+RISC-V hart, as specifiec by the RISC-V supervisor level ISA manual.
+The local interrupt controller manages software interrupts, timer
+interrupts, and hardware interrupts (which are routed via the
+platform level interrupt controller).  Per-hart local interrupt
+controllers are found on all RISC-V systems.
 
 Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+[hch: Kconfig simplifications, various cleanups]
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- .../interrupt-controller/riscv,cpu-intc.txt   | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+ drivers/irqchip/Kconfig          |   4 +
+ drivers/irqchip/Makefile         |   1 +
+ drivers/irqchip/irq-riscv-intc.c | 197 +++++++++++++++++++++++++++++++
+ 3 files changed, 202 insertions(+)
+ create mode 100644 drivers/irqchip/irq-riscv-intc.c
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index e9233db16e03..8460fdcecc2c 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -372,3 +372,7 @@ config QCOM_PDC
+ 	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
+ 
+ endmenu
++
++config RISCV_INTC
++	def_bool y
++	depends on RISCV
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 15f268f646bf..74e333cc274c 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -87,3 +87,4 @@ obj-$(CONFIG_MESON_IRQ_GPIO)		+= irq-meson-gpio.o
+ obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
+ obj-$(CONFIG_NDS32)			+= irq-ativic32.o
+ obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
++obj-$(CONFIG_RISCV_INTC)		+= irq-riscv-intc.o
+diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
 new file mode 100644
-index 000000000000..61900e2e3868
+index 000000000000..883efaa154b8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-@@ -0,0 +1,41 @@
-+RISC-V Hart-Level Interrupt Controller (HLIC)
-+---------------------------------------------
++++ b/drivers/irqchip/irq-riscv-intc.c
+@@ -0,0 +1,197 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2012 Regents of the University of California
++ * Copyright (C) 2017 SiFive
++ */
++#include <linux/irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqdomain.h>
++#include <linux/interrupt.h>
++#include <linux/of.h>
++#include <linux/smp.h>
++#include <asm/sbi.h>
 +
-+RISC-V cores include Control Status Registers (CSRs) which are local to each
-+hart and can be read or written by software. Some of these CSRs are used to
-+control local interrupts connected to the core.  Every interrupt is ultimately
-+routed through a hart's HLIC before it interrupts that hart.
++#define NR_RISCV_IRQS (8 * sizeof(uintptr_t))
 +
-+The RISC-V supervisor ISA manual specifies three interrupt sources that are
-+attached to every HLIC: software interrupts, the timer interrupt, and external
-+interrupts.  Software interrupts are used to send IPIs between cores.  The
-+timer interrupt comes from an architecturally mandated real-time timer that is
-+controller via SBI calls and CSR reads.  External interrupts connect all other
-+device interrupts to the HLIC, which are routed via the platform-level
-+interrupt controller (PLIC).
++/*
++ * Possible interrupt causes:
++ */
++#define INTERRUPT_CAUSE_SOFTWARE    1
++#define INTERRUPT_CAUSE_TIMER       5
++#define INTERRUPT_CAUSE_EXTERNAL    9
 +
-+All RISC-V systems that conform to the supervisor ISA specification are
-+required to have a HLIC with these three interrupt sources present.  Since the
-+interrupt map is defined by the ISA it's not listed in the HLIC's device tree
-+entry, though external interrupt controllers (like the PLIC, for example) will
-+need to define how their interrupts map to the relevant HLICs.
++/*
++ * The high order bit of the trap cause register is always set for
++ * interrupts, which allows us to differentiate them from exceptions
++ * quickly.  The INTERRUPT_CAUSE_* macros don't contain that bit, so we
++ * need to mask it off.
++ */
++#define INTERRUPT_CAUSE_MASK	(1UL << (NR_RISCV_IRQS - 1))
 +
-+Required properties:
-+- compatible : "riscv,cpu-intc"
-+- #interrupt-cells : should be <1>
-+- interrupt-controller : Identifies the node as an interrupt controller
++struct riscv_irq_data {
++	struct irq_chip		chip;
++	struct irq_domain	*domain;
++	int			hart;
++	char			name[20];
++};
 +
-+Furthermore, this interrupt-controller MUST be embedded inside the cpu
-+definition of the hart whose CSRs control these local interrupts.
++static DEFINE_PER_CPU(struct riscv_irq_data, riscv_irq_data);
 +
-+An example device tree entry for a HLIC is show below.
++static void riscv_intc_irq(struct pt_regs *regs)
++{
++	struct pt_regs *old_regs = set_irq_regs(regs);
++	unsigned long cause = csr_read(scause);
++	struct irq_domain *domain;
 +
-+	cpu1: cpu@1 {
-+		compatible = "riscv";
-+		...
-+		cpu1-intc: interrupt-controller {
-+			#interrupt-cells = <1>;
-+			compatible = "riscv,cpu-intc";
-+			interrupt-controller;
-+		};
-+	};
++	WARN_ON((cause & INTERRUPT_CAUSE_MASK) == 0);
++	cause &= ~INTERRUPT_CAUSE_MASK;
++
++	irq_enter();
++
++	/*
++	 * There are three classes of interrupt: timer, software, and
++	 * external devices.  We dispatch between them here.  External
++	 * device interrupts use the generic IRQ mechanisms.
++	 */
++	switch (cause) {
++	case INTERRUPT_CAUSE_TIMER:
++		riscv_timer_interrupt();
++		break;
++	case INTERRUPT_CAUSE_SOFTWARE:
++		riscv_software_interrupt();
++		break;
++	default:
++		domain = per_cpu(riscv_irq_data, smp_processor_id()).domain;
++		generic_handle_irq(irq_find_mapping(domain, cause));
++		break;
++	}
++
++	irq_exit();
++	set_irq_regs(old_regs);
++}
++
++static int riscv_irqdomain_map(struct irq_domain *d, unsigned int irq,
++			       irq_hw_number_t hwirq)
++{
++	struct riscv_irq_data *data = d->host_data;
++
++	irq_set_chip_and_handler(irq, &data->chip, handle_simple_irq);
++	irq_set_chip_data(irq, data);
++	irq_set_noprobe(irq);
++	irq_set_affinity(irq, cpumask_of(data->hart));
++	return 0;
++}
++
++static const struct irq_domain_ops riscv_irqdomain_ops = {
++	.map	= riscv_irqdomain_map,
++	.xlate	= irq_domain_xlate_onecell,
++};
++
++/*
++ * On RISC-V systems local interrupts are masked or unmasked by writing the SIE
++ * (Supervisor Interrupt Enable) CSR.  As CSRs can only be written on the local
++ * hart, these functions can only be called on the hart that corresponds to the
++ * IRQ chip.  They are only called internally to this module, so they BUG_ON if
++ * this condition is violated rather than attempting to handle the error by
++ * forwarding to the target hart, as that's already expected to have been done.
++ */
++static void riscv_irq_mask(struct irq_data *d)
++{
++	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
++
++	BUG_ON(smp_processor_id() != data->hart);
++	csr_clear(sie, 1 << d->hwirq);
++}
++
++static void riscv_irq_unmask(struct irq_data *d)
++{
++	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
++
++	BUG_ON(smp_processor_id() != data->hart);
++	csr_set(sie, 1 << d->hwirq);
++}
++
++/* Callbacks for twiddling SIE on another hart. */
++static void riscv_irq_enable_helper(void *d)
++{
++	riscv_irq_unmask(d);
++}
++
++static void riscv_irq_disable_helper(void *d)
++{
++	riscv_irq_mask(d);
++}
++
++static void riscv_remote_ctrl(unsigned int cpu, void (*fn)(void *d),
++			      struct irq_data *data)
++{
++	smp_call_function_single(cpu, fn, data, true);
++}
++
++static void riscv_irq_enable(struct irq_data *d)
++{
++	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
++
++	/*
++	 * It's only possible to write SIE on the current hart.  This jumps
++	 * over to the target hart if it's not the current one.  It's invalid
++	 * to write SIE on a hart that's not currently running.
++	 */
++	if (data->hart == smp_processor_id())
++		riscv_irq_unmask(d);
++	else if (cpu_online(data->hart))
++		riscv_remote_ctrl(data->hart, riscv_irq_enable_helper, d);
++	else
++		WARN_ON_ONCE(1);
++}
++
++static void riscv_irq_disable(struct irq_data *d)
++{
++	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
++
++	/*
++	 * It's only possible to write SIE on the current hart.  This jumps
++	 * over to the target hart if it's not the current one.  It's invalid
++	 * to write SIE on a hart that's not currently running.
++	 */
++	if (data->hart == smp_processor_id())
++		riscv_irq_mask(d);
++	else if (cpu_online(data->hart))
++		riscv_remote_ctrl(data->hart, riscv_irq_disable_helper, d);
++	else
++		WARN_ON_ONCE(1);
++}
++
++static int __init riscv_intc_init(struct device_node *node,
++				  struct device_node *parent)
++{
++	struct riscv_irq_data *data;
++	int hart;
++
++	hart = riscv_of_processor_hart(node->parent);
++	if (hart < 0)
++		return -EIO;
++
++	data = &per_cpu(riscv_irq_data, hart);
++	snprintf(data->name, sizeof(data->name), "riscv,cpu_intc,%d", hart);
++	data->hart = hart;
++	data->chip.name = data->name;
++	data->chip.irq_mask = riscv_irq_mask;
++	data->chip.irq_unmask = riscv_irq_unmask;
++	data->chip.irq_enable = riscv_irq_enable;
++	data->chip.irq_disable = riscv_irq_disable;
++	data->domain = irq_domain_add_linear(node, NR_RISCV_IRQS,
++			&riscv_irqdomain_ops, data);
++	if (!data->domain)
++		goto error_add_linear;
++
++	set_handle_irq(&riscv_intc_irq);
++	pr_info("%s: %lu local interrupts mapped\n", data->name, NR_RISCV_IRQS);
++	return 0;
++
++error_add_linear:
++	pr_warn("%s: unable to add IRQ domain\n", data->name);
++	return -ENXIO;
++}
++
++IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
 -- 
 2.18.0
