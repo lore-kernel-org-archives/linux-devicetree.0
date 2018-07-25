@@ -1,28 +1,27 @@
 From: jbrunet@baylibre.com
-Subject: Re: [PATCH 14/15] ASoC: meson: add axg sound card DT binding
- documentation
-Date: Wed, 25 Jul 2018 23:12:21 +0200
-Message-ID: <5bd3eb356f7b9ef18a409b549e3d6ac97733a4cf.camel@baylibre.com>
-References: <20180717153643.8806-1-jbrunet@baylibre.com>
-         <20180717153643.8806-18-jbrunet@baylibre.com>
-         <20180725190619.GA20234@rob-hp-laptop>
+Subject: Re: [PATCH 00/14] arm64: dts: meson-axg: add audio support
+Date: Wed, 25 Jul 2018 23:19:05 +0200
+Message-ID: <705e31bf0d978b7d356b2f077179ab0e3db6f092.camel@baylibre.com>
+References: <20180724125238.14567-1-jbrunet@baylibre.com>
+         <CAFBinCBh-b=ie4hBMWdHG8KoLQ7qiRfo8vXfJ1PRcN4UPtg+uA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725190619.GA20234@rob-hp-laptop>
+In-Reply-To: <CAFBinCBh-b=ie4hBMWdHG8KoLQ7qiRfo8vXfJ1PRcN4UPtg+uA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-07-25 at 13:06 -0600, Rob Herring wrote:
-> On Tue, Jul 17, 2018 at 05:36:41PM +0200, Jerome Brunet wrote:
-> > Add the DT binding documentation for axg sound card
-> 
-> I see Mark already applied, but...
+On Wed, 2018-07-25 at 21:11 +0200, Martin Blumenstingl wrote:
+> nit-pick: one patch uses "arm64: dts: meson-axg: s400" in the subject
+> while other patches that are touching the s400 board aren't
+> if you have to re-send this series: can you please use the "arm64:
+> dts: meson-axg: s400:" prefix for all patches touching the s400 board?
 
-It's very recent, no DT using it yet.
+hum, do we really have such rule, or do you think we should add one ?
+Kevin, do you have opinion ?
 
-I can easily have your 3 comments fixed if it is OK with Mark. I'll submit
-something for this tomorrow.
+Not that I really mind either way, but prefixes rules are usually there to help
+maintainer filter the patches. Will such rule help in any way ?
