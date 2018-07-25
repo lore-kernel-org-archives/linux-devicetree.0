@@ -1,133 +1,210 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: Re: [PATCH v2 14/16] arm: dts: sun8i: h3: enable H3
- sid controller
-Date: Wed, 25 Jul 2018 11:12:47 +0200
-Message-ID: <29a3dfaf8df43498a3886a49ce91db583707689e.camel@paulk.fr>
-References: <20180128232919.12639-1-embed3d@gmail.com>
-	 <20180128232919.12639-15-embed3d@gmail.com>
-	 <20180129095200.attg7cgvpifpchtn@flea.lan>
-	 <470ec61e-8b08-5193-ede1-01d02b2c865e@gmail.com>
-	 <CACNAnaGVSbk7czb+mcGTx1C=YwCWe1qqHQDQe9+PNifwEXovMw@mail.gmail.com>
-	 <F1D7126A-B6ED-4A83-A941-5F39CED472CE@aosc.io>
-	 <CACNAnaFMKDmvAUXJngKHWkeGLfjsgn5hhJszNk7Sg4BU98Oafw@mail.gmail.com>
-	 <0ab29bf0-b069-338e-f312-e533656fa0b6@gmail.com>
-	 <39b1eef01c2ed32f09ef30439c4f4297de009898.camel@paulk.fr>
-	 <20180725110512.b6fb81be76f66b07942e5af0@bidouilliste.com>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v3 1/4] venus: firmware: add routine to reset ARM9
+Date: Wed, 25 Jul 2018 12:35:25 +0300
+Message-ID: <8635f09f-a464-2ec6-a29d-9c2fc7601a36@linaro.org>
+References: <1530731212-30474-1-git-send-email-vgarodia@codeaurora.org>
+ <1530731212-30474-2-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBK764DNAKGQEGQ2GHVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180725110512.b6fb81be76f66b07942e5af0-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Cc: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, icenowy-h8G6r0blFSE@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, sean-hENCXIMQXOg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1530731212-30474-2-git-send-email-vgarodia@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vikash Garodia <vgarodia@codeaurora.org>, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Vikash,
 
-On Wed, 2018-07-25 at 11:05 +0200, Emmanuel Vadot wrote:
-
-[...]
-
->  Hello Paul,
+On 07/04/2018 10:06 PM, Vikash Garodia wrote:
+> Add routine to reset the ARM9 and brings it out of reset. Also
+> abstract the Venus CPU state handling with a new function. This
+> is in preparation to add PIL functionality in venus driver.
 > 
->  I've sent a serie yesterday for SID on A64/H3/H5.
->  https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=761
-
-Awesome, thanks for taking care of that :)
-
-Cheers,
-
-Paul
-
-> > > On 19.04.2018 17:19, Kyle Evans wrote:
-> > > > On Thu, Apr 19, 2018 at 10:13 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> > > > > 
-> > > > > 
-> > > > > ? 2018?4?19? GMT+08:00 ??11:11:22, Kyle Evans <kevans-h+KGxgPPiopAfugRpC6u6w@public.gmane.org> ??:
-> > > > > > On Mon, Jan 29, 2018 at 6:03 AM, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > > wrote:
-> > > > > > > 
-> > > > > > > 
-> > > > > > > On 29.01.2018 10:52, Maxime Ripard wrote:
-> > > > > > > > 
-> > > > > > > > On Mon, Jan 29, 2018 at 12:29:17AM +0100, Philipp Rossak wrote:
-> > > > > > > > > 
-> > > > > > > > > This patch enables the the sid controller in the H3. It can be used
-> > > > > > > > > for thermal calibration data.
-> > > > > > > > > 
-> > > > > > > > > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > > > > > ---
-> > > > > > > > >    arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
-> > > > > > > > >    1 file changed, 7 insertions(+)
-> > > > > > > > > 
-> > > > > > > > > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > > > > > > b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > > > > > > index 3f83f6a27c74..9bb5cc29fec5 100644
-> > > > > > > > > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > > > > > > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > > > > > > > > @@ -72,6 +72,13 @@
-> > > > > > > > >                  };
-> > > > > > > > >          };
-> > > > > > > > >    +     soc {
-> > > > > > > > > +               sid: eeprom@1c14000 {
-> > > > > > > > > +                       compatible = "allwinner,sun8i-h3-sid";
-> > > > > > > > > +                       reg = <0x01c14000 0x400>;
-> > > > > > > > > +               };
-> > > > > > > > > +       };
-> > > > > > > > > +
-> > > > > > > > 
-> > > > > > > > 
-> > > > > > > > Shouldn't you also use a nvmem-cells property to the THS node?
-> > > > > > > > 
-> > > > > > > > Maxime
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > Oh seems like I forgot that.
-> > > > > > > As related to the wiki [1] this should be 64 bit wide at the address
-> > > > > > 
-> > > > > > 0x34. I
-> > > > > > > will add that in the next version.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > [1]: http://linux-sunxi.org/SID_Register_Guide#eFUSE
-> > > > > > > 
-> > > > > > > Thanks,
-> > > > > > > Philipp
-> > > > > > > 
-> > > > > > 
-> > > > > > Hi,
-> > > > > > 
-> > > > > > Any chance this will see a v3 soon? I'm kind of interested in sid node
-> > > > > > for h3. =)
-> > > > > 
-> > > > > This patch is independent and can be easily sent out
-> > > > > by its own.
-> > > > > 
-> > > > 
-> > > > Right- I had considered doing so, but wanted to make sure I wasn't
-> > > > going to collide with this series if a v3 is imminent.
-> > > > 
-> > > 
-> > > 
-> > 
-> > -- 
-> > Developer of free digital technology and hardware support.
-> > 
-> > Website: https://www.paulk.fr/
-> > Coding blog: https://code.paulk.fr/
-> > Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.h         |  1 +
+>  drivers/media/platform/qcom/venus/firmware.c     | 36 ++++++++++++++++++++++++
+>  drivers/media/platform/qcom/venus/firmware.h     |  1 +
+>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++------
+>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  5 ++++
+>  5 files changed, 47 insertions(+), 9 deletions(-)
 > 
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 2f02365..eb5ee66 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -129,6 +129,7 @@ struct venus_core {
+>  	struct device *dev;
+>  	struct device *dev_dec;
+>  	struct device *dev_enc;
+> +	bool no_tz;
+>  	struct mutex lock;
+>  	struct list_head instances;
+>  	atomic_t insts_count;
+> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+> index 521d4b3..3968553d 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.c
+> +++ b/drivers/media/platform/qcom/venus/firmware.c
+> @@ -22,11 +22,47 @@
+>  #include <linux/sizes.h>
+>  #include <linux/soc/qcom/mdt_loader.h>
+>  
+> +#include "core.h"
+>  #include "firmware.h"
+> +#include "hfi_venus_io.h"
+>  
+>  #define VENUS_PAS_ID			9
+>  #define VENUS_FW_MEM_SIZE		(6 * SZ_1M)
+>  
+> +static void venus_reset_cpu(struct venus_core *core)
+> +{
+> +	void __iomem *base = core->base;
+> +
+> +	writel(0, base + WRAPPER_FW_START_ADDR);
+> +	writel(VENUS_FW_MEM_SIZE, base + WRAPPER_FW_END_ADDR);
+> +	writel(0, base + WRAPPER_CPA_START_ADDR);
+> +	writel(VENUS_FW_MEM_SIZE, base + WRAPPER_CPA_END_ADDR);
+> +	writel(0x0, base + WRAPPER_CPU_CGC_DIS);
+> +	writel(0x0, base + WRAPPER_CPU_CLOCK_CONFIG);
+> +
+> +	/* Make sure all register writes are committed. */
+> +	mb();
+> +
+> +	/* Bring ARM9 out of reset */
+> +	writel_relaxed(0, base + WRAPPER_A9SS_SW_RESET);
+
+replace writel_relaxed with writel and drop above mb. The writel has wmb
+just before writing so I think using writel here is better choice.
+
+> +}
+> +
+> +int venus_set_hw_state(struct venus_core *core, bool resume)
+
+s/resume/suspend as it is done in the function prototype in firmware.h.
+
+> +{
+> +	void __iomem *base = core->base;
+> +
+> +	if (!core->no_tz)
+> +		return qcom_scm_set_remote_state(resume, 0);
+> +
+> +	if (resume)
+> +		venus_reset_cpu(core);
+> +	else
+> +		writel(1, base + WRAPPER_A9SS_SW_RESET);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(venus_set_hw_state);
+> +
+>  int venus_boot(struct device *dev, const char *fwname)
+>  {
+>  	const struct firmware *mdt;
+> diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
+> index 428efb5..ff2e70e 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.h
+> +++ b/drivers/media/platform/qcom/venus/firmware.h
+> @@ -18,5 +18,6 @@
+>  
+>  int venus_boot(struct device *dev, const char *fwname);
+>  int venus_shutdown(struct device *dev);
+> +int venus_set_hw_state(struct venus_core *core, bool suspend);
+
+could you make two inline functions here, call them
+venus_set_hw_state_suspend() and venus_set_hw_state_resume() which just
+call venus_set_hw_state with the right state.
+
+>  
+>  #endif
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
+> index 9366dae..5b56925 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
+> @@ -19,7 +19,6 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+> -#include <linux/qcom_scm.h>
+>  #include <linux/slab.h>
+>  
+>  #include "core.h"
+> @@ -27,6 +26,7 @@
+>  #include "hfi_msgs.h"
+>  #include "hfi_venus.h"
+>  #include "hfi_venus_io.h"
+> +#include "firmware.h"
+>  
+>  #define HFI_MASK_QHDR_TX_TYPE		0xff000000
+>  #define HFI_MASK_QHDR_RX_TYPE		0x00ff0000
+> @@ -55,11 +55,6 @@
+>  #define IFACEQ_VAR_LARGE_PKT_SIZE	512
+>  #define IFACEQ_VAR_HUGE_PKT_SIZE	(1024 * 12)
+>  
+> -enum tzbsp_video_state {
+> -	TZBSP_VIDEO_STATE_SUSPEND = 0,
+> -	TZBSP_VIDEO_STATE_RESUME
+> -};
+> -
+>  struct hfi_queue_table_header {
+>  	u32 version;
+>  	u32 size;
+> @@ -575,7 +570,7 @@ static int venus_power_off(struct venus_hfi_device *hdev)
+>  	if (!hdev->power_enabled)
+>  		return 0;
+>  
+> -	ret = qcom_scm_set_remote_state(TZBSP_VIDEO_STATE_SUSPEND, 0);
+> +	ret = venus_set_hw_state(hdev->core, false);
+
+... and use venus_set_hw_state_suspend()
+
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -595,7 +590,7 @@ static int venus_power_on(struct venus_hfi_device *hdev)
+>  	if (hdev->power_enabled)
+>  		return 0;
+>  
+> -	ret = qcom_scm_set_remote_state(TZBSP_VIDEO_STATE_RESUME, 0);
+> +	ret = venus_set_hw_state(hdev->core, true);
+
+... and use venus_set_hw_state_resume()
+
+>  	if (ret)
+>  		goto err;
+>  
+> @@ -608,7 +603,7 @@ static int venus_power_on(struct venus_hfi_device *hdev)
+>  	return 0;
+>  
+>  err_suspend:
+> -	qcom_scm_set_remote_state(TZBSP_VIDEO_STATE_SUSPEND, 0);
+> +	venus_set_hw_state(hdev->core, false);
+>  err:
+>  	hdev->power_enabled = false;
+>  	return ret;
+> diff --git a/drivers/media/platform/qcom/venus/hfi_venus_io.h b/drivers/media/platform/qcom/venus/hfi_venus_io.h
+> index def0926..0a4210f 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_venus_io.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_venus_io.h
+> @@ -112,6 +112,11 @@
+>  #define WRAPPER_CPU_STATUS			(WRAPPER_BASE + 0x2014)
+>  #define WRAPPER_CPU_STATUS_WFI			BIT(0)
+>  #define WRAPPER_SW_RESET			(WRAPPER_BASE + 0x3000)
+> +#define WRAPPER_CPA_START_ADDR	(WRAPPER_BASE + 0x1020)
+> +#define WRAPPER_CPA_END_ADDR		(WRAPPER_BASE + 0x1024)
+> +#define WRAPPER_FW_START_ADDR	(WRAPPER_BASE + 0x1028)
+> +#define WRAPPER_FW_END_ADDR			(WRAPPER_BASE + 0x102C)
+> +#define WRAPPER_A9SS_SW_RESET	(WRAPPER_BASE + 0x3000)
+
+something is wrong with tabs/indentation could you check? seems only
+WRAPPER_FW_END_ADDR is fine.
+
+>  
+>  /* Venus 4xx */
+>  #define WRAPPER_VCODEC0_MMCC_POWER_STATUS	(WRAPPER_BASE + 0x90)
 > 
+
 -- 
-Developer of free digital technology and hardware support.
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+regards,
+Stan
