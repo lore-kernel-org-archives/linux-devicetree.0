@@ -1,43 +1,44 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add Cortex-A53 PMU support
-Date: Wed, 25 Jul 2018 19:34:16 +0200
-Message-ID: <CAMuHMdXPYwC5pmY+HmT0TYTXpmy152pVtdanSPCZMX1xp0r76g@mail.gmail.com>
-References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
- <d8e355fd-46f5-3798-fe43-811471a75ab6@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFT v2 03/10] pinctrl: samsung: Document hidden requirement
+ about one external wakeup
+Date: Wed, 25 Jul 2018 11:38:23 -0600
+Message-ID: <20180725173823.GA25530@rob-hp-laptop>
+References: <20180723175302.22535-1-krzk@kernel.org>
+ <20180723175302.22535-4-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d8e355fd-46f5-3798-fe43-811471a75ab6@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180723175302.22535-4-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 6:44 PM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Describe the performance monitor unit (PMU) for the Cortex-A53 cores in
-> the R8A77970 SoC's device tree.
+On Mon, Jul 23, 2018 at 07:52:55PM +0200, Krzysztof Kozlowski wrote:
+> Hardware (S5Pv210 and all Exynos SoCs) provides only 32 external
+> interrupts which can wakeup device from deep sleep modes.  On S5Pv210
+> these are gph0-gph3.  On all Exynos designs these are gpx0-gpx3.
+> There is only one 32-bit register for controlling the external wakeup
+> interrupt mask (masking and unmasking waking capability of these
+> interrupts).
+> 
+> This lead to implementation in pinctrl driver and machine code which was
+> using static memory for storing the mask value and not caring about
+> multiple devices of pin controller... because only one pin controller
+> device will be handling this.
+> 
+> Since each pin controller node in Device Tree maps onto one device, this
+> corresponds to hidden assumption in parsing the Device Tree: external
+> wakeup interrupts can be defined only once.  Make this assumption an
+> explicit requirement.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> Cc: Sylwester Nawrocki <snawrocki@kernel.org>
+> Acked-by: Tomasz Figa <tomasz.figa@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 
-8?
-
-Can you hack up a check in checkpatch.pl to catch such mistakes? ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Rob Herring <robh@kernel.org>
