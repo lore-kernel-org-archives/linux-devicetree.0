@@ -1,53 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] usb: dwc3: core: Add quirk for enabling AutoRetry
- feature in the controller
-Date: Wed, 25 Jul 2018 14:03:25 -0600
-Message-ID: <20180725200325.GA21007@rob-hp-laptop>
-References: <1532168920-3269-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+From: Ladislav Michl <ladis@linux-mips.org>
+Subject: Re: [Letux-kernel] [PATCH 09/32] ARM: dts: omap3-gta04: make NAND
+ partitions compatible with recent U-Boot
+Date: Wed, 25 Jul 2018 22:07:19 +0200
+Message-ID: <20180725200719.GA28936@lenoch>
+References: <cover.1532501910.git.hns@goldelico.com>
+ <8dcf3efd3270451314a663c125841ca87ed2b387.1532501910.git.hns@goldelico.com>
+ <20180725080735.GA7467@lenoch>
+ <EECC7962-DEAB-4C21-98A7-EBAE4AEA312B@goldelico.com>
+ <20180725083305.GB8303@lenoch>
+ <20180725182745.6e436abc@aktux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1532168920-3269-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+In-Reply-To: <20180725182745.6e436abc@aktux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, balbi@kernel.org, v.anuragkumar@gmail.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 21, 2018 at 03:58:40PM +0530, Anurag Kumar Vulisha wrote:
-> By default when core sees any transaction error(CRC or overflow)
-> it replies with terminating retry ACK (Retry=1 and Nump == 0).
-> Enabling this Auto Retry feature in controller, on seeing any
-> transaction errors makes the core to send an non-terminating ACK
-> transaction packet (that is, ACK TP with Retry=1 and Nump != 0).
-> Doing so will give controller a chance to recover from the error
-> condition.
+On Wed, Jul 25, 2018 at 06:27:45PM +0200, Andreas Kemnade wrote:
+> On Wed, 25 Jul 2018 10:33:05 +0200
+> Ladislav Michl <ladis@linux-mips.org> wrote:
 > 
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt |  5 +++++
->  drivers/usb/dwc3/core.c                        | 16 ++++++++++++++++
->  drivers/usb/dwc3/core.h                        |  6 ++++++
->  3 files changed, 27 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 7f13ebe..2ba2bc2 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -94,6 +94,11 @@ Optional properties:
->  			this and tx-thr-num-pkt-prd to a valid, non-zero value
->  			1-16 (DWC_usb31 programming guide section 1.2.3) to
->  			enable periodic ESS TX threshold.
-> + - snps,enable_auto_retry: Set to enable Auto retry Feature to make the
+> > On Wed, Jul 25, 2018 at 10:18:28AM +0200, H. Nikolaus Schaller wrote:
+> > >   
+> > > > Am 25.07.2018 um 10:07 schrieb Ladislav Michl <ladis@linux-mips.org>:
+> > > > 
+> > > > On Wed, Jul 25, 2018 at 08:58:41AM +0200, H. Nikolaus Schaller wrote:  
+> > > >> Vendor defined U-Boot has changed the partition scheme a while ago:
+> > > >> 
+> > > >> * kernel partition 6MB
+> > > >> * file system partition uses the remainder up to end of the NAND
+> > > >> * increased size of the environment partition (to get an OneNAND compatible base address)
+> > > >> * shrink the U-Boot partition
+> > > >> 
+> > > >> Let's be compatible (e.g. Debian kernel built from upstream).  
+> > > > 
+> > > > That, in fact, is breaking compatibility.  
+> > > 
+> > > With what? Nobody is using the old u-boot partition scheme any more
+> > > (it is >5 years old).
+> > >   
+> > > > So once you are touching this
+> > > > what about relying on partitioning provided by bootloader just to prevent
+> > > > something like this happening again?  
+> > > 
+> > > Well, we define what compatible means here (since we are the vendor).
+> > > And people complain with us. We simply recommend them to upgrade the
+> > > boot-loader.  
+> > 
+> > Fair enough. Suggestion was to remove partitioning scheme from DTB alltogether
+> > and let U-Boot provide one. But you being vendor you decide, of course :)
+> > (I'd use only two partitions: MLO and UBI, latter one with BCH8, and store
+> > everything in UBI volumes. That's a bit more flexible approach)
+> > 
+> hmm, so using mtdparts kernel commandline parameter? Somehow it sounds
+> to be sane to not have partition tables in kernel. What only is needed
+> is to have a nice transition scheme for systems in the wild, can
+> commandline mtdparts overwrite dtb? So dtb is a fallback?
 
-s/_/-/
+That's beginning to be offtopic here...  Anyway, see U-Boot's
+CONFIG_FDT_FIXUP_PARTITIONS. Probably better to start a thread on
+U-Boot mailing list if needed.
 
-> +			controller operating in Host mode on seeing transaction
-> +			errors(CRC errors or internal overrun scenerios) on IN
-> +			transfers to reply to the device with a non-terminating
-> +			retry ACK (i.e, an ACK TP with Retry=1 & Nump != 0)
+> But I think all that is a future improvement?
 
-Seems like the property is unnecessary. When would you not want this 
-retry behavior? Why not just enable unconditionally in the driver?
+Depends on vendor decision, it could be done in a few days :)
 
-Rob
+Best regards,
+	ladis
