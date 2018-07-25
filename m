@@ -1,7 +1,7 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 3/6] irqchip: RISC-V Local Interrupt Controller Driver
-Date: Wed, 25 Jul 2018 11:36:46 +0200
-Message-ID: <20180725093649.32332-4-hch@lst.de>
+Subject: [PATCH 5/6] irqchip: New RISC-V PLIC Driver
+Date: Wed, 25 Jul 2018 11:36:48 +0200
+Message-ID: <20180725093649.32332-6-hch@lst.de>
 References: <20180725093649.32332-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,246 +23,351 @@ List-Id: devicetree@vger.kernel.org
 
 From: Palmer Dabbelt <palmer@dabbelt.com>
 
-This patch adds a driver that manages the local interrupts on each
-RISC-V hart, as specifiec by the RISC-V supervisor level ISA manual.
-The local interrupt controller manages software interrupts, timer
-interrupts, and hardware interrupts (which are routed via the
-platform level interrupt controller).  Per-hart local interrupt
-controllers are found on all RISC-V systems.
+This patch adds a driver for the Platform Level Interrupt Controller
+(PLIC) specified as part of the RISC-V supervisor level ISA manual.
+The PLIC connects global interrupt sources to the local interrupt
+controller on each hart.
 
 Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-[hch: Kconfig simplifications, various cleanups]
+[hch: various cleanups, fixed typos, added SPDX tag]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/irqchip/Kconfig          |   4 +
+ drivers/irqchip/Kconfig          |  13 ++
  drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-riscv-intc.c | 197 +++++++++++++++++++++++++++++++
- 3 files changed, 202 insertions(+)
- create mode 100644 drivers/irqchip/irq-riscv-intc.c
+ drivers/irqchip/irq-riscv-plic.c | 295 +++++++++++++++++++++++++++++++
+ 3 files changed, 309 insertions(+)
+ create mode 100644 drivers/irqchip/irq-riscv-plic.c
 
 diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index e9233db16e03..8460fdcecc2c 100644
+index 8460fdcecc2c..d1afac8829ae 100644
 --- a/drivers/irqchip/Kconfig
 +++ b/drivers/irqchip/Kconfig
-@@ -372,3 +372,7 @@ config QCOM_PDC
- 	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
- 
- endmenu
+@@ -376,3 +376,16 @@ endmenu
+ config RISCV_INTC
+ 	def_bool y
+ 	depends on RISCV
 +
-+config RISCV_INTC
-+	def_bool y
++config RISCV_PLIC
++	bool "Platform-Level Interrupt Controller"
 +	depends on RISCV
++	default y
++	help
++	   This enables support for the PLIC chip found in standard RISC-V
++	   systems.  The PLIC controls devices interrupts and connects them to
++	   each core's local interrupt controller.  Aside from timer and
++	   software interrupts, all other interrupt sources (MSI, GPIO, etc)
++	   are subordinate to the PLIC.
++
++	   If you don't know what to do here, say Y.
 diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 15f268f646bf..74e333cc274c 100644
+index 74e333cc274c..7954f4c4a629 100644
 --- a/drivers/irqchip/Makefile
 +++ b/drivers/irqchip/Makefile
-@@ -87,3 +87,4 @@ obj-$(CONFIG_MESON_IRQ_GPIO)		+= irq-meson-gpio.o
- obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
+@@ -88,3 +88,4 @@ obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
  obj-$(CONFIG_NDS32)			+= irq-ativic32.o
  obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
-+obj-$(CONFIG_RISCV_INTC)		+= irq-riscv-intc.o
-diff --git a/drivers/irqchip/irq-riscv-intc.c b/drivers/irqchip/irq-riscv-intc.c
+ obj-$(CONFIG_RISCV_INTC)		+= irq-riscv-intc.o
++obj-$(CONFIG_RISCV_PLIC)		+= irq-riscv-plic.o
+diff --git a/drivers/irqchip/irq-riscv-plic.c b/drivers/irqchip/irq-riscv-plic.c
 new file mode 100644
-index 000000000000..883efaa154b8
+index 000000000000..7b80b73c28a0
 --- /dev/null
-+++ b/drivers/irqchip/irq-riscv-intc.c
-@@ -0,0 +1,197 @@
++++ b/drivers/irqchip/irq-riscv-plic.c
+@@ -0,0 +1,295 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (C) 2012 Regents of the University of California
 + * Copyright (C) 2017 SiFive
 + */
++#include <linux/interrupt.h>
++#include <linux/io.h>
 +#include <linux/irq.h>
 +#include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
 +#include <linux/irqdomain.h>
-+#include <linux/interrupt.h>
++#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/smp.h>
-+#include <asm/sbi.h>
-+
-+#define NR_RISCV_IRQS (8 * sizeof(uintptr_t))
-+
-+/*
-+ * Possible interrupt causes:
-+ */
-+#define INTERRUPT_CAUSE_SOFTWARE    1
-+#define INTERRUPT_CAUSE_TIMER       5
-+#define INTERRUPT_CAUSE_EXTERNAL    9
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
 +
 +/*
-+ * The high order bit of the trap cause register is always set for
-+ * interrupts, which allows us to differentiate them from exceptions
-+ * quickly.  The INTERRUPT_CAUSE_* macros don't contain that bit, so we
-+ * need to mask it off.
++ * From the RISC-V Priviledged Spec v1.10:
++ *
++ * Global interrupt sources are assigned small unsigned integer identifiers,
++ * beginning at the value 1.  An interrupt ID of 0 is reserved to mean "no
++ * interrupt".  Interrupt identifiers are also used to break ties when two or
++ * more interrupt sources have the same assigned priority. Smaller values of
++ * interrupt ID take precedence over larger values of interrupt ID.
++ *
++ * While the RISC-V supervisor spec doesn't define the maximum number of
++ * devices supported by the PLIC, the largest number supported by devices
++ * marked as 'riscv,plic0' (which is the only device type this driver supports,
++ * and is the only extant PLIC as of now) is 1024.  As mentioned above, device
++ * 0 is defined to be non-existent so this device really only supports 1023
++ * devices.
 + */
-+#define INTERRUPT_CAUSE_MASK	(1UL << (NR_RISCV_IRQS - 1))
++#define MAX_DEVICES	1024
++#define MAX_CONTEXTS	15872
 +
-+struct riscv_irq_data {
-+	struct irq_chip		chip;
-+	struct irq_domain	*domain;
-+	int			hart;
-+	char			name[20];
++struct plic_handler {
++	bool			present;
++	int			contextid;
++	struct plic_data	*data;
 +};
 +
-+static DEFINE_PER_CPU(struct riscv_irq_data, riscv_irq_data);
++/*
++ * PLIC devices are named like 'riscv,plic0,%llx', this is enough space to
++ * store that name.
++ */
++#define PLIC_DATA_NAME_SIZE 30
 +
-+static void riscv_intc_irq(struct pt_regs *regs)
++struct plic_data {
++	struct irq_chip		chip;
++	struct irq_domain	*domain;
++	u32			ndev;
++	void __iomem		*reg;
++	int			handlers;
++	struct plic_handler	*handler;
++	char			name[PLIC_DATA_NAME_SIZE];
++	spinlock_t		lock;
++};
++
++/*
++ * Each interrupt source has a priority register associated with it.
++ * We always hardwire it to one in Linux.
++ */
++static inline u32 __iomem *plic_priority(struct plic_data *data, int hwirq)
 +{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
-+	unsigned long cause = csr_read(scause);
-+	struct irq_domain *domain;
-+
-+	WARN_ON((cause & INTERRUPT_CAUSE_MASK) == 0);
-+	cause &= ~INTERRUPT_CAUSE_MASK;
-+
-+	irq_enter();
-+
-+	/*
-+	 * There are three classes of interrupt: timer, software, and
-+	 * external devices.  We dispatch between them here.  External
-+	 * device interrupts use the generic IRQ mechanisms.
-+	 */
-+	switch (cause) {
-+	case INTERRUPT_CAUSE_TIMER:
-+		riscv_timer_interrupt();
-+		break;
-+	case INTERRUPT_CAUSE_SOFTWARE:
-+		riscv_software_interrupt();
-+		break;
-+	default:
-+		domain = per_cpu(riscv_irq_data, smp_processor_id()).domain;
-+		generic_handle_irq(irq_find_mapping(domain, cause));
-+		break;
-+	}
-+
-+	irq_exit();
-+	set_irq_regs(old_regs);
++	return data->reg + hwirq * 0x04;
 +}
 +
-+static int riscv_irqdomain_map(struct irq_domain *d, unsigned int irq,
-+			       irq_hw_number_t hwirq)
++/*
++ * Each hart context has a vector of interrupt enable bits associated with it.
++ * There is one bit for each interrupt source.
++ */
++static inline u32 __iomem *plic_enable_vector(struct plic_data *data,
++		int contextid)
 +{
-+	struct riscv_irq_data *data = d->host_data;
++	return data->reg + (1 << 13) + contextid * 0x80;
++}
++
++/*
++ * Each hart context has a set of control registers associated with it.  Right
++ * now there's only two: a source priority threshold over which the hart will
++ * take an interrupt, and a register to claim interrupts.
++ */
++#define CONTEXT_THRESHOLD	0
++#define CONTEXT_CLAIM		4
++
++static inline u32 __iomem *plic_hart_data(struct plic_data *data,
++		int contextid)
++{
++	return data->reg + (1 << 21) + contextid * 0x1000;
++}
++
++/* Explicit interrupt masking. */
++static void plic_disable(struct plic_data *data, int contextid, int hwirq)
++{
++	u32 __iomem *reg = plic_enable_vector(data, contextid) + (hwirq / 32);
++	u32 mask = ~(1 << (hwirq % 32));
++
++	spin_lock(&data->lock);
++	writel(readl(reg) & mask, reg);
++	spin_unlock(&data->lock);
++}
++
++static void plic_enable(struct plic_data *data, int contextid, int hwirq)
++{
++	u32 __iomem *reg = plic_enable_vector(data, contextid) + (hwirq / 32);
++	u32 bit = 1 << (hwirq % 32);
++
++	spin_lock(&data->lock);
++	writel(readl(reg) | bit, reg);
++	spin_unlock(&data->lock);
++}
++
++/*
++ * There is no need to mask/unmask PLIC interrupts
++ * They are "masked" by reading claim and "unmasked" when writing it back.
++ */
++static void plic_irq_mask(struct irq_data *d)
++{
++}
++
++static void plic_irq_unmask(struct irq_data *d)
++{
++}
++
++static void plic_irq_enable(struct irq_data *d)
++{
++	struct plic_data *data = irq_data_get_irq_chip_data(d);
++	int i;
++
++	writel(1, plic_priority(data, d->hwirq));
++	for (i = 0; i < data->handlers; ++i)
++		if (data->handler[i].present)
++			plic_enable(data, i, d->hwirq);
++}
++
++static void plic_irq_disable(struct irq_data *d)
++{
++	struct plic_data *data = irq_data_get_irq_chip_data(d);
++	int i;
++
++	writel(0, plic_priority(data, d->hwirq));
++	for (i = 0; i < data->handlers; ++i)
++		if (data->handler[i].present)
++			plic_disable(data, i, d->hwirq);
++}
++
++static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
++			      irq_hw_number_t hwirq)
++{
++	struct plic_data *data = d->host_data;
 +
 +	irq_set_chip_and_handler(irq, &data->chip, handle_simple_irq);
 +	irq_set_chip_data(irq, data);
 +	irq_set_noprobe(irq);
-+	irq_set_affinity(irq, cpumask_of(data->hart));
 +	return 0;
 +}
 +
-+static const struct irq_domain_ops riscv_irqdomain_ops = {
-+	.map	= riscv_irqdomain_map,
++static const struct irq_domain_ops plic_irqdomain_ops = {
++	.map	= plic_irqdomain_map,
 +	.xlate	= irq_domain_xlate_onecell,
 +};
 +
 +/*
-+ * On RISC-V systems local interrupts are masked or unmasked by writing the SIE
-+ * (Supervisor Interrupt Enable) CSR.  As CSRs can only be written on the local
-+ * hart, these functions can only be called on the hart that corresponds to the
-+ * IRQ chip.  They are only called internally to this module, so they BUG_ON if
-+ * this condition is violated rather than attempting to handle the error by
-+ * forwarding to the target hart, as that's already expected to have been done.
++ * Handling an interrupt is a two-step process: first you claim the interrupt
++ * by reading the claim register, then you complete the interrupt by writing
++ * that source ID back to the same claim register.  This automatically enables
++ * and disables the interrupt, so there's nothing else to do.
 + */
-+static void riscv_irq_mask(struct irq_data *d)
++static void plic_chained_handle_irq(struct irq_desc *desc)
 +{
-+	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
++	struct plic_handler *handler = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct irq_domain *domain = handler->data->domain;
++	void __iomem *ph = plic_hart_data(handler->data, handler->contextid);
++	u32 what;
 +
-+	BUG_ON(smp_processor_id() != data->hart);
-+	csr_clear(sie, 1 << d->hwirq);
++	chained_irq_enter(chip, desc);
++	while ((what = readl(ph + CONTEXT_CLAIM))) {
++		int irq = irq_find_mapping(domain, what);
++
++		if (irq > 0)
++			generic_handle_irq(irq);
++		else
++			handle_bad_irq(desc);
++		writel(what, ph + CONTEXT_CLAIM);
++	}
++	chained_irq_exit(chip, desc);
 +}
 +
-+static void riscv_irq_unmask(struct irq_data *d)
++static int plic_init(struct device_node *node, struct device_node *parent)
 +{
-+	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
++	struct plic_data *data;
++	struct resource resource;
++	int i, ok = 0;
++	int out = -1;
 +
-+	BUG_ON(smp_processor_id() != data->hart);
-+	csr_set(sie, 1 << d->hwirq);
-+}
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (WARN_ON(!data))
++		return -ENOMEM;
 +
-+/* Callbacks for twiddling SIE on another hart. */
-+static void riscv_irq_enable_helper(void *d)
-+{
-+	riscv_irq_unmask(d);
-+}
++	spin_lock_init(&data->lock);
 +
-+static void riscv_irq_disable_helper(void *d)
-+{
-+	riscv_irq_mask(d);
-+}
++	data->reg = of_iomap(node, 0);
++	if (WARN_ON(!data->reg)) {
++		out = -EIO;
++		goto free_data;
++	}
 +
-+static void riscv_remote_ctrl(unsigned int cpu, void (*fn)(void *d),
-+			      struct irq_data *data)
-+{
-+	smp_call_function_single(cpu, fn, data, true);
-+}
++	of_property_read_u32(node, "riscv,ndev", &data->ndev);
++	if (WARN_ON(!data->ndev)) {
++		out = -EINVAL;
++		goto free_reg;
++	}
 +
-+static void riscv_irq_enable(struct irq_data *d)
-+{
-+	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
++	data->handlers = of_irq_count(node);
++	if (WARN_ON(!data->handlers)) {
++		out = -EINVAL;
++		goto free_reg;
++	}
 +
-+	/*
-+	 * It's only possible to write SIE on the current hart.  This jumps
-+	 * over to the target hart if it's not the current one.  It's invalid
-+	 * to write SIE on a hart that's not currently running.
-+	 */
-+	if (data->hart == smp_processor_id())
-+		riscv_irq_unmask(d);
-+	else if (cpu_online(data->hart))
-+		riscv_remote_ctrl(data->hart, riscv_irq_enable_helper, d);
-+	else
-+		WARN_ON_ONCE(1);
-+}
++	data->handler =
++		kcalloc(data->handlers, sizeof(*data->handler), GFP_KERNEL);
++	if (WARN_ON(!data->handler)) {
++		out = -ENOMEM;
++		goto free_reg;
++	}
 +
-+static void riscv_irq_disable(struct irq_data *d)
-+{
-+	struct riscv_irq_data *data = irq_data_get_irq_chip_data(d);
++	data->domain = irq_domain_add_linear(node, data->ndev + 1,
++			&plic_irqdomain_ops, data);
++	if (WARN_ON(!data->domain)) {
++		out = -ENOMEM;
++		goto free_handler;
++	}
 +
-+	/*
-+	 * It's only possible to write SIE on the current hart.  This jumps
-+	 * over to the target hart if it's not the current one.  It's invalid
-+	 * to write SIE on a hart that's not currently running.
-+	 */
-+	if (data->hart == smp_processor_id())
-+		riscv_irq_mask(d);
-+	else if (cpu_online(data->hart))
-+		riscv_remote_ctrl(data->hart, riscv_irq_disable_helper, d);
-+	else
-+		WARN_ON_ONCE(1);
-+}
-+
-+static int __init riscv_intc_init(struct device_node *node,
-+				  struct device_node *parent)
-+{
-+	struct riscv_irq_data *data;
-+	int hart;
-+
-+	hart = riscv_of_processor_hart(node->parent);
-+	if (hart < 0)
-+		return -EIO;
-+
-+	data = &per_cpu(riscv_irq_data, hart);
-+	snprintf(data->name, sizeof(data->name), "riscv,cpu_intc,%d", hart);
-+	data->hart = hart;
++	of_address_to_resource(node, 0, &resource);
++	snprintf(data->name, sizeof(data->name),
++		 "riscv,plic0,%llx", resource.start);
 +	data->chip.name = data->name;
-+	data->chip.irq_mask = riscv_irq_mask;
-+	data->chip.irq_unmask = riscv_irq_unmask;
-+	data->chip.irq_enable = riscv_irq_enable;
-+	data->chip.irq_disable = riscv_irq_disable;
-+	data->domain = irq_domain_add_linear(node, NR_RISCV_IRQS,
-+			&riscv_irqdomain_ops, data);
-+	if (!data->domain)
-+		goto error_add_linear;
++	data->chip.irq_mask = plic_irq_mask;
++	data->chip.irq_unmask = plic_irq_unmask;
++	data->chip.irq_enable = plic_irq_enable;
++	data->chip.irq_disable = plic_irq_disable;
 +
-+	set_handle_irq(&riscv_intc_irq);
-+	pr_info("%s: %lu local interrupts mapped\n", data->name, NR_RISCV_IRQS);
++	for (i = 0; i < data->handlers; ++i) {
++		struct plic_handler *handler = &data->handler[i];
++		struct of_phandle_args parent;
++		int parent_irq, hwirq;
++
++		handler->present = false;
++
++		if (of_irq_parse_one(node, i, &parent))
++			continue;
++		/* skip context holes */
++		if (parent.args[0] == -1)
++			continue;
++
++		/* skip any contexts that lead to inactive harts */
++		if (of_device_is_compatible(parent.np, "riscv,cpu-intc") &&
++		    parent.np->parent &&
++		    riscv_of_processor_hart(parent.np->parent) < 0)
++			continue;
++
++		parent_irq = irq_create_of_mapping(&parent);
++		if (!parent_irq)
++			continue;
++
++		handler->present = true;
++		handler->contextid = i;
++		handler->data = data;
++		/* hwirq prio must be > this to trigger an interrupt */
++		writel(0, plic_hart_data(data, i) + CONTEXT_THRESHOLD);
++
++		for (hwirq = 1; hwirq <= data->ndev; ++hwirq)
++			plic_disable(data, i, hwirq);
++		irq_set_chained_handler_and_data(parent_irq,
++				plic_chained_handle_irq, handler);
++		++ok;
++	}
++
++	pr_info("%s: mapped %d interrupts to %d/%d handlers\n",
++		data->name, data->ndev, ok, data->handlers);
++	WARN_ON(!ok);
 +	return 0;
 +
-+error_add_linear:
-+	pr_warn("%s: unable to add IRQ domain\n", data->name);
-+	return -ENXIO;
++free_handler:
++	kfree(data->handler);
++free_reg:
++	iounmap(data->reg);
++free_data:
++	kfree(data);
++	return out;
 +}
 +
-+IRQCHIP_DECLARE(riscv, "riscv,cpu-intc", riscv_intc_init);
++IRQCHIP_DECLARE(plic0, "riscv,plic0", plic_init);
 -- 
 2.18.0
