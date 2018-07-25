@@ -1,63 +1,85 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH 1/7] dt-bindings: Document Tegra SDHCI pinctrl bindings
-Date: Wed, 25 Jul 2018 09:47:12 +0300
-Message-ID: <13b93496-0f35-2fe4-c713-352a139433d6@kapsi.fi>
-References: <1532090746-15863-1-git-send-email-avienamo@nvidia.com>
- <1532090746-15863-2-git-send-email-avienamo@nvidia.com>
+From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Wed, 25 Jul 2018 14:48:13 +0800
+Message-ID: <20180725064813.GI6480@MiWiFi-R3L-srv>
+References: <20180718024944.577-1-bhe@redhat.com>
+ <20180718024944.577-5-bhe@redhat.com>
+ <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
+ <20180719151753.GB7147@localhost.localdomain>
+ <20180723143443.GD18181@dhcp22.suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532090746-15863-2-git-send-email-avienamo@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180723143443.GD18181-2MMpYkNvuYDjFM9bn6wA6Q@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel@vger
 List-Id: devicetree@vger.kernel.org
 
-I would maybe say "dt-bindings: mmc: tegra: Add pad voltage control 
-properties" or similar for the subject - the current kind of looks like 
-the SDHCI controller is a pinctrl device :)
+On 07/23/18 at 04:34pm, Michal Hocko wrote:
+> On Thu 19-07-18 23:17:53, Baoquan He wrote:
+> > Kexec has been a formal feature in our distro, and customers owning
+> > those kind of very large machine can make use of this feature to speed
+> > up the reboot process. On uefi machine, the kexec_file loading will
+> > search place to put kernel under 4G from top to down. As we know, the
+> > 1st 4G space is DMA32 ZONE, dma, pci mmcfg, bios etc all try to consume
+> > it. It may have possibility to not be able to find a usable space for
+> > kernel/initrd. From the top down of the whole memory space, we don't
+> > have this worry. 
+> 
+> I do not have the full context here but let me note that you should be
+> careful when doing top-down reservation because you can easily get into
+> hotplugable memory and break the hotremove usecase. We even warn when
+> this is done. See memblock_find_in_range_node
 
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
+Kexec read kernel/initrd file into buffer, just search usable positions
+for them to do the later copying. You can see below struct kexec_segment, 
+for the old kexec_load, kernel/initrd are read into user space buffer,
+the @buf stores the user space buffer address, @mem stores the position
+where kernel/initrd will be put. In kernel, it calls
+kimage_load_normal_segment() to copy user space buffer to intermediate
+pages which are allocated with flag GFP_KERNEL. These intermediate pages
+are recorded as entries, later when user execute "kexec -e" to trigger
+kexec jumping, it will do the final copying from the intermediate pages
+to the real destination pages which @mem pointed. Because we can't touch
+the existed data in 1st kernel when do kexec kernel loading. With my
+understanding, GFP_KERNEL will make those intermediate pages be
+allocated inside immovable area, it won't impact hotplugging. But the
+@mem we searched in the whole system RAM might be lost along with
+hotplug. Hence we need do kexec kernel again when hotplug event is
+detected.
 
-On 20.07.2018 15:45, Aapo Vienamo wrote:
-> Document the pinctrl bindings used by the SDHCI driver to reconfigure
-> pad voltages on controllers supporting multiple voltage levels.
-> 
-> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> ---
->   .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> index 9bce578..90c214d 100644
-> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> @@ -38,3 +38,25 @@ sdhci@c8000200 {
->   	power-gpios = <&gpio 155 0>; /* gpio PT3 */
->   	bus-width = <8>;
->   };
-> +
-> +Optional properties for Tegra210 and Tegra186:
-> +- pinctrl-names, pinctrl-0, pinctrl-1 : Specify pad voltage
-> +  configurations. Valid pinctrl-names are "sdmmc-3v3" and "sdmmc-1v8"
-> +  for controllers supporting multiple voltage levels. The order of names
-> +  should correspond to the pin configuration states in pinctrl-0 and
-> +  pinctrl-1.
-> +
-> +Example:
-> +sdhci@700b0000 {
-> +	compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-> +	reg = <0x0 0x700b0000 0x0 0x200>;
-> +	interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&tegra_car TEGRA210_CLK_SDMMC1>;
-> +	clock-names = "sdhci";
-> +	resets = <&tegra_car 14>;
-> +	reset-names = "sdhci";
-> +	pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
-> +	pinctrl-0 = <&sdmmc1_3v3>;
-> +	pinctrl-1 = <&sdmmc1_1v8>;
-> +	status = "disabled";
-> +};
-> 
+#define KEXEC_CONTROL_MEMORY_GFP (GFP_KERNEL | __GFP_NORETRY)
+
+
+struct kexec_segment {
+        /*
+         * This pointer can point to user memory if kexec_load() system
+         * call is used or will point to kernel memory if
+         * kexec_file_load() system call is used.
+         *
+         * Use ->buf when expecting to deal with user memory and use ->kbuf
+         * when expecting to deal with kernel memory.
+         */
+        union {
+                void __user *buf;
+                void *kbuf;
+        };
+        size_t bufsz;                                                                                                                             
+        unsigned long mem;
+        size_t memsz;
+};
+
+Thanks
+Baoquan
