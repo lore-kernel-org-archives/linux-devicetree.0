@@ -1,39 +1,99 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH 15/26] ARM: tegra: colibri_t30: add i2c-thermtrip
-Date: Wed, 25 Jul 2018 11:14:32 +0000
-Message-ID: <1532517270.6124.39.camel@toradex.com>
-References: <20180723123658.980-1-marcel@ziswiler.com>
-         <20180723123658.980-16-marcel@ziswiler.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v3 1/4] venus: firmware: add routine to reset ARM9
+Date: Wed, 25 Jul 2018 14:14:47 +0300
+Message-ID: <a9e7aee2-7320-affa-4887-c090b3ce289d@linaro.org>
+References: <1530731212-30474-1-git-send-email-vgarodia@codeaurora.org>
+ <1530731212-30474-2-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723123658.980-16-marcel@ziswiler.com>
+In-Reply-To: <1530731212-30474-2-git-send-email-vgarodia@codeaurora.org>
 Content-Language: en-US
-Content-ID: <C3EF246323F23249B9BC433CE55EEC69@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Vikash Garodia <vgarodia@codeaurora.org>, stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE4LTA3LTIzIGF0IDE0OjM2ICswMjAwLCBNYXJjZWwgWmlzd2lsZXIgd3JvdGU6
-DQo+IEZyb206IE1hcmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPg0K
-PiANCj4gQWRkIGkyYy10aGVybXRyaXAgd2hpY2ggd291bGQgc2V0IHRoZSBERVZfT0ZGIGJpdCBp
-biB0aGUgRENEQyBjb250cm9sDQo+IHJlZ2lzdGVyIG9mIHRoZSBUUFM2NTkxMSBQTUlDLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogTWFyY2VsIFppc3dpbGVyIDxtYXJjZWwuemlzd2lsZXJAdG9yYWRl
-eC5jb20+DQo+IA0KPiAtLS0NCj4gDQo+ICBhcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWNvbGli
-cmkuZHRzaSB8IDggKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWNvbGlicmkuZHRz
-aQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtY29saWJyaS5kdHNpDQo+IGluZGV4IDgy
-NjZlNDJlMTYzMC4uNjYwODI0M2UxZDU1IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0
-cy90ZWdyYTMwLWNvbGlicmkuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy90ZWdyYTMw
-LWNvbGlicmkuZHRzaQ0KPiBAQCAtOTAyLDYgKzkwMiwxNCBAQA0KPiAgCQludmlkaWEsY29yZS1w
-d3Itb2ZmLXRpbWUgPSA8MD47DQo+ICAJCW52aWRpYSxjb3JlLXBvd2VyLXJlcS1hY3RpdmUtaGln
-aDsNCj4gIAkJbnZpZGlhLHN5cy1jbG9jay1yZXEtYWN0aXZlLWhpZ2g7DQo+ICsNCj4gKwkJLyog
-U2V0IERFVl9PRkYgYml0IGluIERDREMgY29udHJvbCByZWdpc3RlciBvZg0KPiBUUFM2NTkxMSBQ
-TUlDICovDQo+ICsJCWkyYy10aGVybXRyaXAgew0KPiArCQkJbnZpZGlhLGkyYy1jb250cm9sbGVy
-LWlkID0gPDQ+Ow0KPiArCQkJbnZpZGlhLGJ1cy1hZGRyID0gPDB4MmQ+Ow0KPiArCQkJbnZpZGlh
-LHJlZy1hZGRyID0gPDB4M2U+Ow0KDQpXaGVuIHJ1bm5pbmcgc29tZSBtb3JlIHRlc3RzIEkganVz
-dCByZWFsaXplZCB0aGF0IHRoZSByZWctYWRkciBzaG91bGQNCnJlYWxseSBiZSAweDNmIGluc3Rl
-YWQuIFdpbGwgY2hhbmdlIHRoaXMgaW4gYSB2Mi4NCg0KPiArCQkJbnZpZGlhLHJlZy1kYXRhID0g
-PDB4MT47DQo+ICsJCX07DQo+ICAJfTsNCj4gIA0KPiAgCWFodWJANzAwODAwMDAgew==
+Hi,
+
+On 07/04/2018 10:06 PM, Vikash Garodia wrote:
+> Add routine to reset the ARM9 and brings it out of reset. Also
+> abstract the Venus CPU state handling with a new function. This
+> is in preparation to add PIL functionality in venus driver.
+> 
+> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.h         |  1 +
+>  drivers/media/platform/qcom/venus/firmware.c     | 36 ++++++++++++++++++++++++
+>  drivers/media/platform/qcom/venus/firmware.h     |  1 +
+>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++------
+>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  5 ++++
+>  5 files changed, 47 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 2f02365..eb5ee66 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -129,6 +129,7 @@ struct venus_core {
+>  	struct device *dev;
+>  	struct device *dev_dec;
+>  	struct device *dev_enc;
+> +	bool no_tz;
+>  	struct mutex lock;
+>  	struct list_head instances;
+>  	atomic_t insts_count;
+> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+> index 521d4b3..3968553d 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.c
+> +++ b/drivers/media/platform/qcom/venus/firmware.c
+> @@ -22,11 +22,47 @@
+>  #include <linux/sizes.h>
+>  #include <linux/soc/qcom/mdt_loader.h>
+>  
+> +#include "core.h"
+>  #include "firmware.h"
+> +#include "hfi_venus_io.h"
+>  
+>  #define VENUS_PAS_ID			9
+>  #define VENUS_FW_MEM_SIZE		(6 * SZ_1M)
+>  
+> +static void venus_reset_cpu(struct venus_core *core)
+> +{
+> +	void __iomem *base = core->base;
+> +
+> +	writel(0, base + WRAPPER_FW_START_ADDR);
+> +	writel(VENUS_FW_MEM_SIZE, base + WRAPPER_FW_END_ADDR);
+> +	writel(0, base + WRAPPER_CPA_START_ADDR);
+> +	writel(VENUS_FW_MEM_SIZE, base + WRAPPER_CPA_END_ADDR);
+> +	writel(0x0, base + WRAPPER_CPU_CGC_DIS);
+> +	writel(0x0, base + WRAPPER_CPU_CLOCK_CONFIG);
+> +
+> +	/* Make sure all register writes are committed. */
+> +	mb();
+> +
+> +	/* Bring ARM9 out of reset */
+> +	writel_relaxed(0, base + WRAPPER_A9SS_SW_RESET);
+> +}
+> +
+> +int venus_set_hw_state(struct venus_core *core, bool resume)
+> +{
+> +	void __iomem *base = core->base;
+> +
+> +	if (!core->no_tz)
+> +		return qcom_scm_set_remote_state(resume, 0);
+> +
+> +	if (resume)
+> +		venus_reset_cpu(core);
+> +	else
+> +		writel(1, base + WRAPPER_A9SS_SW_RESET);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(venus_set_hw_state);
+
+This export_symbol shouldn't be needed
+
+-- 
+regards,
+Stan
