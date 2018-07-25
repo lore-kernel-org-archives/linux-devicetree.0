@@ -1,99 +1,89 @@
-Return-Path: <SRS0=CqSa=KK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr60047.outbound.protection.outlook.com ([40.107.6.47]:7645
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727779AbeGZFng (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Jul 2018 01:43:36 -0400
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [v7 4/7] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA
- controller bindings
-Date: Thu, 26 Jul 2018 04:28:36 +0000
-Message-ID: <HE1PR0402MB3385D17C161F59D9A5C35A65E22B0@HE1PR0402MB3385.eurprd04.prod.outlook.com>
-References: <20180725112919.31340-1-wen.he_1@nxp.com>
- <20180725112919.31340-4-wen.he_1@nxp.com>
- <CADRPPNTGODG7h0n8sXv3FQOpL54m6o4rteObR7cnmBymfcRZxg@mail.gmail.com>
-In-Reply-To: <CADRPPNTGODG7h0n8sXv3FQOpL54m6o4rteObR7cnmBymfcRZxg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=02mJ=KJ=gmail.com=pku.leo@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>
-Cc: Vinod <vkoul@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
+In-Reply-To: <20180725112919.31340-4-wen.he_1@nxp.com>
+References: <20180725112919.31340-1-wen.he_1@nxp.com> <20180725112919.31340-4-wen.he_1@nxp.com>
+From: Li Yang <leoyang.li@nxp.com>
+Date: Wed, 25 Jul 2018 16:19:02 -0500
+Message-ID: <CADRPPNTGODG7h0n8sXv3FQOpL54m6o4rteObR7cnmBymfcRZxg@mail.gmail.com>
+Subject: Re: [v7 4/7] dt-bindings: fsl-qdma: Add NXP Layerscpae qDMA
+ controller bindings
+Content-Type: text/plain; charset="UTF-8"
+To: Wen He <wen.he_1@nxp.com>
+Cc: Vinod <vkoul@kernel.org>, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jiafei Pan <jiafei.pan@nxp.com>, Jiaheng Fan <jiaheng.fan@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGkgWWFuZyBbbWFpbHRv
-Omxlb3lhbmcubGlAbnhwLmNvbV0NCj4gU2VudDogMjAxOOW5tDfmnIgyNuaXpSA1OjE5DQo+IFRv
-OiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBWaW5vZCA8dmtvdWxAa2VybmVsLm9y
-Zz47IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtl
-cm5lbC5vcmc+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERFVklDRQ0K
-PiBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IEppYWZlaSBQYW4N
-Cj4gPGppYWZlaS5wYW5AbnhwLmNvbT47IEppYWhlbmcgRmFuIDxqaWFoZW5nLmZhbkBueHAuY29t
-Pg0KPiBTdWJqZWN0OiBSZTogW3Y3IDQvN10gZHQtYmluZGluZ3M6IGZzbC1xZG1hOiBBZGQgTlhQ
-IExheWVyc2NwYWUgcURNQQ0KPiBjb250cm9sbGVyIGJpbmRpbmdzDQo+IA0KPiBPbiBXZWQsIEp1
-bCAyNSwgMjAxOCBhdCA2OjI5IEFNLCBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+IHdyb3RlOg0K
-PiA+IERvY3VtZW50IHRoZSBkZXZpY2V0cmVlIGJpbmRpbmdzIGZvciBOWFAgTGF5ZXJzY2FwZSBx
-RE1BIGNvbnRyb2xsZXINCj4gPiB3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBOWFAgUW9ySVEgTGF5
-ZXJzY2FwZSBTb0NzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VuIEhlIDx3ZW4uaGVfMUBu
-eHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0K
-PiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL2ZzbC1x
-ZG1hLnR4dCB8ICAgNDENCj4gKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlcyBjaGFu
-Z2VkLCA0MSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUgMTAwNjQ0
-DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtcWRtYS50eHQN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZG1hL2ZzbC1xZG1hLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2RtYS9mc2wtcWRtYS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAw
-MDAwMDAuLjk5YjNkNzQNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtcWRtYS50eHQNCj4gPiBAQCAtMCwwICsxLDQx
-IEBADQo+ID4gK05YUCBMYXllcnNjYXBlIFNvQyBxRE1BIENvbnRyb2xsZXINCj4gPiArPT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiA+ICsNCj4gPiArVGhpcyBkZXZpY2UgZm9s
-bG93cyB0aGUgZ2VuZXJpYyBETUEgYmluZGluZ3MgZGVmaW5lZCBpbiBkbWEvZG1hLnR4dC4NCj4g
-PiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKw0KPiA+ICstIGNvbXBhdGlibGU6
-ICAgICAgICAgIE11c3QgYmUgb25lIG9mDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICJm
-c2wsbHMxMDIxYS1xZG1hIjogZm9yIExTMTAyMUEgQm9hcmQNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgImZzbCxsczEwNDNhLXFkbWEiOiBmb3IgbHMxMDQzQSBCb2FyZA0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAiZnNsLGxzMTA0NmEtcWRtYSI6IGZvciBsczEwNDZBIEJvYXJk
-DQo+IA0KPiBDYW4geW91IGFsaWduIG9uIHRoZSBjYXNlIG9mICJscyI/DQo+IA0KDQpPSw0KDQo+
-ID4gKy0gcmVnOiAgICAgICAgICAgICAgICAgU2hvdWxkIGNvbnRhaW4gdGhlIHJlZ2lzdGVyJ3Mg
-YmFzZSBhZGRyZXNzIGFuZA0KPiBsZW5ndGguDQo+ID4gKy0gaW50ZXJydXB0czogICAgICAgICAg
-U2hvdWxkIGNvbnRhaW4gYSByZWZlcmVuY2UgdG8gdGhlIGludGVycnVwdCB1c2VkDQo+IGJ5IHRo
-aXMNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZpY2UuDQo+ID4gKy0gaW50ZXJydXB0
-LW5hbWVzOiAgICAgU2hvdWxkIGNvbnRhaW4gaW50ZXJydXB0IG5hbWVzOg0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAicWRtYS1lcnJvciI6IHRoZSBlcnJvciBpbnRlcnJ1cHQNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgInFkbWEtcXVldWUiOiB0aGUgcXVldWUgaW50ZXJydXB0
-DQo+ID4gKy0gZnNsLHF1ZXVlczogICAgICAgICAgU2hvdWxkIGNvbnRhaW4gbnVtYmVyIG9mIHF1
-ZXVlcyBzdXBwb3J0ZWQuDQo+IA0KPiBUaGlzIHByb3BlcnR5IG5hbWUgbG9va3MgdmVyeSBnZW5l
-cmFsLiAgTm90IHN1cmUgaWYgbWFraW5nIGl0IGEgbGl0dGxlIGJpdCBtb3JlDQo+IHNwZWNpZmlj
-IHdpbGwgYmUgYmV0dGVyIHN1Y2ggYXMgImZzbCxkbWEtcXVldWVzIi4NCj4gDQoNCkdvb2QgaWRl
-YSwgdGhhbmsgeW91ciBjb21tZW50cy4NCg0KPiA+ICsNCj4gPiArT3B0aW9uYWwgcHJvcGVydGll
-czoNCj4gPiArDQo+ID4gKy0gZG1hLWNoYW5uZWxzOiAgICAgICAgICAgICAgICBOdW1iZXIgb2Yg
-RE1BIGNoYW5uZWxzIHN1cHBvcnRlZA0KPiBieSB0aGUgY29udHJvbGxlci4NCj4gPiArLSBiaWct
-ZW5kaWFuOiAgICAgICAgICBJZiBwcmVzZW50IHJlZ2lzdGVycyBhbmQgaGFyZHdhcmUgc2NhdHRl
-ci9nYXRoZXINCj4gZGVzY3JpcHRvcnMNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBvZiB0
-aGUgcURNQSBhcmUgaW1wbGVtZW50ZWQgaW4gYmlnIGVuZGlhbg0KPiBtb2RlLCBvdGhlcndpc2Ug
-aW4gbGl0dGxlDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbW9kZS4NCj4gPiArDQo+ID4g
-K0V4YW1wbGVzOg0KPiA+ICsNCj4gPiArICAgICAgIHFkbWE6IGRtYS1jb250cm9sbGVyQDgzOTAw
-MDAgew0KPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxsczEwMjFhLXFkbWEi
-Ow0KPiA+ICsgICAgICAgICAgICAgICByZWcgPSA8MHgwIDB4ODM5ODAwMCAweDAgMHgyMDAwIC8q
-IENvbnRyb2xsZXINCj4gcmVnaXN0ZXJzICovDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAw
-eDAgMHg4MzlhMDAwIDB4MCAweDIwMDA+OyAvKiBCbG9jayByZWdpc3RlcnMNCj4gKi8NCj4gPiAr
-ICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE4NSBJUlFfVFlQRV9MRVZFTF9I
-SUdIPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDc2DQo+
-IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHQtbmFt
-ZXMgPSAicWRtYS1lcnJvciIsICJxZG1hLXF1ZXVlIjsNCj4gPiArICAgICAgICAgICAgICAgZG1h
-LWNoYW5uZWxzID0gPDg+Ow0KPiA+ICsgICAgICAgICAgICAgICBxdWV1ZXMgPSA8Mj47DQo+IA0K
-PiBOb3QgdXBkYXRlZCBhZnRlciB0aGUgYmluZGluZyBpcyB1cGRhdGVkLg0KPiANCg0KV2hhdCBk
-b2VzIG1lYW5zPyBXaGljaCBvbmUgdXBkYXRlZCBhZnRlciB0aGUgYmluZGluZyBpcyB1cGRhdGU/
-DQoNCkJlc3QgUmVnYXJkcywNCldlbg0KPiA+ICsgICAgICAgICAgICAgICBiaWctZW5kaWFuOw0K
-PiA+ICsgICAgICAgfTsNCj4gPiArDQo+ID4gK0RNQSBjbGllbnRzIG11c3QgdXNlIHRoZSBmb3Jt
-YXQgZGVzY3JpYmVkIGluIGRtYS9kbWEudHh0IGZpbGUuDQo+ID4gLS0NCj4gPiAxLjcuMQ0KPiA+
-DQo+ID4gLS0NCj4gPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGlu
-ZSAidW5zdWJzY3JpYmUgZGV2aWNldHJlZSINCj4gPiBpbiB0aGUgYm9keSBvZiBhIG1lc3NhZ2Ug
-dG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZyBNb3JlIG1ham9yZG9tbw0KPiA+IGluZm8gYXQN
-Cj4gPg0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/
-dXJsPWh0dHAlM0ElMkYlMkZ2Z2VyDQo+ID4gLmtlcm5lbC5vcmclMkZtYWpvcmRvbW8taW5mby5o
-dG1sJmFtcDtkYXRhPTAyJTdDMDElN0N3ZW4uaGVfMSU0DQo+IDBueHAuY28NCj4gPg0KPiBtJTdD
-ZjVjOTMxYTkxMGE1NDEwMjY4ZmMwOGQ1ZjI3NDNmYjIlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5
-OWMNCj4gNWMzMDE2Mw0KPiA+DQo+IDUlN0MwJTdDMCU3QzYzNjY4MTUwMzQ1NjkzOTkxOCZhbXA7
-c2RhdGE9ekM1NyUyQmM5SmkycmpRWTBLdE5TDQo+IGQ4bWxLZ3BwDQo+ID4gSmcyR3FUZWNsd0Z5
-OVhqcyUzRCZhbXA7cmVzZXJ2ZWQ9MA0K
+On Wed, Jul 25, 2018 at 6:29 AM, Wen He <wen.he_1@nxp.com> wrote:
+> Document the devicetree bindings for NXP Layerscape qDMA controller
+> which could be found on NXP QorIQ Layerscape SoCs.
+>
+> Signed-off-by: Wen He <wen.he_1@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/dma/fsl-qdma.txt |   41 ++++++++++++++++++++
+>  1 files changed, 41 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/fsl-qdma.txt
+>
+> diff --git a/Documentation/devicetree/bindings/dma/fsl-qdma.txt b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+> new file mode 100644
+> index 0000000..99b3d74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/fsl-qdma.txt
+> @@ -0,0 +1,41 @@
+> +NXP Layerscape SoC qDMA Controller
+> +==================================
+> +
+> +This device follows the generic DMA bindings defined in dma/dma.txt.
+> +
+> +Required properties:
+> +
+> +- compatible:          Must be one of
+> +                        "fsl,ls1021a-qdma": for LS1021A Board
+> +                        "fsl,ls1043a-qdma": for ls1043A Board
+> +                        "fsl,ls1046a-qdma": for ls1046A Board
+
+Can you align on the case of "ls"?
+
+> +- reg:                 Should contain the register's base address and length.
+> +- interrupts:          Should contain a reference to the interrupt used by this
+> +                       device.
+> +- interrupt-names:     Should contain interrupt names:
+> +                        "qdma-error": the error interrupt
+> +                        "qdma-queue": the queue interrupt
+> +- fsl,queues:          Should contain number of queues supported.
+
+This property name looks very general.  Not sure if making it a little
+bit more specific will be better such as "fsl,dma-queues".
+
+> +
+> +Optional properties:
+> +
+> +- dma-channels:                Number of DMA channels supported by the controller.
+> +- big-endian:          If present registers and hardware scatter/gather descriptors
+> +                       of the qDMA are implemented in big endian mode, otherwise in little
+> +                       mode.
+> +
+> +Examples:
+> +
+> +       qdma: dma-controller@8390000 {
+> +               compatible = "fsl,ls1021a-qdma";
+> +               reg = <0x0 0x8398000 0x0 0x2000 /* Controller registers */
+> +                      0x0 0x839a000 0x0 0x2000>; /* Block registers */
+> +               interrupts = <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
+> +                               <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> +               interrupt-names = "qdma-error", "qdma-queue";
+> +               dma-channels = <8>;
+> +               queues = <2>;
+
+Not updated after the binding is updated.
+
+> +               big-endian;
+> +       };
+> +
+> +DMA clients must use the format described in dma/dma.txt file.
+> --
+> 1.7.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
