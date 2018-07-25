@@ -1,87 +1,93 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH 1/6] RISC-V: simplify software interrupt / IPI code
-Date: Wed, 25 Jul 2018 14:44:32 -0700 (PDT)
-Message-ID: <mhng-03f673cd-5779-44c6-98b3-657e5c4b9d39@palmer-si-x1c4>
-References: <20180725093649.32332-2-hch@lst.de>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: jbrunet@baylibre.com
+Subject: Re: [PATCH 10/14] arm64: dts: meson-axg: add linein codec
+Date: Thu, 26 Jul 2018 00:07:21 +0200
+Message-ID: <90780f5a6b974ee9a4f9f9f2580fc83ef6bdd805.camel@baylibre.com>
+References: <20180724125238.14567-1-jbrunet@baylibre.com>
+         <20180724125238.14567-11-jbrunet@baylibre.com>
+         <CAFBinCAgMhVOpCipV2D_UPqX7z0bcT=qnfRXTWpO7zigzS_TAQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725093649.32332-2-hch@lst.de>
+In-Reply-To: <CAFBinCAgMhVOpCipV2D_UPqX7z0bcT=qnfRXTWpO7zigzS_TAQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>
+Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Jul 2018 02:36:44 PDT (-0700), Christoph Hellwig wrote:
-> Rename handle_ipi to riscv_software_interrupt, drop the unused return
-> value and provide a stub for the !SMP build.  This allows simplifying
-> the upcoming interrupt controller driver by not providing a wrapper
-> for it.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/include/asm/smp.h | 13 +++++++++++--
->  arch/riscv/kernel/smp.c      |  6 ++----
->  2 files changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-> index 85e4220839b0..80ecb957fe9f 100644
-> --- a/arch/riscv/include/asm/smp.h
-> +++ b/arch/riscv/include/asm/smp.h
-> @@ -44,8 +44,17 @@ void arch_send_call_function_single_ipi(int cpu);
->   */
->  #define raw_smp_processor_id() (*((int*)((char*)get_current() + TASK_TI_CPU)))
->
-> -/* Interprocessor interrupt handler */
-> -irqreturn_t handle_ipi(void);
-> +/* Software interrupt handler */
-> +void riscv_software_interrupt(void);
-> +
-> +#else /* CONFIG_SMP */
-> +
-> +/*
-> + * We currently only use software interrupts to pass inter-processor
-> + * interrupts, so if a non-SMP system gets a software interrupt then we
-> + * don't know what to do.
-> + */
-> +#define riscv_software_interrupt()	WARN_ON()
->
->  #endif /* CONFIG_SMP */
->
-> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-> index 6d3962435720..906fe21ea21b 100644
-> --- a/arch/riscv/kernel/smp.c
-> +++ b/arch/riscv/kernel/smp.c
-> @@ -45,7 +45,7 @@ int setup_profiling_timer(unsigned int multiplier)
->  	return -EINVAL;
->  }
->
-> -irqreturn_t handle_ipi(void)
-> +void riscv_software_interrupt(void)
->  {
->  	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
->
-> @@ -60,7 +60,7 @@ irqreturn_t handle_ipi(void)
->
->  		ops = xchg(pending_ipis, 0);
->  		if (ops == 0)
-> -			return IRQ_HANDLED;
-> +			return;
->
->  		if (ops & (1 << IPI_RESCHEDULE))
->  			scheduler_ipi();
-> @@ -73,8 +73,6 @@ irqreturn_t handle_ipi(void)
->  		/* Order data access and bit testing. */
->  		mb();
->  	}
-> -
-> -	return IRQ_HANDLED;
->  }
->
->  static void
+On Wed, 2018-07-25 at 21:18 +0200, Martin Blumenstingl wrote:
+> Hi Jerome,
+> 
+> On Tue, Jul 24, 2018 at 3:09 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > 
+> > Add the es7241 analog to digital converter which is fed by the
+> > lienin jack of the s400
+> > 
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> > index 7489b88f27d7..fb101a1c6660 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> > @@ -178,6 +178,16 @@
+> >                         gpios = <&gpio_speaker 2 0>;
+> >                 };
+> >         };
+> > +
+> > +       linein: audio-codec@0 {
+> 
+> there is a unit-address but no reg property - I am wondering if this is allowed?
+> for the regulators we're using regulator-<unique-name> instead of
+> regulator@<unique number>
+> 
+> (this applies to other patches in this series as well)
 
-Acked-by: Palmer Dabbelt <palmer@sifive.com>
+I did that because I tried to keep node-name generic as described in the DT
+spec. The idea of numbering the nodes (without a reg property) in such a way
+came from :
+Documentation/devicetree/bindings/sound/simple-card.txt:
+=> look at the multi dai link example. I'm doing exactly the same on the axg
+card's dai-links. Nothing new here.
 
-I think it's probably easier to have the whole patch set go through the IRQ
-tree, so I won't put these in the RISC-V tree unless someone says something.
+that being said, section 2.2.1 of the DT specs says:
+
+" If the node has no reg property, the @unit-address must be omitted and the
+node-name alone differentiates the node from other nodes at the same level in
+the tree "
+
+So apparently, this is used but not ok ?
+I could make 'linein' the node-name instead of the label but that wouldn't be
+very generic.
+We could also have dai-link-2 instead dai-link@2 (audio-codec-3 instead of 
+audio-codec@3). I seems to be OK with the spec, but it also looks weird ...
+
+Rob, do you have opinion on this ? 
+
+> 
+> > +               #sound-dai-cells = <0>;
+> > +               compatible = "everest,es7241";
+> > +               VDDA-supply = <&vcc_3v3>;
+> > +               VDDP-supply = <&vcc_3v3>;
+> > +               VDDD-supply = <&vcc_3v3>;
+> > +               status = "okay";
+> > +               sound-name-prefix = "Linein";
+> 
+> SPDIF output uses capital letters "SPDIFOUT"
+> I am not familiar with the sound subsystem (thus I'm not sure where
+> this shows up) so I am wondering if the naming should be consistent?
+
+This string is used to prefix the name of the different widgets and controls
+provided. It is useful when several devices provides component and control with
+the same names. It happens when several instances of a component are used but
+also with classic names, such as "Playback"
+
+I don't think there is a rule regarding capitalization.
+Some name are all capital in ASoC, some just have the first letter in upper
+case. It doesn't change anything technically, and I personally don't care.
+
+> 
+> Regards
+> Martin
