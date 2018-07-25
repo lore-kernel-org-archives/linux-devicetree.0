@@ -1,54 +1,138 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH 04/32] ARM: dts: omap3-gta04: fixes for tvout / venc
-Date: Wed, 25 Jul 2018 12:37:50 +0200
-Message-ID: <20180725103750.4yltpfswd52fpw63@earth.universe>
-References: <cover.1532501910.git.hns@goldelico.com>
- <73e5b1fd4cc27e3148c6bc2e8f8281f3996ccf68.1532501910.git.hns@goldelico.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/4] power: supply: max17040: Config alert SOC low level
+ threshold from FDT
+Date: Wed, 25 Jul 2018 12:42:34 +0200
+Message-ID: <CAJKOXPd93QKfUQvruwGe3WL52_yhbCG_mPSwt74thPNqdJ7qxg@mail.gmail.com>
+References: <20180723040816.19455-1-matheus@castello.eng.br> <20180723040816.19455-3-matheus@castello.eng.br>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ll6onkhnahxv7igd"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <73e5b1fd4cc27e3148c6bc2e8f8281f3996ccf68.1532501910.git.hns@goldelico.com>
+In-Reply-To: <20180723040816.19455-3-matheus@castello.eng.br>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Marek Belisko <marek@goldelico.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+To: Matheus Castello <matheus@castello.eng.br>
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 23 July 2018 at 06:08, Matheus Castello <matheus@castello.eng.br> wrote:
+> For configuration of fuel gauge alert for a low level state of charge
+> interrupt we add a function to config level threshold and a device tree
+> binding property to set it in flatned device tree node.
+>
+> Now we can use "maxim,alert-soc-level" property with the values from
+> 1 up to 32 to configure alert interrupt threshold.
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  drivers/power/supply/max17040_battery.c | 36 +++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 
---ll6onkhnahxv7igd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Matheus,
 
-Hi,
+In series, bindings describing new DT property should go before
+introducing them in the driver.
 
-On Wed, Jul 25, 2018 at 08:58:36AM +0200, H. Nikolaus Schaller wrote:
->  			port@1 {
-> -				reg = <1>;
-> +				reg = <0>;
+>
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+> index 6e54e58814a9..3efa52d32b44 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -47,6 +47,8 @@ struct max17040_chip {
+>         int soc;
+>         /* State Of Charge */
+>         int status;
+> +       /* Alert threshold */
 
-You should also update the node name.
+Threshold in what units?
 
---  Sebastian
+> +       int alert_threshold;
+>  };
+>
+>  static int max17040_get_property(struct power_supply *psy,
+> @@ -123,6 +125,28 @@ static void max17040_get_soc(struct i2c_client *client)
+>         chip->soc = (soc >> 8);
+>  }
+>
+> +static int max17040_set_soc_threshold(struct i2c_client *client, u8 level)
+> +{
+> +       int ret;
+> +       u16 data;
+> +
+> +       /* check if level is between 1% and 32% */
+> +       if (level > 0 && level < 33) {
+> +               /* alert threshold use LSb 5 bits from RCOMP */
+> +               /* two's-complements form: 00000 = 32% and 11111 = 1% */
 
---ll6onkhnahxv7igd
-Content-Type: application/pgp-signature; name="signature.asc"
+Please use Linux style comments.
 
------BEGIN PGP SIGNATURE-----
+> +               level = 32 - level;
+> +               data = max17040_read_reg(client, MAX17040_RCOMP);
+> +               data &= 0xFFE0;
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAltYUvUACgkQ2O7X88g7
-+ppctA//Wd340Y3Z4khluvOvD0SeWlPYwYWDLb2MkM+OF6JHxW8HnJDROA5loXVN
-4Ndx1HyM1V7Oz7YTd00Yj2T577BDUg5rxLzevzpw25KiIU3ajwU8yi9Sf2jnfwsg
-8RxGVHkpGY1WuhYt2a5gFMxCT9Z9eAwr/HOra2zru2wstzfr4fkBMezJ2UQO5mqq
-L3CkmTlKyB6+FQhmdteWQEC3TIM6ly+7w4iRgyso+PHFH4pz3SsK1QGV2abw1QiU
-MzcFCwLy621jJ/JIJngDtbIhZHJtqX+ql6fC84HPwjQunZlkNdjF3xHJu3M3Z2ZI
-mux9D+Ak+jF8pXz1WojUFcc5smn35bTaDzBwIoVNRiPXUhHm4kJtZGgMOK/M8JZc
-RFw80k7zo70anz3/N60XXAg/SH2hA8A7pHOIzrKQrWneKVEljKbPE3Ozj428lhI2
-rZAwg/KJttfYKLl40/pcrADARbstb6mdTzYFLYeSJRcQM6n8NGrwVf9ECRFScJwM
-GDXcwqVVwY4WhIiDbLH6pXPGealIyoX6VefZS/FVvXJ7JuEpAiBMmcVm39VGYh9a
-o8+5Nz72XhaI9jYJ1ZLKte8VTniR179m3TGqmMPi4HZNsk7ZRRuS/DBW7ZGq47D5
-gRTTdBpqJb1/I3h32AAiDyvEOQIA4OC0o+vARXPrsx4tKepMFLM=
-=1qAX
------END PGP SIGNATURE-----
+Please define the mask.
 
---ll6onkhnahxv7igd--
+> +               data |= level;
+> +               max17040_write_reg(client, MAX17040_RCOMP, data);
+> +               ret = 0;
+> +       } else {
+> +               ret = -EINVAL;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static void max17040_get_version(struct i2c_client *client)
+>  {
+>         u16 version;
+> @@ -165,6 +189,16 @@ static void max17040_get_status(struct i2c_client *client)
+>                 chip->status = POWER_SUPPLY_STATUS_FULL;
+>  }
+>
+> +static void max17040_get_of_data(struct max17040_chip *chip)
+> +{
+> +       struct device *dev = &chip->client->dev;
+> +       struct device_node *np = dev->of_node;
+> +
+> +       if (of_property_read_s32(np, "maxim,alert-soc-level",
+> +                       &chip->alert_threshold))
+> +               chip->alert_threshold = 4;
+
+1. You read s32 and later cast it to u8. Either some validation of
+possible values or of_property_read_u8().
+2. You have hard-coded default value - please put it in some define.
+There are already defines, e.g.: MAX17040_BATTERY_FULL
+3. Also the bindings say something about power up value... not 4.
+4, I think that  default - missing - value should mean "no interrupt warnings".
+
+> +}
+> +
+>  static void max17040_work(struct work_struct *work)
+>  {
+>         struct max17040_chip *chip;
+> @@ -231,6 +265,7 @@ static int max17040_probe(struct i2c_client *client,
+>
+>         chip->client = client;
+>         chip->pdata = client->dev.platform_data;
+> +       max17040_get_of_data(chip);
+>
+>         i2c_set_clientdata(client, chip);
+>         psy_cfg.drv_data = chip;
+> @@ -262,6 +297,7 @@ static int max17040_probe(struct i2c_client *client,
+>
+>         max17040_reset(client);
+>         max17040_get_version(client);
+> +       max17040_set_soc_threshold(client, chip->alert_threshold);
+
+1. Return value ignored.
+2. First you enable interrupts for whatever default value of alerts
+and then you set the alerts threshold. You might generate false
+warning in such case so this should be in reverse order.
+
+Best regards,
+Krzysztof
+
+>
+>         INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
+>         queue_delayed_work(system_power_efficient_wq, &chip->work,
+> --
+> 2.13.3
+>
