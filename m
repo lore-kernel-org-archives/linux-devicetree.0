@@ -1,97 +1,49 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: [v2 1/2] dt-bindings: media: i2c: Document MT9V111 bindings
-Date: Wed, 25 Jul 2018 15:44:30 +0200
-Message-ID: <1532526271-19639-2-git-send-email-jacopo@jmondi.org>
-References: <1532526271-19639-1-git-send-email-jacopo@jmondi.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] pinctrl: stm32: fix bank io port number
+Date: Wed, 25 Jul 2018 08:00:20 -0600
+Message-ID: <CAL_Jsq+awnVr0qOtyMRYJzDON6k0c-G+bqLYz+WL5LNpigKhpg@mail.gmail.com>
+References: <1531745857-5561-1-git-send-email-alexandre.torgue@st.com>
+ <1531745857-5561-2-git-send-email-alexandre.torgue@st.com>
+ <20180720163515.GA16515@rob-hp-laptop> <ed56c8d3-f354-d311-8407-66268bcdf7a6@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532526271-19639-1-git-send-email-jacopo@jmondi.org>
+In-Reply-To: <ed56c8d3-f354-d311-8407-66268bcdf7a6@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@iki.fi, kieran.bingham@ideasonboard.com, robh@kernel.org, devicetree@vger.kernel.org
-Cc: Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+On Tue, Jul 24, 2018 at 10:07 AM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+>
+> Hi Rob
+>
+> On 07/20/2018 06:35 PM, Rob Herring wrote:
+> > On Mon, Jul 16, 2018 at 02:57:36PM +0200, Alexandre Torgue wrote:
+> >> In case the exti line is not in line with the bank number (that is the case
+> >> when there is an hole between two banks, for example GPIOK and then GPIOZ),
+> >> use "st,bank-ioport" DT property to get the right exti line.
+> >>
+> >> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> >> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+> >> index 9a06e1f..60c678a 100644
+> >> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+> >> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+> >> @@ -55,6 +55,8 @@ Optional properties:
+> >>      NOTE: If "gpio-ranges" is used for a gpio controller, all gpio-controller
+> >>      have to use a "gpio-ranges" entry.
+> >>      More details in Documentation/devicetree/bindings/gpio/gpio.txt.
+> >> + - st,bank-ioport: should correspond to the EXTI IOport selection (EXTI line
+> >> +   used to select GPIOs as interrupts).
+> >
+> > ioport sounds like something else. Perhaps '-exti-line'?
+>
+> IOport is actually what is described in our datasheet. I could change it
+> to -exti-line but I would prefer to match with the datasheet.
 
-Add documentation for Aptina MT9V111 image sensor.
+Okay.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- .../bindings/media/i2c/aptina,mt9v111.txt          | 46 ++++++++++++++++++++++
- MAINTAINERS                                        |  8 ++++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-new file mode 100644
-index 0000000..bd896e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-@@ -0,0 +1,46 @@
-+* Aptina MT9V111 CMOS sensor
-+----------------------------
-+
-+The Aptina MT9V111 is a 1/4-Inch VGA-format digital image sensor with a core
-+based on Aptina MT9V011 sensor and an integrated Image Flow Processor (IFP).
-+
-+The sensor has an active pixel array of 640x480 pixels and can output a number
-+of image resolution and formats controllable through a simple two-wires
-+interface.
-+
-+Required properties:
-+--------------------
-+
-+- compatible: shall be "aptina,mt9v111".
-+- clocks: reference to the system clock input provider.
-+
-+Optional properties:
-+--------------------
-+
-+- enable-gpios: output enable signal, pin name "OE#". Active low.
-+- standby-gpios: low power state control signal, pin name "STANDBY".
-+  Active high.
-+- reset-gpios: chip reset signal, pin name "RESET#". Active low.
-+
-+The device node must contain one 'port' child node with one 'endpoint' child
-+sub-node for its digital output video port, in accordance with the video
-+interface bindings defined in:
-+Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+Example:
-+--------
-+
-+        &i2c1 {
-+                camera@48 {
-+                        compatible = "aptina,mt9v111";
-+                        reg = <0x48>;
-+
-+                        clocks = <&camera_clk>;
-+
-+                        port {
-+                                mt9v111_out: endpoint {
-+                                        remote-endpoint = <&ceu_in>;
-+                                };
-+                        };
-+                };
-+        };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bbd9b9b..4ab113c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9651,6 +9651,14 @@ F:	Documentation/devicetree/bindings/media/i2c/mt9v032.txt
- F:	drivers/media/i2c/mt9v032.c
- F:	include/media/i2c/mt9v032.h
-
-+MT9V111 APTINA CAMERA SENSOR
-+M:	Jacopo Mondi <jacopo@jmondi.org>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-+F:	drivers/media/i2c/mt9v111.c
-+
- MULTIFUNCTION DEVICES (MFD)
- M:	Lee Jones <lee.jones@linaro.org>
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git
---
-2.7.4
