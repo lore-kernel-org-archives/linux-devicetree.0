@@ -1,78 +1,88 @@
-From: Ladislav Michl <ladis@linux-mips.org>
-Subject: Re: [PATCH 10/32] ARM: dts: omap3-gta04: update gpmc NAND setup
-Date: Wed, 25 Jul 2018 10:10:59 +0200
-Message-ID: <20180725081058.GB7467@lenoch>
-References: <cover.1532501910.git.hns@goldelico.com>
- <effe8969751cde3a3cd7993aa66c839493af9dd1.1532501910.git.hns@goldelico.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 1/9] drm/exynos: rename "bridge_node" to
+ "mic_bridge_node"
+Date: Wed, 25 Jul 2018 10:11:29 +0200
+Message-ID: <20180725081131eucas1p1a5a7f7e19d8ef3254dfe89049ea6d7c7~EjlpXj7zz1467114671eucas1p1f@eucas1p1.samsung.com>
+References: <1529396370-18761-1-git-send-email-m.purski@samsung.com>
+ <CGME20180619081957eucas1p2d2b9075a9b7a90837b40e4529ab31888@eucas1p2.samsung.com>
+ <1529396370-18761-2-git-send-email-m.purski@samsung.com>
+ <20180724074912epcas1p2e47dba6793b91a90b183e6cd809200bb~EPo3hWbma0369303693epcas1p2F@epcas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <effe8969751cde3a3cd7993aa66c839493af9dd1.1532501910.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Marek Belisko <marek@goldelico.com>, =?iso-8859-2?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180724074912epcas1p2e47dba6793b91a90b183e6cd809200bb~EPo3hWbma0369303693epcas1p2F@epcas1p2.samsung.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>, Maciej Purski <m.purski@samsung.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Seung-Woo Kim <sw0312.kim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 08:58:42AM +0200, H. Nikolaus Schaller wrote:
-> to better match omap3-beagle.dts (which was the basis
-> of designing the GTA04).
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  arch/arm/boot/dts/omap3-gta04.dtsi | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-> index 03fe404cbf56..9568e0c4d4bf 100644
-> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> @@ -616,27 +616,27 @@
->  		interrupt-parent = <&gpmc>;
->  		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
->  			     <1 IRQ_TYPE_NONE>;	/* termcount */
-> +		ti,nand-ecc-opt = "ham1";
-> +		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
->  		nand-bus-width = <16>;
-> -		ti,nand-ecc-opt = "bch8";
-
-You are using weeker ECC scheme just to be compatible with another machine?
-So now you cannot boot already deployed filesystem... Also is it enough for
-NAND chip used?
-
-	ladis
-
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
->  
-> -		gpmc,sync-clk-ps = <0>;
-> +		gpmc,device-width = <2>;
->  		gpmc,cs-on-ns = <0>;
->  		gpmc,cs-rd-off-ns = <44>;
->  		gpmc,cs-wr-off-ns = <44>;
->  		gpmc,adv-on-ns = <6>;
->  		gpmc,adv-rd-off-ns = <34>;
->  		gpmc,adv-wr-off-ns = <44>;
-> -		gpmc,we-off-ns = <40>;
->  		gpmc,oe-off-ns = <54>;
-> +		gpmc,we-off-ns = <40>;
->  		gpmc,access-ns = <64>;
->  		gpmc,rd-cycle-ns = <82>;
->  		gpmc,wr-cycle-ns = <82>;
->  		gpmc,wr-access-ns = <40>;
->  		gpmc,wr-data-mux-bus-ns = <0>;
-> -		gpmc,device-width = <2>;
-> -
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> +		gpmc,sync-clk-ps = <0>;
->  
->  		x-loader@0 {
->  			label = "X-Loader";
-> -- 
-> 2.12.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjQuMDcuMjAxOCAwOTo0OSwgSW5raSBEYWUgd3JvdGU6Cj4gSGksCj4KPiAyMDE464WEIDA2
+7JuUIDE57J28IDE3OjE57JeQIE1hY2llaiBQdXJza2kg7J20KOqwgCkg7JO0IOq4gDoKPj4gV2hl
+biBhZGRpbmcgc3VwcG9ydCBmb3IgcGVyaXBoZXJhbCBvdXQgYnJpZGdlcywgdGhlICJicmlkZ2Ui
+IG5hbWUKPj4gYmVjb21lcyBpbXByZWNpc2UgYXMgaXQgcmVmZXJzIHRvIGEgZGlmZmVyZW50IGRl
+dmljZSB0aGFuIHRoZQo+PiAib3V0X2JyaWRnZSIuCj4gQ291bGQgeW91IGdpdmUgbWUgbW9yZSBk
+ZXRhaWxzPyBJJ20gYWZyaWFkIHRoYXQgSSBkb24ndCB1bmRlcnN0YW5kIHdoYXQgeW91IHNheS4K
+ClRoZSBwcm9ibGVtIGlzIHRoYXQgTUlDIGlzIGFuIGlucHV0IGJyaWRnZSBhbmQgbm93IHdlIHdp
+bGwgaGF2ZSBhbHNvCm91dHB1dCBicmlkZ2UgKFRvc2hpYmEgRFNJL0xWRFMgY29udmVydGVyKS4K
+U28gd2Ugd2lsbCBoYXZlIHRvIGRpc3Rpbmd1aXNoIHRoZW0uCgo+Cj4gQW5kIGluIGNhc2Ugb2Yg
+RXh5bm9zNTQzMyBTb0MsIFNNSUVTKFNhbXN1bmcgTW9iaWxlIEltYWdlIEVuaGFuY2VtZW50IFN5
+c3RlbSkgY2FuIGJlIGxvY2F0ZWQgYmV0d2VlbiBERUNPTiBhbmQgTUlQSS1EU0kgZGV2aWNlcyBh
+bHNvLgo+IFRoZXJlZm9yZSwgaGF2aW5nIHNwZWNpZmljIG5hbWUgaXNuJ3QgcmVhc29uYWJsZS4K
+ClNvIHByb2JhYmx5IGluX2JyaWRnZSB3b3VsZCBiZSBhIGJldHRlciBuYW1lLiBJIHdpbGwgcmVw
+aHJhc2UgbWVzc2FnZQphbmQgYnJpZGdlIG5hbWUuCgpSZWdhcnMKQW5kcnplagoKCj4KPiBUaGFu
+a3MsCj4gSW5raSBEYWUKPgo+PiBTaWduZWQtb2ZmLWJ5OiBNYWNpZWogUHVyc2tpIDxtLnB1cnNr
+aUBzYW1zdW5nLmNvbT4KPj4gLS0tCj4+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19k
+cm1fZHNpLmMgfCAxNiArKysrKysrKy0tLS0tLS0tCj4+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNl
+cnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
+b3NfZHJtX2RzaS5jCj4+IGluZGV4IGVhZTQ0ZmQuLjk1OTllNmIgMTAwNjQ0Cj4+IC0tLSBhL2Ry
+aXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYwo+PiArKysgYi9kcml2ZXJzL2dw
+dS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPj4gQEAgLTI3OSw3ICsyNzksNyBAQCBzdHJ1
+Y3QgZXh5bm9zX2RzaSB7Cj4+ICAJc3RydWN0IGxpc3RfaGVhZCB0cmFuc2Zlcl9saXN0Owo+PiAg
+Cj4+ICAJY29uc3Qgc3RydWN0IGV4eW5vc19kc2lfZHJpdmVyX2RhdGEgKmRyaXZlcl9kYXRhOwo+
+PiAtCXN0cnVjdCBkZXZpY2Vfbm9kZSAqYnJpZGdlX25vZGU7Cj4+ICsJc3RydWN0IGRldmljZV9u
+b2RlICptaWNfYnJpZGdlX25vZGU7Cj4+ICB9Owo+PiAgCj4+ICAjZGVmaW5lIGhvc3RfdG9fZHNp
+KGhvc3QpIGNvbnRhaW5lcl9vZihob3N0LCBzdHJ1Y3QgZXh5bm9zX2RzaSwgZHNpX2hvc3QpCj4+
+IEBAIC0xNjMxLDcgKzE2MzEsNyBAQCBzdGF0aWMgaW50IGV4eW5vc19kc2lfcGFyc2VfZHQoc3Ry
+dWN0IGV4eW5vc19kc2kgKmRzaSkKPj4gIAlpZiAocmV0IDwgMCkKPj4gIAkJcmV0dXJuIHJldDsK
+Pj4gIAo+PiAtCWRzaS0+YnJpZGdlX25vZGUgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX25vZGUobm9k
+ZSwgRFNJX1BPUlRfSU4sIDApOwo+PiArCWRzaS0+bWljX2JyaWRnZV9ub2RlID0gb2ZfZ3JhcGhf
+Z2V0X3JlbW90ZV9ub2RlKG5vZGUsIERTSV9QT1JUX0lOLCAwKTsKPj4gIAo+PiAgCXJldHVybiAw
+Owo+PiAgfQo+PiBAQCAtMTY0Miw3ICsxNjQyLDcgQEAgc3RhdGljIGludCBleHlub3NfZHNpX2Jp
+bmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4+ICAJc3RydWN0
+IGRybV9lbmNvZGVyICplbmNvZGVyID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4+ICAJc3RydWN0
+IGV4eW5vc19kc2kgKmRzaSA9IGVuY29kZXJfdG9fZHNpKGVuY29kZXIpOwo+PiAgCXN0cnVjdCBk
+cm1fZGV2aWNlICpkcm1fZGV2ID0gZGF0YTsKPj4gLQlzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdl
+Owo+PiArCXN0cnVjdCBkcm1fYnJpZGdlICptaWNfYnJpZGdlOwo+PiAgCWludCByZXQ7Cj4+ICAK
+Pj4gIAlkcm1fZW5jb2Rlcl9pbml0KGRybV9kZXYsIGVuY29kZXIsICZleHlub3NfZHNpX2VuY29k
+ZXJfZnVuY3MsCj4+IEBAIC0xNjYxLDEwICsxNjYxLDEwIEBAIHN0YXRpYyBpbnQgZXh5bm9zX2Rz
+aV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+PiAgCQly
+ZXR1cm4gcmV0Owo+PiAgCX0KPj4gIAo+PiAtCWlmIChkc2ktPmJyaWRnZV9ub2RlKSB7Cj4+IC0J
+CWJyaWRnZSA9IG9mX2RybV9maW5kX2JyaWRnZShkc2ktPmJyaWRnZV9ub2RlKTsKPj4gLQkJaWYg
+KGJyaWRnZSkKPj4gLQkJCWRybV9icmlkZ2VfYXR0YWNoKGVuY29kZXIsIGJyaWRnZSwgTlVMTCk7
+Cj4+ICsJaWYgKGRzaS0+bWljX2JyaWRnZV9ub2RlKSB7Cj4+ICsJCW1pY19icmlkZ2UgPSBvZl9k
+cm1fZmluZF9icmlkZ2UoZHNpLT5taWNfYnJpZGdlX25vZGUpOwo+PiArCQlpZiAobWljX2JyaWRn
+ZSkKPj4gKwkJCWRybV9icmlkZ2VfYXR0YWNoKGVuY29kZXIsIG1pY19icmlkZ2UsIE5VTEwpOwo+
+PiAgCX0KPj4gIAo+PiAgCXJldHVybiBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKCZkc2ktPmRzaV9o
+b3N0KTsKPj4gQEAgLTE3ODMsNyArMTc4Myw3IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9yZW1v
+dmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPj4gIHsKPj4gIAlzdHJ1Y3QgZXh5bm9z
+X2RzaSAqZHNpID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7Cj4+ICAKPj4gLQlvZl9ub2Rl
+X3B1dChkc2ktPmJyaWRnZV9ub2RlKTsKPj4gKwlvZl9ub2RlX3B1dChkc2ktPm1pY19icmlkZ2Vf
+bm9kZSk7Cj4+ICAKPj4gIAlwbV9ydW50aW1lX2Rpc2FibGUoJnBkZXYtPmRldik7Cj4+ICAKPj4K
+PiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1
+YnNjcmliZSBsaW51eC1zYW1zdW5nLXNvYyIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8g
+bWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6
+Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+Cj4KCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
