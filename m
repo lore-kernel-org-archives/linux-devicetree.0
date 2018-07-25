@@ -1,123 +1,66 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V1 1/3] mmc: sdhci: Allow platform controlled voltage
- switching
-Date: Wed, 25 Jul 2018 14:53:59 +0300
-Message-ID: <33e12e51-4b96-032f-845f-7910d654018c@intel.com>
-References: <1532083566-43215-1-git-send-email-vviswana@codeaurora.org>
- <1532083566-43215-2-git-send-email-vviswana@codeaurora.org>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] iommu/arm-smmu: Error out only if not enough context
+	interrupts
+Date: Wed, 25 Jul 2018 12:57:30 +0100
+Message-ID: <20180725115729.GA31576@arm.com>
+References: <20180719175356.14753-1-vivek.gautam@codeaurora.org>
+	<20180719175356.14753-4-vivek.gautam@codeaurora.org>
+	<20180724083633.GA19324@arm.com>
+	<d6796a00-17da-c03e-ca7f-7a67139ad99a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532083566-43215-2-git-send-email-vviswana@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Viswanath <vviswana@codeaurora.org>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, evgreen@chromium.org, dianders@google.com, sayalil@codeaurora.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d6796a00-17da-c03e-ca7f-7a67139ad99a-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/07/18 13:46, Vijay Viswanath wrote:
-> Some controllers can have internal mechanism to inform the SW that it
-> is ready for voltage switching. For such controllers, changing voltage
-> before the HW is ready can result in various issues.
+On Tue, Jul 24, 2018 at 03:09:41PM +0530, Vivek Gautam wrote:
+> On 7/24/2018 2:06 PM, Will Deacon wrote:
+> >On Thu, Jul 19, 2018 at 11:23:56PM +0530, Vivek Gautam wrote:
+> >>diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> >>index 7c69736a30f8..4cb53bf4f423 100644
+> >>--- a/drivers/iommu/arm-smmu.c
+> >>+++ b/drivers/iommu/arm-smmu.c
+> >>@@ -2229,12 +2229,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+> >>  	if (err)
+> >>  		return err;
+> >>-	if (smmu->version == ARM_SMMU_V2 &&
+> >>-	    smmu->num_context_banks != smmu->num_context_irqs) {
+> >>-		dev_err(dev,
+> >>-			"found only %d context interrupt(s) but %d required\n",
+> >>-			smmu->num_context_irqs, smmu->num_context_banks);
+> >>-		return -ENODEV;
+> >>+	if (smmu->version == ARM_SMMU_V2) {
+> >>+		if (smmu->num_context_banks > smmu->num_context_irqs) {
+> >>+			dev_err(dev,
+> >>+			      "found only %d context irq(s) but %d required\n",
+> >>+			      smmu->num_context_irqs, smmu->num_context_banks);
+> >>+			return -ENODEV;
+> >>+		} else if (smmu->num_context_banks < smmu->num_context_irqs) {
+> >>+			/* loose extra context interrupts */
+> >>+			dev_notice(dev,
+> >>+			      "found %d context irq(s) but only %d required\n",
+> >>+			      smmu->num_context_irqs, smmu->num_context_banks);
+> >>+			smmu->num_context_irqs = smmu->num_context_banks;
+> >>+		}
+> >I don't see the utility in the new message. Can you simplify with the patch
+> >below on top? It's a bit weird that we only decide to ignore the extra irqs
+> >after calling platform_get_irq() on them, but that seems to be harmless.
 > 
-> During setup/cleanup of host, check whether regulator enable/disable
-> was already done by platform driver.
-> 
-> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
-> ---
->  drivers/mmc/host/sdhci.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 1c828e0..494a1e2 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3472,6 +3472,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	unsigned int override_timeout_clk;
->  	u32 max_clk;
->  	int ret;
-> +	bool enable_vqmmc = false;
->  
->  	WARN_ON(host == NULL);
->  	if (host == NULL)
-> @@ -3485,7 +3486,12 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	 * the host can take the appropriate action if regulators are not
->  	 * available.
->  	 */
-> -	ret = mmc_regulator_get_supply(mmc);
-> +	if (!mmc->supply.vmmc) {
-> +		ret = mmc_regulator_get_supply(mmc);
-> +		enable_vqmmc  = true;
-> +	} else {
-> +		ret = 0;
-> +	}
->  	if (ret)
->  		return ret;
+> Thanks. I will modify as suggested below and respin.
 
-Why not
+It's ok, I can make the change locally.
 
-	if (!mmc->supply.vmmc) {
-		ret = mmc_regulator_get_supply(mmc);
-	  	if (ret)
-  			return ret;
-		enable_vqmmc  = true;
-	}
-
->  
-> @@ -3736,7 +3742,10 @@ int sdhci_setup_host(struct sdhci_host *host)
->  
->  	/* If vqmmc regulator and no 1.8V signalling, then there's no UHS */
->  	if (!IS_ERR(mmc->supply.vqmmc)) {
-> -		ret = regulator_enable(mmc->supply.vqmmc);
-> +		if (enable_vqmmc)
-> +			ret = regulator_enable(mmc->supply.vqmmc);
-
-Please introduce host->vqmmc_enabled = !ret;
-
-> +		else
-> +			ret = 0;
->  		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
->  						    1950000))
->  			host->caps1 &= ~(SDHCI_SUPPORT_SDR104 |
-> @@ -3984,7 +3993,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->  	return 0;
->  
->  unreg:
-> -	if (!IS_ERR(mmc->supply.vqmmc))
-> +	if (!IS_ERR(mmc->supply.vqmmc) && enable_vqmmc)
-
-And just make this
-
-	if (host->vqmmc_enabled)
-
->  		regulator_disable(mmc->supply.vqmmc);
->  undma:
->  	if (host->align_buffer)
-> @@ -4002,7 +4011,8 @@ void sdhci_cleanup_host(struct sdhci_host *host)
->  {
->  	struct mmc_host *mmc = host->mmc;
->  
-> -	if (!IS_ERR(mmc->supply.vqmmc))
-> +	if (!IS_ERR(mmc->supply.vqmmc) &&
-> +			(regulator_is_enabled(mmc->supply.vqmmc) > 0))
-
-	if (host->vqmmc_enabled)
-
->  		regulator_disable(mmc->supply.vqmmc);
->  
->  	if (host->align_buffer)
-> @@ -4135,7 +4145,8 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
->  
->  	tasklet_kill(&host->finish_tasklet);
->  
-> -	if (!IS_ERR(mmc->supply.vqmmc))
-> +	if (!IS_ERR(mmc->supply.vqmmc) &&
-> +			(regulator_is_enabled(mmc->supply.vqmmc) > 0))
-
-	if (host->vqmmc_enabled)
-
->  		regulator_disable(mmc->supply.vqmmc);
->  
->  	if (host->align_buffer)
-> 
+Will
