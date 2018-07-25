@@ -1,35 +1,66 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFT v2 04/10] pinctrl: samsung: Add dedicated compatible for
- S5Pv210 wakeup interrupts
-Date: Wed, 25 Jul 2018 11:39:30 -0600
-Message-ID: <20180725173930.GA27860@rob-hp-laptop>
-References: <20180723175302.22535-1-krzk@kernel.org>
- <20180723175302.22535-5-krzk@kernel.org>
+Subject: Re: [PATCH v2 4/5] dt-bindings: drm/bridge Document Cadence MHDP
+ DPI/DP bridge bindings
+Date: Wed, 25 Jul 2018 11:43:30 -0600
+Message-ID: <20180725174330.GA31540@rob-hp-laptop>
+References: <1532430824-23477-1-git-send-email-dkos@cadence.com>
+ <1532430824-23477-5-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180723175302.22535-5-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, Kyungmin Park <kyungmin.park@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
+In-Reply-To: <1532430824-23477-5-git-send-email-dkos@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, pgaj@cadence.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, stelford@cadence.com, ltyrala@cadence.com, linux-arm-kernel@lists.infradead.org, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 23, 2018 at 07:52:56PM +0200, Krzysztof Kozlowski wrote:
-> The S5Pv210 external wakeup interrupts differ from Exynos therefore
-> separate compatible is needed.  Duplicate existing flavor specific data
-> from exynos4210_wkup_irq_chip and add new compatible for S5Pv210.
-> At this point this new compatible does not bring anything new and works
-> exactly as existing "samsung,exynos4210-wakeup-eint".
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: Sylwester Nawrocki <snawrocki@kernel.org>
-> Acked-by: Tomasz Figa <tomasz.figa@gmail.com>
-> ---
->  .../devicetree/bindings/pinctrl/samsung-pinctrl.txt    |  2 ++
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/pinctrl/samsung/pinctrl-exynos.c               | 18 ++++++++++++++++++
->  2 files changed, 20 insertions(+)
+T24gVHVlLCBKdWwgMjQsIDIwMTggYXQgMTI6MTM6MzVQTSArMDEwMCwgRGFtaWFuIEtvcyB3cm90
+ZToKPiBGcm9tOiBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5zY2h1bHpAYm9vdGxpbi5jb20+Cj4g
+Cj4gU2lnbmVkLW9mZi1ieTogRGFtaWFuIEtvcyA8ZGtvc0BjYWRlbmNlLmNvbT4KPiAtLS0KPiAg
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsbWhkcC50eHQgICAgIHwgNDMgKysrKysr
+KysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNDMgaW5zZXJ0aW9ucygrKQo+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+YnJpZGdlL2NkbnMsbWhkcC50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsbWhkcC50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2RucyxtaGRwLnR4dAo+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5kYzdiZTc1OTAwNDgKPiAt
+LS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL2NkbnMsbWhkcC50eHQKPiBAQCAtMCwwICsxLDQzIEBACj4gK0NhZGVuY2Ug
+TUhEUCBicmlkZ2UKPiArPT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1RoZSBDYWRl
+bmNlIE1IRFAgYnJpZGdlIGlzIGEgRFBJIHRvIERQIGJyaWRnZS4KPiArCj4gK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJjZG5zLG1oZHA4NTQ2IiwKPiAr
+LSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVy
+J3MgcmVnaXN0ZXJzLAo+ICstIGNsb2NrczogRFAgYnJpZGdlIGNsb2NrLCBpdCdzIHVzZWQgYnkg
+dGhlIElQIHRvIGtub3cgaG93IHRvIHRyYW5zbGF0ZQo+ICsJYSBudW1iZXIgb2YgY2xvY2sgY3lj
+bGVzIGludG8gYSB0aW1lICh3aGljaCBpcyB1c2VkIHRvIGNvbXBseQo+ICsJd2l0aCBEUCBzdGFu
+ZGFyZCB0aW1pbmdzIGFuZCBkZWxheXMpLAo+ICsKPiArUmVxdWlyZWQgc3Vibm9kZXM6Cj4gKy0g
+cG9ydHM6IFBvcnRzIGFzIGRlc2NyaWJlZCBpbiBEb2N1bWVudGF0aW9uL2RldmljdHJlZS9iaW5k
+aW5ncy9ncmFwaC50eHQKPiArCVBvcnQgMCAtIGlucHV0IHBvcnQgcmVwcmVzZW50aW5nIHRoZSBW
+R0EgYnJpZGdlIGlucHV0Cj4gKwlQb3J0IDEgLSBvdXRwdXQgcG9ydCByZXByZXNlbnRpbmcgdGhl
+IFZHQSBicmlkZ2Ugb3V0cHV0CgpWR0E/Cgo+ICsKPiArRXhhbXBsZToKPiArCj4gKwltaGRwOiBk
+cC1icmlkZ2VAZjBmYjAwMDAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJjZG5zLG1oZHA4NTQ2IjsK
+PiArCQlyZWcgPSA8MHhmMCAweGZiMDAwMDAwIDB4MCAweDEwMDAwMDA+Owo+ICsJCWNsb2NrcyA9
+IDwmbWhkcF9jbG9jaz47Cj4gKwo+ICsJCXBvcnRzIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8
+MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQkJcG9ydEAwIHsKPiArCQkJCXJl
+ZyA9IDwwPjsKPiArCQkJCXZnYV9icmlkZ2VfaW5wdXQ6IGVuZHBvaW50IHsKPiArCQkJCQlyZW1v
+dGUtZW5kcG9pbnQgPSA8Jnh4eF9kcGlfb3V0cHV0PjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+
+ICsJCQlwb3J0QDEgewo+ICsJCQkJcmVnID0gPDE+Owo+ICsJCQkJdmdhX2JyaWRnZV9vdXRwdXQ6
+IGVuZHBvaW50IHsKPiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jnh4eF92Z2FfY29ubmVjdG9y
+X2lucHV0PjsKCnZnYT8KCj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9Owo+IC0tIAo+
+IDIuMTcuMQo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhl
+IGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdl
+IHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBo
+dHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
