@@ -1,36 +1,26 @@
-Return-Path: <SRS0=GvcF=KJ=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 0/3] ARM: shmobile: Add support for RZ/A2
-Date: Wed, 25 Jul 2018 16:22:17 -0500
-Message-Id: <20180725212220.44525-1-chris.brandt@renesas.com>
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 25 Jul 2018 13:51:25 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] serial: sh-sci: Document that serial aliases became
+ optional
+Message-ID: <20180725195125.GA10356@rob-hp-laptop>
+References: <20180720121940.29616-1-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180720121940.29616-1-geert+renesas@glider.be>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Introduce RZ/A2 (R7S9210) as an SoC that can be selected.
+On Fri, Jul 20, 2018 at 02:19:40PM +0200, Geert Uytterhoeven wrote:
+> Serial aliases are optional since commit 7678f4c20fa7670f ("serial:
+> sh-sci: Add support for dynamic instances").
+> Update the DT bindings to reflect this.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-There is no DT mainlined yet, so this is what the entry would look
-like for the BSID register:
-
-	bsid: chipid@fcfe8004 {
-		compatible = "renesas,bsid";
-		reg = <0xfcfe8004 4>;
-	};
-
-
-
-Chris Brandt (3):
-  ARM: shmobile: Add basic RZ/A2 SoC support
-  soc: renesas: identify RZ/A2
-  dt-bindings: arm: Document RZ/A2 SoC DT bindings
-
- Documentation/devicetree/bindings/arm/shmobile.txt |  4 +-
- arch/arm/mach-shmobile/Kconfig                     |  6 +++
- arch/arm/mach-shmobile/Makefile                    |  1 +
- arch/arm/mach-shmobile/setup-r7s9210.c             | 27 ++++++++++
- drivers/soc/renesas/renesas-soc.c                  | 60 +++++++++++++++++-----
- 5 files changed, 85 insertions(+), 13 deletions(-)
- create mode 100644 arch/arm/mach-shmobile/setup-r7s9210.c
-
--- 
-2.16.1
+Reviewed-by: Rob Herring <robh@kernel.org>
