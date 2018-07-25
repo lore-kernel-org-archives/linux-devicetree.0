@@ -1,34 +1,143 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: Re: [PATCH 00/10] Update the pad autocal procedure
-Date: Wed, 25 Jul 2018 17:28:26 +0300
-Message-ID: <20180725172826.2658feb5@dhcp-10-21-25-168>
-References: <1532442591-5640-1-git-send-email-avienamo@nvidia.com>
-        <f41a905c-5364-14a5-122b-09cbd1efa2f9@gmail.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v2 02/10] coresight: platform: Refactor graph endpoint parsing
+Date: Wed, 25 Jul 2018 08:38:09 -0600
+Message-ID: <CANLsYkxcTPWbM75wHgiy8tC6FNhELsMcK=fu2TfvXG-3rM=hCA@mail.gmail.com>
+References: <1531997715-6767-1-git-send-email-suzuki.poulose@arm.com>
+ <1531997715-6767-3-git-send-email-suzuki.poulose@arm.com> <20180724213031.GA22451@xps15>
+ <CANLsYkwDTM2pT0JCCnLdetKoYe6xsmj48Gyb5OJFxJMmRLrZ_g@mail.gmail.com> <ea1a6672-0cbb-86b7-c8cd-0759edb94f85@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f41a905c-5364-14a5-122b-09cbd1efa2f9@gmail.com>
+In-Reply-To: <ea1a6672-0cbb-86b7-c8cd-0759edb94f85@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Geis <pgwipeout@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matt Sealey <matt.sealey@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, coresight@lists.linaro.org, John Horley <john.horley@arm.com>, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Jul 2018 08:06:18 -0400
-Peter Geis <pgwipeout@gmail.com> wrote:
+On Wed, 25 Jul 2018 at 03:01, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> On 07/24/2018 10:34 PM, Mathieu Poirier wrote:
+> > On Tue, 24 Jul 2018 at 15:30, Mathieu Poirier
+> > <mathieu.poirier@linaro.org> wrote:
+> >>
+> >> Good afternoon,
+> >>
+> >> On Thu, Jul 19, 2018 at 11:55:06AM +0100, Suzuki K Poulose wrote:
+> >>> Refactor the of graph endpoint parsing code, to make the error
+> >>> handling easier.
+> >>>
+> >>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >>> ---
+> >>> Changes since v1:
+> >>>   - Splitted from the of_node refcounting fix, part1
+> >>> ---
+> >>>   drivers/hwtracing/coresight/of_coresight.c | 129 +++++++++++++++++------------
+> >>>   1 file changed, 75 insertions(+), 54 deletions(-)
+> >>>
+> >>> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+> >>> index 6880bee..68faaf8 100644
+> >>> --- a/drivers/hwtracing/coresight/of_coresight.c
+> >>> +++ b/drivers/hwtracing/coresight/of_coresight.c
+> >>> @@ -114,17 +114,69 @@ int of_coresight_get_cpu(const struct device_node *node)
+> >>>   }
+> >>>   EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
+> >>>
+> >>> +/*
+> >>> + * of_coresight_parse_endpoint : Parse the given output endpoint @ep
+> >>> + * and fill the connection information in @pdata[*@i].
+> >>> + *
+> >>> + * Parses the local port, remote device name and the remote port. Also
+> >>> + * updates *@i to point to the next index, when an entry is added.
+> >>> + *
+> >>> + * Returns :
+> >>> + *    0      - If the parsing completed without any fatal errors.
+> >>> + *   -Errno  - Fatal error, abort the scanning.
+> >>> + */
+> >>> +static int of_coresight_parse_endpoint(struct device *dev,
+> >>> +                                    struct device_node *ep,
+> >>> +                                    struct coresight_platform_data *pdata,
+> >>> +                                    int *i)
+> >>> +{
+> >>> +     int ret = 0;
+> >>> +     struct of_endpoint endpoint, rendpoint;
+> >>> +     struct device_node *rparent = NULL;
+> >>> +     struct device_node *rport = NULL;
+> >>> +     struct device *rdev = NULL;
+> >>> +
+> >>> +     do {
+> >>> +             /* Parse the local port details */
+> >>> +             if (of_graph_parse_endpoint(ep, &endpoint))
+> >>> +                     break;
+> >>> +             /*
+> >>> +              * Get a handle on the remote port and parent
+> >>> +              * attached to it.
+> >>> +              */
+> >>> +             rparent = of_graph_get_remote_port_parent(ep);
+> >>> +             if (!rparent)
+> >>> +                     break;
+> >>> +             rport = of_graph_get_remote_port(ep);
+> >>> +             if (!rport)
+> >>> +                     break;
+> >>> +             if (of_graph_parse_endpoint(rport, &rendpoint))
+> >>> +                     break;
+> >>> +
+> >>> +             /* If the remote device is not available, defer probing */
+> >>> +             rdev = of_coresight_get_endpoint_device(rparent);
+> >>> +             if (!rdev) {
+> >>> +                     ret = -EPROBE_DEFER;
+> >>> +                     break;
+> >>> +             }
+> >>> +
+> >>> +             pdata->outports[*i] = endpoint.port;
+> >>> +             pdata->child_names[*i] = dev_name(rdev);
+> >>> +             pdata->child_ports[*i] = rendpoint.id;
+> >>> +             /* Move the index */
+> >>> +             (*i)++;
+> >>
+> >> Not a big fan, makes the code needlessly complex.  Incrementation of the index
+> >> can be done in the while loop of of_get_coresight_platform_data().  See below.
+>
+> Me neither..
+>
+> >
+> > Void that - it properly deals with the first of_parse_endpoint().
+>
+> Or may be we could do something with the return value :
+>
+>           1 - Successfully parsed and populated a connection entry
+>           0 - No errors in parsing
+>         < 0 - Errors in parsing
 
-> On 07/24/2018 10:29 AM, Aapo Vienamo wrote:
-> > Aapo Vienamo (10):
-> > 
-> >    mmc: tegra: Enable pad calibration on Tegra210 and Tegra186  
-> 
-> Good Morning,
-> 
-> You seem to be missing patch 10/10.
-> Checked 
-> https://lore.kernel.org/patchwork/project/lkml/list/?series=360525 to be 
-> sure.
+Right, that is another solution.  I usually try to avoid those but I
+think it is better than what we currently have.
 
-Missing patch sent. Thanks for pointing that out.
+>
+> >>> @@ -132,64 +184,33 @@ of_get_coresight_platform_data(struct device *dev,
+>
+>
+> >>> +     while ((ep = of_graph_get_next_endpoint(node, ep))) {
+> >>> +             /*
+> >>> +              * No need to deal with input ports, processing for as
+> >>> +              * processing for output ports will deal with them.
+> >>> +              */
+> >>
+> >> This comment has been broken for a while... It should read:
+> >>
+> >>                  /*
+> >>                   * No need to deal with input ports, as processing
+> >>                   * for output ports will deal with them.
+> >>                   */
+>
+> Sure, will fix it.
 
- -Aapo
+Thanks,
+Mathieu
+
+>
+>
+> Suzuki
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
