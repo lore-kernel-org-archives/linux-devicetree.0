@@ -1,144 +1,137 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V1 1/3] mmc: sdhci: Allow platform controlled voltage
- switching
-Date: Wed, 25 Jul 2018 15:37:29 +0300
-Message-ID: <e38df741-72dd-9e0e-2be3-22d4e516304c@intel.com>
-References: <1532083566-43215-1-git-send-email-vviswana@codeaurora.org>
- <1532083566-43215-2-git-send-email-vviswana@codeaurora.org>
- <33e12e51-4b96-032f-845f-7910d654018c@intel.com>
- <42ee57f7-8a99-b815-12db-2727ed67872b@codeaurora.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/7 v6] iommu/arm-smmu: Add support for the fsl-mc bus
+Date: Wed, 25 Jul 2018 13:48:40 +0100
+Message-ID: <ffa08d6b-580a-93bf-fdf8-571b7d26ee73@arm.com>
+References: <1531135103-10699-1-git-send-email-nipun.gupta@nxp.com>
+	<1531135103-10699-5-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <42ee57f7-8a99-b815-12db-2727ed67872b@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Viswanath <vviswana@codeaurora.org>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, evgreen@chromium.org, dianders@google.com, sayalil@codeaurora.org, rampraka@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1531135103-10699-5-git-send-email-nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, laurentiu.tudor-3arQi8VN3Tc@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/07/18 15:23, Vijay Viswanath wrote:
-> Hi Adrian,
-> 
-> 
-> On 7/25/2018 5:23 PM, Adrian Hunter wrote:
->> On 20/07/18 13:46, Vijay Viswanath wrote:
->>> Some controllers can have internal mechanism to inform the SW that it
->>> is ready for voltage switching. For such controllers, changing voltage
->>> before the HW is ready can result in various issues.
->>>
->>> During setup/cleanup of host, check whether regulator enable/disable
->>> was already done by platform driver.
->>>
->>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->>> ---
->>>   drivers/mmc/host/sdhci.c | 21 ++++++++++++++++-----
->>>   1 file changed, 16 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>> index 1c828e0..494a1e2 100644
->>> --- a/drivers/mmc/host/sdhci.c
->>> +++ b/drivers/mmc/host/sdhci.c
->>> @@ -3472,6 +3472,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>       unsigned int override_timeout_clk;
->>>       u32 max_clk;
->>>       int ret;
->>> +    bool enable_vqmmc = false;
->>>         WARN_ON(host == NULL);
->>>       if (host == NULL)
->>> @@ -3485,7 +3486,12 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>        * the host can take the appropriate action if regulators are not
->>>        * available.
->>>        */
->>> -    ret = mmc_regulator_get_supply(mmc);
->>> +    if (!mmc->supply.vmmc) {
->>> +        ret = mmc_regulator_get_supply(mmc);
->>> +        enable_vqmmc  = true;
->>> +    } else {
->>> +        ret = 0;
->>> +    }
->>>       if (ret)
->>>           return ret;
->>
->> Why not
->>
->>     if (!mmc->supply.vmmc) {
->>         ret = mmc_regulator_get_supply(mmc);
->>           if (ret)
->>                return ret;
->>         enable_vqmmc  = true;
->>     }
->>
-> 
-> looks neater. Will do.
-> 
->>>   @@ -3736,7 +3742,10 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>         /* If vqmmc regulator and no 1.8V signalling, then there's no UHS */
->>>       if (!IS_ERR(mmc->supply.vqmmc)) {
->>> -        ret = regulator_enable(mmc->supply.vqmmc);
->>> +        if (enable_vqmmc)
->>> +            ret = regulator_enable(mmc->supply.vqmmc);
->>
->> Please introduce host->vqmmc_enabled = !ret;
->>
-> 
-> Any reason to introduce vqmmc_enabled variable in sdhci_host structure ? We
-> can get around with a local variable and using regulator_is_enabled API.
+On 09/07/18 12:18, Nipun Gupta wrote:
+> Implement bus specific support for the fsl-mc bus including
+> registering arm_smmu_ops and bus specific device add operations.
 
-regulator_enable() uses reference counting, so we have to use
-regulator_disable() exactly the same number of times that we use
-regulator_enable().
+I guess this is about as neat as it can get;
 
+Reviewed-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+
+> Signed-off-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+> ---
+>   drivers/iommu/arm-smmu.c |  7 +++++++
+>   drivers/iommu/iommu.c    | 13 +++++++++++++
+>   include/linux/fsl/mc.h   |  8 ++++++++
+>   include/linux/iommu.h    |  2 ++
+>   4 files changed, 30 insertions(+)
 > 
->>> +        else
->>> +            ret = 0;
->>>           if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
->>>                               1950000))
->>>               host->caps1 &= ~(SDHCI_SUPPORT_SDR104 |
->>> @@ -3984,7 +3993,7 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>       return 0;
->>>     unreg:
->>> -    if (!IS_ERR(mmc->supply.vqmmc))
->>> +    if (!IS_ERR(mmc->supply.vqmmc) && enable_vqmmc)
->>
->> And just make this
->>
->>     if (host->vqmmc_enabled)
->>
->>>           regulator_disable(mmc->supply.vqmmc);
->>>   undma:
->>>       if (host->align_buffer)
->>> @@ -4002,7 +4011,8 @@ void sdhci_cleanup_host(struct sdhci_host *host)
->>>   {
->>>       struct mmc_host *mmc = host->mmc;
->>>   -    if (!IS_ERR(mmc->supply.vqmmc))
->>> +    if (!IS_ERR(mmc->supply.vqmmc) &&
->>> +            (regulator_is_enabled(mmc->supply.vqmmc) > 0))
->>
->>     if (host->vqmmc_enabled)
->>
->>>           regulator_disable(mmc->supply.vqmmc);
->>>         if (host->align_buffer)
->>> @@ -4135,7 +4145,8 @@ void sdhci_remove_host(struct sdhci_host *host, int
->>> dead)
->>>         tasklet_kill(&host->finish_tasklet);
->>>   -    if (!IS_ERR(mmc->supply.vqmmc))
->>> +    if (!IS_ERR(mmc->supply.vqmmc) &&
->>> +            (regulator_is_enabled(mmc->supply.vqmmc) > 0))
->>
->>     if (host->vqmmc_enabled)
->>
->>>           regulator_disable(mmc->supply.vqmmc);
->>>         if (host->align_buffer)
->>>
->>
->> -- 
->> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-> 
-> Thanks,
-> Vijay
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index f7a96bc..a011bb6 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -52,6 +52,7 @@
+>   #include <linux/spinlock.h>
+>   
+>   #include <linux/amba/bus.h>
+> +#include <linux/fsl/mc.h>
+>   
+>   #include "io-pgtable.h"
+>   #include "arm-smmu-regs.h"
+> @@ -1459,6 +1460,8 @@ static struct iommu_group *arm_smmu_device_group(struct device *dev)
+>   
+>   	if (dev_is_pci(dev))
+>   		group = pci_device_group(dev);
+> +	else if (dev_is_fsl_mc(dev))
+> +		group = fsl_mc_device_group(dev);
+>   	else
+>   		group = generic_device_group(dev);
+>   
+> @@ -2037,6 +2040,10 @@ static void arm_smmu_bus_init(void)
+>   		bus_set_iommu(&pci_bus_type, &arm_smmu_ops);
+>   	}
+>   #endif
+> +#ifdef CONFIG_FSL_MC_BUS
+> +	if (!iommu_present(&fsl_mc_bus_type))
+> +		bus_set_iommu(&fsl_mc_bus_type, &arm_smmu_ops);
+> +#endif
+>   }
+>   
+>   static int arm_smmu_device_probe(struct platform_device *pdev)
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index d227b86..df2f49e 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -32,6 +32,7 @@
+>   #include <linux/pci.h>
+>   #include <linux/bitops.h>
+>   #include <linux/property.h>
+> +#include <linux/fsl/mc.h>
+>   #include <trace/events/iommu.h>
+>   
+>   static struct kset *iommu_group_kset;
+> @@ -988,6 +989,18 @@ struct iommu_group *pci_device_group(struct device *dev)
+>   	return iommu_group_alloc();
+>   }
+>   
+> +/* Get the IOMMU group for device on fsl-mc bus */
+> +struct iommu_group *fsl_mc_device_group(struct device *dev)
+> +{
+> +	struct device *cont_dev = fsl_mc_cont_dev(dev);
+> +	struct iommu_group *group;
+> +
+> +	group = iommu_group_get(cont_dev);
+> +	if (!group)
+> +		group = iommu_group_alloc();
+> +	return group;
+> +}
+> +
+>   /**
+>    * iommu_group_get_for_dev - Find or create the IOMMU group for a device
+>    * @dev: target device
+> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+> index f27cb14..dddaca1 100644
+> --- a/include/linux/fsl/mc.h
+> +++ b/include/linux/fsl/mc.h
+> @@ -351,6 +351,14 @@ struct fsl_mc_io {
+>   #define dev_is_fsl_mc(_dev) (0)
+>   #endif
+>   
+> +/* Macro to check if a device is a container device */
+> +#define fsl_mc_is_cont_dev(_dev) (to_fsl_mc_device(_dev)->flags & \
+> +	FSL_MC_IS_DPRC)
+> +
+> +/* Macro to get the container device of a MC device */
+> +#define fsl_mc_cont_dev(_dev) (fsl_mc_is_cont_dev(_dev) ? \
+> +	(_dev) : (_dev)->parent)
+> +
+>   /*
+>    * module_fsl_mc_driver() - Helper macro for drivers that don't do
+>    * anything special in module init/exit.  This eliminates a lot of
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 7447b0b..209891d 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -389,6 +389,8 @@ static inline size_t iommu_map_sg(struct iommu_domain *domain,
+>   extern struct iommu_group *pci_device_group(struct device *dev);
+>   /* Generic device grouping function */
+>   extern struct iommu_group *generic_device_group(struct device *dev);
+> +/* FSL-MC device grouping function */
+> +struct iommu_group *fsl_mc_device_group(struct device *dev);
+>   
+>   /**
+>    * struct iommu_fwspec - per-device IOMMU instance data
 > 
