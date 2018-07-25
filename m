@@ -1,114 +1,58 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: dma: Add binding for Actions Semi
- Owl SoCs
-Date: Wed, 25 Jul 2018 20:53:58 +0530
-Message-ID: <20180725152358.GA14686@Mani-XPS-13-9360>
-References: <20180723041743.32024-1-manivannan.sadhasivam@linaro.org>
- <20180723041743.32024-2-manivannan.sadhasivam@linaro.org>
- <20180724121604.GA2587@vkoul-mobl>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 6/9] dt-bindings: phy: add binding for
+ Allwinner USB3 PHY
+Date: Wed, 25 Jul 2018 09:31:26 -0600
+Message-ID: <20180725153126.GA8350@rob-hp-laptop>
+References: <20180722055739.26464-1-icenowy@aosc.io>
+ <20180722055739.26464-7-icenowy@aosc.io>
+ <CAGb2v65m6AEW=DO-cqLMyjfnaiZudm38hXufJL6LXdOrJqir_g@mail.gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBUFP4LNAKGQEUO7MPOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180724121604.GA2587@vkoul-mobl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
+In-Reply-To: <CAGb2v65m6AEW=DO-cqLMyjfnaiZudm38hXufJL6LXdOrJqir_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-On Tue, Jul 24, 2018 at 05:46:04PM +0530, Vinod wrote:
-> Hi Mani,
-> 
-> Patch title should be dmaengine: ... Please always use the apt tags and
-> one can find them using git log <subsystem>
-> 
-
-Did you mean, dt-bindings: dmaengine? If yes, then I will use it for the
-future patches.
-
-> On 23-07-18, 09:47, Manivannan Sadhasivam wrote:
-> > Add devicetree binding for Actions Semi Owl SoCs DMA controller.
-> 
-> 
-> It would help for review to describe the controller here
-> 
-
-Okay.
-
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Sun, Jul 22, 2018 at 02:10:33PM +0800, Chen-Yu Tsai wrote:
+> On Sun, Jul 22, 2018 at 1:57 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> > The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
+> > external USB3 pins of the SoC.
+> >
+> > Add a device tree binding for the PHY.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > > ---
-> >  .../devicetree/bindings/dma/owl-dma.txt       | 46 +++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/owl-dma.txt b/Documentation/devicetree/bindings/dma/owl-dma.txt
-> > new file mode 100644
-> > index 000000000000..dd6ce237b216
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/owl-dma.txt
-> > @@ -0,0 +1,46 @@
-> > +* Actions Semi Owl SoCs DMA controller
-> > +
-> > +This binding follows the generic DMA bindings defined in dma.txt.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "actions,s900-dma".
-> > +- reg: Should contain DMA registers location and length.
-> > +- interrupts: Should contain 4 interrupts shared by all channel.
-> > +- #dma-cells: Must be <1>. Used to represent the number of integer
-> > +              cells in the dmas property of client device.
-> > +- dma-channels: Physical channels supported.
-> > +- dma-requests: Virtual channels supported.
+> > Changes in v3:
+> > - Added Chen-Yu's Review tag.
+> >
+> > Rob,
+> > Although you mentioned that the supply is for the port, not the phy;
+> > currently in USB situation "powering on the PHY" also indicates
+> > "powering on the port" and nearly all usages of phy-supply is for Vbus.
+> >
+> > Maybe we should change the overall phy-supply to satisfy this.
 > 
-> not really, virtual channel is a software concepts. On the other hand
-> you may have request lines in hw and you can describe that, if not skip
-> this one
-> 
+> Or maybe change it to vbus-supply, like we have for phy-sun4i-usb,
+> until USB port power sequencing is added. (I remember there were
+> patches for this. What happened?)
 
-Okay. Will change the property description to request signals.
+Once it is in the binding, we are stuck with it.
 
-Thanks,
-Mani
+Connector bindings have landed. We should add vbus-supply to that. You 
+don't have to have a property in the node associated with a driver. The 
+phy driver can walk the tree and get the Vbus supply.
 
-> > +- clocks: Phandle and Specifier of the clock feeding the DMA controller.
-> > +
-> > +Example:
-> > +
-> > +Controller:
-> > +                dma: dma-controller@e0260000 {
-> > +                        compatible = "actions,s900-dma";
-> > +                        reg = <0x0 0xe0260000 0x0 0x1000>;
-> > +                        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-> > +                        #dma-cells = <1>;
-> > +                        dma-channels = <12>;
-> > +                        dma-requests = <46>;
-> > +                        clocks = <&clock CLK_DMAC>;
-> > +                };
-> > +
-> > +Client:
-> > +
-> > +DMA clients connected to the Actions Semi Owl SoCs DMA controller must
-> > +use the format described in the dma.txt file, using a two-cell specifier
-> > +for each channel.
-> > +
-> > +The two cells in order are:
-> > +1. A phandle pointing to the DMA controller.
-> > +2. The channel id.
-> > +
-> > +uart5: serial@e012a000 {
-> > +        ...
-> > +        dma-names = "tx", "rx";
-> > +        dmas = <&dma 26>, <&dma 27>;
-> > +        ...
-> > +};
-> > -- 
-> > 2.17.1
-> 
-> -- 
-> ~Vinod
+UniPhier has the same issue.
+
+Rob
