@@ -1,57 +1,144 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH] MIPS: mscc: ocelot: add MIIM1 bus
-Date: Wed, 25 Jul 2018 14:22:41 +0200
-Message-ID: <20180725122241.31370-1-quentin.schulz@bootlin.com>
+From: Vijay Viswanath <vviswana@codeaurora.org>
+Subject: Re: [PATCH V1 1/3] mmc: sdhci: Allow platform controlled voltage
+ switching
+Date: Wed, 25 Jul 2018 17:53:52 +0530
+Message-ID: <42ee57f7-8a99-b815-12db-2727ed67872b@codeaurora.org>
+References: <1532083566-43215-1-git-send-email-vviswana@codeaurora.org>
+ <1532083566-43215-2-git-send-email-vviswana@codeaurora.org>
+ <33e12e51-4b96-032f-845f-7910d654018c@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <33e12e51-4b96-032f-845f-7910d654018c@intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, evgreen@chromium.org, dianders@google.com, sayalil@codeaurora.org, rampraka@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-There is an additional MIIM (MDIO) bus in this SoC so let's declare it
-in the dtsi.
+Hi Adrian,
 
-This bus requires GPIO 14 and 15 pins that need to be muxed. There is no
-support for internal PHY reset on this bus on the contrary of MIIM0 so
-there is only one register address space and not two.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
----
- arch/mips/boot/dts/mscc/ocelot.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On 7/25/2018 5:23 PM, Adrian Hunter wrote:
+> On 20/07/18 13:46, Vijay Viswanath wrote:
+>> Some controllers can have internal mechanism to inform the SW that it
+>> is ready for voltage switching. For such controllers, changing voltage
+>> before the HW is ready can result in various issues.
+>>
+>> During setup/cleanup of host, check whether regulator enable/disable
+>> was already done by platform driver.
+>>
+>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+>> ---
+>>   drivers/mmc/host/sdhci.c | 21 ++++++++++++++++-----
+>>   1 file changed, 16 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>> index 1c828e0..494a1e2 100644
+>> --- a/drivers/mmc/host/sdhci.c
+>> +++ b/drivers/mmc/host/sdhci.c
+>> @@ -3472,6 +3472,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>   	unsigned int override_timeout_clk;
+>>   	u32 max_clk;
+>>   	int ret;
+>> +	bool enable_vqmmc = false;
+>>   
+>>   	WARN_ON(host == NULL);
+>>   	if (host == NULL)
+>> @@ -3485,7 +3486,12 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>   	 * the host can take the appropriate action if regulators are not
+>>   	 * available.
+>>   	 */
+>> -	ret = mmc_regulator_get_supply(mmc);
+>> +	if (!mmc->supply.vmmc) {
+>> +		ret = mmc_regulator_get_supply(mmc);
+>> +		enable_vqmmc  = true;
+>> +	} else {
+>> +		ret = 0;
+>> +	}
+>>   	if (ret)
+>>   		return ret;
+> 
+> Why not
+> 
+> 	if (!mmc->supply.vmmc) {
+> 		ret = mmc_regulator_get_supply(mmc);
+> 	  	if (ret)
+>    			return ret;
+> 		enable_vqmmc  = true;
+> 	}
+> 
 
-diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
-index 7096915f26e0..d7f0e3551500 100644
---- a/arch/mips/boot/dts/mscc/ocelot.dtsi
-+++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
-@@ -178,6 +178,11 @@
- 				pins = "GPIO_12", "GPIO_13";
- 				function = "uart2";
- 			};
-+
-+			miim1: miim1 {
-+				pins = "GPIO_14", "GPIO_15";
-+				function = "miim1";
-+			};
- 		};
- 
- 		mdio0: mdio@107009c {
-@@ -201,5 +206,16 @@
- 				reg = <3>;
- 			};
- 		};
-+
-+		mdio1: mdio@10700c0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "mscc,ocelot-miim";
-+			reg = <0x10700c0 0x24>;
-+			interrupts = <15>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&miim1>;
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-2.14.1
+looks neater. Will do.
+
+>>   
+>> @@ -3736,7 +3742,10 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>   
+>>   	/* If vqmmc regulator and no 1.8V signalling, then there's no UHS */
+>>   	if (!IS_ERR(mmc->supply.vqmmc)) {
+>> -		ret = regulator_enable(mmc->supply.vqmmc);
+>> +		if (enable_vqmmc)
+>> +			ret = regulator_enable(mmc->supply.vqmmc);
+> 
+> Please introduce host->vqmmc_enabled = !ret;
+> 
+
+Any reason to introduce vqmmc_enabled variable in sdhci_host structure ? 
+We can get around with a local variable and using regulator_is_enabled API.
+
+>> +		else
+>> +			ret = 0;
+>>   		if (!regulator_is_supported_voltage(mmc->supply.vqmmc, 1700000,
+>>   						    1950000))
+>>   			host->caps1 &= ~(SDHCI_SUPPORT_SDR104 |
+>> @@ -3984,7 +3993,7 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>   	return 0;
+>>   
+>>   unreg:
+>> -	if (!IS_ERR(mmc->supply.vqmmc))
+>> +	if (!IS_ERR(mmc->supply.vqmmc) && enable_vqmmc)
+> 
+> And just make this
+> 
+> 	if (host->vqmmc_enabled)
+> 
+>>   		regulator_disable(mmc->supply.vqmmc);
+>>   undma:
+>>   	if (host->align_buffer)
+>> @@ -4002,7 +4011,8 @@ void sdhci_cleanup_host(struct sdhci_host *host)
+>>   {
+>>   	struct mmc_host *mmc = host->mmc;
+>>   
+>> -	if (!IS_ERR(mmc->supply.vqmmc))
+>> +	if (!IS_ERR(mmc->supply.vqmmc) &&
+>> +			(regulator_is_enabled(mmc->supply.vqmmc) > 0))
+> 
+> 	if (host->vqmmc_enabled)
+> 
+>>   		regulator_disable(mmc->supply.vqmmc);
+>>   
+>>   	if (host->align_buffer)
+>> @@ -4135,7 +4145,8 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
+>>   
+>>   	tasklet_kill(&host->finish_tasklet);
+>>   
+>> -	if (!IS_ERR(mmc->supply.vqmmc))
+>> +	if (!IS_ERR(mmc->supply.vqmmc) &&
+>> +			(regulator_is_enabled(mmc->supply.vqmmc) > 0))
+> 
+> 	if (host->vqmmc_enabled)
+> 
+>>   		regulator_disable(mmc->supply.vqmmc);
+>>   
+>>   	if (host->align_buffer)
+>>
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+Thanks,
+Vijay
