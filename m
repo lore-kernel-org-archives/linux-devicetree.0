@@ -1,469 +1,262 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v3.1 10/10] arm64: dts: allwinner: a64:
- Enable HDMI output on A64 boards w/ HDMI
-Date: Thu, 26 Jul 2018 20:03:00 +0200
-Message-ID: <1571011.jY5lUBhtiX@jernej-laptop>
-References: <20180726171257.6688-1-icenowy@aosc.io> <20180726171257.6688-11-icenowy@aosc.io>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 2/5] pinctrl: actions: define pad control configurtion to
+ SoC specific
+Date: Thu, 26 Jul 2018 23:45:03 +0530
+Message-ID: <20180726181503.GE5220@Mani-XPS-13-9360>
+References: <20180722163601.28346-1-sravanhome@gmail.com>
+ <20180722163601.28346-3-sravanhome@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBWEZ5DNAKGQEFYJEDFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180726171257.6688-11-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180722163601.28346-3-sravanhome@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravanan Sekar <sravanhome@gmail.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com
 List-Id: devicetree@vger.kernel.org
 
-Dne =C4=8Detrtek, 26. julij 2018 ob 19:12:57 CEST je Icenowy Zheng napisal(=
-a):
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->=20
-> Enable all necessary device tree nodes and add connector node to device
-> trees for all supported A64 boards with HDMI.
->=20
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> [Icenowy: squash all board patches altogether and change supply name]
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Hi,
+
+On Sun, Jul 22, 2018 at 06:35:58PM +0200, Saravanan Sekar wrote:
+> pad control for s900 and s700 are differs in number of
+> pull control configuraions
+> s900 has 4 pull controls - high impedence, pull up, pull down, repeater
+> s700, s500 has 2 pull controls - pull up and pull down
+> 
+
+You should clearly mention what the commit is actually doing.
+
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 > ---
-> Changes in v3,1:
-> - Squash all enablement patches altogether.
-> - Change supply name to match DT binding & driver change.
-> Changes for v3:
-> - Enable all pipeline components
-> Changes for v2:
-> - none
->=20
->  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 34 +++++++++++++++++++
->  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 34 +++++++++++++++++++
->  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 34 +++++++++++++++++++
->  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 34 +++++++++++++++++++
->  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 34 +++++++++++++++++++
->  .../allwinner/sun50i-a64-sopine-baseboard.dts | 34 +++++++++++++++++++
->  6 files changed, 204 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts index
-> 094cfed13df9..0d8f5571d574 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> @@ -60,6 +60,17 @@
->  		stdout-path =3D "serial0:115200n8";
->  	};
->=20
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
+>  drivers/pinctrl/actions/pinctrl-owl.c  | 64 ++++---------------------
+>  drivers/pinctrl/actions/pinctrl-owl.h  | 13 +++--
+>  drivers/pinctrl/actions/pinctrl-s900.c | 66 +++++++++++++++++++++++++-
+>  3 files changed, 79 insertions(+), 64 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
+> index b5c880b50bb3..f72da7aae4ff 100644
+> --- a/drivers/pinctrl/actions/pinctrl-owl.c
+> +++ b/drivers/pinctrl/actions/pinctrl-owl.c
+> @@ -242,60 +242,6 @@ static int owl_pad_pinconf_reg(const struct owl_padinfo *info,
+>  	return 0;
+>  }
+>  
+> -static int owl_pad_pinconf_arg2val(const struct owl_padinfo *info,
+> -				unsigned int param,
+> -				u32 *arg)
+> -{
+> -	switch (param) {
+> -	case PIN_CONFIG_BIAS_BUS_HOLD:
+> -		*arg = OWL_PINCONF_PULL_HOLD;
+> -		break;
+> -	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> -		*arg = OWL_PINCONF_PULL_HIZ;
+> -		break;
+> -	case PIN_CONFIG_BIAS_PULL_DOWN:
+> -		*arg = OWL_PINCONF_PULL_DOWN;
+> -		break;
+> -	case PIN_CONFIG_BIAS_PULL_UP:
+> -		*arg = OWL_PINCONF_PULL_UP;
+> -		break;
+> -	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> -		*arg = (*arg >= 1 ? 1 : 0);
+> -		break;
+> -	default:
+> -		return -ENOTSUPP;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static int owl_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
+> -				unsigned int param,
+> -				u32 *arg)
+> -{
+> -	switch (param) {
+> -	case PIN_CONFIG_BIAS_BUS_HOLD:
+> -		*arg = *arg == OWL_PINCONF_PULL_HOLD;
+> -		break;
+> -	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> -		*arg = *arg == OWL_PINCONF_PULL_HIZ;
+> -		break;
+> -	case PIN_CONFIG_BIAS_PULL_DOWN:
+> -		*arg = *arg == OWL_PINCONF_PULL_DOWN;
+> -		break;
+> -	case PIN_CONFIG_BIAS_PULL_UP:
+> -		*arg = *arg == OWL_PINCONF_PULL_UP;
+> -		break;
+> -	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> -		*arg = *arg == 1;
+> -		break;
+> -	default:
+> -		return -ENOTSUPP;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int owl_pin_config_get(struct pinctrl_dev *pctrldev,
+>  				unsigned int pin,
+>  				unsigned long *config)
+> @@ -314,7 +260,10 @@ static int owl_pin_config_get(struct pinctrl_dev *pctrldev,
+>  
+>  	arg = owl_read_field(pctrl, reg, bit, width);
+>  
+> -	ret = owl_pad_pinconf_val2arg(info, param, &arg);
+> +	if (!pctrl->soc->padctl_val2arg)
+> +		return -ENOTSUPP;
 > +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
+> +	ret = pctrl->soc->padctl_val2arg(info, param, &arg);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -345,7 +294,10 @@ static int owl_pin_config_set(struct pinctrl_dev *pctrldev,
+>  		if (ret)
+>  			return ret;
+>  
+> -		ret = owl_pad_pinconf_arg2val(info, param, &arg);
+> +		if (!pctrl->soc->padctl_arg2val)
+> +			return -ENOTSUPP;
 > +
->  	leds {
->  		compatible =3D "gpio-leds";
->=20
-> @@ -86,6 +97,10 @@
->  	};
->  };
->=20
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
->  &ehci0 {
->  	status =3D "okay";
->  };
-> @@ -103,6 +118,17 @@
->  	status =3D "okay";
->  };
->=20
-> +&hdmi {
-> +	hdmi-supply =3D <&reg_dldo1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint =3D <&hdmi_con_in>;
-> +	};
-> +};
-> +
->  &i2c1 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&i2c1_pins>;
-> @@ -120,6 +146,10 @@
->  	};
->  };
->=20
-> +&mixer1 {
-> +	status =3D "okay";
-> +};
-> +
->  &mmc0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&mmc0_pins>;
-> @@ -300,6 +330,10 @@
->  	vcc-hdmi-supply =3D <&reg_dldo1>;
->  };
->=20
-> +&tcon1 {
-> +	status =3D "okay";
-> +};
-> +
->  &uart0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&uart0_pins_a>;
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts index
-> 98dbff19f5cc..2bcf02f46366 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> @@ -57,6 +57,21 @@
->  	chosen {
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> +
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&de {
-> +	status =3D "okay";
->  };
->=20
->  &ehci0 {
-> @@ -67,6 +82,17 @@
->  	status =3D "okay";
->  };
->=20
-> +&hdmi {
-> +	hdmi-supply =3D <&reg_dldo1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint =3D <&hdmi_con_in>;
-> +	};
-> +};
-> +
->  /* i2c1 connected with gpio headers like pine64, bananapi */
->  &i2c1 {
->  	pinctrl-names =3D "default";
-> @@ -78,6 +104,10 @@
->  	bias-pull-up;
->  };
->=20
-> +&mixer1 {
-> +	status =3D "okay";
-> +};
-> +
->  &mmc0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&mmc0_pins>;
-> @@ -199,6 +229,10 @@
->  	vcc-hdmi-supply =3D <&reg_dldo1>;
->  };
->=20
-> +&tcon1 {
-> +	status =3D "okay";
-> +};
-> +
->  &uart0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&uart0_pins_a>;
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts index
-> 3f531393eaee..5445a7a1db51 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> @@ -58,12 +58,42 @@
->  		stdout-path =3D "serial0:115200n8";
->  	};
->=20
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +
->  	wifi_pwrseq: wifi_pwrseq {
->  		compatible =3D "mmc-pwrseq-simple";
->  		reset-gpios =3D <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
->  	};
->  };
->=20
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi {
-> +	hdmi-supply =3D <&reg_dldo1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint =3D <&hdmi_con_in>;
-> +	};
-> +};
-> +
-> +&mixer1 {
-> +	status =3D "okay";
-> +};
-> +
->  &mmc0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&mmc0_pins>;
-> @@ -218,6 +248,10 @@
->  	vcc-hdmi-supply =3D <&reg_dldo1>;
->  };
->=20
-> +&tcon1 {
-> +	status =3D "okay";
-> +};
-> +
->  &uart0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&uart0_pins_a>;
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts index
-> 1221764f5719..81a8f92c6c35 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-> @@ -57,12 +57,42 @@
->  	chosen {
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> +
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&de {
-> +	status =3D "okay";
->  };
->=20
->  &ehci1 {
->  	status =3D "okay";
->  };
->=20
-> +&hdmi {
-> +	hdmi-supply =3D <&reg_dldo1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint =3D <&hdmi_con_in>;
-> +	};
-> +};
-> +
-> +&mixer1 {
-> +	status =3D "okay";
-> +};
-> +
->  &mmc0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&mmc0_pins>;
-> @@ -195,6 +225,10 @@
->  	vcc-hdmi-supply =3D <&reg_dldo1>;
->  };
->=20
-> +&tcon1 {
-> +	status =3D "okay";
-> +};
-> +
->  &uart0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&uart0_pins_a>;
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts index
-> 1b9b92e541d2..1b972bade9f6 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> @@ -62,6 +62,21 @@
->  	chosen {
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> +
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&de {
-> +	status =3D "okay";
->  };
->=20
->  &ehci0 {
-> @@ -82,6 +97,17 @@
->=20
->  };
->=20
-> +&hdmi {
-> +	hdmi-supply =3D <&reg_dldo1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint =3D <&hdmi_con_in>;
-> +	};
-> +};
-> +
->  &i2c1 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&i2c1_pins>;
-> @@ -99,6 +125,10 @@
->  	};
->  };
->=20
-> +&mixer1 {
-> +	status =3D "okay";
-> +};
-> +
->  &mmc0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&mmc0_pins>;
-> @@ -238,6 +268,10 @@
->  	status =3D "disabled";
->  };
->=20
-> +&tcon1 {
-> +	status =3D "okay";
-> +};
-> +
->  /* On Exp and Euler connectors */
->  &uart0 {
->  	pinctrl-names =3D "default";
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dt=
-s
-> b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts index
-> c21f2331add6..eff44b069b1d 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> @@ -61,6 +61,17 @@
->  		stdout-path =3D "serial0:115200n8";
->  	};
->=20
-> +	connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +
->  	reg_vcc1v8: vcc1v8 {
->  		compatible =3D "regulator-fixed";
->  		regulator-name =3D "vcc1v8";
-> @@ -69,6 +80,10 @@
->  	};
->  };
->=20
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
->  &ehci0 {
->  	status =3D "okay";
->  };
-> @@ -86,6 +101,17 @@
->  	status =3D "okay";
->  };
->=20
-> +&hdmi {
-> +	hdmi-supply =3D <&reg_dldo1>;
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint =3D <&hdmi_con_in>;
-> +	};
-> +};
-> +
->  &mdio {
->  	ext_rgmii_phy: ethernet-phy@1 {
->  		compatible =3D "ethernet-phy-ieee802.3-c22";
-> @@ -93,6 +119,10 @@
->  	};
->  };
->=20
-> +&mixer1 {
-> +	status =3D "okay";
-> +};
-> +
->  &mmc2 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&mmc2_pins>;
-> @@ -138,6 +168,10 @@
->  	vcc-hdmi-supply =3D <&reg_dldo1>;
+> +		ret = pctrl->soc->padctl_arg2val(info, param, &arg);
+>  		if (ret)
+>  			return ret;
+>  
+> diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
+> index 42635366e68f..669591c5400e 100644
+> --- a/drivers/pinctrl/actions/pinctrl-owl.h
+> +++ b/drivers/pinctrl/actions/pinctrl-owl.h
+> @@ -139,13 +139,6 @@
+>  		.st = &name##_st_conf,			\
+>  	}
+>  
+> -enum owl_pinconf_pull {
+> -	OWL_PINCONF_PULL_HIZ,
+> -	OWL_PINCONF_PULL_DOWN,
+> -	OWL_PINCONF_PULL_UP,
+> -	OWL_PINCONF_PULL_HOLD,
+> -};
+> -
 
-How is it possible to have vcc-hdmi-supply already defined? Did I miss some=
-=20
-patch?
+Why can't this be left here itself?
 
-Best regards,
-Jernej
-
+>  enum owl_pinconf_drv {
+>  	OWL_PINCONF_DRV_2MA,
+>  	OWL_PINCONF_DRV_4MA,
+> @@ -278,6 +271,12 @@ struct owl_pinctrl_soc_data {
+>  	unsigned int ngpios;
+>  	const struct owl_gpio_port *ports;
+>  	unsigned int nports;
+> +	int (*padctl_val2arg)(const struct owl_padinfo *padinfo,
+> +				unsigned int param,
+> +				u32 *arg);
+> +	int (*padctl_arg2val)(const struct owl_padinfo *info,
+> +				unsigned int param,
+> +				u32 *arg);
 >  };
->=20
-> +&tcon1 {
-> +	status =3D "okay";
+>  
+>  int owl_pinctrl_probe(struct platform_device *pdev,
+> diff --git a/drivers/pinctrl/actions/pinctrl-s900.c b/drivers/pinctrl/actions/pinctrl-s900.c
+> index baa2f4847418..dc7bdc1f5cde 100644
+> --- a/drivers/pinctrl/actions/pinctrl-s900.c
+> +++ b/drivers/pinctrl/actions/pinctrl-s900.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pinctrl/pinctrl.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+>  #include "pinctrl-owl.h"
+>  
+>  /* Pinctrl registers offset */
+> @@ -1717,6 +1718,67 @@ static const struct owl_gpio_port s900_gpio_ports[] = {
+>  	OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8)
+>  };
+>  
+> +enum owl_pinconf_pull {
+> +	OWL_PINCONF_PULL_HIZ,
+> +	OWL_PINCONF_PULL_DOWN,
+> +	OWL_PINCONF_PULL_UP,
+> +	OWL_PINCONF_PULL_HOLD,
 > +};
 > +
->  &uart0 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&uart0_pins_a>;
+> +static int owl_pad_pinconf_s900_arg2val(const struct owl_padinfo *info,
+> +				unsigned int param,
+> +				u32 *arg)
 
+How about s900_pad_pinconf_arg2val?
 
+> +{
+> +	switch (param) {
+> +	case PIN_CONFIG_BIAS_BUS_HOLD:
+> +		*arg = OWL_PINCONF_PULL_HOLD;
+> +		break;
+> +	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> +		*arg = OWL_PINCONF_PULL_HIZ;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		*arg = OWL_PINCONF_PULL_DOWN;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		*arg = OWL_PINCONF_PULL_UP;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +		*arg = (*arg >= 1 ? 1 : 0);
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_pad_pinconf_s900_val2arg(const struct owl_padinfo *padinfo,
+> +				unsigned int param,
+> +				u32 *arg)
 
+How about s900_pad_pinconf_val2arg?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Mani
+
+> +{
+> +	switch (param) {
+> +	case PIN_CONFIG_BIAS_BUS_HOLD:
+> +		*arg = *arg == OWL_PINCONF_PULL_HOLD;
+> +		break;
+> +	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> +		*arg = *arg == OWL_PINCONF_PULL_HIZ;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		*arg = *arg == OWL_PINCONF_PULL_DOWN;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		*arg = *arg == OWL_PINCONF_PULL_UP;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +		*arg = *arg == 1;
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static struct owl_pinctrl_soc_data s900_pinctrl_data = {
+>  	.padinfo = s900_padinfo,
+>  	.pins = (const struct pinctrl_pin_desc *)s900_pads,
+> @@ -1727,7 +1789,9 @@ static struct owl_pinctrl_soc_data s900_pinctrl_data = {
+>  	.ngroups = ARRAY_SIZE(s900_groups),
+>  	.ngpios = NUM_GPIOS,
+>  	.ports = s900_gpio_ports,
+> -	.nports = ARRAY_SIZE(s900_gpio_ports)
+> +	.nports = ARRAY_SIZE(s900_gpio_ports),
+> +	.padctl_arg2val = owl_pad_pinconf_s900_arg2val,
+> +	.padctl_val2arg = owl_pad_pinconf_s900_val2arg,
+>  };
+>  
+>  static int s900_pinctrl_probe(struct platform_device *pdev)
+> -- 
+> 2.18.0
+> 
