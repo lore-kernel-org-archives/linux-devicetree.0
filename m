@@ -1,80 +1,76 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] mmc: tmio: rename files and CONFIG options to have
- the same prefix
-Date: Thu, 26 Jul 2018 10:25:34 +0200
-Message-ID: <CAMuHMdUnYiLYO4hX3x6X7EZ8HnnOHXCPEUOXzPVJc=6s7VF+bQ@mail.gmail.com>
-References: <1532575736-20138-1-git-send-email-yamada.masahiro@socionext.com> <1532575736-20138-2-git-send-email-yamada.masahiro@socionext.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/2] ARM: dts: tegra20: restore address order
+Date: Thu, 26 Jul 2018 10:38:20 +0200
+Message-ID: <f62f73d659eecb8fe96983038e83621a@agner.ch>
+References: <20180720163426.4410-1-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532575736-20138-2-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <20180720163426.4410-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yamada-san,
+On 20.07.2018 18:34, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> Commit 6c468f109884 ("ARM: dts: tegra: add Tegra20 NAND flash
+> controller node") introduced the nand-controller node. However, it got
+> added at the wrong spot not honoring the address order. Fix this.
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-On Thu, Jul 26, 2018 at 5:33 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
-> MFD glue") said, these MMC controllers use the IP from Panasonic.
->
-> TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
-> The common driver code was split and expanded as 'tmio-mmc-core', then
-> it become historical misnomer since 'tmio' is not the name of this IP.
->
-> I pointed out this [1], and suggested to re-organize the names in the
-> form of:
->
->   <IP-name>.c            (common code for this IP)
->   <IP-name>_tmio.c       (Toshiba Mobile IO)
->   <IP-name>_sdhi.c       (Renesas SDHI)
->   <IP-name>_uniphier.c   (Socionext UniPhier)
->
-> The <IP-name> in my mind was 'mnsd' because names of Panasonic chips
-> are prefixed with 'MN'.
->
-> This is the naming scheme as we see in dw_mmc* and sdhci-*.
->
-> In the discussion with Wolfram Sang, my suggestion was rejected
-> because it implied drastic function renaming, which is too invasive.
->
-> Ulf Hansson was still happy with file renaming to clarify the
-> relationship between variants.  So, the accepted solution was:
->
->  - Make 'tmio_mmc' the _right_ core name
->  - Align all variant files with the same prefix.
->  - Do not rename functions
->
-> This commit renames files as follows:
->
->   tmio_mmc_core.c              -> tmio_mmc.c
->   tmio_mmc.c                   -> tmio_mmc_original.c
->   renesas_sdhi_core.c          -> tmio_mmc_sdhi.c
->   renesas_sdhi.h               -> tmio_mmc_sdhi.h
->   renesas_sdhi_internal_dmac.c -> tmio_mmc_sdhi_internal_dmac.c
->   renesas_sdhi_sys_dmac.c      -> tmio_mmc_sdhi_sys_dmac.c
+Reviewed-by: Stefan Agner <stefan@agner.ch>
 
-I have mixed feelings about the last two renames, especially about the last
-one: SYS-DMAC is very Renesas-specific, as it's a separate IP block in
-Renesas SoCs.
-1. Are there other SoCs using the same internal DMAC?
-   If not, perhaps the "renesas" should be kept in the driver name?
-2. Are there other SoCs using an external DMAC?
-   Is the interface to the external DMAC similar?
-   If yes, perhaps it should be renamed to tmio_mmc_sdhi_external_dmac.c?
-   If not, perhaps the "renesas" should be kept in the driver name?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> ---
+> 
+>  arch/arm/boot/dts/tegra20.dtsi | 26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 979f38293fe5..a22c6a8f8f83 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -419,19 +419,6 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	gmi@70009000 {
+> -		compatible = "nvidia,tegra20-gmi";
+> -		reg = <0x70009000 0x1000>;
+> -		#address-cells = <2>;
+> -		#size-cells = <1>;
+> -		ranges = <0 0 0xd0000000 0xfffffff>;
+> -		clocks = <&tegra_car TEGRA20_CLK_NOR>;
+> -		clock-names = "gmi";
+> -		resets = <&tegra_car 42>;
+> -		reset-names = "gmi";
+> -		status = "disabled";
+> -	};
+> -
+>  	nand-controller@70008000 {
+>  		compatible = "nvidia,tegra20-nand";
+>  		reg = <0x70008000 0x100>;
+> @@ -447,6 +434,19 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	gmi@70009000 {
+> +		compatible = "nvidia,tegra20-gmi";
+> +		reg = <0x70009000 0x1000>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0xd0000000 0xfffffff>;
+> +		clocks = <&tegra_car TEGRA20_CLK_NOR>;
+> +		clock-names = "gmi";
+> +		resets = <&tegra_car 42>;
+> +		reset-names = "gmi";
+> +		status = "disabled";
+> +	};
+> +
+>  	pwm: pwm@7000a000 {
+>  		compatible = "nvidia,tegra20-pwm";
+>  		reg = <0x7000a000 0x100>;
