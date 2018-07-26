@@ -1,49 +1,128 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: exynos: arndale: use i2c-gpio for HDMI-DDC
-Date: Thu, 26 Jul 2018 13:51:44 +0200
-Message-ID: <CAJKOXPe_YKhgm_e0U3uu2PJ2Edg=Zcsjd0FOSFgew5WMMkoGMg@mail.gmail.com>
-References: <CGME20180726101245eucas1p16d84c77490d9eb81300f38c2f3fb34a5@eucas1p1.samsung.com>
- <20180726101228.14956-1-a.hajda@samsung.com>
- <CAJKOXPd-59v78yDRtUA=5aqmuac8Gxu2JWwrbR44Wn3jXr+nJw@mail.gmail.com>
- <20180726110451eucas1p1cddb55c0c0feeb2494e6199445773c8a~E5mQ6hXvs0711807118eucas1p1l@eucas1p1.samsung.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
+ i.MX7S SoCs.
+Date: Thu, 26 Jul 2018 14:51:58 +0300
+Message-ID: <b5e54dce-582d-15d9-5f33-0f27fd1a256c@mentor.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-5-o.rempel@pengutronix.de>
+ <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
+ <1532601691.32306.28.camel@pengutronix.de>
+ <CABb+yY1GEmw_8q2HaF8y5VfFJX_c_0_MbWtPUE_j_o-zS8iZ_g@mail.gmail.com>
+ <1532604937.32306.30.camel@pengutronix.de>
+ <CABb+yY0LbLfK2SEdTeuDmaGc+PsVn0AREQ=E=c4UZgxa5K95qQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180726110451eucas1p1cddb55c0c0feeb2494e6199445773c8a~E5mQ6hXvs0711807118eucas1p1l@eucas1p1.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY0LbLfK2SEdTeuDmaGc+PsVn0AREQ=E=c4UZgxa5K95qQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
+ linux-arm-kernel"@lists.infradead.org, dl-linux-imx <linux-imx@nxp.com>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-mediatek@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYgSnVseSAyMDE4IGF0IDEzOjA0LCBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
-Y29tPiB3cm90ZToKPiBPbiAyNi4wNy4yMDE4IDEyOjIzLCBLcnp5c3p0b2YgS296bG93c2tpIHdy
-b3RlOgo+PiBPbiAyNiBKdWx5IDIwMTggYXQgMTI6MTIsIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
-c2Ftc3VuZy5jb20+IHdyb3RlOgo+Pj4gSERNSS1EREMgZm9yIHVua25vd24gcmVhc29ucyBkb2Vz
-bid0IHdvcmsgd2l0aCBFeHlub3MgSTJDCj4+PiBjb250cm9sbGVycy4gRm9ydHVuYXRlbHkgaTJj
-LWdwaW8gY29tZXMgdG8gdGhlIHJlc2N1ZS4KPj4gV2FpdC4uLiB3aGF0PyBUaGUgSTJDIGNvbnRy
-b2xsZXIgb24gU29DIChvciBpdHMgZHJpdmVyKSBpcyBidWdneSBpbgo+PiBzb21lIHdheSBhbmQg
-d2UgbmVlZCB0byB1c2UgdGhlc2UgcGlucyBhcyBHUElPIHRvIHJ1biBpMmMtZ3BpbyBkcml2ZXIK
-Pj4gdGhlcmU/IEl0IGxvb2tzIGxpa2Ugd29ya2Fyb3VuZCBub3QgYSBwcm9wZXIgc29sdXRpb24u
-Li4KPgo+IEJ1dCBhdCBsZWFzdCB3b3JraW5nIG9uZSA6KSBCZXR0ZXIgc29sdXRpb25zIGFyZSB3
-ZWxjb21lLgo+IFRoaXMgc2VlbXMgdG8gYmUgbm90IHVuY29tbW9uIGlzc3VlLCBpZiB5b3UgZm9y
-IGV4YW1wbGUgbG9vayBpbnRvIG9kcm9pZAo+IHZlbmRvciBrZXJuZWwgeW91IGNhbiBldmVuIGZp
-bmQgaGFyZGNvZGVkIEVESURzIDopCgpJIGFtIG5vdCBzdXJlIHdoZXRoZXIgaGFyZGtlcm5lbCdz
-IHRyZWUgaXMgYSBnb29kIGFyZ3VtZW50LiBUaGV5IHRvb2sKdmVuZG9yJ3MgdHJlZSBhbmQgYXBw
-bHkgd2hhdGV2ZXIgcGF0Y2hlcy9maXhlcyBhcmUgbmVlZGVkIHRvIGJyaW5nIGl0CnVwLiBUaGV5
-IGRvIG5vdCBoYXZlIHRpbWUgdG8gbG9vayBmb3IgY29ycmVjdCAodGhlICJiZXN0IikgZml4ZXMu
-IFRoZXkKY2hvb3NlIHdoYXRldmVyIGlzIHdvcmtpbmcgbm93LgpCZXR0ZXIgc29sdXRpb24gd291
-bGQgYmUgdG8gc3BlbmQgbW9udGhzIGFuZCBmaXggdGhlIGRyaXZlci4gOikKCkNhbiB5b3UgYXQg
-bGVhc3QgbWVudGlvbiBuZXh0IHRvIGkyYy1ncGlvIG5vZGUgdGhhdCBpdCByZXBsYWNlcyBpMmNf
-MgpiZWNhdXNlIG9mIHRoaXM/CgpCZXN0IHJlZ2FyZHMsCktyenlzenRvZgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 07/26/2018 02:46 PM, Jassi Brar wrote:
+> On Thu, Jul 26, 2018 at 5:05 PM, Lucas Stach <l.stach@pengutronix.de> wrote:
+>> Am Donnerstag, den 26.07.2018, 16:45 +0530 schrieb Jassi Brar:
+>>> On Thu, Jul 26, 2018 at 4:11 PM, Lucas Stach <l.stach@pengutronix.de>
+>>> wrote:
+>>>> Hi Jassi,
+>>>>
+>>>> Am Donnerstag, den 26.07.2018, 15:25 +0530 schrieb Jassi Brar:
+>>>>> On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
+>>>>>> <o.rempel@pengutronix.de> wrote:
+>>>>>> This are currently tested SoCs with imx-mailbox driver.
+>>>>>>
+>>>>>>>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>>>>>>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 +-
+>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>>>>> b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>>>>> index 113d6ab931ef..5616d2afca45 100644
+>>>>>> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>>>>>> @@ -18,7 +18,7 @@ Messaging Unit Device Node:
+>>>>>>  Required properties:
+>>>>>>  -------------------
+>>>>>>  - compatible : should be "fsl,<chip>-mu", the supported chips
+>>>>>> include
+>>>>>> -               imx8qxp, imx8qm.
+>>>>>> +               imx6sx, imx7s, imx8qxp, imx8qm.
+>>>>>>
+>>>>>
+>>>>> This is not scalable. Do we add every new SoC that contains the
+>>>>> same controller?
+>>>>
+>>>> Yes, we do. This is a policy direction from the DT maintainers.
+>>>>
+>>>
+>>> I would love to read the post/documentation.
+>>>
+>>> Consider the same h/w - controller and platforms, but only the the MU
+>>> chapter said the controller name is, say, 'MU121'. I am sure now you
+>>> will see it correct to call it "fsl,mu121" compatible.
+>>> What changed? just the name, right?
+>>>
+>>>
+>>>> If we
+>>>> ever going to want to validate DTs against the binding, all
+>>>> compatibles
+>>>> used in the DTs must be specified in the binding.
+>>>>
+>>>> As we can't really tell if the controller is exactly the same or
+>>>> even
+>>>> has some SoC integration bugs, we generally add a new compatible
+>>>> for
+>>>> each SoC to key off any workarounds necessary in the driver without
+>>>> the
+>>>> need to change the DTs, breaking compatibility.
+>>>>
+>>>
+>>> I think if the h/w resources and behaviour remain the same and the
+>>> documentation does not call it by a different name -- it is safe to
+>>> assume its the same IP. Especially when the driver is absolutely
+>>> indifferent to the 5 SoC names.
+>>
+>> Even if it is the same IP core, the SoC integration might have bugs
+>> that need different behavior from the driver. We've already had that
+>> case with the i.MX6 SPI controller.
+>>
+> For h/w quirks/bugs, a new "has-that-bug" property makes better sense.
+> Or, if you insist, a new compatible based on the first soc that has
+> the buggy block.
+> 
+
+How do you propose to handle this property in the driver, if once flashed
+DTB does not contain it?
+
+>>> If/when we find the controller changes, we could revisit the binding
+>>> and add another compatible option and modify the driver to catch that
+>>> and adapt.
+>>
+>> That's way too late. If we want to keep DTs stable
+>>
+> How do you keep the DT stable by explicitly defining every new SoC to
+> the compatible list in DT, _add_ to the driver.... only to have the
+> driver absolutely not care which SoC is it?
+> Which is the situation right now with this patchset.
+> 
+
+For sake of simplicity you can assume that a driver can be changed in
+future, and SoC/board device tree bindings can not be changed ever.
+
+--
+Best wishes,
+Vladimir
