@@ -1,38 +1,39 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: exynos: arndale: use i2c-gpio for
- HDMI-DDC
-Date: Thu, 26 Jul 2018 15:47:00 +0200
-Message-ID: <CAJKOXPdE3Bqog18C7pEcVZiPfQ1q9OUKnspDH0NXcjzDJkJ9Ag@mail.gmail.com>
-References: <CGME20180726132213eucas1p221b5ec5eb4a5e9c9d2ff1d76c7b26b2c@eucas1p2.samsung.com>
- <CAJKOXPe_YKhgm_e0U3uu2PJ2Edg=Zcsjd0FOSFgew5WMMkoGMg@mail.gmail.com>
- <20180726132209.18127-1-a.hajda@samsung.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Thu, 26 Jul 2018 19:19:33 +0530
+Message-ID: <CABb+yY2XCStT3oRWjPVTT10KY164nhJyGGn3tvjquXM_Xca4Yw@mail.gmail.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-4-o.rempel@pengutronix.de>
+ <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
+ <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180726132209.18127-1-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYgSnVseSAyMDE4IGF0IDE1OjIyLCBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
-Y29tPiB3cm90ZToKPiBIRE1JLUREQyBmb3IgdW5rbm93biByZWFzb25zIGRvZXNuJ3Qgd29yayB3
-aXRoIEV4eW5vcyBJMkMKPiBjb250cm9sbGVycy4gRm9ydHVuYXRlbHkgaTJjLWdwaW8gY29tZXMg
-dG8gdGhlIHJlc2N1ZS4KPgo+IFNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
-c2Ftc3VuZy5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtYXJuZGFs
-ZS5kdHMgIHwgMjggKysrKysrKysrKysrKysrKy0tLS0tLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
-ZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kgfCAgNiArKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDI2
-IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4KClRoYW5rcywgbG9va3MgZ29vZC4gSSds
-bCB0YWtlIGl0IGFmdGVyIG1lcmdlIHdpbmRvdy4KCkJlc3QgcmVnYXJkcywKS3J6eXN6dG9mCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Jul 26, 2018 at 5:21 PM, A.s. Dong <aisheng.dong@nxp.com> wrote:
+>
+> The reference manual is at here: (Chapter 42 Messaging Unit (MU)
+> https://www.nxp.com/docs/en/reference-manual/IMX6ULRM.pdf
+>
+You seem to have shared a wrong link. It has
+       Chapter 42  Synchronous Audio Interface (SAI)
+
+and finding "Messaging Unit" shows no result.
