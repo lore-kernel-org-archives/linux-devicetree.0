@@ -1,59 +1,59 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] drivers/memory/Kconfig: Add CONFIG_OF dependency
-Date: Fri, 27 Jul 2018 01:25:57 +0200
-Message-ID: <20180727012557.72fff5e1@xps13>
-References: <20180721200049.7553-1-anders.roxell@linaro.org>
-        <a83ff193-be57-f566-cafb-132075025b56@infradead.org>
-        <20180722082939.2de739f1@bbrezillon>
-        <CAK8P3a1_8OSqyKsbw+m3ZzLWfPqDK4ynG3WoPTk+K2uJJsiq5A@mail.gmail.com>
-        <20180723114107.664164d2@bbrezillon>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: RFC: simplified RISC-V interrupt and clocksource handling
+Date: Thu, 26 Jul 2018 16:38:43 -0700
+Message-ID: <dc346650-0b48-3c2b-9190-b87ea6987e37@wdc.com>
+References: <20180726143723.16585-1-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180723114107.664164d2@bbrezillon>
+In-Reply-To: <20180726143723.16585-1-hch@lst.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>, Anders Roxell <anders.roxell@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-Boris Brezillon <boris.brezillon@bootlin.com> wrote on Mon, 23 Jul 2018
-11:41:07 +0200:
-
-> On Mon, 23 Jul 2018 11:34:43 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
+On 7/26/18 7:37 AM, Christoph Hellwig wrote:
+> This series tries adds support for interrupt handling and timers
+> for the RISC-V architecture.
 > 
-> > On Sun, Jul 22, 2018 at 8:29 AM, Boris Brezillon
-> > <boris.brezillon@bootlin.com> wrote:  
-> > > +Arnd, Rob and the DT ML.
-> > >
-> > > On Sat, 21 Jul 2018 14:53:47 -0700
-> > > Randy Dunlap <rdunlap@infradead.org> wrote:
-> > >    
-> > >> On 07/21/2018 01:00 PM, Anders Roxell wrote:    
-> > >> > JZ4780_NEMC doesn't depend on OF, and if OF isn't enabled we get this
-> > >> > error:
-> > >> > drivers/memory/jz4780-nemc.c: In function ‘jz4780_nemc_num_banks’:
-> > >> > drivers/memory/jz4780-nemc.c:72:10: error: implicit declaration of
-> > >> >  function ‘of_read_number’; did you mean ‘down_read_nested’?
-> > >> >  [-Werror=implicit-function-declaration]
-> > >> >    bank = of_read_number(prop, 1);
-> > >> >           ^~~~~~~~~~~~~~
-> > >> >           down_read_nested    
-> > >
-> > > Looks like of.h defines stubs so that people can compile-test without
-> > > CONFIG_OF selected. Maybe we should move of_read_number() and
-> > > of_read_ulong() out of the #ifdef CONFIG_OF section.    
-> > 
-> > That seems fine, though the added dependency seems appropriate
-> > here as well. of_read_number() is rarely used, and for the most part in
-> > powerpc specific code that is guaranteed to have CONFIG_OF enabled,
-> > so it's not that likely to cause many more problems.  
+> The basic per-hart interrupt handling implemented by the scause
+> and sie CSRs is extremely simple and implemented directly in
+> arch/riscv/kernel/irq.c.  In addition there is a irqchip driver
+> for the PLIC external interrupt controller, which is called through
+> the set_handle_irq API, and a clocksource driver that gets its
+> timer interrupt directly from the low-level interrupt handling.
 > 
-> Ok, then I'll let Miquel apply Anders' patch to the NAND tree.
+> Compared to previous iterations this version does not try to use an
+> irqchip driver for the low-level interrupt handling.  This saves
+> a couple indirect calls and an additional read of the scause CSR
+> in the hot path, makes the code much simpler and last but not least
+> avoid the dependency on a device tree for a mandatory architectural
+> feature.
+> 
+I agree that this code is much simpler than HLIC code.
+Few doubts though
 
-Applied to nand/next, thanks.
+1. As per my understanding, timer interrupt now can't be registered as a 
+Linux IRQ now. Thus, /proc/interrupts will not be automatically 
+populated for timer interrupt stats. Am I wrong in my assumption?
 
-Miquèl
+2. The future version of local interrupt controller known as Core Level 
+Interrupt Controller aka CLIC. Do we have to change the current design
+again for CLIC in future?
+
+Here are the docs:
+https://github.com/sifive/clic-spec/blob/master/clic.adoc
+
+Regards,
+Atish
+> A git tree is available here (contains a few more patches before
+> the ones in this series)
+> 
+>      git://git.infradead.org/users/hch/riscv.git riscv-irq-simple
+> 
+> Gitweb:
+> 
+>      http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple
+> 
