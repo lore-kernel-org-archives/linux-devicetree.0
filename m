@@ -1,54 +1,82 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 00/14] arm64: dts: meson-axg: add audio support
-Date: Thu, 26 Jul 2018 16:38:10 -0500
-Message-ID: <7hfu051xvh.fsf@baylibre.com>
-References: <20180724125238.14567-1-jbrunet@baylibre.com>
-        <CAFBinCBh-b=ie4hBMWdHG8KoLQ7qiRfo8vXfJ1PRcN4UPtg+uA@mail.gmail.com>
-        <705e31bf0d978b7d356b2f077179ab0e3db6f092.camel@baylibre.com>
-        <CAFBinCB_fULnmrpyzNwnfAiL9QGco_6QW957Wroj8o6ZhNwmWA@mail.gmail.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v3 00/23] Add multi-channel support to Armada thermal
+ driver
+Date: Thu, 26 Jul 2018 15:14:24 -0700
+Message-ID: <20180726221423.GA3569@localhost.localdomain>
+References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+ <20180718172849.30b7cec0@xps13> <20180725095222.054f1e80@xps13>
+ <1532570441.2358.27.camel@intel.com>
+ <20180726211442.GB3487@localhost.localdomain>
+ <20180726213517.GA15690@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCB_fULnmrpyzNwnfAiL9QGco_6QW957Wroj8o6ZhNwmWA@mail.gmail.com>
-        (Martin Blumenstingl's message of "Wed, 25 Jul 2018 23:26:27 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: jbrunet@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180726213517.GA15690@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-
-> Hi Jerome,
->
-> On Wed, Jul 25, 2018 at 11:19 PM <jbrunet@baylibre.com> wrote:
->>
->> On Wed, 2018-07-25 at 21:11 +0200, Martin Blumenstingl wrote:
->> > nit-pick: one patch uses "arm64: dts: meson-axg: s400" in the subject
->> > while other patches that are touching the s400 board aren't
->> > if you have to re-send this series: can you please use the "arm64:
->> > dts: meson-axg: s400:" prefix for all patches touching the s400 board?
->>
->> hum, do we really have such rule, or do you think we should add one ?
-> looking at the git history in arch/arm64/boot/dts/amlogic: it seems
-> that we don't have a rule yet, even though some (some of
-> your's/Neil's/my) patches were using that naming schema in the past
->
->> Kevin, do you have opinion ?
->>
->> Not that I really mind either way, but prefixes rules are usually there to help
->> maintainer filter the patches. Will such rule help in any way ?
-> maybe it's just a problem of a false initial impression
-> I read "arm64: dts: meson-axg: add usb power regulator" in the
-> cover-letter and came to the conclusion that this patch must be wrong
-> since meson-axg.dtsi should not have any regulators (unless they're
-> built into the SoC). only when looking at the patch itself I realized
-> that it's fine because it patches the s400.dts
-
-I actually had the same first impression problem.  At first glance, it
-looks like all the patches are AXG-generic, and only the 2 that mention
-s400 apply to the board.
-
-So, if this needs a respin, I'd prefer the board name where appropriate,
-but it's not something I'm going to be picky about.
-
-Kevin
+T24gVGh1LCBKdWwgMjYsIDIwMTggYXQgMDI6MzU6MThQTSAtMDcwMCwgRWR1YXJkbyBWYWxlbnRp
+biB3cm90ZToKPiBPbiBUaHUsIEp1bCAyNiwgMjAxOCBhdCAwMjoxNDo0M1BNIC0wNzAwLCBFZHVh
+cmRvIFZhbGVudGluIHdyb3RlOgo+ID4gSGVsbG8sCj4gPiAKPiA+IE9uIFRodSwgSnVsIDI2LCAy
+MDE4IGF0IDEwOjAwOjQxQU0gKzA4MDAsIFpoYW5nIFJ1aSB3cm90ZToKPiA+ID4gT24g5LiJLCAy
+MDE4LTA3LTI1IGF0IDA5OjUyICswMjAwLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+ID4gPiA+IEhp
+IEVkdWFyZG8sIFpoYW5nLAo+ID4gPiA+IAo+ID4gPiA+IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5y
+YXluYWxAYm9vdGxpbi5jb20+IHdyb3RlIG9uIFdlZCwgMTggSnVsIDIwMTgKPiA+ID4gPiAxNzoy
+ODo0OSArMDIwMDoKPiA+ID4gPiAKPiA+ID4gPiA+IAo+ID4gPiA+ID4gSGkgRWR1YXJkbywKPiA+
+ID4gPiA+IAo+ID4gPiA+ID4gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNv
+bT4gd3JvdGUgb24gTW9uLCAxNiBKdWwgMjAxOAo+ID4gPiA+ID4gMTY6NDE6NDMgKzAyMDA6Cj4g
+PiA+ID4gPiAKPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IFRoZSBvbmx5IGNhcGFiaWxpdHkgb2Yg
+dGhlIEFybWFkYSB0aGVybWFsIGRyaXZlciBpcyBjdXJyZW50bHkKPiA+ID4gPiA+ID4ganVzdCB0
+bwo+ID4gPiA+ID4gPiByZWFkIG9uZSBzZW5zb3IgKHRoZSBkZWZhdWx0IG9uZSkgcGVyIEFQIGFu
+ZCBvbmUgcGVyIENQLgo+ID4gPiA+ID4gPiBBY3R1YWxseSwKPiA+ID4gPiA+ID4gdGhlcmUgaXMg
+b25lIHNlbnNvciBwZXIgY29yZSBpbiB0aGUgQVA4MDYgcGx1cyBvbmUgc2Vuc29yIGluIHRoZQo+
+ID4gPiA+ID4gPiB0aGVybWFsIElQIGl0c2VsZi4gVGhlIENQMTEwIGp1c3QgZmVhdHVyZXMgb25l
+IHRoZXJtYWwgc2Vuc29yIGluCj4gPiA+ID4gPiA+IGl0cwo+ID4gPiA+ID4gPiBvd24gdGhlcm1h
+bCBJUC4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IFRoaXMgc2VyaWVzIGZpcnN0IGltcHJvdmVz
+IHRoZSByZWFkYWJpbGl0eSBvZiB0aGlzIGRyaXZlciwgdGhlbgo+ID4gPiA+ID4gPiBhZGRzCj4g
+PiA+ID4gPiA+IHN1cHBvcnQgZm9yIG11bHRpLWNoYW5uZWwgdGhlcm1hbCBJUHMuIFRoZSBiaW5k
+aW5ncyBhbmQgdGhlCj4gPiA+ID4gPiA+IGRldmljZS10cmVlcyBhcmUgdXBkYXRlZCBhY2NvcmRp
+bmdseS4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IFRoYW5rIHlvdSwKPiA+ID4gPiA+ID4gTWlx
+dcOobMKgwqAKPiA+ID4gPiA+IEkga25vdyBJIHNlbnQgdGhpcyBzZXJpZXMgb24gbW9uZGF5IGJ1
+dCB0aGVyZSB3YXMgYWxtb3N0IG5vIGNoYW5nZQo+ID4gPiA+ID4gb24KPiA+ID4gPiA+IGl0IChz
+ZWUgYmVsb3cpLCBkbyB5b3UgdGhpbmsgeW91IHdpbGwgaGF2ZSB0aGUgdGltZSB0byBsb29rIGF0
+IGl0Cj4gPiA+ID4gPiBiZWZvcmUgaXQncyB0b28gbGF0ZSBmb3IgdGhlIG1lcmdlIHdpbmRvdz8K
+PiA+ID4gPiBJIGtub3cgYSBsaXR0bGUgYml0IHdoYXQgaXQgaXMgdG8gYmUgb24gdGhlIG1haW50
+YWluZXIgc2lkZSBvZiBhCj4gPiA+ID4gc3Vic3lzdGVtIGJ1dCB0aGVzZSBjaGFuZ2VzIGFyZSBs
+YXlpbmcgc2luY2UgQXByaWwsIDIxc3QgYW5kIEkgcmVhbGx5Cj4gPiA+ID4gZXhwZWN0IHRvIGdl
+dCB0aGVtIG1lcmdlZC4gWmhhbmcsIGFzIEVkdWFyZG8gc2VlbXMgdG8gYmUgb3ZlcmxvYWRlZAo+
+ID4gPiA+IHRoaXMgcmVsZWFzZSwgY291bGQgeW91IHBsZWFzZSB0YWtlIHRoZSBzZXJpZXM/Cj4g
+PiA+ID4gCj4gPiA+ID4gT2YgY291cnNlIGlmIHRoZXJlIGFyZSB0aGluZ3MgdG8gYWRkcmVzcyBJ
+J2xsIGJlIGhhcHB5IHRvIGRvIHNvLgo+ID4gPiA+IAo+ID4gPiBJIGhhZCBhIHN5bmMgd2l0aCBF
+ZHVhcmRvIGR1cmluZyBsYXN0IG1lcmdlIHdpbmRvdywgYW5kIHdlIGFncmVlZCB0bwo+ID4gPiBz
+ZW5kIHNlcGFyYXRlIGdpdCBwdWxsIHJlcXVlc3RzIHRvIExpbnVzIHNpbmNlIHRoaXMgcmVsZWFz
+ZSBhbmQgc2VlIGhvdwo+ID4gPiBpdCB3b3Jrcy4KPiA+ID4gVGhpcyBtZWFucyB0aGF0IGFsbCB0
+aGUgc29jIHRoZXJtYWwgZHJpdmVyIHBhdGNoZXMgc2hvdWxkIGdvIHRvCj4gPiA+IEVkdWFyZG8n
+IHRyZWUgYW5kIHRoZW4gTGludXMnIHRyZWUgZGlyZWN0bHkuCj4gPiA+IAo+ID4gPiBBbnl3YXks
+IGxldCdzIHBpbmcgRWR1YXJkbyBhbmQgc2VlIGlmIGhlIGNhbiByZXZpZXcvdGFrZSB0aGUgcGF0
+Y2hlcy4KPiA+IAo+ID4gU29ycnkgZmVsbG93cywgYnV0IEkgd2FzIG9mZiBjYW1waW5nIGluIGEg
+cGxhY2Ugd2l0aCBubyBlbGVjdHJpY2l0eS9ubwo+ID4gaW50ZXJuZXQuIEkgbG9va2VkIGF0IHRo
+aXMgc2VyaWVzIGJlZm9yZSwgYW5kIEkgZG8gbm90IHJlbWVtYmVyIGFueXRoaW5nCj4gPiB0aGF0
+IGNvdWxkIGJsb2NrIGl0IHRvIGdvLiBMZXQgbWUgcmVzdGFydCBvbiB3b3JraW5nIG9uIGl0Lgo+
+IAo+IExldCBtZSB0YWtlIHRoYXQgYmFjay4gSSBnb3Qgc29tZSBjb21waWxhdGlvbiBlcnJvci4K
+CgpHaXZlbiB0aGF0IEkgbGV0IHRoaXMgb25lIGZhbGwgaW50byB0aGUgY3JhY2tzIGFuZCB0aGF0
+IHRoZXNlIGFyZSBtaW5vcgppc3N1ZXMsIEkgZml4ZWQgdGhlbSBtYW51YWxseSwgYW5kIGFwcGxp
+ZWQgdXAgdG8gcGF0Y2ggMTkuIEJ1dCBuZXh0IGF0CmxlYXN0IGNvbXBpbGUgdGVzdCB5b3VyIHNl
+cmllcyBhbmQgcnVuIGNoZWNrcGF0Y2ggb24gdGhlbS4KClBhdGNoZXMgMjAtMjMgbmVlZCB0byBn
+byB2aWEgeW91ciBhcmNoIHRyZWUuCgo+IAo+ID4gCj4gPiA+IAo+ID4gPiB0aGFua3MsCj4gPiA+
+IHJ1aQo+ID4gPiA+IFRoYW5rcywKPiA+ID4gPiBNaXF1w6hsCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
