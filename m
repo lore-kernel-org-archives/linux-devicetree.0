@@ -1,32 +1,40 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 1/6] dt-bindings: mailbox: allow mbox-cells to be equal
- to 0
-Date: Thu, 26 Jul 2018 15:11:39 +0530
-Message-ID: <CABb+yY2+WwxHBtQfU3TJTErpfzfkNH8iwwYyXbmWAQy8UsqLRQ@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de> <20180726065331.6186-2-o.rempel@pengutronix.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v8 0/6] provide power off support for iMX6 with external
+ PMIC
+Date: Thu, 26 Jul 2018 11:48:47 +0200
+Message-ID: <650c8289-f3a1-8bb1-2e4b-876100f9ae21@i2se.com>
+References: <20180726092220.17250-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180726065331.6186-2-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sudeep Holla <sudeep.holla@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ", Sascha Hauer" <kernel@pengutronix.de>, ", linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180726092220.17250-1-o.rempel@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
-<o.rempel@pengutronix.de> wrote:
-> From: Dong Aisheng <aisheng.dong@nxp.com>
->
-> Mailbox devices may have only one channel which means the mbox-cells
-> at least 1 does not make sense for this type devices. Let's remove
-> that limitation to allow the mbox-cells to be equal to 0.
->
-OK
+Hi Oleksij,
 
-But please realise that you'll have to write more code -- implement
-your own of_xlate() callback.
-Most developers would prefer to call the only channel as channel
-number 0, and use the common of_xlate implementation.
+Am 26.07.2018 um 11:22 schrieb Oleksij Rempel:
+> 2018.07.26:
+> v8 is a rebase against kernel v4.18-rc6. No other changes are made.
+> Added: linux-imx@nxp.com and yibin.gong@nxp.com to the CC.
 
--jassi
+your patches won't apply to regulator-next or linux-next because 
+"regulator: pfuze100: add pfuze3001 support" has been merged before.
+
+Since the pfuze3001 doesn't support standby, it would be nice to make 
+the driver take care of this.
+
+Best regards
+Stefan
