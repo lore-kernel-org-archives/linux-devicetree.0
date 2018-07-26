@@ -1,181 +1,294 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] arm64: dts: renesas: r8a77980: move IPMMU nodes
-Date: Thu, 26 Jul 2018 21:51:18 +0300
-Message-ID: <5f7daa87-b0b3-faa7-0331-640c39961b4a@cogentembedded.com>
-References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 9/9] clocksource: new RISC-V SBI timer driver
+Date: Thu, 26 Jul 2018 11:51:56 -0700
+Message-ID: <972dacda-75d6-83cd-45e0-c7526a4e02ba@wdc.com>
+References: <20180726143723.16585-1-hch@lst.de>
+ <20180726143723.16585-10-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180726143723.16585-10-hch@lst.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, "anup@brainfault.org" <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The IPMMU nodes should follow the GEther node, not the CAN-FD node,
-according to the <unit-address> part of the startng IPMMU-DS1 node.
-While moving the nodes, also do sort them by label alphanumerically...
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+minor nits.
 
----
-The patch is against the 'renesas-devel-20180726-v4.18-rc6' tag of Simon
-Horman's 'renesas.git' repo.
+On 7/26/18 7:38 AM, Christoph Hellwig wrote:
+> From: Palmer Dabbelt <palmer@dabbelt.com>
+> 
+> The RISC-V ISA defines a per-hart real-time clock and timer, which is
+> present on all systems.  The clock is accessed via the 'rdtime'
+> pseudo-instruction (which reads a CSR), and the timer is set via an SBI
+> call.
+> 
+> Contains various improvements from Atish Patra <atish.patra@wdc.com>.
+> 
+> Signed-off-by: Dmitriy Cherkasov <dmitriy@oss-tech.org>
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> [hch: remove dead code, add SPDX tags, minor cleanups, merged
+>   hotplug cpu and other improvements from Atish]
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   arch/riscv/include/asm/smp.h      |   3 -
+>   arch/riscv/kernel/irq.c           |   3 +
+>   arch/riscv/kernel/smpboot.c       |   1 -
+>   arch/riscv/kernel/time.c          |   8 +-
+>   drivers/clocksource/Kconfig       |  10 +++
+>   drivers/clocksource/Makefile      |   1 +
+>   drivers/clocksource/riscv_timer.c | 121 ++++++++++++++++++++++++++++++
+>   include/linux/cpuhotplug.h        |   1 +
+>   8 files changed, 137 insertions(+), 11 deletions(-)
+>   create mode 100644 drivers/clocksource/riscv_timer.c
+> 
+> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+> index c9395fff246f..36016845461d 100644
+> --- a/arch/riscv/include/asm/smp.h
+> +++ b/arch/riscv/include/asm/smp.h
+> @@ -24,9 +24,6 @@
+>   
+>   #ifdef CONFIG_SMP
+>   
+> -/* SMP initialization hook for setup_arch */
+> -void __init init_clockevent(void);
+> -
+>   /* SMP initialization hook for setup_arch */
+>   void __init setup_smp(void);
+>   
+> diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
+> index ab5f3e22c7cc..0cfac48a1272 100644
+> --- a/arch/riscv/kernel/irq.c
+> +++ b/arch/riscv/kernel/irq.c
+> @@ -30,6 +30,9 @@ asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
+>   
+>   	irq_enter();
+>   	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
+> +	case INTERRUPT_CAUSE_TIMER:
+> +		riscv_timer_interrupt();
+> +		break;
+>   #ifdef CONFIG_SMP
+>   	case INTERRUPT_CAUSE_SOFTWARE:
+>   		/*
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index f741458c5a3f..56abab6a9812 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -104,7 +104,6 @@ asmlinkage void __init smp_callin(void)
+>   	current->active_mm = mm;
+>   
+>   	trap_init();
+> -	init_clockevent();
+>   	notify_cpu_starting(smp_processor_id());
+>   	set_cpu_online(smp_processor_id(), 1);
+>   	local_flush_tlb_all();
+> diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
+> index 1bb01dc2d0f1..94e9ca18f5fa 100644
+> --- a/arch/riscv/kernel/time.c
+> +++ b/arch/riscv/kernel/time.c
+> @@ -18,12 +18,6 @@
+>   
+>   unsigned long riscv_timebase;
+>   
+> -void __init init_clockevent(void)
+> -{
+> -	timer_probe();
+> -	csr_set(sie, SIE_STIE);
+> -}
+> -
+>   static long __init timebase_frequency(void)
+>   {
+>   	struct device_node *cpu;
+> @@ -43,5 +37,5 @@ void __init time_init(void)
+>   {
+>   	riscv_timebase = timebase_frequency();
+>   	lpj_fine = riscv_timebase / HZ;
+> -	init_clockevent();
+> +	timer_probe();
+>   }
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index dec0dd88ec15..a57083efaae8 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -609,4 +609,14 @@ config ATCPIT100_TIMER
+>   	help
+>   	  This option enables support for the Andestech ATCPIT100 timers.
+>   
+> +config RISCV_TIMER
+> +	bool "Timer for the RISC-V platform"
+> +	depends on RISCV || COMPILE_TEST
+> +	select TIMER_PROBE
+> +	select TIMER_OF
+> +	help
+> +	  This enables the per-hart timer built into all RISC-V systems, which
+> +	  is accessed via both the SBI and the rdcycle instruction.  This is
+> +	  required for all RISC-V systems.
+> +
+>   endmenu
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 00caf37e52f9..ded31f720bd9 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -78,3 +78,4 @@ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
+>   obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>   obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>   obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+> +obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
+> diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
+> new file mode 100644
+> index 000000000000..146156448bdd
+> --- /dev/null
+> +++ b/drivers/clocksource/riscv_timer.c
+> @@ -0,0 +1,121 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2012 Regents of the University of California
+> + * Copyright (C) 2017 SiFive
+> + */
+> +#include <linux/clocksource.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/cpu.h>
+> +#include <linux/delay.h>
+> +#include <linux/irq.h>
+> +#include <asm/sbi.h>
+> +
+> +/*
+> + * All RISC-V systems have a timer attached to every hart.  These timers can be
+> + * read by the 'rdcycle' pseudo instruction, and can use the SBI to setup
+> + * events.  In order to abstract the architecture-specific timer reading and
+> + * setting functions away from the clock event insertion code, we provide
+> + * function pointers to the clockevent subsystem that perform two basic
+> + * operations: rdtime() reads the timer on the current CPU, and
+> + * next_event(delta) sets the next timer event to 'delta' cycles in the future.
+> + * As the timers are inherently a per-cpu resource, these callbacks perform
+> + * operations on the current hart.  There is guaranteed to be exactly one timer
+> + * per hart on all RISC-V systems.
+> + */
+> +
+> +#define MINDELTA 100
+> +#define MAXDELTA 0x7fffffff
+> +
+> +static int riscv_clock_next_event(unsigned long delta,
+> +		struct clock_event_device *ce)
+> +{
+> +	csr_set(sie, SIE_STIE);
+> +	sbi_set_timer(get_cycles64() + delta);
+> +	return 0;
+> +}
+> +
+> +static DEFINE_PER_CPU(struct clock_event_device, riscv_clock_event) = {
+> +	.name			= "riscv_timer_clockevent",
+> +	.features		= CLOCK_EVT_FEAT_ONESHOT,
+> +	.rating			= 100,
+> +	.set_next_event		= riscv_clock_next_event,
+> +};
+> +
+> +/*
+> + * It is guarnteed that all the timers across all the harts are synchronized
 
- arch/arm64/boot/dts/renesas/r8a77980.dtsi |  126 +++++++++++++++---------------
- 1 file changed, 63 insertions(+), 63 deletions(-)
+/s/guarnteed/guaranteed
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-@@ -462,69 +462,6 @@
- 			};
- 		};
- 
--		ipmmu_ds1: mmu@e7740000 {
--			compatible = "renesas,ipmmu-r8a77980";
--			reg = <0 0xe7740000 0 0x1000>;
--			renesas,ipmmu-main = <&ipmmu_mm 0>;
--			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
--			#iommu-cells = <1>;
--		};
--
--		ipmmu_vip0: mmu@e7b00000 {
--			compatible = "renesas,ipmmu-r8a77980";
--			reg = <0 0xe7b00000 0 0x1000>;
--			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
--			#iommu-cells = <1>;
--		};
--
--		ipmmu_vip1: mmu@e7960000 {
--			compatible = "renesas,ipmmu-r8a77980";
--			reg = <0 0xe7960000 0 0x1000>;
--			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
--			#iommu-cells = <1>;
--		};
--
--		ipmmu_ir: mmu@ff8b0000 {
--			compatible = "renesas,ipmmu-r8a77980";
--			reg = <0 0xff8b0000 0 0x1000>;
--			renesas,ipmmu-main = <&ipmmu_mm 3>;
--			power-domains = <&sysc R8A77980_PD_A3IR>;
--			#iommu-cells = <1>;
--		};
--
--		ipmmu_mm: mmu@e67b0000 {
--			compatible = "renesas,ipmmu-r8a77980";
--			reg = <0 0xe67b0000 0 0x1000>;
--			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
--			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
--			#iommu-cells = <1>;
--		};
--
--		ipmmu_rt: mmu@ffc80000 {
--			compatible = "renesas,ipmmu-r8a77980";
--			reg = <0 0xffc80000 0 0x1000>;
--			renesas,ipmmu-main = <&ipmmu_mm 10>;
--			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
--			#iommu-cells = <1>;
--		};
--
--		ipmmu_vc0: mmu@fe6b0000 {
--			compatible = "renesas,ipmmu-r8a77980";
--			reg = <0 0xfe6b0000 0 0x1000>;
--			renesas,ipmmu-main = <&ipmmu_mm 12>;
--			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
--			#iommu-cells = <1>;
--		};
--
--		ipmmu_vi0: mmu@febd0000 {
--			compatible = "renesas,ipmmu-r8a77980";
--			reg = <0 0xfebd0000 0 0x1000>;
--			renesas,ipmmu-main = <&ipmmu_mm 14>;
--			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
--			#iommu-cells = <1>;
--		};
--
- 		avb: ethernet@e6800000 {
- 			compatible = "renesas,etheravb-r8a77980",
- 				     "renesas,etheravb-rcar-gen3";
-@@ -722,6 +659,69 @@
- 			status = "disabled";
- 		};
- 
-+		ipmmu_ds1: mmu@e7740000 {
-+			compatible = "renesas,ipmmu-r8a77980";
-+			reg = <0 0xe7740000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 0>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_ir: mmu@ff8b0000 {
-+			compatible = "renesas,ipmmu-r8a77980";
-+			reg = <0 0xff8b0000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 3>;
-+			power-domains = <&sysc R8A77980_PD_A3IR>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_mm: mmu@e67b0000 {
-+			compatible = "renesas,ipmmu-r8a77980";
-+			reg = <0 0xe67b0000 0 0x1000>;
-+			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_rt: mmu@ffc80000 {
-+			compatible = "renesas,ipmmu-r8a77980";
-+			reg = <0 0xffc80000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 10>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_vc0: mmu@fe6b0000 {
-+			compatible = "renesas,ipmmu-r8a77980";
-+			reg = <0 0xfe6b0000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 12>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_vi0: mmu@febd0000 {
-+			compatible = "renesas,ipmmu-r8a77980";
-+			reg = <0 0xfebd0000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 14>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_vip0: mmu@e7b00000 {
-+			compatible = "renesas,ipmmu-r8a77980";
-+			reg = <0 0xe7b00000 0 0x1000>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_vip1: mmu@e7960000 {
-+			compatible = "renesas,ipmmu-r8a77980";
-+			reg = <0 0xe7960000 0 0x1000>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
- 		mmc0: mmc@ee140000 {
- 			compatible = "renesas,sdhi-r8a77980",
- 				     "renesas,rcar-gen3-sdhi";
+> + * within one tick of each other, so while this could technically go
+> + * backwards when hopping between CPUs, practically it won't happen.
+> + */
+> +static unsigned long long riscv_clocksource_rdtime(struct clocksource *cs)
+> +{
+> +	return get_cycles64();
+> +}
+> +
+> +static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
+> +	.name		= "riscv_clocksource",
+> +	.rating		= 300,
+> +	.mask		= CLOCKSOURCE_MASK(BITS_PER_LONG),
+> +	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.read		= riscv_clocksource_rdtime,
+> +};
+> +
+> +static int timer_riscv_starting_cpu(unsigned int cpu)
+> +{
+> +	struct clock_event_device *ce = per_cpu_ptr(&riscv_clock_event, cpu);
+> +
+> +	ce->cpumask = cpumask_of(cpu);
+> +	clockevents_config_and_register(ce, riscv_timebase, MINDELTA, MAXDELTA);
+> +	csr_set(sie, SIE_STIE);
+> +	return 0;
+> +}
+> +
+> +static int timer_riscv_dying_cpu(unsigned int cpu)
+> +{
+> +	csr_clear(sie, SIE_STIE);
+> +	return 0;
+> +}
+> +
+> +/* called directly from the low-level interrupt handler */
+> +void riscv_timer_interrupt(void)
+> +{
+
+Should we follow the same prefix for these functions?
+either timer_riscv* or riscv_timer* ?
+
+Apologies for overlooking this in my timer patch as well.
+
+> +	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
+> +
+
+The comment about the purpose of clearing the interrupt in the original 
+patch is removed here. If that's intentional, it's fine.
+
+I thought having that comment helps understanding the distinction 
+between clearing the timer interrupt in SBI call & here.
+> +	csr_clear(sie, SIE_STIE);
+> +	evdev->event_handler(evdev);
+> +}
+> +
+> +static int hart_of_timer(struct device_node *dev)
+> +{
+> +	u32 hart;
+> +
+> +	if (!dev)
+> +		return -1;
+> +	if (!of_device_is_compatible(dev, "riscv"))
+> +		return -1;
+> +	if (of_property_read_u32(dev, "reg", &hart))
+> +		return -1;
+> +
+> +	return hart;
+> +}
+> +
+> +static int __init timer_riscv_init_dt(struct device_node *n)
+> +{
+> +	int cpu_id = hart_of_timer(n), error;
+> +	struct clocksource *cs;
+> +
+> +	if (cpu_id != smp_processor_id())
+> +		return 0;
+> +
+> +	cs = per_cpu_ptr(&riscv_clocksource, cpu_id);
+> +	clocksource_register_hz(cs, riscv_timebase);
+> +
+> +	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
+> +			 "clockevents/riscv/timer:starting",
+> +			 timer_riscv_starting_cpu, timer_riscv_dying_cpu);
+> +	if (error)
+> +		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
+> +		       error, cpu_id);
+> +	return error;
+> +}
+> +
+> +TIMER_OF_DECLARE(riscv_timer, "riscv", timer_riscv_init_dt);
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index 8796ba387152..554c27f6cfbd 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -125,6 +125,7 @@ enum cpuhp_state {
+>   	CPUHP_AP_MARCO_TIMER_STARTING,
+>   	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+>   	CPUHP_AP_ARC_TIMER_STARTING,
+> +	CPUHP_AP_RISCV_TIMER_STARTING,
+>   	CPUHP_AP_KVM_STARTING,
+>   	CPUHP_AP_KVM_ARM_VGIC_INIT_STARTING,
+>   	CPUHP_AP_KVM_ARM_VGIC_STARTING,
+> 
