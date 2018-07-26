@@ -1,104 +1,107 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 5/5] arm64: dts: allwinner: h5: Add SID for H5
-Date: Thu, 26 Jul 2018 13:54:09 +0200
-Message-ID: <20180726115409.7hqtvx4rdqcqdjrq@flea>
-References: <20180724101522.68165-1-manu@freebsd.org>
- <20180724101522.68165-5-manu@freebsd.org>
- <20180724130004.ynaiabshexrrbvo4@flea>
- <20180724153432.e398bddfe63e51e8dcebfc46@bidouilliste.com>
- <20180724144218.jdvgrcqkz2kmohqx@flea>
- <20180724165501.d8f01bf20c7cc43e7ed7fc62@bidouilliste.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
+ i.MX7S SoCs.
+Date: Thu, 26 Jul 2018 13:54:25 +0200
+Message-ID: <1532606065.32306.34.camel@pengutronix.de>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-5-o.rempel@pengutronix.de>
+ <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
+ <1532601691.32306.28.camel@pengutronix.de>
+ <CABb+yY1GEmw_8q2HaF8y5VfFJX_c_0_MbWtPUE_j_o-zS8iZ_g@mail.gmail.com>
+ <1532604937.32306.30.camel@pengutronix.de>
+ <CABb+yY0LbLfK2SEdTeuDmaGc+PsVn0AREQ=E=c4UZgxa5K95qQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pjtvngosb7tku6q5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180724165501.d8f01bf20c7cc43e7ed7fc62@bidouilliste.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@bidouilliste.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>, wens@csie.org, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY0LbLfK2SEdTeuDmaGc+PsVn0AREQ=E=c4UZgxa5K95qQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, ",
+ linux-arm-kernel@lists.infradead.org,  linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
---pjtvngosb7tku6q5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jul 24, 2018 at 04:55:01PM +0200, Emmanuel Vadot wrote:
-> On Tue, 24 Jul 2018 16:42:18 +0200
-> Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->=20
-> > On Tue, Jul 24, 2018 at 03:34:32PM +0200, Emmanuel Vadot wrote:
-> > > On Tue, 24 Jul 2018 15:00:04 +0200
-> > > Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >=20
-> > > > On Tue, Jul 24, 2018 at 12:15:22PM +0200, Emmanuel Vadot wrote:
-> > > > > The SID controller on H5 look the same as the one present in the =
-A64.
-> > > > > But in case we find some difference one day at a compatible string
-> > > > > of it's own and a fallback to the A64 one.
-> > > > >=20
-> > > > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 5 +++++
-> > > > >  1 file changed, 5 insertions(+)
-> > > > >=20
-> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/=
-arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > > index 62d646baac3c..28183bf77164 100644
-> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> > > > > @@ -129,3 +129,8 @@
-> > > > >  		     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-> > > > >  	compatible =3D "allwinner,sun50i-h5-pinctrl";
-> > > > >  };
-> > > > > +
-> > > > > +&sid {
-> > > > > +	compatible =3D "allwinner,sun50i-h5-sid",
-> > > > > +		     "allwinner,sun50i-a64-sid";
-> > > > > +};
-> > > >=20
-> > > > This is still a bit pointless, please remove the common node.
-> > >=20
-> > >  You mean directly declare sid controller in the SoC dtsi and not
-> > > have a common node in sunxi-h3-h5.dtsi ?
-> >=20
-> > Yep
->=20
->  The reason I've put it in the common file is because I'll send patches
-> for the nvmem-cells needed for thermal, and those are common between
-> the two. Other nvmem-cells are also common (like the chipid and
-> probably other).
-
-Then we'll see what we can have in common and what not when we'll have
-something in common?
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---pjtvngosb7tku6q5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltZtlsACgkQ0rTAlCFN
-r3Q/qA/9HOrfkea8UFkgMWosn6UhE3ur7yPZVRqNvx/wb62DWMwSWXsoVLoKE2ld
-sq4zocer720ZIkZSCJjGuAq8+NqB47YO3VVrn6Y9RFY9TzfWR+7rQ2O6/GsYvPAo
-pIJXRAkveUI5RIO9pisTTIa48JZ96gPYqxrEA4WX2CAaqXJLSbrTokc8LXFcnupa
-f4w9rEP9msjZqWSkVP7ljgexgATRRUPm7tXJn4vW9t8SVWdnCtIlp3WMXjzbcjbw
-zAOyOkfhfmSCtgAVxJIlmrw1AhlEAM3AIHc6PjGRyTAPwhfxikg86ELsq/UubO5p
-wdhssLA9DF7qa1SVEQ8KayrmbAbV7cj+/+//E5CQFpCT3w4iNncf1utAUWT0496M
-kYSKUUzw3Uv1WmcfrH26kSYp6kF0V+r5LJfNkyTkWTDKGlH/LIxTjivS4RiSZpbg
-D/quIZHa7VTrUkMvCveS+06SGfd7d/p+Kb67CchbB0pTsVbL7nsD9FT4gKhHpuvN
-bsHxA5fqj5LqX6dvb3u//7V2Zh19HfB5bpRCDkTVNbfCW1ScaM9Lb4IqcXAIiKjb
-TSFOf06fNxXertmvXX0YSpKkc1/asQWuAphrp9yLK1yPp+GbecRON6MyZeQakyJu
-VNE3PfNVlVIXwq8tEYrpYyfBQBCgktZXevvIdo69yiWg0KHszAU=
-=X4Om
------END PGP SIGNATURE-----
-
---pjtvngosb7tku6q5--
+QW0gRG9ubmVyc3RhZywgZGVuIDI2LjA3LjIwMTgsIDE3OjE2ICswNTMwIHNjaHJpZWIgSmFzc2kg
+QnJhcjoKPiA+IE9uIFRodSwgSnVsIDI2LCAyMDE4IGF0IDU6MDUgUE0sIEx1Y2FzIFN0YWNoIDxs
+LnN0YWNoQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPiA+IEFtIERvbm5lcnN0YWcsIGRlbiAyNi4w
+Ny4yMDE4LCAxNjo0NSArMDUzMCBzY2hyaWViIEphc3NpIEJyYXI6Cj4gPiA+IE9uIFRodSwgSnVs
+IDI2LCAyMDE4IGF0IDQ6MTEgUE0sIEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4LmRl
+Pgo+ID4gPiB3cm90ZToKPiA+ID4gPiBIaSBKYXNzaSwKPiA+ID4gPiAKPiA+ID4gPiBBbSBEb25u
+ZXJzdGFnLCBkZW4gMjYuMDcuMjAxOCwgMTU6MjUgKzA1MzAgc2NocmllYiBKYXNzaSBCcmFyOgo+
+ID4gPiA+ID4gT24gVGh1LCBKdWwgMjYsIDIwMTggYXQgMTI6MjMgUE0sIE9sZWtzaWogUmVtcGVs
+Cj4gPiA+ID4gPiA+ID4gPiA+ID4gPiA+IDxvLnJlbXBlbEBwZW5ndXRyb25peC5kZT4gd3JvdGU6
+Cj4gPiA+ID4gPiA+IFRoaXMgYXJlIGN1cnJlbnRseSB0ZXN0ZWQgU29DcyB3aXRoIGlteC1tYWls
+Ym94IGRyaXZlci4KPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBP
+bGVrc2lqIFJlbXBlbCA8by5yZW1wZWxAcGVuZ3V0cm9uaXguZGU+Cj4gPiA+ID4gPiA+IAo+ID4g
+PiA+ID4gPiAtLS0KPiA+ID4gPiA+ID4gwqBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWFpbGJveC9mc2wsbXUudHh0IHwgMiArLQo+ID4gPiA+ID4gPiDCoDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+ID4gPiA+ID4gPiAKPiA+ID4gPiA+ID4g
+ZGlmZiAtLWdpdAo+ID4gPiA+ID4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tYWlsYm94L2ZzbCxtdS50eHQKPiA+ID4gPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWFpbGJveC9mc2wsbXUudHh0Cj4gPiA+ID4gPiA+IGluZGV4IDExM2Q2YWI5
+MzFlZi4uNTYxNmQyYWZjYTQ1IDEwMDY0NAo+ID4gPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9mc2wsbXUudHh0Cj4gPiA+ID4gPiA+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2ZzbCxtdS50eHQKPiA+
+ID4gPiA+ID4gQEAgLTE4LDcgKzE4LDcgQEAgTWVzc2FnaW5nIFVuaXQgRGV2aWNlIE5vZGU6Cj4g
+PiA+ID4gPiA+IMKgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gPiA+ID4gwqAtLS0tLS0tLS0t
+LS0tLS0tLS0tCj4gPiA+ID4gPiA+IMKgLSBjb21wYXRpYmxlIDogc2hvdWxkIGJlICJmc2wsPGNo
+aXA+LW11IiwgdGhlIHN1cHBvcnRlZCBjaGlwcwo+ID4gPiA+ID4gPiBpbmNsdWRlCj4gPiA+ID4g
+PiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbXg4cXhwLCBpbXg4cW0uCj4gPiA+
+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbXg2c3gsIGlteDdzLCBpbXg4
+cXhwLCBpbXg4cW0uCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gCj4gPiA+ID4gPiBUaGlzIGlzIG5v
+dCBzY2FsYWJsZS4gRG8gd2UgYWRkIGV2ZXJ5IG5ldyBTb0MgdGhhdCBjb250YWlucyB0aGUKPiA+
+ID4gPiA+IHNhbWUgY29udHJvbGxlcj8KPiA+ID4gPiAKPiA+ID4gPiBZZXMsIHdlIGRvLiBUaGlz
+IGlzIGEgcG9saWN5IGRpcmVjdGlvbiBmcm9tIHRoZSBEVCBtYWludGFpbmVycy4KPiA+ID4gPiAK
+PiA+ID4gCj4gPiA+IEkgd291bGQgbG92ZSB0byByZWFkIHRoZSBwb3N0L2RvY3VtZW50YXRpb24u
+Cj4gPiA+IAo+ID4gPiBDb25zaWRlciB0aGUgc2FtZSBoL3cgLSBjb250cm9sbGVyIGFuZCBwbGF0
+Zm9ybXMsIGJ1dCBvbmx5IHRoZSB0aGUgTVUKPiA+ID4gY2hhcHRlciBzYWlkIHRoZSBjb250cm9s
+bGVyIG5hbWUgaXMsIHNheSwgJ01VMTIxJy4gSSBhbSBzdXJlIG5vdyB5b3UKPiA+ID4gd2lsbCBz
+ZWUgaXQgY29ycmVjdCB0byBjYWxsIGl0ICJmc2wsbXUxMjEiIGNvbXBhdGlibGUuCj4gPiA+IFdo
+YXQgY2hhbmdlZD8ganVzdCB0aGUgbmFtZSwgcmlnaHQ/Cj4gPiA+IAo+ID4gPiAKPiA+ID4gPiBJ
+ZiB3ZQo+ID4gPiA+IGV2ZXIgZ29pbmcgdG8gd2FudCB0byB2YWxpZGF0ZSBEVHMgYWdhaW5zdCB0
+aGUgYmluZGluZywgYWxsCj4gPiA+ID4gY29tcGF0aWJsZXMKPiA+ID4gPiB1c2VkIGluIHRoZSBE
+VHMgbXVzdCBiZSBzcGVjaWZpZWQgaW4gdGhlIGJpbmRpbmcuCj4gPiA+ID4gCj4gPiA+ID4gQXMg
+d2UgY2FuJ3QgcmVhbGx5IHRlbGwgaWYgdGhlIGNvbnRyb2xsZXIgaXMgZXhhY3RseSB0aGUgc2Ft
+ZSBvcgo+ID4gPiA+IGV2ZW4KPiA+ID4gPiBoYXMgc29tZSBTb0MgaW50ZWdyYXRpb24gYnVncywg
+d2UgZ2VuZXJhbGx5IGFkZCBhIG5ldyBjb21wYXRpYmxlCj4gPiA+ID4gZm9yCj4gPiA+ID4gZWFj
+aCBTb0MgdG8ga2V5IG9mZiBhbnkgd29ya2Fyb3VuZHMgbmVjZXNzYXJ5IGluIHRoZSBkcml2ZXIg
+d2l0aG91dAo+ID4gPiA+IHRoZQo+ID4gPiA+IG5lZWQgdG8gY2hhbmdlIHRoZSBEVHMsIGJyZWFr
+aW5nIGNvbXBhdGliaWxpdHkuCj4gPiA+ID4gCj4gPiA+IAo+ID4gPiBJIHRoaW5rIGlmIHRoZSBo
+L3cgcmVzb3VyY2VzIGFuZCBiZWhhdmlvdXIgcmVtYWluIHRoZSBzYW1lIGFuZCB0aGUKPiA+ID4g
+ZG9jdW1lbnRhdGlvbiBkb2VzIG5vdCBjYWxsIGl0IGJ5IGEgZGlmZmVyZW50IG5hbWUgLS0gaXQg
+aXMgc2FmZSB0bwo+ID4gPiBhc3N1bWUgaXRzIHRoZSBzYW1lIElQLiBFc3BlY2lhbGx5IHdoZW4g
+dGhlIGRyaXZlciBpcyBhYnNvbHV0ZWx5Cj4gPiA+IGluZGlmZmVyZW50IHRvIHRoZSA1IFNvQyBu
+YW1lcy4KPiA+IAo+ID4gRXZlbiBpZiBpdCBpcyB0aGUgc2FtZSBJUCBjb3JlLCB0aGUgU29DIGlu
+dGVncmF0aW9uIG1pZ2h0IGhhdmUgYnVncwo+ID4gdGhhdCBuZWVkIGRpZmZlcmVudCBiZWhhdmlv
+ciBmcm9tIHRoZSBkcml2ZXIuIFdlJ3ZlIGFscmVhZHkgaGFkIHRoYXQKPiA+IGNhc2Ugd2l0aCB0
+aGUgaS5NWDYgU1BJIGNvbnRyb2xsZXIuCj4gPiAKPiAKPiBGb3IgaC93IHF1aXJrcy9idWdzLCBh
+IG5ldyAiaGFzLXRoYXQtYnVnIiBwcm9wZXJ0eSBtYWtlcyBiZXR0ZXIgc2Vuc2UuCj4gT3IsIGlm
+IHlvdSBpbnNpc3QsIGEgbmV3IGNvbXBhdGlibGUgYmFzZWQgb24gdGhlIGZpcnN0IHNvYyB0aGF0
+IGhhcwo+IHRoZSBidWdneSBibG9jay4KPiAKCkhhcmR3YXJlIGJ1Z3MgbWlnaHQgbm90IGJlIGtu
+b3duIGF0IHRoZSB0aGUgdGltZSB0aGUgRFQgaXMgZGVwbG95ZWQuClRoZSBEVCBpcyBub3QgcGFy
+dCBvZiB0aGUga2VybmVsLCBidXQgbWlnaHQgYmUgcGFydCBvZiBhIGZpeGVkIGRldmljZQpmaXJt
+d2FyZS4KCj4gPiA+IElmL3doZW4gd2UgZmluZCB0aGUgY29udHJvbGxlciBjaGFuZ2VzLCB3ZSBj
+b3VsZCByZXZpc2l0IHRoZSBiaW5kaW5nCj4gPiA+IGFuZCBhZGQgYW5vdGhlciBjb21wYXRpYmxl
+IG9wdGlvbiBhbmQgbW9kaWZ5IHRoZSBkcml2ZXIgdG8gY2F0Y2ggdGhhdAo+ID4gPiBhbmQgYWRh
+cHQuCj4gPiAKPiA+IFRoYXQncyB3YXkgdG9vIGxhdGUuIElmIHdlIHdhbnQgdG8ga2VlcCBEVHMg
+c3RhYmxlCj4gPiAKPiAKPiBIb3cgZG8geW91IGtlZXAgdGhlIERUIHN0YWJsZSBieSBleHBsaWNp
+dGx5IGRlZmluaW5nIGV2ZXJ5IG5ldyBTb0MgdG8KPiB0aGUgY29tcGF0aWJsZSBsaXN0IGluIERU
+LCBfYWRkXyB0byB0aGUgZHJpdmVyLi4uLiBvbmx5IHRvIGhhdmUgdGhlCj4gZHJpdmVyIGFic29s
+dXRlbHkgbm90IGNhcmUgd2hpY2ggU29DIGlzIGl0Pwo+IFdoaWNoIGlzIHRoZSBzaXR1YXRpb24g
+cmlnaHQgbm93IHdpdGggdGhpcyBwYXRjaHNldC4KCkl0IG1lYW5zIHdlIGNhbiBsYXRlciwgaW4g
+YSBuZXdlciBrZXJuZWwgY2hhbmdlIHRoZSBkcml2ZXIgdG8gdXNlIHRoZQpjb21wYXRpYmxlIHRv
+IGNoYW5nZSBiZWhhdmlvciB3aXRob3V0IHRoZSBuZWVkIHRvIHVwZGF0ZSB0aGUgRFQgYXQgdGhh
+dApwb2ludC4KClJlZ2FyZHMsCkx1Y2FzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
