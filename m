@@ -1,68 +1,78 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: activate spi flash on pine64 LTS
- board
-Date: Thu, 26 Jul 2018 09:31:38 +0200
-Message-ID: <20180726073138.fexu4nxaamqmrbzb@flea>
-References: <Akash_Gajjar@mentor.com>
- <1532587906-5415-1-git-send-email-Akash_Gajjar@mentor.com>
- <20180726072924.bnvljmd2sf6bf5ae@flea>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 13/15] ARM: tegra: apalis-tk1: fix pcie switch vendor
+ compatible
+Date: Thu, 26 Jul 2018 09:34:49 +0200
+Message-ID: <53e689eca0fe603305642abb559349db@agner.ch>
+References: <20180724104309.21741-1-marcel@ziswiler.com>
+ <20180724104309.21741-14-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oeexq2bajwy2ctlp"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180726072924.bnvljmd2sf6bf5ae@flea>
+In-Reply-To: <20180724104309.21741-14-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Akash Gajjar <Akash_Gajjar@mentor.com>
-Cc: icenowy@aosc.xyz, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marcel Ziswiler <marcel@ziswiler.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, linux-tegra-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 24.07.2018 12:43, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> PLX got bought by Broadcom therefore fix device tree compatible string
+> vendor which silences the following checkpatch.pl warning:
+> 
+> WARNING: DT compatible string vendor "plx" appears un-documented
+>  -- check ./Documentation/devicetree/bindings/vendor-prefixes.txt
 
---oeexq2bajwy2ctlp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This seems to be not the only instance, there are other places where plx
+prefix is used. There are 8 instances in total, 4 ARM (in fact all
+Toradex device trees) and 4 PowerPC.
 
-On Thu, Jul 26, 2018 at 09:29:24AM +0200, Maxime Ripard wrote:
-> 1;5202;0c
-> On Thu, Jul 26, 2018 at 12:21:46PM +0530, Akash Gajjar wrote:
-> > This board has SPI flash. add spi flash support in device tree.
-> > Tested on pine64 LTS.
-> >=20
-> > Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
->=20
-> Queued for 4.20, thanks!
+One device is already documented in
+Documentation/devicetree/bindings/trivial-devices.txt:
+plx,pex8648               48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s)
+Switch
 
-No, sorry, I ended up droping that patch.
+I suggest to just add plx as a valid vendor prefix by adding plx to
+Documentation/devicetree/bindings/vendor-prefixes.txt:
+plx	Broadcom Corporation (formerly PLX Technology)
 
-You mention that the Pine64 LTS has an SPI flash, yet you change the
-sopine baseboard dts. Why is that?
+--
+Stefan
 
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---oeexq2bajwy2ctlp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltZeNkACgkQ0rTAlCFN
-r3Ttig/+PcyaeKtRma4H+5ZJMY00IMKNcQxgzSGQdRxuDZyme44ganZjlgS8AYJl
-QFV5oVvk4SeULzuW1Oo+Syrx8TIMS2sZhhWdcMB9S4/ODPT57vdsrw1wE1V3oxQI
-16dSKqI58pByh3miYFlSXJtUUS21CnrSAuFcYgewzZ2j8uo3Z22RkIJEXfekUU6b
-a+iFybgNtpKLJUi48D/QVbnAy1QTPdtRNldGSEiAmtWVjNLVin//l+CLlx73nJBv
-NDaRYt4aaspD4qllA9mptK8JbQmDxQL+ObVoSm1S6XNy/HR112OQuoxW9jNh1iHn
-qhmb0Ydqe50kPck9HMa1E8ipO35Fc8JZXn8ZgGm53pXP9/eKvCBG8vuOITFBdxN3
-W7EWicAHYR3K55n29IGR5kBJA9/34Xn0IubeJwTu1IWzV6ZRP9FyzIq2l7u7EZP3
-0lfGRAU4cMVtSWwoqYUSai+It+i63UYD6eKXyYoPudpa/8e/aFjoIvY1fYxehjOl
-rVIrmJX0z9FJEHy5Ls2fFFTNUOJl2lcMDUGTflan2PDoPwSpA8aaGr1SKiQF5leG
-3QkGyGE7c0iPCVeFKghsvwiUsy+6oidNLhfEvnKVlbkEnUZUFTofBjXEXZAUGspw
-knLQopE6tZYFjuboD2PR5PEASIxTMjw2+limvIrNxNe1k31mgHY=
-=asom
------END PGP SIGNATURE-----
-
---oeexq2bajwy2ctlp--
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+>  arch/arm/boot/dts/tegra124-apalis-eval.dts      | 2 +-
+>  arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts
+> b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+> index d9805fc97f5e..84ab7dc9febb 100644
+> --- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
+> +++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+> @@ -109,7 +109,7 @@
+>  		clock-frequency = <400000>;
+>  
+>  		pcie-switch@58 {
+> -			compatible = "plx,pex8605";
+> +			compatible = "brcm,pex8605";
+>  			reg = <0x58>;
+>  		};
+>  
+> diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
+> b/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
+> index 89783fe76f65..5319f88d3cab 100644
+> --- a/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
+> +++ b/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
+> @@ -74,7 +74,7 @@
+>  		clock-frequency = <400000>;
+>  
+>  		pcie-switch@58 {
+> -			compatible = "plx,pex8605";
+> +			compatible = "brcm,pex8605";
+>  			reg = <0x58>;
+>  		};
