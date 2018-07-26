@@ -1,64 +1,52 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
-Date: Thu, 26 Jul 2018 17:47:34 +0530
-Message-ID: <CABb+yY0NAw3Ymtpq6tiN_g1zy=fum6O_wtcuig=Y4Dx9Ue70KA@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-7-o.rempel@pengutronix.de>
- <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
- <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
- <CABb+yY2=mFr+gFuWyE+VyG6dWj3gKhTs6X+U9UjFu5N=4zU5uA@mail.gmail.com>
- <e224cff8-0b47-9221-72fa-5db19d531492@pengutronix.de>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: [PATCH v2 00/10] Tegra SDHCI enable 1.8 V signaling on Tegar210 and Tegra186
+Date: Thu, 26 Jul 2018 15:19:10 +0300
+Message-ID: <1532607560-11253-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e224cff8-0b47-9221-72fa-5db19d531492@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, srv_heupstream <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 5:12 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->
->
-> On 26.07.2018 13:09, Jassi Brar wrote:
->> On Thu, Jul 26, 2018 at 4:21 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->>
->>>>
->>>>> +struct imx_mu_con_priv {
->>>>> +       int                     irq;
->>>>> +       unsigned int            idx;
->>>>> +       char                    *irq_desc;
->>>>>
->>>> Having      char  irq_desc[16];    seems simpler than free/kfree upon
->>>> each startup/shutdown. Simply use snprintf() in probe().
->>>
->>> Currently all known configurations use one or two channels. I don't see
->>> any sense to allocate all at the probe.
->>>
->> Just because only 2 out of 4 channels are being used, it doesn't make sense?
->>
->> What is the concern?  "wasting" 16x2 bytes of memory?  How many bytes,
->> LOC and execution time does kasprintf() waste?
->
-> Startup or shutdown is not speed critical path in this driver, or do i
-> miss some thing?
->
-No they are not.
+Hi all,
 
-> Speed vs size is not valid argumentation here.
->
-If the code looks cleaner and smaller and lesser expensive execution
-wise, at least I see that as a valid enough argument.
+Reconfigure pad voltages as part of mmc voltage switching on
+controllers with adjustable voltages. Allow for reconfiguration of the
+signaling voltage of SDMMC1 on Tegra210 P2597 and fix SDMMC4 signaling
+voltage regulator configuration on Tegra210 P2180.
 
-But OK, if you insist.  If someone sends a "cleanup" patch tomorrow, I
-am going to thank and apply.
+This series depends on the "Tegra PMC pinctrl pad configuration" series posted
+earlier.
+
+Changelog:
+v2:
+	- Change the pinctrl bindings commit title
+	- Use IS_ERR in tegra_sdhci_init_pinctrl_info()
+	- Add nvidia,only-1-8-v property
+	- Disable UHS modes in case the pad and regulator configuration
+	  is invalid
+
+Aapo Vienamo (10):
+  dt-bindings: mmc: tegra: Add pad voltage control properties
+  dt-bindings: mmc: tegra: Add nvidia,only-1-8-v property
+  mmc: tegra: Reconfigure pad voltages during voltage switching
+  arm64: dts: Add Tegra210 sdmmc pinctrl voltage states
+  arm64: dts: Add Tegra186 sdmmc pinctrl voltage states
+  arm64: dts: tegra210-p2180: Allow ldo2 to go down to 1.8 V
+  arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
+  arm64: dts: tegra210-p2597: Remove no-1-8-v from sdmmc1
+  arm64: dts: tegra210: Add nvidia,only-1-8-v to sdmmc4
+  arm64: dts: tegra186: Add nvidia,only-1-8-v to sdmmc4
+
+ .../bindings/mmc/nvidia,tegra20-sdhci.txt          |  24 ++++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  41 ++++++
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |  12 +-
+ arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   1 -
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  28 +++++
+ drivers/mmc/host/sdhci-tegra.c                     | 140 +++++++++++++++++++--
+ 6 files changed, 222 insertions(+), 24 deletions(-)
+
+-- 
+2.7.4
