@@ -1,55 +1,151 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v10 00/10] drivers: Introduce firmware dnd clock river for ZynqMP
- core
-Date: Thu, 26 Jul 2018 09:36:55 -0700
-Message-ID: <153262301567.48062.15432354725863055071@swboyd.mtv.corp.google.com>
-References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
- <2c3aad45-37ce-2446-4b90-bddb477286ed@xilinx.com>
- <CY1PR02MB2138E21A3FFBD5FEEAA7D6D4B8550@CY1PR02MB2138.namprd02.prod.outlook.com>
- <19376df2-fdd4-12e3-da4c-37106fffed19@xilinx.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH] clk: actions: Add custom delay option to Actions Semi
+ OWL pll clock driver
+Date: Thu, 26 Jul 2018 22:25:55 +0530
+Message-ID: <20180726165555.GB5220@Mani-XPS-13-9360>
+References: <CADHB5bAztBFgWe-1v5vFfsxJgW1S3OOpV1Jkjrgk2h+pJBFw9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <19376df2-fdd4-12e3-da4c-37106fffed19@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <CADHB5bAztBFgWe-1v5vFfsxJgW1S3OOpV1Jkjrgk2h+pJBFw9w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "mingo@kernel.org" <mingo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, Jolly Shah <JOLLYS@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, linux@armlinux.org.uk, Guilherme =?iso-8859-1?B?Ry4gU2lt9WVz?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Michal Simek (2018-07-25 02:51:14)
-> On 24.7.2018 20:14, Jolly Shah wrote:
-> >>>  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
-> >>>  create mode 100644 drivers/firmware/xilinx/zynqmp.c  create mode
-> >>> 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
-> >>>  create mode 100644 include/linux/firmware/xlnx-zynqmp.h
-> >>>
-> >>
-> >> It looks pretty calm over the last several series that's why when I ge=
-t an answer
-> >> from Stephen or Mike I will take this series via my tree and arm-soc t=
-ree.
-> >>
-> >> I have applied 01-08 here
-> >>  https://github.com/Xilinx/linux-xlnx/commits/zynqmp/soc
-> >>
-> >> Thanks,
-> >> Michal
-> > =
+Hi Edgar,
 
-> > =
+On Tue, Jul 17, 2018 at 02:02:00PM -0300, Edgar Bernardi Righi wrote:
+> This patch adds custom delay support to Actions Semi OWL pll clock driver.
+> It is required for future Actions Semi Owl series S500 SoC clock support
+> 
+> Currently, the driver waits a fixed amount of time defined by the
+> macro PLL_STABILITY_WAIT_US.
+> The default delay (50us) is not enough for Actions Semi Owl S500 SoC.
+> It needs up to 150us.
+> A new field called "delay" was added to "struct owl_pll_hw". The rest
+> of the code was updated accordingly.
+> Old macros "OWL_PLL_HW", "OWL_PLL" and "OWL_PLL_NO_PARENT" were kept
+> (same usage), but updated to set "delay" value to
+> PLL_STABILITY_WAIT_US (50us).
+> New macros "OWL_PLL_HW_DELAY", "OWL_PLL_DELAY" and
+> "OWL_PLL_NO_PARENT_DELAY" were created with an extra argument to set a
+> custom "delay".
+> This does not break S700 and S900 code and was tested on S500 based
+> Lemaker Guitar Board.
+> 
+> Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+> 
+> diff -uprN -X vanilla/Documentation/dontdiff
+> vanilla/drivers/clk/actions/owl-pll.c
+> linux/drivers/clk/actions/owl-pll.c
+> --- vanilla/drivers/clk/actions/owl-pll.c    2018-07-17 13:07:16.667704000 -0300
+> +++ linux/drivers/clk/actions/owl-pll.c    2018-07-17 13:42:07.396785603 -0300
+> @@ -179,7 +179,7 @@ static int owl_pll_set_rate(struct clk_h
+> 
+>      regmap_write(common->regmap, pll_hw->reg, reg);
+> 
+> -    udelay(PLL_STABILITY_WAIT_US);
+> +    udelay(pll_hw->delay);
+> 
+>      return 0;
+>  }
+> diff -uprN -X vanilla/Documentation/dontdiff
+> vanilla/drivers/clk/actions/owl-pll.h
+> linux/drivers/clk/actions/owl-pll.h
+> --- vanilla/drivers/clk/actions/owl-pll.h    2018-07-17 13:07:16.667704000 -0300
+> +++ linux/drivers/clk/actions/owl-pll.h    2018-07-17 13:42:11.116765089 -0300
+> @@ -27,6 +27,7 @@ struct owl_pll_hw {
+>      u8            width;
+>      u8            min_mul;
+>      u8            max_mul;
+> +    u32            delay;
+>      const struct clk_pll_table *table;
+>  };
+> 
+> @@ -35,6 +36,51 @@ struct owl_pll {
+>      struct owl_clk_common    common;
+>  };
+> 
+> +#define PLL_STABILITY_WAIT_US    (50)
+> +
 
-> > Thanks for merging the patches. =
+You don't need this here. Please see below.
 
-> > By mistake I added =E2=80=9CReviewed-by: Stephen Boyd sboyd@kernel.org=
-=E2=80=9D for firmware bindings (Patch01).  Stephen had reviewed clock bind=
-ings only.  Please suggest if I should send a new version with that fix.
-> =
+> +#define OWL_PLL_HW_DELAY(_reg, _bfreq, _bit_idx, _shift,            \
+> +           _width, _min_mul, _max_mul, _table, _delay)            \
+> +    {                                \
+> +        .reg        = _reg,                    \
+> +        .bfreq        = _bfreq,                \
+> +        .bit_idx    = _bit_idx,                \
+> +        .shift        = _shift,                \
+> +        .width        = _width,                \
+> +        .min_mul    = _min_mul,                \
+> +        .max_mul    = _max_mul,                \
+> +        .table        = _table,                \
+> +        .delay        = _delay,                \
+> +    }
+> +
+> +#define OWL_PLL_DELAY(_struct, _name, _parent, _reg, _bfreq, _bit_idx,    \
+> +        _shift, _width, _min_mul, _max_mul, _table, _flags, _delay)    \
+> +    struct owl_pll _struct = {                    \
+> +        .pll_hw    = OWL_PLL_HW_DELAY(_reg, _bfreq, _bit_idx, _shift,    \
+> +                     _width, _min_mul,            \
+> +                     _max_mul, _table, _delay),            \
+> +        .common = {                        \
+> +            .regmap = NULL,                    \
+> +            .hw.init = CLK_HW_INIT(_name,            \
+> +                           _parent,            \
+> +                           &owl_pll_ops,        \
+> +                           _flags),            \
+> +        },                            \
+> +    }
+> +
+> +#define OWL_PLL_NO_PARENT_DELAY(_struct, _name, _reg, _bfreq, _bit_idx,    \
+> +        _shift, _width, _min_mul, _max_mul, _table, _flags, _delay)    \
+> +    struct owl_pll _struct = {                    \
+> +        .pll_hw    = OWL_PLL_HW_DELAY(_reg, _bfreq, _bit_idx, _shift,    \
+> +                     _width, _min_mul,            \
+> +                     _max_mul, _table, _delay),            \
+> +        .common = {                        \
+> +            .regmap = NULL,                    \
+> +            .hw.init = CLK_HW_INIT_NO_PARENT(_name,        \
+> +                           &owl_pll_ops,        \
+> +                           _flags),            \
+> +        },                            \
+> +    }
+> +
 
-> I have fixed that in my branch and I have asked Shephen to look at clk
-> over chat.
-> =
+No need to have DELAY and non DELAY defines. You can just add delay
+as a parameter to the OWL_PLL_NO_PARENT and OWL_PLL defines for the
+whole Owl family. Then use the corresponding delays in board specific
+owl-sx00.c file.
 
+>  #define OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,            \
+>             _width, _min_mul, _max_mul, _table)            \
+>      {                                \
+> @@ -46,6 +92,7 @@ struct owl_pll {
+>          .min_mul    = _min_mul,                \
+>          .max_mul    = _max_mul,                \
+>          .table        = _table,                \
+> +        .delay        = PLL_STABILITY_WAIT_US,\
 
-I have some unresolved review comments on v9. I'll give reviewed-by when
-that discussion is resolved.
+As said above, delay should come from board specific file. No need to
+worry about touching the S900/S700 part. As long as your change not breaking
+the functionality, it is fine.
+
+Thanks,
+Mani
+
+>      }
+> 
+>  #define OWL_PLL(_struct, _name, _parent, _reg, _bfreq, _bit_idx,    \
+> @@ -78,7 +125,6 @@ struct owl_pll {
+>      }
+> 
+>  #define mul_mask(m)        ((1 << ((m)->width)) - 1)
+> -#define PLL_STABILITY_WAIT_US    (50)
+> 
+>  static inline struct owl_pll *hw_to_owl_pll(const struct clk_hw *hw)
+>  {
