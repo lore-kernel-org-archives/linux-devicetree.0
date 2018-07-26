@@ -1,13 +1,11 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 1/9] RISC-V: remove timer leftovers
-Date: Thu, 26 Jul 2018 16:37:15 +0200
-Message-ID: <20180726143723.16585-2-hch@lst.de>
-References: <20180726143723.16585-1-hch@lst.de>
+Subject: RFC: simplified RISC-V interrupt and clocksource handling
+Date: Thu, 26 Jul 2018 16:37:14 +0200
+Message-ID: <20180726143723.16585-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180726143723.16585-1-hch@lst.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
  <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
@@ -21,50 +19,28 @@ To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@ar
 Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This code is currently unused and will be added back later in a different
-place with the real interrupt and clocksource support.
+This series tries adds support for interrupt handling and timers
+for the RISC-V architecture.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/riscv/kernel/time.c | 21 ---------------------
- 1 file changed, 21 deletions(-)
+The basic per-hart interrupt handling implemented by the scause
+and sie CSRs is extremely simple and implemented directly in
+arch/riscv/kernel/irq.c.  In addition there is a irqchip driver
+for the PLIC external interrupt controller, which is called through
+the set_handle_irq API, and a clocksource driver that gets its
+timer interrupt directly from the low-level interrupt handling.
 
-diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
-index 2463fcca719e..0df9b2cbd645 100644
---- a/arch/riscv/kernel/time.c
-+++ b/arch/riscv/kernel/time.c
-@@ -13,32 +13,11 @@
-  */
- 
- #include <linux/clocksource.h>
--#include <linux/clockchips.h>
- #include <linux/delay.h>
--
--#ifdef CONFIG_RISCV_TIMER
--#include <linux/timer_riscv.h>
--#endif
--
- #include <asm/sbi.h>
- 
- unsigned long riscv_timebase;
- 
--DECLARE_PER_CPU(struct clock_event_device, riscv_clock_event);
--
--void riscv_timer_interrupt(void)
--{
--#ifdef CONFIG_RISCV_TIMER
--	/*
--	 * FIXME: This needs to be cleaned up along with the rest of the IRQ
--	 * handling cleanup.  See irq.c for more details.
--	 */
--	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
--
--	evdev->event_handler(evdev);
--#endif
--}
--
- void __init init_clockevent(void)
- {
- 	timer_probe();
--- 
-2.18.0
+Compared to previous iterations this version does not try to use an
+irqchip driver for the low-level interrupt handling.  This saves
+a couple indirect calls and an additional read of the scause CSR
+in the hot path, makes the code much simpler and last but not least
+avoid the dependency on a device tree for a mandatory architectural
+feature.
+
+A git tree is available here (contains a few more patches before
+the ones in this series)
+
+    git://git.infradead.org/users/hch/riscv.git riscv-irq-simple
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple
