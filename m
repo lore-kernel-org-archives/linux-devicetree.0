@@ -1,59 +1,164 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] mmc: tmio: rename files and CONFIG options to have
- the same prefix
-Date: Thu, 26 Jul 2018 11:28:04 +0200
-Message-ID: <CAMuHMdX3zaeXsw799xnWKcZdVjP3r_n=NM-ihXzuSbnU5xF5jw@mail.gmail.com>
-References: <1532575736-20138-1-git-send-email-yamada.masahiro@socionext.com>
- <1532575736-20138-2-git-send-email-yamada.masahiro@socionext.com>
- <CAMuHMdUnYiLYO4hX3x6X7EZ8HnnOHXCPEUOXzPVJc=6s7VF+bQ@mail.gmail.com> <CAK7LNAT9nHCnq90tgomDnwF6RwSa9BGTnxqzgvVwqy-QBy+qxQ@mail.gmail.com>
+From: "Keiji Hayashibara" <hayashibara.keiji@socionext.com>
+Subject: RE: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
+Date: Thu, 26 Jul 2018 18:38:25 +0900
+Message-ID: <001b01d424c4$66e04230$34a0c690$@socionext.com>
+References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com> <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com> <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAT9nHCnq90tgomDnwF6RwSa9BGTnxqzgvVwqy-QBy+qxQ@mail.gmail.com>
+In-Reply-To: <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
+Content-Language: ja
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: 'Andy Shevchenko' <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yamada-san,
+Hello Andy,
 
-On Thu, Jul 26, 2018 at 11:15 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> 2018-07-26 17:25 GMT+09:00 Geert Uytterhoeven <geert@linux-m68k.org>:
-> > On Thu, Jul 26, 2018 at 5:33 AM Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> >> This commit renames files as follows:
-> >>
-> >>   tmio_mmc_core.c              -> tmio_mmc.c
-> >>   tmio_mmc.c                   -> tmio_mmc_original.c
-> >>   renesas_sdhi_core.c          -> tmio_mmc_sdhi.c
-> >>   renesas_sdhi.h               -> tmio_mmc_sdhi.h
-> >>   renesas_sdhi_internal_dmac.c -> tmio_mmc_sdhi_internal_dmac.c
-> >>   renesas_sdhi_sys_dmac.c      -> tmio_mmc_sdhi_sys_dmac.c
+Thank you for your check!
+
+
+> From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
+> Sent: Thursday, July 26, 2018 5:46 PM
+> To: Hayashibara, Keiji/林原 啓二 <hayashibara.keiji@socionext.com>
+> Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
+> 
+> On Thu, Jul 26, 2018 at 10:09 AM, Keiji Hayashibara <hayashibara.keiji@socionext.com> wrote:
+> > Add SPI controller driver implemented in Socionext UniPhier SoCs.
 > >
-> > I have mixed feelings about the last two renames, especially about the last
-> > one: SYS-DMAC is very Renesas-specific, as it's a separate IP block in
-> > Renesas SoCs.
+> > UniPhier SoCs have two types SPI controllers; SCSSI supports a single
+> > channel, and MCSSI supports multiple channels.
+> > This driver supports SCSSI only.
+> >
+> > This controller has 32bit TX/RX FIFO with depth of eight entry, and
+> > supports the SPI master mode only.
+> >
+> > This commit is implemented in PIO transfer mode, not DMA transfer.
+> 
+> Few style realted comments.
+> 
+> > +#include <asm/unaligned.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/bitfield.h>
+> > +#include <linux/bitops.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/spi/spi.h>
+> 
+> Slightly better to keep them in order and put asm/* at the last.
 
-> > 2. Are there other SoCs using an external DMAC?
->
-> Yes.  Some old SoCs in UniPhier SoC family rely on
-> the external DMAC, like renesas_sdhi_sys_dmac.c
->
-> >    Is the interface to the external DMAC similar?
-> >    If yes, perhaps it should be renamed to tmio_mmc_sdhi_external_dmac.c?
->
-> "sdhi" is already Renesas-specific name, isn't it?
+I see. I will modify this.
 
-Right, I'm mixing up SDHI and SDHC.
 
-Gr{oetje,eeting}s,
+> > +#define SSI_TIMEOUT            2000    /* ms */
+> 
+> SSI_TIMEOUT_MS ?
+> 
+> > +#define SSI_CTL                        0x0
+> 
+> Slightly better to keep same width for the addresses, like 0x00 here.
+> 
+> > +#define SSI_CKS                        0x4
+> 
+> > +#define SSI_TXWDS              0x8
+> 
+> > +#define SSI_RXWDS              0xc
+> 
+> Ditto.
 
-                        Geert
+I will modify about above.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> > +static int uniphier_spi_set_baudrate(struct spi_device *spi, unsigned
+> > +int speed) {
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> > +       u32 val, ckrat;
+> > +
+> > +       /*
+> > +        * the supported rates are even numbers from 4 to 254. (4,6,8...254)
+> > +        * round up as we look for equal or less speed
+> > +        */
+> > +       ckrat = DIV_ROUND_UP(clk_get_rate(priv->clk), speed);
+> 
+> > +       ckrat = roundup(ckrat, 2);
+> 
+> ckrat += ckrat & 1;
+> 
+> ?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+It's simple. I will modify.
+
+
+> > +       /* check if requested speed is too small */
+> > +       if (ckrat > SSI_MAX_CLK_DIVIDER)
+> 
+> > +               return -EINVAL;
+> 
+> So, does this critical?
+
+If set the value to SSI_MAX_CLK_DIVIDER, the clock frequency will be set high.
+I don't change it to high frequency, and it is daringly an error.
+On the other hand, when changing to low frequency, I will change it automatically.
+
+> > +
+> > +       if (ckrat < SSI_MIN_CLK_DIVIDER)
+> > +               ckrat = SSI_MIN_CLK_DIVIDER;
+> 
+> clamp_val()  / max() ?
+
+I will modify it to use max().
+
+> 
+> > +       val = readl(priv->base + SSI_CKS);
+> > +       val &= ~SSI_CKS_CKRAT_MASK;
+> > +       val |= ckrat & SSI_CKS_CKRAT_MASK;
+> > +       writel(val, priv->base + SSI_CKS);
+> > +
+> > +       return 0;
+> > +}
+> 
+> > +       priv->irq = platform_get_irq(pdev, 0);
+> > +       if (priv->irq < 0) {
+> > +               dev_err(&pdev->dev, "failed to get IRQ\n");
+> 
+> > +               ret = -ENXIO;
+> 
+> What's wrong with
+> 
+> ret = priv->irq;
+> 
+> ?
+
+I will modify it.
+
+> > +               goto out_disable_clk;
+> > +       }
+> 
+> > +static const struct of_device_id uniphier_spi_match[] = {
+> > +       { .compatible = "socionext,uniphier-scssi", },
+> 
+> > +       { /* sentinel */ },
+> 
+> Slightly better without comma.
+
+OK. I will modify this.
+
+-----------------
+Best Regards,
+Keiji Hayashibara
+
+
+
+> > +};
+> > +MODULE_DEVICE_TABLE(of, uniphier_spi_match);
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
