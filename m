@@ -1,45 +1,80 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 3/6] irqchip: RISC-V Local Interrupt Controller Driver
-Date: Thu, 26 Jul 2018 10:27:06 +0200
-Message-ID: <20180726082706.GA22868@lst.de>
-References: <20180725093649.32332-1-hch@lst.de> <20180725093649.32332-4-hch@lst.de> <c3ccb953-cd75-4a37-636a-ca643602053a@arm.com> <20180725112457.GA24502@lst.de> <CAAhSdy31=D3jOgvrc+Td-TeKQMazPA-suFjOy9XwEuima1WdeA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] mmc: tmio: rename files and CONFIG options to have
+ the same prefix
+Date: Thu, 26 Jul 2018 10:25:34 +0200
+Message-ID: <CAMuHMdUnYiLYO4hX3x6X7EZ8HnnOHXCPEUOXzPVJc=6s7VF+bQ@mail.gmail.com>
+References: <1532575736-20138-1-git-send-email-yamada.masahiro@socionext.com> <1532575736-20138-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAhSdy31=D3jOgvrc+Td-TeKQMazPA-suFjOy9XwEuima1WdeA@mail.gmail.com>
+In-Reply-To: <1532575736-20138-2-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup@brainfault.org>
-Cc: Christoph Hellwig <hch@lst.de>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, palmer@sifive.com, jason@lakedaemon.net, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 09:08:00AM +0530, Anup Patel wrote:
-> Actually, RISCV HLIC and PLIC are very similar to RPi2 and RPi3 SOCs.
-> 
-> On RPi2 and RPi3, we have per-CPU BCM2836 local intc and the global
-> interrupts are managed using BCM2835 intc. You should certainly have
-> a look a this drivers because these very simple compared to GICv2 and
-> GICv3 drivers.
+Hi Yamada-san,
 
-Yes, using that model makes writing the per-cpu irq controller driver
-trivial.  But retrofitting it into the device tree, where the existing
-bootloader (bbl) assumes the old DT layout is a giant pain in the neck.
+On Thu, Jul 26, 2018 at 5:33 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
+> MFD glue") said, these MMC controllers use the IP from Panasonic.
+>
+> TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
+> The common driver code was split and expanded as 'tmio-mmc-core', then
+> it become historical misnomer since 'tmio' is not the name of this IP.
+>
+> I pointed out this [1], and suggested to re-organize the names in the
+> form of:
+>
+>   <IP-name>.c            (common code for this IP)
+>   <IP-name>_tmio.c       (Toshiba Mobile IO)
+>   <IP-name>_sdhi.c       (Renesas SDHI)
+>   <IP-name>_uniphier.c   (Socionext UniPhier)
+>
+> The <IP-name> in my mind was 'mnsd' because names of Panasonic chips
+> are prefixed with 'MN'.
+>
+> This is the naming scheme as we see in dw_mmc* and sdhci-*.
+>
+> In the discussion with Wolfram Sang, my suggestion was rejected
+> because it implied drastic function renaming, which is too invasive.
+>
+> Ulf Hansson was still happy with file renaming to clarify the
+> relationship between variants.  So, the accepted solution was:
+>
+>  - Make 'tmio_mmc' the _right_ core name
+>  - Align all variant files with the same prefix.
+>  - Do not rename functions
+>
+> This commit renames files as follows:
+>
+>   tmio_mmc_core.c              -> tmio_mmc.c
+>   tmio_mmc.c                   -> tmio_mmc_original.c
+>   renesas_sdhi_core.c          -> tmio_mmc_sdhi.c
+>   renesas_sdhi.h               -> tmio_mmc_sdhi.h
+>   renesas_sdhi_internal_dmac.c -> tmio_mmc_sdhi_internal_dmac.c
+>   renesas_sdhi_sys_dmac.c      -> tmio_mmc_sdhi_sys_dmac.c
 
-At the same time I'm still not conveninced RISC-V really needs a full
-irqchip driver for the per-cpu interrupt 'controller' really is nothing
-but 1 and a half architectural control registers:
+I have mixed feelings about the last two renames, especially about the last
+one: SYS-DMAC is very Renesas-specific, as it's a separate IP block in
+Renesas SoCs.
+1. Are there other SoCs using the same internal DMAC?
+   If not, perhaps the "renesas" should be kept in the driver name?
+2. Are there other SoCs using an external DMAC?
+   Is the interface to the external DMAC similar?
+   If yes, perhaps it should be renamed to tmio_mmc_sdhi_external_dmac.c?
+   If not, perhaps the "renesas" should be kept in the driver name?
 
-  - the scause register that contains the reason for an exception
-    (any exception including syscalls and page faults) for the entry
-    into supervisor mode.  This includes a bit to indicate interrupts,
-    and then logical interrupt reason, out of which only three are
-    interesting for supervisor mode (timer, software, external)
-  - the sie register that allows to to enable/disable each of the above
-    causes individually
+Thanks!
 
-So after burning out on DT hacking (never mind retrofitting that into
-actual shipping SOCs vs just qemu) I'm going to try a version that
-doesn't add an irqchip for this but just handles it hardcoded in
-RISC-V do_IRQ.  I'll still keep the irqchip for the PLIC, which while
-specificed in the RISC-V spec isn't architectural but an actual
-periphal.
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
