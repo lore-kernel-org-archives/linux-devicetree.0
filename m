@@ -1,118 +1,77 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
- i.MX7S SoCs.
-Date: Thu, 26 Jul 2018 17:16:12 +0530
-Message-ID: <CABb+yY0LbLfK2SEdTeuDmaGc+PsVn0AREQ=E=c4UZgxa5K95qQ@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-5-o.rempel@pengutronix.de>
- <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
- <1532601691.32306.28.camel@pengutronix.de>
- <CABb+yY1GEmw_8q2HaF8y5VfFJX_c_0_MbWtPUE_j_o-zS8iZ_g@mail.gmail.com>
- <1532604937.32306.30.camel@pengutronix.de>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: arndale: fix HDMI-HPD line handling
+Date: Thu, 26 Jul 2018 13:50:24 +0200
+Message-ID: <20180726115026eucas1p16fa2baff275f20185407be1a205d76d0~E6OEi85ee2226822268eucas1p1Y@eucas1p1.samsung.com>
+References: <CGME20180726101248eucas1p14ede2f90176b93f0bfde1808b494abbd@eucas1p1.samsung.com>
+ <20180726101228.14956-1-a.hajda@samsung.com>
+ <20180726101228.14956-2-a.hajda@samsung.com>
+ <CAJKOXPfR-5pwM_XW9DPNwQAJ2eaDbbnhANbmZCq3eweZ0OyDXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1532604937.32306.30.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, ", linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAJKOXPfR-5pwM_XW9DPNwQAJ2eaDbbnhANbmZCq3eweZ0OyDXg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 5:05 PM, Lucas Stach <l.stach@pengutronix.de> wrote:
-> Am Donnerstag, den 26.07.2018, 16:45 +0530 schrieb Jassi Brar:
->> On Thu, Jul 26, 2018 at 4:11 PM, Lucas Stach <l.stach@pengutronix.de>
->> wrote:
->> > Hi Jassi,
->> >
->> > Am Donnerstag, den 26.07.2018, 15:25 +0530 schrieb Jassi Brar:
->> > > On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
->> > > > <o.rempel@pengutronix.de> wrote:
->> > > > This are currently tested SoCs with imx-mailbox driver.
->> > > >
->> > > > > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->> > > >
->> > > > ---
->> > > >  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 +-
->> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
->> > > >
->> > > > diff --git
->> > > > a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->> > > > b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->> > > > index 113d6ab931ef..5616d2afca45 100644
->> > > > --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->> > > > +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
->> > > > @@ -18,7 +18,7 @@ Messaging Unit Device Node:
->> > > >  Required properties:
->> > > >  -------------------
->> > > >  - compatible : should be "fsl,<chip>-mu", the supported chips
->> > > > include
->> > > > -               imx8qxp, imx8qm.
->> > > > +               imx6sx, imx7s, imx8qxp, imx8qm.
->> > > >
->> > >
->> > > This is not scalable. Do we add every new SoC that contains the
->> > > same controller?
->> >
->> > Yes, we do. This is a policy direction from the DT maintainers.
->> >
->>
->> I would love to read the post/documentation.
->>
->> Consider the same h/w - controller and platforms, but only the the MU
->> chapter said the controller name is, say, 'MU121'. I am sure now you
->> will see it correct to call it "fsl,mu121" compatible.
->> What changed? just the name, right?
->>
->>
->> > If we
->> > ever going to want to validate DTs against the binding, all
->> > compatibles
->> > used in the DTs must be specified in the binding.
->> >
->> > As we can't really tell if the controller is exactly the same or
->> > even
->> > has some SoC integration bugs, we generally add a new compatible
->> > for
->> > each SoC to key off any workarounds necessary in the driver without
->> > the
->> > need to change the DTs, breaking compatibility.
->> >
->>
->> I think if the h/w resources and behaviour remain the same and the
->> documentation does not call it by a different name -- it is safe to
->> assume its the same IP. Especially when the driver is absolutely
->> indifferent to the 5 SoC names.
->
-> Even if it is the same IP core, the SoC integration might have bugs
-> that need different behavior from the driver. We've already had that
-> case with the i.MX6 SPI controller.
->
-For h/w quirks/bugs, a new "has-that-bug" property makes better sense.
-Or, if you insist, a new compatible based on the first soc that has
-the buggy block.
-
-
->> If/when we find the controller changes, we could revisit the binding
->> and add another compatible option and modify the driver to catch that
->> and adapt.
->
-> That's way too late. If we want to keep DTs stable
->
-How do you keep the DT stable by explicitly defining every new SoC to
-the compatible list in DT, _add_ to the driver.... only to have the
-driver absolutely not care which SoC is it?
-Which is the situation right now with this patchset.
-
-thnx.
+T24gMjYuMDcuMjAxOCAxMjo0NCwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPiBPbiAyNiBK
+dWx5IDIwMTggYXQgMTI6MTIsIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdy
+b3RlOgo+PiBIRE1JLUhQRCB3YXMgc2V0IGFjdGl2ZSBsb3csIG1vcmVvdmVyIGJ5IGRlZmF1bHQg
+cGluY29udHJvbAo+PiBjaGlwIHNldHMgcHVsbC1kb3duIG9uIHRoZSBwaW4uIEFzIGEgcmVzdWx0
+IEhETUkgZHJpdmVyCj4+IGFzc3VtZXMgVFYgaXMgYWx3YXlzIGNvbm5lY3RlZCByZWdhcmRsZXNz
+IG9mIGFjdHVhbCBzdGF0ZS4KPj4gVGhlIHBhdGNoIGZpeGVzIGl0Lgo+Pgo+PiBTaWduZWQtb2Zm
+LWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+PiAtLS0KPj4gIGFyY2gv
+YXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtYXJuZGFsZS5kdHMgIHwgNCArKystCj4+ICBhcmNoL2Fy
+bS9ib290L2R0cy9leHlub3M1MjUwLXBpbmN0cmwuZHRzaSB8IDUgKysrKysKPj4gIDIgZmlsZXMg
+Y2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+Cj4+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLWFybmRhbGUuZHRzIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvZXh5bm9zNTI1MC1hcm5kYWxlLmR0cwo+PiBpbmRleCA1OTEwMjMzOTFmN2QuLjI2YmFl
+NTE1NzE3NyAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1hcm5k
+YWxlLmR0cwo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLWFybmRhbGUuZHRz
+Cj4+IEBAIC0yMTAsOSArMjEwLDExIEBACj4+ICB9Owo+Pgo+PiAgJmhkbWkgewo+PiArICAgICAg
+IHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4+ICsgICAgICAgcGluY3RybC0wID0gPCZoZG1p
+X2hwZD47Cj4+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+PiAgICAgICAgIGRkYyA9IDwmaTJj
+X2RkYz47Cj4+IC0gICAgICAgaHBkLWdwaW9zID0gPCZncHgzIDcgR1BJT19BQ1RJVkVfTE9XPjsK
+Pj4gKyAgICAgICBocGQtZ3Bpb3MgPSA8JmdweDMgNyBHUElPX0FDVElWRV9ISUdIPjsKPiBUaGUg
+Z3B4My03IChIRE1JLUhQRCkgaGFzIGV4dGVybmFsIHB1bGwgdXAgdG8uLi4gc28gbWF5YmUgaXQg
+c2hvdWxkIGJlCj4gYWN0aXZlIGxvdz8gSG93IGNhbiBpdCBnbyBoaWdoIGlmIGl0IGlzIGFscmVh
+ZHkgaGlnaD8KPiBJIGFtIG5vdCBzdXJlIGlmIHRoaXMgbWF0dGVycyBiZWNhdXNlIHRoZSBkcml2
+ZXIgaWdub3JlcyB0aGUgZmxhZ3MgYW5kCj4gcmVzcG9uZHMgb24gYm90aCBmYWxsaW5nIGFuZCBy
+aXNpbmcgZWRnZS4KCkhETUkgc3BlY2lmaWNhdGlvbiBzYXlzIEhQRCBpcyBhY3RpdmUgaGlnaCEK
+QXJuZGFsZSBzY2hlbWF0aWNzIGFyZSBxdWl0ZSBtaXNsZWFkaW5nIC0gcHVsbC11cCByZXNpc3Rv
+cnMgbmVhciBsZXZlbApzaGlmdGVyIGFyZSBtYXJrZWQgYXMgbm90LWNvbm5lY3RlZCA6KSBzbyB0
+aGVyZSBhcmUgbm8gcHVsbC11cHMuCkFuZCB0aGVyZSBpcyBwdWxsLWRvd24gcmVzaXN0b3Igb24g
+cmlnaHQgc2lkZSBvZiB0aGUgbGV2ZWwgc2hpZnRlci4KQW5kIGZpbmFsbHkgd2l0aCB0aGlzIHBh
+dGNoIGl0IHdvcmtzIGFzIGV4cGVjdGVkLCB3aXRob3V0IGl0IGl0IHdvcmtzCnNvbWV0aW1lcy4K
+ClJlZ2FyZHMKQW5kcnplagoKPgo+IEJlc3QgcmVnYXJkcywKPiBLcnp5c3p0b2YKPgo+PiAgICAg
+ICAgIHZkZF9vc2Mtc3VwcGx5ID0gPCZsZG8xMF9yZWc+Owo+PiAgICAgICAgIHZkZF9wbGwtc3Vw
+cGx5ID0gPCZsZG84X3JlZz47Cj4+ICAgICAgICAgdmRkLXN1cHBseSA9IDwmbGRvOF9yZWc+Owo+
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kg
+Yi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLXBpbmN0cmwuZHRzaQo+PiBpbmRleCBiMjVk
+NTIwMzkzYjguLmQzMWE2ODY3MmJmYSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
+ZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9z
+NTI1MC1waW5jdHJsLmR0c2kKPj4gQEAgLTU5OSw2ICs1OTksMTEgQEAKPj4gICAgICAgICAgICAg
+ICAgIHNhbXN1bmcscGluLXB1ZCA9IDxFWFlOT1NfUElOX1BVTExfTk9ORT47Cj4+ICAgICAgICAg
+ICAgICAgICBzYW1zdW5nLHBpbi1kcnYgPSA8RVhZTk9TNF9QSU5fRFJWX0xWMT47Cj4+ICAgICAg
+ICAgfTsKPj4gKwo+PiArICAgICAgIGhkbWlfaHBkOiBoZG1pLWhwZCB7Cj4+ICsgICAgICAgICAg
+ICAgICBzYW1zdW5nLHBpbnMgPSAiZ3B4My03IjsKPj4gKyAgICAgICAgICAgICAgIHNhbXN1bmcs
+cGluLXB1ZCA9IDxFWFlOT1NfUElOX1BVTExfTk9ORT47Cj4+ICsgICAgICAgfTsKPj4gIH07Cj4+
+Cj4+ICAmcGluY3RybF8xIHsKPj4gLS0KPj4gMi4xOC4wCj4+Cj4gLS0KPiBUbyB1bnN1YnNjcmli
+ZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtc2Ftc3Vu
+Zy1zb2MiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5l
+bC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21h
+am9yZG9tby1pbmZvLmh0bWwKPgo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
