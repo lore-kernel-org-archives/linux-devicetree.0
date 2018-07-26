@@ -1,127 +1,186 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
-Date: Thu, 26 Jul 2018 12:51:40 +0200
-Message-ID: <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-7-o.rempel@pengutronix.de>
- <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
+From: Radu Pirea <radu.pirea@microchip.com>
+Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
+Date: Thu, 26 Jul 2018 13:57:35 +0300
+Message-ID: <ab87c6a7-4ead-6492-9e47-42e6ab701d1c@microchip.com>
+References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com>
+ <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com>
+ <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
+ <001b01d424c4$66e04230$34a0c690$@socionext.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8636632566864556502=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-mediatek@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <001b01d424c4$66e04230$34a0c690$@socionext.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keiji Hayashibara <hayashibara.keiji@socionext.com>, 'Andy Shevchenko' <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============8636632566864556502==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="nL5YWVr3GLDlSQDY1BkDVeW4R1E6Ycc48"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---nL5YWVr3GLDlSQDY1BkDVeW4R1E6Ycc48
-Content-Type: multipart/mixed; boundary="BCN74KpNeBohgqROeaPdkFBnYLUOzlgiy";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>,
- Devicetree List <devicetree@vger.kernel.org>,
- Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- srv_heupstream <linux-arm-kernel@lists.infradead.org>,
- ", Sascha Hauer" <kernel@pengutronix.de>,
- Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
- dl-linux-imx <linux-imx@nxp.com>
-Message-ID: <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
-Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-7-o.rempel@pengutronix.de>
- <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
-In-Reply-To: <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
-
---BCN74KpNeBohgqROeaPdkFBnYLUOzlgiy
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 
 
-
-On 26.07.2018 12:15, Jassi Brar wrote:
-> On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
-> <o.rempel@pengutronix.de> wrote:
->=20
-> .....
->=20
->> +
->> +/* Control Register */
->> +#define IMX_MU_xCR             0x24
->> +/* Transmit Interrupt Enable */
->> +#define IMX_MU_xCR_TIEn(x)     BIT(20 + (3 - (x)))
->> +/* Receive Interrupt Enable */
->> +#define IMX_MU_xCR_RIEn(x)     BIT(24 + (3 - (x)))
->> +
->> +#define IMX_MU_CHANS   4u
->> +
-> The 'u' unnecessarily refreshes my knowledge of C  :)
-
-ok
-
->=20
->> +struct imx_mu_con_priv {
->> +       int                     irq;
->> +       unsigned int            idx;
->> +       char                    *irq_desc;
+On 07/26/2018 12:38 PM, Keiji Hayashibara wrote:
+> Hello Andy,
+> 
+> Thank you for your check!
+> 
+> 
+>> From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
+>> Sent: Thursday, July 26, 2018 5:46 PM
+>> To: Hayashibara, Keiji/林原 啓二 <hayashibara.keiji@socionext.com>
+>> Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
 >>
-> Having      char  irq_desc[16];    seems simpler than free/kfree upon
-> each startup/shutdown. Simply use snprintf() in probe().
+>> On Thu, Jul 26, 2018 at 10:09 AM, Keiji Hayashibara <hayashibara.keiji@socionext.com> wrote:
+>>> Add SPI controller driver implemented in Socionext UniPhier SoCs.
+>>>
+>>> UniPhier SoCs have two types SPI controllers; SCSSI supports a single
+>>> channel, and MCSSI supports multiple channels.
+>>> This driver supports SCSSI only.
+>>>
+>>> This controller has 32bit TX/RX FIFO with depth of eight entry, and
+>>> supports the SPI master mode only.
+>>>
+>>> This commit is implemented in PIO transfer mode, not DMA transfer.
+>>
+>> Few style realted comments.
+>>
+>>> +#include <asm/unaligned.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/bitfield.h>
+>>> +#include <linux/bitops.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/of_platform.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/spi/spi.h>
+>>
+>> Slightly better to keep them in order and put asm/* at the last.
+> 
+> I see. I will modify this.
+> 
+> 
+>>> +#define SSI_TIMEOUT            2000    /* ms */
+>>
+>> SSI_TIMEOUT_MS ?
+>>
+>>> +#define SSI_CTL                        0x0
+>>
+>> Slightly better to keep same width for the addresses, like 0x00 here.
+>>
+>>> +#define SSI_CKS                        0x4
+>>
+>>> +#define SSI_TXWDS              0x8
+>>
+>>> +#define SSI_RXWDS              0xc
+>>
+>> Ditto.
+> 
+> I will modify about above.
+> 
+>>
+>>> +static int uniphier_spi_set_baudrate(struct spi_device *spi, unsigned
+>>> +int speed) {
+>>> +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+>>> +       u32 val, ckrat;
+>>> +
+>>> +       /*
+>>> +        * the supported rates are even numbers from 4 to 254. (4,6,8...254)
+>>> +        * round up as we look for equal or less speed
+>>> +        */
+>>> +       ckrat = DIV_ROUND_UP(clk_get_rate(priv->clk), speed);
+>>
+>>> +       ckrat = roundup(ckrat, 2);
+>>
+>> ckrat += ckrat & 1;
+>>
+>> ?
+> 
+> It's simple. I will modify.
+> 
+> 
+>>> +       /* check if requested speed is too small */
+>>> +       if (ckrat > SSI_MAX_CLK_DIVIDER)
+>>
+>>> +               return -EINVAL;
+>>
+>> So, does this critical?
+> 
+> If set the value to SSI_MAX_CLK_DIVIDER, the clock frequency will be set high.
+> I don't change it to high frequency, and it is daringly an error.
+> On the other hand, when changing to low frequency, I will change it automatically.
+> 
+>>> +
+>>> +       if (ckrat < SSI_MIN_CLK_DIVIDER)
+>>> +               ckrat = SSI_MIN_CLK_DIVIDER;
 
-Currently all known configurations use one or two channels. I don't see
-any sense to allocate all at the probe.
+In fact you don't need this checks. You already set in probe function this.
+master->max_speed_hz = DIV_ROUND_UP(clksrc, SSI_MIN_CLK_DIVIDER);
+master->min_speed_hz = DIV_ROUND_UP(clksrc, SSI_MAX_CLK_DIVIDER);
 
+The SPI core will check if transfer speed is higher than controller 
+speed and if is, will set the transfer speed to master->max_speed_hz. In 
+case of master->min_speed_hz, if transfer speed is lower than 
+master->min_speed_hz __spi_validate(drivers/spi/spi.c) will return -EINVAL.
 
---BCN74KpNeBohgqROeaPdkFBnYLUOzlgiy--
-
---nL5YWVr3GLDlSQDY1BkDVeW4R1E6Ycc48
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltZp70ACgkQdQOiSHVI
-77R9hQf+PHzjVj6uw8lP/pgBEyqp2oLMRnnw9uAUvoKZqwcNwVYZwiUmvx0HyFu1
-PwW08SUREmBGM3aNFMzcenKGZPI0+O3Vj95Voq5649HwMBt8rVXK7vTi+JJgTJT2
-E94MeEXpTPUN6duZwB8Yzn+LOCiKEPwam9oPJf+6gPsEWq/Yseka0ILwQlWavgAB
-nSJnjqIiEaUmGgIOktkhD4eJFeFsAskyHZHZa769yDlvMCPqjTLoIL1erNpdpiDa
-Dt4nTazctoGkXlgofOk9SIlAaSXA3NnCYjMI+W6y5E2yigCT8HAX6XZFpBddxOcO
-Q2C3xgMGHpgPP4sL3yzX5TprRwvMMA==
-=kqUp
------END PGP SIGNATURE-----
-
---nL5YWVr3GLDlSQDY1BkDVeW4R1E6Ycc48--
-
-
---===============8636632566864556502==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8636632566864556502==--
+>>
+>> clamp_val()  / max() ?
+> 
+> I will modify it to use max().
+> 
+>>
+>>> +       val = readl(priv->base + SSI_CKS);
+>>> +       val &= ~SSI_CKS_CKRAT_MASK;
+>>> +       val |= ckrat & SSI_CKS_CKRAT_MASK;
+>>> +       writel(val, priv->base + SSI_CKS);
+>>> +
+>>> +       return 0;
+>>> +}
+>>
+>>> +       priv->irq = platform_get_irq(pdev, 0);
+>>> +       if (priv->irq < 0) {
+>>> +               dev_err(&pdev->dev, "failed to get IRQ\n");
+>>
+>>> +               ret = -ENXIO;
+>>
+>> What's wrong with
+>>
+>> ret = priv->irq;
+>>
+>> ?
+> 
+> I will modify it.
+> 
+>>> +               goto out_disable_clk;
+>>> +       }
+>>
+>>> +static const struct of_device_id uniphier_spi_match[] = {
+>>> +       { .compatible = "socionext,uniphier-scssi", },
+>>
+>>> +       { /* sentinel */ },
+>>
+>> Slightly better without comma.
+> 
+> OK. I will modify this.
+> 
+> -----------------
+> Best Regards,
+> Keiji Hayashibara
+> 
+> 
+> 
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, uniphier_spi_match);
+>>
+>> --
+>> With Best Regards,
+>> Andy Shevchenko
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
