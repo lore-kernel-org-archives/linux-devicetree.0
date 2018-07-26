@@ -1,7 +1,7 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 3/4] ARM: dts: mvebu: db-xc3-24g4: use new style nand binding
-Date: Thu, 26 Jul 2018 16:02:56 +1200
-Message-ID: <20180726040257.22285-4-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 4/4] ARM: dts: mvebu: Add device tree for db-88f6820-amc board
+Date: Thu, 26 Jul 2018 16:02:57 +1200
+Message-ID: <20180726040257.22285-5-chris.packham@alliedtelesis.co.nz>
 References: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz>
@@ -10,39 +10,181 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-Update the nand flash binding to the new style.
+This board is a plugin card for some of Marvell's switch development
+kits. It's similar to the non-amc board except that it has no SATA
+support.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/armada-385-db-88f6820-amc.dts    | 147 ++++++++++++++++++
+ 2 files changed, 148 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
 
-diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-index d58ea48cb151..df048050615f 100644
---- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-+++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-@@ -69,12 +69,16 @@
- 
- &nand_controller {
- 	status = "okay";
--	label = "pxa3xx_nand-0";
--	num-cs = <1>;
--	marvell,nand-keep-config;
--	nand-on-flash-bbt;
--	nand-ecc-strength = <4>;
--	nand-ecc-step-size = <512>;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 37a3de760d40..e4212b7b7d9e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1126,6 +1126,7 @@ dtb-$(CONFIG_MACH_ARMADA_370) += \
+ dtb-$(CONFIG_MACH_ARMADA_375) += \
+ 	armada-375-db.dtb
+ dtb-$(CONFIG_MACH_ARMADA_38X) += \
++	armada-385-db-88f6820-amc.dtb \
+ 	armada-385-db-ap.dtb \
+ 	armada-385-linksys-caiman.dtb \
+ 	armada-385-linksys-cobra.dtb \
+diff --git a/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts b/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
+new file mode 100644
+index 000000000000..d87614057e3f
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
+@@ -0,0 +1,147 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Device Tree file for Marvell Armada 385 AMC board
++ * (DB-88F6820-AMC)
++ *
++ * Copyright (C) 2017 Allied Telesis Labs
++ */
++
++/dts-v1/;
++#include "armada-385.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Marvell Armada 385 AMC";
++	compatible = "marvell,a385-db-amc", "marvell,armada385", "marvell,armada380";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	aliases {
++		ethernet0 = &eth0;
++		ethernet1 = &eth1;
++		spi1 = &spi1;
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x80000000>; /* 2GB */
++	};
++
++	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
++	};
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins>;
++	status = "okay";
++};
++
++&uart0 {
++	/*
++	 * Exported on the micro USB connector CON3
++	 * through an FTDI
++	 */
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
++	status = "okay";
++};
++
++
++&eth0 {
++	pinctrl-names = "default";
++	/*
++	 * The Reference Clock 0 is used to provide a
++	 * clock to the PHY
++	 */
++	pinctrl-0 = <&ge0_rgmii_pins>, <&ref_clk0_pins>;
++	status = "okay";
++	phy = <&phy0>;
++	phy-mode = "rgmii-id";
++};
++
++&eth2 {
++	status = "okay";
++	phy = <&phy1>;
++	phy-mode = "sgmii";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++
++
++&mdio {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mdio_pins>;
++
++	phy0: ethernet-phy@1 {
++		reg = <1>;
++	};
++
++	phy1: ethernet-phy@0 {
++		reg = <0>;
++	};
++};
++
++&nand_controller {
++	status = "okay";
 +
 +	nand@0 {
 +		reg = <0>;
 +		label = "pxa3xx_nand-0";
 +		nand-rb = <0>;
-+		marvell,nand-keep-config;
 +		nand-on-flash-bbt;
 +		nand-ecc-strength = <4>;
 +		nand-ecc-step-size = <512>;
++
++		partition@user {
++			reg = <0x00000000 0x40000000>;
++			label = "user";
++		};
 +	};
- };
- 
- &spi0 {
++};
++
++&pciec {
++	status = "okay";
++};
++
++&pcie1 {
++	/* Port 0, Lane 0 */
++	status = "okay";
++};
++
++&spi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi1_pins>;
++	status = "okay";
++
++	spi-flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		reg = <0>; /* Chip select 0 */
++		spi-max-frequency = <50000000>;
++		m25p,fast-read;
++
++		partition@u-boot {
++			reg = <0x00000000 0x00100000>;
++			label = "u-boot";
++		};
++		partition@u-boot-env {
++			reg = <0x00100000 0x00040000>;
++			label = "u-boot-env";
++		};
++	};
++};
++
++&refclk {
++	clock-frequency = <20000000>;
++};
 -- 
 2.18.0
