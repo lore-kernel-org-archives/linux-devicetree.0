@@ -1,40 +1,47 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 4/4] MAINTAINERS: Add entry for Actions Semi Owl SoCs DMA driver
-Date: Thu, 26 Jul 2018 10:36:58 +0530
-Message-ID: <20180726050658.1399-5-manivannan.sadhasivam@linaro.org>
-References: <20180726050658.1399-1-manivannan.sadhasivam@linaro.org>
+From: Akash Gajjar <Akash_Gajjar@mentor.com>
+Subject: [PATCH] arm64: dts: allwinner: activate spi flash on pine64 LTS board
+Date: Thu, 26 Jul 2018 12:21:46 +0530
+Message-ID: <1532587906-5415-1-git-send-email-Akash_Gajjar@mentor.com>
+References: <Akash_Gajjar@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180726050658.1399-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <Akash_Gajjar@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: icenowy@aosc.xyz
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add entry for Actions Semi Owl SoCs DMA driver under ARM/ACTIONS.
+This board has SPI flash. add spi flash support in device tree.
+Tested on pine64 LTS.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ .../arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b54e9ebc6f..56d9c7715c2a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1145,12 +1145,14 @@ F:	arch/arm/boot/dts/owl-*
- F:	arch/arm64/boot/dts/actions/
- F:	drivers/clk/actions/
- F:	drivers/clocksource/owl-*
-+F:	drivers/dma/owl-dma.c
- F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
- F:	Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-+F:	Documentation/devicetree/bindings/dma/owl-dma.txt
- F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+index abe179d..9af07db 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+@@ -134,6 +134,18 @@
+ 	regulator-name = "vcc-wifi";
+ };
+ 
++&spi0  {
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "winbond,w25q128", "jedec,spi-nor";
++		reg = <0x0>;
++		spi-max-frequency = <40000000>;
++	};
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
 -- 
-2.17.1
+2.7.4
