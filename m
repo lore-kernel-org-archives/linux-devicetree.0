@@ -1,54 +1,34 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v3 2/2] leds: add Panasonic AN30259A support
-Date: Thu, 26 Jul 2018 09:44:49 +0200
-Message-ID: <20180726074449.GB4872@amd>
-References: <20180721141228.2283-1-simon@lineageos.org>
- <20180721141228.2283-3-simon@lineageos.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/5] arm64: dts: sprd: Add SC27XX breathing light
+ controller device
+Date: Thu, 26 Jul 2018 15:57:21 +0800
+Message-ID: <CAMz4kuJ7e45xDe=aBc-m9dQczu+hdVH-SHCjnFSRmdjs-5BPZg@mail.gmail.com>
+References: <2531014d066e61063b3d7906e6df55caa028e17c.1531881619.git.baolin.wang@linaro.org>
+ <20180726065208.yalawbgabym3evzy@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="uQr8t48UFsdbeI+V"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180721141228.2283-3-simon@lineageos.org>
+In-Reply-To: <20180726065208.yalawbgabym3evzy@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Shields <simon@lineageos.org>
-Cc: linux-leds@vger.kernel.org, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, DTML <devicetree@vger.kernel.org>, arm@kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Olof,
 
---uQr8t48UFsdbeI+V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 26 July 2018 at 14:52, Olof Johansson <olof@lixom.net> wrote:
+> On Mon, Jul 23, 2018 at 02:10:16PM +0800, Baolin Wang wrote:
+>> The SC27xx breathing light controller can support 3 outputs:
+>> red LED, green LED and blue LED.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>
+> Applied 1-5, thanks. If you send a series like this, feel free to send a cover
+> letter as well, to let us know what you want done to them. I'm presuming you
+> wanted them applied in this case.
 
-On Sun 2018-07-22 00:12:27, Simon Shields wrote:
-> AN30259A is a 3-channel LED driver which uses I2C. It supports timed
-> operation via an internal PWM clock, and variable brightness. This
-> driver offers support for basic hardware-based blinking and brightness
-> control.
->=20
-> The datasheet is freely available:
-> https://www.alliedelec.com/m/d/a9d2b3ee87c2d1a535a41dd747b1c247.pdf
->=20
-> Signed-off-by: Simon Shields <simon@lineageos.org>
+Sure, I will add one cover letter next time. Thanks.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---uQr8t48UFsdbeI+V
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAltZe/EACgkQMOfwapXb+vJvlwCbBXb2+g0cgKex/IjaREEUND6w
-RKUAn3H8s5I6vHOaVpE+zHBQ6XP3ScOA
-=/a69
------END PGP SIGNATURE-----
-
---uQr8t48UFsdbeI+V--
+-- 
+Baolin Wang
+Best Regards
