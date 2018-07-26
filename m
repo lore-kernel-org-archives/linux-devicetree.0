@@ -1,282 +1,114 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 9/9] clocksource: new RISC-V SBI timer driver
-Date: Thu, 26 Jul 2018 16:37:23 +0200
-Message-ID: <20180726143723.16585-10-hch@lst.de>
-References: <20180726143723.16585-1-hch@lst.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: meson: align axg card driver with DT
+	bindings documentation" to the asoc tree
+Date: Thu, 26 Jul 2018 16:01:39 +0100 (BST)
+Message-ID: <20180726150139.F013E440078@finisterre.ee.mobilebroadband>
+References: <20180726124544.14740-4-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180726143723.16585-1-hch@lst.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, Dmitriy Cherkasov <dmitriy@oss-tech.org>, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, shorne@gmail.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180726124544.14740-4-jbrunet@baylibre.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Palmer Dabbelt <palmer@dabbelt.com>
+The patch
 
-The RISC-V ISA defines a per-hart real-time clock and timer, which is
-present on all systems.  The clock is accessed via the 'rdtime'
-pseudo-instruction (which reads a CSR), and the timer is set via an SBI
-call.
+   ASoC: meson: align axg card driver with DT bindings documentation
 
-Contains various improvements from Atish Patra <atish.patra@wdc.com>.
+has been applied to the asoc tree at
 
-Signed-off-by: Dmitriy Cherkasov <dmitriy@oss-tech.org>
-Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-[hch: remove dead code, add SPDX tags, minor cleanups, merged
- hotplug cpu and other improvements from Atish]
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 435857e015dc7b337c5f21d195ac2e4ffd694283 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 26 Jul 2018 14:45:44 +0200
+Subject: [PATCH] ASoC: meson: align axg card driver with DT bindings
+ documentation
+
+Drop amlogic prefix in front of the generic DT properties and change
+property "name" to "model".
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/riscv/include/asm/smp.h      |   3 -
- arch/riscv/kernel/irq.c           |   3 +
- arch/riscv/kernel/smpboot.c       |   1 -
- arch/riscv/kernel/time.c          |   8 +-
- drivers/clocksource/Kconfig       |  10 +++
- drivers/clocksource/Makefile      |   1 +
- drivers/clocksource/riscv_timer.c | 121 ++++++++++++++++++++++++++++++
- include/linux/cpuhotplug.h        |   1 +
- 8 files changed, 137 insertions(+), 11 deletions(-)
- create mode 100644 drivers/clocksource/riscv_timer.c
+ sound/soc/meson/axg-card.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-index c9395fff246f..36016845461d 100644
---- a/arch/riscv/include/asm/smp.h
-+++ b/arch/riscv/include/asm/smp.h
-@@ -24,9 +24,6 @@
+diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
+index d6d1081d94ad..2914ba0d965b 100644
+--- a/sound/soc/meson/axg-card.c
++++ b/sound/soc/meson/axg-card.c
+@@ -123,7 +123,7 @@ static int axg_card_add_aux_devices(struct snd_soc_card *card)
+ 	struct snd_soc_aux_dev *aux;
+ 	int num, i;
  
- #ifdef CONFIG_SMP
- 
--/* SMP initialization hook for setup_arch */
--void __init init_clockevent(void);
--
- /* SMP initialization hook for setup_arch */
- void __init setup_smp(void);
- 
-diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
-index ab5f3e22c7cc..0cfac48a1272 100644
---- a/arch/riscv/kernel/irq.c
-+++ b/arch/riscv/kernel/irq.c
-@@ -30,6 +30,9 @@ asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
- 
- 	irq_enter();
- 	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
-+	case INTERRUPT_CAUSE_TIMER:
-+		riscv_timer_interrupt();
-+		break;
- #ifdef CONFIG_SMP
- 	case INTERRUPT_CAUSE_SOFTWARE:
+-	num = of_count_phandle_with_args(node, PREFIX "aux-devs", NULL);
++	num = of_count_phandle_with_args(node, "audio-aux-devs", NULL);
+ 	if (num == -ENOENT) {
  		/*
-diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index f741458c5a3f..56abab6a9812 100644
---- a/arch/riscv/kernel/smpboot.c
-+++ b/arch/riscv/kernel/smpboot.c
-@@ -104,7 +104,6 @@ asmlinkage void __init smp_callin(void)
- 	current->active_mm = mm;
+ 		 * It is ok to have no auxiliary devices but for this card it
+@@ -144,8 +144,8 @@ static int axg_card_add_aux_devices(struct snd_soc_card *card)
+ 	card->num_aux_devs = num;
  
- 	trap_init();
--	init_clockevent();
- 	notify_cpu_starting(smp_processor_id());
- 	set_cpu_online(smp_processor_id(), 1);
- 	local_flush_tlb_all();
-diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
-index 1bb01dc2d0f1..94e9ca18f5fa 100644
---- a/arch/riscv/kernel/time.c
-+++ b/arch/riscv/kernel/time.c
-@@ -18,12 +18,6 @@
+ 	for (i = 0; i < card->num_aux_devs; i++, aux++) {
+-		aux->codec_of_node = of_parse_phandle(node,
+-						      PREFIX "aux-devs", i);
++		aux->codec_of_node =
++			of_parse_phandle(node, "audio-aux-devs", i);
+ 		if (!aux->codec_of_node)
+ 			return -EINVAL;
+ 	}
+@@ -610,18 +610,18 @@ static int axg_card_probe(struct platform_device *pdev)
+ 	priv->card.owner = THIS_MODULE;
+ 	priv->card.dev = dev;
  
- unsigned long riscv_timebase;
+-	ret = snd_soc_of_parse_card_name(&priv->card, PREFIX "name");
++	ret = snd_soc_of_parse_card_name(&priv->card, "model");
+ 	if (ret < 0)
+ 		return ret;
  
--void __init init_clockevent(void)
--{
--	timer_probe();
--	csr_set(sie, SIE_STIE);
--}
--
- static long __init timebase_frequency(void)
- {
- 	struct device_node *cpu;
-@@ -43,5 +37,5 @@ void __init time_init(void)
- {
- 	riscv_timebase = timebase_frequency();
- 	lpj_fine = riscv_timebase / HZ;
--	init_clockevent();
-+	timer_probe();
- }
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index dec0dd88ec15..a57083efaae8 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -609,4 +609,14 @@ config ATCPIT100_TIMER
- 	help
- 	  This option enables support for the Andestech ATCPIT100 timers.
+-	ret = axg_card_parse_of_optional(&priv->card, PREFIX "routing",
++	ret = axg_card_parse_of_optional(&priv->card, "audio-routing",
+ 					 snd_soc_of_parse_audio_routing);
+ 	if (ret) {
+ 		dev_err(dev, "error while parsing routing\n");
+ 		return ret;
+ 	}
  
-+config RISCV_TIMER
-+	bool "Timer for the RISC-V platform"
-+	depends on RISCV || COMPILE_TEST
-+	select TIMER_PROBE
-+	select TIMER_OF
-+	help
-+	  This enables the per-hart timer built into all RISC-V systems, which
-+	  is accessed via both the SBI and the rdcycle instruction.  This is
-+	  required for all RISC-V systems.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 00caf37e52f9..ded31f720bd9 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -78,3 +78,4 @@ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
- obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
- obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
- obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
-+obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
-diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
-new file mode 100644
-index 000000000000..146156448bdd
---- /dev/null
-+++ b/drivers/clocksource/riscv_timer.c
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2012 Regents of the University of California
-+ * Copyright (C) 2017 SiFive
-+ */
-+#include <linux/clocksource.h>
-+#include <linux/clockchips.h>
-+#include <linux/cpu.h>
-+#include <linux/delay.h>
-+#include <linux/irq.h>
-+#include <asm/sbi.h>
-+
-+/*
-+ * All RISC-V systems have a timer attached to every hart.  These timers can be
-+ * read by the 'rdcycle' pseudo instruction, and can use the SBI to setup
-+ * events.  In order to abstract the architecture-specific timer reading and
-+ * setting functions away from the clock event insertion code, we provide
-+ * function pointers to the clockevent subsystem that perform two basic
-+ * operations: rdtime() reads the timer on the current CPU, and
-+ * next_event(delta) sets the next timer event to 'delta' cycles in the future.
-+ * As the timers are inherently a per-cpu resource, these callbacks perform
-+ * operations on the current hart.  There is guaranteed to be exactly one timer
-+ * per hart on all RISC-V systems.
-+ */
-+
-+#define MINDELTA 100
-+#define MAXDELTA 0x7fffffff
-+
-+static int riscv_clock_next_event(unsigned long delta,
-+		struct clock_event_device *ce)
-+{
-+	csr_set(sie, SIE_STIE);
-+	sbi_set_timer(get_cycles64() + delta);
-+	return 0;
-+}
-+
-+static DEFINE_PER_CPU(struct clock_event_device, riscv_clock_event) = {
-+	.name			= "riscv_timer_clockevent",
-+	.features		= CLOCK_EVT_FEAT_ONESHOT,
-+	.rating			= 100,
-+	.set_next_event		= riscv_clock_next_event,
-+};
-+
-+/*
-+ * It is guarnteed that all the timers across all the harts are synchronized
-+ * within one tick of each other, so while this could technically go
-+ * backwards when hopping between CPUs, practically it won't happen.
-+ */
-+static unsigned long long riscv_clocksource_rdtime(struct clocksource *cs)
-+{
-+	return get_cycles64();
-+}
-+
-+static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
-+	.name		= "riscv_clocksource",
-+	.rating		= 300,
-+	.mask		= CLOCKSOURCE_MASK(BITS_PER_LONG),
-+	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
-+	.read		= riscv_clocksource_rdtime,
-+};
-+
-+static int timer_riscv_starting_cpu(unsigned int cpu)
-+{
-+	struct clock_event_device *ce = per_cpu_ptr(&riscv_clock_event, cpu);
-+
-+	ce->cpumask = cpumask_of(cpu);
-+	clockevents_config_and_register(ce, riscv_timebase, MINDELTA, MAXDELTA);
-+	csr_set(sie, SIE_STIE);
-+	return 0;
-+}
-+
-+static int timer_riscv_dying_cpu(unsigned int cpu)
-+{
-+	csr_clear(sie, SIE_STIE);
-+	return 0;
-+}
-+
-+/* called directly from the low-level interrupt handler */
-+void riscv_timer_interrupt(void)
-+{
-+	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
-+
-+	csr_clear(sie, SIE_STIE);
-+	evdev->event_handler(evdev);
-+}
-+
-+static int hart_of_timer(struct device_node *dev)
-+{
-+	u32 hart;
-+
-+	if (!dev)
-+		return -1;
-+	if (!of_device_is_compatible(dev, "riscv"))
-+		return -1;
-+	if (of_property_read_u32(dev, "reg", &hart))
-+		return -1;
-+
-+	return hart;
-+}
-+
-+static int __init timer_riscv_init_dt(struct device_node *n)
-+{
-+	int cpu_id = hart_of_timer(n), error;
-+	struct clocksource *cs;
-+
-+	if (cpu_id != smp_processor_id())
-+		return 0;
-+
-+	cs = per_cpu_ptr(&riscv_clocksource, cpu_id);
-+	clocksource_register_hz(cs, riscv_timebase);
-+
-+	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
-+			 "clockevents/riscv/timer:starting",
-+			 timer_riscv_starting_cpu, timer_riscv_dying_cpu);
-+	if (error)
-+		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
-+		       error, cpu_id);
-+	return error;
-+}
-+
-+TIMER_OF_DECLARE(riscv_timer, "riscv", timer_riscv_init_dt);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 8796ba387152..554c27f6cfbd 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -125,6 +125,7 @@ enum cpuhp_state {
- 	CPUHP_AP_MARCO_TIMER_STARTING,
- 	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
- 	CPUHP_AP_ARC_TIMER_STARTING,
-+	CPUHP_AP_RISCV_TIMER_STARTING,
- 	CPUHP_AP_KVM_STARTING,
- 	CPUHP_AP_KVM_ARM_VGIC_INIT_STARTING,
- 	CPUHP_AP_KVM_ARM_VGIC_STARTING,
+-	ret = axg_card_parse_of_optional(&priv->card, PREFIX "widgets",
++	ret = axg_card_parse_of_optional(&priv->card, "audio-widgets",
+ 					 snd_soc_of_parse_audio_simple_widgets);
+ 	if (ret) {
+ 		dev_err(dev, "error while parsing widgets\n");
 -- 
 2.18.0
