@@ -1,78 +1,29 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 13/15] ARM: tegra: apalis-tk1: fix pcie switch vendor
- compatible
-Date: Thu, 26 Jul 2018 09:34:49 +0200
-Message-ID: <53e689eca0fe603305642abb559349db@agner.ch>
-References: <20180724104309.21741-1-marcel@ziswiler.com>
- <20180724104309.21741-14-marcel@ziswiler.com>
+From: jbrunet@baylibre.com
+Subject: Re: [PATCH 14/15] ASoC: meson: add axg sound card DT binding
+ documentation
+Date: Thu, 26 Jul 2018 09:40:02 +0200
+Message-ID: <9a71a5644b5257d48436a4d28972d4142a96b0eb.camel@baylibre.com>
+References: <20180717153643.8806-1-jbrunet@baylibre.com>
+         <20180717153643.8806-18-jbrunet@baylibre.com>
+         <20180725190619.GA20234@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724104309.21741-14-marcel@ziswiler.com>
+In-Reply-To: <20180725190619.GA20234@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, linux-tegra-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 24.07.2018 12:43, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Wed, 2018-07-25 at 13:06 -0600, Rob Herring wrote:
+> > +- amlogic,aux-devs : List of phandles pointing to auxiliary devices
+> > +- amlogic,widgets : Please refer to widgets.txt.
+> > +- amlogic,routing : A list of the connections between audio components.
 > 
-> PLX got bought by Broadcom therefore fix device tree compatible string
-> vendor which silences the following checkpatch.pl warning:
-> 
-> WARNING: DT compatible string vendor "plx" appears un-documented
->  -- check ./Documentation/devicetree/bindings/vendor-prefixes.txt
+> audio-routing IIRC
 
-This seems to be not the only instance, there are other places where plx
-prefix is used. There are 8 instances in total, 4 ARM (in fact all
-Toradex device trees) and 4 PowerPC.
+Wouldn't it make sense to do the same for widgets and aux-devs then ?
 
-One device is already documented in
-Documentation/devicetree/bindings/trivial-devices.txt:
-plx,pex8648               48-Lane, 12-Port PCI Express Gen 2 (5.0 GT/s)
-Switch
-
-I suggest to just add plx as a valid vendor prefix by adding plx to
-Documentation/devicetree/bindings/vendor-prefixes.txt:
-plx	Broadcom Corporation (formerly PLX Technology)
-
---
-Stefan
-
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
->  arch/arm/boot/dts/tegra124-apalis-eval.dts      | 2 +-
->  arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts
-> b/arch/arm/boot/dts/tegra124-apalis-eval.dts
-> index d9805fc97f5e..84ab7dc9febb 100644
-> --- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
-> +++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
-> @@ -109,7 +109,7 @@
->  		clock-frequency = <400000>;
->  
->  		pcie-switch@58 {
-> -			compatible = "plx,pex8605";
-> +			compatible = "brcm,pex8605";
->  			reg = <0x58>;
->  		};
->  
-> diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
-> b/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
-> index 89783fe76f65..5319f88d3cab 100644
-> --- a/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
-> +++ b/arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts
-> @@ -74,7 +74,7 @@
->  		clock-frequency = <400000>;
->  
->  		pcie-switch@58 {
-> -			compatible = "plx,pex8605";
-> +			compatible = "brcm,pex8605";
->  			reg = <0x58>;
->  		};
+audio-widgets ?
+audio-aux-devs ?
