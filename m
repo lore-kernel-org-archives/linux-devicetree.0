@@ -1,31 +1,71 @@
-From: Trent Piepho <tpiepho@impinj.com>
-Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
-Date: Thu, 26 Jul 2018 17:01:36 +0000
-Message-ID: <1532624495.2283.197.camel@impinj.com>
-References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com>
-         <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com>
-         <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v3.1 00/10] arm64: allwinner: Add A64 DE2 HDMI support
+Date: Fri, 27 Jul 2018 01:12:47 +0800
+Message-ID: <20180726171257.6688-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <C43B4CBB91F26E4188170557B0AB47F8@namprd06.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "hayashibara.keiji@socionext.com" <hayashibara.keiji@socionext.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "masami.hiramatsu@linaro.org" <masami.hiramatsu@linaro.org>, "hayashi.kunihiko@socionext.com" <hayashi.kunihiko@socionext.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBRUC5DNAKGQEHV4QE2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE4LTA3LTI2IGF0IDExOjQ2ICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+ID4gKw0KPiA+ICsgICAgICAgLyoNCj4gPiArICAgICAgICAqIHRoZSBzdXBwb3J0ZWQgcmF0
-ZXMgYXJlIGV2ZW4gbnVtYmVycyBmcm9tIDQgdG8gMjU0LiAoNCw2LDguLi4yNTQpDQo+ID4gKyAg
-ICAgICAgKiByb3VuZCB1cCBhcyB3ZSBsb29rIGZvciBlcXVhbCBvciBsZXNzIHNwZWVkDQo+ID4g
-KyAgICAgICAgKi8NCj4gPiArICAgICAgIGNrcmF0ID0gRElWX1JPVU5EX1VQKGNsa19nZXRfcmF0
-ZShwcml2LT5jbGspLCBzcGVlZCk7DQo+ID4gKyAgICAgICBja3JhdCA9IHJvdW5kdXAoY2tyYXQs
-IDIpOw0KPiANCj4gY2tyYXQgKz0gY2tyYXQgJiAxOw0KDQpFaXRoZXIgd2F5LCB0aGUgY29tcGls
-ZXIgcHJvZHVjZXMgdGhlIHNhbWUgY29kZToNCg0KIGFkZCByMCwgcjAsICMxDQogYmljIHIwLCBy
-MCwgIzENCg0KSS5lLiwgY2tyYXQgPSAoY2tyYXQgKyAxKSAmIH4xLCBvbmUgImFkZCIgYW5kIG9u
-ZSAiYW5kIi4NCg0KTWlnaHQgYXMgd2VsbCB1c2UgdGhlIG1hY3JvIHNvIGl0J3MgY2xlYXIuIFRo
-ZXJlIGlzIGFsc28gcm91bmRfdXAoeCx5KSwNCndoaWNoIEkgYmVsaWV2ZSBpcyBpbnRlbmRlZCB0
-byBiZSB1c2VkIG9ubHkgd2l0aCBwb3dlciBvZiAyIHZhbHVlcyBvZg0KeS4NCg==
+Allwinner A64 has display engine pipeline like other Allwinner SOC's A83T/H3/H5.
+
+A64 behaviour similar to Allwinner A83T where
+Mixer0 => TCON0 => LVDS/RGB/MIPI-DSI
+Mixer1 => TCON1 => HDMI
+as per Display System Block Diagram from the A64 user manual.
+
+This is third patch-set followed with previous RFC[1], first and second
+series[2][3] and merely concentrated on HDMI pipeline through TCON1 and
+rest will add eventually.
+
+I just rebased and slightly re-integrated the patchset according to the
+requirments of the maintainer, and added the mixer0->tcon0 pipeline.
+The further maintainship of the patchset still needs to be discussed
+between I and Jagan.
+
+--Icenowy
+
+Icenowy Zheng (1):
+  dt-bindings: sun4i-drm: add HDMI VCC supply property for sun8i-dw-hdmi
+
+Jagan Teki (8):
+  clk: sunxi-ng: a64: Add minimal rate for video PLLs
+  dt-bindings: display: Add compatible for A64 DE2 display pipeline
+  drm/sun4i: Add support for A64 mixers
+  drm/sun4i: Add support for A64 display engine
+  dt-bindings: display: Add compatible for A64 HDMI
+  dt-bindings: clock: sun50i-a64-ccu: Add PLL_VIDEO[0-1] macros
+  arm64: dts: allwinner: a64: Add display pipeline
+  arm64: dts: allwinner: a64: Enable HDMI output on A64 boards w/ HDMI
+
+Jernej Skrabec (1):
+  drm/sun4i: Add support for HDMI voltage regulator
+
+ .../bindings/display/sunxi/sun4i-drm.txt      |   9 +
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts |  34 ++++
+ .../dts/allwinner/sun50i-a64-nanopi-a64.dts   |  34 ++++
+ .../dts/allwinner/sun50i-a64-olinuxino.dts    |  34 ++++
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts |  34 ++++
+ .../boot/dts/allwinner/sun50i-a64-pine64.dts  |  34 ++++
+ .../allwinner/sun50i-a64-sopine-baseboard.dts |  34 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 169 ++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun50i-a64.c         |  46 ++---
+ drivers/gpu/drm/sun4i/sun4i_drv.c             |   1 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  17 +-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |   2 +
+ drivers/gpu/drm/sun4i/sun8i_mixer.c           |  24 +++
+ include/dt-bindings/clock/sun50i-a64-ccu.h    |   2 +
+ 14 files changed, 451 insertions(+), 23 deletions(-)
+
+-- 
+2.18.0
