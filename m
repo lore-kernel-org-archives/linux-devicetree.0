@@ -1,44 +1,351 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v3.1 01/10] clk: sunxi-ng: a64: Add minimal
- rate for video PLLs
-Date: Thu, 26 Jul 2018 19:53:08 +0200
-Message-ID: <3702695.8LDZkQ7hxA@jernej-laptop>
-References: <20180726171257.6688-1-icenowy@aosc.io> <20180726171257.6688-2-icenowy@aosc.io>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/5] pinctrl: actions: define constructor generic to
+ Actions Semi SoC's
+Date: Thu, 26 Jul 2018 23:24:05 +0530
+Message-ID: <20180726175405.GD5220@Mani-XPS-13-9360>
+References: <20180722163601.28346-1-sravanhome@gmail.com>
+ <20180722163601.28346-2-sravanhome@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBCUV5DNAKGQELCNUJYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180726171257.6688-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180722163601.28346-2-sravanhome@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravanan Sekar <sravanhome@gmail.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com
 List-Id: devicetree@vger.kernel.org
 
-Dne =C4=8Detrtek, 26. julij 2018 ob 19:12:48 CEST je Icenowy Zheng napisal(=
-a):
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->=20
-> According to documentation and experience with other similar SoCs, video
-> PLLs don't work stable if their output frequency is set below 192 MHz.
->=20
-> Because of that, set minimal rate to both A64 video PLLs to 192 MHz.
->=20
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Hi Saravanan,
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+On Sun, Jul 22, 2018 at 06:35:57PM +0200, Saravanan Sekar wrote:
+> Existing constructor defined in S900 is reused generic
+> for all Actions Semi SoC's.
+> 
 
+Perhaps this could be,
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Move generic defines common to the Owl family out of S900 driver.
+
+Thanks,
+Mani
+
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  drivers/pinctrl/actions/pinctrl-owl.h  | 124 +++++++++++++++++++++++++
+>  drivers/pinctrl/actions/pinctrl-s900.c | 122 ------------------------
+>  2 files changed, 124 insertions(+), 122 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
+> index 74342378937c..42635366e68f 100644
+> --- a/drivers/pinctrl/actions/pinctrl-owl.h
+> +++ b/drivers/pinctrl/actions/pinctrl-owl.h
+> @@ -15,6 +15,130 @@
+>  #define OWL_PINCONF_SLEW_SLOW 0
+>  #define OWL_PINCONF_SLEW_FAST 1
+>  
+> +#define OWL_GPIO_PORT_A		0
+> +#define OWL_GPIO_PORT_B		1
+> +#define OWL_GPIO_PORT_C		2
+> +#define OWL_GPIO_PORT_D		3
+> +#define OWL_GPIO_PORT_E		4
+> +#define OWL_GPIO_PORT_F		5
+> +
+
+Please order the defines as pinctrl first and GPIO second. It does look
+a lot better.
+
+Thanks,
+Mani
+
+> +#define MUX_PG(group_name, reg, shift, width)				\
+> +	{								\
+> +		.name = #group_name,					\
+> +		.pads = group_name##_pads,				\
+> +		.npads = ARRAY_SIZE(group_name##_pads),			\
+> +		.funcs = group_name##_funcs,				\
+> +		.nfuncs = ARRAY_SIZE(group_name##_funcs),		\
+> +		.mfpctl_reg  = MFCTL##reg,				\
+> +		.mfpctl_shift = shift,					\
+> +		.mfpctl_width = width,					\
+> +		.drv_reg = -1,						\
+> +		.drv_shift = -1,					\
+> +		.drv_width = -1,					\
+> +		.sr_reg = -1,						\
+> +		.sr_shift = -1,						\
+> +		.sr_width = -1,						\
+> +	}
+> +
+> +#define DRV_PG(group_name, reg, shift, width)				\
+> +	{								\
+> +		.name = #group_name,					\
+> +		.pads = group_name##_pads,				\
+> +		.npads = ARRAY_SIZE(group_name##_pads),			\
+> +		.mfpctl_reg  = -1,					\
+> +		.mfpctl_shift = -1,					\
+> +		.mfpctl_width = -1,					\
+> +		.drv_reg = PAD_DRV##reg,				\
+> +		.drv_shift = shift,					\
+> +		.drv_width = width,					\
+> +		.sr_reg = -1,						\
+> +		.sr_shift = -1,						\
+> +		.sr_width = -1,						\
+> +	}
+> +
+> +#define SR_PG(group_name, reg, shift, width)				\
+> +	{								\
+> +		.name = #group_name,					\
+> +		.pads = group_name##_pads,				\
+> +		.npads = ARRAY_SIZE(group_name##_pads),			\
+> +		.mfpctl_reg  = -1,					\
+> +		.mfpctl_shift = -1,					\
+> +		.mfpctl_width = -1,					\
+> +		.drv_reg = -1,						\
+> +		.drv_shift = -1,					\
+> +		.drv_width = -1,					\
+> +		.sr_reg = PAD_SR##reg,					\
+> +		.sr_shift = shift,					\
+> +		.sr_width = width,					\
+> +	}
+> +
+> +#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat)	\
+> +	[OWL_GPIO_PORT_##port] = {				\
+> +		.offset = base,					\
+> +		.pins = count,					\
+> +		.outen = _outen,				\
+> +		.inen = _inen,					\
+> +		.dat = _dat,					\
+> +	}
+> +
+> +#define FUNCTION(fname)					\
+> +	{						\
+> +		.name = #fname,				\
+> +		.groups = fname##_groups,		\
+> +		.ngroups = ARRAY_SIZE(fname##_groups),	\
+> +	}
+> +
+> +/* PAD PULL UP/DOWN CONFIGURES */
+> +#define PULLCTL_CONF(pull_reg, pull_sft, pull_wdt)	\
+> +	{						\
+> +		.reg = PAD_PULLCTL##pull_reg,		\
+> +		.shift = pull_sft,			\
+> +		.width = pull_wdt,			\
+> +	}
+> +
+> +#define PAD_PULLCTL_CONF(pad_name, pull_reg, pull_sft, pull_wdt)	\
+> +	struct owl_pullctl pad_name##_pullctl_conf			\
+> +		= PULLCTL_CONF(pull_reg, pull_sft, pull_wdt)
+> +
+> +#define ST_CONF(st_reg, st_sft, st_wdt)			\
+> +	{						\
+> +		.reg = PAD_ST##st_reg,			\
+> +		.shift = st_sft,			\
+> +		.width = st_wdt,			\
+> +	}
+> +
+> +#define PAD_ST_CONF(pad_name, st_reg, st_sft, st_wdt)	\
+> +	struct owl_st pad_name##_st_conf		\
+> +		= ST_CONF(st_reg, st_sft, st_wdt)
+> +
+> +#define PAD_INFO(name)					\
+> +	{						\
+> +		.pad = name,				\
+> +		.pullctl = NULL,			\
+> +		.st = NULL,				\
+> +	}
+> +
+> +#define PAD_INFO_ST(name)				\
+> +	{						\
+> +		.pad = name,				\
+> +		.pullctl = NULL,			\
+> +		.st = &name##_st_conf,			\
+> +	}
+> +
+> +#define PAD_INFO_PULLCTL(name)				\
+> +	{						\
+> +		.pad = name,				\
+> +		.pullctl = &name##_pullctl_conf,	\
+> +		.st = NULL,				\
+> +	}
+> +
+> +#define PAD_INFO_PULLCTL_ST(name)			\
+> +	{						\
+> +		.pad = name,				\
+> +		.pullctl = &name##_pullctl_conf,	\
+> +		.st = &name##_st_conf,			\
+> +	}
+> +
+>  enum owl_pinconf_pull {
+>  	OWL_PINCONF_PULL_HIZ,
+>  	OWL_PINCONF_PULL_DOWN,
+> diff --git a/drivers/pinctrl/actions/pinctrl-s900.c b/drivers/pinctrl/actions/pinctrl-s900.c
+> index 5503c7945764..baa2f4847418 100644
+> --- a/drivers/pinctrl/actions/pinctrl-s900.c
+> +++ b/drivers/pinctrl/actions/pinctrl-s900.c
+> @@ -33,13 +33,6 @@
+>  #define PAD_SR1			(0x0274)
+>  #define PAD_SR2			(0x0278)
+>  
+> -#define OWL_GPIO_PORT_A		0
+> -#define OWL_GPIO_PORT_B		1
+> -#define OWL_GPIO_PORT_C		2
+> -#define OWL_GPIO_PORT_D		3
+> -#define OWL_GPIO_PORT_E		4
+> -#define OWL_GPIO_PORT_F		5
+> -
+>  #define _GPIOA(offset)		(offset)
+>  #define _GPIOB(offset)		(32 + (offset))
+>  #define _GPIOC(offset)		(64 + (offset))
+> @@ -892,55 +885,6 @@ static unsigned int i2c2_sr_pads[]		= { I2C2_SCLK, I2C2_SDATA };
+>  static unsigned int sensor0_sr_pads[]		= { SENSOR0_PCLK,
+>  						    SENSOR0_CKOUT };
+>  
+> -#define MUX_PG(group_name, reg, shift, width)				\
+> -	{								\
+> -		.name = #group_name,					\
+> -		.pads = group_name##_pads,				\
+> -		.npads = ARRAY_SIZE(group_name##_pads),			\
+> -		.funcs = group_name##_funcs,				\
+> -		.nfuncs = ARRAY_SIZE(group_name##_funcs),		\
+> -		.mfpctl_reg  = MFCTL##reg,				\
+> -		.mfpctl_shift = shift,					\
+> -		.mfpctl_width = width,					\
+> -		.drv_reg = -1,						\
+> -		.drv_shift = -1,					\
+> -		.drv_width = -1,					\
+> -		.sr_reg = -1,						\
+> -		.sr_shift = -1,						\
+> -		.sr_width = -1,						\
+> -	}
+> -
+> -#define DRV_PG(group_name, reg, shift, width)				\
+> -	{								\
+> -		.name = #group_name,					\
+> -		.pads = group_name##_pads,				\
+> -		.npads = ARRAY_SIZE(group_name##_pads),			\
+> -		.mfpctl_reg  = -1,					\
+> -		.mfpctl_shift = -1,					\
+> -		.mfpctl_width = -1,					\
+> -		.drv_reg = PAD_DRV##reg,				\
+> -		.drv_shift = shift,					\
+> -		.drv_width = width,					\
+> -		.sr_reg = -1,						\
+> -		.sr_shift = -1,						\
+> -		.sr_width = -1,						\
+> -	}
+> -
+> -#define SR_PG(group_name, reg, shift, width)				\
+> -	{								\
+> -		.name = #group_name,					\
+> -		.pads = group_name##_pads,				\
+> -		.npads = ARRAY_SIZE(group_name##_pads),			\
+> -		.mfpctl_reg  = -1,					\
+> -		.mfpctl_shift = -1,					\
+> -		.mfpctl_width = -1,					\
+> -		.drv_reg = -1,						\
+> -		.drv_shift = -1,					\
+> -		.drv_width = -1,					\
+> -		.sr_reg = PAD_SR##reg,					\
+> -		.sr_shift = shift,					\
+> -		.sr_width = width,					\
+> -	}
+>  
+>  /* Pinctrl groups */
+>  static const struct owl_pingroup s900_groups[] = {
+> @@ -1442,13 +1386,6 @@ static const char * const sirq2_groups[] = {
+>  	"sirq2_dummy",
+>  };
+>  
+> -#define FUNCTION(fname)					\
+> -	{						\
+> -		.name = #fname,				\
+> -		.groups = fname##_groups,		\
+> -		.ngroups = ARRAY_SIZE(fname##_groups),	\
+> -	}
+> -
+>  static const struct owl_pinmux_func s900_functions[] = {
+>  	[S900_MUX_ERAM] = FUNCTION(eram),
+>  	[S900_MUX_ETH_RMII] = FUNCTION(eth_rmii),
+> @@ -1500,28 +1437,6 @@ static const struct owl_pinmux_func s900_functions[] = {
+>  	[S900_MUX_SIRQ1] = FUNCTION(sirq1),
+>  	[S900_MUX_SIRQ2] = FUNCTION(sirq2)
+>  };
+> -/* PAD PULL UP/DOWN CONFIGURES */
+> -#define PULLCTL_CONF(pull_reg, pull_sft, pull_wdt)			\
+> -	{								\
+> -		.reg = PAD_PULLCTL##pull_reg,				\
+> -		.shift = pull_sft,					\
+> -		.width = pull_wdt,					\
+> -	}
+> -
+> -#define PAD_PULLCTL_CONF(pad_name, pull_reg, pull_sft, pull_wdt)	\
+> -	struct owl_pullctl pad_name##_pullctl_conf			\
+> -		= PULLCTL_CONF(pull_reg, pull_sft, pull_wdt)
+> -
+> -#define ST_CONF(st_reg, st_sft, st_wdt)					\
+> -	{								\
+> -		.reg = PAD_ST##st_reg,					\
+> -		.shift = st_sft,					\
+> -		.width = st_wdt,					\
+> -	}
+> -
+> -#define PAD_ST_CONF(pad_name, st_reg, st_sft, st_wdt)			\
+> -	struct owl_st pad_name##_st_conf				\
+> -		= ST_CONF(st_reg, st_sft, st_wdt)
+>  
+>  /* PAD_PULLCTL0 */
+>  static PAD_PULLCTL_CONF(ETH_RXER, 0, 18, 2);
+> @@ -1639,34 +1554,6 @@ static PAD_ST_CONF(SPI0_SS, 1, 2, 1);
+>  static PAD_ST_CONF(I2S_BCLK0, 1, 1, 1);
+>  static PAD_ST_CONF(I2S_MCLK0, 1, 0, 1);
+>  
+> -#define PAD_INFO(name)							\
+> -	{								\
+> -		.pad = name,						\
+> -		.pullctl = NULL,					\
+> -		.st = NULL,						\
+> -	}
+> -
+> -#define PAD_INFO_ST(name)						\
+> -	{								\
+> -		.pad = name,						\
+> -		.pullctl = NULL,					\
+> -		.st = &name##_st_conf,					\
+> -	}
+> -
+> -#define PAD_INFO_PULLCTL(name)						\
+> -	{								\
+> -		.pad = name,						\
+> -		.pullctl = &name##_pullctl_conf,			\
+> -		.st = NULL,						\
+> -	}
+> -
+> -#define PAD_INFO_PULLCTL_ST(name)					\
+> -	{								\
+> -		.pad = name,						\
+> -		.pullctl = &name##_pullctl_conf,			\
+> -		.st = &name##_st_conf,					\
+> -	}
+> -
+>  /* Pad info table */
+>  static struct owl_padinfo s900_padinfo[NUM_PADS] = {
+>  	[ETH_TXD0] = PAD_INFO_ST(ETH_TXD0),
+> @@ -1821,15 +1708,6 @@ static struct owl_padinfo s900_padinfo[NUM_PADS] = {
+>  	[SGPIO3] = PAD_INFO_PULLCTL_ST(SGPIO3)
+>  };
+>  
+> -#define OWL_GPIO_PORT(port, base, count, _outen, _inen, _dat)	\
+> -	[OWL_GPIO_PORT_##port] = {				\
+> -		.offset = base,					\
+> -		.pins = count,					\
+> -		.outen = _outen,				\
+> -		.inen = _inen,					\
+> -		.dat = _dat,					\
+> -	}
+> -
+>  static const struct owl_gpio_port s900_gpio_ports[] = {
+>  	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8),
+>  	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8),
+> -- 
+> 2.18.0
+> 
