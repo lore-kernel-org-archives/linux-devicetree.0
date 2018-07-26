@@ -1,53 +1,34 @@
 From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Subject: [PATCH v2 1/2] dt-bindings: spi: add DT bindings for UniPhier SPI controller
-Date: Thu, 26 Jul 2018 16:09:02 +0900
-Message-ID: <1532588943-19481-2-git-send-email-hayashibara.keiji@socionext.com>
-References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com>
+Subject: [PATCH v2 0/3] Add SPI dts node for UniPhier SoCs
+Date: Thu, 26 Jul 2018 16:09:57 +0900
+Message-ID: <1532589000-19602-1-git-send-email-hayashibara.keiji@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.com, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+This series adds SPI pin-mux node and SPI node for UniPhier SoCs.
 
-Add DT bindings for SPI controller implemented in UniPhier SoCs.
+Changes since v1:
+- remove the node for MCSSI which support multiple channels.
+  Since the current driver doesn't support MCSSI, it deletes this node.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
----
- .../devicetree/bindings/spi/spi-uniphier.txt       | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-uniphier.txt
+Kunihiko Hayashi (3):
+  ARM: dts: uniphier: add SPI pin-mux node
+  ARM: dts: uniphier: add SPI node for UniPhier 32bit SoCs
+  arm64: dts: uniphier: add SPI node for LD20, LD11 and PXs3
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-uniphier.txt b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-new file mode 100644
-index 0000000..504a4ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-uniphier.txt
-@@ -0,0 +1,22 @@
-+Socionext UniPhier SPI controller driver
-+
-+UniPhier SoCs have SCSSI which supports SPI single channel.
-+
-+Required properties:
-+ - compatible: should be "socionext,uniphier-scssi"
-+ - reg: address and length of the spi master registers
-+ - #address-cells: must be <1>, see spi-bus.txt
-+ - #size-cells: must be <0>, see spi-bus.txt
-+ - clocks: A phandle to the clock for the device.
-+ - resets: A phandle to the reset control for the device.
-+
-+Example:
-+
-+spi0: spi@54006000 {
-+	compatible = "socionext,uniphier-scssi";
-+	reg = <0x54006000 0x100>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	clocks = <&peri_clk 11>;
-+	resets = <&peri_rst 11>;
-+};
+ arch/arm/boot/dts/uniphier-ld4.dtsi              | 11 ++++++
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi          | 20 +++++++++++
+ arch/arm/boot/dts/uniphier-pro4.dtsi             | 11 ++++++
+ arch/arm/boot/dts/uniphier-pro5.dtsi             | 22 ++++++++++++
+ arch/arm/boot/dts/uniphier-pxs2.dtsi             | 22 ++++++++++++
+ arch/arm/boot/dts/uniphier-sld8.dtsi             | 11 ++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 22 ++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 44 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 22 ++++++++++++
+ 9 files changed, 185 insertions(+)
+
 -- 
 2.7.4
