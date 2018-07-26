@@ -1,62 +1,203 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: RE: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
- fsl,pmic-stby-poweroff property
-Date: Thu, 26 Jul 2018 09:51:13 +0000
-Message-ID: <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
-References: <20180726092220.17250-1-o.rempel@pengutronix.de>
- <20180726092220.17250-2-o.rempel@pengutronix.de>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH v1] arm64: dts: rockchip: add support for ROC-RK3399-PC
+ board
+Date: Thu, 26 Jul 2018 11:51:28 +0200
+Message-ID: <d84ef7a6-8db0-ff71-8e11-a5f56c70d60d@collabora.com>
+References: <1532589205-10153-1-git-send-email-djw@t-chip.com.cn>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180726092220.17250-2-o.rempel@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <1532589205-10153-1-git-send-email-djw@t-chip.com.cn>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
+To: djw@t-chip.com.cn, linux-rockchip@lists.infradead.org
+Cc: Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Pierre-Hugues Husson <phh@phh.me>, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>, Ezequiel Garcia <ezequiel@collabora.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogT2xla3NpaiBSZW1wZWwg
-W21haWx0bzpvLnJlbXBlbEBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogMjAxOMTqN9TCMjbI1SAx
-NzoyMg0KPiBUbzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgTWFyayBCcm93biA8
-YnJvb25pZUBrZXJuZWwub3JnPjsNCj4gUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbC5qLnd5c29j
-a2lAaW50ZWwuY29tPg0KPiBDYzogT2xla3NpaiBSZW1wZWwgPG8ucmVtcGVsQHBlbmd1dHJvbml4
-LmRlPjsga2VybmVsQHBlbmd1dHJvbml4LmRlOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1jbGtAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBBbmRyZXcgTW9ydG9u
-DQo+IDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPjsgTGlhbSBHaXJkd29vZCA8bGdpcmR3b29k
-QGdtYWlsLmNvbT47DQo+IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+
-OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJr
-LnJ1dGxhbmRAYXJtLmNvbT47IE1pY2hhZWwNCj4gVHVycXVldHRlIDxtdHVycXVldHRlQGJheWxp
-YnJlLmNvbT47IFN0ZXBoZW4gQm95ZA0KPiA8c2JveWRAY29kZWF1cm9yYS5vcmc+OyBGYWJpbyBF
-c3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSdXNzZWxsDQo+IEtpbmcgPGxpbnV4QGFy
-bWxpbnV4Lm9yZy51az47IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBSb2JpbiBH
-b25nDQo+IDx5aWJpbi5nb25nQG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAu
-Y29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjggMS82XSBBUk06IGlteDZxOiBwcm92aWRlIGRvY3Vt
-ZW50YXRpb24gZm9yIG5ldw0KPiBmc2wscG1pYy1zdGJ5LXBvd2Vyb2ZmIHByb3BlcnR5DQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBPbGVrc2lqIFJlbXBlbCA8by5yZW1wZWxAcGVuZ3V0cm9uaXguZGU+
-DQo+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiAtLS0NCj4gIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9jay50eHQgfCA4
-ICsrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDZxLWNs
-b2NrLnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2
-cS1jbG9jay50eHQNCj4gaW5kZXggYTQ1Y2E2N2E5ZDVmLi5lMTMwODM0NmUwMGQgMTAwNjQ0DQo+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9j
-ay50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lt
-eDZxLWNsb2NrLnR4dA0KPiBAQCAtNiw2ICs2LDE0IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+
-ICAtIGludGVycnVwdHM6IFNob3VsZCBjb250YWluIENDTSBpbnRlcnJ1cHQNCj4gIC0gI2Nsb2Nr
-LWNlbGxzOiBTaG91bGQgYmUgPDE+DQo+IA0KPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gKy0g
-ZnNsLHBtaWMtc3RieS1wb3dlcm9mZjogQ29uZmlndXJlIENDTSB0byBhc3NlcnQgUE1JQ19TVEJZ
-X1JFUSBzaWduYWwNCj4gKyAgb24gcG93ZXIgb2ZmLg0KPiArICBVc2UgdGhpcyBwcm9wZXJ0eSBp
-ZiB0aGUgU29DIHNob3VsZCBiZSBwb3dlcmVkIG9mZiBieSBleHRlcm5hbCBwb3dlcg0KPiArICBt
-YW5hZ2VtZW50IElDIChQTUlDKSB0cmlnZ2VyZWQgdmlhIFBNSUNfU1RCWV9SRVEgc2lnbmFsLg0K
-UE1JQ19PTl9SRVEgZGlkbid0IGNvbm5lY3QgdG8gYW55IHBpbiBvZiBQTUlDIGluIHlvdXIgY2Fz
-ZT8gRG9uJ3QgdW5kZXJzdGFuZA0Kd2h5IG5vdCBmb2xsb3cgbm9ybWFsIGJvYXJkIGRlc2lnbiBn
-dWlkZSB0byBwb3dlciBvZmYgcG1pYyBieSBQTUlDX09OX1JFUS4NCkhvdyB0byBwb3dlciBvbiBi
-b2FyZCBhZ2FpbiB0aGVuPw0KPiArICBCb2FyZHMgdGhhdCBhcmUgZGVzaWduZWQgdG8gaW5pdGlh
-dGUgcG93ZXJvZmYgb24gUE1JQ19PTl9SRVEgc2lnbmFsDQo+ICtzaG91bGQNCj4gKyAgYmUgdXNp
-bmcgInN5c2Nvbi1wb3dlcm9mZiIgZHJpdmVyIGluc3RlYWQuDQo+ICsNCj4gIFRoZSBjbG9jayBj
-b25zdW1lciBzaG91bGQgc3BlY2lmeSB0aGUgZGVzaXJlZCBjbG9jayBieSBoYXZpbmcgdGhlIGNs
-b2NrICBJRCBpbg0KPiBpdHMgImNsb2NrcyIgcGhhbmRsZSBjZWxsLiAgU2VlIGluY2x1ZGUvZHQt
-YmluZGluZ3MvY2xvY2svaW14NnFkbC1jbG9jay5oDQo+ICBmb3IgdGhlIGZ1bGwgbGlzdCBvZiBp
-Lk1YNiBRdWFkIGFuZCBEdWFsTGl0ZSBjbG9jayBJRHMuDQo+IC0tDQo+IDIuMTguMA0KDQo=
+Hi Levin,
+
+Some few comments.
+
+On 26/07/18 09:13, djw@t-chip.com.cn wrote:
+> From: Levin Du <djw@t-chip.com.cn>
+> 
+> ROC-RK3399-PC is a power efficient 4GB LPDDR4 single board
+> computer with USB 3.0 and Gigabit Ethernet in a form factor
+> compatible with the Raspberry Pi. It is based on the Rockchip
+> RK3399 SoC, powered by the Type-C port.
+> 
+> The devicetree currently supports peripherals of:
+> 
+> - Ethernet
+> - HDMI
+> - SD Card
+> - UART2 debug
+> - TYPE-C
+> - eMMC
+> 
+> USB3 in type-c port currently only works with normal orientation,
+> not flip one.
+> 
+> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+> 
+> ---
+> 
+> Changes in v1:
+> - remove bootargs
+> - use interpolation for brightness level
+> - add vcc_vbus_typec1 regulator
+> - fix phy-supply of u2phy0_otg and u2phy1_otg
+> - remove vcc_hub_en dummy regualtor
+> - add hub_rst (changed to output high) to pinctrl status of vcc5v0_host
+> - remove vsel-gpios props in fan53xx
+> - remove mp8859 in i2c
+> - fusb302: fix interrupt setting
+> - fusb302: add vbus-supply
+> - remove extcon in tcphy0 and tcphy1
+> - remove #sound-dai-cells in i2s*
+> - use RK_PXX style bit number for cd-gpios in SDMMC
+> - clean commented status lines
+> 
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts     | 687 +++++++++++++++++++++
+>  3 files changed, 692 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index acfd3c7..ab5fde8 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -59,6 +59,10 @@ Rockchip platforms device tree bindings
+>      Required root node properties:
+>        - compatible = "firefly,roc-rk3328-cc", "rockchip,rk3328";
+>  
+> +- Firefly ROC-RK3399-PC board:
+> +    Required root node properties:
+> +      - compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
+> +
+>  - ChipSPARK PopMetal-RK3288 board:
+>      Required root node properties:
+>        - compatible = "chipspark,popmetal-rk3288", "rockchip,rk3288";
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index b0092d9..06028db 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -14,5 +14,6 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-bob.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> new file mode 100644
+> index 0000000..7d41a91
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> @@ -0,0 +1,687 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include "rk3399.dtsi"
+> +#include "rk3399-opp.dtsi"
+> +
+> +/ {
+> +	model = "Firefly ROC-RK3399-PC Board";
+> +	compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
+> +
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+> +	};
+> +
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm0 0 25000 0>;
+> +
+> +		brightness-levels = <0 255>;
+> +		default-brightness-level = <200>;
+> +		num-interpolated-steps = <1>;
+
+Unless you want a custom brightness-levels for some reason and because of
+default brightness table does not work for you I'd remove all these three
+properties and just use the default table.
+
+After commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
+linearly to human eye") the pwm_bl driver is able to calculate a default
+brightness table. The calculated table for this PWM will have more
+granularity and will be adjusted to change the brightness linearly to
+the human eye. So I think you can use that table instead of have a DT-defined
+table with less granularity.
+
+> +	};
+> +
+> +	clkin_gmac: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "clkin_gmac";
+> +		#clock-cells = <0>;
+> +	};
+
+<snip>
+
+> +&usb_host0_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd3_0 {
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd_dwc3_0 {
+> +	status = "okay";
+> +	dr_mode = "otg";
+
+dr_mode is already set in rk3399.dtsi so you can remove that from here.
+
+> +};
+> +
+> +&usbdrd3_1 {
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd_dwc3_1 {
+> +	status = "okay";
+> +	dr_mode = "host";
+> +};
+> +
+> +&vopb {
+> +	status = "okay";
+> +};
+> +
+> +&vopb_mmu {
+> +	status = "okay";
+> +};
+> +
+> +&vopl {
+> +	status = "okay";
+> +};
+> +
+> +&vopl_mmu {
+> +	status = "okay";
+> +};
+> 
+
+Best regards,
+ Enric
