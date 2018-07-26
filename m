@@ -1,52 +1,55 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH 2/2] ARM: dts: exynos: arndale: fix HDMI-HPD line handling
-Date: Thu, 26 Jul 2018 12:12:28 +0200
-Message-ID: <20180726101228.14956-2-a.hajda@samsung.com>
-References: <20180726101228.14956-1-a.hajda@samsung.com>
- <CGME20180726101248eucas1p14ede2f90176b93f0bfde1808b494abbd@eucas1p1.samsung.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
+Date: Thu, 26 Jul 2018 15:45:59 +0530
+Message-ID: <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-7-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20180726101228.14956-1-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, dri-devel@lists.freedesktop.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180726065331.6186-7-o.rempel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SERNSS1IUEQgd2FzIHNldCBhY3RpdmUgbG93LCBtb3Jlb3ZlciBieSBkZWZhdWx0IHBpbmNvbnRy
-b2wKY2hpcCBzZXRzIHB1bGwtZG93biBvbiB0aGUgcGluLiBBcyBhIHJlc3VsdCBIRE1JIGRyaXZl
-cgphc3N1bWVzIFRWIGlzIGFsd2F5cyBjb25uZWN0ZWQgcmVnYXJkbGVzcyBvZiBhY3R1YWwgc3Rh
-dGUuClRoZSBwYXRjaCBmaXhlcyBpdC4KClNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEu
-aGFqZGFAc2Ftc3VuZy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1hcm5k
-YWxlLmR0cyAgfCA0ICsrKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtcGluY3RybC5k
-dHNpIHwgNSArKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLWFybmRhbGUu
-ZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1hcm5kYWxlLmR0cwppbmRleCA1OTEw
-MjMzOTFmN2QuLjI2YmFlNTE1NzE3NyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5
-bm9zNTI1MC1hcm5kYWxlLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLWFy
-bmRhbGUuZHRzCkBAIC0yMTAsOSArMjEwLDExIEBACiB9OwogCiAmaGRtaSB7CisJcGluY3RybC1u
-YW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JmhkbWlfaHBkPjsKIAlzdGF0dXMgPSAi
-b2theSI7CiAJZGRjID0gPCZpMmNfZGRjPjsKLQlocGQtZ3Bpb3MgPSA8JmdweDMgNyBHUElPX0FD
-VElWRV9MT1c+OworCWhwZC1ncGlvcyA9IDwmZ3B4MyA3IEdQSU9fQUNUSVZFX0hJR0g+OwogCXZk
-ZF9vc2Mtc3VwcGx5ID0gPCZsZG8xMF9yZWc+OwogCXZkZF9wbGwtc3VwcGx5ID0gPCZsZG84X3Jl
-Zz47CiAJdmRkLXN1cHBseSA9IDwmbGRvOF9yZWc+OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1
-MjUwLXBpbmN0cmwuZHRzaQppbmRleCBiMjVkNTIwMzkzYjguLmQzMWE2ODY3MmJmYSAxMDA2NDQK
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kKKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kKQEAgLTU5OSw2ICs1OTksMTEg
-QEAKIAkJc2Ftc3VuZyxwaW4tcHVkID0gPEVYWU5PU19QSU5fUFVMTF9OT05FPjsKIAkJc2Ftc3Vu
-ZyxwaW4tZHJ2ID0gPEVYWU5PUzRfUElOX0RSVl9MVjE+OwogCX07CisKKwloZG1pX2hwZDogaGRt
-aS1ocGQgeworCQlzYW1zdW5nLHBpbnMgPSAiZ3B4My03IjsKKwkJc2Ftc3VuZyxwaW4tcHVkID0g
-PEVYWU5PU19QSU5fUFVMTF9OT05FPjsKKwl9OwogfTsKIAogJnBpbmN0cmxfMSB7Ci0tIAoyLjE4
-LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
+<o.rempel@pengutronix.de> wrote:
+
+.....
+
+> +
+> +/* Control Register */
+> +#define IMX_MU_xCR             0x24
+> +/* Transmit Interrupt Enable */
+> +#define IMX_MU_xCR_TIEn(x)     BIT(20 + (3 - (x)))
+> +/* Receive Interrupt Enable */
+> +#define IMX_MU_xCR_RIEn(x)     BIT(24 + (3 - (x)))
+> +
+> +#define IMX_MU_CHANS   4u
+> +
+The 'u' unnecessarily refreshes my knowledge of C  :)
+
+
+> +struct imx_mu_con_priv {
+> +       int                     irq;
+> +       unsigned int            idx;
+> +       char                    *irq_desc;
+>
+Having      char  irq_desc[16];    seems simpler than free/kfree upon
+each startup/shutdown. Simply use snprintf() in probe().
+
+The rest of the driver seems fine.
+
+Cheers!
