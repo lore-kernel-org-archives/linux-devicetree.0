@@ -1,88 +1,41 @@
-Return-Path: <SRS0=tHxF=J5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-co1nam03on0079.outbound.protection.outlook.com ([104.47.40.79]:29874
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727307AbeGMKtR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Jul 2018 06:49:17 -0400
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCHv2 4/5] tty: serial: uartlite: Add support for suspend and resume
-Date: Fri, 13 Jul 2018 16:00:09 +0530
-Message-ID: <1531477810-23346-4-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1531477810-23346-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Return-Path: <SRS0=Qj0e=KK=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+References: <20180725212220.44525-1-chris.brandt@renesas.com> <20180725212220.44525-4-chris.brandt@renesas.com>
+In-Reply-To: <20180725212220.44525-4-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 26 Jul 2018 09:25:18 +0200
+Message-ID: <CAMuHMdV5CW8MN6hfE4WUH+7b8yKBwChVc5rXGSAbAyf+KiQ+7g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: arm: Document RZ/A2 SoC DT bindings
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Hi Chris,
 
-Add suspend and resume handlers for uartlite
+On Wed, Jul 25, 2018 at 11:22 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add device tree bindings documentation for Renesas RZ/A2 (r7s9210) SoC.
+> Also document new option for "renesas,bsid"
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- drivers/tty/serial/uartlite.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Thanks for ypur patch!
 
-diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-index b3a12be..98d3ead 100644
---- a/drivers/tty/serial/uartlite.c
-+++ b/drivers/tty/serial/uartlite.c
-@@ -690,9 +690,44 @@ static int ulite_release(struct device *dev)
- 	return rc;
- }
- 
-+/**
-+ * ulite_suspend - Stop the device.
-+ *
-+ * @dev: handle to the device structure.
-+ * Return: 0 always.
-+ */
-+static int __maybe_unused ulite_suspend(struct device *dev)
-+{
-+	struct uart_port *port = dev_get_drvdata(dev);
-+
-+	if (port)
-+		uart_suspend_port(&ulite_uart_driver, port);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ulite_resume - Resume the device.
-+ *
-+ * @dev: handle to the device structure.
-+ * Return: 0 on success, errno otherwise.
-+ */
-+static int __maybe_unused ulite_resume(struct device *dev)
-+{
-+	struct uart_port *port = dev_get_drvdata(dev);
-+
-+	if (port)
-+		uart_resume_port(&ulite_uart_driver, port);
-+
-+	return 0;
-+}
-+
- /* ---------------------------------------------------------------------
-  * Platform bus binding
-  */
-+
-+static SIMPLE_DEV_PM_OPS(ulite_pm_ops, ulite_suspend, ulite_resume);
-+
- #if defined(CONFIG_OF)
- /* Match table for of_platform binding */
- static const struct of_device_id ulite_of_match[] = {
-@@ -768,6 +803,7 @@ static struct platform_driver ulite_platform_driver = {
- 	.driver = {
- 		.name  = "uartlite",
- 		.of_match_table = of_match_ptr(ulite_of_match),
-+		.pm = &ulite_pm_ops,
- 	},
- };
- 
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+
+> @@ -148,7 +150,7 @@ product and revision information.  If present, a device node for this register
+>  should be added.
+
+Please add "or Boundary Scan ID Register" to the paragraph above.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
