@@ -1,45 +1,28 @@
-Return-Path: <SRS0=CMa+=KM=linuxfoundation.org=gregkh@kernel.org>
-Date: Sat, 28 Jul 2018 16:55:15 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 0/3] serial: sh-sci: Add support for RZ/A2
-Message-ID: <20180728145515.GB19385@kroah.com>
+Return-Path: <SRS0=Cg5y=KK=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v2 0/3] serial: sh-sci: Add support for RZ/A2
+Date: Thu, 26 Jul 2018 13:10:19 +0000
+Message-ID: 
+ <TY1PR01MB1562217F23D525E18002E1918A2B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20180725143850.32985-1-chris.brandt@renesas.com>
  <CAMuHMdV=GDmte8uqi2hoy6Cu190uX6stdPkipmsDjan8L5oZRA@mail.gmail.com>
  <TYXPR01MB1568B3A6928B55E665AA626F8A2B0@TYXPR01MB1568.jpnprd01.prod.outlook.com>
  <CAMuHMdX1piAAJeX+C=xr2ZG6Pe4_W+XH6ugURWny0rcJ3En0ew@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdX1piAAJeX+C=xr2ZG6Pe4_W+XH6ugURWny0rcJ3En0ew@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdX1piAAJeX+C=xr2ZG6Pe4_W+XH6ugURWny0rcJ3En0ew@mail.gmail.com>
 To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Chris Brandt <Chris.Brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jul 26, 2018 at 03:01:11PM +0200, Geert Uytterhoeven wrote:
-> Hi Chris,
-> 
-> On Thu, Jul 26, 2018 at 2:25 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> > On Thursday, July 26, 2018, Geert Uytterhoeven wrote:
-> > > Thanks for your series!
-> > >
-> > > Unfortunately Greg has already applied your v1 (and my fix for a
-> > > use-after-free), so either these have to be reverted first, or you have to
-> > > rebase against tty-next.
-> >
-> > I assume you would prefer the newer implementation I did.
-> >
-> > In your opinion, which one would be better (revert or rebase)?
-> 
-> [looking at the incremental differences]
-> 
-> I think the easiest for Greg is to rebase, and send 3 patches:
-
-Greg does not rebase his public trees.  Nor should anyone else :)
-
-I can revert patches if you want me to, just let me know what ones.  Or
-send incremental patches on top of my tree please.  But no reverts are
-going to be happening.
-
-thanks,
-
-greg k-h
+SGkgR2VlcnQsDQoNCk9uIFRodXJzZGF5LCBKdWx5IDI2LCAyMDE4LCBHZWVydCBVeXR0ZXJob2V2
+ZW4gd3JvdGU6DQo+ID4gSW4geW91ciBvcGluaW9uLCB3aGljaCBvbmUgd291bGQgYmUgYmV0dGVy
+IChyZXZlcnQgb3IgcmViYXNlKT8NCj4gDQo+IFtsb29raW5nIGF0IHRoZSBpbmNyZW1lbnRhbCBk
+aWZmZXJlbmNlc10NCj4gDQo+IEkgdGhpbmsgdGhlIGVhc2llc3QgZm9yIEdyZWcgaXMgdG8gcmVi
+YXNlLCBhbmQgc2VuZCAzIHBhdGNoZXM6DQo+ICAgMS4gRG9jdW1lbnQgaW50ZXJydXB0IG9yZGVy
+IGluIGJpbmRpbmdzLA0KPiAgIDIuIFVuaWZ5IFNDSXhfUlpfU0NJRkFfUkVHVFlQRS9TQ0l4X1NI
+NF9TQ0lGX1JFR1RZUEUgcmVndHlwZXMsDQo+ICAgMy4gU2ltcGxpZnkgaW50ZXJydXB0cy4NCg0K
+VGhhbmsgeW91IQ0KDQpDaHJpcw0KDQo=
