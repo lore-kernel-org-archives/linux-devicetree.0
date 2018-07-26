@@ -1,55 +1,82 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
-Date: Thu, 26 Jul 2018 15:45:59 +0530
-Message-ID: <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-7-o.rempel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180726065331.6186-7-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 2/7] clocksource/drivers/timer-mediatek: Add system timer bindings
+Date: Thu, 26 Jul 2018 12:15:25 +0200
+Message-ID: <1532600131-28168-2-git-send-email-daniel.lezcano@linaro.org>
+References: <014f94f9-54d4-1ee0-aa89-67ca5d221989@free.fr>
+ <1532600131-28168-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532600131-28168-1-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, mingo@kernel.org
+Cc: linux-kernel@vger.kernel.org, stanley.chu@mediatek.com, baolin.wang@linaro.org, Sudeep.Holla@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-mediatek@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
-<o.rempel@pengutronix.de> wrote:
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-.....
+This patch adds bindings of new "System Timer" on Mediatek SoCs.
 
-> +
-> +/* Control Register */
-> +#define IMX_MU_xCR             0x24
-> +/* Transmit Interrupt Enable */
-> +#define IMX_MU_xCR_TIEn(x)     BIT(20 + (3 - (x)))
-> +/* Receive Interrupt Enable */
-> +#define IMX_MU_xCR_RIEn(x)     BIT(24 + (3 - (x)))
-> +
-> +#define IMX_MU_CHANS   4u
-> +
-The 'u' unnecessarily refreshes my knowledge of C  :)
+Remove RTC clock in the same time because it is not used by
+both "General Purpose Timer" and "System Timer" now.
 
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ .../bindings/timer/mediatek,mtk-timer.txt          | 34 +++++++++++++---------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
 
-> +struct imx_mu_con_priv {
-> +       int                     irq;
-> +       unsigned int            idx;
-> +       char                    *irq_desc;
->
-Having      char  irq_desc[16];    seems simpler than free/kfree upon
-each startup/shutdown. Simply use snprintf() in probe().
-
-The rest of the driver seems fine.
-
-Cheers!
+diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+index b1fe7e9..18d4d01 100644
+--- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
++++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+@@ -1,19 +1,25 @@
+-Mediatek MT6577, MT6572 and MT6589 Timers
+----------------------------------------
++Mediatek Timers
++---------------
++
++Mediatek SoCs have two different timers on different platforms,
++- GPT (General Purpose Timer)
++- SYST (System Timer)
++
++The proper timer will be selected automatically by driver.
+ 
+ Required properties:
+ - compatible should contain:
+-	* "mediatek,mt2701-timer" for MT2701 compatible timers
+-	* "mediatek,mt6580-timer" for MT6580 compatible timers
+-	* "mediatek,mt6589-timer" for MT6589 compatible timers
+-	* "mediatek,mt7623-timer" for MT7623 compatible timers
+-	* "mediatek,mt8127-timer" for MT8127 compatible timers
+-	* "mediatek,mt8135-timer" for MT8135 compatible timers
+-	* "mediatek,mt8173-timer" for MT8173 compatible timers
+-	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers
+-- reg: Should contain location and length for timers register.
+-- clocks: Clocks driving the timer hardware. This list should include two
+-	clocks. The order is system clock and as second clock the RTC clock.
++	* "mediatek,mt2701-timer" for MT2701 compatible timers (GPT)
++	* "mediatek,mt6580-timer" for MT6580 compatible timers (GPT)
++	* "mediatek,mt6589-timer" for MT6589 compatible timers (GPT)
++	* "mediatek,mt7623-timer" for MT7623 compatible timers (GPT)
++	* "mediatek,mt8127-timer" for MT8127 compatible timers (GPT)
++	* "mediatek,mt8135-timer" for MT8135 compatible timers (GPT)
++	* "mediatek,mt8173-timer" for MT8173 compatible timers (GPT)
++	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers (GPT)
++	* "mediatek,mt6765-timer" for MT6765 compatible timers (SYST)
++- reg: Should contain location and length for timer register.
++- clocks: Should contain system clock.
+ 
+ Examples:
+ 
+@@ -21,5 +27,5 @@ Examples:
+ 		compatible = "mediatek,mt6577-timer";
+ 		reg = <0x10008000 0x80>;
+ 		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+-		clocks = <&system_clk>, <&rtc_clk>;
++		clocks = <&system_clk>;
+ 	};
+-- 
+2.7.4
