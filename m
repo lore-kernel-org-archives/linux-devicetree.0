@@ -1,40 +1,60 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v7 6/6] MAINTAINERS: Add entry for Actions Semiconductor Owl I2C driver
-Date: Thu, 26 Jul 2018 21:16:03 +0530
-Message-ID: <20180726154603.5089-7-manivannan.sadhasivam@linaro.org>
-References: <20180726154603.5089-1-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v7 5/5] arm64: dts: actions: Set UART clock reference
+ from CMU
+Date: Thu, 26 Jul 2018 21:20:25 +0530
+Message-ID: <20180726155025.GA5220@Mani-XPS-13-9360>
+References: <20180719090649.12460-1-sravanhome@gmail.com>
+ <20180719090649.12460-6-sravanhome@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180726154603.5089-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180719090649.12460-6-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, afaerber@suse.de
-Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: afaerber@suse.de
+Cc: sravanhome@gmail.com, sboyd@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-Add entry for Actions Semiconductor Owl I2C driver under ARM/ACTIONS
+Hi Andreas,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+On Thu, Jul 19, 2018 at 11:06:49AM +0200, Saravanan Sekar wrote:
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b54e9ebc6f..5084c62712fa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1145,12 +1145,14 @@ F:	arch/arm/boot/dts/owl-*
- F:	arch/arm64/boot/dts/actions/
- F:	drivers/clk/actions/
- F:	drivers/clocksource/owl-*
-+F:	drivers/i2c/busses/i2c-owl.c
- F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
- F:	Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-+F:	Documentation/devicetree/bindings/i2c/i2c-owl.txt
- F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
--- 
-2.17.1
+Will you be queuing up the dts patches through actions tree?
+
+Thanks,
+Mani
+
+>  arch/arm64/boot/dts/actions/s700-cubieboard7.dts | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> index ef79d7905f44..c08808ca3346 100644
+> --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+> @@ -28,12 +28,6 @@
+>  		device_type = "memory";
+>  		reg = <0x1 0xe0000000 0x0 0x0>;
+>  	};
+> -
+> -	uart3_clk: uart3-clk {
+> -		compatible = "fixed-clock";
+> -		clock-frequency = <921600>;
+> -		#clock-cells = <0>;
+> -	};
+>  };
+>  
+>  &timer {
+> @@ -42,5 +36,5 @@
+>  
+>  &uart3 {
+>  	status = "okay";
+> -	clocks = <&uart3_clk>;
+> +	clocks = <&cmu CLK_UART3>;
+>  };
+> -- 
+> 2.14.4
+> 
