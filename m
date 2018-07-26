@@ -1,48 +1,43 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/4] ARM: dts: mvebu: db-dxbc2: use new style nand binding
-Date: Thu, 26 Jul 2018 16:02:55 +1200
-Message-ID: <20180726040257.22285-3-chris.packham@alliedtelesis.co.nz>
-References: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH] arm64: allwinner: dts: h6: fix Pine H64 MMC bus width
+Date: Thu, 26 Jul 2018 12:48:05 +0800
+Message-ID: <20180726044805.55888-1-icenowy@aosc.io>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Update the nand flash binding to the new style.
+Currently the enabled MMC controllers on Pine H64 do not have bus-width
+set, which make them fall back to 1-bit mode and become quite slow.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Fix this by add the corresponding bus-width properties.
+
+Fixes: ecbd611882a1 ("arm64: allwinner: h6: enable MMC0/2 on Pine H64")
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
- arch/arm/boot/dts/armada-xp-db-dxbc2.dts | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-db-dxbc2.dts b/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
-index 944e0a9c9dac..8a3aa616bbd0 100644
---- a/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
-+++ b/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
-@@ -70,12 +70,16 @@
- 
- &nand_controller {
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index ceffc40810ee..48daec7f78ba 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -46,6 +46,7 @@
+ 	pinctrl-0 = <&mmc0_pins>;
+ 	vmmc-supply = <&reg_cldo1>;
+ 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
  	status = "okay";
--	label = "pxa3xx_nand-0";
--	num-cs = <1>;
--	marvell,nand-keep-config;
--	nand-on-flash-bbt;
--	nand-ecc-strength = <4>;
--	nand-ecc-step-size = <512>;
-+
-+	nand@0 {
-+		reg = <0>;
-+		label = "pxa3xx_nand-0";
-+		nand-rb = <0>;
-+		marvell,nand-keep-config;
-+		nand-on-flash-bbt;
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+	};
  };
  
- &sdio {
+@@ -56,6 +57,7 @@
+ 	vqmmc-supply = <&reg_bldo2>;
+ 	non-removable;
+ 	cap-mmc-hw-reset;
++	bus-width = <8>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.18.0
