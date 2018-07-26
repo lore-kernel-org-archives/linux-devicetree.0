@@ -1,164 +1,32 @@
-From: "Keiji Hayashibara" <hayashibara.keiji@socionext.com>
-Subject: RE: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
-Date: Thu, 26 Jul 2018 18:38:25 +0900
-Message-ID: <001b01d424c4$66e04230$34a0c690$@socionext.com>
-References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com> <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com> <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: mailbox: allow mbox-cells to be equal
+ to 0
+Date: Thu, 26 Jul 2018 15:11:39 +0530
+Message-ID: <CABb+yY2+WwxHBtQfU3TJTErpfzfkNH8iwwYyXbmWAQy8UsqLRQ@mail.gmail.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de> <20180726065331.6186-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
-Content-Language: ja
+In-Reply-To: <20180726065331.6186-2-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Andy Shevchenko' <andy.shevchenko@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko@socionext.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sudeep Holla <sudeep.holla@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ", Sascha Hauer" <kernel@pengutronix.de>, ", linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Andy,
+On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
+<o.rempel@pengutronix.de> wrote:
+> From: Dong Aisheng <aisheng.dong@nxp.com>
+>
+> Mailbox devices may have only one channel which means the mbox-cells
+> at least 1 does not make sense for this type devices. Let's remove
+> that limitation to allow the mbox-cells to be equal to 0.
+>
+OK
 
-Thank you for your check!
+But please realise that you'll have to write more code -- implement
+your own of_xlate() callback.
+Most developers would prefer to call the only channel as channel
+number 0, and use the common of_xlate implementation.
 
-
-> From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
-> Sent: Thursday, July 26, 2018 5:46 PM
-> To: Hayashibara, Keiji/林原 啓二 <hayashibara.keiji@socionext.com>
-> Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
-> 
-> On Thu, Jul 26, 2018 at 10:09 AM, Keiji Hayashibara <hayashibara.keiji@socionext.com> wrote:
-> > Add SPI controller driver implemented in Socionext UniPhier SoCs.
-> >
-> > UniPhier SoCs have two types SPI controllers; SCSSI supports a single
-> > channel, and MCSSI supports multiple channels.
-> > This driver supports SCSSI only.
-> >
-> > This controller has 32bit TX/RX FIFO with depth of eight entry, and
-> > supports the SPI master mode only.
-> >
-> > This commit is implemented in PIO transfer mode, not DMA transfer.
-> 
-> Few style realted comments.
-> 
-> > +#include <asm/unaligned.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/bitfield.h>
-> > +#include <linux/bitops.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/spi/spi.h>
-> 
-> Slightly better to keep them in order and put asm/* at the last.
-
-I see. I will modify this.
-
-
-> > +#define SSI_TIMEOUT            2000    /* ms */
-> 
-> SSI_TIMEOUT_MS ?
-> 
-> > +#define SSI_CTL                        0x0
-> 
-> Slightly better to keep same width for the addresses, like 0x00 here.
-> 
-> > +#define SSI_CKS                        0x4
-> 
-> > +#define SSI_TXWDS              0x8
-> 
-> > +#define SSI_RXWDS              0xc
-> 
-> Ditto.
-
-I will modify about above.
-
-> 
-> > +static int uniphier_spi_set_baudrate(struct spi_device *spi, unsigned
-> > +int speed) {
-> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
-> > +       u32 val, ckrat;
-> > +
-> > +       /*
-> > +        * the supported rates are even numbers from 4 to 254. (4,6,8...254)
-> > +        * round up as we look for equal or less speed
-> > +        */
-> > +       ckrat = DIV_ROUND_UP(clk_get_rate(priv->clk), speed);
-> 
-> > +       ckrat = roundup(ckrat, 2);
-> 
-> ckrat += ckrat & 1;
-> 
-> ?
-
-It's simple. I will modify.
-
-
-> > +       /* check if requested speed is too small */
-> > +       if (ckrat > SSI_MAX_CLK_DIVIDER)
-> 
-> > +               return -EINVAL;
-> 
-> So, does this critical?
-
-If set the value to SSI_MAX_CLK_DIVIDER, the clock frequency will be set high.
-I don't change it to high frequency, and it is daringly an error.
-On the other hand, when changing to low frequency, I will change it automatically.
-
-> > +
-> > +       if (ckrat < SSI_MIN_CLK_DIVIDER)
-> > +               ckrat = SSI_MIN_CLK_DIVIDER;
-> 
-> clamp_val()  / max() ?
-
-I will modify it to use max().
-
-> 
-> > +       val = readl(priv->base + SSI_CKS);
-> > +       val &= ~SSI_CKS_CKRAT_MASK;
-> > +       val |= ckrat & SSI_CKS_CKRAT_MASK;
-> > +       writel(val, priv->base + SSI_CKS);
-> > +
-> > +       return 0;
-> > +}
-> 
-> > +       priv->irq = platform_get_irq(pdev, 0);
-> > +       if (priv->irq < 0) {
-> > +               dev_err(&pdev->dev, "failed to get IRQ\n");
-> 
-> > +               ret = -ENXIO;
-> 
-> What's wrong with
-> 
-> ret = priv->irq;
-> 
-> ?
-
-I will modify it.
-
-> > +               goto out_disable_clk;
-> > +       }
-> 
-> > +static const struct of_device_id uniphier_spi_match[] = {
-> > +       { .compatible = "socionext,uniphier-scssi", },
-> 
-> > +       { /* sentinel */ },
-> 
-> Slightly better without comma.
-
-OK. I will modify this.
-
------------------
-Best Regards,
-Keiji Hayashibara
-
-
-
-> > +};
-> > +MODULE_DEVICE_TABLE(of, uniphier_spi_match);
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
+-jassi
