@@ -1,203 +1,55 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH v1] arm64: dts: rockchip: add support for ROC-RK3399-PC
- board
-Date: Thu, 26 Jul 2018 11:51:28 +0200
-Message-ID: <d84ef7a6-8db0-ff71-8e11-a5f56c70d60d@collabora.com>
-References: <1532589205-10153-1-git-send-email-djw@t-chip.com.cn>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
+ i.MX7S SoCs.
+Date: Thu, 26 Jul 2018 15:25:15 +0530
+Message-ID: <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-5-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532589205-10153-1-git-send-email-djw@t-chip.com.cn>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: djw@t-chip.com.cn, linux-rockchip@lists.infradead.org
-Cc: Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Pierre-Hugues Husson <phh@phh.me>, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>, Ezequiel Garcia <ezequiel@collabora.com>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180726065331.6186-5-o.rempel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Levin,
-
-Some few comments.
-
-On 26/07/18 09:13, djw@t-chip.com.cn wrote:
-> From: Levin Du <djw@t-chip.com.cn>
-> 
-> ROC-RK3399-PC is a power efficient 4GB LPDDR4 single board
-> computer with USB 3.0 and Gigabit Ethernet in a form factor
-> compatible with the Raspberry Pi. It is based on the Rockchip
-> RK3399 SoC, powered by the Type-C port.
-> 
-> The devicetree currently supports peripherals of:
-> 
-> - Ethernet
-> - HDMI
-> - SD Card
-> - UART2 debug
-> - TYPE-C
-> - eMMC
-> 
-> USB3 in type-c port currently only works with normal orientation,
-> not flip one.
-> 
-> Signed-off-by: Levin Du <djw@t-chip.com.cn>
-> 
+On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
+<o.rempel@pengutronix.de> wrote:
+> This are currently tested SoCs with imx-mailbox driver.
+>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
-> 
-> Changes in v1:
-> - remove bootargs
-> - use interpolation for brightness level
-> - add vcc_vbus_typec1 regulator
-> - fix phy-supply of u2phy0_otg and u2phy1_otg
-> - remove vcc_hub_en dummy regualtor
-> - add hub_rst (changed to output high) to pinctrl status of vcc5v0_host
-> - remove vsel-gpios props in fan53xx
-> - remove mp8859 in i2c
-> - fusb302: fix interrupt setting
-> - fusb302: add vbus-supply
-> - remove extcon in tcphy0 and tcphy1
-> - remove #sound-dai-cells in i2s*
-> - use RK_PXX style bit number for cd-gpios in SDMMC
-> - clean commented status lines
-> 
->  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
->  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
->  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts     | 687 +++++++++++++++++++++
->  3 files changed, 692 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-> index acfd3c7..ab5fde8 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> @@ -59,6 +59,10 @@ Rockchip platforms device tree bindings
->      Required root node properties:
->        - compatible = "firefly,roc-rk3328-cc", "rockchip,rk3328";
->  
-> +- Firefly ROC-RK3399-PC board:
-> +    Required root node properties:
-> +      - compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
-> +
->  - ChipSPARK PopMetal-RK3288 board:
->      Required root node properties:
->        - compatible = "chipspark,popmetal-rk3288", "rockchip,rk3288";
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index b0092d9..06028db 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -14,5 +14,6 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-bob.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> new file mode 100644
-> index 0000000..7d41a91
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> @@ -0,0 +1,687 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/pwm/pwm.h>
-> +#include "rk3399.dtsi"
-> +#include "rk3399-opp.dtsi"
-> +
-> +/ {
-> +	model = "Firefly ROC-RK3399-PC Board";
-> +	compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
-> +
-> +	backlight: backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&pwm0 0 25000 0>;
-> +
-> +		brightness-levels = <0 255>;
-> +		default-brightness-level = <200>;
-> +		num-interpolated-steps = <1>;
+>  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> index 113d6ab931ef..5616d2afca45 100644
+> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> @@ -18,7 +18,7 @@ Messaging Unit Device Node:
+>  Required properties:
+>  -------------------
+>  - compatible : should be "fsl,<chip>-mu", the supported chips include
+> -               imx8qxp, imx8qm.
+> +               imx6sx, imx7s, imx8qxp, imx8qm.
+>
+This is not scalable. Do we add every new SoC that contains the same controller?
+I think the controller name, if it has one or create a new one like
+'imx-mu',  should be used here.
+So,
+    compatible : should be "fsl,imx-mu"
 
-Unless you want a custom brightness-levels for some reason and because of
-default brightness table does not work for you I'd remove all these three
-properties and just use the default table.
-
-After commit 88ba95bedb79 ("backlight: pwm_bl: Compute brightness of LED
-linearly to human eye") the pwm_bl driver is able to calculate a default
-brightness table. The calculated table for this PWM will have more
-granularity and will be adjusted to change the brightness linearly to
-the human eye. So I think you can use that table instead of have a DT-defined
-table with less granularity.
-
-> +	};
-> +
-> +	clkin_gmac: external-gmac-clock {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clkin_gmac";
-> +		#clock-cells = <0>;
-> +	};
-
-<snip>
-
-> +&usb_host0_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ohci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host1_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host1_ohci {
-> +	status = "okay";
-> +};
-> +
-> +&usbdrd3_0 {
-> +	status = "okay";
-> +};
-> +
-> +&usbdrd_dwc3_0 {
-> +	status = "okay";
-> +	dr_mode = "otg";
-
-dr_mode is already set in rk3399.dtsi so you can remove that from here.
-
-> +};
-> +
-> +&usbdrd3_1 {
-> +	status = "okay";
-> +};
-> +
-> +&usbdrd_dwc3_1 {
-> +	status = "okay";
-> +	dr_mode = "host";
-> +};
-> +
-> +&vopb {
-> +	status = "okay";
-> +};
-> +
-> +&vopb_mmu {
-> +	status = "okay";
-> +};
-> +
-> +&vopl {
-> +	status = "okay";
-> +};
-> +
-> +&vopl_mmu {
-> +	status = "okay";
-> +};
-> 
-
-Best regards,
- Enric
+BTW, the driver doesn't even probe anything other than
+'fsl,imx6sx-mu', unlike what the binding says.
