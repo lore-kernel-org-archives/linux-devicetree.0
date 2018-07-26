@@ -1,46 +1,59 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
-Date: Thu, 26 Jul 2018 16:39:34 +0530
-Message-ID: <CABb+yY2=mFr+gFuWyE+VyG6dWj3gKhTs6X+U9UjFu5N=4zU5uA@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-7-o.rempel@pengutronix.de>
- <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
- <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH v6 4/4] arm: arm64: dts: add property snps incr burst type adjustment
+Date: Thu, 26 Jul 2018 14:10:07 +0300
+Message-ID: <87a7qe1cds.fsf@linux.intel.com>
+References: <1532341959-3478-1-git-send-email-pengbo.mu@nxp.com> <1532341959-3478-4-git-send-email-pengbo.mu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>srv_heupstream <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532341959-3478-4-git-send-email-pengbo.mu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ran.wang_1@nxp.com, pengbo.mu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 4:21 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
->>
->>> +struct imx_mu_con_priv {
->>> +       int                     irq;
->>> +       unsigned int            idx;
->>> +       char                    *irq_desc;
->>>
->> Having      char  irq_desc[16];    seems simpler than free/kfree upon
->> each startup/shutdown. Simply use snprintf() in probe().
->
-> Currently all known configurations use one or two channels. I don't see
-> any sense to allocate all at the probe.
->
-Just because only 2 out of 4 channels are being used, it doesn't make sense?
+Pengbo Mu <pengbo.mu@nxp.com> writes:
 
-What is the concern?  "wasting" 16x2 bytes of memory?  How many bytes,
-LOC and execution time does kasprintf() waste?
+> Property "snps,incr-burst-type-adjustment =3D <x>, <y>..." for USB3.0
+> DWC3.When only one value means INCRx mode with fix burst type.
+> When more than one value, means undefined length burst mode, USB
+> controller can use the length less than or equal to the largest
+> enabled burst length.
+>
+> While enabling undefined length INCR burst type and INCR16 burst type,
+> get better write performance on NXP Layerscape platforms: around 3%
+> improvement (from 364MB/s to 375MB/s).
+>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Signed-off-by: Pengbo Mu <pengbo.mu@nxp.com>
+
+will this go through arm64 tree or do you need me to pick it up?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAltZrA8ACgkQzL64meEa
+mQbNthAA1avK609b6EdzdZ55k811FE+py4ljrSxVofYnM+xASfnzI/N336dAgcF6
+M34NdWJh1oHF0ZKFC/O9lCm5XdKraqfUK8q4etyvDWRmhSoijDJ2QgqNkPSEpuSH
+6XU9wMJSZZECww4LK+Ov9F948+BOcN2qTk1TC9eC40cExVlYRZ2RLkjfj6uARsCf
+STiN4dtKTpfWha+AzCzRfnY4gQLzKUtHHm9Fr1/ws8Wgq9PXe5BsO64bVnoNa1Kd
+FW4c6bckJOKxk7pa7aCaHzpihm205XN8WyOz4XUUJIpgpnK0pKJoBbNZhAXdNKJS
+hGZ6pQsFNKHABKLSl9iDMnJopH7QFP6TD3I/zREOfIRLoxPg7oPwHl790x4RPskn
+SEpSWi7GlJ6+C1F/K6yGvVUM7bVSNu5/JXLrlzGEM+QUVm/q2rWJj1G2aQt4urwe
+M7qZRQ6kJv1RXWjJbpm2vRLCO6Z+OO2bN9Qh03F3dZd6NUWDY7DoE/t1xEW6Ws6n
+eZKEohFY6FeV/B7olq/YxhhH6JvuW+oSy1ZHp2g0FUZqstVF+coMQCo0Uk8bZ1kQ
+NkX7iGw2JXMjdjtDMwUfCac00Pg/oOlSwNiNJ8hXXIDR504aTRPa1wUTtkDbC3sn
+0fJ2reU5N646NpaUL7gchjJbVZRuFqiOqM8ML2ji6P1H42sfTN4=
+=ESN9
+-----END PGP SIGNATURE-----
+--=-=-=--
