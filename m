@@ -1,68 +1,217 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Thu, 26 Jul 2018 14:13:48 +0000
-Message-ID: <AM0PR04MB4211EA909389F2FE12A0BCCD802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
- <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
- <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY2XCStT3oRWjPVTT10KY164nhJyGGn3tvjquXM_Xca4Yw@mail.gmail.com>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v10 7/7] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth chip wcn3990
+Date: Thu, 26 Jul 2018 19:51:13 +0530
+Message-ID: <0666f40967de21db9ef3df9d94517ac1@codeaurora.org>
+References: <20180720133243.6851-1-bgodavar@codeaurora.org>
+ <20180720133243.6851-8-bgodavar@codeaurora.org>
+ <20180723195441.GM129942@google.com>
+ <81c324ee9104508cf5c862de3f697e4c@codeaurora.org>
+ <20180725183144.GQ129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY2XCStT3oRWjPVTT10KY164nhJyGGn3tvjquXM_Xca4Yw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180725183144.GQ129942@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
-> Sent: Thursday, July 26, 2018 9:50 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; Shawn Guo
-> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>; Rob
-> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>; , Sascha Hauer
-> <kernel@pengutronix.de>; , linux-arm-kernel@lists.infradead.org, linux-
-> mediatek@lists.infradead.org, srv_heupstream <linux-arm-
-> kernel@lists.infradead.org>; Devicetree List <devicetree@vger.kernel.org>;
-> dl-linux-imx <linux-imx@nxp.com>
-> Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
-> channel support
-> 
-> On Thu, Jul 26, 2018 at 5:21 PM, A.s. Dong <aisheng.dong@nxp.com> wrote:
-> >
-> > The reference manual is at here: (Chapter 42 Messaging Unit (MU)
-> >
-> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fw
-> ww.nxp.com%2Fdocs%2Fen%2Freference-
-> manual%2FIMX6ULRM.pdf&amp;data=02%7C01%7Caisheng.dong%40nxp.co
-> m%7Ca1e872436611497795bb08d5f2fe9feb%7C686ea1d3bc2b4c6fa92cd99c5c
-> 301635%7C0%7C0%7C636682097774333065&amp;sdata=Zqf9kgJrutPtQE8OP
-> %2BDu1%2BvULXWSQcgHbszwIWkTNS0%3D&amp;reserved=0
-> >
-> You seem to have shared a wrong link. It has
->        Chapter 42  Synchronous Audio Interface (SAI)
-> 
-> and finding "Messaging Unit" shows no result.
+Hi Matthias,
 
-Sorry, it should be:
-https://www.nxp.com/docs/en/reference-manual/IMX6SXRM.pdf
+On 2018-07-26 00:01, Matthias Kaehlcke wrote:
+> On Tue, Jul 24, 2018 at 09:25:16PM +0530, Balakrishna Godavarthi wrote:
+>> Hi Matthias,
+>> 
+>> On 2018-07-24 01:24, Matthias Kaehlcke wrote:
+>> > On Fri, Jul 20, 2018 at 07:02:43PM +0530, Balakrishna Godavarthi wrote:
+>> > > +	 * sometimes we will face communication synchronization issues,
+>> > > +	 * like reading version command timeouts. In which HCI_SETUP fails,
+>> > > +	 * to overcome these issues, we try to communicate by performing an
+>> > > +	 * COLD power OFF and ON.
+>> > > +	 */
+>> > > +	for (i = 1; i <= 10 && ret; i++) {
+>> >
+>> > Is it really that bad that more than say 3 iterations might be needed?
+>> >
+>> [Bala]: will restrict to 3 iterations.
+> 
+> Is 3x expected to be enough to 'guarantee' as successful
+> initialization? Just wondered about the 10x since it suddendly changed
+> from 1x. What is the failure rate without retries?
+> 
+> Could you provide more information about the 'communication
+> synchronization issues'? Is the root cause understood? Maybe there is
+> a better way than retries.
+> 
 
+[Bala]: basically before sending a every patch series we run a stress 
+test to the driver to detect the bugs.
+         in recent test results found one interesting bug that BT setups 
+fails with version request timeouts,
+         after we do a reboot for the device.
+         we debugged the issue and found that wcn3900 is not responding 
+to the version request commands
+         sent by HOST. this is because before reboot, wcn3990 is in on 
+state i.e. we are communicating to device.
+         then we did a reboot and HOST is not sending a power off request 
+to the regulators to turn off.
+         so after reboot wcn3990 is still in ON state where it will not 
+respond to version request commands which in turn fails HCI_SETUP.
+         so we are sending the power off pulse and then sending the power 
+on pulse.
+         coming back to 3x or 10x iteration this is to avoid any such 
+synchronization issues.
+         i agreed for 3x because of stress test results. we have success 
+rate of 99% for single iteration, where as 3x iterations will helps to 
+handle 1% fails cases.
+
+>> > > +static void qca_regulator_get_current(struct device *dev,
+>> > > +				      struct qca_vreg *vregs)
+>> > > +{
+>> > > +	char prop_name[32]; /* 32 is max size of property name */
+>> > > +
+>> > > +	/* We have different platforms where the load value is controlled
+>> > > +	 * via PMIC controllers. In such cases load required to power ON
+>> > > +	 * Bluetooth chips are defined in the PMIC. We have option to set
+>> > > +	 * operation mode like high or low power modes.
+>> > > +	 * We do have some platforms where driver need to enable the load
+>> > > for
+>> > > +	 * WCN3990. Based on the current property value defined for the
+>> > > +	 * regulators, driver will decide the regulator output load.
+>> > > +	 * If the current property for the regulator is defined in the dts
+>> > > +	 * we will read from dts tree, else from the default load values.
+>> > > +	 */
+>> >
+>> > Let's make sure we all really understand why this is needed. You
+>> > mentioned RPMh regulators earlier and said a special value of 1uA
+>> > would be needed to enable high power mode. Later when I pointed to the
+>> > RPMh regulator code you agreed that this special value wouldn't make
+>> > any difference.
+>> >
+>> > Now the defaults are higher:
+>> >
+>> [Bala]: today i got the info from the power teams here, currently in 
+>> the
+>> downstream what we have is different wrt to the
+>>         patch "https://patchwork.kernel.org/patch/10524299/" by David
+>> Collins.
+>>         prior to his patch we have different architecture where 1uA 
+>> will
+>> change the mode to HPM mode.
+>>         which is not valid, so 1uA will not work any more. we have go 
+>> with
+>> actual current values.
+> 
+> Ok, in any case downstream drivers shouldn't impact the design of
+> upstream drivers. If there are incompatibilities the BT driver needs
+> to be hacked in the downstream tree.
+> 
+>>         coming back to reading current values from dts. we have reason 
+>> for
+>> it.
+>>         let us assume that later stages of wcn3990 if we have less 
+>> current
+>> values than default values.
+>>         instead of updating the driver again, we can assign the 
+>> current no
+>> in the dts, which we will read.
+>> 
+>>         This is how it works.
+>> 
+>>         if(current value for the reg is declared in dts tree)
+>>               consider the current value from the dts.
+>>         else
+>>            go with default value.
+>> 
+>>       pls let me know if you any queries.
+> 
+> If I understand correctly you describe a hypothetical situation of a
+> future wcn3990 variant having lower power requirements. I'd say let's
+> deal with this when these chips actually exist and need to be
+> supported by Linux. As of now it seems there is no need for current
+> limits in the DT.
+> 
+
+[Bala]: will remove current property for dts.
+         in previous mail you asked me a question for currents
+         "The currents of 300mA and 450mA seem high for Bluetooth, I'm 
+not an
+          expert in this area though, they might be reasonable peak 
+currents for
+          certain use cases."
+
+          yes we require 450mA and 300mA of current for rf and ch0 pins.  
+setting regulator to required load will not pump load current to wcn3990
+         it depends on operations, typical the above are the max current 
+drawn by the two pins.
+
+>> > > +	if (device_property_read_bool(dev, prop_name))
+>> > > +		device_property_read_u32(dev, prop_name, &vregs->load_uA);
+>> >
+>> > Why device_property_read_bool()?
+>> >
+>> [Bala]: if the current prop is present we read from dts. else we go 
+>> with
+>> default current no's.
+>>         if block  is used to check whether the property is present in 
+>> dts or
+>> not.
+>>         this is required because before calling 
+>> _regualtor_get_current() we
+>> hold the default current in the vregs[].
+>>         if we skip the read bool here, if the current property is not
+>> present then the function call of device_property_read_u32() will 
+>> assign
+>> zero the vregs[].
+>>         so we miss the default current values.
+>> 
+>>         this how it work if we miss read_bool check
+>> 
+>>         //vregs hold default current
+>>          device_property_read_u32(dev, prop_name, &vregs->load_uA);
+>>          the above will read the current property value from dts store 
+>> in
+>> the vregs.. if the property is missing in dts it will store zero.
+> 
+> Where does of_property_read_u32() set the value to zero when the
+> property does not exist?
+> 
+> A simple test in a probe function:
+> 
+> {
+> 	u32 v = 123;
+> 	of_property_read_u32(node, "no-such-property", &v);
+> 	printk("DBG: v = %d\n", v);
+> }
+> 
+> [    7.598366] DBG: v = 123
+> 
+> And looking at the code, of_property_read_u32() ends up in a call to
+> of_property_read_variable_u32_array():
+> 
+> int of_property_read_variable_u32_array(const struct device_node *np,
+> 			       const char *propname, u32 *out_values,
+> 			       size_t sz_min, size_t sz_max)
+> {
+> 	size_t sz, count;
+> 	const __be32 *val = of_find_property_value_of_size(np, propname,
+> 						(sz_min * sizeof(*out_values)),
+> 						(sz_max * sizeof(*out_values)),
+> 						&sz);
+> 
+> 	if (IS_ERR(val))
+> 		return PTR_ERR(val);
+> 
+> 	...
+> }
+> 
+> i.e. 'out_values' is not modified when the property does not exit.
+
+[Bala]: Thanks for clarifying me.
+
+-- 
 Regards
-Dong Aisheng
+Balakrishna.
