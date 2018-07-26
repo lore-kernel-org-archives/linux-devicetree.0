@@ -1,58 +1,55 @@
-From: richard.gong@linux.intel.com
-Subject: [PATCHv8 4/9] dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
-Date: Thu, 26 Jul 2018 11:27:21 -0500
-Message-ID: <1532622446-19663-5-git-send-email-richard.gong@linux.intel.com>
-References: <1532622446-19663-1-git-send-email-richard.gong@linux.intel.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v10 00/10] drivers: Introduce firmware dnd clock river for ZynqMP
+ core
+Date: Thu, 26 Jul 2018 09:36:55 -0700
+Message-ID: <153262301567.48062.15432354725863055071@swboyd.mtv.corp.google.com>
+References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
+ <2c3aad45-37ce-2446-4b90-bddb477286ed@xilinx.com>
+ <CY1PR02MB2138E21A3FFBD5FEEAA7D6D4B8550@CY1PR02MB2138.namprd02.prod.outlook.com>
+ <19376df2-fdd4-12e3-da4c-37106fffed19@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532622446-19663-1-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <19376df2-fdd4-12e3-da4c-37106fffed19@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, corbet@lwn.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com, joyce.ooi@intel.com
+To: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "mingo@kernel.org" <mingo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, Jolly Shah <JOLLYS@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull@kernel.org>
+Quoting Michal Simek (2018-07-25 02:51:14)
+> On 24.7.2018 20:14, Jolly Shah wrote:
+> >>>  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
+> >>>  create mode 100644 drivers/firmware/xilinx/zynqmp.c  create mode
+> >>> 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
+> >>>  create mode 100644 include/linux/firmware/xlnx-zynqmp.h
+> >>>
+> >>
+> >> It looks pretty calm over the last several series that's why when I ge=
+t an answer
+> >> from Stephen or Mike I will take this series via my tree and arm-soc t=
+ree.
+> >>
+> >> I have applied 01-08 here
+> >>  https://github.com/Xilinx/linux-xlnx/commits/zynqmp/soc
+> >>
+> >> Thanks,
+> >> Michal
+> > =
 
-Add a Device Tree binding for the Intel Stratix10 SoC FPGA manager.
+> > =
 
-Signed-off-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Richard Gong <richard.gong@intel.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v2: this patch is added in patch set version 2
-v3: change to put fpga_mgr node under firmware/svc node
-v4: s/fpga-mgr@0/fpga-mgr/ to remove unit_address
-    add Richard's signed-off-by
-v5: add Reviewed-by Rob Herring
-v6: no change
-v7: no change
-v8: no change
----
- .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt      | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+> > Thanks for merging the patches. =
 
-diff --git a/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-new file mode 100644
-index 0000000..6e03f79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
-@@ -0,0 +1,17 @@
-+Intel Stratix10 SoC FPGA Manager
-+
-+Required properties:
-+The fpga_mgr node has the following mandatory property, must be located under
-+firmware/svc node.
-+
-+- compatible : should contain "intel,stratix10-soc-fpga-mgr"
-+
-+Example:
-+
-+	firmware {
-+		svc {
-+			fpga_mgr: fpga-mgr {
-+				compatible = "intel,stratix10-soc-fpga-mgr";
-+			};
-+		};
-+	};
--- 
-2.7.4
+> > By mistake I added =E2=80=9CReviewed-by: Stephen Boyd sboyd@kernel.org=
+=E2=80=9D for firmware bindings (Patch01).  Stephen had reviewed clock bind=
+ings only.  Please suggest if I should send a new version with that fix.
+> =
+
+> I have fixed that in my branch and I have asked Shephen to look at clk
+> over chat.
+> =
+
+
+I have some unresolved review comments on v9. I'll give reviewed-by when
+that discussion is resolved.
