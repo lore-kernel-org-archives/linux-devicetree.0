@@ -1,77 +1,96 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Thu, 26 Jul 2018 13:34:34 +0000
-Message-ID: <AM0PR04MB4211928BCBB743EBB93E285D802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
- <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
- <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY3OdXGair6hdLH_jb54O09y=rhUMfbG1-LSa=pHvDz+sQ@mail.gmail.com>
+From: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Thu, 26 Jul 2018 21:37:05 +0800
+Message-ID: <20180726133705.GM6480@MiWiFi-R3L-srv>
+References: <20180718024944.577-1-bhe@redhat.com>
+ <20180718024944.577-5-bhe@redhat.com>
+ <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
+ <20180719151753.GB7147@localhost.localdomain>
+ <20180723143443.GD18181@dhcp22.suse.cz>
+ <20180725064813.GI6480@MiWiFi-R3L-srv>
+ <20180726125957.GH28386@dhcp22.suse.cz>
+ <20180726130904.GL6480@MiWiFi-R3L-srv>
+ <20180726131242.GI28386@dhcp22.suse.cz>
+ <20180726131420.GJ28386@dhcp22.suse.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY3OdXGair6hdLH_jb54O09y=rhUMfbG1-LSa=pHvDz+sQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180726131420.GJ28386-2MMpYkNvuYDjFM9bn6wA6Q@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel@vger
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
-> Sent: Thursday, July 26, 2018 8:27 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; Shawn Guo
-> <shawnguo@kernel.org>; Fabio Estevam <fabio.estevam@nxp.com>; Rob
-> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>; , Sascha Hauer
-> <kernel@pengutronix.de>; , linux-arm-kernel@lists.infradead.org, linux-
-> mediatek@lists.infradead.org, srv_heupstream <linux-arm-
-> kernel@lists.infradead.org>; Devicetree List <devicetree@vger.kernel.org>;
-> dl-linux-imx <linux-imx@nxp.com>
-> Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
-> channel support
-
-[...]
-
-> > And SCU firmware does use MU in above way specified by reference
-> manual.
-> > Even from HW point of view, it's still one channel only mailbox.
-> > That's why we change the mbox-cells to 0 accordingly to avoid
-> > confusing the multi channels users supported in this driver.
-> >
-> > As per Sasha's request, we're going to support both protocol (SCU and
-> > generic M4) in one mailbox driver, that means we need deal with this two
-> case property.
-> >
-> > If we use mbox-cells 1 case for SCU, then the using would be like:
-> > mboxes = <&mailbox 0> which is mixed with the normal multi channel
-> > users. And we also must state clearly in binding doc that for
-> > mbox-cells
-> >  1 case for SCU, the cell value must be 0 which is also confusing with
-> > Multi channel users.
-> >
-> > How do you suggest for such case?
-> >
-> Let me read the spec and try to see/shine the light :)
-
-Great, many thanks!
-
-Regards
-Dong Aisheng
-
+On 07/26/18 at 03:14pm, Michal Hocko wrote:
+> On Thu 26-07-18 15:12:42, Michal Hocko wrote:
+> > On Thu 26-07-18 21:09:04, Baoquan He wrote:
+> > > On 07/26/18 at 02:59pm, Michal Hocko wrote:
+> > > > On Wed 25-07-18 14:48:13, Baoquan He wrote:
+> > > > > On 07/23/18 at 04:34pm, Michal Hocko wrote:
+> > > > > > On Thu 19-07-18 23:17:53, Baoquan He wrote:
+> > > > > > > Kexec has been a formal feature in our distro, and customers owning
+> > > > > > > those kind of very large machine can make use of this feature to speed
+> > > > > > > up the reboot process. On uefi machine, the kexec_file loading will
+> > > > > > > search place to put kernel under 4G from top to down. As we know, the
+> > > > > > > 1st 4G space is DMA32 ZONE, dma, pci mmcfg, bios etc all try to consume
+> > > > > > > it. It may have possibility to not be able to find a usable space for
+> > > > > > > kernel/initrd. From the top down of the whole memory space, we don't
+> > > > > > > have this worry. 
+> > > > > > 
+> > > > > > I do not have the full context here but let me note that you should be
+> > > > > > careful when doing top-down reservation because you can easily get into
+> > > > > > hotplugable memory and break the hotremove usecase. We even warn when
+> > > > > > this is done. See memblock_find_in_range_node
+> > > > > 
+> > > > > Kexec read kernel/initrd file into buffer, just search usable positions
+> > > > > for them to do the later copying. You can see below struct kexec_segment, 
+> > > > > for the old kexec_load, kernel/initrd are read into user space buffer,
+> > > > > the @buf stores the user space buffer address, @mem stores the position
+> > > > > where kernel/initrd will be put. In kernel, it calls
+> > > > > kimage_load_normal_segment() to copy user space buffer to intermediate
+> > > > > pages which are allocated with flag GFP_KERNEL. These intermediate pages
+> > > > > are recorded as entries, later when user execute "kexec -e" to trigger
+> > > > > kexec jumping, it will do the final copying from the intermediate pages
+> > > > > to the real destination pages which @mem pointed. Because we can't touch
+> > > > > the existed data in 1st kernel when do kexec kernel loading. With my
+> > > > > understanding, GFP_KERNEL will make those intermediate pages be
+> > > > > allocated inside immovable area, it won't impact hotplugging. But the
+> > > > > @mem we searched in the whole system RAM might be lost along with
+> > > > > hotplug. Hence we need do kexec kernel again when hotplug event is
+> > > > > detected.
+> > > > 
+> > > > I am not sure I am following. If @mem is placed at movable node then the
+> > > > memory hotremove simply won't work, because we are seeing reserved pages
+> > > > and do not know what to do about them. They are not migrateable.
+> > > > Allocating intermediate pages from other nodes doesn't really help.
+> > > 
+> > > OK, I forgot the 2nd kernel which kexec jump into. It won't impact hotremove
+> > > in 1st kernel, it does impact the kernel which kexec jump into if kernel
+> > > is at top of system RAM and the top RAM is in movable node.
+> > 
+> > It will affect the 1st kernel (which does the memblock allocation
+> > top-down) as well. For reasons mentioned above.
 > 
-> Cheers!
+> And btw. in the ideal world, we would restrict the memblock allocation
+> top-down from the non-movable nodes. But I do not think we have that
+> information ready at the time when the reservation is done.
+
+Oh, you could mix kexec loading up with kdump kernel loading. For kdump
+kernel, we need reserve memory region during bootup with memblock
+allocator. For kexec loading, we just operate after system up, and do
+not need to reserve any memmory region. About memory used to load them,
+it's quite different way.
+
+Thanks
+Baoquan
