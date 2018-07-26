@@ -1,87 +1,46 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 1/2] ARM: dts: exynos: arndale: use i2c-gpio for HDMI-DDC
-Date: Thu, 26 Jul 2018 13:04:49 +0200
-Message-ID: <20180726110451eucas1p1cddb55c0c0feeb2494e6199445773c8a~E5mQ6hXvs0711807118eucas1p1l@eucas1p1.samsung.com>
-References: <CGME20180726101245eucas1p16d84c77490d9eb81300f38c2f3fb34a5@eucas1p1.samsung.com>
- <20180726101228.14956-1-a.hajda@samsung.com>
- <CAJKOXPd-59v78yDRtUA=5aqmuac8Gxu2JWwrbR44Wn3jXr+nJw@mail.gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
+Date: Thu, 26 Jul 2018 16:39:34 +0530
+Message-ID: <CABb+yY2=mFr+gFuWyE+VyG6dWj3gKhTs6X+U9UjFu5N=4zU5uA@mail.gmail.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-7-o.rempel@pengutronix.de>
+ <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
+ <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAJKOXPd-59v78yDRtUA=5aqmuac8Gxu2JWwrbR44Wn3jXr+nJw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>srv_heupstream <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYuMDcuMjAxOCAxMjoyMywgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPiBPbiAyNiBK
-dWx5IDIwMTggYXQgMTI6MTIsIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdy
-b3RlOgo+PiBIRE1JLUREQyBmb3IgdW5rbm93biByZWFzb25zIGRvZXNuJ3Qgd29yayB3aXRoIEV4
-eW5vcyBJMkMKPj4gY29udHJvbGxlcnMuIEZvcnR1bmF0ZWx5IGkyYy1ncGlvIGNvbWVzIHRvIHRo
-ZSByZXNjdWUuCj4gV2FpdC4uLiB3aGF0PyBUaGUgSTJDIGNvbnRyb2xsZXIgb24gU29DIChvciBp
-dHMgZHJpdmVyKSBpcyBidWdneSBpbgo+IHNvbWUgd2F5IGFuZCB3ZSBuZWVkIHRvIHVzZSB0aGVz
-ZSBwaW5zIGFzIEdQSU8gdG8gcnVuIGkyYy1ncGlvIGRyaXZlcgo+IHRoZXJlPyBJdCBsb29rcyBs
-aWtlIHdvcmthcm91bmQgbm90IGEgcHJvcGVyIHNvbHV0aW9uLi4uCgpCdXQgYXQgbGVhc3Qgd29y
-a2luZyBvbmUgOikgQmV0dGVyIHNvbHV0aW9ucyBhcmUgd2VsY29tZS4KVGhpcyBzZWVtcyB0byBi
-ZSBub3QgdW5jb21tb24gaXNzdWUsIGlmIHlvdSBmb3IgZXhhbXBsZSBsb29rIGludG8gb2Ryb2lk
-CnZlbmRvciBrZXJuZWwgeW91IGNhbiBldmVuIGZpbmQgaGFyZGNvZGVkIEVESURzIDopCgpSZWdh
-cmRzCkFuZHJ6ZWoKCgo+Cj4gQmVzdCByZWdhcmRzLAo+IEtyenlzenRvZgo+Cj4+IFNpZ25lZC1v
-ZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4+IC0tLQo+PiAgYXJj
-aC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1hcm5kYWxlLmR0cyAgfCAyNCArKysrKysrKysrKysr
-KystLS0tLS0tLQo+PiAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kg
-fCAgNiArKysrKysKPj4gIDIgZmlsZXMgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKSwgOCBkZWxl
-dGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAt
-YXJuZGFsZS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLWFybmRhbGUuZHRzCj4+
-IGluZGV4IDgxNmQ4OWQ0Y2VmZC4uNTkxMDIzMzkxZjdkIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2Fy
-bS9ib290L2R0cy9leHlub3M1MjUwLWFybmRhbGUuZHRzCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2V4eW5vczUyNTAtYXJuZGFsZS5kdHMKPj4gQEAgLTIxMSw3ICsyMTEsNyBAQAo+Pgo+PiAg
-JmhkbWkgewo+PiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gLSAgICAgICBkZGMgPSA8Jmky
-Y18yPjsKPj4gKyAgICAgICBkZGMgPSA8JmkyY19kZGM+Owo+PiAgICAgICAgIGhwZC1ncGlvcyA9
-IDwmZ3B4MyA3IEdQSU9fQUNUSVZFX0xPVz47Cj4+ICAgICAgICAgdmRkX29zYy1zdXBwbHkgPSA8
-JmxkbzEwX3JlZz47Cj4+ICAgICAgICAgdmRkX3BsbC1zdXBwbHkgPSA8JmxkbzhfcmVnPjsKPj4g
-QEAgLTUxMywxMyArNTEzLDYgQEAKPj4gICAgICAgICB9Owo+PiAgfTsKPj4KPj4gLSZpMmNfMiB7
-Cj4+IC0gICAgICAgc3RhdHVzID0gIm9rYXkiOwo+PiAtICAgICAgIC8qIHVzZWQgYnkgSERNSSBE
-REMgKi8KPj4gLSAgICAgICBzYW1zdW5nLGkyYy1zZGEtZGVsYXkgPSA8MTAwPjsKPj4gLSAgICAg
-ICBzYW1zdW5nLGkyYy1tYXgtYnVzLWZyZXEgPSA8NjYwMDA+Owo+PiAtfTsKPj4gLQo+PiAgJmky
-Y18zIHsKPj4gICAgICAgICBzdGF0dXMgPSAib2theSI7Cj4+Cj4+IEBAIC02MDgsMyArNjAxLDE4
-IEBACj4+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+PiAgICAgICAgIHNhbXN1bmcsZXh5bm9z
-LXNhdGFwaHktaTJjLXBoYW5kbGUgPSA8JnNhdGFfcGh5X2kyYz47Cj4+ICB9Owo+PiArCj4+ICsm
-c29jIHsKPj4gKyAgICAgICBpMmNfZGRjOiBpMmMtZ3BpbyB7Cj4+ICsgICAgICAgICAgICAgICBw
-aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiArICAgICAgICAgICAgICAgcGluY3RybC0wID0g
-PCZpMmMyX2dwaW9fYnVzPjsKPj4gKyAgICAgICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4g
-KyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiaTJjLWdwaW8iOwo+PiArICAgICAgICAgICAg
-ICAgZ3Bpb3MgPSA8JmdwYTAgNiAwIC8qIHNkYSAqLwo+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgJmdwYTAgNyAwIC8qIHNjbCAqLwo+PiArICAgICAgICAgICAgICAgICAgICAgICA+Owo+PiAr
-ICAgICAgICAgICAgICAgaTJjLWdwaW8sZGVsYXktdXMgPSA8Mj47Cj4+ICsgICAgICAgICAgICAg
-ICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKyAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0g
-PDA+Owo+PiArICAgICAgIH07Cj4+ICt9Owo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
-dHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUw
-LXBpbmN0cmwuZHRzaQo+PiBpbmRleCA2ZmY2ZGVhMjlkNDQuLmIyNWQ1MjAzOTNiOCAxMDA2NDQK
-Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kKPj4gKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kKPj4gQEAgLTIyNSw2
-ICsyMjUsMTIgQEAKPj4gICAgICAgICAgICAgICAgIHNhbXN1bmcscGluLWRydiA9IDxFWFlOT1M0
-X1BJTl9EUlZfTFYxPjsKPj4gICAgICAgICB9Owo+Pgo+PiArICAgICAgIGkyYzJfZ3Bpb19idXM6
-IGkyYzItZ3Bpby1idXMgewo+PiArICAgICAgICAgICAgICAgc2Ftc3VuZyxwaW5zID0gImdwYTAt
-NiIsICJncGEwLTciOwo+PiArICAgICAgICAgICAgICAgc2Ftc3VuZyxwaW4tcHVkID0gPEVYWU5P
-U19QSU5fUFVMTF9OT05FPjsKPj4gKyAgICAgICAgICAgICAgIHNhbXN1bmcscGluLWRydiA9IDxF
-WFlOT1M0X1BJTl9EUlZfTFYxPjsKPj4gKyAgICAgICB9Owo+PiArCj4+ICAgICAgICAgdWFydDJf
-ZGF0YTogdWFydDItZGF0YSB7Cj4+ICAgICAgICAgICAgICAgICBzYW1zdW5nLHBpbnMgPSAiZ3Bh
-MS0wIiwgImdwYTEtMSI7Cj4+ICAgICAgICAgICAgICAgICBzYW1zdW5nLHBpbi1mdW5jdGlvbiA9
-IDxFWFlOT1NfUElOX0ZVTkNfMj47Cj4+IC0tCj4+IDIuMTguMAo+Pgo+IC0tCj4gVG8gdW5zdWJz
-Y3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXNh
-bXN1bmctc29jIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5r
-ZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9y
-Zy9tYWpvcmRvbW8taW5mby5odG1sCj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On Thu, Jul 26, 2018 at 4:21 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+
+>>
+>>> +struct imx_mu_con_priv {
+>>> +       int                     irq;
+>>> +       unsigned int            idx;
+>>> +       char                    *irq_desc;
+>>>
+>> Having      char  irq_desc[16];    seems simpler than free/kfree upon
+>> each startup/shutdown. Simply use snprintf() in probe().
+>
+> Currently all known configurations use one or two channels. I don't see
+> any sense to allocate all at the probe.
+>
+Just because only 2 out of 4 channels are being used, it doesn't make sense?
+
+What is the concern?  "wasting" 16x2 bytes of memory?  How many bytes,
+LOC and execution time does kasprintf() waste?
