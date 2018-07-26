@@ -1,79 +1,100 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add Cortex-A53 PMU support
-Date: Thu, 26 Jul 2018 15:53:29 +0200
-Message-ID: <20180726135328.zmqanet4dns4vk5m@verge.net.au>
-References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
- <d8e355fd-46f5-3798-fe43-811471a75ab6@cogentembedded.com>
- <CAMuHMdXPYwC5pmY+HmT0TYTXpmy152pVtdanSPCZMX1xp0r76g@mail.gmail.com>
- <CAMuHMdV-6s+NizKhszaY8f2=L2QS8KgCBcKEjR_qvyrrV04uXw@mail.gmail.com>
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Thu, 26 Jul 2018 16:01:52 +0200
+Message-ID: <20180726140152.GM28386@dhcp22.suse.cz>
+References: <20180718024944.577-5-bhe@redhat.com>
+ <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
+ <20180719151753.GB7147@localhost.localdomain>
+ <20180723143443.GD18181@dhcp22.suse.cz>
+ <20180725064813.GI6480@MiWiFi-R3L-srv>
+ <20180726125957.GH28386@dhcp22.suse.cz>
+ <20180726130904.GL6480@MiWiFi-R3L-srv>
+ <20180726131242.GI28386@dhcp22.suse.cz>
+ <20180726131420.GJ28386@dhcp22.suse.cz>
+ <20180726133705.GM6480@MiWiFi-R3L-srv>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdV-6s+NizKhszaY8f2=L2QS8KgCBcKEjR_qvyrrV04uXw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20180726133705.GM6480@MiWiFi-R3L-srv>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: nicolas.pitre@linaro.org, brijesh.singh@amd.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-pci@vger.kernel.org, richard.weiyang@gmail.com, keith.busch@intel.com, jcmvbkbc@gmail.com, baiyaowei@cmss.chinamobile.com, frowand.list@gmail.com, dan.j.williams@intel.com, lorenzo.pieralisi@arm.com, sthemmin@microsoft.com, linux-nvdimm@lists.01.org, patrik.r.jakobsson@gmail.com, andy.shevchenko@gmail.com, linux-input@vger.kernel.org, gustavo@padovan.org, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, thomas.lendacky@amd.com, haiyangz@microsoft.com, maarten.lankhorst@linux.intel.com, josh@joshtriplett.org, jglisse@redhat.com, robh+dt@kernel.org, seanpaul@chromium.org, bhelgaas@google.com, tglx@linutronix.de, yinghai@kernel.org, jonathan.derrick@intel.com, chris@zankel.net, monstr@monstr.eu, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, dmitry.torokhov@gmail
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 02:33:55PM +0200, Geert Uytterhoeven wrote:
-> On Wed, Jul 25, 2018 at 7:34 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, Jul 25, 2018 at 6:44 PM Sergei Shtylyov
-> > <sergei.shtylyov@cogentembedded.com> wrote:
-> > > Describe the performance monitor unit (PMU) for the Cortex-A53 cores in
-> > > the R8A77970 SoC's device tree.
-> >
-> > 8?
+On Thu 26-07-18 21:37:05, Baoquan He wrote:
+> On 07/26/18 at 03:14pm, Michal Hocko wrote:
+> > On Thu 26-07-18 15:12:42, Michal Hocko wrote:
+> > > On Thu 26-07-18 21:09:04, Baoquan He wrote:
+> > > > On 07/26/18 at 02:59pm, Michal Hocko wrote:
+> > > > > On Wed 25-07-18 14:48:13, Baoquan He wrote:
+> > > > > > On 07/23/18 at 04:34pm, Michal Hocko wrote:
+> > > > > > > On Thu 19-07-18 23:17:53, Baoquan He wrote:
+> > > > > > > > Kexec has been a formal feature in our distro, and customers owning
+> > > > > > > > those kind of very large machine can make use of this feature to speed
+> > > > > > > > up the reboot process. On uefi machine, the kexec_file loading will
+> > > > > > > > search place to put kernel under 4G from top to down. As we know, the
+> > > > > > > > 1st 4G space is DMA32 ZONE, dma, pci mmcfg, bios etc all try to consume
+> > > > > > > > it. It may have possibility to not be able to find a usable space for
+> > > > > > > > kernel/initrd. From the top down of the whole memory space, we don't
+> > > > > > > > have this worry. 
+> > > > > > > 
+> > > > > > > I do not have the full context here but let me note that you should be
+> > > > > > > careful when doing top-down reservation because you can easily get into
+> > > > > > > hotplugable memory and break the hotremove usecase. We even warn when
+> > > > > > > this is done. See memblock_find_in_range_node
+> > > > > > 
+> > > > > > Kexec read kernel/initrd file into buffer, just search usable positions
+> > > > > > for them to do the later copying. You can see below struct kexec_segment, 
+> > > > > > for the old kexec_load, kernel/initrd are read into user space buffer,
+> > > > > > the @buf stores the user space buffer address, @mem stores the position
+> > > > > > where kernel/initrd will be put. In kernel, it calls
+> > > > > > kimage_load_normal_segment() to copy user space buffer to intermediate
+> > > > > > pages which are allocated with flag GFP_KERNEL. These intermediate pages
+> > > > > > are recorded as entries, later when user execute "kexec -e" to trigger
+> > > > > > kexec jumping, it will do the final copying from the intermediate pages
+> > > > > > to the real destination pages which @mem pointed. Because we can't touch
+> > > > > > the existed data in 1st kernel when do kexec kernel loading. With my
+> > > > > > understanding, GFP_KERNEL will make those intermediate pages be
+> > > > > > allocated inside immovable area, it won't impact hotplugging. But the
+> > > > > > @mem we searched in the whole system RAM might be lost along with
+> > > > > > hotplug. Hence we need do kexec kernel again when hotplug event is
+> > > > > > detected.
+> > > > > 
+> > > > > I am not sure I am following. If @mem is placed at movable node then the
+> > > > > memory hotremove simply won't work, because we are seeing reserved pages
+> > > > > and do not know what to do about them. They are not migrateable.
+> > > > > Allocating intermediate pages from other nodes doesn't really help.
+> > > > 
+> > > > OK, I forgot the 2nd kernel which kexec jump into. It won't impact hotremove
+> > > > in 1st kernel, it does impact the kernel which kexec jump into if kernel
+> > > > is at top of system RAM and the top RAM is in movable node.
+> > > 
+> > > It will affect the 1st kernel (which does the memblock allocation
+> > > top-down) as well. For reasons mentioned above.
+> > 
+> > And btw. in the ideal world, we would restrict the memblock allocation
+> > top-down from the non-movable nodes. But I do not think we have that
+> > information ready at the time when the reservation is done.
 > 
-> With that fixes:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Oh, you could mix kexec loading up with kdump kernel loading. For kdump
+> kernel, we need reserve memory region during bootup with memblock
+> allocator. For kexec loading, we just operate after system up, and do
+> not need to reserve any memmory region. About memory used to load them,
+> it's quite different way.
 
-Thanks, I have applied the following for v4.20.
-
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] arm64: dts: renesas: r8a77980: add Cortex-A53 PMU support
-
-Describe the performance monitor unit (PMU) for the Cortex-A53 cores in
-the R8A77980 SoC's device tree.
-
-Based on the original (and large) patch by Vladimir Barinov.
-
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- arch/arm64/boot/dts/renesas/r8a77980.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-index d3532fd4c94a..1013da3e2ec4 100644
---- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-@@ -98,6 +98,15 @@
- 		clock-frequency = <0>;
- 	};
- 
-+	pmu_a53 {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts-extended = <&gic GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&a53_0>, <&a53_1>, <&a53_2>, <&a53_3>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0", "arm,psci-0.2";
- 		method = "smc";
+I didn't know about that. I thought both use the same underlying
+reservation mechanism. My bad and sorry for the noise.
 -- 
-2.11.0
+Michal Hocko
+SUSE Labs
