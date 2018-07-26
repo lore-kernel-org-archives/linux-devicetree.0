@@ -1,60 +1,91 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v3 00/23] Add multi-channel support to Armada thermal
- driver
-Date: Thu, 26 Jul 2018 10:00:41 +0800
-Message-ID: <1532570441.2358.27.camel@intel.com>
-References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
- <20180718172849.30b7cec0@xps13> <20180725095222.054f1e80@xps13>
+From: Anurag Kumar Vulisha <anuragku@xilinx.com>
+Subject: RE: [PATCH] usb: dwc3: core: Add quirk for enabling AutoRetry feature
+ in the controller
+Date: Thu, 26 Jul 2018 02:35:16 +0000
+Message-ID: <MWHPR02MB2816DDEAE84716F88B08EB46A72B0@MWHPR02MB2816.namprd02.prod.outlook.com>
+References: <1532168920-3269-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <20180725200325.GA21007@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180725095222.054f1e80@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180725200325.GA21007@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24g5LiJLCAyMDE4LTA3LTI1IGF0IDA5OjUyICswMjAwLCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+
-IEhpIEVkdWFyZG8sIFpoYW5nLAo+IAo+IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9v
-dGxpbi5jb20+IHdyb3RlIG9uIFdlZCwgMTggSnVsIDIwMTgKPiAxNzoyODo0OSArMDIwMDoKPiAK
-PiA+IAo+ID4gSGkgRWR1YXJkbywKPiA+IAo+ID4gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5h
-bEBib290bGluLmNvbT4gd3JvdGUgb24gTW9uLCAxNiBKdWwgMjAxOAo+ID4gMTY6NDE6NDMgKzAy
-MDA6Cj4gPiAKPiA+ID4gCj4gPiA+IFRoZSBvbmx5IGNhcGFiaWxpdHkgb2YgdGhlIEFybWFkYSB0
-aGVybWFsIGRyaXZlciBpcyBjdXJyZW50bHkKPiA+ID4ganVzdCB0bwo+ID4gPiByZWFkIG9uZSBz
-ZW5zb3IgKHRoZSBkZWZhdWx0IG9uZSkgcGVyIEFQIGFuZCBvbmUgcGVyIENQLgo+ID4gPiBBY3R1
-YWxseSwKPiA+ID4gdGhlcmUgaXMgb25lIHNlbnNvciBwZXIgY29yZSBpbiB0aGUgQVA4MDYgcGx1
-cyBvbmUgc2Vuc29yIGluIHRoZQo+ID4gPiB0aGVybWFsIElQIGl0c2VsZi4gVGhlIENQMTEwIGp1
-c3QgZmVhdHVyZXMgb25lIHRoZXJtYWwgc2Vuc29yIGluCj4gPiA+IGl0cwo+ID4gPiBvd24gdGhl
-cm1hbCBJUC4KPiA+ID4gCj4gPiA+IFRoaXMgc2VyaWVzIGZpcnN0IGltcHJvdmVzIHRoZSByZWFk
-YWJpbGl0eSBvZiB0aGlzIGRyaXZlciwgdGhlbgo+ID4gPiBhZGRzCj4gPiA+IHN1cHBvcnQgZm9y
-IG11bHRpLWNoYW5uZWwgdGhlcm1hbCBJUHMuIFRoZSBiaW5kaW5ncyBhbmQgdGhlCj4gPiA+IGRl
-dmljZS10cmVlcyBhcmUgdXBkYXRlZCBhY2NvcmRpbmdseS4KPiA+ID4gCj4gPiA+IFRoYW5rIHlv
-dSwKPiA+ID4gTWlxdcOobMKgwqAKPiA+IEkga25vdyBJIHNlbnQgdGhpcyBzZXJpZXMgb24gbW9u
-ZGF5IGJ1dCB0aGVyZSB3YXMgYWxtb3N0IG5vIGNoYW5nZQo+ID4gb24KPiA+IGl0IChzZWUgYmVs
-b3cpLCBkbyB5b3UgdGhpbmsgeW91IHdpbGwgaGF2ZSB0aGUgdGltZSB0byBsb29rIGF0IGl0Cj4g
-PiBiZWZvcmUgaXQncyB0b28gbGF0ZSBmb3IgdGhlIG1lcmdlIHdpbmRvdz8KPiBJIGtub3cgYSBs
-aXR0bGUgYml0IHdoYXQgaXQgaXMgdG8gYmUgb24gdGhlIG1haW50YWluZXIgc2lkZSBvZiBhCj4g
-c3Vic3lzdGVtIGJ1dCB0aGVzZSBjaGFuZ2VzIGFyZSBsYXlpbmcgc2luY2UgQXByaWwsIDIxc3Qg
-YW5kIEkgcmVhbGx5Cj4gZXhwZWN0IHRvIGdldCB0aGVtIG1lcmdlZC4gWmhhbmcsIGFzIEVkdWFy
-ZG8gc2VlbXMgdG8gYmUgb3ZlcmxvYWRlZAo+IHRoaXMgcmVsZWFzZSwgY291bGQgeW91IHBsZWFz
-ZSB0YWtlIHRoZSBzZXJpZXM/Cj4gCj4gT2YgY291cnNlIGlmIHRoZXJlIGFyZSB0aGluZ3MgdG8g
-YWRkcmVzcyBJJ2xsIGJlIGhhcHB5IHRvIGRvIHNvLgo+IApJIGhhZCBhIHN5bmMgd2l0aCBFZHVh
-cmRvIGR1cmluZyBsYXN0IG1lcmdlIHdpbmRvdywgYW5kIHdlIGFncmVlZCB0bwpzZW5kIHNlcGFy
-YXRlIGdpdCBwdWxsIHJlcXVlc3RzIHRvIExpbnVzIHNpbmNlIHRoaXMgcmVsZWFzZSBhbmQgc2Vl
-IGhvdwppdCB3b3Jrcy4KVGhpcyBtZWFucyB0aGF0IGFsbCB0aGUgc29jIHRoZXJtYWwgZHJpdmVy
-IHBhdGNoZXMgc2hvdWxkIGdvIHRvCkVkdWFyZG8nIHRyZWUgYW5kIHRoZW4gTGludXMnIHRyZWUg
-ZGlyZWN0bHkuCgpBbnl3YXksIGxldCdzIHBpbmcgRWR1YXJkbyBhbmQgc2VlIGlmIGhlIGNhbiBy
-ZXZpZXcvdGFrZSB0aGUgcGF0Y2hlcy4KCnRoYW5rcywKcnVpCj4gVGhhbmtzLAo+IE1pcXXDqGwK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+Hi Rob,
+
+Thanks for your comments, please see my comments inline
+
+>-----Original Message-----
+>From: Rob Herring [mailto:robh@kernel.org]
+>Sent: Thursday, July 26, 2018 1:33 AM
+>To: Anurag Kumar Vulisha <anuragku@xilinx.com>
+>Cc: gregkh@linuxfoundation.org; mark.rutland@arm.com; balbi@kernel.org;
+>v.anuragkumar@gmail.com; linux-usb@vger.kernel.org; devicetree@vger.kernel=
+.org;
+>linux-kernel@vger.kernel.org
+>Subject: Re: [PATCH] usb: dwc3: core: Add quirk for enabling AutoRetry fea=
+ture in the
+>controller
+>
+>On Sat, Jul 21, 2018 at 03:58:40PM +0530, Anurag Kumar Vulisha wrote:
+>> By default when core sees any transaction error(CRC or overflow)
+>> it replies with terminating retry ACK (Retry=3D1 and Nump =3D=3D 0).
+>> Enabling this Auto Retry feature in controller, on seeing any
+>> transaction errors makes the core to send an non-terminating ACK
+>> transaction packet (that is, ACK TP with Retry=3D1 and Nump !=3D 0).
+>> Doing so will give controller a chance to recover from the error
+>> condition.
+>>
+>> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+>> ---
+>>  Documentation/devicetree/bindings/usb/dwc3.txt |  5 +++++
+>>  drivers/usb/dwc3/core.c                        | 16 ++++++++++++++++
+>>  drivers/usb/dwc3/core.h                        |  6 ++++++
+>>  3 files changed, 27 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+>b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> index 7f13ebe..2ba2bc2 100644
+>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> @@ -94,6 +94,11 @@ Optional properties:
+>>  			this and tx-thr-num-pkt-prd to a valid, non-zero value
+>>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
+>>  			enable periodic ESS TX threshold.
+>> + - snps,enable_auto_retry: Set to enable Auto retry Feature to make the
+>
+>s/_/-/
+Sorry, I am not able to understand what needs to fixed here. Please help me=
+ in
+understanding, so that I can fix it in v2.
+>
+>> +			controller operating in Host mode on seeing transaction
+>> +			errors(CRC errors or internal overrun scenerios) on IN
+>> +			transfers to reply to the device with a non-terminating
+>> +			retry ACK (i.e, an ACK TP with Retry=3D1 & Nump !=3D 0)
+>
+>Seems like the property is unnecessary. When would you not want this
+>retry behavior? Why not just enable unconditionally in the driver?
+>
+There is no harm in adding this fix always but I think this Retry feature s=
+hould be added
+depending on the user and type of the application. For example, applying th=
+is feature in
+a streaming application where isochronous transfers  are used might end up =
+in retrying
+in failed packet until timeout happens, this might reduce the performance. =
+And there may
+be cases where the user want to know when the transfer error occurred. Enab=
+ling this feature
+always will fail in both the above mentioned cases. Because of this reason =
+added this quirk,
+so that user can decide when to apply and not. Please correct me if I am wr=
+ong=20
+
+Thanks,
+Anurag Kumar Vulisha
