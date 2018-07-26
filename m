@@ -1,63 +1,127 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: exynos: arndale: fix HDMI-HPD line handling
-Date: Thu, 26 Jul 2018 12:44:30 +0200
-Message-ID: <CAJKOXPfR-5pwM_XW9DPNwQAJ2eaDbbnhANbmZCq3eweZ0OyDXg@mail.gmail.com>
-References: <CGME20180726101248eucas1p14ede2f90176b93f0bfde1808b494abbd@eucas1p1.samsung.com>
- <20180726101228.14956-1-a.hajda@samsung.com>
- <20180726101228.14956-2-a.hajda@samsung.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
+Date: Thu, 26 Jul 2018 12:51:40 +0200
+Message-ID: <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-7-o.rempel@pengutronix.de>
+ <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180726101228.14956-2-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: multipart/mixed; boundary="===============8636632566864556502=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-mediatek@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYgSnVseSAyMDE4IGF0IDEyOjEyLCBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
-Y29tPiB3cm90ZToKPiBIRE1JLUhQRCB3YXMgc2V0IGFjdGl2ZSBsb3csIG1vcmVvdmVyIGJ5IGRl
-ZmF1bHQgcGluY29udHJvbAo+IGNoaXAgc2V0cyBwdWxsLWRvd24gb24gdGhlIHBpbi4gQXMgYSBy
-ZXN1bHQgSERNSSBkcml2ZXIKPiBhc3N1bWVzIFRWIGlzIGFsd2F5cyBjb25uZWN0ZWQgcmVnYXJk
-bGVzcyBvZiBhY3R1YWwgc3RhdGUuCj4gVGhlIHBhdGNoIGZpeGVzIGl0Lgo+Cj4gU2lnbmVkLW9m
-Zi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPiAtLS0KPiAgYXJjaC9h
-cm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1hcm5kYWxlLmR0cyAgfCA0ICsrKy0KPiAgYXJjaC9hcm0v
-Ym9vdC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kgfCA1ICsrKysrCj4gIDIgZmlsZXMgY2hh
-bmdlZCwgOCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4KPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1hcm5kYWxlLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2V4eW5vczUyNTAtYXJuZGFsZS5kdHMKPiBpbmRleCA1OTEwMjMzOTFmN2QuLjI2YmFlNTE1NzE3
-NyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLWFybmRhbGUuZHRz
-Cj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1hcm5kYWxlLmR0cwo+IEBAIC0y
-MTAsOSArMjEwLDExIEBACj4gIH07Cj4KPiAgJmhkbWkgewo+ICsgICAgICAgcGluY3RybC1uYW1l
-cyA9ICJkZWZhdWx0IjsKPiArICAgICAgIHBpbmN0cmwtMCA9IDwmaGRtaV9ocGQ+Owo+ICAgICAg
-ICAgc3RhdHVzID0gIm9rYXkiOwo+ICAgICAgICAgZGRjID0gPCZpMmNfZGRjPjsKPiAtICAgICAg
-IGhwZC1ncGlvcyA9IDwmZ3B4MyA3IEdQSU9fQUNUSVZFX0xPVz47Cj4gKyAgICAgICBocGQtZ3Bp
-b3MgPSA8JmdweDMgNyBHUElPX0FDVElWRV9ISUdIPjsKClRoZSBncHgzLTcgKEhETUktSFBEKSBo
-YXMgZXh0ZXJuYWwgcHVsbCB1cCB0by4uLiBzbyBtYXliZSBpdCBzaG91bGQgYmUKYWN0aXZlIGxv
-dz8gSG93IGNhbiBpdCBnbyBoaWdoIGlmIGl0IGlzIGFscmVhZHkgaGlnaD8KSSBhbSBub3Qgc3Vy
-ZSBpZiB0aGlzIG1hdHRlcnMgYmVjYXVzZSB0aGUgZHJpdmVyIGlnbm9yZXMgdGhlIGZsYWdzIGFu
-ZApyZXNwb25kcyBvbiBib3RoIGZhbGxpbmcgYW5kIHJpc2luZyBlZGdlLgoKQmVzdCByZWdhcmRz
-LApLcnp5c3p0b2YKCj4gICAgICAgICB2ZGRfb3NjLXN1cHBseSA9IDwmbGRvMTBfcmVnPjsKPiAg
-ICAgICAgIHZkZF9wbGwtc3VwcGx5ID0gPCZsZG84X3JlZz47Cj4gICAgICAgICB2ZGQtc3VwcGx5
-ID0gPCZsZG84X3JlZz47Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUy
-NTAtcGluY3RybC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC1waW5jdHJsLmR0
-c2kKPiBpbmRleCBiMjVkNTIwMzkzYjguLmQzMWE2ODY3MmJmYSAxMDA2NDQKPiAtLS0gYS9hcmNo
-L2FybS9ib290L2R0cy9leHlub3M1MjUwLXBpbmN0cmwuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2V4eW5vczUyNTAtcGluY3RybC5kdHNpCj4gQEAgLTU5OSw2ICs1OTksMTEgQEAKPiAg
-ICAgICAgICAgICAgICAgc2Ftc3VuZyxwaW4tcHVkID0gPEVYWU5PU19QSU5fUFVMTF9OT05FPjsK
-PiAgICAgICAgICAgICAgICAgc2Ftc3VuZyxwaW4tZHJ2ID0gPEVYWU5PUzRfUElOX0RSVl9MVjE+
-Owo+ICAgICAgICAgfTsKPiArCj4gKyAgICAgICBoZG1pX2hwZDogaGRtaS1ocGQgewo+ICsgICAg
-ICAgICAgICAgICBzYW1zdW5nLHBpbnMgPSAiZ3B4My03IjsKPiArICAgICAgICAgICAgICAgc2Ft
-c3VuZyxwaW4tcHVkID0gPEVYWU5PU19QSU5fUFVMTF9OT05FPjsKPiArICAgICAgIH07Cj4gIH07
-Cj4KPiAgJnBpbmN0cmxfMSB7Cj4gLS0KPiAyLjE4LjAKPgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============8636632566864556502==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="nL5YWVr3GLDlSQDY1BkDVeW4R1E6Ycc48"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--nL5YWVr3GLDlSQDY1BkDVeW4R1E6Ycc48
+Content-Type: multipart/mixed; boundary="BCN74KpNeBohgqROeaPdkFBnYLUOzlgiy";
+ protected-headers="v1"
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>,
+ Devicetree List <devicetree@vger.kernel.org>,
+ Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ srv_heupstream <linux-arm-kernel@lists.infradead.org>,
+ ", Sascha Hauer" <kernel@pengutronix.de>,
+ Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+ Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
+ dl-linux-imx <linux-imx@nxp.com>
+Message-ID: <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
+Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-7-o.rempel@pengutronix.de>
+ <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
+In-Reply-To: <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
+
+--BCN74KpNeBohgqROeaPdkFBnYLUOzlgiy
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+
+
+On 26.07.2018 12:15, Jassi Brar wrote:
+> On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
+> <o.rempel@pengutronix.de> wrote:
+>=20
+> .....
+>=20
+>> +
+>> +/* Control Register */
+>> +#define IMX_MU_xCR             0x24
+>> +/* Transmit Interrupt Enable */
+>> +#define IMX_MU_xCR_TIEn(x)     BIT(20 + (3 - (x)))
+>> +/* Receive Interrupt Enable */
+>> +#define IMX_MU_xCR_RIEn(x)     BIT(24 + (3 - (x)))
+>> +
+>> +#define IMX_MU_CHANS   4u
+>> +
+> The 'u' unnecessarily refreshes my knowledge of C  :)
+
+ok
+
+>=20
+>> +struct imx_mu_con_priv {
+>> +       int                     irq;
+>> +       unsigned int            idx;
+>> +       char                    *irq_desc;
+>>
+> Having      char  irq_desc[16];    seems simpler than free/kfree upon
+> each startup/shutdown. Simply use snprintf() in probe().
+
+Currently all known configurations use one or two channels. I don't see
+any sense to allocate all at the probe.
+
+
+--BCN74KpNeBohgqROeaPdkFBnYLUOzlgiy--
+
+--nL5YWVr3GLDlSQDY1BkDVeW4R1E6Ycc48
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltZp70ACgkQdQOiSHVI
+77R9hQf+PHzjVj6uw8lP/pgBEyqp2oLMRnnw9uAUvoKZqwcNwVYZwiUmvx0HyFu1
+PwW08SUREmBGM3aNFMzcenKGZPI0+O3Vj95Voq5649HwMBt8rVXK7vTi+JJgTJT2
+E94MeEXpTPUN6duZwB8Yzn+LOCiKEPwam9oPJf+6gPsEWq/Yseka0ILwQlWavgAB
+nSJnjqIiEaUmGgIOktkhD4eJFeFsAskyHZHZa769yDlvMCPqjTLoIL1erNpdpiDa
+Dt4nTazctoGkXlgofOk9SIlAaSXA3NnCYjMI+W6y5E2yigCT8HAX6XZFpBddxOcO
+Q2C3xgMGHpgPP4sL3yzX5TprRwvMMA==
+=kqUp
+-----END PGP SIGNATURE-----
+
+--nL5YWVr3GLDlSQDY1BkDVeW4R1E6Ycc48--
+
+
+--===============8636632566864556502==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8636632566864556502==--
