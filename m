@@ -1,69 +1,73 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: r40/v40: rewrite BPi M2
- Berry DTS to rebase on M2 Ultra
-Date: Thu, 26 Jul 2018 20:47:34 +0800
-Message-ID: <BA51039A-02DD-42C2-A7A9-E1B866074CA6@aosc.io>
-References: <20180724163655.61365-1-icenowy@aosc.io> <20180726124119.dwne2sncws2p3sdi@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 4/4] kexec_file: Load kernel at top of system RAM if
+ required
+Date: Thu, 26 Jul 2018 14:59:57 +0200
+Message-ID: <20180726125957.GH28386@dhcp22.suse.cz>
+References: <20180718024944.577-1-bhe@redhat.com>
+ <20180718024944.577-5-bhe@redhat.com>
+ <20180718153326.b795e9ea7835432a56cd7011@linux-foundation.org>
+ <20180719151753.GB7147@localhost.localdomain>
+ <20180723143443.GD18181@dhcp22.suse.cz>
+ <20180725064813.GI6480@MiWiFi-R3L-srv>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB7UF47NAKGQEWDT6TTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180726124119.dwne2sncws2p3sdi@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180725064813.GI6480@MiWiFi-R3L-srv>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Baoquan He <bhe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, brijesh.singh-5C7GfCeVMHo@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richard.weiyang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, baiyaowei-0p4V/sDNsUmm0O/7XYngnFaTQe2KTcn/@public.gmane.org, kys-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, sthemmin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, patrik.r.jakobsson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, haiyangz-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, maarten.lankhorst-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, josh-iaAMLnmF4UmaiuxdJuQwMA@public.gmane.org, jglisse-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jonathan.derrick-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel@vger
 List-Id: devicetree@vger.kernel.org
 
+On Wed 25-07-18 14:48:13, Baoquan He wrote:
+> On 07/23/18 at 04:34pm, Michal Hocko wrote:
+> > On Thu 19-07-18 23:17:53, Baoquan He wrote:
+> > > Kexec has been a formal feature in our distro, and customers owning
+> > > those kind of very large machine can make use of this feature to speed
+> > > up the reboot process. On uefi machine, the kexec_file loading will
+> > > search place to put kernel under 4G from top to down. As we know, the
+> > > 1st 4G space is DMA32 ZONE, dma, pci mmcfg, bios etc all try to consume
+> > > it. It may have possibility to not be able to find a usable space for
+> > > kernel/initrd. From the top down of the whole memory space, we don't
+> > > have this worry. 
+> > 
+> > I do not have the full context here but let me note that you should be
+> > careful when doing top-down reservation because you can easily get into
+> > hotplugable memory and break the hotremove usecase. We even warn when
+> > this is done. See memblock_find_in_range_node
+> 
+> Kexec read kernel/initrd file into buffer, just search usable positions
+> for them to do the later copying. You can see below struct kexec_segment, 
+> for the old kexec_load, kernel/initrd are read into user space buffer,
+> the @buf stores the user space buffer address, @mem stores the position
+> where kernel/initrd will be put. In kernel, it calls
+> kimage_load_normal_segment() to copy user space buffer to intermediate
+> pages which are allocated with flag GFP_KERNEL. These intermediate pages
+> are recorded as entries, later when user execute "kexec -e" to trigger
+> kexec jumping, it will do the final copying from the intermediate pages
+> to the real destination pages which @mem pointed. Because we can't touch
+> the existed data in 1st kernel when do kexec kernel loading. With my
+> understanding, GFP_KERNEL will make those intermediate pages be
+> allocated inside immovable area, it won't impact hotplugging. But the
+> @mem we searched in the whole system RAM might be lost along with
+> hotplug. Hence we need do kexec kernel again when hotplug event is
+> detected.
 
+I am not sure I am following. If @mem is placed at movable node then the
+memory hotremove simply won't work, because we are seeing reserved pages
+and do not know what to do about them. They are not migrateable.
+Allocating intermediate pages from other nodes doesn't really help.
 
-=E4=BA=8E 2018=E5=B9=B47=E6=9C=8826=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888:=
-41:19, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Wed, Jul 25, 2018 at 12:36:55AM +0800, Icenowy Zheng wrote:
->> Banana Pi designs the BPi M2 Berry board to be software compatible
->with
->> BPi M2 Ultra,
->
->Do you have a reference for this?
-
-See [1], it says "BPI-M2U and BPI-M2 Berry share the same image".
-
-[1] http://www.banana-pi.org/download.html
-
->
->> so it's based on M2 Ultra with some function cuts, including:
->>=20
->> - 2048MiB DRAM -> 1024MiB (this should be proceed by the bootloader);
->> - dropped a LED;
->> - dropped eMMC;
->> - dropped USB2 and connect USB1 to a 4-port HUB.
->
->Is it the exhaustive list?
-
-Sorry, but I forgot one thing -- LiPo battery connector.
-
-The list can be examined with [2], except LED difference.
-
-[2] https://bananapi.gitbooks.io/bpi-m2-ultra-open-source-single-board-comp=
-uter/content/
-
->
->I'm a bit reluctant to merge that kind of patches usually, since that
->would also imply that each time someone will commit something to the
->M2-Ultra, it would automatically apply to the M2-Berry, without any
->easy way to tell and / or test.
->
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+The memblock code warns exactly for that reason.
+-- 
+Michal Hocko
+SUSE Labs
