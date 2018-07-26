@@ -1,72 +1,40 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 02/15] ARM: tegra: apalis-tk1: reorder pcie properties
-Date: Thu, 26 Jul 2018 09:19:27 +0200
-Message-ID: <0de82cabf0585608a5b7f8316f59c054@agner.ch>
-References: <20180724104309.21741-1-marcel@ziswiler.com>
- <20180724104309.21741-3-marcel@ziswiler.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH 1/4] ARM: dts: stm32: Remove cd-inverted property for stm32429i-eval
+Date: Thu, 26 Jul 2018 09:19:53 +0200
+Message-ID: <1532589596-22181-2-git-send-email-patrice.chotard@st.com>
+References: <1532589596-22181-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724104309.21741-3-marcel@ziswiler.com>
+In-Reply-To: <1532589596-22181-1-git-send-email-patrice.chotard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>, linux-tegra-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, lee.jones@linaro.org
+Cc: mcoquelin.stm32@gmail.com, Patrice Chotard <patrice.chotard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24.07.2018 12:42, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> Reorder PCIe properties.
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Hm, first vs. last property, as far as I can tell there is no official
-recommendation. Maybe Rob can comment on that?
+Remove cd-inverted property and update cd-gpios active level
+accordingly
 
-Most device trees put status last, also the base device trees
-tegra30.dtsi/tegra124.dtsi. So I think in this case we should go with
-last property (before subnodes).
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+ arch/arm/boot/dts/stm32429i-eval.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---
-Stefan
-
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
->  arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi | 2 +-
->  arch/arm/boot/dts/tegra124-apalis.dtsi      | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-> b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-> index 09e3641258ae..cb7e53c86408 100644
-> --- a/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-> +++ b/arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi
-> @@ -39,9 +39,9 @@
->  
->  		/* I210 Gigabit Ethernet Controller (On-module) */
->  		pci@2,0 {
-> +			status = "okay";
->  			phys = <&{/padctl@7009f000/pads/pcie/lanes/pcie-2}>;
->  			phy-names = "pcie-0";
-> -			status = "okay";
->  
->  			pcie@0 {
->  				reg = <0 0 0 0 0>;
-> diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi
-> b/arch/arm/boot/dts/tegra124-apalis.dtsi
-> index 5e7ae5e92fb8..d73ee974648a 100644
-> --- a/arch/arm/boot/dts/tegra124-apalis.dtsi
-> +++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
-> @@ -74,9 +74,9 @@
->  
->  		/* I210 Gigabit Ethernet Controller (On-module) */
->  		pci@2,0 {
-> +			status = "okay";
->  			phys = <&{/padctl@7009f000/pads/pcie/lanes/pcie-2}>;
->  			phy-names = "pcie-0";
-> -			status = "okay";
->  
->  			pcie@0 {
->  				reg = <0 0 0 0 0>;
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index 7eb786a2d624..ed7d7f46465e 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -264,8 +264,7 @@
+ &sdio {
+ 	status = "okay";
+ 	vmmc-supply = <&mmc_vcard>;
+-	cd-gpios = <&stmpegpio 15 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&stmpegpio 15 GPIO_ACTIVE_LOW>;
+ 	pinctrl-names = "default", "opendrain";
+ 	pinctrl-0 = <&sdio_pins>;
+ 	pinctrl-1 = <&sdio_pins_od>;
+-- 
+1.9.1
