@@ -1,91 +1,56 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
- i.MX7S SoCs.
-Date: Thu, 26 Jul 2018 13:35:37 +0200
-Message-ID: <1532604937.32306.30.camel@pengutronix.de>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: mailbox: allow mbox-cells to be equal
+ to 0
+Date: Thu, 26 Jul 2018 17:06:46 +0530
+Message-ID: <CABb+yY1DQbGnWL=HZc=xPLdJjKgkpdvCHmm6Pr6_MvERR=D56Q@mail.gmail.com>
 References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-5-o.rempel@pengutronix.de>
- <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
- <1532601691.32306.28.camel@pengutronix.de>
- <CABb+yY1GEmw_8q2HaF8y5VfFJX_c_0_MbWtPUE_j_o-zS8iZ_g@mail.gmail.com>
+ <20180726065331.6186-2-o.rempel@pengutronix.de> <CABb+yY2+WwxHBtQfU3TJTErpfzfkNH8iwwYyXbmWAQy8UsqLRQ@mail.gmail.com>
+ <AM0PR04MB421178C5283BDCCF11F5E2AF802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY1GEmw_8q2HaF8y5VfFJX_c_0_MbWtPUE_j_o-zS8iZ_g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org,  linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM0PR04MB421178C5283BDCCF11F5E2AF802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sudeep Holla <sudeep.holla@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ", Sascha Hauer" <kernel@pengutronix.de>, ", linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgZGVuIDI2LjA3LjIwMTgsIDE2OjQ1ICswNTMwIHNjaHJpZWIgSmFzc2kg
-QnJhcjoKPiBPbiBUaHUsIEp1bCAyNiwgMjAxOCBhdCA0OjExIFBNLCBMdWNhcyBTdGFjaCA8bC5z
-dGFjaEBwZW5ndXRyb25peC5kZT4KPiB3cm90ZToKPiA+IEhpIEphc3NpLAo+ID4gCj4gPiBBbSBE
-b25uZXJzdGFnLCBkZW4gMjYuMDcuMjAxOCwgMTU6MjUgKzA1MzAgc2NocmllYiBKYXNzaSBCcmFy
-Ogo+ID4gPiBPbiBUaHUsIEp1bCAyNiwgMjAxOCBhdCAxMjoyMyBQTSwgT2xla3NpaiBSZW1wZWwK
-PiA+ID4gPiA8by5yZW1wZWxAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+ID4gPiA+IFRoaXMgYXJl
-IGN1cnJlbnRseSB0ZXN0ZWQgU29DcyB3aXRoIGlteC1tYWlsYm94IGRyaXZlci4KPiA+ID4gPiAK
-PiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogT2xla3NpaiBSZW1wZWwgPG8ucmVtcGVsQHBlbmd1
-dHJvbml4LmRlPgo+ID4gPiA+IAo+ID4gPiA+IC0tLQo+ID4gPiA+IMKgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvZnNsLG11LnR4dCB8IDIgKy0KPiA+ID4gPiDCoDEg
-ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+ID4gPiA+IAo+ID4g
-PiA+IGRpZmYgLS1naXQKPiA+ID4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tYWlsYm94L2ZzbCxtdS50eHQKPiA+ID4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tYWlsYm94L2ZzbCxtdS50eHQKPiA+ID4gPiBpbmRleCAxMTNkNmFiOTMxZWYuLjU2
-MTZkMmFmY2E0NSAxMDA2NDQKPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWFpbGJveC9mc2wsbXUudHh0Cj4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvZnNsLG11LnR4dAo+ID4gPiA+IEBAIC0xOCw3ICsx
-OCw3IEBAIE1lc3NhZ2luZyBVbml0IERldmljZSBOb2RlOgo+ID4gPiA+IMKgUmVxdWlyZWQgcHJv
-cGVydGllczoKPiA+ID4gPiDCoC0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+ID4gPiDCoC0gY29tcGF0
-aWJsZSA6IHNob3VsZCBiZSAiZnNsLDxjaGlwPi1tdSIsIHRoZSBzdXBwb3J0ZWQgY2hpcHMKPiA+
-ID4gPiBpbmNsdWRlCj4gPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlteDhx
-eHAsIGlteDhxbS4KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW14NnN4
-LCBpbXg3cywgaW14OHF4cCwgaW14OHFtLgo+ID4gPiA+IAo+ID4gPiAKPiA+ID4gVGhpcyBpcyBu
-b3Qgc2NhbGFibGUuIERvIHdlIGFkZCBldmVyeSBuZXcgU29DIHRoYXQgY29udGFpbnMgdGhlCj4g
-PiA+IHNhbWUgY29udHJvbGxlcj8KPiA+IAo+ID4gWWVzLCB3ZSBkby4gVGhpcyBpcyBhIHBvbGlj
-eSBkaXJlY3Rpb24gZnJvbSB0aGUgRFQgbWFpbnRhaW5lcnMuCj4gPiAKPiAKPiBJIHdvdWxkIGxv
-dmUgdG8gcmVhZCB0aGUgcG9zdC9kb2N1bWVudGF0aW9uLgo+IAo+IENvbnNpZGVyIHRoZSBzYW1l
-IGgvdyAtIGNvbnRyb2xsZXIgYW5kIHBsYXRmb3JtcywgYnV0IG9ubHkgdGhlIHRoZSBNVQo+IGNo
-YXB0ZXIgc2FpZCB0aGUgY29udHJvbGxlciBuYW1lIGlzLCBzYXksICdNVTEyMScuIEkgYW0gc3Vy
-ZSBub3cgeW91Cj4gd2lsbCBzZWUgaXQgY29ycmVjdCB0byBjYWxsIGl0ICJmc2wsbXUxMjEiIGNv
-bXBhdGlibGUuCj4gV2hhdCBjaGFuZ2VkPyBqdXN0IHRoZSBuYW1lLCByaWdodD8KPiAKPiAKPiA+
-IElmIHdlCj4gPiBldmVyIGdvaW5nIHRvIHdhbnQgdG8gdmFsaWRhdGUgRFRzIGFnYWluc3QgdGhl
-IGJpbmRpbmcsIGFsbAo+ID4gY29tcGF0aWJsZXMKPiA+IHVzZWQgaW4gdGhlIERUcyBtdXN0IGJl
-IHNwZWNpZmllZCBpbiB0aGUgYmluZGluZy4KPiA+IAo+ID4gQXMgd2UgY2FuJ3QgcmVhbGx5IHRl
-bGwgaWYgdGhlIGNvbnRyb2xsZXIgaXMgZXhhY3RseSB0aGUgc2FtZSBvcgo+ID4gZXZlbgo+ID4g
-aGFzIHNvbWUgU29DIGludGVncmF0aW9uIGJ1Z3MsIHdlIGdlbmVyYWxseSBhZGQgYSBuZXcgY29t
-cGF0aWJsZQo+ID4gZm9yCj4gPiBlYWNoIFNvQyB0byBrZXkgb2ZmIGFueSB3b3JrYXJvdW5kcyBu
-ZWNlc3NhcnkgaW4gdGhlIGRyaXZlciB3aXRob3V0Cj4gPiB0aGUKPiA+IG5lZWQgdG8gY2hhbmdl
-IHRoZSBEVHMsIGJyZWFraW5nIGNvbXBhdGliaWxpdHkuCj4gPiAKPiAKPiBJIHRoaW5rIGlmIHRo
-ZSBoL3cgcmVzb3VyY2VzIGFuZCBiZWhhdmlvdXIgcmVtYWluIHRoZSBzYW1lIGFuZCB0aGUKPiBk
-b2N1bWVudGF0aW9uIGRvZXMgbm90IGNhbGwgaXQgYnkgYSBkaWZmZXJlbnQgbmFtZSAtLSBpdCBp
-cyBzYWZlIHRvCj4gYXNzdW1lIGl0cyB0aGUgc2FtZSBJUC4gRXNwZWNpYWxseSB3aGVuIHRoZSBk
-cml2ZXIgaXMgYWJzb2x1dGVseQo+IGluZGlmZmVyZW50IHRvIHRoZSA1IFNvQyBuYW1lcy4KCkV2
-ZW4gaWYgaXQgaXMgdGhlIHNhbWUgSVAgY29yZSwgdGhlIFNvQyBpbnRlZ3JhdGlvbiBtaWdodCBo
-YXZlIGJ1Z3MKdGhhdCBuZWVkIGRpZmZlcmVudCBiZWhhdmlvciBmcm9tIHRoZSBkcml2ZXIuIFdl
-J3ZlIGFscmVhZHkgaGFkIHRoYXQKY2FzZSB3aXRoIHRoZSBpLk1YNiBTUEkgY29udHJvbGxlci4K
-Cj4gSWYvd2hlbiB3ZSBmaW5kIHRoZSBjb250cm9sbGVyIGNoYW5nZXMsIHdlIGNvdWxkIHJldmlz
-aXQgdGhlIGJpbmRpbmcKPiBhbmQgYWRkIGFub3RoZXIgY29tcGF0aWJsZSBvcHRpb24gYW5kIG1v
-ZGlmeSB0aGUgZHJpdmVyIHRvIGNhdGNoIHRoYXQKPiBhbmQgYWRhcHQuCgpUaGF0J3Mgd2F5IHRv
-byBsYXRlLiBJZiB3ZSB3YW50IHRvIGtlZXAgRFRzIHN0YWJsZSB0aGUgRFQgbXVzdCBpbmNsdWRl
-CmZvcndhcmQgbG9va2luZyBjb21wYXRpYmxlcywgdG8gYWxsb3cgdGhlIGRyaXZlciB0byBrZXkg
-YW55IHJlcXVpcmVkCmJlaGF2aW9yIGNoYW5nZXMgZnJvbSBhbHJlYWR5IHByZXNlbnQgY29tcGF0
-aWJsZXMuIE90aGVyd2lzZSB5b3UKcmVxdWlyZSB0aGUgRFQgdG8gYmUgdXBkYXRlZCBpbiBzdGVw
-LWxvY2sgd2l0aCB0aGUga2VybmVsIG9yIG5lZWQgbXVjaAptb3JlIGF3a3dhcmQgZGV0ZWN0aW9u
-IGluIHRoZSBkcml2ZXJzLiBJUCBpbnRlZ3JhdGlvbiBidWdzIG1pZ2h0IGJlCmZvdW5kIHdheSBh
-ZnRlciB0aGUgaW5pdGlhbCBEVCBoYXMgYmVlbiB3cml0dGVuLgoKUmVnYXJkcywKTHVjYXMKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwK
+On Thu, Jul 26, 2018 at 4:30 PM, A.s. Dong <aisheng.dong@nxp.com> wrote:
+>> -----Original Message-----
+>> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
+>> Sent: Thursday, July 26, 2018 5:42 PM
+>> To: Oleksij Rempel <o.rempel@pengutronix.de>
+>> Cc: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
+>> <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
+>> Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>;
+>> Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>; Sudeep Holla
+>> <sudeep.holla@arm.com>; Devicetree List <devicetree@vger.kernel.org>;
+>> Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; , Sascha Hauer
+>> <kernel@pengutronix.de>; , linux-arm-kernel@lists.infradead.org, linux-
+>> mediatek@lists.infradead.org, srv_heupstream <linux-arm-
+>> kernel@lists.infradead.org>; dl-linux-imx <linux-imx@nxp.com>
+>> Subject: Re: [PATCH v7 1/6] dt-bindings: mailbox: allow mbox-cells to be
+>> equal to 0
+>>
+>> On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel <o.rempel@pengutronix.de>
+>> wrote:
+>> > From: Dong Aisheng <aisheng.dong@nxp.com>
+>> >
+>> > Mailbox devices may have only one channel which means the mbox-cells
+>> > at least 1 does not make sense for this type devices. Let's remove
+>> > that limitation to allow the mbox-cells to be equal to 0.
+>> >
+>> OK
+>>
+>> But please realise that you'll have to write more code -- implement your own
+>> of_xlate() callback.
+>> Most developers would prefer to call the only channel as channel number 0,
+>> and use the common of_xlate implementation.
+>>
+>
+> Yes, that's true because the common of_xlate assuming the mbox-cells is 1.
+> And there's already such users:
+> arch/arm/boot/dts/bcm283x.dtsi
+>
+You mean that is a good thing, right?
