@@ -1,61 +1,128 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 2/2] ARM: dts: tegra20/tegra30: add pmu interrupt-affinity
-Date: Thu, 26 Jul 2018 10:42:10 +0200
-Message-ID: <e5e24974662564d2501b28ac6faf0b09@agner.ch>
-References: <20180720163426.4410-1-marcel@ziswiler.com>
- <20180720163426.4410-2-marcel@ziswiler.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
+Date: Thu, 26 Jul 2018 11:46:12 +0300
+Message-ID: <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
+References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com>
+ <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720163426.4410-2-marcel@ziswiler.com>
+In-Reply-To: <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-tegra-owner@vger.kernel.org
+To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20.07.2018 18:34, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> This is similar to tegra124 and avoids the following being reported
-> upon boot:
-> 
-> hw perfevents: no interrupt-affinity property for /pmu, guessing.
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Thu, Jul 26, 2018 at 10:09 AM, Keiji Hayashibara
+<hayashibara.keiji@socionext.com> wrote:
+> Add SPI controller driver implemented in Socionext UniPhier SoCs.
+>
+> UniPhier SoCs have two types SPI controllers; SCSSI supports a
+> single channel, and MCSSI supports multiple channels.
+> This driver supports SCSSI only.
+>
+> This controller has 32bit TX/RX FIFO with depth of eight entry,
+> and supports the SPI master mode only.
+>
+> This commit is implemented in PIO transfer mode, not DMA transfer.
 
-Reviewed-by: Stefan Agner <stefan@agner.ch>
+Few style realted comments.
 
-> 
-> ---
-> 
->  arch/arm/boot/dts/tegra20.dtsi | 2 ++
->  arch/arm/boot/dts/tegra30.dtsi | 4 ++++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-> index a22c6a8f8f83..dcad6d6128cf 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -867,5 +867,7 @@
->  		compatible = "arm,cortex-a9-pmu";
->  		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
->  			     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-affinity = <&{/cpus/cpu@0}>,
-> +				     <&{/cpus/cpu@1}>;
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-> index a6781f653310..1de10f0d1da7 100644
-> --- a/arch/arm/boot/dts/tegra30.dtsi
-> +++ b/arch/arm/boot/dts/tegra30.dtsi
-> @@ -1013,5 +1013,9 @@
->  			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
->  			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
->  			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-affinity = <&{/cpus/cpu@0}>,
-> +				     <&{/cpus/cpu@1}>,
-> +				     <&{/cpus/cpu@2}>,
-> +				     <&{/cpus/cpu@3}>;
->  	};
->  };
+> +#include <asm/unaligned.h>
+> +#include <linux/kernel.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spi/spi.h>
+
+Slightly better to keep them in order and put asm/* at the last.
+
+> +#define SSI_TIMEOUT            2000    /* ms */
+
+SSI_TIMEOUT_MS ?
+
+> +#define SSI_CTL                        0x0
+
+Slightly better to keep same width for the addresses, like 0x00 here.
+
+> +#define SSI_CKS                        0x4
+
+> +#define SSI_TXWDS              0x8
+
+> +#define SSI_RXWDS              0xc
+
+Ditto.
+
+
+> +static int uniphier_spi_set_baudrate(struct spi_device *spi, unsigned int speed)
+> +{
+> +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> +       u32 val, ckrat;
+> +
+> +       /*
+> +        * the supported rates are even numbers from 4 to 254. (4,6,8...254)
+> +        * round up as we look for equal or less speed
+> +        */
+> +       ckrat = DIV_ROUND_UP(clk_get_rate(priv->clk), speed);
+
+> +       ckrat = roundup(ckrat, 2);
+
+ckrat += ckrat & 1;
+
+?
+
+> +       /* check if requested speed is too small */
+> +       if (ckrat > SSI_MAX_CLK_DIVIDER)
+
+> +               return -EINVAL;
+
+So, does this critical?
+
+> +
+> +       if (ckrat < SSI_MIN_CLK_DIVIDER)
+> +               ckrat = SSI_MIN_CLK_DIVIDER;
+
+clamp_val()  / max() ?
+
+> +       val = readl(priv->base + SSI_CKS);
+> +       val &= ~SSI_CKS_CKRAT_MASK;
+> +       val |= ckrat & SSI_CKS_CKRAT_MASK;
+> +       writel(val, priv->base + SSI_CKS);
+> +
+> +       return 0;
+> +}
+
+> +       priv->irq = platform_get_irq(pdev, 0);
+> +       if (priv->irq < 0) {
+> +               dev_err(&pdev->dev, "failed to get IRQ\n");
+
+> +               ret = -ENXIO;
+
+What's wrong with
+
+ret = priv->irq;
+
+?
+
+> +               goto out_disable_clk;
+> +       }
+
+> +static const struct of_device_id uniphier_spi_match[] = {
+> +       { .compatible = "socionext,uniphier-scssi", },
+
+> +       { /* sentinel */ },
+
+Slightly better without comma.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, uniphier_spi_match);
+
+-- 
+With Best Regards,
+Andy Shevchenko
