@@ -1,59 +1,84 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH v6 4/4] arm: arm64: dts: add property snps incr burst type adjustment
-Date: Thu, 26 Jul 2018 14:10:07 +0300
-Message-ID: <87a7qe1cds.fsf@linux.intel.com>
-References: <1532341959-3478-1-git-send-email-pengbo.mu@nxp.com> <1532341959-3478-4-git-send-email-pengbo.mu@nxp.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
+ i.MX7S SoCs.
+Date: Thu, 26 Jul 2018 16:45:50 +0530
+Message-ID: <CABb+yY1GEmw_8q2HaF8y5VfFJX_c_0_MbWtPUE_j_o-zS8iZ_g@mail.gmail.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-5-o.rempel@pengutronix.de>
+ <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
+ <1532601691.32306.28.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532341959-3478-4-git-send-email-pengbo.mu@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ran.wang_1@nxp.com, pengbo.mu@nxp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1532601691.32306.28.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, ", linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Pengbo Mu <pengbo.mu@nxp.com> writes:
-
-> Property "snps,incr-burst-type-adjustment =3D <x>, <y>..." for USB3.0
-> DWC3.When only one value means INCRx mode with fix burst type.
-> When more than one value, means undefined length burst mode, USB
-> controller can use the length less than or equal to the largest
-> enabled burst length.
+On Thu, Jul 26, 2018 at 4:11 PM, Lucas Stach <l.stach@pengutronix.de> wrote:
+> Hi Jassi,
 >
-> While enabling undefined length INCR burst type and INCR16 burst type,
-> get better write performance on NXP Layerscape platforms: around 3%
-> improvement (from 364MB/s to 375MB/s).
+> Am Donnerstag, den 26.07.2018, 15:25 +0530 schrieb Jassi Brar:
+>> On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
+>> > <o.rempel@pengutronix.de> wrote:
+>> > This are currently tested SoCs with imx-mailbox driver.
+>> >
+>> > > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>> > ---
+>> >  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 +-
+>> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>> > index 113d6ab931ef..5616d2afca45 100644
+>> > --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>> > +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+>> > @@ -18,7 +18,7 @@ Messaging Unit Device Node:
+>> >  Required properties:
+>> >  -------------------
+>> >  - compatible : should be "fsl,<chip>-mu", the supported chips include
+>> > -               imx8qxp, imx8qm.
+>> > +               imx6sx, imx7s, imx8qxp, imx8qm.
+>> >
+>>
+>> This is not scalable. Do we add every new SoC that contains the same controller?
 >
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> Signed-off-by: Pengbo Mu <pengbo.mu@nxp.com>
+> Yes, we do. This is a policy direction from the DT maintainers.
+>
+I would love to read the post/documentation.
 
-will this go through arm64 tree or do you need me to pick it up?
+Consider the same h/w - controller and platforms, but only the the MU
+chapter said the controller name is, say, 'MU121'. I am sure now you
+will see it correct to call it "fsl,mu121" compatible.
+What changed? just the name, right?
 
-=2D-=20
-balbi
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> If we
+> ever going to want to validate DTs against the binding, all compatibles
+> used in the DTs must be specified in the binding.
+>
+> As we can't really tell if the controller is exactly the same or even
+> has some SoC integration bugs, we generally add a new compatible for
+> each SoC to key off any workarounds necessary in the driver without the
+> need to change the DTs, breaking compatibility.
+>
+I think if the h/w resources and behaviour remain the same and the
+documentation does not call it by a different name -- it is safe to
+assume its the same IP. Especially when the driver is absolutely
+indifferent to the 5 SoC names.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAltZrA8ACgkQzL64meEa
-mQbNthAA1avK609b6EdzdZ55k811FE+py4ljrSxVofYnM+xASfnzI/N336dAgcF6
-M34NdWJh1oHF0ZKFC/O9lCm5XdKraqfUK8q4etyvDWRmhSoijDJ2QgqNkPSEpuSH
-6XU9wMJSZZECww4LK+Ov9F948+BOcN2qTk1TC9eC40cExVlYRZ2RLkjfj6uARsCf
-STiN4dtKTpfWha+AzCzRfnY4gQLzKUtHHm9Fr1/ws8Wgq9PXe5BsO64bVnoNa1Kd
-FW4c6bckJOKxk7pa7aCaHzpihm205XN8WyOz4XUUJIpgpnK0pKJoBbNZhAXdNKJS
-hGZ6pQsFNKHABKLSl9iDMnJopH7QFP6TD3I/zREOfIRLoxPg7oPwHl790x4RPskn
-SEpSWi7GlJ6+C1F/K6yGvVUM7bVSNu5/JXLrlzGEM+QUVm/q2rWJj1G2aQt4urwe
-M7qZRQ6kJv1RXWjJbpm2vRLCO6Z+OO2bN9Qh03F3dZd6NUWDY7DoE/t1xEW6Ws6n
-eZKEohFY6FeV/B7olq/YxhhH6JvuW+oSy1ZHp2g0FUZqstVF+coMQCo0Uk8bZ1kQ
-NkX7iGw2JXMjdjtDMwUfCac00Pg/oOlSwNiNJ8hXXIDR504aTRPa1wUTtkDbC3sn
-0fJ2reU5N646NpaUL7gchjJbVZRuFqiOqM8ML2ji6P1H42sfTN4=
-=ESN9
------END PGP SIGNATURE-----
---=-=-=--
+If/when we find the controller changes, we could revisit the binding
+and add another compatible option and modify the driver to catch that
+and adapt.
