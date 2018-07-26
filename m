@@ -1,101 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: adc: add bindings for mcp3911
-Date: Thu, 26 Jul 2018 07:45:20 -0600
-Message-ID: <CAL_JsqLiG-iTh5rys+ZZ1UpMMB1ub9hqxnRFEHtM8Ouo+d5ZDA@mail.gmail.com>
-References: <20180724183004.20279-1-marcus.folkesson@gmail.com>
- <20180724183004.20279-2-marcus.folkesson@gmail.com> <20180725175117.GA825@rob-hp-laptop>
- <20180725190441.GA3373@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: exynos: arndale: use i2c-gpio for
+ HDMI-DDC
+Date: Thu, 26 Jul 2018 15:47:00 +0200
+Message-ID: <CAJKOXPdE3Bqog18C7pEcVZiPfQ1q9OUKnspDH0NXcjzDJkJ9Ag@mail.gmail.com>
+References: <CGME20180726132213eucas1p221b5ec5eb4a5e9c9d2ff1d76c7b26b2c@eucas1p2.samsung.com>
+ <CAJKOXPe_YKhgm_e0U3uu2PJ2Edg=Zcsjd0FOSFgew5WMMkoGMg@mail.gmail.com>
+ <20180726132209.18127-1-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725190441.GA3373@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Kent Gustavsson <kent@minoris.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180726132209.18127-1-a.hajda@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 1:04 PM Marcus Folkesson
-<marcus.folkesson@gmail.com> wrote:
->
-> Hello Rob,
->
-> Thank you for the review.
->
-> On Wed, Jul 25, 2018 at 11:51:17AM -0600, Rob Herring wrote:
-> > On Tue, Jul 24, 2018 at 08:30:03PM +0200, Marcus Folkesson wrote:
-> > > MCP3911 is a dual channel Analog Front End (AFE) containing two
-> > > synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
-> > >
-> > > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> > > Signed-off-by: Kent Gustavsson <kent@minoris.se>
-> > > ---
-> > >
-> > > Notes:
-> > >     v2:
-> > >             - drop channel width
-> > >             - drop `external_vref`
-> > >             - replace `external-clock` with proper clock bindings
-> > >
-> > >  .../devicetree/bindings/iio/adc/mcp3911.txt        | 28 ++++++++++++++++++++++
-> > >  1 file changed, 28 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
-> > > new file mode 100644
-> > > index 000000000000..af5472f51a84
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
-> > > @@ -0,0 +1,28 @@
-> > > +* Microchip MCP3911 Dual channel analog front end (ADC)
-> > > +
-> > > +Required properties:
-> > > + - compatible: Should be "microchip,mcp3911"
-> > > + - reg: SPI chip select number for the device
-> > > +
-> > > +Recommended properties:
-> > > + - spi-max-frequency: Definition as per
-> > > +    Documentation/devicetree/bindings/spi/spi-bus.txt.
-> > > +    Max frequency for this chip is 20MHz.
-> > > +
-> > > +Optional properties:
-> > > + - device-addr: Device address when multiple MCP3911 chips are present on the
-> > > +   same SPI bus. Valid values are 0-3. Defaults to 0.
-> >
-> > Isn't this the reg value?
-> >
->
-> The reg value defines which chip select the chip hangs on.
-> The chip has support to connect up to four chips on the same SPI bus,
-> including the same chip select signal.
->
-> The chips are separated by the device-addr as it is part of the
-> communication protocol.
-
-Okay, seems pretty specific to this chip. Just add a vendor prefix.
-
-> When reading the description for device-addr, I agree that it fits well
-> for the reg property as well..
-
-Except that reg format is already defined for SPI devices, so it's
-going to have to be separate property.
-
-> > > + - vref-supply: Phandle to the external reference voltage supply.
-> > > + - clocks: Phandle and clock identifier (see clock-names)
-> > > + - clock-names: "adc_clk" for the ADC (sampling) clock
-> >
-> > Datasheet calls this clki (or mclk internally). Or just drop clock-names
-> > as it is pointless
-> > when there is only 1 clock.
->
-> I will drop the clock-names, thanks!
->
-> >
-> > Also DR handling as an IRQ is missing.
->
-> I have considered using the DR signal, but as we not support buffering
-> yet I did not see any point in using it.
-
-For the binding it doesn't matter if a particular driver uses it or
-not. If it's connected in a h/w design it should be in DT.
-
-Rob
+T24gMjYgSnVseSAyMDE4IGF0IDE1OjIyLCBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
+Y29tPiB3cm90ZToKPiBIRE1JLUREQyBmb3IgdW5rbm93biByZWFzb25zIGRvZXNuJ3Qgd29yayB3
+aXRoIEV4eW5vcyBJMkMKPiBjb250cm9sbGVycy4gRm9ydHVuYXRlbHkgaTJjLWdwaW8gY29tZXMg
+dG8gdGhlIHJlc2N1ZS4KPgo+IFNpZ25lZC1vZmYtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
+c2Ftc3VuZy5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtYXJuZGFs
+ZS5kdHMgIHwgMjggKysrKysrKysrKysrKysrKy0tLS0tLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
+ZXh5bm9zNTI1MC1waW5jdHJsLmR0c2kgfCAgNiArKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDI2
+IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4KClRoYW5rcywgbG9va3MgZ29vZC4gSSds
+bCB0YWtlIGl0IGFmdGVyIG1lcmdlIHdpbmRvdy4KCkJlc3QgcmVnYXJkcywKS3J6eXN6dG9mCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
