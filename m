@@ -1,47 +1,79 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 7/7] net: phy: Add pm support for scan ctrl register to
- bcm mdio mux
-Date: Thu, 26 Jul 2018 21:36:34 +0200
-Message-ID: <20180726193634.GM10686@lunn.ch>
-References: <1532630184-29450-1-git-send-email-arun.parameswaran@broadcom.com>
- <1532630184-29450-8-git-send-email-arun.parameswaran@broadcom.com>
- <20180726192050.GJ10686@lunn.ch>
- <170a4731-b091-aef4-2d66-2950114e41fc@broadcom.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: mtd: explicitly document nesting
+ partitions descriptions
+Date: Thu, 26 Jul 2018 21:42:58 +0200
+Message-ID: <20180726214258.733ca90d@bbrezillon>
+References: <20180713143221.8474-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <170a4731-b091-aef4-2d66-2950114e41fc@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180713143221.8474-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Jonas Gorski <jonas.gorski@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 12:33:05PM -0700, Arun Parameswaran wrote:
-> 
-> 
-> On 18-07-26 12:20 PM, Andrew Lunn wrote:
-> > On Thu, Jul 26, 2018 at 11:36:24AM -0700, Arun Parameswaran wrote:
-> >> Add support for saving and restoring the 'scan control' register
-> >> in the Broadcom iProc mdio mux driver.
-> > 
-> > Hi Arun
-> > 
-> > I don't see anything setting this register. So why is it necessary to
-> > save it over suspend/resume?
-> > 
-> >      Andrew
-> > 
-> Hi Andrew
-> In the Omega SoC (only), this register was defaulted incorrectly (to use
-> a test mode) by the hardware. So we added the setup of the register to
-> the early bootloader (ATF).
-> 
-> We still need to restore this register while resuming from sleep.
-
-Hi Arun
-
-It is better to not rely on the bootloader and have the driver do it.
-That makes it easier for people to swap to alternative bootloaders.
-
-     Andrew
+T24gRnJpLCAxMyBKdWwgMjAxOCAxNjozMjoyMCArMDIwMApSYWZhxYIgTWnFgmVja2kgPHphamVj
+NUBnbWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Cj4gCj4gRG9jdW1lbnRhdGlvbiB3YXMgYWxyZWFkeSBzYXlpbmcgdGhhdCBmaXhlZCBh
+bmQgZHluYW1pYyBwYXJ0aXRpb25pbmcgY2FuCj4gYmUgbWl4ZWQgYnV0IHdhcyBtaXNzaW5nIGEg
+Y2xlYXIgZGVzY3JpcHRpb24gYW5kIGV4YW1wbGVzLiBUaGlzIGNvbW1pdAo+IGFkZHMgYSBwcm9w
+ZXIgZG9jdW1lbnRhdGlvbiBvZiBob3cgZGVzY3JpcHRpb25zIGNhbiBiZSBuZXN0ZWQgYW5kIGhv
+dwo+IGxheW91dHMgY2FuIGJlIG1peGVkLgo+IAo+IFRoaXMgYWRkaXRpb24gaXMgaW1wb3J0YW50
+IGZvciBwYXJ0aXRpb25zIHRoYXQgY29udGFpbiBzdWJwYXJ0aXRpb25zLgo+IEluIHN1Y2ggY2Fz
+ZXMgcGFydGl0aW9ucyBoYXZlIHRvIGJlIHByb3Blcmx5IGRlc2NyaWJlZCBpbiBvcmRlciB0byBs
+ZXQKPiBzeXN0ZW0gaGFuZGxlIHRoZW0gY29ycmVjdGx5Lgo+IAo+IERlcGVuZGluZyBvbiBzaXR1
+YXRpb24sIG5lc3RpbmcgZGVzY3JpcHRpb25zIG1heSBwcm92aWRlIG1vcmUgYWNjdXJhdGUKPiBs
+b2dpYy9zdHJ1Y3R1cmUgYW5kL29yIGFsbG93IG1peGluZyBwYXJ0aXRpb25pbmcgdHlwZXMgKHZh
+cmlvdXMKPiAiY29tcGF0aWJsZSIgdmFsdWVzKS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBSYWZhxYIg
+TWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+CgpBcHBsaWVkIGJvdGggcGF0Y2hlcy4KClRoYW5r
+cywKCkJvcmlzCgo+IC0tLQo+IFYyOiBSZXdyb3RlIGV4YW1wbGU6IEkgY2FuIGluY2x1ZGUgImJy
+Y20sdHJ4IiBub3cgYXMgaXRzIERvY3VtZW50YXRpb24KPiAgICAgaGFzIGJlZW4gcHVzaGVkIGlu
+dG8gbXRkIGdpdCB0cmVlLgo+ICAgICBVcGRhdGVkIGNvbW1pdCBtZXNzYWdlLgo+IC0tLQo+ICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcGFydGl0aW9uLnR4dCAgICAgICAgICB8IDQ2ICsr
+KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKykK
+PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9w
+YXJ0aXRpb24udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0
+aXRpb24udHh0Cj4gaW5kZXggYThmMzgyNjQyYmE5Li5hZmJiZDg3MDQ5NmQgMTAwNjQ0Cj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb24udHh0Cj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9wYXJ0aXRpb24udHh0
+Cj4gQEAgLTE0LDYgKzE0LDEzIEBAIG1ldGhvZCBpcyB1c2VkIGZvciBhIGdpdmVuIGZsYXNoIGRl
+dmljZS4gVG8gZGVzY3JpYmUgdGhlIG1ldGhvZCB0aGVyZSBzaG91bGQgYmUKPiAgYSBzdWJub2Rl
+IG9mIHRoZSBmbGFzaCBkZXZpY2UgdGhhdCBpcyBuYW1lZCAncGFydGl0aW9ucycuIEl0IG11c3Qg
+aGF2ZSBhCj4gICdjb21wYXRpYmxlJyBwcm9wZXJ0eSwgd2hpY2ggaXMgdXNlZCB0byBpZGVudGlm
+eSB0aGUgbWV0aG9kIHRvIHVzZS4KPiAgCj4gK1doZW4gYSBzaW5nbGUgcGFydGl0aW9uIGlzIHJl
+cHJlc2VudGVkIHdpdGggYSBEVCBub2RlIChpdCBkZXBlbmRzIG9uIGEgdXNlZAo+ICtmb3JtYXQp
+IGl0IG1heSBhbHNvIGJlIGRlc2NyaWJlZCB1c2luZyBhYm92ZSBydWxlcyAoJ2NvbXBhdGlibGUn
+IGFuZCBvcHRpb25hbGx5Cj4gK3NvbWUgZXh0cmEgcHJvcGVydGllcyAvIHN1Ym5vZGVzKS4gSXQg
+YWxsb3dzIGRlc2NyaWJpbmcgbW9yZSBjb21wbGV4LAo+ICtoaWVyYXJjaGljYWwgKG11bHRpLWxl
+dmVsKSBsYXlvdXRzIGFuZCBzaG91bGQgYmUgdXNlZCBpZiB0aGVyZSBpcyBzb21lCj4gK3NpZ25p
+ZmljYW50IHJlbGF0aW9uIGJldHdlZW4gcGFydGl0aW9ucyBvciBzb21lIHBhcnRpdGlvbiBpbnRl
+cm5hbGx5IHVzZXMKPiArYW5vdGhlciBwYXJ0aXRpb25pbmcgbWV0aG9kLgo+ICsKPiAgQXZhaWxh
+YmxlIGJpbmRpbmdzIGFyZSBsaXN0ZWQgaW4gdGhlICJwYXJ0aXRpb25zIiBzdWJkaXJlY3Rvcnku
+Cj4gIAo+ICAKPiBAQCAtMTA5LDMgKzExNiw0MiBAQCBmbGFzaEAyIHsKPiAgCQl9Owo+ICAJfTsK
+PiAgfTsKPiArCj4gK2ZsYXNoQDMgewo+ICsJcGFydGl0aW9ucyB7Cj4gKwkJY29tcGF0aWJsZSA9
+ICJmaXhlZC1wYXJ0aXRpb25zIjsKPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6
+ZS1jZWxscyA9IDwxPjsKPiArCj4gKwkJcGFydGl0aW9uQDAgewo+ICsJCQlsYWJlbCA9ICJib290
+bG9hZGVyIjsKPiArCQkJcmVnID0gPDB4MDAwMDAwIDB4MTAwMDAwPjsKPiArCQkJcmVhZC1vbmx5
+Owo+ICsJCX07Cj4gKwo+ICsJCWZpcm13YXJlQDEwMDAwMCB7Cj4gKwkJCWxhYmVsID0gImZpcm13
+YXJlIjsKPiArCQkJcmVnID0gPDB4MTAwMDAwIDB4ZTAwMDAwPjsKPiArCQkJY29tcGF0aWJsZSA9
+ICJicmNtLHRyeCI7Cj4gKwkJfTsKPiArCj4gKwkJY2FsaWJyYXRpb25AZjAwMDAwIHsKPiArCQkJ
+bGFiZWwgPSAiY2FsaWJyYXRpb24iOwo+ICsJCQlyZWcgPSA8MHhmMDAwMDAgMHgxMDAwMDA+Owo+
+ICsJCQljb21wYXRpYmxlID0gImZpeGVkLXBhcnRpdGlvbnMiOwo+ICsJCQlyYW5nZXMgPSA8MCAw
+eGYwMDAwMCAweDEwMDAwMD47Cj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6
+ZS1jZWxscyA9IDwxPjsKPiArCj4gKwkJCXBhcnRpdGlvbkAwIHsKPiArCQkJCWxhYmVsID0gIndp
+ZmkwIjsKPiArCQkJCXJlZyA9IDwweDAwMDAwMCAweDA4MDAwMD47Cj4gKwkJCX07Cj4gKwo+ICsJ
+CQlwYXJ0aXRpb25AODAwMDAgewo+ICsJCQkJbGFiZWwgPSAid2lmaTEiOwo+ICsJCQkJcmVnID0g
+PDB4MDgwMDAwIDB4MDgwMDAwPjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiArfTsKCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgg
+TVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
