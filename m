@@ -1,50 +1,59 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v1 6/6] Revert "drm/nouveau: tegra: Detach
- from ARM DMA/IOMMU mapping"
-Date: Fri, 27 Jul 2018 02:16:24 +0300
-Message-ID: <20180726231624.21084-7-digetx@gmail.com>
-References: <20180726231624.21084-1-digetx@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH] drivers/memory/Kconfig: Add CONFIG_OF dependency
+Date: Fri, 27 Jul 2018 01:25:57 +0200
+Message-ID: <20180727012557.72fff5e1@xps13>
+References: <20180721200049.7553-1-anders.roxell@linaro.org>
+        <a83ff193-be57-f566-cafb-132075025b56@infradead.org>
+        <20180722082939.2de739f1@bbrezillon>
+        <CAK8P3a1_8OSqyKsbw+m3ZzLWfPqDK4ynG3WoPTk+K2uJJsiq5A@mail.gmail.com>
+        <20180723114107.664164d2@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180726231624.21084-1-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/nouveau>,
- <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/nouveau>
-List-Post: <mailto:nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/nouveau>,
- <mailto:nouveau-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Nouveau" <nouveau-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Nicolas Chauvet <kwizart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180723114107.664164d2@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>, Anders Roxell <anders.roxell@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SW1wcm9wZXIgRE1BIGJhY2tpbmcgd2l0aCBJT01NVSBoYXMgYmVlbiByZXNvbHZlZCBub3cgdXNp
-bmcgdGhlIG5ldwpkcml2ZXJzIGNvcmUgb3B0aW9uIHRoYXQgYWxsb3dzIHRvIGF2b2lkIHRoZSBp
-bXBsaWNpdCBiYWNraW5nLCBoZW5jZQpkZXRhY2hpbmcgaXNuJ3QgbmVjZXNzYXJ5IGFueW1vcmUu
-CgpUaGlzIHJldmVydHMgY29tbWl0IGI1OWZiNDgyYjUyMjY5OTc3ZWU1ZGUyMDUzMDhlNWIyMzZh
-MDM5MTcuCgpTaWduZWQtb2ZmLWJ5OiBEbWl0cnkgT3NpcGVua28gPGRpZ2V0eEBnbWFpbC5jb20+
-Ci0tLQogZHJpdmVycy9ncHUvZHJtL25vdXZlYXUvbnZrbS9lbmdpbmUvZGV2aWNlL3RlZ3JhLmMg
-fCAxMyAtLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMTMgZGVsZXRpb25zKC0pCgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL25vdXZlYXUvbnZrbS9lbmdpbmUvZGV2aWNlL3RlZ3Jh
-LmMgYi9kcml2ZXJzL2dwdS9kcm0vbm91dmVhdS9udmttL2VuZ2luZS9kZXZpY2UvdGVncmEuYwpp
-bmRleCAwZTM3MmExOTBkM2YuLjc4NTk3ZGE2MzEzYSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUv
-ZHJtL25vdXZlYXUvbnZrbS9lbmdpbmUvZGV2aWNlL3RlZ3JhLmMKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL25vdXZlYXUvbnZrbS9lbmdpbmUvZGV2aWNlL3RlZ3JhLmMKQEAgLTIzLDEwICsyMyw2IEBA
-CiAjaWZkZWYgQ09ORklHX05PVVZFQVVfUExBVEZPUk1fRFJJVkVSCiAjaW5jbHVkZSAicHJpdi5o
-IgogCi0jaWYgSVNfRU5BQkxFRChDT05GSUdfQVJNX0RNQV9VU0VfSU9NTVUpCi0jaW5jbHVkZSA8
-YXNtL2RtYS1pb21tdS5oPgotI2VuZGlmCi0KIHN0YXRpYyBpbnQKIG52a21fZGV2aWNlX3RlZ3Jh
-X3Bvd2VyX3VwKHN0cnVjdCBudmttX2RldmljZV90ZWdyYSAqdGRldikKIHsKQEAgLTEwOSwxNSAr
-MTA1LDYgQEAgbnZrbV9kZXZpY2VfdGVncmFfcHJvYmVfaW9tbXUoc3RydWN0IG52a21fZGV2aWNl
-X3RlZ3JhICp0ZGV2KQogCXVuc2lnbmVkIGxvbmcgcGdzaXplX2JpdG1hcDsKIAlpbnQgcmV0Owog
-Ci0jaWYgSVNfRU5BQkxFRChDT05GSUdfQVJNX0RNQV9VU0VfSU9NTVUpCi0JaWYgKGRldi0+YXJj
-aGRhdGEubWFwcGluZykgewotCQlzdHJ1Y3QgZG1hX2lvbW11X21hcHBpbmcgKm1hcHBpbmcgPSB0
-b19kbWFfaW9tbXVfbWFwcGluZyhkZXYpOwotCi0JCWFybV9pb21tdV9kZXRhY2hfZGV2aWNlKGRl
-dik7Ci0JCWFybV9pb21tdV9yZWxlYXNlX21hcHBpbmcobWFwcGluZyk7Ci0JfQotI2VuZGlmCi0K
-IAlpZiAoIXRkZXYtPmZ1bmMtPmlvbW11X2JpdCkKIAkJcmV0dXJuOwogCi0tIAoyLjE4LjAKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCk5vdXZlYXUgbWFp
-bGluZyBsaXN0Ck5vdXZlYXVAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vbm91dmVhdQo=
+Hi Boris,
+
+Boris Brezillon <boris.brezillon@bootlin.com> wrote on Mon, 23 Jul 2018
+11:41:07 +0200:
+
+> On Mon, 23 Jul 2018 11:34:43 +0200
+> Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+> > On Sun, Jul 22, 2018 at 8:29 AM, Boris Brezillon
+> > <boris.brezillon@bootlin.com> wrote:  
+> > > +Arnd, Rob and the DT ML.
+> > >
+> > > On Sat, 21 Jul 2018 14:53:47 -0700
+> > > Randy Dunlap <rdunlap@infradead.org> wrote:
+> > >    
+> > >> On 07/21/2018 01:00 PM, Anders Roxell wrote:    
+> > >> > JZ4780_NEMC doesn't depend on OF, and if OF isn't enabled we get this
+> > >> > error:
+> > >> > drivers/memory/jz4780-nemc.c: In function ‘jz4780_nemc_num_banks’:
+> > >> > drivers/memory/jz4780-nemc.c:72:10: error: implicit declaration of
+> > >> >  function ‘of_read_number’; did you mean ‘down_read_nested’?
+> > >> >  [-Werror=implicit-function-declaration]
+> > >> >    bank = of_read_number(prop, 1);
+> > >> >           ^~~~~~~~~~~~~~
+> > >> >           down_read_nested    
+> > >
+> > > Looks like of.h defines stubs so that people can compile-test without
+> > > CONFIG_OF selected. Maybe we should move of_read_number() and
+> > > of_read_ulong() out of the #ifdef CONFIG_OF section.    
+> > 
+> > That seems fine, though the added dependency seems appropriate
+> > here as well. of_read_number() is rarely used, and for the most part in
+> > powerpc specific code that is guaranteed to have CONFIG_OF enabled,
+> > so it's not that likely to cause many more problems.  
+> 
+> Ok, then I'll let Miquel apply Anders' patch to the NAND tree.
+
+Applied to nand/next, thanks.
+
+Miquèl
