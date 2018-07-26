@@ -1,53 +1,53 @@
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Subject: [PATCH 7/7] net: phy: Add pm support for scan ctrl register to bcm mdio mux
-Date: Thu, 26 Jul 2018 11:36:24 -0700
-Message-ID: <1532630184-29450-8-git-send-email-arun.parameswaran@broadcom.com>
-References: <1532630184-29450-1-git-send-email-arun.parameswaran@broadcom.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH v9 1/2] regulator: dt-bindings: add QCOM RPMh regulator
+ bindings
+Date: Thu, 26 Jul 2018 11:39:22 -0700
+Message-ID: <20180726183922.GA4402@hector.mosconeconnections.com>
+References: <cover.1531531808.git.collinsd@codeaurora.org>
+ <56b9d5c38cfe46da1228c54f001a49773c3e31dc.1531531808.git.collinsd@codeaurora.org>
+ <CAD=FV=VmfqWRGRMEn+0dzZ8x4R5vVaHbkthXAN91Lm-XmP9Gqg@mail.gmail.com>
+ <20180724145755.GF13268@sirena.org.uk>
+ <CAD=FV=Uo8sT72a0gRitOVoK0SfC-_QixsovW94_LnL6H7QdKvA@mail.gmail.com>
+ <20180724152514.GJ13268@sirena.org.uk>
+ <CAD=FV=WHJcAoR7Y_uhi7_GbVzy6K8FnovVFVRz8js0REONox=w@mail.gmail.com>
+ <20180724165942.GP13268@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532630184-29450-1-git-send-email-arun.parameswaran@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <20180724165942.GP13268@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arun.parameswaran@broadcom.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>, David Collins <collinsd@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Add support for saving and restoring the 'scan control' register
-in the Broadcom iProc mdio mux driver.
++ olof
 
-Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
----
- drivers/net/phy/mdio-mux-bcm-iproc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+On Tue, Jul 24, 2018 at 05:59:42PM +0100, Mark Brown wrote:
+> On Tue, Jul 24, 2018 at 08:43:46AM -0700, Doug Anderson wrote:
+> > On Tue, Jul 24, 2018 at 8:25 AM, Mark Brown <broonie@kernel.org> wrote:
+> 
+> > > There was also some other thing called command DB as well which was a
+> > > separate series.  Ideally there'd be a branch I could pull as there's a
+> > > build dependency on rpmh so I can't apply until the code has landed in
+> > > my tree, don't know what command DB is exactly.
+> 
+> > Yup.  That one landed in May and is already in mainline Linux.  Refer
+> > to commit 312416d9171a ("drivers: qcom: add command DB driver").
+> 
+> That's good at least - the cover letter said it was still under review,
+> guess it just hadn't been updated.
+> 
+> > Adding Andy to this thread (I guess he wasn't on it?).  Hopefully he
+> > can provide you with the branch.
+> 
+Mark,
 
-diff --git a/drivers/net/phy/mdio-mux-bcm-iproc.c b/drivers/net/phy/mdio-mux-bcm-iproc.c
-index 89c18d6..d1fce1e 100644
---- a/drivers/net/phy/mdio-mux-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
-@@ -26,6 +26,9 @@
- #define MDIO_RATE_ADJ_INT_OFFSET	0x004
- #define MDIO_RATE_ADJ_DIVIDENT_SHIFT	16
- 
-+#define MDIO_SCAN_CTRL_OFFSET	0x008
-+#define MDIO_SCAN_CTRL_OVERRIDE_EXT_MSTR	28
-+
- #define MDIO_PARAM_OFFSET		0x23c
- #define MDIO_PARAM_MIIM_CYCLE		29
- #define MDIO_PARAM_INTERNAL_SEL		25
-@@ -51,7 +54,7 @@
- #define MDIO_OPERATING_FREQUENCY	11000000
- #define MDIO_RATE_ADJ_DIVIDENT		1
- 
--#define MDIO_NUM_OF_REGS_TO_RESTORE	2
-+#define MDIO_NUM_OF_REGS_TO_RESTORE	3
- 
- struct iproc_mdiomux_desc {
- 	void *mux_handle;
-@@ -68,6 +71,7 @@ struct iproc_mdiomux_desc {
- static const u16 restore_reg_offsets[MDIO_NUM_OF_REGS_TO_RESTORE] = {
- 	MDIO_RATE_ADJ_EXT_OFFSET,
- 	MDIO_RATE_ADJ_INT_OFFSET,
-+	MDIO_SCAN_CTRL_OVERRIDE_EXT_MSTR,
- };
- #endif
- 
--- 
-1.9.1
+The arm-soc guys merged the Qualcomm pull requests.  So you can just use my
+qcom-drivers-for-4.19 tag.  That won't change at this point.
+
+git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git
+qcom-drivers-for-4.19
+
+Regards,
+Andy
