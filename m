@@ -1,7 +1,7 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5/9] RISC-V: implement low-level interrupt handling
-Date: Thu, 26 Jul 2018 16:37:19 +0200
-Message-ID: <20180726143723.16585-6-hch@lst.de>
+Subject: [PATCH 4/9] RISC-V: add a definition for the SIE SEIE bit
+Date: Thu, 26 Jul 2018 16:37:18 +0200
+Message-ID: <20180726143723.16585-5-hch@lst.de>
 References: <20180726143723.16585-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,101 +21,25 @@ To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@ar
 Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for a routine that dispatches exceptions with the interrupt
-flags set to either the IPI or irqdomain code (and the clock source in the
-future).
-
-Loosely based on the irq-riscv-int.c irqchip driver from the RISC-V tree.
+This mirrors the SIE_SSIE and SETE bits that are used in a similar
+fashion.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/kernel/entry.S |  4 +--
- arch/riscv/kernel/irq.c   | 52 ++++++++++++++++++++++++++++++++-------
- 2 files changed, 45 insertions(+), 11 deletions(-)
+ arch/riscv/include/asm/csr.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 9aaf6c986771..fa2c08e3c05e 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -168,8 +168,8 @@ ENTRY(handle_exception)
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index 421fa3585798..28a0d1cb374c 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -54,6 +54,7 @@
+ /* Interrupt Enable and Interrupt Pending flags */
+ #define SIE_SSIE _AC(0x00000002, UL) /* Software Interrupt Enable */
+ #define SIE_STIE _AC(0x00000020, UL) /* Timer Interrupt Enable */
++#define SIE_SEIE _AC(0x00000200, UL) /* External Interrupt Enable */
  
- 	/* Handle interrupts */
- 	move a0, sp /* pt_regs */
--	REG_L a1, handle_arch_irq
--	jr a1
-+	move a1, s4 /* scause */
-+	tail do_IRQ
- 1:
- 	/* Exceptions run with interrupts enabled */
- 	csrs sstatus, SR_SIE
-diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
-index 7bcdaed15703..ab5f3e22c7cc 100644
---- a/arch/riscv/kernel/irq.c
-+++ b/arch/riscv/kernel/irq.c
-@@ -1,21 +1,55 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2012 Regents of the University of California
-  * Copyright (C) 2017 SiFive
-- *
-- *   This program is free software; you can redistribute it and/or
-- *   modify it under the terms of the GNU General Public License
-- *   as published by the Free Software Foundation, version 2.
-- *
-- *   This program is distributed in the hope that it will be useful,
-- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *   GNU General Public License for more details.
-+ * Copyright (C) 2018 Christoph Hellwig
-  */
- 
- #include <linux/interrupt.h>
- #include <linux/irqchip.h>
- #include <linux/irqdomain.h>
- 
-+/*
-+ * Possible interrupt causes:
-+ */
-+#define INTERRUPT_CAUSE_SOFTWARE    1
-+#define INTERRUPT_CAUSE_TIMER       5
-+#define INTERRUPT_CAUSE_EXTERNAL    9
-+
-+/*
-+ * The high order bit of the trap cause register is always set for
-+ * interrupts, which allows us to differentiate them from exceptions
-+ * quickly.  The INTERRUPT_CAUSE_* macros don't contain that bit, so we
-+ * need to mask it off.
-+ */
-+#define INTERRUPT_CAUSE_FLAG	(1UL << (__riscv_xlen - 1))
-+
-+asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
-+{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
-+
-+	irq_enter();
-+	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
-+#ifdef CONFIG_SMP
-+	case INTERRUPT_CAUSE_SOFTWARE:
-+		/*
-+		 * We only use software interrupts to pass IPIs, so if a non-SMP
-+		 * system gets one, then we don't know what to do.
-+		 */
-+		riscv_software_interrupt();
-+		break;
-+#endif
-+	case INTERRUPT_CAUSE_EXTERNAL:
-+		handle_arch_irq(regs);
-+		break;
-+	default:
-+		panic("unexpected interrupt cause");
-+	}
-+	irq_exit();
-+
-+	set_irq_regs(old_regs);
-+}
-+
- void __init init_IRQ(void)
- {
- 	irqchip_init();
+ #define EXC_INST_MISALIGNED     0
+ #define EXC_INST_ACCESS         1
 -- 
 2.18.0
