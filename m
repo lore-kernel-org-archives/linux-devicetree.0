@@ -1,21 +1,18 @@
 From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
- i.MX7S SoCs.
-Date: Thu, 26 Jul 2018 17:40:32 +0530
-Message-ID: <CABb+yY02KNB9ELKiWYdB0LyvTghhk+nk-dTUGfG8_+KUB_H=Mw@mail.gmail.com>
+Subject: Re: [PATCH v7 6/6] mailbox: Add support for i.MX7D messaging unit
+Date: Thu, 26 Jul 2018 17:47:34 +0530
+Message-ID: <CABb+yY0NAw3Ymtpq6tiN_g1zy=fum6O_wtcuig=Y4Dx9Ue70KA@mail.gmail.com>
 References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-5-o.rempel@pengutronix.de>
- <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
- <1532601691.32306.28.camel@pengutronix.de>
- <CABb+yY1GEmw_8q2HaF8y5VfFJX_c_0_MbWtPUE_j_o-zS8iZ_g@mail.gmail.com>
- <f3f84864-b6f5-350c-77ff-266b034e676e@mentor.com>
- <CABb+yY1v8j0G12Kd8-DqsJ6VoGBLuit2Cu+SFKixJudRAzXgkQ@mail.gmail.com>
- <c5109c4f-705b-8c28-6b79-a40458933423@mentor.com>
+ <20180726065331.6186-7-o.rempel@pengutronix.de>
+ <CABb+yY1Fbj2GiO_zjwnvNFutjX_fRpxnuEoeu6Z3s4NAv2ugbg@mail.gmail.com>
+ <a988e8b4-28be-f598-82de-421017409368@pengutronix.de>
+ <CABb+yY2=mFr+gFuWyE+VyG6dWj3gKhTs6X+U9UjFu5N=4zU5uA@mail.gmail.com>
+ <e224cff8-0b47-9221-72fa-5db19d531492@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c5109c4f-705b-8c28-6b79-a40458933423@mentor.com>
+In-Reply-To: <e224cff8-0b47-9221-72fa-5db19d531492@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,40 +22,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
- linux-arm-kernel"@lists.infradead.org, dl-linux-imx <linux-imx@nxp.com>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, srv_heupstream <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, "A.s. Dong" <aisheng.dong@nxp.com>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, srv_heupstream <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 5:25 PM, Vladimir Zapolskiy
-<vladimir_zapolskiy@mentor.com> wrote:
-> On 07/26/2018 02:52 PM, Jassi Brar wrote:
->> On Thu, Jul 26, 2018 at 5:14 PM, Vladimir Zapolskiy
->> <vladimir_zapolskiy@mentor.com> wrote:
-
->>>
->> Please note the submitted driver absolutely don't care which of the
->> five SoCs it is.
+On Thu, Jul 26, 2018 at 5:12 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 >
-> True.
 >
-
->> In other words, all these SoCs have the same controller.
->
-> False :)
->
-OK, so the controllers are not identical, but same enough to have a
-common driver?
-Is the driver not tested enough or are you planning to add more features?
-
->> So its about have just one compatible right now, and add more if some
->> new SoC comes with a variation of the controller.
+> On 26.07.2018 13:09, Jassi Brar wrote:
+>> On Thu, Jul 26, 2018 at 4:21 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 >>
+>>>>
+>>>>> +struct imx_mu_con_priv {
+>>>>> +       int                     irq;
+>>>>> +       unsigned int            idx;
+>>>>> +       char                    *irq_desc;
+>>>>>
+>>>> Having      char  irq_desc[16];    seems simpler than free/kfree upon
+>>>> each startup/shutdown. Simply use snprintf() in probe().
+>>>
+>>> Currently all known configurations use one or two channels. I don't see
+>>> any sense to allocate all at the probe.
+>>>
+>> Just because only 2 out of 4 channels are being used, it doesn't make sense?
+>>
+>> What is the concern?  "wasting" 16x2 bytes of memory?  How many bytes,
+>> LOC and execution time does kasprintf() waste?
 >
-> True. The driver will be changed in this case, unfortunately the bindings
-> are not so volatile.
+> Startup or shutdown is not speed critical path in this driver, or do i
+> miss some thing?
 >
-The volatility of the bindings will be same when you add a new SoC
-compatible ;)  And you must add to bindings+driver, or the same h/w
-and same driver won't work for your new platform.
+No they are not.
+
+> Speed vs size is not valid argumentation here.
+>
+If the code looks cleaner and smaller and lesser expensive execution
+wise, at least I see that as a valid enough argument.
+
+But OK, if you insist.  If someone sends a "cleanup" patch tomorrow, I
+am going to thank and apply.
