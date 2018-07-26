@@ -1,56 +1,181 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 5/5] arm64: dts: actions: Add pinctrl node for Actions
- Semi S700
-Date: Fri, 27 Jul 2018 00:10:48 +0530
-Message-ID: <20180726184048.GG5220@Mani-XPS-13-9360>
-References: <20180722163601.28346-1-sravanhome@gmail.com>
- <20180722163601.28346-6-sravanhome@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] arm64: dts: renesas: r8a77980: move IPMMU nodes
+Date: Thu, 26 Jul 2018 21:51:18 +0300
+Message-ID: <5f7daa87-b0b3-faa7-0331-640c39961b4a@cogentembedded.com>
+References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180722163601.28346-6-sravanhome@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Saravanan Sekar <sravanhome@gmail.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The IPMMU nodes should follow the GEther node, not the CAN-FD node,
+according to the <unit-address> part of the startng IPMMU-DS1 node.
+While moving the nodes, also do sort them by label alphanumerically...
 
-On Sun, Jul 22, 2018 at 06:36:01PM +0200, Saravanan Sekar wrote:
-> Add pinctrl nodes for Actions Semi S700 SoC
-> 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->  arch/arm64/boot/dts/actions/s700.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
-> index 59d29e4ca404..88edac21e03f 100644
-> --- a/arch/arm64/boot/dts/actions/s700.dtsi
-> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
-> @@ -179,5 +179,11 @@
->  			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
->  			interrupt-names = "timer1";
->  		};
-> +
-> +		pinctrl: pinctrl@e01b0000 {
-> +			compatible = "actions,s700-pinctrl";
-> +			reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +			clocks = <&cmu CLK_GPIO>;
-> +		};
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Driver/binding/dts are inconsistent. Driver seems to support pinctrl +
-gpio + irq but there is no gpio/irq property in dts patch.
+---
+The patch is against the 'renesas-devel-20180726-v4.18-rc6' tag of Simon
+Horman's 'renesas.git' repo.
 
-Please correct it.
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi |  126 +++++++++++++++---------------
+ 1 file changed, 63 insertions(+), 63 deletions(-)
 
-Thanks,
-Mani
-
->  	};
->  };
-> -- 
-> 2.18.0
-> 
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -462,69 +462,6 @@
+ 			};
+ 		};
+ 
+-		ipmmu_ds1: mmu@e7740000 {
+-			compatible = "renesas,ipmmu-r8a77980";
+-			reg = <0 0xe7740000 0 0x1000>;
+-			renesas,ipmmu-main = <&ipmmu_mm 0>;
+-			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+-			#iommu-cells = <1>;
+-		};
+-
+-		ipmmu_vip0: mmu@e7b00000 {
+-			compatible = "renesas,ipmmu-r8a77980";
+-			reg = <0 0xe7b00000 0 0x1000>;
+-			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+-			#iommu-cells = <1>;
+-		};
+-
+-		ipmmu_vip1: mmu@e7960000 {
+-			compatible = "renesas,ipmmu-r8a77980";
+-			reg = <0 0xe7960000 0 0x1000>;
+-			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+-			#iommu-cells = <1>;
+-		};
+-
+-		ipmmu_ir: mmu@ff8b0000 {
+-			compatible = "renesas,ipmmu-r8a77980";
+-			reg = <0 0xff8b0000 0 0x1000>;
+-			renesas,ipmmu-main = <&ipmmu_mm 3>;
+-			power-domains = <&sysc R8A77980_PD_A3IR>;
+-			#iommu-cells = <1>;
+-		};
+-
+-		ipmmu_mm: mmu@e67b0000 {
+-			compatible = "renesas,ipmmu-r8a77980";
+-			reg = <0 0xe67b0000 0 0x1000>;
+-			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
+-			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+-			#iommu-cells = <1>;
+-		};
+-
+-		ipmmu_rt: mmu@ffc80000 {
+-			compatible = "renesas,ipmmu-r8a77980";
+-			reg = <0 0xffc80000 0 0x1000>;
+-			renesas,ipmmu-main = <&ipmmu_mm 10>;
+-			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+-			#iommu-cells = <1>;
+-		};
+-
+-		ipmmu_vc0: mmu@fe6b0000 {
+-			compatible = "renesas,ipmmu-r8a77980";
+-			reg = <0 0xfe6b0000 0 0x1000>;
+-			renesas,ipmmu-main = <&ipmmu_mm 12>;
+-			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+-			#iommu-cells = <1>;
+-		};
+-
+-		ipmmu_vi0: mmu@febd0000 {
+-			compatible = "renesas,ipmmu-r8a77980";
+-			reg = <0 0xfebd0000 0 0x1000>;
+-			renesas,ipmmu-main = <&ipmmu_mm 14>;
+-			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+-			#iommu-cells = <1>;
+-		};
+-
+ 		avb: ethernet@e6800000 {
+ 			compatible = "renesas,etheravb-r8a77980",
+ 				     "renesas,etheravb-rcar-gen3";
+@@ -722,6 +659,69 @@
+ 			status = "disabled";
+ 		};
+ 
++		ipmmu_ds1: mmu@e7740000 {
++			compatible = "renesas,ipmmu-r8a77980";
++			reg = <0 0xe7740000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 0>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			#iommu-cells = <1>;
++		};
++
++		ipmmu_ir: mmu@ff8b0000 {
++			compatible = "renesas,ipmmu-r8a77980";
++			reg = <0 0xff8b0000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 3>;
++			power-domains = <&sysc R8A77980_PD_A3IR>;
++			#iommu-cells = <1>;
++		};
++
++		ipmmu_mm: mmu@e67b0000 {
++			compatible = "renesas,ipmmu-r8a77980";
++			reg = <0 0xe67b0000 0 0x1000>;
++			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			#iommu-cells = <1>;
++		};
++
++		ipmmu_rt: mmu@ffc80000 {
++			compatible = "renesas,ipmmu-r8a77980";
++			reg = <0 0xffc80000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 10>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			#iommu-cells = <1>;
++		};
++
++		ipmmu_vc0: mmu@fe6b0000 {
++			compatible = "renesas,ipmmu-r8a77980";
++			reg = <0 0xfe6b0000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 12>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			#iommu-cells = <1>;
++		};
++
++		ipmmu_vi0: mmu@febd0000 {
++			compatible = "renesas,ipmmu-r8a77980";
++			reg = <0 0xfebd0000 0 0x1000>;
++			renesas,ipmmu-main = <&ipmmu_mm 14>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			#iommu-cells = <1>;
++		};
++
++		ipmmu_vip0: mmu@e7b00000 {
++			compatible = "renesas,ipmmu-r8a77980";
++			reg = <0 0xe7b00000 0 0x1000>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			#iommu-cells = <1>;
++		};
++
++		ipmmu_vip1: mmu@e7960000 {
++			compatible = "renesas,ipmmu-r8a77980";
++			reg = <0 0xe7960000 0 0x1000>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			#iommu-cells = <1>;
++		};
++
+ 		mmc0: mmc@ee140000 {
+ 			compatible = "renesas,sdhi-r8a77980",
+ 				     "renesas,rcar-gen3-sdhi";
