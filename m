@@ -1,45 +1,62 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Thu, 26 Jul 2018 15:19:57 +0530
-Message-ID: <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: RE: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic-stby-poweroff property
+Date: Thu, 26 Jul 2018 09:51:13 +0000
+Message-ID: <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+References: <20180726092220.17250-1-o.rempel@pengutronix.de>
+ <20180726092220.17250-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180726065331.6186-4-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180726092220.17250-2-o.rempel@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
-<o.rempel@pengutronix.de> wrote:
-
-> Each MU has four pairs of rx/tx data register with four rx/tx interrupts
-> which can also be used as a separate channel.
->
-So the hardware actually supports 4 channels.
-
-> -- #mbox-cells:  Must be 0. Number of cells in a mailbox
-> +- #mbox-cells:  Must be:
-> +               0 - for single channel mode. i.MX8* SCU protocol specific.
-> +               1 - for multichannel (generic) mode.
-> +
-No, please.
-DT bindings should reflect the real hardware, and not the software
-mode we want the driver to work in.
-Please define mbox-cells=1  and have the i.MX8* platform always ask
-for channel-0.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogT2xla3NpaiBSZW1wZWwg
+W21haWx0bzpvLnJlbXBlbEBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogMjAxOMTqN9TCMjbI1SAx
+NzoyMg0KPiBUbzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgTWFyayBCcm93biA8
+YnJvb25pZUBrZXJuZWwub3JnPjsNCj4gUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbC5qLnd5c29j
+a2lAaW50ZWwuY29tPg0KPiBDYzogT2xla3NpaiBSZW1wZWwgPG8ucmVtcGVsQHBlbmd1dHJvbml4
+LmRlPjsga2VybmVsQHBlbmd1dHJvbml4LmRlOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1jbGtAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBBbmRyZXcgTW9ydG9u
+DQo+IDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPjsgTGlhbSBHaXJkd29vZCA8bGdpcmR3b29k
+QGdtYWlsLmNvbT47DQo+IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+
+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJr
+LnJ1dGxhbmRAYXJtLmNvbT47IE1pY2hhZWwNCj4gVHVycXVldHRlIDxtdHVycXVldHRlQGJheWxp
+YnJlLmNvbT47IFN0ZXBoZW4gQm95ZA0KPiA8c2JveWRAY29kZWF1cm9yYS5vcmc+OyBGYWJpbyBF
+c3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSdXNzZWxsDQo+IEtpbmcgPGxpbnV4QGFy
+bWxpbnV4Lm9yZy51az47IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBSb2JpbiBH
+b25nDQo+IDx5aWJpbi5nb25nQG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAu
+Y29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjggMS82XSBBUk06IGlteDZxOiBwcm92aWRlIGRvY3Vt
+ZW50YXRpb24gZm9yIG5ldw0KPiBmc2wscG1pYy1zdGJ5LXBvd2Vyb2ZmIHByb3BlcnR5DQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBPbGVrc2lqIFJlbXBlbCA8by5yZW1wZWxAcGVuZ3V0cm9uaXguZGU+
+DQo+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiAtLS0NCj4gIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9jay50eHQgfCA4
+ICsrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDZxLWNs
+b2NrLnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2
+cS1jbG9jay50eHQNCj4gaW5kZXggYTQ1Y2E2N2E5ZDVmLi5lMTMwODM0NmUwMGQgMTAwNjQ0DQo+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9j
+ay50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lt
+eDZxLWNsb2NrLnR4dA0KPiBAQCAtNiw2ICs2LDE0IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+
+ICAtIGludGVycnVwdHM6IFNob3VsZCBjb250YWluIENDTSBpbnRlcnJ1cHQNCj4gIC0gI2Nsb2Nr
+LWNlbGxzOiBTaG91bGQgYmUgPDE+DQo+IA0KPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gKy0g
+ZnNsLHBtaWMtc3RieS1wb3dlcm9mZjogQ29uZmlndXJlIENDTSB0byBhc3NlcnQgUE1JQ19TVEJZ
+X1JFUSBzaWduYWwNCj4gKyAgb24gcG93ZXIgb2ZmLg0KPiArICBVc2UgdGhpcyBwcm9wZXJ0eSBp
+ZiB0aGUgU29DIHNob3VsZCBiZSBwb3dlcmVkIG9mZiBieSBleHRlcm5hbCBwb3dlcg0KPiArICBt
+YW5hZ2VtZW50IElDIChQTUlDKSB0cmlnZ2VyZWQgdmlhIFBNSUNfU1RCWV9SRVEgc2lnbmFsLg0K
+UE1JQ19PTl9SRVEgZGlkbid0IGNvbm5lY3QgdG8gYW55IHBpbiBvZiBQTUlDIGluIHlvdXIgY2Fz
+ZT8gRG9uJ3QgdW5kZXJzdGFuZA0Kd2h5IG5vdCBmb2xsb3cgbm9ybWFsIGJvYXJkIGRlc2lnbiBn
+dWlkZSB0byBwb3dlciBvZmYgcG1pYyBieSBQTUlDX09OX1JFUS4NCkhvdyB0byBwb3dlciBvbiBi
+b2FyZCBhZ2FpbiB0aGVuPw0KPiArICBCb2FyZHMgdGhhdCBhcmUgZGVzaWduZWQgdG8gaW5pdGlh
+dGUgcG93ZXJvZmYgb24gUE1JQ19PTl9SRVEgc2lnbmFsDQo+ICtzaG91bGQNCj4gKyAgYmUgdXNp
+bmcgInN5c2Nvbi1wb3dlcm9mZiIgZHJpdmVyIGluc3RlYWQuDQo+ICsNCj4gIFRoZSBjbG9jayBj
+b25zdW1lciBzaG91bGQgc3BlY2lmeSB0aGUgZGVzaXJlZCBjbG9jayBieSBoYXZpbmcgdGhlIGNs
+b2NrICBJRCBpbg0KPiBpdHMgImNsb2NrcyIgcGhhbmRsZSBjZWxsLiAgU2VlIGluY2x1ZGUvZHQt
+YmluZGluZ3MvY2xvY2svaW14NnFkbC1jbG9jay5oDQo+ICBmb3IgdGhlIGZ1bGwgbGlzdCBvZiBp
+Lk1YNiBRdWFkIGFuZCBEdWFsTGl0ZSBjbG9jayBJRHMuDQo+IC0tDQo+IDIuMTguMA0KDQo=
