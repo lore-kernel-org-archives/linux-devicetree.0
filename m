@@ -1,47 +1,101 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
-Date: Thu, 26 Jul 2018 16:44:08 +0300
-Message-ID: <CAHp75VfPozwBPpuP9HadSc2GVm7tbPpMxg+AtACZa9jzVGGT-Q@mail.gmail.com>
-References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com>
- <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com>
- <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com> <001b01d424c4$66e04230$34a0c690$@socionext.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: adc: add bindings for mcp3911
+Date: Thu, 26 Jul 2018 07:45:20 -0600
+Message-ID: <CAL_JsqLiG-iTh5rys+ZZ1UpMMB1ub9hqxnRFEHtM8Ouo+d5ZDA@mail.gmail.com>
+References: <20180724183004.20279-1-marcus.folkesson@gmail.com>
+ <20180724183004.20279-2-marcus.folkesson@gmail.com> <20180725175117.GA825@rob-hp-laptop>
+ <20180725190441.GA3373@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <001b01d424c4$66e04230$34a0c690$@socionext.com>
+In-Reply-To: <20180725190441.GA3373@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko@socionext.com>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Kent Gustavsson <kent@minoris.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 12:38 PM, Keiji Hayashibara
-<hayashibara.keiji@socionext.com> wrote:
-
->> > +       /* check if requested speed is too small */
->> > +       if (ckrat > SSI_MAX_CLK_DIVIDER)
->>
->> > +               return -EINVAL;
->>
->> So, does this critical?
+On Wed, Jul 25, 2018 at 1:04 PM Marcus Folkesson
+<marcus.folkesson@gmail.com> wrote:
 >
-> If set the value to SSI_MAX_CLK_DIVIDER, the clock frequency will be set high.
-> I don't change it to high frequency, and it is daringly an error.
-> On the other hand, when changing to low frequency, I will change it automatically.
-
-No. My point is, if somehow user asks for that condition to be
-happened you bail out, while when using clamp_val() you may continue
-to work at maximum limit, though issue warning to user, for example.
-
->> > +
->> > +       if (ckrat < SSI_MIN_CLK_DIVIDER)
->> > +               ckrat = SSI_MIN_CLK_DIVIDER;
->>
->> clamp_val()  / max() ?
+> Hello Rob,
 >
-> I will modify it to use max().
+> Thank you for the review.
+>
+> On Wed, Jul 25, 2018 at 11:51:17AM -0600, Rob Herring wrote:
+> > On Tue, Jul 24, 2018 at 08:30:03PM +0200, Marcus Folkesson wrote:
+> > > MCP3911 is a dual channel Analog Front End (AFE) containing two
+> > > synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
+> > >
+> > > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> > > Signed-off-by: Kent Gustavsson <kent@minoris.se>
+> > > ---
+> > >
+> > > Notes:
+> > >     v2:
+> > >             - drop channel width
+> > >             - drop `external_vref`
+> > >             - replace `external-clock` with proper clock bindings
+> > >
+> > >  .../devicetree/bindings/iio/adc/mcp3911.txt        | 28 ++++++++++++++++++++++
+> > >  1 file changed, 28 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> > > new file mode 100644
+> > > index 000000000000..af5472f51a84
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> > > @@ -0,0 +1,28 @@
+> > > +* Microchip MCP3911 Dual channel analog front end (ADC)
+> > > +
+> > > +Required properties:
+> > > + - compatible: Should be "microchip,mcp3911"
+> > > + - reg: SPI chip select number for the device
+> > > +
+> > > +Recommended properties:
+> > > + - spi-max-frequency: Definition as per
+> > > +    Documentation/devicetree/bindings/spi/spi-bus.txt.
+> > > +    Max frequency for this chip is 20MHz.
+> > > +
+> > > +Optional properties:
+> > > + - device-addr: Device address when multiple MCP3911 chips are present on the
+> > > +   same SPI bus. Valid values are 0-3. Defaults to 0.
+> >
+> > Isn't this the reg value?
+> >
+>
+> The reg value defines which chip select the chip hangs on.
+> The chip has support to connect up to four chips on the same SPI bus,
+> including the same chip select signal.
+>
+> The chips are separated by the device-addr as it is part of the
+> communication protocol.
 
-See above.
+Okay, seems pretty specific to this chip. Just add a vendor prefix.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> When reading the description for device-addr, I agree that it fits well
+> for the reg property as well..
+
+Except that reg format is already defined for SPI devices, so it's
+going to have to be separate property.
+
+> > > + - vref-supply: Phandle to the external reference voltage supply.
+> > > + - clocks: Phandle and clock identifier (see clock-names)
+> > > + - clock-names: "adc_clk" for the ADC (sampling) clock
+> >
+> > Datasheet calls this clki (or mclk internally). Or just drop clock-names
+> > as it is pointless
+> > when there is only 1 clock.
+>
+> I will drop the clock-names, thanks!
+>
+> >
+> > Also DR handling as an IRQ is missing.
+>
+> I have considered using the DR signal, but as we not support buffering
+> yet I did not see any point in using it.
+
+For the binding it doesn't matter if a particular driver uses it or
+not. If it's connected in a h/w design it should be in DT.
+
+Rob
