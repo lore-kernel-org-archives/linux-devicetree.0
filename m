@@ -1,105 +1,201 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v3.1 10/10] arm64: dts: allwinner: a64:
- Enable HDMI output on A64 boards w/ HDMI
-Date: Fri, 27 Jul 2018 21:26:11 +0800
-Message-ID: <8DF4600E-DFE4-47CD-B541-FFDD903A65FB@aosc.io>
-References: <20180726171257.6688-1-icenowy@aosc.io> <20180726171257.6688-11-icenowy@aosc.io> <20180727125615.ju23ecgm6y4rz7p5@flea>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 1/3] i3c: master: Add driver for Synopsys DesignWare IP
+Date: Fri, 27 Jul 2018 15:38:50 +0200
+Message-ID: <20180727153850.5a8ca75c@bbrezillon>
+References: <1532120272-17157-1-git-send-email-soares@synopsys.com>
+        <1532120272-17157-2-git-send-email-soares@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBD535TNAKGQEM7CFDEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180727125615.ju23ecgm6y4rz7p5@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532120272-17157-2-git-send-email-soares@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vitor soares <Vitor.Soares@synopsys.com>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, Joao.Pinto@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Victor,
+
+On Fri, 20 Jul 2018 21:57:50 +0100
+Vitor soares <Vitor.Soares@synopsys.com> wrote:
+
+> This patch add driver for Synopsys DesignWare IP on top of
+> I3C subsystem patchset proposal V6
+
+The fact that you based your work on v6 of the I3C patchset should be
+placed ....
+
+> 
+> Signed-off-by: Vitor soares <soares@synopsys.com>
+> ---
+
+... here, so that it does not appear in the final commit message.
 
 
-=E4=BA=8E 2018=E5=B9=B47=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888:=
-56:15, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
->On Fri, Jul 27, 2018 at 01:12:57AM +0800, Icenowy Zheng wrote:
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->> index 1b9b92e541d2..1b972bade9f6 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->> @@ -62,6 +62,21 @@
->>  	chosen {
->>  		stdout-path =3D "serial0:115200n8";
->>  	};
->> +
->> +	connector {
->> +		compatible =3D "hdmi-connector";
->> +		type =3D "a";
->> +
->> +		port {
->> +			hdmi_con_in: endpoint {
->> +				remote-endpoint =3D <&hdmi_out_con>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&de {
->> +	status =3D "okay";
->>  };
->> =20
->>  &ehci0 {
->> @@ -82,6 +97,17 @@
->> =20
->>  };
->> =20
->> +&hdmi {
->> +	hdmi-supply =3D <&reg_dldo1>;
->> +	status =3D "okay";
->> +};
->> +
->> +&hdmi_out {
->> +	hdmi_out_con: endpoint {
->> +		remote-endpoint =3D <&hdmi_con_in>;
->> +	};
->> +};
->> +
->>  &i2c1 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&i2c1_pins>;
->> @@ -99,6 +125,10 @@
->>  	};
->>  };
->> =20
->> +&mixer1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &mmc0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&mmc0_pins>;
->> @@ -238,6 +268,10 @@
->>  	status =3D "disabled";
->>  };
->> =20
->> +&tcon1 {
->> +	status =3D "okay";
->> +};
->
->Is it working or not on the pine64?
+[...]
 
-Not tested yet, as my main A64 device is Pine A64-LTS now.
+> +static int dw_i3c_master_get_free_pos(struct dw_i3c_master *master)
+> +{
+> +	if (!(master->free_pos & GENMASK(master->maxdevs - 1, 0)))
+> +		return -ENOSPC;
+> +
+> +	return ffs(master->free_pos) - 1;
+> +}
 
->
->Maxime
+Okay, maybe we can have a generic infrastructure for that part (I have
+the same logic in the Cadence driver), but let's keep that for later.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> +
+> +static void dw_i3c_master_wr_tx_fifo(struct dw_i3c_master *master,
+> +				     const u8 *bytes, int nbytes)
+> +{
+> +	int i, j;
+> +
+> +	for (i = 0; i < nbytes; i += 4) {
+> +		u32 data = 0;
+> +
+> +		for (j = 0; j < 4 && (i + j) < nbytes; j++)
+> +			data |= (u32)bytes[i + j] << (j * 8);
+> +
+> +		writel(data, master->regs + RX_TX_DATA_PORT);
+
+Maybe you can use writesl() as suggested by Arnd in his review of the
+Cadence driver.
+
+> +	}
+> +}
+> +
+
+[...]
+
+> +
+> +static void dw_i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
+> +{
+> +	struct dw_i3c_i2c_dev_data *data = i2c_dev_get_master_data(dev);
+> +	struct i3c_master_controller *m = i2c_dev_get_master(dev);
+> +	struct dw_i3c_master *master = to_dw_i3c_master(m);
+> +
+> +	writel(NULL,
+
+		^ 0 not NULL
+
+> +	       master->regs +
+> +	       DEV_ADDR_TABLE_LOC(master->datstartaddr, data->index));
+> +
+> +	i2c_dev_set_master_data(dev, NULL);
+> +	master->addrs[data->index] = 0;
+> +	master->free_pos |= BIT(data->index);
+> +	kfree(data);
+> +}
+> +
+
+> +static int dw_i3c_probe(struct platform_device *pdev)
+> +{
+> +	struct dw_i3c_master *master;
+> +	struct resource *res;
+> +	int ret, irq;
+> +
+> +	master = devm_kzalloc(&pdev->dev, sizeof(*master), GFP_KERNEL);
+> +	if (!master)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	master->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(master->regs))
+> +		return PTR_ERR(master->regs);
+> +
+> +	master->core_clk = devm_clk_get(&pdev->dev, "core_clk");
+> +	if (IS_ERR(master->core_clk))
+> +		return PTR_ERR(master->core_clk);
+> +
+> +	master->core_rst = devm_reset_control_get_optional_exclusive(&pdev->dev,
+> +								    "core_rst");
+> +	if (IS_ERR(master->core_rst))
+> +		return PTR_ERR(master->core_rst);
+> +
+> +	ret = clk_prepare_enable(master->core_clk);
+> +	if (ret)
+> +		goto err_disable_core_clk;
+> +
+> +	reset_control_deassert(master->core_rst);
+> +
+> +	spin_lock_init(&master->xferqueue.lock);
+> +	INIT_LIST_HEAD(&master->xferqueue.list);
+> +
+> +	writel(INTR_ALL, master->regs + INTR_STATUS);
+> +	irq = platform_get_irq(pdev, 0);
+> +	ret = devm_request_irq(&pdev->dev, irq,
+> +			       dw_i3c_master_irq_handler, 0,
+> +			       dev_name(&pdev->dev), master);
+> +	if (ret)
+> +		goto err_assert_rst;
+> +
+> +	platform_set_drvdata(pdev, master);
+> +
+> +	ret = readl(master->regs + QUEUE_STATUS_LEVEL);
+> +	master->caps.cmdfifodepth = QUEUE_STATUS_LEVEL_CMD(ret);
+> +
+> +	ret = readl(master->regs + DATA_BUFFER_STATUS_LEVEL);
+> +	master->caps.datafifodepth = DATA_BUFFER_STATUS_LEVEL_TX(ret);
+> +
+> +	ret = readl(master->regs + DEVICE_ADDR_TABLE_POINTER);
+> +	master->datstartaddr = ret;
+> +	master->maxdevs = ret >> 16;
+> +	master->free_pos = GENMASK(master->maxdevs - 1, 0);
+> +
+> +	/* read controller version */
+> +	ret = readl(master->regs + I3C_VER_ID);
+> +	master->version[0] = (char)(ret >> 24);
+> +	master->version[1] = '.';
+> +	master->version[2] = (char)(ret >> 16);
+> +	master->version[3] = (char)(ret >> 8);
+> +	master->version[4] = '\0';
+> +
+> +	/* read controller type */
+> +	ret = readl(master->regs + I3C_VER_TYPE);
+> +	master->type[0] = (char)(ret >> 24);
+> +	master->type[1] = (char)(ret >> 16);
+> +	master->type[2] = (char)(ret >> 8);
+> +	master->type[3] = (char) ret;
+> +	master->type[4] = '\0';
+
+Hm, do you really intend to read these as strings? If you do, maybe you
+can use sprintf() here:
+
+	sprintf(master->version, "%c.%c%c", ...)
+	sprintf(master->type, "%c%c%c%c", ...)
+
+
+> +
+> +	ret = i3c_master_register(&master->base, &pdev->dev,
+> +				  &dw_mipi_i3c_ops, false);
+> +	if (ret)
+> +		goto err_assert_rst;
+> +
+> +	dev_info(&pdev->dev, "Synopsys DW MIPI I3C Master: version %s-%s\n",
+> +		 master->version, master->type);
+> +
+> +	return 0;
+> +
+> +err_assert_rst:
+> +	reset_control_assert(master->core_rst);
+> +
+> +err_disable_core_clk:
+> +	clk_disable_unprepare(master->core_clk);
+> +
+> +	return ret;
+> +}
+
+The driver looks pretty good already, and I'm pleasantly surprised to
+see that the Synopsys IP works pretty much the same way the Cadence one
+does. I could find some of the logic I implemented in the Cadence
+driver almost directly applied to this one, so I think there's room for
+code factorization. Anyway, let's see what the next controller looks
+like before doing that.
+
+Thanks for sharing your work early and for reviewing the previous
+versions of the I3C patchset.
+
+Regards,
+
+Boris
