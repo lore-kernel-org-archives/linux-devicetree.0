@@ -1,59 +1,38 @@
 From: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Subject: [PATCH v2 0/7] Add clock config and pm support to bcm iProc mdio mux
-Date: Fri, 27 Jul 2018 14:23:26 -0700
-Message-ID: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
+Subject: [PATCH v2 1/7] dt-bindings: net: Fix Broadcom iProc mdio mux driver base address
+Date: Fri, 27 Jul 2018 14:23:27 -0700
+Message-ID: <1532726613-6483-2-git-send-email-arun.parameswaran@broadcom.com>
+References: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arun.parameswaran@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-The patchset is based on David Miller's "net-next" repo.
+Modify the base address of the Broadcom iProc MDIO mux driver to
+point to the start of the block's register address space.
 
-The patchset extends the Broadcom iProc mdio mux to add support for
-suspend/resume and the ability to configure the internal clock
-divider. The patchset also sets the scan control register to
-disable external master access.
+Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
+---
+ Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The base address of the mdio-mux-bcm-iproc is modified to point to the
-start of the mdio block's address space, to be able to access all the
-mdio's registers. The missing registers are required to configure the
-internal clock divider registers in some of the Broadcom SoC's.
-
-Changes from v1:
- - Addressed Andrew's comments.
-   - Reworked the patches to be based on 'net-next'
-   - Removed 'fixes' from the commit messages, the changes are related
-     to the new features being added.
-   - Maintained backward compatibility to older dt-blob's specifying
-     base addresse with an offset. The correction is applied in the
-     driver and a message is printed to update the dt-blob.
-   - Re-worked and re-ordered the last four patches (4-7).
-     - Added setting of the scan control register as a new patch
-     - Added a call to 'clk_prepare_enable()' in the patch that adds
-       the clock config support, removed the debug message when clock
-       is not passed.
-     - Simplified the pm support patch (removed the array used for the
-       save/restore logic).
-
-Thanks
-Arun
-
-Arun Parameswaran (7):
-  dt-bindings: net: Fix Broadcom iProc mdio mux driver base address
-  net: phy: Fix the register offsets in Broadcom iProc mdio mux driver
-  arm64: dts: Fix the base address of the Broadcom iProc mdio mux
-  net: phy: Disable external master access in bcm mdio mux driver
-  dt-bindings: net: Add clock handle to Broadcom iProc mdio mux
-  net: phy: Add support to configure clock in Broadcom iProc mdio mux
-  net: phy: Add pm support to Broadcom iProc mdio mux driver
-
- .../bindings/net/brcm,mdio-mux-iproc.txt           |   7 +-
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |   4 +-
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   4 +-
- drivers/net/phy/mdio-mux-bcm-iproc.c               | 109 +++++++++++++++++++--
- 4 files changed, 109 insertions(+), 15 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt b/Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
+index dfe287a..dc8aa68 100644
+--- a/Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
++++ b/Documentation/devicetree/bindings/net/brcm,mdio-mux-iproc.txt
+@@ -18,9 +18,9 @@ at- Documentation/devicetree/bindings/net/mdio-mux.txt
+ 
+ 
+ for example:
+-		mdio_mux_iproc: mdio-mux@6602023c {
++		mdio_mux_iproc: mdio-mux@66020000 {
+ 			compatible = "brcm,mdio-mux-iproc";
+-			reg = <0x6602023c 0x14>;
++			reg = <0x66020000 0x250>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
 -- 
 1.9.1
