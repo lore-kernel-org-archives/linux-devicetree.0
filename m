@@ -1,39 +1,45 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH v1 0/6] Resolve unwanted DMA backing with IOMMU
-Date: Fri, 27 Jul 2018 11:13:31 -0600
-Message-ID: <CAL_JsqJCE+8hZ-xCajUaW4ScY8VmaZ3nN4U-_AKJL+063sLBpw@mail.gmail.com>
-References: <20180726231624.21084-1-digetx@gmail.com>
- <20180727082512.lpvmeuvxnw3mpeym@8bytes.org>
- <20180727090328.GH28088@arm.com> <4164951.xGHfcFJ9uZ@dimapc>
- <20180727142000.76zgficpta473snl@8bytes.org>
+Subject: Re: [PATCH] of/fdt: Remove PPC32 longtrail hack in memory scan
+Date: Fri, 27 Jul 2018 11:12:50 -0600
+Message-ID: <CAL_JsqK4GEPJSPg+sStvFyO=sQ0Fp49FKKTz0S9OGc1COOnp-g@mail.gmail.com>
+References: <20180727053555.26596-1-mpe@ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180727142000.76zgficpta473snl@8bytes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Joerg Roedel <joro@8bytes.org>
-Cc: devicetree@vger.kernel.org, Mikko Perttunen <cyndis@kapsi.fi>, "Rafael J. Wysocki" <rafael@kernel.org>, kwizart@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, Linux IOMMU <iommu@lists.linux-foundation.org>, Thierry Reding <thierry.reding@gmail.com>, bskeggs@redhat.com, Catalin Marinas <catalin.marinas@arm.com>, nouveau@lists.freedesktop.org, Dmitry Osipenko <digetx@gmail.com>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20180727053555.26596-1-mpe@ellerman.id.au>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMjcsIDIwMTggYXQgODoyMCBBTSBKb2VyZyBSb2VkZWwgPGpvcm9AOGJ5dGVz
-Lm9yZz4gd3JvdGU6Cj4KPiBPbiBGcmksIEp1bCAyNywgMjAxOCBhdCAwNToxMDoyMlBNICswMzAw
-LCBEbWl0cnkgT3NpcGVua28gd3JvdGU6Cj4gPiBJJ20gbm90IHN1cmUgd2hhdCB5b3UgZ3V5cyBh
-cmUgbWVhbmluZyBieSB0aGUgImZpcm13YXJlIiwgY291bGQgeW91IGVsYWJvcmF0ZQo+ID4gcGxl
-YXNlPyBEbyB5b3UgbWVhbiB0aGUgT3BlbiBGaXJtd2FyZSBhbmQgaGVuY2UgdGhlIGRldmljZXRy
-ZWUgb3Igd2hhdD8KPgo+IFllcywgSSB0aGluayB0aGUgYmVzdCB3YXkgdG8gcmVxdWVzdCB0aGlz
-IGlzIHVzaW5nIGEgZGV2aWNlLXRyZWUKPiBwcm9wZXJ0eS4gTGV0dGluZyB0aGUgZGV2aWNlIGRy
-aXZlciByZXF1ZXN0IGl0IGlzIGRlZmluaXRseSBhIGJhZCBpZGVhLgoKSSBkb24ndCBmb2xsb3cg
-d2h5IHdlIG5lZWQgYSBwcm9wZXJ0eSByYXRoZXIgdGhhbiBiZWluZyBpbXBsaWVkIGJ5IHRoZQpk
-ZXZpY2UncyAodGhlIEdQVSkgY29tcGF0aWJsZSBzdHJpbmcuCgpSb2IKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Jul 26, 2018 at 11:36 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> When the OF code was originally made common by Grant in commit
+> 51975db0b733 ("of/flattree: merge early_init_dt_scan_memory() common
+> code") (Feb 2010), the common code inherited a hack to handle
+> PPC "longtrail" machines, which had a "memory@0" node with no
+> device_type.
+>
+> That check was then made to only apply to PPC32 in b44aa25d20e2 ("of:
+> Handle memory@0 node on PPC32 only") (May 2014).
+>
+> But according to Paul Mackerras the "longtrail" machines are long
+> dead, if they were ever seen in the wild at all. If someone does still
+> have one, we can handle this firmware wart in powerpc platform code.
+>
+> So remove the hack once and for all.
+
+Yay. I guess Power Macs and other quirks will never die...
+
+I'll queue this up.
+
+Rob
