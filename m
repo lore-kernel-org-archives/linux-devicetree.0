@@ -1,96 +1,196 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3.1 00/10] arm64: allwinner: Add A64 DE2 HDMI support
-Date: Fri, 27 Jul 2018 14:59:12 +0200
-Message-ID: <20180727125912.e5js7krmthto6gmz@flea>
-References: <20180726171257.6688-1-icenowy@aosc.io>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0205767537=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180726171257.6688-1-icenowy@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Diego Rondini <diego.rondini@kynetics.com>
+Subject: [PATCH] ARM: dts: sun8i: Add initial Orangepi Zero Plus 2 H3 support
+Date: Fri, 27 Jul 2018 14:57:39 +0200
+Message-ID: <20180727125739.22871-1-diego.rondini@kynetics.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Jagan Teki <jteki@openedev.com>
+Cc: Diego Rondini <diego.rondini@kynetics.com>
 List-Id: devicetree@vger.kernel.org
 
+Orangepi Zero Plus 2 is an open-source single-board computer, available in two
+Allwinner SOC variants, H3 and H5. We add support for H3 variant here, as the
+H5 is already supported by sun50i-h5-orangepi-zero-plus2.dts.
 
---===============0205767537==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="anrqhmutbeiy5itt"
-Content-Disposition: inline
+H5 Orangepi Zero Plus 2 has
+- Quad-core Cortex-A7
+- 512MB DDR3
+- micrSD slot and 8GB eMMC
+- Debug TTL UART
+- HDMI
+- Wifi + BT
+- OTG+power supply
 
+Signed-off-by: Diego Rondini <diego.rondini@kynetics.com>
+---
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/sun8i-h3-orangepi-zero-plus2.dts | 146 ++++++++++++++++++
+ 2 files changed, 147 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
 
---anrqhmutbeiy5itt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jul 27, 2018 at 01:12:47AM +0800, Icenowy Zheng wrote:
-> Allwinner A64 has display engine pipeline like other Allwinner SOC's A83T=
-/H3/H5.
->=20
-> A64 behaviour similar to Allwinner A83T where
-> Mixer0 =3D> TCON0 =3D> LVDS/RGB/MIPI-DSI
-> Mixer1 =3D> TCON1 =3D> HDMI
-> as per Display System Block Diagram from the A64 user manual.
->=20
-> This is third patch-set followed with previous RFC[1], first and second
-> series[2][3] and merely concentrated on HDMI pipeline through TCON1 and
-> rest will add eventually.
->=20
-> I just rebased and slightly re-integrated the patchset according to the
-> requirments of the maintainer, and added the mixer0->tcon0 pipeline.
-> The further maintainship of the patchset still needs to be discussed
-> between I and Jagan.
-
-Beside the comment on the pine64, it looks good to me. Can you
-resubmit those patches after rc1 is out?
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---anrqhmutbeiy5itt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltbFx8ACgkQ0rTAlCFN
-r3Rh4w//YULFl9J+chHjxWnvahKtcxglkDFlvK0R3Ht0O0wkegqgZci5c425DsnK
-1ISyKxPobr41n6NRuwAje2hqwZte2DoSM3E/TQ749KtzcJGqJHc6jk07+t5oz7CT
-JKi3xip659H/78FOhE/gXxc6XfgKVT+YzH2FbBAJL/Q8wid0O3INJiy+3oqX0ffV
-RUtk23mAMLPe74ku8lvJKxlISZxaapB8W5515IN7oqJBoOfvTJVapQB2Mc/GJXN/
-VsfbDvKKeYLUH9nd+no7iLVkbsb4Jr4byU2pxDCol/jh/t/91AXi7pbLaL4rzfko
-XNiQzohYBbYoTnVIjmxVgYiL8bCI4MUFJ1FH0MCQiP2w0c4bxVSVKZEXzXIqtPaL
-GfZDKGKYUHqiUz8+4LKgV6oNi2xhpD10dXS2H30Rd7rcpbQN9ROibBrdf+0iIvay
-I0+upoQSS1AQcgUGyREum0dQq3QA0dqFeAV76LxXIntcXt2IZ4hw30GwDNBqhi3D
-v/q2NceMeYxM12aAzVg9pkZwY6XGjn9ftdmvXzLLr2OR8+h22Y75dhA7FSEzEPLz
-chxk4lAOyQWDezye0o0+wbEQXii7jxb/E3QLb7JF2EZ6awEG+7aakAuySkG1HJsG
-518FmSA41GV4a/Wtc2+xrThNOr1MIBtgEFiZYzn/V4Kf4bRiV84=
-=/5kr
------END PGP SIGNATURE-----
-
---anrqhmutbeiy5itt--
-
---===============0205767537==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0205767537==--
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 37a3de760d40..03fb915f2337 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1024,6 +1024,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-h3-orangepi-pc-plus.dtb \
+ 	sun8i-h3-orangepi-plus.dtb \
+ 	sun8i-h3-orangepi-plus2e.dtb \
++	sun8i-h3-orangepi-zero-plus2.dtb \
+ 	sun8i-r16-bananapi-m2m.dtb \
+ 	sun8i-r16-nintendo-nes-classic.dtb \
+ 	sun8i-r16-nintendo-super-nes-classic.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
+new file mode 100644
+index 000000000000..3701644adc30
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
+@@ -0,0 +1,146 @@
++/*
++ * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
++ * Copyright (C) 2018 Diego Rondini <diego.rondini@kynetics.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "sun8i-h3.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "OrangePi Zero Plus2 H3";
++	compatible = "xunlong,orangepi-zero-plus2", "allwinner,sun8i-h3";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		reset-gpios = <&pio 0 9 GPIO_ACTIVE_LOW>; /* PA9 */
++		post-power-on-delay-ms = <200>;
++	};
++};
++
++&de {
++	status = "okay";
++};
++
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
++&mmc0 {
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&mmc1 {
++	vmmc-supply = <&reg_vcc3v3>;
++	vqmmc-supply = <&reg_vcc3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++		interrupt-parent = <&r_pio>;
++		interrupts = <0 7 IRQ_TYPE_LEVEL_LOW>;	/* PL7 */
++		interrupt-names = "host-wake";
++	};
++};
++
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_8bit_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <8>;
++	non-removable;
++	cap-mmc-hw-reset;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	status = "okay";
++};
+-- 
+2.17.1
