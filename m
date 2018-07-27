@@ -1,45 +1,152 @@
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
-Subject: [PATCH V4 1/9] dt-bindings: soc: qcom: Add label for GLINK bindings
-Date: Fri, 27 Jul 2018 17:47:21 +0530
-Message-ID: <1532693849-7037-2-git-send-email-aneela@codeaurora.org>
-References: <1532693849-7037-1-git-send-email-aneela@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 01/10] ASoC: dt-bindings: add dt bindings for wcd9335 audio codec
+Date: Fri, 27 Jul 2018 13:17:57 +0100
+Message-ID: <20180727121806.18209-2-srinivas.kandagatla@linaro.org>
+References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532693849-7037-1-git-send-email-aneela@codeaurora.org>
+In-Reply-To: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org, robh+dt@kernel.org, arnaud.pouliquen@st.com, andy.gross@linaro.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Arun Kumar Neelakantam <aneela@codeaurora.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org
+Cc: mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Lew <clew@codeaurora.org>
+This patch adds bindings for wcd9335 audio codec which can support both SLIMbus
+and I2S/I2C interface.
 
-There are GLINK clients who open the same channel on multiple GLINK
-links. These clients need a way to distinguish which remoteproc they
-are communicating to. Add a label property to identify the edge this
-node represents.
-
-Signed-off-by: Chris Lew <clew@codeaurora.org>
-Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/sound/qcom,wcd9335.txt     | 123 +++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd9335.txt
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-index 9663cab..0b8cc53 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-@@ -10,6 +10,11 @@ edge.
- 	Value type: <stringlist>
- 	Definition: must be "qcom,glink-rpm"
- 
-+- label:
-+	Usage: optional
-+	Value type: <string>
-+	Definition: should specify the subsystem name this edge corresponds to.
+diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt b/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt
+new file mode 100644
+index 000000000000..1d8d49e30af7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt
+@@ -0,0 +1,123 @@
++QCOM WCD9335 Codec
 +
- - interrupts:
- 	Usage: required
- 	Value type: <prop-encoded-array>
++Qualcomm WCD9335 Codec is a standalone Hi-Fi audio codec IC, supports
++Qualcomm Technologies, Inc. (QTI) multimedia solutions, including
++the MSM8996, MSM8976, and MSM8956 chipsets. It has in-built
++Soundwire controller, interrupt mux. It supports both I2S/I2C and
++SLIMbus audio interfaces.
++
++Required properties with SLIMbus Interface:
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: For SLIMbus interface it should be "slimMID,PID",
++		    textual representation of Manufacturer ID, Product Code,
++		    shall be in lower case hexadecimal with leading zeroes
++		    suppressed.  Refer to slimbus/bus.txt for details.
++		    Should be:
++		    "slim217,1a0" for MSM8996 and APQ8096 SoCs with SLIMbus.
++
++- reg
++	Usage: required
++	Value type: <u32 u32>
++	Definition: Should be ('Device index', 'Instance ID')
++
++- interrupts
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Interrupts via WCD INTR1 and INTR2 pins
++
++- interrupt-names:
++	Usage: required
++	Value type: <String array>
++	Definition: Interrupt names of WCD INTR1 and INTR2
++	Should be: "intr1", "intr2"
++
++- reset-gpio:
++	Usage: required
++	Value type: <String Array>
++	Definition: Reset gpio line
++
++- qcom,ifd:
++	Usage: required
++	Value type: <phandle>
++	Definition: SLIM interface device
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: See clock-bindings.txt section "consumers". List of
++                three clock specifiers for mclk, mclk2 and slimbus clock.
++
++- clock-names:
++	Usage: required
++	Value type: <string>
++	Definition: Must contain "mclk", "mclk2" and "slimbus" strings.
++
++- vdd-buck-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: Should contain a reference to the 1.8V buck supply
++
++- vdd-buck-sido-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: Should contain a reference to the 1.8V SIDO buck supply
++
++- vdd-rx-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: Should contain a reference to the 1.8V rx supply
++
++- vdd-tx-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: Should contain a reference to the 1.8V tx supply
++
++- vdd-vbat-supply:
++	Usage: Optional
++	Value type: <phandle>
++	Definition: Should contain a reference to the vbat supply
++
++- vdd-micbias-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: Should contain a reference to the micbias supply
++
++- vdd-io-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: Should contain a reference to the 1.8V io supply
++
++- interrupt-controller:
++	Usage: required
++	Definition: Indicating that this is a interrupt controller
++
++- #interrupt-cells:
++	Usage: required
++	Value type: <int>
++	Definition: should be 1
++
++#sound-dai-cells
++	Usage: required
++	Value type: <u32>
++	Definition: Must be 1
++
++codec@1{
++	compatible = "slim217,1a0";
++	reg  = <1 0>;
++	interrupts = <&msmgpio 54 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "intr2"
++	reset-gpio = <&msmgpio 64 0>;
++	qcom,ifd  = <&wc9335_ifd>;
++	clock-names = "mclk", "native";
++	clocks = <&rpmcc RPM_SMD_DIV_CLK1>,
++		 <&rpmcc RPM_SMD_BB_CLK1>;
++	vdd-buck-supply = <&pm8994_s4>;
++	vdd-rx-supply = <&pm8994_s4>;
++	vdd-buck-sido-supply = <&pm8994_s4>;
++	vdd-tx-supply = <&pm8994_s4>;
++	vdd-io-supply = <&pm8994_s4>;
++	#sound-dai-cells = <1>;
++}
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.16.2
