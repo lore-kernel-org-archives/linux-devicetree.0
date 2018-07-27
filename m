@@ -1,45 +1,120 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] of/fdt: Remove PPC32 longtrail hack in memory scan
-Date: Fri, 27 Jul 2018 11:12:50 -0600
-Message-ID: <CAL_JsqK4GEPJSPg+sStvFyO=sQ0Fp49FKKTz0S9OGc1COOnp-g@mail.gmail.com>
-References: <20180727053555.26596-1-mpe@ellerman.id.au>
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v1 0/6] Resolve unwanted DMA backing with IOMMU
+Date: Fri, 27 Jul 2018 20:16:53 +0300
+Message-ID: <2402373.RyBdR7VSnO@dimapc>
+References: <20180726231624.21084-1-digetx@gmail.com>
+	<daadd395-dcb7-9505-f171-0fcc28570301@arm.com>
+	<20180727170326.GA21283@jcrouse-lnx.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20180727053555.26596-1-mpe@ellerman.id.au>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180727170326.GA21283-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Chauvet <kwizart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 11:36 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> When the OF code was originally made common by Grant in commit
-> 51975db0b733 ("of/flattree: merge early_init_dt_scan_memory() common
-> code") (Feb 2010), the common code inherited a hack to handle
-> PPC "longtrail" machines, which had a "memory@0" node with no
-> device_type.
->
-> That check was then made to only apply to PPC32 in b44aa25d20e2 ("of:
-> Handle memory@0 node on PPC32 only") (May 2014).
->
-> But according to Paul Mackerras the "longtrail" machines are long
-> dead, if they were ever seen in the wild at all. If someone does still
-> have one, we can handle this firmware wart in powerpc platform code.
->
-> So remove the hack once and for all.
+On Friday, 27 July 2018 20:03:26 MSK Jordan Crouse wrote:
+> On Fri, Jul 27, 2018 at 05:02:37PM +0100, Robin Murphy wrote:
+> > On 27/07/18 15:10, Dmitry Osipenko wrote:
+> > >On Friday, 27 July 2018 12:03:28 MSK Will Deacon wrote:
+> > >>On Fri, Jul 27, 2018 at 10:25:13AM +0200, Joerg Roedel wrote:
+> > >>>On Fri, Jul 27, 2018 at 02:16:18AM +0300, Dmitry Osipenko wrote:
+> > >>>>The proposed solution adds a new option to the base device driver
+> > >>>>structure that allows device drivers to explicitly convey to the
+> > >>>>drivers
+> > >>>>core that the implicit IOMMU backing for devices must not happen.
+> > >>>
+> > >>>Why is IOMMU mapping a problem for the Tegra GPU driver?
+> > >>>
+> > >>>If we add something like this then it should not be the choice of the
+> > >>>device driver, but of the user and/or the firmware.
+> > >>
+> > >>Agreed, and it would still need somebody to configure an identity domain
+> > >>so
+> > >>that transactions aren't aborted immediately. We currently allow the
+> > >>identity domain to be used by default via a command-line option, so I
+> > >>guess
+> > >>we'd need a way for firmware to request that on a per-device basis.
+> > >
+> > >The IOMMU mapping itself is not a problem, the problem is the management
+> > >of
+> > >the IOMMU. For Tegra we don't want anything to intrude into the IOMMU
+> > >activities because:
+> > >
+> > >1) GPU HW require additional configuration for the IOMMU usage and dumb
+> > >mapping of the allocations simply doesn't work.
+> > 
+> > Generally, that's already handled by the DRM drivers allocating
+> > their own unmanaged domains. The only problem we really need to
+> > solve in that regard is that currently the device DMA ops don't get
+> > updated when moving away from the managed domain. That's been OK for
+> > the VFIO case where the device is bound to a different driver which
+> > we know won't make any explicit DMA API calls, but for the more
+> > general case of IOMMU-aware drivers we could certainly do with a bit
+> > of cooperation between the IOMMU API, DMA API, and arch code to
+> > update the DMA ops dynamically to cope with intermediate subsystems
+> > making DMA API calls on behalf of devices they don't know the
+> > intimate details of.
+> > 
+> > >2) Older Tegra generations have a limited resource and capabilities in
+> > >regards to IOMMU usage, allocating IOMMU domain per-device is just
+> > >impossible for example.
+> > >
+> > >3) HW performs context switches and so particular allocations have to be
+> > >assigned to a particular contexts IOMMU domain.
+> > 
+> > I understand Qualcomm SoCs have a similar thing too, and AFAICS that
+> > case just doesn't fit into the current API model at all. We need the
+> > IOMMU driver to somehow know about the specific details of which
+> > devices have magic associations with specific contexts, and we
+> > almost certainly need a more expressive interface than
+> > iommu_domain_alloc() to have any hope of reliable results.
+> 
+> This is correct for Qualcomm GPUs - The GPU hardware context switching
+> requires a specific context and there are some restrictions around
+> secure contexts as well.
+> 
+> We don't really care if the DMA attaches to a context just as long as it
+> doesn't attach to the one(s) we care about. Perhaps a "valid context" mask
+> would work in from the DT or the device struct to give the subsystems a
+> clue as to which domains they were allowed to use. I recognize that there
+> isn't a one-size-fits-all solution to this problem so I'm open to different
+> ideas.
 
-Yay. I guess Power Macs and other quirks will never die...
+Designating whether implicit IOMMU backing is appropriate for a device via 
+device-tree property sounds a bit awkward because that will be a kinda 
+software description (of a custom Linux driver model), while device-tree is 
+supposed to describe HW.
 
-I'll queue this up.
+What about to grant IOMMU drivers with ability to decide whether the implicit 
+backing for a device is appropriate? Like this:
 
-Rob
+bool implicit_iommu_for_dma_is_allowed(struct device *dev)
+{
+	const struct iommu_ops *ops = dev->bus->iommu_ops;
+	struct iommu_group *group;
+
+	group = iommu_group_get(dev);
+	if (!group)
+		return NULL;
+
+	iommu_group_put(group);
+
+	if (!ops->implicit_iommu_for_dma_is_allowed)
+		return true;
+
+	return ops->implicit_iommu_for_dma_is_allowed(dev);
+}
+
+Then arch_setup_dma_ops() could have a clue whether implicit IOMMU backing for 
+a device is appropriate.
