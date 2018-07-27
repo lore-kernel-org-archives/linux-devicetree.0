@@ -1,76 +1,44 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v3 06/23] thermal: armada: average over samples to avoid
- glitches
-Date: Fri, 27 Jul 2018 18:29:01 +0200
-Message-ID: <2ab1a1f6-e0c3-3eed-a088-9b04e88fce12@linaro.org>
-References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
- <20180716144206.30985-7-miquel.raynal@bootlin.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of/platform: Initialise default DMA masks
+Date: Fri, 27 Jul 2018 10:50:34 -0600
+Message-ID: <CAL_JsqJCtzhcO8s59d=SPEtYpDWhCkKo99cQiuK987Y1Oqgb9A@mail.gmail.com>
+References: <9ffa7f2676c25adf39e85ec8114b26500b5680f6.1532699305.git.robin.murphy@arm.com>
+	<20180727142054.GA29316@lst.de>
+	<a5c6dd56-100a-e1cd-b4c4-2a30d8791ade@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180716144206.30985-7-miquel.raynal@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <a5c6dd56-100a-e1cd-b4c4-2a30d8791ade-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYvMDcvMjAxOCAxNjo0MSwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiBDb25maWd1cmUgdGhl
-IHNhbXBsZSBmcmVxdWVuY3kgYW5kIG51bWJlciBvZiBhdmVyYWdlZCBzYW1wbGVzLgo+IAo+IFRo
-aXMgaXMgbmVlZGVkIGZvciB0d28gcmVhc29uczoKPiAxLyBUbyBiZSBib290bG9hZGVyIGluZGVw
-ZW5kZW50Lgo+IDIvIFRvIHByZXBhcmUgdGhlIGludHJvZHVjdGlvbiBvZiBtdWx0aS1zZW5zb3Jz
-IHN1cHBvcnQgYnkgcHJldmVudGluZwo+ICAgIGluY29uc2lzdGVuY2llcyB3aGVuIHJlYWRpbmcg
-dGVtcGVyYXR1cmVzIHRoYXQgY291bGQgYmUgYSBtZWFuIG9mCj4gICAgc2FtcGxlcyB0b29rIGZy
-b20gZGlmZmVyZW50IHNlbnNvcnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJheW5hbCA8
-bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KPiAtLS0KPiAgZHJpdmVycy90aGVybWFsL2FybWFk
-YV90aGVybWFsLmMgfCAyNSArKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAyNSBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhlcm1hbC9h
-cm1hZGFfdGhlcm1hbC5jIGIvZHJpdmVycy90aGVybWFsL2FybWFkYV90aGVybWFsLmMKPiBpbmRl
-eCA5MjkxZWEzYWQyZjcuLjFmOTcwNmQ5NmEwZCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3RoZXJt
-YWwvYXJtYWRhX3RoZXJtYWwuYwo+ICsrKyBiL2RyaXZlcnMvdGhlcm1hbC9hcm1hZGFfdGhlcm1h
-bC5jCj4gQEAgLTU0LDcgKzU0LDEyIEBACj4gICNkZWZpbmUgQ09OVFJPTDBfVFNFTl9TVEFSVAkJ
-QklUKDApCj4gICNkZWZpbmUgQ09OVFJPTDBfVFNFTl9SRVNFVAkJQklUKDEpCj4gICNkZWZpbmUg
-Q09OVFJPTDBfVFNFTl9FTkFCTEUJCUJJVCgyKQo+ICsjZGVmaW5lIENPTlRST0wwX1RTRU5fQVZH
-X0JZUEFTUwlCSVQoNikKPiArI2RlZmluZSBDT05UUk9MMF9UU0VOX09TUl9TSElGVAkJMjQKPiAr
-I2RlZmluZSBDT05UUk9MMF9UU0VOX09TUl9NQVgJCTB4Mwo+ICAKPiArI2RlZmluZSBDT05UUk9M
-MV9UU0VOX0FWR19TSElGVAkJMAoKV2h5IHNoaWZ0IGJ5IHplcm8gPwoKCgo+ICsjZGVmaW5lIENP
-TlRST0wxX1RTRU5fQVZHX01BU0sJCTB4Nwo+ICAjZGVmaW5lIENPTlRST0wxX0VYVF9UU0VOX1NX
-X1JFU0VUCUJJVCg3KQo+ICAjZGVmaW5lIENPTlRST0wxX0VYVF9UU0VOX0hXX1JFU0VUbglCSVQo
-OCkKPiAgCj4gQEAgLTE5NCw2ICsxOTksMTMgQEAgc3RhdGljIHZvaWQgYXJtYWRhX2FwODA2X2lu
-aXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiAgCXJlZyA9IHJlYWRsX3JlbGF4ZWQo
-cHJpdi0+Y29udHJvbDApOwo+ICAJcmVnICY9IH5DT05UUk9MMF9UU0VOX1JFU0VUOwo+ICAJcmVn
-IHw9IENPTlRST0wwX1RTRU5fU1RBUlQgfCBDT05UUk9MMF9UU0VOX0VOQUJMRTsKPiArCj4gKwkv
-KiBTYW1wbGUgZXZlcnkgfjJtcyAqLwo+ICsJcmVnIHw9IENPTlRST0wwX1RTRU5fT1NSX01BWCA8
-PCBDT05UUk9MMF9UU0VOX09TUl9TSElGVDsKPiArCj4gKwkvKiBFbmFibGUgYXZlcmFnZSAoMiBz
-YW1wbGVzIGJ5IGRlZmF1bHQpICovCj4gKwlyZWcgJj0gfkNPTlRST0wwX1RTRU5fQVZHX0JZUEFT
-UzsKPiArCj4gIAl3cml0ZWwocmVnLCBwcml2LT5jb250cm9sMCk7Cj4gIAo+ICAJLyogV2FpdCB0
-aGUgc2Vuc29ycyB0byBiZSB2YWxpZCBvciB0aGUgY29yZSB3aWxsIHdhcm4gdGhlIHVzZXIgKi8K
-PiBAQCAtMjAzLDcgKzIxNSwyMCBAQCBzdGF0aWMgdm9pZCBhcm1hZGFfYXA4MDZfaW5pdChzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+ICBzdGF0aWMgdm9pZCBhcm1hZGFfY3AxMTBfaW5p
-dChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+ICAJCQkgICAgICBzdHJ1Y3QgYXJtYWRh
-X3RoZXJtYWxfcHJpdiAqcHJpdikKPiAgewo+ICsJdTMyIHJlZzsKPiArCj4gIAlhcm1hZGEzODBf
-aW5pdChwZGV2LCBwcml2KTsKPiArCj4gKwkvKiBTYW1wbGUgZXZlcnkgfjJtcyAqLwo+ICsJcmVn
-ID0gcmVhZGxfcmVsYXhlZChwcml2LT5jb250cm9sMCk7Cj4gKwlyZWcgfD0gQ09OVFJPTDBfVFNF
-Tl9PU1JfTUFYIDw8IENPTlRST0wwX1RTRU5fT1NSX1NISUZUOwo+ICsJd3JpdGVsKHJlZywgcHJp
-di0+Y29udHJvbDApOwo+ICsKPiArCS8qIEF2ZXJhZ2UgdGhlIG91dHB1dCB2YWx1ZSBvdmVyIDJe
-MSA9IDIgc2FtcGxlcyAqLwo+ICsJcmVnID0gcmVhZGxfcmVsYXhlZChwcml2LT5jb250cm9sMSk7
-Cj4gKwlyZWcgJj0gfkNPTlRST0wxX1RTRU5fQVZHX01BU0sgPDwgQ09OVFJPTDFfVFNFTl9BVkdf
-U0hJRlQ7Cj4gKwlyZWcgfD0gMSA8PCBDT05UUk9MMV9UU0VOX0FWR19TSElGVDsKPiArCXdyaXRl
-bChyZWcsIHByaXYtPmNvbnRyb2wxKTsKPiAgfQo+ICAKPiAgc3RhdGljIGJvb2wgYXJtYWRhX2lz
-X3ZhbGlkKHN0cnVjdCBhcm1hZGFfdGhlcm1hbF9wcml2ICpwcml2KQo+IAoKCi0tIAogPGh0dHA6
-Ly93d3cubGluYXJvLm9yZy8+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZv
-ciBBUk0gU29DcwoKRm9sbG93IExpbmFybzogIDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9wYWdl
-cy9MaW5hcm8+IEZhY2Vib29rIHwKPGh0dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+IFR3
-aXR0ZXIgfAo8aHR0cDovL3d3dy5saW5hcm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZwoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Jul 27, 2018 at 8:18 AM Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+> On 27/07/18 15:20, Christoph Hellwig wrote:
+> > On Fri, Jul 27, 2018 at 03:14:15PM +0100, Robin Murphy wrote:
+> >> This shouldn't strictly depend on the changes currently queued in the
+> >> dma-mapping tree, so should be OK to go through the DT tree in parallel.
+> >> Ideally we'd fix all DMA-capable drivers to set their masks correctly,
+> >> but in the short term everyone's going to get cross about -rc1 not
+> >> booting...
+> >
+> > I'd prefer to pick this up through the dma-mapping tree, and in fact
+> > move it before the bus_dma_mask changes just to keep a bisectable
+> > tree.
+>
+> Sure, if Rob and Frank are OK with that I don't mind either way.
+
+NP.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
