@@ -1,68 +1,59 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v3 00/23] Add multi-channel support to Armada thermal
- driver
-Date: Fri, 27 Jul 2018 14:15:57 -0700
-Message-ID: <20180727211556.GA4450@localhost.localdomain>
-References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
- <20180718172849.30b7cec0@xps13> <20180725095222.054f1e80@xps13>
- <1532570441.2358.27.camel@intel.com>
- <20180726211442.GB3487@localhost.localdomain>
- <20180726213517.GA15690@localhost.localdomain>
- <20180726221423.GA3569@localhost.localdomain>
- <20180727005928.6bbe021f@xps13>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180727005928.6bbe021f@xps13>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Subject: [PATCH v2 0/7] Add clock config and pm support to bcm iProc mdio mux
+Date: Fri, 27 Jul 2018 14:23:26 -0700
+Message-ID: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arun.parameswaran@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 27, 2018 at 12:59:28AM +0200, Miquel Raynal wrote:
-> Hi Eduardo,
-> =
+Hi,
+The patchset is based on David Miller's "net-next" repo.
 
-> Eduardo Valentin <edubezval@gmail.com> wrote on Thu, 26 Jul 2018
-> 15:14:24 -0700:
-> =
+The patchset extends the Broadcom iProc mdio mux to add support for
+suspend/resume and the ability to configure the internal clock
+divider. The patchset also sets the scan control register to
+disable external master access.
 
-> > =
+The base address of the mdio-mux-bcm-iproc is modified to point to the
+start of the mdio block's address space, to be able to access all the
+mdio's registers. The missing registers are required to configure the
+internal clock divider registers in some of the Broadcom SoC's.
 
-> > =
+Changes from v1:
+ - Addressed Andrew's comments.
+   - Reworked the patches to be based on 'net-next'
+   - Removed 'fixes' from the commit messages, the changes are related
+     to the new features being added.
+   - Maintained backward compatibility to older dt-blob's specifying
+     base addresse with an offset. The correction is applied in the
+     driver and a message is printed to update the dt-blob.
+   - Re-worked and re-ordered the last four patches (4-7).
+     - Added setting of the scan control register as a new patch
+     - Added a call to 'clk_prepare_enable()' in the patch that adds
+       the clock config support, removed the debug message when clock
+       is not passed.
+     - Simplified the pm support patch (removed the array used for the
+       save/restore logic).
 
-> > Given that I let this one fall into the cracks and that these are minor
-> > issues, I fixed them manually, and applied up to patch 19. But next at
-> > least compile test your series and run checkpatch on them.
-> =
+Thanks
+Arun
 
-> I was really surprised of your remark but indeed there was a build
-> issue in the middle of the series that I did not see because I always
-> test with a last patch fixing it (this patch adds interrupt support, I
-> plan to send it for the next release). I'm very sorry for this
-> mistake, thanks for fixing it by yourself.
+Arun Parameswaran (7):
+  dt-bindings: net: Fix Broadcom iProc mdio mux driver base address
+  net: phy: Fix the register offsets in Broadcom iProc mdio mux driver
+  arm64: dts: Fix the base address of the Broadcom iProc mdio mux
+  net: phy: Disable external master access in bcm mdio mux driver
+  dt-bindings: net: Add clock handle to Broadcom iProc mdio mux
+  net: phy: Add support to configure clock in Broadcom iProc mdio mux
+  net: phy: Add pm support to Broadcom iProc mdio mux driver
 
-Oh, you cannot do that :-). You have to diligently test each patch.
+ .../bindings/net/brcm,mdio-mux-iproc.txt           |   7 +-
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |   4 +-
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   4 +-
+ drivers/net/phy/mdio-mux-bcm-iproc.c               | 109 +++++++++++++++++++--
+ 4 files changed, 109 insertions(+), 15 deletions(-)
 
-> =
-
-> > =
-
-> > Patches 20-23 need to go via your arch tree.
-> =
-
-> Sure, they will enter in the next release now.
-> =
-
-> Thanks,
-> Miqu=E8l
+-- 
+1.9.1
