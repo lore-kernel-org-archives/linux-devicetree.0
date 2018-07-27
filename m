@@ -1,87 +1,300 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v3 01/23] thermal: armada: add a function that sanitizes
- the thermal zone name
-Date: Fri, 27 Jul 2018 13:34:19 +0200
-Message-ID: <84f97022-a470-f314-ee75-e5afb733bea5@linaro.org>
-References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
- <20180716144206.30985-2-miquel.raynal@bootlin.com>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v10 7/7] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth chip wcn3990
+Date: Fri, 27 Jul 2018 17:09:02 +0530
+Message-ID: <ba5c7f6cc8ba7c010ccd6c3573a5d234@codeaurora.org>
+References: <20180720133243.6851-1-bgodavar@codeaurora.org>
+ <20180720133243.6851-8-bgodavar@codeaurora.org>
+ <20180723195441.GM129942@google.com>
+ <81c324ee9104508cf5c862de3f697e4c@codeaurora.org>
+ <20180725183144.GQ129942@google.com>
+ <0666f40967de21db9ef3df9d94517ac1@codeaurora.org>
+ <20180726195129.GW129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180716144206.30985-2-miquel.raynal@bootlin.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180726195129.GW129942@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYvMDcvMjAxOCAxNjo0MSwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiBUaGVybWFsIHpvbmUg
-bmFtZXMgbXVzdCBmb2xsb3cgY2VydGFpbiBydWxlcyBpbXBvc2VkIGJ5IHRoZSBmcmFtZXdvcmsu
-Cj4gVGhleSBhcmUgbGltaXRlZCBpbiBsZW5ndGggYW5kIHNoYWxsIG5vdCBoYXZlIGFueSBoeXBo
-ZW4gJy0nLgo+IAo+IFRoaXMgaXMgZG9uZSBpbiBhIHNlcGFyYXRlIGZ1bmN0aW9uIGZvciBmdXR1
-cmUgdXNlIGluIGFub3RoZXIgbG9jYXRpb24uCj4gCj4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJh
-eW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KCldoeSBkbyB5b3UgaGF2ZSB0byBwcm92
-aWRlIGEgZnVuY3Rpb24gdG8gdGVzdCB0aGF0PwoKTG9naWNhbGx5LCB0aGUgb25lIHdobyBkaWQg
-dGhlIGNoYW5nZSB0byBhZGQgYSB0aGVybWFsIG5hbWUsIHNob3VsZApjaGVjayBpdHMgY29kZSB3
-b3Jrcy4gV2l0aG91dCBhIHByb3BlciBuYW1lIHRoYXQgd29uJ3Qgd29yay4KClNvIHRoaXMgZnVu
-Y3Rpb24gaXMgdGVzdGluZyBzb21ldGhpbmcgd2hpY2ggc2hvdWxkIGJlIGFscmVhZHkgdGVzdGVk
-LCBubz8KCgoKPiAtLS0KPiAgZHJpdmVycy90aGVybWFsL2FybWFkYV90aGVybWFsLmMgfCAzNiAr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDM1
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy90
-aGVybWFsL2FybWFkYV90aGVybWFsLmMgYi9kcml2ZXJzL3RoZXJtYWwvYXJtYWRhX3RoZXJtYWwu
-Ywo+IGluZGV4IDRjMjc1ZWMxMGFjNS4uMDc3ZThlNTYyMzA2IDEwMDY0NAo+IC0tLSBhL2RyaXZl
-cnMvdGhlcm1hbC9hcm1hZGFfdGhlcm1hbC5jCj4gKysrIGIvZHJpdmVycy90aGVybWFsL2FybWFk
-YV90aGVybWFsLmMKPiBAQCAtNzAsNiArNzAsNyBAQCBzdHJ1Y3QgYXJtYWRhX3RoZXJtYWxfcHJp
-diB7Cj4gIAl2b2lkIF9faW9tZW0gKnN0YXR1czsKPiAgCXZvaWQgX19pb21lbSAqY29udHJvbDA7
-Cj4gIAl2b2lkIF9faW9tZW0gKmNvbnRyb2wxOwo+ICsJY2hhciB6b25lX25hbWVbVEhFUk1BTF9O
-QU1FX0xFTkdUSF07Cj4gIAlzdHJ1Y3QgYXJtYWRhX3RoZXJtYWxfZGF0YSAqZGF0YTsKPiAgfTsK
-PiAgCj4gQEAgLTM1Myw2ICszNTQsMzYgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
-aWQgYXJtYWRhX3RoZXJtYWxfaWRfdGFibGVbXSA9IHsKPiAgfTsKPiAgTU9EVUxFX0RFVklDRV9U
-QUJMRShvZiwgYXJtYWRhX3RoZXJtYWxfaWRfdGFibGUpOwo+ICAKPiArc3RhdGljIHZvaWQgYXJt
-YWRhX3NldF9zYW5lX25hbWUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiArCQkJCSBz
-dHJ1Y3QgYXJtYWRhX3RoZXJtYWxfcHJpdiAqcHJpdikKPiArewo+ICsJY29uc3QgY2hhciAqbmFt
-ZSA9IGRldl9uYW1lKCZwZGV2LT5kZXYpOwo+ICsJY2hhciAqaW5zYW5lX2NoYXI7Cj4gKwo+ICsJ
-aWYgKHN0cmxlbihuYW1lKSA+IFRIRVJNQUxfTkFNRV9MRU5HVEgpIHsKPiArCQkvKgo+ICsJCSAq
-IFdoZW4gaW5zaWRlIGEgc3lzdGVtIGNvbnRyb2xsZXIsIHRoZSBkZXZpY2UgbmFtZSBoYXMgdGhl
-Cj4gKwkJICogZm9ybTogZjA2ZjgwMDAuc3lzdGVtLWNvbnRyb2xsZXI6YXAtdGhlcm1hbCBzbyBz
-dHJpcHBpbmcKPiArCQkgKiBhZnRlciB0aGUgJzonIHNob3VsZCBnaXZlIHVzIGEgc2hvcnRlciBi
-dXQgbWVhbmluZ2Z1bCBuYW1lLgo+ICsJCSAqLwo+ICsJCW5hbWUgPSBzdHJyY2hyKG5hbWUsICc6
-Jyk7Cj4gKwkJaWYgKCFuYW1lKQo+ICsJCQluYW1lID0gImFybWFkYV90aGVybWFsIjsKPiArCQll
-bHNlCj4gKwkJCW5hbWUrKzsKPiArCX0KPiArCj4gKwkvKiBTYXZlIHRoZSBuYW1lIGxvY2FsbHkg
-Ki8KPiArCXN0cm5jcHkocHJpdi0+em9uZV9uYW1lLCBuYW1lLCBUSEVSTUFMX05BTUVfTEVOR1RI
-KTsKPiArCj4gKwkvKiBUaGVuIGNoZWNrIHRoZXJlIGFyZSBubyAnLScgb3IgaHdtb24gY29yZSB3
-aWxsIGNvbXBsYWluICovCj4gKwlkbyB7Cj4gKwkJaW5zYW5lX2NoYXIgPSBzdHJwYnJrKHByaXYt
-PnpvbmVfbmFtZSwgIi0iKTsKPiArCQlpZiAoaW5zYW5lX2NoYXIpCj4gKwkJCSppbnNhbmVfY2hh
-ciA9ICdfJzsKPiArCX0gd2hpbGUgKGluc2FuZV9jaGFyKTsKPiArfQo+ICsKPiAgc3RhdGljIGlu
-dCBhcm1hZGFfdGhlcm1hbF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICB7
-Cj4gIAl2b2lkIF9faW9tZW0gKmNvbnRyb2wgPSBOVUxMOwo+IEBAIC0zODEsNiArNDEyLDkgQEAg
-c3RhdGljIGludCBhcm1hZGFfdGhlcm1hbF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2KQo+ICAKPiAgCXByaXYtPmRhdGEgPSAoc3RydWN0IGFybWFkYV90aGVybWFsX2RhdGEgKilt
-YXRjaC0+ZGF0YTsKPiAgCj4gKwkvKiBFbnN1cmUgZGV2aWNlIG5hbWUgaXMgY29ycmVjdCBmb3Ig
-dGhlIHRoZXJtYWwgY29yZSAqLwo+ICsJYXJtYWRhX3NldF9zYW5lX25hbWUocGRldiwgcHJpdik7
-Cj4gKwo+ICAJLyoKPiAgCSAqIExlZ2FjeSBEVCBiaW5kaW5ncyBvbmx5IGRlc2NyaWJlZCAiY29u
-dHJvbDEiIHJlZ2lzdGVyIChhbHNvIHJlZmVycmVkCj4gIAkgKiBhcyAiY29udHJvbCBNU0IiIG9u
-IG9sZCBkb2N1bWVudGF0aW9uKS4gTmV3IGJpbmRpbmdzIGNvdmVyCj4gQEAgLTQwMiw3ICs0MzYs
-NyBAQCBzdGF0aWMgaW50IGFybWFkYV90aGVybWFsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpCj4gIAo+ICAJcHJpdi0+ZGF0YS0+aW5pdF9zZW5zb3IocGRldiwgcHJpdik7Cj4g
-IAo+IC0JdGhlcm1hbCA9IHRoZXJtYWxfem9uZV9kZXZpY2VfcmVnaXN0ZXIoZGV2X25hbWUoJnBk
-ZXYtPmRldiksIDAsIDAsIHByaXYsCj4gKwl0aGVybWFsID0gdGhlcm1hbF96b25lX2RldmljZV9y
-ZWdpc3Rlcihwcml2LT56b25lX25hbWUsIDAsIDAsIHByaXYsCj4gIAkJCQkJICAgICAgICZvcHMs
-IE5VTEwsIDAsIDApOwo+ICAJaWYgKElTX0VSUih0aGVybWFsKSkgewo+ICAJCWRldl9lcnIoJnBk
-ZXYtPmRldiwKPiAKCgotLSAKIDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKU
-giBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKCkZvbGxvdyBMaW5hcm86ICA8aHR0
-cDovL3d3dy5mYWNlYm9vay5jb20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8CjxodHRwOi8vdHdp
-dHRlci5jb20vIyEvbGluYXJvb3JnPiBUd2l0dGVyIHwKPGh0dHA6Ly93d3cubGluYXJvLm9yZy9s
-aW5hcm8tYmxvZy8+IEJsb2cKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Matthias,
+
+On 2018-07-27 01:21, Matthias Kaehlcke wrote:
+> On Thu, Jul 26, 2018 at 07:51:13PM +0530, Balakrishna Godavarthi wrote:
+>> Hi Matthias,
+>> 
+>> On 2018-07-26 00:01, Matthias Kaehlcke wrote:
+>> > On Tue, Jul 24, 2018 at 09:25:16PM +0530, Balakrishna Godavarthi wrote:
+>> > > Hi Matthias,
+>> > >
+>> > > On 2018-07-24 01:24, Matthias Kaehlcke wrote:
+>> > > > On Fri, Jul 20, 2018 at 07:02:43PM +0530, Balakrishna Godavarthi wrote:
+>> > > > > +	 * sometimes we will face communication synchronization issues,
+>> > > > > +	 * like reading version command timeouts. In which HCI_SETUP fails,
+>> > > > > +	 * to overcome these issues, we try to communicate by performing an
+>> > > > > +	 * COLD power OFF and ON.
+>> > > > > +	 */
+>> > > > > +	for (i = 1; i <= 10 && ret; i++) {
+>> > > >
+>> > > > Is it really that bad that more than say 3 iterations might be needed?
+>> > > >
+>> > > [Bala]: will restrict to 3 iterations.
+>> >
+>> > Is 3x expected to be enough to 'guarantee' as successful
+>> > initialization? Just wondered about the 10x since it suddendly changed
+>> > from 1x. What is the failure rate without retries?
+>> >
+>> > Could you provide more information about the 'communication
+>> > synchronization issues'? Is the root cause understood? Maybe there is
+>> > a better way than retries.
+>> >
+>> 
+>> [Bala]: basically before sending a every patch series we run a stress 
+>> test
+>> to the driver to detect the bugs.
+>>         in recent test results found one interesting bug that BT 
+>> setups
+>> fails with version request timeouts,
+>>         after we do a reboot for the device.
+>>         we debugged the issue and found that wcn3900 is not responding 
+>> to
+>> the version request commands
+>>         sent by HOST. this is because before reboot, wcn3990 is in on 
+>> state
+>> i.e. we are communicating to device.
+>>         then we did a reboot and HOST is not sending a power off 
+>> request to
+>> the regulators to turn off.
+>>         so after reboot wcn3990 is still in ON state where it will not
+>> respond to version request commands which in turn fails HCI_SETUP.
+>>         so we are sending the power off pulse and then sending the 
+>> power on
+>> pulse.
+>>         coming back to 3x or 10x iteration this is to avoid any such
+>> synchronization issues.
+>>         i agreed for 3x because of stress test results. we have 
+>> success rate
+>> of 99% for single iteration, where as 3x iterations will helps to 
+>> handle 1%
+>> fails cases.
+> 
+> Thanks for the clarification. Couldn't you assure the device is in a
+> defined state by calling qca_power_shutdown() as one of the first
+> things in qca_wcn3990_init()?
+
+[Bala]:  we have reasons behind writing qca_power_setup(true) at the 
+start.
+
+         1. the reason to add iteration here, is to handle BT fails cases 
+either due to communication failure of wcn3900 or due to regulator 
+issues.
+            before calling qca_setup(), we have our regulator turned on 
+and in qca_setup i.e. init routine if we added power_shutdown as first 
+statement before
+            communicating with chip then regulator will be off and again 
+we need to call function to ON regulators.
+            so it could be some thing like this
+
+            init(){
+
+                for () {
+                      shutdown() // regs are off
+                      poweron(true) // regs are on.
+                      if(!start communicating with chip()) {
+                         break;
+                       }
+
+                }
+            }
+            as the reason to add the iteration handling is to overcome 1% 
+of fail cases, so every time when we call it will turn off the regs and 
+turn it back. which require an turning in off regs and on it back for 
+99% pass
+             cases.
+
+         2. this is the one of the main reason for adding 
+qca_power_setup(true) in the init() function first.
+            as we know that power management is so critical for long 
+lasting of battery.
+            now present implementation is when we off BT from UI i.e. 
+hci0 down, we put BT into an suspend or low power mode, as soon as we 
+turn ON the BT back from UI we make hci0 up.
+            the above is putting device into suspend state and bring it 
+back where the regulator are still on state. so we will have leakage 
+currents which can be minimal or may be in few mA.
+            to over come the above case, we want to do an cold on/off for 
+BT chip wcn3990. i.e. when bt is off from UI, we will off the regulators 
+and turn on it again once the BT is ON from UI.
+            every time we disable i.e. off BT from UI we will call 
+hdev->shutdown() i.e. completely powering off the chip.
+            so it require an reprogram again, when we turn ON BT from UI. 
+it will call qca_setup()--> init().. so here actually qca_power_on(true) 
+will turn on the chip and dump the fw files into it.
+            so that is also a reason behind to write power on first.
+
+            the above feature is under testing state, will post a patch 
+series once the driver code merged to bt-next.
+
+> 
+> Some more comments on the functions, for if the retry loop is kept:
+> 
+>> +static int qca_wcn3990_init(struct hci_uart *hu, u32 *soc_ver)
+>> +{
+>> +	struct hci_dev *hdev = hu->hdev;
+>> +	int i, ret = 1;
+>> +
+>> +	/* WCN3990 is a discrete Bluetooth chip connected to APPS processor.
+>> +	 * sometimes we will face communication synchronization issues,
+>> +	 * like reading version command timeouts. In which HCI_SETUP fails,
+>> +	 * to overcome these issues, we try to communicate by performing an
+>> +	 * COLD power OFF and ON.
+>> +	 */
+>> +	for (i = 1; i <= 10 && ret; i++) {
+>> +		/* This helper will turn ON chip if it is powered off.
+>> +		 * if the chip is already powered ON, function call will
+>> +		 * return zero.
+>> +		 */
+>> +		ret = qca_power_setup(hu, true);
+>> +		if (ret)
+>> +			goto regs_off;
+> 
+> A failure here is not caused by a communication problem, so this
+> should probably be a 'return' instead of a 'goto'.
+> 
+
+[Bala]: yes you are true, but if any chance we have issue with regulator 
+to turn on, we try to turn on them again.
+        so that HCI_SETUP should not fail.
+
+>> +
+>> +		/* Forcefully enable wcn3990 to enter in to boot mode. */
+>> +		host_set_baudrate(hu, 2400);
+>> +		ret = qca_send_vendor_pulse(hdev, QCA_WCN3990_FORCE_BOOT_PULSE);
+>> +		if (ret)
+>> +			goto regs_off;
+>> +
+>> +		qca_set_speed(hu, QCA_INIT_SPEED);
+>> +		ret = qca_send_vendor_pulse(hdev, QCA_WCN3990_POWERON_PULSE);
+>> +		if (ret)
+>> +			goto regs_off;
+>> +
+>> +		/* Wait for 100 ms for SoC to boot */
+>> +		msleep(100);
+>> +
+>> +		/* Now the device is in ready state to communicate with host.
+>> +		 * To sync HOST with device we need to reopen port.
+>> +		 * Without this, we will have RTS and CTS synchronization
+>> +		 * issues.
+>> +		 */
+>> +		serdev_device_close(hu->serdev);
+>> +		ret = serdev_device_open(hu->serdev);
+>> +		if (ret) {
+>> +			bt_dev_err(hu->hdev, "failed to open port");
+>> +			break;
+> 
+> 			return ret;
+> 
+>> +		}
+>  > +
+>> +		hci_uart_set_flow_control(hu, false);
+>> +		ret = qca_read_soc_version(hdev, soc_ver);
+>> +		if (ret < 0 || soc_ver == 0)
+>> +			bt_dev_err(hdev, "Failed to get version:%d", ret);
+> 
+> nit: add a space between ':' and '%d'
+> 
+
+[Bala]: will update.
+
+>> +
+>> +		if (!ret)
+>> +			break;
+> 
+> 			return 0;
+> 
+>> +
+>> +regs_off:
+>> +		bt_dev_err(hdev, "retrying to establish communication: %d", i);
+>> +		qca_power_shutdown(hdev);
+> 
+> Is qca_power_shutdown() needed or would qca_power_setup(hu,
+> false) be enough? This is qca_power_shutdown():
+> 
+
+[Bala]: qca_power_shutdown is needed, as we need to send power pulse at 
+2400 bps before turning off the soc.
+         this is an complete turn off BT portion in wcn3990.
+
+> static int qca_power_shutdown(struct hci_dev *hdev)
+> {
+>         struct hci_uart *hu = hci_get_drvdata(hdev);
+> 
+>         host_set_baudrate(hu, 2400);
+>         qca_send_vendor_pulse(hdev, QCA_WCN3990_POWEROFF_PULSE);
+>         return qca_power_setup(hu, false);
+> }
+> 
+> It additionally sends the power off pulse, which is also done in the
+> loop (though it is currently called QCA_WCN3990_FORCE_BOOT_PULSE).
+> 
+> The code flow with the gotos and the error handling at the end of the
+> loop is a bit messy. Moving the power down to the top of the loop
+> (basically in line with my comment above to get rid of the loop) would
+> help here. In this case checking 'ret' in the loop condition (which I
+> suggested to remove) would make sense, since it elimninates the need
+> for the break/return in the success case. But if we can do without the
+> loop even better :)
+> 
+
+[Bala]: there is a reason to add the loop here, here we go with reason 
+to add.
+         let us assume that qca_setup fails to establish a communication 
+with wcn3990
+         then next steps will not be pass and we can't populate hci0 
+rfkill entry.
+         in traditional bluez stack i.e. bluetoothd daemon will looks for 
+hci0, if we have entry for hci0
+         then only BT option is visible in UI or else BT option will not 
+be available in UI.
+         we don't have any mechanism handled in bluez user space to 
+reinitiate the communication at latest to try for second time to make 
+hci0 up.
+         so that is reason behind to add so that we can handle fault 
+handling of wcn3990 and establish the communication to make BT option 
+available in BT.
+
+>> > If I understand correctly you describe a hypothetical situation of a
+>> > future wcn3990 variant having lower power requirements. I'd say let's
+>> > deal with this when these chips actually exist and need to be
+>> > supported by Linux. As of now it seems there is no need for current
+>> > limits in the DT.
+>> >
+>> 
+>> [Bala]: will remove current property for dts.
+>>         in previous mail you asked me a question for currents
+>>         "The currents of 300mA and 450mA seem high for Bluetooth, I'm 
+>> not an
+>>          expert in this area though, they might be reasonable peak 
+>> currents
+>> for
+>>          certain use cases."
+>> 
+>>          yes we require 450mA and 300mA of current for rf and ch0 
+>> pins.
+>> setting regulator to required load will not pump load current to 
+>> wcn3990
+>>         it depends on operations, typical the above are the max 
+>> current
+>> drawn by the two pins.
+> 
+> Ok, thanks for confirming.
+
+Pls let me know if you require more info :)
+
+-- 
+Regards
+Balakrishna.
