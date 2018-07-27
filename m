@@ -1,108 +1,71 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 4/4] remoteproc: qcom: q6v5-pil: Add PDC restart for modem on SDM845 SoCs
-Date: Fri, 27 Jul 2018 20:58:11 +0530
-Message-ID: <20180727152811.15258-4-sibis@codeaurora.org>
-References: <20180727152811.15258-1-sibis@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727152811.15258-1-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v3 01/23] thermal: armada: add a function that sanitizes
+ the thermal zone name
+Date: Fri, 27 Jul 2018 17:29:52 +0200
+Message-ID: <f1d7e8bd-329f-0c9d-c296-0afbe871058f@linaro.org>
+References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
+ <20180716144206.30985-2-miquel.raynal@bootlin.com>
+ <84f97022-a470-f314-ee75-e5afb733bea5@linaro.org>
+ <20180727135230.3c7102c7@xps13>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180727135230.3c7102c7@xps13>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-In the presence of a PDC block working with subsystem RSC,
-assert/deassert PDC restart in modem start/stop path.
-
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- .../bindings/remoteproc/qcom,q6v5.txt         |  4 +++
- drivers/remoteproc/qcom_q6v5_pil.c            | 27 ++++++++++++++++---
- 2 files changed, 27 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 601dd9f389aa..124fb1dc6fb8 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -51,6 +51,8 @@ on the Qualcomm Hexagon core.
- 	Usage: required
- 	Value type: <phandle>
- 	Definition: reference to the reset-controller for the modem sub-system
-+		    reference to the list of 2 reset-controllers for the modem
-+		    sub-system on SDM845 SoCs
- 		    reference to the list of 3 reset-controllers for the
- 		    wcss sub-system
- 
-@@ -58,6 +60,8 @@ on the Qualcomm Hexagon core.
- 	Usage: required
- 	Value type: <stringlist>
- 	Definition: must be "mss_restart" for the modem sub-system
-+	Definition: must be "mss_restart", "pdc_restart" for the modem
-+		    sub-system on SDM845 SoCs
- 	Definition: must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
- 		    for the wcss syb-system
- 
-diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-index d57fdb34e3dd..5be794639fc3 100644
---- a/drivers/remoteproc/qcom_q6v5_pil.c
-+++ b/drivers/remoteproc/qcom_q6v5_pil.c
-@@ -149,6 +149,7 @@ struct q6v5 {
- 	u32 halt_nc;
- 
- 	struct reset_control *mss_restart;
-+	struct reset_control *pdc_restart;
- 
- 	struct qcom_q6v5 q6v5;
- 
-@@ -349,10 +350,17 @@ static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
- 
- static int q6v5_reset_assert(struct q6v5 *qproc)
- {
--	if (qproc->has_alt_reset)
--		return reset_control_reset(qproc->mss_restart);
--	else
--		return reset_control_assert(qproc->mss_restart);
-+	int ret;
-+
-+	if (qproc->has_alt_reset) {
-+		reset_control_assert(qproc->pdc_restart);
-+		ret = reset_control_reset(qproc->mss_restart);
-+		reset_control_deassert(qproc->pdc_restart);
-+	} else {
-+		ret = reset_control_assert(qproc->mss_restart);
-+	}
-+
-+	return ret;
- }
- 
- static int q6v5_reset_deassert(struct q6v5 *qproc)
-@@ -360,9 +368,11 @@ static int q6v5_reset_deassert(struct q6v5 *qproc)
- 	int ret;
- 
- 	if (qproc->has_alt_reset) {
-+		reset_control_assert(qproc->pdc_restart);
- 		writel(1, qproc->rmb_base + RMB_MBA_ALT_RESET);
- 		ret = reset_control_reset(qproc->mss_restart);
- 		writel(0, qproc->rmb_base + RMB_MBA_ALT_RESET);
-+		reset_control_deassert(qproc->pdc_restart);
- 	} else {
- 		ret = reset_control_deassert(qproc->mss_restart);
- 	}
-@@ -1182,6 +1192,15 @@ static int q6v5_init_reset(struct q6v5 *qproc)
- 		return PTR_ERR(qproc->mss_restart);
- 	}
- 
-+	if (qproc->has_alt_reset) {
-+		qproc->pdc_restart = devm_reset_control_get(qproc->dev,
-+							    "pdc_restart");
-+		if (IS_ERR(qproc->pdc_restart)) {
-+			dev_err(qproc->dev, "failed to acquire pdc restart\n");
-+			return PTR_ERR(qproc->pdc_restart);
-+		}
-+	}
-+
- 	return 0;
- }
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gMjcvMDcvMjAxOCAxMzo1MiwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiBIaSBEYW5pZWwsCj4g
+Cj4gRGFuaWVsIExlemNhbm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+IHdyb3RlIG9uIEZy
+aSwgMjcgSnVsIDIwMTgKPiAxMzozNDoxOSArMDIwMDoKPiAKPj4gT24gMTYvMDcvMjAxOCAxNjo0
+MSwgTWlxdWVsIFJheW5hbCB3cm90ZToKPj4+IFRoZXJtYWwgem9uZSBuYW1lcyBtdXN0IGZvbGxv
+dyBjZXJ0YWluIHJ1bGVzIGltcG9zZWQgYnkgdGhlIGZyYW1ld29yay4KPj4+IFRoZXkgYXJlIGxp
+bWl0ZWQgaW4gbGVuZ3RoIGFuZCBzaGFsbCBub3QgaGF2ZSBhbnkgaHlwaGVuICctJy4KPj4+Cj4+
+PiBUaGlzIGlzIGRvbmUgaW4gYSBzZXBhcmF0ZSBmdW5jdGlvbiBmb3IgZnV0dXJlIHVzZSBpbiBh
+bm90aGVyIGxvY2F0aW9uLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1p
+cXVlbC5yYXluYWxAYm9vdGxpbi5jb20+ICAKPj4KPj4gV2h5IGRvIHlvdSBoYXZlIHRvIHByb3Zp
+ZGUgYSBmdW5jdGlvbiB0byB0ZXN0IHRoYXQ/Cj4+Cj4+IExvZ2ljYWxseSwgdGhlIG9uZSB3aG8g
+ZGlkIHRoZSBjaGFuZ2UgdG8gYWRkIGEgdGhlcm1hbCBuYW1lLCBzaG91bGQKPj4gY2hlY2sgaXRz
+IGNvZGUgd29ya3MuIFdpdGhvdXQgYSBwcm9wZXIgbmFtZSB0aGF0IHdvbid0IHdvcmsuCj4gCj4g
+V2hhdCBkbyB5b3UgbWVhbiAidGhlIG9uZSB3aG8gZGlkIHRoZSBjaGFuZ2UiPwo+IEkgdGhpbmsg
+dGhlIHRoZXJtYWwgY29yZSBzaG91bGQgbm90IGNhcmUgdGhhdCBtdWNoIHRvIHdoYXQgaXMgZ2l2
+ZW4gYXMKPiBuYW1lIGFuZCBzaG91bGQgcHJvYmFibHkgbm90IGJlIHNvIHN0cmljdC4KPiAKPiBB
+bHNvLCBJIGRvbid0IGNob29zZSB3aGF0IGRldl9uYW1lKCkgcmV0dXJucywgaXQncyBpbiB0aGUg
+ZGV2aWNlIHRyZWUKPiBhbmQgdGhlIGRldmljZSB0cmVlIGRvIG5vdCBjYXJlIGFib3V0IHRoZSBp
+bXBsZW1lbnRhdGlvbiwgaXQncyBqdXN0IGEKPiBkZXNjcmlwdGl2ZSBmaWxlLgo+IAo+Pgo+PiBT
+byB0aGlzIGZ1bmN0aW9uIGlzIHRlc3Rpbmcgc29tZXRoaW5nIHdoaWNoIHNob3VsZCBiZSBhbHJl
+YWR5IHRlc3RlZCwgbm8/Cj4gCj4gSSBkb24ndCB0aGluayBpdCBpcy4gV2l0aG91dCB0aGlzIGZ1
+bmN0aW9uIHRoZSBwcm9iZSB3aWxsIHNpbXBseSBmYWlsLgo+IAo+IFRoZSBleHBsYW5hdGlvbiBv
+ZiB3aGF0IGZhaWxzIGlzIGluIHRoZSBjb2RlOgo+IAo+Pj4gKwkJLyoKPj4+ICsJCSAqIFdoZW4g
+aW5zaWRlIGEgc3lzdGVtIGNvbnRyb2xsZXIsIHRoZSBkZXZpY2UgbmFtZSBoYXMgdGhlCj4+PiAr
+CQkgKiBmb3JtOiBmMDZmODAwMC5zeXN0ZW0tY29udHJvbGxlcjphcC10aGVybWFsIHNvIHN0cmlw
+cGluZwo+Pj4gKwkJICogYWZ0ZXIgdGhlICc6JyBzaG91bGQgZ2l2ZSB1cyBhIHNob3J0ZXIgYnV0
+IG1lYW5pbmdmdWwgbmFtZS4KPj4+ICsJCSAqLwo+Pj4gKwkJbmFtZSA9IHN0cnJjaHIobmFtZSwg
+JzonKTsKPj4+ICsJCWlmICghbmFtZSkKPj4+ICsJCQluYW1lID0gImFybWFkYV90aGVybWFsIjsK
+Pj4+ICsJCWVsc2UKPj4+ICsJCQluYW1lKys7Cj4gCj4gWy4uLl0KCkknbSBub3QgaW4gZmF2b3Ig
+b2YgdGhpcywgcG90ZW50aWFsbHkgaXQgY2FuIGludHJvZHVjZSBhIGJyZWFrIHdoaWNoIGNhbgpi
+ZSBleHBsb2l0ZWQgbGF0ZXIuCgpZb3UgYXJlIGNyZWF0aW5nIHRoZSB0aGVybWFsIHpvbmVzIG1h
+bnVhbGx5IGZyb20gdGhlIGRyaXZlciBidXQgd2FudCB0bwpyZWx5IG9uIHRoZSB0ZW1wZXJhdHVy
+ZSBjb250cm9sbGVyIG5hbWUgdG8gZ2l2ZSBhIG5hbWUgdG8gdGhlIHRoZXJtYWwgem9uZS4KCldo
+eSBub3QgY3JlYXRlIHRoZSB0aGVybWFsIHpvbmUgaW4gdGhlIERUIHdpdGggdGhlIGNvcnJlY3Qg
+bmFtZSBhbmQgdXNlCmRldm1fdGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlciA/CgpPciBh
+bHRlcm5hdGl2ZWx5IGhhcmRjb2RlIHRoZSB0aGVybWFsIHpvbmUgbmFtZSA/CgoKCgoKCgotLSAK
+IDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0
+d2FyZSBmb3IgQVJNIFNvQ3MKCkZvbGxvdyBMaW5hcm86ICA8aHR0cDovL3d3dy5mYWNlYm9vay5j
+b20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8CjxodHRwOi8vdHdpdHRlci5jb20vIyEvbGluYXJv
+b3JnPiBUd2l0dGVyIHwKPGh0dHA6Ly93d3cubGluYXJvLm9yZy9saW5hcm8tYmxvZy8+IEJsb2cK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
