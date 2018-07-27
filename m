@@ -1,65 +1,51 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] of/platform: Initialise default DMA masks
-Date: Fri, 27 Jul 2018 15:14:15 +0100
-Message-ID: <9ffa7f2676c25adf39e85ec8114b26500b5680f6.1532699305.git.robin.murphy@arm.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v3 1/2] clk: meson: add DT documentation for emmc clock
+ controller
+Date: Fri, 27 Jul 2018 22:14:28 +0800
+Message-ID: <e797412b-55db-6678-82ba-3a10ac99db9f@amlogic.com>
+References: <20180712211244.11428-1-yixun.lan@amlogic.com>
+ <20180712211244.11428-2-yixun.lan@amlogic.com>
+ <20180724232917.GA27041@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180724232917.GA27041@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: yixun.lan@amlogic.com, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When of_dma_configure() was first born in 591c1ee465ce ("of: configure
-the platform device dma parameters"), everything DMA-related was
-factored out of of_platform_device_create_pdata() as seemed appropriate
-at the time. However, now that of_dma_configure() has grown into the
-generic handler for processing DMA-related properties from DT for all
-kinds of devices, it is no longer an appropriate place to be doing
-OF-platform-specific business. Since there are still plenty of platform
-drivers not setting their own masks and depending on the bus default,
-let's reinstate that inialisation in the OF-platform code itself, and
-restore the long-standing status quo from 0589342c2794 ("of: set
-dma_mask to point to coherent_dma_mask")
 
-CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-CC: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
+HI Rob
 
-This shouldn't strictly depend on the changes currently queued in the
-dma-mapping tree, so should be OK to go through the DT tree in parallel.
-Ideally we'd fix all DMA-capable drivers to set their masks correctly,
-but in the short term everyone's going to get cross about -rc1 not
-booting...
+On 07/25/2018 07:29 AM, Rob Herring wrote:
+> On Thu, Jul 12, 2018 at 09:12:43PM +0000, Yixun Lan wrote:
+>> Document the MMC sub clock controller driver, the potential consumer
+>> of this driver is MMC or NAND. Also add three clock bindings IDs which
+>> provided by this driver.
+>>
+>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+>> ---
+>>  .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
+>>  .../clock/amlogic,meson-mmc-clkc.h            | 16 ++++++++++
+>>  2 files changed, 47 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+>>  create mode 100644 include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 
-Robin.
+Thanks for the review!
 
- drivers/of/platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+There is a discussion about dropping "meson-" prefix in the compatible
+string[1]
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 6925d993e1f0..7ba90c290a42 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -185,6 +185,9 @@ static struct platform_device *of_platform_device_create_pdata(
- 	if (!dev)
- 		goto err_clear_flag;
- 
-+	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-+	if (!dev->dev.dma_mask)
-+		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
- 	of_msi_configure(&dev->dev, dev->dev.of_node);
--- 
-2.17.1.dirty
+So, I will send another version with the new compatible name adjusted
+from "amlogic,meson-axg-mmc-clkc" to "amlogic,axg-mmc-clkc"..
+probably also rename the dt-bindings header file to amlogc,mmc-clkc.h
+
+[1]  https://lkml.kernel.org/r/7hk1prmg4w.fsf@baylibre.com
+
+
+Yixun
