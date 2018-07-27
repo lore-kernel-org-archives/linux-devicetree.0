@@ -1,196 +1,84 @@
-From: Diego Rondini <diego.rondini@kynetics.com>
-Subject: [PATCH] ARM: dts: sun8i: Add initial Orangepi Zero Plus 2 H3 support
-Date: Fri, 27 Jul 2018 14:57:39 +0200
-Message-ID: <20180727125739.22871-1-diego.rondini@kynetics.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/4] spi: dw-mmio: add MSCC Ocelot support
+Date: Fri, 27 Jul 2018 16:07:54 +0300
+Message-ID: <CAHp75Vdk+rqMu6OJOE8Kd-Wib3su+f9tQw6Nqhm9diEvBqaDNQ@mail.gmail.com>
+References: <20180727120535.16504-1-alexandre.belloni@bootlin.com> <20180727120535.16504-3-alexandre.belloni@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180727120535.16504-3-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Jagan Teki <jteki@openedev.com>
-Cc: Diego Rondini <diego.rondini@kynetics.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Mark Brown <broonie@kernel.org>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Orangepi Zero Plus 2 is an open-source single-board computer, available in two
-Allwinner SOC variants, H3 and H5. We add support for H3 variant here, as the
-H5 is already supported by sun50i-h5-orangepi-zero-plus2.dts.
+On Fri, Jul 27, 2018 at 3:05 PM, Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> Because the SPI controller deasserts the chip select when the TX fifo is
+> empty (which may happen in the middle of a transfer), the CS should be
+> handled by linux. Unfortunately, some or all of the first four chip
+> selects are not muxable as GPIOs, depending on the SoC.
+>
+> There is a way to bitbang those pins by using the SPI boot controller so
+> use it to set the chip selects.
+>
+> At init time, it is also necessary to give control of the SPI interface to
+> the Designware IP.
 
-H5 Orangepi Zero Plus 2 has
-- Quad-core Cortex-A7
-- 512MB DDR3
-- micrSD slot and 8GB eMMC
-- Debug TTL UART
-- HDMI
-- Wifi + BT
-- OTG+power supply
+Thanks for an update! My comments below (most of them just about style).
 
-Signed-off-by: Diego Rondini <diego.rondini@kynetics.com>
----
- arch/arm/boot/dts/Makefile                    |   1 +
- .../boot/dts/sun8i-h3-orangepi-zero-plus2.dts | 146 ++++++++++++++++++
- 2 files changed, 147 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
+First of all, can we use 'controller' over the 'master' in the code?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 37a3de760d40..03fb915f2337 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1024,6 +1024,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-h3-orangepi-pc-plus.dtb \
- 	sun8i-h3-orangepi-plus.dtb \
- 	sun8i-h3-orangepi-plus2e.dtb \
-+	sun8i-h3-orangepi-zero-plus2.dtb \
- 	sun8i-r16-bananapi-m2m.dtb \
- 	sun8i-r16-nintendo-nes-classic.dtb \
- 	sun8i-r16-nintendo-super-nes-classic.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
-new file mode 100644
-index 000000000000..3701644adc30
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-zero-plus2.dts
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-+ * Copyright (C) 2018 Diego Rondini <diego.rondini@kynetics.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun8i-h3.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "OrangePi Zero Plus2 H3";
-+	compatible = "xunlong,orangepi-zero-plus2", "allwinner,sun8i-h3";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		reset-gpios = <&pio 0 9 GPIO_ACTIVE_LOW>; /* PA9 */
-+		post-power-on-delay-ms = <200>;
-+	};
-+};
-+
-+&de {
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&r_pio>;
-+		interrupts = <0 7 IRQ_TYPE_LEVEL_LOW>;	/* PL7 */
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	status = "okay";
-+};
+>  .../bindings/spi/snps,dw-apb-ssi.txt          |  5 +-
+
+>  Required properties:
+> -- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi"
+> -- reg : The register base for the controller. For "mscc,<soc>-spi", a second
+> -  register set is required (named ICPU_CFG:SPI_MST)
+> +- compatible : "snps,dw-apb-ssi"
+> +- reg : The register base for the controller.
+
+This hunk is odd.
+
+>  struct dw_spi_mmio {
+>         struct dw_spi  dws;
+>         struct clk     *clk;
+> +       void           *priv;
+>  };
+
+> +#define MSCC_SPI_MST_SW_MODE                   0x14
+> +#define MSCC_SPI_MST_SW_MODE_SW_PIN_CTRL_MODE  BIT(13)
+> +#define MSCC_SPI_MST_SW_MODE_SW_SPI_CS(x)      (x << 5)
+
++ blank line ?
+
+> +struct dw_spi_mscc {
+> +       struct regmap       *syscon;
+
+> +       void __iomem        *spi_mst;
+
+A nit: do we need to repeat "spi" here?
+
+> +};
+
+> +       if (!enable)
+> +               dw_writel(dws, DW_SPI_SER, BIT(cs));
+
+This sounds like
+
+dw_set_cs(spi, enable);
+
+> +       dwsmscc = devm_kzalloc(&pdev->dev, sizeof(struct dw_spi_mscc),
+> +                              GFP_KERNEL);
+
+sizeof(*dwsmcc)  and one line in the result?
+
+> +       /* Deassert all CS */
+> +       writel(0, dwsmscc->spi_mst + MSCC_SPI_MST_SW_MODE);
+
+Hmm... Don't we need to call dw_set_cs() for all of them as well?
+If yes, perhaps better to call custom set_cs() in a loop?
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
