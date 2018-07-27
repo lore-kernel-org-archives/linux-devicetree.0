@@ -1,90 +1,122 @@
-Return-Path: <SRS0=8Sio=KO=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 3/4] serial: sh-sci: Remove SCIx_RZ_SCIFA_REGTYPE
-Date: Mon, 30 Jul 2018 08:17:15 -0500
-Message-Id: <20180730131716.75484-4-chris.brandt@renesas.com>
-In-Reply-To: <20180730131716.75484-1-chris.brandt@renesas.com>
-References: <20180730131716.75484-1-chris.brandt@renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=kCE6=KL=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 2/4] ARM: dts: r8a77470: Add GPIO support
+Date: Fri, 27 Jul 2018 10:51:27 +0100
+Message-Id: <1532685089-35645-3-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1532685089-35645-1-git-send-email-biju.das@bp.renesas.com>
+References: <1532685089-35645-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-There is no more need for SCIx_RZ_SCIFA_REGTYPE now that
-SCIx_SH4_SCIF_REGTYPE can provide the same register/address definitions.
+Describe GPIO blocks in the R8A77470 device tree.
 
-Also, R7S9210 no longer needs a special compatible since the standard
-"renesas,scif" will work just fine.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
-v2:
-* add Reviewed-by
----
- drivers/tty/serial/sh-sci.c | 31 -------------------------------
- include/linux/serial_sci.h  |  1 -
- 2 files changed, 32 deletions(-)
+ arch/arm/boot/dts/r8a77470.dtsi | 90 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index c29244f76057..54ea58bbe3c9 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -293,33 +293,6 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.error_clear = SCIF_ERROR_CLEAR,
- 	},
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index af65fa0..c7c483f 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -61,6 +61,96 @@
+ 		#size-cells = <2>;
+ 		ranges;
  
--	/*
--	 * The "SCIFA" that is in RZ/T and RZ/A2.
--	 * It looks like a normal SCIF with FIFO data, but with a
--	 * compressed address space. Also, the break out of interrupts
--	 * are different: ERI/BRI, RXI, TXI, TEI, DRI.
--	 */
--	[SCIx_RZ_SCIFA_REGTYPE] = {
--		.regs = {
--			[SCSMR]		= { 0x00, 16 },
--			[SCBRR]		= { 0x02,  8 },
--			[SCSCR]		= { 0x04, 16 },
--			[SCxTDR]	= { 0x06,  8 },
--			[SCxSR]		= { 0x08, 16 },
--			[SCxRDR]	= { 0x0A,  8 },
--			[SCFCR]		= { 0x0C, 16 },
--			[SCFDR]		= { 0x0E, 16 },
--			[SCSPTR]	= { 0x10, 16 },
--			[SCLSR]		= { 0x12, 16 },
--		},
--		.fifosize = 16,
--		.overrun_reg = SCLSR,
--		.overrun_mask = SCLSR_ORER,
--		.sampling_rate_mask = SCI_SR(32),
--		.error_mask = SCIF_DEFAULT_ERROR_MASK,
--		.error_clear = SCIF_ERROR_CLEAR,
--	},
--
- 	/*
- 	 * Common SH-3 SCIF definitions.
- 	 */
-@@ -3148,10 +3121,6 @@ static const struct of_device_id of_sci_match[] = {
- 		.compatible = "renesas,scif-r7s72100",
- 		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH2_SCIF_FIFODATA_REGTYPE),
- 	},
--	{
--		.compatible = "renesas,scif-r7s9210",
--		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE),
--	},
- 	/* Family-specific types */
- 	{
- 		.compatible = "renesas,rcar-gen1-scif",
-diff --git a/include/linux/serial_sci.h b/include/linux/serial_sci.h
-index 1c89611e0e06..c0e795d95477 100644
---- a/include/linux/serial_sci.h
-+++ b/include/linux/serial_sci.h
-@@ -36,7 +36,6 @@ enum {
- 	SCIx_SH4_SCIF_FIFODATA_REGTYPE,
- 	SCIx_SH7705_SCIF_REGTYPE,
- 	SCIx_HSCIF_REGTYPE,
--	SCIx_RZ_SCIFA_REGTYPE,
- 
- 	SCIx_NR_REGTYPES,
- };
++		gpio0: gpio@e6050000 {
++			compatible = "renesas,gpio-r8a77470",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6050000 0 0x50>;
++			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 0 23>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 912>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 912>;
++		};
++
++		gpio1: gpio@e6051000 {
++			compatible = "renesas,gpio-r8a77470",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6051000 0 0x50>;
++			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 32 23>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 911>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 911>;
++		};
++
++		gpio2: gpio@e6052000 {
++			compatible = "renesas,gpio-r8a77470",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6052000 0 0x50>;
++			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 64 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 910>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 910>;
++		};
++
++		gpio3: gpio@e6053000 {
++			compatible = "renesas,gpio-r8a77470",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6053000 0 0x50>;
++			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 96 17>, <&pfc 17 123 3>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 909>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 909>;
++		};
++
++		gpio4: gpio@e6054000 {
++			compatible = "renesas,gpio-r8a77470",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6054000 0 0x50>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 128 26>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 908>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 908>;
++		};
++
++		gpio5: gpio@e6055000 {
++			compatible = "renesas,gpio-r8a77470",
++				     "renesas,rcar-gen2-gpio";
++			reg = <0 0xe6055000 0 0x50>;
++			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			gpio-ranges = <&pfc 0 160 32>;
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			clocks = <&cpg CPG_MOD 907>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 907>;
++		};
++
+ 		pfc: pin-controller@e6060000 {
+ 			compatible = "renesas,pfc-r8a77470";
+ 			reg = <0 0xe6060000 0 0x118>;
 -- 
-2.16.1
+2.7.4
