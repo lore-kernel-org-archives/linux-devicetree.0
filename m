@@ -1,124 +1,53 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v7 08/12] mfd: intel-peci-client: Add PECI client MFD
- driver
-Date: Fri, 27 Jul 2018 10:36:15 -0700
-Message-ID: <acffdfef-cb20-4208-5297-d94bac5ecb1b@linux.intel.com>
-References: <20180723214751.1733-1-jae.hyun.yoo@linux.intel.com>
- <20180723214751.1733-9-jae.hyun.yoo@linux.intel.com>
- <20180727082611.GE4628@dell>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 9/9] clocksource: new RISC-V SBI timer driver
+Date: Fri, 27 Jul 2018 10:44:05 -0700
+Message-ID: <f0a5a2e0-7f08-13cd-1758-f53494c1e391@wdc.com>
+References: <20180726143723.16585-1-hch@lst.de>
+ <20180726143723.16585-10-hch@lst.de>
+ <972dacda-75d6-83cd-45e0-c7526a4e02ba@wdc.com>
+ <20180727144148.GA29626@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727082611.GE4628@dell>
+In-Reply-To: <20180727144148.GA29626@lst.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
+To: Christoph Hellwig <hch@lst.de>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, "anup@brainfault.org" <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-On 7/27/2018 1:26 AM, Lee Jones wrote:
-> On Mon, 23 Jul 2018, Jae Hyun Yoo wrote:
-> 
->> This commit adds PECI client MFD driver.
+On 7/27/18 7:38 AM, Christoph Hellwig wrote:
+> On Thu, Jul 26, 2018 at 11:51:56AM -0700, Atish Patra wrote:
+>> Should we follow the same prefix for these functions?
+>> either timer_riscv* or riscv_timer* ?
 >>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Andrew Jeffery <andrew@aj.id.au>
->> Cc: James Feist <james.feist@linux.intel.com>
->> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
->> Cc: Joel Stanley <joel@jms.id.au>
->> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
->> ---
->>   drivers/mfd/Kconfig                   |  14 ++
->>   drivers/mfd/Makefile                  |   1 +
->>   drivers/mfd/intel-peci-client.c       | 182 ++++++++++++++++++++++++++
->>   include/linux/mfd/intel-peci-client.h |  81 ++++++++++++
->>   4 files changed, 278 insertions(+)
->>   create mode 100644 drivers/mfd/intel-peci-client.c
->>   create mode 100644 include/linux/mfd/intel-peci-client.h
+>> Apologies for overlooking this in my timer patch as wel
+> 
+> riscv_timer_* sounds saner to me, I can update that.
+> 
+
+Thanks.
+>>> +	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
+>>> +
 >>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index f3fa516011ec..e38b591479d4 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -595,6 +595,20 @@ config MFD_INTEL_MSIC
->>   	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
->>   	  devices used in Intel Medfield platforms.
->>   
->> +config MFD_INTEL_PECI_CLIENT
->> +	bool "Intel PECI client"
->> +	depends on (PECI || COMPILE_TEST)
->> +	select MFD_CORE
->> +	help
->> +	  If you say yes to this option, support will be included for the
->> +	  multi-funtional Intel PECI (Platform Environment Control Interface)
->> +	  client. PECI is a one-wire bus interface that provides a communication
->> +	  channel from PECI clients in Intel processors and chipset components
->> +	  to external monitoring or control devices.
->> +
->> +	  Additional drivers must be enabled in order to use the functionality
->> +	  of the device.
->> +
->>   config MFD_IPAQ_MICRO
->>   	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
->>   	depends on SA1100_H3100 || SA1100_H3600
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index 2852a6042ecf..29e2cacc58bd 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -203,6 +203,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
->>   obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
->>   obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
->>   obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
->> +obj-$(CONFIG_MFD_INTEL_PECI_CLIENT)	+= intel-peci-client.o
->>   obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
->>   obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
->>   obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
->> diff --git a/drivers/mfd/intel-peci-client.c b/drivers/mfd/intel-peci-client.c
->> new file mode 100644
->> index 000000000000..d7702cf1ea50
->> --- /dev/null
->> +++ b/drivers/mfd/intel-peci-client.c
->> @@ -0,0 +1,182 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2018 Intel Corporation
->> +
->> +#include <linux/bitfield.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/mfd/intel-peci-client.h>
->> +#include <linux/module.h>
->> +#include <linux/peci.h>
->> +#include <linux/of_device.h>
->> +
->> +enum cpu_gens {
->> +	CPU_GEN_HSX = 0, /* Haswell Xeon */
->> +	CPU_GEN_BRX,     /* Broadwell Xeon */
->> +	CPU_GEN_SKX,     /* Skylake Xeon */
->> +};
->> +
->> +static struct mfd_cell peci_functions[] = {
->> +	{
->> +		.name = "peci-cputemp",
->> +		.of_compatible = "intel,peci-cputemp",
->> +	},
->> +	{
->> +		.name = "peci-dimmtemp",
->> +		.of_compatible = "intel,peci-dimmtemp",
->> +	},
->> +};
+>> The comment about the purpose of clearing the interrupt in the original
+>> patch is removed here. If that's intentional, it's fine.
+>>
+>> I thought having that comment helps understanding the distinction between
+>> clearing the timer interrupt in SBI call & here.
 > 
-> The more I look at this driver, the less I think it fits into MFD.
-> 
-> What's stopping you from registering these devices directly from DT?
+> Yes, that was intentional.  But given that I don't even understand why
+> not using an ABI for architectural interrupt source enable/disable maybe
+> I'm confused and should revisit that decision.
 > 
 
-Because DT doesn't allow 2 nodes at the same address so Rob suggested
-MFD for this case.
+I tried adding a new SBI call to disable the interrupts. However, I 
+realized that it is not recommended to change the SBI unless absolutely 
+required.
 
-Thanks,
+Here is the PR & following discussion.
+https://github.com/riscv/riscv-pk/pull/108
 
-Jae
+Regards,
+Atish
