@@ -1,7 +1,7 @@
 From: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Subject: [PATCH v2 3/7] arm64: dts: Fix the base address of the Broadcom iProc mdio mux
-Date: Fri, 27 Jul 2018 14:23:29 -0700
-Message-ID: <1532726613-6483-4-git-send-email-arun.parameswaran@broadcom.com>
+Subject: [PATCH v2 4/7] net: phy: Disable external master access in bcm mdio mux driver
+Date: Fri, 27 Jul 2018 14:23:30 -0700
+Message-ID: <1532726613-6483-5-git-send-email-arun.parameswaran@broadcom.com>
 References: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
@@ -10,46 +10,56 @@ To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arun.parameswaran@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Modify the base address of the mdio mux driver to point to the
-start of the mdio mux block's register address space.
+Configure the scan control register in the Broadcom iProc
+mdio mux driver to disable access to external master.
+
+In some SoC's, the scan control register defaults to an incorrect
+value.
 
 Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
 ---
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi    | 4 ++--
- arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/phy/mdio-mux-bcm-iproc.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index 4057197..1a406a7 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -482,9 +482,9 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/net/phy/mdio-mux-bcm-iproc.c b/drivers/net/phy/mdio-mux-bcm-iproc.c
+index 48bb74a..c36ce4b 100644
+--- a/drivers/net/phy/mdio-mux-bcm-iproc.c
++++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
+@@ -22,6 +22,9 @@
+ #include <linux/mdio-mux.h>
+ #include <linux/delay.h>
  
--		mdio_mux_iproc: mdio-mux@6602023c {
-+		mdio_mux_iproc: mdio-mux@66020000 {
- 			compatible = "brcm,mdio-mux-iproc";
--			reg = <0x6602023c 0x14>;
-+			reg = <0x66020000 0x250>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
++#define MDIO_SCAN_CTRL_OFFSET		0x008
++#define MDIO_SCAN_CTRL_OVRIDE_EXT_MSTR	28
++
+ #define MDIO_PARAM_OFFSET		0x23c
+ #define MDIO_PARAM_MIIM_CYCLE		29
+ #define MDIO_PARAM_INTERNAL_SEL		25
+@@ -53,6 +56,16 @@ struct iproc_mdiomux_desc {
+ 	struct mii_bus *mii_bus;
+ };
  
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index b203152..a70e8dd 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -278,9 +278,9 @@
++static void mdio_mux_iproc_config(struct iproc_mdiomux_desc *md)
++{
++	u32 val;
++
++	/* Disable external mdio master access */
++	val = readl(md->base + MDIO_SCAN_CTRL_OFFSET);
++	val |= BIT(MDIO_SCAN_CTRL_OVRIDE_EXT_MSTR);
++	writel(val, md->base + MDIO_SCAN_CTRL_OFFSET);
++}
++
+ static int iproc_mdio_wait_for_idle(void __iomem *base, bool result)
+ {
+ 	unsigned int timeout = 1000; /* loop for 1s */
+@@ -216,6 +229,8 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
+ 		goto out_register;
+ 	}
  
- 		#include "stingray-pinctrl.dtsi"
- 
--		mdio_mux_iproc: mdio-mux@2023c {
-+		mdio_mux_iproc: mdio-mux@20000 {
- 			compatible = "brcm,mdio-mux-iproc";
--			reg = <0x0002023c 0x14>;
-+			reg = <0x00020000 0x250>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
++	mdio_mux_iproc_config(md);
++
+ 	dev_info(md->dev, "iProc mdiomux registered\n");
+ 	return 0;
  
 -- 
 1.9.1
