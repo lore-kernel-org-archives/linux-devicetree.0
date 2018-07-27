@@ -1,42 +1,41 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 4/4] mips: dts: mscc: enable spi and NOR flash support on ocelot PCB123
-Date: Fri, 27 Jul 2018 14:05:35 +0200
-Message-ID: <20180727120535.16504-5-alexandre.belloni@bootlin.com>
-References: <20180727120535.16504-1-alexandre.belloni@bootlin.com>
+From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Subject: [PATCH] dt-bindings: Add Y Soft Corporation vendor prefix
+Date: Fri, 27 Jul 2018 14:15:15 +0200
+Message-ID: <1532693715-5234-1-git-send-email-michal.vokac@ysoft.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727120535.16504-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Ocelot PCB123 has a SPI NOR connected on its SPI bus.
+Y Soft is headquartered in the Czech Republic and it is a worldwide
+provider of enterprise office solutions for print management.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 ---
- arch/mips/boot/dts/mscc/ocelot_pcb123.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I work towards upstreaming support for our custom i.MX6 based SBCs.
+Those boards are used in our various products. This vendor prefix will
+come handy later when the DTS files are ready for submission.
 
-diff --git a/arch/mips/boot/dts/mscc/ocelot_pcb123.dts b/arch/mips/boot/dts/mscc/ocelot_pcb123.dts
-index 4ccd65379059..2266027759f9 100644
---- a/arch/mips/boot/dts/mscc/ocelot_pcb123.dts
-+++ b/arch/mips/boot/dts/mscc/ocelot_pcb123.dts
-@@ -26,6 +26,16 @@
- 	status = "okay";
- };
- 
-+&spi {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "macronix,mx25l25635f", "jedec,spi-nor";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+	};
-+};
-+
- &mdio0 {
- 	status = "okay";
- };
+Thanks, Michal. 
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 500d5dc..f38fe0b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -413,6 +413,7 @@ xes	Extreme Engineering Solutions (X-ES)
+ xillybus	Xillybus Ltd.
+ xlnx	Xilinx
+ xunlong	Shenzhen Xunlong Software CO.,Limited
++ysoft	Y Soft Corporation a.s.
+ zarlink	Zarlink Semiconductor
+ zeitec	ZEITEC Semiconductor Co., LTD.
+ zidoo	Shenzhen Zidoo Technology Co., Ltd.
 -- 
-2.18.0
+2.1.4
