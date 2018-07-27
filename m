@@ -1,762 +1,238 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v23 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Fri, 27 Jul 2018 13:39:52 +0800
-Message-ID: <1532669992.17602.32.camel@mtksdaap41>
-References: <1532482002-11164-1-git-send-email-houlong.wei@mediatek.com>
-         <1532482002-11164-3-git-send-email-houlong.wei@mediatek.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Fri, 27 Jul 2018 06:00:18 +0000
+Message-ID: <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-4-o.rempel@pengutronix.de>
+ <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
+ <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
+ <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532482002-11164-3-git-send-email-houlong.wei@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Houlong Wei <houlong.wei@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao@mediatek.com>, ginny.chen@mediatek.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Jassi:
-
-In this patch, mediatek mailbox controller implement its own data queue
-rather than using mailbox framework's queue. I've an idea that could let
-mediatek mailbox controller use framework's queue but the framework
-should provide abort function. You could take a look on the sample in
-[1].
-
-Let me explain why need the abort function. One client of mediatek
-mailbox controller is display driver. When a cursor is moving, display
-continuously update the register related to the cursor. Display hardware
-has a limitation that register should be updated in the vblank period
-which is a small interval. In tradition, display hardware would trigger
-an interrupt when vblank start, and driver could update register in this
-irq handler. But the interrupt handler has the risk that it could be
-delayed by some reason so the handler may be postponed out of this
-vblank interval. In order to reduce the risk, display driver use GCE
-hardware to write register. If a cursor move 3 times before vblank,
-display driver would send 3 messages sequentially to mailbox controller.
-If the controller use framework's queue, controller just receive the
-first message and the others is queued in framework. The first message
-could be executed exactly in vblank interval but the other messages are
-sent to controller when controller notify framework tx_done in interrupt
-handler. The interrupt may be postponed by some reason this is what we
-worried. So this patch has to implement its own queue to make sure that
-all message execute in vblank interval.
-
-My idea is that display driver send at most one message to mailbox
-controller. When it need to send the second message before the first
-message is done, it should abort the first message and then send the
-second message which should include first message. So how do you think
-about abort function? Or you have another suggestion?
-
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commit/28618df0491f54956a9d5558c3af0df5be208787
-
-Regards,
-CK
-
-On Wed, 2018-07-25 at 09:26 +0800, Houlong Wei wrote:
-> This patch is first version of Mediatek Command Queue(CMDQ) driver. The
-> CMDQ is used to help write registers with critical time limitation,
-> such as updating display configuration during the vblank. It controls
-> Global Command Engine (GCE) hardware to achieve this requirement.
-> Currently, CMDQ only supports display related hardwares, but we expect
-> it can be extended to other hardwares for future requirements.
-> 
-> Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> Signed-off-by: CK Hu <ck.hu@mediatek.com>
-> ---
->  drivers/mailbox/Kconfig                  |   10 +
->  drivers/mailbox/Makefile                 |    2 +
->  drivers/mailbox/mtk-cmdq-mailbox.c       |  569 ++++++++++++++++++++++++++++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h |   77 ++++
->  4 files changed, 658 insertions(+)
->  create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
->  create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
-> 
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index e63d29a..2bbabc9 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -189,4 +189,14 @@ config STM32_IPCC
->  	  Mailbox implementation for STMicroelectonics STM32 family chips
->  	  with hardware for Inter-Processor Communication Controller (IPCC)
->  	  between processors. Say Y here if you want to have this support.
-> +
-> +config MTK_CMDQ_MBOX
-> +	tristate "MediaTek CMDQ Mailbox Support"
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	select MTK_INFRACFG
-> +	help
-> +	  Say yes here to add support for the MediaTek Command Queue (CMDQ)
-> +	  mailbox driver. The CMDQ is used to help read/write registers with
-> +	  critical time limitation, such as updating display configuration
-> +	  during the vblank.
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index 4d501be..4b00804 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -40,3 +40,5 @@ obj-$(CONFIG_QCOM_APCS_IPC)	+= qcom-apcs-ipc-mailbox.o
->  obj-$(CONFIG_TEGRA_HSP_MBOX)	+= tegra-hsp.o
->  
->  obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
-> +
-> +obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
-> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> new file mode 100644
-> index 0000000..6f92c5e
-> --- /dev/null
-> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> @@ -0,0 +1,569 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2018 MediaTek Inc.
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/errno.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/mailbox/mtk-cmdq-mailbox.h>
-> +#include <linux/of_device.h>
-> +
-> +#define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
-> +#define CMDQ_IRQ_MASK			0xffff
-> +#define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
-> +
-> +#define CMDQ_CURR_IRQ_STATUS		0x10
-> +#define CMDQ_THR_SLOT_CYCLES		0x30
-> +#define CMDQ_THR_BASE			0x100
-> +#define CMDQ_THR_SIZE			0x80
-> +#define CMDQ_THR_WARM_RESET		0x00
-> +#define CMDQ_THR_ENABLE_TASK		0x04
-> +#define CMDQ_THR_SUSPEND_TASK		0x08
-> +#define CMDQ_THR_CURR_STATUS		0x0c
-> +#define CMDQ_THR_IRQ_STATUS		0x10
-> +#define CMDQ_THR_IRQ_ENABLE		0x14
-> +#define CMDQ_THR_CURR_ADDR		0x20
-> +#define CMDQ_THR_END_ADDR		0x24
-> +#define CMDQ_THR_WAIT_TOKEN		0x30
-> +#define CMDQ_THR_PRIORITY		0x40
-> +
-> +#define CMDQ_THR_ACTIVE_SLOT_CYCLES	0x3200
-> +#define CMDQ_THR_ENABLED		0x1
-> +#define CMDQ_THR_DISABLED		0x0
-> +#define CMDQ_THR_SUSPEND		0x1
-> +#define CMDQ_THR_RESUME			0x0
-> +#define CMDQ_THR_STATUS_SUSPENDED	BIT(1)
-> +#define CMDQ_THR_DO_WARM_RESET		BIT(0)
-> +#define CMDQ_THR_IRQ_DONE		0x1
-> +#define CMDQ_THR_IRQ_ERROR		0x12
-> +#define CMDQ_THR_IRQ_EN			(CMDQ_THR_IRQ_ERROR | CMDQ_THR_IRQ_DONE)
-> +#define CMDQ_THR_IS_WAITING		BIT(31)
-> +
-> +#define CMDQ_JUMP_BY_OFFSET		0x10000000
-> +#define CMDQ_JUMP_BY_PA			0x10000001
-> +
-> +struct cmdq_thread {
-> +	struct mbox_chan	*chan;
-> +	void __iomem		*base;
-> +	struct list_head	task_busy_list;
-> +	u32			priority;
-> +	bool			atomic_exec;
-> +};
-> +
-> +struct cmdq_task {
-> +	struct cmdq		*cmdq;
-> +	struct list_head	list_entry;
-> +	dma_addr_t		pa_base;
-> +	struct cmdq_thread	*thread;
-> +	struct cmdq_pkt		*pkt; /* the packet sent from mailbox client */
-> +};
-> +
-> +struct cmdq {
-> +	struct mbox_controller	mbox;
-> +	void __iomem		*base;
-> +	u32			irq;
-> +	u32			thread_nr;
-> +	struct cmdq_thread	*thread;
-> +	struct clk		*clock;
-> +	bool			suspended;
-> +};
-> +
-> +static int cmdq_thread_suspend(struct cmdq *cmdq, struct cmdq_thread *thread)
-> +{
-> +	u32 status;
-> +
-> +	writel(CMDQ_THR_SUSPEND, thread->base + CMDQ_THR_SUSPEND_TASK);
-> +
-> +	/* If already disabled, treat as suspended successful. */
-> +	if (!(readl(thread->base + CMDQ_THR_ENABLE_TASK) & CMDQ_THR_ENABLED))
-> +		return 0;
-> +
-> +	if (readl_poll_timeout_atomic(thread->base + CMDQ_THR_CURR_STATUS,
-> +			status, status & CMDQ_THR_STATUS_SUSPENDED, 0, 10)) {
-> +		dev_err(cmdq->mbox.dev, "suspend GCE thread 0x%x failed\n",
-> +			(u32)(thread->base - cmdq->base));
-> +		return -EFAULT;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void cmdq_thread_resume(struct cmdq_thread *thread)
-> +{
-> +	writel(CMDQ_THR_RESUME, thread->base + CMDQ_THR_SUSPEND_TASK);
-> +}
-> +
-> +static void cmdq_init(struct cmdq *cmdq)
-> +{
-> +	WARN_ON(clk_enable(cmdq->clock) < 0);
-> +	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-> +	clk_disable(cmdq->clock);
-> +}
-> +
-> +static int cmdq_thread_reset(struct cmdq *cmdq, struct cmdq_thread *thread)
-> +{
-> +	u32 warm_reset;
-> +
-> +	writel(CMDQ_THR_DO_WARM_RESET, thread->base + CMDQ_THR_WARM_RESET);
-> +	if (readl_poll_timeout_atomic(thread->base + CMDQ_THR_WARM_RESET,
-> +			warm_reset, !(warm_reset & CMDQ_THR_DO_WARM_RESET),
-> +			0, 10)) {
-> +		dev_err(cmdq->mbox.dev, "reset GCE thread 0x%x failed\n",
-> +			(u32)(thread->base - cmdq->base));
-> +		return -EFAULT;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void cmdq_thread_disable(struct cmdq *cmdq, struct cmdq_thread *thread)
-> +{
-> +	cmdq_thread_reset(cmdq, thread);
-> +	writel(CMDQ_THR_DISABLED, thread->base + CMDQ_THR_ENABLE_TASK);
-> +}
-> +
-> +/* notify GCE to re-fetch commands by setting GCE thread PC */
-> +static void cmdq_thread_invalidate_fetched_data(struct cmdq_thread *thread)
-> +{
-> +	writel(readl(thread->base + CMDQ_THR_CURR_ADDR),
-> +	       thread->base + CMDQ_THR_CURR_ADDR);
-> +}
-> +
-> +static void cmdq_task_insert_into_thread(struct cmdq_task *task)
-> +{
-> +	struct device *dev = task->cmdq->mbox.dev;
-> +	struct cmdq_thread *thread = task->thread;
-> +	struct cmdq_task *prev_task = list_last_entry(
-> +			&thread->task_busy_list, typeof(*task), list_entry);
-> +	u64 *prev_task_base = prev_task->pkt->va_base;
-> +
-> +	/* let previous task jump to this task */
-> +	dma_sync_single_for_cpu(dev, prev_task->pa_base,
-> +				prev_task->pkt->cmd_buf_size, DMA_TO_DEVICE);
-> +	prev_task_base[CMDQ_NUM_CMD(prev_task->pkt) - 1] =
-> +		(u64)CMDQ_JUMP_BY_PA << 32 | task->pa_base;
-> +	dma_sync_single_for_device(dev, prev_task->pa_base,
-> +				   prev_task->pkt->cmd_buf_size, DMA_TO_DEVICE);
-> +
-> +	cmdq_thread_invalidate_fetched_data(thread);
-> +}
-> +
-> +static bool cmdq_command_is_wfe(u64 cmd)
-> +{
-> +	u64 wfe_option = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> +	u64 wfe_op = (u64)(CMDQ_CODE_WFE << CMDQ_OP_CODE_SHIFT) << 32;
-> +	u64 wfe_mask = (u64)CMDQ_OP_CODE_MASK << 32 | 0xffffffff;
-> +
-> +	return ((cmd & wfe_mask) == (wfe_op | wfe_option));
-> +}
-> +
-> +/* we assume tasks in the same display GCE thread are waiting the same event. */
-> +static void cmdq_task_remove_wfe(struct cmdq_task *task)
-> +{
-> +	struct device *dev = task->cmdq->mbox.dev;
-> +	u64 *base = task->pkt->va_base;
-> +	int i;
-> +
-> +	dma_sync_single_for_cpu(dev, task->pa_base, task->pkt->cmd_buf_size,
-> +				DMA_TO_DEVICE);
-> +	for (i = 0; i < CMDQ_NUM_CMD(task->pkt); i++)
-> +		if (cmdq_command_is_wfe(base[i]))
-> +			base[i] = (u64)CMDQ_JUMP_BY_OFFSET << 32 |
-> +				  CMDQ_JUMP_PASS;
-> +	dma_sync_single_for_device(dev, task->pa_base, task->pkt->cmd_buf_size,
-> +				   DMA_TO_DEVICE);
-> +}
-> +
-> +static bool cmdq_thread_is_in_wfe(struct cmdq_thread *thread)
-> +{
-> +	return readl(thread->base + CMDQ_THR_WAIT_TOKEN) & CMDQ_THR_IS_WAITING;
-> +}
-> +
-> +static void cmdq_thread_wait_end(struct cmdq_thread *thread,
-> +				 unsigned long end_pa)
-> +{
-> +	struct device *dev = thread->chan->mbox->dev;
-> +	unsigned long curr_pa;
-> +
-> +	if (readl_poll_timeout_atomic(thread->base + CMDQ_THR_CURR_ADDR,
-> +			curr_pa, curr_pa == end_pa, 1, 20))
-> +		dev_err(dev, "GCE thread cannot run to end.\n");
-> +}
-> +
-> +static void cmdq_task_exec_done(struct cmdq_task *task, enum cmdq_cb_status sta)
-> +{
-> +	struct cmdq_task_cb *cb = &task->pkt->async_cb;
-> +	struct cmdq_cb_data data;
-> +
-> +	WARN_ON(cb->cb == (cmdq_async_flush_cb)NULL);
-> +	data.sta = sta;
-> +	data.data = cb->data;
-> +	cb->cb(data);
-> +
-> +	list_del(&task->list_entry);
-> +}
-> +
-> +static void cmdq_task_handle_error(struct cmdq_task *task)
-> +{
-> +	struct cmdq_thread *thread = task->thread;
-> +	struct cmdq_task *next_task;
-> +
-> +	dev_err(task->cmdq->mbox.dev, "task 0x%p error\n", task);
-> +	WARN_ON(cmdq_thread_suspend(task->cmdq, thread) < 0);
-> +	next_task = list_first_entry_or_null(&thread->task_busy_list,
-> +			struct cmdq_task, list_entry);
-> +	if (next_task)
-> +		writel(next_task->pa_base, thread->base + CMDQ_THR_CURR_ADDR);
-> +	cmdq_thread_resume(thread);
-> +}
-> +
-> +static void cmdq_thread_irq_handler(struct cmdq *cmdq,
-> +				    struct cmdq_thread *thread)
-> +{
-> +	struct cmdq_task *task, *tmp, *curr_task = NULL;
-> +	u32 curr_pa, irq_flag, task_end_pa;
-> +	bool err;
-> +
-> +	irq_flag = readl(thread->base + CMDQ_THR_IRQ_STATUS);
-> +	writel(~irq_flag, thread->base + CMDQ_THR_IRQ_STATUS);
-> +
-> +	/*
-> +	 * When ISR call this function, another CPU core could run
-> +	 * "release task" right before we acquire the spin lock, and thus
-> +	 * reset / disable this GCE thread, so we need to check the enable
-> +	 * bit of this GCE thread.
-> +	 */
-> +	if (!(readl(thread->base + CMDQ_THR_ENABLE_TASK) & CMDQ_THR_ENABLED))
-> +		return;
-> +
-> +	if (irq_flag & CMDQ_THR_IRQ_ERROR)
-> +		err = true;
-> +	else if (irq_flag & CMDQ_THR_IRQ_DONE)
-> +		err = false;
-> +	else
-> +		return;
-> +
-> +	curr_pa = readl(thread->base + CMDQ_THR_CURR_ADDR);
-> +
-> +	list_for_each_entry_safe(task, tmp, &thread->task_busy_list,
-> +				 list_entry) {
-> +		task_end_pa = task->pa_base + task->pkt->cmd_buf_size;
-> +		if (curr_pa >= task->pa_base && curr_pa < task_end_pa)
-> +			curr_task = task;
-> +
-> +		if (!curr_task || curr_pa == task_end_pa - CMDQ_INST_SIZE) {
-> +			cmdq_task_exec_done(task, CMDQ_CB_NORMAL);
-> +			kfree(task);
-> +		} else if (err) {
-> +			cmdq_task_exec_done(task, CMDQ_CB_ERROR);
-> +			cmdq_task_handle_error(curr_task);
-> +			kfree(task);
-> +		}
-> +
-> +		if (curr_task)
-> +			break;
-> +	}
-> +
-> +	if (list_empty(&thread->task_busy_list)) {
-> +		cmdq_thread_disable(cmdq, thread);
-> +		clk_disable(cmdq->clock);
-> +	}
-> +}
-> +
-> +static irqreturn_t cmdq_irq_handler(int irq, void *dev)
-> +{
-> +	struct cmdq *cmdq = dev;
-> +	unsigned long irq_status, flags = 0L;
-> +	int bit;
-> +
-> +	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
-> +	if (!(irq_status ^ CMDQ_IRQ_MASK))
-> +		return IRQ_NONE;
-> +
-> +	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-> +		struct cmdq_thread *thread = &cmdq->thread[bit];
-> +
-> +		spin_lock_irqsave(&thread->chan->lock, flags);
-> +		cmdq_thread_irq_handler(cmdq, thread);
-> +		spin_unlock_irqrestore(&thread->chan->lock, flags);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int cmdq_suspend(struct device *dev)
-> +{
-> +	struct cmdq *cmdq = dev_get_drvdata(dev);
-> +	struct cmdq_thread *thread;
-> +	int i;
-> +	bool task_running = false;
-> +
-> +	cmdq->suspended = true;
-> +
-> +	for (i = 0; i < cmdq->thread_nr; i++) {
-> +		thread = &cmdq->thread[i];
-> +		if (!list_empty(&thread->task_busy_list)) {
-> +			task_running = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (task_running)
-> +		dev_warn(dev, "exist running task(s) in suspend\n");
-> +
-> +	clk_unprepare(cmdq->clock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cmdq_resume(struct device *dev)
-> +{
-> +	struct cmdq *cmdq = dev_get_drvdata(dev);
-> +
-> +	WARN_ON(clk_prepare(cmdq->clock) < 0);
-> +	cmdq->suspended = false;
-> +	return 0;
-> +}
-> +
-> +static int cmdq_remove(struct platform_device *pdev)
-> +{
-> +	struct cmdq *cmdq = platform_get_drvdata(pdev);
-> +
-> +	mbox_controller_unregister(&cmdq->mbox);
-> +	clk_unprepare(cmdq->clock);
-> +
-> +	if (cmdq->mbox.chans)
-> +		devm_kfree(&pdev->dev, cmdq->mbox.chans);
-> +
-> +	if (cmdq->thread)
-> +		devm_kfree(&pdev->dev, cmdq->thread);
-> +
-> +	devm_kfree(&pdev->dev, cmdq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cmdq_mbox_send_data(struct mbox_chan *chan, void *data)
-> +{
-> +	struct cmdq_pkt *pkt = (struct cmdq_pkt *)data;
-> +	struct cmdq_thread *thread = (struct cmdq_thread *)chan->con_priv;
-> +	struct cmdq *cmdq = dev_get_drvdata(chan->mbox->dev);
-> +	struct cmdq_task *task;
-> +	unsigned long curr_pa, end_pa;
-> +
-> +	/* Client should not flush new tasks if suspended. */
-> +	WARN_ON(cmdq->suspended);
-> +
-> +	task = kzalloc(sizeof(*task), GFP_ATOMIC);
-> +	task->cmdq = cmdq;
-> +	INIT_LIST_HEAD(&task->list_entry);
-> +	task->pa_base = pkt->pa_base;
-> +	task->thread = thread;
-> +	task->pkt = pkt;
-> +
-> +	if (list_empty(&thread->task_busy_list)) {
-> +		WARN_ON(clk_enable(cmdq->clock) < 0);
-> +		WARN_ON(cmdq_thread_reset(cmdq, thread) < 0);
-> +
-> +		writel(task->pa_base, thread->base + CMDQ_THR_CURR_ADDR);
-> +		writel(task->pa_base + pkt->cmd_buf_size,
-> +		       thread->base + CMDQ_THR_END_ADDR);
-> +		writel(thread->priority, thread->base + CMDQ_THR_PRIORITY);
-> +		writel(CMDQ_THR_IRQ_EN, thread->base + CMDQ_THR_IRQ_ENABLE);
-> +		writel(CMDQ_THR_ENABLED, thread->base + CMDQ_THR_ENABLE_TASK);
-> +	} else {
-> +		WARN_ON(cmdq_thread_suspend(cmdq, thread) < 0);
-> +		curr_pa = readl(thread->base + CMDQ_THR_CURR_ADDR);
-> +		end_pa = readl(thread->base + CMDQ_THR_END_ADDR);
-> +
-> +		/*
-> +		 * Atomic execution should remove the following wfe, i.e. only
-> +		 * wait event at first task, and prevent to pause when running.
-> +		 */
-> +		if (thread->atomic_exec) {
-> +			/* GCE is executing if command is not WFE */
-> +			if (!cmdq_thread_is_in_wfe(thread)) {
-> +				cmdq_thread_resume(thread);
-> +				cmdq_thread_wait_end(thread, end_pa);
-> +				WARN_ON(cmdq_thread_suspend(cmdq, thread) < 0);
-> +				/* set to this task directly */
-> +				writel(task->pa_base,
-> +				       thread->base + CMDQ_THR_CURR_ADDR);
-> +			} else {
-> +				cmdq_task_insert_into_thread(task);
-> +				cmdq_task_remove_wfe(task);
-> +				smp_mb(); /* modify jump before enable thread */
-> +			}
-> +		} else {
-> +			/* check boundary */
-> +			if (curr_pa == end_pa - CMDQ_INST_SIZE ||
-> +			    curr_pa == end_pa) {
-> +				/* set to this task directly */
-> +				writel(task->pa_base,
-> +				       thread->base + CMDQ_THR_CURR_ADDR);
-> +			} else {
-> +				cmdq_task_insert_into_thread(task);
-> +				smp_mb(); /* modify jump before enable thread */
-> +			}
-> +		}
-> +		writel(task->pa_base + pkt->cmd_buf_size,
-> +		       thread->base + CMDQ_THR_END_ADDR);
-> +		cmdq_thread_resume(thread);
-> +	}
-> +	list_move_tail(&task->list_entry, &thread->task_busy_list);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cmdq_mbox_startup(struct mbox_chan *chan)
-> +{
-> +	return 0;
-> +}
-> +
-> +static void cmdq_mbox_shutdown(struct mbox_chan *chan)
-> +{
-> +}
-> +
-> +static const struct mbox_chan_ops cmdq_mbox_chan_ops = {
-> +	.send_data = cmdq_mbox_send_data,
-> +	.startup = cmdq_mbox_startup,
-> +	.shutdown = cmdq_mbox_shutdown,
-> +};
-> +
-> +static struct mbox_chan *cmdq_xlate(struct mbox_controller *mbox,
-> +		const struct of_phandle_args *sp)
-> +{
-> +	int ind = sp->args[0];
-> +	struct cmdq_thread *thread;
-> +
-> +	if (ind >= mbox->num_chans)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	thread = (struct cmdq_thread *)mbox->chans[ind].con_priv;
-> +	thread->priority = sp->args[1];
-> +	thread->atomic_exec = (sp->args[2] != 0);
-> +	thread->chan = &mbox->chans[ind];
-> +
-> +	return &mbox->chans[ind];
-> +}
-> +
-> +static int cmdq_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct cmdq *cmdq;
-> +	int err, i;
-> +
-> +	cmdq = devm_kzalloc(dev, sizeof(*cmdq), GFP_KERNEL);
-> +	if (!cmdq)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	cmdq->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(cmdq->base)) {
-> +		dev_err(dev, "failed to ioremap gce\n");
-> +		return PTR_ERR(cmdq->base);
-> +	}
-> +
-> +	cmdq->irq = platform_get_irq(pdev, 0);
-> +	if (!cmdq->irq) {
-> +		dev_err(dev, "failed to get irq\n");
-> +		return -EINVAL;
-> +	}
-> +	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
-> +			       "mtk_cmdq", cmdq);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to register ISR (%d)\n", err);
-> +		return err;
-> +	}
-> +
-> +	dev_dbg(dev, "cmdq device: addr:0x%p, va:0x%p, irq:%d\n",
-> +		dev, cmdq->base, cmdq->irq);
-> +
-> +	cmdq->clock = devm_clk_get(dev, "gce");
-> +	if (IS_ERR(cmdq->clock)) {
-> +		dev_err(dev, "failed to get gce clk\n");
-> +		return PTR_ERR(cmdq->clock);
-> +	}
-> +
-> +	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-> +	cmdq->mbox.dev = dev;
-> +	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
-> +					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
-> +	if (!cmdq->mbox.chans)
-> +		return -ENOMEM;
-> +
-> +	cmdq->mbox.num_chans = cmdq->thread_nr;
-> +	cmdq->mbox.ops = &cmdq_mbox_chan_ops;
-> +	cmdq->mbox.of_xlate = cmdq_xlate;
-> +
-> +	/* make use of TXDONE_BY_ACK */
-> +	cmdq->mbox.txdone_irq = false;
-> +	cmdq->mbox.txdone_poll = false;
-> +
-> +	cmdq->thread = devm_kcalloc(dev, cmdq->thread_nr,
-> +					sizeof(*cmdq->thread), GFP_KERNEL);
-> +	if (!cmdq->thread)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < cmdq->thread_nr; i++) {
-> +		cmdq->thread[i].base = cmdq->base + CMDQ_THR_BASE +
-> +				CMDQ_THR_SIZE * i;
-> +		INIT_LIST_HEAD(&cmdq->thread[i].task_busy_list);
-> +		cmdq->mbox.chans[i].con_priv = (void *)&cmdq->thread[i];
-> +	}
-> +
-> +	err = mbox_controller_register(&cmdq->mbox);
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to register mailbox: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, cmdq);
-> +	WARN_ON(clk_prepare(cmdq->clock) < 0);
-> +
-> +	cmdq_init(cmdq);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops cmdq_pm_ops = {
-> +	.suspend = cmdq_suspend,
-> +	.resume = cmdq_resume,
-> +};
-> +
-> +static const struct of_device_id cmdq_of_ids[] = {
-> +	{.compatible = "mediatek,mt8173-gce", .data = (void *)16},
-> +	{}
-> +};
-> +
-> +static struct platform_driver cmdq_drv = {
-> +	.probe = cmdq_probe,
-> +	.remove = cmdq_remove,
-> +	.driver = {
-> +		.name = "mtk_cmdq",
-> +		.pm = &cmdq_pm_ops,
-> +		.of_match_table = cmdq_of_ids,
-> +	}
-> +};
-> +
-> +static int __init cmdq_drv_init(void)
-> +{
-> +	return platform_driver_register(&cmdq_drv);
-> +}
-> +
-> +static void __exit cmdq_drv_exit(void)
-> +{
-> +	platform_driver_unregister(&cmdq_drv);
-> +}
-> +
-> +subsys_initcall(cmdq_drv_init);
-> +module_exit(cmdq_drv_exit);
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> new file mode 100644
-> index 0000000..ccb7342
-> --- /dev/null
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -0,0 +1,77 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + *
-> + */
-> +
-> +#ifndef __MTK_CMDQ_MAILBOX_H__
-> +#define __MTK_CMDQ_MAILBOX_H__
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#define CMDQ_INST_SIZE			8 /* instruction is 64-bit */
-> +#define CMDQ_SUBSYS_SHIFT		16
-> +#define CMDQ_OP_CODE_SHIFT		24
-> +#define CMDQ_JUMP_PASS			CMDQ_INST_SIZE
-> +
-> +#define CMDQ_WFE_UPDATE			BIT(31)
-> +#define CMDQ_WFE_WAIT			BIT(15)
-> +#define CMDQ_WFE_WAIT_VALUE		0x1
-> +
-> +/*
-> + * CMDQ_CODE_MASK:
-> + *   set write mask
-> + *   format: op mask
-> + * CMDQ_CODE_WRITE:
-> + *   write value into target register
-> + *   format: op subsys address value
-> + * CMDQ_CODE_JUMP:
-> + *   jump by offset
-> + *   format: op offset
-> + * CMDQ_CODE_WFE:
-> + *   wait for event and clear
-> + *   it is just clear if no wait
-> + *   format: [wait]  op event update:1 to_wait:1 wait:1
-> + *           [clear] op event update:1 to_wait:0 wait:0
-> + * CMDQ_CODE_EOC:
-> + *   end of command
-> + *   format: op irq_flag
-> + */
-> +enum cmdq_code {
-> +	CMDQ_CODE_MASK = 0x02,
-> +	CMDQ_CODE_WRITE = 0x04,
-> +	CMDQ_CODE_JUMP = 0x10,
-> +	CMDQ_CODE_WFE = 0x20,
-> +	CMDQ_CODE_EOC = 0x40,
-> +};
-> +
-> +enum cmdq_cb_status {
-> +	CMDQ_CB_NORMAL = 0,
-> +	CMDQ_CB_ERROR
-> +};
-> +
-> +struct cmdq_cb_data {
-> +	enum cmdq_cb_status	sta;
-> +	void			*data;
-> +};
-> +
-> +typedef void (*cmdq_async_flush_cb)(struct cmdq_cb_data data);
-> +
-> +struct cmdq_task_cb {
-> +	cmdq_async_flush_cb	cb;
-> +	void			*data;
-> +};
-> +
-> +struct cmdq_pkt {
-> +	void			*va_base;
-> +	dma_addr_t		pa_base;
-> +	size_t			cmd_buf_size; /* command occupied size */
-> +	size_t			buf_size; /* real buffer size */
-> +	struct cmdq_task_cb	cb;
-> +	struct cmdq_task_cb	async_cb;
-> +	void			*cl;
-> +};
-> +
-> +#endif /* __MTK_CMDQ_MAILBOX_H__ */
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYXNzaSBCcmFyIFttYWlsdG86
+amFzc2lzaW5naGJyYXJAZ21haWwuY29tXQ0KPiBTZW50OiBGcmlkYXksIEp1bHkgMjcsIDIwMTgg
+MTI6NTYgUE0NCj4gVG86IEEucy4gRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+IENjOiBP
+bGVrc2lqIFJlbXBlbCA8by5yZW1wZWxAcGVuZ3V0cm9uaXguZGU+OyAsIFNhc2NoYSBIYXVlcg0K
+PiA8a2VybmVsQHBlbmd1dHJvbml4LmRlPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3Jn
+PjsgRmFiaW8NCj4gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgUm9iIEhlcnJpbmcg
+PHJvYmgrZHRAa2VybmVsLm9yZz47DQo+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5j
+b20+OyBWbGFkaW1pciBaYXBvbHNraXkNCj4gPHZsYWRpbWlyX3phcG9sc2tpeUBtZW50b3IuY29t
+PjsgLCBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcsDQo+IGxpbnV4LW1lZGlh
+dGVrQGxpc3RzLmluZnJhZGVhZC5vcmcsIHNydl9oZXVwc3RyZWFtIDxsaW51eC1hcm0tDQo+IGtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgRGV2aWNldHJlZSBMaXN0IDxkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZz47DQo+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMy82XSBkdC1iaW5kaW5nczogbWFpbGJveDogaW14LW11OiBh
+ZGQgZ2VuZXJpYyBNVQ0KPiBjaGFubmVsIHN1cHBvcnQNCj4gDQo+IE9uIEZyaSwgSnVsIDI3LCAy
+MDE4IGF0IDk6MzIgQU0sIEEucy4gRG9uZyA8YWlzaGVuZy5kb25nQG54cC5jb20+IHdyb3RlOg0K
+PiA+Pg0KPiA+PiA+Pg0KPiA+PiA+PiA+IEVhY2ggTVUgaGFzIGZvdXIgcGFpcnMgb2YgcngvdHgg
+ZGF0YSByZWdpc3RlciB3aXRoIGZvdXIgcngvdHgNCj4gPj4gPj4gPiBpbnRlcnJ1cHRzIHdoaWNo
+IGNhbiBhbHNvIGJlIHVzZWQgYXMgYSBzZXBhcmF0ZSBjaGFubmVsLg0KPiA+PiA+PiA+DQo+ID4+
+ID4+IFNvIHRoZSBoYXJkd2FyZSBhY3R1YWxseSBzdXBwb3J0cyA0IGNoYW5uZWxzLg0KPiA+PiA+
+Pg0KPiA+PiA+PiA+IC0tICNtYm94LWNlbGxzOiAgTXVzdCBiZSAwLiBOdW1iZXIgb2YgY2VsbHMg
+aW4gYSBtYWlsYm94DQo+ID4+ID4+ID4gKy0gI21ib3gtY2VsbHM6ICBNdXN0IGJlOg0KPiA+PiA+
+PiA+ICsgICAgICAgICAgICAgICAwIC0gZm9yIHNpbmdsZSBjaGFubmVsIG1vZGUuIGkuTVg4KiBT
+Q1UgcHJvdG9jb2wgc3BlY2lmaWMuDQo+ID4+ID4+ID4gKyAgICAgICAgICAgICAgIDEgLSBmb3Ig
+bXVsdGljaGFubmVsIChnZW5lcmljKSBtb2RlLg0KPiA+PiA+PiA+ICsNCj4gPj4gPj4gTm8sIHBs
+ZWFzZS4NCj4gPj4gPj4gRFQgYmluZGluZ3Mgc2hvdWxkIHJlZmxlY3QgdGhlIHJlYWwgaGFyZHdh
+cmUsIGFuZCBub3QgdGhlIHNvZnR3YXJlDQo+ID4+ID4+IG1vZGUgd2Ugd2FudCB0aGUgZHJpdmVy
+IHRvIHdvcmsgaW4uDQo+ID4+ID4+IFBsZWFzZSBkZWZpbmUgbWJveC1jZWxscz0xICBhbmQgaGF2
+ZSB0aGUgaS5NWDgqIHBsYXRmb3JtIGFsd2F5cw0KPiA+PiA+PiBhc2sgZm9yIGNoYW5uZWwtMC4N
+Cj4gPj4gPg0KPiA+PiA+IFRoZSByZWFsaXR5IGlzIHRoYXQgTVUgaGFyZHdhcmUgZG9lcyBub3Qg
+ZGVmaW5lIGNoYW5uZWxzIGluDQo+ID4+ID4gcmVmZXJlbmNlDQo+ID4+IG1hbnVhbC4NCj4gPj4g
+PiBIb3dldmVyLCBpdCBkb2VzIGhhdmUgZm91ciBzZXBhcmF0ZSBkYXRhIHR4L3J4IHJlZ2lzdGVy
+IHdoaWNoIGNhbg0KPiA+PiA+IGJlIHVzZWQgYXMgJ3ZpcnR1YWwnIGNoYW5uZWxzIHdoaWNoIGlz
+IHN1cHBvcnRlZCBieSB0aGlzIGN1cnJlbnQgZHJpdmVyLg0KPiA+PiA+DQo+ID4+ID4gU2VlIGJl
+bG93IEhXIGRlc2NyaXB0aW9uIGZyb20gdGhlIHJlZmVyZW5jZSBtYW51YWw6DQo+ID4+ID4gRm9y
+IG1lc3NhZ2luZywgdGhlIE1VIGhhcyBmb3VyLCAzMi1iaXQgd3JpdGUtb25seSB0cmFuc21pdA0K
+PiA+PiA+IHJlZ2lzdGVycyBhbmQgZm91ciwgMzItYml0IHJlYWQtb25seSByZWNlaXZlIHJlZ2lz
+dGVycyBvbiB0aGUNCj4gPj4gPiBQcm9jZXNzb3IgQiBhbmQgUHJvY2Vzc29yIEEtc2lkZXMuIFRo
+ZXNlIHJlZ2lzdGVycyBhcmUgdXNlZCBmb3INCj4gPj4gPiBzZW5kaW5nIG1lc3NhZ2VzIHRvIGVh
+Y2gNCj4gPj4gb3RoZXIuDQo+ID4+ID4NCj4gPj4gRm9yIGEgd2hpbGUgcGxlYXNlIGZvcmdldCB0
+aGUgcHJvdG9jb2wodXNlcikgbGV2ZWwgdXNhZ2UsIGFuZA0KPiA+PiBjb25zaWRlciBvbmx5IHdo
+YXQgeW91ciBoL3cgaXMuDQo+ID4+DQo+ID4+IE1VIGhhcyA0IHBhaXJzIG9mIFRYX1JlZyArIFRY
+X0lSUSwgYW5kIDQgcGFpcnMgb2YgUlhfUmVnICsgUlhfSVJRLg0KPiA+PiAoTVUgYWxzbyBoYXMg
+NCAiZG9vcmJlbGwiIHR5cGUgY2hhbm5lbHMgdGhhdCBpdCBjYWxscyBHUCwgYnV0IHRob3NlDQo+
+ID4+IGFyZSBub3QgbWFuYWdlZCBoZXJlLCBzbyBsZXRzIG5vdCB3b3JyeSBhdG0pLg0KPiA+Pg0K
+PiA+PiBCeSBkZWZpbml0aW9uLCBhIG1haWxib3ggY2hhbm5lbCBpcyBzaW1wbHkgYSBzaWduYWws
+IG9wdGlvbmFsbHkgd2l0aA0KPiA+PiBkYXRhIGF0dGFjaGVkLiBTbywgTVUgaGFzIDQgVFggYW5k
+IDQgUlggY2hhbm5lbHMuDQo+ID4+DQo+ID4+IFRoZSBNVSBkcml2ZXIgc2hvdWxkIHBvcHVsYXRl
+IDggdW5pZGlyZWN0aW9uYWwgKDQgVHggYW5kIDQgUlgpDQo+ID4+IGNoYW5uZWxzIGFuZCBzZXQg
+ZWFjaCB0eC9yeCBvcGVyYXRpb24gdG8gdHJpZ2dlciB0aGUgY29ycmVzcG9uZGluZw0KPiA+PiBp
+bnRlcnJ1cHQuIFRoaXMgaXMgbm90IG15IHdoaW0sIHRoaXMgaXMgaG93IHRoZSBjb250cm9sbGVy
+IGlzIQ0KPiA+Pg0KPiA+DQo+ID4gVGhpcyBsb29rcyBsaWtlIHJlYXNvbmFibGUgdG8gbWUsIHRo
+ZW9yZXRpY2FsbHkuDQo+ID4gSnVzdCBub3Qgc3VyZSB3aGV0aGVyIGl0J3MgbmVjZXNzYXJ5IHRv
+IHN1cHBvcnQgaXQgYmVjYXVzZSB3ZSBwcm9iYWJseQ0KPiA+IHdpbGwgbmV2ZXIgdXNlIGxpa2Ug
+dGhhdCBpbiByZWFsaXR5LCB0aGVuIGl0IG1pZ2h0IGJlY29tZSBtZWFuaW5nbGVzcw0KPiA+IGNv
+bXBsaWNpdHkgaW50cm9kdWNlZCBhbmQgZXJyb3IgcHJvbmUuDQo+ID4NCj4gSXQgX2lzXyBuZWNl
+c3NhcnkgdG8gd3JpdGUgY29udHJvbGxlciBkcml2ZXIgaW5kZXBlbmRlbnQgb2YgY2xpZW50IGRy
+aXZlcnMuDQo+IA0KDQpZZXMsIHRoYXQncyB0cnVlLiBXaGF0IGlmIHdlIHRoaW5rIHdlJ3JlIHdy
+aXRpbmcgZHJpdmVyIGFnYWluc3QgSFcgY2FwYWJpbGl0aWVzDQp3aGljaCBzdXBwb3J0IDQgcGFp
+ciBvZiBjaGFubmVsIGxpbmtzKHR4L3J4KT8gDQpJdCBsb29rcyBsaWtlIGluZGVwZW5kZW50IG9m
+IGNsaWVudCBkcml2ZXJzIGFuZCBtYXkgbWFrZSBsaWZlIGVhc2lseS4NCkRvZXMgaXQgbWFrZSBz
+ZW5zZT8NCg0KPiANCj4gPiBBbmQgQUZBSUsgQVJNIE1IVSBpcyBkb2luZyB0aGUgc2FtZSB3YXkg
+YXMgTVUgd2hpY2ggbG9va3MgbGlrZSBhbHNvDQo+IHVuaWRpcmVjdGlvbmFsIGNoYW5uZWwuDQo+
+ID4NCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3Vy
+bD1odHRwJTNBJTJGJTJGaW5mbw0KPiA+DQo+IGNlbnRlci5hcm0uY29tJTJGaGVscCUyRmluZGV4
+LmpzcCUzRnRvcGljJTNEJTJGY29tLmFybS5kb2MuZGRpMDUxNQ0KPiBiJTJGDQo+ID4NCj4gQ0hE
+R0JHSUYuaHRtbCZhbXA7ZGF0YT0wMiU3QzAxJTdDYWlzaGVuZy5kb25nJTQwbnhwLmNvbSU3Q2I3
+MjgNCj4gMTYzNjI5ODMNCj4gPg0KPiA0MjA4ZjllOTA4ZDVmMzdkM2UwMCU3QzY4NmVhMWQzYmMy
+YjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlDQo+IDdDNjM2Ng0KPiA+DQo+IDgyNjQxNTkz
+Nzg1MDA5JmFtcDtzZGF0YT1Wc0cwb1h4RU9iUFJ3VDVLVnNzMmVadGhTVE1UUjIlMkJNcnYNCj4g
+UHFoRFVwUEdVDQo+ID4gJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4gZHJpdmVycy9tYWlsYm94L2Fy
+bV9taHUuYw0KPiA+DQo+IE1IVSBkcml2ZXIgaXMgZG9pbmcgZXhhY3RseSB3aGF0IHRoZSBkYXRh
+IHNoZWV0IHNheXMuIEkga25vdyBiZWNhdXNlIEkgd3JvdGUNCj4gdGhlIGRyaXZlci4NCj4gDQoN
+CkhtbS4uLiBNYXliZSBJIG1pc3NlZCBzb21ldGhpbmcsIGJ1dCBzZWVtcyBubyBmcm9tIHdoYXQg
+SSBzZWU6DQpodHRwOi8vaW5mb2NlbnRlci5hcm0uY29tL2hlbHAvaW5kZXguanNwP3RvcGljPS9j
+b20uYXJtLmRvYy5kdWkwOTIyZy9DQ0hIR0lBSC5odG1sDQoNCkxldCdzIHNlZSB0aGUgZGF0YSBz
+aGVldDoNCjIuMS4xLiBQaHlzaWNhbCBjaGFubmVscw0KVGhlIENTUyBNSFUgcGVyaXBoZXJhbCBw
+cm92aWRlcyBwaHlzaWNhbCBjaGFubmVscyB0aGF0IGFyZSB1c2VkIGZvciBjb21tdW5pY2F0aW9u
+IGJldHdlZW4NCnRoZSBTQ1AgYW5kIHRoZSBBUC4gIFRoZXNlIGNoYW5uZWxzIGFyZSBjYWxsZWQg
+cGh5c2ljYWwgY2hhbm5lbHMgYmVjYXVzZSB0aGVpciBpbXBsZW1lbnRhdGlvbg0KaXMgZml4ZWQg
+aW4gaGFyZHdhcmUuICBFYWNoIHBoeXNpY2FsIGNoYW5uZWwgaXMgdW5pZGlyZWN0aW9uYWwgKFND
+UCB0byBBUCBvciBBUCB0byBTQ1ApLg0KDQpBIHBoeXNpY2FsIGNoYW5uZWwgY29tcHJpc2VzOg0K
+QSAzMi1iaXQgU1RBVCAoU1RBVFVTKSByZWdpc3RlcjoNCkEgMzItYml0IFNFVCByZWdpc3RlcjoN
+CkEgMzItYml0IENMRUFSIHJlZ2lzdGVyOg0KDQpUaGUgZHJpdmVyIHNlZW1zIGNvbXBvc2VzIHRo
+ZW0gaW50byBhIHBhaXIgb2YgbGlua3Mgd2l0aCBib3RoIHR4IGFuZCByeCBwaHlzaWNhbCBjaGFu
+bmVsLg0KZHJpdmVycy9tYWlsYm94L2FybV9taHUuYw0KI2RlZmluZSBNSFVfQ0hBTlMgICAgICAg
+Mw0KDQpzdHJ1Y3QgbWh1X2xpbmsgew0KICAgICAgICB1bnNpZ25lZCBpcnE7DQogICAgICAgIHZv
+aWQgX19pb21lbSAqdHhfcmVnOw0KICAgICAgICB2b2lkIF9faW9tZW0gKnJ4X3JlZzsNCn07DQoN
+CmZvciAoaSA9IDA7IGkgPCBNSFVfQ0hBTlM7IGkrKykgew0KICAgICAgICBtaHUtPmNoYW5baV0u
+Y29uX3ByaXYgPSAmbWh1LT5tbGlua1tpXTsNCiAgICAgICAgbWh1LT5tbGlua1tpXS5pcnEgPSBh
+ZGV2LT5pcnFbaV07DQogICAgICAgIG1odS0+bWxpbmtbaV0ucnhfcmVnID0gbWh1LT5iYXNlICsg
+bWh1X3JlZ1tpXTsNCiAgICAgICAgbWh1LT5tbGlua1tpXS50eF9yZWcgPSBtaHUtPm1saW5rW2ld
+LnJ4X3JlZyArIFRYX1JFR19PRkZTRVQ7DQp9DQpBbmQgdGhlIGRyaXZlciB0b3RhbGx5IHN1cHBv
+cnRzIDMgbGlua3MgbHAsIGhwIGFuZCBzZWMuIEVhY2ggbGlua3MgYWN0dWFsbHkNCmFyZSB1c2lu
+ZyB0d28gdW5pZGlyZWN0aW9uYWwgcGh5c2ljYWwgY2hhbm5lbHMuIEFtIEkgY29ycmVjdD8NCg0K
+PiANCj4gPj4gVGhlIFNDVSBpcyBwb29ybHkgaW1wbGVtZW50ZWQgYXMgaXQgaWdub3JlcyAzIGly
+cXMgYW5kIGNsdWIgYWxsIDQNCj4gPj4gcmVnaXN0ZXIgdG9nZXRoZXIgKHRoZXJlIGFyZSBtYW55
+IG90aGVyIGNvbnMgb2YgdGhpcyBhcHByb2FjaCBidXQNCj4gPj4gbGV0cyBub3QgZ2V0IGludG8g
+dGhhdCkuDQo+ID4+IFBlcnNvbmFsbHksIEkgd291bGQgcHVzaC1iYWNrIG9uIHN1Y2ggYSBiYWQg
+ZGVzaWduLiBCdXQgaWYgeW91IGNsYWltDQo+ID4+IHlvdSBoYXZlIG5vIGNob2ljZSBidXQgdG8g
+c3VwcG9ydCBTQ1UgYXMgc3VjaCwgdGhlIHdvcmsgYXJvdW5kIGNvdWxkDQo+ID4+IGJlIHNpbXBs
+ZXIgdGhhbiBkZWZpbmluZyBhIG5ldyAic2N1IG1vZGUiIGFsdG9nZXRoZXIuDQo+ID4+DQo+ID4N
+Cj4gPiBUaGlzIGlzIG9uZSBvZiB0aGUgcmVjb21tZW5kZWQgd2F5cyBkZXNpZ25lZCBpbiBIVyBy
+ZWZlcmVuY2UgbWFudWFsDQo+ID4gYW5kIGl0IGFsbG93cyB0byBzZW5kIGZyYW1lIGluZm9ybWF0
+aW9uIHVwIHRvIDQgd29yZHMgd2l0aG91dCB1c2luZyBzaGFyZWQNCj4gbWVtb3J5Lg0KPiA+IFND
+VSBqdXN0IGZvbGxvd3MgaXQsIHNvIGl0J3MgaGFyZCB0byBiZWxpZXZlIGl0J3MgYSBiYWQgZGVz
+aWduLg0KPiA+DQo+ID4+ICNtYm94LWNlbGxzOiAgTXVzdCBiZSAzLg0KPiA+PiAgICAgICAgICAg
+ICAgICAgICAgICAgRmlyc3QgY2VsbCBpcyAxIGZvciBUWCBhbmQgMCBmb3IgUlggY2hhbm5lbA0K
+PiA+PiAgICAgICAgICAgICAgICAgICAgICAgU2Vjb25kIGNlbGwgaXMgaW5kZXggb2YgdGhlIGNo
+YW5uZWwgWzAsMSwyIG9yIDNdDQo+ID4+ICAgICAgICAgICAgICAgICAgICAgICBUaGlyZCBjZWxs
+IGlzIDEgaWYgdGhlIGNoYW5uZWwgdHJpZ2dlcnMgYW4gSVJRLA0KPiA+PiAwIGlmIG5vdC4gVGhh
+dCBpcyBBQ1IuUklFL1RJRSBiaXRzIGFyZSBzZXQgb3Igbm90Lg0KPiA+Pg0KPiA+PiBOb3JtYWwg
+Y2xpZW50cyB3b3VsZCBhbHdheXMgcmVxdWVzdCBhIGNoYW5uZWwgd2l0aCBpcnFzIGVuYWJsZWQu
+DQo+ID4+IFRoZSBTQ1UgY2xpZW50IHdvdWxkIHJlcXVlc3QgYWxsIDggY2hhbm5lbHMgLS0gVFgv
+UlhbMCwxLDJdIHdpdGggaXJxcw0KPiA+PiBkaXNhYmxlZCwgVFgvUlhbM10gd2l0aCBpcnFzIGVu
+YWJsZWQuIEFuZCBTQ1Ugd2lsbCByZWFkL3dyaXRlIDQgd29yZA0KPiA+PiBkYXRhIG92ZXIgNCBy
+eC90eCBjaGFubmVscywgaW5zdGVhZCBvZiB0aGUgdmlydHVhbGx5IGNvbmNvY3RlZCBvbmUuDQo+
+ID4+DQo+ID4NCj4gPiBJdCBtYXkgd29yayBJZiBTQ1UgcHJvdG9jb2wgZGF0YSBsZW5ndGggaXMg
+Zml4ZWQgdG8gNCB3b3Jkcy4gSG93ZXZlciwNCj4gPiBpdCdzIGxlbmd0aCBpcyBmbGV4aWJsZSBm
+b3IgZGlmZmVyZW50IFNWQyBzZXJ2aWNlLiBUaGF0IG1lYW5zIHRoaXMgYmluZGluZw0KPiB3b24n
+dCB3b3JrIGZvciBTQ1UuDQo+ID4gQW5kIGl0IHdpbGwgaW50cm9kdWNlIG11Y2ggY29tcGxleGl0
+aWVzIGR1cmluZyB0aGUgaW1wbGVtZW50YXRpb24uDQo+ID4NCj4gPiBJbnN0ZWFkLCB3ZSdyZSB1
+c2luZyBwb2xsaW5nIG1vZGUgZm9yIGJvdGggVFgvUlggYW5kIHRoZSBkYXRhIHNpemUgaXMNCj4g
+PiBzdG9yZWQgaW4gdGhlIG1zZyBoZWFkZXIgYW5kIHNlbmRpbmcgbXNncyB1c2luZyBhbGwgNCBk
+YXRhIHR4L3J4IHJlZ2lzdGVycw0KPiBhcyBhIGNoYW5uZWwgZmlmby4NCj4gPg0KPiBZb3UgZmly
+c3QgZ2l2ZSBtZSB0aGUgIlBhc3Npbmcgc2hvcnQgbWVzc2FnZXMiIHVzZWNhc2UgKHF1aXRlIGEg
+YmFkDQo+IG9uZSkgYW5kIGFzayBob3cgaXQgY2FuIHdvcmsuIFdoZW4gSSBnaXZlIHlvdSBhIHNv
+bHV0aW9uLCB5b3UgZWZmZWN0aXZlbHkgc2F5DQo+ICJ3ZWxsLCBteSB1c2VjYXNlIGlzbid0IGV2
+ZW4gdGhhdCIuIEkgZmVlbCBJIGp1c3Qgd2FzdGVkIG15IHRpbWUuDQo+IA0KDQpTb3JyeSBmb3Ig
+bWF5IG5vdCBjbGVhciwgIlBhc3Npbmcgc2hvcnQgbWVzc2FnZScgdXNlY2FzZSBpcyB0byB0ZWxs
+IGhvdyB0aGUNCkhXIGlzIHdvcmtpbmcgb24gb25lIGNoYW5uZWwgbW9kZSBzZW5kaW5nIHVwIHRv
+IDQgd29yZHMgaW4gb25lIHRpbWUNCkFzIHNwZWNpZmllZCBpbiByZWZlcmVuY2UgbWFudWFsLg0K
+DQpTQ1UgZG9lcyB3b3JrIHRoYXQgd2F5LCB0aGUgb25seSBkaWZmZXJlbmNlIGlzIGl0J3MgdXNp
+bmcgcG9sbGluZyBtb2RlDQpyYXRoZXIgdGhhbiBpbnRlcnJ1cHQgZHJpdmVuLiAgVGhlIHBvaW50
+IGlzIHRoZSBkYXRhIHNpemUgbWF5IGJlIGRpZmZlcmVudA0KZm9yIGVhY2ggbXNnLCBzbyB3ZSBj
+YW4ndCBzaW1wbHkga25vdyB3aGljaCBkYXRhIHJlZ2lzdGVyIGludGVycnVwdA0Kc2hvdWxkIGJl
+IGVuYWJsZSBmcm9tIHN0YXRpYyBkYXRhIGRlZmluZWQgaW4gZGV2aWNlIHRyZWUuDQoNCj4gDQo+
+ID4+DQo+ID4+ID4gc2hvcnQgbWVzc2FnZXMNCj4gPj4gPiBUcmFuc21pdCByZWdpc3RlcihzKSBj
+YW4gYmUgdXNlZCB0byBwYXNzIHNob3J0IG1lc3NhZ2VzIGZyb20gb25lIHRvDQo+ID4+ID4gZm91
+ciB3b3JkcyBpbiBsZW5ndGguIEZvciBleGFtcGxlLCB3aGVuIGEgZm91ci13b3JkIG1lc3NhZ2Ug
+aXMNCj4gPj4gPiBkZXNpcmVkLCBvbmx5IG9uZSBvZiB0aGUgcmVnaXN0ZXJzIG5lZWRzIHRvIGhh
+dmUgaXRzIGNvcnJlc3BvbmRpbmcNCj4gPj4gPiBpbnRlcnJ1cHQgZW5hYmxlIGJpdCBzZXQgYXQg
+dGhlIHJlY2VpdmVyIHNpZGU7IHRoZSBtZXNzYWdl4oCZcyBmaXJzdA0KPiA+PiA+IHRocmVlIHdv
+cmRzIGFyZSB3cml0dGVuIHRvIHRoZSByZWdpc3RlcnMgd2hvc2UgaW50ZXJydXB0IGlzIG1hc2tl
+ZCwNCj4gPj4gPiBhbmQgdGhlIGZvdXJ0aCB3b3JkIGlzIHdyaXR0ZW4gdG8gdGhlIG90aGVyIHJl
+Z2lzdGVyICh3aGljaA0KPiA+PiA+IHRyaWdnZXJzIGFuDQo+ID4+IGludGVycnVwdCBhdCB0aGUg
+cmVjZWl2ZXIgc2lkZSkuDQo+ID4+ID4NCj4gPj4gPiBUaGUgcmVmZXJlbmNlIG1hbnVhbCBpcyBh
+dCBoZXJlOiAoQ2hhcHRlciA0MiBNZXNzYWdpbmcgVW5pdCAoTVUpDQo+ID4+ID4NCj4gPj4NCj4g
+aHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRw
+cyUzQSUyRiUyRncNCj4gPj4gd3cNCj4gPj4gPiAubnhwLmNvbSUyRmRvY3MlMkZlbiUyRnJlZmVy
+ZW5jZS0NCj4gPj4gbWFudWFsJTJGSU1YNlVMUk0ucGRmJmFtcDtkYXRhPTAyJTdDMA0KPiA+PiA+
+DQo+ID4+DQo+IDElN0NhaXNoZW5nLmRvbmclNDBueHAuY29tJTdDZWYzNDlkN2M5Y2FmNDZjNDI2
+MDAwOGQ1ZjMwZTllZjUlN0M2DQo+ID4+IDg2ZWExDQo+ID4+ID4NCj4gPj4NCj4gZDNiYzJiNGM2
+ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjY4MjE2NjQ5NDg2MDMzMiZhbXA7c2RhdA0K
+PiA+PiBhPTU0ckUNCj4gPj4gPg0KPiA+Pg0KPiBpRG0lMkJHRDZFWThORTY0Y2sxTFhWR29VQ3RX
+WXJIWFBvV3FjdWpVbyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+PiA+DQo+ID4+ID4gQW5kIFNDVSBm
+aXJtd2FyZSBkb2VzIHVzZSBNVSBpbiBhYm92ZSB3YXkgc3BlY2lmaWVkIGJ5IHJlZmVyZW5jZQ0K
+PiA+PiBtYW51YWwuDQo+ID4+ID4gRXZlbiBmcm9tIEhXIHBvaW50IG9mIHZpZXcsIGl0J3Mgc3Rp
+bGwgb25lIGNoYW5uZWwgb25seSBtYWlsYm94Lg0KPiA+PiA+DQo+ID4+IFBsZWFzZSByZWFsaXNl
+IHRoYXQgYW55IG1hbnVhbCBpcyB3cml0dGVuIGJ5IGEgbWVyZSBtb3J0YWwgYWZ0ZXJhbGwuDQo+
+ID4+IEhvdyB0aGUgY29udHJvbGxlciB3b3JrcyBpcyBzZXQgaW4gc3RvbmUsIGJ1dCBob3cgdGhl
+IGNvbnRyb2xsZXIgY2FuDQo+ID4+IGJlIHVzZWQgLi4uIGlzIGp1c3Qgc29tZW9uZXMgc3VnZ2Vz
+dGlvbi4NCj4gPj4NCj4gPj4gVGhlIGFwcHJvYWNoIEkgc3VnZ2VzdCBhYm92ZSwgY29uZm9ybXMg
+dG8gdGhlIGFwaSBhbmQgcHJldmVudHMgYQ0KPiA+PiBwcm92aWRlciBkYW5jaW5nIHRvIHRoZSB0
+dW5lcyBvZiBhIHVzZXIuDQo+ID4NCj4gPiBGaXJzdCBvZiBhbGwsIHJlYWxseSBhcHByZWNpYXRl
+IGZvciB5b3VyIHN1Z2dlc3Rpb25zLg0KPiA+IEl0IG1heSBiZSBoYXJkIHRvIGZpbmQgYSBjb21t
+b24gYmluZGluZyB3aXRoIHRoZSBzYW1lIG1ib3gtY2VsbHMuDQo+ID4gSXQgbG9va3MgbGlrZSB3
+ZSBqdXN0IG5lZWQgYSBwcm9wZXJ0eSBpcyBkaXN0aW5ndWlzaCBob3cgdGhlIE1haWxib3gNCj4g
+PiBpcyB1c2VkIEluIG9uZSBjaGFubmVsIG9yIG11bHRpIGNoYW5uZWwgbW9kZS4NCj4gPg0KPiBJ
+IGdldCB0aGUgaWRlYSB5b3Ugd2VyZSByZWFkeSB0byBzZWUgdGhlIGNvZGUgbWVyZ2VkIGluIHRo
+ZSBjb21pbmcgd2luZG93DQo+IGFuZCBiZSBkb25lIHdpdGggaXQuIEFuZCBub3cgaXQgZmVlbHMg
+bGF6eSB0byBjaGFuZ2UgdGhlIGNvZGUuDQoNCkZvciBtZSwgSSdtIGdsYWQgdG8gY2hhbmdlIGlm
+IHdlIGhhdmUgYSBjbGVhciBiZXR0ZXIgc29sdXRpb24uDQpBbmQgSSBkbyBhcHByZWNpYXRlIHlv
+dXIgc3VnZ2VzdGlvbiBhbmQgcmV2aWV3IHRpbWUuDQoNCldoeSBJJ20gYSBiaXQgaGVzaXRhdGUg
+bm93IGlzIGJlY2F1c2UgeW91ciBzdWdnZXN0aW9uIG1heSBub3Qgd29yayBmb3IgU0NVLA0KKHNl
+ZSBhYm92ZSBleHBsYW5hdGlvbiksIGJ1dCBpdCBkb2VzIHdvcmsgZm9yIGdlbmVyaWMgTTQgY2Fz
+ZS4NCkJ1dCB3ZScgcmUgbm93IGdvaW5nIHRvIHN1cHBvcnQgYm90aCBwcm90b2NvbCBpbiBvbmUg
+bWFpbGJveCBkcml2ZXIuDQpBbnkgc3VnZ2VzdGlvbiBvbiBob3cgdG8gdHJlYXQgdGhlbSBwcm9w
+ZXJseSBpZiBjaGFuZ2UgdGhlIGJpbmRpbmc/DQoNCj4gSSBhbSBzb3JyeSwgYnV0IEkgY2FuJ3Qg
+YWxsb3cgY29udHJvbGxlciBkcml2ZXJzICJlbXVsYXRpbmciIHNvbWUgbW9kZSBmb3IgYQ0KPiBj
+bGllbnQgZHJpdmVyLiBUaGF0IGlzIG1vdmluZyBhIHBhcnQgb2YgY2xpZW50IGNvZGUgaW50byB0
+aGUgY29udHJvbGxlciBkcml2ZXIuDQo+IA0KDQpPa2F5LCBsZXQncyBmaWd1cmUgb3V0IGl0IGZp
+cnN0Lg0KV291bGQgeW91IGJlIG1vcmUgc3BlY2lmaWMgb24gd2hhdCAiZW11bGF0aW5nIiBkaWQg
+eW91IG1lYW4gaW4gY29udHJvbGxlciBkcml2ZXI/DQpTZW5kaW5nIHVwIHRvIDQgd29yZHMgY2Fw
+YWJpbGl0eSBpbiBvbmUgY2hhbm5lbCBtb2RlIGFzIHNwZWNpZmllZCBpbiByZWZlcmVuY2UgbWFu
+dWFsPw0KVGhhdCdzIEknbSBhIGJpdCBjb25mdXNpbmcgYmVjYXVzZSBJIHRob3VnaHQgaXQncyBI
+VyBjYXBhYmlsaXR5IGluZGVwZW5kZW50IG9mIGNsaWVudCBkcml2ZXIuDQoNCk9yIGFueXRoaW5n
+IGVsc2U/DQoNCj4gDQo+ID4gRGlyZWN0bHkgY2hlY2tpbmcgbWJveC1jZWxscyBzZWVtcyB0aGUg
+bW9zdCBlYXN5IHdheSBhbmQgaXQgaXMgYWxyZWFkeQ0KPiA+IEFja2VkIGJ5IFJvYi4gQ2FuJ3Qg
+dGhpcyB3YXkgYmUgT2theSB0byB5b3U/DQo+ID4NCj4gUm9iIGlzIGluZGVlZCBmYXIgYmV0dGVy
+IHRoYW4gSSBhbS4gQnV0IGhlIGFsc28gaGFzIHRvIGxvb2sgaW50byAxMDAgb3RoZXINCj4gc3Vi
+c3lzdGVtcywgd2hlcmVhcyBJIGFtIG9ubHkgbG9va2luZyBpbnRvIG1haWxib3guIEkgaGF2ZSB0
+aW1lIHRvIGRpZyBpbnRvDQo+IHlvdXIgZGF0YXNoZWV0cy4gSSBiZWxpZXZlIFJvYiB3aWxsIHBv
+aW50IG91dCBhbnl0aGluZyB3cm9uZyBJIHN1Z2dlc3QuDQo+IA0KDQpZZXMsIHlvdSdyZSBpbiB0
+aGUgZmFpciBlbm91Z2ggYXV0aG9yaXR5IHRvIGp1ZGdlIGl0LiBUaGFua3MgZm9yIHlvdXIgZWZm
+b3J0Lg0KDQo+IEJUVywgdGhlIHN1Ym1pdHRlZCBkcml2ZXIgZG9lc24ndCBldmVuIHN1cHBvcnQg
+dGhlIFNDVSB1c2VjYXNlLiBXaHkgdGhlDQo+IGJpbmRpbmdzPw0KDQpCZWNhdXNlIHRoYXQgcGF0
+Y2ggaXMgZmlyc3RseSBBY2tlZCBieSBSb2IuIE90aGVycyBhcmUgcmV3b3JrZWQgYW5kIHJlYWR5
+IHRvIGJlIHNlbnQNCm91dCBhZ2FpbnN0IHRoaXMgcGF0Y2ggc2VyaWVzLiBCdXQgaXQgc2VlbXMg
+d2Ugc3RpbGwgaGF2ZSB1bnJlc29sdmVkIGlzc3VlcyBub3cgYXMgeW91DQpwb2ludGVkIG91dC4g
+V2UgY2FuIGZpcnN0IHJlc29sdmUgdGhlbS4gT3IgZG8geW91IG5lZWQgbWUgdG8gc2VuZCBvdXQg
+Zm9yIHlvdXIgcmVmZXJlbmNlPw0KDQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0KDQpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
