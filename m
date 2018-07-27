@@ -1,120 +1,124 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v1 0/6] Resolve unwanted DMA backing with IOMMU
-Date: Fri, 27 Jul 2018 20:16:53 +0300
-Message-ID: <2402373.RyBdR7VSnO@dimapc>
-References: <20180726231624.21084-1-digetx@gmail.com>
-	<daadd395-dcb7-9505-f171-0fcc28570301@arm.com>
-	<20180727170326.GA21283@jcrouse-lnx.qualcomm.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v7 08/12] mfd: intel-peci-client: Add PECI client MFD
+ driver
+Date: Fri, 27 Jul 2018 10:36:15 -0700
+Message-ID: <acffdfef-cb20-4208-5297-d94bac5ecb1b@linux.intel.com>
+References: <20180723214751.1733-1-jae.hyun.yoo@linux.intel.com>
+ <20180723214751.1733-9-jae.hyun.yoo@linux.intel.com>
+ <20180727082611.GE4628@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180727170326.GA21283-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Chauvet <kwizart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180727082611.GE4628@dell>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
 List-Id: devicetree@vger.kernel.org
 
-On Friday, 27 July 2018 20:03:26 MSK Jordan Crouse wrote:
-> On Fri, Jul 27, 2018 at 05:02:37PM +0100, Robin Murphy wrote:
-> > On 27/07/18 15:10, Dmitry Osipenko wrote:
-> > >On Friday, 27 July 2018 12:03:28 MSK Will Deacon wrote:
-> > >>On Fri, Jul 27, 2018 at 10:25:13AM +0200, Joerg Roedel wrote:
-> > >>>On Fri, Jul 27, 2018 at 02:16:18AM +0300, Dmitry Osipenko wrote:
-> > >>>>The proposed solution adds a new option to the base device driver
-> > >>>>structure that allows device drivers to explicitly convey to the
-> > >>>>drivers
-> > >>>>core that the implicit IOMMU backing for devices must not happen.
-> > >>>
-> > >>>Why is IOMMU mapping a problem for the Tegra GPU driver?
-> > >>>
-> > >>>If we add something like this then it should not be the choice of the
-> > >>>device driver, but of the user and/or the firmware.
-> > >>
-> > >>Agreed, and it would still need somebody to configure an identity domain
-> > >>so
-> > >>that transactions aren't aborted immediately. We currently allow the
-> > >>identity domain to be used by default via a command-line option, so I
-> > >>guess
-> > >>we'd need a way for firmware to request that on a per-device basis.
-> > >
-> > >The IOMMU mapping itself is not a problem, the problem is the management
-> > >of
-> > >the IOMMU. For Tegra we don't want anything to intrude into the IOMMU
-> > >activities because:
-> > >
-> > >1) GPU HW require additional configuration for the IOMMU usage and dumb
-> > >mapping of the allocations simply doesn't work.
-> > 
-> > Generally, that's already handled by the DRM drivers allocating
-> > their own unmanaged domains. The only problem we really need to
-> > solve in that regard is that currently the device DMA ops don't get
-> > updated when moving away from the managed domain. That's been OK for
-> > the VFIO case where the device is bound to a different driver which
-> > we know won't make any explicit DMA API calls, but for the more
-> > general case of IOMMU-aware drivers we could certainly do with a bit
-> > of cooperation between the IOMMU API, DMA API, and arch code to
-> > update the DMA ops dynamically to cope with intermediate subsystems
-> > making DMA API calls on behalf of devices they don't know the
-> > intimate details of.
-> > 
-> > >2) Older Tegra generations have a limited resource and capabilities in
-> > >regards to IOMMU usage, allocating IOMMU domain per-device is just
-> > >impossible for example.
-> > >
-> > >3) HW performs context switches and so particular allocations have to be
-> > >assigned to a particular contexts IOMMU domain.
-> > 
-> > I understand Qualcomm SoCs have a similar thing too, and AFAICS that
-> > case just doesn't fit into the current API model at all. We need the
-> > IOMMU driver to somehow know about the specific details of which
-> > devices have magic associations with specific contexts, and we
-> > almost certainly need a more expressive interface than
-> > iommu_domain_alloc() to have any hope of reliable results.
+Hi Lee,
+
+On 7/27/2018 1:26 AM, Lee Jones wrote:
+> On Mon, 23 Jul 2018, Jae Hyun Yoo wrote:
 > 
-> This is correct for Qualcomm GPUs - The GPU hardware context switching
-> requires a specific context and there are some restrictions around
-> secure contexts as well.
+>> This commit adds PECI client MFD driver.
+>>
+>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Andrew Jeffery <andrew@aj.id.au>
+>> Cc: James Feist <james.feist@linux.intel.com>
+>> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+>> Cc: Joel Stanley <joel@jms.id.au>
+>> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
+>> ---
+>>   drivers/mfd/Kconfig                   |  14 ++
+>>   drivers/mfd/Makefile                  |   1 +
+>>   drivers/mfd/intel-peci-client.c       | 182 ++++++++++++++++++++++++++
+>>   include/linux/mfd/intel-peci-client.h |  81 ++++++++++++
+>>   4 files changed, 278 insertions(+)
+>>   create mode 100644 drivers/mfd/intel-peci-client.c
+>>   create mode 100644 include/linux/mfd/intel-peci-client.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index f3fa516011ec..e38b591479d4 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -595,6 +595,20 @@ config MFD_INTEL_MSIC
+>>   	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
+>>   	  devices used in Intel Medfield platforms.
+>>   
+>> +config MFD_INTEL_PECI_CLIENT
+>> +	bool "Intel PECI client"
+>> +	depends on (PECI || COMPILE_TEST)
+>> +	select MFD_CORE
+>> +	help
+>> +	  If you say yes to this option, support will be included for the
+>> +	  multi-funtional Intel PECI (Platform Environment Control Interface)
+>> +	  client. PECI is a one-wire bus interface that provides a communication
+>> +	  channel from PECI clients in Intel processors and chipset components
+>> +	  to external monitoring or control devices.
+>> +
+>> +	  Additional drivers must be enabled in order to use the functionality
+>> +	  of the device.
+>> +
+>>   config MFD_IPAQ_MICRO
+>>   	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
+>>   	depends on SA1100_H3100 || SA1100_H3600
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 2852a6042ecf..29e2cacc58bd 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -203,6 +203,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
+>>   obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
+>>   obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
+>>   obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
+>> +obj-$(CONFIG_MFD_INTEL_PECI_CLIENT)	+= intel-peci-client.o
+>>   obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+>>   obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+>>   obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+>> diff --git a/drivers/mfd/intel-peci-client.c b/drivers/mfd/intel-peci-client.c
+>> new file mode 100644
+>> index 000000000000..d7702cf1ea50
+>> --- /dev/null
+>> +++ b/drivers/mfd/intel-peci-client.c
+>> @@ -0,0 +1,182 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2018 Intel Corporation
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/mfd/intel-peci-client.h>
+>> +#include <linux/module.h>
+>> +#include <linux/peci.h>
+>> +#include <linux/of_device.h>
+>> +
+>> +enum cpu_gens {
+>> +	CPU_GEN_HSX = 0, /* Haswell Xeon */
+>> +	CPU_GEN_BRX,     /* Broadwell Xeon */
+>> +	CPU_GEN_SKX,     /* Skylake Xeon */
+>> +};
+>> +
+>> +static struct mfd_cell peci_functions[] = {
+>> +	{
+>> +		.name = "peci-cputemp",
+>> +		.of_compatible = "intel,peci-cputemp",
+>> +	},
+>> +	{
+>> +		.name = "peci-dimmtemp",
+>> +		.of_compatible = "intel,peci-dimmtemp",
+>> +	},
+>> +};
 > 
-> We don't really care if the DMA attaches to a context just as long as it
-> doesn't attach to the one(s) we care about. Perhaps a "valid context" mask
-> would work in from the DT or the device struct to give the subsystems a
-> clue as to which domains they were allowed to use. I recognize that there
-> isn't a one-size-fits-all solution to this problem so I'm open to different
-> ideas.
+> The more I look at this driver, the less I think it fits into MFD.
+> 
+> What's stopping you from registering these devices directly from DT?
+> 
 
-Designating whether implicit IOMMU backing is appropriate for a device via 
-device-tree property sounds a bit awkward because that will be a kinda 
-software description (of a custom Linux driver model), while device-tree is 
-supposed to describe HW.
+Because DT doesn't allow 2 nodes at the same address so Rob suggested
+MFD for this case.
 
-What about to grant IOMMU drivers with ability to decide whether the implicit 
-backing for a device is appropriate? Like this:
+Thanks,
 
-bool implicit_iommu_for_dma_is_allowed(struct device *dev)
-{
-	const struct iommu_ops *ops = dev->bus->iommu_ops;
-	struct iommu_group *group;
-
-	group = iommu_group_get(dev);
-	if (!group)
-		return NULL;
-
-	iommu_group_put(group);
-
-	if (!ops->implicit_iommu_for_dma_is_allowed)
-		return true;
-
-	return ops->implicit_iommu_for_dma_is_allowed(dev);
-}
-
-Then arch_setup_dma_ops() could have a clue whether implicit IOMMU backing for 
-a device is appropriate.
+Jae
