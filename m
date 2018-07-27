@@ -1,482 +1,100 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v3.1 10/10] arm64: dts: allwinner: a64:
- Enable HDMI output on A64 boards w/ HDMI
-Date: Fri, 27 Jul 2018 08:44:00 +0800
-Message-ID: <615A272A-A739-4EDE-9AF4-4FC2822F3E3F@aosc.io>
-References: <20180726171257.6688-1-icenowy@aosc.io> <20180726171257.6688-11-icenowy@aosc.io> <1571011.jY5lUBhtiX@jernej-laptop>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: RE: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic-stby-poweroff property
+Date: Fri, 27 Jul 2018 01:51:35 +0000
+Message-ID: <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+References: <20180726092220.17250-1-o.rempel@pengutronix.de>
+ <20180726092220.17250-2-o.rempel@pengutronix.de>
+ <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBZOV5HNAKGQEECDSZMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1571011.jY5lUBhtiX@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org=?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-=E4=BA=8E 2018=E5=B9=B47=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882:=
-03:00, "Jernej =C5=A0krabec" <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> =E5=86=99=E5=88=B0:
->Dne =C4=8Detrtek, 26. julij 2018 ob 19:12:57 CEST je Icenowy Zheng
->napisal(a):
->> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>=20
->> Enable all necessary device tree nodes and add connector node to
->device
->> trees for all supported A64 boards with HDMI.
->>=20
->> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> [Icenowy: squash all board patches altogether and change supply name]
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> ---
->> Changes in v3,1:
->> - Squash all enablement patches altogether.
->> - Change supply name to match DT binding & driver change.
->> Changes for v3:
->> - Enable all pipeline components
->> Changes for v2:
->> - none
->>=20
->>  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 34
->+++++++++++++++++++
->>  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 34
->+++++++++++++++++++
->>  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 34
->+++++++++++++++++++
->>  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 34
->+++++++++++++++++++
->>  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 34
->+++++++++++++++++++
->>  .../allwinner/sun50i-a64-sopine-baseboard.dts | 34
->+++++++++++++++++++
->>  6 files changed, 204 insertions(+)
->>=20
->> diff --git
->a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
->> b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts index
->> 094cfed13df9..0d8f5571d574 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
->> @@ -60,6 +60,17 @@
->>  		stdout-path =3D "serial0:115200n8";
->>  	};
->>=20
->> +	connector {
->> +		compatible =3D "hdmi-connector";
->> +		type =3D "a";
->> +
->> +		port {
->> +			hdmi_con_in: endpoint {
->> +				remote-endpoint =3D <&hdmi_out_con>;
->> +			};
->> +		};
->> +	};
->> +
->>  	leds {
->>  		compatible =3D "gpio-leds";
->>=20
->> @@ -86,6 +97,10 @@
->>  	};
->>  };
->>=20
->> +&de {
->> +	status =3D "okay";
->> +};
->> +
->>  &ehci0 {
->>  	status =3D "okay";
->>  };
->> @@ -103,6 +118,17 @@
->>  	status =3D "okay";
->>  };
->>=20
->> +&hdmi {
->> +	hdmi-supply =3D <&reg_dldo1>;
->> +	status =3D "okay";
->> +};
->> +
->> +&hdmi_out {
->> +	hdmi_out_con: endpoint {
->> +		remote-endpoint =3D <&hdmi_con_in>;
->> +	};
->> +};
->> +
->>  &i2c1 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&i2c1_pins>;
->> @@ -120,6 +146,10 @@
->>  	};
->>  };
->>=20
->> +&mixer1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &mmc0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&mmc0_pins>;
->> @@ -300,6 +330,10 @@
->>  	vcc-hdmi-supply =3D <&reg_dldo1>;
->>  };
->>=20
->> +&tcon1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &uart0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&uart0_pins_a>;
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
->> b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts index
->> 98dbff19f5cc..2bcf02f46366 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
->> @@ -57,6 +57,21 @@
->>  	chosen {
->>  		stdout-path =3D "serial0:115200n8";
->>  	};
->> +
->> +	connector {
->> +		compatible =3D "hdmi-connector";
->> +		type =3D "a";
->> +
->> +		port {
->> +			hdmi_con_in: endpoint {
->> +				remote-endpoint =3D <&hdmi_out_con>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&de {
->> +	status =3D "okay";
->>  };
->>=20
->>  &ehci0 {
->> @@ -67,6 +82,17 @@
->>  	status =3D "okay";
->>  };
->>=20
->> +&hdmi {
->> +	hdmi-supply =3D <&reg_dldo1>;
->> +	status =3D "okay";
->> +};
->> +
->> +&hdmi_out {
->> +	hdmi_out_con: endpoint {
->> +		remote-endpoint =3D <&hdmi_con_in>;
->> +	};
->> +};
->> +
->>  /* i2c1 connected with gpio headers like pine64, bananapi */
->>  &i2c1 {
->>  	pinctrl-names =3D "default";
->> @@ -78,6 +104,10 @@
->>  	bias-pull-up;
->>  };
->>=20
->> +&mixer1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &mmc0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&mmc0_pins>;
->> @@ -199,6 +229,10 @@
->>  	vcc-hdmi-supply =3D <&reg_dldo1>;
->>  };
->>=20
->> +&tcon1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &uart0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&uart0_pins_a>;
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
->> b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts index
->> 3f531393eaee..5445a7a1db51 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
->> @@ -58,12 +58,42 @@
->>  		stdout-path =3D "serial0:115200n8";
->>  	};
->>=20
->> +	connector {
->> +		compatible =3D "hdmi-connector";
->> +		type =3D "a";
->> +
->> +		port {
->> +			hdmi_con_in: endpoint {
->> +				remote-endpoint =3D <&hdmi_out_con>;
->> +			};
->> +		};
->> +	};
->> +
->>  	wifi_pwrseq: wifi_pwrseq {
->>  		compatible =3D "mmc-pwrseq-simple";
->>  		reset-gpios =3D <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
->>  	};
->>  };
->>=20
->> +&de {
->> +	status =3D "okay";
->> +};
->> +
->> +&hdmi {
->> +	hdmi-supply =3D <&reg_dldo1>;
->> +	status =3D "okay";
->> +};
->> +
->> +&hdmi_out {
->> +	hdmi_out_con: endpoint {
->> +		remote-endpoint =3D <&hdmi_con_in>;
->> +	};
->> +};
->> +
->> +&mixer1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &mmc0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&mmc0_pins>;
->> @@ -218,6 +248,10 @@
->>  	vcc-hdmi-supply =3D <&reg_dldo1>;
->>  };
->>=20
->> +&tcon1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &uart0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&uart0_pins_a>;
->> diff --git
->a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
->> b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts index
->> 1221764f5719..81a8f92c6c35 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
->> @@ -57,12 +57,42 @@
->>  	chosen {
->>  		stdout-path =3D "serial0:115200n8";
->>  	};
->> +
->> +	connector {
->> +		compatible =3D "hdmi-connector";
->> +		type =3D "a";
->> +
->> +		port {
->> +			hdmi_con_in: endpoint {
->> +				remote-endpoint =3D <&hdmi_out_con>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&de {
->> +	status =3D "okay";
->>  };
->>=20
->>  &ehci1 {
->>  	status =3D "okay";
->>  };
->>=20
->> +&hdmi {
->> +	hdmi-supply =3D <&reg_dldo1>;
->> +	status =3D "okay";
->> +};
->> +
->> +&hdmi_out {
->> +	hdmi_out_con: endpoint {
->> +		remote-endpoint =3D <&hdmi_con_in>;
->> +	};
->> +};
->> +
->> +&mixer1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &mmc0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&mmc0_pins>;
->> @@ -195,6 +225,10 @@
->>  	vcc-hdmi-supply =3D <&reg_dldo1>;
->>  };
->>=20
->> +&tcon1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &uart0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&uart0_pins_a>;
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->> b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts index
->> 1b9b92e541d2..1b972bade9f6 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->> @@ -62,6 +62,21 @@
->>  	chosen {
->>  		stdout-path =3D "serial0:115200n8";
->>  	};
->> +
->> +	connector {
->> +		compatible =3D "hdmi-connector";
->> +		type =3D "a";
->> +
->> +		port {
->> +			hdmi_con_in: endpoint {
->> +				remote-endpoint =3D <&hdmi_out_con>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&de {
->> +	status =3D "okay";
->>  };
->>=20
->>  &ehci0 {
->> @@ -82,6 +97,17 @@
->>=20
->>  };
->>=20
->> +&hdmi {
->> +	hdmi-supply =3D <&reg_dldo1>;
->> +	status =3D "okay";
->> +};
->> +
->> +&hdmi_out {
->> +	hdmi_out_con: endpoint {
->> +		remote-endpoint =3D <&hdmi_con_in>;
->> +	};
->> +};
->> +
->>  &i2c1 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&i2c1_pins>;
->> @@ -99,6 +125,10 @@
->>  	};
->>  };
->>=20
->> +&mixer1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &mmc0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&mmc0_pins>;
->> @@ -238,6 +268,10 @@
->>  	status =3D "disabled";
->>  };
->>=20
->> +&tcon1 {
->> +	status =3D "okay";
->> +};
->> +
->>  /* On Exp and Euler connectors */
->>  &uart0 {
->>  	pinctrl-names =3D "default";
->> diff --git
->a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
->> b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts index
->> c21f2331add6..eff44b069b1d 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
->> @@ -61,6 +61,17 @@
->>  		stdout-path =3D "serial0:115200n8";
->>  	};
->>=20
->> +	connector {
->> +		compatible =3D "hdmi-connector";
->> +		type =3D "a";
->> +
->> +		port {
->> +			hdmi_con_in: endpoint {
->> +				remote-endpoint =3D <&hdmi_out_con>;
->> +			};
->> +		};
->> +	};
->> +
->>  	reg_vcc1v8: vcc1v8 {
->>  		compatible =3D "regulator-fixed";
->>  		regulator-name =3D "vcc1v8";
->> @@ -69,6 +80,10 @@
->>  	};
->>  };
->>=20
->> +&de {
->> +	status =3D "okay";
->> +};
->> +
->>  &ehci0 {
->>  	status =3D "okay";
->>  };
->> @@ -86,6 +101,17 @@
->>  	status =3D "okay";
->>  };
->>=20
->> +&hdmi {
->> +	hdmi-supply =3D <&reg_dldo1>;
->> +	status =3D "okay";
->> +};
->> +
->> +&hdmi_out {
->> +	hdmi_out_con: endpoint {
->> +		remote-endpoint =3D <&hdmi_con_in>;
->> +	};
->> +};
->> +
->>  &mdio {
->>  	ext_rgmii_phy: ethernet-phy@1 {
->>  		compatible =3D "ethernet-phy-ieee802.3-c22";
->> @@ -93,6 +119,10 @@
->>  	};
->>  };
->>=20
->> +&mixer1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &mmc2 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&mmc2_pins>;
->> @@ -138,6 +168,10 @@
->>  	vcc-hdmi-supply =3D <&reg_dldo1>;
->
->How is it possible to have vcc-hdmi-supply already defined? Did I miss
-
-It's for simplefb.
-
->some=20
->patch?
->
->Best regards,
->Jernej
->
->>  };
->>=20
->> +&tcon1 {
->> +	status =3D "okay";
->> +};
->> +
->>  &uart0 {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&uart0_pins_a>;
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogT2xla3NpaiBSZW1wZWwg
+W21haWx0bzpvLnJlbXBlbEBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogMjAxOMTqN9TCMjbI1SAx
+OTozOA0KPiBUbzogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPjsgU2hhd24gR3VvIDxz
+aGF3bmd1b0BrZXJuZWwub3JnPjsNCj4gTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPjsg
+UmFmYWVsIEouIFd5c29ja2kNCj4gPHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KPiBDYzog
+a2VybmVsQHBlbmd1dHJvbml4LmRlOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1jbGtAdmdlci5rZXJuZWwu
+b3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBBbmRyZXcgTW9ydG9uIDxha3Bt
+QGxpbnV4LWZvdW5kYXRpb24ub3JnPjsNCj4gTGlhbSBHaXJkd29vZCA8bGdpcmR3b29kQGdtYWls
+LmNvbT47IExlb25hcmQgQ3Jlc3Rleg0KPiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+OyBSb2Ig
+SGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyaw0KPiBSdXRsYW5kIDxtYXJrLnJ1dGxh
+bmRAYXJtLmNvbT47IE1pY2hhZWwgVHVycXVldHRlDQo+IDxtdHVycXVldHRlQGJheWxpYnJlLmNv
+bT47IFN0ZXBoZW4gQm95ZCA8c2JveWRAY29kZWF1cm9yYS5vcmc+OyBGYWJpbw0KPiBFc3RldmFt
+IDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybWxpbnV4Lm9y
+Zy51az47DQo+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBBLnMuIERvbmcgPGFp
+c2hlbmcuZG9uZ0BueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY4IDEvNl0gQVJNOiBp
+bXg2cTogcHJvdmlkZSBkb2N1bWVudGF0aW9uIGZvciBuZXcNCj4gZnNsLHBtaWMtc3RieS1wb3dl
+cm9mZiBwcm9wZXJ0eQ0KPiANCj4gSGksDQo+IA0KPiBPbiAyNi4wNy4yMDE4IDExOjUxLCBSb2Jp
+biBHb25nIHdyb3RlOg0KPiA+DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+Cj4gPj4gRnJvbTogT2xla3NpaiBSZW1wZWwgW21haWx0bzpvLnJlbXBlbEBwZW5ndXRyb25peC5k
+ZV0NCj4gPj4gU2VudDogMjAxOMTqN9TCMjbI1SAxNzoyMg0KPiA+PiBUbzogU2hhd24gR3VvIDxz
+aGF3bmd1b0BrZXJuZWwub3JnPjsgTWFyayBCcm93bg0KPiA8YnJvb25pZUBrZXJuZWwub3JnPjsN
+Cj4gPj4gUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbC5qLnd5c29ja2lAaW50ZWwuY29tPg0KPiA+
+PiBDYzogT2xla3NpaiBSZW1wZWwgPG8ucmVtcGVsQHBlbmd1dHJvbml4LmRlPjsga2VybmVsQHBl
+bmd1dHJvbml4LmRlOw0KPiA+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+PiBsaW51eC1jbGtAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBBbmRyZXcNCj4gPj4gTW9ydG9uIDxh
+a3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPjsgTGlhbSBHaXJkd29vZA0KPiA+PiA8bGdpcmR3b29k
+QGdtYWlsLmNvbT47IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+Ow0K
+PiBSb2INCj4gPj4gSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxt
+YXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+ID4+IE1pY2hhZWwgVHVycXVldHRlIDxtdHVycXVldHRl
+QGJheWxpYnJlLmNvbT47IFN0ZXBoZW4gQm95ZA0KPiA+PiA8c2JveWRAY29kZWF1cm9yYS5vcmc+
+OyBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiA+PiBSdXNzZWxsIEtp
+bmcgPGxpbnV4QGFybWxpbnV4Lm9yZy51az47IGRsLWxpbnV4LWlteA0KPiA+PiA8bGludXgtaW14
+QG54cC5jb20+OyBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+OyBBLnMuIERvbmcNCj4g
+Pj4gPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+PiBTdWJqZWN0OiBbUEFUQ0ggdjggMS82XSBB
+Uk06IGlteDZxOiBwcm92aWRlIGRvY3VtZW50YXRpb24gZm9yIG5ldw0KPiA+PiBmc2wscG1pYy1z
+dGJ5LXBvd2Vyb2ZmIHByb3BlcnR5DQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IE9sZWtzaWog
+UmVtcGVsIDxvLnJlbXBlbEBwZW5ndXRyb25peC5kZT4NCj4gPj4gQWNrZWQtYnk6IFJvYiBIZXJy
+aW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4+IC0tLQ0KPiA+PiAgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDZxLWNsb2NrLnR4dCB8IDggKysrKysrKysNCj4gPj4g
+IDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9jay50eHQN
+Cj4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14NnEtY2xv
+Y2sudHh0DQo+ID4+IGluZGV4IGE0NWNhNjdhOWQ1Zi4uZTEzMDgzNDZlMDBkIDEwMDY0NA0KPiA+
+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14NnEtY2xv
+Y2sudHh0DQo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
+ay9pbXg2cS1jbG9jay50eHQNCj4gPj4gQEAgLTYsNiArNiwxNCBAQCBSZXF1aXJlZCBwcm9wZXJ0
+aWVzOg0KPiA+PiAgLSBpbnRlcnJ1cHRzOiBTaG91bGQgY29udGFpbiBDQ00gaW50ZXJydXB0DQo+
+ID4+ICAtICNjbG9jay1jZWxsczogU2hvdWxkIGJlIDwxPg0KPiA+Pg0KPiA+PiArT3B0aW9uYWwg
+cHJvcGVydGllczoNCj4gPj4gKy0gZnNsLHBtaWMtc3RieS1wb3dlcm9mZjogQ29uZmlndXJlIEND
+TSB0byBhc3NlcnQgUE1JQ19TVEJZX1JFUQ0KPiA+PiArc2lnbmFsDQo+ID4+ICsgIG9uIHBvd2Vy
+IG9mZi4NCj4gPj4gKyAgVXNlIHRoaXMgcHJvcGVydHkgaWYgdGhlIFNvQyBzaG91bGQgYmUgcG93
+ZXJlZCBvZmYgYnkgZXh0ZXJuYWwNCj4gPj4gK3Bvd2VyDQo+ID4+ICsgIG1hbmFnZW1lbnQgSUMg
+KFBNSUMpIHRyaWdnZXJlZCB2aWEgUE1JQ19TVEJZX1JFUSBzaWduYWwuDQo+ID4gUE1JQ19PTl9S
+RVEgZGlkbid0IGNvbm5lY3QgdG8gYW55IHBpbiBvZiBQTUlDIGluIHlvdXIgY2FzZT8NCj4gDQo+
+IE5vLiBGaXJzdCwgaXQgd2FzIG9ubHkgb25lIGN1c3RvbWVyIHNwZWNpZmljIGlzc3VlLiBBZnRl
+ciBzb21lIHJlc2VhcmNoIEkgZm91bmQNCj4gZXZlbiBwdWJsaWNseSBhdmFpbGFibGUgYm9hcmRz
+IChmb3IgZXhhbXBsZSBSaW9UYm9hcmQpIHdoaWNoIGhhcyBzYW1lL3NpbWlsYXINCj4gZGVzaWdu
+LiBBZnRlciBzZWVpbmcgdGhpcyBpbiBpbXg2IGRvY3VtZW50YXRpb24gYXMgdmFsaWQgcG93ZXIg
+b2ZmIHdheSwgSSBoYXZlDQo+IG5vIGRvdWJ0cyAtIHRoZXJlIHNob3VsZCBiZSBldmVuIG1vcmUg
+ZGV2aWNlcyBkb2luIHRoaXMgaW4gdGhlIHdpbGQuDQpOb3Qgc3VyZSB3aHkgdGhlIGN1c3RvbWVy
+IGRpZG4ndCBmb2xsb3cgcmVmZXJlbmNlIGRlc2lnbiwgc2luY2UgUE1JQ19PTl9SRVEgY2FuDQpw
+cm92aWRlIHBvd2VyIG9mZi9vbiBmZWF0dXJlIGJ5IHByZXNzaW5nIE9OT0ZGIGtleSB3aGljaCBj
+b25uZWN0ZWQgT05PRkYNCnBpbiBvZiBpLm14NihPTk9GRiB3aWxsIHRvZ2dsZSBQTUlDX09OX1JF
+USB0byBwb3dlciBvZmYvb24gUE1JQykuIFRoZSBvZmZpY2lhbA0KcG93ZXIgb2ZmL29uIHdheSAo
+UE1JQ19PTl9SRVEpIGNhbiBhbHNvIHBvd2VyIG9mZiBhbGwgcG93ZXIgcmFpbHMgb2YgUEZVWkUg
+ZXhjZXB0DQpzbnZzIGFzIHlvdXIgcGF0Y2ggZGlkIG9uIFBNSUNfU1RCWV9SRVEuICBQTUlDX1NU
+QllfUkVRIGlzIHVzZWQgdG8gbm90aWZ5IHBtaWMNCnN3aXRjaCBwb3dlciBtb2RlIChQRk0vQVBT
+KSBvciBkZWNyZWFzZSB2b2x0YWdlIHRvIHNhdmUgcG93ZXIgaW4ga2VybmVsIHN1c3BlbmQsDQpu
+b3QgcG93ZXIgb2ZmLi4uLkkgYW0gbm90IHN1cmUgaWYgd2UgbmVlZCB0aGlzIHBhdGNoc2V0IHRv
+ICd3b3JrYXJvdW5kJyB0aGUgYm9hcmQgaXNzdWUuDQo+IA0KPiA+IERvbid0IHVuZGVyc3RhbmQN
+Cj4gPiB3aHkgbm90IGZvbGxvdyBub3JtYWwgYm9hcmQgZGVzaWduIGd1aWRlIHRvIHBvd2VyIG9m
+ZiBwbWljIGJ5DQo+IFBNSUNfT05fUkVRLg0KPiA+IEhvdyB0byBwb3dlciBvbiBib2FyZCBhZ2Fp
+biB0aGVuPw0KPiANCj4gUG93ZXIgY3ljbGUuIFdpdGhvdXQgdGhpcyBwYXRjaCwgcG93ZXIgb2Yg
+aXMgbm90IHJlYWwgcG93ZXIgb2ZmLiBTbywgcG93ZXIgY3ljbGUsDQo+IGlzIGV4cGVjdGVkIGJl
+aGF2aW9yIGZvciB1c2VyIGludGVyYWN0aW9uLiBPbiB1c3VhbCBQQywgcmVzZXQgYnV0dG9uIHdp
+bGwgbm90DQo+IGVuYWJsZSBQQyBhcyB3ZWxsLg0KWW91ciBib2FyZCBjYW4ndCBzdXBwb3J0IHdh
+a2V1cCBieSBSVEMgYWxhcm0gaWYgbm90IHVzZSBQTUlDX09OX1JFUSB0byBwb3dlciBvZmYuDQpB
+Z2Fpbiwgd2h5IHlvdXIgYm9hcmQgbm90IGZvbGxvdyB0aGUgZGVzaWduIGd1aWRlPw0K
