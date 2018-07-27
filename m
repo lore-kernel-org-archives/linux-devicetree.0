@@ -1,7 +1,7 @@
 From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH v3 3/4] nvmem: sunxi-sid: add support for H5's SID controller
-Date: Fri, 27 Jul 2018 13:52:04 +0200
-Message-ID: <20180727115205.20955-3-manu@freebsd.org>
+Subject: [PATCH v3 4/4] arm64: dts: allwinner: h5: Add SID for H5
+Date: Fri, 27 Jul 2018 13:52:05 +0200
+Message-ID: <20180727115205.20955-4-manu@freebsd.org>
 References: <20180727115205.20955-1-manu@freebsd.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180727115205.20955-1-manu@freebsd.org>
@@ -10,27 +10,31 @@ To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ma
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
 List-Id: devicetree@vger.kernel.org
 
-The H5 SoC have a SID controller that looks like the one in A64, the
-cells are in the same offset but doesn't contain the same data (thermal
-sensor calibration for example).
-Add a binding for it.
+The H5 SoC have a SID controller like the others Allwinner SoC.
+Add a node for it.
 
 Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
 ---
- Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-index e319fe5e205a..99c4ba6a3f61 100644
---- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-@@ -7,6 +7,7 @@ Required properties:
-   "allwinner,sun8i-a83t-sid"
-   "allwinner,sun8i-h3-sid"
-   "allwinner,sun50i-a64-sid"
-+  "allwinner,sun50i-h5-sid"
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index 62d646baac3c..9838acaeea58 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -92,6 +92,13 @@
+ 			     <GIC_PPI 10
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
++
++	soc {
++		sid: eeprom@1c14000 {
++			compatible = "allwinner,sun50i-h5-sid";
++			reg = <0x1c14000 0x400>;
++		};
++	};
+ };
  
- - reg: Should contain registers location and length
- 
+ &ccu {
 -- 
 2.18.0
