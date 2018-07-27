@@ -1,59 +1,105 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
- coherent DMA mask)
-Date: Fri, 27 Jul 2018 15:18:14 +0200
-Message-ID: <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com>
-References: <CAJKOXPeaguNxRr7pCArJ5Db4tS6Kr5BDheCxskY+vd0dUN+0GQ@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v3.1 10/10] arm64: dts: allwinner: a64:
+ Enable HDMI output on A64 boards w/ HDMI
+Date: Fri, 27 Jul 2018 21:26:11 +0800
+Message-ID: <8DF4600E-DFE4-47CD-B541-FFDD903A65FB@aosc.io>
+References: <20180726171257.6688-1-icenowy@aosc.io> <20180726171257.6688-11-icenowy@aosc.io> <20180727125615.ju23ecgm6y4rz7p5@flea>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPeaguNxRr7pCArJ5Db4tS6Kr5BDheCxskY+vd0dUN+0GQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Christoph Hellwig <hch@lst.de>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Fugang Duan <fugang.duan@nxp.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBD535TNAKGQEM7CFDEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180727125615.ju23ecgm6y4rz7p5@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 July 2018 at 15:11, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> Hi,
->
-> On today's next, the bisect pointed commit
-> ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d as fault for my boot failures
-> with NFSv4 root on Toradex Colibri VF50 (Iris carrier board).
->
-> Author: Robin Murphy <robin.murphy@arm.com>
-> Date:   Mon Jul 23 23:16:12 2018 +0100
->     OF: Don't set default coherent DMA mask
->
-> Board: Toradex Colibri VF50 (NXP VF500, Cortex A5, serial configured
-> with DMA) on Iris Carrier.
->
-> It looks like problem with Freescale Ethernet driver:
-> [   15.458477] fsl-edma 40018000.dma-controller: coherent DMA mask is unset
-> [   15.465284] fsl-lpuart 40027000.serial: Cannot prepare cyclic DMA
-> [   15.472086] Root-NFS: no NFS server address
-> [   15.476359] VFS: Unable to mount root fs via NFS, trying floppy.
-> [   15.484228] VFS: Cannot open root device "nfs" or
-> unknown-block(2,0): error -6
-> [   15.491664] Please append a correct "root=" boot option; here are
-> the available partitions:
-> [   15.500188] 0100           16384 ram0
-> [   15.500200]  (driver?)
-> [   15.506406] Kernel panic - not syncing: VFS: Unable to mount root
-> fs on unknown-block(2,0)
-> [   15.514747] ---[ end Kernel panic - not syncing: VFS: Unable to
-> mount root fs on unknown-block(2,0) ]---
->
-> Attached - defconfig and full boot log.
->
-> Any hints?
-> Let me know if you need any more information.
 
-My Exynos boards also fail to boot on missing network:
-https://krzk.eu/#/builders/21/builds/799/steps/10/logs/serial0
 
-As expected there are plenty of "DMA mask not set" warnings... and
-later dwc3 driver fails with:
-    dwc3: probe of 12400000.dwc3 failed with error -12
-which is probably the answer why LAN attached to USB is not present.
+=E4=BA=8E 2018=E5=B9=B47=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888:=
+56:15, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Fri, Jul 27, 2018 at 01:12:57AM +0800, Icenowy Zheng wrote:
+>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>> index 1b9b92e541d2..1b972bade9f6 100644
+>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>> @@ -62,6 +62,21 @@
+>>  	chosen {
+>>  		stdout-path =3D "serial0:115200n8";
+>>  	};
+>> +
+>> +	connector {
+>> +		compatible =3D "hdmi-connector";
+>> +		type =3D "a";
+>> +
+>> +		port {
+>> +			hdmi_con_in: endpoint {
+>> +				remote-endpoint =3D <&hdmi_out_con>;
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&de {
+>> +	status =3D "okay";
+>>  };
+>> =20
+>>  &ehci0 {
+>> @@ -82,6 +97,17 @@
+>> =20
+>>  };
+>> =20
+>> +&hdmi {
+>> +	hdmi-supply =3D <&reg_dldo1>;
+>> +	status =3D "okay";
+>> +};
+>> +
+>> +&hdmi_out {
+>> +	hdmi_out_con: endpoint {
+>> +		remote-endpoint =3D <&hdmi_con_in>;
+>> +	};
+>> +};
+>> +
+>>  &i2c1 {
+>>  	pinctrl-names =3D "default";
+>>  	pinctrl-0 =3D <&i2c1_pins>;
+>> @@ -99,6 +125,10 @@
+>>  	};
+>>  };
+>> =20
+>> +&mixer1 {
+>> +	status =3D "okay";
+>> +};
+>> +
+>>  &mmc0 {
+>>  	pinctrl-names =3D "default";
+>>  	pinctrl-0 =3D <&mmc0_pins>;
+>> @@ -238,6 +268,10 @@
+>>  	status =3D "disabled";
+>>  };
+>> =20
+>> +&tcon1 {
+>> +	status =3D "okay";
+>> +};
+>
+>Is it working or not on the pine64?
 
-Best regards,
-Krzysztof
+Not tested yet, as my main A64 device is Pine A64-LTS now.
+
+>
+>Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
