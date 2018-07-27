@@ -1,331 +1,49 @@
-Return-Path: <SRS0=22p1=KH=huawei.com=jonathan.cameron@kernel.org>
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 3/3] arm64: dts: hisi: add SEC crypto accelerator nodes for hip07 SoC
-Date: Mon, 23 Jul 2018 16:49:55 +0100
-Message-ID: <20180723154955.12944-4-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20180723154955.12944-1-Jonathan.Cameron@huawei.com>
-References: <20180723154955.12944-1-Jonathan.Cameron@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-crypto@vger.kernel.org
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, smueller@chronox.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linuxarm@huawei.com, xuzaibo@huwei.com, fanghao11@huawei.com, liguozhu@hisilicon.com, wangxiongfeng2@huawei.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Return-Path: <SRS0=Pf9O=KL=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 1/4] serial: sh-sci: Improve interrupts description
+Date: Fri, 27 Jul 2018 16:09:13 -0500
+Message-Id: <20180727210916.66642-2-chris.brandt@renesas.com>
+In-Reply-To: <20180727210916.66642-1-chris.brandt@renesas.com>
+References: <20180727210916.66642-1-chris.brandt@renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enable all 4 SEC units available on d05 boards.
+Describe interrupts property in more detail, especially when there are
+more than one interrupt.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/hisilicon/hip07.dtsi | 284 +++++++++++++++++++++++++++++++
- 1 file changed, 284 insertions(+)
+ .../devicetree/bindings/serial/renesas,sci-serial.txt    | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index 0600a6a84ab7..6d046f4f7019 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1049,7 +1049,74 @@
- 			num-pins = <2>;
- 		};
- 	};
-+	p0_mbigen_alg_a:interrupt-controller@d0080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x0 0xd0080000 0x0 0x10000>;
+diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+index a7cda6550100..eaca9da79d83 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
++++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -73,7 +73,21 @@ Required properties:
+     family-specific and/or generic versions.
  
-+		p0_mbigen_sec_a: intc_sec {
-+			msi-parent = <&p0_its_dsa_a 0x40400>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <33>;
-+		};
-+		p0_mbigen_smmu_alg_a: intc_smmu_alg {
-+			msi-parent = <&p0_its_dsa_a 0x40b1b>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <3>;
-+		};
-+	};
-+	p0_mbigen_alg_b:interrupt-controller@8,d0080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x8 0xd0080000 0x0 0x10000>;
+   - reg: Base address and length of the I/O registers used by the UART.
+-  - interrupts: Must contain an interrupt-specifier for the SCIx interrupt.
++  - interrupts: Must contain one or more interrupt-specifiers for the SCIx.
++                If a single interrupt is expressed, then all events are
++                multiplexed into this single interrupt.
 +
-+		p0_mbigen_sec_b: intc_sec {
-+			msi-parent = <&p0_its_dsa_b 0x42400>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <33>;
-+		};
-+		p0_mbigen_smmu_alg_b: intc_smmu_alg {
-+			msi-parent = <&p0_its_dsa_b 0x42b1b>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <3>;
-+		};
-+	};
-+	p1_mbigen_alg_a:interrupt-controller@400,d0080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x400 0xd0080000 0x0 0x10000>;
-+
-+		p1_mbigen_sec_a: intc_sec {
-+			msi-parent = <&p1_its_dsa_a 0x44400>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <33>;
-+		};
-+		p1_mbigen_smmu_alg_a: intc_smmu_alg {
-+			msi-parent = <&p1_its_dsa_a 0x44b1b>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <3>;
-+		};
-+	};
-+	p1_mbigen_alg_b:interrupt-controller@408,d0080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x408 0xd0080000 0x0 0x10000>;
-+
-+		p1_mbigen_sec_b: intc_sec {
-+			msi-parent = <&p1_its_dsa_b 0x46400>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <33>;
-+		};
-+		p1_mbigen_smmu_alg_b: intc_smmu_alg {
-+			msi-parent = <&p1_its_dsa_b 0x46b1b>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <3>;
-+		};
-+	};
- 	p0_mbigen_dsa_a: interrupt-controller@c0080000 {
- 		compatible = "hisilicon,mbigen-v2";
- 		reg = <0x0 0xc0080000 0x0 0x10000>;
-@@ -1107,6 +1174,58 @@
- 		hisilicon,broken-prefetch-cmd;
- 		status = "disabled";
- 	};
-+	p0_smmu_alg_a: smmu_alg@d0040000 {
-+		compatible = "arm,smmu-v3";
-+		reg = <0x0 0xd0040000 0x0 0x20000>;
-+		interrupt-parent = <&p0_mbigen_smmu_alg_a>;
-+		interrupts = <733 1>,
-+		<734 1>,
-+		<735 1>;
-+		interrupt-names = "eventq", "gerror", "priq";
-+		#iommu-cells = <1>;
-+		dma-coherent;
-+		hisilicon,broken-prefetch-cmd;
-+		/* smmu-cb-memtype = <0x0 0x1>;*/
-+	};
-+	p0_smmu_alg_b: smmu_alg@8,d0040000 {
-+		compatible = "arm,smmu-v3";
-+		reg = <0x8 0xd0040000 0x0 0x20000>;
-+		interrupt-parent = <&p0_mbigen_smmu_alg_b>;
-+		interrupts = <733 1>,
-+		<734 1>,
-+		<735 1>;
-+		interrupt-names = "eventq", "gerror", "priq";
-+		#iommu-cells = <1>;
-+		dma-coherent;
-+		hisilicon,broken-prefetch-cmd;
-+		/* smmu-cb-memtype = <0x0 0x1>;*/
-+	};
-+	p1_smmu_alg_a: smmu_alg@400,d0040000 {
-+		compatible = "arm,smmu-v3";
-+		reg = <0x400 0xd0040000 0x0 0x20000>;
-+		interrupt-parent = <&p1_mbigen_smmu_alg_a>;
-+		interrupts = <733 1>,
-+		<734 1>,
-+		<735 1>;
-+		interrupt-names = "eventq", "gerror", "priq";
-+		#iommu-cells = <1>;
-+		dma-coherent;
-+		hisilicon,broken-prefetch-cmd;
-+		/* smmu-cb-memtype = <0x0 0x1>;*/
-+	};
-+	p1_smmu_alg_b: smmu_alg@408,d0040000 {
-+		compatible = "arm,smmu-v3";
-+		reg = <0x408 0xd0040000 0x0 0x20000>;
-+		interrupt-parent = <&p1_mbigen_smmu_alg_b>;
-+		interrupts = <733 1>,
-+		<734 1>,
-+		<735 1>;
-+		interrupt-names = "eventq", "gerror", "priq";
-+		#iommu-cells = <1>;
-+		dma-coherent;
-+		hisilicon,broken-prefetch-cmd;
-+		/* smmu-cb-memtype = <0x0 0x1>;*/
-+	};
++                If multiple interrupts are provided by the hardware, the order
++                in which the interrupts are listed must match order below. Note
++                that some HW interrupt events may be muxed together resulting
++                in duplicate entries.
++                The interrupt order is as follows:
++                  1. Error (ERI)
++                  2. Receive buffer full (RXI)
++                  3. Transmit buffer empty (TXI)
++                  4. Break (BRI)
++                  5. Data Ready (DRI)
++                  6. Transmit End (TEI)
  
- 	soc {
- 		compatible = "simple-bus";
-@@ -1589,5 +1708,170 @@
- 					 0x0 0 0 4 &mbigen_pcie2_a 671 4>;
- 			status = "disabled";
- 		};
-+		p0_sec_a: crypto@d2000000 {
-+			compatible = "hisilicon,hip07-sec";
-+			reg = <0x0 0xd0000000 0x0 0x10000
-+			       0x0 0xd2000000 0x0 0x10000
-+			       0x0 0xd2010000 0x0 0x10000
-+			       0x0 0xd2020000 0x0 0x10000
-+			       0x0 0xd2030000 0x0 0x10000
-+			       0x0 0xd2040000 0x0 0x10000
-+			       0x0 0xd2050000 0x0 0x10000
-+			       0x0 0xd2060000 0x0 0x10000
-+			       0x0 0xd2070000 0x0 0x10000
-+			       0x0 0xd2080000 0x0 0x10000
-+			       0x0 0xd2090000 0x0 0x10000
-+			       0x0 0xd20a0000 0x0 0x10000
-+			       0x0 0xd20b0000 0x0 0x10000
-+			       0x0 0xd20c0000 0x0 0x10000
-+			       0x0 0xd20d0000 0x0 0x10000
-+			       0x0 0xd20e0000 0x0 0x10000
-+			       0x0 0xd20f0000 0x0 0x10000
-+			       0x0 0xd2100000 0x0 0x10000>;
-+			interrupt-parent = <&p0_mbigen_sec_a>;
-+			iommus = <&p0_smmu_alg_a 0x600>;
-+			dma-coherent;
-+			interrupts = <576 4>,
-+				     <577 1>, <578 4>,
-+				     <579 1>, <580 4>,
-+				     <581 1>, <582 4>,
-+				     <583 1>, <584 4>,
-+				     <585 1>, <586 4>,
-+				     <587 1>, <588 4>,
-+				     <589 1>, <590 4>,
-+				     <591 1>, <592 4>,
-+				     <593 1>, <594 4>,
-+				     <595 1>, <596 4>,
-+				     <597 1>, <598 4>,
-+				     <599 1>, <600 4>,
-+				     <601 1>, <602 4>,
-+				     <603 1>, <604 4>,
-+				     <605 1>, <606 4>,
-+				     <607 1>, <608 4>;
-+		};
-+		p0_sec_b: crypto@8,d2000000 {
-+			compatible = "hisilicon,hip07-sec";
-+			reg = <0x8 0xd0000000 0x0 0x10000
-+			       0x8 0xd2000000 0x0 0x10000
-+			       0x8 0xd2010000 0x0 0x10000
-+			       0x8 0xd2020000 0x0 0x10000
-+			       0x8 0xd2030000 0x0 0x10000
-+			       0x8 0xd2040000 0x0 0x10000
-+			       0x8 0xd2050000 0x0 0x10000
-+			       0x8 0xd2060000 0x0 0x10000
-+			       0x8 0xd2070000 0x0 0x10000
-+			       0x8 0xd2080000 0x0 0x10000
-+			       0x8 0xd2090000 0x0 0x10000
-+			       0x8 0xd20a0000 0x0 0x10000
-+			       0x8 0xd20b0000 0x0 0x10000
-+			       0x8 0xd20c0000 0x0 0x10000
-+			       0x8 0xd20d0000 0x0 0x10000
-+			       0x8 0xd20e0000 0x0 0x10000
-+			       0x8 0xd20f0000 0x0 0x10000
-+			       0x8 0xd2100000 0x0 0x10000>;
-+			interrupt-parent = <&p0_mbigen_sec_b>;
-+			iommus = <&p0_smmu_alg_b 0x600>;
-+			dma-coherent;
-+			interrupts = <576 4>,
-+				     <577 1>, <578 4>,
-+				     <579 1>, <580 4>,
-+				     <581 1>, <582 4>,
-+				     <583 1>, <584 4>,
-+				     <585 1>, <586 4>,
-+				     <587 1>, <588 4>,
-+				     <589 1>, <590 4>,
-+				     <591 1>, <592 4>,
-+				     <593 1>, <594 4>,
-+				     <595 1>, <596 4>,
-+				     <597 1>, <598 4>,
-+				     <599 1>, <600 4>,
-+				     <601 1>, <602 4>,
-+				     <603 1>, <604 4>,
-+				     <605 1>, <606 4>,
-+				     <607 1>, <608 4>;
-+		};
-+		p1_sec_a: crypto@400,d2000000 {
-+			compatible = "hisilicon,hip07-sec";
-+			reg = <0x400 0xd0000000 0x0 0x10000
-+			       0x400 0xd2000000 0x0 0x10000
-+			       0x400 0xd2010000 0x0 0x10000
-+			       0x400 0xd2020000 0x0 0x10000
-+			       0x400 0xd2030000 0x0 0x10000
-+			       0x400 0xd2040000 0x0 0x10000
-+			       0x400 0xd2050000 0x0 0x10000
-+			       0x400 0xd2060000 0x0 0x10000
-+			       0x400 0xd2070000 0x0 0x10000
-+			       0x400 0xd2080000 0x0 0x10000
-+			       0x400 0xd2090000 0x0 0x10000
-+			       0x400 0xd20a0000 0x0 0x10000
-+			       0x400 0xd20b0000 0x0 0x10000
-+			       0x400 0xd20c0000 0x0 0x10000
-+			       0x400 0xd20d0000 0x0 0x10000
-+			       0x400 0xd20e0000 0x0 0x10000
-+			       0x400 0xd20f0000 0x0 0x10000
-+			       0x400 0xd2100000 0x0 0x10000>;
-+			interrupt-parent = <&p1_mbigen_sec_a>;
-+			iommus = <&p1_smmu_alg_a 0x600>;
-+			dma-coherent;
-+			interrupts = <576 4>,
-+				     <577 1>, <578 4>,
-+				     <579 1>, <580 4>,
-+				     <581 1>, <582 4>,
-+				     <583 1>, <584 4>,
-+				     <585 1>, <586 4>,
-+				     <587 1>, <588 4>,
-+				     <589 1>, <590 4>,
-+				     <591 1>, <592 4>,
-+				     <593 1>, <594 4>,
-+				     <595 1>, <596 4>,
-+				     <597 1>, <598 4>,
-+				     <599 1>, <600 4>,
-+				     <601 1>, <602 4>,
-+				     <603 1>, <604 4>,
-+				     <605 1>, <606 4>,
-+				     <607 1>, <608 4>;
-+		};
-+		p1_sec_b: crypto@408,d2000000 {
-+			compatible = "hisilicon,hip07-sec";
-+			reg = <0x408 0xd0000000 0x0 0x10000
-+			       0x408 0xd2000000 0x0 0x10000
-+			       0x408 0xd2010000 0x0 0x10000
-+			       0x408 0xd2020000 0x0 0x10000
-+			       0x408 0xd2030000 0x0 0x10000
-+			       0x408 0xd2040000 0x0 0x10000
-+			       0x408 0xd2050000 0x0 0x10000
-+			       0x408 0xd2060000 0x0 0x10000
-+			       0x408 0xd2070000 0x0 0x10000
-+			       0x408 0xd2080000 0x0 0x10000
-+			       0x408 0xd2090000 0x0 0x10000
-+			       0x408 0xd20a0000 0x0 0x10000
-+			       0x408 0xd20b0000 0x0 0x10000
-+			       0x408 0xd20c0000 0x0 0x10000
-+			       0x408 0xd20d0000 0x0 0x10000
-+			       0x408 0xd20e0000 0x0 0x10000
-+			       0x408 0xd20f0000 0x0 0x10000
-+			       0x408 0xd2100000 0x0 0x10000>;
-+			interrupt-parent = <&p1_mbigen_sec_b>;
-+			iommus = <&p1_smmu_alg_b 0x600>;
-+			dma-coherent;
-+			interrupts = <576 4>,
-+				     <577 1>, <578 4>,
-+				     <579 1>, <580 4>,
-+				     <581 1>, <582 4>,
-+				     <583 1>, <584 4>,
-+				     <585 1>, <586 4>,
-+				     <587 1>, <588 4>,
-+				     <589 1>, <590 4>,
-+				     <591 1>, <592 4>,
-+				     <593 1>, <594 4>,
-+				     <595 1>, <596 4>,
-+				     <597 1>, <598 4>,
-+				     <599 1>, <600 4>,
-+				     <601 1>, <602 4>,
-+				     <603 1>, <604 4>,
-+				     <605 1>, <606 4>,
-+				     <607 1>, <608 4>;
-+		};
-+
- 	};
- };
+   - clocks: Must contain a phandle and clock-specifier pair for each entry
+     in clock-names.
 -- 
-2.16.2
+2.16.1
