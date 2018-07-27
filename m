@@ -1,51 +1,56 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v3 4/9] coresight: platform: Fix leaking device reference
-Date: Fri, 27 Jul 2018 11:15:32 +0100
-Message-ID: <1532686537-12380-5-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v3 6/9] coresight: Add helper to check if the endpoint is input
+Date: Fri, 27 Jul 2018 11:15:34 +0100
+Message-ID: <1532686537-12380-7-git-send-email-suzuki.poulose@arm.com>
 References: <1532686537-12380-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1532686537-12380-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, robert.walker@arm.com, coresight@lists.linaro.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, al.grant@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>, Kim Phillips <kim.phillips@arm.com>
+Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, robert.walker@arm.com, coresight@lists.linaro.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, al.grant@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-We don't drop the reference on the remote device while parsing the
-connection, held by bus_find_device(). Fix this by duplicating the
-device name and dropping the reference.
+Add a helper to check if the given endpoint is input.
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Kim Phillips <kim.phillips@arm.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- - New in v2
----
- drivers/hwtracing/coresight/of_coresight.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/hwtracing/coresight/of_coresight.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-index 28d3aef..4b279f8 100644
+index 2ecdd14..44903d3 100644
 --- a/drivers/hwtracing/coresight/of_coresight.c
 +++ b/drivers/hwtracing/coresight/of_coresight.c
-@@ -162,7 +162,9 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 		}
- 
- 		pdata->outports[i] = endpoint.port;
--		pdata->child_names[i] = dev_name(rdev);
-+		pdata->child_names[i] = devm_kstrdup(dev,
-+						     dev_name(rdev),
-+						     GFP_KERNEL);
- 		pdata->child_ports[i] = rendpoint.id;
- 		/* Connection record updated */
- 		ret = 1;
-@@ -172,6 +174,8 @@ static int of_coresight_parse_endpoint(struct device *dev,
- 		of_node_put(rparent);
- 	if (rport)
- 		of_node_put(rport);
-+	if (rdev)
-+		put_device(rdev);
- 
- 	return ret;
+@@ -45,6 +45,11 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
+ 			       endpoint, of_dev_node_match);
  }
+ 
++static inline bool of_coresight_ep_is_input(struct device_node *ep)
++{
++	return of_property_read_bool(ep, "slave-mode");
++}
++
+ static void of_coresight_get_ports(const struct device_node *node,
+ 				   int *nr_inport, int *nr_outport)
+ {
+@@ -56,7 +61,7 @@ static void of_coresight_get_ports(const struct device_node *node,
+ 		if (!ep)
+ 			break;
+ 
+-		if (of_property_read_bool(ep, "slave-mode"))
++		if (of_coresight_ep_is_input(ep))
+ 			in++;
+ 		else
+ 			out++;
+@@ -213,7 +218,7 @@ of_get_coresight_platform_data(struct device *dev,
+ 		 * No need to deal with input ports, as processing the
+ 		 * output ports connected to them will process the details.
+ 		 */
+-		if (of_find_property(ep, "slave-mode", NULL))
++		if (of_coresight_ep_is_input(ep))
+ 			continue;
+ 
+ 		ret = of_coresight_parse_endpoint(dev, ep, pdata, i);
 -- 
 2.7.4
