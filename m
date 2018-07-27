@@ -1,51 +1,48 @@
-From: djw@t-chip.com.cn
-Subject: Re: [PATCH v1] arm64: dts: rockchip: add support for ROC-RK3399-PC board
-Date: Fri, 27 Jul 2018 15:10:32 +0800
-Message-ID: <871sbpm9w7.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
-References: <1532589205-10153-1-git-send-email-djw@t-chip.com.cn>
-        <cd4706970b40b49373ad169e3f9651f29508194a.camel@collabora.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] mfd: as3722: disable auto power on when AC OK
+Date: Fri, 27 Jul 2018 08:15:44 +0100
+Message-ID: <20180727071544.GD4628@dell>
+References: <20180703150411.29709-1-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cd4706970b40b49373ad169e3f9651f29508194a.camel@collabora.com>
-        (Ezequiel Garcia's message of "Thu, 26 Jul 2018 10:41:58 -0300")
+Content-Disposition: inline
+In-Reply-To: <20180703150411.29709-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: djw@t-chip.com.cn, linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Pierre-Hugues Husson <phh@phh.me>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Heinrich
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: linux-tegra@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ezequiel Garcia <ezequiel@collabora.com> writes:
+On Tue, 03 Jul 2018, Marcel Ziswiler wrote:
 
-> On Thu, 2018-07-26 at 15:13 +0800, djw@t-chip.com.cn wrote:
->> From: Levin Du <djw@t-chip.com.cn>
->> 
->> ROC-RK3399-PC is a power efficient 4GB LPDDR4 single board
->> computer with USB 3.0 and Gigabit Ethernet in a form factor
->> compatible with the Raspberry Pi. It is based on the Rockchip
->> RK3399 SoC, powered by the Type-C port.
->> 
->> The devicetree currently supports peripherals of:
->> 
->> - Ethernet
->> - HDMI
->> - SD Card
->> - UART2 debug
->> - TYPE-C
->
-> Hi Levin,
->
-> Last time I tried to make the mainline fusb driver work, it really didn't.
-> Is USB 3.0 Type-C actually working with mainline on this board?
->
-> Thanks!
-> Eze
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> On ams AS3722, power on when AC OK is enabled by default.
+> Making this option as disable by default and enable only
+> when platform need this explicitly.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Reviewed-by: Bibek Basu <bbasu@nvidia.com>
+> Tested-by: Bibek Basu <bbasu@nvidia.com>
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - Document device tree property as suggested by Stefan.
+> - Rename SEQ1 to SEQU1 as per datasheet as suggested by Stefan.
+> - Drop reference to downstream commit as suggested by Lee.
+> 
+>  Documentation/devicetree/bindings/mfd/as3722.txt |  2 ++
+>  drivers/mfd/as3722.c                             | 12 ++++++++++++
+>  include/linux/mfd/as3722.h                       |  3 +++
+>  3 files changed, 17 insertions(+)
 
-That's what I added in the end:
+Applied, thanks.
 
-  USB3 in type-c port currently only works with normal orientation,
-  not flip one.
-
-Adding 'extcon=<&fusb0>' to make the dwc3 core failed to initialize.
-
-Regards,
-Levin
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
