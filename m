@@ -1,7 +1,7 @@
 From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH v3 2/4] ARM: dts: sun8i: h3: Add SID compatible string
-Date: Fri, 27 Jul 2018 13:52:03 +0200
-Message-ID: <20180727115205.20955-2-manu@freebsd.org>
+Subject: [PATCH v3 3/4] nvmem: sunxi-sid: add support for H5's SID controller
+Date: Fri, 27 Jul 2018 13:52:04 +0200
+Message-ID: <20180727115205.20955-3-manu@freebsd.org>
 References: <20180727115205.20955-1-manu@freebsd.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180727115205.20955-1-manu@freebsd.org>
@@ -10,30 +10,27 @@ To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, ma
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Emmanuel Vadot <manu@freebsd.org>
 List-Id: devicetree@vger.kernel.org
 
-The SID controller on H3 already have a binding but isn't present in the
-dtsi file.
-Add a node for it.
+The H5 SoC have a SID controller that looks like the one in A64, the
+cells are in the same offset but doesn't contain the same data (thermal
+sensor calibration for example).
+Add a binding for it.
 
 Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 41d57c76f290..614e2c2154c8 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -111,6 +111,11 @@
- 	};
+diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+index e319fe5e205a..99c4ba6a3f61 100644
+--- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
++++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+@@ -7,6 +7,7 @@ Required properties:
+   "allwinner,sun8i-a83t-sid"
+   "allwinner,sun8i-h3-sid"
+   "allwinner,sun50i-a64-sid"
++  "allwinner,sun50i-h5-sid"
  
- 	soc {
-+		sid: eeprom@1c14000 {
-+			compatible = "allwinner,sun8i-h3-sid";
-+			reg = <0x1c14000 0x400>;
-+		};
-+
- 		mali: gpu@1c40000 {
- 			compatible = "allwinner,sun8i-h3-mali", "arm,mali-400";
- 			reg = <0x01c40000 0x10000>;
+ - reg: Should contain registers location and length
+ 
 -- 
 2.18.0
