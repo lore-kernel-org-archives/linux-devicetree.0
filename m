@@ -1,154 +1,607 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Fri, 27 Jul 2018 10:25:56 +0530
-Message-ID: <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
- <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
- <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v13 1/4] iommu/arm-smmu: Add
+ pm_runtime/sleep ops
+Date: Fri, 27 Jul 2018 10:35:46 +0530
+Message-ID: <cc36024e-888f-b323-d960-93f76a7bbea0@codeaurora.org>
+References: <20180719101539.6104-1-vivek.gautam@codeaurora.org>
+ <20180719101539.6104-2-vivek.gautam@codeaurora.org>
+ <e17fdcb7-2632-753f-4e2e-f81bcded36f1@arm.com>
+ <CAFp+6iF1XzFn1QhWjatxE-1sue-EFS7wNmQ4OB=c3pf1VMLuMA@mail.gmail.com>
+ <CAFp+6iEYpM7w+pq0bG83vgjedqy4ZkQbUP9Bx=61TbEUN45OkA@mail.gmail.com>
+ <401d8509-b9ad-913b-334e-f4ac853472e3@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: multipart/mixed; boundary="===============1537761834=="
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <401d8509-b9ad-913b-334e-f4ac853472e3-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgMjcsIDIwMTggYXQgOTozMiBBTSwgQS5zLiBEb25nIDxhaXNoZW5nLmRvbmdA
-bnhwLmNvbT4gd3JvdGU6Cj4+Cj4+ID4+Cj4+ID4+ID4gRWFjaCBNVSBoYXMgZm91ciBwYWlycyBv
-ZiByeC90eCBkYXRhIHJlZ2lzdGVyIHdpdGggZm91ciByeC90eAo+PiA+PiA+IGludGVycnVwdHMg
-d2hpY2ggY2FuIGFsc28gYmUgdXNlZCBhcyBhIHNlcGFyYXRlIGNoYW5uZWwuCj4+ID4+ID4KPj4g
-Pj4gU28gdGhlIGhhcmR3YXJlIGFjdHVhbGx5IHN1cHBvcnRzIDQgY2hhbm5lbHMuCj4+ID4+Cj4+
-ID4+ID4gLS0gI21ib3gtY2VsbHM6ICBNdXN0IGJlIDAuIE51bWJlciBvZiBjZWxscyBpbiBhIG1h
-aWxib3gKPj4gPj4gPiArLSAjbWJveC1jZWxsczogIE11c3QgYmU6Cj4+ID4+ID4gKyAgICAgICAg
-ICAgICAgIDAgLSBmb3Igc2luZ2xlIGNoYW5uZWwgbW9kZS4gaS5NWDgqIFNDVSBwcm90b2NvbCBz
-cGVjaWZpYy4KPj4gPj4gPiArICAgICAgICAgICAgICAgMSAtIGZvciBtdWx0aWNoYW5uZWwgKGdl
-bmVyaWMpIG1vZGUuCj4+ID4+ID4gKwo+PiA+PiBObywgcGxlYXNlLgo+PiA+PiBEVCBiaW5kaW5n
-cyBzaG91bGQgcmVmbGVjdCB0aGUgcmVhbCBoYXJkd2FyZSwgYW5kIG5vdCB0aGUgc29mdHdhcmUK
-Pj4gPj4gbW9kZSB3ZSB3YW50IHRoZSBkcml2ZXIgdG8gd29yayBpbi4KPj4gPj4gUGxlYXNlIGRl
-ZmluZSBtYm94LWNlbGxzPTEgIGFuZCBoYXZlIHRoZSBpLk1YOCogcGxhdGZvcm0gYWx3YXlzIGFz
-awo+PiA+PiBmb3IgY2hhbm5lbC0wLgo+PiA+Cj4+ID4gVGhlIHJlYWxpdHkgaXMgdGhhdCBNVSBo
-YXJkd2FyZSBkb2VzIG5vdCBkZWZpbmUgY2hhbm5lbHMgaW4gcmVmZXJlbmNlCj4+IG1hbnVhbC4K
-Pj4gPiBIb3dldmVyLCBpdCBkb2VzIGhhdmUgZm91ciBzZXBhcmF0ZSBkYXRhIHR4L3J4IHJlZ2lz
-dGVyIHdoaWNoIGNhbiBiZQo+PiA+IHVzZWQgYXMgJ3ZpcnR1YWwnIGNoYW5uZWxzIHdoaWNoIGlz
-IHN1cHBvcnRlZCBieSB0aGlzIGN1cnJlbnQgZHJpdmVyLgo+PiA+Cj4+ID4gU2VlIGJlbG93IEhX
-IGRlc2NyaXB0aW9uIGZyb20gdGhlIHJlZmVyZW5jZSBtYW51YWw6Cj4+ID4gRm9yIG1lc3NhZ2lu
-ZywgdGhlIE1VIGhhcyBmb3VyLCAzMi1iaXQgd3JpdGUtb25seSB0cmFuc21pdCByZWdpc3RlcnMK
-Pj4gPiBhbmQgZm91ciwgMzItYml0IHJlYWQtb25seSByZWNlaXZlIHJlZ2lzdGVycyBvbiB0aGUg
-UHJvY2Vzc29yIEIgYW5kCj4+ID4gUHJvY2Vzc29yIEEtc2lkZXMuIFRoZXNlIHJlZ2lzdGVycyBh
-cmUgdXNlZCBmb3Igc2VuZGluZyBtZXNzYWdlcyB0byBlYWNoCj4+IG90aGVyLgo+PiA+Cj4+IEZv
-ciBhIHdoaWxlIHBsZWFzZSBmb3JnZXQgdGhlIHByb3RvY29sKHVzZXIpIGxldmVsIHVzYWdlLCBh
-bmQgY29uc2lkZXIgb25seQo+PiB3aGF0IHlvdXIgaC93IGlzLgo+Pgo+PiBNVSBoYXMgNCBwYWly
-cyBvZiBUWF9SZWcgKyBUWF9JUlEsIGFuZCA0IHBhaXJzIG9mIFJYX1JlZyArIFJYX0lSUS4KPj4g
-KE1VIGFsc28gaGFzIDQgImRvb3JiZWxsIiB0eXBlIGNoYW5uZWxzIHRoYXQgaXQgY2FsbHMgR1As
-IGJ1dCB0aG9zZSBhcmUgbm90Cj4+IG1hbmFnZWQgaGVyZSwgc28gbGV0cyBub3Qgd29ycnkgYXRt
-KS4KPj4KPj4gQnkgZGVmaW5pdGlvbiwgYSBtYWlsYm94IGNoYW5uZWwgaXMgc2ltcGx5IGEgc2ln
-bmFsLCBvcHRpb25hbGx5IHdpdGggZGF0YQo+PiBhdHRhY2hlZC4gU28sIE1VIGhhcyA0IFRYIGFu
-ZCA0IFJYIGNoYW5uZWxzLgo+Pgo+PiBUaGUgTVUgZHJpdmVyIHNob3VsZCBwb3B1bGF0ZSA4IHVu
-aWRpcmVjdGlvbmFsICg0IFR4IGFuZCA0IFJYKSBjaGFubmVscyBhbmQKPj4gc2V0IGVhY2ggdHgv
-cnggb3BlcmF0aW9uIHRvIHRyaWdnZXIgdGhlIGNvcnJlc3BvbmRpbmcgaW50ZXJydXB0LiBUaGlz
-IGlzIG5vdCBteQo+PiB3aGltLCB0aGlzIGlzIGhvdyB0aGUgY29udHJvbGxlciBpcyEKPj4KPgo+
-IFRoaXMgbG9va3MgbGlrZSByZWFzb25hYmxlIHRvIG1lLCB0aGVvcmV0aWNhbGx5Lgo+IEp1c3Qg
-bm90IHN1cmUgd2hldGhlciBpdCdzIG5lY2Vzc2FyeSB0byBzdXBwb3J0IGl0IGJlY2F1c2Ugd2Ug
-cHJvYmFibHkgd2lsbCBuZXZlciB1c2UKPiBsaWtlIHRoYXQgaW4gcmVhbGl0eSwgdGhlbiBpdCBt
-aWdodCBiZWNvbWUgbWVhbmluZ2xlc3MgY29tcGxpY2l0eSBpbnRyb2R1Y2VkCj4gYW5kIGVycm9y
-IHByb25lLgo+Ckl0IF9pc18gbmVjZXNzYXJ5IHRvIHdyaXRlIGNvbnRyb2xsZXIgZHJpdmVyIGlu
-ZGVwZW5kZW50IG9mIGNsaWVudCBkcml2ZXJzLgoKCj4gQW5kIEFGQUlLIEFSTSBNSFUgaXMgZG9p
-bmcgdGhlIHNhbWUgd2F5IGFzIE1VIHdoaWNoIGxvb2tzIGxpa2UgYWxzbyB1bmlkaXJlY3Rpb25h
-bCBjaGFubmVsLgo+IGh0dHA6Ly9pbmZvY2VudGVyLmFybS5jb20vaGVscC9pbmRleC5qc3A/dG9w
-aWM9L2NvbS5hcm0uZG9jLmRkaTA1MTViL0NIREdCR0lGLmh0bWwKPiBkcml2ZXJzL21haWxib3gv
-YXJtX21odS5jCj4KTUhVIGRyaXZlciBpcyBkb2luZyBleGFjdGx5IHdoYXQgdGhlIGRhdGEgc2hl
-ZXQgc2F5cy4gSSBrbm93IGJlY2F1c2UgSQp3cm90ZSB0aGUgZHJpdmVyLgoKCj4+IFRoZSBTQ1Ug
-aXMgcG9vcmx5IGltcGxlbWVudGVkIGFzIGl0IGlnbm9yZXMgMyBpcnFzIGFuZCBjbHViIGFsbCA0
-IHJlZ2lzdGVyCj4+IHRvZ2V0aGVyICh0aGVyZSBhcmUgbWFueSBvdGhlciBjb25zIG9mIHRoaXMg
-YXBwcm9hY2ggYnV0IGxldHMgbm90IGdldCBpbnRvCj4+IHRoYXQpLgo+PiBQZXJzb25hbGx5LCBJ
-IHdvdWxkIHB1c2gtYmFjayBvbiBzdWNoIGEgYmFkIGRlc2lnbi4gQnV0IGlmIHlvdSBjbGFpbSB5
-b3UgaGF2ZQo+PiBubyBjaG9pY2UgYnV0IHRvIHN1cHBvcnQgU0NVIGFzIHN1Y2gsIHRoZSB3b3Jr
-IGFyb3VuZCBjb3VsZCBiZSBzaW1wbGVyIHRoYW4KPj4gZGVmaW5pbmcgYSBuZXcgInNjdSBtb2Rl
-IiBhbHRvZ2V0aGVyLgo+Pgo+Cj4gVGhpcyBpcyBvbmUgb2YgdGhlIHJlY29tbWVuZGVkIHdheXMg
-ZGVzaWduZWQgaW4gSFcgcmVmZXJlbmNlIG1hbnVhbCBhbmQgaXQKPiBhbGxvd3MgdG8gc2VuZCBm
-cmFtZSBpbmZvcm1hdGlvbiB1cCB0byA0IHdvcmRzIHdpdGhvdXQgdXNpbmcgc2hhcmVkIG1lbW9y
-eS4KPiBTQ1UganVzdCBmb2xsb3dzIGl0LCBzbyBpdCdzIGhhcmQgdG8gYmVsaWV2ZSBpdCdzIGEg
-YmFkIGRlc2lnbi4KPgo+PiAjbWJveC1jZWxsczogIE11c3QgYmUgMy4KPj4gICAgICAgICAgICAg
-ICAgICAgICAgIEZpcnN0IGNlbGwgaXMgMSBmb3IgVFggYW5kIDAgZm9yIFJYIGNoYW5uZWwKPj4g
-ICAgICAgICAgICAgICAgICAgICAgIFNlY29uZCBjZWxsIGlzIGluZGV4IG9mIHRoZSBjaGFubmVs
-IFswLDEsMiBvciAzXQo+PiAgICAgICAgICAgICAgICAgICAgICAgVGhpcmQgY2VsbCBpcyAxIGlm
-IHRoZSBjaGFubmVsIHRyaWdnZXJzIGFuIElSUSwKPj4gMCBpZiBub3QuIFRoYXQgaXMgQUNSLlJJ
-RS9USUUgYml0cyBhcmUgc2V0IG9yIG5vdC4KPj4KPj4gTm9ybWFsIGNsaWVudHMgd291bGQgYWx3
-YXlzIHJlcXVlc3QgYSBjaGFubmVsIHdpdGggaXJxcyBlbmFibGVkLgo+PiBUaGUgU0NVIGNsaWVu
-dCB3b3VsZCByZXF1ZXN0IGFsbCA4IGNoYW5uZWxzIC0tIFRYL1JYWzAsMSwyXSB3aXRoIGlycXMg
-ZGlzYWJsZWQsCj4+IFRYL1JYWzNdIHdpdGggaXJxcyBlbmFibGVkLiBBbmQgU0NVIHdpbGwgcmVh
-ZC93cml0ZSA0IHdvcmQgZGF0YSBvdmVyIDQgcngvdHgKPj4gY2hhbm5lbHMsIGluc3RlYWQgb2Yg
-dGhlIHZpcnR1YWxseSBjb25jb2N0ZWQgb25lLgo+Pgo+Cj4gSXQgbWF5IHdvcmsgSWYgU0NVIHBy
-b3RvY29sIGRhdGEgbGVuZ3RoIGlzIGZpeGVkIHRvIDQgd29yZHMuIEhvd2V2ZXIsIGl0J3MgbGVu
-Z3RoCj4gaXMgZmxleGlibGUgZm9yIGRpZmZlcmVudCBTVkMgc2VydmljZS4gVGhhdCBtZWFucyB0
-aGlzIGJpbmRpbmcgd29uJ3Qgd29yayBmb3IgU0NVLgo+IEFuZCBpdCB3aWxsIGludHJvZHVjZSBt
-dWNoIGNvbXBsZXhpdGllcyBkdXJpbmcgdGhlIGltcGxlbWVudGF0aW9uLgo+Cj4gSW5zdGVhZCwg
-d2UncmUgdXNpbmcgcG9sbGluZyBtb2RlIGZvciBib3RoIFRYL1JYIGFuZCB0aGUgZGF0YSBzaXpl
-IGlzIHN0b3JlZCBpbgo+IHRoZSBtc2cgaGVhZGVyIGFuZCBzZW5kaW5nIG1zZ3MgdXNpbmcgYWxs
-IDQgZGF0YSB0eC9yeCByZWdpc3RlcnMgYXMgYSBjaGFubmVsIGZpZm8uCj4KWW91IGZpcnN0IGdp
-dmUgbWUgdGhlICJQYXNzaW5nIHNob3J0IG1lc3NhZ2VzIiB1c2VjYXNlIChxdWl0ZSBhIGJhZApv
-bmUpIGFuZCBhc2sgaG93IGl0IGNhbiB3b3JrLiBXaGVuIEkgZ2l2ZSB5b3UgYSBzb2x1dGlvbiwg
-eW91CmVmZmVjdGl2ZWx5IHNheSAid2VsbCwgbXkgdXNlY2FzZSBpc24ndCBldmVuIHRoYXQiLiBJ
-IGZlZWwgSSBqdXN0Cndhc3RlZCBteSB0aW1lLgoKCj4+Cj4+ID4gc2hvcnQgbWVzc2FnZXMKPj4g
-PiBUcmFuc21pdCByZWdpc3RlcihzKSBjYW4gYmUgdXNlZCB0byBwYXNzIHNob3J0IG1lc3NhZ2Vz
-IGZyb20gb25lIHRvCj4+ID4gZm91ciB3b3JkcyBpbiBsZW5ndGguIEZvciBleGFtcGxlLCB3aGVu
-IGEgZm91ci13b3JkIG1lc3NhZ2UgaXMKPj4gPiBkZXNpcmVkLCBvbmx5IG9uZSBvZiB0aGUgcmVn
-aXN0ZXJzIG5lZWRzIHRvIGhhdmUgaXRzIGNvcnJlc3BvbmRpbmcKPj4gPiBpbnRlcnJ1cHQgZW5h
-YmxlIGJpdCBzZXQgYXQgdGhlIHJlY2VpdmVyIHNpZGU7IHRoZSBtZXNzYWdl4oCZcyBmaXJzdAo+
-PiA+IHRocmVlIHdvcmRzIGFyZSB3cml0dGVuIHRvIHRoZSByZWdpc3RlcnMgd2hvc2UgaW50ZXJy
-dXB0IGlzIG1hc2tlZCwKPj4gPiBhbmQgdGhlIGZvdXJ0aCB3b3JkIGlzIHdyaXR0ZW4gdG8gdGhl
-IG90aGVyIHJlZ2lzdGVyICh3aGljaCB0cmlnZ2VycyBhbgo+PiBpbnRlcnJ1cHQgYXQgdGhlIHJl
-Y2VpdmVyIHNpZGUpLgo+PiA+Cj4+ID4gVGhlIHJlZmVyZW5jZSBtYW51YWwgaXMgYXQgaGVyZTog
-KENoYXB0ZXIgNDIgTWVzc2FnaW5nIFVuaXQgKE1VKQo+PiA+Cj4+IGh0dHBzOi8vZW1lYTAxLnNh
-ZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZ3Cj4+IHd3
-Cj4+ID4gLm54cC5jb20lMkZkb2NzJTJGZW4lMkZyZWZlcmVuY2UtCj4+IG1hbnVhbCUyRklNWDZV
-TFJNLnBkZiZhbXA7ZGF0YT0wMiU3QzAKPj4gPgo+PiAxJTdDYWlzaGVuZy5kb25nJTQwbnhwLmNv
-bSU3Q2VmMzQ5ZDdjOWNhZjQ2YzQyNjAwMDhkNWYzMGU5ZWY1JTdDNgo+PiA4NmVhMQo+PiA+Cj4+
-IGQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY2ODIxNjY0OTQ4NjAzMzIm
-YW1wO3NkYXQKPj4gYT01NHJFCj4+ID4KPj4gaURtJTJCR0Q2RVk4TkU2NGNrMUxYVkdvVUN0V1ly
-SFhQb1dxY3VqVW8lM0QmYW1wO3Jlc2VydmVkPTAKPj4gPgo+PiA+IEFuZCBTQ1UgZmlybXdhcmUg
-ZG9lcyB1c2UgTVUgaW4gYWJvdmUgd2F5IHNwZWNpZmllZCBieSByZWZlcmVuY2UKPj4gbWFudWFs
-Lgo+PiA+IEV2ZW4gZnJvbSBIVyBwb2ludCBvZiB2aWV3LCBpdCdzIHN0aWxsIG9uZSBjaGFubmVs
-IG9ubHkgbWFpbGJveC4KPj4gPgo+PiBQbGVhc2UgcmVhbGlzZSB0aGF0IGFueSBtYW51YWwgaXMg
-d3JpdHRlbiBieSBhIG1lcmUgbW9ydGFsIGFmdGVyYWxsLgo+PiBIb3cgdGhlIGNvbnRyb2xsZXIg
-d29ya3MgaXMgc2V0IGluIHN0b25lLCBidXQgaG93IHRoZSBjb250cm9sbGVyIGNhbiBiZQo+PiB1
-c2VkIC4uLiBpcyBqdXN0IHNvbWVvbmVzIHN1Z2dlc3Rpb24uCj4+Cj4+IFRoZSBhcHByb2FjaCBJ
-IHN1Z2dlc3QgYWJvdmUsIGNvbmZvcm1zIHRvIHRoZSBhcGkgYW5kIHByZXZlbnRzIGEgcHJvdmlk
-ZXIKPj4gZGFuY2luZyB0byB0aGUgdHVuZXMgb2YgYSB1c2VyLgo+Cj4gRmlyc3Qgb2YgYWxsLCBy
-ZWFsbHkgYXBwcmVjaWF0ZSBmb3IgeW91ciBzdWdnZXN0aW9ucy4KPiBJdCBtYXkgYmUgaGFyZCB0
-byBmaW5kIGEgY29tbW9uIGJpbmRpbmcgd2l0aCB0aGUgc2FtZSBtYm94LWNlbGxzLgo+IEl0IGxv
-b2tzIGxpa2Ugd2UganVzdCBuZWVkIGEgcHJvcGVydHkgaXMgZGlzdGluZ3Vpc2ggaG93IHRoZSBN
-YWlsYm94IGlzIHVzZWQKPiBJbiBvbmUgY2hhbm5lbCBvciBtdWx0aSBjaGFubmVsIG1vZGUuCj4K
-SSBnZXQgdGhlIGlkZWEgeW91IHdlcmUgcmVhZHkgdG8gc2VlIHRoZSBjb2RlIG1lcmdlZCBpbiB0
-aGUgY29taW5nCndpbmRvdyBhbmQgYmUgZG9uZSB3aXRoIGl0LiBBbmQgbm93IGl0IGZlZWxzIGxh
-enkgdG8gY2hhbmdlIHRoZSBjb2RlLgpJIGFtIHNvcnJ5LCBidXQgSSBjYW4ndCBhbGxvdyBjb250
-cm9sbGVyIGRyaXZlcnMgImVtdWxhdGluZyIgc29tZSBtb2RlCmZvciBhIGNsaWVudCBkcml2ZXIu
-IFRoYXQgaXMgbW92aW5nIGEgcGFydCBvZiBjbGllbnQgY29kZSBpbnRvIHRoZQpjb250cm9sbGVy
-IGRyaXZlci4KCgo+IERpcmVjdGx5IGNoZWNraW5nIG1ib3gtY2VsbHMgc2VlbXMgdGhlIG1vc3Qg
-ZWFzeSB3YXkgYW5kIGl0IGlzIGFscmVhZHkgQWNrZWQKPiBieSBSb2IuIENhbid0IHRoaXMgd2F5
-IGJlIE9rYXkgdG8geW91Pwo+ClJvYiBpcyBpbmRlZWQgZmFyIGJldHRlciB0aGFuIEkgYW0uIEJ1
-dCBoZSBhbHNvIGhhcyB0byBsb29rIGludG8gMTAwCm90aGVyIHN1YnN5c3RlbXMsIHdoZXJlYXMg
-SSBhbSBvbmx5IGxvb2tpbmcgaW50byBtYWlsYm94LiBJIGhhdmUgdGltZQp0byBkaWcgaW50byB5
-b3VyIGRhdGFzaGVldHMuIEkgYmVsaWV2ZSBSb2Igd2lsbCBwb2ludCBvdXQgYW55dGhpbmcKd3Jv
-bmcgSSBzdWdnZXN0LgoKQlRXLCB0aGUgc3VibWl0dGVkIGRyaXZlciBkb2Vzbid0IGV2ZW4gc3Vw
-cG9ydCB0aGUgU0NVIHVzZWNhc2UuIFdoeQp0aGUgYmluZGluZ3M/CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+This is a multi-part message in MIME format.
+--===============1537761834==
+Content-Type: multipart/alternative;
+ boundary="------------37BEB597666699A5F82FD777"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------37BEB597666699A5F82FD777
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+
+
+On 7/26/2018 9:00 PM, Robin Murphy wrote:
+> On 26/07/18 08:12, Vivek Gautam wrote:
+>> On Wed, Jul 25, 2018 at 11:46 PM, Vivek Gautam
+>> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>> On Tue, Jul 24, 2018 at 8:51 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> 
+>>> wrote:
+>>>> On 19/07/18 11:15, Vivek Gautam wrote:
+>>>>>
+>>>>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>>
+>>>>> The smmu needs to be functional only when the respective
+>>>>> master's using it are active. The device_link feature
+>>>>> helps to track such functional dependencies, so that the
+>>>>> iommu gets powered when the master device enables itself
+>>>>> using pm_runtime. So by adapting the smmu driver for
+>>>>> runtime pm, above said dependency can be addressed.
+>>>>>
+>>>>> This patch adds the pm runtime/sleep callbacks to the
+>>>>> driver and also the functions to parse the smmu clocks
+>>>>> from DT and enable them in resume/suspend.
+>>>>>
+>>>>> Also, while we enable the runtime pm add a pm sleep suspend
+>>>>> callback that pushes devices to low power state by turning
+>>>>> the clocks off in a system sleep.
+>>>>> Also add corresponding clock enable path in resume callback.
+>>>>>
+>>>>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>> [vivek: rework for clock and pm ops]
+>>>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>>>> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>>> ---
+>>>>>
+>>>>> Changes since v12:
+>>>>>    - Added pm sleep .suspend callback. This disables the clocks.
+>>>>>    - Added corresponding change to enable clocks in .resume
+>>>>>     pm sleep callback.
+>>>>>
+>>>>>    drivers/iommu/arm-smmu.c | 75
+>>>>> ++++++++++++++++++++++++++++++++++++++++++++++--
+>>>>>    1 file changed, 73 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>>>> index c73cfce1ccc0..9138a6fffe04 100644
+>>>>> --- a/drivers/iommu/arm-smmu.c
+>>>>> +++ b/drivers/iommu/arm-smmu.c
+>>
+>> [snip]
+>>
+>>>>> platform_device *pdev)
+>>>>>          arm_smmu_device_remove(pdev);
+>>>>>    }
+>>>>>    +static int __maybe_unused arm_smmu_runtime_resume(struct 
+>>>>> device *dev)
+>>>>> +{
+>>>>> +       struct arm_smmu_device *smmu = dev_get_drvdata(dev);
+>>>>> +
+>>>>> +       return clk_bulk_enable(smmu->num_clks, smmu->clks);
+>>>>
+>>>>
+>>>> If there's a power domain being automatically switched by genpd 
+>>>> then we need
+>>>> a reset here because we may have lost state entirely. Since I 
+>>>> remembered the
+>>>> otherwise-useless GPU SMMU on Juno is in a separate power domain, I 
+>>>> gave it
+>>>> a poking via sysfs with some debug stuff to dump sCR0 in these 
+>>>> callbacks,
+>>>> and the problem is clear:
+>>>>
+>>>> ...
+>>>> [    4.625551] arm-smmu 2b400000.iommu: genpd_runtime_suspend()
+>>>> [    4.631163] arm-smmu 2b400000.iommu: arm_smmu_runtime_suspend: 
+>>>> 0x00201936
+>>>> [    4.637897] arm-smmu 2b400000.iommu: suspend latency exceeded, 
+>>>> 6733980 ns
+>>>> [   21.566983] arm-smmu 2b400000.iommu: genpd_runtime_resume()
+>>>> [   21.584796] arm-smmu 2b400000.iommu: arm_smmu_runtime_resume: 
+>>>> 0x00220101
+>>>> [   21.591452] arm-smmu 2b400000.iommu: resume latency exceeded, 
+>>>> 6658020 ns
+>>>> ...
+>>>
+>>> Qualcomm SoCs have retention enabled for SMMU registers so they don't
+>>> lose state.
+>>> ...
+>>> [  256.013367] arm-smmu b40000.arm,smmu: arm_smmu_runtime_suspend
+>>> SCR0 = 0x201e36
+>>> [  256.013367]
+>>> [  256.019160] arm-smmu b40000.arm,smmu: arm_smmu_runtime_resume
+>>> SCR0 = 0x201e36
+>>> [  256.019160]
+>>> [  256.027368] arm-smmu b40000.arm,smmu: arm_smmu_runtime_suspend
+>>> SCR0 = 0x201e36
+>>> [  256.027368]
+>>> [  256.036786] arm-smmu b40000.arm,smmu: arm_smmu_runtime_resume
+>>> SCR0 = 0x201e36
+>>> ...
+>>>
+>>> However after adding arm_smmu_device_reset() in runtime_resume() I 
+>>> observe
+>>> some performance degradation when kill an instance of 'kmscube' and
+>>> start it again.
+>>> The launch time with arm_smmu_device_reset() in runtime_resume() 
+>>> change is
+>>> more.
+>>> Could this be because of frequent TLB invalidation and sync?
+>
+> Probably. Plus the reset procedure is a big chunk of MMIO accesses, 
+> which for a non-trivial SMMU configuration probably isn't negligible 
+> in itself. Unfortunately, unless you know for absolute certain that 
+> you don't need to do that, you do.
+>
+>> Some more information that i gathered.
+>> On Qcom SoCs besides the registers retention, TCU invalidates TLB 
+>> cache on
+>> a CX power collapse exit, which is the system wide suspend case.
+>> The arm-smmu software is not aware of this CX power collapse /
+>> auto-invalidation.
+>>
+>> So wouldn't doing an explicit TLB invalidations during runtime resume be
+>> detrimental to performance?
+>
+> Indeed it would be, but resuming with TLBs full of random 
+> valid-looking junk is even more so.
+>
+>> I have one more doubt here -
+>> We do runtime power cycle around arm_smmu_map/unmap() too.
+>> Now during map/unmap we selectively do TLB maintenance (either
+>> tlb_sync or tlb_add_flush).
+>> But with runtime pm we want to do TLBIALL*. Is that a problem?
+>
+> It's technically redundant to do both, true, but as we've covered in 
+> previous rounds of discussion it's very difficult to know *which* one 
+> is sufficient at any given time, so in order to make progress for now 
+> I think we have to settle with doing both.
+
+Thanks Robin. I will respin the patches as Tomasz also suggested;
+
+arm_smmu_runtime_resume() will look like:
+
+     if (pm_runtime_suspended(dev))
+         return 0;
+     return arm_smmu_runtime_resume(dev);
+
+and,
+arm_smmu_runtime_resume() will have arm_smmu_device_reset().
+
+Best regards
+Vivek
+>
+> Robin.
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+--------------37BEB597666699A5F82FD777
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <p><br>
+    </p>
+    <br>
+    <div class="moz-cite-prefix">On 7/26/2018 9:00 PM, Robin Murphy
+      wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:401d8509-b9ad-913b-334e-f4ac853472e3-5wv7dgnIgG8@public.gmane.org">On
+      26/07/18 08:12, Vivek Gautam wrote:
+      <br>
+      <blockquote type="cite">On Wed, Jul 25, 2018 at 11:46 PM, Vivek
+        Gautam
+        <br>
+        <a class="moz-txt-link-rfc2396E" href="mailto:vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org">&lt;vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org&gt;</a> wrote:
+        <br>
+        <blockquote type="cite">On Tue, Jul 24, 2018 at 8:51 PM, Robin
+          Murphy <a class="moz-txt-link-rfc2396E" href="mailto:robin.murphy-5wv7dgnIgG8@public.gmane.org">&lt;robin.murphy-5wv7dgnIgG8@public.gmane.org&gt;</a> wrote:
+          <br>
+          <blockquote type="cite">On 19/07/18 11:15, Vivek Gautam wrote:
+            <br>
+            <blockquote type="cite">
+              <br>
+              From: Sricharan R <a class="moz-txt-link-rfc2396E" href="mailto:sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org">&lt;sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org&gt;</a>
+              <br>
+              <br>
+              The smmu needs to be functional only when the respective
+              <br>
+              master's using it are active. The device_link feature
+              <br>
+              helps to track such functional dependencies, so that the
+              <br>
+              iommu gets powered when the master device enables itself
+              <br>
+              using pm_runtime. So by adapting the smmu driver for
+              <br>
+              runtime pm, above said dependency can be addressed.
+              <br>
+              <br>
+              This patch adds the pm runtime/sleep callbacks to the
+              <br>
+              driver and also the functions to parse the smmu clocks
+              <br>
+              from DT and enable them in resume/suspend.
+              <br>
+              <br>
+              Also, while we enable the runtime pm add a pm sleep
+              suspend
+              <br>
+              callback that pushes devices to low power state by turning
+              <br>
+              the clocks off in a system sleep.
+              <br>
+              Also add corresponding clock enable path in resume
+              callback.
+              <br>
+              <br>
+              Signed-off-by: Sricharan R
+              <a class="moz-txt-link-rfc2396E" href="mailto:sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org">&lt;sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org&gt;</a>
+              <br>
+              Signed-off-by: Archit Taneja
+              <a class="moz-txt-link-rfc2396E" href="mailto:architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org">&lt;architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org&gt;</a>
+              <br>
+              [vivek: rework for clock and pm ops]
+              <br>
+              Signed-off-by: Vivek Gautam
+              <a class="moz-txt-link-rfc2396E" href="mailto:vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org">&lt;vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org&gt;</a>
+              <br>
+              Reviewed-by: Tomasz Figa <a class="moz-txt-link-rfc2396E" href="mailto:tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org">&lt;tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org&gt;</a>
+              <br>
+              ---
+              <br>
+              <br>
+              Changes since v12:
+              <br>
+                 - Added pm sleep .suspend callback. This disables the
+              clocks.
+              <br>
+                 - Added corresponding change to enable clocks in
+              .resume
+              <br>
+                  pm sleep callback.
+              <br>
+              <br>
+                 drivers/iommu/arm-smmu.c | 75
+              <br>
+              ++++++++++++++++++++++++++++++++++++++++++++++--
+              <br>
+                 1 file changed, 73 insertions(+), 2 deletions(-)
+              <br>
+              <br>
+              diff --git a/drivers/iommu/arm-smmu.c
+              b/drivers/iommu/arm-smmu.c
+              <br>
+              index c73cfce1ccc0..9138a6fffe04 100644
+              <br>
+              --- a/drivers/iommu/arm-smmu.c
+              <br>
+              +++ b/drivers/iommu/arm-smmu.c
+              <br>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+        <br>
+        [snip]
+        <br>
+        <br>
+        <blockquote type="cite">
+          <blockquote type="cite">
+            <blockquote type="cite">platform_device *pdev)
+              <br>
+                       arm_smmu_device_remove(pdev);
+              <br>
+                 }
+              <br>
+                 +static int __maybe_unused
+              arm_smmu_runtime_resume(struct device *dev)
+              <br>
+              +{
+              <br>
+              +       struct arm_smmu_device *smmu =
+              dev_get_drvdata(dev);
+              <br>
+              +
+              <br>
+              +       return clk_bulk_enable(smmu-&gt;num_clks,
+              smmu-&gt;clks);
+              <br>
+            </blockquote>
+            <br>
+            <br>
+            If there's a power domain being automatically switched by
+            genpd then we need
+            <br>
+            a reset here because we may have lost state entirely. Since
+            I remembered the
+            <br>
+            otherwise-useless GPU SMMU on Juno is in a separate power
+            domain, I gave it
+            <br>
+            a poking via sysfs with some debug stuff to dump sCR0 in
+            these callbacks,
+            <br>
+            and the problem is clear:
+            <br>
+            <br>
+            ...
+            <br>
+            [    4.625551] arm-smmu 2b400000.iommu:
+            genpd_runtime_suspend()
+            <br>
+            [    4.631163] arm-smmu 2b400000.iommu:
+            arm_smmu_runtime_suspend: 0x00201936
+            <br>
+            [    4.637897] arm-smmu 2b400000.iommu: suspend latency
+            exceeded, 6733980 ns
+            <br>
+            [   21.566983] arm-smmu 2b400000.iommu:
+            genpd_runtime_resume()
+            <br>
+            [   21.584796] arm-smmu 2b400000.iommu:
+            arm_smmu_runtime_resume: 0x00220101
+            <br>
+            [   21.591452] arm-smmu 2b400000.iommu: resume latency
+            exceeded, 6658020 ns
+            <br>
+            ...
+            <br>
+          </blockquote>
+          <br>
+          Qualcomm SoCs have retention enabled for SMMU registers so
+          they don't
+          <br>
+          lose state.
+          <br>
+          ...
+          <br>
+          [  256.013367] arm-smmu b40000.arm,smmu:
+          arm_smmu_runtime_suspend
+          <br>
+          SCR0 = 0x201e36
+          <br>
+          [  256.013367]
+          <br>
+          [  256.019160] arm-smmu b40000.arm,smmu:
+          arm_smmu_runtime_resume
+          <br>
+          SCR0 = 0x201e36
+          <br>
+          [  256.019160]
+          <br>
+          [  256.027368] arm-smmu b40000.arm,smmu:
+          arm_smmu_runtime_suspend
+          <br>
+          SCR0 = 0x201e36
+          <br>
+          [  256.027368]
+          <br>
+          [  256.036786] arm-smmu b40000.arm,smmu:
+          arm_smmu_runtime_resume
+          <br>
+          SCR0 = 0x201e36
+          <br>
+          ...
+          <br>
+          <br>
+          However after adding arm_smmu_device_reset() in
+          runtime_resume() I observe
+          <br>
+          some performance degradation when kill an instance of
+          'kmscube' and
+          <br>
+          start it again.
+          <br>
+          The launch time with arm_smmu_device_reset() in
+          runtime_resume() change is
+          <br>
+          more.
+          <br>
+          Could this be because of frequent TLB invalidation and sync?
+          <br>
+        </blockquote>
+      </blockquote>
+      <br>
+      Probably. Plus the reset procedure is a big chunk of MMIO
+      accesses, which for a non-trivial SMMU configuration probably
+      isn't negligible in itself. Unfortunately, unless you know for
+      absolute certain that you don't need to do that, you do.
+      <br>
+      <br>
+      <blockquote type="cite">Some more information that i gathered.
+        <br>
+        On Qcom SoCs besides the registers retention, TCU invalidates
+        TLB cache on
+        <br>
+        a CX power collapse exit, which is the system wide suspend case.
+        <br>
+        The arm-smmu software is not aware of this CX power collapse /
+        <br>
+        auto-invalidation.
+        <br>
+        <br>
+        So wouldn't doing an explicit TLB invalidations during runtime
+        resume be
+        <br>
+        detrimental to performance?
+        <br>
+      </blockquote>
+      <br>
+      Indeed it would be, but resuming with TLBs full of random
+      valid-looking junk is even more so.
+      <br>
+      <br>
+      <blockquote type="cite">I have one more doubt here -
+        <br>
+        We do runtime power cycle around arm_smmu_map/unmap() too.
+        <br>
+        Now during map/unmap we selectively do TLB maintenance (either
+        <br>
+        tlb_sync or tlb_add_flush).
+        <br>
+        But with runtime pm we want to do TLBIALL*. Is that a problem?
+        <br>
+      </blockquote>
+      <br>
+      It's technically redundant to do both, true, but as we've covered
+      in previous rounds of discussion it's very difficult to know
+      *which* one is sufficient at any given time, so in order to make
+      progress for now I think we have to settle with doing both.
+      <br>
+    </blockquote>
+    <br>
+    Thanks Robin. I will respin the patches as Tomasz also suggested;<span
+      style="color: rgb(34, 34, 34); font-family: arial, sans-serif;
+      font-size: 12.8px; font-style: normal; font-variant-ligatures:
+      normal; font-variant-caps: normal; font-weight: 400;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial; display: inline
+      !important; float: none;"><br>
+      <br>
+      arm_smmu_runtime_resume() will look like:</span><br style="color:
+      rgb(34, 34, 34); font-family: arial, sans-serif; font-size:
+      12.8px; font-style: normal; font-variant-ligatures: normal;
+      font-variant-caps: normal; font-weight: 400; letter-spacing:
+      normal; orphans: 2; text-align: start; text-indent: 0px;
+      text-transform: none; white-space: normal; widows: 2;
+      word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial;">
+    <br style="color: rgb(34, 34, 34); font-family: arial, sans-serif;
+      font-size: 12.8px; font-style: normal; font-variant-ligatures:
+      normal; font-variant-caps: normal; font-weight: 400;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial;">
+    <span style="color: rgb(34, 34, 34); font-family: arial, sans-serif;
+      font-size: 12.8px; font-style: normal; font-variant-ligatures:
+      normal; font-variant-caps: normal; font-weight: 400;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial; display: inline
+      !important; float: none;">    if (pm_runtime_suspended(dev))</span><br
+      style="color: rgb(34, 34, 34); font-family: arial, sans-serif;
+      font-size: 12.8px; font-style: normal; font-variant-ligatures:
+      normal; font-variant-caps: normal; font-weight: 400;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial;">
+    <span style="color: rgb(34, 34, 34); font-family: arial, sans-serif;
+      font-size: 12.8px; font-style: normal; font-variant-ligatures:
+      normal; font-variant-caps: normal; font-weight: 400;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial; display: inline
+      !important; float: none;">        return 0;</span><br
+      style="color: rgb(34, 34, 34); font-family: arial, sans-serif;
+      font-size: 12.8px; font-style: normal; font-variant-ligatures:
+      normal; font-variant-caps: normal; font-weight: 400;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial;">
+    <span style="color: rgb(34, 34, 34); font-family: arial, sans-serif;
+      font-size: 12.8px; font-style: normal; font-variant-ligatures:
+      normal; font-variant-caps: normal; font-weight: 400;
+      letter-spacing: normal; orphans: 2; text-align: start;
+      text-indent: 0px; text-transform: none; white-space: normal;
+      widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;
+      background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial; display: inline
+      !important; float: none;">    return arm_smmu_runtime_resume(dev);<br>
+      <br>
+      and,<br>
+    </span><span style="color: rgb(34, 34, 34); font-family: arial,
+      sans-serif; font-size: 12.8px; font-style: normal;
+      font-variant-ligatures: normal; font-variant-caps: normal;
+      font-weight: 400; letter-spacing: normal; orphans: 2; text-align:
+      start; text-indent: 0px; text-transform: none; white-space:
+      normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width:
+      0px; background-color: rgb(255, 255, 255); text-decoration-style:
+      initial; text-decoration-color: initial; display: inline
+      !important; float: none;"><span style="color: rgb(34, 34, 34);
+        font-family: arial, sans-serif; font-size: 12.8px; font-style:
+        normal; font-variant-ligatures: normal; font-variant-caps:
+        normal; font-weight: 400; letter-spacing: normal; orphans: 2;
+        text-align: start; text-indent: 0px; text-transform: none;
+        white-space: normal; widows: 2; word-spacing: 0px;
+        -webkit-text-stroke-width: 0px; background-color: rgb(255, 255,
+        255); text-decoration-style: initial; text-decoration-color:
+        initial; display: inline !important; float: none;">arm_smmu_runtime_resume()
+        will have arm_smmu_device_reset().<br>
+      </span></span><br>
+    Best regards<br>
+    Vivek<br>
+    <blockquote type="cite"
+      cite="mid:401d8509-b9ad-913b-334e-f4ac853472e3-5wv7dgnIgG8@public.gmane.org">
+      <br>
+      Robin.
+      <br>
+      --
+      <br>
+      To unsubscribe from this list: send the line "unsubscribe
+      linux-arm-msm" in
+      <br>
+      the body of a message to <a class="moz-txt-link-abbreviated" href="mailto:majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org">majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org</a>
+      <br>
+      More majordomo info at  <a class="moz-txt-link-freetext" href="http://vger.kernel.org/majordomo-info.html">http://vger.kernel.org/majordomo-info.html</a>
+      <br>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------37BEB597666699A5F82FD777--
+
+--===============1537761834==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
+IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+
+--===============1537761834==--
