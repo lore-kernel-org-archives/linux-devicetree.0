@@ -1,89 +1,33 @@
-From: Robin Gong <yibin.gong@nxp.com>
-Subject: RE: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
- fsl,pmic-stby-poweroff property
-Date: Fri, 27 Jul 2018 08:58:22 +0000
-Message-ID: <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
-References: <20180726092220.17250-1-o.rempel@pengutronix.de>
-         <20180726092220.17250-2-o.rempel@pengutronix.de>
-         <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
-         <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
-         <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
- <1532680211.32306.36.camel@pengutronix.de>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC PATCH v1 0/6] Resolve unwanted DMA backing with IOMMU
+Date: Fri, 27 Jul 2018 10:03:28 +0100
+Message-ID: <20180727090328.GH28088@arm.com>
+References: <20180726231624.21084-1-digetx@gmail.com>
+ <20180727082512.lpvmeuvxnw3mpeym@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532680211.32306.36.camel@pengutronix.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180727082512.lpvmeuvxnw3mpeym@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Dmitry Osipenko <digetx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <cyndis@kapsi.fi>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ben Skeggs <bskeggs@redhat.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Nicolas Chauvet <kwizart@gmail.com>, devicetree@vger.kernel.org, nouveau@lists.freedesktop.org, iommu@lists.linux-foundation.org, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTHVjYXMgU3RhY2ggW21h
-aWx0bzpsLnN0YWNoQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiAyMDE45bm0N+aciDI35pelIDE2
-OjMwDQo+IFRvOiBSb2JpbiBHb25nIDx5aWJpbi5nb25nQG54cC5jb20+OyBPbGVrc2lqIFJlbXBl
-bA0KPiA8by5yZW1wZWxAcGVuZ3V0cm9uaXguZGU+OyBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5l
-bC5vcmc+OyBNYXJrDQo+IEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+OyBSYWZhZWwgSi4gV3lz
-b2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+DQo+IENjOiBNYXJrIFJ1dGxhbmQgPG1h
-cmsucnV0bGFuZEBhcm0uY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IE1pY2hh
-ZWwgVHVycXVldHRlIDxtdHVycXVldHRlQGJheWxpYnJlLmNvbT47IFN0ZXBoZW4gQm95ZA0KPiA8
-c2JveWRAY29kZWF1cm9yYS5vcmc+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBMaWFt
-IEdpcmR3b29kDQo+IDxsZ2lyZHdvb2RAZ21haWwuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRA
-a2VybmVsLm9yZz47IGRsLWxpbnV4LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+OyBrZXJuZWxA
-cGVuZ3V0cm9uaXguZGU7IEEucy4gRG9uZw0KPiA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBGYWJp
-byBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSdXNzZWxsDQo+IEtpbmcgPGxpbnV4
-QGFybWxpbnV4Lm9yZy51az47IEFuZHJldyBNb3J0b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5v
-cmc+Ow0KPiBMZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPjsgbGludXgt
-Y2xrQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjggMS82XSBBUk06IGlteDZxOiBwcm92aWRlIGRv
-Y3VtZW50YXRpb24gZm9yIG5ldw0KPiBmc2wscG1pYy1zdGJ5LXBvd2Vyb2ZmIHByb3BlcnR5DQo+
-IA0KPiBIaSBSb2JpbiwNCj4gDQo+IEFtIEZyZWl0YWcsIGRlbiAyNy4wNy4yMDE4LCAwMTo1MSAr
-MDAwMCBzY2hyaWViIFJvYmluIEdvbmc6DQo+IFsuLi5dDQo+ID4gPiA+ID4gLS0tDQo+ID4gPiA+
-ID4gwqBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14NnEtY2xvY2su
-dHh0IHwgOA0KPiA+ID4gPiA+ICsrKysrKysrDQo+ID4gPiA+ID4gwqAxIGZpbGUgY2hhbmdlZCwg
-OCBpbnNlcnRpb25zKCspDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBkaWZmIC0tZ2l0DQo+ID4gPiA+
-ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14NnEtY2xvY2su
-dHh0DQo+ID4gPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2sv
-aW14NnEtY2xvY2sudHh0DQo+ID4gPiA+ID4gaW5kZXggYTQ1Y2E2N2E5ZDVmLi5lMTMwODM0NmUw
-MGQgMTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Nsb2NrL2lteDZxLWNsb2NrLnR4dA0KPiA+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9jay50eHQNCj4gPiA+ID4gPiBAQCAt
-Niw2ICs2LDE0IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gPiA+ID4gwqAtIGludGVycnVw
-dHM6IFNob3VsZCBjb250YWluIENDTSBpbnRlcnJ1cHQNCj4gPiA+ID4gPiDCoC0gI2Nsb2NrLWNl
-bGxzOiBTaG91bGQgYmUgPDE+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiArT3B0aW9uYWwgcHJvcGVy
-dGllczoNCj4gPiA+ID4gPiArLSBmc2wscG1pYy1zdGJ5LXBvd2Vyb2ZmOiBDb25maWd1cmUgQ0NN
-IHRvIGFzc2VydCBQTUlDX1NUQllfUkVRDQo+ID4gPiA+ID4gK3NpZ25hbA0KPiA+ID4gPiA+ICvC
-oMKgb24gcG93ZXIgb2ZmLg0KPiA+ID4gPiA+ICvCoMKgVXNlIHRoaXMgcHJvcGVydHkgaWYgdGhl
-IFNvQyBzaG91bGQgYmUgcG93ZXJlZCBvZmYgYnkNCj4gPiA+ID4gPiArZXh0ZXJuYWwgcG93ZXIN
-Cj4gPiA+ID4gPiArwqDCoG1hbmFnZW1lbnQgSUMgKFBNSUMpIHRyaWdnZXJlZCB2aWEgUE1JQ19T
-VEJZX1JFUSBzaWduYWwuDQo+ID4gPiA+DQo+ID4gPiA+IFBNSUNfT05fUkVRIGRpZG4ndCBjb25u
-ZWN0IHRvIGFueSBwaW4gb2YgUE1JQyBpbiB5b3VyIGNhc2U/DQo+ID4gPg0KPiA+ID4gTm8uIEZp
-cnN0LCBpdCB3YXMgb25seSBvbmUgY3VzdG9tZXIgc3BlY2lmaWMgaXNzdWUuIEFmdGVyIHNvbWUN
-Cj4gPiA+IHJlc2VhcmNoIEkgZm91bmQgZXZlbiBwdWJsaWNseSBhdmFpbGFibGUgYm9hcmRzIChm
-b3IgZXhhbXBsZQ0KPiA+ID4gUmlvVGJvYXJkKSB3aGljaCBoYXMgc2FtZS9zaW1pbGFyIGRlc2ln
-bi4gQWZ0ZXIgc2VlaW5nIHRoaXMgaW4gaW14Ng0KPiA+ID4gZG9jdW1lbnRhdGlvbiBhcyB2YWxp
-ZCBwb3dlciBvZmYgd2F5LCBJIGhhdmUgbm8gZG91YnRzIC0gdGhlcmUgc2hvdWxkIGJlDQo+IGV2
-ZW4gbW9yZSBkZXZpY2VzIGRvaW4gdGhpcyBpbiB0aGUgd2lsZC4NCj4gPg0KPiA+IE5vdCBzdXJl
-IHdoeSB0aGUgY3VzdG9tZXIgZGlkbid0IGZvbGxvdyByZWZlcmVuY2UgZGVzaWduLCBzaW5jZQ0K
-PiA+IFBNSUNfT05fUkVRIGNhbiBwcm92aWRlIHBvd2VyIG9mZi9vbiBmZWF0dXJlIGJ5IHByZXNz
-aW5nIE9OT0ZGIGtleQ0KPiA+IHdoaWNoIGNvbm5lY3RlZCBPTk9GRiBwaW4gb2YgaS5teDYoT05P
-RkYgd2lsbCB0b2dnbGUgUE1JQ19PTl9SRVEgdG8NCj4gPiBwb3dlciBvZmYvb24gUE1JQykuIFRo
-ZSBvZmZpY2lhbCBwb3dlciBvZmYvb24gd2F5IChQTUlDX09OX1JFUSkgY2FuDQo+ID4gYWxzbyBw
-b3dlciBvZmYgYWxsIHBvd2VyIHJhaWxzIG9mIFBGVVpFIGV4Y2VwdCBzbnZzIGFzIHlvdXIgcGF0
-Y2ggZGlkDQo+ID4gb24gUE1JQ19TVEJZX1JFUS7CoMKgUE1JQ19TVEJZX1JFUSBpcyB1c2VkIHRv
-IG5vdGlmeSBwbWljIHN3aXRjaCBwb3dlcg0KPiA+IG1vZGUgKFBGTS9BUFMpIG9yIGRlY3JlYXNl
-IHZvbHRhZ2UgdG8gc2F2ZSBwb3dlciBpbiBrZXJuZWwgc3VzcGVuZCwgbm90DQo+IHBvd2VyIG9m
-Zi4uLi5JIGFtIG5vdCBzdXJlIGlmIHdlIG5lZWQgdGhpcyBwYXRjaHNldCB0byAnd29ya2Fyb3Vu
-ZCcgdGhlIGJvYXJkDQo+IGlzc3VlLg0KPiA+DQo+IE5vdCBhbGwgYm9hcmRzIGZvbGxvdyB0aGUg
-cmVmZXJlbmNlIGRlc2lnbiwgdGhhdCdzIGEgZmFjdCBvZiBsaWZlLg0KPiANCj4gUGxlYXNlIGxv
-b2sgYXQgdGhlIGkuTVg2USByZWZlcmVuY2UgbWFudWFsLiBUaGUgc2VxdWVuY2UgaW1wbGVtZW50
-ZWQgaW4gdGhpcw0KPiBwYXRjaHNldCBjYW4gYmUgZm91bmQgYXMgYSB2YWxpZCB3YXkgdG8gcG93
-ZXIgb2ZmIHRoZSBzeXN0ZW0gaW4NCj4gIjYwLjQuMyBQb3dlciBtb2RlIHRyYW5zaXRpb25zIiAi
-Tm9ybWFsIE9OIHRvIE9GRiB3aXRoIGV4dGVybmFsIFBNSUMiLCBzbw0KPiB0aGVyZSBpcyBoYXJk
-bHkgYW55IHdheSB0byBhcmd1ZSB0aGF0IHRoaXMgaXMgYSBib2FyZCBzcGVjaWZpYyBxdWlyay4g
-VGhpcyBpcyBvbmUgb2YNCj4gdGhlIEZyZWVzY2FsZS9OWFAgcmVjb21tZW5kZWQgc2VxdWVuY2Vz
-IHRvIHR1cm4gb2ZmIHRoZSBzeXN0ZW0uDQpPa2F5LCBidXQgY291bGQgeW91IGFkZCBvbmUgbW9y
-ZSBjb21tZW50IGZvciB0aGlzIHNvbHV0aW9uPyBSVEMgYWxhcm0gYW5kIE9OT0ZGDQpCdXR0b24g
-d2FrZXVwIGZlYXR1cmUgY2FuJ3QgYmUgc3VwcG9ydCBpbiB0aGlzIGNhc2UuDQo+IA0KPiBSZWdh
-cmRzLA0KPiBMdWNhcw0K
+On Fri, Jul 27, 2018 at 10:25:13AM +0200, Joerg Roedel wrote:
+> On Fri, Jul 27, 2018 at 02:16:18AM +0300, Dmitry Osipenko wrote:
+> > The proposed solution adds a new option to the base device driver
+> > structure that allows device drivers to explicitly convey to the drivers
+> > core that the implicit IOMMU backing for devices must not happen.
+> 
+> Why is IOMMU mapping a problem for the Tegra GPU driver?
+> 
+> If we add something like this then it should not be the choice of the
+> device driver, but of the user and/or the firmware.
+
+Agreed, and it would still need somebody to configure an identity domain so
+that transactions aren't aborted immediately. We currently allow the
+identity domain to be used by default via a command-line option, so I guess
+we'd need a way for firmware to request that on a per-device basis.
+
+Will
