@@ -1,142 +1,89 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
- fsl,pmic-stby-poweroff property
-Date: Fri, 27 Jul 2018 11:06:59 +0200
-Message-ID: <20180727090659.6nbfrhaliyt7kyhx@pengutronix.de>
+From: Robin Gong <yibin.gong@nxp.com>
+Subject: RE: [PATCH v8 2/6] ARM: imx6: register pm_power_off handler if
+ "fsl,pmic-stby-poweroff" is set
+Date: Fri, 27 Jul 2018 09:15:40 +0000
+Message-ID: <DB6PR04MB3223A62E5609BF6431ABEA40892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 References: <20180726092220.17250-1-o.rempel@pengutronix.de>
- <20180726092220.17250-2-o.rempel@pengutronix.de>
- <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
- <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
- <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
- <1532680211.32306.36.camel@pengutronix.de>
- <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <20180726092220.17250-3-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2lwgmfoygqy6knol"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>lin
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180726092220.17250-3-o.rempel@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---2lwgmfoygqy6knol
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jul 27, 2018 at 08:58:22AM +0000, Robin Gong wrote:
->=20
->=20
-> > -----Original Message-----
-> > From: Lucas Stach [mailto:l.stach@pengutronix.de]
-> > Sent: 2018=E5=B9=B47=E6=9C=8827=E6=97=A5 16:30
-> > To: Robin Gong <yibin.gong@nxp.com>; Oleksij Rempel
-> > <o.rempel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>; Mark
-> > Brown <broonie@kernel.org>; Rafael J. Wysocki <rafael.j.wysocki@intel.c=
-om>
-> > Cc: Mark Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org;
-> > Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
-> > <sboyd@codeaurora.org>; linux-kernel@vger.kernel.org; Liam Girdwood
-> > <lgirdwood@gmail.com>; Rob Herring <robh+dt@kernel.org>; dl-linux-imx
-> > <linux-imx@nxp.com>; kernel@pengutronix.de; A.s. Dong
-> > <aisheng.dong@nxp.com>; Fabio Estevam <fabio.estevam@nxp.com>; Russell
-> > King <linux@armlinux.org.uk>; Andrew Morton <akpm@linux-foundation.org>;
-> > Leonard Crestez <leonard.crestez@nxp.com>; linux-clk@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org
-> > Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
-> > fsl,pmic-stby-poweroff property
-> >=20
-> > Hi Robin,
-> >=20
-> > Am Freitag, den 27.07.2018, 01:51 +0000 schrieb Robin Gong:
-> > [...]
-> > > > > > ---
-> > > > > > =C2=A0Documentation/devicetree/bindings/clock/imx6q-clock.txt |=
- 8
-> > > > > > ++++++++
-> > > > > > =C2=A01 file changed, 8 insertions(+)
-> > > > > >
-> > > > > > diff --git
-> > > > > > a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> > > > > > b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> > > > > > index a45ca67a9d5f..e1308346e00d 100644
-> > > > > > --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-> > > > > > @@ -6,6 +6,14 @@ Required properties:
-> > > > > > =C2=A0- interrupts: Should contain CCM interrupt
-> > > > > > =C2=A0- #clock-cells: Should be <1>
-> > > > > >
-> > > > > > +Optional properties:
-> > > > > > +- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ
-> > > > > > +signal
-> > > > > > +=C2=A0=C2=A0on power off.
-> > > > > > +=C2=A0=C2=A0Use this property if the SoC should be powered off=
- by
-> > > > > > +external power
-> > > > > > +=C2=A0=C2=A0management IC (PMIC) triggered via PMIC_STBY_REQ s=
-ignal.
-> > > > >
-> > > > > PMIC_ON_REQ didn't connect to any pin of PMIC in your case?
-> > > >
-> > > > No. First, it was only one customer specific issue. After some
-> > > > research I found even publicly available boards (for example
-> > > > RioTboard) which has same/similar design. After seeing this in imx6
-> > > > documentation as valid power off way, I have no doubts - there shou=
-ld be
-> > even more devices doin this in the wild.
-> > >
-> > > Not sure why the customer didn't follow reference design, since
-> > > PMIC_ON_REQ can provide power off/on feature by pressing ONOFF key
-> > > which connected ONOFF pin of i.mx6(ONOFF will toggle PMIC_ON_REQ to
-> > > power off/on PMIC). The official power off/on way (PMIC_ON_REQ) can
-> > > also power off all power rails of PFUZE except snvs as your patch did
-> > > on PMIC_STBY_REQ.=C2=A0=C2=A0PMIC_STBY_REQ is used to notify pmic swi=
-tch power
-> > > mode (PFM/APS) or decrease voltage to save power in kernel suspend, n=
-ot
-> > power off....I am not sure if we need this patchset to 'workaround' the=
- board
-> > issue.
-> > >
-> > Not all boards follow the reference design, that's a fact of life.
-> >=20
-> > Please look at the i.MX6Q reference manual. The sequence implemented in=
- this
-> > patchset can be found as a valid way to power off the system in
-> > "60.4.3 Power mode transitions" "Normal ON to OFF with external PMIC", =
-so
-> > there is hardly any way to argue that this is a board specific quirk. T=
-his is one of
-> > the Freescale/NXP recommended sequences to turn off the system.
-> Okay, but could you add one more comment for this solution? RTC alarm and=
- ONOFF
-> Button wakeup feature can't be support in this case.
-
-Sure, at least it will power off. It make no sense to have power off
-functionality which use same amount of power as power on system.
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---2lwgmfoygqy6knol
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlta4LAACgkQdQOiSHVI
-77QmpAf/TFsUXw3Ab5FPk0VQ3hztHFBOWt/dkfUxh7I45l40h6ShHQhNCcBKI697
-6fC5BBspcpVYOesO5JKrz5pFpBBdCQy5PseLk+WlWufet6sF89Y29f2krI/2OAw6
-QuExD+6KRSPW5qmv2eFTQQXgCmPPnmI49582T1miYndKEQ6aa1tSmVrq2N+vqSgp
-lO7Nk5FSMzc7g9qvkaWuBP2qX8EFpLJqbjFFdWPKz6YdRSdSJZ7tuTBSGgEuQZWZ
-nXAiVX8PVKyDqe+GFtXgLX+jXdv28gfIvbWVjUQ2z1GdLsFonQw6rKBW3rLr9Ogf
-3AKUObX9WfC3RL7XlIxd8uxnoxYzsg==
-=1b+O
------END PGP SIGNATURE-----
-
---2lwgmfoygqy6knol--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogT2xla3NpaiBSZW1wZWwg
+W21haWx0bzpvLnJlbXBlbEBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogMjAxOMTqN9TCMjbI1SAx
+NzoyMg0KPiBUbzogU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgTWFyayBCcm93biA8
+YnJvb25pZUBrZXJuZWwub3JnPjsNCj4gUmFmYWVsIEouIFd5c29ja2kgPHJhZmFlbC5qLnd5c29j
+a2lAaW50ZWwuY29tPg0KPiBDYzogT2xla3NpaiBSZW1wZWwgPG8ucmVtcGVsQHBlbmd1dHJvbml4
+LmRlPjsga2VybmVsQHBlbmd1dHJvbml4LmRlOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1jbGtAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBBbmRyZXcgTW9ydG9u
+DQo+IDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPjsgTGlhbSBHaXJkd29vZCA8bGdpcmR3b29k
+QGdtYWlsLmNvbT47DQo+IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+
+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJr
+LnJ1dGxhbmRAYXJtLmNvbT47IE1pY2hhZWwNCj4gVHVycXVldHRlIDxtdHVycXVldHRlQGJheWxp
+YnJlLmNvbT47IFN0ZXBoZW4gQm95ZA0KPiA8c2JveWRAY29kZWF1cm9yYS5vcmc+OyBGYWJpbyBF
+c3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+OyBSdXNzZWxsDQo+IEtpbmcgPGxpbnV4QGFy
+bWxpbnV4Lm9yZy51az47IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+OyBSb2JpbiBH
+b25nDQo+IDx5aWJpbi5nb25nQG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAu
+Y29tPg0KPiBTdWJqZWN0OiBbUEFUQ0ggdjggMi82XSBBUk06IGlteDY6IHJlZ2lzdGVyIHBtX3Bv
+d2VyX29mZiBoYW5kbGVyIGlmDQo+ICJmc2wscG1pYy1zdGJ5LXBvd2Vyb2ZmIiBpcyBzZXQNCj4g
+DQo+IE9uZSBvZiB0aGUgRnJlZXNjYWxlIHJlY29tbWVuZGVkIHNlcXVlbmNlcyBmb3IgcG93ZXIg
+b2ZmIHdpdGggZXh0ZXJuYWwNCj4gUE1JQyBpcyB0aGUgZm9sbG93aW5nOg0KPiAuLi4NCj4gMy4g
+IFNvQyBpcyBwcm9ncmFtbWluZyBQTUlDIGZvciBwb3dlciBvZmYgd2hlbiBzdGFuZGJ5IGlzIGFz
+c2VydGVkLg0KPiA0LiAgSW4gQ0NNIFNUT1AgbW9kZSwgU3RhbmRieSBpcyBhc3NlcnRlZCwgUE1J
+QyBnYXRlcyBTb0Mgc3VwcGxpZXMuDQo+IA0KPiBTZWU6DQo+IGh0dHBzOi8vZW1lYTAxLnNhZmVs
+aW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnd3dy4NCj4gbnhw
+LmNvbSUyRmFzc2V0cyUyRmRvY3VtZW50cyUyRmRhdGElMkZlbiUyRnJlZmVyZW5jZS1tYW51YWxz
+JTJGSU0NCj4gWDZEUVJNLnBkZiZhbXA7ZGF0YT0wMiU3QzAxJTdDeWliaW4uZ29uZyU0MG54cC5j
+b20lN0MxOTNmZDE5ZTNhDQo+IDQwNDE2ZmZhNGEwOGQ1ZjJkOTU4M2MlN0M2ODZlYTFkM2JjMmI0
+YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MxDQo+ICU3QzYzNjY4MTkzNzY2MTkxNDA3NiZhbXA7
+c2RhdGE9bElDQWVsWXBVaDQlMkZ0JTJGczdOOW1kazJjTFFNaQ0KPiBjSGNPcVEwN3ZUT1VveU5Z
+JTNEJmFtcDtyZXNlcnZlZD0wDQo+IHBhZ2UgNTA4Mw0KPiANCj4gVGhpcyBwYXRjaCBpbXBsZW1l
+bnRzIHN0ZXAgNC4gb2YgdGhpcyBzZXF1ZW5jZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9sZWtz
+aWogUmVtcGVsIDxvLnJlbXBlbEBwZW5ndXRyb25peC5kZT4NCj4gLS0tDQo+ICBhcmNoL2FybS9t
+YWNoLWlteC9wbS1pbXg2LmMgfCAyNSArKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+L21hY2gtaW14L3BtLWlteDYuYyBiL2FyY2gvYXJtL21hY2gtaW14L3BtLWlteDYuYw0KPiBpbmRl
+eCAwMTc1MzlkZDcxMmIuLjJmNWM2NDNmNjJmYiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vbWFj
+aC1pbXgvcG0taW14Ni5jDQo+ICsrKyBiL2FyY2gvYXJtL21hY2gtaW14L3BtLWlteDYuYw0KPiBA
+QCAtNjAxLDYgKzYwMSwyOCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgaW14Nl9wbV9jb21tb25faW5p
+dChjb25zdCBzdHJ1Y3QNCj4gaW14Nl9wbV9zb2NkYXRhDQo+ICAJCQkJICAgSU1YNlFfR1BSMV9H
+SU5UKTsNCj4gIH0NCj4gDQo+ICtzdGF0aWMgdm9pZCBpbXg2X3BtX3N0YnlfcG93ZXJvZmYodm9p
+ZCkgew0KPiArCWlteDZfc2V0X2xwbShTVE9QX1BPV0VSX09GRik7DQo+ICsJaW14NnFfc3VzcGVu
+ZF9maW5pc2goMCk7DQo+ICsNCj4gKwltZGVsYXkoMTAwMCk7DQo+ICsNCj4gKwlwcl9lbWVyZygi
+VW5hYmxlIHRvIHBvd2Vyb2ZmIHN5c3RlbVxuIik7IH0NCj4gKw0KPiArc3RhdGljIGludCBpbXg2
+X3BtX3N0YnlfcG93ZXJvZmZfcHJvYmUodm9pZCkgew0KPiArCWlmIChwbV9wb3dlcl9vZmYpIHsN
+Cj4gKwkJcHJfd2FybigiJXM6IHBtX3Bvd2VyX29mZiBhbHJlYWR5IGNsYWltZWQgICVwICVwZiFc
+biIsDQo+ICsJCQlfX2Z1bmNfXywgcG1fcG93ZXJfb2ZmLCBwbV9wb3dlcl9vZmYpOw0KJ3N5c2Nv
+bi1wb3dlcm9mZicgYW5kICdwbWljLXN0YnktcG93ZXJvZmYgJyBzaG91bGQgYmUgY2hvc2VuIGFz
+IGEgc2luZ2xlDQpQb3dlcm9mZiB3YXkgZm9yIGFueSBpLm14NiBib2FyZC4gV2h5IG5vdCBkZWxl
+dGUgZGlyZWN0bHkgJ3N5c2Nvbi1wb3dlcm9mZicgaW4gZHRzIA0KdG8gYXZvaWQgc3VjaCB0d28g
+cG93ZXIgb2ZmIHdheXMgY29leGlzdD8NCj4gKwkJcmV0dXJuIC1FQlVTWTsNCj4gKwl9DQo+ICsN
+Cj4gKwlwbV9wb3dlcl9vZmYgPSBpbXg2X3BtX3N0YnlfcG93ZXJvZmY7DQo+ICsJcmV0dXJuIDA7
+DQo+ICt9DQo+ICsNCj4gIHZvaWQgX19pbml0IGlteDZfcG1fY2NtX2luaXQoY29uc3QgY2hhciAq
+Y2NtX2NvbXBhdCkgIHsNCj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wOw0KPiBAQCAtNjE3LDYg
+KzYzOSw5IEBAIHZvaWQgX19pbml0IGlteDZfcG1fY2NtX2luaXQoY29uc3QgY2hhcg0KPiAqY2Nt
+X2NvbXBhdCkNCj4gIAl2YWwgPSByZWFkbF9yZWxheGVkKGNjbV9iYXNlICsgQ0xQQ1IpOw0KPiAg
+CXZhbCAmPSB+Qk1fQ0xQQ1JfTFBNOw0KPiAgCXdyaXRlbF9yZWxheGVkKHZhbCwgY2NtX2Jhc2Ug
+KyBDTFBDUik7DQo+ICsNCj4gKwlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKG5wLCAiZnNsLHBt
+aWMtc3RieS1wb3dlcm9mZiIpKQ0KPiArCQlpbXg2X3BtX3N0YnlfcG93ZXJvZmZfcHJvYmUoKTsN
+Cj4gIH0NCj4gDQo+ICB2b2lkIF9faW5pdCBpbXg2cV9wbV9pbml0KHZvaWQpDQo+IC0tDQo+IDIu
+MTguMA0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
