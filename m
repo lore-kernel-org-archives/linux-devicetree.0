@@ -1,7 +1,7 @@
 From: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Subject: [PATCH v2 2/7] net: phy: Fix the register offsets in Broadcom iProc mdio mux driver
-Date: Fri, 27 Jul 2018 14:23:28 -0700
-Message-ID: <1532726613-6483-3-git-send-email-arun.parameswaran@broadcom.com>
+Subject: [PATCH v2 3/7] arm64: dts: Fix the base address of the Broadcom iProc mdio mux
+Date: Fri, 27 Jul 2018 14:23:29 -0700
+Message-ID: <1532726613-6483-4-git-send-email-arun.parameswaran@broadcom.com>
 References: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
@@ -10,72 +10,46 @@ To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arun.parameswaran@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Modify the register offsets in the Broadcom iProc mdio mux to start
-from the top of the register address space.
-
-Earlier, the base address pointed to the end of the block's register
-space. The base address will now point to the start of the mdio's
-address space. The offsets have been fixed to match this.
+Modify the base address of the mdio mux driver to point to the
+start of the mdio mux block's register address space.
 
 Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
 ---
- drivers/net/phy/mdio-mux-bcm-iproc.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi    | 4 ++--
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/mdio-mux-bcm-iproc.c b/drivers/net/phy/mdio-mux-bcm-iproc.c
-index 0831b71..48bb74a 100644
---- a/drivers/net/phy/mdio-mux-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
-@@ -22,7 +22,7 @@
- #include <linux/mdio-mux.h>
- #include <linux/delay.h>
+diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+index 4057197..1a406a7 100644
+--- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+@@ -482,9 +482,9 @@
+ 			status = "disabled";
+ 		};
  
--#define MDIO_PARAM_OFFSET		0x00
-+#define MDIO_PARAM_OFFSET		0x23c
- #define MDIO_PARAM_MIIM_CYCLE		29
- #define MDIO_PARAM_INTERNAL_SEL		25
- #define MDIO_PARAM_BUS_ID		22
-@@ -30,20 +30,22 @@
- #define MDIO_PARAM_PHY_ID		16
- #define MDIO_PARAM_PHY_DATA		0
+-		mdio_mux_iproc: mdio-mux@6602023c {
++		mdio_mux_iproc: mdio-mux@66020000 {
+ 			compatible = "brcm,mdio-mux-iproc";
+-			reg = <0x6602023c 0x14>;
++			reg = <0x66020000 0x250>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
  
--#define MDIO_READ_OFFSET		0x04
-+#define MDIO_READ_OFFSET		0x240
- #define MDIO_READ_DATA_MASK		0xffff
--#define MDIO_ADDR_OFFSET		0x08
-+#define MDIO_ADDR_OFFSET		0x244
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index b203152..a70e8dd 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -278,9 +278,9 @@
  
--#define MDIO_CTRL_OFFSET		0x0C
-+#define MDIO_CTRL_OFFSET		0x248
- #define MDIO_CTRL_WRITE_OP		0x1
- #define MDIO_CTRL_READ_OP		0x2
+ 		#include "stingray-pinctrl.dtsi"
  
--#define MDIO_STAT_OFFSET		0x10
-+#define MDIO_STAT_OFFSET		0x24c
- #define MDIO_STAT_DONE			1
+-		mdio_mux_iproc: mdio-mux@2023c {
++		mdio_mux_iproc: mdio-mux@20000 {
+ 			compatible = "brcm,mdio-mux-iproc";
+-			reg = <0x0002023c 0x14>;
++			reg = <0x00020000 0x250>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
  
- #define BUS_MAX_ADDR			32
- #define EXT_BUS_START_ADDR		16
- 
-+#define MDIO_REG_ADDR_SPACE_SIZE	0x250
-+
- struct iproc_mdiomux_desc {
- 	void *mux_handle;
- 	void __iomem *base;
-@@ -169,6 +171,14 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
- 	md->dev = &pdev->dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (res->start & 0xfff) {
-+		/* For backward compatibility in case the
-+		 * base address is specified with an offset.
-+		 */
-+		dev_info(&pdev->dev, "fix base address in dt-blob\n");
-+		res->start &= ~0xfff;
-+		res->end = res->start + MDIO_REG_ADDR_SPACE_SIZE - 1;
-+	}
- 	md->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(md->base)) {
- 		dev_err(&pdev->dev, "failed to ioremap register\n");
 -- 
 1.9.1
