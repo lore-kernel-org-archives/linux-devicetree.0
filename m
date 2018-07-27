@@ -1,138 +1,51 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v14 4/4] iommu/arm-smmu: Add support for qcom,smmu-v2 variant
-Date: Fri, 27 Jul 2018 12:32:24 +0530
-Message-ID: <20180727070224.23966-5-vivek.gautam@codeaurora.org>
-References: <20180727070224.23966-1-vivek.gautam@codeaurora.org>
+From: djw@t-chip.com.cn
+Subject: Re: [PATCH v1] arm64: dts: rockchip: add support for ROC-RK3399-PC board
+Date: Fri, 27 Jul 2018 15:10:32 +0800
+Message-ID: <871sbpm9w7.fsf@archiso.i-did-not-set--mail-host-address--so-tickle-me>
+References: <1532589205-10153-1-git-send-email-djw@t-chip.com.cn>
+        <cd4706970b40b49373ad169e3f9651f29508194a.camel@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727070224.23966-1-vivek.gautam@codeaurora.org>
+In-Reply-To: <cd4706970b40b49373ad169e3f9651f29508194a.camel@collabora.com>
+        (Ezequiel Garcia's message of "Thu, 26 Jul 2018 10:41:58 -0300")
 Sender: linux-kernel-owner@vger.kernel.org
-To: joro@8bytes.org, robh+dt@kernel.org, rjw@rjwysocki.net, robin.murphy@arm.com, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org
-Cc: alex.williamson@redhat.com, mark.rutland@arm.com, robdclark@gmail.com, linux-pm@vger.kernel.org, sboyd@kernel.org, tfiga@chromium.org, jcrouse@codeaurora.org, sricharan@codeaurora.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>
+To: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: djw@t-chip.com.cn, linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Pierre-Hugues Husson <phh@phh.me>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Heinrich
 List-Id: devicetree@vger.kernel.org
 
-qcom,smmu-v2 is an arm,smmu-v2 implementation with specific
-clock and power requirements. This smmu core is used with
-multiple masters on msm8996, viz. mdss, video, etc.
-Add bindings for the same.
+Ezequiel Garcia <ezequiel@collabora.com> writes:
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
----
+> On Thu, 2018-07-26 at 15:13 +0800, djw@t-chip.com.cn wrote:
+>> From: Levin Du <djw@t-chip.com.cn>
+>> 
+>> ROC-RK3399-PC is a power efficient 4GB LPDDR4 single board
+>> computer with USB 3.0 and Gigabit Ethernet in a form factor
+>> compatible with the Raspberry Pi. It is based on the Rockchip
+>> RK3399 SoC, powered by the Type-C port.
+>> 
+>> The devicetree currently supports peripherals of:
+>> 
+>> - Ethernet
+>> - HDMI
+>> - SD Card
+>> - UART2 debug
+>> - TYPE-C
+>
+> Hi Levin,
+>
+> Last time I tried to make the mainline fusb driver work, it really didn't.
+> Is USB 3.0 Type-C actually working with mainline on this board?
+>
+> Thanks!
+> Eze
 
-Change since v13:
- - No change.
+That's what I added in the end:
 
- .../devicetree/bindings/iommu/arm,smmu.txt         | 42 ++++++++++++++++++++++
- drivers/iommu/arm-smmu.c                           | 13 +++++++
- 2 files changed, 55 insertions(+)
+  USB3 in type-c port currently only works with normal orientation,
+  not flip one.
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-index 8a6ffce12af5..7c71a6ed465a 100644
---- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-@@ -17,10 +17,19 @@ conditions.
-                         "arm,mmu-401"
-                         "arm,mmu-500"
-                         "cavium,smmu-v2"
-+                        "qcom,<soc>-smmu-v2", "qcom,smmu-v2"
- 
-                   depending on the particular implementation and/or the
-                   version of the architecture implemented.
- 
-+                  A number of Qcom SoCs use qcom,smmu-v2 version of the IP.
-+                  "qcom,<soc>-smmu-v2" represents a soc specific compatible
-+                  string that should be present along with the "qcom,smmu-v2"
-+                  to facilitate SoC specific clocks/power connections and to
-+                  address specific bug fixes.
-+                  An example string would be -
-+                  "qcom,msm8996-smmu-v2", "qcom,smmu-v2".
-+
- - reg           : Base address and size of the SMMU.
- 
- - #global-interrupts : The number of global interrupts exposed by the
-@@ -71,6 +80,22 @@ conditions.
-                   or using stream matching with #iommu-cells = <2>, and
-                   may be ignored if present in such cases.
- 
-+- clock-names:    List of the names of clocks input to the device. The
-+                  required list depends on particular implementation and
-+                  is as follows:
-+                  - for "qcom,smmu-v2":
-+                    - "bus": clock required for downstream bus access and
-+                             for the smmu ptw,
-+                    - "iface": clock required to access smmu's registers
-+                               through the TCU's programming interface.
-+                  - unspecified for other implementations.
-+
-+- clocks:         Specifiers for all clocks listed in the clock-names property,
-+                  as per generic clock bindings.
-+
-+- power-domains:  Specifiers for power domains required to be powered on for
-+                  the SMMU to operate, as per generic power domain bindings.
-+
- ** Deprecated properties:
- 
- - mmu-masters (deprecated in favour of the generic "iommus" binding) :
-@@ -137,3 +162,20 @@ conditions.
-                 iommu-map = <0 &smmu3 0 0x400>;
-                 ...
-         };
-+
-+	/* Qcom's arm,smmu-v2 implementation */
-+	smmu4: iommu {
-+		compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
-+		reg = <0xd00000 0x10000>;
-+
-+		#global-interrupts = <1>;
-+		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
-+		#iommu-cells = <1>;
-+		power-domains = <&mmcc MDSS_GDSC>;
-+
-+		clocks = <&mmcc SMMU_MDP_AXI_CLK>,
-+			 <&mmcc SMMU_MDP_AHB_CLK>;
-+		clock-names = "bus", "iface";
-+	};
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index e558abf1ecfc..2b4edba188a5 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -119,6 +119,7 @@ enum arm_smmu_implementation {
- 	GENERIC_SMMU,
- 	ARM_MMU500,
- 	CAVIUM_SMMUV2,
-+	QCOM_SMMUV2,
- };
- 
- struct arm_smmu_s2cr {
-@@ -1971,6 +1972,17 @@ ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
- ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
- ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
- 
-+static const char * const qcom_smmuv2_clks[] = {
-+	"bus", "iface",
-+};
-+
-+static const struct arm_smmu_match_data qcom_smmuv2 = {
-+	.version = ARM_SMMU_V2,
-+	.model = QCOM_SMMUV2,
-+	.clks = qcom_smmuv2_clks,
-+	.num_clks = ARRAY_SIZE(qcom_smmuv2_clks),
-+};
-+
- static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,smmu-v1", .data = &smmu_generic_v1 },
- 	{ .compatible = "arm,smmu-v2", .data = &smmu_generic_v2 },
-@@ -1978,6 +1990,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,mmu-401", .data = &arm_mmu401 },
- 	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
- 	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
-+	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Adding 'extcon=<&fusb0>' to make the dwc3 core failed to initialize.
+
+Regards,
+Levin
