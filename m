@@ -1,85 +1,61 @@
-Return-Path: <SRS0=Gu8q=KN=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <20180727210916.66642-1-chris.brandt@renesas.com> <20180727210916.66642-3-chris.brandt@renesas.com>
-In-Reply-To: <20180727210916.66642-3-chris.brandt@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 29 Jul 2018 13:11:02 +0200
-Message-ID: <CAMuHMdXgeo1rHmXEifXHFQbt=EL=iizeVLWjoMi_=tXPwNj3xw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] serial: sh-sci: Allow for compressed SCIF address
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Rob Landley <rob@landley.net>
+Return-Path: <SRS0=Pf9O=KL=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 2/4] serial: sh-sci: Allow for compressed SCIF address
+Date: Fri, 27 Jul 2018 16:09:14 -0500
+Message-Id: <20180727210916.66642-3-chris.brandt@renesas.com>
+In-Reply-To: <20180727210916.66642-1-chris.brandt@renesas.com>
+References: <20180727210916.66642-1-chris.brandt@renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris,
+Some devices with SCIx_SH4_SCIF_REGTYPE have no space between registers.
+Use the register area size to determine the spacing between register.
 
-On Fri, Jul 27, 2018 at 11:09 PM Chris Brandt <chris.brandt@renesas.com> wrote:
-> Some devices with SCIx_SH4_SCIF_REGTYPE have no space between registers.
-> Use the register area size to determine the spacing between register.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
->  drivers/tty/serial/sh-sci.c | 22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index 6ff6f2bf3b9b..138296ec9a7d 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -348,15 +348,15 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
->         [SCIx_SH4_SCIF_REGTYPE] = {
->                 .regs = {
->                         [SCSMR]         = { 0x00, 16 },
-> -                       [SCBRR]         = { 0x04,  8 },
-> -                       [SCSCR]         = { 0x08, 16 },
-> -                       [SCxTDR]        = { 0x0c,  8 },
-> -                       [SCxSR]         = { 0x10, 16 },
-> -                       [SCxRDR]        = { 0x14,  8 },
-> -                       [SCFCR]         = { 0x18, 16 },
-> -                       [SCFDR]         = { 0x1c, 16 },
-> -                       [SCSPTR]        = { 0x20, 16 },
-> -                       [SCLSR]         = { 0x24, 16 },
-> +                       [SCBRR]         = { 0x02,  8 },
-> +                       [SCSCR]         = { 0x04, 16 },
-> +                       [SCxTDR]        = { 0x06,  8 },
-> +                       [SCxSR]         = { 0x08, 16 },
-> +                       [SCxRDR]        = { 0x0a,  8 },
-> +                       [SCFCR]         = { 0x0c, 16 },
-> +                       [SCFDR]         = { 0x0e, 16 },
-> +                       [SCSPTR]        = { 0x10, 16 },
-> +                       [SCLSR]         = { 0x12, 16 },
->                 },
->                 .fifosize = 16,
->                 .overrun_reg = SCLSR,
-> @@ -2939,6 +2939,10 @@ static int sci_init_single(struct platform_device *dev,
->                         port->regshift = 1;
->         }
->
-> +       if (p->regtype == SCIx_SH4_SCIF_REGTYPE)
-> +               if (sci_port->reg_size >= 0x20)
-> +                       port->regshift = 1;
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ drivers/tty/serial/sh-sci.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-I've accidentally discovered this breaks SCIF on SH7751R2D (QEMU), as the
-board code doesn't fill in regtype, so it is 0 = SCIx_PROBE_REGTYPE.
-The proper (default) regtype of SCIx_SH4_SCIF_REGTYPE is derived by
-sci_probe_regmap(). However, that value is never fed back to sci_init_single(),
-as plat_sci_port is const. So regshift ends up being wrong.
-
-I made it work by changing the check to:
-
--       if (p->regtype == SCIx_SH4_SCIF_REGTYPE)
-+       if (p->regtype == SCIx_SH4_SCIF_REGTYPE ||
-+           (p->regtype == SCIx_PROBE_REGTYPE && port->type == PORT_SCIF))
-
-Perhaps there's a better way?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 6ff6f2bf3b9b..138296ec9a7d 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -348,15 +348,15 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
+ 	[SCIx_SH4_SCIF_REGTYPE] = {
+ 		.regs = {
+ 			[SCSMR]		= { 0x00, 16 },
+-			[SCBRR]		= { 0x04,  8 },
+-			[SCSCR]		= { 0x08, 16 },
+-			[SCxTDR]	= { 0x0c,  8 },
+-			[SCxSR]		= { 0x10, 16 },
+-			[SCxRDR]	= { 0x14,  8 },
+-			[SCFCR]		= { 0x18, 16 },
+-			[SCFDR]		= { 0x1c, 16 },
+-			[SCSPTR]	= { 0x20, 16 },
+-			[SCLSR]		= { 0x24, 16 },
++			[SCBRR]		= { 0x02,  8 },
++			[SCSCR]		= { 0x04, 16 },
++			[SCxTDR]	= { 0x06,  8 },
++			[SCxSR]		= { 0x08, 16 },
++			[SCxRDR]	= { 0x0a,  8 },
++			[SCFCR]		= { 0x0c, 16 },
++			[SCFDR]		= { 0x0e, 16 },
++			[SCSPTR]	= { 0x10, 16 },
++			[SCLSR]		= { 0x12, 16 },
+ 		},
+ 		.fifosize = 16,
+ 		.overrun_reg = SCLSR,
+@@ -2939,6 +2939,10 @@ static int sci_init_single(struct platform_device *dev,
+ 			port->regshift = 1;
+ 	}
+ 
++	if (p->regtype == SCIx_SH4_SCIF_REGTYPE)
++		if (sci_port->reg_size >= 0x20)
++			port->regshift = 1;
++
+ 	/*
+ 	 * The UART port needs an IRQ value, so we peg this to the RX IRQ
+ 	 * for the multi-IRQ ports, which is where we are primarily
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.16.1
