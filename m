@@ -1,34 +1,86 @@
-Return-Path: <SRS0=hJ7p=KO=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <20180727210916.66642-1-chris.brandt@renesas.com> <20180727210916.66642-4-chris.brandt@renesas.com>
-In-Reply-To: <20180727210916.66642-4-chris.brandt@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 30 Jul 2018 11:03:12 +0200
-Message-ID: <CAMuHMdVAdAfAYScOuTLLFCCsokE4-gOona7NsMCo+ct4L0R5qA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] serial: sh-sci: Remove SCIx_RZ_SCIFA_REGTYPE
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+Return-Path: <SRS0=Pf9O=KL=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 3/4] serial: sh-sci: Remove SCIx_RZ_SCIFA_REGTYPE
+Date: Fri, 27 Jul 2018 16:09:15 -0500
+Message-Id: <20180727210916.66642-4-chris.brandt@renesas.com>
+In-Reply-To: <20180727210916.66642-1-chris.brandt@renesas.com>
+References: <20180727210916.66642-1-chris.brandt@renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jul 27, 2018 at 11:09 PM Chris Brandt <chris.brandt@renesas.com> wrote:
-> There is no more need for SCIx_RZ_SCIFA_REGTYPE now that
-> SCIx_SH4_SCIF_REGTYPE can provide the same register/address definitions.
->
-> Also, R7S9210 no longer needs a special compatible since the standard
-> "renesas,scif" will work just fine.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+There is no more need for SCIx_RZ_SCIFA_REGTYPE now that
+SCIx_SH4_SCIF_REGTYPE can provide the same register/address definitions.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Also, R7S9210 no longer needs a special compatible since the standard
+"renesas,scif" will work just fine.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+ drivers/tty/serial/sh-sci.c | 31 -------------------------------
+ include/linux/serial_sci.h  |  1 -
+ 2 files changed, 32 deletions(-)
 
-                        Geert
-
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 138296ec9a7d..cb4f7d3e7192 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -293,33 +293,6 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
+ 		.error_clear = SCIF_ERROR_CLEAR,
+ 	},
+ 
+-	/*
+-	 * The "SCIFA" that is in RZ/T and RZ/A2.
+-	 * It looks like a normal SCIF with FIFO data, but with a
+-	 * compressed address space. Also, the break out of interrupts
+-	 * are different: ERI/BRI, RXI, TXI, TEI, DRI.
+-	 */
+-	[SCIx_RZ_SCIFA_REGTYPE] = {
+-		.regs = {
+-			[SCSMR]		= { 0x00, 16 },
+-			[SCBRR]		= { 0x02,  8 },
+-			[SCSCR]		= { 0x04, 16 },
+-			[SCxTDR]	= { 0x06,  8 },
+-			[SCxSR]		= { 0x08, 16 },
+-			[SCxRDR]	= { 0x0A,  8 },
+-			[SCFCR]		= { 0x0C, 16 },
+-			[SCFDR]		= { 0x0E, 16 },
+-			[SCSPTR]	= { 0x10, 16 },
+-			[SCLSR]		= { 0x12, 16 },
+-		},
+-		.fifosize = 16,
+-		.overrun_reg = SCLSR,
+-		.overrun_mask = SCLSR_ORER,
+-		.sampling_rate_mask = SCI_SR(32),
+-		.error_mask = SCIF_DEFAULT_ERROR_MASK,
+-		.error_clear = SCIF_ERROR_CLEAR,
+-	},
+-
+ 	/*
+ 	 * Common SH-3 SCIF definitions.
+ 	 */
+@@ -3147,10 +3120,6 @@ static const struct of_device_id of_sci_match[] = {
+ 		.compatible = "renesas,scif-r7s72100",
+ 		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH2_SCIF_FIFODATA_REGTYPE),
+ 	},
+-	{
+-		.compatible = "renesas,scif-r7s9210",
+-		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE),
+-	},
+ 	/* Family-specific types */
+ 	{
+ 		.compatible = "renesas,rcar-gen1-scif",
+diff --git a/include/linux/serial_sci.h b/include/linux/serial_sci.h
+index 1c89611e0e06..c0e795d95477 100644
+--- a/include/linux/serial_sci.h
++++ b/include/linux/serial_sci.h
+@@ -36,7 +36,6 @@ enum {
+ 	SCIx_SH4_SCIF_FIFODATA_REGTYPE,
+ 	SCIx_SH7705_SCIF_REGTYPE,
+ 	SCIx_HSCIF_REGTYPE,
+-	SCIx_RZ_SCIFA_REGTYPE,
+ 
+ 	SCIx_NR_REGTYPES,
+ };
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.16.1
