@@ -1,75 +1,204 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] iommu/arm-smmu: Error out only if not enough context
-	interrupts
-Date: Fri, 27 Jul 2018 15:27:33 +0530
-Message-ID: <CAFp+6iEwS1xHYz2eptO1p2hzw+cb6WOvohDkx1SGmthzV0SbyA@mail.gmail.com>
-References: <20180719175356.14753-1-vivek.gautam@codeaurora.org>
-	<20180719175356.14753-4-vivek.gautam@codeaurora.org>
-	<20180724083633.GA19324@arm.com>
-	<d6796a00-17da-c03e-ca7f-7a67139ad99a@codeaurora.org>
-	<20180725115729.GA31576@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180725115729.GA31576-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v3 0/9] coresight: Update device tree bindings
+Date: Fri, 27 Jul 2018 11:15:28 +0100
+Message-ID: <1532686537-12380-1-git-send-email-suzuki.poulose@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, mike.leach@linaro.org, robert.walker@arm.com, coresight@lists.linaro.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, matt.sealey@arm.com, charles.garcia-tobin@arm.com, john.horley@arm.com, al.grant@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 5:27 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Jul 24, 2018 at 03:09:41PM +0530, Vivek Gautam wrote:
->> On 7/24/2018 2:06 PM, Will Deacon wrote:
->> >On Thu, Jul 19, 2018 at 11:23:56PM +0530, Vivek Gautam wrote:
->> >>diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->> >>index 7c69736a30f8..4cb53bf4f423 100644
->> >>--- a/drivers/iommu/arm-smmu.c
->> >>+++ b/drivers/iommu/arm-smmu.c
->> >>@@ -2229,12 +2229,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->> >>    if (err)
->> >>            return err;
->> >>-   if (smmu->version == ARM_SMMU_V2 &&
->> >>-       smmu->num_context_banks != smmu->num_context_irqs) {
->> >>-           dev_err(dev,
->> >>-                   "found only %d context interrupt(s) but %d required\n",
->> >>-                   smmu->num_context_irqs, smmu->num_context_banks);
->> >>-           return -ENODEV;
->> >>+   if (smmu->version == ARM_SMMU_V2) {
->> >>+           if (smmu->num_context_banks > smmu->num_context_irqs) {
->> >>+                   dev_err(dev,
->> >>+                         "found only %d context irq(s) but %d required\n",
->> >>+                         smmu->num_context_irqs, smmu->num_context_banks);
->> >>+                   return -ENODEV;
->> >>+           } else if (smmu->num_context_banks < smmu->num_context_irqs) {
->> >>+                   /* loose extra context interrupts */
->> >>+                   dev_notice(dev,
->> >>+                         "found %d context irq(s) but only %d required\n",
->> >>+                         smmu->num_context_irqs, smmu->num_context_banks);
->> >>+                   smmu->num_context_irqs = smmu->num_context_banks;
->> >>+           }
->> >I don't see the utility in the new message. Can you simplify with the patch
->> >below on top? It's a bit weird that we only decide to ignore the extra irqs
->> >after calling platform_get_irq() on them, but that seems to be harmless.
->>
->> Thanks. I will modify as suggested below and respin.
->
-> It's ok, I can make the change locally.
+Coresight uses DT graph bindings to describe the connections of the
+components. However we have some undocumented usage of the bindings
+to describe some of the properties of the connections.
 
-Thanks Will for making the changes, and picking this.
+The coresight driver needs to know the hardware ports invovled
+in the connection and the direction of data flow to effectively
+manage the trace sessions. So far we have relied on the "port"
+address (as described by the generic graph bindings) to represent
+the hardware port of the component for a connection.
 
-Best regards
-Vivek
+The hardware uses separate numbering scheme for input and output
+ports, which implies, we could have two different (input and output)
+ports with the same port number. This could create problems in the
+graph bindings where the label of the port wouldn't match the address.
+
+e.g, with the existing bindings we get :
+
+	port@0{				// Output port 0
+		reg = <0>;
+		...
+	};
+
+	port@1{
+		reg = <0>;		// Input port 0
+		endpoint {
+			slave-mode;
+			...
+		};
+	};
+
+With the new enforcement in the DT rules, mismatches in label and address
+are not allowed (as see in the case for port@1). So, we need a new mechanism
+to describe the hardware port number reliably.
+
+Also, we relied on an undocumented "slave-mode" property (see the above
+example) to indicate if the port is an input port. Let us formalise and
+switch to a new property to describe the direction of data flow.
+
+There were three options considered for the hardware port number scheme:
+
+ 1) Use natural ordering in the DT to infer the hardware port number.
+  i.e, Mandate that the all ports are listed in the DT and in the ascending
+  order for each class (input and output respectively).
+   Pros :
+      - We don't need new properties and if the existing DTS list them in
+        order (which most of them do), they work out of the box.
+   Cons :
+      - We must list all the ports even if the system cannot/shouldn't use
+        it.
+      - It is prone to human errors (if the order is not kept).
+
+ 2) Use an explicit property to list both the direction and the hw port
+    number and direction. Define "coresight,hwid" as 2 member array of u32,
+    where the members are port number and the direction respectively.
+	e.g
+
+	port@0{
+		reg = <0>;
+		endpoint {
+			coresight,hwid = <0 1>;	// Port # 0, Output
+		}
+	};
+
+	port@1{
+		reg = <1>;
+		endpoint {
+			coresight,hwid = <0 0>;	// Port # 0, Input
+		};
+	};
+
+	Pros:
+	  - The bindings are formal but not so reader friendly and could
+	    potentially lead to human errors.
+	Cons:
+	  - Backward compatiblity is lost.
+ 3) Use explicit properties (implemented in the series) for the hardware
+    port id and direction. We define a new property "coresight,hwid" for
+    each endpoint in coresight devices to specify the hardware port number
+    explicitly. Also use a separate property "direction" to specify the
+    direction of the data flow.
+
+	e.g,
+
+	port@0{
+		reg = <0>;
+		endpoint {
+			direction = <1>;	// Output
+			coresight,hwid = <0>;	// Port # 0
+		}
+	};
+
+	port@1{
+		reg = <1>;
+		endpoint {
+			direction = <0>;	// Input
+			coresight,hwid = <0>;	// Port # 0
+		};
+	};
+
+    Pros:
+       - The bindings are formal and reader friendly, and less prone to errors.
+    Cons:
+       - Backward compatibility is lost.
+
+After a round of discussions [1], the following option (4) is adopted :
+
+ 4) Group ports based on the directions under a dedicated node. This has been
+    checked with the upstream DTC tool to resolve the "address mismatch" issue.
+
+	e.g,
+
+	out-ports {				// Output ports for this component
+
+		port@0 {			// Outport 0
+		  reg = 0;
+		  endpoint { ... };
+		};
+
+		port@1 {			// Outport 1
+		  reg = 1;
+		  endpoint { ... };
+		};
+
+	};
+
+	in-ports {				// Input ports for this component
+		port@0 {			// Inport 0
+		  reg = 0;
+		  endpoint { ... };
+		};
+
+		port@1 {			// Inport 1
+		  reg = 1;
+		  endpoint { ... };
+		};
+
+	};
+
+
+This series implements Option (4) listed above and falls back to the old
+bindings if the new bindings are not available. This allows the systems
+with old bindings work with the new driver. The driver now issues a warning
+(once) when it encounters the old bindings. The series contains DT update
+for Juno platform. The remaining in-kernel sources could be updated once
+we are fine with the proposal.
+
+It also cleans up the platform parsing code to reduce the memory usage by
+reusing the platform description.
+
+Applies on coresight/next
+
+Changes since V2:
+  - Clean of_coresight_parse_endpoint() to return 1 to indicate a connection
+    record was updated.
+  - Drop documentation for old bindings
+
+Changes since V1:
+  - Implement the proposal by Rob.
+  - Drop the DTS updates for all platforms except Juno
+  - Drop the incorrect fix in coresight_register. Instead document the code
+    to prevent people trying to un-fix it again.
+  - Add a patch to drop remote device references in DT graph parsing
+  - Split of_node refcount fixing patch, fix a typo in the comment.
+  - Add Reviewed-by tags from Mathieu.
+  - Drop patches picked up for 4.18-rc series
+
+Changes since RFC:
+ - Fixed style issues
+ - Fix an existing memory leak coresight_register (Found in code update)
+ - Fix missing of_node_put() in the existing driver (Reported-by Mathieu)
+ - Update the existing dts in kernel tree.
+
+Suzuki K Poulose (9):
+  coresight: Document error handling in coresight_register
+  coresight: platform: Refactor graph endpoint parsing
+  coresight: platform: Fix refcounting for graph nodes
+  coresight: platform: Fix leaking device reference
+  coresight: Fix remote endpoint parsing
+  coresight: Add helper to check if the endpoint is input
+  coresight: platform: Cleanup coresight connection handling
+  coresight: Cleanup coresight DT bindings
+  dts: juno: Update coresight bindings
+
+ .../devicetree/bindings/arm/coresight.txt          |  95 +++++---
+ arch/arm64/boot/dts/arm/juno-base.dtsi             | 161 ++++++------
+ arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi          |  52 ++--
+ arch/arm64/boot/dts/arm/juno.dts                   |  13 +-
+ drivers/hwtracing/coresight/coresight.c            |  35 +--
+ drivers/hwtracing/coresight/of_coresight.c         | 269 ++++++++++++++-------
+ include/linux/coresight.h                          |   9 +-
+ 7 files changed, 359 insertions(+), 275 deletions(-)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
