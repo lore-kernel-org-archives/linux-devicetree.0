@@ -1,71 +1,122 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v3 01/23] thermal: armada: add a function that sanitizes
- the thermal zone name
-Date: Fri, 27 Jul 2018 17:29:52 +0200
-Message-ID: <f1d7e8bd-329f-0c9d-c296-0afbe871058f@linaro.org>
-References: <20180716144206.30985-1-miquel.raynal@bootlin.com>
- <20180716144206.30985-2-miquel.raynal@bootlin.com>
- <84f97022-a470-f314-ee75-e5afb733bea5@linaro.org>
- <20180727135230.3c7102c7@xps13>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v3.1 10/10] arm64: dts: allwinner: a64:
+ Enable HDMI output on A64 boards w/ HDMI
+Date: Fri, 27 Jul 2018 23:42:08 +0800
+Message-ID: <7e1dcd8796e417924072f14b2a50af73@aosc.io>
+References: <20180726171257.6688-1-icenowy@aosc.io>
+ <20180726171257.6688-11-icenowy@aosc.io>
+ <20180727125615.ju23ecgm6y4rz7p5@flea>
+ <8DF4600E-DFE4-47CD-B541-FFDD903A65FB@aosc.io>
+ <20180727140032.go6f3dwzxrzfstzj@flea>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180727135230.3c7102c7@xps13>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBUP25TNAKGQEC35ZJLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180727140032.go6f3dwzxrzfstzj@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjcvMDcvMjAxOCAxMzo1MiwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiBIaSBEYW5pZWwsCj4g
-Cj4gRGFuaWVsIExlemNhbm8gPGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc+IHdyb3RlIG9uIEZy
-aSwgMjcgSnVsIDIwMTgKPiAxMzozNDoxOSArMDIwMDoKPiAKPj4gT24gMTYvMDcvMjAxOCAxNjo0
-MSwgTWlxdWVsIFJheW5hbCB3cm90ZToKPj4+IFRoZXJtYWwgem9uZSBuYW1lcyBtdXN0IGZvbGxv
-dyBjZXJ0YWluIHJ1bGVzIGltcG9zZWQgYnkgdGhlIGZyYW1ld29yay4KPj4+IFRoZXkgYXJlIGxp
-bWl0ZWQgaW4gbGVuZ3RoIGFuZCBzaGFsbCBub3QgaGF2ZSBhbnkgaHlwaGVuICctJy4KPj4+Cj4+
-PiBUaGlzIGlzIGRvbmUgaW4gYSBzZXBhcmF0ZSBmdW5jdGlvbiBmb3IgZnV0dXJlIHVzZSBpbiBh
-bm90aGVyIGxvY2F0aW9uLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1p
-cXVlbC5yYXluYWxAYm9vdGxpbi5jb20+ICAKPj4KPj4gV2h5IGRvIHlvdSBoYXZlIHRvIHByb3Zp
-ZGUgYSBmdW5jdGlvbiB0byB0ZXN0IHRoYXQ/Cj4+Cj4+IExvZ2ljYWxseSwgdGhlIG9uZSB3aG8g
-ZGlkIHRoZSBjaGFuZ2UgdG8gYWRkIGEgdGhlcm1hbCBuYW1lLCBzaG91bGQKPj4gY2hlY2sgaXRz
-IGNvZGUgd29ya3MuIFdpdGhvdXQgYSBwcm9wZXIgbmFtZSB0aGF0IHdvbid0IHdvcmsuCj4gCj4g
-V2hhdCBkbyB5b3UgbWVhbiAidGhlIG9uZSB3aG8gZGlkIHRoZSBjaGFuZ2UiPwo+IEkgdGhpbmsg
-dGhlIHRoZXJtYWwgY29yZSBzaG91bGQgbm90IGNhcmUgdGhhdCBtdWNoIHRvIHdoYXQgaXMgZ2l2
-ZW4gYXMKPiBuYW1lIGFuZCBzaG91bGQgcHJvYmFibHkgbm90IGJlIHNvIHN0cmljdC4KPiAKPiBB
-bHNvLCBJIGRvbid0IGNob29zZSB3aGF0IGRldl9uYW1lKCkgcmV0dXJucywgaXQncyBpbiB0aGUg
-ZGV2aWNlIHRyZWUKPiBhbmQgdGhlIGRldmljZSB0cmVlIGRvIG5vdCBjYXJlIGFib3V0IHRoZSBp
-bXBsZW1lbnRhdGlvbiwgaXQncyBqdXN0IGEKPiBkZXNjcmlwdGl2ZSBmaWxlLgo+IAo+Pgo+PiBT
-byB0aGlzIGZ1bmN0aW9uIGlzIHRlc3Rpbmcgc29tZXRoaW5nIHdoaWNoIHNob3VsZCBiZSBhbHJl
-YWR5IHRlc3RlZCwgbm8/Cj4gCj4gSSBkb24ndCB0aGluayBpdCBpcy4gV2l0aG91dCB0aGlzIGZ1
-bmN0aW9uIHRoZSBwcm9iZSB3aWxsIHNpbXBseSBmYWlsLgo+IAo+IFRoZSBleHBsYW5hdGlvbiBv
-ZiB3aGF0IGZhaWxzIGlzIGluIHRoZSBjb2RlOgo+IAo+Pj4gKwkJLyoKPj4+ICsJCSAqIFdoZW4g
-aW5zaWRlIGEgc3lzdGVtIGNvbnRyb2xsZXIsIHRoZSBkZXZpY2UgbmFtZSBoYXMgdGhlCj4+PiAr
-CQkgKiBmb3JtOiBmMDZmODAwMC5zeXN0ZW0tY29udHJvbGxlcjphcC10aGVybWFsIHNvIHN0cmlw
-cGluZwo+Pj4gKwkJICogYWZ0ZXIgdGhlICc6JyBzaG91bGQgZ2l2ZSB1cyBhIHNob3J0ZXIgYnV0
-IG1lYW5pbmdmdWwgbmFtZS4KPj4+ICsJCSAqLwo+Pj4gKwkJbmFtZSA9IHN0cnJjaHIobmFtZSwg
-JzonKTsKPj4+ICsJCWlmICghbmFtZSkKPj4+ICsJCQluYW1lID0gImFybWFkYV90aGVybWFsIjsK
-Pj4+ICsJCWVsc2UKPj4+ICsJCQluYW1lKys7Cj4gCj4gWy4uLl0KCkknbSBub3QgaW4gZmF2b3Ig
-b2YgdGhpcywgcG90ZW50aWFsbHkgaXQgY2FuIGludHJvZHVjZSBhIGJyZWFrIHdoaWNoIGNhbgpi
-ZSBleHBsb2l0ZWQgbGF0ZXIuCgpZb3UgYXJlIGNyZWF0aW5nIHRoZSB0aGVybWFsIHpvbmVzIG1h
-bnVhbGx5IGZyb20gdGhlIGRyaXZlciBidXQgd2FudCB0bwpyZWx5IG9uIHRoZSB0ZW1wZXJhdHVy
-ZSBjb250cm9sbGVyIG5hbWUgdG8gZ2l2ZSBhIG5hbWUgdG8gdGhlIHRoZXJtYWwgem9uZS4KCldo
-eSBub3QgY3JlYXRlIHRoZSB0aGVybWFsIHpvbmUgaW4gdGhlIERUIHdpdGggdGhlIGNvcnJlY3Qg
-bmFtZSBhbmQgdXNlCmRldm1fdGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlciA/CgpPciBh
-bHRlcm5hdGl2ZWx5IGhhcmRjb2RlIHRoZSB0aGVybWFsIHpvbmUgbmFtZSA/CgoKCgoKCgotLSAK
-IDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0
-d2FyZSBmb3IgQVJNIFNvQ3MKCkZvbGxvdyBMaW5hcm86ICA8aHR0cDovL3d3dy5mYWNlYm9vay5j
-b20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8CjxodHRwOi8vdHdpdHRlci5jb20vIyEvbGluYXJv
-b3JnPiBUd2l0dGVyIHwKPGh0dHA6Ly93d3cubGluYXJvLm9yZy9saW5hcm8tYmxvZy8+IEJsb2cK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+=E5=9C=A8 2018-07-27 22:00=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> On Fri, Jul 27, 2018 at 09:26:11PM +0800, Icenowy Zheng wrote:
+>>=20
+>>=20
+>> =E4=BA=8E 2018=E5=B9=B47=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=888:56:15, Maxime Ripard=20
+>> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+>> >On Fri, Jul 27, 2018 at 01:12:57AM +0800, Icenowy Zheng wrote:
+>> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>> >b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>> >> index 1b9b92e541d2..1b972bade9f6 100644
+>> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>> >> @@ -62,6 +62,21 @@
+>> >>  	chosen {
+>> >>  		stdout-path =3D "serial0:115200n8";
+>> >>  	};
+>> >> +
+>> >> +	connector {
+>> >> +		compatible =3D "hdmi-connector";
+>> >> +		type =3D "a";
+>> >> +
+>> >> +		port {
+>> >> +			hdmi_con_in: endpoint {
+>> >> +				remote-endpoint =3D <&hdmi_out_con>;
+>> >> +			};
+>> >> +		};
+>> >> +	};
+>> >> +};
+>> >> +
+>> >> +&de {
+>> >> +	status =3D "okay";
+>> >>  };
+>> >>
+>> >>  &ehci0 {
+>> >> @@ -82,6 +97,17 @@
+>> >>
+>> >>  };
+>> >>
+>> >> +&hdmi {
+>> >> +	hdmi-supply =3D <&reg_dldo1>;
+>> >> +	status =3D "okay";
+>> >> +};
+>> >> +
+>> >> +&hdmi_out {
+>> >> +	hdmi_out_con: endpoint {
+>> >> +		remote-endpoint =3D <&hdmi_con_in>;
+>> >> +	};
+>> >> +};
+>> >> +
+>> >>  &i2c1 {
+>> >>  	pinctrl-names =3D "default";
+>> >>  	pinctrl-0 =3D <&i2c1_pins>;
+>> >> @@ -99,6 +125,10 @@
+>> >>  	};
+>> >>  };
+>> >>
+>> >> +&mixer1 {
+>> >> +	status =3D "okay";
+>> >> +};
+>> >> +
+>> >>  &mmc0 {
+>> >>  	pinctrl-names =3D "default";
+>> >>  	pinctrl-0 =3D <&mmc0_pins>;
+>> >> @@ -238,6 +268,10 @@
+>> >>  	status =3D "disabled";
+>> >>  };
+>> >>
+>> >> +&tcon1 {
+>> >> +	status =3D "okay";
+>> >> +};
+>> >
+>> >Is it working or not on the pine64?
+>>=20
+>> Not tested yet, as my main A64 device is Pine A64-LTS now.
+>=20
+> It was last reported as broken, so it's better to leave it out of that
+> patch until someone figures it out.
+
+Sorry, I did find a bug. Although after fixing it HDMI on Pine A64+
+works fine.
+
+Will fix the bug when sending v3.2 (resending after rc1).
+
+>=20
+> Thanks!
+> Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
