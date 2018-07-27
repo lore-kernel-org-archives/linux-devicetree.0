@@ -1,118 +1,71 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 08/12] mfd: intel-peci-client: Add PECI client MFD
- driver
-Date: Fri, 27 Jul 2018 09:26:11 +0100
-Message-ID: <20180727082611.GE4628@dell>
-References: <20180723214751.1733-1-jae.hyun.yoo@linux.intel.com>
- <20180723214751.1733-9-jae.hyun.yoo@linux.intel.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic-stby-poweroff property
+Date: Fri, 27 Jul 2018 10:30:11 +0200
+Message-ID: <1532680211.32306.36.camel@pengutronix.de>
+References: <20180726092220.17250-1-o.rempel@pengutronix.de>
+         <20180726092220.17250-2-o.rempel@pengutronix.de>
+         <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+         <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
+         <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180723214751.1733-9-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
+To: Robin Gong <yibin.gong@nxp.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 23 Jul 2018, Jae Hyun Yoo wrote:
+Hi Robin,
 
-> This commit adds PECI client MFD driver.
+Am Freitag, den 27.07.2018, 01:51 +0000 schrieb Robin Gong:
+[...]
+> > > > ---
+> > > >  Documentation/devicetree/bindings/clock/imx6q-clock.txt | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> > > > b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> > > > index a45ca67a9d5f..e1308346e00d 100644
+> > > > --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> > > > +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> > > > @@ -6,6 +6,14 @@ Required properties:
+> > > >  - interrupts: Should contain CCM interrupt
+> > > >  - #clock-cells: Should be <1>
+> > > > 
+> > > > +Optional properties:
+> > > > +- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ
+> > > > +signal
+> > > > +  on power off.
+> > > > +  Use this property if the SoC should be powered off by external
+> > > > +power
+> > > > +  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
+> > > 
+> > > PMIC_ON_REQ didn't connect to any pin of PMIC in your case?
+> > 
+> > No. First, it was only one customer specific issue. After some research I found
+> > even publicly available boards (for example RioTboard) which has same/similar
+> > design. After seeing this in imx6 documentation as valid power off way, I have
+> > no doubts - there should be even more devices doin this in the wild.
 > 
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: James Feist <james.feist@linux.intel.com>
-> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
-> ---
->  drivers/mfd/Kconfig                   |  14 ++
->  drivers/mfd/Makefile                  |   1 +
->  drivers/mfd/intel-peci-client.c       | 182 ++++++++++++++++++++++++++
->  include/linux/mfd/intel-peci-client.h |  81 ++++++++++++
->  4 files changed, 278 insertions(+)
->  create mode 100644 drivers/mfd/intel-peci-client.c
->  create mode 100644 include/linux/mfd/intel-peci-client.h
+> Not sure why the customer didn't follow reference design, since PMIC_ON_REQ can
+> provide power off/on feature by pressing ONOFF key which connected ONOFF
+> pin of i.mx6(ONOFF will toggle PMIC_ON_REQ to power off/on PMIC). The official
+> power off/on way (PMIC_ON_REQ) can also power off all power rails of PFUZE except
+> snvs as your patch did on PMIC_STBY_REQ.  PMIC_STBY_REQ is used to notify pmic
+> switch power mode (PFM/APS) or decrease voltage to save power in kernel suspend,
+> not power off....I am not sure if we need this patchset to 'workaround' the board issue.
 > 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index f3fa516011ec..e38b591479d4 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -595,6 +595,20 @@ config MFD_INTEL_MSIC
->  	  Passage) chip. This chip embeds audio, battery, GPIO, etc.
->  	  devices used in Intel Medfield platforms.
->  
-> +config MFD_INTEL_PECI_CLIENT
-> +	bool "Intel PECI client"
-> +	depends on (PECI || COMPILE_TEST)
-> +	select MFD_CORE
-> +	help
-> +	  If you say yes to this option, support will be included for the
-> +	  multi-funtional Intel PECI (Platform Environment Control Interface)
-> +	  client. PECI is a one-wire bus interface that provides a communication
-> +	  channel from PECI clients in Intel processors and chipset components
-> +	  to external monitoring or control devices.
-> +
-> +	  Additional drivers must be enabled in order to use the functionality
-> +	  of the device.
-> +
->  config MFD_IPAQ_MICRO
->  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
->  	depends on SA1100_H3100 || SA1100_H3600
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 2852a6042ecf..29e2cacc58bd 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -203,6 +203,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
->  obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
->  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
->  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
-> +obj-$(CONFIG_MFD_INTEL_PECI_CLIENT)	+= intel-peci-client.o
->  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
->  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
->  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-> diff --git a/drivers/mfd/intel-peci-client.c b/drivers/mfd/intel-peci-client.c
-> new file mode 100644
-> index 000000000000..d7702cf1ea50
-> --- /dev/null
-> +++ b/drivers/mfd/intel-peci-client.c
-> @@ -0,0 +1,182 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2018 Intel Corporation
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/intel-peci-client.h>
-> +#include <linux/module.h>
-> +#include <linux/peci.h>
-> +#include <linux/of_device.h>
-> +
-> +enum cpu_gens {
-> +	CPU_GEN_HSX = 0, /* Haswell Xeon */
-> +	CPU_GEN_BRX,     /* Broadwell Xeon */
-> +	CPU_GEN_SKX,     /* Skylake Xeon */
-> +};
-> +
-> +static struct mfd_cell peci_functions[] = {
-> +	{
-> +		.name = "peci-cputemp",
-> +		.of_compatible = "intel,peci-cputemp",
-> +	},
-> +	{
-> +		.name = "peci-dimmtemp",
-> +		.of_compatible = "intel,peci-dimmtemp",
-> +	},
-> +};
+Not all boards follow the reference design, that's a fact of life.
 
-The more I look at this driver, the less I think it fits into MFD.
+Please look at the i.MX6Q reference manual. The sequence implemented in
+this patchset can be found as a valid way to power off the system in
+"60.4.3 Power mode transitions" "Normal ON to OFF with external PMIC",
+so there is hardly any way to argue that this is a board specific
+quirk. This is one of the Freescale/NXP recommended sequences to turn
+off the system.
 
-What's stopping you from registering these devices directly from DT?
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards,
+Lucas
