@@ -1,137 +1,166 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 9/9] clk: actions: Add Actions Semi S900 SoC Reset Management Unit support
-Date: Sat, 28 Jul 2018 00:15:27 +0530
-Message-ID: <20180727184527.13287-10-manivannan.sadhasivam@linaro.org>
-References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de, mturquette@baylibre.com, sboyd@kernel.org, afaerber@suse.de, robh+dt@kernel.org
-Cc: linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: mtd: spi-nor: only apply reset hacks to broken hardware
+Date: Fri, 27 Jul 2018 12:06:06 -0700
+Message-ID: <20180727190606.GA4653@roeck-us.net>
+References: <20180727183313.137943-1-computersforpeace@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180727183313.137943-1-computersforpeace@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, NeilBrown <neilb@suse.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add Reset Management Unit (RMU) support for Actions Semi S900 SoC.
+On Fri, Jul 27, 2018 at 11:33:13AM -0700, Brian Norris wrote:
+> Commit 59b356ffd0b0 ("mtd: m25p80: restore the status of SPI flash when
+> exiting") is the latest from a long history of attempts to add reboot
+> handling to handle stateful addressing modes on SPI flash. Some prior
+> mostly-related discussions:
+> 
+> http://lists.infradead.org/pipermail/linux-mtd/2013-March/046343.html
+> [PATCH 1/3] mtd: m25p80: utilize dedicated 4-byte addressing commands
+> 
+> http://lists.infradead.org/pipermail/barebox/2014-September/020682.html
+> [RFC] MTD m25p80 3-byte addressing and boot problem
+> 
+> http://lists.infradead.org/pipermail/linux-mtd/2015-February/057683.html
+> [PATCH 2/2] m25p80: if supported put chip to deep power down if not used
+> 
+> Previously, attempts to add reboot-time software reset handling were
+> rejected, but the latest attempt was not.
+> 
+> Quick summary of the problem:
+> Some systems (e.g., boot ROM or bootloader) assume that they can read
+> initial boot code from their SPI flash using 3-byte addressing. If the
+> flash is left in 4-byte mode after reset, these systems won't boot. The
+> above patch provided a shutdown/remove hook to attempt to reset the
+> addressing mode before we reboot. Notably, this patch misses out on
+> huge classes of unexpected reboots (e.g., crashes, watchdog resets).
+> 
+> Unfortunately, it is essentially impossible to solve this problem 100%:
+> if your system doesn't know how to reset the SPI flash to power-on
+> defaults at initialization time, no amount of software can really rescue
+> you -- there will always be a chance of some unexpected reset that
+> leaves your flash in an addressing mode that your boot sequence didn't
+> expect.
+> 
+> While it is not directly harmful to perform hacks like the
+> aforementioned commit on all 4-byte addressing flash, a
+> properly-designed system should not need the hack -- and in fact,
+> providing this hack may mask the fact that a given system is indeed
+> broken. So this patch attempts to apply this unsound hack more narrowly,
+> providing a strong suggestion to developers and system designers that
+> this is truly a hack. With luck, system designers can catch their errors
+> early on in their development cycle, rather than applying this hack long
+> term. But apparently enough systems are out in the wild that we still
+> have to provide this hack.
+> 
+> Document a new device tree property to denote systems that do not have a
+> proper hardware (or software) reset mechanism, and apply the hack (with
+> a loud warning) only in this case.
+> 
+> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/clk/actions/owl-s900.c | 82 ++++++++++++++++++++++++++++++++++
- 1 file changed, 82 insertions(+)
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/drivers/clk/actions/owl-s900.c b/drivers/clk/actions/owl-s900.c
-index bb7ee872d316..4d38b1265cc3 100644
---- a/drivers/clk/actions/owl-s900.c
-+++ b/drivers/clk/actions/owl-s900.c
-@@ -19,8 +19,10 @@
- #include "owl-gate.h"
- #include "owl-mux.h"
- #include "owl-pll.h"
-+#include "owl-reset.h"
- 
- #include <dt-bindings/clock/actions,s900-cmu.h>
-+#include <dt-bindings/reset/actions,s900-reset.h>
- 
- #define CMU_COREPLL		(0x0000)
- #define CMU_DEVPLL		(0x0004)
-@@ -684,20 +686,100 @@ static struct clk_hw_onecell_data s900_hw_clks = {
- 	.num	= CLK_NR_CLKS,
- };
- 
-+static struct owl_reset_map s900_resets[] = {
-+	[RESET_DMAC]		= { CMU_DEVRST0, BIT(0) },
-+	[RESET_SRAMI]		= { CMU_DEVRST0, BIT(1) },
-+	[RESET_DDR_CTL_PHY]	= { CMU_DEVRST0, BIT(2) },
-+	[RESET_NANDC0]		= { CMU_DEVRST0, BIT(3) },
-+	[RESET_SD0]		= { CMU_DEVRST0, BIT(4) },
-+	[RESET_SD1]		= { CMU_DEVRST0, BIT(5) },
-+	[RESET_PCM1]		= { CMU_DEVRST0, BIT(6) },
-+	[RESET_DE]		= { CMU_DEVRST0, BIT(7) },
-+	[RESET_LVDS]		= { CMU_DEVRST0, BIT(8) },
-+	[RESET_SD2]		= { CMU_DEVRST0, BIT(9) },
-+	[RESET_DSI]		= { CMU_DEVRST0, BIT(10) },
-+	[RESET_CSI0]		= { CMU_DEVRST0, BIT(11) },
-+	[RESET_BISP_AXI]	= { CMU_DEVRST0, BIT(12) },
-+	[RESET_CSI1]		= { CMU_DEVRST0, BIT(13) },
-+	[RESET_GPIO]		= { CMU_DEVRST0, BIT(15) },
-+	[RESET_EDP]		= { CMU_DEVRST0, BIT(16) },
-+	[RESET_AUDIO]		= { CMU_DEVRST0, BIT(17) },
-+	[RESET_PCM0]		= { CMU_DEVRST0, BIT(18) },
-+	[RESET_HDE]		= { CMU_DEVRST0, BIT(21) },
-+	[RESET_GPU3D_PA]	= { CMU_DEVRST0, BIT(22) },
-+	[RESET_IMX]		= { CMU_DEVRST0, BIT(23) },
-+	[RESET_SE]		= { CMU_DEVRST0, BIT(24) },
-+	[RESET_NANDC1]		= { CMU_DEVRST0, BIT(25) },
-+	[RESET_SD3]		= { CMU_DEVRST0, BIT(26) },
-+	[RESET_GIC]		= { CMU_DEVRST0, BIT(27) },
-+	[RESET_GPU3D_PB]	= { CMU_DEVRST0, BIT(28) },
-+	[RESET_DDR_CTL_PHY_AXI]	= { CMU_DEVRST0, BIT(29) },
-+	[RESET_CMU_DDR]		= { CMU_DEVRST0, BIT(30) },
-+	[RESET_DMM]		= { CMU_DEVRST0, BIT(31) },
-+	[RESET_USB2HUB]		= { CMU_DEVRST1, BIT(0) },
-+	[RESET_USB2HSIC]	= { CMU_DEVRST1, BIT(1) },
-+	[RESET_HDMI]		= { CMU_DEVRST1, BIT(2) },
-+	[RESET_HDCP2TX]		= { CMU_DEVRST1, BIT(3) },
-+	[RESET_UART6]		= { CMU_DEVRST1, BIT(4) },
-+	[RESET_UART0]		= { CMU_DEVRST1, BIT(5) },
-+	[RESET_UART1]		= { CMU_DEVRST1, BIT(6) },
-+	[RESET_UART2]		= { CMU_DEVRST1, BIT(7) },
-+	[RESET_SPI0]		= { CMU_DEVRST1, BIT(8) },
-+	[RESET_SPI1]		= { CMU_DEVRST1, BIT(9) },
-+	[RESET_SPI2]		= { CMU_DEVRST1, BIT(10) },
-+	[RESET_SPI3]		= { CMU_DEVRST1, BIT(11) },
-+	[RESET_I2C0]		= { CMU_DEVRST1, BIT(12) },
-+	[RESET_I2C1]		= { CMU_DEVRST1, BIT(13) },
-+	[RESET_USB3]		= { CMU_DEVRST1, BIT(14) },
-+	[RESET_UART3]		= { CMU_DEVRST1, BIT(15) },
-+	[RESET_UART4]		= { CMU_DEVRST1, BIT(16) },
-+	[RESET_UART5]		= { CMU_DEVRST1, BIT(17) },
-+	[RESET_I2C2]		= { CMU_DEVRST1, BIT(18) },
-+	[RESET_I2C3]		= { CMU_DEVRST1, BIT(19) },
-+	[RESET_ETHERNET]	= { CMU_DEVRST1, BIT(20) },
-+	[RESET_CHIPID]		= { CMU_DEVRST1, BIT(21) },
-+	[RESET_I2C4]		= { CMU_DEVRST1, BIT(22) },
-+	[RESET_I2C5]		= { CMU_DEVRST1, BIT(23) },
-+	[RESET_CPU_SCNT]	= { CMU_DEVRST1, BIT(30) }
-+};
-+
- static struct owl_clk_desc s900_clk_desc = {
- 	.clks	    = s900_clks,
- 	.num_clks   = ARRAY_SIZE(s900_clks),
- 
- 	.hw_clks    = &s900_hw_clks,
-+
-+	.resets     = s900_resets,
-+	.num_resets = ARRAY_SIZE(s900_resets),
- };
- 
- static int s900_clk_probe(struct platform_device *pdev)
- {
- 	struct owl_clk_desc *desc;
-+	struct owl_reset *reset;
-+	int ret;
- 
- 	desc = &s900_clk_desc;
- 	owl_clk_regmap_init(pdev, desc);
- 
-+	/*
-+	 * FIXME: Reset controller registration should be moved to
-+	 * common code, once all SoCs of Owl family supports it.
-+	 */
-+	reset = devm_kzalloc(&pdev->dev, sizeof(*reset), GFP_KERNEL);
-+	if (!reset)
-+		return -ENOMEM;
-+
-+	reset->rcdev.of_node = pdev->dev.of_node;
-+	reset->rcdev.ops = &owl_reset_ops;
-+	reset->rcdev.nr_resets = desc->num_resets;
-+	reset->reset_map = desc->resets;
-+	reset->regmap = desc->regmap;
-+
-+	ret = devm_reset_controller_register(&pdev->dev, &reset->rcdev);
-+	if (ret)
-+		dev_err(&pdev->dev, "Failed to register reset controller\n");
-+
- 	return owl_clk_probe(&pdev->dev, desc->hw_clks);
- }
- 
--- 
-2.17.1
+> ---
+> Note that I intentionall didn't split the documentation patch. It seems
+> clearer to do these together IMO, but if it's *really* important to
+> someone...I can resend
+> ---
+>  .../devicetree/bindings/mtd/jedec,spi-nor.txt  |  9 +++++++++
+>  drivers/mtd/spi-nor/spi-nor.c                  | 18 ++++++++++++++++--
+>  include/linux/mtd/spi-nor.h                    |  1 +
+>  3 files changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> index 956bb046e599..f03be904d3c2 100644
+> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> @@ -69,6 +69,15 @@ Optional properties:
+>                     all chips and support for it can not be detected at runtime.
+>                     Refer to your chips' datasheet to check if this is supported
+>                     by your chip.
+> +- broken-flash-reset : Some flash devices utilize stateful addressing modes
+> +		   (e.g., for 32-bit addressing) which need to be managed
+> +		   carefully by a system. Because these sorts of flash don't
+> +		   have a standardized software reset command, and because some
+> +		   systems don't toggle the flash RESET# pin upon system reset
+> +		   (if the pin even exists at all), there are systems which
+> +		   cannot reboot properly if the flash is left in the "wrong"
+> +		   state. This boolean flag can be used on such systems, to
+> +		   denote the absence of a reliable reset mechanism.
+>  
+>  Example:
+>  
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index d9c368c44194..f028277fb1ce 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -2757,8 +2757,18 @@ static int spi_nor_init(struct spi_nor *nor)
+>  
+>  	if ((nor->addr_width == 4) &&
+>  	    (JEDEC_MFR(nor->info) != SNOR_MFR_SPANSION) &&
+> -	    !(nor->info->flags & SPI_NOR_4B_OPCODES))
+> +	    !(nor->info->flags & SPI_NOR_4B_OPCODES)) {
+> +		/*
+> +		 * If the RESET# pin isn't hooked up properly, or the system
+> +		 * otherwise doesn't perform a reset command in the boot
+> +		 * sequence, it's impossible to 100% protect against unexpected
+> +		 * reboots (e.g., crashes). Warn the user (or hopefully, system
+> +		 * designer) that this is bad.
+> +		 */
+> +		WARN_ONCE(nor->flags & SNOR_F_BROKEN_RESET,
+> +			  "enabling reset hack; may not recover from unexpected reboots\n");
+>  		set_4byte(nor, nor->info, 1);
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -2781,7 +2791,8 @@ void spi_nor_restore(struct spi_nor *nor)
+>  	/* restore the addressing mode */
+>  	if ((nor->addr_width == 4) &&
+>  	    (JEDEC_MFR(nor->info) != SNOR_MFR_SPANSION) &&
+> -	    !(nor->info->flags & SPI_NOR_4B_OPCODES))
+> +	    !(nor->info->flags & SPI_NOR_4B_OPCODES) &&
+> +	    (nor->flags & SNOR_F_BROKEN_RESET))
+>  		set_4byte(nor, nor->info, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(spi_nor_restore);
+> @@ -2911,6 +2922,9 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  		params.hwcaps.mask |= SNOR_HWCAPS_READ_FAST;
+>  	}
+>  
+> +	if (of_property_read_bool(np, "broken-flash-reset"))
+> +		nor->flags |= SNOR_F_BROKEN_RESET;
+> +
+>  	/* Some devices cannot do fast-read, no matter what DT tells us */
+>  	if (info->flags & SPI_NOR_NO_FR)
+>  		params.hwcaps.mask &= ~SNOR_HWCAPS_READ_FAST;
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index e60da0d34cc1..c922e97f205a 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -235,6 +235,7 @@ enum spi_nor_option_flags {
+>  	SNOR_F_S3AN_ADDR_DEFAULT = BIT(3),
+>  	SNOR_F_READY_XSR_RDY	= BIT(4),
+>  	SNOR_F_USE_CLSR		= BIT(5),
+> +	SNOR_F_BROKEN_RESET	= BIT(6),
+>  };
+>  
+>  /**
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
