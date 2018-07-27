@@ -1,80 +1,54 @@
-From: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Subject: RE: [PATCH] usb: dwc3: core: Add quirk for enabling AutoRetry feature
- in the controller
-Date: Fri, 27 Jul 2018 07:29:35 +0000
-Message-ID: <MWHPR02MB2816FFCAB118C07C7754BF58A72A0@MWHPR02MB2816.namprd02.prod.outlook.com>
-References: <1532168920-3269-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <20180725200325.GA21007@rob-hp-laptop>
- <MWHPR02MB2816DDEAE84716F88B08EB46A72B0@MWHPR02MB2816.namprd02.prod.outlook.com>
- <877eli1c72.fsf@linux.intel.com>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: Re: [PATCH v2 02/10] dt-bindings: mmc: tegra: Add nvidia,only-1-8-v
+ property
+Date: Fri, 27 Jul 2018 11:05:55 +0300
+Message-ID: <20180727110555.1b7ad97d@dhcp-10-21-25-168>
+References: <1532607560-11253-1-git-send-email-avienamo@nvidia.com>
+        <1532607560-11253-3-git-send-email-avienamo@nvidia.com>
+        <484a31bdaad6d76b4fbb7d6fa80cbb8d@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <877eli1c72.fsf@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <484a31bdaad6d76b4fbb7d6fa80cbb8d@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 26 Jul 2018 15:05:55 +0200
+Stefan Agner <stefan@agner.ch> wrote:
 
-Hi Felipe,
+> On 26.07.2018 14:19, Aapo Vienamo wrote:
+> > Add a property to mark controllers which operate at a 1.8 V fixed I/O
+> > voltage.
+> > 
+> > This feature of the hardware needs to be signaled this way because it
+> > cannot be probed at runtime or reliably derived from other properties.  
+> 
+> Is this really needed? Can we not use vqmmc to determine which voltage
+> the controller runs on?
+> 
+> There is already some precedence in the SDHCI core to determine which
+> voltage levels are supported:
+> https://lkml.org/lkml/2018/7/5/342
 
->-----Original Message-----
->From: Felipe Balbi [mailto:balbi@kernel.org]
->Sent: Thursday, July 26, 2018 4:44 PM
->To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Rob Herring <robh@kernel.o=
-rg>
->Cc: gregkh@linuxfoundation.org; mark.rutland@arm.com;
->v.anuragkumar@gmail.com; linux-usb@vger.kernel.org; devicetree@vger.kernel=
-.org;
->linux-kernel@vger.kernel.org
->Subject: RE: [PATCH] usb: dwc3: core: Add quirk for enabling AutoRetry fea=
-ture in the
->controller
->
->
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
->>>b/Documentation/devicetree/bindings/usb/dwc3.txt
->>>> index 7f13ebe..2ba2bc2 100644
->>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
->>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->>>> @@ -94,6 +94,11 @@ Optional properties:
->>>>  			this and tx-thr-num-pkt-prd to a valid, non-zero value
->>>>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
->>>>  			enable periodic ESS TX threshold.
->>>> + - snps,enable_auto_retry: Set to enable Auto retry Feature to make
->>>> + the
->>>
->>>s/_/-/
->> Sorry, I am not able to understand what needs to fixed here. Please
->> help me in understanding, so that I can fix it in v2.
->
->replace _ with -
->
->>>> +			controller operating in Host mode on seeing transaction
->>>> +			errors(CRC errors or internal overrun scenerios) on IN
->>>> +			transfers to reply to the device with a non-terminating
->>>> +			retry ACK (i.e, an ACK TP with Retry=3D1 & Nump !=3D 0)
->>>
->>>Seems like the property is unnecessary. When would you not want this
->>>retry behavior? Why not just enable unconditionally in the driver?
->>>
->> There is no harm in adding this fix always but I think this Retry
->> feature should be added depending on the user and type of the
->> application. For example, applying this feature in a streaming
->> application where isochronous transfers are used might end up in
->
->read the docs. Auto Retry in only for non-isochronous IN endpoints. You do=
-n't need
->any quirk for this. Just enable it unconditionally. Actually, you wanna ma=
-ke sure the
->core can run in Host mode before setting this, but that's it. No need for =
-a quirk.
->
-Thanks for making me understand. Will remove this quirk and send v2
+This property is introduced to solve a slightly different issue. The
+thing is that supplying a fixed voltage SDHCI controller from a variable
+regulator is still a valid configuration. Which means that testing the
+capabilities of the regulator doesn't actually describe the SDHCI
+controller itself.
 
-Best Regards,
-Anurag Kumar Vulisha
+In practice this property is used to communicate whether pad
+reconfiguration and voltage switching needs to be performed or not. This
+cannot be determined from the absence or presence of the pinctrl
+properties either because they naturally won't be there on older dtbs.
+
+The logic behind this goes like this: if this property is present,
+there's no need to perform pad or regulator reconfiguration and UHS
+modes can be enabled. If this property is missing then valid pinctrl and
+regulator properties are required to enable UHS signaling. This is
+implemented in tegra_sdhci_is_uhs_valid() in "[PATCH v2 03/10] mmc:
+tegra: Reconfigure pad voltages during voltage switching"
+
+ -Aapo
