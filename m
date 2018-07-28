@@ -1,104 +1,184 @@
-From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Subject: Re: [PATCH v2 1/2] Input: atmel_mxt_ts: Add support for optional
- regulators.
-Date: Sat, 28 Jul 2018 15:16:02 +0200
-Message-ID: <2009318.0y2T04Zz3n@acerlaptop>
-References: <1531851386-17840-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
- <2353752.vfvcsHJLR6@acerlaptop> <20180719205403.GA29273@hairyalien>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
+ coherent DMA mask)
+Date: Sat, 28 Jul 2018 09:58:20 -0700
+Message-ID: <20180728165820.GA5731@roeck-us.net>
+References: <CAJKOXPeaguNxRr7pCArJ5Db4tS6Kr5BDheCxskY+vd0dUN+0GQ@mail.gmail.com>
+ <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com>
+ <20180727140448.GA29001@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180719205403.GA29273@hairyalien>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nick Dyer <nick@shmanahar.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180727140448.GA29001@lst.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Fugang Duan <fugang.duan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1cnNkYXksIEp1bHkgMTksIDIwMTggOTo1NDowNCBQTSBDRVNUIE5pY2sgRHllciB3cm90
-ZToKPiBPbiBXZWQsIEp1bCAxOCwgMjAxOCBhdCAwNjoyMTozMFBNICswMjAwLCBQYXdlxYIgQ2ht
-aWVsIHdyb3RlOgo+ID4gT24gVHVlc2RheSwgSnVseSAxNywgMjAxOCAxMDowMDowNSBQTSBDRVNU
-IE5pY2sgRHllciB3cm90ZToKPiA+ID4gT24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMDg6MTY6MjVQ
-TSArMDIwMCwgUGF3ZcWCIENobWllbCB3cm90ZToKPiA+ID4gPiBUaGlzIHBhdGNoIGFkZHMgb3B0
-aW9uYWwgcmVndWxhdG9ycywgd2hpY2ggY2FuIGJlIHVzZWQgdG8gcG93ZXIKPiA+ID4gPiB1cCB0
-b3VjaHNjcmVlbi4gQWZ0ZXIgZW5hYmxpbmcgcmVndWxhdG9ycywgd2UgbmVlZCB0byB3YWl0IDE1
-MG1zZWMuCj4gPiA+ID4gVGhpcyB2YWx1ZSBpcyB0YWtlbiBmcm9tIG9mZmljaWFsIGRyaXZlci4K
-PiA+ID4gPiAKPiA+ID4gPiBJdCB3YXMgdGVzdGVkIG9uIFNhbXN1bmcgR2FsYXh5IGk5MDAwIChi
-YXNlZCBvbiBTYW1zdW5nIFM1UFYyMTAgU09DKS4KPiA+ID4gPiAKPiA+ID4gPiBTaWduZWQtb2Zm
-LWJ5OiBQYXdlxYIgQ2htaWVsIDxwYXdlbC5taWtvbGFqLmNobWllbEBnbWFpbC5jb20+Cj4gPiA+
-ID4gLS0tCj4gPiA+ID4gQ2hhbmdlcyBmcm9tIHYxOgo+ID4gPiA+ICAgLSBFbmFibGUgcmVndWxh
-dG9ycyBvbmx5IGlmIHJlc2V0X2dwaW8gaXMgcHJlc2VudC4KPiA+ID4gPiAgIC0gU3dpdGNoIGZy
-b20gZGV2bV9yZWd1bGF0b3JfZ2V0X29wdGlvbmFsIHRvIGRldm1fcmVndWxhdG9yX2dldAo+ID4g
-PiA+IC0tLQo+ID4gPiA+ICBkcml2ZXJzL2lucHV0L3RvdWNoc2NyZWVuL2F0bWVsX214dF90cy5j
-IHwgNDYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0KPiA+ID4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDQ0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiA+IAo+ID4gPiBIaSBQ
-YXdlbC0KPiA+ID4gCj4gPiA+IEkgc2VlIHlvdSd2ZSBib3Jyb3dlZCBzb21lIG9mIHRoZSBsb2dp
-YyBmcm9tIHRoZSBwYXRjaCBJIHdyb3RlIGEgd2hpbGUKPiA+ID4gYmFjayAoc2VlIGh0dHBzOi8v
-Z2l0aHViLmNvbS9uZHllci9saW51eC9jb21taXQvOGU5Njg3ZTQxZWQwNjIgKQo+ID4gQWN0dWFs
-bHksIGkgd2FzIGxvb2tpbmcgYXQgaHR0cHM6Ly9naXRodWIuY29tL2F0bWVsLW1heHRvdWNoL2xp
-bnV4L2Jsb2IvbWF4dG91Y2gtdjMuMTQvZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9hdG1lbF9t
-eHRfdHMuYyAoYW5kIGRpZG4ndCBzYXcgWW91ciBwYXRjaCB0aWxsIG5vdykuCj4gPiBBcmUgWW91
-IGdvaW5nIHRvIHN1Ym1pdCBpdD8gKGl0IGhhcyBtb3JlIGZ1bmN0aW9uYWxpdGllcyAtIGZvciBl
-eGFtcGxlCj4gPiBzdXNwZW5kIG1vZGUgcmVhZCBmcm9tIGRldmljZSB0cmVlKS4KPiAKPiBHZXR0
-aW5nIHRoYXQgd29yayB1cHN0cmVhbSBoYXMgc3RhbGxlZCBmb3IgYSBjb3VwbGUgb2YgeWVhcnMg
-YmVjYXVzZSBJCj4gY2hhbmdlZCBqb2JzLiBJIGhhdmUgYWN0dWFsbHkgc3RhcnRlZCByZWNlbnRs
-eSB0byBkdXN0IGl0IG9mZiBhZ2FpbiwgaXQKPiB3YXMgbGF0ZXIgb24gaW4gbXkgcXVldWUgYnV0
-IGlmIHlvdSBoYXZlIHRoZSB0aW1lIHRvIHdvcmsgb24gaXQgdGhhdCBpcwo+IGdyZWF0Lgo+IAo+
-ID4gPiBUaGUgY29ycmVjdCBiZWhhdmlvdXIgYWNjb3JkaW5nIHRvIEF0bWVsIHNob3VsZCBiZToK
-PiA+ID4gCj4gPiA+ICogTWFrZSBSRVNFVCB6ZXJvCj4gPiA+ICogQnJpbmcgdXAgcmVndWxhdG9y
-cwo+ID4gPiAqIFdhaXQgZm9yIGEgcGVyaW9kIHRvIHNldHRsZSAoMTUwIG1zZWMpCj4gPiA+ICog
-UmVsZWFzZSBSRVNFVAo+ID4gPiAqIFdhaXQgZm9yIDEwMCBtc2VjIHdoaWxzdCBkZXZpY2UgZ2V0
-cyB0aHJvdWdoIGJvb3Rsb2FkZXIKPiA+ID4gKiBXYWl0IGZvciBDSEcgbGluZSBhc3NlcnQgYmVm
-b3JlIHJlYWRpbmcgaW5mbyBibG9jawo+ID4gPiAKPiA+ID4gSSBjYW4ndCBzZWUgdGhlIGZpcnN0
-IGFuZCBsYXN0IHN0ZXBzIGluIHlvdXIgcGF0Y2ggYXQgcHJlc2VudC4KPiA+IEFib3V0IGZpcnN0
-IHN0ZXAgLSByZXNldF9ncGlvIGlzIHJlYWRlZCBieSB1c2luZwo+ID4gZGV2bV9ncGlvZF9nZXRf
-b3B0aW9uYWwgd2l0aCBHUElPRF9PVVRfTE9XIGZsYWcsIHNvIGkgdGhpbmsgKGJ1dCBtaWdodAo+
-ID4gYmUgd3JvbmcpICB0aGF0IHdlIGRvbid0IG5lZWQgdG8gc2V0IHRoaXMgZ3BpbyB2YWx1ZSBh
-Z2FpbiB0byAwIGJlZm9yZQo+ID4gZW5hYmxpbmcgcmVndWxhdG9ycywKPiAKPiBJIHNlZSB3aGF0
-IHlvdSBtZWFuIC0gdGhhdCBpcyBmYWlyIGVub3VnaC4KPiAKPiA+IHNpbmNlIGN1cnJlbnRseSBv
-bmx5IHBsYWNlIHdoZXJlIHJlc2V0X2dwaW8gaXMgdXNlZCBpcyBpbiBkcml2ZXIgcHJvYmUKPiA+
-IChpbiBZb3VyIHBhdGNoIGl0IGlzIHVzZWQgaW4gb3RoZXIgY2FzZXMvcGxhY2VzIC0gZm9yIGV4
-YW1wbGUgaW4KPiA+IG14dF9zdGFydC9zdG9wLCB3aGVuIHdlIGVuYWJsZSByZWd1bGF0b3JzKS4K
-PiA+IEFib3V0IG1pc3Npbmcgd2FpdCBhZnRlciByZWxlYXNpbmcgcmVzZXQsIHNob3VsZG4ndCB0
-aGlzIGJlIHNlcGFyYXRlCj4gPiBwYXRjaCAoc2luY2UgY3VycmVudGx5IGRyaXZlciBpcyBub3Qg
-ZG9pbmcgaXQpPyBJIGNhbiBwcmVwYXJlIGl0IGFuZAo+ID4gc2VuZCB3aXRoIG90aGVyIGluIG5l
-eHQgdmVyc2lvbi4KPiAKPiBBY2NvcmRpbmcgdG8gdGhlIG1heHRvdWNoIGRvY3VtZW50YXRpb24s
-IGl0IGlzbid0IHJlYWR5IGZvciBjb21tcyB1bnRpbAo+IHRoZSBmaXJtd2FyZSBhc3NlcnRzIHRo
-ZSBDSEcgbGluZS4gSSd2ZSBzZWVuIGEgYnVuY2ggb2YgZGV2aWNlcyB0aGF0IGdldAo+IGJ5IHdp
-dGhvdXQgYW4gZXhwbGljaXQgd2FpdCBiZWNhdXNlIHRoZSBib2FyZCBmaWxlIGRvZXMgdGhlIHBv
-d2VyIG9uLAo+IGFuZCBieSB0aGUgdGltZSB0aGUgZHJpdmVyIGdldHMgdG8gcHJvYmUgaXQncyBh
-IGZldyBodW5kcmVkIG1zIGxhdGVyCj4gYW55d2F5LCBzbyBpdCBkb2Vzbid0IG1hdHRlci4gQnV0
-IGlmIHdlIHB1dCBpdCBhbGwgaW4gdGhlIGRyaXZlciwgaXQKPiB3aWxsIGF0dGVtcHQgdG8gcmVh
-ZCB0aGUgaW5mbyBibG9jayBzdHJhaWdodCBhZnRlciB0aGUgMTAwIG1zZWMgZGVsYXkKPiB3aXRo
-b3V0IHdhaXRpbmcgZm9yIENIRywgYW5kIEkgc3VzcGVjdCB3ZSdsbCBlbmQgdXAgd2l0aCBvY2Nh
-c2lvbmFsCj4gcHJvYmUgZmFpbHVyZXMuIEl0J2xsIGRlcGVuZCBvbiB0aGUgbWF4dG91Y2ggZGV2
-aWNlLCB0aG91Z2g6IHRoZXkgaGF2ZSBhCj4gcmFuZ2Ugb2YgZGlmZmVyZW50IHBvd2VyIG9uIHRp
-bWluZ3MuCj4gCj4gV2hpY2ggcGxhdGZvcm0gYXJlIHlvdSBkb2luZyB0aGlzIGZvcj8gSXMgaXQg
-YSBDaHJvbWVib29rPwpObywgaXQncyBTYW1zdW5nIEdhbGF4eSBTIChpOTAwMCkgcGhvbmUgd2l0
-aCBTNVBWMjEwIFNhbXN1bmcgU29jLgpJJ20gcHJlcGFyaW5nIHYzIHZlcnNpb24gd2l0aCBzZXBh
-cmF0ZSBwYXRjaCBhZGRpbmcgdGhpcyB3YWl0L2RlbGF5Lgo+IAo+ID4gVGhhbmtzIGZvciBmZWVk
-YmFjawo+ID4gPiAKPiA+ID4gVGhlIG9ubHkgZG93bnNpZGUgd2l0aCB0aGlzIGFwcHJvYWNoIGlz
-IHRoYXQgdGhlcmUgYXJlIGEgbG90IG9mCj4gPiA+IGRlbGF5cyBkdXJpbmcgZHJpdmVyIHByb2Jl
-LCBidXQgSSBiZWxpZXZlIHRoZSBhc3luY2hyb25vdXMgcHJvYmUgc3R1ZmYKPiA+ID4gdGhhdCdz
-IGxhbmRlZCBzaW5jZSBJIHdyb3RlIHRoZSBvcmlnaW5hbCBwYXRjaCBzaG91bGQgYWRkcmVzcyB0
-aGF0Lgo+ID4gPiAKPiA+ID4gY2hlZXJzCj4gPiA+IAo+ID4gPiBOaWNrCj4gPiA+IAo+ID4gPiA+
-ICAJfQo+ID4gPiA+IEBAIC0zMTE2LDYgKzMxNTQsMTAgQEAgc3RhdGljIGludCBteHRfcmVtb3Zl
-KHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpCj4gPiA+ID4gIAlzdHJ1Y3QgbXh0X2RhdGEgKmRh
-dGEgPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xpZW50KTsKPiA+ID4gPiAgCj4gPiA+ID4gIAlkaXNh
-YmxlX2lycShkYXRhLT5pcnEpOwo+ID4gPiA+ICsJaWYgKGRhdGEtPnJlc2V0X2dwaW8pIHsKPiA+
-ID4gPiArCQlyZWd1bGF0b3JfZGlzYWJsZShkYXRhLT5hdmRkX3JlZyk7Cj4gPiA+ID4gKwkJcmVn
-dWxhdG9yX2Rpc2FibGUoZGF0YS0+dmRkX3JlZyk7Cj4gPiA+ID4gKwl9Cj4gPiA+ID4gIAlzeXNm
-c19yZW1vdmVfZ3JvdXAoJmNsaWVudC0+ZGV2LmtvYmosICZteHRfYXR0cl9ncm91cCk7Cj4gPiA+
-ID4gIAlteHRfZnJlZV9pbnB1dF9kZXZpY2UoZGF0YSk7Cj4gPiA+ID4gIAlteHRfZnJlZV9vYmpl
-Y3RfdGFibGUoZGF0YSk7Cj4gPiA+IAo+ID4gCj4gPiAKPiAKCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Fri, Jul 27, 2018 at 04:04:48PM +0200, Christoph Hellwig wrote:
+> On Fri, Jul 27, 2018 at 03:18:14PM +0200, Krzysztof Kozlowski wrote:
+> > On 27 July 2018 at 15:11, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > Hi,
+> > >
+> > > On today's next, the bisect pointed commit
+> > > ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d as fault for my boot failures
+> > > with NFSv4 root on Toradex Colibri VF50 (Iris carrier board).
+> > >
+> > > Author: Robin Murphy <robin.murphy@arm.com>
+> > > Date:   Mon Jul 23 23:16:12 2018 +0100
+> > >     OF: Don't set default coherent DMA mask
+> > >
+> > > Board: Toradex Colibri VF50 (NXP VF500, Cortex A5, serial configured
+> > > with DMA) on Iris Carrier.
+> > >
+> > > It looks like problem with Freescale Ethernet driver:
+> > > [   15.458477] fsl-edma 40018000.dma-controller: coherent DMA mask is unset
+> > > [   15.465284] fsl-lpuart 40027000.serial: Cannot prepare cyclic DMA
+> > > [   15.472086] Root-NFS: no NFS server address
+> > > [   15.476359] VFS: Unable to mount root fs via NFS, trying floppy.
+> > > [   15.484228] VFS: Cannot open root device "nfs" or
+> > > unknown-block(2,0): error -6
+> > > [   15.491664] Please append a correct "root=" boot option; here are
+> > > the available partitions:
+> > > [   15.500188] 0100           16384 ram0
+> > > [   15.500200]  (driver?)
+> > > [   15.506406] Kernel panic - not syncing: VFS: Unable to mount root
+> > > fs on unknown-block(2,0)
+> > > [   15.514747] ---[ end Kernel panic - not syncing: VFS: Unable to
+> > > mount root fs on unknown-block(2,0) ]---
+> > >
+> > > Attached - defconfig and full boot log.
+> > >
+> > > Any hints?
+> > > Let me know if you need any more information.
+> > 
+> > My Exynos boards also fail to boot on missing network:
+> > https://krzk.eu/#/builders/21/builds/799/steps/10/logs/serial0
+> > 
+> > As expected there are plenty of "DMA mask not set" warnings... and
+> > later dwc3 driver fails with:
+> >     dwc3: probe of 12400000.dwc3 failed with error -12
+> > which is probably the answer why LAN attached to USB is not present.
+> 
+> Looks like all the drivers failed to set a dma mask and were lucky.
+
+I would call it a serious regression. Also, no longer setting a default
+coherent DMA mask is a quite substantial behavioral change, especially
+if and since the code worked just fine up to now.
+
+Crash when booting sam460ex attached below, as is a bisect log.
+
+Guenter
+
+---
+irq: type mismatch, failed to map hwirq-0 for interrupt-controller3!
+WARNING: CPU: 0 PID: 1 at ppc4xx_msi_probe+0x2dc/0x3b8
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 4.18.0-rc6-00010-gff33d1030a6c #1
+NIP:  c001c460 LR: c001c29c CTR: 00000000
+REGS: cf82db60 TRAP: 0700   Not tainted  (4.18.0-rc6-00010-gff33d1030a6c)
+MSR:  00029000 <CE,EE,ME>  CR: 24002028  XER: 00000000
+
+GPR00: c001c29c cf82dc10 cf828000 d1021000 d1021000 cf882108 cf82db78 00000000 
+GPR08: 00000000 c0377ae4 00000000 1000051b 24002028 00000000 c00025e8 00000000 
+GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 c0492380 0000004a 
+GPR24: 00029000 0000000c 10000000 cf8de410 c0494d60 00029000 cf8bebc0 cf8de400 
+NIP [c001c460] ppc4xx_msi_probe+0x2dc/0x3b8
+LR [c001c29c] ppc4xx_msi_probe+0x118/0x3b8
+Call Trace:
+[cf82dc10] [c001c29c] ppc4xx_msi_probe+0x118/0x3b8 (unreliable)
+[cf82dc70] [c0209fbc] platform_drv_probe+0x40/0x9c
+[cf82dc90] [c0208240] driver_probe_device+0x2a8/0x350
+[cf82dcc0] [c0206204] bus_for_each_drv+0x60/0xac
+[cf82dcf0] [c0207e88] __device_attach+0xe8/0x160
+[cf82dd20] [c02071e0] bus_probe_device+0xa0/0xbc
+[cf82dd40] [c02050c8] device_add+0x404/0x5c4
+[cf82dd90] [c0288978] of_platform_device_create_pdata+0x88/0xd8
+[cf82ddb0] [c0288b70] of_platform_bus_create+0x134/0x220
+[cf82de10] [c0288bcc] of_platform_bus_create+0x190/0x220
+[cf82de70] [c0288cf4] of_platform_bus_probe+0x98/0xec
+[cf82de90] [c0449650] __machine_initcall_canyonlands_ppc460ex_device_probe+0x38/0x54
+[cf82dea0] [c0002404] do_one_initcall+0x40/0x188
+[cf82df00] [c043daec] kernel_init_freeable+0x130/0x1d0
+[cf82df30] [c0002600] kernel_init+0x18/0x104
+[cf82df40] [c000c23c] ret_from_kernel_thread+0x14/0x1c
+Instruction dump:
+3860000e 4bffa2a5 3860000f 7f44d378 4bffa299 4bfffe30 3860000e 4bffa28d 
+3860000f 7f24cb78 4bffa281 4bfffde4 <0fe00000> 81290000 2f890000 409efe6c 
+---[ end trace 8cf551077ecfc429 ]---
+ppc4xx-msi c10000000.ppc4xx-msi: coherent DMA mask is unset
+Unable to handle kernel paging request for data at address 0x00000000
+Faulting instruction address: 0xc001bff0
+Oops: Kernel access of bad area, sig: 11 [#1]
+BE Canyonlands
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Tainted: G        W         4.18.0-rc6-00010-gff33d1030a6c #1
+NIP:  c001bff0 LR: c001c418 CTR: c01faa7c
+REGS: cf82db40 TRAP: 0300   Tainted: G        W          (4.18.0-rc6-00010-gff33d1030a6c)
+MSR:  00029000 <CE,EE,ME>  CR: 28002024  XER: 00000000
+DEAR: 00000000 ESR: 00000000 
+GPR00: c001c418 cf82dbf0 cf828000 cf8de400 00000000 00000000 000000c4 000000c4 
+GPR08: c0481ea4 00000000 00000000 000000c4 22002024 00000000 c00025e8 00000000 
+GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 c0492380 0000004a 
+GPR24: 00029000 0000000c 00000000 cf8de410 c0494d60 c0494d60 cf8bebc0 00000001 
+NIP [c001bff0] ppc4xx_of_msi_remove+0x48/0xa0
+LR [c001c418] ppc4xx_msi_probe+0x294/0x3b8
+Call Trace:
+[cf82dbf0] [00029000] 0x29000 (unreliable)
+[cf82dc10] [c001c418] ppc4xx_msi_probe+0x294/0x3b8
+[cf82dc70] [c0209fbc] platform_drv_probe+0x40/0x9c
+[cf82dc90] [c0208240] driver_probe_device+0x2a8/0x350
+[cf82dcc0] [c0206204] bus_for_each_drv+0x60/0xac
+[cf82dcf0] [c0207e88] __device_attach+0xe8/0x160
+[cf82dd20] [c02071e0] bus_probe_device+0xa0/0xbc
+[cf82dd40] [c02050c8] device_add+0x404/0x5c4
+[cf82dd90] [c0288978] of_platform_device_create_pdata+0x88/0xd8
+[cf82ddb0] [c0288b70] of_platform_bus_create+0x134/0x220
+[cf82de10] [c0288bcc] of_platform_bus_create+0x190/0x220
+[cf82de70] [c0288cf4] of_platform_bus_probe+0x98/0xec
+[cf82de90] [c0449650] __machine_initcall_canyonlands_ppc460ex_device_probe+0x38/0x54
+[cf82dea0] [c0002404] do_one_initcall+0x40/0x188
+[cf82df00] [c043daec] kernel_init_freeable+0x130/0x1d0
+[cf82df30] [c0002600] kernel_init+0x18/0x104
+[cf82df40] [c000c23c] ret_from_kernel_thread+0x14/0x1c
+Instruction dump:
+90010024 813d0024 2f890000 83c30058 41bd0014 48000038 813d0024 7f89f800 
+409d002c 813e000c 57ea103a 3bff0001 <7c69502e> 2f830000 419effe0 4803b26d 
+---[ end trace 8cf551077ecfc42a ]---
+
+Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+
+---
+# bad: [639d109b21f1413c54ca7042e40a57856e7679bb] Add linux-next specific files for 20180727
+# good: [d72e90f33aa4709ebecc5005562f52335e106a60] Linux 4.18-rc6
+git bisect start 'HEAD' 'v4.18-rc6'
+# bad: [7bc81125a936a25af28f2172b593bca390b0c539] Merge remote-tracking branch 'spi-nor/spi-nor/next'
+git bisect bad 7bc81125a936a25af28f2172b593bca390b0c539
+# bad: [659868e6488dbad1181ad21888521ff41ae45f65] Merge remote-tracking branch 'vfs/for-next'
+git bisect bad 659868e6488dbad1181ad21888521ff41ae45f65
+# bad: [453ff4bb24c3fa4af40995f2615ec22176e71500] Merge remote-tracking branch 'mvebu/for-next'
+git bisect bad 453ff4bb24c3fa4af40995f2615ec22176e71500
+# good: [ebc949ee3c7e28b6554f00fcdaf2c0c8aae54d90] Merge branch 'next/soc' into for-next
+git bisect good ebc949ee3c7e28b6554f00fcdaf2c0c8aae54d90
+# good: [fef31ecbe2ecbb518ad1db37282eb97ca6dd29b8] Merge remote-tracking branch 'leaks/leaks-next'
+git bisect good fef31ecbe2ecbb518ad1db37282eb97ca6dd29b8
+# good: [53b9c41f0d9c35e41ea884bae6ad4b6fadc59035] Merge branch 'next/drivers' into for-next
+git bisect good 53b9c41f0d9c35e41ea884bae6ad4b6fadc59035
+# bad: [cd67b2d4c0ca61f7e93e622dba0164fb176975b4] Merge remote-tracking branch 'arm-soc/for-next'
+git bisect bad cd67b2d4c0ca61f7e93e622dba0164fb176975b4
+# good: [a0c166140d2e63a069263b6d3c39a42c61749d96] Merge branch 'next/drivers' into for-next
+git bisect good a0c166140d2e63a069263b6d3c39a42c61749d96
+# bad: [e5e08751da47170e6a05c09364595ec1abad7cec] Merge remote-tracking branch 'arm/for-next'
+git bisect bad e5e08751da47170e6a05c09364595ec1abad7cec
+# good: [52e19c3c1eaf103c2eb4f764825136abcfea1538] Merge branches 'clkdev', 'fixes', 'misc' and 'spectre' into for-next
+git bisect good 52e19c3c1eaf103c2eb4f764825136abcfea1538
+# good: [e8d4162413ecbf3b3d1451808bdbd212cec8b70c] ACPI/IORT: Set bus DMA mask as appropriate
+git bisect good e8d4162413ecbf3b3d1451808bdbd212cec8b70c
+# good: [186e2e8cc462aed36cc6845c938547833377582f] ACPI/IORT: Don't set default coherent DMA mask
+git bisect good 186e2e8cc462aed36cc6845c938547833377582f
+# bad: [deff076d4ce359c2d83983a75765b4ac8f635d2f] Merge remote-tracking branch 'dma-mapping/for-next'
+git bisect bad deff076d4ce359c2d83983a75765b4ac8f635d2f
+# bad: [ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d] OF: Don't set default coherent DMA mask
+git bisect bad ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d
+# first bad commit: [ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d] OF: Don't set default coherent DMA mask
