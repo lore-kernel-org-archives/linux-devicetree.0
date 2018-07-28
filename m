@@ -1,23 +1,15 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Sat, 28 Jul 2018 18:39:43 +0530
-Message-ID: <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
- <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
- <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
- <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
- <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH v2 1/2] Input: atmel_mxt_ts: Add support for optional
+ regulators.
+Date: Sat, 28 Jul 2018 15:16:02 +0200
+Message-ID: <2009318.0y2T04Zz3n@acerlaptop>
+References: <1531851386-17840-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <2353752.vfvcsHJLR6@acerlaptop> <20180719205403.GA29273@hairyalien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+In-Reply-To: <20180719205403.GA29273@hairyalien>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -27,197 +19,86 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+To: Nick Dyer <nick@shmanahar.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 27, 2018 at 2:12 PM, A.s. Dong <aisheng.dong@nxp.com> wrote:
-
-
->> >> >>
->> >> >> MU has 4 pairs of TX_Reg + TX_IRQ, and 4 pairs of RX_Reg + RX_IRQ.
->> >> >> (MU also has 4 "doorbell" type channels that it calls GP, but
->> >> >> those are not managed here, so lets not worry atm).
->> >> >>
->> >> >> By definition, a mailbox channel is simply a signal, optionally
->> >> >> with data attached. So, MU has 4 TX and 4 RX channels.
->> >> >>
->> >> >> The MU driver should populate 8 unidirectional (4 Tx and 4 RX)
->> >> >> channels and set each tx/rx operation to trigger the corresponding
->> >> >> interrupt. This is not my whim, this is how the controller is!
->> >> >>
->> >> >
->> >> > This looks like reasonable to me, theoretically.
->> >> > Just not sure whether it's necessary to support it because we
->> >> > probably will never use like that in reality, then it might become
->> >> > meaningless complicity introduced and error prone.
->> >> >
->> >> It _is_ necessary to write controller driver independent of client drivers.
->> >>
->> >
->> > Yes, that's true. What if we think we're writing driver against HW
->> > capabilities which support 4 pair of channel links(tx/rx)?
->> > It looks like independent of client drivers and may make life easily.
->> > Does it make sense?
->> >
->> No, that would be emulation.
->> Why doesn't a usb device controller (udc) driver emulate FSG/HID etc, by
->> "thinking" it has a hardware backed storage/keyboard? It doesn't because
->> that is the job of upper protocol layer.
->>
->
-> Sorry I'm not quite familiar with USB device.
->
-Which subsystem are you familiar with? Every stack is designed like
-that -- controller drivers reflect the physical hardware, any
-emulation/protocol is implemented in the user layer.
-
-
-> Another reason is I doubt that we may never use per register mode in a different register pair
-> in the future.
->
-You may never use, but if the driver reflects the controller as
-precisely as it is, linux could support any usecase that some
-baremetal code could support on your platform.
-For example, you could support "normal" and "scu" mode over the 3-cell
-mechanism I suggested. But your original proposal/assumption of
-"scu-mode", failed immediately, hence Oleksij had to imlpement the
-"normal" mode.
-
-
-> For example:
-> AP:
-> node {
->         ...
->         // cell 0 meaning: 0: tx 1: rx  cell1 meaning: channel id
->         Mboxes = <&mbox 0 1 &mbox 1 2>
->         Mbox-names = "tx", "rx";
->>
->
-> M4:
-> node {
->         ...
->         Mboxes = <&mbox 0 2 &mbox 1 1>
->         Mbox-names = "tx", "rx";
->>
-> This make things complicated and error prone as I said before.
->
-I don't see how.
-
-
-> But that's just my understanding and may overlook something, if you still think
-> we should do exactly as above, I will not against it because it does work for M4 case.
->
-Cool, done.
-
-
-> Then the left question is how we handle SCU case?
->
-Please point me to the code that you worry might not work.
-
-
->
-> I'm a bit confusing....
-> The section 3.6 you pointed is the MHU register description. It does not conflict
-> with what I see from ARM doc center that each physical channel is unidirectional.
->
-> See below:
-> Chan 1:
-> 0x000 SCP_INTR_L_STAT
-> 0x008 SCP_INTR_L_SET
-> 0x010 SCP _INTR_L_CLEAR
->
-> Chan 2:
-> 0x020 SCP_INTR_H_STAT
-> 0x028 SCP_INTR_H_SET
-> 0x030 SCP _INTR_H_CLEAR
->
-> Chan 3:
-> 0x100 CPU_INTR_L_STAT
-> 0x108 CPU_INTR_L_SET
-> 0x110 CPU_INTR_L_CLEAR
->
-> Chan 4:
-> 0x120 CPU_INTR_H_STAT
-> 0x128 CPU_INTR_H_SET
-> 0x130 CPU_INTR_H_CLEAR
->
-> Chan 5:
-> 0x200 SCP_INTR_S_STAT
-> 0x208 SCP_INTR_S_SET
-> 0x210 SCP _INTR_S_CLEAR
->
-> Chan 6:
-> 0x300 CPU_INTR_S_STAT
-> 0x308 CPU_INTR_S_SET
-> 0x310 CPU_INTR_S_CLEAR
->
-> And the driver compose them into 3 channel links (lp, hp and sec).
-> Am I wrong?
->
-The RX and TX are not independent of each other, their priorities are
-tied together in hardware. So it makes more sense (as compared to
-declaring them independent) to club them together as one channel.
-Whatever example you take - MHU or TI - you won't find a driver that
-implements a virtual mode like "scu-mode".
-
-
->> >
->> > Sorry for may not clear, "Passing short message' usecase is to tell
->> > how the HW is working on one channel mode sending up to 4 words in one
->> > time As specified in reference manual.
->> >
->> > SCU does work that way, the only difference is it's using polling mode
->> > rather than interrupt driven.  The point is the data size may be
->> > different for each msg, so we can't simply know which data register
->> > interrupt should be enable from static data defined in device tree.
->> >
->> And you think passing variable data through registers is a better idea than
->> passing packets via shared-memory?
->>
->
-> You got me. :-)
-> I've no idea about which one is better.
->
-Passing data directly via controller makes sense only when your
-protocol defines fixed length packets that fit into registers (usually
-FIFOs) or there is no shared memory between the processors.
-Otherwise, you write a data packet at some located in shmem, and
-provide its start and size along with the code of expected operation
-on it, over the mailbox. Please refer to "Passing frame information"
-para of page-2743 of your manual.
-That is another reason the SCU implementation is broken - it has
-variable length packets and yet use registers to pass them around.
-
-
-> The problem is SCU firmware is already
-> there passing packets through data registers, we have no way to change it.
->
-OK. But what is SCU exactly? Part of ATF? Do you get some binary from
-third party? If the last, you shouldn't be paying hsit for such a
-design.
-
-
->>
->> The hardware has 8 unidirectional channels. But your protocol (SCU
->> implementation) assumes there is one _virtual_ channel that has 4 registers
->> and 1/0 irq --- which is not true. Instead of fixing the assumption in your
->> protocol or emulating the virtual channel in the protocol level (user of a MU),
->> you want to add code in the controller driver that ignores interrupts and club
->> the 4 independent channels together.
->>
->
-> This stucks me. This is how the hardware is designed  and suggested to use
-> in hardware reference manual. And now you're telling me this is wrong and
-> we should not use the design in reference manual...
->
-What you call "suggested to use in hardware reference manual" is just
-1/5 examples of usecase.
-And SCU is not even doing that correctly (it uses variable length
-packet, unlike the fixed 4-words suggestion).
-
-A manual can suggest multiple ways of implementing a usecase. It is
-our job to chose the best one.
+T24gVGh1cnNkYXksIEp1bHkgMTksIDIwMTggOTo1NDowNCBQTSBDRVNUIE5pY2sgRHllciB3cm90
+ZToKPiBPbiBXZWQsIEp1bCAxOCwgMjAxOCBhdCAwNjoyMTozMFBNICswMjAwLCBQYXdlxYIgQ2ht
+aWVsIHdyb3RlOgo+ID4gT24gVHVlc2RheSwgSnVseSAxNywgMjAxOCAxMDowMDowNSBQTSBDRVNU
+IE5pY2sgRHllciB3cm90ZToKPiA+ID4gT24gVHVlLCBKdWwgMTcsIDIwMTggYXQgMDg6MTY6MjVQ
+TSArMDIwMCwgUGF3ZcWCIENobWllbCB3cm90ZToKPiA+ID4gPiBUaGlzIHBhdGNoIGFkZHMgb3B0
+aW9uYWwgcmVndWxhdG9ycywgd2hpY2ggY2FuIGJlIHVzZWQgdG8gcG93ZXIKPiA+ID4gPiB1cCB0
+b3VjaHNjcmVlbi4gQWZ0ZXIgZW5hYmxpbmcgcmVndWxhdG9ycywgd2UgbmVlZCB0byB3YWl0IDE1
+MG1zZWMuCj4gPiA+ID4gVGhpcyB2YWx1ZSBpcyB0YWtlbiBmcm9tIG9mZmljaWFsIGRyaXZlci4K
+PiA+ID4gPiAKPiA+ID4gPiBJdCB3YXMgdGVzdGVkIG9uIFNhbXN1bmcgR2FsYXh5IGk5MDAwIChi
+YXNlZCBvbiBTYW1zdW5nIFM1UFYyMTAgU09DKS4KPiA+ID4gPiAKPiA+ID4gPiBTaWduZWQtb2Zm
+LWJ5OiBQYXdlxYIgQ2htaWVsIDxwYXdlbC5taWtvbGFqLmNobWllbEBnbWFpbC5jb20+Cj4gPiA+
+ID4gLS0tCj4gPiA+ID4gQ2hhbmdlcyBmcm9tIHYxOgo+ID4gPiA+ICAgLSBFbmFibGUgcmVndWxh
+dG9ycyBvbmx5IGlmIHJlc2V0X2dwaW8gaXMgcHJlc2VudC4KPiA+ID4gPiAgIC0gU3dpdGNoIGZy
+b20gZGV2bV9yZWd1bGF0b3JfZ2V0X29wdGlvbmFsIHRvIGRldm1fcmVndWxhdG9yX2dldAo+ID4g
+PiA+IC0tLQo+ID4gPiA+ICBkcml2ZXJzL2lucHV0L3RvdWNoc2NyZWVuL2F0bWVsX214dF90cy5j
+IHwgNDYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0KPiA+ID4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDQ0IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPiA+IAo+ID4gPiBIaSBQ
+YXdlbC0KPiA+ID4gCj4gPiA+IEkgc2VlIHlvdSd2ZSBib3Jyb3dlZCBzb21lIG9mIHRoZSBsb2dp
+YyBmcm9tIHRoZSBwYXRjaCBJIHdyb3RlIGEgd2hpbGUKPiA+ID4gYmFjayAoc2VlIGh0dHBzOi8v
+Z2l0aHViLmNvbS9uZHllci9saW51eC9jb21taXQvOGU5Njg3ZTQxZWQwNjIgKQo+ID4gQWN0dWFs
+bHksIGkgd2FzIGxvb2tpbmcgYXQgaHR0cHM6Ly9naXRodWIuY29tL2F0bWVsLW1heHRvdWNoL2xp
+bnV4L2Jsb2IvbWF4dG91Y2gtdjMuMTQvZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9hdG1lbF9t
+eHRfdHMuYyAoYW5kIGRpZG4ndCBzYXcgWW91ciBwYXRjaCB0aWxsIG5vdykuCj4gPiBBcmUgWW91
+IGdvaW5nIHRvIHN1Ym1pdCBpdD8gKGl0IGhhcyBtb3JlIGZ1bmN0aW9uYWxpdGllcyAtIGZvciBl
+eGFtcGxlCj4gPiBzdXNwZW5kIG1vZGUgcmVhZCBmcm9tIGRldmljZSB0cmVlKS4KPiAKPiBHZXR0
+aW5nIHRoYXQgd29yayB1cHN0cmVhbSBoYXMgc3RhbGxlZCBmb3IgYSBjb3VwbGUgb2YgeWVhcnMg
+YmVjYXVzZSBJCj4gY2hhbmdlZCBqb2JzLiBJIGhhdmUgYWN0dWFsbHkgc3RhcnRlZCByZWNlbnRs
+eSB0byBkdXN0IGl0IG9mZiBhZ2FpbiwgaXQKPiB3YXMgbGF0ZXIgb24gaW4gbXkgcXVldWUgYnV0
+IGlmIHlvdSBoYXZlIHRoZSB0aW1lIHRvIHdvcmsgb24gaXQgdGhhdCBpcwo+IGdyZWF0Lgo+IAo+
+ID4gPiBUaGUgY29ycmVjdCBiZWhhdmlvdXIgYWNjb3JkaW5nIHRvIEF0bWVsIHNob3VsZCBiZToK
+PiA+ID4gCj4gPiA+ICogTWFrZSBSRVNFVCB6ZXJvCj4gPiA+ICogQnJpbmcgdXAgcmVndWxhdG9y
+cwo+ID4gPiAqIFdhaXQgZm9yIGEgcGVyaW9kIHRvIHNldHRsZSAoMTUwIG1zZWMpCj4gPiA+ICog
+UmVsZWFzZSBSRVNFVAo+ID4gPiAqIFdhaXQgZm9yIDEwMCBtc2VjIHdoaWxzdCBkZXZpY2UgZ2V0
+cyB0aHJvdWdoIGJvb3Rsb2FkZXIKPiA+ID4gKiBXYWl0IGZvciBDSEcgbGluZSBhc3NlcnQgYmVm
+b3JlIHJlYWRpbmcgaW5mbyBibG9jawo+ID4gPiAKPiA+ID4gSSBjYW4ndCBzZWUgdGhlIGZpcnN0
+IGFuZCBsYXN0IHN0ZXBzIGluIHlvdXIgcGF0Y2ggYXQgcHJlc2VudC4KPiA+IEFib3V0IGZpcnN0
+IHN0ZXAgLSByZXNldF9ncGlvIGlzIHJlYWRlZCBieSB1c2luZwo+ID4gZGV2bV9ncGlvZF9nZXRf
+b3B0aW9uYWwgd2l0aCBHUElPRF9PVVRfTE9XIGZsYWcsIHNvIGkgdGhpbmsgKGJ1dCBtaWdodAo+
+ID4gYmUgd3JvbmcpICB0aGF0IHdlIGRvbid0IG5lZWQgdG8gc2V0IHRoaXMgZ3BpbyB2YWx1ZSBh
+Z2FpbiB0byAwIGJlZm9yZQo+ID4gZW5hYmxpbmcgcmVndWxhdG9ycywKPiAKPiBJIHNlZSB3aGF0
+IHlvdSBtZWFuIC0gdGhhdCBpcyBmYWlyIGVub3VnaC4KPiAKPiA+IHNpbmNlIGN1cnJlbnRseSBv
+bmx5IHBsYWNlIHdoZXJlIHJlc2V0X2dwaW8gaXMgdXNlZCBpcyBpbiBkcml2ZXIgcHJvYmUKPiA+
+IChpbiBZb3VyIHBhdGNoIGl0IGlzIHVzZWQgaW4gb3RoZXIgY2FzZXMvcGxhY2VzIC0gZm9yIGV4
+YW1wbGUgaW4KPiA+IG14dF9zdGFydC9zdG9wLCB3aGVuIHdlIGVuYWJsZSByZWd1bGF0b3JzKS4K
+PiA+IEFib3V0IG1pc3Npbmcgd2FpdCBhZnRlciByZWxlYXNpbmcgcmVzZXQsIHNob3VsZG4ndCB0
+aGlzIGJlIHNlcGFyYXRlCj4gPiBwYXRjaCAoc2luY2UgY3VycmVudGx5IGRyaXZlciBpcyBub3Qg
+ZG9pbmcgaXQpPyBJIGNhbiBwcmVwYXJlIGl0IGFuZAo+ID4gc2VuZCB3aXRoIG90aGVyIGluIG5l
+eHQgdmVyc2lvbi4KPiAKPiBBY2NvcmRpbmcgdG8gdGhlIG1heHRvdWNoIGRvY3VtZW50YXRpb24s
+IGl0IGlzbid0IHJlYWR5IGZvciBjb21tcyB1bnRpbAo+IHRoZSBmaXJtd2FyZSBhc3NlcnRzIHRo
+ZSBDSEcgbGluZS4gSSd2ZSBzZWVuIGEgYnVuY2ggb2YgZGV2aWNlcyB0aGF0IGdldAo+IGJ5IHdp
+dGhvdXQgYW4gZXhwbGljaXQgd2FpdCBiZWNhdXNlIHRoZSBib2FyZCBmaWxlIGRvZXMgdGhlIHBv
+d2VyIG9uLAo+IGFuZCBieSB0aGUgdGltZSB0aGUgZHJpdmVyIGdldHMgdG8gcHJvYmUgaXQncyBh
+IGZldyBodW5kcmVkIG1zIGxhdGVyCj4gYW55d2F5LCBzbyBpdCBkb2Vzbid0IG1hdHRlci4gQnV0
+IGlmIHdlIHB1dCBpdCBhbGwgaW4gdGhlIGRyaXZlciwgaXQKPiB3aWxsIGF0dGVtcHQgdG8gcmVh
+ZCB0aGUgaW5mbyBibG9jayBzdHJhaWdodCBhZnRlciB0aGUgMTAwIG1zZWMgZGVsYXkKPiB3aXRo
+b3V0IHdhaXRpbmcgZm9yIENIRywgYW5kIEkgc3VzcGVjdCB3ZSdsbCBlbmQgdXAgd2l0aCBvY2Nh
+c2lvbmFsCj4gcHJvYmUgZmFpbHVyZXMuIEl0J2xsIGRlcGVuZCBvbiB0aGUgbWF4dG91Y2ggZGV2
+aWNlLCB0aG91Z2g6IHRoZXkgaGF2ZSBhCj4gcmFuZ2Ugb2YgZGlmZmVyZW50IHBvd2VyIG9uIHRp
+bWluZ3MuCj4gCj4gV2hpY2ggcGxhdGZvcm0gYXJlIHlvdSBkb2luZyB0aGlzIGZvcj8gSXMgaXQg
+YSBDaHJvbWVib29rPwpObywgaXQncyBTYW1zdW5nIEdhbGF4eSBTIChpOTAwMCkgcGhvbmUgd2l0
+aCBTNVBWMjEwIFNhbXN1bmcgU29jLgpJJ20gcHJlcGFyaW5nIHYzIHZlcnNpb24gd2l0aCBzZXBh
+cmF0ZSBwYXRjaCBhZGRpbmcgdGhpcyB3YWl0L2RlbGF5Lgo+IAo+ID4gVGhhbmtzIGZvciBmZWVk
+YmFjawo+ID4gPiAKPiA+ID4gVGhlIG9ubHkgZG93bnNpZGUgd2l0aCB0aGlzIGFwcHJvYWNoIGlz
+IHRoYXQgdGhlcmUgYXJlIGEgbG90IG9mCj4gPiA+IGRlbGF5cyBkdXJpbmcgZHJpdmVyIHByb2Jl
+LCBidXQgSSBiZWxpZXZlIHRoZSBhc3luY2hyb25vdXMgcHJvYmUgc3R1ZmYKPiA+ID4gdGhhdCdz
+IGxhbmRlZCBzaW5jZSBJIHdyb3RlIHRoZSBvcmlnaW5hbCBwYXRjaCBzaG91bGQgYWRkcmVzcyB0
+aGF0Lgo+ID4gPiAKPiA+ID4gY2hlZXJzCj4gPiA+IAo+ID4gPiBOaWNrCj4gPiA+IAo+ID4gPiA+
+ICAJfQo+ID4gPiA+IEBAIC0zMTE2LDYgKzMxNTQsMTAgQEAgc3RhdGljIGludCBteHRfcmVtb3Zl
+KHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpCj4gPiA+ID4gIAlzdHJ1Y3QgbXh0X2RhdGEgKmRh
+dGEgPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xpZW50KTsKPiA+ID4gPiAgCj4gPiA+ID4gIAlkaXNh
+YmxlX2lycShkYXRhLT5pcnEpOwo+ID4gPiA+ICsJaWYgKGRhdGEtPnJlc2V0X2dwaW8pIHsKPiA+
+ID4gPiArCQlyZWd1bGF0b3JfZGlzYWJsZShkYXRhLT5hdmRkX3JlZyk7Cj4gPiA+ID4gKwkJcmVn
+dWxhdG9yX2Rpc2FibGUoZGF0YS0+dmRkX3JlZyk7Cj4gPiA+ID4gKwl9Cj4gPiA+ID4gIAlzeXNm
+c19yZW1vdmVfZ3JvdXAoJmNsaWVudC0+ZGV2LmtvYmosICZteHRfYXR0cl9ncm91cCk7Cj4gPiA+
+ID4gIAlteHRfZnJlZV9pbnB1dF9kZXZpY2UoZGF0YSk7Cj4gPiA+ID4gIAlteHRfZnJlZV9vYmpl
+Y3RfdGFibGUoZGF0YSk7Cj4gPiA+IAo+ID4gCj4gPiAKPiAKCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
