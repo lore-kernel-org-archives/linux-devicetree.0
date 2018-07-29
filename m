@@ -1,72 +1,26 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] drm/panel: simple: Support simple VGA panels
-Date: Sun, 29 Jul 2018 21:36:07 +0200
-Message-ID: <CACRpkdYDZtVLO2By7tDrm-9v4dc=8cS4yEnr4P6pF3HcAvrgxw@mail.gmail.com>
-References: <20180716092339.9736-1-linus.walleij@linaro.org>
- <CAL_JsqLeZX6zJoMYp9drskx-UN8Na2LLhnHjbgZOVgw8D-y9wQ@mail.gmail.com>
- <CACRpkdZ=uGDN8i4q1cODoLDibB+B4FqAF1TzsreATJ2wuFz6vQ@mail.gmail.com>
- <CAL_JsqJ312xfrKTS-7RbLc-v_QUZ9-g+8v-EVn2UiwgyOA8ung@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: berlin: add the as370 SoC pinctrl driver
+Date: Sun, 29 Jul 2018 21:43:24 +0200
+Message-ID: <CACRpkdZoTwjL-g6xRhCdACi1QNEKbzEvsax0-1KmowLg_kZ8Zw@mail.gmail.com>
+References: <20180718135613.1c559b9c@xhacker.debian> <20180718140030.73eb45ca@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJ312xfrKTS-7RbLc-v_QUZ9-g+8v-EVn2UiwgyOA8ung@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718140030.73eb45ca@xhacker.debian>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMTcsIDIwMTggYXQgNDowMiBQTSBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPiB3cm90ZToKPiBPbiBUdWUsIEp1bCAxNywgMjAxOCBhdCAxOjQ3IEFNIExpbnVzIFdhbGxl
-aWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4gd3JvdGU6Cj4gPiBPbiBUdWUsIEp1bCAxNywg
-MjAxOCBhdCAxMjo1MCBBTSBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZToKPiA+
-ID4gT24gTW9uLCBKdWwgMTYsIDIwMTggYXQgMzoyMyBBTSBMaW51cyBXYWxsZWlqIDxsaW51cy53
-YWxsZWlqQGxpbmFyby5vcmc+IHdyb3RlOgoKPiA+ID4gV2h5IGRvbid0IHlvdSBqdXN0IGRlZmlu
-ZSBhICd2Z2EtY29ubmVjdG9yJyBub2RlCj4gPgo+ID4gQmVjYXVzZSB0aGlzIGlzIG5vdCBhIFZH
-QSBjb25uZWN0b3IsIGl0IGlzIGp1c3QgdGhlIFZHQSByZXNvbHV0aW9uLgo+ID4gSW4gb3RoZXIg
-Y2lyY3Vtc3RhbmNlcyBJIGRvIHVzZSBpdC4KPgo+IEl0J3Mgbm90IGEgcGFuZWwgZWl0aGVyLiBB
-IGNvbm5lY3RvciBpcyBzb21ldGhpbmcgd2l0aCB2YXJpYWJsZQo+IHJlc29sdXRpb24uIEEgcGFu
-ZWwgaXMgZml4ZWQgcmVzb2x1dGlvbi4gV2hpY2ggZG8geW91IHdhbnQ/CgpPSyBJIGdldCBpdCwg
-SSB0aGluay4uLiBpdCBtYWtlcyBhIGxvdCBvZiBzZW5zZS4KCkZvciBhbiBlbXVsYXRlZCBtYWNo
-aW5lIGl0J3MgcHJldHR5IG11Y2ggdXAgdG8gdGhlIHNvcGhpc3RpY2F0aW9uCm9mIHRoZSBlbXVs
-YXRpb24uIEJ1dCB2YXJpYWJsZSBpcyB0aGUgYmVzdCBhbnN3ZXIgSSBhc3N1bWUuCgo+ID4gQXBh
-cnQgZnJvbSBiZWluZyBhIHVzZXIgZXhwZXJpZW5jZSBob3Jyb3Igc3RvcnksIHRoYXQgcmVxdWly
-ZXMKPiA+IGEgVkdBIGNvbm5lY3RvciBicmlkZ2UsIGFzIHBlciBhYm92ZS4gKEl0J3MgdGhlIEVE
-SUQgY29kZSB0aGF0Cj4gPiBkb2VzIHRoYXQgY29tbWFuZCBsaW5lIHBhcnNpbmcuKSBBbmQgdGhh
-dCByZXF1aXJlcyBseWluZyBhYm91dAo+ID4gaGF2aW5nIGEgVkdBIGNvbm5lY3RvciBicmlkZ2Uu
-Cj4KPiBCZWNhdXNlIHlvdSBoYXZlIHRvIHNldCB0aGUgcmVzb2x1dGlvbiBvbiB0aGUga2VybmVs
-IGNvbW1hbmQgbGluZT8gSSdtCj4gb3BlbiB0byBoYXZpbmcgYSBkZWZhdWx0IHJlc29sdXRpb24g
-Zm9yIHRoZSBjb25uZWN0b3IgaW4gRFQuCgpPSyBzZWVtcyBsaWtlIHRoYXQgb2xkIHZpcnR1YWwg
-ZW5jb2RlciB0aGF0IExpdml1IGR1ZyB1cCBpcyBzb21ldGhpbmcKd2Ugc2hvdWxkIGR1c3Qgb2Zm
-IGFuZCB1c2UgdGhlbi4KCj4gPiBTdWRlZXAgYXQgQVJNIHNheXMgaXQgZG9lcyBub3QgZW11bGF0
-ZSBhbnkgREFDIGJyaWRnZSBzdWNoCj4gPiBhcyBmb3VuZCBpbiB0aGUgVmVyc2F0aWxlIEV4cHJl
-c3MgbWFjaGluZSBmYW1pbHkuIEl0IGp1c3QgZXhwZWN0cwo+ID4gdG8gaGF2ZSB0aGUgcmlnaHQg
-cmVzb2x1dGlvbiBwYXJhbWV0ZXJzIHdyaXR0ZW4gaW50byB0aGUgcmVnaXN0ZXJzCj4gPiBvZiB0
-aGUgUEwxMTEsIHdoaWNoIGluIHR1cm4gb2YgY291cnNlIGNhbiBvbmx5IGdldCBpdCBmcm9tIGEK
-PiA+IHBhbmVsIG9yIGJyaWRnZSBkcml2ZXIgb2Ygc29tZSBzb3J0Lgo+Cj4gU28gcHV0dGluZyAq
-YW55dGhpbmcqIGluIERUIGlzIGEgbGllLi4uCgpUaGUgdmlydHVhbCBlbmNvZGVyIHNlZW1zIGxp
-a2UgdGVsbGluZyB0aGUgdHJ1dGggc28gSSBzaG91bGQKd29yayBvbiB0aGF0LgoKPiBIYXZpbmcg
-YSB3YXkgdG8gc2V0IHRoZSBkZWZhdWx0IGRpc3BsYXkgcmVzb2x1dGlvbiBpbiBRRU1VIHdvdWxk
-IGJlCj4gbmljZS4gSSd2ZSBoYWNrZWQgYXJvdW5kIHRoYXQgd2hlbiB1c2luZyB2aXJnbC4KClFF
-TVUgaXMgcHJldGVuZGluZyB0byBub3QgcHJvdmlkZSBhIHJlc29sdXRpb24sIGJ1dAphbiBlbXVs
-YXRlZCBtb25pdG9yIGlkZW50aWZpZWQgb3ZlciBJMkMgd2l0aCBFRElELgoKRm9yIHRoZSBWZXhw
-cmVzcyBlbXVsYXRpb24gd2UgY29ubmVjdGVkIHRoZSBTSUk5MDIyCkRWSSBlbmNvZGVyIGh3L2Rp
-c3BsYXkvc2lpOTAyMi5jIHRvIHRoZSBRRU1VIEREQy9FRElECmNoYW5uZWwgcHJvdmlkZXIgaW4g
-aHcvaTJjL2kyYy1kZGMuYy4KClRoaXMgdGhpbmcgcHJvdmlkZXMgYSBjb25qdXJlZCBFRElEIGJs
-b2IgdG8gdGhlIERSTQpFRElEIGxvZ2ljIHdoZW4gdXNpbmcgTGludXguCgpJdCBjdXJyZW50bHkg
-cmV0dXJucyBhIHNpbXBsZSAyMSIgTENEIFZHQSBtb25pdG9yIHByb2JhYmx5CnJlc3VsdGluZyBp
-biAxMDI0eDc2OCByZXNvbHV0aW9uLgoKQnkgZXh0ZW5kaW5nIGFuZCByZWZhY3RvcmluZyB0aGlz
-IGNvZGUsIHdlIGNvdWxkIHByb3ZpZGUKYSBtb3JlIGVhbGJvcmF0ZSAibW9uaXRvciIgZG93biB0
-byB0aGUgZW11bGF0b3IuIFRoZSB0eXBlIG9mCm1vbml0b3IgaW1wbGllcyB0aGUgcmVzb2x1dGlv
-bi4KCllvdXJzLApMaW51cyBXYWxsZWlqCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+On Wed, Jul 18, 2018 at 8:02 AM Jisheng Zhang
+<Jisheng.Zhang@synaptics.com> wrote:
+
+> Add the pin-controller driver for Synaptics AS370 SoC, with definition
+> of its groups and functions. This uses the core Berlin pinctrl driver.
+>
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+
+Patch applied.
+
+Yours,
+Linus Walleij
