@@ -1,52 +1,59 @@
-From: kbuild test robot <fengguang.wu@intel.com>
-Subject: [RFC PATCH] pinctrl: actions: s700_pads[] can be static
-Date: Mon, 30 Jul 2018 06:00:45 +0800
-Message-ID: <20180729220045.GA5007@lkp-ib03>
-References: <20180729200038.11795-5-sravanhome@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCHv2 3/9] dt-bindings: display/ti: add am65x-dss bindings
+Date: Mon, 30 Jul 2018 02:04:28 +0300
+Message-ID: <4964448.gXkgufmvOo@avalon>
+References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
+ <20180618132242.8673-4-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180729200038.11795-5-sravanhome@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, manivannan.sadhasivam@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com, Saravanan Sekar <sravanhome@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180618132242.8673-4-tomi.valkeinen@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Fixes: e96a1c4b279a ("pinctrl: actions: Add Actions Semi S700 pinctrl driver")
-Signed-off-by: kbuild test robot <fengguang.wu@intel.com>
----
- pinctrl-s700.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pinctrl/actions/pinctrl-s700.c b/drivers/pinctrl/actions/pinctrl-s700.c
-index 7e9d23a..df69827 100644
---- a/drivers/pinctrl/actions/pinctrl-s700.c
-+++ b/drivers/pinctrl/actions/pinctrl-s700.c
-@@ -225,7 +225,7 @@
- #define NUM_PADS		(_LASTPAD - _FIRSTPAD + 1)
- 
- /* Pad names for the pinmux subsystem */
--const struct pinctrl_pin_desc s700_pads[] = {
-+static const struct pinctrl_pin_desc s700_pads[] = {
- 	PINCTRL_PIN(ETH_TXD0, "eth_txd0"),
- 	PINCTRL_PIN(ETH_TXD1, "eth_txd1"),
- 	PINCTRL_PIN(ETH_TXD2, "eth_txd2"),
-@@ -1549,7 +1549,7 @@ static const char * const sirq2_groups[] = {
- 	"sirq2_dummy",
- };
- 
--const struct owl_pinmux_func s700_functions[] = {
-+static const struct owl_pinmux_func s700_functions[] = {
- 	[S700_MUX_NOR] = FUNCTION(nor),
- 	[S700_MUX_ETH_RGMII] = FUNCTION(eth_rmii),
- 	[S700_MUX_ETH_SGMII] = FUNCTION(eth_smii),
-@@ -1697,7 +1697,7 @@ static PAD_PULLCTL_CONF(I2C2_SCLK, 2, 7, 1);
- /********PAD INFOS*****************************/
- 
- /* Pad info table for the pinmux subsystem */
--struct owl_padinfo s700_padinfo[NUM_PADS] = {
-+static struct owl_padinfo s700_padinfo[NUM_PADS] = {
- 	[ETH_TXD0] = PAD_INFO_ST(ETH_TXD0),
- 	[ETH_TXD1] = PAD_INFO_ST(ETH_TXD1),
- 	[ETH_TXEN] = PAD_INFO_ST(ETH_TXEN),
+SGkgVG9taSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gTW9uZGF5LCAxOCBKdW5lIDIw
+MTggMTY6MjI6MzYgRUVTVCBUb21pIFZhbGtlaW5lbiB3cm90ZToKPiBBZGQgRFQgYmluZGluZ3Mg
+Zm9yIFRleGFzIEluc3RydW1lbnRzIEFNNjV4IFNvQyBEaXNwbGF5IFN1YnN5c3RlbS4gIFRoZQo+
+IERTUzcgb24gQU02NXggU29DIGhhcyB0d28gdmlkZW8gcG9ydHMgKERQSSBhbmQgT0xESSkgYW5k
+IHR3byB2aWRlbwo+IHBpcGVsaW5lcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxq
+c2FyaGFAdGkuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtl
+aW5lbkB0aS5jb20+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gLS0tCj4gIC4u
+Li9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGFtNi1kc3MudHh0ICAgICAgICAgICB8IDE2ICsrKysr
+KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykKPiAgY3JlYXRl
+IG1vZGUgMTAwNjQ0Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+dGkvdGksYW02LWRzcy50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksYW02LWRzcy50eHQKPiBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGFtNi1kc3MudHh0IG5ldyBmaWxlIG1v
+ZGUKPiAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLjM0NjZmMDk1ZmI4NAo+IC0tLSAvZGV2
+L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90
+aS90aSxhbTYtZHNzLnR4dAo+IEBAIC0wLDAgKzEsMTYgQEAKPiArVGV4YXMgSW5zdHJ1bWVudHMg
+QU02NXggRGlzcGxheSBTdWJzeXN0ZW0KPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09Cj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6
+ICJ0aSxhbTY1eC1kc3MiLCAidGksYW02LWRzcyIKPiArLSByZWc6IGFkZHJlc3MgYW5kIGxlbmd0
+aCBvZiB0aGUgcmVnaXN0ZXIgc3BhY2VzIGZvciBEU1Mgc3VibW9kdWxlcwo+ICstIHJlZy1uYW1l
+czogImNvbW1vbiIsICJ2aWRsMSIsICJ2aWQiLCAib3ZyMSIsICJvdnIyIiwgInZwMSIsICJ2cDIi
+Cj4gKy0gY2xvY2tzOiBwaGFuZGxlIHRvIGZjbGssIHZwMSwgYW5kIHZwMiBjbG9ja3MKPiArLSBj
+bG9jay1uYW1lczogImZjayIsICJ2cDEiLCAidnAyIgo+ICstIGludGVycnVwdHM6IHBoYW5kbGUg
+dG8gdGhlIERJU1BDIGludGVycnVwdAo+ICstIHN5c2NvbjogcGhhbmRsZSB0byBzeXNjb24gZGV2
+aWNlIGhhbmRsaW5nIE9MRElfUFdSRE5fVFggKHBhcnRpdGlvbiAxIG9mCj4gKyAgQU02NTQgQ1RS
+TCBNTVIwKQo+ICsKPiArVGhlIERTUyBvdXRwdXRzIGFyZSBkZXNjcmliZWQgdXNpbmcgdGhlIGRl
+dmljZSBncmFwaHMgYXMgZG9jdW1lbnRlZCBpbgo+ICtEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZ3JhcGgudHh0LiBBTTYgRFNTIGhhcyBhIERQSSBvdXRwdXQgYXMKPiBwb3J0IDAK
+PiArYW5kIGFuIE9MREkgb3V0cHV0IGFzIHBvcnQgMS4KCldpdGhvdXQgZG9jdW1lbnRhdGlvbiBm
+b3IgdGhlIEFNNjV4IGl0J3MgaGFyZCB0byByZXZpZXcgdGhlc2UgRFQgYmluZGluZ3MuIApIb3dl
+dmVyLCBteSBjb21tZW50IHJlZ2FyZGluZyB0aGUgcmVnaXN0ZXJzIG9mIHRoZSBrMmctZHNzIGJp
+bmRpbmdzIGFwcGxpZXMgCmhlcmUgdG9vLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0
+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
