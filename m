@@ -1,56 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver
-Date: Sun, 29 Jul 2018 23:59:45 +0200
-Message-ID: <CACRpkdbcqA4gBv7W2SNSFJRQ26GGCE315UsDDG9zr458GK709g@mail.gmail.com>
-References: <20180712214203.114844-1-tmaimon77@gmail.com> <20180712214203.114844-3-tmaimon77@gmail.com>
- <CACRpkdYOQMkA6BHtY3-NSXhyhoG7KzDg8SkqL2B6M8GQrvXgMA@mail.gmail.com> <CAP6Zq1h5TXBcfvxDA5Ae9XuW65s_zQd_JrM3vRWR6KBRYCHRrg@mail.gmail.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 4/5] pinctrl: actions: Add Actions Semi S700 pinctrl
+ driver
+Date: Mon, 30 Jul 2018 06:00:44 +0800
+Message-ID: <201807300552.cJ0VSU1K%fengguang.wu@intel.com>
+References: <20180729200038.11795-5-sravanhome@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP6Zq1h5TXBcfvxDA5Ae9XuW65s_zQd_JrM3vRWR6KBRYCHRrg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180729200038.11795-5-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tmaimon77@gmail.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, avifishman70@gmail.com, Nancy Yuen <yuenn@google.com>, Brendan Higgins <brendanhiggins@google.com>, Patrick Venture <venture@google.com>, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Cc: kbuild-all@01.org, manivannan.sadhasivam@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com, Saravanan Sekar <sravanhome@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 2:01 AM Tomer Maimon <tmaimon77@gmail.com> wrote:
+Hi Saravanan,
 
-> I initialize bgpio as follow:
->
->                         ret = bgpio_init(&pctrl->gpio_bank[id].gc,
->                                          pctrl->dev, 4,
->                                          pctrl->gpio_bank[id].base +
->                                          NPCM7XX_GP_N_DIN,
->                                          pctrl->gpio_bank[id].base +
->                                          NPCM7XX_GP_N_DOUT,
->                                          NULL,
->                                          NULL,
->                                          pctrl->gpio_bank[id].base +
->                                          NPCM7XX_GP_N_IEM,
->                                          BGPIOF_READ_OUTPUT_REG_SET);
+Thank you for the patch! Perhaps something to improve:
 
-(...)
-> The problem occur when reading the GPIO value from bgpio_get_set function,
-> because the directions value are inverse it reading the wrong I/O registers
->
-> For direction out it reading dat register (instead of set register)
->
-> For direction in it calling set register (instead of dat register)
+[auto build test WARNING on pinctrl/devel]
+[also build test WARNING on next-20180727]
+[cannot apply to v4.18-rc6]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Hm I don't quite get it... sorry. Maybe if you show your fix and what
-you expect to happen I can understand better?
+url:    https://github.com/0day-ci/linux/commits/Saravanan-Sekar/Add-Actions-Semi-S700-pinctrl-support/20180730-040252
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
-Do you mean that because you write the inverse value to
-IEM this happens, and the BGPIO code assumes that
-you always write 1 to set a line as input and 0 to set it
-as output?
 
-I would say if this causes the problem we should just add
-a new BGPIOF_INVERTED_REG_DIR with comment in
-include/linux/gpio/driver.h and make the necessary fix to
-respect this flag in the gpio-mmio.c core so it works right.
+sparse warnings: (new ones prefixed by >>)
 
-If you do this as a separate patch I would be grateful :)
+>> drivers/pinctrl/actions/pinctrl-s700.c:228:31: sparse: symbol 's700_pads' was not declared. Should it be static?
+>> drivers/pinctrl/actions/pinctrl-s700.c:1552:30: sparse: symbol 's700_functions' was not declared. Should it be static?
+>> drivers/pinctrl/actions/pinctrl-s700.c:1700:20: sparse: symbol 's700_padinfo' was not declared. Should it be static?
+   drivers/pinctrl/actions/pinctrl-s700.c:1589:10: sparse: Initializer entry defined twice
+   drivers/pinctrl/actions/pinctrl-s700.c:1594:10:   also defined here
 
-Yours,
-Linus Walleij
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
