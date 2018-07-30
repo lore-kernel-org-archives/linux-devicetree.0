@@ -1,25 +1,23 @@
-Return-Path: <SRS0=bjpz=KP=pengutronix.de=mfe@kernel.org>
-Date: Tue, 31 Jul 2018 08:02:40 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
+Return-Path: <mchehab+samsung@kernel.org>
+Date: Mon, 30 Jul 2018 15:06:40 -0300
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Subject: Re: [PATCH 13/22] [media] tvp5150: disable output while signal not
  locked
-Message-ID: <20180731060240.wd4lexhpje2phb5z@pengutronix.de>
-References: <20180628162054.25613-1-m.felsch@pengutronix.de>
- <20180628162054.25613-14-m.felsch@pengutronix.de>
- <20180730150058.30563d0f@coco.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-ID: <20180730150640.3503934d@coco.lan>
 In-Reply-To: <20180730150058.30563d0f@coco.lan>
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+	<20180628162054.25613-14-m.felsch@pengutronix.de>
+	<20180730150058.30563d0f@coco.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Marco Felsch <m.felsch@pengutronix.de>
 Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Mauro,
+Em Mon, 30 Jul 2018 15:00:58 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
 
-thanks for your feedback.
-
-On 18-07-30 15:00, Mauro Carvalho Chehab wrote:
 > Em Thu, 28 Jun 2018 18:20:45 +0200
 > Marco Felsch <m.felsch@pengutronix.de> escreveu:
 > 
@@ -120,45 +118,49 @@ On 18-07-30 15:00, Mauro Carvalho Chehab wrote:
 > 		val = decoder->lock ? decoder->oe : 0;
 > 	else
 > 		val = decoder->oe;
-
-The previous patch "[media] tvp5150: Add sync lock interrupt handling"
-adds the look mechanism. As you can see the lock will be always true
-if there is no interrupt support during probe():
-
-core->irq = c->irq;
-tvp5150_reset(sd, 0);   /* Calls v4l2_ctrl_handler_setup() */
-if (c->irq) {
-	res = devm_request_threaded_irq(&c->dev, c->irq,
-			NULL,
-			tvp5150_isr,
-			IRQF_TRIGGER_HIGH |
-			IRQF_ONESHOT,
-			"tvp5150", core);
-	if (res)
-		return res;
-} else {
-	core->lock = true;
-}
-
-I'am with you that your s_stream version looks a bit nicer but adds the
-check again.
-
-Regards,
-Marco
-
+> 
 > 
 > >  		int_val = TVP5150_INT_A_LOCK;
 > >  	}
 > >  
-> 
-> 
-> 
-> Thanks,
-> Mauro
-> 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+In other words, I believe we need the enclosed patch to avoid causing
+regressions on existing drivers.
+
+I intend to run a test here with this tvp5150 series before merging,
+in order to be sure that em28xx+tvp5150 devices will keep working.
+
+Regards,
+Mauro
+
+
+[PATCH] tvp5150: if IRQ is not enabled, don't disable inputs at s_stream
+
+The new IRQ logic sets decoder->lock if signal is locked.
+That should work fine when IRQ is used, but not all tvp5150
+clients set it.
+
+So, keep the previous logic if IRQ is not enabled for tvp5150.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index f7c9203a3923..777e0e16787e 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1214,7 +1214,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+ 		tvp5150_enable(sd);
+ 
+ 		/* Enable outputs if decoder is locked */
+-		val = decoder->lock ? decoder->oe : 0;
++		if (decoder->irq)
++			val = decoder->lock ? decoder->oe : 0;
++		else
++			val = decoder->oe;
+ 		int_val = TVP5150_INT_A_LOCK;
+ 	}
+ 
+
+
+Thanks,
+Mauro
