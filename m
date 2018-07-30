@@ -1,32 +1,32 @@
-Return-Path: <SRS0=m83C=J3=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 2/2] serial: sh-sci: Document r7s9210 bindings
-Date: Wed, 11 Jul 2018 09:41:31 -0500
-Message-Id: <20180711144131.73552-3-chris.brandt@renesas.com>
-In-Reply-To: <20180711144131.73552-1-chris.brandt@renesas.com>
-References: <20180711144131.73552-1-chris.brandt@renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 30 Jul 2018 15:46:13 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: iio: adc: Add DT binding document
+ for PMIC5 ADC
+Message-ID: <20180730214613.GA24177@rob-hp-laptop>
+References: <1532562248-6810-1-git-send-email-smohanad@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1532562248-6810-1-git-send-email-smohanad@codeaurora.org>
+To: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 List-ID: <devicetree@vger.kernel.org>
 
-Add R7S9210 (RZ/A2) support
+On Wed, Jul 25, 2018 at 04:44:08PM -0700, Siddartha Mohanadoss wrote:
+> PMIC5 ADC has support for clients to measure voltage and current
+> on inputs connected to the PMIC. Clients include reading voltage
+> phone power and on board system thermistors for thermal management.
+> ADC5 on certain PMIC has support to read battery current.
+> 
+> This change adds documentation.
+> 
+> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> ---
+>  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 ++++++++++----
+>  include/dt-bindings/iio/qcom,spmi-vadc.h           | 115 ++++++++++++++++++++-
+>  2 files changed, 172 insertions(+), 20 deletions(-)
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 1 +
- 1 file changed, 1 insertion(+)
+Please add acks/reviewed-bys when posting new versions.
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-index 106808b55b6d..5c002bce8f42 100644
---- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-@@ -5,6 +5,7 @@ Required properties:
-   - compatible: Must contain one or more of the following:
- 
-     - "renesas,scif-r7s72100" for R7S72100 (RZ/A1H) SCIF compatible UART.
-+    - "renesas,scif-r7s9210" for R7S9210 (RZ/A2) SCIF compatible UART.
-     - "renesas,scifa-r8a73a4" for R8A73A4 (R-Mobile APE6) SCIFA compatible UART.
-     - "renesas,scifb-r8a73a4" for R8A73A4 (R-Mobile APE6) SCIFB compatible UART.
-     - "renesas,scifa-r8a7740" for R8A7740 (R-Mobile A1) SCIFA compatible UART.
--- 
-2.16.1
+Rob
