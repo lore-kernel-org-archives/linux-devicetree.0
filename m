@@ -1,60 +1,57 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Mon, 30 Jul 2018 15:36:00 +0000
-Message-ID: <AM0PR04MB4211DA01F485B35093EA09B2802F0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
- <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
- <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
- <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
- <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
- <20180730144435.srxgohwgdhrmw2rz@pengutronix.de>
- <CABb+yY0sUxGatozwdQVM55z7ACtpK8HCepnfvQNunQ=r5y_kVw@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 0/9] Add Reset Controller support for Actions Semi Owl
+ SoCs
+Date: Mon, 30 Jul 2018 17:38:31 +0200
+Message-ID: <1532965111.3471.14.camel@pengutronix.de>
+References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
+         <c3ae668a-6bcc-a0eb-1e00-14ef9d607316@suse.de>
+         <20180730151131.GA28633@mani>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY0sUxGatozwdQVM55z7ACtpK8HCepnfvQNunQ=r5y_kVw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-mediatek@lists.infradead.org>",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180730151131.GA28633@mani>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+On Mon, 2018-07-30 at 20:41 +0530, Manivannan Sadhasivam wrote:
+> Hi Andreas,
+> 
+> On Mon, Jul 30, 2018 at 12:26:07PM +0200, Andreas Färber wrote:
+> > Hi Mani,
+> > 
+> > Am 27.07.2018 um 20:45 schrieb Manivannan Sadhasivam:
+> > > This patchset adds Reset Controller (RMU) support for Actions Semi
+> > > Owl SoCs, S900 and S700. For the Owl SoCs, RMU has been integrated into
+> > > the clock subsystem in hardware. Hence, in software we integrate RMU
+> > > support into common clock driver inorder to maintain compatibility.
+> > 
+> > Can this not be placed into drivers/reset/ by using mfd-simple with a
+> > sub-node in DT?
+> > 
+> 
+> Actually I was not sure where to place this reset controller driver. When I
+> looked into other similar ones such as sunxi, they just integrated into the
+> clk subsystem. So I just chose that path. But yeah, this is hacky!
+> 
+> But this RMU is not MFD by any means. Since the CMU (Clock) and RMU (Reset)
+> are two separate IPs inside SoC, we shouldn't describe it as a MFD driver. Since
+> RMU has only 2 registers, the HW designers decided to use up the CMU memory
+> map. So, maybe syscon would be best option I think. What is your opinion?
 
-> > If yes, how should it be reflected in DT?
-> > - 1 cell: &mu [0-15]
-> > - 2 cells: &mu [0-7] [TX,RX]
-> > - 3 cells: &mu [0-4] [FIFO,NOFIFO] [TX,RX]
-> >
-> It may be possible for a device binding to have variable cells, but I haven't
-> seen any. And I am not sure that would look neat either.
+Using syscon seems cleaner than stuffing the regmap into owl_clk_desc.
 
-Please refer to 
-Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-- #interrupt-cells : Specifies the number of cells needed to encode an
-  interrupt source. Must be a single cell with a value of at least 3.
-  If the system requires describing PPI affinity, then the value must
-  be at least 4.
+> Even if we go for syscon, we should place the reset driver within clk
+> framework as I can see other SoCs like Mediatek are doing the same. But again
+> I'm not sure!
 
-Regards
-Dong Aisheng
+Me neither. If the CMU and RMU are really separate and only share the
+memory map, a syscon driver could live in drivers/reset without
+problems.
+It's only when there are interactions between clocks and resets that you
+really want to have the reset driver integrated with clk.
+
+regards
+Philipp
