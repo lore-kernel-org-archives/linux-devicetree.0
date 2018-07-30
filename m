@@ -1,79 +1,89 @@
-Return-Path: <SRS0=22p1=KH=huawei.com=jonathan.cameron@kernel.org>
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH V2 0/3] Hisilicon SEC crypto driver (hip06 / hip07)
-Date: Mon, 23 Jul 2018 16:49:52 +0100
-Message-ID: <20180723154955.12944-1-Jonathan.Cameron@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: linux-crypto@vger.kernel.org
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net, smueller@chronox.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linuxarm@huawei.com, xuzaibo@huwei.com, fanghao11@huawei.com, liguozhu@hisilicon.com, wangxiongfeng2@huawei.com, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Return-Path: <SRS0=Hr2m=KO=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 4/5] clk: renesas: Add r8a774a1 CPG Core Clock Definitions
+Date: Mon, 30 Jul 2018 08:48:10 +0100
+Message-Id: <1532936891-25034-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
+References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The driver provides in kernel support for the Hisilicon SEC accelerator
-found in the hip06 and hip07 SoCs.  There are 4 such units on the D05
-board for which an appropriate DT binding has been provided.  ACPI also
-works with an appropriate UEFI build.
+Add all RZ/G2M Clock Pulse Generator Core Clock Outputs, as listed in
+Table 8.2b ("List of Clocks [RZ/G2M]") of the RZ/G2M Hardware User's
+Manual.
 
-The hardware does not update the IV in chaining or counting modes.
-This is done in the drive ron completion of the cipher operation.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+---
+ include/dt-bindings/clock/r8a774a1-cpg-mssr.h | 59 +++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 include/dt-bindings/clock/r8a774a1-cpg-mssr.h
 
-The driver support AES, DES and 3DES block ciphers in a range of
-modes (others to follow). Hash and AAED support to follow.
-
-Sorry for the delay on this one, other priorities and all that...
-
-Changes since V1.
-1) DT binding fixes suggested by Rob Herring in patches 1 and 3.
-2) Added XTS key check as suggested by Stephan Muller.
-3) A trivial use after free found during testing of the above.
-
-Changes since RFC.
-1) Addition of backlog queuing as needed to support dm-crypt usecases.
-2) iommu presence tests now done as Robin Murphy suggested.
-3) Hardware limiation to 32MB requests worked aroud in driver so it will
-   now support very large requests (512*32MB).  Larger request handling
-   than this would require a longer queue with the associate overheads and
-   is considered unlikely to be necessary.
-4) The specific handling related to the inline IV patch set from Stephan
-   has been dropped for now.
-5) Interrupt handler was previous more complex than necessary so has been
-   reworked.
-6) Use of the bounce buffer for small packeets is dropped for now.  This is a
-   performance optimization that made the code harder to review and can be
-   reintroduced as necessary at a later date.
-7) Restructuring of some code to simplify hash and aaed (hash implemented
-   but not ready fo upstream at this time)
-8) Various minor fixes and reworks of the code
-   * several off by one errors in the cleanup paths
-   * single template for enc and dec
-   * drop dec_key as not used (enc_key was used in both cases)
-   * drop dma pool for IVs as it breaks chaining.
-   * lots of spinlocks changed to mutexes as not taken in atomic context.
-   * nasty memory leak cleaned up.
-
-Jonathan Cameron (3):
-  dt-bindings: Add bindings for Hisilicon SEC crypto accelerators.
-  crypto: hisilicon SEC security accelerator driver
-  arm64: dts: hisi: add SEC crypto accelerator nodes for hip07 SoC
-
- .../bindings/crypto/hisilicon,hip07-sec.txt        |   67 +
- arch/arm64/boot/dts/hisilicon/hip07.dtsi           |  284 +++++
- drivers/crypto/Kconfig                             |    2 +
- drivers/crypto/Makefile                            |    1 +
- drivers/crypto/hisilicon/Kconfig                   |   14 +
- drivers/crypto/hisilicon/Makefile                  |    2 +
- drivers/crypto/hisilicon/sec/Makefile              |    3 +
- drivers/crypto/hisilicon/sec/sec_algs.c            | 1122 +++++++++++++++++
- drivers/crypto/hisilicon/sec/sec_drv.c             | 1323 ++++++++++++++++++++
- drivers/crypto/hisilicon/sec/sec_drv.h             |  428 +++++++
- 10 files changed, 3246 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
- create mode 100644 drivers/crypto/hisilicon/Kconfig
- create mode 100644 drivers/crypto/hisilicon/Makefile
- create mode 100644 drivers/crypto/hisilicon/sec/Makefile
- create mode 100644 drivers/crypto/hisilicon/sec/sec_algs.c
- create mode 100644 drivers/crypto/hisilicon/sec/sec_drv.c
- create mode 100644 drivers/crypto/hisilicon/sec/sec_drv.h
-
+diff --git a/include/dt-bindings/clock/r8a774a1-cpg-mssr.h b/include/dt-bindings/clock/r8a774a1-cpg-mssr.h
+new file mode 100644
+index 0000000..144c341
+--- /dev/null
++++ b/include/dt-bindings/clock/r8a774a1-cpg-mssr.h
+@@ -0,0 +1,59 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (C) 2018 Renesas Electronics Corp.
++ */
++#ifndef __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__
++
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
++
++/* r8a774a1 CPG Core Clocks */
++#define R8A774A1_CLK_Z			0
++#define R8A774A1_CLK_Z2			1
++#define R8A774A1_CLK_ZG			2
++#define R8A774A1_CLK_ZTR		3
++#define R8A774A1_CLK_ZTRD2		4
++#define R8A774A1_CLK_ZT			5
++#define R8A774A1_CLK_ZX			6
++#define R8A774A1_CLK_S0D1		7
++#define R8A774A1_CLK_S0D2		8
++#define R8A774A1_CLK_S0D3		9
++#define R8A774A1_CLK_S0D4		10
++#define R8A774A1_CLK_S0D6		11
++#define R8A774A1_CLK_S0D8		12
++#define R8A774A1_CLK_S0D12		13
++#define R8A774A1_CLK_S1D2		14
++#define R8A774A1_CLK_S1D4		15
++#define R8A774A1_CLK_S2D1		16
++#define R8A774A1_CLK_S2D2		17
++#define R8A774A1_CLK_S2D4		18
++#define R8A774A1_CLK_S3D1		19
++#define R8A774A1_CLK_S3D2		20
++#define R8A774A1_CLK_S3D4		21
++#define R8A774A1_CLK_LB			22
++#define R8A774A1_CLK_CL			23
++#define R8A774A1_CLK_ZB3		24
++#define R8A774A1_CLK_ZB3D2		25
++#define R8A774A1_CLK_ZB3D4		26
++#define R8A774A1_CLK_CR			27
++#define R8A774A1_CLK_CRD2		28
++#define R8A774A1_CLK_SD0H		29
++#define R8A774A1_CLK_SD0		30
++#define R8A774A1_CLK_SD1H		31
++#define R8A774A1_CLK_SD1		32
++#define R8A774A1_CLK_SD2H		33
++#define R8A774A1_CLK_SD2		34
++#define R8A774A1_CLK_SD3H		35
++#define R8A774A1_CLK_SD3		36
++#define R8A774A1_CLK_RPC		37
++#define R8A774A1_CLK_RPCD2		38
++#define R8A774A1_CLK_MSO		39
++#define R8A774A1_CLK_HDMI		40
++#define R8A774A1_CLK_CSI0		41
++#define R8A774A1_CLK_CP			42
++#define R8A774A1_CLK_POST2		43
++#define R8A774A1_CLK_CPEX		44
++#define R8A774A1_CLK_R			45
++#define R8A774A1_CLK_OSC		46
++
++#endif /* __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__ */
 -- 
-2.16.2
+2.7.4
