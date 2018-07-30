@@ -1,32 +1,31 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 1/2] MIPS: mscc: ocelot: add interrupt controller
- properties to GPIO controller
-Date: Mon, 30 Jul 2018 10:35:22 -0700
-Message-ID: <20180730173521.fr6be2kw7irk5jbp@pburton-laptop>
-References: <20180725122621.31713-1-quentin.schulz@bootlin.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 6/7] net: phy: Add support to configure clock in
+ Broadcom iProc mdio mux
+Date: Mon, 30 Jul 2018 20:04:04 +0200
+Message-ID: <20180730180404.GH2983@lunn.ch>
+References: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
+ <1532726613-6483-7-git-send-email-arun.parameswaran@broadcom.com>
+ <20180728212224.GF4792@lunn.ch>
+ <d19bb673-9088-bbee-ce9f-f2a4d8f404bf@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180725122621.31713-1-quentin.schulz@bootlin.com>
+In-Reply-To: <d19bb673-9088-bbee-ce9f-f2a4d8f404bf@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, ralf@linux-mips.org, jhogan@kernel.org, linux-gpio@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com
+To: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Quentin,
+> > Hi Arun
+> > 
+> > There is a devm_mdiobus_alloc() which could make the cleanup on error
+> > simple.
+> > 
+> Should I do this as a separate patch ?
 
-On Wed, Jul 25, 2018 at 02:26:20PM +0200, Quentin Schulz wrote:
-> The GPIO controller also serves as an interrupt controller for events
-> on the GPIO it handles.
-> 
-> An interrupt occurs whenever a GPIO line has changed.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> ---
->  arch/mips/boot/dts/mscc/ocelot.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
+A separate patch is easier to review. And if something breaks, a git
+bisect gives you a better idea what actually broke it, if you have
+lots of small patches.
 
-Thanks - applied to mips-next for 4.19.
-
-Paul
+     Andrew
