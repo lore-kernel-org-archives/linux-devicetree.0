@@ -1,47 +1,134 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
-Date: Mon, 30 Jul 2018 11:39:07 +0300
-Message-ID: <CAHp75VdrpOkonozNRUCzchsNHbgV=djecVDr0-fRiYAa4iDE0A@mail.gmail.com>
-References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com>
- <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com>
- <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
- <1532624495.2283.197.camel@impinj.com> <002901d427c6$6b9a4ff0$42ceefd0$@socionext.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Mon, 30 Jul 2018 08:39:37 +0000
+Message-ID: <AM0PR04MB4211BA57F8544F3537ECA1A0802F0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-4-o.rempel@pengutronix.de>
+ <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
+ <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <002901d427c6$6b9a4ff0$42ceefd0$@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Cc: Trent Piepho <tpiepho@impinj.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, =?UTF-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko@socionext.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, =?UTF-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2018 at 8:30 AM, Keiji Hayashibara
-<hayashibara.keiji@socionext.com> wrote:
-> Hello Trent and Andy,
-
->> > > +       ckrat = roundup(ckrat, 2);
->> >
->> > ckrat += ckrat & 1;
->>
->> Either way, the compiler produces the same code:
->>
->>  add r0, r0, #1
->>  bic r0, r0, #1
->>
->> I.e., ckrat = (ckrat + 1) & ~1, one "add" and one "and".
->>
->> Might as well use the macro so it's clear. There is also round_up(x,y), which I believe is intended to be used
->> only with power of 2 values of y.
->
-> I confirmed round_up() macro.
-> This macro is optimized to power of 2 argument,
-> and it matches to this case and clear.
->
-> I will replace to round_up() macro.
-
-Good!
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgT2xla3NpaiAmIFNhc2NoYSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBG
+cm9tOiBKYXNzaSBCcmFyIFttYWlsdG86amFzc2lzaW5naGJyYXJAZ21haWwuY29tXQ0KPiBTZW50
+OiBUaHVyc2RheSwgSnVseSAyNiwgMjAxOCAxMTo0NCBQTQ0KPiBUbzogQS5zLiBEb25nIDxhaXNo
+ZW5nLmRvbmdAbnhwLmNvbT4NCj4gQ2M6IE9sZWtzaWogUmVtcGVsIDxvLnJlbXBlbEBwZW5ndXRy
+b25peC5kZT47IFNoYXduIEd1bw0KPiA8c2hhd25ndW9Aa2VybmVsLm9yZz47IEZhYmlvIEVzdGV2
+YW0gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT47IFJvYg0KPiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5l
+bC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gVmxhZGltaXIg
+WmFwb2xza2l5IDx2bGFkaW1pcl96YXBvbHNraXlAbWVudG9yLmNvbT47ICwgU2FzY2hhIEhhdWVy
+DQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyAsIGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZywgbGludXgtDQo+IG1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcsIHNydl9o
+ZXVwc3RyZWFtIDxsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgRGV2
+aWNldHJlZSBMaXN0IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47DQo+IGRsLWxpbnV4LWlt
+eCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMy82XSBkdC1i
+aW5kaW5nczogbWFpbGJveDogaW14LW11OiBhZGQgZ2VuZXJpYyBNVQ0KPiBjaGFubmVsIHN1cHBv
+cnQNCj4gDQo+IE9uIFRodSwgSnVsIDI2LCAyMDE4IGF0IDU6MjEgUE0sIEEucy4gRG9uZyA8YWlz
+aGVuZy5kb25nQG54cC5jb20+IHdyb3RlOg0KPiANCj4gPj4NCj4gPj4gPiBFYWNoIE1VIGhhcyBm
+b3VyIHBhaXJzIG9mIHJ4L3R4IGRhdGEgcmVnaXN0ZXIgd2l0aCBmb3VyIHJ4L3R4DQo+ID4+ID4g
+aW50ZXJydXB0cyB3aGljaCBjYW4gYWxzbyBiZSB1c2VkIGFzIGEgc2VwYXJhdGUgY2hhbm5lbC4N
+Cj4gPj4gPg0KPiA+PiBTbyB0aGUgaGFyZHdhcmUgYWN0dWFsbHkgc3VwcG9ydHMgNCBjaGFubmVs
+cy4NCj4gPj4NCj4gPj4gPiAtLSAjbWJveC1jZWxsczogIE11c3QgYmUgMC4gTnVtYmVyIG9mIGNl
+bGxzIGluIGEgbWFpbGJveA0KPiA+PiA+ICstICNtYm94LWNlbGxzOiAgTXVzdCBiZToNCj4gPj4g
+PiArICAgICAgICAgICAgICAgMCAtIGZvciBzaW5nbGUgY2hhbm5lbCBtb2RlLiBpLk1YOCogU0NV
+IHByb3RvY29sIHNwZWNpZmljLg0KPiA+PiA+ICsgICAgICAgICAgICAgICAxIC0gZm9yIG11bHRp
+Y2hhbm5lbCAoZ2VuZXJpYykgbW9kZS4NCj4gPj4gPiArDQo+ID4+IE5vLCBwbGVhc2UuDQo+ID4+
+IERUIGJpbmRpbmdzIHNob3VsZCByZWZsZWN0IHRoZSByZWFsIGhhcmR3YXJlLCBhbmQgbm90IHRo
+ZSBzb2Z0d2FyZQ0KPiA+PiBtb2RlIHdlIHdhbnQgdGhlIGRyaXZlciB0byB3b3JrIGluLg0KPiA+
+PiBQbGVhc2UgZGVmaW5lIG1ib3gtY2VsbHM9MSAgYW5kIGhhdmUgdGhlIGkuTVg4KiBwbGF0Zm9y
+bSBhbHdheXMgYXNrDQo+ID4+IGZvciBjaGFubmVsLTAuDQo+ID4NCj4gPiBUaGUgcmVhbGl0eSBp
+cyB0aGF0IE1VIGhhcmR3YXJlIGRvZXMgbm90IGRlZmluZSBjaGFubmVscyBpbiByZWZlcmVuY2UN
+Cj4gbWFudWFsLg0KPiA+IEhvd2V2ZXIsIGl0IGRvZXMgaGF2ZSBmb3VyIHNlcGFyYXRlIGRhdGEg
+dHgvcnggcmVnaXN0ZXIgd2hpY2ggY2FuIGJlDQo+ID4gdXNlZCBhcyAndmlydHVhbCcgY2hhbm5l
+bHMgd2hpY2ggaXMgc3VwcG9ydGVkIGJ5IHRoaXMgY3VycmVudCBkcml2ZXIuDQo+ID4NCj4gPiBT
+ZWUgYmVsb3cgSFcgZGVzY3JpcHRpb24gZnJvbSB0aGUgcmVmZXJlbmNlIG1hbnVhbDoNCj4gPiBG
+b3IgbWVzc2FnaW5nLCB0aGUgTVUgaGFzIGZvdXIsIDMyLWJpdCB3cml0ZS1vbmx5IHRyYW5zbWl0
+IHJlZ2lzdGVycw0KPiA+IGFuZCBmb3VyLCAzMi1iaXQgcmVhZC1vbmx5IHJlY2VpdmUgcmVnaXN0
+ZXJzIG9uIHRoZSBQcm9jZXNzb3IgQiBhbmQNCj4gPiBQcm9jZXNzb3IgQS1zaWRlcy4gVGhlc2Ug
+cmVnaXN0ZXJzIGFyZSB1c2VkIGZvciBzZW5kaW5nIG1lc3NhZ2VzIHRvIGVhY2gNCj4gb3RoZXIu
+DQo+ID4NCj4gRm9yIGEgd2hpbGUgcGxlYXNlIGZvcmdldCB0aGUgcHJvdG9jb2wodXNlcikgbGV2
+ZWwgdXNhZ2UsIGFuZCBjb25zaWRlciBvbmx5DQo+IHdoYXQgeW91ciBoL3cgaXMuDQo+IA0KPiBN
+VSBoYXMgNCBwYWlycyBvZiBUWF9SZWcgKyBUWF9JUlEsIGFuZCA0IHBhaXJzIG9mIFJYX1JlZyAr
+IFJYX0lSUS4NCj4gKE1VIGFsc28gaGFzIDQgImRvb3JiZWxsIiB0eXBlIGNoYW5uZWxzIHRoYXQg
+aXQgY2FsbHMgR1AsIGJ1dCB0aG9zZSBhcmUgbm90DQo+IG1hbmFnZWQgaGVyZSwgc28gbGV0cyBu
+b3Qgd29ycnkgYXRtKS4NCj4gDQo+IEJ5IGRlZmluaXRpb24sIGEgbWFpbGJveCBjaGFubmVsIGlz
+IHNpbXBseSBhIHNpZ25hbCwgb3B0aW9uYWxseSB3aXRoIGRhdGENCj4gYXR0YWNoZWQuIFNvLCBN
+VSBoYXMgNCBUWCBhbmQgNCBSWCBjaGFubmVscy4NCj4gDQo+IFRoZSBNVSBkcml2ZXIgc2hvdWxk
+IHBvcHVsYXRlIDggdW5pZGlyZWN0aW9uYWwgKDQgVHggYW5kIDQgUlgpIGNoYW5uZWxzIGFuZA0K
+PiBzZXQgZWFjaCB0eC9yeCBvcGVyYXRpb24gdG8gdHJpZ2dlciB0aGUgY29ycmVzcG9uZGluZyBp
+bnRlcnJ1cHQuIFRoaXMgaXMgbm90IG15DQo+IHdoaW0sIHRoaXMgaXMgaG93IHRoZSBjb250cm9s
+bGVyIGlzIQ0KPiANCj4gVGhlIFNDVSBpcyBwb29ybHkgaW1wbGVtZW50ZWQgYXMgaXQgaWdub3Jl
+cyAzIGlycXMgYW5kIGNsdWIgYWxsIDQgcmVnaXN0ZXINCj4gdG9nZXRoZXIgKHRoZXJlIGFyZSBt
+YW55IG90aGVyIGNvbnMgb2YgdGhpcyBhcHByb2FjaCBidXQgbGV0cyBub3QgZ2V0IGludG8NCj4g
+dGhhdCkuDQo+IFBlcnNvbmFsbHksIEkgd291bGQgcHVzaC1iYWNrIG9uIHN1Y2ggYSBiYWQgZGVz
+aWduLiBCdXQgaWYgeW91IGNsYWltIHlvdSBoYXZlDQo+IG5vIGNob2ljZSBidXQgdG8gc3VwcG9y
+dCBTQ1UgYXMgc3VjaCwgdGhlIHdvcmsgYXJvdW5kIGNvdWxkIGJlIHNpbXBsZXIgdGhhbg0KPiBk
+ZWZpbmluZyBhIG5ldyAic2N1IG1vZGUiIGFsdG9nZXRoZXIuDQo+IA0KPiAjbWJveC1jZWxsczog
+IE11c3QgYmUgMy4NCj4gICAgICAgICAgICAgICAgICAgICAgIEZpcnN0IGNlbGwgaXMgMSBmb3Ig
+VFggYW5kIDAgZm9yIFJYIGNoYW5uZWwNCj4gICAgICAgICAgICAgICAgICAgICAgIFNlY29uZCBj
+ZWxsIGlzIGluZGV4IG9mIHRoZSBjaGFubmVsIFswLDEsMiBvciAzXQ0KPiAgICAgICAgICAgICAg
+ICAgICAgICAgVGhpcmQgY2VsbCBpcyAxIGlmIHRoZSBjaGFubmVsIHRyaWdnZXJzIGFuIElSUSwN
+Cj4gMCBpZiBub3QuIFRoYXQgaXMgQUNSLlJJRS9USUUgYml0cyBhcmUgc2V0IG9yIG5vdC4NCj4g
+DQo+IE5vcm1hbCBjbGllbnRzIHdvdWxkIGFsd2F5cyByZXF1ZXN0IGEgY2hhbm5lbCB3aXRoIGly
+cXMgZW5hYmxlZC4NCj4gVGhlIFNDVSBjbGllbnQgd291bGQgcmVxdWVzdCBhbGwgOCBjaGFubmVs
+cyAtLSBUWC9SWFswLDEsMl0gd2l0aCBpcnFzIGRpc2FibGVkLA0KPiBUWC9SWFszXSB3aXRoIGly
+cXMgZW5hYmxlZC4gQW5kIFNDVSB3aWxsIHJlYWQvd3JpdGUgNCB3b3JkIGRhdGEgb3ZlciA0IHJ4
+L3R4DQo+IGNoYW5uZWxzLCBpbnN0ZWFkIG9mIHRoZSB2aXJ0dWFsbHkgY29uY29jdGVkIG9uZS4N
+Cj4gDQoNClNhc2NoYSAmIE9sZWtzaWosDQpEbyB5b3UgaGF2ZSBhbnkgY29tbWVudHMgb24gdGhp
+cyBuZXcgYXBwcm9hY2ggc3VnZ2VzdGVkIGJ5IEphc3NpPw0KVGhpcyBsb29rcyBsaWtlIG1heSB3
+b3JrIGZvciBNNCBjYXNlLg0KDQpCdXQgSSdtIHN0aWxsIGRpc2N1c3Npbmcgd2l0aCBKYXNzaSBv
+biB3aGV0aGVyIGl0J3Mgc3VpdGFibGUgZm9yIFNDVSBhcyB3ZWxsPw0KQXMgdGhhdCBtZWFucyB3
+ZSBkcm9wIHRoZSBNVSBIYXJkd2FyZSBjYXBhYmlsaXR5IHRvIHNlbmQgbXVsdGkgd29yZHMNCmlu
+IG9uZSB0aW1lIGJ1dCBzZW5kIG9uZSB3b3JkIG9uIGVhY2ggY2hhbm5lbCBvbmUgdGltZSB3aGlj
+aCBzZWVtcyBsaWtlDQpsZXNzIGVmZmljaWVuY3kgYW5kIG1vcmUgY29tcGxleGl0eSBpbnRyb2R1
+Y2VkIGZvciBTQ1UgY2FzZS4NCg0KUmVnYXJkcw0KRG9uZyBBaXNoZW5nDQoNCj4gDQo+ID4gc2hv
+cnQgbWVzc2FnZXMNCj4gPiBUcmFuc21pdCByZWdpc3RlcihzKSBjYW4gYmUgdXNlZCB0byBwYXNz
+IHNob3J0IG1lc3NhZ2VzIGZyb20gb25lIHRvDQo+ID4gZm91ciB3b3JkcyBpbiBsZW5ndGguIEZv
+ciBleGFtcGxlLCB3aGVuIGEgZm91ci13b3JkIG1lc3NhZ2UgaXMNCj4gPiBkZXNpcmVkLCBvbmx5
+IG9uZSBvZiB0aGUgcmVnaXN0ZXJzIG5lZWRzIHRvIGhhdmUgaXRzIGNvcnJlc3BvbmRpbmcNCj4g
+PiBpbnRlcnJ1cHQgZW5hYmxlIGJpdCBzZXQgYXQgdGhlIHJlY2VpdmVyIHNpZGU7IHRoZSBtZXNz
+YWdl4oCZcyBmaXJzdA0KPiA+IHRocmVlIHdvcmRzIGFyZSB3cml0dGVuIHRvIHRoZSByZWdpc3Rl
+cnMgd2hvc2UgaW50ZXJydXB0IGlzIG1hc2tlZCwNCj4gPiBhbmQgdGhlIGZvdXJ0aCB3b3JkIGlz
+IHdyaXR0ZW4gdG8gdGhlIG90aGVyIHJlZ2lzdGVyICh3aGljaCB0cmlnZ2VycyBhbg0KPiBpbnRl
+cnJ1cHQgYXQgdGhlIHJlY2VpdmVyIHNpZGUpLg0KPiA+DQo+ID4gVGhlIHJlZmVyZW5jZSBtYW51
+YWwgaXMgYXQgaGVyZTogKENoYXB0ZXIgNDIgTWVzc2FnaW5nIFVuaXQgKE1VKQ0KPiA+DQo+IGh0
+dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMl
+M0ElMkYlMkZ3DQo+IHd3DQo+ID4gLm54cC5jb20lMkZkb2NzJTJGZW4lMkZyZWZlcmVuY2UtDQo+
+IG1hbnVhbCUyRklNWDZVTFJNLnBkZiZhbXA7ZGF0YT0wMiU3QzANCj4gPg0KPiAxJTdDYWlzaGVu
+Zy5kb25nJTQwbnhwLmNvbSU3Q2VmMzQ5ZDdjOWNhZjQ2YzQyNjAwMDhkNWYzMGU5ZWY1JTdDNg0K
+PiA4NmVhMQ0KPiA+DQo+IGQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY2
+ODIxNjY0OTQ4NjAzMzImYW1wO3NkYXQNCj4gYT01NHJFDQo+ID4NCj4gaURtJTJCR0Q2RVk4TkU2
+NGNrMUxYVkdvVUN0V1lySFhQb1dxY3VqVW8lM0QmYW1wO3Jlc2VydmVkPTANCj4gPg0KPiA+IEFu
+ZCBTQ1UgZmlybXdhcmUgZG9lcyB1c2UgTVUgaW4gYWJvdmUgd2F5IHNwZWNpZmllZCBieSByZWZl
+cmVuY2UNCj4gbWFudWFsLg0KPiA+IEV2ZW4gZnJvbSBIVyBwb2ludCBvZiB2aWV3LCBpdCdzIHN0
+aWxsIG9uZSBjaGFubmVsIG9ubHkgbWFpbGJveC4NCj4gPg0KPiBQbGVhc2UgcmVhbGlzZSB0aGF0
+IGFueSBtYW51YWwgaXMgd3JpdHRlbiBieSBhIG1lcmUgbW9ydGFsIGFmdGVyYWxsLg0KPiBIb3cg
+dGhlIGNvbnRyb2xsZXIgd29ya3MgaXMgc2V0IGluIHN0b25lLCBidXQgaG93IHRoZSBjb250cm9s
+bGVyIGNhbiBiZQ0KPiB1c2VkIC4uLiBpcyBqdXN0IHNvbWVvbmVzIHN1Z2dlc3Rpb24uDQo+IA0K
+PiBUaGUgYXBwcm9hY2ggSSBzdWdnZXN0IGFib3ZlLCBjb25mb3JtcyB0byB0aGUgYXBpIGFuZCBw
+cmV2ZW50cyBhIHByb3ZpZGVyDQo+IGRhbmNpbmcgdG8gdGhlIHR1bmVzIG9mIGEgdXNlci4NCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
