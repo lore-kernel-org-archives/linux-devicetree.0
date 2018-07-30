@@ -1,66 +1,63 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: [PATCH v6 2/7] soc/tegra: pmc: Factor out DPD register bit calculation
-Date: Mon, 30 Jul 2018 17:01:34 +0300
-Message-ID: <1532959299-17089-3-git-send-email-avienamo@nvidia.com>
-References: <1532959299-17089-1-git-send-email-avienamo@nvidia.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH v6 3/3] ARM: dts: at91: sama5d2 Xplained: add pin muxing
+ for I2S
+Date: Mon, 30 Jul 2018 17:03:33 +0300
+Message-ID: <f11c6e5d-b6a4-2c06-ed7b-abdf19ade257@microchip.com>
+References: <20180730114008.30464-1-codrin.ciubotariu@microchip.com>
+ <20180730114008.30464-4-codrin.ciubotariu@microchip.com>
+ <2e2bc99e-138e-fbc8-1db0-e37b46637af0@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532959299-17089-1-git-send-email-avienamo@nvidia.com>
+In-Reply-To: <2e2bc99e-138e-fbc8-1db0-e37b46637af0@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Aapo Vienamo <avienamo@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Claudiu Beznea <Claudiu.Beznea@microchip.com>, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com
+Cc: devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Cristian.Birsan@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Factor out the the code to calculate the correct DPD register and bit
-number for a given pad. This logic will be needed to query the status
-register.
+On 30.07.2018 16:49, Claudiu Beznea wrote:
+> Hi Codrin,
+> 
+> On 30.07.2018 14:40, Codrin Ciubotariu wrote:
+>> From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+>>
+>> This patch sets the pin muxing for the I2S controllers
+>>
+>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+>> [codrin.ciubotariu@microchip.com: added pin muxing for the second
+>> controller]
+>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+>> ---
+>>
+>> Changes in v6:
+>> 	- none;
+>>
+>>   arch/arm/boot/dts/at91-sama5d2_xplained.dts | 28 +++++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+>> index fcc85d70f36e..95cbec0f8790 100644
+>> --- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+>> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+>> @@ -281,6 +281,11 @@
+>>   				status = "okay";
+>>   			};
+>>   
+>> +			i2s0: i2s@f8050000 {
+>> +				pinctrl-names = "default";
+>> +				pinctrl-0 = <&pinctrl_i2s0_default>;
+> 
+> The approach with the disabled controllers in board DTS files (for our
+> boards) is to use the: status = "disabled" and if there are pin conflicts
+> with other controllers to put a mark in there, something like:
+> 				status = "disabled"; /* Conflict with X */
+> 
+> I'm seeing that i2s1 is in conflict with sdmmc1 and spi0.
 
-Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
----
- drivers/soc/tegra/pmc.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Ok, I will disable them and add the pin conflicts in the next version. 
+Thank you for your review.
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index f926332..393ca72 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -922,11 +922,12 @@ tegra_io_pad_find(struct tegra_pmc *pmc, enum tegra_io_pad id)
- 	return NULL;
- }
- 
--static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
--				unsigned long *status, u32 *mask)
-+static int tegra_io_pad_get_dpd_register_bit(enum tegra_io_pad id,
-+					     unsigned long *request,
-+					     unsigned long *status,
-+					     u32 *mask)
- {
- 	const struct tegra_io_pad_soc *pad;
--	unsigned long rate, value;
- 
- 	pad = tegra_io_pad_find(pmc, id);
- 	if (!pad) {
-@@ -947,6 +948,19 @@ static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
- 		*request = pmc->soc->regs->dpd2_req;
- 	}
- 
-+	return 0;
-+}
-+
-+static int tegra_io_pad_prepare(enum tegra_io_pad id, unsigned long *request,
-+				unsigned long *status, u32 *mask)
-+{
-+	unsigned long rate, value;
-+	int err;
-+
-+	err = tegra_io_pad_get_dpd_register_bit(id, request, status, mask);
-+	if (err)
-+		return err;
-+
- 	if (pmc->clk) {
- 		rate = clk_get_rate(pmc->clk);
- 		if (!rate) {
--- 
-2.7.4
+Best regards,
+Codrin
