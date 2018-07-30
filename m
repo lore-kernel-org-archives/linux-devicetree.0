@@ -1,57 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 1/4] arm64: dts: allwinner: a64: Add SID node
-Date: Mon, 30 Jul 2018 10:26:31 +0200
-Message-ID: <20180730082631.es2fbqce5uabi5jc@flea>
-References: <20180727115205.20955-1-manu@freebsd.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: allwinner: dts: h6: fix Pine H64 MMC
+ bus width
+Date: Mon, 30 Jul 2018 10:27:12 +0200
+Message-ID: <20180730082712.koiaej6dxjnnk6lb@flea>
+References: <20180726044805.55888-1-icenowy@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gu2eabfhidk4tilw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="7e2hjc2as7a2niec"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB24X7PNAKGQEASMOZEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180727115205.20955-1-manu@freebsd.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@freebsd.org>
-Cc: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180726044805.55888-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---gu2eabfhidk4tilw
-Content-Type: text/plain; charset=us-ascii
+--7e2hjc2as7a2niec
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 27, 2018 at 01:52:02PM +0200, Emmanuel Vadot wrote:
-> The A64 have a SID controller which consist of EFUSE (starting at 0x200)
-> and three registers to read/write some of the protected efuses.
->=20
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+On Thu, Jul 26, 2018 at 12:48:05PM +0800, Icenowy Zheng wrote:
+> Currently the enabled MMC controllers on Pine H64 do not have bus-width
+> set, which make them fall back to 1-bit mode and become quite slow.
+> 
+> Fix this by add the corresponding bus-width properties.
+> 
+> Fixes: ecbd611882a1 ("arm64: allwinner: h6: enable MMC0/2 on Pine H64")
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Queued all 4 for 4.20, thanks!
+Applied, thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---gu2eabfhidk4tilw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltey7YACgkQ0rTAlCFN
-r3RGMQ//a7/Pzi6IclTBAEJiQeaoMfgwEZWiKIkj2/uUfmiVEUi/3wrYMNlfN96R
-FK2uPANsvpfTMZLmbu0g+TrEEfDObC1c02m2yvv0EVFcB2x/UhzG4w/YDR2nzqjl
-bh2Fvfe8o+qdWE9FEZWWxa3M1xPwBxAMPZTGEjntS9IX1FJ1DQKlSrg2BApooqi2
-F6IoXas8yMzkjYehtIda6f9n3eqpEo1A3SrRDObapL5qnsJQUBatNcreyp7TnUv/
-2+E2Tz3QsBkr92NRqjuOyMB3GYRH66vZVEVol5T5tJi2Y3vw17RjFzdPH/gSt9ww
-pHUOp6AQB7T/d5EvsIKDCqOPhJmrvHvlfVgOIcgrL7vGrD/lNoA1bP0jJ5cb38d3
-Sxg7sAqedzpTZZjr31gxtogxBbZpuLgD5/myDRenTM7BO1N819exbCsox76s7ptL
-vGB4/an8gOH9z6d2inoGzsG0zV8acqG1X1EvOCmNLJ+zqS8CBI707Jd/l4kUwGTy
-FP4Ntxd/43vBv0VqINE1kHMf9uiqoZjCVMwQ7eQpdKdnvtPpXQ19ZivlmjQMeET2
-QRLPedo0OWbPntIsflHgIDphEl09F8zIgyUQ2YoQLo70ben8khOOjcU+Tz0PSlKs
-FLjIAveQDhWC9aGruugBpSkCd2FMMXhFPj8UYjc2kVLkFtJ3tJM=
-=Z+Jb
------END PGP SIGNATURE-----
-
---gu2eabfhidk4tilw--
+--7e2hjc2as7a2niec--
