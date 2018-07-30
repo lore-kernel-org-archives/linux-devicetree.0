@@ -1,33 +1,70 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v11 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
-Date: Mon, 30 Jul 2018 13:51:52 +0300
-Message-ID: <20180730105152.GC8862@localhost.localdomain>
-References: <cover.1532946848.git.matti.vaittinen@fi.rohmeurope.com>
- <77184f651e5cefb112f1061bc682b759f88144c6.1532946848.git.matti.vaittinen@fi.rohmeurope.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v4 0/2] pinctrl: nuvoton: add driver for NPCM7xx
+Date: Mon, 30 Jul 2018 14:04:04 +0300
+Message-ID: <20180730110406.132729-1-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <77184f651e5cefb112f1061bc682b759f88144c6.1532946848.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, eballetbo@gmail.com, linus.walleij@linaro.org, mazziesaccount@gmail.com, dmitry.torokhov@gmail.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, broonie@kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2018 at 01:43:34PM +0300, Matti Vaittinen wrote:
-> ROHM BD71837 PMIC MFD driver providing interrupts and support
-> for three subsystems:
-> - clk
-> - Regulators
-> - input/power-key
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+This patch set adds pinmux and GPIO controller for the Nuvoton
+NPCM750/730/715/705 Baseboard Management Controller (BMC).
 
-Please note that I maintained the acked-by line from Enric because the
-patch version 11 mostly contains only trivial changes - and is not
-touching the points Enric was originally concerned. Enric, please
-let us know if this is not Ok for you.
+The Nuvoton BMC NPCM750/730/715/705 Pinmux functions accessible
+only for pin groups and pinconf parameters available only for 
+individual pins.
 
-Br,
-	Matti Vaittinen
+The Nuvoton BMC NPCM750/730/715/705 has eight identical GPIO 
+modules, each module has 32 GPIO ports.
+
+Most of the GPIO ports are multiplexed with other system functions.
+
+The NPCM7xx pinctrl and GPIO driver tested on NPCM750 evaluation board.
+
+this patch set depend on 
+gpio: mmio: add inverted direction get_set io support approval.
+https://lore.kernel.org/patchwork/patch/968891/
+without adding BGPIOF_INVERTED_REG_DIR to include/linux/gpio/driver.h
+the build will failed.
+
+Addressed comments from:.
+ - kbuild test robot: https://www.spinics.net/lists/kernel/msg2868491.html
+ 
+conversion about it with Linus Walleij:
+ - https://www.spinics.net/lists/devicetree/msg241973.html 
+ 
+Changes since version 3:
+ - Remove Kconfig MFD_SYSCON dependency.
+ - Add BGPIOF_INVERTED_REG_DIR flag.
+ - dt-binding documentation haven't changed.
+
+Changes since version 2:
+ - Using GPIO_GENERIC (mmio).
+ - Add Kconfig MFD_SYSCON dependency.
+ - Remove unnecessary code from the direction output function.
+ - dt-binding documentation haven't changed.
+				  
+Changes since version 1:
+ - Remove Kconfig MFD_SYSCON dependency.
+ - Modify setfunc function.
+ - Modify dt-binding documentation according Rob comments.
+
+Tomer Maimon (2):
+  dt-binding: pinctrl: Add NPCM7xx pinctrl and GPIO documentation
+  pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver
+
+ .../bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt   |  216 ++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/nuvoton/Kconfig                    |   12 +
+ drivers/pinctrl/nuvoton/Makefile                   |    4 +
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c          | 2082 ++++++++++++++++++++
+ 6 files changed, 2316 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
+ create mode 100644 drivers/pinctrl/nuvoton/Kconfig
+ create mode 100644 drivers/pinctrl/nuvoton/Makefile
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+
+-- 
+2.14.1
