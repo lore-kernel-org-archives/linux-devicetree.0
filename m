@@ -1,66 +1,75 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: Re: [PATCH v2 00/10] Tegra SDHCI update the pad autocal procedure
-Date: Mon, 30 Jul 2018 18:43:51 +0300
-Message-ID: <20180730184351.5044cb6e@dhcp-10-21-25-168>
-References: <1532608016-14319-1-git-send-email-avienamo@nvidia.com>
-        <CAPDyKFo+nv+9qYV=J5k-63cDhQO=L==87RLMj_7BnjEjUf5iEQ@mail.gmail.com>
+From: Anup Patel <anup@brainfault.org>
+Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
+Date: Mon, 30 Jul 2018 21:21:58 +0530
+Message-ID: <CAAhSdy1rGMqhLDKMipGgP+4sYyNc_ckuHREy+Y8zb-hJeeZPog@mail.gmail.com>
+References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-8-hch@lst.de>
+ <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFo+nv+9qYV=J5k-63cDhQO=L==87RLMj_7BnjEjUf5iEQ@mail.gmail.com>
+In-Reply-To: <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Atish Patra <atish.patra@wdc.com>
+Cc: Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 30 Jul 2018 17:07:59 +0200
-Ulf Hansson <ulf.hansson@linaro.org> wrote:
-
-> On 26 July 2018 at 14:26, Aapo Vienamo <avienamo@nvidia.com> wrote:
-> > Hi all,
+On Sat 28 Jul, 2018, 5:34 AM Atish Patra, <atish.patra@wdc.com> wrote:
+>
+> On 7/26/18 7:38 AM, Christoph Hellwig wrote:
+> > This patch adds a driver for the Platform Level Interrupt Controller (PLIC)
+> > specified as part of the RISC-V supervisor level ISA manual, in the memory
+> > layout implemented by SiFive and qemu.
 > >
-> > Update the tegra_sdhci_pad_autocalib() pad drive strength calibration
-> > procedure to match the ones specified in the TRMs of the more recent
-> > SoCs. This was tested on Tegra186, Tegra210, and Tegra124, although it
-> > should not break things older generations either.
+> > The PLIC connects global interrupt sources to the local interrupt controller
+> > on each hart.
 > >
-> > This series depends on the "Tegra SDHCI enable 1.8 V signaling on
-> > Tegar210 and Tegra186" series posted earlier.  
-> 
-> According to the cover letter of the above series, it states that it
-> depends on $subject series. A circular dependency. :-)
+> > This driver is based on the driver in the RISC-V tree from Palmer Dabbelt,
+> > but has been almost entirely rewritten since.
+> >
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+>
+> I tried to boot HighFive Unleashed with the patch series after applying
+> all the patches from riscv-all branch except timer & irq patches. It
+> gets stuck pretty early.
+>
+> Here is my github repo with all the changes:
+> https://github.com/atishp04/riscv-linux/commits/master_chris_cleanup_hifive
+>
+> I am still looking into it.
+> Palmer: Did I miss something?
+>
+> FWIW, here is the boot log.
+> --------- Boot log -------------------------------------------
+> [    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=5
+> [    0.000000] NR_IRQS: 0, nr_irqs: 0, preallocated irqs: 0
+> [    0.000000] plic: mapped 53 interrupts to 4 (out of 9) handlers.
+> [    0.000000] clocksource: riscv_clocksource: mask: 0xffffffffffffffff
+> max_cycles: 0x1d854df40, max_idle_ns: 3526361616960 ns
+> [    0.000000] Calibrating delay loop (skipped), value calculated using
+> timer frequency.. 2.00 BogoMIPS (lpj=10000)
+> [    0.010000] pid_max: default: 32768 minimum: 301
+> [    0.010000] Mount-cache hash table entries: 16384 (order: 5, 131072
+> bytes)
+> [    0.020000] Mountpoint-cache hash table entries: 16384 (order: 5,
+> 131072 bytes)
+> [    0.020000] Hierarchical SRCU implementation.
+> [    0.030000] smp: Bringing up secondary CPUs ...
 
-The dependency chain goes like this: "Tegra SDHCI update the pad
-autocal procedure" -> "Tegra SDHCI enable 1.8 V signaling on Tegar210
-and Tegra186" -> "Tegra PMC pinctrl pad configuration".
+I have noticed following:
 
-> In fact, there should be no dependency at all or else there seems to
-> be a DT compatibility problem here...
+1. plic_irq_toggle() works on all present CPUs which means an
+IRQ will be enabled/disabled for all present CPUs. This further
+imply that whenever an IRQ is triggered, all online CPUs will take
+the interrupt but only one CPU will be successful in claiming the
+IRQ and other CPUs will check for IRQ in vain.
 
->From a functionality perspective there's no strict dependency, however,
-I don't think "[PATCH v2 09/10] mmc: tegra: Perform pad calibration
-after voltage switch" can be applied cleanly without
-"[PATCH v2 03/10] mmc: tegra: Reconfigure pad voltages during voltage
-switching" from the "Tegra SDHCI enable 1.8 V signaling on Tegar210 and
-Tegra186" series.
+2. irq_set_affinity() is not available which means IRQ balancing
+will not work.
 
-> Anyway, I think it actually makes sense to fold in all changes into
-> one series. Make sure the dt-doc changes comes first, then the driver
-> changes and finally arm64/dts changes. This should make it easy to
-> follow the review and I can pick the mmc parts and the soc maintainer
-> can pick the arm64/dts changes.
+3. A PLIC context is for a particular HART+MODE. A HW designer
+can choose to connect PLIC context only for particular MODE of
+HART/CPU whereas this driver assumes that we have context
+available for both M-mode and S-mode of all HARTs/CPUs.
 
-I've sent the changes in multiple part because I've been working on
-further changes to the driver while the previous parts have been
-getting reviewed. This is still the case and there's still going to be
-at least one more series which adds support for HS200 tuning and some
-smaller changes after it. However, the HS200 work is probably going to
-be ready for review in a day or two. I can send these as a one series
-from now on, although at this point it would be 27 patches in total
-and even more with the HS200 patches.
-
-I can do that if you prefer to do it that way. Makes my life somewhat
-easier too.
-
- -Aapo
+Regards,
+Anup
