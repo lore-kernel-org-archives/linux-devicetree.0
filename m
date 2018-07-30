@@ -1,47 +1,37 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 3/3] ptp_qoriq: convert to use module parameters for
- initialization
-Date: Mon, 30 Jul 2018 09:25:45 -0700 (PDT)
-Message-ID: <20180730.092545.225621578249887012.davem@davemloft.net>
-References: <20180730100154.27906-1-yangbo.lu@nxp.com>
-        <20180730100154.27906-3-yangbo.lu@nxp.com>
+From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Subject: Re: [PATCH v2 6/7] net: phy: Add support to configure clock in
+ Broadcom iProc mdio mux
+Date: Mon, 30 Jul 2018 09:47:29 -0700
+Message-ID: <b7b62b2f-2936-c8d0-3443-66d00713db20@broadcom.com>
+References: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
+ <1532726613-6483-7-git-send-email-arun.parameswaran@broadcom.com>
+ <20180728000303.GA23816@lunn.ch>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180730100154.27906-3-yangbo.lu@nxp.com>
+In-Reply-To: <20180728000303.GA23816@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: yangbo.lu@nxp.com
-Cc: netdev@vger.kernel.org, madalin.bucur@nxp.com, richardcochran@gmail.com, robh+dt@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Date: Mon, 30 Jul 2018 18:01:54 +0800
+Hi Andrew
 
-> +static unsigned int cksel = DEFAULT_CKSEL;
-> +module_param(cksel, uint, 0644);
-> +MODULE_PARM_DESC(cksel, "Select reference clock");
-> +
-> +static unsigned int clk_src;
-> +module_param(clk_src, uint, 0644);
-> +MODULE_PARM_DESC(clk_src, "Reference clock frequency (if clocks property not provided in dts)");
-> +
-> +static unsigned int tmr_prsc = 2;
-> +module_param(tmr_prsc, uint, 0644);
-> +MODULE_PARM_DESC(tmr_prsc, "Output clock division/prescale factor");
-> +
-> +static unsigned int tmr_fiper1 = 1000000000;
-> +module_param(tmr_fiper1, uint, 0644);
-> +MODULE_PARM_DESC(tmr_fiper1, "Desired fixed interval pulse period (ns)");
-> +
-> +static unsigned int tmr_fiper2 = 100000;
-> +module_param(tmr_fiper2, uint, 0644);
-> +MODULE_PARM_DESC(tmr_fiper2, "Desired fixed interval pulse period (ns)");
+On 18-07-27 05:03 PM, Andrew Lunn wrote:
+>>  static void mdio_mux_iproc_config(struct iproc_mdiomux_desc *md)
+>>  {
+>>  	u32 val;
+>> +	u32 divisor;
+> 
+> Hi Arun
+> 
+> Reverse Christmas tree please.
+> 
+> 	Andrew
+> 
+Ok, will send out an updated patch.
 
-Sorry, there is no way I am every applying something like this.  Module
-parameters are to be avoided at all costs.
-
-And you don't need it here, you have DTS, please use it.
-
-You are required to support the existing DTS cases, in order to
-avoid breaking things, anyways.
+Thanks
+Arun
