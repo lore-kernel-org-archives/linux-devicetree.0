@@ -1,41 +1,57 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH 3/4] dt-bindings: net: phy: mscc: vsc8531: fix missing "/bits/ 8" in example
-Date: Mon, 30 Jul 2018 15:02:35 +0200
-Message-ID: <20180730130236.3837-3-quentin.schulz@bootlin.com>
-References: <20180730130236.3837-1-quentin.schulz@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180730130236.3837-1-quentin.schulz@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andrew@lunn.ch, f.fainelli@gmail.com, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: netdev@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Mon, 30 Jul 2018 18:34:56 +0530
+Message-ID: <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-4-o.rempel@pengutronix.de>
+ <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
+ <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
+ <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
+ <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
+ <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+ <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, srv_heupstream <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The "vsc8531,led-N-mode" property is read as a u8 in the driver and
-there aren't a lot of modes anyway.
+On Mon, Jul 30, 2018 at 1:05 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> Hi Aishen, Jassie,
+>
+> i'm lost in this discussion. Please, as soon as I need to add some
+> changes to my patches, notify me. Preferably on top for email.
+>
+I am ok with however you choose to implement, 8 unidirectional or 4
+bidirectional channels or whatever.
 
-Without the "/bits/ 8" in front of the value of the property, the
-value is stored as an u32 resulting in of_read_property_u8 to always
-return 0.
+We just can't have protocol specific s/w modes in the controller drivers.
 
-Fix the example so that people using the property can actually use it.
+The best solution is to fix the SCU firmware. If that is _really_
+impossible, I provided a solution (3 cells work around). If you have a
+better idea please feel free to propose and implement that.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
----
- Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It will also help if you could share the user code of "scu-mode". If
+there is no such code (and we know the driver doesn't respect the
+"scu-mode" property) why do we even have that binding? Maybe drop it.
 
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 664d9d0543fc..4c7d1d384df0 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -63,6 +63,6 @@ Example:
-                 compatible = "ethernet-phy-id0007.0570";
-                 vsc8531,vddmac		= <3300>;
-                 vsc8531,edge-slowdown	= <7>;
--                vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
--                vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
-+                vsc8531,led-0-mode	= /bits/ 8 <LINK_1000_ACTIVITY>;
-+                vsc8531,led-1-mode	= /bits/ 8 <LINK_100_ACTIVITY>;
-         };
--- 
-2.17.1
+thnx.
