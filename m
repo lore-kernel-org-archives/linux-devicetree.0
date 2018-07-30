@@ -1,66 +1,32 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] of/fdt: Remove PPC32 longtrail hack in memory scan
-Date: Mon, 30 Jul 2018 11:19:42 -0600
-Message-ID: <CAL_JsqJQKb-0V0rHnonE5QfCrJwf8APiLNoRtEYei+H_YiC4qA@mail.gmail.com>
-References: <20180727053555.26596-1-mpe@ellerman.id.au>
- <CAL_JsqK4GEPJSPg+sStvFyO=sQ0Fp49FKKTz0S9OGc1COOnp-g@mail.gmail.com>
- <87in4xhufu.fsf@concordia.ellerman.id.au>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH 1/2] MIPS: mscc: ocelot: add interrupt controller
+ properties to GPIO controller
+Date: Mon, 30 Jul 2018 10:35:22 -0700
+Message-ID: <20180730173521.fr6be2kw7irk5jbp@pburton-laptop>
+References: <20180725122621.31713-1-quentin.schulz@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <87in4xhufu.fsf@concordia.ellerman.id.au>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180725122621.31713-1-quentin.schulz@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, ralf@linux-mips.org, jhogan@kernel.org, linux-gpio@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2018 at 4:47 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> Rob Herring <robh+dt@kernel.org> writes:
-> > On Thu, Jul 26, 2018 at 11:36 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
-> >> When the OF code was originally made common by Grant in commit
-> >> 51975db0b733 ("of/flattree: merge early_init_dt_scan_memory() common
-> >> code") (Feb 2010), the common code inherited a hack to handle
-> >> PPC "longtrail" machines, which had a "memory@0" node with no
-> >> device_type.
-> >>
-> >> That check was then made to only apply to PPC32 in b44aa25d20e2 ("of:
-> >> Handle memory@0 node on PPC32 only") (May 2014).
-> >>
-> >> But according to Paul Mackerras the "longtrail" machines are long
-> >> dead, if they were ever seen in the wild at all. If someone does still
-> >> have one, we can handle this firmware wart in powerpc platform code.
-> >>
-> >> So remove the hack once and for all.
-> >
-> > Yay. I guess Power Macs and other quirks will never die...
->
-> Not soon.
->
-> In base.c I see:
->  - the hack in arch_find_n_match_cpu_physical_id()
->    - we should just move that into arch code, it's a __weak arch hook
->      after all.
+Hi Quentin,
 
-Except then we'd have to export __of_find_n_match_cpu_property. I
-somewhat prefer it like it is because arch specific functions tend to
-encourage duplication. But if the implementation is completely
-different like sparc, then yes, a separate implementation makes sense.
+On Wed, Jul 25, 2018 at 02:26:20PM +0200, Quentin Schulz wrote:
+> The GPIO controller also serves as an interrupt controller for events
+> on the GPIO it handles.
+> 
+> An interrupt occurs whenever a GPIO line has changed.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> ---
+>  arch/mips/boot/dts/mscc/ocelot.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
 
->  - a PPC hack in of_alias_scan(), I guess we need to retain that
->    behaviour, but it's pretty minor anyway.
+Thanks - applied to mips-next for 4.19.
 
-It would be nice to know what platform(s) needs this as I don't have a
-clue. It would also be nice if I had some dumps of DTs for some of
-these OpenFirmware systems.
-
-Rob
+Paul
