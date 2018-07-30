@@ -1,57 +1,96 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Mon, 30 Jul 2018 18:34:56 +0530
-Message-ID: <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
- <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
- <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
- <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
- <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
- <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, srv_heupstream <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 1/2] of: Add of_machine_compatible_match()
+Date: Mon, 30 Jul 2018 23:15:15 +1000
+Message-ID: <20180730131516.18406-1-mpe@ellerman.id.au>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com
+Cc: linuxppc-dev@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2018 at 1:05 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> Hi Aishen, Jassie,
->
-> i'm lost in this discussion. Please, as soon as I need to add some
-> changes to my patches, notify me. Preferably on top for email.
->
-I am ok with however you choose to implement, 8 unidirectional or 4
-bidirectional channels or whatever.
+We have of_machine_is_compatible() to check if a machine is compatible
+with a single compatible string. However some code is able to support
+multiple compatible boards, and so wants to check for one of many
+compatible strings.
 
-We just can't have protocol specific s/w modes in the controller drivers.
+So add of_machine_compatible_match() which takes a NULL terminated
+array of compatible strings to check against the root node's
+compatible property.
 
-The best solution is to fix the SCU firmware. If that is _really_
-impossible, I provided a solution (3 cells work around). If you have a
-better idea please feel free to propose and implement that.
+Compared to an open coded match this is slightly more self
+documenting, and also avoids the caller needing to juggle the root
+node either directly or via of_find_node_by_path().
 
-It will also help if you could share the user code of "scu-mode". If
-there is no such code (and we know the driver doesn't respect the
-"scu-mode" property) why do we even have that binding? Maybe drop it.
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ drivers/of/base.c  | 21 +++++++++++++++++++++
+ include/linux/of.h |  6 ++++++
+ 2 files changed, 27 insertions(+)
 
-thnx.
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 848f549164cd..603716ba8513 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -505,6 +505,27 @@ int of_device_compatible_match(struct device_node *device,
+ 	return score;
+ }
+ 
++/**
++ * of_machine_compatible_match - Test root of device tree against a compatible array
++ * @compats: NULL terminated array of compatible strings to look for in root node's compatible property.
++ *
++ * Returns true if the root node has any of the given compatible values in its
++ * compatible property.
++ */
++bool of_machine_compatible_match(const char *const *compats)
++{
++	struct device_node *root;
++	int rc = 0;
++
++	root = of_node_get(of_root);
++	if (root) {
++		rc = of_device_compatible_match(root, compats);
++		of_node_put(root);
++	}
++
++	return rc != 0;
++}
++
+ /**
+  * of_machine_is_compatible - Test root of device tree for a given compatible value
+  * @compat: compatible string to look for in root node's compatible property.
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4d25e4f952d9..05e3e23a3a57 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -389,6 +389,7 @@ extern int of_alias_get_id(struct device_node *np, const char *stem);
+ extern int of_alias_get_highest_id(const char *stem);
+ 
+ extern int of_machine_is_compatible(const char *compat);
++extern bool of_machine_compatible_match(const char *const *compats);
+ 
+ extern int of_add_property(struct device_node *np, struct property *prop);
+ extern int of_remove_property(struct device_node *np, struct property *prop);
+@@ -877,6 +878,11 @@ static inline int of_machine_is_compatible(const char *compat)
+ 	return 0;
+ }
+ 
++static inline bool of_machine_compatible_match(const char *const *compats)
++{
++	return false;
++}
++
+ static inline bool of_console_check(const struct device_node *dn, const char *name, int index)
+ {
+ 	return false;
+-- 
+2.14.1
