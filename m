@@ -1,16 +1,25 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 2/2] pinctrl: stm32: check node status before new gpio
- bank registering
-Date: Mon, 30 Jul 2018 17:31:22 +0200
-Message-ID: <2f76dbc9-16f1-ddb6-be11-bf0c383b83c6@st.com>
-References: <1531745857-5561-1-git-send-email-alexandre.torgue@st.com>
- <1531745857-5561-3-git-send-email-alexandre.torgue@st.com>
- <CACRpkdaDy5MGPMxh3GYFHL9VqTv44=t6J=xu_0sdXc4OHFo84g@mail.gmail.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Mon, 30 Jul 2018 15:36:00 +0000
+Message-ID: <AM0PR04MB4211DA01F485B35093EA09B2802F0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
+ <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
+ <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
+ <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+ <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
+ <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
+ <20180730144435.srxgohwgdhrmw2rz@pengutronix.de>
+ <CABb+yY0sUxGatozwdQVM55z7ACtpK8HCepnfvQNunQ=r5y_kVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdaDy5MGPMxh3GYFHL9VqTv44=t6J=xu_0sdXc4OHFo84g@mail.gmail.com>
+In-Reply-To: <CABb+yY0sUxGatozwdQVM55z7ACtpK8HCepnfvQNunQ=r5y_kVw@mail.gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -21,39 +30,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND
- FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Amelie Delaunay <amelie.delaunay@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open
- list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-mediatek@lists.infradead.org>",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus
+Hi Jassi,
 
-On 07/29/2018 10:11 PM, Linus Walleij wrote:
-> On Mon, Jul 16, 2018 at 2:57 PM Alexandre Torgue
-> <alexandre.torgue@st.com> wrote:
-> 
->> Register a new GPIO bank only if GPIO bank node is enabled. This patch also
->> adds checks on ranges which are defined only if a bank is registered.
->>
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
-> Patch applied.
-> 
-Thanks
+> > If yes, how should it be reflected in DT?
+> > - 1 cell: &mu [0-15]
+> > - 2 cells: &mu [0-7] [TX,RX]
+> > - 3 cells: &mu [0-4] [FIFO,NOFIFO] [TX,RX]
+> >
+> It may be possible for a device binding to have variable cells, but I haven't
+> seen any. And I am not sure that would look neat either.
 
-> Alexandre can you check the discussion we've had about using
-> GPIOLIB_IRQCHIP for multi-bank GPIOs with several IRQ
-> lines as per drivers/gpio/gpio-tegra186.c?
-> 
-> Is this approach applicable for STM32 so we can pull
-> more stuff in under GPIOLIB_IRQCHIP?
-> 
-Ok. I'm going to check what's possible to do. I let you know soon.
+Please refer to 
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+- #interrupt-cells : Specifies the number of cells needed to encode an
+  interrupt source. Must be a single cell with a value of at least 3.
+  If the system requires describing PPI affinity, then the value must
+  be at least 4.
 
-regards
-Alex
-
-> Yours,
-> Linus Walleij
-> 
+Regards
+Dong Aisheng
