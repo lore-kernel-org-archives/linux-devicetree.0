@@ -1,42 +1,57 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 2/8] dt-bindings: devfreq: rk3399_dmc: Add rockchip,pmu phandle.
-Date: Mon, 30 Jul 2018 10:11:18 +0200
-Message-ID: <20180730081124.30698-3-enric.balletbo@collabora.com>
-References: <20180730081124.30698-1-enric.balletbo@collabora.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 1/4] arm64: dts: allwinner: a64: Add SID node
+Date: Mon, 30 Jul 2018 10:26:31 +0200
+Message-ID: <20180730082631.es2fbqce5uabi5jc@flea>
+References: <20180727115205.20955-1-manu@freebsd.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gu2eabfhidk4tilw"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180730081124.30698-1-enric.balletbo@collabora.com>
+Content-Disposition: inline
+In-Reply-To: <20180727115205.20955-1-manu@freebsd.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Heiko Stuebner <heiko@sntech.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, Lin Huang <hl@rock-chips.com>, kernel@collabora.com, robin.murphy@arm.com, Sean Paul <seanpaul@chromium.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: Emmanuel Vadot <manu@freebsd.org>
+Cc: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Rockchip DMC (Dynamic Memory Interface) needs to access to the PMU
-general register files to know the DRAM type, so add a phandle to the
-syscon that manages these registers.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+--gu2eabfhidk4tilw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v1:
-- [RFC 2/10] Add reviewed and acked tags from Chanwoo Choi and Rob Herring
+On Fri, Jul 27, 2018 at 01:52:02PM +0200, Emmanuel Vadot wrote:
+> The A64 have a SID controller which consist of EFUSE (starting at 0x200)
+> and three registers to read/write some of the protected efuses.
+>=20
+> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
 
- Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Queued all 4 for 4.20, thanks!
+Maxime
 
-diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-index 0ec68141f85a..951789c0cdd6 100644
---- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-+++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-@@ -12,6 +12,8 @@ Required properties:
- 			 for details.
- - center-supply:	 DMC supply node.
- - status:		 Marks the node enabled/disabled.
-+- rockchip,pmu:		 Phandle to the syscon managing the "PMU general register
-+			 files".
- 
- Optional properties:
- - interrupts:		 The CPU interrupt number. The interrupt specifier
--- 
-2.18.0
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--gu2eabfhidk4tilw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAltey7YACgkQ0rTAlCFN
+r3RGMQ//a7/Pzi6IclTBAEJiQeaoMfgwEZWiKIkj2/uUfmiVEUi/3wrYMNlfN96R
+FK2uPANsvpfTMZLmbu0g+TrEEfDObC1c02m2yvv0EVFcB2x/UhzG4w/YDR2nzqjl
+bh2Fvfe8o+qdWE9FEZWWxa3M1xPwBxAMPZTGEjntS9IX1FJ1DQKlSrg2BApooqi2
+F6IoXas8yMzkjYehtIda6f9n3eqpEo1A3SrRDObapL5qnsJQUBatNcreyp7TnUv/
+2+E2Tz3QsBkr92NRqjuOyMB3GYRH66vZVEVol5T5tJi2Y3vw17RjFzdPH/gSt9ww
+pHUOp6AQB7T/d5EvsIKDCqOPhJmrvHvlfVgOIcgrL7vGrD/lNoA1bP0jJ5cb38d3
+Sxg7sAqedzpTZZjr31gxtogxBbZpuLgD5/myDRenTM7BO1N819exbCsox76s7ptL
+vGB4/an8gOH9z6d2inoGzsG0zV8acqG1X1EvOCmNLJ+zqS8CBI707Jd/l4kUwGTy
+FP4Ntxd/43vBv0VqINE1kHMf9uiqoZjCVMwQ7eQpdKdnvtPpXQ19ZivlmjQMeET2
+QRLPedo0OWbPntIsflHgIDphEl09F8zIgyUQ2YoQLo70ben8khOOjcU+Tz0PSlKs
+FLjIAveQDhWC9aGruugBpSkCd2FMMXhFPj8UYjc2kVLkFtJ3tJM=
+=Z+Jb
+-----END PGP SIGNATURE-----
+
+--gu2eabfhidk4tilw--
