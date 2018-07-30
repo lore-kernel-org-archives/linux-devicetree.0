@@ -1,54 +1,47 @@
-From: Karthik Ramasubramanian <kramasub@codeaurora.org>
-Subject: Re: [PATCH v7 1/4] i2c: i2c-qcom-geni: Add bus driver for the
- Qualcomm GENI I2C controller
-Date: Mon, 30 Jul 2018 11:15:52 -0600
-Message-ID: <d98a059f-e76e-0ae8-e02c-4a980ab925a8@codeaurora.org>
-References: <1528823348-30532-1-git-send-email-kramasub@codeaurora.org>
- <1528823348-30532-2-git-send-email-kramasub@codeaurora.org>
- <20180729103208.uyxp2feonvznmzsp@ninjato>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] clk: meson: add DT documentation for emmc clock controller
+Date: Mon, 30 Jul 2018 11:23:06 -0600
+Message-ID: <CAL_JsqLrO+UMjhgSnaO+Ch-zpLj2-gjkuO=v1PRpMemYmcO2pQ@mail.gmail.com>
+References: <20180712211244.11428-1-yixun.lan@amlogic.com> <20180712211244.11428-2-yixun.lan@amlogic.com>
+ <20180724232917.GA27041@rob-hp-laptop> <e797412b-55db-6678-82ba-3a10ac99db9f@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180729103208.uyxp2feonvznmzsp@ninjato>
-Content-Language: en-US
+In-Reply-To: <e797412b-55db-6678-82ba-3a10ac99db9f@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, evgreen@chromium.org, acourbot@chromium.org, swboyd@chromium.org, dianders@chromium.org, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk <linux-clk@vger.kernel.org>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.o
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 27, 2018 at 8:14 AM Yixun Lan <yixun.lan@amlogic.com> wrote:
+>
+>
+> HI Rob
+>
+> On 07/25/2018 07:29 AM, Rob Herring wrote:
+> > On Thu, Jul 12, 2018 at 09:12:43PM +0000, Yixun Lan wrote:
+> >> Document the MMC sub clock controller driver, the potential consumer
+> >> of this driver is MMC or NAND. Also add three clock bindings IDs which
+> >> provided by this driver.
+> >>
+> >> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> >> ---
+> >>  .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
+> >>  .../clock/amlogic,meson-mmc-clkc.h            | 16 ++++++++++
+> >>  2 files changed, 47 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+> >>  create mode 100644 include/dt-bindings/clock/amlogic,meson-mmc-clkc.h
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+>
+> Thanks for the review!
+>
+> There is a discussion about dropping "meson-" prefix in the compatible
+> string[1]
+>
+> So, I will send another version with the new compatible name adjusted
+> from "amlogic,meson-axg-mmc-clkc" to "amlogic,axg-mmc-clkc"..
+> probably also rename the dt-bindings header file to amlogc,mmc-clkc.h
 
-
-On 7/29/2018 4:32 AM, Wolfram Sang wrote:
-> On Tue, Jun 12, 2018 at 11:09:05AM -0600, Karthikeyan Ramasubramanian wrote:
->> This bus driver supports the GENI based i2c hardware controller in the
->> Qualcomm SOCs. The Qualcomm Generic Interface (GENI) is a programmable
->> module supporting a wide range of serial interfaces including I2C. The
->> driver supports FIFO mode and DMA mode of transfer and switches modes
->> dynamically depending on the size of the transfer.
->>
->> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
->> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
->> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
->> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> 
-> Looks good except one minor thing:
-> 
->> +	pm_runtime_set_suspended(gi2c->se.dev);
->> +	pm_runtime_set_autosuspend_delay(gi2c->se.dev, I2C_AUTO_SUSPEND_DELAY);
->> +	pm_runtime_use_autosuspend(gi2c->se.dev);
->> +	pm_runtime_enable(gi2c->se.dev);
->> +	i2c_add_adapter(&gi2c->adap);
->> +
->> +	return 0;
-> 
-> i2c_add_adapter can fail. So, I'd guess you want to check the return
-> value and move it above the pm_runtime calls?
-> 
-Sure, I will update and upload a new patchset.
-
-Regards,
-Karthik.
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Okay, you can keep my R-by.
