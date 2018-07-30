@@ -1,228 +1,80 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 7/9] clk: actions: Add Actions Semi Owl SoCs Reset
- Management Unit support
-Date: Mon, 30 Jul 2018 12:21:52 +0200
-Message-ID: <1532946112.3471.2.camel@pengutronix.de>
-References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
-         <20180727184527.13287-8-manivannan.sadhasivam@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v8 5/6] regulator: pfuze100-regulator: provide
+ pm_power_off_prepare handler
+Date: Mon, 30 Jul 2018 11:24:52 +0100
+Message-ID: <20180730102452.GH5789@sirena.org.uk>
+References: <20180726092220.17250-1-o.rempel@pengutronix.de>
+ <20180726092220.17250-6-o.rempel@pengutronix.de>
+ <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <06313062-70db-9c10-048e-78ca267da959@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727184527.13287-8-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, mturquette@baylibre.com, sboyd@kernel.org, afaerber@suse.de, robh+dt@kernel.org
-Cc: linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com
+Content-Type: multipart/mixed; boundary="===============5443096280151960720=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <06313062-70db-9c10-048e-78ca267da959@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Michael Turquette <mturquette@baylibre.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivannan,
 
-Thank you for the patch, a few small comments below:
+--===============5443096280151960720==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ewQ5hdP4CtoTt3oD"
+Content-Disposition: inline
 
-On Sat, 2018-07-28 at 00:15 +0530, Manivannan Sadhasivam wrote:
-> Add Reset Management Unit (RMU) support for Actions Semi Owl SoCs.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/clk/actions/Kconfig      |  1 +
->  drivers/clk/actions/Makefile     |  1 +
->  drivers/clk/actions/owl-common.h |  2 +
->  drivers/clk/actions/owl-reset.c  | 72 ++++++++++++++++++++++++++++++++
->  drivers/clk/actions/owl-reset.h  | 32 ++++++++++++++
->  5 files changed, 108 insertions(+)
->  create mode 100644 drivers/clk/actions/owl-reset.c
->  create mode 100644 drivers/clk/actions/owl-reset.h
-> 
-> diff --git a/drivers/clk/actions/Kconfig b/drivers/clk/actions/Kconfig
-> index dc38c85a4833..04f0a6355726 100644
-> --- a/drivers/clk/actions/Kconfig
-> +++ b/drivers/clk/actions/Kconfig
-> @@ -2,6 +2,7 @@ config CLK_ACTIONS
->  	bool "Clock driver for Actions Semi SoCs"
->  	depends on ARCH_ACTIONS || COMPILE_TEST
->  	select REGMAP_MMIO
-> +	select RESET_CONTROLLER
->  	default ARCH_ACTIONS
->  
->  if CLK_ACTIONS
-> diff --git a/drivers/clk/actions/Makefile b/drivers/clk/actions/Makefile
-> index 78c17d56f991..ccfdf9781cef 100644
-> --- a/drivers/clk/actions/Makefile
-> +++ b/drivers/clk/actions/Makefile
-> @@ -7,6 +7,7 @@ clk-owl-y			+= owl-divider.o
->  clk-owl-y			+= owl-factor.o
->  clk-owl-y			+= owl-composite.o
->  clk-owl-y			+= owl-pll.o
-> +clk-owl-y			+= owl-reset.o
->  
->  # SoC support
->  obj-$(CONFIG_CLK_OWL_S700)	+= owl-s700.o
-> diff --git a/drivers/clk/actions/owl-common.h b/drivers/clk/actions/owl-common.h
-> index 56f01f7774aa..4dc7f286831f 100644
-> --- a/drivers/clk/actions/owl-common.h
-> +++ b/drivers/clk/actions/owl-common.h
-> @@ -26,6 +26,8 @@ struct owl_clk_desc {
->  	struct owl_clk_common		**clks;
->  	unsigned long			num_clks;
->  	struct clk_hw_onecell_data	*hw_clks;
-> +	struct owl_reset_map		*resets;
 
-Could this be:
-	const struct owl_reset_map	*resets;
-?
+--ewQ5hdP4CtoTt3oD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +	unsigned long			num_resets;
->  	struct regmap			*regmap;
->  };
->  
-> diff --git a/drivers/clk/actions/owl-reset.c b/drivers/clk/actions/owl-reset.c
-> new file mode 100644
-> index 000000000000..91b161cc68de
-> --- /dev/null
-> +++ b/drivers/clk/actions/owl-reset.c
-> @@ -0,0 +1,72 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +//
-> +// Actions Semi Owl SoCs Reset Management Unit driver
-> +//
-> +// Copyright (c) 2018 Linaro Ltd.
-> +// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
+On Mon, Jul 30, 2018 at 09:50:55AM +0200, Oleksij Rempel wrote:
+> On 27.07.2018 11:32, Robin Gong wrote:
 
-This seems unnecessary, since register access is done via regmap.
+> >>  #include <linux/slab.h>
+> >> +#include <linux/kallsyms.h>
 
-> +#include <linux/regmap.h>
-> +#include <linux/reset-controller.h>
-> +
-> +#include "owl-reset.h"
-> +
-> +static int owl_reset_assert(struct reset_controller_dev *rcdev,
-> +			    unsigned long id)
-> +{
-> +	struct owl_reset *reset = to_owl_reset(rcdev);
-> +	const struct owl_reset_map *map = &reset->reset_map[id];
-> +	u32 reg;
-> +
-> +	regmap_read(reset->regmap, map->reg, &reg);
-> +	regmap_write(reset->regmap, map->reg, reg & ~map->bit);
+> > Is it necessary?
 
-This read-modify-write sequence needs locking against concurrent
-register access. Better use regmap_update_bits():
+> yes, for pm_power_off_prepare
 
-	return regmap_update_bits(reset->regmap, map->reg, map->bit, 0);
+That's a *weird* header to have to use for that symbol, are you sure
+there isn't something more specific - if there isn't there should be.
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int owl_reset_deassert(struct reset_controller_dev *rcdev,
-> +			      unsigned long id)
-> +{
-> +	struct owl_reset *reset = to_owl_reset(rcdev);
-> +	const struct owl_reset_map *map = &reset->reset_map[id];
-> +	u32 reg;
-> +
-> +	regmap_read(reset->regmap, map->reg, &reg);
-> +	regmap_write(reset->regmap, map->reg, reg | map->bit);
+--ewQ5hdP4CtoTt3oD
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Better:
+-----BEGIN PGP SIGNATURE-----
 
-	return regmap_update_bits(reset->regmap, map->reg, map->bit, map->bit);
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlte53MACgkQJNaLcl1U
+h9BsBAf9HfE13YI9qSd1GydHPbPMZnDKSMXtshjnwDivfR+hXUdAlsfgURLvs0V8
+f/iR74SQjrH99baF0Fo9tSGQPkWxv4riSx2J+n4Kk7CxdcxK9OviyIdH4Ecg4uks
+TdgBaVcRXwVgiRx3gIj9ij6xlEfljCPQt5uOBL/42JeJ+kH8Qt11P9BbudUvBR1R
+CbjNPFILD4P5HJ+tIl3fyRru9+Q1rJAof1nP8iTczZRMutPmNGidM47Dg0/z5k/f
+cr+pkjguyjyYCD6gD0S9+oAG6jcmYa6ddGPIT+47Qu+eTWpAHi+PVlzzhJ69L59K
+BqyDpG9Pitz6iJDZYY51xye0o+fI3g==
+=/6WQ
+-----END PGP SIGNATURE-----
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int owl_reset_reset(struct reset_controller_dev *rcdev,
-> +			   unsigned long id)
-> +{
-> +	owl_reset_assert(rcdev, id);
-> +	udelay(1);
+--ewQ5hdP4CtoTt3oD--
 
-Is the delay valid for all IP cores on all SoCs variants?
 
-> +	owl_reset_deassert(rcdev, id);
-> +
-> +	return 0;
-> +}
-> +
-> +static int owl_reset_status(struct reset_controller_dev *rcdev,
-> +			    unsigned long id)
-> +{
-> +	struct owl_reset *reset = to_owl_reset(rcdev);
-> +	const struct owl_reset_map *map = &reset->reset_map[id];
-> +	u32 reg;
-> +
-> +	regmap_read(reset->regmap, map->reg, &reg);
+--===============5443096280151960720==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-If this could return an error, better report it.
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> +
-> +	/*
-> +	 * The reset control API expects 0 if reset is not asserted,
-> +	 * which is the opposite of what our hardware uses.
-> +	 */
-> +	return !(map->bit & reg);
-> +}
-> +
-> +const struct reset_control_ops owl_reset_ops = {
-> +	.assert		= owl_reset_assert,
-> +	.deassert	= owl_reset_deassert,
-> +	.reset		= owl_reset_reset,
-> +	.status		= owl_reset_status,
-> +};
-> diff --git a/drivers/clk/actions/owl-reset.h b/drivers/clk/actions/owl-reset.h
-> new file mode 100644
-> index 000000000000..1a5e987ba99b
-> --- /dev/null
-> +++ b/drivers/clk/actions/owl-reset.h
-> @@ -0,0 +1,32 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +//
-> +// Actions Semi Owl SoCs Reset Management Unit driver
-> +//
-> +// Copyright (c) 2018 Linaro Ltd.
-> +// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +
-> +#ifndef _OWL_RESET_H_
-> +#define _OWL_RESET_H_
-> +
-> +#include <linux/reset-controller.h>
-> +#include <linux/spinlock.h>
-
-spinlock?
-
-> +
-> +struct owl_reset_map {
-> +	u16	reg;
-
-Note that this will be aligned to 32-bits. If the intention was to save
-space, consider storing an u8 bit index instead of the mask.
-
-> +	u32	bit;
-> +};
-> +
-> +struct owl_reset {
-> +	struct reset_controller_dev	rcdev;
-> +	struct owl_reset_map		*reset_map;
-
-Could this be
-	const struct owl_reset_map	*reset_map;
-?
-
-> +	struct regmap			*regmap;
-> +};
-> +
-> +static inline struct owl_reset *to_owl_reset(struct reset_controller_dev *rcdev)
-> +{
-> +	return container_of(rcdev, struct owl_reset, rcdev);
-> +}
-> +
-> +extern const struct reset_control_ops owl_reset_ops;
-> +
-> +#endif /* _OWL_RESET_H_ */
-
-regards
-Philipp
+--===============5443096280151960720==--
