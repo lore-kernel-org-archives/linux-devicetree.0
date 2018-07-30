@@ -1,41 +1,56 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 00/10] Tegra SDHCI update the pad autocal procedure
-Date: Mon, 30 Jul 2018 17:07:59 +0200
-Message-ID: <CAPDyKFo+nv+9qYV=J5k-63cDhQO=L==87RLMj_7BnjEjUf5iEQ@mail.gmail.com>
-References: <1532608016-14319-1-git-send-email-avienamo@nvidia.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 0/9] Add Reset Controller support for Actions Semi Owl
+ SoCs
+Date: Mon, 30 Jul 2018 20:41:31 +0530
+Message-ID: <20180730151131.GA28633@mani>
+References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
+ <c3ae668a-6bcc-a0eb-1e00-14ef9d607316@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532608016-14319-1-git-send-email-avienamo@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <c3ae668a-6bcc-a0eb-1e00-14ef9d607316@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: p.zabel@pengutronix.de, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 26 July 2018 at 14:26, Aapo Vienamo <avienamo@nvidia.com> wrote:
-> Hi all,
->
-> Update the tegra_sdhci_pad_autocalib() pad drive strength calibration
-> procedure to match the ones specified in the TRMs of the more recent
-> SoCs. This was tested on Tegra186, Tegra210, and Tegra124, although it
-> should not break things older generations either.
->
-> This series depends on the "Tegra SDHCI enable 1.8 V signaling on
-> Tegar210 and Tegra186" series posted earlier.
+Hi Andreas,
 
-According to the cover letter of the above series, it states that it
-depends on $subject series. A circular dependency. :-)
+On Mon, Jul 30, 2018 at 12:26:07PM +0200, Andreas Färber wrote:
+> Hi Mani,
+> 
+> Am 27.07.2018 um 20:45 schrieb Manivannan Sadhasivam:
+> > This patchset adds Reset Controller (RMU) support for Actions Semi
+> > Owl SoCs, S900 and S700. For the Owl SoCs, RMU has been integrated into
+> > the clock subsystem in hardware. Hence, in software we integrate RMU
+> > support into common clock driver inorder to maintain compatibility.
+> 
+> Can this not be placed into drivers/reset/ by using mfd-simple with a
+> sub-node in DT?
+> 
 
-In fact, there should be no dependency at all or else there seems to
-be a DT compatibility problem here...
+Actually I was not sure where to place this reset controller driver. When I
+looked into other similar ones such as sunxi, they just integrated into the
+clk subsystem. So I just chose that path. But yeah, this is hacky!
 
-Anyway, I think it actually makes sense to fold in all changes into
-one series. Make sure the dt-doc changes comes first, then the driver
-changes and finally arm64/dts changes. This should make it easy to
-follow the review and I can pick the mmc parts and the soc maintainer
-can pick the arm64/dts changes.
+But this RMU is not MFD by any means. Since the CMU (Clock) and RMU (Reset)
+are two separate IPs inside SoC, we shouldn't describe it as a MFD driver. Since
+RMU has only 2 registers, the HW designers decided to use up the CMU memory
+map. So, maybe syscon would be best option I think. What is your opinion?
 
-[...]
+Even if we go for syscon, we should place the reset driver within clk
+framework as I can see other SoCs like Mediatek are doing the same. But again
+I'm not sure!
 
-Kind regards
-Uffe
+Thanks,
+Mani
+
+> Regards,
+> Andreas
+> 
+> -- 
+> SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+> GF: Felix Imendörffer, Jane Smithard, Graham Norton
+> HRB 21284 (AG Nürnberg)
