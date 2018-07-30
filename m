@@ -1,49 +1,28 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 7/7] net: phy: Add pm support to Broadcom iProc mdio
- mux driver
-Date: Mon, 30 Jul 2018 15:53:06 -0700
-Message-ID: <8d732031-c5e8-d6ea-5b61-3b9baf79796f@gmail.com>
-References: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
- <1532726613-6483-8-git-send-email-arun.parameswaran@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-binding: pinctrl: Add NPCM7xx pinctrl and GPIO
+ documentation
+Date: Mon, 30 Jul 2018 17:08:09 -0600
+Message-ID: <20180730230809.GA20470@rob-hp-laptop>
+References: <20180730110406.132729-1-tmaimon77@gmail.com>
+ <20180730110406.132729-2-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532726613-6483-8-git-send-email-arun.parameswaran@broadcom.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180730110406.132729-2-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Parameswaran <arun.parameswaran@broadcom.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: linus.walleij@linaro.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/27/2018 02:23 PM, Arun Parameswaran wrote:
-> Add support for suspend and resume to the Broadcom iProc mdio
-> mux driver.
+On Mon, Jul 30, 2018 at 02:04:05PM +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM750/730/715/705 pinmux and GPIO controller.
 > 
-> Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > ---
->  drivers/net/phy/mdio-mux-bcm-iproc.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/net/phy/mdio-mux-bcm-iproc.c b/drivers/net/phy/mdio-mux-bcm-iproc.c
-> index 51d1003..d89dce0 100644
-> --- a/drivers/net/phy/mdio-mux-bcm-iproc.c
-> +++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
-> @@ -290,6 +290,33 @@ static int mdio_mux_iproc_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_PM_SLEEP
-> +static int mdio_mux_iproc_suspend(struct device *dev)
-> +{
-> +	struct iproc_mdiomux_desc *md = dev_get_drvdata(dev);
-> +
-> +	if (md->core_clk)
-> +		clk_disable_unprepare(md->core_clk);
+>  .../bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt   | 216 +++++++++++++++++++++
+>  1 file changed, 216 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
 
-Since you are assigning md->core_clk to NULL in case clk_get() returned
-an error, checking for md->core_clk is not necessary since the Linux
-common clock framework perform that NULL check already.
--- 
--- 
-Florian
+Reviewed-by: Rob Herring <robh@kernel.org>
