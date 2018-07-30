@@ -1,32 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 1/9] dt-bindings: soc: qcom: Add label for GLINK
- bindings
-Date: Mon, 30 Jul 2018 16:30:37 -0600
-Message-ID: <20180730223037.GA17877@rob-hp-laptop>
-References: <1532693849-7037-1-git-send-email-aneela@codeaurora.org>
- <1532693849-7037-2-git-send-email-aneela@codeaurora.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v7 11/12] hwmon: Add PECI dimmtemp driver
+Date: Mon, 30 Jul 2018 15:45:05 -0700
+Message-ID: <f3056c4d-1cc6-5fcd-f185-f6b0878e6326@linux.intel.com>
+References: <20180723214751.1733-1-jae.hyun.yoo@linux.intel.com>
+ <20180723214751.1733-12-jae.hyun.yoo@linux.intel.com>
+ <CAL_JsqK4k=c6k-BJT5fWQH_DCqGhr13fq6M_iZZehaveE-z5Hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1532693849-7037-2-git-send-email-aneela@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Kumar Neelakantam <aneela@codeaurora.org>
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org, arnaud.pouliquen@st.com, andy.gross@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqK4k=c6k-BJT5fWQH_DCqGhr13fq6M_iZZehaveE-z5Hg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Randy Dunlap <rdunlap@infradead.org>, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, fbarrat@linux.vnet.ibm.com, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Lee Jones <lee.jones@linaro.org>, Jason M Biils <jason.m.bills@linux.intel.com>, sandeen@redhat.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jonathan Corbet <corbet@lwn.net>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Joel Stanley <joel@jms.id.au>, bryantly@linux.vnet.ibm.com, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, david.kershner@unisys.com, Guenter Roeck <linux@roeck-us.net>, Wu Hao <hao.wu@intel.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Arnd Bergmann <arnd>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 27, 2018 at 05:47:21PM +0530, Arun Kumar Neelakantam wrote:
-> From: Chris Lew <clew@codeaurora.org>
-> 
-> There are GLINK clients who open the same channel on multiple GLINK
-> links. These clients need a way to distinguish which remoteproc they
-> are communicating to. Add a label property to identify the edge this
-> node represents.
-> 
-> Signed-off-by: Chris Lew <clew@codeaurora.org>
-> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+Hi Rob,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 7/30/2018 3:06 PM, Rob Herring wrote:
+> On Mon, Jul 23, 2018 at 3:49 PM Jae Hyun Yoo
+> <jae.hyun.yoo@linux.intel.com> wrote:
+>>
+>> This commit adds PECI dimmtemp hwmon driver.
+>>
+> 
+>> +#if IS_ENABLED(CONFIG_OF)
+>> +static const struct of_device_id peci_dimmtemp_of_table[] = {
+>> +       { .compatible = "intel,peci-dimmtemp" },
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, peci_dimmtemp_of_table);
+>> +#endif
+> 
+> This should be removed. Same for cpu temp driver I'm guessing.
+> 
+
+Yes, you are right. This isn't needed anymore because MFD driver
+loads this module. I'll remove this code from here and from cpu temp
+driver. Also, I'll remove 'of_compatible' setting of 'struct mfd_cell
+peci_functions' in intel-peci-client.c code.
+
+Thanks a lot for your pointing it out!
+
+Jae
+
+> Rob
+> 
