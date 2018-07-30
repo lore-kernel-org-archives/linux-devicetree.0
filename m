@@ -1,179 +1,99 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
- fsl,pmic-stby-poweroff property
-Date: Mon, 30 Jul 2018 10:03:29 +0200
-Message-ID: <02f4b642-14a8-f2db-ea23-c42a4f6f1652@pengutronix.de>
-References: <20180726092220.17250-1-o.rempel@pengutronix.de>
- <20180726092220.17250-2-o.rempel@pengutronix.de>
- <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
- <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
- <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
- <1532680211.32306.36.camel@pengutronix.de>
- <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="0ZXQ3BVq0ww7d6z67tFll8hPf7AVFeQ0a"
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 0/8] Add support for drm/rockchip to dynamically control the DDR frequency.
+Date: Mon, 30 Jul 2018 10:11:16 +0200
+Message-ID: <20180730081124.30698-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Heiko Stuebner <heiko@sntech.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, dri-devel@lists.freedesktop.org, Lin Huang <hl@rock-chips.com>, kernel@collabora.com, robin.murphy@arm.com, Sean Paul <seanpaul@chromium.org>, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Mark Yao <markyao0591@gmail.com>, Jacob Chen <jacob-chen@iotwrt.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Nickey Yang <nickey.yang@rock-chips.com>, devicetree@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, Randy Li <ayaka@soulik.info>, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---0ZXQ3BVq0ww7d6z67tFll8hPf7AVFeQ0a
-Content-Type: multipart/mixed; boundary="4qY4n4uWgIxPC5PJDnntgkyLxmMu2YwQx";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Robin Gong <yibin.gong@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- dl-linux-imx <linux-imx@nxp.com>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>,
- Russell King <linux@armlinux.org.uk>,
- Andrew Morton <akpm@linux-foundation.org>,
- Leonard Crestez <leonard.crestez@nxp.com>,
- "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Message-ID: <02f4b642-14a8-f2db-ea23-c42a4f6f1652@pengutronix.de>
-Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
- fsl,pmic-stby-poweroff property
-References: <20180726092220.17250-1-o.rempel@pengutronix.de>
- <20180726092220.17250-2-o.rempel@pengutronix.de>
- <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
- <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
- <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
- <1532680211.32306.36.camel@pengutronix.de>
- <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
-In-Reply-To: <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+Dear all,
 
---4qY4n4uWgIxPC5PJDnntgkyLxmMu2YwQx
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+The rk3399 platform has a DFI controller that can monitor DDR load and a
+DMC driver that talks with the TF-A (Trusted Firmware-A) to dynamically
+set the DDR frequency with following flow.
 
+             kernel                          Trusted Firmware-A
+                                                  (bl31)
+        monitor ddr load
+                |
+                |
+        get_target_rate
+                |
+                |           pass rate to TF-A
+        clk_set_rate(ddr) --------------------->run ddr dvs flow
+                                                    |
+                                                    |
+                 <------------------------------end ddr dvs flow
+                |
+                |
+              return
 
+These patches add support for devfreq to dynamically control the DDR
+frequency into the drm rockchip driver. By default it uses the
+'simple_ondemand' governor which can adjust the frequency based on the
+DDR load.
 
-On 27.07.2018 10:58, Robin Gong wrote:
->=20
->=20
->> -----Original Message-----
->> From: Lucas Stach [mailto:l.stach@pengutronix.de]
->> Sent: 2018=E5=B9=B47=E6=9C=8827=E6=97=A5 16:30
->> To: Robin Gong <yibin.gong@nxp.com>; Oleksij Rempel
->> <o.rempel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>; Mark
->> Brown <broonie@kernel.org>; Rafael J. Wysocki <rafael.j.wysocki@intel.=
-com>
->> Cc: Mark Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org;
->> Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
->> <sboyd@codeaurora.org>; linux-kernel@vger.kernel.org; Liam Girdwood
->> <lgirdwood@gmail.com>; Rob Herring <robh+dt@kernel.org>; dl-linux-imx
->> <linux-imx@nxp.com>; kernel@pengutronix.de; A.s. Dong
->> <aisheng.dong@nxp.com>; Fabio Estevam <fabio.estevam@nxp.com>; Russell=
+Waiting for your feedback.
 
->> King <linux@armlinux.org.uk>; Andrew Morton <akpm@linux-foundation.org=
->;
->> Leonard Crestez <leonard.crestez@nxp.com>; linux-clk@vger.kernel.org;
->> linux-arm-kernel@lists.infradead.org
->> Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
->> fsl,pmic-stby-poweroff property
->>
->> Hi Robin,
->>
->> Am Freitag, den 27.07.2018, 01:51 +0000 schrieb Robin Gong:
->> [...]
->>>>>> ---
->>>>>> =C2=A0Documentation/devicetree/bindings/clock/imx6q-clock.txt | 8
->>>>>> ++++++++
->>>>>> =C2=A01 file changed, 8 insertions(+)
->>>>>>
->>>>>> diff --git
->>>>>> a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->>>>>> b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->>>>>> index a45ca67a9d5f..e1308346e00d 100644
->>>>>> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->>>>>> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->>>>>> @@ -6,6 +6,14 @@ Required properties:
->>>>>> =C2=A0- interrupts: Should contain CCM interrupt
->>>>>> =C2=A0- #clock-cells: Should be <1>
->>>>>>
->>>>>> +Optional properties:
->>>>>> +- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ
->>>>>> +signal
->>>>>> +=C2=A0=C2=A0on power off.
->>>>>> +=C2=A0=C2=A0Use this property if the SoC should be powered off by=
+Best regards,
+ Enric
 
->>>>>> +external power
->>>>>> +=C2=A0=C2=A0management IC (PMIC) triggered via PMIC_STBY_REQ sign=
-al.
->>>>>
->>>>> PMIC_ON_REQ didn't connect to any pin of PMIC in your case?
->>>>
->>>> No. First, it was only one customer specific issue. After some
->>>> research I found even publicly available boards (for example
->>>> RioTboard) which has same/similar design. After seeing this in imx6
->>>> documentation as valid power off way, I have no doubts - there shoul=
-d be
->> even more devices doin this in the wild.
->>>
->>> Not sure why the customer didn't follow reference design, since
->>> PMIC_ON_REQ can provide power off/on feature by pressing ONOFF key
->>> which connected ONOFF pin of i.mx6(ONOFF will toggle PMIC_ON_REQ to
->>> power off/on PMIC). The official power off/on way (PMIC_ON_REQ) can
->>> also power off all power rails of PFUZE except snvs as your patch did=
+Changes in v1:
+- [RFC 1/10] Add Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+- [RFC 1/10] s/Generic/General/ (Robin Murphy)
+- [RFC 2/10] Add reviewed and acked tags from Chanwoo Choi and Rob Herring
+- [RFC 3/10] Add an explanation for platform SIP calls.
+- [RFC 3/10] Change if statement for a switch.
+- [RFC 3/10] Rename ddr_flag to odt_enable to be more clear.
+- [RFC 4/10] Removed from the series. I did not found a use case where not holding the mutex causes the issue.
+- [RFC 7/10] Removed from the series. I did not found a use case where this matters.
+- [RFC 8/10] Move rk3399-dram.h to dt-includes.
+- [RFC 8/10] Put sdram default values under the dmc node.
+- [RFC 8/10] Removed rk3399-dram-default-timing.dts
 
->>> on PMIC_STBY_REQ.=C2=A0=C2=A0PMIC_STBY_REQ is used to notify pmic swi=
-tch power
->>> mode (PFM/APS) or decrease voltage to save power in kernel suspend, n=
-ot
->> power off....I am not sure if we need this patchset to 'workaround' th=
-e board
->> issue.
->>>
->> Not all boards follow the reference design, that's a fact of life.
->>
->> Please look at the i.MX6Q reference manual. The sequence implemented i=
-n this
->> patchset can be found as a valid way to power off the system in
->> "60.4.3 Power mode transitions" "Normal ON to OFF with external PMIC",=
- so
->> there is hardly any way to argue that this is a board specific quirk. =
-This is one of
->> the Freescale/NXP recommended sequences to turn off the system.
+Derek Basehore (2):
+  devfreq: rk3399_dmc / clk: rockchip: Sync with vblank in the kernel
+    for DDRfreq.
+  devfreq: rk3399_dmc / clk: rockchip: Disable DDR clk timeout on
+    suspend.
 
-> Okay, but could you add one more comment for this solution? RTC alarm a=
-nd ONOFF
-> Button wakeup feature can't be support in this case.
+Enric Balletbo i Serra (3):
+  devfreq: rockchip-dfi: Move GRF definitions to a common place.
+  dt-bindings: devfreq: rk3399_dmc: Add rockchip,pmu phandle.
+  devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.
 
-Enough to add it in to changelog? or should it go to the binding
-documentation?
+Lin Huang (2):
+  arm64: dts: rk3399: Add dfi and dmc nodes.
+  arm64: dts: rockchip: Enable dmc and dfi nodes on gru.
 
+Sean Paul (1):
+  drm: rockchip: Add DDR devfreq support.
 
---4qY4n4uWgIxPC5PJDnntgkyLxmMu2YwQx--
+ .../bindings/devfreq/rk3399_dmc.txt           |   2 +
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi  |  21 ++
+ .../boot/dts/rockchip/rk3399-op1-opp.dtsi     |  29 +++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      |  51 ++++-
+ drivers/clk/rockchip/clk-ddr.c                | 157 +++++++++++--
+ drivers/clk/rockchip/clk.c                    |   2 +-
+ drivers/clk/rockchip/clk.h                    |   3 +-
+ drivers/devfreq/event/rockchip-dfi.c          |  23 +-
+ drivers/devfreq/rk3399_dmc.c                  | 209 +++++++++++++++---
+ drivers/devfreq/rk3399_dmc_priv.h             |  16 ++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c   |  46 ++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h   |   9 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c    |  35 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c   |  34 +++
+ include/dt-bindings/power/rk3399-dram.h       |  73 ++++++
+ include/soc/rockchip/rk3399_dmc.h             |  42 ++++
+ include/soc/rockchip/rk3399_grf.h             |  21 ++
+ include/soc/rockchip/rockchip_sip.h           |   1 +
+ 18 files changed, 704 insertions(+), 70 deletions(-)
+ create mode 100644 drivers/devfreq/rk3399_dmc_priv.h
+ create mode 100644 include/dt-bindings/power/rk3399-dram.h
+ create mode 100644 include/soc/rockchip/rk3399_dmc.h
+ create mode 100644 include/soc/rockchip/rk3399_grf.h
 
---0ZXQ3BVq0ww7d6z67tFll8hPf7AVFeQ0a
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltexlEACgkQdQOiSHVI
-77TWfAgAjRB1PciUy1OHomvrxni8EkaYEB80z17EC958utpp0mPJwNuFY56/8HFJ
-oCrfPZ7bn+/N0K5iCATabDyC4ylmjEGboht6je0eOXtoOqlWU/e+wMRp/yNSlRsw
-1/mQAHKWuVIlBopDYuIrNHxR9fYcmJCcOzGEb3u9vFeEJL9G8jda7IgG9ToeKTlm
-YW9F5TmlabqPZ57WLDK9AXzpW+3W1jm57VCUZesIkIyoNRYboKhPbvpS1UOr2NHi
-rZcwhrIG5CIMWnbxgWAlnNhhG2lF+w1D3wQdqURZns6RmNeDQUQ6OL0bIkLZYy+m
-U7/apbmR1x8qalt+rjgpuFFw9CcxoQ==
-=LKCD
------END PGP SIGNATURE-----
-
---0ZXQ3BVq0ww7d6z67tFll8hPf7AVFeQ0a--
+-- 
+2.18.0
