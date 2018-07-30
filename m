@@ -1,66 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
- i.MX7S SoCs.
-Date: Mon, 30 Jul 2018 16:22:07 -0600
-Message-ID: <20180730222207.GA28554@rob-hp-laptop>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-5-o.rempel@pengutronix.de>
- <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
+Subject: Re: [PATCH v4 08/34] media: dt-bindings: media: qcom,camss: Unify
+ the clock names
+Date: Mon, 30 Jul 2018 16:29:19 -0600
+Message-ID: <20180730222919.GA9313@rob-hp-laptop>
+References: <1532536723-19062-1-git-send-email-todor.tomov@linaro.org>
+ <1532536723-19062-9-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <1532536723-19062-9-git-send-email-todor.tomov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 03:25:15PM +0530, Jassi Brar wrote:
-> On Thu, Jul 26, 2018 at 12:23 PM, Oleksij Rempel
-> <o.rempel@pengutronix.de> wrote:
-> > This are currently tested SoCs with imx-mailbox driver.
-> >
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> > index 113d6ab931ef..5616d2afca45 100644
-> > --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> > +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> > @@ -18,7 +18,7 @@ Messaging Unit Device Node:
-> >  Required properties:
-> >  -------------------
-> >  - compatible : should be "fsl,<chip>-mu", the supported chips include
-> > -               imx8qxp, imx8qm.
-> > +               imx6sx, imx7s, imx8qxp, imx8qm.
-> >
-> This is not scalable. Do we add every new SoC that contains the same controller?
-> I think the controller name, if it has one or create a new one like
-> 'imx-mu',  should be used here.
-> So,
->     compatible : should be "fsl,imx-mu"
+On Wed, Jul 25, 2018 at 07:38:17PM +0300, Todor Tomov wrote:
+> Use more logical clock names - similar to the names in documentation.
+> This will allow better handling of the clocks in the driver when support
+> for more hardware versions is added - equivalent clocks on different
+> hardware versions will have the same name.
 
-No, for all the reasons already correctly explained in this thread.
+You should note that no dts is using this yet (at least that's what I 
+found).
 
-> BTW, the driver doesn't even probe anything other than
-> 'fsl,imx6sx-mu', unlike what the binding says.
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: devicetree@vger.kernel.org
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>  .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
 
-This aspect should be documented here though. The documentation should 
-clearly define what are valid combinations of compatibles.
+With that,
 
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
