@@ -1,49 +1,41 @@
-Return-Path: <SRS0=qjWz=KO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from unassigned.psychz.net ([104.216.146.23]:44712 "EHLO
-        umbrellabagger.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726623AbeG3Qwy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Jul 2018 12:52:54 -0400
-Subject: the photos you need editing
-Message-ID: <3503dbf3899f1fab94a8709142684b25@patioproductions.com>
-Date: Mon, 30 Jul 2018 15:18:57 +0200
-From: "Edward" <bostamacc@everythingturquoise.com>
-Reply-To: hustengs@sina.com
+Return-Path: <SRS0=hJ7p=KO=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+References: <20180727165333.60598-1-chris.brandt@renesas.com> <20180727165333.60598-2-chris.brandt@renesas.com>
+In-Reply-To: <20180727165333.60598-2-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 30 Jul 2018 10:08:21 +0200
+Message-ID: <CAMuHMdX4rwD-46u006EVy+3G0EhgJ0MtN=DzeOi0r29bu90F2A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] soc: renesas: identify RZ/A2
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-We are an image editing service provider having more than 10 years of
-industry experience.
-We use latest techniques for photo editing to meet international quality
-standards.
-We are committed to deliver reliable photo processing services.
+On Fri, Jul 27, 2018 at 6:53 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add support for identifying the RZ/A2M (R7S9210) SoC.
 
-Production of 1000+ images within single working day
++ correct the original RZ/A SoC family name to RZ/A1?
 
-24×7×365 photo editing services
+> Also add support for reading the BSID register which is a different format
+> than the PRR.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+> v2:
+> * Remove 'hard coded' section because there will not be andy non-DT
+>   legacy support needed
+> * Make displaying the chip revision more flexible for the future case
+>   when the revision number from the BSID will be displayed
 
-On-demand image editing to meet rush job requirements
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Service details:
-Images Masking
-Photo Clipping Path
-Photo Cutout
-Photo Enhancement
-Vector Conversion
-Photo Stitching Services
-Fashion Photo Editing
-Jewelry Retouching
-Footwear Photo Editing
-Furniture Photo Retouching
-Wedding Photo Editing
-Real Estate Photo Editing
-Photo Restoration
+Gr{oetje,eeting}s,
 
-We provide trials to evaluate our service quality to new clients.
+                        Geert
 
-Thanks,
-Edward
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
