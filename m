@@ -1,157 +1,47 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Mon, 30 Jul 2018 08:29:37 +0000
-Message-ID: <AM0PR04MB4211FAC90C7B0BC288154273802F0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
- <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
- <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
- <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
- <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/2] spi: add SPI controller driver for UniPhier SoC
+Date: Mon, 30 Jul 2018 11:39:07 +0300
+Message-ID: <CAHp75VdrpOkonozNRUCzchsNHbgV=djecVDr0-fRiYAa4iDE0A@mail.gmail.com>
+References: <1532588943-19481-1-git-send-email-hayashibara.keiji@socionext.com>
+ <1532588943-19481-3-git-send-email-hayashibara.keiji@socionext.com>
+ <CAHp75VcEdxDEo0T5_9BzOPaeaqjbmbrWmaE9+ZuUDYhjh6jpVw@mail.gmail.com>
+ <1532624495.2283.197.camel@impinj.com> <002901d427c6$6b9a4ff0$42ceefd0$@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>, ", Sascha Hauer" <kernel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <002901d427c6$6b9a4ff0$42ceefd0$@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Cc: Trent Piepho <tpiepho@impinj.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, =?UTF-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko@socionext.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, =?UTF-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
-> Sent: Saturday, July 28, 2018 9:10 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
-> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; , Sascha Hauer
-> <kernel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>; Fabio
-> Estevam <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>;
-> Mark Rutland <mark.rutland@arm.com>; Vladimir Zapolskiy
-> <vladimir_zapolskiy@mentor.com>; , linux-arm-kernel@lists.infradead.org,
-> linux-mediatek@lists.infradead.org, srv_heupstream <linux-arm-
-> kernel@lists.infradead.org>; Devicetree List <devicetree@vger.kernel.org>;
-> dl-linux-imx <linux-imx@nxp.com>
-> Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
-> channel support
-> 
+On Mon, Jul 30, 2018 at 8:30 AM, Keiji Hayashibara
+<hayashibara.keiji@socionext.com> wrote:
+> Hello Trent and Andy,
 
-[...]
+>> > > +       ckrat = roundup(ckrat, 2);
+>> >
+>> > ckrat += ckrat & 1;
+>>
+>> Either way, the compiler produces the same code:
+>>
+>>  add r0, r0, #1
+>>  bic r0, r0, #1
+>>
+>> I.e., ckrat = (ckrat + 1) & ~1, one "add" and one "and".
+>>
+>> Might as well use the macro so it's clear. There is also round_up(x,y), which I believe is intended to be used
+>> only with power of 2 values of y.
+>
+> I confirmed round_up() macro.
+> This macro is optimized to power of 2 argument,
+> and it matches to this case and clear.
+>
+> I will replace to round_up() macro.
 
-> >> >
-> >> > Sorry for may not clear, "Passing short message' usecase is to tell
-> >> > how the HW is working on one channel mode sending up to 4 words in
-> >> > one time As specified in reference manual.
-> >> >
-> >> > SCU does work that way, the only difference is it's using polling
-> >> > mode rather than interrupt driven.  The point is the data size may
-> >> > be different for each msg, so we can't simply know which data
-> >> > register interrupt should be enable from static data defined in device
-> tree.
-> >> >
-> >> And you think passing variable data through registers is a better
-> >> idea than passing packets via shared-memory?
-> >>
-> >
-> > You got me. :-)
-> > I've no idea about which one is better.
-> >
-> Passing data directly via controller makes sense only when your protocol
-> defines fixed length packets that fit into registers (usually
-> FIFOs) or there is no shared memory between the processors.
+Good!
 
-Don't have to be fixed length packets. Every data packets less than 4 words
-can be transferred in one time by controller perfectly well as it has 4 data registers.
-No shared memory need.
 
-> Otherwise, you write a data packet at some located in shmem, and provide
-> its start and size along with the code of expected operation on it, over the
-> mailbox. Please refer to "Passing frame information"
-> para of page-2743 of your manual.
-> That is another reason the SCU implementation is broken - it has variable
-> length packets and yet use registers to pass them around.
-> 
-
-" Passing frame information" is used for long message transfer via shared memory.
-But almost all the SCU data frames are less than 4 words. (only quite a few of them,
-2~3, over 4 words) For these types of messages, it's obviously more efficient to transfer
-them in "Passing short message' way as the MU hardware supports well.
-
-So I believe our SCU firmware has already done the best choice in a most efficient
-way (register write is obviously faster than memory copies). Thus, no shared memory
-need to be used for SCU protocol case.
-
-> 
-> > The problem is SCU firmware is already there passing packets through
-> > data registers, we have no way to change it.
-> >
-> OK. But what is SCU exactly? Part of ATF? Do you get some binary from third
-> party? If the last, you shouldn't be paying hsit for such a design.
-> 
-
-The System Controller Firmware (SCFW) is a low-level system function
-which runs on a dedicated Cortex-M core to provide power, clock, and
-resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
-(QM, QP), and i.MX8QX (QXP, DX). 
-
-It's developed by NXP internally.
-
-> 
-> >>
-> >> The hardware has 8 unidirectional channels. But your protocol (SCU
-> >> implementation) assumes there is one _virtual_ channel that has 4
-> >> registers and 1/0 irq --- which is not true. Instead of fixing the
-> >> assumption in your protocol or emulating the virtual channel in the
-> >> protocol level (user of a MU), you want to add code in the controller
-> >> driver that ignores interrupts and club the 4 independent channels
-> together.
-> >>
-> >
-> > This stucks me. This is how the hardware is designed  and suggested to
-> > use in hardware reference manual. And now you're telling me this is
-> > wrong and we should not use the design in reference manual...
-> >
-> What you call "suggested to use in hardware reference manual" is just
-> 1/5 examples of usecase.
-> And SCU is not even doing that correctly (it uses variable length packet,
-> unlike the fixed 4-words suggestion).
-
-SCU is doing well. Please see my above reply.
-
-> 
-> A manual can suggest multiple ways of implementing a usecase. It is our job
-> to chose the best one.
-
-Well, great. That is also our orientation.
-Because we thought the way " Passing short message " is the most suitable way for
-SCU and is the most efficient way as the most SCU Messages are less than 4 words
-and MU hardware supports transfer them well. We could not think out a reason to
-not use it. That's why we choose that.
-
-A simple objection that it uses variable length packet seems not quite convincible.
-Unless we have more convincible reasons...
-
-How do you think?
-
-For example, what's the real benefits we can get if we drop the HW capability of
-"passing Short messages" for SCU in one channel way and use separate 8 Tx/Rx channel
-Instead to send them each time? What about the Performance downgrading? 
-Is it valuable comparing to the complexity introduced?
-
-Regards
-Dong Aisheng
+-- 
+With Best Regards,
+Andy Shevchenko
