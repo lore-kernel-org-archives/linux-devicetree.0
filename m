@@ -1,28 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-binding: pinctrl: Add NPCM7xx pinctrl and GPIO
- documentation
-Date: Mon, 30 Jul 2018 17:08:09 -0600
-Message-ID: <20180730230809.GA20470@rob-hp-laptop>
-References: <20180730110406.132729-1-tmaimon77@gmail.com>
- <20180730110406.132729-2-tmaimon77@gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: dmaengine: Add binding for Actions
+ Semi Owl SoCs
+Date: Mon, 30 Jul 2018 17:10:37 -0600
+Message-ID: <20180730231037.GA2265@rob-hp-laptop>
+References: <20180726050658.1399-1-manivannan.sadhasivam@linaro.org>
+ <20180726050658.1399-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180730110406.132729-2-tmaimon77@gmail.com>
+In-Reply-To: <20180726050658.1399-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: vkoul@kernel.org, dan.j.williams@intel.com, afaerber@suse.de, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2018 at 02:04:05PM +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM750/730/715/705 pinmux and GPIO controller.
+On Thu, Jul 26, 2018 at 10:36:55AM +0530, Manivannan Sadhasivam wrote:
+> Add devicetree binding for Actions Semi Owl SoCs DMA controller.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  .../bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt   | 216 +++++++++++++++++++++
->  1 file changed, 216 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt
+>  .../devicetree/bindings/dma/owl-dma.txt       | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/owl-dma.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
