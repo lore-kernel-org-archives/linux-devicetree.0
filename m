@@ -1,34 +1,63 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v6 2/4] Bluetooth: Add new quirk for non-persistent setup
- settings
-Date: Mon, 30 Jul 2018 14:01:31 +0200
-Message-ID: <A25EEA4C-6A6D-4189-B259-2ABB8A4D1A59@holtmann.org>
-References: <cover.1532060309.git.sean.wang@mediatek.com>
- <d20e070679bb40bff011f5a74f531e1b662d08a5.1532060309.git.sean.wang@mediatek.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: [PATCH net-next 01/10] MIPS: mscc: ocelot: make HSIO registers address range a syscon
+Date: Mon, 30 Jul 2018 14:43:46 +0200
+Message-ID: <c250b2591a70bd8b31eef56d82cf5f5ccb47cc22.1532954208.git-series.quentin.schulz@bootlin.com>
+References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d20e070679bb40bff011f5a74f531e1b662d08a5.1532060309.git.sean.wang@mediatek.com>
+In-Reply-To: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
+In-Reply-To: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
+References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net
+Cc: kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+HSIO contains registers for PLL5 configuration, SerDes/switch port
+muxing and a thermal sensor, hence we can't keep it in the switch DT
+node.
 
-> Add a new quirk HCI_QUIRK_NON_PERSISTENT_SETUP allowing that a quirk that
-> runs setup() after every open() and not just after the first open().
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
-> include/net/bluetooth/hci.h | 9 +++++++++
-> net/bluetooth/hci_core.c    | 3 ++-
-> 2 files changed, 11 insertions(+), 1 deletion(-)
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+---
+ arch/mips/boot/dts/mscc/ocelot.dtsi | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-patch has been applied to bluetooth-next tree.
-
-Regards
-
-Marcel
+diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
+index afe8fc9..c51663a 100644
+--- a/arch/mips/boot/dts/mscc/ocelot.dtsi
++++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+@@ -96,7 +96,6 @@
+ 			reg = <0x1010000 0x10000>,
+ 			      <0x1030000 0x10000>,
+ 			      <0x1080000 0x100>,
+-			      <0x10d0000 0x10000>,
+ 			      <0x11e0000 0x100>,
+ 			      <0x11f0000 0x100>,
+ 			      <0x1200000 0x100>,
+@@ -110,10 +109,10 @@
+ 			      <0x1280000 0x100>,
+ 			      <0x1800000 0x80000>,
+ 			      <0x1880000 0x10000>;
+-			reg-names = "sys", "rew", "qs", "hsio", "port0",
+-				    "port1", "port2", "port3", "port4", "port5",
+-				    "port6", "port7", "port8", "port9", "port10",
+-				    "qsys", "ana";
++			reg-names = "sys", "rew", "qs", "port0", "port1",
++				    "port2", "port3", "port4", "port5", "port6",
++				    "port7", "port8", "port9", "port10", "qsys",
++				    "ana";
+ 			interrupts = <21 22>;
+ 			interrupt-names = "xtr", "inj";
+ 
+@@ -220,5 +219,10 @@
+ 			pinctrl-0 = <&miim1>;
+ 			status = "disabled";
+ 		};
++
++		hsio: syscon@10d0000 {
++			compatible = "mscc,ocelot-hsio", "syscon", "simple-mfd";
++			reg = <0x10d0000 0x10000>;
++		};
+ 	};
+ };
+-- 
+git-series 0.9.1
