@@ -1,81 +1,52 @@
-Return-Path: <SRS0=8Sio=KO=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 2/4] serial: sh-sci: Allow for compressed SCIF address
-Date: Mon, 30 Jul 2018 08:17:14 -0500
-Message-Id: <20180730131716.75484-3-chris.brandt@renesas.com>
-In-Reply-To: <20180730131716.75484-1-chris.brandt@renesas.com>
-References: <20180730131716.75484-1-chris.brandt@renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=8Sio=KO=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/4] serial: sh-sci: Allow for compressed SCIF address
+Date: Mon, 30 Jul 2018 12:17:50 +0000
+Message-ID: 
+ <TY1PR01MB15620483AFDBF8CD8944D5978A2F0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20180727210916.66642-1-chris.brandt@renesas.com>
+ <20180727210916.66642-3-chris.brandt@renesas.com>
+ <CAMuHMdXgeo1rHmXEifXHFQbt=EL=iizeVLWjoMi_=tXPwNj3xw@mail.gmail.com>
+ <CAMuHMdXPecFC=gA2oJpq0sf0+NbBSkDOs0ncGOx9sJXOyonY2A@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdXPecFC=gA2oJpq0sf0+NbBSkDOs0ncGOx9sJXOyonY2A@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Rob Landley <rob@landley.net>
 List-ID: <devicetree@vger.kernel.org>
 
-Some devices with SCIx_SH4_SCIF_REGTYPE have no space between registers.
-Use the register area size to determine the spacing between register.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
-* adjust for case of SCIx_PROBE_REGTYPE
----
- drivers/tty/serial/sh-sci.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 6ff6f2bf3b9b..c29244f76057 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -348,15 +348,15 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 	[SCIx_SH4_SCIF_REGTYPE] = {
- 		.regs = {
- 			[SCSMR]		= { 0x00, 16 },
--			[SCBRR]		= { 0x04,  8 },
--			[SCSCR]		= { 0x08, 16 },
--			[SCxTDR]	= { 0x0c,  8 },
--			[SCxSR]		= { 0x10, 16 },
--			[SCxRDR]	= { 0x14,  8 },
--			[SCFCR]		= { 0x18, 16 },
--			[SCFDR]		= { 0x1c, 16 },
--			[SCSPTR]	= { 0x20, 16 },
--			[SCLSR]		= { 0x24, 16 },
-+			[SCBRR]		= { 0x02,  8 },
-+			[SCSCR]		= { 0x04, 16 },
-+			[SCxTDR]	= { 0x06,  8 },
-+			[SCxSR]		= { 0x08, 16 },
-+			[SCxRDR]	= { 0x0a,  8 },
-+			[SCFCR]		= { 0x0c, 16 },
-+			[SCFDR]		= { 0x0e, 16 },
-+			[SCSPTR]	= { 0x10, 16 },
-+			[SCLSR]		= { 0x12, 16 },
- 		},
- 		.fifosize = 16,
- 		.overrun_reg = SCLSR,
-@@ -2848,7 +2848,7 @@ static int sci_init_single(struct platform_device *dev,
- {
- 	struct uart_port *port = &sci_port->port;
- 	const struct resource *res;
--	unsigned int i;
-+	unsigned int i, regtype;
- 	int ret;
- 
- 	sci_port->cfg	= p;
-@@ -2885,6 +2885,7 @@ static int sci_init_single(struct platform_device *dev,
- 	if (unlikely(sci_port->params == NULL))
- 		return -EINVAL;
- 
-+	regtype = sci_port->params - sci_port_params;
- 	switch (p->type) {
- 	case PORT_SCIFB:
- 		sci_port->rx_trigger = 48;
-@@ -2939,6 +2940,10 @@ static int sci_init_single(struct platform_device *dev,
- 			port->regshift = 1;
- 	}
- 
-+	if (regtype == SCIx_SH4_SCIF_REGTYPE)
-+		if (sci_port->reg_size >= 0x20)
-+			port->regshift = 1;
-+
- 	/*
- 	 * The UART port needs an IRQ value, so we peg this to the RX IRQ
- 	 * for the multi-IRQ ports, which is where we are primarily
--- 
-2.16.1
+SGkgR2VlcnQsDQoNCk9uIFN1bmRheSwgSnVseSAyOSwgMjAxOCwgR2VlcnQgVXl0dGVyaG9ldmVu
+IHdyb3RlOg0KPiBJJ3ZlIGFjY2lkZW50YWxseSBkaXNjb3ZlcmVkIHRoaXMgYnJlYWtzIFNDSUYg
+b24gU0g3NzUxUjJEIChRRU1VKSwgYXMgdGhlDQo+IGJvYXJkIGNvZGUgZG9lc24ndCBmaWxsIGlu
+IHJlZ3R5cGUsIHNvIGl0IGlzIDAgPSBTQ0l4X1BST0JFX1JFR1RZUEUuDQoNCk9oIHRoYXQgcGVz
+a3kgU0g3NzUxISENCg0KDQpPbiBNb25kYXksIEp1bHkgMzAsIDIwMTgsIEdlZXJ0IFV5dHRlcmhv
+ZXZlbiB3cm90ZToNCj4gPiBJIG1hZGUgaXQgd29yayBieSBjaGFuZ2luZyB0aGUgY2hlY2sgdG86
+DQo+ID4NCj4gPiAtICAgICAgIGlmIChwLT5yZWd0eXBlID09IFNDSXhfU0g0X1NDSUZfUkVHVFlQ
+RSkNCj4gPiArICAgICAgIGlmIChwLT5yZWd0eXBlID09IFNDSXhfU0g0X1NDSUZfUkVHVFlQRSB8
+fA0KPiA+ICsgICAgICAgICAgIChwLT5yZWd0eXBlID09IFNDSXhfUFJPQkVfUkVHVFlQRSAmJiBw
+b3J0LT50eXBlID09DQo+IFBPUlRfU0NJRikpDQo+ID4NCj4gPiBQZXJoYXBzIHRoZXJlJ3MgYSBi
+ZXR0ZXIgd2F5Pw0KPiANCj4gTGlrZSAod2hpdGVzcGFjZS1kYW1hZ2VkLWdtYWlsKToNCj4gDQo+
+IC0tLSBhL2RyaXZlcnMvdHR5L3NlcmlhbC9zaC1zY2kuYw0KPiArKysgYi9kcml2ZXJzL3R0eS9z
+ZXJpYWwvc2gtc2NpLmMNCj4gQEAgLTMzNDAsNyArMzM0MCw3IEBAIHN0YXRpYyBpbnQgc2NpX2lu
+aXRfc2luZ2xlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKmRldiwNCj4gIHsNCj4gICAgICAg
+ICBzdHJ1Y3QgdWFydF9wb3J0ICpwb3J0ID0gJnNjaV9wb3J0LT5wb3J0Ow0KPiAgICAgICAgIGNv
+bnN0IHN0cnVjdCByZXNvdXJjZSAqcmVzOw0KPiAtICAgICAgIHVuc2lnbmVkIGludCBpOw0KPiAr
+ICAgICAgIHVuc2lnbmVkIGludCBpLCByZWd0eXBlOw0KPiAgICAgICAgIGludCByZXQ7DQo+IA0K
+PiAgICAgICAgIHNjaV9wb3J0LT5jZmcgICA9IHA7DQo+IEBAIC0zMzgxLDYgKzMzODEsNyBAQCBz
+dGF0aWMgaW50IHNjaV9pbml0X3NpbmdsZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpkZXYs
+DQo+ICAgICAgICAgaWYgKHVubGlrZWx5KHNjaV9wb3J0LT5wYXJhbXMgPT0gTlVMTCkpDQo+ICAg
+ICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gDQo+ICsgICAgICAgcmVndHlwZSA9IHNj
+aV9wb3J0LT5wYXJhbXMgLSBzY2lfcG9ydF9wYXJhbXM7DQo+ICAgICAgICAgc3dpdGNoIChwLT50
+eXBlKSB7DQo+ICAgICAgICAgY2FzZSBQT1JUX1NDSUZCOg0KPiAgICAgICAgICAgICAgICAgc2Np
+X3BvcnQtPnJ4X3RyaWdnZXIgPSA0ODsNCj4gQEAgLTM0MzUsNyArMzQzNiw3IEBAIHN0YXRpYyBp
+bnQgc2NpX2luaXRfc2luZ2xlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKmRldiwNCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgcG9ydC0+cmVnc2hpZnQgPSAxOw0KPiAgICAgICAgIH0NCj4g
+DQo+IC0gICAgICAgaWYgKHAtPnJlZ3R5cGUgPT0gU0NJeF9TSDRfU0NJRl9SRUdUWVBFKQ0KPiAr
+ICAgICAgIGlmIChyZWd0eXBlID09IFNDSXhfU0g0X1NDSUZfUkVHVFlQRSkNCj4gICAgICAgICAg
+ICAgICAgIGlmIChzY2lfcG9ydC0+cmVnX3NpemUgPj0gMHgyMCkNCj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgcG9ydC0+cmVnc2hpZnQgPSAxOw0KDQpUaGF0J3MgY2xldmVyLg0KDQpJZiBpdCB3
+b3JrZWQgZm9yIFNINzc1MSwgSSdsbCBnbyB0ZXN0IGl0IG9uIFJaL0EyIGFzIHdlbGwgYW5kIHJl
+c3VibWl0IA0KdGhlIHBhdGNoLg0KDQoNCkNocmlzDQoNCg==
