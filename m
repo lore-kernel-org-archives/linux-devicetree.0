@@ -1,33 +1,43 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
-        coherent DMA mask)
-Date: Mon, 30 Jul 2018 11:23:06 +0200
-Message-ID: <20180730092306.GA18701@lst.de>
-References: <CAJKOXPeaguNxRr7pCArJ5Db4tS6Kr5BDheCxskY+vd0dUN+0GQ@mail.gmail.com> <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com> <20180727140448.GA29001@lst.de> <20180728165820.GA5731@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v4 0/4] Add support for audio on SDM845 SoC
+Date: Mon, 30 Jul 2018 15:40:50 +0530
+Message-ID: <1532945454-10437-1-git-send-email-rohitkr@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180728165820.GA5731@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Christoph Hellwig <hch@lst.de>, Krzysztof Kozlowski <krzk@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Fugang Duan <fugang.duan@nxp.com>
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rohit kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 28, 2018 at 09:58:20AM -0700, Guenter Roeck wrote:
-> I would call it a serious regression. Also, no longer setting a default
-> coherent DMA mask is a quite substantial behavioral change, especially
-> if and since the code worked just fine up to now.
-> 
-> Crash when booting sam460ex attached below, as is a bisect log.
+This provides initial patchset to support audio on
+Qualcomm Techonologies Inc. SDM845 SoC. Currently, it supports
+audio playback/capture over Primary MI2S and Quaternary
+TDM ports.
 
-Things should be ok again with:
+Changes since v3:
+- Added Module_license in common.c
+- Merged apq8096.c machine driver change with common api patch
+- Addressed comments by Srinivas, Mark and Vinod.
 
-commit a5516219b10218a87abb3352c82248ce3088e94a
-Author: Robin Murphy <robin.murphy@arm.com>
-Date:   Fri Jul 27 15:14:15 2018 +0100
+Rohit kumar (4):
+  ASoC: qcom: dt-bindings: Add sdm845 machine bindings
+  ASoC: dt-bindings: Update dt binding name for apq8096
+  ASoC: qcom: Add support to parse common audio device nodes
+  ASoC: qcom: add sdm845 sound card support
 
-    of/platform: Initialise default DMA masks
+ .../devicetree/bindings/sound/qcom,apq8096.txt     |  15 +-
+ .../devicetree/bindings/sound/qcom,sdm845.txt      |  80 ++++++
+ sound/soc/qcom/Kconfig                             |   8 +
+ sound/soc/qcom/Makefile                            |   4 +-
+ sound/soc/qcom/apq8096.c                           | 111 +-------
+ sound/soc/qcom/common.c                            | 112 ++++++++
+ sound/soc/qcom/common.h                            |  12 +
+ sound/soc/qcom/sdm845.c                            | 286 +++++++++++++++++++++
+ 8 files changed, 525 insertions(+), 103 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+ create mode 100644 sound/soc/qcom/common.c
+ create mode 100644 sound/soc/qcom/common.h
+ create mode 100644 sound/soc/qcom/sdm845.c
 
-from the lastest dma-mapping tree as of Friday.  It isn't in the
-latest linux-next tree yet but be in the next one.
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
