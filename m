@@ -1,48 +1,49 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v6 1/3] dt-bindings: Input: Add additional property to qcom pwrkey
-Date: Tue, 31 Jul 2018 10:18:05 +0530
-Message-Id: <20180731044807.16878-2-vkoul@kernel.org>
-In-Reply-To: <20180731044807.16878-1-vkoul@kernel.org>
-References: <20180731044807.16878-1-vkoul@kernel.org>
-To: linux-input@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=8Sio=KO=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 1/4] serial: sh-sci: Improve interrupts description
+Date: Mon, 30 Jul 2018 08:17:13 -0500
+Message-Id: <20180730131716.75484-2-chris.brandt@renesas.com>
+In-Reply-To: <20180730131716.75484-1-chris.brandt@renesas.com>
+References: <20180730131716.75484-1-chris.brandt@renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Pwrkey and reset have similar properties so add additional
-property for linux,code to use the code for sending events.
+Describe interrupts property in more detail, especially when there are
+more than one interrupt.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../devicetree/bindings/serial/renesas,sci-serial.txt    | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-index 07bf55f6e0b9..bf719396eadd 100644
---- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-+++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
-@@ -32,6 +32,14 @@ PROPERTIES
- 	Definition: presence of this property indicates that the KPDPWR_N pin
- 		    should be configured for pull up.
+diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+index a7cda6550100..eaca9da79d83 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
++++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+@@ -73,7 +73,21 @@ Required properties:
+     family-specific and/or generic versions.
  
-+- linux,code:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: The input key-code associated with the power key.
-+		    Use the linux event codes defined in
-+		    include/dt-bindings/input/linux-event-codes.h
-+		    When property is omitted KEY_POWER is assumed.
+   - reg: Base address and length of the I/O registers used by the UART.
+-  - interrupts: Must contain an interrupt-specifier for the SCIx interrupt.
++  - interrupts: Must contain one or more interrupt-specifiers for the SCIx.
++                If a single interrupt is expressed, then all events are
++                multiplexed into this single interrupt.
 +
- EXAMPLE
++                If multiple interrupts are provided by the hardware, the order
++                in which the interrupts are listed must match order below. Note
++                that some HW interrupt events may be muxed together resulting
++                in duplicate entries.
++                The interrupt order is as follows:
++                  1. Error (ERI)
++                  2. Receive buffer full (RXI)
++                  3. Transmit buffer empty (TXI)
++                  4. Break (BRI)
++                  5. Data Ready (DRI)
++                  6. Transmit End (TEI)
  
- 	pwrkey@800 {
-@@ -40,4 +48,5 @@ EXAMPLE
- 		interrupts = <0x0 0x8 0 IRQ_TYPE_EDGE_BOTH>;
- 		debounce = <15625>;
- 		bias-pull-up;
-+		linux,code = <KEY_POWER>;
- 	};
+   - clocks: Must contain a phandle and clock-specifier pair for each entry
+     in clock-names.
 -- 
-2.14.4
+2.16.1
