@@ -1,147 +1,179 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v8 6/6] ARM: dts: imx6: RIoTboard provide standby on power
- off option
-Date: Mon, 30 Jul 2018 09:58:32 +0200
-Message-ID: <afe757dd-d2e7-8bf5-dca0-17a69a36f7c3@pengutronix.de>
+Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic-stby-poweroff property
+Date: Mon, 30 Jul 2018 10:03:29 +0200
+Message-ID: <02f4b642-14a8-f2db-ea23-c42a4f6f1652@pengutronix.de>
 References: <20180726092220.17250-1-o.rempel@pengutronix.de>
- <20180726092220.17250-7-o.rempel@pengutronix.de>
- <DB6PR04MB3223FA7B91D0D43B2EC1EE2A892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <20180726092220.17250-2-o.rempel@pengutronix.de>
+ <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
+ <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <1532680211.32306.36.camel@pengutronix.de>
+ <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="oq7IsxD5Auoq9GcQyZN7sqUBRb5b0N5Rv"
+ boundary="0ZXQ3BVq0ww7d6z67tFll8hPf7AVFeQ0a"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB6PR04MB3223FA7B91D0D43B2EC1EE2A892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
+To: Robin Gong <yibin.gong@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---oq7IsxD5Auoq9GcQyZN7sqUBRb5b0N5Rv
-Content-Type: multipart/mixed; boundary="FoqGdnG7QHr6d0qatIxZUo8asSinzFik1";
+--0ZXQ3BVq0ww7d6z67tFll8hPf7AVFeQ0a
+Content-Type: multipart/mixed; boundary="4qY4n4uWgIxPC5PJDnntgkyLxmMu2YwQx";
  protected-headers="v1"
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Mark Brown <broonie@kernel.org>,
+To: Robin Gong <yibin.gong@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>,
  "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>,
+Cc: Mark Rutland <mark.rutland@arm.com>,
  "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
  Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
- Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>,
- "A.s. Dong" <aisheng.dong@nxp.com>
-Message-ID: <afe757dd-d2e7-8bf5-dca0-17a69a36f7c3@pengutronix.de>
-Subject: Re: [PATCH v8 6/6] ARM: dts: imx6: RIoTboard provide standby on power
- off option
+ Stephen Boyd <sboyd@codeaurora.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ dl-linux-imx <linux-imx@nxp.com>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Leonard Crestez <leonard.crestez@nxp.com>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Message-ID: <02f4b642-14a8-f2db-ea23-c42a4f6f1652@pengutronix.de>
+Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic-stby-poweroff property
 References: <20180726092220.17250-1-o.rempel@pengutronix.de>
- <20180726092220.17250-7-o.rempel@pengutronix.de>
- <DB6PR04MB3223FA7B91D0D43B2EC1EE2A892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
-In-Reply-To: <DB6PR04MB3223FA7B91D0D43B2EC1EE2A892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <20180726092220.17250-2-o.rempel@pengutronix.de>
+ <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
+ <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+ <1532680211.32306.36.camel@pengutronix.de>
+ <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 
---FoqGdnG7QHr6d0qatIxZUo8asSinzFik1
-Content-Type: text/plain; charset=gbk
+--4qY4n4uWgIxPC5PJDnntgkyLxmMu2YwQx
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
 
 
-On 27.07.2018 11:33, Robin Gong wrote:
+On 27.07.2018 10:58, Robin Gong wrote:
 >=20
 >=20
 >> -----Original Message-----
->> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
->> Sent: 2018=C4=EA7=D4=C226=C8=D5 17:22
->> To: Shawn Guo <shawnguo@kernel.org>; Mark Brown <broonie@kernel.org>;
->> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
->> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->> linux-clk@vger.kernel.org; linux-kernel@vger.kernel.org; Andrew Morton=
+>> From: Lucas Stach [mailto:l.stach@pengutronix.de]
+>> Sent: 2018=E5=B9=B47=E6=9C=8827=E6=97=A5 16:30
+>> To: Robin Gong <yibin.gong@nxp.com>; Oleksij Rempel
+>> <o.rempel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>; Mark
+>> Brown <broonie@kernel.org>; Rafael J. Wysocki <rafael.j.wysocki@intel.=
+com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org;
+>> Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
+>> <sboyd@codeaurora.org>; linux-kernel@vger.kernel.org; Liam Girdwood
+>> <lgirdwood@gmail.com>; Rob Herring <robh+dt@kernel.org>; dl-linux-imx
+>> <linux-imx@nxp.com>; kernel@pengutronix.de; A.s. Dong
+>> <aisheng.dong@nxp.com>; Fabio Estevam <fabio.estevam@nxp.com>; Russell=
 
->> <akpm@linux-foundation.org>; Liam Girdwood <lgirdwood@gmail.com>;
->> Leonard Crestez <leonard.crestez@nxp.com>; Rob Herring
->> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Michael
->> Turquette <mturquette@baylibre.com>; Stephen Boyd
->> <sboyd@codeaurora.org>; Fabio Estevam <fabio.estevam@nxp.com>; Russell=
-
->> King <linux@armlinux.org.uk>; dl-linux-imx <linux-imx@nxp.com>; Robin =
-Gong
->> <yibin.gong@nxp.com>; A.s. Dong <aisheng.dong@nxp.com>
->> Subject: [PATCH v8 6/6] ARM: dts: imx6: RIoTboard provide standby on p=
-ower
->> off option
+>> King <linux@armlinux.org.uk>; Andrew Morton <akpm@linux-foundation.org=
+>;
+>> Leonard Crestez <leonard.crestez@nxp.com>; linux-clk@vger.kernel.org;
+>> linux-arm-kernel@lists.infradead.org
+>> Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
+>> fsl,pmic-stby-poweroff property
 >>
->> This board, as well as some other boards with i.MX6 and a PMIC, uses a=
-
->> "PMIC_STBY_REQ" line to notify the PMIC about a state change.
->> The PMIC is programmed for a specific state change before triggering t=
-he line.
->> In this case, PMIC_STBY_REQ can be used for stand by, sleep and power =
-off
->> modes.
+>> Hi Robin,
 >>
->> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->> ---
->>  arch/arm/boot/dts/imx6dl-riotboard.dts | 5 +++++
->>  1 file changed, 5 insertions(+)
+>> Am Freitag, den 27.07.2018, 01:51 +0000 schrieb Robin Gong:
+>> [...]
+>>>>>> ---
+>>>>>> =C2=A0Documentation/devicetree/bindings/clock/imx6q-clock.txt | 8
+>>>>>> ++++++++
+>>>>>> =C2=A01 file changed, 8 insertions(+)
+>>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>>>>>> b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>>>>>> index a45ca67a9d5f..e1308346e00d 100644
+>>>>>> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>>>>>> @@ -6,6 +6,14 @@ Required properties:
+>>>>>> =C2=A0- interrupts: Should contain CCM interrupt
+>>>>>> =C2=A0- #clock-cells: Should be <1>
+>>>>>>
+>>>>>> +Optional properties:
+>>>>>> +- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ
+>>>>>> +signal
+>>>>>> +=C2=A0=C2=A0on power off.
+>>>>>> +=C2=A0=C2=A0Use this property if the SoC should be powered off by=
+
+>>>>>> +external power
+>>>>>> +=C2=A0=C2=A0management IC (PMIC) triggered via PMIC_STBY_REQ sign=
+al.
+>>>>>
+>>>>> PMIC_ON_REQ didn't connect to any pin of PMIC in your case?
+>>>>
+>>>> No. First, it was only one customer specific issue. After some
+>>>> research I found even publicly available boards (for example
+>>>> RioTboard) which has same/similar design. After seeing this in imx6
+>>>> documentation as valid power off way, I have no doubts - there shoul=
+d be
+>> even more devices doin this in the wild.
+>>>
+>>> Not sure why the customer didn't follow reference design, since
+>>> PMIC_ON_REQ can provide power off/on feature by pressing ONOFF key
+>>> which connected ONOFF pin of i.mx6(ONOFF will toggle PMIC_ON_REQ to
+>>> power off/on PMIC). The official power off/on way (PMIC_ON_REQ) can
+>>> also power off all power rails of PFUZE except snvs as your patch did=
+
+>>> on PMIC_STBY_REQ.=C2=A0=C2=A0PMIC_STBY_REQ is used to notify pmic swi=
+tch power
+>>> mode (PFM/APS) or decrease voltage to save power in kernel suspend, n=
+ot
+>> power off....I am not sure if we need this patchset to 'workaround' th=
+e board
+>> issue.
+>>>
+>> Not all boards follow the reference design, that's a fact of life.
 >>
->> diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts
->> b/arch/arm/boot/dts/imx6dl-riotboard.dts
->> index 2e98c92adff7..a0e9753ee767 100644
->> --- a/arch/arm/boot/dts/imx6dl-riotboard.dts
->> +++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
->> @@ -90,6 +90,10 @@
->>  	status =3D "okay";
->>  };
->>
->> +&clks {
->> +	fsl,pmic-stby-poweroff;
->> +};
-> It's better remove the default "syscon-poweroff" power off node.
+>> Please look at the i.MX6Q reference manual. The sequence implemented i=
+n this
+>> patchset can be found as a valid way to power off the system in
+>> "60.4.3 Power mode transitions" "Normal ON to OFF with external PMIC",=
+ so
+>> there is hardly any way to argue that this is a board specific quirk. =
+This is one of
+>> the Freescale/NXP recommended sequences to turn off the system.
 
-ok
+> Okay, but could you add one more comment for this solution? RTC alarm a=
+nd ONOFF
+> Button wakeup feature can't be support in this case.
 
->>  &fec {
->>  	pinctrl-names =3D "default";
->>  	pinctrl-0 =3D <&pinctrl_enet>;
->> @@ -170,6 +174,7 @@
->>  		reg =3D <0x08>;
->>  		interrupt-parent =3D <&gpio5>;
->>  		interrupts =3D <16 8>;
->> +		fsl,pmic-stby-poweroff;
->>
->>  		regulators {
->>  			reg_vddcore: sw1ab {				/* VDDARM_IN */
->> --
->> 2.18.0
->=20
+Enough to add it in to changelog? or should it go to the binding
+documentation?
 
 
---FoqGdnG7QHr6d0qatIxZUo8asSinzFik1--
+--4qY4n4uWgIxPC5PJDnntgkyLxmMu2YwQx--
 
---oq7IsxD5Auoq9GcQyZN7sqUBRb5b0N5Rv
+--0ZXQ3BVq0ww7d6z67tFll8hPf7AVFeQ0a
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltexSgACgkQdQOiSHVI
-77Tn7wf/Z68qjQ282EXYGrxipHKgWK65FECF6Z4ay8YKJO5/koartIx7CMZR3dSd
-0+xgROKVfIuPQ87JURixVsIe3Ijz4UWsVpCNhm98fbu1gTTQ7XKhYIBeuoEUtiH9
-UXFkrbq1InJGHIsUYyEJLGq6vujx4hQJL2GizDAKk0zpcbjvIhBflGKLGEJWuqi7
-uVaJ+7AeK/4Q2XvuMI3rrOTRsPl58W9Or0+MKr/qoUSW3cLX86NS7/n1oItK9tAt
-pdA8VpcTkWJectYiJUcI0Y25kleu+6zXu57W5pkG5S9ZzeqbZcvOs0j5U9hnmqez
-2EMVN0WFNqLoxTQtHPxq1qdzEmPbqw==
-=lgQc
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltexlEACgkQdQOiSHVI
+77TWfAgAjRB1PciUy1OHomvrxni8EkaYEB80z17EC958utpp0mPJwNuFY56/8HFJ
+oCrfPZ7bn+/N0K5iCATabDyC4ylmjEGboht6je0eOXtoOqlWU/e+wMRp/yNSlRsw
+1/mQAHKWuVIlBopDYuIrNHxR9fYcmJCcOzGEb3u9vFeEJL9G8jda7IgG9ToeKTlm
+YW9F5TmlabqPZ57WLDK9AXzpW+3W1jm57VCUZesIkIyoNRYboKhPbvpS1UOr2NHi
+rZcwhrIG5CIMWnbxgWAlnNhhG2lF+w1D3wQdqURZns6RmNeDQUQ6OL0bIkLZYy+m
+U7/apbmR1x8qalt+rjgpuFFw9CcxoQ==
+=LKCD
 -----END PGP SIGNATURE-----
 
---oq7IsxD5Auoq9GcQyZN7sqUBRb5b0N5Rv--
+--0ZXQ3BVq0ww7d6z67tFll8hPf7AVFeQ0a--
