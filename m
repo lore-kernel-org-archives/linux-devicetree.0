@@ -1,32 +1,59 @@
-Return-Path: <SRS0=8Sio=KO=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 0/4] serial: sh-sci: Clean up previous RZ/A2 support
-Date: Mon, 30 Jul 2018 08:17:12 -0500
-Message-Id: <20180730131716.75484-1-chris.brandt@renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=Hr2m=KO=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 1/5] dt-bindings: power: Add r8a774a1 SYSC power domain definitions
+Date: Mon, 30 Jul 2018 08:48:07 +0100
+Message-Id: <1532936891-25034-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
+References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series doesn't really provide much new functionality, but
-rather provides a cleaner solution for adding RZ/A2 support.
+This patch adds power domain indices for RZ/G2M.
 
-This series applies on top of tty-next
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+ include/dt-bindings/power/r8a774a1-sysc.h | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 include/dt-bindings/power/r8a774a1-sysc.h
 
-v2:
-* Incorporated feedback from Geert
-* Added Reviewed-by
-
-
-Chris Brandt (4):
-  serial: sh-sci: Improve interrupts description
-  serial: sh-sci: Allow for compressed SCIF address
-  serial: sh-sci: Remove SCIx_RZ_SCIFA_REGTYPE
-  serial: sh-sci: Improve support for separate TEI and DRI interrupts
-
- .../bindings/serial/renesas,sci-serial.txt         |  16 ++-
- drivers/tty/serial/sh-sci.c                        | 146 ++++++++-------------
- include/linux/serial_sci.h                         |   1 -
- 3 files changed, 70 insertions(+), 93 deletions(-)
-
+diff --git a/include/dt-bindings/power/r8a774a1-sysc.h b/include/dt-bindings/power/r8a774a1-sysc.h
+new file mode 100644
+index 0000000..580f431
+--- /dev/null
++++ b/include/dt-bindings/power/r8a774a1-sysc.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (C) 2018 Renesas Electronics Corp.
++ */
++#ifndef __DT_BINDINGS_POWER_R8A774A1_SYSC_H__
++#define __DT_BINDINGS_POWER_R8A774A1_SYSC_H__
++
++/*
++ * These power domain indices match the numbers of the interrupt bits
++ * representing the power areas in the various Interrupt Registers
++ * (e.g. SYSCISR, Interrupt Status Register)
++ */
++
++#define R8A774A1_PD_CA57_CPU0		 0
++#define R8A774A1_PD_CA57_CPU1		 1
++#define R8A774A1_PD_CA53_CPU0		 5
++#define R8A774A1_PD_CA53_CPU1		 6
++#define R8A774A1_PD_CA53_CPU2		 7
++#define R8A774A1_PD_CA53_CPU3		 8
++#define R8A774A1_PD_CA57_SCU		12
++#define R8A774A1_PD_A3VC		14
++#define R8A774A1_PD_3DG_A		17
++#define R8A774A1_PD_3DG_B		18
++#define R8A774A1_PD_CA53_SCU		21
++#define R8A774A1_PD_A2VC0		25
++#define R8A774A1_PD_A2VC1		26
++
++/* Always-on power area */
++#define R8A774A1_PD_ALWAYS_ON		32
++
++#endif /* __DT_BINDINGS_POWER_R8A774A1_SYSC_H__ */
 -- 
-2.16.1
+2.7.4
