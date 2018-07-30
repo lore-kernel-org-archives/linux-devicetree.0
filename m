@@ -1,59 +1,49 @@
-Return-Path: <SRS0=Hr2m=KO=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/5] dt-bindings: power: Add r8a774a1 SYSC power domain definitions
-Date: Mon, 30 Jul 2018 08:48:07 +0100
-Message-Id: <1532936891-25034-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
-References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=qjWz=KO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from unassigned.psychz.net ([104.216.146.23]:44712 "EHLO
+        umbrellabagger.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726623AbeG3Qwy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Jul 2018 12:52:54 -0400
+Subject: the photos you need editing
+Message-ID: <3503dbf3899f1fab94a8709142684b25@patioproductions.com>
+Date: Mon, 30 Jul 2018 15:18:57 +0200
+From: "Edward" <bostamacc@everythingturquoise.com>
+Reply-To: hustengs@sina.com
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds power domain indices for RZ/G2M.
+We are an image editing service provider having more than 10 years of
+industry experience.
+We use latest techniques for photo editing to meet international quality
+standards.
+We are committed to deliver reliable photo processing services.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
----
- include/dt-bindings/power/r8a774a1-sysc.h | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a774a1-sysc.h
+Production of 1000+ images within single working day
 
-diff --git a/include/dt-bindings/power/r8a774a1-sysc.h b/include/dt-bindings/power/r8a774a1-sysc.h
-new file mode 100644
-index 0000000..580f431
---- /dev/null
-+++ b/include/dt-bindings/power/r8a774a1-sysc.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A774A1_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A774A1_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A774A1_PD_CA57_CPU0		 0
-+#define R8A774A1_PD_CA57_CPU1		 1
-+#define R8A774A1_PD_CA53_CPU0		 5
-+#define R8A774A1_PD_CA53_CPU1		 6
-+#define R8A774A1_PD_CA53_CPU2		 7
-+#define R8A774A1_PD_CA53_CPU3		 8
-+#define R8A774A1_PD_CA57_SCU		12
-+#define R8A774A1_PD_A3VC		14
-+#define R8A774A1_PD_3DG_A		17
-+#define R8A774A1_PD_3DG_B		18
-+#define R8A774A1_PD_CA53_SCU		21
-+#define R8A774A1_PD_A2VC0		25
-+#define R8A774A1_PD_A2VC1		26
-+
-+/* Always-on power area */
-+#define R8A774A1_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A774A1_SYSC_H__ */
--- 
-2.7.4
+24×7×365 photo editing services
+
+On-demand image editing to meet rush job requirements
+
+Service details:
+Images Masking
+Photo Clipping Path
+Photo Cutout
+Photo Enhancement
+Vector Conversion
+Photo Stitching Services
+Fashion Photo Editing
+Jewelry Retouching
+Footwear Photo Editing
+Furniture Photo Retouching
+Wedding Photo Editing
+Real Estate Photo Editing
+Photo Restoration
+
+We provide trials to evaluate our service quality to new clients.
+
+Thanks,
+Edward
+
