@@ -1,53 +1,86 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] powerpc: Use of_machine_compatible_match()
-Date: Mon, 30 Jul 2018 08:14:51 -0600
-Message-ID: <CAL_JsqLX+NFXRMQXOT352Er5vG_iVSg8dKoouJ5uR0KymW1EdA@mail.gmail.com>
-References: <20180730131516.18406-1-mpe@ellerman.id.au>
- <20180730131516.18406-2-mpe@ellerman.id.au>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Mon, 30 Jul 2018 14:17:03 +0000
+Message-ID: <AM0PR04MB4211FBB1856C007E0F1DE2DA802F0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-4-o.rempel@pengutronix.de>
+ <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
+ <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
+ <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
+ <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
+ <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+ <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
+ <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20180730131516.18406-2-mpe@ellerman.id.au>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "\", linux-arm-kernel\"@lists.infradead.org" <",
+ linux-arm-kernel"@lists.infradead.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, ",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2018 at 7:15 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> Use of_machine_compatible_match() in platform code rather than open
-> coding.
+> -----Original Message-----
+> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
+> Sent: Monday, July 30, 2018 9:05 PM
+> To: Oleksij Rempel <o.rempel@pengutronix.de>
+> Cc: A.s. Dong <aisheng.dong@nxp.com>; , Sascha Hauer
+> <kernel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>; Fabio
+> Estevam <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>;
+> Mark Rutland <mark.rutland@arm.com>; Vladimir Zapolskiy
+> <vladimir_zapolskiy@mentor.com>; ", linux-arm-
+> kernel"@lists.infradead.org; , linux-arm-kernel@lists.infradead.org, linux-
+> mediatek@lists.infradead.org, srv_heupstream <linux-
+> mediatek@lists.infradead.org>; srv_heupstream <linux-arm-
+> kernel@lists.infradead.org>; Devicetree List <devicetree@vger.kernel.org>;
+> dl-linux-imx <linux-imx@nxp.com>
+> Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+> channel support
+> 
+> On Mon, Jul 30, 2018 at 1:05 PM, Oleksij Rempel <o.rempel@pengutronix.de>
+> wrote:
+> > Hi Aishen, Jassie,
+> >
+> > i'm lost in this discussion. Please, as soon as I need to add some
+> > changes to my patches, notify me. Preferably on top for email.
+> >
+> I am ok with however you choose to implement, 8 unidirectional or 4
+> bidirectional channels or whatever.
+> 
+> We just can't have protocol specific s/w modes in the controller drivers.
+> 
+> The best solution is to fix the SCU firmware. If that is _really_ impossible, I
+> provided a solution (3 cells work around). If you have a better idea please
+> feel free to propose and implement that.
+> 
+> It will also help if you could share the user code of "scu-mode". If there is no
+> such code (and we know the driver doesn't respect the "scu-mode" property)
+> why do we even have that binding? Maybe drop it.
 
-This is good because I want to get rid of of_root being used outside
-of drivers/of/. Can you also convert this one:
+The initial idea is using mbox-cells value to distinguish which MU mode is used
+(single chan or multi chans).
 
-drivers/clk/clk-qoriq.c:            of_device_is_compatible(of_root,
-"fsl,ls1021a")) {
+Regards
+Dong Aisheng
 
->
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> ---
->  arch/powerpc/platforms/40x/ppc40x_simple.c    | 2 +-
->  arch/powerpc/platforms/512x/mpc512x_generic.c | 2 +-
->  arch/powerpc/platforms/52xx/lite5200.c        | 2 +-
->  arch/powerpc/platforms/52xx/media5200.c       | 2 +-
->  arch/powerpc/platforms/52xx/mpc5200_simple.c  | 2 +-
->  arch/powerpc/platforms/83xx/mpc830x_rdb.c     | 2 +-
->  arch/powerpc/platforms/83xx/mpc831x_rdb.c     | 2 +-
->  arch/powerpc/platforms/83xx/mpc837x_rdb.c     | 2 +-
->  arch/powerpc/platforms/85xx/corenet_generic.c | 2 +-
->  arch/powerpc/platforms/85xx/tqm85xx.c         | 2 +-
->  10 files changed, 10 insertions(+), 10 deletions(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-Rob
+> 
+> thnx.
