@@ -1,38 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 08/34] media: dt-bindings: media: qcom,camss: Unify
- the clock names
-Date: Mon, 30 Jul 2018 16:29:19 -0600
-Message-ID: <20180730222919.GA9313@rob-hp-laptop>
-References: <1532536723-19062-1-git-send-email-todor.tomov@linaro.org>
- <1532536723-19062-9-git-send-email-todor.tomov@linaro.org>
+Subject: Re: [PATCH V4 1/9] dt-bindings: soc: qcom: Add label for GLINK
+ bindings
+Date: Mon, 30 Jul 2018 16:30:37 -0600
+Message-ID: <20180730223037.GA17877@rob-hp-laptop>
+References: <1532693849-7037-1-git-send-email-aneela@codeaurora.org>
+ <1532693849-7037-2-git-send-email-aneela@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1532536723-19062-9-git-send-email-todor.tomov@linaro.org>
+In-Reply-To: <1532693849-7037-2-git-send-email-aneela@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Todor Tomov <todor.tomov@linaro.org>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org, arnaud.pouliquen@st.com, andy.gross@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 07:38:17PM +0300, Todor Tomov wrote:
-> Use more logical clock names - similar to the names in documentation.
-> This will allow better handling of the clocks in the driver when support
-> for more hardware versions is added - equivalent clocks on different
-> hardware versions will have the same name.
-
-You should note that no dts is using this yet (at least that's what I 
-found).
-
+On Fri, Jul 27, 2018 at 05:47:21PM +0530, Arun Kumar Neelakantam wrote:
+> From: Chris Lew <clew@codeaurora.org>
 > 
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: devicetree@vger.kernel.org
-> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> There are GLINK clients who open the same channel on multiple GLINK
+> links. These clients need a way to distinguish which remoteproc they
+> are communicating to. Add a label property to identify the edge this
+> node represents.
+> 
+> Signed-off-by: Chris Lew <clew@codeaurora.org>
+> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
 > ---
->  .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-
-With that,
+>  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
