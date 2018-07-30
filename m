@@ -1,96 +1,57 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [RFC PATCHv2 2/9] dt-bindings: display/ti: add k2g-dss bindings
-Date: Mon, 30 Jul 2018 14:29:41 +0300
-Message-ID: <90e2533e-2da9-4599-bb05-9c008156abe1@ti.com>
-References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
- <20180618132242.8673-3-tomi.valkeinen@ti.com> <2654733.mVEzccOoVi@avalon>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v6 1/3] ARM: dts: at91: sama5d2: add I2S clock muxing nodes
+Date: Mon, 30 Jul 2018 14:40:06 +0300
+Message-ID: <20180730114008.30464-2-codrin.ciubotariu@microchip.com>
+References: <20180730114008.30464-1-codrin.ciubotariu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2654733.mVEzccOoVi@avalon>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180730114008.30464-1-codrin.ciubotariu@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjQvMDcvMTggMTc6MjksIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gSGkgVG9taSwKPiAK
-PiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KPiAKPiBPbiBNb25kYXksIDE4IEp1bmUgMjAxOCAx
-NjoyMjozNSBFRVNUIFRvbWkgVmFsa2VpbmVuIHdyb3RlOgo+PiBBZGQgRFQgYmluZGluZ3MgZm9y
-IFRleGFzIEluc3RydW1lbnRzIEsyRyBTb0MgRGlzcGxheSBTdWJzeXN0ZW0uIFRoZSBEU1MKPj4g
-aXMgcXVpdGUgc2ltcGxlLCB3aXRoIGEgc2luZ2xlIHBsYW5lIGFuZCBhIHNpbmdsZSBvdXRwdXQu
-Cj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5j
-b20+Cj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+PiBSZXZpZXdlZC1ieTogUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPj4gLS0tCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3RpL3RpLGsyZy1kc3MudHh0IHwgMTUgKysrKysrKysrKysrKysrCj4+ICAx
-IGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGsyZy1kc3Mu
-dHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS90aS90aSxrMmctZHNzLnR4dAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3RpL3RpLGsyZy1kc3MudHh0IG5ldyBmaWxlIG1vZGUKPj4gMTAwNjQ0
-Cj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uMWFmMTE0MjVlZGEzCj4+IC0tLSAvZGV2L251bGwKPj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksazJn
-LWRzcy50eHQKPj4gQEAgLTAsMCArMSwxNSBAQAo+PiArVGV4YXMgSW5zdHJ1bWVudHMgSzJHIERp
-c3BsYXkgU3Vic3lzdGVtCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT0KPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZTogInRpLGsy
-Zy1kc3MiCj4+ICstIHJlZzogYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzcGFj
-ZXMgZm9yIERTUyBzdWJtb2R1bGVzCj4+ICstIHJlZy1uYW1lczogImNmZyIsICJjb21tb24iLCAi
-dmlkMSIsICJvdnIxIiwgInZwMSIKPiAKPiBXaGVuIHNlZWluZyBtdWx0aXBsZSByZWdpc3RlciBy
-YW5nZXMgZm9yIGEgRFQgbm9kZSBJIGFsd2F5cyBzdXNwZWN0IHRoYXQgd2UgCj4gZGVzY3JpYmUg
-bXVsdGlwbGUgSVAgY29yZXMgdGhhdCBjb3VsZCBiZSBiZXR0ZXIgbW9kZWxlZCBhcyBpbmRlcGVu
-ZGVudCBub2Rlcy4gCj4gV2hhdCBwcm9tcHRlZCB5b3Ugbm90IHRvIG1vZGVsIHRoZSBESVNQQyBh
-cyBhIHNlcGFyYXRlIERUIG5vZGUgKHBvc3NpYmx5IGEgCj4gY2hpbGQgb2YgdGhlIERTUyBEVCBu
-b2RlKSA/CgpZZXMsIGl0J3MgYmVlbiBkaWZmaWN1bHQgdG8gZmlndXJlIG91dCB0aGUgSVAgYm91
-bmRhcmllcyBhdCB0aW1lcy4gV2VsbCwKdGhlIHZpZCwgb3ZyIGFuZCB2cCByZWdpb25zIGFyZSBw
-YXJ0IG9mIHRoZSBESVNQQyBJUCwgdGhhdCdzIGNsZWFyLiBUaGUKcXVlc3Rpb24gaXMgd2l0aCBE
-U1MgKGNvcmUpIGFuZCBESVNQQy4KCk9uIEsyRywgRFNTIGFuZCBESVNQQyBhcmUgaW5kZWVkIHNl
-cGFyYXRlIElQcywgc2ltaWxhciB0byBPTUFQcy4gRFNTCigiY2ZnIiByZWdpb24gaGVyZSkgaXMg
-anVzdCBhIHdyYXBwZXIgYW5kIGhhcyBvbmx5IGEgZmV3IHJlZ2lzdGVycywgdGhvdWdoLgoKT24g
-QU02LCB0aGF0J3Mgbm90IHRoZSBjYXNlLCBhbmQgdGhlcmUncyBvbmx5IGEgc2luZ2xlIElQLgoK
-VGhlIHJlYXNvbiB0byByZXByZXNlbnQgSzJHIERTUyBhcyBhIHNpbmdsZSBEVCBub2RlIGlzIGp1
-c3QKcHJhY3RpY2FsaXR5OiB0aGVyZSdzIG5vIGJlbmVmaXQgdGhhdCBJIGNhbiBzZWUgdG8gY29u
-c2lkZXIgRFNTIGFuZApESVNQQyBhcyBzZXBhcmF0ZSBJUHMsIGJ1dCBpdCBkb2VzIGNhdXNlIHBy
-b2JsZW1zIGluIHRoZSBTVyBzaWRlLAplc3BlY2lhbGx5IG5vdyB0aGF0IHdlIHdhbnQgdG8gc3Vw
-cG9ydCBBTTYgRFNTIHRvbywgd2hpY2ggZG9lcyBub3QgaGF2ZQpzZXBhcmF0ZSBEU1MgYW5kIERJ
-U1BDIElQcy4KClRoZSBtYWluIHByb2JsZW0gdGhlcmUgd2FzIHRoZSBxdWVzdGlvbiBhYm91dCBE
-Uk0gZGV2aWNlOiBpcyBpdCB0aGUgRFNTCm9yIHRoZSBESVNQQz8gRnJvbSBEUk0gcG9pbnQgb2Yg
-dmlldywgdGhlIG9ubHkgc2FuZSBhbnN3ZXIgaXMgdGhhdCBESVNQQwppcyB0aGUgRFJNIGRldmlj
-ZSwgYXMgdGhhdCdzIHJlYWxseSB0aGUgZGlzcGxheSBJUCBhbmQgaGFzIHRoZQppbnRlcnJ1cHRz
-IGV0Yy4gVGhhdCB0aGVuIGxlYXZlcyB0aGUgRFNTIGRldmljZSBraW5kIG9mIGhhbmdpbmcgYXJv
-dW5kLgoKQ29uc2lkZXJpbmcgRFNTIGFuZCBESVNDUCBhcyBhIHNpbmdsZSBkZXZpY2UgcmVtb3Zl
-ZCBhbGwgdGhlIHByb2JsZW1zIEkKaGFkLiBJIHRoaW5rIG9tYXBkcm0gZHJpdmVyIHdvdWxkIGFs
-c28gYmUgbXVjaCBzaW1wbGVyIHdpdGggdGhpcyBhcHByb2FjaC4KCj4gRnVydGhlcm1vcmUsICJj
-ZmciIGNvcnJlc3BvbmRzIHRvIHRoZSBEU1MgcmVnaXN0ZXJzLCBzbyBJIHdvbmRlciB3aGV0aGVy
-IGl0IAo+IHNob3VsZG4ndCBiZSBuYW1lZCAiZHNzIi4gU2ltaWxhcmx5LCAiY29tbW9uIiByZWFs
-bHkgc291bmRzIGxpa2UgRFNTIGNvbW1vbiAKPiByZWdpc3RlcnMsIHdoaWxlIGl0IHJlbGF0ZXMg
-dG8gdGhlIERJU1BDLgoKImNmZyIgY29ycmVzcG9uZHMgdG8gdGhlIERTU1VMXzBfQ0ZHIGluIHRo
-ZSBUUk0gYW5kICJjb21tb24iIHRvIHRoZQpESVNQQ19DT01NT04gcmVnaW9uLiBJZiB5b3UgY29u
-c2lkZXIgdGhlcmUgdG8gYmUgb25seSBvbmUgRFNTL0RJU1BDIElQLAp0aGVuIHRoZSBuYW1pbmcg
-bWFrZXMgbW9yZSBzZW5zZSwgYXMgImNmZyIgaXMgYWJvdXQgdGhlIG1haW4gbGV2ZWwKY29uZmln
-LCAiY29tbW9uIiBpcyBhYm91dCBjb21tb24gc3R1ZmYgKHRvIGFsbCBwbGFuZXMgYW5kIHZpZGVv
-cG9ydHMpLgoKPj4gKy0gY2xvY2tzOiBwaGFuZGxlIHRvIGZjbGsgYW5kIHZwMSBjbG9ja3MKPj4g
-Ky0gY2xvY2stbmFtZXM6ICJmY2siLCAidnAxIgo+PiArLSBpbnRlcnJ1cHRzOiBwaGFuZGxlIHRv
-IHRoZSBESVNQQyBpbnRlcnJ1cHQKPj4gKwo+PiArVGhlIERTUyBvdXRwdXRzIGFyZSBkZXNjcmli
-ZWQgdXNpbmcgdGhlIGRldmljZSBncmFwaHMgYXMgZG9jdW1lbnRlZCBpbgo+PiArRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4gSzJHIERTUyBoYXMgYSBzaW5nbGUg
-RFBJCj4+IG91dHB1dCBhcwo+PiArcG9ydCAwLgo+IAo+IEJvdGggU1BSVUhZOEggYW5kIFNQUlNQ
-MDdEIGRvY3VtZW50IGEgRFBJIG91dHB1dCBhbmQgYSBEQkkgb3V0cHV0LiBBbSBJIAo+IGxvb2tp
-bmcgYXQgdGhlIHdyb25nIGRvY3VtZW50ID8KCk5vLCB5b3UncmUgcmlnaHQsIGl0IGhhcyBEQkku
-IEknbSBxdWl0ZSBzdXJlIGl0IHdhcyBkZXNjb3BlZCBhdCBzb21lCnBvaW50LCB0aG91Z2gsIGJ1
-dCBpdCBzZWVtcyB0byBiZSB0aGVyZSBpbiB0aGUgZmluYWwgb25lcy4gV2UgZG9uJ3QKc3VwcG9y
-dCBEQkkgaW4gdGhlIGRyaXZlciwgc28gd2UndmUgbWlzc2VkIGl0LgoKU28gSSdsbCBhZGQgdGhl
-IG5vZGUgdG8gdGhlIERULgoKIFRvbWkKCi0tIApUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95
-LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6
-IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This patch adds two clock muxes for the two I2S
+buses present on sama5d2 platforms.
+
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
+
+Changes in v6:
+	- none
+
+ arch/arm/boot/dts/sama5d2.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 61f68e5c48e9..eeb6afa1cda7 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -992,6 +992,24 @@
+ 						atmel,clk-output-range = <0 100000000>;
+ 					};
+ 				};
++
++				i2s_clkmux {
++					compatible = "atmel,sama5d2-clk-i2s-mux";
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					i2s0muxck: i2s0_muxclk {
++						clocks = <&i2s0_clk>, <&i2s0_gclk>;
++						#clock-cells = <0>;
++						reg = <0>;
++					};
++
++					i2s1muxck: i2s1_muxclk {
++						clocks = <&i2s1_clk>, <&i2s1_gclk>;
++						#clock-cells = <0>;
++						reg = <1>;
++					};
++				};
+ 			};
+ 
+ 			qspi0: spi@f0020000 {
+-- 
+2.17.1
