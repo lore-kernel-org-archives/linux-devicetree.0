@@ -1,40 +1,53 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: [PATCH 3/5] dt-bindings: Add CDTech S070WV95-CT16 panel bindings
-Date: Tue, 31 Jul 2018 01:11:15 +0200
-Message-ID: <20180730231117.5631-4-giulio.benetti@micronovasrl.com>
-References: <20180730231117.5631-1-giulio.benetti@micronovasrl.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180730231117.5631-1-giulio.benetti@micronovasrl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Giulio Benetti <giulio.benetti@micronovasrl.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3.1 08/10] dt-bindings: sun4i-drm: add HDMI
+ VCC supply property for sun8i-dw-hdmi
+Date: Mon, 30 Jul 2018 17:12:44 -0600
+Message-ID: <20180730231244.GA3966@rob-hp-laptop>
+References: <20180726171257.6688-1-icenowy@aosc.io>
+ <20180726171257.6688-9-icenowy@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERB3VW73NAKGQEMB6QRDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180726171257.6688-9-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for S070WV95-CT16 panel
+On Fri, Jul 27, 2018 at 01:12:55AM +0800, Icenowy Zheng wrote:
+> Allwiner SoCs with DesignWare HDMI controller all come with a "HVCC"
+> pin, which is the VCC of HDMI part.
+> 
+> Add a supply property to specify HVCC's regulator in the device tree.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v3.1:
+> - New patch.
+> 
+>  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> index fdb8fb29033f..cb4769913e89 100644
+> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> @@ -97,6 +97,9 @@ Required properties:
+>      first port should be the input endpoint. The second should be the
+>      output, usually to an HDMI connector.
+>  
+> +Optional properties:
+> +  - hdmi-supply: the VCC power supply of the controller
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
----
- .../bindings/display/panel/cdtech,s070wv95-ct16.txt  | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/cdtech,s070wv95-ct16.txt
+"hdmi" doesn't sound like the name of the supply. "hvcc" or just "vcc" 
+would be more appropriate.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/cdtech,s070wv95-ct16.txt b/Documentation/devicetree/bindings/display/panel/cdtech,s070wv95-ct16.txt
-new file mode 100644
-index 000000000000..505615dfa0df
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/cdtech,s070wv95-ct16.txt
-@@ -0,0 +1,12 @@
-+CDTech(H.K.) Electronics Limited 7" 800x480 color TFT-LCD panel
-+
-+Required properties:
-+- compatible: should be "cdtech,s070wv95-ct16"
-+- power-supply: as specified in the base binding
-+
-+Optional properties:
-+- backlight: as specified in the base binding
-+- enable-gpios: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
--- 
-2.17.1
+Rob
