@@ -1,74 +1,33 @@
-From: Diego Rondini <diego.rondini@kynetics.com>
-Subject: Re: [PATCH] ARM: dts: sun8i: Add initial Orangepi Zero Plus 2 H3 support
-Date: Mon, 30 Jul 2018 11:17:44 +0200
-Message-ID: <CAMfw5YpH1nbO1eYGoAOEEreboHs3VEY61x8qRO-BYDcGS+DBqg@mail.gmail.com>
-References: <20180727125739.22871-1-diego.rondini@kynetics.com> <20180730084519.iqyhvocxsfuopze7@flea>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
+        coherent DMA mask)
+Date: Mon, 30 Jul 2018 11:23:06 +0200
+Message-ID: <20180730092306.GA18701@lst.de>
+References: <CAJKOXPeaguNxRr7pCArJ5Db4tS6Kr5BDheCxskY+vd0dUN+0GQ@mail.gmail.com> <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com> <20180727140448.GA29001@lst.de> <20180728165820.GA5731@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180730084519.iqyhvocxsfuopze7@flea>
+Content-Disposition: inline
+In-Reply-To: <20180728165820.GA5731@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Christoph Hellwig <hch@lst.de>, Krzysztof Kozlowski <krzk@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Fugang Duan <fugang.duan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Sat, Jul 28, 2018 at 09:58:20AM -0700, Guenter Roeck wrote:
+> I would call it a serious regression. Also, no longer setting a default
+> coherent DMA mask is a quite substantial behavioral change, especially
+> if and since the code worked just fine up to now.
+> 
+> Crash when booting sam460ex attached below, as is a bisect log.
 
-On Mon, Jul 30, 2018 at 10:45 AM, Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
-> On Fri, Jul 27, 2018 at 02:57:39PM +0200, Diego Rondini wrote:
->> +/dts-v1/;
->> +
->> +#include "sun8i-h3.dtsi"
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +
->> +/ {
->> +     model = "OrangePi Zero Plus2 H3";
->> +     compatible = "xunlong,orangepi-zero-plus2", "allwinner,sun8i-h3";
->
-> The H5 version doesn't make that easy, and it's unfortunate, but we
-> should have a different compatible for the H3 and H5 versions.
->
-> What about something like xunlong,orangepi-zero-plus2-h3?
+Things should be ok again with:
 
-Yes, I think this is the only reasonable option. I'll send v2.
+commit a5516219b10218a87abb3352c82248ce3088e94a
+Author: Robin Murphy <robin.murphy@arm.com>
+Date:   Fri Jul 27 15:14:15 2018 +0100
 
->
->> +&uart1 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
->> +     status = "okay";
->> +};
->
-> I guess it is the BT chip? Which chip is it?
+    of/platform: Initialise default DMA masks
 
-Yes, according to schematics Bluetooth is on uart1.
-It's an Ampak 6212A with a Broadcom 43438 chip. To my understanding
-it's the same chip in the Raspberry Pi 3 B / B+ and Raspberry Zero W.
-
-I've tried to integrate support for Bluetooth with the following:
-
-&uart1 {
-    pinctrl-names = "default";
-    pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-    status = "okay";
-
-    bluetooth {
-        compatible = "brcm,bcm43438-bt";
-        max-speed = <2000000>;
-        shutdown-gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>; /* PA10 */
-        device-wakeup-gpios = <&pio 9 2 GPIO_ACTIVE_HIGH>; /* PL2 */
-        host-wakeup-gpios = <&pio 0 20 GPIO_ACTIVE_HIGH>; /* PA20 */
-    };
-};
-
-but the hci_bcm driver doesn't load automatically and doesn't probe
-the device when loaded manually. I haven't investigated further.
-
-
-Diego Rondini
-Sr. Embedded Engineer
-
-Kynetics
-www.kynetics.com
+from the lastest dma-mapping tree as of Friday.  It isn't in the
+latest linux-next tree yet but be in the next one.
