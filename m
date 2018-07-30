@@ -1,57 +1,66 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 0/9] Add Reset Controller support for Actions Semi Owl
- SoCs
-Date: Mon, 30 Jul 2018 17:38:31 +0200
-Message-ID: <1532965111.3471.14.camel@pengutronix.de>
-References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
-         <c3ae668a-6bcc-a0eb-1e00-14ef9d607316@suse.de>
-         <20180730151131.GA28633@mani>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: Re: [PATCH v2 00/10] Tegra SDHCI update the pad autocal procedure
+Date: Mon, 30 Jul 2018 18:43:51 +0300
+Message-ID: <20180730184351.5044cb6e@dhcp-10-21-25-168>
+References: <1532608016-14319-1-git-send-email-avienamo@nvidia.com>
+        <CAPDyKFo+nv+9qYV=J5k-63cDhQO=L==87RLMj_7BnjEjUf5iEQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180730151131.GA28633@mani>
+In-Reply-To: <CAPDyKFo+nv+9qYV=J5k-63cDhQO=L==87RLMj_7BnjEjUf5iEQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-07-30 at 20:41 +0530, Manivannan Sadhasivam wrote:
-> Hi Andreas,
+On Mon, 30 Jul 2018 17:07:59 +0200
+Ulf Hansson <ulf.hansson@linaro.org> wrote:
+
+> On 26 July 2018 at 14:26, Aapo Vienamo <avienamo@nvidia.com> wrote:
+> > Hi all,
+> >
+> > Update the tegra_sdhci_pad_autocalib() pad drive strength calibration
+> > procedure to match the ones specified in the TRMs of the more recent
+> > SoCs. This was tested on Tegra186, Tegra210, and Tegra124, although it
+> > should not break things older generations either.
+> >
+> > This series depends on the "Tegra SDHCI enable 1.8 V signaling on
+> > Tegar210 and Tegra186" series posted earlier.  
 > 
-> On Mon, Jul 30, 2018 at 12:26:07PM +0200, Andreas Färber wrote:
-> > Hi Mani,
-> > 
-> > Am 27.07.2018 um 20:45 schrieb Manivannan Sadhasivam:
-> > > This patchset adds Reset Controller (RMU) support for Actions Semi
-> > > Owl SoCs, S900 and S700. For the Owl SoCs, RMU has been integrated into
-> > > the clock subsystem in hardware. Hence, in software we integrate RMU
-> > > support into common clock driver inorder to maintain compatibility.
-> > 
-> > Can this not be placed into drivers/reset/ by using mfd-simple with a
-> > sub-node in DT?
-> > 
-> 
-> Actually I was not sure where to place this reset controller driver. When I
-> looked into other similar ones such as sunxi, they just integrated into the
-> clk subsystem. So I just chose that path. But yeah, this is hacky!
-> 
-> But this RMU is not MFD by any means. Since the CMU (Clock) and RMU (Reset)
-> are two separate IPs inside SoC, we shouldn't describe it as a MFD driver. Since
-> RMU has only 2 registers, the HW designers decided to use up the CMU memory
-> map. So, maybe syscon would be best option I think. What is your opinion?
+> According to the cover letter of the above series, it states that it
+> depends on $subject series. A circular dependency. :-)
 
-Using syscon seems cleaner than stuffing the regmap into owl_clk_desc.
+The dependency chain goes like this: "Tegra SDHCI update the pad
+autocal procedure" -> "Tegra SDHCI enable 1.8 V signaling on Tegar210
+and Tegra186" -> "Tegra PMC pinctrl pad configuration".
 
-> Even if we go for syscon, we should place the reset driver within clk
-> framework as I can see other SoCs like Mediatek are doing the same. But again
-> I'm not sure!
+> In fact, there should be no dependency at all or else there seems to
+> be a DT compatibility problem here...
 
-Me neither. If the CMU and RMU are really separate and only share the
-memory map, a syscon driver could live in drivers/reset without
-problems.
-It's only when there are interactions between clocks and resets that you
-really want to have the reset driver integrated with clk.
+>From a functionality perspective there's no strict dependency, however,
+I don't think "[PATCH v2 09/10] mmc: tegra: Perform pad calibration
+after voltage switch" can be applied cleanly without
+"[PATCH v2 03/10] mmc: tegra: Reconfigure pad voltages during voltage
+switching" from the "Tegra SDHCI enable 1.8 V signaling on Tegar210 and
+Tegra186" series.
 
-regards
-Philipp
+> Anyway, I think it actually makes sense to fold in all changes into
+> one series. Make sure the dt-doc changes comes first, then the driver
+> changes and finally arm64/dts changes. This should make it easy to
+> follow the review and I can pick the mmc parts and the soc maintainer
+> can pick the arm64/dts changes.
+
+I've sent the changes in multiple part because I've been working on
+further changes to the driver while the previous parts have been
+getting reviewed. This is still the case and there's still going to be
+at least one more series which adds support for HS200 tuning and some
+smaller changes after it. However, the HS200 work is probably going to
+be ready for review in a day or two. I can send these as a one series
+from now on, although at this point it would be 27 patches in total
+and even more with the HS200 patches.
+
+I can do that if you prefer to do it that way. Makes my life somewhat
+easier too.
+
+ -Aapo
