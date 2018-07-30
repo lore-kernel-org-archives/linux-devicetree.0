@@ -1,98 +1,156 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] of: Add of_machine_compatible_match()
-Date: Mon, 30 Jul 2018 08:06:46 -0600
-Message-ID: <CAL_JsqKYFk6-ofDFvaiy3a+r8Zyzw2UuMQUHb-RrgeWfpjom5w@mail.gmail.com>
-References: <20180730131516.18406-1-mpe@ellerman.id.au>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Mon, 30 Jul 2018 14:14:17 +0000
+Message-ID: <AM0PR04MB4211EF3D479D6B8A093ACCB2802F0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180726065331.6186-1-o.rempel@pengutronix.de>
+ <20180726065331.6186-4-o.rempel@pengutronix.de>
+ <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
+ <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
+ <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
+ <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
+ <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+ <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
+ <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20180730131516.18406-1-mpe@ellerman.id.au>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "\", linux-arm-kernel\"@lists.infradead.org" <",
+ linux-arm-kernel"@lists.infradead.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, ",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-mediatek@lists.infradead.org>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2018 at 7:15 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> We have of_machine_is_compatible() to check if a machine is compatible
-> with a single compatible string. However some code is able to support
-> multiple compatible boards, and so wants to check for one of many
-> compatible strings.
->
-> So add of_machine_compatible_match() which takes a NULL terminated
-> array of compatible strings to check against the root node's
-> compatible property.
->
-> Compared to an open coded match this is slightly more self
-> documenting, and also avoids the caller needing to juggle the root
-> node either directly or via of_find_node_by_path().
->
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-> ---
->  drivers/of/base.c  | 21 +++++++++++++++++++++
->  include/linux/of.h |  6 ++++++
->  2 files changed, 27 insertions(+)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 848f549164cd..603716ba8513 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -505,6 +505,27 @@ int of_device_compatible_match(struct device_node *device,
->         return score;
->  }
->
-> +/**
-> + * of_machine_compatible_match - Test root of device tree against a compatible array
-> + * @compats: NULL terminated array of compatible strings to look for in root node's compatible property.
-> + *
-> + * Returns true if the root node has any of the given compatible values in its
-> + * compatible property.
-> + */
-> +bool of_machine_compatible_match(const char *const *compats)
-> +{
-> +       struct device_node *root;
-> +       int rc = 0;
-> +
-> +       root = of_node_get(of_root);
-> +       if (root) {
-> +               rc = of_device_compatible_match(root, compats);
-> +               of_node_put(root);
-> +       }
-> +
-> +       return rc != 0;
-> +}
-> +
->  /**
->   * of_machine_is_compatible - Test root of device tree for a given compatible value
->   * @compat: compatible string to look for in root node's compatible property.
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 4d25e4f952d9..05e3e23a3a57 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -389,6 +389,7 @@ extern int of_alias_get_id(struct device_node *np, const char *stem);
->  extern int of_alias_get_highest_id(const char *stem);
->
->  extern int of_machine_is_compatible(const char *compat);
-> +extern bool of_machine_compatible_match(const char *const *compats);
+> -----Original Message-----
+> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
+> Sent: Monday, July 30, 2018 9:05 PM
+> To: Oleksij Rempel <o.rempel@pengutronix.de>
+> Cc: A.s. Dong <aisheng.dong@nxp.com>; , Sascha Hauer
+> <kernel@pengutronix.de>; Shawn Guo <shawnguo@kernel.org>; Fabio
+> Estevam <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>;
+> Mark Rutland <mark.rutland@arm.com>; Vladimir Zapolskiy
+> <vladimir_zapolskiy@mentor.com>; ", linux-arm-
+> kernel"@lists.infradead.org; , linux-arm-kernel@lists.infradead.org, linux-
+> mediatek@lists.infradead.org, srv_heupstream <linux-
+> mediatek@lists.infradead.org>; srv_heupstream <linux-arm-
+> kernel@lists.infradead.org>; Devicetree List <devicetree@vger.kernel.org>;
+> dl-linux-imx <linux-imx@nxp.com>
+> Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+> channel support
+> 
+> On Mon, Jul 30, 2018 at 1:05 PM, Oleksij Rempel <o.rempel@pengutronix.de>
+> wrote:
+> > Hi Aishen, Jassie,
+> >
+> > i'm lost in this discussion. Please, as soon as I need to add some
+> > changes to my patches, notify me. Preferably on top for email.
+> >
+> I am ok with however you choose to implement, 8 unidirectional or 4
+> bidirectional channels or whatever.
+> 
+> We just can't have protocol specific s/w modes in the controller drivers.
+> 
 
-Would be nice if of_machine_is_compatible could be implemented in
-terms of of_machine_compatible_match like this:
+Do you think implement "Passing short messages" defined in reference
+manual in controller driver is protocol specific?
+That seems like our most argument before.
 
-int of_machine_is_compatible(const char *compat)
+> The best solution is to fix the SCU firmware. If that is _really_ impossible, I
+> provided a solution (3 cells work around). If you have a better idea please
+> feel free to propose and implement that.
+> 
+
+That's out of our control.
+SCU firmware is not using Linux and there's no mailbox framework.
+It's simply follow "passing short messages" way to send multi words with 4 data
+Registers.
+ 
+> It will also help if you could share the user code of "scu-mode". If there is no
+> such code (and we know the driver doesn't respect the "scu-mode" property)
+> why do we even have that binding? Maybe drop it.
+
+You can refer to this patch for the user code of "scu-mode".
+[RFC PATCH v6 2/2] mailbox: imx-mailbox: add scu protocol support
+https://www.spinics.net/lists/arm-kernel/msg665135.html
+
+And I do admit that there're two protocol specific bits in the driver.
+1. Unlike TI message header, SCU size is in the second u8.
+Ti message header:
+struct ti_msgmgr_message {
+        size_t len;
+        u8 *buf;
+};
+Controller get the size from the first u32.
+
+SCU message header:
+struct sc_rpc_msg {
+        uint8_t ver;
+        uint8_t size;
+        uint8_t svc; 
+        uint8_t func;
+};
+Controller get the size from the second u8.
+
+And a full SCU message is like:
+struct imx_sc_msg_req_set_clock_rate {
+        struct sc_rpc_msg hdr;
+        u32 rate;
+        u16 resource;
+        u8 clk;
+} __packed;
+
+2. There's no synchronous read function in mailbox framework,
+So we use mbox_client_peek_data to read data which can't return
+the read data. In order to save a mem copy from read data to the
+data buffer, the controller driver saves the tx data buffer in itself. 
+(Anyway to improve? Maybe we should implement a synchronous
+mbox_client_read_data()?)
+
+And for SCU IPC client, it's something like:
+int sc_call_rpc(sc_ipc_t ipc, void *msg, bool no_resp)
 {
-  const char *compats[] = { compat, NULL };
-  return of_machine_is_compatible(compats);
+        ...
+        mbox_send_message(sc_ipc->chan, msg);
+
+        if (!no_resp) 
+                ret = mbox_client_peek_data(sc_ipc->chan);
+
+        mbox_client_txdone(sc_ipc->chan, ret);
+        ...
 }
 
-Probably can be inline too.
+int sc_ipc_open(sc_ipc_t *ipc, struct device *dev)
+{
+        sc_ipc->cl.dev = dev; 
+        sc_ipc->cl.tx_block = false;
+        sc_ipc->cl.knows_txdone = true;
 
-Rob
+        sc_ipc->chan = mbox_request_channel(&sc_ipc->cl, 0);
+        ...
+}
+
+Any better ideas?
+
+Regards
+Dong Aisheng
+
+> 
+> thnx.
