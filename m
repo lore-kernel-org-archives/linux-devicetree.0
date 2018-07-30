@@ -1,329 +1,297 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Mon, 30 Jul 2018 09:35:43 +0200
-Message-ID: <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
- <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
- <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
- <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
- <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+Subject: Re: [PATCH v8 5/6] regulator: pfuze100-regulator: provide
+ pm_power_off_prepare handler
+Date: Mon, 30 Jul 2018 09:50:55 +0200
+Message-ID: <06313062-70db-9c10-048e-78ca267da959@pengutronix.de>
+References: <20180726092220.17250-1-o.rempel@pengutronix.de>
+ <20180726092220.17250-6-o.rempel@pengutronix.de>
+ <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5599432849341716580=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel"@lists.infradead.org, srv_heupstream <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-mediatek@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="LwQFIlLOjXGOTd1dIcOYesL3Vuu40VYjj"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============5599432849341716580==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="P0zko6jFhNP8z1cNJ6tfSmqdR1iaw0ok9"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---P0zko6jFhNP8z1cNJ6tfSmqdR1iaw0ok9
-Content-Type: multipart/mixed; boundary="VpFWl5GtRBYIKYKDR11PanKckHsI4adPs";
+--LwQFIlLOjXGOTd1dIcOYesL3Vuu40VYjj
+Content-Type: multipart/mixed; boundary="pFAUOKSuRxFMze1y29w5DqVceqozD4x5Y";
  protected-headers="v1"
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Jassi Brar <jassisinghbrar@gmail.com>, "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: ", Sascha Hauer" <kernel@pengutronix.de>, Shawn Guo
- <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>,
- Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
- ", linux-arm-kernel"@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- srv_heupstream <linux-arm-kernel@lists.infradead.org>,
- Devicetree List <devicetree@vger.kernel.org>,
- dl-linux-imx <linux-imx@nxp.com>
-Message-ID: <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
-Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-References: <20180726065331.6186-1-o.rempel@pengutronix.de>
- <20180726065331.6186-4-o.rempel@pengutronix.de>
- <CABb+yY0kVFvQRBrU4j9t=_JcSUkcXMMSK5u=XSufM6XcmKiv-g@mail.gmail.com>
- <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
- <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
- <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
-In-Reply-To: <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+To: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+ Mark Brown <broonie@kernel.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
+ Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>,
+ "A.s. Dong" <aisheng.dong@nxp.com>
+Message-ID: <06313062-70db-9c10-048e-78ca267da959@pengutronix.de>
+Subject: Re: [PATCH v8 5/6] regulator: pfuze100-regulator: provide
+ pm_power_off_prepare handler
+References: <20180726092220.17250-1-o.rempel@pengutronix.de>
+ <20180726092220.17250-6-o.rempel@pengutronix.de>
+ <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
 
---VpFWl5GtRBYIKYKDR11PanKckHsI4adPs
-Content-Type: text/plain; charset=utf-8
+--pFAUOKSuRxFMze1y29w5DqVceqozD4x5Y
+Content-Type: text/plain; charset=gbk
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-Hi Aishen, Jassie,
 
-i'm lost in this discussion. Please, as soon as I need to add some
-changes to my patches, notify me. Preferably on top for email.
 
-On 28.07.2018 15:09, Jassi Brar wrote:
-> On Fri, Jul 27, 2018 at 2:12 PM, A.s. Dong <aisheng.dong@nxp.com> wrote=
+On 27.07.2018 11:32, Robin Gong wrote:
+>=20
+>=20
+>> -----Original Message-----
+>> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
+>> Sent: 2018=C4=EA7=D4=C226=C8=D5 17:22
+>> To: Shawn Guo <shawnguo@kernel.org>; Mark Brown <broonie@kernel.org>;
+>> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
+>> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>> linux-clk@vger.kernel.org; linux-kernel@vger.kernel.org; Andrew Morton=
+
+>> <akpm@linux-foundation.org>; Liam Girdwood <lgirdwood@gmail.com>;
+>> Leonard Crestez <leonard.crestez@nxp.com>; Rob Herring
+>> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Michael
+>> Turquette <mturquette@baylibre.com>; Stephen Boyd
+>> <sboyd@codeaurora.org>; Fabio Estevam <fabio.estevam@nxp.com>; Russell=
+
+>> King <linux@armlinux.org.uk>; dl-linux-imx <linux-imx@nxp.com>; Robin =
+Gong
+>> <yibin.gong@nxp.com>; A.s. Dong <aisheng.dong@nxp.com>
+>> Subject: [PATCH v8 5/6] regulator: pfuze100-regulator: provide
+>> pm_power_off_prepare handler
+>>
+>> On some boards the SoC can use one pin "PMIC_STBY_REQ" to notify th PM=
+IC
+>> about state changes. In this case internal state of PMIC must be preco=
+nfigured
+>> for upcomming state change.
+>> It works fine with the current regulator framework, except with the po=
+wer-off
+>> case.
+>>
+>> This patch is providing an optional pm_power_off_prepare handler which=
+ will
+>> configure standby state of the PMIC to disable all power lines.
+>>
+>> In my power consumption test on RIoTBoard, I got the following results=
 :
->=20
->=20
->>>>>>>
->>>>>>> MU has 4 pairs of TX_Reg + TX_IRQ, and 4 pairs of RX_Reg + RX_IRQ=
-=2E
->>>>>>> (MU also has 4 "doorbell" type channels that it calls GP, but
->>>>>>> those are not managed here, so lets not worry atm).
->>>>>>>
->>>>>>> By definition, a mailbox channel is simply a signal, optionally
->>>>>>> with data attached. So, MU has 4 TX and 4 RX channels.
->>>>>>>
->>>>>>> The MU driver should populate 8 unidirectional (4 Tx and 4 RX)
->>>>>>> channels and set each tx/rx operation to trigger the correspondin=
-g
->>>>>>> interrupt. This is not my whim, this is how the controller is!
->>>>>>>
->>>>>>
->>>>>> This looks like reasonable to me, theoretically.
->>>>>> Just not sure whether it's necessary to support it because we
->>>>>> probably will never use like that in reality, then it might become=
+>> power off without this patch:	320 mA
+>> power off with this patch:	2   mA
+>> suspend to ram:			40  mA
+>>
+>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>> ---
+>>  drivers/regulator/pfuze100-regulator.c | 92 +++++++++++++++++++++++++=
++
+>>  1 file changed, 92 insertions(+)
+>>
+>> diff --git a/drivers/regulator/pfuze100-regulator.c
+>> b/drivers/regulator/pfuze100-regulator.c
+>> index 8d9dbcc775ea..e386e9acb3f7 100644
+>> --- a/drivers/regulator/pfuze100-regulator.c
+>> +++ b/drivers/regulator/pfuze100-regulator.c
+>> @@ -15,6 +15,7 @@
+>>  #include <linux/regulator/pfuze100.h>
+>>  #include <linux/i2c.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/kallsyms.h>
+> Is it necessary?
 
->>>>>> meaningless complicity introduced and error prone.
->>>>>>
->>>>> It _is_ necessary to write controller driver independent of client =
-drivers.
->>>>>
->>>>
->>>> Yes, that's true. What if we think we're writing driver against HW
->>>> capabilities which support 4 pair of channel links(tx/rx)?
->>>> It looks like independent of client drivers and may make life easily=
-=2E
->>>> Does it make sense?
->>>>
->>> No, that would be emulation.
->>> Why doesn't a usb device controller (udc) driver emulate FSG/HID etc,=
- by
->>> "thinking" it has a hardware backed storage/keyboard? It doesn't beca=
-use
->>> that is the job of upper protocol layer.
->>>
+yes, for pm_power_off_prepare
+
+>>  #include <linux/regmap.h>
 >>
->> Sorry I'm not quite familiar with USB device.
+>>  #define PFUZE_NUMREGS		128
+>> @@ -29,11 +30,17 @@
 >>
-> Which subsystem are you familiar with? Every stack is designed like
-> that -- controller drivers reflect the physical hardware, any
-> emulation/protocol is implemented in the user layer.
->=20
->=20
->> Another reason is I doubt that we may never use per register mode in a=
- different register pair
->> in the future.
+>>  #define PFUZE100_COINVOL	0x1a
+>>  #define PFUZE100_SW1ABVOL	0x20
+>> +#define PFUZE100_SW1ABMODE	0x23
+>>  #define PFUZE100_SW1CVOL	0x2e
+>> +#define PFUZE100_SW1CMODE	0x31
+>>  #define PFUZE100_SW2VOL		0x35
+>> +#define PFUZE100_SW2MODE	0x38
+>>  #define PFUZE100_SW3AVOL	0x3c
+>> +#define PFUZE100_SW3AMODE	0x3f
+>>  #define PFUZE100_SW3BVOL	0x43
+>> +#define PFUZE100_SW3BMODE	0x46
+>>  #define PFUZE100_SW4VOL		0x4a
+>> +#define PFUZE100_SW4MODE	0x4d
+>>  #define PFUZE100_SWBSTCON1	0x66
+>>  #define PFUZE100_VREFDDRCON	0x6a
+>>  #define PFUZE100_VSNVSVOL	0x6b
+>> @@ -44,6 +51,13 @@
+>>  #define PFUZE100_VGEN5VOL	0x70
+>>  #define PFUZE100_VGEN6VOL	0x71
 >>
-> You may never use, but if the driver reflects the controller as
-> precisely as it is, linux could support any usecase that some
-> baremetal code could support on your platform.
-> For example, you could support "normal" and "scu" mode over the 3-cell
-> mechanism I suggested. But your original proposal/assumption of
-> "scu-mode", failed immediately, hence Oleksij had to imlpement the
-> "normal" mode.
->=20
->=20
->> For example:
->> AP:
->> node {
->>         ...
->>         // cell 0 meaning: 0: tx 1: rx  cell1 meaning: channel id
->>         Mboxes =3D <&mbox 0 1 &mbox 1 2>
->>         Mbox-names =3D "tx", "rx";
->>>
+>> +#define PFUZE100_SWxMODE_MASK	0xf
+>> +#define PFUZE100_SWxMODE_APS_APS	0x8
+>> +#define PFUZE100_SWxMODE_APS_OFF	0x4
+>> +
+>> +#define PFUZE100_VGENxLPWR	BIT(6)
+>> +#define PFUZE100_VGENxSTBY	BIT(5)
+>> +
+>>  enum chips { PFUZE100, PFUZE200, PFUZE3000 =3D 3 };
 >>
->> M4:
->> node {
->>         ...
->>         Mboxes =3D <&mbox 0 2 &mbox 1 1>
->>         Mbox-names =3D "tx", "rx";
->>>
->> This make things complicated and error prone as I said before.
+>>  struct pfuze_regulator {
+>> @@ -492,6 +506,69 @@ static inline struct device_node *match_of_node(i=
+nt
+>> index)  }  #endif
 >>
-> I don't see how.
->=20
->=20
->> But that's just my understanding and may overlook something, if you st=
-ill think
->> we should do exactly as above, I will not against it because it does w=
-ork for M4 case.
+>> +static struct pfuze_chip *syspm_pfuze_chip;
+>> +
+>> +static void pfuze_power_off_prepare(void)=20
+>> +	dev_info(syspm_pfuze_chip->dev, "Configure standy mode for power
+>> +off");
+> Add 'if (syspm_pfuze_chip ->chip_id =3D=3D PFUZE100))' here is easy for=
+ extend=20
+> Support on pfuze200/3000.. in the feature.
+
+ok.
+
+>> +
+>> +	/* Switch from default mode: APS/APS to APS/Off */
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap,
+>> PFUZE100_SW1ABMODE,
+>> +			   PFUZE100_SWxMODE_MASK,
+>> PFUZE100_SWxMODE_APS_OFF);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap,
+>> PFUZE100_SW1CMODE,
+>> +			   PFUZE100_SWxMODE_MASK,
+>> PFUZE100_SWxMODE_APS_OFF);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW2MODE,
+>> +			   PFUZE100_SWxMODE_MASK,
+>> PFUZE100_SWxMODE_APS_OFF);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap,
+>> PFUZE100_SW3AMODE,
+>> +			   PFUZE100_SWxMODE_MASK,
+>> PFUZE100_SWxMODE_APS_OFF);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap,
+>> PFUZE100_SW3BMODE,
+>> +			   PFUZE100_SWxMODE_MASK,
+>> PFUZE100_SWxMODE_APS_OFF);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW4MODE,
+>> +			   PFUZE100_SWxMODE_MASK,
+>> PFUZE100_SWxMODE_APS_OFF);
+>> +
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN1VOL,
+>> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+>> +			   PFUZE100_VGENxSTBY);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN2VOL,
+>> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+>> +			   PFUZE100_VGENxSTBY);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN3VOL,
+>> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+>> +			   PFUZE100_VGENxSTBY);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN4VOL,
+>> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+>> +			   PFUZE100_VGENxSTBY);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN5VOL,
+>> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+>> +			   PFUZE100_VGENxSTBY);
+>> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN6VOL,
+>> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
+>> +			   PFUZE100_VGENxSTBY);
+>> +}
+>> +
+>> +static int pfuze_power_off_prepare_init(struct pfuze_chip *pfuze_chip=
+)
+>> +{
+>> +	if (pfuze_chip->chip_id !=3D PFUZE100) {
+>> +		dev_warn(pfuze_chip->dev, "Requested pm_power_off_prepare
+>> handler for not supported chip\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	if (pm_power_off_prepare) {
+>> +		dev_warn(pfuze_chip->dev, "pm_power_off_prepare is already
+>> registered.\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	if (syspm_pfuze_chip) {
+>> +		dev_warn(pfuze_chip->dev, "syspm_pfuze_chip is already set.\n");
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	syspm_pfuze_chip =3D pfuze_chip;
+>> +	pm_power_off_prepare =3D pfuze_power_off_prepare;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int pfuze_identify(struct pfuze_chip *pfuze_chip)  {
+>>  	unsigned int value;
+>> @@ -661,6 +738,20 @@ static int pfuze100_regulator_probe(struct i2c_cl=
+ient
+>> *client,
+>>  		}
+>>  	}
 >>
-> Cool, done.
->=20
->=20
->> Then the left question is how we handle SCU case?
+>> +	if (of_property_read_bool(client->dev.of_node,
+>> +				  "fsl,pmic-stby-poweroff"))
+>> +		return pfuze_power_off_prepare_init(pfuze_chip);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int pfuze100_regulator_remove(struct i2c_client *client) {
+>> +	if (syspm_pfuze_chip) {
+>> +		syspm_pfuze_chip =3D NULL;
+>> +		pm_power_off_prepare =3D NULL;
+>> +	}
+>> +
+>>  	return 0;
+>>  }
 >>
-> Please point me to the code that you worry might not work.
->=20
->=20
+>> @@ -671,6 +762,7 @@ static struct i2c_driver pfuze_driver =3D {
+>>  		.of_match_table =3D pfuze_dt_ids,
+>>  	},
+>>  	.probe =3D pfuze100_regulator_probe,
+>> +	.remove =3D pfuze100_regulator_remove,
+>>  };
+>>  module_i2c_driver(pfuze_driver);
 >>
->> I'm a bit confusing....
->> The section 3.6 you pointed is the MHU register description. It does n=
-ot conflict
->> with what I see from ARM doc center that each physical channel is unid=
-irectional.
->>
->> See below:
->> Chan 1:
->> 0x000 SCP_INTR_L_STAT
->> 0x008 SCP_INTR_L_SET
->> 0x010 SCP _INTR_L_CLEAR
->>
->> Chan 2:
->> 0x020 SCP_INTR_H_STAT
->> 0x028 SCP_INTR_H_SET
->> 0x030 SCP _INTR_H_CLEAR
->>
->> Chan 3:
->> 0x100 CPU_INTR_L_STAT
->> 0x108 CPU_INTR_L_SET
->> 0x110 CPU_INTR_L_CLEAR
->>
->> Chan 4:
->> 0x120 CPU_INTR_H_STAT
->> 0x128 CPU_INTR_H_SET
->> 0x130 CPU_INTR_H_CLEAR
->>
->> Chan 5:
->> 0x200 SCP_INTR_S_STAT
->> 0x208 SCP_INTR_S_SET
->> 0x210 SCP _INTR_S_CLEAR
->>
->> Chan 6:
->> 0x300 CPU_INTR_S_STAT
->> 0x308 CPU_INTR_S_SET
->> 0x310 CPU_INTR_S_CLEAR
->>
->> And the driver compose them into 3 channel links (lp, hp and sec).
->> Am I wrong?
->>
-> The RX and TX are not independent of each other, their priorities are
-> tied together in hardware. So it makes more sense (as compared to
-> declaring them independent) to club them together as one channel.
-> Whatever example you take - MHU or TI - you won't find a driver that
-> implements a virtual mode like "scu-mode".
->=20
->=20
->>>>
->>>> Sorry for may not clear, "Passing short message' usecase is to tell
->>>> how the HW is working on one channel mode sending up to 4 words in o=
-ne
->>>> time As specified in reference manual.
->>>>
->>>> SCU does work that way, the only difference is it's using polling mo=
-de
->>>> rather than interrupt driven.  The point is the data size may be
->>>> different for each msg, so we can't simply know which data register
->>>> interrupt should be enable from static data defined in device tree.
->>>>
->>> And you think passing variable data through registers is a better ide=
-a than
->>> passing packets via shared-memory?
->>>
->>
->> You got me. :-)
->> I've no idea about which one is better.
->>
-> Passing data directly via controller makes sense only when your
-> protocol defines fixed length packets that fit into registers (usually
-> FIFOs) or there is no shared memory between the processors.
-> Otherwise, you write a data packet at some located in shmem, and
-> provide its start and size along with the code of expected operation
-> on it, over the mailbox. Please refer to "Passing frame information"
-> para of page-2743 of your manual.
-> That is another reason the SCU implementation is broken - it has
-> variable length packets and yet use registers to pass them around.
->=20
->=20
->> The problem is SCU firmware is already
->> there passing packets through data registers, we have no way to change=
- it.
->>
-> OK. But what is SCU exactly? Part of ATF? Do you get some binary from
-> third party? If the last, you shouldn't be paying hsit for such a
-> design.
->=20
->=20
->>>
->>> The hardware has 8 unidirectional channels. But your protocol (SCU
->>> implementation) assumes there is one _virtual_ channel that has 4 reg=
-isters
->>> and 1/0 irq --- which is not true. Instead of fixing the assumption i=
-n your
->>> protocol or emulating the virtual channel in the protocol level (user=
- of a MU),
->>> you want to add code in the controller driver that ignores interrupts=
- and club
->>> the 4 independent channels together.
->>>
->>
->> This stucks me. This is how the hardware is designed  and suggested to=
- use
->> in hardware reference manual. And now you're telling me this is wrong =
-and
->> we should not use the design in reference manual...
->>
-> What you call "suggested to use in hardware reference manual" is just
-> 1/5 examples of usecase.
-> And SCU is not even doing that correctly (it uses variable length
-> packet, unlike the fixed 4-words suggestion).
->=20
-> A manual can suggest multiple ways of implementing a usecase. It is
-> our job to chose the best one.
+>> --
+>> 2.18.0
 >=20
 
 
---VpFWl5GtRBYIKYKDR11PanKckHsI4adPs--
+--pFAUOKSuRxFMze1y29w5DqVceqozD4x5Y--
 
---P0zko6jFhNP8z1cNJ6tfSmqdR1iaw0ok9
+--LwQFIlLOjXGOTd1dIcOYesL3Vuu40VYjj
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltev88ACgkQdQOiSHVI
-77Qw/Qf/Ue3D29j4fDaNE4Mzy++XEZ75T2Uu2lx+1q3ePWx8PdB4/qA4gEwIJweO
-DsBMP/KmCK/m8Gle/MkkeyUEBeX1HN7urZduQTvDV62jlhBGuuh4xb7Cd4j876NY
-m6yC6NFXGc/biVrRUalOFW1NitbejOFjRSrjaruNGbOFiL286dUuBEaKpHQPjO1f
-LHq4j9ADXY5wzB2T6h4t4RYJI1t7p/k97CFW98Herf1lvVqPdFEo9fkOyaAOQOQd
-7rnUWLxviSRu1LPRl/bzoyUp45+DXnpTZwPLU0FApV8HJy7Y2AxDvvIWdwK/fafy
-33xWZH7kDnNtBu7+n/YYvgqY/xtcfQ==
-=Wlau
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltew18ACgkQdQOiSHVI
+77SvkQf/bz7OrfiRl8LAMXrax99StT38kYGTmGgksJHP2PC83HQjyLzmIxEGq25z
+l5fN4f6h/raCXmKT289xTpnE0yWSFcnkerKAYW9hlqvICAgw4VTmtAKFzbej3hqm
+5S7gp9dyUPhfaWvUsnndVZCWy1+EOphvfQTNOBgPeyTCIyoGAU8f0iIUVdZNhq1H
+aZ/hqwM0tQXjdlCGbpiZatqrSK0WqxA5kiOpt0yMZnsuRjgqugBpRf0f7RKpVQ5M
+CRMZ22sQgRVDwnfABiJmOCxNohqKuguwloODn6T7SLt2A8F13Gi40tyuBYCcLp0f
+mA5Y5N3UoK17rFzuChlGAmi8Cq3F0Q==
+=PyHs
 -----END PGP SIGNATURE-----
 
---P0zko6jFhNP8z1cNJ6tfSmqdR1iaw0ok9--
-
-
---===============5599432849341716580==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5599432849341716580==--
+--LwQFIlLOjXGOTd1dIcOYesL3Vuu40VYjj--
