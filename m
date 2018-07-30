@@ -1,29 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/5] dt-bindings: pinctrl: Add bindings for Actions
- Semi S700 SoC
-Date: Mon, 30 Jul 2018 17:18:29 -0600
-Message-ID: <20180730231829.GA11190@rob-hp-laptop>
-References: <20180729182551.19383-1-sravanhome@gmail.com>
- <20180729200038.11795-1-sravanhome@gmail.com>
- <20180729200038.11795-4-sravanhome@gmail.com>
+Subject: Re: [PATCH v2 01/10] dt-bindings: mmc: tegra: Add pad voltage
+ control properties
+Date: Mon, 30 Jul 2018 17:22:02 -0600
+Message-ID: <20180730232202.GA14378@rob-hp-laptop>
+References: <1532607560-11253-1-git-send-email-avienamo@nvidia.com>
+ <1532607560-11253-2-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180729200038.11795-4-sravanhome@gmail.com>
+In-Reply-To: <1532607560-11253-2-git-send-email-avienamo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravanan Sekar <sravanhome@gmail.com>
-Cc: manivannan.sadhasivam@linaro.org, linus.walleij@linaro.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com
+To: Aapo Vienamo <avienamo@nvidia.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 29, 2018 at 10:00:36PM +0200, Saravanan Sekar wrote:
-> Add pinctrl and pio bindings for Actions Semi S700 SoC.
+On Thu, Jul 26, 2018 at 03:19:11PM +0300, Aapo Vienamo wrote:
+> Document the pinctrl bindings used by the SDHCI driver to reconfigure
+> pad voltages on controllers supporting multiple voltage levels.
 > 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
 > ---
->  .../bindings/pinctrl/actions,s700-pinctrl.txt | 170 ++++++++++++++++++
->  1 file changed, 170 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s700-pinctrl.txt
+>  .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
