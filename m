@@ -1,59 +1,29 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] of/fdt: Remove PPC32 longtrail hack in memory scan
-Date: Mon, 30 Jul 2018 20:47:01 +1000
-Message-ID: <87in4xhufu.fsf@concordia.ellerman.id.au>
-References: <20180727053555.26596-1-mpe@ellerman.id.au>
- <CAL_JsqK4GEPJSPg+sStvFyO=sQ0Fp49FKKTz0S9OGc1COOnp-g@mail.gmail.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v11 2/2] mfd: bd71837: Devicetree bindings for ROHM
+ BD71837 PMIC
+Date: Mon, 30 Jul 2018 13:49:18 +0300
+Message-ID: <20180730104918.GB8862@localhost.localdomain>
+References: <cover.1532946848.git.matti.vaittinen@fi.rohmeurope.com>
+ <04328e559dcb38b8722248af5a2de028d4237224.1532946848.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <CAL_JsqK4GEPJSPg+sStvFyO=sQ0Fp49FKKTz0S9OGc1COOnp-g@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <04328e559dcb38b8722248af5a2de028d4237224.1532946848.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, eballetbo@gmail.com, linus.walleij@linaro.org, mazziesaccount@gmail.com, dmitry.torokhov@gmail.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, broonie@kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh+dt@kernel.org> writes:
-> On Thu, Jul 26, 2018 at 11:36 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
->> When the OF code was originally made common by Grant in commit
->> 51975db0b733 ("of/flattree: merge early_init_dt_scan_memory() common
->> code") (Feb 2010), the common code inherited a hack to handle
->> PPC "longtrail" machines, which had a "memory@0" node with no
->> device_type.
->>
->> That check was then made to only apply to PPC32 in b44aa25d20e2 ("of:
->> Handle memory@0 node on PPC32 only") (May 2014).
->>
->> But according to Paul Mackerras the "longtrail" machines are long
->> dead, if they were ever seen in the wild at all. If someone does still
->> have one, we can handle this firmware wart in powerpc platform code.
->>
->> So remove the hack once and for all.
->
-> Yay. I guess Power Macs and other quirks will never die...
+On Mon, Jul 30, 2018 at 01:46:37PM +0300, Matti Vaittinen wrote:
+> Document devicetree bindings for ROHM BD71837 PMIC MFD.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Not soon.
+Please note - this patch is unchanged from previous version so I 
+maintained the reviewed-by and acked by statements.
 
-In base.c I see:
- - the hack in arch_find_n_match_cpu_physical_id()
-   - we should just move that into arch code, it's a __weak arch hook
-     after all.
- - a PPC hack in of_alias_scan(), I guess we need to retain that
-   behaviour, but it's pretty minor anyway.
-
-In address.c there's the powermac empty ranges hack. Seems like we could
-fix that just by creating empty `ranges` properties in fixup_device_tree().
-I don't think we support booting powermacs other than via prom_init(). (Ben?)
-
-> I'll queue this up.
-
-cheers
+Br,
+	Matti Vaittinen
