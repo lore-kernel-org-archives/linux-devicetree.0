@@ -1,90 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: dw: export dw_spi_set_cs" to the spi tree
-Date: Mon, 30 Jul 2018 12:05:06 +0100 (BST)
-Message-ID: <20180730110506.5931F1124216@debutante.sirena.org.uk>
-References: <20180727195358.23336-2-alexandre.belloni@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727195358.23336-2-alexandre.belloni@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>linux-spi@vger.kernel.org
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [RFC PATCHv2 3/9] dt-bindings: display/ti: add am65x-dss bindings
+Date: Mon, 30 Jul 2018 14:00:37 +0300
+Message-ID: <040677d9-afad-8474-06ff-c606c45c2295@ti.com>
+References: <20180618132242.8673-1-tomi.valkeinen@ti.com>
+ <20180618132242.8673-4-tomi.valkeinen@ti.com> <4964448.gXkgufmvOo@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4964448.gXkgufmvOo@avalon>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   spi: dw: export dw_spi_set_cs
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From c79bdbb490a1d05c6169cbffd37c19f5aa96587a Mon Sep 17 00:00:00 2001
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Date: Fri, 27 Jul 2018 21:53:54 +0200
-Subject: [PATCH] spi: dw: export dw_spi_set_cs
-
-Export dw_spi_set_cs so it can be used from the various IP integration
-modules.
-
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-dw.c | 3 ++-
- drivers/spi/spi-dw.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index 0d8ccb8be5ec..683a4f137a25 100644
---- a/drivers/spi/spi-dw.c
-+++ b/drivers/spi/spi-dw.c
-@@ -133,7 +133,7 @@ static inline void dw_spi_debugfs_remove(struct dw_spi *dws)
- }
- #endif /* CONFIG_DEBUG_FS */
- 
--static void dw_spi_set_cs(struct spi_device *spi, bool enable)
-+void dw_spi_set_cs(struct spi_device *spi, bool enable)
- {
- 	struct dw_spi *dws = spi_controller_get_devdata(spi->controller);
- 	struct chip_data *chip = spi_get_ctldata(spi);
-@@ -145,6 +145,7 @@ static void dw_spi_set_cs(struct spi_device *spi, bool enable)
- 	if (!enable)
- 		dw_writel(dws, DW_SPI_SER, BIT(spi->chip_select));
- }
-+EXPORT_SYMBOL_GPL(dw_spi_set_cs);
- 
- /* Return the max entries we can fill into tx fifo */
- static inline u32 tx_max(struct dw_spi *dws)
-diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 446013022849..0168b08364d5 100644
---- a/drivers/spi/spi-dw.h
-+++ b/drivers/spi/spi-dw.h
-@@ -245,6 +245,7 @@ struct dw_spi_chip {
- 	void (*cs_control)(u32 command);
- };
- 
-+extern void dw_spi_set_cs(struct spi_device *spi, bool enable);
- extern int dw_spi_add_host(struct device *dev, struct dw_spi *dws);
- extern void dw_spi_remove_host(struct dw_spi *dws);
- extern int dw_spi_suspend_host(struct dw_spi *dws);
--- 
-2.18.0
+T24gMzAvMDcvMTggMDI6MDQsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gSGkgVG9taSwKPiAK
+PiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KPiAKPiBPbiBNb25kYXksIDE4IEp1bmUgMjAxOCAx
+NjoyMjozNiBFRVNUIFRvbWkgVmFsa2VpbmVuIHdyb3RlOgo+PiBBZGQgRFQgYmluZGluZ3MgZm9y
+IFRleGFzIEluc3RydW1lbnRzIEFNNjV4IFNvQyBEaXNwbGF5IFN1YnN5c3RlbS4gIFRoZQo+PiBE
+U1M3IG9uIEFNNjV4IFNvQyBoYXMgdHdvIHZpZGVvIHBvcnRzIChEUEkgYW5kIE9MREkpIGFuZCB0
+d28gdmlkZW8KPj4gcGlwZWxpbmVzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxq
+c2FyaGFAdGkuY29tPgo+PiBTaWduZWQtb2ZmLWJ5OiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxr
+ZWluZW5AdGkuY29tPgo+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPj4gLS0tCj4+
+ICAuLi4vYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNzLnR4dCAgICAgICAgICAgfCAxNiAr
+KysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKQo+PiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0Cj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3RpL3RpLGFtNi1kc3MudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxhbTYtZHNzLnR4dAo+PiBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGFtNi1kc3MudHh0IG5l
+dyBmaWxlIG1vZGUKPj4gMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uMzQ2NmYwOTVmYjg0
+Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvdGkvdGksYW02LWRzcy50eHQKPj4gQEAgLTAsMCArMSwxNiBAQAo+PiArVGV4
+YXMgSW5zdHJ1bWVudHMgQU02NXggRGlzcGxheSBTdWJzeXN0ZW0KPj4gKz09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
+Ogo+PiArLSBjb21wYXRpYmxlOiAidGksYW02NXgtZHNzIiwgInRpLGFtNi1kc3MiCj4+ICstIHJl
+ZzogYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzcGFjZXMgZm9yIERTUyBzdWJt
+b2R1bGVzCj4+ICstIHJlZy1uYW1lczogImNvbW1vbiIsICJ2aWRsMSIsICJ2aWQiLCAib3ZyMSIs
+ICJvdnIyIiwgInZwMSIsICJ2cDIiCj4+ICstIGNsb2NrczogcGhhbmRsZSB0byBmY2xrLCB2cDEs
+IGFuZCB2cDIgY2xvY2tzCj4+ICstIGNsb2NrLW5hbWVzOiAiZmNrIiwgInZwMSIsICJ2cDIiCj4+
+ICstIGludGVycnVwdHM6IHBoYW5kbGUgdG8gdGhlIERJU1BDIGludGVycnVwdAo+PiArLSBzeXNj
+b246IHBoYW5kbGUgdG8gc3lzY29uIGRldmljZSBoYW5kbGluZyBPTERJX1BXUkROX1RYIChwYXJ0
+aXRpb24gMSBvZgo+PiArICBBTTY1NCBDVFJMIE1NUjApCj4+ICsKPj4gK1RoZSBEU1Mgb3V0cHV0
+cyBhcmUgZGVzY3JpYmVkIHVzaW5nIHRoZSBkZXZpY2UgZ3JhcGhzIGFzIGRvY3VtZW50ZWQgaW4K
+Pj4gK0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuIEFNNiBEU1Mg
+aGFzIGEgRFBJIG91dHB1dCBhcwo+PiBwb3J0IDAKPj4gK2FuZCBhbiBPTERJIG91dHB1dCBhcyBw
+b3J0IDEuCj4gCj4gV2l0aG91dCBkb2N1bWVudGF0aW9uIGZvciB0aGUgQU02NXggaXQncyBoYXJk
+IHRvIHJldmlldyB0aGVzZSBEVCBiaW5kaW5ncy4gCj4gSG93ZXZlciwgbXkgY29tbWVudCByZWdh
+cmRpbmcgdGhlIHJlZ2lzdGVycyBvZiB0aGUgazJnLWRzcyBiaW5kaW5ncyBhcHBsaWVzIAo+IGhl
+cmUgdG9vLgoKU29ycnkgdGhhdCBJIGRpZG4ndCBwcm92aWRlIHRoZSBsaW5rLiBJIGd1ZXNzIGl0
+J3Mgbm90IGVhc2lseSBmb3VuZCBmcm9tCnRpLmNvbSBhdCB0aGUgbW9tZW50OgoKaHR0cDovL3d3
+dy50aS5jb20vbGl0L3VnL3NwcnVpZDcvc3BydWlkNy5wZGYKCi0tIApUZXhhcyBJbnN0cnVtZW50
+cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5udXMv
+QnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
