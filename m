@@ -1,75 +1,75 @@
-From: Anup Patel <anup@brainfault.org>
-Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
-Date: Mon, 30 Jul 2018 21:21:58 +0530
-Message-ID: <CAAhSdy1rGMqhLDKMipGgP+4sYyNc_ckuHREy+Y8zb-hJeeZPog@mail.gmail.com>
-References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-8-hch@lst.de>
- <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 0/9] Add Reset Controller support for Actions Semi Owl
+ SoCs
+Date: Mon, 30 Jul 2018 21:39:04 +0530
+Message-ID: <20180730160904.GA2511@Mani-XPS-13-9360>
+References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
+ <c3ae668a-6bcc-a0eb-1e00-14ef9d607316@suse.de>
+ <20180730151131.GA28633@mani>
+ <1532965111.3471.14.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com>
+Content-Disposition: inline
+In-Reply-To: <1532965111.3471.14.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat 28 Jul, 2018, 5:34 AM Atish Patra, <atish.patra@wdc.com> wrote:
->
-> On 7/26/18 7:38 AM, Christoph Hellwig wrote:
-> > This patch adds a driver for the Platform Level Interrupt Controller (PLIC)
-> > specified as part of the RISC-V supervisor level ISA manual, in the memory
-> > layout implemented by SiFive and qemu.
-> >
-> > The PLIC connects global interrupt sources to the local interrupt controller
-> > on each hart.
-> >
-> > This driver is based on the driver in the RISC-V tree from Palmer Dabbelt,
-> > but has been almost entirely rewritten since.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
->
-> I tried to boot HighFive Unleashed with the patch series after applying
-> all the patches from riscv-all branch except timer & irq patches. It
-> gets stuck pretty early.
->
-> Here is my github repo with all the changes:
-> https://github.com/atishp04/riscv-linux/commits/master_chris_cleanup_hifive
->
-> I am still looking into it.
-> Palmer: Did I miss something?
->
-> FWIW, here is the boot log.
-> --------- Boot log -------------------------------------------
-> [    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=5
-> [    0.000000] NR_IRQS: 0, nr_irqs: 0, preallocated irqs: 0
-> [    0.000000] plic: mapped 53 interrupts to 4 (out of 9) handlers.
-> [    0.000000] clocksource: riscv_clocksource: mask: 0xffffffffffffffff
-> max_cycles: 0x1d854df40, max_idle_ns: 3526361616960 ns
-> [    0.000000] Calibrating delay loop (skipped), value calculated using
-> timer frequency.. 2.00 BogoMIPS (lpj=10000)
-> [    0.010000] pid_max: default: 32768 minimum: 301
-> [    0.010000] Mount-cache hash table entries: 16384 (order: 5, 131072
-> bytes)
-> [    0.020000] Mountpoint-cache hash table entries: 16384 (order: 5,
-> 131072 bytes)
-> [    0.020000] Hierarchical SRCU implementation.
-> [    0.030000] smp: Bringing up secondary CPUs ...
+Hi Philipp,
 
-I have noticed following:
+On Mon, Jul 30, 2018 at 05:38:31PM +0200, Philipp Zabel wrote:
+> On Mon, 2018-07-30 at 20:41 +0530, Manivannan Sadhasivam wrote:
+> > Hi Andreas,
+> > 
+> > On Mon, Jul 30, 2018 at 12:26:07PM +0200, Andreas Färber wrote:
+> > > Hi Mani,
+> > > 
+> > > Am 27.07.2018 um 20:45 schrieb Manivannan Sadhasivam:
+> > > > This patchset adds Reset Controller (RMU) support for Actions Semi
+> > > > Owl SoCs, S900 and S700. For the Owl SoCs, RMU has been integrated into
+> > > > the clock subsystem in hardware. Hence, in software we integrate RMU
+> > > > support into common clock driver inorder to maintain compatibility.
+> > > 
+> > > Can this not be placed into drivers/reset/ by using mfd-simple with a
+> > > sub-node in DT?
+> > > 
+> > 
+> > Actually I was not sure where to place this reset controller driver. When I
+> > looked into other similar ones such as sunxi, they just integrated into the
+> > clk subsystem. So I just chose that path. But yeah, this is hacky!
+> > 
+> > But this RMU is not MFD by any means. Since the CMU (Clock) and RMU (Reset)
+> > are two separate IPs inside SoC, we shouldn't describe it as a MFD driver. Since
+> > RMU has only 2 registers, the HW designers decided to use up the CMU memory
+> > map. So, maybe syscon would be best option I think. What is your opinion?
+> 
+> Using syscon seems cleaner than stuffing the regmap into owl_clk_desc.
+> 
 
-1. plic_irq_toggle() works on all present CPUs which means an
-IRQ will be enabled/disabled for all present CPUs. This further
-imply that whenever an IRQ is triggered, all online CPUs will take
-the interrupt but only one CPU will be successful in claiming the
-IRQ and other CPUs will check for IRQ in vain.
+Okay.
 
-2. irq_set_affinity() is not available which means IRQ balancing
-will not work.
+> > Even if we go for syscon, we should place the reset driver within clk
+> > framework as I can see other SoCs like Mediatek are doing the same. But again
+> > I'm not sure!
+> 
+> Me neither. If the CMU and RMU are really separate and only share the
+> memory map, a syscon driver could live in drivers/reset without
+> problems.
+> It's only when there are interactions between clocks and resets that you
+> really want to have the reset driver integrated with clk.
+> 
 
-3. A PLIC context is for a particular HART+MODE. A HW designer
-can choose to connect PLIC context only for particular MODE of
-HART/CPU whereas this driver assumes that we have context
-available for both M-mode and S-mode of all HARTs/CPUs.
+Okay. Then I will add it as a syscon driver under drivers/reset.
+
+I hope that Andreas would also be happy with this.
+
+Thanks a lot for your response!
 
 Regards,
-Anup
+Mani
+
+> regards
+> Philipp
