@@ -1,72 +1,54 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH 00/10] mscc: ocelot: add support for SerDes muxing configuration
-Date: Mon, 30 Jul 2018 14:43:45 +0200
-Message-ID: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v10 00/10] drivers: Introduce firmware dnd clock river for
+ ZynqMP core
+Date: Mon, 30 Jul 2018 14:50:42 +0200
+Message-ID: <e5448935-770a-5c14-438c-23a652b17822@xilinx.com>
+References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
+ <2c3aad45-37ce-2446-4b90-bddb477286ed@xilinx.com>
+ <CY1PR02MB2138E21A3FFBD5FEEAA7D6D4B8550@CY1PR02MB2138.namprd02.prod.outlook.com>
+ <19376df2-fdd4-12e3-da4c-37106fffed19@xilinx.com>
+ <153262301567.48062.15432354725863055071@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <153262301567.48062.15432354725863055071@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net
-Cc: kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Stephen Boyd <sboyd@kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "mingo@kernel.org" <mingo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, Jolly Shah <JOLLYS@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Ocelot switch has currently a hardcoded SerDes muxing that suits only
-a particular use case. Any other board setup will fail to work.
+On 26.7.2018 18:36, Stephen Boyd wrote:
+> Quoting Michal Simek (2018-07-25 02:51:14)
+>> On 24.7.2018 20:14, Jolly Shah wrote:
+>>>>>  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
+>>>>>  create mode 100644 drivers/firmware/xilinx/zynqmp.c  create mode
+>>>>> 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
+>>>>>  create mode 100644 include/linux/firmware/xlnx-zynqmp.h
+>>>>>
+>>>>
+>>>> It looks pretty calm over the last several series that's why when I get an answer
+>>>> from Stephen or Mike I will take this series via my tree and arm-soc tree.
+>>>>
+>>>> I have applied 01-08 here
+>>>>  https://github.com/Xilinx/linux-xlnx/commits/zynqmp/soc
+>>>>
+>>>> Thanks,
+>>>> Michal
+>>>
+>>>
+>>> Thanks for merging the patches. 
+>>> By mistake I added “Reviewed-by: Stephen Boyd sboyd@kernel.org” for firmware bindings (Patch01).  Stephen had reviewed clock bindings only.  Please suggest if I should send a new version with that fix.
+>>
+>> I have fixed that in my branch and I have asked Shephen to look at clk
+>> over chat.
+>>
+> 
+> I have some unresolved review comments on v9. I'll give reviewed-by when
+> that discussion is resolved.
 
-To prepare for upcoming boards' support that do not have the same muxing,
-create a PHY driver that will handle all possible cases.
-
-A SerDes can work in SGMII, QSGMII or PCIe and is also muxed to use a
-given port depending on the selected mode or board design.
-
-The SerDes configuration is in the middle of an address space (HSIO) that
-is used to configure some parts in the MAC controller driver, that is why
-we need to use a syscon so that we can write to the same address space from
-different drivers safely using regmap.
-
-Patches from generic PHY and net should be safe to be merged separately.
-
-I suggest patches 1 to 5 and 10 go through net while the others (6 to 9)
-go through the generic PHY subsystem.
+ok. Do you want to take them via clk tree or via arm-soc tree?
 
 Thanks,
-Quentin
-
-Quentin Schulz (10):
-  MIPS: mscc: ocelot: make HSIO registers address range a syscon
-  dt-bindings: net: ocelot: remove hsio from the list of register address spaces
-  net: mscc: ocelot: get HSIO regmap from syscon
-  net: mscc: ocelot: move the HSIO header to include/soc
-  net: mscc: ocelot: simplify register access for PLL5 configuration
-  phy: add QSGMII and PCIE modes
-  dt-bindings: phy: add DT binding for Microsemi Ocelot SerDes muxing
-  MIPS: mscc: ocelot: add SerDes mux DT node
-  phy: add driver for Microsemi Ocelot SerDes muxing
-  net: mscc: ocelot: make use of SerDes PHYs for handling their configuration
-
- Documentation/devicetree/bindings/mips/mscc.txt             |  16 +-
- Documentation/devicetree/bindings/net/mscc-ocelot.txt       |   9 +-
- Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt |  42 +-
- arch/mips/boot/dts/mscc/ocelot.dtsi                         |  19 +-
- drivers/net/ethernet/mscc/Kconfig                           |   2 +-
- drivers/net/ethernet/mscc/ocelot.c                          |  16 +-
- drivers/net/ethernet/mscc/ocelot.h                          |  79 +-
- drivers/net/ethernet/mscc/ocelot_board.c                    |  54 +-
- drivers/net/ethernet/mscc/ocelot_hsio.h                     | 785 +------
- drivers/net/ethernet/mscc/ocelot_regs.c                     |  93 +-
- drivers/phy/Kconfig                                         |   1 +-
- drivers/phy/Makefile                                        |   1 +-
- drivers/phy/mscc/Kconfig                                    |  11 +-
- drivers/phy/mscc/Makefile                                   |   5 +-
- drivers/phy/mscc/phy-ocelot-serdes.c                        | 314 +++-
- include/linux/phy/phy.h                                     |   2 +-
- include/soc/mscc/ocelot_hsio.h                              | 859 +++++++-
- 17 files changed, 1343 insertions(+), 965 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
- delete mode 100644 drivers/net/ethernet/mscc/ocelot_hsio.h
- create mode 100644 drivers/phy/mscc/Kconfig
- create mode 100644 drivers/phy/mscc/Makefile
- create mode 100644 drivers/phy/mscc/phy-ocelot-serdes.c
- create mode 100644 include/soc/mscc/ocelot_hsio.h
-
-base-commit: d6e74c71c4de5222f147b64bf747e8a3c523c690
--- 
-git-series 0.9.1
+Michal
