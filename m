@@ -1,51 +1,84 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH 0/2] dt: thermal: Fix broken cooling-maps
-Date: Tue, 31 Jul 2018 14:00:58 +0800
-Message-ID: <1533016858.2550.21.camel@intel.com>
-References: <cover.1530766981.git.viresh.kumar@linaro.org>
-         <20180731045151.gqsgsm6l3gwr5m4z@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Todor Tomov <todor.tomov@linaro.org>
+Subject: [PATCH v4.1 08/34] media: dt-bindings: media: qcom,camss: Unify the clock names
+Date: Tue, 31 Jul 2018 09:19:43 +0300
+Message-ID: <1533017983-11374-1-git-send-email-todor.tomov@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731045151.gqsgsm6l3gwr5m4z@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, robh@kernel.org, Wei Xu <xuwei5@hisilicon.com>
-Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 二, 2018-07-31 at 10:21 +0530, Viresh Kumar wrote:
-> On 05-07-18, 10:39, Viresh Kumar wrote:
-> > 
-> > Hi,
-> > 
-> > This is an attempt to fix the broken or partially defined DT
-> > bindings
-> > for cooling-maps. We should list every device that participates in
-> > cooling down at a certain trip point, instead of just the first in
-> > the
-> > list as that depends on certain ordering of events to work
-> > properly.
-> > 
-> > The first patch extends the binding to allow a list of phandles in
-> > "cooling-device" property and the second patch fixes one of the
-> > platform's DT.
-> > 
-> > This will be followed up by fixing all platform DT bindings that
-> > have
-> > these issues after this set is accepted.
-> > 
-> > The kernel also requires some changes to handle the phandle list,
-> > but
-> > wouldn't break with these changes as it reads the first phandle in
-> > the
-> > list for now. We can update that separately.
-> @Zhang: Are you going to apply this for 4.19-rc1 ? There are lot of
-> patches that
-> I am holding up until this gets merged,
-> 
-I suppose this patch should go via Eduardo' tree.
-Eduardo, can you please take a look at this patch set?
+Use more logical clock names - similar to the names in documentation.
+This will allow better handling of the clocks in the driver when support
+for more hardware versions is added - equivalent clocks on different
+hardware versions will have the same name.
 
-thanks,
-rui
+Note: No dts is using this device (and clock names) yet.
+
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+index cadeceb..032e8ed 100644
+--- a/Documentation/devicetree/bindings/media/qcom,camss.txt
++++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+@@ -53,7 +53,7 @@ Qualcomm Camera Subsystem
+ 	Usage: required
+ 	Value type: <stringlist>
+ 	Definition: Should contain the following entries:
+-                - "camss_top_ahb"
++                - "top_ahb"
+                 - "ispif_ahb"
+                 - "csiphy0_timer"
+                 - "csiphy1_timer"
+@@ -67,11 +67,11 @@ Qualcomm Camera Subsystem
+                 - "csi1_phy"
+                 - "csi1_pix"
+                 - "csi1_rdi"
+-                - "camss_ahb"
+-                - "camss_vfe_vfe"
+-                - "camss_csi_vfe"
+-                - "iface"
+-                - "bus"
++                - "ahb"
++                - "vfe0"
++                - "csi_vfe0"
++                - "vfe_ahb"
++                - "vfe_axi"
+ - vdda-supply:
+ 	Usage: required
+ 	Value type: <phandle>
+@@ -161,7 +161,7 @@ Qualcomm Camera Subsystem
+ 			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+ 			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
+ 			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
+-                clock-names = "camss_top_ahb",
++                clock-names = "top_ahb",
+                         "ispif_ahb",
+                         "csiphy0_timer",
+                         "csiphy1_timer",
+@@ -175,11 +175,11 @@ Qualcomm Camera Subsystem
+                         "csi1_phy",
+                         "csi1_pix",
+                         "csi1_rdi",
+-                        "camss_ahb",
+-                        "camss_vfe_vfe",
+-                        "camss_csi_vfe",
+-                        "iface",
+-                        "bus";
++                        "ahb",
++                        "vfe0",
++                        "csi_vfe0",
++                        "vfe_ahb",
++                        "vfe_axi";
+ 		vdda-supply = <&pm8916_l2>;
+ 		iommus = <&apps_iommu 3>;
+ 		ports {
+-- 
+2.7.4
