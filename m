@@ -1,75 +1,74 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] ARM: dts: qcom: msm8974-hammerhead: increase load on l20
- for sdhci
-Date: Tue, 31 Jul 2018 15:29:28 -0700
-Message-ID: <20180731222928.GA24465@builder>
-References: <20180709091628.GA8854@orion>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: phy-qcom-ipq4019-usb: add binding
+ document
+Date: Tue, 31 Jul 2018 16:33:45 -0600
+Message-ID: <20180731223345.GA23086@rob-hp-laptop>
+References: <20180725054059.19506-1-john@phrozen.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180709091628.GA8854@orion>
+In-Reply-To: <20180725054059.19506-1-john@phrozen.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bhushan Shah <bshah@kde.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Masney <masneyb@onstation.org>
+To: John Crispin <john@phrozen.org>
+Cc: Alban Bedel <albeu@free.fr>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 09 Jul 02:16 PDT 2018, Bhushan Shah wrote:
+On Wed, Jul 25, 2018 at 07:40:57AM +0200, John Crispin wrote:
+> This patch adds the binding documentation for the HS/SS USB PHY found
+> inside Qualcom Dakota SoCs.
 
-> The kernel would not boot on the hammerhead hardware due to the
-> following error:
+Qualcomm
+
 > 
-> mmc0: Timeout waiting for hardware interrupt.
-> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-> mmc0: sdhci: Sys addr:  0x00000200 | Version:  0x00003802
-> mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000200
-> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000023
-> mmc0: sdhci: Present:   0x03e80000 | Host ctl: 0x00000034
-> mmc0: sdhci: Power:     0x00000001 | Blk gap:  0x00000000
-> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000007
-> mmc0: sdhci: Timeout:   0x0000000e | Int stat: 0x00000000
-> mmc0: sdhci: Int enab:  0x02ff900b | Sig enab: 0x02ff100b
-> mmc0: sdhci: AC12 err:  0x00000000 | Slot int: 0x00000000
-> mmc0: sdhci: Caps:      0x642dc8b2 | Caps_1:   0x00008007
-> mmc0: sdhci: Cmd:       0x00000c1b | Max curr: 0x00000000
-> mmc0: sdhci: Resp[0]:   0x00000c00 | Resp[1]:  0x00000000
-> mmc0: sdhci: Resp[2]:   0x00000000 | Resp[3]:  0x00000000
-> mmc0: sdhci: Host ctl2: 0x00000008
-> mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0x70040220
-> mmc0: sdhci: ============================================
-> mmc0: Card stuck in wrong state! mmcblk0 card_busy_detect status: 0xe00
-> mmc0: cache flush error -110
-> mmc0: Reset 0x1 never completed.
-> 
-> This patch increases the load on l20 to 0.2 amps for the sdhci
-> and allows the device to boot normally.
-> 
-> Signed-off-by: Bhushan Shah <bshah@kde.org>
-> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Tested-by: Brian Masney <masneyb@onstation.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: John Crispin <john@phrozen.org>
 > ---
->  arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../bindings/phy/phy-qcom-ipq4019-usb.txt           | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
 > 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> index 4dc0b347b1ee..c2dc9d09484a 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> @@ -189,6 +189,8 @@
->  						regulator-max-microvolt = <2950000>;
->  
->  						regulator-boot-on;
-> +						regulator-system-load = <200000>;
-> +						regulator-allow-set-load;
->  					};
->  
->  					l21 {
+> diff --git a/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt b/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
+> new file mode 100644
+> index 000000000000..362877fcafed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
+> @@ -0,0 +1,21 @@
+> +Qualcom Dakota HS/SS USB PHY
+> +
+> +Required properties:
+> + - compatible: "qcom,usb-ss-ipq4019-phy",
+> +	       "qcom,usb-hs-ipq4019-phy"
+
+<vendor>,<soc>-<block> is the usual order.
+
+> + - reg: offset and length of the registers
+> + - #phy-cells: should be 0
+> + - resets: the reset controllers as listed below
+> + - reset-names: the names of the reset controllers
+> +	"por_rst" - the POR reset line for SS and HS phys
+> +	"srif_rst" - the SRIF reset line for HS phys
+
+'_rst' is redundant.
+
+> +Example:
+> +
+> +hsphy@a8000 {
+
+usb-phy@...
+
+> +	compatible = "qcom,usb-hs-ipq4019-phy";
+> +	phy-cells = <0>;
+> +	reg = <0xa8000 0x40>;
+> +	resets = <&gcc USB2_HSPHY_POR_ARES>,
+> +		 <&gcc USB2_HSPHY_S_ARES>;
+> +	reset-names = "por_rst", "srif_rst";
+> +};
 > -- 
-> 2.17.1
+> 2.11.0
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
