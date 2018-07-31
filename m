@@ -1,134 +1,88 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
- coherent DMA mask)
-Date: Tue, 31 Jul 2018 17:53:26 +0200
-Message-ID: <4339e35944851cc105ddfba03e1b990b@agner.ch>
-References: <CAJKOXPeaguNxRr7pCArJ5Db4tS6Kr5BDheCxskY+vd0dUN+0GQ@mail.gmail.com>
- <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com>
- <20180727140448.GA29001@lst.de> <20180728165820.GA5731@roeck-us.net>
- <45f7fc82-fb9c-e666-4ada-c5338d2c1c96@arm.com>
- <39fa11ce4b7dd151d98868f375baf818@agner.ch>
- <0e893142-a5db-d119-6eb3-f849db6b5d04@arm.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v8 2/4] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Tue, 31 Jul 2018 21:28:09 +0530
+Message-ID: <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
+References: <20180731141146.10788-1-o.rempel@pengutronix.de>
+ <20180731141146.10788-3-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0e893142-a5db-d119-6eb3-f849db6b5d04@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Christoph Hellwig <hch@lst.de>, Krzysztof Kozlowski <krzk@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180731141146.10788-3-o.rempel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31.07.2018 14:32, Robin Murphy wrote:
-> On 31/07/18 09:19, Stefan Agner wrote:
->> On 30.07.2018 16:38, Robin Murphy wrote:
->>> On 28/07/18 17:58, Guenter Roeck wrote:
->>>> On Fri, Jul 27, 2018 at 04:04:48PM +0200, Christoph Hellwig wrote:
->>>>> On Fri, Jul 27, 2018 at 03:18:14PM +0200, Krzysztof Kozlowski wrote:
->>>>>> On 27 July 2018 at 15:11, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>>>> Hi,
->>>>>>>
->>>>>>> On today's next, the bisect pointed commit
->>>>>>> ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d as fault for my boot failures
->>>>>>> with NFSv4 root on Toradex Colibri VF50 (Iris carrier board).
->>>>>>>
->>>>>>> Author: Robin Murphy <robin.murphy@arm.com>
->>>>>>> Date:   Mon Jul 23 23:16:12 2018 +0100
->>>>>>>       OF: Don't set default coherent DMA mask
->>>>>>>
->>>>>>> Board: Toradex Colibri VF50 (NXP VF500, Cortex A5, serial configured
->>>>>>> with DMA) on Iris Carrier.
->>>>>>>
->>>>>>> It looks like problem with Freescale Ethernet driver:
->>>>>>> [   15.458477] fsl-edma 40018000.dma-controller: coherent DMA mask is unset
->>>>>>> [   15.465284] fsl-lpuart 40027000.serial: Cannot prepare cyclic DMA
->>>>>>> [   15.472086] Root-NFS: no NFS server address
->>>>>>> [   15.476359] VFS: Unable to mount root fs via NFS, trying floppy.
->>>>>>> [   15.484228] VFS: Cannot open root device "nfs" or
->>>>>>> unknown-block(2,0): error -6
->>>>>>> [   15.491664] Please append a correct "root=" boot option; here are
->>>>>>> the available partitions:
->>>>>>> [   15.500188] 0100           16384 ram0
->>>>>>> [   15.500200]  (driver?)
->>>>>>> [   15.506406] Kernel panic - not syncing: VFS: Unable to mount root
->>>>>>> fs on unknown-block(2,0)
->>>>>>> [   15.514747] ---[ end Kernel panic - not syncing: VFS: Unable to
->>>>>>> mount root fs on unknown-block(2,0) ]---
->>>>>>>
->>>>>>> Attached - defconfig and full boot log.
->>>>>>>
->>>>>>> Any hints?
->>>>>>> Let me know if you need any more information.
->>>>>>
->>>>>> My Exynos boards also fail to boot on missing network:
->>>>>> https://krzk.eu/#/builders/21/builds/799/steps/10/logs/serial0
->>>>>>
->>>>>> As expected there are plenty of "DMA mask not set" warnings... and
->>>>>> later dwc3 driver fails with:
->>>>>>       dwc3: probe of 12400000.dwc3 failed with error -12
->>>>>> which is probably the answer why LAN attached to USB is not present.
->>>>>
->>>>> Looks like all the drivers failed to set a dma mask and were lucky.
->>>>
->>>> I would call it a serious regression. Also, no longer setting a default
->>>> coherent DMA mask is a quite substantial behavioral change, especially
->>>> if and since the code worked just fine up to now.
->>>
->>> To reiterate, that particular side-effect was an unintentional
->>> oversight, and I was simply (un)lucky enough that none of the drivers
->>> I did test depended on that default mask. Sorry for the blip; please
->>> check whether it's now fixed in next-20180730 as it should be.
->>>
->>
->> Just for my understanding:
->>
->> Your first patch ("OF: Don't set default coherent DMA mask") sounded
->> like that *not* setting default coherent DMA mask was intentionally.
->> Since the commit message reads: "...the bus code has not initialised any
->> default value" that was assuming that all bus code sets a default DMA
->> mask which wasn't the case for "simple-bus".
-> 
-> Yes, reading the patches in the order they were written is perhaps a
-> little unclear, but hopefully the order in which they are now applied
-> makes more sense.
-> 
->> So I guess that is what ("of/platform: Initialise default DMA masks")
->> makes up for in the typical device tree case ("simple-bus")?
-> 
-> Indeed, I'd missed the fact that the now-out-of-place-looking
-> initialisation in of_dma_configure() still actually belonged to
-> of_platform_device_create_pdata() - that patch should make the
-> assumptions of "OF: Don't set default coherent DMA mask" true again,
-> even for OF-platform devices.
-> 
->> Now, since almost all drivers are inside a soc "simple-bus" and DMA mask
->> is set again, can/should we rely on the coherent DMA mask set?
->>
->> Or is the expectation still that this is set on driver level too?
-> 
-> Ideally, we'd like all drivers to explicitly request their masks as
-> the documentation in DMA-API-HOWTO.txt recommends, if only to ensure
-> DMA is actually possible - there can be systems where even the default
-> 32-bit mask is no good - but clearly we're a little way off trying to
-> enforce that just yet.
+On Tue, Jul 31, 2018 at 7:41 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> Each MU has four pairs of rx/tx data register with four rx/tx interrupts
+> which can also be used as a separate channel.
+>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/mailbox/fsl,mu.txt    | 28 +++++++++++++++++--
+>  1 file changed, 25 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> index 90e4905dfc69..9efd3a9ade44 100644
+> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> @@ -18,11 +18,33 @@ Messaging Unit Device Node:
+>  Required properties:
+>  -------------------
+>  - compatible : should be "fsl,<chip>-mu", the supported chips include
+> -               imx8qxp, imx8qm.
+> +               imx6sx, imx7s, imx8qxp, imx8qm.
+> +               The "fsl,imx6sx-mu" compatible is seen as generic and should
+> +               be included together with SoC specific compatible.
+>  - reg :                Should contain the registers location and length
+>  - interrupts : Interrupt number. The interrupt specifier format depends
+>                 on the interrupt controller parent.
+> -- #mbox-cells:  Must be 0. Number of cells in a mailbox
+> +- #mbox-cells:  Must be 2.
+>
+This seems like modifying the bindings. But since nothing exists yet,
+maybe we should merge patch 1 and 2 ?
 
-In the FEC driver case, there is an integrated DMA (uDMA). It has
-alignment restrictions, but can otherwise address the full 32-bit range.
 
-So something like this should do it right?
+> +                         <&phandle type channel>
+> +                           phandle   : Label name of controller
+> +                           type      : Channel type
+> +                           channel   : Channel number
+> +
+> +               This MU support 4 type of unidirectional channels, each type
+> +               has 4 channels. A total of 16 channels. Following types are
+> +               supported:
+> +               0 - TX channel with 32bit transmit register and IRQ transmit
+> +               acknowledgment support.
+> +               1 - RX channel with 32bit receive register and IRQ support
+> +               2 - TX doorbell channel. Without own register and no ACK support.
+> +               3 - RX doorbell channel.
+>
+Thanks. This is great.
 
-	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))) {
-		dev_warn(dev, "No suitable DMA available\n");
-		return -ENODEV;
-	}
+> +               The doorbell channels should be used with shared memory and protocol
+> +               level acknowledgment if needed.
+> +
+I would avoid this. People might get notions that they have to use
+shmem with doorbell -- a trivial protocol might mean doing some fixed
+action (like reset) whenever the doorbell rings.
 
-However, that, as far as I understand, still requires that the bus set
-up dma_mask properly.
 
-Should I be using dma_coerce_mask_and_coherent?
-
---
-Stefan
-
-> 
-> Robin.
+> +Optional properties:
+> +-------------------
+> +- clocks :     phandle to the input clock.
+> +- fsl,mu-side-b : Should be set for side B MU.
+>
+Nit: can we call this 'fsl,no-init' ?
