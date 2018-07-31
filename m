@@ -1,42 +1,73 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 3/4] remoteproc: qcom: q6v5-pil: Explicitly get
- mss_restart line
-Date: Tue, 31 Jul 2018 10:57:03 +0200
-Message-ID: <1533027423.3444.11.camel@pengutronix.de>
-References: <20180727152811.15258-1-sibis@codeaurora.org>
-         <20180727152811.15258-3-sibis@codeaurora.org>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
+Date: Tue, 31 Jul 2018 12:05:36 +0300
+Message-ID: <20180731090536.GB2956@localhost.localdomain>
+References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
+ <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
+ <20180612082354.GG20078@localhost.localdomain>
+ <20180613130338.GH20078@localhost.localdomain>
+ <152997038474.143105.3390705878521933864@swboyd.mtv.corp.google.com>
+ <20180627084000.GE2118@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727152811.15258-3-sibis@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180627084000.GE2118@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-07-27 at 20:58 +0530, Sibi Sankar wrote:
-> Explicitly get mss_restart to facilitate adding PDC
-> restart line for modem on SDM845 SoCs
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  drivers/remoteproc/qcom_q6v5_pil.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-> index b1296d614b8b..d57fdb34e3dd 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pil.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pil.c
-> @@ -1176,8 +1176,7 @@ static int q6v5_init_clocks(struct device *dev, struct clk **clks,
->  
->  static int q6v5_init_reset(struct q6v5 *qproc)
->  {
-> -	qproc->mss_restart = devm_reset_control_get_exclusive(qproc->dev,
-> -							      NULL);
-> +	qproc->mss_restart = devm_reset_control_get(qproc->dev, "mss_restart");
+Hello Again,
 
-Please keep using devm_reset_control_get_exclusive.
+On Wed, Jun 27, 2018 at 11:40:00AM +0300, Matti Vaittinen wrote:
+> Hello Stephen,
+> 
+> On Mon, Jun 25, 2018 at 04:46:24PM -0700, Stephen Boyd wrote:
+> > Quoting Matti Vaittinen (2018-06-13 06:03:38)
+> > > On Tue, Jun 12, 2018 at 11:23:54AM +0300, Matti Vaittinen wrote:
+> > > > 
+> > > > I see. This makes sense. I need to verify from HW colleagues whether
+> > > > this chip has internal oscillator or not. I originally thought we have
+> > > > on-chip oscillator - but as you say, we do have XIN pin in documentation.
+> > > > So now I am not sure if the test board I have contains oscillator driving
+> > > > the clk on PMIC - or if the PMIC has internal oscillator. I'll clarify this.
+> > > 
+> > > It really turned out that the PMIC just acts as a clock buffer. So I do
+> > > as you suggested and add lookup for parent clock to the driver. I
+> > > planned to do it so that if no parent is found from DT - then we assume
+> > > the 32.768KHz clock (as described in documentation). Eg, something along
+> > > the lines:
+> > > 
+> > >         init.parent_names = of_clk_get_parent_name(pdev->dev.parent->of_node, 0);
+> > >         if (init.parent_names) {
+> > >                 init.num_parents = 1;
+> > >         } else {
+> > >                 /* If parent is not given from DT we assume the typical use-case with
+> > >                  * 32.768 KHz oscillator for RTC (Maybe we could just error out here?)
+> > >                  */
+> > >                 c->rate = BD71837_CLK_RATE;
+> > >                 bd71837_clk_ops.recalc_rate = &bd71837_clk_recalc_rate;
+> > >         }
+> > 
+> > You can also add a clk directly in this driver in that case there isn't
+> > one in DT with the rate and name of your choosing. Then the logic is the
+> > same and we don't need a c->rate variable.
+> 
+> So you mean that I should use clk_hw_register_fixed_rate and create new
+> clk if parent is not found? Isn't this a bit of an overkill? Downside is
+> that then we do need remove/cleanup functionality for deleting this
+> parent clock - and I didn't find devm support for fixed clock. Furthermore
+> I guess that since it is parent, it can't be removed before child is removed.
+> 
+> Or did you mean something else but creating a fixed rate clock as parent
+> here?
 
-regards
-Philipp
+I would be grateful for any tips on how to proceed. Should I
+
+1. Really create a fixed rate clock - and build cleanup sequence myself
+2. Keep this simple and fail if no parent is found using of_clk_get_parent_name
+
+Best regards
+    Matti Vaittinen
