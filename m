@@ -1,138 +1,80 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v6 3/4] Bluetooth: mediatek: Add protocol support for
- MediaTek serial devices
-Date: Tue, 31 Jul 2018 17:15:52 +0800
-Message-ID: <1533028552.3472.95.camel@mtkswgap22>
-References: <cover.1532060309.git.sean.wang@mediatek.com>
-         <f3a064f86c1da4664a231a40c6cf038cccc758da.1532060309.git.sean.wang@mediatek.com>
-         <60024004-779E-4E1A-8E1B-799339595A27@holtmann.org>
-         <1532966985.3472.54.camel@mtkswgap22>
-         <F83B6E35-B0D7-4050-A112-251BDFB9C998@holtmann.org>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 0/4] IR support for A83T
+Date: Tue, 31 Jul 2018 11:22:54 +0200
+Message-ID: <20180731092258.2279-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <F83B6E35-B0D7-4050-A112-251BDFB9C998@holtmann.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Johan Hedberg <johan.hedberg@gmail.com>, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-sunxi+bncBD257DPK24NRB5GUQDNQKGQEXDTRAXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-07-30 at 20:06 +0200, Marcel Holtmann wrote:
-> Hi Sean,
-> 
-> > All suggestions seem reasonable for me in order to make code style aligned with the other drivers and code better to read,
-> > and it looks like no any big problem, so I'll start to work on the next version immediately.
-> 
-> no rush, but if you can get this back to me quickly, we might be still able to get this driver included.
-> 
-> > And I also add a few explanations inline about questions about the diagnostic packet and how hci->shutdown is being made.
-> > 
-> > On Mon, 2018-07-30 at 15:40 +0200, Marcel Holtmann wrote:
+This patch series adds support for the sunxi A83T ir module and enhances 
+the sunxi-ir driver. Right now the base clock frequency for the ir driver
+is a hard coded define and is set to 8 MHz.
+This works for the most common ir receivers. On the Sinovoip Bananapi M3 
+the ir receiver needs, a 3 MHz base clock frequency to work without
+problems with this driver.
 
+This patch series adds support for an optinal property that makes it able
+to override the default base clock frequency and enables the ir interface 
+on the a83t and the Bananapi M3.
 
-[ ... ]
+changes since v5:
+* removed already merged patches
+* adapt patch 2 to be applyable to current rc-1
 
-> >> Do we want these as HCI vendor events. Or actually as vendor / diagnostic packets. There is a hci_recv_diag.
-> >> 
-> > 
-> > These are actually Hci vendor events. not for diagnostic purpose. They hdr->evt == 0xe4 are all the part of chip initialization.
-> 
-> Ok, then leave it as is.
-> 
-> > 
-> >> So let me ask this a different way, do you have support for LMP / LL tracing in your chips? If yes, then how is that enabled and how does it work? Or any general debug data that can be switched on. That is what we have a diagnostic channel for that is also fed into btmon.
-> >> 
-> > 
-> > I'm not really sure about them because I didn't see any diagnostic packets handling in vendor driver.
-> 
-> You can see examples for this in btusb.c, hci_bcm.c and bpa10x.c where the hardware has a side channel. In case of Broadcom, they are LL or LMP trace packets, but it could be also debug messages or something else. Other vendors use HCI vendor events for that which is also fine. Just wanted to know what it is.
-> 
-> And if your hardware supports LL or LMP traces to be enabled, then implement hdev->set_diag() callback. You can then enable it via /sys/kernel/debug/bluetooth/hci0/vendor_diag
-> 
+changes since v4:
+* rename cir pin from cir_pins to r_cir_pin
+* drop unit-address from r_cir_pin
+* add a83t compatible to the cir node
+* move muxing options to dtsi
+* rename cir label and reorder it in the bananpim3.dts file
 
-Thanks for sharing the information to me.
+changes since v3:
+* collecting all acks & reviewd by
+* fixed typos
 
-If I get the permission and details about adding support for these debug trace packets, I am willing to add them.
+changes since v2:
+* reorder cir pin (alphabetical)
+* fix typo in documentation
 
-> > 
-> >>> +
-> >>> +	/* Each HCI event would go through the core. */
-> >>> +	return hci_recv_frame(hdev, skb);
-> >>> +}
-> >>> +
+changes since v1:
+* fix typos, reword Documentation
+* initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
+* change dev_info() to dev_dbg()
+* change naming to cir* in dts/dtsi
+* Added acked Ackedi-by to related patch
+* use whole memory block instead of registers needed + fix for h3/h5
 
-[ ... ]
+changes since rfc:
+* The property is now optinal. If the property is not available in 
+  the dtb the driver uses the default base clock frequency.
+* the driver prints out the the selected base clock frequency.
+* changed devicetree property from base-clk-frequency to clock-frequency
 
-> >>> +
-> >>> +static int mtk_btuart_shutdown(struct hci_dev *hdev)
-> >>> +{
-> >>> +	struct mtk_btuart_dev *bdev = hci_get_drvdata(hdev);
-> >>> +	struct device *dev = &bdev->serdev->dev;
-> >>> +	u8 param = 0x0;
-> >>> +
-> >>> +	/* Disable the device. */
-> >>> +	mtk_hci_wmt_sync(hdev, MTK_WMT_FUNC_CTRL, 0x0, sizeof(param), &param);
-> >>> +
-> >>> +	/* Shutdown the clock and power domain the device requires. */
-> >>> +	clk_disable_unprepare(bdev->clk);
-> >>> +	pm_runtime_put_sync(dev);
-> >>> +	pm_runtime_disable(dev);
-> >> 
-> >> Don’t these belong into ->close method? And the enable ones into ->open? I really think that ->setup and ->shutdown should just do HCI commands and leave the others to ->open and ->close. Since ->open and ->close are suppose to set up and terminate the transport.
-> >> 
-> > 
-> > Yes, ->open and ->close are already done just for setup and terminate the transport. I've noted the part during earlier version discussion. 
-> > 
-> > Because mt7622 is a SoC integrating Bluetooth hardware inside, these operations for clk* and pm clk_* and pm_*  you saw here are all for controlling clocks and powers Bluetooth circuits requires on the SoC, not for the transports.
-> > 
-> > As for clocks for the transport, they're already being taken care of by the serial driver.
-> 
-> With transport, I meant the Bluetooth transport. So I really thing they belong into ->open and ->close. Within ->setup and ->shutdown, I would just expect HCI commands.
-> 
+Regards,
+Philipp
 
-At the moment, it's not easy that clk_* and pm_*  are moved to ->open and ->close
+Philipp Rossak (4):
+  ARM: dts: sun8i: a83t: Add the cir pin for the A83T
+  ARM: dts: sun8i: a83t: Add support for the cir interface
+  ARM: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+  ARM: dts: sun8i: h3-h5: ir register size should be the whole memory
+    block
 
-because firmware download would depend on the full cycle of hardware power down and then up.
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts |  5 +++++
+ arch/arm/boot/dts/sun8i-a83t.dtsi            | 18 ++++++++++++++++++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi           |  2 +-
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
-And another advantage is that when users call hdev down and the up, the device can do the real hardware reset, not just the software reset via hci command.
-
-> > 
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-> >>> +static int mtk_btuart_send(struct hci_dev *hdev, struct sk_buff *skb)
-> >>> +{
-> >> 
-> >> This should be called btmtkuart_send_frame.
-> >> 
-> > 
-> > okay, will have a rename.
-> > 
-> >>> +	struct mtk_btuart_dev *bdev = hci_get_drvdata(hdev);
-> >>> +	int err;
-> >>> +
-
-[ ... ]
-
-> >>> +static inline void
-> >>> +mtk_make_wmt_hdr(struct mtk_wmt_hdr *hdr, u8 op, u16 plen, u8 flag)
-> >>> +{
-> >>> +	hdr->dir = 1;
-> >>> +	hdr->op = op;
-> >>> +	hdr->dlen = cpu_to_le16(plen + 1);
-> >>> +	hdr->flag = flag;
-> >>> +}
-> >> 
-> >> Move all the *.h parts into the *.c file. It is all so simple that there is no need for having this in a header.
-> >> 
-> >> Minor cosmetic changes, but the rest look good to me.
-> >> 
-> > 
-> > okay, will move whole thing in *.h to *.c and finally I really appreciate your effort on reviewing on these code.
-> 
-> Regards
-> 
-> Marcel
-> 
+-- 
+2.11.0
