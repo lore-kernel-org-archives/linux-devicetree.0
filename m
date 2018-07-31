@@ -1,36 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 2/4] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Tue, 31 Jul 2018 13:09:11 -0600
-Message-ID: <20180731190911.GA23014@rob-hp-laptop>
-References: <20180731141146.10788-1-o.rempel@pengutronix.de>
- <20180731141146.10788-3-o.rempel@pengutronix.de>
+Subject: Re: [PATCH v6 1/5] dt-bindings: thermal: qcom-spmi-temp-alarm: Fix
+ documentation of 'reg'
+Date: Tue, 31 Jul 2018 13:18:20 -0600
+Message-ID: <20180731191820.GA1723@rob-hp-laptop>
+References: <20180731185917.176074-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180731141146.10788-3-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <20180731185917.176074-1-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Collins <collinsd@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 04:11:44PM +0200, Oleksij Rempel wrote:
-> Each MU has four pairs of rx/tx data register with four rx/tx interrupts
-> which can also be used as a separate channel.
+On Tue, Jul 31, 2018 at 11:59:13AM -0700, Matthias Kaehlcke wrote:
+> The documentation claims that the 'reg' property consists of two values,
+> the SPMI address and the length of the controller's registers. However
+> the SPMI bus to which it is added specifies "#size-cells = <0>;". Remove
+> the controller register length from the documentation of the field and the
+> example.
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  .../devicetree/bindings/mailbox/fsl,mu.txt    | 28 +++++++++++++++++--
->  1 file changed, 25 insertions(+), 3 deletions(-)
+> Changes in v6:
+> - patch added to the series
+> ---
+>  .../devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt     | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
