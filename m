@@ -1,242 +1,107 @@
-From: Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v4 2/5] pinctrl: actions: define pad control configurtion to SoC specific
-Date: Tue, 31 Jul 2018 21:47:40 +0200
-Message-ID: <20180731194743.13678-3-sravanhome@gmail.com>
-References: <0180729200038.11795-1-sravanhome@gmail.com>
- <20180731194743.13678-1-sravanhome@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v7 5/6] i2c: Add Actions Semiconductor Owl family S900
+ I2C driver
+Date: Tue, 31 Jul 2018 22:09:32 +0200
+Message-ID: <20180731200932.n7djds2rmqhclit5@ninjato>
+References: <20180726154603.5089-1-manivannan.sadhasivam@linaro.org>
+ <20180726154603.5089-6-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4utn4zc36jrfmsgr"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731194743.13678-1-sravanhome@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180726154603.5089-6-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: manivannan.sadhasivam@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com, Saravanan Sekar <sravanhome@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh+dt@kernel.org, afaerber@suse.de, linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-pad control for s900 and s700 are differs in number of
-pull control configuraions
-s900 has 4 pull controls - high impedence, pull up, pull down, repeater
-s700, s500 has 2 pull controls - pull up and pull down
 
-so pad control configuration has to SoC specific, moved out from pinctrl
-common to s700, s900 specific.
+--4utn4zc36jrfmsgr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- drivers/pinctrl/actions/pinctrl-owl.c  | 64 ++++---------------------
- drivers/pinctrl/actions/pinctrl-owl.h  | 13 +++--
- drivers/pinctrl/actions/pinctrl-s900.c | 66 +++++++++++++++++++++++++-
- 3 files changed, 79 insertions(+), 64 deletions(-)
+Hi Manivannan,
 
-diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
-index 4fa9cc377b3b..004bdc66e158 100644
---- a/drivers/pinctrl/actions/pinctrl-owl.c
-+++ b/drivers/pinctrl/actions/pinctrl-owl.c
-@@ -246,60 +246,6 @@ static int owl_pad_pinconf_reg(const struct owl_padinfo *info,
- 	return 0;
- }
- 
--static int owl_pad_pinconf_arg2val(const struct owl_padinfo *info,
--				unsigned int param,
--				u32 *arg)
--{
--	switch (param) {
--	case PIN_CONFIG_BIAS_BUS_HOLD:
--		*arg = OWL_PINCONF_PULL_HOLD;
--		break;
--	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
--		*arg = OWL_PINCONF_PULL_HIZ;
--		break;
--	case PIN_CONFIG_BIAS_PULL_DOWN:
--		*arg = OWL_PINCONF_PULL_DOWN;
--		break;
--	case PIN_CONFIG_BIAS_PULL_UP:
--		*arg = OWL_PINCONF_PULL_UP;
--		break;
--	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
--		*arg = (*arg >= 1 ? 1 : 0);
--		break;
--	default:
--		return -ENOTSUPP;
--	}
--
--	return 0;
--}
--
--static int owl_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
--				unsigned int param,
--				u32 *arg)
--{
--	switch (param) {
--	case PIN_CONFIG_BIAS_BUS_HOLD:
--		*arg = *arg == OWL_PINCONF_PULL_HOLD;
--		break;
--	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
--		*arg = *arg == OWL_PINCONF_PULL_HIZ;
--		break;
--	case PIN_CONFIG_BIAS_PULL_DOWN:
--		*arg = *arg == OWL_PINCONF_PULL_DOWN;
--		break;
--	case PIN_CONFIG_BIAS_PULL_UP:
--		*arg = *arg == OWL_PINCONF_PULL_UP;
--		break;
--	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
--		*arg = *arg == 1;
--		break;
--	default:
--		return -ENOTSUPP;
--	}
--
--	return 0;
--}
--
- static int owl_pin_config_get(struct pinctrl_dev *pctrldev,
- 				unsigned int pin,
- 				unsigned long *config)
-@@ -318,7 +264,10 @@ static int owl_pin_config_get(struct pinctrl_dev *pctrldev,
- 
- 	arg = owl_read_field(pctrl, reg, bit, width);
- 
--	ret = owl_pad_pinconf_val2arg(info, param, &arg);
-+	if (!pctrl->soc->padctl_val2arg)
-+		return -ENOTSUPP;
-+
-+	ret = pctrl->soc->padctl_val2arg(info, param, &arg);
- 	if (ret)
- 		return ret;
- 
-@@ -349,7 +298,10 @@ static int owl_pin_config_set(struct pinctrl_dev *pctrldev,
- 		if (ret)
- 			return ret;
- 
--		ret = owl_pad_pinconf_arg2val(info, param, &arg);
-+		if (!pctrl->soc->padctl_arg2val)
-+			return -ENOTSUPP;
-+
-+		ret = pctrl->soc->padctl_arg2val(info, param, &arg);
- 		if (ret)
- 			return ret;
- 
-diff --git a/drivers/pinctrl/actions/pinctrl-owl.h b/drivers/pinctrl/actions/pinctrl-owl.h
-index 31cc33d7c4a5..dae2e8363fd5 100644
---- a/drivers/pinctrl/actions/pinctrl-owl.h
-+++ b/drivers/pinctrl/actions/pinctrl-owl.h
-@@ -145,13 +145,6 @@
- 		.shared_ctl_offset = _share,			\
- 	}
- 
--enum owl_pinconf_pull {
--	OWL_PINCONF_PULL_HIZ,
--	OWL_PINCONF_PULL_DOWN,
--	OWL_PINCONF_PULL_UP,
--	OWL_PINCONF_PULL_HOLD,
--};
--
- enum owl_pinconf_drv {
- 	OWL_PINCONF_DRV_2MA,
- 	OWL_PINCONF_DRV_4MA,
-@@ -305,6 +298,12 @@ struct owl_pinctrl_soc_data {
- 	unsigned int ngpios;
- 	const struct owl_gpio_port *ports;
- 	unsigned int nports;
-+	int (*padctl_val2arg)(const struct owl_padinfo *padinfo,
-+				unsigned int param,
-+				u32 *arg);
-+	int (*padctl_arg2val)(const struct owl_padinfo *info,
-+				unsigned int param,
-+				u32 *arg);
- };
- 
- int owl_pinctrl_probe(struct platform_device *pdev,
-diff --git a/drivers/pinctrl/actions/pinctrl-s900.c b/drivers/pinctrl/actions/pinctrl-s900.c
-index 0597009d8369..2e19fecbe5e9 100644
---- a/drivers/pinctrl/actions/pinctrl-s900.c
-+++ b/drivers/pinctrl/actions/pinctrl-s900.c
-@@ -13,6 +13,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinconf-generic.h>
- #include "pinctrl-owl.h"
- 
- /* Pinctrl registers offset */
-@@ -1717,6 +1718,67 @@ static const struct owl_gpio_port s900_gpio_ports[] = {
- 	OWL_GPIO_PORT(F, 0x00F0, 8, 0x0, 0x4, 0x8, 0x460, 0x140, 0x144, 0x178, 0)
- };
- 
-+enum owl_pinconf_pull {
-+	OWL_PINCONF_PULL_HIZ,
-+	OWL_PINCONF_PULL_DOWN,
-+	OWL_PINCONF_PULL_UP,
-+	OWL_PINCONF_PULL_HOLD,
-+};
-+
-+static int s900_pad_pinconf_arg2val(const struct owl_padinfo *info,
-+				unsigned int param,
-+				u32 *arg)
-+{
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_BUS_HOLD:
-+		*arg = OWL_PINCONF_PULL_HOLD;
-+		break;
-+	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-+		*arg = OWL_PINCONF_PULL_HIZ;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		*arg = OWL_PINCONF_PULL_DOWN;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		*arg = OWL_PINCONF_PULL_UP;
-+		break;
-+	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+		*arg = (*arg >= 1 ? 1 : 0);
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int s900_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
-+				unsigned int param,
-+				u32 *arg)
-+{
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_BUS_HOLD:
-+		*arg = *arg == OWL_PINCONF_PULL_HOLD;
-+		break;
-+	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-+		*arg = *arg == OWL_PINCONF_PULL_HIZ;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		*arg = *arg == OWL_PINCONF_PULL_DOWN;
-+		break;
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		*arg = *arg == OWL_PINCONF_PULL_UP;
-+		break;
-+	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-+		*arg = *arg == 1;
-+		break;
-+	default:
-+		return -ENOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
- static struct owl_pinctrl_soc_data s900_pinctrl_data = {
- 	.padinfo = s900_padinfo,
- 	.pins = (const struct pinctrl_pin_desc *)s900_pads,
-@@ -1727,7 +1789,9 @@ static struct owl_pinctrl_soc_data s900_pinctrl_data = {
- 	.ngroups = ARRAY_SIZE(s900_groups),
- 	.ngpios = NUM_GPIOS,
- 	.ports = s900_gpio_ports,
--	.nports = ARRAY_SIZE(s900_gpio_ports)
-+	.nports = ARRAY_SIZE(s900_gpio_ports),
-+	.padctl_arg2val = s900_pad_pinconf_arg2val,
-+	.padctl_val2arg = s900_pad_pinconf_val2arg,
- };
- 
- static int s900_pinctrl_probe(struct platform_device *pdev)
--- 
-2.18.0
+On Thu, Jul 26, 2018 at 09:16:02PM +0530, Manivannan Sadhasivam wrote:
+> Add Actions Semiconductor Owl family S900 I2C driver.
+>=20
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Acked-by: Peter Rosin <peda@axentia.se>
+
+Looks mostly good already. Thanks Peter for the initial review!
+
+> +static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
+> +{
+> +	struct owl_i2c_dev *i2c_dev =3D _dev;
+> +	struct i2c_msg *msg =3D i2c_dev->msg;
+> +	unsigned long flags;
+> +	unsigned int stat, fifostat;
+> +
+> +	spin_lock_irqsave(&i2c_dev->lock, flags);
+> +
+> +	fifostat =3D readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT);
+> +	if (fifostat & OWL_I2C_FIFOSTAT_RNB) {
+> +		dev_dbg(&i2c_dev->adap.dev, "received NACK from device\n");
+> +		goto stop;
+> +	}
+> +
+> +	stat =3D readl(i2c_dev->base + OWL_I2C_REG_STAT);
+> +	if (stat & OWL_I2C_STAT_BEB) {
+> +		dev_dbg(&i2c_dev->adap.dev, "bus error\n");
+> +		goto stop;
+> +	}
+
+I wonder if you can't pass back the different errors to the upper
+layers? Like -ENXIO for NACK and -EIO for bus error? We have a
+convention for that and it seems your HW can support it. The different
+error codes would then maybe also make the debug outputs obsolete.
+
+
+> +	/*
+> +	 * Here, -ENXIO will be returned if interrupt occurred but no
+> +	 * read or write happened. Else if msg_ptr equals to message length,
+> +	 * message count will be returned.
+> +	 */
+> +	ret =3D i2c_dev->msg_ptr =3D=3D msg->len ? num : -ENXIO;
+
+I'd think this kinda unusual construct could go then as well by just
+returning the error code derived from the interrupt handler above.
+
+> +static const struct i2c_adapter_quirks owl_i2c_quirks =3D {
+> +	.flags		=3D I2C_AQ_COMB | I2C_AQ_COMB_WRITE_FIRST,
+> +	.max_read_len   =3D 240,
+> +	.max_write_len  =3D 240,
+> +	.max_comb_1st_msg_len =3D 6,
+> +	.max_comb_2nd_msg_len =3D 240,
+> +};
+
+Yay! Good use of the i2c_adapter_quirks struct :)
+
+Regards,
+
+   Wolfram
+
+
+--4utn4zc36jrfmsgr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltgwfwACgkQFA3kzBSg
+KbZ21Q/9GYHmyV1EiblUh0zTmtvPSAJ36HoCteZkNdGlmvUwDXToxDapDNObY+sY
+6S1awC/4Z3iNfVDsQ3q5RTzozcY1gq2tGRLHmBkCH/x8WxIJQ0uz+gs2YSOqRuIc
+iwZqLQ8PKodo2X9Hj02sl/FyYveiaNgFcx21w9pg/Sgx5mn+yB7KYTubln2MeaHh
+H0y06sSnq0hO24WIOEhl6H3hjMDLYXYEG1+VH32kBFjk2ObPueqvpTmD39R/FTHE
+a0m9XqPfwh55IrFKfJTxDv6nS8YD5oLti32wH1fvcZ9bk5MbRlCoMFVmLjU+kR5Y
+rRW0sWl3Lf2WKcVDZbuUycWHJOaXsx7wbAzoYYTo9ucX17rQiuYu2OX3jj+ZWIQg
+hDPcaWA9bNtkdWK8oIiJ+0uPvLvsoDdEuVY5+H+rfvtkwPAwX6xKvDj2EGyOVjyi
+KJnaRS/DlSbksqx7mtbNbN695qErb7k6CmA9uJxd6T9z5JxZuXoEcU57ELP91VDn
+QG3JLPkdsg+5vQImhW+akuY8a4izTo41frlq2aDkKgwrv6WtYC2c/XdJHFtKeV33
+PdC0eQpv4Ne4DlC1CO3Etq61oTTMCkDLRT7DpLXDO1vGw+J9oqS8DGlaJPW7/50A
+Z2cjKc7e+6JcyYdDax43FvqQc42618/AWg7hN4Jmy80Eexo3uQY=
+=6ZjR
+-----END PGP SIGNATURE-----
+
+--4utn4zc36jrfmsgr--
