@@ -1,51 +1,89 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
-Date: Tue, 31 Jul 2018 18:57:12 +0200
-Message-ID: <20180731165712.GA2521@lst.de>
-References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-8-hch@lst.de> <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com> <dc69d688-f765-74cc-3234-563fecff6002@wdc.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 05/10] ASoC: wcd9335: add CLASS-H
+	Controller support
+Date: Tue, 31 Jul 2018 18:05:57 +0100
+Message-ID: <20180731170557.GK5719@sirena.org.uk>
+References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
+ <20180727121806.18209-6-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dc69d688-f765-74cc-3234-563fecff6002@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
+Content-Type: multipart/mixed; boundary="===============8010861535785143805=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180727121806.18209-6-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, vkoul@kernel.org, robh+dt@kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 30, 2018 at 08:21:33PM -0700, Atish Patra wrote:
-> I found the issue. As per PLIC documentation, a hart context is a given 
-> privilege mode on a given hart. Thus, cpu context ID & cpu numbers are not 
-> same. Here is the PLIC register Maps in U54 core:
->
-> Ref: https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf
->
-> Memory address for Interrupt enable
-> Address
-> 0x0C00-2080   Hart 1 M-mode enables
-> 0x0C00 2094   End of Hart 1 M-mode enables
->
-> 0x0C00-2100   Hart 1 S-mode enables
-> 0x0C00-2114   End of Hart 1 S-mode enables
->
-> Memory map Claim/Threshold
-> Address
-> 0x0C20-1000 4B 	 M-mode priority threshold
-> 0x0C20-1004 4B   M-mode claim/complete
-> 0x0C20-2000 4B   S-mode priority threshold
-> 0x0C20-2004 4B   S-mode claim/complete
->
-> The original PLIC patch was calculating based on handle->contextid which 
-> will assume numbers on a HighFive Unleashed board as 2 4 6 8.
->
-> In this patch, context id is assigned as cpu numbers which will be 1 2 3 4. 
-> Thus it will lead to incorrect plic address access as shown below.
 
-Indeed.  Can you try this branch, which puts back the OF contextid
-parsing from the original code:
+--===============8010861535785143805==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VSVNCtZB1QZ8vhj+"
+Content-Disposition: inline
 
-   git://git.infradead.org/users/hch/riscv.git riscv-irq-simple.2
 
-Gitweb:
+--VSVNCtZB1QZ8vhj+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-   http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple.2
+On Fri, Jul 27, 2018 at 01:18:01PM +0100, Srinivas Kandagatla wrote:
+
+> +	res_val = WCD9XXX_CLASSH_CTRL_VCL_VREF_FILT_R_0KOHM;
+> +	switch (mode) {
+> +	case CLS_H_NORMAL:
+> +		res_val = WCD9XXX_CLASSH_CTRL_VCL_VREF_FILT_R_50KOHM;
+> +		val = WCD9XXX_A_ANA_HPH_PWR_LEVEL_NORMAL;
+> +		gain = DAC_GAIN_0DB;
+> +		ipeak = WCD9XXX_CLASSH_CTRL_CCL_1_DELTA_IPEAK_50MA;
+> +		break;
+> +	case CLS_AB:
+> +		val = WCD9XXX_A_ANA_HPH_PWR_LEVEL_NORMAL;
+> +		gain = DAC_GAIN_0DB;
+> +		ipeak = WCD9XXX_CLASSH_CTRL_CCL_1_DELTA_IPEAK_50MA;
+> +		break;
+> +	case CLS_H_HIFI:
+> +		val = WCD9XXX_A_ANA_HPH_PWR_LEVEL_UHQA;
+> +		gain = DAC_GAIN_M0P2DB;
+> +		ipeak = WCD9XXX_CLASSH_CTRL_CCL_1_DELTA_IPEAK_50MA;
+> +		break;
+> +	case CLS_H_LP:
+> +		val = WCD9XXX_A_ANA_HPH_PWR_LEVEL_LP;
+> +		ipeak = WCD9XXX_CLASSH_CTRL_CCL_1_DELTA_IPEAK_30MA;
+> +		break;
+> +	};
+
+This is missing a default case for error checking, and you don't need
+the semicolon at the end either.
+
+--VSVNCtZB1QZ8vhj+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltglvQACgkQJNaLcl1U
+h9DxCgf+MkCcuHxQonSpd9ITGrqpFrCSDOBZjOOepXTvj/tXAGLT9gfM3c/wNTNs
+/j2LdASeN5XbRupEgD3WgxRQ3moXq3bwtqeFizFhz8UH1Bq612cVMbqmLNKvpDRw
+uEws8494YPyxyXpEz2GgflOXiB5yUs9lSHaGJACZZU9M9BrR3wyeyBRO+1hw2Fk9
+ugRL9wmNTz2pNimXaZ9qQSjZ5uaUJphoUuahXdNy+nhIWeESHskVR24vcZEyRiNr
+gGOk1miiOwE2M0TO+MY1TuxoXLRQzZ7yDzuERvONQ7+RIy+iZnbFNwKO1+eP0Zzy
+/kgca7nvIU19ro8aMU9+MI5WzV04iw==
+=R8QF
+-----END PGP SIGNATURE-----
+
+--VSVNCtZB1QZ8vhj+--
+
+--===============8010861535785143805==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8010861535785143805==--
