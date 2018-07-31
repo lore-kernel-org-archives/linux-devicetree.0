@@ -1,88 +1,45 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v8 2/4] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Tue, 31 Jul 2018 21:28:09 +0530
-Message-ID: <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
-References: <20180731141146.10788-1-o.rempel@pengutronix.de>
- <20180731141146.10788-3-o.rempel@pengutronix.de>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
+ coherent DMA mask)
+Date: Tue, 31 Jul 2018 16:58:41 +0100
+Message-ID: <10c2ca4d-d587-2705-2802-b6df3dc72fd4@arm.com>
+References: <CAJKOXPeaguNxRr7pCArJ5Db4tS6Kr5BDheCxskY+vd0dUN+0GQ@mail.gmail.com>
+ <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com>
+ <20180727140448.GA29001@lst.de> <20180728165820.GA5731@roeck-us.net>
+ <45f7fc82-fb9c-e666-4ada-c5338d2c1c96@arm.com>
+ <39fa11ce4b7dd151d98868f375baf818@agner.ch>
+ <0e893142-a5db-d119-6eb3-f849db6b5d04@arm.com>
+ <f67628ad-4cae-96cd-d0c4-3b2f7d12a822@roeck-us.net>
+ <4ce17098-850f-3bb0-b977-8d7932e74e06@arm.com>
+ <20180731154353.GA29601@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180731141146.10788-3-o.rempel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180731154353.GA29601@roeck-us.net>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Stefan Agner <stefan@agner.ch>, Christoph Hellwig <hch@lst.de>, Krzysztof Kozlowski <krzk@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 7:41 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> Each MU has four pairs of rx/tx data register with four rx/tx interrupts
-> which can also be used as a separate channel.
->
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  .../devicetree/bindings/mailbox/fsl,mu.txt    | 28 +++++++++++++++++--
->  1 file changed, 25 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> index 90e4905dfc69..9efd3a9ade44 100644
-> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> @@ -18,11 +18,33 @@ Messaging Unit Device Node:
->  Required properties:
->  -------------------
->  - compatible : should be "fsl,<chip>-mu", the supported chips include
-> -               imx8qxp, imx8qm.
-> +               imx6sx, imx7s, imx8qxp, imx8qm.
-> +               The "fsl,imx6sx-mu" compatible is seen as generic and should
-> +               be included together with SoC specific compatible.
->  - reg :                Should contain the registers location and length
->  - interrupts : Interrupt number. The interrupt specifier format depends
->                 on the interrupt controller parent.
-> -- #mbox-cells:  Must be 0. Number of cells in a mailbox
-> +- #mbox-cells:  Must be 2.
->
-This seems like modifying the bindings. But since nothing exists yet,
-maybe we should merge patch 1 and 2 ?
+On 31/07/18 16:43, Guenter Roeck wrote:
+> On Tue, Jul 31, 2018 at 03:09:34PM +0100, Robin Murphy wrote:
+>>> Please note that sparc images still generate the warning (next-20180731).
+>>
+>> Ugh, OK, any ideas what sparc does to create these platform devices that
+>> isn't of_platform_device_create_pdata() and has somehow grown an implicit
+>> dependency on of_dma_configure() since 4.12? I'm looking, but nothing jumps
+>> out...
+>>
+> 
+> I suspect it might be of_device_register(), called from
+> 	arch/sparc/kernel/of_device_64.c:scan_one_device()
+> 	arch/sparc/kernel/of_device_32.c:scan_one_device()
 
+Right, that's as far as I got as well, so I'm struggling to see how 
+these things ever got DMA masks set before the of_dma_configure() call 
+moved out of of_platform_device_create_pdata(), or why it wasn't a 
+problem prior to the generic dma_ops rework if they didn't :/
 
-> +                         <&phandle type channel>
-> +                           phandle   : Label name of controller
-> +                           type      : Channel type
-> +                           channel   : Channel number
-> +
-> +               This MU support 4 type of unidirectional channels, each type
-> +               has 4 channels. A total of 16 channels. Following types are
-> +               supported:
-> +               0 - TX channel with 32bit transmit register and IRQ transmit
-> +               acknowledgment support.
-> +               1 - RX channel with 32bit receive register and IRQ support
-> +               2 - TX doorbell channel. Without own register and no ACK support.
-> +               3 - RX doorbell channel.
->
-Thanks. This is great.
-
-> +               The doorbell channels should be used with shared memory and protocol
-> +               level acknowledgment if needed.
-> +
-I would avoid this. People might get notions that they have to use
-shmem with doorbell -- a trivial protocol might mean doing some fixed
-action (like reset) whenever the doorbell rings.
-
-
-> +Optional properties:
-> +-------------------
-> +- clocks :     phandle to the input clock.
-> +- fsl,mu-side-b : Should be set for side B MU.
->
-Nit: can we call this 'fsl,no-init' ?
+Robin.
