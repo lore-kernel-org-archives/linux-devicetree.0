@@ -1,52 +1,39 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v3 0/9] coresight: Update device tree bindings
-Date: Tue, 31 Jul 2018 09:06:57 -0600
-Message-ID: <CANLsYkzBfCydwDO-KyDub4X=GTy_dtv-478RyMReBEH6VybSAg@mail.gmail.com>
-References: <1532686537-12380-1-git-send-email-suzuki.poulose@arm.com> <20180730200232.GA31755@xps15>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH v3 0/3] Input: atmel_mxt_ts: Add support for optional regulators
+Date: Tue, 31 Jul 2018 17:18:08 +0200
+Message-ID: <1533050291-11502-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180730200232.GA31755@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, coresight@lists.linaro.org, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Matt Sealey <matt.sealey@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, John Horley <john.horley@arm.com>, Al Grant <al.grant@arm.com>
+To: nick@shmanahar.org
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-[...]
+This patch series adds optional regulator support to atmel_mxt_ts.
+First patch adds regulators to driver.
+Second patch ensures that device is ready for communication.
+Third patch updates documentation.
 
-> >
-> > Suzuki K Poulose (9):
-> >   coresight: Document error handling in coresight_register
-> >   coresight: platform: Refactor graph endpoint parsing
-> >   coresight: platform: Fix refcounting for graph nodes
-> >   coresight: platform: Fix leaking device reference
-> >   coresight: Fix remote endpoint parsing
-> >   coresight: Add helper to check if the endpoint is input
-> >   coresight: platform: Cleanup coresight connection handling
-> >   coresight: Cleanup coresight DT bindings
-> >   dts: juno: Update coresight bindings
-> >
-> >  .../devicetree/bindings/arm/coresight.txt          |  95 +++++---
-> >  arch/arm64/boot/dts/arm/juno-base.dtsi             | 161 ++++++------
-> >  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi          |  52 ++--
-> >  arch/arm64/boot/dts/arm/juno.dts                   |  13 +-
-> >  drivers/hwtracing/coresight/coresight.c            |  35 +--
-> >  drivers/hwtracing/coresight/of_coresight.c         | 269 ++++++++++++++-------
-> >  include/linux/coresight.h                          |   9 +-
-> >  7 files changed, 359 insertions(+), 275 deletions(-)
-> >
->
-> Good day,
->
-> I have applied patches 1 to 7.  I will wait for Rob's ACK before doing the same
-> with 8 and 9.
+Changes from v2:
+  - Add reviewed-by to one patch
+  - Move code for enabling regulators into separate method,
+    to make code more readable.
+  - Add wait code, to ensure that device is ready for communication.
 
-I just applied patch 8 and 9.
+Changes from v1:
+  - Enable regulators only if reset_gpio is present.
+  - Switch from devm_regulator_get_optional to devm_regulator_get.
 
->
-> Thanks,
-> Mathieu
->
-> > --
-> > 2.7.4
-> >
+Paweł Chmiel (3):
+  Input: atmel_mxt_ts: Add support for  optional regulators.
+  Input: atmel_mxt_ts: Wait for device be ready for communication
+  Input: atmel_mxt_ts: Document optional voltage regulators
+
+ .../devicetree/bindings/input/atmel,maxtouch.txt   |  8 +++
+ drivers/input/touchscreen/atmel_mxt_ts.c           | 76 ++++++++++++++++++++--
+ 2 files changed, 78 insertions(+), 6 deletions(-)
+
+-- 
+2.7.4
