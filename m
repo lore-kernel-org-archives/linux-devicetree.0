@@ -1,73 +1,103 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
-Date: Tue, 31 Jul 2018 12:05:36 +0300
-Message-ID: <20180731090536.GB2956@localhost.localdomain>
-References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
- <20180612082354.GG20078@localhost.localdomain>
- <20180613130338.GH20078@localhost.localdomain>
- <152997038474.143105.3390705878521933864@swboyd.mtv.corp.google.com>
- <20180627084000.GE2118@localhost.localdomain>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH 3/4] dt-bindings: net: phy: mscc: vsc8531: fix missing
+ "/bits/ 8" in example
+Date: Tue, 31 Jul 2018 11:11:51 +0200
+Message-ID: <20180731091151.mfgxxnz6kye4cvfv@qschulz>
+References: <20180730130236.3837-1-quentin.schulz@bootlin.com>
+ <20180730130236.3837-3-quentin.schulz@bootlin.com>
+ <20180730135813.GH13198@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vwalimjjmzvj7stw"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180627084000.GE2118@localhost.localdomain>
+In-Reply-To: <20180730135813.GH13198@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: f.fainelli@gmail.com, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Again,
 
-On Wed, Jun 27, 2018 at 11:40:00AM +0300, Matti Vaittinen wrote:
-> Hello Stephen,
-> 
-> On Mon, Jun 25, 2018 at 04:46:24PM -0700, Stephen Boyd wrote:
-> > Quoting Matti Vaittinen (2018-06-13 06:03:38)
-> > > On Tue, Jun 12, 2018 at 11:23:54AM +0300, Matti Vaittinen wrote:
-> > > > 
-> > > > I see. This makes sense. I need to verify from HW colleagues whether
-> > > > this chip has internal oscillator or not. I originally thought we have
-> > > > on-chip oscillator - but as you say, we do have XIN pin in documentation.
-> > > > So now I am not sure if the test board I have contains oscillator driving
-> > > > the clk on PMIC - or if the PMIC has internal oscillator. I'll clarify this.
-> > > 
-> > > It really turned out that the PMIC just acts as a clock buffer. So I do
-> > > as you suggested and add lookup for parent clock to the driver. I
-> > > planned to do it so that if no parent is found from DT - then we assume
-> > > the 32.768KHz clock (as described in documentation). Eg, something along
-> > > the lines:
-> > > 
-> > >         init.parent_names = of_clk_get_parent_name(pdev->dev.parent->of_node, 0);
-> > >         if (init.parent_names) {
-> > >                 init.num_parents = 1;
-> > >         } else {
-> > >                 /* If parent is not given from DT we assume the typical use-case with
-> > >                  * 32.768 KHz oscillator for RTC (Maybe we could just error out here?)
-> > >                  */
-> > >                 c->rate = BD71837_CLK_RATE;
-> > >                 bd71837_clk_ops.recalc_rate = &bd71837_clk_recalc_rate;
-> > >         }
-> > 
-> > You can also add a clk directly in this driver in that case there isn't
-> > one in DT with the rate and name of your choosing. Then the logic is the
-> > same and we don't need a c->rate variable.
-> 
-> So you mean that I should use clk_hw_register_fixed_rate and create new
-> clk if parent is not found? Isn't this a bit of an overkill? Downside is
-> that then we do need remove/cleanup functionality for deleting this
-> parent clock - and I didn't find devm support for fixed clock. Furthermore
-> I guess that since it is parent, it can't be removed before child is removed.
-> 
-> Or did you mean something else but creating a fixed rate clock as parent
-> here?
+--vwalimjjmzvj7stw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I would be grateful for any tips on how to proceed. Should I
+Hi Andrew,
 
-1. Really create a fixed rate clock - and build cleanup sequence myself
-2. Keep this simple and fail if no parent is found using of_clk_get_parent_name
+On Mon, Jul 30, 2018 at 03:58:13PM +0200, Andrew Lunn wrote:
+> On Mon, Jul 30, 2018 at 03:02:35PM +0200, Quentin Schulz wrote:
+> > The "vsc8531,led-N-mode" property is read as a u8 in the driver and
+> > there aren't a lot of modes anyway.
+> >=20
+> > Without the "/bits/ 8" in front of the value of the property, the
+> > value is stored as an u32 resulting in of_read_property_u8 to always
+> > return 0.
+>=20
+> Hi Quentin
+>=20
+> on big endian systems. I'm expect this worked on little endian ARM. I
+> think the development work was done on a hacked RPi, if i remember
+> correctly.
+>=20
+> >=20
+> > Fix the example so that people using the property can actually use it.
+> >=20
+> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt=
+ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > index 664d9d0543fc..4c7d1d384df0 100644
+> > --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+> > @@ -63,6 +63,6 @@ Example:
+> >                  compatible =3D "ethernet-phy-id0007.0570";
+> >                  vsc8531,vddmac		=3D <3300>;
+> >                  vsc8531,edge-slowdown	=3D <7>;
+> > -                vsc8531,led-0-mode	=3D <LINK_1000_ACTIVITY>;
+> > -                vsc8531,led-1-mode	=3D <LINK_100_ACTIVITY>;
+> > +                vsc8531,led-0-mode	=3D /bits/ 8 <LINK_1000_ACTIVITY>;
+> > +                vsc8531,led-1-mode	=3D /bits/ 8 <LINK_100_ACTIVITY>;
+>=20
+> I don't know the device tree language well enough...
+>=20
+> Would this work?
+>=20
+> vsc8531,led-1-mode	=3D < /bits/ 8  LINK_100_ACTIVITY>;
+>=20
+> If so, you can make it part of the #define.
 
-Best regards
-    Matti Vaittinen
+It does not compile unfortunately. According to the documentation of
+DTC[1], /bits/ 8 should prefix the value/array so I guess we're out of
+luck for using the same define in the kernel and DTS if we want to
+abstract this prefix.
+
+Quentin
+
+[1] https://git.kernel.org/pub/scm/utils/dtc/dtc.git/tree/Documentation/dts=
+-format.txt#n46
+
+--vwalimjjmzvj7stw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAltgJ9cACgkQhLiadT7g
+8aNRxQ//W8xcDndtBdAN0lAb2dm2Cfqk/37IFbAPMJdPLvQCzoOU3lZjfjFJhj+/
+f07+JU4zrrZd84Vg7b1398L7pi1leB2XQa3HtHFhHu0V9OZ+95VkjIdpU5cBCcdM
+Obd757fXFhC5ekPBxffdm9FLpIWDYZv7s9KdhgjSjJHe5B9v3V5GMiW0wcVFWu/3
+Ut4Mebuf8POqvtLjp0IUZcdaNwEfpaLAmHjtibyUfMp7SRFl2JQ+ELV/TtPAwB5E
+KmBv+a1E6em3qfNETg7mCzKScXD7m0+RDHin/mf6zgi/bYKD9/94qrNIFJvLqgCU
+FrO/zwE/aY1NW5jG35GprpFrl0xBQVf0WcIUpX9Y9CyXglLM4PUPQqyWDItBjZ9H
+q3+LKH0tOp3cHM1VQcZZO5KWAyrwWadmuohcONNDj2XzA0xySzIq47f6aAkmoUBO
+aq/1f8V7DtkJo2GWrrziChgcMd/SZzB7WSa1QqpVZ5UDFPc2rFgA6GXMgDnWUVOS
+5lW/Stms2YT+SwnFOxZlbadrwp/jNwTHGOinz/GWFQRo6iiNoLdWT1/AkZBf2KEh
+59TFhlM7XiSiKZTsFsEoQ+umNI5XPFCrFodlSthQWZJYDS7EZEq69824FOUh8Rx6
+/eYB17PHZHy/FwCpCGZrdpvOrC/Rg5IEvs89Xi/SWpEuIukxN48=
+=eird
+-----END PGP SIGNATURE-----
+
+--vwalimjjmzvj7stw--
