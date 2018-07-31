@@ -1,351 +1,175 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v6 3/5] thermal: qcom-spmi: Use PMIC thermal stage 2 for critical trip points
-Date: Tue, 31 Jul 2018 11:45:54 -0700
-Message-ID: <20180731184556.169290-3-mka@chromium.org>
-References: <20180731184556.169290-1-mka@chromium.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v7 08/12] mfd: intel-peci-client: Add PECI client MFD
+ driver
+Date: Tue, 31 Jul 2018 11:56:09 -0700
+Message-ID: <52b5342d-e31a-f4a2-f269-a159d3f58252@linux.intel.com>
+References: <20180723214751.1733-1-jae.hyun.yoo@linux.intel.com>
+ <20180723214751.1733-9-jae.hyun.yoo@linux.intel.com>
+ <20180727082611.GE4628@dell>
+ <acffdfef-cb20-4208-5297-d94bac5ecb1b@linux.intel.com>
+ <CAL_JsqL7WkDOaegwmBDqLkRh0JfCo7O2krONVstjWMUsLiJMrg@mail.gmail.com>
+ <7ab43253-1154-6e2f-b216-69b0d44b470a@linux.intel.com>
+ <20180731070117.GE4662@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731184556.169290-1-mka@chromium.org>
+In-Reply-To: <20180731070117.GE4662@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Collins <collinsd@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, darrick.wong@oracle.com, sandeen@redhat.com, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, kusumi.tomohiro@gmail.com, bryantly@linux.vnet.ibm.com, fbarrat@linux.vnet.ibm.com, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@in>
 List-Id: devicetree@vger.kernel.org
 
-There are three thermal stages defined in the PMIC:
+Hi Lee,
 
-stage 1: warning
-stage 2: system should shut down
-stage 3: emergency shut down
+On 7/31/2018 12:01 AM, Lee Jones wrote:
+> On Mon, 30 Jul 2018, Jae Hyun Yoo wrote:
+> 
+>> Hi Rob,
+>>
+>> On 7/30/2018 3:10 PM, Rob Herring wrote:
+>>> On Fri, Jul 27, 2018 at 11:36 AM Jae Hyun Yoo
+>>> <jae.hyun.yoo@linux.intel.com> wrote:
+>>>>
+>>>> Hi Lee,
+>>>>
+>>>> On 7/27/2018 1:26 AM, Lee Jones wrote:
+>>>>> On Mon, 23 Jul 2018, Jae Hyun Yoo wrote:
+>>>>>
+>>>>>> This commit adds PECI client MFD driver.
+>>>>>>
+>>>>>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>>>>>> Cc: Lee Jones <lee.jones@linaro.org>
+>>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>>> Cc: Andrew Jeffery <andrew@aj.id.au>
+>>>>>> Cc: James Feist <james.feist@linux.intel.com>
+>>>>>> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+>>>>>> Cc: Joel Stanley <joel@jms.id.au>
+>>>>>> Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
+>>>>>> ---
+>>>>>>     drivers/mfd/Kconfig                   |  14 ++
+>>>>>>     drivers/mfd/Makefile                  |   1 +
+>>>>>>     drivers/mfd/intel-peci-client.c       | 182 ++++++++++++++++++++++++++
+>>>>>>     include/linux/mfd/intel-peci-client.h |  81 ++++++++++++
+>>>>>>     4 files changed, 278 insertions(+)
+>>>>>>     create mode 100644 drivers/mfd/intel-peci-client.c
+>>>>>>     create mode 100644 include/linux/mfd/intel-peci-client.h
+>>>>>>
+>>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>>>>> index f3fa516011ec..e38b591479d4 100644
+>>>>>> --- a/drivers/mfd/Kconfig
+>>>>>> +++ b/drivers/mfd/Kconfig
+>>>>>> @@ -595,6 +595,20 @@ config MFD_INTEL_MSIC
+>>>>>>          Passage) chip. This chip embeds audio, battery, GPIO, etc.
+>>>>>>          devices used in Intel Medfield platforms.
+>>>>>>
+>>>>>> +config MFD_INTEL_PECI_CLIENT
+>>>>>> +    bool "Intel PECI client"
+>>>>>> +    depends on (PECI || COMPILE_TEST)
+>>>>>> +    select MFD_CORE
+>>>>>> +    help
+>>>>>> +      If you say yes to this option, support will be included for the
+>>>>>> +      multi-funtional Intel PECI (Platform Environment Control Interface)
+>>>>>> +      client. PECI is a one-wire bus interface that provides a communication
+>>>>>> +      channel from PECI clients in Intel processors and chipset components
+>>>>>> +      to external monitoring or control devices.
+>>>>>> +
+>>>>>> +      Additional drivers must be enabled in order to use the functionality
+>>>>>> +      of the device.
+>>>>>> +
+>>>>>>     config MFD_IPAQ_MICRO
+>>>>>>        bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
+>>>>>>        depends on SA1100_H3100 || SA1100_H3600
+>>>>>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>>>>>> index 2852a6042ecf..29e2cacc58bd 100644
+>>>>>> --- a/drivers/mfd/Makefile
+>>>>>> +++ b/drivers/mfd/Makefile
+>>>>>> @@ -203,6 +203,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)     += intel-lpss.o
+>>>>>>     obj-$(CONFIG_MFD_INTEL_LPSS_PCI)   += intel-lpss-pci.o
+>>>>>>     obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)  += intel-lpss-acpi.o
+>>>>>>     obj-$(CONFIG_MFD_INTEL_MSIC)       += intel_msic.o
+>>>>>> +obj-$(CONFIG_MFD_INTEL_PECI_CLIENT) += intel-peci-client.o
+>>>>>>     obj-$(CONFIG_MFD_PALMAS)   += palmas.o
+>>>>>>     obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+>>>>>>     obj-$(CONFIG_MFD_RC5T583)  += rc5t583.o rc5t583-irq.o
+>>>>>> diff --git a/drivers/mfd/intel-peci-client.c b/drivers/mfd/intel-peci-client.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..d7702cf1ea50
+>>>>>> --- /dev/null
+>>>>>> +++ b/drivers/mfd/intel-peci-client.c
+>>>>>> @@ -0,0 +1,182 @@
+>>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>>> +// Copyright (c) 2018 Intel Corporation
+>>>>>> +
+>>>>>> +#include <linux/bitfield.h>
+>>>>>> +#include <linux/mfd/core.h>
+>>>>>> +#include <linux/mfd/intel-peci-client.h>
+>>>>>> +#include <linux/module.h>
+>>>>>> +#include <linux/peci.h>
+>>>>>> +#include <linux/of_device.h>
+>>>>>> +
+>>>>>> +enum cpu_gens {
+>>>>>> +    CPU_GEN_HSX = 0, /* Haswell Xeon */
+>>>>>> +    CPU_GEN_BRX,     /* Broadwell Xeon */
+>>>>>> +    CPU_GEN_SKX,     /* Skylake Xeon */
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct mfd_cell peci_functions[] = {
+>>>>>> +    {
+>>>>>> +            .name = "peci-cputemp",
+>>>>>> +            .of_compatible = "intel,peci-cputemp",
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +            .name = "peci-dimmtemp",
+>>>>>> +            .of_compatible = "intel,peci-dimmtemp",
+>>>>>> +    },
+>>>>>> +};
+>>>>>
+>>>>> The more I look at this driver, the less I think it fits into MFD.
+>>>>>
+>>>>> What's stopping you from registering these devices directly from DT?
+>>>>>
+>>>>
+>>>> Because DT doesn't allow 2 nodes at the same address so Rob suggested
+>>>> MFD for this case.
+>>>
+>>> Only after I first suggested you create cpu and dimm sensors from a
+>>> single hwmon driver. Perhaps you should figure out how to fix the
+>>> problem with delayed registration. Perhaps you can register the
+>>> sensor, but just delay returning actual data until it is ready.
+>>>
+>>
+>> The actual reason why I divided the single hwmon driver into two is for
+>> using recommended hwmon API set which doesn't allow incremental
+>> creation of sysfs attributes at run time - using of
+>> 'devm_hwmon_device_register_with_info' is suggested by Guenter instead
+>> of using other deprecated APIs.
+>>
+>> The reason why the delayed registration is needed is, BMC kernel cannot
+>> know how many DIMM are installed in remote machine before the machine
+>> completing memory training and testing in POST. So dimm temp driver
+>> cannot create hwmon attributes in advance.
+>>
+>> My thought is, this way is the best to address these requirements.
+> 
+> As I've previously explained, I do not think this is a good fit for
+> MFD.  Since this whole PECI piece is a bit, let's say 'niche', perhaps
+> it's better to contain the client within the PECI subsystem too.  You
+> can then use the platform_device_add() API to register devices as and
+> when required.
+> 
 
-By default the PMIC assumes that the OS isn't doing anything and thus
-at stage 2 it does a partial PMIC shutdown and at stage 3 it kills
-all power. When switching between thermal stages the PMIC generates an
-interrupt which is handled by the driver. The partial PMIC shutdown at
-stage 2 can be disabled by software, which allows the OS to initiate a
-shutdown at stage 2 with a thermal zone configured accordingly.
+If I do like that, I would face the 'DT doesn't allow 2 nodes at the
+same address' issue again. Also, as I previously explained, additional
+PECI sideband function drivers should be added later through this MFD
+driver. For an example, remote CPU crash dump driver which would be an
+misc char type driver that are sharing the same unit address also needs
+to be added later, and it's definitely not an additional hwmon subsystem
+driver. I'm still thinking that an MFD driver is more suitable to
+support these mixed-type function drivers that are sharing a single
+device unit.
 
-If a critical trip point is configured in the thermal zone the driver
-adjusts the stage 1-3 temperature thresholds to (closely) match the
-critical temperature with a stage 2 threshold (125/130/135/140 °C).
-If a suitable match is found the partial shutdown at stage 2 is
-disabled. If for some reason the system doesn't shutdown at stage 2
-the emergency shutdown at stage 3 kicks in.
+Thanks,
 
-The partial shutdown at stage 2 remains enabled in these cases:
-- no critical trip point defined
-- the temperature of the critical trip point is < 125°C
-- the temperature of the critical trip point is > 140°C and no
-  ADC channel is configured (thus the OS is not notified when the critical
-  temperature is reached)
-
-Suggested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Changes in v6:
-- fixed condition to check if ADC is configured in
-  qpnp_tm_update_critical_trip_temp()
-- changed °C in logs to C
-- removed needless evaluation of qpnp_tm_write() return value in
-  qpnp_tm_update_critical_trip_temp()
-- move assignment of chip->initialized to true to qpnp_tm_init(),
-  where the lock is held
-- call thermal_zone_device_update() after initialization is
-  completed
-- split some #define + comment in two lines to avoid exceeding
-  chars per line limit
-- removed extra closing parenthesis in qpnp_tm_get_temp()
-- remove unnecessary parentheses around conditions in
-  qpnp_tm_update_critical_trip_temp() and qpnp_tm_get_critical_trip_temp()
-- fixed indentation of call devm_thermal_zone_of_sensor_register() call
-  in qpnp_tm_probe()
-
-Changes in v5:
-- patch added to the series
----
- drivers/thermal/qcom-spmi-temp-alarm.c | 158 ++++++++++++++++++++++---
- 1 file changed, 140 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/thermal/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom-spmi-temp-alarm.c
-index ad4f3a8d6560..b2d5d5bf4a9b 100644
---- a/drivers/thermal/qcom-spmi-temp-alarm.c
-+++ b/drivers/thermal/qcom-spmi-temp-alarm.c
-@@ -23,6 +23,8 @@
- #include <linux/regmap.h>
- #include <linux/thermal.h>
- 
-+#include "thermal_core.h"
-+
- #define QPNP_TM_REG_TYPE		0x04
- #define QPNP_TM_REG_SUBTYPE		0x05
- #define QPNP_TM_REG_STATUS		0x08
-@@ -37,9 +39,11 @@
- #define STATUS_GEN2_STATE_MASK		GENMASK(6, 4)
- #define STATUS_GEN2_STATE_SHIFT		4
- 
--#define SHUTDOWN_CTRL1_OVERRIDE_MASK	GENMASK(7, 6)
-+#define SHUTDOWN_CTRL1_OVERRIDE_S2	BIT(6)
- #define SHUTDOWN_CTRL1_THRESHOLD_MASK	GENMASK(1, 0)
- 
-+#define SHUTDOWN_CTRL1_RATE_25HZ	BIT(3)
-+
- #define ALARM_CTRL_FORCE_ENABLE		BIT(7)
- 
- /*
-@@ -56,12 +60,19 @@
- #define TEMP_THRESH_STEP		5000	/* Threshold step: 5 C */
- 
- #define THRESH_MIN			0
-+#define THRESH_MAX			3
-+
-+/* Stage 2 Threshold Min: 125 C */
-+#define STAGE2_THRESHOLD_MIN		125000
-+/* Stage 2 Threshold Max: 140 C */
-+#define STAGE2_THRESHOLD_MAX		140000
- 
- /* Temperature in Milli Celsius reported during stage 0 if no ADC is present */
- #define DEFAULT_TEMP			37000
- 
- struct qpnp_tm_chip {
- 	struct regmap			*map;
-+	struct device			*dev;
- 	struct thermal_zone_device	*tz_dev;
- 	unsigned int			subtype;
- 	long				temp;
-@@ -69,6 +80,10 @@ struct qpnp_tm_chip {
- 	unsigned int			stage;
- 	unsigned int			prev_stage;
- 	unsigned int			base;
-+	/* protects .thresh, .stage and chip registers */
-+	struct mutex			lock;
-+	bool				initialized;
-+
- 	struct iio_channel		*adc;
- };
- 
-@@ -125,6 +140,8 @@ static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
- 	unsigned int stage, stage_new, stage_old;
- 	int ret;
- 
-+	WARN_ON(!mutex_is_locked(&chip->lock));
-+
- 	ret = qpnp_tm_get_temp_stage(chip);
- 	if (ret < 0)
- 		return ret;
-@@ -163,8 +180,15 @@ static int qpnp_tm_get_temp(void *data, int *temp)
- 	if (!temp)
- 		return -EINVAL;
- 
-+	if (!chip->initialized) {
-+		*temp = DEFAULT_TEMP;
-+		return 0;
-+	}
-+
- 	if (!chip->adc) {
-+		mutex_lock(&chip->lock);
- 		ret = qpnp_tm_update_temp_no_adc(chip);
-+		mutex_unlock(&chip->lock);
- 		if (ret < 0)
- 			return ret;
- 	} else {
-@@ -180,8 +204,72 @@ static int qpnp_tm_get_temp(void *data, int *temp)
- 	return 0;
- }
- 
-+static int qpnp_tm_update_critical_trip_temp(struct qpnp_tm_chip *chip,
-+					     int temp)
-+{
-+	u8 reg;
-+	bool disable_s2_shutdown = false;
-+
-+	WARN_ON(!mutex_is_locked(&chip->lock));
-+
-+	/*
-+	 * Default: S2 and S3 shutdown enabled, thresholds at
-+	 * 105C/125C/145C, monitoring at 25Hz
-+	 */
-+	reg = SHUTDOWN_CTRL1_RATE_25HZ;
-+
-+	if (temp == THERMAL_TEMP_INVALID ||
-+	    temp < STAGE2_THRESHOLD_MIN) {
-+		chip->thresh = THRESH_MIN;
-+		goto skip;
-+	}
-+
-+	if (temp <= STAGE2_THRESHOLD_MAX) {
-+		chip->thresh = THRESH_MAX -
-+			((STAGE2_THRESHOLD_MAX - temp) /
-+			 TEMP_THRESH_STEP);
-+		disable_s2_shutdown = true;
-+	} else {
-+		chip->thresh = THRESH_MAX;
-+
-+		if (chip->adc)
-+			disable_s2_shutdown = true;
-+		else
-+			dev_warn(chip->dev,
-+				 "No ADC is configured and critical temperature is above the maximum stage 2 threshold of 140 C! Configuring stage 2 shutdown at 140 C.\n");
-+	}
-+
-+skip:
-+	reg |= chip->thresh;
-+	if (disable_s2_shutdown)
-+		reg |= SHUTDOWN_CTRL1_OVERRIDE_S2;
-+
-+	return qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
-+}
-+
-+static int qpnp_tm_set_trip_temp(void *data, int trip, int temp)
-+{
-+	struct qpnp_tm_chip *chip = data;
-+	const struct thermal_trip *trip_points;
-+	int ret;
-+
-+	trip_points = of_thermal_get_trip_points(chip->tz_dev);
-+	if (!trip_points)
-+		return -EINVAL;
-+
-+	if (trip_points[trip].type != THERMAL_TRIP_CRITICAL)
-+		return 0;
-+
-+	mutex_lock(&chip->lock);
-+	ret = qpnp_tm_update_critical_trip_temp(chip, temp);
-+	mutex_unlock(&chip->lock);
-+
-+	return ret;
-+}
-+
- static const struct thermal_zone_of_device_ops qpnp_tm_sensor_ops = {
- 	.get_temp = qpnp_tm_get_temp,
-+	.set_trip_temp = qpnp_tm_set_trip_temp,
- };
- 
- static irqreturn_t qpnp_tm_isr(int irq, void *data)
-@@ -193,6 +281,29 @@ static irqreturn_t qpnp_tm_isr(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+static int qpnp_tm_get_critical_trip_temp(struct qpnp_tm_chip *chip)
-+{
-+	int ntrips;
-+	const struct thermal_trip *trips;
-+	int i;
-+
-+	ntrips = of_thermal_get_ntrips(chip->tz_dev);
-+	if (ntrips <= 0)
-+		return THERMAL_TEMP_INVALID;
-+
-+	trips = of_thermal_get_trip_points(chip->tz_dev);
-+	if (!trips)
-+		return THERMAL_TEMP_INVALID;
-+
-+	for (i = 0; i < ntrips; i++) {
-+		if (of_thermal_is_trip_valid(chip->tz_dev, i) &&
-+		    trips[i].type == THERMAL_TRIP_CRITICAL)
-+			return trips[i].temperature;
-+	}
-+
-+	return THERMAL_TEMP_INVALID;
-+}
-+
- /*
-  * This function initializes the internal temp value based on only the
-  * current thermal stage and threshold. Setup threshold control and
-@@ -203,17 +314,20 @@ static int qpnp_tm_init(struct qpnp_tm_chip *chip)
- 	unsigned int stage;
- 	int ret;
- 	u8 reg = 0;
-+	int crit_temp;
-+
-+	mutex_lock(&chip->lock);
- 
- 	ret = qpnp_tm_read(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, &reg);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	chip->thresh = reg & SHUTDOWN_CTRL1_THRESHOLD_MASK;
- 	chip->temp = DEFAULT_TEMP;
- 
- 	ret = qpnp_tm_get_temp_stage(chip);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 	chip->stage = ret;
- 
- 	stage = chip->subtype == QPNP_TM_SUBTYPE_GEN1
-@@ -224,21 +338,19 @@ static int qpnp_tm_init(struct qpnp_tm_chip *chip)
- 			     (stage - 1) * TEMP_STAGE_STEP +
- 			     TEMP_THRESH_MIN;
- 
--	/*
--	 * Set threshold and disable software override of stage 2 and 3
--	 * shutdowns.
--	 */
--	chip->thresh = THRESH_MIN;
--	reg &= ~(SHUTDOWN_CTRL1_OVERRIDE_MASK | SHUTDOWN_CTRL1_THRESHOLD_MASK);
--	reg |= chip->thresh & SHUTDOWN_CTRL1_THRESHOLD_MASK;
--	ret = qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
-+	crit_temp = qpnp_tm_get_critical_trip_temp(chip);
-+	ret = qpnp_tm_update_critical_trip_temp(chip, crit_temp);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	/* Enable the thermal alarm PMIC module in always-on mode. */
- 	reg = ALARM_CTRL_FORCE_ENABLE;
- 	ret = qpnp_tm_write(chip, QPNP_TM_REG_ALARM_CTRL, reg);
- 
-+	chip->initialized = true;
-+
-+out:
-+	mutex_unlock(&chip->lock);
- 	return ret;
- }
- 
-@@ -257,6 +369,9 @@ static int qpnp_tm_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	dev_set_drvdata(&pdev->dev, chip);
-+	chip->dev = &pdev->dev;
-+
-+	mutex_init(&chip->lock);
- 
- 	chip->map = dev_get_regmap(pdev->dev.parent, NULL);
- 	if (!chip->map)
-@@ -302,6 +417,18 @@ static int qpnp_tm_probe(struct platform_device *pdev)
- 
- 	chip->subtype = subtype;
- 
-+	/*
-+	 * Register the sensor before initializing the hardware to be able to
-+	 * read the trip points. get_temp() returns the default temperature
-+	 * before the hardware initialization is completed.
-+	 */
-+	chip->tz_dev = devm_thermal_zone_of_sensor_register(
-+		&pdev->dev, 0, chip, &qpnp_tm_sensor_ops);
-+	if (IS_ERR(chip->tz_dev)) {
-+		dev_err(&pdev->dev, "failed to register sensor\n");
-+		return PTR_ERR(chip->tz_dev);
-+	}
-+
- 	ret = qpnp_tm_init(chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "init failed\n");
-@@ -313,12 +440,7 @@ static int qpnp_tm_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
--	chip->tz_dev = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, chip,
--							&qpnp_tm_sensor_ops);
--	if (IS_ERR(chip->tz_dev)) {
--		dev_err(&pdev->dev, "failed to register sensor\n");
--		return PTR_ERR(chip->tz_dev);
--	}
-+	thermal_zone_device_update(chip->tz_dev, THERMAL_EVENT_UNSPECIFIED);
- 
- 	return 0;
- }
--- 
-2.18.0.345.g5c9ce644c3-goog
+Jae
