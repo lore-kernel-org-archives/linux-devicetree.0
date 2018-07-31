@@ -1,74 +1,110 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: phy-qcom-ipq4019-usb: add binding
- document
-Date: Tue, 31 Jul 2018 16:33:45 -0600
-Message-ID: <20180731223345.GA23086@rob-hp-laptop>
-References: <20180725054059.19506-1-john@phrozen.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: only apply reset hacks to broken hardware
+Date: Tue, 31 Jul 2018 15:35:50 -0700
+Message-ID: <20180731223550.GA60117@ban.mtv.corp.google.com>
+References: <20180727183313.137943-1-computersforpeace@gmail.com>
+ <20180727220337.1b3375ca@bbrezillon>
+ <87wotcrz94.fsf@notabene.neil.brown.name>
+ <20180731221255.3e65c1fa@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180725054059.19506-1-john@phrozen.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <john@phrozen.org>
-Cc: Alban Bedel <albeu@free.fr>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20180731221255.3e65c1fa@bbrezillon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, NeilBrown <neilb@suse.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 07:40:57AM +0200, John Crispin wrote:
-> This patch adds the binding documentation for the HS/SS USB PHY found
-> inside Qualcom Dakota SoCs.
+Hi Neil, Boris,
 
-Qualcomm
+On Tue, Jul 31, 2018 at 10:12:55PM +0200, Boris Brezillon wrote:
+> On Tue, 31 Jul 2018 11:05:11 +1000
+> NeilBrown <neilb@suse.com> wrote:
+> > On Fri, Jul 27 2018, Boris Brezillon wrote:
+> > > On Fri, 27 Jul 2018 11:33:13 -0700
+> > > I'll leave Neil some time to review/test/comment on the patch before
+> > > queuing it, but it looks good to me.  
+> > 
+> > Thanks.
+> > I can confirm that if I apply this patch, my system won't reboot
+> > properly (as expected), and if I then add
+> > 
+> > 		broken-flash-reset;
+> > 
+> > to the jedec,spi-nor device, it starts functioning correctly again.
+> > 
+> > I don't like the pejorative "broken", and it also suggests that a thing
+> > used to work, but something happened to break it - this is not
+> > accurate.
+> > I would prefer something like "reset-not-connected" which is an accurate
+> > description of the state of the hardware.
 
+One reason I didn't specifically say something like "not connected", is
+because IIUC it's actually *possible* to have a robust boot sequence
+without the RESET# pin -- e.g., if your boot ROM hardcoded a software
+reset command (just because it's not really standardized doesn't mean
+one can't do it).
+
+> > I also think that having a WARN_ON is an over-reaction.  Certainly a
+> > warning could be appropriate, but just one pr_warn() should be enough.
+> > The "problem" is unlikely in practice, and loudly warning people that an
+> > asteroid might kill them isn't particularly helpful.
+> > 
+> > I genuinely think that if the system fails to reboot, then Linux is at
+> > fault. I accept that changing Linux to be completely robust might be
+> > more trouble than it is worth, but I don't accept that it is impossible.
+
+Did you read my last response on the original thread? In my
+understanding, there's always a way to, e.g., b0rk your exception
+handlers, etc., such that you cannot guarantee your software fallbacks
+will work. Normally, one would rely on a (hardware) watchdog to do your
+last resort reset for you, but if said reset cannot also reset your boot
+flash, then...you're stuck.
+
+IOW, it's impossible.
+
+Is that not an accurate description?
+
+> > But I don't intend to fight either of these battles.
 > 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Crispin <john@phrozen.org>
-> ---
->  .../bindings/phy/phy-qcom-ipq4019-usb.txt           | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
+> Does that mean you're accepting this change? Brian, any comment on what
+> Neil said?
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt b/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
-> new file mode 100644
-> index 000000000000..362877fcafed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
-> @@ -0,0 +1,21 @@
-> +Qualcom Dakota HS/SS USB PHY
-> +
-> +Required properties:
-> + - compatible: "qcom,usb-ss-ipq4019-phy",
-> +	       "qcom,usb-hs-ipq4019-phy"
+> To be honest, I hate being in the middle of this discussion without
+> having been involved in the first decision to accept such workarounds.
+> I keep thinking that making boards that do not have reset properly
+> wired less likely to fail rebooting is a wise decision, but I also
+> agree with Brian when he says we should inform people that their design
+> is unreliable.
+> The main problem I see here, is that adding this prop won't help people
+> figuring out what is wrong with their design, it will just help them
 
-<vendor>,<soc>-<block> is the usual order.
+How else would we help someone figure out what's wrong with their
+design? My best attempt is to make it quite obvious, as long as they're
+using vanilla mainline: if their system hangs on reboot (without this
+property), then it's probably a bad design.
 
-> + - reg: offset and length of the registers
-> + - #phy-cells: should be 0
-> + - resets: the reset controllers as listed below
-> + - reset-names: the names of the reset controllers
-> +	"por_rst" - the POR reset line for SS and HS phys
-> +	"srif_rst" - the SRIF reset line for HS phys
+And if instead, someone stuck in this DT property already, the loud
+warning might suggest the reader look at the DT binding doc or code
+comments, where I elaborated.
 
-'_rst' is redundant.
+> workaround the problem when they find out, and it might already be to
+> late to fix the HW design. But maybe it's not what we're trying to do
+> here. Maybe we just want to warn users that rebooting such boards is a
+> risky procedure.
 
-> +Example:
-> +
-> +hsphy@a8000 {
+Brian
 
-usb-phy@...
-
-> +	compatible = "qcom,usb-hs-ipq4019-phy";
-> +	phy-cells = <0>;
-> +	reg = <0xa8000 0x40>;
-> +	resets = <&gcc USB2_HSPHY_POR_ARES>,
-> +		 <&gcc USB2_HSPHY_S_ARES>;
-> +	reset-names = "por_rst", "srif_rst";
-> +};
-> -- 
-> 2.11.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
