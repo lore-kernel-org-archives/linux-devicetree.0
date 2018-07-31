@@ -1,91 +1,214 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: RE: Re: [PATCH v1 1/2] arm64: dts: mt7622: add some misc device
- nodes
-Date: Tue, 31 Jul 2018 16:43:53 +0800
-Message-ID: <1533026633.10540.20.camel@mtkswgap22>
-References: <2ff39c40ef6bc3054667e63c785a1d28527b5ddf.1531753039.git.ryder.lee@mediatek.com>
-         <864955d5-26c4-a5f3-ec1a-420acba50880@gmail.com>
-         <2839886f07dc47afb9a05d06fb1acc84@mtkmbs08n1.mediatek.inc>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/4] reset: qcom: PDC (Power Domain Controller) reset
+ controller
+Date: Tue, 31 Jul 2018 10:51:27 +0200
+Message-ID: <1533027087.3444.7.camel@pengutronix.de>
+References: <20180727152811.15258-1-sibis@codeaurora.org>
+         <20180727152811.15258-2-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2839886f07dc47afb9a05d06fb1acc84@mtkmbs08n1.mediatek.inc>
+In-Reply-To: <20180727152811.15258-2-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-Sorry for the late reply.
-
-On Tue, 2018-07-31 at 16:17 +0800, Ryder Lee (李庚諺) wrote:
-> Hi Ryder,
+On Fri, 2018-07-27 at 20:58 +0530, Sibi Sankar wrote:
+> Add reset controller for SDM845 SoC to control reset signals
+> provided by PDC for Modem, Compute, Display, GPU, Debug, AOP,
+> Sensors, Audio, SP and APPS
 > 
-> On 16/07/18 16:59, Ryder Lee wrote:
-> > Add some misc nodes support - timer and ARM CCI-400.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 36 
-> > ++++++++++++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi 
-> > b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > index 9213c96..8cdec52 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > @@ -217,6 +217,16 @@
-> >  		#reset-cells = <1>;
-> >  	};
-> >  
-> > +	timer: timer@10004000 {
-> > +		compatible = "mediatek,mt7622-timer",
-> > +			     "mediatek,mt6577-timer";
-> > +		reg = <0 0x10004000 0 0x80>;
-> > +		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&infracfg CLK_INFRA_APXGPT_PD>,
-> > +			 <&topckgen CLK_TOP_RTC>;
-> > +		clock-names = "system-clk", "rtc-clk";
-> > +	};
-> > +
-> >  	scpsys: scpsys@10006000 {
-> >  		compatible = "mediatek,mt7622-scpsys",
-> >  			     "syscon";
-> > @@ -317,6 +327,32 @@
-> >  		      <0 0x10360000 0 0x2000>;
-> >  	};
-> >  
-> > +	cci: cci@10390000 {
-> > +		compatible = "arm,cci-400";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		reg = <0 0x10390000 0 0x1000>;
-> > +		ranges = <0 0 0x10390000 0x10000>;
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  drivers/reset/Kconfig          |   9 +++
+>  drivers/reset/Makefile         |   1 +
+>  drivers/reset/reset-qcom-pdc.c | 139 +++++++++++++++++++++++++++++++++
+>  3 files changed, 149 insertions(+)
+>  create mode 100644 drivers/reset/reset-qcom-pdc.c
 > 
-> From my understanding of the binding description ranges should hold child address, parent address and size of the region in the child address space. I can see in arch/arm64 two different variants using 4 ranges values (like here) and using three values.
-> 
-> @Rob + Will what is the preferred way to describe this?
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 13d28fdbdbb5..5344e202a630 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -98,6 +98,15 @@ config RESET_QCOM_AOSS
+>  	  reset signals provided by AOSS for Modem, Venus, ADSP,
+>  	  GPU, Camera, Wireless, Display subsystem. Otherwise, say N.
+>  
+> +config RESET_QCOM_PDC
+> +	bool "Qcom PDC Reset Driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	help
+> +	  This enables the PDC (Power Domain Controller) reset driver
+> +	  for Qualcomm Technologies Inc SDM845 SoCs. Say Y if you want
+> +	  to control reset signals provided by PDC for Modem, Compute,
+> +	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
+> +
+>  config RESET_SIMPLE
+>  	bool "Simple Reset Controller Driver" if COMPILE_TEST
+>  	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 4243c38228e2..d08e8b90046a 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_RESET_MESON_AUDIO_ARB) += reset-meson-audio-arb.o
+>  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+>  obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
+>  obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
+> +obj-$(CONFIG_RESET_QCOM_PDC) += reset-qcom-pdc.o
+>  obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
+>  obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
+>  obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+> diff --git a/drivers/reset/reset-qcom-pdc.c b/drivers/reset/reset-qcom-pdc.c
+> new file mode 100644
+> index 000000000000..64a0041e3452
+> --- /dev/null
+> +++ b/drivers/reset/reset-qcom-pdc.c
+> @@ -0,0 +1,139 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_device.h>
+> +#include <dt-bindings/reset/qcom,sdm845-pdc.h>
+> +
+> +struct qcom_pdc_reset_map {
+> +	u8 bit;
+> +};
+> +
+> +struct qcom_pdc_desc {
+> +	const struct regmap_config *config;
+> +	const struct qcom_pdc_reset_map *resets;
+> +	size_t num_resets;
+> +};
+> +
+> +struct qcom_pdc_reset_data {
+> +	struct reset_controller_dev rcdev;
+> +	struct regmap *regmap;
+> +	const struct qcom_pdc_desc *desc;
+> +};
+> +
+> +static const struct regmap_config sdm845_pdc_regmap_config = {
+> +	.name		= "pdc-reset",
+> +	.reg_bits	= 32,
+> +	.reg_stride	= 4,
+> +	.val_bits	= 32,
+> +	.max_register	= 0x20000,
+> +	.fast_io	= true,
+> +};
+> +
+> +static const struct qcom_pdc_reset_map sdm845_pdc_resets[] = {
+> +	[PDC_APPS_SYNC_RESET] = {0},
+> +	[PDC_SP_SYNC_RESET] = {1},
+> +	[PDC_AUDIO_SYNC_RESET] = {2},
+> +	[PDC_SENSORS_SYNC_RESET] = {3},
+> +	[PDC_AOP_SYNC_RESET] = {4},
+> +	[PDC_DEBUG_SYNC_RESET] = {5},
+> +	[PDC_GPU_SYNC_RESET] = {6},
+> +	[PDC_DISPLAY_SYNC_RESET] = {7},
+> +	[PDC_COMPUTE_SYNC_RESET] = {8},
+> +	[PDC_MODEM_SYNC_RESET] = {9},
+> +};
+> +
+> +static const struct qcom_pdc_desc sdm845_pdc_desc = {
+> +	.config = &sdm845_pdc_regmap_config,
+> +	.resets = sdm845_pdc_resets,
+> +	.num_resets = ARRAY_SIZE(sdm845_pdc_resets),
+> +};
+> +
+> +static inline struct qcom_pdc_reset_data *to_qcom_pdc_reset_data(
+> +				struct reset_controller_dev *rcdev)
+> +{
+> +	return container_of(rcdev, struct qcom_pdc_reset_data, rcdev);
+> +}
+> +
+> +static int qcom_pdc_control_assert(struct reset_controller_dev *rcdev,
+> +					unsigned long idx)
+> +{
+> +	struct qcom_pdc_reset_data *data = to_qcom_pdc_reset_data(rcdev);
+> +	const struct qcom_pdc_reset_map *map = &data->desc->resets[idx];
+> +
+> +	return regmap_update_bits(data->regmap, 0x100,
 
-Hmmm... it's just a copy-paste (I take zynqmp.dtsi as an example).
-> > +
-> > +		cci_control0: slave-if@1000 {
-> > +			compatible = "arm,cci-400-ctrl-if";
-> > +			interface-type = "ace-lite";
-> > +			reg = <0x1000 0x1000>;
-> > +		};
-> 
-> Don't we need to add phandles to the cci-control-port property in the cpu nodes?
-> 
-> Regards,
-> Matthias
+Does this register have a name? If so, a #define would be preferable.
+Otherwise this driver looks fine to me.
 
-MT7622 use cci-400 to improve performance (DMA IO coherence) for
-high-speed IPs. (i.e., ETH/WIFI/SATA/...)
+> +					BIT(map->bit), BIT(map->bit));
+> +}
+> +
+> +static int qcom_pdc_control_deassert(struct reset_controller_dev *rcdev,
+> +					unsigned long idx)
+> +{
+> +	struct qcom_pdc_reset_data *data = to_qcom_pdc_reset_data(rcdev);
+> +	const struct qcom_pdc_reset_map *map = &data->desc->resets[idx];
+> +
+> +	return regmap_update_bits(data->regmap, 0x100, BIT(map->bit), 0);
+> +}
+> +
+> +static const struct reset_control_ops qcom_pdc_reset_ops = {
+> +	.assert = qcom_pdc_control_assert,
+> +	.deassert = qcom_pdc_control_deassert,
+> +};
+> +
+> +static int qcom_pdc_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct qcom_pdc_reset_data *data;
+> +	struct device *dev = &pdev->dev;
+> +	const struct qcom_pdc_desc *desc;
+> +	void __iomem *base;
+> +	struct resource *res;
+> +
+> +	desc = of_device_get_match_data(dev);
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->desc = desc;
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	data->regmap = devm_regmap_init_mmio(dev, base, desc->config);
+> +	if (IS_ERR(data->regmap)) {
+> +		dev_err(dev, "Unable to get pdc-global regmap");
+> +		return PTR_ERR(data->regmap);
+> +	}
+> +
+> +	data->rcdev.owner = THIS_MODULE;
+> +	data->rcdev.ops = &qcom_pdc_reset_ops;
+> +	data->rcdev.nr_resets = desc->num_resets;
+> +	data->rcdev.of_node = dev->of_node;
+> +
+> +	return devm_reset_controller_register(dev, &data->rcdev);
+> +}
+> +
+> +static const struct of_device_id qcom_pdc_reset_of_match[] = {
+> +	{ .compatible = "qcom,sdm845-pdc-global", .data = &sdm845_pdc_desc },
+> +	{}
+> +};
+> +
+> +static struct platform_driver qcom_pdc_reset_driver = {
+> +	.probe = qcom_pdc_reset_probe,
+> +	.driver = {
+> +		.name = "qcom_pdc_reset",
+> +		.of_match_table = qcom_pdc_reset_of_match,
+> +	},
+> +};
+> +
+> +builtin_platform_driver(qcom_pdc_reset_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm PDC Reset Driver");
+> +MODULE_LICENSE("GPL v2");
 
-I added it early but actually the related features have not supported in
-mainline yet.
-
-Ryder
+regards
+Philipp
