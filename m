@@ -1,54 +1,52 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 1/6] i2c: designware: use generic table matching
-Date: Tue, 31 Jul 2018 20:44:02 +0200
-Message-ID: <20180731184402.GY28585@piout.net>
-References: <20180731134740.441-1-alexandre.belloni@bootlin.com>
- <20180731134740.441-2-alexandre.belloni@bootlin.com>
- <44e52856371e4b5c102df8f2efebd527fd26b066.camel@linux.intel.com>
- <0559c93256ae4f59aed278912bcbfd996e279839.camel@linux.intel.com>
- <20180731143059.GV28585@piout.net>
- <1cbe4c184a0a6db1fc5401dbd8bd3a9f6bf22527.camel@linux.intel.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v6 1/5] dt-bindings: thermal: qcom-spmi-temp-alarm: Fix documentation of 'reg'
+Date: Tue, 31 Jul 2018 11:45:52 -0700
+Message-ID: <20180731184556.169290-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1cbe4c184a0a6db1fc5401dbd8bd3a9f6bf22527.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Collins <collinsd@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31/07/2018 17:53:17+0300, Andy Shevchenko wrote:
-> On Tue, 2018-07-31 at 16:30 +0200, Alexandre Belloni wrote:
-> > On 31/07/2018 17:23:04+0300, Andy Shevchenko wrote:
-> > > On Tue, 2018-07-31 at 17:02 +0300, Andy Shevchenko wrote:
-> > > > On Tue, 2018-07-31 at 15:47 +0200, Alexandre Belloni wrote:
->  
-> > > > > +	dev->flags |= (u32)device_get_match_data(&pdev->dev);
-> > > > > +
-> > > 
-> > > And since it would be changed anyway, can you actually move this
-> > > line
-> > > closet to  if (has_acpi_companion()) one ?
-> > > 
-> > 
-> > I need that value to be set before calling of_configure though.
-> 
-> AFAICS, you added those lines later, so, it would be something like
-> 
-> dev->flags |= ...
-> 
-> if (of_node)
->  of_configure()
-> if (has_acpi_companion())
->  acpi_configure()
-> 
-> Would it work for you?
-> 
+The documentation claims that the 'reg' property consists of two values,
+the SPMI address and the length of the controller's registers. However
+the SPMI bus to which it is added specifies "#size-cells = <0>;". Remove
+the controller register length from the documentation of the field and the
+example.
 
-Works for me, I'll send v3 soon.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+---
+Changes in v6:
+- patch added to the series
+---
+ .../devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt     | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
+index 290ec06fa33a..86fb41fe772f 100644
+--- a/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
++++ b/Documentation/devicetree/bindings/thermal/qcom-spmi-temp-alarm.txt
+@@ -6,8 +6,7 @@ interrupt signal and status register to identify high PMIC die temperature.
+ 
+ Required properties:
+ - compatible:      Should contain "qcom,spmi-temp-alarm".
+-- reg:             Specifies the SPMI address and length of the controller's
+-                   registers.
++- reg:             Specifies the SPMI address.
+ - interrupts:      PMIC temperature alarm interrupt.
+ - #thermal-sensor-cells: Should be 0. See thermal.txt for a description.
+ 
+@@ -20,7 +19,7 @@ Example:
+ 
+ 	pm8941_temp: thermal-alarm@2400 {
+ 		compatible = "qcom,spmi-temp-alarm";
+-		reg = <0x2400 0x100>;
++		reg = <0x2400>;
+ 		interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
+ 		#thermal-sensor-cells = <0>;
+ 
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.18.0.345.g5c9ce644c3-goog
