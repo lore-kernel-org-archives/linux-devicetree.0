@@ -1,89 +1,118 @@
-Return-Path: <SRS0=Hr2m=KO=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 4/5] clk: renesas: Add r8a774a1 CPG Core Clock Definitions
-Date: Mon, 30 Jul 2018 08:48:10 +0100
-Message-Id: <1532936891-25034-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
-References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 31 Jul 2018 15:41:28 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add bindings for Hisilicon SEC crypto
+ accelerators.
+Message-ID: <20180731214128.GA4238@rob-hp-laptop>
+References: <20180723154955.12944-1-Jonathan.Cameron@huawei.com>
+ <20180723154955.12944-2-Jonathan.Cameron@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180723154955.12944-2-Jonathan.Cameron@huawei.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, smueller@chronox.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linuxarm@huawei.com, xuzaibo@huwei.com, fanghao11@huawei.com, liguozhu@hisilicon.com, wangxiongfeng2@huawei.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add all RZ/G2M Clock Pulse Generator Core Clock Outputs, as listed in
-Table 8.2b ("List of Clocks [RZ/G2M]") of the RZ/G2M Hardware User's
-Manual.
+On Mon, Jul 23, 2018 at 04:49:53PM +0100, Jonathan Cameron wrote:
+> The hip06 and hip07 SoCs contain a number of these crypto units which
+> accelerate AES and DES operations.
+> 
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- include/dt-bindings/clock/r8a774a1-cpg-mssr.h | 59 +++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 include/dt-bindings/clock/r8a774a1-cpg-mssr.h
+You forgot the 'v2' on the patches. Only matters because I sort my 
+reviews by version and then date. But don't tell anyone or I'll start 
+getting v50 patches. :)
 
-diff --git a/include/dt-bindings/clock/r8a774a1-cpg-mssr.h b/include/dt-bindings/clock/r8a774a1-cpg-mssr.h
-new file mode 100644
-index 0000000..144c341
---- /dev/null
-+++ b/include/dt-bindings/clock/r8a774a1-cpg-mssr.h
-@@ -0,0 +1,59 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+#ifndef __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__
-+#define __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__
-+
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+
-+/* r8a774a1 CPG Core Clocks */
-+#define R8A774A1_CLK_Z			0
-+#define R8A774A1_CLK_Z2			1
-+#define R8A774A1_CLK_ZG			2
-+#define R8A774A1_CLK_ZTR		3
-+#define R8A774A1_CLK_ZTRD2		4
-+#define R8A774A1_CLK_ZT			5
-+#define R8A774A1_CLK_ZX			6
-+#define R8A774A1_CLK_S0D1		7
-+#define R8A774A1_CLK_S0D2		8
-+#define R8A774A1_CLK_S0D3		9
-+#define R8A774A1_CLK_S0D4		10
-+#define R8A774A1_CLK_S0D6		11
-+#define R8A774A1_CLK_S0D8		12
-+#define R8A774A1_CLK_S0D12		13
-+#define R8A774A1_CLK_S1D2		14
-+#define R8A774A1_CLK_S1D4		15
-+#define R8A774A1_CLK_S2D1		16
-+#define R8A774A1_CLK_S2D2		17
-+#define R8A774A1_CLK_S2D4		18
-+#define R8A774A1_CLK_S3D1		19
-+#define R8A774A1_CLK_S3D2		20
-+#define R8A774A1_CLK_S3D4		21
-+#define R8A774A1_CLK_LB			22
-+#define R8A774A1_CLK_CL			23
-+#define R8A774A1_CLK_ZB3		24
-+#define R8A774A1_CLK_ZB3D2		25
-+#define R8A774A1_CLK_ZB3D4		26
-+#define R8A774A1_CLK_CR			27
-+#define R8A774A1_CLK_CRD2		28
-+#define R8A774A1_CLK_SD0H		29
-+#define R8A774A1_CLK_SD0		30
-+#define R8A774A1_CLK_SD1H		31
-+#define R8A774A1_CLK_SD1		32
-+#define R8A774A1_CLK_SD2H		33
-+#define R8A774A1_CLK_SD2		34
-+#define R8A774A1_CLK_SD3H		35
-+#define R8A774A1_CLK_SD3		36
-+#define R8A774A1_CLK_RPC		37
-+#define R8A774A1_CLK_RPCD2		38
-+#define R8A774A1_CLK_MSO		39
-+#define R8A774A1_CLK_HDMI		40
-+#define R8A774A1_CLK_CSI0		41
-+#define R8A774A1_CLK_CP			42
-+#define R8A774A1_CLK_POST2		43
-+#define R8A774A1_CLK_CPEX		44
-+#define R8A774A1_CLK_R			45
-+#define R8A774A1_CLK_OSC		46
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__ */
--- 
-2.7.4
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  .../bindings/crypto/hisilicon,hip07-sec.txt        | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt b/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
+> new file mode 100644
+> index 000000000000..78d2db9d4de5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/crypto/hisilicon,hip07-sec.txt
+> @@ -0,0 +1,67 @@
+> +* Hisilicon hip07 Security Accelerator (SEC)
+> +
+> +Required properties:
+> +- compatible: Must contain one of
+> +  - "hisilicon,hip06-sec"
+> +  - "hisilicon,hip07-sec"
+> +- reg: Memory addresses and lengths of the memory regions through which
+> +  this device is controlled.
+> +  Region 0 has registers to control the backend processing engines.
+> +  Region 1 has registers for functionality common to all queues.
+> +  Regions 2-18 have registers for the 16 individual queues which are isolated
+> +  both in hardware and within the driver.
+> +- interrupts: Interrupt specifiers.
+> +  Refer to interrupt-controller/interrupts.txt for generic interrupt client node
+> +  bindings.
+> +  Interrupt 0 is for the SEC unit error queue.
+> +  Interrupt 2N + 1 is the completion interrupt for queue N.
+> +  Interrupt 2N + 2 is the error interrupt for queue N.
+> +- dma-coherent:  The driver assumes coherent dma is possible.
+> +
+> +Optional properties:
+> +- iommus: The SEC units are behind smmu-v3 iommus.
+> +  Refer to iommu/arm,smmu-v3.txt for more information.
+> +
+> +Example:
+> +
+> +p1_sec_a: crypto@400,d2000000 {
+
+The unit address is still wrong. It should be '400d0000000'.
+
+Really, your dts file should utilize 'ranges' and not just have 64-bit 
+addresses and sizes everywhere. 
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+
+> +	compatible = "hisilicon,hip07-sec";
+> +	reg = <0x400 0xd0000000 0x0 0x10000
+> +	       0x400 0xd2000000 0x0 0x10000
+> +	       0x400 0xd2010000 0x0 0x10000
+> +	       0x400 0xd2020000 0x0 0x10000
+> +	       0x400 0xd2030000 0x0 0x10000
+> +	       0x400 0xd2040000 0x0 0x10000
+> +	       0x400 0xd2050000 0x0 0x10000
+> +	       0x400 0xd2060000 0x0 0x10000
+> +	       0x400 0xd2070000 0x0 0x10000
+> +	       0x400 0xd2080000 0x0 0x10000
+> +	       0x400 0xd2090000 0x0 0x10000
+> +	       0x400 0xd20a0000 0x0 0x10000
+> +	       0x400 0xd20b0000 0x0 0x10000
+> +	       0x400 0xd20c0000 0x0 0x10000
+> +	       0x400 0xd20d0000 0x0 0x10000
+> +	       0x400 0xd20e0000 0x0 0x10000
+> +	       0x400 0xd20f0000 0x0 0x10000
+> +	       0x400 0xd2100000 0x0 0x10000>;
+> +	interrupt-parent = <&p1_mbigen_sec_a>;
+> +	iommus = <&p1_smmu_alg_a 0x600>;
+> +	dma-coherent;
+> +	interrupts = <576 4>,
+> +		     <577 1>, <578 4>,
+> +		     <579 1>, <580 4>,
+> +		     <581 1>, <582 4>,
+> +		     <583 1>, <584 4>,
+> +		     <585 1>, <586 4>,
+> +		     <587 1>, <588 4>,
+> +		     <589 1>, <590 4>,
+> +		     <591 1>, <592 4>,
+> +		     <593 1>, <594 4>,
+> +		     <595 1>, <596 4>,
+> +		     <597 1>, <598 4>,
+> +		     <599 1>, <600 4>,
+> +		     <601 1>, <602 4>,
+> +		     <603 1>, <604 4>,
+> +		     <605 1>, <606 4>,
+> +		     <607 1>, <608 4>;
+> +};
+> -- 
+> 2.16.2
+> 
+> 
