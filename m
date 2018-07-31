@@ -1,55 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] treewide: convert ISO_8859-1 text comments to utf-8
-Date: Tue, 31 Jul 2018 15:49:20 -0600
-Message-ID: <20180731214920.GA20796@rob-hp-laptop>
-References: <20180724111600.4158975-1-arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180724111600.4158975-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, Samuel Ortiz <sameo@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Cameron <jic23@kernel.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=8mma=KP=redhat.com=hdegoede@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH resend v2 1/2] Input: touchscreen DT binding - add touchscreen-min-x and -min-y properties
+Date: Tue, 31 Jul 2018 13:19:57 +0200
+Message-Id: <20180731111958.20043-2-hdegoede@redhat.com>
+In-Reply-To: <20180731111958.20043-1-hdegoede@redhat.com>
+References: <20180731111958.20043-1-hdegoede@redhat.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, robh@kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jul 24, 2018 at 01:13:25PM +0200, Arnd Bergmann wrote:
-> Almost all files in the kernel are either plain text or UTF-8
-> encoded. A couple however are ISO_8859-1, usually just a few
-> characters in a C comments, for historic reasons.
-> 
-> This converts them all to UTF-8 for consistency.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  .../devicetree/bindings/net/nfc/pn544.txt     |   2 +-
->  arch/arm/boot/dts/sun4i-a10-inet97fv2.dts     |   2 +-
->  arch/arm/crypto/sha256_glue.c                 |   2 +-
->  arch/arm/crypto/sha256_neon_glue.c            |   4 +-
->  drivers/crypto/vmx/ghashp8-ppc.pl             |  12 +-
->  drivers/iio/dac/ltc2632.c                     |   2 +-
->  drivers/power/reset/ltc2952-poweroff.c        |   4 +-
->  kernel/events/callchain.c                     |   2 +-
->  net/netfilter/ipvs/Kconfig                    |   8 +-
->  net/netfilter/ipvs/ip_vs_mh.c                 |   4 +-
->  tools/power/cpupower/po/de.po                 |  44 +++----
->  tools/power/cpupower/po/fr.po                 | 120 +++++++++---------
->  12 files changed, 103 insertions(+), 103 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Documentation/devicetree/bindings/net/nfc/pn544.txt
-> index 538a86f7b2b0..72593f056b75 100644
-> --- a/Documentation/devicetree/bindings/net/nfc/pn544.txt
-> +++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
-> @@ -2,7 +2,7 @@
->  
->  Required properties:
->  - compatible: Should be "nxp,pn544-i2c".
-> -- clock-frequency: I²C work frequency.
-> +- clock-frequency: IÂ²C work frequency.
+Some touchscreens, depending on the firmware and/or the digitizer report
+coordinates which never reach 0 along one or both of their axis.
 
-I'd prefer just plain ASCII 'I2C' here, but either way:
+This has been seen for example on the Silead touchscreens on a Onda V891w
+and a Point of View mobii TAB-P800w(v2.0).
 
-Acked-by: Rob Herring <robh@kernel.org>
+This commits documents 2 new touchscreen properties for communicating
+the minimum reported values to the OS: touchscreen-min-x and -min-y.
 
-Rob
+This commit also drop the (in pixels) comment from the documentation
+of the touchscreen-size-x and touchscreen-size-y properties. This comment
+suggests that there is a relation between the range of reported
+coordinates and the display resolution, which is only true for some
+devices. The (in pixels) comment is replaced with "(maximum x coordinate
+reported + 1)" to mirror the language describing the new touchscreen-min-x
+and -min-y properties.
+
+Cc: robh@kernel.org
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+-Split out from the patch implementing support for the properties
+-Describe the changes to the touchscreen-size-x / -size-y description in
+ the commit message
+---
+ .../devicetree/bindings/input/touchscreen/touchscreen.txt   | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+index 537643e86f61..8aff9551259f 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+@@ -1,10 +1,12 @@
+ General Touchscreen Properties:
+ 
+ Optional properties for Touchscreens:
++ - touchscreen-min-x		: minimum x coordinate reported (0 if not set)
++ - touchscreen-min-y		: minimum y coordinate reported (0 if not set)
+  - touchscreen-size-x		: horizontal resolution of touchscreen
+-				  (in pixels)
++				  (maximum x coordinate reported + 1)
+  - touchscreen-size-y		: vertical resolution of touchscreen
+-				  (in pixels)
++				  (maximum y coordinate reported + 1)
+  - touchscreen-max-pressure	: maximum reported pressure (arbitrary range
+ 				  dependent on the controller)
+  - touchscreen-fuzz-x		: horizontal noise value of the absolute input
+-- 
+2.18.0
