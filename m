@@ -1,53 +1,37 @@
-Return-Path: <SRS0=lWLe=KH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:56332 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388091AbeGWOsa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Jul 2018 10:48:30 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 05/21] dt-bindings: media: Specify bus type for MIPI D-PHY, others, explicitly
-Date: Mon, 23 Jul 2018 16:46:50 +0300
-Message-Id: <20180723134706.15334-6-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 31 Jul 2018 15:53:10 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] spi: pl022: Add OF binding to disable DMA usage
+Message-ID: <20180731215310.GA24997@rob-hp-laptop>
+References: <20180724112753.6020-1-alexander.sverdlin@nokia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180724112753.6020-1-alexander.sverdlin@nokia.com>
+To: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Allow specifying the bus type explicitly for MIPI D-PHY, parallel and
-Bt.656 busses. This is useful for devices that can make use of different
-bus types. There are CSI-2 transmitters and receivers but the PHY
-selection needs to be made between C-PHY and D-PHY; many devices also
-support parallel and Bt.656 interfaces but the means to pass that
-information to software wasn't there.
+On Tue, Jul 24, 2018 at 01:27:53PM +0200, Alexander Sverdlin wrote:
+> Legacy platform instantiation of PL022 had an ability to configure DMA
+> usage on controller level. If PL022 is being instantiated from DT it still
+> claims couple of DMA channels capable of DMA_SLAVE unconditionally even if
+> there are no DMA channels specified in the DT.
 
-Autodetection (value 0) is removed as an option as the property could be
-simply omitted in that case.
+How does that work without specifying the channels in DT? Perhaps the 
+driver should stop doing that. We can whitelist any platforms that need 
+current behavior if someone complains.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- Documentation/devicetree/bindings/media/video-interfaces.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index baf9d9756b3c..f884ada0bffc 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -100,10 +100,12 @@ Optional endpoint properties
-   slave device (data source) by the master device (data sink). In the master
-   mode the data source device is also the source of the synchronization signals.
- - bus-type: data bus type. Possible values are:
--  0 - autodetect based on other properties (MIPI CSI-2 D-PHY, parallel or Bt656)
-   1 - MIPI CSI-2 C-PHY
-   2 - MIPI CSI1
-   3 - CCP2
-+  4 - MIPI CSI-2 D-PHY
-+  5 - Parallel
-+  6 - Bt.656
- - bus-width: number of data lines actively used, valid for the parallel busses.
- - data-shift: on the parallel data busses, if bus-width is used to specify the
-   number of data lines, data-shift can be used to specify which data lines are
--- 
-2.11.0
-
+> 
+> Depending on the slave devices' configuration this might be waste of DMA
+> channels or this might even claim some precious DMA channels if there are
+> only few of them in the system.
+> 
+> Add a new boolean property to disable DMA usage on the controller level:
+> 	"pl022,dma-disable"
+> 
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+> ---
+>  Documentation/devicetree/bindings/spi/spi_pl022.txt | 1 +
+>  drivers/spi/spi-pl022.c                             | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
