@@ -1,49 +1,47 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 6/7] net: phy: Add support to configure clock in
- Broadcom iProc mdio mux
-Date: Tue, 31 Jul 2018 10:57:30 -0700
-Message-ID: <6308d149-a16b-e737-355c-3edeb7a51e93@gmail.com>
-References: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
- <1532726613-6483-7-git-send-email-arun.parameswaran@broadcom.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v4 0/3] Add support for MSCC Ocelot SPI
+Date: Tue, 31 Jul 2018 20:16:28 +0200
+Message-ID: <20180731181628.GX28585@piout.net>
+References: <20180731143855.7131-1-alexandre.belloni@bootlin.com>
+ <20180731173809.eovsuiezlqzud7zi@pburton-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532726613-6483-7-git-send-email-arun.parameswaran@broadcom.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180731173809.eovsuiezlqzud7zi@pburton-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Parameswaran <arun.parameswaran@broadcom.com>, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Paul Burton <paul.burton@mips.com>
+Cc: Mark Brown <broonie@kernel.org>, James Hogan <jhogan@kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/27/2018 02:23 PM, Arun Parameswaran wrote:
-> Add support to configure the internal rate adjust register based on the
-> core clock supplied through device tree in the Broadcom iProc mdio mux.
+On 31/07/2018 10:38:09-0700, Paul Burton wrote:
+> Hi Alexandre,
 > 
-> The operating frequency of the mdio mux block is 11MHz. This is derrived
-> by dividing the clock to the mdio mux with the rate adjust register.
+> On Tue, Jul 31, 2018 at 04:38:52PM +0200, Alexandre Belloni wrote:
+> > Hello,
+> > 
+> > This series only contains the DT documentation and the corresponding DT addition
+> > since it has been rebased on spi-next.
+> > 
+> > Alexandre Belloni (3):
+> >   spi: dw: document Microsemi integration
+> >   mips: dts: mscc: Add spi on Ocelot
+> >   mips: dts: mscc: enable spi and NOR flash support on ocelot PCB123
+> > 
+> >  .../devicetree/bindings/spi/snps,dw-apb-ssi.txt       |  6 ++++--
+> >  arch/mips/boot/dts/mscc/ocelot.dtsi                   | 11 +++++++++++
+> >  arch/mips/boot/dts/mscc/ocelot_pcb123.dts             | 10 ++++++++++
+> >  3 files changed, 25 insertions(+), 2 deletions(-)
 > 
-> In some SoC's the default values of the rate adjust register do not yield
-> 11MHz. These SoC's are required to specify the clock via the device tree
-> for proper operation.
+> Thanks - looks like the DT binding has been accepted, so I've applied
+> patches 2 & 3 to mips-next for 4.19.
 > 
-> Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-> ---
 
-[snip]
+Thank you, it is great to see that going in as this makes the platform
+much more useful !
 
->  static int iproc_mdio_wait_for_idle(void __iomem *base, bool result)
-> @@ -198,10 +219,22 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
->  		return PTR_ERR(md->base);
->  	}
->  
-> +	md->core_clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(md->core_clk)) {
-> +		md->core_clk = NULL;
 
-You need to specifically check for -EPROBE_DEFER here and propagate that
-to the caller, other errors could be ignored like you do it here, same
-comment as in patch 7, if you make md->core_clk NULL, then you can drop
-testing for that pointer being valid.
 -- 
-Florian
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
