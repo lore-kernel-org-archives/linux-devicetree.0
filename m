@@ -1,31 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 12/15] ARM: tegra: apalis-tk1: add
- toradex,apalis-tk1-v1.2 compatible
-Date: Tue, 31 Jul 2018 15:45:45 -0600
-Message-ID: <20180731214545.GA19887@rob-hp-laptop>
-References: <20180724104309.21741-1-marcel@ziswiler.com>
- <20180724104309.21741-13-marcel@ziswiler.com>
+Subject: Re: [PATCH 1/4] treewide: convert ISO_8859-1 text comments to utf-8
+Date: Tue, 31 Jul 2018 15:49:20 -0600
+Message-ID: <20180731214920.GA20796@rob-hp-laptop>
+References: <20180724111600.4158975-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180724104309.21741-13-marcel@ziswiler.com>
+In-Reply-To: <20180724111600.4158975-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Mikko Perttunen <mperttunen@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, Samuel Ortiz <sameo@linux.intel.com>, "David S. Miller" <davem@davemloft.net>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Cameron <jic23@kernel.org>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 12:43:06PM +0200, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Tue, Jul 24, 2018 at 01:13:25PM +0200, Arnd Bergmann wrote:
+> Almost all files in the kernel are either plain text or UTF-8
+> encoded. A couple however are ISO_8859-1, usually just a few
+> characters in a C comments, for historic reasons.
 > 
-> Add toradex,apalis-tk1-v1.2 compatible.
+> This converts them all to UTF-8 for consistency.
 > 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
+>  .../devicetree/bindings/net/nfc/pn544.txt     |   2 +-
+>  arch/arm/boot/dts/sun4i-a10-inet97fv2.dts     |   2 +-
+>  arch/arm/crypto/sha256_glue.c                 |   2 +-
+>  arch/arm/crypto/sha256_neon_glue.c            |   4 +-
+>  drivers/crypto/vmx/ghashp8-ppc.pl             |  12 +-
+>  drivers/iio/dac/ltc2632.c                     |   2 +-
+>  drivers/power/reset/ltc2952-poweroff.c        |   4 +-
+>  kernel/events/callchain.c                     |   2 +-
+>  net/netfilter/ipvs/Kconfig                    |   8 +-
+>  net/netfilter/ipvs/ip_vs_mh.c                 |   4 +-
+>  tools/power/cpupower/po/de.po                 |  44 +++----
+>  tools/power/cpupower/po/fr.po                 | 120 +++++++++---------
+>  12 files changed, 103 insertions(+), 103 deletions(-)
 > 
->  Documentation/devicetree/bindings/arm/tegra.txt | 2 ++
->  arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts | 3 ++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
+> diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Documentation/devicetree/bindings/net/nfc/pn544.txt
+> index 538a86f7b2b0..72593f056b75 100644
+> --- a/Documentation/devicetree/bindings/net/nfc/pn544.txt
+> +++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
+> @@ -2,7 +2,7 @@
+>  
+>  Required properties:
+>  - compatible: Should be "nxp,pn544-i2c".
+> -- clock-frequency: I²C work frequency.
+> +- clock-frequency: IÂ²C work frequency.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I'd prefer just plain ASCII 'I2C' here, but either way:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+Rob
