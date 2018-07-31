@@ -1,113 +1,162 @@
-From: Tony Xie <tony.xie@rock-chips.com>
-Subject: [PATCH 3/5] dt-bindings: mfd: rk808: Add binding informations for RK809 and RK817.
-Date: Tue, 31 Jul 2018 14:56:32 +0800
-Message-ID: <1533020197-754-5-git-send-email-tony.xie@rock-chips.com>
-References: <1533020197-754-1-git-send-email-tony.xie@rock-chips.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 08/12] mfd: intel-peci-client: Add PECI client MFD
+ driver
+Date: Tue, 31 Jul 2018 08:01:17 +0100
+Message-ID: <20180731070117.GE4662@dell>
+References: <20180723214751.1733-1-jae.hyun.yoo@linux.intel.com>
+ <20180723214751.1733-9-jae.hyun.yoo@linux.intel.com>
+ <20180727082611.GE4628@dell>
+ <acffdfef-cb20-4208-5297-d94bac5ecb1b@linux.intel.com>
+ <CAL_JsqL7WkDOaegwmBDqLkRh0JfCo7O2krONVstjWMUsLiJMrg@mail.gmail.com>
+ <7ab43253-1154-6e2f-b216-69b0d44b470a@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533020197-754-1-git-send-email-tony.xie@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <7ab43253-1154-6e2f-b216-69b0d44b470a@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: broonie@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, darrick.wong@oracle.com, sandeen@redhat.com, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, kusumi.tomohiro@gmail.com, bryantly@linux.vnet.ibm.com, fbarrat@linux.vnet.ibm.com, David Miller <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@in>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Rockchip's RK809 & RK817 PMIC.
+On Mon, 30 Jul 2018, Jae Hyun Yoo wrote:
 
-Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
----
- Documentation/devicetree/bindings/mfd/rk808.txt | 55 +++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+> Hi Rob,
+> 
+> On 7/30/2018 3:10 PM, Rob Herring wrote:
+> > On Fri, Jul 27, 2018 at 11:36 AM Jae Hyun Yoo
+> > <jae.hyun.yoo@linux.intel.com> wrote:
+> > > 
+> > > Hi Lee,
+> > > 
+> > > On 7/27/2018 1:26 AM, Lee Jones wrote:
+> > > > On Mon, 23 Jul 2018, Jae Hyun Yoo wrote:
+> > > > 
+> > > > > This commit adds PECI client MFD driver.
+> > > > > 
+> > > > > Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> > > > > Cc: Lee Jones <lee.jones@linaro.org>
+> > > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > > Cc: Andrew Jeffery <andrew@aj.id.au>
+> > > > > Cc: James Feist <james.feist@linux.intel.com>
+> > > > > Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+> > > > > Cc: Joel Stanley <joel@jms.id.au>
+> > > > > Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
+> > > > > ---
+> > > > >    drivers/mfd/Kconfig                   |  14 ++
+> > > > >    drivers/mfd/Makefile                  |   1 +
+> > > > >    drivers/mfd/intel-peci-client.c       | 182 ++++++++++++++++++++++++++
+> > > > >    include/linux/mfd/intel-peci-client.h |  81 ++++++++++++
+> > > > >    4 files changed, 278 insertions(+)
+> > > > >    create mode 100644 drivers/mfd/intel-peci-client.c
+> > > > >    create mode 100644 include/linux/mfd/intel-peci-client.h
+> > > > > 
+> > > > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > > > > index f3fa516011ec..e38b591479d4 100644
+> > > > > --- a/drivers/mfd/Kconfig
+> > > > > +++ b/drivers/mfd/Kconfig
+> > > > > @@ -595,6 +595,20 @@ config MFD_INTEL_MSIC
+> > > > >         Passage) chip. This chip embeds audio, battery, GPIO, etc.
+> > > > >         devices used in Intel Medfield platforms.
+> > > > > 
+> > > > > +config MFD_INTEL_PECI_CLIENT
+> > > > > +    bool "Intel PECI client"
+> > > > > +    depends on (PECI || COMPILE_TEST)
+> > > > > +    select MFD_CORE
+> > > > > +    help
+> > > > > +      If you say yes to this option, support will be included for the
+> > > > > +      multi-funtional Intel PECI (Platform Environment Control Interface)
+> > > > > +      client. PECI is a one-wire bus interface that provides a communication
+> > > > > +      channel from PECI clients in Intel processors and chipset components
+> > > > > +      to external monitoring or control devices.
+> > > > > +
+> > > > > +      Additional drivers must be enabled in order to use the functionality
+> > > > > +      of the device.
+> > > > > +
+> > > > >    config MFD_IPAQ_MICRO
+> > > > >       bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
+> > > > >       depends on SA1100_H3100 || SA1100_H3600
+> > > > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > > > > index 2852a6042ecf..29e2cacc58bd 100644
+> > > > > --- a/drivers/mfd/Makefile
+> > > > > +++ b/drivers/mfd/Makefile
+> > > > > @@ -203,6 +203,7 @@ obj-$(CONFIG_MFD_INTEL_LPSS)     += intel-lpss.o
+> > > > >    obj-$(CONFIG_MFD_INTEL_LPSS_PCI)   += intel-lpss-pci.o
+> > > > >    obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)  += intel-lpss-acpi.o
+> > > > >    obj-$(CONFIG_MFD_INTEL_MSIC)       += intel_msic.o
+> > > > > +obj-$(CONFIG_MFD_INTEL_PECI_CLIENT) += intel-peci-client.o
+> > > > >    obj-$(CONFIG_MFD_PALMAS)   += palmas.o
+> > > > >    obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+> > > > >    obj-$(CONFIG_MFD_RC5T583)  += rc5t583.o rc5t583-irq.o
+> > > > > diff --git a/drivers/mfd/intel-peci-client.c b/drivers/mfd/intel-peci-client.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..d7702cf1ea50
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/mfd/intel-peci-client.c
+> > > > > @@ -0,0 +1,182 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > +// Copyright (c) 2018 Intel Corporation
+> > > > > +
+> > > > > +#include <linux/bitfield.h>
+> > > > > +#include <linux/mfd/core.h>
+> > > > > +#include <linux/mfd/intel-peci-client.h>
+> > > > > +#include <linux/module.h>
+> > > > > +#include <linux/peci.h>
+> > > > > +#include <linux/of_device.h>
+> > > > > +
+> > > > > +enum cpu_gens {
+> > > > > +    CPU_GEN_HSX = 0, /* Haswell Xeon */
+> > > > > +    CPU_GEN_BRX,     /* Broadwell Xeon */
+> > > > > +    CPU_GEN_SKX,     /* Skylake Xeon */
+> > > > > +};
+> > > > > +
+> > > > > +static struct mfd_cell peci_functions[] = {
+> > > > > +    {
+> > > > > +            .name = "peci-cputemp",
+> > > > > +            .of_compatible = "intel,peci-cputemp",
+> > > > > +    },
+> > > > > +    {
+> > > > > +            .name = "peci-dimmtemp",
+> > > > > +            .of_compatible = "intel,peci-dimmtemp",
+> > > > > +    },
+> > > > > +};
+> > > > 
+> > > > The more I look at this driver, the less I think it fits into MFD.
+> > > > 
+> > > > What's stopping you from registering these devices directly from DT?
+> > > > 
+> > > 
+> > > Because DT doesn't allow 2 nodes at the same address so Rob suggested
+> > > MFD for this case.
+> > 
+> > Only after I first suggested you create cpu and dimm sensors from a
+> > single hwmon driver. Perhaps you should figure out how to fix the
+> > problem with delayed registration. Perhaps you can register the
+> > sensor, but just delay returning actual data until it is ready.
+> > 
+> 
+> The actual reason why I divided the single hwmon driver into two is for
+> using recommended hwmon API set which doesn't allow incremental
+> creation of sysfs attributes at run time - using of
+> 'devm_hwmon_device_register_with_info' is suggested by Guenter instead
+> of using other deprecated APIs.
+> 
+> The reason why the delayed registration is needed is, BMC kernel cannot
+> know how many DIMM are installed in remote machine before the machine
+> completing memory training and testing in POST. So dimm temp driver
+> cannot create hwmon attributes in advance.
+> 
+> My thought is, this way is the best to address these requirements.
 
-diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-index 91b6522..31c9f3d 100644
---- a/Documentation/devicetree/bindings/mfd/rk808.txt
-+++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-@@ -3,11 +3,15 @@ RK8XX Power Management Integrated Circuit
- The rk8xx family current members:
- rk805
- rk808
-+rk809
-+rk817
- rk818
- 
- Required properties:
- - compatible: "rockchip,rk805"
- - compatible: "rockchip,rk808"
-+- compatible: "rockchip,rk809"
-+- compatible: "rockchip,rk817"
- - compatible: "rockchip,rk818"
- - reg: I2C slave address
- - interrupt-parent: The parent interrupt controller.
-@@ -46,6 +50,28 @@ Optional RK808 properties:
-   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
-   very quickly with no slow ramp time.
- 
-+Optional RK809 properties:
-+- vcc1-supply:  The input supply for DCDC_REG1
-+- vcc2-supply:  The input supply for DCDC_REG2
-+- vcc3-supply:  The input supply for DCDC_REG3
-+- vcc4-supply:  The input supply for DCDC_REG4
-+- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
-+- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
-+- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
-+- vcc8-supply:  The input supply for SWITCH_REG1
-+- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
-+
-+Optional RK817 properties:
-+- vcc1-supply:  The input supply for DCDC_REG1
-+- vcc2-supply:  The input supply for DCDC_REG2
-+- vcc3-supply:  The input supply for DCDC_REG3
-+- vcc4-supply:  The input supply for DCDC_REG4
-+- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
-+- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
-+- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
-+- vcc8-supply:  The input supply for BOOST
-+- vcc9-supply:  The input supply for OTG_SWITCH
-+
- Optional RK818 properties:
- - vcc1-supply:  The input supply for DCDC_REG1
- - vcc2-supply:  The input supply for DCDC_REG2
-@@ -87,6 +113,28 @@ number as described in RK808 datasheet.
- 	- SWITCH_REGn
- 		- valid values for n are 1 to 2
- 
-+Following regulators of the RK809 PMIC block are supported. Note that
-+the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-+number as described in RK808 datasheet.
-+
-+	- DCDC_REGn
-+		- valid values for n are 1 to 5.
-+	- LDO_REGn
-+		- valid values for n are 1 to 9.
-+	- SWITCH_REGn
-+		- valid values for n are 1 to 2.
-+
-+Following regulators of the RK817 PMIC block are supported. Note that
-+the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-+number as described in RK818 datasheet.
-+
-+	- DCDC_REGn
-+		- valid values for n are 1 to 4.
-+	- LDO_REGn
-+		- valid values for n are 1 to 9.
-+	- BOOST
-+	- OTG_SWITCH
-+
- Following regulators of the RK818 PMIC block are supported. Note that
- the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
- number as described in RK818 datasheet.
-@@ -99,6 +147,13 @@ number as described in RK818 datasheet.
- 	- HDMI_SWITCH
- 	- OTG_SWITCH
- 
-+There are three pins needed to config, named "gpio_ts" "gpio_gt" "gpio_slp".
-+	The gpio_gt and gpio_ts pins support the gpio function.
-+	The gpio_slp pin is for controlling the pmic states, as below:
-+		- reset
-+		- power down
-+		- sleep
-+
- Standard regulator bindings are used inside regulator subnodes. Check
-   Documentation/devicetree/bindings/regulator/regulator.txt
- for more details
+As I've previously explained, I do not think this is a good fit for
+MFD.  Since this whole PECI piece is a bit, let's say 'niche', perhaps
+it's better to contain the client within the PECI subsystem too.  You
+can then use the platform_device_add() API to register devices as and
+when required.
+
 -- 
-1.9.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
