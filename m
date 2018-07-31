@@ -1,47 +1,82 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 1/4] ARM: dts: sun8i: a83t: Add the cir pin
- for the A83T
-Date: Tue, 31 Jul 2018 11:22:55 +0200
-Message-ID: <20180731092258.2279-2-embed3d@gmail.com>
-References: <20180731092258.2279-1-embed3d@gmail.com>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v2 00/10] Tegra SDHCI update the pad autocal procedure
+Date: Tue, 31 Jul 2018 11:33:20 +0200
+Message-ID: <56e6c8c572a429a987dd7ef7bd898768@agner.ch>
+References: <1532608016-14319-1-git-send-email-avienamo@nvidia.com>
+ <CAPDyKFo+nv+9qYV=J5k-63cDhQO=L==87RLMj_7BnjEjUf5iEQ@mail.gmail.com>
+ <20180730184351.5044cb6e@dhcp-10-21-25-168>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRB5OUQDNQKGQESILIOUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180731092258.2279-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180730184351.5044cb6e@dhcp-10-21-25-168>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-tegra-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The CIR Pin of the A83T is located at PL12.
+On 30.07.2018 17:43, Aapo Vienamo wrote:
+> On Mon, 30 Jul 2018 17:07:59 +0200
+> Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> 
+>> On 26 July 2018 at 14:26, Aapo Vienamo <avienamo@nvidia.com> wrote:
+>> > Hi all,
+>> >
+>> > Update the tegra_sdhci_pad_autocalib() pad drive strength calibration
+>> > procedure to match the ones specified in the TRMs of the more recent
+>> > SoCs. This was tested on Tegra186, Tegra210, and Tegra124, although it
+>> > should not break things older generations either.
 
-Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+I can give this a try on Tegra 3 here.
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 2be23d600957..afed6c0dea6f 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -1004,6 +1004,11 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
- 
-+			r_cir_pin: r-cir-pin {
-+				pins = "PL12";
-+				function = "s_cir_rx";
-+			};
-+
- 			r_rsb_pins: r-rsb-pins {
- 				pins = "PL0", "PL1";
- 				function = "s_rsb";
--- 
-2.11.0
+>> >
+>> > This series depends on the "Tegra SDHCI enable 1.8 V signaling on
+>> > Tegar210 and Tegra186" series posted earlier.
+>>
+>> According to the cover letter of the above series, it states that it
+>> depends on $subject series. A circular dependency. :-)
+> 
+> The dependency chain goes like this: "Tegra SDHCI update the pad
+> autocal procedure" -> "Tegra SDHCI enable 1.8 V signaling on Tegar210
+> and Tegra186" -> "Tegra PMC pinctrl pad configuration".
+> 
+>> In fact, there should be no dependency at all or else there seems to
+>> be a DT compatibility problem here...
+> 
+> From a functionality perspective there's no strict dependency, however,
+> I don't think "[PATCH v2 09/10] mmc: tegra: Perform pad calibration
+> after voltage switch" can be applied cleanly without
+> "[PATCH v2 03/10] mmc: tegra: Reconfigure pad voltages during voltage
+> switching" from the "Tegra SDHCI enable 1.8 V signaling on Tegar210 and
+> Tegra186" series.
+> 
+>> Anyway, I think it actually makes sense to fold in all changes into
+>> one series. Make sure the dt-doc changes comes first, then the driver
+>> changes and finally arm64/dts changes. This should make it easy to
+>> follow the review and I can pick the mmc parts and the soc maintainer
+>> can pick the arm64/dts changes.
+> 
+> I've sent the changes in multiple part because I've been working on
+> further changes to the driver while the previous parts have been
+> getting reviewed. This is still the case and there's still going to be
+> at least one more series which adds support for HS200 tuning and some
+> smaller changes after it. However, the HS200 work is probably going to
+> be ready for review in a day or two. I can send these as a one series
+> from now on, although at this point it would be 27 patches in total
+> and even more with the HS200 patches.
+> 
+> I can do that if you prefer to do it that way. Makes my life somewhat
+> easier too.
+
+...that would make it easier for my testing too, so I wait for the next
+revision and will give it a try on Tegra 3 then.
+
+--
+Stefan
+
+> 
+>  -Aapo
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
