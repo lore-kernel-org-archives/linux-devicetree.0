@@ -1,84 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/6] dt-bindings: interrupt-controller: RISC-V local
- interrupt controller docs
-Date: Tue, 31 Jul 2018 16:37:14 -0600
-Message-ID: <20180731223714.GA12168@rob-hp-laptop>
-References: <20180725093649.32332-1-hch@lst.de>
- <20180725093649.32332-5-hch@lst.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH RFC 0/4] Wakeup GPIO support for SDM845 SoC
+Date: Tue, 31 Jul 2018 16:44:17 -0600
+Message-ID: <20180731224421.29062-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180725093649.32332-5-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
+To: marc.zyngier@arm.com, sboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org
+Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 11:36:47AM +0200, Christoph Hellwig wrote:
-> From: Palmer Dabbelt <palmer@dabbelt.com>
-> 
-> This patch adds documentation on the RISC-V local interrupt controller,
-> which is a per-hart interrupt controller that manages all interrupts
-> entering a RISC-V hart.  This interrupt controller is present on all
-> RISC-V systems.
-> 
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> ---
->  .../interrupt-controller/riscv,cpu-intc.txt   | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+Hi,
 
-My questions and comments on the prior version from Palmer remain.
+This is an attempt at a solution to enable wake up from suspend and deep idle
+using GPIO as a wakeup source. The 845 uses a new interrupt controller (PDC)
+that lies in the always-on domain and can sense interrupts that are routed to
+it, when the GIC is powered off. It would then wakeup the GIC and replay the
+interrupt which would then be relayed to the AP. The PDC interrupt controller
+driver is merged upstream [1],[2]. The following set of patches extends the
+wakeup capability to GPIOs using the PDC. The TLMM pinctrl driver for the SoC
+available at [3].
 
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> new file mode 100644
-> index 000000000000..61900e2e3868
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> @@ -0,0 +1,41 @@
-> +RISC-V Hart-Level Interrupt Controller (HLIC)
-> +---------------------------------------------
-> +
-> +RISC-V cores include Control Status Registers (CSRs) which are local to each
-> +hart and can be read or written by software. Some of these CSRs are used to
-> +control local interrupts connected to the core.  Every interrupt is ultimately
-> +routed through a hart's HLIC before it interrupts that hart.
-> +
-> +The RISC-V supervisor ISA manual specifies three interrupt sources that are
-> +attached to every HLIC: software interrupts, the timer interrupt, and external
-> +interrupts.  Software interrupts are used to send IPIs between cores.  The
-> +timer interrupt comes from an architecturally mandated real-time timer that is
-> +controller via SBI calls and CSR reads.  External interrupts connect all other
-> +device interrupts to the HLIC, which are routed via the platform-level
-> +interrupt controller (PLIC).
-> +
-> +All RISC-V systems that conform to the supervisor ISA specification are
-> +required to have a HLIC with these three interrupt sources present.  Since the
-> +interrupt map is defined by the ISA it's not listed in the HLIC's device tree
-> +entry, though external interrupt controllers (like the PLIC, for example) will
-> +need to define how their interrupts map to the relevant HLICs.
-> +
-> +Required properties:
-> +- compatible : "riscv,cpu-intc"
-> +- #interrupt-cells : should be <1>
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +
-> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
-> +definition of the hart whose CSRs control these local interrupts.
-> +
-> +An example device tree entry for a HLIC is show below.
-> +
-> +	cpu1: cpu@1 {
-> +		compatible = "riscv";
-> +		...
-> +		cpu1-intc: interrupt-controller {
-> +			#interrupt-cells = <1>;
-> +			compatible = "riscv,cpu-intc";
-> +			interrupt-controller;
-> +		};
-> +	};
-> -- 
-> 2.18.0
-> 
+The complexity with the solution stems from the fact that only a selected few
+GPIO lines are routed to the PDC in addition the TLMMs. They are also from
+different banks on the pinctrl and the TLMM summary line is not routed to the
+PDC. Hence the PDC cannot be considered as parent of the TLMM irqchip (or can
+we ?). This is what it looks like -
+
+   [ PIN ] -----[ TLMM ]---------------> [ GIC ] ---> [ CPU ]
+      |  		 <summary IRQ>       ^
+      |                                      |
+      ----------------------------------> [ PDC ]
+		<wakeup IRQs>
+
+I had a brief discussion with Linus on this and the idea implemented is based
+on his suggestion.
+
+When an IRQ (let's call this latent IRQ) for a GPIO is requested, the
+->irq_request_resources() is used by the TLMM driver to request a PDC pin. The
+PDC pin associated with the GPIO is read from a  static map available in the
+pinctrl-sdm845.c. (I think there should be a better location than a static map,
+more on that later). Knowing the PDC pin from the map, we could look up the DT
+bindings and request the PDC interrupt with the same trigger mask as the
+interrupt requested. The ->set_type and ->set_wake are also trapped to set the
+PDC IRQ's polarity and enable it when the latent IRQ is requested. When the PDC
+detects the interrupt at suspend, it wakes up the GIC and replays the wakeup
+IRQ. The GPIO handler function for the latent IRQ is invoked in turn.
+
+Please review these patches and your inputs would be greatly appreciated and
+(kindly) let me know if I have committed any blunders with this approach. There
+is definitely opportunity to improve the location of the static GPIO-PDC pin
+map. We could possibly put it as an data argument in the interrupts definition
+of the PDC or with interrupt names. Also, I am still sorting out some issues
+with the IRQ handling part of these patches. And I am unsure of how to set the
+polarity of the PDC pin without locking, since we are not in hierarchy with the
+PDC interrupt controller. Again, your inputs on these would be greatly helpful.
+
+Thanks,
+Lina
+
+[1]. drivers/irqchip/qcom-pdc.c
+[2]. Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+[3]. drivers/pinctrl/qcom/pinctrl-msm.c
+
+Lina Iyer (4):
+  drivers: pinctrl: qcom: add wakeup capability to GPIO
+  drivers: pinctrl: qcom: add wakeup gpio map for sdm845
+  arm64: dts: msm: add PDC device bindings for sdm845
+  arm64: dts: qcom: add wake up interrupts for GPIOs
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi  |  78 ++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm.c    | 163 ++++++++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm.h    |  14 +++
+ drivers/pinctrl/qcom/pinctrl-sdm845.c |  76 ++++++++++++
+ 4 files changed, 331 insertions(+)
+
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
