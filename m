@@ -1,107 +1,135 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v7 5/6] i2c: Add Actions Semiconductor Owl family S900
- I2C driver
-Date: Tue, 31 Jul 2018 22:09:32 +0200
-Message-ID: <20180731200932.n7djds2rmqhclit5@ninjato>
-References: <20180726154603.5089-1-manivannan.sadhasivam@linaro.org>
- <20180726154603.5089-6-manivannan.sadhasivam@linaro.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH] mtd: spi-nor: only apply reset hacks to broken hardware
+Date: Tue, 31 Jul 2018 22:12:55 +0200
+Message-ID: <20180731221255.3e65c1fa@bbrezillon>
+References: <20180727183313.137943-1-computersforpeace@gmail.com>
+ <20180727220337.1b3375ca@bbrezillon>
+ <87wotcrz94.fsf@notabene.neil.brown.name>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4utn4zc36jrfmsgr"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180726154603.5089-6-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: robh+dt@kernel.org, afaerber@suse.de, linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <87wotcrz94.fsf@notabene.neil.brown.name>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: NeilBrown <neilb@suse.com>
+Cc: devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 31 Jul 2018 11:05:11 +1000
+NeilBrown <neilb@suse.com> wrote:
 
---4utn4zc36jrfmsgr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Fri, Jul 27 2018, Boris Brezillon wrote:
+> 
+> > On Fri, 27 Jul 2018 11:33:13 -0700
+> > Brian Norris <computersforpeace@gmail.com> wrote:
+> >  
+> >> Commit 59b356ffd0b0 ("mtd: m25p80: restore the status of SPI flash when
+> >> exiting") is the latest from a long history of attempts to add reboot
+> >> handling to handle stateful addressing modes on SPI flash. Some prior
+> >> mostly-related discussions:
+> >> 
+> >> http://lists.infradead.org/pipermail/linux-mtd/2013-March/046343.html
+> >> [PATCH 1/3] mtd: m25p80: utilize dedicated 4-byte addressing commands
+> >> 
+> >> http://lists.infradead.org/pipermail/barebox/2014-September/020682.html
+> >> [RFC] MTD m25p80 3-byte addressing and boot problem
+> >> 
+> >> http://lists.infradead.org/pipermail/linux-mtd/2015-February/057683.html
+> >> [PATCH 2/2] m25p80: if supported put chip to deep power down if not used
+> >> 
+> >> Previously, attempts to add reboot-time software reset handling were
+> >> rejected, but the latest attempt was not.
+> >> 
+> >> Quick summary of the problem:
+> >> Some systems (e.g., boot ROM or bootloader) assume that they can read
+> >> initial boot code from their SPI flash using 3-byte addressing. If the
+> >> flash is left in 4-byte mode after reset, these systems won't boot. The
+> >> above patch provided a shutdown/remove hook to attempt to reset the
+> >> addressing mode before we reboot. Notably, this patch misses out on
+> >> huge classes of unexpected reboots (e.g., crashes, watchdog resets).
+> >> 
+> >> Unfortunately, it is essentially impossible to solve this problem 100%:
+> >> if your system doesn't know how to reset the SPI flash to power-on
+> >> defaults at initialization time, no amount of software can really rescue
+> >> you -- there will always be a chance of some unexpected reset that
+> >> leaves your flash in an addressing mode that your boot sequence didn't
+> >> expect.
+> >> 
+> >> While it is not directly harmful to perform hacks like the
+> >> aforementioned commit on all 4-byte addressing flash, a
+> >> properly-designed system should not need the hack -- and in fact,
+> >> providing this hack may mask the fact that a given system is indeed
+> >> broken. So this patch attempts to apply this unsound hack more narrowly,
+> >> providing a strong suggestion to developers and system designers that
+> >> this is truly a hack. With luck, system designers can catch their errors
+> >> early on in their development cycle, rather than applying this hack long
+> >> term. But apparently enough systems are out in the wild that we still
+> >> have to provide this hack.
+> >> 
+> >> Document a new device tree property to denote systems that do not have a
+> >> proper hardware (or software) reset mechanism, and apply the hack (with
+> >> a loud warning) only in this case.
+> >> 
+> >> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+> >> ---
+> >> Note that I intentionall didn't split the documentation patch. It seems
+> >> clearer to do these together IMO, but if it's *really* important to
+> >> someone...I can resend  
+> >
+> > I'm fine with that.
+> >
+> > I'll leave Neil some time to review/test/comment on the patch before
+> > queuing it, but it looks good to me.  
+> 
+> Thanks.
+> I can confirm that if I apply this patch, my system won't reboot
+> properly (as expected), and if I then add
+> 
+> 		broken-flash-reset;
+> 
+> to the jedec,spi-nor device, it starts functioning correctly again.
+> 
+> I don't like the pejorative "broken", and it also suggests that a thing
+> used to work, but something happened to break it - this is not
+> accurate.
+> I would prefer something like "reset-not-connected" which is an accurate
+> description of the state of the hardware.
+> 
+> I also think that having a WARN_ON is an over-reaction.  Certainly a
+> warning could be appropriate, but just one pr_warn() should be enough.
+> The "problem" is unlikely in practice, and loudly warning people that an
+> asteroid might kill them isn't particularly helpful.
+> 
+> I genuinely think that if the system fails to reboot, then Linux is at
+> fault. I accept that changing Linux to be completely robust might be
+> more trouble than it is worth, but I don't accept that it is impossible.
+> 
+> But I don't intend to fight either of these battles.
 
-Hi Manivannan,
+Does that mean you're accepting this change? Brian, any comment on what
+Neil said?
 
-On Thu, Jul 26, 2018 at 09:16:02PM +0530, Manivannan Sadhasivam wrote:
-> Add Actions Semiconductor Owl family S900 I2C driver.
->=20
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Acked-by: Peter Rosin <peda@axentia.se>
+To be honest, I hate being in the middle of this discussion without
+having been involved in the first decision to accept such workarounds.
+I keep thinking that making boards that do not have reset properly
+wired less likely to fail rebooting is a wise decision, but I also
+agree with Brian when he says we should inform people that their design
+is unreliable.
+The main problem I see here, is that adding this prop won't help people
+figuring out what is wrong with their design, it will just help them
+workaround the problem when they find out, and it might already be to
+late to fix the HW design. But maybe it's not what we're trying to do
+here. Maybe we just want to warn users that rebooting such boards is a
+risky procedure.
 
-Looks mostly good already. Thanks Peter for the initial review!
-
-> +static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
-> +{
-> +	struct owl_i2c_dev *i2c_dev =3D _dev;
-> +	struct i2c_msg *msg =3D i2c_dev->msg;
-> +	unsigned long flags;
-> +	unsigned int stat, fifostat;
-> +
-> +	spin_lock_irqsave(&i2c_dev->lock, flags);
-> +
-> +	fifostat =3D readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT);
-> +	if (fifostat & OWL_I2C_FIFOSTAT_RNB) {
-> +		dev_dbg(&i2c_dev->adap.dev, "received NACK from device\n");
-> +		goto stop;
-> +	}
-> +
-> +	stat =3D readl(i2c_dev->base + OWL_I2C_REG_STAT);
-> +	if (stat & OWL_I2C_STAT_BEB) {
-> +		dev_dbg(&i2c_dev->adap.dev, "bus error\n");
-> +		goto stop;
-> +	}
-
-I wonder if you can't pass back the different errors to the upper
-layers? Like -ENXIO for NACK and -EIO for bus error? We have a
-convention for that and it seems your HW can support it. The different
-error codes would then maybe also make the debug outputs obsolete.
-
-
-> +	/*
-> +	 * Here, -ENXIO will be returned if interrupt occurred but no
-> +	 * read or write happened. Else if msg_ptr equals to message length,
-> +	 * message count will be returned.
-> +	 */
-> +	ret =3D i2c_dev->msg_ptr =3D=3D msg->len ? num : -ENXIO;
-
-I'd think this kinda unusual construct could go then as well by just
-returning the error code derived from the interrupt handler above.
-
-> +static const struct i2c_adapter_quirks owl_i2c_quirks =3D {
-> +	.flags		=3D I2C_AQ_COMB | I2C_AQ_COMB_WRITE_FIRST,
-> +	.max_read_len   =3D 240,
-> +	.max_write_len  =3D 240,
-> +	.max_comb_1st_msg_len =3D 6,
-> +	.max_comb_2nd_msg_len =3D 240,
-> +};
-
-Yay! Good use of the i2c_adapter_quirks struct :)
-
-Regards,
-
-   Wolfram
-
-
---4utn4zc36jrfmsgr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltgwfwACgkQFA3kzBSg
-KbZ21Q/9GYHmyV1EiblUh0zTmtvPSAJ36HoCteZkNdGlmvUwDXToxDapDNObY+sY
-6S1awC/4Z3iNfVDsQ3q5RTzozcY1gq2tGRLHmBkCH/x8WxIJQ0uz+gs2YSOqRuIc
-iwZqLQ8PKodo2X9Hj02sl/FyYveiaNgFcx21w9pg/Sgx5mn+yB7KYTubln2MeaHh
-H0y06sSnq0hO24WIOEhl6H3hjMDLYXYEG1+VH32kBFjk2ObPueqvpTmD39R/FTHE
-a0m9XqPfwh55IrFKfJTxDv6nS8YD5oLti32wH1fvcZ9bk5MbRlCoMFVmLjU+kR5Y
-rRW0sWl3Lf2WKcVDZbuUycWHJOaXsx7wbAzoYYTo9ucX17rQiuYu2OX3jj+ZWIQg
-hDPcaWA9bNtkdWK8oIiJ+0uPvLvsoDdEuVY5+H+rfvtkwPAwX6xKvDj2EGyOVjyi
-KJnaRS/DlSbksqx7mtbNbN695qErb7k6CmA9uJxd6T9z5JxZuXoEcU57ELP91VDn
-QG3JLPkdsg+5vQImhW+akuY8a4izTo41frlq2aDkKgwrv6WtYC2c/XdJHFtKeV33
-PdC0eQpv4Ne4DlC1CO3Etq61oTTMCkDLRT7DpLXDO1vGw+J9oqS8DGlaJPW7/50A
-Z2cjKc7e+6JcyYdDax43FvqQc42618/AWg7hN4Jmy80Eexo3uQY=
-=6ZjR
------END PGP SIGNATURE-----
-
---4utn4zc36jrfmsgr--
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
