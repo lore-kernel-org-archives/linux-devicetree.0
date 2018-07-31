@@ -1,72 +1,34 @@
-Return-Path: <SRS0=YJH+=KE=phrozen.org=john@kernel.org>
-From: John Crispin <john@phrozen.org>
-Subject: [PATCH V2 11/25] dt-bindings: PCI: qcom,ar7240: adds binding doc
-Date: Fri, 20 Jul 2018 13:58:28 +0200
-Message-Id: <20180720115842.8406-12-john@phrozen.org>
-In-Reply-To: <20180720115842.8406-1-john@phrozen.org>
-References: <20180720115842.8406-1-john@phrozen.org>
-To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, John Crispin <john@phrozen.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-Path: <SRS0=9UCx=KP=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 4/4] ARM: dts: iwg23s-sbc: Add pinctl support for EtherAVB
+Date: Tue, 31 Jul 2018 10:26:44 +0000
+Message-ID: 
+ <OSBPR01MB2103464D423AFAA15A1BF0FBB82E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1532685089-35645-1-git-send-email-biju.das@bp.renesas.com>
+ <1532685089-35645-5-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdWmObVo=UNRkmdAKhmU+aSafi61ztc1digUSWY_gvrvYA@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdWmObVo=UNRkmdAKhmU+aSafi61ztc1digUSWY_gvrvYA@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-With the driver being converted from platform_data to pure OF, we need to
-also add some docs.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Crispin <john@phrozen.org>
----
- .../devicetree/bindings/pci/qcom,ar7240-pci.txt    | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt b/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
-new file mode 100644
-index 000000000000..5379affd4615
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/qcom,ar7240-pci.txt
-@@ -0,0 +1,42 @@
-+* Qualcomm Atheros AR724X PCI express root complex
-+
-+Required properties:
-+- compatible: should contain "qcom,ar7240-pci" to identify the core.
-+- reg: Should contain the register ranges as listed in the reg-names property.
-+- reg-names: Definition: Must include the following entries
-+	- "crp_base"	Configuration registers
-+	- "ctrl_base"	Control registers
-+	- "cfg_base"	IO Memory
-+- #address-cells: set to <3>
-+- #size-cells: set to <2>
-+- ranges: ranges for the PCI memory and I/O regions
-+- interrupt-map-mask and interrupt-map: standard PCI
-+	properties to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+- #interrupt-cells: set to <1>
-+- interrupt-parent: phandle to the MIPS IRQ controller
-+
-+Optional properties:
-+- interrupt-controller: define to enable the builtin IRQ cascade.
-+
-+* Example for qca9557
-+	pcie-controller@180c0000 {
-+		compatible = "qcom,ar7240-pci";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x0 0x0>;
-+		reg = <0x180c0000 0x1000>,
-+		      <0x180f0000 0x100>,
-+		      <0x14000000 0x1000>;
-+		reg-names = "crp_base", "ctrl_base", "cfg_base";
-+		ranges = <0x2000000 0 0x10000000 0x10000000 0 0x04000000
-+			  0x1000000 0 0x00000000 0x00000000 0 0x00000001>;
-+		interrupt-parent = <&intc2>;
-+		interrupts = <1>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-map-mask = <0 0 0 1>;
-+		interrupt-map = <0 0 0 0 &pcie0 0>;
-+	};
--- 
-2.11.0
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQogU3ViamVjdDogUmU6IFtQ
+QVRDSCA0LzRdIEFSTTogZHRzOiBpd2cyM3Mtc2JjOiBBZGQgcGluY3RsIHN1cHBvcnQgZm9yDQo+
+ID4gICZwZmMgew0KPiA+ICsgICAgICAgYXZiX3BpbnM6IGF2YiB7DQo+ID4gKyAgICAgICAgICAg
+ICAgIGdyb3VwcyA9ICJhdmJfbWRpbyIsICJhdmJfZ21paV90eF9yeCI7DQo+DQo+IGF2Yl9jcnMg
+aXMgd2lyZWQsIGJ1dCBkZWVtZWQgdW51c2VkLCByaWdodD8NCg0KWWVzLCBDUlMgaXMgbm90IHVz
+ZWQgaW4gZnVsbCBkdXBsZXggbW9kZS4NCg0KPiBJbiB0aGF0IGNhc2U6DQo+IFJldmlld2VkLWJ5
+OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPg0KPg0KPiA+ICsg
+ICAgICAgICAgICAgICBmdW5jdGlvbiA9ICJhdmIiOw0KPiA+ICsgICAgICAgfTsNCj4gPiArDQo+
+ID4gICAgICAgICBzY2lmMV9waW5zOiBzY2lmMSB7DQo+ID4gICAgICAgICAgICAgICAgIGdyb3Vw
+cyA9ICJzY2lmMV9kYXRhX2IiOw0KPiA+ICAgICAgICAgICAgICAgICBmdW5jdGlvbiA9ICJzY2lm
+MSI7DQo+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAg
+ICBHZWVydA0KPg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBN
+ZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1
+RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5v
+LiAwNDU4NjcwOS4NCg==
