@@ -1,64 +1,23 @@
-Return-Path: <SRS0=Uoy5=KF=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/3] dt-bindings: clock: meson8b: use the registers from the HHI syscon
-Date: Sat, 21 Jul 2018 21:28:44 +0200
-Message-Id: <20180721192846.18811-2-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20180721192846.18811-1-martin.blumenstingl@googlemail.com>
-References: <20180721192846.18811-1-martin.blumenstingl@googlemail.com>
-To: narmstrong@baylibre.com, jbrunet@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, carlo@caione.org, khilman@baylibre.com, linux-clk@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=7BaO=KP=verge.net.au=horms@kernel.org>
+Date: Tue, 31 Jul 2018 12:40:43 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: pwm: rcar: Add bindings for R-Car E3 support
+Message-ID: <20180731104042.4jl4ykaeoh3sxyo4@verge.net.au>
+References: <1532951391-28792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1532951391-28792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The clock controller on Meson8/Meson8m2 and Meson8b is part of a
-register region called "HHI". This register area contains more
-functionality than just a clock controller:
-- the clock controller
-- some reset controller bits
-- temperature sensor calibration data (on Meson8b and Meson8m2 only)
-- HDMI controller
+On Mon, Jul 30, 2018 at 08:49:51PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds bindings for R-Car E3. No driver update is needed.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-The HHI register area may be accessed concurrently. Allow this by using
-a "system controller" as parent node.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- .../bindings/clock/amlogic,meson8b-clkc.txt         | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
-index b455c5aa9139..38fb979210d3 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
-@@ -9,15 +9,13 @@ Required Properties:
- 	- "amlogic,meson8-clkc" for Meson8 (S802) SoCs
- 	- "amlogic,meson8b-clkc" for Meson8 (S805) SoCs
- 	- "amlogic,meson8m2-clkc" for Meson8m2 (S812) SoCs
--- reg: it must be composed by two tuples:
--	0) physical base address of the xtal register and length of memory
--	   mapped region.
--	1) physical base address of the clock controller and length of memory
--	   mapped region.
--
- - #clock-cells: should be 1.
- - #reset-cells: should be 1.
- 
-+Parent node should have the following properties :
-+- compatible: "syscon", "simple-mfd"
-+- reg: base address and size of the HHI system control register space.
-+
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume. All available clocks are defined as
- preprocessor macros in the dt-bindings/clock/meson8b-clkc.h header and can be
-@@ -30,9 +28,8 @@ device tree sources).
- 
- Example: Clock controller node:
- 
--	clkc: clock-controller@c1104000 {
-+	clkc: clock-controller {
- 		compatible = "amlogic,meson8b-clkc";
--		reg = <0xc1108000 0x4>, <0xc1104000 0x460>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 	};
--- 
-2.18.0
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
