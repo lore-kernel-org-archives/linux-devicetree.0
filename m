@@ -1,101 +1,64 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 05/12] PM / devfreq: Add support for policy notifiers
-Date: Tue, 31 Jul 2018 12:39:53 -0700
-Message-ID: <20180731193953.GH68975@google.com>
-References: <20180703234705.227473-1-mka@chromium.org>
- <CGME20180703234900epcas1p1cda806bab6bbe69228ca5ee56bc33f36@epcas1p1.samsung.com>
- <20180703234705.227473-6-mka@chromium.org>
- <5B3C6C2A.1070205@samsung.com>
- <20180706175301.GG129942@google.com>
- <5399c191-e140-e2b8-629b-72ddfbf99b0f@samsung.com>
- <20180716175050.GZ129942@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v4 0/5] Add Actions Semi S700 pinctrl support
+Date: Tue, 31 Jul 2018 21:47:38 +0200
+Message-ID: <20180731194743.13678-1-sravanhome@gmail.com>
+References: <0180729200038.11795-1-sravanhome@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180716175050.GZ129942@google.com>
+In-Reply-To: <0180729200038.11795-1-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: manivannan.sadhasivam@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com, Saravanan Sekar <sravanhome@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 16, 2018 at 10:50:50AM -0700, Matthias Kaehlcke wrote:
-> On Thu, Jul 12, 2018 at 05:44:33PM +0900, Chanwoo Choi wrote:
-> > Hi Matthias,
-> > 
-> > On 2018년 07월 07일 02:53, Matthias Kaehlcke wrote:
-> > > Hi Chanwoo,
-> > > 
-> > > On Wed, Jul 04, 2018 at 03:41:46PM +0900, Chanwoo Choi wrote:
-> > > 
-> > >> Firstly,
-> > >> I'm not sure why devfreq needs the devfreq_verify_within_limits() function.
-> > >>
-> > >> devfreq already used the OPP interface as default. It means that
-> > >> the outside of 'drivers/devfreq' can disable/enable the frequency
-> > >> such as drivers/thermal/devfreq_cooling.c. Also, when some device
-> > >> drivers disable/enable the specific frequency, the devfreq core
-> > >> consider them.
-> > >>
-> > >> So, devfreq doesn't need to devfreq_verify_within_limits() because
-> > >> already support some interface to change the minimum/maximum frequency
-> > >> of devfreq device. 
-> > >>
-> > >> In case of cpufreq subsystem, cpufreq only provides 'cpufreq_verify_with_limits()'
-> > >> to change the minimum/maximum frequency of cpu. some device driver cannot
-> > >> change the minimum/maximum frequency through OPP interface.
-> > >>
-> > >> But, in case of devfreq subsystem, as I explained already, devfreq support
-> > >> the OPP interface as default way. devfreq subsystem doesn't need to add
-> > >> other way to change the minimum/maximum frequency.
-> > > 
-> > > Using the OPP interface exclusively works as long as a
-> > > enabling/disabling of OPPs is limited to a single driver
-> > > (drivers/thermal/devfreq_cooling.c). When multiple drivers are
-> > > involved you need a way to resolve conflicts, that's the purpose of
-> > > devfreq_verify_within_limits(). Please let me know if there are
-> > > existing mechanisms for conflict resolution that I overlooked.
-> > > 
-> > > Possibly drivers/thermal/devfreq_cooling.c could be migrated to use
-> > > devfreq_verify_within_limits() instead of the OPP interface if
-> > > desired, however this seems beyond the scope of this series.
-> > 
-> > Actually, if we uses this approach, it doesn't support the multiple drivers too.
-> > If non throttler drivers uses devfreq_verify_within_limits(), the conflict
-> > happen.
-> 
-> As long as drivers limit the max freq there is no conflict, the lowest
-> max freq wins. I expect this to be the usual case, apparently it
-> worked for cpufreq for 10+ years.
-> 
-> However it is correct that there would be a conflict if a driver
-> requests a min freq that is higher than the max freq requested by
-> another. In this case devfreq_verify_within_limits() resolves the
-> conflict by raising p->max to the min freq. Not sure if this is
-> something that would ever occur in practice though.
-> 
-> If we are really concerned about this case it would also be an option
-> to limit the adjustment to the max frequency.
-> 
-> > To resolve the conflict for multiple device driver, maybe OPP interface
-> > have to support 'usage_count' such as clk_enable/disable().
-> 
-> This would require supporting negative usage count values, since a OPP
-> should not be enabled if e.g. thermal enables it but the throttler
-> disabled it or viceversa.
-> 
-> Theoretically there could also be conflicts, like one driver disabling
-> the higher OPPs and another the lower ones, with the outcome of all
-> OPPs being disabled, which would be a more drastic conflict resolution
-> than that of devfreq_verify_within_limits().
-> 
-> Viresh, what do you think about an OPP usage count?
+This patchset adds pinctrl support for Actions Semi S700 SoC.
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-Ping, can we try to reach a conclusion on this or at least keep the
-discussion going?
+pinctrl driver is verified using the Cubieboard7.
 
-Not that it matters, but my preferred solution continues to be
-devfreq_verify_within_limits(). It solves conflicts in some way (which
-could be adjusted if needed) and has proven to work in practice for
-10+ years in a very similar sub-system.
+common functionalities from s900 is moved for all Actions Semi
+SoC's usage.
+Common pad control configurations are moved to SoC specific
+
+dts entry for pinctrl depends on clock driver which is still under review:
+https://patchwork.kernel.org/patch/10533959/
+
+Thanks,
+Saravanan
+Parthiban
+
+Changelog in v2
+- GPIO Interrupt support is added
+- Device tree entry for GPIO and Interrupt configured
+- GPIO and pinctrl define reorder, commit message findings fixed
+
+depends on owl GPIO Interrupt support
+https://patchwork.kernel.org/patch/10483477/
+
+Chnagelog in v3
+- Fixed 0-DAY bisectibility error
+
+Chnagelog in v4
+- Fixed 0-DAY sparse warnings on static declaration
+
+Saravanan Sekar (5):
+  pinctrl: actions: define constructor generic to Actions Semi SoC's
+  pinctrl: actions: define pad control configurtion to SoC specific
+  dt-bindings: pinctrl: Add bindings for Actions Semi S700 SoC
+  pinctrl: actions: Add Actions Semi S700 pinctrl driver
+  arm64: dts: actions: Add pinctrl node for Actions Semi S700
+
+ .../bindings/pinctrl/actions,s700-pinctrl.txt |  170 ++
+ arch/arm64/boot/dts/actions/s700.dtsi         |   16 +
+ drivers/pinctrl/actions/Kconfig               |    6 +
+ drivers/pinctrl/actions/Makefile              |    1 +
+ drivers/pinctrl/actions/pinctrl-owl.c         |   71 +-
+ drivers/pinctrl/actions/pinctrl-owl.h         |  142 +-
+ drivers/pinctrl/actions/pinctrl-s700.c        | 1925 +++++++++++++++++
+ drivers/pinctrl/actions/pinctrl-s900.c        |  205 +-
+ 8 files changed, 2337 insertions(+), 199 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s700-pinctrl.txt
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s700.c
+
+-- 
+2.18.0
