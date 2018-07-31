@@ -1,157 +1,275 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v3 1/3] Input: atmel_mxt_ts: Add support for  optional regulators.
-Date: Tue, 31 Jul 2018 17:18:09 +0200
-Message-ID: <1533050291-11502-2-git-send-email-pawel.mikolaj.chmiel@gmail.com>
-References: <1533050291-11502-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for
+ Xilinx zynqmp
+Date: Tue, 31 Jul 2018 10:21:30 -0500
+Message-ID: <CANk1AXQ-qrEKAm9zEs8sVaFNGGFkjCr+npTKUNDXz_bnpL=DQw@mail.gmail.com>
+References: <20180801100457.25614-1-nava.manne@xilinx.com> <20180801100457.25614-2-nava.manne@xilinx.com>
+ <MWHPR0201MB34811402926886136673CE68C22E0@MWHPR0201MB3481.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533050291-11502-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <MWHPR0201MB34811402926886136673CE68C22E0@MWHPR0201MB3481.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nick@shmanahar.org
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To: Nava kishore Manne <navam@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds optional regulators, which can be used to power
-up touchscreen. After enabling regulators, we need to wait 150msec.
-This value is taken from official driver.
+On Tue, Jul 31, 2018 at 8:08 AM, Nava kishore Manne <navam@xilinx.com> wrote:
+>
+> +Alan Tull,
 
-It was tested on Samsung Galaxy i9000 (based on Samsung S5PV210 SOC).
++ linux-fpga mailing list
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
-Changes from v2:
-  - Move code enabling regulators into separate method,
-    to make code more readable.
+Hi Nava,
 
-Changes from v1:
-  - Enable regulators only if reset_gpio is present.
-  - Switch from devm_regulator_get_optional to devm_regulator_get
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 65 +++++++++++++++++++++++++++++---
- 1 file changed, 59 insertions(+), 6 deletions(-)
+Thanks for submitting.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 54fe190fd4bc..2cd7f6db6ba9 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -27,6 +27,7 @@
- #include <linux/interrupt.h>
- #include <linux/of.h>
- #include <linux/property.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/gpio/consumer.h>
- #include <linux/property.h>
-@@ -194,10 +195,10 @@ enum t100_type {
- 
- /* Delay times */
- #define MXT_BACKUP_TIME		50	/* msec */
--#define MXT_RESET_GPIO_TIME	20	/* msec */
- #define MXT_RESET_INVALID_CHG	100	/* msec */
- #define MXT_RESET_TIME		200	/* msec */
- #define MXT_RESET_TIMEOUT	3000	/* msec */
-+#define MXT_REGULATOR_DELAY	150	/* msec */
- #define MXT_CRC_TIMEOUT		1000	/* msec */
- #define MXT_FW_RESET_TIME	3000	/* msec */
- #define MXT_FW_CHG_TIMEOUT	300	/* msec */
-@@ -310,6 +311,8 @@ struct mxt_data {
- 	struct t7_config t7_cfg;
- 	struct mxt_dbg dbg;
- 	struct gpio_desc *reset_gpio;
-+	struct regulator *vdd_reg;
-+	struct regulator *avdd_reg;
- 
- 	/* Cached parameters from object table */
- 	u16 T5_address;
-@@ -3016,6 +3019,38 @@ static const struct dmi_system_id chromebook_T9_suspend_dmi[] = {
- 	{ }
- };
- 
-+static int mxt_regulator_enable(struct mxt_data *data)
-+{
-+	int error;
-+
-+	if (data->reset_gpio) {
-+		error = regulator_enable(data->vdd_reg);
-+		if (error) {
-+			dev_err(&data->client->dev, "Failed to enable vdd regulator: %d\n",
-+				error);
-+			return error;
-+		}
-+
-+		error = regulator_enable(data->avdd_reg);
-+		if (error) {
-+			dev_err(&data->client->dev, "Failed to enable avdd regulator: %d\n",
-+				error);
-+			return error;
-+		}
-+
-+		/*
-+		 * According to maXTouch power sequencing specification, RESET line
-+		 * must be kept low until some time after regulators come up to
-+		 * voltage
-+		 */
-+		msleep(MXT_REGULATOR_DELAY);
-+		gpiod_set_value(data->reset_gpio, 1);
-+		msleep(MXT_RESET_INVALID_CHG);
-+	}
-+
-+	return 0;
-+}
-+
- static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
- 	struct mxt_data *data;
-@@ -3076,6 +3111,22 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		return error;
- 	}
- 
-+	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
-+	if (IS_ERR(data->vdd_reg)) {
-+		error = PTR_ERR(data->vdd_reg);
-+		dev_err(&client->dev, "Failed to get vdd regulator: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	data->avdd_reg = devm_regulator_get(&client->dev, "avdd");
-+	if (IS_ERR(data->avdd_reg)) {
-+		error = PTR_ERR(data->avdd_reg);
-+		dev_err(&client->dev, "Failed to get avdd regulator: %d\n",
-+			error);
-+		return error;
-+	}
-+
- 	error = devm_request_threaded_irq(&client->dev, client->irq,
- 					  NULL, mxt_interrupt, IRQF_ONESHOT,
- 					  client->name, data);
-@@ -3086,11 +3137,9 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	disable_irq(client->irq);
- 
--	if (data->reset_gpio) {
--		msleep(MXT_RESET_GPIO_TIME);
--		gpiod_set_value(data->reset_gpio, 1);
--		msleep(MXT_RESET_INVALID_CHG);
--	}
-+	error = mxt_regulator_enable(data);
-+	if (error)
-+		return error;
- 
- 	error = mxt_initialize(data);
- 	if (error)
-@@ -3116,6 +3165,10 @@ static int mxt_remove(struct i2c_client *client)
- 	struct mxt_data *data = i2c_get_clientdata(client);
- 
- 	disable_irq(data->irq);
-+	if (data->reset_gpio) {
-+		regulator_disable(data->avdd_reg);
-+		regulator_disable(data->vdd_reg);
-+	}
- 	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
--- 
-2.7.4
+This should be on the linux-fpga mailing list.  The
+linux/scripts/get_maintainer.pl script would tell you that.
+
+Also, did you run checkpatch.pl on these? :)  I encourage using the
+--strict parameter.
+
+>
+>> -----Original Message-----
+>> From: Nava kishore Manne [mailto:nava.manne@xilinx.com]
+>> Sent: Wednesday, August 1, 2018 3:35 PM
+>> To: robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
+>> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+>> atull@opensource.altera.com; moritz.fischer@ettus.com; Nava kishore Manne
+>> <navam@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Appana Durga
+>> Kedareswara Rao <appanad@xilinx.com>; chinnikishore369@gmail.com
+>> Subject: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for
+>> Xilinx zynqmp
+>>
+>> This patch adds FPGA Manager support for the Xilinx ZynqMp chip.
+>>
+>> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+>> ---
+>>  drivers/fpga/Kconfig       |   6 ++
+>>  drivers/fpga/Makefile      |   1 +
+>>  drivers/fpga/zynqmp-fpga.c | 164
+>> +++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 171 insertions(+)
+>>  create mode 100644 drivers/fpga/zynqmp-fpga.c
+>>
+>> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig index
+>> cd84934774cc..b84e3555b3e3 100644
+>> --- a/drivers/fpga/Kconfig
+>> +++ b/drivers/fpga/Kconfig
+>> @@ -26,6 +26,12 @@ config FPGA_MGR_ZYNQ_FPGA
+>>       help
+>>         FPGA manager driver support for Xilinx Zynq FPGAs.
+>>
+>> +config FPGA_MGR_ZYNQMP_FPGA
+>> +     tristate "Xilinx Zynqmp FPGA"
+>> +     depends on ARCH_ZYNQMP || COMPILE_TEST
+>> +     help
+>> +       FPGA manager driver support for Xilinx ZynqMp FPGAs.
+>> +
+>>  endif # FPGA
+>>
+>>  endmenu
+>> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile index
+>> 8d83fc6b1613..ef444512cb01 100644
+>> --- a/drivers/fpga/Makefile
+>> +++ b/drivers/fpga/Makefile
+>> @@ -8,3 +8,4 @@ obj-$(CONFIG_FPGA)                    += fpga-mgr.o
+>>  # FPGA Manager Drivers
+>>  obj-$(CONFIG_FPGA_MGR_SOCFPGA)               += socfpga.o
+>>  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)     += zynq-fpga.o
+>> +obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)   += zynqmp-fpga.o
+>> diff --git a/drivers/fpga/zynqmp-fpga.c b/drivers/fpga/zynqmp-fpga.c new file
+>> mode 100644 index 000000000000..e4172c3a6868
+>> --- /dev/null
+>> +++ b/drivers/fpga/zynqmp-fpga.c
+>> @@ -0,0 +1,164 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * Copyright (C) 2018 Xilinx, Inc.
+>> + *
+
+Please delete the unnecessary blank '*' line here.
+
+>> + */
+>> +
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/fpga/fpga-mgr.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/string.h>
+>> +#include <linux/firmware/xilinx/zynqmp/firmware.h>
+
+I don't see this firmware/xilinx folder.  Is this dependent on other
+commits that were submitted?  If so, please note that in the header.
+
+>> +
+>> +/* Constant Definitions */
+>> +#define IXR_FPGA_DONE_MASK   0X00000008U
+>> +#define IXR_FPGA_ENCRYPTION_EN       0x00000008U
+>> +
+>> +/**
+>> + * struct zynqmp_fpga_priv - Private data structure
+>> + * @dev:     Device data structure
+>> + * @flags:   flags which is used to identify the bitfile type
+>> + */
+>> +struct zynqmp_fpga_priv {
+>> +     struct device *dev;
+>> +     u32 flags;
+>> +};
+>> +
+>> +static int zynqmp_fpga_ops_write_init(struct fpga_manager *mgr,
+>> +                                   struct fpga_image_info *info,
+>> +                                   const char *buf, size_t size) {
+
+checkpatch.pl would have complained about this:
+ERROR: open brace '{' following function definitions go on the next line
+
+>> +     struct zynqmp_fpga_priv *priv;
+>> +
+>> +     priv = mgr->priv;
+>> +     priv->flags = info->flags;
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int zynqmp_fpga_ops_write(struct fpga_manager *mgr,
+>> +                              const char *buf, size_t size)
+>> +{
+>> +     struct zynqmp_fpga_priv *priv;
+>> +     char *kbuf;
+>> +     size_t dma_size;
+>> +     dma_addr_t dma_addr;
+>> +     int ret;
+>> +     const struct zynqmp_eemi_ops *eemi_ops =
+>> zynqmp_pm_get_eemi_ops();
+
+Appears to have a dependency that I can't see here.  I'm looking at
+the current linux-next/master branch and not seeing this
+zynqmp_pm_get_eemi_ops function anywhere.
+
+>> +
+>> +     if (!eemi_ops || !eemi_ops->fpga_load)
+>> +             return -ENXIO;
+>> +
+>> +     priv = mgr->priv;
+>> +
+>> +     if (mgr->flags & IXR_FPGA_ENCRYPTION_EN)
+>> +             dma_size = size + ENCRYPTED_KEY_LEN;
+>> +     else
+>> +             dma_size = size;
+>> +
+>> +     kbuf = dma_alloc_coherent(priv->dev, dma_size, &dma_addr,
+>> GFP_KERNEL);
+>> +     if (!kbuf)
+>> +             return -ENOMEM;
+>> +
+>> +     memcpy(kbuf, buf, size);
+>> +
+>> +     if (mgr->flags & IXR_FPGA_ENCRYPTION_EN)
+>> +             memcpy(kbuf + size, mgr->key, ENCRYPTED_KEY_LEN);
+>> +
+>> +     wmb(); /* ensure all writes are done before initiate FW call */
+>> +
+>> +     if (mgr->flags & IXR_FPGA_ENCRYPTION_EN)
+>> +             ret = eemi_ops->fpga_load(dma_addr, dma_addr + size,
+>> +                                       mgr->flags);
+>> +     else
+>> +             ret = eemi_ops->fpga_load(dma_addr, size, mgr->flags);
+>> +
+>> +     dma_free_coherent(priv->dev, dma_size, kbuf, dma_addr);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int zynqmp_fpga_ops_write_complete(struct fpga_manager *mgr,
+>> +                                       struct fpga_image_info *info)
+>> +{
+>> +     return 0;
+>> +}
+>> +
+>> +static enum fpga_mgr_states zynqmp_fpga_ops_state(struct fpga_manager
+>> +*mgr) {
+>> +     u32 status;
+>> +     const struct zynqmp_eemi_ops *eemi_ops =
+>> zynqmp_pm_get_eemi_ops();
+>> +
+>> +     if (!eemi_ops || !eemi_ops->fpga_get_status)
+>> +             return FPGA_MGR_STATE_UNKNOWN;
+>> +
+>> +     eemi_ops->fpga_get_status(&status);
+>> +     if (status & IXR_FPGA_DONE_MASK)
+>> +             return FPGA_MGR_STATE_OPERATING;
+>> +
+>> +     return FPGA_MGR_STATE_UNKNOWN;
+>> +}
+>> +
+>> +static const struct fpga_manager_ops zynqmp_fpga_ops = {
+>> +     .state = zynqmp_fpga_ops_state,
+>> +     .write_init = zynqmp_fpga_ops_write_init,
+>> +     .write = zynqmp_fpga_ops_write,
+>> +     .write_complete = zynqmp_fpga_ops_write_complete, };
+>> +
+>> +static int zynqmp_fpga_probe(struct platform_device *pdev) {
+>> +     struct device *dev = &pdev->dev;
+>> +     struct zynqmp_fpga_priv *priv;
+>> +     int err, ret;
+>> +
+>> +     priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +     if (!priv)
+>> +             return -ENOMEM;
+>> +
+>> +     priv->dev = dev;
+>> +     ret = dma_set_mask_and_coherent(&pdev->dev,
+>> DMA_BIT_MASK(44));
+>> +     if (ret < 0)
+>> +             dev_err(dev, "no usable DMA configuration");
+>> +
+>> +     err = fpga_mgr_register(dev, "Xilinx ZynqMP FPGA Manager",
+>> +                             &zynqmp_fpga_ops, priv);
+
+The API has changed in 4.17 to be
+fpga_mgr_create/free/register/unregister.  Please look at
+linux-next/master for the latest.
+
+>> +     if (err) {
+>> +             dev_err(dev, "unable to register FPGA manager");
+>> +             return err;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int zynqmp_fpga_remove(struct platform_device *pdev) {
+>> +     fpga_mgr_unregister(&pdev->dev);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static const struct of_device_id zynqmp_fpga_of_match[] = {
+>> +     { .compatible = "xlnx,zynqmp-pcap-fpga", },
+>> +     {},
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, zynqmp_fpga_of_match);
+>> +
+>> +static struct platform_driver zynqmp_fpga_driver = {
+>> +     .probe = zynqmp_fpga_probe,
+>> +     .remove = zynqmp_fpga_remove,
+>> +     .driver = {
+>> +             .name = "zynqmp_fpga_manager",
+>> +             .of_match_table = of_match_ptr(zynqmp_fpga_of_match),
+>> +     },
+>> +};
+>> +
+>> +module_platform_driver(zynqmp_fpga_driver);
+>> +
+>> +MODULE_AUTHOR("Nava kishore Manne <navam@xilinx.com>");
+>> +MODULE_DESCRIPTION("Xilinx ZynqMp FPGA Manager");
+>> +MODULE_LICENSE("GPL");
+>> --
+>> 2.18.0
+>
