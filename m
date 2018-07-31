@@ -1,101 +1,38 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: RE: Re: [PATCH v1 1/2] arm64: dts: mt7622: add some misc device
- nodes
-Date: Tue, 31 Jul 2018 17:51:14 +0800
-Message-ID: <1533030674.13386.7.camel@mtkswgap22>
-References: <2ff39c40ef6bc3054667e63c785a1d28527b5ddf.1531753039.git.ryder.lee@mediatek.com>
-         <864955d5-26c4-a5f3-ec1a-420acba50880@gmail.com>
-         <2839886f07dc47afb9a05d06fb1acc84@mtkmbs08n1.mediatek.inc>
-         <1533026633.10540.20.camel@mtkswgap22>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [RFC PATCH 1/2] ARM: dt: fpga: Added binding docs for Xilinx zynqmp FPGA manager
+Date: Tue, 31 Jul 2018 10:02:45 +0000 (UTC)
+Message-ID: <20180801100457.25614-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533026633.10540.20.camel@mtkswgap22>
+Date: Wed, 1 Aug 2018 15:34:56 +0530
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, atull@opensource.altera.com, moritz.fischer@ettus.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, appanad@xilinx.com, chinnikishore369@gmail.com
+Cc: Nava kishore Manne <navam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-31 at 16:43 +0800, Ryder Lee wrote:
-> Hi Matthias,
-> 
-> Sorry for the late reply.
-> 
-> On Tue, 2018-07-31 at 16:17 +0800, Ryder Lee (李庚諺) wrote:
-> > Hi Ryder,
-> > 
-> > On 16/07/18 16:59, Ryder Lee wrote:
-> > > Add some misc nodes support - timer and ARM CCI-400.
-> > > 
-> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > > ---
-> > >  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 36 
-> > > ++++++++++++++++++++++++++++++++
-> > >  1 file changed, 36 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi 
-> > > b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > > index 9213c96..8cdec52 100644
-> > > --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > > +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > > @@ -217,6 +217,16 @@
-> > >  		#reset-cells = <1>;
-> > >  	};
-> > >  
-> > > +	timer: timer@10004000 {
-> > > +		compatible = "mediatek,mt7622-timer",
-> > > +			     "mediatek,mt6577-timer";
-> > > +		reg = <0 0x10004000 0 0x80>;
-> > > +		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-> > > +		clocks = <&infracfg CLK_INFRA_APXGPT_PD>,
-> > > +			 <&topckgen CLK_TOP_RTC>;
-> > > +		clock-names = "system-clk", "rtc-clk";
-> > > +	};
-> > > +
-> > >  	scpsys: scpsys@10006000 {
-> > >  		compatible = "mediatek,mt7622-scpsys",
-> > >  			     "syscon";
-> > > @@ -317,6 +327,32 @@
-> > >  		      <0 0x10360000 0 0x2000>;
-> > >  	};
-> > >  
-> > > +	cci: cci@10390000 {
-> > > +		compatible = "arm,cci-400";
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <1>;
-> > > +		reg = <0 0x10390000 0 0x1000>;
-> > > +		ranges = <0 0 0x10390000 0x10000>;
-> > 
-> > From my understanding of the binding description ranges should hold child address, parent address and size of the region in the child address space. I can see in arch/arm64 two different variants using 4 ranges values (like here) and using three values.
-> > 
-> > @Rob + Will what is the preferred way to describe this?
-> 
-> Hmmm... it's just a copy-paste (I take zynqmp.dtsi as an example).
-> > > +
-> > > +		cci_control0: slave-if@1000 {
-> > > +			compatible = "arm,cci-400-ctrl-if";
-> > > +			interface-type = "ace-lite";
-> > > +			reg = <0x1000 0x1000>;
-> > > +		};
-> > 
-> > Don't we need to add phandles to the cci-control-port property in the cpu nodes?
+New bindings document for zynqmp fpga manager.
 
-I forgot to answer this question in previous mail.
+Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+---
+ .../devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
 
-Yes, we need it. I will add the cci-control-port property in the cpu
-nodes and add the child node PMU in cci-400 - somehow I forgot to add
-them.
-
-Thanks for your reminder.
-
-> > Regards,
-> > Matthias
-> 
-> MT7622 use cci-400 to improve performance (DMA IO coherence) for
-> high-speed IPs. (i.e., ETH/WIFI/SATA/...)
-> 
-> I added it early but actually the related features have not supported in
-> mainline yet.
-> 
-> Ryder
+diff --git a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+new file mode 100644
+index 000000000000..0eac747747f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+@@ -0,0 +1,9 @@
++Xilinx Zynqmp FPGA Manager
++
++Required properties:
++- compatible:		should contain "xlnx,zynqmp-pcap-fpga"
++
++Example:
++	pcap: pcap@00 {
++		compatible = "xlnx,zynqmp-pcap-fpga";
++	};
+-- 
+2.18.0
