@@ -1,8 +1,8 @@
 From: Jassi Brar <jassisinghbrar@gmail.com>
 Subject: Re: [PATCH v7 4/6] dt-bindings: mailbox: imx-mu: add i.MX6SX and
  i.MX7S SoCs.
-Date: Tue, 31 Jul 2018 15:46:59 +0530
-Message-ID: <CABb+yY1LsOUOrEGfmVyOptGRGwUL8KmoLEWABg6AxMo+ia53Lg@mail.gmail.com>
+Date: Tue, 31 Jul 2018 15:48:49 +0530
+Message-ID: <CABb+yY3Xhmp=tum-kW6x2OxrzVgoDZhddPOZo02VVYLbWDPxvQ@mail.gmail.com>
 References: <20180726065331.6186-1-o.rempel@pengutronix.de>
  <20180726065331.6186-5-o.rempel@pengutronix.de>
  <CABb+yY32vBy5qVYsQ6u45=rV6gEggqKy3Jqn1B4oWHaGfTyQ8Q@mail.gmail.com>
@@ -58,11 +58,6 @@ On Tue, Jul 31, 2018 at 3:52 AM, Rob Herring <robh@kernel.org> wrote:
 >
 > No, for all the reasons already correctly explained in this thread.
 >
-OK. I curious
->> BTW, the driver doesn't even probe anything other than
->> 'fsl,imx6sx-mu', unlike what the binding says.
->
-> This aspect should be documented here though. The documentation should
-> clearly define what are valid combinations of compatibles.
->
-> Rob
+OK. I am curious to see what soc specific fixes we need in future.
+
+Thanks.
