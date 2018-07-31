@@ -1,90 +1,52 @@
-Return-Path: <SRS0=TsJA=KP=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 3/4] serial: sh-sci: Remove SCIx_RZ_SCIFA_REGTYPE
-Date: Tue, 31 Jul 2018 05:41:38 -0500
-Message-Id: <20180731104139.93291-4-chris.brandt@renesas.com>
-In-Reply-To: <20180731104139.93291-1-chris.brandt@renesas.com>
-References: <20180731104139.93291-1-chris.brandt@renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v6 0/3] input: pm8941-pwrkey: Add support for reboot reason
+Date: Tue, 31 Jul 2018 10:18:04 +0530
+Message-Id: <20180731044807.16878-1-vkoul@kernel.org>
+To: linux-input@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-There is no more need for SCIx_RZ_SCIFA_REGTYPE now that
-SCIx_SH4_SCIF_REGTYPE can provide the same register/address definitions.
+To add support for reboot reason there have been some attempts [1], [2]
+in past. Based on these discussions we added a new pon driver and made
+pwrkey and resin as child nodes to pon.
 
-Also, R7S9210 no longer needs a special compatible since the standard
-"renesas,scif" will work just fine.
+Since the pwrkey and resin are similar, abstract pwrkey driver
+and then add support for resin in the same driver.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-* add Reviewed-by
----
- drivers/tty/serial/sh-sci.c | 31 -------------------------------
- include/linux/serial_sci.h  |  1 -
- 2 files changed, 32 deletions(-)
+[1]: https://patchwork.kernel.org/patch/9751627/
+[2]: https://patchwork.kernel.org/patch/10381801/
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index c29244f76057..54ea58bbe3c9 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -293,33 +293,6 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.error_clear = SCIF_ERROR_CLEAR,
- 	},
- 
--	/*
--	 * The "SCIFA" that is in RZ/T and RZ/A2.
--	 * It looks like a normal SCIF with FIFO data, but with a
--	 * compressed address space. Also, the break out of interrupts
--	 * are different: ERI/BRI, RXI, TXI, TEI, DRI.
--	 */
--	[SCIx_RZ_SCIFA_REGTYPE] = {
--		.regs = {
--			[SCSMR]		= { 0x00, 16 },
--			[SCBRR]		= { 0x02,  8 },
--			[SCSCR]		= { 0x04, 16 },
--			[SCxTDR]	= { 0x06,  8 },
--			[SCxSR]		= { 0x08, 16 },
--			[SCxRDR]	= { 0x0A,  8 },
--			[SCFCR]		= { 0x0C, 16 },
--			[SCFDR]		= { 0x0E, 16 },
--			[SCSPTR]	= { 0x10, 16 },
--			[SCLSR]		= { 0x12, 16 },
--		},
--		.fifosize = 16,
--		.overrun_reg = SCLSR,
--		.overrun_mask = SCLSR_ORER,
--		.sampling_rate_mask = SCI_SR(32),
--		.error_mask = SCIF_DEFAULT_ERROR_MASK,
--		.error_clear = SCIF_ERROR_CLEAR,
--	},
--
- 	/*
- 	 * Common SH-3 SCIF definitions.
- 	 */
-@@ -3148,10 +3121,6 @@ static const struct of_device_id of_sci_match[] = {
- 		.compatible = "renesas,scif-r7s72100",
- 		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH2_SCIF_FIFODATA_REGTYPE),
- 	},
--	{
--		.compatible = "renesas,scif-r7s9210",
--		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE),
--	},
- 	/* Family-specific types */
- 	{
- 		.compatible = "renesas,rcar-gen1-scif",
-diff --git a/include/linux/serial_sci.h b/include/linux/serial_sci.h
-index 1c89611e0e06..c0e795d95477 100644
---- a/include/linux/serial_sci.h
-+++ b/include/linux/serial_sci.h
-@@ -36,7 +36,6 @@ enum {
- 	SCIx_SH4_SCIF_FIFODATA_REGTYPE,
- 	SCIx_SH7705_SCIF_REGTYPE,
- 	SCIx_HSCIF_REGTYPE,
--	SCIx_RZ_SCIFA_REGTYPE,
- 
- 	SCIx_NR_REGTYPES,
- };
+Changes in v6:
+ - Drop power changes merged thru reset tree
+ - Rebase on input-next
+
+Changes in v5:
+ - Make pon driver tristate
+
+Changes in v4:
+ - Add Rob's ack
+ - Fix typo and description in pon binding
+ - Separate out resin binding to an independent patch
+
+Changes in v3:
+ - Add Bjorn's ack
+ - Make variable for event code u32
+
+Changes in v2:
+ - Add Bjorn's ack
+ - Fix power binding by removing reg property
+ - Use single block for parent check in pm8941-pwrkey as suggested by
+   Dimitry
+
+Vinod Koul (3):
+  dt-bindings: Input: Add additional property to qcom pwrkey
+  input: pm8941-pwrkey: Abstract register offsets and event code
+  input: pm8941-pwrkey: Add resin entry
+
+ .../bindings/input/qcom,pm8941-pwrkey.txt          |  9 +++
+ drivers/input/misc/pm8941-pwrkey.c                 | 69 ++++++++++++++++++----
+ 2 files changed, 65 insertions(+), 13 deletions(-)
+
 -- 
-2.16.1
+2.14.4
