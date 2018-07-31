@@ -1,48 +1,52 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 1/6] i2c: designware: use generic table matching
-Date: Tue, 31 Jul 2018 17:53:17 +0300
-Message-ID: <1cbe4c184a0a6db1fc5401dbd8bd3a9f6bf22527.camel@linux.intel.com>
-References: <20180731134740.441-1-alexandre.belloni@bootlin.com>
-         <20180731134740.441-2-alexandre.belloni@bootlin.com>
-         <44e52856371e4b5c102df8f2efebd527fd26b066.camel@linux.intel.com>
-         <0559c93256ae4f59aed278912bcbfd996e279839.camel@linux.intel.com>
-         <20180731143059.GV28585@piout.net>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v3 0/9] coresight: Update device tree bindings
+Date: Tue, 31 Jul 2018 09:06:57 -0600
+Message-ID: <CANLsYkzBfCydwDO-KyDub4X=GTy_dtv-478RyMReBEH6VybSAg@mail.gmail.com>
+References: <1532686537-12380-1-git-send-email-suzuki.poulose@arm.com> <20180730200232.GA31755@xps15>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731143059.GV28585@piout.net>
+In-Reply-To: <20180730200232.GA31755@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, coresight@lists.linaro.org, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Matt Sealey <matt.sealey@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, John Horley <john.horley@arm.com>, Al Grant <al.grant@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-31 at 16:30 +0200, Alexandre Belloni wrote:
-> On 31/07/2018 17:23:04+0300, Andy Shevchenko wrote:
-> > On Tue, 2018-07-31 at 17:02 +0300, Andy Shevchenko wrote:
-> > > On Tue, 2018-07-31 at 15:47 +0200, Alexandre Belloni wrote:
- 
-> > > > +	dev->flags |= (u32)device_get_match_data(&pdev->dev);
-> > > > +
-> > 
-> > And since it would be changed anyway, can you actually move this
-> > line
-> > closet to  if (has_acpi_companion()) one ?
-> > 
-> 
-> I need that value to be set before calling of_configure though.
+[...]
 
-AFAICS, you added those lines later, so, it would be something like
+> >
+> > Suzuki K Poulose (9):
+> >   coresight: Document error handling in coresight_register
+> >   coresight: platform: Refactor graph endpoint parsing
+> >   coresight: platform: Fix refcounting for graph nodes
+> >   coresight: platform: Fix leaking device reference
+> >   coresight: Fix remote endpoint parsing
+> >   coresight: Add helper to check if the endpoint is input
+> >   coresight: platform: Cleanup coresight connection handling
+> >   coresight: Cleanup coresight DT bindings
+> >   dts: juno: Update coresight bindings
+> >
+> >  .../devicetree/bindings/arm/coresight.txt          |  95 +++++---
+> >  arch/arm64/boot/dts/arm/juno-base.dtsi             | 161 ++++++------
+> >  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi          |  52 ++--
+> >  arch/arm64/boot/dts/arm/juno.dts                   |  13 +-
+> >  drivers/hwtracing/coresight/coresight.c            |  35 +--
+> >  drivers/hwtracing/coresight/of_coresight.c         | 269 ++++++++++++++-------
+> >  include/linux/coresight.h                          |   9 +-
+> >  7 files changed, 359 insertions(+), 275 deletions(-)
+> >
+>
+> Good day,
+>
+> I have applied patches 1 to 7.  I will wait for Rob's ACK before doing the same
+> with 8 and 9.
 
-dev->flags |= ...
+I just applied patch 8 and 9.
 
-if (of_node)
- of_configure()
-if (has_acpi_companion())
- acpi_configure()
-
-Would it work for you?
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+>
+> Thanks,
+> Mathieu
+>
+> > --
+> > 2.7.4
+> >
