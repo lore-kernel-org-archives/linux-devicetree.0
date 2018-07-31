@@ -1,59 +1,49 @@
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Subject: Re: [PATCH v2 7/7] net: phy: Add pm support to Broadcom iProc mdio
- mux driver
-Date: Tue, 31 Jul 2018 10:51:48 -0700
-Message-ID: <f298c64e-d8de-0e6d-3c4d-f62b257329f9@broadcom.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 6/7] net: phy: Add support to configure clock in
+ Broadcom iProc mdio mux
+Date: Tue, 31 Jul 2018 10:57:30 -0700
+Message-ID: <6308d149-a16b-e737-355c-3edeb7a51e93@gmail.com>
 References: <1532726613-6483-1-git-send-email-arun.parameswaran@broadcom.com>
- <1532726613-6483-8-git-send-email-arun.parameswaran@broadcom.com>
- <8d732031-c5e8-d6ea-5b61-3b9baf79796f@gmail.com>
+ <1532726613-6483-7-git-send-email-arun.parameswaran@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <8d732031-c5e8-d6ea-5b61-3b9baf79796f@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1532726613-6483-7-git-send-email-arun.parameswaran@broadcom.com>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Parameswaran <arun.parameswaran@broadcom.com>, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
-
-On 18-07-30 03:53 PM, Florian Fainelli wrote:
-> On 07/27/2018 02:23 PM, Arun Parameswaran wrote:
->> Add support for suspend and resume to the Broadcom iProc mdio
->> mux driver.
->>
->> Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
->> ---
->>  drivers/net/phy/mdio-mux-bcm-iproc.c | 28 ++++++++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>
->> diff --git a/drivers/net/phy/mdio-mux-bcm-iproc.c b/drivers/net/phy/mdio-mux-bcm-iproc.c
->> index 51d1003..d89dce0 100644
->> --- a/drivers/net/phy/mdio-mux-bcm-iproc.c
->> +++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
->> @@ -290,6 +290,33 @@ static int mdio_mux_iproc_remove(struct platform_device *pdev)
->>  	return 0;
->>  }
->>  
->> +#ifdef CONFIG_PM_SLEEP
->> +static int mdio_mux_iproc_suspend(struct device *dev)
->> +{
->> +	struct iproc_mdiomux_desc *md = dev_get_drvdata(dev);
->> +
->> +	if (md->core_clk)
->> +		clk_disable_unprepare(md->core_clk);
+On 07/27/2018 02:23 PM, Arun Parameswaran wrote:
+> Add support to configure the internal rate adjust register based on the
+> core clock supplied through device tree in the Broadcom iProc mdio mux.
 > 
-> Since you are assigning md->core_clk to NULL in case clk_get() returned
-> an error, checking for md->core_clk is not necessary since the Linux
-> common clock framework perform that NULL check already.
+> The operating frequency of the mdio mux block is 11MHz. This is derrived
+> by dividing the clock to the mdio mux with the rate adjust register.
 > 
-Will remove the check.
+> In some SoC's the default values of the rate adjust register do not yield
+> 11MHz. These SoC's are required to specify the clock via the device tree
+> for proper operation.
+> 
+> Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
+> ---
 
-I am working on Andrew's comments (which will add one more patch to the series).
-I will send the whole patchset again, with reviewed-by tags (From Florian
-and Andrew on the ones that apply).
+[snip]
 
-Thanks
-Arun
+>  static int iproc_mdio_wait_for_idle(void __iomem *base, bool result)
+> @@ -198,10 +219,22 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
+>  		return PTR_ERR(md->base);
+>  	}
+>  
+> +	md->core_clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(md->core_clk)) {
+> +		md->core_clk = NULL;
+
+You need to specifically check for -EPROBE_DEFER here and propagate that
+to the caller, other errors could be ignored like you do it here, same
+comment as in patch 7, if you make md->core_clk NULL, then you can drop
+testing for that pointer being valid.
+-- 
+Florian
