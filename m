@@ -1,17 +1,15 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/4] ARM: dts: sun8i: a83t: Add support
- for the cir interface
-Date: Tue, 31 Jul 2018 14:34:23 +0200
-Message-ID: <20180731123423.vfcc2ubmtikk7ycy@flea>
+Subject: Re: [PATCH v6 0/4] IR support for A83T
+Date: Tue, 31 Jul 2018 14:34:52 +0200
+Message-ID: <20180731123452.74jyxc4q3ewig35z@flea>
 References: <20180731092258.2279-1-embed3d@gmail.com>
- <20180731092258.2279-3-embed3d@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVFOQHNQKGQENXC4S4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4NOQHNQKGQED2UJ5RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180731092258.2279-3-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20180731092258.2279-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,27 +20,20 @@ To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 11:22:56AM +0200, Philipp Rossak wrote:
-> The cir interface is like on the H3 located at 0x01f02000 and is exactly
-> the same. This patch adds support for the ir interface on the A83T.
+On Tue, Jul 31, 2018 at 11:22:54AM +0200, Philipp Rossak wrote:
+> This patch series adds support for the sunxi A83T ir module and enhances 
+> the sunxi-ir driver. Right now the base clock frequency for the ir driver
+> is a hard coded define and is set to 8 MHz.
+> This works for the most common ir receivers. On the Sinovoip Bananapi M3 
+> the ir receiver needs, a 3 MHz base clock frequency to work without
+> problems with this driver.
 > 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index afed6c0dea6f..31222a05a8f1 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -992,6 +992,18 @@
->  			reg = <0x1f01c00 0x400>;
->  		};
->  
-> +		r_cir: ir@1f02000 {
-> +			compatible = "allwinner,sun5i-a13-ir";
+> This patch series adds support for an optinal property that makes it able
+> to override the default base clock frequency and enables the ir interface 
+> on the a83t and the Bananapi M3.
 
-You should have an a83t compatile in addition here.
+Once the minor comment on patch 2 has been fixed,
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
 Maxime
 
