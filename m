@@ -1,37 +1,49 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v4 0/3] Add support for MSCC Ocelot SPI
-Date: Tue, 31 Jul 2018 10:38:09 -0700
-Message-ID: <20180731173809.eovsuiezlqzud7zi@pburton-laptop>
-References: <20180731143855.7131-1-alexandre.belloni@bootlin.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
+ coherent DMA mask)
+Date: Tue, 31 Jul 2018 10:38:59 -0700
+Message-ID: <20180731173859.GA17007@roeck-us.net>
+References: <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com>
+ <20180727140448.GA29001@lst.de>
+ <20180728165820.GA5731@roeck-us.net>
+ <45f7fc82-fb9c-e666-4ada-c5338d2c1c96@arm.com>
+ <39fa11ce4b7dd151d98868f375baf818@agner.ch>
+ <0e893142-a5db-d119-6eb3-f849db6b5d04@arm.com>
+ <f67628ad-4cae-96cd-d0c4-3b2f7d12a822@roeck-us.net>
+ <4ce17098-850f-3bb0-b977-8d7932e74e06@arm.com>
+ <20180731154353.GA29601@roeck-us.net>
+ <10c2ca4d-d587-2705-2802-b6df3dc72fd4@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180731143855.7131-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <10c2ca4d-d587-2705-2802-b6df3dc72fd4@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Mark Brown <broonie@kernel.org>, James Hogan <jhogan@kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Stefan Agner <stefan@agner.ch>, Christoph Hellwig <hch@lst.de>, Krzysztof Kozlowski <krzk@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
-
-On Tue, Jul 31, 2018 at 04:38:52PM +0200, Alexandre Belloni wrote:
-> Hello,
+On Tue, Jul 31, 2018 at 04:58:41PM +0100, Robin Murphy wrote:
+> On 31/07/18 16:43, Guenter Roeck wrote:
+> >On Tue, Jul 31, 2018 at 03:09:34PM +0100, Robin Murphy wrote:
+> >>>Please note that sparc images still generate the warning (next-20180731).
+> >>
+> >>Ugh, OK, any ideas what sparc does to create these platform devices that
+> >>isn't of_platform_device_create_pdata() and has somehow grown an implicit
+> >>dependency on of_dma_configure() since 4.12? I'm looking, but nothing jumps
+> >>out...
+> >>
+> >
+> >I suspect it might be of_device_register(), called from
+> >	arch/sparc/kernel/of_device_64.c:scan_one_device()
+> >	arch/sparc/kernel/of_device_32.c:scan_one_device()
 > 
-> This series only contains the DT documentation and the corresponding DT addition
-> since it has been rebased on spi-next.
+> Right, that's as far as I got as well, so I'm struggling to see how these
+> things ever got DMA masks set before the of_dma_configure() call moved out
+> of of_platform_device_create_pdata(), or why it wasn't a problem prior to
+> the generic dma_ops rework if they didn't :/
 > 
-> Alexandre Belloni (3):
->   spi: dw: document Microsemi integration
->   mips: dts: mscc: Add spi on Ocelot
->   mips: dts: mscc: enable spi and NOR flash support on ocelot PCB123
-> 
->  .../devicetree/bindings/spi/snps,dw-apb-ssi.txt       |  6 ++++--
->  arch/mips/boot/dts/mscc/ocelot.dtsi                   | 11 +++++++++++
->  arch/mips/boot/dts/mscc/ocelot_pcb123.dts             | 10 ++++++++++
->  3 files changed, 25 insertions(+), 2 deletions(-)
+Ah, ok. No idea, sorry. All I know is that the messages were first seen
+with next-20180727.
 
-Thanks - looks like the DT binding has been accepted, so I've applied
-patches 2 & 3 to mips-next for 4.19.
-
-Paul
+Guenter
