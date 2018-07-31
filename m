@@ -1,220 +1,67 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH v4 03/10] arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and Makefile
-Date: Tue, 31 Jul 2018 13:38:00 +0800
-Message-ID: <1533015487-60189-4-git-send-email-erin.lo@mediatek.com>
-References: <1533015487-60189-1-git-send-email-erin.lo@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: djw@t-chip.com.cn
+Subject: [PATCH v4 0/4] Add sdmmc UHS support to ROC-RK3328-CC board.
+Date: Tue, 31 Jul 2018 13:59:18 +0800
+Message-ID: <1533016762-5268-1-git-send-email-djw@t-chip.com.cn>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533015487-60189-1-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, erin.lo@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org, Ben Ho <Ben.Ho@mediatek.com>
+To: linux-rockchip@lists.infradead.org
+Cc: Wayne Chou <zxf@t-chip.com.cn>, Levin Du <djw@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, Simon Xue <xxm@rock-chips.com>, Liang Chen <cl@rock-chips.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, Linus Walleij <linus.walleij@linaro.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, David Wu <david.wu@rock-chips.com>, Finley Xiao <finley.xiao@rock-chips.com>, Rocky Hao <rocky.hao@rock-chips.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "David S. Miller" <davem@davemloft.net>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Joseph Chen <chenjh@rock-chips.com>, Mark
 List-Id: devicetree@vger.kernel.org
 
-From: Ben Ho <Ben.Ho@mediatek.com>
+From: Levin Du <djw@t-chip.com.cn>
 
-Add basic chip support for Mediatek 8183
 
-Signed-off-by: Ben Ho <Ben.Ho@mediatek.com>
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/Makefile       |   1 +
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  23 +++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 146 ++++++++++++++++++++++++++++
- 3 files changed, 170 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+Hi all, this is an attemp to add sdmmc UHS support to the
+ROC-RK3328-CC board.
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 7506b0d..a91d462 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -6,3 +6,4 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-evb.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-new file mode 100644
-index 0000000..2a3dd5a
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ * Author: Ben Ho <ben.ho@mediatek.com>
-+ *	   Erin Lo <erin.lo@mediatek.com>
-+ */
-+
-+/dts-v1/;
-+#include "mt8183.dtsi"
-+
-+/ {
-+	model = "MediaTek MT8183 evaluation board";
-+	compatible = "mediatek,mt8183-evb", "mediatek,mt8183";
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x80000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:921600n8";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-new file mode 100644
-index 0000000..1553265
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ * Author: Ben Ho <ben.ho@mediatek.com>
-+ *	   Erin Lo <erin.lo@mediatek.com>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "mediatek,mt8183";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+				core2 {
-+					cpu = <&cpu2>;
-+				};
-+				core3 {
-+					cpu = <&cpu3>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu4>;
-+				};
-+				core1 {
-+					cpu = <&cpu5>;
-+				};
-+				core2 {
-+					cpu = <&cpu6>;
-+				};
-+				core3 {
-+					cpu = <&cpu7>;
-+				};
-+			};
-+		};
-+
-+		cpu0: cpu@000 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x000>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu1: cpu@001 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x001>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@002 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x002>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@003 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x003>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu4: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu5: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x101>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu6: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x102>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu7: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a73";
-+			reg = <0x103>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible      = "arm,psci-1.0";
-+		method          = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	gic: interrupt-controller@0c000000 {
-+		compatible = "arm,gic-v3";
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		interrupt-controller;
-+		reg = <0 0x0c000000 0 0x40000>,  /* GICD */
-+		      <0 0x0c100000 0 0x200000>, /* GICR */
-+		      <0 0x0c400000 0 0x2000>,   /* GICC */
-+		      <0 0x0c410000 0 0x1000>,   /* GICH */
-+		      <0 0x0c420000 0 0x2000>;   /* GICV */
-+
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	sysirq: intpol-controller@0c530a80 {
-+		compatible = "mediatek,mt8183-sysirq",
-+			     "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x0c530a80 0 0x50>;
-+	};
-+};
+This patch series adds a new compatible `rockchip,rk3328-grf-gpio` to
+the gpio-syscon driver, which currently only support for the access of
+the GPIO_MUTE pin in RK3328. Support for HDMI pins can be added later on
+perhaps by writing a standalone driver.
+
+A new GRF GPIO controller named `grf_gpio` is defined in rk3328.dtsi so
+that all RK3328 boards has access to it.
+
+The ROC-RK3328-CC board use the new gpio <&grf_gpio 0> in gpio-regulator
+to control the signal voltage of the sdmmc. It is essential for UHS
+support which requires 1.8V signal voltage.
+
+Many thanks to the Linux people!
+
+Changes in v4:
+- Use binding of "rockchip,rk3328-grf-gpio"
+- Use <&grf_gpio 0> to refer to the GPIO_MUTE pin.
+
+Changes in v3:
+- Change from general gpio-syscon to specific rk3328-gpio-mute
+- Use dedicated "rockchip,rk3328-gpio-mute" driver
+- Use <&gpio_mute 0> instead of <&gpio_mute 1> to refer to the GPIO_MUTE pin.
+
+Changes in v2:
+- Rename gpio_syscon10 to gpio_mute in doc
+- Rename gpio_syscon10 to gpio_mute in rk3328.dtsi
+- Rename gpio_syscon10 to gpio_mute in rk3328-roc-cc.dts
+
+Changes in v1:
+- Refactured for general gpio-syscon usage for Rockchip SoCs.
+- Add doc rockchip,gpio-syscon.txt
+- Split from V0 and add to rk3328.dtsi for general use.
+- Split from V0.
+- Split into small patches
+- Sort dts properties in sdmmc node
+
+Levin Du (4):
+  gpio: syscon: rockchip: add GRF GPIO support for rk3328
+  arm64: dts: rockchip: add GRF GPIO controller to rk3328
+  arm64: dts: rockchip: add io-domain to roc-rk3328-cc
+  arm64: dts: rockchip: add sdmmc UHS support for roc-rk3328-cc
+
+ .../bindings/gpio/rockchip,rk3328-grf-gpio.txt     | 32 ++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts     | 34 ++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  6 ++++
+ drivers/gpio/gpio-syscon.c                         | 31 ++++++++++++++++++++
+ 4 files changed, 103 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.txt
+
 -- 
-1.9.1
+2.7.4
