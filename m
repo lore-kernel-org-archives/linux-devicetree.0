@@ -1,50 +1,68 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [RFC PATCH 1/2] ARM: dt: fpga: Added binding docs for Xilinx
- zynqmp FPGA manager
-Date: Tue, 31 Jul 2018 13:12:32 +0000
-Message-ID: <MWHPR0201MB34814FE28937F4A6F3540C72C22E0@MWHPR0201MB3481.namprd02.prod.outlook.com>
-References: <20180801100457.25614-1-nava.manne@xilinx.com>
- <63c5cfb5-e36b-86b7-732e-c37fe47a7fec@xilinx.com>
+From: Sibi S <sibis@codeaurora.org>
+Subject: Re: [PATCH 4/4] remoteproc: qcom: q6v5-pil: Add PDC restart for modem
+ on SDM845 SoCs
+Date: Tue, 31 Jul 2018 18:43:33 +0530
+Message-ID: <1040c360-3fdf-0657-95ee-0ee669e7b252@codeaurora.org>
+References: <20180727152811.15258-1-sibis@codeaurora.org>
+ <20180727152811.15258-4-sibis@codeaurora.org>
+ <1533027272.3444.9.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <63c5cfb5-e36b-86b7-732e-c37fe47a7fec@xilinx.com>
+In-Reply-To: <1533027272.3444.9.camel@pengutronix.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michals@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>, "atull@kernel.org" <atull@kernel.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmtzIGZvciB0aGUgcXVpY2sgcmVzcG9uc2UuLg0KDQpQbGVhc2Ugc2VlIG15IGNvbW1lbnRz
-IGlubGluZS4uLi4NCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNo
-YWwgU2ltZWsgW21haWx0bzptaWNoYWwuc2ltZWtAeGlsaW54LmNvbV0NCj4gU2VudDogVHVlc2Rh
-eSwgSnVseSAzMSwgMjAxOCA1OjQ4IFBNDQo+IFRvOiBOYXZhIGtpc2hvcmUgTWFubmUgPG5hdmFt
-QHhpbGlueC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IG1hcmsucnV0bGFuZEBhcm0uY29t
-OyBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IFNvcmVuIEJyaW5rbWFubg0KPiA8
-c29yZW5iQHhpbGlueC5jb20+OyBhdHVsbEBvcGVuc291cmNlLmFsdGVyYS5jb207DQo+IG1vcml0
-ei5maXNjaGVyQGV0dHVzLmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFy
-bS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7IEFwcGFuYSBEdXJnYQ0KPiBLZWRhcmVzd2FyYSBSYW8gPGFwcGFuYWRAeGlsaW54LmNv
-bT47IGNoaW5uaWtpc2hvcmUzNjlAZ21haWwuY29tDQo+IENjOiBOYXZhIGtpc2hvcmUgTWFubmUg
-PG5hdmFtQHhpbGlueC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIDEvMl0gQVJNOiBk
-dDogZnBnYTogQWRkZWQgYmluZGluZyBkb2NzIGZvciBYaWxpbngNCj4genlucW1wIEZQR0EgbWFu
-YWdlcg0KPiANCj4gT24gMS44LjIwMTggMTI6MDQsIE5hdmEga2lzaG9yZSBNYW5uZSB3cm90ZToN
-Cj4gPiBOZXcgYmluZGluZ3MgZG9jdW1lbnQgZm9yIHp5bnFtcCBmcGdhIG1hbmFnZXIuDQo+ID4N
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBOYXZhIGtpc2hvcmUgTWFubmUgPG5hdmFtQHhpbGlueC5jb20+
-DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ZwZ2EveGxueCx6eW5xbXAt
-cGNhcC1mcGdhLnR4dCAgIHwgOSArKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5z
-ZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2ZwZ2EveGxueCx6eW5xbXAtDQo+IHBjYXAtZnBnYS50eHQNCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZnBnYS94bG54
-LHp5bnFtcC1wY2FwLQ0KPiBmcGdhLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9mcGdhL3hsbngsenlucW1wLXBjYXAtDQo+IGZwZ2EudHh0DQo+ID4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjBlYWM3NDc3NDdmNQ0KPiA+IC0tLSAv
-ZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZnBn
-YS94bG54LHp5bnFtcC1wY2FwLWZwZ2EudHh0DQo+ID4gQEAgLTAsMCArMSw5IEBADQo+ID4gK1hp
-bGlueCBaeW5xbXAgRlBHQSBNYW5hZ2VyDQo+IA0KPiBUaGlzIHNob3VsZCBiZSBaeW5xTVAuDQo+
-IA0KV2lsbCBmaXggaW4gdGhlIG5leHQgdmVyc2lvbi4uDQoNCj4gPiArDQo+ID4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZToJCXNob3VsZCBjb250YWluICJ4bG54LHp5
-bnFtcC1wY2FwLWZwZ2EiDQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsJcGNhcDogcGNhcEAw
-MCB7DQo+IA0KPiBubyByZWFzb24gZm9yIGFkZHJlc3MgaWYgdGhlcmUgaXMgbm8gYW55IGJlbG93
-Lg0KPiANCiBXaWxsIGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9uLi4uLg0KDQpSZWdhcmRzLA0KTmF2
-YWtpc2hvcmUuDQo=
+Hi Philipp,
+Thanks for the review!
+
+On 07/31/2018 02:24 PM, Philipp Zabel wrote:
+> On Fri, 2018-07-27 at 20:58 +0530, Sibi Sankar wrote:
+>> In the presence of a PDC block working with subsystem RSC,
+>> assert/deassert PDC restart in modem start/stop path.
+>>
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>   .../bindings/remoteproc/qcom,q6v5.txt         |  4 +++
+>>   drivers/remoteproc/qcom_q6v5_pil.c            | 27 ++++++++++++++++---
+>>   2 files changed, 27 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> index 601dd9f389aa..124fb1dc6fb8 100644
+>> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> [...]
+>> @@ -1182,6 +1192,15 @@ static int q6v5_init_reset(struct q6v5 *qproc)
+>>   		return PTR_ERR(qproc->mss_restart);
+>>   	}
+>>   
+>> +	if (qproc->has_alt_reset) {
+>> +		qproc->pdc_restart = devm_reset_control_get(qproc->dev,
+>> +							    "pdc_restart");
+> 
+> Please use devm_reset_control_get_exclusive() instead.
+> 
+
+will replace it in the next re-spin.
+
+>> +		if (IS_ERR(qproc->pdc_restart)) {
+>> +			dev_err(qproc->dev, "failed to acquire pdc restart\n");
+>> +			return PTR_ERR(qproc->pdc_restart);
+>> +		}
+>> +	}
+>> +
+>>   	return 0;
+>>   }
+> 
+> regards
+> Philipp
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
