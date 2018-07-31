@@ -1,51 +1,101 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/4] gpio: syscon: rockchip: add GRF GPIO support for
- rk3328
-Date: Tue, 31 Jul 2018 13:36:44 -0600
-Message-ID: <20180731193644.GA10459@rob-hp-laptop>
-References: <1533016762-5268-1-git-send-email-djw@t-chip.com.cn>
- <1533016762-5268-2-git-send-email-djw@t-chip.com.cn>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v5 05/12] PM / devfreq: Add support for policy notifiers
+Date: Tue, 31 Jul 2018 12:39:53 -0700
+Message-ID: <20180731193953.GH68975@google.com>
+References: <20180703234705.227473-1-mka@chromium.org>
+ <CGME20180703234900epcas1p1cda806bab6bbe69228ca5ee56bc33f36@epcas1p1.samsung.com>
+ <20180703234705.227473-6-mka@chromium.org>
+ <5B3C6C2A.1070205@samsung.com>
+ <20180706175301.GG129942@google.com>
+ <5399c191-e140-e2b8-629b-72ddfbf99b0f@samsung.com>
+ <20180716175050.GZ129942@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1533016762-5268-2-git-send-email-djw@t-chip.com.cn>
+In-Reply-To: <20180716175050.GZ129942@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: djw@t-chip.com.cn
-Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 01:59:19PM +0800, djw@t-chip.com.cn wrote:
-> From: Levin Du <djw@t-chip.com.cn>
+On Mon, Jul 16, 2018 at 10:50:50AM -0700, Matthias Kaehlcke wrote:
+> On Thu, Jul 12, 2018 at 05:44:33PM +0900, Chanwoo Choi wrote:
+> > Hi Matthias,
+> > 
+> > On 2018년 07월 07일 02:53, Matthias Kaehlcke wrote:
+> > > Hi Chanwoo,
+> > > 
+> > > On Wed, Jul 04, 2018 at 03:41:46PM +0900, Chanwoo Choi wrote:
+> > > 
+> > >> Firstly,
+> > >> I'm not sure why devfreq needs the devfreq_verify_within_limits() function.
+> > >>
+> > >> devfreq already used the OPP interface as default. It means that
+> > >> the outside of 'drivers/devfreq' can disable/enable the frequency
+> > >> such as drivers/thermal/devfreq_cooling.c. Also, when some device
+> > >> drivers disable/enable the specific frequency, the devfreq core
+> > >> consider them.
+> > >>
+> > >> So, devfreq doesn't need to devfreq_verify_within_limits() because
+> > >> already support some interface to change the minimum/maximum frequency
+> > >> of devfreq device. 
+> > >>
+> > >> In case of cpufreq subsystem, cpufreq only provides 'cpufreq_verify_with_limits()'
+> > >> to change the minimum/maximum frequency of cpu. some device driver cannot
+> > >> change the minimum/maximum frequency through OPP interface.
+> > >>
+> > >> But, in case of devfreq subsystem, as I explained already, devfreq support
+> > >> the OPP interface as default way. devfreq subsystem doesn't need to add
+> > >> other way to change the minimum/maximum frequency.
+> > > 
+> > > Using the OPP interface exclusively works as long as a
+> > > enabling/disabling of OPPs is limited to a single driver
+> > > (drivers/thermal/devfreq_cooling.c). When multiple drivers are
+> > > involved you need a way to resolve conflicts, that's the purpose of
+> > > devfreq_verify_within_limits(). Please let me know if there are
+> > > existing mechanisms for conflict resolution that I overlooked.
+> > > 
+> > > Possibly drivers/thermal/devfreq_cooling.c could be migrated to use
+> > > devfreq_verify_within_limits() instead of the OPP interface if
+> > > desired, however this seems beyond the scope of this series.
+> > 
+> > Actually, if we uses this approach, it doesn't support the multiple drivers too.
+> > If non throttler drivers uses devfreq_verify_within_limits(), the conflict
+> > happen.
 > 
-> In Rockchip RK3328, the output only GPIO_MUTE pin, originally for codec
-> mute control, can also be used for general purpose. It is manipulated by
-> the GRF_SOC_CON10 register in GRF. Aside from the GPIO_MUTE pin, the HDMI
-> pins can also be set in the same way.
+> As long as drivers limit the max freq there is no conflict, the lowest
+> max freq wins. I expect this to be the usual case, apparently it
+> worked for cpufreq for 10+ years.
 > 
-> Currently this GRF GPIO controller only supports the mute pin. If needed
-> in the future, the HDMI pins support can also be added.
+> However it is correct that there would be a conflict if a driver
+> requests a min freq that is higher than the max freq requested by
+> another. In this case devfreq_verify_within_limits() resolves the
+> conflict by raising p->max to the min freq. Not sure if this is
+> something that would ever occur in practice though.
 > 
-> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+> If we are really concerned about this case it would also be an option
+> to limit the adjustment to the max frequency.
 > 
-> ---
+> > To resolve the conflict for multiple device driver, maybe OPP interface
+> > have to support 'usage_count' such as clk_enable/disable().
 > 
-> Changes in v4:
-> - Rename the GPIO binding to "rockchip,rk3328-grf-gpio"
+> This would require supporting negative usage count values, since a OPP
+> should not be enabled if e.g. thermal enables it but the throttler
+> disabled it or viceversa.
 > 
-> Changes in v3:
-> - Change from general gpio-syscon to specific rk3328-gpio-mute
+> Theoretically there could also be conflicts, like one driver disabling
+> the higher OPPs and another the lower ones, with the outcome of all
+> OPPs being disabled, which would be a more drastic conflict resolution
+> than that of devfreq_verify_within_limits().
 > 
-> Changes in v2:
-> - Rename gpio_syscon10 to gpio_mute in doc
-> 
-> Changes in v1:
-> - Refactured for general gpio-syscon usage for Rockchip SoCs.
-> - Add doc rockchip,gpio-syscon.txt
-> 
->  .../bindings/gpio/rockchip,rk3328-grf-gpio.txt     | 32 ++++++++++++++++++++++
->  drivers/gpio/gpio-syscon.c                         | 31 +++++++++++++++++++++
->  2 files changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.txt
+> Viresh, what do you think about an OPP usage count?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ping, can we try to reach a conclusion on this or at least keep the
+discussion going?
+
+Not that it matters, but my preferred solution continues to be
+devfreq_verify_within_limits(). It solves conflicts in some way (which
+could be adjusted if needed) and has proven to work in practice for
+10+ years in a very similar sub-system.
