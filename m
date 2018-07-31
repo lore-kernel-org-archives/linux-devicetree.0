@@ -1,138 +1,136 @@
-Return-Path: <SRS0=Pf9O=KL=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 1/2] soc: renesas: identify RZ/A2
-Date: Fri, 27 Jul 2018 11:53:32 -0500
-Message-Id: <20180727165333.60598-2-chris.brandt@renesas.com>
-In-Reply-To: <20180727165333.60598-1-chris.brandt@renesas.com>
-References: <20180727165333.60598-1-chris.brandt@renesas.com>
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=qjTl=KP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-cys01nam02on0057.outbound.protection.outlook.com ([104.47.37.57]:11584
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732068AbeGaOvk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Jul 2018 10:51:40 -0400
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH 2/4] dt: bindings: Document ZynqMP DDRC in Synopsys
+ documentation
+Date: Tue, 31 Jul 2018 13:11:20 +0000
+Message-ID: <SN6PR02MB4959EF52415F3256C7C97911C12E0@SN6PR02MB4959.namprd02.prod.outlook.com>
+References: <1531995290-15643-1-git-send-email-manish.narani@xilinx.com>
+ <1531995290-15643-3-git-send-email-manish.narani@xilinx.com>
+ <20180725192500.GA7228@rob-hp-laptop>
+In-Reply-To: <20180725192500.GA7228@rob-hp-laptop>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "mdf@kernel.org" <mdf@kernel.org>, Will Wong <WILLW@xilinx.com>, Naga Sureshkumar Relli <nagasure@xilinx.com>, Edgar Iglesias <edgari@xilinx.com>, Bharat Kumar Gogada <bharatku@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srinivas Goud <sgoud@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for identifying the RZ/A2M (R7S9210) SoC.
-Also add support for reading the BSID register which is a different format
-than the PRR.
+Hi Rob,
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
-* Remove 'hard coded' section because there will not be andy non-DT
-  legacy support needed
-* Make displaying the chip revision more flexible for the future case
-  when the revision number from the BSID will be displayed
----
- drivers/soc/renesas/renesas-soc.c | 55 +++++++++++++++++++++++++++++++++------
- 1 file changed, 47 insertions(+), 8 deletions(-)
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Thursday, July 26, 2018 12:55 AM
+> To: Manish Narani <MNARANI@xilinx.com>
+> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org;
+> catalin.marinas@arm.com; will.deacon@arm.com; mdf@kernel.org; Will
+> Wong <WILLW@xilinx.com>; Naga Sureshkumar Relli <nagasure@xilinx.com>;
+> Edgar Iglesias <edgari@xilinx.com>; Bharat Kumar Gogada
+> <bharatku@xilinx.com>; Shubhrajyoti Datta <shubhraj@xilinx.com>;
+> stefan.krsmanovic@aggios.com; Anirudha Sarangi <anirudh@xilinx.com>;
+> Srinivas Goud <sgoud@xilinx.com>
+> Subject: Re: [PATCH 2/4] dt: bindings: Document ZynqMP DDRC in Synopsys
+> documentation
+>=20
+> On Thu, Jul 19, 2018 at 03:44:48PM +0530, Manish Narani wrote:
+> > This patch documents Synopsys EDAC driver which reports the single bit
+>=20
+> Bindings are for h/w, not drivers. I'm pretty sure Synopsys doesn't make =
+an
+> "EDAC driver".
 
-diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
-index d44d0e687ab8..cf06cd84092a 100644
---- a/drivers/soc/renesas/renesas-soc.c
-+++ b/drivers/soc/renesas/renesas-soc.c
-@@ -46,8 +46,12 @@ static const struct renesas_family fam_rmobile __initconst __maybe_unused = {
- 	.reg	= 0xe600101c,		/* CCCR (Common Chip Code Register) */
- };
- 
--static const struct renesas_family fam_rza __initconst __maybe_unused = {
--	.name	= "RZ/A",
-+static const struct renesas_family fam_rza1 __initconst __maybe_unused = {
-+	.name	= "RZ/A1",
-+};
-+
-+static const struct renesas_family fam_rza2 __initconst __maybe_unused = {
-+	.name	= "RZ/A2",
- };
- 
- static const struct renesas_family fam_rzg __initconst __maybe_unused = {
-@@ -67,7 +71,12 @@ struct renesas_soc {
- };
- 
- static const struct renesas_soc soc_rz_a1h __initconst __maybe_unused = {
--	.family	= &fam_rza,
-+	.family	= &fam_rza1,
-+};
-+
-+static const struct renesas_soc soc_rz_a2m __initconst __maybe_unused = {
-+	.family	= &fam_rza2,
-+	.id	= 0x3b,
- };
- 
- static const struct renesas_soc soc_rmobile_ape6 __initconst __maybe_unused = {
-@@ -184,6 +193,9 @@ static const struct of_device_id renesas_socs[] __initconst = {
- #ifdef CONFIG_ARCH_R7S72100
- 	{ .compatible = "renesas,r7s72100",	.data = &soc_rz_a1h },
- #endif
-+#ifdef CONFIG_ARCH_R7S9210
-+	{ .compatible = "renesas,r7s9210",	.data = &soc_rz_a2m },
-+#endif
- #ifdef CONFIG_ARCH_R8A73A4
- 	{ .compatible = "renesas,r8a73a4",	.data = &soc_rmobile_ape6 },
- #endif
-@@ -262,7 +274,7 @@ static int __init renesas_soc_init(void)
- 	void __iomem *chipid = NULL;
- 	struct soc_device *soc_dev;
- 	struct device_node *np;
--	unsigned int product;
-+	unsigned int product, eshi = 0, eslo;
- 
- 	match = of_match_node(renesas_socs, of_root);
- 	if (!match)
-@@ -271,6 +283,31 @@ static int __init renesas_soc_init(void)
- 	soc = match->data;
- 	family = soc->family;
- 
-+	np = of_find_compatible_node(NULL, NULL, "renesas,bsid");
-+	if (np) {
-+		chipid = of_iomap(np, 0);
-+		of_node_put(np);
-+
-+		if (chipid) {
-+			product = readl(chipid);
-+			iounmap(chipid);
-+
-+			if (soc->id && ((product >> 16) & 0xff) != soc->id) {
-+				pr_warn("SoC mismatch (product = 0x%x)\n",
-+					product);
-+				return -ENODEV;
-+			}
-+		}
-+
-+		/*
-+		 * TODO: Upper 4 bits of BSID are for chip version, but the
-+		 * format is not known at this time so we don't know how to
-+		 * specify eshi and eslo
-+		 */
-+
-+		goto done;
-+	}
-+
- 	/* Try PRR first, then hardcoded fallback */
- 	np = of_find_compatible_node(NULL, NULL, "renesas,prr");
- 	if (np) {
-@@ -289,8 +326,11 @@ static int __init renesas_soc_init(void)
- 			pr_warn("SoC mismatch (product = 0x%x)\n", product);
- 			return -ENODEV;
- 		}
-+		eshi = ((product >> 4) & 0x0f) + 1;
-+		eslo = product & 0xf;
- 	}
- 
-+done:
- 	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
- 	if (!soc_dev_attr)
- 		return -ENOMEM;
-@@ -302,10 +342,9 @@ static int __init renesas_soc_init(void)
- 	soc_dev_attr->family = kstrdup_const(family->name, GFP_KERNEL);
- 	soc_dev_attr->soc_id = kstrdup_const(strchr(match->compatible, ',') + 1,
- 					     GFP_KERNEL);
--	if (chipid)
--		soc_dev_attr->revision = kasprintf(GFP_KERNEL, "ES%u.%u",
--						   ((product >> 4) & 0x0f) + 1,
--						   product & 0xf);
-+	if (eshi)
-+		soc_dev_attr->revision = kasprintf(GFP_KERNEL, "ES%u.%u", eshi,
-+						   eslo);
- 
- 	pr_info("Detected Renesas %s %s %s\n", soc_dev_attr->family,
- 		soc_dev_attr->soc_id, soc_dev_attr->revision ?: "");
--- 
-2.16.1
+I will correct it in next version.
+
+>=20
+> > errors that are corrected and the double bit errors that are detected.
+> >
+> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > ---
+> >  .../bindings/memory-controllers/synopsys.txt       | 25 ++++++++++++++=
+++++-
+> ---
+> >  1 file changed, 21 insertions(+), 4 deletions(-)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
+> > b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
+> > index a43d26d..5d20b76 100644
+> > ---
+> > a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
+> > +++ b/Documentation/devicetree/bindings/memory-controllers/synopsys.tx
+> > +++ t
+> > @@ -1,15 +1,32 @@
+> >  Binding for Synopsys IntelliDDR Multi Protocol Memory Controller
+> >
+> > -This controller has an optional ECC support in half-bus width
+> > (16-bit) -configuration. The ECC controller corrects one bit error and
+> > detects
+> > +Synopsys EDAC driver, it does reports the DDR ECC single bit errors
+> > +that are corrected and double bit ecc errors that are detected by the
+> > +DDR ECC controller.
+>=20
+> Describe the h/w, not drivers.
+Okay
+
+>=20
+> s/it does reports/it reports/
+> s/ecc/ECC/
+
+Okay
+
+>=20
+> > +
+> > +The Zynq DDR ECC controller has an optional ECC support in half-bus
+> > +width
+> > +(16-bit) configuration. The ECC controller corrects one bit error and
+> > +detects
+> >  two bit errors.
+> >
+> >  Required properties:
+> > - - compatible: Should be 'xlnx,zynq-ddrc-a05'
+> > - - reg: Base address and size of the controllers memory area
+> > + - compatible: One of:
+> > +	- 'xlnx,zynq-ddrc-a05' : Zynq DDR ECC controller
+> > +	- 'xlnx,zynqmp-ddrc-2.40a' : ZynqMP DDR ECC controller
+> > + - reg: Should contain DDR controller registers location and length.
+> > +
+> > +Required properties for "xlnx,zynqmp-ddrc-2.40a":
+> > + - interrupt-parent: Should be core interrupt controller.
+>=20
+> Drop this. It is implied.
+
+Sure. I will remove it.
+
+>=20
+> > + - interrupts: Property with a value describing the interrupt number.
+>=20
+> No interrupt for Zynq? That makes ECC reporting hard...
+
+There is no interrupt support in Zynq DDR controller. The ECC reporting is =
+done via polling method.
+
+>=20
+> >
+> >  Example:
+> >  	memory-controller@f8006000 {
+> >  		compatible =3D "xlnx,zynq-ddrc-a05";
+> >  		reg =3D <0xf8006000 0x1000>;
+> >  	};
+> > +
+> > +	mc: memory-controller@fd070000 {
+> > +		compatible =3D "xlnx,zynqmp-ddrc-2.40a";
+> > +		reg =3D <0x0 0xfd070000 0x0 0x30000>;
+> > +		interrupt-parent =3D <&gic>;
+> > +		interrupts =3D <0 112 4>;
+> > +	};
+> > --
+> > 2.1.1
+> >
+Thanks,
+Manish Narani
