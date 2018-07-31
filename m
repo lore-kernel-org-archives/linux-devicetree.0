@@ -1,35 +1,33 @@
-Return-Path: <SRS0=kCE6=KL=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 3/4] ARM: dts: iwg23s-sbc: specify EtherAVB PHY IRQ
-Date: Fri, 27 Jul 2018 10:51:28 +0100
-Message-Id: <1532685089-35645-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1532685089-35645-1-git-send-email-biju.das@bp.renesas.com>
-References: <1532685089-35645-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=TsJA=KP=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3 0/4] serial: sh-sci: Clean up previous RZ/A2 support
+Date: Tue, 31 Jul 2018 05:41:35 -0500
+Message-Id: <20180731104139.93291-1-chris.brandt@renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Specify  EtherAVB PHY IRQ  in the board specific device tree, now that we
-have GPIO support.
+This patch series doesn't really provide much new functionality, but
+rather provides a cleaner solution for adding RZ/A2 support.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 2 ++
- 1 file changed, 2 insertions(+)
+This series applies on top of tty-next
 
-diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-index 56182ee..22da819 100644
---- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-+++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-@@ -35,6 +35,8 @@
- 
- 	phy3: ethernet-phy@3 {
- 		reg = <3>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
- 		micrel,led-mode = <1>;
- 	};
- };
+v3:
+* removed a line of code that wasn't needed
+v2:
+* Incorporated feedback from Geert
+* Added Reviewed-by
+
+Chris Brandt (4):
+  serial: sh-sci: Improve interrupts description
+  serial: sh-sci: Allow for compressed SCIF address
+  serial: sh-sci: Remove SCIx_RZ_SCIFA_REGTYPE
+  serial: sh-sci: Improve support for separate TEI and DRI interrupts
+
+ .../bindings/serial/renesas,sci-serial.txt         |  16 ++-
+ drivers/tty/serial/sh-sci.c                        | 147 ++++++++-------------
+ include/linux/serial_sci.h                         |   1 -
+ 3 files changed, 70 insertions(+), 94 deletions(-)
+
 -- 
-2.7.4
+2.16.1
