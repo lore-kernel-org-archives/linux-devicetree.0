@@ -1,281 +1,108 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC 1/4] drivers: pinctrl: qcom: add wakeup capability to GPIO
-Date: Tue, 31 Jul 2018 16:44:18 -0600
-Message-ID: <20180731224421.29062-2-ilina@codeaurora.org>
-References: <20180731224421.29062-1-ilina@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 6/6] dt-bindings: interrupt-controller: RISC-V PLIC
+ documentation
+Date: Tue, 31 Jul 2018 16:46:30 -0600
+Message-ID: <20180731224630.GB12168@rob-hp-laptop>
+References: <20180725093649.32332-1-hch@lst.de>
+ <20180725093649.32332-7-hch@lst.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731224421.29062-1-ilina@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180725093649.32332-7-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, sboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org
-Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
 List-Id: devicetree@vger.kernel.org
 
-QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
-domain can wakeup the SoC, when interrupts and GPIOs are routed to the
-its interrupt controller. Select GPIOs that are deemed wakeup capable are
-routed to specific PDC pins. The PDC wakes up the GIC and replays the
-interrupt at the GIC and the interrupt handler for the GPIO is invoked.
+On Wed, Jul 25, 2018 at 11:36:49AM +0200, Christoph Hellwig wrote:
+> From: Palmer Dabbelt <palmer@dabbelt.com>
+> 
+> This patch adds documentation for the platform-level interrupt
+> controller (PLIC) found in all RISC-V systems.  This interrupt
+> controller routes interrupts from all the devices in the system to each
+> hart-local interrupt controller.
+> 
+> Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
+> want to change how we're specifying holes in the hart list.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> ---
+>  .../interrupt-controller/riscv,plic0.txt      | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> new file mode 100644
+> index 000000000000..99cd359dbd43
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> @@ -0,0 +1,55 @@
+> +RISC-V Platform-Level Interrupt Controller (PLIC)
+> +-------------------------------------------------
+> +
+> +The RISC-V supervisor ISA specification allows for the presence of a
+> +platform-level interrupt controller (PLIC).   The PLIC connects all external
+> +interrupts in the system to all hart contexts in the system, via the external
+> +interrupt source in each hart's hart-local interrupt controller (HLIC).  A hart
+> +context is a privilege mode in a hardware execution thread.  For example, in
+> +an 4 core system with 2-way SMT, you have 8 harts and probably at least two
+> +privilege modes per hart; machine mode and supervisor mode.
+> +
+> +Each interrupt can be enabled on per-context basis. Any context can claim
+> +a pending enabled interrupt and then release it once it has been handled.
+> +
+> +Each interrupt has a configurable priority. Higher priority interrupts are
+> +serviced firs. Each context can specify a priority threshold. Interrupts
+> +with priority below this threshold will not cause the PLIC to raise its
+> +interrupt line leading to the context.
+> +
+> +While the PLIC supports both edge-triggered and level-triggered interrupts,
+> +interrupt handlers are oblivious to this distinction and therefor it is not
+> +specific in the PLIC device-tree binding.
+> +
+> +While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
+> +"riscv,plic0" device is a concrete implementation of the PLIC that contains a
+> +specific memory layout.  More details about the memory layout of the
+> +"riscv,plic0" device can be found as a comment in the device driver, or as part
+> +of the SiFive U5 Coreplex Series Manual (page 22 of the PDF of version 1.0)
+> +<https://www.sifive.com/documentation/coreplex/u5-coreplex-series-manual/>
+> +
+> +Required properties:
+> +- compatible : "riscv,plic0"
 
-Setup the PDC IRQ when the GPIO's IRQ is requested and enable the PDC
-IRQ when the GPIO's IRQ is enabled.
+Perhaps this should be 'sifive,plic0'
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 163 +++++++++++++++++++++++++++++
- drivers/pinctrl/qcom/pinctrl-msm.h |  14 +++
- 2 files changed, 177 insertions(+)
+Normally this would have an SoC specific compatible too. Sometimes we 
+can get away without, but it doesn't seem like the PLIC is very tightly 
+specified nor has common implementations.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 0e22f52b2a19..39c3934712f7 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -71,6 +71,13 @@ struct msm_pinctrl {
- 
- 	const struct msm_pinctrl_soc_data *soc;
- 	void __iomem *regs;
-+	struct list_head pdc_irqs;
-+};
-+
-+struct wakeup_gpio_irq_map {
-+	struct list_head list;
-+	unsigned gpio;
-+	unsigned pdc_irq;
- };
- 
- static int msm_get_groups_count(struct pinctrl_dev *pctldev)
-@@ -558,6 +565,39 @@ static void msm_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- #define msm_gpio_dbg_show NULL
- #endif
- 
-+static int msm_gpio_get_pdc_pin(struct msm_pinctrl *pctrl, unsigned hwirq)
-+{
-+	struct msm_pinctrl_pdc_map *map = pctrl->soc->pdc_map;
-+	int i;
-+
-+	for (i = 0; i < pctrl->soc->npdc_pins; i++) {
-+		if (map[i].hwirq == hwirq)
-+			return map[i].pdc_pin;
-+	}
-+
-+	return -ENOTCONN;
-+}
-+
-+static struct irq_data *msm_get_pdc_irq_data(struct irq_data *d)
-+{
-+	struct wakeup_gpio_irq_map *p;
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+	struct irq_data *data = NULL;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&pctrl->lock, flags);
-+	list_for_each_entry(p, &pctrl->pdc_irqs, list) {
-+		if (p->gpio == d->hwirq) {
-+			data = irq_get_irq_data(p->pdc_irq);
-+			break;
-+		}
-+	}
-+	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return data;
-+}
-+
- static const struct gpio_chip msm_gpio_template = {
- 	.direction_input  = msm_gpio_direction_input,
- 	.direction_output = msm_gpio_direction_output,
-@@ -687,6 +727,11 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	const struct msm_pingroup *g;
- 	unsigned long flags;
- 	u32 val;
-+	struct irq_data *pdc_irqd = msm_get_pdc_irq_data(d);
-+
-+	// TODO: Lock PDC irq chip and set type?
-+	if (pdc_irqd)
-+		pdc_irqd->chip->irq_set_type(pdc_irqd, type);
- 
- 	g = &pctrl->soc->groups[d->hwirq];
- 
-@@ -779,9 +824,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
- 	unsigned long flags;
-+	struct irq_data *pdc_irqd = msm_get_pdc_irq_data(d);
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
-+	if (pdc_irqd)
-+		irq_set_irq_wake(pdc_irqd->irq, on);
-+
- 	irq_set_irq_wake(pctrl->irq, on);
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-@@ -863,6 +912,117 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
- 	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
- }
- 
-+static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
-+{
-+	struct irq_data *irqd = data;
-+	struct irq_desc *desc = irq_data_to_desc(irqd);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-+	int irq_pin = irq_find_mapping(gc->irq.domain, irqd->hwirq);
-+
-+	chained_irq_enter(chip, desc);
-+	generic_handle_irq(irq_pin);
-+	chained_irq_exit(chip, desc);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int msm_gpio_pdc_pin_request(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+	struct platform_device *pdev = to_platform_device(pctrl->dev);
-+	unsigned pin, npins, irq;
-+	struct wakeup_gpio_irq_map *p;
-+	unsigned long flags, trigger;
-+	const char *pin_name;
-+	int i, ret;
-+
-+	pin = msm_gpio_get_pdc_pin(pctrl, d->hwirq);
-+	if (pin < 0)
-+		return 0;
-+
-+	npins = platform_irq_count(pdev);
-+	if (npins <= 0)
-+		return npins;
-+
-+	for (i = 0; i < npins; i++) {
-+		irq = platform_get_irq(pdev, i);
-+		if (irq >= 0 && pin == irq_get_irq_data(irq)->hwirq)
-+			break;
-+	}
-+	if (i == npins)
-+		return 0;
-+
-+	pin_name = kasprintf(GFP_KERNEL, "gpio-%lu", d->hwirq);
-+	if (!pin_name)
-+		return -ENOMEM;
-+
-+	trigger = irqd_get_trigger_type(d) | IRQF_ONESHOT | IRQF_NO_SUSPEND;
-+	ret = request_irq(irq, wake_irq_gpio_handler, trigger, pin_name, d);
-+	if (ret) {
-+		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
-+		return ret;
-+	}
-+
-+	p = kzalloc(sizeof(p), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	p->pdc_irq = irq;
-+	p->gpio = d->hwirq;
-+	raw_spin_lock_irqsave(&pctrl->lock, flags);
-+	list_add(&p->list, &pctrl->pdc_irqs);
-+	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int msm_gpio_pdc_pin_release(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+	struct wakeup_gpio_irq_map *p, *n, *t = NULL;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&pctrl->lock, flags);
-+	list_for_each_entry_safe(p, n, &pctrl->pdc_irqs, list) {
-+		if (p->gpio == d->hwirq) {
-+			list_del(&p->list);
-+			t = p;
-+			break;
-+		}
-+	}
-+	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+	if (t) {
-+		free_irq(t->pdc_irq, NULL);
-+		kfree(t);
-+	}
-+
-+	return 0;
-+}
-+
-+static int msm_gpio_irq_reqres(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+
-+	if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
-+		dev_err(gc->parent,"unable to lock HW IRQ %lu for IRQ\n",
-+			irqd_to_hwirq(d));
-+		return -EINVAL;
-+	}
-+
-+	return msm_gpio_pdc_pin_request(d);
-+}
-+
-+static void msm_gpio_irq_relres(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+
-+	msm_gpio_pdc_pin_release(d);
-+	gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
-+}
-+
- static int msm_gpio_init(struct msm_pinctrl *pctrl)
- {
- 	struct gpio_chip *chip;
-@@ -887,6 +1047,9 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
- 	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
- 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
-+	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
-+	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
-+	INIT_LIST_HEAD(&pctrl->pdc_irqs);
- 
- 	ret = gpiochip_add_data(&pctrl->chip, pctrl);
- 	if (ret) {
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index 9b9feea540ff..5b7f3160affe 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -97,6 +97,16 @@ struct msm_pingroup {
- 	unsigned intr_detection_width:5;
- };
- 
-+/**
-+ * struct msm_pinctrl_pdc_map - Map GPIOs to PDC pins on RPMH based SoCs
-+ * @hwirq:	   The GPIO that is mapped.
-+ * @pdc_pin:	   The PDC pin to with the GPIO IRQ line is routed.
-+ */
-+struct msm_pinctrl_pdc_map {
-+	u32 hwirq;
-+	u32 pdc_pin;
-+};
-+
- /**
-  * struct msm_pinctrl_soc_data - Qualcomm pin controller driver configuration
-  * @pins:	    An array describing all pins the pin controller affects.
-@@ -107,6 +117,8 @@ struct msm_pingroup {
-  * @ngroups:	    The numbmer of entries in @groups.
-  * @ngpio:	    The number of pingroups the driver should expose as GPIOs.
-  * @pull_no_keeper: The SoC does not support keeper bias.
-+ * @pdc_map:	    The map of GPIOs to the always-on PDC interrupt lines.
-+ * @npdc_pins:	    The number of GPIOs mapped to the PDC pins in @pdc_map.
-  */
- struct msm_pinctrl_soc_data {
- 	const struct pinctrl_pin_desc *pins;
-@@ -117,6 +129,8 @@ struct msm_pinctrl_soc_data {
- 	unsigned ngroups;
- 	unsigned ngpios;
- 	bool pull_no_keeper;
-+	struct msm_pinctrl_pdc_map *pdc_map;
-+	unsigned npdc_pins;
- };
- 
- int msm_pinctrl_probe(struct platform_device *pdev,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> +- #address-cells : should be <0>
+> +- #interrupt-cells : should be <1>
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- reg : Should contain 1 register range (address and length)
+> +- interrupts-extended : Specifies which contexts are connected to the PLIC,
+> +  with "-1" specifying that a context is not present.
+> +
+> +Example:
+> +
+> +	plic: interrupt-controller@c000000 {
+> +		#address-cells = <0>;
+> +		#interrupt-cells = <1>;
+> +		compatible = "riscv,plic0";
+> +		interrupt-controller;
+> +		interrupts-extended = <
+> +			&cpu0-intc 11
+> +			&cpu1-intc 11 &cpu1-intc 9
+> +			&cpu2-intc 11 &cpu2-intc 9
+> +			&cpu3-intc 11 &cpu3-intc 9
+> +			&cpu4-intc 11 &cpu4-intc 9>;
+> +		reg = <0xc000000 0x4000000>;
+> +		riscv,ndev = <10>;
+
+Not documented.
+
+> +	};
+> -- 
+> 2.18.0
+> 
