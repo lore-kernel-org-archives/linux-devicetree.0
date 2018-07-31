@@ -1,94 +1,66 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 2/3] clk: imx6q: optionally get CCM inputs via standard clock
- handles
-Date: Tue, 31 Jul 2018 12:20:08 +0200
-Message-ID: <20180731102009.6710-2-l.stach@pengutronix.de>
-References: <20180731102009.6710-1-l.stach@pengutronix.de>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v11 3/7] Bluetooth: btqca: Redefine qca_uart_setup() to
+ generic function.
+Date: Tue, 31 Jul 2018 15:50:57 +0530
+Message-ID: <c82dd36d4935a2fad015847a9fd49fc0@codeaurora.org>
+References: <20180727141320.25218-1-bgodavar@bgodavar-linux.qualcomm.com>
+ <20180727141320.25218-4-bgodavar@bgodavar-linux.qualcomm.com>
+ <20180730183708.GA68975@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180731102009.6710-1-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180730183708.GA68975@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Balakrishna Godavarthi <bgodavar@bgodavar-linux.qualcomm.com>, marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When specifying external clock inputs to the CCM the current code
-requires the clocks to be in a "clocks" child node of the DT root.
-This is not really conformant with DT best practices.
+Hi Matthias,
 
-To avoid the need to deviate from those best practices, allow the
-clock inputs to be specifies via standard clock handles. This is
-in line with how drivers of the later CCM driver revisions on
-newer i.MX SoCs handle this.
+On 2018-07-31 00:07, Matthias Kaehlcke wrote:
+> On Fri, Jul 27, 2018 at 07:43:16PM +0530, Balakrishna Godavarthi wrote:
+>> From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> 
+>> Redefinition of qca_uart_setup will help future Qualcomm Bluetooth
+>> SoC, to use the same function instead of duplicating the function.
+>> Added new arguments soc_type and soc_ver to the functions.
+>> 
+>> These arguments will help to decide type of firmware files
+>> to be loaded into Bluetooth chip.
+>> soc_type holds the Bluetooth chip connected to APPS processor.
+>> soc_ver holds the Bluetooth chip version.
+>> 
+>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>> Changes in v11:
+>>       * added error log in qca_read_soc_version() instead of 
+>> qca_setup()
+>> ---
+>>  drivers/bluetooth/btqca.c   | 23 ++++++++++-------------
+>>  drivers/bluetooth/btqca.h   | 13 +++++++++++--
+>>  drivers/bluetooth/hci_qca.c | 10 +++++++++-
+>>  3 files changed, 30 insertions(+), 16 deletions(-)
+>> 
+>> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+>> index c5cf9cab438a..b2163bf75b95 100644
+>> --- a/drivers/bluetooth/btqca.c
+>> +++ b/drivers/bluetooth/btqca.c
+>> @@ -85,6 +85,12 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 
+>> *soc_version)
+>>  out:
+>>  	kfree_skb(skb);
+>> 
+>> +	if (!err && *soc_version == 0)
+>> +		err = -EILSEQ;
+> 
+> nit: better do this right after assigning SoC version. No need to
+> respin the series just for this though.
 
-As we can't retroactively change the DT binding, allow this as an
-option with a fallback to the old way of how this has been handled.
+[Bala]: will update.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
- .../devicetree/bindings/clock/imx6q-clock.txt |  5 +++++
- drivers/clk/imx/clk-imx6q.c                   | 22 ++++++++++++++-----
- 2 files changed, 22 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-index a45ca67a9d5f..ce6aa9920c05 100644
---- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-@@ -6,6 +6,11 @@ Required properties:
- - interrupts: Should contain CCM interrupt
- - #clock-cells: Should be <1>
- 
-+Optional properties:
-+- clocks: list of clock specifiers, must contain an entry for each entry
-+          in clock-names
-+- clock-names: valid names are "osc", "ckil", "ckil", "anaclk1" and "anaclk2"
-+
- The clock consumer should specify the desired clock by having the clock
- ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
- for the full list of i.MX6 Quad and DualLite clock IDs.
-diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
-index 9059a369ae95..f64f0fe76658 100644
---- a/drivers/clk/imx/clk-imx6q.c
-+++ b/drivers/clk/imx/clk-imx6q.c
-@@ -421,12 +421,24 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
- 	int ret;
- 
- 	clk[IMX6QDL_CLK_DUMMY] = imx_clk_fixed("dummy", 0);
--	clk[IMX6QDL_CLK_CKIL] = imx_obtain_fixed_clock("ckil", 0);
--	clk[IMX6QDL_CLK_CKIH] = imx_obtain_fixed_clock("ckih1", 0);
--	clk[IMX6QDL_CLK_OSC] = imx_obtain_fixed_clock("osc", 0);
-+	clk[IMX6QDL_CLK_CKIL] = of_clk_get_by_name(ccm_node, "ckil");
-+	if (IS_ERR(clk[IMX6QDL_CLK_CKIL]))
-+		clk[IMX6QDL_CLK_CKIL] = imx_obtain_fixed_clock("ckil", 0);
-+	clk[IMX6QDL_CLK_CKIH] = of_clk_get_by_name(ccm_node, "ckih1");
-+	if (IS_ERR(clk[IMX6QDL_CLK_CKIH]))
-+		clk[IMX6QDL_CLK_CKIH] = imx_obtain_fixed_clock("ckih1", 0);
-+	clk[IMX6QDL_CLK_OSC] = of_clk_get_by_name(ccm_node, "osc");
-+	if (IS_ERR(clk[IMX6QDL_CLK_OSC]))
-+		clk[IMX6QDL_CLK_OSC] = imx_obtain_fixed_clock("osc", 0);
-+
- 	/* Clock source from external clock via CLK1/2 PADs */
--	clk[IMX6QDL_CLK_ANACLK1] = imx_obtain_fixed_clock("anaclk1", 0);
--	clk[IMX6QDL_CLK_ANACLK2] = imx_obtain_fixed_clock("anaclk2", 0);
-+	clk[IMX6QDL_CLK_ANACLK1] = of_clk_get_by_name(ccm_node, "anaclk1");
-+	if (IS_ERR(clk[IMX6QDL_CLK_ANACLK1]))
-+		clk[IMX6QDL_CLK_ANACLK1] = imx_obtain_fixed_clock("anaclk1", 0);
-+
-+	clk[IMX6QDL_CLK_ANACLK2] = of_clk_get_by_name(ccm_node, "anaclk2");
-+	if (IS_ERR(clk[IMX6QDL_CLK_ANACLK2]))
-+		clk[IMX6QDL_CLK_ANACLK2] = imx_obtain_fixed_clock("anaclk2", 0);
- 
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx6q-anatop");
- 	anatop_base = base = of_iomap(np, 0);
 -- 
-2.18.0
+Regards
+Balakrishna.
