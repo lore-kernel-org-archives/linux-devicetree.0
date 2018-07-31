@@ -1,49 +1,113 @@
 From: Tony Xie <tony.xie@rock-chips.com>
-Subject: [PATCH 0/5] support a new type of PMIC，including two chips(rk817 and rk809)
-Date: Tue, 31 Jul 2018 14:56:28 +0800
-Message-ID: <1533020197-754-1-git-send-email-tony.xie@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 3/5] dt-bindings: mfd: rk808: Add binding informations for RK809 and RK817.
+Date: Tue, 31 Jul 2018 14:56:32 +0800
+Message-ID: <1533020197-754-5-git-send-email-tony.xie@rock-chips.com>
+References: <1533020197-754-1-git-send-email-tony.xie@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533020197-754-1-git-send-email-tony.xie@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de
-Cc: linux-rtc@vger.kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, tony.xie@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, sboyd@kernel.org, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, xsf@rock-chips.com, linux-rockchip@lists.infradead.org, broonie@kernel.org, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chenjh@rock-chips.com
+Cc: broonie@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-TW9zdCBvZiBmdW5jdGlvbnMgYW5kIHJlZ2lzdGVycyBvZiB0aGUgcms4MTcgYW5kIHJrODA4IGFy
-ZSB0aGUgc2FtZSwKc28gdGhleSBjYW4gc2hhcmUgYWxsbW9zdCBhbGwgY29kZXMuCgpUaGVpciBz
-cGVjaWZpY2F0aW9ucyBhcmUgYXMgZm9sbG93c++8mgogIDEpIFRoZSBSSzgwOSBhbmQgUks4MDkg
-Y29uc2lzdCBvZiA1IERDRENzLCA5IExET3MgYW5kIGhhdmUgdGhlIHNhbWUgcmVnaXN0ZXJzCiAg
-ICAgZm9yIHRoZXNlIGNvbXBvbmVudHMgZXhjZXB0IGRjZGM1LgogIDIpIFRoZSBkY2RjNSBpcyBh
-IGJvb3N0IGRjZGMgZm9yIFJLODE3IGFuZCBpcyBhIGJ1Y2sgZm9yIFJLODA5LgogIDMpIFRoZSBS
-SzgxNyBoYXMgb25lIHN3aXRjaCBidXQgVGhlIFJrODA5IGhhcyB0d28uCgpUb255IFhpZSAoNSk6
-CiAgbWZkOiByazgwODogQWRkIFJLODE3IGFuZCBSSzgwOSBzdXBwb3J0CiAgcmVndWxhdG9yOiBy
-azgwODogYWRkIFJLODA5IGFuZCBSSzgxNyBzdXBwb3J0LgogIGR0LWJpbmRpbmdzOiBtZmQ6IHJr
-ODA4OiBBZGQgYmluZGluZyBpbmZvcm1hdGlvbnMgZm9yIFJLODA5IGFuZCBSSzgxNy4KICBSVEM6
-IFJLODA4OiBhZGQgUks4MDkgYW5kIFJLODE3IHN1cHBvcnQuCiAgY2xrOiBSSzgwODogYWRkIFJL
-ODA5IGFuZCBSSzgxNyBzdXBwb3J0LgoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZmQvcms4MDgudHh0IHwgIDU1ICsrCiBkcml2ZXJzL2Nsay9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgNiArLQogZHJpdmVycy9jbGsvY2xrLXJrODA4LmMgICAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgNjIgKystCiBkcml2ZXJzL21mZC9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgNiArLQogZHJpdmVycy9tZmQvcms4MDguYyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAyMTggKysrKysrKy0KIGRyaXZlcnMvcmVndWxhdG9yL0tj
-b25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICstCiBkcml2ZXJzL3JlZ3VsYXRvci9y
-azgwOC1yZWd1bGF0b3IuYyAgICAgICAgICAgICB8IDYzMyArKysrKysrKysrKysrKysrKysrKysr
-Ky0KIGRyaXZlcnMvcnRjL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA0
-ICstCiBkcml2ZXJzL3J0Yy9ydGMtcms4MDguYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICA2
-OCArKy0KIGluY2x1ZGUvbGludXgvbWZkL3JrODA4LmggICAgICAgICAgICAgICAgICAgICAgIHwg
-MTc1ICsrKysrKysKIGtlcm5lbC9yZWJvb3QuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgICAxICsKIDExIGZpbGVzIGNoYW5nZWQsIDEyMDMgaW5zZXJ0aW9ucygrKSwgMjkgZGVs
-ZXRpb25zKC0pCgotLSAKMS45LjEKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Add device tree bindings documentation for Rockchip's RK809 & RK817 PMIC.
+
+Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+---
+ Documentation/devicetree/bindings/mfd/rk808.txt | 55 +++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+index 91b6522..31c9f3d 100644
+--- a/Documentation/devicetree/bindings/mfd/rk808.txt
++++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+@@ -3,11 +3,15 @@ RK8XX Power Management Integrated Circuit
+ The rk8xx family current members:
+ rk805
+ rk808
++rk809
++rk817
+ rk818
+ 
+ Required properties:
+ - compatible: "rockchip,rk805"
+ - compatible: "rockchip,rk808"
++- compatible: "rockchip,rk809"
++- compatible: "rockchip,rk817"
+ - compatible: "rockchip,rk818"
+ - reg: I2C slave address
+ - interrupt-parent: The parent interrupt controller.
+@@ -46,6 +50,28 @@ Optional RK808 properties:
+   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
+   very quickly with no slow ramp time.
+ 
++Optional RK809 properties:
++- vcc1-supply:  The input supply for DCDC_REG1
++- vcc2-supply:  The input supply for DCDC_REG2
++- vcc3-supply:  The input supply for DCDC_REG3
++- vcc4-supply:  The input supply for DCDC_REG4
++- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
++- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
++- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
++- vcc8-supply:  The input supply for SWITCH_REG1
++- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
++
++Optional RK817 properties:
++- vcc1-supply:  The input supply for DCDC_REG1
++- vcc2-supply:  The input supply for DCDC_REG2
++- vcc3-supply:  The input supply for DCDC_REG3
++- vcc4-supply:  The input supply for DCDC_REG4
++- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
++- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
++- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
++- vcc8-supply:  The input supply for BOOST
++- vcc9-supply:  The input supply for OTG_SWITCH
++
+ Optional RK818 properties:
+ - vcc1-supply:  The input supply for DCDC_REG1
+ - vcc2-supply:  The input supply for DCDC_REG2
+@@ -87,6 +113,28 @@ number as described in RK808 datasheet.
+ 	- SWITCH_REGn
+ 		- valid values for n are 1 to 2
+ 
++Following regulators of the RK809 PMIC block are supported. Note that
++the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
++number as described in RK808 datasheet.
++
++	- DCDC_REGn
++		- valid values for n are 1 to 5.
++	- LDO_REGn
++		- valid values for n are 1 to 9.
++	- SWITCH_REGn
++		- valid values for n are 1 to 2.
++
++Following regulators of the RK817 PMIC block are supported. Note that
++the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
++number as described in RK818 datasheet.
++
++	- DCDC_REGn
++		- valid values for n are 1 to 4.
++	- LDO_REGn
++		- valid values for n are 1 to 9.
++	- BOOST
++	- OTG_SWITCH
++
+ Following regulators of the RK818 PMIC block are supported. Note that
+ the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+ number as described in RK818 datasheet.
+@@ -99,6 +147,13 @@ number as described in RK818 datasheet.
+ 	- HDMI_SWITCH
+ 	- OTG_SWITCH
+ 
++There are three pins needed to config, named "gpio_ts" "gpio_gt" "gpio_slp".
++	The gpio_gt and gpio_ts pins support the gpio function.
++	The gpio_slp pin is for controlling the pmic states, as below:
++		- reset
++		- power down
++		- sleep
++
+ Standard regulator bindings are used inside regulator subnodes. Check
+   Documentation/devicetree/bindings/regulator/regulator.txt
+ for more details
+-- 
+1.9.1
