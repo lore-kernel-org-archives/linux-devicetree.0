@@ -1,57 +1,69 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v7 1/4] remoteproc/davinci: use the reset framework
-Date: Tue, 31 Jul 2018 15:34:33 +0530
-Message-ID: <c3484965-1efe-2425-86e0-ecb78ea189dd@ti.com>
-References: <20180621073706.22812-1-brgl@bgdev.pl>
- <20180621073706.22812-2-brgl@bgdev.pl> <20180731042539.GE5090@builder>
- <CAMRc=MdwCruRZ_EQ3Pzq-=HdhiA6pfSZczRKMa5i9Rju0JgHig@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Can Guo <cang@codeaurora.org>
+Subject: [PATCH v8 0/5] Support for Qualcomm UFS QMP PHY on SDM845
+Date: Tue, 31 Jul 2018 18:09:09 +0800
+Message-ID: <20180731100914.19856-1-cang@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=MdwCruRZ_EQ3Pzq-=HdhiA6pfSZczRKMa5i9Rju0JgHig@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Can Guo <cang@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Bjorn,
+This patch series adds support for UFS QMP PHY on SDM845 and the
+compatible string for it. This patch series depends on the current
+proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
+the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
+rebased on updated pipe_clk initialization sequence [3]. This series
+can only be merged once the dependent patches do.
+[1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
+[2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
+[3] https://patchwork.kernel.org/patch/10376551/
 
-On Tuesday 31 July 2018 01:25 PM, Bartosz Golaszewski wrote:
-> 2018-07-31 6:25 GMT+02:00 Bjorn Andersson <bjorn.andersson@linaro.org>:
->> On Thu 21 Jun 00:37 PDT 2018, Bartosz Golaszewski wrote:
->>
->>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>
->>> Switch to using the reset framework instead of handcoded reset routines
->>> we used so far.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>> Reviewed-by: Sekhar Nori <nsekhar@ti.com>
->>> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
->>
->> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>
-> 
-> Sekhar,
-> 
-> can you take this through your tree or is it already too late?
+Changes since v7:
+- Add one new change to update UFS PHY power on sequence
+- Incorporated review comments from Evan, Vivek and Manu.
 
-The last -rc is already tagged and I am not sure ARM-SoC will be open to
-new stuff now (there is also a bit of lag after I send my pull request).
+Changes since v6:
+- Add one new change to clean up some structs and field
+- Updates the PHY power control sequence.
+- Incorporated review comments from Vivek and Manu.
 
-Is this something you can take in your tree along with Suman's patch?
+Changes since v5:
+- Updates the PHY power control sequence.
+- Updates UFS PHY power on condition check.
 
-There are no build dependencies with my tree, so it will be safe to
-queue from your tree. It will be great if this can be merged late in the
-cycle though to avoid breaking remoteproc even for short while during
-the merge window.
+Changes since v4:
+- Adds 'ref_aux' clock back to SDM845 UFS PHY clock list.
+- Power on PHY before serdes configuration starts.
+- Updates the UFS PHY initialization sequence.
+- Updates a few UFS PHY registers.
+- Incorporated review comments from Vivek and Manu.
 
-Or if you okay with it, it will be safest to send it soon after
-v4.19-rc1 is tagged.
+Changes since v3:
+- Incorporated review comments from Vivek and Rob.
 
-Let me know.
+Changes since v2:
+- Incorporated review comments from Vivek and Rob.
+- Remove "ref_aux" from sdm845 ufs phy clock list structure.
 
-Thanks,
-Sekhar
+Changes since v1:
+- Incorporated review comments from Vivek and Manu.
+- Update the commit title of patch 2.
+
+
+Can Guo (5):
+  phy: Update PHY power control sequence
+  phy: General struct and field cleanup
+  phy: Add QMP phy based UFS phy support for sdm845
+  scsi: ufs: Power on phy after it is initialized
+  dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   4 +-
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 216 +++++++++++++++++++--
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |  15 ++
+ drivers/scsi/ufs/ufs-qcom.c                        |   4 +-
+ drivers/scsi/ufs/ufs-qcom.h                        |   1 +
+ 5 files changed, 219 insertions(+), 21 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
