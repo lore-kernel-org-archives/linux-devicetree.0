@@ -1,74 +1,124 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: dw: document Microsemi integration" to the spi tree
-Date: Tue, 31 Jul 2018 15:41:42 +0100 (BST)
-Message-ID: <20180731144142.D81C811242BD@debutante.sirena.org.uk>
-References: <20180731143855.7131-2-alexandre.belloni@bootlin.com>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v11 7/7] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth chip wcn3990
+Date: Tue, 31 Jul 2018 20:13:52 +0530
+Message-ID: <8a8c786f2c668681032a59888ffc020d@codeaurora.org>
+References: <20180727141320.25218-1-bgodavar@bgodavar-linux.qualcomm.com>
+ <20180727141320.25218-8-bgodavar@bgodavar-linux.qualcomm.com>
+ <20180730205502.GC68975@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731143855.7131-2-alexandre.belloni@bootlin.com>
+In-Reply-To: <20180730205502.GC68975@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>Rob Herring <robh+dt@kernel.org>linux-spi@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Matthias,
 
-   spi: dw: document Microsemi integration
+On 2018-07-31 02:25, Matthias Kaehlcke wrote:
+> On Fri, Jul 27, 2018 at 07:43:20PM +0530, Balakrishna Godavarthi wrote:
+>> From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> 
+>> Add support to set voltage/current of various regulators
+>> to power up/down Bluetooth chip wcn3990.
+>> 
+>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> ---
+>> Changes in v11:
+>>     * removed support to read regulator currents from dts.
+>>     * updated review comments.
+> 
+> Updated regulator voltage ranges?
+> 
+>> +static int qca_wcn3990_init(struct hci_uart *hu, u32 *soc_ver)
+>> +{
+>> +	struct hci_dev *hdev = hu->hdev;
+>> +	int i, ret;
+>> +
+>> +	/* wcn3990 is a discrete Bluetooth chip connected to SoC.
+>> +	 * sometimes we will face communication synchronization issues,
+>> +	 * like reading version command timeouts. In which HCI_SETUP fails,
+>> +	 * to overcome these issues, we try to communicate by performing an
+>> +	 * cold power off and on.
+>> +	 */
+>> +	for (i = 0; i <= 3; i++) {
+>> +		ret = qca_power_setup(hu, true);
+>> +		if (ret)
+>> +			goto regs_off;
+>> +
+>> +		/* Forcefully enable wcn3990 to enter in to boot mode. */
+>> +		host_set_baudrate(hu, 2400);
+>> +		ret = qca_send_power_pulse(hdev, QCA_WCN3990_POWEROFF_PULSE);
+>> +		if (ret)
+>> +			goto regs_off;
+>> +
+>> +		qca_set_speed(hu, QCA_INIT_SPEED);
+>> +		ret = qca_send_power_pulse(hdev, QCA_WCN3990_POWERON_PULSE);
+>> +		if (ret)
+>> +			goto regs_off;
+>> +
+>> +		/* Wait for 100 ms for SoC to boot */
+>> +		msleep(100);
+>> +
+>> +		/* Now the device is in ready state to communicate with host.
+>> +		 * To sync host with device we need to reopen port.
+>> +		 * Without this, we will have RTS and CTS synchronization
+>> +		 * issues.
+>> +		 */
+>> +		serdev_device_close(hu->serdev);
+>> +		ret = serdev_device_open(hu->serdev);
+>> +		if (ret) {
+>> +			bt_dev_err(hu->hdev, "failed to open port");
+>> +			break;
+>> +		}
+>> +
+>> +		hci_uart_set_flow_control(hu, false);
+>> +		ret = qca_read_soc_version(hdev, soc_ver);
+>> +
+>> +		if (!ret)
+>> +			break;
+>> +
+>> +regs_off:
+>> +		bt_dev_err(hdev, "retrying to establish communication: %d",
+>> +			   i + 1);
+>> +		qca_power_shutdown(hdev);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+> 
+> I'm still not convinced that the retry loop is needed/desirable, I
+> commented on the discussion on v10.
+> 
+[Bala] : replied on v10 patch.
 
-has been applied to the spi tree at
+>> +static const struct qca_vreg_data qca_soc_data = {
+>> +	.soc_type = QCA_WCN3990,
+>> +	.vregs = (struct qca_vreg []) {
+>> +		{ "vddio",   1800000, 1900000,  15000  },
+>> +		{ "vddxo",   1800000, 1900000,  80000  },
+>> +		{ "vddrf",   1300000, 1350000,  300000 },
+>> +		{ "vddch0",  3300000, 3400000,  450000 },
+>> +	},
+> 
+> In v10 this was:
+> 
+> 		{ "vddio",   1800000, 1800000,  15000  },
+> 		{ "vddxo",   1800000, 1800000,  80000  },
+> 		{ "vddrf",   1304000, 1304000,  300000 },
+> 		{ "vddch0",  3000000, 3312000,  450000 },
+> 
+> I don't have concerns about the new voltage ranges, but you should
+> mention such changes in the changelog, ideally with a brief
+> description why the change was made.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+[Bala]: I missed to add, I just updated with latest values from 
+datasheet.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From f09757ab401ff332030f8e3a41cec6a44e6d9461 Mon Sep 17 00:00:00 2001
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Date: Tue, 31 Jul 2018 16:38:53 +0200
-Subject: [PATCH] spi: dw: document Microsemi integration
-
-The integration of the Designware SPI controller on Microsemi SoCs requires
-an extra register set to be able to give the IP control of the SPI
-interface.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-index 204b311e0400..642d3fb1ef85 100644
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-@@ -1,8 +1,10 @@
- Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
- 
- Required properties:
--- compatible : "snps,dw-apb-ssi"
--- reg : The register base for the controller.
-+- compatible : "snps,dw-apb-ssi" or "mscc,<soc>-spi", where soc is "ocelot" or
-+  "jaguar2"
-+- reg : The register base for the controller. For "mscc,<soc>-spi", a second
-+  register set is required (named ICPU_CFG:SPI_MST)
- - interrupts : One interrupt, used by the controller.
- - #address-cells : <1>, as required by generic SPI binding.
- - #size-cells : <0>, also as required by generic SPI binding.
 -- 
-2.18.0
+Regards
+Balakrishna.
