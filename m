@@ -1,14 +1,24 @@
 From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for Xilinx zynqmp
-Date: Tue, 31 Jul 2018 10:02:57 +0000 (UTC)
-Message-ID: <20180801100457.25614-2-nava.manne@xilinx.com>
+Subject: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for Xilinx
+ zynqmp
+Date: Tue, 31 Jul 2018 10:03:09 +0000 (UTC)
+Message-ID: <20180801100457.25614-2-nava.manne__36402.645862154$1533031389$gmane$org@xilinx.com>
 References: <20180801100457.25614-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Date: Wed, 1 Aug 2018 15:34:57 +0530
 In-Reply-To: <20180801100457.25614-1-nava.manne@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, atull@opensource.altera.com, moritz.fischer@ettus.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, appanad@xilinx.com, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
