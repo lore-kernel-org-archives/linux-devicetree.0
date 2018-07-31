@@ -1,250 +1,233 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 4/5] RTC: RK808: add RK809 and RK817 support.
-Date: Tue, 31 Jul 2018 10:10:13 +0200
-Message-ID: <20180731081013.GS28585@piout.net>
-References: <1533023850-29004-1-git-send-email-tony.xie@rock-chips.com>
- <1533023850-29004-5-git-send-email-tony.xie@rock-chips.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
+ coherent DMA mask)
+Date: Tue, 31 Jul 2018 10:19:27 +0200
+Message-ID: <39fa11ce4b7dd151d98868f375baf818@agner.ch>
+References: <CAJKOXPeaguNxRr7pCArJ5Db4tS6Kr5BDheCxskY+vd0dUN+0GQ@mail.gmail.com>
+ <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com>
+ <20180727140448.GA29001@lst.de> <20180728165820.GA5731@roeck-us.net>
+ <45f7fc82-fb9c-e666-4ada-c5338d2c1c96@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1533023850-29004-5-git-send-email-tony.xie@rock-chips.com>
+In-Reply-To: <45f7fc82-fb9c-e666-4ada-c5338d2c1c96@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Xie <tony.xie@rock-chips.com>
-Cc: heiko@sntech.de, broonie@kernel.org, lee.jones@linaro.org, a.zummo@towertech.it, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Christoph Hellwig <hch@lst.de>, Krzysztof Kozlowski <krzk@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-I insist this must be a lowercase "rtc: rk808:". There has not been a
-single upper case RTC in a subject since 2011.
-
-
-On 31/07/2018 15:57:29+0800, Tony Xie wrote:
-> RK809 and RK817 are power management IC chips for multimedia products.
-> Most of their functions and registers are same, including the rtc.
+On 30.07.2018 16:38, Robin Murphy wrote:
+> On 28/07/18 17:58, Guenter Roeck wrote:
+>> On Fri, Jul 27, 2018 at 04:04:48PM +0200, Christoph Hellwig wrote:
+>>> On Fri, Jul 27, 2018 at 03:18:14PM +0200, Krzysztof Kozlowski wrote:
+>>>> On 27 July 2018 at 15:11, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On today's next, the bisect pointed commit
+>>>>> ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d as fault for my boot failures
+>>>>> with NFSv4 root on Toradex Colibri VF50 (Iris carrier board).
+>>>>>
+>>>>> Author: Robin Murphy <robin.murphy@arm.com>
+>>>>> Date:   Mon Jul 23 23:16:12 2018 +0100
+>>>>>      OF: Don't set default coherent DMA mask
+>>>>>
+>>>>> Board: Toradex Colibri VF50 (NXP VF500, Cortex A5, serial configured
+>>>>> with DMA) on Iris Carrier.
+>>>>>
+>>>>> It looks like problem with Freescale Ethernet driver:
+>>>>> [   15.458477] fsl-edma 40018000.dma-controller: coherent DMA mask is unset
+>>>>> [   15.465284] fsl-lpuart 40027000.serial: Cannot prepare cyclic DMA
+>>>>> [   15.472086] Root-NFS: no NFS server address
+>>>>> [   15.476359] VFS: Unable to mount root fs via NFS, trying floppy.
+>>>>> [   15.484228] VFS: Cannot open root device "nfs" or
+>>>>> unknown-block(2,0): error -6
+>>>>> [   15.491664] Please append a correct "root=" boot option; here are
+>>>>> the available partitions:
+>>>>> [   15.500188] 0100           16384 ram0
+>>>>> [   15.500200]  (driver?)
+>>>>> [   15.506406] Kernel panic - not syncing: VFS: Unable to mount root
+>>>>> fs on unknown-block(2,0)
+>>>>> [   15.514747] ---[ end Kernel panic - not syncing: VFS: Unable to
+>>>>> mount root fs on unknown-block(2,0) ]---
+>>>>>
+>>>>> Attached - defconfig and full boot log.
+>>>>>
+>>>>> Any hints?
+>>>>> Let me know if you need any more information.
+>>>>
+>>>> My Exynos boards also fail to boot on missing network:
+>>>> https://krzk.eu/#/builders/21/builds/799/steps/10/logs/serial0
+>>>>
+>>>> As expected there are plenty of "DMA mask not set" warnings... and
+>>>> later dwc3 driver fails with:
+>>>>      dwc3: probe of 12400000.dwc3 failed with error -12
+>>>> which is probably the answer why LAN attached to USB is not present.
+>>>
+>>> Looks like all the drivers failed to set a dma mask and were lucky.
+>>
+>> I would call it a serious regression. Also, no longer setting a default
+>> coherent DMA mask is a quite substantial behavioral change, especially
+>> if and since the code worked just fine up to now.
 > 
-> Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-> ---
->  drivers/rtc/Kconfig     |  4 +--
->  drivers/rtc/rtc-rk808.c | 68 +++++++++++++++++++++++++++++++++++++++----------
->  2 files changed, 56 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index a2ba5db..1aaf935 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -371,11 +371,11 @@ config RTC_DRV_MAX77686
->  	  will be called rtc-max77686.
->  
->  config RTC_DRV_RK808
-> -	tristate "Rockchip RK805/RK808/RK818 RTC"
-> +	tristate "Rockchip RK805/RK808/RK809/RK817/RK818 RTC"
->  	depends on MFD_RK808
->  	help
->  	  If you say yes here you will get support for the
-> -	  RTC of RK805, RK808 and RK818 PMIC.
-> +	  RTC of RK805, RK809 and RK817, RK808 and RK818 PMIC.
->  
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rk808-rtc.
-> diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
-> index 739c0d4..5bacdaf 100644
-> --- a/drivers/rtc/rtc-rk808.c
-> +++ b/drivers/rtc/rtc-rk808.c
-> @@ -50,9 +50,18 @@
->  #define NUM_TIME_REGS	(RK808_WEEKS_REG - RK808_SECONDS_REG + 1)
->  #define NUM_ALARM_REGS	(RK808_ALARM_YEARS_REG - RK808_ALARM_SECONDS_REG + 1)
->  
-> +struct rk_rtc_compat_reg {
-> +	unsigned int ctrl_reg;
-> +	unsigned int status_reg;
-> +	unsigned int alarm_seconds_reg;
-> +	unsigned int int_reg;
-> +	unsigned int seconds_reg;
-> +};
-> +
->  struct rk808_rtc {
->  	struct rk808 *rk808;
->  	struct rtc_device *rtc;
-> +	struct rk_rtc_compat_reg *creg;
->  	int irq;
->  };
->  
-> @@ -101,7 +110,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
->  	int ret;
->  
->  	/* Force an update of the shadowed registers right now */
-> -	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-> +	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
->  				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
->  				 BIT_RTC_CTRL_REG_RTC_GET_TIME);
->  	if (ret) {
-> @@ -115,7 +124,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
->  	 * 32khz. If we clear the GET_TIME bit here, the time of i2c transfer
->  	 * certainly more than 31.25us: 16 * 2.5us at 400kHz bus frequency.
->  	 */
-> -	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-> +	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
->  				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
->  				 0);
->  	if (ret) {
-> @@ -123,7 +132,7 @@ static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
->  		return ret;
->  	}
->  
-> -	ret = regmap_bulk_read(rk808->regmap, RK808_SECONDS_REG,
-> +	ret = regmap_bulk_read(rk808->regmap, rk808_rtc->creg->seconds_reg,
->  			       rtc_data, NUM_TIME_REGS);
->  	if (ret) {
->  		dev_err(dev, "Failed to bulk read rtc_data: %d\n", ret);
-> @@ -166,7 +175,7 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
->  	rtc_data[6] = bin2bcd(tm->tm_wday);
->  
->  	/* Stop RTC while updating the RTC registers */
-> -	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-> +	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
->  				 BIT_RTC_CTRL_REG_STOP_RTC_M,
->  				 BIT_RTC_CTRL_REG_STOP_RTC_M);
->  	if (ret) {
-> @@ -174,14 +183,14 @@ static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
->  		return ret;
->  	}
->  
-> -	ret = regmap_bulk_write(rk808->regmap, RK808_SECONDS_REG,
-> +	ret = regmap_bulk_write(rk808->regmap, rk808_rtc->creg->seconds_reg,
->  				rtc_data, NUM_TIME_REGS);
->  	if (ret) {
->  		dev_err(dev, "Failed to bull write rtc_data: %d\n", ret);
->  		return ret;
->  	}
->  	/* Start RTC again */
-> -	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-> +	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
->  				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
->  	if (ret) {
->  		dev_err(dev, "Failed to update RTC control: %d\n", ret);
-> @@ -199,8 +208,13 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
->  	uint32_t int_reg;
->  	int ret;
->  
-> -	ret = regmap_bulk_read(rk808->regmap, RK808_ALARM_SECONDS_REG,
-> +	ret = regmap_bulk_read(rk808->regmap,
-> +			       rk808_rtc->creg->alarm_seconds_reg,
->  			       alrm_data, NUM_ALARM_REGS);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to read RTC alarm date REG: %d\n", ret);
-> +		return ret;
-> +	}
->  
->  	alrm->time.tm_sec = bcd2bin(alrm_data[0] & SECONDS_REG_MSK);
->  	alrm->time.tm_min = bcd2bin(alrm_data[1] & MINUTES_REG_MAK);
-> @@ -210,7 +224,7 @@ static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
->  	alrm->time.tm_year = (bcd2bin(alrm_data[5] & YEARS_REG_MSK)) + 100;
->  	rockchip_to_gregorian(&alrm->time);
->  
-> -	ret = regmap_read(rk808->regmap, RK808_RTC_INT_REG, &int_reg);
-> +	ret = regmap_read(rk808->regmap, rk808_rtc->creg->int_reg, &int_reg);
->  	if (ret) {
->  		dev_err(dev, "Failed to read RTC INT REG: %d\n", ret);
->  		return ret;
-> @@ -231,7 +245,7 @@ static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
->  	struct rk808 *rk808 = rk808_rtc->rk808;
->  	int ret;
->  
-> -	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
-> +	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
->  				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M, 0);
->  
->  	return ret;
-> @@ -242,7 +256,7 @@ static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
->  	struct rk808 *rk808 = rk808_rtc->rk808;
->  	int ret;
->  
-> -	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
-> +	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->int_reg,
->  				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M,
->  				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
->  
-> @@ -274,7 +288,8 @@ static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
->  	alrm_data[4] = bin2bcd(alrm->time.tm_mon + 1);
->  	alrm_data[5] = bin2bcd(alrm->time.tm_year - 100);
->  
-> -	ret = regmap_bulk_write(rk808->regmap, RK808_ALARM_SECONDS_REG,
-> +	ret = regmap_bulk_write(rk808->regmap,
-> +				rk808_rtc->creg->alarm_seconds_reg,
->  				alrm_data, NUM_ALARM_REGS);
->  	if (ret) {
->  		dev_err(dev, "Failed to bulk write: %d\n", ret);
-> @@ -318,7 +333,7 @@ static irqreturn_t rk808_alarm_irq(int irq, void *data)
->  	struct i2c_client *client = rk808->i2c;
->  	int ret;
->  
-> -	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
-> +	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
->  			   RTC_STATUS_MASK);
->  	if (ret) {
->  		dev_err(&client->dev,
-> @@ -371,6 +386,22 @@ static int rk808_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(rk808_rtc_pm_ops,
->  	rk808_rtc_suspend, rk808_rtc_resume);
->  
-> +static struct rk_rtc_compat_reg rk808_creg = {
-> +	.ctrl_reg = RK808_RTC_CTRL_REG,
-> +	.status_reg = RK808_RTC_STATUS_REG,
-> +	.alarm_seconds_reg = RK808_ALARM_SECONDS_REG,
-> +	.int_reg = RK808_RTC_INT_REG,
-> +	.seconds_reg = RK808_SECONDS_REG,
-> +};
-> +
-> +static struct rk_rtc_compat_reg rk817_creg = {
-> +	.ctrl_reg = RK817_RTC_CTRL_REG,
-> +	.status_reg = RK817_RTC_STATUS_REG,
-> +	.alarm_seconds_reg = RK817_ALARM_SECONDS_REG,
-> +	.int_reg = RK817_RTC_INT_REG,
-> +	.seconds_reg = RK817_SECONDS_REG,
-> +};
-> +
->  static int rk808_rtc_probe(struct platform_device *pdev)
->  {
->  	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-> @@ -381,11 +412,20 @@ static int rk808_rtc_probe(struct platform_device *pdev)
->  	if (rk808_rtc == NULL)
->  		return -ENOMEM;
->  
-> +	switch (rk808->variant) {
-> +	case RK809_ID:
-> +	case RK817_ID:
-> +		rk808_rtc->creg = &rk817_creg;
-> +		break;
-> +	default:
-> +		rk808_rtc->creg = &rk808_creg;
-> +		break;
-> +	}
->  	platform_set_drvdata(pdev, rk808_rtc);
->  	rk808_rtc->rk808 = rk808;
->  
->  	/* start rtc running by default, and use shadowed timer. */
-> -	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-> +	ret = regmap_update_bits(rk808->regmap, rk808_rtc->creg->ctrl_reg,
->  				 BIT_RTC_CTRL_REG_STOP_RTC_M |
->  				 BIT_RTC_CTRL_REG_RTC_READSEL_M,
->  				 BIT_RTC_CTRL_REG_RTC_READSEL_M);
-> @@ -395,7 +435,7 @@ static int rk808_rtc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
-> +	ret = regmap_write(rk808->regmap, rk808_rtc->creg->status_reg,
->  			   RTC_STATUS_MASK);
->  	if (ret) {
->  		dev_err(&pdev->dev,
-> -- 
-> 1.9.1
-> 
+> To reiterate, that particular side-effect was an unintentional
+> oversight, and I was simply (un)lucky enough that none of the drivers
+> I did test depended on that default mask. Sorry for the blip; please
+> check whether it's now fixed in next-20180730 as it should be.
 > 
 
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Just for my understanding:
+
+Your first patch ("OF: Don't set default coherent DMA mask") sounded
+like that *not* setting default coherent DMA mask was intentionally.
+Since the commit message reads: "...the bus code has not initialised any
+default value" that was assuming that all bus code sets a default DMA
+mask which wasn't the case for "simple-bus".
+
+So I guess that is what ("of/platform: Initialise default DMA masks")
+makes up for in the typical device tree case ("simple-bus")?
+
+Now, since almost all drivers are inside a soc "simple-bus" and DMA mask
+is set again, can/should we rely on the coherent DMA mask set?
+
+Or is the expectation still that this is set on driver level too?
+
+It seems that many drivers were affected in the vf610 case (according to
+the log in Krzysztof initial message), e.g.
+[    0.237851] gpio-vf610 4004d000.gpio: DMA mask not set
+[    0.240304] fsl-ftm-pwm 40038000.pwm: DMA mask not set
+[    0.886031] fsl-lpuart 40028000.serial: DMA mask not set
+[    0.958600] vf610_nfc 400e0000.nand: DMA mask not set
+[    1.055900] fsl-dspi 4002d000.dspi1: DMA mask not set
+[    1.393539] fec 400d1000.ethernet: DMA mask not set
+
+--
+Stefan
+
+
+>> Crash when booting sam460ex attached below, as is a bisect log.
+> 
+> Nevertheless, like most of the others that came out of the woodwork,
+> that appears to be a crash due to a broken cleanup path down the line
+> from dma_alloc_coherent() returning NULL - that warrants fixing (or
+> just removing) in its own right, because cleanup code which has never
+> been tested and doesn't actually work is little more than a pointless
+> waste of space.
+> 
+> Robin.
+> 
+>>
+>> Guenter
+>>
+>> ---
+>> irq: type mismatch, failed to map hwirq-0 for interrupt-controller3!
+>> WARNING: CPU: 0 PID: 1 at ppc4xx_msi_probe+0x2dc/0x3b8
+>> Modules linked in:
+>> CPU: 0 PID: 1 Comm: swapper Not tainted 4.18.0-rc6-00010-gff33d1030a6c #1
+>> NIP:  c001c460 LR: c001c29c CTR: 00000000
+>> REGS: cf82db60 TRAP: 0700   Not tainted  (4.18.0-rc6-00010-gff33d1030a6c)
+>> MSR:  00029000 <CE,EE,ME>  CR: 24002028  XER: 00000000
+>>
+>> GPR00: c001c29c cf82dc10 cf828000 d1021000 d1021000 cf882108 cf82db78 00000000
+>> GPR08: 00000000 c0377ae4 00000000 1000051b 24002028 00000000 c00025e8 00000000
+>> GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 c0492380 0000004a
+>> GPR24: 00029000 0000000c 10000000 cf8de410 c0494d60 00029000 cf8bebc0 cf8de400
+>> NIP [c001c460] ppc4xx_msi_probe+0x2dc/0x3b8
+>> LR [c001c29c] ppc4xx_msi_probe+0x118/0x3b8
+>> Call Trace:
+>> [cf82dc10] [c001c29c] ppc4xx_msi_probe+0x118/0x3b8 (unreliable)
+>> [cf82dc70] [c0209fbc] platform_drv_probe+0x40/0x9c
+>> [cf82dc90] [c0208240] driver_probe_device+0x2a8/0x350
+>> [cf82dcc0] [c0206204] bus_for_each_drv+0x60/0xac
+>> [cf82dcf0] [c0207e88] __device_attach+0xe8/0x160
+>> [cf82dd20] [c02071e0] bus_probe_device+0xa0/0xbc
+>> [cf82dd40] [c02050c8] device_add+0x404/0x5c4
+>> [cf82dd90] [c0288978] of_platform_device_create_pdata+0x88/0xd8
+>> [cf82ddb0] [c0288b70] of_platform_bus_create+0x134/0x220
+>> [cf82de10] [c0288bcc] of_platform_bus_create+0x190/0x220
+>> [cf82de70] [c0288cf4] of_platform_bus_probe+0x98/0xec
+>> [cf82de90] [c0449650] __machine_initcall_canyonlands_ppc460ex_device_probe+0x38/0x54
+>> [cf82dea0] [c0002404] do_one_initcall+0x40/0x188
+>> [cf82df00] [c043daec] kernel_init_freeable+0x130/0x1d0
+>> [cf82df30] [c0002600] kernel_init+0x18/0x104
+>> [cf82df40] [c000c23c] ret_from_kernel_thread+0x14/0x1c
+>> Instruction dump:
+>> 3860000e 4bffa2a5 3860000f 7f44d378 4bffa299 4bfffe30 3860000e 4bffa28d
+>> 3860000f 7f24cb78 4bffa281 4bfffde4 <0fe00000> 81290000 2f890000 409efe6c
+>> ---[ end trace 8cf551077ecfc429 ]---
+>> ppc4xx-msi c10000000.ppc4xx-msi: coherent DMA mask is unset
+>> Unable to handle kernel paging request for data at address 0x00000000
+>> Faulting instruction address: 0xc001bff0
+>> Oops: Kernel access of bad area, sig: 11 [#1]
+>> BE Canyonlands
+>> Modules linked in:
+>> CPU: 0 PID: 1 Comm: swapper Tainted: G        W         4.18.0-rc6-00010-gff33d1030a6c #1
+>> NIP:  c001bff0 LR: c001c418 CTR: c01faa7c
+>> REGS: cf82db40 TRAP: 0300   Tainted: G        W          (4.18.0-rc6-00010-gff33d1030a6c)
+>> MSR:  00029000 <CE,EE,ME>  CR: 28002024  XER: 00000000
+>> DEAR: 00000000 ESR: 00000000
+>> GPR00: c001c418 cf82dbf0 cf828000 cf8de400 00000000 00000000 000000c4 000000c4
+>> GPR08: c0481ea4 00000000 00000000 000000c4 22002024 00000000 c00025e8 00000000
+>> GPR16: 00000000 00000000 00000000 00000000 00000000 00000000 c0492380 0000004a
+>> GPR24: 00029000 0000000c 00000000 cf8de410 c0494d60 c0494d60 cf8bebc0 00000001
+>> NIP [c001bff0] ppc4xx_of_msi_remove+0x48/0xa0
+>> LR [c001c418] ppc4xx_msi_probe+0x294/0x3b8
+>> Call Trace:
+>> [cf82dbf0] [00029000] 0x29000 (unreliable)
+>> [cf82dc10] [c001c418] ppc4xx_msi_probe+0x294/0x3b8
+>> [cf82dc70] [c0209fbc] platform_drv_probe+0x40/0x9c
+>> [cf82dc90] [c0208240] driver_probe_device+0x2a8/0x350
+>> [cf82dcc0] [c0206204] bus_for_each_drv+0x60/0xac
+>> [cf82dcf0] [c0207e88] __device_attach+0xe8/0x160
+>> [cf82dd20] [c02071e0] bus_probe_device+0xa0/0xbc
+>> [cf82dd40] [c02050c8] device_add+0x404/0x5c4
+>> [cf82dd90] [c0288978] of_platform_device_create_pdata+0x88/0xd8
+>> [cf82ddb0] [c0288b70] of_platform_bus_create+0x134/0x220
+>> [cf82de10] [c0288bcc] of_platform_bus_create+0x190/0x220
+>> [cf82de70] [c0288cf4] of_platform_bus_probe+0x98/0xec
+>> [cf82de90] [c0449650] __machine_initcall_canyonlands_ppc460ex_device_probe+0x38/0x54
+>> [cf82dea0] [c0002404] do_one_initcall+0x40/0x188
+>> [cf82df00] [c043daec] kernel_init_freeable+0x130/0x1d0
+>> [cf82df30] [c0002600] kernel_init+0x18/0x104
+>> [cf82df40] [c000c23c] ret_from_kernel_thread+0x14/0x1c
+>> Instruction dump:
+>> 90010024 813d0024 2f890000 83c30058 41bd0014 48000038 813d0024 7f89f800
+>> 409d002c 813e000c 57ea103a 3bff0001 <7c69502e> 2f830000 419effe0 4803b26d
+>> ---[ end trace 8cf551077ecfc42a ]---
+>>
+>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+>>
+>> ---
+>> # bad: [639d109b21f1413c54ca7042e40a57856e7679bb] Add linux-next specific files for 20180727
+>> # good: [d72e90f33aa4709ebecc5005562f52335e106a60] Linux 4.18-rc6
+>> git bisect start 'HEAD' 'v4.18-rc6'
+>> # bad: [7bc81125a936a25af28f2172b593bca390b0c539] Merge remote-tracking branch 'spi-nor/spi-nor/next'
+>> git bisect bad 7bc81125a936a25af28f2172b593bca390b0c539
+>> # bad: [659868e6488dbad1181ad21888521ff41ae45f65] Merge remote-tracking branch 'vfs/for-next'
+>> git bisect bad 659868e6488dbad1181ad21888521ff41ae45f65
+>> # bad: [453ff4bb24c3fa4af40995f2615ec22176e71500] Merge remote-tracking branch 'mvebu/for-next'
+>> git bisect bad 453ff4bb24c3fa4af40995f2615ec22176e71500
+>> # good: [ebc949ee3c7e28b6554f00fcdaf2c0c8aae54d90] Merge branch 'next/soc' into for-next
+>> git bisect good ebc949ee3c7e28b6554f00fcdaf2c0c8aae54d90
+>> # good: [fef31ecbe2ecbb518ad1db37282eb97ca6dd29b8] Merge remote-tracking branch 'leaks/leaks-next'
+>> git bisect good fef31ecbe2ecbb518ad1db37282eb97ca6dd29b8
+>> # good: [53b9c41f0d9c35e41ea884bae6ad4b6fadc59035] Merge branch 'next/drivers' into for-next
+>> git bisect good 53b9c41f0d9c35e41ea884bae6ad4b6fadc59035
+>> # bad: [cd67b2d4c0ca61f7e93e622dba0164fb176975b4] Merge remote-tracking branch 'arm-soc/for-next'
+>> git bisect bad cd67b2d4c0ca61f7e93e622dba0164fb176975b4
+>> # good: [a0c166140d2e63a069263b6d3c39a42c61749d96] Merge branch 'next/drivers' into for-next
+>> git bisect good a0c166140d2e63a069263b6d3c39a42c61749d96
+>> # bad: [e5e08751da47170e6a05c09364595ec1abad7cec] Merge remote-tracking branch 'arm/for-next'
+>> git bisect bad e5e08751da47170e6a05c09364595ec1abad7cec
+>> # good: [52e19c3c1eaf103c2eb4f764825136abcfea1538] Merge branches 'clkdev', 'fixes', 'misc' and 'spectre' into for-next
+>> git bisect good 52e19c3c1eaf103c2eb4f764825136abcfea1538
+>> # good: [e8d4162413ecbf3b3d1451808bdbd212cec8b70c] ACPI/IORT: Set bus DMA mask as appropriate
+>> git bisect good e8d4162413ecbf3b3d1451808bdbd212cec8b70c
+>> # good: [186e2e8cc462aed36cc6845c938547833377582f] ACPI/IORT: Don't set default coherent DMA mask
+>> git bisect good 186e2e8cc462aed36cc6845c938547833377582f
+>> # bad: [deff076d4ce359c2d83983a75765b4ac8f635d2f] Merge remote-tracking branch 'dma-mapping/for-next'
+>> git bisect bad deff076d4ce359c2d83983a75765b4ac8f635d2f
+>> # bad: [ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d] OF: Don't set default coherent DMA mask
+>> git bisect bad ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d
+>> # first bad commit: [ff33d1030a6ca87cea9a41e1a2ea7750a781ab3d] OF: Don't set default coherent DMA mask
+>>
