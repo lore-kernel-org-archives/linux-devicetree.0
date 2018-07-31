@@ -1,46 +1,25 @@
-Return-Path: <SRS0=r8rx=KJ=nxp.com=wen.he_1@kernel.org>
-From: Wen He <wen.he_1@nxp.com>
-Subject: [v7 6/7] arm64: dts: ls1046a: add qdma device tree nodes
-Date: Wed, 25 Jul 2018 19:29:18 +0800
-Message-Id: <20180725112919.31340-6-wen.he_1@nxp.com>
-In-Reply-To: <20180725112919.31340-1-wen.he_1@nxp.com>
-References: <20180725112919.31340-1-wen.he_1@nxp.com>
-To: vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, leoyang.li@nxp.com, jiafei.pan@nxp.com, jiaheng.fan@nxp.com, wen.he_1@nxp.com
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 31 Jul 2018 16:14:04 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: Document RZ/G2M SoC DT bindings
+Message-ID: <20180731221404.GA21626@rob-hp-laptop>
+References: <1532447238-13486-1-git-send-email-biju.das@bp.renesas.com>
+ <1532447238-13486-2-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1532447238-13486-2-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-add the qDMA device tree nodes for LS1046A devices.
+On Tue, Jul 24, 2018 at 04:47:16PM +0100, Biju Das wrote:
+> Add device tree bindings documentation for Renesas RZ/G2M (r8a774a1) SoC.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Signed-off-by: Wen He <wen.he_1@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 136ebfa..27988e2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -597,6 +597,21 @@
- 				 <&clockgen 4 1>;
- 		};
- 
-+		qdma: dma-controller@8380000 {
-+			compatible = "fsl,ls1021a-qdma", "fsl,ls1046a-qdma";
-+			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
-+				<0x0 0x8390000 0x0 0x10000>, /* Status regs */
-+				<0x0 0x83a0000 0x0 0x40000>; /* Block regs */
-+			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "qdma-error", "qdma-queue";
-+			dma-channels = <8>;
-+			fsl,queues = <2>;
-+			status-sizes = <64>;
-+			queue-sizes = <64 64>;
-+			big-endian;
-+		};
-+
- 		usb0: usb@2f00000 {
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0x2f00000 0x0 0x10000>;
--- 
-1.7.1
+Reviewed-by: Rob Herring <robh@kernel.org>
