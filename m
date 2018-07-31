@@ -1,86 +1,101 @@
-Return-Path: <SRS0=Pf9O=KL=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 3/4] serial: sh-sci: Remove SCIx_RZ_SCIFA_REGTYPE
-Date: Fri, 27 Jul 2018 16:09:15 -0500
-Message-Id: <20180727210916.66642-4-chris.brandt@renesas.com>
-In-Reply-To: <20180727210916.66642-1-chris.brandt@renesas.com>
-References: <20180727210916.66642-1-chris.brandt@renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <mchehab+samsung@kernel.org>
+Date: Tue, 31 Jul 2018 16:56:00 -0300
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH 18/22] partial revert of "[media] tvp5150: add HW input
+ connectors support"
+Message-ID: <20180731165600.25831676@coco.lan>
+In-Reply-To: <20180731133056.rqaolpoz7lea4y4f@pengutronix.de>
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+	<20180628162054.25613-19-m.felsch@pengutronix.de>
+	<20180730151842.0fd99d01@coco.lan>
+	<3a9f8715-a3a6-b250-82ad-6f2df6500767@redhat.com>
+	<20180731070659.43afe417@coco.lan>
+	<759d76b0-dab2-17bb-970c-38233bafc708@redhat.com>
+	<20180731123652.r23m4zlkdulet22z@pengutronix.de>
+	<7c849709-f3e4-98bb-fad9-a85f6e90bb71@redhat.com>
+	<20180731133056.rqaolpoz7lea4y4f@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Javier Martinez Canillas <javierm@redhat.com>, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, afshin.nasser@gmail.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-There is no more need for SCIx_RZ_SCIFA_REGTYPE now that
-SCIx_SH4_SCIF_REGTYPE can provide the same register/address definitions.
+Em Tue, 31 Jul 2018 15:30:56 +0200
+Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
-Also, R7S9210 no longer needs a special compatible since the standard
-"renesas,scif" will work just fine.
+> Hi Javier,
+> 
+> On 18-07-31 14:52, Javier Martinez Canillas wrote:
+> > Hi Marco,
+> > 
+> > On 07/31/2018 02:36 PM, Marco Felsch wrote:
+> > 
+> > [snip]
+> >   
+> > >>
+> > >> Yes, another thing that patch 19/22 should take into account is DTs that
+> > >> don't have input connectors defined. So probably TVP5150_PORT_YOUT should
+> > >> be 0 instead of TVP5150_PORT_NUM - 1 as is the case in the current patch.
+> > >>
+> > >> In other words, it should work both when input connectors are defined in
+> > >> the DT and when these are not defined and only an output port is defined.  
+> > > 
+> > > Yes, it would be a approach to map the output port dynamicaly to the
+> > > highest port number. I tried to keep things easy by a static mapping.
+> > > Maybe a follow up patch can change this behaviour.
+> > > 
+> > > Anyway, input connectors aren't required. There must be at least one
+> > > port child node with a correct port-number in the DT.
+> > >  
+> > 
+> > Yes, that was my point. But your patch uses the port child reg property as
+> > the index for the struct device_node *endpoints[TVP5150_PORT_NUM] array.
+> > 
+> > If there's only one port child (for the output) then the DT binding says
+> > that the reg property isn't required, so this will be 0 and your patch will
+> > wrongly map it to TVP5150_PORT_AIP1A. That's why I said that the output port
+> > should be the first one in your enum tvp5150_ports and not the last one.  
+> 
+> Yes, now I got you. I implemted this in such a way in my first apporach.
+> But at the moment I don't know why I changed this. Maybe to keep the
+> decoder->input number in sync with the em28xx devices, which will set the
+> port by the s_routing() callback.
+> 
+> Let me check this.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/tty/serial/sh-sci.c | 31 -------------------------------
- include/linux/serial_sci.h  |  1 -
- 2 files changed, 32 deletions(-)
+Anyway, with the patchset I sent (with one fix), it will do the right
+thing with regards to the pad output:
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=tvp5150
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 138296ec9a7d..cb4f7d3e7192 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -293,33 +293,6 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.error_clear = SCIF_ERROR_CLEAR,
- 	},
- 
--	/*
--	 * The "SCIFA" that is in RZ/T and RZ/A2.
--	 * It looks like a normal SCIF with FIFO data, but with a
--	 * compressed address space. Also, the break out of interrupts
--	 * are different: ERI/BRI, RXI, TXI, TEI, DRI.
--	 */
--	[SCIx_RZ_SCIFA_REGTYPE] = {
--		.regs = {
--			[SCSMR]		= { 0x00, 16 },
--			[SCBRR]		= { 0x02,  8 },
--			[SCSCR]		= { 0x04, 16 },
--			[SCxTDR]	= { 0x06,  8 },
--			[SCxSR]		= { 0x08, 16 },
--			[SCxRDR]	= { 0x0A,  8 },
--			[SCFCR]		= { 0x0C, 16 },
--			[SCFDR]		= { 0x0E, 16 },
--			[SCSPTR]	= { 0x10, 16 },
--			[SCLSR]		= { 0x12, 16 },
--		},
--		.fifosize = 16,
--		.overrun_reg = SCLSR,
--		.overrun_mask = SCLSR_ORER,
--		.sampling_rate_mask = SCI_SR(32),
--		.error_mask = SCIF_DEFAULT_ERROR_MASK,
--		.error_clear = SCIF_ERROR_CLEAR,
--	},
--
- 	/*
- 	 * Common SH-3 SCIF definitions.
- 	 */
-@@ -3147,10 +3120,6 @@ static const struct of_device_id of_sci_match[] = {
- 		.compatible = "renesas,scif-r7s72100",
- 		.data = SCI_OF_DATA(PORT_SCIF, SCIx_SH2_SCIF_FIFODATA_REGTYPE),
- 	},
--	{
--		.compatible = "renesas,scif-r7s9210",
--		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE),
--	},
- 	/* Family-specific types */
- 	{
- 		.compatible = "renesas,rcar-gen1-scif",
-diff --git a/include/linux/serial_sci.h b/include/linux/serial_sci.h
-index 1c89611e0e06..c0e795d95477 100644
---- a/include/linux/serial_sci.h
-+++ b/include/linux/serial_sci.h
-@@ -36,7 +36,6 @@ enum {
- 	SCIx_SH4_SCIF_FIFODATA_REGTYPE,
- 	SCIx_SH7705_SCIF_REGTYPE,
- 	SCIx_HSCIF_REGTYPE,
--	SCIx_RZ_SCIFA_REGTYPE,
- 
- 	SCIx_NR_REGTYPES,
- };
--- 
-2.16.1
+
+$ mc_nextgen_test -D 
+digraph board {
+	rankdir=TB
+	colorscheme=x11
+	labelloc="t"
+	label="Grabster AV 350
+ driver:em28xx, bus: usb-0000:00:14.0-2
+"
+	intf_devnode_7 [label="intf_devnode_7\nvideo\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
+	intf_devnode_10 [label="intf_devnode_10\nvbi\n/dev/vbi0", shape=box, style=filled, fillcolor=yellow]
+	entity_1 [label="{{<pad_2> 0 | <pad_3> 1 | <pad_4> 2} | entity_1\nATV decoder\ntvp5150 0-005c | {<pad_5> 3}}", shape=Mrecord, style=filled, fillcolor=lightblue]
+	entity_6 [label="{{<pad_12> 0} | entity_6\nV4L I/O\n2-2:1.0 video}", shape=Mrecord, style=filled, fillcolor=aquamarine]
+	entity_9 [label="{{<pad_13> 0} | entity_9\nVBI I/O\n2-2:1.0 vbi}", shape=Mrecord, style=filled, fillcolor=aquamarine]
+	entity_14 [label="{entity_14\nunknown entity type\nComposite | {<pad_15> 0}}", shape=Mrecord, style=filled, fillcolor=cadetblue]
+	entity_16 [label="{entity_16\nunknown entity type\nS-Video | {<pad_17> 0}}", shape=Mrecord, style=filled, fillcolor=cadetblue]
+	intf_devnode_7 -> entity_6 [dir="none" color="orange"]
+	intf_devnode_10 -> entity_9 [dir="none" color="orange"]
+	entity_1:pad_5 -> entity_6:pad_12 [color=blue]
+	entity_1:pad_5 -> entity_9:pad_13 [color=blue]
+	entity_14:pad_15 -> entity_1:pad_2 [color=blue]
+	entity_16:pad_17 -> entity_1:pad_2 [color=blue style="dashed"]
+}
+
+It won't do the right thing with regards to the input, though, as
+the code at v4l2-mc.c expects just one input. So, both composite and
+S-Video connectors (created outside tvp5150, based on the input entries
+at em28xx cards table) are linked to pad 0. 
+
+Thanks,
+Mauro
