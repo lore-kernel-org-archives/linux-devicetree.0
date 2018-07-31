@@ -1,64 +1,46 @@
-Return-Path: <SRS0=GRE+=KD=xilinx.com=MNARANI@kernel.org>
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH 2/4] dt: bindings: Document ZynqMP DDRC in Synopsys documentation
-Date: Thu, 19 Jul 2018 15:44:48 +0530
-Message-ID: <1531995290-15643-3-git-send-email-manish.narani@xilinx.com>
-In-Reply-To: <1531995290-15643-1-git-send-email-manish.narani@xilinx.com>
-References: <1531995290-15643-1-git-send-email-manish.narani@xilinx.com>
+Return-Path: <SRS0=7BaO=KP=verge.net.au=horms@kernel.org>
+Date: Tue, 31 Jul 2018 12:27:59 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/3] serial: sh-sci: Add support for RZ/A2
+Message-ID: <20180731102758.a2nika7uqyrdvknk@verge.net.au>
+References: <20180725143850.32985-1-chris.brandt@renesas.com>
+ <CAMuHMdV=GDmte8uqi2hoy6Cu190uX6stdPkipmsDjan8L5oZRA@mail.gmail.com>
+ <TYXPR01MB1568B3A6928B55E665AA626F8A2B0@TYXPR01MB1568.jpnprd01.prod.outlook.com>
+ <CAMuHMdX1piAAJeX+C=xr2ZG6Pe4_W+XH6ugURWny0rcJ3En0ew@mail.gmail.com>
+ <20180728145515.GB19385@kroah.com>
+ <TY1PR01MB1562F9D26B585AEF757E31518A290@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, mdf@kernel.org, willw@xilinx.com, naga.sureshkumar.relli@xilinx.com, edgar.iglesias@xilinx.com, bharat.kumar.gogada@xilinx.com, shubhrajyoti.datta@xilinx.com, stefan.krsmanovic@aggios.com
-Cc: anirudh@xilinx.com, sgoud@xilinx.com, Manish Narani <manish.narani@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB1562F9D26B585AEF757E31518A290@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch documents Synopsys EDAC driver which reports the single bit
-errors that are corrected and the double bit errors that are detected.
+On Sat, Jul 28, 2018 at 03:55:14PM +0000, Chris Brandt wrote:
+> On Saturday, July 28, 2018 1, Greg KH wrote:
+> > > > In your opinion, which one would be better (revert or rebase)?
+> > >
+> > > [looking at the incremental differences]
+> > >
+> > > I think the easiest for Greg is to rebase, and send 3 patches:
+> > 
+> > Greg does not rebase his public trees.  Nor should anyone else :)
+> > 
+> > I can revert patches if you want me to, just let me know what ones.  Or
+> > send incremental patches on top of my tree please.  But no reverts are
+> > going to be happening.
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- .../bindings/memory-controllers/synopsys.txt       | 25 ++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+s/no reverts/no rebases/ ?
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-index a43d26d..5d20b76 100644
---- a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-@@ -1,15 +1,32 @@
- Binding for Synopsys IntelliDDR Multi Protocol Memory Controller
- 
--This controller has an optional ECC support in half-bus width (16-bit)
--configuration. The ECC controller corrects one bit error and detects
-+Synopsys EDAC driver, it does reports the DDR ECC single bit errors
-+that are corrected and double bit ecc errors that are detected by the DDR
-+ECC controller.
-+
-+The Zynq DDR ECC controller has an optional ECC support in half-bus width
-+(16-bit) configuration. The ECC controller corrects one bit error and detects
- two bit errors.
- 
- Required properties:
-- - compatible: Should be 'xlnx,zynq-ddrc-a05'
-- - reg: Base address and size of the controllers memory area
-+ - compatible: One of:
-+	- 'xlnx,zynq-ddrc-a05' : Zynq DDR ECC controller
-+	- 'xlnx,zynqmp-ddrc-2.40a' : ZynqMP DDR ECC controller
-+ - reg: Should contain DDR controller registers location and length.
-+
-+Required properties for "xlnx,zynqmp-ddrc-2.40a":
-+ - interrupt-parent: Should be core interrupt controller.
-+ - interrupts: Property with a value describing the interrupt number.
- 
- Example:
- 	memory-controller@f8006000 {
- 		compatible = "xlnx,zynq-ddrc-a05";
- 		reg = <0xf8006000 0x1000>;
- 	};
-+
-+	mc: memory-controller@fd070000 {
-+		compatible = "xlnx,zynqmp-ddrc-2.40a";
-+		reg = <0x0 0xfd070000 0x0 0x30000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 112 4>;
-+	};
--- 
-2.1.1
+> 
+> Yesterday I sent a new patch series that will apply on top of the 
+> current tty-next and basically reverts what I did and replaces it with a 
+> new version that incorporates Geert's suggestions. So no reverts are
+> needed.
+> 
+> I assume now I'm just waiting to see if Geert has any feedback on the 
+> new series.
+> 
+> Chris
+> 
