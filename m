@@ -1,78 +1,42 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC 0/4] Wakeup GPIO support for SDM845 SoC
-Date: Tue, 31 Jul 2018 16:44:17 -0600
-Message-ID: <20180731224421.29062-1-ilina@codeaurora.org>
+Subject: [PATCH RFC 3/4] arm64: dts: msm: add PDC device bindings for sdm845
+Date: Tue, 31 Jul 2018 16:44:20 -0600
+Message-ID: <20180731224421.29062-4-ilina@codeaurora.org>
+References: <20180731224421.29062-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180731224421.29062-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: marc.zyngier@arm.com, sboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org
 Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add PDC interrupt controller device bindings for SDM845.
 
-This is an attempt at a solution to enable wake up from suspend and deep idle
-using GPIO as a wakeup source. The 845 uses a new interrupt controller (PDC)
-that lies in the always-on domain and can sense interrupts that are routed to
-it, when the GIC is powered off. It would then wakeup the GIC and replay the
-interrupt which would then be relayed to the AP. The PDC interrupt controller
-driver is merged upstream [1],[2]. The following set of patches extends the
-wakeup capability to GPIOs using the PDC. The TLMM pinctrl driver for the SoC
-available at [3].
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-The complexity with the solution stems from the fact that only a selected few
-GPIO lines are routed to the PDC in addition the TLMMs. They are also from
-different banks on the pinctrl and the TLMM summary line is not routed to the
-PDC. Hence the PDC cannot be considered as parent of the TLMM irqchip (or can
-we ?). This is what it looks like -
-
-   [ PIN ] -----[ TLMM ]---------------> [ GIC ] ---> [ CPU ]
-      |  		 <summary IRQ>       ^
-      |                                      |
-      ----------------------------------> [ PDC ]
-		<wakeup IRQs>
-
-I had a brief discussion with Linus on this and the idea implemented is based
-on his suggestion.
-
-When an IRQ (let's call this latent IRQ) for a GPIO is requested, the
-->irq_request_resources() is used by the TLMM driver to request a PDC pin. The
-PDC pin associated with the GPIO is read from a  static map available in the
-pinctrl-sdm845.c. (I think there should be a better location than a static map,
-more on that later). Knowing the PDC pin from the map, we could look up the DT
-bindings and request the PDC interrupt with the same trigger mask as the
-interrupt requested. The ->set_type and ->set_wake are also trapped to set the
-PDC IRQ's polarity and enable it when the latent IRQ is requested. When the PDC
-detects the interrupt at suspend, it wakes up the GIC and replays the wakeup
-IRQ. The GPIO handler function for the latent IRQ is invoked in turn.
-
-Please review these patches and your inputs would be greatly appreciated and
-(kindly) let me know if I have committed any blunders with this approach. There
-is definitely opportunity to improve the location of the static GPIO-PDC pin
-map. We could possibly put it as an data argument in the interrupts definition
-of the PDC or with interrupt names. Also, I am still sorting out some issues
-with the IRQ handling part of these patches. And I am unsure of how to set the
-polarity of the PDC pin without locking, since we are not in hierarchy with the
-PDC interrupt controller. Again, your inputs on these would be greatly helpful.
-
-Thanks,
-Lina
-
-[1]. drivers/irqchip/qcom-pdc.c
-[2]. Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-[3]. drivers/pinctrl/qcom/pinctrl-msm.c
-
-Lina Iyer (4):
-  drivers: pinctrl: qcom: add wakeup capability to GPIO
-  drivers: pinctrl: qcom: add wakeup gpio map for sdm845
-  arm64: dts: msm: add PDC device bindings for sdm845
-  arm64: dts: qcom: add wake up interrupts for GPIOs
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi  |  78 ++++++++++++
- drivers/pinctrl/qcom/pinctrl-msm.c    | 163 ++++++++++++++++++++++++++
- drivers/pinctrl/qcom/pinctrl-msm.h    |  14 +++
- drivers/pinctrl/qcom/pinctrl-sdm845.c |  76 ++++++++++++
- 4 files changed, 331 insertions(+)
-
---
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 2acc17ce1a9c..8ccce42885c1 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1213,6 +1213,15 @@
+ 			};
+ 		};
+ 
++		pdc: interrupt-controller@b220000 {
++			compatible = "qcom,sdm845-pdc";
++			reg = <0xb220000 0x30000>;
++			qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
++			#interrupt-cells = <2>;
++			interrupt-parent = <&intc>;
++			interrupt-controller;
++		};
++
+ 		timer@17c90000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
