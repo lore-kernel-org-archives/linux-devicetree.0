@@ -1,53 +1,42 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 4/4] remoteproc: qcom: q6v5-pil: Add PDC restart for
- modem on SDM845 SoCs
-Date: Tue, 31 Jul 2018 10:54:32 +0200
-Message-ID: <1533027272.3444.9.camel@pengutronix.de>
+Subject: Re: [PATCH 3/4] remoteproc: qcom: q6v5-pil: Explicitly get
+ mss_restart line
+Date: Tue, 31 Jul 2018 10:57:03 +0200
+Message-ID: <1533027423.3444.11.camel@pengutronix.de>
 References: <20180727152811.15258-1-sibis@codeaurora.org>
-         <20180727152811.15258-4-sibis@codeaurora.org>
+         <20180727152811.15258-3-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727152811.15258-4-sibis@codeaurora.org>
+In-Reply-To: <20180727152811.15258-3-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org
 Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 2018-07-27 at 20:58 +0530, Sibi Sankar wrote:
-> In the presence of a PDC block working with subsystem RSC,
-> assert/deassert PDC restart in modem start/stop path.
+> Explicitly get mss_restart to facilitate adding PDC
+> restart line for modem on SDM845 SoCs
 > 
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  .../bindings/remoteproc/qcom,q6v5.txt         |  4 +++
->  drivers/remoteproc/qcom_q6v5_pil.c            | 27 ++++++++++++++++---
->  2 files changed, 27 insertions(+), 4 deletions(-)
+>  drivers/remoteproc/qcom_q6v5_pil.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> index 601dd9f389aa..124fb1dc6fb8 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-[...]
-> @@ -1182,6 +1192,15 @@ static int q6v5_init_reset(struct q6v5 *qproc)
->  		return PTR_ERR(qproc->mss_restart);
->  	}
+> diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
+> index b1296d614b8b..d57fdb34e3dd 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pil.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pil.c
+> @@ -1176,8 +1176,7 @@ static int q6v5_init_clocks(struct device *dev, struct clk **clks,
 >  
-> +	if (qproc->has_alt_reset) {
-> +		qproc->pdc_restart = devm_reset_control_get(qproc->dev,
-> +							    "pdc_restart");
+>  static int q6v5_init_reset(struct q6v5 *qproc)
+>  {
+> -	qproc->mss_restart = devm_reset_control_get_exclusive(qproc->dev,
+> -							      NULL);
+> +	qproc->mss_restart = devm_reset_control_get(qproc->dev, "mss_restart");
 
-Please use devm_reset_control_get_exclusive() instead.
-
-> +		if (IS_ERR(qproc->pdc_restart)) {
-> +			dev_err(qproc->dev, "failed to acquire pdc restart\n");
-> +			return PTR_ERR(qproc->pdc_restart);
-> +		}
-> +	}
-> +
->  	return 0;
->  }
+Please keep using devm_reset_control_get_exclusive.
 
 regards
 Philipp
