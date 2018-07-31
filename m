@@ -1,150 +1,75 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: only apply reset hacks to broken hardware
-Date: Wed, 1 Aug 2018 00:15:19 +0200
-Message-ID: <a74ea3ee-894d-3129-ec15-e44261e0c11c@gmail.com>
-References: <20180727183313.137943-1-computersforpeace@gmail.com>
- <20180727220337.1b3375ca@bbrezillon>
- <87wotcrz94.fsf@notabene.neil.brown.name>
- <20180731221255.3e65c1fa@bbrezillon>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] ARM: dts: qcom: msm8974-hammerhead: increase load on l20
+ for sdhci
+Date: Tue, 31 Jul 2018 15:29:28 -0700
+Message-ID: <20180731222928.GA24465@builder>
+References: <20180709091628.GA8854@orion>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180731221255.3e65c1fa@bbrezillon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, NeilBrown <neilb@suse.com>
-Cc: devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180709091628.GA8854@orion>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bhushan Shah <bshah@kde.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Masney <masneyb@onstation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2018 10:12 PM, Boris Brezillon wrote:
-> On Tue, 31 Jul 2018 11:05:11 +1000
-> NeilBrown <neilb@suse.com> wrote:
+On Mon 09 Jul 02:16 PDT 2018, Bhushan Shah wrote:
+
+> The kernel would not boot on the hammerhead hardware due to the
+> following error:
 > 
->> On Fri, Jul 27 2018, Boris Brezillon wrote:
->>
->>> On Fri, 27 Jul 2018 11:33:13 -0700
->>> Brian Norris <computersforpeace@gmail.com> wrote:
->>>  
->>>> Commit 59b356ffd0b0 ("mtd: m25p80: restore the status of SPI flash when
->>>> exiting") is the latest from a long history of attempts to add reboot
->>>> handling to handle stateful addressing modes on SPI flash. Some prior
->>>> mostly-related discussions:
->>>>
->>>> http://lists.infradead.org/pipermail/linux-mtd/2013-March/046343.html
->>>> [PATCH 1/3] mtd: m25p80: utilize dedicated 4-byte addressing commands
->>>>
->>>> http://lists.infradead.org/pipermail/barebox/2014-September/020682.html
->>>> [RFC] MTD m25p80 3-byte addressing and boot problem
->>>>
->>>> http://lists.infradead.org/pipermail/linux-mtd/2015-February/057683.html
->>>> [PATCH 2/2] m25p80: if supported put chip to deep power down if not used
->>>>
->>>> Previously, attempts to add reboot-time software reset handling were
->>>> rejected, but the latest attempt was not.
->>>>
->>>> Quick summary of the problem:
->>>> Some systems (e.g., boot ROM or bootloader) assume that they can read
->>>> initial boot code from their SPI flash using 3-byte addressing. If the
->>>> flash is left in 4-byte mode after reset, these systems won't boot. The
->>>> above patch provided a shutdown/remove hook to attempt to reset the
->>>> addressing mode before we reboot. Notably, this patch misses out on
->>>> huge classes of unexpected reboots (e.g., crashes, watchdog resets).
->>>>
->>>> Unfortunately, it is essentially impossible to solve this problem 100%:
->>>> if your system doesn't know how to reset the SPI flash to power-on
->>>> defaults at initialization time, no amount of software can really rescue
->>>> you -- there will always be a chance of some unexpected reset that
->>>> leaves your flash in an addressing mode that your boot sequence didn't
->>>> expect.
->>>>
->>>> While it is not directly harmful to perform hacks like the
->>>> aforementioned commit on all 4-byte addressing flash, a
->>>> properly-designed system should not need the hack -- and in fact,
->>>> providing this hack may mask the fact that a given system is indeed
->>>> broken. So this patch attempts to apply this unsound hack more narrowly,
->>>> providing a strong suggestion to developers and system designers that
->>>> this is truly a hack. With luck, system designers can catch their errors
->>>> early on in their development cycle, rather than applying this hack long
->>>> term. But apparently enough systems are out in the wild that we still
->>>> have to provide this hack.
->>>>
->>>> Document a new device tree property to denote systems that do not have a
->>>> proper hardware (or software) reset mechanism, and apply the hack (with
->>>> a loud warning) only in this case.
->>>>
->>>> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
->>>> ---
->>>> Note that I intentionall didn't split the documentation patch. It seems
->>>> clearer to do these together IMO, but if it's *really* important to
->>>> someone...I can resend  
->>>
->>> I'm fine with that.
->>>
->>> I'll leave Neil some time to review/test/comment on the patch before
->>> queuing it, but it looks good to me.  
->>
->> Thanks.
->> I can confirm that if I apply this patch, my system won't reboot
->> properly (as expected), and if I then add
->>
->> 		broken-flash-reset;
->>
->> to the jedec,spi-nor device, it starts functioning correctly again.
->>
->> I don't like the pejorative "broken", and it also suggests that a thing
->> used to work, but something happened to break it - this is not
->> accurate.
->> I would prefer something like "reset-not-connected" which is an accurate
->> description of the state of the hardware.
->>
->> I also think that having a WARN_ON is an over-reaction.  Certainly a
->> warning could be appropriate, but just one pr_warn() should be enough.
->> The "problem" is unlikely in practice, and loudly warning people that an
->> asteroid might kill them isn't particularly helpful.
->>
->> I genuinely think that if the system fails to reboot, then Linux is at
->> fault. I accept that changing Linux to be completely robust might be
->> more trouble than it is worth, but I don't accept that it is impossible.
->>
->> But I don't intend to fight either of these battles.
+> mmc0: Timeout waiting for hardware interrupt.
+> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> mmc0: sdhci: Sys addr:  0x00000200 | Version:  0x00003802
+> mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  0x00000200
+> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000023
+> mmc0: sdhci: Present:   0x03e80000 | Host ctl: 0x00000034
+> mmc0: sdhci: Power:     0x00000001 | Blk gap:  0x00000000
+> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000007
+> mmc0: sdhci: Timeout:   0x0000000e | Int stat: 0x00000000
+> mmc0: sdhci: Int enab:  0x02ff900b | Sig enab: 0x02ff100b
+> mmc0: sdhci: AC12 err:  0x00000000 | Slot int: 0x00000000
+> mmc0: sdhci: Caps:      0x642dc8b2 | Caps_1:   0x00008007
+> mmc0: sdhci: Cmd:       0x00000c1b | Max curr: 0x00000000
+> mmc0: sdhci: Resp[0]:   0x00000c00 | Resp[1]:  0x00000000
+> mmc0: sdhci: Resp[2]:   0x00000000 | Resp[3]:  0x00000000
+> mmc0: sdhci: Host ctl2: 0x00000008
+> mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0x70040220
+> mmc0: sdhci: ============================================
+> mmc0: Card stuck in wrong state! mmcblk0 card_busy_detect status: 0xe00
+> mmc0: cache flush error -110
+> mmc0: Reset 0x1 never completed.
 > 
-> Does that mean you're accepting this change? Brian, any comment on what
-> Neil said?
+> This patch increases the load on l20 to 0.2 amps for the sdhci
+> and allows the device to boot normally.
 > 
-> To be honest, I hate being in the middle of this discussion without
-> having been involved in the first decision to accept such workarounds.
-> I keep thinking that making boards that do not have reset properly
-> wired less likely to fail rebooting is a wise decision, but I also
-> agree with Brian when he says we should inform people that their design
-> is unreliable.
+> Signed-off-by: Bhushan Shah <bshah@kde.org>
+> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Tested-by: Brian Masney <masneyb@onstation.org>
 
-Hiding the issue in most cases only leads to vendors making more such
-crippled boards and never learning.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> The main problem I see here, is that adding this prop won't help people
-> figuring out what is wrong with their design, it will just help them
-> workaround the problem when they find out, and it might already be to
-> late to fix the HW design. But maybe it's not what we're trying to do
-> here. Maybe we just want to warn users that rebooting such boards is a
-> risky procedure.
+Regards,
+Bjorn
 
-The thing is, this is not a workaround, it's just a way of hiding the
-problem because the problem does not go away completely. There are still
-scenarios in which the system will fail.
-
--- 
-Best regards,
-Marek Vasut
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> ---
+>  arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> index 4dc0b347b1ee..c2dc9d09484a 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
+> @@ -189,6 +189,8 @@
+>  						regulator-max-microvolt = <2950000>;
+>  
+>  						regulator-boot-on;
+> +						regulator-system-load = <200000>;
+> +						regulator-allow-set-load;
+>  					};
+>  
+>  					l21 {
+> -- 
+> 2.17.1
+> 
