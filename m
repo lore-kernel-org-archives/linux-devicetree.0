@@ -1,7 +1,7 @@
 From: Tony Xie <tony.xie@rock-chips.com>
-Subject: [PATCH 2/5] regulator: rk808: add RK809 and RK817 support.
-Date: Tue, 31 Jul 2018 14:56:31 +0800
-Message-ID: <1533020197-754-4-git-send-email-tony.xie@rock-chips.com>
+Subject: [PATCH 2/5] regulator: rk808: Add regulator driver for RK809 and RK817.
+Date: Tue, 31 Jul 2018 14:56:30 +0800
+Message-ID: <1533020197-754-3-git-send-email-tony.xie@rock-chips.com>
 References: <1533020197-754-1-git-send-email-tony.xie@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
