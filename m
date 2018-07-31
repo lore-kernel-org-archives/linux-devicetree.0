@@ -1,89 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 05/10] ASoC: wcd9335: add CLASS-H
-	Controller support
-Date: Tue, 31 Jul 2018 18:05:57 +0100
-Message-ID: <20180731170557.GK5719@sirena.org.uk>
-References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
- <20180727121806.18209-6-srinivas.kandagatla@linaro.org>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v7 1/3] dt-bindings: net: bluetooth: Add mediatek-bluetooth
+Date: Wed, 1 Aug 2018 01:14:58 +0800
+Message-ID: <a3e8870dfb1302a60b041077a05c44faa42675b6.1533056925.git.sean.wang@mediatek.com>
+References: <cover.1533056925.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8010861535785143805=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180727121806.18209-6-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, tiwai@suse.com, vkoul@kernel.org, robh+dt@kernel.org, lee.jones@linaro.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1533056925.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Sean Wang <sean.wang@mediatek.com>
 
---===============8010861535785143805==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VSVNCtZB1QZ8vhj+"
-Content-Disposition: inline
+Add binding document for a SoC built-in device using MediaTek protocol.
+Which could be found on MT7622 SoC or other similar MediaTek SoCs.
 
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/net/mediatek-bluetooth.txt | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
 
---VSVNCtZB1QZ8vhj+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jul 27, 2018 at 01:18:01PM +0100, Srinivas Kandagatla wrote:
-
-> +	res_val = WCD9XXX_CLASSH_CTRL_VCL_VREF_FILT_R_0KOHM;
-> +	switch (mode) {
-> +	case CLS_H_NORMAL:
-> +		res_val = WCD9XXX_CLASSH_CTRL_VCL_VREF_FILT_R_50KOHM;
-> +		val = WCD9XXX_A_ANA_HPH_PWR_LEVEL_NORMAL;
-> +		gain = DAC_GAIN_0DB;
-> +		ipeak = WCD9XXX_CLASSH_CTRL_CCL_1_DELTA_IPEAK_50MA;
-> +		break;
-> +	case CLS_AB:
-> +		val = WCD9XXX_A_ANA_HPH_PWR_LEVEL_NORMAL;
-> +		gain = DAC_GAIN_0DB;
-> +		ipeak = WCD9XXX_CLASSH_CTRL_CCL_1_DELTA_IPEAK_50MA;
-> +		break;
-> +	case CLS_H_HIFI:
-> +		val = WCD9XXX_A_ANA_HPH_PWR_LEVEL_UHQA;
-> +		gain = DAC_GAIN_M0P2DB;
-> +		ipeak = WCD9XXX_CLASSH_CTRL_CCL_1_DELTA_IPEAK_50MA;
-> +		break;
-> +	case CLS_H_LP:
-> +		val = WCD9XXX_A_ANA_HPH_PWR_LEVEL_LP;
-> +		ipeak = WCD9XXX_CLASSH_CTRL_CCL_1_DELTA_IPEAK_30MA;
-> +		break;
-> +	};
-
-This is missing a default case for error checking, and you don't need
-the semicolon at the end either.
-
---VSVNCtZB1QZ8vhj+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltglvQACgkQJNaLcl1U
-h9DxCgf+MkCcuHxQonSpd9ITGrqpFrCSDOBZjOOepXTvj/tXAGLT9gfM3c/wNTNs
-/j2LdASeN5XbRupEgD3WgxRQ3moXq3bwtqeFizFhz8UH1Bq612cVMbqmLNKvpDRw
-uEws8494YPyxyXpEz2GgflOXiB5yUs9lSHaGJACZZU9M9BrR3wyeyBRO+1hw2Fk9
-ugRL9wmNTz2pNimXaZ9qQSjZ5uaUJphoUuahXdNy+nhIWeESHskVR24vcZEyRiNr
-gGOk1miiOwE2M0TO+MY1TuxoXLRQzZ7yDzuERvONQ7+RIy+iZnbFNwKO1+eP0Zzy
-/kgca7nvIU19ro8aMU9+MI5WzV04iw==
-=R8QF
------END PGP SIGNATURE-----
-
---VSVNCtZB1QZ8vhj+--
-
---===============8010861535785143805==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8010861535785143805==--
+diff --git a/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+new file mode 100644
+index 0000000..14ceb2a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+@@ -0,0 +1,35 @@
++MediaTek SoC built-in Bluetooth Devices
++==================================
++
++This device is a serial attached device to BTIF device and thus it must be a
++child node of the serial node with BTIF. The dt-bindings details for BTIF
++device can be known via Documentation/devicetree/bindings/serial/8250.txt.
++
++Required properties:
++
++- compatible:	Must be
++		  "mediatek,mt7622-bluetooth": for MT7622 SoC
++- clocks:	Should be the clock specifiers corresponding to the entry in
++		clock-names property.
++- clock-names:	Should contain "ref" entries.
++- power-domains: Phandle to the power domain that the device is part of
++
++Example:
++
++	btif: serial@1100c000 {
++		compatible = "mediatek,mt7622-btif",
++			     "mediatek,mtk-btif";
++		reg = <0 0x1100c000 0 0x1000>;
++		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_BTIF_PD>;
++		clock-names = "main";
++		reg-shift = <2>;
++		reg-io-width = <4>;
++
++		bluetooth {
++			compatible = "mediatek,mt7622-bluetooth";
++			power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
++			clocks = <&clk25m>;
++			clock-names = "ref";
++		};
++	};
+-- 
+2.7.4
