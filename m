@@ -1,94 +1,52 @@
-From: skannan@codeaurora.org
-Subject: Re: [PATCH] PM / devfreq: Generic cpufreq governor
-Date: Wed, 01 Aug 2018 13:16:11 -0700
-Message-ID: <07f57aced47960cf48f273d6446b4221@codeaurora.org>
-References: <1532750217-8886-1-git-send-email-skannan@codeaurora.org>
- <2a9bfa53-31b2-b44a-0bd5-07bcc344a466@arm.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 7/8] net: phy: Add support to configure clock in
+ Broadcom iProc mdio mux
+Date: Wed, 1 Aug 2018 21:23:14 +0100
+Message-ID: <20180801202313.GH30658@n2100.armlinux.org.uk>
+References: <1533146186-8374-1-git-send-email-arun.parameswaran@broadcom.com>
+ <1533146186-8374-8-git-send-email-arun.parameswaran@broadcom.com>
+ <0cc6db4f-7008-0ad3-58d7-9e93060f152f@gmail.com>
+ <20180801184659.GG30658@n2100.armlinux.org.uk>
+ <9af7e7a3-54d4-8802-f64a-fc4f9c49c8b9@broadcom.com>
+ <20180801200712.GD19257@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2a9bfa53-31b2-b44a-0bd5-07bcc344a466@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180801200712.GD19257@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Arun Parameswaran <arun.parameswaran@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-01 09:03, Sudeep Holla wrote:
-> On 28/07/18 04:56, Saravana Kannan wrote:
->> Many CPU architectures have caches that can scale independent of the 
->> CPUs.
->> Frequency scaling of the caches is necessary to make sure the cache is 
->> not
->> a performance bottleneck that leads to poor performance and power. The 
->> same
->> idea applies for RAM/DDR.
->> 
->> To achieve this, this patch adds a generic devfreq governor that can 
->> listen
->> to the frequency transitions of each CPU frequency domain and then 
->> adjusts
->> the frequency of the cache (or any devfreq device) based on the 
->> frequency
->> of the CPUs.
->> 
->> To decide the frequency of the device, the governor does one of the
->> following:
->> 
->> * Uses a CPU frequency to device frequency mapping table
->>   - Either one mapping table used for all CPU freq policies (typically 
->> used
->>     for system with homogeneous cores/clusters that have the same 
->> OPPs.
->>   - One mapping table per CPU freq policy (typically used for ASMP 
->> systems
->>     with heterogeneous CPUs with different OPPs)
->> 
->> OR
->> 
->> * Scales the device frequency in proportion to the CPU frequency. So, 
->> if
->>   the CPUs are running at their max frequency, the device runs at its 
->> max
->>   frequency.  If the CPUs are running at their min frequency, the 
->> device
->>   runs at its min frequency. And interpolated for frequencies in 
->> between.
->> 
-> 
-> Is this solution for the old generation of SDM ?
+On Wed, Aug 01, 2018 at 10:07:12PM +0200, Andrew Lunn wrote:
+> You might want to consider adding clk_optional_get() and
+> devm_clk_optional_get().
 
-This code isn't even specific to Qualcomm chips. Let alone a specific 
-generation of SDM.
+I think there's attempts to add such APIs but I don't think it's
+trivial - it seems to require a _lot_ of discussion.
 
-> I have seen newer ones have some kind of firmware interface/hardware to
-> deal with CPUFreq. Do you need this solution for them too ?
+I think part of that is because of the quirky use of error codes.
+If you look at clk_get(), it calls __of_clk_get_by_name() which
+returns:
 
-You are confusing two completely unrelated drivers. This is generic 
-*devfreq* *governor* code. I'll be renaming the commit text like Rafael 
-suggested.
+ -ENOENT if DT is disabled
+ -ENOENT if the device has no DT node
+ -EPROBE_DEFER if the lookup in DT succeeds but there's no registered
+   clock
+ -EINVAL if the device has a DT node but the lookup of the name
+   failed (in otherwords, the optional clock was omitted)
+ -ENOENT if the clocks = property has not enough clocks for the
+    clock-names property
+ -ENOMEM if we fail to allocate the clk
+ -ENOENT if __clk_get() fails
 
-Something like: CPU frequency to devfreq mapping governor.
+or any other error code returned via of_clk_provider's ->get() method.
 
-> If yes, why ?
+The use of -EINVAL, one of the most common error codes, makes it
+difficult to be sure that the clock is not specified in DT.
 
-Read the commit text.
-
-> IMO firmware can arbitrate various requests for frequency
-> scaling and do the *right thing* for the platform.
-
-Firmware (if any) can arbitrate HW that it controls. DDR and 
-interconnect is not something a firmware might control (or should 
-control).
-
-> Having OSPM sending
-> separate requests for such bus/interconnect might end up with 
-> conflicts.
-> No ?
-
-If some chips have firmware that takes care of everything, then you 
-obviously won't be enabling any power management code.
-
-Thanks,
-Saravana
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
+According to speedtest.net: 13Mbps down 490kbps up
