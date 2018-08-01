@@ -1,31 +1,60 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH 01/14] mmc: mmci: fix qcom dma issue during mmci init with
- new dma_setup callback
-Date: Wed, 1 Aug 2018 12:09:57 +0200
-Message-ID: <70d12552-f7d5-c1e5-fbf1-53caf8ee7b4a@st.com>
-References: <1533116221-380-1-git-send-email-ludovic.Barre@st.com>
- <1533116221-380-2-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFq4Qx5e8Hk40F5DpTJn3g1bnm6sbQERS0Lt-OGmzEdLyQ@mail.gmail.com>
+From: "Y.b. Lu" <yangbo.lu@nxp.com>
+Subject: RE: [PATCH 3/3] ptp_qoriq: convert to use module parameters for
+ initialization
+Date: Wed, 1 Aug 2018 10:10:24 +0000
+Message-ID: <DB6PR0401MB2536CE4BCEE872F2C4D63710F82D0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+References: <20180730100154.27906-1-yangbo.lu@nxp.com>
+ <20180730100154.27906-3-yangbo.lu@nxp.com>
+ <20180730143043.qu66ttzwyjbw6si7@localhost>
+ <DB6PR0401MB253643010802739AD55820F3F82D0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+ <20180801061515.krn52iaq2kqdi3wo@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFq4Qx5e8Hk40F5DpTJn3g1bnm6sbQERS0Lt-OGmzEdLyQ@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180801061515.krn52iaq2kqdi3wo@localhost>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Richard,
 
+> -----Original Message-----
+> From: Richard Cochran [mailto:richardcochran@gmail.com]
+> Sent: Wednesday, August 1, 2018 2:15 PM
+> To: Y.b. Lu <yangbo.lu@nxp.com>
+> Cc: netdev@vger.kernel.org; Madalin-cristian Bucur
+> <madalin.bucur@nxp.com>; Rob Herring <robh+dt@kernel.org>; Shawn Guo
+> <shawnguo@kernel.org>; David S . Miller <davem@davemloft.net>;
+> devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org;
+> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 3/3] ptp_qoriq: convert to use module parameters for
+> initialization
+>=20
+> On Wed, Aug 01, 2018 at 04:36:40AM +0000, Y.b. Lu wrote:
+>=20
+> > Could I add a function to calculate a set of default register values
+> > to initialize ptp timer when dts method failed to get required
+> > properties in driver?
+>=20
+> Yes, it would be ideal if the driver can pick correct values automaticall=
+y.
+>=20
+> However, the frequency on the FIPER outputs can't be configured
+> automatically, and we don't have an API for the user to choose this.
 
-On 08/01/2018 12:08 PM, Ulf Hansson wrote:
-> Anyway, we can just drop this patch from your series as I amended the
-> patch causing the problem.
-> 
-> I will continue to review the rest.
+[Y.b. Lu] Thanks a lot. Just let me send out the v2 patch for your reviewin=
+g.
 
-yes, I sent to early. (sorry)
-
-BR
-Ludo
+>=20
+> > I think this will be useful. The ptp timer on new platforms (you may
+> > see two dts patches in this patchset. Many platforms will be
+> > affected.) will work without these dts properties. If user want
+> > specific setting, they can set dts properties.
+>=20
+> Sure.
+>=20
+> Thanks,
+> Richard
