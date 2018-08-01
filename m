@@ -1,46 +1,40 @@
-Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54566 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727308AbeH0NP6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Aug 2018 09:15:58 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 23/23] smiapp: Query the V4L2 endpoint for a specific bus type
-Date: Mon, 27 Aug 2018 12:30:00 +0300
-Message-Id: <20180827093000.29165-24-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
-References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
+Return-Path: <SRS0=StV2=KQ=codeaurora.org=smohanad@kernel.org>
+From: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Subject: [PATCH v4 3/3] iio: adc: Update QCOM ADC license to SPDX format
+Date: Wed,  1 Aug 2018 16:39:18 -0700
+Message-Id: <1533166758-23909-1-git-send-email-smohanad@codeaurora.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 List-ID: <devicetree@vger.kernel.org>
 
-Instead of opportunistically trying to gather some information from the
-V4L2 endpoint, set the bus type and let the V4L2 fwnode framework figure
-out the configuration.
+Update QCOM ADC header file to SPDX format.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/media/i2c/smiapp/smiapp-core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/dt-bindings/iio/qcom,spmi-vadc.h | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 048ab6cfaa97..0d660349b13c 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -2775,7 +2775,13 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
- 	if (!ep)
- 		return NULL;
+diff --git a/include/dt-bindings/iio/qcom,spmi-vadc.h b/include/dt-bindings/iio/qcom,spmi-vadc.h
+index bf54b5a..61d556d 100644
+--- a/include/dt-bindings/iio/qcom,spmi-vadc.h
++++ b/include/dt-bindings/iio/qcom,spmi-vadc.h
+@@ -1,14 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (c) 2012-2014,2018 The Linux Foundation. All rights reserved.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 and
+- * only version 2 as published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
  
-+	bus_cfg.bus_type = V4L2_MBUS_CSI2_DPHY;
- 	rval = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
-+	if (rval == -ENXIO) {
-+		bus_cfg = (struct v4l2_fwnode_endpoint)
-+			{ .bus_type = V4L2_MBUS_CCP2 };
-+		rval = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
-+	}
- 	if (rval)
- 		goto out_err;
- 
+ #ifndef _DT_BINDINGS_QCOM_SPMI_VADC_H
 -- 
-2.11.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
