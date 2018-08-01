@@ -1,54 +1,64 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 3/6] irqchip: RISC-V Local Interrupt Controller Driver
-Date: Wed, 1 Aug 2018 20:55:06 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1808012049170.1835@nanos.tec.linutronix.de>
-References: <20180725093649.32332-1-hch@lst.de> <20180725093649.32332-4-hch@lst.de> <c3ccb953-cd75-4a37-636a-ca643602053a@arm.com> <20180725112457.GA24502@lst.de>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 0/5] Initial support for Samsung Galaxy S and Galaxy S
+ 4G
+Date: Wed, 1 Aug 2018 20:58:07 +0200
+Message-ID: <20180801185807.GB26087@amd>
+References: <1530958183-10956-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <20180710120504.GB6884@amd>
+ <5549799.hqpipYcP1I@acerlaptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725112457.GA24502@lst.de>
+Content-Disposition: inline
+In-Reply-To: <5549799.hqpipYcP1I@acerlaptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, palmer@sifive.com, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xc-racer2@live.ca
 List-Id: devicetree@vger.kernel.org
 
 
-On Wed, 25 Jul 2018, Christoph Hellwig wrote:
+--XOIedfhf+7KOe/yw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Jul 25, 2018 at 12:18:39PM +0100, Marc Zyngier wrote:
-> > This feels odd. It means that you cannot have the following sequence:
-> > 
-> > 	local_irq_disable();
-> > 	enable_irq(x); // where x is owned by a remote hart
-> > 
-> > as smp_call_function_single() requires interrupts to be enabled.
-> > 
-> > More fundamentally, why are you trying to make these interrupts look
-> > global while they aren't? arm/arm64 have similar restrictions with GICv2
-> > and earlier, and treats these interrupts as per-cpu.
-> > 
-> > Given that the drivers that deal with drivers connected to the per-hart
-> > irqchip are themselves likely to be aware of the per-cpu aspect, it
-> > would make sense to align things (we've been through that same
-> > discussion about the clocksource driver a few weeks back).
-> 
-> Right now the only direct consumers are said clocksource, the PLIC
-> driver later in this series and the RISC-V arch IPI code.  None of them
-> is going to do a manual enable_irq, so I guess the remote case of the
-> code is simply dead code.  I'll take a look at converting them to
-> per-cpu.  I guess the GICv2 driver is the best template?
+On Tue 2018-07-10 14:18:39, Pawe=C5=82 Chmiel wrote:
+> On Tuesday, July 10, 2018 2:05:04 PM CEST Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > This patch series adds support for Samsung Galaxy S and Galaxy S 4G.
+> > > Both are commercial phone based on Aries family.
+> >=20
+> > Thanks for doing this. What kind of userspace are your running?
+> >=20
+> > (I do have N900 here running Debian and PostmarketOS, and Droid 4
+> > running Maemo Leste)
+>=20
+> Currently i'm running arch linux arm (but wanted to try PostmarketOS also=
+).
+>=20
 
-Confused. The timer and the IPI are separate causes and have nothing to do
-with the per cpu irq domain. That's what the low level interrupt handling
-code tells me.
+Depending on your goals, Maemo Leste is worth looking at, too. (Unlike
+postmarketOS, their goal is useful phone).
 
-If I understand correctly then the per cpu irq domain is for device
-interrupts, right? If so, then this simply cannot work and there is no way
-to make it work with per cpu interrupts either.
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Is there some high level documentation about the design (or the lack of) or
-can someone give a concise explanation how this stuff is supposed to work?
+--XOIedfhf+7KOe/yw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-	tglx
+iEYEARECAAYFAltiAr8ACgkQMOfwapXb+vK/PQCePPUU7htshonWL95I58vGV6R8
+C1cAoKBInX5dH/IJGUMvawlAPdE+VWCj
+=VTyn
+-----END PGP SIGNATURE-----
+
+--XOIedfhf+7KOe/yw--
