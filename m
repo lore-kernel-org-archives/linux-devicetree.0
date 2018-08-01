@@ -1,54 +1,74 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RFC PATCH v2 5/6] spi: Add QuadSPI driver for Atmel SAMA5D2
-Date: Wed, 1 Aug 2018 21:57:33 +0200
-Message-ID: <20180801215733.4dfa3a95@bbrezillon>
-References: <20180627131609.13681-1-bugalski.piotr@gmail.com>
-        <20180627131609.13681-6-bugalski.piotr@gmail.com>
-        <20180801172747.GJ5509@sirena.org.uk>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RESEND RFC 2/4] drivers: pinctrl: qcom: add wakeup gpio
+ map for sdm845
+Date: Wed, 1 Aug 2018 14:04:05 -0600
+Message-ID: <20180801200405.GB6422@codeaurora.org>
+References: <20180801020021.9782-1-ilina@codeaurora.org>
+ <20180801020021.9782-3-ilina@codeaurora.org>
+ <8636vyxyub.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801172747.GJ5509@sirena.org.uk>
+Content-Disposition: inline
+In-Reply-To: <8636vyxyub.wl-marc.zyngier@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Piotr Bugalski <bugalski.piotr@gmail.com>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>, Piotr Bugalski <pbu@cryptera.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Wed, Aug 01 2018 at 02:42 -0600, Marc Zyngier wrote:
+>On Wed, 01 Aug 2018 03:00:19 +0100,
+>Lina Iyer <ilina@codeaurora.org> wrote:
+>>
+>> Add GPIO to PDC pin map for the SDM845 SoC.
+>>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>>  drivers/pinctrl/qcom/pinctrl-sdm845.c | 76 +++++++++++++++++++++++++++
+>>  1 file changed, 76 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+>> index 2ab7a8885757..e93660922dc2 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+>> @@ -1277,6 +1277,80 @@ static const struct msm_pingroup sdm845_groups[] = {
+>>  	UFS_RESET(ufs_reset, 0x99f000),
+>>  };
+>>
+>> +static struct msm_pinctrl_pdc_map sdm845_wakeup_gpios[] = {
+>
+>[huge array]
+>
+>> +};
+>
+>Why isn't that array part of the DT? I'd expect other SoCs to
+>eventually use a similar mechanism, no?
+>
+I agree and it should be.
 
-On Wed, 1 Aug 2018 18:27:47 +0100
-Mark Brown <broonie@kernel.org> wrote:
+One place I am thinking is to add it to the DT definition of PDC
+controller as a data argument -
 
-> On Wed, Jun 27, 2018 at 03:16:08PM +0200, Piotr Bugalski wrote:
-> > Kernel contains QSPI driver strongly tied to MTD and nor-flash memory.
-> > New spi-mem interface allows usage also other memory types, especially
-> > much larger NAND with SPI interface. This driver works as SPI controller
-> > and is not related to MTD, however can work with NAND-flash or other
-> > peripherals using spi-mem interface.  
-> 
-> This is fine from a SPI point of view
+	tlmm: pinctrl@000000{
+	[...]
+		interrupts-extended = <&pdc 30 IRQ_TYPE_LEVEL_HIGH 1>,
+                      <&pdc 31 IRQ_TYPE_LEVEL_HIGH 3>,
+		      <&pdc 32 IRQ_TYPE_LEVEL_HIGH 5>,
+						   ^
+						   |--- Provide the GPIO
+						   for the PDC pin here.
+	};
 
-Cool. There are still 2 things I think should be addressed before
-merging the driver:
-1/ Fixing the SoB tag to match the author (problem reported by
-   Alexandre)
-2/ Getting this patch [1] merged and implementing the ->get_name() hook
-   in this driver so that SPI NOR devs declared to the MTD layer keep
-   the same name after the transition to spi-mem and mtdparts= passed on
-   the cmdline keep working. Without this in place we're likely to
-   break a few setups :-/.
+	pdc: interrupt-controller@b220000 {
+		compatible = "qcom,sdm845-pdc";
+		reg = <0xb220000 0x30000>;
+		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
+		#interrupt-cells = <3>; <-------- Increase this from 2 ?
+		interrupt-parent = <&intc>;
+		interrupt-controller;
+	};
 
-> but I'd like to apply it directly
-> to the SPI tree rather than ack it for merge via the MTD tree - can we
-> work something out with a shared branch or something?
+Would that be acceptable?
 
-Sure, I can provide an immutable tag for you to pull and I'll add my
-acks on those patches once the 2 things I mentioned above are
-addressed.
-
-Regards,
-
-Boris
-
-[1]https://patchwork.kernel.org/patch/10508693/ 
+Thanks,
+Lina
