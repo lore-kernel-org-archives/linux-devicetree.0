@@ -1,52 +1,73 @@
-From: John Crispin <john@phrozen.org>
-Subject: [PATCH V2 1/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
-Date: Wed,  1 Aug 2018 12:49:39 +0200
-Message-ID: <20180801104941.29432-2-john@phrozen.org>
-References: <20180801104941.29432-1-john@phrozen.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801104941.29432-1-john@phrozen.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alban Bedel <albeu@free.fr>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, John Crispin <john@phrozen.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 4/4] ASoC: qcom: add sdm845 sound card
+	support
+Date: Wed, 1 Aug 2018 11:51:31 +0100
+Message-ID: <20180801105131.GF5509@sirena.org.uk>
+References: <1533114069-16570-1-git-send-email-rohitkr@codeaurora.org>
+ <1533114069-16570-5-git-send-email-rohitkr@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2621417515088584222=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1533114069-16570-5-git-send-email-rohitkr@codeaurora.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rohit kumar <rohitkr@codeaurora.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the binding documentation for the HS/SS USB PHY found
-inside Qualcomm Dakota SoCs.
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Crispin <john@phrozen.org>
----
- .../bindings/phy/phy-qcom-ipq4019-usb.txt           | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
+--===============2621417515088584222==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rMWmSaSbD7nr+du9"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt b/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
-new file mode 100644
-index 000000000000..320a596c45b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-qcom-ipq4019-usb.txt
-@@ -0,0 +1,21 @@
-+Qualcom Dakota HS/SS USB PHY
-+
-+Required properties:
-+ - compatible: "qcom,ipq4019-usb-ss-phy",
-+	       "qcom,ipq4019-usb-hs-phy"
-+ - reg: offset and length of the registers
-+ - #phy-cells: should be 0
-+ - resets: the reset controllers as listed below
-+ - reset-names: the names of the reset controllers
-+	"por" - the POR reset line for SS and HS phys
-+	"srif" - the SRIF reset line for HS phys
-+Example:
-+
-+usb-phy@a8000 {
-+	compatible = "qcom,ipq4019-usb-hs-phy";
-+	phy-cells = <0>;
-+	reg = <0xa8000 0x40>;
-+	resets = <&gcc USB2_HSPHY_POR_ARES>,
-+		 <&gcc USB2_HSPHY_S_ARES>;
-+	reset-names = "por", "srif";
-+};
--- 
-2.11.0
+
+--rMWmSaSbD7nr+du9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Aug 01, 2018 at 02:31:09PM +0530, Rohit kumar wrote:
+
+> --- /dev/null
+> +++ b/sound/soc/qcom/sdm845.c
+> @@ -0,0 +1,286 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+
+Please make the entire thing a C++ comment, it makes it look more
+intentional.
+
+--rMWmSaSbD7nr+du9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlthkLIACgkQJNaLcl1U
+h9BBVAf9H4oTxZ8FrcKTi+6zDylOZrUcflwy65D1oUjD/O2ojrKbjzvrLgKQF1EQ
+j8DCBTuVk0FWCU+s9JjASBe//po6IWZjV3WFW0c/5F0Ao1ubyqoKjFfISJGn0D8u
+K1o/mu51BlqJBv+pehniywwaZdqM2N6iGhzq6uJRorzVtnCF+tthaDJ73m9LV4dK
+1PVNETgfMazdDfR8v/d++TrOvFvwDTRke2vyjaZ9H0JrIyEkRrQaF4WFIlYCe3/+
+5rI/zL6H87tPHc8uvJ8Nv4YUkTZB/lopaf+sRXpCg96WKvWkEWPKGq+wGOHZejXm
+EP2CUWsrZr5edEbVY57U6m6kYD1miw==
+=STS5
+-----END PGP SIGNATURE-----
+
+--rMWmSaSbD7nr+du9--
+
+--===============2621417515088584222==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2621417515088584222==--
