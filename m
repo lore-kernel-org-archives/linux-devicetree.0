@@ -1,63 +1,73 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
- coherent DMA mask)
-Date: Wed, 1 Aug 2018 17:33:30 +0100
-Message-ID: <9f32010e-3bcb-2153-dac3-996e9d1b1e9b@arm.com>
-References: <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com>
- <20180727140448.GA29001@lst.de> <20180728165820.GA5731@roeck-us.net>
- <45f7fc82-fb9c-e666-4ada-c5338d2c1c96@arm.com>
- <39fa11ce4b7dd151d98868f375baf818@agner.ch>
- <0e893142-a5db-d119-6eb3-f849db6b5d04@arm.com>
- <f67628ad-4cae-96cd-d0c4-3b2f7d12a822@roeck-us.net>
- <4ce17098-850f-3bb0-b977-8d7932e74e06@arm.com>
- <20180731154353.GA29601@roeck-us.net>
- <10c2ca4d-d587-2705-2802-b6df3dc72fd4@arm.com>
- <20180731173859.GA17007@roeck-us.net>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: [PATCH 16/40] mmc: tegra: Disable card clock during pad calibration
+Date: Wed, 1 Aug 2018 19:32:06 +0300
+Message-ID: <1533141150-10511-17-git-send-email-avienamo@nvidia.com>
+References: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731173859.GA17007@roeck-us.net>
-Content-Language: en-GB
+In-Reply-To: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Stefan Agner <stefan@agner.ch>, Christoph Hellwig <hch@lst.de>, Krzysztof Kozlowski <krzk@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31/07/18 18:38, Guenter Roeck wrote:
-> On Tue, Jul 31, 2018 at 04:58:41PM +0100, Robin Murphy wrote:
->> On 31/07/18 16:43, Guenter Roeck wrote:
->>> On Tue, Jul 31, 2018 at 03:09:34PM +0100, Robin Murphy wrote:
->>>>> Please note that sparc images still generate the warning (next-20180731).
->>>>
->>>> Ugh, OK, any ideas what sparc does to create these platform devices that
->>>> isn't of_platform_device_create_pdata() and has somehow grown an implicit
->>>> dependency on of_dma_configure() since 4.12? I'm looking, but nothing jumps
->>>> out...
->>>>
->>>
->>> I suspect it might be of_device_register(), called from
->>> 	arch/sparc/kernel/of_device_64.c:scan_one_device()
->>> 	arch/sparc/kernel/of_device_32.c:scan_one_device()
->>
->> Right, that's as far as I got as well, so I'm struggling to see how these
->> things ever got DMA masks set before the of_dma_configure() call moved out
->> of of_platform_device_create_pdata(), or why it wasn't a problem prior to
->> the generic dma_ops rework if they didn't :/
->>
-> Ah, ok. No idea, sorry. All I know is that the messages were first seen
-> with next-20180727.
+Disable the card clock during automatic pad drive strength calibration
+and re-enable it afterwards.
 
-OK, I spent this afternoon wrangling toolchains and QEMU to boot an 
-instrumented 4.11 kernel, and the answer is that the warnings are 
-arguably correct. These masks have indeed never been set where they 
-should have been, but then the sbus_dma_ops don't reference them anyway.
+Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+---
+ drivers/mmc/host/sdhci-tegra.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-The coherent mask WARN_ON *should* have started appearing in 4.16 with 
-205e1b7f51e4("dma-mapping: warn when there is no coherent_dma_mask"), 
-but happened to be hidden by the inadvertent side-effect of the prior 
-dma_configure() change. Since there's seemingly no actual regression of 
-functionality, I'm inclined to leave this in the hands of whoever cares 
-about sparc32.
-
-Robin.
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 9e22fec..c2b388b 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -260,11 +260,35 @@ static void tegra_sdhci_configure_cal_pad(struct sdhci_host *host, bool enable)
+ 	}
+ }
+ 
++static bool tegra_sdhci_configure_card_clk(struct sdhci_host *host, bool enable)
++{
++	bool orig_enabled;
++	u32 reg;
++
++	reg = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
++	orig_enabled = !!(reg & SDHCI_CLOCK_CARD_EN);
++
++	if (orig_enabled == enable)
++		return orig_enabled;
++
++	if (enable)
++		reg |= SDHCI_CLOCK_CARD_EN;
++	else
++		reg &= ~SDHCI_CLOCK_CARD_EN;
++
++	sdhci_writew(host, reg, SDHCI_CLOCK_CONTROL);
++
++	return orig_enabled;
++}
++
+ static void tegra_sdhci_pad_autocalib(struct sdhci_host *host)
+ {
++	bool card_clk_enabled;
+ 	u32 reg;
+ 	int ret;
+ 
++	card_clk_enabled = tegra_sdhci_configure_card_clk(host, false);
++
+ 	tegra_sdhci_configure_cal_pad(host, true);
+ 
+ 	reg = sdhci_readl(host, SDHCI_TEGRA_AUTO_CAL_CONFIG);
+@@ -278,6 +302,8 @@ static void tegra_sdhci_pad_autocalib(struct sdhci_host *host)
+ 
+ 	tegra_sdhci_configure_cal_pad(host, false);
+ 
++	tegra_sdhci_configure_card_clk(host, card_clk_enabled);
++
+ 	if (ret)
+ 		dev_err(mmc_dev(host->mmc), "Pad autocal timed out\n");
+ }
+-- 
+2.7.4
