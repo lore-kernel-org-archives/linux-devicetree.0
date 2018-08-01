@@ -1,40 +1,46 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v8 6/6] MAINTAINERS: Add entry for Actions Semiconductor Owl I2C driver
-Date: Wed,  1 Aug 2018 23:32:32 +0530
-Message-ID: <20180801180232.23680-7-manivannan.sadhasivam@linaro.org>
-References: <20180801180232.23680-1-manivannan.sadhasivam@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/6] dt-bindings: interrupt-controller: RISC-V local
+ interrupt controller docs
+Date: Wed, 1 Aug 2018 12:14:42 -0600
+Message-ID: <CAL_JsqJdMuWVrPu+eNvVtui-Regs4FBi_5tk2-V1YrDyj9jB9g@mail.gmail.com>
+References: <20180725093649.32332-1-hch@lst.de> <20180725093649.32332-5-hch@lst.de>
+ <20180731223714.GA12168@rob-hp-laptop> <20180801071307.GA20224@lst.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801180232.23680-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20180801071307.GA20224@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, afaerber@suse.de
-Cc: linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
 List-Id: devicetree@vger.kernel.org
 
-Add entry for Actions Semiconductor Owl I2C driver under ARM/ACTIONS
+On Wed, Aug 1, 2018 at 1:08 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Tue, Jul 31, 2018 at 04:37:14PM -0600, Rob Herring wrote:
+> > On Wed, Jul 25, 2018 at 11:36:47AM +0200, Christoph Hellwig wrote:
+> > > From: Palmer Dabbelt <palmer@dabbelt.com>
+> > >
+> > > This patch adds documentation on the RISC-V local interrupt controller,
+> > > which is a per-hart interrupt controller that manages all interrupts
+> > > entering a RISC-V hart.  This interrupt controller is present on all
+> > > RISC-V systems.
+> > >
+> > > Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> > > ---
+> > >  .../interrupt-controller/riscv,cpu-intc.txt   | 41 +++++++++++++++++++
+> > >  1 file changed, 41 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> >
+> > My questions and comments on the prior version from Palmer remain.
+>
+> Can you point to these questions please?  I don't even rember when this
+> was last posted as it must have been a long time ago.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+It was just a month ago[1], but in googling for the links some
+comments from the 1st posting a year ago[2] aren't addressed either.
+That applies to the PLIC too.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b54e9ebc6f..5084c62712fa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1145,12 +1145,14 @@ F:	arch/arm/boot/dts/owl-*
- F:	arch/arm64/boot/dts/actions/
- F:	drivers/clk/actions/
- F:	drivers/clocksource/owl-*
-+F:	drivers/i2c/busses/i2c-owl.c
- F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
- F:	Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-+F:	Documentation/devicetree/bindings/i2c/i2c-owl.txt
- F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
--- 
-2.17.1
+Rob
+
+[1] https://lkml.org/lkml/2018/7/3/1001
+[2] https://lkml.org/lkml/2017/6/27/24
