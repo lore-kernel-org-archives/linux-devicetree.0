@@ -1,202 +1,64 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 3/3] ptp_qoriq: support automatic configuration for ptp timer
-Date: Wed,  1 Aug 2018 18:05:54 +0800
-Message-ID: <20180801100554.36634-3-yangbo.lu@nxp.com>
-References: <20180801100554.36634-1-yangbo.lu@nxp.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 01/14] mmc: mmci: fix qcom dma issue during mmci init with
+ new dma_setup callback
+Date: Wed, 1 Aug 2018 12:08:38 +0200
+Message-ID: <CAPDyKFq4Qx5e8Hk40F5DpTJn3g1bnm6sbQERS0Lt-OGmzEdLyQ@mail.gmail.com>
+References: <1533116221-380-1-git-send-email-ludovic.Barre@st.com> <1533116221-380-2-git-send-email-ludovic.Barre@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801100554.36634-1-yangbo.lu@nxp.com>
+In-Reply-To: <1533116221-380-2-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, madalin.bucur@nxp.com, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to support automatic configuration for ptp timer.
-If required ptp dts properties are not provided, driver could
-try to calculate a set of default configurations to initialize
-the ptp timer. This makes the driver work for many boards which
-don't have the required ptp dts properties in current kernel.
-Also the users could set dts properties by themselves according
-to their requirement.
+On 1 August 2018 at 11:36, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch fixes qcom dma issue during mmci init.
+> Like init callback of qcom variant is not set, the qcom dma
+> is not correctly initialized and fail while dma transfer
+> ("buggy DMA detected. Taking evasive action").
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 1 +
+>  drivers/mmc/host/mmci.h | 1 +
+>  2 files changed, 2 insertions(+)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 71e9336..1841d250 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -208,6 +208,7 @@ static struct variant_data variant_qcom = {
+>         .mmcimask1              = true,
+>         .start_err              = MCI_STARTBITERR,
+>         .opendrain              = MCI_ROD,
+> +       .init                   = qcom_variant_init,
+>  };
+>
+>  /* Busy detection for the ST Micro variant */
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 517591d..696a066 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -338,3 +338,4 @@ struct mmci_host {
+>  #endif
+>  };
+>
+> +void qcom_variant_init(struct mmci_host *host);
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
-Changes for v2:
-	- Dropped module_param.
----
- drivers/ptp/ptp_qoriq.c       |  111 +++++++++++++++++++++++++++++++++++++++-
- include/linux/fsl/ptp_qoriq.h |    6 ++-
- 2 files changed, 113 insertions(+), 4 deletions(-)
+This isn't needed.
 
-diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index a14c317..095c185 100644
---- a/drivers/ptp/ptp_qoriq.c
-+++ b/drivers/ptp/ptp_qoriq.c
-@@ -29,6 +29,7 @@
- #include <linux/of_platform.h>
- #include <linux/timex.h>
- #include <linux/slab.h>
-+#include <linux/clk.h>
- 
- #include <linux/fsl/ptp_qoriq.h>
- 
-@@ -317,6 +318,105 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
- 	.enable		= ptp_qoriq_enable,
- };
- 
-+/**
-+ * qoriq_ptp_nominal_freq - calculate nominal frequency according to
-+ *			    reference clock frequency
-+ *
-+ * @clk_src: reference clock frequency
-+ *
-+ * The nominal frequency is the desired clock frequency.
-+ * It should be less than the reference clock frequency.
-+ * It should be a factor of 1000MHz.
-+ *
-+ * Return the nominal frequency
-+ */
-+static u32 qoriq_ptp_nominal_freq(u32 clk_src)
-+{
-+	u32 remainder = 0;
-+
-+	clk_src /= 1000000;
-+	remainder = clk_src % 100;
-+	if (remainder) {
-+		clk_src -= remainder;
-+		clk_src += 100;
-+	}
-+
-+	do {
-+		clk_src -= 100;
-+
-+	} while (1000 % clk_src);
-+
-+	return clk_src * 1000000;
-+}
-+
-+/**
-+ * qoriq_ptp_auto_config - calculate a set of default configurations
-+ *
-+ * @qoriq_ptp: pointer to qoriq_ptp
-+ * @node: pointer to device_node
-+ *
-+ * If below dts properties are not provided, this function will be
-+ * called to calculate a set of default configurations for them.
-+ *   "fsl,tclk-period"
-+ *   "fsl,tmr-prsc"
-+ *   "fsl,tmr-add"
-+ *   "fsl,tmr-fiper1"
-+ *   "fsl,tmr-fiper2"
-+ *   "fsl,max-adj"
-+ *
-+ * Return 0 if success
-+ */
-+static int qoriq_ptp_auto_config(struct qoriq_ptp *qoriq_ptp,
-+				 struct device_node *node)
-+{
-+	struct clk *clk;
-+	u64 freq_comp;
-+	u64 max_adj;
-+	u32 nominal_freq;
-+	u32 clk_src = 0;
-+
-+	qoriq_ptp->cksel = DEFAULT_CKSEL;
-+
-+	clk = of_clk_get(node, 0);
-+	if (!IS_ERR(clk)) {
-+		clk_src = clk_get_rate(clk);
-+		clk_put(clk);
-+	}
-+
-+	if (clk_src <= 100000000UL) {
-+		pr_err("error reference clock value, or lower than 100MHz\n");
-+		return -EINVAL;
-+	}
-+
-+	nominal_freq = qoriq_ptp_nominal_freq(clk_src);
-+	if (!nominal_freq)
-+		return -EINVAL;
-+
-+	qoriq_ptp->tclk_period = 1000000000UL / nominal_freq;
-+	qoriq_ptp->tmr_prsc = DEFAULT_TMR_PRSC;
-+
-+	/* Calculate initial frequency compensation value for TMR_ADD register.
-+	 * freq_comp = ceil(2^32 / freq_ratio)
-+	 * freq_ratio = reference_clock_freq / nominal_freq
-+	 */
-+	freq_comp = ((u64)1 << 32) * nominal_freq;
-+	if (do_div(freq_comp, clk_src))
-+		freq_comp++;
-+
-+	qoriq_ptp->tmr_add = freq_comp;
-+	qoriq_ptp->tmr_fiper1 = DEFAULT_FIPER1_PERIOD - qoriq_ptp->tclk_period;
-+	qoriq_ptp->tmr_fiper2 = DEFAULT_FIPER2_PERIOD - qoriq_ptp->tclk_period;
-+
-+	/* max_adj = 1000000000 * (freq_ratio - 1.0) - 1
-+	 * freq_ratio = reference_clock_freq / nominal_freq
-+	 */
-+	max_adj = 1000000000ULL * (clk_src - nominal_freq);
-+	max_adj = max_adj / nominal_freq - 1;
-+	qoriq_ptp->caps.max_adj = max_adj;
-+
-+	return 0;
-+}
-+
- static int qoriq_ptp_probe(struct platform_device *dev)
- {
- 	struct device_node *node = dev->dev.of_node;
-@@ -332,7 +432,7 @@ static int qoriq_ptp_probe(struct platform_device *dev)
- 	if (!qoriq_ptp)
- 		goto no_memory;
- 
--	err = -ENODEV;
-+	err = -EINVAL;
- 
- 	qoriq_ptp->caps = ptp_qoriq_caps;
- 
-@@ -351,10 +451,14 @@ static int qoriq_ptp_probe(struct platform_device *dev)
- 				 "fsl,tmr-fiper2", &qoriq_ptp->tmr_fiper2) ||
- 	    of_property_read_u32(node,
- 				 "fsl,max-adj", &qoriq_ptp->caps.max_adj)) {
--		pr_err("device tree node missing required elements\n");
--		goto no_node;
-+		pr_warn("device tree node missing required elements, try automatic configuration\n");
-+
-+		if (qoriq_ptp_auto_config(qoriq_ptp, node))
-+			goto no_config;
- 	}
- 
-+	err = -ENODEV;
-+
- 	qoriq_ptp->irq = platform_get_irq(dev, 0);
- 
- 	if (qoriq_ptp->irq < 0) {
-@@ -436,6 +540,7 @@ static int qoriq_ptp_probe(struct platform_device *dev)
- 	release_resource(qoriq_ptp->rsrc);
- no_resource:
- 	free_irq(qoriq_ptp->irq, qoriq_ptp);
-+no_config:
- no_node:
- 	kfree(qoriq_ptp);
- no_memory:
-diff --git a/include/linux/fsl/ptp_qoriq.h b/include/linux/fsl/ptp_qoriq.h
-index dc3dac4..c1f003a 100644
---- a/include/linux/fsl/ptp_qoriq.h
-+++ b/include/linux/fsl/ptp_qoriq.h
-@@ -127,9 +127,13 @@ struct qoriq_ptp_registers {
- 
- 
- #define DRIVER		"ptp_qoriq"
--#define DEFAULT_CKSEL	1
- #define N_EXT_TS	2
- 
-+#define DEFAULT_CKSEL		1
-+#define DEFAULT_TMR_PRSC	2
-+#define DEFAULT_FIPER1_PERIOD	1000000000
-+#define DEFAULT_FIPER2_PERIOD	100000
-+
- struct qoriq_ptp {
- 	void __iomem *base;
- 	struct qoriq_ptp_registers regs;
--- 
-1.7.1
+> --
+> 2.7.4
+>
+
+Anyway, we can just drop this patch from your series as I amended the
+patch causing the problem.
+
+I will continue to review the rest.
+
+Kind regards
+Uffe
