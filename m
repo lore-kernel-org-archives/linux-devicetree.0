@@ -1,13 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v7 1/4] ARM: dts: sun8i: a83t: Add the cir pin
- for the A83T
-Date: Wed,  1 Aug 2018 11:47:58 +0200
-Message-ID: <20180801094801.26627-2-embed3d@gmail.com>
+Subject: [PATCH v7 2/4] ARM: dts: sun8i: a83t: Add support for
+ the cir interface
+Date: Wed,  1 Aug 2018 11:47:59 +0200
+Message-ID: <20180801094801.26627-3-embed3d@gmail.com>
 References: <20180801094801.26627-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBVEDQ3NQKGQEC7AM26A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBVMDQ3NQKGQEGHRW7KY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180801094801.26627-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,29 +20,38 @@ To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROf
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The CIR Pin of the A83T is located at PL12.
+The cir interface is like on the H3 located at 0x01f02000 and is exactly
+the same. This patch adds support for the ir interface on the A83T.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 2be23d600957..afed6c0dea6f 100644
+index afed6c0dea6f..798ab48c5479 100644
 --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
 +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -1004,6 +1004,11 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
+@@ -992,6 +992,19 @@
+ 			reg = <0x1f01c00 0x400>;
+ 		};
  
-+			r_cir_pin: r-cir-pin {
-+				pins = "PL12";
-+				function = "s_cir_rx";
-+			};
++		r_cir: ir@1f02000 {
++			compatible = "allwinner,sun8i-a83t-ir",
++				"allwinner,sun5i-a13-ir";
++			clocks = <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
++			clock-names = "apb", "ir";
++			resets = <&r_ccu RST_APB0_IR>;
++			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x01f02000 0x400>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&r_cir_pin>;
++			status = "disabled";
++		};
 +
- 			r_rsb_pins: r-rsb-pins {
- 				pins = "PL0", "PL1";
- 				function = "s_rsb";
+ 		r_pio: pinctrl@1f02c00 {
+ 			compatible = "allwinner,sun8i-a83t-r-pinctrl";
+ 			reg = <0x01f02c00 0x400>;
 -- 
 2.11.0
