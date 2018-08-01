@@ -1,75 +1,102 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/5] regulator: rk808: add RK809 and RK817 support.
-Date: Wed, 1 Aug 2018 10:25:12 +0100
-Message-ID: <20180801092512.GA5509@sirena.org.uk>
-References: <1533023850-29004-1-git-send-email-tony.xie@rock-chips.com>
- <1533023850-29004-3-git-send-email-tony.xie@rock-chips.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/2] mmc: tmio: rename files and CONFIG options to have
+ the same prefix
+Date: Wed, 1 Aug 2018 11:35:12 +0200
+Message-ID: <CAPDyKFph7X=SvG4=DhRf0eiLcKcX=tD42QAO96q9S+Ebecn20w@mail.gmail.com>
+References: <1532575736-20138-1-git-send-email-yamada.masahiro@socionext.com>
+ <1532575736-20138-2-git-send-email-yamada.masahiro@socionext.com>
+ <CAPDyKFpK=UnwdNtb3XcgcRBJZeE0X5osM-tk8E85TCs3CeDq7Q@mail.gmail.com> <CAK7LNAScJFUPK=mMmNWYw-yJ9iaxaibituYRDU2x5kGpbsEd5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3757494064456138012=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1533023850-29004-3-git-send-email-tony.xie@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Xie <tony.xie@rock-chips.com>
-Cc: linux-rtc@vger.kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, huangtao@rock-chips.com, heiko@sntech.de, devicetree@vger.kernel.org, sboyd@kernel.org, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, xsf@rock-chips.com, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chenjh@rock-chips.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNAScJFUPK=mMmNWYw-yJ9iaxaibituYRDU2x5kGpbsEd5A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 31 July 2018 at 14:12, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> 2018-07-31 0:07 GMT+09:00 Ulf Hansson <ulf.hansson@linaro.org>:
+>> On 26 July 2018 at 05:28, Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+>>> As commit b6147490e6aa ("mmc: tmio: split core functionality, DMA and
+>>> MFD glue") said, these MMC controllers use the IP from Panasonic.
+>>>
+>>> TMIO (Toshiba Mobile IO) MMC was the first upstreamed user of this IP.
+>>> The common driver code was split and expanded as 'tmio-mmc-core', then
+>>> it become historical misnomer since 'tmio' is not the name of this IP.
+>>>
+>>> I pointed out this [1], and suggested to re-organize the names in the
+>>> form of:
+>>>
+>>>   <IP-name>.c            (common code for this IP)
+>>>   <IP-name>_tmio.c       (Toshiba Mobile IO)
+>>>   <IP-name>_sdhi.c       (Renesas SDHI)
+>>>   <IP-name>_uniphier.c   (Socionext UniPhier)
+>>>
+>>> The <IP-name> in my mind was 'mnsd' because names of Panasonic chips
+>>> are prefixed with 'MN'.
+>>>
+>>> This is the naming scheme as we see in dw_mmc* and sdhci-*.
+>>>
+>>> In the discussion with Wolfram Sang, my suggestion was rejected
+>>> because it implied drastic function renaming, which is too invasive.
+>>>
+>>> Ulf Hansson was still happy with file renaming to clarify the
+>>> relationship between variants.  So, the accepted solution was:
+>>>
+>>>  - Make 'tmio_mmc' the _right_ core name
+>>>  - Align all variant files with the same prefix.
+>>>  - Do not rename functions
+>>>
+>>> This commit renames files as follows:
+>>>
+>>>   tmio_mmc_core.c              -> tmio_mmc.c
+>>>   tmio_mmc.c                   -> tmio_mmc_original.c
+>>>   renesas_sdhi_core.c          -> tmio_mmc_sdhi.c
+>>>   renesas_sdhi.h               -> tmio_mmc_sdhi.h
+>>>   renesas_sdhi_internal_dmac.c -> tmio_mmc_sdhi_internal_dmac.c
+>>>   renesas_sdhi_sys_dmac.c      -> tmio_mmc_sdhi_sys_dmac.c
+>>>
+>>> Also rename CONFIG options to match to the file names:
+>>>
+>>>   MMC_TMIO_CORE          -> MMC_TMIO
+>>>   MMC_TMIO               -> MMC_TMIO_ORIGINAL
+>>>   MMC_SDHI               -> MMC_TMIO_SDHI
+>>>   MMC_SDHI_SYS_DMAC      -> MMC_TMIO_SDHI_SYS_DMAC
+>>>   MMC_SDHI_INTERNAL_DMAC -> MMC_TMIO_SDHI_INTERNAL_DMAC
+>>>
+>>> I touched eseries_pxa_defconfig and pxa_defconfig in this commit
+>>> because they are inactive, but renaming of CONFIG options generally
+>>> takes some development cycles.  Old names will be kept until the
+>>> migration is completed, like Renesas folks did when they renamed
+>>> ARCH_SHMOBILE_MULTI to ARCH_RENESAS.
+>>>
+>>> [1] https://www.spinics.net/lists/linux-mmc/msg46952.html
+>>>
+>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>
+>> I am awaiting some feedback from Wolfram before applying.
+>
+>
+>
+> If this is not welcome, please feel free to throw away.
+> (then, I will name my driver 'uniphier-sd.c')
+>
+> I am neutral about this renaming because it
+> is trying to make the wrong thing correct.
+>
+>
+> It will also produce a different inconsistency.
+> Even if we rename renesas_sdhi_core.c to tmio_mmc_sdhi.c ,
+> functions in it will be kept renesas_sdhi_*
+> I understand they want to keep the file name and function names consistent.
 
---===============3757494064456138012==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
-Content-Disposition: inline
+Yes, we have discussed this, back an forth.
 
+I have no strong opinions, but instead rely on you reaching an
+agreement with Wolfram on the way forward.
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[...]
 
-On Tue, Jul 31, 2018 at 03:57:27PM +0800, Tony Xie wrote:
-
-> +	default:
-> +		pr_warn("%s ramp_delay: %d not supported, setting 10000\n",
-> +			rdev->desc->name, ramp_delay);
-> +	}
-
-This looks mostly good but I notice that most of the prints in the
-driver are pr_ rather than dev_ ones - using dev_ is better as it allows
-people to see which device was affected.
-
---MGYHOYXEY6WxJCY8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlthfHcACgkQJNaLcl1U
-h9C8Igf/dgHh7kVnRuWvWyT7b/+8mMS+HNtVuTBMtiUf5textB9vCDqH+oOZoZE/
-2PEPQccsJdhF2tkxfuArUQtY8lxO7BQFu3HFxD70ROweX9CfuvfnJBVDAw094Wx6
-Z4G8HLLp0WqLiqSdGvASehN8jspMmWRkV4ucf6ED/yUjGKZMUf3ow7cwgfg2e6S/
-It4Yp/5Z4QrXpQchKhRWYvJZ6xAbtGevKaEvjBWegj7L9vFJTZn1uSJJeDrrnste
-b0I0q4MUN6cfgQwYFK8JeBLvJWkmAC4bBQYv0ulDzboDtRB5VcP6WnjnDiWHBCnj
-G39mcKBy/R9YlALxB1kxGxp2Aj3Y9g==
-=3sW2
------END PGP SIGNATURE-----
-
---MGYHOYXEY6WxJCY8--
-
-
---===============3757494064456138012==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3757494064456138012==--
+Kind regards
+Uffe
