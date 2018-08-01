@@ -1,71 +1,102 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH 00/10] mscc: ocelot: add support for SerDes muxing
- configuration
-Date: Wed, 1 Aug 2018 09:54:00 +0200
-Message-ID: <20180801075400.cvvasvi2g2m56xp4@qschulz>
-References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
- <20180730132441.GC13198@lunn.ch>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v8 4/4] mailbox: Add support for i.MX7D messaging unit
+Date: Wed, 1 Aug 2018 10:00:43 +0200
+Message-ID: <20180801080043.xzoyz4xijjcxlaid@pengutronix.de>
+References: <20180731141146.10788-1-o.rempel@pengutronix.de>
+ <20180731141146.10788-5-o.rempel@pengutronix.de>
+ <AM0PR04MB42113FA3268A1DA75006702B802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u35ohko4nfagn3ww"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180730132441.GC13198@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com
+Content-Type: multipart/mixed; boundary="===============2267723956201486305=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <AM0PR04MB42113FA3268A1DA75006702B802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 
---u35ohko4nfagn3ww
+--===============2267723956201486305==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="socpfouxmughlwfw"
+Content-Disposition: inline
+
+
+--socpfouxmughlwfw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
-
-On Mon, Jul 30, 2018 at 03:24:41PM +0200, Andrew Lunn wrote:
-> > The SerDes configuration is in the middle of an address space (HSIO) th=
-at
-> > is used to configure some parts in the MAC controller driver, that is w=
-hy
-> > we need to use a syscon so that we can write to the same address space =
-=66rom
-> > different drivers safely using regmap.
+On Wed, Aug 01, 2018 at 07:52:43AM +0000, A.s. Dong wrote:
+> > -----Original Message-----
+> > From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
+> > Sent: Tuesday, July 31, 2018 10:12 PM
+> > To: Shawn Guo <shawnguo@kernel.org>; Fabio Estevam
+> > <fabio.estevam@nxp.com>; Rob Herring <robh+dt@kernel.org>; Mark
+> > Rutland <mark.rutland@arm.com>; A.s. Dong <aisheng.dong@nxp.com>;
+> > Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>; Jassi Brar
+> > <jassisinghbrar@gmail.com>
+> > Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
+> > linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; dl-li=
+nux-
+> > imx <linux-imx@nxp.com>
+> > Subject: [PATCH v8 4/4] mailbox: Add support for i.MX7D messaging unit
+> >=20
+> > The Mailbox controller is able to send messages (up to 4 32 bit words)
+> > between the endpoints.
+> >=20
 >=20
-> Hi Quentin
+> I'm not sure but is this still valid after change to multi channels mode?
+> We actually lost the HW capability to send messages up to 4 words
+> in the multi channels mode.
+> And such commit message probably will confuse people.
+> Worth a improve?
 >=20
-> I assume breaking backwards compatibility is not an issue here, since
-> there currently is only one board using the DT binding. But it would
-> be good to give a warning in the cover notes. git bisect will also
-> break for this one particular board. And since these changes are going
-> through different trees, it could be quite a big break.
->=20
+> Otherwise this patch mostly is okay to me except a few bits already
+> pointed out by Jassi.
 
-Yes sorry, I should have mentioned it in the cover letter, will do
-if/when there is a v2.
+Ok, I schedule this task for Thursday or Friday.
 
-Thanks,
-Quentin
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
---u35ohko4nfagn3ww
+--socpfouxmughlwfw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlthZxcACgkQhLiadT7g
-8aPTNw/+IVukDr3iYoXQ4ry2nF4nPhV12+CSQJn1pKAQFUYs3p4DGzfQPXKgXLPR
-27hCz+QoYZSJwvyYwCLeh7/DC39p9jKwWZJymUPunuhsExrloLxUwH7XuT386p9O
-Ym8bHhtsF2hyicESpNsTc+yQZpslNM0fN6iW87NN3Me5zRXGKr4aUjS4SN73EPyB
-JiVT8lF31Whph0mWcCv94sR02u0gU8fqm+EtguJpPj3o6USceNvGo/plgrm6IKam
-u2b1qd97AKw3jlFdPIimOJ9fu0vy/L5aj/6/dQqXSwE+Qd4o8lsh5rgOqsJTg322
-JBN78zFlng0RcHbWoEoAF/SpYZb5kyMIPU0b5y7xHkPaIiu19AtHMhqfuN85tNt9
-kt+77KdcVuDj73HWw3FnhT1f3V8DKtKWWN0bJW5OKO4TdP5RtA9/bU0vcMkcY2mJ
-TgXqZCHijh5i0DltePNDqR+RIXeBJ358Dwi5QBdJmnWvsZMV8ZJOHQFJMqCaFHw0
-LFo9q1H+u20AhC3jt7iFKDvkddadFcDHQfjT8S7Vh6bnYhVepIuorNVkJRdqp0pI
-qzoWbXIRZuuUjBBagA8RwEpxboIwwJ7teAI8YDWUSnM3WTbGtYclVSGSyEdOA7WX
-an+3naqXa4/g0/n1XcGs8ksgtskb6ciL/BX8jdYTz9XkHu69aKo=
-=LSYK
+iQEzBAABCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlthaKQACgkQdQOiSHVI
+77RgBAf+IfWwjwjCUErVFV1t4y1OWZtfmlsLkbfSNrzu6xLfscJToy7A7DoVTs5w
+i5fVxS+7e9WkB63SjZGh2bFO+H/EZQhPfmFaEUAM255hLJzWJ0q706QqEsK/lbD7
+n9O9ddl8r0iGLCOvty7OfiB1swTCrWl5T+9CkhlJdY0ITFQkDFQ8/87q1xyqjpEi
+plRhLa6uPyPssIl6BSp2OL/vuuyMviRK/Z1CVh5gzeGyMqzHBiyzL6C9yl/0Ec+s
+ZMg09VS09ziwA6M7WtNYkWbSSlVeJntIV6fFZHTYPOlT77ryH7hhB9NeRIqZZMJF
+m8SfbGpDij1mFqO92AikqWU1yKXC5g==
+=y2wv
 -----END PGP SIGNATURE-----
 
---u35ohko4nfagn3ww--
+--socpfouxmughlwfw--
+
+
+--===============2267723956201486305==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2267723956201486305==--
