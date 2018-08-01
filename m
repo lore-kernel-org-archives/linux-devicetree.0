@@ -1,328 +1,40 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-Date: Wed, 1 Aug 2018 05:49:16 +0000
-Message-ID: <MWHPR0201MB3481D2A338A004B2FB17CA61C22D0@MWHPR0201MB3481.namprd02.prod.outlook.com>
-References: <20180801100457.25614-1-nava.manne@xilinx.com>
- <20180801100457.25614-2-nava.manne@xilinx.com>
- <MWHPR0201MB34811402926886136673CE68C22E0@MWHPR0201MB3481.namprd02.prod.outlook.com>
- <CANk1AXQ-qrEKAm9zEs8sVaFNGGFkjCr+npTKUNDXz_bnpL=DQw@mail.gmail.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 3/3] ptp_qoriq: convert to use module parameters for
+ initialization
+Date: Tue, 31 Jul 2018 23:15:15 -0700
+Message-ID: <20180801061515.krn52iaq2kqdi3wo@localhost>
+References: <20180730100154.27906-1-yangbo.lu@nxp.com>
+ <20180730100154.27906-3-yangbo.lu@nxp.com>
+ <20180730143043.qu66ttzwyjbw6si7@localhost>
+ <DB6PR0401MB253643010802739AD55820F3F82D0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANk1AXQ-qrEKAm9zEs8sVaFNGGFkjCr+npTKUNDXz_bnpL=DQw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alan Tull <atull@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <DB6PR0401MB253643010802739AD55820F3F82D0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Y.b. Lu" <yangbo.lu@nxp.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan Tull,
+On Wed, Aug 01, 2018 at 04:36:40AM +0000, Y.b. Lu wrote:
 
-Thanks for the quick response.
-Please find my Comments inline...
+> Could I add a function to calculate a set of default register values
+> to initialize ptp timer when dts method failed to get required
+> properties in driver?
 
-> -----Original Message-----
-> From: Alan Tull [mailto:atull@kernel.org]
-> Sent: Tuesday, July 31, 2018 8:52 PM
-> To: Nava kishore Manne <navam@xilinx.com>
-> Cc: robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
-> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
-> atull@opensource.altera.com; moritz.fischer@ettus.com;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; Appana Durga Kedareswara Rao
-> <appanad@xilinx.com>; chinnikishore369@gmail.com; linux-
-> fpga@vger.kernel.org
-> Subject: Re: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for
-> Xilinx zynqmp
-> 
-> On Tue, Jul 31, 2018 at 8:08 AM, Nava kishore Manne <navam@xilinx.com>
-> wrote:
-> >
-> > +Alan Tull,
-> 
-> + linux-fpga mailing list
-> 
-> Hi Nava,
-> 
-> Thanks for submitting.
-> 
-> This should be on the linux-fpga mailing list.  The
-> linux/scripts/get_maintainer.pl script would tell you that.
-> 
-I have Created this Patch On Master Branch there get_maintainer.pl Doesn't have linux-fpga mailing list.
-https://git.kernel.org/pub/scm/linux/kernel/git/atull/linux-fpga.git/ 
-Please suggest a branch So will create a patch on top of it.
+Yes, it would be ideal if the driver can pick correct values
+automatically.
 
-> Also, did you run checkpatch.pl on these? :)  I encourage using the --strict
-> parameter.
-> 
-Will Fix in the next version.
-> >
-> >> -----Original Message-----
-> >> From: Nava kishore Manne [mailto:nava.manne@xilinx.com]
-> >> Sent: Wednesday, August 1, 2018 3:35 PM
-> >> To: robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
-> >> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
-> >> atull@opensource.altera.com; moritz.fischer@ettus.com; Nava kishore
-> >> Manne <navam@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
-> >> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Appana
-> >> Durga Kedareswara Rao <appanad@xilinx.com>;
-> >> chinnikishore369@gmail.com
-> >> Subject: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support
-> >> for Xilinx zynqmp
-> >>
-> >> This patch adds FPGA Manager support for the Xilinx ZynqMp chip.
-> >>
-> >> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> >> ---
-> >>  drivers/fpga/Kconfig       |   6 ++
-> >>  drivers/fpga/Makefile      |   1 +
-> >>  drivers/fpga/zynqmp-fpga.c | 164
-> >> +++++++++++++++++++++++++++++++++++++
-> >>  3 files changed, 171 insertions(+)
-> >>  create mode 100644 drivers/fpga/zynqmp-fpga.c
-> >>
-> >> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig index
-> >> cd84934774cc..b84e3555b3e3 100644
-> >> --- a/drivers/fpga/Kconfig
-> >> +++ b/drivers/fpga/Kconfig
-> >> @@ -26,6 +26,12 @@ config FPGA_MGR_ZYNQ_FPGA
-> >>       help
-> >>         FPGA manager driver support for Xilinx Zynq FPGAs.
-> >>
-> >> +config FPGA_MGR_ZYNQMP_FPGA
-> >> +     tristate "Xilinx Zynqmp FPGA"
-> >> +     depends on ARCH_ZYNQMP || COMPILE_TEST
-> >> +     help
-> >> +       FPGA manager driver support for Xilinx ZynqMp FPGAs.
-> >> +
-> >>  endif # FPGA
-> >>
-> >>  endmenu
-> >> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile index
-> >> 8d83fc6b1613..ef444512cb01 100644
-> >> --- a/drivers/fpga/Makefile
-> >> +++ b/drivers/fpga/Makefile
-> >> @@ -8,3 +8,4 @@ obj-$(CONFIG_FPGA)                    += fpga-mgr.o
-> >>  # FPGA Manager Drivers
-> >>  obj-$(CONFIG_FPGA_MGR_SOCFPGA)               += socfpga.o
-> >>  obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)     += zynq-fpga.o
-> >> +obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)   += zynqmp-fpga.o
-> >> diff --git a/drivers/fpga/zynqmp-fpga.c b/drivers/fpga/zynqmp-fpga.c
-> >> new file mode 100644 index 000000000000..e4172c3a6868
-> >> --- /dev/null
-> >> +++ b/drivers/fpga/zynqmp-fpga.c
-> >> @@ -0,0 +1,164 @@
-> >> +// SPDX-License-Identifier: GPL-2.0+
-> >> +/*
-> >> + * Copyright (C) 2018 Xilinx, Inc.
-> >> + *
-> 
-> Please delete the unnecessary blank '*' line here.
-> 
-Will Fix in the next version.
+However, the frequency on the FIPER outputs can't be configured
+automatically, and we don't have an API for the user to choose this.
 
-> >> + */
-> >> +
-> >> +#include <linux/dma-mapping.h>
-> >> +#include <linux/fpga/fpga-mgr.h>
-> >> +#include <linux/io.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of_address.h>
-> >> +#include <linux/string.h>
-> >> +#include <linux/firmware/xilinx/zynqmp/firmware.h>
-> 
-> I don't see this firmware/xilinx folder.  Is this dependent on other commits that
-> were submitted?  If so, please note that in the header.
-> 
-This  Driver have a dependency On firmware.h currently Jolly Shah is working On it.
-Once its got accepted will add the Required API's in the firmware.h
-https://lkml.org/lkml/2018/7/17/1038 
-will fix this in the next version.
+> I think this will be useful. The ptp timer on new platforms (you may
+> see two dts patches in this patchset. Many platforms will be
+> affected.) will work without these dts properties. If user want
+> specific setting, they can set dts properties.
 
-> >> +
-> >> +/* Constant Definitions */
-> >> +#define IXR_FPGA_DONE_MASK   0X00000008U
-> >> +#define IXR_FPGA_ENCRYPTION_EN       0x00000008U
-> >> +
-> >> +/**
-> >> + * struct zynqmp_fpga_priv - Private data structure
-> >> + * @dev:     Device data structure
-> >> + * @flags:   flags which is used to identify the bitfile type
-> >> + */
-> >> +struct zynqmp_fpga_priv {
-> >> +     struct device *dev;
-> >> +     u32 flags;
-> >> +};
-> >> +
-> >> +static int zynqmp_fpga_ops_write_init(struct fpga_manager *mgr,
-> >> +                                   struct fpga_image_info *info,
-> >> +                                   const char *buf, size_t size) {
-> 
-> checkpatch.pl would have complained about this:
-> ERROR: open brace '{' following function definitions go on the next line
-> 
-Will Fix in the next version.
+Sure.
 
-> >> +     struct zynqmp_fpga_priv *priv;
-> >> +
-> >> +     priv = mgr->priv;
-> >> +     priv->flags = info->flags;
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int zynqmp_fpga_ops_write(struct fpga_manager *mgr,
-> >> +                              const char *buf, size_t size) {
-> >> +     struct zynqmp_fpga_priv *priv;
-> >> +     char *kbuf;
-> >> +     size_t dma_size;
-> >> +     dma_addr_t dma_addr;
-> >> +     int ret;
-> >> +     const struct zynqmp_eemi_ops *eemi_ops =
-> >> zynqmp_pm_get_eemi_ops();
-> 
-> Appears to have a dependency that I can't see here.  I'm looking at the current
-> linux-next/master branch and not seeing this zynqmp_pm_get_eemi_ops
-> function anywhere.
-> 
-This API exists in firmware.c file. Currently it is in under review...
- https://lkml.org/lkml/2018/7/17/1038 
-
-> >> +
-> >> +     if (!eemi_ops || !eemi_ops->fpga_load)
-> >> +             return -ENXIO;
-> >> +
-> >> +     priv = mgr->priv;
-> >> +
-> >> +     if (mgr->flags & IXR_FPGA_ENCRYPTION_EN)
-> >> +             dma_size = size + ENCRYPTED_KEY_LEN;
-> >> +     else
-> >> +             dma_size = size;
-> >> +
-> >> +     kbuf = dma_alloc_coherent(priv->dev, dma_size, &dma_addr,
-> >> GFP_KERNEL);
-> >> +     if (!kbuf)
-> >> +             return -ENOMEM;
-> >> +
-> >> +     memcpy(kbuf, buf, size);
-> >> +
-> >> +     if (mgr->flags & IXR_FPGA_ENCRYPTION_EN)
-> >> +             memcpy(kbuf + size, mgr->key, ENCRYPTED_KEY_LEN);
-> >> +
-> >> +     wmb(); /* ensure all writes are done before initiate FW call */
-> >> +
-> >> +     if (mgr->flags & IXR_FPGA_ENCRYPTION_EN)
-> >> +             ret = eemi_ops->fpga_load(dma_addr, dma_addr + size,
-> >> +                                       mgr->flags);
-> >> +     else
-> >> +             ret = eemi_ops->fpga_load(dma_addr, size, mgr->flags);
-> >> +
-> >> +     dma_free_coherent(priv->dev, dma_size, kbuf, dma_addr);
-> >> +
-> >> +     return ret;
-> >> +}
-> >> +
-> >> +static int zynqmp_fpga_ops_write_complete(struct fpga_manager *mgr,
-> >> +                                       struct fpga_image_info *info)
-> >> +{
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static enum fpga_mgr_states zynqmp_fpga_ops_state(struct
-> >> +fpga_manager
-> >> +*mgr) {
-> >> +     u32 status;
-> >> +     const struct zynqmp_eemi_ops *eemi_ops =
-> >> zynqmp_pm_get_eemi_ops();
-> >> +
-> >> +     if (!eemi_ops || !eemi_ops->fpga_get_status)
-> >> +             return FPGA_MGR_STATE_UNKNOWN;
-> >> +
-> >> +     eemi_ops->fpga_get_status(&status);
-> >> +     if (status & IXR_FPGA_DONE_MASK)
-> >> +             return FPGA_MGR_STATE_OPERATING;
-> >> +
-> >> +     return FPGA_MGR_STATE_UNKNOWN;
-> >> +}
-> >> +
-> >> +static const struct fpga_manager_ops zynqmp_fpga_ops = {
-> >> +     .state = zynqmp_fpga_ops_state,
-> >> +     .write_init = zynqmp_fpga_ops_write_init,
-> >> +     .write = zynqmp_fpga_ops_write,
-> >> +     .write_complete = zynqmp_fpga_ops_write_complete, };
-> >> +
-> >> +static int zynqmp_fpga_probe(struct platform_device *pdev) {
-> >> +     struct device *dev = &pdev->dev;
-> >> +     struct zynqmp_fpga_priv *priv;
-> >> +     int err, ret;
-> >> +
-> >> +     priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> >> +     if (!priv)
-> >> +             return -ENOMEM;
-> >> +
-> >> +     priv->dev = dev;
-> >> +     ret = dma_set_mask_and_coherent(&pdev->dev,
-> >> DMA_BIT_MASK(44));
-> >> +     if (ret < 0)
-> >> +             dev_err(dev, "no usable DMA configuration");
-> >> +
-> >> +     err = fpga_mgr_register(dev, "Xilinx ZynqMP FPGA Manager",
-> >> +                             &zynqmp_fpga_ops, priv);
-> 
-> The API has changed in 4.17 to be
-> fpga_mgr_create/free/register/unregister.  Please look at linux-next/master for
-> the latest.
-
-Will Fix in the next version.
-
-> 
-> >> +     if (err) {
-> >> +             dev_err(dev, "unable to register FPGA manager");
-> >> +             return err;
-> >> +     }
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int zynqmp_fpga_remove(struct platform_device *pdev) {
-> >> +     fpga_mgr_unregister(&pdev->dev);
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static const struct of_device_id zynqmp_fpga_of_match[] = {
-> >> +     { .compatible = "xlnx,zynqmp-pcap-fpga", },
-> >> +     {},
-> >> +};
-> >> +
-> >> +MODULE_DEVICE_TABLE(of, zynqmp_fpga_of_match);
-> >> +
-> >> +static struct platform_driver zynqmp_fpga_driver = {
-> >> +     .probe = zynqmp_fpga_probe,
-> >> +     .remove = zynqmp_fpga_remove,
-> >> +     .driver = {
-> >> +             .name = "zynqmp_fpga_manager",
-> >> +             .of_match_table = of_match_ptr(zynqmp_fpga_of_match),
-> >> +     },
-> >> +};
-> >> +
-> >> +module_platform_driver(zynqmp_fpga_driver);
-> >> +
-> >> +MODULE_AUTHOR("Nava kishore Manne <navam@xilinx.com>");
-> >> +MODULE_DESCRIPTION("Xilinx ZynqMp FPGA Manager");
-> >> +MODULE_LICENSE("GPL");
-> >> --
-> >> 2.18.0
-> >
+Thanks,
+Richard
