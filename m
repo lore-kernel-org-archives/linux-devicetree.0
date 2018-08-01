@@ -1,63 +1,85 @@
-Return-Path: <SRS0=StV2=KQ=codeaurora.org=smohanad@kernel.org>
-From: Siddartha Mohanadoss <smohanad@codeaurora.org>
-Subject: [PATCH v4 0/3] Add QCOM PMIC5 ADC driver
-Date: Wed,  1 Aug 2018 16:31:58 -0700
-Message-Id: <1533166318-18055-1-git-send-email-smohanad@codeaurora.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Return-Path: <SRS0=MTgV=KQ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 4/5] clk: renesas: Add r8a774a1 CPG Core Clock Definitions
+Date: Wed, 1 Aug 2018 09:33:17 +0000
+Message-ID: 
+ <OSBPR01MB2103E2813C539E4273493BDCB82D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
+ <1532936891-25034-5-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdX5NOvxjDUbG0be2e4fmRe5d0hXoi+cJ1B+5-6FHrRk_Q@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdX5NOvxjDUbG0be2e4fmRe5d0hXoi+cJ1B+5-6FHrRk_Q@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series adds the PMIC5 ADC family of chipset
-that supports clients to measure voltage and current on
-inputs connected to the PMIC ADC AMUX. Clients include
-reading voltage phone power and on board system thermistors
-for thermal management.
-
-The v4 patchset addresses most of the review comments from
-prior patchset.
-
-Changes since patchset v3
-* Few minor changes.
-
-Changes since patchset v2
-* Removed support for current channel as part of this series.
-* Fix pointer arithmetic for iio_chan.
-* Few minor changes.
-* Update license to SPDX format for ADC header file.
-
-Changes since patchset v1
-* Merged DT bindings with prior PMIC family instead of a
-  seperate DT file for PMIC5 family.
-* Updated documentation for 'label' and 'value' property.
-* Updated using unique prefix adc5 for functions and defines
-  specific for this family of chipset.
-* Refactored scaling functions to use function pointer for
-  scaling lookup.
-* Added documentation comments as requested in the
-  scaling functions as applicable.
-* Added utility functions in the scaling API to avoid some of
-  the code repetitions.
-* Use consistent hex format for adc_data and use specific length
-  while assigning data.
-* Added support to determine controller version and check against
-  supported hardware settling delay values.
-* Various minor changes.
-
-Siddartha Mohanadoss (3):
-  dt-bindings: iio: adc: Add DT binding document for PMIC5 ADC
-  iio: adc: Add QCOM SPMI PMIC5 ADC driver
-  iio: adc: Update QCOM ADC license to SPDX format
-
- .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 +-
- drivers/iio/adc/Kconfig                            |  20 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/qcom-spmi-adc5.c                   | 798 +++++++++++++++++++++
- drivers/iio/adc/qcom-vadc-common.c                 | 189 ++++-
- drivers/iio/adc/qcom-vadc-common.h                 |  54 ++
- include/dt-bindings/iio/qcom,spmi-vadc.h           | 125 +++-
- 7 files changed, 1230 insertions(+), 34 deletions(-)
- create mode 100644 drivers/iio/adc/qcom-spmi-adc5.c
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggNC81XSBjbGs6IHJlbmVzYXM6IEFkZCByOGE3NzRhMSBDUEcgQ29yZSBDbG9jaw0KPiBE
+ZWZpbml0aW9ucw0KPg0KPiBIaSBCaWp1LA0KPg0KPiBPbiBNb24sIEp1bCAzMCwgMjAxOCBhdCA5
+OjU0IEFNIEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRk
+IGFsbCBSWi9HMk0gQ2xvY2sgUHVsc2UgR2VuZXJhdG9yIENvcmUgQ2xvY2sgT3V0cHV0cywgYXMg
+bGlzdGVkIGluDQo+ID4gVGFibGUgOC4yYiAoIkxpc3Qgb2YgQ2xvY2tzIFtSWi9HMk1dIikgb2Yg
+dGhlIFJaL0cyTSBIYXJkd2FyZSBVc2VyJ3MNCj4gPiBNYW51YWwuDQo+ID4NCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+ID4gUmV2aWV3ZWQt
+Ynk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPg0K
+PiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBi
+L2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svcjhhNzc0YTEtY3BnLW1zc3IuaA0KPiA+IEBAIC0w
+LDAgKzEsNTkgQEANCj4gPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4g
+PiArICoNCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE4IFJlbmVzYXMgRWxlY3Ryb25pY3MgQ29y
+cC4NCj4gPiArICovDQo+ID4gKyNpZm5kZWYgX19EVF9CSU5ESU5HU19DTE9DS19SOEE3NzRBMV9D
+UEdfTVNTUl9IX18NCj4gPiArI2RlZmluZSBfX0RUX0JJTkRJTkdTX0NMT0NLX1I4QTc3NEExX0NQ
+R19NU1NSX0hfXw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL3JlbmVz
+YXMtY3BnLW1zc3IuaD4NCj4gPiArDQo+ID4gKy8qIHI4YTc3NGExIENQRyBDb3JlIENsb2NrcyAq
+Lw0KPiA+ICsjZGVmaW5lIFI4QTc3NEExX0NMS19aICAgICAgICAgICAgICAgICAwDQo+ID4gKyNk
+ZWZpbmUgUjhBNzc0QTFfQ0xLX1oyICAgICAgICAgICAgICAgICAgICAgICAgMQ0KPiA+ICsjZGVm
+aW5lIFI4QTc3NEExX0NMS19aRyAgICAgICAgICAgICAgICAgICAgICAgIDINCj4gPiArI2RlZmlu
+ZSBSOEE3NzRBMV9DTEtfWlRSICAgICAgICAgICAgICAgMw0KPiA+ICsjZGVmaW5lIFI4QTc3NEEx
+X0NMS19aVFJEMiAgICAgICAgICAgICA0DQo+ID4gKyNkZWZpbmUgUjhBNzc0QTFfQ0xLX1pUICAg
+ICAgICAgICAgICAgICAgICAgICAgNQ0KPiA+ICsjZGVmaW5lIFI4QTc3NEExX0NMS19aWCAgICAg
+ICAgICAgICAgICAgICAgICAgIDYNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfUzBEMSAgICAg
+ICAgICAgICAgNw0KPiA+ICsjZGVmaW5lIFI4QTc3NEExX0NMS19TMEQyICAgICAgICAgICAgICA4
+DQo+ID4gKyNkZWZpbmUgUjhBNzc0QTFfQ0xLX1MwRDMgICAgICAgICAgICAgIDkNCj4gPiArI2Rl
+ZmluZSBSOEE3NzRBMV9DTEtfUzBENCAgICAgICAgICAgICAgMTANCj4gPiArI2RlZmluZSBSOEE3
+NzRBMV9DTEtfUzBENiAgICAgICAgICAgICAgMTENCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtf
+UzBEOCAgICAgICAgICAgICAgMTINCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfUzBEMTIgICAg
+ICAgICAgICAgMTMNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfUzFEMiAgICAgICAgICAgICAg
+MTQNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfUzFENCAgICAgICAgICAgICAgMTUNCj4gPiAr
+I2RlZmluZSBSOEE3NzRBMV9DTEtfUzJEMSAgICAgICAgICAgICAgMTYNCj4gPiArI2RlZmluZSBS
+OEE3NzRBMV9DTEtfUzJEMiAgICAgICAgICAgICAgMTcNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9D
+TEtfUzJENCAgICAgICAgICAgICAgMTgNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfUzNEMSAg
+ICAgICAgICAgICAgMTkNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfUzNEMiAgICAgICAgICAg
+ICAgMjANCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfUzNENCAgICAgICAgICAgICAgMjENCj4g
+PiArI2RlZmluZSBSOEE3NzRBMV9DTEtfTEIgICAgICAgICAgICAgICAgICAgICAgICAyMg0KPiA+
+ICsjZGVmaW5lIFI4QTc3NEExX0NMS19DTCAgICAgICAgICAgICAgICAgICAgICAgIDIzDQo+ID4g
+KyNkZWZpbmUgUjhBNzc0QTFfQ0xLX1pCMyAgICAgICAgICAgICAgIDI0DQo+ID4gKyNkZWZpbmUg
+UjhBNzc0QTFfQ0xLX1pCM0QyICAgICAgICAgICAgIDI1DQo+ID4gKyNkZWZpbmUgUjhBNzc0QTFf
+Q0xLX1pCM0Q0ICAgICAgICAgICAgIDI2DQo+ID4gKyNkZWZpbmUgUjhBNzc0QTFfQ0xLX0NSICAg
+ICAgICAgICAgICAgICAgICAgICAgMjcNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfQ1JEMiAg
+ICAgICAgICAgICAgMjgNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfU0QwSCAgICAgICAgICAg
+ICAgMjkNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfU0QwICAgICAgICAgICAgICAgMzANCj4g
+PiArI2RlZmluZSBSOEE3NzRBMV9DTEtfU0QxSCAgICAgICAgICAgICAgMzENCj4gPiArI2RlZmlu
+ZSBSOEE3NzRBMV9DTEtfU0QxICAgICAgICAgICAgICAgMzINCj4gPiArI2RlZmluZSBSOEE3NzRB
+MV9DTEtfU0QySCAgICAgICAgICAgICAgMzMNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfU0Qy
+ICAgICAgICAgICAgICAgMzQNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfU0QzSCAgICAgICAg
+ICAgICAgMzUNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfU0QzICAgICAgICAgICAgICAgMzYN
+Cj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfUlBDICAgICAgICAgICAgICAgMzcNCj4gPiArI2Rl
+ZmluZSBSOEE3NzRBMV9DTEtfUlBDRDIgICAgICAgICAgICAgMzgNCj4gPiArI2RlZmluZSBSOEE3
+NzRBMV9DTEtfTVNPICAgICAgICAgICAgICAgMzkNCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtf
+SERNSSAgICAgICAgICAgICAgNDANCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfQ1NJMCAgICAg
+ICAgICAgICAgNDENCj4gPiArI2RlZmluZSBSOEE3NzRBMV9DTEtfQ1AgICAgICAgICAgICAgICAg
+ICAgICAgICA0Mg0KPiA+ICsjZGVmaW5lIFI4QTc3NEExX0NMS19QT1NUMiAgICAgICAgICAgICA0
+Mw0KPg0KPiBQT1NUMiBpcyBhbiBpbnRlcm5hbCBjbG9jaywgd2hpY2ggZG9lc24ndCBuZWVkIHRv
+IGJlIHJlZmVycmVkIHRvIGZyb20gRFQuDQo+IFNvIHBsZWFzZSBkcm9wIGl0IGZyb20gdGhlIGJp
+bmRpbmdzLg0KDQpXaWxsIHNlbmQgVjIgd2l0aCB0aGUgYWJvdmUgZml4Lg0KDQo+ID4gKyNkZWZp
+bmUgUjhBNzc0QTFfQ0xLX0NQRVggICAgICAgICAgICAgIDQ0DQo+ID4gKyNkZWZpbmUgUjhBNzc0
+QTFfQ0xLX1IgICAgICAgICAgICAgICAgIDQ1DQo+ID4gKyNkZWZpbmUgUjhBNzc0QTFfQ0xLX09T
+QyAgICAgICAgICAgICAgIDQ2DQo+DQo+IFdpdGggdGhlIGFib3ZlIGZpeGVkOg0KPiBSZXZpZXdl
+ZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCg0KUmVn
+YXJkcywNCkJpanUNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMg
+TWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDgg
+NUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBO
+by4gMDQ1ODY3MDkuDQo=
