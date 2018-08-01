@@ -1,67 +1,78 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 07/10] dt-bindings: phy: add DT binding for Microsemi
- Ocelot SerDes muxing
-Date: Wed, 1 Aug 2018 16:31:47 +0200
-Message-ID: <20180801143147.GA16322@lunn.ch>
-References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
- <cd75c96640cc7fe306ee355acb1db85adb5b796f.1532954208.git-series.quentin.schulz@bootlin.com>
- <20180730133448.GD13198@lunn.ch>
- <20180801082413.2mjm52vwxw3anun6@qschulz>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for
+ Xilinx zynqmp
+Date: Wed, 1 Aug 2018 09:49:46 -0500
+Message-ID: <CANk1AXQci08TOVq7TeXXGfMWi8C8o4AGYDJK2Dr-mVgZPqU8bQ@mail.gmail.com>
+References: <20180801100457.25614-1-nava.manne@xilinx.com> <20180801100457.25614-2-nava.manne@xilinx.com>
+ <MWHPR0201MB34811402926886136673CE68C22E0@MWHPR0201MB3481.namprd02.prod.outlook.com>
+ <CANk1AXQ-qrEKAm9zEs8sVaFNGGFkjCr+npTKUNDXz_bnpL=DQw@mail.gmail.com> <MWHPR0201MB3481D2A338A004B2FB17CA61C22D0@MWHPR0201MB3481.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180801082413.2mjm52vwxw3anun6@qschulz>
-Sender: netdev-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <MWHPR0201MB3481D2A338A004B2FB17CA61C22D0@MWHPR0201MB3481.namprd02.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nava kishore Manne <navam@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> > Maybe this should be serdes-mux? The SERDES itself should have some
-> > registers somewhere. If you ever decide to make use of phylink,
-> > e.g. to support SFP, you are going to need to know if the SERDES is
-> > up. So you might need to add the actual SERDES device, in addition to
-> > the mux for the SERDES.
-> > 
-> 
-> I'm not sure to follow.
-> 
-> To be honest, I might have mislead you. The whole configuration of the
-> serdes is in the hsio register address space. For now, muxing is the
-> only reason there is a driver for the serdes but there are other things
-> that can be configured (though not used yet): de/serializer, input/output
-> buffers, PLL, ... configuration registers for the SerDes.
+On Wed, Aug 1, 2018 at 12:49 AM, Nava kishore Manne <navam@xilinx.com> wrote:
+> Hi Alan Tull,
+>
+> Thanks for the quick response.
+> Please find my Comments inline...
+>
+>> -----Original Message-----
+>> From: Alan Tull [mailto:atull@kernel.org]
+>> Sent: Tuesday, July 31, 2018 8:52 PM
+>> To: Nava kishore Manne <navam@xilinx.com>
+>> Cc: robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
+>> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
+>> atull@opensource.altera.com; moritz.fischer@ettus.com;
+>> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+>> kernel@vger.kernel.org; Appana Durga Kedareswara Rao
+>> <appanad@xilinx.com>; chinnikishore369@gmail.com; linux-
+>> fpga@vger.kernel.org
+>> Subject: Re: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for
+>> Xilinx zynqmp
+>>
+>> On Tue, Jul 31, 2018 at 8:08 AM, Nava kishore Manne <navam@xilinx.com>
+>> wrote:
+>> >
+>> > +Alan Tull,
+>>
+>> + linux-fpga mailing list
+>>
+>> Hi Nava,
+>>
+>> Thanks for submitting.
+>>
+>> This should be on the linux-fpga mailing list.  The
+>> linux/scripts/get_maintainer.pl script would tell you that.
+>>
+> I have Created this Patch On Master Branch there get_maintainer.pl Doesn't have linux-fpga mailing list.
 
-When you are using the SERDES for networking, you need to know if the
-SERDES has achieved sync. For example, when the SERDES connects to an
-optical SFP module, the SERDES bit stream continues unmodified over
-the optical link to the SERDES in the peer. The optical module can
-tell you if it is receiving optical power, but it cannot tell you if
-the optical signal makes any sense. The SERDES however knows how to
-decode the bitstream, sync to it, etc. So you need some registers in
-the SERDES to get this status information. Typically, you can also get
-access to the SGMII/1000Base-X code word, so you can do
-auto-negotiation, or know if you need to send each bit 10 or 100 times
-in order to do 100Mbps or 10Mbps. If you are connecting to a PHY which
-can do > 1Gbps, you need to change the SERDES between SGMII,
-1000Base-X, 2500Base-X, etc. Before you can say the link is up, you
-want the PHY to tell you it has link to its peer PHY, and you want to
-know the SERDES is ready. Typically the SERDES is last, since you
-don't know what to configure the SERDES to until the PHY is finished
-negotiating the link to its peer.
+The linux-fpga mailing list has been in MAINTAINERS since v4.9.
 
-If you look at any of the Marvell SERDES interfaces, found in PHYs or
-switches, there are dozens of registers for controlling the SERDES.
+> https://git.kernel.org/pub/scm/linux/kernel/git/atull/linux-fpga.git/
+> Please suggest a branch So will create a patch on top of it.
 
-Now, it could be we don't have a clear definition of what a SERDES
-is. The Marvell documents has a lot in its definition of SERDES, where
-as what you could be purely a 'dumb' parallel to serial convert, and
-all the rest of the logic is in the Ethernet MAC and the PCIe device?
+I understand now.  linux-fpga/master is v4.9ish.  I haven't updated
+the master branch it since I cloned the repo, it doesn't have any
+special FPGA development patches, it's just what Linus's master branch
+was when I cloned.  I don't think you can count on any kernel.org's
+master branch to be up to date with Linus other than Linus.  Probably
+because it would be a waste of traffic on kernel.org and you can have
+multiple remotes on your local git repo with Linus being the one that
+contains the one true master branch.
 
-Now, back to my original point. Where are the registers for 'the rest
-of this logic'? If they are in the MAC address space, we don't have a
-problem. If they are somewhere else, maybe you will need to add
-another device. What is this device called? That is why i'm trying to
-differentiate between the 'SERDES-MUX' and the 'SERDES'.
+Right now, Linus's master branch has the latest FPGA API, so it would
+be a good one to develop on.
 
-	Andrew
+Generally speaking, sometimes there will be some API changes for FPGA
+that are only on linux-next/master.  I spend most of my time
+developing on linux-next/master.  Occasionally that's broken but most
+of the time that works for me.  Or you could use a Linus release tag
+from linus' repo.  Or Linus' master branch.  When submitting, if your
+patches apply cleanly on linux-next/master, that is helpful and good.
+
+Alan
