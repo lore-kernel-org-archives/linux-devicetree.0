@@ -1,116 +1,75 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RESEND RFC 2/4] drivers: pinctrl: qcom: add wakeup gpio map for sdm845
-Date: Tue, 31 Jul 2018 20:00:19 -0600
-Message-ID: <20180801020021.9782-3-ilina@codeaurora.org>
-References: <20180801020021.9782-1-ilina@codeaurora.org>
+From: cang@codeaurora.org
+Subject: Re: [PATCH v8 0/5] Support for Qualcomm UFS QMP PHY on SDM845
+Date: Wed, 01 Aug 2018 10:21:07 +0800
+Message-ID: <1cafb427567bfd6ea8dfd011e4539097@codeaurora.org>
+References: <20180731100914.19856-1-cang@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801020021.9782-1-ilina@codeaurora.org>
+In-Reply-To: <20180731100914.19856-1-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org
-Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
+To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, evgreen@chromium.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add GPIO to PDC pin map for the SDM845 SoC.
-
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-sdm845.c | 76 +++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index 2ab7a8885757..e93660922dc2 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -1277,6 +1277,80 @@ static const struct msm_pingroup sdm845_groups[] = {
- 	UFS_RESET(ufs_reset, 0x99f000),
- };
-
-+static struct msm_pinctrl_pdc_map sdm845_wakeup_gpios[] = {
-+	{1, 30},
-+	{3, 31},
-+	{5, 32},
-+	{10, 33},
-+	{11, 34},
-+	{20, 35},
-+	{22, 36},
-+	{24, 37},
-+	{26, 38},
-+	{30, 39},
-+	{32, 41},
-+	{34, 42},
-+	{36, 43},
-+	{37, 44},
-+	{38, 45},
-+	{39, 46},
-+	{40, 47},
-+	{43, 49},
-+	{44, 50},
-+	{46, 51},
-+	{48, 52},
-+	{52, 54},
-+	{53, 55},
-+	{54, 56},
-+	{56, 57},
-+	{57, 58},
-+	{58, 59},
-+	{59, 60},
-+	{60, 61},
-+	{61, 62},
-+	{62, 63},
-+	{63, 64},
-+	{64, 65},
-+	{66, 66},
-+	{68, 67},
-+	{71, 68},
-+	{73, 69},
-+	{77, 70},
-+	{78, 71},
-+	{79, 72},
-+	{80, 73},
-+	{84, 74},
-+	{85, 75},
-+	{86, 76},
-+	{88, 77},
-+	{91, 79},
-+	{92, 80},
-+	{95, 81},
-+	{96, 82},
-+	{97, 83},
-+	{101, 84},
-+	{103, 85},
-+	{104, 86},
-+	{115, 90},
-+	{116, 91},
-+	{117, 92},
-+	{118, 93},
-+	{119, 94},
-+	{120, 95},
-+	{121, 96},
-+	{122, 97},
-+	{123, 98},
-+	{124, 99},
-+	{125, 100},
-+	{127, 102},
-+	{128, 103},
-+	{129, 104},
-+	{130, 105},
-+	{132, 106},
-+	{133, 107},
-+	{145, 108},
-+};
-+
- static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.pins = sdm845_pins,
- 	.npins = ARRAY_SIZE(sdm845_pins),
-@@ -1285,6 +1359,8 @@ static const struct msm_pinctrl_soc_data sdm845_pinctrl = {
- 	.groups = sdm845_groups,
- 	.ngroups = ARRAY_SIZE(sdm845_groups),
- 	.ngpios = 150,
-+	.pdc_map = sdm845_wakeup_gpios,
-+	.npdc_pins = ARRAY_SIZE(sdm845_wakeup_gpios),
- };
-
- static int sdm845_pinctrl_probe(struct platform_device *pdev)
---
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 2018-07-31 18:09, Can Guo wrote:
+> This patch series adds support for UFS QMP PHY on SDM845 and the
+> compatible string for it. This patch series depends on the current
+> proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
+> the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
+> rebased on updated pipe_clk initialization sequence [3]. This series
+> can only be merged once the dependent patches do.
+> [1]
+> http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
+> [2]
+> http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
+> [3] https://patchwork.kernel.org/patch/10376551/
+> 
+> Changes since v7:
+> - Add one new change to update UFS PHY power on sequence
+> - Incorporated review comments from Evan, Vivek and Manu.
+> 
+> Changes since v6:
+> - Add one new change to clean up some structs and field
+> - Updates the PHY power control sequence.
+> - Incorporated review comments from Vivek and Manu.
+> 
+> Changes since v5:
+> - Updates the PHY power control sequence.
+> - Updates UFS PHY power on condition check.
+> 
+> Changes since v4:
+> - Adds 'ref_aux' clock back to SDM845 UFS PHY clock list.
+> - Power on PHY before serdes configuration starts.
+> - Updates the UFS PHY initialization sequence.
+> - Updates a few UFS PHY registers.
+> - Incorporated review comments from Vivek and Manu.
+> 
+> Changes since v3:
+> - Incorporated review comments from Vivek and Rob.
+> 
+> Changes since v2:
+> - Incorporated review comments from Vivek and Rob.
+> - Remove "ref_aux" from sdm845 ufs phy clock list structure.
+> 
+> Changes since v1:
+> - Incorporated review comments from Vivek and Manu.
+> - Update the commit title of patch 2.
+> 
+> 
+> Can Guo (5):
+>   phy: Update PHY power control sequence
+>   phy: General struct and field cleanup
+>   phy: Add QMP phy based UFS phy support for sdm845
+>   scsi: ufs: Power on phy after it is initialized
+>   dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
+> 
+>  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   4 +-
+>  drivers/phy/qualcomm/phy-qcom-qmp.c                | 216 
+> +++++++++++++++++++--
+>  drivers/phy/qualcomm/phy-qcom-qmp.h                |  15 ++
+>  drivers/scsi/ufs/ufs-qcom.c                        |   4 +-
+>  drivers/scsi/ufs/ufs-qcom.h                        |   1 +
+>  5 files changed, 219 insertions(+), 21 deletions(-)
