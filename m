@@ -1,202 +1,282 @@
-Return-Path: <SRS0=gbhc=KZ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:60431 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbeHJNIU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Aug 2018 09:08:20 -0400
-Date: Fri, 10 Aug 2018 12:38:57 +0200
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 00/21] V4L2 fwnode rework; support for default
- configuration
-Message-ID: <20180810103857.GD7060@w540>
-References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="8w3uRX/HFJGApMzv"
-Content-Disposition: inline
-In-Reply-To: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+Return-Path: <SRS0=StV2=KQ=codeaurora.org=smohanad@kernel.org>
+From: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Subject: [PATCH v4 1/3] dt-bindings: iio: adc: Add DT binding document for PMIC5 ADC
+Date: Wed,  1 Aug 2018 16:38:16 -0700
+Message-Id: <1533166696-23557-1-git-send-email-smohanad@codeaurora.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 List-ID: <devicetree@vger.kernel.org>
 
+PMIC5 ADC has support for clients to measure voltage and current
+on inputs connected to the PMIC. Clients include reading voltage
+phone power and on board system thermistors for thermal management.
+ADC5 on certain PMIC has support to read battery current.
 
---8w3uRX/HFJGApMzv
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+This change adds documentation.
 
-Hi Sakari,
-   thanks for this nice rework
+Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 ++++++++++----
+ include/dt-bindings/iio/qcom,spmi-vadc.h           | 115 ++++++++++++++++++++-
+ 2 files changed, 172 insertions(+), 20 deletions(-)
 
-On Mon, Jul 23, 2018 at 04:46:45PM +0300, Sakari Ailus wrote:
-> Hello everyone,
->
-> I've long thought the V4L2 fwnode framework requires some work (it's buggy
-> and it does not adequately serve common needs). This set should address in
-> particular these matters:
->
-> - Most devices support a particular media bus type but the V4L2 fwnode
->   framework was not able to use such information, but instead tried to
->   guess the bus type with varying levels of success while drivers
->   generally ignored the results. This patchset makes that possible ---
->   setting a bus type enables parsing configuration for only that bus.
->   Failing that check results in returning -ENXIO to be returned.
->
-> - Support specifying default configuration. If the endpoint has no
->   configuration, the defaults set by the driver (as documented in DT
->   bindings) will prevail. Any available configuration will still be read
->   from the endpoint as one could expect. A common use case for this is
->   e.g. the number of CSI-2 lanes. Few devices support lane mapping, and
->   default 1:1 mapping is provided in absence of a valid default or
->   configuration read OF.
->
-> - Debugging information is greatly improved.
->
-> - Recognition of the differences between CSI-2 D-PHY and C-PHY. All
->   currently supported hardware (or at least drivers) is D-PHY only, so
->   this change is still easy.
->
-> The smiapp driver is converted to use the new functionality. This patchset
-> does not address remaining issues such as supporting setting defaults for
-> e.g. bridge drivers with multiple ports, but with Steve Longerbeam's
-> patchset we're much closer with that goal. I've rebased this set on top of
-> Steve's. Albeit the two deal with the same files, there were only a few
-> trivial conflicts.
->
-> Note that I've only tested parsing endpoints for the CSI-2 bus (no
-> parallel IF hardware). Testing in general would be beneficial: the code
-> flows are rather convoluted and different hardware tends to excercise
-> different flows while the use of the use of defaults has a similar
-> effect.
->
-
-I have tested on a parallel device, and so far it's all good. I would
-like to test default settings next, and see how they behave.
-
-> Comments are welcome.
->
-
-In the meantine, looking at your (anticipated) v2, and in particular
-to this commit
-https://git.linuxtv.org/sailus/media_tree.git/commit/?h=v4l2-fwnode-next&id=077d73a3e1b66f9fbb1227245b1332cc1c7871d4
-I'm wondering if introducing an API to query the bus type from the
-firmware wouldn't be beneficial for bridge drivers (and possibly for
-sensor drivers too).
-
-I see in that commit most drivers will set the bus type to 0 and rely
-on autoguessing, which is fine, but I'm thinking at peripheral that
-can support two different media busses (eg. Parallel and BT.656) or
-sensor that can work with parallel or CSI-2 interface, and in that
-case would you consider something like:
-
-static int bridge_driver_parse_of(struct device_node *np):
-        struct v4l2_fwnode_endpoint bus_cfg ;
-
-        bus_type = v4l2_fwnode_get_bus_type(fwnode_handle(np);
-        if (bus_type != V4L2_MBUS_PARALLEL &&
-            bus_type != V4L2_MBUS_BT656)
-            return -ENXIO;
-
-        bus_cfg.bus_type = bus_type;
-        v4l2_fwnode_endpoint_parse(of_fwnode_handle(np), &bus_cfg);
-
-Adding a function to retrieve the bus type specified in firmware would
-make easier for drivers to check if the configuration is acceptable (as
-this is a device specific decision) and use this information later to
-provide to v4l2_fwnode_endpoint_parse() a v4l2_fwnode_endpoint with
-the bus_type initialized, so it does not need to rely on autoguessing.
-
-Otherwise, if I got this right, the only way not to go with
-autoguessing is to restrict the supported media bus type to a single
-one, which for some devices is a limitation.
-
-Does this makes sense to you?
-
-Thanks
-   j
-
-> I've pushed the patches (including Steve's) here:
->
-> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-fwnode>
->
-> Sakari Ailus (21):
->   v4l: fwnode: Add debug prints for V4L2 endpoint property parsing
->   v4l: fwnode: Use fwnode_graph_for_each_endpoint
->   v4l: fwnode: Detect bus type correctly
->   v4l: fwnode: The CSI-2 clock is continuous if it's not non-continuous
->   dt-bindings: media: Specify bus type for MIPI D-PHY, others,
->     explicitly
->   v4l: fwnode: Add definitions for CSI-2 D-PHY, parallel and Bt.656
->     busses
->   v4l: mediabus: Recognise CSI-2 D-PHY and C-PHY
->   v4l: fwnode: Make use of newly specified bus types
->   v4l: fwnode: Read lane inversion information despite lane numbering
->   v4l: fwnode: Only assign configuration if there is no error
->   v4l: fwnode: Support driver-defined lane mapping defaults
->   v4l: fwnode: Support default CSI-2 lane mapping for drivers
->   v4l: fwnode: Parse the graph endpoint as last
->   v4l: fwnode: Use default parallel flags
->   v4l: fwnode: Allow setting default parameters
->   v4l: fwnode: Use media bus type for bus parser selection
->   v4l: fwnode: Print bus type
->   v4l: fwnode: Use V4L2 fwnode endpoint media bus type if set
->   v4l: fwnode: Support parsing of CSI-2 C-PHY endpoints
->   v4l: fwnode: Update V4L2 fwnode endpoint parsing documentation
->   smiapp: Query the V4L2 endpoint for a specific bus type
->
->  .../devicetree/bindings/media/video-interfaces.txt |   4 +-
->  drivers/gpu/ipu-v3/ipu-csi.c                       |   2 +-
->  drivers/media/i2c/adv7180.c                        |   2 +-
->  drivers/media/i2c/ov2659.c                         |  14 +-
->  drivers/media/i2c/ov5640.c                         |   4 +-
->  drivers/media/i2c/ov5645.c                         |   2 +-
->  drivers/media/i2c/ov7251.c                         |   4 +-
->  drivers/media/i2c/s5c73m3/s5c73m3-core.c           |   2 +-
->  drivers/media/i2c/s5k5baf.c                        |   4 +-
->  drivers/media/i2c/s5k6aa.c                         |   2 +-
->  drivers/media/i2c/smiapp/smiapp-core.c             |  34 +-
->  drivers/media/i2c/soc_camera/ov5642.c              |   2 +-
->  drivers/media/i2c/tc358743.c                       |  28 +-
->  drivers/media/pci/intel/ipu3/ipu3-cio2.c           |   2 +-
->  drivers/media/platform/cadence/cdns-csi2rx.c       |   2 +-
->  drivers/media/platform/cadence/cdns-csi2tx.c       |   2 +-
->  drivers/media/platform/marvell-ccic/mcam-core.c    |   4 +-
->  drivers/media/platform/marvell-ccic/mmp-driver.c   |   2 +-
->  drivers/media/platform/omap3isp/isp.c              |   2 +-
->  drivers/media/platform/pxa_camera.c                |   2 +-
->  drivers/media/platform/rcar-vin/rcar-csi2.c        |   2 +-
->  drivers/media/platform/soc_camera/soc_mediabus.c   |   2 +-
->  drivers/media/platform/stm32/stm32-dcmi.c          |   2 +-
->  drivers/media/platform/ti-vpe/cal.c                |   2 +-
->  drivers/media/v4l2-core/v4l2-fwnode.c              | 510 ++++++++++++++++-----
->  drivers/staging/media/imx/imx-media-csi.c          |   2 +-
->  drivers/staging/media/imx/imx6-mipi-csi2.c         |   2 +-
->  drivers/staging/media/imx074/imx074.c              |   2 +-
->  include/media/v4l2-fwnode.h                        |  33 +-
->  include/media/v4l2-mediabus.h                      |   8 +-
->  30 files changed, 505 insertions(+), 180 deletions(-)
->
-> --
-> 2.11.0
-
---8w3uRX/HFJGApMzv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbbWtBAAoJEHI0Bo8WoVY8BrkP/2OX8Q/thsw8zftjQHRWKSAb
-TOI+R+uyVjbOjEi781mb81vf7CZsQgh6bFYzhbyHuu1eqtvRTdkfG119XR5aI0VQ
-nv1SSphuUcC3HS29/xnBb9NhtzR0xDv3EWrvKZHneAsRafZ2n0w4gt0PWfnIChdt
-5edh0j2kBNs1vp9jKG14++zXk8YxsSisgtHhbnwHkRayy8vcuiohTs0SKm23zWPq
-zfq45aRUu2wb/q7lr7bOfNRqaXLBMY9C1Z/LAUyLPHQCMBK1paqtfhQHaz0Mn/iZ
-vxjObSxyzSDFFcHsS2CgLcQ2WTySrjPrQE5G5kHk00qVRsFJ5APKAlVUDEIyHeds
-Q9+Lc3kqi0AcJSVfGGzaQkHyHMC9PQN4GMPrxeDIFFHXKE/ePI0trzv0omxMoHv8
-SRRtrO2yy5romQv414fKI50RAh9kZcWQpPdixa+dalEOE6cMkmNsDiJXYc3EtaBH
-+WxZkaMzSsc9G66Xb4lQ6/H/uGz6zE8xofKUCqFZm5Y8W2uLO8irKMnihIeyTesf
-BMgE5sCzzeHr9C+9Aq0SrAKMq/ivUT92YqitGcmQdhSe+qYYfNIa/oJGcw+5ohlQ
-XVDICVZvk68NhMr8FcRb/RykroTDH4uagLu50svYhlFOUwm9OBtcaKBFAva52uaT
-DydKqTrhqRIomRNuTHKP
-=m13A
------END PGP SIGNATURE-----
-
---8w3uRX/HFJGApMzv--
+diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+index 0fb4613..8498f11 100644
+--- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+@@ -1,7 +1,9 @@
+-Qualcomm's SPMI PMIC voltage ADC
++Qualcomm's SPMI PMIC ADC
+ 
+-SPMI PMIC voltage ADC (VADC) provides interface to clients to read
+-voltage. The VADC is a 15-bit sigma-delta ADC.
++- SPMI PMIC voltage ADC (VADC) provides interface to clients to read
++  voltage. The VADC is a 15-bit sigma-delta ADC.
++- SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
++  voltage. The VADC is a 16-bit sigma-delta ADC.
+ 
+ VADC node:
+ 
+@@ -9,6 +11,8 @@ VADC node:
+     Usage: required
+     Value type: <string>
+     Definition: Should contain "qcom,spmi-vadc".
++                Should contain "qcom,spmi-adc5" for PMIC5 ADC driver.
++                Should contain "qcom,spmi-adc-rev2" for PMIC rev2 ADC driver.
+ 
+ - reg:
+     Usage: required
+@@ -45,13 +49,26 @@ Channel node properties:
+     Definition: ADC channel number.
+             See include/dt-bindings/iio/qcom,spmi-vadc.h
+ 
++- label:
++    Usage: required for "qcom,spmi-adc5" and "qcom,spmi-adc-rev2"
++    Value type: <empty>
++    Definition: ADC input of the platform as seen in the schematics.
++            For thermistor inputs connected to generic AMUX or GPIO inputs
++            these can vary across platform for the same pins. Hence select
++            the platform schematics name for this channel.
++
+ - qcom,decimation:
+     Usage: optional
+     Value type: <u32>
+     Definition: This parameter is used to decrease ADC sampling rate.
+             Quicker measurements can be made by reducing decimation ratio.
+-            Valid values are 512, 1024, 2048, 4096.
+-            If property is not found, default value of 512 will be used.
++            - For compatible property "qcom,spmi-vadc", valid values are
++              512, 1024, 2048, 4096. If property is not found, default value
++              of 512 will be used.
++            - For compatible property "qcom,spmi-adc5", valid values are 250, 420
++              and 840. If property is not found, default value of 840 is used.
++            - For compatible property "qcom,spmi-adc-rev2", valid values are 256,
++              512 and 1024. If property is not present, default value is 1024.
+ 
+ - qcom,pre-scaling:
+     Usage: optional
+@@ -66,21 +83,38 @@ Channel node properties:
+ - qcom,ratiometric:
+     Usage: optional
+     Value type: <empty>
+-    Definition: Channel calibration type. If this property is specified
+-            VADC will use the VDD reference (1.8V) and GND for channel
+-            calibration. If property is not found, channel will be
+-            calibrated with 0.625V and 1.25V reference channels, also
+-            known as absolute calibration.
++    Definition: Channel calibration type.
++            - For compatible property "qcom,spmi-vadc", if this property is
++              specified VADC will use the VDD reference (1.8V) and GND for
++              channel calibration. If property is not found, channel will be
++              calibrated with 0.625V and 1.25V reference channels, also
++              known as absolute calibration.
++            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
++              if this property is specified VADC will use the VDD reference
++              (1.875V) and GND for channel calibration. If property is not found,
++              channel will be calibrated with 0V and 1.25V reference channels,
++              also known as absolute calibration.
+ 
+ - qcom,hw-settle-time:
+     Usage: optional
+     Value type: <u32>
+     Definition: Time between AMUX getting configured and the ADC starting
+-            conversion. Delay = 100us * (value) for value < 11, and
+-            2ms * (value - 10) otherwise.
+-            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
+-            900 us and 1, 2, 4, 6, 8, 10 ms
+-            If property is not found, channel will use 0us.
++            conversion. The 'hw_settle_time' is an index used from valid values
++            and programmed in hardware to achieve the hardware settling delay.
++            - For compatible property "qcom,spmi-vadc" and "qcom,spmi-adc-rev2",
++              Delay = 100us * (hw_settle_time) for hw_settle_time < 11,
++              and 2ms * (hw_settle_time - 10) otherwise.
++              Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
++              900 us and 1, 2, 4, 6, 8, 10 ms.
++              If property is not found, channel will use 0us.
++            - For compatible property "qcom,spmi-adc5", delay = 15us for
++              value 0, 100us * (value) for values < 11,
++              and 2ms * (value - 10) otherwise.
++              Valid values are: 15, 100, 200, 300, 400, 500, 600, 700, 800,
++              900 us and 1, 2, 4, 6, 8, 10 ms
++              Certain controller digital versions have valid values of
++              15, 100, 200, 300, 400, 500, 600, 700, 1, 2, 4, 8, 16, 32, 64, 128 ms
++              If property is not found, channel will use 15us.
+ 
+ - qcom,avg-samples:
+     Usage: optional
+@@ -89,13 +123,18 @@ Channel node properties:
+             Averaging provides the option to obtain a single measurement
+             from the ADC that is an average of multiple samples. The value
+             selected is 2^(value).
+-            Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
+-            If property is not found, 1 sample will be used.
++            - For compatible property "qcom,spmi-vadc", valid values
++              are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
++              If property is not found, 1 sample will be used.
++            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
++              valid values are: 1, 2, 4, 8, 16
++              If property is not found, 1 sample will be used.
+ 
+ NOTE:
+ 
+-Following channels, also known as reference point channels, are used for
+-result calibration and their channel configuration nodes should be defined:
++For compatible property "qcom,spmi-vadc" following channels, also known as
++reference point channels, are used for result calibration and their channel
++configuration nodes should be defined:
+ VADC_REF_625MV and/or VADC_SPARE1(based on PMIC version) VADC_REF_1250MV,
+ VADC_GND_REF and VADC_VDD_VADC.
+ 
+diff --git a/include/dt-bindings/iio/qcom,spmi-vadc.h b/include/dt-bindings/iio/qcom,spmi-vadc.h
+index 42121fa..bf54b5a 100644
+--- a/include/dt-bindings/iio/qcom,spmi-vadc.h
++++ b/include/dt-bindings/iio/qcom,spmi-vadc.h
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2012-2014,2018 The Linux Foundation. All rights reserved.
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 and
+@@ -116,4 +116,117 @@
+ #define VADC_LR_MUX10_PU1_PU2_AMUX_USB_ID	0xf9
+ #define VADC_LR_MUX3_BUF_PU1_PU2_XO_THERM	0xfc
+ 
++/* ADC channels for SPMI PMIC5 */
++
++#define ADC5_REF_GND				0x00
++#define ADC5_1P25VREF				0x01
++#define ADC5_VREF_VADC				0x02
++#define ADC5_VREF_VADC5_DIV_3			0x82
++#define ADC5_VPH_PWR				0x83
++#define ADC5_VBAT_SNS				0x84
++#define ADC5_VCOIN				0x85
++#define ADC5_DIE_TEMP				0x06
++#define ADC5_USB_IN_I				0x07
++#define ADC5_USB_IN_V_16			0x08
++#define ADC5_CHG_TEMP				0x09
++#define ADC5_BAT_THERM				0x0a
++#define ADC5_BAT_ID				0x0b
++#define ADC5_XO_THERM				0x0c
++#define ADC5_AMUX_THM1				0x0d
++#define ADC5_AMUX_THM2				0x0e
++#define ADC5_AMUX_THM3				0x0f
++#define ADC5_AMUX_THM4				0x10
++#define ADC5_AMUX_THM5				0x11
++#define ADC5_GPIO1				0x12
++#define ADC5_GPIO2				0x13
++#define ADC5_GPIO3				0x14
++#define ADC5_GPIO4				0x15
++#define ADC5_GPIO5				0x16
++#define ADC5_GPIO6				0x17
++#define ADC5_GPIO7				0x18
++#define ADC5_SBUx				0x99
++#define ADC5_MID_CHG_DIV6			0x1e
++#define ADC5_OFF				0xff
++
++/* 30k pull-up1 */
++#define ADC5_BAT_THERM_30K_PU			0x2a
++#define ADC5_BAT_ID_30K_PU			0x2b
++#define ADC5_XO_THERM_30K_PU			0x2c
++#define ADC5_AMUX_THM1_30K_PU			0x2d
++#define ADC5_AMUX_THM2_30K_PU			0x2e
++#define ADC5_AMUX_THM3_30K_PU			0x2f
++#define ADC5_AMUX_THM4_30K_PU			0x30
++#define ADC5_AMUX_THM5_30K_PU			0x31
++#define ADC5_GPIO1_30K_PU			0x32
++#define ADC5_GPIO2_30K_PU			0x33
++#define ADC5_GPIO3_30K_PU			0x34
++#define ADC5_GPIO4_30K_PU			0x35
++#define ADC5_GPIO5_30K_PU			0x36
++#define ADC5_GPIO6_30K_PU			0x37
++#define ADC5_GPIO7_30K_PU			0x38
++#define ADC5_SBUx_30K_PU			0x39
++
++/* 100k pull-up2 */
++#define ADC5_BAT_THERM_100K_PU			0x4a
++#define ADC5_BAT_ID_100K_PU			0x4b
++#define ADC5_XO_THERM_100K_PU			0x4c
++#define ADC5_AMUX_THM1_100K_PU			0x4d
++#define ADC5_AMUX_THM2_100K_PU			0x4e
++#define ADC5_AMUX_THM3_100K_PU			0x4f
++#define ADC5_AMUX_THM4_100K_PU			0x50
++#define ADC5_AMUX_THM5_100K_PU			0x51
++#define ADC5_GPIO1_100K_PU			0x52
++#define ADC5_GPIO2_100K_PU			0x53
++#define ADC5_GPIO3_100K_PU			0x54
++#define ADC5_GPIO4_100K_PU			0x55
++#define ADC5_GPIO5_100K_PU			0x56
++#define ADC5_GPIO6_100K_PU			0x57
++#define ADC5_GPIO7_100K_PU			0x58
++#define ADC5_SBUx_100K_PU			0x59
++
++/* 400k pull-up3 */
++#define ADC5_BAT_THERM_400K_PU			0x6a
++#define ADC5_BAT_ID_400K_PU			0x6b
++#define ADC5_XO_THERM_400K_PU			0x6c
++#define ADC5_AMUX_THM1_400K_PU			0x6d
++#define ADC5_AMUX_THM2_400K_PU			0x6e
++#define ADC5_AMUX_THM3_400K_PU			0x6f
++#define ADC5_AMUX_THM4_400K_PU			0x70
++#define ADC5_AMUX_THM5_400K_PU			0x71
++#define ADC5_GPIO1_400K_PU			0x72
++#define ADC5_GPIO2_400K_PU			0x73
++#define ADC5_GPIO3_400K_PU			0x74
++#define ADC5_GPIO4_400K_PU			0x75
++#define ADC5_GPIO5_400K_PU			0x76
++#define ADC5_GPIO6_400K_PU			0x77
++#define ADC5_GPIO7_400K_PU			0x78
++#define ADC5_SBUx_400K_PU			0x79
++
++/* 1/3 Divider */
++#define ADC5_GPIO1_DIV3				0x92
++#define ADC5_GPIO2_DIV3				0x93
++#define ADC5_GPIO3_DIV3				0x94
++#define ADC5_GPIO4_DIV3				0x95
++#define ADC5_GPIO5_DIV3				0x96
++#define ADC5_GPIO6_DIV3				0x97
++#define ADC5_GPIO7_DIV3				0x98
++#define ADC5_SBUx_DIV3				0x99
++
++/* Current and combined current/voltage channels */
++#define ADC5_INT_EXT_ISENSE			0xa1
++#define ADC5_PARALLEL_ISENSE			0xa5
++#define ADC5_CUR_REPLICA_VDS			0xa7
++#define ADC5_CUR_SENS_BATFET_VDS_OFFSET		0xa9
++#define ADC5_CUR_SENS_REPLICA_VDS_OFFSET	0xab
++#define ADC5_EXT_SENS_OFFSET			0xad
++
++#define ADC5_INT_EXT_ISENSE_VBAT_VDATA		0xb0
++#define ADC5_INT_EXT_ISENSE_VBAT_IDATA		0xb1
++#define ADC5_EXT_ISENSE_VBAT_VDATA		0xb2
++#define ADC5_EXT_ISENSE_VBAT_IDATA		0xb3
++#define ADC5_PARALLEL_ISENSE_VBAT_VDATA		0xb4
++#define ADC5_PARALLEL_ISENSE_VBAT_IDATA		0xb5
++
++#define ADC5_MAX_CHANNEL			0xc0
++
+ #endif /* _DT_BINDINGS_QCOM_SPMI_VADC_H */
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
