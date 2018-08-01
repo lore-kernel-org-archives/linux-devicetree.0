@@ -1,35 +1,27 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 4/6] dt-bindings: interrupt-controller: RISC-V local
-        interrupt controller docs
-Date: Wed, 1 Aug 2018 09:13:07 +0200
-Message-ID: <20180801071307.GA20224@lst.de>
-References: <20180725093649.32332-1-hch@lst.de> <20180725093649.32332-5-hch@lst.de> <20180731223714.GA12168@rob-hp-laptop>
+Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
+Date: Wed, 1 Aug 2018 09:14:20 +0200
+Message-ID: <20180801071420.GB20224@lst.de>
+References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-8-hch@lst.de> <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com> <dc69d688-f765-74cc-3234-563fecff6002@wdc.com> <20180731165712.GA2521@lst.de> <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180731223714.GA12168@rob-hp-laptop>
+In-Reply-To: <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
+To: Atish Patra <atish.patra@wdc.com>
+Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 04:37:14PM -0600, Rob Herring wrote:
-> On Wed, Jul 25, 2018 at 11:36:47AM +0200, Christoph Hellwig wrote:
-> > From: Palmer Dabbelt <palmer@dabbelt.com>
-> > 
-> > This patch adds documentation on the RISC-V local interrupt controller,
-> > which is a per-hart interrupt controller that manages all interrupts
-> > entering a RISC-V hart.  This interrupt controller is present on all
-> > RISC-V systems.
-> > 
-> > Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> > ---
-> >  .../interrupt-controller/riscv,cpu-intc.txt   | 41 +++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> 
-> My questions and comments on the prior version from Palmer remain.
+On Tue, Jul 31, 2018 at 05:38:01PM -0700, Atish Patra wrote:
+> Some typos in the above repo in the PLIC driver patch. The following 
+> changes are required. Inline patch below
 
-Can you point to these questions please?  I don't even rember when this
-was last posted as it must have been a long time ago.
+Thanks, I'll fold this in.
+
+> With the above changes, I am able to boot quite far. But it still crashes 
+> which may be a driver issue. I might have missed something while merging 
+
+It probably is.  For now I want the qemu virt machine to boot the kernel
+at least as that unblocks a lot of things like enabling CI bots and
+people being able to actually hack and test their contributions upstream.
