@@ -1,78 +1,69 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for
- Xilinx zynqmp
-Date: Wed, 1 Aug 2018 09:49:46 -0500
-Message-ID: <CANk1AXQci08TOVq7TeXXGfMWi8C8o4AGYDJK2Dr-mVgZPqU8bQ@mail.gmail.com>
-References: <20180801100457.25614-1-nava.manne@xilinx.com> <20180801100457.25614-2-nava.manne@xilinx.com>
- <MWHPR0201MB34811402926886136673CE68C22E0@MWHPR0201MB3481.namprd02.prod.outlook.com>
- <CANk1AXQ-qrEKAm9zEs8sVaFNGGFkjCr+npTKUNDXz_bnpL=DQw@mail.gmail.com> <MWHPR0201MB3481D2A338A004B2FB17CA61C22D0@MWHPR0201MB3481.namprd02.prod.outlook.com>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH v2 2/6] dt-bindings: iio: accel: Add docs for ADXL372
+Date: Wed, 1 Aug 2018 18:16:39 +0300
+Message-ID: <1533136599-31714-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <MWHPR0201MB3481D2A338A004B2FB17CA61C22D0@MWHPR0201MB3481.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <navam@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>, "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>
+To: jic23@kernel.org
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 1, 2018 at 12:49 AM, Nava kishore Manne <navam@xilinx.com> wrote:
-> Hi Alan Tull,
->
-> Thanks for the quick response.
-> Please find my Comments inline...
->
->> -----Original Message-----
->> From: Alan Tull [mailto:atull@kernel.org]
->> Sent: Tuesday, July 31, 2018 8:52 PM
->> To: Nava kishore Manne <navam@xilinx.com>
->> Cc: robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
->> <michals@xilinx.com>; Soren Brinkmann <sorenb@xilinx.com>;
->> atull@opensource.altera.com; moritz.fischer@ettus.com;
->> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
->> kernel@vger.kernel.org; Appana Durga Kedareswara Rao
->> <appanad@xilinx.com>; chinnikishore369@gmail.com; linux-
->> fpga@vger.kernel.org
->> Subject: Re: [RFC PATCH 2/2] fpga manager: Adding FPGA Manager support for
->> Xilinx zynqmp
->>
->> On Tue, Jul 31, 2018 at 8:08 AM, Nava kishore Manne <navam@xilinx.com>
->> wrote:
->> >
->> > +Alan Tull,
->>
->> + linux-fpga mailing list
->>
->> Hi Nava,
->>
->> Thanks for submitting.
->>
->> This should be on the linux-fpga mailing list.  The
->> linux/scripts/get_maintainer.pl script would tell you that.
->>
-> I have Created this Patch On Master Branch there get_maintainer.pl Doesn't have linux-fpga mailing list.
+Add the device tree binding documentation for the ADXL372 3-axis digital
+accelerometer.
 
-The linux-fpga mailing list has been in MAINTAINERS since v4.9.
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+Changes in v2:
+	- introduced all the DT bindings in a single patch.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/atull/linux-fpga.git/
-> Please suggest a branch So will create a patch on top of it.
+ .../devicetree/bindings/iio/accel/adxl372.txt      | 24 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
 
-I understand now.  linux-fpga/master is v4.9ish.  I haven't updated
-the master branch it since I cloned the repo, it doesn't have any
-special FPGA development patches, it's just what Linus's master branch
-was when I cloned.  I don't think you can count on any kernel.org's
-master branch to be up to date with Linus other than Linus.  Probably
-because it would be a waste of traffic on kernel.org and you can have
-multiple remotes on your local git repo with Linus being the one that
-contains the one true master branch.
-
-Right now, Linus's master branch has the latest FPGA API, so it would
-be a good one to develop on.
-
-Generally speaking, sometimes there will be some API changes for FPGA
-that are only on linux-next/master.  I spend most of my time
-developing on linux-next/master.  Occasionally that's broken but most
-of the time that works for me.  Or you could use a Linus release tag
-from linus' repo.  Or Linus' master branch.  When submitting, if your
-patches apply cleanly on linux-next/master, that is helpful and good.
-
-Alan
+diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+new file mode 100644
+index 0000000..41493d9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+@@ -0,0 +1,24 @@
++Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
++
++http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
++
++Required properties:
++ - compatible : should be "adi,adxl372"
++ - reg: SPI chip select number for the device
++ - spi-max-frequency: Max SPI frequency to use
++
++Optional properties:
++ - interrupt-parent : phandle to the parent interrupt controller as documented
++   in Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++ - interrupts: interrupt mapping for IRQ as documented in
++   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++
++Example:
++
++	accelerometer@0 {
++		compatible = "adi,adxl372";
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		interrupt-parent = <&gpio>;
++		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2ba47bb..c8dd09c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -548,6 +548,7 @@ M:	Stefan Popa <stefan.popa@analog.com>
+ W:	http://ez.analog.com/community/linux-device-drivers
+ S:	Supported
+ F:	drivers/iio/accel/adxl372.c
++F:	Documentation/devicetree/bindings/iio/accel/adxl372.txt
+ 
+ AF9013 MEDIA DRIVER
+ M:	Antti Palosaari <crope@iki.fi>
+-- 
+2.7.4
