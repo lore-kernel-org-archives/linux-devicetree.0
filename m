@@ -1,81 +1,67 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCHv2 1/2] ARM: dts: arria10: update NAND clocking
-Date: Wed,  1 Aug 2018 09:31:33 -0500
-Message-ID: <1533133894-31932-1-git-send-email-dinguyen@kernel.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 07/10] dt-bindings: phy: add DT binding for Microsemi
+ Ocelot SerDes muxing
+Date: Wed, 1 Aug 2018 16:31:47 +0200
+Message-ID: <20180801143147.GA16322@lunn.ch>
+References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
+ <cd75c96640cc7fe306ee355acb1db85adb5b796f.1532954208.git-series.quentin.schulz@bootlin.com>
+ <20180730133448.GD13198@lunn.ch>
+ <20180801082413.2mjm52vwxw3anun6@qschulz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, marex@denx.de, yamada.masahiro@socionext.com, dinguyen@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180801082413.2mjm52vwxw3anun6@qschulz>
+Sender: netdev-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-The NAND IP needs 3 clocks(nand_x_clk, nand_clk, and nand_ecc_clk). This
-patch adds a nand_clk, which is derived from the nand_x_clk, but has a
-fixed divider of 4, and the nand_ecc_clk, which is derived from the
-nand_x_clk.
+> > Maybe this should be serdes-mux? The SERDES itself should have some
+> > registers somewhere. If you ever decide to make use of phylink,
+> > e.g. to support SFP, you are going to need to know if the SERDES is
+> > up. So you might need to add the actual SERDES device, in addition to
+> > the mux for the SERDES.
+> > 
+> 
+> I'm not sure to follow.
+> 
+> To be honest, I might have mislead you. The whole configuration of the
+> serdes is in the hsio register address space. For now, muxing is the
+> only reason there is a driver for the serdes but there are other things
+> that can be configured (though not used yet): de/serializer, input/output
+> buffers, PLL, ... configuration registers for the SerDes.
 
-Update the NAND node to use the additional clocks.
+When you are using the SERDES for networking, you need to know if the
+SERDES has achieved sync. For example, when the SERDES connects to an
+optical SFP module, the SERDES bit stream continues unmodified over
+the optical link to the SERDES in the peer. The optical module can
+tell you if it is receiving optical power, but it cannot tell you if
+the optical signal makes any sense. The SERDES however knows how to
+decode the bitstream, sync to it, etc. So you need some registers in
+the SERDES to get this status information. Typically, you can also get
+access to the SGMII/1000Base-X code word, so you can do
+auto-negotiation, or know if you need to send each bit 10 or 100 times
+in order to do 100Mbps or 10Mbps. If you are connecting to a PHY which
+can do > 1Gbps, you need to change the SERDES between SGMII,
+1000Base-X, 2500Base-X, etc. Before you can say the link is up, you
+want the PHY to tell you it has link to its peer PHY, and you want to
+know the SERDES is ready. Typically the SERDES is last, since you
+don't know what to configure the SERDES to until the PHY is finished
+negotiating the link to its peer.
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v2: add nand_ecc_clk and update commit message
----
- arch/arm/boot/dts/socfpga_arria10.dtsi | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+If you look at any of the Marvell SERDES interfaces, found in PHYs or
+switches, there are dozens of registers for controlling the SERDES.
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index a4dcb68..b614b86 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -377,13 +377,28 @@
- 						clk-gate = <0xC8 11>;
- 					};
- 
--					nand_clk: nand_clk {
-+					nand_x_clk: nand_x_clk {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-a10-gate-clk";
- 						clocks = <&l4_mp_clk>;
- 						clk-gate = <0xC8 10>;
- 					};
- 
-+					nand_ecc_clk: nand_ecc_clk {
-+						#clock-cells = <0>;
-+						compatible = "altr,socfpga-a10-gate-clk";
-+						clocks = <&nand_x_clk>;
-+						clk-gate = <0xC8 10>;
-+					};
-+
-+					nand_clk: nand_clk {
-+						#clock-cells = <0>;
-+						compatible = "altr,socfpga-a10-gate-clk";
-+						clocks = <&nand_x_clk>;
-+						fixed-divider = <4>;
-+						clk-gate = <0xC8 10>;
-+					};
-+
- 					spi_m_clk: spi_m_clk {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-a10-gate-clk";
-@@ -650,7 +665,8 @@
- 			reg-names = "nand_data", "denali_reg";
- 			interrupts = <0 99 4>;
- 			dma-mask = <0xffffffff>;
--			clocks = <&nand_clk>;
-+			clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
-+			clock-names = "nand", "nand_x", "ecc";
- 			status = "disabled";
- 		};
- 
--- 
-2.7.4
+Now, it could be we don't have a clear definition of what a SERDES
+is. The Marvell documents has a lot in its definition of SERDES, where
+as what you could be purely a 'dumb' parallel to serial convert, and
+all the rest of the logic is in the Ethernet MAC and the PCIe device?
+
+Now, back to my original point. Where are the registers for 'the rest
+of this logic'? If they are in the MAC address space, we don't have a
+problem. If they are somewhere else, maybe you will need to add
+another device. What is this device called? That is why i'm trying to
+differentiate between the 'SERDES-MUX' and the 'SERDES'.
+
+	Andrew
