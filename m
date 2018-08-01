@@ -1,97 +1,32 @@
-Return-Path: <SRS0=wcnV=LM=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 1/2] clocksource/drivers/ostm: Delay driver registration
-Date: Wed, 29 Aug 2018 08:29:53 -0500
-Message-Id: <20180829132954.64862-2-chris.brandt@renesas.com>
-In-Reply-To: <20180829132954.64862-1-chris.brandt@renesas.com>
-References: <20180829132954.64862-1-chris.brandt@renesas.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=ReDA=KQ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com> <1532936891-25034-3-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1532936891-25034-3-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 1 Aug 2018 10:05:38 +0200
+Message-ID: <CAMuHMdVVfOS3XF=-cqFpUcWGfGT0yFUN==BvauNOWamad1EwEA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] soc: renesas: rcar-sysc: Add r8a774a1 support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The newer RZ/A clock control driver no longer registers all its clocks
-using DT, therefore the clocks required by this driver are no longer
-present at the beginning of boot.
+On Mon, Jul 30, 2018 at 9:54 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add support for RZ/G2M (R8A774A1) SoC power areas to the R-Car SYSC
+> driver.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
 
-Because of this, TIMER_OF_DECLARE can no longer be used because this
-causes the driver to get probed too early before the parent clock exists,
-and the probe will fail with "ostm: Failed to get clock".
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-So, we'll change this driver to register/probe during subsys_initcall which
-is after the appropriate clocks have been registered.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/clocksource/renesas-ostm.c | 35 +++++++++++++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
+                        Geert
 
-diff --git a/drivers/clocksource/renesas-ostm.c b/drivers/clocksource/renesas-ostm.c
-index 6cffd7c6001a..fc5e4ac294b8 100644
---- a/drivers/clocksource/renesas-ostm.c
-+++ b/drivers/clocksource/renesas-ostm.c
-@@ -22,6 +22,7 @@
- #include <linux/interrupt.h>
- #include <linux/sched_clock.h>
- #include <linux/slab.h>
-+#include <linux/platform_device.h>
- 
- /*
-  * The OSTM contains independent channels.
-@@ -101,8 +102,12 @@ static u64 notrace ostm_read_sched_clock(void)
- static void __init ostm_init_sched_clock(struct ostm_device *ostm,
- 			unsigned long rate)
- {
-+	unsigned long flags;
-+
- 	system_clock = ostm->base + OSTM_CNT;
-+	local_irq_save(flags);
- 	sched_clock_register(ostm_read_sched_clock, 32, rate);
-+	local_irq_restore(flags);
- }
- 
- static int ostm_clock_event_next(unsigned long delta,
-@@ -192,9 +197,10 @@ static int __init ostm_init_clkevt(struct ostm_device *ostm, int irq,
- 	return 0;
- }
- 
--static int __init ostm_init(struct device_node *np)
-+static int __init ostm_probe(struct platform_device *pdev)
- {
- 	struct ostm_device *ostm;
-+	struct device_node *np = pdev->dev.of_node;
- 	int ret = -EFAULT;
- 	struct clk *ostm_clk = NULL;
- 	int irq;
-@@ -262,4 +268,29 @@ static int __init ostm_init(struct device_node *np)
- 	return 0;
- }
- 
--TIMER_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
-+static const struct of_device_id ostm_of_table[] = {
-+	{
-+		.compatible = "renesas,ostm",
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static int ostm_remove(struct platform_device *pdev)
-+{
-+	return -EBUSY; /* cannot unregister clockevent and clocksource */
-+}
-+
-+static struct platform_driver ostm_device_driver = {
-+	.remove		= ostm_remove,
-+	.driver		= {
-+		.name	= "ostm",
-+		.of_match_table = of_match_ptr(ostm_of_table),
-+	},
-+};
-+
-+static int __init ostm_init(void)
-+{
-+	return platform_driver_probe(&ostm_device_driver, ostm_probe);
-+}
-+
-+subsys_initcall(ostm_init);
--- 
-2.16.1
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
