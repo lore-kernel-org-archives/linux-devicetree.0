@@ -1,43 +1,21 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: add support for ROC-RK3399-PC board
-Date: Wed, 01 Aug 2018 13:57:12 +0200
-Message-ID: <3845549.84TLR0FYli@phil>
-References: <1532916721-24117-1-git-send-email-djw@t-chip.com.cn>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
+Date: Wed, 1 Aug 2018 14:16:56 +0200
+Message-ID: <20180801121656.GA25806@lst.de>
+References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-8-hch@lst.de> <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com> <dc69d688-f765-74cc-3234-563fecff6002@wdc.com> <20180731165712.GA2521@lst.de> <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532916721-24117-1-git-send-email-djw@t-chip.com.cn>
+Content-Disposition: inline
+In-Reply-To: <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: djw@t-chip.com.cn
-Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jianqun Xu <jay.xu@rock-chips.com>, Jacob Chen <jacob-chen@iotwrt.com>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ezequiel Garcia <ezequiel@collabora.com>, Jagan Teki <jagan@amarulasolutions.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Shawn Lin <shawn.lin@rock-chips.com>, Matthias Brugger <mbrugger@suse.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infrade
+To: Atish Patra <atish.patra@wdc.com>
+Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 30. Juli 2018, 04:12:01 CEST schrieb djw@t-chip.com.cn:
-> From: Levin Du <djw@t-chip.com.cn>
-> 
-> ROC-RK3399-PC is a power efficient 4GB LPDDR4 single board
-> computer with USB 3.0 and Gigabit Ethernet in a form factor
-> compatible with the Raspberry Pi. It is based on the Rockchip
-> RK3399 SoC, powered by the Type-C port.
-> 
-> The devicetree currently supports peripherals of:
-> 
-> - Ethernet
-> - HDMI
-> - SD Card
-> - UART2 debug
-> - Type-C
-> - eMMC
-> 
-> USB3 in Type-C port currently only works with normal orientation,
-> not flip one.
-> 
-> Signed-off-by: Levin Du <djw@t-chip.com.cn>
+On Tue, Jul 31, 2018 at 05:38:01PM -0700, Atish Patra wrote:
+> crash details are at
+> https://paste.debian.net/1036078/
 
-applied with Rob's review-tag.
-
-Might still make it into 4.19 but also may have to wait for 4.20
-
-
-Heiko
+Is this running without kallsyms?  It seems to lack useful symbols
+and a backtrace unfortunately.
