@@ -1,17 +1,89 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
-Date: Wed, 1 Aug 2018 16:18:58 +0200
-Message-ID: <20180801141858.GA28203@lst.de>
-References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-8-hch@lst.de> <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com> <dc69d688-f765-74cc-3234-563fecff6002@wdc.com> <20180731165712.GA2521@lst.de> <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: phandle_cache vs of_detach_node (was Re: [PATCH]
+ powerpc/mobility: Fix node detach/rename problem)
+Date: Thu, 02 Aug 2018 00:26:58 +1000
+Message-ID: <87d0v2f9hp.fsf@concordia.ellerman.id.au>
+References: <c2fba52a-baac-25fb-c26b-c84b25c3178c@linux.vnet.ibm.com>
+ <8736w1jkte.fsf@concordia.ellerman.id.au>
+ <ffaa7eba-5236-e42d-c901-79b045adfb94@linux.vnet.ibm.com>
+ <8736vzj4la.fsf@concordia.ellerman.id.au>
+ <CAL_JsqKf1k3MM+HgQ2U=Ep7L9nbBCmmvGZoEAKxLB1TVqQdW_w@mail.gmail.com>
+ <85014a16-cd2c-0137-72e5-54d4bcdf788a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
+Content-Type: text/plain
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <85014a16-cd2c-0137-72e5-54d4bcdf788a@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, mwb@linux.vnet.ibm.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-I've pushed out an update to the riscv-irq-simple.2 branch to better
-handle with sparse contexid maps, please retry with that.
+Frank Rowand <frowand.list@gmail.com> writes:
+> On 07/31/18 07:17, Rob Herring wrote:
+>> On Tue, Jul 31, 2018 at 12:34 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>>>
+>>> Hi Rob/Frank,
+>>>
+>>> I think we might have a problem with the phandle_cache not interacting
+>>> well with of_detach_node():
+>> 
+>> Probably needs a similar fix as this commit did for overlays:
+>> 
+>> commit b9952b5218added5577e4a3443969bc20884cea9
+>> Author: Frank Rowand <frank.rowand@sony.com>
+>> Date:   Thu Jul 12 14:00:07 2018 -0700
+>> 
+>>     of: overlay: update phandle cache on overlay apply and remove
+>> 
+>>     A comment in the review of the patch adding the phandle cache said that
+>>     the cache would have to be updated when modules are applied and removed.
+>>     This patch implements the cache updates.
+>> 
+>>     Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of
+>> of_find_node_by_phandle()")
+>>     Reported-by: Alan Tull <atull@kernel.org>
+>>     Suggested-by: Alan Tull <atull@kernel.org>
+>>     Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>>     Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> Agreed.  Sorry about missing the of_detach_node() case.
+>
+>
+>> Really what we need here is an "invalidate phandle" function rather
+>> than free and re-allocate the whole damn cache.
+>
+> The big hammer approach was chosen to avoid the race conditions that
+> would otherwise occur.  OF does not have a locking strategy that
+> would be able to protect against the races.
+>
+> We could maybe implement a slightly smaller hammer by (1) disabling
+> the cache, (2) invalidate a phandle entry in the cache, (3) re-enable
+> the cache.  That is an off the cuff thought - I would have to look
+> a little bit more carefully to make sure it would work.
+>
+> But I don't see a need to add the complexity of the smaller hammer
+> or the bigger hammer of proper locking _unless_ we start seeing that
+> the cache is being freed and re-allocated frequently.  For overlays
+> I don't expect the high frequency because it happens on a per overlay
+> removal basis (not per node removal basis).  For of_detach_node() the
+> event _is_ on a per node removal basis.  Michael, do you expect node
+> removals to be a frequent event with low latency being important?  If
+> so, a rough guess on what the frequency would be?
+
+No in practice we expect them to be fairly rare and in the thousands at
+most I think.
+
+TBH you could just disable the phandle_cache on the first detach and
+that would be fine by me. I don't think we've ever noticed phandle
+lookups being much of a problem for us on our hardware.
+
+cheers
