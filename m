@@ -1,40 +1,63 @@
-Return-Path: <SRS0=K2JG=KS=codeaurora.org=smohanad@kernel.org>
+Return-Path: <SRS0=StV2=KQ=codeaurora.org=smohanad@kernel.org>
 From: Siddartha Mohanadoss <smohanad@codeaurora.org>
-Subject: [PATCH v5 3/3] iio: adc: Update QCOM ADC license to SPDX format
-Date: Thu,  2 Aug 2018 18:44:06 -0700
-Message-Id: <1533260646-12476-1-git-send-email-smohanad@codeaurora.org>
+Subject: [PATCH v4 0/3] Add QCOM PMIC5 ADC driver
+Date: Wed,  1 Aug 2018 16:31:58 -0700
+Message-Id: <1533166318-18055-1-git-send-email-smohanad@codeaurora.org>
 To: Jonathan Cameron <jic23@kernel.org>
-Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 List-ID: <devicetree@vger.kernel.org>
 
-Update QCOM ADC header file to SPDX format.
+This patch series adds the PMIC5 ADC family of chipset
+that supports clients to measure voltage and current on
+inputs connected to the PMIC ADC AMUX. Clients include
+reading voltage phone power and on board system thermistors
+for thermal management.
 
-Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- include/dt-bindings/iio/qcom,spmi-vadc.h | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+The v4 patchset addresses most of the review comments from
+prior patchset.
 
-diff --git a/include/dt-bindings/iio/qcom,spmi-vadc.h b/include/dt-bindings/iio/qcom,spmi-vadc.h
-index bf54b5a..61d556d 100644
---- a/include/dt-bindings/iio/qcom,spmi-vadc.h
-+++ b/include/dt-bindings/iio/qcom,spmi-vadc.h
-@@ -1,14 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2012-2014,2018 The Linux Foundation. All rights reserved.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 and
-- * only version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #ifndef _DT_BINDINGS_QCOM_SPMI_VADC_H
+Changes since patchset v3
+* Few minor changes.
+
+Changes since patchset v2
+* Removed support for current channel as part of this series.
+* Fix pointer arithmetic for iio_chan.
+* Few minor changes.
+* Update license to SPDX format for ADC header file.
+
+Changes since patchset v1
+* Merged DT bindings with prior PMIC family instead of a
+  seperate DT file for PMIC5 family.
+* Updated documentation for 'label' and 'value' property.
+* Updated using unique prefix adc5 for functions and defines
+  specific for this family of chipset.
+* Refactored scaling functions to use function pointer for
+  scaling lookup.
+* Added documentation comments as requested in the
+  scaling functions as applicable.
+* Added utility functions in the scaling API to avoid some of
+  the code repetitions.
+* Use consistent hex format for adc_data and use specific length
+  while assigning data.
+* Added support to determine controller version and check against
+  supported hardware settling delay values.
+* Various minor changes.
+
+Siddartha Mohanadoss (3):
+  dt-bindings: iio: adc: Add DT binding document for PMIC5 ADC
+  iio: adc: Add QCOM SPMI PMIC5 ADC driver
+  iio: adc: Update QCOM ADC license to SPDX format
+
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 +-
+ drivers/iio/adc/Kconfig                            |  20 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/qcom-spmi-adc5.c                   | 798 +++++++++++++++++++++
+ drivers/iio/adc/qcom-vadc-common.c                 | 189 ++++-
+ drivers/iio/adc/qcom-vadc-common.h                 |  54 ++
+ include/dt-bindings/iio/qcom,spmi-vadc.h           | 125 +++-
+ 7 files changed, 1230 insertions(+), 34 deletions(-)
+ create mode 100644 drivers/iio/adc/qcom-spmi-adc5.c
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
