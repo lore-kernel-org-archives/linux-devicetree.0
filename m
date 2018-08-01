@@ -1,108 +1,118 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/6] dt-bindings: interrupt-controller: RISC-V PLIC
- documentation
-Date: Tue, 31 Jul 2018 16:46:30 -0600
-Message-ID: <20180731224630.GB12168@rob-hp-laptop>
-References: <20180725093649.32332-1-hch@lst.de>
- <20180725093649.32332-7-hch@lst.de>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
+Date: Tue, 31 Jul 2018 17:38:01 -0700
+Message-ID: <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
+References: <20180726143723.16585-1-hch@lst.de>
+ <20180726143723.16585-8-hch@lst.de>
+ <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com>
+ <dc69d688-f765-74cc-3234-563fecff6002@wdc.com> <20180731165712.GA2521@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180725093649.32332-7-hch@lst.de>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180731165712.GA2521@lst.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
 To: Christoph Hellwig <hch@lst.de>
-Cc: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "palmer@sifive.com" <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shorne@gmail.com" <shorne@gmail.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 11:36:49AM +0200, Christoph Hellwig wrote:
-> From: Palmer Dabbelt <palmer@dabbelt.com>
+On 7/31/18 9:52 AM, Christoph Hellwig wrote:
+> On Mon, Jul 30, 2018 at 08:21:33PM -0700, Atish Patra wrote:
+>> I found the issue. As per PLIC documentation, a hart context is a given
+>> privilege mode on a given hart. Thus, cpu context ID & cpu numbers are not
+>> same. Here is the PLIC register Maps in U54 core:
+>>
+>> Ref: https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf
+>>
+>> Memory address for Interrupt enable
+>> Address
+>> 0x0C00-2080   Hart 1 M-mode enables
+>> 0x0C00 2094   End of Hart 1 M-mode enables
+>>
+>> 0x0C00-2100   Hart 1 S-mode enables
+>> 0x0C00-2114   End of Hart 1 S-mode enables
+>>
+>> Memory map Claim/Threshold
+>> Address
+>> 0x0C20-1000 4B 	 M-mode priority threshold
+>> 0x0C20-1004 4B   M-mode claim/complete
+>> 0x0C20-2000 4B   S-mode priority threshold
+>> 0x0C20-2004 4B   S-mode claim/complete
+>>
+>> The original PLIC patch was calculating based on handle->contextid which
+>> will assume numbers on a HighFive Unleashed board as 2 4 6 8.
+>>
+>> In this patch, context id is assigned as cpu numbers which will be 1 2 3 4.
+>> Thus it will lead to incorrect plic address access as shown below.
 > 
-> This patch adds documentation for the platform-level interrupt
-> controller (PLIC) found in all RISC-V systems.  This interrupt
-> controller routes interrupts from all the devices in the system to each
-> hart-local interrupt controller.
+> Indeed.  Can you try this branch, which puts back the OF contextid
+> parsing from the original code:
 > 
-> Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
-> want to change how we're specifying holes in the hart list.
+>     git://git.infradead.org/users/hch/riscv.git riscv-irq-simple.2
 > 
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> ---
->  .../interrupt-controller/riscv,plic0.txt      | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> Gitweb:
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
-> new file mode 100644
-> index 000000000000..99cd359dbd43
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
-> @@ -0,0 +1,55 @@
-> +RISC-V Platform-Level Interrupt Controller (PLIC)
-> +-------------------------------------------------
-> +
-> +The RISC-V supervisor ISA specification allows for the presence of a
-> +platform-level interrupt controller (PLIC).   The PLIC connects all external
-> +interrupts in the system to all hart contexts in the system, via the external
-> +interrupt source in each hart's hart-local interrupt controller (HLIC).  A hart
-> +context is a privilege mode in a hardware execution thread.  For example, in
-> +an 4 core system with 2-way SMT, you have 8 harts and probably at least two
-> +privilege modes per hart; machine mode and supervisor mode.
-> +
-> +Each interrupt can be enabled on per-context basis. Any context can claim
-> +a pending enabled interrupt and then release it once it has been handled.
-> +
-> +Each interrupt has a configurable priority. Higher priority interrupts are
-> +serviced firs. Each context can specify a priority threshold. Interrupts
-> +with priority below this threshold will not cause the PLIC to raise its
-> +interrupt line leading to the context.
-> +
-> +While the PLIC supports both edge-triggered and level-triggered interrupts,
-> +interrupt handlers are oblivious to this distinction and therefor it is not
-> +specific in the PLIC device-tree binding.
-> +
-> +While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
-> +"riscv,plic0" device is a concrete implementation of the PLIC that contains a
-> +specific memory layout.  More details about the memory layout of the
-> +"riscv,plic0" device can be found as a comment in the device driver, or as part
-> +of the SiFive U5 Coreplex Series Manual (page 22 of the PDF of version 1.0)
-> +<https://www.sifive.com/documentation/coreplex/u5-coreplex-series-manual/>
-> +
-> +Required properties:
-> +- compatible : "riscv,plic0"
-
-Perhaps this should be 'sifive,plic0'
-
-Normally this would have an SoC specific compatible too. Sometimes we 
-can get away without, but it doesn't seem like the PLIC is very tightly 
-specified nor has common implementations.
-
-> +- #address-cells : should be <0>
-> +- #interrupt-cells : should be <1>
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- reg : Should contain 1 register range (address and length)
-> +- interrupts-extended : Specifies which contexts are connected to the PLIC,
-> +  with "-1" specifying that a context is not present.
-> +
-> +Example:
-> +
-> +	plic: interrupt-controller@c000000 {
-> +		#address-cells = <0>;
-> +		#interrupt-cells = <1>;
-> +		compatible = "riscv,plic0";
-> +		interrupt-controller;
-> +		interrupts-extended = <
-> +			&cpu0-intc 11
-> +			&cpu1-intc 11 &cpu1-intc 9
-> +			&cpu2-intc 11 &cpu2-intc 9
-> +			&cpu3-intc 11 &cpu3-intc 9
-> +			&cpu4-intc 11 &cpu4-intc 9>;
-> +		reg = <0xc000000 0x4000000>;
-> +		riscv,ndev = <10>;
-
-Not documented.
-
-> +	};
-> -- 
-> 2.18.0
+>     http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple.2
 > 
+> 
+
+Some typos in the above repo in the PLIC driver patch. The following 
+changes are required. Inline patch below
+
+diff --git a/drivers/irqchip/irq-riscv-plic.c 
+b/drivers/irqchip/irq-riscv-plic.c
+index 0e524e3e..9dbaca47 100644
+--- a/drivers/irqchip/irq-riscv-plic.c
++++ b/drivers/irqchip/irq-riscv-plic.c
+@@ -79,7 +79,7 @@ static DEFINE_SPINLOCK(plic_toggle_lock);
+  static inline void plic_toggle(int ctxid, int hwirq, int enable)
+  {
+         u32 __iomem *reg = plic_regs + ENABLE_BASE +
+-               ctxid * ENABLE_PER_HART + (hwirq / 32);
++               ctxid * ENABLE_PER_HART + (hwirq / 32) * 4;
+         u32 hwirq_mask = 1 << (hwirq % 32);
+
+         spin_lock(&plic_toggle_lock);
+@@ -166,7 +166,7 @@ static void plic_handle_irq(struct pt_regs *regs)
+  static int __init plic_init(struct device_node *node,
+                 struct device_node *parent)
+  {
+-       int error = 0, nr_mapped = 0, cpu, i;
++       int error = 0, nr_mapped = 0, i;
+         u32 nr_irqs;
+
+         if (plic_regs) {
+@@ -211,8 +211,7 @@ static int __init plic_init(struct device_node *node,
+                         pr_err("invalid OF parent, skipping context 
+%d.\n", i);
+                         continue;
+                 }
+-
+-               if (riscv_of_processor_hart(parent.np->parent < 0))
++               if (riscv_of_processor_hart(parent.np->parent) < 0)
+                         continue;
+
+                 plic_handler_present[i] = true;
+
+
+With the above changes, I am able to boot quite far. But it still 
+crashes which may be a driver issue. I might have missed something while 
+merging all the out-of-tree drivers from riscv-all branch.
+
+Here is my git repo.
+https://github.com/atishp04/riscv-linux/tree/master_chris_cleanup_v4
+
+crash details are at
+https://paste.debian.net/1036078/
+
+Regards,
+Atish
