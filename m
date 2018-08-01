@@ -1,54 +1,100 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v8 4/4] mailbox: Add support for i.MX7D messaging unit
-Date: Wed, 1 Aug 2018 07:44:43 +0000
-Message-ID: <AM0PR04MB42118C26A7C5F80FD46FBB9B802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180731141146.10788-1-o.rempel@pengutronix.de>
- <20180731141146.10788-5-o.rempel@pengutronix.de>
- <CABb+yY2PN=LN3bgTTzL9SpA43atughAbS1OjNsg0XZg42JxD3w@mail.gmail.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH net-next 10/10] net: mscc: ocelot: make use of SerDes
+ PHYs for handling their configuration
+Date: Wed, 1 Aug 2018 09:51:44 +0200
+Message-ID: <20180801075143.s3fthewteu3n3evf@qschulz>
+References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
+ <0ce1b3e8466064741dc6e484f87bbe48542cb978.1532954208.git-series.quentin.schulz@bootlin.com>
+ <20180730135018.GF13198@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY2PN=LN3bgTTzL9SpA43atughAbS1OjNsg0XZg42JxD3w@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zs5rv4pdrmnxsur6"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180730135018.GF13198@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
 
-[...]
+--zs5rv4pdrmnxsur6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Andrew,
+
+On Mon, Jul 30, 2018 at 03:50:18PM +0200, Andrew Lunn wrote:
+>  On Mon, Jul 30, 2018 at 02:43:55PM +0200, Quentin Schulz wrote:
+>=20
+> > +		err =3D of_get_phy_mode(portnp);
+> > +		if (err < 0)
+> > +			ocelot->ports[port]->phy_mode =3D PHY_INTERFACE_MODE_NA;
+> > +		else
+> > +			ocelot->ports[port]->phy_mode =3D err;
+> > +
+> > +		if (ocelot->ports[port]->phy_mode =3D=3D PHY_INTERFACE_MODE_NA)
+> > +			continue;
+> > +
+> > +		if (ocelot->ports[port]->phy_mode =3D=3D PHY_INTERFACE_MODE_SGMII)
+> > +			phy_mode =3D PHY_MODE_SGMII;
+> > +		else
+> > +			phy_mode =3D PHY_MODE_QSGMII;
+>=20
+> Hi Quentin
+>=20
+> Say somebody puts RGMII as the phy-mode? It would be better to verify
+> it is only SGMII or QSGMII and return -EINVAL otherwise.
+>=20
+
+I'll replace this with a switch case to handle other cases.
 
 > > +
-> > +static void imx_mu_txdb_work(struct work_struct *work) {
-> > +       struct imx_mu_con_priv *cp =
-> > +                       container_of(work, struct imx_mu_con_priv, work);
-> > +       mbox_chan_txdone(cp->chan, 0); }
-> >
-> The api assumes a controller have same type of channels. So we are having
-> to do this here.
-> I am not sure, but would declaring two mailbox controllers (one with
-> doorbells and the other data channels) work?
-> If not, at least we could use a tasklet instead of a work queue?
-> 
+> > +		serdes =3D devm_of_phy_get(ocelot->dev, portnp, NULL);
+> > +		if (IS_ERR(serdes)) {
+> > +			if (PTR_ERR(serdes) =3D=3D -EPROBE_DEFER) {
+> > +				dev_err(ocelot->dev, "deferring probe\n");
+>=20
+> dev_dbg() ? It is not really an error.
+>=20
 
-I'm also a bit curious what the meaning of calling mbox_chan_txdone
-for a doorbell mailbox?
+Ack.
 
-Is there any recommended way to use it?
+> > +				err =3D -EPROBE_DEFER;
+> > +				goto err_probe_ports;
+> > +			}
+> > +
+> > +			dev_err(ocelot->dev, "missing SerDes phys for port%d\n",
+> > +				port);
+> > +			err =3D -ENODEV;
+>=20
+> err =3D PTR_ERR(serdes) so we get the actual error?
+>=20
 
-Regards
-Dong Aisheng
+Ack.
+
+Thanks,
+Quentin
+
+--zs5rv4pdrmnxsur6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlthZo8ACgkQhLiadT7g
+8aPbkRAAlZG/slUFYQUoRGChoRoiIBCl+L+pqmXc587iGWF0D42nkgIqjNZ7ahHb
+8IqFYGSINc8iYWkvDKXJeR0OtktOreUrldWSXaegihEc3mwnd++TXcyfzhPzTZuX
+dFJk0Epc89hVisiOWrVZfbId7sVlGJYc+w7QXLX3yhJGZ9riycMhzmRvM5Vk8s/y
+tDrXHe+3/lkv89H1Sk8+hKMm9ruNoN9kWxd4IAbArTcxFNDHvK53OtKAyGWaiQ6Q
+AbwhHgkkEiiniS0johMTI15ouf+EHu6XXB/mj69FoOgkGqoXw9pg0gg+ocCIkBUI
+NmyODHe9XT7aTnwFIZa+BYJQCjITGe00xAVAwUFRHw3DTiRaCaEC4dF8NxLRuhEX
+nuiZjRJ+Tlu/WIUBpNktKCZLywRYqsq2OXrZaUCZwozibVF8Mg+bUgH+J4MlNBxb
+tQ+Hh/P5fKpLknBhsvbeYnz4SSqlWIXpCO4ImmyC87iS8NIoZmdOGTtnvRj6DY+u
+gah04QVxoBc4ja9PnBkAbZw+P1sSRHJjss+CClijHfdJZF6o+jYS1ys0hIsl/qDw
+MG0buoT10ZdqKOc9vBhATw/EjnmEJqC7ox0pi9x6FgkPPyCdFy32NEkjbUu04tf2
+mJLvQNy05E1pWGTg4WXq+uUAI/PdCazxzoltt5lyI8H1Jf1CMrk=
+=3Ulf
+-----END PGP SIGNATURE-----
+
+--zs5rv4pdrmnxsur6--
