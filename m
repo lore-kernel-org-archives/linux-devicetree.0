@@ -1,66 +1,46 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH v4 4/4] ASoC: qcom: add sdm845 sound card support
-Date: Wed, 1 Aug 2018 12:02:11 +0530
-Message-ID: <f0f0554c-b2e4-783d-df1e-335ab8d81c11@codeaurora.org>
-References: <1532945454-10437-5-git-send-email-rohitkr@codeaurora.org>
- <201808011127.1snVqYkN%fengguang.wu@intel.com> <s5hy3dqzo51.wl-tiwai@suse.de>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 0/4] IR support for A83T
+Date: Wed, 1 Aug 2018 08:55:00 +0200
+Message-ID: <92b74230-285e-74c3-c89a-e194a8eabc52@gmail.com>
+References: <20180731092258.2279-1-embed3d@gmail.com>
+ <20180731123452.74jyxc4q3ewig35z@flea>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <s5hy3dqzo51.wl-tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBD257DPK24NRBR5SQXNQKGQEN7UUQBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180731123452.74jyxc4q3ewig35z@flea>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>, kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, alsa-devel@alsa-project.org, mark.rutland@arm.com, bgoswami@codeaurora.org, plai@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, srinivas.kandagatla@linaro.org, perex@perex.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Thanks,
+I will fix this today.
 
-On 8/1/2018 10:20 AM, Takashi Iwai wrote:
-> On Wed, 01 Aug 2018 05:46:48 +0200,
-> kbuild test robot wrote:
->> Hi Rohit,
+Philipp
+
+On 31.07.2018 14:34, Maxime Ripard wrote:
+> On Tue, Jul 31, 2018 at 11:22:54AM +0200, Philipp Rossak wrote:
+>> This patch series adds support for the sunxi A83T ir module and enhances
+>> the sunxi-ir driver. Right now the base clock frequency for the ir driver
+>> is a hard coded define and is set to 8 MHz.
+>> This works for the most common ir receivers. On the Sinovoip Bananapi M3
+>> the ir receiver needs, a 3 MHz base clock frequency to work without
+>> problems with this driver.
 >>
->> Thank you for the patch! Perhaps something to improve:
->>
->> [auto build test WARNING on asoc/for-next]
->> [also build test WARNING on next-20180731]
->> [cannot apply to v4.18-rc7]
->> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->>
->> url:    https://github.com/0day-ci/linux/commits/Rohit-kumar/Add-support-for-audio-on-SDM845-SoC/20180801-082203
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
->> reproduce:
->>          # apt-get install sparse
->>          make ARCH=x86_64 allmodconfig
->>          make C=1 CF=-D__CHECK_ENDIAN__
->>
->>
->> sparse warnings: (new ones prefixed by >>)
->>
->>>> sound/soc/qcom/sdm845.c:193:27: sparse: incorrect type in argument 2 (different base types) @@    expected unsigned int [unsigned] val @@    got restricted snd_unsigned int [unsigned] val @@
->>     sound/soc/qcom/sdm845.c:193:27:    expected unsigned int [unsigned] val
->>     sound/soc/qcom/sdm845.c:193:27:    got restricted snd_pcm_format_t [usertype] <noident>
->>
->> vim +193 sound/soc/qcom/sdm845.c
->>
->>     181	
->>     182	static int sdm845_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
->>     183					struct snd_pcm_hw_params *params)
->>     184	{
->>     185		struct snd_interval *rate = hw_param_interval(params,
->>     186						SNDRV_PCM_HW_PARAM_RATE);
->>     187		struct snd_interval *channels = hw_param_interval(params,
->>     188						SNDRV_PCM_HW_PARAM_CHANNELS);
->>     189		struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
->>     190	
->>     191		rate->min = rate->max = DEFAULT_SAMPLE_RATE_48K;
->>     192		channels->min = channels->max = 2;
->>   > 193		snd_mask_set(fmt, SNDRV_PCM_FORMAT_S16_LE);
-> FYI, we have introduced a new helper, snd_mask_set_format(), just for
-> avoiding this sparse warning.  It's already in Mark's for-next tree.
-Thanks Takashi for API suggestion. I will update in next spin.
->
-> thanks,
->
-> Takashi
+>> This patch series adds support for an optinal property that makes it able
+>> to override the default base clock frequency and enables the ir interface
+>> on the a83t and the Bananapi M3.
+> 
+> Once the minor comment on patch 2 has been fixed,
+> Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> 
+> Maxime
+> 
