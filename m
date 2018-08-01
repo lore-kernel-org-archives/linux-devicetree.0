@@ -1,78 +1,104 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RESEND RFC 0/4] Wakeup GPIO support for SDM845 SoC
-Date: Tue, 31 Jul 2018 20:00:17 -0600
-Message-ID: <20180801020021.9782-1-ilina@codeaurora.org>
+Subject: [PATCH RESEND RFC 4/4] arm64: dts: qcom: add wake up interrupts for GPIOs
+Date: Tue, 31 Jul 2018 20:00:21 -0600
+Message-ID: <20180801020021.9782-5-ilina@codeaurora.org>
+References: <20180801020021.9782-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180801020021.9782-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: marc.zyngier@arm.com, swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org
 Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+GPIOs that are wakeup capable have interrupt lines that are routed to
+the always-on interrupt controller (PDC) in parallel to the pinctrl. The
+interrupts listed here are the wake up lines corresponding to GPIOs.
 
-This is an attempt at a solution to enable wake up from suspend and deep idle
-using GPIO as a wakeup source. The 845 uses a new interrupt controller (PDC)
-that lies in the always-on domain and can sense interrupts that are routed to
-it, when the GIC is powered off. It would then wakeup the GIC and replay the
-interrupt which would then be relayed to the AP. The PDC interrupt controller
-driver is merged upstream [1],[2]. The following set of patches extends the
-wakeup capability to GPIOs using the PDC. The TLMM pinctrl driver for the SoC
-available at [3].
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 69 ++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-The complexity with the solution stems from the fact that only a selected few
-GPIO lines are routed to the PDC in addition the TLMMs. They are also from
-different banks on the pinctrl and the TLMM summary line is not routed to the
-PDC. Hence the PDC cannot be considered as parent of the TLMM irqchip (or can
-we ?). This is what it looks like -
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 8ccce42885c1..96ef18ced85b 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -720,6 +720,75 @@
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			interrupts-extended = <&pdc 30 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 31 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 32 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 33 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 34 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 35 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 36 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 37 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 38 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 39 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 41 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 42 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 43 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 44 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 45 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 46 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 47 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 49 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 50 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 51 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 52 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 54 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 55 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 56 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 57 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 58 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 59 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 60 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 61 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 62 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 63 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 64 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 65 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 66 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 67 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 68 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 69 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 70 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 71 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 72 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 73 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 74 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 75 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 76 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 77 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 79 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 80 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 81 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 82 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 83 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 84 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 85 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 86 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 90 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 91 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 92 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 95 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 96 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 97 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 98 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 99 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 100 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 102 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 103 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 104 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 105 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 106 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 107 IRQ_TYPE_LEVEL_HIGH>,
++					      <&pdc 108 IRQ_TYPE_LEVEL_HIGH>;
 
-   [ PIN ] -----[ TLMM ]---------------> [ GIC ] ---> [ CPU ]
-      |  		 <summary IRQ>       ^
-      |                                      |
-      ----------------------------------> [ PDC ]
-		<wakeup IRQs>
-
-I had a brief discussion with Linus on this and the idea implemented is based
-on his suggestion.
-
-When an IRQ (let's call this latent IRQ) for a GPIO is requested, the
-->irq_request_resources() is used by the TLMM driver to request a PDC pin. The
-PDC pin associated with the GPIO is read from a  static map available in the
-pinctrl-sdm845.c. (I think there should be a better location than a static map,
-more on that later). Knowing the PDC pin from the map, we could look up the DT
-bindings and request the PDC interrupt with the same trigger mask as the
-interrupt requested. The ->set_type and ->set_wake are also trapped to set the
-PDC IRQ's polarity and enable it when the latent IRQ is requested. When the PDC
-detects the interrupt at suspend, it wakes up the GIC and replays the wakeup
-IRQ. The GPIO handler function for the latent IRQ is invoked in turn.
-
-Please review these patches and your inputs would be greatly appreciated and
-(kindly) let me know if I have committed any blunders with this approach. There
-is definitely opportunity to improve the location of the static GPIO-PDC pin
-map. We could possibly put it as an data argument in the interrupts definition
-of the PDC or with interrupt names. Also, I am still sorting out some issues
-with the IRQ handling part of these patches. And I am unsure of how to set the
-polarity of the PDC pin without locking, since we are not in hierarchy with the
-PDC interrupt controller. Again, your inputs on these would be greatly helpful.
-
-Thanks,
-Lina
-
-[1]. drivers/irqchip/qcom-pdc.c
-[2]. Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-[3]. drivers/pinctrl/qcom/pinctrl-msm.c
-
-Lina Iyer (4):
-  drivers: pinctrl: qcom: add wakeup capability to GPIO
-  drivers: pinctrl: qcom: add wakeup gpio map for sdm845
-  arm64: dts: msm: add PDC device bindings for sdm845
-  arm64: dts: qcom: add wake up interrupts for GPIOs
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi  |  78 ++++++++++++
- drivers/pinctrl/qcom/pinctrl-msm.c    | 163 ++++++++++++++++++++++++++
- drivers/pinctrl/qcom/pinctrl-msm.h    |  14 +++
- drivers/pinctrl/qcom/pinctrl-sdm845.c |  76 ++++++++++++
- 4 files changed, 331 insertions(+)
-
+ 			qup_i2c0_default: qup-i2c0-default {
+ 				pinmux {
 --
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
