@@ -1,36 +1,108 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 0/3] arm64: dts: meson-axg: add audio support
-Date: Wed,  1 Aug 2018 15:40:30 +0200
-Message-ID: <20180801134033.21739-1-jbrunet@baylibre.com>
+Subject: [PATCH v2 1/3] arm64: dts: meson-axg: add audio fifos
+Date: Wed,  1 Aug 2018 15:40:31 +0200
+Message-ID: <20180801134033.21739-2-jbrunet@baylibre.com>
+References: <20180801134033.21739-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180801134033.21739-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The main purpose of this patchset is to add the audio devices on amlogic's
-AXG SoCs.
+Add TODDR and FRDDR audio fifos of the AXG SoC.
+These fifos are the capture and playback memory interfaces of audio
+subsystem of the AXG.
 
-In term of dependency, apart from the clock bindings you have already
-pulled for your second PR to arm-soc, this patchset requires the ARB
-reset bindings [0] for patch 1.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-Changes since v1 [1]:
- - Dropped applied changes
- - Update card bindings following Rob's comments on the card DT binding
-   documentation.
-
-[0]: 3bfd2fe0ab49 ("reset: meson: add dt-bindings for meson-axg audio arb")
-[1]: https://lkml.kernel.org/r/20180724125238.14567-1-jbrunet@baylibre.com
-
-Jerome Brunet (3):
-  arm64: dts: meson-axg: add audio fifos
-  arm64: dts: meson-axg: s400: enable audio devices
-  arm64: dts: meson-axg: s400: add sound card
-
- .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 180 ++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  67 +++++++
- 2 files changed, 247 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index c518130e5ce7..32f6dcacc2bc 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -11,6 +11,7 @@
+ #include <dt-bindings/clock/axg-aoclkc.h>
+ #include <dt-bindings/gpio/meson-axg-gpio.h>
+ #include <dt-bindings/reset/amlogic,meson-axg-reset.h>
++#include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
+ 
+ / {
+ 	compatible = "amlogic,meson-axg";
+@@ -223,6 +224,72 @@
+ 				resets = <&reset RESET_AUDIO>;
+ 			};
+ 
++			toddr_a: audio-controller@100 {
++				compatible = "amlogic,axg-toddr";
++				reg = <0x0 0x100 0x0 0x1c>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "TODDR_A";
++				interrupts = <GIC_SPI 84 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
++				resets = <&arb AXG_ARB_TODDR_A>;
++				status = "disabled";
++			};
++
++			toddr_b: audio-controller@140 {
++				compatible = "amlogic,axg-toddr";
++				reg = <0x0 0x140 0x0 0x1c>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "TODDR_B";
++				interrupts = <GIC_SPI 85 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
++				resets = <&arb AXG_ARB_TODDR_B>;
++				status = "disabled";
++			};
++
++			toddr_c: audio-controller@180 {
++				compatible = "amlogic,axg-toddr";
++				reg = <0x0 0x180 0x0 0x1c>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "TODDR_C";
++				interrupts = <GIC_SPI 86 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
++				resets = <&arb AXG_ARB_TODDR_C>;
++				status = "disabled";
++			};
++
++			frddr_a: audio-controller@1c0 {
++				compatible = "amlogic,axg-frddr";
++				reg = <0x0 0x1c0 0x0 0x1c>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "FRDDR_A";
++				interrupts = <GIC_SPI 88 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
++				resets = <&arb AXG_ARB_FRDDR_A>;
++				status = "disabled";
++			};
++
++			frddr_b: audio-controller@200 {
++				compatible = "amlogic,axg-frddr";
++				reg = <0x0 0x200 0x0 0x1c>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "FRDDR_B";
++				interrupts = <GIC_SPI 89 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
++				resets = <&arb AXG_ARB_FRDDR_B>;
++				status = "disabled";
++			};
++
++			frddr_c: audio-controller@240 {
++				compatible = "amlogic,axg-frddr";
++				reg = <0x0 0x240 0x0 0x1c>;
++				#sound-dai-cells = <0>;
++				sound-name-prefix = "FRDDR_C";
++				interrupts = <GIC_SPI 90 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
++				resets = <&arb AXG_ARB_FRDDR_C>;
++				status = "disabled";
++			};
++
+ 			arb: reset-controller@280 {
+ 				compatible = "amlogic,meson-axg-audio-arb";
+ 				reg = <0x0 0x280 0x0 0x4>;
 -- 
 2.17.1
