@@ -1,245 +1,69 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RESEND RFC 1/4] drivers: pinctrl: qcom: add wakeup
- capability to GPIO
-Date: Wed, 1 Aug 2018 13:45:38 -0600
-Message-ID: <20180801194538.GA6422@codeaurora.org>
-References: <20180801020021.9782-1-ilina@codeaurora.org>
- <20180801020021.9782-2-ilina@codeaurora.org>
- <86600uy4vh.wl-marc.zyngier@arm.com>
+From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Subject: Re: [PATCH v3 7/8] net: phy: Add support to configure clock in
+ Broadcom iProc mdio mux
+Date: Wed, 1 Aug 2018 12:55:56 -0700
+Message-ID: <9af7e7a3-54d4-8802-f64a-fc4f9c49c8b9@broadcom.com>
+References: <1533146186-8374-1-git-send-email-arun.parameswaran@broadcom.com>
+ <1533146186-8374-8-git-send-email-arun.parameswaran@broadcom.com>
+ <0cc6db4f-7008-0ad3-58d7-9e93060f152f@gmail.com>
+ <20180801184659.GG30658@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <86600uy4vh.wl-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180801184659.GG30658@n2100.armlinux.org.uk>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the feedback, Marc.
+Hi Russell, Florian,
 
-On Wed, Aug 01 2018 at 00:31 -0600, Marc Zyngier wrote:
->On Wed, 01 Aug 2018 03:00:18 +0100,
->Lina Iyer <ilina@codeaurora.org> wrote:
+On 18-08-01 11:46 AM, Russell King - ARM Linux wrote:
+> On Wed, Aug 01, 2018 at 11:40:33AM -0700, Florian Fainelli wrote:
+>> On 08/01/2018 10:56 AM, Arun Parameswaran wrote:
+>>>  static int iproc_mdio_wait_for_idle(void __iomem *base, bool result)
+>>> @@ -204,6 +225,20 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
+>>>  		return -ENOMEM;
+>>>  	}
+>>>  
+>>> +	md->core_clk = devm_clk_get(&pdev->dev, NULL);
+>>> +	if (IS_ERR(md->core_clk)) {
+>>> +		if (PTR_ERR(md->core_clk) == -EPROBE_DEFER)
+>>> +			return -EPROBE_DEFER;
+>>> +
+>>> +		md->core_clk = NULL;
 >>
->> +static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
->> +{
->> +	struct irq_data *irqd = data;
->> +	struct irq_desc *desc = irq_data_to_desc(irqd);
->> +	struct irq_chip *chip = irq_desc_get_chip(desc);
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
->> +	int irq_pin = irq_find_mapping(gc->irq.domain, irqd->hwirq);
->> +
->> +	chained_irq_enter(chip, desc);
->> +	generic_handle_irq(irq_pin);
->> +	chained_irq_exit(chip, desc);
->
->That's crazy. I'm not even commenting on the irq handler vs chained
->irqchip thing, but directly calling into a completely different part
->of the irq hierarchy makes me feel nauseous,
->
-I know the sentiment; I am not too happy about it myself. Explanation
-below.
-
->Why isn't the interrupt still pending at the pinctrl level? Looking at
->the diagram in the cover letter, I'd have hoped that the signal routed
->to the PDC would wakeup the GIC, but that by virtue of being *also*
->wired to the TLMM, the interrupt would be handled via the normal path.
->
-The short answer: TLMM is not active to sense a wakeup interrupt.
-
-When we enter system sleep mode, the TLMM and the GIC are powered off
-and the PDC is the only powered-on interrupt controller. The IRQs
-configured at the PDC are the only ones capable of waking the system.
-Upon sensing the interrupt, the PDC intiates a system wakeup and replays
-the interrupt to the GIC. The GIC relays that to AP. Unfortunately, the
-interrupts from the GPIO do not trigger the TLMM summary line. Therefore
-this handler needs to figure out what GPIO caused the wakeup and notify
-the corresponding driver.
-
->Why isn't that the case? And if that's because the HW is broken and
->doesn't buffer edge interrupts, why can't you use the resend mechanism
->instead?
->
-The PDC hardware can replay the interrupts accurately. However, it will
-replay only the pin and its not the TLMM summary IRQ. The handler here,
-needs to notify the driver that the wakeup interrupt happened and needs
-to take action. If I could trip the summary IRQ in this handler that
-would work too. Can it be done?
-
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int msm_gpio_pdc_pin_request(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->> +	struct platform_device *pdev = to_platform_device(pctrl->dev);
->> +	unsigned pin, npins, irq;
->> +	struct wakeup_gpio_irq_map *p;
->> +	unsigned long flags, trigger;
->> +	const char *pin_name;
->> +	int i, ret;
->> +
->> +	pin = msm_gpio_get_pdc_pin(pctrl, d->hwirq);
->> +	if (pin < 0)
->> +		return 0;
->> +
->> +	npins = platform_irq_count(pdev);
->> +	if (npins <= 0)
->> +		return npins;
->> +
->> +	for (i = 0; i < npins; i++) {
->> +		irq = platform_get_irq(pdev, i);
->> +		if (irq >= 0 && pin == irq_get_irq_data(irq)->hwirq)
->> +			break;
->> +	}
->> +	if (i == npins)
->> +		return 0;
->> +
->> +	pin_name = kasprintf(GFP_KERNEL, "gpio-%lu", d->hwirq);
->> +	if (!pin_name)
->> +		return -ENOMEM;
->> +
->> +	trigger = irqd_get_trigger_type(d) | IRQF_ONESHOT | IRQF_NO_SUSPEND;
->> +	ret = request_irq(irq, wake_irq_gpio_handler, trigger, pin_name, d);
->> +	if (ret) {
->> +		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
->> +		return ret;
->> +	}
->> +
->> +	p = kzalloc(sizeof(p), GFP_KERNEL);
->> +	if (!p)
->> +		return -ENOMEM;
->> +
->> +	p->pdc_irq = irq;
->> +	p->gpio = d->hwirq;
->> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
->> +	list_add(&p->list, &pctrl->pdc_irqs);
->> +	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->
->This whole list business seems bizarre. Why don't you use the
->handler_data instead?
->
-Ah, sure.
-
->> +
->> +	return 0;
->> +}
->> +
->> +static int msm_gpio_pdc_pin_release(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->> +	struct wakeup_gpio_irq_map *p, *n, *t = NULL;
->> +	unsigned long flags;
->> +
->> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
->> +	list_for_each_entry_safe(p, n, &pctrl->pdc_irqs, list) {
->> +		if (p->gpio == d->hwirq) {
->> +			list_del(&p->list);
->> +			t = p;
->> +			break;
->> +		}
->> +	}
->> +	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->> +	if (t) {
->> +		free_irq(t->pdc_irq, NULL);
->
->NULL? This should balance with the request_irq call, I believe.
->
-Sorry, yes. I forgot to port the change from the test branch to here.
-
->> +		kfree(t);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int msm_gpio_irq_reqres(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +
->> +	if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
->> +		dev_err(gc->parent,"unable to lock HW IRQ %lu for IRQ\n",
->> +			irqd_to_hwirq(d));
->> +		return -EINVAL;
->> +	}
->> +
->> +	return msm_gpio_pdc_pin_request(d);
->> +}
->> +
->> +static void msm_gpio_irq_relres(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +
->> +	msm_gpio_pdc_pin_release(d);
->> +	gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
->> +}
->> +
->>  static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>  {
->>  	struct gpio_chip *chip;
->> @@ -887,6 +1047,9 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>  	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
->>  	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
->>  	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
->> +	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
->> +	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->> +	INIT_LIST_HEAD(&pctrl->pdc_irqs);
+>> I would simplify this a bit:
 >>
->>  	ret = gpiochip_add_data(&pctrl->chip, pctrl);
->>  	if (ret) {
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
->> index 9b9feea540ff..5b7f3160affe 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
->> @@ -97,6 +97,16 @@ struct msm_pingroup {
->>  	unsigned intr_detection_width:5;
->>  };
->>
->> +/**
->> + * struct msm_pinctrl_pdc_map - Map GPIOs to PDC pins on RPMH based SoCs
->> + * @hwirq:	   The GPIO that is mapped.
->> + * @pdc_pin:	   The PDC pin to with the GPIO IRQ line is routed.
->> + */
->> +struct msm_pinctrl_pdc_map {
->> +	u32 hwirq;
->> +	u32 pdc_pin;
->> +};
->> +
->>  /**
->>   * struct msm_pinctrl_soc_data - Qualcomm pin controller driver configuration
->>   * @pins:	    An array describing all pins the pin controller affects.
->> @@ -107,6 +117,8 @@ struct msm_pingroup {
->>   * @ngroups:	    The numbmer of entries in @groups.
->>   * @ngpio:	    The number of pingroups the driver should expose as GPIOs.
->>   * @pull_no_keeper: The SoC does not support keeper bias.
->> + * @pdc_map:	    The map of GPIOs to the always-on PDC interrupt lines.
->> + * @npdc_pins:	    The number of GPIOs mapped to the PDC pins in @pdc_map.
->>   */
->>  struct msm_pinctrl_soc_data {
->>  	const struct pinctrl_pin_desc *pins;
->> @@ -117,6 +129,8 @@ struct msm_pinctrl_soc_data {
->>  	unsigned ngroups;
->>  	unsigned ngpios;
->>  	bool pull_no_keeper;
->> +	struct msm_pinctrl_pdc_map *pdc_map;
->> +	unsigned npdc_pins;
->>  };
->>
->>  int msm_pinctrl_probe(struct platform_device *pdev,
->
->I find the whole thing terrifying, the most scary part being the
->hand-crafted injection of the interrupt. I'd appreciate some insights
->on how the pinctl HW is supposed to buffer things, and why its
->summary IRQ isn't visible to the GIC after wakeup.
->
-Since the TLMM is not powered-on it will not sense the wakeup GPIO. The
-summary IRQ is also not triggered. If there is a good way to get the
-action->handler from the GPIO's latent IRQ and set it on the PDC IRQ, I
-think it might work.
+>> 	if (IS_ERR(md->core_clk) && PTR_ERR(md->core_clk) == -EPROBE_DEFER)
+> 
+> Even better is:
+> 
+> 	if (md->core_clk == ERR_PTR(-EPROBE_DEFER))
+> 
 
-Thanks,
-Lina
+The clock is an optional parameter. But I realize, that I did not handle all
+the error cases.
+
+My intention was to proceed with probe if the clock is not found in the DT.
+If the clock is specified in the DT, make use of it.
+
+So, should I modify to something like:
+
+md->core_clk = devm_clk_get(&pdev->dev, NULL);
+if (md->core_clk == ERR_PTR(-ENOENT)) {
+	/* clock is optional, without it the default
+	 * rate divider register values will be used
+	 */
+	md->core_clk = NULL;
+} else if (IS_ERR(md->core_clk)) {
+	return PTR_ERR(md->core_clk);
+} else {
+	rc = clk_prepare_enable(md->core_clk);
+	...
+}
+
+Thanks
+Arun
