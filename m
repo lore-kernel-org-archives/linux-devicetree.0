@@ -1,29 +1,31 @@
-Return-Path: <SRS0=DAzr=KV=vanmierlo.com=m.brock@kernel.org>
+Return-Path: <SRS0=ReDA=KQ=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Mon, 06 Aug 2018 10:57:05 +0200
-From: Maarten Brock <m.brock@vanmierlo.com>
-Subject: Re: [PATCHv3 4/4] dt-bindings: serial: Add binding for uartlite
-In-Reply-To: <20180716160251.GA11275@rob-hp-laptop>
-References: <1531718634-17939-1-git-send-email-shubhrajyoti.datta@gmail.com>
- <1531718634-17939-4-git-send-email-shubhrajyoti.datta@gmail.com>
- <20180716160251.GA11275@rob-hp-laptop>
-Message-ID: <a9896568bfe44758a8c71e811ebb95a0@vanmierlo.com>
-To: Rob Herring <robh@kernel.org>
-Cc: shubhrajyoti.datta@gmail.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, jacmet@sunsite.dk, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-serial-owner@vger.kernel.org
+References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com> <1532936891-25034-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1532936891-25034-2-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 1 Aug 2018 10:01:02 +0200
+Message-ID: <CAMuHMdW_R0Nt_u62fHneYjJc+-W-VqUhfwCt7MmiHjR_BiqntA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: power: Add r8a774a1 SYSC power domain definitions
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 2018-07-16 18:02, Rob Herring wrote:
->> +Optional properties:
->> +- port-number		: Set Uart port number
->> +- clock-names		: Should be "s_axi_aclk"
->> +- clocks		: Input clock specifier. Refer to common clock bindings.
-> 
-> How do you calc baud rates if this is omitted?
+On Mon, Jul 30, 2018 at 9:54 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> This patch adds power domain indices for RZ/G2M.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
 
-The uartlite is fixed to some baud rate (actually divisor) in the fpga.
-And btw. so are the number of data bits, stop bits and parity.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Maarten
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
