@@ -1,86 +1,29 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: i2c: Add binding for Qualcomm CCI I2C controller
-Date: Mon,  6 Aug 2018 16:34:15 +0530
-Message-Id: <20180806110416.4288-2-vkoul@kernel.org>
-In-Reply-To: <20180806110416.4288-1-vkoul@kernel.org>
-References: <20180806110416.4288-1-vkoul@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=ReDA=KQ=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com> <1532936891-25034-4-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1532936891-25034-4-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 1 Aug 2018 10:46:58 +0200
+Message-ID: <CAMuHMdVyuJQj5S03aMMN-LWNLrUk_XEote4uEpwD1wsfQ5yfsw@mail.gmail.com>
+Subject: Re: [PATCH 3/5] soc: renesas: rcar-rst: Add support for RZ/G2M
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Todor Tomov <todor.tomov@linaro.org>
+On Mon, Jul 30, 2018 at 9:54 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
 
-Add DT binding document for Qualcomm Camera Control Interface (CCI)
-I2C controller.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- .../devicetree/bindings/i2c/i2c-qcom-cci.txt       | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+Gr{oetje,eeting}s,
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
-new file mode 100644
-index 000000000000..977978dd4444
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
-@@ -0,0 +1,55 @@
-+Qualcomm Camera Control Interface (CCI) I2C controller
-+
-+Required properties:
-+ - compatible: Should be one of:
-+   - "qcom,cci-v1.0.8" for 8916;
-+   - "qcom,cci-v1.4.0" for 8996.
-+ - #address-cells: Should be <1>.
-+ - #size-cells: Should be <0>.
-+ - reg: Base address of the I2C controller and length of memory mapped region.
-+ - interrupts: Specifier for CCI I2C interrupt.
-+ - clocks: List of clock specifiers, one for each entry in clock-names.
-+ - clock-names: Should contain:
-+   - "mmss_mmagic_ahb" - on qcom,cci-v1.4.0 only;
-+   - "camss_top_ahb";
-+   - "cci_ahb";
-+   - "cci";
-+   - "camss_ahb".
-+
-+Required subnodes:
-+ - i2c-bus instances:
-+	 Mandatory i2c-bus0 subnode
-+	 Mandatory i2c-bus1 for qcom,cci-v1.4.0
-+ - Optional properties:
-+	- clock-frequency: Desired I2C bus clock frequency
-+	  in Hz, defaults to 100 kHz if omitted.
-+
-+Required properties on qcom,cci-v1.4.0:
-+ - power-domains: Power domain specifier.
-+
-+Example:
-+
-+                cci@a0c000 {
-+                        compatible = "qcom,cci-v1.4.0";
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+                        reg = <0xa0c000 0x1000>;
-+                        interrupts = <GIC_SPI 295 IRQ_TYPE_EDGE_RISING>;
-+                        power-domains = <&mmcc CAMSS_GDSC>;
-+                        clocks = <&mmcc MMSS_MMAGIC_AHB_CLK>,
-+                                        <&mmcc CAMSS_TOP_AHB_CLK>,
-+                                        <&mmcc CAMSS_CCI_AHB_CLK>,
-+                                        <&mmcc CAMSS_CCI_CLK>,
-+                                        <&mmcc CAMSS_AHB_CLK>;
-+                        clock-names = "mmss_mmagic_ahb",
-+                                        "camss_top_ahb",
-+                                        "cci_ahb",
-+                                        "cci",
-+                                        "camss_ahb";
-+			i2c-bus0 {
-+	                        clock-frequency = <400000>;
-+			};
-+			i2c-bus1 {
-+				clock-frequency = <400000>;
-+			};
-+                };
+                        Geert
+
 -- 
-2.14.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
