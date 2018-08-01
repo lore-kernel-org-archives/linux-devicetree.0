@@ -1,282 +1,96 @@
-Return-Path: <SRS0=K2JG=KS=codeaurora.org=smohanad@kernel.org>
-From: Siddartha Mohanadoss <smohanad@codeaurora.org>
-Subject: [PATCH v5 1/3] dt-bindings: iio: adc: Add DT binding document for PMIC5 ADC
-Date: Thu,  2 Aug 2018 18:43:38 -0700
-Message-Id: <1533260618-12275-1-git-send-email-smohanad@codeaurora.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Return-Path: <SRS0=MTgV=KQ=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 5/5] clk: renesas: cpg-mssr: Add r8a774a1 support
+Date: Wed, 1 Aug 2018 09:31:57 +0000
+Message-ID: 
+ <OSBPR01MB2103CD9033D38A005C40E3E9B82D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com>
+ <1532936891-25034-6-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdV1vQkBg+d8HmNDVPZOBiH-tmRbmE+ZcWcnqMaP1zgWhg@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdV1vQkBg+d8HmNDVPZOBiH-tmRbmE+ZcWcnqMaP1zgWhg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-PMIC5 ADC has support for clients to measure voltage and current
-on inputs connected to the PMIC. Clients include reading voltage
-phone power and on board system thermistors for thermal management.
-ADC5 on certain PMIC has support to read battery current.
-
-This change adds documentation.
-
-Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 ++++++++++----
- include/dt-bindings/iio/qcom,spmi-vadc.h           | 115 ++++++++++++++++++++-
- 2 files changed, 172 insertions(+), 20 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-index 0fb4613..8498f11 100644
---- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-@@ -1,7 +1,9 @@
--Qualcomm's SPMI PMIC voltage ADC
-+Qualcomm's SPMI PMIC ADC
- 
--SPMI PMIC voltage ADC (VADC) provides interface to clients to read
--voltage. The VADC is a 15-bit sigma-delta ADC.
-+- SPMI PMIC voltage ADC (VADC) provides interface to clients to read
-+  voltage. The VADC is a 15-bit sigma-delta ADC.
-+- SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
-+  voltage. The VADC is a 16-bit sigma-delta ADC.
- 
- VADC node:
- 
-@@ -9,6 +11,8 @@ VADC node:
-     Usage: required
-     Value type: <string>
-     Definition: Should contain "qcom,spmi-vadc".
-+                Should contain "qcom,spmi-adc5" for PMIC5 ADC driver.
-+                Should contain "qcom,spmi-adc-rev2" for PMIC rev2 ADC driver.
- 
- - reg:
-     Usage: required
-@@ -45,13 +49,26 @@ Channel node properties:
-     Definition: ADC channel number.
-             See include/dt-bindings/iio/qcom,spmi-vadc.h
- 
-+- label:
-+    Usage: required for "qcom,spmi-adc5" and "qcom,spmi-adc-rev2"
-+    Value type: <empty>
-+    Definition: ADC input of the platform as seen in the schematics.
-+            For thermistor inputs connected to generic AMUX or GPIO inputs
-+            these can vary across platform for the same pins. Hence select
-+            the platform schematics name for this channel.
-+
- - qcom,decimation:
-     Usage: optional
-     Value type: <u32>
-     Definition: This parameter is used to decrease ADC sampling rate.
-             Quicker measurements can be made by reducing decimation ratio.
--            Valid values are 512, 1024, 2048, 4096.
--            If property is not found, default value of 512 will be used.
-+            - For compatible property "qcom,spmi-vadc", valid values are
-+              512, 1024, 2048, 4096. If property is not found, default value
-+              of 512 will be used.
-+            - For compatible property "qcom,spmi-adc5", valid values are 250, 420
-+              and 840. If property is not found, default value of 840 is used.
-+            - For compatible property "qcom,spmi-adc-rev2", valid values are 256,
-+              512 and 1024. If property is not present, default value is 1024.
- 
- - qcom,pre-scaling:
-     Usage: optional
-@@ -66,21 +83,38 @@ Channel node properties:
- - qcom,ratiometric:
-     Usage: optional
-     Value type: <empty>
--    Definition: Channel calibration type. If this property is specified
--            VADC will use the VDD reference (1.8V) and GND for channel
--            calibration. If property is not found, channel will be
--            calibrated with 0.625V and 1.25V reference channels, also
--            known as absolute calibration.
-+    Definition: Channel calibration type.
-+            - For compatible property "qcom,spmi-vadc", if this property is
-+              specified VADC will use the VDD reference (1.8V) and GND for
-+              channel calibration. If property is not found, channel will be
-+              calibrated with 0.625V and 1.25V reference channels, also
-+              known as absolute calibration.
-+            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
-+              if this property is specified VADC will use the VDD reference
-+              (1.875V) and GND for channel calibration. If property is not found,
-+              channel will be calibrated with 0V and 1.25V reference channels,
-+              also known as absolute calibration.
- 
- - qcom,hw-settle-time:
-     Usage: optional
-     Value type: <u32>
-     Definition: Time between AMUX getting configured and the ADC starting
--            conversion. Delay = 100us * (value) for value < 11, and
--            2ms * (value - 10) otherwise.
--            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
--            900 us and 1, 2, 4, 6, 8, 10 ms
--            If property is not found, channel will use 0us.
-+            conversion. The 'hw_settle_time' is an index used from valid values
-+            and programmed in hardware to achieve the hardware settling delay.
-+            - For compatible property "qcom,spmi-vadc" and "qcom,spmi-adc-rev2",
-+              Delay = 100us * (hw_settle_time) for hw_settle_time < 11,
-+              and 2ms * (hw_settle_time - 10) otherwise.
-+              Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
-+              900 us and 1, 2, 4, 6, 8, 10 ms.
-+              If property is not found, channel will use 0us.
-+            - For compatible property "qcom,spmi-adc5", delay = 15us for
-+              value 0, 100us * (value) for values < 11,
-+              and 2ms * (value - 10) otherwise.
-+              Valid values are: 15, 100, 200, 300, 400, 500, 600, 700, 800,
-+              900 us and 1, 2, 4, 6, 8, 10 ms
-+              Certain controller digital versions have valid values of
-+              15, 100, 200, 300, 400, 500, 600, 700, 1, 2, 4, 8, 16, 32, 64, 128 ms
-+              If property is not found, channel will use 15us.
- 
- - qcom,avg-samples:
-     Usage: optional
-@@ -89,13 +123,18 @@ Channel node properties:
-             Averaging provides the option to obtain a single measurement
-             from the ADC that is an average of multiple samples. The value
-             selected is 2^(value).
--            Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
--            If property is not found, 1 sample will be used.
-+            - For compatible property "qcom,spmi-vadc", valid values
-+              are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
-+              If property is not found, 1 sample will be used.
-+            - For compatible property "qcom,spmi-adc5" and "qcom,spmi-adc-rev2",
-+              valid values are: 1, 2, 4, 8, 16
-+              If property is not found, 1 sample will be used.
- 
- NOTE:
- 
--Following channels, also known as reference point channels, are used for
--result calibration and their channel configuration nodes should be defined:
-+For compatible property "qcom,spmi-vadc" following channels, also known as
-+reference point channels, are used for result calibration and their channel
-+configuration nodes should be defined:
- VADC_REF_625MV and/or VADC_SPARE1(based on PMIC version) VADC_REF_1250MV,
- VADC_GND_REF and VADC_VDD_VADC.
- 
-diff --git a/include/dt-bindings/iio/qcom,spmi-vadc.h b/include/dt-bindings/iio/qcom,spmi-vadc.h
-index 42121fa..bf54b5a 100644
---- a/include/dt-bindings/iio/qcom,spmi-vadc.h
-+++ b/include/dt-bindings/iio/qcom,spmi-vadc.h
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2012-2014,2018 The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -116,4 +116,117 @@
- #define VADC_LR_MUX10_PU1_PU2_AMUX_USB_ID	0xf9
- #define VADC_LR_MUX3_BUF_PU1_PU2_XO_THERM	0xfc
- 
-+/* ADC channels for SPMI PMIC5 */
-+
-+#define ADC5_REF_GND				0x00
-+#define ADC5_1P25VREF				0x01
-+#define ADC5_VREF_VADC				0x02
-+#define ADC5_VREF_VADC5_DIV_3			0x82
-+#define ADC5_VPH_PWR				0x83
-+#define ADC5_VBAT_SNS				0x84
-+#define ADC5_VCOIN				0x85
-+#define ADC5_DIE_TEMP				0x06
-+#define ADC5_USB_IN_I				0x07
-+#define ADC5_USB_IN_V_16			0x08
-+#define ADC5_CHG_TEMP				0x09
-+#define ADC5_BAT_THERM				0x0a
-+#define ADC5_BAT_ID				0x0b
-+#define ADC5_XO_THERM				0x0c
-+#define ADC5_AMUX_THM1				0x0d
-+#define ADC5_AMUX_THM2				0x0e
-+#define ADC5_AMUX_THM3				0x0f
-+#define ADC5_AMUX_THM4				0x10
-+#define ADC5_AMUX_THM5				0x11
-+#define ADC5_GPIO1				0x12
-+#define ADC5_GPIO2				0x13
-+#define ADC5_GPIO3				0x14
-+#define ADC5_GPIO4				0x15
-+#define ADC5_GPIO5				0x16
-+#define ADC5_GPIO6				0x17
-+#define ADC5_GPIO7				0x18
-+#define ADC5_SBUx				0x99
-+#define ADC5_MID_CHG_DIV6			0x1e
-+#define ADC5_OFF				0xff
-+
-+/* 30k pull-up1 */
-+#define ADC5_BAT_THERM_30K_PU			0x2a
-+#define ADC5_BAT_ID_30K_PU			0x2b
-+#define ADC5_XO_THERM_30K_PU			0x2c
-+#define ADC5_AMUX_THM1_30K_PU			0x2d
-+#define ADC5_AMUX_THM2_30K_PU			0x2e
-+#define ADC5_AMUX_THM3_30K_PU			0x2f
-+#define ADC5_AMUX_THM4_30K_PU			0x30
-+#define ADC5_AMUX_THM5_30K_PU			0x31
-+#define ADC5_GPIO1_30K_PU			0x32
-+#define ADC5_GPIO2_30K_PU			0x33
-+#define ADC5_GPIO3_30K_PU			0x34
-+#define ADC5_GPIO4_30K_PU			0x35
-+#define ADC5_GPIO5_30K_PU			0x36
-+#define ADC5_GPIO6_30K_PU			0x37
-+#define ADC5_GPIO7_30K_PU			0x38
-+#define ADC5_SBUx_30K_PU			0x39
-+
-+/* 100k pull-up2 */
-+#define ADC5_BAT_THERM_100K_PU			0x4a
-+#define ADC5_BAT_ID_100K_PU			0x4b
-+#define ADC5_XO_THERM_100K_PU			0x4c
-+#define ADC5_AMUX_THM1_100K_PU			0x4d
-+#define ADC5_AMUX_THM2_100K_PU			0x4e
-+#define ADC5_AMUX_THM3_100K_PU			0x4f
-+#define ADC5_AMUX_THM4_100K_PU			0x50
-+#define ADC5_AMUX_THM5_100K_PU			0x51
-+#define ADC5_GPIO1_100K_PU			0x52
-+#define ADC5_GPIO2_100K_PU			0x53
-+#define ADC5_GPIO3_100K_PU			0x54
-+#define ADC5_GPIO4_100K_PU			0x55
-+#define ADC5_GPIO5_100K_PU			0x56
-+#define ADC5_GPIO6_100K_PU			0x57
-+#define ADC5_GPIO7_100K_PU			0x58
-+#define ADC5_SBUx_100K_PU			0x59
-+
-+/* 400k pull-up3 */
-+#define ADC5_BAT_THERM_400K_PU			0x6a
-+#define ADC5_BAT_ID_400K_PU			0x6b
-+#define ADC5_XO_THERM_400K_PU			0x6c
-+#define ADC5_AMUX_THM1_400K_PU			0x6d
-+#define ADC5_AMUX_THM2_400K_PU			0x6e
-+#define ADC5_AMUX_THM3_400K_PU			0x6f
-+#define ADC5_AMUX_THM4_400K_PU			0x70
-+#define ADC5_AMUX_THM5_400K_PU			0x71
-+#define ADC5_GPIO1_400K_PU			0x72
-+#define ADC5_GPIO2_400K_PU			0x73
-+#define ADC5_GPIO3_400K_PU			0x74
-+#define ADC5_GPIO4_400K_PU			0x75
-+#define ADC5_GPIO5_400K_PU			0x76
-+#define ADC5_GPIO6_400K_PU			0x77
-+#define ADC5_GPIO7_400K_PU			0x78
-+#define ADC5_SBUx_400K_PU			0x79
-+
-+/* 1/3 Divider */
-+#define ADC5_GPIO1_DIV3				0x92
-+#define ADC5_GPIO2_DIV3				0x93
-+#define ADC5_GPIO3_DIV3				0x94
-+#define ADC5_GPIO4_DIV3				0x95
-+#define ADC5_GPIO5_DIV3				0x96
-+#define ADC5_GPIO6_DIV3				0x97
-+#define ADC5_GPIO7_DIV3				0x98
-+#define ADC5_SBUx_DIV3				0x99
-+
-+/* Current and combined current/voltage channels */
-+#define ADC5_INT_EXT_ISENSE			0xa1
-+#define ADC5_PARALLEL_ISENSE			0xa5
-+#define ADC5_CUR_REPLICA_VDS			0xa7
-+#define ADC5_CUR_SENS_BATFET_VDS_OFFSET		0xa9
-+#define ADC5_CUR_SENS_REPLICA_VDS_OFFSET	0xab
-+#define ADC5_EXT_SENS_OFFSET			0xad
-+
-+#define ADC5_INT_EXT_ISENSE_VBAT_VDATA		0xb0
-+#define ADC5_INT_EXT_ISENSE_VBAT_IDATA		0xb1
-+#define ADC5_EXT_ISENSE_VBAT_VDATA		0xb2
-+#define ADC5_EXT_ISENSE_VBAT_IDATA		0xb3
-+#define ADC5_PARALLEL_ISENSE_VBAT_VDATA		0xb4
-+#define ADC5_PARALLEL_ISENSE_VBAT_IDATA		0xb5
-+
-+#define ADC5_MAX_CHANNEL			0xc0
-+
- #endif /* _DT_BINDINGS_QCOM_SPMI_VADC_H */
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggNS81XSBjbGs6IHJlbmVzYXM6IGNwZy1tc3NyOiBBZGQgcjhhNzc0YTEgc3VwcG9ydA0K
+Pg0KPiBIaSBCaWp1LA0KPg0KPiBPbiBNb24sIEp1bCAzMCwgMjAxOCBhdCA5OjU0IEFNIEJpanUg
+RGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIFJaL0cyTSAoUjhB
+Nzc0QTEpIENsb2NrIFB1bHNlIEdlbmVyYXRvciAvIE1vZHVsZSBTdGFuZGJ5IGFuZA0KPiA+IFNv
+ZnR3YXJlIFJlc2V0IHN1cHBvcnQuDQo+ID4NCj4gPiBCYXNlZCBvbiB0aGUgVGFibGUgOC4yYiBv
+ZiAiUlovRyBTZXJpZXMsIDJuZCBHZW5lcmF0aW9uIFVzZXIncyBNYW51YWw6DQo+ID4gSGFyZHdh
+cmUgKChSZXYuIDAuNjEsIEp1bmUgMTIsIDIwMTgpIi4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogRmFi
+cml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+DQo+IFRoYW5r
+cyBmb3IgeW91ciBwYXRjaCENCj4NCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVy
+cy9jbGsvcmVuZXNhcy9yOGE3NzRhMS1jcGctbXNzci5jDQo+DQo+ID4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgY3BnX2NvcmVfY2xrIHI4YTc3NGExX2NvcmVfY2xrc1tdIF9faW5pdGNvbnN0ID0gew0K
+Pg0KPiA+ICsgICAgICAgREVGX0RJVjZfUk8oIm9zYyIsICAgICAgUjhBNzc0QTFfQ0xLX09TQywg
+ICBDTEtfRVhUQUwsDQo+IENQR19SQ0tDUiwgIDgpLA0KPiA+ICsgICAgICAgREVGX0RJVjZfUk8o
+InJfaW50IiwgICAgQ0xLX1JJTlQsICAgICAgICAgIENMS19FWFRBTCwgQ1BHX1JDS0NSLCAzMiks
+DQo+DQo+IFJaL0cyTSBkb2VzIG5vdCBoYXZlIHRoZSBDUEdfUkNLQ1IgcmVnaXN0ZXIuDQo+IFRo
+ZSBpbnRlcm5hbCBSIENMSyBpcyBhbiBpbnRlcm5hbCBjbG9jaywgaGVuY2UgcGxlYXNlIG5hbWUg
+aXQgIi5yIi4NCj4NCj4gUGxlYXNlIGhhdmUgYSBsb29rIGF0ICJjbGs6IHJlbmVzYXM6IHJjYXIt
+Z2VuMzogT1NDIGFuZCBSQ0xLIGltcHJvdmVtZW50cyINCj4gKGh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcHJvamVjdC9saW51eC1yZW5lc2FzLXNvYy9saXN0Lz9zZXJpZXM9MjA2MykNCg0K
+V2lsbCBzZW5kIFYyIGluY29ycG9yYXRpbmcgdGhpcyBjaGFuZ2VzLg0KDQo+ID4gKy8qDQo+ID4g
+KyAqIENQRyBDbG9jayBEYXRhDQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArLyoNCj4gPiArICogICBN
+RCAgICAgICAgICAgICAgICBFWFRBTCAgICAgICAgICAgUExMMCAgICBQTEwxICAgIFBMTDIgICAg
+UExMMyAgICBQTEw0DQo+ID4gKyAqIDE0IDEzIDE5IDE3IChNSHopDQo+ID4gKyAqLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KPiA+ICsgKiAwICAwICAwICAwICAxNi42NiB4IDEgICAgICAgeDE4MCAgICB4MTkyICAgIHgx
+NDQgICAgeDE5MiAgICB4MTQ0DQo+ID4gKyAqIDAgIDAgIDAgIDEgIDE2LjY2IHggMSAgICAgICB4
+MTgwICAgIHgxOTIgICAgeDE0NCAgICB4MTI4ICAgIHgxNDQNCj4gPiArICogMCAgMCAgMSAgMCAg
+UHJvaGliaXRlZCBzZXR0aW5nDQo+ID4gKyAqIDAgIDAgIDEgIDEgIDE2LjY2IHggMSAgICAgICB4
+MTgwICAgIHgxOTIgICAgeDE0NCAgICB4MTkyICAgIHgxNDQNCj4gPiArICogMCAgMSAgMCAgMCAg
+MjAgICAgeCAxICAgICAgIHgxNTAgICAgeDE2MCAgICB4MTIwICAgIHgxNjAgICAgeDEyMA0KPiA+
+ICsgKiAwICAxICAwICAxICAyMCAgICB4IDEgICAgICAgeDE1MCAgICB4MTYwICAgIHgxMjAgICAg
+eDEwNiAgICB4MTIwDQo+ID4gKyAqIDAgIDEgIDEgIDAgIFByb2hpYml0ZWQgc2V0dGluZw0KPiA+
+ICsgKiAwICAxICAxICAxICAyMCAgICB4IDEgICAgICAgeDE1MCAgICB4MTYwICAgIHgxMjAgICAg
+eDE2MCAgICB4MTIwDQo+ID4gKyAqIDEgIDAgIDAgIDAgIDI1ICAgIHggMSAgICAgICB4MTIwICAg
+IHgxMjggICAgeDk2ICAgICB4MTI4ICAgIHg5Ng0KPiA+ICsgKiAxICAwICAwICAxICAyNSAgICB4
+IDEgICAgICAgeDEyMCAgICB4MTI4ICAgIHg5NiAgICAgeDg0ICAgICB4OTYNCj4gPiArICogMSAg
+MCAgMSAgMCAgUHJvaGliaXRlZCBzZXR0aW5nDQo+ID4gKyAqIDEgIDAgIDEgIDEgIDI1ICAgIHgg
+MSAgICAgICB4MTIwICAgIHgxMjggICAgeDk2ICAgICB4MTI4ICAgIHg5Ng0KPiA+ICsgKiAxICAx
+ICAwICAwICAzMy4zMyAvIDIgICAgICAgeDE4MCAgICB4MTkyICAgIHgxNDQgICAgeDE5MiAgICB4
+MTQ0DQo+ID4gKyAqIDEgIDEgIDAgIDEgIDMzLjMzIC8gMiAgICAgICB4MTgwICAgIHgxOTIgICAg
+eDE0NCAgICB4MTI4ICAgIHgxNDQNCj4gPiArICogMSAgMSAgMSAgMCAgUHJvaGliaXRlZCBzZXR0
+aW5nDQo+ID4gKyAqIDEgIDEgIDEgIDEgIDMzLjMzIC8gMiAgICAgICB4MTgwICAgIHgxOTIgICAg
+eDE0NCAgICB4MTkyICAgIHgxNDQNCj4gPiArICovDQo+ID4gKyNkZWZpbmUgQ1BHX1BMTF9DT05G
+SUdfSU5ERVgobWQpICAgICAgICgoKChtZCkgJiBCSVQoMTQpKSA+PiAxMSkgfCBcDQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoKChtZCkgJiBCSVQoMTMpKSA+
+PiAxMSkgfCBcDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAo
+KChtZCkgJiBCSVQoMTkpKSA+PiAxOCkgfCBcDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAoKChtZCkgJiBCSVQoMTcpKSA+PiAxNykpDQo+ID4gKw0KPiA+ICtz
+dGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZ2VuM19jcGdfcGxsX2NvbmZpZyBjcGdfcGxsX2NvbmZp
+Z3NbMTZdDQo+IF9faW5pdGNvbnN0ID0gew0KPiA+ICsgICAgICAgLyogRVhUQUwgZGl2ICAgIFBM
+TDEgbXVsdC9kaXYgICBQTEwzIG11bHQvZGl2ICovDQo+ID4gKyAgICAgICB7IDEsICAgICAgICAg
+ICAgMTkyLCAgICAxLCAgICAgIDE5MiwgICAgMSwgICAgICB9LA0KPiA+ICsgICAgICAgeyAxLCAg
+ICAgICAgICAgIDE5MiwgICAgMSwgICAgICAxMjgsICAgIDEsICAgICAgfSwNCj4gPiArICAgICAg
+IHsgMCwgLyogUHJvaGliaXRlZCBzZXR0aW5nICovICAgICAgICAgICAgICAgICAgIH0sDQo+ID4g
+KyAgICAgICB7IDEsICAgICAgICAgICAgMTkyLCAgICAxLCAgICAgIDE5MiwgICAgMSwgICAgICB9
+LA0KPiA+ICsgICAgICAgeyAxLCAgICAgICAgICAgIDE2MCwgICAgMSwgICAgICAxNjAsICAgIDEs
+ICAgICAgfSwNCj4gPiArICAgICAgIHsgMSwgICAgICAgICAgICAxNjAsICAgIDEsICAgICAgMTA2
+LCAgICAxLCAgICAgIH0sDQo+ID4gKyAgICAgICB7IDAsIC8qIFByb2hpYml0ZWQgc2V0dGluZyAq
+LyAgICAgICAgICAgICAgICAgICB9LA0KPiA+ICsgICAgICAgeyAxLCAgICAgICAgICAgIDE2MCwg
+ICAgMSwgICAgICAxNjAsICAgIDEsICAgICAgfSwNCj4gPiArICAgICAgIHsgMSwgICAgICAgICAg
+ICAxMjgsICAgIDEsICAgICAgMTI4LCAgICAxLCAgICAgIH0sDQo+ID4gKyAgICAgICB7IDEsICAg
+ICAgICAgICAgMTI4LCAgICAxLCAgICAgIDg0LCAgICAgMSwgICAgICB9LA0KPiA+ICsgICAgICAg
+eyAwLCAvKiBQcm9oaWJpdGVkIHNldHRpbmcgKi8gICAgICAgICAgICAgICAgICAgfSwNCj4gPiAr
+ICAgICAgIHsgMSwgICAgICAgICAgICAxMjgsICAgIDEsICAgICAgMTI4LCAgICAxLCAgICAgIH0s
+DQo+ID4gKyAgICAgICB7IDIsICAgICAgICAgICAgMTkyLCAgICAxLCAgICAgIDE5MiwgICAgMSwg
+ICAgICB9LA0KPiA+ICsgICAgICAgeyAyLCAgICAgICAgICAgIDE5MiwgICAgMSwgICAgICAxMjgs
+ICAgIDEsICAgICAgfSwNCj4gPiArICAgICAgIHsgMCwgLyogUHJvaGliaXRlZCBzZXR0aW5nICov
+ICAgICAgICAgICAgICAgICAgIH0sDQo+ID4gKyAgICAgICB7IDIsICAgICAgICAgICAgMTkyLCAg
+ICAxLCAgICAgIDE5MiwgICAgMSwgICAgICB9LA0KPiA+ICt9Ow0KPg0KPiBQbGVhc2UgYWRkIHRo
+ZSBuZXcgT1NDIHByZWRpdmlkZXJzLiBZb3UncmUgZ29ubmEgbmVlZCB0aGVtIGZvciB0aGUNCj4g
+Y29ycmVjdGVkIE9TQyBjbG9jay4NCg0KV2lsbCBzZW5kIFYyIGluY29ycG9yYXRpbmcgdGhpcyBj
+aGFuZ2VzLg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFk
+b3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1Rkgs
+IFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAw
+NDU4NjcwOS4NCg==
