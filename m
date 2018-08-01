@@ -1,52 +1,54 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 7/8] net: phy: Add support to configure clock in
- Broadcom iProc mdio mux
-Date: Wed, 1 Aug 2018 21:23:14 +0100
-Message-ID: <20180801202313.GH30658@n2100.armlinux.org.uk>
-References: <1533146186-8374-1-git-send-email-arun.parameswaran@broadcom.com>
- <1533146186-8374-8-git-send-email-arun.parameswaran@broadcom.com>
- <0cc6db4f-7008-0ad3-58d7-9e93060f152f@gmail.com>
- <20180801184659.GG30658@n2100.armlinux.org.uk>
- <9af7e7a3-54d4-8802-f64a-fc4f9c49c8b9@broadcom.com>
- <20180801200712.GD19257@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180801200712.GD19257@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Arun Parameswaran <arun.parameswaran@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Subject: [PATCH v1 0/4] Add EDAC driver for QCOM SoCs
+Date: Wed,  1 Aug 2018 13:33:31 -0700
+Message-ID: <1533155615-27929-1-git-send-email-vnkgutta@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 01, 2018 at 10:07:12PM +0200, Andrew Lunn wrote:
-> You might want to consider adding clk_optional_get() and
-> devm_clk_optional_get().
+This series implements EDAC driver for QCOM SoCs. As of now, this driver
+supports EDAC for Last Level Cache Controller (LLCC). LLCC EDAC driver is
+to detect and report single and double bit errors on Last Level Cache
+Controller (LLCC) cache. This driver also takes care of dumping registers
+and also adding config options to enable and disable panic when these
+errors happen in LLCC.
 
-I think there's attempts to add such APIs but I don't think it's
-trivial - it seems to require a _lot_ of discussion.
+The driver functionality is implemented in:
+qcom_edac.c : This platform driver registers to edac framework and
+handles the single and double bit errors in cache by registering
+interrupt handlers.
 
-I think part of that is because of the quirky use of error codes.
-If you look at clk_get(), it calls __of_clk_get_by_name() which
-returns:
+llcc-slice.c: It invokes the llcc edac driver and passes platform
+data to it.
 
- -ENOENT if DT is disabled
- -ENOENT if the device has no DT node
- -EPROBE_DEFER if the lookup in DT succeeds but there's no registered
-   clock
- -EINVAL if the device has a DT node but the lookup of the name
-   failed (in otherwords, the optional clock was omitted)
- -ENOENT if the clocks = property has not enough clocks for the
-    clock-names property
- -ENOMEM if we fail to allocate the clk
- -ENOENT if __clk_get() fails
+This patchset depends on the LLCC driver, which is yet to be merged.
+Link: https://patchwork.kernel.org/patch/10422531/
+Link: http://lists-archives.com/linux-kernel/29157082-dt-bindings-documentation-for-qcom-llcc.html
 
-or any other error code returned via of_clk_provider's ->get() method.
+Changes since v0:
+  * Added EDAC_QCOM config and updated the driver
+  * Addressed comments related to indentation and other minor ones
 
-The use of -EINVAL, one of the most common error codes, makes it
-difficult to be sure that the clock is not specified in DT.
+Channagoud Kadabi (1):
+  drivers: edac: Add EDAC driver support for QCOM SoCs
+
+Venkata Narendra Kumar Gutta (3):
+  drivers: soc: Add broadcast base for Last Level Cache Controller
+    (LLCC)
+  drivers: soc: Add support to register LLCC EDAC driver
+  dt-bindigs: Update documentation of qcom,llcc
+
+ .../devicetree/bindings/arm/msm/qcom,llcc.txt      |  15 +-
+ MAINTAINERS                                        |   7 +
+ drivers/edac/Kconfig                               |  28 ++
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/qcom_edac.c                           | 507 +++++++++++++++++++++
+ drivers/soc/qcom/llcc-slice.c                      |  73 ++-
+ include/linux/soc/qcom/llcc-qcom.h                 |   6 +-
+ 7 files changed, 610 insertions(+), 27 deletions(-)
+ create mode 100644 drivers/edac/qcom_edac.c
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
-According to speedtest.net: 13Mbps down 490kbps up
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
