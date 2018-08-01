@@ -1,7 +1,7 @@
 From: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Subject: [PATCH 2/4] dt-bindings: soc: amlogic: add meson-canvas documentation
-Date: Wed,  1 Aug 2018 20:51:26 +0200
-Message-ID: <20180801185128.23440-3-maxi.jourdan@wanadoo.fr>
+Subject: [PATCH 3/4] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
+Date: Wed,  1 Aug 2018 20:51:27 +0200
+Message-ID: <20180801185128.23440-4-maxi.jourdan@wanadoo.fr>
 References: <20180801185128.23440-1-maxi.jourdan@wanadoo.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180801185128.23440-1-maxi.jourdan@wanadoo.fr>
@@ -10,55 +10,40 @@ To: Kevin Hilman <khilman@baylibre.com>
 Cc: Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DT bindings doc for amlogic,meson-canvas
+Wrap the canvas node in a syscon node.
 
 Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
 ---
- .../soc/amlogic/amlogic,meson-canvas.txt      | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt b/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
-new file mode 100644
-index 000000000000..96e14374b9dd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
-@@ -0,0 +1,36 @@
-+Amlogic Meson Canvas
-+================================
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index b8dc4dbb391b..d104b9e111fb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -423,6 +423,23 @@
+ 			};
+ 		};
+ 
++		dmcbus: bus@c8838000 {
++			compatible = "simple-bus";
++			reg = <0x0 0xc8838000 0x0 0x1000>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x0 0x0 0x0 0xc8838000 0x0 0x1000>;
 +
-+A canvas is a collection of metadata that describes a pixel buffer.
-+Those metadata include: width, height, phyaddr, wrapping, block mode
-+and endianness.
++			sysctrl_DMC: system-controller@0 {
++				compatible = "amlogic,meson-gx-dmc-sysctrl", "syscon", "simple-mfd";
++				reg = <0x0 0x0 0x0 0x1000>;
 +
-+Many IPs within Amlogic SoCs rely on canvas indexes to read/write pixel data
-+rather than use the phy addresses directly. For instance, this is the case for
-+the video decoders and the display.
++				canvas: canvas-provider@0 {
++					compatible = "amlogic,meson-canvas";
++				};
++			};
++		};
 +
-+Amlogic SoCs have 256 canvas.
-+
-+Device Tree Bindings:
-+---------------------
-+
-+Canvas Provider
-+--------------------------
-+
-+Required properties:
-+- compatible: "amlogic,meson-canvas"
-+
-+Parent node should have the following properties :
-+- compatible: "amlogic,meson-gx-dmc-sysctrl", "syscon", "simple-mfd"
-+- reg: base address and size of the DMC system control register space.
-+
-+Example:
-+
-+sysctrl_DMC: system-controller@0 {
-+	compatible = "amlogic,meson-gx-dmc-sysctrl", "syscon", "simple-mfd";
-+	reg = <0x0 0x0 0x0 0x1000>;
-+
-+	canvas: canvas-provider@0 {
-+		compatible = "amlogic,meson-canvas";
-+	};
-+};
+ 		hiubus: bus@c883c000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xc883c000 0x0 0x2000>;
 -- 
 2.17.1
