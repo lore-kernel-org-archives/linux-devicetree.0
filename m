@@ -1,45 +1,77 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 09/12] dt-bindings: misc: add bindings for throttler
-Date: Wed, 1 Aug 2018 10:39:46 -0700
-Message-ID: <20180801173946.GL68975@google.com>
-References: <20180703234705.227473-1-mka@chromium.org>
- <CGME20180703234851epcas2p366dcf068db0a7761d7cdccabc4f1fb6e@epcas2p3.samsung.com>
- <20180703234705.227473-10-mka@chromium.org>
- <5B616F0D.1050901@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Subject: [PATCH v3 0/8] Add clock config and pm support to bcm iProc mdio mux
+Date: Wed,  1 Aug 2018 10:56:18 -0700
+Message-ID: <1533146186-8374-1-git-send-email-arun.parameswaran@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5B616F0D.1050901@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arun.parameswaran@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi,
+The patchset is based on David Miller's "net-next" repo.
 
-On Wed, Aug 01, 2018 at 05:27:57PM +0900, Chanwoo Choi wrote:
-> Hi Matthias,
-> 
-> On 2018년 07월 04일 08:47, Matthias Kaehlcke wrote:
-> > The Throttler is used for non-thermal throttling of system components
-> > like CPUs or devfreq devices.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> 
-> If possible, I hope the more detailed example for "cpu0_opp03, &cpu1_opp02, &gpu_opp03"
-> because I'm confusing the meaning of 'cpu0_opp03' phandle.
+The patchset extends the Broadcom iProc mdio mux to add support for
+suspend/resume and the ability to configure the internal clock
+divider. The patchset also sets the scan control register to
+disable external master access.
 
-I omitted the OPP definitions to avoid cluttering the example. I'm
-happy to add them if DT folks also think it would add value.
+The base address of the mdio-mux-bcm-iproc is modified to point to the
+start of the mdio block's address space, to be able to access all the
+mdio's registers. The missing registers are required to configure the
+internal clock divider registers in some of the Broadcom SoC's.
 
-> cpu0_opp03 indicates the only one specific OPP entry among set of
-> OPP entries of CPU0 cpufreq? or cpu0_opp03 indicates the set of OPP
-> entries for CPU0 cpufreq ?
+Changes from v2:
+ - Addressed Andrew's comments:
+     - Moved to using devm_mdiobus_alloc. Added this as a separate patch.
+     - Changed to reverse christmas tree order for variable declaration in
+       the clock patch
+ - Addressed Florian's comments:
+     - Removed null checks for the clock before calling unprepare in
+       both clock and pm patches.
+     - Added check for EPROBE_DEFER when fetching the clock in the clock
+       patch.
+ - The patch to use the devm API has been added before the clock & pm
+   patches. This patch is now patch '5' in the series.
+ - Added reviewed-by tags to commit messages of patches which remain
+   unmodified from v2.
+ - Modified PM patch to use platform_get_drvdata() in suspend/resume
+   API's, similar to the recent fix that went in for the remove()
+   api.
 
-cpu0_opp03 and the other phandles are specific OPP entries, that
-indicate the throttler which frequencies/OPPs should be used for
-throttling. For devices/CPUs with multiple levels of throttling
-multiple entries from its OPP set are listed. In the example a single
-level of throttling is used for all devices/CPUs.
+Changes from v1:
+ - Addressed Andrew's comments.
+   - Reworked the patches to be based on 'net-next'
+   - Removed 'fixes' from the commit messages, the changes are related
+     to the new features being added.
+   - Maintained backward compatibility to older dt-blob's specifying
+     base addresse with an offset. The correction is applied in the
+     driver and a message is printed to update the dt-blob.
+   - Re-worked and re-ordered the last four patches (4-7).
+     - Added setting of the scan control register as a new patch
+     - Added a call to 'clk_prepare_enable()' in the patch that adds
+       the clock config support, removed the debug message when clock
+       is not passed.
+     - Simplified the pm support patch (removed the array used for the
+       save/restore logic).
+
+Thanks
+
+Arun Parameswaran (8):
+  dt-bindings: net: Fix Broadcom iProc mdio mux driver base address
+  net: phy: Fix the register offsets in Broadcom iProc mdio mux driver
+  arm64: dts: Fix the base address of the Broadcom iProc mdio mux
+  net: phy: Disable external master access in bcm mdio mux driver
+  net: phy: Use devm api for mdio bus allocation in bcm iproc mdio mux
+  dt-bindings: net: Add clock handle to Broadcom iProc mdio mux
+  net: phy: Add support to configure clock in Broadcom iProc mdio mux
+  net: phy: Add pm support to Broadcom iProc mdio mux driver
+
+ .../bindings/net/brcm,mdio-mux-iproc.txt           |   7 +-
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi   |   4 +-
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   4 +-
+ drivers/net/phy/mdio-mux-bcm-iproc.c               | 111 +++++++++++++++++++--
+ 4 files changed, 109 insertions(+), 17 deletions(-)
+
+-- 
+1.9.1
