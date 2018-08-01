@@ -1,39 +1,43 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 1/4] gpio: syscon: rockchip: add GRF GPIO support for rk3328
-Date: Wed, 01 Aug 2018 13:46:49 +0200
-Message-ID: <4408660.D6TumT1hZf@phil>
-References: <1533016762-5268-1-git-send-email-djw@t-chip.com.cn> <1533016762-5268-2-git-send-email-djw@t-chip.com.cn>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: add support for ROC-RK3399-PC board
+Date: Wed, 01 Aug 2018 13:57:12 +0200
+Message-ID: <3845549.84TLR0FYli@phil>
+References: <1532916721-24117-1-git-send-email-djw@t-chip.com.cn>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533016762-5268-2-git-send-email-djw@t-chip.com.cn>
+In-Reply-To: <1532916721-24117-1-git-send-email-djw@t-chip.com.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 To: djw@t-chip.com.cn
-Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org, Wayne Chou <zxf@t-chip.com.cn>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jianqun Xu <jay.xu@rock-chips.com>, Jacob Chen <jacob-chen@iotwrt.com>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ezequiel Garcia <ezequiel@collabora.com>, Jagan Teki <jagan@amarulasolutions.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Shawn Lin <shawn.lin@rock-chips.com>, Matthias Brugger <mbrugger@suse.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infrade
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 31. Juli 2018, 07:59:19 CEST schrieb djw@t-chip.com.cn:
+Am Montag, 30. Juli 2018, 04:12:01 CEST schrieb djw@t-chip.com.cn:
 > From: Levin Du <djw@t-chip.com.cn>
 > 
-> In Rockchip RK3328, the output only GPIO_MUTE pin, originally for codec
-> mute control, can also be used for general purpose. It is manipulated by
-> the GRF_SOC_CON10 register in GRF. Aside from the GPIO_MUTE pin, the HDMI
-> pins can also be set in the same way.
+> ROC-RK3399-PC is a power efficient 4GB LPDDR4 single board
+> computer with USB 3.0 and Gigabit Ethernet in a form factor
+> compatible with the Raspberry Pi. It is based on the Rockchip
+> RK3399 SoC, powered by the Type-C port.
 > 
-> Currently this GRF GPIO controller only supports the mute pin. If needed
-> in the future, the HDMI pins support can also be added.
+> The devicetree currently supports peripherals of:
+> 
+> - Ethernet
+> - HDMI
+> - SD Card
+> - UART2 debug
+> - Type-C
+> - eMMC
+> 
+> USB3 in Type-C port currently only works with normal orientation,
+> not flip one.
 > 
 > Signed-off-by: Levin Du <djw@t-chip.com.cn>
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+applied with Rob's review-tag.
 
-It looks like Linus (Torvalds) is doing an -rc8 this time [0] so we might
-still be in time for 4.19 , depending on when this patch is going to be
-applied ;-) .
+Might still make it into 4.19 but also may have to wait for 4.20
 
 
 Heiko
-
-
-[0] https://lore.kernel.org/lkml/CA+55aFzHRaNMHxLCEa5Zke-1FgbQ4rtHf8-HOu0zBzo4Liz88A@mail.gmail.com/
