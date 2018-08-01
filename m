@@ -1,75 +1,263 @@
-From: cang@codeaurora.org
-Subject: Re: [PATCH v8 0/5] Support for Qualcomm UFS QMP PHY on SDM845
-Date: Wed, 01 Aug 2018 10:21:07 +0800
-Message-ID: <1cafb427567bfd6ea8dfd011e4539097@codeaurora.org>
-References: <20180731100914.19856-1-cang@codeaurora.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 7/9] clk: actions: Add Actions Semi Owl SoCs Reset
+ Management Unit support
+Date: Wed, 1 Aug 2018 09:04:16 +0530
+Message-ID: <20180801033416.GA15529@Mani-XPS-13-9360>
+References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
+ <20180727184527.13287-8-manivannan.sadhasivam@linaro.org>
+ <1532946112.3471.2.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731100914.19856-1-cang@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1532946112.3471.2.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, evgreen@chromium.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, afaerber@suse.de, robh+dt@kernel.org, linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 2018-07-31 18:09, Can Guo wrote:
-> This patch series adds support for UFS QMP PHY on SDM845 and the
-> compatible string for it. This patch series depends on the current
-> proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
-> the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
-> rebased on updated pipe_clk initialization sequence [3]. This series
-> can only be merged once the dependent patches do.
-> [1]
-> http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
-> [2]
-> http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
-> [3] https://patchwork.kernel.org/patch/10376551/
+Hi Philipp,
+
+On Mon, Jul 30, 2018 at 12:21:52PM +0200, Philipp Zabel wrote:
+> Hi Manivannan,
 > 
-> Changes since v7:
-> - Add one new change to update UFS PHY power on sequence
-> - Incorporated review comments from Evan, Vivek and Manu.
+> Thank you for the patch, a few small comments below:
 > 
-> Changes since v6:
-> - Add one new change to clean up some structs and field
-> - Updates the PHY power control sequence.
-> - Incorporated review comments from Vivek and Manu.
+> On Sat, 2018-07-28 at 00:15 +0530, Manivannan Sadhasivam wrote:
+> > Add Reset Management Unit (RMU) support for Actions Semi Owl SoCs.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/clk/actions/Kconfig      |  1 +
+> >  drivers/clk/actions/Makefile     |  1 +
+> >  drivers/clk/actions/owl-common.h |  2 +
+> >  drivers/clk/actions/owl-reset.c  | 72 ++++++++++++++++++++++++++++++++
+> >  drivers/clk/actions/owl-reset.h  | 32 ++++++++++++++
+> >  5 files changed, 108 insertions(+)
+> >  create mode 100644 drivers/clk/actions/owl-reset.c
+> >  create mode 100644 drivers/clk/actions/owl-reset.h
+> > 
+> > diff --git a/drivers/clk/actions/Kconfig b/drivers/clk/actions/Kconfig
+> > index dc38c85a4833..04f0a6355726 100644
+> > --- a/drivers/clk/actions/Kconfig
+> > +++ b/drivers/clk/actions/Kconfig
+> > @@ -2,6 +2,7 @@ config CLK_ACTIONS
+> >  	bool "Clock driver for Actions Semi SoCs"
+> >  	depends on ARCH_ACTIONS || COMPILE_TEST
+> >  	select REGMAP_MMIO
+> > +	select RESET_CONTROLLER
+> >  	default ARCH_ACTIONS
+> >  
+> >  if CLK_ACTIONS
+> > diff --git a/drivers/clk/actions/Makefile b/drivers/clk/actions/Makefile
+> > index 78c17d56f991..ccfdf9781cef 100644
+> > --- a/drivers/clk/actions/Makefile
+> > +++ b/drivers/clk/actions/Makefile
+> > @@ -7,6 +7,7 @@ clk-owl-y			+= owl-divider.o
+> >  clk-owl-y			+= owl-factor.o
+> >  clk-owl-y			+= owl-composite.o
+> >  clk-owl-y			+= owl-pll.o
+> > +clk-owl-y			+= owl-reset.o
+> >  
+> >  # SoC support
+> >  obj-$(CONFIG_CLK_OWL_S700)	+= owl-s700.o
+> > diff --git a/drivers/clk/actions/owl-common.h b/drivers/clk/actions/owl-common.h
+> > index 56f01f7774aa..4dc7f286831f 100644
+> > --- a/drivers/clk/actions/owl-common.h
+> > +++ b/drivers/clk/actions/owl-common.h
+> > @@ -26,6 +26,8 @@ struct owl_clk_desc {
+> >  	struct owl_clk_common		**clks;
+> >  	unsigned long			num_clks;
+> >  	struct clk_hw_onecell_data	*hw_clks;
+> > +	struct owl_reset_map		*resets;
 > 
-> Changes since v5:
-> - Updates the PHY power control sequence.
-> - Updates UFS PHY power on condition check.
+> Could this be:
+> 	const struct owl_reset_map	*resets;
+> ?
 > 
-> Changes since v4:
-> - Adds 'ref_aux' clock back to SDM845 UFS PHY clock list.
-> - Power on PHY before serdes configuration starts.
-> - Updates the UFS PHY initialization sequence.
-> - Updates a few UFS PHY registers.
-> - Incorporated review comments from Vivek and Manu.
+
+Ack.
+
+> > +	unsigned long			num_resets;
+> >  	struct regmap			*regmap;
+> >  };
+> >  
+> > diff --git a/drivers/clk/actions/owl-reset.c b/drivers/clk/actions/owl-reset.c
+> > new file mode 100644
+> > index 000000000000..91b161cc68de
+> > --- /dev/null
+> > +++ b/drivers/clk/actions/owl-reset.c
+> > @@ -0,0 +1,72 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +//
+> > +// Actions Semi Owl SoCs Reset Management Unit driver
+> > +//
+> > +// Copyright (c) 2018 Linaro Ltd.
+> > +// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/io.h>
 > 
-> Changes since v3:
-> - Incorporated review comments from Vivek and Rob.
+> This seems unnecessary, since register access is done via regmap.
 > 
-> Changes since v2:
-> - Incorporated review comments from Vivek and Rob.
-> - Remove "ref_aux" from sdm845 ufs phy clock list structure.
+
+Will remove this header.
+
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset-controller.h>
+> > +
+> > +#include "owl-reset.h"
+> > +
+> > +static int owl_reset_assert(struct reset_controller_dev *rcdev,
+> > +			    unsigned long id)
+> > +{
+> > +	struct owl_reset *reset = to_owl_reset(rcdev);
+> > +	const struct owl_reset_map *map = &reset->reset_map[id];
+> > +	u32 reg;
+> > +
+> > +	regmap_read(reset->regmap, map->reg, &reg);
+> > +	regmap_write(reset->regmap, map->reg, reg & ~map->bit);
 > 
-> Changes since v1:
-> - Incorporated review comments from Vivek and Manu.
-> - Update the commit title of patch 2.
+> This read-modify-write sequence needs locking against concurrent
+> register access. Better use regmap_update_bits():
 > 
+> 	return regmap_update_bits(reset->regmap, map->reg, map->bit, 0);
 > 
-> Can Guo (5):
->   phy: Update PHY power control sequence
->   phy: General struct and field cleanup
->   phy: Add QMP phy based UFS phy support for sdm845
->   scsi: ufs: Power on phy after it is initialized
->   dt-bindings: phy-qcom-qmp: Add UFS phy compatible string for sdm845
+
+Ack.
+
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int owl_reset_deassert(struct reset_controller_dev *rcdev,
+> > +			      unsigned long id)
+> > +{
+> > +	struct owl_reset *reset = to_owl_reset(rcdev);
+> > +	const struct owl_reset_map *map = &reset->reset_map[id];
+> > +	u32 reg;
+> > +
+> > +	regmap_read(reset->regmap, map->reg, &reg);
+> > +	regmap_write(reset->regmap, map->reg, reg | map->bit);
 > 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   4 +-
->  drivers/phy/qualcomm/phy-qcom-qmp.c                | 216 
-> +++++++++++++++++++--
->  drivers/phy/qualcomm/phy-qcom-qmp.h                |  15 ++
->  drivers/scsi/ufs/ufs-qcom.c                        |   4 +-
->  drivers/scsi/ufs/ufs-qcom.h                        |   1 +
->  5 files changed, 219 insertions(+), 21 deletions(-)
+> Better:
+> 
+> 	return regmap_update_bits(reset->regmap, map->reg, map->bit, map->bit);
+> 
+
+Ack.
+
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int owl_reset_reset(struct reset_controller_dev *rcdev,
+> > +			   unsigned long id)
+> > +{
+> > +	owl_reset_assert(rcdev, id);
+> > +	udelay(1);
+> 
+> Is the delay valid for all IP cores on all SoCs variants?
+> 
+
+It is valid for S900 and S700 for now but I'm not sure about S500. Will
+make sure while adding S500 support.
+
+> > +	owl_reset_deassert(rcdev, id);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int owl_reset_status(struct reset_controller_dev *rcdev,
+> > +			    unsigned long id)
+> > +{
+> > +	struct owl_reset *reset = to_owl_reset(rcdev);
+> > +	const struct owl_reset_map *map = &reset->reset_map[id];
+> > +	u32 reg;
+> > +
+> > +	regmap_read(reset->regmap, map->reg, &reg);
+> 
+> If this could return an error, better report it.
+> 
+
+Ack.
+
+> > +
+> > +	/*
+> > +	 * The reset control API expects 0 if reset is not asserted,
+> > +	 * which is the opposite of what our hardware uses.
+> > +	 */
+> > +	return !(map->bit & reg);
+> > +}
+> > +
+> > +const struct reset_control_ops owl_reset_ops = {
+> > +	.assert		= owl_reset_assert,
+> > +	.deassert	= owl_reset_deassert,
+> > +	.reset		= owl_reset_reset,
+> > +	.status		= owl_reset_status,
+> > +};
+> > diff --git a/drivers/clk/actions/owl-reset.h b/drivers/clk/actions/owl-reset.h
+> > new file mode 100644
+> > index 000000000000..1a5e987ba99b
+> > --- /dev/null
+> > +++ b/drivers/clk/actions/owl-reset.h
+> > @@ -0,0 +1,32 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +//
+> > +// Actions Semi Owl SoCs Reset Management Unit driver
+> > +//
+> > +// Copyright (c) 2018 Linaro Ltd.
+> > +// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +
+> > +#ifndef _OWL_RESET_H_
+> > +#define _OWL_RESET_H_
+> > +
+> > +#include <linux/reset-controller.h>
+> > +#include <linux/spinlock.h>
+> 
+> spinlock?
+> 
+
+Oops. Not needed, will remove that.
+
+> > +
+> > +struct owl_reset_map {
+> > +	u16	reg;
+> 
+> Note that this will be aligned to 32-bits. If the intention was to save
+> space, consider storing an u8 bit index instead of the mask.
+> 
+
+Better to change it to u32, no need of memory saving here :)
+
+> > +	u32	bit;
+> > +};
+> > +
+> > +struct owl_reset {
+> > +	struct reset_controller_dev	rcdev;
+> > +	struct owl_reset_map		*reset_map;
+> 
+> Could this be
+> 	const struct owl_reset_map	*reset_map;
+> ?
+> 
+
+Ack.
+
+Thanks,
+Mani
+
+> > +	struct regmap			*regmap;
+> > +};
+> > +
+> > +static inline struct owl_reset *to_owl_reset(struct reset_controller_dev *rcdev)
+> > +{
+> > +	return container_of(rcdev, struct owl_reset, rcdev);
+> > +}
+> > +
+> > +extern const struct reset_control_ops owl_reset_ops;
+> > +
+> > +#endif /* _OWL_RESET_H_ */
+> 
+> regards
+> Philipp
