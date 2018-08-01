@@ -1,81 +1,63 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: [PATCH 15/40] mmc: tegra: Power on the calibration pad
-Date: Wed, 1 Aug 2018 19:32:05 +0300
-Message-ID: <1533141150-10511-16-git-send-email-avienamo@nvidia.com>
-References: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [BUG BISECT] Ethernet fail on VF50 (OF: Don't set default
+ coherent DMA mask)
+Date: Wed, 1 Aug 2018 17:33:30 +0100
+Message-ID: <9f32010e-3bcb-2153-dac3-996e9d1b1e9b@arm.com>
+References: <CAJKOXPfageiBVXddtdJRBS+092O3QfD0yoS_Mk+PoX7+qNYNUA@mail.gmail.com>
+ <20180727140448.GA29001@lst.de> <20180728165820.GA5731@roeck-us.net>
+ <45f7fc82-fb9c-e666-4ada-c5338d2c1c96@arm.com>
+ <39fa11ce4b7dd151d98868f375baf818@agner.ch>
+ <0e893142-a5db-d119-6eb3-f849db6b5d04@arm.com>
+ <f67628ad-4cae-96cd-d0c4-3b2f7d12a822@roeck-us.net>
+ <4ce17098-850f-3bb0-b977-8d7932e74e06@arm.com>
+ <20180731154353.GA29601@roeck-us.net>
+ <10c2ca4d-d587-2705-2802-b6df3dc72fd4@arm.com>
+ <20180731173859.GA17007@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
+In-Reply-To: <20180731173859.GA17007@roeck-us.net>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Stefan Agner <stefan@agner.ch>, Christoph Hellwig <hch@lst.de>, Krzysztof Kozlowski <krzk@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Automatic pad drive strength calibration is performed on a separate pad
-identical to the ones used for driving the actual bus. Power on the
-calibration pad during the calibration procedure and power it off
-afterwards to save power.
+On 31/07/18 18:38, Guenter Roeck wrote:
+> On Tue, Jul 31, 2018 at 04:58:41PM +0100, Robin Murphy wrote:
+>> On 31/07/18 16:43, Guenter Roeck wrote:
+>>> On Tue, Jul 31, 2018 at 03:09:34PM +0100, Robin Murphy wrote:
+>>>>> Please note that sparc images still generate the warning (next-20180731).
+>>>>
+>>>> Ugh, OK, any ideas what sparc does to create these platform devices that
+>>>> isn't of_platform_device_create_pdata() and has somehow grown an implicit
+>>>> dependency on of_dma_configure() since 4.12? I'm looking, but nothing jumps
+>>>> out...
+>>>>
+>>>
+>>> I suspect it might be of_device_register(), called from
+>>> 	arch/sparc/kernel/of_device_64.c:scan_one_device()
+>>> 	arch/sparc/kernel/of_device_32.c:scan_one_device()
+>>
+>> Right, that's as far as I got as well, so I'm struggling to see how these
+>> things ever got DMA masks set before the of_dma_configure() call moved out
+>> of of_platform_device_create_pdata(), or why it wasn't a problem prior to
+>> the generic dma_ops rework if they didn't :/
+>>
+> Ah, ok. No idea, sorry. All I know is that the messages were first seen
+> with next-20180727.
 
-Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
----
- drivers/mmc/host/sdhci-tegra.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+OK, I spent this afternoon wrangling toolchains and QEMU to boot an 
+instrumented 4.11 kernel, and the answer is that the warnings are 
+arguably correct. These masks have indeed never been set where they 
+should have been, but then the sbus_dma_ops don't reference them anyway.
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 53c035b9..9e22fec 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -54,6 +54,7 @@
- #define SDHCI_TEGRA_SDMEM_COMP_PADCTRL			0x1e0
- #define SDHCI_TEGRA_SDMEM_COMP_PADCTRL_VREF_SEL_MASK	0x0000000f
- #define SDHCI_TEGRA_SDMEM_COMP_PADCTRL_VREF_SEL_VAL	0x7
-+#define SDHCI_TEGRA_SDMEM_COMP_PADCTRL_E_INPUT_E_PWRD	BIT(31)
- 
- #define SDHCI_TEGRA_AUTO_CAL_STATUS			0x1ec
- #define SDHCI_TEGRA_AUTO_CAL_ACTIVE			BIT(31)
-@@ -240,11 +241,32 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
- 	tegra_host->ddr_signaling = false;
- }
- 
-+static void tegra_sdhci_configure_cal_pad(struct sdhci_host *host, bool enable)
-+{
-+	u32 reg;
-+
-+	/*
-+	 * Enable or disable the additional I/O pad used by the drive strength
-+	 * calibration process.
-+	 */
-+	reg = sdhci_readl(host, SDHCI_TEGRA_SDMEM_COMP_PADCTRL);
-+	if (enable) {
-+		reg |= SDHCI_TEGRA_SDMEM_COMP_PADCTRL_E_INPUT_E_PWRD;
-+		sdhci_writel(host, reg, SDHCI_TEGRA_SDMEM_COMP_PADCTRL);
-+		udelay(1);
-+	} else {
-+		reg &= ~SDHCI_TEGRA_SDMEM_COMP_PADCTRL_E_INPUT_E_PWRD;
-+		sdhci_writel(host, reg, SDHCI_TEGRA_SDMEM_COMP_PADCTRL);
-+	}
-+}
-+
- static void tegra_sdhci_pad_autocalib(struct sdhci_host *host)
- {
- 	u32 reg;
- 	int ret;
- 
-+	tegra_sdhci_configure_cal_pad(host, true);
-+
- 	reg = sdhci_readl(host, SDHCI_TEGRA_AUTO_CAL_CONFIG);
- 	reg |= SDHCI_AUTO_CAL_ENABLE | SDHCI_AUTO_CAL_START;
- 	sdhci_writel(host, reg, SDHCI_TEGRA_AUTO_CAL_CONFIG);
-@@ -254,6 +276,8 @@ static void tegra_sdhci_pad_autocalib(struct sdhci_host *host)
- 				 reg, !(reg & SDHCI_TEGRA_AUTO_CAL_ACTIVE),
- 				 1, 10000);
- 
-+	tegra_sdhci_configure_cal_pad(host, false);
-+
- 	if (ret)
- 		dev_err(mmc_dev(host->mmc), "Pad autocal timed out\n");
- }
--- 
-2.7.4
+The coherent mask WARN_ON *should* have started appearing in 4.16 with 
+205e1b7f51e4("dma-mapping: warn when there is no coherent_dma_mask"), 
+but happened to be hidden by the inadvertent side-effect of the prior 
+dma_configure() change. Since there's seemingly no actual regression of 
+functionality, I'm inclined to leave this in the hands of whoever cares 
+about sparc32.
+
+Robin.
