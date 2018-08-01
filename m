@@ -1,86 +1,99 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 06/12] PM / devfreq: Make update_devfreq() public
-Date: Wed, 01 Aug 2018 17:32:44 +0900
-Message-ID: <5B61702C.4090702@samsung.com>
-References: <20180703234705.227473-1-mka@chromium.org>
-        <CGME20180703234938epcas3p188a1f1bc1ba7eb819ba690485c850c79@epcas3p1.samsung.com>
-        <20180703234705.227473-7-mka@chromium.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 2/2] dt-bindings: clock: Add bindings for the Clocking
+ Wizard IP
+Date: Wed, 1 Aug 2018 10:34:04 +0200
+Message-ID: <20180801103404.4b9135dc@bbrezillon>
+References: <20180801081950.10497-1-boris.brezillon@bootlin.com>
+ <20180801081950.10497-2-boris.brezillon@bootlin.com>
+ <a8620c93-cf99-719d-d2bb-7d0f0b567130@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180703234705.227473-7-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a8620c93-cf99-719d-d2bb-7d0f0b567130@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Julien Su <juliensu@mxic.com.tw>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mason Yang <masonccyang@mxic.com.tw>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+Hi Michal,
 
-On 2018년 07월 04일 08:46, Matthias Kaehlcke wrote:
-> Currently update_devfreq() is only visible to devfreq governors outside
-> of devfreq.c. Make it public to allow drivers that adjust devfreq policies
-> to cause a re-evaluation of the frequency after a policy change.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> --
-> Changes in v5:
-> - none
-> 
-> Changed in v4:
-> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
-> 
-> Changes in v3:
-> - none
-> 
-> Changes in v2:
-> - added 'Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>' tag
-> ---
->  drivers/devfreq/governor.h | 3 ---
->  include/linux/devfreq.h    | 8 ++++++++
->  2 files changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
-> index b81700244ce3..f53339ca610f 100644
-> --- a/drivers/devfreq/governor.h
-> +++ b/drivers/devfreq/governor.h
-> @@ -57,9 +57,6 @@ struct devfreq_governor {
->  				unsigned int event, void *data);
->  };
->  
-> -/* Caution: devfreq->lock must be locked before calling update_devfreq */
-> -extern int update_devfreq(struct devfreq *devfreq);
-> -
->  extern void devfreq_monitor_start(struct devfreq *devfreq);
->  extern void devfreq_monitor_stop(struct devfreq *devfreq);
->  extern void devfreq_monitor_suspend(struct devfreq *devfreq);
-> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
-> index 7c8dce96db73..c4f84a769cb5 100644
-> --- a/include/linux/devfreq.h
-> +++ b/include/linux/devfreq.h
-> @@ -222,6 +222,14 @@ extern void devm_devfreq_remove_device(struct device *dev,
->  extern int devfreq_suspend_device(struct devfreq *devfreq);
->  extern int devfreq_resume_device(struct devfreq *devfreq);
->  
-> +/**
-> + * update_devfreq() - Reevaluate the device and configure frequency
-> + * @devfreq:	the devfreq device
-> + *
-> + * Note: devfreq->lock must be held
-> + */
-> +extern int update_devfreq(struct devfreq *devfreq);
-> +
->  /* Helper functions for devfreq user device driver with OPP. */
->  extern struct dev_pm_opp *devfreq_recommended_opp(struct device *dev,
->  					   unsigned long *freq, u32 flags);
-> 
+On Wed, 1 Aug 2018 10:26:11 +0200
+Michal Simek <michal.simek@xilinx.com> wrote:
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Hi Boris,
+> 
+> On 1.8.2018 10:19, Boris Brezillon wrote:
+> > Document Xilinx Clocking Wizard bindings.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> > ---
+> >  .../devicetree/bindings/clock/xlnx,clk-wizard.txt  | 28 ++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/xlnx,clk-wizard.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/xlnx,clk-wizard.txt b/Documentation/devicetree/bindings/clock/xlnx,clk-wizard.txt
+> > new file mode 100644
+> > index 000000000000..1bf7a764f4a9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/xlnx,clk-wizard.txt
+> > @@ -0,0 +1,28 @@
+> > +Device Tree Clock bindings for the "Clocking Wizard" IP provided by Xilinx
+> > +
+> > +This block can be used to generate up to 4 clock signals out of a single input
+> > +clock. It embeds a PLL to generate an intermediate clock which then feeds 4
+> > +clock dividers whose divider value can be adjusted based on the user needs.
+> > +
+> > +Required properties:
+> > + - #clock-cells: must be 1. The cell is encoding the id of the output clk
+> > +		 (from 0 to xlnx,clk-wizard-num-outputs - 1)
+> > + - compatible: must be "xlnx,clk-wizard-5.1"
+> > + - clocks: 2 clocks are required
+> > + - clock-names: should contain 2 clock names: "aclk" and "clkin".
+> > +		"aclk" is driving the register interface and "clk_in" is the
+> > +		input clock signal that is used by the PLL block
+> > + - xlnx,clk-wizard-num-outputs: this describe the number of output clocks
+> > +				(chosen at synthesization time)
+> > + - reg: registers used to configure the Clocking wizard block
+> > +
+> > +Example:
+> > +
+> > +	clkwizard: clkwizard@43c20000 {
+> > +		compatible = "xlnx,clk-wizard-5.1";
+> > +		reg = <0x43c20000 0x10000>;
+> > +		clocks = <&clkc 18>, <&clkc 18>;
+> > +		clock-names = "aclk", "clk_in1";
+> > +		#clock-cells = <1>;
+> > +		xlnx,clk-wizard-num-outputs = <2>;
+> > +	};
+> >   
+> 
+> First of all this should be 1/2.
 
+Hm, okay. Didn't know the order was important.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> 
+> The second is that this driver is already in staging area
+> (drivers/staging/clocking-wizard) for a while. That's why please use
+> this driver or send patches on the top of this.
+
+Crap! I didn't look in staging. BTW, any reason this driver is in
+staging?
+
+> 
+> I know we have been doing some changes in this driver recently but not
+> sure if they reach our tree or mainline.
+
+Okay. Can you point me to the patches touching this driver?
+
+Thanks,
+
+Boris
