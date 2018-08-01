@@ -1,73 +1,54 @@
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Subject: Re: [PATCH v3 7/8] net: phy: Add support to configure clock in
- Broadcom iProc mdio mux
-Date: Wed, 1 Aug 2018 15:10:31 -0700
-Message-ID: <af188f23-bbef-ed90-b42d-a680c07f3fd2@broadcom.com>
-References: <1533146186-8374-1-git-send-email-arun.parameswaran@broadcom.com>
- <1533146186-8374-8-git-send-email-arun.parameswaran@broadcom.com>
- <0cc6db4f-7008-0ad3-58d7-9e93060f152f@gmail.com>
- <20180801184659.GG30658@n2100.armlinux.org.uk>
- <9af7e7a3-54d4-8802-f64a-fc4f9c49c8b9@broadcom.com>
- <20180801200712.GD19257@lunn.ch>
- <20180801202313.GH30658@n2100.armlinux.org.uk>
- <20180801203846.GE19257@lunn.ch>
- <8133c1f0-addc-5c48-7a6a-44b0d106c425@broadcom.com>
- <20180801215511.GG19257@lunn.ch>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 03/10] mfd: wcd9335: add wcd irq support
+Date: Wed, 1 Aug 2018 16:17:45 -0600
+Message-ID: <CAL_JsqJqCvWBqCfiS7dQMSzJ_FZDtAMJ8OQZvdGSJhsX0eYr6w@mail.gmail.com>
+References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
+ <20180727121806.18209-4-srinivas.kandagatla@linaro.org> <20180731204536.GA7241@rob-hp-laptop>
+ <d31d8f54-18b0-118f-eb25-7b92d5bf9842@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801215511.GG19257@lunn.ch>
-Content-Language: en-US
+In-Reply-To: <d31d8f54-18b0-118f-eb25-7b92d5bf9842@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Banajit Goswami <bgoswami@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vinod <vkoul@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Wed, Aug 1, 2018 at 2:57 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+> Thanks for the review,
+>
+> On 31/07/18 21:45, Rob Herring wrote:
+> > On Fri, Jul 27, 2018 at 01:17:59PM +0100, Srinivas Kandagatla wrote:
+> >> WCD9335 supports two lines of irqs INTR1 and INTR2.
+> >> Multiple interrupts are muxed via these lines.
+> >> INTR1 consists of all possible interrupt sources like:
+> >> Ear OCP, HPH OCP, MBHC, MAD, VBAT, and SVA
+> >> INTR2 is a subset of first interrupt sources like MAD, VBAT, and SVA
+> >>
+> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >> ---
+> >>   drivers/mfd/Makefile                |   2 +-
+> >>   drivers/mfd/wcd9335-core.c          |   9 ++
+> >>   drivers/mfd/wcd9335-irq.c           | 172 ++++++++++++++++++++++++++++++++++++
+> >>   include/dt-bindings/mfd/wcd9335.h   |  43 +++++++++
+> >
+> > I'm confused why these are defined here. The binding for the wc9335 is
+> > not an interrupt-controller.
+>
+> I can move this defines to include/linux/mfd/wcd9335/wcd9335.h as there
+> are no active users for this, but I  was hoping that these can be used
+> in DT in future.
+>
+> WCD9335 is an interrupt controller too. It muxes multiple interrupts via
+> a gpio line interrupt.
+>
+> I did mention this in the bindings.
 
-On 18-08-01 02:55 PM, Andrew Lunn wrote:
->> md->core_clk = devm_clk_get(&pdev->dev, NULL);
->> if (md->core_clk == ERR_PTR(-ENOENT) || md->core_clk == ERR_PTR(-EINVAL)) {
->> 	/* clock is optional, without it the default
->> 	 * rate divider register values will be used
->> 	 */
->> 	md->core_clk = NULL;
->> } else if (IS_ERR(md->core_clk)) {
->> 	return PTR_ERR(md->core_clk);
->> } else {
->> 	rc = clk_prepare_enable(md->core_clk);
->> 	...
->> }
-> 
-> As Florian pointed out, the clk_ API is happy to take a NULL pointer
-> for a clock. So you don't need this last else.
-> 
->     Andrew
-> 
-I do return with an error from the probe if the clk_prepare_enable() fails,
-so I was calling the prepare with a valid clock.
+Then the header belongs in the binding patch.
 
-In the other places where I used the clock, the return values were being
-ignored.
+I don't recall child nodes being defined though and you don't need to
+be a interrupt-controller (in DT) without them.
 
-The 'else' part should have been, I apologize for the confusion.
-
-if (md->core_clk == ERR_PTR(-ENOENT) || md->core_clk == ERR_PTR(-EINVAL)) {
- 	/* clock is optional, without it the default
- 	 * rate divider register values will be used
- 	 */
- 	md->core_clk = NULL;
-} else if (IS_ERR(md->core_clk)) {
- 	return PTR_ERR(md->core_clk);
-} else {
-	rc = clk_prepare_enable(md->core_clk);
-	if (rc) {
-		dev_err(&pdev->dev, "failed to enable core clk\n");
-		return rc;
-	}
-}
-
-
-Thanks
-Arun
+Rob
