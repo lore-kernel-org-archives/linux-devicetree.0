@@ -1,89 +1,71 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: phandle_cache vs of_detach_node (was Re: [PATCH]
- powerpc/mobility: Fix node detach/rename problem)
-Date: Thu, 02 Aug 2018 00:26:58 +1000
-Message-ID: <87d0v2f9hp.fsf@concordia.ellerman.id.au>
-References: <c2fba52a-baac-25fb-c26b-c84b25c3178c@linux.vnet.ibm.com>
- <8736w1jkte.fsf@concordia.ellerman.id.au>
- <ffaa7eba-5236-e42d-c901-79b045adfb94@linux.vnet.ibm.com>
- <8736vzj4la.fsf@concordia.ellerman.id.au>
- <CAL_JsqKf1k3MM+HgQ2U=Ep7L9nbBCmmvGZoEAKxLB1TVqQdW_w@mail.gmail.com>
- <85014a16-cd2c-0137-72e5-54d4bcdf788a@gmail.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCHv2 2/2] ARM: dts: socfpga: update NAND clocking for c5/a5
+Date: Wed,  1 Aug 2018 09:31:34 -0500
+Message-ID: <1533133894-31932-2-git-send-email-dinguyen@kernel.org>
+References: <1533133894-31932-1-git-send-email-dinguyen@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <85014a16-cd2c-0137-72e5-54d4bcdf788a@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, mwb@linux.vnet.ibm.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1533133894-31932-1-git-send-email-dinguyen@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, marex@denx.de, yamada.masahiro@socionext.com, dinguyen@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Frank Rowand <frowand.list@gmail.com> writes:
-> On 07/31/18 07:17, Rob Herring wrote:
->> On Tue, Jul 31, 2018 at 12:34 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->>>
->>> Hi Rob/Frank,
->>>
->>> I think we might have a problem with the phandle_cache not interacting
->>> well with of_detach_node():
->> 
->> Probably needs a similar fix as this commit did for overlays:
->> 
->> commit b9952b5218added5577e4a3443969bc20884cea9
->> Author: Frank Rowand <frank.rowand@sony.com>
->> Date:   Thu Jul 12 14:00:07 2018 -0700
->> 
->>     of: overlay: update phandle cache on overlay apply and remove
->> 
->>     A comment in the review of the patch adding the phandle cache said that
->>     the cache would have to be updated when modules are applied and removed.
->>     This patch implements the cache updates.
->> 
->>     Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of
->> of_find_node_by_phandle()")
->>     Reported-by: Alan Tull <atull@kernel.org>
->>     Suggested-by: Alan Tull <atull@kernel.org>
->>     Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->>     Signed-off-by: Rob Herring <robh@kernel.org>
->
-> Agreed.  Sorry about missing the of_detach_node() case.
->
->
->> Really what we need here is an "invalidate phandle" function rather
->> than free and re-allocate the whole damn cache.
->
-> The big hammer approach was chosen to avoid the race conditions that
-> would otherwise occur.  OF does not have a locking strategy that
-> would be able to protect against the races.
->
-> We could maybe implement a slightly smaller hammer by (1) disabling
-> the cache, (2) invalidate a phandle entry in the cache, (3) re-enable
-> the cache.  That is an off the cuff thought - I would have to look
-> a little bit more carefully to make sure it would work.
->
-> But I don't see a need to add the complexity of the smaller hammer
-> or the bigger hammer of proper locking _unless_ we start seeing that
-> the cache is being freed and re-allocated frequently.  For overlays
-> I don't expect the high frequency because it happens on a per overlay
-> removal basis (not per node removal basis).  For of_detach_node() the
-> event _is_ on a per node removal basis.  Michael, do you expect node
-> removals to be a frequent event with low latency being important?  If
-> so, a rough guess on what the frequency would be?
+The NAND IP needs 3 clocks(nand_x_clk, nand_clk, and nand_ecc_clk). The
+nand_x_clk and nand_ecc_clk are derived from the nand_clk. The nand_x_clk
+has a fixed divider of 4.
 
-No in practice we expect them to be fairly rare and in the thousands at
-most I think.
+Also, update the NAND dts property with the correct clocks property.
 
-TBH you could just disable the phandle_cache on the first detach and
-that would be fine by me. I don't think we've ever noticed phandle
-lookups being much of a problem for us on our hardware.
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v2: add nand_ecc_clk and update commit message
+---
+ arch/arm/boot/dts/socfpga.dtsi | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-cheers
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index b38f8c2..daf249e 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -483,10 +483,17 @@
+ 						clk-gate = <0xa0 9>;
+ 					};
+ 
++					nand_ecc_clk: nand_ecc_clk {
++						#clock-cells = <0>;
++						compatible = "altr,socfpga-gate-clk";
++						clocks = <&nand_x_clk>;
++						clk-gate = <0xa0 9>;
++					};
++
+ 					nand_clk: nand_clk {
+ 						#clock-cells = <0>;
+ 						compatible = "altr,socfpga-gate-clk";
+-						clocks = <&f2s_periph_ref_clk>, <&main_nand_sdmmc_clk>, <&per_nand_mmc_clk>;
++						clocks = <&nand_x_clk>;
+ 						clk-gate = <0xa0 10>;
+ 						fixed-divider = <4>;
+ 					};
+@@ -754,7 +761,8 @@
+ 			reg-names = "nand_data", "denali_reg";
+ 			interrupts = <0x0 0x90 0x4>;
+ 			dma-mask = <0xffffffff>;
+-			clocks = <&nand_x_clk>;
++			clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
++			clock-names = "nand", "nand_x", "ecc";
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.7.4
