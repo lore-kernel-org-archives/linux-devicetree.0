@@ -1,97 +1,156 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v7 5/6] i2c: Add Actions Semiconductor Owl family S900
- I2C driver
-Date: Wed, 1 Aug 2018 10:26:39 +0530
-Message-ID: <20180801045639.GB15529@Mani-XPS-13-9360>
-References: <20180726154603.5089-1-manivannan.sadhasivam@linaro.org>
- <20180726154603.5089-6-manivannan.sadhasivam@linaro.org>
- <20180731200932.n7djds2rmqhclit5@ninjato>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v8 2/4] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Wed, 1 Aug 2018 07:05:30 +0200
+Message-ID: <20180801050530.nzmomvvyo5pfwclz@pengutronix.de>
+References: <20180731141146.10788-1-o.rempel@pengutronix.de>
+ <20180731141146.10788-3-o.rempel@pengutronix.de>
+ <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180731200932.n7djds2rmqhclit5@ninjato>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: robh+dt@kernel.org, afaerber@suse.de, linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com
+Content-Type: multipart/mixed; boundary="===============6133834961581618147=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
 
-On Tue, Jul 31, 2018 at 10:09:32PM +0200, Wolfram Sang wrote:
-> Hi Manivannan,
-> 
-> On Thu, Jul 26, 2018 at 09:16:02PM +0530, Manivannan Sadhasivam wrote:
-> > Add Actions Semiconductor Owl family S900 I2C driver.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Acked-by: Peter Rosin <peda@axentia.se>
-> 
-> Looks mostly good already. Thanks Peter for the initial review!
-> 
+--===============6133834961581618147==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="omgjo4asbi4kpojs"
+Content-Disposition: inline
 
-Thanks to Andy also :)
 
-> > +static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
-> > +{
-> > +	struct owl_i2c_dev *i2c_dev = _dev;
-> > +	struct i2c_msg *msg = i2c_dev->msg;
-> > +	unsigned long flags;
-> > +	unsigned int stat, fifostat;
+--omgjo4asbi4kpojs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 31, 2018 at 09:28:09PM +0530, Jassi Brar wrote:
+> On Tue, Jul 31, 2018 at 7:41 PM, Oleksij Rempel <o.rempel@pengutronix.de>=
+ wrote:
+> > Each MU has four pairs of rx/tx data register with four rx/tx interrupts
+> > which can also be used as a separate channel.
+> >
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/mailbox/fsl,mu.txt    | 28 +++++++++++++++++--
+> >  1 file changed, 25 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Doc=
+umentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > index 90e4905dfc69..9efd3a9ade44 100644
+> > --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > @@ -18,11 +18,33 @@ Messaging Unit Device Node:
+> >  Required properties:
+> >  -------------------
+> >  - compatible : should be "fsl,<chip>-mu", the supported chips include
+> > -               imx8qxp, imx8qm.
+> > +               imx6sx, imx7s, imx8qxp, imx8qm.
+> > +               The "fsl,imx6sx-mu" compatible is seen as generic and s=
+hould
+> > +               be included together with SoC specific compatible.
+> >  - reg :                Should contain the registers location and length
+> >  - interrupts : Interrupt number. The interrupt specifier format depends
+> >                 on the interrupt controller parent.
+> > -- #mbox-cells:  Must be 0. Number of cells in a mailbox
+> > +- #mbox-cells:  Must be 2.
+> >
+> This seems like modifying the bindings. But since nothing exists yet,
+> maybe we should merge patch 1 and 2 ?
+
+For some weeks I already asked to squash this patches.. it was not
+ACKed. We can try again... @Rob, @Aisheng, should I merge this two
+patches?
+
+>=20
+> > +                         <&phandle type channel>
+> > +                           phandle   : Label name of controller
+> > +                           type      : Channel type
+> > +                           channel   : Channel number
 > > +
-> > +	spin_lock_irqsave(&i2c_dev->lock, flags);
+> > +               This MU support 4 type of unidirectional channels, each=
+ type
+> > +               has 4 channels. A total of 16 channels. Following types=
+ are
+> > +               supported:
+> > +               0 - TX channel with 32bit transmit register and IRQ tra=
+nsmit
+> > +               acknowledgment support.
+> > +               1 - RX channel with 32bit receive register and IRQ supp=
+ort
+> > +               2 - TX doorbell channel. Without own register and no AC=
+K support.
+> > +               3 - RX doorbell channel.
+> >
+> Thanks. This is great.
+>=20
+> > +               The doorbell channels should be used with shared memory=
+ and protocol
+> > +               level acknowledgment if needed.
 > > +
-> > +	fifostat = readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT);
-> > +	if (fifostat & OWL_I2C_FIFOSTAT_RNB) {
-> > +		dev_dbg(&i2c_dev->adap.dev, "received NACK from device\n");
-> > +		goto stop;
-> > +	}
-> > +
-> > +	stat = readl(i2c_dev->base + OWL_I2C_REG_STAT);
-> > +	if (stat & OWL_I2C_STAT_BEB) {
-> > +		dev_dbg(&i2c_dev->adap.dev, "bus error\n");
-> > +		goto stop;
-> > +	}
-> 
-> I wonder if you can't pass back the different errors to the upper
-> layers? Like -ENXIO for NACK and -EIO for bus error? We have a
-> convention for that and it seems your HW can support it. The different
-> error codes would then maybe also make the debug outputs obsolete.
-> 
-> 
+> I would avoid this. People might get notions that they have to use
+> shmem with doorbell -- a trivial protocol might mean doing some fixed
+> action (like reset) whenever the doorbell rings.
 
-Sure, will catch the errors using an i2c_dev member and pass it to upper
-layers in owl_i2c_master_xfer.
+Ok.
 
-> > +	/*
-> > +	 * Here, -ENXIO will be returned if interrupt occurred but no
-> > +	 * read or write happened. Else if msg_ptr equals to message length,
-> > +	 * message count will be returned.
-> > +	 */
-> > +	ret = i2c_dev->msg_ptr == msg->len ? num : -ENXIO;
-> 
-> I'd think this kinda unusual construct could go then as well by just
-> returning the error code derived from the interrupt handler above.
-> 
+>=20
+> > +Optional properties:
+> > +-------------------
+> > +- clocks :     phandle to the input clock.
+> > +- fsl,mu-side-b : Should be set for side B MU.
+> >
+> Nit: can we call this 'fsl,no-init' ?
 
-Makes sense! It will become:
+No. It is HW description and not functionality which is present in
+current Linux driver.
 
-ret = i2c_dev->err < 0 ? i2c_dev->err : num;
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Thanks,
-Mani
+--omgjo4asbi4kpojs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > +static const struct i2c_adapter_quirks owl_i2c_quirks = {
-> > +	.flags		= I2C_AQ_COMB | I2C_AQ_COMB_WRITE_FIRST,
-> > +	.max_read_len   = 240,
-> > +	.max_write_len  = 240,
-> > +	.max_comb_1st_msg_len = 6,
-> > +	.max_comb_2nd_msg_len = 240,
-> > +};
-> 
-> Yay! Good use of the i2c_adapter_quirks struct :)
-> 
-> Regards,
-> 
->    Wolfram
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlthP44ACgkQdQOiSHVI
+77ShTAgAgjAe6sj9cLYopHdslgb31y2StyZCjqAQdKORDjd5cGIxQdUekvSZ8GkH
+R9XkJTASAYhmRV8wzUdd+zt7IGv2a5zaRzdUnjkt+nz8KM99lTUBKKFyygZyJ9rv
+42oZuw2aF7wEOS9VJMUqk+904LnIiEaJE2lwrx6fr4TxEiJmITbSGJQzl5t5R4Nv
+2C3LVfvilpMJyaBcNrYebysQV1rRqYOu+46sLwRLr4zYBGqa8y58TDn83vKrpAgl
+wlWVw77M/Y7CfOEA3v/3xKe/knYCUPyfcIMnwvTmlNhBSKr3TjA1gFlQetTNv5UL
+DhRly/QnCc3cpW48l54vByew/6yk2w==
+=Hvrx
+-----END PGP SIGNATURE-----
+
+--omgjo4asbi4kpojs--
+
+
+--===============6133834961581618147==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6133834961581618147==--
