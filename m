@@ -1,49 +1,36 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH v3 02/14] ARM: dts: sunxi: h3/h5: Fix i2c2 register
- address
-Date: Wed, 01 Aug 2018 21:11:05 +0800
-Message-ID: <1c12672d56b1e97aa594d2938ea9a36b5c0a98e0.camel@aosc.io>
-References: <20170926072234.27481-1-clabbe.montjoie@gmail.com>
-         <20170926072234.27481-3-clabbe.montjoie@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/3] arm64: dts: meson-axg: add audio support
+Date: Wed,  1 Aug 2018 15:40:30 +0200
+Message-ID: <20180801134033.21739-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170926072234.27481-3-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-在 2017-09-26二的 09:22 +0200，Corentin Labbe写道：
-> The unit address and register address does not match.
-> This patch fix the register address with the good one.
-> 
-> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+The main purpose of this patchset is to add the audio devices on amlogic's
+AXG SoCs.
 
-This patch should be backported.
+In term of dependency, apart from the clock bindings you have already
+pulled for your second PR to arm-soc, this patchset requires the ARB
+reset bindings [0] for patch 1.
 
-Older LTS also needs patches, but the patch needs to be refactored to
-suite the versions.
+Changes since v1 [1]:
+ - Dropped applied changes
+ - Update card bindings following Rob's comments on the card DT binding
+   documentation.
 
-Cc: stable@vger.kernel.org # 4.14
+[0]: 3bfd2fe0ab49 ("reset: meson: add dt-bindings for meson-axg audio arb")
+[1]: https://lkml.kernel.org/r/20180724125238.14567-1-jbrunet@baylibre.com
 
-> ---
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> index b37ed3461229..289f2cd06dfe 100644
-> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-> @@ -632,7 +632,7 @@
->  
->  		i2c2: i2c@1c2b400 {
->  			compatible = "allwinner,sun6i-a31-i2c";
-> -			reg = <0x01c2b000 0x400>;
-> +			reg = <0x01c2b400 0x400>;
->  			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&ccu CLK_BUS_I2C2>;
->  			resets = <&ccu RST_BUS_I2C2>;
+Jerome Brunet (3):
+  arm64: dts: meson-axg: add audio fifos
+  arm64: dts: meson-axg: s400: enable audio devices
+  arm64: dts: meson-axg: s400: add sound card
+
+ .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 180 ++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  67 +++++++
+ 2 files changed, 247 insertions(+)
+
+-- 
+2.17.1
