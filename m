@@ -1,67 +1,73 @@
 From: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Subject: [PATCH v3 4/8] net: phy: Disable external master access in bcm mdio mux driver
-Date: Wed,  1 Aug 2018 10:56:22 -0700
-Message-ID: <1533146186-8374-5-git-send-email-arun.parameswaran@broadcom.com>
+Subject: [PATCH v3 5/8] net: phy: Use devm api for mdio bus allocation in bcm iproc mdio mux
+Date: Wed,  1 Aug 2018 10:56:23 -0700
+Message-ID: <1533146186-8374-6-git-send-email-arun.parameswaran@broadcom.com>
 References: <1533146186-8374-1-git-send-email-arun.parameswaran@broadcom.com>
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1533146186-8374-1-git-send-email-arun.parameswaran@broadcom.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arun.parameswaran@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Configure the scan control register in the Broadcom iProc
-mdio mux driver to disable access to external master.
+Use devm_mdiobus_alloc() instead of mdiobus_alloc() in the Broadcom
+iProc mdio mux driver.
 
-In some SoC's, the scan control register defaults to an incorrect
-value.
+Also, clear the driver data on error from probe or when remove() is
+called.
 
 Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/phy/mdio-mux-bcm-iproc.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/net/phy/mdio-mux-bcm-iproc.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/net/phy/mdio-mux-bcm-iproc.c b/drivers/net/phy/mdio-mux-bcm-iproc.c
-index 48bb74a..c36ce4b 100644
+index c36ce4b..5640d78 100644
 --- a/drivers/net/phy/mdio-mux-bcm-iproc.c
 +++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
-@@ -22,6 +22,9 @@
- #include <linux/mdio-mux.h>
- #include <linux/delay.h>
+@@ -198,7 +198,7 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(md->base);
+ 	}
  
-+#define MDIO_SCAN_CTRL_OFFSET		0x008
-+#define MDIO_SCAN_CTRL_OVRIDE_EXT_MSTR	28
-+
- #define MDIO_PARAM_OFFSET		0x23c
- #define MDIO_PARAM_MIIM_CYCLE		29
- #define MDIO_PARAM_INTERNAL_SEL		25
-@@ -53,6 +56,16 @@ struct iproc_mdiomux_desc {
- 	struct mii_bus *mii_bus;
- };
+-	md->mii_bus = mdiobus_alloc();
++	md->mii_bus = devm_mdiobus_alloc(&pdev->dev);
+ 	if (!md->mii_bus) {
+ 		dev_err(&pdev->dev, "mdiomux bus alloc failed\n");
+ 		return -ENOMEM;
+@@ -217,7 +217,7 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
+ 	rc = mdiobus_register(bus);
+ 	if (rc) {
+ 		dev_err(&pdev->dev, "mdiomux registration failed\n");
+-		goto out;
++		return rc;
+ 	}
  
-+static void mdio_mux_iproc_config(struct iproc_mdiomux_desc *md)
-+{
-+	u32 val;
-+
-+	/* Disable external mdio master access */
-+	val = readl(md->base + MDIO_SCAN_CTRL_OFFSET);
-+	val |= BIT(MDIO_SCAN_CTRL_OVRIDE_EXT_MSTR);
-+	writel(val, md->base + MDIO_SCAN_CTRL_OFFSET);
-+}
-+
- static int iproc_mdio_wait_for_idle(void __iomem *base, bool result)
- {
- 	unsigned int timeout = 1000; /* loop for 1s */
-@@ -216,6 +229,8 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, md);
+@@ -226,6 +226,7 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
+ 			   &md->mux_handle, md, md->mii_bus);
+ 	if (rc) {
+ 		dev_info(md->dev, "mdiomux initialization failed\n");
++		platform_set_drvdata(pdev, NULL);
  		goto out_register;
  	}
  
-+	mdio_mux_iproc_config(md);
-+
- 	dev_info(md->dev, "iProc mdiomux registered\n");
- 	return 0;
+@@ -236,8 +237,6 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
  
+ out_register:
+ 	mdiobus_unregister(bus);
+-out:
+-	mdiobus_free(bus);
+ 	return rc;
+ }
+ 
+@@ -247,7 +246,7 @@ static int mdio_mux_iproc_remove(struct platform_device *pdev)
+ 
+ 	mdio_mux_uninit(md->mux_handle);
+ 	mdiobus_unregister(md->mii_bus);
+-	mdiobus_free(md->mii_bus);
++	platform_set_drvdata(pdev, NULL);
+ 
+ 	return 0;
+ }
 -- 
 1.9.1
