@@ -1,42 +1,58 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 5/5] clk: RK808: add RK809 and RK817 support.
-Date: Wed, 01 Aug 2018 08:18:55 -0700
-Message-ID: <153313673531.17365.8764698693425766723@swboyd.mtv.corp.google.com>
-References: <1533023850-29004-1-git-send-email-tony.xie@rock-chips.com>
- <1533024029-30273-1-git-send-email-tony.xie@rock-chips.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] PM / devfreq: Generic cpufreq governor
+Date: Wed, 1 Aug 2018 17:03:29 +0100
+Message-ID: <2a9bfa53-31b2-b44a-0bd5-07bcc344a466@arm.com>
+References: <1532750217-8886-1-git-send-email-skannan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533024029-30273-1-git-send-email-tony.xie@rock-chips.com>
+In-Reply-To: <1532750217-8886-1-git-send-email-skannan@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rtc@vger.kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, tony.xie@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, xsf@rock-chips.com, linux-rockchip@lists.infradead.org, broonie@kernel.org, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chenjh@rock-chips.com
+To: Saravana Kannan <skannan@codeaurora.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tony Xie (2018-07-31 01:00:29)
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 721572a..fc1427c 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -46,11 +46,11 @@ config COMMON_CLK_MAX77686
->           clock.
->  =
 
->  config COMMON_CLK_RK808
-> -       tristate "Clock driver for RK805/RK808/RK818"
-> +       tristate "Clock driver for RK805/RK808/RK809/RK817/RK818"
->         depends on MFD_RK808
->         ---help---
-> -         This driver supports RK805, RK808 and RK818 crystal oscillator =
-clock. These
-> -         multi-function devices have two fixed-rate oscillators,
-> +         This driver supports RK805, RK809 and RK817, RK808 and RK818 cr=
-ystal oscillator clock.
-> +          These multi-function devices have two fixed-rate oscillators,
 
-Something got messed up with the indentation here. Please fix.
+On 28/07/18 04:56, Saravana Kannan wrote:
+> Many CPU architectures have caches that can scale independent of the CPUs.
+> Frequency scaling of the caches is necessary to make sure the cache is not
+> a performance bottleneck that leads to poor performance and power. The same
+> idea applies for RAM/DDR.
+> 
+> To achieve this, this patch adds a generic devfreq governor that can listen
+> to the frequency transitions of each CPU frequency domain and then adjusts
+> the frequency of the cache (or any devfreq device) based on the frequency
+> of the CPUs.
+> 
+> To decide the frequency of the device, the governor does one of the
+> following:
+> 
+> * Uses a CPU frequency to device frequency mapping table
+>   - Either one mapping table used for all CPU freq policies (typically used
+>     for system with homogeneous cores/clusters that have the same OPPs.
+>   - One mapping table per CPU freq policy (typically used for ASMP systems
+>     with heterogeneous CPUs with different OPPs)
+> 
+> OR
+> 
+> * Scales the device frequency in proportion to the CPU frequency. So, if
+>   the CPUs are running at their max frequency, the device runs at its max
+>   frequency.  If the CPUs are running at their min frequency, the device
+>   runs at its min frequency. And interpolated for frequencies in between.
+> 
 
->           clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
->           by control register.
-> =20
+Is this solution for the old generation of SDM ?
+I have seen newer ones have some kind of firmware interface/hardware to
+deal with CPUFreq. Do you need this solution for them too ?
+
+If yes, why ? IMO firmware can arbitrate various requests for frequency
+scaling and do the *right thing* for the platform. Having OSPM sending
+separate requests for such bus/interconnect might end up with conflicts.
+No ?
+
+-- 
+Regards,
+Sudeep
