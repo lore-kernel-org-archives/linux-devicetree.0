@@ -1,45 +1,60 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 10/10] MAINTAINERS: Add entry for Actions Semi Owl SoCs Reset Management Unit
-Date: Wed,  1 Aug 2018 09:09:15 +0530
-Message-ID: <20180801033915.15880-11-manivannan.sadhasivam@linaro.org>
-References: <20180801033915.15880-1-manivannan.sadhasivam@linaro.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v4 4/4] ASoC: qcom: add sdm845 sound card support
+Date: Wed, 1 Aug 2018 11:46:48 +0800
+Message-ID: <201808011127.1snVqYkN%fengguang.wu@intel.com>
+References: <1532945454-10437-5-git-send-email-rohitkr@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801033915.15880-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1532945454-10437-5-git-send-email-rohitkr@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de, mturquette@baylibre.com, sboyd@kernel.org, afaerber@suse.de, robh+dt@kernel.org, lee.jones@linaro.org, arnd@arndb.de
-Cc: linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: kbuild-all@01.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rohit kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add entry for Actions Semi Reset Management Unit driver and its
-bindings under ARCH_ACTIONS. Currently only S700 and S900 SoCs
-of the Owl family are supported.
+Hi Rohit,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on asoc/for-next]
+[also build test WARNING on next-20180731]
+[cannot apply to v4.18-rc7]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Rohit-kumar/Add-support-for-audio-on-SDM845-SoC/20180801-082203
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> sound/soc/qcom/sdm845.c:193:27: sparse: incorrect type in argument 2 (different base types) @@    expected unsigned int [unsigned] val @@    got restricted snd_unsigned int [unsigned] val @@
+   sound/soc/qcom/sdm845.c:193:27:    expected unsigned int [unsigned] val
+   sound/soc/qcom/sdm845.c:193:27:    got restricted snd_pcm_format_t [usertype] <noident>
+
+vim +193 sound/soc/qcom/sdm845.c
+
+   181	
+   182	static int sdm845_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
+   183					struct snd_pcm_hw_params *params)
+   184	{
+   185		struct snd_interval *rate = hw_param_interval(params,
+   186						SNDRV_PCM_HW_PARAM_RATE);
+   187		struct snd_interval *channels = hw_param_interval(params,
+   188						SNDRV_PCM_HW_PARAM_CHANNELS);
+   189		struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
+   190	
+   191		rate->min = rate->max = DEFAULT_SAMPLE_RATE_48K;
+   192		channels->min = channels->max = 2;
+ > 193		snd_mask_set(fmt, SNDRV_PCM_FORMAT_S16_LE);
+   194	
+   195		return 0;
+   196	}
+   197	
+
 ---
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9c292ef3c210..25934ae77ba6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1146,13 +1146,17 @@ F:	arch/arm64/boot/dts/actions/
- F:	drivers/clk/actions/
- F:	drivers/clocksource/owl-*
- F:	drivers/pinctrl/actions/*
-+F:	drivers/reset/reset-owl.c
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
-+F:	include/dt-bindings/reset/actions,s700-rmu.h
-+F:	include/dt-bindings/reset/actions,s900-rmu.h
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
- F:	Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
- F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
-+F:	Documentation/devicetree/bindings/reset/actions,owl-reset.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
- 
- ARM/ADS SPHERE MACHINE SUPPORT
--- 
-2.17.1
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
