@@ -1,94 +1,75 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 07/12] PM / devfreq: export devfreq_class
-Date: Wed, 1 Aug 2018 10:18:26 -0700
-Message-ID: <20180801171826.GK68975@google.com>
-References: <20180703234705.227473-1-mka@chromium.org>
- <CGME20180703234837epcas5p1da751e0394c16816b95ac1956bf6de20@epcas5p1.samsung.com>
- <20180703234705.227473-8-mka@chromium.org>
- <5B3C5B78.6020401@samsung.com>
- <20180706180923.GH129942@google.com>
- <41164a91-b271-5f3b-b461-21ff5997cc84@samsung.com>
- <20180716194114.GA129942@google.com>
- <20180731192904.GG68975@google.com>
- <5B616CE0.50400@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH v2 5/6] spi: Add QuadSPI driver for Atmel SAMA5D2
+Date: Wed, 1 Aug 2018 18:27:47 +0100
+Message-ID: <20180801172747.GJ5509@sirena.org.uk>
+References: <20180627131609.13681-1-bugalski.piotr@gmail.com>
+ <20180627131609.13681-6-bugalski.piotr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5B616CE0.50400@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+Content-Type: multipart/mixed; boundary="===============4166929671864913717=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180627131609.13681-6-bugalski.piotr@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Piotr Bugalski <bugalski.piotr@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Piotr Bugalski <pbu@cryptera.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Tudor Ambarus <tudor.ambarus@microchip.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 01, 2018 at 05:18:40PM +0900, Chanwoo Choi wrote:
-> Hi Matthias,
-> 
-> On 2018년 08월 01일 04:29, Matthias Kaehlcke wrote:
-> > On Mon, Jul 16, 2018 at 12:41:14PM -0700, Matthias Kaehlcke wrote:
-> >> Hi Chanwoo,
-> >>
-> >> On Thu, Jul 12, 2018 at 06:08:36PM +0900, Chanwoo Choi wrote:
-> >>> Hi Matthias,
-> >>>
-> >>> On 2018년 07월 07일 03:09, Matthias Kaehlcke wrote:
-> >>>> Hi,
-> >>>>
-> >>>> On Wed, Jul 04, 2018 at 02:30:32PM +0900, Chanwoo Choi wrote:
-> >>>>
-> >>>>> I didn't see any framework which exporting the class instance.
-> >>>>> It is very dangerous. Unknown device drivers is able to reset
-> >>>>> the 'devfreq_class' instance. I can't agree this approach.
-> >>>>
-> >>>> While I agree that it is potential dangerous it is actually a common
-> >>>> practice to export the class:
-> >>>>
-> >>>
-> >>> I tried to find the real usage of exported class instance
-> >>> and I add the comment for each class instance. Almost exported class
-> >>> instance are used in the their own director or some exported class
-> >>> like rio_mport_class/switchtec_class are created from specific device driver
-> >>> instead of subsystem.
-> >>>
-> >>> Only following two cases are used on outside of subsystem directory.
-> >>> devtmpfs.c and alarmtimer.c are core feature of linux kernel.
-> >>>
-> >>> 	drivers/base/devtmpfs.c uses 'block_class'.
-> >>> 	kernel/time/alarmtimer.c uses 'rtc_class'.
-> >>>
-> >>> I cannot yet agree this approach due to only block_class and rtc_class.
-> >>
-> >> I thought your main concern was that the class is exported, which is
-> >> what several other subsystems do. That the class isn't used outside of
-> >> the subsystem directory most likely means that there is no need for
-> >> it, rather than that it shouldn't be done at all (depending on the
-> >> type of use of course).
-> >>
-> >> In any case not exporting the class object provides a limited
-> >> protection against potential abuse of the class at best. To use the
-> >> class API all that is needed is a 'struct device' of a devfreq device,
-> >> which has a pointer to the class object (dev->class).
-> >>
-> >> Theoretically I could register a fake devfreq device to obtain access
-> >> to the class object, though that doesn't seem a very neat approach ;-)
-> >>
-> >>> You added the following comment why devfreq_class instance is necessary.
-> >>> Actullay, I don't know the best solution right now. But, all device drivers
-> >>> can be added or removed if driver uses the module type. It is not a problem
-> >>> for only devfreq instance.
-> >>
-> >> Certainly it's not a problem limited to devfreq devices. In many other
-> >> cases bus notifiers can be used, but since devfreq devices areen't
-> >> tied to a specific bus this is not an option here.
-> >>
-> >> If you really don't want to export the class we could add wrappers
-> >> for (un)registering a class interface:
-> >>
-> >> int devfreq_class_interface_register(struct class_interface *)
-> >> void devfreq_class_interface_unregister(struct class_interface *)
-> 
-> About this approach, I agree because it doesn't export the devfreq_class
-> instance as you commented.
 
-Great, I'll change it in the next revision!
+--===============4166929671864913717==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yhze8HlyfmXt1APY"
+Content-Disposition: inline
+
+
+--yhze8HlyfmXt1APY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 27, 2018 at 03:16:08PM +0200, Piotr Bugalski wrote:
+> Kernel contains QSPI driver strongly tied to MTD and nor-flash memory.
+> New spi-mem interface allows usage also other memory types, especially
+> much larger NAND with SPI interface. This driver works as SPI controller
+> and is not related to MTD, however can work with NAND-flash or other
+> peripherals using spi-mem interface.
+
+This is fine from a SPI point of view but I'd like to apply it directly
+to the SPI tree rather than ack it for merge via the MTD tree - can we
+work something out with a shared branch or something?
+
+--yhze8HlyfmXt1APY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlth7ZIACgkQJNaLcl1U
+h9DoyAf/axay4apJ06n4JCgJFvYwhcy//Lc98dvXcnht+N+o7q386hp2kgdobQQ6
+DEtlMemWfYGAC+SKbOzlk81q5JL/+mP252rjCii5W9moO3Qm2TzCgKtjeWoH3/Va
+cjIdVv0j1AeIuMK2H8I3jFOIh0W5ehXJsuNCwN6kf6E4/4w135XlQ7xOaA7hUjrW
+UoqWfSkVkYLSHIMnUd7t2q5YVEKf3EoqYc/ddACPX1hwdTm3bE3KuWIwNyMomV1t
+e1LAyQ6hMO5ZCU6+/8zjEw2avKuUUEQZRTiBBVyuk2zC1kTg+ARtYg6CbqD96r5J
+p80N/6kIUIqOyajvbcgkUjZZCWpeow==
+=Xusq
+-----END PGP SIGNATURE-----
+
+--yhze8HlyfmXt1APY--
+
+
+--===============4166929671864913717==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4166929671864913717==--
