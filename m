@@ -1,60 +1,41 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v8 2/4] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Wed, 1 Aug 2018 08:58:06 +0000
-Message-ID: <AM0PR04MB4211B20B99E087177D0C06D8802D0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180731141146.10788-1-o.rempel@pengutronix.de>
- <20180731141146.10788-3-o.rempel@pengutronix.de>
- <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+From: Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v5 0/4] Add support for audio on SDM845 SoC
+Date: Wed,  1 Aug 2018 14:31:05 +0530
+Message-ID: <1533114069-16570-1-git-send-email-rohitkr@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, plai@codeaurora.org, bgoswami@codeaurora.org, perex@perex.cz, srinivas.kandagatla@linaro.org, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rohit kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+This provides initial patchset to support audio on
+Qualcomm Techonologies Inc. SDM845 SoC. Currently, it supports
+audio playback/capture over Primary MI2S and Quaternary
+TDM ports.
 
-> > +               The doorbell channels should be used with shared memory and
-> protocol
-> > +               level acknowledgment if needed.
-> > +
-> I would avoid this. People might get notions that they have to use shmem
-> with doorbell -- a trivial protocol might mean doing some fixed action (like
-> reset) whenever the doorbell rings.
->
+Changes since v4:
+- Used snd_mask_set_format() instead of snd_mask_set() to avoid sparse warning.
 
-That's right.
-i.MX8 using the general purpose interrupt for peripherals. No shmem needed.
-e.g. RTC, Watchdog and ON/OFF interrupt.
+Rohit kumar (4):
+  ASoC: qcom: dt-bindings: Add sdm845 machine bindings
+  ASoC: dt-bindings: Update dt binding name for apq8096
+  ASoC: qcom: Add support to parse common audio device nodes
+  ASoC: qcom: add sdm845 sound card support
 
-BTW, this means the peripheral will use mailbox doorbell channels to handle
-Interrupts. Is there such user case in kernel we can refer to?
+ .../devicetree/bindings/sound/qcom,apq8096.txt     |  15 +-
+ .../devicetree/bindings/sound/qcom,sdm845.txt      |  80 ++++++
+ sound/soc/qcom/Kconfig                             |   8 +
+ sound/soc/qcom/Makefile                            |   4 +-
+ sound/soc/qcom/apq8096.c                           | 111 +-------
+ sound/soc/qcom/common.c                            | 112 ++++++++
+ sound/soc/qcom/common.h                            |  12 +
+ sound/soc/qcom/sdm845.c                            | 286 +++++++++++++++++++++
+ 8 files changed, 525 insertions(+), 103 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+ create mode 100644 sound/soc/qcom/common.c
+ create mode 100644 sound/soc/qcom/common.h
+ create mode 100644 sound/soc/qcom/sdm845.c
 
-> 
-> > +Optional properties:
-> > +-------------------
-> > +- clocks :     phandle to the input clock.
-> > +- fsl,mu-side-b : Should be set for side B MU.
-> >
-> Nit: can we call this 'fsl,no-init' ?
-
-Fsl,mu-side-b is more describing HW.
-
-Regards
-Dong Aisheng
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
