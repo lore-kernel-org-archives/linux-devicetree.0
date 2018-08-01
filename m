@@ -1,152 +1,348 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 3/3] arm64: dts: meson-axg: s400: add sound card
-Date: Wed,  1 Aug 2018 15:40:33 +0200
-Message-ID: <20180801134033.21739-4-jbrunet@baylibre.com>
-References: <20180801134033.21739-1-jbrunet@baylibre.com>
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v10 7/7] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth chip wcn3990
+Date: Wed, 01 Aug 2018 19:29:29 +0530
+Message-ID: <b28d946b9926beb009815923beb00322@codeaurora.org>
+References: <20180720133243.6851-1-bgodavar@codeaurora.org>
+ <20180720133243.6851-8-bgodavar@codeaurora.org>
+ <20180723195441.GM129942@google.com>
+ <81c324ee9104508cf5c862de3f697e4c@codeaurora.org>
+ <20180725183144.GQ129942@google.com>
+ <0666f40967de21db9ef3df9d94517ac1@codeaurora.org>
+ <20180726195129.GW129942@google.com>
+ <ba5c7f6cc8ba7c010ccd6c3573a5d234@codeaurora.org>
+ <20180730200703.GB68975@google.com>
+ <5870107568955802c024f0a67c86ea8f@codeaurora.org>
+ <20180731160321.GD68975@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801134033.21739-1-jbrunet@baylibre.com>
+In-Reply-To: <20180731160321.GD68975@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the sound card of the s400. With it the following interface
-should be working:
- * Lineout
- * Daugther card speaker 1 (same output as lineout)
- * Linein
- * SPDIF output
+Hi Matthias,
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../arm64/boot/dts/amlogic/meson-axg-s400.dts | 108 ++++++++++++++++++
- 1 file changed, 108 insertions(+)
+On 2018-07-31 21:33, Matthias Kaehlcke wrote:
+> On Tue, Jul 31, 2018 at 08:08:40PM +0530, Balakrishna Godavarthi wrote:
+>> Hi Matthias,
+>> 
+>> On 2018-07-31 01:37, Matthias Kaehlcke wrote:
+>> > On Fri, Jul 27, 2018 at 05:09:02PM +0530, Balakrishna Godavarthi wrote:
+>> > > Hi Matthias,
+>> > >
+>> > > On 2018-07-27 01:21, Matthias Kaehlcke wrote:
+>> > > > On Thu, Jul 26, 2018 at 07:51:13PM +0530, Balakrishna Godavarthi wrote:
+>> > > > > Hi Matthias,
+>> > > > >
+>> > > > > On 2018-07-26 00:01, Matthias Kaehlcke wrote:
+>> > > > > > On Tue, Jul 24, 2018 at 09:25:16PM +0530, Balakrishna Godavarthi wrote:
+>> > > > > > > Hi Matthias,
+>> > > > > > >
+>> > > > > > > On 2018-07-24 01:24, Matthias Kaehlcke wrote:
+>> > > > > > > > On Fri, Jul 20, 2018 at 07:02:43PM +0530, Balakrishna Godavarthi wrote:
+>> > > > > > > > > +	 * sometimes we will face communication synchronization issues,
+>> > > > > > > > > +	 * like reading version command timeouts. In which HCI_SETUP fails,
+>> > > > > > > > > +	 * to overcome these issues, we try to communicate by performing an
+>> > > > > > > > > +	 * COLD power OFF and ON.
+>> > > > > > > > > +	 */
+>> > > > > > > > > +	for (i = 1; i <= 10 && ret; i++) {
+>> > > > > > > >
+>> > > > > > > > Is it really that bad that more than say 3 iterations might be needed?
+>> > > > > > > >
+>> > > > > > > [Bala]: will restrict to 3 iterations.
+>> > > > > >
+>> > > > > > Is 3x expected to be enough to 'guarantee' as successful
+>> > > > > > initialization? Just wondered about the 10x since it suddendly changed
+>> > > > > > from 1x. What is the failure rate without retries?
+>> > > > > >
+>> > > > > > Could you provide more information about the 'communication
+>> > > > > > synchronization issues'? Is the root cause understood? Maybe there is
+>> > > > > > a better way than retries.
+>> > > > > >
+>> > > > >
+>> > > > > [Bala]: basically before sending a every patch series we run a
+>> > > > > stress test
+>> > > > > to the driver to detect the bugs.
+>> > > > >         in recent test results found one interesting bug that BT
+>> > > > > setups
+>> > > > > fails with version request timeouts,
+>> > > > >         after we do a reboot for the device.
+>> > > > >         we debugged the issue and found that wcn3900 is not
+>> > > > > responding to
+>> > > > > the version request commands
+>> > > > >         sent by HOST. this is because before reboot, wcn3990 is in
+>> > > > > on state
+>> > > > > i.e. we are communicating to device.
+>> > > > >         then we did a reboot and HOST is not sending a power off
+>> > > > > request to
+>> > > > > the regulators to turn off.
+>> > > > >         so after reboot wcn3990 is still in ON state where it will not
+>> > > > > respond to version request commands which in turn fails HCI_SETUP.
+>> > > > >         so we are sending the power off pulse and then sending the
+>> > > > > power on
+>> > > > > pulse.
+>> > > > >         coming back to 3x or 10x iteration this is to avoid any such
+>> > > > > synchronization issues.
+>> > > > >         i agreed for 3x because of stress test results. we have
+>> > > > > success rate
+>> > > > > of 99% for single iteration, where as 3x iterations will helps to
+>> > > > > handle 1%
+>> > > > > fails cases.
+>> > > >
+>> > > > Thanks for the clarification. Couldn't you assure the device is in a
+>> > > > defined state by calling qca_power_shutdown() as one of the first
+>> > > > things in qca_wcn3990_init()?
+>> > >
+>> > > [Bala]:  we have reasons behind writing qca_power_setup(true) at the
+>> > > start.
+>> > >
+>> > >         1. the reason to add iteration here, is to handle BT fails
+>> > > cases
+>> > > either due to communication failure of wcn3900 or due to regulator
+>> > > issues.
+>> > >            before calling qca_setup(), we have our regulator turned
+>> > > on and
+>> > > in qca_setup i.e. init routine if we added power_shutdown as first
+>> > > statement
+>> > > before
+>> > >            communicating with chip then regulator will be off and
+>> > > again we
+>> > > need to call function to ON regulators.
+>> > >            so it could be some thing like this
+>> > >
+>> > >            init(){
+>> > >
+>> > >                for () {
+>> > >                      shutdown() // regs are off
+>> > >                      poweron(true) // regs are on.
+>> > >                      if(!start communicating with chip()) {
+>> > >                         break;
+>> > >                       }
+>> > >
+>> > >                }
+>> > >            }
+>> > >            as the reason to add the iteration handling is to
+>> > > overcome 1% of
+>> > > fail cases, so every time when we call it will turn off the regs and
+>> > > turn it
+>> > > back. which require an turning in off regs and on it back for 99% pass
+>> > >             cases.
+>> >
+>> > But would turning off the regs really add a significant delay here?
+>> > The setup is already really slow, with a 100ms delay in the
+>> > loop (still wonder if booting the chip without loading firmware really
+>> > takes that long) and later the firmware is loaded.
+>> >
+>> [Bala]: By default we will have an firmware loaded in ROM of wcn3990, 
+>> 100 ms
+>> delay will help wcn3990 boot up with default firmware.
+> 
+> Ok, thanks.
+> 
+>>         Once it is booted up with default firmware on ROM, we will 
+>> download
+>> the firmware from the firmware files, these firmware files
+>>         contains bug fixes of wcn3990. Once the firmware files are 
+>> loaded we
+>> will send the reset command to wcn3990.
+>>         wcn3990 will start working with latest firmware which is 
+>> loaded.
+>> 
+>> > If the chip needs to be in a defined state we should make sure to put
+>> > in into that state, unless there is a significant overhead wrt 'try
+>> > first and only reset in case of failure'. As a nice side effect the
+>> > code would be cleaner and we probably could get rid of the loop
+>> > completely, since it's supposed to address the case where the chip
+>> > wasn't properly reset on a reboot.
+>> >
+>> 
+>> [Bala]: i too agree with you, Now we have observed issue because of 
+>> reboot.
+>> But let us take a real time example here.
+>>         if clocks of UART are not stable or there is an issue of UART 
+>> GPIO's
+>> or some thing related might have broken in UART. Then will have
+>> communication issues with BT chip.
+>>         where HCI_SETUP fails, instead of giving a fails status, we 
+>> are
+>> trying to communicate once again and these is also be in 1% of fail 
+>> cases.
+> 
+> If there are issues with unstable clocks, GPIOs or similar the problem
+> should be fixed at it's root, instead of papering over it in the BT
+> driver. Kernel drivers would be a complete mess if they tried to
+> recover from all possible problems in other subsystems.
+> 
+> I don't have general objections agains a retry loop when it is really
+> needed, but I don't have the impressions this is the case here. If
+> your stress tests reveal problems that can't be addresses otherwise
+> please let us know and we might end up with the retry loop after all.
+> 
+[Bala]: current results point out failures cases only while reboot.
+         if we have any issue that causes the problem of BT failure then 
+we will add
+         the loop. For now we will go with out retry loop :)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 9f5d81c3ee29..d399078d1f0c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -204,6 +204,113 @@
- 		status = "okay";
- 		sound-name-prefix = "DIT";
- 	};
-+
-+	sound {
-+		compatible = "amlogic,axg-sound-card";
-+		model = "AXG-S400";
-+		audio-aux-devs = <&tdmin_a>, <&tdmin_b>,  <&tdmin_c>,
-+				 <&tdmin_lb>, <&tdmout_c>;
-+		audio-widgets = "Line", "Lineout",
-+				"Line", "Linein",
-+				"Speaker", "Speaker1 Left",
-+				"Speaker", "Speaker1 Right";
-+		audio-routing = "TDMOUT_C IN 0", "FRDDR_A OUT 2",
-+				"SPDIFOUT IN 0", "FRDDR_A OUT 3",
-+				"TDMOUT_C IN 1", "FRDDR_B OUT 2",
-+				"SPDIFOUT IN 1", "FRDDR_B OUT 3",
-+				"TDMOUT_C IN 2", "FRDDR_C OUT 2",
-+				"SPDIFOUT IN 2", "FRDDR_C OUT 3",
-+				"TDM_C Playback", "TDMOUT_C OUT",
-+				"TDMIN_A IN 2", "TDM_C Capture",
-+				"TDMIN_A IN 5", "TDM_C Loopback",
-+				"TDMIN_B IN 2", "TDM_C Capture",
-+				"TDMIN_B IN 5", "TDM_C Loopback",
-+				"TDMIN_C IN 2", "TDM_C Capture",
-+				"TDMIN_C IN 5", "TDM_C Loopback",
-+				"TDMIN_LB IN 2", "TDM_C Loopback",
-+				"TDMIN_LB IN 5", "TDM_C Capture",
-+				"TODDR_A IN 0", "TDMIN_A OUT",
-+				"TODDR_B IN 0", "TDMIN_A OUT",
-+				"TODDR_C IN 0", "TDMIN_A OUT",
-+				"TODDR_A IN 1", "TDMIN_B OUT",
-+				"TODDR_B IN 1", "TDMIN_B OUT",
-+				"TODDR_C IN 1", "TDMIN_B OUT",
-+				"TODDR_A IN 2", "TDMIN_C OUT",
-+				"TODDR_B IN 2", "TDMIN_C OUT",
-+				"TODDR_C IN 2", "TDMIN_C OUT",
-+				"TODDR_A IN 6", "TDMIN_LB OUT",
-+				"TODDR_B IN 6", "TDMIN_LB OUT",
-+				"TODDR_C IN 6", "TDMIN_LB OUT",
-+				"Lineout", "Lineout AOUTL",
-+				"Lineout", "Lineout AOUTR",
-+				"Speaker1 Left", "SPK1 OUT_A",
-+				"Speaker1 Left", "SPK1 OUT_B",
-+				"Speaker1 Right", "SPK1 OUT_C",
-+				"Speaker1 Right", "SPK1 OUT_D",
-+				"Linein AINL", "Linein",
-+				"Linein AINR", "Linein";
-+		assigned-clocks = <&clkc CLKID_HIFI_PLL>,
-+				  <&clkc CLKID_MPLL0>,
-+				  <&clkc CLKID_MPLL1>;
-+		assigned-clock-parents = <0>, <0>, <0>;
-+		assigned-clock-rates = <589824000>,
-+				       <270950400>,
-+				       <393216000>;
-+		status = "okay";
-+
-+		dai-link@0 {
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link@1 {
-+			sound-dai = <&frddr_b>;
-+		};
-+
-+		dai-link@2 {
-+			sound-dai = <&frddr_c>;
-+		};
-+
-+		dai-link@3 {
-+			sound-dai = <&toddr_a>;
-+		};
-+
-+		dai-link@4 {
-+			sound-dai = <&toddr_b>;
-+		};
-+
-+		dai-link@5 {
-+			sound-dai = <&toddr_c>;
-+		};
-+
-+		dai-link@6 {
-+			sound-dai = <&tdmif_c>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-2 = <1 1>;
-+			dai-tdm-slot-rx-mask-1 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec@0 {
-+				sound-dai = <&lineout>;
-+			};
-+
-+			codec@1 {
-+				sound-dai = <&speaker_amp1>;
-+			};
-+
-+			codec@2 {
-+				sound-dai = <&linein>;
-+			};
-+
-+		};
-+
-+		dai-link@7 {
-+			sound-dai = <&spdifout>;
-+
-+			codec {
-+				sound-dai = <&spdif_dit>;
-+			};
-+		};
-+	};
- };
- 
- &ethmac {
-@@ -272,6 +379,7 @@
- 		PVDD_B-supply = <&main_12v>;
- 		PVDD_C-supply = <&main_12v>;
- 		PVDD_D-supply = <&main_12v>;
-+		sound-name-prefix = "SPK1";
- 	};
- };
- 
+>> > >         2. this is the one of the main reason for adding
+>> > > qca_power_setup(true) in the init() function first.
+>> > >            as we know that power management is so critical for long
+>> > > lasting
+>> > > of battery.
+>> > >            now present implementation is when we off BT from UI i.e.
+>> > > hci0
+>> > > down, we put BT into an suspend or low power mode, as soon as we
+>> > > turn ON the
+>> > > BT back from UI we make hci0 up.
+>> > >            the above is putting device into suspend state and bring
+>> > > it back
+>> > > where the regulator are still on state. so we will have leakage
+>> > > currents
+>> > > which can be minimal or may be in few mA.
+>> > >            to over come the above case, we want to do an cold on/off
+>> > > for BT
+>> > > chip wcn3990. i.e. when bt is off from UI, we will off the
+>> > > regulators and
+>> > > turn on it again once the BT is ON from UI.
+>> > >            every time we disable i.e. off BT from UI we will call
+>> > > hdev->shutdown() i.e. completely powering off the chip.
+>> > >            so it require an reprogram again, when we turn ON BT from
+>> > > UI. it
+>> > > will call qca_setup()--> init().. so here actually
+>> > > qca_power_on(true) will
+>> > > turn on the chip and dump the fw files into it.
+>> > >            so that is also a reason behind to write power on first.
+>> > >
+>> > >            the above feature is under testing state, will post a patch
+>> > > series once the driver code merged to bt-next.
+>> >
+>> > Thanks for the info.
+>> >
+>> > If I understand correctly what you describe isn't incompatible with
+>> > performing a proper reset. 'vregs_on' can be checked to avoid
+>> > disabling already disabled regulators:
+>> >
+>> >   if (qcadev->bt_power->vregs_on)
+>> >           qca_power_shutdown(hdev);
+>> >
+>> >   // short delay needed here?
+>> >
+>> >   qca_power_setup(hu, true);
+>> >
+>> > Unless there are drawbacks that I'm missing I think that's preferable
+>> > over the retry loop.
+>> >
+>> > > > The code flow with the gotos and the error handling at the end of the
+>> > > > loop is a bit messy. Moving the power down to the top of the loop
+>> > > > (basically in line with my comment above to get rid of the loop) would
+>> > > > help here. In this case checking 'ret' in the loop condition (which I
+>> > > > suggested to remove) would make sense, since it elimninates the need
+>> > > > for the break/return in the success case. But if we can do without the
+>> > > > loop even better :)
+>> > > >
+>> > >
+>> > > [Bala]: there is a reason to add the loop here, here we go with
+>> > > reason to
+>> > > add.
+>> > >         let us assume that qca_setup fails to establish a
+>> > > communication with
+>> > > wcn3990
+>> > >         then next steps will not be pass and we can't populate hci0
+>> > > rfkill
+>> > > entry.
+>> > >         in traditional bluez stack i.e. bluetoothd daemon will looks
+>> > > for
+>> > > hci0, if we have entry for hci0
+>> > >         then only BT option is visible in UI or else BT option will
+>> > > not be
+>> > > available in UI.
+>> > >         we don't have any mechanism handled in bluez user space to
+>> > > reinitiate the communication at latest to try for second time to
+>> > > make hci0
+>> > > up.
+>> > >         so that is reason behind to add so that we can handle fault
+>> > > handling
+>> > > of wcn3990 and establish the communication to make BT option
+>> > > available in
+>> > > BT.
+>> >
+>> > The loop is supposed to address the following case (quoting you from
+>> > earlier discussion in the thread):
+>> >
+>> > > found one interesting bug that BT setups fails with version request
+>> > > timeouts, after we do a reboot for the device. we debugged the issue
+>> > > and found that wcn3900 is not responding to the version request
+>> > > commands sent by HOST. this is because before reboot, wcn3990 is in
+>> > > on state i.e. we are communicating to device. then we did a reboot
+>> > > and HOST is not sending a power off request to the regulators to
+>> > > turn off. so after reboot wcn3990 is still in ON state where it will
+>> > > not respond to version request commands which in turn fails
+>> > > HCI_SETUP. so we are sending the power off pulse and then sending the
+>> > > power on pulse.
+>> >
+>> > My suggestion to address this failure case is to reset/power off the
+>> > chip before initializing it. With that the loop shouldn't be needed,
+>> > actually it wasn't there before you found this specific error.
+>> 
+>> [Bala]: I will update loop according to your suggestions, But i am 
+>> little
+>> bit worried, if the HCI_SETUP fails due to some
+>>         external issue of UART, so in that cases we can't able to 
+>> handle
+>> with out loop and as i said, some operating system,
+>>        will not handle HCI SETUP failures, we at the driver need to 
+>> handle
+>> such cases too.
+> 
+> As I said above, in most cases the problem should be addressed in the
+> driver that causes it. Not hiding issues may allow to fix them
+> properly, which also benefits other users of the UART/component.
+> 
+> Cheers
+> 
+> Matthias
+
+[Bala]: below is how qca_wcn3990_init() after update.
+
+qca_wcn3990_init()
+{
+        /* Forcefully enable wcn3990 to enter in to boot mode. */
+         host_set_baudrate(hu, 2400);
+         ret = qca_send_power_pulse(hdev, QCA_WCN3990_POWEROFF_PULSE);
+         if (ret)
+                 return ret;
+
+         qca_set_speed(hu, QCA_INIT_SPEED);
+         ret = qca_send_power_pulse(hdev, QCA_WCN3990_POWERON_PULSE);
+         if (ret)
+                 return ret;
+
+         /* Wait for 100 ms for SoC to boot */
+         msleep(100);
+
+         /* Now the device is in ready state to communicate with host.
+          * To sync host with device we need to reopen port.
+          * Without this, we will have RTS and CTS synchronization
+          * issues.
+          */
+         serdev_device_close(hu->serdev);
+         ret = serdev_device_open(hu->serdev);
+         if (ret) {
+                 bt_dev_err(hu->hdev, "failed to open port");
+                 return ret;
+         }
+
+         hci_uart_set_flow_control(hu, false);
+         ret = qca_read_soc_version(hdev, soc_ver);
+
+         return ret;
+
+}
+
 -- 
-2.17.1
+Regards
+Balakrishna.
