@@ -1,389 +1,122 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v13 7/7] Bluetooth: hci_qca: Add support for Qualcomm
- Bluetooth chip wcn3990
-Date: Fri, 03 Aug 2018 01:40:43 +0530
-Message-ID: <db854b94ad686d2506ba1cfcb5aef196@codeaurora.org>
-References: <20180802190732.4811-1-bgodavar@codeaurora.org>
- <20180802190732.4811-8-bgodavar@codeaurora.org>
- <20180802195733.GQ68975@google.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v8 0/3] add support for Bluetooth on MT7622 SoC
+Date: Fri, 3 Aug 2018 04:25:29 +0800
+Message-ID: <cover.1533241009.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802195733.GQ68975@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-03 01:27, Matthias Kaehlcke wrote:
-> On Fri, Aug 03, 2018 at 12:37:32AM +0530, Balakrishna Godavarthi wrote:
->> Add support to set voltage/current of various regulators
->> to power up/down Bluetooth chip wcn3990.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->> Changes in v13:
->>    * updated review comments.
->> 
->> Changes in v12:
->>     * removed retrying iteration loop in qca_wcn3990_init.
->> 
->> Changes in v11:
->>     * removed support to read regulator currents from dts.
->>     * updated review comments.
->> 
->> Changes in v10:
->>     * added support to read regulator currents from dts.
->>     * added support to try to connect with chip if it fails to respond 
->> to initial commands
->>     * updated review comments.
->> 
->> changes in v9:
->>     * moved flow control to vendor and set_baudarte functions.
->>     * removed parent regs.
->> 
->> changes in v8:
->>     * closing qca buffer, if qca_power_setup fails
->>     * chnaged ibs start timer function call location.
->>     * updated review comments.
->> 
->> changes in v7:
->>     * addressed review comments.
->> 
->> changes in v6:
->>     * Hooked up qca_power to qca_serdev.
->>     * renamed all the naming inconsistency functions with qca_*
->>     * leveraged common code of ROME for wcn3990.
->>     * created wrapper functions for re-usable blocks.
->>     * updated function of _*regulator_enable and _*regualtor_disable.
->>     * removed redundant comments and functions.
->>     * addressed review comments.
->> 
->> Changes in v5:
->>     * updated regulator vddpa min_uV to 1304000.
->>       * addressed review comments.
->> 
->> Changes in v4:
->>     * Segregated the changes of btqca from hci_qca
->>     * rebased all changes on top of bluetooth-next.
->>     * addressed review comments.
->> ---
->>  drivers/bluetooth/btqca.h   |   3 +
->>  drivers/bluetooth/hci_qca.c | 402 
->> +++++++++++++++++++++++++++++++-----
->>  2 files changed, 358 insertions(+), 47 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
->> index a9c2779f3e07..0c01f375fe83 100644
->> --- a/drivers/bluetooth/btqca.h
->> +++ b/drivers/bluetooth/btqca.h
->> @@ -37,6 +37,9 @@
->>  #define EDL_TAG_ID_HCI			(17)
->>  #define EDL_TAG_ID_DEEP_SLEEP		(27)
->> 
->> +#define QCA_WCN3990_POWERON_PULSE	0xFC
->> +#define QCA_WCN3990_POWEROFF_PULSE	0xC0
->> +
->>  enum qca_bardrate {
->>  	QCA_BAUDRATE_115200 	= 0,
->>  	QCA_BAUDRATE_57600,
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index a6e7d38ef931..66f36527e4dd 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -5,7 +5,7 @@
->>   *  protocol extension to H4.
->>   *
->>   *  Copyright (C) 2007 Texas Instruments, Inc.
->> - *  Copyright (c) 2010, 2012 The Linux Foundation. All rights 
->> reserved.
->> + *  Copyright (c) 2010, 2012, 2018 The Linux Foundation. All rights 
->> reserved.
->>   *
->>   *  Acknowledgements:
->>   *  This file is based on hci_ll.c, which was...
->> @@ -31,9 +31,14 @@
->>  #include <linux/kernel.h>
->>  #include <linux/clk.h>
->>  #include <linux/debugfs.h>
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->>  #include <linux/gpio/consumer.h>
->>  #include <linux/mod_devicetable.h>
->>  #include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regulator/consumer.h>
->>  #include <linux/serdev.h>
->> 
->>  #include <net/bluetooth/bluetooth.h>
->> @@ -124,12 +129,46 @@ enum qca_speed_type {
->>  	QCA_OPER_SPEED
->>  };
->> 
->> +/*
->> + * Voltage regulator information required for configuring the
->> + * QCA Bluetooth chipset
->> + */
->> +struct qca_vreg {
->> +	const char *name;
->> +	unsigned int min_uV;
->> +	unsigned int max_uV;
->> +	unsigned int load_uA;
->> +};
->> +
->> +struct qca_vreg_data {
->> +	enum qca_btsoc_type soc_type;
->> +	struct qca_vreg *vregs;
->> +	size_t num_vregs;
->> +};
->> +
->> +/*
->> + * Platform data for the QCA Bluetooth power driver.
->> + */
->> +struct qca_power {
->> +	struct device *dev;
->> +	const struct qca_vreg_data *vreg_data;
->> +	struct regulator_bulk_data *vreg_bulk;
->> +	bool vregs_on;
->> +};
->> +
->>  struct qca_serdev {
->>  	struct hci_uart	 serdev_hu;
->>  	struct gpio_desc *bt_en;
->>  	struct clk	 *susclk;
->> +	enum qca_btsoc_type btsoc_type;
->> +	struct qca_power *bt_power;
->> +	u32 init_speed;
->> +	u32 oper_speed;
->>  };
->> 
->> +static int qca_power_setup(struct hci_uart *hu, bool on);
->> +static void qca_power_shutdown(struct hci_dev *hdev);
->> +
->>  static void __serial_clock_on(struct tty_struct *tty)
->>  {
->>  	/* TODO: Some chipset requires to enable UART clock on client
->> @@ -407,6 +446,7 @@ static int qca_open(struct hci_uart *hu)
->>  {
->>  	struct qca_serdev *qcadev;
->>  	struct qca_data *qca;
->> +	int ret;
->> 
->>  	BT_DBG("hu %p qca_open", hu);
->> 
->> @@ -458,19 +498,32 @@ static int qca_open(struct hci_uart *hu)
->> 
->>  	hu->priv = qca;
->> 
->> -	timer_setup(&qca->wake_retrans_timer, hci_ibs_wake_retrans_timeout, 
->> 0);
->> -	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
->> -
->> -	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
->> -	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
->> -
->>  	if (hu->serdev) {
->>  		serdev_device_open(hu->serdev);
->> 
->>  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> -		gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> +		if (qcadev->btsoc_type != QCA_WCN3990) {
->> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> +		} else {
->> +			hu->init_speed = qcadev->init_speed;
->> +			hu->oper_speed = qcadev->oper_speed;
->> +			ret = qca_power_setup(hu, true);
->> +			if (ret) {
->> +				destroy_workqueue(qca->workqueue);
->> +				kfree_skb(qca->rx_skb);
->> +				hu->priv = NULL;
->> +				kfree(qca);
->> +				return ret;
->> +			}
->> +		}
->>  	}
->> 
->> +	timer_setup(&qca->wake_retrans_timer, hci_ibs_wake_retrans_timeout, 
->> 0);
->> +	qca->wake_retrans = IBS_WAKE_RETRANS_TIMEOUT_MS;
->> +
->> +	timer_setup(&qca->tx_idle_timer, hci_ibs_tx_idle_timeout, 0);
->> +	qca->tx_idle_delay = IBS_TX_IDLE_TIMEOUT_MS;
->> +
->>  	BT_DBG("HCI_UART_QCA open, tx_idle_delay=%u, wake_retrans=%u",
->>  	       qca->tx_idle_delay, qca->wake_retrans);
->> 
->> @@ -554,10 +607,13 @@ static int qca_close(struct hci_uart *hu)
->>  	qca->hu = NULL;
->> 
->>  	if (hu->serdev) {
->> -		serdev_device_close(hu->serdev);
->> -
->>  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> -		gpiod_set_value_cansleep(qcadev->bt_en, 0);
->> +		if (qcadev->btsoc_type == QCA_WCN3990)
->> +			qca_power_shutdown(hu->hdev);
->> +		else
->> +			gpiod_set_value_cansleep(qcadev->bt_en, 0);
->> +
->> +		serdev_device_close(hu->serdev);
->>  	}
->> 
->>  	kfree_skb(qca->rx_skb);
->> @@ -891,6 +947,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, 
->> uint8_t baudrate)
->>  	struct hci_uart *hu = hci_get_drvdata(hdev);
->>  	struct qca_data *qca = hu->priv;
->>  	struct sk_buff *skb;
->> +	struct qca_serdev *qcadev;
->>  	u8 cmd[] = { 0x01, 0x48, 0xFC, 0x01, 0x00 };
->> 
->>  	if (baudrate > QCA_BAUDRATE_3200000)
->> @@ -904,6 +961,13 @@ static int qca_set_baudrate(struct hci_dev *hdev, 
->> uint8_t baudrate)
->>  		return -ENOMEM;
->>  	}
->> 
->> +	/* Disabling hardware flow control is mandatory while
->> +	 * sending change baudrate request to wcn3990 SoC.
->> +	 */
->> +	qcadev = serdev_device_get_drvdata(hu->serdev);
->> +	if (qcadev->btsoc_type == QCA_WCN3990)
->> +		hci_uart_set_flow_control(hu, true);
->> +
->>  	/* Assign commands to change baudrate and packet type. */
->>  	skb_put_data(skb, cmd, sizeof(cmd));
->>  	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
->> @@ -919,6 +983,9 @@ static int qca_set_baudrate(struct hci_dev *hdev, 
->> uint8_t baudrate)
->>  	schedule_timeout(msecs_to_jiffies(BAUDRATE_SETTLE_TIMEOUT_MS));
->>  	set_current_state(TASK_RUNNING);
->> 
->> +	if (qcadev->btsoc_type == QCA_WCN3990)
->> +		hci_uart_set_flow_control(hu, false);
->> +
->>  	return 0;
->>  }
->> 
->> @@ -930,6 +997,43 @@ static inline void host_set_baudrate(struct 
->> hci_uart *hu, unsigned int speed)
->>  		hci_uart_set_baudrate(hu, speed);
->>  }
->> 
->> +static int qca_send_power_pulse(struct hci_dev *hdev, u8 cmd)
->> +{
->> +	struct hci_uart *hu = hci_get_drvdata(hdev);
->> +	struct qca_data *qca = hu->priv;
->> +	struct sk_buff *skb;
->> +
->> +	/* These power pulses are single byte command which are sent
->> +	 * at required baudrate to wcn3990. On wcn3990, we have an external
->> +	 * circuit at Tx pin which decodes the pulse sent at specific 
->> baudrate.
->> +	 * For example, wcn3990 supports RF COEX antenna for both Wi-Fi/BT
->> +	 * and also we use the same power inputs to turn on and off for
->> +	 * Wi-Fi/BT. Powering up the power sources will not enable BT, until
->> +	 * we send a power on pulse at 115200 bps. This algorithm will help 
->> to
->> +	 * save power. Disabling hardware flow control is mandatory while
->> +	 * sending power pulses to SoC.
->> +	 */
->> +	bt_dev_dbg(hdev, "sending power pulse %02x to SoC", cmd);
->> +
->> +	skb = bt_skb_alloc(sizeof(cmd), GFP_KERNEL);
->> +	if (!skb)
->> +		return -ENOMEM;
->> +
->> +	hci_uart_set_flow_control(hu, true);
->> +
->> +	skb_put_u8(skb, cmd);
->> +	hci_skb_pkt_type(skb) = HCI_COMMAND_PKT;
->> +
->> +	skb_queue_tail(&qca->txq, skb);
->> +	hci_uart_tx_wakeup(hu);
->> +
->> +	/* Wait for 100 uS for SoC to settle down */
->> +	usleep_range(100, 200);
->> +	hci_uart_set_flow_control(hu, false);
->> +
->> +	return 0;
->> +}
->> +
->>  static unsigned int qca_get_speed(struct hci_uart *hu,
->>  				  enum qca_speed_type speed_type)
->>  {
->> @@ -952,9 +1056,18 @@ static unsigned int qca_get_speed(struct 
->> hci_uart *hu,
->> 
->>  static int qca_check_speeds(struct hci_uart *hu)
->>  {
->> -	if (!qca_get_speed(hu, QCA_INIT_SPEED) ||
->> -	    !qca_get_speed(hu, QCA_OPER_SPEED))
->> -		return -EINVAL;
->> +	struct qca_serdev *qcadev;
->> +
->> +	qcadev = serdev_device_get_drvdata(hu->serdev);
->> +	if (qcadev->btsoc_type == QCA_WCN3990) {
->> +		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
->> +		    !qca_get_speed(hu, QCA_OPER_SPEED))
->> +			return -EINVAL;
->> +	} else {
->> +		if (!qca_get_speed(hu, QCA_INIT_SPEED) ||
->> +		    !qca_get_speed(hu, QCA_OPER_SPEED))
->> +			return -EINVAL;
->> +	}
->> 
->>  	return 0;
->>  }
->> @@ -974,7 +1087,7 @@ static int qca_set_speed(struct hci_uart *hu, 
->> enum qca_speed_type speed_type)
->>  			return 0;
->> 
->>  		qca_baudrate = qca_get_baudrate_value(speed);
->> -		bt_dev_info(hu->hdev, "Set UART speed to %d", speed);
->> +		bt_dev_dbg(hu->hdev, "Set UART speed to %d", speed);
->>  		ret = qca_set_baudrate(hu->hdev, qca_baudrate);
->>  		if (ret)
->>  			return ret;
->> @@ -985,15 +1098,51 @@ static int qca_set_speed(struct hci_uart *hu, 
->> enum qca_speed_type speed_type)
->>  	return 0;
->>  }
->> 
->> +static int qca_wcn3990_init(struct hci_uart *hu, u32 *soc_ver)
->> +{
-> 
-> I focussed more on other things in the last review rounds and
-> overlooked that qca_read_soc_version() and the soc_ver pointer slipped
-> in here with v10 (v9: https://patchwork.kernel.org/patch/10510029/).
-> 
-> In a similar line as in an earlier discussion about reading the SoC
-> version in qca_uart_setup() 
-> (https://patchwork.kernel.org/patch/10467903/)
-> I don't think the init function is the right place and it shouldn't
-> receive this soc_ver parameter about which it doesn't really
-> care. Please switch back as it was in v9 and read the SoC version in
-> qca_setup() (like it is done for Rome).
-> 
-> Then we should be done from my side.
+From: Sean Wang <sean.wang@mediatek.com>
 
-so it should be some thing like this?
+v8 and changes since v7:
+ - add updates per these suggestions mentioned in [1][2]
+ - remove the hack atomic_inc(&hdev->cmd_cnt) mentioned in [2] because it should
+   be better to be considered in the core
 
-if (qcadev->btsoc_type == QCA_WCN3990) {
-		bt_dev_info(hdev, "setting up wcn3990");
-		ret = qca_wcn3990_init(hu);
-		if (ret)
-			return ret;
-                 hci_uart_set_flow_control(hu, false);
-                 ret = qca_read_soc_version(hdev, &soc_ver);
-                 if (ret)
-                      return ret;
-	}
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2018-August/014516.html
+[2] http://lists.infradead.org/pipermail/linux-mediatek/2018-August/014518.html
+
+v7 and changes since v6:
+ - drop already applied patches
+ - move clk_* and pm_* operation to ->open and ->close 
+ - label this driver as BT_MTKUART
+ - make code style aligned with the other drivers and code better to read
+   as these suggestions and fixes are mentioned in [1]
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2018-July/014458.html
+
+v6 and changes since v5:
+ - make btmtkuart become a separate driver.
+ - drop already applied patches and the patch for btuart driver
+ - refine comments in driver allowing people know that mtk extra header
+   + length doesn't indicate a full H:4 frame, things can fragment.
+ - enhance dt-binding document with removing mistaken added " and improve
+   English sentence.
+ - remove unnecessary '\n' with bt_dev_err.
+ - refine code style.
+ - set hdev->manufacturer as mtk id.
+
+v5 and changes since v4:
+ - add Reviewed-by Tag from Ulf Hansson for patch 2
+ - remove default y in Kconfig for btmtkuart selection to avoid overkill for
+   users which would like to have less an amount on stuff in kernel.
+ - list header declarations in alphabetical order and add a proper blank line
+   within.
+ - remove unused macro.
+ - use sizeof to calculate structure size instead of an aextra macro to hardcode.
+ - use struct hci_dev * as input paraments for mtk_hci_wmt_sync and mtk_setup_fw
+   for that can be reused in mtk bluetooth with other interfaces.
+ - remove unused local variabled in mtk_btuart_recv.
+ - remove superfluous :8 for dlen2 in struct mtk_stp_hdr definition.
+ - give a reasonable naming for these labels and add a pm_runtime_put_noidle()
+   in the path undoing failing pm_runtime_get_sync().
+ - Turn __u8 into u8 in struct mtk_stp_hdr.
+
+ Really thanks for these reviews by Johan Hovold and Andy Shevchenko
+
+v4 and changes since v3:
+ - refine patch 2 based on commit 919b7308fcc4 to allow that
+   dev_pm_domain_attach() will return better error codes. 
+
+v3 and changes since v2
+* all changes happen on patch 6
+ - fix up SPDX license style for btmtkuart.h.
+ - change firmware download from in ACL data to in HCI commands
+   and then remove unused mtk_acl_wmt_sync and related code.
+ - add a workaround replacing bad vendor event id 0xe4 with 0xff every
+   vendor should use.
+ - add a sanity check for mtk_hci_wmt_sync to verifying if
+   input parameters are valid.
+ - add an atomic_inc(&bdev->hdev->cmd_cnt) for __hci_cmd_sync_ev.
+ - be changed to use firmware with a header called mt7622pr2h.bin.
+
+v2 and changes since v1
+ - Dropped patches already being applied
+ - Rewirte the whole driver using btuart [1], and add slight extension
+   of btuart to fit into btmtkuart driver. Beware that [1] is also pulled
+   into one part of the series for avoiding any breakage when the patchset
+   is being compiled.
+
+[1] btuart 
+	https://www.spinics.net/lists/linux-bluetooth/msg74918.html
+
+v1:
+
+Hi,
+
+This patchset introduces built-in Bluetooth support on MT7622 SoC.
+And, it should be simple to make an extension to support other
+MediaTek SoCs with adjusting a few of changes on the initialization
+sequence of the device.
+
+Before the main driver is being introduced, a few of things about
+power-domain management should be re-worked for serdev core and MediaTek
+SCPSYS to allow the Bluetooth to properly power up.
+
+Patch 2: add a generic way attaching power domain to serdev
+Patch 3 and 4: add cleanups with reuse APIs from Linux core
+Patch 5: fix a limitation about power enablement Bluetooth depends on
+Patch 1, 6 and 7: the major part of adding Bluetooth support to MT7622
+	
+	Sean
+
+Sean Wang (3):
+  dt-bindings: net: bluetooth: Add mediatek-bluetooth
+  Bluetooth: mediatek: Add protocol support for MediaTek serial devices
+  MAINTAINERS: add an entry for MediaTek Bluetooth driver
+
+ .../devicetree/bindings/net/mediatek-bluetooth.txt |  35 ++
+ MAINTAINERS                                        |   8 +
+ drivers/bluetooth/Kconfig                          |  11 +
+ drivers/bluetooth/Makefile                         |   2 +
+ drivers/bluetooth/btmtkuart.c                      | 588 +++++++++++++++++++++
+ 5 files changed, 644 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek-bluetooth.txt
+ create mode 100644 drivers/bluetooth/btmtkuart.c
 
 -- 
-Regards
-Balakrishna.
+2.7.4
