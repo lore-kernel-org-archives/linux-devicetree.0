@@ -1,213 +1,257 @@
-From: Jian-Hong Pan <starnight@g.ncu.edu.tw>
-Subject: Re: [RFC net-next 00/15] net: A socket API for LoRa
-Date: Thu, 2 Aug 2018 15:52:21 +0800
-Message-ID: <CAC=mGzg0uP6ddm-kjev6JAH=GrKX9bT6s2canFOjKsC4rCcVAQ@mail.gmail.com>
-References: <20180701110804.32415-1-afaerber@suse.de> <BY1PR02MB11147C7443AB9623D6B65798E75A0@BY1PR02MB1114.namprd02.prod.outlook.com>
- <e08cdcfb-207f-bd73-2afd-f775810b72b7@suse.de> <BY1PR02MB11143134B9ABAC9C9929A9C4E7530@BY1PR02MB1114.namprd02.prod.outlook.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 03/10] mfd: wcd9335: add wcd irq support
+Date: Thu, 2 Aug 2018 09:05:25 +0100
+Message-ID: <20180802080525.GM4662@dell>
+References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
+ <20180727121806.18209-4-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BY1PR02MB11143134B9ABAC9C9929A9C4E7530-OTiisfizz7/NBNxPHmjuKqnrV9Ap65cLvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Whitten <Ben.Whitten-xJ1y+ldTOs21Z/+hSey0Gg@public.gmane.org>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jiri Pirko <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Janus Piwek <jpiwek-xaGqqxxtfCsTxu5ScYMnmg@public.gmane.org>, =?UTF-8?Q?Michael_R=C3=B6der?= <michael.roeder-1xq/Wrep1TY@public.gmane.org>, Dollar Chen <dollar.chen-R57ae0ORxaEAvxtiuMwx3w@public.gmane.org>, Ken Yu <ken.yu-EUSmNabW1sldz2imjWt+ww@public.gmane.org>, =?UTF-8?Q?Konstantin_B=C3=B6hm?= <konstantin.boehm-5mkw0NDAAUY@public.gmane.org>, Jan Jongboom <jan.jongboom-5wv7dgnIgG8@public.gmane.org>, Jon Ortego <Jon.Ortego-Nsp29kwzw+8@public.gmane.org>, "contact-GpjyyWaKhplWk0Htik3J/w@public.gmane.org" <contact-GpjyyWaKhplWk0Htik3J/w@public.gmane.org>, Brian Ray <brian.ra>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180727121806.18209-4-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-2018-07-18 19:28 GMT+08:00 Ben Whitten <Ben.Whitten-xJ1y+ldTOs21Z/+hSey0Gg@public.gmane.org>:
->> Subject: Re: [RFC net-next 00/15] net: A socket API for LoRa
->>
->> + linux-wireless + Stefan + Seth
->>
->> Am 11.07.2018 um 17:21 schrieb Ben Whitten:
->> >> This patchset is clearly not ready for merging, but is being
->> >> submitted for
->> >> discussion, as requested by Jiri, in particular of the design
->> >> choices:
->> >>
->> >> 1) PF_LORA/AF_LORA and associated identifiers are
->> >> proposed to represent
->> >>    this technology. While for an SX1276 - case a) above - it
->> >> might work to
->> >>    layer LoRaWAN as a protocol option for PF_LORA and
->> add
->> >> LoRaWAN address
->> >>    fields to the union in my sockaddr_lora, how would that
->> >> work for devices
->> >>    that only support LoRaWAN but not pure LoRa? Do we
->> >> need both AF_LORA and
->> >>    AF_LORAWAN, or just a separate ETH_P_LORAWAN or
->> >> ARPHRD_LORAWAN?
->> >>
->> >> 2) PF_LORA is used with SOCK_DGRAM here. The
->> >> assumption is that RAW mode
->> >>    would be DGRAM plus preamble plus optional
->> checksum.
->> >>
->> >> 3) Only the transmit path is partially implemented
->> already.
->> >> The assumption
->> >>    is that the devices should go into receive mode by
->> default
->> >> and only
->> >>    interrupt that when asked to transmit.
->> >>
->> >> 4) Some hardware settings need to be supplied
->> externally,
->> >> such as the radio
->> >>    frequency for some modules, but many others can be
->> >> runtime-configured,
->> >>    such as Spreading Factor, Bandwidth, Sync Word, or
->> which
->> >> antenna to use.
->> >>    What settings should be implemented as socket option
->> vs.
->> >> netlink layer
->> >>    vs. ioctl vs. sysfs? What are the criteria to apply?
->> >>
->> >> 5) Many of the modules support multiple modes, such as
->> >> LoRa, LoRaWAN and FSK.
->> >>    Lacking a LoRaWAN implementation, I am currently
->> >> switching them into LoRa
->> >>    mode at probe time wherever possible. How do we
->> deal
->> >> with that properly?
->> >>
->> >>   a) Is there any precedence from the Wifi world for
->> >> dynamically selecting
->> >>      between our own trusted Open Source
->> implementation
->> >> vs. hardware/firmware
->> >>      accelerated and/or certified implementations?
->> >>
->> >>   b) Would a proof of concept for FSK (non-LoRa) modes
->> be
->> >> required for
->> >>      merging any LoRa driver for chipsets that support
->> both?
->> >> Or is there any
->> >>      facility or design guidelines that would allow us to
->> focus
->> >> on LoRa and
->> >>      LoRaWAN and leave non-LoRa radio modes to later
->> >> contributors?
->> >
->> > Down the line I think we should also plan for a CRDA style
->> regdb somewhere in the path for raw LoRa transceivers
->> operating as softMAC, much like with WiFi.
->>
->> Yes, I had raised the topic of wireless-regdb for Stefan's
->> conference -
->> currently it seems to only cover 2.4 GHz, 5 GHz and 60 GHz.
->> Not sure if
->> we can easily extend that to cover 433 MHz, 868 MHz, 915
->> MHz and 923 MHz
->> bands or whether we'd just need something similar... Is
->> 802.15.4 able to
->> share this database with Wifi?
->
-> Well the README in the wireless-regdb doesn't bind itself to 80211, there=
- are references to the other ETSI EN specs so this would be the place rathe=
-r than duplicating.
-> There would need a bit of additional information to capture duty-cycle re=
-quirements, however the SRD spec states the maximum bandwidths can be 'The =
-whole band', so with a flag set we could hijack this band information for d=
-uty-cycle.
-> I am unsure if 802.15.4 uses this database, most of the naming seems gear=
-ed towards 80211, nl80211, cfg80211 so perhaps we need our own versions of =
-these with a common component, I hope the maintainers can give some guidanc=
-e here.
->
->> An argument to share with Wifi might be that Semtech's
->> SX1280 and SX1281
->> 2.4 GHz transceivers claim to support LoRa modulation, too.
->> Having two
->> different regulatory DBs interact with LoRa drivers seems a
->> bad idea,
->> and duplicating 2.4 GHz into a new DB doesn't sound
->> appealing either.
->
-> Well I'm not sure if the modulation affects regulatory information, just =
-bands, power, and techniques like DFS.
-> As these chips are 2.4GHz only I expect they are bound by the existing re=
-gulatory information we would just need a path to access it.
->
->> https://www.semtech.com/products/wireless-rf/24-ghz-
->> transceivers
->>
->> Meanwhile my attempt to play with netlink during SUSE
->> Hackweek has been
->> going slow and I could use some guidance or a volunteer to
->> contribute: I
->> have a bare skeleton of registration, commands, attributes
->> and multicast
->> groups, but no plan yet how to connect that to the actual
->> drivers to
->> query or apply the settings...
->
-> Happy to help, I will be starting from zero on netlink but I can contribu=
-te my existing work incorporating Marks comments for sx1301 etal.
->
->> https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/li
->> nux-lora.git/tree/net/lora/netlink.c?h=3Dlora-next
+On Fri, 27 Jul 2018, Srinivas Kandagatla wrote:
 
-Is this the repository used for the LoRa subsystem now?!!!
-If it is, than great!
+> WCD9335 supports two lines of irqs INTR1 and INTR2.
+> Multiple interrupts are muxed via these lines.
+> INTR1 consists of all possible interrupt sources like:
+> Ear OCP, HPH OCP, MBHC, MAD, VBAT, and SVA
+> INTR2 is a subset of first interrupt sources like MAD, VBAT, and SVA
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/mfd/Makefile                |   2 +-
+>  drivers/mfd/wcd9335-core.c          |   9 ++
+>  drivers/mfd/wcd9335-irq.c           | 172 ++++++++++++++++++++++++++++++++++++
 
-As the previous mails, I am trying to implement the LoRaWAN
-specification as the soft MAC as the MAC layer over LoRa PHY.
-This is the the talk about LoRaWAN class module I gave in Netdev Conf
-https://www.slideshare.net/chienhungpan/lorawan-class-module-and-subsystem
+Any particular reason for separating out IRQ handling?
 
-The expectation is:
+>  include/dt-bindings/mfd/wcd9335.h   |  43 +++++++++
+>  include/linux/mfd/wcd9335/wcd9335.h |   3 +
+>  5 files changed, 228 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/mfd/wcd9335-irq.c
+>  create mode 100644 include/dt-bindings/mfd/wcd9335.h
+> 
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index a4697370640b..210875afe78a 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -58,7 +58,7 @@ obj-$(CONFIG_MFD_ARIZONA)	+= cs47l24-tables.o
+>  endif
+>  
+>  obj-$(CONFIG_MFD_WCD9335)	+= wcd9335.o
+> -wcd9335-objs			:= wcd9335-core.o
+> +wcd9335-objs			:= wcd9335-core.o wcd9335-irq.o
+>  
+>  obj-$(CONFIG_MFD_WM8400)	+= wm8400-core.o
+>  wm831x-objs			:= wm831x-core.o wm831x-irq.o wm831x-otp.o
+> diff --git a/drivers/mfd/wcd9335-core.c b/drivers/mfd/wcd9335-core.c
+> index 8f746901f4e9..6299dfb63aca 100644
+> --- a/drivers/mfd/wcd9335-core.c
+> +++ b/drivers/mfd/wcd9335-core.c
+> @@ -243,12 +243,20 @@ static int wcd9335_slim_status(struct slim_device *sdev,
+>  		return ret;
+>  	}
+>  
+> +	wcd9335_irq_init(wcd);
 
-socket APIs:
-send and receive the data
-------------------------------------------------------------
-LoRaWAN class module implements MAC:
-append the header/footer, encryption/decryption, timing slot and MAC comman=
-ds
-------------------------------------------------------------
-LoRa device drivers:
-send and receive the messages for MAC layer
-------------------------------------------------------------
-LoRa devices
+Why don't you check the return value?
 
-Is it possible that combine the LoRaWAN class module I implemented?
-I start from the simplest class A end device's behavior, especially
-the timing slot.
-Also the encryption/decryption for uplink/downlink data messages.
-I can send it as patches.
+What happens if it defers?
 
-However, I have 2 problems right now.
-1. Which Address and Protocol Family should we use?  PF_LORA or PF_LORAWAN?
-2. To test the LoRaWAN class module, adding more procedures in LoRa
-device drivers to register as a LoRaWAN device is needed.
+>  	wcd->slim_ifd = wcd->slim_ifd;
+>  
+>  	return mfd_add_devices(wcd->dev, 0, wcd9335_devices,
+>  			       ARRAY_SIZE(wcd9335_devices), NULL, 0, NULL);
+>  }
+>  
+> +static void wcd9335_slim_remove(struct slim_device *sdev)
+> +{
+> +	struct wcd9335 *wcd = dev_get_drvdata(&sdev->dev);
+> +
+> +	wcd9335_irq_exit(wcd);
+> +}
+> +
+>  static const struct slim_device_id wcd9335_slim_id[] = {
+>  	{0x217, 0x1a0, 0x1, 0x0},
+>  	{}
+> @@ -259,6 +267,7 @@ static struct slim_driver wcd9335_slim_driver = {
+>  		.name = "wcd9335-slim",
+>  	},
+>  	.probe = wcd9335_slim_probe,
+> +	.remove = wcd9335_slim_remove,
+>  	.device_status = wcd9335_slim_status,
+>  	.id_table = wcd9335_slim_id,
+>  };
+> diff --git a/drivers/mfd/wcd9335-irq.c b/drivers/mfd/wcd9335-irq.c
+> new file mode 100644
+> index 000000000000..84098c89419b
+> --- /dev/null
+> +++ b/drivers/mfd/wcd9335-irq.c
+> @@ -0,0 +1,172 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2018, Linaro Limited
+> +//
 
-Regards,
-Jian-Hong Pan
+Blank line?
 
->> > LoRa radios used in Gateway devices are typically relatively
->> high power (capable of 27dBm) and operate in bands with
->> certain restrictions, eg the EU has keep out areas within
->> 868MHz for alarms and SRD devices must abide by certain
->> duty cycle restrictions, there are also maximum powers to
->> consider for sub-bands. (ETSI EN 300 220-2 V3.2.1, Bands K,
->> L, M, N, P, Q)
->>
->> > The certified AT style modules will (should) already have
->> this regulatory data baked in so it only applied to situations
->> where we drive the transceivers directly, but it wouldn't
->> hurt to check that the frequency being asked to transmit on
->> doesn't spill into a restricted band.
->>
->> Some do have configuration options that will need to be set
->> or checked.
->>
->> Regards,
->> Andreas
->>
->> --
->> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
->> GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton
->> HRB 21284 (AG N=C3=BCrnberg)
+> +#include <linux/gpio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_irq.h>
+> +#include <dt-bindings/mfd/wcd9335.h>
+> +#include <linux/mfd/wcd9335/wcd9335.h>
+> +#include <linux/mfd/wcd9335/registers.h>
+
+Please place in alphabetical order.
+
+> +static const struct regmap_irq wcd9335_irqs[] = {
+> +	/* INTR_REG 0 */
+> +	[WCD9335_IRQ_SLIMBUS] = {
+> +		.reg_offset = 0,
+> +		.mask = BIT(0),
+> +	},
+
+[snipped approx 1,000,000 entries]
+
+> +	[WCD9335_IRQ_SVA_OUTBOX2] = {
+> +		.reg_offset = 3,
+> +		.mask = BIT(6),
+> +	},
+> +};
+
+Please use REGMAP_IRQ_REG() to significantly reduce the diff.
+
+> +static const struct regmap_irq_chip wcd9335_regmap_irq1_chip = {
+> +	.name = "wcd9335_pin1_irq",
+> +	.status_base = WCD9335_INTR_PIN1_STATUS0,
+> +	.mask_base = WCD9335_INTR_PIN1_MASK0,
+> +	.ack_base = WCD9335_INTR_PIN1_CLEAR0,
+> +	.type_base = WCD9335_INTR_LEVEL0,
+> +	.num_regs = 4,
+> +	.irqs = wcd9335_irqs,
+> +	.num_irqs = ARRAY_SIZE(wcd9335_irqs),
+> +};
+> +
+> +int wcd9335_irq_init(struct wcd9335 *wcd)
+> +{
+> +	int ret;
+
+'\n' here.
+
+> +	/*
+> +	 * INTR1 consists of all possible interrupt sources Ear OCP,
+> +	 * HPH OCP, MBHC, MAD, VBAT, and SVA
+> +	 * INTR2 is a subset of first interrupt sources MAD, VBAT, and SVA
+> +	 */
+> +	wcd->intr1 = of_irq_get_byname(wcd->dev->of_node, "intr1");
+> +	if (wcd->intr1 < 0 || wcd->intr1 == -EPROBE_DEFER) {
+> +		dev_err(wcd->dev, "Unable to configure irq\n");
+
+Nit: s/irq/IRQ/
+
+Do you really want to issue an error message for -EPROBE_DEFER?
+
+This maybe confusing if it is initiated later.
+
+> +		return wcd->intr1;
+> +	}
+> +
+> +	ret = regmap_add_irq_chip(wcd->regmap, wcd->intr1,
+> +				 IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> +				 0, &wcd9335_regmap_irq1_chip,
+> +				 &wcd->irq_data);
+> +	if (ret != 0) {
+
+"if (ret)"
+
+> +		dev_err(wcd->dev, "Failed to register IRQ chip: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int wcd9335_irq_exit(struct wcd9335 *wcd)
+> +{
+> +	regmap_del_irq_chip(wcd->intr1, wcd->irq_data);
+
+'\n' here.
+
+> +	return 0;
+> +}
+
+Or better still, make this a void and remove the superfluous return.
+
+> diff --git a/include/dt-bindings/mfd/wcd9335.h b/include/dt-bindings/mfd/wcd9335.h
+> new file mode 100644
+> index 000000000000..61b6a11da00d
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/wcd9335.h
+> @@ -0,0 +1,43 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This header provides macros for WCD9335 device bindings.
+> + *
+> + * Copyright (c) 2018, Linaro Limited
+> + */
+> +
+> +#ifndef _DT_BINDINGS_MFD_WCD9335_H
+> +#define _DT_BINDINGS_MFD_WCD9335_H
+> +
+> +#define	WCD9335_IRQ_SLIMBUS			0
+> +#define	WCD9335_IRQ_FLL_LOCK_LOSS		1
+> +#define	WCD9335_IRQ_HPH_PA_OCPL_FAULT		2
+> +#define	WCD9335_IRQ_HPH_PA_OCPR_FAULT		3
+> +#define	WCD9335_IRQ_EAR_PA_OCP_FAULT		4
+> +#define	WCD9335_IRQ_HPH_PA_CNPL_COMPLETE	5
+> +#define	WCD9335_IRQ_HPH_PA_CNPR_COMPLETE	6
+> +#define	WCD9335_IRQ_EAR_PA_CNP_COMPLETE		7
+> +#define	WCD9335_IRQ_MBHC_SW_DET			8
+> +#define	WCD9335_IRQ_MBHC_ELECT_INS_REM_DET	9
+> +#define	WCD9335_IRQ_MBHC_BUTTON_PRESS_DET	10
+> +#define	WCD9335_IRQ_MBHC_BUTTON_RELEASE_DET	11
+> +#define	WCD9335_IRQ_MBHC_ELECT_INS_REM_LEG_DET	12
+> +#define	WCD9335_IRQ_RESERVED_0			13
+> +#define	WCD9335_IRQ_RESERVED_1			14
+> +#define	WCD9335_IRQ_RESERVED_2			15
+> +#define	WCD9335_IRQ_LINE_PA1_CNP_COMPLETE	16
+> +#define	WCD9335_IRQ_LINE_PA2_CNP_COMPLETE	17
+> +#define	WCD9335_IRQ_LINE_PA3_CNP_COMPLETE	18
+> +#define	WCD9335_IRQ_LINE_PA4_CNP_COMPLETE	19
+> +#define	WCD9335_IRQ_SOUNDWIRE			20
+> +#define	WCD9335_IRQ_VDD_DIG_RAMP_COMPLETE	21
+> +#define	WCD9335_IRQ_RCO_ERROR			22
+> +#define	WCD9335_IRQ_SVA_ERROR			23
+> +#define	WCD9335_IRQ_MAD_AUDIO			24
+> +#define	WCD9335_IRQ_MAD_BEACON			25
+> +#define	WCD9335_IRQ_MAD_ULTRASOUND		26
+> +#define	WCD9335_IRQ_VBAT_ATTACK			27
+> +#define	WCD9335_IRQ_VBAT_RESTORE		28
+> +#define	WCD9335_IRQ_SVA_OUTBOX1			29
+> +#define	WCD9335_IRQ_SVA_OUTBOX2			30
+> +
+> +#endif /* _DT_BINDINGS_MFD_WCD9335_H */
+> diff --git a/include/linux/mfd/wcd9335/wcd9335.h b/include/linux/mfd/wcd9335/wcd9335.h
+> index b9d2f7af243a..1479bfe75f23 100644
+> --- a/include/linux/mfd/wcd9335/wcd9335.h
+> +++ b/include/linux/mfd/wcd9335/wcd9335.h
+> @@ -39,4 +39,7 @@ struct wcd9335 {
+>  	struct regulator_bulk_data supplies[WCD9335_MAX_SUPPLY];
+>  };
+>  
+> +extern int wcd9335_irq_init(struct wcd9335 *wcd);
+> +extern int wcd9335_irq_exit(struct wcd9335 *wcd);
+> +
+>  #endif /* __WCD9335_H__ */
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
