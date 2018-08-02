@@ -1,86 +1,47 @@
-Return-Path: <SRS0=l8RJ=KV=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] rcar-vin: add R8A77980 support
-Message-ID: <e7afb623-799b-17b6-cb6b-8fd839ea660a@cogentembedded.com>
-Date: Mon, 6 Aug 2018 20:45:01 +0300
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
+Return-Path: <SRS0=H47x=KR=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 0/5] Add RZ/G2M SYSC/RST/Clock support
+Date: Thu,  2 Aug 2018 15:48:17 +0100
+Message-Id: <1533221302-44598-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the R8A77980 SoC support to the R-Car VIN driver.
+This patch series aims to add SYSC/RST/Clock support for 
+for RZ/G2M SoC. RZ/G2M SoC is similar to R-Car Gen3 M3-W SoC.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+----
+V1-->V2
+     * Incorporated review comments
+----
+Biju Das (5):
+  dt-bindings: power: Add r8a774a1 SYSC power domain definitions
+  soc: renesas: rcar-sysc: Add r8a774a1 support
+  soc: renesas: rcar-rst: Add support for RZ/G2M
+  clk: renesas: Add r8a774a1 CPG Core Clock Definitions
+  clk: renesas: cpg-mssr: Add r8a774a1 support
 
----
-This patch is against the 'media_tree.git' repo's 'master' branch.
+ .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   9 +-
+ .../bindings/power/renesas,rcar-sysc.txt           |   1 +
+ .../devicetree/bindings/reset/renesas,rst.txt      |   1 +
+ drivers/clk/renesas/Kconfig                        |   5 +
+ drivers/clk/renesas/Makefile                       |   1 +
+ drivers/clk/renesas/r8a774a1-cpg-mssr.c            | 323 +++++++++++++++++++++
+ drivers/clk/renesas/renesas-cpg-mssr.c             |   6 +
+ drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
+ drivers/soc/renesas/Kconfig                        |  11 +-
+ drivers/soc/renesas/Makefile                       |   1 +
+ drivers/soc/renesas/r8a774a1-sysc.c                |  45 +++
+ drivers/soc/renesas/rcar-rst.c                     |   4 +-
+ drivers/soc/renesas/rcar-sysc.c                    |   3 +
+ drivers/soc/renesas/rcar-sysc.h                    |   1 +
+ include/dt-bindings/clock/r8a774a1-cpg-mssr.h      |  58 ++++
+ include/dt-bindings/power/r8a774a1-sysc.h          |  31 ++
+ 16 files changed, 493 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/clk/renesas/r8a774a1-cpg-mssr.c
+ create mode 100644 drivers/soc/renesas/r8a774a1-sysc.c
+ create mode 100644 include/dt-bindings/clock/r8a774a1-cpg-mssr.h
+ create mode 100644 include/dt-bindings/power/r8a774a1-sysc.h
 
- Documentation/devicetree/bindings/media/rcar_vin.txt |    1 
- drivers/media/platform/rcar-vin/rcar-core.c          |   32 +++++++++++++++++++
- 2 files changed, 33 insertions(+)
-
-Index: media_tree/Documentation/devicetree/bindings/media/rcar_vin.txt
-===================================================================
---- media_tree.orig/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ media_tree/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -23,6 +23,7 @@ on Gen3 platforms to a CSI-2 receiver.
-    - "renesas,vin-r8a7796" for the R8A7796 device
-    - "renesas,vin-r8a77965" for the R8A77965 device
-    - "renesas,vin-r8a77970" for the R8A77970 device
-+   - "renesas,vin-r8a77980" for the R8A77980 device
-    - "renesas,vin-r8a77995" for the R8A77995 device
-    - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
-      device.
-Index: media_tree/drivers/media/platform/rcar-vin/rcar-core.c
-===================================================================
---- media_tree.orig/drivers/media/platform/rcar-vin/rcar-core.c
-+++ media_tree/drivers/media/platform/rcar-vin/rcar-core.c
-@@ -1097,6 +1097,34 @@ static const struct rvin_info rcar_info_
- 	.routes = rcar_info_r8a77995_routes,
- };
- 
-+static const struct rvin_group_route rcar_info_r8a77980_routes[] = {
-+	{ .csi = RVIN_CSI40, .channel = 0, .vin = 0, .mask = BIT(0) | BIT(3) },
-+	{ .csi = RVIN_CSI40, .channel = 1, .vin = 0, .mask = BIT(2) },
-+	{ .csi = RVIN_CSI40, .channel = 0, .vin = 1, .mask = BIT(2) },
-+	{ .csi = RVIN_CSI40, .channel = 1, .vin = 1, .mask = BIT(1) | BIT(3) },
-+	{ .csi = RVIN_CSI40, .channel = 0, .vin = 2, .mask = BIT(1) },
-+	{ .csi = RVIN_CSI40, .channel = 2, .vin = 2, .mask = BIT(3) },
-+	{ .csi = RVIN_CSI40, .channel = 1, .vin = 3, .mask = BIT(0) },
-+	{ .csi = RVIN_CSI40, .channel = 3, .vin = 3, .mask = BIT(3) },
-+	{ .csi = RVIN_CSI41, .channel = 0, .vin = 4, .mask = BIT(0) | BIT(3) },
-+	{ .csi = RVIN_CSI41, .channel = 1, .vin = 4, .mask = BIT(2) },
-+	{ .csi = RVIN_CSI41, .channel = 0, .vin = 5, .mask = BIT(2) },
-+	{ .csi = RVIN_CSI41, .channel = 1, .vin = 5, .mask = BIT(1) | BIT(3) },
-+	{ .csi = RVIN_CSI41, .channel = 0, .vin = 6, .mask = BIT(1) },
-+	{ .csi = RVIN_CSI41, .channel = 2, .vin = 6, .mask = BIT(3) },
-+	{ .csi = RVIN_CSI41, .channel = 1, .vin = 7, .mask = BIT(0) },
-+	{ .csi = RVIN_CSI41, .channel = 3, .vin = 7, .mask = BIT(3) },
-+	{ /* Sentinel */ }
-+};
-+
-+static const struct rvin_info rcar_info_r8a77980 = {
-+	.model = RCAR_GEN3,
-+	.use_mc = true,
-+	.max_width = 4096,
-+	.max_height = 4096,
-+	.routes = rcar_info_r8a77980_routes,
-+};
-+
- static const struct of_device_id rvin_of_id_table[] = {
- 	{
- 		.compatible = "renesas,vin-r8a7778",
-@@ -1143,6 +1171,10 @@ static const struct of_device_id rvin_of
- 		.data = &rcar_info_r8a77970,
- 	},
- 	{
-+		.compatible = "renesas,vin-r8a77980",
-+		.data = &rcar_info_r8a77980,
-+	},
-+	{
- 		.compatible = "renesas,vin-r8a77995",
- 		.data = &rcar_info_r8a77995,
- 	},
+-- 
+2.7.4
