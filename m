@@ -1,38 +1,180 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v9 4/6] regulator: pfuze100: add fsl,pmic-stby-poweroff property
-Date: Thu,  2 Aug 2018 12:34:23 +0200
-Message-ID: <20180802103425.3053-5-o.rempel@pengutronix.de>
+Subject: [PATCH v9 5/6] regulator: pfuze100-regulator: provide
+ pm_power_off_prepare handler
+Date: Thu,  2 Aug 2018 12:34:24 +0200
+Message-ID: <20180802103425.3053-6-o.rempel@pengutronix.de>
 References: <20180802103425.3053-1-o.rempel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180802103425.3053-1-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, yibin.gong@nxp.com, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the new optional "fsl,pmic-stby-poweroff" property.
+On some boards the SoC can use one pin "PMIC_STBY_REQ" to notify th PMIC
+about state changes. In this case internal state of PMIC must be
+preconfigured for upcomming state change.
+It works fine with the current regulator framework, except with the
+power-off case.
+
+This patch is providing an optional pm_power_off_prepare handler
+which will configure standby state of the PMIC to disable all power lines.
+
+In my power consumption test on RIoTBoard, I got the following results:
+power off without this patch:	320 mA
+power off with this patch:	2   mA
+suspend to ram:			40  mA
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/regulator/pfuze100.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/regulator/pfuze100-regulator.c | 91 ++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-index c7610718adff..f9be1acf891c 100644
---- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
-+++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-@@ -12,6 +12,11 @@ Optional properties:
-   disabled. This binding is a workaround to keep backward compatibility with
-   old dtb's which rely on the fact that the switched regulators are always on
-   and don't mark them explicit as "regulator-always-on".
-+- fsl,pmic-stby-poweroff: if present, configure the PMIC to shutdown all
-+  power rails when PMIC_STBY_REQ line is asserted during the power off sequence.
-+  Use this option if the SoC should be powered off by external power
-+  management IC (PMIC) on PMIC_STBY_REQ signal.
-+  As opposite to PMIC_STBY_REQ boards can implement PMIC_ON_REQ signal.
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index 31c3a236120a..1e43a9de3bd5 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -31,11 +31,17 @@
  
- Required child node:
- - regulators: This is the list of child nodes that specify the regulator
+ #define PFUZE100_COINVOL	0x1a
+ #define PFUZE100_SW1ABVOL	0x20
++#define PFUZE100_SW1ABMODE	0x23
+ #define PFUZE100_SW1CVOL	0x2e
++#define PFUZE100_SW1CMODE	0x31
+ #define PFUZE100_SW2VOL		0x35
++#define PFUZE100_SW2MODE	0x38
+ #define PFUZE100_SW3AVOL	0x3c
++#define PFUZE100_SW3AMODE	0x3f
+ #define PFUZE100_SW3BVOL	0x43
++#define PFUZE100_SW3BMODE	0x46
+ #define PFUZE100_SW4VOL		0x4a
++#define PFUZE100_SW4MODE	0x4d
+ #define PFUZE100_SWBSTCON1	0x66
+ #define PFUZE100_VREFDDRCON	0x6a
+ #define PFUZE100_VSNVSVOL	0x6b
+@@ -46,6 +52,13 @@
+ #define PFUZE100_VGEN5VOL	0x70
+ #define PFUZE100_VGEN6VOL	0x71
+ 
++#define PFUZE100_SWxMODE_MASK	0xf
++#define PFUZE100_SWxMODE_APS_APS	0x8
++#define PFUZE100_SWxMODE_APS_OFF	0x4
++
++#define PFUZE100_VGENxLPWR	BIT(6)
++#define PFUZE100_VGENxSTBY	BIT(5)
++
+ enum chips { PFUZE100, PFUZE200, PFUZE3000 = 3, PFUZE3001 = 0x31, };
+ 
+ struct pfuze_regulator {
+@@ -559,6 +572,69 @@ static inline struct device_node *match_of_node(int index)
+ }
+ #endif
+ 
++static struct pfuze_chip *syspm_pfuze_chip;
++
++static void pfuze_power_off_prepare(void)
++{
++	dev_info(syspm_pfuze_chip->dev, "Configure standy mode for power off");
++
++	/* Switch from default mode: APS/APS to APS/Off */
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW1ABMODE,
++			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW1CMODE,
++			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW2MODE,
++			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW3AMODE,
++			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW3BMODE,
++			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW4MODE,
++			   PFUZE100_SWxMODE_MASK, PFUZE100_SWxMODE_APS_OFF);
++
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN1VOL,
++			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
++			   PFUZE100_VGENxSTBY);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN2VOL,
++			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
++			   PFUZE100_VGENxSTBY);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN3VOL,
++			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
++			   PFUZE100_VGENxSTBY);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN4VOL,
++			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
++			   PFUZE100_VGENxSTBY);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN5VOL,
++			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
++			   PFUZE100_VGENxSTBY);
++	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN6VOL,
++			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
++			   PFUZE100_VGENxSTBY);
++}
++
++static int pfuze_power_off_prepare_init(struct pfuze_chip *pfuze_chip)
++{
++	if (pfuze_chip->chip_id != PFUZE100) {
++		dev_warn(pfuze_chip->dev, "Requested pm_power_off_prepare handler for not supported chip\n");
++		return -ENODEV;
++	}
++
++	if (pm_power_off_prepare) {
++		dev_warn(pfuze_chip->dev, "pm_power_off_prepare is already registered.\n");
++		return -EBUSY;
++	}
++
++	if (syspm_pfuze_chip) {
++		dev_warn(pfuze_chip->dev, "syspm_pfuze_chip is already set.\n");
++		return -EBUSY;
++	}
++
++	syspm_pfuze_chip = pfuze_chip;
++	pm_power_off_prepare = pfuze_power_off_prepare;
++
++	return 0;
++}
++
+ static int pfuze_identify(struct pfuze_chip *pfuze_chip)
+ {
+ 	unsigned int value;
+@@ -753,6 +829,20 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
+ 		}
+ 	}
+ 
++	if (of_property_read_bool(client->dev.of_node,
++				  "fsl,pmic-stby-poweroff"))
++		return pfuze_power_off_prepare_init(pfuze_chip);
++
++	return 0;
++}
++
++static int pfuze100_regulator_remove(struct i2c_client *client)
++{
++	if (syspm_pfuze_chip) {
++		syspm_pfuze_chip = NULL;
++		pm_power_off_prepare = NULL;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -763,6 +853,7 @@ static struct i2c_driver pfuze_driver = {
+ 		.of_match_table = pfuze_dt_ids,
+ 	},
+ 	.probe = pfuze100_regulator_probe,
++	.remove = pfuze100_regulator_remove,
+ };
+ module_i2c_driver(pfuze_driver);
+ 
 -- 
 2.18.0
