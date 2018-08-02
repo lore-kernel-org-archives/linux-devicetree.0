@@ -1,161 +1,503 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Thu, 2 Aug 2018 09:24:09 +0000
-Message-ID: <AM0PR04MB42112E77338240832E2E5077802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
- <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
- <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
- <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
- <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
- <20180730144435.srxgohwgdhrmw2rz@pengutronix.de>
- <CABb+yY0sUxGatozwdQVM55z7ACtpK8HCepnfvQNunQ=r5y_kVw@mail.gmail.com>
- <CABb+yY04dm_N1Ud2Mhi-g-eFdNVkxJKE8ONOqntZjN_QKwgLcg@mail.gmail.com>
- <AM0PR04MB42118617A7F29C1D7BE59242802E0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY2HaTK9tq539+m1fyMMPr1eyygJZ7QvzWNp9E7aYxpoVQ@mail.gmail.com>
- <CABb+yY0KB7RLK1DyPNNPaXoXkx5WoJhkoKX5XVa+4Q94vC7p4A@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 02/10] mfd: wcd9335: add support to wcd9335 core
+Date: Thu, 2 Aug 2018 10:26:13 +0100
+Message-ID: <9a33e0ce-a385-cdad-f610-655562bec1f5@linaro.org>
+References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
+ <20180727121806.18209-3-srinivas.kandagatla@linaro.org>
+ <20180802083351.GN4662@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY0KB7RLK1DyPNNPaXoXkx5WoJhkoKX5XVa+4Q94vC7p4A@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180802083351.GN4662@dell>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-mediatek@lists.infradead.org>",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Thanks for the review,
 
-> -----Original Message-----
-> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
-> Sent: Tuesday, July 31, 2018 8:42 PM
-> To: A.s. Dong <aisheng.dong@nxp.com>
 
-[...]
-
-> >> Do you need me to send the full scu client driver patch for the reference?
-> >> If yes, please feel free to let me know.
-> >>
-> > Yes, that'll make it clearer.
-> >
-> Thanks for sharing the patch offline.
+On 02/08/18 09:33, Lee Jones wrote:
+> On Fri, 27 Jul 2018, Srinivas Kandagatla wrote:
 > 
-> I don't see why it can't be adapted to work with the simple 2-cell
-> implementation. Instead of one virtual, ask for 4 physical channels and send
-> data in u32 chunks sequentially over them.
-> In fact, that should make it even better by removing the tight-loop (zero
-> delay!!) polling in send_data() -- MU does support interrupts, why not use
-> them to avoid polling?  If you find it hard, I can make a patch on top of your
-> client patchset, once Oleksij is done with the MU driver.
+>> Qualcomm WCD9335 Codec is a standalone Hi-Fi audio codec IC,
+>> It has mulitple blocks like Soundwire controller, codec,
+>> Codec processing engine, ClassH controller, interrupt mux.
+>> It supports both I2S/I2C and SLIMbus audio interfaces.
+>>
+>> This patch adds support to SLIMbus audio interface.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/mfd/Kconfig                   |  18 ++
+>>   drivers/mfd/Makefile                  |   4 +
+>>   drivers/mfd/wcd9335-core.c            | 268 ++++++++++++++++
+>>   include/linux/mfd/wcd9335/registers.h | 580 ++++++++++++++++++++++++++++++++++
+>>   include/linux/mfd/wcd9335/wcd9335.h   |  42 +++
+>>   5 files changed, 912 insertions(+)
+>>   create mode 100644 drivers/mfd/wcd9335-core.c
+>>   create mode 100644 include/linux/mfd/wcd9335/registers.h
+>>   create mode 100644 include/linux/mfd/wcd9335/wcd9335.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index f3fa516011ec..6e5b5f3cfe20 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -1807,6 +1807,24 @@ config MFD_WM97xx
+>>   	  support for the WM97xx, in order to use the actual functionaltiy of
+>>   	  the device other drivers must be enabled.
+>>   
+>> +config MFD_WCD9335
+>> +	tristate
+>> +	select MFD_CORE
+>> +	select REGMAP
+>> +	select REGMAP_IRQ
+>> +
+>> +config MFD_WCD9335_SLIM
+>> +	tristate "Qualcomm WCD9335 with SLIMbus"
+>> +	select MFD_WCD9335
+>> +	select REGMAP_SLIMBUS
+>> +	depends on SLIMBUS
+>> +	help
+>> +	The WCD9335 is a standalone Hi-Fi audio codec IC, supports
 > 
+> s/codec/CODEC/
+Yep.
+> 
+>> +	Qualcomm Technologies, Inc. (QTI) multimedia solutions, including
+>> +	the MSM8996, MSM8976, and MSM8956 chipsets. It has inbuild
+> 
+> s/inbuild/in-built/
 
-As you insist, I will try to implement multi channels mode, then we can do a
-clear comparison to see which one is better for SCU mode rather than assumptions.
+Sure!
 
-First of all,  using interrupt for each chan will likely to terribly slow down the SCU
-Message handling speed. SCU Messages usually are handled by SCU firmware very
-quickly in a few microseconds. (< 10us). That's why we use polling mode for SCU
-message handling.
+> 
+>> +	Soundwire controller, interrupt mux. It supports both I2S/I2C and
+>> +	SLIMbus audio interfaces. This option selects SLIMbus audio interface.
+> 
+> The help should be indented.
 
-If we break down a SCU message into a few separate MU channel interrupts driven,
-There will be a lot of unnecessary and meaningless interrupt handling.
-And the whole flow may look like:
+Sure!
+> 
+>>   config MFD_STW481X
+>>   	tristate "Support for ST Microelectronics STw481x"
+>>   	depends on I2C && (ARCH_NOMADIK || COMPILE_TEST)
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 2852a6042ecf..a4697370640b 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -56,6 +56,10 @@ endif
+>>   ifeq ($(CONFIG_MFD_CS47L24),y)
+>>   obj-$(CONFIG_MFD_ARIZONA)	+= cs47l24-tables.o
+>>   endif
+>> +
+>> +obj-$(CONFIG_MFD_WCD9335)	+= wcd9335.o
+>> +wcd9335-objs			:= wcd9335-core.o
+>> +
+>>   obj-$(CONFIG_MFD_WM8400)	+= wm8400-core.o
+>>   wm831x-objs			:= wm831x-core.o wm831x-irq.o wm831x-otp.o
+>>   wm831x-objs			+= wm831x-auxadc.o
+>> diff --git a/drivers/mfd/wcd9335-core.c b/drivers/mfd/wcd9335-core.c
+>> new file mode 100644
+>> index 000000000000..8f746901f4e9
+>> --- /dev/null
+>> +++ b/drivers/mfd/wcd9335-core.c
+>> @@ -0,0 +1,268 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2018, Linaro Limited
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/slimbus.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_gpio.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/mfd/wcd9335/wcd9335.h>
+>> +#include <linux/mfd/wcd9335/registers.h>
+> 
+> Alphabetical.
+> 
+Sure will do that in next version.
+>> +static const struct regmap_range_cfg wcd9335_ranges[] = {
+>> +	{	.name = "WCD9335",
+> 
+> What is that?  New line please.
+Opps, will fix it in next version.
+> 
+>> +		.range_min =  0x0,
+>> +		.range_max =  WCD9335_MAX_REGISTER,
+>> +		.selector_reg = WCD9335_REG(0x0, 0),
+>> +		.selector_mask = 0xff,
+>> +		.selector_shift = 0,
+>> +		.window_start = 0x0,
+>> +		.window_len = 0x1000,
+>> +	},
+>> +};
+>> +
+>> +static struct regmap_config wcd9335_regmap_config = {
+>> +	.reg_bits = 16,
+>> +	.val_bits = 8,
+>> +	.cache_type = REGCACHE_RBTREE,
+>> +	.max_register = WCD9335_MAX_REGISTER,
+>> +	.can_multi_write = true,
+>> +	.ranges = wcd9335_ranges,
+>> +	.num_ranges = ARRAY_SIZE(wcd9335_ranges),
+>> +};
+>> +
+>> +static const struct regmap_range_cfg wcd9335_ifd_ranges[] = {
+>> +	{	.name = "WCD9335-IFD",
+> 
+> As above.
+> 
+Yep.
+>> +		.range_min =  0x0,
+>> +		.range_max = WCD9335_REG(0, 0x7ff),
+>> +		.selector_reg = WCD9335_REG(0, 0x0),
+>> +		.selector_mask = 0xff,
+>> +		.selector_shift = 0,
+>> +		.window_start = 0x0,
+>> +		.window_len = 0x1000,
+>> +	},
+>> +};
+>> +
+>> +static struct regmap_config wcd9335_ifd_regmap_config = {
+>> +	.reg_bits = 16,
+>> +	.val_bits = 8,
+>> +	.can_multi_write = true,
+>> +	.max_register = WCD9335_REG(0, 0x7FF),
+>> +	.ranges = wcd9335_ifd_ranges,
+>> +	.num_ranges = ARRAY_SIZE(wcd9335_ifd_ranges),
+>> +};
+>> +
+>> +static int wcd9335_parse_dt(struct wcd9335 *wcd)
+>> +{
+>> +	struct device *dev = wcd->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	int ret;
+>> +
+>> +	wcd->reset_gpio = of_get_named_gpio(np,	"reset-gpio", 0);
+>> +	if (wcd->reset_gpio < 0) {
+>> +		dev_err(dev, "Reset gpio missing in DT\n");
+> 
+> s/gpio/GPIO/
+> 
+> s/missing in DT/missing from DT/
+Yep!
+> 
+>> +		return wcd->reset_gpio;
+>> +	}
+>> +
+>> +	wcd->mclk = devm_clk_get(dev, "mclk");
+>> +	if (IS_ERR(wcd->mclk)) {
+>> +		dev_err(dev, "mclk not found\n");
+>> +		return PTR_ERR(wcd->mclk);
+>> +	}
+>> +
+>> +	wcd->native_clk = devm_clk_get(dev, "slimbus");
+>> +	if (IS_ERR(wcd->native_clk)) {
+>> +		dev_err(dev, "slimbus clk not found\n");
+> 
+> Any reason for abbreviating 'clock' in the error message?
+> 
+No, Will change it to clock in next version.
+>> +		return PTR_ERR(wcd->native_clk);
+>> +	}
+>> +
+>> +	wcd->supplies[0].supply = "vdd-buck";
+>> +	wcd->supplies[1].supply = "vdd-buck-sido";
+>> +	wcd->supplies[2].supply = "vdd-tx";
+>> +	wcd->supplies[3].supply = "vdd-rx";
+>> +	wcd->supplies[4].supply = "vdd-io";
+>> +
+>> +	ret = regulator_bulk_get(dev, WCD9335_MAX_SUPPLY, wcd->supplies);
+>> +	if (ret != 0) {
+> 
+> "if (ret)"
+> 
+> Same for all.  I won't comment on the others.
+Yes, I agree, will fix such instances.
+> 
+>> +		dev_err(dev, "Failed to get supplies: err = %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wcd9335_power_on_reset(struct wcd9335 *wcd)
+>> +{
+>> +	struct device *dev = wcd->dev;
+>> +	int ret;
+>> +
+>> +	ret = regulator_bulk_enable(WCD9335_MAX_SUPPLY, wcd->supplies);
+>> +	if (ret != 0) {
+>> +		dev_err(dev, "Failed to get supplies: err = %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * For WCD9335, it takes about 600us for the Vout_A and
+>> +	 * Vout_D to be ready after BUCK_SIDO is powered up.
+>> +	 * SYS_RST_N shouldn't be pulled high during this time
+>> +	 */
+>> +	usleep_range(600, 650);
+>> +
+>> +	gpio_direction_output(wcd->reset_gpio, 0);
+>> +	msleep(20);
+> 
+> What's this for?  Why can't you just:
+> 
+This is just making sure that reset line is low before actual the chip 
+is taken out of reset.
 
-Sending Word 0 ->
-Chan 0 interrupt -> (meaningless)
-Sending Word 1 ->
-Chan1 interrupt -> (meaningless)
-Sending Word 2 ->
-Chan2 interrupt -> (meaningless)
-Sending Word 3 ->
-Chan3 interrupt-> (meaningless)
+>    gpio_direction_output(wcd->reset_gpio, 1);
+> 
+> ... and drop the next 2 lines?
+> 
+>> +	gpio_set_value(wcd->reset_gpio, 1);
+>> +	msleep(20);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wcd9335_bring_up(struct wcd9335 *wcd)
+>> +{
+>> +	struct regmap *rm = wcd->regmap;
+>> +	int val, byte0;
+>> +	int ret = 0;
+>> +
+>> +	regmap_read(rm, WCD9335_CHIP_TIER_CTRL_EFUSE_VAL_OUT0, &val);
+>> +	regmap_read(rm, WCD9335_CHIP_TIER_CTRL_CHIP_ID_BYTE0, &byte0);
+>> +
+>> +	if ((val < 0) || (byte0 < 0)) {
+>> +		dev_err(wcd->dev, "wcd9335 codec version detection fail!\n");
+> 
+> s/wcd9335 codec/WCD9335 CODEC/ ?
+> 
+sure!
 
-Sending Word 4 on Chan 0 again ->
-Wait for Chan 0 interrupt (meaningless) ->
-...
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (byte0 == 0x1) {
+>> +		dev_info(wcd->dev, "wcd9335 codec version is v2.0\n");
+>> +		wcd->version = WCD9335_VERSION_2_0;
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_RST_CTL, 0x01);
+>> +		regmap_write(rm, WCD9335_SIDO_SIDO_TEST_2, 0x00);
+>> +		regmap_write(rm, WCD9335_SIDO_SIDO_CCL_8, 0x6F);
+>> +		regmap_write(rm, WCD9335_BIAS_VBG_FINE_ADJ, 0x65);
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x5);
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x7);
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x3);
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_RST_CTL, 0x3);
+>> +	} else {
+>> +		dev_err(wcd->dev, "wcd9335 codec version not supported\n");
+> 
+> As above.
+> 
+Yep.
+>> +		ret = -EINVAL;
+> 
+> Why not just
+> 
+>    return -EINVAL;
+> 
+> Then you can just return 0 and avoid pre-initialising ret.
+Agreed!
 
-Then waiting for Rx:
+> 
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int wcd9335_slim_probe(struct slim_device *slim)
+>> +{
+>> +	struct device *dev = &slim->dev;
+>> +	struct wcd9335 *wcd;
+>> +	int ret = 0;
+> 
+> Why pre-initialise?
+looks like over done!
+> 
+>> +	/* Interface device */
+>> +	if (slim->e_addr.dev_index == 0)
+> 
+> Is 0 the parent?  I think 0 needs defining for clarity.
+Sure, Its interface device index, I will try to make this clear by 
+defining ir.
+> 
+>> +		return 0;
+>> +
+>> +	wcd = devm_kzalloc(dev, sizeof(*wcd), GFP_KERNEL);
+>> +	if (!wcd)
+>> +		return	-ENOMEM;
+>> +
+>> +	wcd->dev = dev;
+> 
+> '\n' here.
+> 
+Yep.
+>> +	ret = wcd9335_parse_dt(wcd);
+>> +	if (ret) {
+>> +		dev_err(dev, "Error parsing DT (%d)\n", ret);
+> 
+> This format changes from message to message.
+> 
+> Please pick one and stick with it.
+> 
+> I personally like: "<MESSAGE>: %d", ret
+Okay I will keep a close eye on such things before sending next version.
+> 
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = wcd9335_power_on_reset(wcd);
+>> +	if (ret) {
+>> +		dev_err(dev, "Error Powering\n");
+> 
+> I think this is superflouous since you already printed a message.
+> 
+Yep!
+>> +		return ret;
+>> +	}
+>> +
+>> +	wcd->regmap = regmap_init_slimbus(slim, &wcd9335_regmap_config);
+>> +	if (IS_ERR(wcd->regmap)) {
+>> +		ret = PTR_ERR(wcd->regmap);
+>> +		dev_err(dev, "Failed to allocate register map:%d\n", ret);
+> 
+> A different format again.  Ensure there is a ' ' after the ':'.
+> 
+>> +		return ret;
+>> +	}
+>> +
+>> +	dev_set_drvdata(dev, wcd);
+> 
+> Probably nicer to do this at the very end - after a '\n'.
+> 
+Okay.
+>> +	wcd->slim = slim;
+>> +	wcd->intf_type = WCD9335_INTERFACE_TYPE_SLIMBUS;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct mfd_cell wcd9335_devices[] = {
+>> +	{
+>> +		.name = "wcd9335-codec",
+>> +	},
+>> +};
+> 
+> When are you going to add the other devices?
+> 
+We are trying to sort of hw setup to test other devices like soundwire 
+controller, will add these once we are in a position to test them.
 
-Chan 0 Rx interrupt ->
-Read Word 0   ->
-(Then we know response size here)
+> By the way, one line entries should be placed on one line.
+> 
+>> +	{ .name = "wcd9335-codec" },
+> 
+>> +static int wcd9335_slim_status(struct slim_device *sdev,
+>> +				 enum slim_device_status s)
+> 
+> 's' is not a good variable name.  Suggest 'status'.
+> 
+Agreed!
+>> +{
+>> +	struct device_node *ifd_np;
+> 
+> What's 'ifd'?
+> 
+SLIMbus Interface device.
+>> +	struct wcd9335 *wcd;
+>> +	struct device *dev;
+>> +	int ret;
+>> +
+>> +	/* Interface device */
+> 
+> As previously suggested just define the device ID and drop the
+> comment.
+> 
+Yep.
+>> +	if (sdev->e_addr.dev_index == 0)
+>> +		return 0;
+>> +
+>> +	wcd = dev_get_drvdata(&sdev->dev);
+>> +	dev = wcd->dev;
+> 
+> Odd.  You do to the effort of assigning this and use 'wcd->dev' at
+> most call sites anyway.  I'd drop 'dev' and just use it from 'wcd'
+> everywhere.
+> 
+Will cleanup such instances!
+>> +	ifd_np = of_parse_phandle(wcd->dev->of_node, "qcom,ifd", 0);
+>> +	if (!ifd_np) {
+>> +		dev_err(wcd->dev, "No Interface device found\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	wcd->slim_ifd = of_slim_get_device(sdev->ctrl, ifd_np);
+>> +	if (!wcd->slim_ifd) {
+>> +		dev_err(wcd->dev, "Unable to get SLIM Interface device\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	wcd->ifd_regmap = regmap_init_slimbus(wcd->slim_ifd,
+>> +					      &wcd9335_ifd_regmap_config);
+>> +	if (IS_ERR(wcd->ifd_regmap)) {
+>> +		dev_err(dev, "Failed to allocate register map\n");
+>> +		return PTR_ERR(wcd->ifd_regmap);
+>> +	}
+>> +
+>> +	ret = wcd9335_bring_up(wcd);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to bringup WCD9335\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	wcd->slim_ifd = wcd->slim_ifd;
+> 
+> Am I missing something?
+No, Its my bad!
+> 
+>> +	return mfd_add_devices(wcd->dev, 0, wcd9335_devices,
+>> +			       ARRAY_SIZE(wcd9335_devices), NULL, 0, NULL);
+> 
+> No error message if it were to fail?
+Will fix this in next version.
+> 
+>> +}
+>> +
+>> +static const struct slim_device_id wcd9335_slim_id[] = {
+>> +	{0x217, 0x1a0, 0x1, 0x0},
+> 
+> Well that's just horrific.  Can't these be defined?
+> 
+Possibly, This is 48bit enumeration address of SLIMbus device, These 
+correspond to Manufacture ID, Product-ID, and Device-ID and Instance IDs.
 
-Chan 1 Rx interrupt ->
-Read Word 1 ->
-Chan 2 Rx interrupt ->
-Read Word 2 ->
-Chan 3 Rx interrupt ->
-Read Word 3 ->
-
-(If msg size > 4 words)
-Chan 0 Rx interrupt ->
-Read Word 4
-
-...
-And we must use a complicated way to map the received data of each channel
-into one SCU msg buffer and need handle the sequence properly for size > 4
-words case
-
-Is this what you intended?
-
-Per my understanding, there're several issues for this follow:
-1) Many unnecessary and meaningless interrupts hanllding of Tx and RX
-2) Performance downgrading
-    A 4 word SCU MSG may need 8 interrupts to handle which terribly slow
-    down the speed. (Interrupt latency will be terrible if many)
-3) Complex RX flow in order to align with framework design
-
-Any comments about these issues?
-
-Generally, from what I see, the mailbox framework really is not designed for SCU type
-devices that handling msg sending or receiving via multiple channels.  Including the
-ring buffer supported for handling several msgs on the same channel and rich
-completion mechanism, none of them are suitable for SCU MU in multiple channel mode.
-
-What we really actually needed is a quite simple way to handle MSG Tx and Tx
-synchronously.
-
-int sc_call_rpc(sc_ipc_t ipc, void *msg, bool no_resp)
-{       
-        ...
-        ret = mbox_send_message(sc_ipc->chan, msg);
-        if (!no_resp) 
-                ret = mbox_receive_message(sc_ipc->chan, msg);
-        ...
-        return ret;
-}
-
-For me, I don't think the above way driven by interrupt is suitable for SCU.
-But I will still keep investigating if any better way to handle it in multi chan
-mode as you wish.
-
-How would you suggest for such situation in order to support SCU properly?
-
-> I have some more suggestions for the client driver. But since I don't have to
-> live with them (you do), I can't demand you make those changes. If you like,
-> please feel free to cc me on the next revision of the client driver.
-
-I certainly appreciate any clear and valuable improvement suggestions.
-Just feel free to let me know if any better idea.
-
-Regards
-Dong Aisheng
+>> +	{}
+>> +};
+>> +
+>> +static struct slim_driver wcd9335_slim_driver = {
+>> +	.driver = {
+>> +		.name = "wcd9335-slim",
+>> +	},
+>> +	.probe = wcd9335_slim_probe,
+>> +	.device_status = wcd9335_slim_status,
+>> +	.id_table = wcd9335_slim_id,
+>> +};
+>> +
+>> +module_slim_driver(wcd9335_slim_driver);
+>> +MODULE_DESCRIPTION("WCD9335 slim driver");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/include/linux/mfd/wcd9335/registers.h b/include/linux/mfd/wcd9335/registers.h
+> 
