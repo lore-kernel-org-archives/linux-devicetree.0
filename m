@@ -1,93 +1,28 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH 2/3] dt-bindings: interrupt-controller: RISC-V local interrupt controller docs
-Date: Thu, 02 Aug 2018 13:30:01 -0700 (PDT)
-Message-ID: <mhng-a548b882-7f89-4ff4-a46b-f9cee7da724f@palmer-si-x1c4>
-References: <20180625200448.26fvdv2tj3etmtlp@localhost>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 6/8] clk: tegra20: Turn EMC clock gate into divider
+Date: Thu, 02 Aug 2018 13:56:25 -0700
+Message-ID: <153324338536.10763.14402574110693682142@swboyd.mtv.corp.google.com>
+References: <20180724164221.3307-1-digetx@gmail.com>
+ <20180724164221.3307-7-digetx@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180625200448.26fvdv2tj3etmtlp@localhost>
+In-Reply-To: <20180724164221.3307-7-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: christoph@boehmwalder.at, Christoph Hellwig <hch@infradead.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
+To: Dmitry Osipenko <digetx@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jun 2018 13:04:48 PDT (-0700), christoph@boehmwalder.at wrote:
-> On Fri, Jun 22, 2018 at 04:20:05PM -0700, Palmer Dabbelt wrote:
->> From: Palmer Dabbelt <palmer@dabbelt.com>
->>
->> This patch adds documentation on the RISC-V local interrupt controller,
->> which is a per-hart interrupt controller that manages all interrupts
->> entering a RISC-V hart.  This interrupt controller is present on all
->> RISC-V systems.
->>
->> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
->> ---
->>  .../interrupt-controller/riscv,cpu-intc.txt        | 41 ++++++++++++++++++++++
->>  1 file changed, 41 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
->> new file mode 100644
->> index 000000000000..61900e2e3868
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
->> @@ -0,0 +1,41 @@
->> +RISC-V Hart-Level Interrupt Controller (HLIC)
->> +---------------------------------------------
->> +
->> +RISC-V cores include Control Status Registers (CSRs) which are local to each
->> +hart and can be read or written by software. Some of these CSRs are used to
->> +control local interrupts connected to the core.  Every interrupt is ultimately
->> +routed through a hart's HLIC before it interrupts that hart.
->> +
->> +The RISC-V supervisor ISA manual specifies three interrupt sources that are
->> +attached to every HLIC: software interrupts, the timer interrupt, and external
->> +interrupts.  Software interrupts are used to send IPIs between cores.  The
->> +timer interrupt comes from an architecturally mandated real-time timer that is
->> +controller via SBI calls and CSR reads.  External interrupts connect all other
->> +device interrupts to the HLIC, which are routed via the platform-level
->> +interrupt controller (PLIC).
->> +
->> +All RISC-V systems that conform to the supervisor ISA specification are
->> +required to have a HLIC with these three interrupt sources present.  Since the
->> +interrupt map is defined by the ISA it's not listed in the HLIC's device tree
->> +entry, though external interrupt controllers (like the PLIC, for example) will
->> +need to define how their interrupts map to the relevant HLICs.
->> +
->> +Required properties:
->> +- compatible : "riscv,cpu-intc"
->> +- #interrupt-cells : should be <1>
->> +- interrupt-controller : Identifies the node as an interrupt controller
->> +
->> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
->> +definition of the hart whose CSRs control these local interrupts.
->> +
->> +An example device tree entry for a HLIC is show below.
->
-> Spotted a typo here, "show" -> "shown".
+Quoting Dmitry Osipenko (2018-07-24 09:42:19)
+> Kernel should never gate the EMC clock as it causes immediate lockup, so
+> removing clk-gate functionality doesn't affect anything. Turning EMC clk
+> gate into divider allows to implement glitch-less EMC scaling, avoiding
+> reparenting to a backup clock.
+> =
 
-Thanks.  It looks like we're actually dropping this binding and integrating 
-this first-level interrupt controller into the core RISC-V arch code as keeping 
-it split out results in too many inefficiencies.
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> ---
 
->> +
->> +	cpu1: cpu@1 {
->> +		compatible = "riscv";
->> +		...
->> +		cpu1-intc: interrupt-controller {
->> +			#interrupt-cells = <1>;
->> +			compatible = "riscv,cpu-intc";
->> +			interrupt-controller;
->> +		};
->> +	};
->> --
->> 2.16.4
->
-> Also, I've noticed that double spaces after punctuation are used pretty
-> inconsistently throughout the document. Is that intended?
-
-No.  I noticed this in the PLIC document as well, I'll fix that one up.
-
-Thanks!
+Acked-by: Stephen Boyd <sboyd@kernel.org>
