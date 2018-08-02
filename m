@@ -1,44 +1,29 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 0/3] add dwc2 support for px30
-Date: Thu,  2 Aug 2018 15:01:30 +0200
-Message-ID: <20180802130133.4898-1-heiko@sntech.de>
+Subject: Re: [PATCH v3 1/4] dt-bindings: usb: dwc2: add description for px30
+Date: Thu, 02 Aug 2018 15:03:15 +0200
+Message-ID: <1906917.Z0b3HQLJhP@phil>
+References: <1533113116-8820-1-git-send-email-cl@rock-chips.com> <1533113116-8820-2-git-send-email-cl@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-usb@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, balbi@kernel.org, gregkh@linuxfoundation.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, cl@rock-chips.com, hminas@synopsys.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533113116-8820-2-git-send-email-cl@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cl@rock-chips.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, klaus.goger@theobroma-systems.com, hjc@rock-chips.com, jagan@amarulasolutions.com, djw@t-chip.com.cn, jacob-chen@iotwrt.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, frank.wang@rock-chips.com, lgirdwood@gmail.com, broonie@kernel.org, alsa-devel@alsa-project.org, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, yamada.masahiro@socionext.com, arnd@arndb.de, zhangqing@rock-chips.com, shawn.lin@rock-chips.com, kever.yang@rock-chips.com, david.wu@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com, sugar.zhang@rock-chips.com, huibin.hong@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-This is split out from the series adding the px30 support, due to
-the dwc2 binding change not having landed yet in a maintainer tree.
+Am Mittwoch, 1. August 2018, 10:45:13 CEST schrieb cl@rock-chips.com:
+> From: Liang Chen <cl@rock-chips.com>
+> 
+> This patch adds the compatible of dwc2 for PX30 SoCs.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Liang Chen <cl@rock-chips.com>
 
-The Acked binding change should go through some usb tree, while
-I'll pick up the dts changes once that has happened.
+I've split out the dwc2 things from the px30 dts and readded them
+in a new series and also moved the binding addition over there [0]
 
-The binding itself is unchanged.
+Heiko
 
-
-Heiko Stuebner (2):
-  arm64: dts: rockchip: add dwc2 otg controller on px30
-  arm64: dts: rockchip: enable dwc2-based otg controller on px30-evb
-
-Liang Chen (1):
-  dt-bindings: usb: dwc2: add description for px30
-
- Documentation/devicetree/bindings/usb/dwc2.txt |  1 +
- arch/arm64/boot/dts/rockchip/px30-evb.dts      |  4 ++++
- arch/arm64/boot/dts/rockchip/px30.dtsi         | 16 ++++++++++++++++
- 3 files changed, 21 insertions(+)
-
--- 
-2.17.0
+[0] https://patchwork.kernel.org/cover/10553569/
