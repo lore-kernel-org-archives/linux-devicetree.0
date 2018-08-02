@@ -1,67 +1,82 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: uniphier: remove unnecessary include headers" to the spi tree
-Date: Thu,  2 Aug 2018 11:12:24 +0100 (BST)
-Message-ID: <20180802101224.A50D71124241@debutante.sirena.org.uk>
-References: <1533184963-28508-1-git-send-email-hayashibara.keiji@socionext.com>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: RE: [PATCH v3 2/2] PM / devfreq: Add devfreq driver for
+ interconnect bandwidth voting
+Date: Thu, 02 Aug 2018 19:13:41 +0900
+Message-ID: <20180802101341epcms1p53ee79776dbcbeaf6f1e7910b20095220@epcms1p5>
+References: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
+        <CGME20180802005759epcas4p4a68d50e61c8425124a993de1917021a2@epcms1p5>
+Reply-To: myungjoo.ham@samsung.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533184963-28508-1-git-send-email-hayashibara.keiji@socionext.com>
+In-Reply-To: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.comlinux-spi@vger.kernel.org
+To: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Saravana Kannan <skannan@codeaurora.org>, "georgi.djakov@linaro.org" <georgi.djakov@linaro.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "daidavid1@codeaurora.org" <daidavid1@codeaurora.org>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+>This driver registers itself as a devfreq device that allows devfreq
+>governors to make bandwidth votes for an interconnect path. This allows
+>applying various policies for different interconnect paths using devfreq
+>governors.
+>
 
-   spi: uniphier: remove unnecessary include headers
+First of all, the name, "devfreq_icbw", is not appropriate for a
+devfreq device driver. It confuses; it looks like a part of the
+framework itself.
 
-has been applied to the spi tree at
+>diff --git a/drivers/devfreq/devfreq_icbw.c b/drivers/devfreq/devfreq_icbw.c
+>new file mode 100644
+>index 0000000..231fb21
+>--- /dev/null
+>+++ b/drivers/devfreq/devfreq_icbw.c
+>@@ -0,0 +1,116 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+/*
+>+ * Copyright (c) 2013-2014, 2018, The Linux Foundation. All rights reserved.
+>+ */
+>+
+>+#define pr_fmt(fmt) "icbw: " fmt
+>+
+>+#include <linux/kernel.h>
+>+#include <linux/module.h>
+>+#include <linux/init.h>
+>+#include <linux/err.h>
+>+#include <linux/errno.h>
+>+#include <linux/mutex.h>
+>+#include <linux/devfreq.h>
+>+#include <linux/platform_device.h>
+>+#include <linux/of.h>
+>+#include <linux/interconnect.h>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+Where can I find this file?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>+
+>+struct dev_data {
+>+	struct icc_path *path;
+>+	u32 cur_ab;
+>+	u32 cur_pb;
+>+	unsigned long gov_ab;
+>+	struct devfreq *df;
+>+	struct devfreq_dev_profile dp;
+>+};
+>+
+>+static int icbw_target(struct device *dev, unsigned long *freq, u32 flags)
+>+{
+>+	struct dev_data *d = dev_get_drvdata(dev);
+>+	int ret;
+>+	u32 new_pb = *freq, new_ab = d->gov_ab;
+>+
+>+	if (d->cur_pb == new_pb && d->cur_ab == new_ab)
+>+		return 0;
+>+
+>+	dev_dbg(dev, "BW KBps: AB: %u PB: %u\n", new_ab, new_pb);
+>+
+>+	ret = icc_set(d->path, new_ab, new_pb);
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+I'm not sure if icc_set is available.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 07ebbbe458790d3c75f4a2f3634d8e04f66b389b Mon Sep 17 00:00:00 2001
-From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Date: Thu, 2 Aug 2018 13:42:43 +0900
-Subject: [PATCH] spi: uniphier: remove unnecessary include headers
-
-This commit removed include headers of linux/of.h and linux/of_platform.h,
-because they are not used.
-
-Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-uniphier.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/spi/spi-uniphier.c b/drivers/spi/spi-uniphier.c
-index 089985465890..5a6137fe172d 100644
---- a/drivers/spi/spi-uniphier.c
-+++ b/drivers/spi/spi-uniphier.c
-@@ -10,8 +10,6 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
--#include <linux/of.h>
--#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/spi/spi.h>
- 
--- 
-2.18.0
+Cheers,
+MyungJoo
