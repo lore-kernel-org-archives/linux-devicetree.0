@@ -1,97 +1,151 @@
-From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v4 1/3] iio: Add modifier for white light
-Date: Thu, 2 Aug 2018 21:30:12 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1808022117460.25216@vps.pmeerw.net>
-References: <20180802182729.2061830-1-pn@denx.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 2/3] iio: light: Add support for vishay vcnl4035
+Date: Thu, 2 Aug 2018 22:34:14 +0300
+Message-ID: <CAHp75VcR7aaUkNJdARMvnkuzxfODwVhHFH0Hm94hsENbShtO3A@mail.gmail.com>
+References: <20180802182729.2061830-1-pn@denx.de> <20180802182729.2061830-2-pn@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802182729.2061830-1-pn@denx.de>
+In-Reply-To: <20180802182729.2061830-2-pn@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Parthiban Nallathambi <pn@denx.de>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, linux-iio <linux-iio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, wd@denx.de, sbabic@denx.de, Heiko Schocher <hs@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Aug 2, 2018 at 9:27 PM, Parthiban Nallathambi <pn@denx.de> wrote:
+> Add support for VCNL4035, which is capable of Ambient light
+> sensing (ALS) and proximity function. This patch adds support
+> only for ALS function
 
-it is not clear to me why 'white' is needed; 
-isn't that the default, i.e. unfiltered light?
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/bitops.h>
+> +#include <linux/regmap.h>
+> +#include <linux/pm_runtime.h>
 
-thanks, regards, p.
+Sort?
 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> ---
->  Documentation/ABI/testing/sysfs-bus-iio | 7 +++++++
->  drivers/iio/industrialio-core.c         | 1 +
->  include/uapi/linux/iio/types.h          | 1 +
->  tools/iio/iio_event_monitor.c           | 2 ++
->  4 files changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-> index 731146c3b138..43e481aed5b2 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio
-> @@ -1312,6 +1312,13 @@ Description:
->  		standardised CIE Erythemal Action Spectrum. UV index values range
->  		from 0 (low) to >=11 (extreme).
->  
-> +What:		/sys/.../iio:deviceX/in_intensityY_white_raw
-> +KernelVersion:	4.18
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		Modifier white indicates that measurements contain white LED
-> +		component.
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/events.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+
+Ditto.
+
+> +       if (reg & (VCNL4035_INT_ALS_IF_H_MASK | VCNL4035_INT_ALS_IF_L_MASK))
+> +               return true;
+> +       else
+> +               return false;
+
+return !!(reg & ...); ?
+
+> +static irqreturn_t vcnl4035_drdy_irq_thread(int irq, void *private)
+> +{
+> +       struct iio_dev *indio_dev = private;
+> +       struct vcnl4035_data *data = iio_priv(indio_dev);
 > +
->  What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
->  What:		/sys/.../iio:deviceX/in_intensity_green_integration_time
->  What:		/sys/.../iio:deviceX/in_intensity_blue_integration_time
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 19bdf3d2962a..cb939b9fad16 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -108,6 +108,7 @@ static const char * const iio_modifier_names[] = {
->  	[IIO_MOD_LIGHT_GREEN] = "green",
->  	[IIO_MOD_LIGHT_BLUE] = "blue",
->  	[IIO_MOD_LIGHT_UV] = "uv",
-> +	[IIO_MOD_LIGHT_WHITE] = "white",
->  	[IIO_MOD_QUATERNION] = "quaternion",
->  	[IIO_MOD_TEMP_AMBIENT] = "ambient",
->  	[IIO_MOD_TEMP_OBJECT] = "object",
-> diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-> index 4213cdf88e3c..de87a6c7e6de 100644
-> --- a/include/uapi/linux/iio/types.h
-> +++ b/include/uapi/linux/iio/types.h
-> @@ -84,6 +84,7 @@ enum iio_modifier {
->  	IIO_MOD_CO2,
->  	IIO_MOD_VOC,
->  	IIO_MOD_LIGHT_UV,
-> +	IIO_MOD_LIGHT_WHITE,
->  };
->  
->  enum iio_event_type {
-> diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-> index b61245e1181d..a2f9c62a79dd 100644
-> --- a/tools/iio/iio_event_monitor.c
-> +++ b/tools/iio/iio_event_monitor.c
-> @@ -96,6 +96,7 @@ static const char * const iio_modifier_names[] = {
->  	[IIO_MOD_LIGHT_GREEN] = "green",
->  	[IIO_MOD_LIGHT_BLUE] = "blue",
->  	[IIO_MOD_LIGHT_UV] = "uv",
-> +	[IIO_MOD_LIGHT_WHITE] = "white",
->  	[IIO_MOD_QUATERNION] = "quaternion",
->  	[IIO_MOD_TEMP_AMBIENT] = "ambient",
->  	[IIO_MOD_TEMP_OBJECT] = "object",
-> @@ -178,6 +179,7 @@ static bool event_is_known(struct iio_event_data *event)
->  	case IIO_MOD_LIGHT_GREEN:
->  	case IIO_MOD_LIGHT_BLUE:
->  	case IIO_MOD_LIGHT_UV:
-> +	case IIO_MOD_LIGHT_WHITE:
->  	case IIO_MOD_QUATERNION:
->  	case IIO_MOD_TEMP_AMBIENT:
->  	case IIO_MOD_TEMP_OBJECT:
-> 
+
+> +       if (vcnl4035_is_triggered(data)) {
+
+Here is negative conditional suits.
+
+> +#ifndef CONFIG_PM
+
+Why?
+
+> +       ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
+> +       if (ret < 0)
+> +               return ret;
+> +#endif
+
+> +               pr_err("regmap_write default THDH returned %d\n", ret);
+
+dev_err()
+
+> +               pr_err("regmap_write default THDL returned %d\n", ret);
+
+Ditto.
+
+
+> +       ret = pm_runtime_set_active(&client->dev);
+> +       if (ret < 0)
+> +               goto fail_poweroff;
+> +
+> +       pm_runtime_enable(&client->dev);
+> +       pm_runtime_set_autosuspend_delay(&client->dev, VCNL4035_SLEEP_DELAY_MS);
+> +       pm_runtime_use_autosuspend(&client->dev);
+
+Usually we do this after we probed the device.
+
+> +       if (client->irq) {
+
+First of all, it can be negative.
+Second, care to factor out this rather long branch to a separate function?
+
+> +               if (ret < 0) {
+> +                       dev_err(&client->dev, "request irq %d for trigger0 failed\n",
+> +                               client->irq);
+> +                       goto fail_buffer_clean;
+> +                       }
+
+Indentation.
+
+> +       }
+
+So, do I understand correctly that IRQ is optional for this device?
+
+
+
+> +#ifdef CONFIG_PM
+> +static int vcnl4035_runtime_suspend(struct device *dev)
+
+Perhaps __maybe_unused
+
+> +static int vcnl4035_runtime_resume(struct device *dev)
+
+Ditto.
+
+> +{
+> +       struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+> +       struct vcnl4035_data *data = iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       regcache_sync(data->regmap);
+> +       ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
+> +       if (ret < 0)
+> +               return ret;
+
++ blank line
+
+> +       /* wait for 1 ALS integration cycle */
+> +       msleep(data->als_it_val * 100);
+> +
+> +       return 0;
+> +}
+> +#endif
+
+> +static const struct of_device_id vcnl4035_of_match[] = {
+> +       { .compatible = "vishay,vcnl4035", },
+> +       { },
+
+Better w/o comma.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, vcnl4035_of_match);
+
+> +
+> +static const struct i2c_device_id vcnl4035_id[] = {
+> +       { "vcnl4035", 0 },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, vcnl4035_id);
+
+Are you expecting legacy code to use this? I would rather switch to
+->probe_new() and also remove this.
 
 -- 
-
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
+With Best Regards,
+Andy Shevchenko
