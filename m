@@ -1,100 +1,126 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: [PATCH] ARC: AXS10x/HSDK: Allow U-Boot to pass MAC-address to the kernel
-Date: Thu,  2 Aug 2018 13:19:37 +0300
-Message-ID: <20180802101937.6202-1-abrodkin@synopsys.com>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-snps-arc@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, stable@vger.kernel.org, devicetree@vger.kernel.org
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v7 2/3] Bluetooth: mediatek: Add protocol support for
+ MediaTek serial devices
+Date: Thu, 2 Aug 2018 18:24:55 +0800
+Message-ID: <1533205495.3472.144.camel@mtkswgap22>
+References: <cover.1533056925.git.sean.wang@mediatek.com>
+         <c92ed10cf16f36d9a3b390e864af92e2dfe7b771.1533056925.git.sean.wang@mediatek.com>
+         <1707FFA1-A294-4A95-A3BF-0910CE455232@holtmann.org>
+         <1533192799.3472.122.camel@mtkswgap22>
+         <FF45A90A-F9F1-47CB-AB1F-1E92BF587FBE@holtmann.org>
+         <1533199720.3472.136.camel@mtkswgap22>
+         <9526E5D9-50BA-4D57-80F5-083DB7D28AFE@holtmann.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9526E5D9-50BA-4D57-80F5-083DB7D28AFE@holtmann.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Otherwise kernel uses random MAC which is not very conveniet.
-With that change in place use might set desired MAC in U-Boot
-with "setenv ethaddr 11:22:33:44:55:66", save environment and
-then from boot to boot the same MAC will be used by the kernel.
+On Thu, 2018-08-02 at 11:45 +0200, Marcel Holtmann wrote:
+> Hi Sean,
+> 
+> >>>>> +
+> >>>>> +static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
+> >>>>> +			    const void *param)
+> >>>>> +{
+> >>>>> +	struct mtk_hci_wmt_cmd wc;
+> >>>>> +	struct mtk_wmt_hdr *hdr;
+> >>>>> +	struct sk_buff *skb;
+> >>>>> +	u32 hlen;
+> >>>>> +
+> >>>>> +	hlen = sizeof(*hdr) + plen;
+> >>>>> +	if (hlen > 255)
+> >>>>> +		return -EINVAL;
+> >>>>> +
+> >>>>> +	hdr = (struct mtk_wmt_hdr *)&wc;
+> >>>>> +	hdr->dir = 1;
+> >>>>> +	hdr->op = op;
+> >>>>> +	hdr->dlen = cpu_to_le16(plen + 1);
+> >>>>> +	hdr->flag = flag;
+> >>>>> +	memcpy(wc.data, param, plen);
+> >>>>> +
+> >>>>> +	atomic_inc(&hdev->cmd_cnt);
+> >>>> 
+> >>>> Why are you doing this one. It will need a comment here if really needed. However I doubt that this is needed. You are only using it from hdev->setup and hdev->shutdown callbacks.
+> >>>> 
+> >>> 
+> >>> An increment on cmd_cnt is really needed because hci_cmd_work would check whether cmd_cnt is positive and then has a decrement on cmd_cnt before a packet is being sent out.
+> >>> 
+> >>> okay will add a comment.
+> >> 
+> >> but you are in ->setup callback this time. So if you need this, then all the other ->setup routines would actually fail as well. Either this is leftover from when you did things in ->probe or ->open or this is some thing we might better fix properly in the core instead of papering over it. Can you recheck if this is really needed.
+> >> 
+> > 
+> > I added a counter print and the counter increments as below
+> > 
+> > 	/* atomic_inc(&hdev->cmd_cnt); */
+> >        pr_info("cmd_cnt = %d\n" , atomic_read(&hdev->cmd_cnt));
+> > 
+> >        skb = __hci_cmd_sync_ev(hdev, 0xfc6f, hlen, &wc, HCI_VENDOR_PKT,
+> >                                HCI_INIT_TIMEOUT);
+> > 
+> > and the log show up that 
+> > 
+> > 
+> > [  334.049156] Bluetooth: hci0: command 0xfc6f tx timeout
+> > [  334.054840] cmd_cnt = 0
+> > [  336.065076] Bluetooth: hci0: command 0xfc6f tx timeout
+> > [  336.070795] cmd_cnt = 0
+> > [  338.080997] Bluetooth: hci0: command 0xfc6f tx timeout
+> > [  338.086683] cmd_cnt = 0
+> > [  340.096907] Bluetooth: hci0: command 0xfc6f tx timeout
+> > [  340.102609] cmd_cnt = 0
+> > [  342.112824] Bluetooth: hci0: command 0xfc6f tx timeout
+> > [  342.118520] cmd_cnt = 0
+> > [  344.128747] Bluetooth: hci0: command 0xfc6f tx timeout
+> > [  344.134454] cmd_cnt = 0
+> > [  346.144667] Bluetooth: hci0: command 0xfc6f tx timeout
+> > [  346.150372] cmd_cnt = 0
+> > 
+> > 
+> > The packet is dropped by hci_cmd_work at [1], so I also wondered why the
+> > other vendor driver works, it seems the counter needs to be incremented
+> > before every skb is being queued to cmd_q.
+> > 
+> > 4257 static void hci_cmd_work(struct work_struct *work)
+> > 4258 {
+> > 4259         struct hci_dev *hdev = container_of(work, struct hci_dev, cmd_work);
+> > 4260         struct sk_buff *skb;
+> > 4261
+> > 4262         BT_DBG("%s cmd_cnt %d cmd queued %d", hdev->name,
+> > 4263                atomic_read(&hdev->cmd_cnt), skb_queue_len(&hdev->cmd_q));
+> > 4264
+> > 4265         /* Send queued commands */
+> > 
+> > [1]
+> > 4266         if (atomic_read(&hdev->cmd_cnt)) { /* dropped when cmd_cnt is zero */
+> > 4267                 skb = skb_dequeue(&hdev->cmd_q);
+> > 4268                 if (!skb)
+> > 4269                         return;
+> > 4270
+> > 4271                 kfree_skb(hdev->sent_cmd);
+> > 4272
+> > 4273                 hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
+> > 4274                 if (hdev->sent_cmd) {
+> > 4275                         atomic_dec(&hdev->cmd_cnt);  /* cmd_cnt-- */
+> > 4276                         hci_send_frame(hdev, skb);
+> 
+> actually the command also needs to better go via the raw_q anyway since it doesn’t come back with the cmd status or cmd complete. You have it waiting for a vendor event. Maybe with is something we need to consider with __hci_cmd_sync_ev anyway.
+> 
+> Johan would know best since he wrote that code. Anyway, we should fix that in the core and not have you hack around it.
+> 
 
-One other note for this to happen it's required to pass
-board's .dtb in U-Boot's "bootm" command like that:
-------------------->8-----------------
-bootm 0x82000000 - 0x84000000
-------------------->8-----------------
+yes, my case is that received event is neither cmd status nor cmd complete. It is completely a vendor event.
 
-Here 0x82000000 is location of uImage while
-0x80000000 is location of either axs10x.dtb or hsdk.dtb
-previously loaded from SD-card, USB storage or TFTP server.
+if it wants to be solved by the core layer, do you permit that I remove the hack and then send it in the next version?
 
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: stable@vger.kernel.org # 4.14
-Cc: devicetree@vger.kernel.org
----
- arch/arc/boot/dts/axs10x_mb.dtsi | 7 ++++++-
- arch/arc/boot/dts/hsdk.dts       | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+	Sean
 
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index 47b74fbc403c..37bafd44e36d 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -9,6 +9,10 @@
-  */
- 
- / {
-+	aliases {
-+		ethernet = &gmac;
-+	};
-+
- 	axs10x_mb {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -68,7 +72,7 @@
- 			};
- 		};
- 
--		ethernet@0x18000 {
-+		gmac: ethernet@0x18000 {
- 			#interrupt-cells = <1>;
- 			compatible = "snps,dwmac";
- 			reg = < 0x18000 0x2000 >;
-@@ -81,6 +85,7 @@
- 			max-speed = <100>;
- 			resets = <&creg_rst 5>;
- 			reset-names = "stmmaceth";
-+			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
- 		};
- 
- 		ehci@0x40000 {
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 006aa3de5348..d00f283094d3 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -25,6 +25,10 @@
- 		bootargs = "earlycon=uart8250,mmio32,0xf0005000,115200n8 console=ttyS0,115200n8 debug print-fatal-signals=1";
- 	};
- 
-+	aliases {
-+		ethernet = &gmac;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -163,7 +167,7 @@
- 			#clock-cells = <0>;
- 		};
- 
--		ethernet@8000 {
-+		gmac: ethernet@8000 {
- 			#interrupt-cells = <1>;
- 			compatible = "snps,dwmac";
- 			reg = <0x8000 0x2000>;
-@@ -176,6 +180,7 @@
- 			phy-handle = <&phy0>;
- 			resets = <&cgu_rst HSDK_ETH_RESET>;
- 			reset-names = "stmmaceth";
-+			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
- 
- 			mdio {
- 				#address-cells = <1>;
--- 
-2.17.1
+> Regards
+> 
+> Marcel
+> 
