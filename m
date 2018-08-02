@@ -1,80 +1,115 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 03/10] mfd: wcd9335: add wcd irq support
-Date: Thu, 2 Aug 2018 11:07:29 +0100
-Message-ID: <26123a18-ad12-b654-c3bf-4faba0aa0646@linaro.org>
-References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
- <20180727121806.18209-4-srinivas.kandagatla@linaro.org>
- <20180802080525.GM4662@dell>
- <74081a83-abcf-5529-babb-83a7b5242f68@linaro.org>
- <20180802100117.GQ4662@dell>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v8 2/4] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Thu, 2 Aug 2018 10:07:51 +0000
+Message-ID: <AM0PR04MB42117DA905926F3B3DAC014E802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180731141146.10788-1-o.rempel@pengutronix.de>
+ <20180731141146.10788-3-o.rempel@pengutronix.de>
+ <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
+ <20180801050530.nzmomvvyo5pfwclz@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802100117.GQ4662@dell>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180801050530.nzmomvvyo5pfwclz@pengutronix.de>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+> -----Original Message-----
+> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
 
+[...]
 
-On 02/08/18 11:01, Lee Jones wrote:
->>> Any particular reason for separating out IRQ handling?
->> No particular reason, I tried to follow what other codecs like wm8994,
->> wm8350 and 14 others do.
-> I haven't look at them in a while, but maybe theirs are optional?
+> > > diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > > b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > > index 90e4905dfc69..9efd3a9ade44 100644
+> > > --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > > +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > > @@ -18,11 +18,33 @@ Messaging Unit Device Node:
+> > >  Required properties:
+> > >  -------------------
+> > >  - compatible : should be "fsl,<chip>-mu", the supported chips include
+> > > -               imx8qxp, imx8qm.
+> > > +               imx6sx, imx7s, imx8qxp, imx8qm.
+> > > +               The "fsl,imx6sx-mu" compatible is seen as generic and should
+> > > +               be included together with SoC specific compatible.
+> > >  - reg :                Should contain the registers location and length
+> > >  - interrupts : Interrupt number. The interrupt specifier format depends
+> > >                 on the interrupt controller parent.
+> > > -- #mbox-cells:  Must be 0. Number of cells in a mailbox
+> > > +- #mbox-cells:  Must be 2.
+> > >
+> > This seems like modifying the bindings. But since nothing exists yet,
+> > maybe we should merge patch 1 and 2 ?
 > 
-> Either way, I don't think you need to do it.
-Sure, I can merge them into core in next version.
+> For some weeks I already asked to squash this patches.. it was not ACKed.
+> We can try again... @Rob, @Aisheng, should I merge this two patches?
 > 
->>>>    include/dt-bindings/mfd/wcd9335.h   |  43 +++++++++
->>>>    include/linux/mfd/wcd9335/wcd9335.h |   3 +
->>>>    5 files changed, 228 insertions(+), 1 deletion(-)
->>>>    create mode 100644 drivers/mfd/wcd9335-irq.c
->>>>    create mode 100644 include/dt-bindings/mfd/wcd9335.h
->>>>
->>>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->>>> index a4697370640b..210875afe78a 100644
->>>> --- a/drivers/mfd/Makefile
->>>> +++ b/drivers/mfd/Makefile
->>>> @@ -58,7 +58,7 @@ obj-$(CONFIG_MFD_ARIZONA)	+= cs47l24-tables.o
->>>>    endif
->>>>    obj-$(CONFIG_MFD_WCD9335)	+= wcd9335.o
->>>> -wcd9335-objs			:= wcd9335-core.o
->>>> +wcd9335-objs			:= wcd9335-core.o wcd9335-irq.o
->>>>    obj-$(CONFIG_MFD_WM8400)	+= wm8400-core.o
->>>>    wm831x-objs			:= wm831x-core.o wm831x-irq.o wm831x-otp.o
->>>> diff --git a/drivers/mfd/wcd9335-core.c b/drivers/mfd/wcd9335-core.c
->>>> index 8f746901f4e9..6299dfb63aca 100644
->>>> --- a/drivers/mfd/wcd9335-core.c
->>>> +++ b/drivers/mfd/wcd9335-core.c
->>>> @@ -243,12 +243,20 @@ static int wcd9335_slim_status(struct slim_device *sdev,
->>>>    		return ret;
->>>>    	}
->>>> +	wcd9335_irq_init(wcd);
->>> Why don't you check the return value?
->>>
->>> What happens if it defers?
->>>
->> It would not defer here as the regmaps are already setup in probe and the
->> status callback is only invoked when the SLIMbus device is up.
-> I guess now you have seen my comment below, you know that it can
-> defer, right?
 
-Yes, I see it can defer on gpios.
+I guess It may depend on whether we use single channel mode for SCU.
 
+I'm not sure we've already got the conclusion that multi channel mode
+is suitable for SCU. I'm trying to implement it but meet some problems.
+I've just explained in another reply. Hope Jassie can shine some light.
+
+Regards
+Dong Aisheng
+
+> >
+> > > +                         <&phandle type channel>
+> > > +                           phandle   : Label name of controller
+> > > +                           type      : Channel type
+> > > +                           channel   : Channel number
+> > > +
+> > > +               This MU support 4 type of unidirectional channels, each type
+> > > +               has 4 channels. A total of 16 channels. Following types are
+> > > +               supported:
+> > > +               0 - TX channel with 32bit transmit register and IRQ transmit
+> > > +               acknowledgment support.
+> > > +               1 - RX channel with 32bit receive register and IRQ support
+> > > +               2 - TX doorbell channel. Without own register and no ACK
+> support.
+> > > +               3 - RX doorbell channel.
+> > >
+> > Thanks. This is great.
+> >
+> > > +               The doorbell channels should be used with shared memory and
+> protocol
+> > > +               level acknowledgment if needed.
+> > > +
+> > I would avoid this. People might get notions that they have to use
+> > shmem with doorbell -- a trivial protocol might mean doing some fixed
+> > action (like reset) whenever the doorbell rings.
 > 
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +// Copyright (c) 2018, Linaro Limited
->>>> +//
->>> Blank line?
->>>
->> Yep.
-> Does "yep" mean, "I'll fix it"?
-Yes, I mean I agree with you and will fix this in next version.
-
---srini
+> Ok.
 > 
-> -- 
+> >
+> > > +Optional properties:
+> > > +-------------------
+> > > +- clocks :     phandle to the input clock.
+> > > +- fsl,mu-side-b : Should be set for side B MU.
+> > >
+> > Nit: can we call this 'fsl,no-init' ?
+> 
+> No. It is HW description and not functionality which is present in current Linux
+> driver.
+> 
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
