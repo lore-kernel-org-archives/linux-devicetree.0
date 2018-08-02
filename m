@@ -1,219 +1,161 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 03/10] mfd: wcd9335: add wcd irq support
-Date: Thu, 2 Aug 2018 09:54:02 +0100
-Message-ID: <74081a83-abcf-5529-babb-83a7b5242f68@linaro.org>
-References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
- <20180727121806.18209-4-srinivas.kandagatla@linaro.org>
- <20180802080525.GM4662@dell>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Thu, 2 Aug 2018 09:24:09 +0000
+Message-ID: <AM0PR04MB42112E77338240832E2E5077802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
+ <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
+ <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
+ <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+ <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
+ <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
+ <20180730144435.srxgohwgdhrmw2rz@pengutronix.de>
+ <CABb+yY0sUxGatozwdQVM55z7ACtpK8HCepnfvQNunQ=r5y_kVw@mail.gmail.com>
+ <CABb+yY04dm_N1Ud2Mhi-g-eFdNVkxJKE8ONOqntZjN_QKwgLcg@mail.gmail.com>
+ <AM0PR04MB42118617A7F29C1D7BE59242802E0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY2HaTK9tq539+m1fyMMPr1eyygJZ7QvzWNp9E7aYxpoVQ@mail.gmail.com>
+ <CABb+yY0KB7RLK1DyPNNPaXoXkx5WoJhkoKX5XVa+4Q94vC7p4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802080525.GM4662@dell>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY0KB7RLK1DyPNNPaXoXkx5WoJhkoKX5XVa+4Q94vC7p4A@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-mediatek@lists.infradead.org>",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review,
+Hi Jassi,
 
-On 02/08/18 09:05, Lee Jones wrote:
-> On Fri, 27 Jul 2018, Srinivas Kandagatla wrote:
-> 
->> WCD9335 supports two lines of irqs INTR1 and INTR2.
->> Multiple interrupts are muxed via these lines.
->> INTR1 consists of all possible interrupt sources like:
->> Ear OCP, HPH OCP, MBHC, MAD, VBAT, and SVA
->> INTR2 is a subset of first interrupt sources like MAD, VBAT, and SVA
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/mfd/Makefile                |   2 +-
->>   drivers/mfd/wcd9335-core.c          |   9 ++
->>   drivers/mfd/wcd9335-irq.c           | 172 ++++++++++++++++++++++++++++++++++++
-> 
-> Any particular reason for separating out IRQ handling?
-No particular reason, I tried to follow what other codecs like wm8994, 
-wm8350 and 14 others do.
+> -----Original Message-----
+> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
+> Sent: Tuesday, July 31, 2018 8:42 PM
+> To: A.s. Dong <aisheng.dong@nxp.com>
 
-> 
->>   include/dt-bindings/mfd/wcd9335.h   |  43 +++++++++
->>   include/linux/mfd/wcd9335/wcd9335.h |   3 +
->>   5 files changed, 228 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/mfd/wcd9335-irq.c
->>   create mode 100644 include/dt-bindings/mfd/wcd9335.h
->>
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index a4697370640b..210875afe78a 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -58,7 +58,7 @@ obj-$(CONFIG_MFD_ARIZONA)	+= cs47l24-tables.o
->>   endif
->>   
->>   obj-$(CONFIG_MFD_WCD9335)	+= wcd9335.o
->> -wcd9335-objs			:= wcd9335-core.o
->> +wcd9335-objs			:= wcd9335-core.o wcd9335-irq.o
->>   
->>   obj-$(CONFIG_MFD_WM8400)	+= wm8400-core.o
->>   wm831x-objs			:= wm831x-core.o wm831x-irq.o wm831x-otp.o
->> diff --git a/drivers/mfd/wcd9335-core.c b/drivers/mfd/wcd9335-core.c
->> index 8f746901f4e9..6299dfb63aca 100644
->> --- a/drivers/mfd/wcd9335-core.c
->> +++ b/drivers/mfd/wcd9335-core.c
->> @@ -243,12 +243,20 @@ static int wcd9335_slim_status(struct slim_device *sdev,
->>   		return ret;
->>   	}
->>   
->> +	wcd9335_irq_init(wcd);
-> 
-> Why don't you check the return value?
-> 
-> What happens if it defers?
-> 
-It would not defer here as the regmaps are already setup in probe and 
-the status callback is only invoked when the SLIMbus device is up.
+[...]
 
-I will add the missing checks here.
-
->>   	wcd->slim_ifd = wcd->slim_ifd;
->>   
->>   	return mfd_add_devices(wcd->dev, 0, wcd9335_devices,
->>   			       ARRAY_SIZE(wcd9335_devices), NULL, 0, NULL);
->>   }
->>   
->> +static void wcd9335_slim_remove(struct slim_device *sdev)
->> +{
->> +	struct wcd9335 *wcd = dev_get_drvdata(&sdev->dev);
->> +
->> +	wcd9335_irq_exit(wcd);
->> +}
->> +
->>   static const struct slim_device_id wcd9335_slim_id[] = {
->>   	{0x217, 0x1a0, 0x1, 0x0},
->>   	{}
->> @@ -259,6 +267,7 @@ static struct slim_driver wcd9335_slim_driver = {
->>   		.name = "wcd9335-slim",
->>   	},
->>   	.probe = wcd9335_slim_probe,
->> +	.remove = wcd9335_slim_remove,
->>   	.device_status = wcd9335_slim_status,
->>   	.id_table = wcd9335_slim_id,
->>   };
->> diff --git a/drivers/mfd/wcd9335-irq.c b/drivers/mfd/wcd9335-irq.c
->> new file mode 100644
->> index 000000000000..84098c89419b
->> --- /dev/null
->> +++ b/drivers/mfd/wcd9335-irq.c
->> @@ -0,0 +1,172 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +// Copyright (c) 2018, Linaro Limited
->> +//
+> >> Do you need me to send the full scu client driver patch for the reference?
+> >> If yes, please feel free to let me know.
+> >>
+> > Yes, that'll make it clearer.
+> >
+> Thanks for sharing the patch offline.
 > 
-> Blank line?
-> 
-Yep.
-
->> +#include <linux/gpio.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/regmap.h>
->> +#include <linux/of_irq.h>
->> +#include <dt-bindings/mfd/wcd9335.h>
->> +#include <linux/mfd/wcd9335/wcd9335.h>
->> +#include <linux/mfd/wcd9335/registers.h>
-> 
-> Please place in alphabetical order.
-> 
-sure!
-
->> +static const struct regmap_irq wcd9335_irqs[] = {
->> +	/* INTR_REG 0 */
->> +	[WCD9335_IRQ_SLIMBUS] = {
->> +		.reg_offset = 0,
->> +		.mask = BIT(0),
->> +	},
-> 
-> [snipped approx 1,000,000 entries]
-> 
->> +	[WCD9335_IRQ_SVA_OUTBOX2] = {
->> +		.reg_offset = 3,
->> +		.mask = BIT(6),
->> +	},
->> +};
-> 
-> Please use REGMAP_IRQ_REG() to significantly reduce the diff.
+> I don't see why it can't be adapted to work with the simple 2-cell
+> implementation. Instead of one virtual, ask for 4 physical channels and send
+> data in u32 chunks sequentially over them.
+> In fact, that should make it even better by removing the tight-loop (zero
+> delay!!) polling in send_data() -- MU does support interrupts, why not use
+> them to avoid polling?  If you find it hard, I can make a patch on top of your
+> client patchset, once Oleksij is done with the MU driver.
 > 
 
-Nice, that looks good, I will use that in next version.
+As you insist, I will try to implement multi channels mode, then we can do a
+clear comparison to see which one is better for SCU mode rather than assumptions.
 
->> +static const struct regmap_irq_chip wcd9335_regmap_irq1_chip = {
->> +	.name = "wcd9335_pin1_irq",
->> +	.status_base = WCD9335_INTR_PIN1_STATUS0,
->> +	.mask_base = WCD9335_INTR_PIN1_MASK0,
->> +	.ack_base = WCD9335_INTR_PIN1_CLEAR0,
->> +	.type_base = WCD9335_INTR_LEVEL0,
->> +	.num_regs = 4,
->> +	.irqs = wcd9335_irqs,
->> +	.num_irqs = ARRAY_SIZE(wcd9335_irqs),
->> +};
->> +
->> +int wcd9335_irq_init(struct wcd9335 *wcd)
->> +{
->> +	int ret;
-> 
-> '\n' here.
+First of all,  using interrupt for each chan will likely to terribly slow down the SCU
+Message handling speed. SCU Messages usually are handled by SCU firmware very
+quickly in a few microseconds. (< 10us). That's why we use polling mode for SCU
+message handling.
 
-yep!
+If we break down a SCU message into a few separate MU channel interrupts driven,
+There will be a lot of unnecessary and meaningless interrupt handling.
+And the whole flow may look like:
 
-> 
->> +	/*
->> +	 * INTR1 consists of all possible interrupt sources Ear OCP,
->> +	 * HPH OCP, MBHC, MAD, VBAT, and SVA
->> +	 * INTR2 is a subset of first interrupt sources MAD, VBAT, and SVA
->> +	 */
->> +	wcd->intr1 = of_irq_get_byname(wcd->dev->of_node, "intr1");
->> +	if (wcd->intr1 < 0 || wcd->intr1 == -EPROBE_DEFER) {
->> +		dev_err(wcd->dev, "Unable to configure irq\n");
-> 
-> Nit: s/irq/IRQ/
-> 
-> Do you really want to issue an error message for -EPROBE_DEFER?
-> 
-> This maybe confusing if it is initiated later.
+Sending Word 0 ->
+Chan 0 interrupt -> (meaningless)
+Sending Word 1 ->
+Chan1 interrupt -> (meaningless)
+Sending Word 2 ->
+Chan2 interrupt -> (meaningless)
+Sending Word 3 ->
+Chan3 interrupt-> (meaningless)
 
-Thanks for spotting this, I will take a closer look at this error path 
-and handle the DEFER case correctly in next version!
-> 
->> +		return wcd->intr1;
->> +	}
->> +
->> +	ret = regmap_add_irq_chip(wcd->regmap, wcd->intr1,
->> +				 IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
->> +				 0, &wcd9335_regmap_irq1_chip,
->> +				 &wcd->irq_data);
->> +	if (ret != 0) {
-> 
-> "if (ret)"
-> 
-Yep!
+Sending Word 4 on Chan 0 again ->
+Wait for Chan 0 interrupt (meaningless) ->
+...
 
->> +		dev_err(wcd->dev, "Failed to register IRQ chip: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int wcd9335_irq_exit(struct wcd9335 *wcd)
->> +{
->> +	regmap_del_irq_chip(wcd->intr1, wcd->irq_data);
-> 
-> '\n' here.
-yep!
-> 
->> +	return 0;
->> +}
-> 
-> Or better still, make this a void and remove the superfluous return.
+Then waiting for Rx:
 
-Makes sense, I will give that a try in next version.
+Chan 0 Rx interrupt ->
+Read Word 0   ->
+(Then we know response size here)
+
+Chan 1 Rx interrupt ->
+Read Word 1 ->
+Chan 2 Rx interrupt ->
+Read Word 2 ->
+Chan 3 Rx interrupt ->
+Read Word 3 ->
+
+(If msg size > 4 words)
+Chan 0 Rx interrupt ->
+Read Word 4
+
+...
+And we must use a complicated way to map the received data of each channel
+into one SCU msg buffer and need handle the sequence properly for size > 4
+words case
+
+Is this what you intended?
+
+Per my understanding, there're several issues for this follow:
+1) Many unnecessary and meaningless interrupts hanllding of Tx and RX
+2) Performance downgrading
+    A 4 word SCU MSG may need 8 interrupts to handle which terribly slow
+    down the speed. (Interrupt latency will be terrible if many)
+3) Complex RX flow in order to align with framework design
+
+Any comments about these issues?
+
+Generally, from what I see, the mailbox framework really is not designed for SCU type
+devices that handling msg sending or receiving via multiple channels.  Including the
+ring buffer supported for handling several msgs on the same channel and rich
+completion mechanism, none of them are suitable for SCU MU in multiple channel mode.
+
+What we really actually needed is a quite simple way to handle MSG Tx and Tx
+synchronously.
+
+int sc_call_rpc(sc_ipc_t ipc, void *msg, bool no_resp)
+{       
+        ...
+        ret = mbox_send_message(sc_ipc->chan, msg);
+        if (!no_resp) 
+                ret = mbox_receive_message(sc_ipc->chan, msg);
+        ...
+        return ret;
+}
+
+For me, I don't think the above way driven by interrupt is suitable for SCU.
+But I will still keep investigating if any better way to handle it in multi chan
+mode as you wish.
+
+How would you suggest for such situation in order to support SCU properly?
+
+> I have some more suggestions for the client driver. But since I don't have to
+> live with them (you do), I can't demand you make those changes. If you like,
+> please feel free to cc me on the next revision of the client driver.
+
+I certainly appreciate any clear and valuable improvement suggestions.
+Just feel free to let me know if any better idea.
+
+Regards
+Dong Aisheng
