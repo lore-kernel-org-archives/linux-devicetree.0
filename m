@@ -1,39 +1,43 @@
-From: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Subject: Re: [PATCH 4/4] drm/meson: convert to the new canvas module
-Date: Thu, 2 Aug 2018 14:34:44 +0200
-Message-ID: <CAHStOZ6B-R7=5utGqb49OsFBsUsMVsn=WMrzNK8Wk-zcgbnPuA@mail.gmail.com>
-References: <20180801185128.23440-1-maxi.jourdan@wanadoo.fr>
- <20180801185128.23440-5-maxi.jourdan@wanadoo.fr> <744700e43aed3880807f86abde0caf3df1127e60.camel@baylibre.com>
+From: Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v2 4/4] arm64: zynqmp: Add DDRC node
+Date: Thu, 2 Aug 2018 18:04:48 +0530
+Message-ID: <1533213288-8771-5-git-send-email-manish.narani@xilinx.com>
+References: <1533213288-8771-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <744700e43aed3880807f86abde0caf3df1127e60.camel@baylibre.com>
+In-Reply-To: <1533213288-8771-1-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, mdf@kernel.org, edgar.iglesias@xilinx.com, shubhrajyoti.datta@xilinx.com, naga.sureshkumar.relli@xilinx.com, bharat.kumar.gogada@xilinx.com, stefan.krsmanovic@aggios.com
+Cc: sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Manish Narani <manish.narani@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
+This patch adds ddrc memory controller node in dts. The size mentioned
+in dts is 0x30000, because we need to access DDR_QOS INTR registers
+located at fd090208 from this driver.
 
-2018-08-02 10:39 GMT+02:00 Jerome Brunet <jbrunet@baylibre.com>:
-> I looks like the consumer of your 'canvas' devices must know how the canvas
-> device is organized internally. Maybe something better can be done ?
->
-> Your canvas driver could provide a consumer API, for example:
-> meson_canvas_get(): to translate for struct device_node to whatever abstract
-> pointer you would need.
-> meson_canvas_alloc(), setup(), etc ...
->
-> ... This is just adding a bit of indirection but it would help hide the plumbing
-> of your canvas driver from the consumers (and repeat this code in each). This
-> might be usefull if you ever to make this canvas driver evolve.
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+---
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Overall the inner workings are hidden as there is an ops struct
-instead of public functions.
-
-I agree that the "fetch the node" boilerplate code could be put behind
-a helper, but at the same time this code helps remind the developer
-that there needs to be a canvas node in the dts, and that it has to be
-linked in your own device node.
-
-I would like to keep it that way if that is okay with you.
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index a091e6f..7d6a3cf 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -355,6 +355,13 @@
+ 			xlnx,bus-width = <64>;
+ 		};
+ 
++		mc: memory-controller@fd070000 {
++			compatible = "xlnx,zynqmp-ddrc-2.40a";
++			reg = <0x0 0xfd070000 0x0 0x30000>;
++			interrupt-parent = <&gic>;
++			interrupts = <0 112 4>;
++		};
++
+ 		gem0: ethernet@ff0b0000 {
+ 			compatible = "cdns,zynqmp-gem", "cdns,gem";
+ 			status = "disabled";
+-- 
+2.1.1
