@@ -1,92 +1,67 @@
-Return-Path: <SRS0=L/Ao=KR=linuxtv.org=mchehab@kernel.org>
+Return-Path: <mchehab+samsung@kernel.org>
+Date: Thu, 2 Aug 2018 11:38:44 -0300
 From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Date: Thu, 02 Aug 2018 10:11:51 +0000
-Subject: [git:media_tree/master] media: dt-bindings: media: qcom, camss: Unify the clock names
-Reply-to: linux-media@vger.kernel.org
-Message-Id: <E1flD2F-0003u2-0e@www.linuxtv.org>
-To: linuxtv-commits@linuxtv.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hansverk@cisco.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 16/22] [media] tvp5150: add querystd
+Message-ID: <20180802113844.6425a23a@coco.lan>
+In-Reply-To: <20180802101641.5oyo25ztbh45wcvh@pengutronix.de>
+References: <20180628162054.25613-1-m.felsch@pengutronix.de>
+	<20180628162054.25613-17-m.felsch@pengutronix.de>
+	<20180730150945.3301864f@coco.lan>
+	<20180801132125.j4725kthupcc7fnd@pengutronix.de>
+	<20180801112212.4f450528@coco.lan>
+	<20180801144926.ijqotetin4uhtxw6@pengutronix.de>
+	<20180801125056.5d0b14c7@coco.lan>
+	<20180802080101.b3en5xcjclcyopfa@pengutronix.de>
+	<20180802064900.3dfbd0ec@coco.lan>
+	<20180802101641.5oyo25ztbh45wcvh@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de, afshin.nasser@gmail.com, javierm@redhat.com, sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-This is an automatic generated email to let you know that the following patch were queued:
+Em Thu, 2 Aug 2018 12:16:41 +0200
+Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
-Subject: media: dt-bindings: media: qcom, camss: Unify the clock names
-Author:  Todor Tomov <todor.tomov@linaro.org>
-Date:    Tue Jul 31 02:19:43 2018 -0400
+> > > Did you drop the DT of_graph support patch? It was there on your first
+> > > tvp5150 branch.   
+> > 
+> > Yes. As discussed, I'm waiting for a replacement patch from you. So,
+> > after testing, I removed it, in order to make simpler to add your
+> > replacement patch.
+> > 
+> > IMO, the proper mapping is one input linked to (up to) 3 connectors.  
+> 
+> I tought it would be okay to have more than 1 input pad since the
+> .sig_type pad property. So the tvp5150 media entity can be represented
+> like the physical tvp5150 chip.
 
-Use more logical clock names - similar to the names in documentation.
-This will allow better handling of the clocks in the driver when support
-for more hardware versions is added - equivalent clocks on different
-hardware versions will have the same name.
+As I said, tvp5150 has internally two physical inputs only: AIP1A and AIP1B.
 
-Note: No dts is using this device (and clock names) yet.
+IMO, it should be creating 3 PADS (two inputs and the output one), e. g.
+something like (names here are just a suggestion):
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Hans Verkuil <hansverk@cisco.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+	TVP5150_PAD_IN_AIP1A,
+	TVP5150_PAD_IN_AIP1B,
+	TVP5150_PAD_OUT
 
- .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+The S-video connector (if present) should be linked to both inputs.
 
----
+I discussed this with other core maintainers: we all have the same
+opinion about that.
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
-index cadecebc73f7..032e8ed81faa 100644
---- a/Documentation/devicetree/bindings/media/qcom,camss.txt
-+++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
-@@ -53,7 +53,7 @@ Qualcomm Camera Subsystem
- 	Usage: required
- 	Value type: <stringlist>
- 	Definition: Should contain the following entries:
--                - "camss_top_ahb"
-+                - "top_ahb"
-                 - "ispif_ahb"
-                 - "csiphy0_timer"
-                 - "csiphy1_timer"
-@@ -67,11 +67,11 @@ Qualcomm Camera Subsystem
-                 - "csi1_phy"
-                 - "csi1_pix"
-                 - "csi1_rdi"
--                - "camss_ahb"
--                - "camss_vfe_vfe"
--                - "camss_csi_vfe"
--                - "iface"
--                - "bus"
-+                - "ahb"
-+                - "vfe0"
-+                - "csi_vfe0"
-+                - "vfe_ahb"
-+                - "vfe_axi"
- - vdda-supply:
- 	Usage: required
- 	Value type: <phandle>
-@@ -161,7 +161,7 @@ Qualcomm Camera Subsystem
- 			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
- 			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
- 			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
--                clock-names = "camss_top_ahb",
-+                clock-names = "top_ahb",
-                         "ispif_ahb",
-                         "csiphy0_timer",
-                         "csiphy1_timer",
-@@ -175,11 +175,11 @@ Qualcomm Camera Subsystem
-                         "csi1_phy",
-                         "csi1_pix",
-                         "csi1_rdi",
--                        "camss_ahb",
--                        "camss_vfe_vfe",
--                        "camss_csi_vfe",
--                        "iface",
--                        "bus";
-+                        "ahb",
-+                        "vfe0",
-+                        "csi_vfe0",
-+                        "vfe_ahb",
-+                        "vfe_axi";
- 		vdda-supply = <&pm8916_l2>;
- 		iommus = <&apps_iommu 3>;
- 		ports {
+I'll post a separate e-mail from the discussions for you and others to
+comment.
+
+It would need some logic that will enforce that just one connector link
+will be active on any given time (e. g. when a link is enabled, 
+it should disable the other links).
+
+> 
+> I will fix it, if it isn't the right way.
+
+Ok.
+
+Thanks,
+Mauro
