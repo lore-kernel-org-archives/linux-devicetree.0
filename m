@@ -1,59 +1,150 @@
-Return-Path: <SRS0=tWHS=KQ=sirena.org.uk=broonie@kernel.org>
-Date: Wed, 1 Aug 2018 11:39:49 +0100
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] spi: pl022: Add OF binding to disable DMA usage
-Message-ID: <20180801103949.GE5509@sirena.org.uk>
-References: <20180724112753.6020-1-alexander.sverdlin@nokia.com>
- <20180725170644.GE6315@sirena.org.uk>
- <150e4a91-e607-ee7c-20bc-9ed81019f1da@nokia.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o0ZfoUVt4BxPQnbU"
-Content-Disposition: inline
-In-Reply-To: <150e4a91-e607-ee7c-20bc-9ed81019f1da@nokia.com>
-To: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-Path: <SRS0=HJQ3=KR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from www.linuxtv.org ([130.149.80.248]:46115 "EHLO www.linuxtv.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732267AbeHBOj6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Aug 2018 10:39:58 -0400
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Date: Thu, 02 Aug 2018 10:18:15 +0000
+Subject: [git:media_tree/master] media: dt-bindings: media: qcom,camss: Add 8996 bindings
+Reply-to: linux-media@vger.kernel.org
+Message-Id: <E1flD2E-0003qv-GW@www.linuxtv.org>
+Sender: devicetree-owner@vger.kernel.org
+To: linuxtv-commits@linuxtv.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Rob Herring <robh@kernel.org>, Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
+This is an automatic generated email to let you know that the following patch were queued:
 
---o0ZfoUVt4BxPQnbU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Subject: media: dt-bindings: media: qcom,camss: Add 8996 bindings
+Author:  Todor Tomov <todor.tomov@linaro.org>
+Date:    Wed Jul 25 12:38:25 2018 -0400
 
-On Thu, Jul 26, 2018 at 11:04:24AM +0200, Alexander Sverdlin wrote:
-> On 25/07/18 19:06, Mark Brown wrote:
+Update binding document for MSM8996.
 
-> > this or if we shouldn't instead be looking at improving the driver to
-> > work better in systems with limited channels, for example by only
-> > claiming the channels when it's active (since it can fall back to PIO if
-> > it doesn't get them).  That might be too heavyweight though, possibly
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Hans Verkuil <hansverk@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-> yes, this is an option as well, but at the time we need to take this decision
-> the bus scan has not yet been performed. We could scan all the devices in
-> the DT and check if any of them requires DMA. This would mean, that
-> probe() of the PL022 driver will include similar code to the bus scan
-> that anyway will happen later just to take the decision on DMA usage.
+ .../devicetree/bindings/media/qcom,camss.txt       | 44 +++++++++++++++++++---
+ 1 file changed, 38 insertions(+), 6 deletions(-)
 
-> But I'm fine with that. If this sounds better than new boolean DT binding,
-> I'll send another patch.
+---
 
-I'm not 100% clear I follow what you mean by bus scan here but I *think*
-that sounds about right.  The channel request/release could be factored
-out into helper functions to minimize duplication.
-
---o0ZfoUVt4BxPQnbU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlthjfQACgkQJNaLcl1U
-h9Cs3Af/Svb2xLnwyZWkAc/SdIwYy6CVbec1+ONDDwSF+JH8c+0VaskO6JLs95gA
-i4w7tidTrWu2KA/0oRBR3h/m7Hgxv3u7dfjF2hS6M/b+z+sXdTn9GJ1nhfO8/FOk
-3qEFlrkM4QcP6/1LX9FScnfW4qkSoVusxrmuWzKhAL69B5DPuV/jZojK1qE8eWby
-US1ZlVKSQpV7oJo/Ua5W5VOJIBTu9Wl+/dp3+FOOzOALXodnbv/On00fMQVD71fF
-1kMyBNQ2fRMlbXAkMasykLAs6PapyEKOi9MH2zkaUM9YW7SrKrV5vYgS5hGQRHSG
-ClimEAHbHcp+3bSSffNTz+LLc2hGjg==
-=5ska
------END PGP SIGNATURE-----
-
---o0ZfoUVt4BxPQnbU--
+diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+index e938eb02274c..09eb6ed99114 100644
+--- a/Documentation/devicetree/bindings/media/qcom,camss.txt
++++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+@@ -5,8 +5,9 @@ Qualcomm Camera Subsystem
+ - compatible:
+ 	Usage: required
+ 	Value type: <stringlist>
+-	Definition: Should contain:
++	Definition: Should contain one of:
+ 		- "qcom,msm8916-camss"
++		- "qcom,msm8996-camss"
+ - reg:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -19,11 +20,16 @@ Qualcomm Camera Subsystem
+ 		- "csiphy0_clk_mux"
+ 		- "csiphy1"
+ 		- "csiphy1_clk_mux"
++		- "csiphy2"		(8996 only)
++		- "csiphy2_clk_mux"	(8996 only)
+ 		- "csid0"
+ 		- "csid1"
++		- "csid2"		(8996 only)
++		- "csid3"		(8996 only)
+ 		- "ispif"
+ 		- "csi_clk_mux"
+ 		- "vfe0"
++		- "vfe1"		(8996 only)
+ - interrupts:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -34,10 +40,14 @@ Qualcomm Camera Subsystem
+ 	Definition: Should contain the following entries:
+ 		- "csiphy0"
+ 		- "csiphy1"
++		- "csiphy2"		(8996 only)
+ 		- "csid0"
+ 		- "csid1"
++		- "csid2"		(8996 only)
++		- "csid3"		(8996 only)
+ 		- "ispif"
+ 		- "vfe0"
++		- "vfe1"		(8996 only)
+ - power-domains:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -57,6 +67,7 @@ Qualcomm Camera Subsystem
+ 		- "ispif_ahb"
+ 		- "csiphy0_timer"
+ 		- "csiphy1_timer"
++		- "csiphy2_timer"	(8996 only)
+ 		- "csi0_ahb"
+ 		- "csi0"
+ 		- "csi0_phy"
+@@ -67,9 +78,25 @@ Qualcomm Camera Subsystem
+ 		- "csi1_phy"
+ 		- "csi1_pix"
+ 		- "csi1_rdi"
++		- "csi2_ahb"		(8996 only)
++		- "csi2"		(8996 only)
++		- "csi2_phy"		(8996 only)
++		- "csi2_pix"		(8996 only)
++		- "csi2_rdi"		(8996 only)
++		- "csi3_ahb"		(8996 only)
++		- "csi3"		(8996 only)
++		- "csi3_phy"		(8996 only)
++		- "csi3_pix"		(8996 only)
++		- "csi3_rdi"		(8996 only)
+ 		- "ahb"
+ 		- "vfe0"
+ 		- "csi_vfe0"
++		- "vfe0_ahb",		(8996 only)
++		- "vfe0_stream",	(8996 only)
++		- "vfe1",		(8996 only)
++		- "csi_vfe1",		(8996 only)
++		- "vfe1_ahb",		(8996 only)
++		- "vfe1_stream",	(8996 only)
+ 		- "vfe_ahb"
+ 		- "vfe_axi"
+ - vdda-supply:
+@@ -90,14 +117,18 @@ Qualcomm Camera Subsystem
+ 		- reg:
+ 			Usage: required
+ 			Value type: <u32>
+-			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
++			Definition: Selects CSI2 PHY interface - PHY0, PHY1
++				    or PHY2 (8996 only)
+ 	Endpoint node properties:
+ 		- clock-lanes:
+ 			Usage: required
+ 			Value type: <u32>
+-			Definition: The physical clock lane index. The value
+-				    must always be <1> as the physical clock
+-				    lane is lane 1.
++			Definition: The physical clock lane index. On 8916
++				    the value must always be <1> as the physical
++				    clock lane is lane 1. On 8996 the value must
++				    always be <7> as the hardware supports D-PHY
++				    and C-PHY, indexes are in a common set and
++				    D-PHY physical clock lane is labeled as 7.
+ 		- data-lanes:
+ 			Usage: required
+ 			Value type: <prop-encoded-array>
+@@ -105,7 +136,8 @@ Qualcomm Camera Subsystem
+ 				    Position of an entry determines the logical
+ 				    lane number, while the value of an entry
+ 				    indicates physical lane index. Lane swapping
+-				    is supported.
++				    is supported. Physical lane indexes for
++				    8916: 0, 2, 3, 4; for 8996: 0, 1, 2, 3.
+ 
+ * An Example
+ 
