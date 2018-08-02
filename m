@@ -1,115 +1,67 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v8 2/4] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Thu, 2 Aug 2018 10:07:51 +0000
-Message-ID: <AM0PR04MB42117DA905926F3B3DAC014E802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <20180731141146.10788-1-o.rempel@pengutronix.de>
- <20180731141146.10788-3-o.rempel@pengutronix.de>
- <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
- <20180801050530.nzmomvvyo5pfwclz@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180801050530.nzmomvvyo5pfwclz@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ", linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: uniphier: remove unnecessary include headers" to the spi tree
+Date: Thu,  2 Aug 2018 11:12:24 +0100 (BST)
+Message-ID: <20180802101224.A50D71124241@debutante.sirena.org.uk>
+References: <1533184963-28508-1-git-send-email-hayashibara.keiji@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533184963-28508-1-git-send-email-hayashibara.keiji@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, yamada.masahiro@socionext.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, linux-kernel@vger.kernel.org, hayashibara.keiji@socionext.comlinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
+The patch
 
-[...]
+   spi: uniphier: remove unnecessary include headers
 
-> > > diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> > > b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> > > index 90e4905dfc69..9efd3a9ade44 100644
-> > > --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> > > +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-> > > @@ -18,11 +18,33 @@ Messaging Unit Device Node:
-> > >  Required properties:
-> > >  -------------------
-> > >  - compatible : should be "fsl,<chip>-mu", the supported chips include
-> > > -               imx8qxp, imx8qm.
-> > > +               imx6sx, imx7s, imx8qxp, imx8qm.
-> > > +               The "fsl,imx6sx-mu" compatible is seen as generic and should
-> > > +               be included together with SoC specific compatible.
-> > >  - reg :                Should contain the registers location and length
-> > >  - interrupts : Interrupt number. The interrupt specifier format depends
-> > >                 on the interrupt controller parent.
-> > > -- #mbox-cells:  Must be 0. Number of cells in a mailbox
-> > > +- #mbox-cells:  Must be 2.
-> > >
-> > This seems like modifying the bindings. But since nothing exists yet,
-> > maybe we should merge patch 1 and 2 ?
-> 
-> For some weeks I already asked to squash this patches.. it was not ACKed.
-> We can try again... @Rob, @Aisheng, should I merge this two patches?
-> 
+has been applied to the spi tree at
 
-I guess It may depend on whether we use single channel mode for SCU.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-I'm not sure we've already got the conclusion that multi channel mode
-is suitable for SCU. I'm trying to implement it but meet some problems.
-I've just explained in another reply. Hope Jassie can shine some light.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Regards
-Dong Aisheng
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> >
-> > > +                         <&phandle type channel>
-> > > +                           phandle   : Label name of controller
-> > > +                           type      : Channel type
-> > > +                           channel   : Channel number
-> > > +
-> > > +               This MU support 4 type of unidirectional channels, each type
-> > > +               has 4 channels. A total of 16 channels. Following types are
-> > > +               supported:
-> > > +               0 - TX channel with 32bit transmit register and IRQ transmit
-> > > +               acknowledgment support.
-> > > +               1 - RX channel with 32bit receive register and IRQ support
-> > > +               2 - TX doorbell channel. Without own register and no ACK
-> support.
-> > > +               3 - RX doorbell channel.
-> > >
-> > Thanks. This is great.
-> >
-> > > +               The doorbell channels should be used with shared memory and
-> protocol
-> > > +               level acknowledgment if needed.
-> > > +
-> > I would avoid this. People might get notions that they have to use
-> > shmem with doorbell -- a trivial protocol might mean doing some fixed
-> > action (like reset) whenever the doorbell rings.
-> 
-> Ok.
-> 
-> >
-> > > +Optional properties:
-> > > +-------------------
-> > > +- clocks :     phandle to the input clock.
-> > > +- fsl,mu-side-b : Should be set for side B MU.
-> > >
-> > Nit: can we call this 'fsl,no-init' ?
-> 
-> No. It is HW description and not functionality which is present in current Linux
-> driver.
-> 
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 07ebbbe458790d3c75f4a2f3634d8e04f66b389b Mon Sep 17 00:00:00 2001
+From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Date: Thu, 2 Aug 2018 13:42:43 +0900
+Subject: [PATCH] spi: uniphier: remove unnecessary include headers
+
+This commit removed include headers of linux/of.h and linux/of_platform.h,
+because they are not used.
+
+Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-uniphier.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/spi/spi-uniphier.c b/drivers/spi/spi-uniphier.c
+index 089985465890..5a6137fe172d 100644
+--- a/drivers/spi/spi-uniphier.c
++++ b/drivers/spi/spi-uniphier.c
+@@ -10,8 +10,6 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
+-#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/spi/spi.h>
+ 
+-- 
+2.18.0
