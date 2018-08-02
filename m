@@ -1,50 +1,86 @@
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Subject: Re: [RFC PATCH v2 5/6] spi: Add QuadSPI driver for Atmel SAMA5D2
-Date: Thu, 2 Aug 2018 12:46:36 +0200
-Message-ID: <6f9ca4f1-6809-2d7d-4d64-6869a4e413cb@exceet.de>
-References: <20180627131609.13681-1-bugalski.piotr@gmail.com>
- <20180627131609.13681-6-bugalski.piotr@gmail.com>
- <20180801172747.GJ5509@sirena.org.uk> <20180801215733.4dfa3a95@bbrezillon>
- <20180802101742.GF9117@sirena.org.uk>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Thu, 2 Aug 2018 12:47:27 +0200
+Message-ID: <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
+References: <20180802103425.3053-1-o.rempel@pengutronix.de>
+ <20180802103425.3053-4-o.rempel@pengutronix.de>
+ <20180802104443.GH9117@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="5AJLEBPFi8zhQJWYRI3WJOFLDJr5ahJGy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802101742.GF9117@sirena.org.uk>
-Content-Language: en-US
+In-Reply-To: <20180802104443.GH9117@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tudor Ambarus <tudor.ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Piotr Bugalski <pbu@cryptera.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Piotr Bugalski <bugalski.piotr@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@microchip.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--5AJLEBPFi8zhQJWYRI3WJOFLDJr5ahJGy
+Content-Type: multipart/mixed; boundary="AXOb8o839w5QurrTYeEqtVxfDzvKm5doU";
+ protected-headers="v1"
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kernel@pengutronix.de,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,
+ Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
+ Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com,
+ "A.s. Dong" <aisheng.dong@nxp.com>
+Message-ID: <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
+Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
+References: <20180802103425.3053-1-o.rempel@pengutronix.de>
+ <20180802103425.3053-4-o.rempel@pengutronix.de>
+ <20180802104443.GH9117@sirena.org.uk>
+In-Reply-To: <20180802104443.GH9117@sirena.org.uk>
 
-On 02.08.2018 12:17, Mark Brown wrote:
-> On Wed, Aug 01, 2018 at 09:57:33PM +0200, Boris Brezillon wrote:
->> Mark Brown <broonie@kernel.org> wrote:
-> 
->> 2/ Getting this patch [1] merged and implementing the ->get_name() hook
->>     in this driver so that SPI NOR devs declared to the MTD layer keep
->>     the same name after the transition to spi-mem and mtdparts= passed on
->>     the cmdline keep working. Without this in place we're likely to
->>     break a few setups :-/.
-> 
->> [1]https://patchwork.kernel.org/patch/10508693/
-> 
-> I don't seem to have a copy of this patch...  not sure it was sent to
-> me?
+--AXOb8o839w5QurrTYeEqtVxfDzvKm5doU
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-When I sent the patch I put you in cc. So if nothing went wrong you 
-should have it.
-It is part of the SPI MEM conversion series for the FSL QSPI driver [1].
+On 02.08.2018 12:44, Mark Brown wrote:
+> On Thu, Aug 02, 2018 at 12:34:22PM +0200, Oleksij Rempel wrote:
+>> Export pm_power_off_prepare. It is needed to implement power off on
+>> Freescale/NXP iMX6 based boards with external power management
+>> integrated circuit (PMIC).
+>=20
+> I thought we'd got an ack for this from Raphael on a previous version o=
+r
+> am I mistaken?
+>=20
 
-Boris made some remarks on documentation in v2, that I have fixed, but 
-not sent out yet, as we have some blocking issues with the driver itself.
+No, we got an:
+"Anyway, I have no particular problems with exporting
+pm_power_off_prepare via EXPORT_SYMBOL_GPL()."
 
-So if you want I could send the patch separately so it can be applied 
-with the Atmel driver.
+Should i see it as ACK?
 
-Regards,
-Frieder
 
-[1] https://patchwork.ozlabs.org/cover/939864/
+--AXOb8o839w5QurrTYeEqtVxfDzvKm5doU--
+
+--5AJLEBPFi8zhQJWYRI3WJOFLDJr5ahJGy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAlti4T8ACgkQdQOiSHVI
+77SA7Qf+PEBdxj2UynzNMWWjoQrpHpM98iIoXeKecu2cWw70ew2hGM6x07P+RcGH
+R3JNhb7OioigTyxAEKf99TB4sRnoQwZKnaf2sBIUaT4w58rCIPNQV3zZJAmGef/U
+o2n21ct8+G3DNgQ0HaK32XWVvtq0s0D0Jog60AH9gqTmBpC+jR+v1kVZ1CqI4Djm
+urDDQjN4TusrUVlMCCWoVMhb1F8pddCrb6NAgBQQmK90wJJ+2eZzutvvEQMJMsUz
+GFdQolaj/lOeuKzK1hZT6wRMh4OGRTln3jBuHYCdWJ5jLsuu+CMXww7mCZcfo8U3
+v9w4e25L8O1m88nWMH5SA1ZwvHLGPw==
+=YY42
+-----END PGP SIGNATURE-----
+
+--5AJLEBPFi8zhQJWYRI3WJOFLDJr5ahJGy--
