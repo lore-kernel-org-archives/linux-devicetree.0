@@ -1,11 +1,13 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: simplified RISC-V interrupt and clocksource handling v2
-Date: Thu,  2 Aug 2018 13:49:57 +0200
-Message-ID: <20180802115008.4031-1-hch@lst.de>
+Subject: [PATCH 01/11] dt-bindings: Correct RISC-V's timebase-frequency
+Date: Thu,  2 Aug 2018 13:49:58 +0200
+Message-ID: <20180802115008.4031-2-hch@lst.de>
+References: <20180802115008.4031-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180802115008.4031-1-hch@lst.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
  <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
@@ -19,45 +21,68 @@ To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@ar
 Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This series tries adds support for interrupt handling and timers
-for the RISC-V architecture.
+From: Palmer Dabbelt <palmer@sifive.com>
 
-The basic per-hart interrupt handling implemented by the scause
-and sie CSRs is extremely simple and implemented directly in
-arch/riscv/kernel/irq.c.  In addition there is a irqchip driver
-for the PLIC external interrupt controller, which is called through
-the set_handle_irq API, and a clocksource driver that gets its
-timer interrupt directly from the low-level interrupt handling.
+Someone must have read the device tree specification incorrectly,
+because we were putting timebase-frequency in the wrong place.  This
+corrects the issue, moving it from
 
-Compared to previous iterations this version does not try to use an
-irqchip driver for the low-level interrupt handling.  This saves
-a couple indirect calls and an additional read of the scause CSR
-in the hot path, makes the code much simpler and last but not least
-avoid the dependency on a device tree for a mandatory architectural
-feature.
+/ {
+        cpus {
+                timebase-frequency = X;
+        }
+}
 
-A git tree is available here (contains a few more patches before
-the ones in this series)
+to
 
-    git://git.infradead.org/users/hch/riscv.git riscv-irq-simple.2
+/ {
+        cpus {
+                cpu@0 {
+                        timebase-frequency = X;
+                }
+        }
+}
 
-Gitweb:
+This is great, because the timer's frequency should really be a per-cpu
+quantity on RISC-V systems since there's a timer per CPU.  This should
+lead to some cleanups in our timer driver.
 
-    http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple.2
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ Documentation/devicetree/bindings/riscv/cpus.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Changes since v1:
- - rename the plic driver to irq-sifive-plic
- - switch to a default compatible of sifive,plic0 (still supporting the
-   riscv,plic0 name for compatibility)
- - add a reference for the SiFive PLIC register layout
- - fix plic_toggle addressing for large numbers of hwirqs
- - remove the call to ack_bad_irq
- - use a raw spinlock for plic_toggle_lock
- - use the irq_desc cpumask in the plic enable/disable methods
- - add back OF contexid parsing in the plic driver
- - don't allow COMPILE_TEST builds of the clocksource driver, as it
-   depends on <asm/sbi.h>
- - default the clocksource driver to y
- - clean up naming in the clocksource driver
- - remove the MINDELTA and MAXDELTA #defines
- - various DT binding fixes
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
+index adf7b7af5dc3..b0b038d6c406 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.txt
++++ b/Documentation/devicetree/bindings/riscv/cpus.txt
+@@ -93,9 +93,9 @@ Linux is allowed to run on.
+         cpus {
+                 #address-cells = <1>;
+                 #size-cells = <0>;
+-                timebase-frequency = <1000000>;
+                 cpu@0 {
+                         clock-frequency = <1600000000>;
++                        timebase-frequency = <1000000>;
+                         compatible = "sifive,rocket0", "riscv";
+                         device_type = "cpu";
+                         i-cache-block-size = <64>;
+@@ -113,6 +113,7 @@ Linux is allowed to run on.
+                 };
+                 cpu@1 {
+                         clock-frequency = <1600000000>;
++                        timebase-frequency = <1000000>;
+                         compatible = "sifive,rocket0", "riscv";
+                         d-cache-block-size = <64>;
+                         d-cache-sets = <64>;
+@@ -145,6 +146,7 @@ Example: Spike ISA Simulator with 1 Hart
+ This device tree matches the Spike ISA golden model as run with `spike -p1`.
+ 
+         cpus {
++                timebase-frequency = <1000000>;
+                 cpu@0 {
+                         device_type = "cpu";
+                         reg = <0x00000000>;
+-- 
+2.18.0
