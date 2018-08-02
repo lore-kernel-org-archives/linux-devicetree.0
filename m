@@ -1,66 +1,89 @@
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v2 2/4] dt: bindings: Document ZynqMP DDRC in Synopsys documentation
-Date: Thu, 2 Aug 2018 18:04:46 +0530
-Message-ID: <1533213288-8771-3-git-send-email-manish.narani@xilinx.com>
-References: <1533213288-8771-1-git-send-email-manish.narani@xilinx.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 00/13] media: staging/imx7: add i.MX7 media driver
+Date: Thu, 2 Aug 2018 14:37:54 +0200
+Message-ID: <267173c9-7235-6008-7248-ee06c0db3780@xs4all.nl>
+References: <20180522145245.3143-1-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533213288-8771-1-git-send-email-manish.narani@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, mdf@kernel.org, edgar.iglesias@xilinx.com, shubhrajyoti.datta@xilinx.com, naga.sureshkumar.relli@xilinx.com, bharat.kumar.gogada@xilinx.com, stefan.krsmanovic@aggios.com
-Cc: sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Manish Narani <manish.narani@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20180522145245.3143-1-rui.silva@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>, mchehab@kernel.org, sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch documents Synopsys EDAC driver which reports the single bit
-errors that are corrected and the double bit errors that are detected.
+Hi Rui,
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- .../bindings/memory-controllers/synopsys.txt       | 27 ++++++++++++++++++----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+On 05/22/18 16:52, Rui Miguel Silva wrote:
+> Hi,
+> This series introduces the Media driver to work with the i.MX7 SoC. it uses the
+> already existing imx media core drivers but since the i.MX7, contrary to
+> i.MX5/6, do not have an IPU and because of that some changes in the imx media
+> core are made along this series to make it support that case.
+> 
+> This patches adds CSI and MIPI-CSI2 drivers for i.MX7, along with several
+> configurations changes for this to work as a capture subsystem. Some bugs are
+> also fixed along the line. And necessary documentation.
+> 
+> For a more detailed view of the capture paths, pads links in the i.MX7 please
+> take a look at the documentation in PATCH 14.
+> 
+> The system used to test and develop this was the Warp7 board with an OV2680
+> sensor, which output format is 10-bit bayer. So, only MIPI interface was
+> tested, a scenario with an parallel input would nice to have.
+> 
+> *Important note*, this code depends on Steve Longerbeam series [0]:
+> [PATCH v4 00/13] media: imx: Switch to subdev notifiers
+> which the merging status is not clear to me, but the changes in there make
+> senses to this series
+> 
+> Bellow goes an example of the output of the pads and links and the output of
+> v4l2-compliance testing.
+> 
+> The v4l-utils version used is:
+> v4l2-compliance SHA   : 47d43b130dc6e9e0edc900759fb37649208371e4 from Apr 4th.
+> 
+> The Media Driver fail some tests but this failures are coming from code out of
+> scope of this series (video-mux, imx-capture), and some from the sensor OV2680
+> but that I think not related with the sensor driver but with the testing and
+> core.
+> 
+> The csi and mipi-csi entities pass all compliance tests.
+> 
+> Cheers,
+>     Rui
+> 
+> [0]: https://www.mail-archive.com/linux-media@vger.kernel.org/msg131186.html
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-index a43d26d..9d32762 100644
---- a/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/synopsys.txt
-@@ -1,15 +1,32 @@
- Binding for Synopsys IntelliDDR Multi Protocol Memory Controller
- 
--This controller has an optional ECC support in half-bus width (16-bit)
--configuration. The ECC controller corrects one bit error and detects
--two bit errors.
-+The ZynqMP DDR ECC controller has an optional ECC support in 64-bit and 32-bit
-+bus width configurations.
-+
-+The Zynq DDR ECC controller has an optional ECC support in half-bus width
-+(16-bit) configuration.
-+
-+These both ECC controllers correct single bit ECC errors and detect double bit
-+ECC errors.
- 
- Required properties:
-- - compatible: Should be 'xlnx,zynq-ddrc-a05'
-- - reg: Base address and size of the controllers memory area
-+ - compatible: One of:
-+	- 'xlnx,zynq-ddrc-a05' : Zynq DDR ECC controller
-+	- 'xlnx,zynqmp-ddrc-2.40a' : ZynqMP DDR ECC controller
-+ - reg: Should contain DDR controller registers location and length.
-+
-+Required properties for "xlnx,zynqmp-ddrc-2.40a":
-+ - interrupts: Property with a value describing the interrupt number.
- 
- Example:
- 	memory-controller@f8006000 {
- 		compatible = "xlnx,zynq-ddrc-a05";
- 		reg = <0xf8006000 0x1000>;
- 	};
-+
-+	mc: memory-controller@fd070000 {
-+		compatible = "xlnx,zynqmp-ddrc-2.40a";
-+		reg = <0x0 0xfd070000 0x0 0x30000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 112 4>;
-+	};
--- 
-2.1.1
+This patch series was delayed quite a bit since the patch series above
+it depends on is still not merged.
+
+But the v6 version of that series will be merged once the 4.20 cycle opens:
+https://www.mail-archive.com/linux-media@vger.kernel.org/msg133391.html
+
+Sakari has a branch with that series on top of the latest media_tree master:
+https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-fwnode
+
+Can you rebase this imx7 series on top of that? And test it again with the
+*latest* v4l2-compliance? (I've added new checks recently, so you need to
+update this utility)
+
+Please post the output of the v4l2-compliance test (after fixing any issues
+it raises of course), either as a reply to this post or in the cover letter
+of a v7 version of this series if you had to make changes.
+
+This should expedite merging this series for 4.20.
+
+Thanks!
+
+	Hans
