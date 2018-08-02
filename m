@@ -1,108 +1,55 @@
-Return-Path: <SRS0=a3By=KQ=linux.intel.com=sakari.ailus@kernel.org>
-Date: Wed, 1 Aug 2018 14:16:27 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH 05/21] dt-bindings: media: Specify bus type for MIPI
- D-PHY, others, explicitly
-Message-ID: <20180801111627.gtvnhzo2b2j4haa2@paasikivi.fi.intel.com>
-References: <20180723134706.15334-1-sakari.ailus@linux.intel.com>
- <20180723134706.15334-6-sakari.ailus@linux.intel.com>
- <20180731213210.GA28374@rob-hp-laptop>
+Return-Path: <SRS0=Mhmi=KR=sirena.org.uk=broonie@kernel.org>
+Date: Thu, 2 Aug 2018 12:45:53 +0100
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] spi: pl022: Add OF binding to disable DMA usage
+Message-ID: <20180802114553.GK9117@sirena.org.uk>
+References: <20180724112753.6020-1-alexander.sverdlin@nokia.com>
+ <20180725170644.GE6315@sirena.org.uk>
+ <150e4a91-e607-ee7c-20bc-9ed81019f1da@nokia.com>
+ <20180801103949.GE5509@sirena.org.uk>
+ <a63a2c81-e624-9a7c-172d-c26159696fae@nokia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rwbb4r/vLufKlfJs"
 Content-Disposition: inline
-In-Reply-To: <20180731213210.GA28374@rob-hp-laptop>
-To: Rob Herring <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+In-Reply-To: <a63a2c81-e624-9a7c-172d-c26159696fae@nokia.com>
+To: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob,
 
-Thanks for the review.
+--rwbb4r/vLufKlfJs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Jul 31, 2018 at 03:32:10PM -0600, Rob Herring wrote:
-> On Mon, Jul 23, 2018 at 04:46:50PM +0300, Sakari Ailus wrote:
-> > Allow specifying the bus type explicitly for MIPI D-PHY, parallel and
-> > Bt.656 busses. This is useful for devices that can make use of different
-> > bus types. There are CSI-2 transmitters and receivers but the PHY
-> > selection needs to be made between C-PHY and D-PHY; many devices also
-> > support parallel and Bt.656 interfaces but the means to pass that
-> > information to software wasn't there.
-> > 
-> > Autodetection (value 0) is removed as an option as the property could be
-> > simply omitted in that case.
-> 
-> Presumably there are users, so you can't remove it. But documenting 
-> behavior when absent would be good.
+On Wed, Aug 01, 2018 at 12:47:01PM +0200, Alexander Sverdlin wrote:
+> On 01/08/18 12:39, Mark Brown wrote:
 
-Well, it's effectively the same as having no such property at all: the type
-is not specified. Generally there are two possibilities: the hardware
-supports just a single bus or it supports more than one. If there's just
-one, the type can be known by the driver. In that case there's no use for
-autodetection.
+> > I'm not 100% clear I follow what you mean by bus scan here but I *think*
+> > that sounds about right.  The channel request/release could be factored
+> > out into helper functions to minimize duplication.
 
-The second case is a bit more complicated: the bus type detection is solely
-based on properties available in the endpoint, and I think that may have
-been feasible approach when there were just parallel and Bt.656 busses that
-were supported, but with the additional busses, the V4L2 fwnode framework
-may no longer guess the bus in any meaningful way from the available
-properties. I'd think the only known-good option here is to specify the
-type explicitly in that case: there's no room for guessing. (This patchset
-makes it possible for drivers to explicitly define the bus type, but the
-autodetection support is maintained for backwards compatibility.)
+> Rob has an opinion that the driver should only claim the channels explicitly
+> specified in DT. This sounds about right, but this would be behavioral change.
+> What do you think?
 
-One of the existing issues is that there are combined parallel/Bt.656
-receivers that need to know the type of the bus. This is based on the
-existence parallel interface only properties: if any of these exist, then
-the interface is parallel, otherwise it is Bt.656. The DT bindings for the
-same devices also define the defaults for the parallel interface. This
-leaves the end result ambiguous: is it the parallel interface with the
-default configuration or is it Bt.656?
+If it results in platforms that previously used DMA not using DMA that
+doesn't seem like a good idea.  I'd have thought that if we didn't have
+DMA configured we'd already not be able to request a channel TBH.
 
-There will likely be similar issues for CSI-2 D-PHY and CSI-2 C-PHY. The
-question there would be: is this CSI-2 C-PHY or CSI-2 D-PHY with default
-clock lane configuration?
+--rwbb4r/vLufKlfJs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In either case the autodetection option for the bus type provides no useful
-information. If it exists in DT source, that's fine, there's just no use
-for it.
+-----BEGIN PGP SIGNATURE-----
 
-Let me know if you still think it should be maintained in binding
-documentation.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlti7vEACgkQJNaLcl1U
+h9CDwwf+Lfu/ss/MVmxLfIaBismkxnVGehLaBPKsBX6W6YPxBqEgMvgEpZqaOKqV
+mn4nf5iaOsSHNOGwy4T5T3m074JnUj48bpIyjnBjdBceF/WvWsBQyrx2FxwG50+y
+u5CqfY35lqPcV5sXN0pyOcy3fLBjtACsSOwnW7XGDVbrVFiQbDuMNorYTHiNixwx
+PrzkZTXdmSOc3WaFX9KL3hzKJQ/g/GMsAhINvEine0VkGJrerQkkLRLVKyY91lXJ
+y6Jv5tNv0Ho8M4qYvxvfoDbrDOP6KXj37Br1JZqBEME/idh22+0j/1EqMYXiPQzU
+aIs9BMQtn0KlXmgK6nTwHRw5xdSfnA==
+=ikhM
+-----END PGP SIGNATURE-----
 
-> 
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > index baf9d9756b3c..f884ada0bffc 100644
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -100,10 +100,12 @@ Optional endpoint properties
-> >    slave device (data source) by the master device (data sink). In the master
-> >    mode the data source device is also the source of the synchronization signals.
-> >  - bus-type: data bus type. Possible values are:
-> > -  0 - autodetect based on other properties (MIPI CSI-2 D-PHY, parallel or Bt656)
-> >    1 - MIPI CSI-2 C-PHY
-> >    2 - MIPI CSI1
-> >    3 - CCP2
-> > +  4 - MIPI CSI-2 D-PHY
-> > +  5 - Parallel
-> 
-> Is that really specific enough to be useful?
-
-Yes; see above.
-
-> 
-> > +  6 - Bt.656
-> >  - bus-width: number of data lines actively used, valid for the parallel busses.
-> >  - data-shift: on the parallel data busses, if bus-width is used to specify the
-> >    number of data lines, data-shift can be used to specify which data lines are
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+--rwbb4r/vLufKlfJs--
