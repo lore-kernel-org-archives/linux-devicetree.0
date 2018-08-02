@@ -1,303 +1,464 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v8 5/6] regulator: pfuze100-regulator: provide
- pm_power_off_prepare handler
-Date: Thu, 2 Aug 2018 10:16:03 +0200
-Message-ID: <403db02e-9c91-5080-ee9c-7a44716e64b2@pengutronix.de>
-References: <20180726092220.17250-1-o.rempel@pengutronix.de>
- <20180726092220.17250-6-o.rempel@pengutronix.de>
- <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 02/10] mfd: wcd9335: add support to wcd9335 core
+Date: Thu, 2 Aug 2018 09:33:51 +0100
+Message-ID: <20180802083351.GN4662@dell>
+References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
+ <20180727121806.18209-3-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="UhqsxUSXFGrrRBGuuTxAxJcdNTcYUhHQ2"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20180727121806.18209-3-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---UhqsxUSXFGrrRBGuuTxAxJcdNTcYUhHQ2
-Content-Type: multipart/mixed; boundary="wTQfzCZEaH9cLMGMfipz7eVubsnh9GVcQ";
- protected-headers="v1"
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Mark Brown <broonie@kernel.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>,
- Russell King <linux@armlinux.org.uk>, dl-linux-imx <linux-imx@nxp.com>,
- "A.s. Dong" <aisheng.dong@nxp.com>
-Message-ID: <403db02e-9c91-5080-ee9c-7a44716e64b2@pengutronix.de>
-Subject: Re: [PATCH v8 5/6] regulator: pfuze100-regulator: provide
- pm_power_off_prepare handler
-References: <20180726092220.17250-1-o.rempel@pengutronix.de>
- <20180726092220.17250-6-o.rempel@pengutronix.de>
- <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
-In-Reply-To: <DB6PR04MB32233832762D02F1023861A1892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+On Fri, 27 Jul 2018, Srinivas Kandagatla wrote:
 
---wTQfzCZEaH9cLMGMfipz7eVubsnh9GVcQ
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+> Qualcomm WCD9335 Codec is a standalone Hi-Fi audio codec IC,
+> It has mulitple blocks like Soundwire controller, codec,
+> Codec processing engine, ClassH controller, interrupt mux.
+> It supports both I2S/I2C and SLIMbus audio interfaces.
+> 
+> This patch adds support to SLIMbus audio interface.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/mfd/Kconfig                   |  18 ++
+>  drivers/mfd/Makefile                  |   4 +
+>  drivers/mfd/wcd9335-core.c            | 268 ++++++++++++++++
+>  include/linux/mfd/wcd9335/registers.h | 580 ++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/wcd9335/wcd9335.h   |  42 +++
+>  5 files changed, 912 insertions(+)
+>  create mode 100644 drivers/mfd/wcd9335-core.c
+>  create mode 100644 include/linux/mfd/wcd9335/registers.h
+>  create mode 100644 include/linux/mfd/wcd9335/wcd9335.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index f3fa516011ec..6e5b5f3cfe20 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1807,6 +1807,24 @@ config MFD_WM97xx
+>  	  support for the WM97xx, in order to use the actual functionaltiy of
+>  	  the device other drivers must be enabled.
+>  
+> +config MFD_WCD9335
+> +	tristate
+> +	select MFD_CORE
+> +	select REGMAP
+> +	select REGMAP_IRQ
+> +
+> +config MFD_WCD9335_SLIM
+> +	tristate "Qualcomm WCD9335 with SLIMbus"
+> +	select MFD_WCD9335
+> +	select REGMAP_SLIMBUS
+> +	depends on SLIMBUS
+> +	help
+> +	The WCD9335 is a standalone Hi-Fi audio codec IC, supports
 
+s/codec/CODEC/
 
+> +	Qualcomm Technologies, Inc. (QTI) multimedia solutions, including
+> +	the MSM8996, MSM8976, and MSM8956 chipsets. It has inbuild
 
-On 27.07.2018 11:32, Robin Gong wrote:
->=20
->=20
->> -----Original Message-----
->> From: Oleksij Rempel [mailto:o.rempel@pengutronix.de]
->> Sent: 2018=C4=EA7=D4=C226=C8=D5 17:22
->> To: Shawn Guo <shawnguo@kernel.org>; Mark Brown <broonie@kernel.org>;
->> Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->> Cc: Oleksij Rempel <o.rempel@pengutronix.de>; kernel@pengutronix.de;
->> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->> linux-clk@vger.kernel.org; linux-kernel@vger.kernel.org; Andrew Morton=
+s/inbuild/in-built/
 
->> <akpm@linux-foundation.org>; Liam Girdwood <lgirdwood@gmail.com>;
->> Leonard Crestez <leonard.crestez@nxp.com>; Rob Herring
->> <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Michael
->> Turquette <mturquette@baylibre.com>; Stephen Boyd
->> <sboyd@codeaurora.org>; Fabio Estevam <fabio.estevam@nxp.com>; Russell=
+> +	Soundwire controller, interrupt mux. It supports both I2S/I2C and
+> +	SLIMbus audio interfaces. This option selects SLIMbus audio interface.
 
->> King <linux@armlinux.org.uk>; dl-linux-imx <linux-imx@nxp.com>; Robin =
-Gong
->> <yibin.gong@nxp.com>; A.s. Dong <aisheng.dong@nxp.com>
->> Subject: [PATCH v8 5/6] regulator: pfuze100-regulator: provide
->> pm_power_off_prepare handler
->>
->> On some boards the SoC can use one pin "PMIC_STBY_REQ" to notify th PM=
-IC
->> about state changes. In this case internal state of PMIC must be preco=
-nfigured
->> for upcomming state change.
->> It works fine with the current regulator framework, except with the po=
-wer-off
->> case.
->>
->> This patch is providing an optional pm_power_off_prepare handler which=
- will
->> configure standby state of the PMIC to disable all power lines.
->>
->> In my power consumption test on RIoTBoard, I got the following results=
-:
->> power off without this patch:	320 mA
->> power off with this patch:	2   mA
->> suspend to ram:			40  mA
->>
->> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->> ---
->>  drivers/regulator/pfuze100-regulator.c | 92 +++++++++++++++++++++++++=
-+
->>  1 file changed, 92 insertions(+)
->>
->> diff --git a/drivers/regulator/pfuze100-regulator.c
->> b/drivers/regulator/pfuze100-regulator.c
->> index 8d9dbcc775ea..e386e9acb3f7 100644
->> --- a/drivers/regulator/pfuze100-regulator.c
->> +++ b/drivers/regulator/pfuze100-regulator.c
->> @@ -15,6 +15,7 @@
->>  #include <linux/regulator/pfuze100.h>
->>  #include <linux/i2c.h>
->>  #include <linux/slab.h>
->> +#include <linux/kallsyms.h>
-> Is it necessary?
->>  #include <linux/regmap.h>
->>
->>  #define PFUZE_NUMREGS		128
->> @@ -29,11 +30,17 @@
->>
->>  #define PFUZE100_COINVOL	0x1a
->>  #define PFUZE100_SW1ABVOL	0x20
->> +#define PFUZE100_SW1ABMODE	0x23
->>  #define PFUZE100_SW1CVOL	0x2e
->> +#define PFUZE100_SW1CMODE	0x31
->>  #define PFUZE100_SW2VOL		0x35
->> +#define PFUZE100_SW2MODE	0x38
->>  #define PFUZE100_SW3AVOL	0x3c
->> +#define PFUZE100_SW3AMODE	0x3f
->>  #define PFUZE100_SW3BVOL	0x43
->> +#define PFUZE100_SW3BMODE	0x46
->>  #define PFUZE100_SW4VOL		0x4a
->> +#define PFUZE100_SW4MODE	0x4d
->>  #define PFUZE100_SWBSTCON1	0x66
->>  #define PFUZE100_VREFDDRCON	0x6a
->>  #define PFUZE100_VSNVSVOL	0x6b
->> @@ -44,6 +51,13 @@
->>  #define PFUZE100_VGEN5VOL	0x70
->>  #define PFUZE100_VGEN6VOL	0x71
->>
->> +#define PFUZE100_SWxMODE_MASK	0xf
->> +#define PFUZE100_SWxMODE_APS_APS	0x8
->> +#define PFUZE100_SWxMODE_APS_OFF	0x4
->> +
->> +#define PFUZE100_VGENxLPWR	BIT(6)
->> +#define PFUZE100_VGENxSTBY	BIT(5)
->> +
->>  enum chips { PFUZE100, PFUZE200, PFUZE3000 =3D 3 };
->>
->>  struct pfuze_regulator {
->> @@ -492,6 +506,69 @@ static inline struct device_node *match_of_node(i=
-nt
->> index)  }  #endif
->>
->> +static struct pfuze_chip *syspm_pfuze_chip;
->> +
->> +static void pfuze_power_off_prepare(void)=20
->> +	dev_info(syspm_pfuze_chip->dev, "Configure standy mode for power
->> +off");
-> Add 'if (syspm_pfuze_chip ->chip_id =3D=3D PFUZE100))' here is easy for=
- extend=20
-> Support on pfuze200/3000.. in the feature.
-There is already:
-static int pfuze_power_off_prepare_init(struct pfuze_chip *pfuze_chip)
-{
-        if (pfuze_chip->chip_id !=3D PFUZE100) {
-                dev_warn(pfuze_chip->dev, "Requested
-pm_power_off_prepare handler for not supported chip\n");
-                return -ENODEV;
-        }
+The help should be indented.
 
+>  config MFD_STW481X
+>  	tristate "Support for ST Microelectronics STw481x"
+>  	depends on I2C && (ARCH_NOMADIK || COMPILE_TEST)
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 2852a6042ecf..a4697370640b 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -56,6 +56,10 @@ endif
+>  ifeq ($(CONFIG_MFD_CS47L24),y)
+>  obj-$(CONFIG_MFD_ARIZONA)	+= cs47l24-tables.o
+>  endif
+> +
+> +obj-$(CONFIG_MFD_WCD9335)	+= wcd9335.o
+> +wcd9335-objs			:= wcd9335-core.o
+> +
+>  obj-$(CONFIG_MFD_WM8400)	+= wm8400-core.o
+>  wm831x-objs			:= wm831x-core.o wm831x-irq.o wm831x-otp.o
+>  wm831x-objs			+= wm831x-auxadc.o
+> diff --git a/drivers/mfd/wcd9335-core.c b/drivers/mfd/wcd9335-core.c
+> new file mode 100644
+> index 000000000000..8f746901f4e9
+> --- /dev/null
+> +++ b/drivers/mfd/wcd9335-core.c
+> @@ -0,0 +1,268 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2018, Linaro Limited
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/slimbus.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/clk.h>
+> +#include <linux/gpio.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/mfd/wcd9335/wcd9335.h>
+> +#include <linux/mfd/wcd9335/registers.h>
 
-No need to add it in pfuze_power_off_prepare()
+Alphabetical.
 
->> +
->> +	/* Switch from default mode: APS/APS to APS/Off */
->> +	regmap_update_bits(syspm_pfuze_chip->regmap,
->> PFUZE100_SW1ABMODE,
->> +			   PFUZE100_SWxMODE_MASK,
->> PFUZE100_SWxMODE_APS_OFF);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap,
->> PFUZE100_SW1CMODE,
->> +			   PFUZE100_SWxMODE_MASK,
->> PFUZE100_SWxMODE_APS_OFF);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW2MODE,
->> +			   PFUZE100_SWxMODE_MASK,
->> PFUZE100_SWxMODE_APS_OFF);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap,
->> PFUZE100_SW3AMODE,
->> +			   PFUZE100_SWxMODE_MASK,
->> PFUZE100_SWxMODE_APS_OFF);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap,
->> PFUZE100_SW3BMODE,
->> +			   PFUZE100_SWxMODE_MASK,
->> PFUZE100_SWxMODE_APS_OFF);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_SW4MODE,
->> +			   PFUZE100_SWxMODE_MASK,
->> PFUZE100_SWxMODE_APS_OFF);
->> +
->> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN1VOL,
->> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
->> +			   PFUZE100_VGENxSTBY);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN2VOL,
->> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
->> +			   PFUZE100_VGENxSTBY);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN3VOL,
->> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
->> +			   PFUZE100_VGENxSTBY);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN4VOL,
->> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
->> +			   PFUZE100_VGENxSTBY);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN5VOL,
->> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
->> +			   PFUZE100_VGENxSTBY);
->> +	regmap_update_bits(syspm_pfuze_chip->regmap, PFUZE100_VGEN6VOL,
->> +			   PFUZE100_VGENxLPWR | PFUZE100_VGENxSTBY,
->> +			   PFUZE100_VGENxSTBY);
->> +}
->> +
->> +static int pfuze_power_off_prepare_init(struct pfuze_chip *pfuze_chip=
-)
->> +{
->> +	if (pfuze_chip->chip_id !=3D PFUZE100) {
->> +		dev_warn(pfuze_chip->dev, "Requested pm_power_off_prepare
->> handler for not supported chip\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	if (pm_power_off_prepare) {
->> +		dev_warn(pfuze_chip->dev, "pm_power_off_prepare is already
->> registered.\n");
->> +		return -EBUSY;
->> +	}
->> +
->> +	if (syspm_pfuze_chip) {
->> +		dev_warn(pfuze_chip->dev, "syspm_pfuze_chip is already set.\n");
->> +		return -EBUSY;
->> +	}
->> +
->> +	syspm_pfuze_chip =3D pfuze_chip;
->> +	pm_power_off_prepare =3D pfuze_power_off_prepare;
->> +
->> +	return 0;
->> +}
->> +
->>  static int pfuze_identify(struct pfuze_chip *pfuze_chip)  {
->>  	unsigned int value;
->> @@ -661,6 +738,20 @@ static int pfuze100_regulator_probe(struct i2c_cl=
-ient
->> *client,
->>  		}
->>  	}
->>
->> +	if (of_property_read_bool(client->dev.of_node,
->> +				  "fsl,pmic-stby-poweroff"))
->> +		return pfuze_power_off_prepare_init(pfuze_chip);
->> +
->> +	return 0;
->> +}
->> +
->> +static int pfuze100_regulator_remove(struct i2c_client *client) {
->> +	if (syspm_pfuze_chip) {
->> +		syspm_pfuze_chip =3D NULL;
->> +		pm_power_off_prepare =3D NULL;
->> +	}
->> +
->>  	return 0;
->>  }
->>
->> @@ -671,6 +762,7 @@ static struct i2c_driver pfuze_driver =3D {
->>  		.of_match_table =3D pfuze_dt_ids,
->>  	},
->>  	.probe =3D pfuze100_regulator_probe,
->> +	.remove =3D pfuze100_regulator_remove,
->>  };
->>  module_i2c_driver(pfuze_driver);
->>
->> --
->> 2.18.0
->=20
+> +static const struct regmap_range_cfg wcd9335_ranges[] = {
+> +	{	.name = "WCD9335",
 
+What is that?  New line please.
 
---wTQfzCZEaH9cLMGMfipz7eVubsnh9GVcQ--
+> +		.range_min =  0x0,
+> +		.range_max =  WCD9335_MAX_REGISTER,
+> +		.selector_reg = WCD9335_REG(0x0, 0),
+> +		.selector_mask = 0xff,
+> +		.selector_shift = 0,
+> +		.window_start = 0x0,
+> +		.window_len = 0x1000,
+> +	},
+> +};
+> +
+> +static struct regmap_config wcd9335_regmap_config = {
+> +	.reg_bits = 16,
+> +	.val_bits = 8,
+> +	.cache_type = REGCACHE_RBTREE,
+> +	.max_register = WCD9335_MAX_REGISTER,
+> +	.can_multi_write = true,
+> +	.ranges = wcd9335_ranges,
+> +	.num_ranges = ARRAY_SIZE(wcd9335_ranges),
+> +};
+> +
+> +static const struct regmap_range_cfg wcd9335_ifd_ranges[] = {
+> +	{	.name = "WCD9335-IFD",
 
---UhqsxUSXFGrrRBGuuTxAxJcdNTcYUhHQ2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+As above.
 
------BEGIN PGP SIGNATURE-----
+> +		.range_min =  0x0,
+> +		.range_max = WCD9335_REG(0, 0x7ff),
+> +		.selector_reg = WCD9335_REG(0, 0x0),
+> +		.selector_mask = 0xff,
+> +		.selector_shift = 0,
+> +		.window_start = 0x0,
+> +		.window_len = 0x1000,
+> +	},
+> +};
+> +
+> +static struct regmap_config wcd9335_ifd_regmap_config = {
+> +	.reg_bits = 16,
+> +	.val_bits = 8,
+> +	.can_multi_write = true,
+> +	.max_register = WCD9335_REG(0, 0x7FF),
+> +	.ranges = wcd9335_ifd_ranges,
+> +	.num_ranges = ARRAY_SIZE(wcd9335_ifd_ranges),
+> +};
+> +
+> +static int wcd9335_parse_dt(struct wcd9335 *wcd)
+> +{
+> +	struct device *dev = wcd->dev;
+> +	struct device_node *np = dev->of_node;
+> +	int ret;
+> +
+> +	wcd->reset_gpio = of_get_named_gpio(np,	"reset-gpio", 0);
+> +	if (wcd->reset_gpio < 0) {
+> +		dev_err(dev, "Reset gpio missing in DT\n");
 
-iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAltivcMACgkQdQOiSHVI
-77TZqwgAofbGPSc8Xzuafl9A5262Yjfl+aiCSmngdfWG8Z4XFsNQ12P7XkoQErUJ
-qRW+8IeCe/VoJtcM+A2Z6wBepKVRBndNF6CbHimGmTSefdNz4CHCpQvPuu0apZTB
-BPwutMwLbk9/zSMfRYyImr4vGDe/E0Uab2SRqzXBweslkTTBDbDM6YUw/p7pKhB4
-/3wFvin873aCAQT6us8fQBNu4qpO3Y/I+luvEIND5MAEpZfSfdw9GItSEz0aaS5A
-+3RnxNFC1nungbmXHJrD+Lvu3TVe3TszZS0RQ4MasRcN29k3+Q33z4Eg4r9/HH3B
-KccJ7JmXvfH5zTqVCGBW+BOsnd94zA==
-=pRcc
------END PGP SIGNATURE-----
+s/gpio/GPIO/
 
---UhqsxUSXFGrrRBGuuTxAxJcdNTcYUhHQ2--
+s/missing in DT/missing from DT/
+
+> +		return wcd->reset_gpio;
+> +	}
+> +
+> +	wcd->mclk = devm_clk_get(dev, "mclk");
+> +	if (IS_ERR(wcd->mclk)) {
+> +		dev_err(dev, "mclk not found\n");
+> +		return PTR_ERR(wcd->mclk);
+> +	}
+> +
+> +	wcd->native_clk = devm_clk_get(dev, "slimbus");
+> +	if (IS_ERR(wcd->native_clk)) {
+> +		dev_err(dev, "slimbus clk not found\n");
+
+Any reason for abbreviating 'clock' in the error message?
+
+> +		return PTR_ERR(wcd->native_clk);
+> +	}
+> +
+> +	wcd->supplies[0].supply = "vdd-buck";
+> +	wcd->supplies[1].supply = "vdd-buck-sido";
+> +	wcd->supplies[2].supply = "vdd-tx";
+> +	wcd->supplies[3].supply = "vdd-rx";
+> +	wcd->supplies[4].supply = "vdd-io";
+> +
+> +	ret = regulator_bulk_get(dev, WCD9335_MAX_SUPPLY, wcd->supplies);
+> +	if (ret != 0) {
+
+"if (ret)"
+
+Same for all.  I won't comment on the others.
+
+> +		dev_err(dev, "Failed to get supplies: err = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int wcd9335_power_on_reset(struct wcd9335 *wcd)
+> +{
+> +	struct device *dev = wcd->dev;
+> +	int ret;
+> +
+> +	ret = regulator_bulk_enable(WCD9335_MAX_SUPPLY, wcd->supplies);
+> +	if (ret != 0) {
+> +		dev_err(dev, "Failed to get supplies: err = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * For WCD9335, it takes about 600us for the Vout_A and
+> +	 * Vout_D to be ready after BUCK_SIDO is powered up.
+> +	 * SYS_RST_N shouldn't be pulled high during this time
+> +	 */
+> +	usleep_range(600, 650);
+> +
+> +	gpio_direction_output(wcd->reset_gpio, 0);
+> +	msleep(20);
+
+What's this for?  Why can't you just:
+
+  gpio_direction_output(wcd->reset_gpio, 1);
+
+... and drop the next 2 lines?
+
+> +	gpio_set_value(wcd->reset_gpio, 1);
+> +	msleep(20);
+> +
+> +	return 0;
+> +}
+> +
+> +static int wcd9335_bring_up(struct wcd9335 *wcd)
+> +{
+> +	struct regmap *rm = wcd->regmap;
+> +	int val, byte0;
+> +	int ret = 0;
+> +
+> +	regmap_read(rm, WCD9335_CHIP_TIER_CTRL_EFUSE_VAL_OUT0, &val);
+> +	regmap_read(rm, WCD9335_CHIP_TIER_CTRL_CHIP_ID_BYTE0, &byte0);
+> +
+> +	if ((val < 0) || (byte0 < 0)) {
+> +		dev_err(wcd->dev, "wcd9335 codec version detection fail!\n");
+
+s/wcd9335 codec/WCD9335 CODEC/ ?
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (byte0 == 0x1) {
+> +		dev_info(wcd->dev, "wcd9335 codec version is v2.0\n");
+> +		wcd->version = WCD9335_VERSION_2_0;
+> +		regmap_write(rm, WCD9335_CODEC_RPM_RST_CTL, 0x01);
+> +		regmap_write(rm, WCD9335_SIDO_SIDO_TEST_2, 0x00);
+> +		regmap_write(rm, WCD9335_SIDO_SIDO_CCL_8, 0x6F);
+> +		regmap_write(rm, WCD9335_BIAS_VBG_FINE_ADJ, 0x65);
+> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x5);
+> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x7);
+> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x3);
+> +		regmap_write(rm, WCD9335_CODEC_RPM_RST_CTL, 0x3);
+> +	} else {
+> +		dev_err(wcd->dev, "wcd9335 codec version not supported\n");
+
+As above.
+
+> +		ret = -EINVAL;
+
+Why not just
+
+  return -EINVAL;
+
+Then you can just return 0 and avoid pre-initialising ret.
+
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int wcd9335_slim_probe(struct slim_device *slim)
+> +{
+> +	struct device *dev = &slim->dev;
+> +	struct wcd9335 *wcd;
+> +	int ret = 0;
+
+Why pre-initialise?
+
+> +	/* Interface device */
+> +	if (slim->e_addr.dev_index == 0)
+
+Is 0 the parent?  I think 0 needs defining for clarity.
+
+> +		return 0;
+> +
+> +	wcd = devm_kzalloc(dev, sizeof(*wcd), GFP_KERNEL);
+> +	if (!wcd)
+> +		return	-ENOMEM;
+> +
+> +	wcd->dev = dev;
+
+'\n' here.
+
+> +	ret = wcd9335_parse_dt(wcd);
+> +	if (ret) {
+> +		dev_err(dev, "Error parsing DT (%d)\n", ret);
+
+This format changes from message to message.
+
+Please pick one and stick with it.
+
+I personally like: "<MESSAGE>: %d", ret
+
+> +		return ret;
+> +	}
+> +
+> +	ret = wcd9335_power_on_reset(wcd);
+> +	if (ret) {
+> +		dev_err(dev, "Error Powering\n");
+
+I think this is superflouous since you already printed a message.
+
+> +		return ret;
+> +	}
+> +
+> +	wcd->regmap = regmap_init_slimbus(slim, &wcd9335_regmap_config);
+> +	if (IS_ERR(wcd->regmap)) {
+> +		ret = PTR_ERR(wcd->regmap);
+> +		dev_err(dev, "Failed to allocate register map:%d\n", ret);
+
+A different format again.  Ensure there is a ' ' after the ':'.
+
+> +		return ret;
+> +	}
+> +
+> +	dev_set_drvdata(dev, wcd);
+
+Probably nicer to do this at the very end - after a '\n'.
+
+> +	wcd->slim = slim;
+> +	wcd->intf_type = WCD9335_INTERFACE_TYPE_SLIMBUS;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct mfd_cell wcd9335_devices[] = {
+> +	{
+> +		.name = "wcd9335-codec",
+> +	},
+> +};
+
+When are you going to add the other devices?
+
+By the way, one line entries should be placed on one line.
+
+> +	{ .name = "wcd9335-codec" },
+
+> +static int wcd9335_slim_status(struct slim_device *sdev,
+> +				 enum slim_device_status s)
+
+'s' is not a good variable name.  Suggest 'status'.
+
+> +{
+> +	struct device_node *ifd_np;
+
+What's 'ifd'?
+
+> +	struct wcd9335 *wcd;
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	/* Interface device */
+
+As previously suggested just define the device ID and drop the
+comment.
+
+> +	if (sdev->e_addr.dev_index == 0)
+> +		return 0;
+> +
+> +	wcd = dev_get_drvdata(&sdev->dev);
+> +	dev = wcd->dev;
+
+Odd.  You do to the effort of assigning this and use 'wcd->dev' at
+most call sites anyway.  I'd drop 'dev' and just use it from 'wcd'
+everywhere.
+
+> +	ifd_np = of_parse_phandle(wcd->dev->of_node, "qcom,ifd", 0);
+> +	if (!ifd_np) {
+> +		dev_err(wcd->dev, "No Interface device found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	wcd->slim_ifd = of_slim_get_device(sdev->ctrl, ifd_np);
+> +	if (!wcd->slim_ifd) {
+> +		dev_err(wcd->dev, "Unable to get SLIM Interface device\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	wcd->ifd_regmap = regmap_init_slimbus(wcd->slim_ifd,
+> +					      &wcd9335_ifd_regmap_config);
+> +	if (IS_ERR(wcd->ifd_regmap)) {
+> +		dev_err(dev, "Failed to allocate register map\n");
+> +		return PTR_ERR(wcd->ifd_regmap);
+> +	}
+> +
+> +	ret = wcd9335_bring_up(wcd);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to bringup WCD9335\n");
+> +		return ret;
+> +	}
+> +
+> +	wcd->slim_ifd = wcd->slim_ifd;
+
+Am I missing something?
+
+> +	return mfd_add_devices(wcd->dev, 0, wcd9335_devices,
+> +			       ARRAY_SIZE(wcd9335_devices), NULL, 0, NULL);
+
+No error message if it were to fail?
+
+> +}
+> +
+> +static const struct slim_device_id wcd9335_slim_id[] = {
+> +	{0x217, 0x1a0, 0x1, 0x0},
+
+Well that's just horrific.  Can't these be defined?
+
+> +	{}
+> +};
+> +
+> +static struct slim_driver wcd9335_slim_driver = {
+> +	.driver = {
+> +		.name = "wcd9335-slim",
+> +	},
+> +	.probe = wcd9335_slim_probe,
+> +	.device_status = wcd9335_slim_status,
+> +	.id_table = wcd9335_slim_id,
+> +};
+> +
+> +module_slim_driver(wcd9335_slim_driver);
+> +MODULE_DESCRIPTION("WCD9335 slim driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/wcd9335/registers.h b/include/linux/mfd/wcd9335/registers.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
