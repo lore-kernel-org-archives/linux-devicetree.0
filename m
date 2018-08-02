@@ -1,7 +1,7 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 01/11] dt-bindings: Correct RISC-V's timebase-frequency
-Date: Thu,  2 Aug 2018 13:49:58 +0200
-Message-ID: <20180802115008.4031-2-hch@lst.de>
+Subject: [PATCH 02/11] dt-bindings: Add an enable method to RISC-V
+Date: Thu,  2 Aug 2018 13:49:59 +0200
+Message-ID: <20180802115008.4031-3-hch@lst.de>
 References: <20180802115008.4031-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,66 +23,41 @@ List-Id: devicetree@vger.kernel.org
 
 From: Palmer Dabbelt <palmer@sifive.com>
 
-Someone must have read the device tree specification incorrectly,
-because we were putting timebase-frequency in the wrong place.  This
-corrects the issue, moving it from
+RISC-V doesn't currently specify a mechanism for enabling or disabling
+CPUs.  Instead, we assume that all CPUs are enabled on boot, and if
+someone wants to save power we instead put a CPU to sleep via a WFI
+loop.  Future systems may have an explicit mechanism for putting a CPU
+to sleep, so we're standardizing the device tree entry for when that
+happens.
 
-/ {
-        cpus {
-                timebase-frequency = X;
-        }
-}
-
-to
-
-/ {
-        cpus {
-                cpu@0 {
-                        timebase-frequency = X;
-                }
-        }
-}
-
-This is great, because the timer's frequency should really be a per-cpu
-quantity on RISC-V systems since there's a timer per CPU.  This should
-lead to some cleanups in our timer driver.
+We're not defining a spin-table based interface to the firmware, as the
+plan is to handle this entirely within the kernel instead.
 
 Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- Documentation/devicetree/bindings/riscv/cpus.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/riscv/cpus.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
-index adf7b7af5dc3..b0b038d6c406 100644
+index b0b038d6c406..6aa9cd075a5b 100644
 --- a/Documentation/devicetree/bindings/riscv/cpus.txt
 +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
-@@ -93,9 +93,9 @@ Linux is allowed to run on.
-         cpus {
-                 #address-cells = <1>;
-                 #size-cells = <0>;
--                timebase-frequency = <1000000>;
-                 cpu@0 {
-                         clock-frequency = <1600000000>;
-+                        timebase-frequency = <1000000>;
-                         compatible = "sifive,rocket0", "riscv";
-                         device_type = "cpu";
-                         i-cache-block-size = <64>;
-@@ -113,6 +113,7 @@ Linux is allowed to run on.
-                 };
-                 cpu@1 {
-                         clock-frequency = <1600000000>;
-+                        timebase-frequency = <1000000>;
-                         compatible = "sifive,rocket0", "riscv";
-                         d-cache-block-size = <64>;
-                         d-cache-sets = <64>;
-@@ -145,6 +146,7 @@ Example: Spike ISA Simulator with 1 Hart
- This device tree matches the Spike ISA golden model as run with `spike -p1`.
+@@ -82,6 +82,15 @@ described below.
+                 Value type: <string>
+                 Definition: Contains the RISC-V ISA string of this hart.  These
+                             ISA strings are defined by the RISC-V ISA manual.
++        - cpu-enable-method:
++                Usage: optional
++                Value type: <stringlist>
++                Definition: When absent, default is either "always-disabled"
++                            "always-enabled", depending on the current state
++                            of the CPU.
++                            Must be one of:
++                                * "always-disabled": This CPU cannot be enabled.
++                                * "always-enabled": This CPU cannot be disabled.
  
-         cpus {
-+                timebase-frequency = <1000000>;
-                 cpu@0 {
-                         device_type = "cpu";
-                         reg = <0x00000000>;
+ Example: SiFive Freedom U540G Development Kit
+ ---------------------------------------------
 -- 
 2.18.0
