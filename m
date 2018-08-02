@@ -1,41 +1,122 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: Applied "ASoC: wcd9335: add support to wcd9335
- codec" to the asoc tree
-Date: Thu, 2 Aug 2018 07:32:26 +0100
-Message-ID: <20180802063226.GK4662@dell>
-References: <20180801112011.33C511124241@debutante.sirena.org.uk>
- <2b90faa5-6fd9-f769-183e-23cb59bf460e@linaro.org>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RESEND RFC 1/4] drivers: pinctrl: qcom: add wakeup
+ capability to GPIO
+Date: Thu, 2 Aug 2018 00:51:04 -0600
+Message-ID: <20180802065104.GA27850@codeaurora.org>
+References: <20180801020021.9782-1-ilina@codeaurora.org>
+ <20180801020021.9782-2-ilina@codeaurora.org>
+ <86600uy4vh.wl-marc.zyngier@arm.com>
+ <20180801194538.GA6422@codeaurora.org>
+ <86wot9wb9u.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2b90faa5-6fd9-f769-183e-23cb59bf460e@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, vkoul@kernel.org, Mark Brown <broonie@kernel.org>
+In-Reply-To: <86wot9wb9u.wl-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAwMSBBdWcgMjAxOCwgU3Jpbml2YXMgS2FuZGFnYXRsYSB3cm90ZToKCj4gSGkgTWFy
-aywKPiAKPiBPbiAwMS8wOC8xOCAxMjoyMCwgTWFyayBCcm93biB3cm90ZToKPiA+ICsjaW5jbHVk
-ZSA8c291bmQvc29jLmg+Cj4gPiArI2luY2x1ZGUgPHNvdW5kL3BjbV9wYXJhbXMuaD4KPiA+ICsj
-aW5jbHVkZSA8c291bmQvc29jLWRhcG0uaD4KPiA+ICsjaW5jbHVkZSA8c291bmQvdGx2Lmg+Cj4g
-PiArI2luY2x1ZGUgPHNvdW5kL2luZm8uaD4KPiA+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvbWZk
-L3djZDkzMzUuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvbWZkL3djZDkzMzUvd2NkOTMzNS5oPgo+
-ID4gKyNpbmNsdWRlIDxsaW51eC9tZmQvd2NkOTMzNS9yZWdpc3RlcnMuaD4KPiAKPiBXaXRob3V0
-IHRoZSAiW1BBVENIIHYyIDAyLzEwXSBtZmQ6IHdjZDkzMzU6IGFkZCBzdXBwb3J0IHRvIHdjZDkz
-MzUgY29yZSIgSXQKPiB3b3VsZCBicmVhayB0aGUgYnVpbGQuCgpUaGlzIGZpbGUgc2hvdWxkIG5v
-dCBiZSBidWlsdCB3aXRob3V0IDAyLzEwLgoKLS0gCkxlZSBKb25lcyBb5p2O55C85pavXQpMaW5h
-cm8gU2VydmljZXMgVGVjaG5pY2FsIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29m
-dHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJs
-b2cKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWls
-bWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+On Thu, Aug 02 2018 at 00:08 -0600, Marc Zyngier wrote:
+>Hi Lina,
+>
+>On Wed, 01 Aug 2018 20:45:38 +0100,
+>Lina Iyer <ilina@codeaurora.org> wrote:
+>>
+>> Thanks for the feedback, Marc.
+>>
+>> On Wed, Aug 01 2018 at 00:31 -0600, Marc Zyngier wrote:
+>> > On Wed, 01 Aug 2018 03:00:18 +0100,
+>> > Lina Iyer <ilina@codeaurora.org> wrote:
+>> >>
+>> >> +static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
+>> >> +{
+>> >> +	struct irq_data *irqd = data;
+>> >> +	struct irq_desc *desc = irq_data_to_desc(irqd);
+>> >> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> >> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
+>> >> +	int irq_pin = irq_find_mapping(gc->irq.domain, irqd->hwirq);
+>> >> +
+>> >> +	chained_irq_enter(chip, desc);
+>> >> +	generic_handle_irq(irq_pin);
+>> >> +	chained_irq_exit(chip, desc);
+>> >
+>> > That's crazy. I'm not even commenting on the irq handler vs chained
+>> > irqchip thing, but directly calling into a completely different part
+>> > of the irq hierarchy makes me feel nauseous,
+>> >
+>> I know the sentiment; I am not too happy about it myself. Explanation
+>> below.
+>>
+>> > Why isn't the interrupt still pending at the pinctrl level? Looking at
+>> > the diagram in the cover letter, I'd have hoped that the signal routed
+>> > to the PDC would wakeup the GIC, but that by virtue of being *also*
+>> > wired to the TLMM, the interrupt would be handled via the normal path.
+>> >
+>> The short answer: TLMM is not active to sense a wakeup interrupt.
+>
+>I get that bit. See below for the bit I don't get.
+>
+>> When we enter system sleep mode, the TLMM and the GIC are powered off
+>> and the PDC is the only powered-on interrupt controller. The IRQs
+>> configured at the PDC are the only ones capable of waking the system.
+>> Upon sensing the interrupt, the PDC intiates a system wakeup and replays
+>> the interrupt to the GIC. The GIC relays that to AP. Unfortunately, the
+>> interrupts from the GPIO do not trigger the TLMM summary line. Therefore
+>> this handler needs to figure out what GPIO caused the wakeup and notify
+>> the corresponding driver.
+>
+>That's most bizarre. What causes the TLMM output line not to reflect
+>the fact that an input is asserted?
+There is a parallel line that is directed from the PIN directly to the
+PDC in addition to the TLMM. This line does not go through the TLMM.
+
+Active path						_____
+                  /-------------- > [ TLMM ] --------> |     |
+            [ Device GPIO ]	   	     summary   | GIC | ==>
+		\				       |     |
+		  ----------------> [ PDC ] ---------> |_____|
+Wakeup path	     GPIO as IRQ		IRQ
+
+> I understand that it has been
+>turned off, but surely the PDC wakes it up at the same time as the
+>GIC, and it should realise that there is something pending...
+>
+PDC is always-on and when it detects any interrupt, will wakeup the GIC
+and then replay the interrupt line to the GIC. This interrupt line is
+not the summary line, but a separate line from GPIO/PIN to the PDC.
+
+Since the TLMM was also in low power mode, when the GIC was powered
+down, the TLMM never sees the IRQ and therefore will not send the
+summary line to GIC. The wakeup path is GPIO -> PDC -> GIC.
+
+>> > Why isn't that the case? And if that's because the HW is broken and
+>> > doesn't buffer edge interrupts, why can't you use the resend mechanism
+>> > instead?
+>> >
+>> The PDC hardware can replay the interrupts accurately. However, it will
+>> replay only the pin and its not the TLMM summary IRQ. The handler here,
+>> needs to notify the driver that the wakeup interrupt happened and needs
+>> to take action. If I could trip the summary IRQ in this handler that
+>> would work too. Can it be done?
+>
+>So the TLMM has indeed noticed the interrupt and you can read the TLMM
+>status registers to find out what fired?
+I think that's where it is probably confusing. The TLMM will not see the
+interrupt because it was in low power mode.
+
+>The question remains: why
+>isn't it generating any output if it knows something as fired? The
+>output line is level, right? What you describe would make sense if it
+>was generating an edge, but that'd really be a terrible design...
+>
+
+>As for tripping the summary interrupt, see check_irq_resend(). This
+>will only work if this summary interrupt is edge.
+>
+Will explore this.
+
+Thanks Marc.
+
+-- Lina
