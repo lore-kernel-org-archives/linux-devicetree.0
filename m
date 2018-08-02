@@ -1,42 +1,29 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
-Date: Wed, 1 Aug 2018 18:09:42 -0700
-Message-ID: <1b380e3c-e137-ebe9-4528-852062d2192e@wdc.com>
-References: <20180726143723.16585-1-hch@lst.de>
- <20180726143723.16585-8-hch@lst.de>
- <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com>
- <dc69d688-f765-74cc-3234-563fecff6002@wdc.com> <20180731165712.GA2521@lst.de>
- <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
- <20180801121656.GA25806@lst.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 5/8] net: phy: Use devm api for mdio bus allocation in
+ bcm iproc mdio mux
+Date: Wed, 1 Aug 2018 18:39:38 -0700
+Message-ID: <9bd09f10-895b-23cd-cf42-64a942cd266c@gmail.com>
+References: <1533171233-14557-1-git-send-email-arun.parameswaran@broadcom.com>
+ <1533171233-14557-6-git-send-email-arun.parameswaran@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180801121656.GA25806@lst.de>
+In-Reply-To: <1533171233-14557-6-git-send-email-arun.parameswaran@broadcom.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
+To: Arun Parameswaran <arun.parameswaran@broadcom.com>, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 8/1/18 5:12 AM, Christoph Hellwig wrote:
-> On Tue, Jul 31, 2018 at 05:38:01PM -0700, Atish Patra wrote:
->> crash details are at
->> https://paste.debian.net/1036078/
+
+
+On 08/01/2018 05:53 PM, Arun Parameswaran wrote:
+> Use devm_mdiobus_alloc() instead of mdiobus_alloc() in the Broadcom
+> iProc mdio mux driver.
 > 
-> Is this running without kallsyms?  It seems to lack useful symbols
-> and a backtrace unfortunately.
-> 
-Yes. I checked the config. All KALLSYMS options and STACKTRACE are enabled
+> Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
 
-CONFIG_KALLSYMS=y
-CONFIG_KALLSYMS_ALL=y
-CONFIG_KALLSYMS_BASE_RELATIVE=y
-
-CONFIG_STACKTRACE_SUPPORT=y
-CONFIG_STACKTRACE=y
-
-Not sure if I missed something.
-
-Regards,
-Atish
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
