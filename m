@@ -1,167 +1,219 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v7 2/3] Bluetooth: mediatek: Add protocol support for
- MediaTek serial devices
-Date: Thu, 2 Aug 2018 16:48:40 +0800
-Message-ID: <1533199720.3472.136.camel@mtkswgap22>
-References: <cover.1533056925.git.sean.wang@mediatek.com>
-         <c92ed10cf16f36d9a3b390e864af92e2dfe7b771.1533056925.git.sean.wang@mediatek.com>
-         <1707FFA1-A294-4A95-A3BF-0910CE455232@holtmann.org>
-         <1533192799.3472.122.camel@mtkswgap22>
-         <FF45A90A-F9F1-47CB-AB1F-1E92BF587FBE@holtmann.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 03/10] mfd: wcd9335: add wcd irq support
+Date: Thu, 2 Aug 2018 09:54:02 +0100
+Message-ID: <74081a83-abcf-5529-babb-83a7b5242f68@linaro.org>
+References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
+ <20180727121806.18209-4-srinivas.kandagatla@linaro.org>
+ <20180802080525.GM4662@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <FF45A90A-F9F1-47CB-AB1F-1E92BF587FBE@holtmann.org>
+In-Reply-To: <20180802080525.GM4662@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-08-02 at 09:38 +0200, Marcel Holtmann wrote:
-> Hi Sean,
+Thanks for the review,
+
+On 02/08/18 09:05, Lee Jones wrote:
+> On Fri, 27 Jul 2018, Srinivas Kandagatla wrote:
+> 
+>> WCD9335 supports two lines of irqs INTR1 and INTR2.
+>> Multiple interrupts are muxed via these lines.
+>> INTR1 consists of all possible interrupt sources like:
+>> Ear OCP, HPH OCP, MBHC, MAD, VBAT, and SVA
+>> INTR2 is a subset of first interrupt sources like MAD, VBAT, and SVA
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/mfd/Makefile                |   2 +-
+>>   drivers/mfd/wcd9335-core.c          |   9 ++
+>>   drivers/mfd/wcd9335-irq.c           | 172 ++++++++++++++++++++++++++++++++++++
+> 
+> Any particular reason for separating out IRQ handling?
+No particular reason, I tried to follow what other codecs like wm8994, 
+wm8350 and 14 others do.
+
+> 
+>>   include/dt-bindings/mfd/wcd9335.h   |  43 +++++++++
+>>   include/linux/mfd/wcd9335/wcd9335.h |   3 +
+>>   5 files changed, 228 insertions(+), 1 deletion(-)
+>>   create mode 100644 drivers/mfd/wcd9335-irq.c
+>>   create mode 100644 include/dt-bindings/mfd/wcd9335.h
+>>
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index a4697370640b..210875afe78a 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -58,7 +58,7 @@ obj-$(CONFIG_MFD_ARIZONA)	+= cs47l24-tables.o
+>>   endif
+>>   
+>>   obj-$(CONFIG_MFD_WCD9335)	+= wcd9335.o
+>> -wcd9335-objs			:= wcd9335-core.o
+>> +wcd9335-objs			:= wcd9335-core.o wcd9335-irq.o
+>>   
+>>   obj-$(CONFIG_MFD_WM8400)	+= wm8400-core.o
+>>   wm831x-objs			:= wm831x-core.o wm831x-irq.o wm831x-otp.o
+>> diff --git a/drivers/mfd/wcd9335-core.c b/drivers/mfd/wcd9335-core.c
+>> index 8f746901f4e9..6299dfb63aca 100644
+>> --- a/drivers/mfd/wcd9335-core.c
+>> +++ b/drivers/mfd/wcd9335-core.c
+>> @@ -243,12 +243,20 @@ static int wcd9335_slim_status(struct slim_device *sdev,
+>>   		return ret;
+>>   	}
+>>   
+>> +	wcd9335_irq_init(wcd);
+> 
+> Why don't you check the return value?
+> 
+> What happens if it defers?
+> 
+It would not defer here as the regmaps are already setup in probe and 
+the status callback is only invoked when the SLIMbus device is up.
+
+I will add the missing checks here.
+
+>>   	wcd->slim_ifd = wcd->slim_ifd;
+>>   
+>>   	return mfd_add_devices(wcd->dev, 0, wcd9335_devices,
+>>   			       ARRAY_SIZE(wcd9335_devices), NULL, 0, NULL);
+>>   }
+>>   
+>> +static void wcd9335_slim_remove(struct slim_device *sdev)
+>> +{
+>> +	struct wcd9335 *wcd = dev_get_drvdata(&sdev->dev);
+>> +
+>> +	wcd9335_irq_exit(wcd);
+>> +}
+>> +
+>>   static const struct slim_device_id wcd9335_slim_id[] = {
+>>   	{0x217, 0x1a0, 0x1, 0x0},
+>>   	{}
+>> @@ -259,6 +267,7 @@ static struct slim_driver wcd9335_slim_driver = {
+>>   		.name = "wcd9335-slim",
+>>   	},
+>>   	.probe = wcd9335_slim_probe,
+>> +	.remove = wcd9335_slim_remove,
+>>   	.device_status = wcd9335_slim_status,
+>>   	.id_table = wcd9335_slim_id,
+>>   };
+>> diff --git a/drivers/mfd/wcd9335-irq.c b/drivers/mfd/wcd9335-irq.c
+>> new file mode 100644
+>> index 000000000000..84098c89419b
+>> --- /dev/null
+>> +++ b/drivers/mfd/wcd9335-irq.c
+>> @@ -0,0 +1,172 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// Copyright (c) 2018, Linaro Limited
+>> +//
+> 
+> Blank line?
+> 
+Yep.
+
+>> +#include <linux/gpio.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/of_irq.h>
+>> +#include <dt-bindings/mfd/wcd9335.h>
+>> +#include <linux/mfd/wcd9335/wcd9335.h>
+>> +#include <linux/mfd/wcd9335/registers.h>
+> 
+> Please place in alphabetical order.
+> 
+sure!
+
+>> +static const struct regmap_irq wcd9335_irqs[] = {
+>> +	/* INTR_REG 0 */
+>> +	[WCD9335_IRQ_SLIMBUS] = {
+>> +		.reg_offset = 0,
+>> +		.mask = BIT(0),
+>> +	},
+> 
+> [snipped approx 1,000,000 entries]
+> 
+>> +	[WCD9335_IRQ_SVA_OUTBOX2] = {
+>> +		.reg_offset = 3,
+>> +		.mask = BIT(6),
+>> +	},
+>> +};
+> 
+> Please use REGMAP_IRQ_REG() to significantly reduce the diff.
 > 
 
-[ ... ]
+Nice, that looks good, I will use that in next version.
 
-> >>> +
-> >>> +static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
-> >>> +			    const void *param)
-> >>> +{
-> >>> +	struct mtk_hci_wmt_cmd wc;
-> >>> +	struct mtk_wmt_hdr *hdr;
-> >>> +	struct sk_buff *skb;
-> >>> +	u32 hlen;
-> >>> +
-> >>> +	hlen = sizeof(*hdr) + plen;
-> >>> +	if (hlen > 255)
-> >>> +		return -EINVAL;
-> >>> +
-> >>> +	hdr = (struct mtk_wmt_hdr *)&wc;
-> >>> +	hdr->dir = 1;
-> >>> +	hdr->op = op;
-> >>> +	hdr->dlen = cpu_to_le16(plen + 1);
-> >>> +	hdr->flag = flag;
-> >>> +	memcpy(wc.data, param, plen);
-> >>> +
-> >>> +	atomic_inc(&hdev->cmd_cnt);
-> >> 
-> >> Why are you doing this one. It will need a comment here if really needed. However I doubt that this is needed. You are only using it from hdev->setup and hdev->shutdown callbacks.
-> >> 
-> > 
-> > An increment on cmd_cnt is really needed because hci_cmd_work would check whether cmd_cnt is positive and then has a decrement on cmd_cnt before a packet is being sent out.
-> > 
-> > okay will add a comment.
+>> +static const struct regmap_irq_chip wcd9335_regmap_irq1_chip = {
+>> +	.name = "wcd9335_pin1_irq",
+>> +	.status_base = WCD9335_INTR_PIN1_STATUS0,
+>> +	.mask_base = WCD9335_INTR_PIN1_MASK0,
+>> +	.ack_base = WCD9335_INTR_PIN1_CLEAR0,
+>> +	.type_base = WCD9335_INTR_LEVEL0,
+>> +	.num_regs = 4,
+>> +	.irqs = wcd9335_irqs,
+>> +	.num_irqs = ARRAY_SIZE(wcd9335_irqs),
+>> +};
+>> +
+>> +int wcd9335_irq_init(struct wcd9335 *wcd)
+>> +{
+>> +	int ret;
 > 
-> but you are in ->setup callback this time. So if you need this, then all the other ->setup routines would actually fail as well. Either this is leftover from when you did things in ->probe or ->open or this is some thing we might better fix properly in the core instead of papering over it. Can you recheck if this is really needed.
+> '\n' here.
+
+yep!
+
 > 
-
-I added a counter print and the counter increments as below
-
-	/* atomic_inc(&hdev->cmd_cnt); */
-        pr_info("cmd_cnt = %d\n" , atomic_read(&hdev->cmd_cnt));
-
-        skb = __hci_cmd_sync_ev(hdev, 0xfc6f, hlen, &wc, HCI_VENDOR_PKT,
-                                HCI_INIT_TIMEOUT);
-
-and the log show up that 
-
-
-[  334.049156] Bluetooth: hci0: command 0xfc6f tx timeout
-[  334.054840] cmd_cnt = 0
-[  336.065076] Bluetooth: hci0: command 0xfc6f tx timeout
-[  336.070795] cmd_cnt = 0
-[  338.080997] Bluetooth: hci0: command 0xfc6f tx timeout
-[  338.086683] cmd_cnt = 0
-[  340.096907] Bluetooth: hci0: command 0xfc6f tx timeout
-[  340.102609] cmd_cnt = 0
-[  342.112824] Bluetooth: hci0: command 0xfc6f tx timeout
-[  342.118520] cmd_cnt = 0
-[  344.128747] Bluetooth: hci0: command 0xfc6f tx timeout
-[  344.134454] cmd_cnt = 0
-[  346.144667] Bluetooth: hci0: command 0xfc6f tx timeout
-[  346.150372] cmd_cnt = 0
-
-
-The packet is dropped by hci_cmd_work at [1], so I also wondered why the
-other vendor driver works, it seems the counter needs to be incremented
-before every skb is being queued to cmd_q.
-
-4257 static void hci_cmd_work(struct work_struct *work)
-4258 {
-4259         struct hci_dev *hdev = container_of(work, struct hci_dev, cmd_work);
-4260         struct sk_buff *skb;
-4261
-4262         BT_DBG("%s cmd_cnt %d cmd queued %d", hdev->name,
-4263                atomic_read(&hdev->cmd_cnt), skb_queue_len(&hdev->cmd_q));
-4264
-4265         /* Send queued commands */
-
-[1]
-4266         if (atomic_read(&hdev->cmd_cnt)) { /* dropped when cmd_cnt is zero */
-4267                 skb = skb_dequeue(&hdev->cmd_q);
-4268                 if (!skb)
-4269                         return;
-4270
-4271                 kfree_skb(hdev->sent_cmd);
-4272
-4273                 hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
-4274                 if (hdev->sent_cmd) {
-4275                         atomic_dec(&hdev->cmd_cnt);  /* cmd_cnt-- */
-4276                         hci_send_frame(hdev, skb);
-
-
-> >>> +
-> >>> +	skb = __hci_cmd_sync_ev(hdev, 0xfc6f, hlen, &wc, HCI_VENDOR_PKT,
-> >>> +				HCI_INIT_TIMEOUT);
-> >>> +
-> >>> +	if (IS_ERR(skb)) {
-> >>> +		int err = PTR_ERR(skb);
-> >>> +
-> >>> +		bt_dev_err(hdev, "Failed to send wmt cmd (%d)", err);
-> >>> +		return err;
-> >>> +	}
-> >>> +
-> >>> +	kfree_skb(skb);
-> >>> +
-> >>> +	return 0;
-> >>> +}
-> >>> +
-
-[ ... ]
-
-> >>> +	shdr->dlen2 = dlen & 0xff;
-> >>> +	shdr->cs = p[0] + p[1] + p[2];
-> >> 
-> > 
-> > as above discussion about shr->cs , it can be filled with zero to have less computing 
+>> +	/*
+>> +	 * INTR1 consists of all possible interrupt sources Ear OCP,
+>> +	 * HPH OCP, MBHC, MAD, VBAT, and SVA
+>> +	 * INTR2 is a subset of first interrupt sources MAD, VBAT, and SVA
+>> +	 */
+>> +	wcd->intr1 = of_irq_get_byname(wcd->dev->of_node, "intr1");
+>> +	if (wcd->intr1 < 0 || wcd->intr1 == -EPROBE_DEFER) {
+>> +		dev_err(wcd->dev, "Unable to configure irq\n");
 > 
-> If it has no value, then zero it out and add a comment for it.
+> Nit: s/irq/IRQ/
 > 
-
-okay
-
-> > 
-> >> I would add another comment here that this added the STP trailer. And change the above to mention it adds the STP header.
-> >> 
-> > 
-> > sure
-> > 
-> >> And you might want to check if there is space for the trailer as well. Otherwise skb_put tends to call BUG() if I remember correctly. I know this is super unlikely since our bt_skb_alloc is pretty large.
-> >> 
-> > 
-> > sure, I will add the handling for that. it should be better to make sure all rooms are enough for header and trailer before adding content to them
-> > 
-> > 
-
-[ ... ]
-
-> >> You want to add a MODULE_FIRMWARE here as well.
-> >> 
-> > 
-> > okay
+> Do you really want to issue an error message for -EPROBE_DEFER?
 > 
-> Regards
+> This maybe confusing if it is initiated later.
+
+Thanks for spotting this, I will take a closer look at this error path 
+and handle the DEFER case correctly in next version!
 > 
-> Marcel
+>> +		return wcd->intr1;
+>> +	}
+>> +
+>> +	ret = regmap_add_irq_chip(wcd->regmap, wcd->intr1,
+>> +				 IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+>> +				 0, &wcd9335_regmap_irq1_chip,
+>> +				 &wcd->irq_data);
+>> +	if (ret != 0) {
 > 
+> "if (ret)"
+> 
+Yep!
+
+>> +		dev_err(wcd->dev, "Failed to register IRQ chip: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int wcd9335_irq_exit(struct wcd9335 *wcd)
+>> +{
+>> +	regmap_del_irq_chip(wcd->intr1, wcd->irq_data);
+> 
+> '\n' here.
+yep!
+> 
+>> +	return 0;
+>> +}
+> 
+> Or better still, make this a void and remove the superfluous return.
+
+Makes sense, I will give that a try in next version.
