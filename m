@@ -1,69 +1,86 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: simplified RISC-V interrupt and clocksource handling v2
-Date: Thu, 02 Aug 2018 10:24:11 -0700 (PDT)
-Message-ID: <mhng-1a7030e5-19c4-481b-9f7c-e0976214eb18@palmer-si-x1c4>
-References: <20180802115008.4031-1-hch@lst.de>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: Re: [PATCH v12 1/7] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip wcn3990
+Date: Thu, 02 Aug 2018 23:24:52 +0530
+Message-ID: <366e23679cabb332b1ecde8396570f66@codeaurora.org>
+References: <20180802132518.8680-1-bgodavar@codeaurora.org>
+ <20180802132518.8680-2-bgodavar@codeaurora.org>
+ <20180802172043.GN68975@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802115008.4031-1-hch@lst.de>
+In-Reply-To: <20180802172043.GN68975@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anup@brainfault.org, atish.patra@wdc.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 02 Aug 2018 04:49:57 PDT (-0700), Christoph Hellwig wrote:
-> This series tries adds support for interrupt handling and timers
-> for the RISC-V architecture.
->
-> The basic per-hart interrupt handling implemented by the scause
-> and sie CSRs is extremely simple and implemented directly in
-> arch/riscv/kernel/irq.c.  In addition there is a irqchip driver
-> for the PLIC external interrupt controller, which is called through
-> the set_handle_irq API, and a clocksource driver that gets its
-> timer interrupt directly from the low-level interrupt handling.
->
-> Compared to previous iterations this version does not try to use an
-> irqchip driver for the low-level interrupt handling.  This saves
-> a couple indirect calls and an additional read of the scause CSR
-> in the hot path, makes the code much simpler and last but not least
-> avoid the dependency on a device tree for a mandatory architectural
-> feature.
->
-> A git tree is available here (contains a few more patches before
-> the ones in this series)
->
->     git://git.infradead.org/users/hch/riscv.git riscv-irq-simple.2
->
-> Gitweb:
->
->     http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple.2
->
-> Changes since v1:
->  - rename the plic driver to irq-sifive-plic
->  - switch to a default compatible of sifive,plic0 (still supporting the
->    riscv,plic0 name for compatibility)
->  - add a reference for the SiFive PLIC register layout
->  - fix plic_toggle addressing for large numbers of hwirqs
->  - remove the call to ack_bad_irq
->  - use a raw spinlock for plic_toggle_lock
->  - use the irq_desc cpumask in the plic enable/disable methods
->  - add back OF contexid parsing in the plic driver
->  - don't allow COMPILE_TEST builds of the clocksource driver, as it
->    depends on <asm/sbi.h>
->  - default the clocksource driver to y
->  - clean up naming in the clocksource driver
->  - remove the MINDELTA and MAXDELTA #defines
->  - various DT binding fixes
+Hi Matthias,
 
-Ah, thank you so much.  This is great!  With this patch set applied on top of 
-rc7 I can boot QEMU master and get to the Fedora root file system.  I'll review 
-the patch set properly, but at least for now I think a
+On 2018-08-02 22:50, Matthias Kaehlcke wrote:
+> On Thu, Aug 02, 2018 at 06:55:12PM +0530, Balakrishna Godavarthi wrote:
+>> This patch enables regulators for the Qualcomm Bluetooth wcn3990
+>> controller.
+>> 
+>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  .../bindings/net/qualcomm-bluetooth.txt       | 26 
+>> +++++++++++++++++--
+>>  1 file changed, 24 insertions(+), 2 deletions(-)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
+>> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> index 0ea18a53cc29..2175174415ee 100644
+>> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+>> @@ -10,12 +10,22 @@ device the slave device is attached to.
+>>  Required properties:
+>>   - compatible: should contain one of the following:
+>>     * "qcom,qca6174-bt"
+>> +   * "qcom,wcn3990-bt"
+>> +
+>> +Optional properties for compatible string qcom,qca6174-bt:
+>> 
+>> -Optional properties:
+>>   - enable-gpios: gpio specifier used to enable chip
+>>   - clocks: clock provided to the controller (SUSCLK_32KHZ)
+>> 
+>> -Example:
+>> +Optional properties for compatible string qcom,wcn3990-bt:
+>> +
+>> + - vddio-supply: Bluetooth wcn3990 VDD_IO supply regulator handle.
+>> + - vddxo-supply: Bluetooth wcn3990 VDD_XO supply regulator handle.
+>> + - vddrf-supply: Bluetooth wcn3990 VDD_RF supply regulator handle.
+>> + - vddch0-supply: Bluetooth wcn3990 VDD_CH0 supply regulator handle.
+> 
+> Are these really optional? If I understand correctly the driver
+> expects the regulators to be there. Even if it could do with only some
+> regulators specified the devm_regulator_bulk_get() call would fail if
+> not all requested regulators are available.
 
-Tested-by: Palmer Dabbelt <palmer@sifive.com>
+yes they are required along with compatible string "qcom,wcn3990-bt".
+i have taken reference wrt compatible string "qcom,qca6174-bt".
+In which clocks and enable-gpios are required for driver to work, but it 
+was written as optional in doc.
 
-is warranted.  What's the best way to go about merging this?  There's quite a 
-bit of arch/riscv diff here so I don't mind taking it through the RISC-V tree, 
-but there's also some irqchip and clocksource stuff as well so I'm not sure if 
-that's OK to do.
+below snippet from hci_qca.c for qcom,qca6174-bt.
+
+  if (IS_ERR(qcadev->bt_en)) {
+        dev_err(&serdev->dev, "failed to acquire enable gpio\n");
+        return PTR_ERR(qcadev->bt_en);
+     }
+
+   qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+   if (IS_ERR(qcadev->susclk)) {
+       dev_err(&serdev->dev, "failed to acquire clk\n");
+        return PTR_ERR(qcadev->susclk);
+      }
+
+
+-- 
+Regards
+Balakrishna.
