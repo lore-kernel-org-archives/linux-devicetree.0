@@ -1,13 +1,11 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 1/3] dt-bindings: usb: dwc2: add description for px30
-Date: Thu,  2 Aug 2018 15:01:31 +0200
-Message-ID: <20180802130133.4898-2-heiko@sntech.de>
-References: <20180802130133.4898-1-heiko@sntech.de>
+Subject: [PATCH 0/3] add dwc2 support for px30
+Date: Thu,  2 Aug 2018 15:01:30 +0200
+Message-ID: <20180802130133.4898-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180802130133.4898-1-heiko@sntech.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,30 +19,26 @@ To: linux-usb@vger.kernel.org
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, balbi@kernel.org, gregkh@linuxfoundation.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, cl@rock-chips.com, hminas@synopsys.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Liang Chen <cl@rock-chips.com>
+This is split out from the series adding the px30 support, due to
+the dwc2 binding change not having landed yet in a maintainer tree.
 
-This patch adds the compatible of dwc2 for PX30 SoCs.
+The Acked binding change should go through some usb tree, while
+I'll pick up the dts changes once that has happened.
 
-Signed-off-by: Liang Chen <cl@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
-unchanged from it being part of the general px30 series
+The binding itself is unchanged.
 
- Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 46da5f184460..6dc3c4a34483 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -6,6 +6,7 @@ Required properties:
-   - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
-   - hisilicon,hi6220-usb: The DWC2 USB controller instance in the hi6220 SoC.
-   - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
-+  - "rockchip,px30-usb", "rockchip,rk3066-usb", "snps,dwc2": for px30 Soc;
-   - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
-   - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
-   - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
+Heiko Stuebner (2):
+  arm64: dts: rockchip: add dwc2 otg controller on px30
+  arm64: dts: rockchip: enable dwc2-based otg controller on px30-evb
+
+Liang Chen (1):
+  dt-bindings: usb: dwc2: add description for px30
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |  1 +
+ arch/arm64/boot/dts/rockchip/px30-evb.dts      |  4 ++++
+ arch/arm64/boot/dts/rockchip/px30.dtsi         | 16 ++++++++++++++++
+ 3 files changed, 21 insertions(+)
+
 -- 
 2.17.0
