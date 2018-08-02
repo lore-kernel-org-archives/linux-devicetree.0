@@ -1,222 +1,40 @@
-From: Saravana Kannan <skannan@codeaurora.org>
-Subject: [PATCH v3 2/2] PM / devfreq: Add devfreq driver for interconnect bandwidth voting
-Date: Wed,  1 Aug 2018 17:57:42 -0700
-Message-ID: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
+Date: Wed, 1 Aug 2018 18:02:52 -0700
+Message-ID: <41a996bf-b591-db0c-718e-524743f348fd@wdc.com>
+References: <20180726143723.16585-1-hch@lst.de>
+ <20180726143723.16585-8-hch@lst.de>
+ <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com>
+ <dc69d688-f765-74cc-3234-563fecff6002@wdc.com> <20180731165712.GA2521@lst.de>
+ <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com>
+ <20180801141858.GA28203@lst.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180801141858.GA28203@lst.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Saravana Kannan <skannan@codeaurora.org>, georgi.djakov@linaro.org, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This driver registers itself as a devfreq device that allows devfreq
-governors to make bandwidth votes for an interconnect path. This allows
-applying various policies for different interconnect paths using devfreq
-governors.
+On 8/1/18 7:14 AM, Christoph Hellwig wrote:
+> I've pushed out an update to the riscv-irq-simple.2 branch to better
+> handle with sparse contexid maps, please retry with that.
+> 
 
-Example uses:
-* Use the devfreq performance governor to set the CPU to DDR interconnect
-  path for maximum performance.
-* Use the devfreq performance governor to set the GPU to DDR interconnect
-  path for maximum performance.
-* Use the CPU frequency to device frequency mapping governor to scale the
-  DDR frequency based on the needs of the CPUs' current frequency.
+I see you have changed the driver file name from irq-riscv-plic to 
+irq-riscv-sifive along with default Y for SIFIVE_PLIC. I guess it was 
+done because PLIC register spec is SIFIVE specific rather than RISC-V.
 
-Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
----
- Documentation/devicetree/bindings/devfreq/icbw.txt |  21 ++++
- drivers/devfreq/Kconfig                            |  13 +++
- drivers/devfreq/Makefile                           |   1 +
- drivers/devfreq/devfreq_icbw.c                     | 116 +++++++++++++++++++++
- 4 files changed, 151 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/devfreq/icbw.txt
- create mode 100644 drivers/devfreq/devfreq_icbw.c
+But can we keep the new kconfig option "SIFIVE_PLIC" enabled in 
+driver/irqchip/Kconfig or arch/riscv/Kconfig for now to avoid breakage 
+without linux_defconfig update.
 
-diff --git a/Documentation/devicetree/bindings/devfreq/icbw.txt b/Documentation/devicetree/bindings/devfreq/icbw.txt
-new file mode 100644
-index 0000000..36cf045
---- /dev/null
-+++ b/Documentation/devicetree/bindings/devfreq/icbw.txt
-@@ -0,0 +1,21 @@
-+Interconnect bandwidth device
-+
-+icbw is a device that represents an interconnect path that connects two
-+devices. This device is typically used to vote for BW requirements between
-+two devices. Eg: CPU to DDR, GPU to DDR, etc
-+
-+Required properties:
-+- compatible:		Must be "devfreq-icbw"
-+- interconnects:	Pairs of phandles and interconnect provider specifier
-+			to denote the edge source and destination ports of
-+			the interconnect path. See also:
-+		Documentation/devicetree/bindings/interconnect/interconnect.txt
-+- interconnect-names:	Must have one entry with the name "path".
-+
-+Example:
-+
-+	qcom,cpubw {
-+		compatible = "devfreq-icbw";
-+		interconnects = <&snoc MASTER_APSS_1 &bimc SLAVE_EBI_CH0>;
-+		interconnect-names = "path";
-+	};
-diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 3d9ae68..590370e 100644
---- a/drivers/devfreq/Kconfig
-+++ b/drivers/devfreq/Kconfig
-@@ -121,6 +121,19 @@ config ARM_RK3399_DMC_DEVFREQ
-           It sets the frequency for the memory controller and reads the usage counts
-           from hardware.
- 
-+config DEVFREQ_ICBW
-+	bool "DEVFREQ device for making bandwidth votes on interconnect paths"
-+	select DEVFREQ_GOV_PERFORMANCE
-+	select DEVFREQ_GOV_POWERSAVE
-+	select DEVFREQ_GOV_USERSPACE
-+	default n
-+	help
-+	  Different devfreq governors use this devfreq device to make
-+	  bandwidth votes for interconnect paths between different devices
-+	  (Eg: CPU to DDR, GPU to DDR, etc). This driver provides a generic
-+	  interface so that the devfreq governors can be shared across SoCs
-+	  and architectures.
-+
- source "drivers/devfreq/event/Kconfig"
- 
- endif # PM_DEVFREQ
-diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
-index e9dc3e9..b302c5cf 100644
---- a/drivers/devfreq/Makefile
-+++ b/drivers/devfreq/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_DEVFREQ_GOV_CPUFREQ_MAP)	+= governor_cpufreq_map.o
- obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
- obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
- obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
-+obj-$(CONFIG_DEVFREQ_ICBW)		+= devfreq_icbw.o
- 
- # DEVFREQ Event Drivers
- obj-$(CONFIG_PM_DEVFREQ_EVENT)		+= event/
-diff --git a/drivers/devfreq/devfreq_icbw.c b/drivers/devfreq/devfreq_icbw.c
-new file mode 100644
-index 0000000..231fb21
---- /dev/null
-+++ b/drivers/devfreq/devfreq_icbw.c
-@@ -0,0 +1,116 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2013-2014, 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#define pr_fmt(fmt) "icbw: " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/mutex.h>
-+#include <linux/devfreq.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/interconnect.h>
-+
-+struct dev_data {
-+	struct icc_path *path;
-+	u32 cur_ab;
-+	u32 cur_pb;
-+	unsigned long gov_ab;
-+	struct devfreq *df;
-+	struct devfreq_dev_profile dp;
-+};
-+
-+static int icbw_target(struct device *dev, unsigned long *freq, u32 flags)
-+{
-+	struct dev_data *d = dev_get_drvdata(dev);
-+	int ret;
-+	u32 new_pb = *freq, new_ab = d->gov_ab;
-+
-+	if (d->cur_pb == new_pb && d->cur_ab == new_ab)
-+		return 0;
-+
-+	dev_dbg(dev, "BW KBps: AB: %u PB: %u\n", new_ab, new_pb);
-+
-+	ret = icc_set(d->path, new_ab, new_pb);
-+	if (ret) {
-+		dev_err(dev, "bandwidth request failed (%d)\n", ret);
-+	} else {
-+		d->cur_pb = new_pb;
-+		d->cur_ab = new_ab;
-+	}
-+
-+	return ret;
-+}
-+
-+static int icbw_get_dev_status(struct device *dev,
-+				struct devfreq_dev_status *stat)
-+{
-+	struct dev_data *d = dev_get_drvdata(dev);
-+
-+	stat->private_data = &d->gov_ab;
-+	return 0;
-+}
-+
-+static int devfreq_icbw_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dev_data *d;
-+	struct devfreq_dev_profile *p;
-+
-+	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
-+	if (!d)
-+		return -ENOMEM;
-+	dev_set_drvdata(dev, d);
-+
-+	p = &d->dp;
-+	p->polling_ms = 50;
-+	p->target = icbw_target;
-+	p->get_dev_status = icbw_get_dev_status;
-+
-+	d->path = of_icc_get(dev, "path");
-+	if (IS_ERR(d->path)) {
-+		dev_err(dev, "Unable to register interconnect path\n");
-+		return -ENODEV;
-+	}
-+
-+	d->df = devfreq_add_device(dev, p, "performance", NULL);
-+	if (IS_ERR(d->df)) {
-+		icc_put(d->path);
-+		return PTR_ERR(d->df);
-+	}
-+
-+	return 0;
-+}
-+
-+static int devfreq_icbw_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dev_data *d = dev_get_drvdata(dev);
-+
-+	devfreq_remove_device(d->df);
-+	icc_put(d->path);
-+	return 0;
-+}
-+
-+static const struct of_device_id icbw_match_table[] = {
-+	{ .compatible = "devfreq-icbw" },
-+	{}
-+};
-+
-+static struct platform_driver icbw_driver = {
-+	.probe = devfreq_icbw_probe,
-+	.remove = devfreq_icbw_remove,
-+	.driver = {
-+		.name = "devfreq-icbw",
-+		.of_match_table = icbw_match_table,
-+	},
-+};
-+
-+module_platform_driver(icbw_driver);
-+MODULE_DESCRIPTION("Interconnect bandwidth voting driver");
-+MODULE_LICENSE("GPL v2");
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+With the config enabled, Qemu virt machine booting has no issues with 
+riscv-irq-simple.2 branch. I am still looking at the crash from the 
+hardware.
+
+Regards,
+Atish
