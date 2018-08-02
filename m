@@ -1,7 +1,7 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v9 6/6] ARM: dts: imx6: RIoTboard provide standby on power off option
-Date: Thu,  2 Aug 2018 12:34:25 +0200
-Message-ID: <20180802103425.3053-7-o.rempel@pengutronix.de>
+Subject: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Thu,  2 Aug 2018 12:34:22 +0200
+Message-ID: <20180802103425.3053-4-o.rempel@pengutronix.de>
 References: <20180802103425.3053-1-o.rempel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180802103425.3053-1-o.rempel@pengutronix.de>
@@ -10,40 +10,26 @@ To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J.
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This board, as well as some other boards with i.MX6 and a PMIC, uses a
-"PMIC_STBY_REQ" line to notify the PMIC about a state change.
-The PMIC is programmed for a specific state change before triggering the
-line.
-In this case, PMIC_STBY_REQ can be used for stand by, sleep
-and power off modes.
+Export pm_power_off_prepare. It is needed to implement power off on
+Freescale/NXP iMX6 based boards with external power management
+integrated circuit (PMIC).
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx6dl-riotboard.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/reboot.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
-index 2e98c92adff7..a0e9753ee767 100644
---- a/arch/arm/boot/dts/imx6dl-riotboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
-@@ -90,6 +90,10 @@
- 	status = "okay";
- };
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index e4ced883d8de..83810d726f3e 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -49,6 +49,7 @@ int reboot_force;
+  */
  
-+&clks {
-+	fsl,pmic-stby-poweroff;
-+};
-+
- &fec {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
-@@ -170,6 +174,7 @@
- 		reg = <0x08>;
- 		interrupt-parent = <&gpio5>;
- 		interrupts = <16 8>;
-+		fsl,pmic-stby-poweroff;
+ void (*pm_power_off_prepare)(void);
++EXPORT_SYMBOL_GPL(pm_power_off_prepare);
  
- 		regulators {
- 			reg_vddcore: sw1ab {				/* VDDARM_IN */
+ /**
+  *	emergency_restart - reboot the system
 -- 
 2.18.0
