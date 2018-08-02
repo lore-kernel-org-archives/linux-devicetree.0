@@ -1,36 +1,74 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
-Date: Thu, 2 Aug 2018 11:53:25 +0200
-Message-ID: <20180802095325.GC14203@lst.de>
-References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-8-hch@lst.de> <1b3f6066-0c7c-a5f5-75ad-559fe81091ee@wdc.com> <dc69d688-f765-74cc-3234-563fecff6002@wdc.com> <20180731165712.GA2521@lst.de> <dcb17e67-9f83-0ff5-a2c6-a6dd1b4d9c0d@wdc.com> <20180801121656.GA25806@lst.de> <1b380e3c-e137-ebe9-4528-852062d2192e@wdc.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 5/9] RISC-V: implement low-level interrupt handling
+Date: Thu, 2 Aug 2018 11:48:55 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1808021147540.2037@nanos.tec.linutronix.de>
+References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-6-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1b380e3c-e137-ebe9-4528-852062d2192e@wdc.com>
+In-Reply-To: <20180726143723.16585-6-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anup@brainfault.org, atish.patra@wdc.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 01, 2018 at 06:09:42PM -0700, Atish Patra wrote:
-> On 8/1/18 5:12 AM, Christoph Hellwig wrote:
->> On Tue, Jul 31, 2018 at 05:38:01PM -0700, Atish Patra wrote:
->>> crash details are at
->>> https://paste.debian.net/1036078/
->>
->> Is this running without kallsyms?  It seems to lack useful symbols
->> and a backtrace unfortunately.
->>
-> Yes. I checked the config. All KALLSYMS options and STACKTRACE are enabled
->
-> CONFIG_KALLSYMS=y
-> CONFIG_KALLSYMS_ALL=y
-> CONFIG_KALLSYMS_BASE_RELATIVE=y
->
-> CONFIG_STACKTRACE_SUPPORT=y
-> CONFIG_STACKTRACE=y
->
-> Not sure if I missed something.
+On Thu, 26 Jul 2018, Christoph Hellwig wrote:
+> Add support for a routine that dispatches exceptions with the interrupt
+> flags set to either the IPI or irqdomain code (and the clock source in the
+> future).
+> 
+> Loosely based on the irq-riscv-int.c irqchip driver from the RISC-V tree.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/kernel/entry.S |  4 +--
+>  arch/riscv/kernel/irq.c   | 52 ++++++++++++++++++++++++++++++++-------
+>  2 files changed, 45 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 9aaf6c986771..fa2c08e3c05e 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -168,8 +168,8 @@ ENTRY(handle_exception)
+>  
+>  	/* Handle interrupts */
+>  	move a0, sp /* pt_regs */
+> -	REG_L a1, handle_arch_irq
+> -	jr a1
+> +	move a1, s4 /* scause */
+> +	tail do_IRQ
 
-That should be all that is needed normally.
+What's the reason for doing the whole exception dance in ASM ?
+
+>  1:
+>  	/* Exceptions run with interrupts enabled */
+>  	csrs sstatus, SR_SIE
+
+> +asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
+> +{
+> +	struct pt_regs *old_regs = set_irq_regs(regs);
+> +
+> +	irq_enter();
+> +	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
+> +#ifdef CONFIG_SMP
+> +	case INTERRUPT_CAUSE_SOFTWARE:
+> +		/*
+> +		 * We only use software interrupts to pass IPIs, so if a non-SMP
+> +		 * system gets one, then we don't know what to do.
+> +		 */
+> +		riscv_software_interrupt();
+> +		break;
+> +#endif
+> +	case INTERRUPT_CAUSE_EXTERNAL:
+> +		handle_arch_irq(regs);
+> +		break;
+> +	default:
+> +		panic("unexpected interrupt cause");
+> +	}
+> +	irq_exit();
+
+Looks about right.
+
+Thanks,
+
+	tglx
