@@ -1,74 +1,29 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 5/9] RISC-V: implement low-level interrupt handling
-Date: Thu, 2 Aug 2018 11:48:55 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1808021147540.2037@nanos.tec.linutronix.de>
-References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-6-hch@lst.de>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 6/6] dt-bindings: interrupt-controller: RISC-V PLIC
+        documentation
+Date: Thu, 2 Aug 2018 11:55:27 +0200
+Message-ID: <20180802095527.GD14203@lst.de>
+References: <20180725093649.32332-1-hch@lst.de> <20180725093649.32332-7-hch@lst.de> <20180731224630.GB12168@rob-hp-laptop> <20180801071635.GC20224@lst.de> <CAL_JsqJWOXX7-_sb4W63wPRqFjHuU-DM-LNYgczieWjAE5ABfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180726143723.16585-6-hch@lst.de>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJWOXX7-_sb4W63wPRqFjHuU-DM-LNYgczieWjAE5ABfQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anup@brainfault.org, atish.patra@wdc.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
+To: Rob Herring <robh@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Jul 2018, Christoph Hellwig wrote:
-> Add support for a routine that dispatches exceptions with the interrupt
-> flags set to either the IPI or irqdomain code (and the clock source in the
-> future).
+On Wed, Aug 01, 2018 at 12:26:31PM -0600, Rob Herring wrote:
+> Not really my problem that they didn't follow the process and upstream
+> their binding first. But this alone is just a string identifier, so I
+> don't really care that much. If things are really a mess, then the
+> next implementations will have to have better compatible strings. More
+> likely, I'll just see folks trying to add various properties to deal
+> with all the differences.
 > 
-> Loosely based on the irq-riscv-int.c irqchip driver from the RISC-V tree.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/kernel/entry.S |  4 +--
->  arch/riscv/kernel/irq.c   | 52 ++++++++++++++++++++++++++++++++-------
->  2 files changed, 45 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> index 9aaf6c986771..fa2c08e3c05e 100644
-> --- a/arch/riscv/kernel/entry.S
-> +++ b/arch/riscv/kernel/entry.S
-> @@ -168,8 +168,8 @@ ENTRY(handle_exception)
->  
->  	/* Handle interrupts */
->  	move a0, sp /* pt_regs */
-> -	REG_L a1, handle_arch_irq
-> -	jr a1
-> +	move a1, s4 /* scause */
-> +	tail do_IRQ
+> You could always define a better compatible and leave 'riscv,plic0' as
+> a fallback to avoid breaking things.
 
-What's the reason for doing the whole exception dance in ASM ?
-
->  1:
->  	/* Exceptions run with interrupts enabled */
->  	csrs sstatus, SR_SIE
-
-> +asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
-> +{
-> +	struct pt_regs *old_regs = set_irq_regs(regs);
-> +
-> +	irq_enter();
-> +	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
-> +#ifdef CONFIG_SMP
-> +	case INTERRUPT_CAUSE_SOFTWARE:
-> +		/*
-> +		 * We only use software interrupts to pass IPIs, so if a non-SMP
-> +		 * system gets one, then we don't know what to do.
-> +		 */
-> +		riscv_software_interrupt();
-> +		break;
-> +#endif
-> +	case INTERRUPT_CAUSE_EXTERNAL:
-> +		handle_arch_irq(regs);
-> +		break;
-> +	default:
-> +		panic("unexpected interrupt cause");
-> +	}
-> +	irq_exit();
-
-Looks about right.
-
-Thanks,
-
-	tglx
+Is there any better way to define a compatible other than having
+duplicate IRQCHIP_DECLARE() statements?
