@@ -1,693 +1,628 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v7 2/3] Bluetooth: mediatek: Add protocol support for
- MediaTek serial devices
-Date: Thu, 2 Aug 2018 09:38:11 +0200
-Message-ID: <FF45A90A-F9F1-47CB-AB1F-1E92BF587FBE@holtmann.org>
-References: <cover.1533056925.git.sean.wang@mediatek.com>
- <c92ed10cf16f36d9a3b390e864af92e2dfe7b771.1533056925.git.sean.wang@mediatek.com>
- <1707FFA1-A294-4A95-A3BF-0910CE455232@holtmann.org>
- <1533192799.3472.122.camel@mtkswgap22>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+From: "Keiji Hayashibara" <hayashibara.keiji@socionext.com>
+Subject: RE: [PATCH v3 2/2] spi: add SPI controller driver for UniPhier SoC
+Date: Thu, 2 Aug 2018 16:52:21 +0900
+Message-ID: <000001d42a35$be480050$3ad800f0$@socionext.com>
+References: <1533108552-19878-1-git-send-email-hayashibara.keiji@socionext.com> <1533108552-19878-3-git-send-email-hayashibara.keiji@socionext.com> <CAHp75VeiGuTpPHYcq+aoZUWiX7HFmOg63Zs6dfk0OJiN4Ux=5g@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain;
-        charset=utf-8
+        charset="utf-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533192799.3472.122.camel@mtkswgap22>
+In-Reply-To: <CAHp75VeiGuTpPHYcq+aoZUWiX7HFmOg63Zs6dfk0OJiN4Ux=5g@mail.gmail.com>
+Content-Language: ja
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: 'Andy Shevchenko' <andy.shevchenko@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-spi <linux-spi@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+Hi Andy,
 
->>> This adds a driver based on serdev driver for the MediaTek serial protocol
->>> based on running H:4, which can enable the built-in Bluetooth device inside
->>> MT7622 SoC.
->>> 
-> 
-> [ ... ]
-> 
->>> +enum {
->>> +	MTK_WMT_PATCH_DWNLD = 0x1,
->>> +	MTK_WMT_FUNC_CTRL = 0x6,
->>> +	MTK_WMT_RST = 0x7
->>> +};
->>> +
->>> +struct mtk_stp_hdr {
->>> +	u8 prefix;
->>> +	u8 dlen1:4;
->>> +	u8 type:4;
->> 
->> So this is the hard one. I doubt that this is endian safe. It is also some fun way of packing it. Can you find a better variable name and just pack it into an u16 in the function. And then also label this __le16 or __be16 accordingly.
-> 
-> okay, I will do it. here I suppose 'u8 dlen1:4 and u8 type:4' only take up one byte. 
-> 
->>> +	u8 dlen2;
->>> +	u8 cs;
->> 
->> Are you checking the checksum on receive?
->> 
-> 
-> it is no needs. cs always shows zeros when I dump these received packets.
-> 
->>> +} __packed;
->>> +
->>> +struct mtk_wmt_hdr {
->>> +	u8	dir;
->>> +	u8	op;
->>> +	__le16	dlen;
->>> +	u8	flag;
->>> +} __packed;
->>> +
->>> +struct mtk_hci_wmt_cmd {
->>> +	struct mtk_wmt_hdr hdr;
->>> +	u8 data[256];
->>> +} __packed;
->>> +
->>> +struct btmtkuart_dev {
->>> +	struct hci_dev *hdev;
->>> +	struct serdev_device *serdev;
->>> +
->>> +	struct work_struct tx_work;
->>> +	unsigned long tx_state;
->>> +	struct sk_buff_head txq;
->>> +
->>> +	struct sk_buff *rx_skb;
->>> +
->>> +	struct mtk_stp_splitter *sp;
->> 
->> This should be a leftover and no longer be needed.
->> 
-> 
-> okay. it's my fault and I should have a removal in the version
-> 
->>> +	struct clk *clk;
->> 
->> Move the struct clk below struct serdev_device.
->> 
-> 
-> okay, it is a nice arrangement
-> 
->>> +
->>> +	u8	stp_pad[6];
->>> +	u8	stp_cursor;
->>> +	u16	stp_dlen;
->>> +};
->>> +
->>> +static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
->>> +			    const void *param)
->>> +{
->>> +	struct mtk_hci_wmt_cmd wc;
->>> +	struct mtk_wmt_hdr *hdr;
->>> +	struct sk_buff *skb;
->>> +	u32 hlen;
->>> +
->>> +	hlen = sizeof(*hdr) + plen;
->>> +	if (hlen > 255)
->>> +		return -EINVAL;
->>> +
->>> +	hdr = (struct mtk_wmt_hdr *)&wc;
->>> +	hdr->dir = 1;
->>> +	hdr->op = op;
->>> +	hdr->dlen = cpu_to_le16(plen + 1);
->>> +	hdr->flag = flag;
->>> +	memcpy(wc.data, param, plen);
->>> +
->>> +	atomic_inc(&hdev->cmd_cnt);
->> 
->> Why are you doing this one. It will need a comment here if really needed. However I doubt that this is needed. You are only using it from hdev->setup and hdev->shutdown callbacks.
->> 
-> 
-> An increment on cmd_cnt is really needed because hci_cmd_work would check whether cmd_cnt is positive and then has a decrement on cmd_cnt before a packet is being sent out.
-> 
-> okay will add a comment.
+Thank you for your check.
 
-but you are in ->setup callback this time. So if you need this, then all the other ->setup routines would actually fail as well. Either this is leftover from when you did things in ->probe or ->open or this is some thing we might better fix properly in the core instead of papering over it. Can you recheck if this is really needed.
 
->>> +
->>> +	skb = __hci_cmd_sync_ev(hdev, 0xfc6f, hlen, &wc, HCI_VENDOR_PKT,
->>> +				HCI_INIT_TIMEOUT);
->>> +
->>> +	if (IS_ERR(skb)) {
->>> +		int err = PTR_ERR(skb);
->>> +
->>> +		bt_dev_err(hdev, "Failed to send wmt cmd (%d)", err);
->>> +		return err;
->>> +	}
->>> +
->>> +	kfree_skb(skb);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int mtk_setup_fw(struct hci_dev *hdev)
->>> +{
->>> +	const struct firmware *fw;
->>> +	const char *fwname;
->>> +	const u8 *fw_ptr;
->>> +	size_t fw_size;
->>> +	int err, dlen;
->>> +	u8 flag;
->>> +
->>> +	fwname = FIRMWARE_MT7622;
->> 
->> Scrap the fwname variable and use it directly. If you later want to support newer/older hardware with other firmware names, we deal with it then.
->> 
+> From: Andy Shevchenko [mailto:andy.shevchenko@gmail.com]
+> Sent: Wednesday, August 1, 2018 7:21 PM
+> To: Hayashibara, Keiji/林原 啓二 <hayashibara.keiji@socionext.com>
+> Subject: Re: [PATCH v3 2/2] spi: add SPI controller driver for UniPhier SoC
 > 
-> okay
+> On Wed, Aug 1, 2018 at 10:29 AM, Keiji Hayashibara <hayashibara.keiji@socionext.com> wrote:
+> > Add SPI controller driver implemented in Socionext UniPhier SoCs.
+> >
+> > UniPhier SoCs have two types SPI controllers; SCSSI supports a single
+> > channel, and MCSSI supports multiple channels.
+> > This driver supports SCSSI only.
+> >
+> > This controller has 32bit TX/RX FIFO with depth of eight entry, and
+> > supports the SPI master mode only.
+> >
+> > This commit is implemented in PIO transfer mode, not DMA transfer.
+> >
 > 
->>> +
->>> +	err = request_firmware(&fw, fwname, &hdev->dev);
->>> +	if (err < 0) {
->>> +		bt_dev_err(hdev, "Failed to load firmware file (%d)", err);
->>> +		return err;
->>> +	}
->>> +
->>> +	fw_ptr = fw->data;
->>> +	fw_size = fw->size;
->>> +
->>> +	/* The size of patch header is 30 bytes, should be skip. */
->>> +	if (fw_size < 30)
->>> +		return -EINVAL;
->>> +
->>> +	fw_size -= 30;
->>> +	fw_ptr += 30;
->>> +	flag = 1;
->>> +
->>> +	while (fw_size > 0) {
->>> +		dlen = min_t(int, 250, fw_size);
->>> +
->>> +		/* Tell deivice the position in sequence. */
->>> +		if (fw_size - dlen <= 0)
->>> +			flag = 3;
->>> +		else if (fw_size < fw->size - 30)
->>> +			flag = 2;
->>> +
->>> +		err = mtk_hci_wmt_sync(hdev, MTK_WMT_PATCH_DWNLD, flag, dlen,
->>> +				       fw_ptr);
->>> +		if (err < 0)
->>> +			break;
->>> +
->>> +		fw_size -= dlen;
->>> +		fw_ptr += dlen;
->>> +	}
->>> +
->>> +	release_firmware(fw);
->>> +
->>> +	return err;
->>> +}
->>> +
->>> +static int btmtkuart_recv_event(struct hci_dev *hdev, struct sk_buff *skb)
->>> +{
->>> +	struct hci_event_hdr *hdr = (void *)skb->data;
->>> +
->>> +	/* Fix up the vendor event id with HCI_VENDOR_PKT instead of
->>> +	 * 0xe4 so that btmon can parse the kind of vendor event properly.
->>> +	 */
->>> +	if (hdr->evt == 0xe4)
->>> +		hdr->evt = HCI_VENDOR_PKT;
->>> +
->>> +	/* Each HCI event would go through the core. */
->> 
->> This comment adds really no value here. Just remove it.
->> 
+> One comment below, otherwise FWIW,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > 
-> okay
 > 
->>> +	return hci_recv_frame(hdev, skb);
->>> +}
->>> +
->>> +static const struct h4_recv_pkt mtk_recv_pkts[] = {
->>> +	{ H4_RECV_ACL,      .recv = hci_recv_frame },
->>> +	{ H4_RECV_SCO,      .recv = hci_recv_frame },
->>> +	{ H4_RECV_EVENT,    .recv = btmtkuart_recv_event },
->>> +};
->>> +
->>> +static const unsigned char *
->>> +mtk_stp_split(struct btmtkuart_dev *bdev, const unsigned char *data, int count,
->>> +	      int *sz_h4)
->>> +{
->>> +	struct mtk_stp_hdr *shdr;
->>> +
->>> +	/* The cursor is reset when all the data of STP is consumed out. */
->>> +	if (!bdev->stp_dlen && bdev->stp_cursor >= 6)
->>> +		bdev->stp_cursor = 0;
->>> +
->>> +	/* Filling pad until all STP info is obtained. */
->>> +	while (bdev->stp_cursor < 6 && count > 0) {
->>> +		bdev->stp_pad[bdev->stp_cursor] = *data;
->>> +		bdev->stp_cursor++;
->>> +		data++;
->>> +		count--;
->>> +	}
->>> +
->>> +	/* Retrieve STP info and have a sanity check. */
->>> +	if (!bdev->stp_dlen && bdev->stp_cursor >= 6) {
->>> +		shdr = (struct mtk_stp_hdr *)&bdev->stp_pad[2];
->>> +		bdev->stp_dlen = shdr->dlen1 << 8 | shdr->dlen2;
->>> +
->>> +		/* Resync STP when unexpected data is being read. */
->>> +		if (shdr->prefix != 0x80 || bdev->stp_dlen > 2048) {
->>> +			bt_dev_err(bdev->hdev, "stp format unexpect (%d, %d)",
->>> +				   shdr->prefix, bdev->stp_dlen);
->>> +			bdev->stp_cursor = 2;
->>> +			bdev->stp_dlen = 0;
->>> +		}
->>> +	}
->>> +
->>> +	/* Directly quit when there's no data found for H4 can process. */
->>> +	if (count <= 0)
->>> +		return NULL;
->>> +
->>> +	/* Tranlate to how much the size of data H4 can handle so far. */
->>> +	*sz_h4 = min_t(int, count, bdev->stp_dlen);
->>> +
->>> +	/* Update the remaining size of STP packet. */
->>> +	bdev->stp_dlen -= *sz_h4;
->>> +
->>> +	/* Data points to STP payload which can be handled by H4. */
->>> +	return data;
->>> +}
->>> +
->>> +static int btmtkuart_recv(struct hci_dev *hdev, const u8 *data, size_t count)
->>> +{
->>> +	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
->>> +	const unsigned char *p_left = data, *p_h4;
->>> +	int sz_left = count, sz_h4, adv;
->>> +	int err;
->>> +
->>> +	while (sz_left > 0) {
->>> +		/*  The serial data received from MT7622 BT controller is
->>> +		 *  at all time padded around with the STP header and tailer.
->>> +		 *
->>> +		 *  A full STP packet is looking like
->>> +		 *   -----------------------------------
->>> +		 *  | STP header  |  H:4   | STP tailer |
->>> +		 *   -----------------------------------
->>> +		 *  but it doesn't guarantee to contain a full H:4 packet which
->>> +		 *  means that it's possible for multiple STP packets forms a
->>> +		 *  full H:4 packet that means extra STP header + length doesn't
->>> +		 *  indicate a full H:4 frame, things can fragment. Whose length
->>> +		 *  recorded in STP header just shows up the most length the
->>> +		 *  H:4 engine can handle currently.
->>> +		 */
->>> +
->>> +		p_h4 = mtk_stp_split(bdev, p_left, sz_left, &sz_h4);
->>> +		if (!p_h4)
->>> +			break;
->>> +
->>> +		adv = p_h4 - p_left;
->>> +		sz_left -= adv;
->>> +		p_left += adv;
->>> +
->>> +		bdev->rx_skb = h4_recv_buf(bdev->hdev, bdev->rx_skb, p_h4,
->>> +					   sz_h4, mtk_recv_pkts,
->>> +					   sizeof(mtk_recv_pkts));
->>> +		if (IS_ERR(bdev->rx_skb)) {
->>> +			err = PTR_ERR(bdev->rx_skb);
->>> +			bt_dev_err(bdev->hdev,
->>> +				   "Frame reassembly failed (%d)", err);
->>> +			bdev->rx_skb = NULL;
->>> +			return err;
->>> +		}
->>> +
->>> +		sz_left -= sz_h4;
->>> +		p_left += sz_h4;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static void btmtkuart_tx_work(struct work_struct *work)
->>> +{
->>> +	struct btmtkuart_dev *bdev = container_of(work, struct btmtkuart_dev,
->>> +						   tx_work);
->>> +	struct serdev_device *serdev = bdev->serdev;
->>> +	struct hci_dev *hdev = bdev->hdev;
->>> +
->>> +	while (1) {
->>> +		clear_bit(BTMTKUART_TX_STATE_WAKEUP, &bdev->tx_state);
->>> +
->>> +		while (1) {
->>> +			struct sk_buff *skb = skb_dequeue(&bdev->txq);
->>> +			int len;
->>> +
->>> +			if (!skb)
->>> +				break;
->>> +
->>> +			len = serdev_device_write_buf(serdev, skb->data,
->>> +						      skb->len);
->>> +			hdev->stat.byte_tx += len;
->>> +
->>> +			skb_pull(skb, len);
->>> +			if (skb->len > 0) {
->>> +				skb_queue_head(&bdev->txq, skb);
->>> +				break;
->>> +			}
->>> +
->>> +			switch (hci_skb_pkt_type(skb)) {
->>> +			case HCI_COMMAND_PKT:
->>> +				hdev->stat.cmd_tx++;
->>> +				break;
->>> +			case HCI_ACLDATA_PKT:
->>> +				hdev->stat.acl_tx++;
->>> +				break;
->>> +			case HCI_SCODATA_PKT:
->>> +				hdev->stat.sco_tx++;
->>> +				break;
->>> +			}
->>> +
->>> +			kfree_skb(skb);
->>> +		}
->>> +
->>> +		if (!test_bit(BTMTKUART_TX_STATE_WAKEUP, &bdev->tx_state))
->>> +			break;
->>> +	}
->>> +
->>> +	clear_bit(BTMTKUART_TX_STATE_ACTIVE, &bdev->tx_state);
->>> +}
->>> +
->>> +static void btmtkuart_tx_wakeup(struct btmtkuart_dev *bdev)
->>> +{
->>> +	if (test_and_set_bit(BTMTKUART_TX_STATE_ACTIVE, &bdev->tx_state))
->>> +		set_bit(BTMTKUART_TX_STATE_WAKEUP, &bdev->tx_state);
->>> +
->>> +	schedule_work(&bdev->tx_work);
->>> +}
->>> +
->> 
->> Move btmtkuart_recv and mtk_stp_split above this function to keep them close where they are used.
->> 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+> > ---
+> >  drivers/spi/Kconfig        |  13 ++
+> >  drivers/spi/Makefile       |   1 +
+> >  drivers/spi/spi-uniphier.c | 525
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 539 insertions(+)
+> >  create mode 100644 drivers/spi/spi-uniphier.c
+> >
+> > diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig index
+> > ad5d68e..671d078 100644
+> > --- a/drivers/spi/Kconfig
+> > +++ b/drivers/spi/Kconfig
+> > @@ -688,6 +688,19 @@ config SPI_TXX9
+> >         help
+> >           SPI driver for Toshiba TXx9 MIPS SoCs
+> >
+> > +config SPI_UNIPHIER
+> > +       tristate "Socionext UniPhier SPI Controller"
+> > +       depends on (ARCH_UNIPHIER || COMPILE_TEST) && OF
+> > +       help
+> > +         This enables a driver for the Socionext UniPhier SoC SCSSI SPI controller.
+> > +
+> > +         UniPhier SoCs have SCSSI and MCSSI SPI controllers.
+> > +         Every UniPhier SoC has SCSSI which supports single channel.
+> > +         Older UniPhier Pro4/Pro5 also has MCSSI which support multiple channels.
+> > +         This driver supports SCSSI only.
+> > +
+> > +         If your SoC supports SCSSI, say Y here.
+> > +
+> >  config SPI_XCOMM
+> >         tristate "Analog Devices AD-FMCOMMS1-EBZ SPI-I2C-bridge driver"
+> >         depends on I2C
+> > diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile index
+> > cb1f437..a90d559 100644
+> > --- a/drivers/spi/Makefile
+> > +++ b/drivers/spi/Makefile
+> > @@ -101,6 +101,7 @@ spi-thunderx-objs                   := spi-cavium.o spi-cavium-thunderx.o
+> >  obj-$(CONFIG_SPI_THUNDERX)             += spi-thunderx.o
+> >  obj-$(CONFIG_SPI_TOPCLIFF_PCH)         += spi-topcliff-pch.o
+> >  obj-$(CONFIG_SPI_TXX9)                 += spi-txx9.o
+> > +obj-$(CONFIG_SPI_UNIPHIER)             += spi-uniphier.o
+> >  obj-$(CONFIG_SPI_XCOMM)                += spi-xcomm.o
+> >  obj-$(CONFIG_SPI_XILINX)               += spi-xilinx.o
+> >  obj-$(CONFIG_SPI_XLP)                  += spi-xlp.o
+> > diff --git a/drivers/spi/spi-uniphier.c b/drivers/spi/spi-uniphier.c
+> > new file mode 100644 index 0000000..0899854
+> > --- /dev/null
+> > +++ b/drivers/spi/spi-uniphier.c
+> > @@ -0,0 +1,525 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +// spi-uniphier.c - Socionext UniPhier SPI controller driver
+> > +// Copyright 2012      Panasonic Corporation
+> > +// Copyright 2016-2018 Socionext Inc.
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/bitfield.h>
+> > +#include <linux/bitops.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
 > 
-> okay
+> > +#include <linux/of.h>
+> > +#include <linux/of_platform.h>
 > 
->>> +static int btmtkuart_receive_buf(struct serdev_device *serdev, const u8 *data,
->>> +				 size_t count)
->>> +{
->>> +	struct btmtkuart_dev *bdev = serdev_device_get_drvdata(serdev);
->>> +	int err;
->>> +
->>> +	err = btmtkuart_recv(bdev->hdev, data, count);
->>> +	if (err < 0)
->>> +		return err;
->>> +
->>> +	bdev->hdev->stat.byte_rx += count;
->>> +
->>> +	return count;
->>> +}
->>> +
->>> +static void btmtkuart_write_wakeup(struct serdev_device *serdev)
->>> +{
->>> +	struct btmtkuart_dev *bdev = serdev_device_get_drvdata(serdev);
->>> +
->>> +	btmtkuart_tx_wakeup(bdev);
->>> +}
->>> +
->>> +static const struct serdev_device_ops btmtkuart_client_ops = {
->>> +	.receive_buf = btmtkuart_receive_buf,
->>> +	.write_wakeup = btmtkuart_write_wakeup,
->>> +};
->>> +
->>> +static int btmtkuart_open(struct hci_dev *hdev)
->>> +{
->>> +	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
->>> +	struct device *dev;
->>> +	int err;
->>> +
->>> +	err = serdev_device_open(bdev->serdev);
->>> +	if (err) {
->>> +		bt_dev_err(hdev, "Unable to open UART device %s",
->>> +			   dev_name(&bdev->serdev->dev));
->>> +		goto err_open;
->>> +	}
->>> +
->>> +	dev = &bdev->serdev->dev;
->>> +
->>> +	bdev->stp_cursor = 2;
->>> +	bdev->stp_dlen = 0;
->>> +
->>> +	/* Enable the power domain and clock the device requires. */
->>> +	pm_runtime_enable(dev);
->>> +	err = pm_runtime_get_sync(dev);
->>> +	if (err < 0) {
->>> +		pm_runtime_put_noidle(dev);
->>> +		goto err_disable_rpm;
->>> +	}
->>> +
->>> +	err = clk_prepare_enable(bdev->clk);
->>> +	if (err < 0)
->>> +		goto err_put_rpm;
->> 
->> Add an extra empty line here.
->> 
-> 
-> okay
-> 
->>> +	return 0;
->>> +
->>> +err_put_rpm:
->>> +	pm_runtime_put_sync(dev);
->>> +err_disable_rpm:
->>> +	pm_runtime_disable(dev);
->>> +err_open:
->>> +	return err;
->>> +}
->>> +
->>> +static int btmtkuart_close(struct hci_dev *hdev)
->>> +{
->>> +	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
->>> +	struct device *dev = &bdev->serdev->dev;
->>> +
->>> +	/* Shutdown the clock and power domain the device requires. */
->>> +	clk_disable_unprepare(bdev->clk);
->>> +	pm_runtime_put_sync(dev);
->>> +	pm_runtime_disable(dev);
->>> +
->>> +	serdev_device_close(bdev->serdev);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int btmtkuart_flush(struct hci_dev *hdev)
->>> +{
->>> +	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
->>> +
->>> +	/* Flush any pending characters */
->>> +	serdev_device_write_flush(bdev->serdev);
->>> +	skb_queue_purge(&bdev->txq);
->>> +
->>> +	cancel_work_sync(&bdev->tx_work);
->>> +
->>> +	kfree_skb(bdev->rx_skb);
->>> +	bdev->rx_skb = NULL;
->> 
->> I would assume you want to reset the stp_cursor here as well.
->> 
-> 
-> yes, it can be and is better
-> 
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int btmtkuart_setup(struct hci_dev *hdev)
->>> +{
->>> +	u8 param = 0x1;
->>> +	int err = 0;
->>> +
->>> +	/* Setup a firmware which the device definitely requires. */
->>> +	err = mtk_setup_fw(hdev);
->>> +	if (err < 0)
->>> +		return err;
->>> +
->>> +	/* Activate funciton the firmware providing to. */
->>> +	err = mtk_hci_wmt_sync(hdev, MTK_WMT_RST, 0x4, 0, 0);
->>> +	if (err < 0)
->>> +		return err;
->>> +
->>> +	/* Enable Bluetooth protocol. */
->>> +	err = mtk_hci_wmt_sync(hdev, MTK_WMT_FUNC_CTRL, 0x0, sizeof(param),
->>> +			       &param);
->>> +	if (err < 0)
->>> +		return err;
->>> +
->>> +	set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
->> 
->> Since you have your own driver. Just move this after the hdev->manufacturer setting in probe(). There is no need to keep setting this over and over again.
->> 
-> 
-> okay
-> 
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int btmtkuart_shutdown(struct hci_dev *hdev)
->>> +{
->>> +	u8 param = 0x0;
->>> +	int err;
->>> +
->>> +	/* Disable the device. */
->>> +	err = mtk_hci_wmt_sync(hdev, MTK_WMT_FUNC_CTRL, 0x0, sizeof(param),
->>> +			       &param);
->>> +
->>> +	return err;
->>> +}
->>> +
->>> +static int btmtkuart_send_frame(struct hci_dev *hdev, struct sk_buff *skb)
->>> +{
->>> +	struct btmtkuart_dev *bdev = hci_get_drvdata(hdev);
->>> +	struct mtk_stp_hdr *shdr;
->>> +	struct sk_buff *new_skb;
->>> +	int dlen;
->>> +	u8 *p;
->>> +
->>> +	/* Prepend skb with frame type */
->>> +	memcpy(skb_push(skb, 1), &hci_skb_pkt_type(skb), 1);
->>> +	dlen = skb->len;
->>> +
->>> +	/* Make sure of STP header at least has 4-bytes free space to fill. */
->>> +	if (unlikely(skb_headroom(skb) < sizeof(*shdr))) {
->>> +		new_skb = skb_realloc_headroom(skb, sizeof(*shdr));
->>> +		kfree_skb(skb);
->>> +		skb = new_skb;
->>> +	}
->>> +
->>> +	/* Build for STP packet format. */
->>> +	shdr = skb_push(skb, sizeof(*shdr));
->>> +	p = (u8 *)shdr;
->>> +	shdr->prefix = 0x80;
->>> +	shdr->dlen1 = (dlen & 0xf00) >> 8;
->>> +	shdr->type = 0;
->>> +	shdr->dlen2 = dlen & 0xff;
->>> +	shdr->cs = p[0] + p[1] + p[2];
->> 
-> 
-> as above discussion about shr->cs , it can be filled with zero to have less computing 
+> I fail to find where those two are used, just remove them.
 
-If it has no value, then zero it out and add a comment for it.
+I sent this modification as a new patch.
+https://patchwork.kernel.org/patch/10553249/
 
-> 
->> I would add another comment here that this added the STP trailer. And change the above to mention it adds the STP header.
->> 
-> 
-> sure
-> 
->> And you might want to check if there is space for the trailer as well. Otherwise skb_put tends to call BUG() if I remember correctly. I know this is super unlikely since our bt_skb_alloc is pretty large.
->> 
-> 
-> sure, I will add the handling for that. it should be better to make sure all rooms are enough for header and trailer before adding content to them
-> 
-> 
->>> +	skb_put_zero(skb, MTK_STP_TLR_SIZE);
->> 
->> Extra empty line here please.
->> 
-> 
-> okay
-> 
->>> +	skb_queue_tail(&bdev->txq, skb);
->>> +
->>> +	btmtkuart_tx_wakeup(bdev);
->>> +	return 0;
->>> +}
->>> +
->>> +static int btmtkuart_probe(struct serdev_device *serdev)
->>> +{
->>> +	struct btmtkuart_dev *bdev;
->>> +	struct hci_dev *hdev;
->>> +
->>> +	bdev = devm_kzalloc(&serdev->dev, sizeof(*bdev), GFP_KERNEL);
->>> +	if (!bdev)
->>> +		return -ENOMEM;
->>> +
->>> +	bdev->clk = devm_clk_get(&serdev->dev, "ref");
->>> +	if (IS_ERR(bdev->clk))
->>> +		return PTR_ERR(bdev->clk);
->>> +
->>> +	bdev->serdev = serdev;
->>> +	serdev_device_set_drvdata(serdev, bdev);
->>> +
->>> +	serdev_device_set_client_ops(serdev, &btmtkuart_client_ops);
->>> +
->>> +	INIT_WORK(&bdev->tx_work, btmtkuart_tx_work);
->>> +	skb_queue_head_init(&bdev->txq);
->>> +
->>> +	/* Initialize and register HCI device */
->>> +	hdev = hci_alloc_dev();
->>> +	if (!hdev) {
->>> +		dev_err(&serdev->dev, "Can't allocate HCI device\n");
->>> +		return -ENOMEM;
->>> +	}
->>> +
->>> +	bdev->hdev = hdev;
->>> +
->>> +	hdev->bus = HCI_UART;
->>> +	hci_set_drvdata(hdev, bdev);
->>> +
->>> +	hdev->open  = btmtkuart_open;
->>> +	hdev->close = btmtkuart_close;
->>> +	hdev->flush = btmtkuart_flush;
->>> +	hdev->setup = btmtkuart_setup;
->>> +	hdev->shutdown = btmtkuart_shutdown;
->>> +	hdev->send  = btmtkuart_send_frame;
->>> +	SET_HCIDEV_DEV(hdev, &serdev->dev);
->>> +
->>> +	hdev->manufacturer = 70;
->>> +
->>> +	if (hci_register_dev(hdev) < 0) {
->>> +		dev_err(&serdev->dev, "Can't register HCI device\n");
->>> +		hci_free_dev(hdev);
->>> +		return -ENODEV;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static void btmtkuart_remove(struct serdev_device *serdev)
->>> +{
->>> +	struct btmtkuart_dev *bdev = serdev_device_get_drvdata(serdev);
->>> +	struct hci_dev *hdev = bdev->hdev;
->>> +
->>> +	hci_unregister_dev(hdev);
->>> +	hci_free_dev(hdev);
->>> +}
->>> +
->>> +#ifdef CONFIG_OF
->>> +static const struct of_device_id mtk_of_match_table[] = {
->>> +	{ .compatible = "mediatek,mt7622-bluetooth"},
->>> +	{ }
->>> +};
->>> +MODULE_DEVICE_TABLE(of, mtk_of_match_table);
->>> +#endif
->>> +
->>> +static struct serdev_device_driver btmtkuart_driver = {
->>> +	.probe = btmtkuart_probe,
->>> +	.remove = btmtkuart_remove,
->>> +	.driver = {
->>> +		.name = "btmtkuart",
->>> +		.of_match_table = of_match_ptr(mtk_of_match_table),
->>> +	},
->>> +};
->>> +
->>> +module_serdev_device_driver(btmtkuart_driver);
->>> +
->>> +MODULE_AUTHOR("Sean Wang <sean.wang@mediatek.com>");
->>> +MODULE_DESCRIPTION("MediaTek Bluetooth Serial driver" VERSION);
->> 
->> You are missing a “ ver “ at the end of your string here. Check with modinfo that it looks correct.
->> 
-> 
-> okay
-> 
->>> +MODULE_VERSION(VERSION);
->>> +MODULE_LICENSE("GPL”);
->> 
->> You want to add a MODULE_FIRMWARE here as well.
->> 
-> 
-> okay
 
-Regards
+> > +#include <linux/platform_device.h>
+> > +#include <linux/spi/spi.h>
+> > +
+> > +#include <asm/unaligned.h>
+> > +
+> > +#define SSI_TIMEOUT_MS         2000
+> > +#define SSI_MAX_CLK_DIVIDER    254
+> > +#define SSI_MIN_CLK_DIVIDER    4
+> > +
+> > +struct uniphier_spi_priv {
+> > +       void __iomem *base;
+> > +       struct clk *clk;
+> > +       struct spi_master *master;
+> > +       struct completion xfer_done;
+> > +
+> > +       int error;
+> > +       unsigned int tx_bytes;
+> > +       unsigned int rx_bytes;
+> > +       const u8 *tx_buf;
+> > +       u8 *rx_buf;
+> > +
+> > +       bool is_save_param;
+> > +       u8 bits_per_word;
+> > +       u16 mode;
+> > +       u32 speed_hz;
+> > +};
+> > +
+> > +#define SSI_CTL                        0x00
+> > +#define   SSI_CTL_EN           BIT(0)
+> > +
+> > +#define SSI_CKS                        0x04
+> > +#define   SSI_CKS_CKRAT_MASK   GENMASK(7, 0)
+> > +#define   SSI_CKS_CKPHS                BIT(14)
+> > +#define   SSI_CKS_CKINIT       BIT(13)
+> > +#define   SSI_CKS_CKDLY                BIT(12)
+> > +
+> > +#define SSI_TXWDS              0x08
+> > +#define   SSI_TXWDS_WDLEN_MASK GENMASK(13, 8)
+> > +#define   SSI_TXWDS_TDTF_MASK  GENMASK(7, 6)
+> > +#define   SSI_TXWDS_DTLEN_MASK GENMASK(5, 0)
+> > +
+> > +#define SSI_RXWDS              0x0c
+> > +#define   SSI_RXWDS_DTLEN_MASK GENMASK(5, 0)
+> > +
+> > +#define SSI_FPS                        0x10
+> > +#define   SSI_FPS_FSPOL                BIT(15)
+> > +#define   SSI_FPS_FSTRT                BIT(14)
+> > +
+> > +#define SSI_SR                 0x14
+> > +#define   SSI_SR_RNE           BIT(0)
+> > +
+> > +#define SSI_IE                 0x18
+> > +#define   SSI_IE_RCIE          BIT(3)
+> > +#define   SSI_IE_RORIE         BIT(0)
+> > +
+> > +#define SSI_IS                 0x1c
+> > +#define   SSI_IS_RXRS          BIT(9)
+> > +#define   SSI_IS_RCID          BIT(3)
+> > +#define   SSI_IS_RORID         BIT(0)
+> > +
+> > +#define SSI_IC                 0x1c
+> > +#define   SSI_IC_TCIC          BIT(4)
+> > +#define   SSI_IC_RCIC          BIT(3)
+> > +#define   SSI_IC_RORIC         BIT(0)
+> > +
+> > +#define SSI_FC                 0x20
+> > +#define   SSI_FC_TXFFL         BIT(12)
+> > +#define   SSI_FC_TXFTH_MASK    GENMASK(11, 8)
+> > +#define   SSI_FC_RXFFL         BIT(4)
+> > +#define   SSI_FC_RXFTH_MASK    GENMASK(3, 0)
+> > +
+> > +#define SSI_TXDR               0x24
+> > +#define SSI_RXDR               0x24
+> > +
+> > +#define SSI_FIFO_DEPTH         8U
+> > +
+> > +static inline unsigned int bytes_per_word(unsigned int bits) {
+> > +       return bits <= 8 ? 1 : (bits <= 16 ? 2 : 4); }
+> > +
+> > +static inline void uniphier_spi_irq_enable(struct spi_device *spi,
+> > +u32 mask) {
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> > +       u32 val;
+> > +
+> > +       val = readl(priv->base + SSI_IE);
+> > +       val |= mask;
+> > +       writel(val, priv->base + SSI_IE); }
+> > +
+> > +static inline void uniphier_spi_irq_disable(struct spi_device *spi,
+> > +u32 mask) {
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> > +       u32 val;
+> > +
+> > +       val = readl(priv->base + SSI_IE);
+> > +       val &= ~mask;
+> > +       writel(val, priv->base + SSI_IE); }
+> > +
+> > +static void uniphier_spi_set_mode(struct spi_device *spi) {
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> > +       u32 val1, val2;
+> > +
+> > +       /*
+> > +        * clock setting
+> > +        * CKPHS    capture timing. 0:rising edge, 1:falling edge
+> > +        * CKINIT   clock initial level. 0:low, 1:high
+> > +        * CKDLY    clock delay. 0:no delay, 1:delay depending on FSTRT
+> > +        *          (FSTRT=0: 1 clock, FSTRT=1: 0.5 clock)
+> > +        *
+> > +        * frame setting
+> > +        * FSPOL    frame signal porarity. 0: low, 1: high
+> > +        * FSTRT    start frame timing
+> > +        *          0: rising edge of clock, 1: falling edge of clock
+> > +        */
+> > +       switch (spi->mode & (SPI_CPOL | SPI_CPHA)) {
+> > +       case SPI_MODE_0:
+> > +               /* CKPHS=1, CKINIT=0, CKDLY=1, FSTRT=0 */
+> > +               val1 = SSI_CKS_CKPHS | SSI_CKS_CKDLY;
+> > +               val2 = 0;
+> > +               break;
+> > +       case SPI_MODE_1:
+> > +               /* CKPHS=0, CKINIT=0, CKDLY=0, FSTRT=1 */
+> > +               val1 = 0;
+> > +               val2 = SSI_FPS_FSTRT;
+> > +               break;
+> > +       case SPI_MODE_2:
+> > +               /* CKPHS=0, CKINIT=1, CKDLY=1, FSTRT=1 */
+> > +               val1 = SSI_CKS_CKINIT | SSI_CKS_CKDLY;
+> > +               val2 = SSI_FPS_FSTRT;
+> > +               break;
+> > +       case SPI_MODE_3:
+> > +               /* CKPHS=1, CKINIT=1, CKDLY=0, FSTRT=0 */
+> > +               val1 = SSI_CKS_CKPHS | SSI_CKS_CKINIT;
+> > +               val2 = 0;
+> > +               break;
+> > +       }
+> > +
+> > +       if (!(spi->mode & SPI_CS_HIGH))
+> > +               val2 |= SSI_FPS_FSPOL;
+> > +
+> > +       writel(val1, priv->base + SSI_CKS);
+> > +       writel(val2, priv->base + SSI_FPS);
+> > +
+> > +       val1 = 0;
+> > +       if (spi->mode & SPI_LSB_FIRST)
+> > +               val1 |= FIELD_PREP(SSI_TXWDS_TDTF_MASK, 1);
+> > +       writel(val1, priv->base + SSI_TXWDS);
+> > +       writel(val1, priv->base + SSI_RXWDS); }
+> > +
+> > +static void uniphier_spi_set_transfer_size(struct spi_device *spi,
+> > +int size) {
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> > +       u32 val;
+> > +
+> > +       val = readl(priv->base + SSI_TXWDS);
+> > +       val &= ~(SSI_TXWDS_WDLEN_MASK | SSI_TXWDS_DTLEN_MASK);
+> > +       val |= FIELD_PREP(SSI_TXWDS_WDLEN_MASK, size);
+> > +       val |= FIELD_PREP(SSI_TXWDS_DTLEN_MASK, size);
+> > +       writel(val, priv->base + SSI_TXWDS);
+> > +
+> > +       val = readl(priv->base + SSI_RXWDS);
+> > +       val &= ~SSI_RXWDS_DTLEN_MASK;
+> > +       val |= FIELD_PREP(SSI_RXWDS_DTLEN_MASK, size);
+> > +       writel(val, priv->base + SSI_RXWDS); }
+> > +
+> > +static void uniphier_spi_set_baudrate(struct spi_device *spi,
+> > +                                     unsigned int speed) {
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> > +       u32 val, ckdiv;
+> > +
+> > +       /*
+> > +        * the supported rates are even numbers from 4 to 254. (4,6,8...254)
+> > +        * round up as we look for equal or less speed
+> > +        */
+> > +       ckdiv = DIV_ROUND_UP(clk_get_rate(priv->clk), speed);
+> > +       ckdiv = round_up(ckdiv, 2);
+> > +
+> > +       val = readl(priv->base + SSI_CKS);
+> > +       val &= ~SSI_CKS_CKRAT_MASK;
+> > +       val |= ckdiv & SSI_CKS_CKRAT_MASK;
+> > +       writel(val, priv->base + SSI_CKS); }
+> > +
+> > +static void uniphier_spi_setup_transfer(struct spi_device *spi,
+> > +                                      struct spi_transfer *t) {
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> > +       u32 val;
+> > +
+> > +       priv->error = 0;
+> > +       priv->tx_buf = t->tx_buf;
+> > +       priv->rx_buf = t->rx_buf;
+> > +       priv->tx_bytes = priv->rx_bytes = t->len;
+> > +
+> > +       if (!priv->is_save_param || priv->mode != spi->mode) {
+> > +               uniphier_spi_set_mode(spi);
+> > +               priv->mode = spi->mode;
+> > +       }
+> > +
+> > +       if (!priv->is_save_param || priv->bits_per_word != t->bits_per_word) {
+> > +               uniphier_spi_set_transfer_size(spi, t->bits_per_word);
+> > +               priv->bits_per_word = t->bits_per_word;
+> > +       }
+> > +
+> > +       if (!priv->is_save_param || priv->speed_hz != t->speed_hz) {
+> > +               uniphier_spi_set_baudrate(spi, t->speed_hz);
+> > +               priv->speed_hz = t->speed_hz;
+> > +       }
+> > +
+> > +       if (!priv->is_save_param)
+> > +               priv->is_save_param = true;
+> > +
+> > +       /* reset FIFOs */
+> > +       val = SSI_FC_TXFFL | SSI_FC_RXFFL;
+> > +       writel(val, priv->base + SSI_FC); }
+> > +
+> > +static void uniphier_spi_send(struct uniphier_spi_priv *priv) {
+> > +       int wsize;
+> > +       u32 val = 0;
+> > +
+> > +       wsize = min(bytes_per_word(priv->bits_per_word), priv->tx_bytes);
+> > +       priv->tx_bytes -= wsize;
+> > +
+> > +       if (priv->tx_buf) {
+> > +               switch (wsize) {
+> > +               case 1:
+> > +                       val = *priv->tx_buf;
+> > +                       break;
+> > +               case 2:
+> > +                       val = get_unaligned_le16(priv->tx_buf);
+> > +                       break;
+> > +               case 4:
+> > +                       val = get_unaligned_le32(priv->tx_buf);
+> > +                       break;
+> > +               }
+> > +
+> > +               priv->tx_buf += wsize;
+> > +       }
+> > +
+> > +       writel(val, priv->base + SSI_TXDR); }
+> > +
+> > +static void uniphier_spi_recv(struct uniphier_spi_priv *priv) {
+> > +       int rsize;
+> > +       u32 val;
+> > +
+> > +       rsize = min(bytes_per_word(priv->bits_per_word), priv->rx_bytes);
+> > +       priv->rx_bytes -= rsize;
+> > +
+> > +       val = readl(priv->base + SSI_RXDR);
+> > +
+> > +       if (priv->rx_buf) {
+> > +               switch (rsize) {
+> > +               case 1:
+> > +                       *priv->rx_buf = val;
+> > +                       break;
+> > +               case 2:
+> > +                       put_unaligned_le16(val, priv->rx_buf);
+> > +                       break;
+> > +               case 4:
+> > +                       put_unaligned_le32(val, priv->rx_buf);
+> > +                       break;
+> > +               }
+> > +
+> > +               priv->rx_buf += rsize;
+> > +       }
+> > +}
+> > +
+> > +static void uniphier_spi_fill_tx_fifo(struct uniphier_spi_priv *priv)
+> > +{
+> > +       unsigned int tx_count;
+> > +       u32 val;
+> > +
+> > +       tx_count = DIV_ROUND_UP(priv->tx_bytes,
+> > +                               bytes_per_word(priv->bits_per_word));
+> > +       tx_count = min(tx_count, SSI_FIFO_DEPTH);
+> > +
+> > +       /* set fifo threshold */
+> > +       val = readl(priv->base + SSI_FC);
+> > +       val &= ~(SSI_FC_TXFTH_MASK | SSI_FC_RXFTH_MASK);
+> > +       val |= FIELD_PREP(SSI_FC_TXFTH_MASK, tx_count);
+> > +       val |= FIELD_PREP(SSI_FC_RXFTH_MASK, tx_count);
+> > +       writel(val, priv->base + SSI_FC);
+> > +
+> > +       while (tx_count--)
+> > +               uniphier_spi_send(priv); }
+> > +
+> > +static void uniphier_spi_set_cs(struct spi_device *spi, bool enable)
+> > +{
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(spi->master);
+> > +       u32 val;
+> > +
+> > +       val = readl(priv->base + SSI_FPS);
+> > +
+> > +       if (enable)
+> > +               val |= SSI_FPS_FSPOL;
+> > +       else
+> > +               val &= ~SSI_FPS_FSPOL;
+> > +
+> > +       writel(val, priv->base + SSI_FPS); }
+> > +
+> > +static int uniphier_spi_transfer_one(struct spi_master *master,
+> > +                                    struct spi_device *spi,
+> > +                                    struct spi_transfer *t) {
+> > +       struct uniphier_spi_priv *priv = spi_master_get_devdata(master);
+> > +       int status;
+> > +
+> > +       uniphier_spi_setup_transfer(spi, t);
+> > +
+> > +       reinit_completion(&priv->xfer_done);
+> > +
+> > +       uniphier_spi_fill_tx_fifo(priv);
+> > +
+> > +       uniphier_spi_irq_enable(spi, SSI_IE_RCIE | SSI_IE_RORIE);
+> > +
+> > +       status = wait_for_completion_timeout(&priv->xfer_done,
+> > +
+> > + msecs_to_jiffies(SSI_TIMEOUT_MS));
+> > +
+> > +       uniphier_spi_irq_disable(spi, SSI_IE_RCIE | SSI_IE_RORIE);
+> > +
+> > +       if (status < 0)
+> > +               return status;
+> > +
+> > +       return priv->error;
+> > +}
+> > +
+> > +static int uniphier_spi_prepare_transfer_hardware(struct spi_master
+> > +*master) {
+> > +       struct uniphier_spi_priv *priv =
+> > +spi_master_get_devdata(master);
+> > +
+> > +       writel(SSI_CTL_EN, priv->base + SSI_CTL);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int uniphier_spi_unprepare_transfer_hardware(struct spi_master
+> > +*master) {
+> > +       struct uniphier_spi_priv *priv =
+> > +spi_master_get_devdata(master);
+> > +
+> > +       writel(0, priv->base + SSI_CTL);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static irqreturn_t uniphier_spi_handler(int irq, void *dev_id) {
+> > +       struct uniphier_spi_priv *priv = dev_id;
+> > +       u32 val, stat;
+> > +
+> > +       stat = readl(priv->base + SSI_IS);
+> > +       val = SSI_IC_TCIC | SSI_IC_RCIC | SSI_IC_RORIC;
+> > +       writel(val, priv->base + SSI_IC);
+> > +
+> > +       /* rx fifo overrun */
+> > +       if (stat & SSI_IS_RORID) {
+> > +               priv->error = -EIO;
+> > +               goto done;
+> > +       }
+> > +
+> > +       /* rx complete */
+> > +       if ((stat & SSI_IS_RCID) && (stat & SSI_IS_RXRS)) {
+> > +               while ((readl(priv->base + SSI_SR) & SSI_SR_RNE) &&
+> > +                               (priv->rx_bytes - priv->tx_bytes) > 0)
+> > +                       uniphier_spi_recv(priv);
+> > +
+> > +               if ((readl(priv->base + SSI_SR) & SSI_SR_RNE) ||
+> > +                               (priv->rx_bytes != priv->tx_bytes)) {
+> > +                       priv->error = -EIO;
+> > +                       goto done;
+> > +               } else if (priv->rx_bytes == 0)
+> > +                       goto done;
+> > +
+> > +               /* next tx transfer */
+> > +               uniphier_spi_fill_tx_fifo(priv);
+> > +
+> > +               return IRQ_HANDLED;
+> > +       }
+> > +
+> > +       return IRQ_NONE;
+> > +
+> > +done:
+> > +       complete(&priv->xfer_done);
+> > +       return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int uniphier_spi_probe(struct platform_device *pdev) {
+> > +       struct uniphier_spi_priv *priv;
+> > +       struct spi_master *master;
+> > +       struct resource *res;
+> > +       unsigned long clk_rate;
+> > +       int irq;
+> > +       int ret;
+> > +
+> > +       master = spi_alloc_master(&pdev->dev, sizeof(*priv));
+> > +       if (!master)
+> > +               return -ENOMEM;
+> > +
+> > +       platform_set_drvdata(pdev, master);
+> > +
+> > +       priv = spi_master_get_devdata(master);
+> > +       priv->master = master;
+> > +       priv->is_save_param = false;
+> > +
+> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       priv->base = devm_ioremap_resource(&pdev->dev, res);
+> > +       if (IS_ERR(priv->base)) {
+> > +               ret = PTR_ERR(priv->base);
+> > +               goto out_master_put;
+> > +       }
+> > +
+> > +       priv->clk = devm_clk_get(&pdev->dev, NULL);
+> > +       if (IS_ERR(priv->clk)) {
+> > +               dev_err(&pdev->dev, "failed to get clock\n");
+> > +               ret = PTR_ERR(priv->clk);
+> > +               goto out_master_put;
+> > +       }
+> > +
+> > +       ret = clk_prepare_enable(priv->clk);
+> > +       if (ret)
+> > +               goto out_master_put;
+> > +
+> > +       irq = platform_get_irq(pdev, 0);
+> > +       if (irq < 0) {
+> > +               dev_err(&pdev->dev, "failed to get IRQ\n");
+> > +               ret = irq;
+> > +               goto out_disable_clk;
+> > +       }
+> > +
+> > +       ret = devm_request_irq(&pdev->dev, irq, uniphier_spi_handler,
+> > +                              0, "uniphier-spi", priv);
+> > +       if (ret) {
+> > +               dev_err(&pdev->dev, "failed to request IRQ\n");
+> > +               goto out_disable_clk;
+> > +       }
+> > +
+> > +       init_completion(&priv->xfer_done);
+> > +
+> > +       clk_rate = clk_get_rate(priv->clk);
+> > +
+> > +       master->max_speed_hz = DIV_ROUND_UP(clk_rate, SSI_MIN_CLK_DIVIDER);
+> > +       master->min_speed_hz = DIV_ROUND_UP(clk_rate, SSI_MAX_CLK_DIVIDER);
+> > +       master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST;
+> > +       master->dev.of_node = pdev->dev.of_node;
+> > +       master->bus_num = pdev->id;
+> > +       master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
+> > +
+> > +       master->set_cs = uniphier_spi_set_cs;
+> > +       master->transfer_one = uniphier_spi_transfer_one;
+> > +       master->prepare_transfer_hardware
+> > +                               = uniphier_spi_prepare_transfer_hardware;
+> > +       master->unprepare_transfer_hardware
+> > +                               = uniphier_spi_unprepare_transfer_hardware;
+> > +       master->num_chipselect = 1;
+> > +
+> > +       ret = devm_spi_register_master(&pdev->dev, master);
+> > +       if (ret)
+> > +               goto out_disable_clk;
+> > +
+> > +       return 0;
+> > +
+> > +out_disable_clk:
+> > +       clk_disable_unprepare(priv->clk);
+> > +
+> > +out_master_put:
+> > +       spi_master_put(master);
+> > +       return ret;
+> > +}
+> > +
+> > +static int uniphier_spi_remove(struct platform_device *pdev) {
+> > +       struct uniphier_spi_priv *priv = platform_get_drvdata(pdev);
+> > +
+> > +       clk_disable_unprepare(priv->clk);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static const struct of_device_id uniphier_spi_match[] = {
+> > +       { .compatible = "socionext,uniphier-scssi" },
+> > +       { /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, uniphier_spi_match);
+> > +
+> > +static struct platform_driver uniphier_spi_driver = {
+> > +       .probe = uniphier_spi_probe,
+> > +       .remove = uniphier_spi_remove,
+> > +       .driver = {
+> > +               .name = "uniphier-spi",
+> > +               .of_match_table = uniphier_spi_match,
+> > +       },
+> > +};
+> > +module_platform_driver(uniphier_spi_driver);
+> > +
+> > +MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
+> > +MODULE_AUTHOR("Keiji Hayashibara <hayashibara.keiji@socionext.com>");
+> > +MODULE_DESCRIPTION("Socionext UniPhier SPI controller driver");
+> > +MODULE_LICENSE("GPL v2");
+> > --
+> > 2.7.4
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-spi"
+> > in the body of a message to majordomo@vger.kernel.org More majordomo
+> > info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-Marcel
+--
+Best Regards,
+Keiji Hayashibara
