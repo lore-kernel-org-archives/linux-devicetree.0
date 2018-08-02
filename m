@@ -1,43 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 01/10] ASoC: dt-bindings: add dt bindings for wcd9335
- audio codec
-Date: Thu, 2 Aug 2018 08:07:33 -0600
-Message-ID: <CAL_JsqJKXfnCggFK3QC4Q2+-ZCGKdASJ87e=s6AUq4kYA-GWjg@mail.gmail.com>
-References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
- <20180727121806.18209-2-srinivas.kandagatla@linaro.org> <20180731204315.GA5265@rob-hp-laptop>
- <53a4e82c-7270-fdbd-a2ea-efbfc2d747a2@linaro.org> <CAL_JsqKcxB2NZR94BP9-Qc8AAFsySPoADm2UA_ZV8V7JdP8-wQ@mail.gmail.com>
- <4c821ce9-6268-150f-2ab0-358f5b312ec0@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v8 2/4] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Thu, 2 Aug 2018 08:09:26 -0600
+Message-ID: <CAL_Jsq+S0c9TNSfaHahQGZ05OcRMZnpbbwBRps_dOEm+WofyLQ@mail.gmail.com>
+References: <20180731141146.10788-1-o.rempel@pengutronix.de>
+ <20180731141146.10788-3-o.rempel@pengutronix.de>
+ <CABb+yY1ZusgN4UVxmUgXZS9ObGdLwFAL4XkW7F1yVb6Gq=9XPA@mail.gmail.com>
+ <20180801050530.nzmomvvyo5pfwclz@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4c821ce9-6268-150f-2ab0-358f5b312ec0@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Banajit Goswami <bgoswami@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vinod <vkoul@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180801050530.nzmomvvyo5pfwclz@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 2, 2018 at 1:33 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+On Tue, Jul 31, 2018 at 11:05 PM Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 >
-> Thanks for review,
+> On Tue, Jul 31, 2018 at 09:28:09PM +0530, Jassi Brar wrote:
+> > On Tue, Jul 31, 2018 at 7:41 PM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> > > Each MU has four pairs of rx/tx data register with four rx/tx interrupts
+> > > which can also be used as a separate channel.
+> > >
+> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > ---
+> > >  .../devicetree/bindings/mailbox/fsl,mu.txt    | 28 +++++++++++++++++--
+> > >  1 file changed, 25 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > > index 90e4905dfc69..9efd3a9ade44 100644
+> > > --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > > +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+> > > @@ -18,11 +18,33 @@ Messaging Unit Device Node:
+> > >  Required properties:
+> > >  -------------------
+> > >  - compatible : should be "fsl,<chip>-mu", the supported chips include
+> > > -               imx8qxp, imx8qm.
+> > > +               imx6sx, imx7s, imx8qxp, imx8qm.
+> > > +               The "fsl,imx6sx-mu" compatible is seen as generic and should
+> > > +               be included together with SoC specific compatible.
+> > >  - reg :                Should contain the registers location and length
+> > >  - interrupts : Interrupt number. The interrupt specifier format depends
+> > >                 on the interrupt controller parent.
+> > > -- #mbox-cells:  Must be 0. Number of cells in a mailbox
+> > > +- #mbox-cells:  Must be 2.
+> > >
+> > This seems like modifying the bindings. But since nothing exists yet,
+> > maybe we should merge patch 1 and 2 ?
 >
-> On 01/08/18 23:20, Rob Herring wrote:
-> >>>> +- qcom,ifd:
-> >>>> +    Usage: required
-> >>>> +    Value type: <phandle>
-> >>>> +    Definition: SLIM interface device
-> >>> Wouldn't this be the parent?
-> >>>
-> >> No, Interface device is just like other slim device and is part of
-> >> SLIMbus Component and has a unique address. Every SLIMbus component has
-> >> one interface device.
-> > I still don't understand what this means. If this is SLIMbus specific,
-> > then maybe it should be named that way? Or it is QCom specific?
->
-> It is SLIMbus specific, I will rename this to "slim,ifd" in next version
-> which makes it clear!
+> For some weeks I already asked to squash this patches.. it was not
+> ACKed. We can try again... @Rob, @Aisheng, should I merge this two
+> patches?
 
-'slim' is not a vendor. So 'slim-ifc-dev' perhaps. Unless IFD is a
-well known acronym for someone familiar with SLIMbus.
+Whatever you like. I don't really care.
 
 Rob
