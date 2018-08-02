@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v2 3/6] arm64: dts: rockchip: add VPU device node for RK3399
-Date: Thu,  2 Aug 2018 17:00:07 -0300
-Message-ID: <20180802200010.24365-4-ezequiel@collabora.com>
+Subject: [PATCH v2 2/6] ARM: dts: rockchip: add VPU device node for RK3288
+Date: Thu,  2 Aug 2018 17:00:06 -0300
+Message-ID: <20180802200010.24365-3-ezequiel@collabora.com>
 References: <20180802200010.24365-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,35 +21,45 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the Video Processing Unit node for the RK3399 SoC.
+Add the Video Processing Unit node for RK3288 SoC.
+Also, enable the VPU IOMMU node, as it's needed
+for any user that wants to use the VPU with the IOMMU.
 
 Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/rk3288.dtsi | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index c88e603396f6..11137a06dd62 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1198,6 +1198,18 @@
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 0840ffb3205c..a86f0c7d8e71 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1223,6 +1223,18 @@
+ 		};
  	};
  
-+	vpu: video-codec@ff650000 {
-+		compatible = "rockchip,rk3399-vpu";
-+		reg = <0x0 0xff650000 0x0 0x800>;
-+		interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH 0>;
++	vpu: video-codec@ff9a0000 {
++		compatible = "rockchip,rk3288-vpu";
++		reg = <0x0 0xff9a0000 0x0 0x800>;
++		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-names = "vepu", "vdpu";
 +		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
 +		clock-names = "aclk", "hclk";
-+		power-domains = <&power RK3399_PD_VCODEC>;
++		power-domains = <&power RK3288_PD_VIDEO>;
 +		iommus = <&vpu_mmu>;
 +	};
 +
- 	vpu_mmu: iommu@ff650800 {
+ 	vpu_mmu: iommu@ff9a0800 {
  		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff650800 0x0 0x40>;
+ 		reg = <0x0 0xff9a0800 0x0 0x100>;
+@@ -1231,7 +1243,6 @@
+ 		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
+ 		clock-names = "aclk", "iface";
+ 		#iommu-cells = <0>;
+-		status = "disabled";
+ 	};
+ 
+ 	hevc_mmu: iommu@ff9c0440 {
 -- 
 2.18.0
