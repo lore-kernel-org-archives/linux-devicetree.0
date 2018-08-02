@@ -1,63 +1,126 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v3 2/2] PM / devfreq: Add devfreq driver for interconnect
- bandwidth voting
-Date: Thu, 2 Aug 2018 16:15:09 +0300
-Message-ID: <248eb8ef-6936-a23b-4c44-fd9953992ae2@linaro.org>
-References: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
- <CGME20180802005759epcas4p4a68d50e61c8425124a993de1917021a2@epcms1p5>
- <20180802101341epcms1p53ee79776dbcbeaf6f1e7910b20095220@epcms1p5>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Subject: [PATCH v12 0/7] Enable Bluetooth functionality for WCN3990
+Date: Thu,  2 Aug 2018 18:55:11 +0530
+Message-ID: <20180802132518.8680-1-bgodavar@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802101341epcms1p53ee79776dbcbeaf6f1e7910b20095220@epcms1p5>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Saravana Kannan <skannan@codeaurora.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "daidavid1@codeaurora.org" <daidavid1@codeaurora.org>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi MyungJoo,
+These patches enables Bluetooth functinalties for new Qualcomm
+Bluetooth chip wnc3990. As this is latest chip with new features, 
+along with some common features to old chip "qcom,qca6174-bt".
+we have updated names of functions that are used for both the chips 
+to keep this generic and would help in future when we would have new 
+BT SoC.
 
-On 08/02/2018 01:13 PM, MyungJoo Ham wrote:
->> This driver registers itself as a devfreq device that allows devfreq
->> governors to make bandwidth votes for an interconnect path. This allows
->> applying various policies for different interconnect paths using devfreq
->> governors.
->>
-> 
-> First of all, the name, "devfreq_icbw", is not appropriate for a
-> devfreq device driver. It confuses; it looks like a part of the
-> framework itself.
-> 
->> diff --git a/drivers/devfreq/devfreq_icbw.c b/drivers/devfreq/devfreq_icbw.c
->> new file mode 100644
->> index 0000000..231fb21
->> --- /dev/null
->> +++ b/drivers/devfreq/devfreq_icbw.c
->> @@ -0,0 +1,116 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2013-2014, 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#define pr_fmt(fmt) "icbw: " fmt
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/init.h>
->> +#include <linux/err.h>
->> +#include <linux/errno.h>
->> +#include <linux/mutex.h>
->> +#include <linux/devfreq.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of.h>
->> +#include <linux/interconnect.h>
-> 
-> Where can I find this file?
+The below are difference between new and old chips.
 
-It is part of the On-chip interconnect API, which is currently under
-review and is available here: https://lkml.org/lkml/2018/7/31/647
+*Power:
+ *New chip: we use voltage regulators to turn on/off the chip and we 
+  must send a command on Tx line to turn on/off the chip completely.
+ *Old chip: We turn on/off by setting a GPIO.
 
-Thanks,
-Georgi
+ *Note: Turning on sequence differs between two chips.
+
+*Firmware download:
+  Only firmware file name differ from New and Old chip.
+  
+  So we reused some functions/structure/variables which are used for old 
+  chip to New chip by generic naming (may be future chips may use same functions).
+
+ * As we have multiple changes for functions names,we have tested these patches 
+   on both chips.
+
+v12:
+ * removed iteration loop in qca_init_wcn3990 
+ * updated review comments.
+
+v11:
+ * removed regulator current from dtbindings
+ * addressed review comments.
+
+v10:
+ * update current load with actual values of WCN3990.
+ * added support  for itterative connect with BT chip if it fails to respond to the HOST.
+ * Added regulator current dtbindings.
+ * addressed review comments.
+
+v9:
+ * removed smps regs.
+ * hidded flow control in respective functions.
+ * moved qca_soc_ver to qca_setup
+ * addressed review comments.
+ 
+v8:
+  * Squashed [v7 2/8] and [v7 3/8] to one patch.
+  * updated functions to set and get the UART speeds.
+  * addressed review comments.
+
+v7:
+  * Renamed all the possible function of ROME to generic.
+  * updated with review comments for hci_qca and btqca
+  * fixed kbuild errors.
+  * created wrapper functions for re-usable blocks.
+ 
+v6:
+  * Hooked up qca_power to qca_serdev.
+  * renamed all the naming inconsistency functions with qca_*
+  * leveraged common code of ROME for wcn3990.
+  * created wrapper functions for re-usable blocks.
+  * updated function of _*regulator_enable and _*regualtor_disable.  
+  * removed redundant comments and functions.
+  * add code to derive the firmware files based on ROM Version.
+  * created new patch for common function of ROME and wcn3990.
+  * enables Qualcomm chip to operate at 3.2Mbps.
+  * updated names of functions that are used for both the chips to keep this generic. 
+
+v5:
+  * updated with review comments for hci_qca and btqca
+ 
+v4:
+  * rebased all changes on top of bluetooth-next.
+  * addressed review comments.
+  * New patch created for firmware download.
+
+v3:
+  * Rebased all changes on top of bluetooth-next.
+  * dt-bindings: net: bluetooth: Add device tree bindings for QTI chip wcn3990
+    - added dt-binding snippet for bluetooth chip wcn3990.
+  * Bluetooth: Add support for wcn3990 soc.
+    - updated BT_INFO with bt_dev_info, where ever necessary.
+
+v2:
+   * Add support for wcn3990:
+    These changes are aligned as per serdev frame work.
+          We implemented these changes on top of https://patchwork.kernel.org/patch/10316093/
+        As this patch enable serdev for one of the Qualcomm BT chip.
+
+        The changes in the patch include.
+        - Adding support to voting up/down regulators for WCN3990.
+           - Bluetooth firmware download for wcn3990.
+
+  * Add device tree bindings for Atheros chips:
+          These changes are on top of https://patchwork.kernel.org/patch/10316097/.
+          - Description of device tree bindings.
+
+Balakrishna Godavarthi (7):
+  dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
+    wcn3990
+  Bluetooth: btqca: Rename ROME specific functions to generic functions
+  Bluetooth: btqca: Redefine qca_uart_setup() to generic function.
+  Bluetooth: hci_qca: Add wrapper functions for setting UART speed
+  Bluetooth: hci_qca: Enable 3.2 Mbps operating speed.
+  Bluetooth: btqca: Add wcn3990 firmware download support.
+  Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990
+
+ .../bindings/net/qualcomm-bluetooth.txt       |  26 +-
+ drivers/bluetooth/btqca.c                     | 117 +++--
+ drivers/bluetooth/btqca.h                     |  22 +-
+ drivers/bluetooth/hci_qca.c                   | 485 +++++++++++++++---
+ 4 files changed, 534 insertions(+), 116 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
