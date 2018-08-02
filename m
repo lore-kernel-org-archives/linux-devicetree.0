@@ -1,289 +1,182 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 11/11] clocksource: new RISC-V SBI timer driver
-Date: Thu, 2 Aug 2018 16:21:10 -0700
-Message-ID: <78e56d2f-155b-72df-1094-fdfb45090216@wdc.com>
-References: <20180802115008.4031-1-hch@lst.de>
- <20180802115008.4031-12-hch@lst.de>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v5 03/12] PM / devfreq: Don't adjust to user limits in
+ governors
+Date: Thu, 2 Aug 2018 16:36:00 -0700
+Message-ID: <20180802233600.GT68975@google.com>
+References: <20180703234705.227473-1-mka@chromium.org>
+ <20180703234705.227473-4-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180802115008.4031-12-hch@lst.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, "anup@brainfault.org" <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180703234705.227473-4-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On 8/2/18 4:51 AM, Christoph Hellwig wrote:
-> From: Palmer Dabbelt <palmer@dabbelt.com>
+Hi Chanwoo,
+
+this patch and "PM / devfreq: Fix handling of min/max_freq == 0"
+address issues not directly related with the throttler. It seems it
+could still take a while for the throttler to move forward, do you
+want me to spin out these two patches so that they can get merged
+independently from the rest of the series?
+
+Thanks
+
+Matthias
+
+On Tue, Jul 03, 2018 at 04:46:56PM -0700, Matthias Kaehlcke wrote:
+> Several governors use the user space limits df->min/max_freq to adjust
+> the target frequency. This is not necessary, since update_devfreq()
+> already takes care of this. Instead the governor can request the available
+> min/max frequency by setting the target frequency to DEVFREQ_MIN/MAX_FREQ
+> and let update_devfreq() take care of any adjustments.
 > 
-> The RISC-V ISA defines a per-hart real-time clock and timer, which is
-> present on all systems.  The clock is accessed via the 'rdtime'
-> pseudo-instruction (which reads a CSR), and the timer is set via an SBI
-> call.
-> 
-> Contains various improvements from Atish Patra <atish.patra@wdc.com>.
-> 
-> Signed-off-by: Dmitriy Cherkasov <dmitriy@oss-tech.org>
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> [hch: remove dead code, add SPDX tags, minor cleanups, merged
->   hotplug cpu and other improvements from Atish]
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
 > ---
->   arch/riscv/include/asm/smp.h      |   3 -
->   arch/riscv/kernel/irq.c           |   3 +
->   arch/riscv/kernel/smpboot.c       |   1 -
->   arch/riscv/kernel/time.c          |   8 +-
->   drivers/clocksource/Kconfig       |  11 +++
->   drivers/clocksource/Makefile      |   1 +
->   drivers/clocksource/riscv_timer.c | 119 ++++++++++++++++++++++++++++++
->   include/linux/cpuhotplug.h        |   1 +
->   8 files changed, 136 insertions(+), 11 deletions(-)
->   create mode 100644 drivers/clocksource/riscv_timer.c
+> Changes in v5:
+> - none
 > 
-> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-> index c9395fff246f..36016845461d 100644
-> --- a/arch/riscv/include/asm/smp.h
-> +++ b/arch/riscv/include/asm/smp.h
-> @@ -24,9 +24,6 @@
->   
->   #ifdef CONFIG_SMP
->   
-> -/* SMP initialization hook for setup_arch */
-> -void __init init_clockevent(void);
-> -
->   /* SMP initialization hook for setup_arch */
->   void __init setup_smp(void);
->   
-> diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
-> index ab5f3e22c7cc..0cfac48a1272 100644
-> --- a/arch/riscv/kernel/irq.c
-> +++ b/arch/riscv/kernel/irq.c
-> @@ -30,6 +30,9 @@ asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
->   
->   	irq_enter();
->   	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
-> +	case INTERRUPT_CAUSE_TIMER:
-> +		riscv_timer_interrupt();
-> +		break;
->   #ifdef CONFIG_SMP
->   	case INTERRUPT_CAUSE_SOFTWARE:
->   		/*
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index f741458c5a3f..56abab6a9812 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -104,7 +104,6 @@ asmlinkage void __init smp_callin(void)
->   	current->active_mm = mm;
->   
->   	trap_init();
-> -	init_clockevent();
->   	notify_cpu_starting(smp_processor_id());
->   	set_cpu_online(smp_processor_id(), 1);
->   	local_flush_tlb_all();
-> diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
-> index 1bb01dc2d0f1..94e9ca18f5fa 100644
-> --- a/arch/riscv/kernel/time.c
-> +++ b/arch/riscv/kernel/time.c
-> @@ -18,12 +18,6 @@
->   
->   unsigned long riscv_timebase;
->   
-> -void __init init_clockevent(void)
-> -{
-> -	timer_probe();
-> -	csr_set(sie, SIE_STIE);
-> -}
-> -
->   static long __init timebase_frequency(void)
->   {
->   	struct device_node *cpu;
-> @@ -43,5 +37,5 @@ void __init time_init(void)
->   {
->   	riscv_timebase = timebase_frequency();
->   	lpj_fine = riscv_timebase / HZ;
-> -	init_clockevent();
-> +	timer_probe();
->   }
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index dec0dd88ec15..a11f4ba98b05 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -609,4 +609,15 @@ config ATCPIT100_TIMER
->   	help
->   	  This option enables support for the Andestech ATCPIT100 timers.
->   
-> +config RISCV_TIMER
-> +	bool "Timer for the RISC-V platform"
-> +	depends on RISCV
-> +	default y
-> +	select TIMER_PROBE
-> +	select TIMER_OF
-> +	help
-> +	  This enables the per-hart timer built into all RISC-V systems, which
-> +	  is accessed via both the SBI and the rdcycle instruction.  This is
-> +	  required for all RISC-V systems.
-> +
->   endmenu
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index 00caf37e52f9..ded31f720bd9 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -78,3 +78,4 @@ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
->   obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
->   obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
->   obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
-> +obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
-> diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
-> new file mode 100644
-> index 000000000000..c1e46170c068
-> --- /dev/null
-> +++ b/drivers/clocksource/riscv_timer.c
-> @@ -0,0 +1,119 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2012 Regents of the University of California
-> + * Copyright (C) 2017 SiFive
-> + */
-> +#include <linux/clocksource.h>
-> +#include <linux/clockchips.h>
-> +#include <linux/cpu.h>
-> +#include <linux/delay.h>
-> +#include <linux/irq.h>
-> +#include <asm/sbi.h>
-> +
-> +/*
-> + * All RISC-V systems have a timer attached to every hart.  These timers can be
-> + * read by the 'rdcycle' pseudo instruction, and can use the SBI to setup
-> + * events.  In order to abstract the architecture-specific timer reading and
-> + * setting functions away from the clock event insertion code, we provide
-> + * function pointers to the clockevent subsystem that perform two basic
-> + * operations: rdtime() reads the timer on the current CPU, and
-> + * next_event(delta) sets the next timer event to 'delta' cycles in the future.
-> + * As the timers are inherently a per-cpu resource, these callbacks perform
-> + * operations on the current hart.  There is guaranteed to be exactly one timer
-> + * per hart on all RISC-V systems.
-> + */
-> +
-> +static int riscv_clock_next_event(unsigned long delta,
-> +		struct clock_event_device *ce)
-> +{
-> +	csr_set(sie, SIE_STIE);
-> +	sbi_set_timer(get_cycles64() + delta);
-> +	return 0;
-> +}
-> +
-> +static DEFINE_PER_CPU(struct clock_event_device, riscv_clock_event) = {
-> +	.name			= "riscv_timer_clockevent",
-> +	.features		= CLOCK_EVT_FEAT_ONESHOT,
-> +	.rating			= 100,
-> +	.set_next_event		= riscv_clock_next_event,
-> +};
-> +
-> +/*
-> + * It is guarnteed that all the timers across all the harts are synchronized
-
-/s/guarnteed/guaranteed
-> + * within one tick of each other, so while this could technically go
-> + * backwards when hopping between CPUs, practically it won't happen.
-> + */
-> +static unsigned long long riscv_clocksource_rdtime(struct clocksource *cs)
-> +{
-> +	return get_cycles64();
-> +}
-> +
-> +static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
-> +	.name		= "riscv_clocksource",
-> +	.rating		= 300,
-> +	.mask		= CLOCKSOURCE_MASK(BITS_PER_LONG),
-> +	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
-> +	.read		= riscv_clocksource_rdtime,
-> +};
-> +
-> +static int riscv_timer_starting_cpu(unsigned int cpu)
-> +{
-> +	struct clock_event_device *ce = per_cpu_ptr(&riscv_clock_event, cpu);
-> +
-> +	ce->cpumask = cpumask_of(cpu);
-> +	clockevents_config_and_register(ce, riscv_timebase, 100, 0x7fffffff);
-> +
-> +	csr_set(sie, SIE_STIE);
-> +	return 0;
-> +}
-> +
-> +static int riscv_timer_dying_cpu(unsigned int cpu)
-> +{
-> +	csr_clear(sie, SIE_STIE);
-> +	return 0;
-> +}
-> +
-> +/* called directly from the low-level interrupt handler */
-> +void riscv_timer_interrupt(void)
-> +{
-> +	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
-> +
-> +	csr_clear(sie, SIE_STIE);
-> +	evdev->event_handler(evdev);
-> +}
-> +
-> +static int riscv_timer_hart_id(struct device_node *dev)
-> +{
-> +	u32 hart;
-> +
-> +	if (!dev)
-> +		return -1;
-> +	if (!of_device_is_compatible(dev, "riscv"))
-> +		return -1;
-> +	if (of_property_read_u32(dev, "reg", &hart))
-> +		return -1;
-> +
-> +	return hart;
-> +}
-> +
-> +static int __init riscv_timer_init_dt(struct device_node *n)
-> +{
-> +	int cpu_id = riscv_timer_hart_id(n), error;
-> +	struct clocksource *cs;
-> +
-> +	if (cpu_id != smp_processor_id())
-> +		return 0;
-> +
-> +	cs = per_cpu_ptr(&riscv_clocksource, cpu_id);
-> +	clocksource_register_hz(cs, riscv_timebase);
-> +
-> +	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
-> +			 "clockevents/riscv/timer:starting",
-> +			 riscv_timer_starting_cpu, riscv_timer_dying_cpu);
-> +	if (error)
-> +		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
-> +		       error, cpu_id);
-> +	return error;
-> +}
-> +
-> +TIMER_OF_DECLARE(riscv_timer, "riscv", riscv_timer_init_dt);
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index 8796ba387152..554c27f6cfbd 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -125,6 +125,7 @@ enum cpuhp_state {
->   	CPUHP_AP_MARCO_TIMER_STARTING,
->   	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
->   	CPUHP_AP_ARC_TIMER_STARTING,
-> +	CPUHP_AP_RISCV_TIMER_STARTING,
->   	CPUHP_AP_KVM_STARTING,
->   	CPUHP_AP_KVM_ARM_VGIC_INIT_STARTING,
->   	CPUHP_AP_KVM_ARM_VGIC_STARTING,
+> Changes in v4:
+> - added 'Reviewed-by: Brian Norris <briannorris@chromium.org>' tag
 > 
-
-Otherwise, FWIW
-
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
+> Changes in v3:
+> - none
+> 
+> Changes in v2:
+> - squashed "PM / devfreq: Remove redundant frequency adjustment from governors"
+>   and "PM / devfreq: governors: Return device frequency limits instead of user
+>   limits"
+> - updated subject and commit message
+> - use DEVFREQ_MIN/MAX_FREQ instead of df->scaling_min/max_freq
+> ---
+>  drivers/devfreq/governor.h                |  3 +++
+>  drivers/devfreq/governor_performance.c    |  5 +----
+>  drivers/devfreq/governor_powersave.c      |  2 +-
+>  drivers/devfreq/governor_simpleondemand.c | 12 +++---------
+>  drivers/devfreq/governor_userspace.c      | 16 ++++------------
+>  5 files changed, 12 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+> index cfc50a61a90d..b81700244ce3 100644
+> --- a/drivers/devfreq/governor.h
+> +++ b/drivers/devfreq/governor.h
+> @@ -25,6 +25,9 @@
+>  #define DEVFREQ_GOV_SUSPEND			0x4
+>  #define DEVFREQ_GOV_RESUME			0x5
+>  
+> +#define DEVFREQ_MIN_FREQ			0
+> +#define DEVFREQ_MAX_FREQ			ULONG_MAX
+> +
+>  /**
+>   * struct devfreq_governor - Devfreq policy governor
+>   * @node:		list node - contains registered devfreq governors
+> diff --git a/drivers/devfreq/governor_performance.c b/drivers/devfreq/governor_performance.c
+> index 4d23ecfbd948..ded429fd51be 100644
+> --- a/drivers/devfreq/governor_performance.c
+> +++ b/drivers/devfreq/governor_performance.c
+> @@ -20,10 +20,7 @@ static int devfreq_performance_func(struct devfreq *df,
+>  	 * target callback should be able to get floor value as
+>  	 * said in devfreq.h
+>  	 */
+> -	if (!df->max_freq)
+> -		*freq = UINT_MAX;
+> -	else
+> -		*freq = df->max_freq;
+> +	*freq = DEVFREQ_MAX_FREQ;
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/devfreq/governor_powersave.c b/drivers/devfreq/governor_powersave.c
+> index 0c42f23249ef..9e8897f5ac42 100644
+> --- a/drivers/devfreq/governor_powersave.c
+> +++ b/drivers/devfreq/governor_powersave.c
+> @@ -20,7 +20,7 @@ static int devfreq_powersave_func(struct devfreq *df,
+>  	 * target callback should be able to get ceiling value as
+>  	 * said in devfreq.h
+>  	 */
+> -	*freq = df->min_freq;
+> +	*freq = DEVFREQ_MIN_FREQ;
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/devfreq/governor_simpleondemand.c b/drivers/devfreq/governor_simpleondemand.c
+> index 28e0f2de7100..c0417f0e081e 100644
+> --- a/drivers/devfreq/governor_simpleondemand.c
+> +++ b/drivers/devfreq/governor_simpleondemand.c
+> @@ -27,7 +27,6 @@ static int devfreq_simple_ondemand_func(struct devfreq *df,
+>  	unsigned int dfso_upthreshold = DFSO_UPTHRESHOLD;
+>  	unsigned int dfso_downdifferential = DFSO_DOWNDIFFERENCTIAL;
+>  	struct devfreq_simple_ondemand_data *data = df->data;
+> -	unsigned long max = (df->max_freq) ? df->max_freq : UINT_MAX;
+>  
+>  	err = devfreq_update_stats(df);
+>  	if (err)
+> @@ -47,7 +46,7 @@ static int devfreq_simple_ondemand_func(struct devfreq *df,
+>  
+>  	/* Assume MAX if it is going to be divided by zero */
+>  	if (stat->total_time == 0) {
+> -		*freq = max;
+> +		*freq = DEVFREQ_MAX_FREQ;
+>  		return 0;
+>  	}
+>  
+> @@ -60,13 +59,13 @@ static int devfreq_simple_ondemand_func(struct devfreq *df,
+>  	/* Set MAX if it's busy enough */
+>  	if (stat->busy_time * 100 >
+>  	    stat->total_time * dfso_upthreshold) {
+> -		*freq = max;
+> +		*freq = DEVFREQ_MAX_FREQ;
+>  		return 0;
+>  	}
+>  
+>  	/* Set MAX if we do not know the initial frequency */
+>  	if (stat->current_frequency == 0) {
+> -		*freq = max;
+> +		*freq = DEVFREQ_MAX_FREQ;
+>  		return 0;
+>  	}
+>  
+> @@ -85,11 +84,6 @@ static int devfreq_simple_ondemand_func(struct devfreq *df,
+>  	b = div_u64(b, (dfso_upthreshold - dfso_downdifferential / 2));
+>  	*freq = (unsigned long) b;
+>  
+> -	if (df->min_freq && *freq < df->min_freq)
+> -		*freq = df->min_freq;
+> -	if (df->max_freq && *freq > df->max_freq)
+> -		*freq = df->max_freq;
+> -
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/devfreq/governor_userspace.c b/drivers/devfreq/governor_userspace.c
+> index 080607c3f34d..378d84c011df 100644
+> --- a/drivers/devfreq/governor_userspace.c
+> +++ b/drivers/devfreq/governor_userspace.c
+> @@ -26,19 +26,11 @@ static int devfreq_userspace_func(struct devfreq *df, unsigned long *freq)
+>  {
+>  	struct userspace_data *data = df->data;
+>  
+> -	if (data->valid) {
+> -		unsigned long adjusted_freq = data->user_frequency;
+> -
+> -		if (df->max_freq && adjusted_freq > df->max_freq)
+> -			adjusted_freq = df->max_freq;
+> -
+> -		if (df->min_freq && adjusted_freq < df->min_freq)
+> -			adjusted_freq = df->min_freq;
+> -
+> -		*freq = adjusted_freq;
+> -	} else {
+> +	if (data->valid)
+> +		*freq = data->user_frequency;
+> +	else
+>  		*freq = df->previous_freq; /* No user freq specified yet */
+> -	}
+> +
+>  	return 0;
+>  }
+>  
