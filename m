@@ -1,69 +1,92 @@
-Return-Path: <SRS0=K2JG=KS=codeaurora.org=smohanad@kernel.org>
-From: Siddartha Mohanadoss <smohanad@codeaurora.org>
-Subject: [PATCH v5 0/3] Add QCOM PMIC5 ADC driver
-Date: Thu,  2 Aug 2018 18:42:26 -0700
-Message-Id: <1533260546-11916-1-git-send-email-smohanad@codeaurora.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Return-Path: <SRS0=L/Ao=KR=linuxtv.org=mchehab@kernel.org>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Date: Thu, 02 Aug 2018 10:11:51 +0000
+Subject: [git:media_tree/master] media: dt-bindings: media: qcom, camss: Unify the clock names
+Reply-to: linux-media@vger.kernel.org
+Message-Id: <E1flD2F-0003u2-0e@www.linuxtv.org>
+To: linuxtv-commits@linuxtv.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hansverk@cisco.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series adds the PMIC5 ADC family of chipset
-that supports clients to measure voltage and current on
-inputs connected to the PMIC ADC AMUX. Clients include
-reading voltage phone power and on board system thermistors
-for thermal management.
+This is an automatic generated email to let you know that the following patch were queued:
 
-The v5 patchset addresses most of the review comments from
-prior patchset.
+Subject: media: dt-bindings: media: qcom, camss: Unify the clock names
+Author:  Todor Tomov <todor.tomov@linaro.org>
+Date:    Tue Jul 31 02:19:43 2018 -0400
 
-Changes since patchset v4
-* Remove support to query channels raw ADC code readings.
-* Few minor changes.
+Use more logical clock names - similar to the names in documentation.
+This will allow better handling of the clocks in the driver when support
+for more hardware versions is added - equivalent clocks on different
+hardware versions will have the same name.
 
-Changes since patchset v3
-* Few minor changes.
+Note: No dts is using this device (and clock names) yet.
 
-Changes since patchset v2
-* Removed support for current channel as part of this series.
-* Fix pointer arithmetic for iio_chan.
-* Few minor changes.
-* Update license to SPDX format for ADC header file.
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Hans Verkuil <hansverk@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Changes since patchset v1
-* Merged DT bindings with prior PMIC family instead of a
-  seperate DT file for PMIC5 family.
-* Updated documentation for 'label' and 'value' property.
-* Updated using unique prefix adc5 for functions and defines
-  specific for this family of chipset.
-* Refactored scaling functions to use function pointer for
-  scaling lookup.
-* Added documentation comments as requested in the
-  scaling functions as applicable.
-* Added utility functions in the scaling API to avoid some of
-  the code repetitions.
-* Use consistent hex format for adc_data and use specific length
-  while assigning data.
-* Added support to determine controller version and check against
-  supported hardware settling delay values.
-* Various minor changes.
+ .../devicetree/bindings/media/qcom,camss.txt       | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Siddartha Mohanadoss (3):
-  dt-bindings: iio: adc: Add DT binding document for PMIC5 ADC
-  iio: adc: Add QCOM SPMI PMIC5 ADC driver
-  iio: adc: Update QCOM ADC license to SPDX format
+---
 
- ,                                                  |   0
- .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 +-
- drivers/iio/adc/Kconfig                            |  20 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/qcom-spmi-adc5.c                   | 788 +++++++++++++++++++++
- drivers/iio/adc/qcom-vadc-common.c                 | 189 ++++-
- drivers/iio/adc/qcom-vadc-common.h                 |  54 ++
- include/dt-bindings/iio/qcom,spmi-vadc.h           | 125 +++-
- 8 files changed, 1220 insertions(+), 34 deletions(-)
- create mode 100644 ,
- create mode 100644 drivers/iio/adc/qcom-spmi-adc5.c
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+index cadecebc73f7..032e8ed81faa 100644
+--- a/Documentation/devicetree/bindings/media/qcom,camss.txt
++++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+@@ -53,7 +53,7 @@ Qualcomm Camera Subsystem
+ 	Usage: required
+ 	Value type: <stringlist>
+ 	Definition: Should contain the following entries:
+-                - "camss_top_ahb"
++                - "top_ahb"
+                 - "ispif_ahb"
+                 - "csiphy0_timer"
+                 - "csiphy1_timer"
+@@ -67,11 +67,11 @@ Qualcomm Camera Subsystem
+                 - "csi1_phy"
+                 - "csi1_pix"
+                 - "csi1_rdi"
+-                - "camss_ahb"
+-                - "camss_vfe_vfe"
+-                - "camss_csi_vfe"
+-                - "iface"
+-                - "bus"
++                - "ahb"
++                - "vfe0"
++                - "csi_vfe0"
++                - "vfe_ahb"
++                - "vfe_axi"
+ - vdda-supply:
+ 	Usage: required
+ 	Value type: <phandle>
+@@ -161,7 +161,7 @@ Qualcomm Camera Subsystem
+ 			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+ 			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
+ 			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
+-                clock-names = "camss_top_ahb",
++                clock-names = "top_ahb",
+                         "ispif_ahb",
+                         "csiphy0_timer",
+                         "csiphy1_timer",
+@@ -175,11 +175,11 @@ Qualcomm Camera Subsystem
+                         "csi1_phy",
+                         "csi1_pix",
+                         "csi1_rdi",
+-                        "camss_ahb",
+-                        "camss_vfe_vfe",
+-                        "camss_csi_vfe",
+-                        "iface",
+-                        "bus";
++                        "ahb",
++                        "vfe0",
++                        "csi_vfe0",
++                        "vfe_ahb",
++                        "vfe_axi";
+ 		vdda-supply = <&pm8916_l2>;
+ 		iommus = <&apps_iommu 3>;
+ 		ports {
