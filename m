@@ -1,245 +1,289 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 05/12] PM / devfreq: Add support for policy notifiers
-Date: Thu, 2 Aug 2018 16:13:43 -0700
-Message-ID: <20180802231343.GS68975@google.com>
-References: <CGME20180703234900epcas1p1cda806bab6bbe69228ca5ee56bc33f36@epcas1p1.samsung.com>
- <20180703234705.227473-6-mka@chromium.org>
- <5B3C6C2A.1070205@samsung.com>
- <20180706175301.GG129942@google.com>
- <5399c191-e140-e2b8-629b-72ddfbf99b0f@samsung.com>
- <20180716175050.GZ129942@google.com>
- <20180731193953.GH68975@google.com>
- <5B610B48.4030802@samsung.com>
- <20180801170824.GJ68975@google.com>
- <5B626563.1090302@samsung.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 11/11] clocksource: new RISC-V SBI timer driver
+Date: Thu, 2 Aug 2018 16:21:10 -0700
+Message-ID: <78e56d2f-155b-72df-1094-fdfb45090216@wdc.com>
+References: <20180802115008.4031-1-hch@lst.de>
+ <20180802115008.4031-12-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5B626563.1090302@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180802115008.4031-12-hch@lst.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Dmitriy Cherkasov <dmitriy@oss-tech.org>, "anup@brainfault.org" <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
-
-On Thu, Aug 02, 2018 at 10:58:59AM +0900, Chanwoo Choi wrote:
-> Hi Matthias,
+On 8/2/18 4:51 AM, Christoph Hellwig wrote:
+> From: Palmer Dabbelt <palmer@dabbelt.com>
 > 
-> On 2018년 08월 02일 02:08, Matthias Kaehlcke wrote:
-> > Hi Chanwoo,
-> > 
-> > On Wed, Aug 01, 2018 at 10:22:16AM +0900, Chanwoo Choi wrote:
-> >> On 2018년 08월 01일 04:39, Matthias Kaehlcke wrote:
-> >>> On Mon, Jul 16, 2018 at 10:50:50AM -0700, Matthias Kaehlcke wrote:
-> >>>> On Thu, Jul 12, 2018 at 05:44:33PM +0900, Chanwoo Choi wrote:
-> >>>>> Hi Matthias,
-> >>>>>
-> >>>>> On 2018년 07월 07일 02:53, Matthias Kaehlcke wrote:
-> >>>>>> Hi Chanwoo,
-> >>>>>>
-> >>>>>> On Wed, Jul 04, 2018 at 03:41:46PM +0900, Chanwoo Choi wrote:
-> >>>>>>
-> >>>>>>> Firstly,
-> >>>>>>> I'm not sure why devfreq needs the devfreq_verify_within_limits() function.
-> >>>>>>>
-> >>>>>>> devfreq already used the OPP interface as default. It means that
-> >>>>>>> the outside of 'drivers/devfreq' can disable/enable the frequency
-> >>>>>>> such as drivers/thermal/devfreq_cooling.c. Also, when some device
-> >>>>>>> drivers disable/enable the specific frequency, the devfreq core
-> >>>>>>> consider them.
-> >>>>>>>
-> >>>>>>> So, devfreq doesn't need to devfreq_verify_within_limits() because
-> >>>>>>> already support some interface to change the minimum/maximum frequency
-> >>>>>>> of devfreq device. 
-> >>>>>>>
-> >>>>>>> In case of cpufreq subsystem, cpufreq only provides 'cpufreq_verify_with_limits()'
-> >>>>>>> to change the minimum/maximum frequency of cpu. some device driver cannot
-> >>>>>>> change the minimum/maximum frequency through OPP interface.
-> >>>>>>>
-> >>>>>>> But, in case of devfreq subsystem, as I explained already, devfreq support
-> >>>>>>> the OPP interface as default way. devfreq subsystem doesn't need to add
-> >>>>>>> other way to change the minimum/maximum frequency.
-> >>>>>>
-> >>>>>> Using the OPP interface exclusively works as long as a
-> >>>>>> enabling/disabling of OPPs is limited to a single driver
-> >>>>>> (drivers/thermal/devfreq_cooling.c). When multiple drivers are
-> >>>>>> involved you need a way to resolve conflicts, that's the purpose of
-> >>>>>> devfreq_verify_within_limits(). Please let me know if there are
-> >>>>>> existing mechanisms for conflict resolution that I overlooked.
-> >>>>>>
-> >>>>>> Possibly drivers/thermal/devfreq_cooling.c could be migrated to use
-> >>>>>> devfreq_verify_within_limits() instead of the OPP interface if
-> >>>>>> desired, however this seems beyond the scope of this series.
-> >>>>>
-> >>>>> Actually, if we uses this approach, it doesn't support the multiple drivers too.
-> >>>>> If non throttler drivers uses devfreq_verify_within_limits(), the conflict
-> >>>>> happen.
-> >>>>
-> >>>> As long as drivers limit the max freq there is no conflict, the lowest
-> >>>> max freq wins. I expect this to be the usual case, apparently it
-> >>>> worked for cpufreq for 10+ years.
-> >>>>
-> >>>> However it is correct that there would be a conflict if a driver
-> >>>> requests a min freq that is higher than the max freq requested by
-> >>>> another. In this case devfreq_verify_within_limits() resolves the
-> >>>> conflict by raising p->max to the min freq. Not sure if this is
-> >>>> something that would ever occur in practice though.
-> >>>>
-> >>>> If we are really concerned about this case it would also be an option
-> >>>> to limit the adjustment to the max frequency.
-> >>>>
-> >>>>> To resolve the conflict for multiple device driver, maybe OPP interface
-> >>>>> have to support 'usage_count' such as clk_enable/disable().
-> >>>>
-> >>>> This would require supporting negative usage count values, since a OPP
-> >>>> should not be enabled if e.g. thermal enables it but the throttler
-> >>>> disabled it or viceversa.
-> >>>>
-> >>>> Theoretically there could also be conflicts, like one driver disabling
-> >>>> the higher OPPs and another the lower ones, with the outcome of all
-> >>>> OPPs being disabled, which would be a more drastic conflict resolution
-> >>>> than that of devfreq_verify_within_limits().
-> >>>>
-> >>>> Viresh, what do you think about an OPP usage count?
-> >>>
-> >>> Ping, can we try to reach a conclusion on this or at least keep the
-> >>> discussion going?
-> >>>
-> >>> Not that it matters, but my preferred solution continues to be
-> >>> devfreq_verify_within_limits(). It solves conflicts in some way (which
-> >>> could be adjusted if needed) and has proven to work in practice for
-> >>> 10+ years in a very similar sub-system.
-> >>
-> >> It is not true. Current cpufreq subsystem doesn't support external OPP
-> >> control to enable/disable the OPP entry. If some device driver
-> >> controls the OPP entry of cpufreq driver with opp_disable/enable(),
-> >> the operation is not working. Because cpufreq considers the limit
-> >> through 'cpufreq_verify_with_limits()' only.
-> > 
-> > Ok, we can probably agree that using cpufreq_verify_with_limits()
-> > exclusively seems to have worked well for cpufreq, and that in their
-> > overall purpose cpufreq and devfreq are similar subsystems.
-> > 
-> > The current throttler series with devfreq_verify_within_limits() takes
-> > the enabled OPPs into account, the lowest and highest OPP are used as
-> > a starting point for the frequency adjustment and (in theory) the
-> > frequency range should only be narrowed by
-> > devfreq_verify_within_limits().
-> > 
-> >> As I already commented[1], there is different between cpufreq and devfreq.
-> >> [1] https://lkml.org/lkml/2018/7/4/80
-> >>
-> >> Already, subsystem already used OPP interface in order to control
-> >> specific OPP entry. I don't want to provide two outside method
-> >> to control the frequency of devfreq driver. It might make the confusion.
-> > 
-> > I understand your point, it would indeed be preferable to have a
-> > single method. However I'm not convinced that the OPP interface is
-> > a suitable solution, as I exposed earlier in this thread (quoted
-> > below).
-> > 
-> > I would like you to at least consider the possibility of changing
-> > drivers/thermal/devfreq_cooling.c to devfreq_verify_within_limits().
-> > Besides that it's not what is currently used, do you see any technical
-> > concerns that would make devfreq_verify_within_limits() an unsuitable
-> > or inferior solution?
+> The RISC-V ISA defines a per-hart real-time clock and timer, which is
+> present on all systems.  The clock is accessed via the 'rdtime'
+> pseudo-instruction (which reads a CSR), and the timer is set via an SBI
+> call.
 > 
-> As we already discussed, devfreq_verify_within_limits() doesn't support
-> the multiple outside controllers (e.g., devfreq-cooling.c).
-
-That's incorrect, its purpose is precisely that.
-
-Are you suggesting that cpufreq with its use of
-cpufreq_verify_within_limits() (the inspiration for
-devfreq_verify_within_limits()) is broken? It is used by cpu_cooling.c
-and other drivers when receiving a CPUFREQ_ADJUST event, essentially
-what I am proposing with DEVFREQ_ADJUST.
-
-Could you elaborate why this model wouldn't work for devfreq? "OPP
-interface is mandatory for devfreq" isn't really a technical argument,
-is it mandatory for any other reason than that it is the interface
-that is currently used?
-
-> After you are suggesting the throttler core, there are at least two
-> outside controllers (e.g., devfreq-cooling.c and throttler driver).
-> As I knew the problem about conflict, I cannot agree the temporary
-> method. OPP interface is mandatory for devfreq in order to control
-> the OPP (frequency/voltage). In this situation, we have to try to
-> find the method through OPP interface.
-
-What do you mean with "temporary method"?
-
-We can try to find a method through the OPP interface, but at this
-point I'm not convinced that it is technically necessary or even
-preferable.
-
-Another inconvenient of the OPP approach for both devfreq-cooling.c
-and the throttler is that they have to bother with disabling all OPPs
-above/below the max/min (they don't/shouldn't have to care), instead
-of just telling devfreq the max/min.
-
-> We can refer to regulator/clock. Multiple device driver can use
-> the regulator/clock without any problem. I think that usage of OPP
-> is similiar with regulator/clock. As you mentioned, maybe OPP
-> would handle the negative count. Although opp_enable/opp_disable()
-> have to handle the negative count and opp_enable/opp_disable()
-> can support the multiple usage from device drivers, I think that
-> this approach is right.
-
-The regulator/clock approach with the typical usage counts seems more
-intuitive to me, personally I wouldn't write an interface with
-negative usage count if I could reasonably avoid it.
-
-> >> I want to use only OPP interface to enable/disable frequency
-> >> even if we have to modify the OPP interface.
-> > 
-> > These are the concerns I raised earlier about a solution with OPP
-> > usage counts:
-> > 
-> > "This would require supporting negative usage count values, since a OPP
-> > should not be enabled if e.g. thermal enables it but the throttler
-> > disabled it or viceversa.
+> Contains various improvements from Atish Patra <atish.patra@wdc.com>.
 > 
-> Already replied	about negative usage count. I think that negative usage count
-> is not problem if this approach could resolve the issue.
+> Signed-off-by: Dmitriy Cherkasov <dmitriy@oss-tech.org>
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> [hch: remove dead code, add SPDX tags, minor cleanups, merged
+>   hotplug cpu and other improvements from Atish]
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   arch/riscv/include/asm/smp.h      |   3 -
+>   arch/riscv/kernel/irq.c           |   3 +
+>   arch/riscv/kernel/smpboot.c       |   1 -
+>   arch/riscv/kernel/time.c          |   8 +-
+>   drivers/clocksource/Kconfig       |  11 +++
+>   drivers/clocksource/Makefile      |   1 +
+>   drivers/clocksource/riscv_timer.c | 119 ++++++++++++++++++++++++++++++
+>   include/linux/cpuhotplug.h        |   1 +
+>   8 files changed, 136 insertions(+), 11 deletions(-)
+>   create mode 100644 drivers/clocksource/riscv_timer.c
 > 
-> > 
-> > Theoretically there could also be conflicts, like one driver disabling
-> > the higher OPPs and another the lower ones, with the outcome of all
-> > OPPs being disabled, which would be a more drastic conflict resolution
-> > than that of devfreq_verify_within_limits()."
-> > 
-> > What do you think about these points?
+> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+> index c9395fff246f..36016845461d 100644
+> --- a/arch/riscv/include/asm/smp.h
+> +++ b/arch/riscv/include/asm/smp.h
+> @@ -24,9 +24,6 @@
+>   
+>   #ifdef CONFIG_SMP
+>   
+> -/* SMP initialization hook for setup_arch */
+> -void __init init_clockevent(void);
+> -
+>   /* SMP initialization hook for setup_arch */
+>   void __init setup_smp(void);
+>   
+> diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
+> index ab5f3e22c7cc..0cfac48a1272 100644
+> --- a/arch/riscv/kernel/irq.c
+> +++ b/arch/riscv/kernel/irq.c
+> @@ -30,6 +30,9 @@ asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
+>   
+>   	irq_enter();
+>   	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
+> +	case INTERRUPT_CAUSE_TIMER:
+> +		riscv_timer_interrupt();
+> +		break;
+>   #ifdef CONFIG_SMP
+>   	case INTERRUPT_CAUSE_SOFTWARE:
+>   		/*
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index f741458c5a3f..56abab6a9812 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -104,7 +104,6 @@ asmlinkage void __init smp_callin(void)
+>   	current->active_mm = mm;
+>   
+>   	trap_init();
+> -	init_clockevent();
+>   	notify_cpu_starting(smp_processor_id());
+>   	set_cpu_online(smp_processor_id(), 1);
+>   	local_flush_tlb_all();
+> diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
+> index 1bb01dc2d0f1..94e9ca18f5fa 100644
+> --- a/arch/riscv/kernel/time.c
+> +++ b/arch/riscv/kernel/time.c
+> @@ -18,12 +18,6 @@
+>   
+>   unsigned long riscv_timebase;
+>   
+> -void __init init_clockevent(void)
+> -{
+> -	timer_probe();
+> -	csr_set(sie, SIE_STIE);
+> -}
+> -
+>   static long __init timebase_frequency(void)
+>   {
+>   	struct device_node *cpu;
+> @@ -43,5 +37,5 @@ void __init time_init(void)
+>   {
+>   	riscv_timebase = timebase_frequency();
+>   	lpj_fine = riscv_timebase / HZ;
+> -	init_clockevent();
+> +	timer_probe();
+>   }
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index dec0dd88ec15..a11f4ba98b05 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -609,4 +609,15 @@ config ATCPIT100_TIMER
+>   	help
+>   	  This option enables support for the Andestech ATCPIT100 timers.
+>   
+> +config RISCV_TIMER
+> +	bool "Timer for the RISC-V platform"
+> +	depends on RISCV
+> +	default y
+> +	select TIMER_PROBE
+> +	select TIMER_OF
+> +	help
+> +	  This enables the per-hart timer built into all RISC-V systems, which
+> +	  is accessed via both the SBI and the rdcycle instruction.  This is
+> +	  required for all RISC-V systems.
+> +
+>   endmenu
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 00caf37e52f9..ded31f720bd9 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -78,3 +78,4 @@ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
+>   obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>   obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>   obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+> +obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
+> diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
+> new file mode 100644
+> index 000000000000..c1e46170c068
+> --- /dev/null
+> +++ b/drivers/clocksource/riscv_timer.c
+> @@ -0,0 +1,119 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2012 Regents of the University of California
+> + * Copyright (C) 2017 SiFive
+> + */
+> +#include <linux/clocksource.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/cpu.h>
+> +#include <linux/delay.h>
+> +#include <linux/irq.h>
+> +#include <asm/sbi.h>
+> +
+> +/*
+> + * All RISC-V systems have a timer attached to every hart.  These timers can be
+> + * read by the 'rdcycle' pseudo instruction, and can use the SBI to setup
+> + * events.  In order to abstract the architecture-specific timer reading and
+> + * setting functions away from the clock event insertion code, we provide
+> + * function pointers to the clockevent subsystem that perform two basic
+> + * operations: rdtime() reads the timer on the current CPU, and
+> + * next_event(delta) sets the next timer event to 'delta' cycles in the future.
+> + * As the timers are inherently a per-cpu resource, these callbacks perform
+> + * operations on the current hart.  There is guaranteed to be exactly one timer
+> + * per hart on all RISC-V systems.
+> + */
+> +
+> +static int riscv_clock_next_event(unsigned long delta,
+> +		struct clock_event_device *ce)
+> +{
+> +	csr_set(sie, SIE_STIE);
+> +	sbi_set_timer(get_cycles64() + delta);
+> +	return 0;
+> +}
+> +
+> +static DEFINE_PER_CPU(struct clock_event_device, riscv_clock_event) = {
+> +	.name			= "riscv_timer_clockevent",
+> +	.features		= CLOCK_EVT_FEAT_ONESHOT,
+> +	.rating			= 100,
+> +	.set_next_event		= riscv_clock_next_event,
+> +};
+> +
+> +/*
+> + * It is guarnteed that all the timers across all the harts are synchronized
+
+/s/guarnteed/guaranteed
+> + * within one tick of each other, so while this could technically go
+> + * backwards when hopping between CPUs, practically it won't happen.
+> + */
+> +static unsigned long long riscv_clocksource_rdtime(struct clocksource *cs)
+> +{
+> +	return get_cycles64();
+> +}
+> +
+> +static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
+> +	.name		= "riscv_clocksource",
+> +	.rating		= 300,
+> +	.mask		= CLOCKSOURCE_MASK(BITS_PER_LONG),
+> +	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.read		= riscv_clocksource_rdtime,
+> +};
+> +
+> +static int riscv_timer_starting_cpu(unsigned int cpu)
+> +{
+> +	struct clock_event_device *ce = per_cpu_ptr(&riscv_clock_event, cpu);
+> +
+> +	ce->cpumask = cpumask_of(cpu);
+> +	clockevents_config_and_register(ce, riscv_timebase, 100, 0x7fffffff);
+> +
+> +	csr_set(sie, SIE_STIE);
+> +	return 0;
+> +}
+> +
+> +static int riscv_timer_dying_cpu(unsigned int cpu)
+> +{
+> +	csr_clear(sie, SIE_STIE);
+> +	return 0;
+> +}
+> +
+> +/* called directly from the low-level interrupt handler */
+> +void riscv_timer_interrupt(void)
+> +{
+> +	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
+> +
+> +	csr_clear(sie, SIE_STIE);
+> +	evdev->event_handler(evdev);
+> +}
+> +
+> +static int riscv_timer_hart_id(struct device_node *dev)
+> +{
+> +	u32 hart;
+> +
+> +	if (!dev)
+> +		return -1;
+> +	if (!of_device_is_compatible(dev, "riscv"))
+> +		return -1;
+> +	if (of_property_read_u32(dev, "reg", &hart))
+> +		return -1;
+> +
+> +	return hart;
+> +}
+> +
+> +static int __init riscv_timer_init_dt(struct device_node *n)
+> +{
+> +	int cpu_id = riscv_timer_hart_id(n), error;
+> +	struct clocksource *cs;
+> +
+> +	if (cpu_id != smp_processor_id())
+> +		return 0;
+> +
+> +	cs = per_cpu_ptr(&riscv_clocksource, cpu_id);
+> +	clocksource_register_hz(cs, riscv_timebase);
+> +
+> +	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
+> +			 "clockevents/riscv/timer:starting",
+> +			 riscv_timer_starting_cpu, riscv_timer_dying_cpu);
+> +	if (error)
+> +		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
+> +		       error, cpu_id);
+> +	return error;
+> +}
+> +
+> +TIMER_OF_DECLARE(riscv_timer, "riscv", riscv_timer_init_dt);
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index 8796ba387152..554c27f6cfbd 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -125,6 +125,7 @@ enum cpuhp_state {
+>   	CPUHP_AP_MARCO_TIMER_STARTING,
+>   	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+>   	CPUHP_AP_ARC_TIMER_STARTING,
+> +	CPUHP_AP_RISCV_TIMER_STARTING,
+>   	CPUHP_AP_KVM_STARTING,
+>   	CPUHP_AP_KVM_ARM_VGIC_INIT_STARTING,
+>   	CPUHP_AP_KVM_ARM_VGIC_STARTING,
 > 
-> It depends on how to use OPP interface on multiple device driver.
-> Even if devfreq/opp provides the control method, outside device driver
-> are misusing them. It is problem of user.
 
-I wouldn't call it misusing if two independent drivers take
-contradictory actions on an interface that doesn't provide
-arbitration. How can driver A know that it shouldn't disable OPPs a, b
-and c because driver B disabled d, e and f? Who is misusing the
-interface, driver A or driver B?
+Otherwise, FWIW
 
-> Instead, if we use the OPP interface, we can check why OPP entry
-> is disabled or enabled through usage count.
-> 
-> > 
-> > The negative usage counts aren't necessarily a dealbreaker in a
-> > technical sense, though I'm not a friend of quirky interfaces that
-> > don't behave like a typical user would expect (e.g. an OPP isn't
-> > necessarily enabled after dev_pm_opp_enable()).
-> > 
-> > I can sent an RFC with OPP usage counts, though due to the above
-> > concerns I have doubts it will be well received.
-> 
-> Please add me to Cc list.
-
-Will do
-
-Thanks
-
-Matthias
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
