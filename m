@@ -1,63 +1,151 @@
-Return-Path: <SRS0=H47x=KR=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 1/5] dt-bindings: power: Add r8a774a1 SYSC power domain definitions
-Date: Thu,  2 Aug 2018 15:48:18 +0100
-Message-Id: <1533221302-44598-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1533221302-44598-1-git-send-email-biju.das@bp.renesas.com>
-References: <1533221302-44598-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=L/Ao=KR=linuxtv.org=mchehab@kernel.org>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Date: Thu, 02 Aug 2018 10:17:30 +0000
+Subject: [git:media_tree/master] media: dt-bindings: media: qcom,camss: Fix whitespaces
+Reply-to: linux-media@vger.kernel.org
+Message-Id: <E1flD2E-0003rK-Ia@www.linuxtv.org>
+To: linuxtv-commits@linuxtv.org
+Cc: Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Todor Tomov <todor.tomov@linaro.org>, Hans Verkuil <hansverk@cisco.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds power domain indices for RZ/G2M.
+This is an automatic generated email to let you know that the following patch were queued:
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1-->V2
-     * No change
----
- include/dt-bindings/power/r8a774a1-sysc.h | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a774a1-sysc.h
+Subject: media: dt-bindings: media: qcom,camss: Fix whitespaces
+Author:  Todor Tomov <todor.tomov@linaro.org>
+Date:    Wed Jul 25 12:38:24 2018 -0400
 
-diff --git a/include/dt-bindings/power/r8a774a1-sysc.h b/include/dt-bindings/power/r8a774a1-sysc.h
-new file mode 100644
-index 0000000..580f431
---- /dev/null
-+++ b/include/dt-bindings/power/r8a774a1-sysc.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A774A1_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A774A1_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A774A1_PD_CA57_CPU0		 0
-+#define R8A774A1_PD_CA57_CPU1		 1
-+#define R8A774A1_PD_CA53_CPU0		 5
-+#define R8A774A1_PD_CA53_CPU1		 6
-+#define R8A774A1_PD_CA53_CPU2		 7
-+#define R8A774A1_PD_CA53_CPU3		 8
-+#define R8A774A1_PD_CA57_SCU		12
-+#define R8A774A1_PD_A3VC		14
-+#define R8A774A1_PD_3DG_A		17
-+#define R8A774A1_PD_3DG_B		18
-+#define R8A774A1_PD_CA53_SCU		21
-+#define R8A774A1_PD_A2VC0		25
-+#define R8A774A1_PD_A2VC1		26
-+
-+/* Always-on power area */
-+#define R8A774A1_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A774A1_SYSC_H__ */
--- 
-2.7.4
+Use tabs.
+
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Hans Verkuil <hansverk@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+ .../devicetree/bindings/media/qcom,camss.txt       | 92 +++++++++++-----------
+ 1 file changed, 46 insertions(+), 46 deletions(-)
+
+---
+
+diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+index 032e8ed81faa..e938eb02274c 100644
+--- a/Documentation/devicetree/bindings/media/qcom,camss.txt
++++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+@@ -53,25 +53,25 @@ Qualcomm Camera Subsystem
+ 	Usage: required
+ 	Value type: <stringlist>
+ 	Definition: Should contain the following entries:
+-                - "top_ahb"
+-                - "ispif_ahb"
+-                - "csiphy0_timer"
+-                - "csiphy1_timer"
+-                - "csi0_ahb"
+-                - "csi0"
+-                - "csi0_phy"
+-                - "csi0_pix"
+-                - "csi0_rdi"
+-                - "csi1_ahb"
+-                - "csi1"
+-                - "csi1_phy"
+-                - "csi1_pix"
+-                - "csi1_rdi"
+-                - "ahb"
+-                - "vfe0"
+-                - "csi_vfe0"
+-                - "vfe_ahb"
+-                - "vfe_axi"
++		- "top_ahb"
++		- "ispif_ahb"
++		- "csiphy0_timer"
++		- "csiphy1_timer"
++		- "csi0_ahb"
++		- "csi0"
++		- "csi0_phy"
++		- "csi0_pix"
++		- "csi0_rdi"
++		- "csi1_ahb"
++		- "csi1"
++		- "csi1_phy"
++		- "csi1_pix"
++		- "csi1_rdi"
++		- "ahb"
++		- "vfe0"
++		- "csi_vfe0"
++		- "vfe_ahb"
++		- "vfe_axi"
+ - vdda-supply:
+ 	Usage: required
+ 	Value type: <phandle>
+@@ -95,17 +95,17 @@ Qualcomm Camera Subsystem
+ 		- clock-lanes:
+ 			Usage: required
+ 			Value type: <u32>
+-                        Definition: The physical clock lane index. The value
+-                                    must always be <1> as the physical clock
+-                                    lane is lane 1.
++			Definition: The physical clock lane index. The value
++				    must always be <1> as the physical clock
++				    lane is lane 1.
+ 		- data-lanes:
+ 			Usage: required
+ 			Value type: <prop-encoded-array>
+-                        Definition: An array of physical data lanes indexes.
+-                                    Position of an entry determines the logical
+-                                    lane number, while the value of an entry
+-                                    indicates physical lane index. Lane swapping
+-                                    is supported.
++			Definition: An array of physical data lanes indexes.
++				    Position of an entry determines the logical
++				    lane number, while the value of an entry
++				    indicates physical lane index. Lane swapping
++				    is supported.
+ 
+ * An Example
+ 
+@@ -161,25 +161,25 @@ Qualcomm Camera Subsystem
+ 			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+ 			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
+ 			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
+-                clock-names = "top_ahb",
+-                        "ispif_ahb",
+-                        "csiphy0_timer",
+-                        "csiphy1_timer",
+-                        "csi0_ahb",
+-                        "csi0",
+-                        "csi0_phy",
+-                        "csi0_pix",
+-                        "csi0_rdi",
+-                        "csi1_ahb",
+-                        "csi1",
+-                        "csi1_phy",
+-                        "csi1_pix",
+-                        "csi1_rdi",
+-                        "ahb",
+-                        "vfe0",
+-                        "csi_vfe0",
+-                        "vfe_ahb",
+-                        "vfe_axi";
++		clock-names = "top_ahb",
++			"ispif_ahb",
++			"csiphy0_timer",
++			"csiphy1_timer",
++			"csi0_ahb",
++			"csi0",
++			"csi0_phy",
++			"csi0_pix",
++			"csi0_rdi",
++			"csi1_ahb",
++			"csi1",
++			"csi1_phy",
++			"csi1_pix",
++			"csi1_rdi",
++			"ahb",
++			"vfe0",
++			"csi_vfe0",
++			"vfe_ahb",
++			"vfe_axi";
+ 		vdda-supply = <&pm8916_l2>;
+ 		iommus = <&apps_iommu 3>;
+ 		ports {
