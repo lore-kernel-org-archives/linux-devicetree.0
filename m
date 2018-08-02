@@ -1,30 +1,40 @@
-Return-Path: <SRS0=H47x=KR=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 0/5] Add GPIO and EAVB Pinctrl support
-Date: Thu,  2 Aug 2018 15:11:22 +0100
-Message-Id: <1533219087-33695-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=ckZ6=KR=verge.net.au=horms@kernel.org>
+Date: Thu, 2 Aug 2018 13:05:13 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v7] usb: gadget: udc: renesas_usb3: Add register of usb
+ role switch
+Message-ID: <20180802110512.sr76jd5mcms6tv5m@verge.net.au>
+References: <1532656240-7951-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1532656240-7951-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, hdegoede@redhat.com, andy.shevchenko@gmail.com, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series aims to add GPIO and EAVB Pinctrl support
-for RZ/G1C SoC.
+On Fri, Jul 27, 2018 at 10:50:40AM +0900, Yoshihiro Shimoda wrote:
+> This patch adds role switch support for R-Car SoCs into the USB 3.0
+> peripheral driver. Some R-Car SoCs (e.g. R-Car H3) have USB 3.0
+> dual-role device controller which has the USB 3.0 xHCI host and
+> Renesas USB 3.0 peripheral.
+> 
+> Unfortunately, the mode change register (DRD_CON) contains
+> the USB 3.0 peripheral controller side only. So, this renesas_usb3
+> driver manages the DRD_CON now. However, in peripheral mode, the host
+> should stop. Also the host hardware needs to reinitialize its own
+> registers when the mode changes from peripheral to host mode.
+> Otherwise, the host cannot work correctly (e.g. detect a device
+> as high-speed).
+> 
+> To achieve this reinitialization by a driver, this driver also
+> registers a role switch driver to manage the DRD_CON and get
+> a device pointer of usb 3.0 host from "companion" property of OF.
+> Then, when the usb role is changed, renesas_usb3_role_switch_set()
+> will attach/release the xhci-plat driver to reinitialize the host
+> hardware.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-V1-->V2
-    Add support for gpio-reserved-ranges 
-
-Biju Das (5):
-  gpio: rcar: Add GPIO hole support
-  dt-bindings: gpio: rcar: Add gpio-reserved-ranges support
-  ARM: dts: r8a77470: Add GPIO support
-  ARM: dts: iwg23s-sbc: specify EtherAVB PHY IRQ
-  ARM: dts: iwg23s-sbc: Add pinctl support for EtherAVB
-
- .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |  3 +
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          | 10 +++
- arch/arm/boot/dts/r8a77470.dtsi                    | 91 ++++++++++++++++++++++
- drivers/gpio/gpio-rcar.c                           | 30 ++++++-
- 4 files changed, 133 insertions(+), 1 deletion(-)
-
--- 
-2.7.4
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
