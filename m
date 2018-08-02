@@ -1,151 +1,81 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 2/3] iio: light: Add support for vishay vcnl4035
-Date: Thu, 2 Aug 2018 22:34:14 +0300
-Message-ID: <CAHp75VcR7aaUkNJdARMvnkuzxfODwVhHFH0Hm94hsENbShtO3A@mail.gmail.com>
-References: <20180802182729.2061830-1-pn@denx.de> <20180802182729.2061830-2-pn@denx.de>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v13 1/7] dt-bindings: net: bluetooth: Add device tree
+ bindings for QTI chip wcn3990
+Date: Thu, 2 Aug 2018 12:39:17 -0700
+Message-ID: <20180802193917.GP68975@google.com>
+References: <20180802190732.4811-1-bgodavar@codeaurora.org>
+ <20180802190732.4811-2-bgodavar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802182729.2061830-2-pn@denx.de>
+Content-Disposition: inline
+In-Reply-To: <20180802190732.4811-2-bgodavar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Parthiban Nallathambi <pn@denx.de>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, linux-iio <linux-iio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, wd@denx.de, sbabic@denx.de, Heiko Schocher <hs@denx.de>
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 2, 2018 at 9:27 PM, Parthiban Nallathambi <pn@denx.de> wrote:
-> Add support for VCNL4035, which is capable of Ambient light
-> sensing (ALS) and proximity function. This patch adds support
-> only for ALS function
-
-> +#include <linux/module.h>
-> +#include <linux/i2c.h>
-> +#include <linux/bitops.h>
-> +#include <linux/regmap.h>
-> +#include <linux/pm_runtime.h>
-
-Sort?
-
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/events.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/trigger.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
-
-Ditto.
-
-> +       if (reg & (VCNL4035_INT_ALS_IF_H_MASK | VCNL4035_INT_ALS_IF_L_MASK))
-> +               return true;
-> +       else
-> +               return false;
-
-return !!(reg & ...); ?
-
-> +static irqreturn_t vcnl4035_drdy_irq_thread(int irq, void *private)
-> +{
-> +       struct iio_dev *indio_dev = private;
-> +       struct vcnl4035_data *data = iio_priv(indio_dev);
+On Fri, Aug 03, 2018 at 12:37:26AM +0530, Balakrishna Godavarthi wrote:
+> This patch enables regulators for the Qualcomm Bluetooth wcn3990
+> controller.
+> 
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> Changes in v13:
+>  * Segregated optional and required properties for wcn3990.
+> ---
+>  .../bindings/net/qualcomm-bluetooth.txt       | 29 +++++++++++++++++--
+>  1 file changed, 27 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index 0ea18a53cc29..824c0e23c544 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -10,12 +10,25 @@ device the slave device is attached to.
+>  Required properties:
+>   - compatible: should contain one of the following:
+>     * "qcom,qca6174-bt"
+> +   * "qcom,wcn3990-bt"
 > +
-
-> +       if (vcnl4035_is_triggered(data)) {
-
-Here is negative conditional suits.
-
-> +#ifndef CONFIG_PM
-
-Why?
-
-> +       ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
-> +       if (ret < 0)
-> +               return ret;
-> +#endif
-
-> +               pr_err("regmap_write default THDH returned %d\n", ret);
-
-dev_err()
-
-> +               pr_err("regmap_write default THDL returned %d\n", ret);
-
-Ditto.
-
-
-> +       ret = pm_runtime_set_active(&client->dev);
-> +       if (ret < 0)
-> +               goto fail_poweroff;
+> +Optional properties for compatible string qcom,qca6174-bt:
+>  
+> -Optional properties:
+>   - enable-gpios: gpio specifier used to enable chip
+>   - clocks: clock provided to the controller (SUSCLK_32KHZ)
+>  
+> -Example:
+> +Required properties for compatible string qcom,wcn3990-bt:
 > +
-> +       pm_runtime_enable(&client->dev);
-> +       pm_runtime_set_autosuspend_delay(&client->dev, VCNL4035_SLEEP_DELAY_MS);
-> +       pm_runtime_use_autosuspend(&client->dev);
-
-Usually we do this after we probed the device.
-
-> +       if (client->irq) {
-
-First of all, it can be negative.
-Second, care to factor out this rather long branch to a separate function?
-
-> +               if (ret < 0) {
-> +                       dev_err(&client->dev, "request irq %d for trigger0 failed\n",
-> +                               client->irq);
-> +                       goto fail_buffer_clean;
-> +                       }
-
-Indentation.
-
-> +       }
-
-So, do I understand correctly that IRQ is optional for this device?
-
-
-
-> +#ifdef CONFIG_PM
-> +static int vcnl4035_runtime_suspend(struct device *dev)
-
-Perhaps __maybe_unused
-
-> +static int vcnl4035_runtime_resume(struct device *dev)
-
-Ditto.
-
-> +{
-> +       struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-> +       struct vcnl4035_data *data = iio_priv(indio_dev);
-> +       int ret;
+> + - vddio-supply: VDD_IO supply regulator handle.
+> + - vddxo-supply: VDD_XO supply regulator handle.
+> + - vddrf-supply: VDD_RF supply regulator handle.
+> + - vddch0-supply: VDD_CH0 supply regulator handle.
 > +
-> +       regcache_sync(data->regmap);
-> +       ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
-> +       if (ret < 0)
-> +               return ret;
-
-+ blank line
-
-> +       /* wait for 1 ALS integration cycle */
-> +       msleep(data->als_it_val * 100);
+> +Optional properties for compatible string qcom,wcn3990-bt:
 > +
-> +       return 0;
-> +}
-> +#endif
-
-> +static const struct of_device_id vcnl4035_of_match[] = {
-> +       { .compatible = "vishay,vcnl4035", },
-> +       { },
-
-Better w/o comma.
-
+> + - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
+> +
+> +Examples:
+>  
+>  serial@7570000 {
+>  	label = "BT-UART";
+> @@ -28,3 +41,15 @@ serial@7570000 {
+>  		clocks = <&divclk4>;
+>  	};
+>  };
+> +
+> +serial@898000 {
+> +	bluetooth {
+> +		compatible = "qcom,wcn3990-bt";
+> +
+> +		vddio-supply = <&vreg_s4a_1p8>;
+> +		vddxo-supply = <&vreg_l7a_1p8>;
+> +		vddrf-supply = <&vreg_l17a_1p3>;
+> +		vddch0-supply = <&vreg_l25a_3p3>;
+> +		max-speed = <3200000>;
+> +	};
 > +};
-> +MODULE_DEVICE_TABLE(of, vcnl4035_of_match);
 
-> +
-> +static const struct i2c_device_id vcnl4035_id[] = {
-> +       { "vcnl4035", 0 },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, vcnl4035_id);
-
-Are you expecting legacy code to use this? I would rather switch to
-->probe_new() and also remove this.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
