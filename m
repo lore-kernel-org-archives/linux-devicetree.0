@@ -1,53 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: Applied "ASoC: wcd9335: add CLASS-H Controller support" to the
- asoc tree
-Date: Thu, 2 Aug 2018 10:52:35 +0100
-Message-ID: <20180802095235.GB9117@sirena.org.uk>
-References: <20180801112000.DC6B51124241@debutante.sirena.org.uk>
- <d7c2e466-9f60-9347-bc62-7ed0dc3df91b@linaro.org>
- <20180802063130.GJ4662@dell>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qcHopEYAB45HaUaB"
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: [PATCH v3 2/2] iio: light: Add device tree binding for vishay vcnl4035
+Date: Thu,  2 Aug 2018 11:52:30 +0200
+Message-ID: <20180802095230.2049554-2-pn@denx.de>
+References: <20180629153802.1639514-1-pn@denx.de>
+ <20180802095230.2049554-1-pn@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180802063130.GJ4662@dell>
+In-Reply-To: <20180802095230.2049554-1-pn@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, vkoul@kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de, Parthiban Nallathambi <pn@denx.de>
 List-Id: devicetree@vger.kernel.org
 
+Adding device tree binding for vcnl4035 and vendor
+prefix for Vishay Intertechnology
 
---qcHopEYAB45HaUaB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+-------
 
-On Thu, Aug 02, 2018 at 07:31:30AM +0100, Lee Jones wrote:
-> On Wed, 01 Aug 2018, Srinivas Kandagatla wrote:
+Changelog in v3:
+- removed interrupt-parent property reference in documentation
+- renamed vcnl4035 to light-sensor
+---
+ .../devicetree/bindings/iio/light/vcnl4035.txt         | 18 ++++++++++++++++++
+ Documentation/devicetree/bindings/vendor-prefixes.txt  |  1 +
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4035.txt
 
-> > Without the "[PATCH v2 02/10] mfd: wcd9335: add support to wcd9335 core" It
-> > would break the build.
-
-> This is not a run-time dependency.
-
-> Without 02/10 there is no build. :)
-
-I reverted both patches after Srini's mail anyway (I didn't go and check
-for the MFD dependency, probably should've done).
-
---qcHopEYAB45HaUaB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlti1GIACgkQJNaLcl1U
-h9Bj6gf8CW3GQP6wh/uI0bsTgcrN3VIWuUsOzAmi9uwXXvvKpht9jBEQEvnHeW6F
-4RHbLEYW6Ftf/QA4Gq9aSQkeZwtpnq7NNfDBmiNiNjt6ZQ3NDoDnJh7eJPl45rRG
-oUMpqESO8grhP3Xvdn2D79zMUQbjmzxJpKmf32AxLpp+CV2HGWL07VofsmkmljoA
-7AkOOHRAV5cupYkC+pKAkYZTAZsCj0TeVGDtfCO6ytZ/eGfyKPK4n0eIa+KEJUP4
-4bT0GWP8bQIV5Was00DTRRaYdAIETVrTFU60Ukv+4lxw43yGhk47inx+ZT+Cw6XE
-YBqxdCFtO/8ClZIK+5TLmiBdpR+kIg==
-=GgCo
------END PGP SIGNATURE-----
-
---qcHopEYAB45HaUaB--
+diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4035.txt b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
+new file mode 100644
+index 000000000000..871f995f7b35
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
+@@ -0,0 +1,18 @@
++VISHAY VCNL4035 -  Ambient Light and proximity sensor
++
++Link to datasheet: https://www.vishay.com/docs/84251/vcnl4035x01.pdf
++
++Required properties:
++
++	-compatible: should be "vishay,vcnl4035"
++	-reg: I2C address of the sensor, should be 0x60
++	- interrupts: interrupt mapping for GPIO IRQ (level active low)
++
++Example:
++
++light-sensor@60 {
++	compatible = "vishay,vcnl4035";
++	reg = <0x60>;
++	interrupt-parent = <&gpio4>;
++	interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 7cad066191ee..3cc46d5735a9 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -395,6 +395,7 @@ v3	V3 Semiconductor
+ variscite	Variscite Ltd.
+ via	VIA Technologies, Inc.
+ virtio	Virtual I/O Device Specification, developed by the OASIS consortium
++vishay	Vishay Intertechnology, Inc
+ vivante	Vivante Corporation
+ vocore VoCore Studio
+ voipac	Voipac Technologies s.r.o.
+-- 
+2.14.4
