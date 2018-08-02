@@ -1,146 +1,97 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH v13 0/7] Enable Bluetooth functionality for WCN3990
-Date: Fri, 03 Aug 2018 00:39:26 +0530
-Message-ID: <94dbf53da5a77bbc345f3246f06f7e4f@codeaurora.org>
-References: <20180802190732.4811-1-bgodavar@codeaurora.org>
+From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v4 1/3] iio: Add modifier for white light
+Date: Thu, 2 Aug 2018 21:30:12 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1808022117460.25216@vps.pmeerw.net>
+References: <20180802182729.2061830-1-pn@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802190732.4811-1-bgodavar@codeaurora.org>
+In-Reply-To: <20180802182729.2061830-1-pn@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Parthiban Nallathambi <pn@denx.de>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de
 List-Id: devicetree@vger.kernel.org
 
-my bad forgot to add subject.
+Hello,
 
-On 2018-08-03 00:37, Balakrishna Godavarthi wrote:
-> These patches enables Bluetooth functinalties for new Qualcomm
-> Bluetooth chip wnc3990. As this is latest chip with new features,
-> along with some common features to old chip "qcom,qca6174-bt".
-> we have updated names of functions that are used for both the chips
-> to keep this generic and would help in future when we would have new
-> BT SoC.
+it is not clear to me why 'white' is needed; 
+isn't that the default, i.e. unfiltered light?
+
+thanks, regards, p.
+
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 7 +++++++
+>  drivers/iio/industrialio-core.c         | 1 +
+>  include/uapi/linux/iio/types.h          | 1 +
+>  tools/iio/iio_event_monitor.c           | 2 ++
+>  4 files changed, 11 insertions(+)
 > 
-> The below are difference between new and old chips.
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index 731146c3b138..43e481aed5b2 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -1312,6 +1312,13 @@ Description:
+>  		standardised CIE Erythemal Action Spectrum. UV index values range
+>  		from 0 (low) to >=11 (extreme).
+>  
+> +What:		/sys/.../iio:deviceX/in_intensityY_white_raw
+> +KernelVersion:	4.18
+> +Contact:	linux-iio@vger.kernel.org
+> +Description:
+> +		Modifier white indicates that measurements contain white LED
+> +		component.
+> +
+>  What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
+>  What:		/sys/.../iio:deviceX/in_intensity_green_integration_time
+>  What:		/sys/.../iio:deviceX/in_intensity_blue_integration_time
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 19bdf3d2962a..cb939b9fad16 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -108,6 +108,7 @@ static const char * const iio_modifier_names[] = {
+>  	[IIO_MOD_LIGHT_GREEN] = "green",
+>  	[IIO_MOD_LIGHT_BLUE] = "blue",
+>  	[IIO_MOD_LIGHT_UV] = "uv",
+> +	[IIO_MOD_LIGHT_WHITE] = "white",
+>  	[IIO_MOD_QUATERNION] = "quaternion",
+>  	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+>  	[IIO_MOD_TEMP_OBJECT] = "object",
+> diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
+> index 4213cdf88e3c..de87a6c7e6de 100644
+> --- a/include/uapi/linux/iio/types.h
+> +++ b/include/uapi/linux/iio/types.h
+> @@ -84,6 +84,7 @@ enum iio_modifier {
+>  	IIO_MOD_CO2,
+>  	IIO_MOD_VOC,
+>  	IIO_MOD_LIGHT_UV,
+> +	IIO_MOD_LIGHT_WHITE,
+>  };
+>  
+>  enum iio_event_type {
+> diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+> index b61245e1181d..a2f9c62a79dd 100644
+> --- a/tools/iio/iio_event_monitor.c
+> +++ b/tools/iio/iio_event_monitor.c
+> @@ -96,6 +96,7 @@ static const char * const iio_modifier_names[] = {
+>  	[IIO_MOD_LIGHT_GREEN] = "green",
+>  	[IIO_MOD_LIGHT_BLUE] = "blue",
+>  	[IIO_MOD_LIGHT_UV] = "uv",
+> +	[IIO_MOD_LIGHT_WHITE] = "white",
+>  	[IIO_MOD_QUATERNION] = "quaternion",
+>  	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+>  	[IIO_MOD_TEMP_OBJECT] = "object",
+> @@ -178,6 +179,7 @@ static bool event_is_known(struct iio_event_data *event)
+>  	case IIO_MOD_LIGHT_GREEN:
+>  	case IIO_MOD_LIGHT_BLUE:
+>  	case IIO_MOD_LIGHT_UV:
+> +	case IIO_MOD_LIGHT_WHITE:
+>  	case IIO_MOD_QUATERNION:
+>  	case IIO_MOD_TEMP_AMBIENT:
+>  	case IIO_MOD_TEMP_OBJECT:
 > 
-> *Power:
->  *New chip: we use voltage regulators to turn on/off the chip and we
->   must send a command on Tx line to turn on/off the chip completely.
->  *Old chip: We turn on/off by setting a GPIO.
-> 
->  *Note: Turning on sequence differs between two chips.
-> 
-> *Firmware download:
->   Only firmware file name differ from New and Old chip.
-> 
->   So we reused some functions/structure/variables which are used for 
-> old
->   chip to New chip by generic naming (may be future chips may use same
-> functions).
-> 
->  * As we have multiple changes for functions names,we have tested these 
-> patches
->    on both chips.
-> 
-> v13:
->  * Segregated optional and required properties for wcn3990.
-> 
-> v12:
->  * removed iteration loop in qca_init_wcn3990
->  * updated review comments.
-> 
-> v11:
->  * removed regulator current from dtbindings
->  * addressed review comments.
-> 
-> v10:
->  * update current load with actual values of WCN3990.
->  * added support  for itterative connect with BT chip if it fails to
-> respond to the HOST.
->  * Added regulator current dtbindings.
->  * addressed review comments.
-> 
-> v9:
->  * removed smps regs.
->  * hidded flow control in respective functions.
->  * moved qca_soc_ver to qca_setup
->  * addressed review comments.
-> 
-> v8:
->   * Squashed [v7 2/8] and [v7 3/8] to one patch.
->   * updated functions to set and get the UART speeds.
->   * addressed review comments.
-> 
-> v7:
->   * Renamed all the possible function of ROME to generic.
->   * updated with review comments for hci_qca and btqca
->   * fixed kbuild errors.
->   * created wrapper functions for re-usable blocks.
-> 
-> v6:
->   * Hooked up qca_power to qca_serdev.
->   * renamed all the naming inconsistency functions with qca_*
->   * leveraged common code of ROME for wcn3990.
->   * created wrapper functions for re-usable blocks.
->   * updated function of _*regulator_enable and _*regualtor_disable.
->   * removed redundant comments and functions.
->   * add code to derive the firmware files based on ROM Version.
->   * created new patch for common function of ROME and wcn3990.
->   * enables Qualcomm chip to operate at 3.2Mbps.
->   * updated names of functions that are used for both the chips to
-> keep this generic.
-> 
-> v5:
->   * updated with review comments for hci_qca and btqca
-> 
-> v4:
->   * rebased all changes on top of bluetooth-next.
->   * addressed review comments.
->   * New patch created for firmware download.
-> 
-> v3:
->   * Rebased all changes on top of bluetooth-next.
->   * dt-bindings: net: bluetooth: Add device tree bindings for QTI chip 
-> wcn3990
->     - added dt-binding snippet for bluetooth chip wcn3990.
->   * Bluetooth: Add support for wcn3990 soc.
->     - updated BT_INFO with bt_dev_info, where ever necessary.
-> 
-> v2:
->    * Add support for wcn3990:
->     These changes are aligned as per serdev frame work.
->           We implemented these changes on top of
-> https://patchwork.kernel.org/patch/10316093/
->         As this patch enable serdev for one of the Qualcomm BT chip.
-> 
->         The changes in the patch include.
->         - Adding support to voting up/down regulators for WCN3990.
->            - Bluetooth firmware download for wcn3990.
-> 
->   * Add device tree bindings for Atheros chips:
->           These changes are on top of
-> https://patchwork.kernel.org/patch/10316097/.
->           - Description of device tree bindings.
-> 
-> Balakrishna Godavarthi (7):
->   dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
->     wcn3990
->   Bluetooth: btqca: Rename ROME specific functions to generic functions
->   Bluetooth: btqca: Redefine qca_uart_setup() to generic function.
->   Bluetooth: hci_qca: Add wrapper functions for setting UART speed
->   Bluetooth: hci_qca: Enable 3.2 Mbps operating speed.
->   Bluetooth: btqca: Add wcn3990 firmware download support.
->   Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990
-> 
->  .../bindings/net/qualcomm-bluetooth.txt       |  29 +-
->  drivers/bluetooth/btqca.c                     | 117 +++--
->  drivers/bluetooth/btqca.h                     |  22 +-
->  drivers/bluetooth/hci_qca.c                   | 483 +++++++++++++++---
->  4 files changed, 535 insertions(+), 116 deletions(-)
 
 -- 
-Regards
-Balakrishna.
+
+Peter Meerwald-Stadler
+Mobile: +43 664 24 44 418
