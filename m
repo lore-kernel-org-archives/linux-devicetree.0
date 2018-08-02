@@ -1,138 +1,200 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RESEND RFC 1/4] drivers: pinctrl: qcom: add wakeup
- capability to GPIO
-Date: Thu, 2 Aug 2018 06:58:27 -0600
-Message-ID: <20180802125827.GB27850@codeaurora.org>
-References: <20180801020021.9782-1-ilina@codeaurora.org>
- <20180801020021.9782-2-ilina@codeaurora.org>
- <86600uy4vh.wl-marc.zyngier@arm.com>
- <20180801194538.GA6422@codeaurora.org>
- <86wot9wb9u.wl-marc.zyngier@arm.com>
- <20180802065104.GA27850@codeaurora.org>
- <86sh3xw7m9.wl-marc.zyngier@arm.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v6 07/13] media: dt-bindings: add bindings for i.MX7
+ media driver
+Date: Thu, 2 Aug 2018 16:00:27 +0300
+Message-ID: <20180802130027.yltizjaagt7q3vqu@paasikivi.fi.intel.com>
+References: <20180522145245.3143-1-rui.silva@linaro.org>
+ <20180522145245.3143-8-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <86sh3xw7m9.wl-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <20180522145245.3143-8-rui.silva@linaro.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 02 2018 at 01:27 -0600, Marc Zyngier wrote:
->On Thu, 02 Aug 2018 07:51:04 +0100,
->Lina Iyer <ilina@codeaurora.org> wrote:
->>
->> On Thu, Aug 02 2018 at 00:08 -0600, Marc Zyngier wrote:
->> > Hi Lina,
->> >
->> > On Wed, 01 Aug 2018 20:45:38 +0100,
->> > Lina Iyer <ilina@codeaurora.org> wrote:
->> >>
->> >> Thanks for the feedback, Marc.
->> >>
->> >> On Wed, Aug 01 2018 at 00:31 -0600, Marc Zyngier wrote:
->> >> > On Wed, 01 Aug 2018 03:00:18 +0100,
->> >> > Lina Iyer <ilina@codeaurora.org> wrote:
->> >> >>
->> >> >> +static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
->> >> >> +{
->> >> >> +	struct irq_data *irqd = data;
->> >> >> +	struct irq_desc *desc = irq_data_to_desc(irqd);
->> >> >> +	struct irq_chip *chip = irq_desc_get_chip(desc);
->> >> >> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
->> >> >> +	int irq_pin = irq_find_mapping(gc->irq.domain, irqd->hwirq);
->> >> >> +
->> >> >> +	chained_irq_enter(chip, desc);
->> >> >> +	generic_handle_irq(irq_pin);
->> >> >> +	chained_irq_exit(chip, desc);
->> >> >
->> >> > That's crazy. I'm not even commenting on the irq handler vs chained
->> >> > irqchip thing, but directly calling into a completely different part
->> >> > of the irq hierarchy makes me feel nauseous,
->> >> >
->> >> I know the sentiment; I am not too happy about it myself. Explanation
->> >> below.
->> >>
->> >> > Why isn't the interrupt still pending at the pinctrl level? Looking at
->> >> > the diagram in the cover letter, I'd have hoped that the signal routed
->> >> > to the PDC would wakeup the GIC, but that by virtue of being *also*
->> >> > wired to the TLMM, the interrupt would be handled via the normal path.
->> >> >
->> >> The short answer: TLMM is not active to sense a wakeup interrupt.
->> >
->> > I get that bit. See below for the bit I don't get.
->> >
->> >> When we enter system sleep mode, the TLMM and the GIC are powered off
->> >> and the PDC is the only powered-on interrupt controller. The IRQs
->> >> configured at the PDC are the only ones capable of waking the system.
->> >> Upon sensing the interrupt, the PDC intiates a system wakeup and replays
->> >> the interrupt to the GIC. The GIC relays that to AP. Unfortunately, the
->> >> interrupts from the GPIO do not trigger the TLMM summary line. Therefore
->> >> this handler needs to figure out what GPIO caused the wakeup and notify
->> >> the corresponding driver.
->> >
->> > That's most bizarre. What causes the TLMM output line not to reflect
->> > the fact that an input is asserted?
->> There is a parallel line that is directed from the PIN directly to the
->> PDC in addition to the TLMM. This line does not go through the TLMM.
->
->I got that from the cover letter.
->
->>
->> Active path						_____
->>                 /-------------- > [ TLMM ] --------> |     |
->>            [ Device GPIO ]	   	     summary   | GIC | ==>
->> 		\				       |     |
->> 		  ----------------> [ PDC ] ---------> |_____|
->> Wakeup path	     GPIO as IRQ		IRQ
->>
->> > I understand that it has been
->> > turned off, but surely the PDC wakes it up at the same time as the
->> > GIC, and it should realise that there is something pending...
->> >
->> PDC is always-on and when it detects any interrupt, will wakeup the GIC
->> and then replay the interrupt line to the GIC. This interrupt line is
->> not the summary line, but a separate line from GPIO/PIN to the PDC.
->>
->> Since the TLMM was also in low power mode, when the GIC was powered
->> down, the TLMM never sees the IRQ and therefore will not send the
->> summary line to GIC. The wakeup path is GPIO -> PDC -> GIC.
->
->Sure. But once woken up (GIC *and* TLMM), the gpio line (which I
->assume is level) is still high at the TLMM input. So why isn't it
->registering that state once it has been woken up?
->
->I can understand that it would be missing an edge. But that doesn't
->hold for level signalling.
->
-Sure, yes. Sorry for not registering your point in my response.
-Once woken up we should see the level interrupt in TLMM.
+Hi Rui,
 
--- Lina
+On Tue, May 22, 2018 at 03:52:39PM +0100, Rui Miguel Silva wrote:
+> Add bindings documentation for i.MX7 media drivers.
+> The imx7 MIPI CSI2 and imx7 CMOS Sensor Interface.
+> 
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+> ---
+>  .../devicetree/bindings/media/imx7-csi.txt    | 44 ++++++++++
+>  .../bindings/media/imx7-mipi-csi2.txt         | 82 +++++++++++++++++++
+>  2 files changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7-csi.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/imx7-csi.txt b/Documentation/devicetree/bindings/media/imx7-csi.txt
+> new file mode 100644
+> index 000000000000..aab4f5d72390
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/imx7-csi.txt
+> @@ -0,0 +1,44 @@
+> +Freescale i.MX7 CMOS Sensor Interface
+> +=====================================
+> +
+> +csi node
+> +--------
+> +
+> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
+> +to connect directly to external CMOS image sensors.
+> +
+> +Required properties:
+> +
+> +- compatible    : "fsl,imx7-csi";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain CSI interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
+> +                 entries in the clock property;
+> +
+> +The device node should contain one 'port' child node with one child 'endpoint'
 
->>
->> >> > Why isn't that the case? And if that's because the HW is broken and
->> >> > doesn't buffer edge interrupts, why can't you use the resend mechanism
->> >> > instead?
->> >> >
->> >> The PDC hardware can replay the interrupts accurately. However, it will
->> >> replay only the pin and its not the TLMM summary IRQ. The handler here,
->> >> needs to notify the driver that the wakeup interrupt happened and needs
->> >> to take action. If I could trip the summary IRQ in this handler that
->> >> would work too. Can it be done?
->> >
->> > So the TLMM has indeed noticed the interrupt and you can read the TLMM
->> > status registers to find out what fired?
->> I think that's where it is probably confusing. The TLMM will not see the
->> interrupt because it was in low power mode.
->
->See above. I can buy that for edge, but not level.
->
->Thanks,
->
->	M.
->
->--
->Jazz is not dead, it just smell funny.
+"should" or "shall"?
+
+> +node, according to the bindings defined in Documentation/devicetree/bindings/
+> +media/video-interfaces.txt. In the following example a remote endpoint is a
+
+I wouldn't split the path as it breaks copy-paste; up to you.
+
+> +video multiplexer.
+> +
+> +example:
+> +
+> +                csi: csi@30710000 {
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
+> +
+> +                        compatible = "fsl,imx7-csi";
+> +                        reg = <0x30710000 0x10000>;
+> +                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
+> +                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
+> +                                        <&clks IMX7D_CLK_DUMMY>;
+> +                        clock-names = "axi", "mclk", "dcic";
+> +
+> +                        port {
+> +                                csi_from_csi_mux: endpoint {
+> +                                        remote-endpoint = <&csi_mux_to_csi>;
+> +                                };
+> +                        };
+> +                };
+> diff --git a/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+> new file mode 100644
+> index 000000000000..7c5f20863724
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+> @@ -0,0 +1,82 @@
+> +Freescale i.MX7 Mipi CSI2
+> +=========================
+> +
+> +mipi_csi2 node
+> +--------------
+> +
+> +This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
+> +compatible with previous version of Samsung D-phy.
+> +
+> +Required properties:
+> +
+> +- compatible    : "fsl,imx7-mipi-csi2";
+> +- reg           : base address and length of the register set for the device;
+> +- interrupts    : should contain MIPI CSIS interrupt;
+> +- clocks        : list of clock specifiers, see
+> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
+> +- clock-names   : must contain "pclk", "wrap" and "phy" entries, matching
+> +                  entries in the clock property;
+> +- power-domains : a phandle to the power domain, see
+> +          Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- reset-names   : should include following entry "mrst";
+> +- resets        : a list of phandle, should contain reset entry of
+> +                  reset-names;
+> +- phy-supply    : from the generic phy bindings, a phandle to a regulator that
+> +	          provides power to MIPI CSIS core;
+> +
+> +Optional properties:
+> +
+> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
+> +		    value when this property is not specified is 166 MHz;
+> +- fsl,csis-hs-settle : differential receiver (HS-RX) settle time;
+> +
+> +port node
+> +---------
+> +
+> +- reg		  : (required) can take the values 0 or 1, where 0 is the
+> +                     related sink port and port 1 should be the source one;
+
+Should and is -> shall?
+
+I think you should also elaborate whether or not the port (as well as the
+endpoint) nodes themselves are mandatory.
+
+> +
+> +endpoint node
+> +-------------
+> +
+> +- data-lanes    : (required) an array specifying active physical MIPI-CSI2
+> +		    data input lanes and their mapping to logical lanes; the
+> +		    array's content is unused, only its length is meaningful;
+
+If this is for port 0 only, please document that. Which values (length) are
+allowed?
+
+> +
+> +example:
+> +
+> +        mipi_csi: mipi-csi@30750000 {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                compatible = "fsl,imx7-mipi-csi2";
+> +                reg = <0x30750000 0x10000>;
+> +                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
+> +                                <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
+> +                                <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
+> +                clock-names = "pclk", "wrap", "phy";
+> +                clock-frequency = <166000000>;
+> +                power-domains = <&pgc_mipi_phy>;
+> +                phy-supply = <&reg_1p0d>;
+> +                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
+> +                reset-names = "mrst";
+> +                fsl,csis-hs-settle = <3>;
+> +
+> +                port@0 {
+> +                        reg = <0>;
+> +
+> +                        mipi_from_sensor: endpoint {
+> +                                remote-endpoint = <&ov2680_to_mipi>;
+> +                                data-lanes = <1>;
+> +                        };
+> +                };
+> +
+> +                port@1 {
+> +                        reg = <1>;
+> +
+> +                        mipi_vc0_to_csi_mux: endpoint {
+> +                                remote-endpoint = <&csi_mux_from_mipi_vc0>;
+> +                        };
+> +                };
+> +        };
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
