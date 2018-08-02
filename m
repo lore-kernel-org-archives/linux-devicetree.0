@@ -1,129 +1,82 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v1 0/6] Resolve unwanted DMA backing with IOMMU
-Date: Thu, 02 Aug 2018 21:24:10 +0300
-Message-ID: <2887450.sPhIOOMKZK@dimapc>
-References: <20180726231624.21084-1-digetx@gmail.com>
-	<20180727170326.GA21283@jcrouse-lnx.qualcomm.com>
-	<2402373.RyBdR7VSnO@dimapc>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <2402373.RyBdR7VSnO@dimapc>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Chauvet <kwizart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Skeggs <bskeggs-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: [PATCH v4 1/3] iio: Add modifier for white light
+Date: Thu,  2 Aug 2018 20:27:27 +0200
+Message-ID: <20180802182729.2061830-1-pn@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de, Parthiban Nallathambi <pn@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, 27 July 2018 20:16:53 MSK Dmitry Osipenko wrote:
-> On Friday, 27 July 2018 20:03:26 MSK Jordan Crouse wrote:
-> > On Fri, Jul 27, 2018 at 05:02:37PM +0100, Robin Murphy wrote:
-> > > On 27/07/18 15:10, Dmitry Osipenko wrote:
-> > > >On Friday, 27 July 2018 12:03:28 MSK Will Deacon wrote:
-> > > >>On Fri, Jul 27, 2018 at 10:25:13AM +0200, Joerg Roedel wrote:
-> > > >>>On Fri, Jul 27, 2018 at 02:16:18AM +0300, Dmitry Osipenko wrote:
-> > > >>>>The proposed solution adds a new option to the base device driver
-> > > >>>>structure that allows device drivers to explicitly convey to the
-> > > >>>>drivers
-> > > >>>>core that the implicit IOMMU backing for devices must not happen.
-> > > >>>
-> > > >>>Why is IOMMU mapping a problem for the Tegra GPU driver?
-> > > >>>
-> > > >>>If we add something like this then it should not be the choice of the
-> > > >>>device driver, but of the user and/or the firmware.
-> > > >>
-> > > >>Agreed, and it would still need somebody to configure an identity
-> > > >>domain
-> > > >>so
-> > > >>that transactions aren't aborted immediately. We currently allow the
-> > > >>identity domain to be used by default via a command-line option, so I
-> > > >>guess
-> > > >>we'd need a way for firmware to request that on a per-device basis.
-> > > >
-> > > >The IOMMU mapping itself is not a problem, the problem is the
-> > > >management
-> > > >of
-> > > >the IOMMU. For Tegra we don't want anything to intrude into the IOMMU
-> > > >activities because:
-> > > >
-> > > >1) GPU HW require additional configuration for the IOMMU usage and dumb
-> > > >mapping of the allocations simply doesn't work.
-> > > 
-> > > Generally, that's already handled by the DRM drivers allocating
-> > > their own unmanaged domains. The only problem we really need to
-> > > solve in that regard is that currently the device DMA ops don't get
-> > > updated when moving away from the managed domain. That's been OK for
-> > > the VFIO case where the device is bound to a different driver which
-> > > we know won't make any explicit DMA API calls, but for the more
-> > > general case of IOMMU-aware drivers we could certainly do with a bit
-> > > of cooperation between the IOMMU API, DMA API, and arch code to
-> > > update the DMA ops dynamically to cope with intermediate subsystems
-> > > making DMA API calls on behalf of devices they don't know the
-> > > intimate details of.
-> > > 
-> > > >2) Older Tegra generations have a limited resource and capabilities in
-> > > >regards to IOMMU usage, allocating IOMMU domain per-device is just
-> > > >impossible for example.
-> > > >
-> > > >3) HW performs context switches and so particular allocations have to
-> > > >be
-> > > >assigned to a particular contexts IOMMU domain.
-> > > 
-> > > I understand Qualcomm SoCs have a similar thing too, and AFAICS that
-> > > case just doesn't fit into the current API model at all. We need the
-> > > IOMMU driver to somehow know about the specific details of which
-> > > devices have magic associations with specific contexts, and we
-> > > almost certainly need a more expressive interface than
-> > > iommu_domain_alloc() to have any hope of reliable results.
-> > 
-> > This is correct for Qualcomm GPUs - The GPU hardware context switching
-> > requires a specific context and there are some restrictions around
-> > secure contexts as well.
-> > 
-> > We don't really care if the DMA attaches to a context just as long as it
-> > doesn't attach to the one(s) we care about. Perhaps a "valid context" mask
-> > would work in from the DT or the device struct to give the subsystems a
-> > clue as to which domains they were allowed to use. I recognize that there
-> > isn't a one-size-fits-all solution to this problem so I'm open to
-> > different
-> > ideas.
-> 
-> Designating whether implicit IOMMU backing is appropriate for a device via
-> device-tree property sounds a bit awkward because that will be a kinda
-> software description (of a custom Linux driver model), while device-tree is
-> supposed to describe HW.
-> 
-> What about to grant IOMMU drivers with ability to decide whether the
-> implicit backing for a device is appropriate? Like this:
-> 
-> bool implicit_iommu_for_dma_is_allowed(struct device *dev)
-> {
-> 	const struct iommu_ops *ops = dev->bus->iommu_ops;
-> 	struct iommu_group *group;
-> 
-> 	group = iommu_group_get(dev);
-> 	if (!group)
-> 		return NULL;
-> 
-> 	iommu_group_put(group);
-> 
-> 	if (!ops->implicit_iommu_for_dma_is_allowed)
-> 		return true;
-> 
-> 	return ops->implicit_iommu_for_dma_is_allowed(dev);
-> }
-> 
-> Then arch_setup_dma_ops() could have a clue whether implicit IOMMU backing
-> for a device is appropriate.
+Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+---
+ Documentation/ABI/testing/sysfs-bus-iio | 7 +++++++
+ drivers/iio/industrialio-core.c         | 1 +
+ include/uapi/linux/iio/types.h          | 1 +
+ tools/iio/iio_event_monitor.c           | 2 ++
+ 4 files changed, 11 insertions(+)
 
-Guys, does it sound good to you or maybe you have something else on your mind? 
-Even if it's not an ideal solution, it fixes the immediate problem and should 
-be good enough for the starter.
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 731146c3b138..43e481aed5b2 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -1312,6 +1312,13 @@ Description:
+ 		standardised CIE Erythemal Action Spectrum. UV index values range
+ 		from 0 (low) to >=11 (extreme).
+ 
++What:		/sys/.../iio:deviceX/in_intensityY_white_raw
++KernelVersion:	4.18
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Modifier white indicates that measurements contain white LED
++		component.
++
+ What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
+ What:		/sys/.../iio:deviceX/in_intensity_green_integration_time
+ What:		/sys/.../iio:deviceX/in_intensity_blue_integration_time
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 19bdf3d2962a..cb939b9fad16 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -108,6 +108,7 @@ static const char * const iio_modifier_names[] = {
+ 	[IIO_MOD_LIGHT_GREEN] = "green",
+ 	[IIO_MOD_LIGHT_BLUE] = "blue",
+ 	[IIO_MOD_LIGHT_UV] = "uv",
++	[IIO_MOD_LIGHT_WHITE] = "white",
+ 	[IIO_MOD_QUATERNION] = "quaternion",
+ 	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+ 	[IIO_MOD_TEMP_OBJECT] = "object",
+diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
+index 4213cdf88e3c..de87a6c7e6de 100644
+--- a/include/uapi/linux/iio/types.h
++++ b/include/uapi/linux/iio/types.h
+@@ -84,6 +84,7 @@ enum iio_modifier {
+ 	IIO_MOD_CO2,
+ 	IIO_MOD_VOC,
+ 	IIO_MOD_LIGHT_UV,
++	IIO_MOD_LIGHT_WHITE,
+ };
+ 
+ enum iio_event_type {
+diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+index b61245e1181d..a2f9c62a79dd 100644
+--- a/tools/iio/iio_event_monitor.c
++++ b/tools/iio/iio_event_monitor.c
+@@ -96,6 +96,7 @@ static const char * const iio_modifier_names[] = {
+ 	[IIO_MOD_LIGHT_GREEN] = "green",
+ 	[IIO_MOD_LIGHT_BLUE] = "blue",
+ 	[IIO_MOD_LIGHT_UV] = "uv",
++	[IIO_MOD_LIGHT_WHITE] = "white",
+ 	[IIO_MOD_QUATERNION] = "quaternion",
+ 	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+ 	[IIO_MOD_TEMP_OBJECT] = "object",
+@@ -178,6 +179,7 @@ static bool event_is_known(struct iio_event_data *event)
+ 	case IIO_MOD_LIGHT_GREEN:
+ 	case IIO_MOD_LIGHT_BLUE:
+ 	case IIO_MOD_LIGHT_UV:
++	case IIO_MOD_LIGHT_WHITE:
+ 	case IIO_MOD_QUATERNION:
+ 	case IIO_MOD_TEMP_AMBIENT:
+ 	case IIO_MOD_TEMP_OBJECT:
+-- 
+2.14.4
