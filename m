@@ -1,29 +1,53 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 6/6] dt-bindings: interrupt-controller: RISC-V PLIC
-        documentation
-Date: Thu, 2 Aug 2018 11:55:27 +0200
-Message-ID: <20180802095527.GD14203@lst.de>
-References: <20180725093649.32332-1-hch@lst.de> <20180725093649.32332-7-hch@lst.de> <20180731224630.GB12168@rob-hp-laptop> <20180801071635.GC20224@lst.de> <CAL_JsqJWOXX7-_sb4W63wPRqFjHuU-DM-LNYgczieWjAE5ABfQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Applied "ASoC: wcd9335: add CLASS-H Controller support" to the
+ asoc tree
+Date: Thu, 2 Aug 2018 10:52:35 +0100
+Message-ID: <20180802095235.GB9117@sirena.org.uk>
+References: <20180801112000.DC6B51124241@debutante.sirena.org.uk>
+ <d7c2e466-9f60-9347-bc62-7ed0dc3df91b@linaro.org>
+ <20180802063130.GJ4662@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qcHopEYAB45HaUaB"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJWOXX7-_sb4W63wPRqFjHuU-DM-LNYgczieWjAE5ABfQ@mail.gmail.com>
+In-Reply-To: <20180802063130.GJ4662@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, vkoul@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 01, 2018 at 12:26:31PM -0600, Rob Herring wrote:
-> Not really my problem that they didn't follow the process and upstream
-> their binding first. But this alone is just a string identifier, so I
-> don't really care that much. If things are really a mess, then the
-> next implementations will have to have better compatible strings. More
-> likely, I'll just see folks trying to add various properties to deal
-> with all the differences.
-> 
-> You could always define a better compatible and leave 'riscv,plic0' as
-> a fallback to avoid breaking things.
 
-Is there any better way to define a compatible other than having
-duplicate IRQCHIP_DECLARE() statements?
+--qcHopEYAB45HaUaB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Aug 02, 2018 at 07:31:30AM +0100, Lee Jones wrote:
+> On Wed, 01 Aug 2018, Srinivas Kandagatla wrote:
+
+> > Without the "[PATCH v2 02/10] mfd: wcd9335: add support to wcd9335 core" It
+> > would break the build.
+
+> This is not a run-time dependency.
+
+> Without 02/10 there is no build. :)
+
+I reverted both patches after Srini's mail anyway (I didn't go and check
+for the MFD dependency, probably should've done).
+
+--qcHopEYAB45HaUaB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlti1GIACgkQJNaLcl1U
+h9Bj6gf8CW3GQP6wh/uI0bsTgcrN3VIWuUsOzAmi9uwXXvvKpht9jBEQEvnHeW6F
+4RHbLEYW6Ftf/QA4Gq9aSQkeZwtpnq7NNfDBmiNiNjt6ZQ3NDoDnJh7eJPl45rRG
+oUMpqESO8grhP3Xvdn2D79zMUQbjmzxJpKmf32AxLpp+CV2HGWL07VofsmkmljoA
+7AkOOHRAV5cupYkC+pKAkYZTAZsCj0TeVGDtfCO6ytZ/eGfyKPK4n0eIa+KEJUP4
+4bT0GWP8bQIV5Was00DTRRaYdAIETVrTFU60Ukv+4lxw43yGhk47inx+ZT+Cw6XE
+YBqxdCFtO/8ClZIK+5TLmiBdpR+kIg==
+=GgCo
+-----END PGP SIGNATURE-----
+
+--qcHopEYAB45HaUaB--
