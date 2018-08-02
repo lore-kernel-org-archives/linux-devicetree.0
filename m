@@ -1,55 +1,63 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RFC PATCH v2 5/6] spi: Add QuadSPI driver for Atmel SAMA5D2
-Date: Thu, 2 Aug 2018 13:48:04 +0200
-Message-ID: <20180802134804.2352ee89@bbrezillon>
-References: <20180627131609.13681-1-bugalski.piotr@gmail.com>
-        <20180627131609.13681-6-bugalski.piotr@gmail.com>
-        <20180801172747.GJ5509@sirena.org.uk>
-        <20180801215733.4dfa3a95@bbrezillon>
-        <20180802101742.GF9117@sirena.org.uk>
-        <6f9ca4f1-6809-2d7d-4d64-6869a4e413cb@exceet.de>
+From: Christoph Hellwig <hch@lst.de>
+Subject: simplified RISC-V interrupt and clocksource handling v2
+Date: Thu,  2 Aug 2018 13:49:57 +0200
+Message-ID: <20180802115008.4031-1-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6f9ca4f1-6809-2d7d-4d64-6869a4e413cb@exceet.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frieder Schrempf <frieder.schrempf@exceet.de>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Tudor Ambarus <tudor.ambarus@microchip.com>, Richard Weinberger <richard@nod.at>, Piotr Bugalski <pbu@cryptera.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Piotr Bugalski <bugalski.piotr@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@microchip.com>
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2 Aug 2018 12:46:36 +0200
-Frieder Schrempf <frieder.schrempf@exceet.de> wrote:
+This series tries adds support for interrupt handling and timers
+for the RISC-V architecture.
 
-> Hi Mark,
-> 
-> On 02.08.2018 12:17, Mark Brown wrote:
-> > On Wed, Aug 01, 2018 at 09:57:33PM +0200, Boris Brezillon wrote:  
-> >> Mark Brown <broonie@kernel.org> wrote:  
-> >   
-> >> 2/ Getting this patch [1] merged and implementing the ->get_name() hook
-> >>     in this driver so that SPI NOR devs declared to the MTD layer keep
-> >>     the same name after the transition to spi-mem and mtdparts= passed on
-> >>     the cmdline keep working. Without this in place we're likely to
-> >>     break a few setups :-/.  
-> >   
-> >> [1]https://patchwork.kernel.org/patch/10508693/  
-> > 
-> > I don't seem to have a copy of this patch...  not sure it was sent to
-> > me?  
-> 
-> When I sent the patch I put you in cc. So if nothing went wrong you 
-> should have it.
-> It is part of the SPI MEM conversion series for the FSL QSPI driver [1].
-> 
-> Boris made some remarks on documentation in v2, that I have fixed, but 
-> not sent out yet, as we have some blocking issues with the driver itself.
+The basic per-hart interrupt handling implemented by the scause
+and sie CSRs is extremely simple and implemented directly in
+arch/riscv/kernel/irq.c.  In addition there is a irqchip driver
+for the PLIC external interrupt controller, which is called through
+the set_handle_irq API, and a clocksource driver that gets its
+timer interrupt directly from the low-level interrupt handling.
 
-I don't remember where we were stuck. Are you still waiting answers
-from Yogesh? Probably a good time to ping him if that's the case ;-).
+Compared to previous iterations this version does not try to use an
+irqchip driver for the low-level interrupt handling.  This saves
+a couple indirect calls and an additional read of the scause CSR
+in the hot path, makes the code much simpler and last but not least
+avoid the dependency on a device tree for a mandatory architectural
+feature.
 
-> 
-> So if you want I could send the patch separately so it can be applied 
-> with the Atmel driver.
+A git tree is available here (contains a few more patches before
+the ones in this series)
 
-Yes please, send a v3 for patch 1 and 2.
+    git://git.infradead.org/users/hch/riscv.git riscv-irq-simple.2
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple.2
+
+Changes since v1:
+ - rename the plic driver to irq-sifive-plic
+ - switch to a default compatible of sifive,plic0 (still supporting the
+   riscv,plic0 name for compatibility)
+ - add a reference for the SiFive PLIC register layout
+ - fix plic_toggle addressing for large numbers of hwirqs
+ - remove the call to ack_bad_irq
+ - use a raw spinlock for plic_toggle_lock
+ - use the irq_desc cpumask in the plic enable/disable methods
+ - add back OF contexid parsing in the plic driver
+ - don't allow COMPILE_TEST builds of the clocksource driver, as it
+   depends on <asm/sbi.h>
+ - default the clocksource driver to y
+ - clean up naming in the clocksource driver
+ - remove the MINDELTA and MAXDELTA #defines
+ - various DT binding fixes
