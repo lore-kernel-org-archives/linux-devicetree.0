@@ -1,200 +1,63 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v6 07/13] media: dt-bindings: add bindings for i.MX7
- media driver
-Date: Thu, 2 Aug 2018 16:00:27 +0300
-Message-ID: <20180802130027.yltizjaagt7q3vqu@paasikivi.fi.intel.com>
-References: <20180522145245.3143-1-rui.silva@linaro.org>
- <20180522145245.3143-8-rui.silva@linaro.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 4/4] drm/meson: convert to the new canvas module
+Date: Thu, 02 Aug 2018 15:01:41 +0200
+Message-ID: <843e41de9fa7d5f87309ff4e0db2ed84a1153a4c.camel@baylibre.com>
+References: <20180801185128.23440-1-maxi.jourdan@wanadoo.fr>
+         <20180801185128.23440-5-maxi.jourdan@wanadoo.fr>
+         <744700e43aed3880807f86abde0caf3df1127e60.camel@baylibre.com>
+         <CAHStOZ6B-R7=5utGqb49OsFBsUsMVsn=WMrzNK8Wk-zcgbnPuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20180522145245.3143-8-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rui Miguel Silva <rui.silva@linaro.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, mchehab@kernel.org, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-media@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHStOZ6B-R7=5utGqb49OsFBsUsMVsn=WMrzNK8Wk-zcgbnPuA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
-
-On Tue, May 22, 2018 at 03:52:39PM +0100, Rui Miguel Silva wrote:
-> Add bindings documentation for i.MX7 media drivers.
-> The imx7 MIPI CSI2 and imx7 CMOS Sensor Interface.
+On Thu, 2018-08-02 at 14:34 +0200, Maxime Jourdan wrote:
+> Hi Jerome,
 > 
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> ---
->  .../devicetree/bindings/media/imx7-csi.txt    | 44 ++++++++++
->  .../bindings/media/imx7-mipi-csi2.txt         | 82 +++++++++++++++++++
->  2 files changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/imx7-csi.txt
->  create mode 100644 Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+> 2018-08-02 10:39 GMT+02:00 Jerome Brunet <jbrunet@baylibre.com>:
+> > I looks like the consumer of your 'canvas' devices must know how the canvas
+> > device is organized internally. Maybe something better can be done ?
+> > 
+> > Your canvas driver could provide a consumer API, for example:
+> > meson_canvas_get(): to translate for struct device_node to whatever abstract
+> > pointer you would need.
+> > meson_canvas_alloc(), setup(), etc ...
+> > 
+> > ... This is just adding a bit of indirection but it would help hide the plumbing
+> > of your canvas driver from the consumers (and repeat this code in each). This
+> > might be usefull if you ever to make this canvas driver evolve.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/imx7-csi.txt b/Documentation/devicetree/bindings/media/imx7-csi.txt
-> new file mode 100644
-> index 000000000000..aab4f5d72390
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/imx7-csi.txt
-> @@ -0,0 +1,44 @@
-> +Freescale i.MX7 CMOS Sensor Interface
-> +=====================================
-> +
-> +csi node
-> +--------
-> +
-> +This is device node for the CMOS Sensor Interface (CSI) which enables the chip
-> +to connect directly to external CMOS image sensors.
-> +
-> +Required properties:
-> +
-> +- compatible    : "fsl,imx7-csi";
-> +- reg           : base address and length of the register set for the device;
-> +- interrupts    : should contain CSI interrupt;
-> +- clocks        : list of clock specifiers, see
-> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-> +- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
-> +                 entries in the clock property;
-> +
-> +The device node should contain one 'port' child node with one child 'endpoint'
+> Overall the inner workings are hidden as there is an ops struct
+> instead of public functions.
 
-"should" or "shall"?
+What I don't like is precisely that you need to expose this 'struct ops' to the
+consumer. I would prefer an API for this (it can be a 1:1 mapping). The canvas
+should remain some abstract object you get from DT.
 
-> +node, according to the bindings defined in Documentation/devicetree/bindings/
-> +media/video-interfaces.txt. In the following example a remote endpoint is a
+IMO, this is the same as a reset, a syscon or whatever other phandle you get
+from DT. The consumer should not have to 'care' how it works (how data are
+organized), it should just use it.
 
-I wouldn't split the path as it breaks copy-paste; up to you.
+Whatever you need to do to deal with your canvas phandle should (IMO) reside in
+your soc/amlogic/meson-canvas.c, and not be spread in the consumers.
 
-> +video multiplexer.
-> +
-> +example:
-> +
-> +                csi: csi@30710000 {
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
-> +
-> +                        compatible = "fsl,imx7-csi";
-> +                        reg = <0x30710000 0x10000>;
-> +                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +                        clocks = <&clks IMX7D_CLK_DUMMY>,
-> +                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-> +                                        <&clks IMX7D_CLK_DUMMY>;
-> +                        clock-names = "axi", "mclk", "dcic";
-> +
-> +                        port {
-> +                                csi_from_csi_mux: endpoint {
-> +                                        remote-endpoint = <&csi_mux_to_csi>;
-> +                                };
-> +                        };
-> +                };
-> diff --git a/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
-> new file mode 100644
-> index 000000000000..7c5f20863724
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
-> @@ -0,0 +1,82 @@
-> +Freescale i.MX7 Mipi CSI2
-> +=========================
-> +
-> +mipi_csi2 node
-> +--------------
-> +
-> +This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
-> +compatible with previous version of Samsung D-phy.
-> +
-> +Required properties:
-> +
-> +- compatible    : "fsl,imx7-mipi-csi2";
-> +- reg           : base address and length of the register set for the device;
-> +- interrupts    : should contain MIPI CSIS interrupt;
-> +- clocks        : list of clock specifiers, see
-> +        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-> +- clock-names   : must contain "pclk", "wrap" and "phy" entries, matching
-> +                  entries in the clock property;
-> +- power-domains : a phandle to the power domain, see
-> +          Documentation/devicetree/bindings/power/power_domain.txt for details.
-> +- reset-names   : should include following entry "mrst";
-> +- resets        : a list of phandle, should contain reset entry of
-> +                  reset-names;
-> +- phy-supply    : from the generic phy bindings, a phandle to a regulator that
-> +	          provides power to MIPI CSIS core;
-> +
-> +Optional properties:
-> +
-> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
-> +		    value when this property is not specified is 166 MHz;
-> +- fsl,csis-hs-settle : differential receiver (HS-RX) settle time;
-> +
-> +port node
-> +---------
-> +
-> +- reg		  : (required) can take the values 0 or 1, where 0 is the
-> +                     related sink port and port 1 should be the source one;
+> 
+> I agree that the "fetch the node" boilerplate code could be put behind
+> a helper, but at the same time this code helps remind the developer
+> that there needs to be a canvas node in the dts, and that it has to be
+> linked in your own device node.
 
-Should and is -> shall?
+This is why we have a DT documentation.
 
-I think you should also elaborate whether or not the port (as well as the
-endpoint) nodes themselves are mandatory.
+And, as far as I understand amlogic's display and decoder stuff, you won't get
+very far w/o a canvas, so 'the developer' will be reminded fairly quickly ;)
 
-> +
-> +endpoint node
-> +-------------
-> +
-> +- data-lanes    : (required) an array specifying active physical MIPI-CSI2
-> +		    data input lanes and their mapping to logical lanes; the
-> +		    array's content is unused, only its length is meaningful;
+> 
+> I would like to keep it that way if that is okay with you.
 
-If this is for port 0 only, please document that. Which values (length) are
-allowed?
-
-> +
-> +example:
-> +
-> +        mipi_csi: mipi-csi@30750000 {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                compatible = "fsl,imx7-mipi-csi2";
-> +                reg = <0x30750000 0x10000>;
-> +                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> +                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-> +                                <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-> +                                <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-> +                clock-names = "pclk", "wrap", "phy";
-> +                clock-frequency = <166000000>;
-> +                power-domains = <&pgc_mipi_phy>;
-> +                phy-supply = <&reg_1p0d>;
-> +                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-> +                reset-names = "mrst";
-> +                fsl,csis-hs-settle = <3>;
-> +
-> +                port@0 {
-> +                        reg = <0>;
-> +
-> +                        mipi_from_sensor: endpoint {
-> +                                remote-endpoint = <&ov2680_to_mipi>;
-> +                                data-lanes = <1>;
-> +                        };
-> +                };
-> +
-> +                port@1 {
-> +                        reg = <1>;
-> +
-> +                        mipi_vc0_to_csi_mux: endpoint {
-> +                                remote-endpoint = <&csi_mux_from_mipi_vc0>;
-> +                        };
-> +                };
-> +        };
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+It's just my opinion, I'm not the one merging it ... :P
