@@ -1,97 +1,86 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 03/10] mfd: wcd9335: add wcd irq support
-Date: Thu, 2 Aug 2018 11:01:17 +0100
-Message-ID: <20180802100117.GQ4662@dell>
-References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
- <20180727121806.18209-4-srinivas.kandagatla@linaro.org>
- <20180802080525.GM4662@dell>
- <74081a83-abcf-5529-babb-83a7b5242f68@linaro.org>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 7/9] irqchip: add a RISC-V PLIC driver
+Date: Thu, 2 Aug 2018 12:04:04 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1808021149470.2037@nanos.tec.linutronix.de>
+References: <20180726143723.16585-1-hch@lst.de> <20180726143723.16585-8-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <74081a83-abcf-5529-babb-83a7b5242f68@linaro.org>
+In-Reply-To: <20180726143723.16585-8-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, tiwai@suse.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anup@brainfault.org, atish.patra@wdc.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 02 Aug 2018, Srinivas Kandagatla wrote:
 
-> Thanks for the review,
-> 
-> On 02/08/18 09:05, Lee Jones wrote:
-> > On Fri, 27 Jul 2018, Srinivas Kandagatla wrote:
-> > 
-> > > WCD9335 supports two lines of irqs INTR1 and INTR2.
-> > > Multiple interrupts are muxed via these lines.
-> > > INTR1 consists of all possible interrupt sources like:
-> > > Ear OCP, HPH OCP, MBHC, MAD, VBAT, and SVA
-> > > INTR2 is a subset of first interrupt sources like MAD, VBAT, and SVA
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > ---
-> > >   drivers/mfd/Makefile                |   2 +-
-> > >   drivers/mfd/wcd9335-core.c          |   9 ++
-> > >   drivers/mfd/wcd9335-irq.c           | 172 ++++++++++++++++++++++++++++++++++++
-> > 
-> > Any particular reason for separating out IRQ handling?
-> No particular reason, I tried to follow what other codecs like wm8994,
-> wm8350 and 14 others do.
+On Thu, 26 Jul 2018, Christoph Hellwig wrote:
 
-I haven't look at them in a while, but maybe theirs are optional?
+> This patch adds a driver for the Platform Level Interrupt Controller (PLIC)
 
-Either way, I don't think you need to do it.
+See Documentation/process/submitting-patches.rst and search for 'This patch'
 
-> > >   include/dt-bindings/mfd/wcd9335.h   |  43 +++++++++
-> > >   include/linux/mfd/wcd9335/wcd9335.h |   3 +
-> > >   5 files changed, 228 insertions(+), 1 deletion(-)
-> > >   create mode 100644 drivers/mfd/wcd9335-irq.c
-> > >   create mode 100644 include/dt-bindings/mfd/wcd9335.h
-> > > 
-> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > > index a4697370640b..210875afe78a 100644
-> > > --- a/drivers/mfd/Makefile
-> > > +++ b/drivers/mfd/Makefile
-> > > @@ -58,7 +58,7 @@ obj-$(CONFIG_MFD_ARIZONA)	+= cs47l24-tables.o
-> > >   endif
-> > >   obj-$(CONFIG_MFD_WCD9335)	+= wcd9335.o
-> > > -wcd9335-objs			:= wcd9335-core.o
-> > > +wcd9335-objs			:= wcd9335-core.o wcd9335-irq.o
-> > >   obj-$(CONFIG_MFD_WM8400)	+= wm8400-core.o
-> > >   wm831x-objs			:= wm831x-core.o wm831x-irq.o wm831x-otp.o
-> > > diff --git a/drivers/mfd/wcd9335-core.c b/drivers/mfd/wcd9335-core.c
-> > > index 8f746901f4e9..6299dfb63aca 100644
-> > > --- a/drivers/mfd/wcd9335-core.c
-> > > +++ b/drivers/mfd/wcd9335-core.c
-> > > @@ -243,12 +243,20 @@ static int wcd9335_slim_status(struct slim_device *sdev,
-> > >   		return ret;
-> > >   	}
-> > > +	wcd9335_irq_init(wcd);
-> > 
-> > Why don't you check the return value?
-> > 
-> > What happens if it defers?
-> > 
-> It would not defer here as the regmaps are already setup in probe and the
-> status callback is only invoked when the SLIMbus device is up.
+> +static inline void __iomem *plic_hart_offset(int ctxid)
+> +{
+> +	return plic_regs + CONTEXT_BASE + ctxid * CONTEXT_PER_HART;
+> +}
+> +
+> +/*
+> + * Protect mask operations on the registers given that we can't assume that
+> + * atomic memory operations work on them.
+> + */
+> +static DEFINE_SPINLOCK(plic_toggle_lock);
 
-I guess now you have seen my comment below, you know that it can
-defer, right?
+RAW_SPINLOCK please.
 
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +// Copyright (c) 2018, Linaro Limited
-> > > +//
-> > 
-> > Blank line?
-> > 
-> Yep.
+> +
+> +static inline void plic_toggle(int ctxid, int hwirq, int enable)
+> +{
+> +	u32 __iomem *reg = plic_regs + ENABLE_BASE + ctxid * ENABLE_PER_HART;
+> +	u32 hwirq_mask = 1 << (hwirq % 32);
+> +
+> +	spin_lock(&plic_toggle_lock);
+> +	if (enable)
+> +		writel(readl(reg) | hwirq_mask, reg);
+> +	else
+> +		writel(readl(reg) & ~hwirq_mask, reg);
+> +	spin_unlock(&plic_toggle_lock);
+> +}
+> +
+> +static inline void plic_irq_toggle(struct irq_data *d, int enable)
+> +{
+> +	int cpu;
+> +
+> +	writel(enable, plic_regs + PRIORITY_BASE + d->hwirq * PRIORITY_PER_ID);
+> +	for_each_present_cpu(cpu)
+> +		plic_toggle(cpu, d->hwirq, enable);
 
-Does "yep" mean, "I'll fix it"?
+I suggest to make that:
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+	for_each_cpu(cpu, irq_data_get_affinity_mask(d))
+		plic_toggle(cpu, d->hwirq, enable);
+       
+That gives you immediately support for interrupt affinity. And then it's
+trivial to do the actual irq_chip::irq_set_affinity() magic as well.
+
+> +/*
+> + * Handling an interrupt is a two-step process: first you claim the interrupt
+> + * by reading the claim register, then you complete the interrupt by writing
+> + * that source ID back to the same claim register.  This automatically enables
+> + * and disables the interrupt, so there's nothing else to do.
+> + */
+> +static void plic_handle_irq(struct pt_regs *regs)
+> +{
+> +	void __iomem *claim =
+> +		plic_hart_offset(smp_processor_id()) + CONTEXT_CLAIM;
+
+Either ignore the 80 char thing or just move the assignment into the code
+section please. That line break is horrible to read.
+
+> +	irq_hw_number_t hwirq;
+> +
+
+Other than that this looks halfways sane.
+
+Thanks,
+
+	tglx
