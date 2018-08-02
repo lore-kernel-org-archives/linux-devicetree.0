@@ -1,55 +1,100 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH v2 5/6] spi: Add QuadSPI driver for Atmel SAMA5D2
-Date: Thu, 2 Aug 2018 11:17:42 +0100
-Message-ID: <20180802101742.GF9117@sirena.org.uk>
-References: <20180627131609.13681-1-bugalski.piotr@gmail.com>
- <20180627131609.13681-6-bugalski.piotr@gmail.com>
- <20180801172747.GJ5509@sirena.org.uk>
- <20180801215733.4dfa3a95@bbrezillon>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0hHDr/TIsw4o3iPK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180801215733.4dfa3a95@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Piotr Bugalski <bugalski.piotr@gmail.com>, linux-spi@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@microchip.com>, Tudor Ambarus <tudor.ambarus@microchip.com>, Piotr Bugalski <pbu@cryptera.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: [PATCH] ARC: AXS10x/HSDK: Allow U-Boot to pass MAC-address to the kernel
+Date: Thu,  2 Aug 2018 13:19:37 +0300
+Message-ID: <20180802101937.6202-1-abrodkin@synopsys.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, stable@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Otherwise kernel uses random MAC which is not very conveniet.
+With that change in place use might set desired MAC in U-Boot
+with "setenv ethaddr 11:22:33:44:55:66", save environment and
+then from boot to boot the same MAC will be used by the kernel.
 
---0hHDr/TIsw4o3iPK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+One other note for this to happen it's required to pass
+board's .dtb in U-Boot's "bootm" command like that:
+------------------->8-----------------
+bootm 0x82000000 - 0x84000000
+------------------->8-----------------
 
-On Wed, Aug 01, 2018 at 09:57:33PM +0200, Boris Brezillon wrote:
-> Mark Brown <broonie@kernel.org> wrote:
+Here 0x82000000 is location of uImage while
+0x80000000 is location of either axs10x.dtb or hsdk.dtb
+previously loaded from SD-card, USB storage or TFTP server.
 
-> 2/ Getting this patch [1] merged and implementing the ->get_name() hook
->    in this driver so that SPI NOR devs declared to the MTD layer keep
->    the same name after the transition to spi-mem and mtdparts=3D passed on
->    the cmdline keep working. Without this in place we're likely to
->    break a few setups :-/.
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: stable@vger.kernel.org # 4.14
+Cc: devicetree@vger.kernel.org
+---
+ arch/arc/boot/dts/axs10x_mb.dtsi | 7 ++++++-
+ arch/arc/boot/dts/hsdk.dts       | 7 ++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-> [1]https://patchwork.kernel.org/patch/10508693/=20
-
-I don't seem to have a copy of this patch...  not sure it was sent to
-me?
-
---0hHDr/TIsw4o3iPK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlti2kUACgkQJNaLcl1U
-h9BcOAgAgAz5lMpc2flvBJhdnlT29tzROXqSpM6wz1kpJM0vXKIBnD1f+CVqWg5x
-isd9zCSCYinC8A8qNtC8KeRZNWDWsuSc0oiizuFp8G5Nf/ep6iIoxlKV8FMwmOVm
-DITz7SZUqd/Ej1peuGNsE3/3dGd2sT0TKnjrrJT7ZjAjfH4OwfWkUS9lshgp0H+y
-l7HDz5Z5JAmEkkCbe97AHnZQv0jths9imXVpaAJJl6uYRkxM3zIAp6vRKf71MSSz
-ubaV2h3gejoYUviXa6zp4+o373AwNwSV/2JSV93wt4ogLkuECl3PMTzm74d+jlJq
-vRr2BQqeV9RkMdcDJmrV27AxH4TvsA==
-=R9Tx
------END PGP SIGNATURE-----
-
---0hHDr/TIsw4o3iPK--
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index 47b74fbc403c..37bafd44e36d 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -9,6 +9,10 @@
+  */
+ 
+ / {
++	aliases {
++		ethernet = &gmac;
++	};
++
+ 	axs10x_mb {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -68,7 +72,7 @@
+ 			};
+ 		};
+ 
+-		ethernet@0x18000 {
++		gmac: ethernet@0x18000 {
+ 			#interrupt-cells = <1>;
+ 			compatible = "snps,dwmac";
+ 			reg = < 0x18000 0x2000 >;
+@@ -81,6 +85,7 @@
+ 			max-speed = <100>;
+ 			resets = <&creg_rst 5>;
+ 			reset-names = "stmmaceth";
++			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
+ 		};
+ 
+ 		ehci@0x40000 {
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 006aa3de5348..d00f283094d3 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -25,6 +25,10 @@
+ 		bootargs = "earlycon=uart8250,mmio32,0xf0005000,115200n8 console=ttyS0,115200n8 debug print-fatal-signals=1";
+ 	};
+ 
++	aliases {
++		ethernet = &gmac;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -163,7 +167,7 @@
+ 			#clock-cells = <0>;
+ 		};
+ 
+-		ethernet@8000 {
++		gmac: ethernet@8000 {
+ 			#interrupt-cells = <1>;
+ 			compatible = "snps,dwmac";
+ 			reg = <0x8000 0x2000>;
+@@ -176,6 +180,7 @@
+ 			phy-handle = <&phy0>;
+ 			resets = <&cgu_rst HSDK_ETH_RESET>;
+ 			reset-names = "stmmaceth";
++			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
+ 
+ 			mdio {
+ 				#address-cells = <1>;
+-- 
+2.17.1
