@@ -1,90 +1,101 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: [PATCH v3 1/2] PM / devfreq: Generic CPU frequency to device
- frequency mapping governor
-Date: Thu, 02 Aug 2018 18:56:08 +0900
-Message-ID: <20180802095608epcms1p33fb061543efc9ceb3ec12d5567ceffbc@epcms1p3>
-References: <1533171465-25508-1-git-send-email-skannan@codeaurora.org>
-        <CGME20180802005756epcas4p465a12f42a0e36f0af6fd276a3a56957f@epcms1p3>
-Reply-To: myungjoo.ham@samsung.com
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 02/10] mfd: wcd9335: add support to
+	wcd9335 core
+Date: Thu, 2 Aug 2018 10:57:41 +0100
+Message-ID: <20180802095741.GP4662@dell>
+References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
+ <20180727121806.18209-3-srinivas.kandagatla@linaro.org>
+ <20180802083351.GN4662@dell>
+ <9a33e0ce-a385-cdad-f610-655562bec1f5@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533171465-25508-1-git-send-email-skannan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Saravana Kannan <skannan@codeaurora.org>, "georgi.djakov@linaro.org" <georgi.djakov@linaro.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "daidavid1@codeaurora.org" <daidavid1@codeaurora.org>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <9a33e0ce-a385-cdad-f610-655562bec1f5@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, tiwai@suse.com, vkoul@kernel.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
->Many CPU architectures have caches that can scale independent of the CPUs.
->Frequency scaling of the caches is necessary to make sure the cache is not
->a performance bottleneck that leads to poor performance and power. The same
->idea applies for RAM/DDR.
->
->To achieve this, this patch adds a generic devfreq governor that takes the
->current frequency of each CPU frequency domain and then adjusts the
->frequency of the cache (or any devfreq device) based on the frequency of
->the CPUs. It listens to CPU frequency transition notifiers to keep itself
->up to date on the current CPU frequency.
->
->To decide the frequency of the device, the governor does one of the
->following:
-
-This exactly has the same purpose with "passive" governor except for the
-single part: passive governor depends on another devfreq driver, not
-cpufreq driver.
-
-If both governors have many features in common, can you merge them into one?
-Passive governor also has "get_target_freq", which allows driver authors
-to define the mapping.
-
-Probably, you will need to add one more notifier call to get events from
-cpufreq instead of devfreq.
-
->
->* Uses a CPU frequency to device frequency mapping table
->  - Either one mapping table used for all CPU freq policies (typically used
->    for system with homogeneous cores/clusters that have the same OPPs).
->  - One mapping table per CPU freq policy (typically used for ASMP systems
->    with heterogeneous CPUs with different OPPs)
->
->OR
->
->* Scales the device frequency in proportion to the CPU frequency. So, if
->  the CPUs are running at their max frequency, the device runs at its max
->  frequency.  If the CPUs are running at their min frequency, the device
->  runs at its min frequency. And interpolated for frequencies in between.
-
-If you want to satisfy these two cases to the "modified" passive governors,
-you may need to supply two "preloaded" get_target_freq functions for
-struct devfreq_passive_data. If that's impossible, requiring a bit more
-modifications, you may need to write alternative routines in
-update_devfreq_passive().
-
-Cheers,
-MyungJoo
-
->
->Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
->---
-> .../bindings/devfreq/devfreq-cpufreq-map.txt       |  53 ++
-> drivers/devfreq/Kconfig                            |   8 +
-> drivers/devfreq/Makefile                           |   1 +
-> drivers/devfreq/governor_cpufreq_map.c             | 583 +++++++++++++++++++++
-> 4 files changed, 645 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
-> create mode 100644 drivers/devfreq/governor_cpufreq_map.c
->
-[]
->diff --git a/drivers/devfreq/governor_cpufreq_map.c b/drivers/devfreq/governor_cpufreq_map.c
->new file mode 100644
->index 0000000..084a3ff
->--- /dev/null
->+++ b/drivers/devfreq/governor_cpufreq_map.c
->@@ -0,0 +1,583 @@
->+// SPDX-License-Identifier: GPL-2.0
->+/*
->+ * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
->+ */
-
-Is this boilerplate fine? ( using // )
+T24gVGh1LCAwMiBBdWcgMjAxOCwgU3Jpbml2YXMgS2FuZGFnYXRsYSB3cm90ZToKPiBPbiAwMi8w
+OC8xOCAwOTozMywgTGVlIEpvbmVzIHdyb3RlOgo+ID4gT24gRnJpLCAyNyBKdWwgMjAxOCwgU3Jp
+bml2YXMgS2FuZGFnYXRsYSB3cm90ZToKPiA+IAo+ID4gPiBRdWFsY29tbSBXQ0Q5MzM1IENvZGVj
+IGlzIGEgc3RhbmRhbG9uZSBIaS1GaSBhdWRpbyBjb2RlYyBJQywKPiA+ID4gSXQgaGFzIG11bGl0
+cGxlIGJsb2NrcyBsaWtlIFNvdW5kd2lyZSBjb250cm9sbGVyLCBjb2RlYywKPiA+ID4gQ29kZWMg
+cHJvY2Vzc2luZyBlbmdpbmUsIENsYXNzSCBjb250cm9sbGVyLCBpbnRlcnJ1cHQgbXV4Lgo+ID4g
+PiBJdCBzdXBwb3J0cyBib3RoIEkyUy9JMkMgYW5kIFNMSU1idXMgYXVkaW8gaW50ZXJmYWNlcy4K
+PiA+ID4gCj4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0IHRvIFNMSU1idXMgYXVkaW8gaW50
+ZXJmYWNlLgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogU3Jpbml2YXMgS2FuZGFnYXRsYSA8
+c3Jpbml2YXMua2FuZGFnYXRsYUBsaW5hcm8ub3JnPgo+ID4gPiAtLS0KPiA+ID4gICBkcml2ZXJz
+L21mZC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgIDE4ICsrCj4gPiA+ICAgZHJpdmVycy9t
+ZmQvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgNCArCj4gPiA+ICAgZHJpdmVycy9tZmQv
+d2NkOTMzNS1jb3JlLmMgICAgICAgICAgICB8IDI2OCArKysrKysrKysrKysrKysrCj4gPiA+ICAg
+aW5jbHVkZS9saW51eC9tZmQvd2NkOTMzNS9yZWdpc3RlcnMuaCB8IDU4MCArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrCj4gPiA+ICAgaW5jbHVkZS9saW51eC9tZmQvd2NkOTMzNS93
+Y2Q5MzM1LmggICB8ICA0MiArKysKPiA+ID4gICA1IGZpbGVzIGNoYW5nZWQsIDkxMiBpbnNlcnRp
+b25zKCspCj4gPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWZkL3djZDkzMzUtY29y
+ZS5jCj4gPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvbWZkL3djZDkzMzUv
+cmVnaXN0ZXJzLmgKPiA+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC9tZmQv
+d2NkOTMzNS93Y2Q5MzM1LmgKPiA+ID4gCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9L
+Y29uZmlnIGIvZHJpdmVycy9tZmQvS2NvbmZpZwo+ID4gPiBpbmRleCBmM2ZhNTE2MDExZWMuLjZl
+NWI1ZjNjZmUyMCAxMDA2NDQKPiA+ID4gLS0tIGEvZHJpdmVycy9tZmQvS2NvbmZpZwo+ID4gPiAr
+KysgYi9kcml2ZXJzL21mZC9LY29uZmlnCj4gPiA+IEBAIC0xODA3LDYgKzE4MDcsMjQgQEAgY29u
+ZmlnIE1GRF9XTTk3eHgKPiA+ID4gICAJICBzdXBwb3J0IGZvciB0aGUgV005N3h4LCBpbiBvcmRl
+ciB0byB1c2UgdGhlIGFjdHVhbCBmdW5jdGlvbmFsdGl5IG9mCj4gPiA+ICAgCSAgdGhlIGRldmlj
+ZSBvdGhlciBkcml2ZXJzIG11c3QgYmUgZW5hYmxlZC4KPiA+ID4gK2NvbmZpZyBNRkRfV0NEOTMz
+NQo+ID4gPiArCXRyaXN0YXRlCj4gPiA+ICsJc2VsZWN0IE1GRF9DT1JFCj4gPiA+ICsJc2VsZWN0
+IFJFR01BUAo+ID4gPiArCXNlbGVjdCBSRUdNQVBfSVJRCj4gPiA+ICsKPiA+ID4gK2NvbmZpZyBN
+RkRfV0NEOTMzNV9TTElNCj4gPiA+ICsJdHJpc3RhdGUgIlF1YWxjb21tIFdDRDkzMzUgd2l0aCBT
+TElNYnVzIgo+ID4gPiArCXNlbGVjdCBNRkRfV0NEOTMzNQo+ID4gPiArCXNlbGVjdCBSRUdNQVBf
+U0xJTUJVUwo+ID4gPiArCWRlcGVuZHMgb24gU0xJTUJVUwo+ID4gPiArCWhlbHAKPiA+ID4gKwlU
+aGUgV0NEOTMzNSBpcyBhIHN0YW5kYWxvbmUgSGktRmkgYXVkaW8gY29kZWMgSUMsIHN1cHBvcnRz
+Cj4gPiAKPiA+IHMvY29kZWMvQ09ERUMvCj4gWWVwLgoKSWYgeW91IGFncmVlIHdpdGggc29tZXRo
+aW5nLCBiZXN0IGp1c3QgdG8gc25pcCBpdC4KCk5vIG5lZWQgdG8gcmVwbHkgYXQgYWxsIGlmIHlv
+dSBhZ3JlZSB3aXRoIGV2ZXJ5dGhpbmcuCgpbLi4uXQoKPiA+ID4gK3N0YXRpYyBpbnQgd2NkOTMz
+NV9wb3dlcl9vbl9yZXNldChzdHJ1Y3Qgd2NkOTMzNSAqd2NkKQo+ID4gPiArewo+ID4gPiArCXN0
+cnVjdCBkZXZpY2UgKmRldiA9IHdjZC0+ZGV2Owo+ID4gPiArCWludCByZXQ7Cj4gPiA+ICsKPiA+
+ID4gKwlyZXQgPSByZWd1bGF0b3JfYnVsa19lbmFibGUoV0NEOTMzNV9NQVhfU1VQUExZLCB3Y2Qt
+PnN1cHBsaWVzKTsKPiA+ID4gKwlpZiAocmV0ICE9IDApIHsKPiA+ID4gKwkJZGV2X2VycihkZXYs
+ICJGYWlsZWQgdG8gZ2V0IHN1cHBsaWVzOiBlcnIgPSAlZFxuIiwgcmV0KTsKPiA+ID4gKwkJcmV0
+dXJuIHJldDsKPiA+ID4gKwl9Cj4gPiA+ICsKPiA+ID4gKwkvKgo+ID4gPiArCSAqIEZvciBXQ0Q5
+MzM1LCBpdCB0YWtlcyBhYm91dCA2MDB1cyBmb3IgdGhlIFZvdXRfQSBhbmQKPiA+ID4gKwkgKiBW
+b3V0X0QgdG8gYmUgcmVhZHkgYWZ0ZXIgQlVDS19TSURPIGlzIHBvd2VyZWQgdXAuCj4gPiA+ICsJ
+ICogU1lTX1JTVF9OIHNob3VsZG4ndCBiZSBwdWxsZWQgaGlnaCBkdXJpbmcgdGhpcyB0aW1lCj4g
+PiA+ICsJICovCj4gPiA+ICsJdXNsZWVwX3JhbmdlKDYwMCwgNjUwKTsKPiA+ID4gKwo+ID4gPiAr
+CWdwaW9fZGlyZWN0aW9uX291dHB1dCh3Y2QtPnJlc2V0X2dwaW8sIDApOwo+ID4gPiArCW1zbGVl
+cCgyMCk7Cj4gPiAKPiA+IFdoYXQncyB0aGlzIGZvcj8gIFdoeSBjYW4ndCB5b3UganVzdDoKPiA+
+IAo+IFRoaXMgaXMganVzdCBtYWtpbmcgc3VyZSB0aGF0IHJlc2V0IGxpbmUgaXMgbG93IGJlZm9y
+ZSBhY3R1YWwgdGhlIGNoaXAgaXMKPiB0YWtlbiBvdXQgb2YgcmVzZXQuCgpJZiBpdCBjb25mdXNl
+ZCBtZSwgaXQgbWlnaHQgY29uZnVzZSBvdGhlcnMuCgpCZXN0IHRvIGFkZCBhIGNvbW1lbnQgdG8g
+dGhlIHR1bmUgb2Y6CgogICJUb2dnbGUgcmVzZXQgbGluZSBvZmYvb24gdG8gZW5zdXJlIC4uLiAi
+Cgo+ID4gICAgZ3Bpb19kaXJlY3Rpb25fb3V0cHV0KHdjZC0+cmVzZXRfZ3BpbywgMSk7Cj4gPiAK
+PiA+IC4uLiBhbmQgZHJvcCB0aGUgbmV4dCAyIGxpbmVzPwoKWy4uLl0KCj4gPiA+ICtzdGF0aWMg
+Y29uc3Qgc3RydWN0IG1mZF9jZWxsIHdjZDkzMzVfZGV2aWNlc1tdID0gewo+ID4gPiArCXsKPiA+
+ID4gKwkJLm5hbWUgPSAid2NkOTMzNS1jb2RlYyIsCj4gPiA+ICsJfSwKPiA+ID4gK307Cj4gPiAK
+PiA+IFdoZW4gYXJlIHlvdSBnb2luZyB0byBhZGQgdGhlIG90aGVyIGRldmljZXM/Cj4gPiAKPiBX
+ZSBhcmUgdHJ5aW5nIHRvIHNvcnQgb2YgaHcgc2V0dXAgdG8gdGVzdCBvdGhlciBkZXZpY2VzIGxp
+a2Ugc291bmR3aXJlCj4gY29udHJvbGxlciwgd2lsbCBhZGQgdGhlc2Ugb25jZSB3ZSBhcmUgaW4g
+YSBwb3NpdGlvbiB0byB0ZXN0IHRoZW0uCgpFbnN1cmUgdGhhdCB5b3UgZG8sIG9yIEknbGwgcmV2
+ZXJ0IHRoZSB3aG9sZSBkcml2ZXIgYXMgIm5vdCBhbiBNRkQiIDopCgo+ID4gQnkgdGhlIHdheSwg
+b25lIGxpbmUgZW50cmllcyBzaG91bGQgYmUgcGxhY2VkIG9uIG9uZSBsaW5lLgo+ID4gCj4gPiA+
+ICsJeyAubmFtZSA9ICJ3Y2Q5MzM1LWNvZGVjIiB9LAoKWy4uLl0KCj4gPiA+ICtzdGF0aWMgaW50
+IHdjZDkzMzVfc2xpbV9zdGF0dXMoc3RydWN0IHNsaW1fZGV2aWNlICpzZGV2LAo+ID4gPiArCQkJ
+CSBlbnVtIHNsaW1fZGV2aWNlX3N0YXR1cyBzKQo+ID4gCj4gPiAncycgaXMgbm90IGEgZ29vZCB2
+YXJpYWJsZSBuYW1lLiAgU3VnZ2VzdCAnc3RhdHVzJy4KPiA+IAo+IEFncmVlZCEKPiA+ID4gK3sK
+PiA+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmlmZF9ucDsKPiA+IAo+ID4gV2hhdCdzICdpZmQn
+Pwo+ID4gCj4gU0xJTWJ1cyBJbnRlcmZhY2UgZGV2aWNlLgoKVGhhdCdzIGEgdGVycmlibGUgdmFy
+aWFibGUgbmFtZS4gOikKCi0tIApMZWUgSm9uZXMgW+adjueQvOaWr10KTGluYXJvIFNlcnZpY2Vz
+IFRlY2huaWNhbCBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBB
+Uk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGlu
+ZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXBy
+b2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
