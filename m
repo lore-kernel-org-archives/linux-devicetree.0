@@ -1,67 +1,80 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 03/10] mfd: wcd9335: add wcd irq support
-Date: Thu, 2 Aug 2018 08:34:55 +0100
-Message-ID: <292fb788-fa5a-8106-efbb-e1fa825f5697@linaro.org>
-References: <20180727121806.18209-1-srinivas.kandagatla@linaro.org>
- <20180727121806.18209-4-srinivas.kandagatla@linaro.org>
- <20180731204536.GA7241@rob-hp-laptop>
- <d31d8f54-18b0-118f-eb25-7b92d5bf9842@linaro.org>
- <CAL_JsqJqCvWBqCfiS7dQMSzJ_FZDtAMJ8OQZvdGSJhsX0eYr6w@mail.gmail.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v9 2/4] dt-bindings: mailbox: imx-mu: add generic MU channel
+ support
+Date: Thu,  2 Aug 2018 09:23:23 +0200
+Message-ID: <20180802072325.22991-3-o.rempel@pengutronix.de>
+References: <20180802072325.22991-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJqCvWBqCfiS7dQMSzJ_FZDtAMJ8OQZvdGSJhsX0eYr6w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Banajit Goswami <bgoswami@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vinod <vkoul@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180802072325.22991-1-o.rempel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for review,
+Each MU has four pairs of rx/tx data register with four rx/tx interrupts
+which can also be used as a separate channel.
 
-On 01/08/18 23:17, Rob Herring wrote:
-> On Wed, Aug 1, 2018 at 2:57 AM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->> Thanks for the review,
->>
->> On 31/07/18 21:45, Rob Herring wrote:
->>> On Fri, Jul 27, 2018 at 01:17:59PM +0100, Srinivas Kandagatla wrote:
->>>> WCD9335 supports two lines of irqs INTR1 and INTR2.
->>>> Multiple interrupts are muxed via these lines.
->>>> INTR1 consists of all possible interrupt sources like:
->>>> Ear OCP, HPH OCP, MBHC, MAD, VBAT, and SVA
->>>> INTR2 is a subset of first interrupt sources like MAD, VBAT, and SVA
->>>>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>> ---
->>>>    drivers/mfd/Makefile                |   2 +-
->>>>    drivers/mfd/wcd9335-core.c          |   9 ++
->>>>    drivers/mfd/wcd9335-irq.c           | 172 ++++++++++++++++++++++++++++++++++++
->>>>    include/dt-bindings/mfd/wcd9335.h   |  43 +++++++++
->>>
->>> I'm confused why these are defined here. The binding for the wc9335 is
->>> not an interrupt-controller.
->>
->> I can move this defines to include/linux/mfd/wcd9335/wcd9335.h as there
->> are no active users for this, but I  was hoping that these can be used
->> in DT in future.
->>
->> WCD9335 is an interrupt controller too. It muxes multiple interrupts via
->> a gpio line interrupt.
->>
->> I did mention this in the bindings.
-> 
-> Then the header belongs in the binding patch.
-> 
-> I don't recall child nodes being defined though and you don't need to
-> be a interrupt-controller (in DT) without them.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ .../devicetree/bindings/mailbox/fsl,mu.txt    | 26 ++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-Sure, I will fix it in next version.
-
-Thanks,
-srini
-> 
-> Rob
-> 
+diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+index 90e4905dfc69..f3cf77eb5ab4 100644
+--- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
++++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+@@ -18,11 +18,31 @@ Messaging Unit Device Node:
+ Required properties:
+ -------------------
+ - compatible :	should be "fsl,<chip>-mu", the supported chips include
+-		imx8qxp, imx8qm.
++		imx6sx, imx7s, imx8qxp, imx8qm.
++		The "fsl,imx6sx-mu" compatible is seen as generic and should
++		be included together with SoC specific compatible.
+ - reg :		Should contain the registers location and length
+ - interrupts :	Interrupt number. The interrupt specifier format depends
+ 		on the interrupt controller parent.
+-- #mbox-cells:  Must be 0. Number of cells in a mailbox
++- #mbox-cells:  Must be 2.
++			  <&phandle type channel>
++			    phandle   : Label name of controller
++			    type      : Channel type
++			    channel   : Channel number
++
++		This MU support 4 type of unidirectional channels, each type
++		has 4 channels. A total of 16 channels. Following types are
++		supported:
++		0 - TX channel with 32bit transmit register and IRQ transmit
++		acknowledgment support.
++		1 - RX channel with 32bit receive register and IRQ support
++		2 - TX doorbell channel. Without own register and no ACK support.
++		3 - RX doorbell channel.
++
++Optional properties:
++-------------------
++- clocks :	phandle to the input clock.
++- fsl,mu-side-b : Should be set for side B MU.
+ 
+ Examples:
+ --------
+@@ -30,5 +50,5 @@ lsio_mu0: mailbox@5d1b0000 {
+ 	compatible = "fsl,imx8qxp-mu";
+ 	reg = <0x0 0x5d1b0000 0x0 0x10000>;
+ 	interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+-	#mbox-cells = <0>;
++	#mbox-cells = <2>;
+ };
+-- 
+2.18.0
