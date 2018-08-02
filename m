@@ -1,78 +1,168 @@
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v3 2/2] iio: light: Add device tree binding for vishay
- vcnl4035
-Date: Thu, 2 Aug 2018 13:51:31 +0100
-Message-ID: <20180802135131.000037cb@huawei.com>
-References: <20180629153802.1639514-1-pn@denx.de>
-        <20180802095230.2049554-1-pn@denx.de>
-        <20180802095230.2049554-2-pn@denx.de>
+From: Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v3 1/4] edac: synps: Add platform specific structures for ddrc controller
+Date: Thu, 2 Aug 2018 18:21:19 +0530
+Message-ID: <1533214282-9977-2-git-send-email-manish.narani@xilinx.com>
+References: <1533214282-9977-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180802095230.2049554-2-pn@denx.de>
+In-Reply-To: <1533214282-9977-1-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Parthiban Nallathambi <pn@denx.de>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, mdf@kernel.org, edgar.iglesias@xilinx.com, shubhrajyoti.datta@xilinx.com, naga.sureshkumar.relli@xilinx.com, bharat.kumar.gogada@xilinx.com, stefan.krsmanovic@aggios.com
+Cc: sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Manish Narani <manish.narani@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2 Aug 2018 11:52:30 +0200
-Parthiban Nallathambi <pn@denx.de> wrote:
+This patch adds platform specific structures, so that we can add
+different IP support later using quirks.
 
-> Adding device tree binding for vcnl4035 and vendor
-> prefix for Vishay Intertechnology
-> 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> -------
-Generally don't add your own cut line, just use the one that is already there below.
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+---
+ drivers/edac/synopsys_edac.c | 64 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 53 insertions(+), 11 deletions(-)
 
-One minor comment inline.
-> 
-> Changelog in v3:
-> - removed interrupt-parent property reference in documentation
-> - renamed vcnl4035 to light-sensor
-> ---
->  .../devicetree/bindings/iio/light/vcnl4035.txt         | 18 ++++++++++++++++++
->  Documentation/devicetree/bindings/vendor-prefixes.txt  |  1 +
->  2 files changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4035.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4035.txt b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
-> new file mode 100644
-> index 000000000000..871f995f7b35
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
-> @@ -0,0 +1,18 @@
-> +VISHAY VCNL4035 -  Ambient Light and proximity sensor
-> +
-> +Link to datasheet: https://www.vishay.com/docs/84251/vcnl4035x01.pdf
-> +
-> +Required properties:
-> +
-> +	-compatible: should be "vishay,vcnl4035"
-> +	-reg: I2C address of the sensor, should be 0x60
-
-Bit random on the spacing after -.
-
-> +	- interrupts: interrupt mapping for GPIO IRQ (level active low)
-> +
-> +Example:
-> +
-> +light-sensor@60 {
-> +	compatible = "vishay,vcnl4035";
-> +	reg = <0x60>;
-> +	interrupt-parent = <&gpio4>;
-> +	interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 7cad066191ee..3cc46d5735a9 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -395,6 +395,7 @@ v3	V3 Semiconductor
->  variscite	Variscite Ltd.
->  via	VIA Technologies, Inc.
->  virtio	Virtual I/O Device Specification, developed by the OASIS consortium
-> +vishay	Vishay Intertechnology, Inc
->  vivante	Vivante Corporation
->  vocore VoCore Studio
->  voipac	Voipac Technologies s.r.o.
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 0c9c59e..d4798e8 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -22,6 +22,7 @@
+ #include <linux/edac.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
+ 
+ #include "edac_module.h"
+ 
+@@ -130,6 +131,7 @@ struct synps_ecc_status {
+  * @baseaddr:	Base address of the DDR controller
+  * @message:	Buffer for framing the event specific info
+  * @stat:	ECC status information
++ * @p_data:	Pointer to platform data
+  * @ce_cnt:	Correctable Error count
+  * @ue_cnt:	Uncorrectable Error count
+  */
+@@ -137,11 +139,29 @@ struct synps_edac_priv {
+ 	void __iomem *baseaddr;
+ 	char message[SYNPS_EDAC_MSG_SIZE];
+ 	struct synps_ecc_status stat;
++	const struct synps_platform_data *p_data;
+ 	u32 ce_cnt;
+ 	u32 ue_cnt;
+ };
+ 
+ /**
++ * struct synps_platform_data -  synps platform data structure
++ * @synps_edac_geterror_info:	function pointer to synps edac error info
++ * @synps_edac_get_mtype:	function pointer to synps edac mtype
++ * @synps_edac_get_dtype:	function pointer to synps edac dtype
++ * @synps_edac_get_eccstate:	function pointer to synps edac eccstate
++ * @quirks:			to differentiate IPs
++ */
++struct synps_platform_data {
++	int (*synps_edac_geterror_info)(void __iomem *base,
++					struct synps_ecc_status *p);
++	enum mem_type (*synps_edac_get_mtype)(const void __iomem *base);
++	enum dev_type (*synps_edac_get_dtype)(const void __iomem *base);
++	bool (*synps_edac_get_eccstate)(void __iomem *base);
++	int quirks;
++};
++
++/**
+  * synps_edac_geterror_info - Get the current ecc error info
+  * @base:	Pointer to the base address of the ddr memory controller
+  * @p:		Pointer to the synopsys ecc status structure
+@@ -242,7 +262,8 @@ static void synps_edac_check(struct mem_ctl_info *mci)
+ 	struct synps_edac_priv *priv = mci->pvt_info;
+ 	int status;
+ 
+-	status = synps_edac_geterror_info(priv->baseaddr, &priv->stat);
++	status = priv->p_data->synps_edac_geterror_info(priv->baseaddr,
++							&priv->stat);
+ 	if (status)
+ 		return;
+ 
+@@ -372,10 +393,12 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
+ 		for (j = 0; j < csi->nr_channels; j++) {
+ 			dimm            = csi->channels[j]->dimm;
+ 			dimm->edac_mode = EDAC_FLAG_SECDED;
+-			dimm->mtype     = synps_edac_get_mtype(priv->baseaddr);
++			dimm->mtype     = priv->p_data->synps_edac_get_mtype(
++						priv->baseaddr);
+ 			dimm->nr_pages  = (size >> PAGE_SHIFT) / csi->nr_channels;
+ 			dimm->grain     = SYNPS_EDAC_ERR_GRAIN;
+-			dimm->dtype     = synps_edac_get_dtype(priv->baseaddr);
++			dimm->dtype     = priv->p_data->synps_edac_get_dtype(
++						priv->baseaddr);
+ 		}
+ 	}
+ 
+@@ -423,6 +446,21 @@ static int synps_edac_mc_init(struct mem_ctl_info *mci,
+ 	return status;
+ }
+ 
++static const struct synps_platform_data zynq_edac_def = {
++	.synps_edac_geterror_info	= synps_edac_geterror_info,
++	.synps_edac_get_mtype		= synps_edac_get_mtype,
++	.synps_edac_get_dtype		= synps_edac_get_dtype,
++	.synps_edac_get_eccstate	= synps_edac_get_eccstate,
++	.quirks				= 0,
++};
++
++static const struct of_device_id synps_edac_match[] = {
++	{ .compatible = "xlnx,zynq-ddrc-a05", .data = (void *)&zynq_edac_def },
++	{ /* end of table */ }
++};
++
++MODULE_DEVICE_TABLE(of, synps_edac_match);
++
+ /**
+  * synps_edac_mc_probe - Check controller and bind driver
+  * @pdev:	Pointer to the platform_device struct
+@@ -440,13 +478,22 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+ 	int rc;
+ 	struct resource *res;
+ 	void __iomem *baseaddr;
++	const struct of_device_id *match;
++	const struct synps_platform_data *p_data;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	baseaddr = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(baseaddr))
+ 		return PTR_ERR(baseaddr);
+ 
+-	if (!synps_edac_get_eccstate(baseaddr)) {
++	match = of_match_node(synps_edac_match, pdev->dev.of_node);
++	if (!match && !match->data) {
++		dev_err(&pdev->dev, "of_match_node() failed\n");
++		return -EINVAL;
++	}
++
++	p_data = (struct synps_platform_data *)match->data;
++	if (!(p_data->synps_edac_get_eccstate(baseaddr))) {
+ 		edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
+ 		return -ENXIO;
+ 	}
+@@ -468,6 +515,8 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+ 
+ 	priv = mci->pvt_info;
+ 	priv->baseaddr = baseaddr;
++	priv->p_data = match->data;
++
+ 	rc = synps_edac_mc_init(mci, pdev);
+ 	if (rc) {
+ 		edac_printk(KERN_ERR, EDAC_MC,
+@@ -511,13 +560,6 @@ static int synps_edac_mc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id synps_edac_match[] = {
+-	{ .compatible = "xlnx,zynq-ddrc-a05", },
+-	{ /* end of table */ }
+-};
+-
+-MODULE_DEVICE_TABLE(of, synps_edac_match);
+-
+ static struct platform_driver synps_edac_mc_driver = {
+ 	.driver = {
+ 		   .name = "synopsys-edac",
+-- 
+2.1.1
