@@ -1,63 +1,59 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 4/4] drm/meson: convert to the new canvas module
-Date: Thu, 02 Aug 2018 15:01:41 +0200
-Message-ID: <843e41de9fa7d5f87309ff4e0db2ed84a1153a4c.camel@baylibre.com>
-References: <20180801185128.23440-1-maxi.jourdan@wanadoo.fr>
-         <20180801185128.23440-5-maxi.jourdan@wanadoo.fr>
-         <744700e43aed3880807f86abde0caf3df1127e60.camel@baylibre.com>
-         <CAHStOZ6B-R7=5utGqb49OsFBsUsMVsn=WMrzNK8Wk-zcgbnPuA@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 2/3] arm64: dts: rockchip: add dwc2 otg controller on px30
+Date: Thu,  2 Aug 2018 15:01:32 +0200
+Message-ID: <20180802130133.4898-3-heiko@sntech.de>
+References: <20180802130133.4898-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHStOZ6B-R7=5utGqb49OsFBsUsMVsn=WMrzNK8Wk-zcgbnPuA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180802130133.4898-1-heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-usb@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, balbi@kernel.org, gregkh@linuxfoundation.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, cl@rock-chips.com, hminas@synopsys.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-08-02 at 14:34 +0200, Maxime Jourdan wrote:
-> Hi Jerome,
-> 
-> 2018-08-02 10:39 GMT+02:00 Jerome Brunet <jbrunet@baylibre.com>:
-> > I looks like the consumer of your 'canvas' devices must know how the canvas
-> > device is organized internally. Maybe something better can be done ?
-> > 
-> > Your canvas driver could provide a consumer API, for example:
-> > meson_canvas_get(): to translate for struct device_node to whatever abstract
-> > pointer you would need.
-> > meson_canvas_alloc(), setup(), etc ...
-> > 
-> > ... This is just adding a bit of indirection but it would help hide the plumbing
-> > of your canvas driver from the consumers (and repeat this code in each). This
-> > might be usefull if you ever to make this canvas driver evolve.
-> 
-> Overall the inner workings are hidden as there is an ops struct
-> instead of public functions.
+Add the node for the dwc2-based otg controller on the px30 soc.
 
-What I don't like is precisely that you need to expose this 'struct ops' to the
-consumer. I would prefer an API for this (it can be a 1:1 mapping). The canvas
-should remain some abstract object you get from DT.
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ arch/arm64/boot/dts/rockchip/px30.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-IMO, this is the same as a reset, a syscon or whatever other phandle you get
-from DT. The consumer should not have to 'care' how it works (how data are
-organized), it should just use it.
-
-Whatever you need to do to deal with your canvas phandle should (IMO) reside in
-your soc/amlogic/meson-canvas.c, and not be spread in the consumers.
-
-> 
-> I agree that the "fetch the node" boilerplate code could be put behind
-> a helper, but at the same time this code helps remind the developer
-> that there needs to be a canvas node in the dts, and that it has to be
-> linked in your own device node.
-
-This is why we have a DT documentation.
-
-And, as far as I understand amlogic's display and decoder stuff, you won't get
-very far w/o a canvas, so 'the developer' will be reminded fairly quickly ;)
-
-> 
-> I would like to keep it that way if that is okay with you.
-
-It's just my opinion, I'm not the one merging it ... :P
+diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+index dc3b22ca9a0e..fed782194a94 100644
+--- a/arch/arm64/boot/dts/rockchip/px30.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+@@ -702,6 +702,22 @@
+ 			<100000000>, <200000000>;
+ 	};
+ 
++	usb20_otg: usb@ff300000 {
++		compatible = "rockchip,px30-usb", "rockchip,rk3066-usb",
++			     "snps,dwc2";
++		reg = <0x0 0xff300000 0x0 0x40000>;
++		interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_OTG>;
++		clock-names = "otg";
++		dr_mode = "otg";
++		g-np-tx-fifo-size = <16>;
++		g-rx-fifo-size = <280>;
++		g-tx-fifo-size = <256 128 128 64 32 16>;
++		g-use-dma;
++		power-domains = <&power PX30_PD_USB>;
++		status = "disabled";
++	};
++
+ 	usb_host0_ehci: usb@ff340000 {
+ 		compatible = "generic-ehci";
+ 		reg = <0x0 0xff340000 0x0 0x10000>;
+-- 
+2.17.0
