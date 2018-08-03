@@ -1,96 +1,154 @@
-From: skannan@codeaurora.org
-Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Fri, 03 Aug 2018 12:52:48 -0700
-Message-ID: <1ddda4b9e6dcd7ad415235f4d6af2dc7@codeaurora.org>
-References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
- <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
- <CAE=gft7_5SZKpU0i9Jbi6UV-eqW8=6Fm7rw4oKVXG6J9Q7_E+g@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 1/3] iio: Add modifier for white light
+Date: Fri, 3 Aug 2018 21:34:43 +0100
+Message-ID: <20180803213443.3f82ebc8@archlinux>
+References: <20180802182729.2061830-1-pn@denx.de>
+        <alpine.DEB.2.21.1808022117460.25216@vps.pmeerw.net>
+        <fb30878f-0163-306a-e933-d9fecc996acb@denx.de>
+        <alpine.DEB.2.21.1808031323150.13492@vps.pmeerw.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft7_5SZKpU0i9Jbi6UV-eqW8=6Fm7rw4oKVXG6J9Q7_E+g@mail.gmail.com>
+In-Reply-To: <alpine.DEB.2.21.1808031323150.13492@vps.pmeerw.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@google.com>
-Cc: tdas@codeaurora.org, rjw@rjwysocki.net, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, sboyd@kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org
+To: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: Parthiban Nallathambi <pn@denx.de>, knaack.h@gmx.de, lars@metafoo.de, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-03 12:40, Evan Green wrote:
-> Hi Taniya,
-> 
-> On Tue, Jul 24, 2018 at 3:44 AM Taniya Das <tdas@codeaurora.org> wrote:
->> 
->> The CPUfreq HW present in some QCOM chipsets offloads the steps 
->> necessary
->> for changing the frequency of CPUs. The driver implements the cpufreq
->> driver interface for this hardware engine.
->> 
->> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>  drivers/cpufreq/Kconfig.arm       |  11 ++
->>  drivers/cpufreq/Makefile          |   1 +
->>  drivers/cpufreq/qcom-cpufreq-hw.c | 348 
->> ++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 360 insertions(+)
->>  create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
->> 
-> ...
->> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c 
->> b/drivers/cpufreq/qcom-cpufreq-hw.c
->> new file mode 100644
->> index 0000000..ea8f7d1
->> --- /dev/null
->> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> ...
->> +static int qcom_cpufreq_hw_read_lut(struct platform_device *pdev,
->> +                                   struct cpufreq_qcom *c)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       void __iomem *base;
->> +       u32 data, src, lval, i, core_count, prev_cc, prev_freq, 
->> cur_freq;
->> +
->> +       c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
->> +                               sizeof(*c->table), GFP_KERNEL);
->> +       if (!c->table)
->> +               return -ENOMEM;
->> +
->> +       base = c->reg_bases[REG_LUT_TABLE];
->> +
->> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->> +               data = readl_relaxed(base + i * LUT_ROW_SIZE);
->> +               src = (data & GENMASK(31, 30)) >> 30;
->> +               lval = data & GENMASK(7, 0);
->> +               core_count = CORE_COUNT_VAL(data);
->> +
->> +               if (src)
->> +                       c->table[i].frequency = c->xo_rate * lval / 
->> 1000;
->> +               else
->> +                       c->table[i].frequency = INIT_RATE / 1000;
-> 
-> I don't know much about how this hardware works, but based on the
-> mask, src has 4 possible values. So does 0 mean INIT_RATE, and 1, 2,
-> and 3 all mean xo_rate?
-> 
-> Also, is INIT_RATE really constant? It sounds like gpll0 (or
-> gpll0_out_even?). You're already getting the xo clock, why not get
-> gpll0's real rate as well?
+On Fri, 3 Aug 2018 13:38:17 +0200 (CEST)
+Peter Meerwald-Stadler <pmeerw@pmeerw.net> wrote:
 
-Actually I was about to comment and say NOT to get clocks just to get 
-their rate. The XO_RATE is just a multiplication factor. This HW/FW can 
-change in the future and make the multiplication factor to 1KHz. We also 
-can't really control any of the clocks going to this block from Linux 
-(it's all locked down). Adding clk_get significantly delays when this 
-driver can be probed and increases boot up time. The INIT_RATE will 
-always be 300 MHz independent of what source it's coming from (as in, if 
-GPLL0 can't give 300, the HW design will be so that we'll find a 
-different source).
+> Hello,
+> 
+> > > it is not clear to me why 'white' is needed;
+> > > isn't that the default, i.e. unfiltered light?  
+> > 
+> > Yes, it is. But devices like vcnl4035 veml7700, White LED data one
+> > register and all other sources of light (like fluorescent,
+> > incandescent ,sunlight) in separate register.
+> > 
+> > So in such cases this WHITE modifier is needed. Should it needs to
+> > come under IIO_MOD_LIGHT_CLEAR?  
+This wins the aware for odd.  The sensor is drawn as only have two
+sensing elements, one for Ambient light sensing and one for proximity.
 
-So, I'd like to remove any clock bindings for this driver.
+A particular award should be given for using a different axis for
+the white channel in which normalized output is decimal vs all the
+others where it is a percentage ;)
 
-Thanks,
-Saravana
+Looking closely at those graphs I think this is actually a standard
+sensor combination job.
+
+So 'white' is what we have always called _both in that it reads
+both visible and infrared. The other sensor is infrared.
+
+Ambient is illuminance not intensity (approximate human eye response).
+
+The only dubious bit about this is that I can see how they managed
+to cancel out some of the signal around 700nm as there is nothing
+much on the infrared and lots on the white.
+
+Alternative is that they actually have a filter that really approximates
+the human eye and the white channel is the sum of the other two?
+
+
+
+> 
+> it is a mess already :), there is 
+> _intensity
+> _intensity_ir
+> _intensity_both
+> _intensity_uv
+> _intensity_red
+> _intensity_green
+> _intensity_blue
+> _intensity_clear
+> 
+> I think that ir, uv, red, green, blue are filters for particular ranges 
+> of the spectrum
+
+That is the intent certainly.
+
+> 
+> _intensity_clear might be unfiltered and _intensity might relate to the 
+> human eye photopic curve, I think the proposed white might be the same as 
+> clear?
+> 
+> 'both' means ir + _intensity (not clearly specified)
+
+Yup, that's the power of initial assumptions.  There was a time when
+the only light sensors you tended to get were ir and both ir and visible.
+Visible was obtained by taking one from the other.
+
+One of those things we'd change if doing it again but it's a bit late
+now..
+
+Jonathan
+
+
+> 
+> regards, p.
+> 
+> > > > +KernelVersion:	4.18
+> > > > +Contact:	linux-iio@vger.kernel.org
+> > > > +Description:
+> > > > +		Modifier white indicates that measurements contain white LED
+> > > > +		component.
+> > > > +
+> > > >   What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
+> > > >   What:
+> > > > /sys/.../iio:deviceX/in_intensity_green_integration_time
+> > > >   What:
+> > > > /sys/.../iio:deviceX/in_intensity_blue_integration_time
+> > > > diff --git a/drivers/iio/industrialio-core.c
+> > > > b/drivers/iio/industrialio-core.c
+> > > > index 19bdf3d2962a..cb939b9fad16 100644
+> > > > --- a/drivers/iio/industrialio-core.c
+> > > > +++ b/drivers/iio/industrialio-core.c
+> > > > @@ -108,6 +108,7 @@ static const char * const iio_modifier_names[] = {
+> > > >   	[IIO_MOD_LIGHT_GREEN] = "green",
+> > > >   	[IIO_MOD_LIGHT_BLUE] = "blue",
+> > > >   	[IIO_MOD_LIGHT_UV] = "uv",
+> > > > +	[IIO_MOD_LIGHT_WHITE] = "white",
+> > > >   	[IIO_MOD_QUATERNION] = "quaternion",
+> > > >   	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+> > > >   	[IIO_MOD_TEMP_OBJECT] = "object",
+> > > > diff --git a/include/uapi/linux/iio/types.h
+> > > > b/include/uapi/linux/iio/types.h
+> > > > index 4213cdf88e3c..de87a6c7e6de 100644
+> > > > --- a/include/uapi/linux/iio/types.h
+> > > > +++ b/include/uapi/linux/iio/types.h
+> > > > @@ -84,6 +84,7 @@ enum iio_modifier {
+> > > >   	IIO_MOD_CO2,
+> > > >   	IIO_MOD_VOC,
+> > > >   	IIO_MOD_LIGHT_UV,
+> > > > +	IIO_MOD_LIGHT_WHITE,
+> > > >   };
+> > > >     enum iio_event_type {
+> > > > diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+> > > > index b61245e1181d..a2f9c62a79dd 100644
+> > > > --- a/tools/iio/iio_event_monitor.c
+> > > > +++ b/tools/iio/iio_event_monitor.c
+> > > > @@ -96,6 +96,7 @@ static const char * const iio_modifier_names[] = {
+> > > >   	[IIO_MOD_LIGHT_GREEN] = "green",
+> > > >   	[IIO_MOD_LIGHT_BLUE] = "blue",
+> > > >   	[IIO_MOD_LIGHT_UV] = "uv",
+> > > > +	[IIO_MOD_LIGHT_WHITE] = "white",
+> > > >   	[IIO_MOD_QUATERNION] = "quaternion",
+> > > >   	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+> > > >   	[IIO_MOD_TEMP_OBJECT] = "object",
+> > > > @@ -178,6 +179,7 @@ static bool event_is_known(struct iio_event_data
+> > > > *event)
+> > > >   	case IIO_MOD_LIGHT_GREEN:
+> > > >   	case IIO_MOD_LIGHT_BLUE:
+> > > >   	case IIO_MOD_LIGHT_UV:
+> > > > +	case IIO_MOD_LIGHT_WHITE:
+> > > >   	case IIO_MOD_QUATERNION:
+> > > >   	case IIO_MOD_TEMP_AMBIENT:
+> > > >   	case IIO_MOD_TEMP_OBJECT:
+> > > >   
+> > >   
+> > 
+> >   
+> 
