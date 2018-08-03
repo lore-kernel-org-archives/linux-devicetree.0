@@ -1,872 +1,637 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v5 1/2] iio: light: Add support for vishay vcnl4035
-Date: Fri, 3 Aug 2018 22:18:11 +0100
-Message-ID: <20180803221811.2314888d@archlinux>
-References: <20180803173636.2071442-1-pn@denx.de>
+Subject: Re: [PATCH v3 1/6] iio: adxl372: New driver for Analog Devices
+ ADXL372 Accelerometer
+Date: Fri, 3 Aug 2018 22:22:05 +0100
+Message-ID: <20180803222205.1f404691@archlinux>
+References: <1533301341-26560-1-git-send-email-stefan.popa@analog.com>
+        <1533301341-26560-2-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803173636.2071442-1-pn@denx.de>
+In-Reply-To: <1533301341-26560-2-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Parthiban Nallathambi <pn@denx.de>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, andy.shevchenko@gmail.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: broonie@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  3 Aug 2018 19:36:35 +0200
-Parthiban Nallathambi <pn@denx.de> wrote:
+On Fri, 3 Aug 2018 16:02:16 +0300
+Stefan Popa <stefan.popa@analog.com> wrote:
 
-> Add support for VCNL4035, which is capable of Ambient light
-> sensing (ALS) and proximity function. This patch adds support
-> only for ALS function
+> This patch adds basic support for Analog Devices ADXL372 SPI-Bus
+> Three-Axis Digital Accelerometer.
 > 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> The device is probed and configured the with some initial default
+> values. With this basic driver, it is possible to read raw acceleration
+> data.
 > 
-> Changelog since v1:
+> Datasheet:
+> http://www.analog.com/media/en/technical-documentation/data-sheets/ADXL372.pdf
 > 
-> 1. Fixed 0-day warning on le16_to_cpu usage
-> 2. Persistence value is directly mapped to datasheet's value to
-> avoid confusions of usage from sysfs
-> 
-> Changelog in v3:
-> - Usage of lock is not needed, removed mutex locking
-> - ALS threshold and persistence configuration available
-> as events and threshold events are notified to userspace
-> - Usage of devm_ is re-ordered and exit handling updated
-> - Complexity in timestamp calculation is removed and used
-> iio_get_time_ns
-> 
-> Changelog in v4:
-> - New white light index is introduced for getting data from
-> white spectrum
-> - PM enable/disable is called from read_raw accordingly
-> - Probe exit handling re-ordered
-> 
-> Changelog in v5:
-> - White spectrum is mesaured as "_CLEAR" intesity, so removed
-> white spectrum modifier
-> - Header re-ordering
-> - Trigger init and de-init into separate function
-> - Indentation correct and usage of dev_err in place of pr_err
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+One really minor suggestion inline. I'd only bother if you are respinning
+for some other reason.
 
-So a few things I missed last time and some feedback related to recent
-changes (also in the reply to the previous version).
-
-Thanks,
+I'll hold this one to wait for the rest of the series (some of which needs
+other peoples acks).
 
 Jonathan
 
 > ---
->  drivers/iio/light/Kconfig    |  12 +
->  drivers/iio/light/Makefile   |   1 +
->  drivers/iio/light/vcnl4035.c | 701 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 714 insertions(+)
->  create mode 100644 drivers/iio/light/vcnl4035.c
+>  MAINTAINERS                 |   6 +
+>  drivers/iio/accel/Kconfig   |  11 +
+>  drivers/iio/accel/Makefile  |   1 +
+>  drivers/iio/accel/adxl372.c | 530 ++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 548 insertions(+)
+>  create mode 100644 drivers/iio/accel/adxl372.c
 > 
-> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-> index c7ef8d1862d6..b7069a4c28a2 100644
-> --- a/drivers/iio/light/Kconfig
-> +++ b/drivers/iio/light/Kconfig
-> @@ -447,6 +447,18 @@ config VCNL4000
->  	 To compile this driver as a module, choose M here: the
->  	 module will be called vcnl4000.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 60b1028..2ba47bb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -543,6 +543,12 @@ W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/input/misc/adxl34x.c
 >  
-> +config VCNL4035
-> +	tristate "VCNL4035 combined ALS and proximity sensor"
-> +	select REGMAP_I2C
-> +	depends on I2C
+> +ADXL372 THREE-AXIS DIGITAL ACCELEROMETER DRIVER
+> +M:	Stefan Popa <stefan.popa@analog.com>
+> +W:	http://ez.analog.com/community/linux-device-drivers
+> +S:	Supported
+> +F:	drivers/iio/accel/adxl372.c
+> +
+>  AF9013 MEDIA DRIVER
+>  M:	Antti Palosaari <crope@iki.fi>
+>  L:	linux-media@vger.kernel.org
+> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> index 62ae7e5..1b496ef 100644
+> --- a/drivers/iio/accel/Kconfig
+> +++ b/drivers/iio/accel/Kconfig
+> @@ -60,6 +60,17 @@ config ADXL345_SPI
+>  	  will be called adxl345_spi and you will also get adxl345_core
+>  	  for the core module.
+>  
+> +config ADXL372
+> +	tristate "Analog Devices ADXL372 3-Axis Accelerometer Driver"
+> +	depends on SPI
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
 > +	help
-> +	 Say Y here if you want to build a driver for the Vishay VCNL4035,
-> +	 combined ambient light (ALS) and proximity sensor. Currently only ALS
-> +	 function is available.
+> +	  Say yes here to add support for the Analog Devices ADXL372 triaxial
+> +	  acceleration sensor.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called adxl372.
 > +
-> +	 To compile this driver as a module, choose M here: the
-> +	 module will be called vcnl4035.
-> +
->  config VEML6070
->  	tristate "VEML6070 UV A light sensor"
+>  config BMA180
+>  	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
 >  	depends on I2C
-> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-> index 80943af5d627..dce98511a59b 100644
-> --- a/drivers/iio/light/Makefile
-> +++ b/drivers/iio/light/Makefile
-> @@ -44,6 +44,7 @@ obj-$(CONFIG_TSL2772)		+= tsl2772.o
->  obj-$(CONFIG_TSL4531)		+= tsl4531.o
->  obj-$(CONFIG_US5182D)		+= us5182d.o
->  obj-$(CONFIG_VCNL4000)		+= vcnl4000.o
-> +obj-$(CONFIG_VCNL4035)		+= vcnl4035.o
->  obj-$(CONFIG_VEML6070)		+= veml6070.o
->  obj-$(CONFIG_VL6180)		+= vl6180.o
->  obj-$(CONFIG_ZOPT2201)		+= zopt2201.o
-> diff --git a/drivers/iio/light/vcnl4035.c b/drivers/iio/light/vcnl4035.c
+> diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
+> index 636d4d1..5758ffc 100644
+> --- a/drivers/iio/accel/Makefile
+> +++ b/drivers/iio/accel/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_ADIS16209) += adis16209.o
+>  obj-$(CONFIG_ADXL345) += adxl345_core.o
+>  obj-$(CONFIG_ADXL345_I2C) += adxl345_i2c.o
+>  obj-$(CONFIG_ADXL345_SPI) += adxl345_spi.o
+> +obj-$(CONFIG_ADXL372) += adxl372.o
+>  obj-$(CONFIG_BMA180) += bma180.o
+>  obj-$(CONFIG_BMA220) += bma220_spi.o
+>  obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
+> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
 > new file mode 100644
-> index 000000000000..64ea7cbc763e
+> index 0000000..7d5092d
 > --- /dev/null
-> +++ b/drivers/iio/light/vcnl4035.c
-> @@ -0,0 +1,701 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/drivers/iio/accel/adxl372.c
+> @@ -0,0 +1,530 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 > +/*
-> + * VCNL4035 Ambient Light and Proximity Sensor - 7-bit I2C slave address 0x60
+> + * ADXL372 3-Axis Digital Accelerometer SPI driver
 > + *
-> + * Copyright (c) 2018, DENX Software Engineering GmbH
-> + * Author: Parthiban Nallathambi <pn@denx.de>
-> + *
-> + *
-> + * TODO: Proximity
+> + * Copyright 2018 Analog Devices Inc.
 > + */
-> +#include <linux/bitops.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
 > +
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/events.h>
+> +#include <linux/bitops.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/spi/spi.h>
+> +
 > +#include <linux/iio/iio.h>
 > +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/trigger.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
 > +
-> +#define VCNL4035_DRV_NAME	"vcnl4035"
-> +#define VCNL4035_IRQ_NAME	"vcnl4035_event"
-> +#define VCNL4035_REGMAP_NAME	"vcnl4035_regmap"
+> +/* ADXL372 registers definition */
+> +#define ADXL372_DEVID			0x00
+> +#define ADXL372_DEVID_MST		0x01
+> +#define ADXL372_PARTID			0x02
+> +#define ADXL372_REVID			0x03
+> +#define ADXL372_STATUS_1		0x04
+> +#define ADXL372_STATUS_2		0x05
+> +#define ADXL372_FIFO_ENTRIES_2		0x06
+> +#define ADXL372_FIFO_ENTRIES_1		0x07
+> +#define ADXL372_X_DATA_H		0x08
+> +#define ADXL372_X_DATA_L		0x09
+> +#define ADXL372_Y_DATA_H		0x0A
+> +#define ADXL372_Y_DATA_L		0x0B
+> +#define ADXL372_Z_DATA_H		0x0C
+> +#define ADXL372_Z_DATA_L		0x0D
+> +#define ADXL372_X_MAXPEAK_H		0x15
+> +#define ADXL372_X_MAXPEAK_L		0x16
+> +#define ADXL372_Y_MAXPEAK_H		0x17
+> +#define ADXL372_Y_MAXPEAK_L		0x18
+> +#define ADXL372_Z_MAXPEAK_H		0x19
+> +#define ADXL372_Z_MAXPEAK_L		0x1A
+> +#define ADXL372_OFFSET_X		0x20
+> +#define ADXL372_OFFSET_Y		0x21
+> +#define ADXL372_OFFSET_Z		0x22
+> +#define ADXL372_X_THRESH_ACT_H		0x23
+> +#define ADXL372_X_THRESH_ACT_L		0x24
+> +#define ADXL372_Y_THRESH_ACT_H		0x25
+> +#define ADXL372_Y_THRESH_ACT_L		0x26
+> +#define ADXL372_Z_THRESH_ACT_H		0x27
+> +#define ADXL372_Z_THRESH_ACT_L		0x28
+> +#define ADXL372_TIME_ACT		0x29
+> +#define ADXL372_X_THRESH_INACT_H	0x2A
+> +#define ADXL372_X_THRESH_INACT_L	0x2B
+> +#define ADXL372_Y_THRESH_INACT_H	0x2C
+> +#define ADXL372_Y_THRESH_INACT_L	0x2D
+> +#define ADXL372_Z_THRESH_INACT_H	0x2E
+> +#define ADXL372_Z_THRESH_INACT_L	0x2F
+> +#define ADXL372_TIME_INACT_H		0x30
+> +#define ADXL372_TIME_INACT_L		0x31
+> +#define ADXL372_X_THRESH_ACT2_H		0x32
+> +#define ADXL372_X_THRESH_ACT2_L		0x33
+> +#define ADXL372_Y_THRESH_ACT2_H		0x34
+> +#define ADXL372_Y_THRESH_ACT2_L		0x35
+> +#define ADXL372_Z_THRESH_ACT2_H		0x36
+> +#define ADXL372_Z_THRESH_ACT2_L		0x37
+> +#define ADXL372_HPF			0x38
+> +#define ADXL372_FIFO_SAMPLES		0x39
+> +#define ADXL372_FIFO_CTL		0x3A
+> +#define ADXL372_INT1_MAP		0x3B
+> +#define ADXL372_INT2_MAP		0x3C
+> +#define ADXL372_TIMING			0x3D
+> +#define ADXL372_MEASURE			0x3E
+> +#define ADXL372_POWER_CTL		0x3F
+> +#define ADXL372_SELF_TEST		0x40
+> +#define ADXL372_RESET			0x41
+> +#define ADXL372_FIFO_DATA		0x42
 > +
-> +/* Device registers */
-> +#define VCNL4035_ALS_CONF	0x00
-> +#define VCNL4035_ALS_THDH	0x01
-> +#define VCNL4035_ALS_THDL	0x02
-> +#define VCNL4035_ALS_DATA	0x0B
-> +#define VCNL4035_WHITE_DATA	0x0C
-> +#define VCNL4035_INT_FLAG	0x0D
-> +#define VCNL4035_DEV_ID		0x0E
+> +#define ADXL372_DEVID_VAL		0xAD
+> +#define ADXL372_PARTID_VAL		0xFA
+> +#define ADXL372_RESET_CODE		0x52
 > +
-> +/* Register masks */
-> +#define VCNL4035_MODE_ALS_MASK		BIT(0)
-> +#define VCNL4035_MODE_ALS_WHITE_CHAN	BIT(8)
-> +#define VCNL4035_MODE_ALS_INT_MASK	BIT(1)
-> +#define VCNL4035_ALS_IT_MASK		GENMASK(7, 5)
-> +#define VCNL4035_ALS_PERS_MASK		GENMASK(3, 2)
-> +#define VCNL4035_INT_ALS_IF_H_MASK	BIT(12)
-> +#define VCNL4035_INT_ALS_IF_L_MASK	BIT(13)
+> +/* ADXL372_POWER_CTL */
+> +#define ADXL372_POWER_CTL_MODE_MSK		GENMASK_ULL(1, 0)
+> +#define ADXL372_POWER_CTL_MODE(x)		(((x) & 0x3) << 0)
 > +
-> +/* Default values */
-> +#define VCNL4035_MODE_ALS_ENABLE	BIT(0)
-> +#define VCNL4035_MODE_ALS_DISABLE	0x00
-> +#define VCNL4035_MODE_ALS_INT_ENABLE	BIT(1)
-> +#define VCNL4035_MODE_ALS_INT_DISABLE	0
-> +#define VCNL4035_DEV_ID_VAL		0x80
-> +#define VCNL4035_ALS_IT_DEFAULT		0x01
-> +#define VCNL4035_ALS_PERS_DEFAULT	0x00
-> +#define VCNL4035_ALS_THDH_DEFAULT	5000
-> +#define VCNL4035_ALS_THDL_DEFAULT	100
-> +#define VCNL4035_SLEEP_DELAY_MS		2000
+> +/* ADXL372_MEASURE */
+> +#define ADXL372_MEASURE_LINKLOOP_MSK		GENMASK_ULL(5, 4)
+> +#define ADXL372_MEASURE_LINKLOOP_MODE(x)	(((x) & 0x3) << 4)
+> +#define ADXL372_MEASURE_BANDWIDTH_MSK		GENMASK_ULL(2, 0)
+> +#define ADXL372_MEASURE_BANDWIDTH_MODE(x)	(((x) & 0x7) << 0)
 > +
-> +struct vcnl4035_data {
-> +	struct i2c_client *client;
-> +	struct regmap *regmap;
-> +	unsigned int als_it_val;
-> +	unsigned int als_persistence:4;
-> +	unsigned int als_thresh_low;
-> +	unsigned int als_thresh_high;
-> +	struct iio_trigger *drdy_trigger0;
+> +/* ADXL372_TIMING */
+> +#define ADXL372_TIMING_ODR_MSK			GENMASK_ULL(7, 5)
+> +#define ADXL372_TIMING_ODR_MODE(x)		(((x) & 0x7) << 5)
+> +
+> +/* ADXL372_FIFO_CTL */
+> +#define ADXL372_FIFO_CTL_FORMAT_MSK		GENMASK(5, 3)
+> +#define ADXL372_FIFO_CTL_FORMAT_MODE(x)		(((x) & 0x7) << 3)
+> +#define ADXL372_FIFO_CTL_MODE_MSK		GENMASK(2, 1)
+> +#define ADXL372_FIFO_CTL_MODE_MODE(x)		(((x) & 0x3) << 1)
+> +#define ADXL372_FIFO_CTL_SAMPLES_MSK		BIT(1)
+> +#define ADXL372_FIFO_CTL_SAMPLES_MODE(x)	(((x) > 0xFF) ? 1 : 0)
+> +
+> +/* ADXL372_STATUS_1 */
+> +#define ADXL372_STATUS_1_DATA_RDY(x)		(((x) >> 0) & 0x1)
+> +#define ADXL372_STATUS_1_FIFO_RDY(x)		(((x) >> 1) & 0x1)
+> +#define ADXL372_STATUS_1_FIFO_FULL(x)		(((x) >> 2) & 0x1)
+> +#define ADXL372_STATUS_1_FIFO_OVR(x)		(((x) >> 3) & 0x1)
+> +#define ADXL372_STATUS_1_USR_NVM_BUSY(x)	(((x) >> 5) & 0x1)
+> +#define ADXL372_STATUS_1_AWAKE(x)		(((x) >> 6) & 0x1)
+> +#define ADXL372_STATUS_1_ERR_USR_REGS(x)	(((x) >> 7) & 0x1)
+> +
+> +/* ADXL372_INT1_MAP */
+> +#define ADXL372_INT1_MAP_DATA_RDY_MSK		BIT(0)
+> +#define ADXL372_INT1_MAP_DATA_RDY_MODE(x)	(((x) & 0x1) << 0)
+> +#define ADXL372_INT1_MAP_FIFO_RDY_MSK		BIT(1)
+> +#define ADXL372_INT1_MAP_FIFO_RDY_MODE(x)	(((x) & 0x1) << 1)
+> +#define ADXL372_INT1_MAP_FIFO_FULL_MSK		BIT(2)
+> +#define ADXL372_INT1_MAP_FIFO_FULL_MODE(x)	(((x) & 0x1) << 2)
+> +#define ADXL372_INT1_MAP_FIFO_OVR_MSK		BIT(3)
+> +#define ADXL372_INT1_MAP_FIFO_OVR_MODE(x)	(((x) & 0x1) << 3)
+> +#define ADXL372_INT1_MAP_INACT_MSK		BIT(4)
+> +#define ADXL372_INT1_MAP_INACT_MODE(x)		(((x) & 0x1) << 4)
+> +#define ADXL372_INT1_MAP_ACT_MSK		BIT(5)
+> +#define ADXL372_INT1_MAP_ACT_MODE(x)		(((x) & 0x1) << 5)
+> +#define ADXL372_INT1_MAP_AWAKE_MSK		BIT(6)
+> +#define ADXL372_INT1_MAP_AWAKE_MODE(x)		(((x) & 0x1) << 6)
+> +#define ADXL372_INT1_MAP_LOW_MSK		BIT(7)
+> +#define ADXL372_INT1_MAP_LOW_MODE(x)		(((x) & 0x1) << 7)
+> +
+> +/*
+> + * At +/- 200g with 12-bit resolution, scale is computed as:
+> + * (200 + 200) * 9.81 / (2^12 - 1) = 0.958241
+> + */
+> +#define ADXL372_USCALE	958241
+> +
+> +enum adxl372_op_mode {
+> +	ADXL372_STANDBY,
+> +	ADXL372_WAKE_UP,
+> +	ADXL372_INSTANT_ON,
+> +	ADXL372_FULL_BW_MEASUREMENT,
 > +};
 > +
-> +static inline bool vcnl4035_is_triggered(struct vcnl4035_data *data)
-> +{
-> +	int ret;
-> +	int reg;
+> +enum adxl372_act_proc_mode {
+> +	ADXL372_DEFAULT,
+> +	ADXL372_LINKED,
+> +	ADXL372_LOOPED,
+> +};
 > +
-> +	ret = regmap_read(data->regmap, VCNL4035_INT_FLAG, &reg);
+> +enum adxl372_th_activity {
+> +	ADXL372_ACTIVITY,
+> +	ADXL372_ACTIVITY2,
+> +	ADXL372_INACTIVITY,
+> +};
+> +
+> +enum adxl372_odr {
+> +	ADXL372_ODR_400HZ,
+> +	ADXL372_ODR_800HZ,
+> +	ADXL372_ODR_1600HZ,
+> +	ADXL372_ODR_3200HZ,
+> +	ADXL372_ODR_6400HZ,
+> +};
+> +
+> +enum adxl372_bandwidth {
+> +	ADXL372_BW_200HZ,
+> +	ADXL372_BW_400HZ,
+> +	ADXL372_BW_800HZ,
+> +	ADXL372_BW_1600HZ,
+> +	ADXL372_BW_3200HZ,
+> +};
+> +
+> +#define ADXL372_ACCEL_CHANNEL(index, reg, axis) {			\
+> +	.type = IIO_ACCEL,						\
+> +	.address = reg,							\
+> +	.modified = 1,							\
+> +	.channel2 = IIO_MOD_##axis,					\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),		\
+> +}
+> +
+> +static const struct iio_chan_spec adxl372_channels[] = {
+> +	ADXL372_ACCEL_CHANNEL(0, ADXL372_X_DATA_H, X),
+> +	ADXL372_ACCEL_CHANNEL(1, ADXL372_Y_DATA_H, Y),
+> +	ADXL372_ACCEL_CHANNEL(2, ADXL372_Z_DATA_H, Z),
+> +};
+> +
+> +struct adxl372_state {
+> +	struct spi_device		*spi;
+> +	struct regmap			*regmap;
+> +	enum adxl372_op_mode		op_mode;
+> +	enum adxl372_act_proc_mode	act_proc_mode;
+> +	enum adxl372_odr		odr;
+> +	enum adxl372_bandwidth		bw;
+> +	u32				act_time_ms;
+> +	u32				inact_time_ms;
+> +};
+> +
+> +static int adxl372_read_axis(struct adxl372_state *st, u8 addr)
+> +{
+> +	__be16 regval;
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(st->regmap, addr, &regval, sizeof(regval));
 > +	if (ret < 0)
-> +		return false;
+> +		return ret;
 > +
-> +	return !!(reg &
-> +		(VCNL4035_INT_ALS_IF_H_MASK | VCNL4035_INT_ALS_IF_L_MASK));
+> +	return be16_to_cpu(regval);
 > +}
 > +
-> +static irqreturn_t vcnl4035_drdy_irq_thread(int irq, void *private)
-> +{
-> +	struct iio_dev *indio_dev = private;
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
-> +
-> +	if (vcnl4035_is_triggered(data)) {
-> +		iio_push_event(indio_dev, IIO_UNMOD_EVENT_CODE(IIO_LIGHT,
-> +							0,
-> +							IIO_EV_TYPE_THRESH,
-> +							IIO_EV_DIR_EITHER),
-> +				iio_get_time_ns(indio_dev));
-> +		iio_trigger_poll_chained(data->drdy_trigger0);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	return IRQ_NONE;
-> +}
-> +
-> +/* Triggered buffer */
-> +static irqreturn_t vcnl4035_trigger_consumer_handler(int irq, void *p)
-> +{
-> +	struct iio_poll_func *pf = p;
-> +	struct iio_dev *indio_dev = pf->indio_dev;
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
-> +	u16 buffer[ALIGN(sizeof(u16), sizeof(s64)) + sizeof(s64)];
-
-This seems odd given it's a u16 and so those sizes are probably
-double what they should be.
-
-> +	int ret;
-> +
-> +	ret = regmap_read(data->regmap, VCNL4035_ALS_DATA, (int *)buffer);
-> +	if (!ret)
-> +		iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-> +						iio_get_time_ns(indio_dev));
-I would prefer the cleaner option of
-
-if (!ret) {
-	dev_err...
-	goto error;
-}
-iio_push...
-
-error:
-	iio_trigger_notify_done(...)
-
-	return IRQ_HANDLED;
-
-It makes it much easier to see that one path is an error path, whereas the
-other is expected to be normal.
-
-> +	else
-> +		dev_err(&data->client->dev,
-> +			"Trigger consumer can't read from sensor.\n");
-> +	iio_trigger_notify_done(indio_dev->trig);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int vcnl4035_als_drdy_set_state(struct iio_trigger *trigger,
-> +					bool enable_drdy)
-> +{
-> +	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trigger);
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
-> +	int val = enable_drdy ? VCNL4035_MODE_ALS_INT_ENABLE :
-> +					VCNL4035_MODE_ALS_INT_DISABLE;
-> +
-> +	return regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-> +				 VCNL4035_MODE_ALS_INT_MASK,
-> +				 val);
-> +}
-> +
-> +static const struct iio_trigger_ops vcnl4035_trigger_ops = {
-> +	.validate_device = iio_trigger_validate_own_device,
-> +	.set_trigger_state = vcnl4035_als_drdy_set_state,
-> +};
-> +
-> +static int vcnl4035_set_pm_runtime_state(struct vcnl4035_data *data, bool on)
+> +static int adxl372_set_op_mode(struct adxl372_state *st,
+> +			       enum adxl372_op_mode op_mode)
 > +{
 > +	int ret;
-> +	struct device *dev = &data->client->dev;
 > +
-> +	if (on) {
-> +		ret = pm_runtime_get_sync(dev);
-> +		if (ret < 0)
-> +			pm_runtime_put_noidle(dev);
-> +	} else {
-> +		pm_runtime_mark_last_busy(dev);
-> +		ret = pm_runtime_put_autosuspend(dev);
-> +	}
+> +	ret = regmap_update_bits(st->regmap, ADXL372_POWER_CTL,
+> +				 ADXL372_POWER_CTL_MODE_MSK,
+> +				 ADXL372_POWER_CTL_MODE(op_mode));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	st->op_mode = op_mode;
 > +
 > +	return ret;
 > +}
 > +
-> +/*
-> + *	Device IT	INT Time (ms)	Scale (lux/step)
-> + *	000		50		0.064
-> + *	001		100		0.032
-> + *	010		200		0.016
-> + *	100		400		0.008
-> + *	101 - 111	800		0.004
-> + * Values are proportional, so ALS INT is selected for input due to
-> + * simplicity reason. Integration time value and scaling is
-> + * calculated based on device INT value
-> + *
-> + * Raw value needs to be scaled using ALS steps
-> + *
-> + */
-> +static int vcnl4035_read_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan, int *val,
-> +			    int *val2, long mask)
-> +{
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +	int raw_data;
-> +	unsigned int reg;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = vcnl4035_set_pm_runtime_state(data, true);
-> +		if  (ret < 0)
-> +			return ret;
-> +
-> +		ret = iio_device_claim_direct_mode(indio_dev);
-> +		if (!ret) {
-> +			if (chan->channel)
-> +				reg = VCNL4035_ALS_DATA;
-> +			else
-> +				reg = VCNL4035_WHITE_DATA;
-> +			ret = regmap_read(data->regmap, reg, &raw_data);
-> +			iio_device_release_direct_mode(indio_dev);
-> +			if (!ret) {
-> +				*val = raw_data;
-> +				ret = IIO_VAL_INT;
-> +			}
-> +		}
-> +		vcnl4035_set_pm_runtime_state(data, false);
-> +		return ret;
-> +	case IIO_CHAN_INFO_INT_TIME:
-> +		*val = 50;
-> +		if (!data->als_it_val)
-> +			*val = data->als_it_val * 100;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		*val = 64;
-> +		if (!data->als_it_val)
-> +			*val2 = 1000;
-> +		else
-> +			*val2 = data->als_it_val * 2 * 1000;
-> +		return IIO_VAL_FRACTIONAL;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int vcnl4035_write_raw(struct iio_dev *indio_dev,
-> +				struct iio_chan_spec const *chan,
-> +				int val, int val2, long mask)
+> +static int adxl372_set_odr(struct adxl372_state *st,
+> +			   enum adxl372_odr odr)
 > +{
 > +	int ret;
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
 > +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_INT_TIME:
-> +		if (val <= 0 || val > 800)
-> +			return -EINVAL;
-> +
-> +		ret = vcnl4035_set_pm_runtime_state(data, true);
-> +		if  (ret < 0)
-> +			return ret;
-> +
-> +		ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-> +					 VCNL4035_ALS_IT_MASK,
-> +					 val / 100);
-> +		if (!ret)
-> +			data->als_it_val = val / 100;
-> +
-> +		vcnl4035_set_pm_runtime_state(data, false);
+> +	ret = regmap_update_bits(st->regmap, ADXL372_TIMING,
+> +				 ADXL372_TIMING_ODR_MSK,
+> +				 ADXL372_TIMING_ODR_MODE(odr));
+> +	if (ret < 0)
 > +		return ret;
-> +	default:
-> +		return -EINVAL;
-> +	}
+> +
+> +	st->odr = odr;
+> +
+> +	return ret;
 > +}
 > +
-> +/* No direct ABI for persistence and threshold, so eventing */
-> +static int vcnl4035_read_thresh(struct iio_dev *indio_dev,
-> +		const struct iio_chan_spec *chan, enum iio_event_type type,
-> +		enum iio_event_direction dir, enum iio_event_info info,
-> +		int *val, int *val2)
+> +static int adxl372_set_bandwidth(struct adxl372_state *st,
+> +				 enum adxl372_bandwidth bw)
 > +{
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
+> +	int ret;
 > +
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		switch (dir) {
-> +		case IIO_EV_DIR_RISING:
-> +			*val = data->als_thresh_high;
-> +			return IIO_VAL_INT;
-> +		case IIO_EV_DIR_FALLING:
-> +			*val = data->als_thresh_low;
-> +			return IIO_VAL_INT;
-> +		default:
-> +			return -EINVAL;
-> +		}
+> +	ret = regmap_update_bits(st->regmap, ADXL372_MEASURE,
+> +				 ADXL372_MEASURE_BANDWIDTH_MSK,
+> +				 ADXL372_MEASURE_BANDWIDTH_MODE(bw));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	st->bw = bw;
+> +
+> +	return ret;
+> +}
+> +
+> +static int adxl372_set_act_proc_mode(struct adxl372_state *st,
+> +				     enum adxl372_act_proc_mode mode)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(st->regmap,
+> +				 ADXL372_MEASURE,
+> +				 ADXL372_MEASURE_LINKLOOP_MSK,
+> +				 ADXL372_MEASURE_LINKLOOP_MODE(mode));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	st->act_proc_mode = mode;
+> +
+> +	return ret;
+> +}
+> +
+> +static int adxl372_set_activity_threshold(struct adxl372_state *st,
+> +					  enum adxl372_th_activity act,
+> +					  bool ref_en, bool enable,
+> +					  unsigned int threshold)
+> +{
+> +	unsigned char buf[6];
+> +	unsigned char th_reg_high_val, th_reg_low_val, th_reg_high_addr;
+> +
+> +	/* scale factor is 100 mg/code */
+> +	th_reg_high_val = (threshold / 100) >> 3;
+> +	th_reg_low_val = ((threshold / 100) << 5) | (ref_en << 1) | enable;
+> +
+> +	switch (act) {
+> +	case ADXL372_ACTIVITY:
+> +		th_reg_high_addr = ADXL372_X_THRESH_ACT_H;
 > +		break;
-> +	case IIO_EV_INFO_PERIOD:
-> +		*val = data->als_persistence;
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
+> +	case ADXL372_ACTIVITY2:
+> +		th_reg_high_addr = ADXL372_X_THRESH_ACT2_H;
+> +		break;
+> +	case ADXL372_INACTIVITY:
+> +		th_reg_high_addr = ADXL372_X_THRESH_INACT_H;
+
+Really minor but perhaps a constant lookup table would be more elegant?
+
+> +		break;
 > +	}
 > +
+> +	buf[0] = th_reg_high_val;
+> +	buf[1] = th_reg_low_val;
+> +	buf[2] = th_reg_high_val;
+> +	buf[3] = th_reg_low_val;
+> +	buf[4] = th_reg_high_val;
+> +	buf[5] = th_reg_low_val;
+> +
+> +	return regmap_bulk_write(st->regmap, th_reg_high_addr,
+> +				 buf, ARRAY_SIZE(buf));
 > +}
 > +
-> +static int vcnl4035_write_thresh(struct iio_dev *indio_dev,
-> +		const struct iio_chan_spec *chan, enum iio_event_type type,
-> +		enum iio_event_direction dir, enum iio_event_info info, int val,
-> +		int val2)
+> +static int adxl372_set_activity_time_ms(struct adxl372_state *st,
+> +					unsigned int act_time_ms)
 > +{
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
+> +	unsigned int reg_val, scale_factor;
 > +	int ret;
 > +
-> +	switch (info) {
-> +	case IIO_EV_INFO_VALUE:
-> +		/* 16 bit threshold range 0 - 65535 */
-> +		if (val < 0 || val > 65535)
-> +			return -EINVAL;
-> +		if (dir == IIO_EV_DIR_RISING) {
-> +			if (val < data->als_thresh_low)
-> +				return -EINVAL;
-> +			ret = regmap_write(data->regmap, VCNL4035_ALS_THDH,
-> +					   val);
-> +			if (!ret)
-> +				data->als_thresh_high = val;
-> +		} else {
-> +			if (val > data->als_thresh_high)
-> +				return -EINVAL;
-> +			ret = regmap_write(data->regmap, VCNL4035_ALS_THDL,
-> +					   val);
-> +			if (!ret)
-> +				data->als_thresh_low = val;
-> +		}
+> +	/*
+> +	 * 3.3 ms per code is the scale factor of the TIME_ACT register for
+> +	 * ODR = 6400 Hz. It is 6.6 ms per code for ODR = 3200 Hz and below.
+> +	 */
+> +	if (st->odr == ADXL372_ODR_6400HZ)
+> +		scale_factor = 3300;
+> +	else
+> +		scale_factor = 6600;
+> +
+> +	reg_val = DIV_ROUND_CLOSEST(act_time_ms * 1000, scale_factor);
+> +
+> +	/* TIME_ACT register is 8 bits wide */
+> +	if (reg_val > 0xFF)
+> +		reg_val = 0xFF;
+> +
+> +	ret = regmap_write(st->regmap, ADXL372_TIME_ACT, reg_val);
+> +	if (ret < 0)
 > +		return ret;
-> +	case IIO_EV_INFO_PERIOD:
-> +		/* allow only 1 2 4 8 as persistence value */
-> +		if (val < 0 || val > 8 || __sw_hweight8(val) != 1)
-> +			return -EINVAL;
-> +		ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-> +					 VCNL4035_ALS_PERS_MASK, val);
-> +		if (!ret)
-> +			data->als_persistence = val;
-> +		return ret;
-> +	default:
-> +		return -EINVAL;
-> +	}
+> +
+> +	st->act_time_ms = act_time_ms;
+> +
+> +	return ret;
 > +}
 > +
-> +static IIO_CONST_ATTR_INT_TIME_AVAIL("50 100 200 400 800");
-> +
-> +static struct attribute *vcnl4035_attributes[] = {
-> +	&iio_const_attr_integration_time_available.dev_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group vcnl4035_attribute_group = {
-> +	.attrs = vcnl4035_attributes,
-> +};
-> +
-> +static const struct iio_info vcnl4035_info = {
-> +	.read_raw		= vcnl4035_read_raw,
-> +	.write_raw		= vcnl4035_write_raw,
-> +	.read_event_value	= vcnl4035_read_thresh,
-> +	.write_event_value	= vcnl4035_write_thresh,
-> +	.attrs			= &vcnl4035_attribute_group,
-> +};
-> +
-> +static const struct iio_event_spec vcnl4035_event_spec[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-> +	}, {
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-> +	}, {
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_EITHER,
-> +		.mask_separate = BIT(IIO_EV_INFO_PERIOD),
-> +	},
-> +};
-> +
-> +enum vcnl4035_scan_index_order {
-> +	VCNL4035_CHAN_INDEX_LIGHT,
-> +	VCNL4035_CHAN_INDEX_WHITE_LED,
-> +};
-> +
-> +static const unsigned long vcnl4035_available_scan_masks[] = {
-> +	BIT(VCNL4035_CHAN_INDEX_LIGHT),
-> +	BIT(VCNL4035_CHAN_INDEX_WHITE_LED),
-> +	0
-> +};
-> +
-> +static const struct iio_chan_spec vcnl4035_channels[] = {
-> +	{
-> +		.type = IIO_INTENSITY,
-> +		.channel = 0,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				BIT(IIO_CHAN_INFO_INT_TIME) |
-> +				BIT(IIO_CHAN_INFO_SCALE),
-> +		.event_spec = vcnl4035_event_spec,
-> +		.num_event_specs = ARRAY_SIZE(vcnl4035_event_spec),
-> +		.scan_index = VCNL4035_CHAN_INDEX_LIGHT,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.endianness = IIO_LE,
-> +		},
-
-This is an oddity on the datasheet.  It sort of gives the calibration
-to lux, so it would be IIO_LIGHT rather than IIO_INTENSITY, but
-it is all a bit unclear on what it actually is.
-
-If you can figure out the conversion to units of lux then it would 
-be good.
-
-> +	},
-> +	{
-> +		.type = IIO_INTENSITY,
-> +		.channel = 1,
-> +		.modified = 1,
-> +		.channel2 = IIO_MOD_LIGHT_CLEAR,
-
-I'm still a bit unclear on what this one actually is.. Might be
-logically 'clear' or might be the traditional option of 'both'.
-
-See reply to v4.
-
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.scan_index = VCNL4035_CHAN_INDEX_WHITE_LED,
-> +		.scan_type = {
-> +			.sign = 'u',
-> +			.realbits = 16,
-> +			.storagebits = 16,
-> +			.endianness = IIO_LE,
-> +		},
-> +	},
-> +};
-> +
-> +static int vcnl4035_set_als_power_state(struct vcnl4035_data *data, u8 status)
+> +static int adxl372_set_inactivity_time_ms(struct adxl372_state *st,
+> +					  unsigned int inact_time_ms)
 > +{
-> +	return regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-> +					VCNL4035_MODE_ALS_MASK,
-> +					status);
-> +}
-> +
-> +static int vcnl4035_init(struct vcnl4035_data *data)
-> +{
+> +	unsigned int reg_val_h, reg_val_l, res, scale_factor;
 > +	int ret;
-> +	int id;
 > +
-> +	ret = regmap_read(data->regmap, VCNL4035_DEV_ID, &id);
-> +	if (ret < 0) {
-> +		dev_err(&data->client->dev, "Failed to read DEV_ID register\n");
+> +	/*
+> +	 * 13 ms per code is the scale factor of the TIME_INACT register for
+> +	 * ODR = 6400 Hz. It is 26 ms per code for ODR = 3200 Hz and below.
+> +	 */
+> +	if (st->odr == ADXL372_ODR_6400HZ)
+> +		scale_factor = 13;
+> +	else
+> +		scale_factor = 26;
+> +
+> +	res = DIV_ROUND_CLOSEST(inact_time_ms, scale_factor);
+> +	reg_val_h = (res >> 8) & 0xFF;
+> +	reg_val_l = res & 0xFF;
+> +
+> +	ret = regmap_write(st->regmap, ADXL372_TIME_INACT_H, reg_val_h);
+> +	if (ret < 0)
 > +		return ret;
-> +	}
 > +
-> +	if (id != VCNL4035_DEV_ID_VAL) {
-> +		dev_err(&data->client->dev, "Wrong id, got %x, expected %x\n",
-> +			id, VCNL4035_DEV_ID_VAL);
+> +	ret = regmap_write(st->regmap, ADXL372_TIME_INACT_L, reg_val_l);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	st->inact_time_ms = inact_time_ms;
+> +
+> +	return ret;
+> +}
+> +
+> +static int adxl372_setup(struct adxl372_state *st)
+> +{
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(st->regmap, ADXL372_DEVID, &regval);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (regval != ADXL372_DEVID_VAL) {
+> +		dev_err(&st->spi->dev, "Invalid chip id %x\n", regval);
 > +		return -ENODEV;
 > +	}
 > +
-> +	ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
+> +	ret = adxl372_set_op_mode(st, ADXL372_STANDBY);
 > +	if (ret < 0)
 > +		return ret;
 > +
-> +	/* ALS white channel enable */
-> +	ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-> +				 VCNL4035_MODE_ALS_WHITE_CHAN,
-> +				 1);
-> +	if (ret) {
-> +		dev_err(&data->client->dev, "set white channel enable %d\n",
-> +			ret);
+> +	/* Set threshold for activity detection to 1g */
+> +	ret = adxl372_set_activity_threshold(st, ADXL372_ACTIVITY,
+> +					     true, true, 1000);
+> +	if (ret < 0)
 > +		return ret;
-> +	}
 > +
-> +	/* set default integration time - 100 ms for ALS */
-> +	ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-> +				 VCNL4035_ALS_IT_MASK,
-> +				 VCNL4035_ALS_IT_DEFAULT);
-> +	if (ret) {
-> +		dev_err(&data->client->dev, "set default ALS IT returned %d\n",
-> +			ret);
+> +	/* Set threshold for inactivity detection to 100mg */
+> +	ret = adxl372_set_activity_threshold(st, ADXL372_INACTIVITY,
+> +					     true, true, 100);
+> +	if (ret < 0)
 > +		return ret;
-> +	}
-> +	data->als_it_val = VCNL4035_ALS_IT_DEFAULT;
 > +
-> +	/* set default persistence time - 1 for ALS */
-> +	ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-> +				 VCNL4035_ALS_PERS_MASK,
-> +				 VCNL4035_ALS_PERS_DEFAULT);
-> +	if (ret) {
-> +		dev_err(&data->client->dev, "set default PERS returned %d\n",
-> +			ret);
+> +	/* Set activity processing in Looped mode */
+> +	ret = adxl372_set_act_proc_mode(st, ADXL372_LOOPED);
+> +	if (ret < 0)
 > +		return ret;
-> +	}
-> +	data->als_persistence = VCNL4035_ALS_PERS_DEFAULT;
 > +
-> +	/* set default HIGH threshold for ALS */
-> +	ret = regmap_write(data->regmap, VCNL4035_ALS_THDH,
-> +				VCNL4035_ALS_THDH_DEFAULT);
-> +	if (ret) {
-> +		dev_err(&data->client->dev, "set default THDH returned %d\n",
-> +			ret);
+> +	ret = adxl372_set_odr(st, ADXL372_ODR_6400HZ);
+> +	if (ret < 0)
 > +		return ret;
-> +	}
-> +	data->als_thresh_high = VCNL4035_ALS_THDH_DEFAULT;
 > +
-> +	/* set default LOW threshold for ALS */
-> +	ret = regmap_write(data->regmap, VCNL4035_ALS_THDL,
-> +				VCNL4035_ALS_THDL_DEFAULT);
-> +	if (ret) {
-> +		dev_err(&data->client->dev, "set default THDL returned %d\n",
-> +			ret);
+> +	ret = adxl372_set_bandwidth(st, ADXL372_BW_3200HZ);
+> +	if (ret < 0)
 > +		return ret;
-> +	}
-> +	data->als_thresh_low = VCNL4035_ALS_THDL_DEFAULT;
 > +
-> +	return 0;
+> +	/* Set activity timer to 1ms */
+> +	ret = adxl372_set_activity_time_ms(st, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Set inactivity timer to 10s */
+> +	ret = adxl372_set_inactivity_time_ms(st, 10000);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Set the mode of operation to full bandwidth measurement mode */
+> +	return adxl372_set_op_mode(st, ADXL372_FULL_BW_MEASUREMENT);
 > +}
 > +
-> +static bool vcnl4035_is_volatile_reg(struct device *dev, unsigned int reg)
+> +static int adxl372_reg_access(struct iio_dev *indio_dev,
+> +			      unsigned int reg,
+> +			      unsigned int writeval,
+> +			      unsigned int *readval)
 > +{
-> +	switch (reg) {
-> +	case VCNL4035_ALS_CONF:
-> +	case VCNL4035_DEV_ID:
-> +		return false;
+> +	struct adxl372_state *st = iio_priv(indio_dev);
+> +
+> +	if (readval)
+> +		return regmap_read(st->regmap, reg, readval);
+> +	else
+> +		return regmap_write(st->regmap, reg, writeval);
+> +}
+> +
+> +static int adxl372_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int *val, int *val2, long info)
+> +{
+> +	struct adxl372_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = adxl372_read_axis(st, chan->address);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		*val = sign_extend32(ret >> chan->scan_type.shift,
+> +				     chan->scan_type.realbits - 1);
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = 0;
+> +		*val2 = ADXL372_USCALE;
+> +		return IIO_VAL_INT_PLUS_MICRO;
 > +	default:
-> +		return true;
+> +		return -EINVAL;
 > +	}
 > +}
 > +
-> +static const struct regmap_config vcnl4035_regmap_config = {
-> +	.name		= VCNL4035_REGMAP_NAME,
-> +	.reg_bits	= 8,
-> +	.val_bits	= 16,
-> +	.max_register	= VCNL4035_DEV_ID,
-> +	.cache_type	= REGCACHE_RBTREE,
-> +	.volatile_reg	= vcnl4035_is_volatile_reg,
-> +	.val_format_endian = REGMAP_ENDIAN_LITTLE,
+> +static const struct iio_info adxl372_info = {
+> +	.read_raw = adxl372_read_raw,
+> +	.debugfs_reg_access = &adxl372_reg_access,
 > +};
 > +
-> +static int vcnl4035_probe_trigger(struct iio_dev *indio_dev)
+> +static const struct regmap_config adxl372_spi_regmap_config = {
+> +	.reg_bits = 7,
+> +	.pad_bits = 1,
+> +	.val_bits = 8,
+> +	.read_flag_mask = BIT(0),
+> +};
+> +
+> +static int adxl372_probe(struct spi_device *spi)
 > +{
-> +	int ret;
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
-> +
-> +	data->drdy_trigger0 = devm_iio_trigger_alloc(
-> +			indio_dev->dev.parent,
-> +			"%s-dev%d", indio_dev->name, indio_dev->id);
-> +	if (!data->drdy_trigger0)
-> +		return -ENOMEM;
-> +
-> +	data->drdy_trigger0->dev.parent = indio_dev->dev.parent;
-> +	data->drdy_trigger0->ops = &vcnl4035_trigger_ops;
-> +	iio_trigger_set_drvdata(data->drdy_trigger0, indio_dev);
-> +	ret = iio_trigger_register(data->drdy_trigger0);
-
-devm_iio_trigger_register?
-
-> +	if (ret) {
-> +		dev_err(&data->client->dev, "iio trigger register failed\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Trigger setup */
-> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-> +			vcnl4035_trigger_consumer_handler,
-> +			NULL);
-
-devm_iio_trigggered_buffer_setup
-
-> +	if (ret < 0) {
-> +		dev_err(&data->client->dev, "iio triggered buffer setup failed\n");
-> +		goto fail_trigger_unregister;
-> +	}
-> +
-> +	/* IRQ to trigger mapping */
-> +	ret = devm_request_threaded_irq(&data->client->dev, data->client->irq,
-
-This currently gives incorrect unwinding as the ordering is not the reverse of
-the probe.  It may be fine, but that's not obvious like it would be in clean
-reverse order.  Use managed interfaces for the above two as well as suggested
-and the unwind on removal will be entirely managed and hence correct.
-
-> +			NULL, vcnl4035_drdy_irq_thread,
-> +			IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> +			VCNL4035_IRQ_NAME, indio_dev);
-> +	if (ret < 0) {
-> +		dev_err(&data->client->dev, "request irq %d for trigger0 failed\n",
-> +				data->client->irq);
-> +		goto fail_buffer_clean;
-> +	}
-> +
-> +	return 0;
-> +
-> +fail_buffer_clean:
-> +	iio_triggered_buffer_cleanup(indio_dev);
-> +fail_trigger_unregister:
-> +	iio_trigger_unregister(data->drdy_trigger0);
-devm_ versions for both the setup calls and this goes away.
-> +
-> +	return ret;
-> +}
-> +
-> +static void vcnl4035_remove_trigger(struct iio_dev *indio_dev)
-> +{
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
-> +
-
-devm_ versions above and this goes away
-
-> +	iio_triggered_buffer_cleanup(indio_dev);
-> +	iio_trigger_unregister(data->drdy_trigger0);
-> +}
-> +
-> +static int vcnl4035_probe(struct i2c_client *client,
-> +				const struct i2c_device_id *id)
-> +{
-> +	struct vcnl4035_data *data;
 > +	struct iio_dev *indio_dev;
+> +	struct adxl372_state *st;
 > +	struct regmap *regmap;
 > +	int ret;
 > +
-> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
 > +	if (!indio_dev)
 > +		return -ENOMEM;
 > +
-> +	regmap = devm_regmap_init_i2c(client, &vcnl4035_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_err(&client->dev, "regmap_init failed!\n");
+> +	st = iio_priv(indio_dev);
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	st->spi = spi;
+> +
+> +	regmap = devm_regmap_init_spi(spi, &adxl372_spi_regmap_config);
+> +	if (IS_ERR(regmap))
 > +		return PTR_ERR(regmap);
-> +	}
 > +
-> +	data = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	data->client = client;
-> +	data->regmap = regmap;
+> +	st->regmap = regmap;
 > +
-> +	indio_dev->dev.parent = &client->dev;
-> +	indio_dev->info = &vcnl4035_info;
-> +	indio_dev->name = VCNL4035_DRV_NAME;
-> +	indio_dev->channels = vcnl4035_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(vcnl4035_channels);
+> +	indio_dev->channels = adxl372_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(adxl372_channels);
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->info = &adxl372_info;
 > +	indio_dev->modes = INDIO_DIRECT_MODE;
 > +
-> +	ret = vcnl4035_init(data);
+> +	ret = adxl372_setup(st);
 > +	if (ret < 0) {
-> +		dev_err(&client->dev, "vcnl4035 chip init failed\n");
+> +		dev_err(&st->spi->dev, "ADXL372 setup failed\n");
 > +		return ret;
 > +	}
 > +
-> +	if (client->irq > 0) {
-> +		ret = vcnl4035_probe_trigger(indio_dev);
-> +		if (ret < 0) {
-> +			dev_err(&client->dev, "vcnl4035 unable init trigger\n");
-> +			goto fail_pm_disable;
-> +		}
-> +	}
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret)
-> +		goto fail_free_trigger;
-> +
-> +	ret = pm_runtime_set_active(&client->dev);
-> +	if (ret < 0)
-> +		goto fail_free_trigger;
-> +
-> +	pm_runtime_enable(&client->dev);
-> +	pm_runtime_set_autosuspend_delay(&client->dev, VCNL4035_SLEEP_DELAY_MS);
-> +	pm_runtime_use_autosuspend(&client->dev);
-> +
-> +	return 0;
-> +
-> +fail_free_trigger:
-> +	vcnl4035_remove_trigger(indio_dev);
-> +fail_pm_disable:
-> +	pm_runtime_disable(&client->dev);
-> +	pm_runtime_set_suspended(&client->dev);
-> +	pm_runtime_put_noidle(&client->dev);
-
-The ordering is now wrong here as you need to adjust it to take into account 
-that you reordered the setup above.  However, I'm not sure I agree
-with Andy on reordering the probe in the first place.
-
-> +	vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_DISABLE);
-> +	return ret;
+> +	return devm_iio_device_register(&st->spi->dev, indio_dev);
 > +}
 > +
-> +static int vcnl4035_remove(struct i2c_client *client)
-> +{
-> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +
-> +	vcnl4035_remove_trigger(indio_dev);
-> +	iio_device_unregister(indio_dev);
-> +
-> +	pm_runtime_disable(&client->dev);
-You should unwind explicitly those actions you take in probe so I'd expect
-to see a bit more here.
-pm_runtime_dont_use_autosuspend (this one is actually highlighted in the docs).
-pm_runtime_disable
-pm_runtime_set_suspended
-pm_runtime_put_noidle (matched against the implicit get in pm_runtime disable.)
-
-
-> +	pm_runtime_set_suspended(&client->dev);
-> +	pm_runtime_put_noidle(&client->dev);
-
-
-> +
-> +	return vcnl4035_set_als_power_state(iio_priv(indio_dev),
-> +					VCNL4035_MODE_ALS_DISABLE);
-> +}
-> +
-> +#ifdef CONFIG_PM
-> +static int __maybe_unused vcnl4035_runtime_suspend(struct device *dev)
-> +{
-> +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_DISABLE);
-> +	regcache_mark_dirty(data->regmap);
-> +
-> +	return ret;
-> +}
-> +
-> +static int __maybe_unused vcnl4035_runtime_resume(struct device *dev)
-> +{
-> +	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-> +	struct vcnl4035_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	regcache_sync(data->regmap);
-> +	ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* wait for 1 ALS integration cycle */
-> +	msleep(data->als_it_val * 100);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops vcnl4035_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
-> +	SET_RUNTIME_PM_OPS(vcnl4035_runtime_suspend,
-> +			   vcnl4035_runtime_resume, NULL)
+> +static const struct spi_device_id adxl372_id[] = {
+> +	{ "adxl372", 0 },
+> +	{}
 > +};
+> +MODULE_DEVICE_TABLE(spi, adxl372_id);
 > +
-> +static const struct of_device_id vcnl4035_of_match[] = {
-> +	{ .compatible = "vishay,vcnl4035", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, vcnl4035_of_match);
-> +
-> +static struct i2c_driver vcnl4035_driver = {
+> +static struct spi_driver adxl372_driver = {
 > +	.driver = {
-> +		.name   = VCNL4035_DRV_NAME,
-> +		.pm	= &vcnl4035_pm_ops,
-> +		.of_match_table = of_match_ptr(vcnl4035_of_match),
+> +		.name = KBUILD_MODNAME,
 > +	},
-> +	.probe  = vcnl4035_probe,
-> +	.remove	= vcnl4035_remove,
+> +	.probe = adxl372_probe,
+> +	.id_table = adxl372_id,
 > +};
 > +
-> +module_i2c_driver(vcnl4035_driver);
+> +module_spi_driver(adxl372_driver);
 > +
-> +MODULE_AUTHOR("Parthiban Nallathambi <pn@denx.de>");
-> +MODULE_DESCRIPTION("VCNL4035 Ambient Light Sensor driver");
+> +MODULE_AUTHOR("Stefan Popa <stefan.popa@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices ADXL372 3-axis accelerometer driver");
 > +MODULE_LICENSE("GPL v2");
