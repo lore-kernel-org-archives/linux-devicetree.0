@@ -1,67 +1,165 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH v6 4/8] media: platform: Add Cedrus VPU decoder driver
-Date: Fri, 03 Aug 2018 17:49:38 -0300
-Message-ID: <faa0436aad809ca562b5c152420b1e4d4b6f507b.camel@collabora.com>
-References: <20180725100256.22833-1-paul.kocialkowski@bootlin.com>
-         <20180725100256.22833-5-paul.kocialkowski@bootlin.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 2/3] iio: light: Add support for vishay vcnl4035
+Date: Fri, 3 Aug 2018 21:55:29 +0100
+Message-ID: <20180803215529.2069df4f@archlinux>
+References: <20180802182729.2061830-1-pn@denx.de>
+        <20180802182729.2061830-2-pn@denx.de>
+        <CAHp75VcR7aaUkNJdARMvnkuzxfODwVhHFH0Hm94hsENbShtO3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725100256.22833-5-paul.kocialkowski@bootlin.com>
+In-Reply-To: <CAHp75VcR7aaUkNJdARMvnkuzxfODwVhHFH0Hm94hsENbShtO3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-sunxi@googlegroups.com, Hugues Fruchet <hugues.fruchet@st.com>, Randy Li <ayaka@soulik.info>, Hans Verkuil <hverkuil@xs4all.nl>, Tomasz Figa <tfiga@chromium.org>, Alexandre Courbot <acourbot@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Parthiban Nallathambi <pn@denx.de>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, linux-iio <linux-iio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, wd@denx.de, sbabic@denx.de, Heiko Schocher <hs@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-07-25 at 12:02 +0200, Paul Kocialkowski wrote:
-> This introduces the Cedrus VPU driver that supports the VPU found in
-> Allwinner SoCs, also known as Video Engine. It is implemented through
-> a v4l2 m2m decoder device and a media device (used for media requests).
-> So far, it only supports MPEG2 decoding.
-> 
-> Since this VPU is stateless, synchronization with media requests is
-> required in order to ensure consistency between frame headers that
-> contain metadata about the frame to process and the raw slice data that
-> is used to generate the frame.
-> 
-> This driver was made possible thanks to the long-standing effort
-> carried out by the linux-sunxi community in the interest of reverse
-> engineering, documenting and implementing support for Allwinner VPU.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-[..]
-> +static int cedrus_probe(struct platform_device *pdev)
-> +{
-> +	struct cedrus_dev *dev;
-> +	struct video_device *vfd;
-> +	int ret;
-> +
-> +	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-> +	if (!dev)
-> +		return -ENOMEM;
-> +
-> +	dev->dev = &pdev->dev;
-> +	dev->pdev = pdev;
-> +
-> +	ret = cedrus_hw_probe(dev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to probe hardware\n");
-> +		return ret;
-> +	}
-> +
-> +	dev->dec_ops[CEDRUS_CODEC_MPEG2] = &cedrus_dec_ops_mpeg2;
-> +
-> +	mutex_init(&dev->dev_mutex);
-> +	spin_lock_init(&dev->irq_lock);
-> +
+On Thu, 2 Aug 2018 22:34:14 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-A minor thing.
+> On Thu, Aug 2, 2018 at 9:27 PM, Parthiban Nallathambi <pn@denx.de> wrote:
+> > Add support for VCNL4035, which is capable of Ambient light
+> > sensing (ALS) and proximity function. This patch adds support
+> > only for ALS function  
+> 
+> > +#include <linux/module.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/bitops.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/pm_runtime.h>  
+> 
+> Sort?
+> 
+> > +#include <linux/iio/iio.h>
+> > +#include <linux/iio/sysfs.h>
+> > +#include <linux/iio/events.h>
+> > +#include <linux/iio/buffer.h>
+> > +#include <linux/iio/trigger.h>
+> > +#include <linux/iio/trigger_consumer.h>
+> > +#include <linux/iio/triggered_buffer.h>  
+> 
+> Ditto.
+> 
+> > +       if (reg & (VCNL4035_INT_ALS_IF_H_MASK | VCNL4035_INT_ALS_IF_L_MASK))
+> > +               return true;
+> > +       else
+> > +               return false;  
+> 
+> return !!(reg & ...); ?
+> 
+> > +static irqreturn_t vcnl4035_drdy_irq_thread(int irq, void *private)
+> > +{
+> > +       struct iio_dev *indio_dev = private;
+> > +       struct vcnl4035_data *data = iio_priv(indio_dev);
+> > +  
+> 
+> > +       if (vcnl4035_is_triggered(data)) {  
+> 
+> Here is negative conditional suits.
+> 
+> > +#ifndef CONFIG_PM  
+> 
+> Why?
+> 
+> > +       ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +#endif  
+> 
+> > +               pr_err("regmap_write default THDH returned %d\n", ret);  
+> 
+> dev_err()
+> 
+> > +               pr_err("regmap_write default THDL returned %d\n", ret);  
+> 
+> Ditto.
+> 
+> 
+> > +       ret = pm_runtime_set_active(&client->dev);
+> > +       if (ret < 0)
+> > +               goto fail_poweroff;
+> > +
+> > +       pm_runtime_enable(&client->dev);
+> > +       pm_runtime_set_autosuspend_delay(&client->dev, VCNL4035_SLEEP_DELAY_MS);
+> > +       pm_runtime_use_autosuspend(&client->dev);  
+> 
+> Usually we do this after we probed the device.
+I'm not sure we should.  The docs are fairly clear on this:
 
-I believe this spinlock is not needed. All the data structures
-it's accessing are already protected, and some operations
-(stop_streaming) are guaranteed to not run at the same
-time as a job.
+"In order to use autosuspend, subsystems or drivers must call
+pm_runtime_use_autosuspend() (preferably before registering the device), and
+thereafter they should use the various *_autosuspend() helper functions instead
+of the non-autosuspend counterparts:" (Documentation/runtime_pm.txt)
 
-Regards,
-Eze
+It also makes more logical sense to have removed the userspace interfaces before
+unwinding this as then we don't have annoying races around the inevitable
+set_suspended.
+
+> 
+> > +       if (client->irq) {  
+> 
+> First of all, it can be negative.
+> Second, care to factor out this rather long branch to a separate function?
+> 
+> > +               if (ret < 0) {
+> > +                       dev_err(&client->dev, "request irq %d for trigger0 failed\n",
+> > +                               client->irq);
+> > +                       goto fail_buffer_clean;
+> > +                       }  
+> 
+> Indentation.
+> 
+> > +       }  
+> 
+> So, do I understand correctly that IRQ is optional for this device?
+> 
+> 
+> 
+> > +#ifdef CONFIG_PM
+> > +static int vcnl4035_runtime_suspend(struct device *dev)  
+> 
+> Perhaps __maybe_unused
+> 
+> > +static int vcnl4035_runtime_resume(struct device *dev)  
+> 
+> Ditto.
+> 
+> > +{
+> > +       struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+> > +       struct vcnl4035_data *data = iio_priv(indio_dev);
+> > +       int ret;
+> > +
+> > +       regcache_sync(data->regmap);
+> > +       ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
+> > +       if (ret < 0)
+> > +               return ret;  
+> 
+> + blank line
+> 
+> > +       /* wait for 1 ALS integration cycle */
+> > +       msleep(data->als_it_val * 100);
+> > +
+> > +       return 0;
+> > +}
+> > +#endif  
+> 
+> > +static const struct of_device_id vcnl4035_of_match[] = {
+> > +       { .compatible = "vishay,vcnl4035", },
+> > +       { },  
+> 
+> Better w/o comma.
+> 
+> > +};
+> > +MODULE_DEVICE_TABLE(of, vcnl4035_of_match);  
+> 
+> > +
+> > +static const struct i2c_device_id vcnl4035_id[] = {
+> > +       { "vcnl4035", 0 },
+> > +       { }
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, vcnl4035_id);  
+> 
+> Are you expecting legacy code to use this? I would rather switch to
+> ->probe_new() and also remove this.  
+> 
