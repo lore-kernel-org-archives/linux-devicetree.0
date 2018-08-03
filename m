@@ -1,74 +1,68 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: [PATCH v15 1/7] dt-bindings: net: bluetooth: Add device tree bindings for QTI chip wcn3990
-Date: Fri,  3 Aug 2018 17:46:26 +0530
-Message-ID: <20180803121632.30689-2-bgodavar@codeaurora.org>
-References: <20180803121632.30689-1-bgodavar@codeaurora.org>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 10/11] irqchip: add a SiFive PLIC driver
+Date: Fri, 3 Aug 2018 14:29:58 +0200
+Message-ID: <20180803122958.GA18301@lst.de>
+References: <20180802115008.4031-1-hch@lst.de> <20180802115008.4031-11-hch@lst.de> <2416469e-c39e-6481-f5e0-ad191b858d06@wdc.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803121632.30689-1-bgodavar@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <2416469e-c39e-6481-f5e0-ad191b858d06@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, thierry.escande@linaro.org, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To: Atish Patra <atish.patra@wdc.com>
+Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "anup@brainfault.org" <anup@brainfault.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables regulators for the Qualcomm Bluetooth wcn3990
-controller.
+On Thu, Aug 02, 2018 at 04:13:26PM -0700, Atish Patra wrote:
+>> + * which device 0 is defined as non-existant by the RISC-V Priviledged Spec.
+> /s/existant/existent
+>
+> /s/Priviledged/Privileged
+>> + * Each hart context has a vector of interupt enable bits associated with it.
+> /s/interupt/interrupt
 
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
- .../bindings/net/qualcomm-bluetooth.txt       | 29 +++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+All fixed.
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 0ea18a53cc29..824c0e23c544 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -10,12 +10,25 @@ device the slave device is attached to.
- Required properties:
-  - compatible: should contain one of the following:
-    * "qcom,qca6174-bt"
-+   * "qcom,wcn3990-bt"
-+
-+Optional properties for compatible string qcom,qca6174-bt:
- 
--Optional properties:
-  - enable-gpios: gpio specifier used to enable chip
-  - clocks: clock provided to the controller (SUSCLK_32KHZ)
- 
--Example:
-+Required properties for compatible string qcom,wcn3990-bt:
-+
-+ - vddio-supply: VDD_IO supply regulator handle.
-+ - vddxo-supply: VDD_XO supply regulator handle.
-+ - vddrf-supply: VDD_RF supply regulator handle.
-+ - vddch0-supply: VDD_CH0 supply regulator handle.
-+
-+Optional properties for compatible string qcom,wcn3990-bt:
-+
-+ - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-+
-+Examples:
- 
- serial@7570000 {
- 	label = "BT-UART";
-@@ -28,3 +41,15 @@ serial@7570000 {
- 		clocks = <&divclk4>;
- 	};
- };
-+
-+serial@898000 {
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+
-+		vddio-supply = <&vreg_s4a_1p8>;
-+		vddxo-supply = <&vreg_l7a_1p8>;
-+		vddrf-supply = <&vreg_l17a_1p3>;
-+		vddch0-supply = <&vreg_l25a_3p3>;
-+		max-speed = <3200000>;
-+	};
-+};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>> +	WARN_ON_ONCE(!handler->present);
+>> +
+>> +	csr_clear(sie, SIE_STIE);
+>
+> We should clear the SIE_SEIE not SIE_STIE. Correct ?
+
+Yes, fixed.
+
+>> +	if (plic_regs) {
+>> +		pr_warning("PLIC already present.\n");
+>
+> Got a check-patch warning.
+>
+> WARNING: Prefer pr_warn(... to pr_warning(...
+> #257: FILE: drivers/irqchip/irq-sifive-plic.c:191:
+> +               pr_warning("PLIC already present.\n");
+
+Fixed.
+
+>> +
+>> +		if (of_irq_parse_one(node, i, &parent)) {
+>> +			pr_err("failed to parse parent for contxt %d.\n", i);
+> /s/contxt/context
+
+Fixed.
+
+>> +			continue;
+>> +		}
+>> +
+>> +		/* skip context holes */
+>> +		if (parent.args[0] == -1)
+>> +			continue;
+>> +
+>> +		cpu = plic_find_hart_id(parent.np->parent);
+>
+> Since plic_find_hart_id() is going to walk up the DT, we can pass only 
+> parent.np instead of parent.np->parent. It does not increase any efficiency 
+> either way. So not very necessary. Just thought of taking the advantage of 
+> plic_find_hart_id.
+
+Yeah, I'll update this.
+
+Thanks for the review!
