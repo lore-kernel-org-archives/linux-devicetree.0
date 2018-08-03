@@ -1,57 +1,43 @@
-Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54574 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727264AbeH0NP6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Aug 2018 09:15:58 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 17/23] v4l: fwnode: Only zero the struct if bus type is set to V4L2_MBUS_UNKNOWN
-Date: Mon, 27 Aug 2018 12:29:54 +0300
-Message-Id: <20180827093000.29165-18-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
-References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
+Return-Path: <SRS0=CNAl=KS=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1533221871-62069-1-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1533221871-62069-1-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 3 Aug 2018 10:49:29 +0200
+Message-ID: <CAMuHMdX-1-Twu4-PW+i1M3HewAqYUQyPEyGPaA1NcJeuhzL5Lg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] clk: renesas: cpg-mssr: Add r8a774a1 support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-In order to prepare for allowing drivers to set the defaults for a given
-bus, make zeroing the struct conditional based on detecting the bus.
-All callers now set the bus type to zero which allows only zeroing the
-remaining bus union.
+Hi Biju,
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+On Thu, Aug 2, 2018 at 5:03 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add RZ/G2M (R8A774A1) Clock Pulse Generator / Module Standby and Software
+> Reset support.
+>
+> Based on the Table 8.2b of "RZ/G Series, 2nd Generation User's Manual:
+> Hardware ((Rev. 0.61, June 12, 2018)".
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+> V1-->V2
+>   * Added OSC predividers, rename rint to .r
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index ba51c1ead314..6c5a76442667 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -325,6 +325,12 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 	u32 bus_type = 0;
- 	int rval;
- 
-+	if (vep->bus_type == V4L2_MBUS_UNKNOWN) {
-+		/* Zero fields from bus union to until the end */
-+		memset(&vep->bus, 0,
-+		       sizeof(*vep) - offsetof(typeof(*vep), bus));
-+	}
-+
- 	pr_debug("===== begin V4L2 endpoint properties\n");
- 
- 	/*
-@@ -333,10 +339,6 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 	 */
- 	memset(&vep->base, 0, sizeof(vep->base));
- 
--	/* Zero fields from bus_type to until the end */
--	memset(&vep->bus_type, 0, sizeof(*vep) -
--	       offsetof(typeof(*vep), bus_type));
--
- 	fwnode_property_read_u32(fwnode, "bus-type", &bus_type);
- 
- 	switch (bus_type) {
+Thanks for the update!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I.e. will queue in clk-renesas-for-v4.20.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.11.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
