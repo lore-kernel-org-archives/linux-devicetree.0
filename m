@@ -1,79 +1,29 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH V4 0/8] backlight: qcom-wled: Support for QCOM wled driver
-Date: Fri, 3 Aug 2018 08:45:03 +0100
-Message-ID: <20180803074503.xvjvllsejw7xq3ox@holly.lan>
-References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
- <519913ec490934931b1c0b3a4539c283@codeaurora.org>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: simplified RISC-V interrupt and clocksource handling v2
+Date: Fri, 3 Aug 2018 09:49:20 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1808030947480.1841@nanos.tec.linutronix.de>
+References: <mhng-1a7030e5-19c4-481b-9f7c-e0976214eb18@palmer-si-x1c4>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <519913ec490934931b1c0b3a4539c283@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: kgunda@codeaurora.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, linux-arm-msm@vger.kernel.org, lee.jones@linaro.org, linux-arm-msm-owner@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <mhng-1a7030e5-19c4-481b-9f7c-e0976214eb18@palmer-si-x1c4>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Palmer Dabbelt <palmer@sifive.com>
+Cc: Christoph Hellwig <hch@lst.de>, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anup@brainfault.org, atish.patra@wdc.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBdWcgMDMsIDIwMTggYXQgMTI6NDk6MzRQTSArMDUzMCwga2d1bmRhQGNvZGVhdXJv
-cmEub3JnIHdyb3RlOgo+IEhpIEJqb3JuLAo+IENhbiB5b3UgcGxlYXNlIGhlbHAgcmV2aWV3IHRo
-aXMgcGF0Y2ggc2VyaWVzID8KPiAKPiBQYXZlbCwgUm9iLCBEYW5pZWwgcmV2aWV3ZWQgdGhlIHNl
-cmllcyBleGNlcHQgdGhlICJhdXRvIHN0cmluZyBkZXRlY3Rpb24iCj4gcGF0Y2guCgpJIGRpZCB0
-YWtlIGEgZ2xhbmNlIGF0IHRoZSBsYXN0IHBhdGNoLi4uIGJ1dCBpbiB0aGUgZW5kIGRlY2lkZWQg
-dG8gd2FpdApmb3IgdjUgdG8gbG9vayBpbiBkZXB0aC4KCgpEYW5pZWwuCgoKPiAKPiBUaGFua3Ms
-Cj4gS2lyYW4KPiAKPiBPbiAyMDE4LTA3LTA5IDE1OjUyLCBLaXJhbiBHdW5kYSB3cm90ZToKPiA+
-IFRoaXMgcGF0Y2ggc2VyaWVzIHJlbmFtZXMgdGhlIHBtODk0MS13bGVkLmMgZHJpdmVyIHRvIHFj
-b20td2xlZC5jIHRvIGFkZAo+ID4gdGhlIHN1cHBvcnQgZm9yIG11bHRpcGxlIFBNSUNzIHN1cHBv
-cnRlZCBieSBxdWFsY29tbS4gVGhpcyBwYXRjaCBzZXJpZXMKPiA+IHN1cHBvcnRzIGJvdGggUE04
-OTQxIGFuZCBQTUk4OTk4IFdMRUQuIFRoZSBQTUk4OTk4IFdMRUQgaGFzIHRoZSBzdXBwb3J0Cj4g
-PiB0byBoYW5kbGUgdGhlIE9WUCAob3ZlciB2b2x0YWdlIHByb3RlY3Rpb24pIGFuZCB0aGUgU0Mg
-KHNob3J0IGNpcmN1aXQKPiA+IHByb3RlY3Rpb24pCj4gPiBpbnRlcnJ1cHRzLiBJdCBhbHNvIGhh
-cyB0aGUgYXV0byBzdHJpbmcgZGV0ZWN0aW9uIGFsZ29yaXRobSBzdXBwb3J0IHRvCj4gPiBjb25m
-aWd1cmUgdGhlIHJpZ2h0IHN0cmluZ3MgaWYgdGhlIHVzZXIgc3BlY2lmaWVkIHN0cmluZyBjb25m
-aWd1cmF0aW9uCj4gPiBpcyBpbi1jb3JyZWN0LiBUaGVzZSB0aHJlZSBmZWF0dXJlcyBhcmUgYWRk
-ZWQgaW4gdGhpcyBzZXJpZXMgZm9yCj4gPiBQTUk4OTk4Lgo+ID4gCj4gPiBjaGFuZ2VzIGZyb20g
-djE6Cj4gPiAgICAtIEZpeGVkIHRoZSBjb21taXQgbWVzc2FnZSBmb3IKPiA+ICAgIC0gYmFja2xp
-Z2h0OiBxY29tLXdsZWQ6IFJlbmFtZSBwbTg5NDEtd2xlZC5jIHRvIHFjb20td2xlZC5jCj4gPiAK
-PiA+IENoYW5nZXMgZnJvbSB2MjoKPiA+ICAgIC0gRml4ZWQgYmpvcm4gYW5kIG90aGVyIHJldmll
-d2VyJ3MgY29tbWVudHMKPiA+ICAgIC0gU2VwZXJhdGVkIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5n
-cwo+ID4gICAgLSBTcGxpdHRlZCBvdXQgdGhlIFdMRUQ0IGNoYW5nZXMgaW4gc2VwZXJhdGUgcGF0
-Y2gKPiA+ICAgIC0gTWVyZ2VkIE9WUCBhbmQgYXV0byBzdHJpbmcgZGV0ZWN0aW9uIHBhdGNoCj4g
-PiAKPiA+IENoYW5nZXMgZnJvbSB2MzoKPiA+ICAgLSBBZGRlZCBSZXZpZXdlZC1ieS9BY2tlZC1i
-eSB0YWdzCj4gPiAgIC0gRml4ZWQgY29tbWVudHMgZnJvbSBCam9ybi9WaW5vZC9Sb2IKPiA+ICAg
-LSBTcGxpdHRpbmcgdGhlICJiYWNrbGlnaHQ6IHFjb20td2xlZDogQWRkIHN1cHBvcnQgZm9yIFdM
-RUQ0Cj4gPiBwZXJpcGhlcmFsIiBwYXRjaAo+ID4gICAgIHRvIHNlcGVyYXRlIHRoZSBXTEVEMyBz
-cGVjaWZpYyByZXN0cnVjdHVyZS4KPiA+IAo+ID4gS2lyYW4gR3VuZGEgKDgpOgo+ID4gICBiYWNr
-bGlnaHQ6IHFjb20td2xlZDogUmVuYW1lIHBtODk0MS13bGVkLmMgdG8gcWNvbS13bGVkLmMKPiA+
-ICAgYmFja2xpZ2h0OiBxY29tLXdsZWQ6IHJlc3RydWN0dXJlIHRoZSBxY29tLXdsZWQgYmluZGlu
-Z3MKPiA+ICAgYmFja2xpZ2h0OiBxY29tLXdsZWQ6IEFkZCBuZXcgcHJvcGVydGllcyBmb3IgUE1J
-ODk5OAo+ID4gICBiYWNrbGlnaHQ6IHFjb20td2xlZDogUmVuYW1lIFBNODk0MSogdG8gV0xFRDMK
-PiA+ICAgYmFja2xpZ2h0OiBxY29tLXdsZWQ6IFJlc3RydWN0dXJlIHRoZSBkcml2ZXIgZm9yIFdM
-RUQzCj4gPiAgIGJhY2tsaWdodDogcWNvbS13bGVkOiBBZGQgc3VwcG9ydCBmb3IgV0xFRDQgcGVy
-aXBoZXJhbAo+ID4gICBiYWNrbGlnaHQ6IHFjb20td2xlZDogYWRkIHN1cHBvcnQgZm9yIHNob3J0
-IGNpcmN1aXQgaGFuZGxpbmcKPiA+ICAgYmFja2xpZ2h0OiBxY29tLXdsZWQ6IEFkZCBhdXRvIHN0
-cmluZyBkZXRlY3Rpb24gbG9naWMKPiA+IAo+ID4gIC4uLi9iaW5kaW5ncy9sZWRzL2JhY2tsaWdo
-dC9wbTg5NDEtd2xlZC50eHQgICAgICAgIHwgICA0MiAtCj4gPiAgLi4uL2JpbmRpbmdzL2xlZHMv
-YmFja2xpZ2h0L3Fjb20td2xlZC50eHQgICAgICAgICAgfCAgMTUwICsrKwo+ID4gIGRyaXZlcnMv
-dmlkZW8vYmFja2xpZ2h0L0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwgICAgOCArLQo+ID4g
-IGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L01ha2VmaWxlICAgICAgICAgICAgICAgICAgIHwgICAg
-MiArLQo+ID4gIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L3BtODk0MS13bGVkLmMgICAgICAgICAg
-ICAgIHwgIDQzMiAtLS0tLS0tCj4gPiAgZHJpdmVycy92aWRlby9iYWNrbGlnaHQvcWNvbS13bGVk
-LmMgICAgICAgICAgICAgICAgfCAxMjk4Cj4gPiArKysrKysrKysrKysrKysrKysrKwo+ID4gIDYg
-ZmlsZXMgY2hhbmdlZCwgMTQ1MyBpbnNlcnRpb25zKCspLCA0NzkgZGVsZXRpb25zKC0pCj4gPiAg
-ZGVsZXRlIG1vZGUgMTAwNjQ0Cj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bGVkcy9iYWNrbGlnaHQvcG04OTQxLXdsZWQudHh0Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4g
-PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9iYWNrbGlnaHQvcWNvbS13
-bGVkLnR4dAo+ID4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9w
-bTg5NDEtd2xlZC5jCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdmlkZW8vYmFja2xp
-Z2h0L3Fjb20td2xlZC5jCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Thu, 2 Aug 2018, Palmer Dabbelt wrote:
+> bit of arch/riscv diff here so I don't mind taking it through the RISC-V tree,
+> but there's also some irqchip and clocksource stuff as well so I'm not sure if
+> that's OK to do.
+
+I have no objections if that goes through the risc-v tree once the DT stuff
+is sorted out.
+
+For the clocksource and irqchip bits:
+
+    Acked-by: Thomas Gleixner <tglx@linutronix.de>
+
+Thanks,
+
+	tglx
