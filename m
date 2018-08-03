@@ -1,81 +1,130 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v11 03/11] firmware: xilinx: Add zynqmp IOCTL API for device control
-Date: Fri, 3 Aug 2018 10:53:20 -0700
-Message-ID: <1533318808-10781-4-git-send-email-jollys@xilinx.com>
-References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+Subject: [PATCH v11 00/11] drivers: Introduce firmware dnd clock river for ZynqMP core
+Date: Fri, 3 Aug 2018 10:53:17 -0700
+Message-ID: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
 Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajanv@xilinx.com>
+This patchset is adding communication layer with firmware and clock driver who uses 
+those APIs to communicate with PMU.
+Firmware driver provides an interface to firmware APIs.Interface APIs can be used by any driver to communicate to
+PMUFW(Platform Management Unit). All requests go through ATF.
+This patchset adds CCF compliant clock driver for ZynqMP.Clock driver queries supported clock information from 
+firmware and regiters pll and output clocks with CCF.
 
-Add ZynqMP firmware IOCTL API to control and configure
-devices like PLLs, SD, Gem, etc.
+v11:
+ - Removed "Reveiwed-by:Stephen Boyd" tag from firmware binding
+ - Updated clock and firmware driver to use probe method instead of init
+ - Marked PMU payload arguments with __le32 for proper endienness code
+ 
+v10:
+ - Incorporated code review comments from v9 patch series. Discussed below:
+	https://patchwork.kernel.org/patch/10478575/
+	https://patchwork.kernel.org/patch/10478457/
+	https://patchwork.kernel.org/patch/10478461/
+	https://patchwork.kernel.org/patch/10478463/
+	
+v9:
+ - Fixed minor typo comments
 
-Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
----
- drivers/firmware/xilinx/zynqmp.c     | 20 ++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |  2 ++
- 2 files changed, 22 insertions(+)
+v8:
+ - Corrected typo in clk Kconfig
+ 
+v7:
+ - Removed xilinx specific clock debugfs API support
+ - Added reviewed-by tags for FW and clock bindings
+ - Updated clock node name to clock-controller
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index edbb84e..24cfd9e 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -241,8 +241,28 @@ static int get_set_conduit_method(struct device_node *np)
- 	return 0;
- }
- 
-+/**
-+ * zynqmp_pm_ioctl() - PM IOCTL API for device control and configs
-+ * @node_id:	Node ID of the device
-+ * @ioctl_id:	ID of the requested IOCTL
-+ * @arg1:	Argument 1 to requested IOCTL call
-+ * @arg2:	Argument 2 to requested IOCTL call
-+ * @out:	Returned output value
-+ *
-+ * This function calls IOCTL to firmware for device control and configuration.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
-+			   u32 *out)
-+{
-+	return zynqmp_pm_invoke_fn(PM_IOCTL, node_id, ioctl_id,
-+				   arg1, arg2, out);
-+}
-+
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
-+	.ioctl = zynqmp_pm_ioctl,
- };
- 
- /**
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index cb63bed..2eec6e7 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -34,6 +34,7 @@
- 
- enum pm_api_id {
- 	PM_GET_API_VERSION = 1,
-+	PM_IOCTL = 34,
- };
- 
- /* PMU-FW return status codes */
-@@ -49,6 +50,7 @@ enum pm_ret_status {
- 
- struct zynqmp_eemi_ops {
- 	int (*get_api_version)(u32 *version);
-+	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
- };
- 
- #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
+v6:
+ - Broke patch series to have base FW driver and Clock driver user
+ - Incorporated code review comments from last FW and Clock driver patch series. Discussed below:
+	https://patchwork.kernel.org/patch/10230759/
+	https://patchwork.kernel.org/patch/10250047/
+
+v5:
+ - Added ATF version check support
+ - Updated some functions to be static 
+ - Minor function name corrections
+
+v4:
+ - Changed clock setrate/getrate API prototype to support 64 bit rate
+ - Defined macros for get_node_status return values
+ - Moved DT node as a child of firmware
+ - Changed debugfs APIs to return data to debugfs buffer instead of dumping to kernel log
+ - Minor changes to incorporate other review comments from v3 patch series
+
+v3:
+ - added some fixes to firmware-ggs.c
+ - updated pinmux get/set function argument names to specify function id instead of node id
+ - added new pinctrl query macros
+ - incorporated review comments from v2 patch series
+
+v2:
+ - change SPDX-License-Identifier license text style
+ - split patch into multiple patches
+ - Updated copyrights
+ - Added ABI documentation
+ - incorporated logical review comments from previuos patch. Discussed below:
+	https://patchwork.kernel.org/patch/10150665/
+
+Jolly Shah (1):
+  drivers: clk: Add ZynqMP clock driver
+
+Rajan Vaja (10):
+  dt-bindings: firmware: Add bindings for ZynqMP firmware
+  firmware: xilinx: Add Zynqmp firmware driver
+  firmware: xilinx: Add zynqmp IOCTL API for device control
+  firmware: xilinx: Add query data API
+  firmware: xilinx: Add clock APIs
+  firmware: xilinx: Add debugfs interface
+  firmware: xilinx: Add debugfs for IOCTL API
+  firmware: xilinx: Add debugfs for query data API
+  dt-bindings: clock: Add bindings for ZynqMP clock driver
+  firmware: xilinx: Replace init call with probe method
+
+ .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  82 +++
+ arch/arm64/Kconfig.platforms                       |   1 +
+ drivers/clk/Kconfig                                |   1 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/zynqmp/Kconfig                         |  10 +
+ drivers/clk/zynqmp/Makefile                        |   4 +
+ drivers/clk/zynqmp/clk-gate-zynqmp.c               | 144 +++++
+ drivers/clk/zynqmp/clk-mux-zynqmp.c                | 141 ++++
+ drivers/clk/zynqmp/clk-zynqmp.h                    |  68 ++
+ drivers/clk/zynqmp/clkc.c                          | 716 +++++++++++++++++++++
+ drivers/clk/zynqmp/divider.c                       | 217 +++++++
+ drivers/clk/zynqmp/pll.c                           | 335 ++++++++++
+ drivers/firmware/Kconfig                           |   1 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/xilinx/Kconfig                    |  23 +
+ drivers/firmware/xilinx/Makefile                   |   5 +
+ drivers/firmware/xilinx/zynqmp-debug.c             | 249 +++++++
+ drivers/firmware/xilinx/zynqmp-debug.h             |  22 +
+ drivers/firmware/xilinx/zynqmp.c                   | 535 +++++++++++++++
+ include/dt-bindings/clock/xlnx,zynqmp-clk.h        | 116 ++++
+ include/linux/firmware/xlnx-zynqmp.h               | 116 ++++
+ 21 files changed, 2788 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+ create mode 100644 drivers/clk/zynqmp/Kconfig
+ create mode 100644 drivers/clk/zynqmp/Makefile
+ create mode 100644 drivers/clk/zynqmp/clk-gate-zynqmp.c
+ create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
+ create mode 100644 drivers/clk/zynqmp/clk-zynqmp.h
+ create mode 100644 drivers/clk/zynqmp/clkc.c
+ create mode 100644 drivers/clk/zynqmp/divider.c
+ create mode 100644 drivers/clk/zynqmp/pll.c
+ create mode 100644 drivers/firmware/xilinx/Kconfig
+ create mode 100644 drivers/firmware/xilinx/Makefile
+ create mode 100644 drivers/firmware/xilinx/zynqmp-debug.c
+ create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
+ create mode 100644 drivers/firmware/xilinx/zynqmp.c
+ create mode 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
+ create mode 100644 include/linux/firmware/xlnx-zynqmp.h
+
 -- 
 2.7.4
