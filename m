@@ -1,90 +1,135 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v5 4/4] clk: bd71837: Add driver for BD71837 PMIC clock
-Date: Fri, 3 Aug 2018 11:09:14 +0300
-Message-ID: <20180803080914.GA20907@localhost.localdomain>
-References: <cover.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <d99c8762b0fbbcb18ec4f4d104191364c0ea798c.1528117485.git.matti.vaittinen@fi.rohmeurope.com>
- <152878945117.16708.12422348324182290971@swboyd.mtv.corp.google.com>
- <20180612082354.GG20078@localhost.localdomain>
- <152997029783.143105.16692843405899913246@swboyd.mtv.corp.google.com>
- <20180626081319.GA2118@localhost.localdomain>
- <20180731073023.GA2956@localhost.localdomain>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [RESEND PATCH v5 2/3] dt-bindings: display: atmel: optional
+ video-interface of endpoints
+Date: Fri, 3 Aug 2018 10:11:28 +0200
+Message-ID: <20180803081128.GA4528@w540>
+References: <20180803072308.14962-1-peda@axentia.se>
+ <20180803072308.14962-3-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180731073023.GA2956@localhost.localdomain>
+In-Reply-To: <20180803072308.14962-3-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, robh+dt@kernel.org
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, broonie@kernel.org, lee.jones@linaro.org, lgirdwood@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 11:28:58AM +0300, Matti Vaittinen wrote:
-> On Tue, Jun 26, 2018 at 11:13:19AM +0300, Matti Vaittinen wrote:
-> > On Mon, Jun 25, 2018 at 04:44:57PM -0700, Stephen Boyd wrote:
-> > > Quoting Matti Vaittinen (2018-06-12 01:23:54)
-> > > > On Tue, Jun 12, 2018 at 12:44:11AM -0700, Stephen Boyd wrote:
-> > > > > Quoting Matti Vaittinen (2018-06-04 06:19:13)
 
-[snip]
+--gBBFr7Ir9EOA20Yy
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> 
-> > 3. Create devm_of_clk_add_hw_provider_w_node() which does something
-> 
+Hi Peter!
 
-After giving this second thought - I think there is limited amount of
-use cases where other than own or parent nodes should be used. Actually,
-the MFD node being parent is pretty much only use case I can think of
-where something else but own node should be used. Hence function like
-suggested devm_of_clk_add_hw_provider_w_node might invite thinking of
-clever hacks... So, perhaps introducing
-devm_of_clk_add_hw_provider_parent() (see idea below) would be option to
-consider? I feel the bd71837 driver is not only case where MFD is being
-parent which has the clock stuff in DT.
+On Fri, Aug 03, 2018 at 09:23:07AM +0200, Peter Rosin wrote:
+> With bus-type/bus-width properties in the endpoint nodes, the video-
+> interface of the connection can be specified for cases where the
+> heuristic fails to select the correct output mode. This can happen
+> e.g. if not all RGB pins are routed on the PCB; the driver has no
+> way of knowing this, and needs to be told explicitly.
+>
+> This is critical for the devices that have the "conflicting output
+> formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
+> RGB bits move around depending on the selected output mode. For
+> devices that do not have the "conflicting output formats" issue
+> (SAMA5D2, SAMA5D4), this is completely irrelevant.
+>
+> Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> index 82f2acb3d374..9de434a8f523 100644
+> --- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> @@ -15,6 +15,14 @@ Required children nodes:
+>   to external devices using the OF graph reprensentation (see ../graph.txt).
+>   At least one port node is required.
+>
+> +Optional properties in grandchild nodes:
+> + Any endpoint grandchild node may specify a desired video interface
+> + according to ../../media/video-interfaces.txt, specifically
+> + - bus-type: must be <0>.
 
-static int __devm_of_clk_add_hw_provider(struct device *dev,
-	struct clk_hw *(*get)(struct of_phandle_args *clkspec, void *data),
-	struct device_node *of_node, void *data)
-{
-	struct device_node **ptr;
-	int ret;
-	ptr = devres_alloc(devm_of_clk_release_provider, sizeof(*ptr),
-			   GFP_KERNEL);
-	if (!ptr)
-		return -ENOMEM;
+Is there any value in specifying this, if it has a fixed value to
+"autodetect"? I understand it's optional, so if nobody else objects,
+feels free to keep it there.
 
-	*ptr = of_node;
-	ret = of_clk_add_hw_provider(of_node, get, data);
-	if (!ret)
-		devres_add(dev, ptr);
-	else
-		devres_free(ptr);
-	return ret;
-}
 
-int devm_of_clk_add_hw_provider(struct device *dev,
-	struct clk_hw *(*get)(struct of_phandle_args *clkspec, void *data),
-	void *data)
-{
-	return __devm_of_clk_add_hw_provider(dev, get, dev->of_node, data);
-}
-EXPORT_SYMBOL_GPL(devm_of_clk_add_hw_provider);
+> + - bus-width: recognized values are <12>, <16>, <18> and <24>, and
+> +   override any output mode selection heuristic, forcing "rgb444",
+> +   "rgb565", "rgb666" and "rgb888" respectively.
+> +
+>  Example:
+>
+>  	hlcdc: hlcdc@f0030000 {
+> @@ -50,3 +58,21 @@ Example:
+>  			#pwm-cells = <3>;
+>  		};
+>  	};
+> +
 
-int devm_of_clk_add_hw_provider_parent(struct device *dev,
-	struct clk_hw *(*get)(struct of_phandle_args *clkspec, void *data),
-	void *data)
-{
-	return __devm_of_clk_add_hw_provider(*dev, get, dev->parent->of_node,
-					     data);
-}
-EXPORT_SYMBOL_GPL(devm_of_clk_add_hw_provider_parent);
+Two blank lines here.
 
-> just a friendly reminder, what's your opinion on adding this kind of
-> function (devm_of_clk_add_hw_provider_w_node)? or solutions 1/2? And are
-> these options safe what comes to reference counting of of_nodes?
+> +
+> +Example 2: With a video interface override to force rgb565; as above
+> +but with these changes/additions:
+> +
+> +	&hlcdc {
+> +		hlcdc-display-controller {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
+> +
+> +			port@0 {
 
-I thik the reference counting should not be a problem when use is
-limited to (MFD) parent device nodes, right?
+The node has a unit address specified, you're missing a reg = <0>
+property (no big deal, it's an example, but the other one has it)
 
-Best regards
-    Matti Vaittinen
+> +				hlcdc_panel_output: endpoint@0 {
+
+Missing reg here too.
+
+Minors apart:
+
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Thanks
+   j
+
+> +					bus-type = <0>;
+> +					bus-width = <16>;
+> +				};
+> +			};
+> +		};
+> +	};
+> --
+> 2.11.0
+>
+
+--gBBFr7Ir9EOA20Yy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJbZA4vAAoJEHI0Bo8WoVY8aeMQAIm5HcyWTXTBWIjfHUulvw9T
+F0eFetBBXbdC0VTjrB3i9w6uO282S5P9eJf3rB1BjTvFyu+OcJ5AEG7Hv2c54tpn
+hScsmrXyLfpaMNVUHyGMwMwVztoJVkb28vT0+5QAxxH3odJtCqDeXgPnmVIX/gPN
+chhZ/zP/hX328f/LeaO565aL7kJL1hyBgeLYO+p73PC3rFFxlOKLziqiDf69f+AI
+dbcIG/xJZRQR54jReaXQPl2TcQxwjRxsEDAJaP45P1Kvg2N+mG3lMQCcTr8QHegk
+vWh+BhTbhBfjo3EdumiaetL3jytjFrhlTJLSdHmJlihtGR1Z/kZwelxOaLy2gvCs
+X5n5syeUD+b3+3P+f9ogKGmeaLRl962S8nmOrsAH+A1tLWXEjiLAcuWftPN/L8DQ
+jUjsa60uw62DCJwl4PtIBqXgJO8avCjWOVw/msW/uOzyfG2qlAr6W2Z0tQsmjzpV
+LsJb8Y7YgC/fntP5yGHNipnm7JN4iFdvUzDGaCHhROa8u07DJNAQifxgz1KJdHcW
+PA1tKKHeZ5O8T+iyVxBGlIUvTLyRMW1LP2bYHz4S6CAdp5DE9463mtmtifz4n/ki
+OxMOBgN9U8neyIAEv/1aMedBY9p/ufnZmNOtxgRZwWSAaaec8sfk6r/zNcnO9PcC
+8CzYkWsy8xrmQ6DNeUWb
+=4Hd+
+-----END PGP SIGNATURE-----
+
+--gBBFr7Ir9EOA20Yy--
