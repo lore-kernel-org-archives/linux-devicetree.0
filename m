@@ -1,107 +1,51 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v6 2/3] dt-bindings: display: atmel: optional
- video-interface of endpoints
-Date: Fri, 3 Aug 2018 13:32:25 +0300
-Message-ID: <20180803103225.xkwqe3wiv2gwdo5g@valkosipuli.retiisi.org.uk>
-References: <20180803101124.4622-1-peda@axentia.se>
- <20180803101124.4622-3-peda@axentia.se>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 1/2] of: Add of_machine_compatible_match()
+Date: Fri, 03 Aug 2018 20:31:03 +1000
+Message-ID: <87efffhhco.fsf@concordia.ellerman.id.au>
+References: <20180730131516.18406-1-mpe@ellerman.id.au>
+ <CAL_JsqKYFk6-ofDFvaiy3a+r8Zyzw2UuMQUHb-RrgeWfpjom5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180803101124.4622-3-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CAL_JsqKYFk6-ofDFvaiy3a+r8Zyzw2UuMQUHb-RrgeWfpjom5w@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Rob Herring <robh+dt@kernel.org> writes:
+> On Mon, Jul 30, 2018 at 7:15 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+...
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 4d25e4f952d9..05e3e23a3a57 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -389,6 +389,7 @@ extern int of_alias_get_id(struct device_node *np, const char *stem);
+>>  extern int of_alias_get_highest_id(const char *stem);
+>>
+>>  extern int of_machine_is_compatible(const char *compat);
+>> +extern bool of_machine_compatible_match(const char *const *compats);
+>
+> Would be nice if of_machine_is_compatible could be implemented in
+> terms of of_machine_compatible_match like this:
+>
+> int of_machine_is_compatible(const char *compat)
+> {
+>   const char *compats[] = { compat, NULL };
+>   return of_machine_is_compatible(compats);
+> }
+>
+> Probably can be inline too.
 
-Thanks for cc'ing me.
+Yeah good idea, I'll do a v2 next week.
 
-On Fri, Aug 03, 2018 at 12:11:23PM +0200, Peter Rosin wrote:
-> With bus-type/bus-width properties in the endpoint nodes, the video-
-> interface of the connection can be specified for cases where the
-> heuristic fails to select the correct output mode. This can happen
-> e.g. if not all RGB pins are routed on the PCB; the driver has no
-> way of knowing this, and needs to be told explicitly.
-> 
-> This is critical for the devices that have the "conflicting output
-> formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
-> RGB bits move around depending on the selected output mode. For
-> devices that do not have the "conflicting output formats" issue
-> (SAMA5D2, SAMA5D4), this is completely irrelevant.
-> 
-> Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-> index 82f2acb3d374..10e8707d1443 100644
-> --- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
-> @@ -15,6 +15,14 @@ Required children nodes:
->   to external devices using the OF graph reprensentation (see ../graph.txt).
->   At least one port node is required.
->  
-> +Optional properties in grandchild nodes:
-> + Any endpoint grandchild node may specify a desired video interface
-> + according to ../../media/video-interfaces.txt, specifically
-> + - bus-type: must be <0>.
-
-bus-type won't tell anything in this case, you could simply drop it. If
-your hardware only supports parallel or Bt.656 bus then the code parsing
-the properties can (and should) know the bus type as well.
-
-Looking at your implementation, bus-type is not being used. This supports
-the suggestion.
-
-The V4L2 implementation is about to change as well and there's a bit of
-discussion ongoing related to the bus-type property:
-
-<URL:https://www.spinics.net/lists/linux-media/msg137980.html>
-<URL:https://www.spinics.net/lists/linux-media/msg137979.html>
-
-> + - bus-width: recognized values are <12>, <16>, <18> and <24>, and
-> +   override any output mode selection heuristic, forcing "rgb444",
-> +   "rgb565", "rgb666" and "rgb888" respectively.
-> +
->  Example:
->  
->  	hlcdc: hlcdc@f0030000 {
-> @@ -50,3 +58,25 @@ Example:
->  			#pwm-cells = <3>;
->  		};
->  	};
-> +
-> +Example 2: With a video interface override to force rgb565; as above
-> +but with these changes/additions:
-> +
-> +	&hlcdc {
-> +		hlcdc-display-controller {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
-> +
-> +			port@0 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				reg = <0>;
-> +
-> +				hlcdc_panel_output: endpoint@0 {
-> +					reg = <0>;
-> +					bus-type = <0>;
-> +					bus-width = <16>;
-> +				};
-> +			};
-> +		};
-> +	};
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+cheers
