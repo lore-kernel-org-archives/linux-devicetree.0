@@ -1,168 +1,350 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v7 2/3] Bluetooth: mediatek: Add protocol support for
- MediaTek serial devices
-Date: Sat, 4 Aug 2018 02:00:14 +0800
-Message-ID: <1533319214.3472.187.camel@mtkswgap22>
-References: <cover.1533056925.git.sean.wang@mediatek.com>
-         <c92ed10cf16f36d9a3b390e864af92e2dfe7b771.1533056925.git.sean.wang@mediatek.com>
-         <1707FFA1-A294-4A95-A3BF-0910CE455232@holtmann.org>
-         <1533192799.3472.122.camel@mtkswgap22>
-         <FF45A90A-F9F1-47CB-AB1F-1E92BF587FBE@holtmann.org>
-         <1533199720.3472.136.camel@mtkswgap22>
-         <9526E5D9-50BA-4D57-80F5-083DB7D28AFE@holtmann.org>
-         <1533205495.3472.144.camel@mtkswgap22>
-         <A6D48D49-52CE-405D-8C5D-C4D54CE67221@holtmann.org>
-         <1533303749.3472.160.camel@mtkswgap22>
-         <D2336CD2-B69B-4B5B-8125-F0CAD29E3243@holtmann.org>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v11 06/11] firmware: xilinx: Add debugfs interface
+Date: Fri, 3 Aug 2018 10:53:23 -0700
+Message-ID: <1533318808-10781-7-git-send-email-jollys@xilinx.com>
+References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <D2336CD2-B69B-4B5B-8125-F0CAD29E3243@holtmann.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-08-03 at 19:19 +0200, Marcel Holtmann wrote:
-> Hi Sean,
-> 
-> >>>>>>>>> +
-> >>>>>>>>> +static int mtk_hci_wmt_sync(struct hci_dev *hdev, u8 op, u8 flag, u16 plen,
-> >>>>>>>>> +			    const void *param)
-> >>>>>>>>> +{
-> >>>>>>>>> +	struct mtk_hci_wmt_cmd wc;
-> >>>>>>>>> +	struct mtk_wmt_hdr *hdr;
-> >>>>>>>>> +	struct sk_buff *skb;
-> >>>>>>>>> +	u32 hlen;
-> >>>>>>>>> +
-> >>>>>>>>> +	hlen = sizeof(*hdr) + plen;
-> >>>>>>>>> +	if (hlen > 255)
-> >>>>>>>>> +		return -EINVAL;
-> >>>>>>>>> +
-> >>>>>>>>> +	hdr = (struct mtk_wmt_hdr *)&wc;
-> >>>>>>>>> +	hdr->dir = 1;
-> >>>>>>>>> +	hdr->op = op;
-> >>>>>>>>> +	hdr->dlen = cpu_to_le16(plen + 1);
-> >>>>>>>>> +	hdr->flag = flag;
-> >>>>>>>>> +	memcpy(wc.data, param, plen);
-> >>>>>>>>> +
-> >>>>>>>>> +	atomic_inc(&hdev->cmd_cnt);
-> >>>>>>>> 
-> >>>>>>>> Why are you doing this one. It will need a comment here if really needed. However I doubt that this is needed. You are only using it from hdev->setup and hdev->shutdown callbacks.
-> >>>>>>>> 
-> >>>>>>> 
-> >>>>>>> An increment on cmd_cnt is really needed because hci_cmd_work would check whether cmd_cnt is positive and then has a decrement on cmd_cnt before a packet is being sent out.
-> >>>>>>> 
-> >>>>>>> okay will add a comment.
-> >>>>>> 
-> >>>>>> but you are in ->setup callback this time. So if you need this, then all the other ->setup routines would actually fail as well. Either this is leftover from when you did things in ->probe or ->open or this is some thing we might better fix properly in the core instead of papering over it. Can you recheck if this is really needed.
-> >>>>>> 
-> >>>>> 
-> >>>>> I added a counter print and the counter increments as below
-> >>>>> 
-> >>>>> 	/* atomic_inc(&hdev->cmd_cnt); */
-> >>>>>      pr_info("cmd_cnt = %d\n" , atomic_read(&hdev->cmd_cnt));
-> >>>>> 
-> >>>>>      skb = __hci_cmd_sync_ev(hdev, 0xfc6f, hlen, &wc, HCI_VENDOR_PKT,
-> >>>>>                              HCI_INIT_TIMEOUT);
-> >>>>> 
-> >>>>> and the log show up that 
-> >>>>> 
-> >>>>> 
-> >>>>> [  334.049156] Bluetooth: hci0: command 0xfc6f tx timeout
-> >>>>> [  334.054840] cmd_cnt = 0
-> >>>>> [  336.065076] Bluetooth: hci0: command 0xfc6f tx timeout
-> >>>>> [  336.070795] cmd_cnt = 0
-> >>>>> [  338.080997] Bluetooth: hci0: command 0xfc6f tx timeout
-> >>>>> [  338.086683] cmd_cnt = 0
-> >>>>> [  340.096907] Bluetooth: hci0: command 0xfc6f tx timeout
-> >>>>> [  340.102609] cmd_cnt = 0
-> >>>>> [  342.112824] Bluetooth: hci0: command 0xfc6f tx timeout
-> >>>>> [  342.118520] cmd_cnt = 0
-> >>>>> [  344.128747] Bluetooth: hci0: command 0xfc6f tx timeout
-> >>>>> [  344.134454] cmd_cnt = 0
-> >>>>> [  346.144667] Bluetooth: hci0: command 0xfc6f tx timeout
-> >>>>> [  346.150372] cmd_cnt = 0
-> >>>>> 
-> >>>>> 
-> >>>>> The packet is dropped by hci_cmd_work at [1], so I also wondered why the
-> >>>>> other vendor driver works, it seems the counter needs to be incremented
-> >>>>> before every skb is being queued to cmd_q.
-> >>>>> 
-> >>>>> 4257 static void hci_cmd_work(struct work_struct *work)
-> >>>>> 4258 {
-> >>>>> 4259         struct hci_dev *hdev = container_of(work, struct hci_dev, cmd_work);
-> >>>>> 4260         struct sk_buff *skb;
-> >>>>> 4261
-> >>>>> 4262         BT_DBG("%s cmd_cnt %d cmd queued %d", hdev->name,
-> >>>>> 4263                atomic_read(&hdev->cmd_cnt), skb_queue_len(&hdev->cmd_q));
-> >>>>> 4264
-> >>>>> 4265         /* Send queued commands */
-> >>>>> 
-> >>>>> [1]
-> >>>>> 4266         if (atomic_read(&hdev->cmd_cnt)) { /* dropped when cmd_cnt is zero */
-> >>>>> 4267                 skb = skb_dequeue(&hdev->cmd_q);
-> >>>>> 4268                 if (!skb)
-> >>>>> 4269                         return;
-> >>>>> 4270
-> >>>>> 4271                 kfree_skb(hdev->sent_cmd);
-> >>>>> 4272
-> >>>>> 4273                 hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
-> >>>>> 4274                 if (hdev->sent_cmd) {
-> >>>>> 4275                         atomic_dec(&hdev->cmd_cnt);  /* cmd_cnt-- */
-> >>>>> 4276                         hci_send_frame(hdev, skb);
-> >>>> 
-> >>>> actually the command also needs to better go via the raw_q anyway since it doesn’t come back with the cmd status or cmd complete. You have it waiting for a vendor event. Maybe with is something we need to consider with __hci_cmd_sync_ev anyway.
-> >>>> 
-> >>>> Johan would know best since he wrote that code. Anyway, we should fix that in the core and not have you hack around it.
-> >>>> 
-> >>> 
-> >>> yes, my case is that received event is neither cmd status nor cmd complete. It is completely a vendor event.
-> >>> 
-> >>> if it wants to be solved by the core layer, do you permit that I remove the hack and then send it in the next version?
-> >> 
-> >> we need to have a __hci_raw_sync_ev that uses the hdev->raw_q and waits for the specified event to come back. I never realized that you are missing the cmd status or cmd complete. So this is similar to the original CSR vendor commands which had the same behavior.
-> >> 
-> >> I have the feeling that you hdev->cmd_cnt increment is just hiding the problem here. If you really think that it is not chains any side effects we can merge the driver with a big warning and fix this up. However the clean way would be for you to create a patch that introduces __hci_raw_sync_ev as describe above.
-> > 
-> > What do you think of this? If I add extra atomic_set 1 on cmd_cnt after driver really got a vendor event back instead of blinding to increment for every packet sent.
-> > 
-> > the behavior is the same to receive a cmd status or complete. it should not have side effects.
-> > 
-> > 96         skb = __hci_cmd_sync_ev(hdev, 0xfc6f, hlen, &wc, HCI_VENDOR_PKT,
-> > 97                                 HCI_INIT_TIMEOUT);
-> > 98
-> > 99         if (IS_ERR(skb)) {
-> > 100                 int err = PTR_ERR(skb);
-> > 101
-> > 102                 bt_dev_err(hdev, "Failed to send wmt cmd (%d)", err);
-> > 103                 return err;
-> > 104         }
-> > 105
-> > 106         if (!test_bit(HCI_RESET, &hdev->flags)) <<<<<<
-> > 107                 atomic_set(&hdev->cmd_cnt, 1);  <<<<<<
-> > 108
-> > 109         kfree_skb(skb);
-> 
-> this is even more hackish since the __hci_cmd_sync_ev command is really meant to get a cmd status first before waiting for that event.
-> 
+From: Rajan Vaja <rajanv@xilinx.com>
 
-Understood.
+Firmware-debug provides debugfs interface to all APIs.
+Debugfs can be used to call firmware APIs with required
+parameters.
 
-I've stopped the hack in v8. could we merge v8 first ? and then I will a fix up with __hci_raw_sync_ev that uses the hdev->raw_q instead of __hci_cmd_sync_ev in TODO.
+Usage:
+* Calling firmware API through debugfs:
+  # echo "<api-name> <arg1> .. <argn>" > /sys/.../zynqmp-firmware/pm
 
-> Are all Mediatek vendor commands this way? Or just the ones for loading the firmware? So only the WMT ones?
-> 
+* Read output of last called firmware API:
+  # cat /sys/.../zynqmp-firmware/pm
 
-Only the WMT ones, WMT commands/events are usually used in system controlling, for example, global function on/off, firmware download, reset and so on. most only appear on device initialization
+Refer ug1200 for more information on these APIs:
+  * https://www.xilinx.com/support/documentation/user_guides/ug1200-eemi-api.pdf
 
-> Regards
-> 
-> Marcel
-> 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Add basic debugfs file to get API version.
+
+Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+---
+ drivers/firmware/xilinx/Kconfig        |   7 ++
+ drivers/firmware/xilinx/Makefile       |   1 +
+ drivers/firmware/xilinx/zynqmp-debug.c | 212 +++++++++++++++++++++++++++++++++
+ drivers/firmware/xilinx/zynqmp-debug.h |  22 ++++
+ drivers/firmware/xilinx/zynqmp.c       |   9 ++
+ 5 files changed, 251 insertions(+)
+ create mode 100644 drivers/firmware/xilinx/zynqmp-debug.c
+ create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
+
+diff --git a/drivers/firmware/xilinx/Kconfig b/drivers/firmware/xilinx/Kconfig
+index 64d976e..8f44b9c 100644
+--- a/drivers/firmware/xilinx/Kconfig
++++ b/drivers/firmware/xilinx/Kconfig
+@@ -13,4 +13,11 @@ config ZYNQMP_FIRMWARE
+ 	  Say yes to enable ZynqMP firmware interface driver.
+ 	  If in doubt, say N.
+ 
++config ZYNQMP_FIRMWARE_DEBUG
++	bool "Enable Xilinx Zynq MPSoC firmware debug APIs"
++	depends on ZYNQMP_FIRMWARE && DEBUG_FS
++	help
++	  Say yes to enable ZynqMP firmware interface debug APIs.
++	  If in doubt, say N.
++
+ endmenu
+diff --git a/drivers/firmware/xilinx/Makefile b/drivers/firmware/xilinx/Makefile
+index 29f7bf2..875a537 100644
+--- a/drivers/firmware/xilinx/Makefile
++++ b/drivers/firmware/xilinx/Makefile
+@@ -2,3 +2,4 @@
+ # Makefile for Xilinx firmwares
+ 
+ obj-$(CONFIG_ZYNQMP_FIRMWARE) += zynqmp.o
++obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) += zynqmp-debug.o
+diff --git a/drivers/firmware/xilinx/zynqmp-debug.c b/drivers/firmware/xilinx/zynqmp-debug.c
+new file mode 100644
+index 0000000..fcbdd6e
+--- /dev/null
++++ b/drivers/firmware/xilinx/zynqmp-debug.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Xilinx Zynq MPSoC Firmware layer for debugfs APIs
++ *
++ *  Copyright (C) 2014-2018 Xilinx, Inc.
++ *
++ *  Michal Simek <michal.simek@xilinx.com>
++ *  Davorin Mista <davorin.mista@aggios.com>
++ *  Jolly Shah <jollys@xilinx.com>
++ *  Rajan Vaja <rajanv@xilinx.com>
++ */
++
++#include <linux/compiler.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/debugfs.h>
++#include <linux/uaccess.h>
++
++#include <linux/firmware/xlnx-zynqmp.h>
++#include "zynqmp-debug.h"
++
++#define PM_API_NAME_LEN			50
++
++struct pm_api_info {
++	u32 api_id;
++	char api_name[PM_API_NAME_LEN];
++	char api_name_len;
++};
++
++static char debugfs_buf[PAGE_SIZE];
++
++#define PM_API(id)		 {id, #id, strlen(#id)}
++static struct pm_api_info pm_api_list[] = {
++	PM_API(PM_GET_API_VERSION),
++};
++
++/**
++ * zynqmp_pm_argument_value() - Extract argument value from a PM-API request
++ * @arg:	Entered PM-API argument in string format
++ *
++ * Return: Argument value in unsigned integer format on success
++ *	   0 otherwise
++ */
++static u64 zynqmp_pm_argument_value(char *arg)
++{
++	u64 value;
++
++	if (!arg)
++		return 0;
++
++	if (!kstrtou64(arg, 0, &value))
++		return value;
++
++	return 0;
++}
++
++/**
++ * get_pm_api_id() - Extract API-ID from a PM-API request
++ * @pm_api_req:		Entered PM-API argument in string format
++ * @pm_id:		API-ID
++ *
++ * Return: 0 on success else error code
++ */
++static int get_pm_api_id(char *pm_api_req, u32 *pm_id)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(pm_api_list) ; i++) {
++		if (!strncasecmp(pm_api_req, pm_api_list[i].api_name,
++				 pm_api_list[i].api_name_len)) {
++			*pm_id = pm_api_list[i].api_id;
++			break;
++		}
++	}
++
++	/* If no name was entered look for PM-API ID instead */
++	if (i == ARRAY_SIZE(pm_api_list) && kstrtouint(pm_api_req, 10, pm_id))
++		return -EINVAL;
++
++	return 0;
++}
++
++static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
++{
++	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
++	u32 pm_api_version;
++	int ret;
++
++	if (!eemi_ops)
++		return -ENXIO;
++
++	switch (pm_id) {
++	case PM_GET_API_VERSION:
++		ret = eemi_ops->get_api_version(&pm_api_version);
++		sprintf(debugfs_buf, "PM-API Version = %d.%d\n",
++			pm_api_version >> 16, pm_api_version & 0xffff);
++		break;
++	default:
++		sprintf(debugfs_buf, "Unsupported PM-API request\n");
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
++/**
++ * zynqmp_pm_debugfs_api_write() - debugfs write function
++ * @file:	User file
++ * @ptr:	User entered PM-API string
++ * @len:	Length of the userspace buffer
++ * @off:	Offset within the file
++ *
++ * Used for triggering pm api functions by writing
++ * echo <pm_api_id>	> /sys/kernel/debug/zynqmp_pm/power or
++ * echo <pm_api_name>	> /sys/kernel/debug/zynqmp_pm/power
++ *
++ * Return: Number of bytes copied if PM-API request succeeds,
++ *	   the corresponding error code otherwise
++ */
++static ssize_t zynqmp_pm_debugfs_api_write(struct file *file,
++					   const char __user *ptr, size_t len,
++					   loff_t *off)
++{
++	char *kern_buff, *tmp_buff;
++	char *pm_api_req;
++	u32 pm_id = 0;
++	u64 pm_api_arg[4] = {0, 0, 0, 0};
++	/* Return values from PM APIs calls */
++	u32 pm_api_ret[4] = {0, 0, 0, 0};
++
++	int ret;
++	int i = 0;
++
++	strcpy(debugfs_buf, "");
++
++	if (*off != 0 || len == 0)
++		return -EINVAL;
++
++	kern_buff = kzalloc(len, GFP_KERNEL);
++	if (!kern_buff)
++		return -ENOMEM;
++
++	tmp_buff = kern_buff;
++
++	ret = strncpy_from_user(kern_buff, ptr, len);
++	if (ret < 0) {
++		ret = -EFAULT;
++		goto err;
++	}
++
++	/* Read the API name from a user request */
++	pm_api_req = strsep(&kern_buff, " ");
++
++	ret = get_pm_api_id(pm_api_req, &pm_id);
++	if (ret < 0)
++		goto err;
++
++	/* Read node_id and arguments from the PM-API request */
++	pm_api_req = strsep(&kern_buff, " ");
++	while ((i < ARRAY_SIZE(pm_api_arg)) && pm_api_req) {
++		pm_api_arg[i++] = zynqmp_pm_argument_value(pm_api_req);
++		pm_api_req = strsep(&kern_buff, " ");
++	}
++
++	ret = process_api_request(pm_id, pm_api_arg, pm_api_ret);
++
++err:
++	kfree(tmp_buff);
++	if (ret)
++		return ret;
++
++	return len;
++}
++
++/**
++ * zynqmp_pm_debugfs_api_read() - debugfs read function
++ * @file:	User file
++ * @ptr:	Requested pm_api_version string
++ * @len:	Length of the userspace buffer
++ * @off:	Offset within the file
++ *
++ * Return: Length of the version string on success
++ *	   else error code
++ */
++static ssize_t zynqmp_pm_debugfs_api_read(struct file *file, char __user *ptr,
++					  size_t len, loff_t *off)
++{
++	return simple_read_from_buffer(ptr, len, off, debugfs_buf,
++				       strlen(debugfs_buf));
++}
++
++/* Setup debugfs fops */
++static const struct file_operations fops_zynqmp_pm_dbgfs = {
++	.owner = THIS_MODULE,
++	.write = zynqmp_pm_debugfs_api_write,
++	.read = zynqmp_pm_debugfs_api_read,
++};
++
++/**
++ * zynqmp_pm_api_debugfs_init - Initialize debugfs interface
++ *
++ * Return:	None
++ */
++void zynqmp_pm_api_debugfs_init(void)
++{
++	struct dentry *root_dir;
++
++	/* Initialize debugfs interface */
++	root_dir = debugfs_create_dir("zynqmp-firmware", NULL);
++	debugfs_create_file("pm", 0660, root_dir, NULL,
++			    &fops_zynqmp_pm_dbgfs);
++}
+diff --git a/drivers/firmware/xilinx/zynqmp-debug.h b/drivers/firmware/xilinx/zynqmp-debug.h
+new file mode 100644
+index 0000000..3303b37
+--- /dev/null
++++ b/drivers/firmware/xilinx/zynqmp-debug.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Xilinx Zynq MPSoC Firmware layer
++ *
++ *  Copyright (C) 2014-2018 Xilinx
++ *
++ *  Michal Simek <michal.simek@xilinx.com>
++ *  Davorin Mista <davorin.mista@aggios.com>
++ *  Jolly Shah <jollys@xilinx.com>
++ *  Rajan Vaja <rajanv@xilinx.com>
++ */
++
++#ifndef __FIRMWARE_ZYNQMP_DEBUG_H__
++#define __FIRMWARE_ZYNQMP_DEBUG_H__
++
++#if IS_REACHABLE(CONFIG_ZYNQMP_FIRMWARE_DEBUG)
++void zynqmp_pm_api_debugfs_init(void);
++#else
++static inline void zynqmp_pm_api_debugfs_init(void) { }
++#endif
++
++#endif /* __FIRMWARE_ZYNQMP_DEBUG_H__ */
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 41ed800..7ccedf0 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -21,6 +21,7 @@
+ #include <linux/uaccess.h>
+ 
+ #include <linux/firmware/xlnx-zynqmp.h>
++#include "zynqmp-debug.h"
+ 
+ /**
+  * zynqmp_pm_ret_code() - Convert PMU-FW error codes to Linux error codes
+@@ -551,3 +552,11 @@ static int __init zynqmp_plat_init(void)
+ 	return ret;
+ }
+ early_initcall(zynqmp_plat_init);
++
++static int zynqmp_firmware_init(void)
++{
++	zynqmp_pm_api_debugfs_init();
++
++	return 0;
++}
++device_initcall(zynqmp_firmware_init);
+-- 
+2.7.4
