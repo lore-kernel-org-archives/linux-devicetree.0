@@ -1,65 +1,78 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v10 00/10] drivers: Introduce firmware dnd clock river for
- ZynqMP core
-Date: Fri, 3 Aug 2018 08:14:27 +0200
-Message-ID: <d153598d-8d09-fb32-f68e-6fc4975eb9ce@xilinx.com>
-References: <1531857547-16652-1-git-send-email-jollys@xilinx.com>
- <2c3aad45-37ce-2446-4b90-bddb477286ed@xilinx.com>
- <CY1PR02MB2138E21A3FFBD5FEEAA7D6D4B8550@CY1PR02MB2138.namprd02.prod.outlook.com>
- <19376df2-fdd4-12e3-da4c-37106fffed19@xilinx.com>
- <153262301567.48062.15432354725863055071@swboyd.mtv.corp.google.com>
- <e5448935-770a-5c14-438c-23a652b17822@xilinx.com>
- <153324358299.10763.8724416723915219268@swboyd.mtv.corp.google.com>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V4 0/8] backlight: qcom-wled: Support for QCOM wled driver
+Date: Fri, 03 Aug 2018 12:49:34 +0530
+Message-ID: <519913ec490934931b1c0b3a4539c283@codeaurora.org>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153324358299.10763.8724416723915219268@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "mingo@kernel.org" <mingo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, Jolly Shah <JOLLYS@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2.8.2018 22:59, Stephen Boyd wrote:
-> Quoting Michal Simek (2018-07-30 05:50:42)
->> On 26.7.2018 18:36, Stephen Boyd wrote:
->>> Quoting Michal Simek (2018-07-25 02:51:14)
->>>> On 24.7.2018 20:14, Jolly Shah wrote:
->>>>>>>  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
->>>>>>>  create mode 100644 drivers/firmware/xilinx/zynqmp.c  create mode
->>>>>>> 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
->>>>>>>  create mode 100644 include/linux/firmware/xlnx-zynqmp.h
->>>>>>>
->>>>>>
->>>>>> It looks pretty calm over the last several series that's why when I get an answer
->>>>>> from Stephen or Mike I will take this series via my tree and arm-soc tree.
->>>>>>
->>>>>> I have applied 01-08 here
->>>>>>  https://github.com/Xilinx/linux-xlnx/commits/zynqmp/soc
->>>>>>
->>>>>> Thanks,
->>>>>> Michal
->>>>>
->>>>>
->>>>> Thanks for merging the patches. 
->>>>> By mistake I added “Reviewed-by: Stephen Boyd sboyd@kernel.org” for firmware bindings (Patch01).  Stephen had reviewed clock bindings only.  Please suggest if I should send a new version with that fix.
->>>>
->>>> I have fixed that in my branch and I have asked Shephen to look at clk
->>>> over chat.
->>>>
->>>
->>> I have some unresolved review comments on v9. I'll give reviewed-by when
->>> that discussion is resolved.
->>
->> ok. Do you want to take them via clk tree or via arm-soc tree?
->>
-> 
-> I'm fine for the clk patch to go via arm-soc if that makes it easier.
-> 
+Hi Bjorn,
+Can you please help review this patch series ?
 
-ok. Great.
-Jolly: Please address all Stephen's comments that we can move.
+Pavel, Rob, Daniel reviewed the series except the "auto string 
+detection" patch.
 
 Thanks,
-Michal
+Kiran
+
+On 2018-07-09 15:52, Kiran Gunda wrote:
+> This patch series renames the pm8941-wled.c driver to qcom-wled.c to 
+> add
+> the support for multiple PMICs supported by qualcomm. This patch series
+> supports both PM8941 and PMI8998 WLED. The PMI8998 WLED has the support
+> to handle the OVP (over voltage protection) and the SC (short circuit
+> protection)
+> interrupts. It also has the auto string detection algorithm support to
+> configure the right strings if the user specified string configuration
+> is in-correct. These three features are added in this series for 
+> PMI8998.
+> 
+> changes from v1:
+>    - Fixed the commit message for
+>    - backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
+> 
+> Changes from v2:
+>    - Fixed bjorn and other reviewer's comments
+>    - Seperated the device tree bindings
+>    - Splitted out the WLED4 changes in seperate patch
+>    - Merged OVP and auto string detection patch
+> 
+> Changes from v3:
+>   - Added Reviewed-by/Acked-by tags
+>   - Fixed comments from Bjorn/Vinod/Rob
+>   - Splitting the "backlight: qcom-wled: Add support for WLED4 
+> peripheral" patch
+>     to seperate the WLED3 specific restructure.
+> 
+> Kiran Gunda (8):
+>   backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
+>   backlight: qcom-wled: restructure the qcom-wled bindings
+>   backlight: qcom-wled: Add new properties for PMI8998
+>   backlight: qcom-wled: Rename PM8941* to WLED3
+>   backlight: qcom-wled: Restructure the driver for WLED3
+>   backlight: qcom-wled: Add support for WLED4 peripheral
+>   backlight: qcom-wled: add support for short circuit handling
+>   backlight: qcom-wled: Add auto string detection logic
+> 
+>  .../bindings/leds/backlight/pm8941-wled.txt        |   42 -
+>  .../bindings/leds/backlight/qcom-wled.txt          |  150 +++
+>  drivers/video/backlight/Kconfig                    |    8 +-
+>  drivers/video/backlight/Makefile                   |    2 +-
+>  drivers/video/backlight/pm8941-wled.c              |  432 -------
+>  drivers/video/backlight/qcom-wled.c                | 1298 
+> ++++++++++++++++++++
+>  6 files changed, 1453 insertions(+), 479 deletions(-)
+>  delete mode 100644
+> Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+>  create mode 100644
+> Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>  delete mode 100644 drivers/video/backlight/pm8941-wled.c
+>  create mode 100644 drivers/video/backlight/qcom-wled.c
