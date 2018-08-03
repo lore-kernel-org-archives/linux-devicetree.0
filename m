@@ -1,130 +1,97 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v11 00/11] drivers: Introduce firmware dnd clock river for ZynqMP core
-Date: Fri, 3 Aug 2018 10:53:17 -0700
-Message-ID: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v9 10/10] drivers: clk: Add ZynqMP clock driver
+Date: Fri, 3 Aug 2018 17:57:49 +0000
+Message-ID: <CY1PR02MB2138E8037930136463F8555FB8230@CY1PR02MB2138.namprd02.prod.outlook.com>
+References: <1529516435-7315-1-git-send-email-jollys@xilinx.com>
+ <1529516435-7315-11-git-send-email-jollys@xilinx.com>
+ <153111401693.143105.16925315512459949259@swboyd.mtv.corp.google.com>
+ <SN1PR02MB37589FF7DBAFBD0C070F690EB85C0@SN1PR02MB3758.namprd02.prod.outlook.com>
+ <153254813376.48062.5902552373363371978@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <153254813376.48062.5902552373363371978@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc: rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Stephen Boyd <sboyd@kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "mingo@kernel.org" <mingo@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, Michal Simek <michals@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tejas Patel <TEJASP@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is adding communication layer with firmware and clock driver who uses 
-those APIs to communicate with PMU.
-Firmware driver provides an interface to firmware APIs.Interface APIs can be used by any driver to communicate to
-PMUFW(Platform Management Unit). All requests go through ATF.
-This patchset adds CCF compliant clock driver for ZynqMP.Clock driver queries supported clock information from 
-firmware and regiters pll and output clocks with CCF.
-
-v11:
- - Removed "Reveiwed-by:Stephen Boyd" tag from firmware binding
- - Updated clock and firmware driver to use probe method instead of init
- - Marked PMU payload arguments with __le32 for proper endienness code
- 
-v10:
- - Incorporated code review comments from v9 patch series. Discussed below:
-	https://patchwork.kernel.org/patch/10478575/
-	https://patchwork.kernel.org/patch/10478457/
-	https://patchwork.kernel.org/patch/10478461/
-	https://patchwork.kernel.org/patch/10478463/
-	
-v9:
- - Fixed minor typo comments
-
-v8:
- - Corrected typo in clk Kconfig
- 
-v7:
- - Removed xilinx specific clock debugfs API support
- - Added reviewed-by tags for FW and clock bindings
- - Updated clock node name to clock-controller
-
-v6:
- - Broke patch series to have base FW driver and Clock driver user
- - Incorporated code review comments from last FW and Clock driver patch series. Discussed below:
-	https://patchwork.kernel.org/patch/10230759/
-	https://patchwork.kernel.org/patch/10250047/
-
-v5:
- - Added ATF version check support
- - Updated some functions to be static 
- - Minor function name corrections
-
-v4:
- - Changed clock setrate/getrate API prototype to support 64 bit rate
- - Defined macros for get_node_status return values
- - Moved DT node as a child of firmware
- - Changed debugfs APIs to return data to debugfs buffer instead of dumping to kernel log
- - Minor changes to incorporate other review comments from v3 patch series
-
-v3:
- - added some fixes to firmware-ggs.c
- - updated pinmux get/set function argument names to specify function id instead of node id
- - added new pinctrl query macros
- - incorporated review comments from v2 patch series
-
-v2:
- - change SPDX-License-Identifier license text style
- - split patch into multiple patches
- - Updated copyrights
- - Added ABI documentation
- - incorporated logical review comments from previuos patch. Discussed below:
-	https://patchwork.kernel.org/patch/10150665/
-
-Jolly Shah (1):
-  drivers: clk: Add ZynqMP clock driver
-
-Rajan Vaja (10):
-  dt-bindings: firmware: Add bindings for ZynqMP firmware
-  firmware: xilinx: Add Zynqmp firmware driver
-  firmware: xilinx: Add zynqmp IOCTL API for device control
-  firmware: xilinx: Add query data API
-  firmware: xilinx: Add clock APIs
-  firmware: xilinx: Add debugfs interface
-  firmware: xilinx: Add debugfs for IOCTL API
-  firmware: xilinx: Add debugfs for query data API
-  dt-bindings: clock: Add bindings for ZynqMP clock driver
-  firmware: xilinx: Replace init call with probe method
-
- .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  82 +++
- arch/arm64/Kconfig.platforms                       |   1 +
- drivers/clk/Kconfig                                |   1 +
- drivers/clk/Makefile                               |   1 +
- drivers/clk/zynqmp/Kconfig                         |  10 +
- drivers/clk/zynqmp/Makefile                        |   4 +
- drivers/clk/zynqmp/clk-gate-zynqmp.c               | 144 +++++
- drivers/clk/zynqmp/clk-mux-zynqmp.c                | 141 ++++
- drivers/clk/zynqmp/clk-zynqmp.h                    |  68 ++
- drivers/clk/zynqmp/clkc.c                          | 716 +++++++++++++++++++++
- drivers/clk/zynqmp/divider.c                       | 217 +++++++
- drivers/clk/zynqmp/pll.c                           | 335 ++++++++++
- drivers/firmware/Kconfig                           |   1 +
- drivers/firmware/Makefile                          |   1 +
- drivers/firmware/xilinx/Kconfig                    |  23 +
- drivers/firmware/xilinx/Makefile                   |   5 +
- drivers/firmware/xilinx/zynqmp-debug.c             | 249 +++++++
- drivers/firmware/xilinx/zynqmp-debug.h             |  22 +
- drivers/firmware/xilinx/zynqmp.c                   | 535 +++++++++++++++
- include/dt-bindings/clock/xlnx,zynqmp-clk.h        | 116 ++++
- include/linux/firmware/xlnx-zynqmp.h               | 116 ++++
- 21 files changed, 2788 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
- create mode 100644 drivers/clk/zynqmp/Kconfig
- create mode 100644 drivers/clk/zynqmp/Makefile
- create mode 100644 drivers/clk/zynqmp/clk-gate-zynqmp.c
- create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
- create mode 100644 drivers/clk/zynqmp/clk-zynqmp.h
- create mode 100644 drivers/clk/zynqmp/clkc.c
- create mode 100644 drivers/clk/zynqmp/divider.c
- create mode 100644 drivers/clk/zynqmp/pll.c
- create mode 100644 drivers/firmware/xilinx/Kconfig
- create mode 100644 drivers/firmware/xilinx/Makefile
- create mode 100644 drivers/firmware/xilinx/zynqmp-debug.c
- create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
- create mode 100644 drivers/firmware/xilinx/zynqmp.c
- create mode 100644 include/dt-bindings/clock/xlnx,zynqmp-clk.h
- create mode 100644 include/linux/firmware/xlnx-zynqmp.h
-
--- 
-2.7.4
+SGkgU3RlcGhlbiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdGVw
+aGVuIEJveWQgW21haWx0bzpzYm95ZEBrZXJuZWwub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1
+bHkgMjUsIDIwMTggMTI6NDkgUE0NCj4gVG86IGFyZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc7IGRt
+aXRyeS50b3Jva2hvdkBnbWFpbC5jb207DQo+IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBo
+a2FsbHdlaXQxQGdtYWlsLmNvbTsNCj4ga2Vlc2Nvb2tAY2hyb21pdW0ub3JnOyBsaW51eC1jbGtA
+dmdlci5rZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gbWF0dEBjb2RlYmx1ZXBy
+aW50LmNvLnVrOyBtaW5nb0BrZXJuZWwub3JnOyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4g
+cm9iaCtkdEBrZXJuZWwub3JnOyBzYm95ZEBjb2RlYXVyb3JhLm9yZzsgc3VkZWVwLmhvbGxhQGFy
+bS5jb207IEpvbGx5DQo+IFNoYWggPEpPTExZU0B4aWxpbnguY29tPjsgTWljaGFsIFNpbWVrIDxt
+aWNoYWxzQHhpbGlueC5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgVGVq
+YXMgUGF0ZWwgPFRFSkFTUEB4aWxpbnguY29tPjsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IFJhamFuIFZhamEgPFJBSkFOVkB4aWxpbnguY29tPjsgU2h1YmhyYWp5b3RpIERhdHRh
+DQo+IDxzaHViaHJhakB4aWxpbnguY29tPjsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnDQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjkgMTAvMTBdIGRyaXZlcnM6IGNsazogQWRk
+IFp5bnFNUCBjbG9jayBkcml2ZXINCj4gDQo+IFF1b3RpbmcgSm9sbHkgU2hhaCAoMjAxOC0wNy0x
+NyAxMzowOTowMSkNCj4gPiBIaSBTdGVwaGVuLA0KPiA+DQo+ID4gVGhhbmtzIGZvciB0aGUgcmV2
+aWV3LA0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTog
+U3RlcGhlbiBCb3lkIFttYWlsdG86c2JveWRAa2VybmVsLm9yZ10NCj4gPiA+IFNlbnQ6IFN1bmRh
+eSwgSnVseSAwOCwgMjAxOCAxMDoyNyBQTQ0KPiA+ID4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4
+aWxpbnguY29tPjsgYXJkLmJpZXNoZXV2ZWxAbGluYXJvLm9yZzsNCj4gPiA+IGRtaXRyeS50b3Jv
+a2hvdkBnbWFpbC5jb207IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiA+ID4gaGthbGx3
+ZWl0MUBnbWFpbC5jb207IGtlZXNjb29rQGNocm9taXVtLm9yZzsNCj4gPiA+IGxpbnV4LWNsa0B2
+Z2VyLmtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiA+ID4gbWF0dEBjb2RlYmx1
+ZXByaW50LmNvLnVrOyBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47DQo+ID4gPiBt
+aW5nb0BrZXJuZWwub3JnOyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4gPiA+IHJvYmgrZHRA
+a2VybmVsLm9yZzsgc2JveWRAY29kZWF1cm9yYS5vcmc7IHN1ZGVlcC5ob2xsYUBhcm0uY29tDQo+
+ID4gPiBDYzogUmFqYW4gVmFqYSA8UkFKQU5WQHhpbGlueC5jb20+Ow0KPiA+ID4gbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEpvbGx5IFNoYWgNCj4gPiA+IDxK
+T0xMWVNAeGlsaW54LmNvbT47IFRlamFzIFBhdGVsIDxURUpBU1BAeGlsaW54LmNvbT47IFNodWJo
+cmFqeW90aQ0KPiA+ID4gRGF0dGEgPHNodWJocmFqQHhpbGlueC5jb20+OyBKb2xseSBTaGFoIDxK
+T0xMWVNAeGlsaW54LmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjkgMTAvMTBdIGRy
+aXZlcnM6IGNsazogQWRkIFp5bnFNUCBjbG9jayBkcml2ZXINCj4gPiA+DQo+ID4gPiA+ICsvKioN
+Cj4gPiA+ID4gKyAqIHp5bnFtcF9wbV9jbG9ja19nZXRfcGFyZW50cygpIC0gR2V0IHRoZSBmaXJz
+dCAzIHBhcmVudHMgb2YNCj4gPiA+ID4gK2Nsb2NrIGZvciBnaXZlbg0KPiA+ID4gaWQNCj4gPiA+
+ID4gKyAqIEBjbG9ja19pZDogIENsb2NrIElEDQo+ID4gPiA+ICsgKiBAaW5kZXg6ICAgICBQYXJl
+bnQgaW5kZXgNCj4gPiA+ID4gKyAqIEBwYXJlbnRzOiAgIDMgcGFyZW50cyBvZiB0aGUgZ2l2ZW4g
+Y2xvY2sNCj4gPiA+ID4gKyAqDQo+ID4gPiA+ICsgKiBUaGlzIGZ1bmN0aW9uIGlzIHVzZWQgdG8g
+Z2V0IDMgcGFyZW50cyBmb3IgdGhlIGNsb2NrIHNwZWNpZmllZA0KPiA+ID4gPiArYnkNCj4gPiA+
+ID4gKyAqIGdpdmVuIGNsb2NrIElELg0KPiA+ID4gPiArICoNCj4gPiA+ID4gKyAqIFRoaXMgQVBJ
+IHdpbGwgcmV0dXJuIDMgcGFyZW50cyB3aXRoIGEgc2luZ2xlIHJlc3BvbnNlLiBUbyBnZXQNCj4g
+PiA+ID4gKyAqIG90aGVyIHBhcmVudHMsIG1hc3RlciBzaG91bGQgY2FsbCBzYW1lIEFQSSBpbiBs
+b29wIHdpdGggbmV3DQo+ID4gPiA+ICsgKiBwYXJlbnQgaW5kZXggdGlsbCBlcnJvciBpcyByZXR1
+cm5lZC4gRS5nIEZpcnN0IGNhbGwgc2hvdWxkDQo+ID4gPiA+ICtoYXZlDQo+ID4gPiA+ICsgKiBp
+bmRleCAwIHdoaWNoIHdpbGwgcmV0dXJuIHBhcmVudHMgMCwxIGFuZCAyLiBOZXh0IGNhbGwsIGlu
+ZGV4DQo+ID4gPiA+ICsgKiBzaG91bGQgYmUgMyB3aGljaCB3aWxsIHJldHVybiBwYXJlbnQgMyw0
+IGFuZCA1IGFuZCBzbyBvbi4NCj4gPiA+ID4gKyAqDQo+ID4gPiA+ICsgKiBSZXR1cm46IFJldHVy
+bnMgc3RhdHVzLCBlaXRoZXIgc3VjY2VzcyBvciBlcnJvcityZWFzb24gICovDQo+ID4gPiA+ICtz
+dGF0aWMgaW50IHp5bnFtcF9wbV9jbG9ja19nZXRfcGFyZW50cyh1MzIgY2xvY2tfaWQsIHUzMiBp
+bmRleCwNCj4gPiA+ID4gK3UzMg0KPiA+ID4gKnBhcmVudHMpDQo+ID4gPiA+ICt7DQo+ID4gPiA+
+ICsgICAgICAgc3RydWN0IHp5bnFtcF9wbV9xdWVyeV9kYXRhIHFkYXRhID0gezB9Ow0KPiA+ID4g
+PiArICAgICAgIHUzMiByZXRfcGF5bG9hZFtQQVlMT0FEX0FSR19DTlRdOw0KPiA+ID4NCj4gPiA+
+IFdoYXQncyB0aGUgZW5kaWFubmVzcyBvZiB0aGlzIHBheWxvYWQ/IElzIGl0IGxpdHRsZSBlbmRp
+YW4/IE9yIGRvDQo+ID4gPiB0aGUgZWVtaV9vcHMgY29udmVydCB0byBDUFUgbmF0aXZlIGVuZGlh
+bm5lc3M/DQo+ID4NCj4gPiBJdHMgbGl0dGxlIGVuZGlhbg0KPiANCj4gSXMgaXQgQ1BVIG5hdGl2
+ZT8gVGhpcyBtaWdodCBuZWVkIHRvIGJlIG1hcmtlZCBhcyBfX2xlMzIgZm9yIHByb3BlciBlbmRp
+YW5lc3MNCj4gY29kZS4NCj4gDQoNCkZpeGVkIGluIHYxMSBzZXJpZXMocG9zdGVkIHRvZGF5KS4N
+Cg0KPiA+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKy8qKg0KPiA+ID4gPiArICogenlucW1wX2Nsb2Nr
+X2luaXQoKSAtIEluaXRpYWxpemUgenlucW1wIGNsb2Nrcw0KPiA+ID4gPiArICoNCj4gPiA+ID4g
+KyAqIFJldHVybjogMCBvbiBzdWNjZXNzIGVsc2UgZXJyb3IgY29kZSAgKi8gc3RhdGljIGludCBf
+X2luaXQNCj4gPiA+ID4gK3p5bnFtcF9jbG9ja19pbml0KHZvaWQpIHsNCj4gPiA+ID4gKyAgICAg
+ICBpbnQgcmV0Ow0KPiA+ID4gPiArICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7DQo+ID4g
+PiA+ICsNCj4gPiA+ID4gKyAgICAgICBucCA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEws
+IE5VTEwsICJ4bG54LHp5bnFtcCIpOw0KPiA+ID4gPiArICAgICAgIGlmICghbnApDQo+ID4gPiA+
+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0VOVDsNCj4gPiA+ID4gKyAgICAgICBvZl9ub2Rl
+X3B1dChucCk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBucCA9IG9mX2ZpbmRfY29tcGF0
+aWJsZV9ub2RlKE5VTEwsIE5VTEwsDQo+ID4gPiA+ICsgInhsbngsenlucW1wLWNsayIpOw0KPiA+
+ID4NCj4gPiA+IFdoeSBjYW4ndCB0aGlzIGJlIGEgcGxhdGZvcm0gZGV2aWNlIGRyaXZlcj8NCj4g
+Pg0KPiA+IFBsYXRmb3JtIGRyaXZlciBtYXkgcHJvYmUgbGF0ZXIoYW4gYWN0dWFsbHkgcHJvYmlu
+ZyBsYXRlciBpbiBvdXIgY2FzZSkuIFRoaXMgd2lsbA0KPiByZXN1bHRzIGluIGNsb2NrIGdldCBm
+YWlsdXJlIGluIGNsb2NrIGNvbnN1bWVyIHBlcmlwaGVyYWxzLiBTbyBjbG9jayByZWdpc3RyYXRp
+b24NCj4gbmVlZHMgdG8gYmUgZG9uZSBlYXJsaWVyLg0KPiANCj4gVGhhdCdzIGZpbmUgdGhvdWdo
+PyBJZiBhIGNsa19nZXQoKSBmYWlscyBiZWNhdXNlIHRoZSBwcm92aWRlciBpc24ndCByZWdpc3Rl
+cmVkIHlldA0KPiB0aGUgY29uc3VtZXIgd2lsbCBzZWUgLUVQUk9CRV9ERUZFUiBhbmQgdHJ5IGFn
+YWluIGxhdGVyLg0KDQpZb3UgYXJlIHJpZ2h0LiBSZXBsYWNlZCBpbml0IHdpdGggcGxhdGZvcm0g
+ZHJpdmVyIHByb2JlIGluIHYxMSBzZXJpZXMocG9zdGVkIHRvZGF5KS4NCg0KVGhhbmtzLA0KSm9s
+bHkgU2hhaA0KDQoNCg==
