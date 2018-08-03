@@ -1,82 +1,107 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 14/18] serial: intel: Add CCF support
-Date: Fri, 3 Aug 2018 12:30:23 +0200
-Message-ID: <20180803103023.GA6557@kroah.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-15-songjun.wu@linux.intel.com>
- <20180803055640.GA32226@kroah.com>
- <763bba56-3701-7fe9-9b31-4710594b40d5@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6 2/3] dt-bindings: display: atmel: optional
+ video-interface of endpoints
+Date: Fri, 3 Aug 2018 13:32:25 +0300
+Message-ID: <20180803103225.xkwqe3wiv2gwdo5g@valkosipuli.retiisi.org.uk>
+References: <20180803101124.4622-1-peda@axentia.se>
+ <20180803101124.4622-3-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <763bba56-3701-7fe9-9b31-4710594b40d5@linux.intel.com>
+In-Reply-To: <20180803101124.4622-3-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Wu, Songjun" <songjun.wu@linux.intel.com>
-Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 03, 2018 at 03:33:38PM +0800, Wu, Songjun wrote:
-> 
-> 
-> On 8/3/2018 1:56 PM, Greg Kroah-Hartman wrote:
-> > On Fri, Aug 03, 2018 at 11:02:33AM +0800, Songjun Wu wrote:
-> > > Previous implementation uses platform-dependent API to get the clock.
-> > > Those functions are not available for other SoC which uses the same IP.
-> > > The CCF (Common Clock Framework) have an abstraction based APIs for
-> > > clock. In future, the platform specific code will be removed when the
-> > > legacy soc use CCF as well.
-> > > Change to use CCF APIs to get clock and rate. So that different SoCs
-> > > can use the same driver.
-> > > 
-> > > Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
-> > > ---
-> > > 
-> > > Changes in v2: None
-> > > 
-> > >   drivers/tty/serial/lantiq.c | 11 +++++++++++
-> > >   1 file changed, 11 insertions(+)
-> > > 
-> > > diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-> > > index 36479d66fb7c..35518ab3a80d 100644
-> > > --- a/drivers/tty/serial/lantiq.c
-> > > +++ b/drivers/tty/serial/lantiq.c
-> > > @@ -26,7 +26,9 @@
-> > >   #include <linux/clk.h>
-> > >   #include <linux/gpio.h>
-> > > +#ifdef CONFIG_LANTIQ
-> > >   #include <lantiq_soc.h>
-> > > +#endif
-> > That is never how you do this in Linux, you know better.
-> > 
-> > Please go and get this patchset reviewed and signed-off-by from other
-> > internal Intel kernel developers before resending it next time.  It is
-> > their job to find and fix your basic errors like this, not ours.
-> Thank you for your comment.
-> Actually, we have discussed this issue internally.
-> We put the reason why we use "#ifdef CONFIG_LANTIQ" preprocessor in commit
-> message in "[PATCH v2 08/18] serial: intel: Get serial id from dts".
-> Please refer the commit message below.
-> 
-> "#ifdef CONFIG_LANTIQ" preprocessor is used because LTQ_EARLY_ASC
-> macro is defined in lantiq_soc.h.
-> lantiq_soc.h is in arch path for legacy product support.
-> 
-> arch/mips/include/asm/mach-lantiq/xway/lantiq_soc.h
-> 
-> If "#ifdef preprocessor" is changed to
-> "if (IS_ENABLED(CONFIG_LANTIQ))", when CONFIG_LANTIQ is not enabled,
-> code using LTQ_EARLY_ASC is compiled.
-> Compilation will fail for no LTQ_EARLY_ASC defined.
+Hi Peter,
 
-Sorry, but no.  Why is this one tiny driver/chip somehow more "special"
-than all of the tens of thousands of other devices we support to warrent
-it getting some sort of special exception to do things differently?
-What happens to the next device that wants to do it this way?
+Thanks for cc'ing me.
 
-Our coding style and rules are there for a reason, do not violate them
-thinking your device is the only one that matters.
+On Fri, Aug 03, 2018 at 12:11:23PM +0200, Peter Rosin wrote:
+> With bus-type/bus-width properties in the endpoint nodes, the video-
+> interface of the connection can be specified for cases where the
+> heuristic fails to select the correct output mode. This can happen
+> e.g. if not all RGB pins are routed on the PCB; the driver has no
+> way of knowing this, and needs to be told explicitly.
+> 
+> This is critical for the devices that have the "conflicting output
+> formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
+> RGB bits move around depending on the selected output mode. For
+> devices that do not have the "conflicting output formats" issue
+> (SAMA5D2, SAMA5D4), this is completely irrelevant.
+> 
+> Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> index 82f2acb3d374..10e8707d1443 100644
+> --- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> @@ -15,6 +15,14 @@ Required children nodes:
+>   to external devices using the OF graph reprensentation (see ../graph.txt).
+>   At least one port node is required.
+>  
+> +Optional properties in grandchild nodes:
+> + Any endpoint grandchild node may specify a desired video interface
+> + according to ../../media/video-interfaces.txt, specifically
+> + - bus-type: must be <0>.
 
-Do it properly, again, you all know better than this.
+bus-type won't tell anything in this case, you could simply drop it. If
+your hardware only supports parallel or Bt.656 bus then the code parsing
+the properties can (and should) know the bus type as well.
 
-greg k-h
+Looking at your implementation, bus-type is not being used. This supports
+the suggestion.
+
+The V4L2 implementation is about to change as well and there's a bit of
+discussion ongoing related to the bus-type property:
+
+<URL:https://www.spinics.net/lists/linux-media/msg137980.html>
+<URL:https://www.spinics.net/lists/linux-media/msg137979.html>
+
+> + - bus-width: recognized values are <12>, <16>, <18> and <24>, and
+> +   override any output mode selection heuristic, forcing "rgb444",
+> +   "rgb565", "rgb666" and "rgb888" respectively.
+> +
+>  Example:
+>  
+>  	hlcdc: hlcdc@f0030000 {
+> @@ -50,3 +58,25 @@ Example:
+>  			#pwm-cells = <3>;
+>  		};
+>  	};
+> +
+> +Example 2: With a video interface override to force rgb565; as above
+> +but with these changes/additions:
+> +
+> +	&hlcdc {
+> +		hlcdc-display-controller {
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
+> +
+> +			port@0 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <0>;
+> +
+> +				hlcdc_panel_output: endpoint@0 {
+> +					reg = <0>;
+> +					bus-type = <0>;
+> +					bus-width = <16>;
+> +				};
+> +			};
+> +		};
+> +	};
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
