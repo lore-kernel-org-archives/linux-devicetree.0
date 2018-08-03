@@ -1,311 +1,125 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2 4/4] phy: socionext: add USB2 PHY driver for UniPhier SoC
-Date: Fri,  3 Aug 2018 18:54:05 +0900
-Message-ID: <1533290045-18969-5-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1533290045-18969-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v11 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Fri, 3 Aug 2018 18:10:21 +0800
+Message-ID: <201808031831.TJYSQ80i%fengguang.wu@intel.com>
+References: <77184f651e5cefb112f1061bc682b759f88144c6.1532946848.git.matti.vaittinen@fi.rohmeurope.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533290045-18969-1-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <77184f651e5cefb112f1061bc682b759f88144c6.1532946848.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: kbuild-all@01.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, eballetbo@gmail.com, linus.walleij@linaro.org, mazziesaccount@gmail.com, dmitry.torokhov@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, broonie@kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for PHY interface built into USB2 controller implemented on
-UniPhier SoCs. This driver supports HS-PHY for Pro4 and LD11.
+Hi Matti,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on ljones-mfd/for-mfd-next]
+[also build test WARNING on v4.18-rc7 next-20180802]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Matti-Vaittinen/mfd-bd71837-mfd-driver-for-ROHM-BD71837-PMIC/20180730-204810
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
+
+smatch warnings:
+drivers/mfd/rohm-bd718x7.c:163 bd71837_i2c_probe() warn: unsigned 'button.irq' is never less than zero.
+
+vim +163 drivers/mfd/rohm-bd718x7.c
+
+    88	
+    89	static int bd71837_i2c_probe(struct i2c_client *i2c,
+    90				    const struct i2c_device_id *id)
+    91	{
+    92		struct bd71837 *bd71837;
+    93		int ret, i;
+    94		unsigned int val;
+    95	
+    96		bd71837 = devm_kzalloc(&i2c->dev, sizeof(struct bd71837), GFP_KERNEL);
+    97	
+    98		if (!bd71837)
+    99			return -ENOMEM;
+   100	
+   101		bd71837->chip_irq = i2c->irq;
+   102	
+   103		if (!bd71837->chip_irq) {
+   104			dev_err(&i2c->dev, "No IRQ configured\n");
+   105			return -EINVAL;
+   106		}
+   107	
+   108		bd71837->dev = &i2c->dev;
+   109		dev_set_drvdata(&i2c->dev, bd71837);
+   110	
+   111		bd71837->regmap = devm_regmap_init_i2c(i2c, &bd71837_regmap_config);
+   112		if (IS_ERR(bd71837->regmap)) {
+   113			dev_err(&i2c->dev, "regmap initialization failed\n");
+   114			return PTR_ERR(bd71837->regmap);
+   115		}
+   116	
+   117		ret = regmap_read(bd71837->regmap, BD71837_REG_REV, &val);
+   118		if (ret) {
+   119			dev_err(&i2c->dev, "Read BD71837_REG_DEVICE failed\n");
+   120			return ret;
+   121		}
+   122		for (i = 0; i < ARRAY_SIZE(supported_revisions); i++)
+   123			if (supported_revisions[i] == val)
+   124				break;
+   125	
+   126		if (i == ARRAY_SIZE(supported_revisions)) {
+   127			dev_err(&i2c->dev, "Unsupported chip revision\n");
+   128			return -ENODEV;
+   129		}
+   130	
+   131		ret = devm_regmap_add_irq_chip(&i2c->dev, bd71837->regmap,
+   132					       bd71837->chip_irq, IRQF_ONESHOT, 0,
+   133					       &bd71837_irq_chip, &bd71837->irq_data);
+   134		if (ret) {
+   135			dev_err(&i2c->dev, "Failed to add irq_chip\n");
+   136			return ret;
+   137		}
+   138	
+   139		/* Configure short press to 10 milliseconds */
+   140		ret = regmap_update_bits(bd71837->regmap,
+   141					 BD71837_REG_PWRONCONFIG0,
+   142					 BD718XX_PWRBTN_PRESS_DURATION_MASK,
+   143					 BD718XX_PWRBTN_SHORT_PRESS_10MS);
+   144		if (ret) {
+   145			dev_err(&i2c->dev, "Failed to configure button short press timeout\n");
+   146			return ret;
+   147		}
+   148	
+   149		/* Configure long press to 10 seconds */
+   150		ret = regmap_update_bits(bd71837->regmap,
+   151					 BD71837_REG_PWRONCONFIG1,
+   152					 BD718XX_PWRBTN_PRESS_DURATION_MASK,
+   153					 BD718XX_PWRBTN_LONG_PRESS_10S);
+   154	
+   155		if (ret) {
+   156			dev_err(&i2c->dev, "Failed to configure button long press timeout\n");
+   157			return ret;
+   158		}
+   159	
+   160		button.irq = regmap_irq_get_virq(bd71837->irq_data,
+   161						  BD71837_INT_PWRBTN_S);
+   162	
+ > 163		if (button.irq < 0) {
+   164			dev_err(&i2c->dev, "Failed to get the IRQ\n");
+   165			return button.irq;
+   166		}
+   167	
+   168		ret = devm_mfd_add_devices(bd71837->dev, PLATFORM_DEVID_AUTO,
+   169					   bd71837_mfd_cells,
+   170					   ARRAY_SIZE(bd71837_mfd_cells), NULL, 0,
+   171					   regmap_irq_get_domain(bd71837->irq_data));
+   172		if (ret)
+   173			dev_err(&i2c->dev, "Failed to create subdevices\n");
+   174	
+   175		return ret;
+   176	}
+   177	
+
 ---
- drivers/phy/socionext/Kconfig             |  13 ++
- drivers/phy/socionext/Makefile            |   1 +
- drivers/phy/socionext/phy-uniphier-usb2.c | 246 ++++++++++++++++++++++++++++++
- 3 files changed, 260 insertions(+)
- create mode 100644 drivers/phy/socionext/phy-uniphier-usb2.c
-
-diff --git a/drivers/phy/socionext/Kconfig b/drivers/phy/socionext/Kconfig
-index 4a172fc..497ca38 100644
---- a/drivers/phy/socionext/Kconfig
-+++ b/drivers/phy/socionext/Kconfig
-@@ -2,6 +2,19 @@
- # PHY drivers for Socionext platforms.
- #
- 
-+config PHY_UNIPHIER_USB2
-+	tristate "UniPhier USB2 PHY driver"
-+	depends on ARCH_UNIPHIER || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support USB PHY implemented on USB2 controller
-+	  on UniPhier SoCs. This driver provides interface to interact
-+	  with USB 2.0 PHY that is part of the UniPhier SoC.
-+	  In case of Pro4, it is necessary to specify this USB2 PHY instead
-+	  of USB3 HS-PHY.
-+
- config PHY_UNIPHIER_USB3
- 	tristate "UniPhier USB3 PHY driver"
- 	depends on ARCH_UNIPHIER || COMPILE_TEST
-diff --git a/drivers/phy/socionext/Makefile b/drivers/phy/socionext/Makefile
-index e230fa31..91e4825 100644
---- a/drivers/phy/socionext/Makefile
-+++ b/drivers/phy/socionext/Makefile
-@@ -3,4 +3,5 @@
- # Makefile for the phy drivers.
- #
- 
-+obj-$(CONFIG_PHY_UNIPHIER_USB2)	+= phy-uniphier-usb2.o
- obj-$(CONFIG_PHY_UNIPHIER_USB3)	+= phy-uniphier-usb3hs.o phy-uniphier-usb3ss.o
-diff --git a/drivers/phy/socionext/phy-uniphier-usb2.c b/drivers/phy/socionext/phy-uniphier-usb2.c
-new file mode 100644
-index 0000000..22eece2
---- /dev/null
-+++ b/drivers/phy/socionext/phy-uniphier-usb2.c
-@@ -0,0 +1,246 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// phy-uniphier-usb2.c - PHY driver for UniPhier USB2 controller
-+// Copyright 2015-2018 Socionext Inc.
-+// Author:
-+//      Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+
-+#define SG_USBPHY1CTRL		0x500
-+#define SG_USBPHY1CTRL2		0x504
-+#define SG_USBPHY2CTRL		0x508
-+#define SG_USBPHY2CTRL2		0x50c	/* LD11 */
-+#define SG_USBPHY12PLL		0x50c	/* Pro4 */
-+#define SG_USBPHY3CTRL		0x510
-+#define SG_USBPHY3CTRL2		0x514
-+#define SG_USBPHY4CTRL		0x518	/* Pro4 */
-+#define SG_USBPHY4CTRL2		0x51c	/* Pro4 */
-+#define SG_USBPHY34PLL		0x51c	/* Pro4 */
-+
-+struct uniphier_u2phy_param {
-+	u32 offset;
-+	u32 value;
-+};
-+
-+struct uniphier_u2phy_soc_data {
-+	struct uniphier_u2phy_param config0;
-+	struct uniphier_u2phy_param config1;
-+};
-+
-+struct uniphier_u2phy_priv {
-+	struct regmap *regmap;
-+	struct phy *phy;
-+	struct regulator *vbus;
-+	const struct uniphier_u2phy_soc_data *data;
-+	struct uniphier_u2phy_priv *next;
-+};
-+
-+static int uniphier_u2phy_power_on(struct phy *phy)
-+{
-+	struct uniphier_u2phy_priv *priv = phy_get_drvdata(phy);
-+	int ret = 0;
-+
-+	if (priv->vbus)
-+		ret = regulator_enable(priv->vbus);
-+
-+	return ret;
-+}
-+
-+static int uniphier_u2phy_power_off(struct phy *phy)
-+{
-+	struct uniphier_u2phy_priv *priv = phy_get_drvdata(phy);
-+
-+	if (priv->vbus)
-+		regulator_disable(priv->vbus);
-+
-+	return 0;
-+}
-+
-+static int uniphier_u2phy_init(struct phy *phy)
-+{
-+	struct uniphier_u2phy_priv *priv = phy_get_drvdata(phy);
-+
-+	if (!priv->data)
-+		return 0;
-+
-+	regmap_write(priv->regmap, priv->data->config0.offset,
-+		     priv->data->config0.value);
-+	regmap_write(priv->regmap, priv->data->config1.offset,
-+		     priv->data->config1.value);
-+
-+	return 0;
-+}
-+
-+static struct phy *uniphier_u2phy_xlate(struct device *dev,
-+					struct of_phandle_args *args)
-+{
-+	struct uniphier_u2phy_priv *priv = dev_get_drvdata(dev);
-+
-+	while (priv && args->np != priv->phy->dev.of_node)
-+		priv = priv->next;
-+
-+	if (!priv) {
-+		dev_err(dev, "Failed to find appropriate phy\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return priv->phy;
-+}
-+
-+static const struct phy_ops uniphier_u2phy_ops = {
-+	.init      = uniphier_u2phy_init,
-+	.power_on  = uniphier_u2phy_power_on,
-+	.power_off = uniphier_u2phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int uniphier_u2phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *parent, *child;
-+	struct uniphier_u2phy_priv *priv = NULL, *next = NULL;
-+	struct phy_provider *phy_provider;
-+	struct regmap *regmap;
-+	const struct uniphier_u2phy_soc_data *data;
-+	int ret, data_idx, ndatas;
-+
-+	data = of_device_get_match_data(dev);
-+	if (WARN_ON(!data))
-+		return -EINVAL;
-+
-+	/* get number of data */
-+	for (ndatas = 0; data[ndatas].config0.offset; ndatas++)
-+		;
-+
-+	parent = of_get_parent(dev->of_node);
-+	regmap = syscon_node_to_regmap(parent);
-+	of_node_put(parent);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to get regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	for_each_child_of_node(dev->of_node, child) {
-+		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+		if (!priv) {
-+			ret = -ENOMEM;
-+			goto out_put_child;
-+		}
-+		priv->regmap = regmap;
-+
-+		priv->vbus = devm_regulator_get_optional(dev, "vbus");
-+		if (IS_ERR(priv->vbus)) {
-+			if (PTR_ERR(priv->vbus) == -EPROBE_DEFER) {
-+				ret = PTR_ERR(priv->vbus);
-+				goto out_put_child;
-+			}
-+			priv->vbus = NULL;
-+		}
-+
-+		priv->phy = devm_phy_create(dev, child, &uniphier_u2phy_ops);
-+		if (IS_ERR(priv->phy)) {
-+			dev_err(dev, "Failed to create phy\n");
-+			ret = PTR_ERR(priv->phy);
-+			goto out_put_child;
-+		}
-+
-+		ret = of_property_read_u32(child, "reg", &data_idx);
-+		if (ret) {
-+			dev_err(dev, "Failed to get reg property\n");
-+			goto out_put_child;
-+		}
-+
-+		if (data_idx < ndatas)
-+			priv->data = &data[data_idx];
-+		else
-+			dev_warn(dev, "No phy configuration: %s\n",
-+				 child->full_name);
-+
-+		phy_set_drvdata(priv->phy, priv);
-+		priv->next = next;
-+		next = priv;
-+	}
-+
-+	dev_set_drvdata(dev, priv);
-+	phy_provider = devm_of_phy_provider_register(dev,
-+						     uniphier_u2phy_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	return 0;
-+
-+out_put_child:
-+	of_node_put(child);
-+
-+	return ret;
-+}
-+
-+static const struct uniphier_u2phy_soc_data uniphier_pro4_data[] = {
-+	{
-+		.config0 = { SG_USBPHY1CTRL, 0x05142400 },
-+		.config1 = { SG_USBPHY12PLL, 0x00010010 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY2CTRL, 0x05142400 },
-+		.config1 = { SG_USBPHY12PLL, 0x00010010 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY3CTRL, 0x05142400 },
-+		.config1 = { SG_USBPHY34PLL, 0x00010010 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY4CTRL, 0x05142400 },
-+		.config1 = { SG_USBPHY34PLL, 0x00010010 },
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static const struct uniphier_u2phy_soc_data uniphier_ld11_data[] = {
-+	{
-+		.config0 = { SG_USBPHY1CTRL,  0x82280000 },
-+		.config1 = { SG_USBPHY1CTRL2, 0x00000106 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY2CTRL,  0x82280000 },
-+		.config1 = { SG_USBPHY2CTRL2, 0x00000106 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY3CTRL,  0x82280000 },
-+		.config1 = { SG_USBPHY3CTRL2, 0x00000106 },
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static const struct of_device_id uniphier_u2phy_match[] = {
-+	{
-+		.compatible = "socionext,uniphier-pro4-usb2-phy",
-+		.data = &uniphier_pro4_data,
-+	},
-+	{
-+		.compatible = "socionext,uniphier-ld11-usb2-phy",
-+		.data = &uniphier_ld11_data,
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, uniphier_u2phy_match);
-+
-+static struct platform_driver uniphier_u2phy_driver = {
-+	.probe = uniphier_u2phy_probe,
-+	.driver = {
-+		.name = "uniphier-usb2-phy",
-+		.of_match_table = uniphier_u2phy_match,
-+	},
-+};
-+module_platform_driver(uniphier_u2phy_driver);
-+
-+MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
-+MODULE_DESCRIPTION("UniPhier PHY driver for USB2 controller");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
