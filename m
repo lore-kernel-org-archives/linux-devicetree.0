@@ -1,61 +1,70 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RESEND PATCH v5 0/3] drm/atmel-hlcdc: bus-width override support
-Date: Fri, 3 Aug 2018 09:30:05 +0200
-Message-ID: <20180803093005.60eec28e@bbrezillon>
-References: <20180803072308.14962-1-peda@axentia.se>
+From: "Wu, Songjun" <songjun.wu@linux.intel.com>
+Subject: Re: [PATCH v2 14/18] serial: intel: Add CCF support
+Date: Fri, 3 Aug 2018 15:33:38 +0800
+Message-ID: <763bba56-3701-7fe9-9b31-4710594b40d5@linux.intel.com>
+References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
+ <20180803030237.3366-15-songjun.wu@linux.intel.com>
+ <20180803055640.GA32226@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180803072308.14962-1-peda@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180803055640.GA32226@kroah.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAgMyBBdWcgMjAxOCAwOToyMzowNSArMDIwMApQZXRlciBSb3NpbiA8cGVkYUBheGVu
-dGlhLnNlPiB3cm90ZToKCj4gSGkhCj4gCj4gVGhpcyBpcyBwZXJoYXBzIG5vdCBhIHRydWUgcmVz
-ZW5kIGluIHRoYXQgdGhlc2UgdGhyZWUgcGF0Y2hlcyB3ZXJlCj4gb3JpZ2luYWxseSBpbiBhIGxh
-cmdlciBzZXJpZXMgWzFdLCBhbmQgdGhlIHNlcmllcyBoYXZlIGJlZW4gcmViYXNlZAo+IHRvIHY0
-LjE4LXJjNi4gSG93ZXZlciwgSSBkaWQgYXNrIHRoYXQgdGhlc2UgdGhyZWUgcGF0Y2hlcyBzaG91
-bGQgYmUKPiBjb25zaWRlcmVkIHNlcGFyYXRlbHkuIFRoZSBvdGhlciBwYXRjaGVzIGluIHRoZSBv
-cmlnaW5hbCBzZXJpZXMgaGF2ZQo+IGJlZW4gYWRvcHRlZCBhbmQgcmV3b3JrZWQgYnkgUnVzc2Vs
-bCBLaW5nIFsyXS4KCk9vcHMsIGNvbXBsZXRlbHkgZm9yZ290IHRvIGFwcGx5IHRob3NlIDMgcGF0
-Y2hlcy4gSWYgdGhlcmUncyBubwpvYmplY3Rpb24gSSdsbCBxdWV1ZSB0aGVtIHRvIGRybS1taXNj
-LW5leHQuCgpSZWdhcmRzLAoKQm9yaXMKCj4gCj4gVGhlIGJhY2tncm91bmQgZm9yIHRoZXNlIHBh
-dGNoZXMgaXMgdGhhdCBvdXIgUENCIGludGVyZmFjZSBiZXR3ZWVuCj4gdGhlIFNBTUE1RDMgYW5k
-IHRoZSBkczkwYzE4NSBsdmRzIGVuY29kZXIgaXMgb25seSB1c2luZyAxNiBiaXRzLCBhbmQKPiB0
-aGlzIGhhcyB0byBiZSBkZXNjcmliZWQgc29tZXdoZXJlLCBvciB0aGUgYXRtZWwtaGxjZGMgZHJp
-dmVyIGhhdmUgbm8KPiBjaGFuY2Ugb2Ygc2VsZWN0aW5nIHRoZSBjb3JyZWN0IG91dHB1dCBtb2Rl
-LiBTaW5jZSB3ZSBoYXZlIHNpbWlsYXIKPiBwcm9ibGVtcyB3aXRoIGEgdGRhMTk5ODggSERNSSBl
-bmNvZGVyIEkgYWRkZWQgcGF0Y2hlcyB0byBvdmVycmlkZQo+IHRoZSBhdG1lbC1obGNkYyBvdXRw
-dXQgZm9ybWF0IHZpYSBEVCBwcm9wZXJ0aWVzIGNvbXBhdGlibGUgd2l0aCB0aGUKPiBtZWRpYSB2
-aWRlby1pbnRlcmZhY2UgYmluZGluZyBhbmQgdGhpbmdzIHN0YXJ0IHRvIHBsYXkgdG9nZXRoZXIu
-Cj4gSSBvZiBjb3Vyc2UgbmVlZCBteSBvbGQgcGF0Y2hlcyBvciB0aGUgbmV3IG9uZXMgZnJvbSBS
-dXNzZWxsIHRvCj4gYWN0dWFsbHkgdXNlIHRoZSBIRE1JIGVuY29kZXIgd2l0aCB0aGUgU0FNQTVE
-MywgYnV0IHRoYXQgaXMgbm90Cj4gZGlyZWN0bHkgcmVsYXRlZCB0byB0aGlzIChzaG9ydGVuZWQp
-IHNlcmllcy4KPiAKPiBDaGVlcnMsCj4gUGV0ZXIKPiAKPiBbMV0gaHR0cHM6Ly9sa21sLm9yZy9s
-a21sLzIwMTgvNS8yMy8yNzMKPiBbMl0gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJt
-LWtlcm5lbC9tc2c2NjkyMzguaHRtbAo+IAo+IFBldGVyIFJvc2luICgzKToKPiAgIGR0LWJpbmRp
-bmdzOiBkaXNwbGF5OiBicmlkZ2U6IGx2ZHMtdHJhbnNtaXR0ZXI6IGFkZCB0aSxkczkwYzE4NQo+
-ICAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IGF0bWVsOiBvcHRpb25hbCB2aWRlby1pbnRlcmZhY2Ug
-b2YgZW5kcG9pbnRzCj4gICBkcm0vYXRtZWwtaGxjZGM6IHN1cHBvcnQgYnVzLXdpZHRoICgxMi8x
-Ni8xOC8yNCkgaW4gZW5kcG9pbnQgbm9kZXMKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9hdG1lbC9obGNkYy1kYy50eHQgfCAyNiArKysrKysrKwo+ICAuLi4vYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQgICB8ICA4ICsrLQo+ICBkcml2ZXJz
-L2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfY3J0Yy5jICAgICB8IDcwICsrKysrKysr
-KysrKysrKy0tLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2Rj
-X2RjLmggICAgICAgfCAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9o
-bGNkY19vdXRwdXQuYyAgIHwgNjcgKysrKysrKysrKysrKysrKysrLS0tCj4gIDUgZmlsZXMgY2hh
-bmdlZCwgMTQ0IGluc2VydGlvbnMoKyksIDI4IGRlbGV0aW9ucygtKQo+IAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 8/3/2018 1:56 PM, Greg Kroah-Hartman wrote:
+> On Fri, Aug 03, 2018 at 11:02:33AM +0800, Songjun Wu wrote:
+>> Previous implementation uses platform-dependent API to get the clock.
+>> Those functions are not available for other SoC which uses the same IP.
+>> The CCF (Common Clock Framework) have an abstraction based APIs for
+>> clock. In future, the platform specific code will be removed when the
+>> legacy soc use CCF as well.
+>> Change to use CCF APIs to get clock and rate. So that different SoCs
+>> can use the same driver.
+>>
+>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
+>> ---
+>>
+>> Changes in v2: None
+>>
+>>   drivers/tty/serial/lantiq.c | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
+>> index 36479d66fb7c..35518ab3a80d 100644
+>> --- a/drivers/tty/serial/lantiq.c
+>> +++ b/drivers/tty/serial/lantiq.c
+>> @@ -26,7 +26,9 @@
+>>   #include <linux/clk.h>
+>>   #include <linux/gpio.h>
+>>   
+>> +#ifdef CONFIG_LANTIQ
+>>   #include <lantiq_soc.h>
+>> +#endif
+> That is never how you do this in Linux, you know better.
+>
+> Please go and get this patchset reviewed and signed-off-by from other
+> internal Intel kernel developers before resending it next time.  It is
+> their job to find and fix your basic errors like this, not ours.
+Thank you for your comment.
+Actually, we have discussed this issue internally.
+We put the reason why we use "#ifdef CONFIG_LANTIQ" preprocessor in commit
+message in "[PATCH v2 08/18] serial: intel: Get serial id from dts".
+Please refer the commit message below.
+
+"#ifdef CONFIG_LANTIQ" preprocessor is used because LTQ_EARLY_ASC
+macro is defined in lantiq_soc.h.
+lantiq_soc.h is in arch path for legacy product support.
+
+arch/mips/include/asm/mach-lantiq/xway/lantiq_soc.h
+
+If "#ifdef preprocessor" is changed to
+"if (IS_ENABLED(CONFIG_LANTIQ))", when CONFIG_LANTIQ is not enabled,
+code using LTQ_EARLY_ASC is compiled.
+Compilation will fail for no LTQ_EARLY_ASC defined.
