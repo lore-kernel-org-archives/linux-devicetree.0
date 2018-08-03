@@ -1,36 +1,144 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 09/11] RISC-V: Support per-hart timebase-frequency
-Date: Fri, 3 Aug 2018 14:33:57 +0200
-Message-ID: <20180803123357.GC18301@lst.de>
-References: <20180802115008.4031-1-hch@lst.de> <20180802115008.4031-10-hch@lst.de> <fef973e1-6efc-0eff-2789-4a4b5b01900b@wdc.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH v15 0/7] Enable Bluetooth functionality for WCN3990
+Date: Fri, 3 Aug 2018 14:46:19 +0200
+Message-ID: <9348C715-71AE-416B-8460-55135FFDAC7E@holtmann.org>
+References: <20180803121632.30689-1-bgodavar@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fef973e1-6efc-0eff-2789-4a4b5b01900b@wdc.com>
+In-Reply-To: <20180803121632.30689-1-bgodavar@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "anup@brainfault.org" <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
+To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Thierry Escande <thierry.escande@linaro.org>, rtatiya@codeaurora.org, hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 02, 2018 at 03:19:49PM -0700, Atish Patra wrote:
-> On 8/2/18 4:50 AM, Christoph Hellwig wrote:
->> From: Palmer Dabbelt <palmer@sifive.com>
->>
->> Follow the updated DT specs and read the timebase-frequency from the
->> CPU 0 node.
->>
->
-> However, the DT in the HighFive Unleashed has the entry at the wrong place.
->
-> Even the example in github also at wrong place.
-> https://github.com/riscv/riscv-device-tree-doc/pull/8/commits/2461d481329c55005fcbe684f0d6bdb3b7f0a432
->
-> DT should be consistent between Documentation and the one in the hardware. 
-> I can fix them in bbl & submit a bbl patch. But I am not sure if that's an 
-> acceptable way to do it.
+Hi Balakrishna,
 
-I'll need to have comments from Palmer and/or someone else at SiFive
-here.  Personally I really don't care where we document the timebase,
-as this patch supports both locations anywhere.  For now I'll just update
-the commit log to state that more explicitly.
+> These patches enables Bluetooth functinalties for new Qualcomm
+> Bluetooth chip wnc3990. As this is latest chip with new features, 
+> along with some common features to old chip "qcom,qca6174-bt".
+> we have updated names of functions that are used for both the chips 
+> to keep this generic and would help in future when we would have new 
+> BT SoC.
+> 
+> The below are difference between new and old chips.
+> 
+> *Power:
+> *New chip: we use voltage regulators to turn on/off the chip and we 
+>  must send a command on Tx line to turn on/off the chip completely.
+> *Old chip: We turn on/off by setting a GPIO.
+> 
+> *Note: Turning on sequence differs between two chips.
+> 
+> *Firmware download:
+>  Only firmware file name differ from New and Old chip.
+> 
+>  So we reused some functions/structure/variables which are used for old 
+>  chip to New chip by generic naming (may be future chips may use same functions).
+> 
+> * As we have multiple changes for functions names,we have tested these patches 
+>   on both chips.
+> 
+> v15:
+> * fixed nit issue in hci_qca.
+> 
+> v13:
+> * Segregated optional and required properties for wcn3990.
+> 
+> v12:
+> * removed iteration loop in qca_init_wcn3990 
+> * updated review comments.
+> 
+> v11:
+> * removed regulator current from dtbindings
+> * addressed review comments.
+> 
+> v10:
+> * update current load with actual values of WCN3990.
+> * added support  for itterative connect with BT chip if it fails to respond to the HOST.
+> * Added regulator current dtbindings.
+> * addressed review comments.
+> 
+> v9:
+> * removed smps regs.
+> * hidded flow control in respective functions.
+> * moved qca_soc_ver to qca_setup
+> * addressed review comments.
+> 
+> v8:
+>  * Squashed [v7 2/8] and [v7 3/8] to one patch.
+>  * updated functions to set and get the UART speeds.
+>  * addressed review comments.
+> 
+> v7:
+>  * Renamed all the possible function of ROME to generic.
+>  * updated with review comments for hci_qca and btqca
+>  * fixed kbuild errors.
+>  * created wrapper functions for re-usable blocks.
+> 
+> v6:
+>  * Hooked up qca_power to qca_serdev.
+>  * renamed all the naming inconsistency functions with qca_*
+>  * leveraged common code of ROME for wcn3990.
+>  * created wrapper functions for re-usable blocks.
+>  * updated function of _*regulator_enable and _*regualtor_disable.  
+>  * removed redundant comments and functions.
+>  * add code to derive the firmware files based on ROM Version.
+>  * created new patch for common function of ROME and wcn3990.
+>  * enables Qualcomm chip to operate at 3.2Mbps.
+>  * updated names of functions that are used for both the chips to keep this generic. 
+> 
+> v5:
+>  * updated with review comments for hci_qca and btqca
+> 
+> v4:
+>  * rebased all changes on top of bluetooth-next.
+>  * addressed review comments.
+>  * New patch created for firmware download.
+> 
+> v3:
+>  * Rebased all changes on top of bluetooth-next.
+>  * dt-bindings: net: bluetooth: Add device tree bindings for QTI chip wcn3990
+>    - added dt-binding snippet for bluetooth chip wcn3990.
+>  * Bluetooth: Add support for wcn3990 soc.
+>    - updated BT_INFO with bt_dev_info, where ever necessary.
+> 
+> v2:
+>   * Add support for wcn3990:
+>    These changes are aligned as per serdev frame work.
+>          We implemented these changes on top of https://patchwork.kernel.org/patch/10316093/
+>        As this patch enable serdev for one of the Qualcomm BT chip.
+> 
+>        The changes in the patch include.
+>        - Adding support to voting up/down regulators for WCN3990.
+>           - Bluetooth firmware download for wcn3990.
+> 
+>  * Add device tree bindings for Atheros chips:
+>          These changes are on top of https://patchwork.kernel.org/patch/10316097/.
+>          - Description of device tree bindings.
+> 
+> Balakrishna Godavarthi (7):
+>  dt-bindings: net: bluetooth: Add device tree bindings for QTI chip
+>    wcn3990
+>  Bluetooth: btqca: Rename ROME specific functions to generic functions
+>  Bluetooth: btqca: Redefine qca_uart_setup() to generic function.
+>  Bluetooth: hci_qca: Add wrapper functions for setting UART speed
+>  Bluetooth: hci_qca: Enable 3.2 Mbps operating speed.
+>  Bluetooth: btqca: Add wcn3990 firmware download support.
+>  Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990
+> 
+> .../bindings/net/qualcomm-bluetooth.txt       |  29 +-
+> drivers/bluetooth/btqca.c                     | 117 +++--
+> drivers/bluetooth/btqca.h                     |  22 +-
+> drivers/bluetooth/hci_qca.c                   | 486 +++++++++++++++---
+> 4 files changed, 539 insertions(+), 115 deletions(-)
+
+all 7 patches have been applied to bluetooth-next tree.
+
+If we need to fix things, we fix them with additional patches instead of respinning the series.
+
+Regards
+
+Marcel
