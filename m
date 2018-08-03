@@ -1,51 +1,115 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 1/2] of: Add of_machine_compatible_match()
-Date: Fri, 03 Aug 2018 20:31:03 +1000
-Message-ID: <87efffhhco.fsf@concordia.ellerman.id.au>
-References: <20180730131516.18406-1-mpe@ellerman.id.au>
- <CAL_JsqKYFk6-ofDFvaiy3a+r8Zyzw2UuMQUHb-RrgeWfpjom5w@mail.gmail.com>
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: Re: [PATCH v4 1/3] iio: Add modifier for white light
+Date: Fri, 3 Aug 2018 12:44:44 +0200
+Message-ID: <fb30878f-0163-306a-e933-d9fecc996acb@denx.de>
+References: <20180802182729.2061830-1-pn@denx.de>
+ <alpine.DEB.2.21.1808022117460.25216@vps.pmeerw.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <CAL_JsqKYFk6-ofDFvaiy3a+r8Zyzw2UuMQUHb-RrgeWfpjom5w@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.21.1808022117460.25216@vps.pmeerw.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: pn@denx.de, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh+dt@kernel.org> writes:
-> On Mon, Jul 30, 2018 at 7:15 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
-...
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index 4d25e4f952d9..05e3e23a3a57 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -389,6 +389,7 @@ extern int of_alias_get_id(struct device_node *np, const char *stem);
->>  extern int of_alias_get_highest_id(const char *stem);
+Hello Peter,
+
+On 08/02/2018 09:30 PM, Peter Meerwald-Stadler wrote:
+> Hello,
+> 
+> it is not clear to me why 'white' is needed;
+> isn't that the default, i.e. unfiltered light?
+
+Yes, it is. But devices like vcnl4035 veml7700, White LED data one
+register and all other sources of light (like fluorescent,
+incandescent ,sunlight) in separate register.
+
+So in such cases this WHITE modifier is needed. Should it needs to
+come under IIO_MOD_LIGHT_CLEAR?
+
+> 
+> thanks, regards, p.
+> 
+>> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+>> ---
+>>   Documentation/ABI/testing/sysfs-bus-iio | 7 +++++++
+>>   drivers/iio/industrialio-core.c         | 1 +
+>>   include/uapi/linux/iio/types.h          | 1 +
+>>   tools/iio/iio_event_monitor.c           | 2 ++
+>>   4 files changed, 11 insertions(+)
 >>
->>  extern int of_machine_is_compatible(const char *compat);
->> +extern bool of_machine_compatible_match(const char *const *compats);
->
-> Would be nice if of_machine_is_compatible could be implemented in
-> terms of of_machine_compatible_match like this:
->
-> int of_machine_is_compatible(const char *compat)
-> {
->   const char *compats[] = { compat, NULL };
->   return of_machine_is_compatible(compats);
-> }
->
-> Probably can be inline too.
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+>> index 731146c3b138..43e481aed5b2 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-iio
+>> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+>> @@ -1312,6 +1312,13 @@ Description:
+>>   		standardised CIE Erythemal Action Spectrum. UV index values range
+>>   		from 0 (low) to >=11 (extreme).
+>>   
+>> +What:		/sys/.../iio:deviceX/in_intensityY_white_raw
+>> +KernelVersion:	4.18
+>> +Contact:	linux-iio@vger.kernel.org
+>> +Description:
+>> +		Modifier white indicates that measurements contain white LED
+>> +		component.
+>> +
+>>   What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
+>>   What:		/sys/.../iio:deviceX/in_intensity_green_integration_time
+>>   What:		/sys/.../iio:deviceX/in_intensity_blue_integration_time
+>> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+>> index 19bdf3d2962a..cb939b9fad16 100644
+>> --- a/drivers/iio/industrialio-core.c
+>> +++ b/drivers/iio/industrialio-core.c
+>> @@ -108,6 +108,7 @@ static const char * const iio_modifier_names[] = {
+>>   	[IIO_MOD_LIGHT_GREEN] = "green",
+>>   	[IIO_MOD_LIGHT_BLUE] = "blue",
+>>   	[IIO_MOD_LIGHT_UV] = "uv",
+>> +	[IIO_MOD_LIGHT_WHITE] = "white",
+>>   	[IIO_MOD_QUATERNION] = "quaternion",
+>>   	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+>>   	[IIO_MOD_TEMP_OBJECT] = "object",
+>> diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
+>> index 4213cdf88e3c..de87a6c7e6de 100644
+>> --- a/include/uapi/linux/iio/types.h
+>> +++ b/include/uapi/linux/iio/types.h
+>> @@ -84,6 +84,7 @@ enum iio_modifier {
+>>   	IIO_MOD_CO2,
+>>   	IIO_MOD_VOC,
+>>   	IIO_MOD_LIGHT_UV,
+>> +	IIO_MOD_LIGHT_WHITE,
+>>   };
+>>   
+>>   enum iio_event_type {
+>> diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+>> index b61245e1181d..a2f9c62a79dd 100644
+>> --- a/tools/iio/iio_event_monitor.c
+>> +++ b/tools/iio/iio_event_monitor.c
+>> @@ -96,6 +96,7 @@ static const char * const iio_modifier_names[] = {
+>>   	[IIO_MOD_LIGHT_GREEN] = "green",
+>>   	[IIO_MOD_LIGHT_BLUE] = "blue",
+>>   	[IIO_MOD_LIGHT_UV] = "uv",
+>> +	[IIO_MOD_LIGHT_WHITE] = "white",
+>>   	[IIO_MOD_QUATERNION] = "quaternion",
+>>   	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+>>   	[IIO_MOD_TEMP_OBJECT] = "object",
+>> @@ -178,6 +179,7 @@ static bool event_is_known(struct iio_event_data *event)
+>>   	case IIO_MOD_LIGHT_GREEN:
+>>   	case IIO_MOD_LIGHT_BLUE:
+>>   	case IIO_MOD_LIGHT_UV:
+>> +	case IIO_MOD_LIGHT_WHITE:
+>>   	case IIO_MOD_QUATERNION:
+>>   	case IIO_MOD_TEMP_AMBIENT:
+>>   	case IIO_MOD_TEMP_OBJECT:
+>>
+> 
 
-Yeah good idea, I'll do a v2 next week.
+-- 
+Thanks,
+Parthiban Nallathambi
 
-cheers
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
