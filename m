@@ -1,51 +1,76 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [RESEND PATCH v5 0/3] drm/atmel-hlcdc: bus-width override support
-Date: Fri,  3 Aug 2018 09:23:05 +0200
-Message-ID: <20180803072308.14962-1-peda@axentia.se>
+Subject: [RESEND PATCH v5 2/3] dt-bindings: display: atmel: optional video-interface of endpoints
+Date: Fri,  3 Aug 2018 09:23:07 +0200
+Message-ID: <20180803072308.14962-3-peda@axentia.se>
+References: <20180803072308.14962-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180803072308.14962-1-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+With bus-type/bus-width properties in the endpoint nodes, the video-
+interface of the connection can be specified for cases where the
+heuristic fails to select the correct output mode. This can happen
+e.g. if not all RGB pins are routed on the PCB; the driver has no
+way of knowing this, and needs to be told explicitly.
 
-This is perhaps not a true resend in that these three patches were
-originally in a larger series [1], and the series have been rebased
-to v4.18-rc6. However, I did ask that these three patches should be
-considered separately. The other patches in the original series have
-been adopted and reworked by Russell King [2].
+This is critical for the devices that have the "conflicting output
+formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
+RGB bits move around depending on the selected output mode. For
+devices that do not have the "conflicting output formats" issue
+(SAMA5D2, SAMA5D4), this is completely irrelevant.
 
-The background for these patches is that our PCB interface between
-the SAMA5D3 and the ds90c185 lvds encoder is only using 16 bits, and
-this has to be described somewhere, or the atmel-hlcdc driver have no
-chance of selecting the correct output mode. Since we have similar
-problems with a tda19988 HDMI encoder I added patches to override
-the atmel-hlcdc output format via DT properties compatible with the
-media video-interface binding and things start to play together.
-I of course need my old patches or the new ones from Russell to
-actually use the HDMI encoder with the SAMA5D3, but that is not
-directly related to this (shortened) series.
+Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Cheers,
-Peter
-
-[1] https://lkml.org/lkml/2018/5/23/273
-[2] https://www.spinics.net/lists/arm-kernel/msg669238.html
-
-Peter Rosin (3):
-  dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
-  dt-bindings: display: atmel: optional video-interface of endpoints
-  drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
-
- .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 26 ++++++++
- .../bindings/display/bridge/lvds-transmitter.txt   |  8 ++-
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     | 70 +++++++++++++++-------
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |  1 +
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   | 67 ++++++++++++++++++---
- 5 files changed, 144 insertions(+), 28 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+index 82f2acb3d374..9de434a8f523 100644
+--- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
++++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+@@ -15,6 +15,14 @@ Required children nodes:
+  to external devices using the OF graph reprensentation (see ../graph.txt).
+  At least one port node is required.
+ 
++Optional properties in grandchild nodes:
++ Any endpoint grandchild node may specify a desired video interface
++ according to ../../media/video-interfaces.txt, specifically
++ - bus-type: must be <0>.
++ - bus-width: recognized values are <12>, <16>, <18> and <24>, and
++   override any output mode selection heuristic, forcing "rgb444",
++   "rgb565", "rgb666" and "rgb888" respectively.
++
+ Example:
+ 
+ 	hlcdc: hlcdc@f0030000 {
+@@ -50,3 +58,21 @@ Example:
+ 			#pwm-cells = <3>;
+ 		};
+ 	};
++
++
++Example 2: With a video interface override to force rgb565; as above
++but with these changes/additions:
++
++	&hlcdc {
++		hlcdc-display-controller {
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
++
++			port@0 {
++				hlcdc_panel_output: endpoint@0 {
++					bus-type = <0>;
++					bus-width = <16>;
++				};
++			};
++		};
++	};
 -- 
 2.11.0
