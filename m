@@ -1,134 +1,68 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v3 2/9] ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for mpu6515
-Date: Thu,  2 Aug 2018 20:18:53 -0400
-Message-ID: <20180803001900.25371-3-masneyb@onstation.org>
-References: <20180803001900.25371-1-masneyb@onstation.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v5 03/12] PM / devfreq: Don't adjust to user limits in
+ governors
+Date: Thu, 2 Aug 2018 17:24:52 -0700
+Message-ID: <20180803002452.GV68975@google.com>
+References: <20180703234705.227473-1-mka@chromium.org>
+ <20180703234705.227473-4-mka@chromium.org>
+ <CGME20180802233605epcas2p2fc6b1cef0dc773f6c7e59017721917bc@epcas2p2.samsung.com>
+ <20180802233600.GT68975@google.com>
+ <5B639BD2.5050008@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803001900.25371-1-masneyb@onstation.org>
+Content-Disposition: inline
+In-Reply-To: <5B639BD2.5050008@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree bindings for the mpu6515 to the LG Nexus 5
-(hammerhead) phone. Confirmed that the gyroscope / accelerometer
-(mpu6515), magnetometer (ak8963), and temperature / pressure (bmp280)
-sensors are available on the phone.
+On Fri, Aug 03, 2018 at 09:03:30AM +0900, Chanwoo Choi wrote:
+> Hi Matthias,
+> 
+> On 2018년 08월 03일 08:36, Matthias Kaehlcke wrote:
+> > Hi Chanwoo,
+> > 
+> > this patch and "PM / devfreq: Fix handling of min/max_freq == 0"
+> > address issues not directly related with the throttler. It seems it
+> > could still take a while for the throttler to move forward, do you
+> > want me to spin out these two patches so that they can get merged
+> > independently from the rest of the series?
+> 
+> How about resend the devfreq patches(patch1/2/3/4/6) which don't depend on
+> throttler core with my reviewed tag? Maybe, it is easy to merge them through Myungjoo.
 
-Interrupts are not working properly on the ak8963 magnetometer so they
-are currently not configured.
+Sure, I can do this if you think it is reasonable to merge all these
+patches without the throttler.
 
-The bmp280 retuns temperature/pressure measurement skipped errors but
-will reliably work if I run:
+These are the patches we are talking about and my interpretation of
+their status:
 
-    echo 1 > in_pressure_oversampling_ratio
-    echo 1 > in_temp_oversampling_ratio
+[01] PM / devfreq: Init user limits from OPP limits, not viceversa
+  landed in Rafaels tree
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
-I'll send follow up patch(es) once I investigate why the skipped errors
-are occurring with the bmp280 with the default oversampling ratios.
+[02] PM / devfreq: Fix handling of min/max_freq == 0
+  independent fix, can land
 
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 56 +++++++++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi           | 11 ++++
- 2 files changed, 67 insertions(+)
+[03] PM / devfreq: Don't adjust to user limits in governors
+  independent improvement, can land
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index c2dc9d09484a..928affae1885 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -241,6 +241,24 @@
- 				bias-pull-up;
- 			};
- 		};
-+
-+		i2c12_pins: i2c12 {
-+			mux {
-+				pins = "gpio87", "gpio88";
-+				function = "blsp_i2c12";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
-+		mpu6515_pin: mpu6515 {
-+			irq {
-+				pins = "gpio73";
-+				function = "gpio";
-+				bias-disable;
-+				input-enable;
-+			};
-+		};
- 	};
- 
- 	sdhci@f9824900 {
-@@ -277,6 +295,44 @@
- 			linux,code = <KEY_VOLUMEDOWN>;
- 		};
- 	};
-+
-+	i2c@f9968000 {
-+		status = "ok";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c12_pins>;
-+		clock-frequency = <100000>;
-+		qcom,src-freq = <50000000>;
-+
-+		mpu6515@68 {
-+			compatible = "invensense,mpu6515";
-+			reg = <0x68>;
-+			interrupts-extended = <&msmgpio 73 IRQ_TYPE_EDGE_FALLING>;
-+			vddio-supply = <&pm8941_lvs1>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mpu6515_pin>;
-+
-+			i2c-gate {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				ak8963@f {
-+					compatible = "asahi-kasei,ak8963";
-+					reg = <0x0f>;
-+					// Currently only works in polling mode.
-+					// gpios = <&msmgpio 61 0>;
-+					vid-supply = <&pm8941_lvs1>;
-+					vdd-supply = <&pm8941_l17>;
-+				};
-+
-+				bmp280@76 {
-+					compatible = "bosch,bmp280";
-+					reg = <0x76>;
-+					vdda-supply = <&pm8941_lvs1>;
-+					vddd-supply = <&pm8941_l17>;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &spmi_bus {
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index d9019a49b292..cebb6ae9143a 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -737,6 +737,17 @@
- 			dma-names = "tx", "rx";
- 		};
- 
-+		blsp_i2c12: i2c@f9968000 {
-+			status = "disabled";
-+			compatible = "qcom,i2c-qup-v2.1.1";
-+			reg = <0xf9968000 0x1000>;
-+			interrupts = <0 106 IRQ_TYPE_NONE>;
-+			clocks = <&gcc GCC_BLSP2_QUP6_I2C_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		spmi_bus: spmi@fc4cf000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg-names = "core", "intr", "cnfg";
--- 
-2.17.1
+[04] PM / devfreq: Add struct devfreq_policy
+  edge case, can land if devfreq maintainers think that factoring out
+  some fields to the policy struct is an improvement independently of
+  the throttler
+
+[05] PM / devfreq: Add support for policy notifiers
+  under heavy discussion ;-), can't land
+
+[06] PM / devfreq: Make update_devfreq() public
+  has no user without the throttler, not sure if it should be merged
+  without it. up to devfreq maintainers.
+
+Please let me know what you think
+
+Thanks
+
+Matthias
