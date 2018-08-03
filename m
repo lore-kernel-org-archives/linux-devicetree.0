@@ -1,56 +1,50 @@
-Return-Path: <SRS0=1CVG=KS=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH v2 3/5] ARM: dts: r8a77470: Add GPIO support
-Date: Fri, 3 Aug 2018 16:58:04 +0000
-Message-ID: 
- <OSBPR01MB210394FFC0AAF05676576582B8230@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1533219087-33695-1-git-send-email-biju.das@bp.renesas.com>
- <1533219087-33695-4-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdW62Mcgy+RSm4FeN3Aj98O4TkmopdRFji_7jX=vBY1jpw@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdW62Mcgy+RSm4FeN3Aj98O4TkmopdRFji_7jX=vBY1jpw@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=CNAl=KS=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+References: <1533219087-33695-1-git-send-email-biju.das@bp.renesas.com> <1533219087-33695-4-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1533219087-33695-4-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 3 Aug 2018 11:09:35 +0200
+Message-ID: <CAMuHMdW62Mcgy+RSm4FeN3Aj98O4TkmopdRFji_7jX=vBY1jpw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] ARM: dts: r8a77470: Add GPIO support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IGRldmljZXRyZWUtb3duZXJAdmdlci5rZXJuZWwub3JnIDxk
-ZXZpY2V0cmVlLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBHZWVydCBV
-eXR0ZXJob2V2ZW4NCj4gU2VudDogMDMgQXVndXN0IDIwMTggMTA6MTANCj4gVG86IEJpanUgRGFz
-IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
-cm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgU2ltb24g
-SG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBNYWdudXMNCj4gRGFtbSA8bWFnbnVzLmRhbW1A
-Z21haWwuY29tPjsgTGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNhcy0NCj4gc29jQHZnZXIua2Vy
-bmVsLm9yZz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFDQo+
-IFRSRUUgQklORElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgR2VlcnQgVXl0dGVy
-aG9ldmVuDQo+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IENocmlzIFBhdGVyc29uDQo+IDxD
-aHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlv
-LmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAzLzVdIEFS
-TTogZHRzOiByOGE3NzQ3MDogQWRkIEdQSU8gc3VwcG9ydA0KPg0KPiBIaSBCaWp1LA0KPg0KPiBP
-biBUaHUsIEF1ZyAyLCAyMDE4IGF0IDQ6MTcgUE0gQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVz
-YXMuY29tPiB3cm90ZToNCj4gPiBEZXNjcmliZSBHUElPIGJsb2NrcyBpbiB0aGUgUjhBNzc0NzAg
-ZGV2aWNlIHRyZWUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNA
-YnAucmVuZXNhcy5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6
-aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+
-DQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVy
-LmJlPg0KPg0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDcwLmR0c2kNCj4gPiAr
-KysgYi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQ3MC5kdHNpDQo+DQo+ID4gKyAgICAgICAgICAg
-ICAgIGdwaW8zOiBncGlvQGU2MDUzMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gInJlbmVzYXMsZ3Bpby1yOGE3NzQ3MCIsDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICJyZW5lc2FzLHJjYXItZ2VuMi1ncGlvIjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MCAweGU2MDUzMDAwIDAgMHg1MD47DQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDcgSVJRX1RZUEVfTEVW
-RUxfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3Bpby1jb250cm9sbGVyOw0KPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIGdwaW8tcmVzZXJ2ZWQtcmFuZ2VzID0gPDE3IDEwPjsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBncGlvLXJhbmdlcyA9IDwmcGZjIDAgOTYgMzA+Ow0KPg0K
-PiBJIHdvdWxkIHJldmVyc2UgdGhlIG9yZGVyIG9mIHRoZXNlIHR3byBwcm9wZXJ0aWVzLCBidXQg
-dGhhdCdzIHB1cmVseQ0KPiBjb3NtZXRpYy4NCg0KV2lsbCBzZW5kIFYzIHdpdGggdGhpcyBjaGFu
-Z2UuDQoNClJlZ2FyZHMsDQpCaWp1DQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBM
-dGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1z
-aGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJl
-Z2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+Hi Biju,
+
+On Thu, Aug 2, 2018 at 4:17 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Describe GPIO blocks in the R8A77470 device tree.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+
+Thanks for your patch!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/arch/arm/boot/dts/r8a77470.dtsi
+> +++ b/arch/arm/boot/dts/r8a77470.dtsi
+
+> +               gpio3: gpio@e6053000 {
+> +                       compatible = "renesas,gpio-r8a77470",
+> +                                    "renesas,rcar-gen2-gpio";
+> +                       reg = <0 0xe6053000 0 0x50>;
+> +                       interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +                       #gpio-cells = <2>;
+> +                       gpio-controller;
+> +                       gpio-reserved-ranges = <17 10>;
+> +                       gpio-ranges = <&pfc 0 96 30>;
+
+I would reverse the order of these two properties, but that's purely cosmetic.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
