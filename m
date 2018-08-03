@@ -1,146 +1,105 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 2/9] ARM: dts: qcom: msm8974-hammerhead: add device
- tree bindings for mpu6515
-Date: Fri, 3 Aug 2018 22:46:27 +0100
-Message-ID: <20180803224627.3c5d8072@archlinux>
+Subject: Re: [PATCH v3 4/9] dt-bindings: iio: tsl2772: add new bindings
+Date: Fri, 3 Aug 2018 22:48:38 +0100
+Message-ID: <20180803224838.362d6cf5@archlinux>
 References: <20180803001900.25371-1-masneyb@onstation.org>
-        <20180803001900.25371-3-masneyb@onstation.org>
+        <20180803001900.25371-5-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803001900.25371-3-masneyb@onstation.org>
+In-Reply-To: <20180803001900.25371-5-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Brian Masney <masneyb@onstation.org>
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  2 Aug 2018 20:18:53 -0400
+On Thu,  2 Aug 2018 20:18:55 -0400
 Brian Masney <masneyb@onstation.org> wrote:
 
-> This patch adds device tree bindings for the mpu6515 to the LG Nexus 5
-> (hammerhead) phone. Confirmed that the gyroscope / accelerometer
-> (mpu6515), magnetometer (ak8963), and temperature / pressure (bmp280)
-> sensors are available on the phone.
-> 
-> Interrupts are not working properly on the ak8963 magnetometer so they
-> are currently not configured.
-> 
-> The bmp280 retuns temperature/pressure measurement skipped errors but
-> will reliably work if I run:
-> 
->     echo 1 > in_pressure_oversampling_ratio
->     echo 1 > in_temp_oversampling_ratio
+> This patch adds the new properties amstaos,proximity-diodes and
+> led-max-microamp to the tsl2772 driver. This patch also removes the
+> driver from the trivial-devices.txt.
 > 
 > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-I've queued up the regulator patch for IIO but it won't make the coming
-merge window.  There is no dependence between this and that patch, but
-I would assume the hardware won't work until both are present.
+> ---
+This and the implementation look fine to me, but I'll leave them for
+now to give Rob time to take a look if he wants to.
+
+Thanks,
 
 Jonathan
 
-> ---
-> I'll send follow up patch(es) once I investigate why the skipped errors
-> are occurring with the bmp280 with the default oversampling ratios.
+> I got a Reviewed-by: Rob Herring <robh@kernel.org> on my last series but
+> didn't include it due to the new file tsl2772.txt in this patch. Device
+> tree bindings need to be complete.
 > 
->  .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 56 +++++++++++++++++++
->  arch/arm/boot/dts/qcom-msm8974.dtsi           | 11 ++++
->  2 files changed, 67 insertions(+)
+>  .../devicetree/bindings/iio/light/tsl2772.txt | 37 +++++++++++++++++++
+>  .../devicetree/bindings/trivial-devices.txt   | 10 -----
+>  2 files changed, 37 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
 > 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> index c2dc9d09484a..928affae1885 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-> @@ -241,6 +241,24 @@
->  				bias-pull-up;
->  			};
->  		};
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.txt b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> new file mode 100644
+> index 000000000000..6f33169344f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+> @@ -0,0 +1,37 @@
+> +* AMS/TAOS ALS and proximity sensor
 > +
-> +		i2c12_pins: i2c12 {
-> +			mux {
-> +				pins = "gpio87", "gpio88";
-> +				function = "blsp_i2c12";
-> +				drive-strength = <2>;
-> +				bias-disable;
-> +			};
-> +		};
+> +Required properties:
 > +
-> +		mpu6515_pin: mpu6515 {
-> +			irq {
-> +				pins = "gpio73";
-> +				function = "gpio";
-> +				bias-disable;
-> +				input-enable;
-> +			};
-> +		};
->  	};
->  
->  	sdhci@f9824900 {
-> @@ -277,6 +295,44 @@
->  			linux,code = <KEY_VOLUMEDOWN>;
->  		};
->  	};
+> +  - compatible: Should be one of
+> +		"amstaos,tsl2571"
+> +		"amstaos,tsl2671"
+> +		"amstaos,tmd2671"
+> +		"amstaos,tsl2771"
+> +		"amstaos,tmd2771"
+> +		"amstaos,tsl2572"
+> +		"amstaos,tsl2672"
+> +		"amstaos,tmd2672"
+> +		"amstaos,tsl2772"
+> +		"amstaos,tmd2772"
+> +  - reg: the I2C address of the device
 > +
-> +	i2c@f9968000 {
-> +		status = "ok";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&i2c12_pins>;
-> +		clock-frequency = <100000>;
-> +		qcom,src-freq = <50000000>;
+> +Optional properties:
 > +
-> +		mpu6515@68 {
-> +			compatible = "invensense,mpu6515";
-> +			reg = <0x68>;
-> +			interrupts-extended = <&msmgpio 73 IRQ_TYPE_EDGE_FALLING>;
-> +			vddio-supply = <&pm8941_lvs1>;
+> +  - amstaos,proximity-diodes - proximity diodes to enable. <0>, <1>, or <0 1>
+> +                               are the only valid values.
+> +  - led-max-microamp - current for the proximity LED. Must be 100000, 50000,
+> +                       25000, or 13000.
+> +  - interrupts: the sole interrupt generated by the device
 > +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&mpu6515_pin>;
+> +  Refer to interrupt-controller/interrupts.txt for generic interrupt client
+> +  node bindings.
 > +
-> +			i2c-gate {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				ak8963@f {
-> +					compatible = "asahi-kasei,ak8963";
-> +					reg = <0x0f>;
-> +					// Currently only works in polling mode.
-> +					// gpios = <&msmgpio 61 0>;
-> +					vid-supply = <&pm8941_lvs1>;
-> +					vdd-supply = <&pm8941_l17>;
-> +				};
+> +Example:
 > +
-> +				bmp280@76 {
-> +					compatible = "bosch,bmp280";
-> +					reg = <0x76>;
-> +					vdda-supply = <&pm8941_lvs1>;
-> +					vddd-supply = <&pm8941_l17>;
-> +				};
-> +			};
-> +		};
-> +	};
->  };
->  
->  &spmi_bus {
-> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> index d9019a49b292..cebb6ae9143a 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> @@ -737,6 +737,17 @@
->  			dma-names = "tx", "rx";
->  		};
->  
-> +		blsp_i2c12: i2c@f9968000 {
-> +			status = "disabled";
-> +			compatible = "qcom,i2c-qup-v2.1.1";
-> +			reg = <0xf9968000 0x1000>;
-> +			interrupts = <0 106 IRQ_TYPE_NONE>;
-> +			clocks = <&gcc GCC_BLSP2_QUP6_I2C_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
-> +			clock-names = "core", "iface";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
->  		spmi_bus: spmi@fc4cf000 {
->  			compatible = "qcom,spmi-pmic-arb";
->  			reg-names = "core", "intr", "cnfg";
+> +tsl2772@39 {
+> +	compatible = "amstaos,tsl2772";
+> +	reg = <0x39>;
+> +	interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
+> +	amstaos,proximity-diodes = <0>;
+> +	led-max-microamp = <100000>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+> index 763a2808a95c..a977ccef7230 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/trivial-devices.txt
+> @@ -21,16 +21,6 @@ adi,adt7490		+/-1C TDM Extended Temp Range I.C
+>  adi,adxl345		Three-Axis Digital Accelerometer
+>  adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
+>  ams,iaq-core		AMS iAQ-Core VOC Sensor
+> -amstaos,tsl2571		AMS/TAOS ALS and proximity sensor
+> -amstaos,tsl2671		AMS/TAOS ALS and proximity sensor
+> -amstaos,tmd2671		AMS/TAOS ALS and proximity sensor
+> -amstaos,tsl2771		AMS/TAOS ALS and proximity sensor
+> -amstaos,tmd2771		AMS/TAOS ALS and proximity sensor
+> -amstaos,tsl2572		AMS/TAOS ALS and proximity sensor
+> -amstaos,tsl2672		AMS/TAOS ALS and proximity sensor
+> -amstaos,tmd2672		AMS/TAOS ALS and proximity sensor
+> -amstaos,tsl2772		AMS/TAOS ALS and proximity sensor
+> -amstaos,tmd2772		AMS/TAOS ALS and proximity sensor
+>  at,24c08		i2c serial eeprom  (24cxx)
+>  atmel,at97sc3204t	i2c trusted platform module (TPM)
+>  capella,cm32181		CM32181: Ambient Light Sensor
