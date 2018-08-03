@@ -1,27 +1,108 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v12 2/2] mfd: bd71837: Devicetree bindings for ROHM
- BD71837 PMIC
-Date: Fri, 3 Aug 2018 14:14:25 +0300
-Message-ID: <20180803111425.GD20907@localhost.localdomain>
-References: <cover.1533292711.git.matti.vaittinen@fi.rohmeurope.com>
- <d053f54e5ce726ffaa95fbd9c20962a49dd1ee07.1533292711.git.matti.vaittinen@fi.rohmeurope.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH v2] remoteproc: qcom: Introduce Non-PAS ADSP PIL driver
+Date: Fri, 3 Aug 2018 16:53:05 +0530
+Message-ID: <be77dbce-49aa-862f-0192-f0264b5aa588@codeaurora.org>
+References: <1530264053-8394-1-git-send-email-rohitkr@codeaurora.org>
+ <20180706203236.GA24729@rob-hp-laptop>
+ <43dcb60b-720f-27ab-3696-dbf0fe0b65fc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d053f54e5ce726ffaa95fbd9c20962a49dd1ee07.1533292711.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <43dcb60b-720f-27ab-3696-dbf0fe0b65fc@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, eballetbo@gmail.com, linus.walleij@linaro.org, mazziesaccount@gmail.com, dmitry.torokhov@gmail.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, broonie@kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Rob Herring <robh@kernel.org>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, sbpata@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 03, 2018 at 02:09:12PM +0300, Matti Vaittinen wrote:
-> Document devicetree bindings for ROHM BD71837 PMIC MFD.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
+Hello Bjorn,
 
-I kept the Reviewed-by and Acked-by as this patch is unchanged once
-again... Sorry for the spam.
+
+Can you please let us know the suggest the file name and review the patch.
+
+
+On 7/9/2018 11:29 AM, Rohit Kumar wrote:
+> Thanks Rob for reviewing.
+>
+>
+> On 7/7/2018 2:02 AM, Rob Herring wrote:
+>> On Fri, Jun 29, 2018 at 02:50:53PM +0530, Rohit kumar wrote:
+>>> This adds APSS based ADSP PIL driver for QCOM SoCs.
+>>> Added initial support for SDM845 with ADSP bootup and
+>>> shutdown operation handled from Application Processor
+>>> SubSystem(APSS).
+>>>
+>>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+>>> ---
+>>> Changes since v1:
+>>> - Used APIs from qcom_q6v5.c
+>>> - Use clock, reset and regmap driver APIs instead of
+>>>    directly writing into the LPASS registers.
+>>> - Created new file for non PAS ADSP PIL instead of extending
+>>>    existing ADSP PIL driver.
+>>> - cleanups as suggested by Bjorn and Rob.
+>>>
+>>>   .../bindings/remoteproc/qcom,non-pas-adsp.txt      | 138 +++++
+>> This should be a separate patch.
+>
+> Ok. Will separate it in next spin.
+>>> drivers/remoteproc/Kconfig                         |  18 +
+>>>   drivers/remoteproc/Makefile                        |   1 +
+>>>   drivers/remoteproc/qcom_nonpas_adsp_pil.c          | 667 
+>>> +++++++++++++++++++++
+>>>   4 files changed, 824 insertions(+)
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
+>>>   create mode 100644 drivers/remoteproc/qcom_nonpas_adsp_pil.c
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt 
+>>> b/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
+>>> new file mode 100644
+>>> index 0000000..0581aaa
+>>> --- /dev/null
+>>> +++ 
+>>> b/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
+>>> @@ -0,0 +1,138 @@
+>>> +Qualcomm Technology Inc. Non PAS ADSP Peripheral Image Loader
+>>> +
+>>> +This document defines the binding for a component that loads and 
+>>> boots firmware
+>>> +on the Qualcomm Technology Inc. ADSP Hexagon core.
+>>> +
+>>> +- compatible:
+>>> +    Usage: required
+>>> +    Value type: <string>
+>>> +    Definition: must be one of:
+>>> +            "qcom,sdm845-apss-adsp-pil"
+>> Didn't Bjorn say to drop the 'apss' part?
+>
+> Yes, he had asked to rename compatible string for  existing PIL driver 
+> as "qcom,platform-subsystem-pas"
+> and non-pas pil driver as "qcom,platform-subsystem-pil". I wanted to 
+> get confirmation from Bjorn whether
+> we should rename the filename too.
+> @Bjorn, can you please suggest filename and compatible strings for the 
+> two drivers.
+>>> +
+>>> +- reg:
+>>> +    Usage: required
+>>> +    Value type: <prop-encoded-array>
+>>> +    Definition: must specify the base address and size of the qdsp6ss
+>>> +
+>>> +- reg-names:
+>>> +    Usage: required
+>>> +    Value type: <stringlist>
+>>> +    Definition: must be "qdsp6ss"
+>>> +
+>>>
+>> -- 
+>> To unsubscribe from this list: send the line "unsubscribe 
+>> linux-remoteproc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at http://vger.kernel.org/majordomo-info.html
+>
+> Thanks,
+> Rohit
+>
