@@ -1,70 +1,56 @@
-Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54584 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727159AbeH0NP5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Aug 2018 09:15:57 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 12/23] v4l: fwnode: Support driver-defined lane mapping defaults
-Date: Mon, 27 Aug 2018 12:29:49 +0300
-Message-Id: <20180827093000.29165-13-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
-References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
+Return-Path: <SRS0=1CVG=KS=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH v2 3/5] ARM: dts: r8a77470: Add GPIO support
+Date: Fri, 3 Aug 2018 16:58:04 +0000
+Message-ID: 
+ <OSBPR01MB210394FFC0AAF05676576582B8230@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1533219087-33695-1-git-send-email-biju.das@bp.renesas.com>
+ <1533219087-33695-4-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdW62Mcgy+RSm4FeN3Aj98O4TkmopdRFji_7jX=vBY1jpw@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdW62Mcgy+RSm4FeN3Aj98O4TkmopdRFji_7jX=vBY1jpw@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Make use of the default CSI-2 lane mapping from caller-passed
-configuration.
-
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index ea9262305968..282595c90818 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -55,10 +55,14 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 	u32 v;
- 	int rval;
- 
--	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY)
-+	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY) {
- 		num_data_lanes = min_t(u32, bus->num_data_lanes,
- 				       V4L2_FWNODE_CSI2_MAX_DATA_LANES);
- 
-+		for (i = 0; i < num_data_lanes; i++)
-+			array[i] = bus->data_lanes[i];
-+	}
-+
- 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
- 	if (rval > 0) {
- 		num_data_lanes =
-@@ -66,15 +70,15 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 
- 		fwnode_property_read_u32_array(fwnode, "data-lanes", array,
- 					       num_data_lanes);
-+	}
- 
--		for (i = 0; i < num_data_lanes; i++) {
--			if (lanes_used & BIT(array[i]))
--				pr_warn("duplicated lane %u in data-lanes\n",
--					array[i]);
--			lanes_used |= BIT(array[i]);
-+	for (i = 0; i < num_data_lanes; i++) {
-+		if (lanes_used & BIT(array[i]))
-+			pr_warn("duplicated lane %u in data-lanes\n",
-+				array[i]);
-+		lanes_used |= BIT(array[i]);
- 
--			pr_debug("lane %u position %u\n", i, array[i]);
--		}
-+		pr_debug("lane %u position %u\n", i, array[i]);
- 	}
- 
- 	rval = fwnode_property_read_u32_array(fwnode, "lane-polarities", NULL,
--- 
-2.11.0
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IGRldmljZXRyZWUtb3duZXJAdmdlci5rZXJuZWwub3JnIDxk
+ZXZpY2V0cmVlLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFsZiBPZiBHZWVydCBV
+eXR0ZXJob2V2ZW4NCj4gU2VudDogMDMgQXVndXN0IDIwMTggMTA6MTANCj4gVG86IEJpanUgRGFz
+IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
+cm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgU2ltb24g
+SG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBNYWdudXMNCj4gRGFtbSA8bWFnbnVzLmRhbW1A
+Z21haWwuY29tPjsgTGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNhcy0NCj4gc29jQHZnZXIua2Vy
+bmVsLm9yZz47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQgREVWSUNFDQo+
+IFRSRUUgQklORElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgR2VlcnQgVXl0dGVy
+aG9ldmVuDQo+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IENocmlzIFBhdGVyc29uDQo+IDxD
+aHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlv
+LmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAzLzVdIEFS
+TTogZHRzOiByOGE3NzQ3MDogQWRkIEdQSU8gc3VwcG9ydA0KPg0KPiBIaSBCaWp1LA0KPg0KPiBP
+biBUaHUsIEF1ZyAyLCAyMDE4IGF0IDQ6MTcgUE0gQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVz
+YXMuY29tPiB3cm90ZToNCj4gPiBEZXNjcmliZSBHUElPIGJsb2NrcyBpbiB0aGUgUjhBNzc0NzAg
+ZGV2aWNlIHRyZWUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNA
+YnAucmVuZXNhcy5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6
+aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+
+DQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVy
+LmJlPg0KPg0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDcwLmR0c2kNCj4gPiAr
+KysgYi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQ3MC5kdHNpDQo+DQo+ID4gKyAgICAgICAgICAg
+ICAgIGdwaW8zOiBncGlvQGU2MDUzMDAwIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBj
+b21wYXRpYmxlID0gInJlbmVzYXMsZ3Bpby1yOGE3NzQ3MCIsDQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICJyZW5lc2FzLHJjYXItZ2VuMi1ncGlvIjsNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICByZWcgPSA8MCAweGU2MDUzMDAwIDAgMHg1MD47DQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDcgSVJRX1RZUEVfTEVW
+RUxfSElHSD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2dwaW8tY2VsbHMgPSA8Mj47
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3Bpby1jb250cm9sbGVyOw0KPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIGdwaW8tcmVzZXJ2ZWQtcmFuZ2VzID0gPDE3IDEwPjsNCj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBncGlvLXJhbmdlcyA9IDwmcGZjIDAgOTYgMzA+Ow0KPg0K
+PiBJIHdvdWxkIHJldmVyc2UgdGhlIG9yZGVyIG9mIHRoZXNlIHR3byBwcm9wZXJ0aWVzLCBidXQg
+dGhhdCdzIHB1cmVseQ0KPiBjb3NtZXRpYy4NCg0KV2lsbCBzZW5kIFYzIHdpdGggdGhpcyBjaGFu
+Z2UuDQoNClJlZ2FyZHMsDQpCaWp1DQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBM
+dGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1z
+aGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJl
+Z2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
