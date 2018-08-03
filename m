@@ -1,154 +1,67 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 1/3] iio: Add modifier for white light
-Date: Fri, 3 Aug 2018 21:34:43 +0100
-Message-ID: <20180803213443.3f82ebc8@archlinux>
-References: <20180802182729.2061830-1-pn@denx.de>
-        <alpine.DEB.2.21.1808022117460.25216@vps.pmeerw.net>
-        <fb30878f-0163-306a-e933-d9fecc996acb@denx.de>
-        <alpine.DEB.2.21.1808031323150.13492@vps.pmeerw.net>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v6 4/8] media: platform: Add Cedrus VPU decoder driver
+Date: Fri, 03 Aug 2018 17:49:38 -0300
+Message-ID: <faa0436aad809ca562b5c152420b1e4d4b6f507b.camel@collabora.com>
+References: <20180725100256.22833-1-paul.kocialkowski@bootlin.com>
+         <20180725100256.22833-5-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.1808031323150.13492@vps.pmeerw.net>
+In-Reply-To: <20180725100256.22833-5-paul.kocialkowski@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: Parthiban Nallathambi <pn@denx.de>, knaack.h@gmx.de, lars@metafoo.de, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-sunxi@googlegroups.com, Hugues Fruchet <hugues.fruchet@st.com>, Randy Li <ayaka@soulik.info>, Hans Verkuil <hverkuil@xs4all.nl>, Tomasz Figa <tfiga@chromium.org>, Alexandre Courbot <acourbot@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 3 Aug 2018 13:38:17 +0200 (CEST)
-Peter Meerwald-Stadler <pmeerw@pmeerw.net> wrote:
-
-> Hello,
+On Wed, 2018-07-25 at 12:02 +0200, Paul Kocialkowski wrote:
+> This introduces the Cedrus VPU driver that supports the VPU found in
+> Allwinner SoCs, also known as Video Engine. It is implemented through
+> a v4l2 m2m decoder device and a media device (used for media requests).
+> So far, it only supports MPEG2 decoding.
 > 
-> > > it is not clear to me why 'white' is needed;
-> > > isn't that the default, i.e. unfiltered light?  
-> > 
-> > Yes, it is. But devices like vcnl4035 veml7700, White LED data one
-> > register and all other sources of light (like fluorescent,
-> > incandescent ,sunlight) in separate register.
-> > 
-> > So in such cases this WHITE modifier is needed. Should it needs to
-> > come under IIO_MOD_LIGHT_CLEAR?  
-This wins the aware for odd.  The sensor is drawn as only have two
-sensing elements, one for Ambient light sensing and one for proximity.
-
-A particular award should be given for using a different axis for
-the white channel in which normalized output is decimal vs all the
-others where it is a percentage ;)
-
-Looking closely at those graphs I think this is actually a standard
-sensor combination job.
-
-So 'white' is what we have always called _both in that it reads
-both visible and infrared. The other sensor is infrared.
-
-Ambient is illuminance not intensity (approximate human eye response).
-
-The only dubious bit about this is that I can see how they managed
-to cancel out some of the signal around 700nm as there is nothing
-much on the infrared and lots on the white.
-
-Alternative is that they actually have a filter that really approximates
-the human eye and the white channel is the sum of the other two?
-
-
-
+> Since this VPU is stateless, synchronization with media requests is
+> required in order to ensure consistency between frame headers that
+> contain metadata about the frame to process and the raw slice data that
+> is used to generate the frame.
 > 
-> it is a mess already :), there is 
-> _intensity
-> _intensity_ir
-> _intensity_both
-> _intensity_uv
-> _intensity_red
-> _intensity_green
-> _intensity_blue
-> _intensity_clear
+> This driver was made possible thanks to the long-standing effort
+> carried out by the linux-sunxi community in the interest of reverse
+> engineering, documenting and implementing support for Allwinner VPU.
 > 
-> I think that ir, uv, red, green, blue are filters for particular ranges 
-> of the spectrum
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+[..]
+> +static int cedrus_probe(struct platform_device *pdev)
+> +{
+> +	struct cedrus_dev *dev;
+> +	struct video_device *vfd;
+> +	int ret;
+> +
+> +	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+> +	if (!dev)
+> +		return -ENOMEM;
+> +
+> +	dev->dev = &pdev->dev;
+> +	dev->pdev = pdev;
+> +
+> +	ret = cedrus_hw_probe(dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to probe hardware\n");
+> +		return ret;
+> +	}
+> +
+> +	dev->dec_ops[CEDRUS_CODEC_MPEG2] = &cedrus_dec_ops_mpeg2;
+> +
+> +	mutex_init(&dev->dev_mutex);
+> +	spin_lock_init(&dev->irq_lock);
+> +
 
-That is the intent certainly.
+A minor thing.
 
-> 
-> _intensity_clear might be unfiltered and _intensity might relate to the 
-> human eye photopic curve, I think the proposed white might be the same as 
-> clear?
-> 
-> 'both' means ir + _intensity (not clearly specified)
+I believe this spinlock is not needed. All the data structures
+it's accessing are already protected, and some operations
+(stop_streaming) are guaranteed to not run at the same
+time as a job.
 
-Yup, that's the power of initial assumptions.  There was a time when
-the only light sensors you tended to get were ir and both ir and visible.
-Visible was obtained by taking one from the other.
-
-One of those things we'd change if doing it again but it's a bit late
-now..
-
-Jonathan
-
-
-> 
-> regards, p.
-> 
-> > > > +KernelVersion:	4.18
-> > > > +Contact:	linux-iio@vger.kernel.org
-> > > > +Description:
-> > > > +		Modifier white indicates that measurements contain white LED
-> > > > +		component.
-> > > > +
-> > > >   What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
-> > > >   What:
-> > > > /sys/.../iio:deviceX/in_intensity_green_integration_time
-> > > >   What:
-> > > > /sys/.../iio:deviceX/in_intensity_blue_integration_time
-> > > > diff --git a/drivers/iio/industrialio-core.c
-> > > > b/drivers/iio/industrialio-core.c
-> > > > index 19bdf3d2962a..cb939b9fad16 100644
-> > > > --- a/drivers/iio/industrialio-core.c
-> > > > +++ b/drivers/iio/industrialio-core.c
-> > > > @@ -108,6 +108,7 @@ static const char * const iio_modifier_names[] = {
-> > > >   	[IIO_MOD_LIGHT_GREEN] = "green",
-> > > >   	[IIO_MOD_LIGHT_BLUE] = "blue",
-> > > >   	[IIO_MOD_LIGHT_UV] = "uv",
-> > > > +	[IIO_MOD_LIGHT_WHITE] = "white",
-> > > >   	[IIO_MOD_QUATERNION] = "quaternion",
-> > > >   	[IIO_MOD_TEMP_AMBIENT] = "ambient",
-> > > >   	[IIO_MOD_TEMP_OBJECT] = "object",
-> > > > diff --git a/include/uapi/linux/iio/types.h
-> > > > b/include/uapi/linux/iio/types.h
-> > > > index 4213cdf88e3c..de87a6c7e6de 100644
-> > > > --- a/include/uapi/linux/iio/types.h
-> > > > +++ b/include/uapi/linux/iio/types.h
-> > > > @@ -84,6 +84,7 @@ enum iio_modifier {
-> > > >   	IIO_MOD_CO2,
-> > > >   	IIO_MOD_VOC,
-> > > >   	IIO_MOD_LIGHT_UV,
-> > > > +	IIO_MOD_LIGHT_WHITE,
-> > > >   };
-> > > >     enum iio_event_type {
-> > > > diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-> > > > index b61245e1181d..a2f9c62a79dd 100644
-> > > > --- a/tools/iio/iio_event_monitor.c
-> > > > +++ b/tools/iio/iio_event_monitor.c
-> > > > @@ -96,6 +96,7 @@ static const char * const iio_modifier_names[] = {
-> > > >   	[IIO_MOD_LIGHT_GREEN] = "green",
-> > > >   	[IIO_MOD_LIGHT_BLUE] = "blue",
-> > > >   	[IIO_MOD_LIGHT_UV] = "uv",
-> > > > +	[IIO_MOD_LIGHT_WHITE] = "white",
-> > > >   	[IIO_MOD_QUATERNION] = "quaternion",
-> > > >   	[IIO_MOD_TEMP_AMBIENT] = "ambient",
-> > > >   	[IIO_MOD_TEMP_OBJECT] = "object",
-> > > > @@ -178,6 +179,7 @@ static bool event_is_known(struct iio_event_data
-> > > > *event)
-> > > >   	case IIO_MOD_LIGHT_GREEN:
-> > > >   	case IIO_MOD_LIGHT_BLUE:
-> > > >   	case IIO_MOD_LIGHT_UV:
-> > > > +	case IIO_MOD_LIGHT_WHITE:
-> > > >   	case IIO_MOD_QUATERNION:
-> > > >   	case IIO_MOD_TEMP_AMBIENT:
-> > > >   	case IIO_MOD_TEMP_OBJECT:
-> > > >   
-> > >   
-> > 
-> >   
-> 
+Regards,
+Eze
