@@ -1,34 +1,69 @@
-Return-Path: <SRS0=wcnV=LM=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 2/2] dt-bindings: timer: ostm: Add R7S9210 support
-Date: Wed, 29 Aug 2018 08:29:54 -0500
-Message-Id: <20180829132954.64862-3-chris.brandt@renesas.com>
-In-Reply-To: <20180829132954.64862-1-chris.brandt@renesas.com>
-References: <20180829132954.64862-1-chris.brandt@renesas.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=K2JG=KS=codeaurora.org=smohanad@kernel.org>
+From: Siddartha Mohanadoss <smohanad@codeaurora.org>
+Subject: [PATCH v5 0/3] Add QCOM PMIC5 ADC driver
+Date: Thu,  2 Aug 2018 18:42:26 -0700
+Message-Id: <1533260546-11916-1-git-send-email-smohanad@codeaurora.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Siddartha Mohanadoss <smohanad@codeaurora.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 List-ID: <devicetree@vger.kernel.org>
 
-The R7S9210 belongs to the RZ/A2 SoC series
+This patch series adds the PMIC5 ADC family of chipset
+that supports clients to measure voltage and current on
+inputs connected to the PMIC ADC AMUX. Clients include
+reading voltage phone power and on board system thermistors
+for thermal management.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- Documentation/devicetree/bindings/timer/renesas,ostm.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The v5 patchset addresses most of the review comments from
+prior patchset.
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-index be3ae0fdf775..81a78f8bcf17 100644
---- a/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-@@ -9,7 +9,8 @@ Channels are independent from each other.
- Required Properties:
- 
-   - compatible: must be one or more of the following:
--    - "renesas,r7s72100-ostm" for the r7s72100 OSTM
-+    - "renesas,r7s72100-ostm" for the R7S72100 (RZ/A1) OSTM
-+    - "renesas,r7s9210-ostm" for the R7S9210 (RZ/A2) OSTM
-     - "renesas,ostm" for any OSTM
- 		This is a fallback for the above renesas,*-ostm entries
- 
+Changes since patchset v4
+* Remove support to query channels raw ADC code readings.
+* Few minor changes.
+
+Changes since patchset v3
+* Few minor changes.
+
+Changes since patchset v2
+* Removed support for current channel as part of this series.
+* Fix pointer arithmetic for iio_chan.
+* Few minor changes.
+* Update license to SPDX format for ADC header file.
+
+Changes since patchset v1
+* Merged DT bindings with prior PMIC family instead of a
+  seperate DT file for PMIC5 family.
+* Updated documentation for 'label' and 'value' property.
+* Updated using unique prefix adc5 for functions and defines
+  specific for this family of chipset.
+* Refactored scaling functions to use function pointer for
+  scaling lookup.
+* Added documentation comments as requested in the
+  scaling functions as applicable.
+* Added utility functions in the scaling API to avoid some of
+  the code repetitions.
+* Use consistent hex format for adc_data and use specific length
+  while assigning data.
+* Added support to determine controller version and check against
+  supported hardware settling delay values.
+* Various minor changes.
+
+Siddartha Mohanadoss (3):
+  dt-bindings: iio: adc: Add DT binding document for PMIC5 ADC
+  iio: adc: Add QCOM SPMI PMIC5 ADC driver
+  iio: adc: Update QCOM ADC license to SPDX format
+
+ ,                                                  |   0
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  77 +-
+ drivers/iio/adc/Kconfig                            |  20 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/qcom-spmi-adc5.c                   | 788 +++++++++++++++++++++
+ drivers/iio/adc/qcom-vadc-common.c                 | 189 ++++-
+ drivers/iio/adc/qcom-vadc-common.h                 |  54 ++
+ include/dt-bindings/iio/qcom,spmi-vadc.h           | 125 +++-
+ 8 files changed, 1220 insertions(+), 34 deletions(-)
+ create mode 100644 ,
+ create mode 100644 drivers/iio/adc/qcom-spmi-adc5.c
+
 -- 
-2.16.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
