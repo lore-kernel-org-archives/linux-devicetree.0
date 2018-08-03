@@ -1,108 +1,113 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH v2] remoteproc: qcom: Introduce Non-PAS ADSP PIL driver
-Date: Fri, 3 Aug 2018 16:53:05 +0530
-Message-ID: <be77dbce-49aa-862f-0192-f0264b5aa588@codeaurora.org>
-References: <1530264053-8394-1-git-send-email-rohitkr@codeaurora.org>
- <20180706203236.GA24729@rob-hp-laptop>
- <43dcb60b-720f-27ab-3696-dbf0fe0b65fc@codeaurora.org>
+From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v4 1/3] iio: Add modifier for white light
+Date: Fri, 3 Aug 2018 13:38:17 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1808031323150.13492@vps.pmeerw.net>
+References: <20180802182729.2061830-1-pn@denx.de> <alpine.DEB.2.21.1808022117460.25216@vps.pmeerw.net> <fb30878f-0163-306a-e933-d9fecc996acb@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <43dcb60b-720f-27ab-3696-dbf0fe0b65fc@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <fb30878f-0163-306a-e933-d9fecc996acb@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, sbpata@codeaurora.org
+To: Parthiban Nallathambi <pn@denx.de>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, robh+dt@kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de
 List-Id: devicetree@vger.kernel.org
 
-Hello Bjorn,
+Hello,
 
+> > it is not clear to me why 'white' is needed;
+> > isn't that the default, i.e. unfiltered light?
+> 
+> Yes, it is. But devices like vcnl4035 veml7700, White LED data one
+> register and all other sources of light (like fluorescent,
+> incandescent ,sunlight) in separate register.
+> 
+> So in such cases this WHITE modifier is needed. Should it needs to
+> come under IIO_MOD_LIGHT_CLEAR?
 
-Can you please let us know the suggest the file name and review the patch.
+it is a mess already :), there is 
+_intensity
+_intensity_ir
+_intensity_both
+_intensity_uv
+_intensity_red
+_intensity_green
+_intensity_blue
+_intensity_clear
 
+I think that ir, uv, red, green, blue are filters for particular ranges 
+of the spectrum
 
-On 7/9/2018 11:29 AM, Rohit Kumar wrote:
-> Thanks Rob for reviewing.
->
->
-> On 7/7/2018 2:02 AM, Rob Herring wrote:
->> On Fri, Jun 29, 2018 at 02:50:53PM +0530, Rohit kumar wrote:
->>> This adds APSS based ADSP PIL driver for QCOM SoCs.
->>> Added initial support for SDM845 with ADSP bootup and
->>> shutdown operation handled from Application Processor
->>> SubSystem(APSS).
->>>
->>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->>> ---
->>> Changes since v1:
->>> - Used APIs from qcom_q6v5.c
->>> - Use clock, reset and regmap driver APIs instead of
->>>    directly writing into the LPASS registers.
->>> - Created new file for non PAS ADSP PIL instead of extending
->>>    existing ADSP PIL driver.
->>> - cleanups as suggested by Bjorn and Rob.
->>>
->>>   .../bindings/remoteproc/qcom,non-pas-adsp.txt      | 138 +++++
->> This should be a separate patch.
->
-> Ok. Will separate it in next spin.
->>> drivers/remoteproc/Kconfig                         |  18 +
->>>   drivers/remoteproc/Makefile                        |   1 +
->>>   drivers/remoteproc/qcom_nonpas_adsp_pil.c          | 667 
->>> +++++++++++++++++++++
->>>   4 files changed, 824 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
->>>   create mode 100644 drivers/remoteproc/qcom_nonpas_adsp_pil.c
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt 
->>> b/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
->>> new file mode 100644
->>> index 0000000..0581aaa
->>> --- /dev/null
->>> +++ 
->>> b/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
->>> @@ -0,0 +1,138 @@
->>> +Qualcomm Technology Inc. Non PAS ADSP Peripheral Image Loader
->>> +
->>> +This document defines the binding for a component that loads and 
->>> boots firmware
->>> +on the Qualcomm Technology Inc. ADSP Hexagon core.
->>> +
->>> +- compatible:
->>> +    Usage: required
->>> +    Value type: <string>
->>> +    Definition: must be one of:
->>> +            "qcom,sdm845-apss-adsp-pil"
->> Didn't Bjorn say to drop the 'apss' part?
->
-> Yes, he had asked to rename compatible string for  existing PIL driver 
-> as "qcom,platform-subsystem-pas"
-> and non-pas pil driver as "qcom,platform-subsystem-pil". I wanted to 
-> get confirmation from Bjorn whether
-> we should rename the filename too.
-> @Bjorn, can you please suggest filename and compatible strings for the 
-> two drivers.
->>> +
->>> +- reg:
->>> +    Usage: required
->>> +    Value type: <prop-encoded-array>
->>> +    Definition: must specify the base address and size of the qdsp6ss
->>> +
->>> +- reg-names:
->>> +    Usage: required
->>> +    Value type: <stringlist>
->>> +    Definition: must be "qdsp6ss"
->>> +
->>>
->> -- 
->> To unsubscribe from this list: send the line "unsubscribe 
->> linux-remoteproc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at http://vger.kernel.org/majordomo-info.html
->
-> Thanks,
-> Rohit
->
+_intensity_clear might be unfiltered and _intensity might relate to the 
+human eye photopic curve, I think the proposed white might be the same as 
+clear?
+
+'both' means ir + _intensity (not clearly specified)
+
+regards, p.
+
+> > > +KernelVersion:	4.18
+> > > +Contact:	linux-iio@vger.kernel.org
+> > > +Description:
+> > > +		Modifier white indicates that measurements contain white LED
+> > > +		component.
+> > > +
+> > >   What:		/sys/.../iio:deviceX/in_intensity_red_integration_time
+> > >   What:
+> > > /sys/.../iio:deviceX/in_intensity_green_integration_time
+> > >   What:
+> > > /sys/.../iio:deviceX/in_intensity_blue_integration_time
+> > > diff --git a/drivers/iio/industrialio-core.c
+> > > b/drivers/iio/industrialio-core.c
+> > > index 19bdf3d2962a..cb939b9fad16 100644
+> > > --- a/drivers/iio/industrialio-core.c
+> > > +++ b/drivers/iio/industrialio-core.c
+> > > @@ -108,6 +108,7 @@ static const char * const iio_modifier_names[] = {
+> > >   	[IIO_MOD_LIGHT_GREEN] = "green",
+> > >   	[IIO_MOD_LIGHT_BLUE] = "blue",
+> > >   	[IIO_MOD_LIGHT_UV] = "uv",
+> > > +	[IIO_MOD_LIGHT_WHITE] = "white",
+> > >   	[IIO_MOD_QUATERNION] = "quaternion",
+> > >   	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+> > >   	[IIO_MOD_TEMP_OBJECT] = "object",
+> > > diff --git a/include/uapi/linux/iio/types.h
+> > > b/include/uapi/linux/iio/types.h
+> > > index 4213cdf88e3c..de87a6c7e6de 100644
+> > > --- a/include/uapi/linux/iio/types.h
+> > > +++ b/include/uapi/linux/iio/types.h
+> > > @@ -84,6 +84,7 @@ enum iio_modifier {
+> > >   	IIO_MOD_CO2,
+> > >   	IIO_MOD_VOC,
+> > >   	IIO_MOD_LIGHT_UV,
+> > > +	IIO_MOD_LIGHT_WHITE,
+> > >   };
+> > >     enum iio_event_type {
+> > > diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+> > > index b61245e1181d..a2f9c62a79dd 100644
+> > > --- a/tools/iio/iio_event_monitor.c
+> > > +++ b/tools/iio/iio_event_monitor.c
+> > > @@ -96,6 +96,7 @@ static const char * const iio_modifier_names[] = {
+> > >   	[IIO_MOD_LIGHT_GREEN] = "green",
+> > >   	[IIO_MOD_LIGHT_BLUE] = "blue",
+> > >   	[IIO_MOD_LIGHT_UV] = "uv",
+> > > +	[IIO_MOD_LIGHT_WHITE] = "white",
+> > >   	[IIO_MOD_QUATERNION] = "quaternion",
+> > >   	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+> > >   	[IIO_MOD_TEMP_OBJECT] = "object",
+> > > @@ -178,6 +179,7 @@ static bool event_is_known(struct iio_event_data
+> > > *event)
+> > >   	case IIO_MOD_LIGHT_GREEN:
+> > >   	case IIO_MOD_LIGHT_BLUE:
+> > >   	case IIO_MOD_LIGHT_UV:
+> > > +	case IIO_MOD_LIGHT_WHITE:
+> > >   	case IIO_MOD_QUATERNION:
+> > >   	case IIO_MOD_TEMP_AMBIENT:
+> > >   	case IIO_MOD_TEMP_OBJECT:
+> > > 
+> > 
+> 
+> 
+
+-- 
+
+Peter Meerwald-Stadler
+Mobile: +43 664 24 44 418
