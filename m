@@ -1,793 +1,383 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: [PATCH v5 1/2] iio: light: Add support for vishay vcnl4035
-Date: Fri,  3 Aug 2018 19:36:35 +0200
-Message-ID: <20180803173636.2071442-1-pn@denx.de>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH v2 01/18] MIPS: intel: Add initial support for Intel MIPS
+ SoCs
+Date: Fri, 3 Aug 2018 10:49:24 -0700
+Message-ID: <20180803174924.iqzmbtz5hrf5dlzu@pburton-laptop>
+References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
+ <20180803030237.3366-2-songjun.wu@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180803030237.3366-2-songjun.wu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, andy.shevchenko@gmail.com
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de, Parthiban Nallathambi <pn@denx.de>
+To: Songjun Wu <songjun.wu@linux.intel.com>
+Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for VCNL4035, which is capable of Ambient light
-sensing (ALS) and proximity function. This patch adds support
-only for ALS function
+Hi Songjun / Hua,
 
-Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+On Fri, Aug 03, 2018 at 11:02:20AM +0800, Songjun Wu wrote:
+> From: Hua Ma <hua.ma@linux.intel.com>
+> 
+> Add initial support for Intel MIPS interAptiv SoCs made by Intel.
+> This series will add support for the grx500 family.
+> 
+> The series allows booting a minimal system using a initramfs.
 
-Changelog since v1:
+Thanks for submitting this - I have some comments below.
 
-1. Fixed 0-day warning on le16_to_cpu usage
-2. Persistence value is directly mapped to datasheet's value to
-avoid confusions of usage from sysfs
+> diff --git a/arch/mips/Kbuild.platforms b/arch/mips/Kbuild.platforms
+> index ac7ad54f984f..bcd647060f3e 100644
+> --- a/arch/mips/Kbuild.platforms
+> +++ b/arch/mips/Kbuild.platforms
+> @@ -12,6 +12,7 @@ platforms += cobalt
+>  platforms += dec
+>  platforms += emma
+>  platforms += generic
+> +platforms += intel-mips
+>  platforms += jazz
+>  platforms += jz4740
+>  platforms += lantiq
 
-Changelog in v3:
-- Usage of lock is not needed, removed mutex locking
-- ALS threshold and persistence configuration available
-as events and threshold events are notified to userspace
-- Usage of devm_ is re-ordered and exit handling updated
-- Complexity in timestamp calculation is removed and used
-iio_get_time_ns
+Oh EVA, why must you ruin nice things... Ideally I'd be suggesting that
+we use the generic platform but it doesn't yet have a nice way to deal
+with non-standard EVA setups.
 
-Changelog in v4:
-- New white light index is introduced for getting data from
-white spectrum
-- PM enable/disable is called from read_raw accordingly
-- Probe exit handling re-ordered
+It would be good if we could make sure that's the only reason for your
+custom platform though, so that once generic does support EVA we can
+migrate your system over. Most notably, it would be good to make use of
+the UHI-specified boot protocol if possible (ie. $r4==-2, $r5==&dtb).
 
-Changelog in v5:
-- White spectrum is mesaured as "_CLEAR" intesity, so removed
-white spectrum modifier
-- Header re-ordering
-- Trigger init and de-init into separate function
-- Indentation correct and usage of dev_err in place of pr_err
----
- drivers/iio/light/Kconfig    |  12 +
- drivers/iio/light/Makefile   |   1 +
- drivers/iio/light/vcnl4035.c | 701 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 714 insertions(+)
- create mode 100644 drivers/iio/light/vcnl4035.c
+It looks like your prom_init_cmdline() supports multiple boot protocols
+- could you clarify which is actually used?
 
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index c7ef8d1862d6..b7069a4c28a2 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -447,6 +447,18 @@ config VCNL4000
- 	 To compile this driver as a module, choose M here: the
- 	 module will be called vcnl4000.
- 
-+config VCNL4035
-+	tristate "VCNL4035 combined ALS and proximity sensor"
-+	select REGMAP_I2C
-+	depends on I2C
-+	help
-+	 Say Y here if you want to build a driver for the Vishay VCNL4035,
-+	 combined ambient light (ALS) and proximity sensor. Currently only ALS
-+	 function is available.
-+
-+	 To compile this driver as a module, choose M here: the
-+	 module will be called vcnl4035.
-+
- config VEML6070
- 	tristate "VEML6070 UV A light sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index 80943af5d627..dce98511a59b 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_TSL2772)		+= tsl2772.o
- obj-$(CONFIG_TSL4531)		+= tsl4531.o
- obj-$(CONFIG_US5182D)		+= us5182d.o
- obj-$(CONFIG_VCNL4000)		+= vcnl4000.o
-+obj-$(CONFIG_VCNL4035)		+= vcnl4035.o
- obj-$(CONFIG_VEML6070)		+= veml6070.o
- obj-$(CONFIG_VL6180)		+= vl6180.o
- obj-$(CONFIG_ZOPT2201)		+= zopt2201.o
-diff --git a/drivers/iio/light/vcnl4035.c b/drivers/iio/light/vcnl4035.c
-new file mode 100644
-index 000000000000..64ea7cbc763e
---- /dev/null
-+++ b/drivers/iio/light/vcnl4035.c
-@@ -0,0 +1,701 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * VCNL4035 Ambient Light and Proximity Sensor - 7-bit I2C slave address 0x60
-+ *
-+ * Copyright (c) 2018, DENX Software Engineering GmbH
-+ * Author: Parthiban Nallathambi <pn@denx.de>
-+ *
-+ *
-+ * TODO: Proximity
-+ */
-+#include <linux/bitops.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/events.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+
-+#define VCNL4035_DRV_NAME	"vcnl4035"
-+#define VCNL4035_IRQ_NAME	"vcnl4035_event"
-+#define VCNL4035_REGMAP_NAME	"vcnl4035_regmap"
-+
-+/* Device registers */
-+#define VCNL4035_ALS_CONF	0x00
-+#define VCNL4035_ALS_THDH	0x01
-+#define VCNL4035_ALS_THDL	0x02
-+#define VCNL4035_ALS_DATA	0x0B
-+#define VCNL4035_WHITE_DATA	0x0C
-+#define VCNL4035_INT_FLAG	0x0D
-+#define VCNL4035_DEV_ID		0x0E
-+
-+/* Register masks */
-+#define VCNL4035_MODE_ALS_MASK		BIT(0)
-+#define VCNL4035_MODE_ALS_WHITE_CHAN	BIT(8)
-+#define VCNL4035_MODE_ALS_INT_MASK	BIT(1)
-+#define VCNL4035_ALS_IT_MASK		GENMASK(7, 5)
-+#define VCNL4035_ALS_PERS_MASK		GENMASK(3, 2)
-+#define VCNL4035_INT_ALS_IF_H_MASK	BIT(12)
-+#define VCNL4035_INT_ALS_IF_L_MASK	BIT(13)
-+
-+/* Default values */
-+#define VCNL4035_MODE_ALS_ENABLE	BIT(0)
-+#define VCNL4035_MODE_ALS_DISABLE	0x00
-+#define VCNL4035_MODE_ALS_INT_ENABLE	BIT(1)
-+#define VCNL4035_MODE_ALS_INT_DISABLE	0
-+#define VCNL4035_DEV_ID_VAL		0x80
-+#define VCNL4035_ALS_IT_DEFAULT		0x01
-+#define VCNL4035_ALS_PERS_DEFAULT	0x00
-+#define VCNL4035_ALS_THDH_DEFAULT	5000
-+#define VCNL4035_ALS_THDL_DEFAULT	100
-+#define VCNL4035_SLEEP_DELAY_MS		2000
-+
-+struct vcnl4035_data {
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+	unsigned int als_it_val;
-+	unsigned int als_persistence:4;
-+	unsigned int als_thresh_low;
-+	unsigned int als_thresh_high;
-+	struct iio_trigger *drdy_trigger0;
-+};
-+
-+static inline bool vcnl4035_is_triggered(struct vcnl4035_data *data)
-+{
-+	int ret;
-+	int reg;
-+
-+	ret = regmap_read(data->regmap, VCNL4035_INT_FLAG, &reg);
-+	if (ret < 0)
-+		return false;
-+
-+	return !!(reg &
-+		(VCNL4035_INT_ALS_IF_H_MASK | VCNL4035_INT_ALS_IF_L_MASK));
-+}
-+
-+static irqreturn_t vcnl4035_drdy_irq_thread(int irq, void *private)
-+{
-+	struct iio_dev *indio_dev = private;
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+
-+	if (vcnl4035_is_triggered(data)) {
-+		iio_push_event(indio_dev, IIO_UNMOD_EVENT_CODE(IIO_LIGHT,
-+							0,
-+							IIO_EV_TYPE_THRESH,
-+							IIO_EV_DIR_EITHER),
-+				iio_get_time_ns(indio_dev));
-+		iio_trigger_poll_chained(data->drdy_trigger0);
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+/* Triggered buffer */
-+static irqreturn_t vcnl4035_trigger_consumer_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+	u16 buffer[ALIGN(sizeof(u16), sizeof(s64)) + sizeof(s64)];
-+	int ret;
-+
-+	ret = regmap_read(data->regmap, VCNL4035_ALS_DATA, (int *)buffer);
-+	if (!ret)
-+		iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-+						iio_get_time_ns(indio_dev));
-+	else
-+		dev_err(&data->client->dev,
-+			"Trigger consumer can't read from sensor.\n");
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int vcnl4035_als_drdy_set_state(struct iio_trigger *trigger,
-+					bool enable_drdy)
-+{
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trigger);
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+	int val = enable_drdy ? VCNL4035_MODE_ALS_INT_ENABLE :
-+					VCNL4035_MODE_ALS_INT_DISABLE;
-+
-+	return regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-+				 VCNL4035_MODE_ALS_INT_MASK,
-+				 val);
-+}
-+
-+static const struct iio_trigger_ops vcnl4035_trigger_ops = {
-+	.validate_device = iio_trigger_validate_own_device,
-+	.set_trigger_state = vcnl4035_als_drdy_set_state,
-+};
-+
-+static int vcnl4035_set_pm_runtime_state(struct vcnl4035_data *data, bool on)
-+{
-+	int ret;
-+	struct device *dev = &data->client->dev;
-+
-+	if (on) {
-+		ret = pm_runtime_get_sync(dev);
-+		if (ret < 0)
-+			pm_runtime_put_noidle(dev);
-+	} else {
-+		pm_runtime_mark_last_busy(dev);
-+		ret = pm_runtime_put_autosuspend(dev);
-+	}
-+
-+	return ret;
-+}
-+
-+/*
-+ *	Device IT	INT Time (ms)	Scale (lux/step)
-+ *	000		50		0.064
-+ *	001		100		0.032
-+ *	010		200		0.016
-+ *	100		400		0.008
-+ *	101 - 111	800		0.004
-+ * Values are proportional, so ALS INT is selected for input due to
-+ * simplicity reason. Integration time value and scaling is
-+ * calculated based on device INT value
-+ *
-+ * Raw value needs to be scaled using ALS steps
-+ *
-+ */
-+static int vcnl4035_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan, int *val,
-+			    int *val2, long mask)
-+{
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+	int ret;
-+	int raw_data;
-+	unsigned int reg;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = vcnl4035_set_pm_runtime_state(data, true);
-+		if  (ret < 0)
-+			return ret;
-+
-+		ret = iio_device_claim_direct_mode(indio_dev);
-+		if (!ret) {
-+			if (chan->channel)
-+				reg = VCNL4035_ALS_DATA;
-+			else
-+				reg = VCNL4035_WHITE_DATA;
-+			ret = regmap_read(data->regmap, reg, &raw_data);
-+			iio_device_release_direct_mode(indio_dev);
-+			if (!ret) {
-+				*val = raw_data;
-+				ret = IIO_VAL_INT;
-+			}
-+		}
-+		vcnl4035_set_pm_runtime_state(data, false);
-+		return ret;
-+	case IIO_CHAN_INFO_INT_TIME:
-+		*val = 50;
-+		if (!data->als_it_val)
-+			*val = data->als_it_val * 100;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = 64;
-+		if (!data->als_it_val)
-+			*val2 = 1000;
-+		else
-+			*val2 = data->als_it_val * 2 * 1000;
-+		return IIO_VAL_FRACTIONAL;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int vcnl4035_write_raw(struct iio_dev *indio_dev,
-+				struct iio_chan_spec const *chan,
-+				int val, int val2, long mask)
-+{
-+	int ret;
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_INT_TIME:
-+		if (val <= 0 || val > 800)
-+			return -EINVAL;
-+
-+		ret = vcnl4035_set_pm_runtime_state(data, true);
-+		if  (ret < 0)
-+			return ret;
-+
-+		ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-+					 VCNL4035_ALS_IT_MASK,
-+					 val / 100);
-+		if (!ret)
-+			data->als_it_val = val / 100;
-+
-+		vcnl4035_set_pm_runtime_state(data, false);
-+		return ret;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+/* No direct ABI for persistence and threshold, so eventing */
-+static int vcnl4035_read_thresh(struct iio_dev *indio_dev,
-+		const struct iio_chan_spec *chan, enum iio_event_type type,
-+		enum iio_event_direction dir, enum iio_event_info info,
-+		int *val, int *val2)
-+{
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		switch (dir) {
-+		case IIO_EV_DIR_RISING:
-+			*val = data->als_thresh_high;
-+			return IIO_VAL_INT;
-+		case IIO_EV_DIR_FALLING:
-+			*val = data->als_thresh_low;
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
-+		break;
-+	case IIO_EV_INFO_PERIOD:
-+		*val = data->als_persistence;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+}
-+
-+static int vcnl4035_write_thresh(struct iio_dev *indio_dev,
-+		const struct iio_chan_spec *chan, enum iio_event_type type,
-+		enum iio_event_direction dir, enum iio_event_info info, int val,
-+		int val2)
-+{
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		/* 16 bit threshold range 0 - 65535 */
-+		if (val < 0 || val > 65535)
-+			return -EINVAL;
-+		if (dir == IIO_EV_DIR_RISING) {
-+			if (val < data->als_thresh_low)
-+				return -EINVAL;
-+			ret = regmap_write(data->regmap, VCNL4035_ALS_THDH,
-+					   val);
-+			if (!ret)
-+				data->als_thresh_high = val;
-+		} else {
-+			if (val > data->als_thresh_high)
-+				return -EINVAL;
-+			ret = regmap_write(data->regmap, VCNL4035_ALS_THDL,
-+					   val);
-+			if (!ret)
-+				data->als_thresh_low = val;
-+		}
-+		return ret;
-+	case IIO_EV_INFO_PERIOD:
-+		/* allow only 1 2 4 8 as persistence value */
-+		if (val < 0 || val > 8 || __sw_hweight8(val) != 1)
-+			return -EINVAL;
-+		ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-+					 VCNL4035_ALS_PERS_MASK, val);
-+		if (!ret)
-+			data->als_persistence = val;
-+		return ret;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static IIO_CONST_ATTR_INT_TIME_AVAIL("50 100 200 400 800");
-+
-+static struct attribute *vcnl4035_attributes[] = {
-+	&iio_const_attr_integration_time_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group vcnl4035_attribute_group = {
-+	.attrs = vcnl4035_attributes,
-+};
-+
-+static const struct iio_info vcnl4035_info = {
-+	.read_raw		= vcnl4035_read_raw,
-+	.write_raw		= vcnl4035_write_raw,
-+	.read_event_value	= vcnl4035_read_thresh,
-+	.write_event_value	= vcnl4035_write_thresh,
-+	.attrs			= &vcnl4035_attribute_group,
-+};
-+
-+static const struct iio_event_spec vcnl4035_event_spec[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-+	}, {
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_separate = BIT(IIO_EV_INFO_VALUE),
-+	}, {
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_EITHER,
-+		.mask_separate = BIT(IIO_EV_INFO_PERIOD),
-+	},
-+};
-+
-+enum vcnl4035_scan_index_order {
-+	VCNL4035_CHAN_INDEX_LIGHT,
-+	VCNL4035_CHAN_INDEX_WHITE_LED,
-+};
-+
-+static const unsigned long vcnl4035_available_scan_masks[] = {
-+	BIT(VCNL4035_CHAN_INDEX_LIGHT),
-+	BIT(VCNL4035_CHAN_INDEX_WHITE_LED),
-+	0
-+};
-+
-+static const struct iio_chan_spec vcnl4035_channels[] = {
-+	{
-+		.type = IIO_INTENSITY,
-+		.channel = 0,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_INT_TIME) |
-+				BIT(IIO_CHAN_INFO_SCALE),
-+		.event_spec = vcnl4035_event_spec,
-+		.num_event_specs = ARRAY_SIZE(vcnl4035_event_spec),
-+		.scan_index = VCNL4035_CHAN_INDEX_LIGHT,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
-+	},
-+	{
-+		.type = IIO_INTENSITY,
-+		.channel = 1,
-+		.modified = 1,
-+		.channel2 = IIO_MOD_LIGHT_CLEAR,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.scan_index = VCNL4035_CHAN_INDEX_WHITE_LED,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
-+	},
-+};
-+
-+static int vcnl4035_set_als_power_state(struct vcnl4035_data *data, u8 status)
-+{
-+	return regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-+					VCNL4035_MODE_ALS_MASK,
-+					status);
-+}
-+
-+static int vcnl4035_init(struct vcnl4035_data *data)
-+{
-+	int ret;
-+	int id;
-+
-+	ret = regmap_read(data->regmap, VCNL4035_DEV_ID, &id);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Failed to read DEV_ID register\n");
-+		return ret;
-+	}
-+
-+	if (id != VCNL4035_DEV_ID_VAL) {
-+		dev_err(&data->client->dev, "Wrong id, got %x, expected %x\n",
-+			id, VCNL4035_DEV_ID_VAL);
-+		return -ENODEV;
-+	}
-+
-+	ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* ALS white channel enable */
-+	ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-+				 VCNL4035_MODE_ALS_WHITE_CHAN,
-+				 1);
-+	if (ret) {
-+		dev_err(&data->client->dev, "set white channel enable %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	/* set default integration time - 100 ms for ALS */
-+	ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-+				 VCNL4035_ALS_IT_MASK,
-+				 VCNL4035_ALS_IT_DEFAULT);
-+	if (ret) {
-+		dev_err(&data->client->dev, "set default ALS IT returned %d\n",
-+			ret);
-+		return ret;
-+	}
-+	data->als_it_val = VCNL4035_ALS_IT_DEFAULT;
-+
-+	/* set default persistence time - 1 for ALS */
-+	ret = regmap_update_bits(data->regmap, VCNL4035_ALS_CONF,
-+				 VCNL4035_ALS_PERS_MASK,
-+				 VCNL4035_ALS_PERS_DEFAULT);
-+	if (ret) {
-+		dev_err(&data->client->dev, "set default PERS returned %d\n",
-+			ret);
-+		return ret;
-+	}
-+	data->als_persistence = VCNL4035_ALS_PERS_DEFAULT;
-+
-+	/* set default HIGH threshold for ALS */
-+	ret = regmap_write(data->regmap, VCNL4035_ALS_THDH,
-+				VCNL4035_ALS_THDH_DEFAULT);
-+	if (ret) {
-+		dev_err(&data->client->dev, "set default THDH returned %d\n",
-+			ret);
-+		return ret;
-+	}
-+	data->als_thresh_high = VCNL4035_ALS_THDH_DEFAULT;
-+
-+	/* set default LOW threshold for ALS */
-+	ret = regmap_write(data->regmap, VCNL4035_ALS_THDL,
-+				VCNL4035_ALS_THDL_DEFAULT);
-+	if (ret) {
-+		dev_err(&data->client->dev, "set default THDL returned %d\n",
-+			ret);
-+		return ret;
-+	}
-+	data->als_thresh_low = VCNL4035_ALS_THDL_DEFAULT;
-+
-+	return 0;
-+}
-+
-+static bool vcnl4035_is_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case VCNL4035_ALS_CONF:
-+	case VCNL4035_DEV_ID:
-+		return false;
-+	default:
-+		return true;
-+	}
-+}
-+
-+static const struct regmap_config vcnl4035_regmap_config = {
-+	.name		= VCNL4035_REGMAP_NAME,
-+	.reg_bits	= 8,
-+	.val_bits	= 16,
-+	.max_register	= VCNL4035_DEV_ID,
-+	.cache_type	= REGCACHE_RBTREE,
-+	.volatile_reg	= vcnl4035_is_volatile_reg,
-+	.val_format_endian = REGMAP_ENDIAN_LITTLE,
-+};
-+
-+static int vcnl4035_probe_trigger(struct iio_dev *indio_dev)
-+{
-+	int ret;
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+
-+	data->drdy_trigger0 = devm_iio_trigger_alloc(
-+			indio_dev->dev.parent,
-+			"%s-dev%d", indio_dev->name, indio_dev->id);
-+	if (!data->drdy_trigger0)
-+		return -ENOMEM;
-+
-+	data->drdy_trigger0->dev.parent = indio_dev->dev.parent;
-+	data->drdy_trigger0->ops = &vcnl4035_trigger_ops;
-+	iio_trigger_set_drvdata(data->drdy_trigger0, indio_dev);
-+	ret = iio_trigger_register(data->drdy_trigger0);
-+	if (ret) {
-+		dev_err(&data->client->dev, "iio trigger register failed\n");
-+		return ret;
-+	}
-+
-+	/* Trigger setup */
-+	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+			vcnl4035_trigger_consumer_handler,
-+			NULL);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "iio triggered buffer setup failed\n");
-+		goto fail_trigger_unregister;
-+	}
-+
-+	/* IRQ to trigger mapping */
-+	ret = devm_request_threaded_irq(&data->client->dev, data->client->irq,
-+			NULL, vcnl4035_drdy_irq_thread,
-+			IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+			VCNL4035_IRQ_NAME, indio_dev);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "request irq %d for trigger0 failed\n",
-+				data->client->irq);
-+		goto fail_buffer_clean;
-+	}
-+
-+	return 0;
-+
-+fail_buffer_clean:
-+	iio_triggered_buffer_cleanup(indio_dev);
-+fail_trigger_unregister:
-+	iio_trigger_unregister(data->drdy_trigger0);
-+
-+	return ret;
-+}
-+
-+static void vcnl4035_remove_trigger(struct iio_dev *indio_dev)
-+{
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+
-+	iio_triggered_buffer_cleanup(indio_dev);
-+	iio_trigger_unregister(data->drdy_trigger0);
-+}
-+
-+static int vcnl4035_probe(struct i2c_client *client,
-+				const struct i2c_device_id *id)
-+{
-+	struct vcnl4035_data *data;
-+	struct iio_dev *indio_dev;
-+	struct regmap *regmap;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	regmap = devm_regmap_init_i2c(client, &vcnl4035_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&client->dev, "regmap_init failed!\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->client = client;
-+	data->regmap = regmap;
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->info = &vcnl4035_info;
-+	indio_dev->name = VCNL4035_DRV_NAME;
-+	indio_dev->channels = vcnl4035_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(vcnl4035_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = vcnl4035_init(data);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "vcnl4035 chip init failed\n");
-+		return ret;
-+	}
-+
-+	if (client->irq > 0) {
-+		ret = vcnl4035_probe_trigger(indio_dev);
-+		if (ret < 0) {
-+			dev_err(&client->dev, "vcnl4035 unable init trigger\n");
-+			goto fail_pm_disable;
-+		}
-+	}
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto fail_free_trigger;
-+
-+	ret = pm_runtime_set_active(&client->dev);
-+	if (ret < 0)
-+		goto fail_free_trigger;
-+
-+	pm_runtime_enable(&client->dev);
-+	pm_runtime_set_autosuspend_delay(&client->dev, VCNL4035_SLEEP_DELAY_MS);
-+	pm_runtime_use_autosuspend(&client->dev);
-+
-+	return 0;
-+
-+fail_free_trigger:
-+	vcnl4035_remove_trigger(indio_dev);
-+fail_pm_disable:
-+	pm_runtime_disable(&client->dev);
-+	pm_runtime_set_suspended(&client->dev);
-+	pm_runtime_put_noidle(&client->dev);
-+	vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_DISABLE);
-+	return ret;
-+}
-+
-+static int vcnl4035_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+
-+	vcnl4035_remove_trigger(indio_dev);
-+	iio_device_unregister(indio_dev);
-+
-+	pm_runtime_disable(&client->dev);
-+	pm_runtime_set_suspended(&client->dev);
-+	pm_runtime_put_noidle(&client->dev);
-+
-+	return vcnl4035_set_als_power_state(iio_priv(indio_dev),
-+					VCNL4035_MODE_ALS_DISABLE);
-+}
-+
-+#ifdef CONFIG_PM
-+static int __maybe_unused vcnl4035_runtime_suspend(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_DISABLE);
-+	regcache_mark_dirty(data->regmap);
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused vcnl4035_runtime_resume(struct device *dev)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
-+	struct vcnl4035_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	regcache_sync(data->regmap);
-+	ret = vcnl4035_set_als_power_state(data, VCNL4035_MODE_ALS_ENABLE);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* wait for 1 ALS integration cycle */
-+	msleep(data->als_it_val * 100);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops vcnl4035_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+	SET_RUNTIME_PM_OPS(vcnl4035_runtime_suspend,
-+			   vcnl4035_runtime_resume, NULL)
-+};
-+
-+static const struct of_device_id vcnl4035_of_match[] = {
-+	{ .compatible = "vishay,vcnl4035", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, vcnl4035_of_match);
-+
-+static struct i2c_driver vcnl4035_driver = {
-+	.driver = {
-+		.name   = VCNL4035_DRV_NAME,
-+		.pm	= &vcnl4035_pm_ops,
-+		.of_match_table = of_match_ptr(vcnl4035_of_match),
-+	},
-+	.probe  = vcnl4035_probe,
-+	.remove	= vcnl4035_remove,
-+};
-+
-+module_i2c_driver(vcnl4035_driver);
-+
-+MODULE_AUTHOR("Parthiban Nallathambi <pn@denx.de>");
-+MODULE_DESCRIPTION("VCNL4035 Ambient Light Sensor driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.14.4
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index 08c10c518f83..2d34f17f3e24 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -409,6 +409,34 @@ config LANTIQ
+>  	select ARCH_HAS_RESET_CONTROLLER
+>  	select RESET_CONTROLLER
+>  
+> +config INTEL_MIPS
+> +	bool "Intel MIPS interAptiv SoC based platforms"
+> +	select BOOT_RAW
+> +	select CEVT_R4K
+> +	select COMMON_CLK
+> +	select CPU_MIPS32_3_5_EVA
+> +	select CPU_MIPS32_3_5_FEATURES
+> +	select CPU_MIPSR2_IRQ_EI
+> +	select CPU_MIPSR2_IRQ_VI
+> +	select CSRC_R4K
+> +	select DMA_NONCOHERENT
+> +	select GENERIC_ISA_DMA
+> +	select IRQ_MIPS_CPU
+> +	select MFD_CORE
+> +	select MFD_SYSCON
+> +	select MIPS_CPU_SCACHE
+> +	select MIPS_GIC
+> +	select SYS_HAS_CPU_MIPS32_R1
+
+For a system based on interAptiv you should never need to build a
+MIPS32r1 kernel, so you should remove the above select.
+
+> diff --git a/arch/mips/include/asm/mach-intel-mips/cpu-feature-overrides.h b/arch/mips/include/asm/mach-intel-mips/cpu-feature-overrides.h
+> new file mode 100644
+> index 000000000000..ac5f3b943d2a
+> --- /dev/null
+> +++ b/arch/mips/include/asm/mach-intel-mips/cpu-feature-overrides.h
+> @@ -0,0 +1,61 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This file was derived from: include/asm-mips/cpu-features.h
+> + *	Copyright (C) 2003, 2004 Ralf Baechle
+> + *	Copyright (C) 2004 Maciej W. Rozycki
+> + *	Copyright (C) 2018 Intel Corporation.
+> + */
+> +
+> +#ifndef __ASM_MACH_INTEL_MIPS_CPU_FEATURE_OVERRIDES_H
+> +#define __ASM_MACH_INTEL_MIPS_CPU_FEATURE_OVERRIDES_H
+> +
+> +#define cpu_has_tlb		1
+> +#define cpu_has_4kex		1
+> +#define cpu_has_3k_cache	0
+> +#define cpu_has_4k_cache	1
+> +#define cpu_has_tx39_cache	0
+> +#define cpu_has_sb1_cache	0
+> +#define cpu_has_fpu		0
+> +#define cpu_has_32fpr		0
+> +#define cpu_has_counter		1
+> +#define cpu_has_watch		1
+> +#define cpu_has_divec		1
+> +
+> +#define cpu_has_prefetch	1
+> +#define cpu_has_ejtag		1
+> +#define cpu_has_llsc		1
+> +
+> +#define cpu_has_mips16		0
+> +#define cpu_has_mdmx		0
+> +#define cpu_has_mips3d		0
+> +#define cpu_has_smartmips	0
+> +#define cpu_has_mmips		0
+> +#define cpu_has_vz		0
+> +
+> +#define cpu_has_mips32r1	1
+> +#define cpu_has_mips32r2	1
+> +#define cpu_has_mips64r1	0
+> +#define cpu_has_mips64r2	0
+> +
+> +#define cpu_has_dsp		1
+> +#define cpu_has_dsp2		0
+> +#define cpu_has_mipsmt		1
+> +
+> +#define cpu_has_vint		1
+> +#define cpu_has_veic		0
+> +
+> +#define cpu_has_64bits		0
+> +#define cpu_has_64bit_zero_reg	0
+> +#define cpu_has_64bit_gp_regs	0
+> +#define cpu_has_64bit_addresses	0
+> +
+> +#define cpu_has_cm2		1
+> +#define cpu_has_cm2_l2sync	1
+> +#define cpu_has_eva		1
+> +#define cpu_has_tlbinv		1
+> +
+> +#define cpu_dcache_line_size()	32
+> +#define cpu_icache_line_size()	32
+> +#define cpu_scache_line_size()	32
+
+If you rebase atop linux-next or mips-next then you should find that
+many of these defines are now redundant, especially after removing the
+SYS_HAS_CPU_MIPS32_R1 select which means your kernel build will always
+target MIPS32r2.
+
+Due to architectural restrictions on where various options can be
+present, you should be able to remove:
+
+  - cpu_has_4kex
+  - cpu_has_3k_cache
+  - cpu_has_4k_cache
+  - cpu_has_32fpr
+  - cpu_has_divec
+  - cpu_has_prefetch
+  - cpu_has_llsc
+
+cpu_has_mmips defaults to a compile-time zero unless you select
+CONFIG_SYS_SUPPORTS_MICROMIPS, so please remove that one.
+
+cpu_has_64bit_gp_regs & cpu_has_64bit_addresses both default to zero
+already for 32bit kernel builds, so please remove those.
+
+cpu_has_cm2 & cpu_has_cm2_l2sync don't exist anywhere in-tree, so please
+remove those.
+
+Additionally cpu_has_sb1_cache is not used anywhere, or defined by
+asm/cpu-features.h & seems to just be left over in some platform
+override files including presumably one you based yours on. Please
+remove it too.
+
+Also you select CPU_MIPSR2_IRQ_EI but define cpu_has_veic as 0, could
+you check that mismatch?
+
+> diff --git a/arch/mips/include/asm/mach-intel-mips/irq.h b/arch/mips/include/asm/mach-intel-mips/irq.h
+> new file mode 100644
+> index 000000000000..12a949084856
+> --- /dev/null
+> +++ b/arch/mips/include/asm/mach-intel-mips/irq.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + *  Copyright (C) 2014 Lei Chuanhua <Chuanhua.lei@lantiq.com>
+> + *  Copyright (C) 2018 Intel Corporation.
+> + */
+> +
+> +#ifndef __INTEL_MIPS_IRQ_H
+> +#define __INTEL_MIPS_IRQ_H
+> +
+> +#define MIPS_CPU_IRQ_BASE	0
+> +#define MIPS_GIC_IRQ_BASE	(MIPS_CPU_IRQ_BASE + 8)
+
+These 2 defines are the defaults anyway, so please remove them.
+
+> +#define NR_IRQS 256
+
+And if you don't actually need this then you could remove irq.h entirely
+- do you actually use more than 128 IRQs?
+
+> diff --git a/arch/mips/include/asm/mach-intel-mips/spaces.h b/arch/mips/include/asm/mach-intel-mips/spaces.h
+> new file mode 100644
+> index 000000000000..80e7b09f712c
+> --- /dev/null
+> +++ b/arch/mips/include/asm/mach-intel-mips/spaces.h
+>% >% >%
+> +#define IO_SIZE			_AC(0x10000000, UL)
+> +#define IO_SHIFT		_AC(0x10000000, UL)
+
+These IO_ defines don't appear to be used anywhere?
+
+> +/* IO space one */
+> +#define __pa_symbol(x)		__pa(x)
+
+Can you explain why you need this, rather than the default definition of
+__pa_symbol()? The comment doesn't seem to describe much of anything.
+
+> diff --git a/arch/mips/include/asm/mach-intel-mips/war.h b/arch/mips/include/asm/mach-intel-mips/war.h
+> new file mode 100644
+> index 000000000000..1c95553151e1
+> --- /dev/null
+> +++ b/arch/mips/include/asm/mach-intel-mips/war.h
+> @@ -0,0 +1,18 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __ASM_MIPS_MACH_INTEL_MIPS_WAR_H
+> +#define __ASM_MIPS_MACH_INTEL_MIPS_WAR_H
+> +
+> +#define R4600_V1_INDEX_ICACHEOP_WAR	0
+> +#define R4600_V1_HIT_CACHEOP_WAR	0
+> +#define R4600_V2_HIT_CACHEOP_WAR	0
+> +#define R5432_CP0_INTERRUPT_WAR		0
+> +#define BCM1250_M3_WAR			0
+> +#define SIBYTE_1956_WAR			0
+> +#define MIPS4K_ICACHE_REFILL_WAR	0
+> +#define MIPS_CACHE_SYNC_WAR		0
+> +#define TX49XX_ICACHE_INDEX_INV_WAR	0
+> +#define ICACHE_REFILLS_WORKAROUND_WAR	0
+> +#define R10000_LLSC_WAR			0
+> +#define MIPS34K_MISSED_ITLB_WAR		0
+> +
+> +#endif /* __ASM_MIPS_MACH_INTEL_MIPS_WAR_H */
+
+Since you need none of these workarounds, you shouldn't need war.h at
+all.
+
+> diff --git a/arch/mips/intel-mips/Kconfig b/arch/mips/intel-mips/Kconfig
+> new file mode 100644
+> index 000000000000..35d2ae2b5408
+> --- /dev/null
+> +++ b/arch/mips/intel-mips/Kconfig
+> @@ -0,0 +1,22 @@
+> +if INTEL_MIPS
+> +
+> +choice
+> +	prompt "Built-in device tree"
+> +	help
+> +	  Legacy bootloaders do not pass a DTB pointer to the kernel, so
+> +	  if a "wrapper" is not being used, the kernel will need to include
+> +	  a device tree that matches the target board.
+> +
+> +	  The builtin DTB will only be used if the firmware does not supply
+> +	  a valid DTB.
+> +
+> +config DTB_INTEL_MIPS_NONE
+> +	bool "None"
+> +
+> +config DTB_INTEL_MIPS_GRX500
+> +	bool "Intel MIPS GRX500 Board"
+> +	select BUILTIN_DTB
+> +
+> +endchoice
+> +
+> +endif
+
+So do you actually have both styles of bootloader?
+
+> diff --git a/arch/mips/intel-mips/prom.c b/arch/mips/intel-mips/prom.c
+> new file mode 100644
+> index 000000000000..a1b1393c13bc
+> --- /dev/null
+> +++ b/arch/mips/intel-mips/prom.c
+>% >% >%
+> +static void __init prom_init_cmdline(void)
+> +{
+> +	int i;
+> +	int argc;
+> +	char **argv;
+> +
+> +	/*
+> +	 * If u-boot pass parameters, it is ok, however, if without u-boot
+> +	 * JTAG or other tool has to reset all register value before it goes
+> +	 * emulation most likely belongs to this category
+> +	 */
+> +	if (fw_arg0 == 0 || fw_arg1 == 0)
+> +		return;
+
+I don't understand what you're trying to say here, or why this check
+exists. If you boot with fw_arg0 == fw_arg1 == 0 then you'd just hit the
+loop below right, and execute zero iterations of it? That seems like it
+would be fine without this special case.
+
+> +	/*
+> +	 * a0: fw_arg0 - the number of string in init cmdline
+> +	 * a1: fw_arg1 - the address of string in init cmdline
+> +	 *
+> +	 * In accordance with the MIPS UHI specification,
+> +	 * the bootloader can pass the following arguments to the kernel:
+> +	 * - $a0: -2.
+> +	 * - $a1: KSEG0 address of the flattened device-tree blob.
+> +	 */
+> +	if (fw_arg0 == -2)
+> +		return;
+> +
+> +	argc = fw_arg0;
+> +	argv = (char **)KSEG1ADDR(fw_arg1);
+> +
+> +	arcs_cmdline[0] = '\0';
+> +
+> +	for (i = 0; i < argc; i++) {
+> +		char *p = (char *)KSEG1ADDR(argv[i]);
+> +
+> +		if (argv[i] && *p) {
+> +			strlcat(arcs_cmdline, p, sizeof(arcs_cmdline));
+> +			strlcat(arcs_cmdline, " ", sizeof(arcs_cmdline));
+> +		}
+> +	}
+
+Why do you need to use kseg1? Why can't the arguments be accessed
+cached?
+
+Are the arguments passed as virtual or physical addresses? If virtual &
+we can access them cached then you could replace all of this with a call
+to fw_init_cmdline().
+
+> +static int __init plat_enable_iocoherency(void)
+> +{
+> +	if (!mips_cps_numiocu(0))
+> +		return 0;
+> +
+> +	/* Nothing special needs to be done to enable coherency */
+> +	pr_info("Coherence Manager IOCU detected\n");
+> +	/* Second IOCU for MPE or other master access register */
+> +	write_gcr_reg0_base(0xa0000000);
+> +	write_gcr_reg0_mask(0xf8000000 | CM_GCR_REGn_MASK_CMTGT_IOCU1);
+> +	return 1;
+> +}
+> +
+> +static void __init plat_setup_iocoherency(void)
+> +{
+> +	if (plat_enable_iocoherency() &&
+> +	    coherentio == IO_COHERENCE_DISABLED) {
+> +		pr_info("Hardware DMA cache coherency disabled\n");
+> +		return;
+> +	}
+> +	panic("This kind of IO coherency is not supported!");
+> +}
+
+Since you select CONFIG_DMA_NONCOHERENT in Kconfig, coherentio will
+always equal IO_COHERENCE_DISABLED. That suggests to me that the above 2
+functions are probably useless, or at least needlessly convoluted.
+
+> +static int __init plat_publish_devices(void)
+> +{
+> +	if (!of_have_populated_dt())
+> +		return 0;
+> +	return of_platform_populate(NULL, of_default_bus_match_table, NULL,
+> +				    NULL);
+> +}
+> +arch_initcall(plat_publish_devices);
+
+The core DT code calls of_platform_populate() already (see
+of_platform_default_populate_init()), so you can remove this function.
+
+Thanks,
+    Paul
