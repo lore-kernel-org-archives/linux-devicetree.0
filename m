@@ -1,81 +1,129 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 03/12] PM / devfreq: Don't adjust to user limits in
- governors
-Date: Fri, 03 Aug 2018 09:43:23 +0900
-Message-ID: <5B63A52B.8010706@samsung.com>
-References: <20180703234705.227473-1-mka@chromium.org>
-        <20180703234705.227473-4-mka@chromium.org>
-        <CGME20180802233605epcas2p2fc6b1cef0dc773f6c7e59017721917bc@epcas2p2.samsung.com>
-        <20180802233600.GT68975@google.com> <5B639BD2.5050008@samsung.com>
-        <20180803002452.GV68975@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+From: Songjun Wu <songjun.wu@linux.intel.com>
+Subject: [PATCH v2 00/18] MIPS: intel: add initial support for Intel MIPS SoCs
+Date: Fri,  3 Aug 2018 11:02:19 +0800
+Message-ID: <20180803030237.3366-1-songjun.wu@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180803002452.GV68975@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Cc: linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Songjun Wu <songjun.wu@linux.intel.com>, Michael Turquette <mturquette@baylibre.com>, James Hogan <jhogan@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ralf Baechle <ralf@linux-mips.org>, Philippe Ombredanne <pombredanne@nexb.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+This patch series is for adding the support for Intel MIPS
+interAptiv SoC GRX500 family. It includes CCF support, serial
+driver optimization and DTS modification.
 
-On 2018년 08월 03일 09:24, Matthias Kaehlcke wrote:
-> On Fri, Aug 03, 2018 at 09:03:30AM +0900, Chanwoo Choi wrote:
->> Hi Matthias,
->>
->> On 2018년 08월 03일 08:36, Matthias Kaehlcke wrote:
->>> Hi Chanwoo,
->>>
->>> this patch and "PM / devfreq: Fix handling of min/max_freq == 0"
->>> address issues not directly related with the throttler. It seems it
->>> could still take a while for the throttler to move forward, do you
->>> want me to spin out these two patches so that they can get merged
->>> independently from the rest of the series?
->>
->> How about resend the devfreq patches(patch1/2/3/4/6) which don't depend on
->> throttler core with my reviewed tag? Maybe, it is easy to merge them through Myungjoo.
-> 
-> Sure, I can do this if you think it is reasonable to merge all these
-> patches without the throttler.
+This patch series is applied on top of linux v4.18-rc7.
+Basic verification is performed on GRX500 board.
 
-IMO, patch1/2/3/6 looks good. I replied with my reviewed-tag for them.
+We propose merging this patch series into MIPS Linux tree.
 
-patch4 defines the 'struct devfreq_policy' and then patch5
-send notification with 'struct devfreq_policy' on original patch.
-But, when we discussed it on patch5, new devfreq notification
-send 'struct devfreq_freq_limits' better than 'struct devfreq_policy'.
-So, patch4 would be required with more discussion. If myungjoo agree
-the current patch4, I'm okay.
+Changes in v2:
+- Remove unused _END macros
+- Remove the redundant check and not accurate comments
+- Replace the get_counter_resolution function with fixed value 2
+- Use obj-y and split into per line per .o
+- Add EVA mapping description in code comments
+- Remove unused include header file
+- Do a clean-up for grx500_defconfig
+- Rewrite clock driver, add platform clock description details in
+  clock driver.
+- Rewrite clock driver's dt-binding document according to Rob Herring's
+  comments.
+- Simplify device tree docoment, remove some clock description.
+- New patch split from previous patch
+- The memory address is changed to @20000000
+- Update to obj-$(CONFIG_BUILTIN_DTB) as per commit fca3aa166422
+- New patch split from previous patch
+- Add the board and chip compatible in dt document
+- New patch to reorder the head files according to the coding style.
 
-> 
-> These are the patches we are talking about and my interpretation of
-> their status:
-> 
-> [01] PM / devfreq: Init user limits from OPP limits, not viceversa
->   landed in Rafaels tree
-> 
-> [02] PM / devfreq: Fix handling of min/max_freq == 0
->   independent fix, can land
-> 
-> [03] PM / devfreq: Don't adjust to user limits in governors
->   independent improvement, can land
-> 
-> [04] PM / devfreq: Add struct devfreq_policy
->   edge case, can land if devfreq maintainers think that factoring out
->   some fields to the policy struct is an improvement independently of
->   the throttler
-> 
-> [05] PM / devfreq: Add support for policy notifiers
->   under heavy discussion ;-), can't land
-> 
-> [06] PM / devfreq: Make update_devfreq() public
->   has no user without the throttler, not sure if it should be merged
->   without it. up to devfreq maintainers.
-> 
-> Please let me know what you think
+Hua Ma (3):
+  MIPS: intel: Add initial support for Intel MIPS SoCs
+  MIPS: dts: Add initial support for Intel MIPS SoCs
+  dt-binding: MIPS: Add documentation of Intel MIPS SoCs
+
+Songjun Wu (13):
+  MIPS: dts: Change upper case to lower case
+  MIPS: dts: Add aliases node for lantiq danube serial
+  serial: intel: Get serial id from dts
+  serial: intel: Change ltq_w32_mask to asc_update_bits
+  MIPS: lantiq: Unselect SWAP_IO_SPACE when LANTIQ is selected
+  serial: intel: Use readl/writel instead of ltq_r32/ltq_w32
+  serial: intel: Rename fpiclk to freqclk
+  serial: intel: Replace clk_enable/clk_disable with clk generic API
+  serial: intel: Add CCF support
+  serial: intel: Support more platform
+  serial: intel: Reorder the head files
+  serial: intel: Change init_lqasc to static declaration
+  dt-bindings: serial: lantiq: Add optional properties for CCF
+
+Yixin Zhu (2):
+  clk: intel: Add clock driver for Intel MIPS SoCs
+  dt-bindings: clk: Add documentation of grx500 clock controller
+
+ .../devicetree/bindings/clock/intel,grx500-clk.txt |  39 ++
+ Documentation/devicetree/bindings/mips/intel.txt   |  17 +
+ .../devicetree/bindings/serial/lantiq_asc.txt      |  15 +
+ arch/mips/Kbuild.platforms                         |   1 +
+ arch/mips/Kconfig                                  |  30 +-
+ arch/mips/boot/dts/Makefile                        |   1 +
+ arch/mips/boot/dts/intel-mips/Makefile             |   4 +
+ arch/mips/boot/dts/intel-mips/easy350_anywan.dts   |  26 ++
+ arch/mips/boot/dts/intel-mips/xrx500.dtsi          |  66 +++
+ arch/mips/boot/dts/lantiq/danube.dtsi              |  42 +-
+ arch/mips/boot/dts/lantiq/easy50712.dts            |  18 +-
+ arch/mips/configs/grx500_defconfig                 | 138 ++++++
+ .../asm/mach-intel-mips/cpu-feature-overrides.h    |  61 +++
+ arch/mips/include/asm/mach-intel-mips/ioremap.h    |  39 ++
+ arch/mips/include/asm/mach-intel-mips/irq.h        |  17 +
+ .../asm/mach-intel-mips/kernel-entry-init.h        | 104 +++++
+ arch/mips/include/asm/mach-intel-mips/spaces.h     |  27 ++
+ arch/mips/include/asm/mach-intel-mips/war.h        |  18 +
+ arch/mips/intel-mips/Kconfig                       |  22 +
+ arch/mips/intel-mips/Makefile                      |   5 +
+ arch/mips/intel-mips/Platform                      |  12 +
+ arch/mips/intel-mips/irq.c                         |  35 ++
+ arch/mips/intel-mips/prom.c                        | 172 ++++++++
+ arch/mips/intel-mips/time.c                        |  42 ++
+ drivers/clk/Kconfig                                |   1 +
+ drivers/clk/Makefile                               |   3 +
+ drivers/clk/intel/Kconfig                          |  20 +
+ drivers/clk/intel/Makefile                         |   7 +
+ drivers/clk/intel/clk-cgu-pll.c                    | 166 ++++++++
+ drivers/clk/intel/clk-cgu-pll.h                    |  34 ++
+ drivers/clk/intel/clk-cgu.c                        | 470 +++++++++++++++++++++
+ drivers/clk/intel/clk-cgu.h                        | 259 ++++++++++++
+ drivers/clk/intel/clk-grx500.c                     | 168 ++++++++
+ drivers/tty/serial/Kconfig                         |   2 +-
+ drivers/tty/serial/lantiq.c                        | 143 ++++---
+ include/dt-bindings/clock/intel,grx500-clk.h       |  69 +++
+ 36 files changed, 2206 insertions(+), 87 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,grx500-clk.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/intel.txt
+ create mode 100644 arch/mips/boot/dts/intel-mips/Makefile
+ create mode 100644 arch/mips/boot/dts/intel-mips/easy350_anywan.dts
+ create mode 100644 arch/mips/boot/dts/intel-mips/xrx500.dtsi
+ create mode 100644 arch/mips/configs/grx500_defconfig
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/cpu-feature-overrides.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/ioremap.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/irq.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/kernel-entry-init.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/spaces.h
+ create mode 100644 arch/mips/include/asm/mach-intel-mips/war.h
+ create mode 100644 arch/mips/intel-mips/Kconfig
+ create mode 100644 arch/mips/intel-mips/Makefile
+ create mode 100644 arch/mips/intel-mips/Platform
+ create mode 100644 arch/mips/intel-mips/irq.c
+ create mode 100644 arch/mips/intel-mips/prom.c
+ create mode 100644 arch/mips/intel-mips/time.c
+ create mode 100644 drivers/clk/intel/Kconfig
+ create mode 100644 drivers/clk/intel/Makefile
+ create mode 100644 drivers/clk/intel/clk-cgu-pll.c
+ create mode 100644 drivers/clk/intel/clk-cgu-pll.h
+ create mode 100644 drivers/clk/intel/clk-cgu.c
+ create mode 100644 drivers/clk/intel/clk-cgu.h
+ create mode 100644 drivers/clk/intel/clk-grx500.c
+ create mode 100644 include/dt-bindings/clock/intel,grx500-clk.h
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.11.0
