@@ -1,151 +1,195 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: linux-lora.git and LoRaWAN (was: [RFC net-next 00/15] net: A socket
- API for LoRa)
-Date: Fri, 3 Aug 2018 10:44:41 +0200
-Message-ID: <6dda350b-66ab-b5ab-41ed-319b27e4e28c@suse.de>
-References: <20180701110804.32415-1-afaerber@suse.de>
- <BY1PR02MB11147C7443AB9623D6B65798E75A0@BY1PR02MB1114.namprd02.prod.outlook.com>
- <e08cdcfb-207f-bd73-2afd-f775810b72b7@suse.de>
- <BY1PR02MB11143134B9ABAC9C9929A9C4E7530@BY1PR02MB1114.namprd02.prod.outlook.com>
- <CAC=mGzg0uP6ddm-kjev6JAH=GrKX9bT6s2canFOjKsC4rCcVAQ@mail.gmail.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [RESEND PATCH v5 2/3] dt-bindings: display: atmel: optional
+ video-interface of endpoints
+Date: Fri, 3 Aug 2018 10:51:43 +0200
+Message-ID: <20180803085143.GC4528@w540>
+References: <20180803072308.14962-1-peda@axentia.se>
+ <20180803072308.14962-3-peda@axentia.se>
+ <20180803081128.GA4528@w540>
+ <6fe3e84e-bd9d-0894-df8b-1b40c0f9477d@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAC=mGzg0uP6ddm-kjev6JAH=GrKX9bT6s2canFOjKsC4rCcVAQ@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Jian-Hong Pan <starnight@g.ncu.edu.tw>
-Cc: Ben Whitten <Ben.Whitten@lairdtech.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=c3=b6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=c3=b6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, "contact@snootlab.com" <contact@snootlab.com>, Brian Ray <brian.ray@link-labs.com>"lora@globalsat.com.tw" <lo>
+Content-Type: multipart/mixed; boundary="===============1275557568=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <6fe3e84e-bd9d-0894-df8b-1b40c0f9477d@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, David Airlie <airlied@linux.ie>, Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jian-Hong,
 
-Am 02.08.2018 um 09:52 schrieb Jian-Hong Pan:
-> 2018-07-18 19:28 GMT+08:00 Ben Whitten <Ben.Whitten@lairdtech.com>:
->>> 1) PF_LORA/AF_LORA and associated identifiers are
->>> proposed to represent
->>>    this technology. While for an SX1276 [...] it
->>> might work to
->>>    layer LoRaWAN as a protocol option for PF_LORA and
-> add
->>> LoRaWAN address
->>>    fields to the union in my sockaddr_lora, how would that
->>> work for devices
->>>    that only support LoRaWAN but not pure LoRa? Do we
->>> need both AF_LORA and
->>>    AF_LORAWAN, or just a separate ETH_P_LORAWAN or
->>> ARPHRD_LORAWAN?
-[...]
->>> Meanwhile my attempt to play with netlink during SUSE
->>> Hackweek has been
->>> going slow and I could use some guidance or a volunteer to
->>> contribute: I
->>> have a bare skeleton of registration, commands, attributes
->>> and multicast
->>> groups, but no plan yet how to connect that to the actual
->>> drivers to
->>> query or apply the settings...
->>
->> Happy to help, I will be starting from zero on netlink but I can contribute my existing work incorporating Marks comments for sx1301 etal.
->>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/li
->>> nux-lora.git/tree/net/lora/netlink.c?h=lora-next
-> 
-> Is this the repository used for the LoRa subsystem now?!!!
-> If it is, than great!
+--===============1275557568==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uh9ZiVrAOUUm9fzH"
+Content-Disposition: inline
 
-Yes, my linux-lora.git contains this RFC patchset (modulo SX1276 fixes
-spotted by kbuild bot) plus a new serdev driver for another module and
-ongoing work by Ben and me for refactoring SX1301. It's monitored by the
-0-day test service (kbuild bot).
 
-As this patchset was an RFC and does not have any Acked-bys from
-maintainers, the tree does not have a for-next branch integrated into
-linux-next on basis of 4.18-rc1, but instead (like my personal GitHub
-tree before) has a lora-next branch that rebases as patch queue on top
-of linux-next for now.
+--uh9ZiVrAOUUm9fzH
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-The intent is to allow collaboration on getting things into a state that
-I can later submit a clean (squashed) RFC v2 for review, with all issues
-raised for this v1 addressed.
+On Fri, Aug 03, 2018 at 10:40:02AM +0200, Peter Rosin wrote:
+> On 2018-08-03 10:11, jacopo mondi wrote:
+> > Hi Peter!
+> >
+> > On Fri, Aug 03, 2018 at 09:23:07AM +0200, Peter Rosin wrote:
+> >> With bus-type/bus-width properties in the endpoint nodes, the video-
+> >> interface of the connection can be specified for cases where the
+> >> heuristic fails to select the correct output mode. This can happen
+> >> e.g. if not all RGB pins are routed on the PCB; the driver has no
+> >> way of knowing this, and needs to be told explicitly.
+> >>
+> >> This is critical for the devices that have the "conflicting output
+> >> formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
+> >> RGB bits move around depending on the selected output mode. For
+> >> devices that do not have the "conflicting output formats" issue
+> >> (SAMA5D2, SAMA5D4), this is completely irrelevant.
+> >>
+> >> Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> >> Signed-off-by: Peter Rosin <peda@axentia.se>
+> >> ---
+> >>  .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 26 ++++++++++++++++++++++
+> >>  1 file changed, 26 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> >> index 82f2acb3d374..9de434a8f523 100644
+> >> --- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> >> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
+> >> @@ -15,6 +15,14 @@ Required children nodes:
+> >>   to external devices using the OF graph reprensentation (see ../graph.txt).
+> >>   At least one port node is required.
+> >>
+> >> +Optional properties in grandchild nodes:
+> >> + Any endpoint grandchild node may specify a desired video interface
+> >> + according to ../../media/video-interfaces.txt, specifically
+> >> + - bus-type: must be <0>.
+> >
+> > Is there any value in specifying this, if it has a fixed value to
+> > "autodetect"? I understand it's optional, so if nobody else objects,
+> > feels free to keep it there.
+>
+> That's just how media/video-interfaces.txt works.
+>
+> bus-type 0 means that other properties describe the bus type. In this
+> case bus-width is specified, so that means a parallel bus. But bus-width
+> has no meaning (or may not have) if bus-type is non-zero. But checking
+> that bus-type for zero in the code seemed like overkill to me since the
+> driver already knows that it is a parallel bus...
+>
 
-For contributing patches to my linux-lora.git I suggest to use
---subject-prefix="PATCH lora-next" to distinguish from net-next.
-And I just realize I should add a MAINTAINERS entry in my tree to make
-sure patches CC me, too. (I do monitor netdev for patches with subject
-"lora", but chances are someone might omit that.)
+Yeah, I felt like pointing that out since you're not cheking for its value,
+and that property is only used by v4l2-fwnode to handle some
+not-that-used-anymore bus as CCP2 is.
 
-> As the previous mails, I am trying to implement the LoRaWAN
-> specification as the soft MAC as the MAC layer over LoRa PHY.
-> This is the the talk about LoRaWAN class module I gave in Netdev Conf
-> https://www.slideshare.net/chienhungpan/lorawan-class-module-and-subsystem
-> 
-> The expectation is:
-> 
-> socket APIs:
-> send and receive the data
-> ------------------------------------------------------------
-> LoRaWAN class module implements MAC:
-> append the header/footer, encryption/decryption, timing slot and MAC commands
-> ------------------------------------------------------------
-> LoRa device drivers:
-> send and receive the messages for MAC layer
-> ------------------------------------------------------------
-> LoRa devices
+> TL;DR I'd like to keep it.
+>
 
-Thanks for sharing your slides. We seem to be in alignment for the
-abstract concept above. The devil is in the implementation details. ^.-
+Fine with me then.
 
-> Is it possible that combine the LoRaWAN class module I implemented?
+> >
+> >> + - bus-width: recognized values are <12>, <16>, <18> and <24>, and
+> >> +   override any output mode selection heuristic, forcing "rgb444",
+> >> +   "rgb565", "rgb666" and "rgb888" respectively.
+> >> +
+> >>  Example:
+> >>
+> >>  	hlcdc: hlcdc@f0030000 {
+> >> @@ -50,3 +58,21 @@ Example:
+> >>  			#pwm-cells = <3>;
+> >>  		};
+> >>  	};
+> >> +
+> >
+> > Two blank lines here.
+> >
+> >> +
+> >> +Example 2: With a video interface override to force rgb565; as above
+> >> +but with these changes/additions:
+> >> +
+> >> +	&hlcdc {
+> >> +		hlcdc-display-controller {
+> >> +			pinctrl-names = "default";
+> >> +			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
+> >> +
+> >> +			port@0 {
+> >
+> > The node has a unit address specified, you're missing a reg = <0>
+> > property (no big deal, it's an example, but the other one has it)
+> >
+> >> +				hlcdc_panel_output: endpoint@0 {
+> >
+> > Missing reg here too.
+>
+> I'll fix those (I think they appeared for the original example after I
+> wrote the patch).
+>
 
-Yes, as stated in this cover letter, I would love if you could help
-merge your LoRaWAN implementation with my driver framework. Comparing
-802.15.4 and 802.11, I think MAC code should go into net/maclorawan/ and
-then is a fairly independent module, with you as maintainer.
+Ok, then please consider also describing the port@0 node cell sizes too
+since it has a child endpoint node.
 
-> I start from the simplest class A end device's behavior, especially
-> the timing slot.
-> Also the encryption/decryption for uplink/downlink data messages.
-> I can send it as patches.
-> 
-> However, I have 2 problems right now.
-> 1. Which Address and Protocol Family should we use?  PF_LORA or PF_LORAWAN?
+Cheers
+  j
 
-That was one of the questions I raised above. I now think we need both.
-I'm not yet too deep into LoRaWAN, but from the AT command interfaces
-I've seen there's confirmed and unconfirmed transmission modes that with
-PF_LORAWAN might be mapped to SOCK_STREAM and SOCK_DGRAM. Or do you see
-a way of doing both on a single PF_LORA SOCK_LORAWAN socket?
+> Cheers,
+> Peter
+>
+> > Minors apart:
+> >
+> > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >
+> > Thanks
+> >    j
+> >
+> >> +					bus-type = <0>;
+> >> +					bus-width = <16>;
+> >> +				};
+> >> +			};
+> >> +		};
+> >> +	};
+> >> --
+> >> 2.11.0
+> >>
+>
 
-> 2. To test the LoRaWAN class module, adding more procedures in LoRa
-> device drivers to register as a LoRaWAN device is needed.
+--uh9ZiVrAOUUm9fzH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-No, I don't think so. There are (at least) two types of devices, LoRaWAN
-and LoRa devices. The SX1276 is a pure LoRa device and thus should only
-expose a LoRa network device. It'll be the task of the maclorawan module
-to translate between the two layers, not the business of the device
-driver; SX1276 should receive a ready-to-send LoRa skb. For Ethernet,
-PF_INET and PF_INET6 don't need separate devices either, both use eth0.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-What I do think we need is your struct lora_hw, maybe renamed to
-lora_phy. That could be the missing piece for registration of the device
-drivers with nllora module?
-Note that similarly we'll also need an nllorawan module that needs to
-work both with your maclorawan and with some of my device drivers that
-implement the MAC in an MCU.
+iQIcBAEBAgAGBQJbZBefAAoJEHI0Bo8WoVY8YEAQAK4/Xl3bZx+rmnDsc8c5zudH
+dsY4OmeO985t/cxZH1P6brYKThwYqMZ70/Xr7GYmhn2v0N6GcjXwOh6k4+rmLMrn
+lT8OXuaO6DbqTmdQAosnZcdbie9YdpDwnc2xRGZw1jZth+OMw3D7Ue5BiAcGX7lV
+XNQ8DFufd5rrfWzHVNV5mTbfPx3WA/H8J68B5BFNW+rCzcxSw8Ez2eiPwkc/XOL/
+rn7k/jKvzbwDqahyVO7UfQkUrqxM5Uaa/SRMT2Cl4NSiUM6QIVRMJ3nfBwSo6JMw
+9nL7EUhLS1AXeGRaiiMssb7I6+SvRISVjwTJhF+D/6CIBTPDIdDrNaxGEY4oYOT/
+BRYNhynIks6LDV6UR+SiQ5VjYSbZvvDIvJoUr7es4gEMwDGn5aHUdACGnfFuVEEm
+urh0IVGpoPtOi3IOCk9C17hCuzuXoBd1n+yN2q07uqx5DTYNnvJMoZKULHDhLC4U
+vzNDiqbWbackuY5LBFEu3wuCtXuagtQkhGF6Kn24d+419c/5K+fbEDD7Qq/z67ma
+43SUy2w6XvqRM5sMjs+E7rFQK60W92XuHIv4DP7s+meuJe14Km6BHnSZNi6QsOMn
+7oIGhSujoBY8vYrV+MoKhrg2UccH2DMxTl6RCa5xoeMkGb5GrB4YMlpe4boRM3af
+f68v4sPv0G9bTYxiXr8R
+=wH5T
+-----END PGP SIGNATURE-----
 
-Additionally I've been looking into socket options at PF_LORA dgram
-layer for some radio options, but discarded that again for lack of
-precedence. Basically I wondered whether we could allow to choose SF,
-bandwidth, etc. on socket level and then apply those settings before
-sending one packet rather than expecting a global netlink operation that
-affects all sockets for that interface.
+--uh9ZiVrAOUUm9fzH--
 
-Regards,
-Andreas
+--===============1275557568==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1275557568==--
