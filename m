@@ -1,29 +1,44 @@
-From: "Wu, Songjun" <songjun.wu@linux.intel.com>
-Subject: Re: [PATCH v2 15/18] serial: intel: Support more platform
-Date: Fri, 3 Aug 2018 15:21:45 +0800
-Message-ID: <2bd3f808-ed93-ac2c-a802-957a88129e67@linux.intel.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-16-songjun.wu@linux.intel.com>
- <20180803055709.GB32226@kroah.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [RESEND PATCH v5 1/3] dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
+Date: Fri,  3 Aug 2018 09:23:06 +0200
+Message-ID: <20180803072308.14962-2-peda@axentia.se>
+References: <20180803072308.14962-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803055709.GB32226@kroah.com>
-Content-Language: en-US
+In-Reply-To: <20180803072308.14962-1-peda@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>
 List-Id: devicetree@vger.kernel.org
 
+Start list of actual chips compatible with "lvds-encoder".
 
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ .../devicetree/bindings/display/bridge/lvds-transmitter.txt       | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-On 8/3/2018 1:57 PM, Greg Kroah-Hartman wrote:
-> On Fri, Aug 03, 2018 at 11:02:34AM +0800, Songjun Wu wrote:
->> Support more platform.
->>
->> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
->> ---
-> Your changelog text makes no sense, sorry.
-Thanks for your comment.
-I will describe it more clearly.
+diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+index fd39ad34c383..50220190c203 100644
+--- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
++++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+@@ -22,7 +22,13 @@ among others.
+ 
+ Required properties:
+ 
+-- compatible: Must be "lvds-encoder"
++- compatible: Must be one or more of the following
++  - "ti,ds90c185" for the TI DS90C185 FPD-Link Serializer
++  - "lvds-encoder" for a generic LVDS encoder device
++
++  When compatible with the generic version, nodes must list the
++  device-specific version corresponding to the device first
++  followed by the generic version.
+ 
+ Required nodes:
+ 
+-- 
+2.11.0
