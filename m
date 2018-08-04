@@ -1,41 +1,47 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 0/2] ARM: dts: add Raspberry Pi Compute Module 3 and IO board
-Date: Sat,  4 Aug 2018 13:10:01 +0200
-Message-ID: <1533381003-13367-1-git-send-email-stefan.wahren@i2se.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v7 0/3] drm/atmel-hlcdc: bus-width override support
+Date: Sat,  4 Aug 2018 13:14:36 +0200
+Message-ID: <20180804111439.7455-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-This patch series add support for Rasberry Pi Compute Module 3 and
-Compute Module 3 Lite.
+Hi!
 
-Stefan Wahren (2):
-  dt-bindings: bcm: Add Raspberry Pi CM3 and CM3L
-  ARM: dts: add Raspberry Pi Compute Module 3 and IO board
+The background for these patches is that our PCB interface between
+the SAMA5D3 and the ds90c185 lvds encoder is only using 16 bits, and
+this has to be described somewhere, or the atmel-hlcdc driver have no
+chance of selecting the correct output mode. Since we have similar
+problems with a tda19988 HDMI encoder I added patches to override
+the atmel-hlcdc output format via DT properties compatible with the
+media video-interface binding and things start to play together.
 
- .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |  8 ++
- arch/arm/boot/dts/Makefile                         |  1 +
- arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts          | 87 ++++++++++++++++++++++
- arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi             | 52 +++++++++++++
- arch/arm64/boot/dts/broadcom/Makefile              |  3 +-
- .../boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts      |  2 +
- 6 files changed, 152 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
- create mode 100644 arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi
- create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+Cheers,
+Peter
+
+Changes since v6  https://lkml.org/lkml/2018/8/3/333
+- zap bus-type from the binding in patch 2/3
+
+Changes since (the shortened) v5  https://lkml.org/lkml/2018/8/3/182
+- add reg properties (and #*-cells) to the example in patch 2/3
+- prohibit bus-width 0 in the device-tree in patch 3/3
+- added reviewed-by from Jacopo to patch 2/3 and 3/3
+
+Peter Rosin (3):
+  dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
+  dt-bindings: display: atmel: optional video-interface of endpoints
+  drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
+
+ .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 28 +++++++++
+ .../bindings/display/bridge/lvds-transmitter.txt   |  8 ++-
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     | 70 +++++++++++++++-------
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |  1 +
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   | 70 +++++++++++++++++++---
+ 5 files changed, 149 insertions(+), 28 deletions(-)
 
 -- 
-2.7.4
+2.11.0
