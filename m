@@ -1,43 +1,19 @@
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v4 4/4] arm64: zynqmp: Add DDRC node
-Date: Sat, 4 Aug 2018 14:55:35 +0530
-Message-ID: <1533374735-16662-5-git-send-email-manish.narani@xilinx.com>
-References: <1533374735-16662-1-git-send-email-manish.narani@xilinx.com>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 09/11] RISC-V: Support per-hart timebase-frequency
+Date: Sat, 4 Aug 2018 11:58:51 +0200
+Message-ID: <20180804095851.GA12794@lst.de>
+References: <20180802115008.4031-1-hch@lst.de> <20180802115008.4031-10-hch@lst.de> <fef973e1-6efc-0eff-2789-4a4b5b01900b@wdc.com> <20180803123357.GC18301@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533374735-16662-1-git-send-email-manish.narani@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <20180803123357.GC18301@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, mdf@kernel.org, edgar.iglesias@xilinx.com, shubhrajyoti.datta@xilinx.com, naga.sureshkumar.relli@xilinx.com, bharat.kumar.gogada@xilinx.com, stefan.krsmanovic@aggios.com
-Cc: sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Manish Narani <manish.narani@xilinx.com>
+To: Atish Patra <atish.patra@wdc.com>
+Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "palmer@sifive.com" <palmer@sifive.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "anup@brainfault.org" <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds ddrc memory controller node in dts. The size mentioned
-in dts is 0x30000, because we need to access DDR_QOS INTR registers
-located at fd090208 from this driver.
-
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index a091e6f..7d6a3cf 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -355,6 +355,13 @@
- 			xlnx,bus-width = <64>;
- 		};
- 
-+		mc: memory-controller@fd070000 {
-+			compatible = "xlnx,zynqmp-ddrc-2.40a";
-+			reg = <0x0 0xfd070000 0x0 0x30000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0 112 4>;
-+		};
-+
- 		gem0: ethernet@ff0b0000 {
- 			compatible = "cdns,zynqmp-gem", "cdns,gem";
- 			status = "disabled";
--- 
-2.1.1
+Actually I had a slight change of heart: I'm going to drop both
+timebase frequence patches and the enable method documentation one
+from this series as they aren't strictly required to get a booting
+qemu kernel.
