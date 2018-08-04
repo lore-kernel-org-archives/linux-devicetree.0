@@ -1,7 +1,7 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 3/8] RISC-V: remove INTERRUPT_CAUSE_* defines from asm/irq.h
-Date: Sat,  4 Aug 2018 10:23:14 +0200
-Message-ID: <20180804082319.5711-4-hch@lst.de>
+Subject: [PATCH 4/8] RISC-V: add a definition for the SIE SEIE bit
+Date: Sat,  4 Aug 2018 10:23:15 +0200
+Message-ID: <20180804082319.5711-5-hch@lst.de>
 References: <20180804082319.5711-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,28 +21,25 @@ To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@ar
 Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-These are only of use to the local irq controller driver, so add them in
-that driver implementation instead, which will be submitted soon.
+This mirrors the SIE_SSIE and SETE bits that are used in a similar
+fashion.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/include/asm/irq.h | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/riscv/include/asm/csr.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
-index c871661c9df4..996b6fbe17a6 100644
---- a/arch/riscv/include/asm/irq.h
-+++ b/arch/riscv/include/asm/irq.h
-@@ -17,10 +17,6 @@
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index 421fa3585798..28a0d1cb374c 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -54,6 +54,7 @@
+ /* Interrupt Enable and Interrupt Pending flags */
+ #define SIE_SSIE _AC(0x00000002, UL) /* Software Interrupt Enable */
+ #define SIE_STIE _AC(0x00000020, UL) /* Timer Interrupt Enable */
++#define SIE_SEIE _AC(0x00000200, UL) /* External Interrupt Enable */
  
- #define NR_IRQS         0
- 
--#define INTERRUPT_CAUSE_SOFTWARE    1
--#define INTERRUPT_CAUSE_TIMER       5
--#define INTERRUPT_CAUSE_EXTERNAL    9
--
- void riscv_timer_interrupt(void);
- void riscv_software_interrupt(void);
- 
+ #define EXC_INST_MISALIGNED     0
+ #define EXC_INST_ACCESS         1
 -- 
 2.18.0
