@@ -1,88 +1,97 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
-Date: Sat, 4 Aug 2018 07:33:58 +0200
-Message-ID: <20180804073358.7c5cf3a0@bbrezillon>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
-        <20180719152930.3715-2-boris.brezillon@bootlin.com>
-        <023901d42b72$5bc329d0$13497d70$@codeaurora.org>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH v3 1/4] edac: synps: Add platform specific structures for
+ ddrc controller
+Date: Sat, 4 Aug 2018 06:09:43 +0000
+Message-ID: <SN6PR02MB4959EC485CE2A59827C56D45C1220@SN6PR02MB4959.namprd02.prod.outlook.com>
+References: <1533214282-9977-1-git-send-email-manish.narani@xilinx.com>
+ <1533214282-9977-2-git-send-email-manish.narani@xilinx.com>
+ <20180804051857.GA3843@nazgul.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <023901d42b72$5bc329d0$13497d70$@codeaurora.org>
+In-Reply-To: <20180804051857.GA3843@nazgul.tnic>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: mshettel@codeaurora.org
-Cc: 'Wolfram Sang' <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, 'Jonathan Corbet' <corbet@lwn.net>, linux-doc@vger.kernel.org, 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Przemyslaw Sroka' <psroka@cadence.com>, 'Arkadiusz Golec' <agolec@cadence.com>, 'Alan Douglas' <adouglas@cadence.com>, 'Bartosz Folta' <bfolta@cadence.com>, 'Damian Kos' <dkos@cadence.com>, 'Alicja Jurasik-Urbaniak' <alicja@cadence.com>, 'Cyprian Wronka' <cwronka@cadence.com>, 'Suresh Punnoose' <sureshp@cadence.com>, 'Rafal Ciepiela' <rafalc@cadence.com>, 'Thomas Petazzoni' <thomas.petazzoni@bootlin.com>, 'Nishanth Menon' <nm@ti.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, Edgar Iglesias <edgari@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, Naga Sureshkumar Relli <nagasure@xilinx.com>, Bharat Kumar Gogada <bharatku@xilinx.com>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, Srinivas Goud <sgoud@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
-
-On Fri, 3 Aug 2018 15:38:43 -0600
-<mshettel@codeaurora.org> wrote:
-
-> > +static void
-> > +i3c_master_register_new_i3c_devs(struct i3c_master_controller *master)
-> > +{
-> > +	struct i3c_dev_desc *desc;
-> > +	int ret;
-> > +
-> > +	if (!master->init_done)
-> > +		return;
-> > +
-> > +	i3c_bus_for_each_i3cdev(master->bus, desc) {
-> > +		if (desc->dev || !desc->info.dyn_addr)
-> > +			continue;
-> > +
-> > +		desc->dev = kzalloc(sizeof(*desc->dev), GFP_KERNEL);
-> > +		if (!desc->dev)
-> > +			continue;
-> > +
-> > +		desc->dev->bus = master->bus;
-> > +		desc->dev->desc = desc;
-> > +		desc->dev->dev.parent = &master->bus->dev;
-> > +		if (desc == master->this)
-> > +			desc->dev->dev.type = &i3c_master_type;
-> > +		else
-> > +			desc->dev->dev.type = &i3c_device_type;
-> > +		desc->dev->dev.bus = &i3c_bus_type;
-> > +		desc->dev->dev.release = i3c_device_release;
-> > +		dev_set_name(&desc->dev->dev, "%d-%llx", master->bus-  
-> > >id,  
-> > +			     desc->info.pid);
-> > +
-> > +		if (desc->boardinfo)
-> > +			desc->dev->dev.of_node = desc->boardinfo-  
-> > >of_node;  
-> > +
-> > +		pr_info("%s:%i\n", __func__, __LINE__);
-> > +		if (ret)
-> > +			dev_err(master->parent,
-> > +				"Failed to add I3C device (err = %d)\n",  
-> ret);
-> > +	}
-> > +}  
-> 
-> The compiler gives a warning that "ret" may be used uninitialized in the
-> above function, which is true since "ret" is never assigned a value.  Also,
-> I wonder about the "pr_info" call here, should there be a more detailed
-> message here about the device being registered, other than the file name and
-> line number?
-
-Yes, kbuild already reported that problem. I messed up when selecting
-the lines to add to my commit and added this trace instead of
-
-		ret = device_register(&desc->dev->dev);
-
-Will be fixed in v7.
-
-> 
-> Otherwise, I have gone through the code in the process of writing the first
-> iteration of the Qualcomm I3C master driver, and overall the framework looks
-> good.  Will update with any additional feedback I have.
-
-Thanks for looking at the framework code. Your driver is in my TODO
-list.
-
-Regards,
-
-Boris
+SGkgQm9yaXMsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jp
+c2xhdiBQZXRrb3YgW21haWx0bzpicEBhbGllbjguZGVdDQo+IFNlbnQ6IFNhdHVyZGF5LCBBdWd1
+c3QgNCwgMjAxOCAxMDo0OSBBTQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvNF0gZWRhYzog
+c3lucHM6IEFkZCBwbGF0Zm9ybSBzcGVjaWZpYyBzdHJ1Y3R1cmVzIGZvcg0KPiBkZHJjIGNvbnRy
+b2xsZXINCj4gDQo+IE9uIFRodSwgQXVnIDAyLCAyMDE4IGF0IDA2OjIxOjE5UE0gKzA1MzAsIE1h
+bmlzaCBOYXJhbmkgd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIHBsYXRmb3JtIHNwZWNpZmlj
+IHN0cnVjdHVyZXMsIHNvIHRoYXQgd2UgY2FuIGFkZA0KPiANCj4gIlRoaXMgcGF0Y2giIGluIGEg
+Y29tbWl0IG1lc3NhZ2UgaXMgdGF1dG9sb2dpY2FsbHkgcmVkdW5kYW50Lg0KT2theS4gSSB3aWxs
+IHVwZGF0ZSB0aGlzIGluIHY0Lg0KDQo+IA0KPiA+IGRpZmZlcmVudCBJUCBzdXBwb3J0IGxhdGVy
+IHVzaW5nIHF1aXJrcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hbmlzaCBOYXJhbmkgPG1h
+bmlzaC5uYXJhbmlAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9lZGFjL3N5bm9w
+c3lzX2VkYWMuYyB8IDY0DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+LS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKyksIDExIGRlbGV0
+aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFj
+LmMNCj4gPiBiL2RyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMgaW5kZXggMGM5YzU5ZS4uZDQ3
+OThlOCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2VkYWMvc3lub3BzeXNfZWRhYy5jDQo+ID4g
+KysrIGIvZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYw0KPiA+IEBAIC0yMiw2ICsyMiw3IEBA
+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9lZGFjLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1
+bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICsjaW5j
+bHVkZSA8bGludXgvb2YuaD4NCj4gPg0KPiA+ICAjaW5jbHVkZSAiZWRhY19tb2R1bGUuaCINCj4g
+Pg0KPiA+IEBAIC0xMzAsNiArMTMxLDcgQEAgc3RydWN0IHN5bnBzX2VjY19zdGF0dXMgew0KPiA+
+ICAgKiBAYmFzZWFkZHI6CUJhc2UgYWRkcmVzcyBvZiB0aGUgRERSIGNvbnRyb2xsZXINCj4gPiAg
+ICogQG1lc3NhZ2U6CUJ1ZmZlciBmb3IgZnJhbWluZyB0aGUgZXZlbnQgc3BlY2lmaWMgaW5mbw0K
+PiA+ICAgKiBAc3RhdDoJRUNDIHN0YXR1cyBpbmZvcm1hdGlvbg0KPiA+ICsgKiBAcF9kYXRhOglQ
+b2ludGVyIHRvIHBsYXRmb3JtIGRhdGENCj4gPiAgICogQGNlX2NudDoJQ29ycmVjdGFibGUgRXJy
+b3IgY291bnQNCj4gPiAgICogQHVlX2NudDoJVW5jb3JyZWN0YWJsZSBFcnJvciBjb3VudA0KPiA+
+ICAgKi8NCj4gPiBAQCAtMTM3LDExICsxMzksMjkgQEAgc3RydWN0IHN5bnBzX2VkYWNfcHJpdiB7
+DQo+ID4gIAl2b2lkIF9faW9tZW0gKmJhc2VhZGRyOw0KPiA+ICAJY2hhciBtZXNzYWdlW1NZTlBT
+X0VEQUNfTVNHX1NJWkVdOw0KPiA+ICAJc3RydWN0IHN5bnBzX2VjY19zdGF0dXMgc3RhdDsNCj4g
+PiArCWNvbnN0IHN0cnVjdCBzeW5wc19wbGF0Zm9ybV9kYXRhICpwX2RhdGE7DQo+ID4gIAl1MzIg
+Y2VfY250Ow0KPiA+ICAJdTMyIHVlX2NudDsNCj4gPiAgfTsNCj4gPg0KPiA+ICAvKioNCj4gPiAr
+ICogc3RydWN0IHN5bnBzX3BsYXRmb3JtX2RhdGEgLSAgc3lucHMgcGxhdGZvcm0gZGF0YSBzdHJ1
+Y3R1cmUNCj4gPiArICogQHN5bnBzX2VkYWNfZ2V0ZXJyb3JfaW5mbzoJZnVuY3Rpb24gcG9pbnRl
+ciB0byBzeW5wcyBlZGFjIGVycm9yDQo+IGluZm8NCj4gPiArICogQHN5bnBzX2VkYWNfZ2V0X210
+eXBlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBzIGVkYWMgbXR5cGUNCj4gPiArICogQHN5bnBz
+X2VkYWNfZ2V0X2R0eXBlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBzIGVkYWMgZHR5cGUNCj4g
+PiArICogQHN5bnBzX2VkYWNfZ2V0X2VjY3N0YXRlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBz
+IGVkYWMgZWNjc3RhdGUNCj4gPiArICogQHF1aXJrczoJCQl0byBkaWZmZXJlbnRpYXRlIElQcw0K
+PiA+ICsgKi8NCj4gPiArc3RydWN0IHN5bnBzX3BsYXRmb3JtX2RhdGEgew0KPiA+ICsJaW50ICgq
+c3lucHNfZWRhY19nZXRlcnJvcl9pbmZvKSh2b2lkIF9faW9tZW0gKmJhc2UsDQo+ID4gKwkJCQkJ
+c3RydWN0IHN5bnBzX2VjY19zdGF0dXMgKnApOw0KPiA+ICsJZW51bSBtZW1fdHlwZSAoKnN5bnBz
+X2VkYWNfZ2V0X210eXBlKShjb25zdCB2b2lkIF9faW9tZW0NCj4gKmJhc2UpOw0KPiA+ICsJZW51
+bSBkZXZfdHlwZSAoKnN5bnBzX2VkYWNfZ2V0X2R0eXBlKShjb25zdCB2b2lkIF9faW9tZW0gKmJh
+c2UpOw0KPiA+ICsJYm9vbCAoKnN5bnBzX2VkYWNfZ2V0X2VjY3N0YXRlKSh2b2lkIF9faW9tZW0g
+KmJhc2UpOw0KPiA+ICsJaW50IHF1aXJrczsNCj4gPiArfTsNCj4gPiArDQo+ID4gKy8qKg0KPiA+
+ICAgKiBzeW5wc19lZGFjX2dldGVycm9yX2luZm8gLSBHZXQgdGhlIGN1cnJlbnQgZWNjIGVycm9y
+IGluZm8NCj4gPiAgICogQGJhc2U6CVBvaW50ZXIgdG8gdGhlIGJhc2UgYWRkcmVzcyBvZiB0aGUg
+ZGRyIG1lbW9yeSBjb250cm9sbGVyDQo+ID4gICAqIEBwOgkJUG9pbnRlciB0byB0aGUgc3lub3Bz
+eXMgZWNjIHN0YXR1cyBzdHJ1Y3R1cmUNCj4gPiBAQCAtMjQyLDcgKzI2Miw4IEBAIHN0YXRpYyB2
+b2lkIHN5bnBzX2VkYWNfY2hlY2soc3RydWN0IG1lbV9jdGxfaW5mbw0KPiAqbWNpKQ0KPiA+ICAJ
+c3RydWN0IHN5bnBzX2VkYWNfcHJpdiAqcHJpdiA9IG1jaS0+cHZ0X2luZm87DQo+ID4gIAlpbnQg
+c3RhdHVzOw0KPiA+DQo+ID4gLQlzdGF0dXMgPSBzeW5wc19lZGFjX2dldGVycm9yX2luZm8ocHJp
+di0+YmFzZWFkZHIsICZwcml2LT5zdGF0KTsNCj4gPiArCXN0YXR1cyA9IHByaXYtPnBfZGF0YS0+
+c3lucHNfZWRhY19nZXRlcnJvcl9pbmZvKHByaXYtPmJhc2VhZGRyLA0KPiA+ICsJCQkJCQkJJnBy
+aXYtPnN0YXQpOw0KPiANCj4gVW5uZWNlc3NhcmlseSBsb25nIGxpbmUgLSBzaG9ydGVuaW5nIGJ5
+IHJlbmFtaW5nIG1pZ2h0IGhlbHAuDQpGYWlyIE9uZS4gSSB3aWxsIGxvb2sgdG8gY2hhbmdlIHRo
+ZSBuYW1lLiBBbHNvLCBNYXkgYmUgSSBjb3VsZCB1c2Ugb25seSAncHJpdicgYXMgYXJndW1lbnQg
+YW5kIGV4dHJhY3QvdXNlICdiYXNlYWRkcicgYW5kICdzdGF0JyBpbiB0aGUgZnVuY3Rpb24gZGVm
+aW5pdGlvbiBpdHNlbGYuDQoNCj4gDQo+ID4gQEAgLTM3MiwxMCArMzkzLDEyIEBAIHN0YXRpYyBp
+bnQgc3lucHNfZWRhY19pbml0X2Nzcm93cyhzdHJ1Y3QNCj4gbWVtX2N0bF9pbmZvICptY2kpDQo+
+ID4gIAkJZm9yIChqID0gMDsgaiA8IGNzaS0+bnJfY2hhbm5lbHM7IGorKykgew0KPiA+ICAJCQlk
+aW1tICAgICAgICAgICAgPSBjc2ktPmNoYW5uZWxzW2pdLT5kaW1tOw0KPiA+ICAJCQlkaW1tLT5l
+ZGFjX21vZGUgPSBFREFDX0ZMQUdfU0VDREVEOw0KPiA+IC0JCQlkaW1tLT5tdHlwZSAgICAgPSBz
+eW5wc19lZGFjX2dldF9tdHlwZShwcml2LQ0KPiA+YmFzZWFkZHIpOw0KPiA+ICsJCQlkaW1tLT5t
+dHlwZSAgICAgPSBwcml2LT5wX2RhdGEtDQo+ID5zeW5wc19lZGFjX2dldF9tdHlwZSgNCj4gPiAr
+CQkJCQkJcHJpdi0+YmFzZWFkZHIpOw0KPiANCj4gRGl0dG8gLSB0aGF0IHRyYWlsaW5nIG9wZW5p
+bmcgYnJhY2UgYXQgdGhlIGVuZCBpcyBqdXN0IHl1Y2t5LiBTaG9ydGVuIGl0IGFuZCBsZXQgaXMN
+Cj4gc3RpY2sgb3V0IGV2ZW4gaWYgaXQgbG9uZ2VyIHRoYW4gODAgY29scy4NCk9rYXkuIFdpbGwg
+bW9kaWZ5IGl0Lg0KDQo+IA0KPiA+DQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3lucHNfcGxh
+dGZvcm1fZGF0YSB6eW5xX2VkYWNfZGVmID0gew0KPiA+ICsJLnN5bnBzX2VkYWNfZ2V0ZXJyb3Jf
+aW5mbwk9IHN5bnBzX2VkYWNfZ2V0ZXJyb3JfaW5mbywNCj4gPiArCS5zeW5wc19lZGFjX2dldF9t
+dHlwZQkJPSBzeW5wc19lZGFjX2dldF9tdHlwZSwNCj4gPiArCS5zeW5wc19lZGFjX2dldF9kdHlw
+ZQkJPSBzeW5wc19lZGFjX2dldF9kdHlwZSwNCj4gPiArCS5zeW5wc19lZGFjX2dldF9lY2NzdGF0
+ZQk9IHN5bnBzX2VkYWNfZ2V0X2VjY3N0YXRlLA0KPiA+ICsJLnF1aXJrcwkJCQk9IDAsDQo+IA0K
+PiBEcm9wIHRoZSAic3lucHNfIiBwcmVmaXggZnJvbSB0aGUgZnVuY3Rpb24gcG9pbnRlciBuYW1l
+cyBhbmQgbGVhdmUgdGhlbSBpbg0KPiB0aGUgYWN0dWFsIGZ1bmN0aW9uIG5hbWVzIHNvIHRoYXQg
+d2hlbiBvbmUgbG9va3MgYXQgdGhlIGNvZGUsIGtub3dzIHdoYXQgaXMNCj4gd2hhdC4NCk9rYXku
+IEkgd2lsbCBjb3JyZWN0IGl0IGluIHY0Lg0KDQpUaGFua3MsDQpNYW5pc2ggTmFyYW5pDQo=
