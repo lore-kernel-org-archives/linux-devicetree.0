@@ -1,39 +1,76 @@
-From: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Subject: Re: [PATCH 3/4] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
-Date: Sat, 4 Aug 2018 22:02:46 +0200
-Message-ID: <CAHStOZ5VaOiOQhi7vG0Q9R7gF+LHvZim1qsEUJanZkFoXqgwDA@mail.gmail.com>
-References: <20180801185128.23440-1-maxi.jourdan@wanadoo.fr>
- <20180801185128.23440-4-maxi.jourdan@wanadoo.fr>
- <CALecT5hgk+Wuh4-UWY29NNoEz-47Fx3pSjve8raCd3hRMzXE5w@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 1/3] iio: adc: add support for mcp3911
+Date: Sat, 4 Aug 2018 23:56:17 +0300
+Message-ID: <CAHp75VeDy=9o84K-PnASOMNXrNc9B1v9azWkx-wb4uLcomj_Vw@mail.gmail.com>
+References: <20180802191554.20176-1-marcus.folkesson@gmail.com>
+ <CAHp75Vf8kMLsoFN_EK150yW_FvH8XfgjiETYAtvW63et5NNurw@mail.gmail.com>
+ <20180803230922.22d628fc@archlinux> <20180804065506.GB1727@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CALecT5hgk+Wuh4-UWY29NNoEz-47Fx3pSjve8raCd3hRMzXE5w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yixun Lan <yixun.lan@gmail.com>
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Maxime Jourdan <maxi.jourdan@wanadoo.fr>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180804065506.GB1727@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Kent Gustavsson <kent@minoris.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio <linux-iio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
->> +                       sysctrl_DMC: system-controller@0 {
->> +                               compatible = "amlogic,meson-gx-dmc-sysctrl", "syscon", "simple-mfd";
->
-> we'd like to drop 'meson-' prefix, so better using "amlogic,gx-dmc-sysctrl",
-> please take a look at the discussion here [1]
->
-> [1] https://lkml.kernel.org/r/7hk1prmg4w.fsf@baylibre.com
->
+On Sat, Aug 4, 2018 at 9:55 AM, Marcus Folkesson
+<marcus.folkesson@gmail.com> wrote:
+> On Fri, Aug 03, 2018 at 11:09:22PM +0100, Jonathan Cameron wrote:
+>> On Thu, 2 Aug 2018 22:52:00 +0300
+>> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>>
+>> > On Thu, Aug 2, 2018 at 10:15 PM, Marcus Folkesson
+>> > <marcus.folkesson@gmail.com> wrote:
+>> > > MCP3911 is a dual channel Analog Front End (AFE) containing two
+>> > > synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
+>> > >
+>> > > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+>> >
+>> > > Signed-off-by: Kent Gustavsson <kent@minoris.se>
+>> >
+>> > What is this? Why it's here (presense and location in the message)?
+>> To clarify... If Kent wrote the patch and you are simply acting
+>> as gatekeeper / upstreamer you should set the mail to be from Kent
+>> and put your own Signed-off after his to basically act as a submaintainer
+>> certifying you believe his sign off and all that entails.
 
-On that subject, should I remove the meson keyword from dts only, or
-from everything ?
+Yep. And here the ordering is incorrect, right?
 
-e.g use amlogic_canvas_* symbols instead of meson_canvas_*, name the
-source file "amlogic-canvas.c", etc. ?
+>> If it is a bit of a joint effort then that's fine but for copyright
+>> purposes there should be some indication of the split.
+>
+> First, thank you Andy for noticing.
+>
+> I actually intended to use Co-Developed-by (a pretty new tag)
+> in combination with Signed-off-by.
+> But the tag must have disappeared in some preparation stage..
+>
+> From Documentation/process/submitting-patches.rst ::
+>
+>         A Co-Developed-by: states that the patch was also created by another developer
+>         along with the original author.  This is useful at times when multiple people
+>         work on a single patch.  Note, this person also needs to have a Signed-off-by:
+>         line in the patch as well.
+>
+> I will switch order and add the Co-Developed-by-tag.
+> Is this correct?
+>
+> Co-Developed-by: Kent Gustavsson <kent@minoris.se>
+> Signed-off-by: Kent Gustavsson <kent@minoris.se>
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+
+Yep, this looks good!
+
+>> > > +       of_property_read_u32(of_node, "device-addr", &adc->dev_addr);
+
+>> > Isn't what we called CS (chip select)?
+>> Nope. We went around this in an earlier revision. It's an address transmitted
+>> in the control byte to allow you to 'share' a chip select line between multiple
+>> chips (crazy but true).
+
+OK.
+
+-- 
+With Best Regards,
+Andy Shevchenko
