@@ -1,7 +1,8 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5/8] RISC-V: implement low-level interrupt handling
-Date: Sat,  4 Aug 2018 10:23:16 +0200
-Message-ID: <20180804082319.5711-6-hch@lst.de>
+Subject: [PATCH 6/8] dt-bindings: interrupt-controller: RISC-V PLIC
+ documentation
+Date: Sat,  4 Aug 2018 10:23:17 +0200
+Message-ID: <20180804082319.5711-7-hch@lst.de>
 References: <20180804082319.5711-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,104 +19,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
 Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
 Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
 To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, linux-riscv@lists.infradead.org, shorne@gmail.com
+Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for a routine that dispatches exceptions with the interrupt
-flags set to either the IPI or irqdomain code (and the clock source in the
-future).
+From: Palmer Dabbelt <palmer@dabbelt.com>
 
-Loosely based on the irq-riscv-int.c irqchip driver from the RISC-V tree.
+This patch adds documentation for the platform-level interrupt
+controller (PLIC) found in all RISC-V systems.  This interrupt
+controller routes interrupts from all the devices in the system to each
+hart-local interrupt controller.
 
+Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
+want to change how we're specifying holes in the hart list.
+
+Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+[hch: various fixes and updates]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/kernel/entry.S |  4 +--
- arch/riscv/kernel/irq.c   | 52 ++++++++++++++++++++++++++++++++-------
- 2 files changed, 45 insertions(+), 11 deletions(-)
+ .../interrupt-controller/sifive,plic0.txt     | 57 +++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
 
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 9aaf6c986771..fa2c08e3c05e 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -168,8 +168,8 @@ ENTRY(handle_exception)
- 
- 	/* Handle interrupts */
- 	move a0, sp /* pt_regs */
--	REG_L a1, handle_arch_irq
--	jr a1
-+	move a1, s4 /* scause */
-+	tail do_IRQ
- 1:
- 	/* Exceptions run with interrupts enabled */
- 	csrs sstatus, SR_SIE
-diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
-index 7bcdaed15703..ab5f3e22c7cc 100644
---- a/arch/riscv/kernel/irq.c
-+++ b/arch/riscv/kernel/irq.c
-@@ -1,21 +1,55 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2012 Regents of the University of California
-  * Copyright (C) 2017 SiFive
-- *
-- *   This program is free software; you can redistribute it and/or
-- *   modify it under the terms of the GNU General Public License
-- *   as published by the Free Software Foundation, version 2.
-- *
-- *   This program is distributed in the hope that it will be useful,
-- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *   GNU General Public License for more details.
-+ * Copyright (C) 2018 Christoph Hellwig
-  */
- 
- #include <linux/interrupt.h>
- #include <linux/irqchip.h>
- #include <linux/irqdomain.h>
- 
-+/*
-+ * Possible interrupt causes:
-+ */
-+#define INTERRUPT_CAUSE_SOFTWARE    1
-+#define INTERRUPT_CAUSE_TIMER       5
-+#define INTERRUPT_CAUSE_EXTERNAL    9
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+new file mode 100644
+index 000000000000..bbfa61cf8d3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+@@ -0,0 +1,57 @@
++SiFive Platform-Level Interrupt Controller (PLIC)
++-------------------------------------------------
 +
-+/*
-+ * The high order bit of the trap cause register is always set for
-+ * interrupts, which allows us to differentiate them from exceptions
-+ * quickly.  The INTERRUPT_CAUSE_* macros don't contain that bit, so we
-+ * need to mask it off.
-+ */
-+#define INTERRUPT_CAUSE_FLAG	(1UL << (__riscv_xlen - 1))
++SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
++(PLIC) high-level specification in the RISC-V Privileged Architecture
++specification.  The PLIC connects all external interrupts in the system to all
++hart contexts in the system, via the external interrupt source in each hart.
 +
-+asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
-+{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
++A hart context is a privilege mode in a hardware execution thread.  For example,
++in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
++privilege modes per hart; machine mode and supervisor mode.
 +
-+	irq_enter();
-+	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
-+#ifdef CONFIG_SMP
-+	case INTERRUPT_CAUSE_SOFTWARE:
-+		/*
-+		 * We only use software interrupts to pass IPIs, so if a non-SMP
-+		 * system gets one, then we don't know what to do.
-+		 */
-+		riscv_software_interrupt();
-+		break;
-+#endif
-+	case INTERRUPT_CAUSE_EXTERNAL:
-+		handle_arch_irq(regs);
-+		break;
-+	default:
-+		panic("unexpected interrupt cause");
-+	}
-+	irq_exit();
++Each interrupt can be enabled on per-context basis.  Any context can claim
++a pending enabled interrupt and then release it once it has been handled.
 +
-+	set_irq_regs(old_regs);
-+}
++Each interrupt has a configurable priority.  Higher priority interrupts are
++serviced first.  Each context can specify a priority threshold. Interrupts
++with priority below this threshold will not cause the PLIC to raise its
++interrupt line leading to the context.
 +
- void __init init_IRQ(void)
- {
- 	irqchip_init();
++While the PLIC supports both edge-triggered and level-triggered interrupts,
++interrupt handlers are oblivious to this distinction and therefore it is not
++specified in the PLIC device-tree binding.
++
++While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
++"sifive,plic0" device is a concrete implementation of the PLIC that contains a
++specific memory layout, which is documented in chapter 8 of the SiFive U5
++Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
++
++Required properties:
++- compatible : "sifive,plic0".
++- #address-cells : should be <0>.
++- #interrupt-cells : should be <1>.
++- interrupt-controller : Identifies the node as an interrupt controller.
++- reg : Should contain 1 register range (address and length).
++- interrupts-extended : Specifies which contexts are connected to the PLIC,
++  with "-1" specifying that a context is not present.  The nodes pointed
++  to should be "riscv" HART nodes, or eventually be parented by such nodes.
++- riscv,ndev: Specifies how many external interrupts are supported by
++  this controller.
++
++Example:
++
++	plic: interrupt-controller@c000000 {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		compatible = "riscv,plic0";
++		interrupt-controller;
++		interrupts-extended = <
++			&cpu0-intc 11
++			&cpu1-intc 11 &cpu1-intc 9
++			&cpu2-intc 11 &cpu2-intc 9
++			&cpu3-intc 11 &cpu3-intc 9
++			&cpu4-intc 11 &cpu4-intc 9>;
++		reg = <0xc000000 0x4000000>;
++		riscv,ndev = <10>;
++	};
 -- 
 2.18.0
