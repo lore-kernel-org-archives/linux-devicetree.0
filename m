@@ -1,97 +1,211 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v3 1/4] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Sat, 4 Aug 2018 06:09:43 +0000
-Message-ID: <SN6PR02MB4959EC485CE2A59827C56D45C1220@SN6PR02MB4959.namprd02.prod.outlook.com>
-References: <1533214282-9977-1-git-send-email-manish.narani@xilinx.com>
- <1533214282-9977-2-git-send-email-manish.narani@xilinx.com>
- <20180804051857.GA3843@nazgul.tnic>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH v3 1/3] iio: adc: add support for mcp3911
+Date: Sat, 4 Aug 2018 08:55:06 +0200
+Message-ID: <20180804065506.GB1727@gmail.com>
+References: <20180802191554.20176-1-marcus.folkesson@gmail.com>
+ <CAHp75Vf8kMLsoFN_EK150yW_FvH8XfgjiETYAtvW63et5NNurw@mail.gmail.com>
+ <20180803230922.22d628fc@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XvKFcGCOAo53UbWW"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180804051857.GA3843@nazgul.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180803230922.22d628fc@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, Edgar Iglesias <edgari@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, Naga Sureshkumar Relli <nagasure@xilinx.com>, Bharat Kumar Gogada <bharatku@xilinx.com>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, Srinivas Goud <sgoud@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Kent Gustavsson <kent@minoris.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio <linux-iio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jp
-c2xhdiBQZXRrb3YgW21haWx0bzpicEBhbGllbjguZGVdDQo+IFNlbnQ6IFNhdHVyZGF5LCBBdWd1
-c3QgNCwgMjAxOCAxMDo0OSBBTQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDEvNF0gZWRhYzog
-c3lucHM6IEFkZCBwbGF0Zm9ybSBzcGVjaWZpYyBzdHJ1Y3R1cmVzIGZvcg0KPiBkZHJjIGNvbnRy
-b2xsZXINCj4gDQo+IE9uIFRodSwgQXVnIDAyLCAyMDE4IGF0IDA2OjIxOjE5UE0gKzA1MzAsIE1h
-bmlzaCBOYXJhbmkgd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIHBsYXRmb3JtIHNwZWNpZmlj
-IHN0cnVjdHVyZXMsIHNvIHRoYXQgd2UgY2FuIGFkZA0KPiANCj4gIlRoaXMgcGF0Y2giIGluIGEg
-Y29tbWl0IG1lc3NhZ2UgaXMgdGF1dG9sb2dpY2FsbHkgcmVkdW5kYW50Lg0KT2theS4gSSB3aWxs
-IHVwZGF0ZSB0aGlzIGluIHY0Lg0KDQo+IA0KPiA+IGRpZmZlcmVudCBJUCBzdXBwb3J0IGxhdGVy
-IHVzaW5nIHF1aXJrcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hbmlzaCBOYXJhbmkgPG1h
-bmlzaC5uYXJhbmlAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9lZGFjL3N5bm9w
-c3lzX2VkYWMuYyB8IDY0DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKyksIDExIGRlbGV0
-aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFj
-LmMNCj4gPiBiL2RyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMgaW5kZXggMGM5YzU5ZS4uZDQ3
-OThlOCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2VkYWMvc3lub3BzeXNfZWRhYy5jDQo+ID4g
-KysrIGIvZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYw0KPiA+IEBAIC0yMiw2ICsyMiw3IEBA
-DQo+ID4gICNpbmNsdWRlIDxsaW51eC9lZGFjLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1
-bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICsjaW5j
-bHVkZSA8bGludXgvb2YuaD4NCj4gPg0KPiA+ICAjaW5jbHVkZSAiZWRhY19tb2R1bGUuaCINCj4g
-Pg0KPiA+IEBAIC0xMzAsNiArMTMxLDcgQEAgc3RydWN0IHN5bnBzX2VjY19zdGF0dXMgew0KPiA+
-ICAgKiBAYmFzZWFkZHI6CUJhc2UgYWRkcmVzcyBvZiB0aGUgRERSIGNvbnRyb2xsZXINCj4gPiAg
-ICogQG1lc3NhZ2U6CUJ1ZmZlciBmb3IgZnJhbWluZyB0aGUgZXZlbnQgc3BlY2lmaWMgaW5mbw0K
-PiA+ICAgKiBAc3RhdDoJRUNDIHN0YXR1cyBpbmZvcm1hdGlvbg0KPiA+ICsgKiBAcF9kYXRhOglQ
-b2ludGVyIHRvIHBsYXRmb3JtIGRhdGENCj4gPiAgICogQGNlX2NudDoJQ29ycmVjdGFibGUgRXJy
-b3IgY291bnQNCj4gPiAgICogQHVlX2NudDoJVW5jb3JyZWN0YWJsZSBFcnJvciBjb3VudA0KPiA+
-ICAgKi8NCj4gPiBAQCAtMTM3LDExICsxMzksMjkgQEAgc3RydWN0IHN5bnBzX2VkYWNfcHJpdiB7
-DQo+ID4gIAl2b2lkIF9faW9tZW0gKmJhc2VhZGRyOw0KPiA+ICAJY2hhciBtZXNzYWdlW1NZTlBT
-X0VEQUNfTVNHX1NJWkVdOw0KPiA+ICAJc3RydWN0IHN5bnBzX2VjY19zdGF0dXMgc3RhdDsNCj4g
-PiArCWNvbnN0IHN0cnVjdCBzeW5wc19wbGF0Zm9ybV9kYXRhICpwX2RhdGE7DQo+ID4gIAl1MzIg
-Y2VfY250Ow0KPiA+ICAJdTMyIHVlX2NudDsNCj4gPiAgfTsNCj4gPg0KPiA+ICAvKioNCj4gPiAr
-ICogc3RydWN0IHN5bnBzX3BsYXRmb3JtX2RhdGEgLSAgc3lucHMgcGxhdGZvcm0gZGF0YSBzdHJ1
-Y3R1cmUNCj4gPiArICogQHN5bnBzX2VkYWNfZ2V0ZXJyb3JfaW5mbzoJZnVuY3Rpb24gcG9pbnRl
-ciB0byBzeW5wcyBlZGFjIGVycm9yDQo+IGluZm8NCj4gPiArICogQHN5bnBzX2VkYWNfZ2V0X210
-eXBlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBzIGVkYWMgbXR5cGUNCj4gPiArICogQHN5bnBz
-X2VkYWNfZ2V0X2R0eXBlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBzIGVkYWMgZHR5cGUNCj4g
-PiArICogQHN5bnBzX2VkYWNfZ2V0X2VjY3N0YXRlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBz
-IGVkYWMgZWNjc3RhdGUNCj4gPiArICogQHF1aXJrczoJCQl0byBkaWZmZXJlbnRpYXRlIElQcw0K
-PiA+ICsgKi8NCj4gPiArc3RydWN0IHN5bnBzX3BsYXRmb3JtX2RhdGEgew0KPiA+ICsJaW50ICgq
-c3lucHNfZWRhY19nZXRlcnJvcl9pbmZvKSh2b2lkIF9faW9tZW0gKmJhc2UsDQo+ID4gKwkJCQkJ
-c3RydWN0IHN5bnBzX2VjY19zdGF0dXMgKnApOw0KPiA+ICsJZW51bSBtZW1fdHlwZSAoKnN5bnBz
-X2VkYWNfZ2V0X210eXBlKShjb25zdCB2b2lkIF9faW9tZW0NCj4gKmJhc2UpOw0KPiA+ICsJZW51
-bSBkZXZfdHlwZSAoKnN5bnBzX2VkYWNfZ2V0X2R0eXBlKShjb25zdCB2b2lkIF9faW9tZW0gKmJh
-c2UpOw0KPiA+ICsJYm9vbCAoKnN5bnBzX2VkYWNfZ2V0X2VjY3N0YXRlKSh2b2lkIF9faW9tZW0g
-KmJhc2UpOw0KPiA+ICsJaW50IHF1aXJrczsNCj4gPiArfTsNCj4gPiArDQo+ID4gKy8qKg0KPiA+
-ICAgKiBzeW5wc19lZGFjX2dldGVycm9yX2luZm8gLSBHZXQgdGhlIGN1cnJlbnQgZWNjIGVycm9y
-IGluZm8NCj4gPiAgICogQGJhc2U6CVBvaW50ZXIgdG8gdGhlIGJhc2UgYWRkcmVzcyBvZiB0aGUg
-ZGRyIG1lbW9yeSBjb250cm9sbGVyDQo+ID4gICAqIEBwOgkJUG9pbnRlciB0byB0aGUgc3lub3Bz
-eXMgZWNjIHN0YXR1cyBzdHJ1Y3R1cmUNCj4gPiBAQCAtMjQyLDcgKzI2Miw4IEBAIHN0YXRpYyB2
-b2lkIHN5bnBzX2VkYWNfY2hlY2soc3RydWN0IG1lbV9jdGxfaW5mbw0KPiAqbWNpKQ0KPiA+ICAJ
-c3RydWN0IHN5bnBzX2VkYWNfcHJpdiAqcHJpdiA9IG1jaS0+cHZ0X2luZm87DQo+ID4gIAlpbnQg
-c3RhdHVzOw0KPiA+DQo+ID4gLQlzdGF0dXMgPSBzeW5wc19lZGFjX2dldGVycm9yX2luZm8ocHJp
-di0+YmFzZWFkZHIsICZwcml2LT5zdGF0KTsNCj4gPiArCXN0YXR1cyA9IHByaXYtPnBfZGF0YS0+
-c3lucHNfZWRhY19nZXRlcnJvcl9pbmZvKHByaXYtPmJhc2VhZGRyLA0KPiA+ICsJCQkJCQkJJnBy
-aXYtPnN0YXQpOw0KPiANCj4gVW5uZWNlc3NhcmlseSBsb25nIGxpbmUgLSBzaG9ydGVuaW5nIGJ5
-IHJlbmFtaW5nIG1pZ2h0IGhlbHAuDQpGYWlyIE9uZS4gSSB3aWxsIGxvb2sgdG8gY2hhbmdlIHRo
-ZSBuYW1lLiBBbHNvLCBNYXkgYmUgSSBjb3VsZCB1c2Ugb25seSAncHJpdicgYXMgYXJndW1lbnQg
-YW5kIGV4dHJhY3QvdXNlICdiYXNlYWRkcicgYW5kICdzdGF0JyBpbiB0aGUgZnVuY3Rpb24gZGVm
-aW5pdGlvbiBpdHNlbGYuDQoNCj4gDQo+ID4gQEAgLTM3MiwxMCArMzkzLDEyIEBAIHN0YXRpYyBp
-bnQgc3lucHNfZWRhY19pbml0X2Nzcm93cyhzdHJ1Y3QNCj4gbWVtX2N0bF9pbmZvICptY2kpDQo+
-ID4gIAkJZm9yIChqID0gMDsgaiA8IGNzaS0+bnJfY2hhbm5lbHM7IGorKykgew0KPiA+ICAJCQlk
-aW1tICAgICAgICAgICAgPSBjc2ktPmNoYW5uZWxzW2pdLT5kaW1tOw0KPiA+ICAJCQlkaW1tLT5l
-ZGFjX21vZGUgPSBFREFDX0ZMQUdfU0VDREVEOw0KPiA+IC0JCQlkaW1tLT5tdHlwZSAgICAgPSBz
-eW5wc19lZGFjX2dldF9tdHlwZShwcml2LQ0KPiA+YmFzZWFkZHIpOw0KPiA+ICsJCQlkaW1tLT5t
-dHlwZSAgICAgPSBwcml2LT5wX2RhdGEtDQo+ID5zeW5wc19lZGFjX2dldF9tdHlwZSgNCj4gPiAr
-CQkJCQkJcHJpdi0+YmFzZWFkZHIpOw0KPiANCj4gRGl0dG8gLSB0aGF0IHRyYWlsaW5nIG9wZW5p
-bmcgYnJhY2UgYXQgdGhlIGVuZCBpcyBqdXN0IHl1Y2t5LiBTaG9ydGVuIGl0IGFuZCBsZXQgaXMN
-Cj4gc3RpY2sgb3V0IGV2ZW4gaWYgaXQgbG9uZ2VyIHRoYW4gODAgY29scy4NCk9rYXkuIFdpbGwg
-bW9kaWZ5IGl0Lg0KDQo+IA0KPiA+DQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3lucHNfcGxh
-dGZvcm1fZGF0YSB6eW5xX2VkYWNfZGVmID0gew0KPiA+ICsJLnN5bnBzX2VkYWNfZ2V0ZXJyb3Jf
-aW5mbwk9IHN5bnBzX2VkYWNfZ2V0ZXJyb3JfaW5mbywNCj4gPiArCS5zeW5wc19lZGFjX2dldF9t
-dHlwZQkJPSBzeW5wc19lZGFjX2dldF9tdHlwZSwNCj4gPiArCS5zeW5wc19lZGFjX2dldF9kdHlw
-ZQkJPSBzeW5wc19lZGFjX2dldF9kdHlwZSwNCj4gPiArCS5zeW5wc19lZGFjX2dldF9lY2NzdGF0
-ZQk9IHN5bnBzX2VkYWNfZ2V0X2VjY3N0YXRlLA0KPiA+ICsJLnF1aXJrcwkJCQk9IDAsDQo+IA0K
-PiBEcm9wIHRoZSAic3lucHNfIiBwcmVmaXggZnJvbSB0aGUgZnVuY3Rpb24gcG9pbnRlciBuYW1l
-cyBhbmQgbGVhdmUgdGhlbSBpbg0KPiB0aGUgYWN0dWFsIGZ1bmN0aW9uIG5hbWVzIHNvIHRoYXQg
-d2hlbiBvbmUgbG9va3MgYXQgdGhlIGNvZGUsIGtub3dzIHdoYXQgaXMNCj4gd2hhdC4NCk9rYXku
-IEkgd2lsbCBjb3JyZWN0IGl0IGluIHY0Lg0KDQpUaGFua3MsDQpNYW5pc2ggTmFyYW5pDQo=
+
+--XvKFcGCOAo53UbWW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Andy and Jonathan,
+
+
+On Fri, Aug 03, 2018 at 11:09:22PM +0100, Jonathan Cameron wrote:
+> On Thu, 2 Aug 2018 22:52:00 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>=20
+> > On Thu, Aug 2, 2018 at 10:15 PM, Marcus Folkesson
+> > <marcus.folkesson@gmail.com> wrote:
+> > > MCP3911 is a dual channel Analog Front End (AFE) containing two
+> > > synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
+> > >
+> > > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com> =20
+> >=20
+> > > Signed-off-by: Kent Gustavsson <kent@minoris.se> =20
+> >=20
+> > What is this? Why it's here (presense and location in the message)?
+> To clarify... If Kent wrote the patch and you are simply acting
+> as gatekeeper / upstreamer you should set the mail to be from Kent
+> and put your own Signed-off after his to basically act as a submaintainer
+> certifying you believe his sign off and all that entails.
+>=20
+> If it is a bit of a joint effort then that's fine but for copyright
+> purposes there should be some indication of the split.
+
+First, thank you Andy for noticing.
+
+I actually intended to use Co-Developed-by (a pretty new tag)
+in combination with Signed-off-by.
+But the tag must have disappeared in some preparation stage..
+
+=46rom Documentation/process/submitting-patches.rst ::
+
+	A Co-Developed-by: states that the patch was also created by another devel=
+oper
+	along with the original author.  This is useful at times when multiple peo=
+ple
+	work on a single patch.  Note, this person also needs to have a Signed-off=
+-by:
+	line in the patch as well.
+
+I will switch order and add the Co-Developed-by-tag.
+Is this correct?
+
+Co-Developed-by: Kent Gustavsson <kent@minoris.se>  =20
+Signed-off-by: Kent Gustavsson <kent@minoris.se> =20
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com> =20
+
+>=20
+>=20
+> >=20
+> > > + * Copyright (C) 2018 Kent Gustavsson <kent@minoris.se> =20
+> >=20
+> > > + * =20
+> >=20
+> > Redundant.
+> >=20
+> > > +static int mcp3911_read(struct mcp3911 *adc, u8 reg, u32 *val, u8 le=
+n)
+> > > +{
+> > > +       int ret;
+> > > +
+> > > +       reg =3D MCP3911_REG_READ(reg, adc->dev_addr);
+> > > +       ret =3D spi_write_then_read(adc->spi, &reg, 1, val, len);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       be32_to_cpus(val);
+> > > +       *val >>=3D ((4 - len) * 8);
+> > > +       dev_dbg(&adc->spi->dev, "reading 0x%x from register 0x%x\n", =
+*val,
+> > > +                       reg>>1);
+> > > +       return ret;
+> > > +}
+> > > +
+> > > +static int mcp3911_write(struct mcp3911 *adc, u8 reg, u32 val, u8 le=
+n)
+> > > +{
+> > > +       dev_dbg(&adc->spi->dev, "writing 0x%x to register 0x%x\n", va=
+l, reg);
+> > > +
+> > > +       val <<=3D (3 - len) * 8;
+> > > +       cpu_to_be32s(&val);
+> > > +       val |=3D MCP3911_REG_WRITE(reg, adc->dev_addr);
+> > > +
+> > > +       return spi_write(adc->spi, &val, len + 1);
+> > > +} =20
+> >=20
+> > Can't you use REGMAP_SPI ?
+> My instinct is not really. The magic device-addr doesn't help.
+> You could work around it but it's not that nice and you'd have
+> to create the regmap mapping on the fly or carry static ones
+> for each value of htat.
+>=20
+>=20
+>=20
+> >=20
+> > > +       of_property_read_u32(of_node, "device-addr", &adc->dev_addr);
+> > > +       if (adc->dev_addr > 3) {
+> > > +               dev_err(&adc->spi->dev,
+> > > +                               "invalid device address (%i). Must be=
+ in range 0-3.\n",
+> > > +                               adc->dev_addr);
+> > > +               return -EINVAL;
+> > > +       }
+> > > +       dev_dbg(&adc->spi->dev, "use device address %i\n", adc->dev_a=
+ddr); =20
+> >=20
+> > Isn't what we called CS (chip select)?
+> Nope. We went around this in an earlier revision. It's an address transmi=
+tted
+> in the control byte to allow you to 'share' a chip select line between mu=
+ltiple
+> chips (crazy but true).
+>=20
+> >=20
+> > > +       if (IS_ERR(adc->vref)) { =20
+> >=20
+> > > + =20
+> >=20
+> > Redundant.
+> >=20
+> > > +       if (adc->clki) =20
+> >=20
+> > Seems to be redundant if clock is optional (it should be NULL and API
+> > is NULL-aware).
+> >=20
+> > > +               clk_disable_unprepare(adc->clki); =20
+> >=20
+> > > +       if (adc->clki)
+> > > +               clk_disable_unprepare(adc->clki); =20
+> >=20
+> > Ditto.
+> >=20
+> > > +#if defined(CONFIG_OF) =20
+> >=20
+> > This prevents playing with the device on ACPI enabled platforms.
+
+I will remove the defined(CONFIG_OF) and not use the of_match_ptr()
+macro.=20
+
+> Yeah, that trickery is still little known (and I forget about it from
+> time to time).
+>=20
+> The upshot for those who have missed this is you can use a magic
+> acpi device to instantiate based on device tree bindings :)
+>=20
+> So we need to strip all this 'obvious' protection stuff out of drivers.
+
+Jonathan,
+Do you want me to do the same changes for drivers in iio/ ?
+I'm probably not the only one looking at other drivers when writing my
+own, so I guess this is a rather frequent issue for new drivers?
+
+
+>=20
+> >=20
+> > > +               .of_match_table =3D of_match_ptr(mcp3911_dt_ids), =20
+> >=20
+> > Ditto for macro.
+> >=20
+>=20
+
+Best regards,
+Marcus Folkesson
+
+--XvKFcGCOAo53UbWW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAltlTcQACgkQiIBOb1ld
+UjKPFw/+NeiGz6rfi628o/DAMpQDQbDHkK/2DmBcJIPpZv1oRuPFbrTFx6ju30/v
+dfed1gAcphELG90jVf6nUI7VFie0xUyA9dpZL1orhuS4hl0djUJY+PAztAsckM1a
+U6xVGtd7r2zA1uY7Ggf89Gb1VWEpcKQX7HbnI/x41jA7CZExkky43MK6GcdVhOzS
+LboSdr+KkEOxq1SvtYkhWST/WOHTmUfL5nobnR0qxhaJpeIskamhtmC4ek8+11kP
+N4fjFUIexXxAWnxXkm0hGCxmET5rfl5/+kSaVOprNQ+wm6AmMiUiLY6ujPh0z68L
+8tZWMS1XzPUrRd4asb2G3uwCAgKDKVHgwTb3j3l4O5bTXPcHRLdveiykpjNfB5pV
+QAvina6KAJ4RLyad/OhTWGB/QWU4YgoL4Ksgf8ZQxqYBjErqutzD0gHOWB9Pst9k
+h75Ca2jLrWLxWu+3t+9h25IbiGf0IklgNfKL2GmmtKpjTl1HxBJ3p9S9CClvx4GB
+A+Y3LaurPWFT4cIaX1FWW8pnuFoLkDap/Pw3Cd2qZMnRuqkcVWlaPpQIBtcCuGrW
+CprEPppwMWRCok2oF4MRyEcBFPPuvNJzUBjVAgtKlVCVvsTkzxKKvjQC3ThGX/On
+3NY8XwiPjGWLW9OhCy2J+YvPqIU/1d6kbrK+AVVVz9aamm/xAv8=
+=8cpx
+-----END PGP SIGNATURE-----
+
+--XvKFcGCOAo53UbWW--
