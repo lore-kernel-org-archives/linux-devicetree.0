@@ -1,7 +1,7 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 7/8] irqchip: add a SiFive PLIC driver
-Date: Sat,  4 Aug 2018 10:23:18 +0200
-Message-ID: <20180804082319.5711-8-hch@lst.de>
+Subject: [PATCH 8/8] clocksource: new RISC-V SBI timer driver
+Date: Sat,  4 Aug 2018 10:23:19 +0200
+Message-ID: <20180804082319.5711-9-hch@lst.de>
 References: <20180804082319.5711-1-hch@lst.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,329 +18,254 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
 Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
 Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
 To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, linux-riscv@lists.infradead.org, shorne@gmail.com
+Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, Dmitriy Cherkasov <dmitriy@oss-tech.org>, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Adds a driver for the SiFive implementation of the RISC-V Platform Level
-Interrupt Controller (PLIC).  The PLIC connects global interrupt sources
-to the local interrupt controller on each hart.
+From: Palmer Dabbelt <palmer@dabbelt.com>
 
-This driver is based on the driver in the RISC-V tree from Palmer Dabbelt,
-but has been almost entirely rewritten since, and includes many fixes
-from Atish Patra.
+The RISC-V ISA defines a per-hart real-time clock and timer, which is
+present on all systems.  The clock is accessed via the 'rdtime'
+pseudo-instruction (which reads a CSR), and the timer is set via an SBI
+call.
 
+Contains various improvements from Atish Patra <atish.patra@wdc.com>.
+
+Signed-off-by: Dmitriy Cherkasov <dmitriy@oss-tech.org>
+Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+[hch: remove dead code, add SPDX tags, used riscv_of_processor_hart(),
+ minor cleanups, merged  hotplug cpu support and other improvements
+ from Atish]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/configs/defconfig      |   1 +
- drivers/irqchip/Kconfig           |  12 ++
- drivers/irqchip/Makefile          |   1 +
- drivers/irqchip/irq-sifive-plic.c | 259 ++++++++++++++++++++++++++++++
- 4 files changed, 273 insertions(+)
- create mode 100644 drivers/irqchip/irq-sifive-plic.c
+ arch/riscv/include/asm/smp.h      |   3 -
+ arch/riscv/kernel/irq.c           |   3 +
+ arch/riscv/kernel/smpboot.c       |   1 -
+ arch/riscv/kernel/time.c          |   9 +--
+ drivers/clocksource/Kconfig       |  11 ++++
+ drivers/clocksource/Makefile      |   1 +
+ drivers/clocksource/riscv_timer.c | 105 ++++++++++++++++++++++++++++++
+ include/linux/cpuhotplug.h        |   1 +
+ 8 files changed, 122 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/clocksource/riscv_timer.c
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 07326466871b..36473d7dbaac 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -76,3 +76,4 @@ CONFIG_ROOT_NFS=y
- CONFIG_CRYPTO_USER_API_HASH=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
-+CONFIG_SIFIVE_PLIC=y
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index e9233db16e03..df345b878ac2 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -372,3 +372,15 @@ config QCOM_PDC
- 	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
+diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
+index c9395fff246f..36016845461d 100644
+--- a/arch/riscv/include/asm/smp.h
++++ b/arch/riscv/include/asm/smp.h
+@@ -24,9 +24,6 @@
  
- endmenu
-+
-+config SIFIVE_PLIC
-+	bool "SiFive Platform-Level Interrupt Controller"
+ #ifdef CONFIG_SMP
+ 
+-/* SMP initialization hook for setup_arch */
+-void __init init_clockevent(void);
+-
+ /* SMP initialization hook for setup_arch */
+ void __init setup_smp(void);
+ 
+diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
+index ab5f3e22c7cc..0cfac48a1272 100644
+--- a/arch/riscv/kernel/irq.c
++++ b/arch/riscv/kernel/irq.c
+@@ -30,6 +30,9 @@ asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs, unsigned long cause)
+ 
+ 	irq_enter();
+ 	switch (cause & ~INTERRUPT_CAUSE_FLAG) {
++	case INTERRUPT_CAUSE_TIMER:
++		riscv_timer_interrupt();
++		break;
+ #ifdef CONFIG_SMP
+ 	case INTERRUPT_CAUSE_SOFTWARE:
+ 		/*
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index f741458c5a3f..56abab6a9812 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -104,7 +104,6 @@ asmlinkage void __init smp_callin(void)
+ 	current->active_mm = mm;
+ 
+ 	trap_init();
+-	init_clockevent();
+ 	notify_cpu_starting(smp_processor_id());
+ 	set_cpu_online(smp_processor_id(), 1);
+ 	local_flush_tlb_all();
+diff --git a/arch/riscv/kernel/time.c b/arch/riscv/kernel/time.c
+index 0df9b2cbd645..1911c8f6b8a6 100644
+--- a/arch/riscv/kernel/time.c
++++ b/arch/riscv/kernel/time.c
+@@ -18,12 +18,6 @@
+ 
+ unsigned long riscv_timebase;
+ 
+-void __init init_clockevent(void)
+-{
+-	timer_probe();
+-	csr_set(sie, SIE_STIE);
+-}
+-
+ void __init time_init(void)
+ {
+ 	struct device_node *cpu;
+@@ -35,6 +29,5 @@ void __init time_init(void)
+ 	riscv_timebase = prop;
+ 
+ 	lpj_fine = riscv_timebase / HZ;
+-
+-	init_clockevent();
++	timer_probe();
+ }
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index dec0dd88ec15..a11f4ba98b05 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -609,4 +609,15 @@ config ATCPIT100_TIMER
+ 	help
+ 	  This option enables support for the Andestech ATCPIT100 timers.
+ 
++config RISCV_TIMER
++	bool "Timer for the RISC-V platform"
 +	depends on RISCV
++	default y
++	select TIMER_PROBE
++	select TIMER_OF
 +	help
-+	   This enables support for the PLIC chip found in SiFive (and
-+	   potentially other) RISC-V systems.  The PLIC controls devices
-+	   interrupts and connects them to each core's local interrupt
-+	   controller.  Aside from timer and software interrupts, all other
-+	   interrupt sources are subordinate to the PLIC.
++	  This enables the per-hart timer built into all RISC-V systems, which
++	  is accessed via both the SBI and the rdcycle instruction.  This is
++	  required for all RISC-V systems.
 +
-+	   If you don't know what to do here, say Y.
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 15f268f646bf..fbd1ec8070ef 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -87,3 +87,4 @@ obj-$(CONFIG_MESON_IRQ_GPIO)		+= irq-meson-gpio.o
- obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
- obj-$(CONFIG_NDS32)			+= irq-ativic32.o
- obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
-+obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+ endmenu
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 00caf37e52f9..ded31f720bd9 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -78,3 +78,4 @@ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
+ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+ obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+ obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
++obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
+diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/riscv_timer.c
 new file mode 100644
-index 000000000000..faacf428e250
+index 000000000000..4e8b347e43e2
 --- /dev/null
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -0,0 +1,259 @@
++++ b/drivers/clocksource/riscv_timer.c
+@@ -0,0 +1,105 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
++ * Copyright (C) 2012 Regents of the University of California
 + * Copyright (C) 2017 SiFive
-+ * Copyright (C) 2018 Christoph Hellwig
 + */
-+#define pr_fmt(fmt) "plic: " fmt
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
++#include <linux/clocksource.h>
++#include <linux/clockchips.h>
++#include <linux/cpu.h>
++#include <linux/delay.h>
 +#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
++#include <asm/sbi.h>
 +
 +/*
-+ * This driver implements a version of the RISC-V PLIC with the actual layout
-+ * specified in chapter 8 of the SiFive U5 Coreplex Series Manual:
-+ *
-+ *     https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf
-+ *
-+ * The largest number supported by devices marked as 'riscv,plic0', is 1024, of
-+ * which device 0 is defined as non-existent by the RISC-V Privileged Spec.
++ * All RISC-V systems have a timer attached to every hart.  These timers can be
++ * read by the 'rdcycle' pseudo instruction, and can use the SBI to setup
++ * events.  In order to abstract the architecture-specific timer reading and
++ * setting functions away from the clock event insertion code, we provide
++ * function pointers to the clockevent subsystem that perform two basic
++ * operations: rdtime() reads the timer on the current CPU, and
++ * next_event(delta) sets the next timer event to 'delta' cycles in the future.
++ * As the timers are inherently a per-cpu resource, these callbacks perform
++ * operations on the current hart.  There is guaranteed to be exactly one timer
++ * per hart on all RISC-V systems.
 + */
 +
-+#define MAX_DEVICES			1024
-+#define MAX_CONTEXTS			15872
-+
-+/*
-+ * Each interrupt source has a priority register associated with it.
-+ * We always hardwire it to one in Linux.
-+ */
-+#define PRIORITY_BASE			0
-+#define     PRIORITY_PER_ID		4
-+
-+/*
-+ * Each hart context has a vector of interrupt enable bits associated with it.
-+ * There's one bit for each interrupt source.
-+ */
-+#define ENABLE_BASE			0x2000
-+#define     ENABLE_PER_HART		0x80
-+
-+/*
-+ * Each hart context has a set of control registers associated with it.  Right
-+ * now there's only two: a source priority threshold over which the hart will
-+ * take an interrupt, and a register to claim interrupts.
-+ */
-+#define CONTEXT_BASE			0x200000
-+#define     CONTEXT_PER_HART		0x1000
-+#define     CONTEXT_THRESHOLD		0x00
-+#define     CONTEXT_CLAIM		0x04
-+
-+static void __iomem *plic_regs;
-+
-+struct plic_handler {
-+	bool			present;
-+	int			ctxid;
-+};
-+static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
-+
-+static inline void __iomem *plic_hart_offset(int ctxid)
++static int riscv_clock_next_event(unsigned long delta,
++		struct clock_event_device *ce)
 +{
-+	return plic_regs + CONTEXT_BASE + ctxid * CONTEXT_PER_HART;
-+}
-+
-+static inline u32 __iomem *plic_enable_base(int ctxid)
-+{
-+	return plic_regs + ENABLE_BASE + ctxid * ENABLE_PER_HART;
-+}
-+
-+/*
-+ * Protect mask operations on the registers given that we can't assume that
-+ * atomic memory operations work on them.
-+ */
-+static DEFINE_RAW_SPINLOCK(plic_toggle_lock);
-+
-+static inline void plic_toggle(int ctxid, int hwirq, int enable)
-+{
-+	u32 __iomem *reg = plic_enable_base(ctxid) + (hwirq / 32);
-+	u32 hwirq_mask = 1 << (hwirq % 32);
-+
-+	raw_spin_lock(&plic_toggle_lock);
-+	if (enable)
-+		writel(readl(reg) | hwirq_mask, reg);
-+	else
-+		writel(readl(reg) & ~hwirq_mask, reg);
-+	raw_spin_unlock(&plic_toggle_lock);
-+}
-+
-+static inline void plic_irq_toggle(struct irq_data *d, int enable)
-+{
-+	int cpu;
-+
-+	writel(enable, plic_regs + PRIORITY_BASE + d->hwirq * PRIORITY_PER_ID);
-+	for_each_cpu(cpu, irq_data_get_affinity_mask(d)) {
-+		struct plic_handler *handler = per_cpu_ptr(&plic_handlers, cpu);
-+
-+		if (handler->present)
-+			plic_toggle(handler->ctxid, d->hwirq, enable);
-+	}
-+}
-+
-+static void plic_irq_enable(struct irq_data *d)
-+{
-+	plic_irq_toggle(d, 1);
-+}
-+
-+static void plic_irq_disable(struct irq_data *d)
-+{
-+	plic_irq_toggle(d, 0);
-+}
-+
-+static struct irq_chip plic_chip = {
-+	.name		= "SiFive PLIC",
-+	/*
-+	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
-+	 * by reading claim and "unmasked" when writing it back.
-+	 */
-+	.irq_enable	= plic_irq_enable,
-+	.irq_disable	= plic_irq_disable,
-+};
-+
-+static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
-+			      irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &plic_chip, handle_simple_irq);
-+	irq_set_chip_data(irq, NULL);
-+	irq_set_noprobe(irq);
++	csr_set(sie, SIE_STIE);
++	sbi_set_timer(get_cycles64() + delta);
 +	return 0;
 +}
 +
-+static const struct irq_domain_ops plic_irqdomain_ops = {
-+	.map		= plic_irqdomain_map,
-+	.xlate		= irq_domain_xlate_onecell,
++static DEFINE_PER_CPU(struct clock_event_device, riscv_clock_event) = {
++	.name			= "riscv_timer_clockevent",
++	.features		= CLOCK_EVT_FEAT_ONESHOT,
++	.rating			= 100,
++	.set_next_event		= riscv_clock_next_event,
 +};
 +
-+static struct irq_domain *plic_irqdomain;
-+
 +/*
-+ * Handling an interrupt is a two-step process: first you claim the interrupt
-+ * by reading the claim register, then you complete the interrupt by writing
-+ * that source ID back to the same claim register.  This automatically enables
-+ * and disables the interrupt, so there's nothing else to do.
++ * It is guaranteed that all the timers across all the harts are synchronized
++ * within one tick of each other, so while this could technically go
++ * backwards when hopping between CPUs, practically it won't happen.
 + */
-+static void plic_handle_irq(struct pt_regs *regs)
++static unsigned long long riscv_clocksource_rdtime(struct clocksource *cs)
 +{
-+	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
-+	void __iomem *claim = plic_hart_offset(handler->ctxid) + CONTEXT_CLAIM;
-+	irq_hw_number_t hwirq;
-+
-+	WARN_ON_ONCE(!handler->present);
-+
-+	csr_clear(sie, SIE_SEIE);
-+	while ((hwirq = readl(claim))) {
-+		int irq = irq_find_mapping(plic_irqdomain, hwirq);
-+
-+		if (unlikely(irq <= 0))
-+			pr_warn_ratelimited("can't find mapping for hwirq %lu\n",
-+					hwirq);
-+		else
-+			generic_handle_irq(irq);
-+		writel(hwirq, claim);
-+	}
-+	csr_set(sie, SIE_SEIE);
++	return get_cycles64();
 +}
 +
-+/*
-+ * Walk up the DT tree until we find a active RISC-V core (HART) node and
-+ * extract the cpuid from it.
-+ */
-+static int plic_find_hart_id(struct device_node *node)
++static DEFINE_PER_CPU(struct clocksource, riscv_clocksource) = {
++	.name		= "riscv_clocksource",
++	.rating		= 300,
++	.mask		= CLOCKSOURCE_MASK(BITS_PER_LONG),
++	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
++	.read		= riscv_clocksource_rdtime,
++};
++
++static int riscv_timer_starting_cpu(unsigned int cpu)
 +{
-+	for (; node; node = node->parent) {
-+		if (of_device_is_compatible(node, "riscv"))
-+			return riscv_of_processor_hart(node);
-+	}
++	struct clock_event_device *ce = per_cpu_ptr(&riscv_clock_event, cpu);
 +
-+	return -1;
-+}
++	ce->cpumask = cpumask_of(cpu);
++	clockevents_config_and_register(ce, riscv_timebase, 100, 0x7fffffff);
 +
-+static int __init plic_init(struct device_node *node,
-+		struct device_node *parent)
-+{
-+	int error = 0, nr_handlers, nr_mapped = 0, i;
-+	u32 nr_irqs;
-+
-+	if (plic_regs) {
-+		pr_warn("PLIC already present.\n");
-+		return -ENXIO;
-+	}
-+
-+	plic_regs = of_iomap(node, 0);
-+	if (WARN_ON(!plic_regs))
-+		return -EIO;
-+
-+	error = -EINVAL;
-+	of_property_read_u32(node, "riscv,ndev", &nr_irqs);
-+	if (WARN_ON(!nr_irqs))
-+		goto out_iounmap;
-+
-+	nr_handlers = of_irq_count(node);
-+	if (WARN_ON(!nr_handlers))
-+		goto out_iounmap;
-+	if (WARN_ON(nr_handlers < num_possible_cpus()))
-+		goto out_iounmap;
-+
-+	error = -ENOMEM;
-+	plic_irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
-+			&plic_irqdomain_ops, NULL);
-+	if (WARN_ON(!plic_irqdomain))
-+		goto out_iounmap;
-+
-+	for (i = 0; i < nr_handlers; i++) {
-+		struct of_phandle_args parent;
-+		struct plic_handler *handler;
-+		irq_hw_number_t hwirq;
-+		int cpu;
-+
-+		if (of_irq_parse_one(node, i, &parent)) {
-+			pr_err("failed to parse parent for context %d.\n", i);
-+			continue;
-+		}
-+
-+		/* skip context holes */
-+		if (parent.args[0] == -1)
-+			continue;
-+
-+		cpu = plic_find_hart_id(parent.np);
-+		if (cpu < 0) {
-+			pr_warn("failed to parse hart ID for context %d.\n", i);
-+			continue;
-+		}
-+
-+		handler = per_cpu_ptr(&plic_handlers, cpu);
-+		handler->present = true;
-+		handler->ctxid = i;
-+
-+		/* priority must be > threshold to trigger an interrupt */
-+		writel(0, plic_hart_offset(i) + CONTEXT_THRESHOLD);
-+		for (hwirq = 1; hwirq <= nr_irqs; hwirq++)
-+			plic_toggle(i, hwirq, 0);
-+		nr_mapped++;
-+	}
-+
-+	pr_info("mapped %d interrupts to %d (out of %d) handlers.\n",
-+		nr_irqs, nr_mapped, nr_handlers);
-+	set_handle_irq(plic_handle_irq);
++	csr_set(sie, SIE_STIE);
 +	return 0;
++}
 +
-+out_iounmap:
-+	iounmap(plic_regs);
++static int riscv_timer_dying_cpu(unsigned int cpu)
++{
++	csr_clear(sie, SIE_STIE);
++	return 0;
++}
++
++/* called directly from the low-level interrupt handler */
++void riscv_timer_interrupt(void)
++{
++	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
++
++	csr_clear(sie, SIE_STIE);
++	evdev->event_handler(evdev);
++}
++
++static int __init riscv_timer_init_dt(struct device_node *n)
++{
++	int cpu_id = riscv_of_processor_hart(n), error;
++	struct clocksource *cs;
++
++	if (cpu_id != smp_processor_id())
++		return 0;
++
++	cs = per_cpu_ptr(&riscv_clocksource, cpu_id);
++	clocksource_register_hz(cs, riscv_timebase);
++
++	error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
++			 "clockevents/riscv/timer:starting",
++			 riscv_timer_starting_cpu, riscv_timer_dying_cpu);
++	if (error)
++		pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
++		       error, cpu_id);
 +	return error;
 +}
 +
-+IRQCHIP_DECLARE(sifive_plic0, "sifive,u5-plic", plic_init);
-+IRQCHIP_DECLARE(riscv_plic0, "riscv,plic0", plic_init); /* for legacy systems */
++TIMER_OF_DECLARE(riscv_timer, "riscv", riscv_timer_init_dt);
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 8796ba387152..554c27f6cfbd 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -125,6 +125,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_MARCO_TIMER_STARTING,
+ 	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+ 	CPUHP_AP_ARC_TIMER_STARTING,
++	CPUHP_AP_RISCV_TIMER_STARTING,
+ 	CPUHP_AP_KVM_STARTING,
+ 	CPUHP_AP_KVM_ARM_VGIC_INIT_STARTING,
+ 	CPUHP_AP_KVM_ARM_VGIC_STARTING,
 -- 
 2.18.0
