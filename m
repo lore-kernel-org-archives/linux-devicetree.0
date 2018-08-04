@@ -1,65 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 14/18] serial: intel: Add CCF support
-Date: Sat, 4 Aug 2018 23:03:11 +0200
-Message-ID: <CAK8P3a3qs34LuhPeaef2wPHYEWbYO5N-4n7763BcaDyppiJ6DA@mail.gmail.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-15-songjun.wu@linux.intel.com> <20180803055640.GA32226@kroah.com>
- <763bba56-3701-7fe9-9b31-4710594b40d5@linux.intel.com> <20180803103023.GA6557@kroah.com>
- <3360edd2-f3d8-b860-13fa-ce680edbfd0a@hauke-m.de> <20180804124309.GB4920@kroah.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v8 6/6] MAINTAINERS: Add entry for Actions Semiconductor
+ Owl I2C driver
+Date: Sat, 4 Aug 2018 23:04:10 +0200
+Message-ID: <20180804210410.okdjmwlqtjtarzmo@ninjato>
+References: <20180801180232.23680-1-manivannan.sadhasivam@linaro.org>
+ <20180801180232.23680-7-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fxix552pc65a3rfg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180804124309.GB4920@kroah.com>
+Content-Disposition: inline
+In-Reply-To: <20180801180232.23680-7-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, "Wu, Songjun" <songjun.wu@linux.intel.com>, hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, linux-clk <linux-clk@vger.kernel.org>, linux-serial@vger.kernel.org, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh+dt@kernel.org, afaerber@suse.de, linus.walleij@linaro.org, linux-i2c@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 4, 2018 at 2:43 PM, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Sat, Aug 04, 2018 at 12:54:22PM +0200, Hauke Mehrtens wrote:
->> On 08/03/2018 12:30 PM, Greg Kroah-Hartman wrote:
->> > On Fri, Aug 03, 2018 at 03:33:38PM +0800, Wu, Songjun wrote:
 
->> This patch makes it possible to use it with the legacy lantiq code and
->> also with the common clock framework. I see multiple options to fix this
->> problem.
->>
->> 1. The current approach to have it as a compile variant for a) legacy
->> lantiq arch code without common clock framework and b) support for SoCs
->> using the common clock framework.
->> 2. Convert the lantiq arch code to the common clock framework. This
->> would be a good approach, but it need some efforts.
->> 3. Remove the arch/mips/lantiq code. There are still users of this code.
->> 4. Use the old APIs also for the new xRX500 SoC, I do not like this
->> approach.
->> 5. Move lantiq_soc.h to somewhere in include/linux/ so it is globally
->> available and provide some better wrapper code.
->
-> I don't really care what you do at this point in time, but you all
-> should know better than the crazy #ifdef is not allowed to try to
-> prevent/allow the inclusion of a .h file.  Checkpatch might have even
-> warned you about it, right?
->
-> So do it correctly, odds are #5 is correct, as that makes it work like
-> any other device in the kernel.  You are not unique here.
+--fxix552pc65a3rfg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The best approach here would clearly be 2. We don't want platform
-specific header files for doing things that should be completely generic.
+On Wed, Aug 01, 2018 at 11:32:32PM +0530, Manivannan Sadhasivam wrote:
+> Add entry for Actions Semiconductor Owl I2C driver under ARM/ACTIONS
 
-Converting lantiq to the common-clk framework obviously requires
-some work, but then again the whole arch/mips/lantiq/clk.c file
-is fairly short and maybe not that hard to convert.
+So, it goes upstream via arm-soc?
 
->From looking at arch/mips/lantiq/xway/sysctrl.c, it appears that you
-already use the clkdev lookup mechanism for some devices without
-using COMMON_CLK, so I would assume that you can also use those
-for the remaining clks, which would be much simpler. It registers
-one anonymous clk there as
+>=20
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-        clkdev_add_pmu("1e100c00.serial", NULL, 0, 0, PMU_ASC1);
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
 
-so why not add replace that with two named clocks and just use
-the same names in the DT for the newer chip?
 
-      Arnd
+--fxix552pc65a3rfg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltmFMoACgkQFA3kzBSg
+Kbbz+g//f+smcxURu7eKin0PrmusPul2GE5dfw9TX+C8oZ+/6/hW/SL0QLL8do2j
+9bSqQsR4N2vfs/KrZ4IUx95l3WLfwFljS8oFMlmEqhZEcd3Rgu/lp2m7Afq6aTFA
+TtvVEs/7bkIh8BXBQnFRhYtfFyBQxmTTsQluS7TViCUoDvbE0+WIpmse60dLHGMR
+hMpg/s6Na3cQztsk0lbwjLS2Xj0znMEKH94Tha734DnzNpYGY5nrBvEC7puEqWDW
+XDd06hnTDJrnqZxUAaXe+rHgJZ9ATG0Wty3OQtgsGuGEIxcRs7O4/J5t0jdPy0YE
+VhydSQUCv5jcLUQC/AyTppAKDaY0NDfyFaAQQzsKzkUHXtGPeonzkPR/1PUiMDE7
+NgPU5AM3FqbpGwUeFH3hzQPIHUTkV/u0SZp+LVhH8gJ0zpbWaclGtzeMhmyO692Z
+tQNSJwiY7bUZBB0I9YDMHKvxO24XuNOwPUiDyL3RHSbAn+4U6ppAuUIUFdOyXEsU
+Z5tPvczTed3B1kX6tPFWggbUer0X88y5fA5f73v1GFKu/26ySlOmBhUqdi23efkf
+697IyHN0rIiAsDJLDR/MutMA/4ftFhX86//QMn26GtpNlPk7RwJGCA1Xm5aqBc3V
+M0pfQxVX9SAVB+gKVVEUPBJtoTWvXUyd4FwbtpV8Ms3XzhaDW68=
+=QKJe
+-----END PGP SIGNATURE-----
+
+--fxix552pc65a3rfg--
