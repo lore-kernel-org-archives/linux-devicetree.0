@@ -1,64 +1,63 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v7 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ Firmware
- bindings
-Date: Fri, 03 Aug 2018 16:46:50 -0700
-Message-ID: <153334001055.10763.8002698033760154254@swboyd.mtv.corp.google.com>
-References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
- <1532428970-18122-2-git-send-email-tdas@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject: Re: [PATCH 6/6] dt-bindings: interrupt-controller: RISC-V PLIC documentation
+Date: Fri, 03 Aug 2018 18:48:43 -0700 (PDT)
+Message-ID: <mhng-6ecc7259-6cd2-4649-a0b5-be7c79176657@palmer-si-x1c4>
+References: <CAL_JsqJWOXX7-_sb4W63wPRqFjHuU-DM-LNYgczieWjAE5ABfQ@mail.gmail.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532428970-18122-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <CAL_JsqJWOXX7-_sb4W63wPRqFjHuU-DM-LNYgczieWjAE5ABfQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com, Taniya Das <tdas@codeaurora.org>
+To: robh@kernel.org
+Cc: Christoph Hellwig <hch@lst.de>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2018-07-24 03:42:49)
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.tx=
-t b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> new file mode 100644
-> index 0000000..22d4355
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
-> @@ -0,0 +1,172 @@
-[...]
-> +
-> +               CPU7: cpu@700 {
-> +                       device_type =3D "cpu";
-> +                       compatible =3D "qcom,kryo385";
-> +                       reg =3D <0x0 0x700>;
-> +                       enable-method =3D "psci";
-> +                       next-level-cache =3D <&L2_700>;
-> +                       qcom,freq-domain =3D <&freq_domain_table1>;
-> +                       L2_700: l2-cache {
-> +                               compatible =3D "cache";
-> +                               next-level-cache =3D <&L3_0>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       qcom,cpufreq-hw {
-> +               compatible =3D "qcom,cpufreq-hw";
-> +
-> +               clocks =3D <&rpmhcc RPMH_CXO_CLK>;
-> +               clock-names =3D "xo";
-> +
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <2>;
-> +               ranges;
-> +               freq_domain_table0: freq_table0 {
-> +                       reg =3D <0 0x17d43000 0 0x1400>;
-> +               };
-> +
-> +               freq_domain_table1: freq_table1 {
-> +                       reg =3D <0 0x17d45800 0 0x1400>;
-> +               };
+On Wed, 01 Aug 2018 11:26:31 PDT (-0700), robh@kernel.org wrote:
+> On Wed, Aug 1, 2018 at 1:12 AM Christoph Hellwig <hch@lst.de> wrote:
+>>
+>> On Tue, Jul 31, 2018 at 04:46:30PM -0600, Rob Herring wrote:
+>> > Perhaps this should be 'sifive,plic0'
+>>
+>> Excepet for the fact this the old name has already been in shipping
+>> hardware and release of qemu and other emulators it should.
+>
+> Not really my problem that they didn't follow the process and upstream
+> their binding first. But this alone is just a string identifier, so I
+> don't really care that much. If things are really a mess, then the
+> next implementations will have to have better compatible strings. More
+> likely, I'll just see folks trying to add various properties to deal
+> with all the differences.
+>
+> You could always define a better compatible and leave 'riscv,plic0' as
+> a fallback to avoid breaking things.
 
-Sorry, this is just not proper DT design. The whole node should have a
-reg property, and it should contain two (or three if we're handling the
-L3 clk domain?) different offsets for the different power clusters. The
-problem seems to still be that we don't have a way to map the CPUs to
-the clk domains they're in provided by this hardware block. Making
-subnodes is not the solution.
+Ya, sorry about that.  FWIW, we don't consider any of the bindings stable until 
+they're actually accepted upstream, so it's on us to fix our bootloaders to 
+match what actually lands upstream.  Luckily there's not that much hardware out 
+there and none of it is in production, so I'm OK forcing people to upgrade 
+bootloaders to make this all work.
+
+I think it's probably best to leave the extra compat string out of the kernel 
+proper, as then it'll never be enshrined as a RISC-V standard.
+
+>> > Normally this would have an SoC specific compatible too. Sometimes we
+>> > can get away without, but it doesn't seem like the PLIC is very tightly
+>> > specified nor has common implementations.
+>>
+>> It is a giant f***cking mess to be honest.  Adding a highlevel spec
+>> to the ISA but not a register layout is completely idotic, but if you
+>> look at the current riscv-sw list this decision is still defended by
+>> SiFive / the RISC-V foundation.  The whole stale of the RISC-V platform
+>> Ecosystem is rather pathetic unfortunately, and people don't seem to
+>> be willing to learn from past good practice nor mistakes in ARM land.
+>
+> Interrupt controllers are where the differentiation is. ;)
+
+Again, sorry about that :).  The RISC-V platform specification really should 
+have started a year ago, but I'm afraid there's just a bit too much going on on 
+my end.
+
+If it helps any, we just submitted a plumbers dev room with one topic being the 
+RISC-V platform spec, so I guess I'm in official trouble now it there isn't at 
+least something to talk about by November...
