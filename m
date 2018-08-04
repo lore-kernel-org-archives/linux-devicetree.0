@@ -1,122 +1,64 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 14/18] serial: intel: Add CCF support
-Date: Sat, 4 Aug 2018 14:43:09 +0200
-Message-ID: <20180804124309.GB4920@kroah.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-15-songjun.wu@linux.intel.com>
- <20180803055640.GA32226@kroah.com>
- <763bba56-3701-7fe9-9b31-4710594b40d5@linux.intel.com>
- <20180803103023.GA6557@kroah.com>
- <3360edd2-f3d8-b860-13fa-ce680edbfd0a@hauke-m.de>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v6 0/8] Cedrus driver for the Allwinner
+ Video Engine, using media requests
+Date: Sat, 4 Aug 2018 14:43:48 +0200
+Message-ID: <4e8a0286-7e49-5622-1895-ac3268224152@xs4all.nl>
+References: <20180725100256.22833-1-paul.kocialkowski@bootlin.com>
+Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3360edd2-f3d8-b860-13fa-ce680edbfd0a@hauke-m.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: "Wu, Songjun" <songjun.wu@linux.intel.com>, hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC3MVVMX3ELBBCN7S3NQKGQE2MXRXWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180725100256.22833-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 04, 2018 at 12:54:22PM +0200, Hauke Mehrtens wrote:
-> On 08/03/2018 12:30 PM, Greg Kroah-Hartman wrote:
-> > On Fri, Aug 03, 2018 at 03:33:38PM +0800, Wu, Songjun wrote:
-> >>
-> >>
-> >> On 8/3/2018 1:56 PM, Greg Kroah-Hartman wrote:
-> >>> On Fri, Aug 03, 2018 at 11:02:33AM +0800, Songjun Wu wrote:
-> >>>> Previous implementation uses platform-dependent API to get the clock.
-> >>>> Those functions are not available for other SoC which uses the same IP.
-> >>>> The CCF (Common Clock Framework) have an abstraction based APIs for
-> >>>> clock. In future, the platform specific code will be removed when the
-> >>>> legacy soc use CCF as well.
-> >>>> Change to use CCF APIs to get clock and rate. So that different SoCs
-> >>>> can use the same driver.
-> >>>>
-> >>>> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
-> >>>> ---
-> >>>>
-> >>>> Changes in v2: None
-> >>>>
-> >>>>   drivers/tty/serial/lantiq.c | 11 +++++++++++
-> >>>>   1 file changed, 11 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/tty/serial/lantiq.c b/drivers/tty/serial/lantiq.c
-> >>>> index 36479d66fb7c..35518ab3a80d 100644
-> >>>> --- a/drivers/tty/serial/lantiq.c
-> >>>> +++ b/drivers/tty/serial/lantiq.c
-> >>>> @@ -26,7 +26,9 @@
-> >>>>   #include <linux/clk.h>
-> >>>>   #include <linux/gpio.h>
-> >>>> +#ifdef CONFIG_LANTIQ
-> >>>>   #include <lantiq_soc.h>
-> >>>> +#endif
-> >>> That is never how you do this in Linux, you know better.
-> >>>
-> >>> Please go and get this patchset reviewed and signed-off-by from other
-> >>> internal Intel kernel developers before resending it next time.  It is
-> >>> their job to find and fix your basic errors like this, not ours.
-> >> Thank you for your comment.
-> >> Actually, we have discussed this issue internally.
-> >> We put the reason why we use "#ifdef CONFIG_LANTIQ" preprocessor in commit
-> >> message in "[PATCH v2 08/18] serial: intel: Get serial id from dts".
-> >> Please refer the commit message below.
-> >>
-> >> "#ifdef CONFIG_LANTIQ" preprocessor is used because LTQ_EARLY_ASC
-> >> macro is defined in lantiq_soc.h.
-> >> lantiq_soc.h is in arch path for legacy product support.
-> >>
-> >> arch/mips/include/asm/mach-lantiq/xway/lantiq_soc.h
-> >>
-> >> If "#ifdef preprocessor" is changed to
-> >> "if (IS_ENABLED(CONFIG_LANTIQ))", when CONFIG_LANTIQ is not enabled,
-> >> code using LTQ_EARLY_ASC is compiled.
-> >> Compilation will fail for no LTQ_EARLY_ASC defined.
-> > 
-> > Sorry, but no.  Why is this one tiny driver/chip somehow more "special"
-> > than all of the tens of thousands of other devices we support to warrent
-> > it getting some sort of special exception to do things differently?
-> > What happens to the next device that wants to do it this way?
-> > 
-> > Our coding style and rules are there for a reason, do not violate them
-> > thinking your device is the only one that matters.
-> > 
-> > Do it properly, again, you all know better than this.
-> > 
-> > greg k-h
-> > 
-> Hi Greg,
+On 07/25/2018 12:02 PM, Paul Kocialkowski wrote:
+> This is the sixth iteration of the updated Cedrus driver,
+> that supports the Video Engine found in most Allwinner SoCs, starting
+> with the A10. It was tested on the A13, A20, A33 and H3.
 > 
-> The problem is that the Lantiq SoC code in arch/mips/lantiq does not use
-> the common clock framework, but it uses the clk framework directly. It
-> defines CONFIG_HAVE_CLK and CONFIG_CLKDEV_LOOKUP, but not
-> CONFIG_COMMON_CLK. The xRX500 SoC which is being added here is about 2
-> generations more recent than the VR9/xRX200 SoC which is the latest
-> which is supported by the code in arch/mips/lantiq. With this new SoC we
-> switched to the common clock framework. This driver is used by the older
-> SoC and also by the new ones because this IP core is pretty similar in
-> all the SoCs.
-> This patch makes it possible to use it with the legacy lantiq code and
-> also with the common clock framework. I see multiple options to fix this
-> problem.
+> The initial version of this driver[0] was originally written and
+> submitted by Florent Revest using a previous version of the request API
+> that is necessary to provide coherency between controls and the buffers
+> they apply to.
 > 
-> 1. The current approach to have it as a compile variant for a) legacy
-> lantiq arch code without common clock framework and b) support for SoCs
-> using the common clock framework.
-> 2. Convert the lantiq arch code to the common clock framework. This
-> would be a good approach, but it need some efforts.
-> 3. Remove the arch/mips/lantiq code. There are still users of this code.
-> 4. Use the old APIs also for the new xRX500 SoC, I do not like this
-> approach.
-> 5. Move lantiq_soc.h to somewhere in include/linux/ so it is globally
-> available and provide some better wrapper code.
+> The driver was adapted to use the latest version of the media request
+> API[1], as submitted by Hand Verkuil. Media request API support is a
+> hard requirement for the Cedrus driver.
+> 
+> The driver itself currently only supports MPEG2 and more codecs will be
+> added to the driver eventually. The output frames provided by the
+> Video Engine are in a multi-planar 32x32-tiled YUV format, with a plane
+> for luminance (Y) and a plane for chrominance (UV). A specific format is
+> introduced in the V4L2 API to describe it.
+> 
+> This implementation is based on the significant work that was conducted
+> by various members of the linux-sunxi community for understanding and
+> documenting the Video Engine's innards.
+> 
+> In addition to the media requests API, the following series are required
+> for Cedrus:
+> * vicodec: the Virtual Codec driver
 
-I don't really care what you do at this point in time, but you all
-should know better than the crazy #ifdef is not allowed to try to
-prevent/allow the inclusion of a .h file.  Checkpatch might have even
-warned you about it, right?
+This will appear in for 4.19.
 
-So do it correctly, odds are #5 is correct, as that makes it work like
-any other device in the kernel.  You are not unique here.
+> * allwinner: a64: add SRAM controller / system control
+> * SRAM patches from the Cedrus VPU driver series version 5
 
-greg k-h
+What about these? Are they queued up for 4.19 as well?
+
+I'll post a rebased reqv17 later today that includes the
+"add v4l2_ctrl_request_hdl_find/put/ctrl_find functions" patch.
+
+Regards,
+
+	Hans
