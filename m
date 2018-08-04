@@ -1,132 +1,88 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3 1/4] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Sat, 4 Aug 2018 07:18:57 +0200
-Message-ID: <20180804051857.GA3843@nazgul.tnic>
-References: <1533214282-9977-1-git-send-email-manish.narani@xilinx.com>
- <1533214282-9977-2-git-send-email-manish.narani@xilinx.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Sat, 4 Aug 2018 07:33:58 +0200
+Message-ID: <20180804073358.7c5cf3a0@bbrezillon>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+        <20180719152930.3715-2-boris.brezillon@bootlin.com>
+        <023901d42b72$5bc329d0$13497d70$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1533214282-9977-2-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <023901d42b72$5bc329d0$13497d70$@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, mdf@kernel.org, edgar.iglesias@xilinx.com, shubhrajyoti.datta@xilinx.com, naga.sureshkumar.relli@xilinx.com, bharat.kumar.gogada@xilinx.com, stefan.krsmanovic@aggios.com, sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+To: mshettel@codeaurora.org
+Cc: 'Wolfram Sang' <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, 'Jonathan Corbet' <corbet@lwn.net>, linux-doc@vger.kernel.org, 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>, 'Arnd Bergmann' <arnd@arndb.de>, 'Przemyslaw Sroka' <psroka@cadence.com>, 'Arkadiusz Golec' <agolec@cadence.com>, 'Alan Douglas' <adouglas@cadence.com>, 'Bartosz Folta' <bfolta@cadence.com>, 'Damian Kos' <dkos@cadence.com>, 'Alicja Jurasik-Urbaniak' <alicja@cadence.com>, 'Cyprian Wronka' <cwronka@cadence.com>, 'Suresh Punnoose' <sureshp@cadence.com>, 'Rafal Ciepiela' <rafalc@cadence.com>, 'Thomas Petazzoni' <thomas.petazzoni@bootlin.com>, 'Nishanth Menon' <nm@ti.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 02, 2018 at 06:21:19PM +0530, Manish Narani wrote:
-> This patch adds platform specific structures, so that we can add
+Hi Mike,
 
-"This patch" in a commit message is tautologically redundant.
+On Fri, 3 Aug 2018 15:38:43 -0600
+<mshettel@codeaurora.org> wrote:
 
-> different IP support later using quirks.
+> > +static void
+> > +i3c_master_register_new_i3c_devs(struct i3c_master_controller *master)
+> > +{
+> > +	struct i3c_dev_desc *desc;
+> > +	int ret;
+> > +
+> > +	if (!master->init_done)
+> > +		return;
+> > +
+> > +	i3c_bus_for_each_i3cdev(master->bus, desc) {
+> > +		if (desc->dev || !desc->info.dyn_addr)
+> > +			continue;
+> > +
+> > +		desc->dev = kzalloc(sizeof(*desc->dev), GFP_KERNEL);
+> > +		if (!desc->dev)
+> > +			continue;
+> > +
+> > +		desc->dev->bus = master->bus;
+> > +		desc->dev->desc = desc;
+> > +		desc->dev->dev.parent = &master->bus->dev;
+> > +		if (desc == master->this)
+> > +			desc->dev->dev.type = &i3c_master_type;
+> > +		else
+> > +			desc->dev->dev.type = &i3c_device_type;
+> > +		desc->dev->dev.bus = &i3c_bus_type;
+> > +		desc->dev->dev.release = i3c_device_release;
+> > +		dev_set_name(&desc->dev->dev, "%d-%llx", master->bus-  
+> > >id,  
+> > +			     desc->info.pid);
+> > +
+> > +		if (desc->boardinfo)
+> > +			desc->dev->dev.of_node = desc->boardinfo-  
+> > >of_node;  
+> > +
+> > +		pr_info("%s:%i\n", __func__, __LINE__);
+> > +		if (ret)
+> > +			dev_err(master->parent,
+> > +				"Failed to add I3C device (err = %d)\n",  
+> ret);
+> > +	}
+> > +}  
 > 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  drivers/edac/synopsys_edac.c | 64 ++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 53 insertions(+), 11 deletions(-)
+> The compiler gives a warning that "ret" may be used uninitialized in the
+> above function, which is true since "ret" is never assigned a value.  Also,
+> I wonder about the "pr_info" call here, should there be a more detailed
+> message here about the device being registered, other than the file name and
+> line number?
+
+Yes, kbuild already reported that problem. I messed up when selecting
+the lines to add to my commit and added this trace instead of
+
+		ret = device_register(&desc->dev->dev);
+
+Will be fixed in v7.
+
 > 
-> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-> index 0c9c59e..d4798e8 100644
-> --- a/drivers/edac/synopsys_edac.c
-> +++ b/drivers/edac/synopsys_edac.c
-> @@ -22,6 +22,7 @@
->  #include <linux/edac.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of.h>
->  
->  #include "edac_module.h"
->  
-> @@ -130,6 +131,7 @@ struct synps_ecc_status {
->   * @baseaddr:	Base address of the DDR controller
->   * @message:	Buffer for framing the event specific info
->   * @stat:	ECC status information
-> + * @p_data:	Pointer to platform data
->   * @ce_cnt:	Correctable Error count
->   * @ue_cnt:	Uncorrectable Error count
->   */
-> @@ -137,11 +139,29 @@ struct synps_edac_priv {
->  	void __iomem *baseaddr;
->  	char message[SYNPS_EDAC_MSG_SIZE];
->  	struct synps_ecc_status stat;
-> +	const struct synps_platform_data *p_data;
->  	u32 ce_cnt;
->  	u32 ue_cnt;
->  };
->  
->  /**
-> + * struct synps_platform_data -  synps platform data structure
-> + * @synps_edac_geterror_info:	function pointer to synps edac error info
-> + * @synps_edac_get_mtype:	function pointer to synps edac mtype
-> + * @synps_edac_get_dtype:	function pointer to synps edac dtype
-> + * @synps_edac_get_eccstate:	function pointer to synps edac eccstate
-> + * @quirks:			to differentiate IPs
-> + */
-> +struct synps_platform_data {
-> +	int (*synps_edac_geterror_info)(void __iomem *base,
-> +					struct synps_ecc_status *p);
-> +	enum mem_type (*synps_edac_get_mtype)(const void __iomem *base);
-> +	enum dev_type (*synps_edac_get_dtype)(const void __iomem *base);
-> +	bool (*synps_edac_get_eccstate)(void __iomem *base);
-> +	int quirks;
-> +};
-> +
-> +/**
->   * synps_edac_geterror_info - Get the current ecc error info
->   * @base:	Pointer to the base address of the ddr memory controller
->   * @p:		Pointer to the synopsys ecc status structure
-> @@ -242,7 +262,8 @@ static void synps_edac_check(struct mem_ctl_info *mci)
->  	struct synps_edac_priv *priv = mci->pvt_info;
->  	int status;
->  
-> -	status = synps_edac_geterror_info(priv->baseaddr, &priv->stat);
-> +	status = priv->p_data->synps_edac_geterror_info(priv->baseaddr,
-> +							&priv->stat);
+> Otherwise, I have gone through the code in the process of writing the first
+> iteration of the Qualcomm I3C master driver, and overall the framework looks
+> good.  Will update with any additional feedback I have.
 
-Unnecessarily long line - shortening by renaming might help.
+Thanks for looking at the framework code. Your driver is in my TODO
+list.
 
->  	if (status)
->  		return;
->  
-> @@ -372,10 +393,12 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
->  		for (j = 0; j < csi->nr_channels; j++) {
->  			dimm            = csi->channels[j]->dimm;
->  			dimm->edac_mode = EDAC_FLAG_SECDED;
-> -			dimm->mtype     = synps_edac_get_mtype(priv->baseaddr);
-> +			dimm->mtype     = priv->p_data->synps_edac_get_mtype(
-> +						priv->baseaddr);
+Regards,
 
-Ditto - that trailing opening brace at the end is just yucky. Shorten it
-and let is stick out even if it longer than 80 cols.
-
->  			dimm->nr_pages  = (size >> PAGE_SHIFT) / csi->nr_channels;
->  			dimm->grain     = SYNPS_EDAC_ERR_GRAIN;
-> -			dimm->dtype     = synps_edac_get_dtype(priv->baseaddr);
-> +			dimm->dtype     = priv->p_data->synps_edac_get_dtype(
-> +						priv->baseaddr);
->  		}
->  	}
->  
-> @@ -423,6 +446,21 @@ static int synps_edac_mc_init(struct mem_ctl_info *mci,
->  	return status;
->  }
->  
-> +static const struct synps_platform_data zynq_edac_def = {
-> +	.synps_edac_geterror_info	= synps_edac_geterror_info,
-> +	.synps_edac_get_mtype		= synps_edac_get_mtype,
-> +	.synps_edac_get_dtype		= synps_edac_get_dtype,
-> +	.synps_edac_get_eccstate	= synps_edac_get_eccstate,
-> +	.quirks				= 0,
-
-Drop the "synps_" prefix from the function pointer names and leave them
-in the actual function names so that when one looks at the code, knows
-what is what.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+Boris
