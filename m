@@ -1,284 +1,430 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v5 05/12] PM / devfreq: Add support for policy notifiers
-Date: Mon, 6 Aug 2018 12:21:11 -0700
-Message-ID: <20180806192111.GB160295@google.com>
-References: <5399c191-e140-e2b8-629b-72ddfbf99b0f@samsung.com>
- <20180716175050.GZ129942@google.com>
- <20180731193953.GH68975@google.com>
- <5B610B48.4030802@samsung.com>
- <20180801170824.GJ68975@google.com>
- <5B626563.1090302@samsung.com>
- <20180802231343.GS68975@google.com>
- <CGME20180802234831epcas5p3951e8f64381a27d40865d339878751d1@epcas5p3.samsung.com>
- <20180802234820.GU68975@google.com>
- <5B639E76.6050901@samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] arm64: dts: renesas: r8a77980: add CSI2/VIN support
+Date: Mon, 6 Aug 2018 22:55:00 +0300
+Message-ID: <758a8c87-272c-e861-4aab-01309cff2f84@cogentembedded.com>
+References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5B639E76.6050901@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Describe the CSI2 and VIN (and their interconnections) in the R8A77980
+device tree.
 
-On Fri, Aug 03, 2018 at 09:14:46AM +0900, Chanwoo Choi wrote:
-> Hi Matthias,
-> 
-> On 2018년 08월 03일 08:48, Matthias Kaehlcke wrote:
-> > On Thu, Aug 02, 2018 at 04:13:43PM -0700, Matthias Kaehlcke wrote:
-> >> Hi Chanwoo,
-> >>
-> >> On Thu, Aug 02, 2018 at 10:58:59AM +0900, Chanwoo Choi wrote:
-> >>> Hi Matthias,
-> >>>
-> >>> On 2018년 08월 02일 02:08, Matthias Kaehlcke wrote:
-> >>>> Hi Chanwoo,
-> >>>>
-> >>>> On Wed, Aug 01, 2018 at 10:22:16AM +0900, Chanwoo Choi wrote:
-> >>>>> On 2018년 08월 01일 04:39, Matthias Kaehlcke wrote:
-> >>>>>> On Mon, Jul 16, 2018 at 10:50:50AM -0700, Matthias Kaehlcke wrote:
-> >>>>>>> On Thu, Jul 12, 2018 at 05:44:33PM +0900, Chanwoo Choi wrote:
-> >>>>>>>> Hi Matthias,
-> >>>>>>>>
-> >>>>>>>> On 2018년 07월 07일 02:53, Matthias Kaehlcke wrote:
-> >>>>>>>>> Hi Chanwoo,
-> >>>>>>>>>
-> >>>>>>>>> On Wed, Jul 04, 2018 at 03:41:46PM +0900, Chanwoo Choi wrote:
-> >>>>>>>>>
-> >>>>>>>>>> Firstly,
-> >>>>>>>>>> I'm not sure why devfreq needs the devfreq_verify_within_limits() function.
-> >>>>>>>>>>
-> >>>>>>>>>> devfreq already used the OPP interface as default. It means that
-> >>>>>>>>>> the outside of 'drivers/devfreq' can disable/enable the frequency
-> >>>>>>>>>> such as drivers/thermal/devfreq_cooling.c. Also, when some device
-> >>>>>>>>>> drivers disable/enable the specific frequency, the devfreq core
-> >>>>>>>>>> consider them.
-> >>>>>>>>>>
-> >>>>>>>>>> So, devfreq doesn't need to devfreq_verify_within_limits() because
-> >>>>>>>>>> already support some interface to change the minimum/maximum frequency
-> >>>>>>>>>> of devfreq device. 
-> >>>>>>>>>>
-> >>>>>>>>>> In case of cpufreq subsystem, cpufreq only provides 'cpufreq_verify_with_limits()'
-> >>>>>>>>>> to change the minimum/maximum frequency of cpu. some device driver cannot
-> >>>>>>>>>> change the minimum/maximum frequency through OPP interface.
-> >>>>>>>>>>
-> >>>>>>>>>> But, in case of devfreq subsystem, as I explained already, devfreq support
-> >>>>>>>>>> the OPP interface as default way. devfreq subsystem doesn't need to add
-> >>>>>>>>>> other way to change the minimum/maximum frequency.
-> >>>>>>>>>
-> >>>>>>>>> Using the OPP interface exclusively works as long as a
-> >>>>>>>>> enabling/disabling of OPPs is limited to a single driver
-> >>>>>>>>> (drivers/thermal/devfreq_cooling.c). When multiple drivers are
-> >>>>>>>>> involved you need a way to resolve conflicts, that's the purpose of
-> >>>>>>>>> devfreq_verify_within_limits(). Please let me know if there are
-> >>>>>>>>> existing mechanisms for conflict resolution that I overlooked.
-> >>>>>>>>>
-> >>>>>>>>> Possibly drivers/thermal/devfreq_cooling.c could be migrated to use
-> >>>>>>>>> devfreq_verify_within_limits() instead of the OPP interface if
-> >>>>>>>>> desired, however this seems beyond the scope of this series.
-> >>>>>>>>
-> >>>>>>>> Actually, if we uses this approach, it doesn't support the multiple drivers too.
-> >>>>>>>> If non throttler drivers uses devfreq_verify_within_limits(), the conflict
-> >>>>>>>> happen.
-> >>>>>>>
-> >>>>>>> As long as drivers limit the max freq there is no conflict, the lowest
-> >>>>>>> max freq wins. I expect this to be the usual case, apparently it
-> >>>>>>> worked for cpufreq for 10+ years.
-> >>>>>>>
-> >>>>>>> However it is correct that there would be a conflict if a driver
-> >>>>>>> requests a min freq that is higher than the max freq requested by
-> >>>>>>> another. In this case devfreq_verify_within_limits() resolves the
-> >>>>>>> conflict by raising p->max to the min freq. Not sure if this is
-> >>>>>>> something that would ever occur in practice though.
-> >>>>>>>
-> >>>>>>> If we are really concerned about this case it would also be an option
-> >>>>>>> to limit the adjustment to the max frequency.
-> >>>>>>>
-> >>>>>>>> To resolve the conflict for multiple device driver, maybe OPP interface
-> >>>>>>>> have to support 'usage_count' such as clk_enable/disable().
-> >>>>>>>
-> >>>>>>> This would require supporting negative usage count values, since a OPP
-> >>>>>>> should not be enabled if e.g. thermal enables it but the throttler
-> >>>>>>> disabled it or viceversa.
-> >>>>>>>
-> >>>>>>> Theoretically there could also be conflicts, like one driver disabling
-> >>>>>>> the higher OPPs and another the lower ones, with the outcome of all
-> >>>>>>> OPPs being disabled, which would be a more drastic conflict resolution
-> >>>>>>> than that of devfreq_verify_within_limits().
-> >>>>>>>
-> >>>>>>> Viresh, what do you think about an OPP usage count?
-> >>>>>>
-> >>>>>> Ping, can we try to reach a conclusion on this or at least keep the
-> >>>>>> discussion going?
-> >>>>>>
-> >>>>>> Not that it matters, but my preferred solution continues to be
-> >>>>>> devfreq_verify_within_limits(). It solves conflicts in some way (which
-> >>>>>> could be adjusted if needed) and has proven to work in practice for
-> >>>>>> 10+ years in a very similar sub-system.
-> >>>>>
-> >>>>> It is not true. Current cpufreq subsystem doesn't support external OPP
-> >>>>> control to enable/disable the OPP entry. If some device driver
-> >>>>> controls the OPP entry of cpufreq driver with opp_disable/enable(),
-> >>>>> the operation is not working. Because cpufreq considers the limit
-> >>>>> through 'cpufreq_verify_with_limits()' only.
-> >>>>
-> >>>> Ok, we can probably agree that using cpufreq_verify_with_limits()
-> >>>> exclusively seems to have worked well for cpufreq, and that in their
-> >>>> overall purpose cpufreq and devfreq are similar subsystems.
-> >>>>
-> >>>> The current throttler series with devfreq_verify_within_limits() takes
-> >>>> the enabled OPPs into account, the lowest and highest OPP are used as
-> >>>> a starting point for the frequency adjustment and (in theory) the
-> >>>> frequency range should only be narrowed by
-> >>>> devfreq_verify_within_limits().
-> >>>>
-> >>>>> As I already commented[1], there is different between cpufreq and devfreq.
-> >>>>> [1] https://lkml.org/lkml/2018/7/4/80
-> >>>>>
-> >>>>> Already, subsystem already used OPP interface in order to control
-> >>>>> specific OPP entry. I don't want to provide two outside method
-> >>>>> to control the frequency of devfreq driver. It might make the confusion.
-> >>>>
-> >>>> I understand your point, it would indeed be preferable to have a
-> >>>> single method. However I'm not convinced that the OPP interface is
-> >>>> a suitable solution, as I exposed earlier in this thread (quoted
-> >>>> below).
-> >>>>
-> >>>> I would like you to at least consider the possibility of changing
-> >>>> drivers/thermal/devfreq_cooling.c to devfreq_verify_within_limits().
-> >>>> Besides that it's not what is currently used, do you see any technical
-> >>>> concerns that would make devfreq_verify_within_limits() an unsuitable
-> >>>> or inferior solution?
-> >>>
-> >>> As we already discussed, devfreq_verify_within_limits() doesn't support
-> >>> the multiple outside controllers (e.g., devfreq-cooling.c).
-> >>
-> >> That's incorrect, its purpose is precisely that.
-> >>
-> >> Are you suggesting that cpufreq with its use of
-> >> cpufreq_verify_within_limits() (the inspiration for
-> >> devfreq_verify_within_limits()) is broken? It is used by cpu_cooling.c
-> >> and other drivers when receiving a CPUFREQ_ADJUST event, essentially
-> >> what I am proposing with DEVFREQ_ADJUST.
-> >>
-> >> Could you elaborate why this model wouldn't work for devfreq? "OPP
-> >> interface is mandatory for devfreq" isn't really a technical argument,
-> >> is it mandatory for any other reason than that it is the interface
-> >> that is currently used?
-> >>
-> >>> After you are suggesting the throttler core, there are at least two
-> >>> outside controllers (e.g., devfreq-cooling.c and throttler driver).
-> >>> As I knew the problem about conflict, I cannot agree the temporary
-> >>> method. OPP interface is mandatory for devfreq in order to control
-> >>> the OPP (frequency/voltage). In this situation, we have to try to
-> >>> find the method through OPP interface.
-> >>
-> >> What do you mean with "temporary method"?
-> >>
-> >> We can try to find a method through the OPP interface, but at this
-> >> point I'm not convinced that it is technically necessary or even
-> >> preferable.
-> >>
-> >> Another inconvenient of the OPP approach for both devfreq-cooling.c
-> >> and the throttler is that they have to bother with disabling all OPPs
-> >> above/below the max/min (they don't/shouldn't have to care), instead
-> >> of just telling devfreq the max/min.
-> > 
-> > And a more important one: both drivers now have to keep track which
-> > OPPs they enabled/disabled previously, done are the days of a simple
-> > dev_pm_opp_enable/disable() in devfreq_cooling. Certainly it is
-> > possible and not very complex to implement, but is it really the
-> > best/a good solution?
-> 
-> 
-> As I replied them right before, Each outside driver has their own throttling
-> policy to control OPP entries. They don't care the requirement of other
-> driver and cannot know the requirement of other driver. devfreq core can only
-> recognize them and then only consider enabled OPP entris without disabled OPP entries.
-> 
-> For example1,
->        | devfreq-cooling| throttler
-> ---------------------------------------
-> 500Mhz | disabled       | disabled
-> 400Mhz | disabled       | disabled
-> 300Mhz |                | disabled
-> 200Mhz |                |
-> 100Mhz |                |
-> => devfreq driver can use only 100/200Mhz
-> 
-> 
-> For example2,
->        | devfreq-cooling| throttler
-> ---------------------------------------
-> 500Mhz | disabled       | disabled
-> 400Mhz | disabled       |
-> 300Mhz | disabled       |
-> 200Mhz |                |
-> 100Mhz |                |
-> => devfreq driver can use only 100/200Mhz
-> 
-> 
-> For example3,
->        | devfreq-cooling| throttler
-> ---------------------------------------
-> 500Mhz | disabled       | disabled
-> 400Mhz |                |
-> 300Mhz |                |
-> 200Mhz |                | disabled
-> 100Mhz |                | disabled
-> => devfreq driver can use only 300/400Mhz
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-These are all cases without conflicts, my concern is about this:
+---
+This patch is against the 'renesas-devel-20180802v2-v4.18-rc7' branch of
+Simon Horman's 'renesas.git' repo.
 
->        | devfreq-cooling| throttler
-> ---------------------------------------
-> 500Mhz | disabled       |
-> 400Mhz | disabled       |
-> 300Mhz |                | disabled
-> 200Mhz |                | disabled
-> 100Mhz |                | disabled
-> => devfreq driver can't use any frequency?
+The R8A77980 CSI2/VIN DT binding updates have been posted earlier today...
 
-Actually my above comment wasn't about this case, but about the
-added complexity in devfreq-cooling.c and the throttler:
+ arch/arm64/boot/dts/renesas/r8a77980.dtsi |  374 ++++++++++++++++++++++++++++++
+ 1 file changed, 374 insertions(+)
 
-A bit simplified partition_enable_opps() currently does this:
-
-for_each_opp(opp) {
-  if (opp->freq <= max)
-     opp_enable(opp)
-  else
-     opp_disable(opp)
-}
-
-With the OPP usage/disable count this doesn't work any longer. Now we
-need to keep track of the enabled/disabled state of the OPP, something
-like:
-
-dev_pm_opp_enable(opp) {
-  if (opp->freq <= max) {
-    if (opp->freq > prev_max)
-      opp_enable(opp)
-  } else {
-    if (opp->freq < prev_max)
-      opp_disable(opp)
-  }
-}
-
-And duplicate the same in the throttler (and other possible
-drivers). Obviously it can be done, but is there really any gain
-from it?
-
-Instead they just could do:
-
-devfreq_verify_within_limits(policy/freq_pair, 0, max_freq)
-
-without being concerned about implementation details of devfreq.
-
-Thanks
-
-Matthias
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
++++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+@@ -579,6 +579,302 @@
+ 			status = "disabled";
+ 		};
+ 
++		vin0: video@e6ef0000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef0000 0 0x1000>;
++			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 811>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 811>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					vin0csi40: endpoint@2 {
++						reg = <2>;
++						remote-endpoint= <&csi40vin0>;
++					};
++				};
++			};
++		};
++
++		vin1: video@e6ef1000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef1000 0 0x1000>;
++			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 810>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			status = "disabled";
++			resets = <&cpg 810>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					vin1csi40: endpoint@2 {
++						reg = <2>;
++						remote-endpoint= <&csi40vin1>;
++					};
++				};
++			};
++		};
++
++		vin2: video@e6ef2000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef2000 0 0x1000>;
++			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 809>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 809>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					vin2csi40: endpoint@2 {
++						reg = <2>;
++						remote-endpoint= <&csi40vin2>;
++					};
++				};
++			};
++		};
++
++		vin3: video@e6ef3000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef3000 0 0x1000>;
++			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 808>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 808>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					vin3csi40: endpoint@2 {
++						reg = <2>;
++						remote-endpoint= <&csi40vin3>;
++					};
++				};
++			};
++		};
++
++		vin4: video@e6ef4000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef4000 0 0x1000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 807>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 807>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					vin4csi41: endpoint@2 {
++						reg = <2>;
++						remote-endpoint= <&csi41vin4>;
++					};
++				};
++			};
++		};
++
++		vin5: video@e6ef5000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef5000 0 0x1000>;
++			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 806>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 806>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					vin5csi41: endpoint@2 {
++						reg = <2>;
++						remote-endpoint= <&csi41vin5>;
++					};
++				};
++			};
++		};
++
++		vin6: video@e6ef6000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef6000 0 0x1000>;
++			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 805>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 805>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					vin6csi41: endpoint@2 {
++						reg = <2>;
++						remote-endpoint= <&csi41vin6>;
++					};
++				};
++			};
++		};
++
++		vin7: video@e6ef7000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef7000 0 0x1000>;
++			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 804>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 804>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					vin7csi41: endpoint@2 {
++						reg = <2>;
++						remote-endpoint= <&csi41vin7>;
++					};
++				};
++			};
++		};
++
++		vin8: video@e6ef8000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef8000 0 0x1000>;
++			interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 628>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 628>;
++			status = "disabled";
++		};
++
++		vin9: video@e6ef9000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6ef9000 0 0x1000>;
++			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 627>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 627>;
++			status = "disabled";
++		};
++
++		vin10: video@e6efa000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6efa000 0 0x1000>;
++			interrupts = <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 625>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 625>;
++			status = "disabled";
++		};
++
++		vin11: video@e6efb000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6efb000 0 0x1000>;
++			interrupts = <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 618>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 618>;
++			status = "disabled";
++		};
++
++		vin12: video@e6efc000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6efc000 0 0x1000>;
++			interrupts = <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 612>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 612>;
++			status = "disabled";
++		};
++
++		vin13: video@e6efd000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6efd000 0 0x1000>;
++			interrupts = <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 608>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 608>;
++			status = "disabled";
++		};
++
++		vin14: video@e6efe000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6efe000 0 0x1000>;
++			interrupts = <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 605>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 605>;
++			status = "disabled";
++		};
++
++		vin15: video@e6eff000 {
++			compatible = "renesas,vin-r8a77980";
++			reg = <0 0xe6eff000 0 0x1000>;
++			interrupts = <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 604>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 604>;
++			status = "disabled";
++		};
++
+ 		dmac1: dma-controller@e7300000 {
+ 			compatible = "renesas,dmac-r8a77980",
+ 				     "renesas,rcar-dmac";
+@@ -769,6 +1065,84 @@
+ 			resets = <&cpg 603>;
+ 		};
+ 
++		csi40: csi2@feaa0000 {
++			compatible = "renesas,r8a77980-csi2";
++			reg = <0 0xfeaa0000 0 0x10000>;
++			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 716>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 716>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					csi40vin0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&vin0csi40>;
++					};
++					csi40vin1: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&vin1csi40>;
++					};
++					csi40vin2: endpoint@2 {
++						reg = <2>;
++						remote-endpoint = <&vin2csi40>;
++					};
++					csi40vin3: endpoint@3 {
++						reg = <3>;
++						remote-endpoint = <&vin3csi40>;
++					};
++				};
++			};
++		};
++
++		csi41: csi2@feab0000 {
++			compatible = "renesas,r8a77980-csi2";
++			reg = <0 0xfeab0000 0 0x10000>;
++			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 716>;
++			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
++			resets = <&cpg 716>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					reg = <1>;
++
++					csi41vin4: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&vin4csi41>;
++					};
++					csi41vin5: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&vin5csi41>;
++					};
++					csi41vin6: endpoint@2 {
++						reg = <2>;
++						remote-endpoint = <&vin6csi41>;
++					};
++					csi41vin7: endpoint@3 {
++						reg = <3>;
++						remote-endpoint = <&vin7csi41>;
++					};
++				};
++			};
++		};
++
+ 		du: display@feb00000 {
+ 			compatible = "renesas,du-r8a77980",
+ 				     "renesas,du-r8a77970";
