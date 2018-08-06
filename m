@@ -1,67 +1,97 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v3 3/6] regmap: Add regmap_noinc_read API
-Date: Mon, 6 Aug 2018 11:25:08 +0100
-Message-ID: <20180806102508.GA32322@imbe.wolfsonmicro.main>
-References: <1533301341-26560-1-git-send-email-stefan.popa@analog.com>
- <1533301341-26560-4-git-send-email-stefan.popa@analog.com>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V4 0/8] backlight: qcom-wled: Support for QCOM wled driver
+Date: Mon, 06 Aug 2018 16:28:47 +0530
+Message-ID: <405f3406c933b93d84a554f4552941f4@codeaurora.org>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
+ <519913ec490934931b1c0b3a4539c283@codeaurora.org>
+ <20180803074503.xvjvllsejw7xq3ox@holly.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1533301341-26560-4-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <20180803074503.xvjvllsejw7xq3ox@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: jic23@kernel.org, broonie@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 03, 2018 at 04:02:18PM +0300, Stefan Popa wrote:
-> From: Crestez Dan Leonard <leonard.crestez@intel.com>
+On 2018-08-03 13:15, Daniel Thompson wrote:
+> On Fri, Aug 03, 2018 at 12:49:34PM +0530, kgunda@codeaurora.org wrote:
+>> Hi Bjorn,
+>> Can you please help review this patch series ?
+>> 
+>> Pavel, Rob, Daniel reviewed the series except the "auto string 
+>> detection"
+>> patch.
 > 
-> The regmap API usually assumes that bulk read operations will read a
-> range of registers but some I2C/SPI devices have certain registers for
-> which a such a read operation will return data from an internal FIFO
-> instead. Add an explicit API to support bulk read without range semantics.
+> I did take a glance at the last patch... but in the end decided to wait
+> for v5 to look in depth.
 > 
-> Some linux drivers use regmap_bulk_read or regmap_raw_read for such
-> registers, for example mpu6050 or bmi150 from IIO. This only happens to
-> work because when caching is disabled a single regmap read op will map
-> to a single bus read op (as desired). This breaks if caching is enabled and
-> reg+1 happens to be a cacheable register.
 > 
-> Without regmap support refactoring a driver to enable regmap caching
-> requires separate I2C and SPI paths. This is exactly what regmap is
-> supposed to help avoid.
+> Daniel.
 > 
-> Suggested-by: Jonathan Cameron <jic23@kernel.org>
-> Signed-off-by: Crestez Dan Leonard <leonard.crestez@intel.com>
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> ---
-> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-> index 4f38068..b6e6040 100644
-> --- a/include/linux/regmap.h
-> +++ b/include/linux/regmap.h
-> @@ -946,6 +946,8 @@ int regmap_raw_write_async(struct regmap *map, unsigned int reg,
->  int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val);
->  int regmap_raw_read(struct regmap *map, unsigned int reg,
->  		    void *val, size_t val_len);
-> +int regmap_noinc_read(struct regmap *map, unsigned int reg,
-> +		      void *val, size_t val_len);
->  int regmap_bulk_read(struct regmap *map, unsigned int reg, void *val,
->  		     size_t val_count);
->  int regmap_update_bits_base(struct regmap *map, unsigned int reg,
-> @@ -1196,6 +1198,13 @@ static inline int regmap_raw_read(struct regmap *map, unsigned int reg,
->  	return -EINVAL;
->  }
->  
-> +static inline int regmap_pipe_read(struct regmap *map, unsigned int reg,
-> +				   void *val, size_t val_len)
-> +{
-> +	WARN_ONCE(1, "regmap API is disabled");
-> +	return -EINVAL;
-> +}
-> +
+> 
+>> 
+Thanks Daniel! I will push the V5 series then.
 
-This is presumably supposed to be regmap_noinc_read.
-
-Thanks,
-Charles
+>> Thanks,
+>> Kiran
+>> 
+>> On 2018-07-09 15:52, Kiran Gunda wrote:
+>> > This patch series renames the pm8941-wled.c driver to qcom-wled.c to add
+>> > the support for multiple PMICs supported by qualcomm. This patch series
+>> > supports both PM8941 and PMI8998 WLED. The PMI8998 WLED has the support
+>> > to handle the OVP (over voltage protection) and the SC (short circuit
+>> > protection)
+>> > interrupts. It also has the auto string detection algorithm support to
+>> > configure the right strings if the user specified string configuration
+>> > is in-correct. These three features are added in this series for
+>> > PMI8998.
+>> >
+>> > changes from v1:
+>> >    - Fixed the commit message for
+>> >    - backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
+>> >
+>> > Changes from v2:
+>> >    - Fixed bjorn and other reviewer's comments
+>> >    - Seperated the device tree bindings
+>> >    - Splitted out the WLED4 changes in seperate patch
+>> >    - Merged OVP and auto string detection patch
+>> >
+>> > Changes from v3:
+>> >   - Added Reviewed-by/Acked-by tags
+>> >   - Fixed comments from Bjorn/Vinod/Rob
+>> >   - Splitting the "backlight: qcom-wled: Add support for WLED4
+>> > peripheral" patch
+>> >     to seperate the WLED3 specific restructure.
+>> >
+>> > Kiran Gunda (8):
+>> >   backlight: qcom-wled: Rename pm8941-wled.c to qcom-wled.c
+>> >   backlight: qcom-wled: restructure the qcom-wled bindings
+>> >   backlight: qcom-wled: Add new properties for PMI8998
+>> >   backlight: qcom-wled: Rename PM8941* to WLED3
+>> >   backlight: qcom-wled: Restructure the driver for WLED3
+>> >   backlight: qcom-wled: Add support for WLED4 peripheral
+>> >   backlight: qcom-wled: add support for short circuit handling
+>> >   backlight: qcom-wled: Add auto string detection logic
+>> >
+>> >  .../bindings/leds/backlight/pm8941-wled.txt        |   42 -
+>> >  .../bindings/leds/backlight/qcom-wled.txt          |  150 +++
+>> >  drivers/video/backlight/Kconfig                    |    8 +-
+>> >  drivers/video/backlight/Makefile                   |    2 +-
+>> >  drivers/video/backlight/pm8941-wled.c              |  432 -------
+>> >  drivers/video/backlight/qcom-wled.c                | 1298
+>> > ++++++++++++++++++++
+>> >  6 files changed, 1453 insertions(+), 479 deletions(-)
+>> >  delete mode 100644
+>> > Documentation/devicetree/bindings/leds/backlight/pm8941-wled.txt
+>> >  create mode 100644
+>> > Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>> >  delete mode 100644 drivers/video/backlight/pm8941-wled.c
+>> >  create mode 100644 drivers/video/backlight/qcom-wled.c
+> --
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
