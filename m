@@ -1,67 +1,61 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: New remoteproc driver for TI PRU
-Date: Mon, 6 Aug 2018 11:32:24 -0500
-Message-ID: <5bd5e388-959c-cff7-df38-d267e06d4d96@lechnology.com>
-References: <20180623210810.21232-1-david@lechnology.com>
- <e0a883af-8228-5b06-3186-f57d8f898aaa@ti.com>
- <8fc18d40-72f5-9215-26f0-1492e3a6c0e7@lechnology.com>
- <536d28bd-bcdd-1665-e1c8-828572051cfb@ti.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v8 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic-stby-poweroff property
+Date: Mon, 06 Aug 2018 18:49:32 +0200
+Message-ID: <1533574172.2809.11.camel@pengutronix.de>
+References: <20180726092220.17250-1-o.rempel@pengutronix.de>
+         <20180726092220.17250-2-o.rempel@pengutronix.de>
+         <DB6PR04MB3223605CB1F5E06D4A278B3C892B0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+         <84c1921c-922e-4b5d-b688-db89047fa1db@pengutronix.de>
+         <DB6PR04MB32236EA307DCD070771B1D4D892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+         <1532680211.32306.36.camel@pengutronix.de>
+         <DB6PR04MB32239840E3DF12328A3E7E47892A0@DB6PR04MB3223.eurprd04.prod.outlook.com>
+         <02f4b642-14a8-f2db-ea23-c42a4f6f1652@pengutronix.de>
+         <DB6PR04MB3223362445234D81383F0D1689200@DB6PR04MB3223.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <536d28bd-bcdd-1665-e1c8-828572051cfb@ti.com>
-Content-Language: en-US
+In-Reply-To: <DB6PR04MB3223362445234D81383F0D1689200@DB6PR04MB3223.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, Roger Quadros <rogerq@ti.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
+To: Robin Gong <yibin.gong@nxp.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2018 07:17 PM, Suman Anna wrote:
-> Hi David,
+Am Montag, den 06.08.2018, 02:34 +0000 schrieb Robin Gong:
+> > > > Not all boards follow the reference design, that's a fact of
+> > > > life.
+> > > > 
+> > > > Please look at the i.MX6Q reference manual. The sequence
+> > > > implemented
+> > > > in this patchset can be found as a valid way to power off the
+> > > > system
+> > > > in
+> > > > "60.4.3 Power mode transitions" "Normal ON to OFF with external
+> > > > PMIC", so there is hardly any way to argue that this is a board
+> > > > specific quirk. This is one of the Freescale/NXP recommended
+> > > > sequences to
+> > 
+> > turn off the system.
+> > 
+> > > Okay, but could you add one more comment for this solution? RTC
+> > > alarm
+> > > and ONOFF Button wakeup feature can't be support in this case.
+> > 
+> > Enough to add it in to changelog? or should it go to the binding
+> > documentation?
 > 
-> On 06/29/2018 12:44 PM, David Lechner wrote:
->> On 06/29/2018 04:58 AM, Roger Quadros wrote:
->>> +Suman & Tero
->>>
->>> Hi David,
->>>
->>> On 24/06/18 00:08, David Lechner wrote:
->>>>
->>>> Date: Sat, 23 Jun 2018 15:43:59 -0500
->>>> Subject: [PATCH 0/8] New remoteproc driver for TI PRU
->>>>
->>>> This series adds a new remoteproc driver for the TI Programmable
->>>> Runtime Unit
->>>> (PRU) that is present in some TI Sitara processors. This code has
->>>> been tested
->>>> working on AM1808 (LEGO MINDSTORMS EV3) and AM3358 (BeagleBone Green).
->>>
->>> This is great. We have been working on something similar and I think
->>> it would
->>> be great if we can collaborate to get all our needs addressed.
->>
->> Yes, I have used the PRU with the TI kernel on BeagleBone so I've seen
->> the TI
->> implementation. My primary interest is in the AM1808, which has a far
->> simpler
->> PRU than other SoCs. So, I was hoping I could get away with just
->> implementing
->> the basic stuff that I need and let TI add the more complex stuff later.
-> 
-> Thanks for the series. PRUSS is present on many SoCs now, and each with
-> their own integration quirks, both in terms of SoC connections as well
-> as internal sub-modules within the subsystem. We currently support
-> AM335x, AM437x, AM57xx, Keystone 2 based 66AK2G and a newer generation
-> AM65x as well. It should be relatively straight-forward to scale this
-> for AM1808/OMAP-L138 as well. The move to the standard Common Clock and
-> Reset frameworks for clocks with the Davinci chips should make it
-> relatively straight-forward for the architecture pieces.
-> 
-> I will take a look at your series in detail sometime next week, and
-> mostly post our series to the upstream lists as well within the next
-> couple of weeks so that it is easier for discussion on the upstream lists.
-> 
+> The binding doc is better.
 
-Have you had time to look at this yet? If you are too busy, I can submit
-a v2 with the interrupt controller broken out into a separate driver.
+Sorry, I disagree.
+
+A binding is a way to describe a specific hardware layout, it isn't the
+right place to advice a hardware designer on the implications of a
+specific hardware implementation. The NXP hardware design guide is a
+more suitable place for this information.
+
+We also don't mention in random bindings that the system won't be able
+to brew a fresh cup of coffee.
+
+Regards,
+Lucas
