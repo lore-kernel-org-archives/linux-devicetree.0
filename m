@@ -1,112 +1,49 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 4/8] media: platform: Add Cedrus VPU decoder driver
-Date: Mon, 06 Aug 2018 16:21:01 +0200
-Message-ID: <130e4f08534d0dfbd26f97f9b95d533ce86ceada.camel@bootlin.com>
-References: <20180725100256.22833-1-paul.kocialkowski@bootlin.com>
-         <20180725100256.22833-5-paul.kocialkowski@bootlin.com>
-         <faa0436aad809ca562b5c152420b1e4d4b6f507b.camel@collabora.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 3/6] regmap: Add regmap_noinc_read API
+Date: Mon, 6 Aug 2018 15:39:01 +0100
+Message-ID: <20180806143901.GP2414@sirena.org.uk>
+References: <1533557087-10401-1-git-send-email-stefan.popa@analog.com>
+ <1533557087-10401-4-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-r7SMzHuFY9GvmukQMWuj"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="p/1JFEOz/hVXxMAZ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <faa0436aad809ca562b5c152420b1e4d4b6f507b.camel@collabora.com>
+Content-Disposition: inline
+In-Reply-To: <1533557087-10401-4-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@collabora.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-sunxi@googlegroups.com, Hugues Fruchet <hugues.fruchet@st.com>, Randy Li <ayaka@soulik.info>, Hans Verkuil <hverkuil@xs4all.nl>, Tomasz Figa <tfiga@chromium.org>, Alexandre Courbot <acourbot@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
 List-Id: devicetree@vger.kernel.org
 
 
---=-r7SMzHuFY9GvmukQMWuj
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+--p/1JFEOz/hVXxMAZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+On Mon, Aug 06, 2018 at 03:04:44PM +0300, Stefan Popa wrote:
 
-On Fri, 2018-08-03 at 17:49 -0300, Ezequiel Garcia wrote:
-> On Wed, 2018-07-25 at 12:02 +0200, Paul Kocialkowski wrote:
-> > This introduces the Cedrus VPU driver that supports the VPU found in
-> > Allwinner SoCs, also known as Video Engine. It is implemented through
-> > a v4l2 m2m decoder device and a media device (used for media requests).
-> > So far, it only supports MPEG2 decoding.
-> >=20
-> > Since this VPU is stateless, synchronization with media requests is
-> > required in order to ensure consistency between frame headers that
-> > contain metadata about the frame to process and the raw slice data that
-> > is used to generate the frame.
-> >=20
-> > This driver was made possible thanks to the long-standing effort
-> > carried out by the linux-sunxi community in the interest of reverse
-> > engineering, documenting and implementing support for Allwinner VPU.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
->=20
-> [..]
-> > +static int cedrus_probe(struct platform_device *pdev)
-> > +{
-> > +	struct cedrus_dev *dev;
-> > +	struct video_device *vfd;
-> > +	int ret;
-> > +
-> > +	dev =3D devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-> > +	if (!dev)
-> > +		return -ENOMEM;
-> > +
-> > +	dev->dev =3D &pdev->dev;
-> > +	dev->pdev =3D pdev;
-> > +
-> > +	ret =3D cedrus_hw_probe(dev);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Failed to probe hardware\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	dev->dec_ops[CEDRUS_CODEC_MPEG2] =3D &cedrus_dec_ops_mpeg2;
-> > +
-> > +	mutex_init(&dev->dev_mutex);
-> > +	spin_lock_init(&dev->irq_lock);
-> > +
->=20
-> A minor thing.
->=20
-> I believe this spinlock is not needed. All the data structures
-> it's accessing are already protected, and some operations
-> (stop_streaming) are guaranteed to not run at the same
-> time as a job.
+> +	if (!regmap_volatile(map, reg) || !regmap_readable(map, reg)) {
+> +		ret = -EINVAL;
+> +		goto out_unlock;
+> +	}
 
-I think we were afraid of this kind of scenario happening, but
-everything seems to indicate that these data structures are already
-properly protected by the core, as you're suggesting.
+I suggested having an explicit operation to check if a register supports
+this mode of operation when I reviewed an earlier version, I didn't
+notice a reply on that?
 
-Removing the lock does not cause any noticeable issue at first try, but
-I'd like to test decoding for a few hours in a row to reduce the
-probability of missing a corner case that our lock was preventing.
-
-If that goes well, I guess we can remove it from our driver.
-
-Cheers,
-
-Paul
-
---=20
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---=-r7SMzHuFY9GvmukQMWuj
+--p/1JFEOz/hVXxMAZ
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAltoWU0ACgkQ3cLmz3+f
-v9FoWAf/WG03qz9Fjv7JGnd7X5HALk//tyU8gOO6QPBxy76EGuvrPjv/JethusXV
-RUUYVbEarEXgfk8JrEGlewzbM7Zlwi5F1AFSRbVZTTB871buDt8W7hjzXIVJu9yR
-Ie5K1jB6lh7prMRPjPodOli8EuE4b7GM30R+IbMnUrVr8cJfTN09IAb0Pzr1iM6/
-1nYCvQyhB88kxm+KVTNEIJiDDMSmFia5pBQw5TgInO1G1QKi0beTICqTv5hUnw6l
-Rfs5/g1apthU/eDVqQrh0b9Gf/QPyJLc118ISxXgKfNetOQ/35B9hyJCAUq7bveT
-VZQj3QqckS6YTocGreXR/nol0jKH8Q==
-=XOnT
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltoXYEACgkQJNaLcl1U
+h9AJdAf+MuzrfAjV3XR/vvxIWIN5fNHaN8p8i6B479nzAsnIRY/IirqmWxYZ3+X0
+7IJOxtvbmZR6EW6VVT5ccTAlAnbrduCT11AbwOpLDYf8Zkjldv3AfepOURH9lUI0
+2/Ve5mb3F36MLGvOBqqdVKkAezpPb+MrWc44HuSofWo85mGGTeBWlMV7UGr26/HZ
+uMYXA55IRthFAAHjrkVDRt/Y4kYmzRtBJNt1ihytVH1T3OMjyqdWeE3WGA50uv0r
+GIZ3RIB8t9iiEFWFVxxR678VNa6bSBy1CjHyGN9TKVNPpwBEqUL11ToBFiobr9Jp
+ef5nNuAxn/I22hkhVMmCRQCU01V5DQ==
+=Prc5
 -----END PGP SIGNATURE-----
 
---=-r7SMzHuFY9GvmukQMWuj--
+--p/1JFEOz/hVXxMAZ--
