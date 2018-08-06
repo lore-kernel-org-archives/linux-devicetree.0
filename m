@@ -1,34 +1,33 @@
-Return-Path: <SRS0=QYpu=LN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40185 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbeHaA5N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Aug 2018 20:57:13 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n2-v6so9264285wrw.7
-        for <devicetree@vger.kernel.org>; Thu, 30 Aug 2018 13:53:11 -0700 (PDT)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH 0/5] add support to STM LSM6DSO 6-axis Mems sensor
-Date: Thu, 30 Aug 2018 22:52:54 +0200
-Message-Id: <20180830205259.7029-1-lorenzo.bianconi@redhat.com>
+Return-Path: <SRS0=Ch3o=KW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from 161640.com ([78.128.99.25]:34307 "EHLO dealsofamerica.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726415AbeHGE1t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Aug 2018 00:27:49 -0400
+Subject: check with you
+Message-ID: <4b4232e2c38b74ffb5c793f4b62a35c0@whitecapsmarine.com>
+Date: Mon, 06 Aug 2018 14:53:17 +0200
+From: "Jason James" <askchati@montaguecompany.com>
+Reply-To: gaosintans@aliyun.com
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Lorenzo Bianconi (5):
-  iio: imu: st_lsm6dsx: add read_fifo callback to fifo_ops
-  iio: imu: st_lsm6dsx: make st_lsm6dsx_check_odr() non-static
-  iio: imu: st_lsm6dsx: add addr/max_word_len to st_lsm6dsx_read_block()
-  iio: imu: st_lsm6dsx: add support to LSM6DSO
-  dt-bindings: iio: imu: st_lsm6dsx: add LSM6DSO device bindings
+Want to follow up the email sent last week.
+Do you have needs for photo editing?
+We can edit 400 images within 24 hours.
 
- .../bindings/iio/imu/st_lsm6dsx.txt           |   1 +
- drivers/iio/imu/st_lsm6dsx/Kconfig            |   2 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |  18 +-
- .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    | 166 ++++++++++++++++--
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  |  51 +++++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c   |   5 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c   |   5 +
- 7 files changed, 228 insertions(+), 20 deletions(-)
+We are working on all kinds of ecommerce photos, jewelry photos, and the
+portrait images.
 
--- 
-2.18.0
+We do cutting out and clipping path and others, and also we provide
+retouching for your photos,
+
+You can throw us a photo and we will do testing for you to check our
+quality.
+
+Thanks,
+Jason
+
