@@ -1,67 +1,67 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT 4/4] ARM: dts: exynos: Add LDO28 regulator on Exynos5422 Odroid boards
-Date: Mon,  6 Aug 2018 18:09:33 +0200
-Message-ID: <20180806160933.6578-4-krzk@kernel.org>
-References: <20180806160933.6578-1-krzk@kernel.org>
+From: David Lechner <david@lechnology.com>
+Subject: Re: New remoteproc driver for TI PRU
+Date: Mon, 6 Aug 2018 11:32:24 -0500
+Message-ID: <5bd5e388-959c-cff7-df38-d267e06d4d96@lechnology.com>
+References: <20180623210810.21232-1-david@lechnology.com>
+ <e0a883af-8228-5b06-3186-f57d8f898aaa@ti.com>
+ <8fc18d40-72f5-9215-26f0-1492e3a6c0e7@lechnology.com>
+ <536d28bd-bcdd-1665-e1c8-828572051cfb@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180806160933.6578-1-krzk@kernel.org>
+In-Reply-To: <536d28bd-bcdd-1665-e1c8-828572051cfb@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+To: Suman Anna <s-anna@ti.com>, Roger Quadros <rogerq@ti.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The LDO28 is used only on Odroid XU3 for Display Port.  Define it so DTS
-will describe entire hardware.
+On 06/29/2018 07:17 PM, Suman Anna wrote:
+> Hi David,
+> 
+> On 06/29/2018 12:44 PM, David Lechner wrote:
+>> On 06/29/2018 04:58 AM, Roger Quadros wrote:
+>>> +Suman & Tero
+>>>
+>>> Hi David,
+>>>
+>>> On 24/06/18 00:08, David Lechner wrote:
+>>>>
+>>>> Date: Sat, 23 Jun 2018 15:43:59 -0500
+>>>> Subject: [PATCH 0/8] New remoteproc driver for TI PRU
+>>>>
+>>>> This series adds a new remoteproc driver for the TI Programmable
+>>>> Runtime Unit
+>>>> (PRU) that is present in some TI Sitara processors. This code has
+>>>> been tested
+>>>> working on AM1808 (LEGO MINDSTORMS EV3) and AM3358 (BeagleBone Green).
+>>>
+>>> This is great. We have been working on something similar and I think
+>>> it would
+>>> be great if we can collaborate to get all our needs addressed.
+>>
+>> Yes, I have used the PRU with the TI kernel on BeagleBone so I've seen
+>> the TI
+>> implementation. My primary interest is in the AM1808, which has a far
+>> simpler
+>> PRU than other SoCs. So, I was hoping I could get away with just
+>> implementing
+>> the basic stuff that I need and let TI add the more complex stuff later.
+> 
+> Thanks for the series. PRUSS is present on many SoCs now, and each with
+> their own integration quirks, both in terms of SoC connections as well
+> as internal sub-modules within the subsystem. We currently support
+> AM335x, AM437x, AM57xx, Keystone 2 based 66AK2G and a newer generation
+> AM65x as well. It should be relatively straight-forward to scale this
+> for AM1808/OMAP-L138 as well. The move to the standard Common Clock and
+> Reset frameworks for clocks with the Davinci chips should make it
+> relatively straight-forward for the architecture pieces.
+> 
+> I will take a look at your series in detail sometime next week, and
+> mostly post our series to the upstream lists as well within the next
+> couple of weeks so that it is easier for discussion on the upstream lists.
+> 
 
-Depending on bootloader behavior this might affect the Display Port
-because none of drivers are enabling it. By default it is off in S2MPS11
-PMIC reset values.  However it could be enabled by bootloader so in such
-case kernel will later disable it as unused regulator.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
----
-
-Not tested on Odroid XU3 with Display Port.
----
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 7 +++++++
- arch/arm/boot/dts/exynos5422-odroidxu3.dts    | 6 ++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index b0dc9cc81b94..178e1064cfc7 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -331,6 +331,13 @@
- 				regulator-always-on;
- 			};
- 
-+			ldo28_reg: LDO28 {
-+				/* Used on XU3 */
-+				regulator-name = "vdd_ldo26";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3950000>;
-+			};
-+
- 			ldo29_reg: LDO29 {
- 				/* Unused */
- 				regulator-name = "vdd_ldo29";
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-index 0322f281912c..db0bc17a667b 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-@@ -49,6 +49,12 @@
- 	};
- };
- 
-+&ldo28_reg {
-+	regulator-name = "dp_p3v3";
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+};
-+
- &pwm {
- 	/*
- 	 * PWM 0 -- fan
--- 
-2.14.1
+Have you had time to look at this yet? If you are too busy, I can submit
+a v2 with the interrupt controller broken out into a separate driver.
