@@ -1,75 +1,35 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] pinctrl: ocelot: add support for interrupt controller
-Date: Mon, 6 Aug 2018 13:06:23 +0200
-Message-ID: <CACRpkdbq2Q-J8scsuaUS0hP1x12xh0zd+RMrCp0TYB773bOAdg@mail.gmail.com>
-References: <20180725122621.31713-1-quentin.schulz@bootlin.com> <20180725122621.31713-2-quentin.schulz@bootlin.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v7 0/3] ARM: dts: at91: sama5d2: Add nodes for I2S
+Date: Mon, 6 Aug 2018 14:19:45 +0300
+Message-ID: <20180806111948.4522-1-codrin.ciubotariu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725122621.31713-2-quentin.schulz@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: quentin.schulz@bootlin.com
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, paul.burton@mips.com, James Hogan <jhogan@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, Claudiu.Beznea@microchip.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Quentin, sorry for delays!
+These are the remaining dts patches from the series:
+[PATCH v5 0/5] ASoC: add driver for Atmel I2S controller
 
-On Wed, Jul 25, 2018 at 2:27 PM Quentin Schulz
-<quentin.schulz@bootlin.com> wrote:
+v6 -> v7
+ - addressed some comments regarding pin conflicts;
 
-> This GPIO controller can serve as an interrupt controller as well on the
-> GPIOs it handles.
->
-> An interrupt is generated whenever a GPIO line changes and the
-> interrupt for this GPIO line is enabled. This means that both the
-> changes from low to high and high to low generate an interrupt.
->
-> For some use cases, it makes sense to ignore the high to low change and
-> not generate an interrupt. Such a use case is a line that is hold in a
-> level high/low manner until the event holding the line gets acked.
-> This can be achieved by making sure the interrupt on the GPIO controller
-> side gets acked and masked only after the line gets hold in its default
-> state, this is what's done with the fasteoi functions.
->
-> Only IRQ_TYPE_EDGE_BOTH and IRQ_TYPE_LEVEL_HIGH are supported for now.
->
-> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+v5 -> v6
+ - removed unnecessary phandles to audio PLL clock from the I2S nodes;
+ - using assigned clocks to set gclk as parent of i2smuxclk;
 
-Patch applied, it's such a pretty and straight-forward patch.
-Also IRQ is probably very nice to have, so let's get this in and
-supported.
+Codrin Ciubotariu (1):
+  ARM: dts: at91: sama5d2: add I2S clock muxing nodes
 
-Please consider addressing the following in follow-up patch(es):
+Cyrille Pitchen (2):
+  ARM: dts: at91: sama5d2: add nodes for I2S controllers
+  ARM: dts: at91: sama5d2 Xplained: add pin muxing for I2S
 
-> +static int ocelot_irq_set_type(struct irq_data *data, unsigned int type);
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 30 +++++++++++
+ arch/arm/boot/dts/sama5d2.dtsi              | 56 +++++++++++++++++++++
+ 2 files changed, 86 insertions(+)
 
-Can't you just move the function above so you don't have to forward-declare
-this?
-
-> +static struct irq_chip ocelot_eoi_irqchip = {
-> +       .name           = "gpio",
-> +       .irq_mask       = ocelot_irq_mask,
-> +       .irq_eoi        = ocelot_irq_ack,
-> +       .irq_unmask     = ocelot_irq_unmask,
-> +       .flags          = IRQCHIP_EOI_THREADED | IRQCHIP_EOI_IF_HANDLED,
-
-As you see the latter part of the define is "IF_HANDLED".
-
-> +       .irq_set_type   = ocelot_irq_set_type,
-> +};
-> +
-> +static struct irq_chip ocelot_irqchip = {
-> +       .name           = "gpio",
-> +       .irq_mask       = ocelot_irq_mask,
-> +       .irq_ack        = ocelot_irq_ack,
-> +       .irq_unmask     = ocelot_irq_unmask,
-> +       .irq_set_type   = ocelot_irq_set_type,
-> +};
-
-Is it really neccessary to have two irqchips?
-
-Is this to separate ACK and EOI because the EOI version
-doesn't survive an ACK?
-
-Yours,
-Linus Walleij
+-- 
+2.17.1
