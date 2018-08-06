@@ -1,33 +1,53 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v4 0/4] EDAC: Enhancements to Synopsys EDAC driver
-Date: Mon, 6 Aug 2018 13:58:27 +0000
-Message-ID: <SN6PR02MB4959577EB1CE589F980E6A43C1200@SN6PR02MB4959.namprd02.prod.outlook.com>
-References: <1533374735-16662-1-git-send-email-manish.narani@xilinx.com>
- <20180804163230.GA8157@nazgul.tnic>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v6 4/8] media: platform: Add Cedrus VPU decoder driver
+Date: Mon, 6 Aug 2018 23:10:40 +0900
+Message-ID: <CAAFQd5DgFDFupACthsz1iLpAeYRtUtEfzQC1E5XZQ6gPZAYi1Q@mail.gmail.com>
+References: <20180725100256.22833-1-paul.kocialkowski@bootlin.com>
+ <20180725100256.22833-5-paul.kocialkowski@bootlin.com> <b45a8a89-1313-7a08-206d-b93017724754@xs4all.nl>
+ <dba0f9496b393c76f355398018b14ae06b2b18c9.camel@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180804163230.GA8157@nazgul.tnic>
-Content-Language: en-US
+In-Reply-To: <dba0f9496b393c76f355398018b14ae06b2b18c9.camel@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, Edgar Iglesias <edgari@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, Naga Sureshkumar Relli <nagasure@xilinx.com>, Bharat Kumar Gogada <bharatku@xilinx.com>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, Srinivas Goud <sgoud@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Alexandre Courbot <acourbot@chromium.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, devel@driverdev.osuosl.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg KH <gregkh@linuxfoundation.org>, thomas.petazzoni@bootlin.com, linux-sunxi@googlegroups.com, Hugues FRUCHET <hugues.fruchet@st.com>, ayaka <ayaka@soulik.info>, Ezequiel Garcia <ezequiel@collabora.com>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jp
-c2xhdiBQZXRrb3YgW21haWx0bzpicEBhbGllbjguZGVdDQo+IFNlbnQ6IFNhdHVyZGF5LCBBdWd1
-c3QgNCwgMjAxOCAxMDowMyBQTQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0IDAvNF0gRURBQzog
-RW5oYW5jZW1lbnRzIHRvIFN5bm9wc3lzIEVEQUMgZHJpdmVyDQo+IA0KPiBPbiBTYXQsIEF1ZyAw
-NCwgMjAxOCBhdCAwMjo1NTozMVBNICswNTMwLCBNYW5pc2ggTmFyYW5pIHdyb3RlOg0KPiA+IFRo
-aXMgcGF0Y2ggc2VyaWVzIGVuaGFuY2VzIHRoZSBjdXJyZW50IEVEQUMgZHJpdmVyIHRvIHN1cHBv
-cnQNCj4gPiBkaWZmZXJlbnQNCj4gDQo+IFRoaXMgb25lLCB5b3VyIDIvNCBhbmQgNC80IHN0aWxs
-IHNheXMgInRoaXMgcGF0Y2giLiBIdXJyaWVkIHRvbyBtdWNoPw0KPiBIb3cgYWJvdXQgc2xvd2lu
-ZyBkb3duIGFuZCBsb29raW5nIGF0IHRoZW0gd2l0aCBhIGNyaXRpY2FsIGV5ZT8NCj4gDQo+IEFs
-c28sIGhvdyBhYm91dCB3YWl0aW5nIGZvciBhIHdlZWsgYmVmb3JlIHJlc2VuZGluZyB5b3VyIHBh
-dGNoZXMgc28gdGhhdCB5b3UNCj4gZ2l2ZSBwZW9wbGUgY2hhbmNlIHRvIHJldmlldyB0aGVtIHRv
-bz8NCj4gDQo+IFdoaWxlIHlvdSB3YWl0LCBwbGVhc2UgcmVhZCBEb2N1bWVudGF0aW9uL3Byb2Nl
-c3Mvc3VibWl0dGluZy1wYXRjaGVzLnJzdA0KPiAtIGl0J2xsIGhlbHAgeW91IHdpdGggdGhlIHN1
-Ym1pc3Npb24gbW9kYWxpdGllcy4NCg0KWWVzLCBJIG1pc3NlZCBpdC4gU29ycnkgZm9yIHRoYXQu
-IEkgd2lsbCBzdXJlbHkgd2FpdCBmb3IgYXJvdW5kIGEgd2VlayBmb3Igb3RoZXJzIHRvIHJldmll
-dy4NClRoYW5rcyBmb3IgdGhlIGd1aWRhbmNlLg0KDQpUaGFua3MsDQpNYW5pc2ggTmFyYW5pDQo=
+Hi Paul,
+
+On Mon, Aug 6, 2018 at 10:50 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi Hans and thanks for the review!
+>
+> On Sat, 2018-08-04 at 14:18 +0200, Hans Verkuil wrote:
+> > Hi Paul,
+> >
+> > See below for my review comments. Mostly small fry, the main issue I found is
+> > that there is no support for VIDIOC_DECODER_CMD. That's the proper way of
+> > stopping a decoder. Don't rely on the deprecated allow_zero_bytesused field.
+>
+> Mhh, it looks like this was kept around by negligence, but we do expect
+> that streamoff stops the decoder, not a zero bytesused field.
+>
+> Is it still required to implement the V4L2_DEC_CMD_STOP
+> VIDIOC_DECODER_CMD in that case? I read in the doc that this ioctl
+> should be optional.
+
+If I understand correctly that this decoder is stateless, there should
+be no need for any special flush sequence, since a 1:1 relation
+between OUTPUT and CAPTURE buffers is expected, which means that
+userspace can just stop queuing new OUTPUT buffers and keep dequeuing
+CAPTURE buffers until it matches all OUTPUT buffers queued before.
+
+By the way, I guess we will also need some documentation for the
+stateless codec interface. Do you or Maxime (who sent the H264 part)
+have any plans to work on it? We have some internal documents, which
+should be convertible to rst using pandoc, but we might need some help
+with updating to latest request API and further editing. Alexandre
+(moved from Cc to To) is going to be looking into this.
+
+Best regards,
+Tomasz
