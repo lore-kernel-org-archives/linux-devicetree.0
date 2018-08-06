@@ -1,304 +1,457 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 05/12] PM / devfreq: Add support for policy notifiers
-Date: Tue, 07 Aug 2018 07:31:16 +0900
-Message-ID: <5B68CC34.8040102@samsung.com>
-References: <5399c191-e140-e2b8-629b-72ddfbf99b0f@samsung.com>
-        <20180716175050.GZ129942@google.com> <20180731193953.GH68975@google.com>
-        <5B610B48.4030802@samsung.com> <20180801170824.GJ68975@google.com>
-        <5B626563.1090302@samsung.com> <20180802231343.GS68975@google.com>
-        <CGME20180802234831epcas5p3951e8f64381a27d40865d339878751d1@epcas5p3.samsung.com>
-        <20180802234820.GU68975@google.com> <5B639E76.6050901@samsung.com>
-        <20180806192111.GB160295@google.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 6/8] input: stpmu1: add stpmu1 onkey driver
+Date: Mon, 6 Aug 2018 15:47:37 -0700
+Message-ID: <20180806224737.GC141444@dtor-ws>
+References: <1530803657-17684-1-git-send-email-p.paillet@st.com>
+ <1530803657-17684-7-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180806192111.GB160295@google.com>
+Content-Disposition: inline
+In-Reply-To: <1530803657-17684-7-git-send-email-p.paillet@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, Benson Leung <bleung@chromium.org>, Olof Johansson <olof@lixom.net>
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+Hi Pascal,
 
-On 2018년 08월 07일 04:21, Matthias Kaehlcke wrote:
-> Hi Chanwoo,
+On Thu, Jul 05, 2018 at 03:14:24PM +0000, Pascal PAILLET-LME wrote:
+> From: pascal paillet <p.paillet@st.com>
 > 
-> On Fri, Aug 03, 2018 at 09:14:46AM +0900, Chanwoo Choi wrote:
->> Hi Matthias,
->>
->> On 2018년 08월 03일 08:48, Matthias Kaehlcke wrote:
->>> On Thu, Aug 02, 2018 at 04:13:43PM -0700, Matthias Kaehlcke wrote:
->>>> Hi Chanwoo,
->>>>
->>>> On Thu, Aug 02, 2018 at 10:58:59AM +0900, Chanwoo Choi wrote:
->>>>> Hi Matthias,
->>>>>
->>>>> On 2018년 08월 02일 02:08, Matthias Kaehlcke wrote:
->>>>>> Hi Chanwoo,
->>>>>>
->>>>>> On Wed, Aug 01, 2018 at 10:22:16AM +0900, Chanwoo Choi wrote:
->>>>>>> On 2018년 08월 01일 04:39, Matthias Kaehlcke wrote:
->>>>>>>> On Mon, Jul 16, 2018 at 10:50:50AM -0700, Matthias Kaehlcke wrote:
->>>>>>>>> On Thu, Jul 12, 2018 at 05:44:33PM +0900, Chanwoo Choi wrote:
->>>>>>>>>> Hi Matthias,
->>>>>>>>>>
->>>>>>>>>> On 2018년 07월 07일 02:53, Matthias Kaehlcke wrote:
->>>>>>>>>>> Hi Chanwoo,
->>>>>>>>>>>
->>>>>>>>>>> On Wed, Jul 04, 2018 at 03:41:46PM +0900, Chanwoo Choi wrote:
->>>>>>>>>>>
->>>>>>>>>>>> Firstly,
->>>>>>>>>>>> I'm not sure why devfreq needs the devfreq_verify_within_limits() function.
->>>>>>>>>>>>
->>>>>>>>>>>> devfreq already used the OPP interface as default. It means that
->>>>>>>>>>>> the outside of 'drivers/devfreq' can disable/enable the frequency
->>>>>>>>>>>> such as drivers/thermal/devfreq_cooling.c. Also, when some device
->>>>>>>>>>>> drivers disable/enable the specific frequency, the devfreq core
->>>>>>>>>>>> consider them.
->>>>>>>>>>>>
->>>>>>>>>>>> So, devfreq doesn't need to devfreq_verify_within_limits() because
->>>>>>>>>>>> already support some interface to change the minimum/maximum frequency
->>>>>>>>>>>> of devfreq device. 
->>>>>>>>>>>>
->>>>>>>>>>>> In case of cpufreq subsystem, cpufreq only provides 'cpufreq_verify_with_limits()'
->>>>>>>>>>>> to change the minimum/maximum frequency of cpu. some device driver cannot
->>>>>>>>>>>> change the minimum/maximum frequency through OPP interface.
->>>>>>>>>>>>
->>>>>>>>>>>> But, in case of devfreq subsystem, as I explained already, devfreq support
->>>>>>>>>>>> the OPP interface as default way. devfreq subsystem doesn't need to add
->>>>>>>>>>>> other way to change the minimum/maximum frequency.
->>>>>>>>>>>
->>>>>>>>>>> Using the OPP interface exclusively works as long as a
->>>>>>>>>>> enabling/disabling of OPPs is limited to a single driver
->>>>>>>>>>> (drivers/thermal/devfreq_cooling.c). When multiple drivers are
->>>>>>>>>>> involved you need a way to resolve conflicts, that's the purpose of
->>>>>>>>>>> devfreq_verify_within_limits(). Please let me know if there are
->>>>>>>>>>> existing mechanisms for conflict resolution that I overlooked.
->>>>>>>>>>>
->>>>>>>>>>> Possibly drivers/thermal/devfreq_cooling.c could be migrated to use
->>>>>>>>>>> devfreq_verify_within_limits() instead of the OPP interface if
->>>>>>>>>>> desired, however this seems beyond the scope of this series.
->>>>>>>>>>
->>>>>>>>>> Actually, if we uses this approach, it doesn't support the multiple drivers too.
->>>>>>>>>> If non throttler drivers uses devfreq_verify_within_limits(), the conflict
->>>>>>>>>> happen.
->>>>>>>>>
->>>>>>>>> As long as drivers limit the max freq there is no conflict, the lowest
->>>>>>>>> max freq wins. I expect this to be the usual case, apparently it
->>>>>>>>> worked for cpufreq for 10+ years.
->>>>>>>>>
->>>>>>>>> However it is correct that there would be a conflict if a driver
->>>>>>>>> requests a min freq that is higher than the max freq requested by
->>>>>>>>> another. In this case devfreq_verify_within_limits() resolves the
->>>>>>>>> conflict by raising p->max to the min freq. Not sure if this is
->>>>>>>>> something that would ever occur in practice though.
->>>>>>>>>
->>>>>>>>> If we are really concerned about this case it would also be an option
->>>>>>>>> to limit the adjustment to the max frequency.
->>>>>>>>>
->>>>>>>>>> To resolve the conflict for multiple device driver, maybe OPP interface
->>>>>>>>>> have to support 'usage_count' such as clk_enable/disable().
->>>>>>>>>
->>>>>>>>> This would require supporting negative usage count values, since a OPP
->>>>>>>>> should not be enabled if e.g. thermal enables it but the throttler
->>>>>>>>> disabled it or viceversa.
->>>>>>>>>
->>>>>>>>> Theoretically there could also be conflicts, like one driver disabling
->>>>>>>>> the higher OPPs and another the lower ones, with the outcome of all
->>>>>>>>> OPPs being disabled, which would be a more drastic conflict resolution
->>>>>>>>> than that of devfreq_verify_within_limits().
->>>>>>>>>
->>>>>>>>> Viresh, what do you think about an OPP usage count?
->>>>>>>>
->>>>>>>> Ping, can we try to reach a conclusion on this or at least keep the
->>>>>>>> discussion going?
->>>>>>>>
->>>>>>>> Not that it matters, but my preferred solution continues to be
->>>>>>>> devfreq_verify_within_limits(). It solves conflicts in some way (which
->>>>>>>> could be adjusted if needed) and has proven to work in practice for
->>>>>>>> 10+ years in a very similar sub-system.
->>>>>>>
->>>>>>> It is not true. Current cpufreq subsystem doesn't support external OPP
->>>>>>> control to enable/disable the OPP entry. If some device driver
->>>>>>> controls the OPP entry of cpufreq driver with opp_disable/enable(),
->>>>>>> the operation is not working. Because cpufreq considers the limit
->>>>>>> through 'cpufreq_verify_with_limits()' only.
->>>>>>
->>>>>> Ok, we can probably agree that using cpufreq_verify_with_limits()
->>>>>> exclusively seems to have worked well for cpufreq, and that in their
->>>>>> overall purpose cpufreq and devfreq are similar subsystems.
->>>>>>
->>>>>> The current throttler series with devfreq_verify_within_limits() takes
->>>>>> the enabled OPPs into account, the lowest and highest OPP are used as
->>>>>> a starting point for the frequency adjustment and (in theory) the
->>>>>> frequency range should only be narrowed by
->>>>>> devfreq_verify_within_limits().
->>>>>>
->>>>>>> As I already commented[1], there is different between cpufreq and devfreq.
->>>>>>> [1] https://lkml.org/lkml/2018/7/4/80
->>>>>>>
->>>>>>> Already, subsystem already used OPP interface in order to control
->>>>>>> specific OPP entry. I don't want to provide two outside method
->>>>>>> to control the frequency of devfreq driver. It might make the confusion.
->>>>>>
->>>>>> I understand your point, it would indeed be preferable to have a
->>>>>> single method. However I'm not convinced that the OPP interface is
->>>>>> a suitable solution, as I exposed earlier in this thread (quoted
->>>>>> below).
->>>>>>
->>>>>> I would like you to at least consider the possibility of changing
->>>>>> drivers/thermal/devfreq_cooling.c to devfreq_verify_within_limits().
->>>>>> Besides that it's not what is currently used, do you see any technical
->>>>>> concerns that would make devfreq_verify_within_limits() an unsuitable
->>>>>> or inferior solution?
->>>>>
->>>>> As we already discussed, devfreq_verify_within_limits() doesn't support
->>>>> the multiple outside controllers (e.g., devfreq-cooling.c).
->>>>
->>>> That's incorrect, its purpose is precisely that.
->>>>
->>>> Are you suggesting that cpufreq with its use of
->>>> cpufreq_verify_within_limits() (the inspiration for
->>>> devfreq_verify_within_limits()) is broken? It is used by cpu_cooling.c
->>>> and other drivers when receiving a CPUFREQ_ADJUST event, essentially
->>>> what I am proposing with DEVFREQ_ADJUST.
->>>>
->>>> Could you elaborate why this model wouldn't work for devfreq? "OPP
->>>> interface is mandatory for devfreq" isn't really a technical argument,
->>>> is it mandatory for any other reason than that it is the interface
->>>> that is currently used?
->>>>
->>>>> After you are suggesting the throttler core, there are at least two
->>>>> outside controllers (e.g., devfreq-cooling.c and throttler driver).
->>>>> As I knew the problem about conflict, I cannot agree the temporary
->>>>> method. OPP interface is mandatory for devfreq in order to control
->>>>> the OPP (frequency/voltage). In this situation, we have to try to
->>>>> find the method through OPP interface.
->>>>
->>>> What do you mean with "temporary method"?
->>>>
->>>> We can try to find a method through the OPP interface, but at this
->>>> point I'm not convinced that it is technically necessary or even
->>>> preferable.
->>>>
->>>> Another inconvenient of the OPP approach for both devfreq-cooling.c
->>>> and the throttler is that they have to bother with disabling all OPPs
->>>> above/below the max/min (they don't/shouldn't have to care), instead
->>>> of just telling devfreq the max/min.
->>>
->>> And a more important one: both drivers now have to keep track which
->>> OPPs they enabled/disabled previously, done are the days of a simple
->>> dev_pm_opp_enable/disable() in devfreq_cooling. Certainly it is
->>> possible and not very complex to implement, but is it really the
->>> best/a good solution?
->>
->>
->> As I replied them right before, Each outside driver has their own throttling
->> policy to control OPP entries. They don't care the requirement of other
->> driver and cannot know the requirement of other driver. devfreq core can only
->> recognize them and then only consider enabled OPP entris without disabled OPP entries.
->>
->> For example1,
->>        | devfreq-cooling| throttler
->> ---------------------------------------
->> 500Mhz | disabled       | disabled
->> 400Mhz | disabled       | disabled
->> 300Mhz |                | disabled
->> 200Mhz |                |
->> 100Mhz |                |
->> => devfreq driver can use only 100/200Mhz
->>
->>
->> For example2,
->>        | devfreq-cooling| throttler
->> ---------------------------------------
->> 500Mhz | disabled       | disabled
->> 400Mhz | disabled       |
->> 300Mhz | disabled       |
->> 200Mhz |                |
->> 100Mhz |                |
->> => devfreq driver can use only 100/200Mhz
->>
->>
->> For example3,
->>        | devfreq-cooling| throttler
->> ---------------------------------------
->> 500Mhz | disabled       | disabled
->> 400Mhz |                |
->> 300Mhz |                |
->> 200Mhz |                | disabled
->> 100Mhz |                | disabled
->> => devfreq driver can use only 300/400Mhz
+> The stpmu1 pmic is able to manage an onkey button. This driver exposes
+> the stpmu1 onkey as an input device. It can also be configured to
+> shut-down the power supplies on a long key-press with an adjustable
+> duration.
 > 
-> These are all cases without conflicts, my concern is about this:
+> Signed-off-by: pascal paillet <p.paillet@st.com>
+> ---
+>  drivers/input/misc/Kconfig        |  11 ++
+>  drivers/input/misc/Makefile       |   2 +
+>  drivers/input/misc/stpmu1_onkey.c | 321 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 334 insertions(+)
+>  create mode 100644 drivers/input/misc/stpmu1_onkey.c
 > 
->>        | devfreq-cooling| throttler
->> ---------------------------------------
->> 500Mhz | disabled       |
->> 400Mhz | disabled       |
->> 300Mhz |                | disabled
->> 200Mhz |                | disabled
->> 100Mhz |                | disabled
->> => devfreq driver can't use any frequency?
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index c25606e..d020971 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -841,4 +841,15 @@ config INPUT_RAVE_SP_PWRBUTTON
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called rave-sp-pwrbutton.
+>  
+> +config INPUT_STPMU1_ONKEY
+> +	tristate "STPMU1 PMIC Onkey support"
+> +	depends on MFD_STPMU1
+> +	help
+> +	  Say Y to enable support of onkey embedded into STPMU1 PMIC. onkey
+> +	  can be used to wakeup from low power modes and force a shut-down on
+> +	  long press.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called stpmu1_onkey.
+> +
+>  endif
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index 72cde28..cc60dc1 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -70,6 +70,7 @@ obj-$(CONFIG_INPUT_SGI_BTNS)		+= sgi_btns.o
+>  obj-$(CONFIG_INPUT_SIRFSOC_ONKEY)	+= sirfsoc-onkey.o
+>  obj-$(CONFIG_INPUT_SOC_BUTTON_ARRAY)	+= soc_button_array.o
+>  obj-$(CONFIG_INPUT_SPARCSPKR)		+= sparcspkr.o
+> +obj-$(CONFIG_INPUT_STPMU1_ONKEY)  	+= stpmu1_onkey.o
+>  obj-$(CONFIG_INPUT_TPS65218_PWRBUTTON)	+= tps65218-pwrbutton.o
+>  obj-$(CONFIG_INPUT_TWL4030_PWRBUTTON)	+= twl4030-pwrbutton.o
+>  obj-$(CONFIG_INPUT_TWL4030_VIBRA)	+= twl4030-vibra.o
+> @@ -80,3 +81,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)		+= wm831x-on.o
+>  obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)	+= xen-kbdfront.o
+>  obj-$(CONFIG_INPUT_YEALINK)		+= yealink.o
+>  obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)	+= ideapad_slidebar.o
+> +
+> diff --git a/drivers/input/misc/stpmu1_onkey.c b/drivers/input/misc/stpmu1_onkey.c
+> new file mode 100644
+> index 0000000..084a31f
+> --- /dev/null
+> +++ b/drivers/input/misc/stpmu1_onkey.c
+> @@ -0,0 +1,321 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
+> + * Author: Philippe Peurichard <philippe.peurichard@st.com>,
+> + * Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
+> + */
+> +
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/stpmu1.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +/**
+> + * struct stpmu1_onkey - OnKey data
+> + * @pmic:		pointer to STPMU1 PMIC device
+> + * @input_dev:		pointer to input device
+> + * @irq_falling:	irq that we are hooked on to
+> + * @irq_rising:		irq that we are hooked on to
+> + */
+> +struct stpmu1_onkey {
+> +	struct stpmu1_dev *pmic;
+> +	struct input_dev *input_dev;
+> +	int irq_falling;
+> +	int irq_rising;
+> +};
+> +
+> +/**
+> + * struct pmic_onkey_config - configuration of pmic PONKEYn
+> + * @turnoff_enabled:		value to enable turnoff condition
+> + * @cc_flag_clear:		value to clear CC flag in case of PowerOff
+> + * trigger by longkey press
+> + * @onkey_pullup_val:		value of PONKEY PullUp (active or inactive)
+> + * @long_press_time_val:	value for long press h/w shutdown event
+> + */
+> +struct pmic_onkey_config {
+> +	bool turnoff_enabled;
+> +	bool cc_flag_clear;
+> +	u8 onkey_pullup_val;
+> +	u8 long_press_time_val;
+> +};
+> +
+> +/**
+> + * onkey_falling_irq() - button press isr
+> + * @irq:		irq
+> + * @pmic_onkey:		onkey device
+> + *
+> + * Return: IRQ_HANDLED
+> + */
 
-There are no any enabled frequency. Because device driver
-(devfreq-cooling, throttler) disable all frequencies.
+This is internal driver functions, I do not see the need for kernel-doc
+style comments (or any comments for this one to be honest).
 
-Outside drivers(devfreq-cooling, throttler) can enable/disable
-specific OPP entries. As I already commented, each outside driver
-doesn't consider the policy of other device driver about OPP entries.
+> +static irqreturn_t onkey_falling_irq(int irq, void *ponkey)
+> +{
+> +	struct stpmu1_onkey *onkey = ponkey;
+> +	struct input_dev *input_dev = onkey->input_dev;
+> +
+> +	input_report_key(input_dev, KEY_POWER, 1);
+> +	pm_wakeup_event(input_dev->dev.parent, 0);
+> +	input_sync(input_dev);
+> +
+> +	dev_dbg(&input_dev->dev, "Pwr Onkey Falling Interrupt received\n");
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * onkey_rising_irq() - button released isr
+> + * @irq:		irq
+> + * @pmic_onkey:		onkey device
+> + *
+> + * Return: IRQ_HANDLED
+> + */
+> +static irqreturn_t onkey_rising_irq(int irq, void *ponkey)
+> +{
+> +	struct stpmu1_onkey *onkey = ponkey;
+> +	struct input_dev *input_dev = onkey->input_dev;
+> +
+> +	input_report_key(input_dev, KEY_POWER, 0);
+> +	pm_wakeup_event(input_dev->dev.parent, 0);
+> +	input_sync(input_dev);
+> +
+> +	dev_dbg(&input_dev->dev, "Pwr Onkey Rising Interrupt received\n");
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * stpmu1_onkey_dt_params() - device tree parameter parser
+> + * @pdev:	platform device for the PONKEY
+> + * @onkey:	pointer to onkey driver data
+> + * @config:	configuration params to be filled up
+> + */
+> +static int stpmu1_onkey_dt_params(struct platform_device *pdev,
+> +				  struct stpmu1_onkey *onkey,
+> +				  struct pmic_onkey_config *config)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np;
+> +	u32 val;
+> +
+> +	np = dev->of_node;
+> +	if (!np)
+> +		return -EINVAL;
 
-OPP interface is independent on devfreq and just control OPP entries.
-After that, devfreq just consider the only enabled OPP entries.
+Is this possible?
 
-> 
-> Actually my above comment wasn't about this case, but about the
-> added complexity in devfreq-cooling.c and the throttler:
-> 
-> A bit simplified partition_enable_opps() currently does this:
-> 
-> for_each_opp(opp) {
->   if (opp->freq <= max)
->      opp_enable(opp)
->   else
->      opp_disable(opp)
-> }
-> 
-> With the OPP usage/disable count this doesn't work any longer. Now we
-> need to keep track of the enabled/disabled state of the OPP, something
-> like:
-> 
-> dev_pm_opp_enable(opp) {
->   if (opp->freq <= max) {
->     if (opp->freq > prev_max)
->       opp_enable(opp)
->   } else {
->     if (opp->freq < prev_max)
->       opp_disable(opp)
->   }
-> }
-> 
-> And duplicate the same in the throttler (and other possible
-> drivers). Obviously it can be done, but is there really any gain
-> from it?
-> 
-> Instead they just could do:
-> 
-> devfreq_verify_within_limits(policy/freq_pair, 0, max_freq)
-> 
-> without being concerned about implementation details of devfreq.
-> 
+> +
+> +	onkey->irq_falling = platform_get_irq_byname(pdev, "onkey-falling");
+> +	if (onkey->irq_falling < 0) {
+> +		dev_err(dev, "failed: request IRQ onkey-falling %d",
 
-I don't think so. dev_pm_opp_enable()/dev_pm_opp_disable()
-have to consider only one OPP entry without any other OPP entry.
+Some of your messages use \n, some don't. I'd rather they all did.
 
-dev_pm_opp_enable()/dev_pm_opp_disable() can never know the other
-OPP entries. After some driver(devfreq-cooling.c and throttler) 
-enable or disable specific OPP entries, the remaining OPP entry 
-with enabled state will be considered on devfreq driver.
+> +			onkey->irq_falling);
+> +		return onkey->irq_falling;
+> +	}
+> +
+> +	onkey->irq_rising = platform_get_irq_byname(pdev, "onkey-rising");
+> +	if (onkey->irq_rising < 0) {
+> +		dev_err(dev, "failed: request IRQ onkey-rising %d",
+> +			onkey->irq_rising);
+> +		return onkey->irq_rising;
+> +	}
+> +
+> +	if (!of_property_read_u32(np, "st,onkey-long-press-seconds", &val)) {
+> +		if (val >= 1 && val <= 16) {
+> +			config->long_press_time_val = (16 - val);
+> +		} else {
+> +			dev_warn(dev,
+> +				 "Invalid range of long key pressed timer %d (<16)\n\r",
+
+Why \n\r?
+
+> +				 val);
+> +		}
+> +	}
+> +	if (of_get_property(np, "st,onkey-pwroff-enabled", NULL))
+> +		config->turnoff_enabled = true;
+> +
+> +	if (of_get_property(np, "st,onkey-clear-cc-flag", NULL))
+> +		config->cc_flag_clear = true;
+> +
+> +	if (of_get_property(np, "st,onkey-pu-inactive", NULL))
+> +		config->onkey_pullup_val = PONKEY_PU_ACTIVE;
+
+Even though the driver is only used in OF systems, I wonder if we should
+not be using generic device property API.
+
+> +
+> +	dev_dbg(dev, "onkey-switch-off duration=%d seconds\n",
+> +		config->long_press_time_val);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * stpmu1_onkey_probe() - probe
+> + * @pdev:	platform device for the PONKEY
+> + *
+> + * Return: 0 for successful probe else appropriate error
+> + */
+> +static int stpmu1_onkey_probe(struct platform_device *pdev)
+> +{
+> +	struct stpmu1_dev *pmic = dev_get_drvdata(pdev->dev.parent);
+> +	struct device *dev = &pdev->dev;
+> +	struct input_dev *input_dev;
+> +	struct stpmu1_onkey *onkey;
+> +	struct pmic_onkey_config config;
+> +	unsigned int val = 0;
+> +	int ret;
+
+Call this variable "error" please.
+
+> +
+> +	onkey = devm_kzalloc(dev, sizeof(*onkey), GFP_KERNEL);
+> +	if (!onkey)
+> +		return -ENOMEM;
+> +
+> +	memset(&config, 0, sizeof(struct pmic_onkey_config));
+> +	ret = stpmu1_onkey_dt_params(pdev, onkey, &config);
+> +	if (ret < 0)
+
+stpmu1_onkey_dt_params() does not return positives (good) so:
+
+	if (error)
+		return error;
+
+> +		goto err;
+> +
+> +	input_dev = devm_input_allocate_device(dev);
+> +	if (!input_dev) {
+> +		dev_err(dev, "Can't allocate Pwr Onkey Input Device\n");
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	input_dev->name = "pmic_onkey";
+> +	input_dev->phys = "pmic_onkey/input0";
+> +	input_dev->dev.parent = dev;
+
+This is already set by devm_input_allocate_device().
+
+> +
+> +	input_set_capability(input_dev, EV_KEY, KEY_POWER);
+> +
+> +	/* Setup Power Onkey Hardware parameters (long key press)*/
+> +	val = (config.long_press_time_val & PONKEY_TURNOFF_TIMER_MASK);
+> +	if (config.turnoff_enabled)
+> +		val |= PONKEY_PWR_OFF;
+> +	if (config.cc_flag_clear)
+> +		val |= PONKEY_CC_FLAG_CLEAR;
+> +	ret = regmap_update_bits(pmic->regmap, PKEY_TURNOFF_CR,
+> +				 PONKEY_TURNOFF_MASK, val);
+> +	if (ret) {
+> +		dev_err(dev, "LONG_PRESS_KEY_UPDATE failed: %d\n", ret);
+> +		goto err;
+
+You are using all managed resources, so "return error" directly, no need
+to just to error unwinding path.
+
+> +	}
+> +
+> +	ret = regmap_update_bits(pmic->regmap, PADS_PULL_CR,
+> +				 PONKEY_PU_ACTIVE,
+> +				 config.onkey_pullup_val);
+> +
+> +	if (ret) {
+> +		dev_err(dev, "ONKEY Pads configuration failed: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	onkey->pmic = pmic;
+> +	onkey->input_dev = input_dev;
+> +
+> +	ret = devm_request_threaded_irq(dev, onkey->irq_falling, NULL,
+
+Why does this need to be threaded? The isr does not seem to be calling
+any APIs that may wait.
+
+> +					onkey_falling_irq,
+> +					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +					dev_name(dev), onkey);
+> +	if (ret) {
+> +		dev_err(dev, "Can't get IRQ for Onkey Falling edge: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(dev, onkey->irq_rising, NULL,
+> +					onkey_rising_irq,
+> +					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +					dev_name(dev), onkey);
+> +	if (ret) {
+> +		dev_err(dev, "Can't get IRQ for Onkey Rising edge: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = input_register_device(input_dev);
+> +	if (ret) {
+> +		dev_err(dev, "Can't register power button: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, onkey);
+> +	device_init_wakeup(dev, true);
+> +
+> +	dev_dbg(dev, "PMIC Pwr Onkey driver probed\n");
+
+I'd rather dropped this. Input core will print when registering device
+already.
+
+> +
+> +err:
+> +	return ret;
+> +}
+> +
+> +/**
+> + * stpmu1_onkey_remove() - Cleanup on removal
+> + * @pdev:	platform device for the button
+> + *
+> + * Return: 0
+> + */
+> +static int stpmu1_onkey_remove(struct platform_device *pdev)
+> +{
+> +	struct stpmu1_onkey *onkey = platform_get_drvdata(pdev);
+> +
+> +	input_unregister_device(onkey->input_dev);
+
+You are using managed input device, so this call is not needed. You
+should be able to remove entire stpmu1_onkey_remove().
+
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+
+You annotated suspend/resume methods with __maybe_unused, so this guard
+is not needed.
+
+> +
+> +/**
+> + * pmic_onkey_suspend() - suspend handler
+> + * @dev:	power button device
+> + *
+> + * Cancel all pending work items for the power button, setup irq for wakeup
+> + *
+> + * Return: 0
+> + */
+> +static int __maybe_unused stpmu1_onkey_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct stpmu1_onkey *onkey = platform_get_drvdata(pdev);
+> +
+> +	if (device_may_wakeup(dev)) {
+> +		enable_irq_wake(onkey->irq_falling);
+> +		enable_irq_wake(onkey->irq_rising);
+> +	}
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pmic_onkey_resume() - resume handler
+> + * @dev:	power button device
+> + *
+> + * Just disable the wakeup capability of irq here.
+> + *
+> + * Return: 0
+> + */
+> +static int __maybe_unused stpmu1_onkey_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct stpmu1_onkey *onkey = platform_get_drvdata(pdev);
+> +
+> +	if (device_may_wakeup(dev)) {
+> +		disable_irq_wake(onkey->irq_falling);
+> +		disable_irq_wake(onkey->irq_rising);
+> +	}
+> +	return 0;
+> +}
+> +
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(stpmu1_onkey_pm,
+> +			 stpmu1_onkey_suspend,
+> +			 stpmu1_onkey_resume);
+> +
+> +static const struct of_device_id of_stpmu1_onkey_match[] = {
+> +	{ .compatible = "st,stpmu1-onkey" },
+> +	{ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, of_stpmu1_onkey_match);
+> +
+> +static struct platform_driver stpmu1_onkey_driver = {
+> +	.probe	= stpmu1_onkey_probe,
+> +	.remove	= stpmu1_onkey_remove,
+> +	.driver	= {
+> +		.name	= "stpmu1_onkey",
+> +		.of_match_table = of_match_ptr(of_stpmu1_onkey_match),
+> +		.pm	= &stpmu1_onkey_pm,
+> +	},
+> +};
+> +module_platform_driver(stpmu1_onkey_driver);
+> +
+> +MODULE_DESCRIPTION("Onkey driver for STPMU1");
+> +MODULE_LICENSE("GPL");
+
+To match your SPDX notice this should be MODULE_LICENSE("GPL v2").
+
+> +MODULE_AUTHOR("philippe.peurichard@st.com>");
+> -- 
+> 1.9.1
+
+Thanks.
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Dmitry
