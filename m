@@ -1,41 +1,75 @@
-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: Re: [PATCH 09/11] RISC-V: Support per-hart timebase-frequency
-Date: Mon, 06 Aug 2018 13:34:23 -0700 (PDT)
-Message-ID: <mhng-d315d8a6-c4db-4ec8-927b-fc9f1d8e7872@palmer-si-x1c4>
-References: <20180803123357.GC18301@lst.de>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 4/5] arm: dts: qcom: Add ipq8064-ap161.dts
+Date: Mon, 6 Aug 2018 14:35:34 -0600
+Message-ID: <CAL_JsqL2g+1maJLDf0uDAWEmLtA5bUPP5Pi_pRSd3Lu-yBFq9g@mail.gmail.com>
+References: <1533305419-29152-1-git-send-email-sricharan@codeaurora.org> <1533305419-29152-5-git-send-email-sricharan@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803123357.GC18301@lst.de>
+In-Reply-To: <1533305419-29152-5-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
+To: Sricharan <sricharan@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 03 Aug 2018 05:33:57 PDT (-0700), Christoph Hellwig wrote:
-> On Thu, Aug 02, 2018 at 03:19:49PM -0700, Atish Patra wrote:
->> On 8/2/18 4:50 AM, Christoph Hellwig wrote:
->>> From: Palmer Dabbelt <palmer@sifive.com>
->>>
->>> Follow the updated DT specs and read the timebase-frequency from the
->>> CPU 0 node.
->>>
->>
->> However, the DT in the HighFive Unleashed has the entry at the wrong place.
->>
->> Even the example in github also at wrong place.
->> https://github.com/riscv/riscv-device-tree-doc/pull/8/commits/2461d481329c55005fcbe684f0d6bdb3b7f0a432
->>
->> DT should be consistent between Documentation and the one in the hardware.
->> I can fix them in bbl & submit a bbl patch. But I am not sure if that's an
->> acceptable way to do it.
+On Fri, Aug 3, 2018 at 8:10 AM Sricharan R <sricharan@codeaurora.org> wrote:
 >
-> I'll need to have comments from Palmer and/or someone else at SiFive
-> here.  Personally I really don't care where we document the timebase,
-> as this patch supports both locations anywhere.  For now I'll just update
-> the commit log to state that more explicitly.
+> Add a new board dts for ipq8064-ap161.
+>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
+>  arch/arm/boot/dts/Makefile                     | 1 +
+>  arch/arm/boot/dts/qcom-ipq8064-ap161.dts       | 7 +++++++
+>  3 files changed, 10 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/qcom-ipq8064-ap161.dts
+>
+> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+> index ee532e7..2325135 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom.txt
+> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
+> @@ -15,6 +15,7 @@ The 'SoC' and 'board' elements are required. All other elements are optional.
+>
+>  The 'SoC' element must be one of the following strings:
+>
+> +       ipq8064
+>         apq8016
+>         apq8074
+>         apq8084
+> @@ -30,6 +31,7 @@ The 'SoC' element must be one of the following strings:
+>
+>  The 'board' element must be one of the following strings:
+>
+> +       ap
+>         cdp
+>         liquid
+>         dragonboard
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 37a3de7..233661a 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -772,6 +772,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>         qcom-ipq4019-ap.dk07.1-c1.dtb \
+>         qcom-ipq4019-ap.dk07.1-c2.dtb \
+>         qcom-ipq8064-ap148.dtb \
+> +       qcom-ipq8064-ap161.dtb \
+>         qcom-msm8660-surf.dtb \
+>         qcom-msm8960-cdp.dtb \
+>         qcom-msm8974-fairphone-fp2.dtb \
+> diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap161.dts b/arch/arm/boot/dts/qcom-ipq8064-ap161.dts
+> new file mode 100644
+> index 0000000..aab5174
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-ipq8064-ap161.dts
+> @@ -0,0 +1,7 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "qcom-ipq8064-v1.0.dtsi"
+> +
+> +/ {
+> +       model = "Qualcomm Technologies, Inc. IPQ8064/AP-161";
+> +       compatible = "qcom,ipq8064-ap161";
 
-You're welcome to submit a BBL patch to make this all match, but from my 
-understanding of the device tree spec putting timebase-frequency in either 
-place should be legal so it's not a critical fix.  That said, it's better to 
-have them match than not match.
+Doesn't match what you documented above. I'm guessing the ap148 board
+didn't either...
+
+Rob
