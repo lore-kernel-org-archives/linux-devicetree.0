@@ -1,33 +1,93 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH 0/2] dt: thermal: Fix broken cooling-maps
-Date: Mon, 06 Aug 2018 14:29:38 +0800
-Message-ID: <1533536978.2158.86.camel@intel.com>
-References: <cover.1530766981.git.viresh.kumar@linaro.org>
-         <20180731045151.gqsgsm6l3gwr5m4z@vireshk-i7>
-         <1533016858.2550.21.camel@intel.com>
-         <20180803084000.73ofs6cttnqc6uiq@vireshk-i7>
+From: "Wu, Songjun" <songjun.wu@linux.intel.com>
+Subject: Re: [PATCH v2 14/18] serial: intel: Add CCF support
+Date: Mon, 6 Aug 2018 15:05:27 +0800
+Message-ID: <acd28f40-4342-7f67-8468-7d4578f614a1@linux.intel.com>
+References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
+ <20180803030237.3366-15-songjun.wu@linux.intel.com>
+ <20180803055640.GA32226@kroah.com>
+ <763bba56-3701-7fe9-9b31-4710594b40d5@linux.intel.com>
+ <20180803103023.GA6557@kroah.com>
+ <3360edd2-f3d8-b860-13fa-ce680edbfd0a@hauke-m.de>
+ <20180804124309.GB4920@kroah.com>
+ <CAK8P3a3qs34LuhPeaef2wPHYEWbYO5N-4n7763BcaDyppiJ6DA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803084000.73ofs6cttnqc6uiq@vireshk-i7>
+In-Reply-To: <CAK8P3a3qs34LuhPeaef2wPHYEWbYO5N-4n7763BcaDyppiJ6DA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Eduardo Valentin <edubezval@gmail.com>, robh@kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, linux-clk <linux-clk@vger.kernel.org>, linux-serial@vger.kernel.org, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-On 五, 2018-08-03 at 14:10 +0530, Viresh Kumar wrote:
-> On 31-07-18, 14:00, Zhang Rui wrote:
-> > 
-> > I suppose this patch should go via Eduardo' tree.
-> > Eduardo, can you please take a look at this patch set?
-> Zhang,
-> 
-> Since Eduardo isn't replying, will it be possible for you to pick it
-> up as I
-> don't want to miss 4.19-rc1.
-> 
-Okay, I will keep queue it in my tree first.
 
-thanks,
-rui
+
+On 8/5/2018 5:03 AM, Arnd Bergmann wrote:
+> On Sat, Aug 4, 2018 at 2:43 PM, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>> On Sat, Aug 04, 2018 at 12:54:22PM +0200, Hauke Mehrtens wrote:
+>>> On 08/03/2018 12:30 PM, Greg Kroah-Hartman wrote:
+>>>> On Fri, Aug 03, 2018 at 03:33:38PM +0800, Wu, Songjun wrote:
+>>> This patch makes it possible to use it with the legacy lantiq code and
+>>> also with the common clock framework. I see multiple options to fix this
+>>> problem.
+>>>
+>>> 1. The current approach to have it as a compile variant for a) legacy
+>>> lantiq arch code without common clock framework and b) support for SoCs
+>>> using the common clock framework.
+>>> 2. Convert the lantiq arch code to the common clock framework. This
+>>> would be a good approach, but it need some efforts.
+>>> 3. Remove the arch/mips/lantiq code. There are still users of this code.
+>>> 4. Use the old APIs also for the new xRX500 SoC, I do not like this
+>>> approach.
+>>> 5. Move lantiq_soc.h to somewhere in include/linux/ so it is globally
+>>> available and provide some better wrapper code.
+>> I don't really care what you do at this point in time, but you all
+>> should know better than the crazy #ifdef is not allowed to try to
+>> prevent/allow the inclusion of a .h file.  Checkpatch might have even
+>> warned you about it, right?
+>>
+>> So do it correctly, odds are #5 is correct, as that makes it work like
+>> any other device in the kernel.  You are not unique here.
+> The best approach here would clearly be 2. We don't want platform
+> specific header files for doing things that should be completely generic.
+>
+> Converting lantiq to the common-clk framework obviously requires
+> some work, but then again the whole arch/mips/lantiq/clk.c file
+> is fairly short and maybe not that hard to convert.
+>
+> >From looking at arch/mips/lantiq/xway/sysctrl.c, it appears that you
+> already use the clkdev lookup mechanism for some devices without
+> using COMMON_CLK, so I would assume that you can also use those
+> for the remaining clks, which would be much simpler. It registers
+> one anonymous clk there as
+>
+>          clkdev_add_pmu("1e100c00.serial", NULL, 0, 0, PMU_ASC1);
+>
+> so why not add replace that with two named clocks and just use
+> the same names in the DT for the newer chip?
+>
+>        Arnd
+We discussed internally and have another solution for this issue.
+Add one lantiq.h in the serial folder, and use "#ifdef preprocessor" in 
+lantiq.h,
+also providing no-op stub functions in the #else case, then call those 
+functions
+unconditionally from lantiq.c to avoid #ifdef in C file.
+
+To support CCF in legacy product is another topic, is not included in 
+this patch.
+
+The implementation is as following：
+#ifdef CONFIG_LANTIQ
+#include <lantiq_soc.h>
+#else
+#define LTQ_EARLY_ASC 0
+#define CPHYSADDR(_val) 0
+
+static inline struct clk *clk_get_fpi(void)
+{
+     return NULL;
+}
+#endif
