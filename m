@@ -1,83 +1,89 @@
-From: skannan@codeaurora.org
-Subject: Re: [PATCH v7 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
- Firmware bindings
-Date: Mon, 06 Aug 2018 13:54:24 -0700
-Message-ID: <b362d9f769fde3ce1a2dcd89f20eb476@codeaurora.org>
-References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
- <1532428970-18122-2-git-send-email-tdas@codeaurora.org>
- <153334001055.10763.8002698033760154254@swboyd.mtv.corp.google.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC documentation
+Date: Mon, 6 Aug 2018 14:59:48 -0600
+Message-ID: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
+References: <20180802115008.4031-1-hch@lst.de> <20180802115008.4031-4-hch@lst.de>
+ <0093fadc-a150-3745-e73d-e579bfdfabfb@wdc.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153334001055.10763.8002698033760154254@swboyd.mtv.corp.google.com>
+In-Reply-To: <0093fadc-a150-3745-e73d-e579bfdfabfb@wdc.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Taniya Das <tdas@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: atish.patra@wdc.com
+Cc: Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-03 16:46, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-07-24 03:42:49)
->> diff --git 
->> a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt 
->> b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
->> new file mode 100644
->> index 0000000..22d4355
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
->> @@ -0,0 +1,172 @@
-> [...]
->> +
->> +               CPU7: cpu@700 {
->> +                       device_type = "cpu";
->> +                       compatible = "qcom,kryo385";
->> +                       reg = <0x0 0x700>;
->> +                       enable-method = "psci";
->> +                       next-level-cache = <&L2_700>;
->> +                       qcom,freq-domain = <&freq_domain_table1>;
->> +                       L2_700: l2-cache {
->> +                               compatible = "cache";
->> +                               next-level-cache = <&L3_0>;
->> +                       };
->> +               };
->> +       };
->> +
->> +       qcom,cpufreq-hw {
->> +               compatible = "qcom,cpufreq-hw";
->> +
->> +               clocks = <&rpmhcc RPMH_CXO_CLK>;
->> +               clock-names = "xo";
->> +
->> +               #address-cells = <2>;
->> +               #size-cells = <2>;
->> +               ranges;
->> +               freq_domain_table0: freq_table0 {
->> +                       reg = <0 0x17d43000 0 0x1400>;
->> +               };
->> +
->> +               freq_domain_table1: freq_table1 {
->> +                       reg = <0 0x17d45800 0 0x1400>;
->> +               };
-> 
-> Sorry, this is just not proper DT design. The whole node should have a
-> reg property, and it should contain two (or three if we're handling the
-> L3 clk domain?) different offsets for the different power clusters. The
-> problem seems to still be that we don't have a way to map the CPUs to
-> the clk domains they're in provided by this hardware block. Making
-> subnodes is not the solution.
+On Thu, Aug 2, 2018 at 4:08 PM Atish Patra <atish.patra@wdc.com> wrote:
+>
+> On 8/2/18 4:50 AM, Christoph Hellwig wrote:
+> > From: Palmer Dabbelt <palmer@dabbelt.com>
+> >
+> > This patch adds documentation for the platform-level interrupt
+> > controller (PLIC) found in all RISC-V systems.  This interrupt
+> > controller routes interrupts from all the devices in the system to each
+> > hart-local interrupt controller.
+> >
+> > Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
+> > want to change how we're specifying holes in the hart list.
+> >
+> > Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> > [hch: various fixes and updates]
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >   .../interrupt-controller/sifive,plic0.txt     | 57 +++++++++++++++++++
+> >   1 file changed, 57 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+> > new file mode 100644
+> > index 000000000000..c756cd208a93
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+> > @@ -0,0 +1,57 @@
+> > +SiFive Platform-Level Interrupt Controller (PLIC)
+> > +-------------------------------------------------
+> > +
+> > +SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
+> > +(PLIC) high-level specification in the RISC-V Privileged Architecture
+> > +specification.  The PLIC connects all external interrupts in the system to all
+> > +hart contexts in the system, via the external interrupt source in each hart.
+> > +
+> > +A hart context is a privilege mode in a hardware execution thread.  For example,
+> > +in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
+> > +privilege modes per hart; machine mode and supervisor mode.
+> > +
+> > +Each interrupt can be enabled on per-context basis. Any context can claim
+> > +a pending enabled interrupt and then release it once it has been handled.
+> > +
+> > +Each interrupt has a configurable priority. Higher priority interrupts are
+> > +serviced first. Each context can specify a priority threshold. Interrupts
+> > +with priority below this threshold will not cause the PLIC to raise its
+> > +interrupt line leading to the context.
+> > +
+> > +While the PLIC supports both edge-triggered and level-triggered interrupts,
+> > +interrupt handlers are oblivious to this distinction and therefore it is not
+> > +specified in the PLIC device-tree binding.
+> > +
+> > +While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
+> > +"sifive,plic0" device is a concrete implementation of the PLIC that contains a
+> > +specific memory layout, which is documented in chapter 8 of the SiFive U5
+> > +Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
+> > +
+> > +Required properties:
+> > +- compatible : "sifive,plic0"
+> > +- #address-cells : should be <0>
+> > +- #interrupt-cells : should be <1>
+> > +- interrupt-controller : Identifies the node as an interrupt controller
+> > +- reg : Should contain 1 register range (address and length)
+>
+> The one in the real device tree has two entries.
+> reg = <0x00000000 0x0c000000 0x00000000 0x04000000>;
+>
+> Is it intentional or just incorrect entry left over from earlier days?
 
-The problem is mapping clock domains to logical CPUs that CPUfreq uses. 
-The physical CPU to logical CPU mapping can be changed by the kernel 
-(even through DT if I'm not mistaken). So we need to have a way to tell 
-in DT which physical CPUs are connected to which CPU freq clock domain.
+> > +             reg = <0xc000000 0x4000000>;
 
-As for subnodes or not, we don't have any strong opinion, but couple of 
-other points to consider. Two or more CPUfreq policies might have a 
-common frequency table (read from HW), but separate control of 
-frequency. So, you also need a way to group frequency table with CPU 
-freq policies. If you have a better design, we are open to that 
-suggestion.
+Looks to me like one has #size-cells and #address-cells set to 2 and
+the example is using 1.
 
-Thanks,
-Saravana
+Rob
