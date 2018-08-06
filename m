@@ -1,25 +1,56 @@
-From: "Wu, Songjun" <songjun.wu@linux.intel.com>
-Subject: Re: [PATCH v2 15/18] serial: intel: Support more platform
-Date: Mon, 6 Aug 2018 15:20:04 +0800
-Message-ID: <8589b777-1fa9-5c27-3a78-8c9e7af2fc01@linux.intel.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-16-songjun.wu@linux.intel.com>
- <20180805083722.GA30000@infradead.org>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: Re: [PATCH v3 3/4] venus: firmware: add no TZ boot and shutdown
+ routine
+Date: Mon, 06 Aug 2018 13:48:52 +0530
+Message-ID: <e482a9af27288c9e8a8ffb5c1de8a209@codeaurora.org>
+References: <1530731212-30474-1-git-send-email-vgarodia@codeaurora.org>
+ <1530731212-30474-4-git-send-email-vgarodia@codeaurora.org>
+ <4727000d-96ef-2dc5-50df-6bdadcaa156e@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180805083722.GA30000@infradead.org>
-Content-Language: en-US
+In-Reply-To: <4727000d-96ef-2dc5-50df-6bdadcaa156e@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@infradead.org>
-Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org, linux-media-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Stanimir,
 
+Thanks for your review.
 
-On 8/5/2018 4:37 PM, Christoph Hellwig wrote:
-> The subject line also seems odd, your are changing deps on the lantiq
-> driver, not some (nonexistent) intel serial driver.
->
-Your suggestion is reasonable, it will be changed to "serial: lantiq".
+On 2018-07-25 15:06, Stanimir Varbanov wrote:
+> Hi Vikash,
+> 
+> On 07/04/2018 10:06 PM, Vikash Garodia wrote:
+> 
+<snip>
+
+>> 
+>>  #define VENUS_PAS_ID			9
+>> -#define VENUS_FW_MEM_SIZE		(6 * SZ_1M)
+>> +#define VENUS_FW_MEM_SIZE		(5 * SZ_1M)
+> 
+> This change should be subject to a separate patch.
+Ok.
+
+> 
+<snip>
+
+>> +	writel_relaxed(reg, reg_base + WRAPPER_A9SS_SW_RESET);
+>> +
+>> +	/* Make sure reset is asserted before the mapping is removed */
+>> +	mb();
+> 
+> mb() is used for compiler barrier as far as I know, isn't better to 
+> just
+> read the register and keep the comment?
+
+mb() can ensure that the instructions are ordered. This is needed to 
+ensure
+reset before the mapping is removed.
+
+Thanks,
+Vikash
