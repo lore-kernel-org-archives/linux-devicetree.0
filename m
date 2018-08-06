@@ -1,43 +1,41 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH] ARC: AXS10x/HSDK: Allow U-Boot to pass MAC-address to
- the kernel
-Date: Mon, 6 Aug 2018 13:24:56 +0000
-Message-ID: <1533561894.32021.5.camel@synopsys.com>
-References: <20180802101937.6202-1-abrodkin@synopsys.com>
-         <C2D7FE5348E1B147BCA15975FBA23075012B089D74@us01wembx1.internal.synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075012B089D74@us01wembx1.internal.synopsys.com>
-Content-Language: en-US
-Content-ID: <D4E6042A1C81F54A915278050E0284FD@internal.synopsys.com>
-Sender: stable-owner@vger.kernel.org
-To: "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: [PATCH v4 0/4] Venus updates - PIL
+Date: Mon,  6 Aug 2018 18:58:01 +0530
+Message-ID: <1533562085-8773-1-git-send-email-vgarodia@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org, vgarodia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmluZWV0LA0KDQpPbiBUaHUsIDIwMTgtMDgtMDIgYXQgMjE6NTggKzAwMDAsIFZpbmVldCBH
-dXB0YSB3cm90ZToNCj4gT24gMDgvMDIvMjAxOCAwMzoxOSBBTSwgQWxleGV5IEJyb2RraW4gd3Jv
-dGU6DQo+ID4gT3RoZXJ3aXNlIGtlcm5lbCB1c2VzIHJhbmRvbSBNQUMgd2hpY2ggaXMgbm90IHZl
-cnkgY29udmVuaWV0Lg0KPiANCj4gQ3VyaW91cyB3aGF0IGV4YWN0bHkgaXMgdGhlIGlzc3VlIC0g
-d2h5IGRvZXMgdGhlIHVzZXIgY2FyZSB3aGF0IE1BQyBpcyBhc3NpZ25lZCA/DQo+IA0KPiA+IFdp
-dGggdGhhdCBjaGFuZ2UgaW4gcGxhY2UgdXNlIG1pZ2h0IHNldCBkZXNpcmVkIE1BQyBpbiBVLUJv
-b3QNCj4gPiB3aXRoICJzZXRlbnYgZXRoYWRkciAxMToyMjozMzo0NDo1NTo2NiIsIHNhdmUgZW52
-aXJvbm1lbnQgYW5kDQo+ID4gdGhlbiBmcm9tIGJvb3QgdG8gYm9vdCB0aGUgc2FtZSBNQUMgd2ls
-bCBiZSB1c2VkIGJ5IHRoZSBrZXJuZWwuDQo+ID4gDQo+IA0KPiBBbmQgd2hhdCBpZiBvbmUgaXMg
-cnVubmluZyB3aXRob3V0IHVib290IC0gaXQgd2lsbCByZXNvcnQgdG8gYWxsIHplcm9zIHZzLiBy
-YW5kb20NCj4geWV0IHdvcmtpbmcgTUFDID8NCj4gDQoNCklmIG9uZSBpcyBydW5uaW5nIHdpdGhv
-dXQgdS1ib290IC0gaXQgd2lsbCByZXNvcnQgdG8gcmFuZG9tIE1BQyBhcyB3ZSBkb24ndCB0cmVh
-dCANCiIwMDowMDowMDowMDowMDowMCIgYXMgYSB2YWxpZCBFdGhlcm5ldCBhZGRyZXNzLg0KDQpM
-b29rIGF0IGZvbGxvd2luZyBsaW5rIGZvciBtb3JlIGRldGFpbHMuDQpodHRwczovL2VsaXhpci5i
-b290bGluLmNvbS9saW51eC92NC4xOC1yYzgvc291cmNlL2luY2x1ZGUvbGludXgvZXRoZXJkZXZp
-Y2UuaCNMMTg0DQoNCg0KQlRXOg0KVGVzdGVkLWJ5OiBFdmdlbml5IFBhbHRzZXYgPHBhbHRzZXZA
-c3lub3BzeXMuY29tPg0KDQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXw0KPiBsaW51eC1zbnBzLWFyYyBtYWlsaW5nIGxpc3QNCj4gbGludXgtc25w
-cy1hcmNAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2lu
-dC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fbGlzdHMuaW5mcmFkZWFkLm9yZ19tYWlsbWFuX2xpc3Rp
-bmZvX2xpbnV4LTJEc25wcy0yRGFyYyZkPUR3SUNBZyZjPURQTDZfWF82SmtYRng3QVhXcUIwdGcm
-cj1abEpODQo+IDFNcmlQVVRrQktDclBTeDY3R21hcGxFVUdjQUVrOXlQdENMZFVYSSZtPXBFZTMx
-TXE0RkMyMFpCUTFTTUdkQ3Blc1BtUUZ5YVFDZHBZOS1OX2FXUmMmcz1sd0k3dlRxQW1iVlBIZGZN
-el9GbE96ZkJEdnRZQ1FETC02cy1aMkZGcl9ZJmU9DQotLSANCiBFdWdlbml5IFBhbHRzZXY=
+Hello,
+
+Here is v4 with following comments addressed:
+
+* inline function for setting suspend and resume.
+* keep firmware size as 6 MB.
+* comments related to indentation, cleanup, etc.
+
+As per comments from Bjorn, qcom_mdt_load_no_init is being used in this
+patch series to align with https://patchwork.kernel.org/patch/10397889/.
+
+Comments are welcome!
+
+Vikash Garodia (4):
+  venus: firmware: add routine to reset ARM9
+  venus: firmware: move load firmware in a separate function
+  venus: firmware: add no TZ boot and shutdown routine
+  venus: firmware: register separate driver for firmware device
+
+ .../devicetree/bindings/media/qcom,venus.txt       |  17 +-
+ drivers/media/platform/qcom/venus/core.c           |  60 +++++--
+ drivers/media/platform/qcom/venus/core.h           |   7 +
+ drivers/media/platform/qcom/venus/firmware.c       | 192 ++++++++++++++++++---
+ drivers/media/platform/qcom/venus/firmware.h       |  17 +-
+ drivers/media/platform/qcom/venus/hfi_venus.c      |  13 +-
+ drivers/media/platform/qcom/venus/hfi_venus_io.h   |   6 +
+ 7 files changed, 268 insertions(+), 44 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
