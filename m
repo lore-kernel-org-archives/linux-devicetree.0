@@ -1,117 +1,43 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH 07/10] dt-bindings: phy: add DT binding for Microsemi
- Ocelot SerDes muxing
-Date: Mon, 6 Aug 2018 14:47:59 +0200
-Message-ID: <20180806124759.7e2uz7jvoycalris@qschulz>
-References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
- <cd75c96640cc7fe306ee355acb1db85adb5b796f.1532954208.git-series.quentin.schulz@bootlin.com>
- <20180730133448.GD13198@lunn.ch>
- <20180801082413.2mjm52vwxw3anun6@qschulz>
- <20180801143147.GA16322@lunn.ch>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH] ARC: AXS10x/HSDK: Allow U-Boot to pass MAC-address to
+ the kernel
+Date: Mon, 6 Aug 2018 13:24:56 +0000
+Message-ID: <1533561894.32021.5.camel@synopsys.com>
+References: <20180802101937.6202-1-abrodkin@synopsys.com>
+         <C2D7FE5348E1B147BCA15975FBA23075012B089D74@us01wembx1.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dwtbtpadbufkaztq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180801143147.GA16322@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075012B089D74@us01wembx1.internal.synopsys.com>
+Content-Language: en-US
+Content-ID: <D4E6042A1C81F54A915278050E0284FD@internal.synopsys.com>
+Sender: stable-owner@vger.kernel.org
+To: "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---dwtbtpadbufkaztq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Andrew,
-
-On Wed, Aug 01, 2018 at 04:31:47PM +0200, Andrew Lunn wrote:
-> > > Maybe this should be serdes-mux? The SERDES itself should have some
-> > > registers somewhere. If you ever decide to make use of phylink,
-> > > e.g. to support SFP, you are going to need to know if the SERDES is
-> > > up. So you might need to add the actual SERDES device, in addition to
-> > > the mux for the SERDES.
-> > >=20
-> >=20
-> > I'm not sure to follow.
-> >=20
-> > To be honest, I might have mislead you. The whole configuration of the
-> > serdes is in the hsio register address space. For now, muxing is the
-> > only reason there is a driver for the serdes but there are other things
-> > that can be configured (though not used yet): de/serializer, input/outp=
-ut
-> > buffers, PLL, ... configuration registers for the SerDes.
->=20
-> When you are using the SERDES for networking, you need to know if the
-> SERDES has achieved sync. For example, when the SERDES connects to an
-> optical SFP module, the SERDES bit stream continues unmodified over
-> the optical link to the SERDES in the peer. The optical module can
-> tell you if it is receiving optical power, but it cannot tell you if
-> the optical signal makes any sense. The SERDES however knows how to
-> decode the bitstream, sync to it, etc. So you need some registers in
-> the SERDES to get this status information. Typically, you can also get
-> access to the SGMII/1000Base-X code word, so you can do
-> auto-negotiation, or know if you need to send each bit 10 or 100 times
-> in order to do 100Mbps or 10Mbps. If you are connecting to a PHY which
-> can do > 1Gbps, you need to change the SERDES between SGMII,
-> 1000Base-X, 2500Base-X, etc. Before you can say the link is up, you
-> want the PHY to tell you it has link to its peer PHY, and you want to
-> know the SERDES is ready. Typically the SERDES is last, since you
-> don't know what to configure the SERDES to until the PHY is finished
-> negotiating the link to its peer.
->=20
-> If you look at any of the Marvell SERDES interfaces, found in PHYs or
-> switches, there are dozens of registers for controlling the SERDES.
->=20
-> Now, it could be we don't have a clear definition of what a SERDES
-> is. The Marvell documents has a lot in its definition of SERDES, where
-> as what you could be purely a 'dumb' parallel to serial convert, and
-> all the rest of the logic is in the Ethernet MAC and the PCIe device?
->=20
-> Now, back to my original point. Where are the registers for 'the rest
-> of this logic'? If they are in the MAC address space, we don't have a
-> problem. If they are somewhere else, maybe you will need to add
-> another device. What is this device called? That is why i'm trying to
-> differentiate between the 'SERDES-MUX' and the 'SERDES'.
->=20
-
-If I've correctly read the datasheet of the switch, the sync status bit
-is in the MAC address space. Same for 1000BASE-X/SGMII, autonegotiation.
-
-The point I was trying to make was that this driver isn't only for
-"muxing". There are also a handful of registers for
-(electronically-related ?) features of SerDes (e.g. "control of phase
-regulator logic", "deserializer phase control", a few
-thresholds/hysteresis/frequencies, etc...
-
-I understand that "serdes" isn't also fully matching the work done by
-this driver as some features are handled within the MAC controller
-address space.
-
-Let me know if something bothers you/does not make sense,
-Thanks,
-Quentin
-
---dwtbtpadbufkaztq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAltoQ38ACgkQhLiadT7g
-8aNNmRAAj3K9XzeEroN7RKAVvgvpx7JR0bTMte0G2EebUPsrmM1SYW9MD7zypbzA
-7JKgVaQdeYy0DIf6TCUfLb9Q9w7EETlnF2iWawDPt5OpvD+sYOYOSmUbCkUOBk56
-r4EI1HLCyo2tTcHtKcnDOw7b55Racgmc2ToSOLiL/u3koVZwgHFStrNP1Y+woQ8N
-saLzxwhhCGQhb+GLL3U2Silk6WO+Pbj3TG0YDf0YFhufaFHaux+Ni6kHaFjGuHy8
-68RQwrGBwjXdgopf5o7aqcEuUXUN6Lx2Q4eEHdxJZXxN7y+eo5uJLntRj+fk2Nn1
-AWW+f5fsHju5LYy+icEBYFDAzH2aBsgLCNtD1zxmoEv6Ot/HHJRIFOF1noQB79D/
-ZU4pKZsftOxCb3dLkDnRg3WrA7M1jIbmVGsFM3fIro7+oebhJjdGyLTPmOC2UmS5
-w9JgFVkEh+uCnACJyclgORW9Xydbn7BhiU3AKUehpKUJ7FYArFGozHaMC9oxeYdj
-Skj9M0+1FOanAcsXOO+pcHock11Fn7vDBc8HOpq4OXvPSFTeHYDE5DHOwvFgqGDI
-QKb6R2bZqy2VXlluhxbGbnz+57xZ1KjtA3Mcb+XVZlaxsiDWL91OA8o1Bjk0VRwQ
-wTvgzjRnqMOrp7TJPxhSDk12KPTvz74ShQRoM6zaJNBWN8yUsAA=
-=0PCv
------END PGP SIGNATURE-----
-
---dwtbtpadbufkaztq--
+SGkgVmluZWV0LA0KDQpPbiBUaHUsIDIwMTgtMDgtMDIgYXQgMjE6NTggKzAwMDAsIFZpbmVldCBH
+dXB0YSB3cm90ZToNCj4gT24gMDgvMDIvMjAxOCAwMzoxOSBBTSwgQWxleGV5IEJyb2RraW4gd3Jv
+dGU6DQo+ID4gT3RoZXJ3aXNlIGtlcm5lbCB1c2VzIHJhbmRvbSBNQUMgd2hpY2ggaXMgbm90IHZl
+cnkgY29udmVuaWV0Lg0KPiANCj4gQ3VyaW91cyB3aGF0IGV4YWN0bHkgaXMgdGhlIGlzc3VlIC0g
+d2h5IGRvZXMgdGhlIHVzZXIgY2FyZSB3aGF0IE1BQyBpcyBhc3NpZ25lZCA/DQo+IA0KPiA+IFdp
+dGggdGhhdCBjaGFuZ2UgaW4gcGxhY2UgdXNlIG1pZ2h0IHNldCBkZXNpcmVkIE1BQyBpbiBVLUJv
+b3QNCj4gPiB3aXRoICJzZXRlbnYgZXRoYWRkciAxMToyMjozMzo0NDo1NTo2NiIsIHNhdmUgZW52
+aXJvbm1lbnQgYW5kDQo+ID4gdGhlbiBmcm9tIGJvb3QgdG8gYm9vdCB0aGUgc2FtZSBNQUMgd2ls
+bCBiZSB1c2VkIGJ5IHRoZSBrZXJuZWwuDQo+ID4gDQo+IA0KPiBBbmQgd2hhdCBpZiBvbmUgaXMg
+cnVubmluZyB3aXRob3V0IHVib290IC0gaXQgd2lsbCByZXNvcnQgdG8gYWxsIHplcm9zIHZzLiBy
+YW5kb20NCj4geWV0IHdvcmtpbmcgTUFDID8NCj4gDQoNCklmIG9uZSBpcyBydW5uaW5nIHdpdGhv
+dXQgdS1ib290IC0gaXQgd2lsbCByZXNvcnQgdG8gcmFuZG9tIE1BQyBhcyB3ZSBkb24ndCB0cmVh
+dCANCiIwMDowMDowMDowMDowMDowMCIgYXMgYSB2YWxpZCBFdGhlcm5ldCBhZGRyZXNzLg0KDQpM
+b29rIGF0IGZvbGxvd2luZyBsaW5rIGZvciBtb3JlIGRldGFpbHMuDQpodHRwczovL2VsaXhpci5i
+b290bGluLmNvbS9saW51eC92NC4xOC1yYzgvc291cmNlL2luY2x1ZGUvbGludXgvZXRoZXJkZXZp
+Y2UuaCNMMTg0DQoNCg0KQlRXOg0KVGVzdGVkLWJ5OiBFdmdlbml5IFBhbHRzZXYgPHBhbHRzZXZA
+c3lub3BzeXMuY29tPg0KDQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXw0KPiBsaW51eC1zbnBzLWFyYyBtYWlsaW5nIGxpc3QNCj4gbGludXgtc25w
+cy1hcmNAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2lu
+dC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fbGlzdHMuaW5mcmFkZWFkLm9yZ19tYWlsbWFuX2xpc3Rp
+bmZvX2xpbnV4LTJEc25wcy0yRGFyYyZkPUR3SUNBZyZjPURQTDZfWF82SmtYRng3QVhXcUIwdGcm
+cj1abEpODQo+IDFNcmlQVVRrQktDclBTeDY3R21hcGxFVUdjQUVrOXlQdENMZFVYSSZtPXBFZTMx
+TXE0RkMyMFpCUTFTTUdkQ3Blc1BtUUZ5YVFDZHBZOS1OX2FXUmMmcz1sd0k3dlRxQW1iVlBIZGZN
+el9GbE96ZkJEdnRZQ1FETC02cy1aMkZGcl9ZJmU9DQotLSANCiBFdWdlbml5IFBhbHRzZXY=
