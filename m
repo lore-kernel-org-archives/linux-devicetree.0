@@ -1,35 +1,72 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
-        documentation
-Date: Tue, 7 Aug 2018 09:20:34 +0200
-Message-ID: <20180807072034.GA569@lst.de>
-References: <20180802115008.4031-1-hch@lst.de> <20180802115008.4031-4-hch@lst.de> <0093fadc-a150-3745-e73d-e579bfdfabfb@wdc.com> <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH] arm64: allwinner: h6: orangepi-one-plus: Add
+ Ethernet support
+Date: Tue,  7 Aug 2018 12:48:39 +0530
+Message-ID: <20180807071839.25305-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBW4PUXNQKGQEZTDY5VA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 06, 2018 at 02:59:48PM -0600, Rob Herring wrote:
-> > > +Required properties:
-> > > +- compatible : "sifive,plic0"
-> > > +- #address-cells : should be <0>
-> > > +- #interrupt-cells : should be <1>
-> > > +- interrupt-controller : Identifies the node as an interrupt controller
-> > > +- reg : Should contain 1 register range (address and length)
-> >
-> > The one in the real device tree has two entries.
-> > reg = <0x00000000 0x0c000000 0x00000000 0x04000000>;
-> >
-> > Is it intentional or just incorrect entry left over from earlier days?
-> 
-> > > +             reg = <0xc000000 0x4000000>;
-> 
-> Looks to me like one has #size-cells and #address-cells set to 2 and
-> the example is using 1.
+Add Ethernet support for orangepi-one-plus board,
+- Ethernet port connected via RTL8211E PHY
+- GMAC_EN is connected via PD6
+- GMAC-3V supplied from ALDO2 regulator
 
-Yes.  And it seems like the real life device tree is simply bogus.
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ .../allwinner/sun50i-h6-orangepi-one-plus.dts | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+index 0612c19cd994..eca5b7ea0d6d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+@@ -21,6 +21,35 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++		vin-supply = <&reg_aldo2>;
++	};
++};
++
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_gmac_3v3>;
++	allwinner,rx-delay-ps = <200>;
++	allwinner,tx-delay-ps = <200>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++	};
+ };
+ 
+ &mmc0 {
+-- 
+2.18.0.321.gffc6fa0e3
