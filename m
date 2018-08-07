@@ -1,37 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: stratix10: Add Stratix10 SMMU support
-Date: Tue, 7 Aug 2018 12:00:59 -0600
-Message-ID: <20180807180059.GA4415@rob-hp-laptop>
-References: <1532543077-8933-1-git-send-email-thor.thayer@linux.intel.com>
- <1532543077-8933-2-git-send-email-thor.thayer@linux.intel.com>
+Subject: Re: [PATCH] ASoC: rsnd: Document R-Car M3-N support
+Date: Tue, 7 Aug 2018 12:01:34 -0600
+Message-ID: <20180807180134.GA6871@rob-hp-laptop>
+References: <1532551215-14868-1-git-send-email-ykaneko0929@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1532543077-8933-2-git-send-email-thor.thayer@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com
-Cc: joro@8bytes.org, mark.rutland@arm.com, dinguyen@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1532551215-14868-1-git-send-email-ykaneko0929@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 25, 2018 at 01:24:36PM -0500, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
+On Thu, Jul 26, 2018 at 05:40:15AM +0900, Yoshihiro Kaneko wrote:
+> From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
 > 
-> Add SMMU support to the Stratix10 Device Tree which
-> includes adding the SMMU node and adding IOMMU stream
-> ids to the SMMU peripherals. Update bindings.
+> Document support for the sound modules in the Renesas M3-N (r8a77965)
+> SoC.
 > 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> No driver update is needed.
+> 
+> Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
 > ---
-> This patch is dependent on the patch series
-> "iommu/arm-smmu: Add runtime pm/sleep support"
-> (https://patchwork.ozlabs.org/cover/946160/)
+> 
+> This patch is based on the devel branch of Simon Horman's renesas tree.
+> 
+>  Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-I don't think so.
-
-> ---
->  .../devicetree/bindings/iommu/arm,smmu.txt         | 25 ++++++++++++++++++
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 30 ++++++++++++++++++++++
->  2 files changed, 55 insertions(+)
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
