@@ -1,34 +1,134 @@
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH v3 0/6] Add support for MSCC Ocelot i2c
-Date: Tue, 7 Aug 2018 17:10:11 +0300
-Message-ID: <ce7bc15f-5742-8d1b-4b47-2e8b66d3e5c3@linux.intel.com>
-References: <20180806185412.7210-1-alexandre.belloni@bootlin.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] spi: sprd: Add SPI driver for Spreadtrum SC9860
+Date: Tue, 7 Aug 2018 15:24:08 +0100
+Message-ID: <20180807142408.GB7958@sirena.org.uk>
+References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
+ <99befd2badc4dffb59662fca1e11d79f18b64755.1533638405.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="CUfgB8w4ZwR/yMy5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180806185412.7210-1-alexandre.belloni@bootlin.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <99befd2badc4dffb59662fca1e11d79f18b64755.1533638405.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/2018 09:54 PM, Alexandre Belloni wrote:
-> Hello,
-> 
-> Because the designware IP was not able to handle the SDA hold time before
-> version 1.11a, MSCC has its own implementation. Add support for it and then add
-> i2c on ocelot boards.
-> 
-> I would expect patches 1 to 4 to go through the i2c tree and 5-6 through
-> the mips tree once patch 4 has been reviewed by the DT maintainers.
-> 
-For the patches 1-4/6 that touch i2c-designware:
 
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+--CUfgB8w4ZwR/yMy5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I tested acpi_match_device() conversion to device_get_match_data() 
-didn't affect MODEL_CHERRYTRAIL case and quick test that i2c 
-communication continue working.
+On Tue, Aug 07, 2018 at 06:43:38PM +0800, Baolin Wang wrote:
+> From: Lanqing Liu <lanqing.liu@spreadtrum.com>
+>=20
+> This patch adds the SPI controller driver for Spreadtrum SC9860 platform.
+
+This all looks pretty clean, a few comments below but nothing too major:
+
+> +static void sprd_spi_chipselect(struct spi_device *sdev, bool cs)
+> +{
+> +	struct spi_controller *sctlr =3D sdev->controller;
+> +	struct sprd_spi *ss =3D spi_controller_get_devdata(sctlr);
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret =3D pm_runtime_get_sync(ss->dev);
+> +	if (ret < 0) {
+> +		dev_err(ss->dev, "failed to resume SPI controller\n");
+> +		return;
+> +	}
+
+Something else further up the stack should probably have runtime PM
+enabled already - we should only be changing chip select as part of a
+bigger operation.  If you use the core auto_runtime_pm feature this will
+definitely happen.
+
+> +	bits_per_word =3D bits_per_word > 16 ? round_up(bits_per_word, 16) :
+> +		round_up(bits_per_word, 8);
+
+Please
+
+> +	switch (bits_per_word) {
+> +	case 8:
+> +	case 16:
+> +	case 32:
+
+It'd be nice to have a default case, the core should check for you but
+it's nice to have defensive programming here.
+
+> +static int sprd_spi_transfer_one(struct spi_controller *sctlr,
+> +				 struct spi_device *sdev,
+> +				 struct spi_transfer *t)
+> +{
+> +	struct sprd_spi *ss =3D spi_controller_get_devdata(sctlr);
+> +	int ret;
+> +
+> +	ret =3D pm_runtime_get_sync(ss->dev);
+> +	if (ret < 0) {
+> +		dev_err(ss->dev, "failed to resume SPI controller\n");
+> +		goto rpm_err;
+> +	}
+
+Same thing with runtime PM here - the core can do this for you.
+
+> +static int sprd_spi_setup(struct spi_device *spi_dev)
+> +{
+> +	struct spi_controller *sctlr =3D spi_dev->controller;
+> +	struct sprd_spi *ss =3D spi_controller_get_devdata(sctlr);
+> +	int ret;
+> +
+> +	ret =3D pm_runtime_get_sync(ss->dev);
+> +	if (ret < 0) {
+> +		dev_err(ss->dev, "failed to resume SPI controller\n");
+> +		return ret;
+> +	}
+> +
+> +	ss->hw_mode =3D spi_dev->mode;
+> +	sprd_spi_init_hw(ss);
+
+This can be called for one chip select while another is in progress so
+it's not good to actually configure the hardware here unless the
+configuration is in a chip select specific set of registers.  Instead
+you should defer to when the transfer is being set up.
+
+> +static int sprd_spi_clk_init(struct platform_device *pdev, struct sprd_s=
+pi *ss)
+> +{
+> +	struct clk *clk_spi, *clk_parent;
+> +
+> +	clk_spi =3D devm_clk_get(&pdev->dev, "spi");
+> +	if (IS_ERR(clk_spi)) {
+> +		dev_warn(&pdev->dev, "can't get the spi clock\n");
+> +		clk_spi =3D NULL;
+> +	}
+
+I suspect some of these clocks are essential and you should probably
+return an error if you can't get them (especially if probe deferral
+becomes a factor).
+
+> +	if (!clk_set_parent(clk_spi, clk_parent))
+> +		ss->src_clk =3D clk_get_rate(clk_spi);
+> +	else
+> +		ss->src_clk =3D SPRD_SPI_DEFAULT_SOURCE;
+
+Are upstream DTs going to be missing the clock setup needed here?
+
+--CUfgB8w4ZwR/yMy5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltpq4cACgkQJNaLcl1U
+h9AVcgf+NxxRSsAAJNVZOh81hcSC5CB7sYJnt2eniKxe6PLdIM4NXBncN13jTSUf
+B9wU7JvRS02VGMZiFUi5RA50jN3a5gby3mb9UmjjVZzyQSPNpzeeDUEv67jreyXo
+zTSy758kPJxqKwCG7fsHSBIJoT5/zx9sLESNX+3IxgJ1cMco6tZET9qo/gQqxsdH
+Zw9SE4DDrAcIrYoc0Q1gBYIyeJ88ljJoytdHyCRPdjzaWColce5TKv6VvfOp8kZP
+6JBKb8FPF6XdAHA8qvHobNyub85E836EIaoNSO97QAFi4JLXR8Zekx6y5kxBT84J
+Pf2FbnHBP1XRQQX1deSuKEtxt8MYOA==
+=UadY
+-----END PGP SIGNATURE-----
+
+--CUfgB8w4ZwR/yMy5--
