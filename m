@@ -1,85 +1,48 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [RFT 4/4] ARM: dts: exynos: Add LDO28 regulator on Exynos5422
- Odroid boards
-Date: Tue, 7 Aug 2018 12:59:48 +0200
-Message-ID: <20180807105950eucas1p1e48a3d064afb4d601fa33eeb67f0ba02~IlRTyxXuT0840608406eucas1p1t@eucas1p1.samsung.com>
-References: <20180806160933.6578-1-krzk@kernel.org>
-        <CGME20180806160955epcas4p14c924297f156db1dcb30ce543bc2d79a@epcas4p1.samsung.com>
-        <20180806160933.6578-4-krzk@kernel.org>
+From: <patrice.chotard@st.com>
+Subject: [PATCH 0/3] ARM: dts: stm32: Fix DT dtc warnings for STM32 MCU's
+Date: Tue, 7 Aug 2018 13:06:32 +0200
+Message-ID: <1533639995-27047-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180806160933.6578-4-krzk@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, lee.jones@linaro.org
+Cc: mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, Patrice Chotard <patrice.chotard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+From: Patrice Chotard <patrice.chotard@st.com>
 
-On 2018-08-06 18:09, Krzysztof Kozlowski wrote:
-> The LDO28 is used only on Odroid XU3 for Display Port.  Define it so DTS
-> will describe entire hardware.
->
-> Depending on bootloader behavior this might affect the Display Port
-> because none of drivers are enabling it. By default it is off in S2MPS11
-> PMIC reset values.  However it could be enabled by bootloader so in such
-> case kernel will later disable it as unused regulator.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This series fixes DT dtc warnings for following STM32 MCU's boards:
+	- stm32f429i evaluation
+	- stm32f429 discovery
+	- stm32f469 discovery
+	- stm32746g evaluation
+	- stm32f746 discovery
+	- stm32h743i discovery
+	- stm32h743i evaluation
 
-Odroid XU3 boots fine with this patch. Display Port is not yet enabled in
-mainline for OdroidXU3, so there is not much else to test for now.
+Patrice Chotard (3):
+  ARM: dts: stm32: Fix DT dtc warnings for stm32h7
+  ARM: dts: stm32: Fix DT dtc warnings for stm32f7
+  ARM: dts: stm32: Fix DT dtc warnings for stm32f4
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+ arch/arm/boot/dts/stm32429i-eval.dts     | 11 +++--
+ arch/arm/boot/dts/stm32746g-eval.dts     |  9 ++--
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi   | 30 ++++++-------
+ arch/arm/boot/dts/stm32f429-disco.dts    |  7 ++-
+ arch/arm/boot/dts/stm32f429-pinctrl.dtsi | 74 +++++++++++++++----------------
+ arch/arm/boot/dts/stm32f429.dtsi         |  8 ++--
+ arch/arm/boot/dts/stm32f469-disco.dts    | 11 +++--
+ arch/arm/boot/dts/stm32f469-pinctrl.dtsi | 76 +++++++++++++++-----------------
+ arch/arm/boot/dts/stm32f7-pinctrl.dtsi   | 24 +++++-----
+ arch/arm/boot/dts/stm32f746-disco.dts    |  6 +--
+ arch/arm/boot/dts/stm32f746.dtsi         |  8 ++--
+ arch/arm/boot/dts/stm32f769-disco.dts    | 11 +++--
+ arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 10 ++---
+ arch/arm/boot/dts/stm32h743.dtsi         |  8 ++--
+ arch/arm/boot/dts/stm32h743i-disco.dts   |  2 +-
+ arch/arm/boot/dts/stm32h743i-eval.dts    |  2 +-
+ 16 files changed, 140 insertions(+), 157 deletions(-)
 
-> ---
->
-> Not tested on Odroid XU3 with Display Port.
-> ---
->   arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 7 +++++++
->   arch/arm/boot/dts/exynos5422-odroidxu3.dts    | 6 ++++++
->   2 files changed, 13 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> index b0dc9cc81b94..178e1064cfc7 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> @@ -331,6 +331,13 @@
->   				regulator-always-on;
->   			};
->   
-> +			ldo28_reg: LDO28 {
-> +				/* Used on XU3 */
-> +				regulator-name = "vdd_ldo26";
-> +				regulator-min-microvolt = <800000>;
-> +				regulator-max-microvolt = <3950000>;
-> +			};
-> +
->   			ldo29_reg: LDO29 {
->   				/* Unused */
->   				regulator-name = "vdd_ldo29";
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3.dts b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> index 0322f281912c..db0bc17a667b 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> @@ -49,6 +49,12 @@
->   	};
->   };
->   
-> +&ldo28_reg {
-> +	regulator-name = "dp_p3v3";
-> +	regulator-min-microvolt = <3300000>;
-> +	regulator-max-microvolt = <3300000>;
-> +};
-> +
->   &pwm {
->   	/*
->   	 * PWM 0 -- fan
-
-Best regards
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+1.9.1
