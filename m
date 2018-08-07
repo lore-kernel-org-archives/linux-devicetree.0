@@ -1,59 +1,89 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: only apply reset hacks to broken hardware
-Date: Tue, 7 Aug 2018 12:22:42 -0700
-Message-ID: <20180807192242.GA139259@ban.mtv.corp.google.com>
-References: <20180727183313.137943-1-computersforpeace@gmail.com>
- <20180727220337.1b3375ca@bbrezillon>
- <87wotcrz94.fsf@notabene.neil.brown.name>
- <20180731221255.3e65c1fa@bbrezillon>
- <20180731223550.GA60117@ban.mtv.corp.google.com>
- <20180807183901.GB31722@rob-hp-laptop>
+From: skannan@codeaurora.org
+Subject: Re: [PATCH v7 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
+ Firmware bindings
+Date: Tue, 07 Aug 2018 12:24:14 -0700
+Message-ID: <74d27daca2bb03716fc84f9c57118af0@codeaurora.org>
+References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
+ <1532428970-18122-2-git-send-email-tdas@codeaurora.org>
+ <153334001055.10763.8002698033760154254@swboyd.mtv.corp.google.com>
+ <b362d9f769fde3ce1a2dcd89f20eb476@codeaurora.org>
+ <20180807111237.GA1588@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180807183901.GB31722@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, NeilBrown <neilb@suse.com>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180807111237.GA1588@e107155-lin>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Taniya Das <tdas@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 07, 2018 at 12:39:01PM -0600, Rob Herring wrote:
-> On Tue, Jul 31, 2018 at 03:35:50PM -0700, Brian Norris wrote:
-> > One reason I didn't specifically say something like "not connected", is
-> > because IIUC it's actually *possible* to have a robust boot sequence
-> > without the RESET# pin -- e.g., if your boot ROM hardcoded a software
-> > reset command (just because it's not really standardized doesn't mean
-> > one can't do it).
+On 2018-08-07 04:12, Sudeep Holla wrote:
+> On Mon, Aug 06, 2018 at 01:54:24PM -0700, skannan@codeaurora.org wrote:
+>> On 2018-08-03 16:46, Stephen Boyd wrote:
+>> >Quoting Taniya Das (2018-07-24 03:42:49)
+>> >>diff --git
+>> >>a/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>> >>b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>> >>new file mode 100644
+>> >>index 0000000..22d4355
+>> >>--- /dev/null
+>> >>+++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+>> >>@@ -0,0 +1,172 @@
+>> >[...]
+>> >>+
+>> >>+               CPU7: cpu@700 {
+>> >>+                       device_type = "cpu";
+>> >>+                       compatible = "qcom,kryo385";
+>> >>+                       reg = <0x0 0x700>;
+>> >>+                       enable-method = "psci";
+>> >>+                       next-level-cache = <&L2_700>;
+>> >>+                       qcom,freq-domain = <&freq_domain_table1>;
+>> >>+                       L2_700: l2-cache {
+>> >>+                               compatible = "cache";
+>> >>+                               next-level-cache = <&L3_0>;
+>> >>+                       };
+>> >>+               };
+>> >>+       };
+>> >>+
+>> >>+       qcom,cpufreq-hw {
+>> >>+               compatible = "qcom,cpufreq-hw";
+>> >>+
+>> >>+               clocks = <&rpmhcc RPMH_CXO_CLK>;
+>> >>+               clock-names = "xo";
+>> >>+
+>> >>+               #address-cells = <2>;
+>> >>+               #size-cells = <2>;
+>> >>+               ranges;
+>> >>+               freq_domain_table0: freq_table0 {
+>> >>+                       reg = <0 0x17d43000 0 0x1400>;
+>> >>+               };
+>> >>+
+>> >>+               freq_domain_table1: freq_table1 {
+>> >>+                       reg = <0 0x17d45800 0 0x1400>;
+>> >>+               };
+>> >
+>> >Sorry, this is just not proper DT design. The whole node should have a
+>> >reg property, and it should contain two (or three if we're handling the
+>> >L3 clk domain?) different offsets for the different power clusters. The
+>> >problem seems to still be that we don't have a way to map the CPUs to
+>> >the clk domains they're in provided by this hardware block. Making
+>> >subnodes is not the solution.
+>> 
+>> The problem is mapping clock domains to logical CPUs that CPUfreq 
+>> uses. The
+>> physical CPU to logical CPU mapping can be changed by the kernel (even
+>> through DT if I'm not mistaken). So we need to have a way to tell in 
+>> DT
+>> which physical CPUs are connected to which CPU freq clock domain.
+>> 
 > 
-> Based on that, then it sounds like you need a specific compatible string 
-> so you too can know how to s/w reset the device.
+> How about passing CPU freq clock domain id as along with phandle in
+> qcom,freq-domain ?
 
-We do also support compatible properties for these chips, where needed.
-But I don't think that's really needed.
+Now sure what you mean here. There's no such this as CPUfreq clock 
+domain id. It has policies that are made up of logical CPU numbers. 
+Logical CPU is not something that you can fix in DT.
 
-> I guess you are assuming a bootloader didn't leave the flash in an 
-> unknown addressing state?
-
-For some of these address states (at least, 3-byte vs. 4-byte
-addressing), we can still identify the device independently; the READ ID
-command works in either mode.
-
-The problem is that a boot ROM is rarely as complex as a Linux driver
-and probably can't be updated. And they usually do stupid things anyway.
-So *that's* where you need a well-defined entry state for the flash.
-
-Brian
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-Saravana
