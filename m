@@ -1,101 +1,36 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [v0.1 PATCH 3/7] dt-bindings: mmc: add DT binding for UniPhier
- SD/eMMC controller
-Date: Tue,  7 Aug 2018 15:17:18 +0900
-Message-ID: <1533622642-13989-4-git-send-email-yamada.masahiro@socionext.com>
-References: <1533622642-13989-1-git-send-email-yamada.masahiro@socionext.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v7 0/4] IR support for A83T
+Date: Tue, 7 Aug 2018 14:25:44 +0800
+Message-ID: <CAGb2v66oe71CEtqkB2S-AYRzGnTQiJjVPUoRPkefd=9aqK+XbA@mail.gmail.com>
+References: <20180801094801.26627-1-embed3d@gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1533622642-13989-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-mmc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB77WUTNQKGQENE6MAMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180801094801.26627-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, sean-hENCXIMQXOg@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This SD/eMMC controller is used for UniPhier SoC family.
+On Wed, Aug 1, 2018 at 5:47 PM, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch series adds support for the sunxi A83T ir module and enhances
+> the sunxi-ir driver. Right now the base clock frequency for the ir driver
+> is a hard coded define and is set to 8 MHz.
+> This works for the most common ir receivers. On the Sinovoip Bananapi M3
+> the ir receiver needs, a 3 MHz base clock frequency to work without
+> problems with this driver.
+>
+> This patch series adds support for an optinal property that makes it able
+> to override the default base clock frequency and enables the ir interface
+> on the a83t and the Bananapi M3.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Queued up for 4.20.
 
- .../devicetree/bindings/mmc/uniphier-sd.txt        | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/uniphier-sd.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/uniphier-sd.txt b/Documentation/devicetree/bindings/mmc/uniphier-sd.txt
-new file mode 100644
-index 0000000..49dd0fc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/uniphier-sd.txt
-@@ -0,0 +1,60 @@
-+UniPhier SD/eMMC controller
-+
-+Required properties:
-+- compatible: should be one of the following:
-+    "socionext,uniphier-sd-v2.91" - IP version 2.91
-+    "socionext,uniphier-sd-v3.1"  - IP version 3.1
-+    "socionext,uniphier-sd-v3.1b" - IP version 3.1 (bug-fix ver.) [1]
-+- reg: offset and length of the register set for the device.
-+- interrupts: a single interrupt specifier.
-+- clocks: a single clock specifier of the controller clock.
-+- reset-names: should contain the following:
-+    "host"   - mandatory for all versions
-+    "bridge" - should exist only for "socionext,uniphier-sd-v2.91"
-+    "hw"     - should exist if eMMC hw reset line is available
-+- resets: a list of reset specifiers, corresponding to the reset-names
-+
-+[1] There are two different controller cores for version 3.1.  The early
-+    release had a bug in the DMA RX channel.  The issue was fixed later,
-+    but the version number was not incremented.  Hence, the latter has
-+    'b' at the end of its compatible string.
-+
-+Optional properties:
-+- pinctrl-names: if present, should contain the following:
-+    "default" - should exist for all instances
-+    "uhs"     - should exist for SD instance with UHS support
-+- pinctrl-0: pin control state for the default mode
-+- pinctrl-1: pin control state for the UHS mode
-+- dma-names: should be "rx-tx" if present.
-+  This property can exist only for "socionext,uniphier-sd-v2.91".
-+- dmas: a single DMA channel specifier
-+  This property can exist only for "socionext,uniphier-sd-v2.91".
-+- bus-width: see mmc.txt
-+- cap-sd-highspeed: see mmc.txt
-+- cap-mmc-highspeed: see mmc.txt
-+- sd-uhs-sdr12: see mmc.txt
-+- sd-uhs-sdr25: see mmc.txt
-+- sd-uhs-sdr50: see mmc.txt
-+- cap-mmc-hw-reset: should exist if reset-names contains "hw". see mmc.txt
-+- non-removable: see mmc.txt
-+
-+Example:
-+
-+	sd: sdhc@5a400000 {
-+		compatible = "socionext,uniphier-sd-v2.91";
-+		reg = <0x5a400000 0x200>;
-+		interrupts = <0 76 4>;
-+		pinctrl-names = "default", "uhs";
-+		pinctrl-0 = <&pinctrl_sd>;
-+		pinctrl-1 = <&pinctrl_sd_uhs>;
-+		clocks = <&mio_clk 0>;
-+		reset-names = "host", "bridge";
-+		resets = <&mio_rst 0>, <&mio_rst 3>;
-+		dma-names = "rx-tx";
-+		dmas = <&dmac 4>;
-+		bus-width = <4>;
-+		cap-sd-highspeed;
-+		sd-uhs-sdr12;
-+		sd-uhs-sdr25;
-+		sd-uhs-sdr50;
-+	};
--- 
-2.7.4
+Thanks!
