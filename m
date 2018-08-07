@@ -1,29 +1,69 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [v0.1 PATCH 0/7] mmc: tmio: refactor TMIO core a bit and add
- UniPhier SD/eMMC controller support
-Date: Tue, 7 Aug 2018 15:26:16 +0900
-Message-ID: <CAK7LNAQ7fwWofFb-xVU7E4=hJh2x=NPOce9LBF3ncWqYtqt-hg@mail.gmail.com>
-References: <1533622642-13989-1-git-send-email-yamada.masahiro@socionext.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V4 8/8] backlight: qcom-wled: Add auto string detection
+ logic
+Date: Mon, 6 Aug 2018 23:32:29 -0700
+Message-ID: <20180807063229.GE23866@tuxbook-pro>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
+ <1531131741-19971-9-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533622642-13989-1-git-send-email-yamada.masahiro@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <1531131741-19971-9-git-send-email-kgunda@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-mmc <linux-mmc@vger.kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-08-07 15:17 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+On Mon 09 Jul 03:22 PDT 2018, Kiran Gunda wrote:
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+[..]
+> @@ -189,6 +206,15 @@ static int wled4_set_brightness(struct wled *wled, u16 brightness)
+>  	return 0;
+>  }
+>  
+> +static void wled_ovp_work(struct work_struct *work)
+> +{
+> +	struct wled *wled = container_of(work,
+> +					 struct wled, ovp_work.work);
+> +
+> +	if (wled->ovp_irq > 0)
+> +		enable_irq(wled->ovp_irq);
+> +}
+> +
+>  static int wled_module_enable(struct wled *wled, int val)
+>  {
+>  	int rc;
+> @@ -200,7 +226,18 @@ static int wled_module_enable(struct wled *wled, int val)
+>  				WLED_CTRL_REG_MOD_EN,
+>  				WLED_CTRL_REG_MOD_EN_MASK,
+>  				val << WLED_CTRL_REG_MOD_EN_SHIFT);
+> -	return rc;
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	if (val) {
+> +		schedule_delayed_work(&wled->ovp_work, WLED_SOFT_START_DLY_US);
 
+schedule_delayed_work() takes a delay in jiffies, not micro seconds.
 
-> [v0.1 PATCH 0/7] mmc: tmio: refactor TMIO core a bit and add UniPhier SD/eMMC controller support
+> +	} else {
+> +		cancel_delayed_work_sync(&wled->ovp_work);
 
+If we get here within WLED_SOFT_START_DLY_US of a module enable we have
+yet to execute the enable_irq() in the delayed worker, which should mean
+that the irq is unbalanced from then on.
 
-This series is v1.
+I believe you can check the return value of cancel_delayed_work_sync()
+being true to know if wled_ovp_work() was yet to execute.
 
-v0.1 was the internal numbering, which I forgot to change.
+> +		if (wled->ovp_irq > 0)
+> +			disable_irq(wled->ovp_irq);
+> +	}
+> +
+> +	return 0;
+>  }
+>  
 
-
--- 
-Best Regards
-Masahiro Yamada
+Regards,
+Bjorn
