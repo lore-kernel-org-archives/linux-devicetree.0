@@ -1,134 +1,82 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] spi: sprd: Add SPI driver for Spreadtrum SC9860
-Date: Tue, 7 Aug 2018 15:24:08 +0100
-Message-ID: <20180807142408.GB7958@sirena.org.uk>
-References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
- <99befd2badc4dffb59662fca1e11d79f18b64755.1533638405.git.baolin.wang@linaro.org>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v7 2/3] Bluetooth: mediatek: Add protocol support for
+ MediaTek serial devices
+Date: Tue, 7 Aug 2018 22:34:05 +0800
+Message-ID: <1533652445.3472.230.camel@mtkswgap22>
+References: <cover.1533056925.git.sean.wang@mediatek.com>
+         <c92ed10cf16f36d9a3b390e864af92e2dfe7b771.1533056925.git.sean.wang@mediatek.com>
+         <1707FFA1-A294-4A95-A3BF-0910CE455232@holtmann.org>
+         <1533192799.3472.122.camel@mtkswgap22>
+         <FF45A90A-F9F1-47CB-AB1F-1E92BF587FBE@holtmann.org>
+         <1533199720.3472.136.camel@mtkswgap22>
+         <9526E5D9-50BA-4D57-80F5-083DB7D28AFE@holtmann.org>
+         <1533205495.3472.144.camel@mtkswgap22>
+         <A6D48D49-52CE-405D-8C5D-C4D54CE67221@holtmann.org>
+         <1533303749.3472.160.camel@mtkswgap22>
+         <D2336CD2-B69B-4B5B-8125-F0CAD29E3243@holtmann.org>
+         <1533319214.3472.187.camel@mtkswgap22>
+         <7A3537C5-5940-45AD-AB80-77418CCFE130@holtmann.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CUfgB8w4ZwR/yMy5"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <99befd2badc4dffb59662fca1e11d79f18b64755.1533638405.git.baolin.wang@linaro.org>
+In-Reply-To: <7A3537C5-5940-45AD-AB80-77418CCFE130@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2018-08-06 at 17:39 +0200, Marcel Holtmann wrote:
+> Hi Sean,
+> 
+> >>>>>>>>>>> +
 
---CUfgB8w4ZwR/yMy5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ ... ]
 
-On Tue, Aug 07, 2018 at 06:43:38PM +0800, Baolin Wang wrote:
-> From: Lanqing Liu <lanqing.liu@spreadtrum.com>
->=20
-> This patch adds the SPI controller driver for Spreadtrum SC9860 platform.
+> >> this is even more hackish since the __hci_cmd_sync_ev command is really meant to get a cmd status first before waiting for that event.
+> >> 
+> > 
+> > Understood.
+> > 
+> > I've stopped the hack in v8. could we merge v8 first ? and then I will a fix up with __hci_raw_sync_ev that uses the hdev->raw_q instead of __hci_cmd_sync_ev in TODO.
+> 
+> so I looked into this a bit more. We actually added __hci_cmd_send for a Qualcomm firmware loader that was doing something similar. So instead of trying to add a yet another command to the core, I actually used that and implemented the wait for vendor event in the driver.
+> 
+> You will see my v9 on the mailing list. I also did a bunch of cosmetic minor cleanup and spelling correction. Please test this version. I also make __le16 dlen instead of dlen1 + dlen2 since I think that is what your hardware does.
 
-This all looks pretty clean, a few comments below but nothing too major:
+Only one thing needs to be corrected in v9. that is __be16 is required instead of dlen1 + dlen2. I will fix it up in v10 and the other changes all look good to me.
 
-> +static void sprd_spi_chipselect(struct spi_device *sdev, bool cs)
-> +{
-> +	struct spi_controller *sctlr =3D sdev->controller;
-> +	struct sprd_spi *ss =3D spi_controller_get_devdata(sctlr);
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret =3D pm_runtime_get_sync(ss->dev);
-> +	if (ret < 0) {
-> +		dev_err(ss->dev, "failed to resume SPI controller\n");
-> +		return;
-> +	}
+> If this version of the driver works for you then I am happy to merge it. You can then add support for hdev->set_bdaddr and hdev->set_diag in later patches. I also like to clean up the STP receive handler since it can be done a lot simpler and smaller, but that has to wait.
+> 
 
-Something else further up the stack should probably have runtime PM
-enabled already - we should only be changing chip select as part of a
-bigger operation.  If you use the core auto_runtime_pm feature this will
-definitely happen.
+hopefully v10 also can be merged :)
 
-> +	bits_per_word =3D bits_per_word > 16 ? round_up(bits_per_word, 16) :
-> +		round_up(bits_per_word, 8);
+I will investigate more about how to add ->set_bdaddr, ->set_diag and STP receive enhancement in later patches.
 
-Please
+but so far I have not much idea about how to make STP multiplexer be a independent driver.
 
-> +	switch (bits_per_word) {
-> +	case 8:
-> +	case 16:
-> +	case 32:
+my thought is that it would be really better and cleaner a chain of serdev is be used as the base of mtkbtuart. something like
+  
+8250 serial bus <----> STP multiplexer serdev <----> mtkbtuart serdev
 
-It'd be nice to have a default case, the core should check for you but
-it's nice to have defensive programming here.
+however, STP multiplexer serdev is not a real device, that doesn't no request any resource. I think it should not be allowed to be added in a device tree and even in dt-binding document.
 
-> +static int sprd_spi_transfer_one(struct spi_controller *sctlr,
-> +				 struct spi_device *sdev,
-> +				 struct spi_transfer *t)
-> +{
-> +	struct sprd_spi *ss =3D spi_controller_get_devdata(sctlr);
-> +	int ret;
-> +
-> +	ret =3D pm_runtime_get_sync(ss->dev);
-> +	if (ret < 0) {
-> +		dev_err(ss->dev, "failed to resume SPI controller\n");
-> +		goto rpm_err;
-> +	}
+> >> Are all Mediatek vendor commands this way? Or just the ones for loading the firmware? So only the WMT ones?
+> >> 
+> > 
+> > Only the WMT ones, WMT commands/events are usually used in system controlling, for example, global function on/off, firmware download, reset and so on. most only appear on device initialization
+> 
+> Since you never checked the result of the vendor event, I opted for just signaling that it arrived. If they can report success or failure, we need to add some extra code for that.
+> 
 
-Same thing with runtime PM here - the core can do this for you.
+I will consider more WMT event status when I add more Bluetooth devices such as MT7668U usb based Bluetooth which I plan to add the support in later patches in the next weeks 
 
-> +static int sprd_spi_setup(struct spi_device *spi_dev)
-> +{
-> +	struct spi_controller *sctlr =3D spi_dev->controller;
-> +	struct sprd_spi *ss =3D spi_controller_get_devdata(sctlr);
-> +	int ret;
-> +
-> +	ret =3D pm_runtime_get_sync(ss->dev);
-> +	if (ret < 0) {
-> +		dev_err(ss->dev, "failed to resume SPI controller\n");
-> +		return ret;
-> +	}
-> +
-> +	ss->hw_mode =3D spi_dev->mode;
-> +	sprd_spi_init_hw(ss);
-
-This can be called for one chip select while another is in progress so
-it's not good to actually configure the hardware here unless the
-configuration is in a chip select specific set of registers.  Instead
-you should defer to when the transfer is being set up.
-
-> +static int sprd_spi_clk_init(struct platform_device *pdev, struct sprd_s=
-pi *ss)
-> +{
-> +	struct clk *clk_spi, *clk_parent;
-> +
-> +	clk_spi =3D devm_clk_get(&pdev->dev, "spi");
-> +	if (IS_ERR(clk_spi)) {
-> +		dev_warn(&pdev->dev, "can't get the spi clock\n");
-> +		clk_spi =3D NULL;
-> +	}
-
-I suspect some of these clocks are essential and you should probably
-return an error if you can't get them (especially if probe deferral
-becomes a factor).
-
-> +	if (!clk_set_parent(clk_spi, clk_parent))
-> +		ss->src_clk =3D clk_get_rate(clk_spi);
-> +	else
-> +		ss->src_clk =3D SPRD_SPI_DEFAULT_SOURCE;
-
-Are upstream DTs going to be missing the clock setup needed here?
-
---CUfgB8w4ZwR/yMy5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltpq4cACgkQJNaLcl1U
-h9AVcgf+NxxRSsAAJNVZOh81hcSC5CB7sYJnt2eniKxe6PLdIM4NXBncN13jTSUf
-B9wU7JvRS02VGMZiFUi5RA50jN3a5gby3mb9UmjjVZzyQSPNpzeeDUEv67jreyXo
-zTSy758kPJxqKwCG7fsHSBIJoT5/zx9sLESNX+3IxgJ1cMco6tZET9qo/gQqxsdH
-Zw9SE4DDrAcIrYoc0Q1gBYIyeJ88ljJoytdHyCRPdjzaWColce5TKv6VvfOp8kZP
-6JBKb8FPF6XdAHA8qvHobNyub85E836EIaoNSO97QAFi4JLXR8Zekx6y5kxBT84J
-Pf2FbnHBP1XRQQX1deSuKEtxt8MYOA==
-=UadY
------END PGP SIGNATURE-----
-
---CUfgB8w4ZwR/yMy5--
+> Regards
+> 
+> Marcel
+> 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
