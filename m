@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 09/18] dmaengine: dma-jz4780: Add support for the JZ4725B SoC
-Date: Tue,  7 Aug 2018 13:42:09 +0200
-Message-ID: <20180807114218.20091-10-paul@crapouillou.net>
+Subject: [PATCH v4 10/18] dmaengine: dma-jz4780: Enable Fast DMA to the AIC
+Date: Tue,  7 Aug 2018 13:42:10 +0200
+Message-ID: <20180807114218.20091-11-paul@crapouillou.net>
 References: <20180807114218.20091-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180807114218.20091-1-paul@crapouillou.net>
@@ -10,85 +10,44 @@ To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutlan
 Cc: Paul Cercueil <paul@crapouillou.net>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-The JZ4725B has one DMA core starring six DMA channels.
-As for the JZ4770, each DMA channel's clock can be enabled with
-a register write, the difference here being that once started, it
-is not possible to turn it off.
+With the fast DMA bit set, the DMA will transfer twice as much data
+per clock period to the AIC, so there is little point not to set it.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
 Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 ---
- drivers/dma/dma-jz4780.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ drivers/dma/dma-jz4780.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
- v2: - Add comments about channel enabling/disabling
-     - The documentation update is now in patch 01/17
+ v2: No change
 
  v3: No change
 
- v4: Drop the SoC version ID and use the 'flags' field of the
-     jz4780_dma_soc_data structure
+ v4: No change
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 2d194dfa697e..565971c2a33c 100644
+index 565971c2a33c..3a4d0a4b550d 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -94,6 +94,7 @@
- #define JZ_SOC_DATA_ALLOW_LEGACY_DT	BIT(0)
- #define JZ_SOC_DATA_PROGRAMMABLE_DMA	BIT(1)
- #define JZ_SOC_DATA_PER_CHAN_PM		BIT(2)
-+#define JZ_SOC_DATA_NO_DCKES_DCKEC	BIT(3)
+@@ -52,6 +52,7 @@
+ #define JZ_DMA_DMAC_DMAE	BIT(0)
+ #define JZ_DMA_DMAC_AR		BIT(2)
+ #define JZ_DMA_DMAC_HLT		BIT(3)
++#define JZ_DMA_DMAC_FAIC	BIT(27)
+ #define JZ_DMA_DMAC_FMSC	BIT(31)
  
- /**
-  * struct jz4780_dma_hwdesc - descriptor structure read by the DMA controller.
-@@ -208,14 +209,23 @@ static inline void jz4780_dma_ctrl_writel(struct jz4780_dma_dev *jzdma,
- static inline void jz4780_dma_chan_enable(struct jz4780_dma_dev *jzdma,
- 	unsigned int chn)
- {
--	if (jzdma->soc_data->flags & JZ_SOC_DATA_PER_CHAN_PM)
--		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKES, BIT(chn));
-+	if (jzdma->soc_data->flags & JZ_SOC_DATA_PER_CHAN_PM) {
-+		unsigned int reg;
-+
-+		if (jzdma->soc_data->flags & JZ_SOC_DATA_NO_DCKES_DCKEC)
-+			reg = JZ_DMA_REG_DCKE;
-+		else
-+			reg = JZ_DMA_REG_DCKES;
-+
-+		jz4780_dma_ctrl_writel(jzdma, reg, BIT(chn));
-+	}
- }
+ #define JZ_DMA_DRT_AUTO		0x8
+@@ -923,8 +924,8 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 	 * Also set the FMSC bit - it increases MSC performance, so it makes
+ 	 * little sense not to enable it.
+ 	 */
+-	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMAC,
+-			  JZ_DMA_DMAC_DMAE | JZ_DMA_DMAC_FMSC);
++	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMAC, JZ_DMA_DMAC_DMAE |
++			       JZ_DMA_DMAC_FAIC | JZ_DMA_DMAC_FMSC);
  
- static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev *jzdma,
- 	unsigned int chn)
- {
--	if (jzdma->soc_data->flags & JZ_SOC_DATA_PER_CHAN_PM)
-+	if ((jzdma->soc_data->flags & JZ_SOC_DATA_PER_CHAN_PM) &&
-+			!(jzdma->soc_data->flags & JZ_SOC_DATA_NO_DCKES_DCKEC))
- 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
- }
- 
-@@ -978,6 +988,12 @@ static const struct jz4780_dma_soc_data jz4740_dma_soc_data = {
- 	.transfer_ord_max = 5,
- };
- 
-+static const struct jz4780_dma_soc_data jz4725b_dma_soc_data = {
-+	.nb_channels = 6,
-+	.transfer_ord_max = 5,
-+	.flags = JZ_SOC_DATA_PER_CHAN_PM | JZ_SOC_DATA_NO_DCKES_DCKEC,
-+};
-+
- static const struct jz4780_dma_soc_data jz4770_dma_soc_data = {
- 	.nb_channels = 6,
- 	.transfer_ord_max = 6,
-@@ -992,6 +1008,7 @@ static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
- 
- static const struct of_device_id jz4780_dma_dt_match[] = {
- 	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
-+	{ .compatible = "ingenic,jz4725b-dma", .data = &jz4725b_dma_soc_data },
- 	{ .compatible = "ingenic,jz4770-dma", .data = &jz4770_dma_soc_data },
- 	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
- 	{},
+ 	if (soc_data->flags & JZ_SOC_DATA_PROGRAMMABLE_DMA)
+ 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMACP, 0);
 -- 
 2.11.0
