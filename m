@@ -1,138 +1,107 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/8] media: v4l: Add definition for
- Allwinner's MB32-tiled NV12 format
-Date: Tue, 07 Aug 2018 18:40:15 +0200
-Message-ID: <2f2f5721ab5b07e36ec920b9d9c7fa0839b99a95.camel@bootlin.com>
-References: <20180725100256.22833-1-paul.kocialkowski@bootlin.com>
-	 <20180725100256.22833-3-paul.kocialkowski@bootlin.com>
-	 <4628cfe1-e42f-67ad-20b3-078c6a96d6ed@xs4all.nl>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] PM / devfreq: Generic CPU frequency to device
+ frequency mapping governor
+Date: Tue, 7 Aug 2018 10:41:14 -0600
+Message-ID: <20180807164114.GA12587@rob-hp-laptop>
+References: <1533171465-25508-1-git-send-email-skannan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-P8kg2P4hui+LtIFpvQmg"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBAEXU7NQKGQEWBMTGBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <4628cfe1-e42f-67ad-20b3-078c6a96d6ed-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1533171465-25508-1-git-send-email-skannan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <skannan@codeaurora.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, georgi.djakov@linaro.org, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---=-P8kg2P4hui+LtIFpvQmg
-Content-Type: text/plain; charset="UTF-8"
-
-Hi,
-
-On Sat, 2018-08-04 at 13:42 +0200, Hans Verkuil wrote:
-> On 07/25/2018 12:02 PM, Paul Kocialkowski wrote:
-> > This introduces support for Allwinner's MB32-tiled NV12 format, where
-> > each plane is divided into macroblocks of 32x32 pixels. Hence, the size
-> > of each plane has to be aligned to 32 bytes. The pixels inside each
-> > macroblock are coded as they would be if the macroblock was a single
-> > plane, line after line.
-> > 
-> > The MB32-tiled NV12 format is used by the video engine on Allwinner
-> > platforms: it is the default format for decoded frames (and the only one
-> > available in the oldest supported platforms).
-> > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  Documentation/media/uapi/v4l/pixfmt-reserved.rst | 15 ++++++++++++++-
-> >  drivers/media/v4l2-core/v4l2-ioctl.c             |  1 +
-> >  include/uapi/linux/videodev2.h                   |  1 +
-> >  3 files changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/media/uapi/v4l/pixfmt-reserved.rst b/Documentation/media/uapi/v4l/pixfmt-reserved.rst
-> > index 38af1472a4b4..9a68b6a787bf 100644
-> > --- a/Documentation/media/uapi/v4l/pixfmt-reserved.rst
-> > +++ b/Documentation/media/uapi/v4l/pixfmt-reserved.rst
-> > @@ -243,7 +243,20 @@ please make a proposal on the linux-media mailing list.
-> >  	It is an opaque intermediate format and the MDP hardware must be
-> >  	used to convert ``V4L2_PIX_FMT_MT21C`` to ``V4L2_PIX_FMT_NV12M``,
-> >  	``V4L2_PIX_FMT_YUV420M`` or ``V4L2_PIX_FMT_YVU420``.
-> > -
-> > +    * .. _V4L2-PIX-FMT-MB32-NV12:
-> > +
-> > +      - ``V4L2_PIX_FMT_MB32_NV12``
-> > +      - 'MN12'
-> > +      - Two-planar NV12-based format used by the Allwinner video engine
-> > +        hardware, with 32x32 tiles for the luminance plane and 32x64 tiles
-> > +        for the chrominance plane. Each tile is a linear pixel data
-> > +        representation within its own bounds. Each tile follows the previous
-> > +        one linearly (as in, from left to right, top to bottom).
+On Wed, Aug 01, 2018 at 05:57:41PM -0700, Saravana Kannan wrote:
+> Many CPU architectures have caches that can scale independent of the CPUs.
+> Frequency scaling of the caches is necessary to make sure the cache is not
+> a performance bottleneck that leads to poor performance and power. The same
+> idea applies for RAM/DDR.
 > 
-> as in, -> as in:
-
-Thanks!
-
-> > +
-> > +        The frame dimensions are aligned to match an integer number of
-> > +        tiles, resulting in 32-aligned resolutions for the luminance plane
-> > +        and 16-aligned resolutions for the chrominance plane (with 2x2
-> > +        subsampling).
-> >  
-> >  .. tabularcolumns:: |p{6.6cm}|p{2.2cm}|p{8.7cm}|
-> >  
-> > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > index 68e914b83a03..7e1c200de10d 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > @@ -1331,6 +1331,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
-> >  		case V4L2_PIX_FMT_SE401:	descr = "GSPCA SE401"; break;
-> >  		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
-> >  		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
-> > +		case V4L2_PIX_FMT_MB32_NV12:	descr = "Allwinner tiled NV12 format"; break;
+> To achieve this, this patch adds a generic devfreq governor that takes the
+> current frequency of each CPU frequency domain and then adjusts the
+> frequency of the cache (or any devfreq device) based on the frequency of
+> the CPUs. It listens to CPU frequency transition notifiers to keep itself
+> up to date on the current CPU frequency.
 > 
-> "Allwinner Tiled NV12 Format"
+> To decide the frequency of the device, the governor does one of the
+> following:
 > 
-> If it is Allwinner specific, then that should be in the PIX_FMT name as well:
-> something like V4L2_PIX_FMT_ALLWINNER_MB32_NV12 or perhaps SUNXI_MB32_NV12.
+> * Uses a CPU frequency to device frequency mapping table
+>   - Either one mapping table used for all CPU freq policies (typically used
+>     for system with homogeneous cores/clusters that have the same OPPs).
+>   - One mapping table per CPU freq policy (typically used for ASMP systems
+>     with heterogeneous CPUs with different OPPs)
 > 
-> On the other hand, you could also see this as a variant of e.g. V4L2_PIX_FMT_NV12MT
-> or V4L2_PIX_FMT_NV12MT_16X16. In that case it is not necessarily Allwinner specific
-> since other devices might choose this format. You can go either way, as long
-> as it is consistent.
-
-I think it is fair to say that the format is Allwinner-specific and
-unlikely to be found elsewhere. It is not actually very well described
-by "MB32" since the chroma tiles have a different pixel size than the
-luma tiles (16x64).
-
-It would probably be clearer to just call the format:
-V4L2_PIX_FMT_SUNXI_TILED_NV12
-
-Cheers,
-
-Paul
-
-> >  		default:
-> >  			WARN(1, "Unknown pixelformat 0x%08x\n", fmt->pixelformat);
-> >  			if (fmt->description[0])
-> > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> > index d171361ed9b3..453d27142e31 100644
-> > --- a/include/uapi/linux/videodev2.h
-> > +++ b/include/uapi/linux/videodev2.h
-> > @@ -670,6 +670,7 @@ struct v4l2_pix_format {
-> >  #define V4L2_PIX_FMT_Z16      v4l2_fourcc('Z', '1', '6', ' ') /* Depth data 16-bit */
-> >  #define V4L2_PIX_FMT_MT21C    v4l2_fourcc('M', 'T', '2', '1') /* Mediatek compressed block mode  */
-> >  #define V4L2_PIX_FMT_INZI     v4l2_fourcc('I', 'N', 'Z', 'I') /* Intel Planar Greyscale 10-bit and Depth 16-bit */
-> > +#define V4L2_PIX_FMT_MB32_NV12 v4l2_fourcc('M', 'N', '1', '2') /* Allwinner tiled NV12 format */
-> >  
-> >  /* 10bit raw bayer packed, 32 bytes for every 25 pixels, last LSB 6 bits unused */
-> >  #define V4L2_PIX_FMT_IPU3_SBGGR10	v4l2_fourcc('i', 'p', '3', 'b') /* IPU3 packed 10-bit BGGR bayer */
-> > 
+> OR
 > 
-> Regards,
+> * Scales the device frequency in proportion to the CPU frequency. So, if
+>   the CPUs are running at their max frequency, the device runs at its max
+>   frequency.  If the CPUs are running at their min frequency, the device
+>   runs at its min frequency. And interpolated for frequencies in between.
 > 
-> 	Hans
--- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-P8kg2P4hui+LtIFpvQmg--
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> ---
+>  .../bindings/devfreq/devfreq-cpufreq-map.txt       |  53 ++
+
+Bindings should be a separate patch.
+
+>  drivers/devfreq/Kconfig                            |   8 +
+>  drivers/devfreq/Makefile                           |   1 +
+>  drivers/devfreq/governor_cpufreq_map.c             | 583 +++++++++++++++++++++
+>  4 files changed, 645 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+>  create mode 100644 drivers/devfreq/governor_cpufreq_map.c
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+> new file mode 100644
+> index 0000000..982a30b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+> @@ -0,0 +1,53 @@
+> +Devfreq CPUfreq governor
+> +
+> +devfreq-cpufreq-map is a parent device that contains one or more child devices.
+> +Each child device provides CPU frequency to device frequency mapping for a
+> +specific device. Examples of devices that could use this are: DDR, cache and
+> +CCI.
+> +
+> +Parent device name shall be "devfreq-cpufreq-map".
+> +
+> +Required child device properties:
+> +- cpu-to-dev-map, or cpu-to-dev-map-<X>:
+> +			A list of tuples where each tuple consists of a
+> +			CPU frequency (KHz) and the corresponding device
+> +			frequency. CPU frequencies not listed in the table
+> +			will use the device frequency that corresponds to the
+> +			next rounded up CPU frequency.
+> +			Use "cpu-to-dev-map" if all CPUs in the system should
+> +			share same mapping.
+> +			Use cpu-to-dev-map-<cpuid> to describe different
+> +			mappings for different CPUs. The property should be
+> +			listed only for the first CPU if multiple CPUs are
+> +			synchronous.
+> +- target-dev:		Phandle to device that this mapping applies to.
+> +
+> +Example:
+> +	devfreq-cpufreq-map {
+> +		cpubw-cpufreq {
+> +			target-dev = <&cpubw>;
+> +			cpu-to-dev-map =
+> +				<  300000  1144000 >,
+> +				<  422400  2288000 >,
+> +				<  652800  3051000 >,
+> +				<  883200  5996000 >,
+> +				< 1190400  8056000 >,
+> +				< 1497600 10101000 >,
+> +				< 1728000 12145000 >,
+> +				< 2649600 16250000 >;
+
+Now we have frequencies listed in multiple places, the OPP tables and 
+here? Perhaps it is grouping OPPs that should be done.
+
+This all looks bolted on and very much Linux specifc.
+
+Rob
