@@ -1,91 +1,35 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/3] ARM: dts: i.MX6: Use consistent node names for Engicam files
-Date: Tue,  7 Aug 2018 12:38:38 +0530
-Message-ID: <20180807070838.24685-3-jagan@amarulasolutions.com>
-References: <20180807070838.24685-1-jagan@amarulasolutions.com>
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
+        documentation
+Date: Tue, 7 Aug 2018 09:20:34 +0200
+Message-ID: <20180807072034.GA569@lst.de>
+References: <20180802115008.4031-1-hch@lst.de> <20180802115008.4031-4-hch@lst.de> <0093fadc-a150-3745-e73d-e579bfdfabfb@wdc.com> <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807070838.24685-1-jagan@amarulasolutions.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Use consistent pinctrl node names for Engicam dt files,
-sufix 'grp' look consistent than actual node name
+On Mon, Aug 06, 2018 at 02:59:48PM -0600, Rob Herring wrote:
+> > > +Required properties:
+> > > +- compatible : "sifive,plic0"
+> > > +- #address-cells : should be <0>
+> > > +- #interrupt-cells : should be <1>
+> > > +- interrupt-controller : Identifies the node as an interrupt controller
+> > > +- reg : Should contain 1 register range (address and length)
+> >
+> > The one in the real device tree has two entries.
+> > reg = <0x00000000 0x0c000000 0x00000000 0x04000000>;
+> >
+> > Is it intentional or just incorrect entry left over from earlier days?
+> 
+> > > +             reg = <0xc000000 0x4000000>;
+> 
+> Looks to me like one has #size-cells and #address-cells set to 2 and
+> the example is using 1.
 
-- pinctrl_gpmi_nand: gpmi-nand {
-+ pinctrl_gpmi_nand: gpminandgrp {
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 2 +-
- arch/arm/boot/dts/imx6qdl-icore.dtsi     | 4 ++--
- arch/arm/boot/dts/imx6ul-geam.dts        | 2 +-
- arch/arm/boot/dts/imx6ul-isiot.dtsi      | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-index 6feae392830e..ba93026ecee8 100644
---- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
-@@ -281,7 +281,7 @@
- };
- 
- &iomuxc {
--	pinctrl_audmux: audmux {
-+	pinctrl_audmux: audmuxgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_DISP0_DAT20__AUD4_TXC  0x130b0
- 			MX6QDL_PAD_DISP0_DAT21__AUD4_TXD  0x110b0
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index d39966e80415..84d03c65f4c8 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -274,7 +274,7 @@
- };
- 
- &iomuxc {
--	pinctrl_audmux: audmux {
-+	pinctrl_audmux: audmuxgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_DISP0_DAT20__AUD4_TXC  0x130b0
- 			MX6QDL_PAD_DISP0_DAT21__AUD4_TXD  0x110b0
-@@ -313,7 +313,7 @@
- 		>;
- 	};
- 
--	pinctrl_gpmi_nand: gpmi-nand {
-+	pinctrl_gpmi_nand: gpminandgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_NANDF_CLE__NAND_CLE     0xb0b1
- 			MX6QDL_PAD_NANDF_ALE__NAND_ALE     0xb0b1
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
-index bf86a5e33fc5..e22ec5be2b78 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dts
-+++ b/arch/arm/boot/dts/imx6ul-geam.dts
-@@ -292,7 +292,7 @@
- 		>;
- 	};
- 
--	pinctrl_gpmi_nand: gpmi-nand {
-+	pinctrl_gpmi_nand: gpminandgrp {
- 		fsl,pins = <
- 			MX6UL_PAD_NAND_CLE__RAWNAND_CLE         0xb0b1
- 			MX6UL_PAD_NAND_ALE__RAWNAND_ALE         0xb0b1
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-index fe435484e69d..b1fa3f0a684d 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -239,7 +239,7 @@
- 		>;
- 	};
- 
--	pinctrl_gpmi_nand: gpmi-nand {
-+	pinctrl_gpmi_nand: gpminandgrp {
- 		fsl,pins = <
- 			MX6UL_PAD_NAND_CLE__RAWNAND_CLE         0xb0b1
- 			MX6UL_PAD_NAND_ALE__RAWNAND_ALE         0xb0b1
--- 
-2.18.0.321.gffc6fa0e3
+Yes.  And it seems like the real life device tree is simply bogus.
