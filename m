@@ -1,49 +1,62 @@
 From: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Subject: [PATCH v2 3/4] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
-Date: Wed,  8 Aug 2018 00:00:10 +0200
-Message-ID: <20180807220011.24436-4-maxi.jourdan@wanadoo.fr>
-References: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
+Subject: [PATCH v2 0/4] soc: amlogic: add meson-canvas
+Date: Wed,  8 Aug 2018 00:00:07 +0200
+Message-ID: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-amlogic@lists.infradead.org
+Cc: Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Wrap the canvas node in a syscon node.
+Amlogic SoCs feature a set of 256 canvas that act as pixel buffer
+descriptors. Some IPs like the display and video decoders access those
+pixels by using canvas IDs rather than direct phy addresses.
 
-Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+As such, allocating/manipulating canvases can be done concurrently and
+there is a need for a standalone, lock-aware canvas provider module.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index b8dc4dbb391b..c98198662ae2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -423,6 +423,23 @@
- 			};
- 		};
- 
-+		dmcbus: bus@c8838000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xc8838000 0x0 0x1000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xc8838000 0x0 0x1000>;
-+
-+			sysctrl_DMC: system-controller@0 {
-+				compatible = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";
-+				reg = <0x0 0x0 0x0 0x1000>;
-+
-+				canvas: canvas-provider@0 {
-+					compatible = "amlogic,canvas";
-+				};
-+			};
-+		};
-+
- 		hiubus: bus@c883c000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xc883c000 0x0 0x2000>;
+Currently, canvas code lies in the drm/meson module as it is the sole
+user.
+
+This patchset adds such canvas provider module and converts drm/meson to
+using it, stripping/moving the current canvas code.
+
+Changes since v1: [0]
+ - Convert ops struct to a public API
+ - Added comments
+ - Hid the of-node probe code behind meson_canvas_get
+ - Changed device lock to a spinlock with irqsave
+
+[0]: https://lkml.org/lkml/2018/8/1/1512
+
+Maxime Jourdan (4):
+  soc: amlogic: add meson-canvas driver
+  dt-bindings: soc: amlogic: add meson-canvas documentation
+  ARM64: dts: meson-gx: add dmcbus and canvas nodes.
+  drm/meson: convert to the new canvas module
+
+ .../bindings/display/amlogic,meson-vpu.txt    |   9 +-
+ .../soc/amlogic/amlogic,meson-canvas.txt      |  36 ++++
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |  24 ++-
+ drivers/gpu/drm/meson/Kconfig                 |   1 +
+ drivers/gpu/drm/meson/Makefile                |   2 +-
+ drivers/gpu/drm/meson/meson_canvas.c          |  70 -------
+ drivers/gpu/drm/meson/meson_canvas.h          |  42 ----
+ drivers/gpu/drm/meson/meson_crtc.c            |   9 +-
+ drivers/gpu/drm/meson/meson_drv.c             |  22 +--
+ drivers/gpu/drm/meson/meson_drv.h             |   5 +-
+ drivers/gpu/drm/meson/meson_plane.c           |   3 +-
+ drivers/gpu/drm/meson/meson_viu.c             |   1 -
+ drivers/soc/amlogic/Kconfig                   |   7 +
+ drivers/soc/amlogic/Makefile                  |   1 +
+ drivers/soc/amlogic/meson-canvas.c            | 185 ++++++++++++++++++
+ include/linux/soc/amlogic/meson-canvas.h      |  65 ++++++
+ 16 files changed, 337 insertions(+), 145 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
+ delete mode 100644 drivers/gpu/drm/meson/meson_canvas.c
+ delete mode 100644 drivers/gpu/drm/meson/meson_canvas.h
+ create mode 100644 drivers/soc/amlogic/meson-canvas.c
+ create mode 100644 include/linux/soc/amlogic/meson-canvas.h
+
 -- 
 2.18.0
