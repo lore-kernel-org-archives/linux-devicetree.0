@@ -1,41 +1,35 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
+From: Patrice CHOTARD <patrice.chotard@st.com>
 Subject: Re: [PATCH 1/3] ARM: dts: stm32: Fix DT dtc warnings for stm32h7
-Date: Tue, 7 Aug 2018 13:56:20 +0200
-Message-ID: <f5933d5c-8da3-5112-351c-6b1ba669a9b6@st.com>
+Date: Tue, 7 Aug 2018 12:01:05 +0000
+Message-ID: <9570b293-6467-c8bb-4f08-71c07371730a@st.com>
 References: <1533639995-27047-1-git-send-email-patrice.chotard@st.com>
  <1533639995-27047-2-git-send-email-patrice.chotard@st.com>
  <8bd7a402-fc88-f4d9-451f-9533f2898ce0@st.com>
+ <f5933d5c-8da3-5112-351c-6b1ba669a9b6@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8bd7a402-fc88-f4d9-451f-9533f2898ce0@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f5933d5c-8da3-5112-351c-6b1ba669a9b6@st.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: patrice.chotard@st.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org
-Cc: linux-stm32@st-md-mailman.stormreply.com, mcoquelin.stm32@gmail.com
+Content-ID: <B9594A8CC688964182CC4AB44FE41948@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>
+Cc: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGF0cmljZQoKT24gMDgvMDcvMjAxOCAwMTozOCBQTSwgQWxleGFuZHJlIFRvcmd1ZSB3cm90
-ZToKPj4gK8KgwqDCoCAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gK8KgwqDCoCAjc2l6ZS1jZWxs
-cyA9IDwxPjsKPj4gKwo+PiDCoMKgwqDCoMKgIGNsb2NrcyB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDC
-oCBjbGtfaHNlOiBjbGstaHNlIHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgI2Nsb2Nr
-LWNlbGxzID0gPDA+Owo+PiBAQCAtNjAsNyArNjIsNyBAQAo+PiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCBjbG9jay1mcmVxdWVuY3kgPSA8MzI3Njg+Owo+PiDCoMKgwqDCoMKgwqDCoMKgwqAg
-fTsKPj4gLcKgwqDCoMKgwqDCoMKgIGNsa19pMnM6IGkyc19ja2luIHsKPj4gK8KgwqDCoMKgwqDC
-oMKgIGNsa19pMnM6IGkycy1ja2luIHsKPiAKPiBjbG9jayBkcml2ZXIgZGVhbHMgd2l0aCAiaTJz
-X2NraW4iIGZvciBjbG9ja8KgIHNvdXJjZSBzZWxlY3Rpb24uIEkgbmVlZCAKPiB0byBjaGVjayBk
-ZWVwZXIgaWYgdGhpcyBjaGFuZ2UgY291bGQgY2F1c2UgYW4gaXNzdWUuCgpTb3JyeSBJIGRpZG4n
-dCBjaGVjayBpbiB0aGUgd2VsbCBkcml2ZXIuIEFzIGZhciBJIGNhbiBzZWUgaXQncyBvayBmb3Ig
-CnRoaXMgcGFydCBvZiBwYXRjaC4KCmNoZWVycwpBbGV4Cgo+IAo+IHRoeAo+IEFsZXgKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+SSB3aWxsIHNlbmQgYSB2Mg0KDQpUaGFua3MgZm9yIHJldmlld2luZyA7LSkNCg0KUGF0cmljZQ0K
+DQpPbiAwOC8wNy8yMDE4IDAxOjU2IFBNLCBBbGV4YW5kcmUgVG9yZ3VlIHdyb3RlOg0KPiBIaSBQ
+YXRyaWNlDQo+IA0KPiBPbiAwOC8wNy8yMDE4IDAxOjM4IFBNLCBBbGV4YW5kcmUgVG9yZ3VlIHdy
+b3RlOg0KPj4+ICvCoMKgwqAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+Pj4gK8KgwqDCoCAjc2l6
+ZS1jZWxscyA9IDwxPjsNCj4+PiArDQo+Pj4gwqDCoMKgwqDCoCBjbG9ja3Mgew0KPj4+IMKgwqDC
+oMKgwqDCoMKgwqDCoCBjbGtfaHNlOiBjbGstaHNlIHsNCj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCAjY2xvY2stY2VsbHMgPSA8MD47DQo+Pj4gQEAgLTYwLDcgKzYyLDcgQEANCj4+PiDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbG9jay1mcmVxdWVuY3kgPSA8MzI3Njg+Ow0KPj4+
+IMKgwqDCoMKgwqDCoMKgwqDCoCB9Ow0KPj4+IC3CoMKgwqDCoMKgwqDCoCBjbGtfaTJzOiBpMnNf
+Y2tpbiB7DQo+Pj4gK8KgwqDCoMKgwqDCoMKgIGNsa19pMnM6IGkycy1ja2luIHsNCj4+DQo+PiBj
+bG9jayBkcml2ZXIgZGVhbHMgd2l0aCAiaTJzX2NraW4iIGZvciBjbG9ja8KgIHNvdXJjZSBzZWxl
+Y3Rpb24uIEkgbmVlZCANCj4+IHRvIGNoZWNrIGRlZXBlciBpZiB0aGlzIGNoYW5nZSBjb3VsZCBj
+YXVzZSBhbiBpc3N1ZS4NCj4gDQo+IFNvcnJ5IEkgZGlkbid0IGNoZWNrIGluIHRoZSB3ZWxsIGRy
+aXZlci4gQXMgZmFyIEkgY2FuIHNlZSBpdCdzIG9rIGZvciANCj4gdGhpcyBwYXJ0IG9mIHBhdGNo
+Lg0KPiANCj4gY2hlZXJzDQo+IEFsZXgNCj4gDQo+Pg0KPj4gdGh4DQo+PiBBbGV4
