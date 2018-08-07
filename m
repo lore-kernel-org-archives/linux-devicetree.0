@@ -1,78 +1,61 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] of/fdt: Remove PPC32 longtrail hack in memory scan
-Date: Tue, 07 Aug 2018 22:34:33 +1000
-Message-ID: <87va8mbbja.fsf@concordia.ellerman.id.au>
-References: <20180727053555.26596-1-mpe@ellerman.id.au>
- <CAL_JsqK4GEPJSPg+sStvFyO=sQ0Fp49FKKTz0S9OGc1COOnp-g@mail.gmail.com>
- <87in4xhufu.fsf@concordia.ellerman.id.au>
- <CAL_JsqJQKb-0V0rHnonE5QfCrJwf8APiLNoRtEYei+H_YiC4qA@mail.gmail.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH v2 0/3] ARM: dts: stm32: Fix DT dtc warnings for STM32 MCU's
+Date: Tue, 7 Aug 2018 14:54:57 +0200
+Message-ID: <1533646500-4028-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <CAL_JsqJQKb-0V0rHnonE5QfCrJwf8APiLNoRtEYei+H_YiC4qA@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, lee.jones@linaro.org
+Cc: linux-stm32@st-md-mailman.stormreply.com, mcoquelin.stm32@gmail.com, Patrice Chotard <patrice.chotard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh+dt@kernel.org> writes:
-> On Mon, Jul 30, 2018 at 4:47 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
->> Rob Herring <robh+dt@kernel.org> writes:
->> > On Thu, Jul 26, 2018 at 11:36 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
->> >> When the OF code was originally made common by Grant in commit
->> >> 51975db0b733 ("of/flattree: merge early_init_dt_scan_memory() common
->> >> code") (Feb 2010), the common code inherited a hack to handle
->> >> PPC "longtrail" machines, which had a "memory@0" node with no
->> >> device_type.
->> >>
->> >> That check was then made to only apply to PPC32 in b44aa25d20e2 ("of:
->> >> Handle memory@0 node on PPC32 only") (May 2014).
->> >>
->> >> But according to Paul Mackerras the "longtrail" machines are long
->> >> dead, if they were ever seen in the wild at all. If someone does still
->> >> have one, we can handle this firmware wart in powerpc platform code.
->> >>
->> >> So remove the hack once and for all.
->> >
->> > Yay. I guess Power Macs and other quirks will never die...
->>
->> Not soon.
->>
->> In base.c I see:
->>  - the hack in arch_find_n_match_cpu_physical_id()
->>    - we should just move that into arch code, it's a __weak arch hook
->>      after all.
->
-> Except then we'd have to export __of_find_n_match_cpu_property. I
-> somewhat prefer it like it is because arch specific functions tend to
-> encourage duplication. But if the implementation is completely
-> different like sparc, then yes, a separate implementation makes sense.
+From: Patrice Chotard <patrice.chotard@st.com>
 
-OK I'll leave it as-is then.
+Change since v1:
+	- update nodes name as following: <node_name>@0 to <node_name>-0
 
->>  - a PPC hack in of_alias_scan(), I guess we need to retain that
->>    behaviour, but it's pretty minor anyway.
->
-> It would be nice to know what platform(s) needs this as I don't have a
-> clue.
 
-Yeah.
+This series fixes DT dtc warnings for following STM32 MCU's boards:
+	- stm32f429i evaluation
+	- stm32f429 discovery
+	- stm32f469 discovery
+	- stm32746g evaluation
+	- stm32f746 discovery
+	- stm32h743i discovery
+	- stm32h743i evaluation
 
-> It would also be nice if I had some dumps of DTs for some of
-> these OpenFirmware systems.
+Patrice Chotard (3):
+  ARM: dts: stm32: Fix DT dtc warnings for stm32h7
+  ARM: dts: stm32: Fix DT dtc warnings for stm32f7
+  ARM: dts: stm32: Fix DT dtc warnings for stm32f4
 
-Yeah it would. What if I threw some in a git tree somewhere?
+ arch/arm/boot/dts/stm32429i-eval.dts     | 11 +++--
+ arch/arm/boot/dts/stm32746g-eval.dts     |  9 ++--
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi   | 30 ++++++-------
+ arch/arm/boot/dts/stm32f429-disco.dts    |  7 ++-
+ arch/arm/boot/dts/stm32f429-pinctrl.dtsi | 74 +++++++++++++++----------------
+ arch/arm/boot/dts/stm32f429.dtsi         |  8 ++--
+ arch/arm/boot/dts/stm32f469-disco.dts    | 11 +++--
+ arch/arm/boot/dts/stm32f469-pinctrl.dtsi | 76 +++++++++++++++-----------------
+ arch/arm/boot/dts/stm32f7-pinctrl.dtsi   | 24 +++++-----
+ arch/arm/boot/dts/stm32f746-disco.dts    |  6 +--
+ arch/arm/boot/dts/stm32f746.dtsi         |  8 ++--
+ arch/arm/boot/dts/stm32f769-disco.dts    | 11 +++--
+ arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 10 ++---
+ arch/arm/boot/dts/stm32h743.dtsi         |  8 ++--
+ arch/arm/boot/dts/stm32h743i-disco.dts   |  2 +-
+ arch/arm/boot/dts/stm32h743i-eval.dts    |  2 +-
+ 16 files changed, 140 insertions(+), 157 deletions(-)
 
-I guess fully unpacked is the most useful form, ie. just a direct copy
-from /proc/device-tree.
-
-cheers
+-- 
+1.9.1
