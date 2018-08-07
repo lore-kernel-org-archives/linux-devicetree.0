@@ -1,80 +1,86 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] PM / devfreq: Add devfreq driver for interconnect
- bandwidth voting
-Date: Tue, 7 Aug 2018 10:51:03 -0600
-Message-ID: <20180807165103.GA23354@rob-hp-laptop>
-References: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: iio: adc: add bindings for mcp3911
+Date: Tue, 7 Aug 2018 10:52:36 -0600
+Message-ID: <20180807165236.GA4765@rob-hp-laptop>
+References: <20180802191554.20176-1-marcus.folkesson@gmail.com>
+ <20180802191554.20176-2-marcus.folkesson@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
+In-Reply-To: <20180802191554.20176-2-marcus.folkesson@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <skannan@codeaurora.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, georgi.djakov@linaro.org, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Kent Gustavsson <kent@minoris.se>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 01, 2018 at 05:57:42PM -0700, Saravana Kannan wrote:
-> This driver registers itself as a devfreq device that allows devfreq
-> governors to make bandwidth votes for an interconnect path. This allows
-> applying various policies for different interconnect paths using devfreq
-> governors.
+On Thu, Aug 02, 2018 at 09:15:53PM +0200, Marcus Folkesson wrote:
+> MCP3911 is a dual channel Analog Front End (AFE) containing two
+> synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
 > 
-> Example uses:
-> * Use the devfreq performance governor to set the CPU to DDR interconnect
->   path for maximum performance.
-> * Use the devfreq performance governor to set the GPU to DDR interconnect
->   path for maximum performance.
-> * Use the CPU frequency to device frequency mapping governor to scale the
->   DDR frequency based on the needs of the CPUs' current frequency.
-> 
-> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> Signed-off-by: Kent Gustavsson <kent@minoris.se>
 > ---
->  Documentation/devicetree/bindings/devfreq/icbw.txt |  21 ++++
-
-Please make bindings separate a patch.
-
->  drivers/devfreq/Kconfig                            |  13 +++
->  drivers/devfreq/Makefile                           |   1 +
->  drivers/devfreq/devfreq_icbw.c                     | 116 +++++++++++++++++++++
->  4 files changed, 151 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/icbw.txt
->  create mode 100644 drivers/devfreq/devfreq_icbw.c
 > 
-> diff --git a/Documentation/devicetree/bindings/devfreq/icbw.txt b/Documentation/devicetree/bindings/devfreq/icbw.txt
+> Notes:
+>     v3:
+>     	- add bindings for interrupt
+>     	- prefix device-addr with `microchip`
+>     	- drop `clock-names`
+>     v2:
+>     	- drop channel width
+>     	- drop `external_vref`
+>     	- replace `external-clock` with proper clock bindings
+> 
+>  .../devicetree/bindings/iio/adc/mcp3911.txt        | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
 > new file mode 100644
-> index 0000000..36cf045
+> index 000000000000..432da7a28783
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/icbw.txt
-> @@ -0,0 +1,21 @@
-> +Interconnect bandwidth device
-> +
-> +icbw is a device that represents an interconnect path that connects two
-> +devices. This device is typically used to vote for BW requirements between
-> +two devices. Eg: CPU to DDR, GPU to DDR, etc
-
-I'm pretty sure this doesn't represent a h/w device. This usage doesn't 
-encourage me to accept the interconnects binding either.
-
+> +++ b/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> @@ -0,0 +1,32 @@
+> +* Microchip MCP3911 Dual channel analog front end (ADC)
 > +
 > +Required properties:
-> +- compatible:		Must be "devfreq-icbw"
-> +- interconnects:	Pairs of phandles and interconnect provider specifier
-> +			to denote the edge source and destination ports of
-> +			the interconnect path. See also:
-> +		Documentation/devicetree/bindings/interconnect/interconnect.txt
-> +- interconnect-names:	Must have one entry with the name "path".
+> + - compatible: Should be "microchip,mcp3911"
+> + - reg: SPI chip select number for the device
+> +
+> +Recommended properties:
+> + - spi-max-frequency: Definition as per
+> +	 Documentation/devicetree/bindings/spi/spi-bus.txt.
+> +	 Max frequency for this chip is 20MHz.
+> +
+> +Optional properties:
+> + - clocks: Phandle and clock identifier for sampling clock
+> + - interrupt-parent: Phandle to the parent interrupt controller
+> +	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 
-That's pretty useless...
+Drop this. It is implied.
 
+With that, 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> + - interrupts: IRQ line for the ADC
+> +	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> + - microchip,device-addr: Device address when multiple MCP3911 chips are present on the
+> +	same SPI bus. Valid values are 0-3. Defaults to 0.
+> + - vref-supply: Phandle to the external reference voltage supply.
 > +
 > +Example:
-> +
-> +	qcom,cpubw {
-
-Someone in QCom please broadcast to stop using qcom,foo for node names. 
-It is amazing how consistent you all are. If only folks were as 
-consistent in reading 
-Documentation/devicetree/bindings/submitting-patches.txt.
-
-Rob
+> +adc@0 {
+> +	compatible = "microchip,mcp3911";
+> +	reg = <0>;
+> +	interrupt-parent = <&gpio5>;
+> +	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+> +	spi-max-frequency = <20000000>;
+> +	microchip,device-addr = <0>;
+> +	vref-supply = <&vref_reg>;
+> +	clocks = <&xtal>;
+> +};
+> -- 
+> 2.11.0.rc2
+> 
