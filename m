@@ -1,69 +1,163 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V4 8/8] backlight: qcom-wled: Add auto string detection
- logic
-Date: Mon, 6 Aug 2018 23:32:29 -0700
-Message-ID: <20180807063229.GE23866@tuxbook-pro>
-References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
- <1531131741-19971-9-git-send-email-kgunda@codeaurora.org>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v4 1/3] Input: edt-ft5x06 - Add support for regulator
+Date: Tue, 7 Aug 2018 08:59:44 +0200
+Message-ID: <20180807085944.337bf20b@dell-desktop.home>
+References: <20180725073410.730-1-mylene.josserand@bootlin.com>
+        <20180725073410.730-2-mylene.josserand@bootlin.com>
+        <20180726004732.GD80336@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1531131741-19971-9-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <20180726004732.GD80336@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon 09 Jul 03:22 PDT 2018, Kiran Gunda wrote:
-> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
-[..]
-> @@ -189,6 +206,15 @@ static int wled4_set_brightness(struct wled *wled, u16 brightness)
->  	return 0;
->  }
->  
-> +static void wled_ovp_work(struct work_struct *work)
-> +{
-> +	struct wled *wled = container_of(work,
-> +					 struct wled, ovp_work.work);
-> +
-> +	if (wled->ovp_irq > 0)
-> +		enable_irq(wled->ovp_irq);
-> +}
-> +
->  static int wled_module_enable(struct wled *wled, int val)
->  {
->  	int rc;
-> @@ -200,7 +226,18 @@ static int wled_module_enable(struct wled *wled, int val)
->  				WLED_CTRL_REG_MOD_EN,
->  				WLED_CTRL_REG_MOD_EN_MASK,
->  				val << WLED_CTRL_REG_MOD_EN_SHIFT);
-> -	return rc;
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	if (val) {
-> +		schedule_delayed_work(&wled->ovp_work, WLED_SOFT_START_DLY_US);
+Hello Dmitry,
 
-schedule_delayed_work() takes a delay in jiffies, not micro seconds.
+Thank you again for the review.
 
-> +	} else {
-> +		cancel_delayed_work_sync(&wled->ovp_work);
+On Wed, 25 Jul 2018 17:47:32 -0700
+Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
 
-If we get here within WLED_SOFT_START_DLY_US of a module enable we have
-yet to execute the enable_irq() in the delayed worker, which should mean
-that the irq is unbalanced from then on.
+> Hi Mylène,
+> 
+> On Wed, Jul 25, 2018 at 09:34:08AM +0200, Mylène Josserand wrote:
+> > Add the support of regulator to use it as VCC source.
+> > 
+> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |  1 +
+> >  drivers/input/touchscreen/edt-ft5x06.c             | 43 ++++++++++++++++++++++
+> >  2 files changed, 44 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+> > index 025cf8c9324a..48e975b9c1aa 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+> > @@ -30,6 +30,7 @@ Required properties:
+> >  Optional properties:
+> >   - reset-gpios: GPIO specification for the RESET input
+> >   - wake-gpios:  GPIO specification for the WAKE input
+> > + - vcc-supply:  Regulator that supplies the touchscreen
+> >  
+> >   - pinctrl-names: should be "default"
+> >   - pinctrl-0:   a phandle pointing to the pin settings for the
+> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> > index 1e18ca0d1b4e..dcde719094f7 100644
+> > --- a/drivers/input/touchscreen/edt-ft5x06.c
+> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> > @@ -39,6 +39,7 @@
+> >  #include <linux/input/mt.h>
+> >  #include <linux/input/touchscreen.h>
+> >  #include <linux/of_device.h>
+> > +#include <linux/regulator/consumer.h>
+> >  
+> >  #define WORK_REGISTER_THRESHOLD		0x00
+> >  #define WORK_REGISTER_REPORT_RATE	0x08
+> > @@ -91,6 +92,7 @@ struct edt_ft5x06_ts_data {
+> >  	struct touchscreen_properties prop;
+> >  	u16 num_x;
+> >  	u16 num_y;
+> > +	struct regulator *vcc;
+> >  
+> >  	struct gpio_desc *reset_gpio;
+> >  	struct gpio_desc *wake_gpio;
+> > @@ -963,6 +965,13 @@ edt_ft5x06_ts_set_regs(struct edt_ft5x06_ts_data *tsdata)
+> >  	}
+> >  }
+> >  
+> > +static void edt_ft5x06_disable_regulator(void *arg)
+> > +{
+> > +	struct edt_ft5x06_ts_data *data = arg;
+> > +
+> > +	regulator_disable(data->vcc);
+> > +}
+> > +
+> >  static int edt_ft5x06_ts_probe(struct i2c_client *client,
+> >  					 const struct i2c_device_id *id)
+> >  {
+> > @@ -991,6 +1000,28 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+> >  
+> >  	tsdata->max_support_points = chip_data->max_support_points;
+> >  
+> > +	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
+> > +	if (IS_ERR(tsdata->vcc)) {
+> > +		error = PTR_ERR(tsdata->vcc);
+> > +		if (error != -EPROBE_DEFER)
+> > +			dev_err(&client->dev, "failed to request regulator: %d\n",
+> > +				error);
+> > +		return error;
+> > +	}
+> > +
+> > +	error = regulator_enable(tsdata->vcc);
+> > +	if (error < 0) {
+> > +		dev_err(&client->dev, "failed to enable vcc: %d\n",
+> > +			error);
+> > +		return error;
+> > +	}  
+> 
+> It is better to put the chip into reset and then power up the regulatori
+> and take it out of the reset, rather than power up and then toggle reset
+> on and off.
 
-I believe you can check the return value of cancel_delayed_work_sync()
-being true to know if wled_ovp_work() was yet to execute.
+okay, thanks, I will update it.
 
-> +		if (wled->ovp_irq > 0)
-> +			disable_irq(wled->ovp_irq);
-> +	}
-> +
-> +	return 0;
->  }
->  
+> 
+> > +
+> > +	error = devm_add_action_or_reset(&client->dev,
+> > +					 edt_ft5x06_disable_regulator,
+> > +					 tsdata);
+> > +	if (error)
+> > +		return error;
+> > +
+> >  	tsdata->reset_gpio = devm_gpiod_get_optional(&client->dev,
+> >  						     "reset", GPIOD_OUT_HIGH);
+> >  	if (IS_ERR(tsdata->reset_gpio)) {
+> > @@ -1120,9 +1151,12 @@ static int edt_ft5x06_ts_remove(struct i2c_client *client)
+> >  static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
+> >  {
+> >  	struct i2c_client *client = to_i2c_client(dev);
+> > +	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
+> >  
+> >  	if (device_may_wakeup(dev))
+> >  		enable_irq_wake(client->irq);
+> > +	else
+> > +		regulator_disable(tsdata->vcc);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -1130,9 +1164,18 @@ static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
+> >  static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
+> >  {
+> >  	struct i2c_client *client = to_i2c_client(dev);
+> > +	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
+> > +	int ret;
+> >  
+> >  	if (device_may_wakeup(dev))
+> >  		disable_irq_wake(client->irq);
+> > +	else {
+> > +		ret = regulator_enable(tsdata->vcc);
+> > +		if (ret < 0) {
+> > +			dev_err(dev, "failed to enable vcc: %d\n", ret);
+> > +			return ret;
+> > +		}
+> > +	}  
+> 
+> I believe I mentioned in other review that once you powered up the
+> device, you need to restore its settings, include switching to factory
+> mode, if it was in factory mode, and restoring threshold/gain/offset
+> settings.
 
-Regards,
-Bjorn
+Yes, I will update the driver with that but as I told you in a previous
+mail, I can't test the suspend/resume :(
+
+Best regards,
+
+-- 
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
