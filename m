@@ -1,124 +1,89 @@
-From: "Wu, Songjun" <songjun.wu@linux.intel.com>
-Subject: Re: [PATCH v2 14/18] serial: intel: Add CCF support
-Date: Tue, 7 Aug 2018 15:18:45 +0800
-Message-ID: <d6d0be20-aea9-cecf-1e39-3d65c0dbad5f@linux.intel.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-15-songjun.wu@linux.intel.com>
- <20180803055640.GA32226@kroah.com>
- <763bba56-3701-7fe9-9b31-4710594b40d5@linux.intel.com>
- <20180803103023.GA6557@kroah.com>
- <3360edd2-f3d8-b860-13fa-ce680edbfd0a@hauke-m.de>
- <20180804124309.GB4920@kroah.com>
- <CAK8P3a3qs34LuhPeaef2wPHYEWbYO5N-4n7763BcaDyppiJ6DA@mail.gmail.com>
- <acd28f40-4342-7f67-8468-7d4578f614a1@linux.intel.com>
- <CAMuHMdWY9NuYOXq8sD9wmH48=vhMcSBomRY9ZbC+tGE3PGiTGg@mail.gmail.com>
- <0ab8e6e7-3cc2-8e50-b1f3-99616437f527@linux.intel.com>
- <CAMuHMdUJ8-bveoHWOetjrHtq2HNPnf00PidQwJ-kZD2o86KLMw@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH] arm64: allwinner: h6: orangepi-one-plus:
+ Add Ethernet support
+Date: Tue, 07 Aug 2018 15:19:33 +0800
+Message-ID: <2D1B8773-0019-458A-8C7E-20077AA27AD4@aosc.io>
+References: <20180807071839.25305-1-jagan@amarulasolutions.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUJ8-bveoHWOetjrHtq2HNPnf00PidQwJ-kZD2o86KLMw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, Hauke Mehrtens <hauke@hauke-m.de>, hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, Linux MIPS Mailing List <linux-mips@linux-mips.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBHUQUXNQKGQEKM6J6OY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180807071839.25305-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 8/6/2018 5:29 PM, Geert Uytterhoeven wrote:
-> Hi Songjun,
->
-> On Mon, Aug 6, 2018 at 10:58 AM Wu, Songjun <songjun.wu@linux.intel.com> wrote:
->> On 8/6/2018 3:20 PM, Geert Uytterhoeven wrote:
->>> On Mon, Aug 6, 2018 at 9:15 AM Wu, Songjun <songjun.wu@linux.intel.com> wrote:
->>>> On 8/5/2018 5:03 AM, Arnd Bergmann wrote:
->>>>> On Sat, Aug 4, 2018 at 2:43 PM, Greg Kroah-Hartman
->>>>> <gregkh@linuxfoundation.org> wrote:
->>>>>> On Sat, Aug 04, 2018 at 12:54:22PM +0200, Hauke Mehrtens wrote:
->>>>>>> On 08/03/2018 12:30 PM, Greg Kroah-Hartman wrote:
->>>>>>>> On Fri, Aug 03, 2018 at 03:33:38PM +0800, Wu, Songjun wrote:
->>>>>>> This patch makes it possible to use it with the legacy lantiq code and
->>>>>>> also with the common clock framework. I see multiple options to fix this
->>>>>>> problem.
->>>>>>>
->>>>>>> 1. The current approach to have it as a compile variant for a) legacy
->>>>>>> lantiq arch code without common clock framework and b) support for SoCs
->>>>>>> using the common clock framework.
->>>>>>> 2. Convert the lantiq arch code to the common clock framework. This
->>>>>>> would be a good approach, but it need some efforts.
->>>>>>> 3. Remove the arch/mips/lantiq code. There are still users of this code.
->>>>>>> 4. Use the old APIs also for the new xRX500 SoC, I do not like this
->>>>>>> approach.
->>>>>>> 5. Move lantiq_soc.h to somewhere in include/linux/ so it is globally
->>>>>>> available and provide some better wrapper code.
->>>>>> I don't really care what you do at this point in time, but you all
->>>>>> should know better than the crazy #ifdef is not allowed to try to
->>>>>> prevent/allow the inclusion of a .h file.  Checkpatch might have even
->>>>>> warned you about it, right?
->>>>>>
->>>>>> So do it correctly, odds are #5 is correct, as that makes it work like
->>>>>> any other device in the kernel.  You are not unique here.
->>>>> The best approach here would clearly be 2. We don't want platform
->>>>> specific header files for doing things that should be completely generic.
->>>>>
->>>>> Converting lantiq to the common-clk framework obviously requires
->>>>> some work, but then again the whole arch/mips/lantiq/clk.c file
->>>>> is fairly short and maybe not that hard to convert.
->>>>>
->>>>> >From looking at arch/mips/lantiq/xway/sysctrl.c, it appears that you
->>>>> already use the clkdev lookup mechanism for some devices without
->>>>> using COMMON_CLK, so I would assume that you can also use those
->>>>> for the remaining clks, which would be much simpler. It registers
->>>>> one anonymous clk there as
->>>>>
->>>>>            clkdev_add_pmu("1e100c00.serial", NULL, 0, 0, PMU_ASC1);
->>>>>
->>>>> so why not add replace that with two named clocks and just use
->>>>> the same names in the DT for the newer chip?
->>>>>
->>>>>          Arnd
->>>> We discussed internally and have another solution for this issue.
->>>> Add one lantiq.h in the serial folder, and use "#ifdef preprocessor" in
->>>> lantiq.h,
->>>> also providing no-op stub functions in the #else case, then call those
->>>> functions
->>>> unconditionally from lantiq.c to avoid #ifdef in C file.
->>>>
->>>> To support CCF in legacy product is another topic, is not included in
->>>> this patch.
->>>>
->>>> The implementation is as following：
->>>> #ifdef CONFIG_LANTIQ
->>>> #include <lantiq_soc.h>
->>>> #else
->>>> #define LTQ_EARLY_ASC 0
->>>> #define CPHYSADDR(_val) 0
->>>>
->>>> static inline struct clk *clk_get_fpi(void)
->>>> {
->>>>        return NULL;
->>>> }
->>>> #endif
->>> Why not use clkdev_add(), as Arnd suggested?
->>> That would be a 3-line patch without introducing a new header file and an ugly
->>> #ifdef, which complicates compile coverage testing?
->>>
->> The reason we add a new head file is also for two macros(LTQ_EARLY_ASC
->> and CPHYSADDR)
->> used by legacy product. We need to provide the no-op stub for these two
->> macro for new product.
-> No you don't. The line number should not be obtained by comparing the
-> resource address with a hardcoded base address.
-This is the previous code. Now the line number is obtained from dts.
-We keep this code for the compatibility.
+=E4=BA=8E 2018=E5=B9=B48=E6=9C=887=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883:1=
+8:39, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> =E5=86=99=E5=88=B0:
+>Add Ethernet support for orangepi-one-plus board,
+>- Ethernet port connected via RTL8211E PHY
+>- GMAC_EN is connected via PD6
+>- GMAC-3V supplied from ALDO2 regulator
 
-Referring to the conditional-compilation part in coding-style,
-We add a header file to avoid using “#ifdef” in C file.
-> Perhaps the override of port->line should just be removed, as IIRC, the serial
-> core has already filled in that field with the (next available) line number?
+Is the prequisite patchset merged?
+
 >
-> Gr{oetje,eeting}s,
+>Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>---
+> .../allwinner/sun50i-h6-orangepi-one-plus.dts | 29 +++++++++++++++++++
+> 1 file changed, 29 insertions(+)
 >
->                          Geert
+>diff --git
+>a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+>b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+>index 0612c19cd994..eca5b7ea0d6d 100644
+>--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+>+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+>@@ -21,6 +21,35 @@
+> 	chosen {
+> 		stdout-path =3D "serial0:115200n8";
+> 	};
+>+
+>+	reg_gmac_3v3: gmac-3v3 {
+>+		compatible =3D "regulator-fixed";
+>+		regulator-name =3D "vcc-gmac-3v3";
+>+		regulator-min-microvolt =3D <3300000>;
+>+		regulator-max-microvolt =3D <3300000>;
+>+		startup-delay-us =3D <100000>;
+>+		enable-active-high;
+>+		gpio =3D <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+>+		vin-supply =3D <&reg_aldo2>;
+>+	};
+>+};
+>+
+>+&emac {
+>+	pinctrl-names =3D "default";
+>+	pinctrl-0 =3D <&ext_rgmii_pins>;
+>+	phy-mode =3D "rgmii";
+>+	phy-handle =3D <&ext_rgmii_phy>;
+>+	phy-supply =3D <&reg_gmac_3v3>;
+>+	allwinner,rx-delay-ps =3D <200>;
+>+	allwinner,tx-delay-ps =3D <200>;
+>+	status =3D "okay";
+>+};
+>+
+>+&mdio {
+>+	ext_rgmii_phy: ethernet-phy@1 {
+>+		compatible =3D "ethernet-phy-ieee802.3-c22";
+>+		reg =3D <1>;
+>+	};
+> };
+>=20
+> &mmc0 {
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
