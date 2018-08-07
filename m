@@ -1,58 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 net-next 9/9] dt-bindings: net: stmmac: Add the
- bindings documentation for XGMAC2.
-Date: Tue, 7 Aug 2018 11:36:09 -0600
-Message-ID: <20180807173609.GA12872@rob-hp-laptop>
-References: <cover.1533311285.git.joabreu@synopsys.com>
- <782f85bb556f1f1d8b4eb0b803092ecb4a2c98a8.1533311285.git.joabreu@synopsys.com>
+Subject: Re: [PATCH v3 4/6] i2c: designware: add MSCC Ocelot support
+Date: Tue, 7 Aug 2018 11:42:22 -0600
+Message-ID: <20180807174222.GA5720@rob-hp-laptop>
+References: <20180806185412.7210-1-alexandre.belloni@bootlin.com>
+ <20180806185412.7210-5-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <782f85bb556f1f1d8b4eb0b803092ecb4a2c98a8.1533311285.git.joabreu@synopsys.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Joao Pinto <Joao.Pinto@synopsys.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org
+In-Reply-To: <20180806185412.7210-5-alexandre.belloni@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 03, 2018 at 04:50:27PM +0100, Jose Abreu wrote:
-> Adds the documentation for XGMAC2 DT bindings.
+On Mon, Aug 06, 2018 at 08:54:10PM +0200, Alexandre Belloni wrote:
+> The Microsemi Ocelot I2C controller is a designware IP. It also has a
+> second set of registers to allow tweaking SDA hold time and spike
+> filtering.
 > 
-> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Cc: devicetree@vger.kernel.org
 > Cc: Rob Herring <robh+dt@kernel.org>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
-> Changes from v1:
-> 	- Correct header, now we also support 2.5/10G.
-> 	- Add missing '>' (Sergei)
-> ---
->  Documentation/devicetree/bindings/net/stmmac.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  .../bindings/i2c/i2c-designware.txt           |  9 ++++-
+
+Please split binding patches.
+
+>  drivers/i2c/busses/i2c-designware-core.h      |  3 ++
+>  drivers/i2c/busses/i2c-designware-platdrv.c   | 40 +++++++++++++++++++
+>  3 files changed, 50 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index 3a28a5d8857d..a32fd590ce8f 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -1,7 +1,8 @@
-> -* STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
-> +* STMicroelectronics 10/100/1000/2500/10000 Ethernet driver (GMAC/XGMAC)
-
-Bindings don't describe drivers.
-
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> index fbb0a6d8b964..7886f2dc6675 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -2,7 +2,8 @@
 >  
->  Required properties:
-> -- compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac"
-> +- compatible: Should be "snps,dwmac-<ip_version>", "snps,dwmac" or
-> +	"snps,dwxgmac-<ip_version>", "snps,dwxgmac".
->  	For backwards compatibility: "st,spear600-gmac" is also supported.
->  - reg: Address and length of the register set for the device
->  - interrupt-parent: Should be the phandle for the interrupt controller
-> -- 
-> 2.7.4
-> 
-> 
+>  Required properties :
+>  
+> - - compatible : should be "snps,designware-i2c"
+> + - compatible : should be "snps,designware-i2c" or "mscc,ocelot-i2c" followed by
+> +   "snps,designware-i2c" for fallback
+
+Please reformat to one valid combination per line.
+
+>   - reg : Offset and length of the register set for the device
+>   - interrupts : <IRQ> where IRQ is the interrupt number.
+>  
+> @@ -11,8 +12,12 @@ Recommended properties :
+>   - clock-frequency : desired I2C bus clock frequency in Hz.
+>  
+>  Optional properties :
+> + - reg : for "mscc,ocelot-i2c", a second register set to configure the SDA hold
+> +   time, named ICPU_CFG:TWI_DELAY in the datasheet.
+> +
+>   - i2c-sda-hold-time-ns : should contain the SDA hold time in nanoseconds.
+> -   This option is only supported in hardware blocks version 1.11a or newer.
+> +   This option is only supported in hardware blocks version 1.11a or newer and
+> +   on Microsemi SoCs ("mscc,ocelot-i2c" compatible).
+>  
+>   - i2c-scl-falling-time-ns : should contain the SCL falling time in nanoseconds.
+>     This value which is by default 300ns is used to compute the tLOW period.
