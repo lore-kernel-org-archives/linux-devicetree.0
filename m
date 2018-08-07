@@ -1,82 +1,245 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v7 2/3] Bluetooth: mediatek: Add protocol support for
- MediaTek serial devices
-Date: Tue, 7 Aug 2018 22:34:05 +0800
-Message-ID: <1533652445.3472.230.camel@mtkswgap22>
-References: <cover.1533056925.git.sean.wang@mediatek.com>
-         <c92ed10cf16f36d9a3b390e864af92e2dfe7b771.1533056925.git.sean.wang@mediatek.com>
-         <1707FFA1-A294-4A95-A3BF-0910CE455232@holtmann.org>
-         <1533192799.3472.122.camel@mtkswgap22>
-         <FF45A90A-F9F1-47CB-AB1F-1E92BF587FBE@holtmann.org>
-         <1533199720.3472.136.camel@mtkswgap22>
-         <9526E5D9-50BA-4D57-80F5-083DB7D28AFE@holtmann.org>
-         <1533205495.3472.144.camel@mtkswgap22>
-         <A6D48D49-52CE-405D-8C5D-C4D54CE67221@holtmann.org>
-         <1533303749.3472.160.camel@mtkswgap22>
-         <D2336CD2-B69B-4B5B-8125-F0CAD29E3243@holtmann.org>
-         <1533319214.3472.187.camel@mtkswgap22>
-         <7A3537C5-5940-45AD-AB80-77418CCFE130@holtmann.org>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: stm32: Fix DT dtc warnings for stm32f4
+Date: Tue, 7 Aug 2018 14:47:17 +0000
+Message-ID: <b91caf84-81d6-1bc4-2e23-9fd14c9af38f@st.com>
+References: <1533646500-4028-1-git-send-email-patrice.chotard@st.com>
+ <1533646500-4028-4-git-send-email-patrice.chotard@st.com>
+ <CABGGisxNQgduwhpX_jt1d=gKasDFTGovvQeRLh0-dsjSU277bQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7A3537C5-5940-45AD-AB80-77418CCFE130@holtmann.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, linux-kernel@vger.kernel.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABGGisxNQgduwhpX_jt1d=gKasDFTGovvQeRLh0-dsjSU277bQ@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <123CCFEBB41C2A429B90387FD14E1706@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-08-06 at 17:39 +0200, Marcel Holtmann wrote:
-> Hi Sean,
+Hi Rob
+
+On 08/07/2018 04:08 PM, Rob Herring wrote:
+> On Tue, Aug 7, 2018 at 6:55 AM <patrice.chotard@st.com> wrote:
+>>
+>> From: Patrice Chotard <patrice.chotard@st.com>
+>>
+>> Fix the following DT dtc warnings for stm32f429 and
+>> stm32f469 boards:
+>>
+>> Warning (node_name_chars_strict): /soc/pin-controller/usbotg_fs@0: Character '_' not recommended in node name
+>> Warning (node_name_chars_strict): /soc/pin-controller/usbotg_fs@1: Character '_' not recommended in node name
+>> Warning (node_name_chars_strict): /soc/pin-controller/usbotg_hs@0: Character '_' not recommended in node name
+>> Warning (node_name_chars_strict): /soc/pin-controller/sdio_pins@0: Character '_' not recommended in node name
+>> Warning (node_name_chars_strict): /soc/pin-controller/sdio_pins_od@0: Character '_' not recommended in node name
+>> Warning (node_name_chars_strict): /gpio_keys: Character '_' not recommended in node name
+>> Warning (unit_address_vs_reg): /memory: node has a reg or ranges property, but no unit name
+>> Warning (unit_address_vs_reg): /soc/pin-controller: node has a reg or ranges property, but no unit name
+>> Warning (unit_address_vs_reg): /soc/pin-controller/usart1@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/usart3@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/usbotg_fs@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/usbotg_fs@1: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/usbotg_hs@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/mii@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/adc@200: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/pwm@1: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/pwm@3: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/i2c1@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/ltdc@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/dcmi@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/sdio_pins@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /soc/pin-controller/sdio_pins_od@0: node has a unit name, but no reg property
+>> Warning (unit_address_vs_reg): /gpio_keys/button@0: node has a unit name, but no reg property
+>> Warning (avoid_unnecessary_addr_size): /gpio_keys: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+>>
+>> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+>> ---
+>> Change since v1:
+>>          - update nodes name as following: <node_name>@0 to <node_name>-0
+>>
+>>
+>>   arch/arm/boot/dts/stm32429i-eval.dts     | 11 +++--
+>>   arch/arm/boot/dts/stm32f4-pinctrl.dtsi   | 30 ++++++-------
+>>   arch/arm/boot/dts/stm32f429-disco.dts    |  7 ++-
+>>   arch/arm/boot/dts/stm32f429-pinctrl.dtsi | 74 +++++++++++++++----------------
+>>   arch/arm/boot/dts/stm32f429.dtsi         |  8 ++--
+>>   arch/arm/boot/dts/stm32f469-disco.dts    | 11 +++--
+>>   arch/arm/boot/dts/stm32f469-pinctrl.dtsi | 76 +++++++++++++++-----------------
+>>   7 files changed, 102 insertions(+), 115 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+>> index 7eb786a2d624..116232b589e4 100644
+>> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+>> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+>> @@ -60,7 +60,7 @@
+>>                  stdout-path = "serial0:115200n8";
+>>          };
+>>
+>> -       memory {
+>> +       memory@0 {
+>>                  reg = <0x00000000 0x2000000>;
+>>          };
+>>
+>> @@ -111,17 +111,16 @@
+>>                  };
+>>          };
+>>
+>> -       gpio_keys {
+>> +       gpio-keys {
+>>                  compatible = "gpio-keys";
+>> -               #address-cells = <1>;
+>>                  #size-cells = <0>;
 > 
-> >>>>>>>>>>> +
+> Think you forgot this line.
 
-[ ... ]
+You are right, i will remove it
 
-> >> this is even more hackish since the __hci_cmd_sync_ev command is really meant to get a cmd status first before waiting for that event.
-> >> 
-> > 
-> > Understood.
-> > 
-> > I've stopped the hack in v8. could we merge v8 first ? and then I will a fix up with __hci_raw_sync_ev that uses the hdev->raw_q instead of __hci_cmd_sync_ev in TODO.
 > 
-> so I looked into this a bit more. We actually added __hci_cmd_send for a Qualcomm firmware loader that was doing something similar. So instead of trying to add a yet another command to the core, I actually used that and implemented the wait for vendor event in the driver.
+>>                  autorepeat;
+>> -               button@0 {
+>> +               button-0 {
+>>                          label = "Wake up";
+>>                          linux,code = <KEY_WAKEUP>;
+>>                          gpios = <&gpioa 0 0>;
+>>                  };
+>> -               button@1 {
+>> +               button-1 {
+>>                          label = "Tamper";
+>>                          linux,code = <KEY_RESTART>;
+>>                          gpios = <&gpioc 13 0>;
+>> @@ -145,7 +144,7 @@
+>>                  };
+>>          };
+>>
+>> -       mmc_vcard: mmc_vcard {
+>> +       mmc_vcard: mmc-vcard {
+>>                  compatible = "regulator-fixed";
+>>                  regulator-name = "mmc_vcard";
+>>                  regulator-min-microvolt = <3300000>;
+>> diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+>> index 35202896c093..244c7ab8c76d 100644
+>> --- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+>> +++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+>> @@ -45,7 +45,7 @@
+>>
+>>   / {
+>>          soc {
+>> -               pinctrl: pin-controller {
+>> +               pinctrl: pin-controller@40020000 {
 > 
-> You will see my v9 on the mailing list. I also did a bunch of cosmetic minor cleanup and spelling correction. Please test this version. I also make __le16 dlen instead of dlen1 + dlen2 since I think that is what your hardware does.
+> pinctrl is the documented node name, not pin-controller.
 
-Only one thing needs to be corrected in v9. that is __be16 is required instead of dlen1 + dlen2. I will fix it up in v10 and the other changes all look good to me.
+Okay
 
-> If this version of the driver works for you then I am happy to merge it. You can then add support for hdev->set_bdaddr and hdev->set_diag in later patches. I also like to clean up the STP receive handler since it can be done a lot simpler and smaller, but that has to wait.
 > 
-
-hopefully v10 also can be merged :)
-
-I will investigate more about how to add ->set_bdaddr, ->set_diag and STP receive enhancement in later patches.
-
-but so far I have not much idea about how to make STP multiplexer be a independent driver.
-
-my thought is that it would be really better and cleaner a chain of serdev is be used as the base of mtkbtuart. something like
-  
-8250 serial bus <----> STP multiplexer serdev <----> mtkbtuart serdev
-
-however, STP multiplexer serdev is not a real device, that doesn't no request any resource. I think it should not be allowed to be added in a device tree and even in dt-binding document.
-
-> >> Are all Mediatek vendor commands this way? Or just the ones for loading the firmware? So only the WMT ones?
-> >> 
-> > 
-> > Only the WMT ones, WMT commands/events are usually used in system controlling, for example, global function on/off, firmware download, reset and so on. most only appear on device initialization
+>>                          #address-cells = <1>;
+>>                          #size-cells = <1>;
+>>                          ranges = <0 0x40020000 0x3000>;
+>> @@ -163,7 +163,7 @@
+>>                                  st,bank-name = "GPIOK";
+>>                          };
+>>
+>> -                       usart1_pins_a: usart1@0 {
+>> +                       usart1_pins_a: usart1-0 {
 > 
-> Since you never checked the result of the vendor event, I opted for just signaling that it arrived. If they can report success or failure, we need to add some extra code for that.
+> What's wrong with just "usart1"?
 > 
+> I think I would like to see "-pins" appended to the node names.
 
-I will consider more WMT event status when I add more Bluetooth devices such as MT7668U usb based Bluetooth which I plan to add the support in later patches in the next weeks 
+Our way of naming our node is <IP_name><instance>-<differentiator>
 
-> Regards
+differentiator starts at 0, and is incremented if needed.
+For example, if we want to add a sleep config, the node's name would be:
+
+usart1_pins_sleep_a: usart1-1 { blablabla ...}
+
+
+
 > 
-> Marcel
+>>                                  pins1 {
+>>                                          pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+>>                                          bias-disable;
+>> @@ -176,7 +176,7 @@
+>>                                  };
+>>                          };
+>>
+>> -                       usart3_pins_a: usart3@0 {
+>> +                       usart3_pins_a: usart3-0 {
+>>                                  pins1 {
+>>                                          pinmux = <STM32_PINMUX('B', 10, AF7)>; /* USART3_TX */
+>>                                          bias-disable;
+>> @@ -189,7 +189,7 @@
+>>                                  };
+>>                          };
+>>
+>> -                       usbotg_fs_pins_a: usbotg_fs@0 {
+>> +                       usbotg_fs_pins_a: usbotg-fs-0 {
+>>                                  pins {
+>>                                          pinmux = <STM32_PINMUX('A', 10, AF10)>, /* OTG_FS_ID */
+>>                                                   <STM32_PINMUX('A', 11, AF10)>, /* OTG_FS_DM */
+>> @@ -200,7 +200,7 @@
+>>                                  };
+>>                          };
+>>
+>> -                       usbotg_fs_pins_b: usbotg_fs@1 {
+>> +                       usbotg_fs_pins_b: usbotg-fs-1 {
+>>                                  pins {
+>>                                          pinmux = <STM32_PINMUX('B', 12, AF12)>, /* OTG_HS_ID */
+>>                                                   <STM32_PINMUX('B', 14, AF12)>, /* OTG_HS_DM */
+>> @@ -211,7 +211,7 @@
+>>                                  };
+>>                          };
+>>
+>> -                       usbotg_hs_pins_a: usbotg_hs@0 {
+>> +                       usbotg_hs_pins_a: usbotg-hs-0 {
+>>                                  pins {
+>>                                          pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT*/
+>>                                                   <STM32_PINMUX('I', 11, AF10)>, /* OTG_HS_ULPI_DIR */
+>> @@ -231,7 +231,7 @@
+>>                                  };
+>>                          };
+>>
+>> -                       ethernet_mii: mii@0 {
+>> +                       ethernet_mii: mii-0 {
+>>                                  pins {
+>>                                          pinmux = <STM32_PINMUX('G', 13, AF11)>, /* ETH_MII_TXD0_ETH_RMII_TXD0 */
+>>                                                   <STM32_PINMUX('G', 14, AF11)>, /* ETH_MII_TXD1_ETH_RMII_TXD1 */
+>> @@ -251,13 +251,13 @@
+>>                                  };
+>>                          };
+>>
+>> -                       adc3_in8_pin: adc@200 {
+>> +                       adc3_in8_pin: adc-0 {
+>>                                  pins {
+>>                                          pinmux = <STM32_PINMUX('F', 10, ANALOG)>;
+>>                                  };
+>>                          };
+>>
+>> -                       pwm1_pins: pwm@1 {
+>> +                       pwm1_pins: pwm-1 {
 > 
+> You have a mixture of the number suffix being a pin mode # and block
+> instance #. pwm1 or pwm1-pins?
+
+Right, if we follow our rules, the node's name must be :
+
+pwm1_pins: pwm1-0 { ....
+
+
+Thanks
+
+Patrice
+
 > 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> Similar comments on the rest.
+> 
+> Rob
+> 
