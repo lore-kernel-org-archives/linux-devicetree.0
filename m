@@ -1,49 +1,53 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 11/18] dmaengine: dma-jz4780: Add missing residue DTC mask
-Date: Tue,  7 Aug 2018 13:42:11 +0200
-Message-ID: <20180807114218.20091-12-paul@crapouillou.net>
+Subject: [PATCH v4 08/18] dmaengine: dma-jz4780: Add support for the JZ4740 SoC
+Date: Tue,  7 Aug 2018 13:42:08 +0200
+Message-ID: <20180807114218.20091-9-paul@crapouillou.net>
 References: <20180807114218.20091-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180807114218.20091-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Cc: Paul Cercueil <paul@crapouillou.net>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Daniel Silsby <dansilsby@gmail.com>
+Cc: Paul Cercueil <paul@crapouillou.net>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+The JZ4740 SoC has a single DMA core starring six DMA channels.
 
-The 'dtc' word in jz DMA descriptors contains two fields: The
-lowest 24 bits are the transfer count, and upper 8 bits are the DOA
-offset to next descriptor. The upper 8 bits are now correctly masked
-off when computing residue in jz4780_dma_desc_residue(). Note that
-reads of the DTCn hardware reg are automatically masked this way.
-
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 ---
- drivers/dma/dma-jz4780.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/dma-jz4780.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- v2: No change
+ v2: The documentation update is now in patch 01/17
 
- v3: No change
+ v3: The Kconfig update was dropped thanks to patch 06/18
 
- v4: Add my Signed-off-by
+ v4: No change
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 3a4d0a4b550d..a4292ac4c686 100644
+index 184d1a2bf9ba..2d194dfa697e 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -616,7 +616,8 @@ static size_t jz4780_dma_desc_residue(struct jz4780_dma_chan *jzchan,
- 	residue = 0;
+@@ -973,6 +973,11 @@ static int jz4780_dma_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- 	for (i = next_sg; i < desc->count; i++)
--		residue += desc->desc[i].dtc << jzchan->transfer_shift;
-+		residue += (desc->desc[i].dtc & 0xffffff) <<
-+			jzchan->transfer_shift;
++static const struct jz4780_dma_soc_data jz4740_dma_soc_data = {
++	.nb_channels = 6,
++	.transfer_ord_max = 5,
++};
++
+ static const struct jz4780_dma_soc_data jz4770_dma_soc_data = {
+ 	.nb_channels = 6,
+ 	.transfer_ord_max = 6,
+@@ -986,6 +991,7 @@ static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
+ };
  
- 	if (next_sg != 0) {
- 		count = jz4780_dma_chn_readl(jzdma, jzchan->id,
+ static const struct of_device_id jz4780_dma_dt_match[] = {
++	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = &jz4770_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
+ 	{},
 -- 
 2.11.0
