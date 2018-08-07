@@ -1,28 +1,44 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH] arm64: allwinner: h6: orangepi-one-plus: Add Ethernet support
-Date: Tue, 7 Aug 2018 12:54:29 +0530
-Message-ID: <CAMty3ZDMw3OkZdGvt6tRY6KsSCNKcvptsty7n_t2s_mOzQnr5w@mail.gmail.com>
-References: <20180807071839.25305-1-jagan@amarulasolutions.com> <2D1B8773-0019-458A-8C7E-20077AA27AD4@aosc.io>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/5] dt-binding: dwmac-sun8i: add H6
+ compatible string (w/ A64 fallback)
+Date: Tue, 7 Aug 2018 15:31:03 +0800
+Message-ID: <CAGb2v67rOsxKxxRB0Yc8NugzmBas5s1aXmVBgh1Ts9AGd_OgEA@mail.gmail.com>
+References: <20180722053955.25266-1-icenowy@aosc.io> <20180722053955.25266-2-icenowy@aosc.io>
+ <20180731205614.GA25776@rob-hp-laptop>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2D1B8773-0019-458A-8C7E-20077AA27AD4@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBTUVUXNQKGQESZ2TMCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180731205614.GA25776@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 7, 2018 at 12:49 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+On Wed, Aug 1, 2018 at 4:56 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Jul 22, 2018 at 01:39:51PM +0800, Icenowy Zheng wrote:
+>> The Allwinner H6 SoC features a Ethernet MAC that is similar to the one
+>> in A64.
+>>
+>> Add a compatible string for it with A64 fallback compatible string, in
+>> this case the A64 driver can be used.
+>>
+>> The "internal" PHY is not internal from the perspective of the H6 main
+>> die, instead it's on the co-packaged AC200 chip, and connected to the
+>> main die with RMII at the in-package Port A PIO bank. So from the SoC
+>> driver side it needs no special treatment.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/net/dwmac-sun8i.txt | 1 +
+>>  1 file changed, 1 insertion(+)
 >
->
-> =E4=BA=8E 2018=E5=B9=B48=E6=9C=887=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883=
-:18:39, Jagan Teki <jagan@amarulasolutions.com> =E5=86=99=E5=88=B0:
->>Add Ethernet support for orangepi-one-plus board,
->>- Ethernet port connected via RTL8211E PHY
->>- GMAC_EN is connected via PD6
->>- GMAC-3V supplied from ALDO2 regulator
->
-> Is the prequisite patchset merged?
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Not yet, I guess. Do you suggest to squash if not?
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
