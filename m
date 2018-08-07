@@ -1,162 +1,89 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 1/2] documentation: pinctrl: Add compatibles for Amlogic Meson G12A pin controllers
-Date: Tue, 7 Aug 2018 10:06:33 +0800
-Message-ID: <20180807020634.18182-2-yixun.lan@amlogic.com>
-References: <20180807020634.18182-1-yixun.lan@amlogic.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH 4/5] arm: dts: qcom: Add ipq8064-ap161.dts
+Date: Tue, 7 Aug 2018 07:52:47 +0530
+Message-ID: <b3852f40-d1dc-0002-04b4-398675a42350@codeaurora.org>
+References: <1533305419-29152-1-git-send-email-sricharan@codeaurora.org>
+ <1533305419-29152-5-git-send-email-sricharan@codeaurora.org>
+ <CAL_JsqL2g+1maJLDf0uDAWEmLtA5bUPP5Pi_pRSd3Lu-yBFq9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807020634.18182-1-yixun.lan@amlogic.com>
+In-Reply-To: <CAL_JsqL2g+1maJLDf0uDAWEmLtA5bUPP5Pi_pRSd3Lu-yBFq9g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new compatible name for Amlogic's Meson-G12A pin controllers,
-add a dt-binding header file which document the detail pin names.
+Hi Rob,
 
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- .../bindings/pinctrl/meson,pinctrl.txt        |   2 +
- include/dt-bindings/gpio/meson-g12a-gpio.h    | 114 ++++++++++++++++++
- 2 files changed, 116 insertions(+)
- create mode 100644 include/dt-bindings/gpio/meson-g12a-gpio.h
+On 8/7/2018 2:05 AM, Rob Herring wrote:
+> On Fri, Aug 3, 2018 at 8:10 AM Sricharan R <sricharan@codeaurora.org> wrote:
+>>
+>> Add a new board dts for ipq8064-ap161.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
+>>  arch/arm/boot/dts/Makefile                     | 1 +
+>>  arch/arm/boot/dts/qcom-ipq8064-ap161.dts       | 7 +++++++
+>>  3 files changed, 10 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/qcom-ipq8064-ap161.dts
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+>> index ee532e7..2325135 100644
+>> --- a/Documentation/devicetree/bindings/arm/qcom.txt
+>> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
+>> @@ -15,6 +15,7 @@ The 'SoC' and 'board' elements are required. All other elements are optional.
+>>
+>>  The 'SoC' element must be one of the following strings:
+>>
+>> +       ipq8064
+>>         apq8016
+>>         apq8074
+>>         apq8084
+>> @@ -30,6 +31,7 @@ The 'SoC' element must be one of the following strings:
+>>
+>>  The 'board' element must be one of the following strings:
+>>
+>> +       ap
+>>         cdp
+>>         liquid
+>>         dragonboard
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 37a3de7..233661a 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -772,6 +772,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
+>>         qcom-ipq4019-ap.dk07.1-c1.dtb \
+>>         qcom-ipq4019-ap.dk07.1-c2.dtb \
+>>         qcom-ipq8064-ap148.dtb \
+>> +       qcom-ipq8064-ap161.dtb \
+>>         qcom-msm8660-surf.dtb \
+>>         qcom-msm8960-cdp.dtb \
+>>         qcom-msm8974-fairphone-fp2.dtb \
+>> diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap161.dts b/arch/arm/boot/dts/qcom-ipq8064-ap161.dts
+>> new file mode 100644
+>> index 0000000..aab5174
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/qcom-ipq8064-ap161.dts
+>> @@ -0,0 +1,7 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +#include "qcom-ipq8064-v1.0.dtsi"
+>> +
+>> +/ {
+>> +       model = "Qualcomm Technologies, Inc. IPQ8064/AP-161";
+>> +       compatible = "qcom,ipq8064-ap161";
+> 
+> Doesn't match what you documented above. I'm guessing the ap148 board
+> didn't either...
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 54ecb8ab7788..82ead40311f6 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -13,6 +13,8 @@ Required properties for the root node:
- 		      "amlogic,meson-gxl-aobus-pinctrl"
- 		      "amlogic,meson-axg-periphs-pinctrl"
- 		      "amlogic,meson-axg-aobus-pinctrl"
-+		      "amlogic,meson-g12a-periphs-pinctrl"
-+		      "amlogic,meson-g12a-aobus-pinctrl"
-  - reg: address and size of registers controlling irq functionality
- 
- === GPIO sub-nodes ===
-diff --git a/include/dt-bindings/gpio/meson-g12a-gpio.h b/include/dt-bindings/gpio/meson-g12a-gpio.h
-new file mode 100644
-index 000000000000..f7bd69350d18
---- /dev/null
-+++ b/include/dt-bindings/gpio/meson-g12a-gpio.h
-@@ -0,0 +1,114 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-+/*
-+ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-+ * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MESON_G12A_GPIO_H
-+#define _DT_BINDINGS_MESON_G12A_GPIO_H
-+
-+/* First GPIO chip */
-+#define GPIOAO_0	0
-+#define GPIOAO_1	1
-+#define GPIOAO_2	2
-+#define GPIOAO_3	3
-+#define GPIOAO_4	4
-+#define GPIOAO_5	5
-+#define GPIOAO_6	6
-+#define GPIOAO_7	7
-+#define GPIOAO_8	8
-+#define GPIOAO_9	9
-+#define GPIOAO_10	10
-+#define GPIOAO_11	11
-+#define GPIOE_0		12
-+#define GPIOE_1		13
-+#define GPIOE_2		14
-+
-+/* Second GPIO chip */
-+#define GPIOZ_0		0
-+#define GPIOZ_1		1
-+#define GPIOZ_2		2
-+#define GPIOZ_3		3
-+#define GPIOZ_4		4
-+#define GPIOZ_5		5
-+#define GPIOZ_6		6
-+#define GPIOZ_7		7
-+#define GPIOZ_8		8
-+#define GPIOZ_9		9
-+#define GPIOZ_10	10
-+#define GPIOZ_11	11
-+#define GPIOZ_12	12
-+#define GPIOZ_13	13
-+#define GPIOZ_14	14
-+#define GPIOZ_15	15
-+#define GPIOH_0		16
-+#define GPIOH_1		17
-+#define GPIOH_2		18
-+#define GPIOH_3		19
-+#define GPIOH_4		20
-+#define GPIOH_5		21
-+#define GPIOH_6		22
-+#define GPIOH_7		23
-+#define GPIOH_8		24
-+#define BOOT_0		25
-+#define BOOT_1		26
-+#define BOOT_2		27
-+#define BOOT_3		28
-+#define BOOT_4		29
-+#define BOOT_5		30
-+#define BOOT_6		31
-+#define BOOT_7		32
-+#define BOOT_8		33
-+#define BOOT_9		34
-+#define BOOT_10		35
-+#define BOOT_11		36
-+#define BOOT_12		37
-+#define BOOT_13		38
-+#define BOOT_14		39
-+#define BOOT_15		40
-+#define GPIOC_0		41
-+#define GPIOC_1		42
-+#define GPIOC_2		43
-+#define GPIOC_3		44
-+#define GPIOC_4		45
-+#define GPIOC_5		46
-+#define GPIOC_6		47
-+#define GPIOC_7		48
-+#define GPIOA_0		49
-+#define GPIOA_1		50
-+#define GPIOA_2		51
-+#define GPIOA_3		52
-+#define GPIOA_4		53
-+#define GPIOA_5		54
-+#define GPIOA_6		55
-+#define GPIOA_7		56
-+#define GPIOA_8		57
-+#define GPIOA_9		58
-+#define GPIOA_10	59
-+#define GPIOA_11	60
-+#define GPIOA_12	61
-+#define GPIOA_13	62
-+#define GPIOA_14	63
-+#define GPIOA_15	64
-+#define GPIOX_0		65
-+#define GPIOX_1		66
-+#define GPIOX_2		67
-+#define GPIOX_3		68
-+#define GPIOX_4		69
-+#define GPIOX_5		70
-+#define GPIOX_6		71
-+#define GPIOX_7		72
-+#define GPIOX_8		73
-+#define GPIOX_9		74
-+#define GPIOX_10	75
-+#define GPIOX_11	76
-+#define GPIOX_12	77
-+#define GPIOX_13	78
-+#define GPIOX_14	79
-+#define GPIOX_15	80
-+#define GPIOX_16	81
-+#define GPIOX_17	82
-+#define GPIOX_18	83
-+#define GPIOX_19	84
-+
-+#endif /* _DT_BINDINGS_MESON_G12A_GPIO_H */
+oops. yeah, ap148 id not having it. will add that and also correct this.
+would call it as 'ap161' as the name for the board part.
+
+Regards,
+ Sricharan
+
 -- 
-2.18.0
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
