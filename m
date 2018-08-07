@@ -1,32 +1,38 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 0/3] Add Broadcom Omega SoC internal switch and phy
-Date: Tue, 7 Aug 2018 20:08:27 +0200
-Message-ID: <20180807180827.GH18350@lunn.ch>
-References: <1533661364-15381-1-git-send-email-arun.parameswaran@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 3/5] powerpc/mpic: Add support for non-contiguous irq ranges
+Date: Tue, 7 Aug 2018 12:09:38 -0600
+Message-ID: <20180807180938.GA13623@rob-hp-laptop>
+References: <1532684881-19310-1-git-send-email-Bharat.Bhushan@nxp.com>
+ <1532684881-19310-4-git-send-email-Bharat.Bhushan@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1533661364-15381-1-git-send-email-arun.parameswaran@broadcom.com>
+In-Reply-To: <1532684881-19310-4-git-send-email-Bharat.Bhushan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+Cc: benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, oss@buserror.net, galak@kernel.crashing.org, mark.rutland@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, keescook@chromium.org, tyreld@linux.vnet.ibm.com, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 07, 2018 at 10:02:41AM -0700, Arun Parameswaran wrote:
-> Hi,
-> 
-> The patchset is based on David Miller's "net-next" repo.
-> 
-> The patches add support for the Broadcom Omega SoC's internal ethernet
-> switch and the internal gphy.
-> 
-> The internal ethernet switch in the Omega is a b53 srab based switch.
-> The support for the switch is added to the b53 driver in the dsa
-> framework.
-> 
-> The gphy support is added to the bcm7xxx driver.
+On Fri, Jul 27, 2018 at 03:17:59PM +0530, Bharat Bhushan wrote:
+> Freescale MPIC h/w may not support all interrupt sources reported
+> by hardware, "last-interrupt-source" or platform. On these platforms
+> a misconfigured device tree that assigns one of the reserved
+> interrupts leaves a non-functioning system without warning.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+There are lots of ways to misconfigure DTs. I don't think this is 
+special and needs a property. We've had some interrupt mask or valid 
+properties in the past, but generally don't accept those.
 
-    Andrew
+> 
+> This patch adds "supported-irq-ranges" property in device tree to
+> provide the range of supported source of interrupts. If a reserved
+> interrupt used then it will not be programming h/w, which it does
+> currently, and through warning.
+> 
+> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+> ---
+>  .../devicetree/bindings/powerpc/fsl/mpic.txt       |   8 ++
+>  arch/powerpc/include/asm/mpic.h                    |   9 ++
+>  arch/powerpc/sysdev/mpic.c                         | 113 +++++++++++++++++++--
+>  3 files changed, 121 insertions(+), 9 deletions(-)
