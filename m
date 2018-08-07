@@ -1,68 +1,54 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: [PATCH v6 2/2] iio: light: Add device tree binding for vishay vcnl4035
-Date: Tue,  7 Aug 2018 12:27:04 +0200
-Message-ID: <20180807102704.1652656-2-pn@denx.de>
-References: <20180807102704.1652656-1-pn@denx.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807102704.1652656-1-pn@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, andy.shevchenko@gmail.com
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, matthias.bgg@gmail.com, wd@denx.de, sbabic@denx.de, hs@denx.de, Parthiban Nallathambi <pn@denx.de>
+From: Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v2 0/2] i2c: npcm7xx: new driver for I2C controller
+Date: Tue,  7 Aug 2018 13:38:12 +0300
+Message-ID: <20180807103814.29586-1-tali.perry1@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sboyd@kernel.org, brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, weiyongjunl@huawei.com, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tali Perry <tali.perry1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding device tree binding for vcnl4035 and vendor
-prefix for Vishay Intertechnology
+Nuvoton NPCM7XX I2C Controller
+NPCM7xx includes 16 I2C contollers. THis driver operates the controller.
+This module also includes a slave mode, which will be submitted later on.
 
-Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+Any feedback would be appreciated.  
 
-Changelog in v3:
-- removed interrupt-parent property reference in documentation
-- renamed vcnl4035 to light-sensor
+v2 -> v1:
+	- run check patch in strict mode.
+	- use linux crc.
+	- define regs in constant offset without base.
+	- remove debug prints.
+	- no declerations for local functions.
+	
+v1: initial version
 
-Changelog in v4:
-- commit message fix
-- same indexing/space in binding
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+
 ---
- .../devicetree/bindings/iio/light/vcnl4035.txt         | 18 ++++++++++++++++++
- Documentation/devicetree/bindings/vendor-prefixes.txt  |  1 +
- 2 files changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4035.txt
+Tali Perry (2):
+  dt-binding: i2c: npcm7xx: add binding for i2c controller
+  i2c: npcm7xx: add i2c controller master mode only
 
-diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4035.txt b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
-new file mode 100644
-index 000000000000..c07c7f052556
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/vcnl4035.txt
-@@ -0,0 +1,18 @@
-+VISHAY VCNL4035 -  Ambient Light and proximity sensor
-+
-+Link to datasheet: https://www.vishay.com/docs/84251/vcnl4035x01.pdf
-+
-+Required properties:
-+
-+	-compatible: should be "vishay,vcnl4035"
-+	-reg: I2C address of the sensor, should be 0x60
-+	-interrupts: interrupt mapping for GPIO IRQ (level active low)
-+
-+Example:
-+
-+light-sensor@60 {
-+	compatible = "vishay,vcnl4035";
-+	reg = <0x60>;
-+	interrupt-parent = <&gpio4>;
-+	interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 7cad066191ee..3cc46d5735a9 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -395,6 +395,7 @@ v3	V3 Semiconductor
- variscite	Variscite Ltd.
- via	VIA Technologies, Inc.
- virtio	Virtual I/O Device Specification, developed by the OASIS consortium
-+vishay	Vishay Intertechnology, Inc
- vivante	Vivante Corporation
- vocore VoCore Studio
- voipac	Voipac Technologies s.r.o.
+ .../devicetree/bindings/i2c/i2c-npcm7xx.txt        |   27 +
+ MAINTAINERS                                        |    8 +
+ drivers/i2c/busses/Kconfig                         |   11 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-npcm7xx.c                   | 2017 ++++++++++++++++++++
+ 5 files changed, 2064 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
+ create mode 100644 drivers/i2c/busses/i2c-npcm7xx.c
+
 -- 
-2.14.4
+2.14.1
