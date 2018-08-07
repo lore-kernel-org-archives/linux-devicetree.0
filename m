@@ -1,38 +1,33 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v3 0/2] i2c: Add support for Qcom CCI I2C controller
-Date: Mon,  6 Aug 2018 16:34:14 +0530
-Message-Id: <20180806110416.4288-1-vkoul@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=Wv3U=KW=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v3 0/5] Add GPIO and EAVB Pinctrl support
+Date: Tue,  7 Aug 2018 08:57:01 +0100
+Message-Id: <1533628626-26503-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+This patch series aims to add GPIO and EAVB Pinctrl support for RZ/G1C SoC.
 
-This series adds support for Qualcomm Camera Control Interface (CCI) I2C
-controller. This block contains one/two I2C masters and registers these
-adapters based on the controller probed on.
+----
+V1-->V2
+  * Add support for gpio-reserved-ranges 
+V2-->V3
+  * Updated binding documentation
+  * Rework based on Geert's comment.
+----
+Biju Das (5):
+  gpio: rcar: Add GPIO hole support
+  dt-bindings: gpio: rcar: Add gpio-reserved-ranges support
+  ARM: dts: r8a77470: Add GPIO support
+  ARM: dts: iwg23s-sbc: specify EtherAVB PHY IRQ
+  ARM: dts: iwg23s-sbc: Add pinctl support for EtherAVB
 
-Changes in v3:
- - Update DT binding per RobH comments
- - Add the subnode for bus instances
- - Move all compataible data to driver data
- - add num_master data and use that to register and use masters
-
-Changes in v2:
- - Add support for two adapters
-
-Todor Tomov (2):
-  dt-bindings: i2c: Add binding for Qualcomm CCI I2C controller
-  i2c: Add Qualcomm CCI I2C driver
-
- .../devicetree/bindings/i2c/i2c-qcom-cci.txt       |  55 ++
- drivers/i2c/busses/Kconfig                         |  10 +
- drivers/i2c/busses/Makefile                        |   1 +
- drivers/i2c/busses/i2c-qcom-cci.c                  | 814 +++++++++++++++++++++
- 4 files changed, 880 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
- create mode 100644 drivers/i2c/busses/i2c-qcom-cci.c
+ .../devicetree/bindings/gpio/renesas,gpio-rcar.txt | 61 ++++++++-------
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          | 10 +++
+ arch/arm/boot/dts/r8a77470.dtsi                    | 91 ++++++++++++++++++++++
+ drivers/gpio/gpio-rcar.c                           |  6 ++
+ 4 files changed, 142 insertions(+), 26 deletions(-)
 
 -- 
-2.14.4
+2.7.4
