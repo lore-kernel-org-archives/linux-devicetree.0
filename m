@@ -1,111 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: reset: Add PDC reset binding for SDM845
- SoCs
-Date: Tue, 7 Aug 2018 12:16:59 -0600
-Message-ID: <20180807181659.GA20659@rob-hp-laptop>
+Subject: Re: [PATCH 4/4] remoteproc: qcom: q6v5-pil: Add PDC restart for
+ modem on SDM845 SoCs
+Date: Tue, 7 Aug 2018 12:18:35 -0600
+Message-ID: <20180807181835.GA28960@rob-hp-laptop>
 References: <20180727152811.15258-1-sibis@codeaurora.org>
- <1533026547.3444.4.camel@pengutronix.de>
- <28f34ddf-03b2-0baa-c04f-15e546ef3f75@codeaurora.org>
+ <20180727152811.15258-4-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <28f34ddf-03b2-0baa-c04f-15e546ef3f75@codeaurora.org>
+In-Reply-To: <20180727152811.15258-4-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi S <sibis@codeaurora.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org, ilina@codeaurora.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 06:27:24PM +0530, Sibi S wrote:
-> Hi Philipp,
-> Thanks for the review!
+On Fri, Jul 27, 2018 at 08:58:11PM +0530, Sibi Sankar wrote:
+> In the presence of a PDC block working with subsystem RSC,
+> assert/deassert PDC restart in modem start/stop path.
 > 
-> On 07/31/2018 02:12 PM, Philipp Zabel wrote:
-> > Hi Sibi,
-> > 
-> > On Fri, 2018-07-27 at 20:58 +0530, Sibi Sankar wrote:
-> > > Add SDM845 PDC (Power Domain Controller) reset controller binding
-> > > 
-> > > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > > ---
-> > >   .../bindings/reset/qcom,pdc-reset.txt         | 52 +++++++++++++++++++
-> > >   include/dt-bindings/reset/qcom,sdm845-pdc.h   | 20 +++++++
-> > >   2 files changed, 72 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> > >   create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> > > new file mode 100644
-> > > index 000000000000..85e159962e08
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> > > @@ -0,0 +1,52 @@
-> > > +PDC Reset Controller
-> > > +======================================
-> > > +
-> > > +This binding describes a reset-controller found on PDC-Global(Power Domain
-> > > +Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
-> > > +
-> > > +Required properties:
-> > > +- compatible:
-> > > +	Usage: required
-> > > +	Value type: <string>
-> > > +	Definition: must be:
-> > > +		    "qcom,sdm845-pdc-global"
-> > > +
-> > > +- reg:
-> > > +	Usage: required
-> > > +	Value type: <prop-encoded-array>
-> > > +	Definition: must specify the base address and size of the register
-> > > +	            space.
-> > > +
-> > > +- #reset-cells:
-> > > +	Usage: required
-> > > +	Value type: <uint>
-> > > +	Definition: must be 1; cell entry represents the reset index.
-> > > +
-> > > +Example:
-> > > +
-> > > +pdc_reset: reset-controller@b2e0000 {
-> > 
-> > Is this really just a reset controller?
-> > 
-> > The name makes it sound like a driver binding to this should also
-> > provide pm_genpd and the binding should probably call this a power-
-> > controller: Documentation/devicetree/bindings/power/power_domain.txt.
-> > 
-> 
-> The PDC-global reg space which is a part of PDC-wrapper reg space seems
-> to be only used for the reset lines.
-> 
-> Couple of other drivers use other parts of the PDC-wrapper reg space:
-> https://patchwork.kernel.org/patch/10223701/ (PDC-Interrupt controller)
-> https://patchwork.kernel.org/patch/10255767/ (GMU-PDC incorrectly tries
-> to occupy the entire pdc-wrapper reg space)
-> 
-> since it couldn't be logically mapped into pdc-interrupt driver, it had
-> to be included as a separate reset driver.
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  .../bindings/remoteproc/qcom,q6v5.txt         |  4 +++
 
-You can't have overlapping regions in DT (well, you can because we have 
-to work-around existing DTs that do, but you shouldn't).
+Please split bindings to separate patch.
 
-A single node can be multiple providers such as interrupt controller and 
-reset controller. It's an OS problem to split that into multiple 
-drivers.
- 
-> > > +	compatible = "qcom,sdm845-pdc-global";
-> > > +	reg = <0xb2e0000 0x20000>;
-> > 
-> > This looks like this is the register space of the complete PDC, not just
-> > the reset register?
-> > 
+>  drivers/remoteproc/qcom_q6v5_pil.c            | 27 ++++++++++++++++---
+>  2 files changed, 27 insertions(+), 4 deletions(-)
 > 
-> The entire register space was chosen because it is only used for its
-> reset lines (had a good look at the downstream kernel and had a conversation
-> with Lina) and to ensure break backward compatibility for
-> the for the dt entry if the reg-space was used for other purposes in
-> the future.
-
-Why do you want to ensure breaking backwards compatibility?
-
-Rob
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> index 601dd9f389aa..124fb1dc6fb8 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> @@ -51,6 +51,8 @@ on the Qualcomm Hexagon core.
+>  	Usage: required
+>  	Value type: <phandle>
+>  	Definition: reference to the reset-controller for the modem sub-system
+> +		    reference to the list of 2 reset-controllers for the modem
+> +		    sub-system on SDM845 SoCs
+>  		    reference to the list of 3 reset-controllers for the
+>  		    wcss sub-system
+>  
+> @@ -58,6 +60,8 @@ on the Qualcomm Hexagon core.
+>  	Usage: required
+>  	Value type: <stringlist>
+>  	Definition: must be "mss_restart" for the modem sub-system
+> +	Definition: must be "mss_restart", "pdc_restart" for the modem
+> +		    sub-system on SDM845 SoCs
+>  	Definition: must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
+>  		    for the wcss syb-system
+>  
