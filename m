@@ -1,36 +1,36 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 0/3] Add Broadcom Omega SoC internal switch and phy
-Date: Tue, 07 Aug 2018 15:49:01 -0700 (PDT)
-Message-ID: <20180807.154901.1465546829516526941.davem@davemloft.net>
-References: <1533661364-15381-1-git-send-email-arun.parameswaran@broadcom.com>
-        <20180807180827.GH18350@lunn.ch>
+From: Tuomas Tynkkynen <tuomas@tuxera.com>
+Subject: [PATCH 1/2] ARM: dts: sunxi: Don't use cd-inverted in sun8i-r40-bananapi-m2-ultra
+Date: Wed, 8 Aug 2018 02:25:53 +0300
+Message-ID: <20180807232554.16825-1-tuomas@tuxera.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807180827.GH18350@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andrew@lunn.ch
-Cc: arun.parameswaran@broadcom.com, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tuomas Tynkkynen <tuomas@tuxera.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-Date: Tue, 7 Aug 2018 20:08:27 +0200
+Another user of cd-inverted seems to have crept in. Switch it away from
+cd-inverted to be consistent with other sunxi boards.
 
-> On Tue, Aug 07, 2018 at 10:02:41AM -0700, Arun Parameswaran wrote:
->> Hi,
->> 
->> The patchset is based on David Miller's "net-next" repo.
->> 
->> The patches add support for the Broadcom Omega SoC's internal ethernet
->> switch and the internal gphy.
->> 
->> The internal ethernet switch in the Omega is a b53 srab based switch.
->> The support for the switch is added to the b53 driver in the dsa
->> framework.
->> 
->> The gphy support is added to the bcm7xxx driver.
-> 
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Tuomas Tynkkynen <tuomas@tuxera.com>
+---
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Series applied.
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index c39b9169ea64..a891a387e8f1 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -159,8 +159,7 @@
+ &mmc0 {
+ 	vmmc-supply = <&reg_dcdc1>;
+ 	bus-width = <4>;
+-	cd-gpios = <&pio 7 13 GPIO_ACTIVE_HIGH>; /* PH13 */
+-	cd-inverted;
++	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
+ 	status = "okay";
+ };
+ 
+-- 
+2.16.3
