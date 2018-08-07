@@ -1,89 +1,81 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 4/5] arm: dts: qcom: Add ipq8064-ap161.dts
-Date: Tue, 7 Aug 2018 07:52:47 +0530
-Message-ID: <b3852f40-d1dc-0002-04b4-398675a42350@codeaurora.org>
-References: <1533305419-29152-1-git-send-email-sricharan@codeaurora.org>
- <1533305419-29152-5-git-send-email-sricharan@codeaurora.org>
- <CAL_JsqL2g+1maJLDf0uDAWEmLtA5bUPP5Pi_pRSd3Lu-yBFq9g@mail.gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: add csi regulator to sopine dts
+Date: Tue, 7 Aug 2018 10:52:20 +0800
+Message-ID: <CAGb2v66GoZJ4nXs7S0F3JXJ3Jm0ZBRXy0r2e4STqVPV5S0UVUQ@mail.gmail.com>
+References: <Akash_Gajjar@mentor.com> <1533109399-21174-1-git-send-email-Akash_Gajjar@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL2g+1maJLDf0uDAWEmLtA5bUPP5Pi_pRSd3Lu-yBFq9g@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1533109399-21174-1-git-send-email-Akash_Gajjar@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Akash Gajjar <Akash_Gajjar@mentor.com>
+Cc: Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Aug 1, 2018 at 3:43 PM, Akash Gajjar <Akash_Gajjar@mentor.com> wrote:
+> sopine board has a csi. enable supply dvdd-1v8-csi, dovdd-2v8-csi and
+> avdd-2v8-csi on board to access external camera connected to it.
 
-On 8/7/2018 2:05 AM, Rob Herring wrote:
-> On Fri, Aug 3, 2018 at 8:10 AM Sricharan R <sricharan@codeaurora.org> wrote:
->>
->> Add a new board dts for ipq8064-ap161.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
->>  arch/arm/boot/dts/Makefile                     | 1 +
->>  arch/arm/boot/dts/qcom-ipq8064-ap161.dts       | 7 +++++++
->>  3 files changed, 10 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/qcom-ipq8064-ap161.dts
->>
->> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
->> index ee532e7..2325135 100644
->> --- a/Documentation/devicetree/bindings/arm/qcom.txt
->> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
->> @@ -15,6 +15,7 @@ The 'SoC' and 'board' elements are required. All other elements are optional.
->>
->>  The 'SoC' element must be one of the following strings:
->>
->> +       ipq8064
->>         apq8016
->>         apq8074
->>         apq8084
->> @@ -30,6 +31,7 @@ The 'SoC' element must be one of the following strings:
->>
->>  The 'board' element must be one of the following strings:
->>
->> +       ap
->>         cdp
->>         liquid
->>         dragonboard
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 37a3de7..233661a 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -772,6 +772,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
->>         qcom-ipq4019-ap.dk07.1-c1.dtb \
->>         qcom-ipq4019-ap.dk07.1-c2.dtb \
->>         qcom-ipq8064-ap148.dtb \
->> +       qcom-ipq8064-ap161.dtb \
->>         qcom-msm8660-surf.dtb \
->>         qcom-msm8960-cdp.dtb \
->>         qcom-msm8974-fairphone-fp2.dtb \
->> diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap161.dts b/arch/arm/boot/dts/qcom-ipq8064-ap161.dts
->> new file mode 100644
->> index 0000000..aab5174
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/qcom-ipq8064-ap161.dts
->> @@ -0,0 +1,7 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +#include "qcom-ipq8064-v1.0.dtsi"
->> +
->> +/ {
->> +       model = "Qualcomm Technologies, Inc. IPQ8064/AP-161";
->> +       compatible = "qcom,ipq8064-ap161";
-> 
-> Doesn't match what you documented above. I'm guessing the ap148 board
-> didn't either...
+Unless there are other uses beyond supplying the camera module, this is not
+going to be accepted. Enabling power to the camera should be in the same
+patch as enabling the camera itself. And since it is a module, it should
+be an overlay file.
 
-oops. yeah, ap148 id not having it. will add that and also correct this.
-would call it as 'ap161' as the name for the board part.
 
-Regards,
- Sricharan
+ChenYu
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
+> ---
+>  .../arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
+> index 43418bd..256229b 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
+> @@ -68,6 +68,13 @@
+>
+>  #include "axp803.dtsi"
+>
+> +&reg_aldo1 {
+> +       regulator-always-on;
+> +       regulator-min-microvolt = <2800000>;
+> +       regulator-max-microvolt = <2800000>;
+> +       regulator-name = "dovdd-csi";
+> +};
+> +
+>  &reg_aldo2 {
+>         regulator-always-on;
+>         regulator-min-microvolt = <1800000>;
+> @@ -112,6 +119,13 @@
+>         regulator-name = "vdd-sys";
+>  };
+>
+> +&reg_dldo3 {
+> +       regulator-always-on;
+> +       regulator-min-microvolt = <2800000>;
+> +       regulator-max-microvolt = <2800000>;
+> +       regulator-name = "avdd-csi";
+> +};
+> +
+>  &reg_eldo1 {
+>         regulator-always-on;
+>         regulator-min-microvolt = <1800000>;
+> @@ -119,6 +133,13 @@
+>         regulator-name = "vdd-1v8-lpddr";
+>  };
+>
+> +&reg_eldo3 {
+> +       regulator-always-on;
+> +       regulator-min-microvolt = <1800000>;
+> +       regulator-max-microvolt = <1800000>;
+> +       regulator-name = "vdd-csi";
+> +};
+> +
+>  &reg_fldo1 {
+>         regulator-min-microvolt = <1200000>;
+>         regulator-max-microvolt = <1200000>;
+> --
+> 2.7.4
+>
