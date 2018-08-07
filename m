@@ -1,42 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ASoC: rsnd: Document R-Car M3-N support
-Date: Tue, 7 Aug 2018 12:01:34 -0600
-Message-ID: <20180807180134.GA6871@rob-hp-laptop>
-References: <1532551215-14868-1-git-send-email-ykaneko0929@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 0/3] Add Broadcom Omega SoC internal switch and phy
+Date: Tue, 7 Aug 2018 20:08:27 +0200
+Message-ID: <20180807180827.GH18350@lunn.ch>
+References: <1533661364-15381-1-git-send-email-arun.parameswaran@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1532551215-14868-1-git-send-email-ykaneko0929@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+In-Reply-To: <1533661364-15381-1-git-send-email-arun.parameswaran@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 26, 2018 at 05:40:15AM +0900, Yoshihiro Kaneko wrote:
-> From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+On Tue, Aug 07, 2018 at 10:02:41AM -0700, Arun Parameswaran wrote:
+> Hi,
 > 
-> Document support for the sound modules in the Renesas M3-N (r8a77965)
-> SoC.
+> The patchset is based on David Miller's "net-next" repo.
 > 
-> No driver update is needed.
+> The patches add support for the Broadcom Omega SoC's internal ethernet
+> switch and the internal gphy.
 > 
-> Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-> ---
+> The internal ethernet switch in the Omega is a b53 srab based switch.
+> The support for the switch is added to the b53 driver in the dsa
+> framework.
 > 
-> This patch is based on the devel branch of Simon Horman's renesas tree.
-> 
->  Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
->  1 file changed, 1 insertion(+)
+> The gphy support is added to the bcm7xxx driver.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
