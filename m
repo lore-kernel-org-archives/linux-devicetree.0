@@ -1,10 +1,12 @@
 From: Tuomas Tynkkynen <tuomas@tuxera.com>
-Subject: [PATCH 1/2] ARM: dts: sunxi: Don't use cd-inverted in sun8i-r40-bananapi-m2-ultra
-Date: Wed, 8 Aug 2018 02:25:53 +0300
-Message-ID: <20180807232554.16825-1-tuomas@tuxera.com>
+Subject: [PATCH 2/2] arm64: dts: sunxi: Don't use cd-inverted in sun50i-a64-pinebook
+Date: Wed, 8 Aug 2018 02:25:54 +0300
+Message-ID: <20180807232554.16825-2-tuomas@tuxera.com>
+References: <20180807232554.16825-1-tuomas@tuxera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180807232554.16825-1-tuomas@tuxera.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tuomas Tynkkynen <tuomas@tuxera.com>
@@ -15,22 +17,22 @@ cd-inverted to be consistent with other sunxi boards.
 
 Signed-off-by: Tuomas Tynkkynen <tuomas@tuxera.com>
 ---
- arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 3 +--
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-index c39b9169ea64..a891a387e8f1 100644
---- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-+++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-@@ -159,8 +159,7 @@
- &mmc0 {
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+index 897e60cbe38d..4b8fe453bacd 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+@@ -80,8 +80,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
  	vmmc-supply = <&reg_dcdc1>;
- 	bus-width = <4>;
--	cd-gpios = <&pio 7 13 GPIO_ACTIVE_HIGH>; /* PH13 */
+-	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
 -	cd-inverted;
-+	cd-gpios = <&pio 7 13 GPIO_ACTIVE_LOW>; /* PH13 */
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
+ 	bus-width = <4>;
  	status = "okay";
- };
- 
 -- 
 2.16.3
