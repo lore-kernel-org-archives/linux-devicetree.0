@@ -1,138 +1,118 @@
-From: skannan@codeaurora.org
-Subject: Re: [PATCH v3 1/2] PM / devfreq: Generic CPU frequency to device
- frequency mapping governor
-Date: Tue, 07 Aug 2018 12:37:07 -0700
-Message-ID: <496ac47a3c78f37655b60841fba7494c@codeaurora.org>
-References: <1533171465-25508-1-git-send-email-skannan@codeaurora.org>
- <20180807164114.GA12587@rob-hp-laptop>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH RFC 4/4] arm64: dts: qcom: add wake up interrupts for GPIOs
+Date: Tue, 7 Aug 2018 12:56:43 -0700
+Message-ID: <CAE=gft5SRSnXN4Cs8JdTNgFKAFk1YH4bxL91=jvhRZe7Zznxdg@mail.gmail.com>
+References: <20180731224421.29062-1-ilina@codeaurora.org> <20180731224421.29062-5-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807164114.GA12587@rob-hp-laptop>
+In-Reply-To: <20180731224421.29062-5-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, georgi.djakov@linaro.org, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: marc.zyngier@arm.com, Stephen Boyd <sboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, swboyd@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-07 09:41, Rob Herring wrote:
-> On Wed, Aug 01, 2018 at 05:57:41PM -0700, Saravana Kannan wrote:
->> Many CPU architectures have caches that can scale independent of the 
->> CPUs.
->> Frequency scaling of the caches is necessary to make sure the cache is 
->> not
->> a performance bottleneck that leads to poor performance and power. The 
->> same
->> idea applies for RAM/DDR.
->> 
->> To achieve this, this patch adds a generic devfreq governor that takes 
->> the
->> current frequency of each CPU frequency domain and then adjusts the
->> frequency of the cache (or any devfreq device) based on the frequency 
->> of
->> the CPUs. It listens to CPU frequency transition notifiers to keep 
->> itself
->> up to date on the current CPU frequency.
->> 
->> To decide the frequency of the device, the governor does one of the
->> following:
->> 
->> * Uses a CPU frequency to device frequency mapping table
->>   - Either one mapping table used for all CPU freq policies (typically 
->> used
->>     for system with homogeneous cores/clusters that have the same 
->> OPPs).
->>   - One mapping table per CPU freq policy (typically used for ASMP 
->> systems
->>     with heterogeneous CPUs with different OPPs)
->> 
->> OR
->> 
->> * Scales the device frequency in proportion to the CPU frequency. So, 
->> if
->>   the CPUs are running at their max frequency, the device runs at its 
->> max
->>   frequency.  If the CPUs are running at their min frequency, the 
->> device
->>   runs at its min frequency. And interpolated for frequencies in 
->> between.
->> 
->> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
->> ---
->>  .../bindings/devfreq/devfreq-cpufreq-map.txt       |  53 ++
-> 
-> Bindings should be a separate patch.
-> 
->>  drivers/devfreq/Kconfig                            |   8 +
->>  drivers/devfreq/Makefile                           |   1 +
->>  drivers/devfreq/governor_cpufreq_map.c             | 583 
->> +++++++++++++++++++++
->>  4 files changed, 645 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->>  create mode 100644 drivers/devfreq/governor_cpufreq_map.c
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt 
->> b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->> new file mode 100644
->> index 0000000..982a30b
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->> @@ -0,0 +1,53 @@
->> +Devfreq CPUfreq governor
->> +
->> +devfreq-cpufreq-map is a parent device that contains one or more 
->> child devices.
->> +Each child device provides CPU frequency to device frequency mapping 
->> for a
->> +specific device. Examples of devices that could use this are: DDR, 
->> cache and
->> +CCI.
->> +
->> +Parent device name shall be "devfreq-cpufreq-map".
->> +
->> +Required child device properties:
->> +- cpu-to-dev-map, or cpu-to-dev-map-<X>:
->> +			A list of tuples where each tuple consists of a
->> +			CPU frequency (KHz) and the corresponding device
->> +			frequency. CPU frequencies not listed in the table
->> +			will use the device frequency that corresponds to the
->> +			next rounded up CPU frequency.
->> +			Use "cpu-to-dev-map" if all CPUs in the system should
->> +			share same mapping.
->> +			Use cpu-to-dev-map-<cpuid> to describe different
->> +			mappings for different CPUs. The property should be
->> +			listed only for the first CPU if multiple CPUs are
->> +			synchronous.
->> +- target-dev:		Phandle to device that this mapping applies to.
->> +
->> +Example:
->> +	devfreq-cpufreq-map {
->> +		cpubw-cpufreq {
->> +			target-dev = <&cpubw>;
->> +			cpu-to-dev-map =
->> +				<  300000  1144000 >,
->> +				<  422400  2288000 >,
->> +				<  652800  3051000 >,
->> +				<  883200  5996000 >,
->> +				< 1190400  8056000 >,
->> +				< 1497600 10101000 >,
->> +				< 1728000 12145000 >,
->> +				< 2649600 16250000 >;
-> 
-> Now we have frequencies listed in multiple places, the OPP tables and
-> here? Perhaps it is grouping OPPs that should be done.
+On Tue, Jul 31, 2018 at 3:44 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>
+> GPIOs that are wakeup capable have interrupt lines that are routed to
+> the always-on interrupt controller (PDC) in parallel to the pinctrl. The
+> interrupts listed here are the wake up lines corresponding to GPIOs.
+>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 69 ++++++++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 8ccce42885c1..96ef18ced85b 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -720,6 +720,75 @@
+>                         #gpio-cells = <2>;
+>                         interrupt-controller;
+>                         #interrupt-cells = <2>;
+> +                       interrupts-extended = <&pdc 30 IRQ_TYPE_LEVEL_HIGH>,
 
-This doesn't list all OPPs (it can if necessary). This is listing the 
-minimum frequency needed to give good performance/power for a 
-device/product.
+In order to get any GPIO interrupts on my board, I needed to add the
+summary IRQ first in this list. My reading of platform_get_irq is that
+"interrupts-extended" is queried before "interrupts", so we
+accidentally wire the summary IRQ to PDC 30. Given this, you can
+probably remove the regular "interrupts" property.
 
-AFAIK, OPP grouping isn't something that's supported in OPP framework or 
-in DT. Is there something specific you had in mind? Also, I'd like for 
-this to work even with devices that don't have OPPs listed in DT.
+-Evan
 
-Thanks,
-Saravana
+> +                                             <&pdc 31 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 32 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 33 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 34 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 35 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 36 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 37 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 38 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 39 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 41 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 42 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 43 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 44 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 45 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 46 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 47 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 49 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 50 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 51 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 52 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 54 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 55 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 56 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 57 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 58 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 59 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 60 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 61 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 62 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 63 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 64 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 65 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 66 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 67 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 68 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 69 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 70 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 71 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 72 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 73 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 74 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 75 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 76 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 77 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 79 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 80 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 81 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 82 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 83 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 84 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 85 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 86 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 90 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 91 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 92 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 95 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 96 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 97 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 98 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 99 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 100 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 102 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 103 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 104 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 105 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 106 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 107 IRQ_TYPE_LEVEL_HIGH>,
+> +                                             <&pdc 108 IRQ_TYPE_LEVEL_HIGH>;
+>
+>                         qup_i2c0_default: qup-i2c0-default {
+>                                 pinmux {
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
