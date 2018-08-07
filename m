@@ -1,52 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller
- documentation
-Date: Tue, 7 Aug 2018 14:41:21 +0100
-Message-ID: <20180807134121.GA7958@sirena.org.uk>
-References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: [PATCH 0/8] Tegra SDHCI support HS400 on Tegra210 and Tegra186
+Date: Tue, 7 Aug 2018 16:59:56 +0300
+Message-ID: <1533650404-18125-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
+This series implements support for HS400 signaling on Tegra210 and
+Tegra186. This includes programming the DQS trimmer values, implementing
+enhanced strobe and HS400 delay line calibration.
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This series depends on the "Tegra SDHCI add support for HS200 and UHS
+signaling" series.
 
-On Tue, Aug 07, 2018 at 06:43:37PM +0800, Baolin Wang wrote:
+Aapo Vienamo (8):
+  dt-bindings: mmc: Add DQS trim value to Tegra SDHCI
+  mmc: tegra: Parse and program DQS trim value
+  mmc: tegra: Implement HS400 enhanced strobe
+  mmc: tegra: Implement HS400 delay line calibration
+  arm64: dts: tegra186: Add SDMMC4 DQS trim value
+  arm64: dts: tegra210: Add SDMMC4 DQS trim value
+  arm64: dts: tegra186: Enable HS400
+  arm64: dts: tegra210: Enable HS400
 
-> +Optional properties:
-> +- sprd,spi-interval: Specify the intervals of two SPI frames, which can be
-> +	converted to the delay clock cycles = interval number * 4 + 10.
+ .../bindings/mmc/nvidia,tegra20-sdhci.txt          |  3 +
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  2 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  2 +
+ drivers/mmc/host/sdhci-tegra.c                     | 83 +++++++++++++++++++++-
+ 4 files changed, 87 insertions(+), 3 deletions(-)
 
-What's a frame here, and does it overlap with any of the existing delay
-configuration we have?  In general it's better for this stuff to be
-configured at runtime by the device rather than at DT time by the
-controller since that way if the device needs the delays we always do
-them if we can and if they are only needed some of the time (eg, for
-only one device on the bus or for only some operations) then we don't
-take the performance hit when we don't need to.
-
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltpoYAACgkQJNaLcl1U
-h9AipAf8C3BTJ+JtWaUjns2mJPPiv5Ck30ahWS7xkS4zheh+pLz7a689zgEGwCfW
-zqlaNz0G2RPcPmOG6Erur6AM4H1p13ymRNPEY9HDdOyGaiLyuYx3LhL7cCTcAdvY
-3TbWIuEWTMxaOj8LTubqA9JGuWWcHsfAqqJxj/4a1GX/mFKWFh11K2utNEybziNt
-1daiNHmNEsGf09Oz37PHpCm5q+zjD0ZfA4OkIknFY9x9ey/kt8eMkROtQjxwDSNR
-D0/QmkL/OQ5nLGDohgl3MvwwNMJI1tP0iTs1eZSIHECGsfchVTpWjRsUYYy2DTCJ
-lgLJ/7Yc2oFh5HZxACtltPVYBxmX+w==
-=58R/
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
+-- 
+2.7.4
