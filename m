@@ -1,54 +1,50 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH 09/11] RISC-V: Support per-hart timebase-frequency
-Date: Tue, 7 Aug 2018 23:47:13 -0700
-Message-ID: <b4ddcb20-6109-22ac-4691-c2c012ea112a@wdc.com>
-References: <mhng-d315d8a6-c4db-4ec8-927b-fc9f1d8e7872@palmer-si-x1c4>
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Subject: Re: [PATCH] media: dt: adv7604: Fix slave map documentation
+Date: Wed, 8 Aug 2018 09:48:00 +0200
+Message-ID: <505904fb-7bfc-c455-740e-b72a14731eb9@ysoft.com>
+References: <20180807155452.797-1-kieran.bingham@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <mhng-d315d8a6-c4db-4ec8-927b-fc9f1d8e7872@palmer-si-x1c4>
+In-Reply-To: <20180807155452.797-1-kieran.bingham@ideasonboard.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Palmer Dabbelt <palmer@dabbelt.com>, Christoph Hellwig <hch@lst.de>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "anup@brainfault.org" <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>, mchehab@kernel.org, linux-media@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/6/18 1:34 PM, Palmer Dabbelt wrote:
-> On Fri, 03 Aug 2018 05:33:57 PDT (-0700), Christoph Hellwig wrote:
->> On Thu, Aug 02, 2018 at 03:19:49PM -0700, Atish Patra wrote:
->>> On 8/2/18 4:50 AM, Christoph Hellwig wrote:
->>>> From: Palmer Dabbelt <palmer@sifive.com>
->>>>
->>>> Follow the updated DT specs and read the timebase-frequency from the
->>>> CPU 0 node.
->>>>
->>>
->>> However, the DT in the HighFive Unleashed has the entry at the wrong place.
->>>
->>> Even the example in github also at wrong place.
->>> https://github.com/riscv/riscv-device-tree-doc/pull/8/commits/2461d481329c55005fcbe684f0d6bdb3b7f0a432
->>>
->>> DT should be consistent between Documentation and the one in the hardware.
->>> I can fix them in bbl & submit a bbl patch. But I am not sure if that's an
->>> acceptable way to do it.
->>
->> I'll need to have comments from Palmer and/or someone else at SiFive
->> here.  Personally I really don't care where we document the timebase,
->> as this patch supports both locations anywhere.  For now I'll just update
->> the commit log to state that more explicitly.
+On 7.8.2018 17:54, Kieran Bingham wrote:
+Hi Kieran,
+> The reg-names property in the documentation is missing an '='. Add it.
 > 
-> You're welcome to submit a BBL patch to make this all match, but from my
-> understanding of the device tree spec putting timebase-frequency in either
-> place should be legal so it's not a critical fix.  That said, it's better to
-> have them match than not match.
+> Fixes: 9feb786876c7 ("media: dt-bindings: media: adv7604: Extend
+> bindings to allow specifying slave map addresses")
 > 
 
-ok. I will add it my TODO list as a low priority task. Following DT 
-entries can be fixed for now.
+"dt-bindings: media: " is preferred for the subject.
 
-1. timebase-frequency
-2. next-level-cache
+I think you should also add device tree maintainers to the recipients.
 
-Regards,
-Atish
+Best regards,
+Michal
+
+> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> ---
+>   Documentation/devicetree/bindings/media/i2c/adv7604.txt | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> index dcf57e7c60eb..b3e688b77a38 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> @@ -66,7 +66,7 @@ Example:
+>   		 * other maps will retain their default addresses.
+>   		 */
+>   		reg = <0x4c>, <0x66>;
+> -		reg-names "main", "edid";
+> +		reg-names = "main", "edid";
+>   
+>   		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+>   		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> 
