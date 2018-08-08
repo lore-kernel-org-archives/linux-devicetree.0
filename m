@@ -1,48 +1,42 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt: bindings: lm3697: Add bindings for lm3697
- driver
-Date: Wed, 8 Aug 2018 11:52:12 +0200
-Message-ID: <9908f71b-0881-8aca-9e59-009eecdb598c@gmail.com>
-References: <20180807160442.8937-1-dmurphy@ti.com>
- <5b8f8622-a5a5-4c54-c1ab-334db75dce83@ysoft.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v4 3/6] regmap: Add regmap_noinc_read API [UNSCANNED]
+Date: Wed, 8 Aug 2018 10:59:05 +0100
+Message-ID: <20180808095905.GG32322@imbe.wolfsonmicro.main>
+References: <1533557087-10401-1-git-send-email-stefan.popa@analog.com>
+ <1533557087-10401-4-git-send-email-stefan.popa@analog.com>
+ <20180806143901.GP2414@sirena.org.uk>
+ <1533569985.11050.9.camel@analog.com>
+ <20180806160402.GR2414@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5b8f8622-a5a5-4c54-c1ab-334db75dce83@ysoft.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180806160402.GR2414@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jic23@kernel.org" <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "leonard.crestez@intel.com" <leonard.crestez@intel.com>, davem@davemlo
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal.
+On Mon, Aug 06, 2018 at 05:04:02PM +0100, Mark Brown wrote:
+> On Mon, Aug 06, 2018 at 03:39:53PM +0000, Popa, Stefan Serban wrote:
+> > On Lu, 2018-08-06 at 15:39 +0100, Mark Brown wrote:
+> 
+> > > I suggested having an explicit operation to check if a register supports
+> > > this mode of operation when I reviewed an earlier version, I didn't
+> > > notice a reply on that?
+> 
+> > Sorry, I got confused about what needs to be done. Should I add a new field
+> > to the regmap_config struct which will be checked during the function call?
+> > Something like can_multi_write? How do you suggest it should be called? Is
+> > readable_noinc_reg ok?
+> 
+> Like I said last time I'd suggest making it more like the readable and
+> volatile checks - I'm fairly sure I've seen devices that don't
+> autoincrement only for some registers.
 
-Thanks for the heads-up.
-"dt-" prefix is indeed more preferred than "dt: ".
+I can confirm I have seen hardware that autoincrements for some
+registers and not for others.
 
-Dan - I will fix it by myself, no need to resend.
-
-Best regards,
-Jacek Anaszewski
-
-On 08/08/2018 09:56 AM, Michal VokÃ¡Ä wrote:
-> On 7.8.2018 18:04, Dan Murphy wrote:
->> Add the device tree bindings for the lm3697
->> led driver for backlighting and display.
-> 
-> Hi Dan,
-> it seems like you missed to fix part of the subject as Jacek suggested.
-> 
-> I think it should be: "dt-bindings: leds: Add bindings for lm3697 driver"
-> 
-> Best regards,
-> Michal
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>
->> v2 - Fixed subject and patch commit message -
->> https://lore.kernel.org/patchwork/patch/971326/
-> 
-> 
+Thanks,
+Charles
