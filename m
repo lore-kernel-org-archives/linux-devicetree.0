@@ -1,103 +1,75 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 6/8] dt-bindings: interrupt-controller: RISC-V PLIC documentation
-Date: Wed, 8 Aug 2018 08:29:50 -0600
-Message-ID: <CAL_JsqKKCPhb1um_+68ya0ng_v2tSb5O+-8RQPqx7Od3sJ4FuA@mail.gmail.com>
-References: <20180804082319.5711-1-hch@lst.de> <20180804082319.5711-7-hch@lst.de>
+From: Mikko Perttunen <cyndis@kapsi.fi>
+Subject: Re: [PATCH v3 3/8] mailbox: Add transmit done by blocking option
+Date: Wed, 8 Aug 2018 17:34:12 +0300
+Message-ID: <b5a91f9e-c3ff-371c-d355-4a5e8a147796@kapsi.fi>
+References: <20180702114033.15654-1-mperttunen@nvidia.com>
+ <20180702114033.15654-4-mperttunen@nvidia.com>
+ <CABb+yY0_dKC_cYFwwb-aeRgrx=sjv=8VLP=C6DJEecFf=v+mkQ@mail.gmail.com>
+ <907bac36-0c54-8f38-0f5e-f59196d414c6@kapsi.fi>
+ <afc8a305-79ea-2194-0af0-919bbb8f675e@kapsi.fi>
+ <CABb+yY2mpNV186=M2anmZANgMOra4JM7ybyUT4yCxhqAG6-AZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180804082319.5711-7-hch@lst.de>
+In-Reply-To: <CABb+yY2mpNV186=M2anmZANgMOra4JM7ybyUT4yCxhqAG6-AZg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Anup Patel <anup@brainfault.org>, atish.patra@wdc.com, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mikko Perttunen <mperttunen@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Devicetree List <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, ", linux-arm-kernel"@lists.infradead.org", linux-arm-kernel"@lists.infradead.org, linux-mediatek@lists.infradead.orgsrv_heupstream <linux-mediatek@lists.infradead.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 4, 2018 at 2:23 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> From: Palmer Dabbelt <palmer@dabbelt.com>
 
-Version numbers on the individual patches would be nice...
 
-> This patch adds documentation for the platform-level interrupt
-> controller (PLIC) found in all RISC-V systems.  This interrupt
-> controller routes interrupts from all the devices in the system to each
-> hart-local interrupt controller.
->
-> Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
-> want to change how we're specifying holes in the hart list.
->
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> [hch: various fixes and updates]
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  .../interrupt-controller/sifive,plic0.txt     | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
-> new file mode 100644
-> index 000000000000..bbfa61cf8d3f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
-> @@ -0,0 +1,57 @@
-> +SiFive Platform-Level Interrupt Controller (PLIC)
-> +-------------------------------------------------
-> +
-> +SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
-> +(PLIC) high-level specification in the RISC-V Privileged Architecture
-> +specification.  The PLIC connects all external interrupts in the system to all
-> +hart contexts in the system, via the external interrupt source in each hart.
-> +
-> +A hart context is a privilege mode in a hardware execution thread.  For example,
-> +in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
-> +privilege modes per hart; machine mode and supervisor mode.
-> +
-> +Each interrupt can be enabled on per-context basis.  Any context can claim
-> +a pending enabled interrupt and then release it once it has been handled.
-> +
-> +Each interrupt has a configurable priority.  Higher priority interrupts are
-> +serviced first.  Each context can specify a priority threshold. Interrupts
-> +with priority below this threshold will not cause the PLIC to raise its
-> +interrupt line leading to the context.
-> +
-> +While the PLIC supports both edge-triggered and level-triggered interrupts,
-> +interrupt handlers are oblivious to this distinction and therefore it is not
-> +specified in the PLIC device-tree binding.
-> +
-> +While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
-> +"sifive,plic0" device is a concrete implementation of the PLIC that contains a
-> +specific memory layout, which is documented in chapter 8 of the SiFive U5
-> +Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
-> +
-> +Required properties:
-> +- compatible : "sifive,plic0".
-> +- #address-cells : should be <0>.
-> +- #interrupt-cells : should be <1>.
-> +- interrupt-controller : Identifies the node as an interrupt controller.
-> +- reg : Should contain 1 register range (address and length).
-> +- interrupts-extended : Specifies which contexts are connected to the PLIC,
-> +  with "-1" specifying that a context is not present.  The nodes pointed
-> +  to should be "riscv" HART nodes, or eventually be parented by such nodes.
-> +- riscv,ndev: Specifies how many external interrupts are supported by
-> +  this controller.
-> +
-> +Example:
-> +
-> +       plic: interrupt-controller@c000000 {
-> +               #address-cells = <0>;
-> +               #interrupt-cells = <1>;
-> +               compatible = "riscv,plic0";
-> +               interrupt-controller;
-> +               interrupts-extended = <
-> +                       &cpu0-intc 11
-> +                       &cpu1-intc 11 &cpu1-intc 9
-> +                       &cpu2-intc 11 &cpu2-intc 9
-> +                       &cpu3-intc 11 &cpu3-intc 9
-> +                       &cpu4-intc 11 &cpu4-intc 9>;
+On 08/08/2018 05:10 PM, Jassi Brar wrote:
+> On Wed, Aug 8, 2018 at 5:08 PM, Mikko Perttunen <cyndis@kapsi.fi> wrote:
+>>
+>>
+>> On 04.08.2018 13:45, Mikko Perttunen wrote:
+>>>
+>>> On 08/03/2018 03:54 PM, Jassi Brar wrote:
+>>>>
+>>>> On Mon, Jul 2, 2018 at 5:10 PM, Mikko Perttunen <mperttunen@nvidia.com>
+>>>> wrote:
+>>>>>
+>>>>> Add a new TXDONE option, TXDONE_BY_BLOCK. With this option, the
+>>>>> send_data function of the mailbox driver is expected to block until
+>>>>> the message has been sent. The new option is used with the Tegra
+>>>>> Combined UART driver to minimize unnecessary overhead when transmitting
+>>>>> data.
+>>>>>
+>>>> 1) TXDONE_BY_BLOCK flag :-
+>>>>           Have you tried setting the flag mbox_chan->mbox_client->tx_block
+>>>> ?
+>>>
+>>>
+>>> No - I suppose I should have done that. I'm a bit concerned about overhead
+>>> as send_data may be called thousands of times per second, so I tried to make
+>>> it as close as possible to the downstream driver that just pokes the mailbox
+>>> register directly.
+>>
+>>
+>> I tried using polling in the mailbox framework. Some printing is done from
+>> atomic context so it seems tx_block cannot be used -
+>> wait_for_completion_timeout understandably does not work in atomic context.
+>> I also tried without tx_block, in which case I got some horribly garbled
+>> output, but "Try increasing MBOX_TX_QUEUE_LEN" was readable there.
+>>
+>> Any opinions?
+>>
+> The problems arise because your hardware (SM) supports TXDONE_BY_POLL,
+> but your client drives it by TXDONE_BY_ACK because the older DB
+> channels are so.
+> 
+> Please populate SM channels as a separate controller than DB.
+> The DB controller, as is, run by ACK method.
+> The SM controller should be run by polling, i.e, set txdone_poll =
+> true and the poll period small enough. The virtual tty client driver
+> should be able to safely set tx_block from appropriate context.
+> 
 
-I'm confused why this is still here if you are dropping the cpu intc binding?
+Sorry, I should have clarified that I already split up the controllers. 
+The SM controller has txdone_poll = true. I didn't adjust txpoll_period 
+so I guess it's zero.
 
-I also noticed the cpu binding refers to "riscv,cpu-intc" as well.
-That needs to be fixed too if there's a change.
-
-Rob
+Mikko
