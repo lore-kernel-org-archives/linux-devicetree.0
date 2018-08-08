@@ -1,75 +1,50 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 6/8] dt-bindings: interrupt-controller: RISC-V PLIC documentation
-Date: Wed, 8 Aug 2018 10:15:58 -0600
-Message-ID: <CAL_JsqKgawQA5V2W1e9QFb_Ri+Aka-08WizeSD9kdxyBdcwpEQ@mail.gmail.com>
-References: <20180804082319.5711-1-hch@lst.de> <20180804082319.5711-7-hch@lst.de>
- <CAL_JsqKKCPhb1um_+68ya0ng_v2tSb5O+-8RQPqx7Od3sJ4FuA@mail.gmail.com> <20180808150448.GA31785@lst.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: [PATCH v2] dt-bindings: media: adv7604: Fix slave map documentation
+Date: Wed,  8 Aug 2018 17:33:51 +0100
+Message-ID: <20180808163351.28852-1-kieran.bingham@ideasonboard.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808150448.GA31785@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>, Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Anup Patel <anup@brainfault.org>, atish.patra@wdc.com, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
+To: mchehab@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 8, 2018 at 8:59 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Wed, Aug 08, 2018 at 08:29:50AM -0600, Rob Herring wrote:
-> > Version numbers on the individual patches would be nice...
->
-> We've never done these in the subsystems I'm involved with.  Too
-> much clutter in the subject lines for information that is easily
-> deductable.
+The reg-names property in the documentation is missing an '='. Add it.
 
-Unfortunately not in Gmail which doesn't thread properly. But
-patchwork also provides the version tag which I use to sort my
-reviews.
+Fixes: 9feb786876c7 ("media: dt-bindings: media: adv7604: Extend
+bindings to allow specifying slave map addresses")
 
-> > > +Example:
-> > > +
-> > > +       plic: interrupt-controller@c000000 {
-> > > +               #address-cells = <0>;
-> > > +               #interrupt-cells = <1>;
-> > > +               compatible = "riscv,plic0";
-> > > +               interrupt-controller;
-> > > +               interrupts-extended = <
-> > > +                       &cpu0-intc 11
-> > > +                       &cpu1-intc 11 &cpu1-intc 9
-> > > +                       &cpu2-intc 11 &cpu2-intc 9
-> > > +                       &cpu3-intc 11 &cpu3-intc 9
-> > > +                       &cpu4-intc 11 &cpu4-intc 9>;
-> >
-> > I'm confused why this is still here if you are dropping the cpu intc binding?
->
-> We need some parent that identifies the core (hart in RISC-V terminology).
-> The way the code now works is that it just walks up the parent chain
-> until it finds a CPU node, so it either accepts the legacy intc node
-> inbetween, or it accepts the cpu node directly as the intc node is pointless.
->
-> I guess for the documentation we should instead just point to the
-> "riscv" cpu nodes instead?
+Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 
-That's not valid and dtc will tell you that. 'interrupts' (via
-interrupt-parent) or 'interrupts-extended' has to point to an
-'interrupt-controller' node. I guess you could make the cpu nodes
-interrupt-controllers. That's a bit strange, but I can't think of a
-reason why that wouldn't work.
+---
+v2:
+ - Commit title changed to prefix as "dt-bindings: media:"
 
-Just because the cpu-intc is not made to be an irqchip in the kernel
-doesn't mean it can't still be represented as an interrupt-controller
-in DT. It shouldn't be designed just around how some OS happens to
-implement things.
+If this is collected through a DT tree, I assume therefore this will be
+fine, but if it is to go through the media-tree, please update as
+necessaary to prevent the redundant dual "media:" tagging.
 
-> > I also noticed the cpu binding refers to "riscv,cpu-intc" as well.
-> > That needs to be fixed too if there's a change.
->
-> Only in the examples.  I'd be fine with dropping them, but let's keep
-> that separate from the interrupt support.
+(I'll leave it to the maintainers to decide whose tree thise should go
+through)
 
-You need to sort out how this is all tied together and works because
-right now you are supporting 2 ways and one is undocumented and the
-other is invalid. Changing things later is only going to be more
-painful.
+Thanks
 
-Rob
+Kieran
+
+ Documentation/devicetree/bindings/media/i2c/adv7604.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+index dcf57e7c60eb..b3e688b77a38 100644
+--- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
++++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+@@ -66,7 +66,7 @@ Example:
+ 		 * other maps will retain their default addresses.
+ 		 */
+ 		reg = <0x4c>, <0x66>;
+-		reg-names "main", "edid";
++		reg-names = "main", "edid";
+ 
+ 		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+ 		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+-- 
+2.17.1
