@@ -1,120 +1,81 @@
-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC documentation
-Date: Tue, 07 Aug 2018 19:17:40 -0700 (PDT)
-Message-ID: <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4>
-References: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: simplified RISC-V interrupt and clocksource handling v3
+Date: Tue, 07 Aug 2018 19:23:19 -0700 (PDT)
+Message-ID: <mhng-d7c67842-dff7-4200-bc2e-c3eed1a0a7bf@palmer-si-x1c4>
+References: <20180804082319.5711-1-hch@lst.de>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
+In-Reply-To: <20180804082319.5711-1-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
+To: Christoph Hellwig <hch@lst.de>, robh+dt@kernel.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, anup@brainfault.org, atish.patra@wdc.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 06 Aug 2018 13:59:48 PDT (-0700), robh+dt@kernel.org wrote:
-> On Thu, Aug 2, 2018 at 4:08 PM Atish Patra <atish.patra@wdc.com> wrote:
->>
->> On 8/2/18 4:50 AM, Christoph Hellwig wrote:
->> > From: Palmer Dabbelt <palmer@dabbelt.com>
->> >
->> > This patch adds documentation for the platform-level interrupt
->> > controller (PLIC) found in all RISC-V systems.  This interrupt
->> > controller routes interrupts from all the devices in the system to each
->> > hart-local interrupt controller.
->> >
->> > Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
->> > want to change how we're specifying holes in the hart list.
->> >
->> > Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
->> > [hch: various fixes and updates]
->> > Signed-off-by: Christoph Hellwig <hch@lst.de>
->> > ---
->> >   .../interrupt-controller/sifive,plic0.txt     | 57 +++++++++++++++++++
->> >   1 file changed, 57 insertions(+)
->> >   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
->> > new file mode 100644
->> > index 000000000000..c756cd208a93
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
->> > @@ -0,0 +1,57 @@
->> > +SiFive Platform-Level Interrupt Controller (PLIC)
->> > +-------------------------------------------------
->> > +
->> > +SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
->> > +(PLIC) high-level specification in the RISC-V Privileged Architecture
->> > +specification.  The PLIC connects all external interrupts in the system to all
->> > +hart contexts in the system, via the external interrupt source in each hart.
->> > +
->> > +A hart context is a privilege mode in a hardware execution thread.  For example,
->> > +in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
->> > +privilege modes per hart; machine mode and supervisor mode.
->> > +
->> > +Each interrupt can be enabled on per-context basis. Any context can claim
->> > +a pending enabled interrupt and then release it once it has been handled.
->> > +
->> > +Each interrupt has a configurable priority. Higher priority interrupts are
->> > +serviced first. Each context can specify a priority threshold. Interrupts
->> > +with priority below this threshold will not cause the PLIC to raise its
->> > +interrupt line leading to the context.
->> > +
->> > +While the PLIC supports both edge-triggered and level-triggered interrupts,
->> > +interrupt handlers are oblivious to this distinction and therefore it is not
->> > +specified in the PLIC device-tree binding.
->> > +
->> > +While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
->> > +"sifive,plic0" device is a concrete implementation of the PLIC that contains a
->> > +specific memory layout, which is documented in chapter 8 of the SiFive U5
->> > +Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
->> > +
->> > +Required properties:
->> > +- compatible : "sifive,plic0"
-
-I think there was a thread bouncing around somewhere where decided to pick the 
-official name of the compatible string to be "sifive,plic-1.0".  The idea here 
-is that the PLIC is compatible across all of SiFive's current implementations, 
-but there's some limitations in the memory map that will probably cause us to 
-spin a version 2 at some point so we want major version number.  The minor 
-number is just in case we find some errata in the PLIC.
-
->> > +- #address-cells : should be <0>
->> > +- #interrupt-cells : should be <1>
->> > +- interrupt-controller : Identifies the node as an interrupt controller
->> > +- reg : Should contain 1 register range (address and length)
->>
->> The one in the real device tree has two entries.
->> reg = <0x00000000 0x0c000000 0x00000000 0x04000000>;
->>
->> Is it intentional or just incorrect entry left over from earlier days?
+On Sat, 04 Aug 2018 01:23:11 PDT (-0700), Christoph Hellwig wrote:
+> This series tries adds support for interrupt handling and timers
+> for the RISC-V architecture.
 >
->> > +             reg = <0xc000000 0x4000000>;
+> The basic per-hart interrupt handling implemented by the scause
+> and sie CSRs is extremely simple and implemented directly in
+> arch/riscv/kernel/irq.c.  In addition there is a irqchip driver
+> for the PLIC external interrupt controller, which is called through
+> the set_handle_irq API, and a clocksource driver that gets its
+> timer interrupt directly from the low-level interrupt handling.
 >
-> Looks to me like one has #size-cells and #address-cells set to 2 and
-> the example is using 1.
+> Compared to previous iterations this version does not try to use an
+> irqchip driver for the low-level interrupt handling.  This saves
+> a couple indirect calls and an additional read of the scause CSR
+> in the hot path, makes the code much simpler and last but not least
+> avoid the dependency on a device tree for a mandatory architectural
+> feature.
+>
+> A git tree is available here (contains a few more patches before
+> the ones in this series)
+>
+>     git://git.infradead.org/users/hch/riscv.git riscv-irq-simple.3
+>
+> Gitweb:
+>
+>     http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple.3
+>
+> Changes since v2:
+>  - actually use SEIE instead of STIE in the plic driver
+>  - rename the default compat string for the plic to sifive,u5-plic
+>  - various spelling fixes
+>  - drop a superflous derefence in the plic driver that is taken care of
+>    by the following loop
+>  - drop the patch to document the enable method - not relevant for the
+>    rest of the series
+>  - drop the patches for the per-hart timebase frequency - not relevant
+>    for the rest of the series.
+>  - use riscv_of_processor_hart in the timer driver
+>
+> Changes since v1:
+>  - rename the plic driver to irq-sifive-plic
+>  - switch to a default compatible of sifive,plic0 (still supporting the
+>    riscv,plic0 name for compatibility)
+>  - add a reference for the SiFive PLIC register layout
+>  - fix plic_toggle addressing for large numbers of hwirqs
+>  - remove the call to ack_bad_irq
+>  - use a raw spinlock for plic_toggle_lock
+>  - use the irq_desc cpumask in the plic enable/disable methods
+>  - add back OF contexid parsing in the plic driver
+>  - don't allow COMPILE_TEST builds of the clocksource driver, as it
+>    depends on <asm/sbi.h>
+>  - default the clocksource driver to y
+>  - clean up naming in the clocksource driver
+>  - remove the MINDELTA and MAXDELTA #defines
+>  - various DT binding fixes
 
-Yes.  For some background on how this works: we have a hardware generator that 
-has a tree-of-busses abstraction, and each device is attached to some point on 
-that tree.  When a device gets attached to the bus, we also generate a device 
-tree entry.  For whatever system I generated the example PLIC device tree entry 
-from, it must have been attached to a bus with addresses of 32 bits or less, 
-which resulted in #address-cells and #size-cells being 1.
+Thanks!  Modulo the one device tree issue I replied to in patch 3 this looks 
+great!  We've already gotten the ACKs to take this through the RISC-V tree, so 
+I'm going to put this along with the queued RISC-V patches on our for-next 
+branch, including my proposed change for "sifive,plic-1.0" but leaving the 
+device tree bindings with #{address,size}-cells=1.
 
-Christoph has a HiFive Unleashed, which has a fu540-c000 on it, which is 
-probably not what I generated as an example -- the fu540-c000 is a complicated 
-configuration, when I mess around with the hardware I tend to use simple ones 
-as I'm not really a hardware guy.  I suppose the bus that the PLIC is hanging 
-off on the fu540-c000 has addresses wider than 32 bits.  This makes sense, as 
-the machine has 8GiB of memory and the PLIC is on a bus that's closer to the 
-core than the DRAM is, so it'd need at least enough address bits to fit 8GiB.
+We can always change this, but I'd like to get this out so people can start 
+playing with it earlier rather than later.
 
-Is the inconsistency a problem?  I generally write device tree handling code to 
-just respect whatever #*-fields says and don't consider that part of the 
-specification of the binding.  I don't mind changing the example to have 
-#size-fields and #address-fields to be 2, but since it's not wrong I also don't 
-see any reason to change it.  We do have 32-bit devices with PLICs, and while 
-they're not Linux-capable devices we're trying to adopt the Linux device tree 
-bindings through the rest of the RISC-V software ecosystem as they tend to be 
-pretty well thought out.
+Thanks to everyone for all the help!
