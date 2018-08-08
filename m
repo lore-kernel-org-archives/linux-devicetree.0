@@ -1,38 +1,55 @@
-From: Tuomas Tynkkynen <tuomas@tuxera.com>
-Subject: [PATCH 2/2] arm64: dts: sunxi: Don't use cd-inverted in sun50i-a64-pinebook
-Date: Wed, 8 Aug 2018 02:25:54 +0300
-Message-ID: <20180807232554.16825-2-tuomas@tuxera.com>
-References: <20180807232554.16825-1-tuomas@tuxera.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v2 2/4] phy: socionext: add USB3 PHY driver for UniPhier SoC
+Date: Wed, 08 Aug 2018 09:41:37 +0900
+Message-ID: <20180808094136.5509.4A936039@socionext.com>
+References: <1533290045-18969-1-git-send-email-hayashi.kunihiko@socionext.com> <1533290045-18969-3-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807232554.16825-1-tuomas@tuxera.com>
+In-Reply-To: <1533290045-18969-3-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tuomas Tynkkynen <tuomas@tuxera.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Another user of cd-inverted seems to have crept in. Switch it away from
-cd-inverted to be consistent with other sunxi boards.
+On Fri, 3 Aug 2018 18:54:03 +0900 <hayashi.kunihiko@socionext.com> wrote:
 
-Signed-off-by: Tuomas Tynkkynen <tuomas@tuxera.com>
+> Add a driver for PHY interface built into USB3 controller
+> implemented in UniPhier SoCs.
+> This driver supports High-Speed PHY and Super-Speed PHY.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
+> Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> ---
+>  drivers/phy/Kconfig                         |   1 +
+>  drivers/phy/Makefile                        |   1 +
+>  drivers/phy/socionext/Kconfig               |  12 +
+>  drivers/phy/socionext/Makefile              |   6 +
+>  drivers/phy/socionext/phy-uniphier-usb3hs.c | 423 ++++++++++++++++++++++++++++
+>  drivers/phy/socionext/phy-uniphier-usb3ss.c | 350 +++++++++++++++++++++++
+>  6 files changed, 793 insertions(+)
+>  create mode 100644 drivers/phy/socionext/Kconfig
+>  create mode 100644 drivers/phy/socionext/Makefile
+>  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3hs.c
+>  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3ss.c
+
+[snip]
+
+> +static void uniphier_u3ssphy_testio_write(struct uniphier_u3ssphy_priv *priv,
+> +					  u32 data)
+> +{
+> +	/* need to read TESTO twice after accessing TESTI */
+> +	writel(data, priv->base + SSPHY_TESTI);
+> +	readl(priv->base + SSPHY_TESTI);
+> +	readl(priv->base + SSPHY_TESTI);
+
+I made a mistake here. The comment and the code are inconsistent.
+I'll fix it next.
+
+Thanks,
+
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index 897e60cbe38d..4b8fe453bacd 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -80,8 +80,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
- 	vmmc-supply = <&reg_dcdc1>;
--	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
--	cd-inverted;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	bus-width = <4>;
- 	status = "okay";
--- 
-2.16.3
+Best Regards,
+Kunihiko Hayashi
