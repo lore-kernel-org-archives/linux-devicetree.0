@@ -1,65 +1,54 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] of/fdt: Remove PPC32 longtrail hack in memory scan
-Date: Wed, 8 Aug 2018 11:29:32 +0200
-Message-ID: <CAMuHMdVPmDG5m4C5=Y8yJYdwnWmXJJqQO1Hxa-3oncou9WCPzw@mail.gmail.com>
-References: <20180727053555.26596-1-mpe@ellerman.id.au>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] spi: sprd: Add SPI driver for Spreadtrum SC9860
+Date: Wed, 8 Aug 2018 10:31:48 +0100
+Message-ID: <20180808093148.GA9346@sirena.org.uk>
+References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
+ <99befd2badc4dffb59662fca1e11d79f18b64755.1533638405.git.baolin.wang@linaro.org>
+ <20180807142408.GB7958@sirena.org.uk>
+ <CAMz4kuL2=7mNHLoTg7hjA4NjfGgNQ-mBJBSE8uMb0oqwnU1=Yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20180727053555.26596-1-mpe@ellerman.id.au>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dominik Klein <dominik.klein@gmx.com>, Linuxppc-dev <linuxppc-dev@ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMz4kuL2=7mNHLoTg7hjA4NjfGgNQ-mBJBSE8uMb0oqwnU1=Yg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, lanqing.liu@spreadtrum.com, linux-spi@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
 
-On Fri, Jul 27, 2018 at 7:36 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
-> When the OF code was originally made common by Grant in commit
-> 51975db0b733 ("of/flattree: merge early_init_dt_scan_memory() common
-> code") (Feb 2010), the common code inherited a hack to handle
-> PPC "longtrail" machines, which had a "memory@0" node with no
-> device_type.
->
-> That check was then made to only apply to PPC32 in b44aa25d20e2 ("of:
-> Handle memory@0 node on PPC32 only") (May 2014).
->
-> But according to Paul Mackerras the "longtrail" machines are long
-> dead, if they were ever seen in the wild at all. If someone does still
-> have one, we can handle this firmware wart in powerpc platform code.
->
-> So remove the hack once and for all.
->
-> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for your patch!
+On Wed, Aug 08, 2018 at 10:45:33AM +0800, Baolin Wang wrote:
+> On 7 August 2018 at 22:24, Mark Brown <broonie@kernel.org> wrote:
+> > On Tue, Aug 07, 2018 at 06:43:38PM +0800, Baolin Wang wrote:
 
-My LongTrail died in 2004.  I haven't heard since even longer about active
-use from any of the other people I know that had one.
+> >> +     bits_per_word = bits_per_word > 16 ? round_up(bits_per_word, 16) :
+> >> +             round_up(bits_per_word, 8);
 
-So:
+> > Please
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Sorry I did not get your points here, could you elaborate on?
 
-However, recently Dominik (CC) send me an enquiry about it, so perhaps
-he is a happy user?
+Sorry, missed the actual comment there - use normal if statements rather
+than the ternery operator, it's easier to read.
 
-Gr{oetje,eeting}s,
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltquIEACgkQJNaLcl1U
+h9D8Lwf+J5prKQ102tAnrwIbX+bnTbGLWbzHy/xe9I5LurjAiiD71625mnUJpUa6
+wySqLkDVivSopvk0Kep3i6i1M7CGRHHJucqFNe631u8ZahigQ9yE9CM8IVQxkqEY
+vfg6FCLyGxqGk5BCbjOHnqHDznkCsKVLYRPyp5QrPo8OxX1IvjZASba2Unksiyov
+ivsRL8LCBFHtzynR07kIvjMDYkulC6E0H2VsQE8fNAbrOfTd+WD4Ht8L2gj0PY+t
+GWBUX5H+wQmYNo+aSrwartUsw9SpHF8/O6yk1X9nIOlOEWC64FF3YGw87EcP4HOM
+XA7NKASPkS8NEYZR3pDoOR3OeyViqw==
+=rz+7
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--UlVJffcvxoiEqYs2--
