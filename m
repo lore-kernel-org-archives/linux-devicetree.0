@@ -1,47 +1,61 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller documentation
-Date: Wed, 8 Aug 2018 18:35:28 +0800
-Message-ID: <CAMz4kuKZHxYiJaMHnqdAGth8XkfGnq3-Tsfc59cGjsHQHZaY7A@mail.gmail.com>
-References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
- <20180807134121.GA7958@sirena.org.uk> <CAMz4kuJsyKv_fvrqRR3pdfKsLVy53Uj0KX+m_9jLxpcVcMvs9g@mail.gmail.com>
- <20180808095025.GB9346@sirena.org.uk>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun8i: r40/v40: rewrite BPi
+ M2 Berry DTS to rebase on M2 Ultra
+Date: Wed, 08 Aug 2018 18:36:56 +0800
+Message-ID: <dc8a28bcfbe082158bac5b097badb3ddf0f51ce8.camel@aosc.io>
+References: <20180724163655.61365-1-icenowy@aosc.io>
+         <20180726124119.dwne2sncws2p3sdi@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808095025.GB9346@sirena.org.uk>
+In-Reply-To: <20180726124119.dwne2sncws2p3sdi@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, lanqing.liu@spreadtrum.com, linux-spi@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: maxime.ripard@bootlin.com
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 8 August 2018 at 17:50, Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Aug 08, 2018 at 10:26:42AM +0800, Baolin Wang wrote:
->
->> Sorry for confusing. Let me try to explain it explicitly.
->> We can set the word size (bits_per_word) for each transmission, for
->> our SPI controller,  after every word size transmission, we need one
->> interval time (hardware automatically) to make sure the slave has
->> enough time to receive the whole data.
->
-> OK, so it's an inter word delay.  Some other controllers definitely have
-> the same feature.
->
->> Yes, I agree we should configure it at runtime by the device, but we
->> did not find one member to use in 'struct spi_transfer', we just find
->> one similar 'delay_usecs' member in 'struct spi_transfer' but not
->> same. We can use  'delay_usecs' to set our hardware interval value,
->> but we should clean it when transfer is done, since we do not need to
->> delay after the transfer in spi_transfer_one _message(). Or can we add
->> one new member maybe named 'word_interval' to indicate the interval
->> time between word size transmission?
->
-> Right, I don't think we added this yet (if we did I can't see it).  I'd
-> add a new field to spi_transfer for this, then other controllers with
-> the same support can implement it as well and drivers can start using
-> it too.
+在 2018-07-26四的 14:41 +0200，Maxime Ripard写道：
+> On Wed, Jul 25, 2018 at 12:36:55AM +0800, Icenowy Zheng wrote:
+> > Banana Pi designs the BPi M2 Berry board to be software compatible
+> > with
+> > BPi M2 Ultra,
+> 
+> Do you have a reference for this?
+> 
+> > so it's based on M2 Ultra with some function cuts, including:
+> > 
+> > - 2048MiB DRAM -> 1024MiB (this should be proceed by the
+> > bootloader);
+> > - dropped a LED;
+> > - dropped eMMC;
+> > - dropped USB2 and connect USB1 to a 4-port HUB.
+> 
+> Is it the exhaustive list?
 
-OK. So I will name the new filed as 'word_delay', is it OK for you?
+I have asked Mikey from Sinovoip, and he has agreed this.
 
--- 
-Baolin Wang
-Best Regards
+Here's a list provided by him, which covers some things I forgot:
+- 2GiB -> 1GiB
+- no eMMC
+- no onboard microphone
+- no IR
+- no charging (and power jack to USB)
+- USB change
+- one less LED
+
+Should I add this to the device tree's comment?
+
+> 
+> I'm a bit reluctant to merge that kind of patches usually, since that
+> would also imply that each time someone will commit something to the
+> M2-Ultra, it would automatically apply to the M2-Berry, without any
+> easy way to tell and / or test.
+> 
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
