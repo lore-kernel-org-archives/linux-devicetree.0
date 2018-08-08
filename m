@@ -1,124 +1,69 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH 1/4] dt-bindings: reset: Add PDC reset binding for SDM845
- SoCs
-Date: Wed, 8 Aug 2018 16:48:55 -0600
-Message-ID: <20180808224854.GB26960@jcrouse-lnx.qualcomm.com>
-References: <20180727152811.15258-1-sibis@codeaurora.org>
- <1533026547.3444.4.camel@pengutronix.de>
- <28f34ddf-03b2-0baa-c04f-15e546ef3f75@codeaurora.org>
- <20180807181659.GA20659@rob-hp-laptop>
- <ca959e6f-b1b0-8fdf-2c40-0b49a4cf06e6@codeaurora.org>
- <20180808213723.GA26960@jcrouse-lnx.qualcomm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] dt-bindings: media: adv748x: Document secondary addresses
+Date: Thu, 09 Aug 2018 01:59:29 +0300
+Message-ID: <4299631.dFueHHkrC4@avalon>
+References: <20180808173128.6400-1-kieran.bingham@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180808213723.GA26960@jcrouse-lnx.qualcomm.com>
+In-Reply-To: <20180808173128.6400-1-kieran.bingham@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org, ilina@codeaurora.org
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: mchehab@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2018 at 03:37:24PM -0600, Jordan Crouse wrote:
-> On Wed, Aug 08, 2018 at 09:14:05PM +0530, Sibi Sankar wrote:
-> > Hi Rob,
-> > Thanks for the review
-> > 
-> > On 08/07/2018 11:46 PM, Rob Herring wrote:
-> > >On Tue, Jul 31, 2018 at 06:27:24PM +0530, Sibi S wrote:
-> > >>Hi Philipp,
-> > >>Thanks for the review!
-> > >>
-> > >>On 07/31/2018 02:12 PM, Philipp Zabel wrote:
-> > >>>Hi Sibi,
-> > >>>
-> > >>>On Fri, 2018-07-27 at 20:58 +0530, Sibi Sankar wrote:
-> > >>>>Add SDM845 PDC (Power Domain Controller) reset controller binding
-> > >>>>
-> > >>>>Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > >>>>---
-> > >>>>   .../bindings/reset/qcom,pdc-reset.txt         | 52 +++++++++++++++++++
-> > >>>>   include/dt-bindings/reset/qcom,sdm845-pdc.h   | 20 +++++++
-> > >>>>   2 files changed, 72 insertions(+)
-> > >>>>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> > >>>>   create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
-> > >>>>
-> > >>>>diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> > >>>>new file mode 100644
-> > >>>>index 000000000000..85e159962e08
-> > >>>>--- /dev/null
-> > >>>>+++ b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> > >>>>@@ -0,0 +1,52 @@
-> > >>>>+PDC Reset Controller
-> > >>>>+======================================
-> > >>>>+
-> > >>>>+This binding describes a reset-controller found on PDC-Global(Power Domain
-> > >>>>+Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
-> > >>>>+
-> > >>>>+Required properties:
-> > >>>>+- compatible:
-> > >>>>+	Usage: required
-> > >>>>+	Value type: <string>
-> > >>>>+	Definition: must be:
-> > >>>>+		    "qcom,sdm845-pdc-global"
-> > >>>>+
-> > >>>>+- reg:
-> > >>>>+	Usage: required
-> > >>>>+	Value type: <prop-encoded-array>
-> > >>>>+	Definition: must specify the base address and size of the register
-> > >>>>+	            space.
-> > >>>>+
-> > >>>>+- #reset-cells:
-> > >>>>+	Usage: required
-> > >>>>+	Value type: <uint>
-> > >>>>+	Definition: must be 1; cell entry represents the reset index.
-> > >>>>+
-> > >>>>+Example:
-> > >>>>+
-> > >>>>+pdc_reset: reset-controller@b2e0000 {
-> > >>>
-> > >>>Is this really just a reset controller?
-> > >>>
-> > >>>The name makes it sound like a driver binding to this should also
-> > >>>provide pm_genpd and the binding should probably call this a power-
-> > >>>controller: Documentation/devicetree/bindings/power/power_domain.txt.
-> > >>>
-> > >>
-> > >>The PDC-global reg space which is a part of PDC-wrapper reg space seems
-> > >>to be only used for the reset lines.
-> > >>
-> > >>Couple of other drivers use other parts of the PDC-wrapper reg space:
-> > >>https://patchwork.kernel.org/patch/10223701/ (PDC-Interrupt controller)
-> > >>https://patchwork.kernel.org/patch/10255767/ (GMU-PDC incorrectly tries
-> > >>to occupy the entire pdc-wrapper reg space)
-> > >>
-> > >>since it couldn't be logically mapped into pdc-interrupt driver, it had
-> > >>to be included as a separate reset driver.
-> > >
-> > >You can't have overlapping regions in DT (well, you can because we have
-> > >to work-around existing DTs that do, but you shouldn't).
-> > >
-> > >A single node can be multiple providers such as interrupt controller and
-> > >reset controller. It's an OS problem to split that into multiple
-> > >drivers.
-> > 
-> > There will be no overlaps. Jordan will be changing the dt binding of
-> > gmu_pdc so that there is no overlap I guess. What I meant to say is that
-> > pdc-global is a separate reg-space and currently has no other
-> > functionality other than exposing the reset lines.
-> 
-> Correct - the updated GPU DT will be:
-> 
->   reg = <0x506a000 0x30000>,
->      <0xb280000 0x10000>,
->      <0xb480000, 0x10000>;
->   reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-> 
-> Jordan
+Hi Kieran,
 
-Code change:  https://patchwork.freedesktop.org/patch/243513/
-DT change: https://patchwork.freedesktop.org/patch/243539/
+Thank you for the patch.
 
-Jordan
+On Wednesday, 8 August 2018 20:31:28 EEST Kieran Bingham wrote:
+> The ADV748x supports configurable slave addresses for its I2C pages.
+> Document the page names, and example for setting each of the pages
+> excplicitly.
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> ---
+>  .../devicetree/bindings/media/i2c/adv748x.txt          | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> b/Documentation/devicetree/bindings/media/i2c/adv748x.txt index
+> 21ffb5ed8183..9515d8ad0e31 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> @@ -18,6 +18,11 @@ Optional Properties:
+>  		     "intrq3". All interrupts are optional. The "intrq3" interrupt
+>  		     is only available on the adv7481
+>    - interrupts: Specify the interrupt lines for the ADV748x
+> +  - reg-names : Names of maps with programmable addresses.
+> +		It can contain any map needed a non-default address.
+
+s/can contain any map needed/shall contain all maps needing/
+
+> +		Possible map names are:
+> +		  "main", "dpll", "cp", "hdmi", "edid", "repeater",
+> +		  "infoframe", "cbus", "cec", "sdp", "txa", "txb"
+
+Should you also update the description of the reg property, possibly with the 
+same text as the adv7604 bindings ?
+
+>  The device node must contain one 'port' child node per device input and
+> output port, in accordance with the video interface bindings defined in
+> @@ -47,7 +52,10 @@ Example:
+> 
+>  	video-receiver@70 {
+>  		compatible = "adi,adv7482";
+> -		reg = <0x70>;
+> +		reg = <0x70 0x71 0x72 0x73 0x74 0x75
+> +		       0x60 0x61 0x62 0x63 0x64 0x65>;
+> +		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
+> +			    "infoframe", "cbus", "cec", "sdp", "txa", "txb";
+> 
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+
+Laurent Pinchart
