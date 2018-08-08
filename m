@@ -1,84 +1,146 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 3/4] ARM64: dts: meson-gx: add dmcbus and canvas
- nodes.
-Date: Wed, 08 Aug 2018 10:41:44 +0200
-Message-ID: <3221c65f87f8fd3541e0188186cb0259327cb671.camel@baylibre.com>
-References: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
-         <20180807220011.24436-4-maxi.jourdan@wanadoo.fr>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 1/2] PM / devfreq: Generic CPU frequency to device
+ frequency mapping governor
+Date: Wed, 8 Aug 2018 09:47:54 +0100
+Message-ID: <20180808084754.GB25416@e107155-lin>
+References: <1533171465-25508-1-git-send-email-skannan@codeaurora.org>
+ <20180807164114.GA12587@rob-hp-laptop>
+ <496ac47a3c78f37655b60841fba7494c@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807220011.24436-4-maxi.jourdan@wanadoo.fr>
+Content-Disposition: inline
+In-Reply-To: <496ac47a3c78f37655b60841fba7494c@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Kevin Hilman <khilman@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: skannan@codeaurora.org
+Cc: Rob Herring <robh@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, georgi.djakov@linaro.org, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-08-08 at 00:00 +0200, Maxime Jourdan wrote:
-> Wrap the canvas node in a syscon node.
+On Tue, Aug 07, 2018 at 12:37:07PM -0700, skannan@codeaurora.org wrote:
+> On 2018-08-07 09:41, Rob Herring wrote:
+> >On Wed, Aug 01, 2018 at 05:57:41PM -0700, Saravana Kannan wrote:
+> >>Many CPU architectures have caches that can scale independent of the
+> >>CPUs.
+> >>Frequency scaling of the caches is necessary to make sure the cache is
+> >>not
+> >>a performance bottleneck that leads to poor performance and power. The
+> >>same
+> >>idea applies for RAM/DDR.
+> >>
+> >>To achieve this, this patch adds a generic devfreq governor that takes
+> >>the
+> >>current frequency of each CPU frequency domain and then adjusts the
+> >>frequency of the cache (or any devfreq device) based on the frequency of
+> >>the CPUs. It listens to CPU frequency transition notifiers to keep
+> >>itself
+> >>up to date on the current CPU frequency.
+> >>
+> >>To decide the frequency of the device, the governor does one of the
+> >>following:
+> >>
+> >>* Uses a CPU frequency to device frequency mapping table
+> >>  - Either one mapping table used for all CPU freq policies (typically
+> >>used
+> >>    for system with homogeneous cores/clusters that have the same OPPs).
+> >>  - One mapping table per CPU freq policy (typically used for ASMP
+> >>systems
+> >>    with heterogeneous CPUs with different OPPs)
+> >>
+> >>OR
+> >>
+> >>* Scales the device frequency in proportion to the CPU frequency. So, if
+> >>  the CPUs are running at their max frequency, the device runs at its
+> >>max
+> >>  frequency.  If the CPUs are running at their min frequency, the device
+> >>  runs at its min frequency. And interpolated for frequencies in
+> >>between.
+> >>
+> >>Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> >>---
+> >> .../bindings/devfreq/devfreq-cpufreq-map.txt       |  53 ++
+> >
+> >Bindings should be a separate patch.
+> >
+> >> drivers/devfreq/Kconfig                            |   8 +
+> >> drivers/devfreq/Makefile                           |   1 +
+> >> drivers/devfreq/governor_cpufreq_map.c             | 583
+> >>+++++++++++++++++++++
+> >> 4 files changed, 645 insertions(+)
+> >> create mode 100644
+> >>Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+> >> create mode 100644 drivers/devfreq/governor_cpufreq_map.c
+> >>
+> >>diff --git
+> >>a/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+> >>b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+> >>new file mode 100644
+> >>index 0000000..982a30b
+> >>--- /dev/null
+> >>+++ b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+> >>@@ -0,0 +1,53 @@
+> >>+Devfreq CPUfreq governor
+> >>+
+> >>+devfreq-cpufreq-map is a parent device that contains one or more child
+> >>devices.
+> >>+Each child device provides CPU frequency to device frequency mapping
+> >>for a
+> >>+specific device. Examples of devices that could use this are: DDR,
+> >>cache and
+> >>+CCI.
+> >>+
+> >>+Parent device name shall be "devfreq-cpufreq-map".
+> >>+
+> >>+Required child device properties:
+> >>+- cpu-to-dev-map, or cpu-to-dev-map-<X>:
+> >>+			A list of tuples where each tuple consists of a
+> >>+			CPU frequency (KHz) and the corresponding device
+> >>+			frequency. CPU frequencies not listed in the table
+> >>+			will use the device frequency that corresponds to the
+> >>+			next rounded up CPU frequency.
+> >>+			Use "cpu-to-dev-map" if all CPUs in the system should
+> >>+			share same mapping.
+> >>+			Use cpu-to-dev-map-<cpuid> to describe different
+> >>+			mappings for different CPUs. The property should be
+> >>+			listed only for the first CPU if multiple CPUs are
+> >>+			synchronous.
+> >>+- target-dev:		Phandle to device that this mapping applies to.
+> >>+
+> >>+Example:
+> >>+	devfreq-cpufreq-map {
+> >>+		cpubw-cpufreq {
+> >>+			target-dev = <&cpubw>;
+> >>+			cpu-to-dev-map =
+> >>+				<  300000  1144000 >,
+> >>+				<  422400  2288000 >,
+> >>+				<  652800  3051000 >,
+> >>+				<  883200  5996000 >,
+> >>+				< 1190400  8056000 >,
+> >>+				< 1497600 10101000 >,
+> >>+				< 1728000 12145000 >,
+> >>+				< 2649600 16250000 >;
+> >
+> >Now we have frequencies listed in multiple places, the OPP tables and
+> >here? Perhaps it is grouping OPPs that should be done.
 > 
-> Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> index b8dc4dbb391b..c98198662ae2 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -423,6 +423,23 @@
->  			};
->  		};
->  
-> +		dmcbus: bus@c8838000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0xc8838000 0x0 0x1000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges = <0x0 0x0 0x0 0xc8838000 0x0 0x1000>;
-> +
-> +			sysctrl_DMC: system-controller@0 {
-> +				compatible = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";
-> +				reg = <0x0 0x0 0x0 0x1000>;
-> +
-> +				canvas: canvas-provider@0 {
-> +					compatible = "amlogic,canvas";
+> This doesn't list all OPPs (it can if necessary). This is listing the
+> minimum frequency needed to give good performance/power for a
+> device/product.
+>
 
-If there is only one canvas provider under "sysctrl_DMC" and it has no reg
-property , you should not put a unit-address (@0) here. (same for the
-documentation patch)
+Shouldn't the "status" property be used to disable OPPs you don't need
+on a particular platform ?
 
-You may have seen unit-address without a reg property used elsewhere (ASoC
-simple-card, my recent axg-sound-card), when there is multiple node with the
-same node-name (ex: dai-link).
+Duplicating values is highly prone to errors and should be avoided.
 
-As Martin pointed out, the DT spec says we should not use unit-address unless
-there is a reg property. We did not get Rob's view on this and we might have to
-update this later on. In your case, unless I missed something, you should
-definitely not have it
+> AFAIK, OPP grouping isn't something that's supported in OPP framework or in
+> DT. Is there something specific you had in mind? Also, I'd like for this to
+> work even with devices that don't have OPPs listed in DT.
+>
+Also what's the solution you have for platforms with new *QCom FW Cpufreq* ?
+IIUC the frequency is obtained from the firmware. TBH this should ideally
+be handled in firmware if cpufreq is also handled by the firmware. I guess
+this platform doesn't have that ?
 
-nitpick regarding the node-name (canvas-provider). If appropriate, we should try
-to stick to one of the generic names proposed in the spec. I wonder if the
-canvas provider could be viewed as a "memory" or "memory-controller"
-
-So, what about this ? Just a proposition, feel free to comment ;)
-
-	sysctrl_DMC: system-controller@0 {							compatib
-le = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";> 		reg =
-<0x0 0x0 0x0 0x1000>;
-	
-		canvas: memory-controller {
-			compatible = "amlogic,canvas";
-		}
-
-[...]
-
-
-> +				};
-> +			};
-> +		};
-> +
->  		hiubus: bus@c883c000 {
->  			compatible = "simple-bus";
->  			reg = <0x0 0xc883c000 0x0 0x2000>;
+--
+Regards,
+Sudeep
