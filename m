@@ -1,86 +1,37 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
-Date: Wed, 08 Aug 2018 00:55:37 -0500
-Message-ID: <aeff83355ee5235cfd6107dba06a5f7957b45c92.camel@buserror.net>
-References: <1532684881-19310-1-git-send-email-Bharat.Bhushan@nxp.com>
-         <1532684881-19310-6-git-send-email-Bharat.Bhushan@nxp.com>
-         <ab2a113620123cb71364b6ae89328ae2fca49821.camel@buserror.net>
-         <AM5PR0401MB254592DC0E917FD292B323BA9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH RESEND RFC 1/4] drivers: pinctrl: qcom: add wakeup capability to
+ GPIO
+Date: Tue, 07 Aug 2018 23:05:07 -0700
+Message-ID: <153370830708.220756.4595316550560511917@swboyd.mtv.corp.google.com>
+References: <20180801020021.9782-1-ilina@codeaurora.org>
+ <20180801020021.9782-2-ilina@codeaurora.org>
+ <86600uy4vh.wl-marc.zyngier@arm.com> <20180801194538.GA6422@codeaurora.org>
+ <86wot9wb9u.wl-marc.zyngier@arm.com> <20180802065104.GA27850@codeaurora.org>
+ <86sh3xw7m9.wl-marc.zyngier@arm.com> <20180802125827.GB27850@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM5PR0401MB254592DC0E917FD292B323BA9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+In-Reply-To: <20180802125827.GB27850@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Bhushan <bharat.bhushan@nxp.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "tyreld@linux.vnet.ibm.com" <tyreld@linux.vnet.ibm.com>, "joe@perches.com" <joe@perches.com>
+To: Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-08-08 at 03:44 +0000, Bharat Bhushan wrote:
-> > -----Original Message-----
-> > From: Scott Wood [mailto:oss@buserror.net]
-> > Sent: Wednesday, August 8, 2018 2:44 AM
-> > To: Bharat Bhushan <bharat.bhushan@nxp.com>;
-> > benh@kernel.crashing.org; paulus@samba.org; mpe@ellerman.id.au;
-> > galak@kernel.crashing.org; mark.rutland@arm.com;
-> > kstewart@linuxfoundation.org; gregkh@linuxfoundation.org;
-> > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-
-> > kernel@vger.kernel.org
-> > Cc: robh@kernel.org; keescook@chromium.org; tyreld@linux.vnet.ibm.com;
-> > joe@perches.com
-> > Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
-> > 
-> > On Fri, 2018-07-27 at 15:18 +0530, Bharat Bhushan wrote:
-> > > MPIC on NXP (Freescale) P2020 supports following irq
-> > > ranges:
-> > >   > 0 - 11      (External interrupt)
-> > >   > 16 - 79     (Internal interrupt)
-> > >   > 176 - 183   (Messaging interrupt)
-> > >   > 224 - 231   (Shared message signaled interrupt)
-> > 
-> > Why don't you convert to the 4-cell interrupt specifiers that make dealing
-> > with these ranges less error-prone?
-> 
-> Ok , will do if we agree to have this series as per comment on other patch.
+Quoting Lina Iyer (2018-08-02 05:58:27)
+> On Thu, Aug 02 2018 at 01:27 -0600, Marc Zyngier wrote:
+> >
+> >Sure. But once woken up (GIC *and* TLMM), the gpio line (which I
+> >assume is level) is still high at the TLMM input. So why isn't it
+> >registering that state once it has been woken up?
+> >
+> >I can understand that it would be missing an edge. But that doesn't
+> >hold for level signalling.
+> >
+> Sure, yes. Sorry for not registering your point in my response.
+> Once woken up we should see the level interrupt in TLMM.
 
-If you're concerned with errors, this would be a good things to do regardless.
- Actually, it seems that p2020si-post.dtsi already uses 4-cell interrupts.
-
-What is motivating this patchset?  Is there something wrong in the existing
-dts files?
-
-
-> 
-> > 
-> > > diff --git a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-> > > b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-> > > index 1006950..49ff348 100644
-> > > --- a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-> > > +++ b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-> > > @@ -57,6 +57,11 @@ void __init mpc85xx_rdb_pic_init(void)
-> > >  			MPIC_BIG_ENDIAN |
-> > >  			MPIC_SINGLE_DEST_CPU,
-> > >  			0, 256, " OpenPIC  ");
-> > > +	} else if (of_machine_is_compatible("fsl,P2020RDB-PC")) {
-> > > +		mpic = mpic_alloc(NULL, 0,
-> > > +		  MPIC_BIG_ENDIAN |
-> > > +		  MPIC_SINGLE_DEST_CPU,
-> > > +		  0, 0, " OpenPIC  ");
-> > >  	} else {
-> > >  		mpic = mpic_alloc(NULL, 0,
-> > >  		  MPIC_BIG_ENDIAN |
-> > 
-> > I don't think we want to grow a list of every single revision of every
-> > board in
-> > these platform files.
-> 
-> One other confusing observation I have is that "irq_count" from platform
-> code is given precedence over "last-interrupt-source" in device-tree.
-> Should not device-tree should have precedence otherwise there is no point
-> using " last-interrupt-source" if platform code passes "irq_count" in
-> mpic_alloc().
-
-Maybe, though I don't think it matters much given that last-interrupt-source
-was only added to avoid having to pass irq_count in platform code.
-
--Scott
+And the level type gpio interrupt will trigger the TLMM summary
+interrupt line after the wakeup? So then the only thing that needs to be
+replayed is edge interrupts? How are edge interrupts going to be
+replayed?
