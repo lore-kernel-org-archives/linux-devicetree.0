@@ -1,35 +1,65 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller documentation
-Date: Wed, 8 Aug 2018 19:07:48 +0800
-Message-ID: <CAMz4kuKzSc0SZjzt1OB2FW-v608AvTNk5X165EMLn5_e-JhPHw@mail.gmail.com>
-References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
- <20180807134121.GA7958@sirena.org.uk> <CAMz4kuJsyKv_fvrqRR3pdfKsLVy53Uj0KX+m_9jLxpcVcMvs9g@mail.gmail.com>
- <20180808095025.GB9346@sirena.org.uk> <CAMz4kuKZHxYiJaMHnqdAGth8XkfGnq3-Tsfc59cGjsHQHZaY7A@mail.gmail.com>
- <20180808105451.GE9346@sirena.org.uk>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH] ARM: dts: socfpga: use stdout-path for chosen node
+Date: Wed, 8 Aug 2018 12:00:50 +0200
+Message-ID: <f27a5e90-9783-761e-a87b-9b8a2d46d2a4@denx.de>
+References: <20180808090944.861-1-simon.k.r.goldschmidt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808105451.GE9346@sirena.org.uk>
+In-Reply-To: <20180808090944.861-1-simon.k.r.goldschmidt@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, lanqing.liu@spreadtrum.com, linux-spi@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8 August 2018 at 18:54, Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Aug 08, 2018 at 06:35:28PM +0800, Baolin Wang wrote:
->> On 8 August 2018 at 17:50, Mark Brown <broonie@kernel.org> wrote:
->
->> > Right, I don't think we added this yet (if we did I can't see it).  I'd
->> > add a new field to spi_transfer for this, then other controllers with
->> > the same support can implement it as well and drivers can start using
->> > it too.
->
->> OK. So I will name the new filed as 'word_delay', is it OK for you?
->
-> Sounds good, yes.
+On 08/08/2018 11:09 AM, Simon Goldschmidt wrote:
+> Use stdout-path dts property for kernel console.
+> 
+> There were two socfpga boards left not using stdout-path:
+> socrates and vining. Make sure they match the other boards.
+> 
+> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+> ---
+>  arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    | 3 ++-
+>  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+> index 53bf99eef66d..6f5255a7d192 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+> @@ -22,7 +22,8 @@
+>  	compatible = "ebv,socrates", "altr,socfpga-cyclone5", "altr,socfpga";
+>  
+>  	chosen {
+> -		bootargs = "console=ttyS0,115200";
+> +		bootargs = "earlyprintk";
+> +		stdout-path = "serial0:115200n8";
+>  	};
+>  
+>  	memory@0 {
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> index f50b19447de6..e61efe16e79c 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> @@ -54,7 +54,8 @@
+>  	compatible = "samtec,vining", "altr,socfpga-cyclone5", "altr,socfpga";
+>  
+>  	chosen {
+> -		bootargs = "console=ttyS0,115200";
+> +		bootargs = "earlyprintk";
 
-OK. Thanks.
+Why this earlyprintk ?
+
+> +		stdout-path = "serial0:115200n8";
+>  	};
+>  
+>  	memory@0 {
+> 
+
 
 -- 
-Baolin Wang
-Best Regards
+Best regards,
+Marek Vasut
