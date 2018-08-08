@@ -1,92 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 0/9] Add Reset Controller support for Actions Semi Owl SoCs
-Date: Wed, 8 Aug 2018 12:21:25 -0600
-Message-ID: <CAL_JsqL7rFt8OKQoyD4JuZ+i9Fqc6RLsTxN4cJmur28ptwyNWQ@mail.gmail.com>
-References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
- <c3ae668a-6bcc-a0eb-1e00-14ef9d607316@suse.de> <20180730151131.GA28633@mani>
- <20180807184710.GA26423@rob-hp-laptop> <20180808172946.GA4188@Mani-XPS-13-9360>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller
+ documentation
+Date: Wed, 8 Aug 2018 18:57:01 +0000
+Message-ID: <1533754621.2283.270.camel@impinj.com>
+References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
+         <20180807134121.GA7958@sirena.org.uk>
+         <CAMz4kuJsyKv_fvrqRR3pdfKsLVy53Uj0KX+m_9jLxpcVcMvs9g@mail.gmail.com>
+         <20180808095025.GB9346@sirena.org.uk>
+         <CAMz4kuKZHxYiJaMHnqdAGth8XkfGnq3-Tsfc59cGjsHQHZaY7A@mail.gmail.com>
+         <20180808105451.GE9346@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808172946.GA4188@Mani-XPS-13-9360>
+In-Reply-To: <20180808105451.GE9346@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <D39B6F4479A8E649BD321CD3C0B740B1@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Manivannan Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>
+To: "broonie@kernel.org" <broonie@kernel.org>, "baolin.wang@linaro.org" <baolin.wang@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 8, 2018 at 11:30 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> Hi Rob,
->
-> On Tue, Aug 07, 2018 at 12:47:10PM -0600, Rob Herring wrote:
-> > On Mon, Jul 30, 2018 at 08:41:31PM +0530, Manivannan Sadhasivam wrote:
-> > > Hi Andreas,
-> > >
-> > > On Mon, Jul 30, 2018 at 12:26:07PM +0200, Andreas F=C3=A4rber wrote:
-> > > > Hi Mani,
-> > > >
-> > > > Am 27.07.2018 um 20:45 schrieb Manivannan Sadhasivam:
-> > > > > This patchset adds Reset Controller (RMU) support for Actions Sem=
-i
-> > > > > Owl SoCs, S900 and S700. For the Owl SoCs, RMU has been integrate=
-d into
-> > > > > the clock subsystem in hardware. Hence, in software we integrate =
-RMU
-> > > > > support into common clock driver inorder to maintain compatibilit=
-y.
-> > > >
-> > > > Can this not be placed into drivers/reset/ by using mfd-simple with=
- a
-> > > > sub-node in DT?
-> >
-> > That is exactly what I tell folks not to do. Design the DT based on h/w
-> > blocks, not current desired driver split for some OS.
-> >
-> > > Actually I was not sure where to place this reset controller driver. =
-When I
-> > > looked into other similar ones such as sunxi, they just integrated in=
-to the
-> > > clk subsystem. So I just chose that path. But yeah, this is hacky!
-> > >
-> > > But this RMU is not MFD by any means. Since the CMU (Clock) and RMU (=
-Reset)
-> > > are two separate IPs inside SoC, we shouldn't describe it as a MFD dr=
-iver. Since
-> > > RMU has only 2 registers, the HW designers decided to use up the CMU =
-memory
-> > > map. So, maybe syscon would be best option I think. What is your opin=
-ion?
-> >
-> > If there's nothing shared then it is not a syscon. If you can create
-> > separate address ranges, then 2 nodes is probably okay. If the register=
-s
-> > are all mixed up, then 1 node.
-> >
->
-> I don't quite understand the reason for not being syscon. The definition
-> of syscon says that, "System controller node represents a register region
-> containing a set of miscellaneous registers. The registers are not cohesi=
-ve
-> enough to represent as any specific type of device." which exactly fits
-> this case. Only the registers of CMU & RMU are shared and not the HW bloc=
-k!
->
-> Can you please clarify?
-
-IIRC, the original intent of 'syscon' was really for things that had
-no subsystem. Random bits all just dumped together. A block with clock
-and reset doesn't sounds pretty well defined functions. Plus that
-criteria doesn't work well because what does and doesn't have a
-subsystem (and DT binding) evolves. IMO, we should probably get rid of
-'syscon'.
-
-Let me turn it around. Why do you want it do be a syscon? Simply to
-create a regmap I suppose because that is all that 'syscon' compatible
-is. A flag to create a regmap. Why do you need a regmap then? Do you
-need to protect concurrent accesses (a single register has both clock
-and reset bits). If so, you can't really call CMU and RMU 2 blocks. If
-not, you don't really need regmap.
-
-Rob
+T24gV2VkLCAyMDE4LTA4LTA4IGF0IDExOjU0ICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
+biBXZWQsIEF1ZyAwOCwgMjAxOCBhdCAwNjozNToyOFBNICswODAwLCBCYW9saW4gV2FuZyB3cm90
+ZToNCj4gPiBPbiA4IEF1Z3VzdCAyMDE4IGF0IDE3OjUwLCBNYXJrIEJyb3duIDxicm9vbmllQGtl
+cm5lbC5vcmc+IHdyb3RlOg0KPiA+ID4gUmlnaHQsIEkgZG9uJ3QgdGhpbmsgd2UgYWRkZWQgdGhp
+cyB5ZXQgKGlmIHdlIGRpZCBJIGNhbid0IHNlZQ0KPiA+ID4gaXQpLiAgSSdkDQo+ID4gPiBhZGQg
+YSBuZXcgZmllbGQgdG8gc3BpX3RyYW5zZmVyIGZvciB0aGlzLCB0aGVuIG90aGVyIGNvbnRyb2xs
+ZXJzDQo+ID4gPiB3aXRoDQo+ID4gPiB0aGUgc2FtZSBzdXBwb3J0IGNhbiBpbXBsZW1lbnQgaXQg
+YXMgd2VsbCBhbmQgZHJpdmVycyBjYW4gc3RhcnQNCj4gPiA+IHVzaW5nDQo+ID4gPiBpdCB0b28u
+DQo+ID4gT0suIFNvIEkgd2lsbCBuYW1lIHRoZSBuZXcgZmlsZWQgYXMgJ3dvcmRfZGVsYXknLCBp
+cyBpdCBPSyBmb3IgeW91Pw0KPiANCj4gU291bmRzIGdvb2QsIHllcy4NCg0KU2hvdWxkIGl0IGJl
+IGluIMK1cyBsaWtlIHRoZSBleGlzdGluZyBpdGVyLXRyYW5zZmVyIGRlbGF5PyAgSSB0aGluaw0K
+cGVyaGFwcyB1bml0cyBvZiBjeWNsZXMgb2YgdGhlIFNQSSBjbG9jayBtYWtlIG1vcmUgc2Vuc2U/
