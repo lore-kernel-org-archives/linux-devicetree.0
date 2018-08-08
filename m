@@ -1,61 +1,72 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2 2/3] i2c: Add helper to ease DMA handling
-Date: Wed, 8 Aug 2018 22:57:53 +0200
-Message-ID: <20180808205752.llowh4bvu2wkuhga@ninjato>
-References: <1530955795-17714-1-git-send-email-jun.gao@mediatek.com>
- <1530955795-17714-3-git-send-email-jun.gao@mediatek.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 1/2] dt: bindings: lm3697: Add bindings for lm3697
+ driver
+Date: Wed, 8 Aug 2018 23:02:16 +0200
+Message-ID: <20180808210215.GA15831@amd>
+References: <20180807160442.8937-1-dmurphy@ti.com>
+ <20180808195903.GB20912@amd>
+ <f6b3534b-2ee9-782e-35e5-e103c34528bc@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rp4jubaesdmneqdp"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1530955795-17714-3-git-send-email-jun.gao@mediatek.com>
+In-Reply-To: <f6b3534b-2ee9-782e-35e5-e103c34528bc@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jun Gao <jun.gao@mediatek.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---rp4jubaesdmneqdp
+--DocE+STaALJfprDB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jul 07, 2018 at 05:29:54PM +0800, Jun Gao wrote:
-> From: Jun Gao <jun.gao@mediatek.com>
+Hi!
+
+> >> +	- #size-cells : 0
+> >> +	- control-bank-cfg - : Indicates which sink is connected to which co=
+ntrol bank
+> >> +		0 - All HVLED outputs are controlled by bank A
+> >> +		1 - HVLED1 is controlled bank B, HVLED2/3 are controlled by bank A
+> >> +		2 - HVLED2 is controlled bank B, HVLED1/3 are controlled by bank A
+> >> +		3 - HVLED1/2 are controlled by bank B, HVLED3 is controlled by bank=
+ A
+> >> +		4 - HVLED3 is controlled by bank B, HVLED1/2 are controlled by bank=
+ A
+> >> +		5 - HVLED1/3 is controlled by bank B, HVLED2 is controlled by bank A
+> >> +		6 - (default) HVLED1 is controlled by bank A, HVLED2/3 are controll=
+ed by bank B
+> >> +		7 - All HVLED outputs are controlled by bank B
+> >=20
+> > This is quite long way to describe a bitmask, no? Could we make
+> > it so that control-bank-cfg is not needed?
 >=20
-> This function is needed by i2c_get_dma_safe_msg_buf() potentially.
-> It is used to free DMA safe buffer when DMA operation fails.
+> The problem we have here is there is a potential to control
+> 3 different LED string but only 2 sinks.  So control bank A can control 2=
+ LED strings and control
+> bank b can control 1 LED string. =20
 >=20
-> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
 
-Right, we need something like this. This leaks in the sh_mobile driver,
-too :(
+Can we forget about the LED strings, and just expose the sinks as
+Linux LED devices?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-I am still thinking if there is a nice way to put this functionality
-into i2c_release_dma_safe_msg_buf() itself somehow...
-
-Thanks!
-
-
---rp4jubaesdmneqdp
+--DocE+STaALJfprDB
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltrWUwACgkQFA3kzBSg
-Kba6Tw/+Iimt7Umis4CVLfglXlJM8cOcQwzHzSmtfK88GLGEPybXuZuk6hJ+2G1m
-p964DyDxJy+DCrdA7jIU64RdFOuf62+nZVRS0xt50Ycl+OhayWr9FL5teoFZ+uSn
-EKU5MnhgnO0MPG05JciJGS7SM5hFbT86n70ktre589BT8g7QnV7sO1BVi5LDoyPL
-9zCSYFCYZZ/+gfP2oMtSJT8LkHgSEYz9JXCWmANs/HhWepbtemQRJ5rvPens7yCa
-xq/OkH7NoIJ9Ipewv/J6RJJsZBw7bXPnfp4WaHIvZog0WZHYJkSbQk5DDNgIYu3T
-Z1lRM8P1eWn2dhYSPrjv8k+FFFX1O5rM2uCkATDZierjJSa4wgYVanizY7TP28km
-dfXlL/Vb92KZICGQBBG3gbe3ueWoNxUmSljMn7rUKPybJ+P1MYZHk6TF/momdpDx
-SLKwhU9PaKy/9dukiU8L+vWcgw69ic7RHbKV84EwxhjDX6XhexPI2H4L+uOfyJZo
-UplbqRhIOXk1h5tbk1m6NJAVlFFSGcWNvdR28+CQl9LBBnOWR6vWYspYrERLrXlu
-+rISW9VO/G5F0CZfZ0Eka335h8c1f5ybq84pWk1nPRn8RmSmn+hgWiHEdzZJV632
-4WmPNIK4ZcTX85fahz06Z+RRk6Mn60mQZzjzzgDr9Q+PimU+e08=
-=9FC3
+iEYEARECAAYFAltrWlcACgkQMOfwapXb+vJXKACeNsGqbtuMFPW3Jtr+9/aN7qRf
+YZ8An3/jYlRDulqvn4ZuE/VdMsI+74Bq
+=XbIL
 -----END PGP SIGNATURE-----
 
---rp4jubaesdmneqdp--
+--DocE+STaALJfprDB--
