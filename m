@@ -1,34 +1,65 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
-        documentation
-Date: Wed, 8 Aug 2018 18:57:29 +0200
-Message-ID: <20180808165729.GA6079@lst.de>
-References: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com> <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4> <CAL_JsqKPFSQYH3p6a0VoCr-VAzf_98H7N3fNJ+4+DquS8WcjUQ@mail.gmail.com> <20180808150938.GA32274@lst.de> <bb671fe1-6c43-3218-0096-7c5280ffb6b5@arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 0/4] pci-dra7xx: Enable errata i870 workaround for RC
+ mode
+Date: Wed, 8 Aug 2018 17:57:00 +0100
+Message-ID: <20180808165700.GB486@e107981-ln.cambridge.arm.com>
+References: <20180724173150.2701-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <bb671fe1-6c43-3218-0096-7c5280ffb6b5@arm.com>
+In-Reply-To: <20180724173150.2701-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Christoph Hellwig <hch@lst.de>, Rob Herring <robh+dt@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, atish.patra@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
+To: Vignesh R <vigneshr@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2018 at 05:47:40PM +0100, Marc Zyngier wrote:
-> The original GIC driver deals with 2.5 revisions of the architecture
-> (yes, there was something pre-GICv1...), and implementers have been
-> creative to the extreme. Still, we could have done without most of these
-> compat strings. Hindsight and all that jazz.
+On Tue, Jul 24, 2018 at 11:01:46PM +0530, Vignesh R wrote:
+> Make workaround for errata i870 applicable in Host mode as
+> well(previously it was enabled only for EP mode) as per errata
+> documentation: http://www.ti.com/lit/er/sprz450/sprz450.pdf
 > 
-> GICv3 is a much more controlled architecture, and although people have
-> come up with a number of turds masquerading as implementations, it has
-> never been bad enough to mandate a different set of compat strings.
-> Also, you cannot describe that kind of stuff in ACPI, and we need to
-> support both, so we've come up with different ways of handling this.
+> Tested on DRA72 EVM
+> 
+> Tony,
+> 
+> If you are okay with the series, could you pick this via omap tree?
+> All ACKs are in place and Lorenzo is okay with PCIe bits to go along with
+> rest of DTS changes.
 
-So the claim from SiFive is that all their current plic blocks are
-the same.  Based on that I'd be really tempted to just match for
-sifive,plic (or sifive,plic1 as suggested by them), but also require
-each device to actually provide a board specific compatible string,
-just in case that something goes wrong.  Which I suspect is what you
-are doing with GICv3, right?
+I think we have missed the v4.19 merge window by now - please let me
+know if I can drop this series from the PCI patch queue.
+
+Thanks,
+Lorenzo
+
+> Regards
+> Vignesh
+> 
+> 
+> Changes since v2:
+> Reorder patch 2 to appear at the last.
+> Collect all the ACKs
+> 
+> Changes since v1:
+> Drop IRQ handling rework (will be sent out separately)
+> 
+> v2: https://patchwork.ozlabs.org/cover/935454/
+> v1: https://lkml.org/lkml/2017/12/1/59
+> 
+> 
+> Vignesh R (4):
+>   dt-bindings: PCI: dra7xx: Add bindings for unaligned access in host
+>     mode
+>   ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
+>   ARM: dts: dra7: Fix up unaligned access setting for PCIe EP
+>   pci: dwc: pci-dra7xx: Enable errata i870 for both EP and RC mode
+> 
+>  Documentation/devicetree/bindings/pci/ti-pci.txt |  5 +++++
+>  arch/arm/boot/dts/dra7.dtsi                      |  4 +++-
+>  drivers/pci/controller/dwc/pci-dra7xx.c          | 12 ++++++------
+>  3 files changed, 14 insertions(+), 7 deletions(-)
+> 
+> -- 
+> 2.18.0
+> 
