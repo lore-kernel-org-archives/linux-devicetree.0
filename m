@@ -1,126 +1,54 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 2/2] spi: sprd: Add SPI driver for Spreadtrum SC9860
-Date: Wed, 8 Aug 2018 11:19:07 +0800
-Message-ID: <CAMz4kuJrzaZn9560tF73a-WPNhhRj5S2ezTKr0HHpcGRXMw-Ew@mail.gmail.com>
-References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
- <99befd2badc4dffb59662fca1e11d79f18b64755.1533638405.git.baolin.wang@linaro.org>
- <1533661818.2283.264.camel@impinj.com>
+From: Bharat Bhushan <bharat.bhushan@nxp.com>
+Subject: RE: [RFC 3/5] powerpc/mpic: Add support for non-contiguous irq ranges
+Date: Wed, 8 Aug 2018 03:37:28 +0000
+Message-ID: <AM5PR0401MB2545AF363F5DD258205177FC9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+References: <1532684881-19310-1-git-send-email-Bharat.Bhushan@nxp.com>
+         <1532684881-19310-4-git-send-email-Bharat.Bhushan@nxp.com>
+         <20180807180938.GA13623@rob-hp-laptop>
+ <a20f27b15161164c829f771d2b085639f6709374.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533661818.2283.264.camel@impinj.com>
+In-Reply-To: <a20f27b15161164c829f771d2b085639f6709374.camel@buserror.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Scott Wood <oss@buserror.net>, Rob Herring <robh@kernel.org>
+Cc: "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "tyreld@linux.vnet.ibm.com" <tyreld@linux.vnet.ibm.com>, "joe@perches.com" <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Trent,
-
-On 8 August 2018 at 01:10, Trent Piepho <tpiepho@impinj.com> wrote:
-> On Tue, 2018-08-07 at 18:43 +0800, Baolin Wang wrote:
->>
->> +static u32 sprd_spi_transfer_max_timeout(struct sprd_spi *ss,
->> +                                      struct spi_transfer *t)
->> +{
->> +     /*
->> +      * The time spent on transmission of the full FIFO data is the maximum
->> +      * SPI transmission time.
->> +      */
->> +     u32 size = t->bits_per_word * SPRD_SPI_FIFO_SIZE;
->> +     u32 bit_time_us = SPRD_SPI_HZ / t->speed_hz + 1;
->> +     u32 total_time_us = size * bit_time_us;
->> +     /*
->> +      * There is an interval between data and the data in our SPI hardware,
->> +      * so the total transmission time need add the interval time.
->> +      *
->> +      * The inteval calculation formula:
->> +      * interval time (source clock cycles) = interval * 4 + 10.
->> +      */
->> +     u32 interval_cycle = SPRD_SPI_FIFO_SIZE * ((ss->interval << 2) + 10);
->> +     u32 interval_time_us = interval_cycle * SPRD_SPI_HZ / ss->src_clk + 1;
->
-> If interval is greater than 31, this will overflow.
-
-Usually we will not set such a big value for interval,  but this is a
-risk like you said. So we will check and limit the interval value to
-make sure the formula will not overflow.
-
->
-> Also SPRD_SPI_HZ is not the speed anything runs at, as one might think
-> from the name.  It's the number of microseconds in a second.  The is
-> already a Linux macro for that, USEC_PER_SEC, that you should use
-> instead.
-
-Right, will use USEC_PER_SEC instead.
-
->
->> +
->> +     return total_time_us + interval_time_us;
->> +}
->> +
->
->
->> +static void sprd_spi_set_speed(struct sprd_spi *ss, u32 speed_hz)
->> +{
->> +     /*
->> +      * From SPI datasheet, the prescale calculation formula:
->> +      * prescale = SPI source clock / (2 * SPI_freq) - 1;
->> +      */
->> +     u32 clk_div = ss->src_clk / (speed_hz << 1) - 1;
->
-> You should probably round up here.  The convention is to use the
-> closest speed less than equal to the requested speed, but since this is
-> a divider, rounding it down will select the next highest speed.
-
-Per the datasheet, we do not need round up/down the speed. Since our
-hardware can handle the clock calculated by the above formula if the
-requested speed is in the normal region (less than ->max_speed_hz).
-
->> +
->> +     writel_relaxed(clk_div, ss->base + SPRD_SPI_CLKD);
->> +}
->> +
->
->> +
->> +static int sprd_spi_probe(struct platform_device *pdev)
->> +{
->> +     struct device_node *np = pdev->dev.of_node;
->> +     struct spi_controller *sctlr;
->> +     struct resource *res;
->> +     struct sprd_spi *ss;
->> +     int ret;
->> +
->> +     pdev->id = of_alias_get_id(pdev->dev.of_node, "spi");
->> +     sctlr = spi_alloc_master(&pdev->dev, sizeof(*ss));
->> +     if (!sctlr)
->> +             return -ENOMEM;
->> +
->> +     ss = spi_controller_get_devdata(sctlr);
->> +     if (of_property_read_u32(np, "sprd,spi-interval", &ss->interval))
->> +             ss->interval = SPRD_SPI_ITVL_NUM;
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     ss->base = devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(ss->base)) {
->> +             ret = PTR_ERR(ss->base);
->> +             goto free_controller;
->> +     }
->> +
->> +     ss->dev = &pdev->dev;
->> +     sctlr->dev.of_node = pdev->dev.of_node;
->> +     sctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_3WIRE | SPI_TX_DUAL;
->> +     sctlr->bus_num = pdev->id;
->> +     sctlr->setup = sprd_spi_setup;
->> +     sctlr->set_cs = sprd_spi_chipselect;
->> +     sctlr->transfer_one = sprd_spi_transfer_one;
->> +     sctlr->max_speed_hz = (ss->src_clk / 2) < SPRD_SPI_MAX_SPEED_HZ ?
->> +             ss->src_clk / 2 : SPRD_SPI_MAX_SPEED_HZ;
->
-> You can write this as:
->         sctlr->max_speed_hz = min(ss->src_clk / 2, SPRD_SPI_MAX_SPEED_HZ);
-
-Right. Thanks for your comments.
-
--- 
-Baolin Wang
-Best Regards
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
+bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDgsIDIwMTgg
+MjozNCBBTQ0KPiBUbzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz47IEJoYXJhdCBCaHVz
+aGFuDQo+IDxiaGFyYXQuYmh1c2hhbkBueHAuY29tPg0KPiBDYzogYmVuaEBrZXJuZWwuY3Jhc2hp
+bmcub3JnOyBwYXVsdXNAc2FtYmEub3JnOyBtcGVAZWxsZXJtYW4uaWQuYXU7DQo+IGdhbGFrQGtl
+cm5lbC5jcmFzaGluZy5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBrc3Rld2FydEBsaW51
+eGZvdW5kYXRpb24ub3JnOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC0N
+Cj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsga2Vlc2Nvb2tAY2hyb21pdW0ub3JnOw0KPiB0eXJl
+bGRAbGludXgudm5ldC5pYm0uY29tOyBqb2VAcGVyY2hlcy5jb20NCj4gU3ViamVjdDogUmU6IFtS
+RkMgMy81XSBwb3dlcnBjL21waWM6IEFkZCBzdXBwb3J0IGZvciBub24tY29udGlndW91cyBpcnEN
+Cj4gcmFuZ2VzDQo+IA0KPiBPbiBUdWUsIDIwMTgtMDgtMDcgYXQgMTI6MDkgLTA2MDAsIFJvYiBI
+ZXJyaW5nIHdyb3RlOg0KPiA+IE9uIEZyaSwgSnVsIDI3LCAyMDE4IGF0IDAzOjE3OjU5UE0gKzA1
+MzAsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+ID4gRnJlZXNjYWxlIE1QSUMgaC93IG1heSBu
+b3Qgc3VwcG9ydCBhbGwgaW50ZXJydXB0IHNvdXJjZXMgcmVwb3J0ZWQgYnkNCj4gPiA+IGhhcmR3
+YXJlLCAibGFzdC1pbnRlcnJ1cHQtc291cmNlIiBvciBwbGF0Zm9ybS4gT24gdGhlc2UgcGxhdGZv
+cm1zIGENCj4gPiA+IG1pc2NvbmZpZ3VyZWQgZGV2aWNlIHRyZWUgdGhhdCBhc3NpZ25zIG9uZSBv
+ZiB0aGUgcmVzZXJ2ZWQNCj4gPiA+IGludGVycnVwdHMgbGVhdmVzIGEgbm9uLWZ1bmN0aW9uaW5n
+IHN5c3RlbSB3aXRob3V0IHdhcm5pbmcuDQo+ID4NCj4gPiBUaGVyZSBhcmUgbG90cyBvZiB3YXlz
+IHRvIG1pc2NvbmZpZ3VyZSBEVHMuIEkgZG9uJ3QgdGhpbmsgdGhpcyBpcw0KPiA+IHNwZWNpYWwg
+YW5kIG5lZWRzIGEgcHJvcGVydHkuDQo+IA0KPiBZZWFoLCB0aGUgc3lzdGVtIHdpbGwgYmUganVz
+dCBhcyBub24tZnVuY3Rpb25pbmcgaWYgeW91IHNwZWNpZnkgYSB2YWxpZC1idXQtDQo+IHdyb25n
+LWZvci10aGUtZGV2aWNlIGludGVycnVwdCBudW1iZXIuDQoNClNvbWUgaXMgb25lIGFkZGl0aW9u
+YWwgYmVuZWZpdHMgb2YgdGhpcyBjaGFuZ2VzLCBNUElDIGhhdmUgcmVzZXJ2ZWQgcmVnaW9ucyBm
+b3IgdW4tc3VwcG9ydGVkIGludGVycnVwdHMgYW5kIHJlYWQvd3JpdGVzIHRvIHRoZXNlIHJlc2Vy
+dmVkIHJlZ2lvbnMgc2VhbXMgaGF2ZSBubyBlZmZlY3QuDQpNUElDIGRyaXZlciByZWFkcy93cml0
+ZXMgdG8gdGhlIHJlc2VydmVkIHJlZ2lvbnMgZHVyaW5nIGluaXQvdW5pbml0IGFuZCBzYXZlL3Jl
+c3RvcmUgc3RhdGUuDQoNCkxldCBtZSBrbm93IGlmIGl0IG1ha2Ugc2Vuc2UgdG8gaGF2ZSB0aGVz
+ZSBjaGFuZ2VzIGZvciBtZW50aW9uZWQgcmVhc29ucy4NCg0KVGhhbmtzDQotQmhhcmF0DQoNCj4g
+DQo+ID4gIFdlJ3ZlIGhhZCBzb21lIGludGVycnVwdCBtYXNrIG9yIHZhbGlkIHByb3BlcnRpZXMg
+aW4gdGhlIHBhc3QsIGJ1dA0KPiA+IGdlbmVyYWxseSBkb24ndCBhY2NlcHQgdGhvc2UuDQo+IA0K
+PiBGV0lXLCBzb21lIG9mIHRoZW0gbGlrZSBwcm90ZWN0ZWQtc291cmNlcyBhbmQgbXBpYy1tc2dy
+LXJlY2VpdmUtbWFzaw0KPiBhcmVuJ3QgZm9yIGRldGVjdGluZyBlcnJvcnMsIGJ1dCBhcmUgZm9y
+IHBhcnRpdGlvbmluZyAodGhvdWdoIHRoZSBmb3JtZXIgaXMNCj4gb2Jzb2xldGUgd2l0aCBwaWMt
+bm8tcmVzZXQpLg0KPiANCj4gLVNjb3R0DQoNCg==
