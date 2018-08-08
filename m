@@ -1,42 +1,132 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v4 3/6] regmap: Add regmap_noinc_read API [UNSCANNED]
-Date: Wed, 8 Aug 2018 10:59:05 +0100
-Message-ID: <20180808095905.GG32322@imbe.wolfsonmicro.main>
-References: <1533557087-10401-1-git-send-email-stefan.popa@analog.com>
- <1533557087-10401-4-git-send-email-stefan.popa@analog.com>
- <20180806143901.GP2414@sirena.org.uk>
- <1533569985.11050.9.camel@analog.com>
- <20180806160402.GR2414@sirena.org.uk>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Wed, 8 Aug 2018 15:45:26 +0530
+Message-ID: <c83e4248-aef2-bb40-8d8e-47d9b2918cc7@codeaurora.org>
+References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
+ <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
+ <CAE=gft7_5SZKpU0i9Jbi6UV-eqW8=6Fm7rw4oKVXG6J9Q7_E+g@mail.gmail.com>
+ <1ddda4b9e6dcd7ad415235f4d6af2dc7@codeaurora.org>
+ <153333504360.10763.8964005567051510823@swboyd.mtv.corp.google.com>
+ <4d37a1ee4f2d5b30da3f62cbfca756a8@codeaurora.org>
+ <153370933225.220756.12056174025047430491@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180806160402.GR2414@sirena.org.uk>
+In-Reply-To: <153370933225.220756.12056174025047430491@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>, "lars@metafoo.de" <lars@metafoo.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jic23@kernel.org" <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "leonard.crestez@intel.com" <leonard.crestez@intel.com>, davem@davemlo
+To: Stephen Boyd <sboyd@kernel.org>, skannan@codeaurora.org
+Cc: Evan Green <evgreen@google.com>, rjw@rjwysocki.net, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 06, 2018 at 05:04:02PM +0100, Mark Brown wrote:
-> On Mon, Aug 06, 2018 at 03:39:53PM +0000, Popa, Stefan Serban wrote:
-> > On Lu, 2018-08-06 at 15:39 +0100, Mark Brown wrote:
-> 
-> > > I suggested having an explicit operation to check if a register supports
-> > > this mode of operation when I reviewed an earlier version, I didn't
-> > > notice a reply on that?
-> 
-> > Sorry, I got confused about what needs to be done. Should I add a new field
-> > to the regmap_config struct which will be checked during the function call?
-> > Something like can_multi_write? How do you suggest it should be called? Is
-> > readable_noinc_reg ok?
-> 
-> Like I said last time I'd suggest making it more like the readable and
-> volatile checks - I'm fairly sure I've seen devices that don't
-> autoincrement only for some registers.
 
-I can confirm I have seen hardware that autoincrements for some
-registers and not for others.
 
-Thanks,
-Charles
+On 8/8/2018 11:52 AM, Stephen Boyd wrote:
+> Quoting skannan@codeaurora.org (2018-08-06 13:46:05)
+>> On 2018-08-03 15:24, Stephen Boyd wrote:
+>>> Quoting skannan@codeaurora.org (2018-08-03 12:52:48)
+>>>> On 2018-08-03 12:40, Evan Green wrote:
+>>>>> Hi Taniya,
+>>>>>
+>>>>> On Tue, Jul 24, 2018 at 3:44 AM Taniya Das <tdas@codeaurora.org> wrote:
+>>>>>>
+>>>>>> +               if (src)
+>>>>>> +                       c->table[i].frequency = c->xo_rate * lval /
+>>>>>> 1000;
+>>>>>> +               else
+>>>>>> +                       c->table[i].frequency = INIT_RATE / 1000;
+>>>>>
+>>>>> I don't know much about how this hardware works, but based on the
+>>>>> mask, src has 4 possible values. So does 0 mean INIT_RATE, and 1, 2,
+>>>>> and 3 all mean xo_rate?
+>>>>>
+>>>>> Also, is INIT_RATE really constant? It sounds like gpll0 (or
+>>>>> gpll0_out_even?). You're already getting the xo clock, why not get
+>>>>> gpll0's real rate as well?
+>>>>
+>>>> Actually I was about to comment and say NOT to get clocks just to get
+>>>> their rate. The XO_RATE is just a multiplication factor. This HW/FW
+>>>> can
+>>>> change in the future and make the multiplication factor to 1KHz.
+>>>
+>>> So future changes to this hardware are going to make this register
+>>> return the final frequency that we should use? Sounds great! But that
+>>> isn't how it's working right now. We need to have XO in the binding
+>>> here
+>>> so the driver can work with different XO frequencies in case that ever
+>>> happens. Same story for GPLL0. Hardcoding this stuff in the driver just
+>>> means we'll have to swizzle things in the driver when it changes.
+>>
+>> XO being a different frequency in a Qualcomm chip is way way less likely
+>> than anything else we are discussing here. In the 10+years I've been
+>> there this has never changed.
+>>
+>> So, how about making this binding optional? If it's not present we can
+>> make assumptions for XO rate and init rate. That'll handle your
+>> hypothetical use case while also being optimized.
+> 
+> Optional properties are almost never correct for clks. Either the clk
+> goes there or it doesn't go there. The only time it's optional is if the
+> HW has the choice of generating the clk itself internally or to use an
+> external clk as input.
+> 
+> In this case, it's not optional, it's actually used so marking it
+> optional is highly confusing.
+> 
+>>
+>>>> We also
+>>>> can't really control any of the clocks going to this block from Linux
+>>>> (it's all locked down).
+>>>
+>>> This shouldn't matter. The clocks going to this hardware block are
+>>> described by the firmware to the OS by means of the DT node. If the
+>>> firmware or the hardware decides to change the input clks then the
+>>> binding can have different clk nodes used.
+>>
+>> There are tons of clocks that are input to blocks in an SoC that are
+>> never controlled by Linux. Or are expose in DT because they are set up
+>> ahead of time and can't change. So, why make an exception here?
+> 
+> Because the driver doesn't have to hard-code some frequency that can
+> easily come from the DT, making it more flexible for frequency plan
+> changes. It doesn't matter about control of clks at all here, so this
+> comparison is just plain wrong.
+> 
+>>
+>>>> The INIT_RATE will
+>>>> always be 300 MHz independent of what source it's coming from (as in,
+>>>> if
+>>>> GPLL0 can't give 300, the HW design will be so that we'll find a
+>>>> different source).
+>>>>
+>>>> So, I'd like to remove any clock bindings for this driver.
+>>>
+>>> No. Bindings describe how the hardware is connected. Please don't
+>>> remove
+>>> clocks from the binding just because probe defer is a concern.
+>>
+>> Binding describes hardware controllable by the OS. That's the reality.
+>> Let's not add mandatory clock bindings for clocks that the OS can't do
+>> anything about.
+>>
+> 
+> It seems that you believe clks should only be used to turn on/off and
+> control rates. That is not the whole truth. Sometimes clks are there
+> just to express the clk frequencies that are present in the design so
+> that drivers can figure out what to do.
+> 
+
+Stephen,
+
+As this clock is not configurable by linux clock drivers and we really 
+do not care the parent src(as mentioned by Saravana) to generate the 
+300MHz, would it be good to define a fixed rate clock so as to express 
+the HW connectivity & frequency?
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
