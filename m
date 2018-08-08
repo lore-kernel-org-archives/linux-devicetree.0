@@ -1,61 +1,147 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v3 3/8] mailbox: Add transmit done by blocking option
-Date: Wed, 8 Aug 2018 19:40:11 +0530
-Message-ID: <CABb+yY2mpNV186=M2anmZANgMOra4JM7ybyUT4yCxhqAG6-AZg@mail.gmail.com>
-References: <20180702114033.15654-1-mperttunen@nvidia.com> <20180702114033.15654-4-mperttunen@nvidia.com>
- <CABb+yY0_dKC_cYFwwb-aeRgrx=sjv=8VLP=C6DJEecFf=v+mkQ@mail.gmail.com>
- <907bac36-0c54-8f38-0f5e-f59196d414c6@kapsi.fi> <afc8a305-79ea-2194-0af0-919bbb8f675e@kapsi.fi>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC documentation
+Date: Wed, 8 Aug 2018 08:16:14 -0600
+Message-ID: <CAL_JsqKPFSQYH3p6a0VoCr-VAzf_98H7N3fNJ+4+DquS8WcjUQ@mail.gmail.com>
+References: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
+ <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <afc8a305-79ea-2194-0af0-919bbb8f675e@kapsi.fi>
+In-Reply-To: <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <cyndis@kapsi.fi>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Devicetree List <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, ", linux-arm-kernel"@lists.infradead.org, ", linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-mediatek@lists.infradead.org>srv_heupstream <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 8, 2018 at 5:08 PM, Mikko Perttunen <cyndis@kapsi.fi> wrote:
+On Tue, Aug 7, 2018 at 8:17 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
 >
+> On Mon, 06 Aug 2018 13:59:48 PDT (-0700), robh+dt@kernel.org wrote:
+> > On Thu, Aug 2, 2018 at 4:08 PM Atish Patra <atish.patra@wdc.com> wrote:
+> >>
+> >> On 8/2/18 4:50 AM, Christoph Hellwig wrote:
+> >> > From: Palmer Dabbelt <palmer@dabbelt.com>
+> >> >
+> >> > This patch adds documentation for the platform-level interrupt
+> >> > controller (PLIC) found in all RISC-V systems.  This interrupt
+> >> > controller routes interrupts from all the devices in the system to each
+> >> > hart-local interrupt controller.
+> >> >
+> >> > Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
+> >> > want to change how we're specifying holes in the hart list.
+> >> >
+> >> > Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> >> > [hch: various fixes and updates]
+> >> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >> > ---
+> >> >   .../interrupt-controller/sifive,plic0.txt     | 57 +++++++++++++++++++
+> >> >   1 file changed, 57 insertions(+)
+> >> >   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+> >> > new file mode 100644
+> >> > index 000000000000..c756cd208a93
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+> >> > @@ -0,0 +1,57 @@
+> >> > +SiFive Platform-Level Interrupt Controller (PLIC)
+> >> > +-------------------------------------------------
+> >> > +
+> >> > +SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
+> >> > +(PLIC) high-level specification in the RISC-V Privileged Architecture
+> >> > +specification.  The PLIC connects all external interrupts in the system to all
+> >> > +hart contexts in the system, via the external interrupt source in each hart.
+> >> > +
+> >> > +A hart context is a privilege mode in a hardware execution thread.  For example,
+> >> > +in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
+> >> > +privilege modes per hart; machine mode and supervisor mode.
+> >> > +
+> >> > +Each interrupt can be enabled on per-context basis. Any context can claim
+> >> > +a pending enabled interrupt and then release it once it has been handled.
+> >> > +
+> >> > +Each interrupt has a configurable priority. Higher priority interrupts are
+> >> > +serviced first. Each context can specify a priority threshold. Interrupts
+> >> > +with priority below this threshold will not cause the PLIC to raise its
+> >> > +interrupt line leading to the context.
+> >> > +
+> >> > +While the PLIC supports both edge-triggered and level-triggered interrupts,
+> >> > +interrupt handlers are oblivious to this distinction and therefore it is not
+> >> > +specified in the PLIC device-tree binding.
+> >> > +
+> >> > +While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
+> >> > +"sifive,plic0" device is a concrete implementation of the PLIC that contains a
+> >> > +specific memory layout, which is documented in chapter 8 of the SiFive U5
+> >> > +Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
+> >> > +
+> >> > +Required properties:
+> >> > +- compatible : "sifive,plic0"
 >
-> On 04.08.2018 13:45, Mikko Perttunen wrote:
->>
->> On 08/03/2018 03:54 PM, Jassi Brar wrote:
->>>
->>> On Mon, Jul 2, 2018 at 5:10 PM, Mikko Perttunen <mperttunen@nvidia.com>
->>> wrote:
->>>>
->>>> Add a new TXDONE option, TXDONE_BY_BLOCK. With this option, the
->>>> send_data function of the mailbox driver is expected to block until
->>>> the message has been sent. The new option is used with the Tegra
->>>> Combined UART driver to minimize unnecessary overhead when transmitting
->>>> data.
->>>>
->>> 1) TXDONE_BY_BLOCK flag :-
->>>          Have you tried setting the flag mbox_chan->mbox_client->tx_block
->>> ?
->>
->>
->> No - I suppose I should have done that. I'm a bit concerned about overhead
->> as send_data may be called thousands of times per second, so I tried to make
->> it as close as possible to the downstream driver that just pokes the mailbox
->> register directly.
->
->
-> I tried using polling in the mailbox framework. Some printing is done from
-> atomic context so it seems tx_block cannot be used -
-> wait_for_completion_timeout understandably does not work in atomic context.
-> I also tried without tx_block, in which case I got some horribly garbled
-> output, but "Try increasing MBOX_TX_QUEUE_LEN" was readable there.
->
-> Any opinions?
->
-The problems arise because your hardware (SM) supports TXDONE_BY_POLL,
-but your client drives it by TXDONE_BY_ACK because the older DB
-channels are so.
+> I think there was a thread bouncing around somewhere where decided to pick the
+> official name of the compatible string to be "sifive,plic-1.0".  The idea here
+> is that the PLIC is compatible across all of SiFive's current implementations,
+> but there's some limitations in the memory map that will probably cause us to
+> spin a version 2 at some point so we want major version number.  The minor
+> number is just in case we find some errata in the PLIC.
 
-Please populate SM channels as a separate controller than DB.
-The DB controller, as is, run by ACK method.
-The SM controller should be run by polling, i.e, set txdone_poll =
-true and the poll period small enough. The virtual tty client driver
-should be able to safely set tx_block from appropriate context.
+Is 1.0 an actual version number corresponding to an exact, revision
+controlled version of the IP or just something you made up? Looks like
+the latter to me and I'm not a fan of s/w folks making up version
+numbers for h/w. Standard naming convention is <vendor>,<soc>-<block>
+unless you have good reason to deviate (IP for FPGAs where version
+numbers are exposed to customers is one example).
+
+And defining a version 2 when you find a quirk doesn't work. You've
+already shipped the DT. You need to be able to fix issues with just an
+OS update. This is why you are supposed to define a compatible string
+for each and every SoC (and use a fallback when they are "the
+same"TM).
+
+> >> > +- #address-cells : should be <0>
+> >> > +- #interrupt-cells : should be <1>
+> >> > +- interrupt-controller : Identifies the node as an interrupt controller
+> >> > +- reg : Should contain 1 register range (address and length)
+> >>
+> >> The one in the real device tree has two entries.
+> >> reg = <0x00000000 0x0c000000 0x00000000 0x04000000>;
+> >>
+> >> Is it intentional or just incorrect entry left over from earlier days?
+> >
+> >> > +             reg = <0xc000000 0x4000000>;
+> >
+> > Looks to me like one has #size-cells and #address-cells set to 2 and
+> > the example is using 1.
+>
+> Yes.  For some background on how this works: we have a hardware generator that
+> has a tree-of-busses abstraction, and each device is attached to some point on
+> that tree.  When a device gets attached to the bus, we also generate a device
+> tree entry.  For whatever system I generated the example PLIC device tree entry
+> from, it must have been attached to a bus with addresses of 32 bits or less,
+> which resulted in #address-cells and #size-cells being 1.
+>
+> Christoph has a HiFive Unleashed, which has a fu540-c000 on it, which is
+> probably not what I generated as an example -- the fu540-c000 is a complicated
+> configuration, when I mess around with the hardware I tend to use simple ones
+> as I'm not really a hardware guy.  I suppose the bus that the PLIC is hanging
+> off on the fu540-c000 has addresses wider than 32 bits.  This makes sense, as
+> the machine has 8GiB of memory and the PLIC is on a bus that's closer to the
+> core than the DRAM is, so it'd need at least enough address bits to fit 8GiB.
+>
+> Is the inconsistency a problem?  I generally write device tree handling code to
+> just respect whatever #*-fields says and don't consider that part of the
+> specification of the binding.  I don't mind changing the example to have
+> #size-fields and #address-fields to be 2, but since it's not wrong I also don't
+> see any reason to change it.  We do have 32-bit devices with PLICs, and while
+> they're not Linux-capable devices we're trying to adopt the Linux device tree
+> bindings through the rest of the RISC-V software ecosystem as they tend to be
+> pretty well thought out.
+
+The example is just an example and dts files can use either. For dts
+files though, you should use the smallest size necessary and utilize
+'ranges'. Some folks seem to think a 64-bit chip needs 64-bit address
+and size everywhere. That's true at the top level typically, but
+individual buses often don't span more than 4GB of address space. But
+all that's out of scope of the example.
+
+There are no "Linux device tree bindings". There are DT bindings that
+happen to be hosting within the Linux tree for convenience.
+
+Rob
