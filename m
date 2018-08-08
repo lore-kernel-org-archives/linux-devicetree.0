@@ -1,57 +1,166 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt: bindings: lm3697: Add bindings for lm3697
- driver
-Date: Wed, 8 Aug 2018 23:09:49 +0200
-Message-ID: <53691469-4554-42a8-c182-762c1a3939b7@gmail.com>
-References: <20180807160442.8937-1-dmurphy@ti.com>
- <20180808195903.GB20912@amd> <f6b3534b-2ee9-782e-35e5-e103c34528bc@ti.com>
- <20180808210215.GA15831@amd> <f18a5616-bb25-da0d-aec8-585e042b4919@ti.com>
+From: skannan@codeaurora.org
+Subject: Re: [PATCH v3 1/2] PM / devfreq: Generic CPU frequency to device
+ frequency mapping governor
+Date: Wed, 08 Aug 2018 14:18:18 -0700
+Message-ID: <8c7ab63d4c646733b89962a1d2a0a4ae@codeaurora.org>
+References: <1533171465-25508-1-git-send-email-skannan@codeaurora.org>
+ <20180807164114.GA12587@rob-hp-laptop>
+ <496ac47a3c78f37655b60841fba7494c@codeaurora.org>
+ <20180808084754.GB25416@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f18a5616-bb25-da0d-aec8-585e042b4919@ti.com>
-Content-Language: en-US
+In-Reply-To: <20180808084754.GB25416@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rob Herring <robh@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, georgi.djakov@linaro.org, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
-
-On 08/08/2018 11:04 PM, Dan Murphy wrote:
-> On 08/08/2018 04:02 PM, Pavel Machek wrote:
->> Hi!
->>
->>>>> +	- #size-cells : 0
->>>>> +	- control-bank-cfg - : Indicates which sink is connected to which control bank
->>>>> +		0 - All HVLED outputs are controlled by bank A
->>>>> +		1 - HVLED1 is controlled bank B, HVLED2/3 are controlled by bank A
->>>>> +		2 - HVLED2 is controlled bank B, HVLED1/3 are controlled by bank A
->>>>> +		3 - HVLED1/2 are controlled by bank B, HVLED3 is controlled by bank A
->>>>> +		4 - HVLED3 is controlled by bank B, HVLED1/2 are controlled by bank A
->>>>> +		5 - HVLED1/3 is controlled by bank B, HVLED2 is controlled by bank A
->>>>> +		6 - (default) HVLED1 is controlled by bank A, HVLED2/3 are controlled by bank B
->>>>> +		7 - All HVLED outputs are controlled by bank B
->>>>
->>>> This is quite long way to describe a bitmask, no? Could we make
->>>> it so that control-bank-cfg is not needed?
->>>
->>> The problem we have here is there is a potential to control
->>> 3 different LED string but only 2 sinks.  So control bank A can control 2 LED strings and control
->>> bank b can control 1 LED string.  
->>>
->>
->> Can we forget about the LED strings, and just expose the sinks as
->> Linux LED devices?
+On 2018-08-08 01:47, Sudeep Holla wrote:
+> On Tue, Aug 07, 2018 at 12:37:07PM -0700, skannan@codeaurora.org wrote:
+>> On 2018-08-07 09:41, Rob Herring wrote:
+>> >On Wed, Aug 01, 2018 at 05:57:41PM -0700, Saravana Kannan wrote:
+>> >>Many CPU architectures have caches that can scale independent of the
+>> >>CPUs.
+>> >>Frequency scaling of the caches is necessary to make sure the cache is
+>> >>not
+>> >>a performance bottleneck that leads to poor performance and power. The
+>> >>same
+>> >>idea applies for RAM/DDR.
+>> >>
+>> >>To achieve this, this patch adds a generic devfreq governor that takes
+>> >>the
+>> >>current frequency of each CPU frequency domain and then adjusts the
+>> >>frequency of the cache (or any devfreq device) based on the frequency of
+>> >>the CPUs. It listens to CPU frequency transition notifiers to keep
+>> >>itself
+>> >>up to date on the current CPU frequency.
+>> >>
+>> >>To decide the frequency of the device, the governor does one of the
+>> >>following:
+>> >>
+>> >>* Uses a CPU frequency to device frequency mapping table
+>> >>  - Either one mapping table used for all CPU freq policies (typically
+>> >>used
+>> >>    for system with homogeneous cores/clusters that have the same OPPs).
+>> >>  - One mapping table per CPU freq policy (typically used for ASMP
+>> >>systems
+>> >>    with heterogeneous CPUs with different OPPs)
+>> >>
+>> >>OR
+>> >>
+>> >>* Scales the device frequency in proportion to the CPU frequency. So, if
+>> >>  the CPUs are running at their max frequency, the device runs at its
+>> >>max
+>> >>  frequency.  If the CPUs are running at their min frequency, the device
+>> >>  runs at its min frequency. And interpolated for frequencies in
+>> >>between.
+>> >>
+>> >>Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+>> >>---
+>> >> .../bindings/devfreq/devfreq-cpufreq-map.txt       |  53 ++
+>> >
+>> >Bindings should be a separate patch.
+>> >
+>> >> drivers/devfreq/Kconfig                            |   8 +
+>> >> drivers/devfreq/Makefile                           |   1 +
+>> >> drivers/devfreq/governor_cpufreq_map.c             | 583
+>> >>+++++++++++++++++++++
+>> >> 4 files changed, 645 insertions(+)
+>> >> create mode 100644
+>> >>Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+>> >> create mode 100644 drivers/devfreq/governor_cpufreq_map.c
+>> >>
+>> >>diff --git
+>> >>a/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+>> >>b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+>> >>new file mode 100644
+>> >>index 0000000..982a30b
+>> >>--- /dev/null
+>> >>+++ b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
+>> >>@@ -0,0 +1,53 @@
+>> >>+Devfreq CPUfreq governor
+>> >>+
+>> >>+devfreq-cpufreq-map is a parent device that contains one or more child
+>> >>devices.
+>> >>+Each child device provides CPU frequency to device frequency mapping
+>> >>for a
+>> >>+specific device. Examples of devices that could use this are: DDR,
+>> >>cache and
+>> >>+CCI.
+>> >>+
+>> >>+Parent device name shall be "devfreq-cpufreq-map".
+>> >>+
+>> >>+Required child device properties:
+>> >>+- cpu-to-dev-map, or cpu-to-dev-map-<X>:
+>> >>+			A list of tuples where each tuple consists of a
+>> >>+			CPU frequency (KHz) and the corresponding device
+>> >>+			frequency. CPU frequencies not listed in the table
+>> >>+			will use the device frequency that corresponds to the
+>> >>+			next rounded up CPU frequency.
+>> >>+			Use "cpu-to-dev-map" if all CPUs in the system should
+>> >>+			share same mapping.
+>> >>+			Use cpu-to-dev-map-<cpuid> to describe different
+>> >>+			mappings for different CPUs. The property should be
+>> >>+			listed only for the first CPU if multiple CPUs are
+>> >>+			synchronous.
+>> >>+- target-dev:		Phandle to device that this mapping applies to.
+>> >>+
+>> >>+Example:
+>> >>+	devfreq-cpufreq-map {
+>> >>+		cpubw-cpufreq {
+>> >>+			target-dev = <&cpubw>;
+>> >>+			cpu-to-dev-map =
+>> >>+				<  300000  1144000 >,
+>> >>+				<  422400  2288000 >,
+>> >>+				<  652800  3051000 >,
+>> >>+				<  883200  5996000 >,
+>> >>+				< 1190400  8056000 >,
+>> >>+				< 1497600 10101000 >,
+>> >>+				< 1728000 12145000 >,
+>> >>+				< 2649600 16250000 >;
+>> >
+>> >Now we have frequencies listed in multiple places, the OPP tables and
+>> >here? Perhaps it is grouping OPPs that should be done.
+>> 
+>> This doesn't list all OPPs (it can if necessary). This is listing the
+>> minimum frequency needed to give good performance/power for a
+>> device/product.
+>> 
 > 
-> 2 sinks 3 LED strings.  How do you know which LED string is which and what bank it belongs
-> to when setting the brightness.  Each Bank has a separate register for brightness control.
+> Shouldn't the "status" property be used to disable OPPs you don't need
+> on a particular platform ?
 
-Just a blind shot, without going into details - could you please check
-if led-sources property documented in the common LED bindings couldn't
-help here?
+But that's not the point here? We aren't trying to disable any OPPs 
+here? Not sure what you mean.
 
--- 
-Best regards,
-Jacek Anaszewski
+> Duplicating values is highly prone to errors and should be avoided.
+> 
+>> AFAIK, OPP grouping isn't something that's supported in OPP framework 
+>> or in
+>> DT. Is there something specific you had in mind? Also, I'd like for 
+>> this to
+>> work even with devices that don't have OPPs listed in DT.
+>> 
+> Also what's the solution you have for platforms with new *QCom FW 
+> Cpufreq* ?
+> IIUC the frequency is obtained from the firmware. TBH this should 
+> ideally
+> be handled in firmware if cpufreq is also handled by the firmware. I 
+> guess
+> this platform doesn't have that ?
+
+All QC platforms would use this.
+
+As a personal (non-Qcom) opinion, I'd rather the kernel control this 
+than have some black magic FW manage this. I've a really bitter taste in 
+my mouth for FW hiding this because of a broken ACPI implementation in 
+one of my x86 motherboards prevented CPUfreq from working (this was well 
+before I worked on CPUfreq). Pushing stuff to FW seems to beat the ideal 
+behind an opensource OS. In a few cases it's elegant or more robust, so 
+maybe in those cases its okay to use a FW. But I'd rather not for 
+simpler stuff like this.
+
+-Saravana
