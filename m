@@ -1,177 +1,48 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [RFC net-next 00/15] net: A socket API for LoRa
-Date: Thu, 9 Aug 2018 00:42:58 +0200
-Message-ID: <a70e9715-beac-d9a8-145e-de00175e56fa@suse.de>
-References: <20180701110804.32415-1-afaerber@suse.de>
- <CAC=mGzgUCopz2xTOA0R-WD8a1DOaOOUn=YpfdMiJ33y3hnh6kg@mail.gmail.com>
- <92ee4016-1da9-826b-3674-b2d604a64848@suse.de>
- <20180808213640.10a1d76f@alans-desktop>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [v3 PATCH 0/2] arm64: dts: Add sdm845 GPU/GMU and SMMU
+Date: Wed,  8 Aug 2018 16:46:59 -0600
+Message-ID: <20180808224701.7527-1-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180808213640.10a1d76f@alans-desktop>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc: Jian-Hong Pan <starnight@g.ncu.edu.tw>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=c3=b6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=c3=b6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, contact@snootlab.com, Ben Whitten <ben.whitten@lairdtech.com>, Brian Ray <brian.ray@link-labs.com>, lora@globalsat.com.tw, Alexander Graf <agraf@suse.de>=?UTF-8?Q?Michal_Kube=c4=8dek?= <m>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sibis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 08.08.2018 um 22:36 schrieb Alan Cox:
-> On Sun, 5 Aug 2018 02:11:25 +0200
-> Andreas Färber <afaerber@suse.de> wrote:
->> Am 03.07.2018 um 17:11 schrieb Jian-Hong Pan:
->>> 2018-07-01 19:07 GMT+08:00 Andreas Färber <afaerber@suse.de>:  
->> LoRa radio channels being half-duplex, we'd need to stop receiving in
->> ndo_start_xmit and re-start receiving in the TX interrupt handler AFAIU.
->> Yes, it's ugly - one reason I haven't implemented RX in sx1276 yet.
-> 
-> Why - the signal is still floating around in the air, you can't unhear it
-> at the antenna.
-
-Why what? :)
-
-> If a given piece of hardware needs to flip between RX
-> and TX mode then it should be handled by that driver.
-
-Yes, and we are talking about that concrete sx1276 driver here, whose
-chipset has a state machine that only allows either rx or tx and also
-has standby and sleep modes with differing levels of data retention.
-
-The sx1301 is a different beast (and driver) and may allow both.
-
-In any case, the ndo_start_xmit hook is in each device driver. But the
-recvmsg hook I mentioned is at protocol layer, which exactly is the
-layering problem I see.
-
-> (Some ancient ethernet cards do this btw.. they can't listen and transmit
-> at the same time)
-
-So when do they start receiving?
-
-The issue here was that my original description, which you appear to
-have cut, suggested a continuous listen mode, interrupted by transmit.
-Jian-Hong didn't like that, with reference to the LoRaWAN spec that
-supposedly asks for only being in receive mode when expecting a message,
-likely to save on battery. So the question is, could we cleanly
-implement receiving only when the user asks us to, or is that a no-go?
-
->>> - We can have a pre-defined table according to LoRaWAN Regional Parameters.
->>> - Device driver declares the hardware's capability, for example
->>> frequency, TX power.  And then registers as a LoRaWAN compatible
->>> device.  
->>
->> That sounds like a layering violation. We rather need to expose all
->> these tunable parameters individually at the LoRa layer, allowing the
->> LoRaWAN layer to configure them as it pleases. Not the other direction.
->> That still leaves my above question 4) open of how to implement each.
-> 
-> Wifi already has the general policy database for the various existing
-> protocols. Please take a look at the CRDA agent and how it hooks into
-> wireless.It might need to some tweaking but it would be odd to have
-> different configuration schemes for different wifi protocols.
-
-CRDA/wireless-regdb had been brought up and I've been pointed to nl80211
-and nl802154, which I've tried to make sense of for my initial nllora.
-Admittedly with limited success, as that code is slightly complex.
-
-We also seemed to have consensus here that we _should_ be reusing
-wireless-regdb but would need to extend it 1.) with sub-GHz frequency
-bands and 2.) duty-cycle limits for some of those bands. No maintainer
-commented on that so far. Thus I am working in tiny steps on providing
-netlink-layer commands in nllora that can dispatch the individual radio
-settings to drivers, which then upper layers can instrument as needed.
-
-And making my very first steps with netlink here, it appeared as if each
-technology has its own enums of commands and attributes, so I don't see
-how to reuse anything from Wifi here apart from some design inspiration.
-
->> The use case I have in mind is this: User A opens a LoRaWAN socket and
->> using maclorawan sends a packet P1. Here the LoRaWAN Regional Parameters
->> and LoRaWAN Sync Word need to be applied.
->> User B then opens a pure LoRa socket and transmits a packet P1' with
->> different Sync Word, SF, BW, CR, etc.
->> Afterwards user A wants to send another packet P2 via LoRaWAN - this
->> needs to use the same LoRaWAN settings as before, not those used for
->> LoRa in between. Therefore I was thinking about socket-level options, as
->> netlink operations would be device-wide, with undesired side-effects.
-> 
-> Agreed
-> 
->> Obviously in that scenario not both users can receive at the same time.
-> 
-> That's a hardware question. Imagine a software defined radio. If your
-> limitation wouldn't exist in a pure software defined radio then it's
-> almost certainly a device level detal.
-
-An SDR would not be using this sx1276 device driver, I imagine.
-
-In fact I would expect an SDR device not to be in drivers/net/lora/ at
-all but to live in drivers/net/sdr/ and to consume ETH_P_LORA etc. skbs
-and just do the right thing for them depending on their type...
-
->> interface but cleanly distinguished as ETH_P_GFSK or something.
->> For example, the Chistera Pi HAT has both an RFM95W and an RFM22 module.
-> 
-> Agreed if you can flip per packet.
-
-The SX127x can - it might involve delays of course.
-
-The SX130x doesn't even need to flip for sending AFAICT, it's just
-metadata after the payload in the FIFO.
-
->> The next question arising is how the user would create such an skb. Just
->> like I was hesitant about PF_LORAWAN originally, I'd like to avoid
->> polluting the PF_ number space for each of these. Maybe have one PF_FSK
->> as equivalent to PF_LORA and then have either a socket option or
->> sockaddr field to select the modulation variants? Not sure how exactly
->> those others differ from each other, that's why I tried to postpone the
->> FSK topic and to focus on LoRa first - b) below.
->>
->> At this point we could also argue whether we need a PF_LORA at all or
->> rather just some generic PF_RADIO with lots of options stored in its
->> sockaddr.
-> 
-> What matters most is mux/demux.
-> 
-> If you've got something listening to data but without the structure
-> needed to identify multiple listeners and split out the data meaningfully
-> to those listeners according to parts of the packet then you've got no
-> reason to make it a protocol just use SOCK_PACKET and if need be BPF.
-
-Sorry, that doesn't parse for me. SOCK_PACKET must be a protocol on some
-PF_ protocol family, no? Are you suggesting I use SOCK_PACKET instead of
-SOCK_DGRAM in what is now net/lora/dgram.c? Or are you saying there's
-some generic implementation that we can reuse and scratch mine?
-
-> The reason we have a socket layer not /dev/ethernet0 is that it's
-> meaningful to divide messages up into flows, and to partition those flows
-> securely amongst multiple consumers/generators.
-
-For me the distinction is that a /dev/whatever0 would seem more suited
-for a stream of data to read/write, whereas sockets give us a bounded
-skb for packets at device driver level.
-
-These PHYs all broadcast something over the antenna when sending, with
-any addressing of listeners or senders being optional and MAC-specific,
-apart from the LoRa/FSK SyncWord as well as the various frequency etc.
-settings that determine what the receiver listens for.
-
-None of these PHYs define any mechanism like EtherType through which to
-identify upper-layer protocols.
-
-So in a way, listening is always in a promiscuous mode, and I guess we
-would need to try to parse each incoming packet as e.g. a LoRaWAN packet
-and just give up if it's too short or checksums don't match. Only at the
-layer of LoRaWAN and competing proprietary or custom protocols can we
-split received packets out to individual listeners.
-
-Does that give us any further clues for the design discussion here?
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+QWRkIERUIG5vZGVzIGZvciB0aGUgc2RtODQ1IEdQVS9HTVUgKGdyYXBoaWNzIG1hbmFnZW1lbnQg
+dW5pdCkgYW5kIHRoZSBjb21wYW5pb24KYXJtLXNtbXUtdjIgY29tcGF0aWJsZSBTTU1VLgoKVGhp
+cyBidWlsZHMgb24gdGhlIGZvbGxvd2luZyBkZXBlbmRlbmNpZXMgLQpodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzEwMjg2MzY5LyAtIGJpbmRpbmdzIGZvciBxY29tLGxldmVsCmh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyODE1OTkvIC0gcWNvbSxzbW11LXYy
+IGJpbmRpbmdzCgpBbmQgcmVxdWlyZXMgdGhlc2UgdHdvIGNoYW5nZXMgZm9yIHRoZSBkcml2ZXI6
+CgpodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gvMjQzNTEyLyAtIHVzZSBu
+ZXcgUERDIHNlY3Rpb25zCmh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9wYXRjaC8y
+NDM1MTMvIC0gdXNlIHFjb20sZ211IGluc3RlYWQgb2YgZ211CgpJIHRoaW5rIHdlIGFyZSBzdGls
+bCB3YWl0aW5nIGZvciB0aGUgZGVwZW5kZW5jaWVzIHRvIG1lcmdlIGJ1dCB0aGlzIHNob3VsZAph
+dCBsZWFzdCBiZSB1c2FibGUgZm9yIGFueWJvZHkgd2l0aCBhIHRhcmdldCB0aGF0IHdhbnRzIHRv
+IGdldCB0aGUgR1BVIHVwCmFuZCBoYXBweS4KClt2MyAtIFNwbGl0IEdNVSBQREMgcmVnaW9uIGlu
+dG8gdHdvIEdQVSBzcGVjaWZpYyBzZWN0aW9ucywgZml4IGluZGVudGF0aW9uLAogIHJlYWxseSB1
+c2UgcWNvbSxnbXUgZm9yIHRoZSBwaGFuZGxlIG5hbWVdClt2MiAtIGNoYW5nZWQgcWNvbSxhcmMt
+bGV2ZWwgdG8gcWNvbSxsZXZlbCBmb2xsb3dpbmcgZGlzY3Vzc2lvbiB3aXRoIFZpcmVzaDsKY2hh
+bmdlIGdtdSBwaGFuZGxlIHRvIHFjb20sZ211IHBlciBSb2JdCgpKb3JkYW4gQ3JvdXNlICgyKToK
+ICBkdC1iaW5kaW5nczogRG9jdW1lbnQgcWNvbSxhZHJlbm8tZ211CiAgYXJtNjQ6IGR0czogc2Rt
+ODQ1OiBBZGQgZ3B1IGFuZCBnbXUgZGV2aWNlIG5vZGVzCgogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tc20vZ211LnR4dCAgIHwgIDU0ICsrKysrKysrCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0ICAgfCAgMTAgKy0KIGFyY2gvYXJtNjQvYm9vdC9k
+dHMvcWNvbS9zZG04NDUuZHRzaSAgICAgICAgICB8IDEyMSArKysrKysrKysrKysrKysrKysKIDMg
+ZmlsZXMgY2hhbmdlZCwgMTgzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
+L2dtdS50eHQKCi0tIAoyLjE4LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2ZyZWVkcmVubwo=
