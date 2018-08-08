@@ -1,43 +1,47 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH] arm64: dts: hisilicon: Add missing clocks property for
- CPUs
-Date: Wed, 8 Aug 2018 11:28:59 +0100
-Message-ID: <5B6AC5EB.3030808@hisilicon.com>
-References: <6de0dde994326b3fdc2b746e22fdf1afe18067d2.1532315177.git.viresh.kumar@linaro.org>
- <20180731072414.vymng6k5uamgmyhi@vireshk-i7>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller documentation
+Date: Wed, 8 Aug 2018 18:35:28 +0800
+Message-ID: <CAMz4kuKZHxYiJaMHnqdAGth8XkfGnq3-Tsfc59cGjsHQHZaY7A@mail.gmail.com>
+References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
+ <20180807134121.GA7958@sirena.org.uk> <CAMz4kuJsyKv_fvrqRR3pdfKsLVy53Uj0KX+m_9jLxpcVcMvs9g@mail.gmail.com>
+ <20180808095025.GB9346@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731072414.vymng6k5uamgmyhi@vireshk-i7>
+In-Reply-To: <20180808095025.GB9346@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, lanqing.liu@spreadtrum.com, linux-spi@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
+On 8 August 2018 at 17:50, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Aug 08, 2018 at 10:26:42AM +0800, Baolin Wang wrote:
+>
+>> Sorry for confusing. Let me try to explain it explicitly.
+>> We can set the word size (bits_per_word) for each transmission, for
+>> our SPI controller,  after every word size transmission, we need one
+>> interval time (hardware automatically) to make sure the slave has
+>> enough time to receive the whole data.
+>
+> OK, so it's an inter word delay.  Some other controllers definitely have
+> the same feature.
+>
+>> Yes, I agree we should configure it at runtime by the device, but we
+>> did not find one member to use in 'struct spi_transfer', we just find
+>> one similar 'delay_usecs' member in 'struct spi_transfer' but not
+>> same. We can use  'delay_usecs' to set our hardware interval value,
+>> but we should clean it when transfer is done, since we do not need to
+>> delay after the transfer in spi_transfer_one _message(). Or can we add
+>> one new member maybe named 'word_interval' to indicate the interval
+>> time between word size transmission?
+>
+> Right, I don't think we added this yet (if we did I can't see it).  I'd
+> add a new field to spi_transfer for this, then other controllers with
+> the same support can implement it as well and drivers can start using
+> it too.
 
-On 2018/7/31 8:24, Viresh Kumar wrote:
-> On 23-07-18, 08:36, Viresh Kumar wrote:
->> The clocks property should either be present for all the CPUs of a
->> cluster or none. If these are present only for a subset of CPUs of a
->> cluster then things will start falling apart as soon as the CPUs are
->> brought online in a different order. For example, this will happen
->> because the operating system looks for such properties in the CPU node
->> it is trying to bring up, so that it can register a cooling device.
->>
->> Add missing clocks property.
->>
->> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 7 +++++++
->>  1 file changed, 7 insertions(+)
-> 
-> @Wei: Can you please apply this one as well ?
+OK. So I will name the new filed as 'word_delay', is it OK for you?
 
-Sorry for the late reply!
-I will apply it after 4.19-rc1 released.
-Thanks!
-
-Best Regards,
-Wei
+-- 
+Baolin Wang
+Best Regards
