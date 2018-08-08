@@ -1,119 +1,66 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH 1/4] dt-bindings: reset: Add PDC reset binding for SDM845
- SoCs
-Date: Wed, 8 Aug 2018 15:37:24 -0600
-Message-ID: <20180808213723.GA26960@jcrouse-lnx.qualcomm.com>
-References: <20180727152811.15258-1-sibis@codeaurora.org>
- <1533026547.3444.4.camel@pengutronix.de>
- <28f34ddf-03b2-0baa-c04f-15e546ef3f75@codeaurora.org>
- <20180807181659.GA20659@rob-hp-laptop>
- <ca959e6f-b1b0-8fdf-2c40-0b49a4cf06e6@codeaurora.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 1/2] dt: bindings: lm3697: Add bindings for lm3697
+ driver
+Date: Wed, 8 Aug 2018 16:41:16 -0500
+Message-ID: <cdf671fa-674d-6e34-177e-c0e9cb4f6137@ti.com>
+References: <20180807160442.8937-1-dmurphy@ti.com>
+ <20180808195903.GB20912@amd> <f6b3534b-2ee9-782e-35e5-e103c34528bc@ti.com>
+ <20180808210215.GA15831@amd> <f18a5616-bb25-da0d-aec8-585e042b4919@ti.com>
+ <20180808210926.GC15831@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ca959e6f-b1b0-8fdf-2c40-0b49a4cf06e6@codeaurora.org>
+In-Reply-To: <20180808210926.GC15831@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org, ilina@codeaurora.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2018 at 09:14:05PM +0530, Sibi Sankar wrote:
-> Hi Rob,
-> Thanks for the review
+On 08/08/2018 04:09 PM, Pavel Machek wrote:
+> On Wed 2018-08-08 16:04:43, Dan Murphy wrote:
+>> On 08/08/2018 04:02 PM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>>>> +	- #size-cells : 0
+>>>>>> +	- control-bank-cfg - : Indicates which sink is connected to which control bank
+>>>>>> +		0 - All HVLED outputs are controlled by bank A
+>>>>>> +		1 - HVLED1 is controlled bank B, HVLED2/3 are controlled by bank A
+>>>>>> +		2 - HVLED2 is controlled bank B, HVLED1/3 are controlled by bank A
+>>>>>> +		3 - HVLED1/2 are controlled by bank B, HVLED3 is controlled by bank A
+>>>>>> +		4 - HVLED3 is controlled by bank B, HVLED1/2 are controlled by bank A
+>>>>>> +		5 - HVLED1/3 is controlled by bank B, HVLED2 is controlled by bank A
+>>>>>> +		6 - (default) HVLED1 is controlled by bank A, HVLED2/3 are controlled by bank B
+>>>>>> +		7 - All HVLED outputs are controlled by bank B
+>>>>>
+>>>>> This is quite long way to describe a bitmask, no? Could we make
+>>>>> it so that control-bank-cfg is not needed?
+>>>>
+>>>> The problem we have here is there is a potential to control
+>>>> 3 different LED string but only 2 sinks.  So control bank A can control 2 LED strings and control
+>>>> bank b can control 1 LED string.  
+>>>>
+>>>
+>>> Can we forget about the LED strings, and just expose the sinks as
+>>> Linux LED devices?
+>>
+>> 2 sinks 3 LED strings.  How do you know which LED string is which and what bank it belongs
+>> to when setting the brightness.  Each Bank has a separate register for brightness control.
 > 
-> On 08/07/2018 11:46 PM, Rob Herring wrote:
-> >On Tue, Jul 31, 2018 at 06:27:24PM +0530, Sibi S wrote:
-> >>Hi Philipp,
-> >>Thanks for the review!
-> >>
-> >>On 07/31/2018 02:12 PM, Philipp Zabel wrote:
-> >>>Hi Sibi,
-> >>>
-> >>>On Fri, 2018-07-27 at 20:58 +0530, Sibi Sankar wrote:
-> >>>>Add SDM845 PDC (Power Domain Controller) reset controller binding
-> >>>>
-> >>>>Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> >>>>---
-> >>>>   .../bindings/reset/qcom,pdc-reset.txt         | 52 +++++++++++++++++++
-> >>>>   include/dt-bindings/reset/qcom,sdm845-pdc.h   | 20 +++++++
-> >>>>   2 files changed, 72 insertions(+)
-> >>>>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> >>>>   create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
-> >>>>
-> >>>>diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> >>>>new file mode 100644
-> >>>>index 000000000000..85e159962e08
-> >>>>--- /dev/null
-> >>>>+++ b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> >>>>@@ -0,0 +1,52 @@
-> >>>>+PDC Reset Controller
-> >>>>+======================================
-> >>>>+
-> >>>>+This binding describes a reset-controller found on PDC-Global(Power Domain
-> >>>>+Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
-> >>>>+
-> >>>>+Required properties:
-> >>>>+- compatible:
-> >>>>+	Usage: required
-> >>>>+	Value type: <string>
-> >>>>+	Definition: must be:
-> >>>>+		    "qcom,sdm845-pdc-global"
-> >>>>+
-> >>>>+- reg:
-> >>>>+	Usage: required
-> >>>>+	Value type: <prop-encoded-array>
-> >>>>+	Definition: must specify the base address and size of the register
-> >>>>+	            space.
-> >>>>+
-> >>>>+- #reset-cells:
-> >>>>+	Usage: required
-> >>>>+	Value type: <uint>
-> >>>>+	Definition: must be 1; cell entry represents the reset index.
-> >>>>+
-> >>>>+Example:
-> >>>>+
-> >>>>+pdc_reset: reset-controller@b2e0000 {
-> >>>
-> >>>Is this really just a reset controller?
-> >>>
-> >>>The name makes it sound like a driver binding to this should also
-> >>>provide pm_genpd and the binding should probably call this a power-
-> >>>controller: Documentation/devicetree/bindings/power/power_domain.txt.
-> >>>
-> >>
-> >>The PDC-global reg space which is a part of PDC-wrapper reg space seems
-> >>to be only used for the reset lines.
-> >>
-> >>Couple of other drivers use other parts of the PDC-wrapper reg space:
-> >>https://patchwork.kernel.org/patch/10223701/ (PDC-Interrupt controller)
-> >>https://patchwork.kernel.org/patch/10255767/ (GMU-PDC incorrectly tries
-> >>to occupy the entire pdc-wrapper reg space)
-> >>
-> >>since it couldn't be logically mapped into pdc-interrupt driver, it had
-> >>to be included as a separate reset driver.
-> >
-> >You can't have overlapping regions in DT (well, you can because we have
-> >to work-around existing DTs that do, but you shouldn't).
-> >
-> >A single node can be multiple providers such as interrupt controller and
-> >reset controller. It's an OS problem to split that into multiple
-> >drivers.
+> Yes, and LED strings are statically assigned to banks, right?
 > 
-> There will be no overlaps. Jordan will be changing the dt binding of
-> gmu_pdc so that there is no overlap I guess. What I meant to say is that
-> pdc-global is a separate reg-space and currently has no other
-> functionality other than exposing the reset lines.
+> So why not simply forget about LED strings for sake of hw
+> abstractions, and work just with banks?
 
-Correct - the updated GPU DT will be:
+How would you set the control bank register for the correct LED string configuration?
 
-  reg = <0x506a000 0x30000>,
-     <0xb280000 0x10000>,
-     <0xb480000, 0x10000>;
-  reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
+Dan
 
-Jordan
+> 									Pavel
+> 
+
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+------------------
+Dan Murphy
