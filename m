@@ -1,70 +1,86 @@
-From: Bharat Bhushan <bharat.bhushan@nxp.com>
-Subject: RE: [RFC 3/5] powerpc/mpic: Add support for non-contiguous irq ranges
-Date: Wed, 8 Aug 2018 05:57:09 +0000
-Message-ID: <AM5PR0401MB254583A97F24DBE1BACF1B1E9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
+Date: Wed, 08 Aug 2018 00:55:37 -0500
+Message-ID: <aeff83355ee5235cfd6107dba06a5f7957b45c92.camel@buserror.net>
 References: <1532684881-19310-1-git-send-email-Bharat.Bhushan@nxp.com>
-         <1532684881-19310-4-git-send-email-Bharat.Bhushan@nxp.com>
-         <20180807180938.GA13623@rob-hp-laptop>
-         <a20f27b15161164c829f771d2b085639f6709374.camel@buserror.net>
-         <AM5PR0401MB2545AF363F5DD258205177FC9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <7526e100693e4db9bb3adf576254b2161086dfe8.camel@buserror.net>
+         <1532684881-19310-6-git-send-email-Bharat.Bhushan@nxp.com>
+         <ab2a113620123cb71364b6ae89328ae2fca49821.camel@buserror.net>
+         <AM5PR0401MB254592DC0E917FD292B323BA9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7526e100693e4db9bb3adf576254b2161086dfe8.camel@buserror.net>
-Content-Language: en-US
+In-Reply-To: <AM5PR0401MB254592DC0E917FD292B323BA9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, Rob Herring <robh@kernel.org>
-Cc: "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "tyreld@linux.vnet.ibm.com" <tyreld@linux.vnet.ibm.com>, "joe@perches.com" <joe@perches.com>
+To: Bharat Bhushan <bharat.bhushan@nxp.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "tyreld@linux.vnet.ibm.com" <tyreld@linux.vnet.ibm.com>, "joe@perches.com" <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
-bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDgsIDIwMTgg
-MTE6MjEgQU0NCj4gVG86IEJoYXJhdCBCaHVzaGFuIDxiaGFyYXQuYmh1c2hhbkBueHAuY29tPjsg
-Um9iIEhlcnJpbmcNCj4gPHJvYmhAa2VybmVsLm9yZz4NCj4gQ2M6IGJlbmhAa2VybmVsLmNyYXNo
-aW5nLm9yZzsgcGF1bHVzQHNhbWJhLm9yZzsgbXBlQGVsbGVybWFuLmlkLmF1Ow0KPiBnYWxha0Br
-ZXJuZWwuY3Jhc2hpbmcub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4ga3N0ZXdhcnRAbGlu
-dXhmb3VuZGF0aW9uLm9yZzsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgt
-DQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGtlZXNjb29rQGNocm9taXVtLm9yZzsNCj4gdHly
-ZWxkQGxpbnV4LnZuZXQuaWJtLmNvbTsgam9lQHBlcmNoZXMuY29tDQo+IFN1YmplY3Q6IFJlOiBb
-UkZDIDMvNV0gcG93ZXJwYy9tcGljOiBBZGQgc3VwcG9ydCBmb3Igbm9uLWNvbnRpZ3VvdXMgaXJx
-DQo+IHJhbmdlcw0KPiANCj4gT24gV2VkLCAyMDE4LTA4LTA4IGF0IDAzOjM3ICswMDAwLCBCaGFy
-YXQgQmh1c2hhbiB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4g
-PiBGcm9tOiBTY290dCBXb29kIFttYWlsdG86b3NzQGJ1c2Vycm9yLm5ldF0NCj4gPiA+IFNlbnQ6
-IFdlZG5lc2RheSwgQXVndXN0IDgsIDIwMTggMjozNCBBTQ0KPiA+ID4gVG86IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+OyBCaGFyYXQgQmh1c2hhbg0KPiA+ID4gPGJoYXJhdC5iaHVzaGFu
-QG54cC5jb20+DQo+ID4gPiBDYzogYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVsdXNAc2Ft
-YmEub3JnOyBtcGVAZWxsZXJtYW4uaWQuYXU7DQo+ID4gPiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcu
-b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiA+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlv
-bi5vcmc7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC0NCj4gPiA+
-IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGtlZXNjb29rQGNocm9taXVtLm9yZzsNCj4gPiA+IHR5
-cmVsZEBsaW51eC52bmV0LmlibS5jb207IGpvZUBwZXJjaGVzLmNvbQ0KPiA+ID4gU3ViamVjdDog
-UmU6IFtSRkMgMy81XSBwb3dlcnBjL21waWM6IEFkZCBzdXBwb3J0IGZvciBub24tY29udGlndW91
-cw0KPiA+ID4gaXJxIHJhbmdlcw0KPiA+ID4NCj4gPiA+IE9uIFR1ZSwgMjAxOC0wOC0wNyBhdCAx
-MjowOSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gPiA+IE9uIEZyaSwgSnVsIDI3LCAy
-MDE4IGF0IDAzOjE3OjU5UE0gKzA1MzAsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+ID4gPiA+
-IEZyZWVzY2FsZSBNUElDIGgvdyBtYXkgbm90IHN1cHBvcnQgYWxsIGludGVycnVwdCBzb3VyY2Vz
-DQo+ID4gPiA+ID4gcmVwb3J0ZWQgYnkgaGFyZHdhcmUsICJsYXN0LWludGVycnVwdC1zb3VyY2Ui
-IG9yIHBsYXRmb3JtLiBPbg0KPiA+ID4gPiA+IHRoZXNlIHBsYXRmb3JtcyBhIG1pc2NvbmZpZ3Vy
-ZWQgZGV2aWNlIHRyZWUgdGhhdCBhc3NpZ25zIG9uZSBvZg0KPiA+ID4gPiA+IHRoZSByZXNlcnZl
-ZCBpbnRlcnJ1cHRzIGxlYXZlcyBhIG5vbi1mdW5jdGlvbmluZyBzeXN0ZW0gd2l0aG91dA0KPiB3
-YXJuaW5nLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGVyZSBhcmUgbG90cyBvZiB3YXlzIHRvIG1pc2Nv
-bmZpZ3VyZSBEVHMuIEkgZG9uJ3QgdGhpbmsgdGhpcyBpcw0KPiA+ID4gPiBzcGVjaWFsIGFuZCBu
-ZWVkcyBhIHByb3BlcnR5Lg0KPiA+ID4NCj4gPiA+IFllYWgsIHRoZSBzeXN0ZW0gd2lsbCBiZSBq
-dXN0IGFzIG5vbi1mdW5jdGlvbmluZyBpZiB5b3Ugc3BlY2lmeSBhDQo+ID4gPiB2YWxpZC0NCj4g
-PiA+IGJ1dC0NCj4gPiA+IHdyb25nLWZvci10aGUtZGV2aWNlIGludGVycnVwdCBudW1iZXIuDQo+
-ID4NCj4gPiBTb21lIGlzIG9uZSBhZGRpdGlvbmFsIGJlbmVmaXRzIG9mIHRoaXMgY2hhbmdlcywg
-TVBJQyBoYXZlIHJlc2VydmVkDQo+ID4gcmVnaW9ucyBmb3IgdW4tc3VwcG9ydGVkIGludGVycnVw
-dHMgYW5kIHJlYWQvd3JpdGVzIHRvIHRoZXNlIHJlc2VydmVkDQo+ID4gcmVnaW9ucyBzZWFtcyBo
-YXZlIG5vIGVmZmVjdC4NCj4gPiBNUElDIGRyaXZlciByZWFkcy93cml0ZXMgdG8gdGhlIHJlc2Vy
-dmVkIHJlZ2lvbnMgZHVyaW5nIGluaXQvdW5pbml0DQo+ID4gYW5kIHNhdmUvcmVzdG9yZSBzdGF0
-ZS4NCj4gPg0KPiA+IExldCBtZSBrbm93IGlmIGl0IG1ha2Ugc2Vuc2UgdG8gaGF2ZSB0aGVzZSBj
-aGFuZ2VzIGZvciBtZW50aW9uZWQNCj4gcmVhc29ucy4NCj4gDQo+IFRoZSBkcml2ZXIgaGFzIGJl
-ZW4gZG9pbmcgdGhpcyBmb3JldmVyIHdpdGggbm8gaWxsIGVmZmVjdC4NCg0KWWVzLCB0aGVyZSBh
-cmUgbm8gaXNzdWUgcmVwb3J0ZWQNCg0KPiAgV2hhdCBpcyB0aGUgIG1vdGl2YXRpb24gZm9yIHRo
-aXMgY2hhbmdlPw0KDQpPbiBTaW11bGF0aW9uIG1vZGVsIEkgc2VlIHdhcm5pbmcgd2hlbiBhY2Nl
-c3NpbmcgdGhlIHJlc2VydmVkIHJlZ2lvbiwgU28gdGhpcyBwYXRjaCBpcyBqdXN0IGFuIGVmZm9y
-dCB0byBpbXByb3ZlLg0KDQpUaGFua3MNCi1CaGFyYXQNCg0KPiANCj4gLVNjb3R0DQoNCg==
+On Wed, 2018-08-08 at 03:44 +0000, Bharat Bhushan wrote:
+> > -----Original Message-----
+> > From: Scott Wood [mailto:oss@buserror.net]
+> > Sent: Wednesday, August 8, 2018 2:44 AM
+> > To: Bharat Bhushan <bharat.bhushan@nxp.com>;
+> > benh@kernel.crashing.org; paulus@samba.org; mpe@ellerman.id.au;
+> > galak@kernel.crashing.org; mark.rutland@arm.com;
+> > kstewart@linuxfoundation.org; gregkh@linuxfoundation.org;
+> > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-
+> > kernel@vger.kernel.org
+> > Cc: robh@kernel.org; keescook@chromium.org; tyreld@linux.vnet.ibm.com;
+> > joe@perches.com
+> > Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
+> > 
+> > On Fri, 2018-07-27 at 15:18 +0530, Bharat Bhushan wrote:
+> > > MPIC on NXP (Freescale) P2020 supports following irq
+> > > ranges:
+> > >   > 0 - 11      (External interrupt)
+> > >   > 16 - 79     (Internal interrupt)
+> > >   > 176 - 183   (Messaging interrupt)
+> > >   > 224 - 231   (Shared message signaled interrupt)
+> > 
+> > Why don't you convert to the 4-cell interrupt specifiers that make dealing
+> > with these ranges less error-prone?
+> 
+> Ok , will do if we agree to have this series as per comment on other patch.
+
+If you're concerned with errors, this would be a good things to do regardless.
+ Actually, it seems that p2020si-post.dtsi already uses 4-cell interrupts.
+
+What is motivating this patchset?  Is there something wrong in the existing
+dts files?
+
+
+> 
+> > 
+> > > diff --git a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
+> > > b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
+> > > index 1006950..49ff348 100644
+> > > --- a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
+> > > +++ b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
+> > > @@ -57,6 +57,11 @@ void __init mpc85xx_rdb_pic_init(void)
+> > >  			MPIC_BIG_ENDIAN |
+> > >  			MPIC_SINGLE_DEST_CPU,
+> > >  			0, 256, " OpenPIC  ");
+> > > +	} else if (of_machine_is_compatible("fsl,P2020RDB-PC")) {
+> > > +		mpic = mpic_alloc(NULL, 0,
+> > > +		  MPIC_BIG_ENDIAN |
+> > > +		  MPIC_SINGLE_DEST_CPU,
+> > > +		  0, 0, " OpenPIC  ");
+> > >  	} else {
+> > >  		mpic = mpic_alloc(NULL, 0,
+> > >  		  MPIC_BIG_ENDIAN |
+> > 
+> > I don't think we want to grow a list of every single revision of every
+> > board in
+> > these platform files.
+> 
+> One other confusing observation I have is that "irq_count" from platform
+> code is given precedence over "last-interrupt-source" in device-tree.
+> Should not device-tree should have precedence otherwise there is no point
+> using " last-interrupt-source" if platform code passes "irq_count" in
+> mpic_alloc().
+
+Maybe, though I don't think it matters much given that last-interrupt-source
+was only added to avoid having to pass irq_count in platform code.
+
+-Scott
