@@ -1,78 +1,61 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 08/18] serial: intel: Get serial id from dts
-Date: Wed, 8 Aug 2018 10:33:25 +0200
-Message-ID: <CAMuHMdVgC__AJHCEKT9UhdK4Jh4bm-s0ihH8mvx7KQ7+vzh6Ag@mail.gmail.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-9-songjun.wu@linux.intel.com> <CAMuHMdXkGchPN337dXbBVOFsb1o-Tkh8S_z=uCm3Z0sDjPVMKA@mail.gmail.com>
- <734bddbc-a5aa-d50d-0e7b-d8adc4d1afb2@linux.intel.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: cpufreq: Introduce QCOM CPUFREQ
+ Firmware bindings
+Date: Wed, 8 Aug 2018 09:37:38 +0100
+Message-ID: <20180808083738.GA25416@e107155-lin>
+References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
+ <1532428970-18122-2-git-send-email-tdas@codeaurora.org>
+ <153334001055.10763.8002698033760154254@swboyd.mtv.corp.google.com>
+ <b362d9f769fde3ce1a2dcd89f20eb476@codeaurora.org>
+ <20180807111237.GA1588@e107155-lin>
+ <74d27daca2bb03716fc84f9c57118af0@codeaurora.org>
+ <1aa8b42d-721f-1f5b-b1be-a6b4f220d023@codeaurora.org>
+ <153370890232.220756.13782706852981763402@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <734bddbc-a5aa-d50d-0e7b-d8adc4d1afb2@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <153370890232.220756.13782706852981763402@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: songjun.wu@linux.intel.com
-Cc: hua.ma@linux.intel.com, yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com, Linux MIPS Mailing List <linux-mips@linux-mips.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Taniya Das <tdas@codeaurora.org>, skannan@codeaurora.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org, evgreen@google.com, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Songjun,
+On Tue, Aug 07, 2018 at 11:15:02PM -0700, Stephen Boyd wrote:
+> Quoting Taniya Das (2018-08-07 19:46:01)
+[...]
 
-On Wed, Aug 8, 2018 at 6:05 AM Wu, Songjun <songjun.wu@linux.intel.com> wrote:
-> On 8/7/2018 3:33 PM, Geert Uytterhoeven wrote:
-> > On Fri, Aug 3, 2018 at 5:04 AM Songjun Wu <songjun.wu@linux.intel.com> wrote:
-> >> Get serial id from dts.
-> >>
-> >> "#ifdef CONFIG_LANTIQ" preprocessor is used because LTQ_EARLY_ASC
-> >> macro is defined in lantiq_soc.h.
-> >> lantiq_soc.h is in arch path for legacy product support.
-> >>
-> >> arch/mips/include/asm/mach-lantiq/xway/lantiq_soc.h
-> >>
-> >> If "#ifdef preprocessor" is changed to
-> >> "if (IS_ENABLED(CONFIG_LANTIQ))", when CONFIG_LANTIQ is not enabled,
-> >> code using LTQ_EARLY_ASC is compiled.
-> >> Compilation will fail for no LTQ_EARLY_ASC defined.
-> >>
-> >> Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
-> > Thanks for your patch!
-> >
-> >> @@ -699,9 +700,19 @@ lqasc_probe(struct platform_device *pdev)
-> >>                  return -ENODEV;
-> >>          }
-> >>
-> >> -       /* check if this is the console port */
-> >> -       if (mmres->start != CPHYSADDR(LTQ_EARLY_ASC))
-> >> -               line = 1;
-> >> +       /* get serial id */
-> >> +       line = of_alias_get_id(node, "serial");
-> >> +       if (line < 0) {
-> >> +#ifdef CONFIG_LANTIQ
-> >> +               if (mmres->start == CPHYSADDR(LTQ_EARLY_ASC))
-> >> +                       line = 0;
-> >> +               else
-> >> +                       line = 1;
-> >> +#else
-> >> +               dev_err(&pdev->dev, "failed to get alias id, errno %d\n", line);
-> >> +               return line;
-> > Please note that not providing a fallback here makes life harder when using
-> > DT overlays.
-> > See the description of commit 7678f4c20fa7670f ("serial: sh-sci: Add support
-> > for dynamic instances") for background info.
-> Thanks for your comment.
-> The logic in commit 7678f4c20fa7670f is not suitable here.
-> We need to know which serial instance is used for console.
-> We cannot use dynamic serial instance here.
+> > Sudeep,
+> > 
+> > Earlier the design was the freq_domain would take the CPU phandles
+> > 
+> > freq_domain:
+> >    cpus = <&cpu0 &cpu1....>;
+> > 
+> 
+> I believe Sudeep is recommending something I recommended earlier. It
+> would look like:
+> 
+>    cpu7 {
+> 	   qcom,freq-domain = <&cpufreq_hw 1>;
+>    }
+> 
+> to indicate that cpu7 is in cpufreq_hw's frequency domain #1. That
+> should probably be called clk domain BTW.
+>
 
-Why does the driver need to use which serial instance is used for the console?
-Hardcoding that is not an option, as the board DTS may specify the console using
-chosen/stdout-path.
+Thanks Stephen, that's exactly what I meant. You have explained all the
+details saving me time :)
 
-Gr{oetje,eeting}s,
+> If that was done with a phandle and a single cell, then we should have
+> something similar on the cpufreq_hw node side indicating how to parse
+> the cells in qcom,freq-domain. A property like #qcom,freq-domain-cells =
+> <1> to indicate that one u32 follows the phandle.
+>
 
-                        Geert
+As Saravana mentions in the other email I can't believe it's just made up
+of logical CPU numbers. If that's the case is it software configurable.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Regards,
+Sudeep
