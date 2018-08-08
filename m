@@ -1,52 +1,51 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH] arm: dts: am4372: setup rtc as system-power-controller
-Date: Wed, 8 Aug 2018 14:38:00 +0530
-Message-ID: <bc07ac40-accc-64aa-a277-063833645545@ti.com>
-References: <1532498135-9031-1-git-send-email-j-keerthy@ti.com>
- <20180808090607.GR99251@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Subject: [PATCH] ARM: dts: socfpga: use stdout-path for chosen node
+Date: Wed,  8 Aug 2018 11:09:44 +0200
+Message-ID: <20180808090944.861-1-simon.k.r.goldschmidt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808090607.GR99251@atomide.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: t-kristo@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
+Use stdout-path dts property for kernel console.
 
+There were two socfpga boards left not using stdout-path:
+socrates and vining. Make sure they match the other boards.
 
-On Wednesday 08 August 2018 02:36 PM, Tony Lindgren wrote:
-> * Keerthy <j-keerthy@ti.com> [180725 05:59]:
->> RTC alarm2 is connected to pmic_en line and hence can be used to control
->> the pmic enabling/disabling. Hence add the system-power-controller for rtc
->> node.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>  arch/arm/boot/dts/am4372.dtsi | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
->> index f0cbd86..d4b7c59 100644
->> --- a/arch/arm/boot/dts/am4372.dtsi
->> +++ b/arch/arm/boot/dts/am4372.dtsi
->> @@ -469,6 +469,7 @@
->>  			ti,hwmods = "rtc";
->>  			clocks = <&clk_32768_ck>;
->>  			clock-names = "int-clk";
->> +			system-power-controller;
->>  			status = "disabled";
->>  		};
->>  
-> 
-> Should this be queued as a fix for v4.19-rc series?
+Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+---
+ arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    | 3 ++-
+ arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-Yes this makes pmic to shutdown during power off.
-
-> 
-> Regards,
-> 
-> Tony
-> 
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+index 53bf99eef66d..6f5255a7d192 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+@@ -22,7 +22,8 @@
+ 	compatible = "ebv,socrates", "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
++		bootargs = "earlyprintk";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	memory@0 {
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+index f50b19447de6..e61efe16e79c 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+@@ -54,7 +54,8 @@
+ 	compatible = "samtec,vining", "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+-		bootargs = "console=ttyS0,115200";
++		bootargs = "earlyprintk";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	memory@0 {
+-- 
+2.17.1
