@@ -1,125 +1,54 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RFC 4/4] arm64: dts: qcom: add wake up interrupts for
- GPIOs
-Date: Wed, 8 Aug 2018 14:01:01 -0600
-Message-ID: <20180808200101.GD27850@codeaurora.org>
-References: <20180731224421.29062-1-ilina@codeaurora.org>
- <20180731224421.29062-5-ilina@codeaurora.org>
- <CAE=gft5SRSnXN4Cs8JdTNgFKAFk1YH4bxL91=jvhRZe7Zznxdg@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 1/6] i2c: designware: use generic table matching
+Date: Wed, 8 Aug 2018 22:22:10 +0200
+Message-ID: <20180808202210.qkocl4hckqla7exe@ninjato>
+References: <20180806185412.7210-1-alexandre.belloni@bootlin.com>
+ <20180806185412.7210-2-alexandre.belloni@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qebv7hyem3d6rgy2"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAE=gft5SRSnXN4Cs8JdTNgFKAFk1YH4bxL91=jvhRZe7Zznxdg@mail.gmail.com>
+In-Reply-To: <20180806185412.7210-2-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: marc.zyngier@arm.com, Stephen Boyd <sboyd@chromium.org>, Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, swboyd@chromium.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 07 2018 at 13:57 -0600, Evan Green wrote:
->On Tue, Jul 31, 2018 at 3:44 PM Lina Iyer <ilina@codeaurora.org> wrote:
->>
->> GPIOs that are wakeup capable have interrupt lines that are routed to
->> the always-on interrupt controller (PDC) in parallel to the pinctrl. The
->> interrupts listed here are the wake up lines corresponding to GPIOs.
->>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 69 ++++++++++++++++++++++++++++
->>  1 file changed, 69 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index 8ccce42885c1..96ef18ced85b 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -720,6 +720,75 @@
->>                         #gpio-cells = <2>;
->>                         interrupt-controller;
->>                         #interrupt-cells = <2>;
->> +                       interrupts-extended = <&pdc 30 IRQ_TYPE_LEVEL_HIGH>,
->
->In order to get any GPIO interrupts on my board, I needed to add the
->summary IRQ first in this list. My reading of platform_get_irq is that
->"interrupts-extended" is queried before "interrupts", so we
->accidentally wire the summary IRQ to PDC 30. Given this, you can
->probably remove the regular "interrupts" property.
->
-Sure. Will fix that.
 
--- Lina
+--qebv7hyem3d6rgy2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +                                             <&pdc 31 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 32 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 33 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 34 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 35 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 36 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 37 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 38 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 39 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 41 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 42 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 43 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 44 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 45 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 46 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 47 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 49 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 50 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 51 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 52 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 54 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 55 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 56 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 57 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 58 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 59 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 60 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 61 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 62 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 63 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 64 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 65 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 66 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 67 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 68 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 69 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 70 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 71 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 72 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 73 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 74 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 75 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 76 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 77 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 79 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 80 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 81 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 82 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 83 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 84 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 85 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 86 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 90 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 91 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 92 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 95 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 96 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 97 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 98 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 99 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 100 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 102 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 103 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 104 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 105 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 106 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 107 IRQ_TYPE_LEVEL_HIGH>,
->> +                                             <&pdc 108 IRQ_TYPE_LEVEL_HIGH>;
->>
->>                         qup_i2c0_default: qup-i2c0-default {
->>                                 pinmux {
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
+On Mon, Aug 06, 2018 at 08:54:07PM +0200, Alexandre Belloni wrote:
+> Switch to device_get_match_data in probe to match the device specific data
+> instead of using the acpi specific function.
+>=20
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
+Andy, you happy with this patch?
+
+
+--qebv7hyem3d6rgy2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAltrUPIACgkQFA3kzBSg
+KbaIaxAAglFXoMQYzEDtLC4xW5R2IY/3q0HtEncf4ExyKGuclwPtfaEN0ECDPC14
+96nZJednR4FDHm25y5ThZtGyllbm4YNomkQzSJgoplSNCuMZdnEmAOC5+XJilbTH
+oLwxhVrc/txYTAzRVbFgfCGReziyHPzBJjOw1jd8cmjFlTSjBwzS5FtzFYnVd+Fi
+yddQjjAJsvj/WFa8KdQ41Nmq6mUYosldUFQYfQ4kXREj1Kk9f0cdsF0Re6fjkC9S
+ZrFQI7zeooRVE+Tas5l9umdg0aIPJDdyVEKGLAGOU/HpyB4R5nvr3KHDvGaqqlAt
+/SE3vTuf2s0fJdR28vjxkekwMSZawFlcQ8vOhUtDOWJUzJdsTRiXHkBRb6wOY+wx
+dYLN1mWx6yq5TDnIYSf3JCi2m4uz8y/7q0P3l6Wcs8Z1LYJo0xNTMrCWzrrxCMGO
+1cA4qpJ1S7LqMFIS/scDO83TEpsOkKunozNBqElNGRdnMyTgZznysFAPn9dKiBx3
+BQS2xfGl/rlWsXZaKaqoKjrIk2rl2pP1BbMtDi3dB3C7lLfLlCLkd8bzL1t/+CFN
+tugPZcQJwVMeIYnjR6hK89RiupqPRtqs1UH1bnCie6P2kTubOd2Wvt4UaQ57alTj
+BWwI/55tMlFCGldsGApZao/0vJ36jwNZVmM9x743o094tAN7HtM=
+=t7TX
+-----END PGP SIGNATURE-----
+
+--qebv7hyem3d6rgy2--
