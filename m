@@ -1,52 +1,37 @@
 From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 6/8] dt-bindings: interrupt-controller: RISC-V PLIC
+Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
         documentation
-Date: Wed, 8 Aug 2018 17:04:48 +0200
-Message-ID: <20180808150448.GA31785@lst.de>
-References: <20180804082319.5711-1-hch@lst.de> <20180804082319.5711-7-hch@lst.de> <CAL_JsqKKCPhb1um_+68ya0ng_v2tSb5O+-8RQPqx7Od3sJ4FuA@mail.gmail.com>
+Date: Wed, 8 Aug 2018 17:09:38 +0200
+Message-ID: <20180808150938.GA32274@lst.de>
+References: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com> <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4> <CAL_JsqKPFSQYH3p6a0VoCr-VAzf_98H7N3fNJ+4+DquS8WcjUQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKKCPhb1um_+68ya0ng_v2tSb5O+-8RQPqx7Od3sJ4FuA@mail.gmail.com>
+In-Reply-To: <CAL_JsqKPFSQYH3p6a0VoCr-VAzf_98H7N3fNJ+4+DquS8WcjUQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Anup Patel <anup@brainfault.org>, atish.patra@wdc.com, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2018 at 08:29:50AM -0600, Rob Herring wrote:
-> Version numbers on the individual patches would be nice...
-
-We've never done these in the subsystems I'm involved with.  Too
-much clutter in the subject lines for information that is easily
-deductable.
-
-> > +Example:
-> > +
-> > +       plic: interrupt-controller@c000000 {
-> > +               #address-cells = <0>;
-> > +               #interrupt-cells = <1>;
-> > +               compatible = "riscv,plic0";
-> > +               interrupt-controller;
-> > +               interrupts-extended = <
-> > +                       &cpu0-intc 11
-> > +                       &cpu1-intc 11 &cpu1-intc 9
-> > +                       &cpu2-intc 11 &cpu2-intc 9
-> > +                       &cpu3-intc 11 &cpu3-intc 9
-> > +                       &cpu4-intc 11 &cpu4-intc 9>;
+On Wed, Aug 08, 2018 at 08:16:14AM -0600, Rob Herring wrote:
+> Is 1.0 an actual version number corresponding to an exact, revision
+> controlled version of the IP or just something you made up? Looks like
+> the latter to me and I'm not a fan of s/w folks making up version
+> numbers for h/w. Standard naming convention is <vendor>,<soc>-<block>
+> unless you have good reason to deviate (IP for FPGAs where version
+> numbers are exposed to customers is one example).
 > 
-> I'm confused why this is still here if you are dropping the cpu intc binding?
+> And defining a version 2 when you find a quirk doesn't work. You've
+> already shipped the DT. You need to be able to fix issues with just an
+> OS update. This is why you are supposed to define a compatible string
+> for each and every SoC (and use a fallback when they are "the
+> same"TM).
 
-We need some parent that identifies the core (hart in RISC-V terminology).
-The way the code now works is that it just walks up the parent chain
-until it finds a CPU node, so it either accepts the legacy intc node
-inbetween, or it accepts the cpu node directly as the intc node is pointless.
+Can you point to some existing examples of the multiple offered
+compatible strings and what is actually matched for something that
+largely hasn't changed?
 
-I guess for the documentation we should instead just point to the
-"riscv" cpu nodes instead?
-
-> I also noticed the cpu binding refers to "riscv,cpu-intc" as well.
-> That needs to be fixed too if there's a change.
-
-Only in the examples.  I'd be fine with dropping them, but let's keep
-that separate from the interrupt support.
+For example the documentation for the arm GICv3 binding seems to just
+match for arm,gic-v3.  On the other hand the GIC driver seems to match
+for a lot of different strings.
