@@ -1,138 +1,59 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
-Date: Tue, 07 Aug 2018 23:22:12 -0700
-Message-ID: <153370933225.220756.12056174025047430491@swboyd.mtv.corp.google.com>
-References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
- <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
- <CAE=gft7_5SZKpU0i9Jbi6UV-eqW8=6Fm7rw4oKVXG6J9Q7_E+g@mail.gmail.com>
- <1ddda4b9e6dcd7ad415235f4d6af2dc7@codeaurora.org>
- <153333504360.10763.8964005567051510823@swboyd.mtv.corp.google.com>
- <4d37a1ee4f2d5b30da3f62cbfca756a8@codeaurora.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH RESEND RFC 1/4] drivers: pinctrl: qcom: add wakeup
+ capability to GPIO
+Date: Wed, 8 Aug 2018 07:26:32 +0100
+Message-ID: <20180808072632.21f076b6@why.wild-wind.fr.eu.org>
+References: <20180801020021.9782-1-ilina@codeaurora.org>
+        <20180801020021.9782-2-ilina@codeaurora.org>
+        <86600uy4vh.wl-marc.zyngier@arm.com>
+        <20180801194538.GA6422@codeaurora.org>
+        <86wot9wb9u.wl-marc.zyngier@arm.com>
+        <20180802065104.GA27850@codeaurora.org>
+        <86sh3xw7m9.wl-marc.zyngier@arm.com>
+        <20180802125827.GB27850@codeaurora.org>
+        <153370830708.220756.4595316550560511917@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4d37a1ee4f2d5b30da3f62cbfca756a8@codeaurora.org>
+In-Reply-To: <153370830708.220756.4595316550560511917@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: skannan@codeaurora.org
-Cc: Evan Green <evgreen@google.com>, tdas@codeaurora.org, rjw@rjwysocki.net, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Lina Iyer <ilina@codeaurora.org>, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting skannan@codeaurora.org (2018-08-06 13:46:05)
-> On 2018-08-03 15:24, Stephen Boyd wrote:
-> > Quoting skannan@codeaurora.org (2018-08-03 12:52:48)
-> >> On 2018-08-03 12:40, Evan Green wrote:
-> >> > Hi Taniya,
-> >> >
-> >> > On Tue, Jul 24, 2018 at 3:44 AM Taniya Das <tdas@codeaurora.org> wro=
-te:
-> >> >>
-> >> >> +               if (src)
-> >> >> +                       c->table[i].frequency =3D c->xo_rate * lval=
- /
-> >> >> 1000;
-> >> >> +               else
-> >> >> +                       c->table[i].frequency =3D INIT_RATE / 1000;
-> >> >
-> >> > I don't know much about how this hardware works, but based on the
-> >> > mask, src has 4 possible values. So does 0 mean INIT_RATE, and 1, 2,
-> >> > and 3 all mean xo_rate?
-> >> >
-> >> > Also, is INIT_RATE really constant? It sounds like gpll0 (or
-> >> > gpll0_out_even?). You're already getting the xo clock, why not get
-> >> > gpll0's real rate as well?
-> >> =
+On Tue, 07 Aug 2018 23:05:07 -0700
+Stephen Boyd <swboyd@chromium.org> wrote:
 
-> >> Actually I was about to comment and say NOT to get clocks just to get
-> >> their rate. The XO_RATE is just a multiplication factor. This HW/FW =
+> Quoting Lina Iyer (2018-08-02 05:58:27)
+> > On Thu, Aug 02 2018 at 01:27 -0600, Marc Zyngier wrote:  
+> > >
+> > >Sure. But once woken up (GIC *and* TLMM), the gpio line (which I
+> > >assume is level) is still high at the TLMM input. So why isn't it
+> > >registering that state once it has been woken up?
+> > >
+> > >I can understand that it would be missing an edge. But that doesn't
+> > >hold for level signalling.
+> > >  
+> > Sure, yes. Sorry for not registering your point in my response.
+> > Once woken up we should see the level interrupt in TLMM.  
+> 
+> And the level type gpio interrupt will trigger the TLMM summary
+> interrupt line after the wakeup? So then the only thing that needs to be
+> replayed is edge interrupts? How are edge interrupts going to be
+> replayed?
 
-> >> can
-> >> change in the future and make the multiplication factor to 1KHz.
-> > =
+Level interrupts should be taken care of without doing anything, by the
+very nature of being a level signal.
 
-> > So future changes to this hardware are going to make this register
-> > return the final frequency that we should use? Sounds great! But that
-> > isn't how it's working right now. We need to have XO in the binding =
+Edge interrupts should be replayed using check_irq_resend() after
+taking the right locks and making the interrupt pending. Or, if there
+is a way for SW to make the interrupt pending at the TLMM level, to use
+that as a way to reinject the interrupt (which would be the preferred
+way, as it avoids all kind of ugly locking considerations).
 
-> > here
-> > so the driver can work with different XO frequencies in case that ever
-> > happens. Same story for GPLL0. Hardcoding this stuff in the driver just
-> > means we'll have to swizzle things in the driver when it changes.
-> =
+Thanks,
 
-> XO being a different frequency in a Qualcomm chip is way way less likely =
-
-> than anything else we are discussing here. In the 10+years I've been =
-
-> there this has never changed.
-> =
-
-> So, how about making this binding optional? If it's not present we can =
-
-> make assumptions for XO rate and init rate. That'll handle your =
-
-> hypothetical use case while also being optimized.
-
-Optional properties are almost never correct for clks. Either the clk
-goes there or it doesn't go there. The only time it's optional is if the
-HW has the choice of generating the clk itself internally or to use an
-external clk as input.
-
-In this case, it's not optional, it's actually used so marking it
-optional is highly confusing.
-
-> =
-
-> >> We also
-> >> can't really control any of the clocks going to this block from Linux
-> >> (it's all locked down).
-> > =
-
-> > This shouldn't matter. The clocks going to this hardware block are
-> > described by the firmware to the OS by means of the DT node. If the
-> > firmware or the hardware decides to change the input clks then the
-> > binding can have different clk nodes used.
-> =
-
-> There are tons of clocks that are input to blocks in an SoC that are =
-
-> never controlled by Linux. Or are expose in DT because they are set up =
-
-> ahead of time and can't change. So, why make an exception here?
-
-Because the driver doesn't have to hard-code some frequency that can
-easily come from the DT, making it more flexible for frequency plan
-changes. It doesn't matter about control of clks at all here, so this
-comparison is just plain wrong.
-
-> =
-
-> >> The INIT_RATE will
-> >> always be 300 MHz independent of what source it's coming from (as in, =
-
-> >> if
-> >> GPLL0 can't give 300, the HW design will be so that we'll find a
-> >> different source).
-> >> =
-
-> >> So, I'd like to remove any clock bindings for this driver.
-> > =
-
-> > No. Bindings describe how the hardware is connected. Please don't =
-
-> > remove
-> > clocks from the binding just because probe defer is a concern.
-> =
-
-> Binding describes hardware controllable by the OS. That's the reality. =
-
-> Let's not add mandatory clock bindings for clocks that the OS can't do =
-
-> anything about.
-> =
-
-
-It seems that you believe clks should only be used to turn on/off and
-control rates. That is not the whole truth. Sometimes clks are there
-just to express the clk frequencies that are present in the design so
-that drivers can figure out what to do.
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
