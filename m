@@ -1,166 +1,119 @@
-From: skannan@codeaurora.org
-Subject: Re: [PATCH v3 1/2] PM / devfreq: Generic CPU frequency to device
- frequency mapping governor
-Date: Wed, 08 Aug 2018 14:18:18 -0700
-Message-ID: <8c7ab63d4c646733b89962a1d2a0a4ae@codeaurora.org>
-References: <1533171465-25508-1-git-send-email-skannan@codeaurora.org>
- <20180807164114.GA12587@rob-hp-laptop>
- <496ac47a3c78f37655b60841fba7494c@codeaurora.org>
- <20180808084754.GB25416@e107155-lin>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [PATCH 1/4] dt-bindings: reset: Add PDC reset binding for SDM845
+ SoCs
+Date: Wed, 8 Aug 2018 15:37:24 -0600
+Message-ID: <20180808213723.GA26960@jcrouse-lnx.qualcomm.com>
+References: <20180727152811.15258-1-sibis@codeaurora.org>
+ <1533026547.3444.4.camel@pengutronix.de>
+ <28f34ddf-03b2-0baa-c04f-15e546ef3f75@codeaurora.org>
+ <20180807181659.GA20659@rob-hp-laptop>
+ <ca959e6f-b1b0-8fdf-2c40-0b49a4cf06e6@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808084754.GB25416@e107155-lin>
+Content-Disposition: inline
+In-Reply-To: <ca959e6f-b1b0-8fdf-2c40-0b49a4cf06e6@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rob Herring <robh@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Mark Rutland <mark.rutland@arm.com>, georgi.djakov@linaro.org, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org, ilina@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-08 01:47, Sudeep Holla wrote:
-> On Tue, Aug 07, 2018 at 12:37:07PM -0700, skannan@codeaurora.org wrote:
->> On 2018-08-07 09:41, Rob Herring wrote:
->> >On Wed, Aug 01, 2018 at 05:57:41PM -0700, Saravana Kannan wrote:
->> >>Many CPU architectures have caches that can scale independent of the
->> >>CPUs.
->> >>Frequency scaling of the caches is necessary to make sure the cache is
->> >>not
->> >>a performance bottleneck that leads to poor performance and power. The
->> >>same
->> >>idea applies for RAM/DDR.
->> >>
->> >>To achieve this, this patch adds a generic devfreq governor that takes
->> >>the
->> >>current frequency of each CPU frequency domain and then adjusts the
->> >>frequency of the cache (or any devfreq device) based on the frequency of
->> >>the CPUs. It listens to CPU frequency transition notifiers to keep
->> >>itself
->> >>up to date on the current CPU frequency.
->> >>
->> >>To decide the frequency of the device, the governor does one of the
->> >>following:
->> >>
->> >>* Uses a CPU frequency to device frequency mapping table
->> >>  - Either one mapping table used for all CPU freq policies (typically
->> >>used
->> >>    for system with homogeneous cores/clusters that have the same OPPs).
->> >>  - One mapping table per CPU freq policy (typically used for ASMP
->> >>systems
->> >>    with heterogeneous CPUs with different OPPs)
->> >>
->> >>OR
->> >>
->> >>* Scales the device frequency in proportion to the CPU frequency. So, if
->> >>  the CPUs are running at their max frequency, the device runs at its
->> >>max
->> >>  frequency.  If the CPUs are running at their min frequency, the device
->> >>  runs at its min frequency. And interpolated for frequencies in
->> >>between.
->> >>
->> >>Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
->> >>---
->> >> .../bindings/devfreq/devfreq-cpufreq-map.txt       |  53 ++
->> >
->> >Bindings should be a separate patch.
->> >
->> >> drivers/devfreq/Kconfig                            |   8 +
->> >> drivers/devfreq/Makefile                           |   1 +
->> >> drivers/devfreq/governor_cpufreq_map.c             | 583
->> >>+++++++++++++++++++++
->> >> 4 files changed, 645 insertions(+)
->> >> create mode 100644
->> >>Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->> >> create mode 100644 drivers/devfreq/governor_cpufreq_map.c
->> >>
->> >>diff --git
->> >>a/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->> >>b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->> >>new file mode 100644
->> >>index 0000000..982a30b
->> >>--- /dev/null
->> >>+++ b/Documentation/devicetree/bindings/devfreq/devfreq-cpufreq-map.txt
->> >>@@ -0,0 +1,53 @@
->> >>+Devfreq CPUfreq governor
->> >>+
->> >>+devfreq-cpufreq-map is a parent device that contains one or more child
->> >>devices.
->> >>+Each child device provides CPU frequency to device frequency mapping
->> >>for a
->> >>+specific device. Examples of devices that could use this are: DDR,
->> >>cache and
->> >>+CCI.
->> >>+
->> >>+Parent device name shall be "devfreq-cpufreq-map".
->> >>+
->> >>+Required child device properties:
->> >>+- cpu-to-dev-map, or cpu-to-dev-map-<X>:
->> >>+			A list of tuples where each tuple consists of a
->> >>+			CPU frequency (KHz) and the corresponding device
->> >>+			frequency. CPU frequencies not listed in the table
->> >>+			will use the device frequency that corresponds to the
->> >>+			next rounded up CPU frequency.
->> >>+			Use "cpu-to-dev-map" if all CPUs in the system should
->> >>+			share same mapping.
->> >>+			Use cpu-to-dev-map-<cpuid> to describe different
->> >>+			mappings for different CPUs. The property should be
->> >>+			listed only for the first CPU if multiple CPUs are
->> >>+			synchronous.
->> >>+- target-dev:		Phandle to device that this mapping applies to.
->> >>+
->> >>+Example:
->> >>+	devfreq-cpufreq-map {
->> >>+		cpubw-cpufreq {
->> >>+			target-dev = <&cpubw>;
->> >>+			cpu-to-dev-map =
->> >>+				<  300000  1144000 >,
->> >>+				<  422400  2288000 >,
->> >>+				<  652800  3051000 >,
->> >>+				<  883200  5996000 >,
->> >>+				< 1190400  8056000 >,
->> >>+				< 1497600 10101000 >,
->> >>+				< 1728000 12145000 >,
->> >>+				< 2649600 16250000 >;
->> >
->> >Now we have frequencies listed in multiple places, the OPP tables and
->> >here? Perhaps it is grouping OPPs that should be done.
->> 
->> This doesn't list all OPPs (it can if necessary). This is listing the
->> minimum frequency needed to give good performance/power for a
->> device/product.
->> 
+On Wed, Aug 08, 2018 at 09:14:05PM +0530, Sibi Sankar wrote:
+> Hi Rob,
+> Thanks for the review
 > 
-> Shouldn't the "status" property be used to disable OPPs you don't need
-> on a particular platform ?
-
-But that's not the point here? We aren't trying to disable any OPPs 
-here? Not sure what you mean.
-
-> Duplicating values is highly prone to errors and should be avoided.
+> On 08/07/2018 11:46 PM, Rob Herring wrote:
+> >On Tue, Jul 31, 2018 at 06:27:24PM +0530, Sibi S wrote:
+> >>Hi Philipp,
+> >>Thanks for the review!
+> >>
+> >>On 07/31/2018 02:12 PM, Philipp Zabel wrote:
+> >>>Hi Sibi,
+> >>>
+> >>>On Fri, 2018-07-27 at 20:58 +0530, Sibi Sankar wrote:
+> >>>>Add SDM845 PDC (Power Domain Controller) reset controller binding
+> >>>>
+> >>>>Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> >>>>---
+> >>>>   .../bindings/reset/qcom,pdc-reset.txt         | 52 +++++++++++++++++++
+> >>>>   include/dt-bindings/reset/qcom,sdm845-pdc.h   | 20 +++++++
+> >>>>   2 files changed, 72 insertions(+)
+> >>>>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
+> >>>>   create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
+> >>>>
+> >>>>diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
+> >>>>new file mode 100644
+> >>>>index 000000000000..85e159962e08
+> >>>>--- /dev/null
+> >>>>+++ b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
+> >>>>@@ -0,0 +1,52 @@
+> >>>>+PDC Reset Controller
+> >>>>+======================================
+> >>>>+
+> >>>>+This binding describes a reset-controller found on PDC-Global(Power Domain
+> >>>>+Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
+> >>>>+
+> >>>>+Required properties:
+> >>>>+- compatible:
+> >>>>+	Usage: required
+> >>>>+	Value type: <string>
+> >>>>+	Definition: must be:
+> >>>>+		    "qcom,sdm845-pdc-global"
+> >>>>+
+> >>>>+- reg:
+> >>>>+	Usage: required
+> >>>>+	Value type: <prop-encoded-array>
+> >>>>+	Definition: must specify the base address and size of the register
+> >>>>+	            space.
+> >>>>+
+> >>>>+- #reset-cells:
+> >>>>+	Usage: required
+> >>>>+	Value type: <uint>
+> >>>>+	Definition: must be 1; cell entry represents the reset index.
+> >>>>+
+> >>>>+Example:
+> >>>>+
+> >>>>+pdc_reset: reset-controller@b2e0000 {
+> >>>
+> >>>Is this really just a reset controller?
+> >>>
+> >>>The name makes it sound like a driver binding to this should also
+> >>>provide pm_genpd and the binding should probably call this a power-
+> >>>controller: Documentation/devicetree/bindings/power/power_domain.txt.
+> >>>
+> >>
+> >>The PDC-global reg space which is a part of PDC-wrapper reg space seems
+> >>to be only used for the reset lines.
+> >>
+> >>Couple of other drivers use other parts of the PDC-wrapper reg space:
+> >>https://patchwork.kernel.org/patch/10223701/ (PDC-Interrupt controller)
+> >>https://patchwork.kernel.org/patch/10255767/ (GMU-PDC incorrectly tries
+> >>to occupy the entire pdc-wrapper reg space)
+> >>
+> >>since it couldn't be logically mapped into pdc-interrupt driver, it had
+> >>to be included as a separate reset driver.
+> >
+> >You can't have overlapping regions in DT (well, you can because we have
+> >to work-around existing DTs that do, but you shouldn't).
+> >
+> >A single node can be multiple providers such as interrupt controller and
+> >reset controller. It's an OS problem to split that into multiple
+> >drivers.
 > 
->> AFAIK, OPP grouping isn't something that's supported in OPP framework 
->> or in
->> DT. Is there something specific you had in mind? Also, I'd like for 
->> this to
->> work even with devices that don't have OPPs listed in DT.
->> 
-> Also what's the solution you have for platforms with new *QCom FW 
-> Cpufreq* ?
-> IIUC the frequency is obtained from the firmware. TBH this should 
-> ideally
-> be handled in firmware if cpufreq is also handled by the firmware. I 
-> guess
-> this platform doesn't have that ?
+> There will be no overlaps. Jordan will be changing the dt binding of
+> gmu_pdc so that there is no overlap I guess. What I meant to say is that
+> pdc-global is a separate reg-space and currently has no other
+> functionality other than exposing the reset lines.
 
-All QC platforms would use this.
+Correct - the updated GPU DT will be:
 
-As a personal (non-Qcom) opinion, I'd rather the kernel control this 
-than have some black magic FW manage this. I've a really bitter taste in 
-my mouth for FW hiding this because of a broken ACPI implementation in 
-one of my x86 motherboards prevented CPUfreq from working (this was well 
-before I worked on CPUfreq). Pushing stuff to FW seems to beat the ideal 
-behind an opensource OS. In a few cases it's elegant or more robust, so 
-maybe in those cases its okay to use a FW. But I'd rather not for 
-simpler stuff like this.
+  reg = <0x506a000 0x30000>,
+     <0xb280000 0x10000>,
+     <0xb480000, 0x10000>;
+  reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
 
--Saravana
+Jordan
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
