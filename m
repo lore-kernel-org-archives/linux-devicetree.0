@@ -1,310 +1,68 @@
-From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 1/8] media: v4l: Add definitions for
- MPEG2 slice format and metadata
-Date: Wed, 08 Aug 2018 14:05:31 +0200
-Message-ID: <d10ae3939e0559cbb0ce9584513d1499962d46c9.camel@bootlin.com>
-References: <20180725100256.22833-1-paul.kocialkowski@bootlin.com>
-	 <20180725100256.22833-2-paul.kocialkowski@bootlin.com>
-	 <57d8c895-ad9f-5105-e923-9666fdf909d9@xs4all.nl>
-Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH] ARM: dts: socfpga: use stdout-path for chosen node
+Date: Wed, 8 Aug 2018 14:11:09 +0200
+Message-ID: <ba66504e-c002-7dc6-daed-633fee896131@denx.de>
+References: <20180808090944.861-1-simon.k.r.goldschmidt@gmail.com>
+ <f27a5e90-9783-761e-a87b-9b8a2d46d2a4@denx.de>
+ <CAAh8qsyHxMjwBtBa5pYejkOxwFRbbFbt+myC4ynQQonK8MAo-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-9LjEtgDN/MgaN2wTRtzY"
-Return-path: <linux-sunxi+bncBCOO3QWNR4KRBF5ZVPNQKGQEK5PVWBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <57d8c895-ad9f-5105-e923-9666fdf909d9-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAh8qsyHxMjwBtBa5pYejkOxwFRbbFbt+myC4ynQQonK8MAo-w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---=-9LjEtgDN/MgaN2wTRtzY
-Content-Type: text/plain; charset="UTF-8"
-
-Hi,
-
-On Sat, 2018-08-04 at 15:30 +0200, Hans Verkuil wrote:
-> On 07/25/2018 12:02 PM, Paul Kocialkowski wrote:
-
-[...]
-
-> > diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> > index abec03937bb3..4e73f62b5163 100644
-> > --- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> > +++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> > @@ -60,6 +60,11 @@ Compressed Formats
-> >        - ``V4L2_PIX_FMT_MPEG2``
-> >        - 'MPG2'
-> >        - MPEG2 video elementary stream.
-> > +    * .. _V4L2-PIX-FMT-MPEG2-SLICE:
-> > +
-> > +      - ``V4L2_PIX_FMT_MPEG2_SLICE``
-> > +      - 'MG2S'
-> > +      - MPEG2 parsed slice data, as extracted from the MPEG2 bitstream.
+On 08/08/2018 02:02 PM, Simon Goldschmidt wrote:
+> On Wed, Aug 8, 2018 at 1:32 PM Marek Vasut <marex@denx.de> wrote:
+>>
+>> On 08/08/2018 11:09 AM, Simon Goldschmidt wrote:
+>>> Use stdout-path dts property for kernel console.
+>>>
+>>> There were two socfpga boards left not using stdout-path:
+>>> socrates and vining. Make sure they match the other boards.
+>>>
+>>> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+>>> ---
+>>>  arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    | 3 ++-
+>>>  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 3 ++-
+>>>  2 files changed, 4 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+>>> index 53bf99eef66d..6f5255a7d192 100644
+>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+>>> @@ -22,7 +22,8 @@
+>>>       compatible = "ebv,socrates", "altr,socfpga-cyclone5", "altr,socfpga";
+>>>
+>>>       chosen {
+>>> -             bootargs = "console=ttyS0,115200";
+>>> +             bootargs = "earlyprintk";
+>>> +             stdout-path = "serial0:115200n8";
+>>>       };
+>>>
+>>>       memory@0 {
+>>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+>>> index f50b19447de6..e61efe16e79c 100644
+>>> --- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+>>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+>>> @@ -54,7 +54,8 @@
+>>>       compatible = "samtec,vining", "altr,socfpga-cyclone5", "altr,socfpga";
+>>>
+>>>       chosen {
+>>> -             bootargs = "console=ttyS0,115200";
+>>> +             bootargs = "earlyprintk";
+>>
+>> Why this earlyprintk ?
 > 
-> This does not mention that this requires the use of the Request API and which controls
-> are compulsory in the request.
+> The reason is Dinh added that to all socfpga boards in his commit [1]
+> and I wanted the remaining two boards to be the same.
 
-Right, so I will add a more extensive description regarding the intended
-use case for this format, covering what controls are required.
+Isn't earlyprintk mostly a debugging aid ?
 
-> >      * .. _V4L2-PIX-FMT-MPEG4:
-> >  
-> >        - ``V4L2_PIX_FMT_MPEG4``
-> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > index 3610dce3a4f8..22483d894259 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > @@ -844,6 +844,8 @@ const char *v4l2_ctrl_get_name(u32 id)
-> >  	case V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE:		return "Vertical MV Search Range";
-> >  	case V4L2_CID_MPEG_VIDEO_REPEAT_SEQ_HEADER:		return "Repeat Sequence Header";
-> >  	case V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME:		return "Force Key Frame";
-> > +	case V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS:		return "MPEG2 Slice Header";
-> > +	case V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION:		return "MPEG2 Quantization Matrices";
-> 
-> Use MPEG-2 instead of MPEG2 in these two descriptions.
-
-Will do!
-
-Cheers,
-
-Paul
-
-> Regards,
-> 
-> 	Hans
-> 
-> >  
-> >  	/* VPX controls */
-> >  	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		return "VPX Number of Partitions";
-> > @@ -1292,6 +1294,12 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
-> >  	case V4L2_CID_RDS_TX_ALT_FREQS:
-> >  		*type = V4L2_CTRL_TYPE_U32;
-> >  		break;
-> > +	case V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS:
-> > +		*type = V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS;
-> > +		break;
-> > +	case V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION:
-> > +		*type = V4L2_CTRL_TYPE_MPEG2_QUANTIZATION;
-> > +		break;
-> >  	default:
-> >  		*type = V4L2_CTRL_TYPE_INTEGER;
-> >  		break;
-> > @@ -1550,6 +1558,7 @@ static void std_log(const struct v4l2_ctrl *ctrl)
-> >  static int std_validate(const struct v4l2_ctrl *ctrl, u32 idx,
-> >  			union v4l2_ctrl_ptr ptr)
-> >  {
-> > +	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
-> >  	size_t len;
-> >  	u64 offset;
-> >  	s64 val;
-> > @@ -1612,6 +1621,45 @@ static int std_validate(const struct v4l2_ctrl *ctrl, u32 idx,
-> >  			return -ERANGE;
-> >  		return 0;
-> >  
-> > +	case V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS:
-> > +		p_mpeg2_slice_params = ptr.p;
-> > +
-> > +		switch (p_mpeg2_slice_params->intra_dc_precision) {
-> > +		case 0: /* 8 bits */
-> > +		case 1: /* 9 bits */
-> > +		case 11: /* 11 bits */
-> > +			break;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		switch (p_mpeg2_slice_params->picture_structure) {
-> > +		case 1: /* interlaced top field */
-> > +		case 2: /* interlaced bottom field */
-> > +		case 3: /* progressive */
-> > +			break;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		switch (p_mpeg2_slice_params->slice_type) {
-> > +		case V4L2_MPEG2_SLICE_TYPE_I:
-> > +		case V4L2_MPEG2_SLICE_TYPE_P:
-> > +		case V4L2_MPEG2_SLICE_TYPE_B:
-> > +			break;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		if (p_mpeg2_slice_params->backward_ref_index > VIDEO_MAX_FRAME ||
-> > +		    p_mpeg2_slice_params->forward_ref_index > VIDEO_MAX_FRAME)
-> > +			return -EINVAL;
-> > +
-> > +		return 0;
-> > +
-> > +	case V4L2_CTRL_TYPE_MPEG2_QUANTIZATION:
-> > +		return 0;
-> > +
-> >  	default:
-> >  		return -EINVAL;
-> >  	}
-> > @@ -2186,6 +2234,12 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
-> >  	case V4L2_CTRL_TYPE_U32:
-> >  		elem_size = sizeof(u32);
-> >  		break;
-> > +	case V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS:
-> > +		elem_size = sizeof(struct v4l2_ctrl_mpeg2_slice_params);
-> > +		break;
-> > +	case V4L2_CTRL_TYPE_MPEG2_QUANTIZATION:
-> > +		elem_size = sizeof(struct v4l2_ctrl_mpeg2_quantization);
-> > +		break;
-> >  	default:
-> >  		if (type < V4L2_CTRL_COMPOUND_TYPES)
-> >  			elem_size = sizeof(s32);
-> > diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > index 44fc0102221f..68e914b83a03 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> > @@ -1304,6 +1304,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
-> >  		case V4L2_PIX_FMT_H263:		descr = "H.263"; break;
-> >  		case V4L2_PIX_FMT_MPEG1:	descr = "MPEG-1 ES"; break;
-> >  		case V4L2_PIX_FMT_MPEG2:	descr = "MPEG-2 ES"; break;
-> > +		case V4L2_PIX_FMT_MPEG2_SLICE:	descr = "MPEG-2 parsed slice data"; break;
-> >  		case V4L2_PIX_FMT_MPEG4:	descr = "MPEG-4 part 2 ES"; break;
-> >  		case V4L2_PIX_FMT_XVID:		descr = "Xvid"; break;
-> >  		case V4L2_PIX_FMT_VC1_ANNEX_G:	descr = "VC-1 (SMPTE 412M Annex G)"; break;
-> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> > index 34ee3167d7dd..83eff6f91ed2 100644
-> > --- a/include/media/v4l2-ctrls.h
-> > +++ b/include/media/v4l2-ctrls.h
-> > @@ -35,13 +35,15 @@ struct poll_table_struct;
-> >  
-> >  /**
-> >   * union v4l2_ctrl_ptr - A pointer to a control value.
-> > - * @p_s32:	Pointer to a 32-bit signed value.
-> > - * @p_s64:	Pointer to a 64-bit signed value.
-> > - * @p_u8:	Pointer to a 8-bit unsigned value.
-> > - * @p_u16:	Pointer to a 16-bit unsigned value.
-> > - * @p_u32:	Pointer to a 32-bit unsigned value.
-> > - * @p_char:	Pointer to a string.
-> > - * @p:		Pointer to a compound value.
-> > + * @p_s32:			Pointer to a 32-bit signed value.
-> > + * @p_s64:			Pointer to a 64-bit signed value.
-> > + * @p_u8:			Pointer to a 8-bit unsigned value.
-> > + * @p_u16:			Pointer to a 16-bit unsigned value.
-> > + * @p_u32:			Pointer to a 32-bit unsigned value.
-> > + * @p_char:			Pointer to a string.
-> > + * @p_mpeg2_slice_params:	Pointer to a MPEG2 slice parameters structure.
-> > + * @p_mpeg2_quantization:	Pointer to a MPEG2 quantization data structure.
-> > + * @p:				Pointer to a compound value.
-> >   */
-> >  union v4l2_ctrl_ptr {
-> >  	s32 *p_s32;
-> > @@ -50,6 +52,8 @@ union v4l2_ctrl_ptr {
-> >  	u16 *p_u16;
-> >  	u32 *p_u32;
-> >  	char *p_char;
-> > +	struct v4l2_ctrl_mpeg2_slice_params *p_mpeg2_slice_params;
-> > +	struct v4l2_ctrl_mpeg2_quantization *p_mpeg2_quantization;
-> >  	void *p;
-> >  };
-> >  
-> > diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> > index e4ee10ee917d..ce6de781037a 100644
-> > --- a/include/uapi/linux/v4l2-controls.h
-> > +++ b/include/uapi/linux/v4l2-controls.h
-> > @@ -557,6 +557,9 @@ enum v4l2_mpeg_video_mpeg4_profile {
-> >  };
-> >  #define V4L2_CID_MPEG_VIDEO_MPEG4_QPEL		(V4L2_CID_MPEG_BASE+407)
-> >  
-> > +#define V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS	(V4L2_CID_MPEG_BASE+450)
-> > +#define V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION	(V4L2_CID_MPEG_BASE+451)
-> > +
-> >  /*  Control IDs for VP8 streams
-> >   *  Although VP8 is not part of MPEG we add these controls to the MPEG class
-> >   *  as that class is already handling other video compression standards
-> > @@ -1092,4 +1095,44 @@ enum v4l2_detect_md_mode {
-> >  #define V4L2_CID_DETECT_MD_THRESHOLD_GRID	(V4L2_CID_DETECT_CLASS_BASE + 3)
-> >  #define V4L2_CID_DETECT_MD_REGION_GRID		(V4L2_CID_DETECT_CLASS_BASE + 4)
-> >  
-> > +#define V4L2_MPEG2_SLICE_TYPE_I			1
-> > +#define V4L2_MPEG2_SLICE_TYPE_P			2
-> > +#define V4L2_MPEG2_SLICE_TYPE_B			3
-> > +#define V4L2_MPEG2_SLICE_TYPE_D			4
-> > +
-> > +struct v4l2_ctrl_mpeg2_slice_params {
-> > +	__u32	slice_len;
-> > +	__u32	slice_pos;
-> > +
-> > +	__u16	width;
-> > +	__u16	height;
-> > +
-> > +	__u8	slice_type;
-> > +	__u8	f_code[2][2];
-> > +
-> > +	__u8	intra_dc_precision;
-> > +	__u8	picture_structure;
-> > +	__u8	top_field_first;
-> > +	__u8	frame_pred_frame_dct;
-> > +	__u8	concealment_motion_vectors;
-> > +	__u8	q_scale_type;
-> > +	__u8	intra_vlc_format;
-> > +	__u8	alternate_scan;
-> > +
-> > +	__u8	backward_ref_index;
-> > +	__u8	forward_ref_index;
-> > +};
-> > +
-> > +struct v4l2_ctrl_mpeg2_quantization {
-> > +	__u8	load_intra_quantiser_matrix : 1;
-> > +	__u8	load_non_intra_quantiser_matrix : 1;
-> > +	__u8	load_chroma_intra_quantiser_matrix : 1;
-> > +	__u8	load_chroma_non_intra_quantiser_matrix : 1;
-> > +
-> > +	__u8	intra_quantiser_matrix[64];
-> > +	__u8	non_intra_quantiser_matrix[64];
-> > +	__u8	chroma_intra_quantiser_matrix[64];
-> > +	__u8	chroma_non_intra_quantiser_matrix[64];
-> > +};
-> > +
-> >  #endif
-> > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> > index 1f6c4b52baae..d171361ed9b3 100644
-> > --- a/include/uapi/linux/videodev2.h
-> > +++ b/include/uapi/linux/videodev2.h
-> > @@ -629,6 +629,7 @@ struct v4l2_pix_format {
-> >  #define V4L2_PIX_FMT_H263     v4l2_fourcc('H', '2', '6', '3') /* H263          */
-> >  #define V4L2_PIX_FMT_MPEG1    v4l2_fourcc('M', 'P', 'G', '1') /* MPEG-1 ES     */
-> >  #define V4L2_PIX_FMT_MPEG2    v4l2_fourcc('M', 'P', 'G', '2') /* MPEG-2 ES     */
-> > +#define V4L2_PIX_FMT_MPEG2_SLICE v4l2_fourcc('M', 'G', '2', 'S') /* MPEG-2 parsed slice data */
-> >  #define V4L2_PIX_FMT_MPEG4    v4l2_fourcc('M', 'P', 'G', '4') /* MPEG-4 part 2 ES */
-> >  #define V4L2_PIX_FMT_XVID     v4l2_fourcc('X', 'V', 'I', 'D') /* Xvid           */
-> >  #define V4L2_PIX_FMT_VC1_ANNEX_G v4l2_fourcc('V', 'C', '1', 'G') /* SMPTE 421M Annex G compliant stream */
-> > @@ -1587,6 +1588,8 @@ struct v4l2_ext_control {
-> >  		__u8 __user *p_u8;
-> >  		__u16 __user *p_u16;
-> >  		__u32 __user *p_u32;
-> > +		struct v4l2_ctrl_mpeg2_slice_params __user *p_mpeg2_slice_params;
-> > +		struct v4l2_ctrl_mpeg2_quantization __user *p_mpeg2_quantization;
-> >  		void __user *ptr;
-> >  	};
-> >  } __attribute__ ((packed));
-> > @@ -1632,6 +1635,8 @@ enum v4l2_ctrl_type {
-> >  	V4L2_CTRL_TYPE_U8	     = 0x0100,
-> >  	V4L2_CTRL_TYPE_U16	     = 0x0101,
-> >  	V4L2_CTRL_TYPE_U32	     = 0x0102,
-> > +	V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS = 0x0103,
-> > +	V4L2_CTRL_TYPE_MPEG2_QUANTIZATION = 0x0104,
-> >  };
-> >  
-> >  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
-> > 
-> 
-> 
 -- 
-Paul Kocialkowski, Bootlin (formerly Free Electrons)
-Embedded Linux and kernel engineering
-https://bootlin.com
---=-9LjEtgDN/MgaN2wTRtzY--
+Best regards,
+Marek Vasut
