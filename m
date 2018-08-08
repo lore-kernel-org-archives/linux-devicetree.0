@@ -1,43 +1,56 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 0/3] arm64: dts: qcom: pm8998: Add ADC node and die temperature channel
-Date: Wed,  8 Aug 2018 12:13:36 -0700
-Message-ID: <20180808191339.16875-1-mka@chromium.org>
+Subject: [PATCH 2/3] arm64: dts: qcom: pm8998: Add adc node
+Date: Wed,  8 Aug 2018 12:13:38 -0700
+Message-ID: <20180808191339.16875-3-mka@chromium.org>
+References: <20180808191339.16875-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180808191339.16875-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Siddartha Mohanadoss <smohanad@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds the DT node for the QCOM SPMI PMIC5 ADC and a channel
-for the die temperature.
+This adds the adc node to pm8998 based on the examples in the
+bindings. It also fixes the order of the included headers.
 
-The die temperature is going to be used by the temperature alarm driver
-(https://lore.kernel.org/patchwork/project/lkml/list/?series=361416).
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ arch/arm64/boot/dts/qcom/pm8998.dtsi | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-My understanding is that some of the ADC channels are/can be universally
-useful on devices with a pm8998, while the use of others is device specific
-(e.g. AMUX). Siddartha / QCA folks, are there other generally useful ADC
-channels that should be added here?
-
-The driver for the QCOM SPMI PMIC5 ADC landed in the 'testing' branch of the
-'iio' tree:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/commit/?h=testing&id=2c909be15f45c96d3dc6a84e56a76e5c3c7a60ae
-
-(This series has a trivial conflict with the temp alarm series mentioned
-above, if desired I can rebase it on that, I wasn't sure whether it's a
-good idea to create a dependency on it)
-
-Matthias Kaehlcke (3):
-  dt-bindings: iio: vadc: Fix documentation of 'reg'
-  arm64: dts: qcom: pm8998: Add adc node
-  arm64: dts: qcom: pm8998: Add die temperature channel node to the ADC
-
- .../bindings/iio/adc/qcom,spmi-vadc.txt        |  4 ++--
- arch/arm64/boot/dts/qcom/pm8998.dtsi           | 18 +++++++++++++++++-
- 2 files changed, 19 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+index 92bed1e7d4bb..f70f6101bceb 100644
+--- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+@@ -1,8 +1,9 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+ /* Copyright 2018 Google LLC. */
+ 
+-#include <dt-bindings/spmi/spmi.h>
++#include <dt-bindings/iio/qcom,spmi-vadc.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/spmi/spmi.h>
+ 
+ &spmi_bus {
+ 	pm8998_lsid0: pmic@0 {
+@@ -11,6 +12,16 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		pm8998_adc: adc@3100 {
++			compatible = "qcom,spmi-adc-rev2";
++			reg = <0x3100>;
++			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#io-channel-cells = <1>;
++			io-channel-ranges;
++		};
++
+ 		pm8998_gpio: gpios@c000 {
+ 			compatible = "qcom,pm8998-gpio", "qcom,spmi-gpio";
+ 			reg = <0xc000>;
 -- 
 2.18.0.597.ga71716f1ad-goog
