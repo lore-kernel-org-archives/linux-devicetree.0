@@ -1,37 +1,34 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
-        documentation
-Date: Wed, 8 Aug 2018 17:09:38 +0200
-Message-ID: <20180808150938.GA32274@lst.de>
-References: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com> <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4> <CAL_JsqKPFSQYH3p6a0VoCr-VAzf_98H7N3fNJ+4+DquS8WcjUQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alan Tull <atull@kernel.org>
+Subject: [PATCH] arm64: dts: stratix10: i2c clock running out of spec
+Date: Wed,  8 Aug 2018 10:42:41 -0500
+Message-ID: <20180808154241.3760-1-atull@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKPFSQYH3p6a0VoCr-VAzf_98H7N3fNJ+4+DquS8WcjUQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
+To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Alan Tull <atull@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2018 at 08:16:14AM -0600, Rob Herring wrote:
-> Is 1.0 an actual version number corresponding to an exact, revision
-> controlled version of the IP or just something you made up? Looks like
-> the latter to me and I'm not a fan of s/w folks making up version
-> numbers for h/w. Standard naming convention is <vendor>,<soc>-<block>
-> unless you have good reason to deviate (IP for FPGAs where version
-> numbers are exposed to customers is one example).
-> 
-> And defining a version 2 when you find a quirk doesn't work. You've
-> already shipped the DT. You need to be able to fix issues with just an
-> OS update. This is why you are supposed to define a compatible string
-> for each and every SoC (and use a fallback when they are "the
-> same"TM).
+DesignWare I2C controller was observed running at 105.93kHz rather
+than the specified 100kHz.  Adjust device tree settings to bring it
+within spec (a slightly conservative 98 MHz).
 
-Can you point to some existing examples of the multiple offered
-compatible strings and what is actually matched for something that
-largely hasn't changed?
+Signed-off-by: Alan Tull <atull@kernel.org>
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-For example the documentation for the arm GICv3 binding seems to just
-match for arm,gic-v3.  On the other hand the GIC driver seems to match
-for a lot of different strings.
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 6edc4fa..53cf195 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -124,6 +124,8 @@
+ &i2c1 {
+ 	status = "okay";
+ 	clock-frequency = <100000>;
++	i2c-sda-falling-time-ns = <890>;  /* hcnt */
++	i2c-sdl-falling-time-ns = <890>;  /* lcnt */
+ 
+ 	adc@14 {
+ 		compatible = "lltc,ltc2497";
+-- 
+2.7.4
