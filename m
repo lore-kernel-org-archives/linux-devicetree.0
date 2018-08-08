@@ -1,132 +1,85 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Wed, 8 Aug 2018 15:45:26 +0530
-Message-ID: <c83e4248-aef2-bb40-8d8e-47d9b2918cc7@codeaurora.org>
-References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
- <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
- <CAE=gft7_5SZKpU0i9Jbi6UV-eqW8=6Fm7rw4oKVXG6J9Q7_E+g@mail.gmail.com>
- <1ddda4b9e6dcd7ad415235f4d6af2dc7@codeaurora.org>
- <153333504360.10763.8964005567051510823@swboyd.mtv.corp.google.com>
- <4d37a1ee4f2d5b30da3f62cbfca756a8@codeaurora.org>
- <153370933225.220756.12056174025047430491@swboyd.mtv.corp.google.com>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH] media: dt: adv7604: Fix slave map documentation
+Date: Wed, 8 Aug 2018 11:23:32 +0100
+Message-ID: <b5b25641-f898-577b-7762-d72dd64272cf@ideasonboard.com>
+References: <20180807155452.797-1-kieran.bingham@ideasonboard.com>
+ <505904fb-7bfc-c455-740e-b72a14731eb9@ysoft.com>
+Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153370933225.220756.12056174025047430491@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <505904fb-7bfc-c455-740e-b72a14731eb9@ysoft.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, skannan@codeaurora.org
-Cc: Evan Green <evgreen@google.com>, rjw@rjwysocki.net, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org
+To: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, mchehab@kernel.org, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Michal,
 
+Thank you for your review.
 
-On 8/8/2018 11:52 AM, Stephen Boyd wrote:
-> Quoting skannan@codeaurora.org (2018-08-06 13:46:05)
->> On 2018-08-03 15:24, Stephen Boyd wrote:
->>> Quoting skannan@codeaurora.org (2018-08-03 12:52:48)
->>>> On 2018-08-03 12:40, Evan Green wrote:
->>>>> Hi Taniya,
->>>>>
->>>>> On Tue, Jul 24, 2018 at 3:44 AM Taniya Das <tdas@codeaurora.org> wrote:
->>>>>>
->>>>>> +               if (src)
->>>>>> +                       c->table[i].frequency = c->xo_rate * lval /
->>>>>> 1000;
->>>>>> +               else
->>>>>> +                       c->table[i].frequency = INIT_RATE / 1000;
->>>>>
->>>>> I don't know much about how this hardware works, but based on the
->>>>> mask, src has 4 possible values. So does 0 mean INIT_RATE, and 1, 2,
->>>>> and 3 all mean xo_rate?
->>>>>
->>>>> Also, is INIT_RATE really constant? It sounds like gpll0 (or
->>>>> gpll0_out_even?). You're already getting the xo clock, why not get
->>>>> gpll0's real rate as well?
->>>>
->>>> Actually I was about to comment and say NOT to get clocks just to get
->>>> their rate. The XO_RATE is just a multiplication factor. This HW/FW
->>>> can
->>>> change in the future and make the multiplication factor to 1KHz.
->>>
->>> So future changes to this hardware are going to make this register
->>> return the final frequency that we should use? Sounds great! But that
->>> isn't how it's working right now. We need to have XO in the binding
->>> here
->>> so the driver can work with different XO frequencies in case that ever
->>> happens. Same story for GPLL0. Hardcoding this stuff in the driver just
->>> means we'll have to swizzle things in the driver when it changes.
->>
->> XO being a different frequency in a Qualcomm chip is way way less likely
->> than anything else we are discussing here. In the 10+years I've been
->> there this has never changed.
->>
->> So, how about making this binding optional? If it's not present we can
->> make assumptions for XO rate and init rate. That'll handle your
->> hypothetical use case while also being optimized.
-> 
-> Optional properties are almost never correct for clks. Either the clk
-> goes there or it doesn't go there. The only time it's optional is if the
-> HW has the choice of generating the clk itself internally or to use an
-> external clk as input.
-> 
-> In this case, it's not optional, it's actually used so marking it
-> optional is highly confusing.
-> 
->>
->>>> We also
->>>> can't really control any of the clocks going to this block from Linux
->>>> (it's all locked down).
->>>
->>> This shouldn't matter. The clocks going to this hardware block are
->>> described by the firmware to the OS by means of the DT node. If the
->>> firmware or the hardware decides to change the input clks then the
->>> binding can have different clk nodes used.
->>
->> There are tons of clocks that are input to blocks in an SoC that are
->> never controlled by Linux. Or are expose in DT because they are set up
->> ahead of time and can't change. So, why make an exception here?
-> 
-> Because the driver doesn't have to hard-code some frequency that can
-> easily come from the DT, making it more flexible for frequency plan
-> changes. It doesn't matter about control of clks at all here, so this
-> comparison is just plain wrong.
-> 
->>
->>>> The INIT_RATE will
->>>> always be 300 MHz independent of what source it's coming from (as in,
->>>> if
->>>> GPLL0 can't give 300, the HW design will be so that we'll find a
->>>> different source).
->>>>
->>>> So, I'd like to remove any clock bindings for this driver.
->>>
->>> No. Bindings describe how the hardware is connected. Please don't
->>> remove
->>> clocks from the binding just because probe defer is a concern.
->>
->> Binding describes hardware controllable by the OS. That's the reality.
->> Let's not add mandatory clock bindings for clocks that the OS can't do
->> anything about.
->>
-> 
-> It seems that you believe clks should only be used to turn on/off and
-> control rates. That is not the whole truth. Sometimes clks are there
-> just to express the clk frequencies that are present in the design so
-> that drivers can figure out what to do.
-> 
++Rob, +Mark, +Laurent asking for opinions if anyone has any on prefixes
+through media tree.
 
-Stephen,
+On 08/08/18 08:48, Michal Vokáč wrote:
+> On 7.8.2018 17:54, Kieran Bingham wrote:
+> Hi Kieran,
+>> The reg-names property in the documentation is missing an '='. Add it.
+>>
+>> Fixes: 9feb786876c7 ("media: dt-bindings: media: adv7604: Extend
+>> bindings to allow specifying slave map addresses")
+>>
+> 
+> "dt-bindings: media: " is preferred for the subject.
 
-As this clock is not configurable by linux clock drivers and we really 
-do not care the parent src(as mentioned by Saravana) to generate the 
-300MHz, would it be good to define a fixed rate clock so as to express 
-the HW connectivity & frequency?
+This patch will go through the media-tree as far as I am aware, and
+Mauro prefixes all commits through the media tree with "media:" if they
+are not already prefixed.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+Thus this would then become "media: dt-bindings: media: adv7604: ...."
+as per my commit: 9feb786876c7 which seems a bit redundant.
 
+Is it still desired ? If so I'll send a V2. (perhaps needed anyway, as I
+seem to have erroneously shortened dt-bindings: to just dt: which wasn't
+intentional.
+
+> I think you should also add device tree maintainers to the recipients.
+
+Added to this mail to ask opinions on patch prefixes above.
+
+Originally, I believed the list was sufficient as this is a trivial
+patch, and it goes through the media tree.
+
+But, it turned out to be more controversial :)
+
+Rob, Mark, should I add you to all patches affecting DT? Or is the list
+sufficient?
 --
+Regards
+
+Kieran
+
+
+> Best regards,
+> Michal
+> 
+>> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+>> ---
+>>   Documentation/devicetree/bindings/media/i2c/adv7604.txt | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> index dcf57e7c60eb..b3e688b77a38 100644
+>> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> @@ -66,7 +66,7 @@ Example:
+>>            * other maps will retain their default addresses.
+>>            */
+>>           reg = <0x4c>, <0x66>;
+>> -        reg-names "main", "edid";
+>> +        reg-names = "main", "edid";
+>>             reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+>>           hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
