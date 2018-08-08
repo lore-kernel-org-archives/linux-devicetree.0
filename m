@@ -1,65 +1,105 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 0/4] pci-dra7xx: Enable errata i870 workaround for RC
- mode
-Date: Wed, 8 Aug 2018 17:57:00 +0100
-Message-ID: <20180808165700.GB486@e107981-ln.cambridge.arm.com>
-References: <20180724173150.2701-1-vigneshr@ti.com>
+From: vitor <Vitor.Soares@synopsys.com>
+Subject: Re: [PATCH 2/3] dt-bindings: i3c: Document Synopsys DesignWare I3C
+ master bindings
+Date: Wed, 8 Aug 2018 17:59:24 +0100
+Message-ID: <c00cb815-ae82-312a-213b-145537a294bd@synopsys.com>
+References: <1532120272-17157-1-git-send-email-soares@synopsys.com>
+ <1532120272-17157-3-git-send-email-soares@synopsys.com>
+ <20180725195733.GA14450@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180724173150.2701-1-vigneshr@ti.com>
+In-Reply-To: <20180725195733.GA14450@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Vitor soares <Vitor.Soares@synopsys.com>
+Cc: boris.brezillon@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de, psroka@cadence.com, agolec@cadence.com, adouglas@cadence.com, bfolta@cadence.com, dkos@cadence.com, alicja@cadence.com, cwronka@cadence.com, sureshp@cadence.com, rafalc@cadence.com, thomas.petazzoni@bootlin.com, nm@ti.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, linus.walleij@linaro.org, Xiang.Lin@synaptics.com, linux-gpio@vger.kernel.org, nsekhar@ti.com, pgaj@cadence.com, peda@axentia.se, Joao.Pinto@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 24, 2018 at 11:01:46PM +0530, Vignesh R wrote:
-> Make workaround for errata i870 applicable in Host mode as
-> well(previously it was enabled only for EP mode) as per errata
-> documentation: http://www.ti.com/lit/er/sprz450/sprz450.pdf
-> 
-> Tested on DRA72 EVM
-> 
-> Tony,
-> 
-> If you are okay with the series, could you pick this via omap tree?
-> All ACKs are in place and Lorenzo is okay with PCIe bits to go along with
-> rest of DTS changes.
+Hi Rob,
 
-I think we have missed the v4.19 merge window by now - please let me
-know if I can drop this series from the PCI patch queue.
 
-Thanks,
-Lorenzo
+On 25-07-2018 20:57, Rob Herring wrote:
+> On Fri, Jul 20, 2018 at 09:57:51PM +0100, Vitor soares wrote:
+>> This patch document Synopsys DesignWare I3C master DT bindings.
+>>
+>> Signed-off-by: Vitor soares <soares@synopsys.com>
+>> ---
+>>   .../devicetree/bindings/i3c/snps,dw-i3c-master.txt | 43 ++++++++++++++++++++++
+>>   1 file changed, 43 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt b/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
+>> new file mode 100644
+>> index 0000000..7f5c8b0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
+>> @@ -0,0 +1,43 @@
+>> +Bindings for Synopsys DesignWare I3C master block
+>> +=================================================
+>> +
+>> +Required properties:
+>> +--------------------
+>> +- compatible: shall be "snps,dw-i3c-master"
+> Only one version and no version number?
+>
+> ... and an SoC specific compatible string.
 
-> Regards
-> Vignesh
-> 
-> 
-> Changes since v2:
-> Reorder patch 2 to appear at the last.
-> Collect all the ACKs
-> 
-> Changes since v1:
-> Drop IRQ handling rework (will be sent out separately)
-> 
-> v2: https://patchwork.ozlabs.org/cover/935454/
-> v1: https://lkml.org/lkml/2017/12/1/59
-> 
-> 
-> Vignesh R (4):
->   dt-bindings: PCI: dra7xx: Add bindings for unaligned access in host
->     mode
->   ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
->   ARM: dts: dra7: Fix up unaligned access setting for PCIe EP
->   pci: dwc: pci-dra7xx: Enable errata i870 for both EP and RC mode
-> 
->  Documentation/devicetree/bindings/pci/ti-pci.txt |  5 +++++
->  arch/arm/boot/dts/dra7.dtsi                      |  4 +++-
->  drivers/pci/controller/dwc/pci-dra7xx.c          | 12 ++++++------
->  3 files changed, 14 insertions(+), 7 deletions(-)
-> 
-> -- 
-> 2.18.0
-> 
+I'm not understanding. Can you explain?
+
+>
+>> +- clocks: shall reference the core_clk
+>> +- clock-names: shall contain "core_clk"
+> "_clk" is redundant and *-names with a single entry is kind of
+> pointless.
+
+I will fix it for next version.
+
+>
+>> +- interrupts: the interrupt line connected to this I3C master
+>> +- reg:  Offset and length of I3C master registers
+>> +
+>> +Mandatory properties defined by the generic binding (see
+>> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+>> +
+>> +- #address-cells: shall be set to 3
+>> +- #size-cells: shall be set to 0
+>> +
+>> +Optional properties defined by the generic binding (see
+>> +Documentation/devicetree/bindings/i3c/i3c.txt for more details):
+>> +
+>> +- i2c-scl-hz
+>> +- i3c-scl-hz
+>> +
+>> +I3C device connected on the bus follow the generic description (see
+>> +Documentation/devicetree/bindings/i3c/i3c.txt for more details).
+>> +
+>> +Example:
+>> +
+>> +	i3c-master@0x2000 {
+> Drop the '0x'
+>
+>> +		compatible = "snps,dw-i3c-master";
+>> +		#address-cells = <3>;
+>> +		#size-cells = <0>;
+>> +		reg = <0x02000 0x1000>;
+>> +		interrupts = <0>;
+>> +		clocks = <&i3cclk>;
+>> +		clock-names = "core_clk";
+>> +
+>> +		eeprom@0x57{
+>> +			compatible = "atmel,24c01";
+>> +			reg = < 0x57 0x80000010 0x0>;
+>> +			pagesize = <0x8>;
+>> +		};
+>> +	};
+>> -- 
+>> 2.7.4
+>>
+>>
+
+Thanks for your feedback.
+
+Best regards,
+Vitor Soares
