@@ -1,39 +1,57 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 6/8] dt-bindings: interrupt-controller: RISC-V PLIC
-        documentation
-Date: Wed, 8 Aug 2018 18:41:27 +0200
-Message-ID: <20180808164127.GA5733@lst.de>
-References: <20180804082319.5711-1-hch@lst.de> <20180804082319.5711-7-hch@lst.de> <CAL_JsqKKCPhb1um_+68ya0ng_v2tSb5O+-8RQPqx7Od3sJ4FuA@mail.gmail.com> <20180808150448.GA31785@lst.de> <CAL_JsqKgawQA5V2W1e9QFb_Ri+Aka-08WizeSD9kdxyBdcwpEQ@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
+ documentation
+Date: Wed, 8 Aug 2018 17:47:40 +0100
+Message-ID: <bb671fe1-6c43-3218-0096-7c5280ffb6b5@arm.com>
+References: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
+ <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4>
+ <CAL_JsqKPFSQYH3p6a0VoCr-VAzf_98H7N3fNJ+4+DquS8WcjUQ@mail.gmail.com>
+ <20180808150938.GA32274@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKgawQA5V2W1e9QFb_Ri+Aka-08WizeSD9kdxyBdcwpEQ@mail.gmail.com>
+In-Reply-To: <20180808150938.GA32274@lst.de>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@sifive.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Anup Patel <anup@brainfault.org>, atish.patra@wdc.com, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
+To: Christoph Hellwig <hch@lst.de>, Rob Herring <robh+dt@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, atish.patra@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2018 at 10:15:58AM -0600, Rob Herring wrote:
-> 'interrupts' (via
-> interrupt-parent) or 'interrupts-extended' has to point to an
-> 'interrupt-controller' node. I guess you could make the cpu nodes
-> interrupt-controllers. That's a bit strange, but I can't think of a
-> reason why that wouldn't work.
+On 08/08/18 16:09, Christoph Hellwig wrote:
+> On Wed, Aug 08, 2018 at 08:16:14AM -0600, Rob Herring wrote:
+>> Is 1.0 an actual version number corresponding to an exact, revision
+>> controlled version of the IP or just something you made up? Looks like
+>> the latter to me and I'm not a fan of s/w folks making up version
+>> numbers for h/w. Standard naming convention is <vendor>,<soc>-<block>
+>> unless you have good reason to deviate (IP for FPGAs where version
+>> numbers are exposed to customers is one example).
+>>
+>> And defining a version 2 when you find a quirk doesn't work. You've
+>> already shipped the DT. You need to be able to fix issues with just an
+>> OS update. This is why you are supposed to define a compatible string
+>> for each and every SoC (and use a fallback when they are "the
+>> same"TM).
+> 
+> Can you point to some existing examples of the multiple offered
+> compatible strings and what is actually matched for something that
+> largely hasn't changed?
+> 
+> For example the documentation for the arm GICv3 binding seems to just
+> match for arm,gic-v3.  On the other hand the GIC driver seems to match
+> for a lot of different strings.
 
-It could work, and would actually match how the hardware works
-fairly closely.
+The original GIC driver deals with 2.5 revisions of the architecture
+(yes, there was something pre-GICv1...), and implementers have been
+creative to the extreme. Still, we could have done without most of these
+compat strings. Hindsight and all that jazz.
 
-> Just because the cpu-intc is not made to be an irqchip in the kernel
-> doesn't mean it can't still be represented as an interrupt-controller
-> in DT. It shouldn't be designed just around how some OS happens to
-> implement things.
+GICv3 is a much more controlled architecture, and although people have
+come up with a number of turds masquerading as implementations, it has
+never been bad enough to mandate a different set of compat strings.
+Also, you cannot describe that kind of stuff in ACPI, and we need to
+support both, so we've come up with different ways of handling this.
 
-Independent of how you implement it, there isn't really such a thing
-as the cpu-intc.  The CPU itself has a number of exceptions, that
-are all handled the same way.  One of them just happens to be
-the connection to an external interrupt controller.
-
-That being said I'm fine with keeping up the pretence (at least in
-DT) that it is a separate entity and resubmit the cpu-intc docs
-given how widespread they exist already.
+	M.
+-- 
+Jazz is not dead. It just smells funny...
