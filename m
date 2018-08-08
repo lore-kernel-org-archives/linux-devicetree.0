@@ -1,73 +1,74 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] net: ethernet: cpsw-phy-sel: prefer phandle for phy sel
- and update binding
-Date: Wed, 8 Aug 2018 13:58:38 +0200
-Message-ID: <20180808115838.GA18314@lunn.ch>
-References: <20180808080354.100146-1-tony@atomide.com>
+From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Subject: Re: [PATCH] ARM: dts: socfpga: use stdout-path for chosen node
+Date: Wed, 8 Aug 2018 14:02:44 +0200
+Message-ID: <CAAh8qsyHxMjwBtBa5pYejkOxwFRbbFbt+myC4ynQQonK8MAo-w@mail.gmail.com>
+References: <20180808090944.861-1-simon.k.r.goldschmidt@gmail.com> <f27a5e90-9783-761e-a87b-9b8a2d46d2a4@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180808080354.100146-1-tony@atomide.com>
-Sender: netdev-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f27a5e90-9783-761e-a87b-9b8a2d46d2a4@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Vasut <marex@denx.de>
+Cc: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
-> @@ -19,6 +19,9 @@ Required properties:
->  - slaves		: Specifies number for slaves
->  - active_slave		: Specifies the slave to use for time stamping,
->  			  ethtool and SIOCGMIIPHY
-> +- cpsw-phy-sel		: Specifies the phandle to the CPSW phy mode selection
-> +			  device. Note that in legacy cases cpsw-phy-sel may be
-> +			  a child device instead of a phandle.
+On Wed, Aug 8, 2018 at 1:32 PM Marek Vasut <marex@denx.de> wrote:
+>
+> On 08/08/2018 11:09 AM, Simon Goldschmidt wrote:
+> > Use stdout-path dts property for kernel console.
+> >
+> > There were two socfpga boards left not using stdout-path:
+> > socrates and vining. Make sure they match the other boards.
+> >
+> > Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    | 3 ++-
+> >  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 3 ++-
+> >  2 files changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+> > index 53bf99eef66d..6f5255a7d192 100644
+> > --- a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+> > +++ b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+> > @@ -22,7 +22,8 @@
+> >       compatible = "ebv,socrates", "altr,socfpga-cyclone5", "altr,socfpga";
+> >
+> >       chosen {
+> > -             bootargs = "console=ttyS0,115200";
+> > +             bootargs = "earlyprintk";
+> > +             stdout-path = "serial0:115200n8";
+> >       };
+> >
+> >       memory@0 {
+> > diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> > index f50b19447de6..e61efe16e79c 100644
+> > --- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> > +++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+> > @@ -54,7 +54,8 @@
+> >       compatible = "samtec,vining", "altr,socfpga-cyclone5", "altr,socfpga";
+> >
+> >       chosen {
+> > -             bootargs = "console=ttyS0,115200";
+> > +             bootargs = "earlyprintk";
+>
+> Why this earlyprintk ?
 
-Hi Tony
+The reason is Dinh added that to all socfpga boards in his commit [1]
+and I wanted the remaining two boards to be the same.
 
-It would be good to reference cpsw-phy-sel.txt.
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts?h=v4.17.13&id=efc1985c8f79ee8259d19a9b6e3df6a07d063669
 
->  Optional properties:
->  - ti,hwmods		: Must be "cpgmac0"
-> @@ -75,6 +78,7 @@ Examples:
->  		cpts_clock_mult = <0x80000000>;
->  		cpts_clock_shift = <29>;
->  		syscon = <&cm>;
-> +		cpsw-phy-sel = <&phy_sel>;
->  		cpsw_emac0: slave@0 {
->  			phy_id = <&davinci_mdio>, <0>;
->  			phy-mode = "rgmii-txid";
-> @@ -103,6 +107,7 @@ Examples:
->  		cpts_clock_mult = <0x80000000>;
->  		cpts_clock_shift = <29>;
->  		syscon = <&cm>;
-> +		cpsw-phy-sel = <&phy_sel>;
->  		cpsw_emac0: slave@0 {
->  			phy_id = <&davinci_mdio>, <0>;
->  			phy-mode = "rgmii-txid";
-> diff --git a/drivers/net/ethernet/ti/cpsw-phy-sel.c b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-> --- a/drivers/net/ethernet/ti/cpsw-phy-sel.c
-> +++ b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-> @@ -170,10 +170,13 @@ void cpsw_phy_sel(struct device *dev, phy_interface_t phy_mode, int slave)
->  	struct device_node *node;
->  	struct cpsw_phy_sel_priv *priv;
->  
-> -	node = of_get_child_by_name(dev->of_node, "cpsw-phy-sel");
-> +	node = of_parse_phandle(dev->of_node, "cpsw-phy-sel", 0);
->  	if (!node) {
+Best Regards,
+Simon
 
-Do you need to handle EPROBE_DEFER here? The phandle points to a
-device which has not yet been loaded? I'm not sure exactly where it
-will be returned, maybe it is bus_find_device(), but i expect to see
-some handling of it somewhere in this function.
-
-> -		dev_err(dev, "Phy mode driver DT not found\n");
-> -		return;
-> +		node = of_get_child_by_name(dev->of_node, "cpsw-phy-sel");
-> +		if (!node) {
-> +			dev_err(dev, "Phy mode driver DT not found\n");
-> +			return;
-> +		}
->  	}
-
-	Andrew
+>
+> > +             stdout-path = "serial0:115200n8";
+> >       };
+> >
+> >       memory@0 {
+> >
+>
+>
+> --
+> Best regards,
+> Marek Vasut
