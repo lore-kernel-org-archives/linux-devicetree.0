@@ -1,144 +1,133 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
-Date: Wed, 8 Aug 2018 12:01:32 +0530
-Message-ID: <454c277e-8a63-81cb-b341-a50f4e25cbea@ti.com>
-References: <20180605060510.32473-1-nm@ti.com>
- <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
+ documentation
+Date: Tue, 7 Aug 2018 23:42:04 -0700
+Message-ID: <4ceba1c7-f385-a995-2037-12883cd963ff@wdc.com>
+References: <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
+In-Reply-To: <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>
-Cc: Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "anup@brainfault.org" <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "shorne@gmail.com" <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tuesday 05 June 2018 07:35 PM, Rob Herring wrote:
-> On Tue, Jun 5, 2018 at 1:05 AM, Nishanth Menon <nm@ti.com> wrote:
->> The AM654 SoC is a lead device of the K3 Multicore SoC architecture
->> platform, targeted for broad market and industrial control with aim to
->> meet the complex processing needs of modern embedded products.
->>
->> Some highlights of this SoC are:
->> * Quad ARMv8 A53 cores split over two clusters
->> * GICv3 compliant GIC500
->> * Configurable L3 Cache and IO-coherent architecture
->> * Dual lock-step capable R5F uC for safety-critical applications
->> * High data throughput capable distributed DMA architecture under NAVSS
->> * Three Gigabit Industrial Communication Subsystems (ICSSG), each with dual
->>   PRUs and dual RTUs
->> * Hardware accelerator block containing AES/DES/SHA/MD5 called SA2UL
->> * Centralized System Controller for Security, Power, and Resource
->>   management.
->> * Dual ADCSS, eQEP/eCAP, eHRPWM, dual CAN-FD
->> * Flash subystem with OSPI and Hyperbus interfaces
->> * Multimedia capability with CAL, DSS7-UL, SGX544, McASP
->> * Peripheral connectivity including USB3, PCIE, MMC/SD, GPMC, I2C, SPI,
->>   GPIO
->>
->> See AM65x Technical Reference Manual (SPRUID7, April 2018)
->> for further details: http://www.ti.com/lit/pdf/spruid7
->>
->> We introduce the Kconfig symbol for the SoC along with this patch since
->> it is logically relevant point, however the usage is in subsequent
->> patches.
->>
->> NOTE: AM654 is the first of the device variants, hence we introduce a
->> generic am6.dtsi.
->>
->> Signed-off-by: Benjamin Fair <b-fair@ti.com>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> ---
->>  MAINTAINERS                          |   1 +
->>  arch/arm64/boot/dts/ti/k3-am6.dtsi   | 144 +++++++++++++++++++++++++++++++++++
->>  arch/arm64/boot/dts/ti/k3-am654.dtsi | 117 ++++++++++++++++++++++++++++
->>  drivers/soc/ti/Kconfig               |  14 ++++
->>  4 files changed, 276 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/ti/k3-am6.dtsi
->>  create mode 100644 arch/arm64/boot/dts/ti/k3-am654.dtsi
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index cfb35b252ac7..5f5c4eddec7a 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -2092,6 +2092,7 @@ M:        Nishanth Menon <nm@ti.com>
->>  L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->>  S:     Supported
->>  F:     Documentation/devicetree/bindings/arm/ti/k3.txt
->> +F:     arch/arm64/boot/dts/ti/k3-*
->>
->>  ARM/TEXAS INSTRUMENT KEYSTONE ARCHITECTURE
->>  M:     Santosh Shilimkar <ssantosh@kernel.org>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am6.dtsi b/arch/arm64/boot/dts/ti/k3-am6.dtsi
->> new file mode 100644
->> index 000000000000..cdfa12173aac
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/ti/k3-am6.dtsi
->> @@ -0,0 +1,144 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Device Tree Source for AM6 SoC Family
->> + *
->> + * Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
->> + */
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/interrupt-controller/irq.h>
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +/ {
->> +       model = "Texas Instruments K3 AM654 SoC";
->> +       compatible = "ti,am654";
->> +       interrupt-parent = <&gic>;
->> +       #address-cells = <2>;
->> +       #size-cells = <2>;
->> +
->> +       aliases {
->> +               serial0 = &wkup_uart0;
->> +               serial1 = &mcu_uart0;
->> +               serial2 = &main_uart0;
->> +               serial3 = &main_uart1;
->> +               serial4 = &main_uart2;
->> +       };
->> +
->> +       chosen { };
->> +
->> +       firmware {
->> +               optee {
->> +                       compatible = "linaro,optee-tz";
->> +                       method = "smc";
->> +               };
->> +
->> +               psci: psci {
->> +                       compatible = "arm,psci-1.0";
->> +                       method = "smc";
->> +               };
->> +       };
->> +
->> +       soc0: soc0 {
->> +               compatible = "simple-bus";
->> +               #address-cells = <2>;
->> +               #size-cells = <2>;
->> +               ranges;
+On 8/7/18 7:17 PM, Palmer Dabbelt wrote:
+> On Mon, 06 Aug 2018 13:59:48 PDT (-0700), robh+dt@kernel.org wrote:
+>> On Thu, Aug 2, 2018 at 4:08 PM Atish Patra <atish.patra@wdc.com> wrote:
+>>>
+>>> On 8/2/18 4:50 AM, Christoph Hellwig wrote:
+>>>> From: Palmer Dabbelt <palmer@dabbelt.com>
+>>>>
+>>>> This patch adds documentation for the platform-level interrupt
+>>>> controller (PLIC) found in all RISC-V systems.  This interrupt
+>>>> controller routes interrupts from all the devices in the system to each
+>>>> hart-local interrupt controller.
+>>>>
+>>>> Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
+>>>> want to change how we're specifying holes in the hart list.
+>>>>
+>>>> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+>>>> [hch: various fixes and updates]
+>>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>>> ---
+>>>>    .../interrupt-controller/sifive,plic0.txt     | 57 +++++++++++++++++++
+>>>>    1 file changed, 57 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+>>>> new file mode 100644
+>>>> index 000000000000..c756cd208a93
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic0.txt
+>>>> @@ -0,0 +1,57 @@
+>>>> +SiFive Platform-Level Interrupt Controller (PLIC)
+>>>> +-------------------------------------------------
+>>>> +
+>>>> +SiFive SOCs include an implementation of the Platform-Level Interrupt Controller
+>>>> +(PLIC) high-level specification in the RISC-V Privileged Architecture
+>>>> +specification.  The PLIC connects all external interrupts in the system to all
+>>>> +hart contexts in the system, via the external interrupt source in each hart.
+>>>> +
+>>>> +A hart context is a privilege mode in a hardware execution thread.  For example,
+>>>> +in an 4 core system with 2-way SMT, you have 8 harts and probably at least two
+>>>> +privilege modes per hart; machine mode and supervisor mode.
+>>>> +
+>>>> +Each interrupt can be enabled on per-context basis. Any context can claim
+>>>> +a pending enabled interrupt and then release it once it has been handled.
+>>>> +
+>>>> +Each interrupt has a configurable priority. Higher priority interrupts are
+>>>> +serviced first. Each context can specify a priority threshold. Interrupts
+>>>> +with priority below this threshold will not cause the PLIC to raise its
+>>>> +interrupt line leading to the context.
+>>>> +
+>>>> +While the PLIC supports both edge-triggered and level-triggered interrupts,
+>>>> +interrupt handlers are oblivious to this distinction and therefore it is not
+>>>> +specified in the PLIC device-tree binding.
+>>>> +
+>>>> +While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
+>>>> +"sifive,plic0" device is a concrete implementation of the PLIC that contains a
+>>>> +specific memory layout, which is documented in chapter 8 of the SiFive U5
+>>>> +Coreplex Series Manual <https://static.dev.sifive.com/U54-MC-RVCoreIP.pdf>.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : "sifive,plic0"
 > 
-> Really need 64-bit addresses and sizes? Use ranges to limit the
-> address space if possible.
+> I think there was a thread bouncing around somewhere where decided to pick the
+> official name of the compatible string to be "sifive,plic-1.0".  The idea here
+> is that the PLIC is compatible across all of SiFive's current implementations,
+> but there's some limitations in the memory map that will probably cause us to
+> spin a version 2 at some point so we want major version number.  The minor
+> number is just in case we find some errata in the PLIC.
+> 
+>>>> +- #address-cells : should be <0>
+>>>> +- #interrupt-cells : should be <1>
+>>>> +- interrupt-controller : Identifies the node as an interrupt controller
+>>>> +- reg : Should contain 1 register range (address and length)
+>>>
+>>> The one in the real device tree has two entries.
+>>> reg = <0x00000000 0x0c000000 0x00000000 0x04000000>;
+>>>
+>>> Is it intentional or just incorrect entry left over from earlier days?
+>>
+>>>> +             reg = <0xc000000 0x4000000>;
+>>
+>> Looks to me like one has #size-cells and #address-cells set to 2 and
+>> the example is using 1.
+> 
+> Yes.  For some background on how this works: we have a hardware generator that
+> has a tree-of-busses abstraction, and each device is attached to some point on
+> that tree.  When a device gets attached to the bus, we also generate a device
+> tree entry.  For whatever system I generated the example PLIC device tree entry
+> from, it must have been attached to a bus with addresses of 32 bits or less,
+> which resulted in #address-cells and #size-cells being 1.
+> 
 
-We now have address-cells as <1>,
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/ti/k3-am65.dtsi#n49
+Thanks Palmer for the detailed explanation.
 
-However each PCIe instance has 2 data regions and one of the regions
-(PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT1/PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT1 specified
-in the "MAIN Domain Memory Map" table of TRM http://www.ti.com/lit/pdf/spruid7)
-is above the 32bit region and requires 2 cells to specify the start address.
-This region is used to access MEM_SPACE of PCIe endpoint when operating in root
-complex mode and access memory of PCI root complex when operating in endpoint mode.
+> Christoph has a HiFive Unleashed, which has a fu540-c000 on it, which is
+> probably not what I generated as an example -- the fu540-c000 is a complicated
+> configuration, when I mess around with the hardware I tend to use simple ones
+> as I'm not really a hardware guy.  I suppose the bus that the PLIC is hanging
+> off on the fu540-c000 has addresses wider than 32 bits.  This makes sense, as
+> the machine has 8GiB of memory and the PLIC is on a bus that's closer to the
+> core than the DRAM is, so it'd need at least enough address bits to fit 8GiB.
+> 
+> Is the inconsistency a problem?  I generally write device tree handling code to
+> just respect whatever #*-fields says and don't consider that part of the
+> specification of the binding.  I don't mind changing the example to have
+> #size-fields and #address-fields to be 2, but since it's not wrong I also don't
+> see any reason to change it.  We do have 32-bit devices with PLICs, and while
+> they're not Linux-capable devices we're trying to adopt the Linux device tree
+> bindings through the rest of the RISC-V software ecosystem as they tend to be
+> pretty well thought out.
+> 
 
-In order to describe this, should we change the address-cells back to <2> or do
-you suggest any other alternatives?
+Sounds good to me. IMHO, the inconsistencies and its reasoning are well 
+documented which is good enough for now.
 
-Thanks
-Kishon
+Regards,
+Atish
