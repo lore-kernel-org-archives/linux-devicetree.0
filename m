@@ -1,108 +1,92 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
-Date: Wed, 08 Aug 2018 12:57:27 -0500
-Message-ID: <bef421feea16da2fdab333e63a6828741bd59055.camel@buserror.net>
-References: <1532684881-19310-1-git-send-email-Bharat.Bhushan@nxp.com>
-         <1532684881-19310-6-git-send-email-Bharat.Bhushan@nxp.com>
-         <ab2a113620123cb71364b6ae89328ae2fca49821.camel@buserror.net>
-         <AM5PR0401MB254592DC0E917FD292B323BA9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-         <aeff83355ee5235cfd6107dba06a5f7957b45c92.camel@buserror.net>
-         <AM5PR0401MB2545041D99EEDC3136B201719A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 0/9] Add Reset Controller support for Actions Semi Owl SoCs
+Date: Wed, 8 Aug 2018 12:21:25 -0600
+Message-ID: <CAL_JsqL7rFt8OKQoyD4JuZ+i9Fqc6RLsTxN4cJmur28ptwyNWQ@mail.gmail.com>
+References: <20180727184527.13287-1-manivannan.sadhasivam@linaro.org>
+ <c3ae668a-6bcc-a0eb-1e00-14ef9d607316@suse.de> <20180730151131.GA28633@mani>
+ <20180807184710.GA26423@rob-hp-laptop> <20180808172946.GA4188@Mani-XPS-13-9360>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM5PR0401MB2545041D99EEDC3136B201719A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+In-Reply-To: <20180808172946.GA4188@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Bhushan <bharat.bhushan@nxp.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "tyreld@linux.vnet.ibm.com" <tyreld@linux.vnet.ibm.com>, "joe@perches.com" <joe@perches.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, Manivannan Sadhasivam <manivannanece23@gmail.com>, Thomas Liau <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-08-08 at 06:28 +0000, Bharat Bhushan wrote:
-> > -----Original Message-----
-> > From: Scott Wood [mailto:oss@buserror.net]
-> > Sent: Wednesday, August 8, 2018 11:26 AM
-> > To: Bharat Bhushan <bharat.bhushan@nxp.com>;
-> > benh@kernel.crashing.org; paulus@samba.org; mpe@ellerman.id.au;
-> > galak@kernel.crashing.org; mark.rutland@arm.com;
-> > kstewart@linuxfoundation.org; gregkh@linuxfoundation.org;
-> > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-
-> > kernel@vger.kernel.org
-> > Cc: robh@kernel.org; keescook@chromium.org; tyreld@linux.vnet.ibm.com;
-> > joe@perches.com
-> > Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
-> > 
-> > On Wed, 2018-08-08 at 03:44 +0000, Bharat Bhushan wrote:
-> > > > -----Original Message-----
-> > > > From: Scott Wood [mailto:oss@buserror.net]
-> > > > Sent: Wednesday, August 8, 2018 2:44 AM
-> > > > To: Bharat Bhushan <bharat.bhushan@nxp.com>;
-> > > > benh@kernel.crashing.org; paulus@samba.org; mpe@ellerman.id.au;
-> > > > galak@kernel.crashing.org; mark.rutland@arm.com;
-> > > > kstewart@linuxfoundation.org; gregkh@linuxfoundation.org;
-> > > > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-
-> > > > kernel@vger.kernel.org
-> > > > Cc: robh@kernel.org; keescook@chromium.org;
-> > > > tyreld@linux.vnet.ibm.com; joe@perches.com
-> > > > Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for
-> > > > P2020
-> > > > 
-> > > > On Fri, 2018-07-27 at 15:18 +0530, Bharat Bhushan wrote:
-> > > > > MPIC on NXP (Freescale) P2020 supports following irq
-> > > > > ranges:
-> > > > >   > 0 - 11      (External interrupt)
-> > > > >   > 16 - 79     (Internal interrupt)
-> > > > >   > 176 - 183   (Messaging interrupt)
-> > > > >   > 224 - 231   (Shared message signaled interrupt)
-> > > > 
-> > > > Why don't you convert to the 4-cell interrupt specifiers that make
-> > > > dealing with these ranges less error-prone?
-> > > 
-> > > Ok , will do if we agree to have this series as per comment on other
-> > > patch.
-> > 
-> > If you're concerned with errors, this would be a good things to do
-> > regardless.
-> >  Actually, it seems that p2020si-post.dtsi already uses 4-cell interrupts.
-> > 
-> > What is motivating this patchset?  Is there something wrong in the
-> > existing
-> > dts files?
-> 
-> There is no error in device tree. Main motivation is to improve code for
-> following reasons: 
->   - While code study it was found that if a reserved irq-number used then
-> there are no check in driver. irq will be configured as correct and
-> interrupt will never fire.
+On Wed, Aug 8, 2018 at 11:30 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Aug 07, 2018 at 12:47:10PM -0600, Rob Herring wrote:
+> > On Mon, Jul 30, 2018 at 08:41:31PM +0530, Manivannan Sadhasivam wrote:
+> > > Hi Andreas,
+> > >
+> > > On Mon, Jul 30, 2018 at 12:26:07PM +0200, Andreas F=C3=A4rber wrote:
+> > > > Hi Mani,
+> > > >
+> > > > Am 27.07.2018 um 20:45 schrieb Manivannan Sadhasivam:
+> > > > > This patchset adds Reset Controller (RMU) support for Actions Sem=
+i
+> > > > > Owl SoCs, S900 and S700. For the Owl SoCs, RMU has been integrate=
+d into
+> > > > > the clock subsystem in hardware. Hence, in software we integrate =
+RMU
+> > > > > support into common clock driver inorder to maintain compatibilit=
+y.
+> > > >
+> > > > Can this not be placed into drivers/reset/ by using mfd-simple with=
+ a
+> > > > sub-node in DT?
+> >
+> > That is exactly what I tell folks not to do. Design the DT based on h/w
+> > blocks, not current desired driver split for some OS.
+> >
+> > > Actually I was not sure where to place this reset controller driver. =
+When I
+> > > looked into other similar ones such as sunxi, they just integrated in=
+to the
+> > > clk subsystem. So I just chose that path. But yeah, this is hacky!
+> > >
+> > > But this RMU is not MFD by any means. Since the CMU (Clock) and RMU (=
+Reset)
+> > > are two separate IPs inside SoC, we shouldn't describe it as a MFD dr=
+iver. Since
+> > > RMU has only 2 registers, the HW designers decided to use up the CMU =
+memory
+> > > map. So, maybe syscon would be best option I think. What is your opin=
+ion?
+> >
+> > If there's nothing shared then it is not a syscon. If you can create
+> > separate address ranges, then 2 nodes is probably okay. If the register=
+s
+> > are all mixed up, then 1 node.
+> >
+>
+> I don't quite understand the reason for not being syscon. The definition
+> of syscon says that, "System controller node represents a register region
+> containing a set of miscellaneous registers. The registers are not cohesi=
+ve
+> enough to represent as any specific type of device." which exactly fits
+> this case. Only the registers of CMU & RMU are shared and not the HW bloc=
+k!
+>
+> Can you please clarify?
 
-Again, a wrong interrupt number won't fire, whether an interrupt by that
-number exists or not.  I wouldn't mind a sanity check in the driver if the
-programming model made it properly discoverable, but I don't think it's worth
-messing with device trees just for this (and even less so given that there
-don't seem to be new chips coming out that this would be relevant for).
+IIRC, the original intent of 'syscon' was really for things that had
+no subsystem. Random bits all just dumped together. A block with clock
+and reset doesn't sounds pretty well defined functions. Plus that
+criteria doesn't work well because what does and doesn't have a
+subsystem (and DT binding) evolves. IMO, we should probably get rid of
+'syscon'.
 
-> > > One other confusing observation I have is that "irq_count" from
-> > > platform code is given precedence over "last-interrupt-source" in
-> > > device-
-> > 
-> > tree.
-> > > Should not device-tree should have precedence otherwise there is no
-> > > point using " last-interrupt-source" if platform code passes
-> > > "irq_count" in mpic_alloc().
-> > 
-> > Maybe, though I don't think it matters much given that last-interrupt-
-> > source
-> > was only added to avoid having to pass irq_count in platform code.
-> 
-> Thanks for clarifying;
-> 
-> My understanding was that "last-interrupt-source" added to ensure that we
-> can over-ride value passed from platform code. In that case we do not need
-> to change code and can control from device tree.
+Let me turn it around. Why do you want it do be a syscon? Simply to
+create a regmap I suppose because that is all that 'syscon' compatible
+is. A flag to create a regmap. Why do you need a regmap then? Do you
+need to protect concurrent accesses (a single register has both clock
+and reset bits). If so, you can't really call CMU and RMU 2 blocks. If
+not, you don't really need regmap.
 
-The changelog says, "To avoid needing to write custom board-specific code to
-detect that scenario, allow it to be easily overridden in the device-tree,"
-where "it" means the value provided by hardware.  The goal was to pass in 256
-without board code in the kernel, not to override the 256.
-
--Scott
+Rob
