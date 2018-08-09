@@ -1,64 +1,35 @@
-Return-Path: <SRS0=24TD=K7=ideasonboard.com=kieran.bingham+renesas@kernel.org>
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH/RFC 1/2] media: dt-bindings: adv748x: Fix decimal unit
- addresses
-References: <1528984088-24801-1-git-send-email-geert+renesas@glider.be>
- <1528984088-24801-2-git-send-email-geert+renesas@glider.be>
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Message-ID: <ec3c39d5-17a6-50f2-b54d-d30c89aadf1f@ideasonboard.com>
-Date: Thu, 16 Aug 2018 09:40:50 +0100
-MIME-Version: 1.0
-In-Reply-To: <1528984088-24801-2-git-send-email-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5b6cc31f.1c69fb81.183a5.f380@mx.google.com>
+Date: Thu, 09 Aug 2018 16:41:34 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: maxim: Add SPDX license identifiers
+References: <20180807161826.2222-1-krzk@kernel.org>
+In-Reply-To: <20180807161826.2222-1-krzk@kernel.org>
+To: krzk@kernel.org
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, Sangbeom Kim <sbkim73@samsung.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Geert,
+Hi, this is an automated email from Rob's (experimental) review bot. I
+found a couple of common problems with your patch. Please see below.
 
-On 14/06/18 14:48, Geert Uytterhoeven wrote:
-> With recent dtc and W=1:
+On Tue,  7 Aug 2018 18:18:25 +0200, Krzysztof Kozlowski wrote:
+> Replace GPL v2.0 and v2.0+ license statements with SPDX license
+> identifiers.
 > 
->     Warning (graph_port): video-receiver@70/port@10: graph node unit address error, expected "a"
->     Warning (graph_port): video-receiver@70/port@11: graph node unit address error, expected "b"
-> 
-> Unit addresses are always hexadecimal (without prefix), while the bases
-> of reg property values depend on their prefixes.
-> 
-> Fixes: e69595170b1cad85 ("media: adv748x: Add adv7481, adv7482 bindings")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+The preferred subject prefix is "dt-bindings: <binding dir>: ...".
+
 > ---
->  Documentation/devicetree/bindings/media/i2c/adv748x.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> index 21ffb5ed818302ff..54d1d3bc186949fa 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> @@ -73,7 +73,7 @@ Example:
->  			};
->  		};
->  
-> -		port@10 {
-> +		port@a {
->  			reg = <10>;
->  
->  			adv7482_txa: endpoint {
-> @@ -83,7 +83,7 @@ Example:
->  			};
->  		};
->  
-> -		port@11 {
-> +		port@b {
->  			reg = <11>;
->  
->  			adv7482_txb: endpoint {
+>  drivers/regulator/max14577-regulator.c         | 22 +++++------------
+>  drivers/regulator/max77686-regulator.c         | 32 +++++++-----------------
+>  drivers/regulator/max77693-regulator.c         | 32 +++++++-----------------
+>  drivers/regulator/max77802-regulator.c         | 34 +++++++++-----------------
+>  drivers/regulator/max8997-regulator.c          | 30 ++++++-----------------
+>  drivers/regulator/max8998.c                    | 28 ++++++---------------
+>  include/dt-bindings/regulator/maxim,max77802.h |  5 +---
+>  7 files changed, 52 insertions(+), 131 deletions(-)
 > 
 
-Just looking back through these patches, to make sure they get integrated.
-
-Having read yours and Robs responses, I do agree that this is a correct fix.
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+DT bindings (including binding headers) should be a separate patch. See
+Documentation/devicetree/bindings/submitting-patches.txt.
