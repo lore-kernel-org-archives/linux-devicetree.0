@@ -1,71 +1,84 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: [PATCH v3] dt-bindings: media: adv748x: Document re-mappable addresses
-Date: Thu,  9 Aug 2018 20:29:44 +0100
-Message-ID: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, mchehab@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kieran Bingham <kieran.bingham@ideasonboard.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: Add idle-states to device tree for
+ rk3399
+Date: Thu, 09 Aug 2018 22:09:42 +0200
+Message-ID: <5620784.b19SH5PkdR@phil>
+References: <1467793254-10808-1-git-send-email-wxt@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1467793254-10808-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The ADV748x supports configurable slave addresses for its I2C pages.
-Document the page names, and provide an example for setting each of the
-pages explicitly.
+Am Mittwoch, 6. Juli 2016, 10:20:54 CEST schrieb Caesar Wang:
+> As the rk3399 ATF had been supported on ARM github [0], so we can add
+> idle-states for rk3399.
+> This patch adds idle-states bindings data collected through tests
+> experiments (latency and energy consumption) on rk3399 evb2 board.
+> 
+> You can see detail idle-states definitions on document [1].
+> 
+> * arm,psci-suspend-param: power_state parameter to pass to the PSCI
+>   suspend call.
+> * entry-latency: Worst case latency required to enter the idle state. The
+>   exit-latency may be guaranteed only after entry-latency has passed.
+> * min-residency: Minimum period, including preparation and entry, for a
+>   given idle state to be worthwhile energywise
+> * min-residency: Minimum period, including preparation and entry, for a
+>   given idle state to be worthwhile energywise.
+> 
+> [0]:
+> https://github.com/ARM-software/arm-trusted-firmware
+> [1]:
+> Documentation/devicetree/bindings/arm/psci.txt
+> Documentation/devicetree/bindings/arm/idle-states.txt
+> 
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Looks like this patch slipped through the cracks and nobody reposted
+them over time.
 
----
-v2:
- - Fix commit message
- - Extend documentation for the "required property" reg:
 
-v3
- - Fix missing comment from Laurent.
- - correct the reg descrption
----
- .../devicetree/bindings/media/i2c/adv748x.txt    | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index a6dd623..12ce265 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -101,6 +101,18 @@
+>  			};
+>  		};
+>  
+> +		idle-states {
+> +			entry-method = "psci";
+> +			cpu_sleep: cpu-sleep-0 {
+> +				compatible = "arm,idle-state";
+> +				local-timer-stop;
+> +				arm,psci-suspend-param = <0x0010000>;
+> +				entry-latency-us = <350>;
+> +				exit-latency-us = <600>;
+> +				min-residency-us = <1150>;
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 21ffb5ed8183..25a02496f4ba 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -10,7 +10,11 @@ Required Properties:
-     - "adi,adv7481" for the ADV7481
-     - "adi,adv7482" for the ADV7482
- 
--  - reg: I2C slave address
-+  - reg: I2C slave addresses
-+    The ADV748x has up to twelve 256-byte maps that can be accessed via the
-+    main I2C ports. Each map has it own I2C address and acts as a standard
-+    slave device on the I2C bus. The main address is mandatory, others are
-+    optional and remain at default values if not specified.
- 
- Optional Properties:
- 
-@@ -18,6 +22,11 @@ Optional Properties:
- 		     "intrq3". All interrupts are optional. The "intrq3" interrupt
- 		     is only available on the adv7481
-   - interrupts: Specify the interrupt lines for the ADV748x
-+  - reg-names : Names of maps with programmable addresses.
-+		It shall contain all maps needing a non-default address.
-+		Possible map names are:
-+		  "main", "dpll", "cp", "hdmi", "edid", "repeater",
-+		  "infoframe", "cbus", "cec", "sdp", "txa", "txb"
- 
- The device node must contain one 'port' child node per device input and output
- port, in accordance with the video interface bindings defined in
-@@ -47,7 +56,10 @@ Example:
- 
- 	video-receiver@70 {
- 		compatible = "adi,adv7482";
--		reg = <0x70>;
-+		reg = <0x70 0x71 0x72 0x73 0x74 0x75
-+		       0x60 0x61 0x62 0x63 0x64 0x65>;
-+		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
-+			    "infoframe", "cbus", "cec", "sdp", "txa", "txb";
- 
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.17.1
+Looking at the chromeos kernel, there are some more patches adapting
+this idle-state to use different timings.
+
+There also was a cluster-idle state added for a while but that seems to
+cause audio issues according to the CrOS history.
+
+In any case, I'll try to look at this shortly.
+
+
+Heiko
