@@ -1,45 +1,109 @@
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
-        documentation
-Date: Thu, 9 Aug 2018 08:43:53 +0200
-Message-ID: <20180809064353.GA19566@lst.de>
-References: <CAL_JsqKVTGcJP=AJR+6h1Brv8MW9xjD=v2__Xtegkd-+Hnua7g@mail.gmail.com> <mhng-cfa17eb2-3548-48ee-9216-74a3607a3091@palmer-si-x1c4>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
+ channel support
+Date: Thu, 9 Aug 2018 06:45:21 +0000
+Message-ID: <AM0PR04MB42117A7564C6E1AA4D1232F780250@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
+ <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
+ <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
+ <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
+ <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
+ <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
+ <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
+ <20180730144435.srxgohwgdhrmw2rz@pengutronix.de>
+ <CABb+yY0sUxGatozwdQVM55z7ACtpK8HCepnfvQNunQ=r5y_kVw@mail.gmail.com>
+ <CABb+yY04dm_N1Ud2Mhi-g-eFdNVkxJKE8ONOqntZjN_QKwgLcg@mail.gmail.com>
+ <AM0PR04MB42118617A7F29C1D7BE59242802E0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY2HaTK9tq539+m1fyMMPr1eyygJZ7QvzWNp9E7aYxpoVQ@mail.gmail.com>
+ <CABb+yY0KB7RLK1DyPNNPaXoXkx5WoJhkoKX5XVa+4Q94vC7p4A@mail.gmail.com>
+ <AM0PR04MB42112E77338240832E2E5077802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <AM0PR04MB42110FCA0F68A73BA7416EA480250@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <CABb+yY1wGv8XHcTy7WPeD_GGx0J4QF8bcgowJYOoTgTD1R6wPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <mhng-cfa17eb2-3548-48ee-9216-74a3607a3091@palmer-si-x1c4>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: robh+dt@kernel.org, atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY1wGv8XHcTy7WPeD_GGx0J4QF8bcgowJYOoTgTD1R6wPA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-mediatek@lists.infradead.org>",
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
+ Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 08, 2018 at 11:29:17PM -0700, Palmer Dabbelt wrote:
->> So I guess to answer my question, you are just making up version
->> numbers. Unless you are doing the IP verilog too, don't do that.
->
-> Well, in this case my proposal would be that we change the hardware team's 
-> versioning scheme to match whatever we decide on the versioning scheme 
-> should be as a part of this discussion.  I proposed accepting whatever 
-> versioning scheme is decided upon hereto the hardware team before 
-> discussing changing the naming scheme and they agreed to do so.
->
-> So we're really in the drivers' seat here.
->
->> If you want to use just 'sifive,plic' then I'm fine with that. I've
->> given you the potential problems with that and they will be your
->> problems to deal with. Maybe you'll get lucky. Plus it won't be a
->> problem for the 1st implementation.
->
-> I'd prefer to have some versioning scheme, that's why I'm talking so much 
-> about this :).  I really just want to learn how to get the right one, as 
-> I'm quite new to all this and we'll have many of these.
+> -----Original Message-----
+> From: Jassi Brar [mailto:jassisinghbrar@gmail.com]
+> Sent: Thursday, August 9, 2018 10:56 AM
+[...]
+> On Thu, Aug 9, 2018 at 7:52 AM, A.s. Dong <aisheng.dong@nxp.com> wrote:
+> > Hi Jassi,
+> >
+> > Do you have any comments about this reply?
+> >
+> I did read your post. And my opinion isn't changed. If mailbox is new to you,
+> please try to see how other subsystems works, especially SPI, I2C and DMA.
+> 
 
-Based on the discussion so far I think we should settle for sifive,plic +
-an actual implementation string suggested by Palmer and Andrew.
+Okay.
+What's your comments about the known issues if doing that way?
+1) Many unnecessary and meaningless interrupts handling of Tx and RX
+2) Performance downgrading
+    A 4 word SCU MSG may need 8 interrupts to handle which terribly slow
+    down the speed. (Interrupt latency will be terrible if many). SCU msg
+    are mostly handled within 10 us.
+3) Complex RX flow in order to align with framework design
 
-This is what I have right now:
+Are you referring to them as not a real issue?
+Or even they're issues/limitations, you would still prefer multi channels way
+In order to be consistent with mailbox subsystem by sacrificing the
+performance drop?
 
-http://git.infradead.org/users/hch/riscv.git/commitdiff/1972707029f8f1216dbe14bd7791295e4b37f560
+And to be clear, the working flow you want is exactly as follows, right?
+Sending Word 0 ->
+Chan 0 interrupt -> (meaningless)
+Sending Word 1 ->
+Chan1 interrupt -> (meaningless)
+Sending Word 2 ->
+Chan2 interrupt -> (meaningless)
+Sending Word 3 ->
+Chan3 interrupt-> (meaningless)
 
-and which I'd like to send out before it is too late.
+Sending Word 4 on Chan 0 again ->
+Wait for Chan 0 interrupt (meaningless) -> ...
+
+Then waiting for Rx:
+
+Chan 0 Rx interrupt ->
+Read Word 0   ->
+(Then we know response size here)
+
+Chan 1 Rx interrupt ->
+Read Word 1 ->
+Chan 2 Rx interrupt ->
+Read Word 2 ->
+Chan 3 Rx interrupt ->
+Read Word 3 ->
+
+(If msg size > 4 words)
+Chan 0 Rx interrupt ->
+Read Word 4
+
+Regards
+Dong Aisheng
+
+> Thanks.
