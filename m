@@ -1,95 +1,73 @@
 From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v8 3/5] phy: Add QMP phy based UFS phy support for sdm845
-Date: Thu, 9 Aug 2018 10:59:42 -0700
-Message-ID: <CAE=gft6pFN91Y317-9S-3+DMgt6rMeGU_8ynrziGN=WaNVu5_Q@mail.gmail.com>
-References: <20180731100914.19856-1-cang@codeaurora.org> <20180731100914.19856-4-cang@codeaurora.org>
- <CAE=gft6cdE+oMYf779VGrQHfYQ5Xb1v+Qr6cAznTtAovehCOxw@mail.gmail.com> <c5ccbdac-8816-2a64-eb29-23e506b5cf7c@codeaurora.org>
+Subject: Re: [PATCH v8 4/5] scsi: ufs: Power on phy after it is initialized
+Date: Thu, 9 Aug 2018 11:00:37 -0700
+Message-ID: <CAE=gft4xCk2MD-oOAuCRwWz6J9mMvZGFR2J+E7vcu06+3xBZRQ@mail.gmail.com>
+References: <20180731100914.19856-1-cang@codeaurora.org> <20180731100914.19856-5-cang@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c5ccbdac-8816-2a64-eb29-23e506b5cf7c@codeaurora.org>
+In-Reply-To: <20180731100914.19856-5-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vivek.gautam@codeaurora.org
-Cc: cang@codeaurora.org, subhashj@codeaurora.org, asutoshd@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: cang@codeaurora.org
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 9, 2018 at 10:26 AM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
+On Tue, Jul 31, 2018 at 3:09 AM Can Guo <cang@codeaurora.org> wrote:
 >
-> Hi Evan,
+> Before UFS PHY is initialized, powering on it has no effect but increases
+> the PHY's power on count. Then when power on PHY to enable it after phy
+> initialization where it is really needed, as PHY's power on count is not
+> zero, again it would do nothing but directly return and leaves the PHY
+> disabled. This change adds condition checks to phy power on calls which
+> happen before phy initialization.
 >
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+> ---
+>  drivers/scsi/ufs/ufs-qcom.c | 4 +++-
+>  drivers/scsi/ufs/ufs-qcom.h | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 >
-> On 8/9/2018 3:25 AM, Evan Green wrote:
-> > On Tue, Jul 31, 2018 at 3:09 AM Can Guo <cang@codeaurora.org> wrote:
-> >> Add UFS PHY support to make SDM845 UFS work with common PHY framework.
-> >>
-> >> Signed-off-by: Can Guo <cang@codeaurora.org>
-> >> ---
-> >>   drivers/phy/qualcomm/phy-qcom-qmp.c | 172 +++++++++++++++++++++++++++++++++++-
-> >>   drivers/phy/qualcomm/phy-qcom-qmp.h |  15 ++++
-> >>   2 files changed, 186 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> >> index 9be9754..de7ff18 100644
-> >> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> >> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > ...
-> >>   static void qcom_qmp_phy_configure(void __iomem *base,
-> >>                                     const unsigned int *regs,
-> >>                                     const struct qmp_phy_init_tbl tbl[],
-> >> @@ -1131,6 +1249,14 @@ static int qcom_qmp_phy_init(struct phy *phy)
-> >>          qcom_qmp_phy_configure(pcs, cfg->regs, cfg->pcs_tbl, cfg->pcs_tbl_num);
-> >>
-> >>          /*
-> >> +        * UFS PHY requires the deassert of software reset before serdes start.
-> >> +        * For UFS PHYs that do not have software reset control bits, defer
-> >> +        * starting serdes until the power on callback.
-> >> +        */
-> > I'm relatively thick when it comes to PHYs, but I'm a little confused.
-> > The sequence of code right below this (not shown) looks like it is
-> > deasserting reset before starting serdes, seemingly doing what the
-> > comment wants. I guess the problem is the lack of SW reset? So then
-> > you defer serdes start until UFS does... something. Can you explain
-> > how deferring to after UFS HC init actually helps? Is it the UFS HC
-> > that releases reset on the PHY?
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 2b38db2..4e9d526 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -288,6 +288,7 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>                         __func__, ret);
+>                 goto out;
+>         }
+> +       host->is_phy_init = true;
 >
-> As you can see in [1], the ufs first asserts the sw_reset, then phy
-> initialization is done.
-> This phy_init() is just programming the phy registers. Now as per the H/W
-> programming doc, we can't start the phy until we de-assert the sw_reset.
-> So the sequence as per the programming doc should be:
+>         /* De-assert PHY reset and start serdes */
+>         ufs_qcom_deassert_reset(hba);
+> @@ -1147,7 +1148,8 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>                 return 0;
 >
-> assert SW_reset --> program phy serdes/tx/rx/pcs registers --> deassert
-> SW_reset --> start serdes --> test PCS status
+>         if (on && (status == POST_CHANGE)) {
+> -               phy_power_on(host->generic_phy);
+> +               if (host->is_phy_init)
+> +                       phy_power_on(host->generic_phy);
 >
-> That's the reason that serdes_start has been moved to phy_power_on(), as
-> that seemed
-> a more cleaner way of handling the above sequence.
-> UFS HC init doesn't help more than this in terms of phy initialization.
-
-Ok that makes sense. Thank you for the explanation.
-
+>                 /* enable the device ref clock for HS mode*/
+>                 if (ufshcd_is_hs_mode(&hba->pwr_info))
+> diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
+> index 295f4be..5747aa3 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.h
+> +++ b/drivers/scsi/ufs/ufs-qcom.h
+> @@ -242,6 +242,7 @@ struct ufs_qcom_host {
+>         /* Bitmask for enabling debug prints */
+>         u32 dbg_print_en;
+>         struct ufs_qcom_testbus testbus;
+> +       bool is_phy_init;
+>  };
 >
-> >
-> > I was hoping the next patch would help, but I'm still confused. It
-> > looks like you've added a call to phy_power_on in
-> > ufs_qcom_setup_clocks, but there's also one still in
-> > ufs_qcom_power_up_sequence. What does the original phy_power_on in
-> > ufs_qcom_power_up_sequence do now? It seems like that one would do the
-> > power on too early, and then your new added call in
-> > ufs_qcom_setup_clocks would do nothing.
+>  static inline u32
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 >
-> I think [patch 4/5] of this series handles this. We skip the
-> phy_power_on until
-> we do phy_init.
-> phy_power_on/off() in setup_clocks() is also used for suspend/resume case
-> and that's the reason you see couple of phy_power_on(). Patch 4/5 should
-> handle
-> this now.
-
-Ok got it. I was confused about the ordering. setup_clocks is actually
-called first (via __ufshcd_setup_clocks > ufshcd_hba_init >
-ufshcd_init), which is why you need the boolean to defer this power on
-until later.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 Reviewed-by: Evan Green <evgreen@chromium.org>
