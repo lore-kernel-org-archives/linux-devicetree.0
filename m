@@ -1,77 +1,93 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: Re: [PATCH 02/40] dt-bindings: mmc: tegra: Add pad voltage control
- properties
-Date: Thu, 9 Aug 2018 19:36:13 +0300
-Message-ID: <20180809193613.5327fc95@dhcp-10-21-25-168>
-References: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
-        <1533141150-10511-3-git-send-email-avienamo@nvidia.com>
-        <20180809121500.GP21639@ulmo>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v8 3/5] phy: Add QMP phy based UFS phy support for sdm845
+Date: Thu, 9 Aug 2018 22:56:35 +0530
+Message-ID: <c5ccbdac-8816-2a64-eb29-23e506b5cf7c@codeaurora.org>
+References: <20180731100914.19856-1-cang@codeaurora.org>
+ <20180731100914.19856-4-cang@codeaurora.org>
+ <CAE=gft6cdE+oMYf779VGrQHfYQ5Xb1v+Qr6cAznTtAovehCOxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180809121500.GP21639@ulmo>
+In-Reply-To: <CAE=gft6cdE+oMYf779VGrQHfYQ5Xb1v+Qr6cAznTtAovehCOxw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Evan Green <evgreen@chromium.org>, cang@codeaurora.org
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 9 Aug 2018 14:15:00 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
+Hi Evan,
 
-> On Wed, Aug 01, 2018 at 07:31:52PM +0300, Aapo Vienamo wrote:
-> > Document the pinctrl bindings used by the SDHCI driver to reconfigure
-> > pad voltages on controllers supporting multiple voltage levels.
-> > 
-> > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> > Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 22 ++++++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> > index 9bce578..90c214d 100644
-> > --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> > @@ -38,3 +38,25 @@ sdhci@c8000200 {
-> >  	power-gpios = <&gpio 155 0>; /* gpio PT3 */
-> >  	bus-width = <8>;
-> >  };
-> > +
-> > +Optional properties for Tegra210 and Tegra186:
-> > +- pinctrl-names, pinctrl-0, pinctrl-1 : Specify pad voltage
-> > +  configurations. Valid pinctrl-names are "sdmmc-3v3" and "sdmmc-1v8"
-> > +  for controllers supporting multiple voltage levels. The order of names
-> > +  should correspond to the pin configuration states in pinctrl-0 and
-> > +  pinctrl-1.  
-> 
-> Do we also want "sdmmc-off" to allow SDMMC pads to be powered down when
-> the slot or card is not used?
 
-I don't see a real need for it, at least not in the context of this
-series which aims to implement support for HS200 and UHS signaling. I
-guess it could be added later if there's an actual case for it, where
-turning off the pad would result in measureable change in total power
-consumption.
+On 8/9/2018 3:25 AM, Evan Green wrote:
+> On Tue, Jul 31, 2018 at 3:09 AM Can Guo <cang@codeaurora.org> wrote:
+>> Add UFS PHY support to make SDM845 UFS work with common PHY framework.
+>>
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp.c | 172 +++++++++++++++++++++++++++++++++++-
+>>   drivers/phy/qualcomm/phy-qcom-qmp.h |  15 ++++
+>>   2 files changed, 186 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> index 9be9754..de7ff18 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> ...
+>>   static void qcom_qmp_phy_configure(void __iomem *base,
+>>                                     const unsigned int *regs,
+>>                                     const struct qmp_phy_init_tbl tbl[],
+>> @@ -1131,6 +1249,14 @@ static int qcom_qmp_phy_init(struct phy *phy)
+>>          qcom_qmp_phy_configure(pcs, cfg->regs, cfg->pcs_tbl, cfg->pcs_tbl_num);
+>>
+>>          /*
+>> +        * UFS PHY requires the deassert of software reset before serdes start.
+>> +        * For UFS PHYs that do not have software reset control bits, defer
+>> +        * starting serdes until the power on callback.
+>> +        */
+> I'm relatively thick when it comes to PHYs, but I'm a little confused.
+> The sequence of code right below this (not shown) looks like it is
+> deasserting reset before starting serdes, seemingly doing what the
+> comment wants. I guess the problem is the lack of SW reset? So then
+> you defer serdes start until UFS does... something. Can you explain
+> how deferring to after UFS HC init actually helps? Is it the UFS HC
+> that releases reset on the PHY?
 
- -Aapo
+As you can see in [1], the ufs first asserts the sw_reset, then phy 
+initialization is done.
+This phy_init() is just programming the phy registers. Now as per the H/W
+programming doc, we can't start the phy until we de-assert the sw_reset.
+So the sequence as per the programming doc should be:
 
-> > +
-> > +Example:
-> > +sdhci@700b0000 {
-> > +	compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-> > +	reg = <0x0 0x700b0000 0x0 0x200>;
-> > +	interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> > +	clocks = <&tegra_car TEGRA210_CLK_SDMMC1>;
-> > +	clock-names = "sdhci";
-> > +	resets = <&tegra_car 14>;
-> > +	reset-names = "sdhci";
-> > +	pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
-> > +	pinctrl-0 = <&sdmmc1_3v3>;
-> > +	pinctrl-1 = <&sdmmc1_1v8>;
-> > +	status = "disabled";
-> > +};
-> > -- 
-> > 2.7.4
-> >   
+assert SW_reset --> program phy serdes/tx/rx/pcs registers --> deassert 
+SW_reset --> start serdes --> test PCS status
+
+That's the reason that serdes_start has been moved to phy_power_on(), as 
+that seemed
+a more cleaner way of handling the above sequence.
+UFS HC init doesn't help more than this in terms of phy initialization.
+
+>
+> I was hoping the next patch would help, but I'm still confused. It
+> looks like you've added a call to phy_power_on in
+> ufs_qcom_setup_clocks, but there's also one still in
+> ufs_qcom_power_up_sequence. What does the original phy_power_on in
+> ufs_qcom_power_up_sequence do now? It seems like that one would do the
+> power on too early, and then your new added call in
+> ufs_qcom_setup_clocks would do nothing.
+
+I think [patch 4/5] of this series handles this. We skip the 
+phy_power_on until
+we do phy_init.
+phy_power_on/off() in setup_clocks() is also used for suspend/resume case
+and that's the reason you see couple of phy_power_on(). Patch 4/5 should 
+handle
+this now.
+
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/ufs/ufs-qcom.c#n268
+
+[snip]
+
+Regards
+Vivek
