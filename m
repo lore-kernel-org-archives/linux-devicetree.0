@@ -1,59 +1,45 @@
-From: Andrea Merello <andrea.merello@gmail.com>
-Subject: Re: [PATCH v4 3/7] dt-bindings: dmaengine: xilinx_dma: add optional
- xlnx,sg-length-width property
-Date: Thu, 9 Aug 2018 08:36:00 +0200
-Message-ID: <CAN8YU5Pwn-dqU=QwiG=Wmg2QbEj2Z5U-uEQZcc3huZw-w568jA@mail.gmail.com>
-References: <20180802141012.19970-1-andrea.merello@gmail.com>
- <20180802141012.19970-3-andrea.merello@gmail.com> <20180807145603.GA1664@rob-hp-laptop>
-Reply-To: andrea.merello@gmail.com
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
+        documentation
+Date: Thu, 9 Aug 2018 08:43:53 +0200
+Message-ID: <20180809064353.GA19566@lst.de>
+References: <CAL_JsqKVTGcJP=AJR+6h1Brv8MW9xjD=v2__Xtegkd-+Hnua7g@mail.gmail.com> <mhng-cfa17eb2-3548-48ee-9216-74a3607a3091@palmer-si-x1c4>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180807145603.GA1664@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <mhng-cfa17eb2-3548-48ee-9216-74a3607a3091@palmer-si-x1c4>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Vinod <vkoul@kernel.org>, dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, v4-000linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: robh+dt@kernel.org, atish.patra@wdc.com, Christoph Hellwig <hch@lst.de>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 7, 2018 at 4:56 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Aug 02, 2018 at 04:10:08PM +0200, Andrea Merello wrote:
->> The width of the "length register" cannot be autodetected, and it is now
->> specified with a DT property. Add DOC for it.
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
->> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
->> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
->> ---
->> Changes in v2:
->>       - change property name
->>       - property is now optional
->>       - cc DT maintainer
->> Changes in v3:
->>       - reword
->>       - cc DT maintainerS and ML
->> Changes in v4:
->>       - specify the unit, the valid range and the default value
->> ---
->>  Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
->> index a2b8bfaec43c..aec4a41a03ae 100644
->> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
->> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
->> @@ -41,6 +41,10 @@ Optional properties:
->>  - xlnx,include-sg: Tells configured for Scatter-mode in
->>       the hardware.
->>  Optional properties for AXI DMA:
->> +- xlnx,sg-length-width: Should be set to the width in bits of the length
->> +     register as configured in h/w. Takes values {8...26}. If the property
->> +     is missing or invalid then the default value 23 is used. This is the
->> +     maximum value that is supported by all IP versions.
+On Wed, Aug 08, 2018 at 11:29:17PM -0700, Palmer Dabbelt wrote:
+>> So I guess to answer my question, you are just making up version
+>> numbers. Unless you are doing the IP verilog too, don't do that.
 >
-> If 23 is the max, then why is the range 8-26?
+> Well, in this case my proposal would be that we change the hardware team's 
+> versioning scheme to match whatever we decide on the versioning scheme 
+> should be as a part of this discussion.  I proposed accepting whatever 
+> versioning scheme is decided upon hereto the hardware team before 
+> discussing changing the naming scheme and they agreed to do so.
+>
+> So we're really in the drivers' seat here.
+>
+>> If you want to use just 'sifive,plic' then I'm fine with that. I've
+>> given you the potential problems with that and they will be your
+>> problems to deal with. Maybe you'll get lucky. Plus it won't be a
+>> problem for the 1st implementation.
+>
+> I'd prefer to have some versioning scheme, that's why I'm talking so much 
+> about this :).  I really just want to learn how to get the right one, as 
+> I'm quite new to all this and we'll have many of these.
 
-26 In the max possible value and it is supported by some HW IP flavours.
-23 is the max value supported by ALL HW IP flavours
+Based on the discussion so far I think we should settle for sifive,plic +
+an actual implementation string suggested by Palmer and Andrew.
+
+This is what I have right now:
+
+http://git.infradead.org/users/hch/riscv.git/commitdiff/1972707029f8f1216dbe14bd7791295e4b37f560
+
+and which I'd like to send out before it is too late.
