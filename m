@@ -1,150 +1,440 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 20/40] mmc: tegra: Add a workaround for tap value change
- glitch
-Date: Thu, 9 Aug 2018 14:58:04 +0200
-Message-ID: <20180809125804.GY21639@ulmo>
-References: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
- <1533141150-10511-21-git-send-email-avienamo@nvidia.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add CSI2/VIN support
+Date: Thu, 9 Aug 2018 15:08:54 +0200
+Message-ID: <20180809130854.65nvmnuuz6gffjjr@verge.net.au>
+References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
+ <758a8c87-272c-e861-4aab-01309cff2f84@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="B7FF+pnjRCrp0ISR"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1533141150-10511-21-git-send-email-avienamo@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+In-Reply-To: <758a8c87-272c-e861-4aab-01309cff2f84@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---B7FF+pnjRCrp0ISR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Aug 01, 2018 at 07:32:10PM +0300, Aapo Vienamo wrote:
-> Add quirk to disable the card clock during configuration of the tap
-> value in tegra_sdhci_set_tap() and issue sdhci_reset() after value
-> change. This is a workaround to avoid propagation of a potential
-> glitch caused by setting the tap value.
->=20
-> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+On Mon, Aug 06, 2018 at 10:55:00PM +0300, Sergei Shtylyov wrote:
+> Describe the CSI2 and VIN (and their interconnections) in the R8A77980
+> device tree.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
 > ---
->  drivers/mmc/host/sdhci-tegra.c | 30 ++++++++++++++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegr=
-a.c
-> index 3c10451..a2375ad 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -47,6 +47,9 @@
->  #define SDHCI_MISC_CTRL_ENABLE_SDHCI_SPEC_300		0x20
->  #define SDHCI_MISC_CTRL_ENABLE_DDR50			0x200
-> =20
-> +#define SDHCI_VNDR_TUN_CTRL0_0				0x1c0
-> +#define SDHCI_VNDR_TUN_CTRL0_TUN_HW_TAP			0x20000
+> This patch is against the 'renesas-devel-20180802v2-v4.18-rc7' branch of
+> Simon Horman's 'renesas.git' repo.
+> 
+> The R8A77980 CSI2/VIN DT binding updates have been posted earlier today...
+> 
+>  arch/arm64/boot/dts/renesas/r8a77980.dtsi |  374 ++++++++++++++++++++++++++++++
+>  1 file changed, 374 insertions(+)
+> 
+> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+> @@ -579,6 +579,302 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		vin0: video@e6ef0000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef0000 0 0x1000>;
+> +			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 811>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 811>;
+> +			status = "disabled";
 > +
->  #define SDHCI_TEGRA_AUTO_CAL_CONFIG			0x1e4
->  #define SDHCI_AUTO_CAL_START				BIT(31)
->  #define SDHCI_AUTO_CAL_ENABLE				BIT(29)
-> @@ -68,6 +71,7 @@
->  #define NVQUIRK_ENABLE_DDR50				BIT(5)
->  #define NVQUIRK_HAS_PADCALIB				BIT(6)
->  #define NVQUIRK_NEEDS_PAD_CONTROL			BIT(7)
-> +#define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
-> =20
->  struct sdhci_tegra_soc_data {
->  	const struct sdhci_pltfm_data *pdata;
-> @@ -499,12 +503,32 @@ static unsigned int tegra_sdhci_get_max_clock(struc=
-t sdhci_host *host)
-> =20
->  static void tegra_sdhci_set_tap(struct sdhci_host *host, unsigned int ta=
-p)
->  {
-> +	struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +	struct sdhci_tegra *tegra_host =3D sdhci_pltfm_priv(pltfm_host);
-> +	const struct sdhci_tegra_soc_data *soc_data =3D tegra_host->soc_data;
-> +	bool card_clk_enabled =3D false;
->  	u32 reg;
-> =20
-> +	/*
-> +	 * Touching the tap values is a bit tricky on some SoC generations.
-> +	 * The quirk enables a workaround for a glitch that sometimes occurs if
-> +	 * the tap values are changed.
-> +	 */
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
 > +
-> +	if (soc_data->nvquirks & NVQUIRK_DIS_CARD_CLK_CONFIG_TAP)
-> +		card_clk_enabled =3D tegra_sdhci_configure_card_clk(host, false);
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
 > +
->  	reg =3D sdhci_readl(host, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
->  	reg &=3D ~SDHCI_CLOCK_CTRL_TAP_MASK;
->  	reg |=3D tap << SDHCI_CLOCK_CTRL_TAP_SHIFT;
->  	sdhci_writel(host, reg, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
+> +					reg = <1>;
 > +
-> +	if (soc_data->nvquirks & NVQUIRK_DIS_CARD_CLK_CONFIG_TAP &&
-> +		    card_clk_enabled) {
+> +					vin0csi40: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint= <&csi40vin0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		vin1: video@e6ef1000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef1000 0 0x1000>;
+> +			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 810>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			status = "disabled";
+> +			resets = <&cpg 810>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					vin1csi40: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint= <&csi40vin1>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		vin2: video@e6ef2000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef2000 0 0x1000>;
+> +			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 809>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 809>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					vin2csi40: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint= <&csi40vin2>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		vin3: video@e6ef3000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef3000 0 0x1000>;
+> +			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 808>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 808>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					vin3csi40: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint= <&csi40vin3>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		vin4: video@e6ef4000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef4000 0 0x1000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 807>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 807>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					vin4csi41: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint= <&csi41vin4>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		vin5: video@e6ef5000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef5000 0 0x1000>;
+> +			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 806>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 806>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					vin5csi41: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint= <&csi41vin5>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		vin6: video@e6ef6000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef6000 0 0x1000>;
+> +			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 805>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 805>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					vin6csi41: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint= <&csi41vin6>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		vin7: video@e6ef7000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef7000 0 0x1000>;
+> +			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 804>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 804>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					vin7csi41: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint= <&csi41vin7>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		vin8: video@e6ef8000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef8000 0 0x1000>;
+> +			interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 628>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 628>;
+> +			status = "disabled";
+> +		};
+> +
+> +		vin9: video@e6ef9000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6ef9000 0 0x1000>;
+> +			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 627>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 627>;
+> +			status = "disabled";
+> +		};
+> +
+> +		vin10: video@e6efa000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6efa000 0 0x1000>;
+> +			interrupts = <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 625>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 625>;
+> +			status = "disabled";
+> +		};
+> +
+> +		vin11: video@e6efb000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6efb000 0 0x1000>;
+> +			interrupts = <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 618>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 618>;
+> +			status = "disabled";
+> +		};
+> +
+> +		vin12: video@e6efc000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6efc000 0 0x1000>;
+> +			interrupts = <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 612>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 612>;
+> +			status = "disabled";
+> +		};
+> +
+> +		vin13: video@e6efd000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6efd000 0 0x1000>;
+> +			interrupts = <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 608>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 608>;
+> +			status = "disabled";
+> +		};
+> +
+> +		vin14: video@e6efe000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6efe000 0 0x1000>;
+> +			interrupts = <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 605>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 605>;
+> +			status = "disabled";
+> +		};
+> +
+> +		vin15: video@e6eff000 {
+> +			compatible = "renesas,vin-r8a77980";
+> +			reg = <0 0xe6eff000 0 0x1000>;
+> +			interrupts = <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 604>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 604>;
+> +			status = "disabled";
+> +		};
+> +
+>  		dmac1: dma-controller@e7300000 {
+>  			compatible = "renesas,dmac-r8a77980",
+>  				     "renesas,rcar-dmac";
+> @@ -769,6 +1065,84 @@
+>  			resets = <&cpg 603>;
+>  		};
+>  
+> +		csi40: csi2@feaa0000 {
+> +			compatible = "renesas,r8a77980-csi2";
+> +			reg = <0 0xfeaa0000 0 0x10000>;
+> +			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 716>;
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 716>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					csi40vin0: endpoint@0 {
+> +						reg = <0>;
+> +						remote-endpoint = <&vin0csi40>;
+> +					};
+> +					csi40vin1: endpoint@1 {
+> +						reg = <1>;
+> +						remote-endpoint = <&vin1csi40>;
+> +					};
+> +					csi40vin2: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint = <&vin2csi40>;
+> +					};
+> +					csi40vin3: endpoint@3 {
+> +						reg = <3>;
+> +						remote-endpoint = <&vin3csi40>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		csi41: csi2@feab0000 {
+> +			compatible = "renesas,r8a77980-csi2";
+> +			reg = <0 0xfeab0000 0 0x10000>;
+> +			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
 
-This is weirdly aligned.
+The use of GIC_SPI 246 for both csi40 and csi41 seems suspicious.
+Is this intentional?
 
-> +		udelay(1);
+> +			clocks = <&cpg CPG_MOD 716>;
 
-Can this also become a usleep_range()? I may be too paranoid about
-this...
+Should this clock be 715 rather than 716?
 
-Thierry
-
-> +		sdhci_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
-> +		tegra_sdhci_configure_card_clk(host, card_clk_enabled);
-> +	}
->  }
-> =20
->  static int tegra_sdhci_execute_tuning(struct sdhci_host *host, u32 opcod=
-e)
-> @@ -758,7 +782,8 @@ static const struct sdhci_pltfm_data sdhci_tegra210_p=
-data =3D {
->  static const struct sdhci_tegra_soc_data soc_data_tegra210 =3D {
->  	.pdata =3D &sdhci_tegra210_pdata,
->  	.nvquirks =3D NVQUIRK_NEEDS_PAD_CONTROL |
-> -		    NVQUIRK_HAS_PADCALIB,
-> +		    NVQUIRK_HAS_PADCALIB |
-> +		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP,
->  };
-> =20
->  static const struct sdhci_pltfm_data sdhci_tegra186_pdata =3D {
-> @@ -783,7 +808,8 @@ static const struct sdhci_pltfm_data sdhci_tegra186_p=
-data =3D {
->  static const struct sdhci_tegra_soc_data soc_data_tegra186 =3D {
->  	.pdata =3D &sdhci_tegra186_pdata,
->  	.nvquirks =3D NVQUIRK_NEEDS_PAD_CONTROL |
-> -		    NVQUIRK_HAS_PADCALIB,
-> +		    NVQUIRK_HAS_PADCALIB |
-> +		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP,
->  };
-> =20
->  static const struct of_device_id sdhci_tegra_dt_match[] =3D {
-> --=20
-> 2.7.4
->=20
-
---B7FF+pnjRCrp0ISR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltsOlwACgkQ3SOs138+
-s6F0BBAAoaIQAqFlshNymfiyhxa0gQPgVnTkQbJtwzhZGZqYkjfpQNUWWOKzH44l
-902s3VSsRE6E0vIPjL3l1P16g/msr6YBCPHcx7M0uICxAdDpYn33RtuxUdsSSysq
-6DrGPt4p3iE9+Zigxtl65CdDXKiU9neZOsiJ/SgmdTMIlFAy9hKxjT4EIRspdIYq
-pa2oLL2b5teaBzvWd0Fshmg7gkDSIEmfrbD/iT+KkMUiOW0wJX4D98f80YSujSwB
-cel3raQiwOmYo4IcVrO4JV6NKhmrJ60cZTBz/xaIGTm/RzmlR3huoilYGNu4xMpG
-HCT9IrQa3YkBi07qN+qzPNCzU1gzj+bwdgA5RGv3wd65m0wOWJyxrZOwzc3EbJwo
-VwqPrxqJqoVorvF42pOHvunPhEGGV6ZqQapvIZBP1ERrG2mOyIZ1sqpBDl78RuKn
-/HCxpT5Tk55HcJo6S9bkINlNwQs8CSVOostuZUW4WUpp+AI4xCUAkUEFuMY2ZKG3
-vzsE2GBwIVHI+Pcd5jQLY1ylecXOoYlTvdmZHk9KHwe+l+pVlnrPRcqDdYFwI/7J
-ntsVgvIXBT3oqZZgfHpwGirvMvdpjh5Nmx9dnafoaWUvW8ijQqd/sZchHqV2jk3n
-eHYo41aNTq5EAAdmnyeTxYpOIr5E428edqDUVWx9q2hvPebF610=
-=b49y
------END PGP SIGNATURE-----
-
---B7FF+pnjRCrp0ISR--
+> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
+> +			resets = <&cpg 716>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@1 {
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					reg = <1>;
+> +
+> +					csi41vin4: endpoint@0 {
+> +						reg = <0>;
+> +						remote-endpoint = <&vin4csi41>;
+> +					};
+> +					csi41vin5: endpoint@1 {
+> +						reg = <1>;
+> +						remote-endpoint = <&vin5csi41>;
+> +					};
+> +					csi41vin6: endpoint@2 {
+> +						reg = <2>;
+> +						remote-endpoint = <&vin6csi41>;
+> +					};
+> +					csi41vin7: endpoint@3 {
+> +						reg = <3>;
+> +						remote-endpoint = <&vin7csi41>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+>  		du: display@feb00000 {
+>  			compatible = "renesas,du-r8a77980",
+>  				     "renesas,du-r8a77970";
+> 
