@@ -1,53 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] clk: imx6q: optionally get CCM inputs via standard
- clock handles
-Date: Thu, 09 Aug 2018 16:41:24 -0600
-Message-ID: <5b6cc315.1c69fb81.3b2b4.137c@mx.google.com>
-References: <20180731102009.6710-1-l.stach@pengutronix.de>
- <20180731102009.6710-2-l.stach@pengutronix.de>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH] net: ethernet: cpsw-phy-sel: prefer phandle for phy sel
+ and update binding
+Date: Thu, 9 Aug 2018 17:47:59 -0500
+Message-ID: <3db0048e-21e9-60ea-9e6f-a72bd961f33f@ti.com>
+References: <20180808080354.100146-1-tony@atomide.com>
+ <20180808115838.GA18314@lunn.ch> <20180808134836.GS99251@atomide.com>
+ <20180809104653.GV99251@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180731102009.6710-2-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: l.stach@pengutronix.de
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, patchwork-lst@pengutronix.de, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180809104653.GV99251@atomide.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, this is an automated email from Rob's (experimental) review bot. I
-found a couple of common problems with your patch. Please see below.
 
-On Tue, 31 Jul 2018 12:20:08 +0200, Lucas Stach wrote:
-> When specifying external clock inputs to the CCM the current code
-> requires the clocks to be in a "clocks" child node of the DT root.
-> This is not really conformant with DT best practices.
-> 
-> To avoid the need to deviate from those best practices, allow the
-> clock inputs to be specifies via standard clock handles. This is
-> in line with how drivers of the later CCM driver revisions on
-> newer i.MX SoCs handle this.
-> 
-> As we can't retroactively change the DT binding, allow this as an
-> option with a fallback to the old way of how this has been handled.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 
-The preferred subject prefix is "dt-bindings: <binding dir>: ...".
-
-> ---
->  .../devicetree/bindings/clock/imx6q-clock.txt |  5 +++++
->  drivers/clk/imx/clk-imx6q.c                   | 22 ++++++++++++++-----
->  2 files changed, 22 insertions(+), 5 deletions(-)
+On 08/09/2018 05:46 AM, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [180808 13:52]:
+>> * Andrew Lunn <andrew@lunn.ch> [180808 12:02]:
+>>>
+>>> Do you need to handle EPROBE_DEFER here? The phandle points to a
+>>> device which has not yet been loaded? I'm not sure exactly where it
+>>> will be returned, maybe it is bus_find_device(), but i expect to see
+>>> some handling of it somewhere in this function.
 > 
+> If no device is found the driver just produces a warning currently.
+> And in that case cpsw attempts to continue with bootloader settings.
+> 
+> And looking at the caller function cpsw_slave_open() it also just
+> produces warnings for phy_connect() too..
+> 
+> I agree that in general this this whole pile of cpsw related drivers sure
+> could use some better error handling. Starting with making cpsw_slave_open()
+> and cpsw_phy_sel() return errors instead of just ignoring them might be a
+> good start.
+> 
+> Grygorii, care to add that note of things to do into your cpsw maintainer
+> hat?
 
-DT bindings (including binding headers) should be a separate patch. See
-Documentation/devicetree/bindings/submitting-patches.txt.
+Right. EPROBE_DEFER not supported for this module as of now.
+
+> 
+>> With the proper interconnect hierarchy in the device tree there should be
+>> no EPROBE_DEFER happening here as the interconnects are probed in the
+>> right order with the always on interrupt with system control module first :)
+>>
+>> But then again, adding support for EPROBE_DEFER here won't hurt either,
+>> will take a look.
+> 
+> I'll just add some notes about that to the patch description considering
+> the above.
+
+thanks Tony.
+
+-- 
+regards,
+-grygorii
