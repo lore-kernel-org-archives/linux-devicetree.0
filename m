@@ -1,131 +1,91 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH v3 3/8] mailbox: Add transmit done by blocking option
-Date: Thu, 9 Aug 2018 11:49:19 +0300
-Message-ID: <b3045f85-eacb-a5ec-1690-b9c63d0f3373@kapsi.fi>
-References: <20180702114033.15654-1-mperttunen@nvidia.com>
- <20180702114033.15654-4-mperttunen@nvidia.com>
- <CABb+yY0_dKC_cYFwwb-aeRgrx=sjv=8VLP=C6DJEecFf=v+mkQ@mail.gmail.com>
- <907bac36-0c54-8f38-0f5e-f59196d414c6@kapsi.fi>
- <afc8a305-79ea-2194-0af0-919bbb8f675e@kapsi.fi>
- <CABb+yY2mpNV186=M2anmZANgMOra4JM7ybyUT4yCxhqAG6-AZg@mail.gmail.com>
- <b5a91f9e-c3ff-371c-d355-4a5e8a147796@kapsi.fi>
- <CABb+yY3Ng+rbKRYXTncfHKv6HXBW5hHjMKDpepz31MxpE9bwRQ@mail.gmail.com>
- <a57fccaa-fcfe-6611-45a5-8c224f4ee2b6@kapsi.fi>
+From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v7 2/8] media: v4l: Add definition for the Sunxi
+ tiled NV12 format
+Date: Thu,  9 Aug 2018 11:04:29 +0200
+Message-ID: <20180809090435.17248-3-paul.kocialkowski@bootlin.com>
+References: <20180809090435.17248-1-paul.kocialkowski@bootlin.com>
+Reply-To: paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a57fccaa-fcfe-6611-45a5-8c224f4ee2b6@kapsi.fi>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Devicetree List <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, ", linux-arm-kernel"@lists.infradead.org, srv_heupstream <linux-mediatek@lists.infradead.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCOO3QWNR4KRBSMHWDNQKGQEYMJCLVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180809090435.17248-1-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Here's my current code:
+This introduces support for the Sunxi tiled NV12 format, where each
+component of the YUV frame is divided into macroblocks. Hence, the size
+of each plane requires specific alignment. The pixels inside each
+macroblock are coded in linear order (line after line from top to
+bottom).
 
-https://github.com/cyndis/linux/commits/wip/t194-tcu-4
+This tiled NV12 format is used by the video engine on Allwinner
+platforms: it is the default format for decoded frames (and the only
+one available in the oldest supported platforms).
 
-"fixup! mailbox: tegra-hsp: Add support for shared mailboxes" splits up 
-the controller into two. "tegra-hsp: use polling" changes it to use polling.
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/media/uapi/v4l/pixfmt-reserved.rst | 15 ++++++++++++++-
+ drivers/media/v4l2-core/v4l2-ioctl.c             |  1 +
+ include/uapi/linux/videodev2.h                   |  1 +
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-There are two lines in the top patch with comments:
-
-- at the end of tegra_hsp_mailbox_send_data, I left a "while 
-(!tegra_hsp_mailbox_last_tx_done(chan));". Without it I wasn't able to 
-see even a few garbled characters in the output.
-
-- as mentioned, if I enable tx_block on the client side, I get a BUG: 
-scheduling while atomic. I assume this gets printed through the earlycon 
-as it's printing out correctly.
-
-Thanks,
-Mikko
-
-On 08.08.2018 17:46, Mikko Perttunen wrote:
-> On 08/08/2018 05:39 PM, Jassi Brar wrote:
->> On Wed, Aug 8, 2018 at 8:04 PM, Mikko Perttunen <cyndis@kapsi.fi> wrote:
->>>
->>>
->>> On 08/08/2018 05:10 PM, Jassi Brar wrote:
->>>>
->>>> On Wed, Aug 8, 2018 at 5:08 PM, Mikko Perttunen <cyndis@kapsi.fi> 
->>>> wrote:
->>>>>
->>>>>
->>>>>
->>>>> On 04.08.2018 13:45, Mikko Perttunen wrote:
->>>>>>
->>>>>>
->>>>>> On 08/03/2018 03:54 PM, Jassi Brar wrote:
->>>>>>>
->>>>>>>
->>>>>>> On Mon, Jul 2, 2018 at 5:10 PM, Mikko Perttunen 
->>>>>>> <mperttunen@nvidia.com>
->>>>>>> wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> Add a new TXDONE option, TXDONE_BY_BLOCK. With this option, the
->>>>>>>> send_data function of the mailbox driver is expected to block until
->>>>>>>> the message has been sent. The new option is used with the Tegra
->>>>>>>> Combined UART driver to minimize unnecessary overhead when
->>>>>>>> transmitting
->>>>>>>> data.
->>>>>>>>
->>>>>>> 1) TXDONE_BY_BLOCK flag :-
->>>>>>>            Have you tried setting the flag
->>>>>>> mbox_chan->mbox_client->tx_block
->>>>>>> ?
->>>>>>
->>>>>>
->>>>>>
->>>>>> No - I suppose I should have done that. I'm a bit concerned about
->>>>>> overhead
->>>>>> as send_data may be called thousands of times per second, so I 
->>>>>> tried to
->>>>>> make
->>>>>> it as close as possible to the downstream driver that just pokes the
->>>>>> mailbox
->>>>>> register directly.
->>>>>
->>>>>
->>>>>
->>>>> I tried using polling in the mailbox framework. Some printing is done
->>>>> from
->>>>> atomic context so it seems tx_block cannot be used -
->>>>> wait_for_completion_timeout understandably does not work in atomic
->>>>> context.
->>>>> I also tried without tx_block, in which case I got some horribly 
->>>>> garbled
->>>>> output, but "Try increasing MBOX_TX_QUEUE_LEN" was readable there.
->>>>>
->>>>> Any opinions?
->>>>>
->>>> The problems arise because your hardware (SM) supports TXDONE_BY_POLL,
->>>> but your client drives it by TXDONE_BY_ACK because the older DB
->>>> channels are so.
->>>>
->>>> Please populate SM channels as a separate controller than DB.
->>>> The DB controller, as is, run by ACK method.
->>>> The SM controller should be run by polling, i.e, set txdone_poll =
->>>> true and the poll period small enough. The virtual tty client driver
->>>> should be able to safely set tx_block from appropriate context.
->>>>
->>>
->>> Sorry, I should have clarified that I already split up the 
->>> controllers. The
->>> SM controller has txdone_poll = true. I didn't adjust txpoll_period so I
->>> guess it's zero.
->>>
->> Can you please share your code (controller and client) ? Maybe offline
->> if you wish.
->>
-> 
-> I'll upload a git branch tomorrow -- I'm not at the machine with the 
-> code now.
-> 
-> Mikko
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/media/uapi/v4l/pixfmt-reserved.rst b/Documentation/media/uapi/v4l/pixfmt-reserved.rst
+index 38af1472a4b4..0c399858bda2 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-reserved.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-reserved.rst
+@@ -243,7 +243,20 @@ please make a proposal on the linux-media mailing list.
+ 	It is an opaque intermediate format and the MDP hardware must be
+ 	used to convert ``V4L2_PIX_FMT_MT21C`` to ``V4L2_PIX_FMT_NV12M``,
+ 	``V4L2_PIX_FMT_YUV420M`` or ``V4L2_PIX_FMT_YVU420``.
+-
++    * .. _V4L2-PIX-FMT-SUNXI-TILED-NV12:
++
++      - ``V4L2_PIX_FMT_SUNXI_TILED_NV12``
++      - 'ST12'
++      - Two-planar NV12-based format used by the video engine found on Allwinner
++	(codenamed sunxi) platforms, with 32x32 tiles for the luminance plane
++	and 32x64 tiles for the chrominance plane. The data in each tile is
++	stored in linear order, within the tile bounds. Each tile follows the
++	previous one linearly in memory (from left to right, top to bottom).
++
++	The associated buffer dimensions are aligned to match an integer number
++	of tiles, resulting in 32-aligned resolutions for the luminance plane
++	and 16-aligned resolutions for the chrominance plane (with 2x2
++	subsampling).
+ 
+ .. tabularcolumns:: |p{6.6cm}|p{2.2cm}|p{8.7cm}|
+ 
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 192481afa09f..d5d1732dce27 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1337,6 +1337,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 		case V4L2_PIX_FMT_SE401:	descr = "GSPCA SE401"; break;
+ 		case V4L2_PIX_FMT_S5C_UYVY_JPG:	descr = "S5C73MX interleaved UYVY/JPEG"; break;
+ 		case V4L2_PIX_FMT_MT21C:	descr = "Mediatek Compressed Format"; break;
++		case V4L2_PIX_FMT_SUNXI_TILED_NV12: descr = "Sunxi Tiled NV12 Format"; break;
+ 		default:
+ 			WARN(1, "Unknown pixelformat 0x%08x\n", fmt->pixelformat);
+ 			if (fmt->description[0])
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 08d2af1bae0b..dc9afa790e44 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -677,6 +677,7 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_Z16      v4l2_fourcc('Z', '1', '6', ' ') /* Depth data 16-bit */
+ #define V4L2_PIX_FMT_MT21C    v4l2_fourcc('M', 'T', '2', '1') /* Mediatek compressed block mode  */
+ #define V4L2_PIX_FMT_INZI     v4l2_fourcc('I', 'N', 'Z', 'I') /* Intel Planar Greyscale 10-bit and Depth 16-bit */
++#define V4L2_PIX_FMT_SUNXI_TILED_NV12 v4l2_fourcc('S', 'T', '1', '2') /* Sunxi Tiled NV12 Format */
+ 
+ /* 10bit raw bayer packed, 32 bytes for every 25 pixels, last LSB 6 bits unused */
+ #define V4L2_PIX_FMT_IPU3_SBGGR10	v4l2_fourcc('i', 'p', '3', 'b') /* IPU3 packed 10-bit BGGR bayer */
+-- 
+2.18.0
