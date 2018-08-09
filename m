@@ -1,440 +1,89 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77980: add CSI2/VIN support
-Date: Thu, 9 Aug 2018 15:08:54 +0200
-Message-ID: <20180809130854.65nvmnuuz6gffjjr@verge.net.au>
-References: <2368353.xfo5beGC5E@wasted.cogentembedded.com>
- <758a8c87-272c-e861-4aab-01309cff2f84@cogentembedded.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 10/40] soc/tegra: pmc: Implement pad configuration via
+ pinctrl
+Date: Thu, 9 Aug 2018 15:12:11 +0200
+Message-ID: <20180809131211.GA21639@ulmo>
+References: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
+ <1533141150-10511-11-git-send-email-avienamo@nvidia.com>
+ <20180809122706.GT21639@ulmo>
+ <20180809154412.4e7fe9b3@dhcp-10-21-25-168>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ELawpaRm0uGyL1wg"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <758a8c87-272c-e861-4aab-01309cff2f84@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180809154412.4e7fe9b3@dhcp-10-21-25-168>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 06, 2018 at 10:55:00PM +0300, Sergei Shtylyov wrote:
-> Describe the CSI2 and VIN (and their interconnections) in the R8A77980
-> device tree.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
-> This patch is against the 'renesas-devel-20180802v2-v4.18-rc7' branch of
-> Simon Horman's 'renesas.git' repo.
-> 
-> The R8A77980 CSI2/VIN DT binding updates have been posted earlier today...
-> 
->  arch/arm64/boot/dts/renesas/r8a77980.dtsi |  374 ++++++++++++++++++++++++++++++
->  1 file changed, 374 insertions(+)
-> 
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> @@ -579,6 +579,302 @@
->  			status = "disabled";
->  		};
->  
-> +		vin0: video@e6ef0000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef0000 0 0x1000>;
-> +			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 811>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 811>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					vin0csi40: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint= <&csi40vin0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		vin1: video@e6ef1000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef1000 0 0x1000>;
-> +			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 810>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			status = "disabled";
-> +			resets = <&cpg 810>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					vin1csi40: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint= <&csi40vin1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		vin2: video@e6ef2000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef2000 0 0x1000>;
-> +			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 809>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 809>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					vin2csi40: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint= <&csi40vin2>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		vin3: video@e6ef3000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef3000 0 0x1000>;
-> +			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 808>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 808>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					vin3csi40: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint= <&csi40vin3>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		vin4: video@e6ef4000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef4000 0 0x1000>;
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 807>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 807>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					vin4csi41: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint= <&csi41vin4>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		vin5: video@e6ef5000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef5000 0 0x1000>;
-> +			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 806>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 806>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					vin5csi41: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint= <&csi41vin5>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		vin6: video@e6ef6000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef6000 0 0x1000>;
-> +			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 805>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 805>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					vin6csi41: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint= <&csi41vin6>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		vin7: video@e6ef7000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef7000 0 0x1000>;
-> +			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 804>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 804>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					vin7csi41: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint= <&csi41vin7>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		vin8: video@e6ef8000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef8000 0 0x1000>;
-> +			interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 628>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 628>;
-> +			status = "disabled";
-> +		};
-> +
-> +		vin9: video@e6ef9000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6ef9000 0 0x1000>;
-> +			interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 627>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 627>;
-> +			status = "disabled";
-> +		};
-> +
-> +		vin10: video@e6efa000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6efa000 0 0x1000>;
-> +			interrupts = <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 625>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 625>;
-> +			status = "disabled";
-> +		};
-> +
-> +		vin11: video@e6efb000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6efb000 0 0x1000>;
-> +			interrupts = <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 618>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 618>;
-> +			status = "disabled";
-> +		};
-> +
-> +		vin12: video@e6efc000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6efc000 0 0x1000>;
-> +			interrupts = <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 612>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 612>;
-> +			status = "disabled";
-> +		};
-> +
-> +		vin13: video@e6efd000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6efd000 0 0x1000>;
-> +			interrupts = <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 608>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 608>;
-> +			status = "disabled";
-> +		};
-> +
-> +		vin14: video@e6efe000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6efe000 0 0x1000>;
-> +			interrupts = <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 605>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 605>;
-> +			status = "disabled";
-> +		};
-> +
-> +		vin15: video@e6eff000 {
-> +			compatible = "renesas,vin-r8a77980";
-> +			reg = <0 0xe6eff000 0 0x1000>;
-> +			interrupts = <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 604>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 604>;
-> +			status = "disabled";
-> +		};
-> +
->  		dmac1: dma-controller@e7300000 {
->  			compatible = "renesas,dmac-r8a77980",
->  				     "renesas,rcar-dmac";
-> @@ -769,6 +1065,84 @@
->  			resets = <&cpg 603>;
->  		};
->  
-> +		csi40: csi2@feaa0000 {
-> +			compatible = "renesas,r8a77980-csi2";
-> +			reg = <0 0xfeaa0000 0 0x10000>;
-> +			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 716>;
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 716>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					csi40vin0: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&vin0csi40>;
-> +					};
-> +					csi40vin1: endpoint@1 {
-> +						reg = <1>;
-> +						remote-endpoint = <&vin1csi40>;
-> +					};
-> +					csi40vin2: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint = <&vin2csi40>;
-> +					};
-> +					csi40vin3: endpoint@3 {
-> +						reg = <3>;
-> +						remote-endpoint = <&vin3csi40>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		csi41: csi2@feab0000 {
-> +			compatible = "renesas,r8a77980-csi2";
-> +			reg = <0 0xfeab0000 0 0x10000>;
-> +			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
 
-The use of GIC_SPI 246 for both csi40 and csi41 seems suspicious.
-Is this intentional?
+--ELawpaRm0uGyL1wg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +			clocks = <&cpg CPG_MOD 716>;
+On Thu, Aug 09, 2018 at 03:44:12PM +0300, Aapo Vienamo wrote:
+> On Thu, 9 Aug 2018 14:27:06 +0200
+> Thierry Reding <thierry.reding@gmail.com> wrote:
+>=20
+> > On Wed, Aug 01, 2018 at 07:32:00PM +0300, Aapo Vienamo wrote:
+> > > Register a pinctrl device and implement get and set functions for
+> > > PIN_CONFIG_LOW_POWER_MODE and PIN_CONFIG_POWER_SOURCE parameters.
+> > >=20
+> > > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> > > Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> > > ---
+> > >  drivers/soc/tegra/pmc.c | 187 ++++++++++++++++++++++++++++++++++++++=
++++++++++-
+> > >  1 file changed, 185 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c =20
+> > [...]
+> > > @@ -1704,6 +1863,12 @@ static const u8 tegra124_cpu_powergates[] =3D {
+> > >  		.name	=3D (_name),			\
+> > >  	})
+> > > =20
+> > > +#define TEGRA_IO_PIN_DESC(_id, _dpd, _voltage, _name)	\
+> > > +	((struct pinctrl_pin_desc) {			\
+> > > +		.number =3D (_id),			\
+> > > +		.name	=3D (_name)			\
+> > > +	})
+> > > + =20
+> >=20
+> > Do we really need the explicit cast to struct pinctrl_pin_desc here?
+> >=20
+>=20
+> No, but I prefer to have it as it makes the type of the value the macro
+> expands to explicit. In a way it hints at how and where the macro should
+> be used and arguably improves readability.
 
-Should this clock be 715 rather than 716?
+It's a rather uncommon pattern in the kernel, and most issues are easily
+caught by the compiler.
 
-> +			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-> +			resets = <&cpg 716>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					reg = <1>;
-> +
-> +					csi41vin4: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&vin4csi41>;
-> +					};
-> +					csi41vin5: endpoint@1 {
-> +						reg = <1>;
-> +						remote-endpoint = <&vin5csi41>;
-> +					};
-> +					csi41vin6: endpoint@2 {
-> +						reg = <2>;
-> +						remote-endpoint = <&vin6csi41>;
-> +					};
-> +					csi41vin7: endpoint@3 {
-> +						reg = <3>;
-> +						remote-endpoint = <&vin7csi41>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
->  		du: display@feb00000 {
->  			compatible = "renesas,du-r8a77980",
->  				     "renesas,du-r8a77970";
-> 
+But it's fine with me if you want to keep it.
+
+Thierry
+
+--ELawpaRm0uGyL1wg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltsPasACgkQ3SOs138+
+s6Ft+Q//ZlGl3OuUBrz8aBjmgApj4optY/PujiMt8F0ObC/Br+s2gQVJPYmrhI4q
+dR2ARZaVA9Br9Fkq5z5zRkD6YDle07p9kj7RjSrVdXnMbCM4dNspfD04XBmveqsT
+6wtaJinLd9FVF55UkLGApwL0dlMq06fyu1947GOMmFTAVlrKkS7LT5AtQICgX9Yr
+FJVVYmVF8ZKtJphokEhdtlbu6ZV/jiqVDyWKWEY2bPaJx/4rUcGbZNKar4BYOuXu
+6fNSPJ6umDXNsUJwwheGd0r+1na75zGm/Zd6cCvtI0BjVh/xpKzfF8A5FzOYKjfM
+M5Rr0lDilDqI1tcr5vIiZiI+WLV+Bkr/ZfC96+usHibkESiC+Ow5J1v8kbjPOmiT
+16xHCwAHDUwvkmYCrolw/sf1m0RsWweIC+y0BOl4meBbhMkLQDUhBG6TxPTU32+/
+0U9jw9d9iIDOWsqMKzjGhB9WmvPJO2w720wQtRCn2nX6lR+ROmlT/BGZWujXN730
+CBHnx+LbL7pw4GrhYf1EfY8E+YgVZA6Ql3Uyb6Z7/I7UNyH9MMjyPH1HnuET1nst
+wBUtAQSNLXqgVdtZ4p3ryfMfu0PhNmgbjrnBgbSGDOmOcQJHquRWqiWn1uPPe7od
+c8VLH5COAFJuZmthAtG/RW/vQxsH1vkqqnkxlVxKZE/ei8bqLl4=
+=lAWZ
+-----END PGP SIGNATURE-----
+
+--ELawpaRm0uGyL1wg--
