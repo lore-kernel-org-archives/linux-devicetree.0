@@ -1,253 +1,49 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2] clk: qcom: Add some missing gcc clks for msm8996
-Date: Thu,  9 Aug 2018 15:01:19 -0700
-Message-ID: <20180809220119.18932-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 7/8] arm64: dts: rk3399: Add dfi and dmc nodes.
+Date: Thu, 09 Aug 2018 16:41:22 -0600
+Message-ID: <5b6cc314.1c69fb81.96ced.16f7@mx.google.com>
+References: <20180730081124.30698-1-enric.balletbo@collabora.com>
+ <20180730081124.30698-8-enric.balletbo@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180730081124.30698-8-enric.balletbo@collabora.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: enric.balletbo@collabora.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Douglas Anderson <dianders@chromium.org>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Klaus Goger <klaus.goger@theobroma-systems.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, kernel@collabora.com, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Chanwoo Choi <cw00.choi@samsung.com>, Nickey Yang <nickey.yang@rock-chips.com>, Jacob Chen <jacob-chen@iotwrt.com>, devicetree@vger.kernel.org, Randy Li <ayaka@soulik.info>, linux-pm@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>, Mark Yao <markyao0591@gmail.com>, linux-arm-kernel@lists.infradead.org, Lin Huang <hl@rock-chips.com>, Kyungmin Park <kyungmin.park@samsung.com>, robin.murphy@arm.com
 List-Id: devicetree@vger.kernel.org
 
-From: Rajendra Nayak <rnayak@codeaurora.org>
-
-Add a few missing gcc clks for msm8996
-
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-[bjorn: omit aggre0_noc_qosgen_extref_clk]
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v1:
-- Dropped LPASS SMMU clocks already introduced by Srinivas
-
- drivers/clk/qcom/gcc-msm8996.c               | 152 +++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-msm8996.h |   9 ++
- 2 files changed, 161 insertions(+)
-
-diff --git a/drivers/clk/qcom/gcc-msm8996.c b/drivers/clk/qcom/gcc-msm8996.c
-index 9a3290fdd01b..9d136172c27c 100644
---- a/drivers/clk/qcom/gcc-msm8996.c
-+++ b/drivers/clk/qcom/gcc-msm8996.c
-@@ -260,6 +260,36 @@ static struct clk_alpha_pll_postdiv gpll0 = {
- 	},
- };
- 
-+static struct clk_branch gcc_mmss_gpll0_div_clk = {
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x5200c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mmss_gpll0_div_clk",
-+			.parent_names = (const char *[]){ "gpll0" },
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_gpll0_div_clk = {
-+	.halt_check = BRANCH_HALT_DELAY,
-+	.clkr = {
-+		.enable_reg = 0x5200c,
-+		.enable_mask = BIT(2),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_gpll0_div_clk",
-+			.parent_names = (const char *[]){ "gpll0" },
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops
-+		},
-+	},
-+};
-+
- static struct clk_alpha_pll gpll4_early = {
- 	.offset = 0x77000,
- 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-@@ -2951,6 +2981,20 @@ static struct clk_branch gcc_smmu_aggre0_ahb_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_aggre1_pnoc_ahb_clk = {
-+	.halt_reg = 0x82014,
-+	.clkr = {
-+		.enable_reg = 0x82014,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_aggre1_pnoc_ahb_clk",
-+			.parent_names = (const char *[]){ "periph_noc_clk_src" },
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_aggre2_ufs_axi_clk = {
- 	.halt_reg = 0x83014,
- 	.clkr = {
-@@ -2981,6 +3025,34 @@ static struct clk_branch gcc_aggre2_usb3_axi_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_dcc_ahb_clk = {
-+	.halt_reg = 0x84004,
-+	.clkr = {
-+		.enable_reg = 0x84004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_dcc_ahb_clk",
-+			.parent_names = (const char *[]){ "config_noc_clk_src" },
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_aggre0_noc_mpu_cfg_ahb_clk = {
-+	.halt_reg = 0x85000,
-+	.clkr = {
-+		.enable_reg = 0x85000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_aggre0_noc_mpu_cfg_ahb_clk",
-+			.parent_names = (const char *[]){ "config_noc_clk_src" },
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_qspi_ahb_clk = {
- 	.halt_reg = 0x8b004,
- 	.clkr = {
-@@ -3039,6 +3111,20 @@ static struct clk_branch gcc_hdmi_clkref_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_edp_clkref_clk = {
-+	.halt_reg = 0x88004,
-+	.clkr = {
-+		.enable_reg = 0x88004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_edp_clkref_clk",
-+			.parent_names = (const char *[]){ "xo" },
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_ufs_clkref_clk = {
- 	.halt_reg = 0x88008,
- 	.clkr = {
-@@ -3095,6 +3181,62 @@ static struct clk_branch gcc_rx1_usb2_clkref_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_mss_cfg_ahb_clk = {
-+	.halt_reg = 0x8a000,
-+	.clkr = {
-+		.enable_reg = 0x8a000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_cfg_ahb_clk",
-+			.parent_names = (const char *[]){ "config_noc_clk_src" },
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_mnoc_bimc_axi_clk = {
-+	.halt_reg = 0x8a004,
-+	.clkr = {
-+		.enable_reg = 0x8a004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_mnoc_bimc_axi_clk",
-+			.parent_names = (const char *[]){ "system_noc_clk_src" },
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_snoc_axi_clk = {
-+	.halt_reg = 0x8a024,
-+	.clkr = {
-+		.enable_reg = 0x8a024,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_snoc_axi_clk",
-+			.parent_names = (const char *[]){ "system_noc_clk_src" },
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_q6_bimc_axi_clk = {
-+	.halt_reg = 0x8a028,
-+	.clkr = {
-+		.enable_reg = 0x8a028,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_q6_bimc_axi_clk",
-+			.parent_names = (const char *[]){ "system_noc_clk_src" },
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_hw *gcc_msm8996_hws[] = {
- 	&xo.hw,
- 	&gpll0_early_div.hw,
-@@ -3355,6 +3497,7 @@ static struct clk_regmap *gcc_msm8996_clocks[] = {
- 	[GCC_AGGRE0_CNOC_AHB_CLK] = &gcc_aggre0_cnoc_ahb_clk.clkr,
- 	[GCC_SMMU_AGGRE0_AXI_CLK] = &gcc_smmu_aggre0_axi_clk.clkr,
- 	[GCC_SMMU_AGGRE0_AHB_CLK] = &gcc_smmu_aggre0_ahb_clk.clkr,
-+	[GCC_AGGRE1_PNOC_AHB_CLK] = &gcc_aggre1_pnoc_ahb_clk.clkr,
- 	[GCC_AGGRE2_UFS_AXI_CLK] = &gcc_aggre2_ufs_axi_clk.clkr,
- 	[GCC_AGGRE2_USB3_AXI_CLK] = &gcc_aggre2_usb3_axi_clk.clkr,
- 	[GCC_QSPI_AHB_CLK] = &gcc_qspi_ahb_clk.clkr,
-@@ -3365,6 +3508,15 @@ static struct clk_regmap *gcc_msm8996_clocks[] = {
- 	[GCC_PCIE_CLKREF_CLK] = &gcc_pcie_clkref_clk.clkr,
- 	[GCC_RX2_USB2_CLKREF_CLK] = &gcc_rx2_usb2_clkref_clk.clkr,
- 	[GCC_RX1_USB2_CLKREF_CLK] = &gcc_rx1_usb2_clkref_clk.clkr,
-+	[GCC_EDP_CLKREF_CLK] = &gcc_edp_clkref_clk.clkr,
-+	[GCC_MSS_CFG_AHB_CLK] = &gcc_mss_cfg_ahb_clk.clkr,
-+	[GCC_MSS_Q6_BIMC_AXI_CLK] = &gcc_mss_q6_bimc_axi_clk.clkr,
-+	[GCC_MSS_SNOC_AXI_CLK] = &gcc_mss_snoc_axi_clk.clkr,
-+	[GCC_MSS_MNOC_BIMC_AXI_CLK] = &gcc_mss_mnoc_bimc_axi_clk.clkr,
-+	[GCC_DCC_AHB_CLK] = &gcc_dcc_ahb_clk.clkr,
-+	[GCC_AGGRE0_NOC_MPU_CFG_AHB_CLK] = &gcc_aggre0_noc_mpu_cfg_ahb_clk.clkr,
-+	[GCC_MMSS_GPLL0_DIV_CLK] = &gcc_mmss_gpll0_div_clk.clkr,
-+	[GCC_MSS_GPLL0_DIV_CLK] = &gcc_mss_gpll0_div_clk.clkr,
- };
- 
- static struct gdsc *gcc_msm8996_gdscs[] = {
-diff --git a/include/dt-bindings/clock/qcom,gcc-msm8996.h b/include/dt-bindings/clock/qcom,gcc-msm8996.h
-index 75b07cf5eed0..db80f2ee571b 100644
---- a/include/dt-bindings/clock/qcom,gcc-msm8996.h
-+++ b/include/dt-bindings/clock/qcom,gcc-msm8996.h
-@@ -235,6 +235,15 @@
- #define GCC_RX1_USB2_CLKREF_CLK					218
- #define GCC_HLOS1_VOTE_LPASS_CORE_SMMU_CLK			219
- #define GCC_HLOS1_VOTE_LPASS_ADSP_SMMU_CLK			220
-+#define GCC_EDP_CLKREF_CLK					221
-+#define GCC_MSS_CFG_AHB_CLK					222
-+#define GCC_MSS_Q6_BIMC_AXI_CLK					223
-+#define GCC_MSS_SNOC_AXI_CLK					224
-+#define GCC_MSS_MNOC_BIMC_AXI_CLK				225
-+#define GCC_DCC_AHB_CLK						226
-+#define GCC_AGGRE0_NOC_MPU_CFG_AHB_CLK				227
-+#define GCC_MMSS_GPLL0_DIV_CLK					228
-+#define GCC_MSS_GPLL0_DIV_CLK					229
- 
- #define GCC_SYSTEM_NOC_BCR					0
- #define GCC_CONFIG_NOC_BCR					1
--- 
-2.18.0
+SGksIHRoaXMgaXMgYW4gYXV0b21hdGVkIGVtYWlsIGZyb20gUm9iJ3MgKGV4cGVyaW1lbnRhbCkg
+cmV2aWV3IGJvdC4gSQpmb3VuZCBhIGNvdXBsZSBvZiBjb21tb24gcHJvYmxlbXMgd2l0aCB5b3Vy
+IHBhdGNoLiBQbGVhc2Ugc2VlIGJlbG93LgoKT24gTW9uLCAzMCBKdWwgMjAxOCAxMDoxMToyMyAr
+MDIwMCwgRW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSB3cm90ZToKPiBGcm9tOiBMaW4gSHVhbmcgPGhs
+QHJvY2stY2hpcHMuY29tPgo+IAo+IFRoZXNlIGFyZSByZXF1aXJlZCB0byBzdXBwb3J0IEREUiBE
+VkZTIG9uIHJrMzM5OSBwbGF0Zm9ybS4gVGhlIHBhdGNoIGFsc28KPiBpbnRyb2R1Y2VzIHR3byBu
+ZXcgZmlsZXMgKHJrMzM5OS1kcmFtLmggYW5kIHJrMzM5OS1kcmFtLWRlZmF1bHQtdGltaW5nKQo+
+IHdpdGggZGVmYXVsdCBEUkFNIHNldHRpbmdzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IExpbiBIdWFu
+ZyA8aGxAcm9jay1jaGlwcy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogRW5yaWMgQmFsbGV0Ym8gaSBT
+ZXJyYSA8ZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbT4KClRoZSBwcmVmZXJyZWQgc3ViamVj
+dCBwcmVmaXggaXMgImR0LWJpbmRpbmdzOiA8YmluZGluZyBkaXI+OiAuLi4iLgoKPiAtLS0KPiAK
+PiBDaGFuZ2VzIGluIHYxOgo+IC0gW1JGQyA4LzEwXSBNb3ZlIHJrMzM5OS1kcmFtLmggdG8gZHQt
+aW5jbHVkZXMuCj4gLSBbUkZDIDgvMTBdIFB1dCBzZHJhbSBkZWZhdWx0IHZhbHVlcyB1bmRlciB0
+aGUgZG1jIG5vZGUuCj4gLSBbUkZDIDgvMTBdIFJlbW92ZWQgcmszMzk5LWRyYW0tZGVmYXVsdC10
+aW1pbmcuZHRzCj4gCj4gIC4uLi9ib290L2R0cy9yb2NrY2hpcC9yazMzOTktb3AxLW9wcC5kdHNp
+ICAgICB8IDI5ICsrKysrKysrCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5
+LmR0c2kgICAgICB8IDQ5ICsrKysrKysrKysrKysKPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9wb3dl
+ci9yazMzOTktZHJhbS5oICAgICAgIHwgNzMgKysrKysrKysrKysrKysrKysrKwo+ICAzIGZpbGVz
+IGNoYW5nZWQsIDE1MSBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
+L2R0LWJpbmRpbmdzL3Bvd2VyL3JrMzM5OS1kcmFtLmgKPiAKCkRUIGJpbmRpbmdzIChpbmNsdWRp
+bmcgYmluZGluZyBoZWFkZXJzKSBzaG91bGQgYmUgYSBzZXBhcmF0ZSBwYXRjaC4gU2VlCkRvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zdWJtaXR0aW5nLXBhdGNoZXMudHh0LgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
