@@ -1,53 +1,83 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] net: ethernet: cpsw-phy-sel: prefer phandle for phy sel
- and update binding
-Date: Thu, 9 Aug 2018 03:46:53 -0700
-Message-ID: <20180809104653.GV99251@atomide.com>
-References: <20180808080354.100146-1-tony@atomide.com>
- <20180808115838.GA18314@lunn.ch>
- <20180808134836.GS99251@atomide.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/8] dt-bindings: mmc: Add DQS trim value to Tegra SDHCI
+Date: Thu, 9 Aug 2018 13:36:09 +0200
+Message-ID: <20180809113609.GI21639@ulmo>
+References: <1533650404-18125-1-git-send-email-avienamo@nvidia.com>
+ <1533650404-18125-2-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xQR6quUbZ63TTuTU"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180808134836.GS99251@atomide.com>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <1533650404-18125-2-git-send-email-avienamo@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [180808 13:52]:
-> * Andrew Lunn <andrew@lunn.ch> [180808 12:02]:
-> > 
-> > Do you need to handle EPROBE_DEFER here? The phandle points to a
-> > device which has not yet been loaded? I'm not sure exactly where it
-> > will be returned, maybe it is bus_find_device(), but i expect to see
-> > some handling of it somewhere in this function.
 
-If no device is found the driver just produces a warning currently.
-And in that case cpsw attempts to continue with bootloader settings.
+--xQR6quUbZ63TTuTU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And looking at the caller function cpsw_slave_open() it also just
-produces warnings for phy_connect() too..
+On Tue, Aug 07, 2018 at 04:59:57PM +0300, Aapo Vienamo wrote:
+> Document HS400 DQS trim value device tree property.
+>=20
+> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.t=
+xt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+> index 3c7960a..7d294f3 100644
+> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+> @@ -72,6 +72,7 @@ Optional properties for Tegra210 and Tegra186:
+>    trimmer value for non-tunable modes.
+>  - nvidia,default-trim : Specify the default outbound clock trimmer
+>    value.
+> +- nvidia,dqs-trim : Specify DQS trim value for HS400 timing
+> =20
+>    Notes on the pad calibration pull up and pulldown offset values:
+>      - The property values are drive codes which are programmed into the
+> @@ -88,6 +89,8 @@ Optional properties for Tegra210 and Tegra186:
+>      - The values are programmed to the Vendor Clock Control Register.
+>        Please refer to the reference manual of the SoC for correct
+>        values.
+> +    - The DQS trim values are only used on controllers which support
+> +      HS400 timing.
 
-I agree that in general this this whole pile of cpsw related drivers sure
-could use some better error handling. Starting with making cpsw_slave_open()
-and cpsw_phy_sel() return errors instead of just ignoring them might be a
-good start.
+One of these additions says "DQS trim values", the other says "DQS trim
+value". It is unclear from the above how many values there are. I think
+this should be more explicit. Also, I don't see why the note about which
+controllers the DQS trim value(s) applies to is in a separate paragraph.
+Couldn't it be moved to the property description?
 
-Grygorii, care to add that note of things to do into your cpsw maintainer
-hat?
+Also, I think the bindings should specify which generations of Tegra do
+support HS400. Where else are people supposed to find that information?
 
-> With the proper interconnect hierarchy in the device tree there should be
-> no EPROBE_DEFER happening here as the interconnects are probed in the
-> right order with the always on interrupt with system control module first :)
->
-> But then again, adding support for EPROBE_DEFER here won't hurt either,
-> will take a look.
+Thierry
 
-I'll just add some notes about that to the patch description considering
-the above.
+--xQR6quUbZ63TTuTU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
+-----BEGIN PGP SIGNATURE-----
 
-Tony
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltsJygACgkQ3SOs138+
+s6F+PQ//Sy+W2dQjwsIevUD60h4o/MYKtvLKHwJAfy7RZJ8Bj9HLJMSE66Sx7+Kn
+nZPNrn76YGF6tBXsjgkvMaF2yNOsny9ggCbx8ktdpXyZPAGx7Z5ZNJPai93h1+ea
+QXrj7aUxyl1ZgPA7aAA5VbYgwH4xUSD8qhuQBbrZFmlD7KJw0k5+K06S0E3CY8Je
+TDEuvIEWMX4WMUOvc/vNK756ieW8r0NrU++iuy6m/11DU+fn29gZ79ThYSFQyNPA
+zSCYNf00ec7jN4uCTqVPvUO6/dguNAG80xwJGzkuBiaJXaF1PiWdmXI9iS/JvYgw
+4Qs5D1BnM734ysrlwEisju+qgktPNMKl+yrVdkiG6KfWkcOtV4yYzfbnhUoP1UdV
+Y8PygMgDQtdfH7aHok4NUoIdetbvYIecdvrvGhqcEIsxWYifUnjbil9lQOzf8PPF
+P9Hkp0+MHI86wGJRR5+gIeUKmRN8/LODM6YOGBY0AnVVS3c0gMRGx324MU/gNwkA
+qurn0ML81uTrv1U0ANNt6rxRt38hoMHbCThPmvaID580tNgleKbcLRb1t86odlIK
+R5McG56coeNySKU6UL5O3nLZsbNeW4nioEYIRgwJ9+un5J+AVd8zpQJRatffgOkl
+pFuu4AZuYiHYXsymmBrPK24iqi6MVbYGUpG3AjtnagA3vhyc9KU=
+=CKUn
+-----END PGP SIGNATURE-----
+
+--xQR6quUbZ63TTuTU--
