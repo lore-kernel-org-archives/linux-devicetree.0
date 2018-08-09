@@ -1,106 +1,70 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v1 09/10] arm64: dts: qcom: Add reg-names for all tsens nodes
-Date: Thu,  9 Aug 2018 18:02:41 +0530
-Message-ID: <188c07144d98bfbe2bbbb7d1f2941acdcf4e6682.1533815718.git.amit.kucheria@linaro.org>
-References: <cover.1533815718.git.amit.kucheria@linaro.org>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: Re: [PATCH 5/8] arm64: dts: tegra186: Add SDMMC4 DQS trim value
+Date: Thu, 9 Aug 2018 15:37:32 +0300
+Message-ID: <20180809153732.4c91e425@dhcp-10-21-25-168>
+References: <1533650404-18125-1-git-send-email-avienamo@nvidia.com>
+        <1533650404-18125-6-git-send-email-avienamo@nvidia.com>
+        <20180809114922.GN21639@ulmo>
+        <20180809150226.64657f56@dhcp-10-21-25-168>
+        <03fc6726-25ff-20de-d271-ebae19b753c7@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1533815718.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1533815718.git.amit.kucheria@linaro.org>
-References: <cover.1533815718.git.amit.kucheria@linaro.org>
+In-Reply-To: <03fc6726-25ff-20de-d271-ebae19b753c7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Peter Geis <pgwipeout@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of showing up as thermal-sensor@<addr>, the nodes will show up as
-tsens0_tm, tsen1_tm, tsens1_srot, etc. in /proc/iomem making it easier to
-read.
+On Thu, 9 Aug 2018 08:23:16 -0400
+Peter Geis <pgwipeout@gmail.com> wrote:
 
-IOW,
+> On 08/09/2018 08:02 AM, Aapo Vienamo wrote:
+> > On Thu, 9 Aug 2018 13:49:22 +0200
+> > Thierry Reding <thierry.reding@gmail.com> wrote:
+> >   
+> >> On Tue, Aug 07, 2018 at 05:00:01PM +0300, Aapo Vienamo wrote:  
+> >>> Add the HS400 DQS trim value for Tegra186 SDMMC4.
+> >>>
+> >>> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> >>> ---
+> >>>   arch/arm64/boot/dts/nvidia/tegra186.dtsi | 1 +
+> >>>   1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> >>> index 6e9ef26..9e07bc6 100644
+> >>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> >>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> >>> @@ -313,6 +313,7 @@
+> >>>   		nvidia,pad-autocal-pull-down-offset-1v8-timeout = <0x0a>;
+> >>>   		nvidia,default-tap = <0x5>;
+> >>>   		nvidia,default-trim = <0x9>;
+> >>> +		nvidia,dqs-trim = <63>;
+> >>>   		status = "disabled";
+> >>>   	};
+> >>>       
+> >>
+> >> Isn't this technically dependent on the board layout and as such would
+> >> belong in the board DTS file? Or does this value work on all existing
+> >> Tegra186 platforms?  
+> > 
+> > This value is specified as part of the controller initialization
+> > sequence in the TRM. I've understood that this (and other tap and trim)
+> > value(s) are used for compensating the propagation delay differences
+> > that are caused by the internal SoC layout.
+> > 
+> >   -Aapo
+> > --  
+> 
+> The Tegra2 and Tegra3 TRMs also specify recommended DQS values, and I am 
+> working on at least one device that differs in the platform data from 
+> the default value.
+> I see that you mentioned this is for the newer devices that support 
+> HS200/HS400 modes, but does it enable setting DQS on older devices?
 
-0c222000-0c2221fe : thermal-sensor@c263000
-0c223000-0c2231fe : thermal-sensor@c265000
-0c263000-0c2631fe : thermal-sensor@c263000
-0c265000-0c2651fe : thermal-sensor@c265000
+I can't find any mention of _SDMMC_ DQS trimmer on Tegra2, Tegra3 or
+Tegra124 TRMs. As far as I can tell, programming the DQS trimmer value
+is only required by HS400 signaling on Tegra210 and Tegra186.
 
-becomes
-
-0c222000-0c2221fe : tsens0_srot
-0c223000-0c2231fe : tsens1_srot
-0c263000-0c2631fe : tsens0_tm
-0c265000-0c2651fe : tsens1_tm
-
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm/boot/dts/qcom-msm8974.dtsi   | 1 +
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 +
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 ++
- arch/arm64/boot/dts/qcom/sdm845.dtsi  | 2 ++
- 4 files changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 3c4b81c29798..64c9f81ddd90 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -431,6 +431,7 @@
- 			compatible = "qcom,msm8974-tsens";
- 			reg = <0xfc4a9000 0x1000>, /* TM */
- 			      <0xfc4a8000 0x1000>; /* SROT */
-+			reg-names = "tsens_tm", "tsens_srot";
- 			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
- 			nvmem-cell-names = "calib", "calib_backup";
- 			#qcom,sensors = <11>;
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index abf84df5a7bc..4e6a5e462a91 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -778,6 +778,7 @@
- 			compatible = "qcom,msm8916-tsens";
- 			reg = <0x4a9000 0x1000>, /* TM */
- 			      <0x4a8000 0x1000>; /* SROT */
-+			reg-names = "tsens_tm", "tsens_srot";
- 			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
- 			nvmem-cell-names = "calib", "calib_sel";
- 			#qcom,sensors = <5>;
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index c2dca3a30091..7e5982daa2ed 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -969,6 +969,7 @@
- 			compatible = "qcom,msm8996-tsens";
- 			reg = <0x4a9000 0x1000>, /* TM */
- 			      <0x4a8000 0x1000>; /* SROT */
-+			reg-names = "tsens0_tm", "tsens0_srot";
- 			#qcom,sensors = <13>;
- 			#thermal-sensor-cells = <1>;
- 		};
-@@ -977,6 +978,7 @@
- 			compatible = "qcom,msm8996-tsens";
- 			reg = <0x4ad000 0x1000>, /* TM */
- 			      <0x4ac000 0x1000>; /* SROT */
-+			reg-names = "tsens1_tm", "tsens1_srot";
- 			#qcom,sensors = <8>;
- 			#thermal-sensor-cells = <1>;
- 		};
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index f722785df26b..efd5d7abd1cd 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1531,6 +1531,7 @@
- 			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
- 			reg = <0xc263000 0x1ff>, /* TM */
- 			      <0xc222000 0x1ff>; /* SROT */
-+			reg-names = "tsens0_tm", "tsens0_srot";
- 			#qcom,sensors = <13>;
- 			#thermal-sensor-cells = <1>;
- 		};
-@@ -1539,6 +1540,7 @@
- 			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
- 			reg = <0xc265000 0x1ff>, /* TM */
- 			      <0xc223000 0x1ff>; /* SROT */
-+			reg-names = "tsens1_tm", "tsens1_srot";
- 			#qcom,sensors = <8>;
- 			#thermal-sensor-cells = <1>;
- 		};
--- 
-2.17.1
+ -Aapo
