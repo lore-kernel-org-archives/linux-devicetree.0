@@ -1,143 +1,122 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 1/2] dt: bindings: lm3697: Add bindings for lm3697
- driver
-Date: Thu, 9 Aug 2018 08:30:28 -0500
-Message-ID: <c028fb73-8df5-9402-d96e-c907199356ed@ti.com>
-References: <20180807160442.8937-1-dmurphy@ti.com>
- <20180808195903.GB20912@amd> <f6b3534b-2ee9-782e-35e5-e103c34528bc@ti.com>
- <20180808210215.GA15831@amd> <f18a5616-bb25-da0d-aec8-585e042b4919@ti.com>
- <53691469-4554-42a8-c182-762c1a3939b7@gmail.com>
- <01bbf05a-8e5e-d3ce-857a-ac5c6efb779c@ti.com>
- <683f9e60-9ad8-93d8-e4ed-dbfdae78c307@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 13/40] mmc: tegra: Poll for calibration completion
+Date: Thu, 9 Aug 2018 15:44:55 +0200
+Message-ID: <20180809134455.GC21639@ulmo>
+References: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
+ <1533141150-10511-14-git-send-email-avienamo@nvidia.com>
+ <20180809124616.GV21639@ulmo>
+ <20180809155638.23f96e61@dhcp-10-21-25-168>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="56p9wBiXEyg+KhLM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <683f9e60-9ad8-93d8-e4ed-dbfdae78c307@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180809155638.23f96e61@dhcp-10-21-25-168>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jacek and Pavel
 
-On 08/09/2018 07:09 AM, Jacek Anaszewski wrote:
-> Dan,
-> 
-> On 08/08/2018 11:45 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 08/08/2018 04:09 PM, Jacek Anaszewski wrote:
->>> Hi Dan,
->>>
->>> On 08/08/2018 11:04 PM, Dan Murphy wrote:
->>>> On 08/08/2018 04:02 PM, Pavel Machek wrote:
->>>>> Hi!
->>>>>
->>>>>>>> +	- #size-cells : 0
->>>>>>>> +	- control-bank-cfg - : Indicates which sink is connected to which control bank
->>>>>>>> +		0 - All HVLED outputs are controlled by bank A
->>>>>>>> +		1 - HVLED1 is controlled bank B, HVLED2/3 are controlled by bank A
->>>>>>>> +		2 - HVLED2 is controlled bank B, HVLED1/3 are controlled by bank A
->>>>>>>> +		3 - HVLED1/2 are controlled by bank B, HVLED3 is controlled by bank A
->>>>>>>> +		4 - HVLED3 is controlled by bank B, HVLED1/2 are controlled by bank A
->>>>>>>> +		5 - HVLED1/3 is controlled by bank B, HVLED2 is controlled by bank A
->>>>>>>> +		6 - (default) HVLED1 is controlled by bank A, HVLED2/3 are controlled by bank B
->>>>>>>> +		7 - All HVLED outputs are controlled by bank B
->>>>>>>
->>>>>>> This is quite long way to describe a bitmask, no? Could we make
->>>>>>> it so that control-bank-cfg is not needed?
->>>>>>
->>>>>> The problem we have here is there is a potential to control
->>>>>> 3 different LED string but only 2 sinks.  So control bank A can control 2 LED strings and control
->>>>>> bank b can control 1 LED string.  
->>>>>>
->>>>>
->>>>> Can we forget about the LED strings, and just expose the sinks as
->>>>> Linux LED devices?
->>>>
->>>> 2 sinks 3 LED strings.  How do you know which LED string is which and what bank it belongs
->>>> to when setting the brightness.  Each Bank has a separate register for brightness control.
->>>
->>> Just a blind shot, without going into details - could you please check
->>> if led-sources property documented in the common LED bindings couldn't
->>> help here?
->>>
->>
->> I could change the name to led-sources.  But this part does not really follow the 1 output to a
->> 1 LED string topology.
-> 
-> led-sources was designed for describing the topology where one LED can
-> be connected to more then one output, see bindings of
-> max77693-led (in Documentation/devicetree/bindings/mfd/max77693.txt).
-> 
-> Here the topology is a bit different - more than one LED (string) can be
-> connected to a single bank, but this is accomplished inside the chip.
-> Logically LEDs configured that way can be treated as a single LED
-> (string) connected to two outputs, and what follows they should be
-> described by a single DT child node.
-> 
-> led-sources will fit very well for this purpose. You could do
-> the following mapping:
-> 
-> 0 - HVLED1
-> 1 - HVLED2
-> 2 - HVLED3
-> 
-> Then, in the child DT nodes you would use these identifiers to describe
-> the topology:
-> 
-> Following node would describe strings connected to the outputs
-> HVLED1 and HVLED2 controlled by bank A.
-> 
-> led@0 {
-> 	reg = <0>;
-> 	led-sources = <0>. <1>;
-> 	label = "white:first_backlight_cluster";
-> 	linux,default-trigger = "backlight";
-> };
-> 
-> 
-> IOW I agree with Pavel, but I propose to use already documented common
-> DT LED property.
-> 
+--56p9wBiXEyg+KhLM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I agree to use the led-sources but I still believe this approach may be confusing to other sw devs
-and will lead to configuration issues by users.
+On Thu, Aug 09, 2018 at 03:56:38PM +0300, Aapo Vienamo wrote:
+> On Thu, 9 Aug 2018 14:46:16 +0200
+> Thierry Reding <thierry.reding@gmail.com> wrote:
+>=20
+> > On Wed, Aug 01, 2018 at 07:32:03PM +0300, Aapo Vienamo wrote:
+> > > Implement polling with 10 ms timeout for automatic pad drive strength
+> > > calibration.
+> > >=20
+> > > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> > > ---
+> > >  drivers/mmc/host/sdhci-tegra.c | 21 ++++++++++++++++-----
+> > >  1 file changed, 16 insertions(+), 5 deletions(-)
+> > >=20
+> > > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-=
+tegra.c
+> > > index 7d98455..c8ff267 100644
+> > > --- a/drivers/mmc/host/sdhci-tegra.c
+> > > +++ b/drivers/mmc/host/sdhci-tegra.c
+> > > @@ -16,6 +16,7 @@
+> > >  #include <linux/err.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/init.h>
+> > > +#include <linux/iopoll.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/clk.h>
+> > >  #include <linux/io.h>
+> > > @@ -50,6 +51,9 @@
+> > >  #define SDHCI_AUTO_CAL_START			BIT(31)
+> > >  #define SDHCI_AUTO_CAL_ENABLE			BIT(29)
+> > > =20
+> > > +#define SDHCI_TEGRA_AUTO_CAL_STATUS		0x1ec
+> > > +#define SDHCI_TEGRA_AUTO_CAL_ACTIVE		BIT(31)
+> > > +
+> > >  #define NVQUIRK_FORCE_SDHCI_SPEC_200	BIT(0)
+> > >  #define NVQUIRK_ENABLE_BLOCK_GAP_DET	BIT(1)
+> > >  #define NVQUIRK_ENABLE_SDHCI_SPEC_300	BIT(2)
+> > > @@ -228,13 +232,20 @@ static void tegra_sdhci_reset(struct sdhci_host=
+ *host, u8 mask)
+> > > =20
+> > >  static void tegra_sdhci_pad_autocalib(struct sdhci_host *host)
+> > >  {
+> > > -	u32 val;
+> > > +	u32 reg;
+> > > +	int ret;
+> > > +
+> > > +	reg =3D sdhci_readl(host, SDHCI_TEGRA_AUTO_CAL_CONFIG);
+> > > +	reg |=3D SDHCI_AUTO_CAL_ENABLE | SDHCI_AUTO_CAL_START;
+> > > +	sdhci_writel(host, reg, SDHCI_TEGRA_AUTO_CAL_CONFIG);
+> > >   =20
+> >=20
+> > I know this is preexisting, but I want to make sure we cover this so we
+> > don't run into this down the road: do these bits automatically clear on
+> > calibration completion? Can we run these multiple times and get
+> > everything properly calibrated?
+>=20
+> The TRM states in the pad auto-calibration procedure description that
+> this bit should not be cleared.
 
-This implementation requires the sw dev to know which strings are controlled by which bank.
-And this method may produce a misconfiguration like something below where HVLED2 is declared in
-both bank A and bank B
+It says that SDHCI_AUTO_CAL_ENABLE shouldn't be cleared after
+calibration completes, but I'm wondering how recalibration is going to
+happen on a second run.
 
-led@0 {
-	reg = <0>;
-	led-sources = <0>. <1>;
-	label = "white:first_backlight_cluster";
-	linux,default-trigger = "backlight";
-};
+I guess if we never turn off calibration, then it will continue to run
+forever, but does that also work if we go back to a mode that doesn't
+require calibration?
 
-led@1 {
-	reg = <1>;
-	led-sources = <1>. <2>;
-	label = "white:keypad_cluster";
-	linux,default-trigger = "backlight";
-};
+So perhaps what we need is to clear SDHCI_AUTO_CAL_ENABLE when going to
+such a mode. And perhaps we need to clear SDHCI_AUTO_CAL_START after the
+calibration is complete.
 
-The driver will need to be intelligent and declare a miss configuration on the above.
-Not saying this cannot be done but I am not sure why we want to add all of these extra LoC and intelligence
-in the kernel driver.
-The driver cannot make assumptions on the intention.  And the device tree documentation will need to
-pretty much need a lengthy explanation on how to configure the child nodes.
+Anyway, lots of unanswered questions and if the above works, I'm fine
+with merging it as-is. If we find out that something else is needed at a
+later point we can always fix it up later.
 
-The implementation I suggested removes that ambiguity.  It is a simple integer that is written to the device
-as part of the device configuration, which the config is a setting for the device.
+Thierry
 
-The child nodes denote which bank the exposed LED node will control.  Removing any need
-for the sw developers new or old to know the specific device configurations.
+--56p9wBiXEyg+KhLM
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Dan
--- 
-------------------
-Dan Murphy
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltsRVUACgkQ3SOs138+
+s6ESZxAAs2NFQ3cNsgDNlKQrmj0UQBmZWM/K7uGfW4pQUPu0E6o7+mKXsVDZh+7V
+omu10iibbzbhlWGvOGEjN294m5kHXH5rEuxi54lOFLtXLQAEhdkyG/svRORxGUMp
+y3vrcz0XxhQnMPbMKI5FjzQcTRekv1aDko8/ba8FqaTkFA1zb9yqKvRPj/9LBp8I
+CWzcPEVuRuCAot4Va4uUHVrF926NU49q9FJ1CEWHceYYMopTX/Zeu14B6AfPYAKG
+ur7Zv87kvl4o9bO2/KEsqfKrfaTu3su9sU/YZGoglhwNavAwW6j8jJY8Yveldw8/
+FmuB++5KqBftzgrmM08dHhMD4qOXntxPcx9QhSdbGHcZtQ/pgnLQX3TiAVRn3NPh
+M2sOG2KnkBmfs9QPA/WruyqbDNsjj/7CHl+4fcm4G+Bp9xxIawH2h9R2D7QIWsMK
+DcSUa0X3Z49DExcB7cfbl4eOjoglzDKI+Za2tIu2zDnW3XIxiLh1aOzeO4DuZMVy
+8RE8Gbl7FFeQb1xGkzwkWMXbY/IAA1Ycoyl19APFT4LhmSKtleGS96egezlFFX75
+9RNF/0ihn+ccVSdIoRbU/AgVy/11Cz3QX84OvRsbdwR+oLO2wUOqBKEvVcvquOzs
+vKv2nC/vGKsb28YV9MoNV0lAzd+I89IzrDbun3z5h55Oz0t24kU=
+=pnxY
+-----END PGP SIGNATURE-----
+
+--56p9wBiXEyg+KhLM--
