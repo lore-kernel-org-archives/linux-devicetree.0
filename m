@@ -1,127 +1,27 @@
-Return-Path: <SRS0=Wv3U=KW=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v3 3/5] ARM: dts: r8a77470: Add GPIO support
-Date: Tue,  7 Aug 2018 08:57:04 +0100
-Message-Id: <1533628626-26503-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1533628626-26503-1-git-send-email-biju.das@bp.renesas.com>
-References: <1533628626-26503-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5b6cc312.1c69fb81.87ce1.1389@mx.google.com>
+Date: Thu, 09 Aug 2018 16:41:20 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 4/4] dt-bindigs: Update documentation of qcom,llcc
+References: <1533155615-27929-1-git-send-email-vnkgutta@codeaurora.org> <1533155615-27929-5-git-send-email-vnkgutta@codeaurora.org>
+In-Reply-To: <1533155615-27929-5-git-send-email-vnkgutta@codeaurora.org>
+To: vnkgutta@codeaurora.org
+Cc: evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de
 List-ID: <devicetree@vger.kernel.org>
 
-Describe GPIO blocks in the R8A77470 device tree.
+Hi, this is an automated email from Rob's (experimental) review bot. I
+found a couple of common problems with your patch. Please see below.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V2-->V3
- * Moved gpio-reserved-ranges property just below gpio-ranges
----
- arch/arm/boot/dts/r8a77470.dtsi | 91 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
+On Wed,  1 Aug 2018 13:33:35 -0700, Venkata Narendra Kumar Gutta wrote:
+> Add reg-names and interrupts for LLCC documentation and the usage
+> examples. llcc broadcast base is added in addition to llcc base,
+> which is used for llcc broadcast writes.
+> 
+> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index c6730f4..0bea5a2 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -61,6 +61,97 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		gpio0: gpio@e6050000 {
-+			compatible = "renesas,gpio-r8a77470",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6050000 0 0x50>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 0 23>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 912>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 912>;
-+		};
-+
-+		gpio1: gpio@e6051000 {
-+			compatible = "renesas,gpio-r8a77470",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6051000 0 0x50>;
-+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 32 23>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 911>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 911>;
-+		};
-+
-+		gpio2: gpio@e6052000 {
-+			compatible = "renesas,gpio-r8a77470",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6052000 0 0x50>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 64 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 910>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 910>;
-+		};
-+
-+		gpio3: gpio@e6053000 {
-+			compatible = "renesas,gpio-r8a77470",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6053000 0 0x50>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 96 30>;
-+			gpio-reserved-ranges = <17 10>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 909>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 909>;
-+		};
-+
-+		gpio4: gpio@e6054000 {
-+			compatible = "renesas,gpio-r8a77470",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6054000 0 0x50>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 128 26>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 908>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 908>;
-+		};
-+
-+		gpio5: gpio@e6055000 {
-+			compatible = "renesas,gpio-r8a77470",
-+				     "renesas,rcar-gen2-gpio";
-+			reg = <0 0xe6055000 0 0x50>;
-+			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			gpio-ranges = <&pfc 0 160 32>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			clocks = <&cpg CPG_MOD 907>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 907>;
-+		};
-+
- 		pfc: pin-controller@e6060000 {
- 			compatible = "renesas,pfc-r8a77470";
- 			reg = <0 0xe6060000 0 0x118>;
--- 
-2.7.4
+The preferred subject prefix is "dt-bindings: <binding dir>: ...".
+
+> ---
+>  Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
