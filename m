@@ -1,248 +1,106 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH 2/2] arm64: dts: meson-g12a: add initial g12a s905d2 SoC DT support
-Date: Thu, 9 Aug 2018 16:22:31 +0800
-Message-ID: <1533802951-49919-3-git-send-email-jianxin.pan@amlogic.com>
-References: <1533802951-49919-1-git-send-email-jianxin.pan@amlogic.com>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH v2] dt-bindings: media: adv748x: Document re-mappable
+ addresses
+Date: Thu, 9 Aug 2018 09:33:21 +0100
+Message-ID: <22e60e95-be35-76c4-af4e-7595025128d1@ideasonboard.com>
+References: <20180808232941.10582-1-kieran.bingham@ideasonboard.com>
+ <3968377.CNlSUayrWh@avalon>
+Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533802951-49919-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <3968377.CNlSUayrWh@avalon>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mchehab@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Try to add basic DT support for the Amlogic's Meson-G12A S905D2 SoC,
-which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
-Timer, UART. It's capable of booting up into the serial console.
+Hi Laurent,
 
-Signed-off-by: Jianxin <jianxin.pan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/Makefile            |   1 +
- arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts |  22 +++
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi     | 174 ++++++++++++++++++++++++
- 3 files changed, 197 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+On 09/08/18 09:22, Laurent Pinchart wrote:
+> Hi Kieran,
+> 
+> Thank you for the patch.
+> 
+> On Thursday, 9 August 2018 02:29:41 EEST Kieran Bingham wrote:
+>> The ADV748x supports configurable slave addresses for its I2C pages.
+>> Document the page names, and provide an example for setting each of the
+>> pages explicitly.
+>>
+>> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+>> ---
+>> v2:
+>>  - Fix commit message
+>>  - Extend documentation for the "required property" reg:
+>>
+>>
+>>  .../devicetree/bindings/media/i2c/adv748x.txt    | 16 ++++++++++++++--
+>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+>> b/Documentation/devicetree/bindings/media/i2c/adv748x.txt index
+>> 21ffb5ed8183..f7fbe221c15e 100644
+>> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+>> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+>> @@ -10,7 +10,11 @@ Required Properties:
+>>      - "adi,adv7481" for the ADV7481
+>>      - "adi,adv7482" for the ADV7482
+>>
+>> -  - reg: I2C slave address
+>> +  - reg: I2C slave addresses
+>> +    The ADV748x has up to twelve 256-byte maps that can be accessed via the
+>> +    main I2C ports. Each map has it own I2C address and acts as a standard
+>> +    slave device on the I2C bus. The main address is mandatory, others are
+>> +    optional and revert to defaults if not specified.
+> 
+> Maybe "revert" has a meaning I'm not aware of, but don't you mean "default" > instead ? "default to defaults" probably needs to be rephrased though.
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index a97c0e2..c31f29d6 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-new file mode 100644
-index 0000000..d267a37
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-g12a.dtsi"
-+
-+/ {
-+	compatible = "amlogic,u200", "amlogic,g12a";
-+	model = "Amlogic Meson G12A U200 Development Board";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+	};
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+};
-+
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-new file mode 100644
-index 0000000..64a0f2e
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -0,0 +1,174 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "amlogic,g12a";
-+
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* Alternate 3 MiB reserved for ARM Trusted Firmware (BL31) */
-+		secmon_reserved: secmon@5000000 {
-+			reg = <0x0 0x05000000 0x0 0x300000>;
-+			no-map;
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <0x2>;
-+		#size-cells = <0x0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		l2: l2-cache0 {
-+			compatible = "cache";
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	xtal: xtal-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "xtal";
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		apb: apb@ffe00000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xffe00000 0x0 0x200000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x200000>;
-+		};
-+
-+		cbus: bus@ffd00000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xffd00000 0x0 0x25000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
-+
-+		};
-+
-+		gic: interrupt-controller@ffc01000 {
-+			compatible = "arm,gic-400";
-+			reg = <0x0 0xffc01000 0 0x1000>,
-+			      <0x0 0xffc02000 0 0x2000>,
-+			      <0x0 0xffc04000 0 0x2000>,
-+			      <0x0 0xffc06000 0 0x2000>;
-+			interrupt-controller;
-+			interrupts = <GIC_PPI 9
-+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+		};
-+
-+		hiubus: bus@ff63c000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff63c000 0x0 0x1c00>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1c00>;
-+
-+		};
-+
-+		periphs: periphs@ff634000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff634000 0x0 0x2000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff634000 0x0 0x2000>;
-+		};
-+
-+		aobus: bus@ff800000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff800000 0x0 0x100000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
-+
-+			uart_AO: serial@3000 {
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
-+				reg = <0x0 0x3000 0x0 0x18>;
-+				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&xtal>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+			uart_AO_B: serial@4000 {
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
-+				reg = <0x0 0x4000 0x0 0x18>;
-+				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&xtal>, <&xtal>, <&xtal>;
-+				clock-names = "xtal", "pclk", "baud";
-+				status = "disabled";
-+			};
-+
-+		};
-+	};
-+};
+"Revert to defaults" makes perfect sense in my head :D ... but perhaps
+   "remains at default values"
+would be better?
+
+> 
+>>  Optional Properties:
+>>
+>> @@ -18,6 +22,11 @@ Optional Properties:
+>>  		     "intrq3". All interrupts are optional. The "intrq3" interrupt
+>>  		     is only available on the adv7481
+>>    - interrupts: Specify the interrupt lines for the ADV748x
+>> +  - reg-names : Names of maps with programmable addresses.
+>> +		It can contain any map needed a non-default address.
+> 
+> I think you missed my comment to v1:
+> 
+> s/can contain any map needed/shall contain all maps needing/
+
+Ugh ... yes I did.
+
+/me shouldn't try to do easy patches at 12.30am.
+
+
+>> +		Possible map names are:
+>> +		  "main", "dpll", "cp", "hdmi", "edid", "repeater",
+>> +		  "infoframe", "cbus", "cec", "sdp", "txa", "txb"
+>>
+>>  The device node must contain one 'port' child node per device input and
+>> output port, in accordance with the video interface bindings defined in
+>> @@ -47,7 +56,10 @@ Example:
+>>
+>>  	video-receiver@70 {
+>>  		compatible = "adi,adv7482";
+>> -		reg = <0x70>;
+>> +		reg = <0x70 0x71 0x72 0x73 0x74 0x75
+>> +		       0x60 0x61 0x62 0x63 0x64 0x65>;
+>> +		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
+>> +			    "infoframe", "cbus", "cec", "sdp", "txa", "txb";
+>>
+>>  		#address-cells = <1>;
+>>  		#size-cells = <0>;
+> 
+
 -- 
-1.9.1
+Regards
+--
+Kieran
