@@ -1,217 +1,143 @@
-From: Janek Kotas <jank@cadence.com>
-Subject: [PATCH v3 2/2] scsi: ufs: Add UFS platform driver for Cadence UFS
-Date: Thu, 9 Aug 2018 13:25:25 +0000
-Message-ID: <66C16650-56D0-46A3-8050-A5540E48C702@global.cadence.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 1/2] dt: bindings: lm3697: Add bindings for lm3697
+ driver
+Date: Thu, 9 Aug 2018 08:30:28 -0500
+Message-ID: <c028fb73-8df5-9402-d96e-c907199356ed@ti.com>
+References: <20180807160442.8937-1-dmurphy@ti.com>
+ <20180808195903.GB20912@amd> <f6b3534b-2ee9-782e-35e5-e103c34528bc@ti.com>
+ <20180808210215.GA15831@amd> <f18a5616-bb25-da0d-aec8-585e042b4919@ti.com>
+ <53691469-4554-42a8-c182-762c1a3939b7@gmail.com>
+ <01bbf05a-8e5e-d3ce-857a-ac5c6efb779c@ti.com>
+ <683f9e60-9ad8-93d8-e4ed-dbfdae78c307@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <683f9e60-9ad8-93d8-e4ed-dbfdae78c307@gmail.com>
 Content-Language: en-US
-Content-ID: <1DBE53285508664F9A2F23E9A8D28946@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a device tree platform driver for
-Cadence UFS Host Controller.
-It can be enabled with SCSI_UFS_CDNS_PLATFORM Kconfig option.
+Jacek and Pavel
 
-Signed-off-by: Jan Kotas <jank@cadence.com>
----
- drivers/scsi/ufs/Kconfig       |   8 +++
- drivers/scsi/ufs/Makefile      |   1 +
- drivers/scsi/ufs/cdns-pltfrm.c | 147 +++++++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 156 insertions(+)
- create mode 100644 drivers/scsi/ufs/cdns-pltfrm.c
+On 08/09/2018 07:09 AM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 08/08/2018 11:45 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 08/08/2018 04:09 PM, Jacek Anaszewski wrote:
+>>> Hi Dan,
+>>>
+>>> On 08/08/2018 11:04 PM, Dan Murphy wrote:
+>>>> On 08/08/2018 04:02 PM, Pavel Machek wrote:
+>>>>> Hi!
+>>>>>
+>>>>>>>> +	- #size-cells : 0
+>>>>>>>> +	- control-bank-cfg - : Indicates which sink is connected to which control bank
+>>>>>>>> +		0 - All HVLED outputs are controlled by bank A
+>>>>>>>> +		1 - HVLED1 is controlled bank B, HVLED2/3 are controlled by bank A
+>>>>>>>> +		2 - HVLED2 is controlled bank B, HVLED1/3 are controlled by bank A
+>>>>>>>> +		3 - HVLED1/2 are controlled by bank B, HVLED3 is controlled by bank A
+>>>>>>>> +		4 - HVLED3 is controlled by bank B, HVLED1/2 are controlled by bank A
+>>>>>>>> +		5 - HVLED1/3 is controlled by bank B, HVLED2 is controlled by bank A
+>>>>>>>> +		6 - (default) HVLED1 is controlled by bank A, HVLED2/3 are controlled by bank B
+>>>>>>>> +		7 - All HVLED outputs are controlled by bank B
+>>>>>>>
+>>>>>>> This is quite long way to describe a bitmask, no? Could we make
+>>>>>>> it so that control-bank-cfg is not needed?
+>>>>>>
+>>>>>> The problem we have here is there is a potential to control
+>>>>>> 3 different LED string but only 2 sinks.  So control bank A can control 2 LED strings and control
+>>>>>> bank b can control 1 LED string.  
+>>>>>>
+>>>>>
+>>>>> Can we forget about the LED strings, and just expose the sinks as
+>>>>> Linux LED devices?
+>>>>
+>>>> 2 sinks 3 LED strings.  How do you know which LED string is which and what bank it belongs
+>>>> to when setting the brightness.  Each Bank has a separate register for brightness control.
+>>>
+>>> Just a blind shot, without going into details - could you please check
+>>> if led-sources property documented in the common LED bindings couldn't
+>>> help here?
+>>>
+>>
+>> I could change the name to led-sources.  But this part does not really follow the 1 output to a
+>> 1 LED string topology.
+> 
+> led-sources was designed for describing the topology where one LED can
+> be connected to more then one output, see bindings of
+> max77693-led (in Documentation/devicetree/bindings/mfd/max77693.txt).
+> 
+> Here the topology is a bit different - more than one LED (string) can be
+> connected to a single bank, but this is accomplished inside the chip.
+> Logically LEDs configured that way can be treated as a single LED
+> (string) connected to two outputs, and what follows they should be
+> described by a single DT child node.
+> 
+> led-sources will fit very well for this purpose. You could do
+> the following mapping:
+> 
+> 0 - HVLED1
+> 1 - HVLED2
+> 2 - HVLED3
+> 
+> Then, in the child DT nodes you would use these identifiers to describe
+> the topology:
+> 
+> Following node would describe strings connected to the outputs
+> HVLED1 and HVLED2 controlled by bank A.
+> 
+> led@0 {
+> 	reg = <0>;
+> 	led-sources = <0>. <1>;
+> 	label = "white:first_backlight_cluster";
+> 	linux,default-trigger = "backlight";
+> };
+> 
+> 
+> IOW I agree with Pavel, but I propose to use already documented common
+> DT LED property.
+> 
 
-diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-index e27b4d4e..44cb90a0 100644
---- a/drivers/scsi/ufs/Kconfig
-+++ b/drivers/scsi/ufs/Kconfig
-@@ -80,6 +80,14 @@ config SCSI_UFSHCD_PLATFORM
-=20
- 	  If unsure, say N.
-=20
-+config SCSI_UFS_CDNS_PLATFORM
-+	tristate "Cadence UFS Controller platform driver"
-+	depends on SCSI_UFSHCD_PLATFORM
-+	help
-+	This selects the Cadence specific additions to UFSHCD platform driver.
-+
-+	  If unsure, say N.
-+
- config SCSI_UFS_DWC_TC_PLATFORM
- 	tristate "DesignWare platform support using a G210 Test Chip"
- 	depends on SCSI_UFSHCD_PLATFORM
-diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
-index 918f5791..dcddc7a4 100644
---- a/drivers/scsi/ufs/Makefile
-+++ b/drivers/scsi/ufs/Makefile
-@@ -2,6 +2,7 @@
- # UFSHCD makefile
- obj-$(CONFIG_SCSI_UFS_DWC_TC_PCI) +=3D tc-dwc-g210-pci.o ufshcd-dwc.o tc-d=
-wc-g210.o
- obj-$(CONFIG_SCSI_UFS_DWC_TC_PLATFORM) +=3D tc-dwc-g210-pltfrm.o ufshcd-dw=
-c.o tc-dwc-g210.o
-+obj-$(CONFIG_SCSI_UFS_CDNS_PLATFORM) +=3D cdns-pltfrm.o
- obj-$(CONFIG_SCSI_UFS_QCOM) +=3D ufs-qcom.o
- obj-$(CONFIG_SCSI_UFSHCD) +=3D ufshcd-core.o
- ufshcd-core-objs :=3D ufshcd.o ufs-sysfs.o
-diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.=
-c
-new file mode 100644
-index 00000000..5d9e4875
---- /dev/null
-+++ b/drivers/scsi/ufs/cdns-pltfrm.c
-@@ -0,0 +1,147 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Platform UFS Host driver for Cadence controller
-+ *
-+ * Copyright (C) 2018 Cadence Design Systems, Inc.
-+ *
-+ * Authors:
-+ *	Jan Kotas <jank@cadence.com>
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/time.h>
-+
-+#include "ufshcd-pltfrm.h"
-+
-+#define CDNS_UFS_REG_HCLKDIV 0xFC
-+
-+/**
-+ * Sets HCLKDIV register value based on the core_clk
-+ * @hba: host controller instance
-+ *
-+ * Return zero for success and non-zero for failure
-+ */
-+static int cdns_ufs_set_hclkdiv(struct ufs_hba *hba)
-+{
-+	struct ufs_clk_info *clki;
-+	struct list_head *head =3D &hba->clk_list_head;
-+	unsigned long core_clk_rate =3D 0;
-+	u32 core_clk_div =3D 0;
-+
-+	if (list_empty(head))
-+		return 0;
-+
-+	list_for_each_entry(clki, head, list) {
-+		if (IS_ERR_OR_NULL(clki->clk))
-+			continue;
-+		if (!strcmp(clki->name, "core_clk"))
-+			core_clk_rate =3D clk_get_rate(clki->clk);
-+	}
-+
-+	if (!core_clk_rate) {
-+		dev_err(hba->dev, "%s: unable to find core_clk rate\n",
-+			__func__);
-+		return -EINVAL;
-+	}
-+
-+	core_clk_div =3D core_clk_rate / USEC_PER_SEC;
-+
-+	ufshcd_writel(hba, core_clk_div, CDNS_UFS_REG_HCLKDIV);
-+	/* Make sure the register was updated */
-+	mb();
-+
-+	return 0;
-+}
-+
-+/**
-+ * Sets clocks used by the controller
-+ * @hba: host controller instance
-+ * @on: if true, enable clocks, otherwise disable
-+ * @status: notify stage (pre, post change)
-+ *
-+ * Return zero for success and non-zero for failure
-+ */
-+static int cdns_ufs_setup_clocks(struct ufs_hba *hba, bool on,
-+				 enum ufs_notify_change_status status)
-+{
-+	if ((!on) || (status =3D=3D PRE_CHANGE))
-+		return 0;
-+
-+	return cdns_ufs_set_hclkdiv(hba);
-+}
-+
-+static struct ufs_hba_variant_ops cdns_pltfm_hba_vops =3D {
-+	.name =3D "cdns-ufs-pltfm",
-+	.setup_clocks =3D cdns_ufs_setup_clocks,
-+};
-+
-+/**
-+ * cdns_ufs_pltfrm_probe - probe routine of the driver
-+ * @pdev: pointer to platform device handle
-+ *
-+ * Return zero for success and non-zero for failure
-+ */
-+static int cdns_ufs_pltfrm_probe(struct platform_device *pdev)
-+{
-+	int err;
-+	struct device *dev =3D &pdev->dev;
-+
-+	/* Perform generic probe */
-+	err =3D ufshcd_pltfrm_init(pdev, &cdns_pltfm_hba_vops);
-+	if (err)
-+		dev_err(dev, "ufshcd_pltfrm_init() failed %d\n", err);
-+
-+	return err;
-+}
-+
-+/**
-+ * cdns_ufs_pltfrm_remove - set driver_data of the device to NULL
-+ * @pdev: pointer to platform device handle
-+ *
-+ * Always returns 0
-+ */
-+static int cdns_ufs_pltfrm_remove(struct platform_device *pdev)
-+{
-+	struct ufs_hba *hba =3D  platform_get_drvdata(pdev);
-+
-+	pm_runtime_get_sync(&(pdev)->dev);
-+	ufshcd_remove(hba);
-+	return 0;
-+}
-+
-+static const struct of_device_id cdns_ufs_of_match[] =3D {
-+	{ .compatible =3D "cdns,ufshc" },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, cdns_ufs_of_match);
-+
-+static const struct dev_pm_ops cdns_ufs_dev_pm_ops =3D {
-+	.suspend         =3D ufshcd_pltfrm_suspend,
-+	.resume          =3D ufshcd_pltfrm_resume,
-+	.runtime_suspend =3D ufshcd_pltfrm_runtime_suspend,
-+	.runtime_resume  =3D ufshcd_pltfrm_runtime_resume,
-+	.runtime_idle    =3D ufshcd_pltfrm_runtime_idle,
-+};
-+
-+static struct platform_driver cdns_ufs_pltfrm_driver =3D {
-+	.probe	=3D cdns_ufs_pltfrm_probe,
-+	.remove	=3D cdns_ufs_pltfrm_remove,
-+	.driver	=3D {
-+		.name   =3D "cdns-ufshcd",
-+		.owner  =3D THIS_MODULE,
-+		.pm     =3D &cdns_ufs_dev_pm_ops,
-+		.of_match_table =3D cdns_ufs_of_match,
-+	},
-+};
-+
-+module_platform_driver(cdns_ufs_pltfrm_driver);
-+
-+MODULE_AUTHOR("Jan Kotas <jank@cadence.com>");
-+MODULE_DESCRIPTION("Cadence UFS host controller platform driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_VERSION(UFSHCD_DRIVER_VERSION);
---=20
-2.15.0
+I agree to use the led-sources but I still believe this approach may be confusing to other sw devs
+and will lead to configuration issues by users.
+
+This implementation requires the sw dev to know which strings are controlled by which bank.
+And this method may produce a misconfiguration like something below where HVLED2 is declared in
+both bank A and bank B
+
+led@0 {
+	reg = <0>;
+	led-sources = <0>. <1>;
+	label = "white:first_backlight_cluster";
+	linux,default-trigger = "backlight";
+};
+
+led@1 {
+	reg = <1>;
+	led-sources = <1>. <2>;
+	label = "white:keypad_cluster";
+	linux,default-trigger = "backlight";
+};
+
+The driver will need to be intelligent and declare a miss configuration on the above.
+Not saying this cannot be done but I am not sure why we want to add all of these extra LoC and intelligence
+in the kernel driver.
+The driver cannot make assumptions on the intention.  And the device tree documentation will need to
+pretty much need a lengthy explanation on how to configure the child nodes.
+
+The implementation I suggested removes that ambiguity.  It is a simple integer that is written to the device
+as part of the device configuration, which the config is a setting for the device.
+
+The child nodes denote which bank the exposed LED node will control.  Removing any need
+for the sw developers new or old to know the specific device configurations.
+
+
+Dan
+-- 
+------------------
+Dan Murphy
