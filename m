@@ -1,42 +1,71 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v1 02/10] dt-bindings: thermal: Fix a typo in
- documentation
-Date: Thu, 9 Aug 2018 12:16:30 -0700
-Message-ID: <20180809191630.GJ160295@google.com>
-References: <cover.1533815718.git.amit.kucheria@linaro.org>
- <08b528ddc26adcb57539b1ac9d352850d7d80bfb.1533815718.git.amit.kucheria@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: [PATCH v3] dt-bindings: media: adv748x: Document re-mappable addresses
+Date: Thu,  9 Aug 2018 20:29:44 +0100
+Message-ID: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <08b528ddc26adcb57539b1ac9d352850d7d80bfb.1533815718.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, mchehab@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kieran Bingham <kieran.bingham@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 09, 2018 at 06:02:34PM +0530, Amit Kucheria wrote:
-> c(1) + x(1) was actually meant to be c(1) * x(1).
-> 
-> While we're at it, add some brackets to make it nicer to read.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index cc553f0952c5..751104213d08 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -152,7 +152,7 @@ Optional property:
->    Elem size: one cell	the sensors listed in the thermal-sensors property.
->    Elem type: signed	Coefficients defaults to 1, in case this property
->  			is not specified. A simple linear polynomial is used:
-> -			Z = c0 * x0 + c1 + x1 + ... + c(n-1) * x(n-1) + cn.
-> +			Z = (c0 * x0) + (c1 * x1) + ... + (c(n-1) * x(n-1)) + cn.
->  
->  			The coefficients are ordered and they match with sensors
->  			by means of sensor ID. Additional coefficients are
+The ADV748x supports configurable slave addresses for its I2C pages.
+Document the page names, and provide an example for setting each of the
+pages explicitly.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+
+---
+v2:
+ - Fix commit message
+ - Extend documentation for the "required property" reg:
+
+v3
+ - Fix missing comment from Laurent.
+ - correct the reg descrption
+---
+ .../devicetree/bindings/media/i2c/adv748x.txt    | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+index 21ffb5ed8183..25a02496f4ba 100644
+--- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
++++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+@@ -10,7 +10,11 @@ Required Properties:
+     - "adi,adv7481" for the ADV7481
+     - "adi,adv7482" for the ADV7482
+ 
+-  - reg: I2C slave address
++  - reg: I2C slave addresses
++    The ADV748x has up to twelve 256-byte maps that can be accessed via the
++    main I2C ports. Each map has it own I2C address and acts as a standard
++    slave device on the I2C bus. The main address is mandatory, others are
++    optional and remain at default values if not specified.
+ 
+ Optional Properties:
+ 
+@@ -18,6 +22,11 @@ Optional Properties:
+ 		     "intrq3". All interrupts are optional. The "intrq3" interrupt
+ 		     is only available on the adv7481
+   - interrupts: Specify the interrupt lines for the ADV748x
++  - reg-names : Names of maps with programmable addresses.
++		It shall contain all maps needing a non-default address.
++		Possible map names are:
++		  "main", "dpll", "cp", "hdmi", "edid", "repeater",
++		  "infoframe", "cbus", "cec", "sdp", "txa", "txb"
+ 
+ The device node must contain one 'port' child node per device input and output
+ port, in accordance with the video interface bindings defined in
+@@ -47,7 +56,10 @@ Example:
+ 
+ 	video-receiver@70 {
+ 		compatible = "adi,adv7482";
+-		reg = <0x70>;
++		reg = <0x70 0x71 0x72 0x73 0x74 0x75
++		       0x60 0x61 0x62 0x63 0x64 0x65>;
++		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
++			    "infoframe", "cbus", "cec", "sdp", "txa", "txb";
+ 
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-- 
+2.17.1
