@@ -1,108 +1,110 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 2/2] spi: sprd: Add SPI driver for Spreadtrum SC9860
-Date: Thu, 9 Aug 2018 11:23:51 +0800
-Message-ID: <CAMz4kuKCvN-dpSw3ZXj5CvahWkb6-4a93DDFJ66vkqeA=3=o5A@mail.gmail.com>
-References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
- <99befd2badc4dffb59662fca1e11d79f18b64755.1533638405.git.baolin.wang@linaro.org>
- <1533661818.2283.264.camel@impinj.com> <CAMz4kuJrzaZn9560tF73a-WPNhhRj5S2ezTKr0HHpcGRXMw-Ew@mail.gmail.com>
- <1533755337.2283.280.camel@impinj.com>
+From: Bharat Bhushan <bharat.bhushan@nxp.com>
+Subject: RE: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
+Date: Thu, 9 Aug 2018 03:28:07 +0000
+Message-ID: <AM5PR0401MB25458654D6CEFBF2F05FC7709A250@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+References: <1532684881-19310-1-git-send-email-Bharat.Bhushan@nxp.com>
+         <1532684881-19310-6-git-send-email-Bharat.Bhushan@nxp.com>
+         <ab2a113620123cb71364b6ae89328ae2fca49821.camel@buserror.net>
+         <AM5PR0401MB254592DC0E917FD292B323BA9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+         <aeff83355ee5235cfd6107dba06a5f7957b45c92.camel@buserror.net>
+         <AM5PR0401MB2545041D99EEDC3136B201719A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+ <bef421feea16da2fdab333e63a6828741bd59055.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533755337.2283.280.camel@impinj.com>
+In-Reply-To: <bef421feea16da2fdab333e63a6828741bd59055.camel@buserror.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>
+To: Scott Wood <oss@buserror.net>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "tyreld@linux.vnet.ibm.com" <tyreld@linux.vnet.ibm.com>, "joe@perches.com" <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Trent,
-
-On 9 August 2018 at 03:08, Trent Piepho <tpiepho@impinj.com> wrote:
-> On Wed, 2018-08-08 at 11:19 +0800, Baolin Wang wrote:
->> On 8 August 2018 at 01:10, Trent Piepho <tpiepho@impinj.com> wrote:
->> > On Tue, 2018-08-07 at 18:43 +0800, Baolin Wang wrote:
->> > >
->> > > +static u32 sprd_spi_transfer_max_timeout(struct sprd_spi *ss,
->> > > +                                      struct spi_transfer *t)
->> > > +{
->> > > +     /*
->> > > +      * The time spent on transmission of the full FIFO data is the maximum
->> > > +      * SPI transmission time.
->> > > +      */
->> > > +     u32 size = t->bits_per_word * SPRD_SPI_FIFO_SIZE;
->> > > +     u32 bit_time_us = SPRD_SPI_HZ / t->speed_hz + 1;
->
-> There's another flaw here in that the transfer speed, t->speed_hz,
-> might not be exactly what is used, due to limitations of the clock
-> divider.  It would be better to find the actual SPI clock used, then
-> use that in the calculations.
-
-Right, will use the real speed to calculate the transfer time.
-
->
->> > > +     u32 total_time_us = size * bit_time_us;
->> > > +     /*
->> > > +      * There is an interval between data and the data in our SPI hardware,
->> > > +      * so the total transmission time need add the interval time.
->> > > +      *
->> > > +      * The inteval calculation formula:
->> > > +      * interval time (source clock cycles) = interval * 4 + 10.
->> > > +      */
->> > > +     u32 interval_cycle = SPRD_SPI_FIFO_SIZE * ((ss->interval << 2) + 10);
->> > > +     u32 interval_time_us = interval_cycle * SPRD_SPI_HZ / ss->src_clk + 1;
->> >
->> > If interval is greater than 31, this will overflow.
->>
->> Usually we will not set such a big value for interval,  but this is a
->> risk like you said. So we will check and limit the interval value to
->> make sure the formula will not overflow.
->>
->
-> Better would be to limit the inter word delay to whatever maximum value
-> your hardware supports, and then write code that can calculate that
-> without error.
-
-Yes, will define the maximum word delay values to avoid overflow.
-
->
->> > > +static void sprd_spi_set_speed(struct sprd_spi *ss, u32 speed_hz)
->> > > +{
->> > > +     /*
->> > > +      * From SPI datasheet, the prescale calculation formula:
->> > > +      * prescale = SPI source clock / (2 * SPI_freq) - 1;
->> > > +      */
->> > > +     u32 clk_div = ss->src_clk / (speed_hz << 1) - 1;
->> >
->> > You should probably round up here.  The convention is to use the
->> > closest speed less than equal to the requested speed, but since this is
->> > a divider, rounding it down will select the next highest speed.
->>
->> Per the datasheet, we do not need round up/down the speed. Since our
->> hardware can handle the clock calculated by the above formula if the
->> requested speed is in the normal region (less than ->max_speed_hz).
->
-> That is not what I mean.  Let me explain differently.
->
-> An integer divider like this can not produce any frequency exactly.
-> Consider if src_clk is 10 MHz.  A clk_div value of 0 produces a 5 MHz
-> SPI clock.  A clk_div value of 1 produces a 2.5 MHz SPI clock.
->
-> What if the transfer requests a SPI clock of 3 MHz?
->
-> Your math above will produce a SPI clock of 5 MHz, faster than
-> requested.  This is not the convention in Linux SPI masters.  You
-> should instead of have chosen a clk_div value of 1 to get a SPI clock
-> of 2.5 MHz, the closest clock possible that is not greater than the
-> requested value.
->
-> To do this, round up.
->
-> clk_div = DIV_ROUND_UP(ss->src_clk, speed_hz * 2) - 1;
-
-Thanks for your patient explanation. After talking with Lanqing who is
-the author of the SPI driver, we think you are definitely correct and
-will fix in next version according to your suggestion. Thanks a lot.
-
--- 
-Baolin Wang
-Best Regards
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
+bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDgsIDIwMTgg
+MTE6MjcgUE0NCj4gVG86IEJoYXJhdCBCaHVzaGFuIDxiaGFyYXQuYmh1c2hhbkBueHAuY29tPjsN
+Cj4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVsdXNAc2FtYmEub3JnOyBtcGVAZWxsZXJt
+YW4uaWQuYXU7DQo+IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
+Y29tOw0KPiBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBncmVna2hAbGludXhmb3VuZGF0
+aW9uLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0
+cy5vemxhYnMub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBDYzogcm9i
+aEBrZXJuZWwub3JnOyBrZWVzY29va0BjaHJvbWl1bS5vcmc7IHR5cmVsZEBsaW51eC52bmV0Lmli
+bS5jb207DQo+IGpvZUBwZXJjaGVzLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1JGQyA1LzVdIHBvd2Vy
+cGMvZnNsOiBBZGQgc3VwcG9ydGVkLWlycS1yYW5nZXMgZm9yIFAyMDIwDQo+IA0KPiBPbiBXZWQs
+IDIwMTgtMDgtMDggYXQgMDY6MjggKzAwMDAsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+ID4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFNjb3R0IFdvb2QgW21haWx0
+bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgOCwgMjAx
+OCAxMToyNiBBTQ0KPiA+ID4gVG86IEJoYXJhdCBCaHVzaGFuIDxiaGFyYXQuYmh1c2hhbkBueHAu
+Y29tPjsNCj4gPiA+IGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZzsgcGF1bHVzQHNhbWJhLm9yZzsg
+bXBlQGVsbGVybWFuLmlkLmF1Ow0KPiA+ID4gZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9yZzsgbWFy
+ay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBn
+cmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtDQo+ID4gPiBrZXJuZWxA
+dmdlci5rZXJuZWwub3JnDQo+ID4gPiBDYzogcm9iaEBrZXJuZWwub3JnOyBrZWVzY29va0BjaHJv
+bWl1bS5vcmc7DQo+ID4gPiB0eXJlbGRAbGludXgudm5ldC5pYm0uY29tOyBqb2VAcGVyY2hlcy5j
+b20NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUkZDIDUvNV0gcG93ZXJwYy9mc2w6IEFkZCBzdXBwb3J0
+ZWQtaXJxLXJhbmdlcyBmb3INCj4gPiA+IFAyMDIwDQo+ID4gPg0KPiA+ID4gT24gV2VkLCAyMDE4
+LTA4LTA4IGF0IDAzOjQ0ICswMDAwLCBCaGFyYXQgQmh1c2hhbiB3cm90ZToNCj4gPiA+ID4gPiAt
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+IEZyb206IFNjb3R0IFdvb2QgW21h
+aWx0bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiA+ID4gPiA+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0
+IDgsIDIwMTggMjo0NCBBTQ0KPiA+ID4gPiA+IFRvOiBCaGFyYXQgQmh1c2hhbiA8YmhhcmF0LmJo
+dXNoYW5AbnhwLmNvbT47DQo+ID4gPiA+ID4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVs
+dXNAc2FtYmEub3JnOyBtcGVAZWxsZXJtYW4uaWQuYXU7DQo+ID4gPiA+ID4gZ2FsYWtAa2VybmVs
+LmNyYXNoaW5nLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiA+ID4ga3N0ZXdhcnRA
+bGludXhmb3VuZGF0aW9uLm9yZzsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+ID4gPiA+
+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
+b3JnOw0KPiA+ID4gPiA+IGxpbnV4LSBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gPiA+ID4g
+Q2M6IHJvYmhAa2VybmVsLm9yZzsga2Vlc2Nvb2tAY2hyb21pdW0ub3JnOw0KPiA+ID4gPiA+IHR5
+cmVsZEBsaW51eC52bmV0LmlibS5jb207IGpvZUBwZXJjaGVzLmNvbQ0KPiA+ID4gPiA+IFN1Ympl
+Y3Q6IFJlOiBbUkZDIDUvNV0gcG93ZXJwYy9mc2w6IEFkZCBzdXBwb3J0ZWQtaXJxLXJhbmdlcyBm
+b3INCj4gPiA+ID4gPiBQMjAyMA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gT24gRnJpLCAyMDE4LTA3
+LTI3IGF0IDE1OjE4ICswNTMwLCBCaGFyYXQgQmh1c2hhbiB3cm90ZToNCj4gPiA+ID4gPiA+IE1Q
+SUMgb24gTlhQIChGcmVlc2NhbGUpIFAyMDIwIHN1cHBvcnRzIGZvbGxvd2luZyBpcnENCj4gPiA+
+ID4gPiA+IHJhbmdlczoNCj4gPiA+ID4gPiA+ICAgPiAwIC0gMTEgICAgICAoRXh0ZXJuYWwgaW50
+ZXJydXB0KQ0KPiA+ID4gPiA+ID4gICA+IDE2IC0gNzkgICAgIChJbnRlcm5hbCBpbnRlcnJ1cHQp
+DQo+ID4gPiA+ID4gPiAgID4gMTc2IC0gMTgzICAgKE1lc3NhZ2luZyBpbnRlcnJ1cHQpDQo+ID4g
+PiA+ID4gPiAgID4gMjI0IC0gMjMxICAgKFNoYXJlZCBtZXNzYWdlIHNpZ25hbGVkIGludGVycnVw
+dCkNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFdoeSBkb24ndCB5b3UgY29udmVydCB0byB0aGUgNC1j
+ZWxsIGludGVycnVwdCBzcGVjaWZpZXJzIHRoYXQNCj4gPiA+ID4gPiBtYWtlIGRlYWxpbmcgd2l0
+aCB0aGVzZSByYW5nZXMgbGVzcyBlcnJvci1wcm9uZT8NCj4gPiA+ID4NCj4gPiA+ID4gT2sgLCB3
+aWxsIGRvIGlmIHdlIGFncmVlIHRvIGhhdmUgdGhpcyBzZXJpZXMgYXMgcGVyIGNvbW1lbnQgb24N
+Cj4gPiA+ID4gb3RoZXIgcGF0Y2guDQo+ID4gPg0KPiA+ID4gSWYgeW91J3JlIGNvbmNlcm5lZCB3
+aXRoIGVycm9ycywgdGhpcyB3b3VsZCBiZSBhIGdvb2QgdGhpbmdzIHRvIGRvDQo+ID4gPiByZWdh
+cmRsZXNzLg0KPiA+ID4gIEFjdHVhbGx5LCBpdCBzZWVtcyB0aGF0IHAyMDIwc2ktcG9zdC5kdHNp
+IGFscmVhZHkgdXNlcyA0LWNlbGwgaW50ZXJydXB0cy4NCj4gPiA+DQo+ID4gPiBXaGF0IGlzIG1v
+dGl2YXRpbmcgdGhpcyBwYXRjaHNldD8gIElzIHRoZXJlIHNvbWV0aGluZyB3cm9uZyBpbiB0aGUN
+Cj4gPiA+IGV4aXN0aW5nIGR0cyBmaWxlcz8NCj4gPg0KPiA+IFRoZXJlIGlzIG5vIGVycm9yIGlu
+IGRldmljZSB0cmVlLiBNYWluIG1vdGl2YXRpb24gaXMgdG8gaW1wcm92ZSBjb2RlDQo+ID4gZm9y
+IGZvbGxvd2luZyByZWFzb25zOg0KPiA+ICAgLSBXaGlsZSBjb2RlIHN0dWR5IGl0IHdhcyBmb3Vu
+ZCB0aGF0IGlmIGEgcmVzZXJ2ZWQgaXJxLW51bWJlciB1c2VkDQo+ID4gdGhlbiB0aGVyZSBhcmUg
+bm8gY2hlY2sgaW4gZHJpdmVyLiBpcnEgd2lsbCBiZSBjb25maWd1cmVkIGFzIGNvcnJlY3QNCj4g
+PiBhbmQgaW50ZXJydXB0IHdpbGwgbmV2ZXIgZmlyZS4NCj4gDQo+IEFnYWluLCBhIHdyb25nIGlu
+dGVycnVwdCBudW1iZXIgd29uJ3QgZmlyZSwgd2hldGhlciBhbiBpbnRlcnJ1cHQgYnkgdGhhdA0K
+PiBudW1iZXIgZXhpc3RzIG9yIG5vdC4gIEkgd291bGRuJ3QgbWluZCBhIHNhbml0eSBjaGVjayBp
+biB0aGUgZHJpdmVyIGlmIHRoZQ0KPiBwcm9ncmFtbWluZyBtb2RlbCBtYWRlIGl0IHByb3Blcmx5
+IGRpc2NvdmVyYWJsZSwgYnV0IEkgZG9uJ3QgdGhpbmsgaXQncw0KPiB3b3J0aCBtZXNzaW5nIHdp
+dGggZGV2aWNlIHRyZWVzIGp1c3QgZm9yIHRoaXMgKGFuZCBldmVuIGxlc3Mgc28gZ2l2ZW4gdGhh
+dA0KPiB0aGVyZSBkb24ndCBzZWVtIHRvIGJlIG5ldyBjaGlwcyBjb21pbmcgb3V0IHRoYXQgdGhp
+cyB3b3VsZCBiZSByZWxldmFudA0KPiBmb3IpLg0KDQpGYWlyIGVub3VnaCwgd2UgY2FuIHVzZSBN
+UElDIHZlcnNpb24gdG8gZGVmaW5lIHN1cHBvcnRlZCBpbnRlcnJ1cHRzIHJhbmdlcy4gV2lsbCB0
+aGF0IGJlIGFjY2VwdGFibGUuDQoNClRoYW5rcw0KLUJoYXJhdA0KDQo+IA0KPiA+ID4gPiBPbmUg
+b3RoZXIgY29uZnVzaW5nIG9ic2VydmF0aW9uIEkgaGF2ZSBpcyB0aGF0ICJpcnFfY291bnQiIGZy
+b20NCj4gPiA+ID4gcGxhdGZvcm0gY29kZSBpcyBnaXZlbiBwcmVjZWRlbmNlIG92ZXIgImxhc3Qt
+aW50ZXJydXB0LXNvdXJjZSIgaW4NCj4gPiA+ID4gZGV2aWNlLQ0KPiA+ID4NCj4gPiA+IHRyZWUu
+DQo+ID4gPiA+IFNob3VsZCBub3QgZGV2aWNlLXRyZWUgc2hvdWxkIGhhdmUgcHJlY2VkZW5jZSBv
+dGhlcndpc2UgdGhlcmUgaXMNCj4gPiA+ID4gbm8gcG9pbnQgdXNpbmcgIiBsYXN0LWludGVycnVw
+dC1zb3VyY2UiIGlmIHBsYXRmb3JtIGNvZGUgcGFzc2VzDQo+ID4gPiA+ICJpcnFfY291bnQiIGlu
+IG1waWNfYWxsb2MoKS4NCj4gPiA+DQo+ID4gPiBNYXliZSwgdGhvdWdoIEkgZG9uJ3QgdGhpbmsg
+aXQgbWF0dGVycyBtdWNoIGdpdmVuIHRoYXQNCj4gPiA+IGxhc3QtaW50ZXJydXB0LSBzb3VyY2Ug
+d2FzIG9ubHkgYWRkZWQgdG8gYXZvaWQgaGF2aW5nIHRvIHBhc3MNCj4gPiA+IGlycV9jb3VudCBp
+biBwbGF0Zm9ybSBjb2RlLg0KPiA+DQo+ID4gVGhhbmtzIGZvciBjbGFyaWZ5aW5nOw0KPiA+DQo+
+ID4gTXkgdW5kZXJzdGFuZGluZyB3YXMgdGhhdCAibGFzdC1pbnRlcnJ1cHQtc291cmNlIiBhZGRl
+ZCB0byBlbnN1cmUgdGhhdA0KPiA+IHdlIGNhbiBvdmVyLXJpZGUgdmFsdWUgcGFzc2VkIGZyb20g
+cGxhdGZvcm0gY29kZS4gSW4gdGhhdCBjYXNlIHdlIGRvDQo+ID4gbm90IG5lZWQgdG8gY2hhbmdl
+IGNvZGUgYW5kIGNhbiBjb250cm9sIGZyb20gZGV2aWNlIHRyZWUuDQo+IA0KPiBUaGUgY2hhbmdl
+bG9nIHNheXMsICJUbyBhdm9pZCBuZWVkaW5nIHRvIHdyaXRlIGN1c3RvbSBib2FyZC1zcGVjaWZp
+YyBjb2RlDQo+IHRvIGRldGVjdCB0aGF0IHNjZW5hcmlvLCBhbGxvdyBpdCB0byBiZSBlYXNpbHkg
+b3ZlcnJpZGRlbiBpbiB0aGUgZGV2aWNlLXRyZWUsIg0KPiB3aGVyZSAiaXQiIG1lYW5zIHRoZSB2
+YWx1ZSBwcm92aWRlZCBieSBoYXJkd2FyZS4gIFRoZSBnb2FsIHdhcyB0byBwYXNzIGluDQo+IDI1
+NiB3aXRob3V0IGJvYXJkIGNvZGUgaW4gdGhlIGtlcm5lbCwgbm90IHRvIG92ZXJyaWRlIHRoZSAy
+NTYuDQo+IA0KPiAtU2NvdHQNCg0K
