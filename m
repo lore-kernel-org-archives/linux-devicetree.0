@@ -1,75 +1,43 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 1/2] dt: bindings: lm3697: Add bindings for lm3697
- driver
-Date: Thu, 9 Aug 2018 15:24:18 +0200
-Message-ID: <20180809132418.GB4469@localhost>
-References: <20180807160442.8937-1-dmurphy@ti.com>
- <20180808195903.GB20912@amd>
- <f6b3534b-2ee9-782e-35e5-e103c34528bc@ti.com>
- <20180808210215.GA15831@amd>
- <f18a5616-bb25-da0d-aec8-585e042b4919@ti.com>
- <53691469-4554-42a8-c182-762c1a3939b7@gmail.com>
- <01bbf05a-8e5e-d3ce-857a-ac5c6efb779c@ti.com>
- <683f9e60-9ad8-93d8-e4ed-dbfdae78c307@gmail.com>
+From: Janek Kotas <jank@cadence.com>
+Subject: [PATCH v3 0/2] scsi: ufs: Add UFS platform driver and bindings for
+ Cadence UFS
+Date: Thu, 9 Aug 2018 13:24:44 +0000
+Message-ID: <1EAD7741-4CEF-4E23-9A3F-918F07B52E35@global.cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <683f9e60-9ad8-93d8-e4ed-dbfdae78c307@gmail.com>
+Content-Language: en-US
+Content-ID: <600FC4CD23F98B49A639ADE73BC4D8A0@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+This patchset adds a driver support for Cadence UFS controller.
+It was verified on Cadence Palladium emulation platform.
 
-> >>> 2 sinks 3 LED strings.  How do you know which LED string is which and what bank it belongs
-> >>> to when setting the brightness.  Each Bank has a separate register for brightness control.
-> >>
-> >> Just a blind shot, without going into details - could you please check
-> >> if led-sources property documented in the common LED bindings couldn't
-> >> help here?
-> >>
-> > 
-> > I could change the name to led-sources.  But this part does not really follow the 1 output to a
-> > 1 LED string topology.
-> 
-> led-sources was designed for describing the topology where one LED can
-> be connected to more then one output, see bindings of
-> max77693-led (in Documentation/devicetree/bindings/mfd/max77693.txt).
-> 
-> Here the topology is a bit different - more than one LED (string) can be
-> connected to a single bank, but this is accomplished inside the chip.
-> Logically LEDs configured that way can be treated as a single LED
-> (string) connected to two outputs, and what follows they should be
-> described by a single DT child node.
-> 
-> led-sources will fit very well for this purpose. You could do
-> the following mapping:
-> 
-> 0 - HVLED1
-> 1 - HVLED2
-> 2 - HVLED3
-> 
-> Then, in the child DT nodes you would use these identifiers to describe
-> the topology:
-> 
-> Following node would describe strings connected to the outputs
-> HVLED1 and HVLED2 controlled by bank A.
-> 
-> led@0 {
-> 	reg = <0>;
-> 	led-sources = <0>. <1>;
-> 	label = "white:first_backlight_cluster";
-> 	linux,default-trigger = "backlight";
-> };
-> 
-> 
-> IOW I agree with Pavel, but I propose to use already documented common
-> DT LED property.
+Changes since V2:
+	Updated dt bindings documentation.
 
-This is better than my proposal. Thanks!
-								Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Changes since V1:
+	Renamed the documentation file name to cdns,ufshc.txt.
+	Updated interrupt and register mapping.
+	Added license information.
+	Added a missing PHY clock.
+
+Jan Kotas (2):
+  dt-bindings: ufs: Add bindings for Cadence UFS
+  scsi: ufs: Add UFS platform driver for Cadence UFS
+
+ .../devicetree/bindings/ufs/cdns,ufshc.txt         |  31 +++++
+ drivers/scsi/ufs/Kconfig                           |   8 ++
+ drivers/scsi/ufs/Makefile                          |   1 +
+ drivers/scsi/ufs/cdns-pltfrm.c                     | 147 +++++++++++++++++=
+++++
+ 4 files changed, 187 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
+ create mode 100644 drivers/scsi/ufs/cdns-pltfrm.c
+
+--=20
+2.15.0
