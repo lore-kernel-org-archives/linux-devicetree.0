@@ -1,103 +1,270 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt: bindings: lm3697: Add bindings for lm3697
- driver
-Date: Thu, 9 Aug 2018 14:09:56 +0200
-Message-ID: <683f9e60-9ad8-93d8-e4ed-dbfdae78c307@gmail.com>
-References: <20180807160442.8937-1-dmurphy@ti.com>
- <20180808195903.GB20912@amd> <f6b3534b-2ee9-782e-35e5-e103c34528bc@ti.com>
- <20180808210215.GA15831@amd> <f18a5616-bb25-da0d-aec8-585e042b4919@ti.com>
- <53691469-4554-42a8-c182-762c1a3939b7@gmail.com>
- <01bbf05a-8e5e-d3ce-857a-ac5c6efb779c@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 01/40] dt-bindings: Add Tegra PMC pad configuration
+ bindings
+Date: Thu, 9 Aug 2018 14:13:50 +0200
+Message-ID: <20180809121350.GO21639@ulmo>
+References: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
+ <1533141150-10511-2-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2/+Vq7w28QOSGzSM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <01bbf05a-8e5e-d3ce-857a-ac5c6efb779c@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1533141150-10511-2-git-send-email-avienamo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dan,
 
-On 08/08/2018 11:45 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 08/08/2018 04:09 PM, Jacek Anaszewski wrote:
->> Hi Dan,
->>
->> On 08/08/2018 11:04 PM, Dan Murphy wrote:
->>> On 08/08/2018 04:02 PM, Pavel Machek wrote:
->>>> Hi!
->>>>
->>>>>>> +	- #size-cells : 0
->>>>>>> +	- control-bank-cfg - : Indicates which sink is connected to which control bank
->>>>>>> +		0 - All HVLED outputs are controlled by bank A
->>>>>>> +		1 - HVLED1 is controlled bank B, HVLED2/3 are controlled by bank A
->>>>>>> +		2 - HVLED2 is controlled bank B, HVLED1/3 are controlled by bank A
->>>>>>> +		3 - HVLED1/2 are controlled by bank B, HVLED3 is controlled by bank A
->>>>>>> +		4 - HVLED3 is controlled by bank B, HVLED1/2 are controlled by bank A
->>>>>>> +		5 - HVLED1/3 is controlled by bank B, HVLED2 is controlled by bank A
->>>>>>> +		6 - (default) HVLED1 is controlled by bank A, HVLED2/3 are controlled by bank B
->>>>>>> +		7 - All HVLED outputs are controlled by bank B
->>>>>>
->>>>>> This is quite long way to describe a bitmask, no? Could we make
->>>>>> it so that control-bank-cfg is not needed?
->>>>>
->>>>> The problem we have here is there is a potential to control
->>>>> 3 different LED string but only 2 sinks.  So control bank A can control 2 LED strings and control
->>>>> bank b can control 1 LED string.  
->>>>>
->>>>
->>>> Can we forget about the LED strings, and just expose the sinks as
->>>> Linux LED devices?
->>>
->>> 2 sinks 3 LED strings.  How do you know which LED string is which and what bank it belongs
->>> to when setting the brightness.  Each Bank has a separate register for brightness control.
->>
->> Just a blind shot, without going into details - could you please check
->> if led-sources property documented in the common LED bindings couldn't
->> help here?
->>
-> 
-> I could change the name to led-sources.  But this part does not really follow the 1 output to a
-> 1 LED string topology.
+--2/+Vq7w28QOSGzSM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-led-sources was designed for describing the topology where one LED can
-be connected to more then one output, see bindings of
-max77693-led (in Documentation/devicetree/bindings/mfd/max77693.txt).
+On Wed, Aug 01, 2018 at 07:31:51PM +0300, Aapo Vienamo wrote:
+> Document the PMC pinctrl bindings for pad power state and signaling
+> voltage configuration. Both nvidia,tegra186-pmc.txt and
+> nvidia,tegra20-pmc.txt are modified as they both cover SoC generations
+> for which these bindings apply.
+>=20
+> Add a header defining Tegra PMC pad voltage configurations.
+>=20
+> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  92 +++++++++++++++=
++++
+>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 103 +++++++++++++++=
+++++++
+>  include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h |  18 ++++
+>  3 files changed, 213 insertions(+)
+>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-=
+pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.t=
+xt
+> index 5a3bf7c..d7fed4d 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
+> @@ -34,3 +34,95 @@ Board DTS:
+>  	pmc@c360000 {
+>  		nvidia,invert-interrupt;
+>  	};
+> +
+> +=3D=3D Pad Control =3D=3D
+> +
+> +On Tegra SoCs a pad is a set of pins which are configured as a group.
+> +The pin grouping is a fixed attribute of the hardware. The PMC can be
+> +used to set pad power state and signaling voltage. A pad can be either
+> +in active or power down mode. The support for power state and signaling
+> +voltage configuration varies depending on the pad in question. 3.3 V and
+> +1.8 V signaling voltages are supported on pins where software
+> +controllable signaling voltage switching is available.
+> +
+> +Pad configurations are described is with pin configuration nodes which
 
-Here the topology is a bit different - more than one LED (string) can be
-connected to a single bank, but this is accomplished inside the chip.
-Logically LEDs configured that way can be treated as a single LED
-(string) connected to two outputs, and what follows they should be
-described by a single DT child node.
+The "is" in the middle there seems to be left-over from a previous
+formulation of the sentence.
 
-led-sources will fit very well for this purpose. You could do
-the following mapping:
+> +are placed under the pmc node and they are referred to by the pinctrl
+> +client properties. For more information see
+> +Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
+> +
+> +Following pads are present on Tegra186:
 
-0 - HVLED1
-1 - HVLED2
-2 - HVLED3
+"The following pads..."
 
-Then, in the child DT nodes you would use these identifiers to describe
-the topology:
+> +csia		csib		dsi		mipi-bias
+> +pex-clk-bias	pex-clk3	pex-clk2	pex-clk1
+> +usb0		usb1		usb2		usb-bias
+> +uart		audio		hsic		dbg
+> +hdmi-dp0	hdmi-dp1	pex-cntrl	sdmmc2-hv
+> +sdmmc4		cam		dsib		dsic
+> +dsid		csic		csid		csie
+> +dsif		spi		ufs		dmic-hv
+> +edp		sdmmc1-hv	sdmmc3-hv	conn
+> +audio-hv	ao-hv
+> +
+> +Required pin configuration properties:
+> +  - pins: Must contain name of the pad(s) to be configured.
 
-Following node would describe strings connected to the outputs
-HVLED1 and HVLED2 controlled by bank A.
+"the name". Also, I'm assuming that this can take a list of names, so
+perhaps this should read:
 
-led@0 {
-	reg = <0>;
-	led-sources = <0>. <1>;
-	label = "white:first_backlight_cluster";
-	linux,default-trigger = "backlight";
-};
+	- pins: A list of strings, each of which contains the name of a pad
+	    to be configured.
 
+> +
+> +Optional pin configuration properties:
+> +  - low-power-enable: Configure the pad into power down mode
+> +  - low-power-disable: Configure the pad into active mode
 
-IOW I agree with Pavel, but I propose to use already documented common
-DT LED property.
+Do we need both of these? low-power could be a boolean property to mean
+that the pad(s) should be configured in power down mode. If absent it
+would mean that the pad(s) should be configured in normal mode. The only
+reason why I can think of them to have to be separate is if we want to
+define a configuration where the power mode is not touched. But is that
+really something we need or want?
 
--- 
-Best regards,
-Jacek Anaszewski
+> +  - power-source: Must contain either TEGRA_IO_PAD_VOLTAGE_1V8 or
+> +    TEGRA_IO_PAD_VOLTAGE_3V3 to select between signaling voltages.
+> +    The values are defined in
+> +    include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h.
+
+Why is this called "power-source"? This defines the signaling voltage of
+the pad, so why not something like "power-level", or "voltage", or
+"output-voltage"?
+
+Or is this because it is a mux that will internally select either a
+1.8 V or a 3.3 V source? In which case I guess this is okay. Perhaps
+give some explanation of the mechanics of the underlying hardware to
+make this more obvious.
+
+> +
+> +Note: The power state can be configured on all of the above pads except
+> +      for ao-hv. Following pads have software configurable signaling
+> +      voltages: sdmmc2-hv, dmic-hv, sdmmc1-hv, sdmmc3-hv, audio-hv,
+> +      ao-hv.
+> +
+> +Pad configuration state example:
+> +	pmc: pmc@7000e400 {
+> +		compatible =3D "nvidia,tegra186-pmc";
+> +		reg =3D <0 0x0c360000 0 0x10000>,
+> +		      <0 0x0c370000 0 0x10000>,
+> +		      <0 0x0c380000 0 0x10000>,
+> +		      <0 0x0c390000 0 0x10000>;
+> +		reg-names =3D "pmc", "wake", "aotag", "scratch";
+> +
+> +		...
+> +
+> +		sdmmc1_3v3: sdmmc1-3v3 {
+> +			pins =3D "sdmmc1-hv";
+> +			power-source =3D <TEGRA_IO_PAD_VOLTAGE_3V3>;
+> +		};
+> +
+> +		sdmmc1_1v8: sdmmc1-1v8 {
+> +			pins =3D "sdmmc1-hv";
+> +			power-source =3D <TEGRA_IO_PAD_VOLTAGE_1V8>;
+> +		};
+
+Wouldn't these be implicitly low-power-disable? What if these are off by
+default? Selecting these states would change the power source but keep
+them in power down, no? Don't we want something like the below instead?
+
+		sdmmc1_3v3: sdmmc1-3v3 {
+			pins =3D "sdmmc1-hv";
+			power-source =3D <TEGRA_IO_PAD_VOLTAGE_3V3>;
+			/* low-power-disable implied here */
+		};
+
+		sdmmc1_1v8: sdmmc1-1v8 {
+			pins =3D "sdmmc1-hv";
+			power-source =3D <TEGRA_IO_PAD_VOLTAGE_1V8>;
+			/* low-power-disable implied here */
+		};
+
+		sdmmc1_off: sdmmc1-off {
+			pins =3D "sdmmc1-hv";
+			low-power;
+		};
+
+That would allow the SDHCI driver to select between the two signaling
+modes and a separate state for powering down the pad.
+
+> +
+> +		hdmi_off: hdmi-off {
+> +			pins =3D "hdmi";
+> +			low-power-enable;
+> +		}
+> +
+> +		hdmi_on: hdmi-on {
+> +			pins =3D "hdmi";
+> +			low-power-disable;
+> +		}
+
+These would similarily become:
+
+		hdmi_off: hdmi-off {
+			pins =3D "hdmi";
+			low-power;
+		};
+
+		hdmi_on: hdmi-on {
+			pins =3D "hdmi";
+		};
+
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-p=
+mc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> index a74b37b..5363b90 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+> @@ -195,3 +195,106 @@ Example:
+>  		power-domains =3D <&pd_audio>;
+>  		...
+>  	};
+> +
+> +=3D=3D Pad Control =3D=3D
+> +
+> +On Tegra SoCs a pad is a set of pins which are configured as a group.
+> +The pin grouping is a fixed attribute of the hardware. The PMC can be
+> +used to set pad power state and signaling voltage. A pad can be either
+> +in active or power down mode. The support for power state and signaling
+> +voltage configuration varies depending on the pad in question. 3.3 V and
+> +1.8 V signaling voltages are supported on pins where software
+> +controllable signaling voltage switching is available.
+> +
+> +The pad configuration state nodes are placed under the pmc node and they
+> +are referred to by the pinctrl client properties. For more information
+> +see Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
+> +The pad name should be used as the value of the pins property in pin
+> +configuration nodes.
+> +
+> +Following pads are present on Tegra124 and Tegra132:
+> +audio		bb		cam		comp
+> +csia		csb		cse		dsi
+> +dsib		dsic		dsid		hdmi
+> +hsic		hv		lvds		mipi-bias
+> +nand		pex-bias	pex-clk1	pex-clk2
+> +pex-cntrl	sdmmc1		sdmmc3		sdmmc4
+> +sys_ddc		uart		usb0		usb1
+> +usb2		usb_bias
+> +
+> +Following pads are present on Tegra210:
+> +audio		audio-hv	cam		csia
+> +csib		csic		csid		csie
+> +csif		dbg		debug-nonao	dmic
+> +dp		dsi		dsib		dsic
+> +dsid		emmc		emmc2		gpio
+> +hdmi		hsic		lvds		mipi-bias
+> +pex-bias	pex-clk1	pex-clk2	pex-cntrl
+> +sdmmc1		sdmmc3		spi		spi-hv
+> +uart		usb0		usb1		usb2
+> +usb3		usb-bias
+
+What about chips prior to Tegra124?
+
+Thierry
+
+--2/+Vq7w28QOSGzSM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAltsL/wACgkQ3SOs138+
+s6FEgQ/+MtQ0fxIXDUNK2HsXkdHw2vRGHMBEuqJFZyTbAYLOhT4Oi0u91UIHkba5
+m6yztZJQPLCtc3OU5HuXDqtCNYRD+HUoKpRgDqmjVlY0oKgzlnzVFmfmAwOAfH30
+ktGPJC6o7aUB+5D2ed/uk4zLAywBvPFgP8KmcfYzRR1cRLG+mpzPbkcDKOd+XYX+
+3nvG36eiEhfuNRE9PkpmiGHoXq8ktnZOikMFv0f1308uXJ4ynXrRck4EhTTX2gRd
+KE3Z54UeV1o49ao41VSumr1Bu0gc53fpKl3nRgp/KoxO6c5wH90HCGebvXboNnf+
+z6GYQxsZi7LfxMrgMUQ6mwDC81YY5Wb+zgb/yLy5pZy577FLe6F1sz2yZ5LMzcCT
+wavSxlUGqi3TWDTFEQaaC7jdHBhc3YcHoNxue6Rto+15HZE3U6IXoHVmJVTjK6Oq
+XnmKCVstIZvjt36Bbi8j4gTZm5o7Nbu3zXyuqQ4QN9gIiKCKOJefyxBhkmf2oPRQ
+wA6RZS/x7zvvH62d67EsryLnHMS/DRYDJbUAVr4XCTIezK1obQ67yYlcnUj9zu3A
+NZ7jPWaE5m22YXeWlfi3CGGbWXo1h5M8ME2WyEBNtZ0QR1xHmdpiAmnZ84HAe5NM
+VXjgZBBmSbYYUfe3uDfsa7Mn++V2X0yZjJZKrQwSeP+6zWRYfks=
+=OVwz
+-----END PGP SIGNATURE-----
+
+--2/+Vq7w28QOSGzSM--
