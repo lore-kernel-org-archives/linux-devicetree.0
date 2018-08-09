@@ -1,84 +1,43 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v7 5/8] ARM: dts: sun5i: Add Video Engine and reserved memory
- nodes
-Date: Thu,  9 Aug 2018 11:04:32 +0200
-Message-ID: <20180809090435.17248-6-paul.kocialkowski@bootlin.com>
-References: <20180809090435.17248-1-paul.kocialkowski@bootlin.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v2 2/3] i2c: Add helper to ease DMA handling
+Date: Thu, 9 Aug 2018 17:13:20 +0800
+Message-ID: <1533806000.3347.6.camel@mtksdaap41>
+References: <1530955795-17714-1-git-send-email-jun.gao@mediatek.com>
+         <1530955795-17714-3-git-send-email-jun.gao@mediatek.com>
+         <20180808205752.llowh4bvu2wkuhga@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180809090435.17248-1-paul.kocialkowski@bootlin.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Alexandre Courbot <acourbot@chromium.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Li <ayaka@soulik.info>, linux-sunxi@googlegroups.com, Tomasz Figa <tfiga@chromium.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Ezequiel Garcia <ezequiel@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180808205752.llowh4bvu2wkuhga@ninjato>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Jun Gao <jun.gao@mediatek.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds nodes for the Video Engine and the associated reserved memory
-for sun5i-based platforms. Up to 96 MiB of memory are dedicated to the
-CMA pool.
+On Wed, 2018-08-08 at 22:57 +0200, Wolfram Sang wrote:
+> On Sat, Jul 07, 2018 at 05:29:54PM +0800, Jun Gao wrote:
+> > From: Jun Gao <jun.gao@mediatek.com>
+> > 
+> > This function is needed by i2c_get_dma_safe_msg_buf() potentially.
+> > It is used to free DMA safe buffer when DMA operation fails.
+> > 
+> > Signed-off-by: Jun Gao <jun.gao@mediatek.com>
+> 
+> Right, we need something like this. This leaks in the sh_mobile driver,
+> too :(
+> 
+> I am still thinking if there is a nice way to put this functionality
+> into i2c_release_dma_safe_msg_buf() itself somehow...
 
-The VPU can only map the first 256 MiB of DRAM, so the reserved memory
-pool has to be located in that area. Following Allwinner's decision in
-downstream software, the last 96 MiB of the first 256 MiB of RAM are
-reserved for this purpose.
+Wolfram,
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- arch/arm/boot/dts/sun5i.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+I have second thought on these API now. Recently, we have saw similar
+issue for spi device driver.
 
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index 51dcefc76c12..6a9d6d185ade 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -108,6 +108,21 @@
- 		};
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		/* Address must be kept in the lower 256 MiBs of DRAM for VE. */
-+		cma_pool: cma@4a000000 {
-+			compatible = "shared-dma-pool";
-+			size = <0x6000000>;
-+			alloc-ranges = <0x4a000000 0x6000000>;
-+			reusable;
-+			linux,cma-default;
-+		};
-+	};
-+
- 	soc@1c00000 {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -295,6 +310,17 @@
- 			};
- 		};
- 
-+		video-codec@1c0e000 {
-+			compatible = "allwinner,sun5i-a13-video-engine";
-+			reg = <0x01c0e000 0x1000>;
-+			clocks = <&ccu CLK_AHB_VE>, <&ccu CLK_VE>,
-+				 <&ccu CLK_DRAM_VE>;
-+			clock-names = "ahb", "mod", "ram";
-+			resets = <&ccu RST_VE>;
-+			interrupts = <53>;
-+			allwinner,sram = <&ve_sram 1>;
-+		};
-+
- 		mmc0: mmc@1c0f000 {
- 			compatible = "allwinner,sun5i-a13-mmc";
- 			reg = <0x01c0f000 0x1000>;
--- 
-2.18.0
+I believe the reason for these api is because some arch changed to can
+not do DMA on stack recently. Maybe we should have dma_mapping to bounce
+buffer like it bounce un-dma-able address for those arch? or we should
+have a common driver API for this, not just for i2c?
+
+Joe.C
