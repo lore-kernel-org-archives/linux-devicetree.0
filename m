@@ -1,75 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 3/6] regmap: Add regmap_noinc_read API
-Date: Thu, 9 Aug 2018 11:14:53 +0100
-Message-ID: <20180809101453.GD6132@sirena.org.uk>
-References: <1533653540-24796-1-git-send-email-stefan.popa@analog.com>
- <1533653540-24796-4-git-send-email-stefan.popa@analog.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 03/11] dt-bindings: interrupt-controller: RISC-V PLIC
+ documentation
+Date: Thu, 9 Aug 2018 11:19:51 +0100
+Message-ID: <15990cbc-042c-027e-ea2d-c4f0433c29a1@arm.com>
+References: <CAL_Jsq+pVzqKUbhErRr15JX2mPUOSTp_ddGvu9KAuf=TtXfduQ@mail.gmail.com>
+ <mhng-4bc89d00-bc90-440f-996f-861dde382aaa@palmer-si-x1c4>
+ <CAL_JsqKPFSQYH3p6a0VoCr-VAzf_98H7N3fNJ+4+DquS8WcjUQ@mail.gmail.com>
+ <20180808150938.GA32274@lst.de>
+ <bb671fe1-6c43-3218-0096-7c5280ffb6b5@arm.com> <20180808165729.GA6079@lst.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TybLhxa8M7aNoW+V"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1533653540-24796-4-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <20180808165729.GA6079@lst.de>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, atish.patra@wdc.com, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Stafford Horne <shorne@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 08/08/18 17:57, Christoph Hellwig wrote:
+> On Wed, Aug 08, 2018 at 05:47:40PM +0100, Marc Zyngier wrote:
+>> The original GIC driver deals with 2.5 revisions of the architecture
+>> (yes, there was something pre-GICv1...), and implementers have been
+>> creative to the extreme. Still, we could have done without most of these
+>> compat strings. Hindsight and all that jazz.
+>>
+>> GICv3 is a much more controlled architecture, and although people have
+>> come up with a number of turds masquerading as implementations, it has
+>> never been bad enough to mandate a different set of compat strings.
+>> Also, you cannot describe that kind of stuff in ACPI, and we need to
+>> support both, so we've come up with different ways of handling this.
+> 
+> So the claim from SiFive is that all their current plic blocks are
+> the same.  Based on that I'd be really tempted to just match for
+> sifive,plic (or sifive,plic1 as suggested by them), but also require
+> each device to actually provide a board specific compatible string,
+> just in case that something goes wrong.  Which I suspect is what you
+> are doing with GICv3, right?
 
---TybLhxa8M7aNoW+V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We do it slightly differently:
 
-On Tue, Aug 07, 2018 at 05:52:17PM +0300, Stefan Popa wrote:
-> From: Crestez Dan Leonard <leonard.crestez@intel.com>
->=20
-> The regmap API usually assumes that bulk read operations will read a
-> range of registers but some I2C/SPI devices have certain registers for
+Each GICv3 implementation has a set of ID registers that uniquely
+identifies the implementer and revision of the HW block. This allows us
+to quirk individual implementations while only having a single matching
+property, and be independent of a single firmware implementation (DT vs
+ACPI).
 
-The following changes since commit ce397d215ccd07b8ae3f71db689aedb85d56ab40:
+We don't mandate anything at the board or even SoC level though (it
+would quickly become unmanageable given the number of SOCs and devices).
 
-  Linux 4.18-rc1 (2018-06-17 08:04:49 +0900)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/r=
-egmap-noinc-read
-
-for you to fetch changes up to 74fe7b551f3385fa585d92616c85b3a575b2b2cb:
-
-  regmap: Add regmap_noinc_read API (2018-08-09 11:00:15 +0100)
-
-----------------------------------------------------------------
-regmap: Support non-incrementing registers
-
-Some devices have individual registers that don't autoincrement the
-register address during bulk reads but instead repeatedly read the same
-value, for example for monitoring GPIOs or ADCs.  Add support for these.
-
-----------------------------------------------------------------
-Crestez Dan Leonard (1):
-      regmap: Add regmap_noinc_read API
-
- drivers/base/regmap/internal.h |  3 ++
- drivers/base/regmap/regmap.c   | 79 ++++++++++++++++++++++++++++++++++++++=
-+++-
- include/linux/regmap.h         | 19 ++++++++++
- 3 files changed, 100 insertions(+), 1 deletion(-)
-
---TybLhxa8M7aNoW+V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAltsFBwACgkQJNaLcl1U
-h9AwzAf9G5jIyT2s7YVz52yfMsuS6N1K4QWtidmqdlvpf4lsJBHl705VZC4JkFTV
-tLA3Aetv8lFmxfSm5ePOmSjpYxg0N2vflgHxAbDMqcyaUQutV0vHcVAeMZ5Q0lZP
-xk3BDi48esQbvjeyPxJKcPgC8WpOhVzVdrcmGBNJo+aOj6UKYQKurh2P5LVZDYL9
-qJzOaPmC95DaJYAaddNTtq8G7o/bUvTpvYnaMNqicyKLLdmvjNunEDiLAXcx6h+t
-TGGRs0TFJ8WFfJ+sLX24KrRR945voVIEYzETpBS3iVwe8Tz9jVfMjyWAaizBtDpo
-BNB+GDHU07RlkgimF2S9huU5BfAtGg==
-=Wwqu
------END PGP SIGNATURE-----
-
---TybLhxa8M7aNoW+V--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
