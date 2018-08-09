@@ -1,89 +1,92 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v4 2/3] clk: meson: add DT documentation for emmc clock controller
-Date: Thu, 9 Aug 2018 15:07:22 +0800
-Message-ID: <20180809070724.11935-3-yixun.lan@amlogic.com>
-References: <20180809070724.11935-1-yixun.lan@amlogic.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 3/4] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
+Date: Thu, 9 Aug 2018 09:53:21 +0200
+Message-ID: <fcbfff13-aec5-c571-3a5e-a3d571505342@baylibre.com>
+References: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
+ <20180807220011.24436-4-maxi.jourdan@wanadoo.fr>
+ <3221c65f87f8fd3541e0188186cb0259327cb671.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180809070724.11935-1-yixun.lan@amlogic.com>
+In-Reply-To: <3221c65f87f8fd3541e0188186cb0259327cb671.camel@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the MMC sub clock controller driver, the potential consumer
-of this driver is MMC or NAND. Also add four clock bindings IDs which
-provided by this driver.
+On 08/08/2018 10:41, Jerome Brunet wrote:
+> On Wed, 2018-08-08 at 00:00 +0200, Maxime Jourdan wrote:
+>> Wrap the canvas node in a syscon node.
+>>
+>> Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> index b8dc4dbb391b..c98198662ae2 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> @@ -423,6 +423,23 @@
+>>  			};
+>>  		};
+>>  
+>> +		dmcbus: bus@c8838000 {
+>> +			compatible = "simple-bus";
+>> +			reg = <0x0 0xc8838000 0x0 0x1000>;
+>> +			#address-cells = <2>;
+>> +			#size-cells = <2>;
+>> +			ranges = <0x0 0x0 0x0 0xc8838000 0x0 0x1000>;
+>> +
+>> +			sysctrl_DMC: system-controller@0 {
+>> +				compatible = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";
+>> +				reg = <0x0 0x0 0x0 0x1000>;
+>> +
+>> +				canvas: canvas-provider@0 {
+>> +					compatible = "amlogic,canvas";
+> 
+> If there is only one canvas provider under "sysctrl_DMC" and it has no reg
+> property , you should not put a unit-address (@0) here. (same for the
+> documentation patch)
+> 
+> You may have seen unit-address without a reg property used elsewhere (ASoC
+> simple-card, my recent axg-sound-card), when there is multiple node with the
+> same node-name (ex: dai-link).
+> 
+> As Martin pointed out, the DT spec says we should not use unit-address unless
+> there is a reg property. We did not get Rob's view on this and we might have to
+> update this later on. In your case, unless I missed something, you should
+> definitely not have it
+> 
+> nitpick regarding the node-name (canvas-provider). If appropriate, we should try
+> to stick to one of the generic names proposed in the spec. I wonder if the
+> canvas provider could be viewed as a "memory" or "memory-controller"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- .../bindings/clock/amlogic,mmc-clkc.txt       | 31 +++++++++++++++++++
- include/dt-bindings/clock/amlogic,mmc-clkc.h  | 17 ++++++++++
- 2 files changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
- create mode 100644 include/dt-bindings/clock/amlogic,mmc-clkc.h
+It's not really a memory or memory-controller, it's a Lookup Table on top of the memory controller,
+nothing really matches here...
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
-new file mode 100644
-index 000000000000..9e6d34389be8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
-@@ -0,0 +1,31 @@
-+* Amlogic MMC Sub Clock Controller Driver
-+
-+The Amlogic MMC clock controller generates and supplies clock to support
-+MMC and NAND controller
-+
-+Required Properties:
-+
-+- compatible: should be:
-+		"amlogic,gx-mmc-clkc"
-+		"amlogic,axg-mmc-clkc"
-+
-+- #clock-cells: should be 1.
-+- clocks: phandles to clocks corresponding to the clock-names property
-+- clock-names: list of parent clock names
-+	- "clkin0", "clkin1"
-+
-+Parent node should have the following properties :
-+- compatible: "amlogic,axg-mmc-clkc", "syscon".
-+- reg: base address and size of the MMC control register space.
-+
-+Example: Clock controller node:
-+
-+sd_mmc_c_clkc: clock-controller@7000 {
-+	compatible = "amlogic,axg-mmc-clkc", "syscon";
-+	reg = <0x0 0x7000 0x0 0x4>;
-+	#clock-cells = <1>;
-+
-+	clock-names = "clkin0", "clkin1";
-+	clocks = <&clkc CLKID_SD_MMC_C_CLK0>,
-+		 <&clkc CLKID_FCLK_DIV2>;
-+};
-diff --git a/include/dt-bindings/clock/amlogic,mmc-clkc.h b/include/dt-bindings/clock/amlogic,mmc-clkc.h
-new file mode 100644
-index 000000000000..162b94949119
---- /dev/null
-+++ b/include/dt-bindings/clock/amlogic,mmc-clkc.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Meson MMC sub clock tree IDs
-+ *
-+ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-+ * Author: Yixun Lan <yixun.lan@amlogic.com>
-+ */
-+
-+#ifndef __MMC_CLKC_H
-+#define __MMC_CLKC_H
-+
-+#define CLKID_MMC_DIV				1
-+#define CLKID_MMC_PHASE_CORE			2
-+#define CLKID_MMC_PHASE_TX			3
-+#define CLKID_MMC_PHASE_RX			4
-+
-+#endif
--- 
-2.17.1
+> 
+> So, what about this ? Just a proposition, feel free to comment ;)
+> 
+> 	sysctrl_DMC: system-controller@0 {							compatib
+> le = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";> 		reg =
+> <0x0 0x0 0x0 0x1000>;
+> 	
+> 		canvas: memory-controller {
+> 			compatible = "amlogic,canvas";
+> 		}
+> 
+> [...]
+> 
+> 
+>> +				};
+>> +			};
+>> +		};
+>> +
+>>  		hiubus: bus@c883c000 {
+>>  			compatible = "simple-bus";
+>>  			reg = <0x0 0xc883c000 0x0 0x2000>;
+> 
+> 
