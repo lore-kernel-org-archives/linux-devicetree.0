@@ -1,65 +1,24 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [RFC net-next 00/15] net: A socket API for LoRa
-Date: Thu, 9 Aug 2018 02:50:39 +0200
-Message-ID: <f1967750-0a42-0e76-2d7d-da293bc351af@suse.de>
-References: <20180701110804.32415-1-afaerber@suse.de>
- <CAC=mGzgUCopz2xTOA0R-WD8a1DOaOOUn=YpfdMiJ33y3hnh6kg@mail.gmail.com>
- <92ee4016-1da9-826b-3674-b2d604a64848@suse.de>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: dmaengine: Add binding for Actions
+ Semi Owl SoCs
+Date: Thu, 9 Aug 2018 08:16:32 +0530
+Message-ID: <20180809024632.GQ2395@vkoul-mobl>
+References: <20180726050658.1399-1-manivannan.sadhasivam@linaro.org>
+ <20180726050658.1399-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <92ee4016-1da9-826b-3674-b2d604a64848@suse.de>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Jian-Hong Pan <starnight@g.ncu.edu.tw>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=c3=b6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=c3=b6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, contact@snootlab.com, Ben Whitten <ben.whitten@lairdtech.com>, Brian Ray <brian.ray@link-labs.com>, lora@globalsat.com.tw, Alexander Graf <agraf@suse.de>, =?UTF-8?Q?Michal_Kube=c4=8dek?= <mkubecek@suse.cz>, Rob Herring <robh@kern>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180726050658.1399-2-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
 List-Id: devicetree@vger.kernel.org
 
-Am 05.08.2018 um 02:11 schrieb Andreas Färber:
-> Am 03.07.2018 um 17:11 schrieb Jian-Hong Pan:
->> 2018-07-01 19:07 GMT+08:00 Andreas Färber <afaerber@suse.de>:
->>> 5) Many of the modules support multiple modes, such as LoRa, LoRaWAN and FSK.
->>>    Lacking a LoRaWAN implementation, I am currently switching them into LoRa
->>>    mode at probe time wherever possible. How do we deal with that properly?
-[...]
-> Independently of what LoRaWAN does, the
-> user needs to be able to send on the physical layer from a selection of
-> LoRa, GFSK, FSK, OOK, GMSK and MSK.
-> Supposedly Wireless M-Bus and IEEE 802.15.4 can be implemented via those
-> according to the SX1276 datasheet.
-> 
-> This opens a can of worms...
-> 
-> SX127x has a single channel, so I don't think there should be six
-> network interfaces lora0, gfsk0, fsk0, ook0, gmsk0 and msk0 exposed to
-> the user.
-> Having a lora0 interface speak non-LoRa modulations may be confusing,
-> but since the chip is sold as LoRa transceiver it might be acceptable.
-> 
-> SX130x has 8+2 channels, with IF9 dedicated to GFSK/FSK. It appears to
-> use one FIFO for receiving (up to 16 packets) and can only transmit one
-> packet at a time. So I think this should be one lora0 interface, too.
-> 
-> With a view to supporting non-LoRa RF chipsets such as Si4xxx (GFSK,
-> FSK, OOK) or nRF905 and nRF24L01+ (both GFSK) at a later date, I don't
-> think those modulations should be some netlink option on a PF_LORA
-> interface but cleanly distinguished as ETH_P_GFSK or something.
-> For example, the Chistera Pi HAT has both an RFM95W and an RFM22 module.
+On 26-07-18, 10:36, Manivannan Sadhasivam wrote:
+> Add devicetree binding for Actions Semi Owl SoCs DMA controller.
 
-Answering myself here: MSK is a special case of FSK, and GMSK a special
-case of GFSK. SX1276 allows to switch between LoRa and FSK/OOK modes,
-and in FSK/OOK mode between FSK and OOK modulation types and for FSK
-modulation allows to set Gaussian filter values. I assume (G)MSK is
-selected indirectly through BitRate and Fdev settings or something.
-
-So we would just need ETH_P_FSK and ETH_P_OOK plus some skb fields for
-ETH_P_FSK.
-
-Regards,
-Andreas
+Applied, thanks
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+~Vinod
