@@ -1,56 +1,47 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v7 3/6] dt-bindings: mailbox: imx-mu: add generic MU
- channel support
-Date: Thu, 9 Aug 2018 08:25:54 +0530
-Message-ID: <CABb+yY1wGv8XHcTy7WPeD_GGx0J4QF8bcgowJYOoTgTD1R6wPA@mail.gmail.com>
-References: <AM0PR04MB42116C756EC78AD12EB254D6802B0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY0yn9os6nqH8eUfAr3Q3ev4=TfpTp=5ZDBR7FN67eb-wg@mail.gmail.com>
- <VI1PR04MB4222672B8F7B6AF2B11A4442802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1EkHk85H72xYoYA3JbQL03+-o3UcRVdA_Zub-Q+D=OHw@mail.gmail.com>
- <VI1PR04MB422216469EE5F3ED8E53A4F1802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY0SfdFr8TMOMosTVb5+LFWqB8nQkKj3ze8usi-s7Cko4g@mail.gmail.com>
- <VI1PR04MB4222B4877B341C0FA07A6A8D802A0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <CABb+yY1MSSQKZ6BOQXC-x=qy4VZ5HqDBjmh_BJTXSkAm3+P8mA@mail.gmail.com>
- <bf7aca98-7ec8-bcf3-b1a8-d86a7cf28d31@pengutronix.de>
- <CABb+yY3PLcjduxm7uJ9xZpPP2zkcQ5Qngs4PjnhGAXp43QVzFA@mail.gmail.com>
- <20180730144435.srxgohwgdhrmw2rz@pengutronix.de>
- <CABb+yY0sUxGatozwdQVM55z7ACtpK8HCepnfvQNunQ=r5y_kVw@mail.gmail.com>
- <CABb+yY04dm_N1Ud2Mhi-g-eFdNVkxJKE8ONOqntZjN_QKwgLcg@mail.gmail.com>
- <AM0PR04MB42118617A7F29C1D7BE59242802E0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <CABb+yY2HaTK9tq539+m1fyMMPr1eyygJZ7QvzWNp9E7aYxpoVQ@mail.gmail.com>
- <CABb+yY0KB7RLK1DyPNNPaXoXkx5WoJhkoKX5XVa+4Q94vC7p4A@mail.gmail.com>
- <AM0PR04MB42112E77338240832E2E5077802C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <AM0PR04MB42110FCA0F68A73BA7416EA480250@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller documentation
+Date: Thu, 9 Aug 2018 11:03:11 +0800
+Message-ID: <CAMz4kuKwfBB8-8o5s8FQadFSFiD8KU=qNZYQjCWOfc-QpuVRSw@mail.gmail.com>
+References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
+ <20180807134121.GA7958@sirena.org.uk> <CAMz4kuJsyKv_fvrqRR3pdfKsLVy53Uj0KX+m_9jLxpcVcMvs9g@mail.gmail.com>
+ <20180808095025.GB9346@sirena.org.uk> <CAMz4kuKZHxYiJaMHnqdAGth8XkfGnq3-Tsfc59cGjsHQHZaY7A@mail.gmail.com>
+ <20180808105451.GE9346@sirena.org.uk> <1533754621.2283.270.camel@impinj.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB42110FCA0F68A73BA7416EA480250@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, ",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-mediatek@lists.infradead.org>",
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- srv_heupstream" <linux-arm-kernel@lists.infradead.org>, ",
- Sascha Hauer" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533754621.2283.270.camel@impinj.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Trent Piepho <tpiepho@impinj.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 9, 2018 at 7:52 AM, A.s. Dong <aisheng.dong@nxp.com> wrote:
-> Hi Jassi,
->
-> Do you have any comments about this reply?
->
-I did read your post. And my opinion isn't changed. If mailbox is new
-to you, please try to see how other subsystems works, especially SPI,
-I2C and DMA.
+Hi Trent,
 
-Thanks.
+On 9 August 2018 at 02:57, Trent Piepho <tpiepho@impinj.com> wrote:
+> On Wed, 2018-08-08 at 11:54 +0100, Mark Brown wrote:
+>> On Wed, Aug 08, 2018 at 06:35:28PM +0800, Baolin Wang wrote:
+>> > On 8 August 2018 at 17:50, Mark Brown <broonie@kernel.org> wrote:
+>> > > Right, I don't think we added this yet (if we did I can't see
+>> > > it).  I'd
+>> > > add a new field to spi_transfer for this, then other controllers
+>> > > with
+>> > > the same support can implement it as well and drivers can start
+>> > > using
+>> > > it too.
+>> > OK. So I will name the new filed as 'word_delay', is it OK for you?
+>>
+>> Sounds good, yes.
+>
+> Should it be in =C2=B5s like the existing iter-transfer delay?  I think
+> perhaps units of cycles of the SPI clock make more sense?
+
+Since some SPI controllers just want some interval values (neither =C2=B5s
+unit nor cycles unit ) set into hardware, and the hardware will
+convert to the correct delay time automatically. So I did not force
+'word_delay' unit as =C2=B5s or cycle, and just let the slave devices
+decide the unit which depends on the SPI hardware requirement.
+
+--=20
+Baolin Wang
+Best Regards
