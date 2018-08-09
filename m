@@ -1,34 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: add binding for i.MX8MQ CCM
-Date: Thu, 9 Aug 2018 15:37:55 -0600
-Message-ID: <20180809213755.GA23245@rob-hp-laptop>
-References: <1533825941-17224-1-git-send-email-abel.vesa@nxp.com>
- <1533825941-17224-2-git-send-email-abel.vesa@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v6 00/24] Ingenic TCU patchset v6
+Date: Thu,  9 Aug 2018 23:43:50 +0200
+Message-ID: <20180809214414.20905-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1533825941-17224-2-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-imx@nxp.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 09, 2018 at 05:45:38PM +0300, Abel Vesa wrote:
-> From: Lucas Stach <l.stach@pengutronix.de>
-> 
-> This adds the binding for the i.MX8MQ Clock Controller Module.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  .../devicetree/bindings/clock/imx8mq-clock.txt     |  20 +
->  include/dt-bindings/clock/imx8mq-clock.h           | 629 +++++++++++++++++++++
->  2 files changed, 649 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
->  create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
+Hi,
 
-Please add acks/reviewed-bys when posting new versions even if it was 
-back in January.
+This is the V6 of my Ingenic Timer/Counter Unit (TCU) patchset.
 
-Rob
+Major changes since V5:
+
+- ingenic,timer-channel / ingenic,clocksource-channel devicetree
+  properties for the ingenic-timer driver are gone. The system timer
+  will default to use TCU channel #0, the clocksource will default to
+  use TCU channel #1. When a client driver requests one of these TCU
+  channels (e.g. the PWM driver), the ingenic-timer driver will
+  dynamically switch the system timer or clocksource to a new TCU
+  channel.
+
+- The big watchdog commit in v5 was split into multiple smaller commits.
+
+- The watchdog driver now just sets its clock to the lowest rate
+  possible, and calculate the maximum timeout from that.
+
+- The PWM driver now requests the TCU channels it wants to use using the
+  API functions provided by ingenic-timer. Channels 0 and 1 can now be
+  used.
+
+- The register lengths in the pwm/watchdog nodes were fixed. They no
+  longer overlap.
+
+- Small fixes here and there, see each patch's changelog for more info.
+
+Regards,
+-Paul Cercueil
