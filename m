@@ -1,54 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] drm/meson: convert to the new canvas module
-Date: Thu, 09 Aug 2018 16:41:26 -0600
-Message-ID: <5b6cc316.1c69fb81.682d3.1216@mx.google.com>
-References: <20180801185128.23440-1-maxi.jourdan@wanadoo.fr>
- <20180801185128.23440-5-maxi.jourdan@wanadoo.fr>
+Subject: Re: [PATCH 2/3] clk: imx6q: optionally get CCM inputs via standard
+ clock handles
+Date: Thu, 09 Aug 2018 16:41:24 -0600
+Message-ID: <5b6cc315.1c69fb81.3b2b4.137c@mx.google.com>
+References: <20180731102009.6710-1-l.stach@pengutronix.de>
+ <20180731102009.6710-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180801185128.23440-5-maxi.jourdan@wanadoo.fr>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Jourdan <maxi.jourdan@wanadoo.fr>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180731102009.6710-2-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: l.stach@pengutronix.de
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, patchwork-lst@pengutronix.de, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIHRoaXMgaXMgYW4gYXV0b21hdGVkIGVtYWlsIGZyb20gUm9iJ3MgKGV4cGVyaW1lbnRhbCkg
-cmV2aWV3IGJvdC4gSQpmb3VuZCBhIGNvdXBsZSBvZiBjb21tb24gcHJvYmxlbXMgd2l0aCB5b3Vy
-IHBhdGNoLiBQbGVhc2Ugc2VlIGJlbG93LgoKT24gV2VkLCAgMSBBdWcgMjAxOCAyMDo1MToyOCAr
-MDIwMCwgTWF4aW1lIEpvdXJkYW4gd3JvdGU6Cj4gVGhpcyByZW1vdmVzIHRoZSBtZXNvbl9jYW52
-YXMgZmlsZXMgd2l0aGluIHRoZSBtZXNvbi9kcm0gbGF5ZXIKPiBhbmQgbWFrZXMgdXNlIG9mIHRo
-ZSBuZXcgY2FudmFzIG1vZHVsZSB0aGF0IGlzIHJlZmVyZW5jZWQgaW4gdGhlIGR0cy4KPiAKPiBD
-YW52YXNlcyBjYW4gYmUgdXNlZCBieSBkaWZmZXJlbnQgSVBzIGFuZCBtb2R1bGVzLCBhbmQgaXQg
-aXMgYXMgc3VjaAo+IHByZWZlcmFibGUgdG8gcmVseSBvbiBhIG1vZHVsZSB0aGF0IGNhbiBzYWZl
-bHkgZGlzcGF0Y2ggY2FudmFzZXMgb24KPiBkZW1hbmQuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF4
-aW1lIEpvdXJkYW4gPG1heGkuam91cmRhbkB3YW5hZG9vLmZyPgoKVGhlIHByZWZlcnJlZCBzdWJq
-ZWN0IHByZWZpeCBpcyAiZHQtYmluZGluZ3M6IDxiaW5kaW5nIGRpcj46IC4uLiIuCgo+IC0tLQo+
-ICAuLi4vYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1lc29uLXZwdS50eHQgICAgfCAgOSArLS0K
-PiAgYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4LmR0c2kgICAgIHwgIDcgKy0K
-PiAgZHJpdmVycy9ncHUvZHJtL21lc29uL0tjb25maWcgICAgICAgICAgICAgICAgIHwgIDEgKwo+
-ICBkcml2ZXJzL2dwdS9kcm0vbWVzb24vTWFrZWZpbGUgICAgICAgICAgICAgICAgfCAgMiArLQo+
-ICBkcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fY2FudmFzLmMgICAgICAgICAgfCA3MCAtLS0t
-LS0tLS0tLS0tLS0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9jYW52YXMuaCAg
-ICAgICAgICB8IDQyIC0tLS0tLS0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9j
-cnRjLmMgICAgICAgICAgICB8ICA1ICstCj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9k
-cnYuYyAgICAgICAgICAgICB8IDM1ICsrKysrKy0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lc29u
-L21lc29uX2Rydi5oICAgICAgICAgICAgIHwgIDUgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lc29u
-L21lc29uX3BsYW5lLmMgICAgICAgICAgIHwgIDMgKy0KPiAgZHJpdmVycy9ncHUvZHJtL21lc29u
-L21lc29uX3ZpdS5jICAgICAgICAgICAgIHwgIDEgLQo+ICAxMSBmaWxlcyBjaGFuZ2VkLCAzOSBp
-bnNlcnRpb25zKCspLCAxNDEgZGVsZXRpb25zKC0pCj4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fY2FudmFzLmMKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9jYW52YXMuaAo+IAoKRFQgYmluZGluZ3MgKGluY2x1
-ZGluZyBiaW5kaW5nIGhlYWRlcnMpIHNob3VsZCBiZSBhIHNlcGFyYXRlIHBhdGNoLiBTZWUKRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3N1Ym1pdHRpbmctcGF0Y2hlcy50eHQuCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi, this is an automated email from Rob's (experimental) review bot. I
+found a couple of common problems with your patch. Please see below.
+
+On Tue, 31 Jul 2018 12:20:08 +0200, Lucas Stach wrote:
+> When specifying external clock inputs to the CCM the current code
+> requires the clocks to be in a "clocks" child node of the DT root.
+> This is not really conformant with DT best practices.
+> 
+> To avoid the need to deviate from those best practices, allow the
+> clock inputs to be specifies via standard clock handles. This is
+> in line with how drivers of the later CCM driver revisions on
+> newer i.MX SoCs handle this.
+> 
+> As we can't retroactively change the DT binding, allow this as an
+> option with a fallback to the old way of how this has been handled.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+
+The preferred subject prefix is "dt-bindings: <binding dir>: ...".
+
+> ---
+>  .../devicetree/bindings/clock/imx6q-clock.txt |  5 +++++
+>  drivers/clk/imx/clk-imx6q.c                   | 22 ++++++++++++++-----
+>  2 files changed, 22 insertions(+), 5 deletions(-)
+> 
+
+DT bindings (including binding headers) should be a separate patch. See
+Documentation/devicetree/bindings/submitting-patches.txt.
