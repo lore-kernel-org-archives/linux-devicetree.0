@@ -1,92 +1,81 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 3/4] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
-Date: Thu, 9 Aug 2018 09:53:21 +0200
-Message-ID: <fcbfff13-aec5-c571-3a5e-a3d571505342@baylibre.com>
-References: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
- <20180807220011.24436-4-maxi.jourdan@wanadoo.fr>
- <3221c65f87f8fd3541e0188186cb0259327cb671.camel@baylibre.com>
+From: Christoph Hellwig <hch@lst.de>
+Subject: simplified RISC-V interrupt and clocksource handling v4
+Date: Thu,  9 Aug 2018 09:55:59 +0200
+Message-ID: <20180809075602.989-1-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3221c65f87f8fd3541e0188186cb0259327cb671.camel@baylibre.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, aou@eecs.berkeley.edu, anup@brainfault.org, linux-kernel@vger.kernel.org, atish.patra@wdc.com, linux-riscv@lists.infradead.org, shorne@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/2018 10:41, Jerome Brunet wrote:
-> On Wed, 2018-08-08 at 00:00 +0200, Maxime Jourdan wrote:
->> Wrap the canvas node in a syscon node.
->>
->> Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> index b8dc4dbb391b..c98198662ae2 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> @@ -423,6 +423,23 @@
->>  			};
->>  		};
->>  
->> +		dmcbus: bus@c8838000 {
->> +			compatible = "simple-bus";
->> +			reg = <0x0 0xc8838000 0x0 0x1000>;
->> +			#address-cells = <2>;
->> +			#size-cells = <2>;
->> +			ranges = <0x0 0x0 0x0 0xc8838000 0x0 0x1000>;
->> +
->> +			sysctrl_DMC: system-controller@0 {
->> +				compatible = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";
->> +				reg = <0x0 0x0 0x0 0x1000>;
->> +
->> +				canvas: canvas-provider@0 {
->> +					compatible = "amlogic,canvas";
-> 
-> If there is only one canvas provider under "sysctrl_DMC" and it has no reg
-> property , you should not put a unit-address (@0) here. (same for the
-> documentation patch)
-> 
-> You may have seen unit-address without a reg property used elsewhere (ASoC
-> simple-card, my recent axg-sound-card), when there is multiple node with the
-> same node-name (ex: dai-link).
-> 
-> As Martin pointed out, the DT spec says we should not use unit-address unless
-> there is a reg property. We did not get Rob's view on this and we might have to
-> update this later on. In your case, unless I missed something, you should
-> definitely not have it
-> 
-> nitpick regarding the node-name (canvas-provider). If appropriate, we should try
-> to stick to one of the generic names proposed in the spec. I wonder if the
-> canvas provider could be viewed as a "memory" or "memory-controller"
+This series tries adds support for interrupt handling and timers
+for the RISC-V architecture.
 
-It's not really a memory or memory-controller, it's a Lookup Table on top of the memory controller,
-nothing really matches here...
+The basic per-hart interrupt handling implemented by the scause
+and sie CSRs is extremely simple and implemented directly in
+arch/riscv/kernel/irq.c.  In addition there is a irqchip driver
+for the PLIC external interrupt controller, which is called through
+the set_handle_irq API, and a clocksource driver that gets its
+timer interrupt directly from the low-level interrupt handling.
 
-> 
-> So, what about this ? Just a proposition, feel free to comment ;)
-> 
-> 	sysctrl_DMC: system-controller@0 {							compatib
-> le = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";> 		reg =
-> <0x0 0x0 0x0 0x1000>;
-> 	
-> 		canvas: memory-controller {
-> 			compatible = "amlogic,canvas";
-> 		}
-> 
-> [...]
-> 
-> 
->> +				};
->> +			};
->> +		};
->> +
->>  		hiubus: bus@c883c000 {
->>  			compatible = "simple-bus";
->>  			reg = <0x0 0xc883c000 0x0 0x2000>;
-> 
-> 
+Compared to previous iterations this version does not try to use an
+irqchip driver for the low-level interrupt handling.  This saves
+a couple indirect calls and an additional read of the scause CSR
+in the hot path, makes the code much simpler and last but not least
+avoid the dependency on a device tree for a mandatory architectural
+feature.
+
+A git tree is available here (contains a few more patches before
+the ones in this series).  The series is against the riscv for-next
+tree, so using the git tree is advised
+
+    git://git.infradead.org/users/hch/riscv.git riscv-irq-simple.4
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/riscv.git/shortlog/refs/heads/riscv-irq-simple.4
+
+Changes since v3:
+ - more improvements to the DT bindings
+ - add back the patch adding the riscv,cpu-intc binding documentation
+   as it is referenced from others
+
+Changes since v2:
+ - actually use SEIE instead of STIE in the plic driver
+ - rename the default compat string for the plic to sifive,u5-plic
+ - various spelling fixes
+ - drop a superflous derefence in the plic driver that is taken care of
+   by the following loop
+ - drop the patch to document the enable method - not relevant for the
+   rest of the series
+ - drop the patches for the per-hart timebase frequency - not relevant
+   for the rest of the series.
+ - use riscv_of_processor_hart in the timer driver
+
+Changes since v1:
+ - rename the plic driver to irq-sifive-plic
+ - switch to a default compatible of sifive,plic0 (still supporting the
+   riscv,plic0 name for compatibility)
+ - add a reference for the SiFive PLIC register layout
+ - fix plic_toggle addressing for large numbers of hwirqs
+ - remove the call to ack_bad_irq
+ - use a raw spinlock for plic_toggle_lock
+ - use the irq_desc cpumask in the plic enable/disable methods
+ - add back OF contexid parsing in the plic driver
+ - don't allow COMPILE_TEST builds of the clocksource driver, as it
+   depends on <asm/sbi.h>
+ - default the clocksource driver to y
+ - clean up naming in the clocksource driver
+ - remove the MINDELTA and MAXDELTA #defines
+ - various DT binding fixes
