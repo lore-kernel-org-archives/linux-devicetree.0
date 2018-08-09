@@ -1,294 +1,73 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v3 3/3] thermal: broadcom: Add Stingray thermal driver
-Date: Thu,  9 Aug 2018 18:24:59 +0530
-Message-ID: <1533819299-3401-4-git-send-email-srinath.mannam@broadcom.com>
-References: <1533819299-3401-1-git-send-email-srinath.mannam@broadcom.com>
+From: Aapo Vienamo <avienamo@nvidia.com>
+Subject: Re: [PATCH 13/40] mmc: tegra: Poll for calibration completion
+Date: Thu, 9 Aug 2018 15:56:38 +0300
+Message-ID: <20180809155638.23f96e61@dhcp-10-21-25-168>
+References: <1533141150-10511-1-git-send-email-avienamo@nvidia.com>
+        <1533141150-10511-14-git-send-email-avienamo@nvidia.com>
+        <20180809124616.GV21639@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533819299-3401-1-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <20180809124616.GV21639@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pramod Kumar <pramod.kumar@broadcom.com>
+On Thu, 9 Aug 2018 14:46:16 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Adds stingray thermal driver to monitor six
-thermal zones temperature and trips at critical temperature.
+> On Wed, Aug 01, 2018 at 07:32:03PM +0300, Aapo Vienamo wrote:
+> > Implement polling with 10 ms timeout for automatic pad drive strength
+> > calibration.
+> > 
+> > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> > ---
+> >  drivers/mmc/host/sdhci-tegra.c | 21 ++++++++++++++++-----
+> >  1 file changed, 16 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> > index 7d98455..c8ff267 100644
+> > --- a/drivers/mmc/host/sdhci-tegra.c
+> > +++ b/drivers/mmc/host/sdhci-tegra.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/err.h>
+> >  #include <linux/module.h>
+> >  #include <linux/init.h>
+> > +#include <linux/iopoll.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/io.h>
+> > @@ -50,6 +51,9 @@
+> >  #define SDHCI_AUTO_CAL_START			BIT(31)
+> >  #define SDHCI_AUTO_CAL_ENABLE			BIT(29)
+> >  
+> > +#define SDHCI_TEGRA_AUTO_CAL_STATUS		0x1ec
+> > +#define SDHCI_TEGRA_AUTO_CAL_ACTIVE		BIT(31)
+> > +
+> >  #define NVQUIRK_FORCE_SDHCI_SPEC_200	BIT(0)
+> >  #define NVQUIRK_ENABLE_BLOCK_GAP_DET	BIT(1)
+> >  #define NVQUIRK_ENABLE_SDHCI_SPEC_300	BIT(2)
+> > @@ -228,13 +232,20 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
+> >  
+> >  static void tegra_sdhci_pad_autocalib(struct sdhci_host *host)
+> >  {
+> > -	u32 val;
+> > +	u32 reg;
+> > +	int ret;
+> > +
+> > +	reg = sdhci_readl(host, SDHCI_TEGRA_AUTO_CAL_CONFIG);
+> > +	reg |= SDHCI_AUTO_CAL_ENABLE | SDHCI_AUTO_CAL_START;
+> > +	sdhci_writel(host, reg, SDHCI_TEGRA_AUTO_CAL_CONFIG);
+> >    
+> 
+> I know this is preexisting, but I want to make sure we cover this so we
+> don't run into this down the road: do these bits automatically clear on
+> calibration completion? Can we run these multiple times and get
+> everything properly calibrated?
 
-Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Vikram Prakash <vikram.prakash@broadcom.com>
----
- drivers/thermal/Kconfig               |   3 +-
- drivers/thermal/broadcom/Kconfig      |   9 ++
- drivers/thermal/broadcom/Makefile     |   1 +
- drivers/thermal/broadcom/sr-thermal.c | 216 ++++++++++++++++++++++++++++++++++
- 4 files changed, 228 insertions(+), 1 deletion(-)
- create mode 100644 drivers/thermal/broadcom/sr-thermal.c
+The TRM states in the pad auto-calibration procedure description that
+this bit should not be cleared.
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 8297988..26d39d4 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -416,7 +416,8 @@ config MTK_THERMAL
- 	  controller present in Mediatek SoCs
- 
- menu "Broadcom thermal drivers"
--depends on ARCH_BCM || ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
-+depends on ARCH_BCM || ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM_IPROC || \
-+		COMPILE_TEST
- source "drivers/thermal/broadcom/Kconfig"
- endmenu
- 
-diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
-index c106a15..dc9a9bd 100644
---- a/drivers/thermal/broadcom/Kconfig
-+++ b/drivers/thermal/broadcom/Kconfig
-@@ -22,3 +22,12 @@ config BCM_NS_THERMAL
- 	  BCM4708, BCM4709, BCM5301x, BCM95852X, etc). It contains DMU (Device
- 	  Management Unit) block with a thermal sensor that allows checking CPU
- 	  temperature.
-+
-+config BCM_SR_THERMAL
-+	tristate "Stingray thermal driver"
-+	depends on ARCH_BCM_IPROC || COMPILE_TEST
-+	default ARCH_BCM_IPROC
-+	help
-+	  Support for the Stingray family of SoCs. Its different blocks like
-+	  iHost, CRMU and NITRO has thermal sensor that allows checking its
-+	  temperature.
-diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
-index fae10ec..79df69e 100644
---- a/drivers/thermal/broadcom/Makefile
-+++ b/drivers/thermal/broadcom/Makefile
-@@ -1,3 +1,4 @@
- obj-$(CONFIG_BCM2835_THERMAL)		+= bcm2835_thermal.o
- obj-$(CONFIG_BRCMSTB_THERMAL)		+= brcmstb_thermal.o
- obj-$(CONFIG_BCM_NS_THERMAL)		+= ns-thermal.o
-+obj-$(CONFIG_BCM_SR_THERMAL)		+= sr-thermal.o
-diff --git a/drivers/thermal/broadcom/sr-thermal.c b/drivers/thermal/broadcom/sr-thermal.c
-new file mode 100644
-index 0000000..909f80c
---- /dev/null
-+++ b/drivers/thermal/broadcom/sr-thermal.c
-@@ -0,0 +1,216 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018 Broadcom
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+#define TMON_CRIT_TEMP          105000 /* temp in millidegree C */
-+#define SR_TMON_MAX_LIST        6
-+
-+/*
-+ * In stingray thermal IO memory,
-+ * Total Number of available TMONs MASK is at offset 0
-+ * temperature registers BASE is at 4 byte offset.
-+ * Each TMON temperature register size is 4.
-+ */
-+#define SR_TMON_TEMP_BASE(id)   ((id) * 0x4)
-+
-+static const char * const sr_tmon_names[SR_TMON_MAX_LIST] = {
-+	"sr_tmon_ihost0",
-+	"sr_tmon_ihost1",
-+	"sr_tmon_ihost2",
-+	"sr_tmon_ihost3",
-+	"sr_tmon_crmu",
-+	"sr_tmon_nitro",
-+};
-+
-+struct sr_tmon {
-+	struct thermal_zone_device *tz;
-+	unsigned int crit_temp;
-+	unsigned int tmon_id;
-+	struct sr_thermal *priv;
-+};
-+
-+struct sr_thermal {
-+	struct device *dev;
-+	void __iomem *regs;
-+	struct sr_tmon tmon[SR_TMON_MAX_LIST];
-+};
-+
-+static int sr_get_temp(struct thermal_zone_device *tz, int *temp)
-+{
-+	struct sr_tmon *tmon = tz->devdata;
-+	struct sr_thermal *sr_thermal = tmon->priv;
-+
-+	*temp = readl(sr_thermal->regs + SR_TMON_TEMP_BASE(tmon->tmon_id));
-+
-+	return 0;
-+}
-+
-+static int sr_get_trip_type(struct thermal_zone_device *tz, int trip,
-+					enum thermal_trip_type *type)
-+{
-+	struct sr_tmon *tmon = tz->devdata;
-+	struct sr_thermal *sr_thermal = tmon->priv;
-+
-+	switch (trip) {
-+	case 0:
-+		*type = THERMAL_TRIP_CRITICAL;
-+		break;
-+	default:
-+		dev_dbg(sr_thermal->dev,
-+			"Driver does not support more than 1 trip point\n");
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int sr_get_trip_temp(struct thermal_zone_device *tz, int trip, int *temp)
-+{
-+	struct sr_tmon *tmon = tz->devdata;
-+	struct sr_thermal *sr_thermal = tmon->priv;
-+
-+	switch (trip) {
-+	case 0:
-+		*temp = tmon->crit_temp;
-+		break;
-+	default:
-+		dev_dbg(sr_thermal->dev,
-+			"Driver does not support more than 1 trip point\n");
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int sr_set_trip_temp(struct thermal_zone_device *tz, int trip, int temp)
-+{
-+	struct sr_tmon *tmon = tz->devdata;
-+
-+	switch (trip) {
-+	case 0:
-+		/*
-+		 * Allow the user to change critical temperature
-+		 * as per their requirement, could be for debug
-+		 * purpose, even if it's more than the recommended
-+		 * critical temperature.
-+		 */
-+		tmon->crit_temp = temp;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static struct thermal_zone_device_ops sr_thermal_ops = {
-+	.get_temp = sr_get_temp,
-+	.get_trip_type = sr_get_trip_type,
-+	.get_trip_temp = sr_get_trip_temp,
-+	.set_trip_temp = sr_set_trip_temp,
-+};
-+
-+static int sr_thermal_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sr_thermal *sr_thermal;
-+	struct sr_tmon *tmon;
-+	struct resource *res;
-+	uint32_t sr_tmon_list = 0;
-+	unsigned int i;
-+	int ret;
-+
-+	sr_thermal = devm_kzalloc(dev, sizeof(*sr_thermal), GFP_KERNEL);
-+	if (!sr_thermal)
-+		return -ENOMEM;
-+
-+	sr_thermal->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	sr_thermal->regs = (void __iomem *)devm_memremap(&pdev->dev, res->start,
-+					 resource_size(res), MEMREMAP_WB);
-+	if (IS_ERR(sr_thermal->regs)) {
-+		dev_err(dev, "failed to get io address\n");
-+		return PTR_ERR(sr_thermal->regs);
-+	}
-+
-+	ret = device_property_read_u32(dev, "brcm,tmon-mask", &sr_tmon_list);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < SR_TMON_MAX_LIST; i++) {
-+
-+		if (!(sr_tmon_list & BIT(i)))
-+			continue;
-+
-+		/* Flush temperature registers */
-+		writel(0, sr_thermal->regs + SR_TMON_TEMP_BASE(i));
-+		tmon = &sr_thermal->tmon[i];
-+		tmon->crit_temp = TMON_CRIT_TEMP;
-+		tmon->tmon_id = i;
-+		tmon->priv = sr_thermal;
-+		tmon->tz = thermal_zone_device_register(sr_tmon_names[i],
-+				1, 1,
-+				tmon,
-+				&sr_thermal_ops,
-+				NULL, 1000, 1000);
-+		if (IS_ERR(tmon->tz))
-+			goto err_exit;
-+
-+		dev_info(dev, "%s: registered\n", sr_tmon_names[i]);
-+	}
-+	platform_set_drvdata(pdev, sr_thermal);
-+
-+	return 0;
-+
-+err_exit:
-+	while (--i >= 0) {
-+		if (sr_thermal->tmon[i].tz)
-+			thermal_zone_device_unregister(sr_thermal->tmon[i].tz);
-+	}
-+
-+	return PTR_ERR(tmon->tz);
-+}
-+
-+static int sr_thermal_remove(struct platform_device *pdev)
-+{
-+	struct sr_thermal *sr_thermal = platform_get_drvdata(pdev);
-+	unsigned int i;
-+
-+	for (i = 0; i < SR_TMON_MAX_LIST; i++)
-+		if (sr_thermal->tmon[i].tz)
-+			thermal_zone_device_unregister(sr_thermal->tmon[i].tz);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sr_thermal_of_match[] = {
-+	{ .compatible = "brcm,sr-thermal", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sr_thermal_of_match);
-+
-+static const struct acpi_device_id sr_thermal_acpi_ids[] = {
-+	{ .id = "BRCM0500" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(acpi, sr_thermal_acpi_ids);
-+
-+static struct platform_driver sr_thermal_driver = {
-+	.probe		= sr_thermal_probe,
-+	.remove		= sr_thermal_remove,
-+	.driver = {
-+		.name = "sr-thermal",
-+		.of_match_table = sr_thermal_of_match,
-+		.acpi_match_table = ACPI_PTR(sr_thermal_acpi_ids),
-+	},
-+};
-+module_platform_driver(sr_thermal_driver);
-+
-+MODULE_AUTHOR("Pramod Kumar <pramod.kumar@broadcom.com>");
-+MODULE_DESCRIPTION("Stingray thermal driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+ -Aapo
