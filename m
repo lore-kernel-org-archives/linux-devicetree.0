@@ -1,126 +1,61 @@
-From: Bharat Bhushan <bharat.bhushan@nxp.com>
-Subject: RE: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
-Date: Thu, 9 Aug 2018 07:04:35 +0000
-Message-ID: <AM5PR0401MB2545EA3D59F997C8483AE8E89A250@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-References: <1532684881-19310-1-git-send-email-Bharat.Bhushan@nxp.com>
-         <1532684881-19310-6-git-send-email-Bharat.Bhushan@nxp.com>
-         <ab2a113620123cb71364b6ae89328ae2fca49821.camel@buserror.net>
-         <AM5PR0401MB254592DC0E917FD292B323BA9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-         <aeff83355ee5235cfd6107dba06a5f7957b45c92.camel@buserror.net>
-         <AM5PR0401MB2545041D99EEDC3136B201719A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
-         <bef421feea16da2fdab333e63a6828741bd59055.camel@buserror.net>
-         <AM5PR0401MB25458654D6CEFBF2F05FC7709A250@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <5c1bcbd2c753f4224764c1932e5a9a99b4a604f5.camel@buserror.net>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v4 0/3] clk: meson: add a sub EMMC clock controller support
+Date: Thu, 9 Aug 2018 15:07:20 +0800
+Message-ID: <20180809070724.11935-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5c1bcbd2c753f4224764c1932e5a9a99b4a604f5.camel@buserror.net>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "tyreld@linux.vnet.ibm.com" <tyreld@linux.vnet.ibm.com>, "joe@perches.com" <joe@perches.com>
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
-bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFRodXJzZGF5LCBBdWd1c3QgOSwgMjAxOCAx
-MTo0MiBBTQ0KPiBUbzogQmhhcmF0IEJodXNoYW4gPGJoYXJhdC5iaHVzaGFuQG54cC5jb20+Ow0K
-PiBiZW5oQGtlcm5lbC5jcmFzaGluZy5vcmc7IHBhdWx1c0BzYW1iYS5vcmc7IG1wZUBlbGxlcm1h
-bi5pZC5hdTsNCj4gZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9yZzsgbWFyay5ydXRsYW5kQGFybS5j
-b207DQo+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7IGdyZWdraEBsaW51eGZvdW5kYXRp
-b24ub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3Rz
-Lm96bGFicy5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IENjOiByb2Jo
-QGtlcm5lbC5vcmc7IGtlZXNjb29rQGNocm9taXVtLm9yZzsgdHlyZWxkQGxpbnV4LnZuZXQuaWJt
-LmNvbTsNCj4gam9lQHBlcmNoZXMuY29tDQo+IFN1YmplY3Q6IFJlOiBbUkZDIDUvNV0gcG93ZXJw
-Yy9mc2w6IEFkZCBzdXBwb3J0ZWQtaXJxLXJhbmdlcyBmb3IgUDIwMjANCj4gDQo+IE9uIFRodSwg
-MjAxOC0wOC0wOSBhdCAwMzoyOCArMDAwMCwgQmhhcmF0IEJodXNoYW4gd3JvdGU6DQo+ID4gPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogU2NvdHQgV29vZCBbbWFpbHRv
-Om9zc0BidXNlcnJvci5uZXRdDQo+ID4gPiBTZW50OiBXZWRuZXNkYXksIEF1Z3VzdCA4LCAyMDE4
-IDExOjI3IFBNDQo+ID4gPiBUbzogQmhhcmF0IEJodXNoYW4gPGJoYXJhdC5iaHVzaGFuQG54cC5j
-b20+Ow0KPiA+ID4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVsdXNAc2FtYmEub3JnOyBt
-cGVAZWxsZXJtYW4uaWQuYXU7DQo+ID4gPiBnYWxha0BrZXJuZWwuY3Jhc2hpbmcub3JnOyBtYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsNCj4gPiA+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7IGdy
-ZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC0NCj4gPiA+IGtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IENjOiByb2JoQGtlcm5lbC5vcmc7IGtlZXNjb29rQGNocm9t
-aXVtLm9yZzsNCj4gPiA+IHR5cmVsZEBsaW51eC52bmV0LmlibS5jb207IGpvZUBwZXJjaGVzLmNv
-bQ0KPiA+ID4gU3ViamVjdDogUmU6IFtSRkMgNS81XSBwb3dlcnBjL2ZzbDogQWRkIHN1cHBvcnRl
-ZC1pcnEtcmFuZ2VzIGZvcg0KPiA+ID4gUDIwMjANCj4gPiA+DQo+ID4gPiBPbiBXZWQsIDIwMTgt
-MDgtMDggYXQgMDY6MjggKzAwMDAsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+ID4gPiA+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+ID4gRnJvbTogU2NvdHQgV29vZCBbbWFp
-bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+ID4gPiA+ID4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3Qg
-OCwgMjAxOCAxMToyNiBBTQ0KPiA+ID4gPiA+IFRvOiBCaGFyYXQgQmh1c2hhbiA8YmhhcmF0LmJo
-dXNoYW5AbnhwLmNvbT47DQo+ID4gPiA+ID4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVs
-dXNAc2FtYmEub3JnOyBtcGVAZWxsZXJtYW4uaWQuYXU7DQo+ID4gPiA+ID4gZ2FsYWtAa2VybmVs
-LmNyYXNoaW5nLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiA+ID4ga3N0ZXdhcnRA
-bGludXhmb3VuZGF0aW9uLm9yZzsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+ID4gPiA+
-ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
-b3JnOw0KPiA+ID4gPiA+IGxpbnV4LSBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gPiA+ID4g
-Q2M6IHJvYmhAa2VybmVsLm9yZzsga2Vlc2Nvb2tAY2hyb21pdW0ub3JnOw0KPiA+ID4gPiA+IHR5
-cmVsZEBsaW51eC52bmV0LmlibS5jb207IGpvZUBwZXJjaGVzLmNvbQ0KPiA+ID4gPiA+IFN1Ympl
-Y3Q6IFJlOiBbUkZDIDUvNV0gcG93ZXJwYy9mc2w6IEFkZCBzdXBwb3J0ZWQtaXJxLXJhbmdlcyBm
-b3INCj4gPiA+ID4gPiBQMjAyMA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gT24gV2VkLCAyMDE4LTA4
-LTA4IGF0IDAzOjQ0ICswMDAwLCBCaGFyYXQgQmh1c2hhbiB3cm90ZToNCj4gPiA+ID4gPiA+ID4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gPiA+ID4gRnJvbTogU2NvdHQgV29v
-ZCBbbWFpbHRvOm9zc0BidXNlcnJvci5uZXRdDQo+ID4gPiA+ID4gPiA+IFNlbnQ6IFdlZG5lc2Rh
-eSwgQXVndXN0IDgsIDIwMTggMjo0NCBBTQ0KPiA+ID4gPiA+ID4gPiBUbzogQmhhcmF0IEJodXNo
-YW4gPGJoYXJhdC5iaHVzaGFuQG54cC5jb20+Ow0KPiA+ID4gPiA+ID4gPiBiZW5oQGtlcm5lbC5j
-cmFzaGluZy5vcmc7IHBhdWx1c0BzYW1iYS5vcmc7DQo+ID4gPiA+ID4gPiA+IG1wZUBlbGxlcm1h
-bi5pZC5hdTsgZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9yZzsNCj4gPiA+ID4gPiA+ID4gbWFyay5y
-dXRsYW5kQGFybS5jb207IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+ID4gPiA+ID4g
-PiA+IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsNCj4gPiA+ID4gPiA+ID4gbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7DQo+ID4gPiA+
-ID4gPiA+IGxpbnV4LSBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gPiA+ID4gPiA+IENjOiBy
-b2JoQGtlcm5lbC5vcmc7IGtlZXNjb29rQGNocm9taXVtLm9yZzsNCj4gPiA+ID4gPiA+ID4gdHly
-ZWxkQGxpbnV4LnZuZXQuaWJtLmNvbTsgam9lQHBlcmNoZXMuY29tDQo+ID4gPiA+ID4gPiA+IFN1
-YmplY3Q6IFJlOiBbUkZDIDUvNV0gcG93ZXJwYy9mc2w6IEFkZCBzdXBwb3J0ZWQtaXJxLXJhbmdl
-cw0KPiA+ID4gPiA+ID4gPiBmb3INCj4gPiA+ID4gPiA+ID4gUDIwMjANCj4gPiA+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiA+ID4gT24gRnJpLCAyMDE4LTA3LTI3IGF0IDE1OjE4ICswNTMwLCBCaGFyYXQg
-Qmh1c2hhbiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiBNUElDIG9uIE5YUCAoRnJlZXNjYWxlKSBQ
-MjAyMCBzdXBwb3J0cyBmb2xsb3dpbmcgaXJxDQo+ID4gPiA+ID4gPiA+ID4gcmFuZ2VzOg0KPiA+
-ID4gPiA+ID4gPiA+ICAgPiAwIC0gMTEgICAgICAoRXh0ZXJuYWwgaW50ZXJydXB0KQ0KPiA+ID4g
-PiA+ID4gPiA+ICAgPiAxNiAtIDc5ICAgICAoSW50ZXJuYWwgaW50ZXJydXB0KQ0KPiA+ID4gPiA+
-ID4gPiA+ICAgPiAxNzYgLSAxODMgICAoTWVzc2FnaW5nIGludGVycnVwdCkNCj4gPiA+ID4gPiA+
-ID4gPiAgID4gMjI0IC0gMjMxICAgKFNoYXJlZCBtZXNzYWdlIHNpZ25hbGVkIGludGVycnVwdCkN
-Cj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gV2h5IGRvbid0IHlvdSBjb252ZXJ0IHRvIHRo
-ZSA0LWNlbGwgaW50ZXJydXB0IHNwZWNpZmllcnMNCj4gPiA+ID4gPiA+ID4gdGhhdCBtYWtlIGRl
-YWxpbmcgd2l0aCB0aGVzZSByYW5nZXMgbGVzcyBlcnJvci1wcm9uZT8NCj4gPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gPiBPayAsIHdpbGwgZG8gaWYgd2UgYWdyZWUgdG8gaGF2ZSB0aGlzIHNlcmllcyBh
-cyBwZXIgY29tbWVudCBvbg0KPiA+ID4gPiA+ID4gb3RoZXIgcGF0Y2guDQo+ID4gPiA+ID4NCj4g
-PiA+ID4gPiBJZiB5b3UncmUgY29uY2VybmVkIHdpdGggZXJyb3JzLCB0aGlzIHdvdWxkIGJlIGEg
-Z29vZCB0aGluZ3MgdG8NCj4gPiA+ID4gPiBkbyByZWdhcmRsZXNzLg0KPiA+ID4gPiA+ICBBY3R1
-YWxseSwgaXQgc2VlbXMgdGhhdCBwMjAyMHNpLXBvc3QuZHRzaSBhbHJlYWR5IHVzZXMgNC1jZWxs
-DQo+ID4gPiA+ID4gaW50ZXJydXB0cy4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFdoYXQgaXMgbW90
-aXZhdGluZyB0aGlzIHBhdGNoc2V0PyAgSXMgdGhlcmUgc29tZXRoaW5nIHdyb25nIGluDQo+ID4g
-PiA+ID4gdGhlIGV4aXN0aW5nIGR0cyBmaWxlcz8NCj4gPiA+ID4NCj4gPiA+ID4gVGhlcmUgaXMg
-bm8gZXJyb3IgaW4gZGV2aWNlIHRyZWUuIE1haW4gbW90aXZhdGlvbiBpcyB0byBpbXByb3ZlDQo+
-ID4gPiA+IGNvZGUgZm9yIGZvbGxvd2luZyByZWFzb25zOg0KPiA+ID4gPiAgIC0gV2hpbGUgY29k
-ZSBzdHVkeSBpdCB3YXMgZm91bmQgdGhhdCBpZiBhIHJlc2VydmVkIGlycS1udW1iZXINCj4gPiA+
-ID4gdXNlZCB0aGVuIHRoZXJlIGFyZSBubyBjaGVjayBpbiBkcml2ZXIuIGlycSB3aWxsIGJlIGNv
-bmZpZ3VyZWQgYXMNCj4gPiA+ID4gY29ycmVjdCBhbmQgaW50ZXJydXB0IHdpbGwgbmV2ZXIgZmly
-ZS4NCj4gPiA+DQo+ID4gPiBBZ2FpbiwgYSB3cm9uZyBpbnRlcnJ1cHQgbnVtYmVyIHdvbid0IGZp
-cmUsIHdoZXRoZXIgYW4gaW50ZXJydXB0IGJ5DQo+ID4gPiB0aGF0IG51bWJlciBleGlzdHMgb3Ig
-bm90LiAgSSB3b3VsZG4ndCBtaW5kIGEgc2FuaXR5IGNoZWNrIGluIHRoZQ0KPiA+ID4gZHJpdmVy
-IGlmIHRoZSBwcm9ncmFtbWluZyBtb2RlbCBtYWRlIGl0IHByb3Blcmx5IGRpc2NvdmVyYWJsZSwg
-YnV0IEkNCj4gPiA+IGRvbid0IHRoaW5rIGl0J3Mgd29ydGggbWVzc2luZyB3aXRoIGRldmljZSB0
-cmVlcyBqdXN0IGZvciB0aGlzIChhbmQNCj4gPiA+IGV2ZW4gbGVzcyBzbyBnaXZlbiB0aGF0IHRo
-ZXJlIGRvbid0IHNlZW0gdG8gYmUgbmV3IGNoaXBzIGNvbWluZyBvdXQNCj4gPiA+IHRoYXQgdGhp
-cyB3b3VsZCBiZSByZWxldmFudCBmb3IpLg0KPiA+DQo+ID4gRmFpciBlbm91Z2gsIHdlIGNhbiB1
-c2UgTVBJQyB2ZXJzaW9uIHRvIGRlZmluZSBzdXBwb3J0ZWQgaW50ZXJydXB0cw0KPiByYW5nZXMu
-DQo+ID4gV2lsbCB0aGF0IGJlIGFjY2VwdGFibGUuDQo+IA0KPiBJdCdzIGJldHRlciB0aGFuIGRl
-dmljZSB0cmVlIGNoYW5nZXMgYnV0IEknbSBub3QgY29udmluY2VkIGl0J3Mgd29ydGh3aGlsZSBq
-dXN0DQo+IHRvIHN1cHByZXNzIHNvbWUgc2ltdWxhdG9yIHdhcm5pbmdzLg0KPiAgSWYgdGhlIHdh
-cm5pbmdzIHJlYWxseSBib3RoZXIgeW91LCB5b3UNCj4gY2FuIHVzZSBwaWMtbm8tcmVzZXQgaW4g
-dGhlIGRldmljZSB0cmVlIChhc3N1bWluZyB0aGlzIGlzbid0IHNvbWUgbmV3IGNoaXANCj4gdGhh
-dCB5b3Ugd2FudCB0byBtYWtlIHN1cmUgZG9lc24ndCBmYWxsIG92ZXIgd2hlbiB0aGUgdXN1YWwg
-bXBpYyBpbml0DQo+IGhhcHBlbnMpIGFuZC9vciBjb252aW5jZSB0aGUgaGFyZHdhcmUgcGVvcGxl
-IHRvIG1ha2UgdGhlIGludGVyZmFjZQ0KPiBwcm9wZXJseSBkaXNjb3ZlcmFibGUgaW5jbHVkaW5n
-IGRpc2NvbnRpZ3VvdXMgcmVnaW9ucyAoaWYgdGhlcmUgKmlzKiBzb21lDQo+IG5ldyBjaGlwIEkg
-aGF2ZW4ndCBoZWFyZCBhYm91dCkuDQoNClRoZXJlIGlzIG5ldyBjaGlwIHVuZGVyIGRldmVsb3Bt
-ZW50IGJhc2VkIG9uIGUyMDAsIHdoaWNoIHVzZXMgc2FtZSBtcGljIGFzIGluIG9sZGVyIFBvd2Vy
-UEMgdmVyc2lvbnMuDQpUaGlzIHBhdGNoIHdhcyBub3QganVzdCBhYm91dCBzdXBwcmVzc2luZyB0
-aGUgd2FybmluZyBidXQgd2FybmluZyB3YXMgdGhlIG9ic2VydmF0aW9uIHRoYXQgcmVzZXJ2ZWQg
-cmVnaW9uIGlzIGdldHRpbmcgYWNjZXNzZWQgZHVyaW5nIGluaXQvdW5pbml0L3NhdmUvcmVzdG9y
-ZS4gVGhpcyBwYXRjaCB3YXMganVzdCBhbiBtaW5vciBpbXByb3ZlbWVudCB0byBhdm9pZCB0aGVz
-ZSBhY2Nlc3Nlcy4gV2Ugd2lsbCBkcm9wIHRoaXMgc2VyaWVzIGlmIHRoaXMgaW1wcm92ZW1lbnQg
-aXMgbm90IGNvbnZpbmNpbmcuDQoNClRoYW5rcw0KLUJoYXJhdA0KDQo+IA0KPiAtU2NvdHQNCg0K
+This driver will add a MMC clock controller driver support.
+The original idea about adding a clock controller is during the
+discussion in the NAND driver mainline effort[1].
+
+This driver is tested in the S400 board (AXG platform) with NAND driver.
+
+Changes since v3 [4]:
+ - separate clk-phase-delay driver
+ - replace clk_get_rate() with clk_hw_get_rate()
+ - collect Rob's R-Y
+ - drop 'meson-' prefix from compatible string
+
+Changes since v2 [3]:
+ - squash dt-binding clock-id patch
+ - update license
+ - fix alignment
+ - construct a clk register helper() function
+
+Changes since v1 [2]:
+ - implement phase clock
+ - update compatible name
+ - adjust file name
+ - divider probe() into small functions, and re-use them
+
+[1] https://lkml.kernel.org/r/20180628090034.0637a062@xps13
+[2] https://lkml.kernel.org/r/20180703145716.31860-1-yixun.lan@amlogic.com
+[3] https://lkml.kernel.org/r/20180710163658.6175-1-yixun.lan@amlogic.com
+[4] https://lkml.kernel.org/r/20180712211244.11428-1-yixun.lan@amlogic.com
+
+Yixun Lan (3):
+  clk: meson: add emmc sub clock phase delay driver
+  clk: meson: add DT documentation for emmc clock controller
+  clk: meson: add sub MMC clock controller driver
+
+ .../bindings/clock/amlogic,mmc-clkc.txt       |  31 ++
+ drivers/clk/meson/Kconfig                     |  10 +
+ drivers/clk/meson/Makefile                    |   3 +-
+ drivers/clk/meson/clk-phase-delay.c           |  96 ++++++
+ drivers/clk/meson/clkc.h                      |  13 +
+ drivers/clk/meson/mmc-clkc.c                  | 275 ++++++++++++++++++
+ include/dt-bindings/clock/amlogic,mmc-clkc.h  |  17 ++
+ 7 files changed, 444 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,mmc-clkc.txt
+ create mode 100644 drivers/clk/meson/clk-phase-delay.c
+ create mode 100644 drivers/clk/meson/mmc-clkc.c
+ create mode 100644 include/dt-bindings/clock/amlogic,mmc-clkc.h
+
+-- 
+2.17.1
