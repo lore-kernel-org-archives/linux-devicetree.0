@@ -1,110 +1,113 @@
-From: Bharat Bhushan <bharat.bhushan@nxp.com>
-Subject: RE: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
-Date: Thu, 9 Aug 2018 03:28:07 +0000
-Message-ID: <AM5PR0401MB25458654D6CEFBF2F05FC7709A250@AM5PR0401MB2545.eurprd04.prod.outlook.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
+Date: Thu, 09 Aug 2018 01:11:55 -0500
+Message-ID: <5c1bcbd2c753f4224764c1932e5a9a99b4a604f5.camel@buserror.net>
 References: <1532684881-19310-1-git-send-email-Bharat.Bhushan@nxp.com>
          <1532684881-19310-6-git-send-email-Bharat.Bhushan@nxp.com>
          <ab2a113620123cb71364b6ae89328ae2fca49821.camel@buserror.net>
          <AM5PR0401MB254592DC0E917FD292B323BA9A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
          <aeff83355ee5235cfd6107dba06a5f7957b45c92.camel@buserror.net>
          <AM5PR0401MB2545041D99EEDC3136B201719A260@AM5PR0401MB2545.eurprd04.prod.outlook.com>
- <bef421feea16da2fdab333e63a6828741bd59055.camel@buserror.net>
+         <bef421feea16da2fdab333e63a6828741bd59055.camel@buserror.net>
+         <AM5PR0401MB25458654D6CEFBF2F05FC7709A250@AM5PR0401MB2545.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bef421feea16da2fdab333e63a6828741bd59055.camel@buserror.net>
-Content-Language: en-US
+In-Reply-To: <AM5PR0401MB25458654D6CEFBF2F05FC7709A250@AM5PR0401MB2545.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Bharat Bhushan <bharat.bhushan@nxp.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "galak@kernel.crashing.org" <galak@kernel.crashing.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: "robh@kernel.org" <robh@kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "tyreld@linux.vnet.ibm.com" <tyreld@linux.vnet.ibm.com>, "joe@perches.com" <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFp
-bHRvOm9zc0BidXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDgsIDIwMTgg
-MTE6MjcgUE0NCj4gVG86IEJoYXJhdCBCaHVzaGFuIDxiaGFyYXQuYmh1c2hhbkBueHAuY29tPjsN
-Cj4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVsdXNAc2FtYmEub3JnOyBtcGVAZWxsZXJt
-YW4uaWQuYXU7DQo+IGdhbGFrQGtlcm5lbC5jcmFzaGluZy5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
-Y29tOw0KPiBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBncmVna2hAbGludXhmb3VuZGF0
-aW9uLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0
-cy5vemxhYnMub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBDYzogcm9i
-aEBrZXJuZWwub3JnOyBrZWVzY29va0BjaHJvbWl1bS5vcmc7IHR5cmVsZEBsaW51eC52bmV0Lmli
-bS5jb207DQo+IGpvZUBwZXJjaGVzLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1JGQyA1LzVdIHBvd2Vy
-cGMvZnNsOiBBZGQgc3VwcG9ydGVkLWlycS1yYW5nZXMgZm9yIFAyMDIwDQo+IA0KPiBPbiBXZWQs
-IDIwMTgtMDgtMDggYXQgMDY6MjggKzAwMDAsIEJoYXJhdCBCaHVzaGFuIHdyb3RlOg0KPiA+ID4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206IFNjb3R0IFdvb2QgW21haWx0
-bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiA+ID4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgOCwgMjAx
-OCAxMToyNiBBTQ0KPiA+ID4gVG86IEJoYXJhdCBCaHVzaGFuIDxiaGFyYXQuYmh1c2hhbkBueHAu
-Y29tPjsNCj4gPiA+IGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZzsgcGF1bHVzQHNhbWJhLm9yZzsg
-bXBlQGVsbGVybWFuLmlkLmF1Ow0KPiA+ID4gZ2FsYWtAa2VybmVsLmNyYXNoaW5nLm9yZzsgbWFy
-ay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyBn
-cmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtDQo+ID4gPiBrZXJuZWxA
-dmdlci5rZXJuZWwub3JnDQo+ID4gPiBDYzogcm9iaEBrZXJuZWwub3JnOyBrZWVzY29va0BjaHJv
-bWl1bS5vcmc7DQo+ID4gPiB0eXJlbGRAbGludXgudm5ldC5pYm0uY29tOyBqb2VAcGVyY2hlcy5j
-b20NCj4gPiA+IFN1YmplY3Q6IFJlOiBbUkZDIDUvNV0gcG93ZXJwYy9mc2w6IEFkZCBzdXBwb3J0
-ZWQtaXJxLXJhbmdlcyBmb3INCj4gPiA+IFAyMDIwDQo+ID4gPg0KPiA+ID4gT24gV2VkLCAyMDE4
-LTA4LTA4IGF0IDAzOjQ0ICswMDAwLCBCaGFyYXQgQmh1c2hhbiB3cm90ZToNCj4gPiA+ID4gPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+IEZyb206IFNjb3R0IFdvb2QgW21h
-aWx0bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiA+ID4gPiA+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0
-IDgsIDIwMTggMjo0NCBBTQ0KPiA+ID4gPiA+IFRvOiBCaGFyYXQgQmh1c2hhbiA8YmhhcmF0LmJo
-dXNoYW5AbnhwLmNvbT47DQo+ID4gPiA+ID4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBwYXVs
-dXNAc2FtYmEub3JnOyBtcGVAZWxsZXJtYW4uaWQuYXU7DQo+ID4gPiA+ID4gZ2FsYWtAa2VybmVs
-LmNyYXNoaW5nLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiA+ID4ga3N0ZXdhcnRA
-bGludXhmb3VuZGF0aW9uLm9yZzsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+ID4gPiA+
-ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMu
-b3JnOw0KPiA+ID4gPiA+IGxpbnV4LSBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4gPiA+ID4g
-Q2M6IHJvYmhAa2VybmVsLm9yZzsga2Vlc2Nvb2tAY2hyb21pdW0ub3JnOw0KPiA+ID4gPiA+IHR5
-cmVsZEBsaW51eC52bmV0LmlibS5jb207IGpvZUBwZXJjaGVzLmNvbQ0KPiA+ID4gPiA+IFN1Ympl
-Y3Q6IFJlOiBbUkZDIDUvNV0gcG93ZXJwYy9mc2w6IEFkZCBzdXBwb3J0ZWQtaXJxLXJhbmdlcyBm
-b3INCj4gPiA+ID4gPiBQMjAyMA0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gT24gRnJpLCAyMDE4LTA3
-LTI3IGF0IDE1OjE4ICswNTMwLCBCaGFyYXQgQmh1c2hhbiB3cm90ZToNCj4gPiA+ID4gPiA+IE1Q
-SUMgb24gTlhQIChGcmVlc2NhbGUpIFAyMDIwIHN1cHBvcnRzIGZvbGxvd2luZyBpcnENCj4gPiA+
-ID4gPiA+IHJhbmdlczoNCj4gPiA+ID4gPiA+ICAgPiAwIC0gMTEgICAgICAoRXh0ZXJuYWwgaW50
-ZXJydXB0KQ0KPiA+ID4gPiA+ID4gICA+IDE2IC0gNzkgICAgIChJbnRlcm5hbCBpbnRlcnJ1cHQp
-DQo+ID4gPiA+ID4gPiAgID4gMTc2IC0gMTgzICAgKE1lc3NhZ2luZyBpbnRlcnJ1cHQpDQo+ID4g
-PiA+ID4gPiAgID4gMjI0IC0gMjMxICAgKFNoYXJlZCBtZXNzYWdlIHNpZ25hbGVkIGludGVycnVw
-dCkNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFdoeSBkb24ndCB5b3UgY29udmVydCB0byB0aGUgNC1j
-ZWxsIGludGVycnVwdCBzcGVjaWZpZXJzIHRoYXQNCj4gPiA+ID4gPiBtYWtlIGRlYWxpbmcgd2l0
-aCB0aGVzZSByYW5nZXMgbGVzcyBlcnJvci1wcm9uZT8NCj4gPiA+ID4NCj4gPiA+ID4gT2sgLCB3
-aWxsIGRvIGlmIHdlIGFncmVlIHRvIGhhdmUgdGhpcyBzZXJpZXMgYXMgcGVyIGNvbW1lbnQgb24N
-Cj4gPiA+ID4gb3RoZXIgcGF0Y2guDQo+ID4gPg0KPiA+ID4gSWYgeW91J3JlIGNvbmNlcm5lZCB3
-aXRoIGVycm9ycywgdGhpcyB3b3VsZCBiZSBhIGdvb2QgdGhpbmdzIHRvIGRvDQo+ID4gPiByZWdh
-cmRsZXNzLg0KPiA+ID4gIEFjdHVhbGx5LCBpdCBzZWVtcyB0aGF0IHAyMDIwc2ktcG9zdC5kdHNp
-IGFscmVhZHkgdXNlcyA0LWNlbGwgaW50ZXJydXB0cy4NCj4gPiA+DQo+ID4gPiBXaGF0IGlzIG1v
-dGl2YXRpbmcgdGhpcyBwYXRjaHNldD8gIElzIHRoZXJlIHNvbWV0aGluZyB3cm9uZyBpbiB0aGUN
-Cj4gPiA+IGV4aXN0aW5nIGR0cyBmaWxlcz8NCj4gPg0KPiA+IFRoZXJlIGlzIG5vIGVycm9yIGlu
-IGRldmljZSB0cmVlLiBNYWluIG1vdGl2YXRpb24gaXMgdG8gaW1wcm92ZSBjb2RlDQo+ID4gZm9y
-IGZvbGxvd2luZyByZWFzb25zOg0KPiA+ICAgLSBXaGlsZSBjb2RlIHN0dWR5IGl0IHdhcyBmb3Vu
-ZCB0aGF0IGlmIGEgcmVzZXJ2ZWQgaXJxLW51bWJlciB1c2VkDQo+ID4gdGhlbiB0aGVyZSBhcmUg
-bm8gY2hlY2sgaW4gZHJpdmVyLiBpcnEgd2lsbCBiZSBjb25maWd1cmVkIGFzIGNvcnJlY3QNCj4g
-PiBhbmQgaW50ZXJydXB0IHdpbGwgbmV2ZXIgZmlyZS4NCj4gDQo+IEFnYWluLCBhIHdyb25nIGlu
-dGVycnVwdCBudW1iZXIgd29uJ3QgZmlyZSwgd2hldGhlciBhbiBpbnRlcnJ1cHQgYnkgdGhhdA0K
-PiBudW1iZXIgZXhpc3RzIG9yIG5vdC4gIEkgd291bGRuJ3QgbWluZCBhIHNhbml0eSBjaGVjayBp
-biB0aGUgZHJpdmVyIGlmIHRoZQ0KPiBwcm9ncmFtbWluZyBtb2RlbCBtYWRlIGl0IHByb3Blcmx5
-IGRpc2NvdmVyYWJsZSwgYnV0IEkgZG9uJ3QgdGhpbmsgaXQncw0KPiB3b3J0aCBtZXNzaW5nIHdp
-dGggZGV2aWNlIHRyZWVzIGp1c3QgZm9yIHRoaXMgKGFuZCBldmVuIGxlc3Mgc28gZ2l2ZW4gdGhh
-dA0KPiB0aGVyZSBkb24ndCBzZWVtIHRvIGJlIG5ldyBjaGlwcyBjb21pbmcgb3V0IHRoYXQgdGhp
-cyB3b3VsZCBiZSByZWxldmFudA0KPiBmb3IpLg0KDQpGYWlyIGVub3VnaCwgd2UgY2FuIHVzZSBN
-UElDIHZlcnNpb24gdG8gZGVmaW5lIHN1cHBvcnRlZCBpbnRlcnJ1cHRzIHJhbmdlcy4gV2lsbCB0
-aGF0IGJlIGFjY2VwdGFibGUuDQoNClRoYW5rcw0KLUJoYXJhdA0KDQo+IA0KPiA+ID4gPiBPbmUg
-b3RoZXIgY29uZnVzaW5nIG9ic2VydmF0aW9uIEkgaGF2ZSBpcyB0aGF0ICJpcnFfY291bnQiIGZy
-b20NCj4gPiA+ID4gcGxhdGZvcm0gY29kZSBpcyBnaXZlbiBwcmVjZWRlbmNlIG92ZXIgImxhc3Qt
-aW50ZXJydXB0LXNvdXJjZSIgaW4NCj4gPiA+ID4gZGV2aWNlLQ0KPiA+ID4NCj4gPiA+IHRyZWUu
-DQo+ID4gPiA+IFNob3VsZCBub3QgZGV2aWNlLXRyZWUgc2hvdWxkIGhhdmUgcHJlY2VkZW5jZSBv
-dGhlcndpc2UgdGhlcmUgaXMNCj4gPiA+ID4gbm8gcG9pbnQgdXNpbmcgIiBsYXN0LWludGVycnVw
-dC1zb3VyY2UiIGlmIHBsYXRmb3JtIGNvZGUgcGFzc2VzDQo+ID4gPiA+ICJpcnFfY291bnQiIGlu
-IG1waWNfYWxsb2MoKS4NCj4gPiA+DQo+ID4gPiBNYXliZSwgdGhvdWdoIEkgZG9uJ3QgdGhpbmsg
-aXQgbWF0dGVycyBtdWNoIGdpdmVuIHRoYXQNCj4gPiA+IGxhc3QtaW50ZXJydXB0LSBzb3VyY2Ug
-d2FzIG9ubHkgYWRkZWQgdG8gYXZvaWQgaGF2aW5nIHRvIHBhc3MNCj4gPiA+IGlycV9jb3VudCBp
-biBwbGF0Zm9ybSBjb2RlLg0KPiA+DQo+ID4gVGhhbmtzIGZvciBjbGFyaWZ5aW5nOw0KPiA+DQo+
-ID4gTXkgdW5kZXJzdGFuZGluZyB3YXMgdGhhdCAibGFzdC1pbnRlcnJ1cHQtc291cmNlIiBhZGRl
-ZCB0byBlbnN1cmUgdGhhdA0KPiA+IHdlIGNhbiBvdmVyLXJpZGUgdmFsdWUgcGFzc2VkIGZyb20g
-cGxhdGZvcm0gY29kZS4gSW4gdGhhdCBjYXNlIHdlIGRvDQo+ID4gbm90IG5lZWQgdG8gY2hhbmdl
-IGNvZGUgYW5kIGNhbiBjb250cm9sIGZyb20gZGV2aWNlIHRyZWUuDQo+IA0KPiBUaGUgY2hhbmdl
-bG9nIHNheXMsICJUbyBhdm9pZCBuZWVkaW5nIHRvIHdyaXRlIGN1c3RvbSBib2FyZC1zcGVjaWZp
-YyBjb2RlDQo+IHRvIGRldGVjdCB0aGF0IHNjZW5hcmlvLCBhbGxvdyBpdCB0byBiZSBlYXNpbHkg
-b3ZlcnJpZGRlbiBpbiB0aGUgZGV2aWNlLXRyZWUsIg0KPiB3aGVyZSAiaXQiIG1lYW5zIHRoZSB2
-YWx1ZSBwcm92aWRlZCBieSBoYXJkd2FyZS4gIFRoZSBnb2FsIHdhcyB0byBwYXNzIGluDQo+IDI1
-NiB3aXRob3V0IGJvYXJkIGNvZGUgaW4gdGhlIGtlcm5lbCwgbm90IHRvIG92ZXJyaWRlIHRoZSAy
-NTYuDQo+IA0KPiAtU2NvdHQNCg0K
+On Thu, 2018-08-09 at 03:28 +0000, Bharat Bhushan wrote:
+> > -----Original Message-----
+> > From: Scott Wood [mailto:oss@buserror.net]
+> > Sent: Wednesday, August 8, 2018 11:27 PM
+> > To: Bharat Bhushan <bharat.bhushan@nxp.com>;
+> > benh@kernel.crashing.org; paulus@samba.org; mpe@ellerman.id.au;
+> > galak@kernel.crashing.org; mark.rutland@arm.com;
+> > kstewart@linuxfoundation.org; gregkh@linuxfoundation.org;
+> > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-
+> > kernel@vger.kernel.org
+> > Cc: robh@kernel.org; keescook@chromium.org; tyreld@linux.vnet.ibm.com;
+> > joe@perches.com
+> > Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for P2020
+> > 
+> > On Wed, 2018-08-08 at 06:28 +0000, Bharat Bhushan wrote:
+> > > > -----Original Message-----
+> > > > From: Scott Wood [mailto:oss@buserror.net]
+> > > > Sent: Wednesday, August 8, 2018 11:26 AM
+> > > > To: Bharat Bhushan <bharat.bhushan@nxp.com>;
+> > > > benh@kernel.crashing.org; paulus@samba.org; mpe@ellerman.id.au;
+> > > > galak@kernel.crashing.org; mark.rutland@arm.com;
+> > > > kstewart@linuxfoundation.org; gregkh@linuxfoundation.org;
+> > > > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-
+> > > > kernel@vger.kernel.org
+> > > > Cc: robh@kernel.org; keescook@chromium.org;
+> > > > tyreld@linux.vnet.ibm.com; joe@perches.com
+> > > > Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for
+> > > > P2020
+> > > > 
+> > > > On Wed, 2018-08-08 at 03:44 +0000, Bharat Bhushan wrote:
+> > > > > > -----Original Message-----
+> > > > > > From: Scott Wood [mailto:oss@buserror.net]
+> > > > > > Sent: Wednesday, August 8, 2018 2:44 AM
+> > > > > > To: Bharat Bhushan <bharat.bhushan@nxp.com>;
+> > > > > > benh@kernel.crashing.org; paulus@samba.org; mpe@ellerman.id.au;
+> > > > > > galak@kernel.crashing.org; mark.rutland@arm.com;
+> > > > > > kstewart@linuxfoundation.org; gregkh@linuxfoundation.org;
+> > > > > > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org;
+> > > > > > linux- kernel@vger.kernel.org
+> > > > > > Cc: robh@kernel.org; keescook@chromium.org;
+> > > > > > tyreld@linux.vnet.ibm.com; joe@perches.com
+> > > > > > Subject: Re: [RFC 5/5] powerpc/fsl: Add supported-irq-ranges for
+> > > > > > P2020
+> > > > > > 
+> > > > > > On Fri, 2018-07-27 at 15:18 +0530, Bharat Bhushan wrote:
+> > > > > > > MPIC on NXP (Freescale) P2020 supports following irq
+> > > > > > > ranges:
+> > > > > > >   > 0 - 11      (External interrupt)
+> > > > > > >   > 16 - 79     (Internal interrupt)
+> > > > > > >   > 176 - 183   (Messaging interrupt)
+> > > > > > >   > 224 - 231   (Shared message signaled interrupt)
+> > > > > > 
+> > > > > > Why don't you convert to the 4-cell interrupt specifiers that
+> > > > > > make dealing with these ranges less error-prone?
+> > > > > 
+> > > > > Ok , will do if we agree to have this series as per comment on
+> > > > > other patch.
+> > > > 
+> > > > If you're concerned with errors, this would be a good things to do
+> > > > regardless.
+> > > >  Actually, it seems that p2020si-post.dtsi already uses 4-cell
+> > > > interrupts.
+> > > > 
+> > > > What is motivating this patchset?  Is there something wrong in the
+> > > > existing dts files?
+> > > 
+> > > There is no error in device tree. Main motivation is to improve code
+> > > for following reasons:
+> > >   - While code study it was found that if a reserved irq-number used
+> > > then there are no check in driver. irq will be configured as correct
+> > > and interrupt will never fire.
+> > 
+> > Again, a wrong interrupt number won't fire, whether an interrupt by that
+> > number exists or not.  I wouldn't mind a sanity check in the driver if the
+> > programming model made it properly discoverable, but I don't think it's
+> > worth messing with device trees just for this (and even less so given that
+> > there don't seem to be new chips coming out that this would be relevant
+> > for).
+> 
+> Fair enough, we can use MPIC version to define supported interrupts ranges.
+> Will that be acceptable.
+
+It's better than device tree changes but I'm not convinced it's worthwhile
+just to suppress some simulator warnings.  If the warnings really bother you,
+you can use pic-no-reset in the device tree (assuming this isn't some new chip
+that you want to make sure doesn't fall over when the usual mpic init happens)
+and/or convince the hardware people to make the interface properly
+discoverable including discontiguous regions (if there *is* some new chip I
+haven't heard about).
+
+-Scott
