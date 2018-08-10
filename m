@@ -1,64 +1,190 @@
-From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Fri, 10 Aug 2018 12:49:21 -0700
-Message-ID: <153393056178.37448.16084112653118820084@swboyd.mtv.corp.google.com>
-References: <20180808224701.7527-1-jcrouse@codeaurora.org>
- <20180808224701.7527-3-jcrouse@codeaurora.org>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH v4 5/6] iio:adxl372: Add sampling frequency support
+Date: Fri, 10 Aug 2018 21:58:04 +0200
+Message-ID: <20180810195804.GB2723@gmail.com>
+References: <1533557087-10401-1-git-send-email-stefan.popa@analog.com>
+ <1533557087-10401-6-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180808224701.7527-3-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sibis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1533557087-10401-6-git-send-email-stefan.popa@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: jic23@kernel.org, broonie@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBKb3JkYW4gQ3JvdXNlICgyMDE4LTA4LTA4IDE1OjQ3OjAxKQo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBpbmRleCBjZGFhYmViM2M5OTUuLjlmYjkwYmI0ZWExZiAx
-MDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtMzIzLDUgKzMyMywx
-MjYgQEAKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxl
-ZCI7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgICAgICAgICAgfTsKPiAr
-Cj4gKyAgICAgICAgICAgICAgIGFkcmVub19zbW11OiBhcm0sc21tdS1hZHJlbm9ANTA0MDAwMCB7
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJxY29tLG1zbTg5OTYtc21t
-dS12MiI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4NTA0MDAwMCAweDEwMDAw
-PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAjaW9tbXUtY2VsbHMgPSA8MT47Cj4gKyAgICAg
-ICAgICAgICAgICNnbG9iYWwtaW50ZXJydXB0cyA9IDwyPjsKPiArICAgICAgICAgICAgICAgICAg
-ICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI5IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgMjMxIElSUV9UWVBFX0xFVkVMX0hJ
-R0g+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgMzY0IElSUV9UWVBF
-X0VER0VfUklTSU5HPiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM2
-NSBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICA8
-R0lDX1NQSSAzNjYgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgPEdJQ19TUEkgMzY3IElSUV9UWVBFX0VER0VfUklTSU5HPiwKPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM2OCBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1NQSSAzNjkgSVJRX1RZUEVfRURHRV9S
-SVNJTkc+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgMzcwIElSUV9U
-WVBFX0VER0VfUklTSU5HPiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJ
-IDM3MSBJUlFfVFlQRV9FREdFX1JJU0lORz47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xv
-Y2tzID0gPCZjbG9ja19nY2MgR0NDX0dQVV9NRU1OT0NfR0ZYX0NMSz4sCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICA8JmNsb2NrX2djYyBHQ0NfR1BVX0NGR19BSEJfQ0xLPjsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJidXMiLCAiaWZhY2UiOwo+ICsK
-PiArICAgICAgICAgICAgICAgICAgICAgICBwb3dlci1kb21haW5zID0gPCZjbG9ja19ncHVjYyBH
-UFVfQ1hfR0RTQz47Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICBn
-cHVfb3BwX3RhYmxlOiBhZHJlbm8tb3BwLXRhYmxlIHsKClRoZSBPUFAgdGFibGVzIHNob3VsZCBi
-ZSBtb3ZlZCBpbnRvIHRoZSByb290IG9mIHRoZSB0cmVlLiBOb3RoaW5nIHNob3VsZApiZSB1bmRl
-ciB0aGUgU29DIG5vZGUgd2l0aG91dCBhIHJlZyBwcm9wZXJ0eS4KCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyIjsKPiArCj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgb3BwLTcxMDAwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDcxMDAwMDAwMD47Cj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBxY29tLGxldmVsID0gPDQxNj47Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJl
-ZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+
+--neYutvxvOLaeuPCA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Stefan,
+
+On Mon, Aug 06, 2018 at 03:04:46PM +0300, Stefan Popa wrote:
+> This patch adds the option for the user to select the sampling frequency.
+> Also, the user can read the available frequencies and read the currently
+> set frequency via the read_raw function. The frequency can be set via the
+> write_raw function.
+>=20
+> When the frequency is set, the bandwidth is also checked and ensured
+> that it is constrained to at most half of the sampling frequency. Also, t=
+he
+> activity and inactivity timers have to be updated because they depend on
+> the selected ODR.
+>=20
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+> ---
+>  drivers/iio/accel/adxl372.c | 74 +++++++++++++++++++++++++++++++++++++++=
++++++-
+>  1 file changed, 73 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+> index 623c32d..d991d1c 100644
+> --- a/drivers/iio/accel/adxl372.c
+> +++ b/drivers/iio/accel/adxl372.c
+> @@ -223,7 +223,8 @@ static const struct adxl372_axis_lookup adxl372_axis_=
+lookup_table[] =3D {
+>  	.modified =3D 1,							\
+>  	.channel2 =3D IIO_MOD_##axis,					\
+>  	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),			\
+> -	.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE),		\
+> +	.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE) |		\
+> +				    BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
+>  	.scan_index =3D index,						\
+>  	.scan_type =3D {							\
+>  		.sign =3D 's',						\
+> @@ -311,6 +312,19 @@ static int adxl372_set_odr(struct adxl372_state *st,
+>  	return ret;
+>  }
+> =20
+> +static int adxl372_find_closest_match(const int *array,
+> +				      unsigned int size, int val)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < size; i++) {
+> +		if (val <=3D array[i])
+> +			return i;
+> +	}
+> +
+> +	return size - 1;
+> +}
+
+Hum, would find_closest() work for this?
+See include/linux/util_macros.h
+
+> +
+>  static int adxl372_set_bandwidth(struct adxl372_state *st,
+>  				 enum adxl372_bandwidth bw)
+>  {
+> @@ -631,6 +645,51 @@ static int adxl372_read_raw(struct iio_dev *indio_de=
+v,
+>  		*val =3D 0;
+>  		*val2 =3D ADXL372_USCALE;
+>  		return IIO_VAL_INT_PLUS_MICRO;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*val =3D adxl372_samp_freq_tbl[st->odr];
+> +		return IIO_VAL_INT;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int adxl372_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int val, int val2, long info)
+> +{
+> +	struct adxl372_state *st =3D iio_priv(indio_dev);
+> +	int odr_index, ret;
+> +
+
+Is it worth to make sure that val2 is zero here?
+
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		odr_index =3D adxl372_find_closest_match(adxl372_samp_freq_tbl,
+> +					ARRAY_SIZE(adxl372_samp_freq_tbl),
+> +					val);
+> +		ret =3D adxl372_set_odr(st, odr_index);
+> +		if (ret < 0)
+> +			return ret;
+> +		/*
+> +		 * The timer period depends on the ODR selected.
+> +		 * At 3200 Hz and below, it is 6.6 ms; at 6400 Hz, it is 3.3 ms
+> +		 */
+> +		ret =3D adxl372_set_activity_time_ms(st, st->act_time_ms);
+> +		if (ret < 0)
+> +			return ret;
+> +		/*
+> +		 * The timer period depends on the ODR selected.
+> +		 * At 3200 Hz and below, it is 26 ms; at 6400 Hz, it is 13 ms
+> +		 */
+> +		ret =3D adxl372_set_inactivity_time_ms(st, st->inact_time_ms);
+> +		if (ret < 0)
+> +			return ret;
+> +		/*
+> +		 * The maximum bandwidth is constrained to at most half of
+> +		 * the ODR to ensure that the Nyquist criteria is not violated
+> +		 */
+> +		if (st->bw > odr_index)
+> +			ret =3D adxl372_set_bandwidth(st, odr_index);
+> +
+> +		return ret;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -763,8 +822,21 @@ static const struct iio_trigger_ops adxl372_trigger_=
+ops =3D {
+>  	.set_trigger_state =3D adxl372_dready_trig_set_state,
+>  };
+> =20
+> +static IIO_CONST_ATTR_SAMP_FREQ_AVAIL("400 800 1600 3200 6400");
+> +
+> +static struct attribute *adxl372_attributes[] =3D {
+> +	&iio_const_attr_sampling_frequency_available.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group adxl372_attrs_group =3D {
+> +	.attrs =3D adxl372_attributes,
+> +};
+> +
+>  static const struct iio_info adxl372_info =3D {
+> +	.attrs =3D &adxl372_attrs_group,
+>  	.read_raw =3D adxl372_read_raw,
+> +	.write_raw =3D adxl372_write_raw,
+>  	.debugfs_reg_access =3D &adxl372_reg_access,
+>  	.hwfifo_set_watermark =3D adxl372_set_watermark,
+>  };
+> --=20
+> 2.7.4
+
+
+Best regards,
+Marcus Folkesson
+>=20
+
+--neYutvxvOLaeuPCA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAltt7kcACgkQiIBOb1ld
+UjKSoRAA30f20bS9ZZIym61gO3ry/CoRw4KxAeJz9Y+Sv02SBtBjMZCawTxK2YV/
+H3QzahkFed5Udj/zNXbwm8qeyZQLbk508nM6P6XTJ9Gr52vRBTxceaFLq+DZzRoO
+Ut9+3KBvOd4yMHdfFCj+NAZjGuqbWfj1F+1atxmQBrlTSqqZkgffSdByJed5Hxp1
++vBrsYH7XQb3KQAnBQ6stnp3GxdWb3FqvSwTmJxwLvBbWSE3VAho7ZJ3TNShqtZf
+Sv6oq8mZ6XpYS2rlZ10iHjqiaqN4i9OhZdGXfflmCfabLkxqlwSgXQ0jvd74AZTj
+v6RctgjueC+lbhJJq5XGTee0MfYHrDXF2oEPM+w4mNJjleC8SxSlg/4eRB/NsTq3
+SUvo/tcMuYXbdiQPsze8AhEv0MM1soI1vhJ6EgoIRbmc3H8FYx+TZk5zT8RtBpSt
+Q7OYasmyAwoaFhjvOtfeDiA/hmqySPYDBt2QdWqDdxnCZ04I5DX7MM2o9S/92PNm
+FspiWVYz/xmaEZP6TKK/eg0sBuu/UPUTb7qZgtG5I3af1xjekJ3xJ7D73jrabKf5
+DeAhWMt0tAxFg3SAGRIzhGRga84gVHlJ/Y2XVMJ5T4n+Kf9ZugimyNo/EvfJKFUv
+bzExintPZybWjcjq3L7YrJ0qZYqDuoR72q79RHAXmzPViE+XkvA=
+=NQHc
+-----END PGP SIGNATURE-----
+
+--neYutvxvOLaeuPCA--
