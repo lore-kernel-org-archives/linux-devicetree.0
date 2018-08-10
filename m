@@ -1,69 +1,49 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 4/4] drm/meson: convert to the new canvas module
-Date: Fri, 10 Aug 2018 09:49:16 +0200
-Message-ID: <e95fe817-ef12-9d06-e7c3-af2a959a2443@baylibre.com>
-References: <20180801185128.23440-1-maxi.jourdan@wanadoo.fr>
- <20180801185128.23440-5-maxi.jourdan@wanadoo.fr>
- <5b6cc316.1c69fb81.682d3.1216@mx.google.com>
- <CAHStOZ6oemCwYWb7dW6SS_ZaWEiVWSfrF=dB_G6CkVb6KS96nA@mail.gmail.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] clk: qcom: Add qspi (Quad SPI) clock defines for
+ sdm845 to header
+Date: Fri, 10 Aug 2018 13:38:18 +0530
+Message-ID: <a081f764-ae7d-e92a-fb15-370768f4fe5c@codeaurora.org>
+References: <20180724174513.174018-1-dianders@chromium.org>
+ <20180724174513.174018-2-dianders@chromium.org>
+ <20180725160102.GA18545@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAHStOZ6oemCwYWb7dW6SS_ZaWEiVWSfrF=dB_G6CkVb6KS96nA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180725160102.GA18545@rob-hp-laptop>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Douglas Anderson <dianders@chromium.org>
+Cc: sboyd@kernel.org, andy.gross@linaro.org, girishm@codeaurora.org, linux-arm-msm@vger.kernel.org, anischal@codeaurora.org, bjorn.andersson@linaro.org, grahamr@codeaurora.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMDgvMjAxOCAwODozNSwgTWF4aW1lIEpvdXJkYW4gd3JvdGU6Cj4gMjAxOC0wOC0xMCAw
-OjQxIEdNVCswMjowMCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjoKPj4gSGksIHRoaXMg
-aXMgYW4gYXV0b21hdGVkIGVtYWlsIGZyb20gUm9iJ3MgKGV4cGVyaW1lbnRhbCkgcmV2aWV3IGJv
-dC4gSQo+PiBmb3VuZCBhIGNvdXBsZSBvZiBjb21tb24gcHJvYmxlbXMgd2l0aCB5b3VyIHBhdGNo
-LiBQbGVhc2Ugc2VlIGJlbG93Lgo+Pgo+PiBPbiBXZWQsICAxIEF1ZyAyMDE4IDIwOjUxOjI4ICsw
-MjAwLCBNYXhpbWUgSm91cmRhbiB3cm90ZToKPj4+IFRoaXMgcmVtb3ZlcyB0aGUgbWVzb25fY2Fu
-dmFzIGZpbGVzIHdpdGhpbiB0aGUgbWVzb24vZHJtIGxheWVyCj4+PiBhbmQgbWFrZXMgdXNlIG9m
-IHRoZSBuZXcgY2FudmFzIG1vZHVsZSB0aGF0IGlzIHJlZmVyZW5jZWQgaW4gdGhlIGR0cy4KPj4+
-Cj4+PiBDYW52YXNlcyBjYW4gYmUgdXNlZCBieSBkaWZmZXJlbnQgSVBzIGFuZCBtb2R1bGVzLCBh
-bmQgaXQgaXMgYXMgc3VjaAo+Pj4gcHJlZmVyYWJsZSB0byByZWx5IG9uIGEgbW9kdWxlIHRoYXQg
-Y2FuIHNhZmVseSBkaXNwYXRjaCBjYW52YXNlcyBvbgo+Pj4gZGVtYW5kLgo+Pj4KPj4+IFNpZ25l
-ZC1vZmYtYnk6IE1heGltZSBKb3VyZGFuIDxtYXhpLmpvdXJkYW5Ad2FuYWRvby5mcj4KPj4KPj4g
-VGhlIHByZWZlcnJlZCBzdWJqZWN0IHByZWZpeCBpcyAiZHQtYmluZGluZ3M6IDxiaW5kaW5nIGRp
-cj46IC4uLiIuCj4+Cj4+PiAtLS0KPj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1l
-c29uLXZwdS50eHQgICAgfCAgOSArLS0KPj4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMv
-bWVzb24tZ3guZHRzaSAgICAgfCAgNyArLQo+Pj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9LY29u
-ZmlnICAgICAgICAgICAgICAgICB8ICAxICsKPj4+ICBkcml2ZXJzL2dwdS9kcm0vbWVzb24vTWFr
-ZWZpbGUgICAgICAgICAgICAgICAgfCAgMiArLQo+Pj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9t
-ZXNvbl9jYW52YXMuYyAgICAgICAgICB8IDcwIC0tLS0tLS0tLS0tLS0tLS0tLS0KPj4+ICBkcml2
-ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fY2FudmFzLmggICAgICAgICAgfCA0MiAtLS0tLS0tLS0t
-LQo+Pj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9jcnRjLmMgICAgICAgICAgICB8ICA1
-ICstCj4+PiAgZHJpdmVycy9ncHUvZHJtL21lc29uL21lc29uX2Rydi5jICAgICAgICAgICAgIHwg
-MzUgKysrKysrLS0tLQo+Pj4gIGRyaXZlcnMvZ3B1L2RybS9tZXNvbi9tZXNvbl9kcnYuaCAgICAg
-ICAgICAgICB8ICA1ICstCj4+PiAgZHJpdmVycy9ncHUvZHJtL21lc29uL21lc29uX3BsYW5lLmMg
-ICAgICAgICAgIHwgIDMgKy0KPj4+ICBkcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fdml1LmMg
-ICAgICAgICAgICAgfCAgMSAtCj4+PiAgMTEgZmlsZXMgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygr
-KSwgMTQxIGRlbGV0aW9ucygtKQo+Pj4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
-cm0vbWVzb24vbWVzb25fY2FudmFzLmMKPj4+ICBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL21lc29uL21lc29uX2NhbnZhcy5oCj4+Pgo+Pgo+PiBEVCBiaW5kaW5ncyAoaW5jbHVk
-aW5nIGJpbmRpbmcgaGVhZGVycykgc2hvdWxkIGJlIGEgc2VwYXJhdGUgcGF0Y2guIFNlZQo+PiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3VibWl0dGluZy1wYXRjaGVzLnR4dC4K
-Pj4KPiAKPiBIaSwgV2hhdCdzIHRoZSBzdGFuZGFyZCBwcm9jZWR1cmUgaGVyZSA/IFRoZSByZWFz
-b24gSSBrZXB0Cj4gZGV2aWNldHJlZStkcm0gY2hhbmdlcyB0b2dldGhlciBpcyBiZWNhdXNlIEkg
-ZGlkbid0IHdhbnQgdG8gaGF2ZQo+IGZsb2F0aW5nIGNvbW1pdHMgdGhhdCB3b3VsZCBicmVhayB0
-aGUgZHJtIG1vZHVsZS4KPiAKPiBTaG91bGQgSSBzcGxpdCB0aGUgY2hhbmdlcyBhbnl3YXkgPwo+
-IAo+IE1heGltZQo+IAoKWWVwLCBzcGxpdCB0aGUgZHQtYmluZGluZ3MgYW5kIHRoZSBjb2RlIGNo
-YW5nZS4KCkluIGEgbm9uLXBlcmZlY3Qgd29yaywgaXQgY291bGQgYmUgZ3JlYXQgdG8ga2VlcCB0
-aGUgIm9sZCIgY2FudmFzIHVudGlsCmV2ZXJ5dGhpbmcgaXMgbWVyZ2VkLCBleGNlcHQgaWYgS2V2
-aW4gbGV0IG1lIG1lcmdlIGV2ZXJ5dGhpbmcgKGluY2x1ZGluZyBEVCkgaW4gZHJtLW1pc2MuCgpO
-ZWlsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+On 7/25/2018 9:31 PM, Rob Herring wrote:
+> On Tue, Jul 24, 2018 at 10:45:12AM -0700, Douglas Anderson wrote:
+>> These clocks will need to be defined in the clock driver and
+>> referenced in device tree files.
+>>
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> ---
+>>
+>> Changes in v3: None
+>> Changes in v2: None
+>>
+>>   include/dt-bindings/clock/qcom,gcc-sdm845.h | 3 +++
+>>   1 file changed, 3 insertions(+)
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+   Reviewed-by: Taniya Das <tdas@codeaurora.org>
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
