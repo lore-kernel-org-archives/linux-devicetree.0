@@ -1,7 +1,7 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 1/4] dt-bindings: arm: hisilicon: Add binding for Hi3670 SoC
-Date: Fri, 10 Aug 2018 23:23:36 +0530
-Message-ID: <20180810175339.25421-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 3/4] dt-bindings: arm: hisilicon: Add binding for HiKey970 board
+Date: Fri, 10 Aug 2018 23:23:38 +0530
+Message-ID: <20180810175339.25421-4-manivannan.sadhasivam@linaro.org>
 References: <20180810175339.25421-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180810175339.25421-1-manivannan.sadhasivam@linaro.org>
@@ -10,7 +10,7 @@ To: xuwei5@hisilicon.com, robh+dt@kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding for Hi3670 SoC.
+Add devicetree binding for HiKey970 board.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
@@ -18,16 +18,16 @@ Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-index 199cd36fe1ba..14f54f569c63 100644
+index 14f54f569c63..a97f643e7d1c 100644
 --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
 +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-@@ -8,6 +8,10 @@ HiKey960 Board
+@@ -12,6 +12,10 @@ Hi3670 SoC
  Required root node properties:
- 	- compatible = "hisilicon,hi3660-hikey960", "hisilicon,hi3660";
+ 	- compatible = "hisilicon,hi3670";
  
-+Hi3670 SoC
++HiKey970 Board
 +Required root node properties:
-+	- compatible = "hisilicon,hi3670";
++	- compatible = "hisilicon,hi3670-hikey970", "hisilicon,hi3670";
 +
  Hi3798cv200 SoC
  Required root node properties:
