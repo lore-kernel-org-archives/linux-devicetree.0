@@ -1,30 +1,31 @@
 From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: Re: [PATCH v6 1/6] iio: adxl372: New driver for Analog Devices
+Subject: Re: [PATCH v4 1/6] iio: adxl372: New driver for Analog Devices
  ADXL372 Accelerometer
-Date: Fri, 10 Aug 2018 20:21:35 +0200
-Message-ID: <20180810182135.GA717@gmail.com>
-References: <1533890783-13456-1-git-send-email-stefan.popa@analog.com>
- <1533890783-13456-2-git-send-email-stefan.popa@analog.com>
+Date: Fri, 10 Aug 2018 21:25:05 +0200
+Message-ID: <20180810192505.GA2723@gmail.com>
+References: <1533557087-10401-1-git-send-email-stefan.popa@analog.com>
+ <1533557087-10401-2-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
+        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1533890783-13456-2-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <1533557087-10401-2-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stefan Popa <stefan.popa@analog.com>
 Cc: jic23@kernel.org, broonie@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---wac7ysb48OaltWcw
+--x+6KMIRAuhnl3hBn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi Stefan,
 
-On Fri, Aug 10, 2018 at 11:46:18AM +0300, Stefan Popa wrote:
+
+On Mon, Aug 06, 2018 at 03:04:42PM +0300, Stefan Popa wrote:
 > This patch adds basic support for Analog Devices ADXL372 SPI-Bus
 > Three-Axis Digital Accelerometer.
 >=20
@@ -106,46 +107,43 @@ rs
 > @@ -0,0 +1,525 @@
 > +// SPDX-License-Identifier: GPL-2.0+
 > +/*
+> + * ADXL372 3-Axis Digital Accelerometer SPI driver
+> + *
+> + * Copyright 2018 Analog Devices Inc.
+> + */
 
-The SPDX identifier "GPL-2.0+" is "GPL v2 or later", and the MODULE_LICENSE
-"GPL v2" is "GPL v2 only"
+Please make the SPDX-identifier and MODULE_LICENCE match here as well.
 
-See include/linux/module.h ::
+Either=20
+SPDX-License-Identifier: GPL-2.0+
+MODULE_LICENSE("GPL")
 
- *	"GPL"				[GNU Public License v2 or later]
- *	"GPL v2"			[GNU Public License v2]
+or
 
+SPDX-License-Identifier: GPL-2.0
+MODULE_LICENSE("GPL v2")
 
-Please make them match :-)
-
-[snip]
-
-> +MODULE_LICENSE("GPL v2");
-> --=20
-> 2.7.4
->=20
-
-Best regards
+Thanks!
 Marcus Folkesson
 
---wac7ysb48OaltWcw
+--x+6KMIRAuhnl3hBn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAltt16kACgkQiIBOb1ld
-UjLvdw//RuXizom2vss5WQp9bKoizuxPCG3xFJDXBQKgkIuRhCXEWfafC1eMe6Yp
-u6IpuO50LS98lU/qAL5xNRmjPIr761zvoMbB+EZFCxlmBzqw6mpntZNyX28JYM/D
-i6k8pA7Gg/TJOSF6pvbblugUYJQMZgRnao4trzqS4CRNntV5yyW007FmaniwcSBE
-Kx5NNZ1wjBEFWVirl1MFQM93JfrVn4ieSL1hqYL3lcCMU3DOeWMuKzcLFv/rNspL
-3+5zkL3g0ALwrGGkC9uaeORb8rMMhRqGffxQq4Qtw7qeqwS3J3oH6ZuGOlhP2Bdj
-jyjkdCFjmmZi58OBYu8wRFFhdhZN7a0Xyt3PaOeHECUsJlnIArFCrENyGCFa10Vg
-mbzAuCk6CfFbf1W09IRLH91nlhrygJxNPqbWgEHxo04o+U8aXc5tUaYz8Ov6DQ0C
-tINWV06TEpKoj9AFG3qCc71FTJapkukXY8XMtgTFo+MhGgd6oDYXu735/Opf7DZj
-Ru6Eh3hZ6Hryy6wxJ48Ufjoy4SBMH/F+e2kf4z8C9xXOrRqXanyIXJyqjNAlOwGV
-kYBHeR8MCIfrqCtGQdePYFymymivCZDcAhFMC6CPjzqd07VlBCJHuQUB2lo0wu0r
-8RkwRwIVd84BA5vNFaj1X56mY5PusDWjAFqKEs0VbHBNG9eqYME=
-=KjBl
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAltt5o0ACgkQiIBOb1ld
+UjKQHQ/+Pgab6MAe9FBMzZA0daGigs/5JetMKzizYOtpj2vhtntcJ5LlgMG6V/Rd
+TfYjIiKPEfc8FVqtPua3DPBcvUL/iuVU7LqQYx8LaIkwT1Fp4dg2OQovOeUEUZ0E
+nmAFwp3QDMPnZgAvDr5WnrFMua7a24ZhaEcDUXStoXPDndSfXkbvsCfovpAnMGk5
+S/fmMoa5gPunEhOWGZR4F8q+LnmlcBUoLeTcNNqHGBpx07TQiXCybtWFKaQ8VtaO
+CEznh2nEc040k4yuk2xubBh5XItJSON5fAuuHirP8gEvkmQzMwNuwO/QLkODNfuh
+JYRmjBoeVm43b+hfazzQu1ZtvC9cmyj5G8SUZsI1PzI9WRFGZKb/oRMHGKaTYFO0
+JtOgTLsmUTnpiP3ArRjoC6Bap5r5mlN8+rC7iELY5prpHHxw5QMiX0SsHnAlR250
+msaRMAWMhiCvQ/fVLlP9YLPro4WqK4rTKQnq2zHv4VrFofxp6g/59nMnpUdPeGpS
+IzByC+01dwqe8D+ZrvtrlYlELUNec6Ba0WaSUFDqu4QSmi3CaZ+UIJQNPZIa82Y5
+0ZPBr7mKqWgN8DRjtB+QABKCWFuFioOWlvHywLAY/wN384etjobzxZfI0XpSY2VX
+9G6KfwVHEqMIlqk+PkCjJhzjbsNf2rsEauqUK99P3UIYd0FU2Dw=
+=R3xe
 -----END PGP SIGNATURE-----
 
---wac7ysb48OaltWcw--
+--x+6KMIRAuhnl3hBn--
