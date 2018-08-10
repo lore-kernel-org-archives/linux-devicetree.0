@@ -1,122 +1,84 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v6 0/6] iio: accel: Add adxl372 driver
-Date: Fri, 10 Aug 2018 11:46:17 +0300
-Message-ID: <1533890783-13456-1-git-send-email-stefan.popa@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/9] Add Reset Controller support for Actions Semi Owl SoCs
+Date: Fri, 10 Aug 2018 15:21:04 +0530
+Message-ID: <20180810095113.25292-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, broonie@kernel.org
-Cc: Stefan Popa <stefan.popa@analog.com>, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: p.zabel@pengutronix.de, mturquette@baylibre.com, sboyd@kernel.org, afaerber@suse.de, robh+dt@kernel.org
+Cc: linux-clk@vger.kernel.org, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, sravanhome@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Changes in v6:
-Patch 1:
-	- nothing changed.
-Patch 2, 3:
-	- added reviewed-by's which were lost when new versions were added.
-Patch 4:
-	- fixed kbuild warning by adding a buffer overflow check in
-	  adxl372_buffer_postenable().
-Patch 5, 6:
-	- nothing changed
+This patchset adds Reset Controller (RMU) support for Actions Semi
+Owl SoCs, S900 and S700. For the Owl SoCs, RMU has been integrated into
+the clock subsystem in hardware. Hence, in software we integrate RMU
+support into common clock driver inorder to maintain compatibility. The
+syscon approach is not taken into account based on the review by Rob.
 
-Changes in v5:
-Patch 1, 2:
-	- nothing changed
-Patch 3:
-	- added a new readable_noinc operation based on feedback from
-	  Mark Brown
-Patch 4:
-	- added a readable_noinc callback based on the changes from the
-	  previous patch.
-Patch 5, 6:
-	- nothing changed
+This patch series depends on the recently posted S700 clk series:
+"[PATCH v7 0/5] Add clock driver for Actions S700 SoC". For the S700 clk
+series, driver and bindings patches are applied through the clk tree.
+But the DTS patches are not yet picked up by the platform maintainer,
+Andreas.
 
-Changes in v4:
-Patch 1:
-	- used a lookup table in adxl372_set_activity_threshold() instead
-	  of a switch(case).
-Patch 2: 
-	- removed the interrupt-parent from the bindings.
-Patch 3:
-	- renamed regmap_pipe_read() stub to regmap_noinc_read().
-Patch 4:
-	- removed the adxl372_read_fifo() wrapper and directly called
-	  regmap_noinc_read().
-	- called iio_triggered_buffer_predisable() before doing the local
-	  changes.
-Patch 5:
-	- nothing changed.
-Patch 6:
-	- nothing changed.
+Hence, Andreas is expected to pick the DTS patches in this series once
+reviewed by the maintainers along with S700 clk DTS patches.
+
+Because of the absence of the S500 SoC clk support, the reset controller
+registration code is added to both S700 and S900 SoC clk drivers for now.
+But once S500 clk support is added, the reset controller registration part
+will be moved to Owl SoCs common clk code.
+
+Thanks,
+Mani
 
 Changes in v3:
-Patch 1, 2:
-	- nothing changed
-Patch 3:
-	- changed the name from regmap_pipe_read() to regmap_noinc_read()
-	- added a check for readable registers
-Patch 4:
-	- dropped the fifo peak mode
-	- corrected the patch based on feedback from Peter Meerwald-Stadler.
-Patch 5 and 6:
-	- nothing changed
+
+* Reverted back the syscon approach based on the review by Rob Herring
+* Dropped the MAINTAINERS patch
+* Converted reset_map struct definitions to const based on the review by
+  Philipp
+* Fixed S700 header in DT spotted by Parthiban
+* Added Reviewed-by tags from Rob for 3 bindings patches
 
 Changes in v2:
-Patch 1:
-	- removed ADXL372_RD_FLAG_MSK and ADXL372_WR_FLAG_MSK macros.
-	- handled regmap read/write by setting reg_bits and pad_bits
-	  fields in regmap_config struct.
-	- removed the buffer specifications when defining the channels.
-	- changed the activity and inactivity thresholds.
-	- added two new functions for setting the activity and inactivity
-	  timers: adxl372_set_inactivity_time_ms() and
-	  adxl372_set_activity_time_ms().
-Patch 2:
-	- introduced all the DT bindings in a single patch.
-Patch 3:
-	- backported the patch based on this discussion: 
-          https://lkml.org/lkml/2016/6/16/548.
-	- this patch is required as the regmap_pipe_read() API will be used 
-	  to read the data from the FIFO.
-Patch 4:
-	- removed DT bindings changes from this patch.
-	- removed the linux/gpio/consumer.h header.
-	- used regmap_pipe_read() instead of regmap_bulk_read() when
-	  reading data from the FIFO.
-	- used multiple regmap_write() calls instead of a single
-	  regmap_bulk_write() if there is no fast path.
-	- used be32_to_cpu() inside the adxl372_get_status() function.
-	- added a new in_accel_x&y&z_peak scan element which allows the
-	  user to set the FIFO into XYZ peak mode.
-	- used a adxl372_axis_lookup_table() to determine the fifo format
-	  from the active_scan_mask.
-	- made IRQ optional.
-Patch 5 and 6:
-	- nothing changed
 
-Crestez Dan Leonard (1):
-  regmap: Add regmap_noinc_read API
+* Converted the CMU and RMU drivers to syscon for a more cleaner
+  approach
+* Declared the owl_reset_map structs to const
+* Used regmap_update_bits instead of a combined regmap_read and write
+* Removed unused headers in RMU drivers
+* Added MAINTAINERS entry for the RMU driver and bindings
 
-Stefan Popa (5):
-  iio: adxl372: New driver for Analog Devices ADXL372 Accelerometer
-  dt-bindings: iio: accel: Add docs for ADXL372
-  iio:adxl372: Add FIFO and interrupts support
-  iio:adxl372: Add sampling frequency support
-  iio:adxl372: Add filter bandwidth support
+Manivannan Sadhasivam (9):
+  clk: actions: Cache regmap info in private clock descriptor
+  dt-bindings: clock: Add reset controller bindings for Actions Semi Owl
+    SoCs
+  dt-bindings: reset: Add binding constants for Actions Semi S700 RMU
+  dt-bindings: reset: Add binding constants for Actions Semi S900 RMU
+  arm64: dts: actions: Add Reset Controller support for S700 SoC
+  arm64: dts: actions: Add Reset Controller support for S900 SoC
+  clk: actions: Add Actions Semi Owl SoCs Reset Management Unit support
+  clk: actions: Add Actions Semi S700 SoC Reset Management Unit support
+  clk: actions: Add Actions Semi S900 SoC Reset Management Unit support
 
- .../devicetree/bindings/iio/accel/adxl372.txt      |  22 +
- MAINTAINERS                                        |   7 +
- drivers/base/regmap/internal.h                     |   3 +
- drivers/base/regmap/regmap.c                       |  79 +-
- drivers/iio/accel/Kconfig                          |  11 +
- drivers/iio/accel/Makefile                         |   1 +
- drivers/iio/accel/adxl372.c                        | 986 +++++++++++++++++++++
- include/linux/regmap.h                             |  19 +
- 8 files changed, 1127 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
- create mode 100644 drivers/iio/accel/adxl372.c
+ .../bindings/clock/actions,owl-cmu.txt        |  2 +
+ arch/arm64/boot/dts/actions/s700.dtsi         |  2 +
+ arch/arm64/boot/dts/actions/s900.dtsi         |  2 +
+ drivers/clk/actions/Kconfig                   |  1 +
+ drivers/clk/actions/Makefile                  |  1 +
+ drivers/clk/actions/owl-common.c              |  3 +-
+ drivers/clk/actions/owl-common.h              |  5 +-
+ drivers/clk/actions/owl-reset.c               | 66 ++++++++++++++
+ drivers/clk/actions/owl-reset.h               | 31 +++++++
+ drivers/clk/actions/owl-s700.c                | 55 +++++++++++-
+ drivers/clk/actions/owl-s900.c                | 86 ++++++++++++++++++-
+ .../dt-bindings/reset/actions,s700-reset.h    | 34 ++++++++
+ .../dt-bindings/reset/actions,s900-reset.h    | 65 ++++++++++++++
+ 13 files changed, 347 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/clk/actions/owl-reset.c
+ create mode 100644 drivers/clk/actions/owl-reset.h
+ create mode 100644 include/dt-bindings/reset/actions,s700-reset.h
+ create mode 100644 include/dt-bindings/reset/actions,s900-reset.h
 
 -- 
-2.7.4
+2.17.1
