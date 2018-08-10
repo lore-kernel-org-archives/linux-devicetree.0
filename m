@@ -1,161 +1,28 @@
-Return-Path: <SRS0=p9ww=LD=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [RFT 8/8] arm64: dts: renesas: ebisu: Add HDMI and CVBS input
-Date: Mon, 20 Aug 2018 12:16:42 +0200
-Message-Id: <1534760202-20114-9-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1534760202-20114-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1534760202-20114-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, kieran.bingham+renesas@ideasonboard.com, niklas.soderlund+renesas@ragnatech.se, damm+renesas@opensource.se, ulrich.hecht+renesas@gmail.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=20pF=KZ=verge.net.au=horms@kernel.org>
+Date: Fri, 10 Aug 2018 13:09:48 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/5] dt-bindings: power: Add r8a774a1 SYSC power
+ domain definitions
+Message-ID: <20180810110947.kamga2xzjh4k3vdy@verge.net.au>
+References: <1533221302-44598-1-git-send-email-biju.das@bp.renesas.com>
+ <1533221302-44598-2-git-send-email-biju.das@bp.renesas.com>
+ <20180809110758.rrlatabqt2v5suqd@verge.net.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180809110758.rrlatabqt2v5suqd@verge.net.au>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add HDMI and CVBS inputs device nodes to R-Car E3 Ebisu board.
+On Thu, Aug 09, 2018 at 01:07:59PM +0200, Simon Horman wrote:
+> On Thu, Aug 02, 2018 at 03:48:18PM +0100, Biju Das wrote:
+> > This patch adds power domain indices for RZ/G2M.
+> > 
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Both HDMI and CVBS inputs are connected to an ADV7482 video decoder hooked to
-the SoC CSI-2 receiver port.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
-The upported BSP patch:
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=97287065b27d987f96a33bfbbd52586ac091ee6d
-described the ADV7482 output as 'adv7482_txa_cp' and 'adv7482_txa_sd'.
-
-This seems wrong to me, as per Ebisu's schematics, the TXA output channel is a
-single one and it is routed to CSI40 input. The BSP patch connects two
-endpoints, with differente 'data-lanes' values to the same CSI input, and this
-seems odd to me.
-
-There is an issue here that the mainline ADV748x drivers does not support
-dynamic routing, and thus HDMI is always routed to TXA and analogue inputs to
-TXB, but that's a separate issue and DTS should only describe which connections
-are in place in the board, so I didn't include the adv748x's 'port@11' defined
-in the BSP patch (which is also wrong as it should be port@b, and the 11th port
-described TXB, not a different input routing to port@a).
-
-Please have a look and confirm my understanding.
-Thanks
-  j
----
- arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 86 ++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-index 2bc3a48..d2faf3e 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
-@@ -28,6 +28,29 @@
- 		/* first 128MB is reserved for secure area. */
- 		reg = <0x0 0x48000000 0x0 0x38000000>;
- 	};
-+
-+	cvbs-in {
-+		compatible = "composite-video-connector";
-+		label = "CVBS IN";
-+
-+		port {
-+			cvbs_con: endpoint {
-+				remote-endpoint = <&adv7482_ain7>;
-+			};
-+		};
-+	};
-+
-+	hdmi-in {
-+		compatible = "hdmi-connector";
-+		label = "HDMI IN";
-+		type = "a";
-+
-+		port {
-+			hdmi_in_con: endpoint {
-+				remote-endpoint = <&adv7482_hdmi>;
-+			};
-+		};
-+	};
- };
-
- &avb {
-@@ -47,6 +70,22 @@
- 	};
- };
-
-+&csi40 {
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			reg = <0>;
-+
-+			csi40_in: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&adv7482_txa>;
-+			};
-+		};
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -55,6 +94,49 @@
- 	clock-frequency = <48000000>;
- };
-
-+&i2c0 {
-+	status = "okay";
-+
-+	video-receiver@70 {
-+		compatible = "adi,adv7482";
-+		reg = <0x70>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		interrupt-parent = <&gpio0>;
-+		interrupt-names = "intrq1", "intrq2";
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>,
-+			     <17 IRQ_TYPE_LEVEL_LOW>;
-+
-+		port@7 {
-+			reg = <7>;
-+
-+			adv7482_ain7: endpoint {
-+				remote-endpoint = <&cvbs_con>;
-+			};
-+		};
-+
-+		port@8 {
-+			reg = <8>;
-+
-+			adv7482_hdmi: endpoint {
-+				remote-endpoint = <&hdmi_in_con>;
-+			};
-+		};
-+
-+		port@a {
-+			reg = <0xa>;
-+
-+			adv7482_txa: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+				remote-endpoint = <&csi40_in>;
-+			};
-+		};
-+	};
-+};
-+
- &ohci0 {
- 	status = "okay";
- };
-@@ -94,6 +176,10 @@
- 	status = "okay";
- };
-
-+&vin4 {
-+	status = "okay";
-+};
-+
- &xhci0 {
- 	pinctrl-0 = <&usb30_pins>;
- 	pinctrl-names = "default";
---
-2.7.4
+Now applied for v4.20.
