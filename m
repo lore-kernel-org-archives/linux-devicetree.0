@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v7 12/12] media: video-mux: add bayer formats
-Date: Fri, 10 Aug 2018 15:20:45 +0100
-Message-ID: <20180810142045.27657-13-rui.silva@linaro.org>
+Subject: [PATCH v7 09/12] ARM: dts: imx7s-warp: add ov2680 sensor node
+Date: Fri, 10 Aug 2018 15:20:42 +0100
+Message-ID: <20180810142045.27657-10-rui.silva@linaro.org>
 References: <20180810142045.27657-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,43 +21,91 @@ To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Philipp Zabel <p.zabel@pen
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add non vendor bayer formats to the  allowed format array.
+Warp7 comes with a Omnivision OV2680 sensor, add the node here to make complete
+the camera data path for this system. Add the needed regulator to the analog
+voltage supply, the port and endpoints in mipi_csi node and the pinctrl for the
+reset gpio.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- drivers/media/platform/video-mux.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/imx7s-warp.dts | 44 ++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
-index d8a6fa20879a..af74eb384b78 100644
---- a/drivers/media/platform/video-mux.c
-+++ b/drivers/media/platform/video-mux.c
-@@ -263,6 +263,26 @@ static int video_mux_set_format(struct v4l2_subdev *sd,
- 	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
- 	case MEDIA_BUS_FMT_JPEG_1X8:
- 	case MEDIA_BUS_FMT_AHSV8888_1X32:
-+	case MEDIA_BUS_FMT_SBGGR8_1X8:
-+	case MEDIA_BUS_FMT_SGBRG8_1X8:
-+	case MEDIA_BUS_FMT_SGRBG8_1X8:
-+	case MEDIA_BUS_FMT_SRGGB8_1X8:
-+	case MEDIA_BUS_FMT_SBGGR10_1X10:
-+	case MEDIA_BUS_FMT_SGBRG10_1X10:
-+	case MEDIA_BUS_FMT_SGRBG10_1X10:
-+	case MEDIA_BUS_FMT_SRGGB10_1X10:
-+	case MEDIA_BUS_FMT_SBGGR12_1X12:
-+	case MEDIA_BUS_FMT_SGBRG12_1X12:
-+	case MEDIA_BUS_FMT_SGRBG12_1X12:
-+	case MEDIA_BUS_FMT_SRGGB12_1X12:
-+	case MEDIA_BUS_FMT_SBGGR14_1X14:
-+	case MEDIA_BUS_FMT_SGBRG14_1X14:
-+	case MEDIA_BUS_FMT_SGRBG14_1X14:
-+	case MEDIA_BUS_FMT_SRGGB14_1X14:
-+	case MEDIA_BUS_FMT_SBGGR16_1X16:
-+	case MEDIA_BUS_FMT_SGBRG16_1X16:
-+	case MEDIA_BUS_FMT_SGRBG16_1X16:
-+	case MEDIA_BUS_FMT_SRGGB16_1X16:
- 		break;
- 	default:
- 		sdformat->format.code = MEDIA_BUS_FMT_Y8_1X8;
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index 8e098b90c525..b1c5d8f8a2ba 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -91,6 +91,14 @@
+ 		regulator-always-on;
+ 	};
+ 
++	reg_peri_3p15v: regulator-peri-3p15v {
++		compatible = "regulator-fixed";
++		regulator-name = "peri_3p15v_reg";
++		regulator-min-microvolt = <3150000>;
++		regulator-max-microvolt = <3150000>;
++		regulator-always-on;
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "imx7-sgtl5000";
+@@ -214,6 +222,27 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
++
++	ov2680: camera@36 {
++		compatible = "ovti,ov2680";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov2680>;
++		reg = <0x36>;
++		clocks = <&osc>;
++		clock-names = "xvclk";
++		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
++		DOVDD-supply = <&sw2_reg>;
++		DVDD-supply = <&sw2_reg>;
++		AVDD-supply = <&reg_peri_3p15v>;
++
++		port {
++			ov2680_to_mipi: endpoint {
++				remote-endpoint = <&mipi_from_sensor>;
++				clock-lanes = <0>;
++				data-lanes = <1>;
++			};
++		};
++	};
+ };
+ 
+ &i2c4 {
+@@ -348,6 +377,15 @@
+ 	#size-cells = <0>;
+ 	fsl,csis-hs-settle = <3>;
+ 
++	port@0 {
++		reg = <0>;
++
++		mipi_from_sensor: endpoint {
++			remote-endpoint = <&ov2680_to_mipi>;
++			data-lanes = <1>;
++		};
++	};
++
+ 	port@1 {
+ 		reg = <1>;
+ 
+@@ -404,6 +442,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_ov2680: ov2660grp {
++		fsl,pins = <
++			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
++		>;
++	};
++
+ 	pinctrl_sai1: sai1grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
 -- 
 2.18.0
