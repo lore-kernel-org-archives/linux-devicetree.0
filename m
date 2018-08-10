@@ -1,268 +1,277 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 2/2] arm64: dts: meson-g12a: add initial g12a s905d2 SoC
- DT support
-Date: Fri, 10 Aug 2018 13:58:34 +0200
-Message-ID: <f21f60423cbc43797e2465f1a734f715795c30b6.camel@baylibre.com>
-References: <1533802951-49919-1-git-send-email-jianxin.pan@amlogic.com>
-         <1533802951-49919-3-git-send-email-jianxin.pan@amlogic.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v7 3/3] drm/atmel-hlcdc: support bus-width (12/16/18/24)
+ in endpoint nodes
+Date: Fri, 10 Aug 2018 14:47:18 +0200
+Message-ID: <73d5efe8-4589-5a84-7660-c952f22387a1@axentia.se>
+References: <20180804111439.7455-1-peda@axentia.se>
+ <20180804111439.7455-4-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533802951-49919-3-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <20180804111439.7455-4-peda@axentia.se>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>
+To: linux-kernel@vger.kernel.org
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-08-09 at 16:22 +0800, Jianxin Pan wrote:
-> Try to add basic DT support for the Amlogic's Meson-G12A S905D2 SoC,
-> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
-> Timer, UART. It's capable of booting up into the serial console.
+On 2018-08-04 13:14, Peter Rosin wrote:
+> This beats the heuristic that the connector is involved in what format
+> should be output for cases where this fails.
+
+Sorry to reply to self, but...
+
+> E.g. if there is a bridge that changes format between the encoder and the
+> connector, or if some of the RGB pins between the lcd controller and the
+> encoder are not routed on the PCB.
 > 
-> Signed-off-by: Jianxin <jianxin.pan@amlogic.com>
-
-Could please fix your signoff here ? Your last name went missing
-
+> This is critical for the devices that have the "conflicting output
+> formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
+> RGB bits move around depending on the selected output mode. For
+> devices that do not have the "conflicting output formats" issue
+> (SAMA5D2, SAMA5D4), this is completely irrelevant.
+> 
+> Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
->  arch/arm64/boot/dts/amlogic/Makefile            |   1 +
->  arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts |  22 +++
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi     | 174 ++++++++++++++++++++++++
->  3 files changed, 197 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c   | 70 +++++++++++++++++-------
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h     |  1 +
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 70 +++++++++++++++++++++---
+>  3 files changed, 114 insertions(+), 27 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index a97c0e2..c31f29d6 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-> new file mode 100644
-> index 0000000..d267a37
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-> + */
+> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> index d73281095fac..c38a479ada98 100644
+> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
+> @@ -226,6 +226,55 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
+>  #define ATMEL_HLCDC_RGB888_OUTPUT	BIT(3)
+>  #define ATMEL_HLCDC_OUTPUT_MODE_MASK	GENMASK(3, 0)
+>  
+> +static int atmel_hlcdc_connector_output_mode(struct drm_connector_state *state)
+> +{
+> +	struct drm_connector *connector = state->connector;
+> +	struct drm_display_info *info = &connector->display_info;
+> +	struct drm_encoder *encoder;
+> +	unsigned int supported_fmts = 0;
+> +	int j;
 > +
-> +/dts-v1/;
+> +	encoder = state->best_encoder;
+> +	if (!encoder)
+> +		encoder = connector->encoder;
 > +
-> +#include "meson-g12a.dtsi"
+> +	switch (atmel_hlcdc_encoder_get_bus_fmt(encoder)) {
+> +	case 0:
+> +		break;
+> +	case MEDIA_BUS_FMT_RGB444_1X12:
+> +		return ATMEL_HLCDC_RGB444_OUTPUT;
+> +	case MEDIA_BUS_FMT_RGB565_1X16:
+> +		return ATMEL_HLCDC_RGB565_OUTPUT;
+> +	case MEDIA_BUS_FMT_RGB666_1X18:
+> +		return ATMEL_HLCDC_RGB666_OUTPUT;
+> +	case MEDIA_BUS_FMT_RGB888_1X24:
+> +		return ATMEL_HLCDC_RGB888_OUTPUT;
+> +	default:
+> +		return -EINVAL;
+> +	}
 > +
-> +/ {
-> +	compatible = "amlogic,u200", "amlogic,g12a";
-> +	model = "Amlogic Meson G12A U200 Development Board";
+> +	for (j = 0; j < info->num_bus_formats; j++) {
+> +		switch (info->bus_formats[j]) {
+> +		case MEDIA_BUS_FMT_RGB444_1X12:
+> +			supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
+> +			break;
+> +		case MEDIA_BUS_FMT_RGB565_1X16:
+> +			supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
+> +			break;
+> +		case MEDIA_BUS_FMT_RGB666_1X18:
+> +			supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
+> +			break;
+> +		case MEDIA_BUS_FMT_RGB888_1X24:
+> +			supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
 > +
-> +	aliases {
-> +		serial0 = &uart_AO;
-> +	};
+> +	return supported_fmts;
+> +}
+> +
+>  static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
+>  {
+>  	unsigned int output_fmts = ATMEL_HLCDC_OUTPUT_MODE_MASK;
+> @@ -238,31 +287,12 @@ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
+>  	crtc = drm_crtc_to_atmel_hlcdc_crtc(state->crtc);
+>  
+>  	for_each_new_connector_in_state(state->state, connector, cstate, i) {
+> -		struct drm_display_info *info = &connector->display_info;
+>  		unsigned int supported_fmts = 0;
+> -		int j;
+>  
+>  		if (!cstate->crtc)
+>  			continue;
+>  
+> -		for (j = 0; j < info->num_bus_formats; j++) {
+> -			switch (info->bus_formats[j]) {
+> -			case MEDIA_BUS_FMT_RGB444_1X12:
+> -				supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
+> -				break;
+> -			case MEDIA_BUS_FMT_RGB565_1X16:
+> -				supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
+> -				break;
+> -			case MEDIA_BUS_FMT_RGB666_1X18:
+> -				supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
+> -				break;
+> -			case MEDIA_BUS_FMT_RGB888_1X24:
+> -				supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
+> -				break;
+> -			default:
+> -				break;
+> -			}
+> -		}
+> +		supported_fmts = atmel_hlcdc_connector_output_mode(cstate);
+>  
+>  		if (crtc->dc->desc->conflicting_output_formats)
+>  			output_fmts &= supported_fmts;
+> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+> index 60c937f42114..4cc1e03f0aee 100644
+> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
+> @@ -441,5 +441,6 @@ void atmel_hlcdc_crtc_irq(struct drm_crtc *c);
+>  int atmel_hlcdc_crtc_create(struct drm_device *dev);
+>  
+>  int atmel_hlcdc_create_outputs(struct drm_device *dev);
+> +int atmel_hlcdc_encoder_get_bus_fmt(struct drm_encoder *encoder);
+>  
+>  #endif /* DRM_ATMEL_HLCDC_H */
+> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+> index 8db51fb131db..f587ae596791 100644
+> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+> @@ -27,33 +27,89 @@
+>  
+>  #include "atmel_hlcdc_dc.h"
+>  
+> +struct atmel_hlcdc_rgb_output {
+> +	struct drm_encoder encoder;
+> +	int bus_fmt;
 > +};
 > +
-> +&uart_AO {
-> +	status = "okay";
-> +};
+>  static const struct drm_encoder_funcs atmel_hlcdc_panel_encoder_funcs = {
+>  	.destroy = drm_encoder_cleanup,
+>  };
+>  
+> +static struct atmel_hlcdc_rgb_output *
+> +atmel_hlcdc_encoder_to_rgb_output(struct drm_encoder *encoder)
+> +{
+> +	return container_of(encoder, struct atmel_hlcdc_rgb_output, encoder);
+> +}
 > +
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> new file mode 100644
-> index 0000000..64a0f2e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> @@ -0,0 +1,174 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-> + */
+> +int atmel_hlcdc_encoder_get_bus_fmt(struct drm_encoder *encoder)
+> +{
+> +	struct atmel_hlcdc_rgb_output *output;
 > +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +	output = atmel_hlcdc_encoder_to_rgb_output(encoder);
 > +
-> +/ {
-
-Could you please order the subnodes alphabetically ?
-
-In general, we should try to order nodes by addresses when there is one and
-alphabetically when there is none. This is something we have to fix for the AXG
-as well.
-
-
-> +	compatible = "amlogic,g12a";
+> +	return output->bus_fmt;
+> +}
 > +
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
+> +static int atmel_hlcdc_of_bus_fmt(struct device_node *ep)
+> +{
+> +	u32 bus_width;
+> +	int ret;
 > +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
+> +	ret = of_property_read_u32(ep, "bus-width", &bus_width);
+> +	if (ret == -EINVAL)
+> +		return 0;
+> +	if (ret)
+> +		return ret;
 > +
-> +		/* Alternate 3 MiB reserved for ARM Trusted Firmware (BL31) */
-
-It's the only one (for now at least) so it's not really an alternate, isn't it ?
-
-> +		secmon_reserved: secmon@5000000 {
-> +			reg = <0x0 0x05000000 0x0 0x300000>;
-> +			no-map;
-> +		};
-> +	};
+> +	switch (bus_width) {
+> +	case 12:
+> +		return MEDIA_BUS_FMT_RGB444_1X12;
+> +	case 16:
+> +		return MEDIA_BUS_FMT_RGB565_1X16;
+> +	case 18:
+> +		return MEDIA_BUS_FMT_RGB666_1X18;
+> +	case 24:
+> +		return MEDIA_BUS_FMT_RGB888_1X24;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
 > +
-> +	cpus {
-> +		#address-cells = <0x2>;
-> +		#size-cells = <0x0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu2: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x2>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x3>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		l2: l2-cache0 {
-> +			compatible = "cache";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
-> +	};
-> +
-> +	xtal: xtal-clk {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <24000000>;
-> +		clock-output-names = "xtal";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-
-Could you please order the different bus by ascending addresses ?
+>  static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
+>  {
+> -	struct drm_encoder *encoder;
+> +	struct atmel_hlcdc_rgb_output *output;
+> +	struct device_node *ep;
+>  	struct drm_panel *panel;
+>  	struct drm_bridge *bridge;
+>  	int ret;
+>  
+> +	ep = of_graph_get_endpoint_by_regs(dev->dev->of_node, 0, endpoint);
 
 
+...I just noticed that the ep device_node is never put away...
+
+> +	if (!ep)
+> +		return -ENODEV;
 > +
-> +		apb: apb@ffe00000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0xffe00000 0x0 0x200000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x200000>;
-> +		};
+>  	ret = drm_of_find_panel_or_bridge(dev->dev->of_node, 0, endpoint,
+>  					  &panel, &bridge);
+>  	if (ret)
+>  		return ret;
+>  
+> -	encoder = devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
+> -	if (!encoder)
+> +	output = devm_kzalloc(dev->dev, sizeof(*output), GFP_KERNEL);
+> +	if (!output)
+>  		return -EINVAL;
+
+...and this should be -ENOMEM. Not that this latter buglet is a problem
+with this series, but since I noticed it and am going to resend anyway
+I'm going to fix that too.
+
+Cheers,
+Peter
+
+>  
+> -	ret = drm_encoder_init(dev, encoder,
+> +	output->bus_fmt = atmel_hlcdc_of_bus_fmt(ep);
+> +	if (output->bus_fmt < 0) {
+> +		dev_err(dev->dev, "invalid bus width\n");
+> +		return -EINVAL;
+> +	}
 > +
-> +		cbus: bus@ffd00000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0xffd00000 0x0 0x25000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
-> +
-> +		};
-> +
-> +		gic: interrupt-controller@ffc01000 {
-> +			compatible = "arm,gic-400";
-> +			reg = <0x0 0xffc01000 0 0x1000>,
-> +			      <0x0 0xffc02000 0 0x2000>,
-> +			      <0x0 0xffc04000 0 0x2000>,
-> +			      <0x0 0xffc06000 0 0x2000>;
-> +			interrupt-controller;
-> +			interrupts = <GIC_PPI 9
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <0>;
-> +		};
-> +
-> +		hiubus: bus@ff63c000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0xff63c000 0x0 0x1c00>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1c00>;
-> +
-> +		};
-> +
-> +		periphs: periphs@ff634000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0xff634000 0x0 0x2000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges = <0x0 0x0 0x0 0xff634000 0x0 0x2000>;
-> +		};
-> +
-> +		aobus: bus@ff800000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0xff800000 0x0 0x100000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
-> +
-> +			uart_AO: serial@3000 {
-> +				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
-> +				reg = <0x0 0x3000 0x0 0x18>;
-> +				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>, <&xtal>, <&xtal>;
-> +				clock-names = "xtal", "pclk", "baud";
-> +				status = "disabled";
-> +			};
-> +
-> +			uart_AO_B: serial@4000 {
-> +				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
-> +				reg = <0x0 0x4000 0x0 0x18>;
-> +				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>, <&xtal>, <&xtal>;
-> +				clock-names = "xtal", "pclk", "baud";
-> +				status = "disabled";
-> +			};
-> +
-> +		};
-> +	};
-> +};
+> +	ret = drm_encoder_init(dev, &output->encoder,
+>  			       &atmel_hlcdc_panel_encoder_funcs,
+>  			       DRM_MODE_ENCODER_NONE, NULL);
+>  	if (ret)
+>  		return ret;
+>  
+> -	encoder->possible_crtcs = 0x1;
+> +	output->encoder.possible_crtcs = 0x1;
+>  
+>  	if (panel) {
+>  		bridge = drm_panel_bridge_add(panel, DRM_MODE_CONNECTOR_Unknown);
+> @@ -62,7 +118,7 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
+>  	}
+>  
+>  	if (bridge) {
+> -		ret = drm_bridge_attach(encoder, bridge, NULL);
+> +		ret = drm_bridge_attach(&output->encoder, bridge, NULL);
+>  		if (!ret)
+>  			return 0;
+>  
+> @@ -70,7 +126,7 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
+>  			drm_panel_bridge_remove(bridge);
+>  	}
+>  
+> -	drm_encoder_cleanup(encoder);
+> +	drm_encoder_cleanup(&output->encoder);
+>  
+>  	return ret;
+>  }
+> 
