@@ -1,66 +1,101 @@
-From: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [RFC net-next 00/15] net: A socket API for LoRa
-Date: Fri, 10 Aug 2018 16:57:11 +0100
-Message-ID: <20180810165711.59bf26f7@alans-desktop>
-References: <20180701110804.32415-1-afaerber@suse.de>
- <CAC=mGzgUCopz2xTOA0R-WD8a1DOaOOUn=YpfdMiJ33y3hnh6kg@mail.gmail.com>
- <92ee4016-1da9-826b-3674-b2d604a64848@suse.de>
- <20180808213640.10a1d76f@alans-desktop>
- <a70e9715-beac-d9a8-145e-de00175e56fa@suse.de>
- <20180809125939.39ac2cc9@alans-desktop>
- <CAC=mGzjn4Kc-q9NFwX6NhU4V_thnzBP8SHtFQKyRbpSKR=yx3w@mail.gmail.com>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v1 2/4] drivers: soc: Add support to register LLCC EDAC driver
+Date: Fri, 10 Aug 2018 10:21:14 -0700
+Message-ID: <CAE=gft4zc8vHt_O0dTomu=3zq-_ri52WnjH=F6BhyaNoybu2hQ@mail.gmail.com>
+References: <1533155615-27929-1-git-send-email-vnkgutta@codeaurora.org> <1533155615-27929-3-git-send-email-vnkgutta@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAC=mGzjn4Kc-q9NFwX6NhU4V_thnzBP8SHtFQKyRbpSKR=yx3w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jian-Hong Pan <starnight@g.ncu.edu.tw>
-Cc: Michal =?UTF-8?B?S3ViZcSNZWs=?= <mkubecek@suse.cz>, Konstantin =?UTF-8?B?QsO2aG0=?= <konstantin.boehm@ancud.de>, shess@hessware.de, pieter.robyns@uhasselt.be, "linux-kernel@vger.kernel.org>,
- " <contact@snootlab.com>, Xue Liu <liuxuenetmail@gmail.com>, Ken Yu <ken.yu@rakwireless.com>, Michael =?UTF-8?B?UsO2ZGVy?= <michael.roeder@avnet.eu>, Stefan Schmidt <stefan@datenfreihafen.org>, Rob Herring <robh@kernel.org>, lora@globalsat.com.tw, Alexander Graf <agraf@suse.de>, Jan Jongboom <jan.jongboom@arm.com>, Janus Piwek <jpiwek@arroweurope.com>, Jon Ortego <Jon.Ortego@imst.de>, devicetree@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Hasnain Virk <Hasnain.Virk@arm.com>, Daniele Comel <dcomel@mipot.com>, Marcel Holtmann <marcel@holtmann.org>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Dollar Chen <dollar.chen@wtmec.com>, Brian Ray <brian.ray@link-labs.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533155615-27929-3-git-send-email-vnkgutta@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vnkgutta@codeaurora.org
+Cc: robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de
 List-Id: devicetree@vger.kernel.org
 
-> Except saving power, mitigating the wireless signal conflict on the
-> air is one of the reasons.
+On Wed, Aug 1, 2018 at 1:33 PM Venkata Narendra Kumar Gutta
+<vnkgutta@codeaurora.org> wrote:
+>
+> Cache error reporting controller is to detect and report single
+> and double bit errors on Last Level Cache Controller (LLCC) cache.
+> Add required support to register LLCC EDAC driver as platform driver,
+> from LLCC driver.
+>
+> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> ---
+>  drivers/soc/qcom/llcc-slice.c      | 18 ++++++++++++++++--
+>  include/linux/soc/qcom/llcc-qcom.h |  2 ++
+>  2 files changed, 18 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
+> index a63640d..09c8bb0 100644
+> --- a/drivers/soc/qcom/llcc-slice.c
+> +++ b/drivers/soc/qcom/llcc-slice.c
+> @@ -224,7 +224,7 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
+>         u32 attr0_val;
+>         u32 max_cap_cacheline;
+>         u32 sz;
+> -       int ret;
+> +       int ret = 0;
+>         const struct llcc_slice_config *llcc_table;
+>         struct llcc_slice_desc desc;
+>
+> @@ -282,6 +282,7 @@ int qcom_llcc_probe(struct platform_device *pdev,
+>         struct resource *llcc_banks_res, *llcc_bcast_res;
+>         void __iomem *llcc_banks_base, *llcc_bcast_base;
+>         int ret, i;
+> +       struct platform_device *llcc_edac;
+>
+>         drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
+>         if (!drv_data)
+> @@ -341,6 +342,19 @@ int qcom_llcc_probe(struct platform_device *pdev,
+>         mutex_init(&drv_data->lock);
+>         platform_set_drvdata(pdev, drv_data);
+>
+> -       return qcom_llcc_cfg_program(pdev);
+> +       ret = qcom_llcc_cfg_program(pdev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       drv_data->ecc_irq = platform_get_irq(pdev, 0);
+> +       if (drv_data->ecc_irq >= 0) {
 
-If the device level is always receiving when not transmitting it has no
-effect on this. The act of listening does not harm other traffic.
+This condition will always be true for u32. See below...
 
-> The sleep/idle/stop mitigate the unconcerned RF signals or messages.
+> +               llcc_edac = platform_device_register_data(&pdev->dev,
+> +                                               "qcom_llcc_edac", -1, drv_data,
+> +                                               sizeof(*drv_data));
+> +               if (IS_ERR(llcc_edac))
+> +                       dev_err(dev, "Failed to register llcc edac driver\n");
+> +       }
+> +
+> +       return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_llcc_probe);
+> diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
+> index c681e79..1a3bc25 100644
+> --- a/include/linux/soc/qcom/llcc-qcom.h
+> +++ b/include/linux/soc/qcom/llcc-qcom.h
+> @@ -78,6 +78,7 @@ struct llcc_slice_config {
+>   * @num_banks: Number of llcc banks
+>   * @bitmap: Bit map to track the active slice ids
+>   * @offsets: Pointer to the bank offsets array
+> + * @ecc_irq: interrupt for llcc cache error detection and reporting
+>   */
+>  struct llcc_drv_data {
+>         struct regmap *regmap;
+> @@ -89,6 +90,7 @@ struct llcc_drv_data {
+>         u32 num_banks;
+>         unsigned long *bitmap;
+>         u32 *offsets;
+> +       u32 ecc_irq;
 
-At the physical level it's irrelevant. If we are receiving then we might
-hear more things we later discard. It's not running on a tiny
-microcontroller so the extra CPU cycles are not going to kill us.
+The return type for platform_get_irq is int, so this should probably
+be int, or "unsigned", but then you'd need to fix your logic above.
 
-> > How do you plan to deal with routing if you've got multiple devices ?  
-> 
-> For LoRaWAN, it is a star topology.
-
-No the question was much more how you plan to deal with it in the OS. If
-for example I want to open a LORA connection to something, then there
-needs to be a proper process to figure out where the target is and how to
-get traffic to them.
-
-I guess it's best phrased as
-
-- What does a struct sockaddr_lora look like
-
-- How does the kernel decide which interface it goes out of (if any), and
-  if it loops back
-
-remembering we might only be talking to a hub, or we might even be a
-virtualized LORA interface where we are pretending to be some kind of
-sensor and feeding it back.
-
-Long term yes I think Alexander is right the inevitable fate of all
-networks is to become a link layer in order to transmit IP frames 8)
-
-Alan
+>  };
+>
+>  #if IS_ENABLED(CONFIG_QCOM_LLCC)
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
