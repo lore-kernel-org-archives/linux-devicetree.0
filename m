@@ -1,185 +1,224 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v7 05/12] media: dt-bindings: add bindings for i.MX7 media
- driver
-Date: Fri, 10 Aug 2018 15:20:38 +0100
-Message-ID: <20180810142045.27657-6-rui.silva@linaro.org>
-References: <20180810142045.27657-1-rui.silva@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20180810142045.27657-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-media@vger.kernel.org
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v8 0/8] Introduce on-chip interconnect API
+Date: Fri, 10 Aug 2018 17:52:25 +0300
+Message-ID: <20180810145233.16466-1-georgi.djakov@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for i.MX7 media drivers.
-The imx7 MIPI CSI2 and imx7 CMOS Sensor Interface.
+Modern SoCs have multiple processors and various dedicated cores (video, gpu,
+graphics, modem). These cores are talking to each other and can generate a
+lot of data flowing through the on-chip interconnects. These interconnect
+buses could form different topologies such as crossbar, point to point buses,
+hierarchical buses or use the network-on-chip concept.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- .../devicetree/bindings/media/imx7-csi.txt    | 45 ++++++++++
- .../bindings/media/imx7-mipi-csi2.txt         | 90 +++++++++++++++++++
- 2 files changed, 135 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/imx7-csi.txt
- create mode 100644 Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
+These buses have been sized usually to handle use cases with high data
+throughput but it is not necessary all the time and consume a lot of power.
+Furthermore, the priority between masters can vary depending on the running
+use case like video playback or CPU intensive tasks.
 
-diff --git a/Documentation/devicetree/bindings/media/imx7-csi.txt b/Documentation/devicetree/bindings/media/imx7-csi.txt
-new file mode 100644
-index 000000000000..171b089ee91f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/imx7-csi.txt
-@@ -0,0 +1,45 @@
-+Freescale i.MX7 CMOS Sensor Interface
-+=====================================
-+
-+csi node
-+--------
-+
-+This is device node for the CMOS Sensor Interface (CSI) which enables the chip
-+to connect directly to external CMOS image sensors.
-+
-+Required properties:
-+
-+- compatible    : "fsl,imx7-csi";
-+- reg           : base address and length of the register set for the device;
-+- interrupts    : should contain CSI interrupt;
-+- clocks        : list of clock specifiers, see
-+        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-+- clock-names   : must contain "axi", "mclk" and "dcic" entries, matching
-+                 entries in the clock property;
-+
-+The device node shall contain one 'port' child node with one child 'endpoint'
-+node, according to the bindings defined in:
-+ Documentation/devicetree/bindings/media/video-interfaces.txt.
-+ 
-+In the following example a remote endpoint is a video multiplexer.
-+
-+example:
-+
-+                csi: csi@30710000 {
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+
-+                        compatible = "fsl,imx7-csi";
-+                        reg = <0x30710000 0x10000>;
-+                        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+                        clocks = <&clks IMX7D_CLK_DUMMY>,
-+                                        <&clks IMX7D_CSI_MCLK_ROOT_CLK>,
-+                                        <&clks IMX7D_CLK_DUMMY>;
-+                        clock-names = "axi", "mclk", "dcic";
-+
-+                        port {
-+                                csi_from_csi_mux: endpoint {
-+                                        remote-endpoint = <&csi_mux_to_csi>;
-+                                };
-+                        };
-+                };
-diff --git a/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
-new file mode 100644
-index 000000000000..71fd74ed3ec8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt
-@@ -0,0 +1,90 @@
-+Freescale i.MX7 Mipi CSI2
-+=========================
-+
-+mipi_csi2 node
-+--------------
-+
-+This is the device node for the MIPI CSI-2 receiver core in i.MX7 SoC. It is
-+compatible with previous version of Samsung D-phy.
-+
-+Required properties:
-+
-+- compatible    : "fsl,imx7-mipi-csi2";
-+- reg           : base address and length of the register set for the device;
-+- interrupts    : should contain MIPI CSIS interrupt;
-+- clocks        : list of clock specifiers, see
-+        Documentation/devicetree/bindings/clock/clock-bindings.txt for details;
-+- clock-names   : must contain "pclk", "wrap" and "phy" entries, matching
-+                  entries in the clock property;
-+- power-domains : a phandle to the power domain, see
-+          Documentation/devicetree/bindings/power/power_domain.txt for details.
-+- reset-names   : should include following entry "mrst";
-+- resets        : a list of phandle, should contain reset entry of
-+                  reset-names;
-+- phy-supply    : from the generic phy bindings, a phandle to a regulator that
-+	          provides power to MIPI CSIS core;
-+
-+Optional properties:
-+
-+- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
-+		    value when this property is not specified is 166 MHz;
-+- fsl,csis-hs-settle : differential receiver (HS-RX) settle time;
-+
-+The device node should contain two 'port' child nodes with one child 'endpoint'
-+node, according to the bindings defined in:
-+ Documentation/devicetree/bindings/ media/video-interfaces.txt.
-+ The following are properties specific to those nodes.
-+
-+port node
-+---------
-+
-+- reg		  : (required) can take the values 0 or 1, where 0 shall be
-+                     related to the sink port and port 1 shall be the source
-+                     one;
-+
-+endpoint node
-+-------------
-+
-+- data-lanes    : (required) an array specifying active physical MIPI-CSI2
-+		    data input lanes and their mapping to logical lanes; this
-+                    shall only be applied to port 0 (sink port), the array's
-+                    content is unused only its length is meaningful,
-+                    in this case the maximum length supported is 2;
-+
-+example:
-+
-+        mipi_csi: mipi-csi@30750000 {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                compatible = "fsl,imx7-mipi-csi2";
-+                reg = <0x30750000 0x10000>;
-+                interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+                clocks = <&clks IMX7D_IPG_ROOT_CLK>,
-+                                <&clks IMX7D_MIPI_CSI_ROOT_CLK>,
-+                                <&clks IMX7D_MIPI_DPHY_ROOT_CLK>;
-+                clock-names = "pclk", "wrap", "phy";
-+                clock-frequency = <166000000>;
-+                power-domains = <&pgc_mipi_phy>;
-+                phy-supply = <&reg_1p0d>;
-+                resets = <&src IMX7_RESET_MIPI_PHY_MRST>;
-+                reset-names = "mrst";
-+                fsl,csis-hs-settle = <3>;
-+
-+                port@0 {
-+                        reg = <0>;
-+
-+                        mipi_from_sensor: endpoint {
-+                                remote-endpoint = <&ov2680_to_mipi>;
-+                                data-lanes = <1>;
-+                        };
-+                };
-+
-+                port@1 {
-+                        reg = <1>;
-+
-+                        mipi_vc0_to_csi_mux: endpoint {
-+                                remote-endpoint = <&csi_mux_from_mipi_vc0>;
-+                        };
-+                };
-+        };
--- 
-2.18.0
+Having an API to control the requirement of the system in terms of bandwidth
+and QoS, so we can adapt the interconnect configuration to match those by
+scaling the frequencies, setting link priority and tuning QoS parameters.
+This configuration can be a static, one-time operation done at boot for some
+platforms or a dynamic set of operations that happen at run-time.
+
+This patchset introduce a new API to get the requirement and configure the
+interconnect buses across the entire chipset to fit with the current demand.
+The API is NOT for changing the performance of the endpoint devices, but only
+the interconnect path in between them.
+
+The API is using a consumer/provider-based model, where the providers are
+the interconnect buses and the consumers could be various drivers.
+The consumers request interconnect resources (path) to an endpoint and set
+the desired constraints on this data flow path. The provider(s) receive
+requests from consumers and aggregate these requests for all master-slave
+pairs on that path. Then the providers configure each participating in the
+topology node according to the requested data flow path, physical links and
+constraints. The topology could be complicated and multi-tiered and is SoC
+specific.
+
+Below is a simplified diagram of a real-world SoC topology. The interconnect
+providers are the NoCs.
+
++----------------+    +----------------+
+| HW Accelerator |--->|      M NoC     |<---------------+
++----------------+    +----------------+                |
+                        |      |                    +------------+
+ +-----+  +-------------+      V       +------+     |            |
+ | DDR |  |                +--------+  | PCIe |     |            |
+ +-----+  |                | Slaves |  +------+     |            |
+   ^ ^    |                +--------+     |         |   C NoC    |
+   | |    V                               V         |            |
++------------------+   +------------------------+   |            |   +-----+
+|                  |-->|                        |-->|            |-->| CPU |
+|                  |-->|                        |<--|            |   +-----+
+|     Mem NoC      |   |         S NoC          |   +------------+
+|                  |<--|                        |---------+    |
+|                  |<--|                        |<------+ |    |   +--------+
++------------------+   +------------------------+       | |    +-->| Slaves |
+  ^  ^    ^    ^          ^                             | |        +--------+
+  |  |    |    |          |                             | V
++------+  |  +-----+   +-----+  +---------+   +----------------+   +--------+
+| CPUs |  |  | GPU |   | DSP |  | Masters |-->|       P NoC    |-->| Slaves |
++------+  |  +-----+   +-----+  +---------+   +----------------+   +--------+
+          |
+      +-------+
+      | Modem |
+      +-------+
+
+TODO:
+* Create icc_set_extended() to handle parameters such as latency and other
+  QoS values.
+* Convert from using global node identifiers to local per provider ids.
+* Cache the path between the nodes instead of walking the graph on each get().
+* Sync interconnect requests with the idle state of the device.
+
+Changes since patchset v7 (https://lkml.org/lkml/2018/7/31/647)
+* Addressed comments on kernel-doc and grammar. (Randy)
+* Picked Reviewed-by: Evan
+* Squashed consumer and provider DT bindings into single patch. (Rob)
+* Cleaned-up msm8916 DT bindings docs by removing unused port ids.
+* Updated documentation for the cases when NULL is returned. (Saravana)
+* New patch to add myself as maintainer.
+
+Changes since patchset v6 (https://lkml.org/lkml/2018/7/9/698)
+* [patches 1,6]: Move the aggregation within the provider from the framework to
+  the platform driver's set() callback, as the aggregation point could be SoC
+  specific.
+* [patch 1]: Include missing header, reset state only of the traversed nodes,
+  move more code into path_init(), add more asserts, move misplaced mutex,
+  simplify icc_link_destroy() (Evan)
+* [patch 1]: Fix the order of requests to go from source to destination. (Alex)
+* [patch 7]: Use better wording in the documentation. (Evan)
+* [patch 6]: Reorder struct members, sort nodes alphabetically, improve naming
+  of variables , add missing clk_disable_unprepare() in error paths. (Matthias)
+* [patch 6]: Remove redundant NULL pointer check in msm8916 driver. (Alex)
+* [patch 6]: Add missing depend on QCOM_SMD_RPM in Kconfig. (Evan)
+* [patch 3]: Don't check for errors on debugfs calls, remove debugfs directory
+  when module is unloaded (Greg)
+
+Changes since patchset v5 (https://lkml.org/lkml/2018/6/20/453)
+* Fix the modular build, make rpm-smd driver a module.
+* Optimize locking and move to higher level. (Evan)
+* Code cleanups. Fix typos. (Evan, Matthias)
+* Add the source node to the path. (Evan)
+* Rename path_allocate() to path_init() with minor refactoring. (Evan)
+* Rename *_remove() functions to *_destroy().
+* Return fixed errors in icc_link_destroy(). (Evan)
+* Fix krealloc() usage in icc_link_destroy(). (Evan)
+* Add missing kfree() in icc_node_create(). (Matthias)
+* Make icc_node_add() return void. (Matthias)
+* Change mutex_init to mutex_lock in icc_provider_add(). (Matthias)
+* Add new icc_node_del() function to delete nodes from provider.
+* Fix the header guard to reflect the path in smd-rpm.h. (Evan)
+* Check for errors returned by qcom_icc_rpm_smd_send(). (Evan)
+* Propagate the error of icc_provider_del(). (Evan)
+
+Changes since patchset v4 (https://lkml.org/lkml/2018/3/9/856)
+* Simplified locking by using a single global mutex. (Evan)
+* Changed the aggregation function interface.
+* Implemented functions for node, link, provider removal. (Evan)
+* Naming changes on variables and functions, removed redundant code. (Evan)
+* Fixes and clarifications in the docs. (Matthias, Evan, Amit, Alexandre)
+* Removed mandatory reg DT property, made interconnect-names optional. (Bjorn)
+* Made interconnect-cells property required to align with other bindings. (Neil)
+* Moved msm8916 specific bindings into a separate file and patch. (Bjorn)
+* Use the names, instead of the hardcoded ids for topology. (Matthias)
+* Init the node before creating the links. (Evan)
+* Added icc_units_to_bps macro. (Amit)
+
+Changes since patchset v3 (https://lkml.org/lkml/2017/9/8/544)
+* Refactored the constraints aggregation.
+* Use the IDR API.
+* Split the provider and consumer bindings into separate patches and propose
+  new bindings for consumers, which allows to specify the local source port.
+* Adopted the icc_ prefix for API functions.
+* Introduced separate API functions for creating interconnect nodes and links.
+* Added DT lookup support in addition to platform data.
+* Dropped the event tracing patch for now.
+* Added a patch to provide summary via debugfs.
+* Use macro for the list of topology definitions in the platform driver.
+* Various minor changes.
+
+Changes since patchset v2 (https://lkml.org/lkml/2017/7/20/825)
+* Split the aggregation into per node and per provider. Cache the
+  aggregated values.
+* Various small refactorings and cleanups in the framework.
+* Added a patch introducing basic tracepoint support for monitoring
+  the time required to update the interconnect nodes.
+
+Changes since patchset v1 (https://lkml.org/lkml/2017/6/27/890)
+* Updates in the documentation.
+* Changes in request aggregation, locking.
+* Dropped the aggregate() callback and use the default as it currently
+  sufficient for the single vendor driver. Will add it later when needed.
+* Dropped the dt-bindings draft patch for now.
+
+Changes since RFC v2 (https://lkml.org/lkml/2017/6/12/316)
+* Converted documentation to rst format.
+* Fixed an incorrect call to mutex_lock. Renamed max_bw to peak_bw.
+
+Changes since RFC v1 (https://lkml.org/lkml/2017/5/15/605)
+* Refactored code into shorter functions.
+* Added a new aggregate() API function.
+* Rearranged some structs to reduce padding bytes.
+
+Changes since RFC v0 (https://lkml.org/lkml/2017/3/1/599)
+* Removed DT support and added optional Patch 3 with new bindings proposal.
+* Converted the topology into internal driver data.
+* Made the framework modular.
+* interconnect_get() now takes (src and dst ports as arguments).
+* Removed public declarations of some structs.
+* Now passing prev/next nodes to the vendor driver.
+* Properly remove requests on _put().
+* Added refcounting.
+* Updated documentation.
+* Changed struct interconnect_path to use array instead of linked list.
+
+Georgi Djakov (8):
+  interconnect: Add generic on-chip interconnect API
+  dt-bindings: Introduce interconnect binding
+  interconnect: Allow endpoints translation via DT
+  interconnect: Add debugfs support
+  interconnect: qcom: Add RPM communication
+  dt-bindings: interconnect: Document qcom,msm8916 NoC bindings
+  interconnect: qcom: Add msm8916 interconnect provider driver
+  MAINTAINERS: add a maintainer for the interconnect API
+
+ .../bindings/interconnect/interconnect.txt    |  60 ++
+ .../bindings/interconnect/qcom-msm8916.txt    |  41 +
+ .../bindings/interconnect/qcom-smd.txt        |  32 +
+ Documentation/interconnect/interconnect.rst   |  94 +++
+ MAINTAINERS                                   |  10 +
+ drivers/Kconfig                               |   2 +
+ drivers/Makefile                              |   1 +
+ drivers/interconnect/Kconfig                  |  15 +
+ drivers/interconnect/Makefile                 |   3 +
+ drivers/interconnect/core.c                   | 729 ++++++++++++++++++
+ drivers/interconnect/qcom/Kconfig             |  23 +
+ drivers/interconnect/qcom/Makefile            |   4 +
+ drivers/interconnect/qcom/msm8916.c           | 510 ++++++++++++
+ drivers/interconnect/qcom/smd-rpm.c           |  91 +++
+ drivers/interconnect/qcom/smd-rpm.h           |  16 +
+ include/dt-bindings/interconnect/qcom.h       |  98 +++
+ include/linux/interconnect-provider.h         | 125 +++
+ include/linux/interconnect.h                  |  49 ++
+ 18 files changed, 1903 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/interconnect.txt
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom-msm8916.txt
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom-smd.txt
+ create mode 100644 Documentation/interconnect/interconnect.rst
+ create mode 100644 drivers/interconnect/Kconfig
+ create mode 100644 drivers/interconnect/Makefile
+ create mode 100644 drivers/interconnect/core.c
+ create mode 100644 drivers/interconnect/qcom/Kconfig
+ create mode 100644 drivers/interconnect/qcom/Makefile
+ create mode 100644 drivers/interconnect/qcom/msm8916.c
+ create mode 100644 drivers/interconnect/qcom/smd-rpm.c
+ create mode 100644 drivers/interconnect/qcom/smd-rpm.h
+ create mode 100644 include/dt-bindings/interconnect/qcom.h
+ create mode 100644 include/linux/interconnect-provider.h
+ create mode 100644 include/linux/interconnect.h
