@@ -1,82 +1,24 @@
-Return-Path: <SRS0=nZrf=K4=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 3/7] [media] v4l2-subdev: add stubs for v4l2_subdev_get_try_*
-Date: Mon, 13 Aug 2018 11:25:04 +0200
-Message-Id: <20180813092508.1334-4-m.felsch@pengutronix.de>
-In-Reply-To: <20180813092508.1334-1-m.felsch@pengutronix.de>
-References: <20180813092508.1334-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
+Return-Path: <SRS0=20pF=KZ=verge.net.au=horms@kernel.org>
+Date: Fri, 10 Aug 2018 14:11:37 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 4/5] ARM: dts: iwg23s-sbc: specify EtherAVB PHY IRQ
+Message-ID: <20180810121137.qw3t6jx65smuezen@verge.net.au>
+References: <1533628626-26503-1-git-send-email-biju.das@bp.renesas.com>
+ <1533628626-26503-5-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1533628626-26503-5-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-In case of missing CONFIG_VIDEO_V4L2_SUBDEV_API those helpers aren't
-available. So each driver have to add ifdefs around those helpers or
-add the CONFIG_VIDEO_V4L2_SUBDEV_API as dependcy.
+On Tue, Aug 07, 2018 at 08:57:05AM +0100, Biju Das wrote:
+> Specify  EtherAVB PHY IRQ  in the board specific device tree, now that we
+> have GPIO support.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Make these helpers available in case of CONFIG_VIDEO_V4L2_SUBDEV_API
-isn't set to avoid ifdefs. This approach is less error prone too.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- include/media/v4l2-subdev.h | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index 9102d6ca566e..ce48f1fcf295 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -912,8 +912,6 @@ struct v4l2_subdev_fh {
- #define to_v4l2_subdev_fh(fh)	\
- 	container_of(fh, struct v4l2_subdev_fh, vfh)
- 
--#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
--
- /**
-  * v4l2_subdev_get_try_format - ancillary routine to call
-  *	&struct v4l2_subdev_pad_config->try_fmt
-@@ -927,9 +925,13 @@ static inline struct v4l2_mbus_framefmt
- 			    struct v4l2_subdev_pad_config *cfg,
- 			    unsigned int pad)
- {
-+#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
- 	if (WARN_ON(pad >= sd->entity.num_pads))
- 		pad = 0;
- 	return &cfg[pad].try_fmt;
-+#else
-+	return NULL;
-+#endif
- }
- 
- /**
-@@ -945,9 +947,13 @@ static inline struct v4l2_rect
- 			  struct v4l2_subdev_pad_config *cfg,
- 			  unsigned int pad)
- {
-+#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
- 	if (WARN_ON(pad >= sd->entity.num_pads))
- 		pad = 0;
- 	return &cfg[pad].try_crop;
-+#else
-+	return NULL;
-+#endif
- }
- 
- /**
-@@ -963,11 +969,14 @@ static inline struct v4l2_rect
- 			     struct v4l2_subdev_pad_config *cfg,
- 			     unsigned int pad)
- {
-+#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
- 	if (WARN_ON(pad >= sd->entity.num_pads))
- 		pad = 0;
- 	return &cfg[pad].try_compose;
--}
-+#else
-+	return NULL;
- #endif
-+}
- 
- extern const struct v4l2_file_operations v4l2_subdev_fops;
- 
--- 
-2.18.0
+Thanks, applied for v4.20.
