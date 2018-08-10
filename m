@@ -1,96 +1,83 @@
-From: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Subject: Re: [PATCH v2 3/4] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
-Date: Fri, 10 Aug 2018 08:42:58 +0200
-Message-ID: <CAHStOZ5RrB_=vhHwN22ajcbmWW_F04RdJTiE1ZLSDqhvwT5Zkg@mail.gmail.com>
-References: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
- <20180807220011.24436-4-maxi.jourdan@wanadoo.fr> <3221c65f87f8fd3541e0188186cb0259327cb671.camel@baylibre.com>
- <fcbfff13-aec5-c571-3a5e-a3d571505342@baylibre.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v4 4/6] iio:adxl372: Add FIFO and interrupts
+ support
+Date: Fri, 10 Aug 2018 10:20:54 +0300
+Message-ID: <20180810072054.vemdubi6kna3bx2k@mwanda>
+References: <1533557087-10401-5-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fcbfff13-aec5-c571-3a5e-a3d571505342@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kbuild-bounces@lists.01.org>
+Content-Disposition: inline
+In-Reply-To: <1533557087-10401-5-git-send-email-stefan.popa@analog.com>
+List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/kbuild/>
+List-Post: <mailto:kbuild@lists.01.org>
+List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=subscribe>
+Errors-To: kbuild-bounces@lists.01.org
+Sender: "kbuild" <kbuild-bounces@lists.01.org>
+To: kbuild@01.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, broonie@kernel.org, kbuild-all@01.org, Stefan Popa <stefan.popa@analog.com>, knaack.h@gmx.de, mchehab+samsung@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-08-09 9:53 GMT+02:00 Neil Armstrong <narmstrong@baylibre.com>:
-> On 08/08/2018 10:41, Jerome Brunet wrote:
->> On Wed, 2018-08-08 at 00:00 +0200, Maxime Jourdan wrote:
->>> Wrap the canvas node in a syscon node.
->>>
->>> Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
->>> ---
->>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 17 +++++++++++++++++
->>>  1 file changed, 17 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> index b8dc4dbb391b..c98198662ae2 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> @@ -423,6 +423,23 @@
->>>                      };
->>>              };
->>>
->>> +            dmcbus: bus@c8838000 {
->>> +                    compatible = "simple-bus";
->>> +                    reg = <0x0 0xc8838000 0x0 0x1000>;
->>> +                    #address-cells = <2>;
->>> +                    #size-cells = <2>;
->>> +                    ranges = <0x0 0x0 0x0 0xc8838000 0x0 0x1000>;
->>> +
->>> +                    sysctrl_DMC: system-controller@0 {
->>> +                            compatible = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";
->>> +                            reg = <0x0 0x0 0x0 0x1000>;
->>> +
->>> +                            canvas: canvas-provider@0 {
->>> +                                    compatible = "amlogic,canvas";
->>
->> If there is only one canvas provider under "sysctrl_DMC" and it has no reg
->> property , you should not put a unit-address (@0) here. (same for the
->> documentation patch)
->>
->> You may have seen unit-address without a reg property used elsewhere (ASoC
->> simple-card, my recent axg-sound-card), when there is multiple node with the
->> same node-name (ex: dai-link).
+Hi Stefan,
 
-Ack.
+I love your patch! Perhaps something to improve:
 
->> As Martin pointed out, the DT spec says we should not use unit-address unless
->> there is a reg property. We did not get Rob's view on this and we might have to
->> update this later on. In your case, unless I missed something, you should
->> definitely not have it
->>
->> nitpick regarding the node-name (canvas-provider). If appropriate, we should try
->> to stick to one of the generic names proposed in the spec. I wonder if the
->> canvas provider could be viewed as a "memory" or "memory-controller"
->
-> It's not really a memory or memory-controller, it's a Lookup Table on top of the memory controller,
-> nothing really matches here...
+url:    https://github.com/0day-ci/linux/commits/Stefan-Popa/iio-accel-Add-adxl372-driver/20180807-050955
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
 
-Thanks for the comments. It will be "video-lut" as suggested.
+smatch warnings:
+drivers/iio/accel/adxl372.c:704 adxl372_buffer_postenable() error: buffer overflow 'adxl372_axis_lookup_table' 7 <= 7 (assuming for loop doesn't break)
 
->>
->> So, what about this ? Just a proposition, feel free to comment ;)
->>
->>       sysctrl_DMC: system-controller@0 {                                                      compatib
->> le = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";>               reg =
->> <0x0 0x0 0x0 0x1000>;
->>
->>               canvas: memory-controller {
->>                       compatible = "amlogic,canvas";
->>               }
->>
->> [...]
->>
->>
->>> +                            };
->>> +                    };
->>> +            };
->>> +
->>>              hiubus: bus@c883c000 {
->>>                      compatible = "simple-bus";
->>>                      reg = <0x0 0xc883c000 0x0 0x2000>;
->>
->>
->
+# https://github.com/0day-ci/linux/commit/021923033c19a85fa8f99993de6591691ee67b1a
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 021923033c19a85fa8f99993de6591691ee67b1a
+vim +704 drivers/iio/accel/adxl372.c
+
+02192303 Stefan Popa 2018-08-06  686  
+02192303 Stefan Popa 2018-08-06  687  static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+02192303 Stefan Popa 2018-08-06  688  {
+02192303 Stefan Popa 2018-08-06  689  	struct adxl372_state *st = iio_priv(indio_dev);
+02192303 Stefan Popa 2018-08-06  690  	unsigned int mask;
+02192303 Stefan Popa 2018-08-06  691  	int i, ret;
+02192303 Stefan Popa 2018-08-06  692  
+02192303 Stefan Popa 2018-08-06  693  	ret = adxl372_set_interrupts(st, ADXL372_INT1_MAP_FIFO_FULL_MSK, 0);
+02192303 Stefan Popa 2018-08-06  694  	if (ret < 0)
+02192303 Stefan Popa 2018-08-06  695  		return ret;
+02192303 Stefan Popa 2018-08-06  696  
+02192303 Stefan Popa 2018-08-06  697  	mask = *indio_dev->active_scan_mask;
+02192303 Stefan Popa 2018-08-06  698  
+02192303 Stefan Popa 2018-08-06  699  	for (i = 0; i < ARRAY_SIZE(adxl372_axis_lookup_table); i++) {
+02192303 Stefan Popa 2018-08-06  700  		if (mask == adxl372_axis_lookup_table[i].bits)
+02192303 Stefan Popa 2018-08-06  701  			break;
+02192303 Stefan Popa 2018-08-06  702  	}
+02192303 Stefan Popa 2018-08-06  703  
+02192303 Stefan Popa 2018-08-06 @704  	st->fifo_format = adxl372_axis_lookup_table[i].fifo_format;
+02192303 Stefan Popa 2018-08-06  705  	st->fifo_set_size = bitmap_weight(indio_dev->active_scan_mask,
+02192303 Stefan Popa 2018-08-06  706  					  indio_dev->masklength);
+02192303 Stefan Popa 2018-08-06  707  	/*
+02192303 Stefan Popa 2018-08-06  708  	 * The 512 FIFO samples can be allotted in several ways, such as:
+02192303 Stefan Popa 2018-08-06  709  	 * 170 sample sets of concurrent 3-axis data
+02192303 Stefan Popa 2018-08-06  710  	 * 256 sample sets of concurrent 2-axis data (user selectable)
+02192303 Stefan Popa 2018-08-06  711  	 * 512 sample sets of single-axis data
+02192303 Stefan Popa 2018-08-06  712  	 */
+02192303 Stefan Popa 2018-08-06  713  	if ((st->watermark * st->fifo_set_size) > ADXL372_FIFO_SIZE)
+02192303 Stefan Popa 2018-08-06  714  		st->watermark = (ADXL372_FIFO_SIZE  / st->fifo_set_size);
+02192303 Stefan Popa 2018-08-06  715  
+02192303 Stefan Popa 2018-08-06  716  	st->fifo_mode = ADXL372_FIFO_STREAMED;
+02192303 Stefan Popa 2018-08-06  717  
+02192303 Stefan Popa 2018-08-06  718  	ret = adxl372_configure_fifo(st);
+02192303 Stefan Popa 2018-08-06  719  	if (ret < 0) {
+02192303 Stefan Popa 2018-08-06  720  		st->fifo_mode = ADXL372_FIFO_BYPASSED;
+02192303 Stefan Popa 2018-08-06  721  		adxl372_set_interrupts(st, 0, 0);
+02192303 Stefan Popa 2018-08-06  722  		return ret;
+02192303 Stefan Popa 2018-08-06  723  	}
+02192303 Stefan Popa 2018-08-06  724  
+02192303 Stefan Popa 2018-08-06  725  	return iio_triggered_buffer_postenable(indio_dev);
+02192303 Stefan Popa 2018-08-06  726  }
+02192303 Stefan Popa 2018-08-06  727  
