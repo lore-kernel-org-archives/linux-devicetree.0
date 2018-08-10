@@ -1,80 +1,54 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 0/4] pci-dra7xx: Enable errata i870 workaround for RC
- mode
-Date: Fri, 10 Aug 2018 15:37:28 +0530
-Message-ID: <ba428a15-77bf-e09c-3bd7-b5a0eae7ee13@ti.com>
-References: <20180724173150.2701-1-vigneshr@ti.com>
- <20180808165700.GB486@e107981-ln.cambridge.arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 3/6] regmap: Add regmap_noinc_read API
+Date: Fri, 10 Aug 2018 11:38:56 +0100
+Message-ID: <20180810103856.GB20971@sirena.org.uk>
+References: <1533890783-13456-1-git-send-email-stefan.popa@analog.com>
+ <1533890783-13456-4-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808165700.GB486@e107981-ln.cambridge.arm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1533890783-13456-4-git-send-email-stefan.popa@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Tony Lindgren <tony@atomide.com>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
 List-Id: devicetree@vger.kernel.org
 
 
+--VrqPEDrXMn8OVzN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wednesday 08 August 2018 10:27 PM, Lorenzo Pieralisi wrote:
-> On Tue, Jul 24, 2018 at 11:01:46PM +0530, Vignesh R wrote:
->> Make workaround for errata i870 applicable in Host mode as
->> well(previously it was enabled only for EP mode) as per errata
->> documentation: http://www.ti.com/lit/er/sprz450/sprz450.pdf
->>
->> Tested on DRA72 EVM
->>
->> Tony,
->>
->> If you are okay with the series, could you pick this via omap tree?
->> All ACKs are in place and Lorenzo is okay with PCIe bits to go along with
->> rest of DTS changes.
-> 
-> I think we have missed the v4.19 merge window by now - 
+On Fri, Aug 10, 2018 at 11:46:20AM +0300, Stefan Popa wrote:
+> From: Crestez Dan Leonard <leonard.crestez@intel.com>
+>=20
+> The regmap API usually assumes that bulk read operations will read a
+> range of registers but some I2C/SPI devices have certain registers for
+> which a such a read operation will return data from an internal FIFO
+> instead. Add an explicit API to support bulk read without range semantics.
 
-Right. I didn't get any response from Tony.
+Please don't resubmit patches that have already been applied, you should
+submit patches against current code in the tree you're expecting things
+to be applied to.  If any updates are needed to a patch that's already
+been applied you should submit incremental patches which make those
+updates.  This avoids having to change published git commits which could
+cause problems for people working against git.
 
-> please let me know if I can drop this series from the PCI patch queue.
-> 
+--VrqPEDrXMn8OVzN4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Ok, I will resend the patch after 4.19-rc. Thanks!
+-----BEGIN PGP SIGNATURE-----
 
-Regards
-Vignesh
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlttaz8ACgkQJNaLcl1U
+h9AjNQf/buHO0/HMfa6dgryJ+K7ERaW4OvogB34AF9dEiXKgWwZpFggKVav9mHHp
+TRt2fk5D2f0dPLwWBUGOSPEFNsfMd3BI9MeUvNHgD6mKky/AX+Fa0GntaSRC3dr2
+DG+Zx1nz3Lq5EwVwvxuMGc9BkIqwcqX5G+LLwhOz030/6dvuSyGpfLUddt24ruvW
+Pu10QpfpcnWPKViZqwGAUf8TCELqKmBVC0TNU9aps/PLjc46FZqtKrt4mWTsdUDG
+6lR5RrwOgrJZ1/k7nZQKxnURll6hdSgVDNpEhHZHDqxdL/h4RnaY/KtR0KsEjaxN
+QEEhDPHRiwZNbYLvAgYvGF/IwijfNg==
+=Bhv7
+-----END PGP SIGNATURE-----
 
-
-> Thanks,
-> Lorenzo
-> 
->> Regards
->> Vignesh
->>
->>
->> Changes since v2:
->> Reorder patch 2 to appear at the last.
->> Collect all the ACKs
->>
->> Changes since v1:
->> Drop IRQ handling rework (will be sent out separately)
->>
->> v2: https://patchwork.ozlabs.org/cover/935454/
->> v1: https://lkml.org/lkml/2017/12/1/59
->>
->>
->> Vignesh R (4):
->>   dt-bindings: PCI: dra7xx: Add bindings for unaligned access in host
->>     mode
->>   ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
->>   ARM: dts: dra7: Fix up unaligned access setting for PCIe EP
->>   pci: dwc: pci-dra7xx: Enable errata i870 for both EP and RC mode
->>
->>  Documentation/devicetree/bindings/pci/ti-pci.txt |  5 +++++
->>  arch/arm/boot/dts/dra7.dtsi                      |  4 +++-
->>  drivers/pci/controller/dwc/pci-dra7xx.c          | 12 ++++++------
->>  3 files changed, 14 insertions(+), 7 deletions(-)
->>
->> -- 
->> 2.18.0
->>
+--VrqPEDrXMn8OVzN4--
