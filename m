@@ -1,67 +1,61 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH v6 2/6] dt-bindings: iio: accel: Add docs for ADXL372
-Date: Fri, 10 Aug 2018 11:46:19 +0300
-Message-ID: <1533890783-13456-3-git-send-email-stefan.popa@analog.com>
-References: <1533890783-13456-1-git-send-email-stefan.popa@analog.com>
+From: Jian Hu <jian.hu@amlogic.com>
+Subject: [PATCH v3 0/2] clk: meson-g12a: Add EE clock controller driver
+Date: Fri, 10 Aug 2018 16:47:36 +0800
+Message-ID: <1533890858-113020-1-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533890783-13456-1-git-send-email-stefan.popa@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, broonie@kernel.org
-Cc: Stefan Popa <stefan.popa@analog.com>, lars@metafoo.de, Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, robh+dt@kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: "Qianggui, song" <qianggui.song@amlogic.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, "Bo.yang" <bo.yang@amlogic.com>, Stephen Boyd <sboyd@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, "Sunny.luo" <sunny.luo@amlogic.com>, linux-clk@vger.kernel.org, "Xingyu.chen" <xingyu.chen@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree binding documentation for the ADXL372 3-axis digital
-accelerometer.
+Add a Clock driver for the Everything-Else part of
+the Amlogic Meson-G12A SoC.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/iio/accel/adxl372.txt      | 22 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl372.txt
+Changes since v2 at[2]
+-fix fixed clocks's descriptions
+-fix aligment
+-add enable bit for plls base on [3] patches
+-add fix clock gate bit
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-new file mode 100644
-index 0000000..9409984
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-@@ -0,0 +1,22 @@
-+Analog Devices ADXL372 3-Axis, +/-(200g) Digital Accelerometer
-+
-+http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
-+
-+Required properties:
-+ - compatible : should be "adi,adxl372"
-+ - reg: SPI chip select number for the device
-+ - spi-max-frequency: Max SPI frequency to use
-+
-+Optional properties:
-+ - interrupts: interrupt mapping for IRQ as documented in
-+   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+Example:
-+
-+	accelerometer@0 {
-+		compatible = "adi,adxl372";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2ba47bb..c8dd09c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -548,6 +548,7 @@ M:	Stefan Popa <stefan.popa@analog.com>
- W:	http://ez.analog.com/community/linux-device-drivers
- S:	Supported
- F:	drivers/iio/accel/adxl372.c
-+F:	Documentation/devicetree/bindings/iio/accel/adxl372.txt
- 
- AF9013 MEDIA DRIVER
- M:	Antti Palosaari <crope@iki.fi>
+Changes since v1 at[1]
+-fix typo of 'Everything'.
+-change the word 'AmLogic' to 'Amlogic'
+-squash patch 1 and 2.
+-delete usless message of "Trying obsolete regs".
+-delete the empty line in include/dt-bindings/clock/g12a-clkc.h.
+-rebase on top of the "next/drivers" branch, and add g12a clock patch.
+-add CLK_MUX_ROUND_CLOSEST for g12a_sd_emmc_b_clk0_sel and
+ g12a_sd_emmc_c_clk0_sel.
+
+[1]https://lkml.kernel.org/r/1531133549-25806-2-git-send-email-jian.hu@amlogic.com
+[2]https://lkml.kernel.org/r/1531728707-192230-2-git-send-email-jian.hu@amlogic.com
+[3]https://lkml.kernel.org/r/20180717095617.12240-1-jbrunet@baylibre.com
+
+Jian Hu (2):
+  dt-bindings: clk: meson-g12a: Add G12A EE Clock Bindings
+  clk: meson-g12a: Add EE Clock controller driver
+
+ .../bindings/clock/amlogic,gxbb-clkc.txt           |    1 +
+ drivers/clk/meson/Kconfig                          |   10 +
+ drivers/clk/meson/Makefile                         |    1 +
+ drivers/clk/meson/g12a.c                           | 1128 ++++++++++++++++++++
+ drivers/clk/meson/g12a.h                           |  128 +++
+ include/dt-bindings/clock/g12a-clkc.h              |   93 ++
+ 6 files changed, 1361 insertions(+)
+ create mode 100644 drivers/clk/meson/g12a.c
+ create mode 100644 drivers/clk/meson/g12a.h
+ create mode 100644 include/dt-bindings/clock/g12a-clkc.h
+
 -- 
-2.7.4
+1.9.1
