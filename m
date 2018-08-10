@@ -1,118 +1,107 @@
-From: Kun Yi <kunyi@google.com>
-Subject: Re: [RFC PATCH v2 1/4] dt-bindings: misc: Add bindings for misc. BMC
- control fields
-Date: Thu, 9 Aug 2018 17:22:42 -0700
-Message-ID: <CAGMNF6XCSdif5=kAQ4eh_6+nmHLAu9Fva403EU2Ji2w27H9R0A@mail.gmail.com>
-References: <20180711053122.30773-1-andrew@aj.id.au> <20180711053122.30773-2-andrew@aj.id.au>
- <20180711200450.GB17291@rob-hp-laptop> <1531356830.3551458.1437853280.551CA8C5@webmail.messagingengine.com>
- <CAL_JsqKpXxR4t_-3BOy-0mFePXkaSck_4PfHRD=OZQ-_-T5P=w@mail.gmail.com>
- <b6ced4cad4d7ff78330181b2c893855c23103953.camel@kernel.crashing.org>
- <1531463489.747186.1439263128.075AECE1@webmail.messagingengine.com>
- <CAL_JsqLZo-=7UkuvvUFYdCR4asBBiWyC=Q1ryH=-HLU6vzf9tA@mail.gmail.com>
- <ece91112ecfdc7218184c4c4519e455cf9397e11.camel@kernel.crashing.org>
- <CAL_JsqL_bMXLAA0091-g8PmhXR5g5Pf2y2=ey7Ss5ofHm46sWw@mail.gmail.com>
- <c69d0e7c3a95d83da87b566a62619462671a233b.camel@kernel.crashing.org>
- <1531967302.2140539.1445583600.0F5ED287@webmail.messagingengine.com>
- <9787b471abc49c0b3db60e3471473a7a5b45ade7.camel@kernel.crashing.org>
- <1532045276.1219110.1446722072.546C1F9D@webmail.messagingengine.com> <483b76bac7cb8043d9d780d5ffa5e43438279887.camel@kernel.crashing.org>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v2 2/4] phy: socionext: add USB3 PHY driver for UniPhier SoC
+Date: Fri, 10 Aug 2018 11:30:08 +0900
+Message-ID: <20180810113007.0746.4A936039@socionext.com>
+References: <1533290045-18969-3-git-send-email-hayashi.kunihiko@socionext.com> <312d10ae-7909-bede-ea0a-5d92a497f639@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <483b76bac7cb8043d9d780d5ffa5e43438279887.camel@kernel.crashing.org>
+In-Reply-To: <312d10ae-7909-bede-ea0a-5d92a497f639@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: benh@kernel.crashing.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, robh@kernel.org, Eugene.Cho@dell.com, a.amelkin@yadro.com, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-kernel@vger.kernel.org, stewart@linux.ibm.com, linux-arm-kernel@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Andrew, Benjamin, Rob,
+Hi Kishon,
 
-Thanks for bringing up the set of patches and a great discussion.
-After going through the thread I figured that I'd like to share a few
-things we needed to hack when programming several BMC boards:
+On Thu, 9 Aug 2018 16:00:19 +0530
+Kishon Vijay Abraham I <kishon@ti.com> wrote:
 
-- Debug UART enable/mux
-- Disable GPIO D/E passthrough (I think this is supported by the
-current pinctrl driver)
-- RMII/RGMII strapping
-- iLPC2AHB control
-- SPI master mux select
-- Various SuperIO configurations
+> Hi,
+> 
+> On Friday 03 August 2018 03:24 PM, Kunihiko Hayashi wrote:
+> > Add a driver for PHY interface built into USB3 controller
+> > implemented in UniPhier SoCs.
+> > This driver supports High-Speed PHY and Super-Speed PHY.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
+> > Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> > ---
+> >  drivers/phy/Kconfig                         |   1 +
+> >  drivers/phy/Makefile                        |   1 +
+> >  drivers/phy/socionext/Kconfig               |  12 +
+> >  drivers/phy/socionext/Makefile              |   6 +
+> >  drivers/phy/socionext/phy-uniphier-usb3hs.c | 423 ++++++++++++++++++++++++++++
+> >  drivers/phy/socionext/phy-uniphier-usb3ss.c | 350 +++++++++++++++++++++++
+> >  6 files changed, 793 insertions(+)
+> >  create mode 100644 drivers/phy/socionext/Kconfig
+> >  create mode 100644 drivers/phy/socionext/Makefile
+> >  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3hs.c
+> >  create mode 100644 drivers/phy/socionext/phy-uniphier-usb3ss.c
 
-As for the discussion whether these belong to a platform driver or
-device tree nodes, I think in an ideal world all these configurations
-could be nicely grouped and abstracted in a platform kernel driver (or
-drivers). However in reality think this as an "M * N" problem: there
-are M variants of BMCs and N different platforms built with these
-BMCs. Each platform-BMC combination is going to have its own quirks
-and slightly different requirements in BMC "tunables". Were there a
-kernel driver for the M BMC variants, it would inevitably have a lot
-of churn due to the different needs of the platforms.
+[snip]
 
-What I like about the device tree approach is the expressiveness of
-the format and the ability to specify non-conflicting initial values
-easily. Sometimes we need initial values for these parameters set
-before running userspace, and setting such values in device tree is
-easier than using #defines or kernel parameters.
+> > --- /dev/null
+> > +++ b/drivers/phy/socionext/phy-uniphier-usb3hs.c
+> > @@ -0,0 +1,423 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +//
+> > +// phy-uniphier-usb3hs.c - HS-PHY driver for Socionext UniPhier USB3 controller
+> > +// Copyright 2015-2018 Socionext Inc.
+> > +// Author:
+> > +//      Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > +// Contributors:
+> > +//      Motoya Tanigawa <tanigawa.motoya@socionext.com>
+> > +//      Masami Hiramatsu <masami.hiramatsu@linaro.org>
+> > +
+> 
+> I'm not sure if there is a standard format for adding SPDX identifiers. But
+> other PHY drivers seems to have used single line comment style only for the
+> first line. (see drivers/phy/amlogic/phy-meson-gxl-usb3.c)
 
+Okay, I understand that the format differs depending on each sub-system so far.
+I'll rewrite it according to other PHY drivers.
 
+Same as phy-uniphier-usb3ss.c.
 
+> > +#include <linux/bitfield.h>
+> > +#include <linux/bitops.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/nvmem-consumer.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/slab.h>
 
-On Thu, Jul 19, 2018 at 9:57 PM Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> On Fri, 2018-07-20 at 09:37 +0930, Andrew Jeffery wrote:
-> > >
-> > > Andrew, can you start with a list that shows what you expect us to need
-> > > on our systems ?
-> > >
-> >
-> > Okay, our Witherspoon and Romulus platforms containing the ASPEED AST2500 currently need the following tuneables exposed:
-> >
-> > > From the SCU:
-> >
-> > - Debug UART enable
-> > - VGA DAC mux
-> > - VGA scratch registers 0-7
-> > - LPC SuperIO decode enable
-> > - VGA MMIO decode enable
-> >
-> > > From the LPC controller:
-> >
-> > - iLPC2AHB enable
-> > - SuperIO scratch registers 0x20-0x2f
-> >
-> > (The LPC controller is just as much of a collection of random bits as the SCU)
-> >
-> > Lastly, our Palmetto platform uses an AST2400 which has fewer features compared to the AST2500. Its tuneable list is the same as the above with the exception of "Debug UART enable".
-> >
-> > Tuneables that we may need to expose in the future include:
-> >
-> > > From the SCU:
-> >
-> > - PCI VID/DID for the BMC PCIe device
-> > - VGA device enable (may need to be disabled if the platform contains a discrete graphics processor)
->
-> Additionally there's a bunch of resigters controlling the mapping of
-> various MMIO regions of the BMC PCIe device to portions of the BMC
-> address space. I'm not sure what's the best way to handle that.
->
-> This specific set might require a dedicated device as a subnode of
-> the SCU in the DT that contains all the mappings as properties...
->
-> That or we consider them static enough and just whack it in u-boot.
->
-> > > From the LPC controller:
-> >
-> > - UART mux
-> >
-> > Alexander, Eugene, can you chime in with your platforms' needs?
-> >
-> > Cheers,
-> >
-> > Andrew
+[snip]
 
+> > +	phy = devm_phy_create(dev, dev->of_node, &uniphier_u3hsphy_ops);
+> > +	if (IS_ERR(phy))
+> > +		return PTR_ERR(phy);
+> > +
+> > +	phy_set_drvdata(phy, priv);
+> > +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> > +	if (IS_ERR(phy_provider))
+> > +		return PTR_ERR(phy_provider);
+> 
+> return PTR_ERR_OR_ZERO()?
 
+Indeed. I'll replace it as follows.
 
---
-Regards,
-Kun
+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+	return PTR_ERR_OR_ZERO(phy_provider);
+
+Same as phy-uniphier-usb3ss.c.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
