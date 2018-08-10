@@ -1,254 +1,226 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v8 4/4] drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
-Date: Fri, 10 Aug 2018 15:03:59 +0200
-Message-ID: <20180810130359.9882-5-peda@axentia.se>
-References: <20180810130359.9882-1-peda@axentia.se>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v6 08/24] watchdog: jz4740: Use WDT clock provided by TCU
+ driver
+Date: Fri, 10 Aug 2018 06:36:48 -0700
+Message-ID: <20180810133648.GA29028@roeck-us.net>
+References: <20180809214414.20905-1-paul@crapouillou.net>
+ <20180809214414.20905-9-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180810130359.9882-1-peda@axentia.se>
+Content-Disposition: inline
+In-Reply-To: <20180809214414.20905-9-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This beats the heuristic that the connector is involved in what format
-should be output for cases where this fails.
+On Thu, Aug 09, 2018 at 11:43:58PM +0200, Paul Cercueil wrote:
+> Instead of requesting the "ext" clock and handling the watchdog clock
+> divider and gating in the watchdog driver, we now request and use the
+> "wdt" clock that is supplied by the ingenic-timer "TCU" driver.
+> 
+> The major benefit is that the watchdog's clock rate and parent can now
+> be specified from within devicetree, instead of hardcoded in the driver.
+> 
+> Also, this driver won't poke anymore into the TCU registers to
+> enable/disable the clock, as this is now handled by the TCU driver.
+> 
+> On the bad side, we break the ABI with devicetree - as we now request a
+> different clock. In this very specific case it is still okay, as every
+> Ingenic JZ47xx-based board out there compile the devicetree within the
+> kernel; so it's still time to push breaking changes, in order to get a
+> clean devicetree that won't break once it musn't.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-E.g. if there is a bridge that changes format between the encoder and the
-connector, or if some of the RGB pins between the lcd controller and the
-encoder are not routed on the PCB.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-This is critical for the devices that have the "conflicting output
-formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
-RGB bits move around depending on the selected output mode. For
-devices that do not have the "conflicting output formats" issue
-(SAMA5D2, SAMA5D4), this is completely irrelevant.
-
-Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c   | 70 +++++++++++++++++-------
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h     |  1 +
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 66 +++++++++++++++++++---
- 3 files changed, 110 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index d73281095fac..c38a479ada98 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -226,6 +226,55 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
- #define ATMEL_HLCDC_RGB888_OUTPUT	BIT(3)
- #define ATMEL_HLCDC_OUTPUT_MODE_MASK	GENMASK(3, 0)
- 
-+static int atmel_hlcdc_connector_output_mode(struct drm_connector_state *state)
-+{
-+	struct drm_connector *connector = state->connector;
-+	struct drm_display_info *info = &connector->display_info;
-+	struct drm_encoder *encoder;
-+	unsigned int supported_fmts = 0;
-+	int j;
-+
-+	encoder = state->best_encoder;
-+	if (!encoder)
-+		encoder = connector->encoder;
-+
-+	switch (atmel_hlcdc_encoder_get_bus_fmt(encoder)) {
-+	case 0:
-+		break;
-+	case MEDIA_BUS_FMT_RGB444_1X12:
-+		return ATMEL_HLCDC_RGB444_OUTPUT;
-+	case MEDIA_BUS_FMT_RGB565_1X16:
-+		return ATMEL_HLCDC_RGB565_OUTPUT;
-+	case MEDIA_BUS_FMT_RGB666_1X18:
-+		return ATMEL_HLCDC_RGB666_OUTPUT;
-+	case MEDIA_BUS_FMT_RGB888_1X24:
-+		return ATMEL_HLCDC_RGB888_OUTPUT;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	for (j = 0; j < info->num_bus_formats; j++) {
-+		switch (info->bus_formats[j]) {
-+		case MEDIA_BUS_FMT_RGB444_1X12:
-+			supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB565_1X16:
-+			supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB666_1X18:
-+			supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB888_1X24:
-+			supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return supported_fmts;
-+}
-+
- static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
- {
- 	unsigned int output_fmts = ATMEL_HLCDC_OUTPUT_MODE_MASK;
-@@ -238,31 +287,12 @@ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
- 	crtc = drm_crtc_to_atmel_hlcdc_crtc(state->crtc);
- 
- 	for_each_new_connector_in_state(state->state, connector, cstate, i) {
--		struct drm_display_info *info = &connector->display_info;
- 		unsigned int supported_fmts = 0;
--		int j;
- 
- 		if (!cstate->crtc)
- 			continue;
- 
--		for (j = 0; j < info->num_bus_formats; j++) {
--			switch (info->bus_formats[j]) {
--			case MEDIA_BUS_FMT_RGB444_1X12:
--				supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB565_1X16:
--				supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB666_1X18:
--				supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB888_1X24:
--				supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
--				break;
--			default:
--				break;
--			}
--		}
-+		supported_fmts = atmel_hlcdc_connector_output_mode(cstate);
- 
- 		if (crtc->dc->desc->conflicting_output_formats)
- 			output_fmts &= supported_fmts;
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-index 60c937f42114..4cc1e03f0aee 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-@@ -441,5 +441,6 @@ void atmel_hlcdc_crtc_irq(struct drm_crtc *c);
- int atmel_hlcdc_crtc_create(struct drm_device *dev);
- 
- int atmel_hlcdc_create_outputs(struct drm_device *dev);
-+int atmel_hlcdc_encoder_get_bus_fmt(struct drm_encoder *encoder);
- 
- #endif /* DRM_ATMEL_HLCDC_H */
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-index 16c1b2f54b42..10ed7c221a3c 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-@@ -27,14 +27,59 @@
- 
- #include "atmel_hlcdc_dc.h"
- 
-+struct atmel_hlcdc_rgb_output {
-+	struct drm_encoder encoder;
-+	int bus_fmt;
-+};
-+
- static const struct drm_encoder_funcs atmel_hlcdc_panel_encoder_funcs = {
- 	.destroy = drm_encoder_cleanup,
- };
- 
-+static struct atmel_hlcdc_rgb_output *
-+atmel_hlcdc_encoder_to_rgb_output(struct drm_encoder *encoder)
-+{
-+	return container_of(encoder, struct atmel_hlcdc_rgb_output, encoder);
-+}
-+
-+int atmel_hlcdc_encoder_get_bus_fmt(struct drm_encoder *encoder)
-+{
-+	struct atmel_hlcdc_rgb_output *output;
-+
-+	output = atmel_hlcdc_encoder_to_rgb_output(encoder);
-+
-+	return output->bus_fmt;
-+}
-+
-+static int atmel_hlcdc_of_bus_fmt(const struct device_node *ep)
-+{
-+	u32 bus_width;
-+	int ret;
-+
-+	ret = of_property_read_u32(ep, "bus-width", &bus_width);
-+	if (ret == -EINVAL)
-+		return 0;
-+	if (ret)
-+		return ret;
-+
-+	switch (bus_width) {
-+	case 12:
-+		return MEDIA_BUS_FMT_RGB444_1X12;
-+	case 16:
-+		return MEDIA_BUS_FMT_RGB565_1X16;
-+	case 18:
-+		return MEDIA_BUS_FMT_RGB666_1X18;
-+	case 24:
-+		return MEDIA_BUS_FMT_RGB888_1X24;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
- 				       struct of_endpoint *endpoint)
- {
--	struct drm_encoder *encoder;
-+	struct atmel_hlcdc_rgb_output *output;
- 	struct drm_panel *panel;
- 	struct drm_bridge *bridge;
- 	int ret;
-@@ -45,17 +90,24 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
- 	if (ret)
- 		return ret;
- 
--	encoder = devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
--	if (!encoder)
-+	output = devm_kzalloc(dev->dev, sizeof(*output), GFP_KERNEL);
-+	if (!output)
-+		return -ENOMEM;
-+
-+	output->bus_fmt = atmel_hlcdc_of_bus_fmt(endpoint->local_node);
-+	if (output->bus_fmt < 0) {
-+		dev_err(dev->dev, "endpoint %d: invalid bus width\n",
-+			endpoint->id);
- 		return -EINVAL;
-+	}
- 
--	ret = drm_encoder_init(dev, encoder,
-+	ret = drm_encoder_init(dev, &output->encoder,
- 			       &atmel_hlcdc_panel_encoder_funcs,
- 			       DRM_MODE_ENCODER_NONE, NULL);
- 	if (ret)
- 		return ret;
- 
--	encoder->possible_crtcs = 0x1;
-+	output->encoder.possible_crtcs = 0x1;
- 
- 	if (panel) {
- 		bridge = drm_panel_bridge_add(panel, DRM_MODE_CONNECTOR_Unknown);
-@@ -64,7 +116,7 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
- 	}
- 
- 	if (bridge) {
--		ret = drm_bridge_attach(encoder, bridge, NULL);
-+		ret = drm_bridge_attach(&output->encoder, bridge, NULL);
- 		if (!ret)
- 			return 0;
- 
-@@ -72,7 +124,7 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
- 			drm_panel_bridge_remove(bridge);
- 	}
- 
--	drm_encoder_cleanup(encoder);
-+	drm_encoder_cleanup(&output->encoder);
- 
- 	return ret;
- }
--- 
-2.11.0
+> ---
+>  drivers/watchdog/Kconfig      |  2 +
+>  drivers/watchdog/jz4740_wdt.c | 86 +++++++++++++++++--------------------------
+>  2 files changed, 36 insertions(+), 52 deletions(-)
+> 
+>  v5: New patch
+> 
+>  v6: - Split regmap change to new patch 09/24
+>      - The code now sets the WDT clock to the smallest rate possible and
+>        calculates the maximum timeout from that
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 9af07fd92763..834222abbbdb 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1476,7 +1476,9 @@ config INDYDOG
+>  config JZ4740_WDT
+>  	tristate "Ingenic jz4740 SoC hardware watchdog"
+>  	depends on MACH_JZ4740 || MACH_JZ4780
+> +	depends on COMMON_CLK
+>  	select WATCHDOG_CORE
+> +	select INGENIC_TIMER
+>  	help
+>  	  Hardware driver for the built-in watchdog timer on Ingenic jz4740 SoCs.
+>  
+> diff --git a/drivers/watchdog/jz4740_wdt.c b/drivers/watchdog/jz4740_wdt.c
+> index ec4d99a830ba..1d504ecf45e1 100644
+> --- a/drivers/watchdog/jz4740_wdt.c
+> +++ b/drivers/watchdog/jz4740_wdt.c
+> @@ -26,25 +26,9 @@
+>  #include <linux/err.h>
+>  #include <linux/of.h>
+>  
+> -#include <asm/mach-jz4740/timer.h>
+> -
+>  #define JZ_REG_WDT_TIMER_DATA     0x0
+>  #define JZ_REG_WDT_COUNTER_ENABLE 0x4
+>  #define JZ_REG_WDT_TIMER_COUNTER  0x8
+> -#define JZ_REG_WDT_TIMER_CONTROL  0xC
+> -
+> -#define JZ_WDT_CLOCK_PCLK 0x1
+> -#define JZ_WDT_CLOCK_RTC  0x2
+> -#define JZ_WDT_CLOCK_EXT  0x4
+> -
+> -#define JZ_WDT_CLOCK_DIV_SHIFT   3
+> -
+> -#define JZ_WDT_CLOCK_DIV_1    (0 << JZ_WDT_CLOCK_DIV_SHIFT)
+> -#define JZ_WDT_CLOCK_DIV_4    (1 << JZ_WDT_CLOCK_DIV_SHIFT)
+> -#define JZ_WDT_CLOCK_DIV_16   (2 << JZ_WDT_CLOCK_DIV_SHIFT)
+> -#define JZ_WDT_CLOCK_DIV_64   (3 << JZ_WDT_CLOCK_DIV_SHIFT)
+> -#define JZ_WDT_CLOCK_DIV_256  (4 << JZ_WDT_CLOCK_DIV_SHIFT)
+> -#define JZ_WDT_CLOCK_DIV_1024 (5 << JZ_WDT_CLOCK_DIV_SHIFT)
+>  
+>  #define DEFAULT_HEARTBEAT 5
+>  #define MAX_HEARTBEAT     2048
+> @@ -65,7 +49,8 @@ MODULE_PARM_DESC(heartbeat,
+>  struct jz4740_wdt_drvdata {
+>  	struct watchdog_device wdt;
+>  	void __iomem *base;
+> -	struct clk *rtc_clk;
+> +	struct clk *clk;
+> +	unsigned long clk_rate;
+>  };
+>  
+>  static int jz4740_wdt_ping(struct watchdog_device *wdt_dev)
+> @@ -80,31 +65,12 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+>  				    unsigned int new_timeout)
+>  {
+>  	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+> -	unsigned int rtc_clk_rate;
+> -	unsigned int timeout_value;
+> -	unsigned short clock_div = JZ_WDT_CLOCK_DIV_1;
+> -
+> -	rtc_clk_rate = clk_get_rate(drvdata->rtc_clk);
+> -
+> -	timeout_value = rtc_clk_rate * new_timeout;
+> -	while (timeout_value > 0xffff) {
+> -		if (clock_div == JZ_WDT_CLOCK_DIV_1024) {
+> -			/* Requested timeout too high;
+> -			* use highest possible value. */
+> -			timeout_value = 0xffff;
+> -			break;
+> -		}
+> -		timeout_value >>= 2;
+> -		clock_div += (1 << JZ_WDT_CLOCK_DIV_SHIFT);
+> -	}
+> +	u16 timeout_value = (u16)(drvdata->clk_rate * new_timeout);
+>  
+>  	writeb(0x0, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
+> -	writew(clock_div, drvdata->base + JZ_REG_WDT_TIMER_CONTROL);
+>  
+>  	writew((u16)timeout_value, drvdata->base + JZ_REG_WDT_TIMER_DATA);
+>  	writew(0x0, drvdata->base + JZ_REG_WDT_TIMER_COUNTER);
+> -	writew(clock_div | JZ_WDT_CLOCK_RTC,
+> -		drvdata->base + JZ_REG_WDT_TIMER_CONTROL);
+>  
+>  	writeb(0x1, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
+>  
+> @@ -114,7 +80,13 @@ static int jz4740_wdt_set_timeout(struct watchdog_device *wdt_dev,
+>  
+>  static int jz4740_wdt_start(struct watchdog_device *wdt_dev)
+>  {
+> -	jz4740_timer_enable_watchdog();
+> +	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(drvdata->clk);
+> +	if (ret)
+> +		return ret;
+> +
+>  	jz4740_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
+>  
+>  	return 0;
+> @@ -125,7 +97,7 @@ static int jz4740_wdt_stop(struct watchdog_device *wdt_dev)
+>  	struct jz4740_wdt_drvdata *drvdata = watchdog_get_drvdata(wdt_dev);
+>  
+>  	writeb(0x0, drvdata->base + JZ_REG_WDT_COUNTER_ENABLE);
+> -	jz4740_timer_disable_watchdog();
+> +	clk_disable_unprepare(drvdata->clk);
+>  
+>  	return 0;
+>  }
+> @@ -163,26 +135,42 @@ MODULE_DEVICE_TABLE(of, jz4740_wdt_of_matches);
+>  
+>  static int jz4740_wdt_probe(struct platform_device *pdev)
+>  {
+> +	struct device *dev = &pdev->dev;
+>  	struct jz4740_wdt_drvdata *drvdata;
+>  	struct watchdog_device *jz4740_wdt;
+>  	struct resource	*res;
+> +	long rate;
+>  	int ret;
+>  
+> -	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct jz4740_wdt_drvdata),
+> -			       GFP_KERNEL);
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+>  	if (!drvdata)
+>  		return -ENOMEM;
+>  
+> -	if (heartbeat < 1 || heartbeat > MAX_HEARTBEAT)
+> -		heartbeat = DEFAULT_HEARTBEAT;
+> +	drvdata->clk = devm_clk_get(&pdev->dev, "wdt");
+> +	if (IS_ERR(drvdata->clk)) {
+> +		dev_err(&pdev->dev, "cannot find WDT clock\n");
+> +		return PTR_ERR(drvdata->clk);
+> +	}
+> +
+> +	/* Set smallest clock possible */
+> +	rate = clk_round_rate(drvdata->clk, 1);
+> +	if (rate < 0)
+> +		return rate;
+>  
+> +	ret = clk_set_rate(drvdata->clk, rate);
+> +	if (ret)
+> +		return ret;
+> +
+> +	drvdata->clk_rate = rate;
+>  	jz4740_wdt = &drvdata->wdt;
+>  	jz4740_wdt->info = &jz4740_wdt_info;
+>  	jz4740_wdt->ops = &jz4740_wdt_ops;
+> -	jz4740_wdt->timeout = heartbeat;
+>  	jz4740_wdt->min_timeout = 1;
+> -	jz4740_wdt->max_timeout = MAX_HEARTBEAT;
+> -	jz4740_wdt->parent = &pdev->dev;
+> +	jz4740_wdt->max_timeout = 0xffff / rate;
+> +	jz4740_wdt->timeout = clamp(heartbeat,
+> +				    jz4740_wdt->min_timeout,
+> +				    jz4740_wdt->max_timeout);
+> +	jz4740_wdt->parent = dev;
+>  	watchdog_set_nowayout(jz4740_wdt, nowayout);
+>  	watchdog_set_drvdata(jz4740_wdt, drvdata);
+>  
+> @@ -191,12 +179,6 @@ static int jz4740_wdt_probe(struct platform_device *pdev)
+>  	if (IS_ERR(drvdata->base))
+>  		return PTR_ERR(drvdata->base);
+>  
+> -	drvdata->rtc_clk = devm_clk_get(&pdev->dev, "rtc");
+> -	if (IS_ERR(drvdata->rtc_clk)) {
+> -		dev_err(&pdev->dev, "cannot find RTC clock\n");
+> -		return PTR_ERR(drvdata->rtc_clk);
+> -	}
+> -
+>  	ret = devm_watchdog_register_device(&pdev->dev, &drvdata->wdt);
+>  	if (ret < 0)
+>  		return ret;
+> -- 
+> 2.11.0
+> 
