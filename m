@@ -1,44 +1,73 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: pm8998: Add die temperature channel
- node to the ADC
-Date: Fri, 10 Aug 2018 17:10:22 -0700
-Message-ID: <CAD=FV=VOhqHTnxJaF5d+qLYyy=QARQq+Y8Q+Oxyyqacnnt-grQ@mail.gmail.com>
-References: <20180808191339.16875-1-mka@chromium.org> <20180808191339.16875-4-mka@chromium.org>
+From: Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH v1 3/4] drivers: edac: Add EDAC driver support for QCOM SoCs
+Date: Fri, 10 Aug 2018 17:14:08 -0700
+Message-ID: <CAE=gft5dOURp02K9StHsXySCYCu-nO-44Sw0=+CTxkO-Yra_5A@mail.gmail.com>
+References: <1533155615-27929-1-git-send-email-vnkgutta@codeaurora.org>
+ <1533155615-27929-4-git-send-email-vnkgutta@codeaurora.org>
+ <CAE=gft5-5sVE-ih26KzJdpeth7Hq6QKNrP+oj_1JR=zYrdo0rw@mail.gmail.com> <2f1f8fcb95ed82219817800577ced67d@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808191339.16875-4-mka@chromium.org>
+In-Reply-To: <2f1f8fcb95ed82219817800577ced67d@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Siddartha Mohanadoss <smohanad@codeaurora.org>
+To: vnkgutta@codeaurora.org
+Cc: robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Aug 8, 2018 at 12:13 PM, Matthias Kaehlcke <mka@chromium.org> wrote:
-> Add a channel node for the die temperature to the ADC.
+On Fri, Aug 10, 2018 at 4:13 PM <vnkgutta@codeaurora.org> wrote:
 >
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8998.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> index f70f6101bceb..499bae0afb7f 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-> @@ -20,6 +20,11 @@
->                         #size-cells = <0>;
->                         #io-channel-cells = <1>;
->                         io-channel-ranges;
-> +
-> +                       die-temp {
-> +                               reg = <ADC5_DIE_TEMP>;
-> +                               label = "die_temp";
-> +                       };
+> On 2018-08-10 10:23, Evan Green wrote:
+> > On Wed, Aug 1, 2018 at 1:34 PM Venkata Narendra Kumar Gutta
+> > <vnkgutta@codeaurora.org> wrote:
+> >>
+> >> From: Channagoud Kadabi <ckadabi@codeaurora.org>
+> >>
+> >> Add error reporting driver for SBEs and DBEs. As of now, this driver
+> >> supports erp for Last Level Cache Controller (LLCC). This driver takes
+> >> care of dumping registers and adding config options to enable and
+> >> disable panic when the errors happen in cache.
+> >>
+> >> Co-developed-by: Venkata Narendra Kumar Gutta
+> >> <vnkgutta@codeaurora.org>
+> >> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> >> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+> >> ---
+> >>  MAINTAINERS              |   7 +
+> >>  drivers/edac/Kconfig     |  28 +++
+> >>  drivers/edac/Makefile    |   1 +
+> >>  drivers/edac/qcom_edac.c | 507
+> >> +++++++++++++++++++++++++++++++++++++++++++++++
+> >>  4 files changed, 543 insertions(+)
+> >>  create mode 100644 drivers/edac/qcom_edac.c
+> >>
+> > ...
+> >> diff --git a/drivers/edac/qcom_edac.c b/drivers/edac/qcom_edac.c
+> >> new file mode 100644
+> >> index 0000000..cf3e2b0
+> >> --- /dev/null
+> >> +++ b/drivers/edac/qcom_edac.c
+> >> @@ -0,0 +1,507 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> >> + */
+> >> +
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/edac.h>
+> >> +#include <linux/of_device.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/smp.h>
+> >> +#include <linux/regmap.h>
+> >> +#include <linux/interrupt.h>
+> >> +#include <linux/soc/qcom/llcc-qcom.h>
+> >
+> > Please alphabetize these includes, and remove any unneeded ones.
+> Ok, I'll update it in the next version. I didn't know that it's
+> mandatory to have in alphabetic order.
+> Is it recommended or a strict rule that we have includes in alphabetize
+> order?
 
-Seems to match the binding.
-
-I'm no expert, but FWIW:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+You know, I'm not actually sure if it's a strict rule. I'm still
+learning many of the conventions here myself. But it seems to get
+commented on consistently by reviewers, so it's in my bag of "things I
+look out for".
