@@ -1,15 +1,16 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
 Subject: Re: [PATCH 2/2] dt-bindings: clock: Add bindings for the Clocking
  Wizard IP
-Date: Sat, 11 Aug 2018 16:18:54 +0530
-Message-ID: <CAKfKVtGHwafCtPo2MR-dw-61UYH3A4H3bRZ9ipGuGx5bLBNp3Q@mail.gmail.com>
+Date: Sat, 11 Aug 2018 15:41:35 +0200
+Message-ID: <20180811154135.4e998d6b@bbrezillon>
 References: <20180801081950.10497-1-boris.brezillon@bootlin.com>
  <20180801081950.10497-2-boris.brezillon@bootlin.com>
+ <CAKfKVtGHwafCtPo2MR-dw-61UYH3A4H3bRZ9ipGuGx5bLBNp3Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180801081950.10497-2-boris.brezillon@bootlin.com>
+In-Reply-To: <CAKfKVtGHwafCtPo2MR-dw-61UYH3A4H3bRZ9ipGuGx5bLBNp3Q@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,17 +20,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Julien Su <juliensu@mxic.com.tw>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mason Yang <masonccyang@mxic.com.tw>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengxunli@mxic.com.tw
+To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Julien Su <juliensu@mxic.com.tw>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mason Yang <masonccyang@mxic.com.tw>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-Hi  Boris,
+Hi Shubhrajyoti,
 
+On Sat, 11 Aug 2018 16:18:54 +0530
+Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com> wrote:
 
-On Wed, Aug 1, 2018 at 1:49 PM, Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
-> Document Xilinx Clocking Wizard bindings.
->
+> Hi  Boris,
+> 
+> 
+> On Wed, Aug 1, 2018 at 1:49 PM, Boris Brezillon
+> <boris.brezillon@bootlin.com> wrote:
+> > Document Xilinx Clocking Wizard bindings.
+> >  
+> 
+> Thanks for the patches.
+> Are you planning to post another version patching the staging?
 
-Thanks for the patches.
-Are you planning to post another version patching the staging?
+Yes, but that won't happen before a few weeks, so, if you can't wait,
+feel free to port my changes to the existing driver. Would be good to
+also address the aspect that initially prevented this driver from being
+merged in the clk subsystem, so that we can finally move it there.
+
+Regards,
+
+Boris
