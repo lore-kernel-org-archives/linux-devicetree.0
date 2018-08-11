@@ -1,50 +1,34 @@
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: [PATCH 2/3] dt-bindings: iio: dac: add bindings for ltc166x
-Date: Sat, 11 Aug 2018 22:02:25 +0200
-Message-ID: <20180811200226.28776-2-marcus.folkesson@gmail.com>
-References: <20180811200226.28776-1-marcus.folkesson@gmail.com>
+From: kbuild test robot <fengguang.wu@intel.com>
+Subject: [RFC PATCH] clk: qcom: gcc_sdm660_hws[] can be static
+Date: Sun, 12 Aug 2018 05:30:06 +0800
+Message-ID: <20180811213006.GA10693@ivb42>
+References: <20180810202123.29238-1-ctatlor97@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180811200226.28776-1-marcus.folkesson@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180810202123.29238-1-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kbuild-all@01.org, ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-LTC1665/LTC1660 is a 8/10-bit Digital-to-Analog Converter (DAC)
-with eight individual channels.
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Fixes: 851e534f5d75 ("clk: qcom: Add Global Clock controller (GCC) driver for SDM660")
+Signed-off-by: kbuild test robot <fengguang.wu@intel.com>
 ---
- .../devicetree/bindings/iio/dac/ltc166x.txt         | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/ltc166x.txt
+ gcc-sdm660.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc166x.txt b/Documentation/devicetree/bindings/iio/dac/ltc166x.txt
-new file mode 100644
-index 000000000000..c5b5f22d6c64
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/ltc166x.txt
-@@ -0,0 +1,21 @@
-+* Linear Technology Micropower octal 8-Bit and 10-Bit DACs
-+
-+Required properties:
-+ - compatible: Must be one of the following:
-+		"lltc,ltc1660"
-+		"lltc,ltc1665"
-+ - reg: SPI chip select number for the device
-+ - vref-supply: Phandle to the voltage reference supply
-+
-+Recommended properties:
-+ - spi-max-frequency: Definition as per
-+	 Documentation/devicetree/bindings/spi/spi-bus.txt.
-+	 Max frequency for this chip is 5 MHz.
-+
-+Example:
-+dac@0 {
-+	compatible = "lltc,ltc1660";
-+	reg = <0>;
-+	spi-max-frequency = <5000000>;
-+	vref-supply = <&vref_reg>;
-+};
--- 
-2.11.0.rc2
+diff --git a/drivers/clk/qcom/gcc-sdm660.c b/drivers/clk/qcom/gcc-sdm660.c
+index bdb445a..cec8b41 100644
+--- a/drivers/clk/qcom/gcc-sdm660.c
++++ b/drivers/clk/qcom/gcc-sdm660.c
+@@ -2252,7 +2252,7 @@ static struct gdsc pcie_0_gdsc = {
+ 	.flags = VOTABLE,
+ };
+ 
+-struct clk_hw *gcc_sdm660_hws[] = {
++static struct clk_hw *gcc_sdm660_hws[] = {
+ 	[GCC_XO] = &xo.hw,
+ 	[GCC_GPLL0_EARLY_DIV] = &gpll0_early_div.hw,
+ 	[GCC_GPLL1_EARLY_DIV] = &gpll1_early_div.hw,
