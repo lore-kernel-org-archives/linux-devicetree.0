@@ -1,44 +1,46 @@
 From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: [PATCH] soc: qcom: smd-rpm: Add sdm660 compatible
-Date: Sat, 11 Aug 2018 17:24:17 +0100
-Message-ID: <20180811162417.10143-1-ctatlor97@gmail.com>
+Subject: [PATCH] firmware: qcom: scm: Add sdm660 soc compatible
+Date: Sat, 11 Aug 2018 17:24:50 +0100
+Message-ID: <20180811162453.10930-1-ctatlor97@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Sricharan R <sricharan@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the compatible for the RPM in SDM660, so that rpm resources can be
-made available.
+Add the compatible for SDM660.
+This does not need clocks to do scm calls
 
 Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 ---
- Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
- drivers/soc/qcom/smd-rpm.c                                  | 1 +
- 2 files changed, 2 insertions(+)
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt | 1 +
+ drivers/firmware/qcom_scm.c                             | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-index 89e1cb9212f6..c38d2b91aadb 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-@@ -23,6 +23,7 @@ resources.
- 		    "qcom,rpm-msm8916"
- 		    "qcom,rpm-msm8974"
- 		    "qcom,rpm-msm8998"
-+		    "qcom,rpm-sdm660"
- 
- - qcom,smd-channels:
- 	Usage: required
-diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-index 93517ed83355..05d4dec15572 100644
---- a/drivers/soc/qcom/smd-rpm.c
-+++ b/drivers/soc/qcom/smd-rpm.c
-@@ -227,6 +227,7 @@ static const struct of_device_id qcom_smd_rpm_of_match[] = {
- 	{ .compatible = "qcom,rpm-msm8974" },
- 	{ .compatible = "qcom,rpm-msm8996" },
- 	{ .compatible = "qcom,rpm-msm8998" },
-+	{ .compatible = "qcom,rpm-sdm660" },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, qcom_smd_rpm_of_match);
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+index fcf6979c0b6d..499608fcc864 100644
+--- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+@@ -11,6 +11,7 @@ Required properties:
+  * "qcom,scm-msm8660" for MSM8660 platforms
+  * "qcom,scm-msm8690" for MSM8690 platforms
+  * "qcom,scm-msm8996" for MSM8996 platforms
++ * "qcom,scm-sdm660" for SDM660 platforms
+  * "qcom,scm-ipq4019" for IPQ4019 platforms
+  * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
+ - clocks: One to three clocks may be required based on compatible.
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index e778af766fae..ee113ceb5d41 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -603,6 +603,9 @@ static const struct of_device_id qcom_scm_dt_match[] = {
+ 	{ .compatible = "qcom,scm-msm8996",
+ 	  .data = NULL, /* no clocks */
+ 	},
++	{ .compatible = "qcom,scm-sdm660",
++	  .data = NULL, /* no clocks */
++	},
+ 	{ .compatible = "qcom,scm-ipq4019",
+ 	  .data = NULL, /* no clocks */
+ 	},
 -- 
 2.18.0
