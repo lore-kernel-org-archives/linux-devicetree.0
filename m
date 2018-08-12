@@ -1,190 +1,50 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Add sdm660 pinctrl driver
-Date: Sun, 12 Aug 2018 14:04:49 +0100
-Message-ID: <0EFAD5B6-835F-49A1-B99D-ACB84F82D06F@gmail.com>
-References: <20180811162520.11641-1-ctatlor97@gmail.com> <2202961.SmUWKIdeCe@debian64> <4A3869BF-2069-409A-B291-427971AF89FA@gmail.com> <2710770.4cMFGZ35A3@debian64>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/4] ARM: dts: exynos: Add missing used PMIC regulators on
+ Exynos5422 Odroid boards
+Date: Sun, 12 Aug 2018 15:25:53 +0200
+Message-ID: <CAJKOXPds5s8omeR7UOB4u4HrYCZBTJX3t4YU4PSWBGb-9MG7iw@mail.gmail.com>
+References: <20180806160933.6578-1-krzk@kernel.org> <CANAwSgTYviRnLjVU50w_o5k6=iMjxqU5qQ+7RW9K43KrrqRKPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2710770.4cMFGZ35A3@debian64>
+In-Reply-To: <CANAwSgTYviRnLjVU50w_o5k6=iMjxqU5qQ+7RW9K43KrrqRKPA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On 11 August 2018 at 08:39, Anand Moon <linux.amoon@gmail.com> wrote:
+> Hi Krzysztof,
+>
+> These patches should also be ported to u-boot to enable PMIC.
+>
+> I was just looking into S2MPS11B data sheet
+> According to the 1.2 Key Features of  S2MPS11
+>
+> BUCK1, BUCK2, BUCK3, BUCK4, BUCK6 have (0.65 V to 1.6 V) min /max range.
+> BUCK5 have (0.65 V to 2.0 V) min /max range.
+> BUCK7 have (1.2 V to 1.5 V) min / max range.
+> BUCK8 have (1.8 V to 2.1 V) min / max range.
+> BUCK10 have (0.75 V to 1.4 V) min / max range.
+>
+> BUCKBOST9 (3.0 V to 3.75 V) min / max range.
+>
+> LDO1, LDO6, LDO11, LDO22, LDO23, LDO27, LDO35 (0.8 V to 2.375 V) min / max range
+>
+> LDO2, LDO3, LDO5, LDO7, LDO9, LDO10, LD012, LDO13, LDO14, LDO15,
+> LDO16, LDO17, LDO18, LDO19, LDO20, LD021, LDO24, LDO25, LDO26,
+> LDO28, LDO29, LDO30, LDO31, LDO32, LDO33, LDO34, LDO36, LDO37, LDO38
+> (0.8 V to 3.95 V) min / max range
+>
+> I am aware off we have configures the min/max range as per board schematics.
+> but each regulator support dynamic voltage scale and have different
+> turn on/off voltage and current rating.
+>
+> So why are we not setting the regulator-min-microvolt /
+> regulator-max-microvolt as per datasheets.
+> Please correct me if I am wrong.
 
+Which regulators are not configured as in datasheet?
 
-On 12 August 2018 13:42:27 BST, Christian Lamparter <chunkeey@gmail=2Ecom>=
- wrote:
->On Sunday, August 12, 2018 9:18:19 AM CEST you wrote:
->> On 11 August 2018 18:27:43 BST, Christian Lamparter
-><chunkeey@gmail=2Ecom> wrote:
->> >On Saturday, August 11, 2018 6:25:19 PM CEST Craig Tatlor wrote:
->> >> Add initial pinctrl driver to support pin configuration with
->> >> pinctrl framework for sdm660=2E
->> >> Based off CAF implementation=2E
->> >>=20
->> >> Signed-off-by: Craig Tatlor <ctatlor97@gmail=2Ecom>
->> >> ---
->> >>=20
->> >> diff --git
->> >a/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl=2Etxt
->> >b/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl=2Etxt
->> >> new file mode 100644
->> >> index 000000000000=2E=2E85e6c6c17c04
->> >> --- /dev/null
->> >> +++
->> >b/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl=2Etxt
->> >> @@ -0,0 +1,195 @@
->> >> +Qualcomm Technologies, Inc=2E SDM660 TLMM block
->> >> +
->> >> +This binding describes the Top Level Mode Multiplexer block found
->in
->> >the
->> >> +SDM660 platform=2E
->> >> +
->> >> +- compatible:
->> >> +	Usage: required
->> >> +	Value type: <string>
->> >> +	Definition: must be "qcom,sdm660-pinctrl"
->> >> +
->> >> +- reg:
->> >> +	Usage: required
->> >> +	Value type: <prop-encoded-array>
->> >> +	Definition: the base address and size of the TLMM register
->space=2E
->> >> +
->> >> +- interrupts:
->> >> +	Usage: required
->> >> +	Value type: <prop-encoded-array>
->> >> +	Definition: should specify the TLMM summary IRQ=2E
->> >> +
->> >> +- interrupt-controller:
->> >> +	Usage: required
->> >> +	Value type: <none>
->> >> +	Definition: identifies this node as an interrupt controller
->> >> +
->> >> +- #interrupt-cells:
->> >> +	Usage: required
->> >> +	Value type: <u32>
->> >> +	Definition: must be 2=2E Specifying the pin number and flags, as
->> >defined
->> >> +		    in <dt-bindings/interrupt-controller/irq=2Eh>
->> >> +
->> >> +- gpio-controller:
->> >> +	Usage: required
->> >> +	Value type: <none>
->> >> +	Definition: identifies this node as a gpio controller
->> >> +
->> >> +- #gpio-cells:
->> >> +	Usage: required
->> >> +	Value type: <u32>
->> >> +	Definition: must be 2=2E Specifying the pin number and flags, as
->> >defined
->> >> +		    in <dt-bindings/gpio/gpio=2Eh>
->> >> +
->> >> +Please refer to =2E=2E/gpio/gpio=2Etxt and
->> >=2E=2E/interrupt-controller/interrupts=2Etxt for
->> >> +a general description of GPIO and interrupt bindings=2E
->> >You want to specify gpio-ranges here as well=2E The property is
->explained
->> >in Section "2=2E1) gpio- and pin-controller interaction" in
->> >=2E=2E/gpio/gpio=2Etxt
->> >
->> >Without it, the gpio-hogs construct (part of =2E=2E/gpio/gpio=2Etxt) w=
-ill
->> >cause
->> >the driver to fail during boot=2E (try it, ;-) )
->> Would gpio-ranges make sense for this, as the gpio and pinctrl are in
->same block?
->Yes, it's part of the =2E=2E/gpio/gpio=2Etxt which you link=2E
->Here's a copy of the relevant section that explains this
->gpio- and pin-controller interaction=2E
->
->
->|2=2E1) gpio- and pin-controller interaction
->|-----------------------------------------
->|
->|Some or all of the GPIOs provided by a GPIO controller may be routed
->to pins
->|on the package via a pin controller=2E This allows muxing those pins
->between
->|GPIO and other functions=2E
->|It is useful to represent which GPIOs correspond to which pins on
->which pin
->|controllers=2E The gpio-ranges property described below represents this,
->and
->|contains information structures as follows:
->|
->|       gpio-range-list ::=3D <single-gpio-range> [gpio-range-list]
->|       single-gpio-range ::=3D <numeric-gpio-range> | <named-gpio-range>
->|       numeric-gpio-range ::=3D
->|                       <pinctrl-phandle> <gpio-base> <pinctrl-base>
-><count>
->|       named-gpio-range ::=3D <pinctrl-phandle> <gpio-base> '<0 0>'
->|       pinctrl-phandle : phandle to pin controller node
->|       gpio-base : Base GPIO ID in the GPIO controller
->|       pinctrl-base : Base pinctrl pin ID in the pin controller
->|       count : The number of GPIOs/pins in this range
->|
->|The "pin controller node" mentioned above must conform to the bindings
->|described in =2E=2E/pinctrl/pinctrl-bindings=2Etxt=2E
->|=2E=2E=2E
->
->As for the reason why gpio-ranges is what it is, please look at the ML
->discussion from the "pinctrl: msm: fix gpio-hog related boot issues"
->thread
->on <https://patchwork=2Ekernel=2Eorg/patch/10339127/> and the posts by=20
->Linus Walleij: <https://patchwork=2Ekernel=2Eorg/patch/10339127/#21903101=
->
->and
->Stephen Boyd: <https://patchwork=2Ekernel=2Eorg/patch/10339127/#21867185>=
-=2E
->(It's quite a bit to take in)
-Thanks for the links, makes sense now, I'll add in v2=2E
->
->> Seems no other qcom pinctrl drivers have it and I'm able to boot
->without it=2E
->Ok, let's run an experiment=2E Please remove the gpio-ranges property and
->try
->adding a test gpio-hog to your device's DTS:
->
->something like (I randomly selected GPIO5, but it shouldn't
->matter which gpio you select here=2E If you know a unused/NC
->pin/gpio, then you can use it instead):
->
->&tlmm {
->	test-hog {
->		gpio-hog;
->		gpios =3D <5 0>;
->		output-low;
->		line-name =3D "test hog";
->	};
->};
->
->compile&install it and then watch the kernel on the next boot:
->
->without the gpio-ranges present, it will spew out something along the
->lines of:
->
->| requesting hog GPIO test hog (chip 3000000=2Epinctrl, offset 5) failed,
->-517
->| gpiochip_add_data: GPIOs 0=2E=2E114 (3000000=2Epinctrl) failed to regis=
-ter
->| sdm660-pinctrl 3000000=2Epinctrl: Failed register gpiochip
->
->The single gpio-hog causes havoc and takes down the sdm660-pinctrl with
->it=2E
->And every driver that depends on the pinctrl to setup the pin
->muxing/config
->will fail to load as well=2E (check out /sys/kernel/debug/pinctrl/, it
->will be
->empty=2E)
-Yup
->
->Regards,
->Christian
-
--- 
+Best regards,
+Krzysztof
