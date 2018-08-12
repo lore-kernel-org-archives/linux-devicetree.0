@@ -1,40 +1,32 @@
 From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] arm64: dts: sdm630 SoC and Sony Pioneer (Xperia XA2)
- support
-Date: Sun, 12 Aug 2018 10:11:49 +0800
-Message-ID: <201808120959.98WQBsJj%fengguang.wu@intel.com>
-References: <20180811162549.12312-1-ctatlor97@gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sdm845-mtp: Add RPMh VRM/XOB
+ regulators
+Date: Sun, 12 Aug 2018 15:06:44 +0800
+Message-ID: <201808121444.cbLObD3h%fengguang.wu@intel.com>
+References: <20180810215150.82490-3-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="u3/rZRmxL6MmkK24"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="IS0zKkzwUGydFO0o"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180811162549.12312-1-ctatlor97@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Catalin Marinas <catalin.marinas@arm.com>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180810215150.82490-3-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, swboyd@chromium.org, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---u3/rZRmxL6MmkK24
+--IS0zKkzwUGydFO0o
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi Craig,
+Hi Douglas,
 
 Thank you for the patch! Yet something to improve:
 
 [auto build test ERROR on agross/for-next]
-[also build test ERROR on v4.18-rc8 next-20180810]
+[cannot apply to v4.18-rc8 next-20180810]
 [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-url:    https://github.com/0day-ci/linux/commits/Craig-Tatlor/arm64-dts-sdm630-SoC-and-Sony-Pioneer-Xperia-XA2-support/20180812-061913
+url:    https://github.com/0day-ci/linux/commits/Douglas-Anderson/arm64-dts-sdm845-Add-RPMh-regulators-and-usb/20180811-164836
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git for-next
 config: arm64-defconfig (attached as .config)
 compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
@@ -46,30 +38,28 @@ reproduce:
 
 All errors (new ones prefixed by >>):
 
-   In file included from arch/arm64/boot/dts/qcom/sdm630-pioneer.dtsi:4:0,
-                    from arch/arm64/boot/dts/qcom/sdm630-pioneer.dts:6:
->> arch/arm64/boot/dts/qcom/sdm630.dtsi:5:10: fatal error: dt-bindings/clock/qcom,gcc-sdm660.h: No such file or directory
-    #include <dt-bindings/clock/qcom,gcc-sdm660.h>
-             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> arch/arm64/boot/dts/qcom/sdm845-mtp.dts:10:10: fatal error: dt-bindings/regulator/qcom,rpmh-regulator.h: No such file or directory
+    #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    compilation terminated.
 
-vim +5 arch/arm64/boot/dts/qcom/sdm630.dtsi
+vim +10 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
 
-     3	
-     4	#include <dt-bindings/interrupt-controller/arm-gic.h>
-   > 5	#include <dt-bindings/clock/qcom,gcc-sdm660.h>
-     6	
+     9	
+  > 10	#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+    11	#include "sdm845.dtsi"
+    12	
 
 ---
 0-DAY kernel test infrastructure                Open Source Technology Center
 https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
---u3/rZRmxL6MmkK24
+--IS0zKkzwUGydFO0o
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICH+Ob1sAAy5jb25maWcAjDxZc9s40u/zK1SZl93amllJVmTn+8oPIAlKWPEyQOrwC0qx
+H4sICBfUb1sAAy5jb25maWcAjDxZc9s40u/zK1SZl93amllJVmTn+8oPIAlKWPEyQOrwC0qx
 lYxrbTkryzObf7/dAA8ABJVMpTxmd+PuuwH/+suvI/J+fn3Zn58e9s/P30dfD8fDaX8+PI6+
 PD0f/n8U5aMsL0c0YuXvQJw8Hd//+8/96WU+G81+n9z8Pv7t9DAZrQ6n4+F5FL4evzx9fYf2
 T6/HX379Bf79CsCXb9DV6f9G+/3p4Y/57Ldn7OS3r8f3374+PIz+Fh0+P+2Po+vfp9DbZPJ3
@@ -791,15 +781,4 @@ COa63DgwBECtyuTJIXnS/iYIirqs59NlZFAhhGiKl+Wm/+11lJWxsQGkC4nV6+DKJPlxZj3u
 i7G2ozkXrrK0JA2goJwMb4X4ix8Lp4bFD/PWEBje2Q7Zqu8qgEiNtYGrDG6sd2hl60PN+P8D
 b1KF/SySAgA=
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---u3/rZRmxL6MmkK24--
+--IS0zKkzwUGydFO0o--
