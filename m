@@ -1,64 +1,27 @@
-Return-Path: <SRS0=zNDs=K5=gmail.com=zbsdta@kernel.org>
+Return-Path: <SRS0=eRNh=K3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail01.vodafone.es ([217.130.24.71]:7094 "EHLO
+        mail01.vodafone.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727748AbeHLPn2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Aug 2018 11:43:28 -0400
+Date: Sun, 12 Aug 2018 12:31:47 +0200 (CEST)
+From: Peter Wong <Peter@vodafone.es>
+Reply-To: Peter Wong <Peter@vodafone.es>
+Message-ID: <6728874.168340.1534069909866.JavaMail.javamailuser@localhost>
+Subject: Investment opportunity
 MIME-Version: 1.0
-From: =?UTF-8?B?5byg5rOi?= <zbsdta@gmail.com>
-Date: Tue, 14 Aug 2018 22:44:52 +0800
-Message-ID: <CADUUTHCAB2eWFX-JCisfCzj6SLHLhJzYMUdf94FbDd-TYSj6fA@mail.gmail.com>
-Subject: How delete node or property in overlayd dts?
-Content-Type: multipart/alternative; boundary="000000000000b63b780573664074"
-To: robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000b63b780573664074
-Content-Type: text/plain; charset="UTF-8"
+Greetings,
+I am contacting you for an opportunity to invest in any profitable business in your country.
+We also offer a quick loan at low interest rate, please reply on my private e-mail: hsbcmdpeterwong@gmail.com
+Sincerely: Peter Wong
 
-/delete-node/ /delete-prop/ could be used in dtsi files without device tree
-overlay.
 
-but with device tree overlay,  /delete-node/ and  /delete-prop/ are not
-work.
-How to delete property and node in overlay dts?
 
-for example,
-in basel.dts have following node
-node1 {
-    property1;
-    property3;
-    node2 {
-        property2;
-    }
-}
 
-in overlay.dts as following
- node1 {
-    /delete-property/ property1;
-    /delete-node/ node2;
-}
-
-after overlay, property1 and node2 is not deleted.
-
---000000000000b63b780573664074
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">/delete-node/ /delete-prop/ could be used in dtsi files wi=
-thout device tree overlay.<div><br></div><div>but with device tree overlay,=
-=C2=A0
-
-<span style=3D"font-size:small;background-color:rgb(255,255,255);text-decor=
-ation-style:initial;text-decoration-color:initial;float:none;display:inline=
-">/delete-node/ and=C2=A0 /delete-prop/ are not work.</span></div><div><spa=
-n style=3D"font-size:small;background-color:rgb(255,255,255);text-decoratio=
-n-style:initial;text-decoration-color:initial;float:none;display:inline">Ho=
-w to delete property and node in overlay dts?</span></div><div><span style=
-=3D"font-size:small;background-color:rgb(255,255,255);text-decoration-style=
-:initial;text-decoration-color:initial;float:none;display:inline"><br></spa=
-n></div><div>for example,=C2=A0</div><div>in basel.dts have following node<=
-/div><div>node1 {</div><div>=C2=A0 =C2=A0 property1;</div><div>=C2=A0 =C2=
-=A0 property3;</div><div>=C2=A0 =C2=A0 node2 {</div><div>=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 property2;</div><div>=C2=A0 =C2=A0 }</div><div>}</div><div><br><=
-/div><div>in overlay.dts as following</div><div>=C2=A0node1 {</div><div>=C2=
-=A0 =C2=A0 /delete-property/ property1;</div><div>=C2=A0 =C2=A0 /delete-nod=
-e/ node2;</div><div>}</div><div><br></div><div>after overlay, property1 and=
- node2 is not deleted.</div><div><br></div><div><br></div></div>
-
---000000000000b63b780573664074--
+----------------------------------------------------
+This email was sent by the shareware version of Postman Professional.
