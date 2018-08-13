@@ -1,65 +1,60 @@
-Return-Path: <SRS0=l8RJ=KV=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] rcar-csi2: add R8A77980 support
-Message-ID: <f6edfd44-7b08-e467-3486-795251816187@cogentembedded.com>
-Date: Mon, 6 Aug 2018 19:56:27 +0300
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=nZrf=K4=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v2 0/7] TVP5150 fixes and new features
+Date: Mon, 13 Aug 2018 11:25:01 +0200
+Message-Id: <20180813092508.1334-1-m.felsch@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the R-Car V3H (AKA R8A77980) SoC support to the R-Car CSI2 driver.
+Hi,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+this is my v2 with the integrated reviews from my v1 [1]. Since Mauro
+applied the most patches from my v1 to his experimental/tvp5150-3
+branch [2], this series only contains those which aren't applied.
 
----
-This patch is against the 'media_tree.git' repo's 'master' branch.
+Patches I changed contain a changelog, so I will omit these here.
 
- Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt |    1 
- drivers/media/platform/rcar-vin/rcar-csi2.c                   |   11 ++++++++++
- 2 files changed, 12 insertions(+)
+Patch ('[media] tvp5150: add FORMAT_TRY support for get/set selection
+handlers') throws a compile error. Therefore I added two v4l2-subdev.h
+patches which should fix the error in a common way.
 
-Index: media_tree/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-===================================================================
---- media_tree.orig/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-+++ media_tree/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-@@ -12,6 +12,7 @@ Mandatory properties
-    - "renesas,r8a7796-csi2" for the R8A7796 device.
-    - "renesas,r8a77965-csi2" for the R8A77965 device.
-    - "renesas,r8a77970-csi2" for the R8A77970 device.
-+   - "renesas,r8a77980-csi2" for the R8A77980 device.
- 
-  - reg: the register base and size for the device registers
-  - interrupts: the interrupt for the device
-Index: media_tree/drivers/media/platform/rcar-vin/rcar-csi2.c
-===================================================================
---- media_tree.orig/drivers/media/platform/rcar-vin/rcar-csi2.c
-+++ media_tree/drivers/media/platform/rcar-vin/rcar-csi2.c
-@@ -959,6 +959,13 @@ static const struct rcar_csi2_info rcar_
- 	.confirm_start = rcsi2_confirm_start_v3m_e3,
- };
- 
-+static const struct rcar_csi2_info rcar_csi2_info_r8a77980 = {
-+	.init_phtw = rcsi2_init_phtw_h3_v3h_m3n,
-+	.hsfreqrange = hsfreqrange_h3_v3h_m3n,
-+	.csi0clkfreqrange = 0x20,
-+	.clear_ulps = true,
-+};
-+
- static const struct of_device_id rcar_csi2_of_table[] = {
- 	{
- 		.compatible = "renesas,r8a7795-csi2",
-@@ -976,6 +983,10 @@ static const struct of_device_id rcar_cs
- 		.compatible = "renesas,r8a77970-csi2",
- 		.data = &rcar_csi2_info_r8a77970,
- 	},
-+	{
-+		.compatible = "renesas,r8a77980-csi2",
-+		.data = &rcar_csi2_info_r8a77980,
-+	},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, rcar_csi2_of_table);
+Patch ('[media] tvp5150: add s_power callback') is new too. I forget
+them in my v1. This patch address the interrupt enable/disable handling.
+Now it is possible to pause streaming and keep the interrupts on.
+
+The changes I made in the ('[media] tvp5150: add input source selection
+of_graph support') patch are based on the the RFC [3] and discussion [4].
+I dropped patch ('[media] tvp5150: Change default input source selection
+behaviour') since the default input source selectopn is setup during the
+.registered() callback now.
+
+I've tested this series on a customer dt-based board. Unfortunately I
+haven't a device which use the em28xx driver. So other tester a welcome :)
+
+[1] https://www.spinics.net/lists/devicetree/msg236650.html
+[2] https://git.linuxtv.org/mchehab/experimental.git/log/?h=tvp5150-3
+[3] https://www.spinics.net/lists/devicetree/msg243181.html
+[4] https://www.spinics.net/lists/devicetree/msg243840.html
+
+Regards,
+Marco
+
+Marco Felsch (6):
+  [media] tvp5150: add input source selection of_graph support
+  [media] dt-bindings: tvp5150: Add input port connectors DT bindings
+  [media] v4l2-subdev: add stubs for v4l2_subdev_get_try_*
+  [media] v4l2-subdev: fix v4l2_subdev_get_try_* dependency
+  [media] tvp5150: add FORMAT_TRY support for get/set selection handlers
+  [media] tvp5150: add s_power callback
+
+Michael Tretter (1):
+  [media] tvp5150: initialize subdev before parsing device tree
+
+ .../devicetree/bindings/media/i2c/tvp5150.txt | 191 +++++-
+ drivers/media/i2c/tvp5150.c                   | 611 +++++++++++++++---
+ include/media/v4l2-subdev.h                   | 111 ++--
+ 3 files changed, 776 insertions(+), 137 deletions(-)
+
+-- 
+2.18.0
