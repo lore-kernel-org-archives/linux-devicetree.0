@@ -1,96 +1,85 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3] dt-bindings: media: adv748x: Document re-mappable addresses
-Date: Mon, 13 Aug 2018 23:06:52 +0300
-Message-ID: <2839443.megObXD3Cp@avalon>
-References: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 6/6] ath10k: Add QMI message handshake for wcn3990
+ client
+Date: Mon, 13 Aug 2018 13:06:35 -0700
+Message-ID: <20180813200633.GA38014@ban.mtv.corp.google.com>
+References: <20180723123428.12993-1-govinds@codeaurora.org>
+ <20180723123428.12993-7-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: mchehab@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180723123428.12993-7-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
+Hi Govind,
 
-Thank you for the patch.
-
-On Thursday, 9 August 2018 22:29:44 EEST Kieran Bingham wrote:
-> The ADV748x supports configurable slave addresses for its I2C pages.
-> Document the page names, and provide an example for setting each of the
-> pages explicitly.
+On Mon, Jul 23, 2018 at 06:04:28PM +0530, Govind Singh wrote:
+> Add WCN3990 QMI client handshakes for Q6 integrated WLAN connectivity
+> subsystem. This layer is responsible for communicating qmi control
+> messages to wifi fw QMI service using QMI messaging protocol.
 > 
-> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> Qualcomm MSM Interface(QMI) is a messaging format used to communicate
+> between components running between remote processors with underlying
+> transport layer based on integrated chipset(shared memory) or
+> discrete chipset(PCI/USB/SDIO/UART).
 > 
+> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
-> v2:
->  - Fix commit message
->  - Extend documentation for the "required property" reg:
+>  drivers/net/wireless/ath/ath10k/Kconfig  |    1 +
+>  drivers/net/wireless/ath/ath10k/Makefile |    4 +-
+>  drivers/net/wireless/ath/ath10k/core.c   |    6 +-
+>  drivers/net/wireless/ath/ath10k/core.h   |    2 +
+>  drivers/net/wireless/ath/ath10k/qmi.c    | 1019 ++++++++++++++++++++++
+>  drivers/net/wireless/ath/ath10k/qmi.h    |  129 +++
+>  drivers/net/wireless/ath/ath10k/snoc.c   |  262 +++++-
+>  drivers/net/wireless/ath/ath10k/snoc.h   |    4 +
+>  8 files changed, 1417 insertions(+), 10 deletions(-)
+>  create mode 100644 drivers/net/wireless/ath/ath10k/qmi.c
+>  create mode 100644 drivers/net/wireless/ath/ath10k/qmi.h
 > 
-> v3
->  - Fix missing comment from Laurent.
->  - correct the reg descrption
-> ---
->  .../devicetree/bindings/media/i2c/adv748x.txt    | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> b/Documentation/devicetree/bindings/media/i2c/adv748x.txt index
-> 21ffb5ed8183..25a02496f4ba 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> @@ -10,7 +10,11 @@ Required Properties:
->      - "adi,adv7481" for the ADV7481
->      - "adi,adv7482" for the ADV7482
-> 
-> -  - reg: I2C slave address
-> +  - reg: I2C slave addresses
-> +    The ADV748x has up to twelve 256-byte maps that can be accessed via the
-> +    main I2C ports. Each map has it own I2C address and acts as a standard
-> +    slave device on the I2C bus. The main address is mandatory, others are
-> +    optional and remain at default values if not specified.
-> 
->  Optional Properties:
-> 
-> @@ -18,6 +22,11 @@ Optional Properties:
->  		     "intrq3". All interrupts are optional. The "intrq3" interrupt
->  		     is only available on the adv7481
->    - interrupts: Specify the interrupt lines for the ADV748x
-> +  - reg-names : Names of maps with programmable addresses.
-> +		It shall contain all maps needing a non-default address.
-> +		Possible map names are:
-> +		  "main", "dpll", "cp", "hdmi", "edid", "repeater",
-> +		  "infoframe", "cbus", "cec", "sdp", "txa", "txb"
 
-Reading this again, the text doesn't document the "main" map very well. The 
-main I2C address is always required, but if no other I2C address needs to be 
-specified, the reg-names property can be omitted. Otherwise the "main" reg-
-names entry is required.
+> diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+> new file mode 100644
+> index 000000000000..d91499a7354c
+> --- /dev/null
+> +++ b/drivers/net/wireless/ath/ath10k/qmi.c
+> @@ -0,0 +1,1019 @@
 
-This being said, this problem isn't specific to the adv748x bindings, so I 
-don't want to block this patch until we figure out a proper wording that can 
-be applied globally. For that reason,
+...
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +int ath10k_qmi_deinit(struct ath10k *ar)
+> +{
+> +	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
+> +	struct ath10k_qmi *qmi = ar_snoc->qmi;
+> +
+> +	cancel_work_sync(&qmi->event_work);
+> +	destroy_workqueue(qmi->event_wq);
 
->  The device node must contain one 'port' child node per device input and
-> output port, in accordance with the video interface bindings defined in
-> @@ -47,7 +56,10 @@ Example:
-> 
->  	video-receiver@70 {
->  		compatible = "adi,adv7482";
-> -		reg = <0x70>;
-> +		reg = <0x70 0x71 0x72 0x73 0x74 0x75
-> +		       0x60 0x61 0x62 0x63 0x64 0x65>;
-> +		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
-> +			    "infoframe", "cbus", "cec", "sdp", "txa", "txb";
-> 
->  		#address-cells = <1>;
->  		#size-cells = <0>;
+I believe this is incorrect ordering. You should not be destroying the
+work queue that handles QMI event responses before you release the QMI
+handle. As it stands, this means you segfault during 'rmmod'.
 
--- 
-Regards,
+> +	qmi_handle_release(&qmi->qmi_hdl);
 
-Laurent Pinchart
+I think this should be:
+
+	qmi_handle_release(&qmi->qmi_hdl);
+	cancel_work_sync(&qmi->event_work);
+	destroy_workqueue(qmi->event_wq);
+
+> +	qmi = NULL;
+
+This assignment is pointless, as 'qmi' is a local variable. Maybe you
+meant to clear the struct member, as a precaution? So this would be:
+
+	ar_snoc->qmi = NULL;
+
+Brian
+
+> +
+> +	return 0;
+> +} 
