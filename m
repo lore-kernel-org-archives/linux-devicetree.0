@@ -1,90 +1,52 @@
-Return-Path: <SRS0=H47x=KR=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 4/5] clk: renesas: Add r8a774a1 CPG Core Clock Definitions
-Date: Thu,  2 Aug 2018 15:56:34 +0100
-Message-Id: <1533221794-59181-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=nZrf=K4=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v2 6/7] [media] tvp5150: initialize subdev before parsing device tree
+Date: Mon, 13 Aug 2018 11:25:07 +0200
+Message-Id: <20180813092508.1334-7-m.felsch@pengutronix.de>
+In-Reply-To: <20180813092508.1334-1-m.felsch@pengutronix.de>
+References: <20180813092508.1334-1-m.felsch@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add all RZ/G2M Clock Pulse Generator Core Clock Outputs, as listed in
-Table 8.2b ("List of Clocks [RZ/G2M]") of the RZ/G2M Hardware User's
-Manual.
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-V1--> V2
-  * Removed internal clock POST2.
----
- include/dt-bindings/clock/r8a774a1-cpg-mssr.h | 58 +++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 include/dt-bindings/clock/r8a774a1-cpg-mssr.h
+There are several debug prints in the tvp5150_parse_dt() function, which
+do not print the prefix, because the v4l2_subdev is not initialized, yet.
 
-diff --git a/include/dt-bindings/clock/r8a774a1-cpg-mssr.h b/include/dt-bindings/clock/r8a774a1-cpg-mssr.h
-new file mode 100644
-index 0000000..9bc5d45
---- /dev/null
-+++ b/include/dt-bindings/clock/r8a774a1-cpg-mssr.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+#ifndef __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__
-+#define __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__
-+
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+
-+/* r8a774a1 CPG Core Clocks */
-+#define R8A774A1_CLK_Z			0
-+#define R8A774A1_CLK_Z2			1
-+#define R8A774A1_CLK_ZG			2
-+#define R8A774A1_CLK_ZTR		3
-+#define R8A774A1_CLK_ZTRD2		4
-+#define R8A774A1_CLK_ZT			5
-+#define R8A774A1_CLK_ZX			6
-+#define R8A774A1_CLK_S0D1		7
-+#define R8A774A1_CLK_S0D2		8
-+#define R8A774A1_CLK_S0D3		9
-+#define R8A774A1_CLK_S0D4		10
-+#define R8A774A1_CLK_S0D6		11
-+#define R8A774A1_CLK_S0D8		12
-+#define R8A774A1_CLK_S0D12		13
-+#define R8A774A1_CLK_S1D2		14
-+#define R8A774A1_CLK_S1D4		15
-+#define R8A774A1_CLK_S2D1		16
-+#define R8A774A1_CLK_S2D2		17
-+#define R8A774A1_CLK_S2D4		18
-+#define R8A774A1_CLK_S3D1		19
-+#define R8A774A1_CLK_S3D2		20
-+#define R8A774A1_CLK_S3D4		21
-+#define R8A774A1_CLK_LB			22
-+#define R8A774A1_CLK_CL			23
-+#define R8A774A1_CLK_ZB3		24
-+#define R8A774A1_CLK_ZB3D2		25
-+#define R8A774A1_CLK_ZB3D4		26
-+#define R8A774A1_CLK_CR			27
-+#define R8A774A1_CLK_CRD2		28
-+#define R8A774A1_CLK_SD0H		29
-+#define R8A774A1_CLK_SD0		30
-+#define R8A774A1_CLK_SD1H		31
-+#define R8A774A1_CLK_SD1		32
-+#define R8A774A1_CLK_SD2H		33
-+#define R8A774A1_CLK_SD2		34
-+#define R8A774A1_CLK_SD3H		35
-+#define R8A774A1_CLK_SD3		36
-+#define R8A774A1_CLK_RPC		37
-+#define R8A774A1_CLK_RPCD2		38
-+#define R8A774A1_CLK_MSO		39
-+#define R8A774A1_CLK_HDMI		40
-+#define R8A774A1_CLK_CSI0		41
-+#define R8A774A1_CLK_CP			42
-+#define R8A774A1_CLK_CPEX		43
-+#define R8A774A1_CLK_R			44
-+#define R8A774A1_CLK_OSC		45
-+
-+#endif /* __DT_BINDINGS_CLOCK_R8A774A1_CPG_MSSR_H__ */
+Initialize the v4l2_subdev before parsing the device tree to fix the
+debug messages.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/media/i2c/tvp5150.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 825dcf3a9d83..e736f609fecd 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -2032,6 +2032,9 @@ static int tvp5150_probe(struct i2c_client *c,
+ 
+ 	core->regmap = map;
+ 	sd = &core->sd;
++	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
++	sd->internal_ops = &tvp5150_internal_ops;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 
+ 	if (IS_ENABLED(CONFIG_OF) && np) {
+ 		res = tvp5150_parse_dt(core, np);
+@@ -2044,10 +2047,6 @@ static int tvp5150_probe(struct i2c_client *c,
+ 		core->mbus_type = V4L2_MBUS_BT656;
+ 	}
+ 
+-	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+-	sd->internal_ops = &tvp5150_internal_ops;
+-	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+-
+ 	res = tvp5150_mc_init(sd);
+ 	if (res)
+ 		goto err_cleanup_dt;
 -- 
-2.7.4
+2.18.0
