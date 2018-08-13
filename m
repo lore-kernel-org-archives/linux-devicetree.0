@@ -1,45 +1,40 @@
-Return-Path: <SRS0=Wv3U=KW=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v3 4/5] ARM: dts: iwg23s-sbc: specify EtherAVB PHY IRQ
-Date: Tue,  7 Aug 2018 08:57:05 +0100
-Message-Id: <1533628626-26503-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1533628626-26503-1-git-send-email-biju.das@bp.renesas.com>
-References: <1533628626-26503-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=4COz=K4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from unassigned.psychz.net ([104.149.231.218]:45552 "EHLO
+        soapequipment.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728226AbeHMLyI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Aug 2018 07:54:08 -0400
+Subject: you need mobile apps
+Message-ID: <42099617b7e00effb321cd6914633a03@lantronix.com>
+Date: Mon, 13 Aug 2018 07:33:19 +0200
+From: "Jack Dike" <toslintge@aromafloria.com>
+Reply-To: cengjaos@aliyun.com
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Specify  EtherAVB PHY IRQ  in the board specific device tree, now that we
-have GPIO support.
+Do you need mobile apps development? We can do it for you.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
----
-V1-->V2
-    * No change
-V2-->V3
-    * No change
-    * compile time dependency on gpio dtsi patch
----
+We are an India base company. Here are the details about us:
+Years in business: 8
+Staffs: 125
+App developed: 350
 
----
- arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts | 2 ++
- 1 file changed, 2 insertions(+)
+We work on Android, iOS, Ionic, and PhoneGap platforms, we have clients
+across different kind of industries.
+Such like retail, media and entertainment, BFSI, hospitality, social media,
+eCommerce, food and beverages, etc.
 
-diff --git a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-index 2dab6d1..a3d92d9 100644
---- a/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-+++ b/arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts
-@@ -59,6 +59,8 @@
- 
- 	phy3: ethernet-phy@3 {
- 		reg = <3>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
- 		micrel,led-mode = <1>;
- 	};
- };
--- 
-2.7.4
+We do below:
+Mobile Apps
+Mobile App UI/UX designing
+App Maintenance and Support
+Website or ecommerce portal development
+
+Please reply back if you are interested in what we do.
+We will share our portfolios to you.
+
+Regards,
+Jack
