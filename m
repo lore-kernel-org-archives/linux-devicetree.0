@@ -1,35 +1,82 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5b6cc31f.1c69fb81.183a5.f380@mx.google.com>
-Date: Thu, 09 Aug 2018 16:41:34 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: maxim: Add SPDX license identifiers
-References: <20180807161826.2222-1-krzk@kernel.org>
-In-Reply-To: <20180807161826.2222-1-krzk@kernel.org>
-To: krzk@kernel.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, Sangbeom Kim <sbkim73@samsung.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=nZrf=K4=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v2 3/7] [media] v4l2-subdev: add stubs for v4l2_subdev_get_try_*
+Date: Mon, 13 Aug 2018 11:25:04 +0200
+Message-Id: <20180813092508.1334-4-m.felsch@pengutronix.de>
+In-Reply-To: <20180813092508.1334-1-m.felsch@pengutronix.de>
+References: <20180813092508.1334-1-m.felsch@pengutronix.de>
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi, this is an automated email from Rob's (experimental) review bot. I
-found a couple of common problems with your patch. Please see below.
+In case of missing CONFIG_VIDEO_V4L2_SUBDEV_API those helpers aren't
+available. So each driver have to add ifdefs around those helpers or
+add the CONFIG_VIDEO_V4L2_SUBDEV_API as dependcy.
 
-On Tue,  7 Aug 2018 18:18:25 +0200, Krzysztof Kozlowski wrote:
-> Replace GPL v2.0 and v2.0+ license statements with SPDX license
-> identifiers.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Make these helpers available in case of CONFIG_VIDEO_V4L2_SUBDEV_API
+isn't set to avoid ifdefs. This approach is less error prone too.
 
-The preferred subject prefix is "dt-bindings: <binding dir>: ...".
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ include/media/v4l2-subdev.h | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-> ---
->  drivers/regulator/max14577-regulator.c         | 22 +++++------------
->  drivers/regulator/max77686-regulator.c         | 32 +++++++-----------------
->  drivers/regulator/max77693-regulator.c         | 32 +++++++-----------------
->  drivers/regulator/max77802-regulator.c         | 34 +++++++++-----------------
->  drivers/regulator/max8997-regulator.c          | 30 ++++++-----------------
->  drivers/regulator/max8998.c                    | 28 ++++++---------------
->  include/dt-bindings/regulator/maxim,max77802.h |  5 +---
->  7 files changed, 52 insertions(+), 131 deletions(-)
-> 
-
-DT bindings (including binding headers) should be a separate patch. See
-Documentation/devicetree/bindings/submitting-patches.txt.
+diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+index 9102d6ca566e..ce48f1fcf295 100644
+--- a/include/media/v4l2-subdev.h
++++ b/include/media/v4l2-subdev.h
+@@ -912,8 +912,6 @@ struct v4l2_subdev_fh {
+ #define to_v4l2_subdev_fh(fh)	\
+ 	container_of(fh, struct v4l2_subdev_fh, vfh)
+ 
+-#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+-
+ /**
+  * v4l2_subdev_get_try_format - ancillary routine to call
+  *	&struct v4l2_subdev_pad_config->try_fmt
+@@ -927,9 +925,13 @@ static inline struct v4l2_mbus_framefmt
+ 			    struct v4l2_subdev_pad_config *cfg,
+ 			    unsigned int pad)
+ {
++#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+ 	if (WARN_ON(pad >= sd->entity.num_pads))
+ 		pad = 0;
+ 	return &cfg[pad].try_fmt;
++#else
++	return NULL;
++#endif
+ }
+ 
+ /**
+@@ -945,9 +947,13 @@ static inline struct v4l2_rect
+ 			  struct v4l2_subdev_pad_config *cfg,
+ 			  unsigned int pad)
+ {
++#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+ 	if (WARN_ON(pad >= sd->entity.num_pads))
+ 		pad = 0;
+ 	return &cfg[pad].try_crop;
++#else
++	return NULL;
++#endif
+ }
+ 
+ /**
+@@ -963,11 +969,14 @@ static inline struct v4l2_rect
+ 			     struct v4l2_subdev_pad_config *cfg,
+ 			     unsigned int pad)
+ {
++#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+ 	if (WARN_ON(pad >= sd->entity.num_pads))
+ 		pad = 0;
+ 	return &cfg[pad].try_compose;
+-}
++#else
++	return NULL;
+ #endif
++}
+ 
+ extern const struct v4l2_file_operations v4l2_subdev_fops;
+ 
+-- 
+2.18.0
