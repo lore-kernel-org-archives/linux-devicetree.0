@@ -1,71 +1,91 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
-Date: Mon, 13 Aug 2018 16:04:54 -0600
-Message-ID: <20180813220454.GA28913@rob-hp-laptop>
-References: <20180812184152.GA22343@ravnborg.org>
- <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
- <20180813181808.GA2357@ravnborg.org>
+Subject: Re: [PATCH net-next 02/10] dt-bindings: net: ocelot: remove hsio
+ from the list of register address spaces
+Date: Mon, 13 Aug 2018 16:31:03 -0600
+Message-ID: <20180813223103.GA16669@rob-hp-laptop>
+References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
+ <3558e538b55a2249b0a179c04c27e9d3715bbbaa.1532954208.git-series.quentin.schulz@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180813181808.GA2357@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Joshua Henderson <joshua.henderson@microchip.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <3558e538b55a2249b0a179c04c27e9d3715bbbaa.1532954208.git-series.quentin.schulz@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMTMsIDIwMTggYXQgMDg6MTg6MDhQTSArMDIwMCwgU2FtIFJhdm5ib3JnIHdy
-b3RlOgo+IEhpIE5pY2hvbGFzLgo+IAo+IE9uIE1vbiwgQXVnIDEzLCAyMDE4IGF0IDA1OjU0OjQ4
-UE0gKzAyMDAsIE5pY29sYXMgRmVycmUgd3JvdGU6Cj4gPiBPbiAxMi8wOC8yMDE4IGF0IDIwOjQx
-LCBTYW0gUmF2bmJvcmcgd3JvdGU6Cj4gPiA+TmV3IERSTSBiYXNlZCBkcml2ZXIgZm9yIGF0OTFz
-YW05IFNPQydzIHRoYXQgdXNlcyB0aGUKPiA+ID5BdG1lbCBMQ0RDIElQIGNvcmUuCj4gPiAKPiA+
-IEknbSBkZWxpZ2h0ZWQgdG8gc2VlIHRoaXMgd29yazogVGhhbmtzIGEgbG90IFNhbSEKPiBHbGFk
-IHRvIGhlYXIuCj4gSSB3YXMgYSBiaXQgd29ycmllZCB0aGF0IHRoZSByZXNwb25zZSB3b3VsZCBi
-ZSAidGhpcyBpcwo+IHdhc3RlIG9mIHRpbWUgYXMgd2UgaGF2ZSBhIHdvcmtpbmcgZHJpdmVyIGFs
-cmVhZHkiLgo+IAo+ID4gCj4gPiA+VGhpcyBpcyBmaXJzdCB2ZXJzaW9uIG9mIGEgcGF0Y2ggc2V0
-IHRoYXQgYWRkcwo+ID4gPmRyaXZlcnMgZm9yIHRoZSBBdG1lbCBMQ0RDIElQIGNvcmUuCj4gPiA+
-UG9zdGVkIGZvciByZXZpZXcgYXMgdGhlIGJhc2ljcyB3b3JrcyBub3cuCj4gPiA+Cj4gPiA+VGhl
-IExDREMgSVAgY29yZSBjb250YWlucyB0d28gZGV2aWNlczoKPiA+ID4tIGEgUFdNIG9mdGVuIHVz
-ZWQgZm9yIGJhY2tsaWdodAo+ID4gPi0gYSBMQ0QgZGlzcGxheSBjb250cm9sbGVyCj4gPiA+Cj4g
-PiA+Qm90aCBkZXZpY2VzIGFyZSBzdXBwb3J0ZWQgdG9kYXkgYnkgdGhlIGF0bWVsX2xjZGZiIGRy
-aXZlci4KPiA+ID5Gb3IgdGhpcyBuZXcgc2V0IG9mIGRyaXZlcnMgdGhlIGNvbXBhdGlibGUgc3Ry
-aW5ncyB3YXMKPiA+ID5zZWxlY3RlZCB0byBhdm9pZCBjbGFzaCB3aXRoIHRoZSBleGlzdGluZyBj
-b21wYXRpYmxlCj4gPiA+c3RyaW5ncyB1c2VkIGZvciB0aGUgYXRtZWxfbGNkZmIgZHJpdmVyIHRv
-IGFsbG93IHRoZW0KPiA+ID50byBjby1leGlzdC4KPiA+IAo+ID4gV291bGQgYmUgZ29vZCB0byBo
-YXZlIGEgcGxhbiB0byBwaGFzZS1vdXQgdGhlIG9sZCBhdG1lbF9sY2RmYiBmYmRldgo+ID4gZHJp
-dmVyIHdoZW4gdGhpcyBvbmUgYWRkcmVzc2VzIHNvbWUgVE9ETyBpdGVtcyB0aGF0IG1ha2Ugc2Vu
-c2UuCj4gQWdyZWUgb24gdGhpcy4KPiBPbmUgYXBwcm9hY2ggY291bGQgYmUgdG8gc2F5IHRoYXQg
-d2hlbiBhbGwgaW4ta2VybmVsIHVzZXJzIG9mIGF0bWVsX2xjZGZiCj4gYXJlIHBvcnRlZCwgdGhl
-biB0aGUgb2xkIGRyaXZlciBjb3VsZCBiZSBkcm9wcGVkIGFmdGVyIGEga2VybmVsIHJlbGVhc2Uu
-Cj4gCj4gPiBUaGUgbWZkIHN1ZmZpeCBzZWVtcyBzdHJhbmdlIHRvIG1lLiBXaGF0IGFib3V0ICJh
-dG1lbCxhdDkxc2FtOTI2My1sY2RjLW1mZCIKPiA+ID0+ICJhdG1lbCxhdDkxc2FtOTI2My1sY2Qi
-IChvciAibWljcm9jaGlwLGF0OTFzYW05MjYzLWxjZGMiKS4KPiBUaGUgIi1tZmQiIHN1ZmZpeCB3
-YXMgYWRkZWQgdG8gYXZvaWQgY2xhc2hpbmcgd2l0aCB0aGUgY3VycmVudAo+IGNvbXBhdGlibGUg
-c3RyaW5nIHVzZWQgYnkgdGhlIGF0bWVsX2xjZGZiIGRyaXZlci4KCkkgZG9uJ3Qga25vdyB0aGF0
-IDIgcmVnaXN0ZXJzIGZvciBhIGJhY2tsaWdodCBQV00gY29uc3RpdHV0ZSBhbiBNRkQuIEEgCnNp
-bmdsZSBub2RlIGNhbiBiZSBib3RoIGFuIExDRCBjb250cm9sbGVyIGFuZCBhIFBXTS4KClRoZSBm
-YWN0IHRoYXQgdGhlIE9TIGhhcyAyIGRyaXZlcnMgaXMgaXJyZWxldmFudCB0byB0aGUgYmluZGlu
-ZyBhbmQgRFQgCmlzIG5vdCBhIHdheSB0byBzZWxlY3QgZHJpdmVycy4gWW91ciBjaG9pY2Ugd2l0
-aCBMaW51eCBpcyBlaXRoZXIga2NvbmZpZyAKb3IgbWFudWFsIG1vZHVsZSBsb2FkaW5nLgoKPiBJ
-IHN1c2dnZXN0IHdlIGRvIHRoZSBmb2xsb3dpbmc6Cj4gLSB1c2UgdGhlIG1pY3JvY2hpcCBwcmVm
-aXgsIGFzIHRoaXMgaXMgbm93IG93bmVkIGJ5IG1pY3JvY2hpcAo+IC0gYW5kIGFkZCB0aGUgZHJp
-dmVyIHRvIGEgZHJtL21pY3JvY2hpcC8gZGlyZWN0b3J5Cj4gKFRoZW4gd2UgY2FuIG9ubHkgaG9w
-ZSB0aGF0IG1pY3JvY2hpcCBkbyBub3QgY2hhbmdlIG5hbWUgb3IKPiBhcmUgcHVyY2hhc2VkIGJ5
-IHNvbWVvbmUgZWxzZSkuCgpJIHdvdWxkIG5vdCBkbyB0aGF0LiBUaGVuIHlvdSBoYXZlIGEgZHRz
-IHdpdGggYSBtaXh0dXJlIGJhc2VkIG9uIHdoZW4gCnlvdSBnb3QgYXJvdW5kIHRvIHdyaXRpbmcg
-ZWFjaCBiaW5kaW5nLiBpLk1YIGhhcyBjb250aW51ZWQgdXNpbmcgJ2ZzbCcgCmV2ZW4gb24gbmV3
-IGNoaXBzIHRvZGF5LiBQcm9iYWJseSBhIGdvb2QgY2hvaWNlIGhhZCB0aGUgUUNvbSBhY3EgaGFk
-IApnb25lIHRocnUuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Mon, Jul 30, 2018 at 02:43:47PM +0200, Quentin Schulz wrote:
+> HSIO register address space should be handled outside of the MAC
+> controller as there are some registers for PLL5 configuring,
+> SerDes/switch port muxing and a thermal sensor IP, so let's remove it.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/mips/mscc.txt       | 16 ++++++++++++-
+>  Documentation/devicetree/bindings/net/mscc-ocelot.txt |  9 ++-----
+>  2 files changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mips/mscc.txt b/Documentation/devicetree/bindings/mips/mscc.txt
+> index ae15ec3..bc817e9 100644
+> --- a/Documentation/devicetree/bindings/mips/mscc.txt
+> +++ b/Documentation/devicetree/bindings/mips/mscc.txt
+> @@ -41,3 +41,19 @@ Example:
+>  		compatible = "mscc,ocelot-cpu-syscon", "syscon";
+>  		reg = <0x70000000 0x2c>;
+>  	};
+> +
+> +o HSIO regs:
+> +
+> +The SoC has a few registers (HSIO) handling miscellaneous functionalities:
+> +configuration and status of PLL5, RCOMP, SyncE, SerDes configurations and
+> +status, SerDes muxing and a thermal sensor.
+> +
+> +Required properties:
+> +- compatible: Should be "mscc,ocelot-hsio", "syscon", "simple-mfd"
+> +- reg : Should contain registers location and length
+> +
+> +Example:
+> +	syscon@10d0000 {
+> +		compatible = "mscc,ocelot-hsio", "syscon", "simple-mfd";
+
+simple-mfd is not appropriate without child nodes, so drop it.
+
+> +		reg = <0x10d0000 0x10000>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/net/mscc-ocelot.txt b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
+> index 0a84711..9e5c17d 100644
+> --- a/Documentation/devicetree/bindings/net/mscc-ocelot.txt
+> +++ b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
+> @@ -12,7 +12,6 @@ Required properties:
+>    - "sys"
+>    - "rew"
+>    - "qs"
+> -  - "hsio"
+>    - "qsys"
+>    - "ana"
+>    - "portX" with X from 0 to the number of last port index available on that
+> @@ -45,7 +44,6 @@ Example:
+>  		reg = <0x1010000 0x10000>,
+>  		      <0x1030000 0x10000>,
+>  		      <0x1080000 0x100>,
+> -		      <0x10d0000 0x10000>,
+>  		      <0x11e0000 0x100>,
+>  		      <0x11f0000 0x100>,
+>  		      <0x1200000 0x100>,
+> @@ -59,10 +57,9 @@ Example:
+>  		      <0x1280000 0x100>,
+>  		      <0x1800000 0x80000>,
+>  		      <0x1880000 0x10000>;
+> -		reg-names = "sys", "rew", "qs", "hsio", "port0",
+> -			    "port1", "port2", "port3", "port4", "port5",
+> -			    "port6", "port7", "port8", "port9", "port10",
+> -			    "qsys", "ana";
+> +		reg-names = "sys", "rew", "qs", "port0", "port1", "port2",
+> +			    "port3", "port4", "port5", "port6", "port7",
+> +			    "port8", "port9", "port10", "qsys", "ana";
+>  		interrupts = <21 22>;
+>  		interrupt-names = "xtr", "inj";
+>  
+> -- 
+> git-series 0.9.1
