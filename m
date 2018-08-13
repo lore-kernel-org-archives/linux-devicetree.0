@@ -1,28 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 02/10] dt-bindings: thermal: Fix a typo in
- documentation
-Date: Mon, 13 Aug 2018 15:49:53 -0600
-Message-ID: <20180813214953.GA27382@rob-hp-laptop>
-References: <cover.1533815718.git.amit.kucheria@linaro.org>
- <08b528ddc26adcb57539b1ac9d352850d7d80bfb.1533815718.git.amit.kucheria@linaro.org>
+Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
+Date: Mon, 13 Aug 2018 16:04:54 -0600
+Message-ID: <20180813220454.GA28913@rob-hp-laptop>
+References: <20180812184152.GA22343@ravnborg.org>
+ <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
+ <20180813181808.GA2357@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <08b528ddc26adcb57539b1ac9d352850d7d80bfb.1533815718.git.amit.kucheria@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20180813181808.GA2357@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Joshua Henderson <joshua.henderson@microchip.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 09, 2018 at 06:02:34PM +0530, Amit Kucheria wrote:
-> c(1) + x(1) was actually meant to be c(1) * x(1).
-> 
-> While we're at it, add some brackets to make it nicer to read.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gTW9uLCBBdWcgMTMsIDIwMTggYXQgMDg6MTg6MDhQTSArMDIwMCwgU2FtIFJhdm5ib3JnIHdy
+b3RlOgo+IEhpIE5pY2hvbGFzLgo+IAo+IE9uIE1vbiwgQXVnIDEzLCAyMDE4IGF0IDA1OjU0OjQ4
+UE0gKzAyMDAsIE5pY29sYXMgRmVycmUgd3JvdGU6Cj4gPiBPbiAxMi8wOC8yMDE4IGF0IDIwOjQx
+LCBTYW0gUmF2bmJvcmcgd3JvdGU6Cj4gPiA+TmV3IERSTSBiYXNlZCBkcml2ZXIgZm9yIGF0OTFz
+YW05IFNPQydzIHRoYXQgdXNlcyB0aGUKPiA+ID5BdG1lbCBMQ0RDIElQIGNvcmUuCj4gPiAKPiA+
+IEknbSBkZWxpZ2h0ZWQgdG8gc2VlIHRoaXMgd29yazogVGhhbmtzIGEgbG90IFNhbSEKPiBHbGFk
+IHRvIGhlYXIuCj4gSSB3YXMgYSBiaXQgd29ycmllZCB0aGF0IHRoZSByZXNwb25zZSB3b3VsZCBi
+ZSAidGhpcyBpcwo+IHdhc3RlIG9mIHRpbWUgYXMgd2UgaGF2ZSBhIHdvcmtpbmcgZHJpdmVyIGFs
+cmVhZHkiLgo+IAo+ID4gCj4gPiA+VGhpcyBpcyBmaXJzdCB2ZXJzaW9uIG9mIGEgcGF0Y2ggc2V0
+IHRoYXQgYWRkcwo+ID4gPmRyaXZlcnMgZm9yIHRoZSBBdG1lbCBMQ0RDIElQIGNvcmUuCj4gPiA+
+UG9zdGVkIGZvciByZXZpZXcgYXMgdGhlIGJhc2ljcyB3b3JrcyBub3cuCj4gPiA+Cj4gPiA+VGhl
+IExDREMgSVAgY29yZSBjb250YWlucyB0d28gZGV2aWNlczoKPiA+ID4tIGEgUFdNIG9mdGVuIHVz
+ZWQgZm9yIGJhY2tsaWdodAo+ID4gPi0gYSBMQ0QgZGlzcGxheSBjb250cm9sbGVyCj4gPiA+Cj4g
+PiA+Qm90aCBkZXZpY2VzIGFyZSBzdXBwb3J0ZWQgdG9kYXkgYnkgdGhlIGF0bWVsX2xjZGZiIGRy
+aXZlci4KPiA+ID5Gb3IgdGhpcyBuZXcgc2V0IG9mIGRyaXZlcnMgdGhlIGNvbXBhdGlibGUgc3Ry
+aW5ncyB3YXMKPiA+ID5zZWxlY3RlZCB0byBhdm9pZCBjbGFzaCB3aXRoIHRoZSBleGlzdGluZyBj
+b21wYXRpYmxlCj4gPiA+c3RyaW5ncyB1c2VkIGZvciB0aGUgYXRtZWxfbGNkZmIgZHJpdmVyIHRv
+IGFsbG93IHRoZW0KPiA+ID50byBjby1leGlzdC4KPiA+IAo+ID4gV291bGQgYmUgZ29vZCB0byBo
+YXZlIGEgcGxhbiB0byBwaGFzZS1vdXQgdGhlIG9sZCBhdG1lbF9sY2RmYiBmYmRldgo+ID4gZHJp
+dmVyIHdoZW4gdGhpcyBvbmUgYWRkcmVzc2VzIHNvbWUgVE9ETyBpdGVtcyB0aGF0IG1ha2Ugc2Vu
+c2UuCj4gQWdyZWUgb24gdGhpcy4KPiBPbmUgYXBwcm9hY2ggY291bGQgYmUgdG8gc2F5IHRoYXQg
+d2hlbiBhbGwgaW4ta2VybmVsIHVzZXJzIG9mIGF0bWVsX2xjZGZiCj4gYXJlIHBvcnRlZCwgdGhl
+biB0aGUgb2xkIGRyaXZlciBjb3VsZCBiZSBkcm9wcGVkIGFmdGVyIGEga2VybmVsIHJlbGVhc2Uu
+Cj4gCj4gPiBUaGUgbWZkIHN1ZmZpeCBzZWVtcyBzdHJhbmdlIHRvIG1lLiBXaGF0IGFib3V0ICJh
+dG1lbCxhdDkxc2FtOTI2My1sY2RjLW1mZCIKPiA+ID0+ICJhdG1lbCxhdDkxc2FtOTI2My1sY2Qi
+IChvciAibWljcm9jaGlwLGF0OTFzYW05MjYzLWxjZGMiKS4KPiBUaGUgIi1tZmQiIHN1ZmZpeCB3
+YXMgYWRkZWQgdG8gYXZvaWQgY2xhc2hpbmcgd2l0aCB0aGUgY3VycmVudAo+IGNvbXBhdGlibGUg
+c3RyaW5nIHVzZWQgYnkgdGhlIGF0bWVsX2xjZGZiIGRyaXZlci4KCkkgZG9uJ3Qga25vdyB0aGF0
+IDIgcmVnaXN0ZXJzIGZvciBhIGJhY2tsaWdodCBQV00gY29uc3RpdHV0ZSBhbiBNRkQuIEEgCnNp
+bmdsZSBub2RlIGNhbiBiZSBib3RoIGFuIExDRCBjb250cm9sbGVyIGFuZCBhIFBXTS4KClRoZSBm
+YWN0IHRoYXQgdGhlIE9TIGhhcyAyIGRyaXZlcnMgaXMgaXJyZWxldmFudCB0byB0aGUgYmluZGlu
+ZyBhbmQgRFQgCmlzIG5vdCBhIHdheSB0byBzZWxlY3QgZHJpdmVycy4gWW91ciBjaG9pY2Ugd2l0
+aCBMaW51eCBpcyBlaXRoZXIga2NvbmZpZyAKb3IgbWFudWFsIG1vZHVsZSBsb2FkaW5nLgoKPiBJ
+IHN1c2dnZXN0IHdlIGRvIHRoZSBmb2xsb3dpbmc6Cj4gLSB1c2UgdGhlIG1pY3JvY2hpcCBwcmVm
+aXgsIGFzIHRoaXMgaXMgbm93IG93bmVkIGJ5IG1pY3JvY2hpcAo+IC0gYW5kIGFkZCB0aGUgZHJp
+dmVyIHRvIGEgZHJtL21pY3JvY2hpcC8gZGlyZWN0b3J5Cj4gKFRoZW4gd2UgY2FuIG9ubHkgaG9w
+ZSB0aGF0IG1pY3JvY2hpcCBkbyBub3QgY2hhbmdlIG5hbWUgb3IKPiBhcmUgcHVyY2hhc2VkIGJ5
+IHNvbWVvbmUgZWxzZSkuCgpJIHdvdWxkIG5vdCBkbyB0aGF0LiBUaGVuIHlvdSBoYXZlIGEgZHRz
+IHdpdGggYSBtaXh0dXJlIGJhc2VkIG9uIHdoZW4gCnlvdSBnb3QgYXJvdW5kIHRvIHdyaXRpbmcg
+ZWFjaCBiaW5kaW5nLiBpLk1YIGhhcyBjb250aW51ZWQgdXNpbmcgJ2ZzbCcgCmV2ZW4gb24gbmV3
+IGNoaXBzIHRvZGF5LiBQcm9iYWJseSBhIGdvb2QgY2hvaWNlIGhhZCB0aGUgUUNvbSBhY3EgaGFk
+IApnb25lIHRocnUuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
