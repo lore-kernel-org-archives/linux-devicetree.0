@@ -1,103 +1,80 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-binding: i2c: npcm7xx: add binding for i2c
- controller
-Date: Mon, 13 Aug 2018 12:58:30 -0600
-Message-ID: <20180813185830.GA18453@rob-hp-laptop>
-References: <20180807110709.31847-1-tali.perry1@gmail.com>
- <20180807110709.31847-2-tali.perry1@gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: soc: amlogic: add meson-canvas
+ documentation
+Date: Mon, 13 Aug 2018 13:07:21 -0600
+Message-ID: <20180813190721.GA27621@rob-hp-laptop>
+References: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
+ <20180807220011.24436-3-maxi.jourdan@wanadoo.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180807110709.31847-2-tali.perry1@gmail.com>
+In-Reply-To: <20180807220011.24436-3-maxi.jourdan@wanadoo.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tali Perry <tali.perry1@gmail.com>
-Cc: avifishman70@gmail.com, tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, arnd@arndb.de, wsa@the-dreams.de, andriy.shevchenko@linux.intel.com, pierre-yves.mordret@st.com, cedric.madianga@gmail.com, baolin.wang@spreadtrum.com, jarkko.nikula@linux.intel.com, hdegoede@redhat.com, rmk+kernel@armlinux.org.uk, ard.biesheuvel@linaro.org, thor.thayer@linux.intel.com, geert@linux-m68k.org, heikki.krogerus@linux.intel.com, tglx@linutronix.de, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 07, 2018 at 02:07:08PM +0300, Tali Perry wrote:
-> Nuvoton NPCM7XX I2C Controller
-> NPCM7xx includes 16 I2C contollers. THis driver operates the controller.
-> This module also includes a slave mode, which will be submitted later on.
+On Wed, Aug 08, 2018 at 12:00:09AM +0200, Maxime Jourdan wrote:
+> DT bindings doc for amlogic,meson-canvas
 > 
-> Any feedback would be appreciated.  
-> 
-> v2 -> v1:
-> 	- run check patch in strict mode.
-> 	- use linux crc.
-> 	- define regs in constant offset without base.
-> 	- remove debug prints.
-> 	- no declerations for local functions.
-> 	
-> v1: initial version
-> 
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> 
+> Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
 > ---
->  .../devicetree/bindings/i2c/i2c-npcm7xx.txt        | 27 ++++++++++++++++++++++
->  MAINTAINERS                                        |  8 +++++++
->  2 files changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
+>  .../soc/amlogic/amlogic,meson-canvas.txt      | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt b/Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
+> diff --git a/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt b/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
 > new file mode 100644
-> index 000000000000..e2ee45d7a41e
+> index 000000000000..5f0351717bee
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
-> @@ -0,0 +1,27 @@
-> +Nuvoton NPCM7XX I2C bus
+> +++ b/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
+> @@ -0,0 +1,36 @@
+> +Amlogic Canvas
+> +================================
 > +
-> +The NPCM750x includes sixteen I2C busses
+> +A canvas is a collection of metadata that describes a pixel buffer.
+> +Those metadata include: width, height, phyaddr, wrapping, block mode
+> +and endianness.
+> +
+> +Many IPs within Amlogic SoCs rely on canvas indexes to read/write pixel data
+> +rather than use the phy addresses directly. For instance, this is the case for
+> +the video decoders and the display.
+> +
+> +Amlogic SoCs have 256 canvas.
+> +
+> +Device Tree Bindings:
+> +---------------------
+> +
+> +Canvas Provider
+> +--------------------------
 > +
 > +Required properties:
-> +- compatible      : must be "nuvoton,npcm750-i2c-bus"
-
-Is 'bus' how the datasheet calls it? If not, I'd drop the '-bus' part as 
-it is really a controller.
-
-> +- reg             : Offset and length of the register set for the device.
-> +- interrupts      : Contain the I2C interrupt with flags for falling edge.
-> +- clocks          : phandle of I2C reference clock.
+> +- compatible: "amlogic,canvas"
 > +
-> +Optional:
-> +- bus-frequency   : Contain the I2C bus frequency,
-> +			the default I2C bus frequency is 100000.
-> +- pinctrl-0       : must be <&smbX_pins>, X is module number
-> +			(on NPCM7XX it's 0 to 15)
-> +- pinctrl-names   : should be set to "default"
+> +Parent node should have the following properties :
+> +- compatible: "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd"
+
+Is this documented somewhere? One child function is not a reason for an 
+MFD and child nodes. And child nodes like this with no resources are 
+unnecessary.
+
+> +- reg: base address and size of the DMC system control register space.
+> +
 > +Example:
 > +
-> +	i2c0: i2c-bus@80000 {
-
-Should be 'i2c@80000'
-
-> +		compatible = "nuvoton,npcm750-i2c-bus";
-> +		reg = <0x80000 0x1000>;
-> +		clocks = <&clk NPCM7XX_CLK_APB2>;
-> +		bus-frequency = <100000>;
-> +		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&smb0_pins>;
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 192d7f73fd01..13bac916d21d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1244,6 +1244,14 @@ F:	drivers/i2c/busses/i2c-aspeed.c
->  F:	Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2400-i2c-ic.txt
->  F:	Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
->  
-> +ARM/NUVOTON I2C DRIVER
-> +M:	Tali Perry <tali.perry1@gmail.com>
-> +L:	linux-i2c@vger.kernel.org
-> +L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	drivers/i2c/busses/i2c-npcm7xx.c
-> +F:	Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
+> +sysctrl_DMC: system-controller@0 {
+> +	compatible = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";
+> +	reg = <0x0 0x0 0x0 0x1000>;
 > +
->  ARM/ASPEED MACHINE SUPPORT
->  M:	Joel Stanley <joel@jms.id.au>
->  R:	Andrew Jeffery <andrew@aj.id.au>
+> +	canvas: canvas-provider@0 {
+> +		compatible = "amlogic,canvas";
+> +	};
+> +};
 > -- 
-> 2.14.1
+> 2.18.0
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
