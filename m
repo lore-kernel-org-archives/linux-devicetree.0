@@ -1,32 +1,53 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: BPI-M2 Ultra boot hang, with linux-next
-Date: Mon, 13 Aug 2018 19:05:35 +0800
-Message-ID: <CAGb2v65Zh1JUk2Sg_CNTtyBFTszDoaCBeRvvbQGSkVW1ixNFDw@mail.gmail.com>
-References: <CAMty3ZDG5sbM2w+Mymvm8JZ8vgmP-mvtXEzT4j8vqWsap+T4DA@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: condor/v3hsk: add
+ DU/LVDS/HDMI support
+Date: Mon, 13 Aug 2018 14:14:25 +0300
+Message-ID: <5e60a349-3b80-f930-59cd-43b0f2e71238@cogentembedded.com>
+References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
+ <c78f1228-afb0-54cf-5d9e-5c812b678de3@cogentembedded.com>
+ <20180614072426.vq42mmb3gsmv6z5k@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBFOMYXNQKGQEKJNB5DI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZDG5sbM2w+Mymvm8JZ8vgmP-mvtXEzT4j8vqWsap+T4DA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180614072426.vq42mmb3gsmv6z5k@verge.net.au>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 18, 2018 at 3:40 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> I'm observing boot hang 'Starting kernel..." with BPI-M2 Ultra,
-> disabling de2 status on dts seems booting.
->
-> Was it an existing issue or did I miss anything?
+Hello!
 
-A few of the R40 DRM patches didn't make it in with the others. Right
-now the DRM driver doesn't know how to parse the R40's complicated
-display pipeline graph, and it crashes.
+On 06/14/2018 10:24 AM, Simon Horman wrote:
 
-ChenYu
+>> Define the Condor/V3HSK board dependent parts of the DU and  LVDS device
+>> nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
+>> Analog Devices ADV7511W HDMI transmitter...
+>>
+>> Based on the original (and large) patch by Vladimir Barinov.
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>> Changes in version 2:
+>> - added the V3HSK DT update, reworded the description, renamed the patch;
+>> - added a space between the HDMI node name and a brace.
+>>
+>>  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 +++++++++++++++++++++
+>>  arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts  |  120 ++++++++++++++++++++++++
+> 
+> Laurent, could you review this?
+
+   2 months have passed and no review so far...
+
+MBR, Sergei
