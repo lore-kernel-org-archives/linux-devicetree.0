@@ -1,85 +1,98 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 6/6] ath10k: Add QMI message handshake for wcn3990
- client
-Date: Mon, 13 Aug 2018 13:06:35 -0700
-Message-ID: <20180813200633.GA38014@ban.mtv.corp.google.com>
-References: <20180723123428.12993-1-govinds@codeaurora.org>
- <20180723123428.12993-7-govinds@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v8 3/4] drm/atmel-hlcdc: iterate over all output endpoints
+Date: Mon, 13 Aug 2018 14:52:03 -0600
+Message-ID: <CAL_JsqJPzwpN2TFghy-FfHZppexG9gW4qBy6iYtGpyP_Bp6dUA@mail.gmail.com>
+References: <20180810130359.9882-1-peda@axentia.se>
+ <20180810130359.9882-4-peda@axentia.se>
+ <20180813135949.32vrlrevtazr5x7d@apu3b.nibble.pw>
+ <0baac94e-f3d2-53fd-4af9-854bb4498345@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180723123428.12993-7-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0baac94e-f3d2-53fd-4af9-854bb4498345@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jmondi <jacopo@jmondi.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Sakari Ailus <sakari.ailus@iki.fi>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Jyri Sarha <jsarha@ti.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Govind,
-
-On Mon, Jul 23, 2018 at 06:04:28PM +0530, Govind Singh wrote:
-> Add WCN3990 QMI client handshakes for Q6 integrated WLAN connectivity
-> subsystem. This layer is responsible for communicating qmi control
-> messages to wifi fw QMI service using QMI messaging protocol.
-> 
-> Qualcomm MSM Interface(QMI) is a messaging format used to communicate
-> between components running between remote processors with underlying
-> transport layer based on integrated chipset(shared memory) or
-> discrete chipset(PCI/USB/SDIO/UART).
-> 
-> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/net/wireless/ath/ath10k/Kconfig  |    1 +
->  drivers/net/wireless/ath/ath10k/Makefile |    4 +-
->  drivers/net/wireless/ath/ath10k/core.c   |    6 +-
->  drivers/net/wireless/ath/ath10k/core.h   |    2 +
->  drivers/net/wireless/ath/ath10k/qmi.c    | 1019 ++++++++++++++++++++++
->  drivers/net/wireless/ath/ath10k/qmi.h    |  129 +++
->  drivers/net/wireless/ath/ath10k/snoc.c   |  262 +++++-
->  drivers/net/wireless/ath/ath10k/snoc.h   |    4 +
->  8 files changed, 1417 insertions(+), 10 deletions(-)
->  create mode 100644 drivers/net/wireless/ath/ath10k/qmi.c
->  create mode 100644 drivers/net/wireless/ath/ath10k/qmi.h
-> 
-
-> diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-> new file mode 100644
-> index 000000000000..d91499a7354c
-> --- /dev/null
-> +++ b/drivers/net/wireless/ath/ath10k/qmi.c
-> @@ -0,0 +1,1019 @@
-
-...
-
-> +int ath10k_qmi_deinit(struct ath10k *ar)
-> +{
-> +	struct ath10k_snoc *ar_snoc = ath10k_snoc_priv(ar);
-> +	struct ath10k_qmi *qmi = ar_snoc->qmi;
-> +
-> +	cancel_work_sync(&qmi->event_work);
-> +	destroy_workqueue(qmi->event_wq);
-
-I believe this is incorrect ordering. You should not be destroying the
-work queue that handles QMI event responses before you release the QMI
-handle. As it stands, this means you segfault during 'rmmod'.
-
-> +	qmi_handle_release(&qmi->qmi_hdl);
-
-I think this should be:
-
-	qmi_handle_release(&qmi->qmi_hdl);
-	cancel_work_sync(&qmi->event_work);
-	destroy_workqueue(qmi->event_wq);
-
-> +	qmi = NULL;
-
-This assignment is pointless, as 'qmi' is a local variable. Maybe you
-meant to clear the struct member, as a precaution? So this would be:
-
-	ar_snoc->qmi = NULL;
-
-Brian
-
-> +
-> +	return 0;
-> +} 
+T24gTW9uLCBBdWcgMTMsIDIwMTggYXQgODoyNSBBTSBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlh
+LnNlPiB3cm90ZToKPgo+IE9uIDIwMTgtMDgtMTMgMTU6NTksIGphY29wbyBtb25kaSB3cm90ZToK
+PiA+IEhpIFBldGVyLAo+ID4KPiA+IE9uIEZyaSwgQXVnIDEwLCAyMDE4IGF0IDAzOjAzOjU4UE0g
+KzAyMDAsIFBldGVyIFJvc2luIHdyb3RlOgo+ID4+IFRoaXMgZW5hYmxlcyBtb3JlIGZsZXhpYmxl
+IGRldmljZXRyZWVzLiBZb3UgY2FuIGUuZy4gaGF2ZSB0d28gb3V0cHV0Cj4gPj4gbm9kZXMgd2hl
+cmUgb25lIGlzIG5vdCBlbmFibGVkLCB3aXRob3V0IHRoZSBvcmRlcmluZyBhZmZlY3RpbmcgdGhp
+bmdzLgoKWW91ciBEVHMgYXJlIG5vdCBzdXBwb3NlZCB0byBiZSBmbGV4aWJsZS4gVGhleSBzaG91
+bGQgYmUgd2VsbCBkZWZpbmVkCmJ5IHRoZSBiaW5kaW5nLgoKPiA+Pgo+ID4+IFByaW9yIHRvIHRo
+aXMgcGF0Y2ggdGhlIGFjdGl2ZSBub2RlIGhhZCB0byBoYXZlIGVuZHBvaW50IGlkIHplcm8uCj4g
+Pj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPgo+ID4+
+IC0tLQo+ID4+ICBkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfb3V0cHV0
+LmMgfCAzMiArKysrKysrKysrKysrKysrKystLS0tLS0KPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDI1
+IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1dC5jIGIvZHJpdmVycy9n
+cHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1dC5jCj4gPj4gaW5kZXggOGRiNTFm
+YjEzMWRiLi4xNmMxYjJmNTRiNDIgMTAwNjQ0Cj4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2F0
+bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1dC5jCj4gPj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1dC5jCj4gPj4gQEAgLTMxLDE0ICszMSwxNiBA
+QCBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9lbmNvZGVyX2Z1bmNzIGF0bWVsX2hsY2RjX3BhbmVs
+X2VuY29kZXJfZnVuY3MgPSB7Cj4gPj4gICAgICAuZGVzdHJveSA9IGRybV9lbmNvZGVyX2NsZWFu
+dXAsCj4gPj4gIH07Cj4gPj4KPiA+PiAtc3RhdGljIGludCBhdG1lbF9obGNkY19hdHRhY2hfZW5k
+cG9pbnQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgaW50IGVuZHBvaW50KQo+ID4+ICtzdGF0aWMg
+aW50IGF0bWVsX2hsY2RjX2F0dGFjaF9lbmRwb2ludChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+
+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBvZl9lbmRwb2lu
+dCAqZW5kcG9pbnQpCj4gPj4gIHsKPiA+PiAgICAgIHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2Rl
+cjsKPiA+PiAgICAgIHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsOwo+ID4+ICAgICAgc3RydWN0IGRy
+bV9icmlkZ2UgKmJyaWRnZTsKPiA+PiAgICAgIGludCByZXQ7Cj4gPj4KPiA+PiAtICAgIHJldCA9
+IGRybV9vZl9maW5kX3BhbmVsX29yX2JyaWRnZShkZXYtPmRldi0+b2Zfbm9kZSwgMCwgZW5kcG9p
+bnQsCj4gPj4gKyAgICByZXQgPSBkcm1fb2ZfZmluZF9wYW5lbF9vcl9icmlkZ2UoZGV2LT5kZXYt
+Pm9mX25vZGUsCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZW5k
+cG9pbnQtPnBvcnQsIGVuZHBvaW50LT5pZCwKPiA+Cj4gPiBZb3UgYXJlIHJlZnVzaW5nIGVuZHBv
+aW50LT5wb3J0ICE9IDAgaW4gdGhlIGNhbGxlciwgc28gdGhhdCBjb3VsZCBiZQo+ID4gMC4KPgo+
+IFllcywgaXQgY291bGQuIEhvd2V2ZXIsIEkgaW50ZW50aW9uYWxseSBkaWQgbm90IHdyaXRlIDAg
+aGVyZSwgc28gdGhhdAo+IHRoZSBsb2dpYyByZWxhdGVkIHRvICJwb3J0IGhhcyB0byBiZSB6ZXJv
+IiB3YXMgaW4gb25lIHBsYWNlIGFuZCBub3QKPiBzY2F0dGVyZWQgYWJvdXQuIEkgZ3Vlc3MgaXQn
+cyB1cCB0byBCb3Jpcz8KPgo+IE1heWJlIHRoZSBwb3J0IGRvIG5vdCBhY3R1YWxseSBoYXZlIHRv
+IGJlIHplcm8gYXQgYWxsPyBXaXRoIHRoZSBvbGQKPiBjb2RlLCBpdCB3YXMga2luZCBvZiB1bmRl
+cnN0YW5kYWJsZSB0aGF0IHRoZSBwb3J0IG51bWJlciB3YXMgZml4ZWQsCj4gYnV0IGZvciB0aGUg
+Y29kZSBpbiBteSBwYXRjaCBpdCBkb2VzIG5vdCBtYXR0ZXIgYXQgYWxsIEFGQUlDVC4gVGhlcmUK
+PiBpcyBub3RoaW5nIGluIHRoZSBiaW5kaW5nIGRvY3MgKGV4Y2VwdCBmb3IgdGhlIGV4YW1wbGUp
+IHRoYXQgaGludHMKPiB0aGF0IHBvcnQgaGFzIHRvIGJlIHplcm8sIHNvIHRoYXQncyBvbmUgdGhp
+bmcgaW4gZmF2b3Igb2YganVzdCBnZXR0aW5nCj4gcmlkIG9mIHRoZSBwb3J0IG51bWJlciBjaGVj
+a2luZyBhbHRvZ2V0aGVyLi4uCgpUaGUgcG9ydCBudW1iZXJpbmcgbXVzdCBiZSBkZWZpbmVkIGFu
+ZCBmaXhlZC4gSWYgdGhhdCBpcyBub3QgY2xlYXIgaW4KdGhlIGJpbmRpbmcsIGZpeCB0aGUgYmlu
+ZGluZy4KCj4gPj4gQEAgLTc3LDEzICs3OSwyOSBAQCBzdGF0aWMgaW50IGF0bWVsX2hsY2RjX2F0
+dGFjaF9lbmRwb2ludChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCBpbnQgZW5kcG9pbnQpCj4gPj4K
+PiA+PiAgaW50IGF0bWVsX2hsY2RjX2NyZWF0ZV9vdXRwdXRzKHN0cnVjdCBkcm1fZGV2aWNlICpk
+ZXYpCj4gPj4gIHsKPiA+PiAtICAgIGludCBlbmRwb2ludCwgcmV0ID0gMDsKPiA+PiAtCj4gPj4g
+LSAgICBmb3IgKGVuZHBvaW50ID0gMDsgIXJldDsgZW5kcG9pbnQrKykKPiA+PiAtICAgICAgICAg
+ICAgcmV0ID0gYXRtZWxfaGxjZGNfYXR0YWNoX2VuZHBvaW50KGRldiwgZW5kcG9pbnQpOwo+ID4+
+ICsgICAgc3RydWN0IG9mX2VuZHBvaW50IGVuZHBvaW50Owo+ID4+ICsgICAgc3RydWN0IGRldmlj
+ZV9ub2RlICpub2RlID0gTlVMTDsKPiA+PiArICAgIGludCBjb3VudCA9IDA7Cj4gPj4gKyAgICBp
+bnQgcmV0ID0gMDsKPiA+PiArCj4gPj4gKyAgICBmb3JfZWFjaF9lbmRwb2ludF9vZl9ub2RlKGRl
+di0+ZGV2LT5vZl9ub2RlLCBub2RlKSB7Cj4gPj4gKyAgICAgICAgICAgIG9mX2dyYXBoX3BhcnNl
+X2VuZHBvaW50KG5vZGUsICZlbmRwb2ludCk7CgpJJ2QgcmVhbGx5IGxpa2UgdG8ga2lsbCBvZmYg
+b2ZfZ3JhcGhfcGFyc2VfZW5kcG9pbnQsIG5vdCBhZGQgbW9yZQp1c2VycyAoY2hlY2sgdGhlIGdp
+dCBoaXN0b3J5IG9uIHRoaXMgY29kZSkuIFlvdSBzaG91bGQga25vdyB3aGF0IGFyZQpwb3NzaWJs
+ZSBwb3J0IGFuZCBlbmRwb2ludCBudW1iZXJzLCBzbyBpdGVyYXRlIG92ZXIgdGhvc2UuCgo+ID4+
+ICsKPiA+PiArICAgICAgICAgICAgaWYgKGVuZHBvaW50LnBvcnQpCj4gPj4gKyAgICAgICAgICAg
+ICAgICAgICAgY29udGludWU7Cj4gPj4gKwo+ID4+ICsgICAgICAgICAgICByZXQgPSBhdG1lbF9o
+bGNkY19hdHRhY2hfZW5kcG9pbnQoZGV2LCAmZW5kcG9pbnQpOwo+ID4+ICsgICAgICAgICAgICBp
+ZiAocmV0ID09IC1FTk9ERVYpCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgY29udGludWU7Cj4g
+Pj4gKyAgICAgICAgICAgIGlmIChyZXQpIHsKPiA+PiArICAgICAgICAgICAgICAgICAgICBvZl9u
+b2RlX3B1dChub2RlKTsKPiA+PiArICAgICAgICAgICAgICAgICAgICBicmVhazsKPiA+PiArICAg
+ICAgICAgICAgfQo+ID4+ICsgICAgICAgICAgICBjb3VudCsrOwo+ID4+ICsgICAgfQo+ID4+Cj4g
+Pj4gICAgICAvKiBBdCBsZWFzdCBvbmUgZGV2aWNlIHdhcyBzdWNjZXNzZnVsbHkgYXR0YWNoZWQu
+Ki8KPiA+PiAtICAgIGlmIChyZXQgPT0gLUVOT0RFViAmJiBlbmRwb2ludCkKPiA+PiArICAgIGlm
+IChyZXQgPT0gLUVOT0RFViAmJiBjb3VudCkKPiA+PiAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4g
+Pj4KPiA+PiAgICAgIHJldHVybiByZXQ7Cj4gPj4gLS0KPiA+PiAyLjExLjAKPiA+Pgo+Cl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
