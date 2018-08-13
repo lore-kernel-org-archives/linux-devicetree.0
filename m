@@ -1,61 +1,101 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: Add idle-states to device tree for rk3399
-Date: Mon, 13 Aug 2018 10:25:41 +0200
-Message-ID: <3578407.YVa0lydFsh@phil>
-References: <1467793254-10808-1-git-send-email-wxt@rock-chips.com> <5620784.b19SH5PkdR@phil> <ae312dc3-f640-ecf3-049a-c8576bb83330@rock-chips.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 3/8] drm/bridge/synopsys: dsi: add ability to check
+ dsi-device attachment
+Date: Mon, 13 Aug 2018 10:28:39 +0200
+Message-ID: <20180813082842eucas1p1e45c0bf5d61b9d0015a4795f54c565f1~KZFD69J9n0732107321eucas1p1Q@eucas1p1.samsung.com>
+References: <20180709134834.11035-1-heiko@sntech.de>
+ <CGME20180709142209epcas1p4a82cafecb58fcfae9d89b8f254ae8cad@epcas1p4.samsung.com>
+ <20180709134834.11035-4-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae312dc3-f640-ecf3-049a-c8576bb83330@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tao Huang <huangtao@rock-chips.com>
-Cc: Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Xing Zheng <zhengxing@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Catalin Marinas <catalin.marinas@arm.com>, dbasehore@chromium.org, Will Deacon <will.deacon@arm.com>, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, tony.xie@rock-chips.com, David Wu <david.wu@rock-chips.com>, cf@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180709134834.11035-4-heiko@sntech.de>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tao,
-
-Am Sonntag, 12. August 2018, 18:24:45 CEST schrieb Tao Huang:
-> On 2018年08月10日 04:09, Heiko Stuebner wrote:
-> > Am Mittwoch, 6. Juli 2016, 10:20:54 CEST schrieb Caesar Wang:
-> >
-> >>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 18 ++++++++++++++++++
-> >>  1 file changed, 18 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >> index a6dd623..12ce265 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >> @@ -101,6 +101,18 @@
-> >>  			};
-> >>  		};
-> >>  
-> >> +		idle-states {
-> >> +			entry-method = "psci";
-> >> +			cpu_sleep: cpu-sleep-0 {
-> >> +				compatible = "arm,idle-state";
-> >> +				local-timer-stop;
-> >> +				arm,psci-suspend-param = <0x0010000>;
-> >> +				entry-latency-us = <350>;
-> >> +				exit-latency-us = <600>;
-> >> +				min-residency-us = <1150>;
-> > Looking at the chromeos kernel, there are some more patches adapting
-> > this idle-state to use different timings.
-> Yes, we have another values. So the values of this patch are wrong.
-> >
-> > There also was a cluster-idle state added for a while but that seems to
-> > cause audio issues according to the CrOS history.
-> 
-> DMA or Audio driver should add PM_QOS_CPU_DMA_LATENCY or other methods to avoid the effects of idle.
-> Idle itself is good.
-
-Thanks for the clarification. Do you know if some from Rockchip plans
-on submitting a new version of the patch with changed timings and
-cluster-sleep?
-
-Otherwise I can also just pull the values from the vendor kernel so that
-we get idle states in mainline as well.
-
-
-Thanks
-Heiko
+T24gMDkuMDcuMjAxOCAxNTo0OCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gV2hlbiB0aGUgcGFu
+ZWwtZHJpdmVyIGlzIGJ1aWxkIGFzIGEgbW9kdWxlIGl0IGN1cnJlbnRseSBmYWlscyBoYXJkIGFz
+IHRoZQo+IHBhbmVsIGNhbm5vdCBiZSBwcm9iZWQgZGlyZWN0bHk6Cj4KPiBkd19taXBpX2RzaV9i
+aW5kKCkKPiAgIF9fZHdfbWlwaV9kc2lfcHJvYmUoKQo+ICAgICBjcmVhdGVzIGRzaSBidXMKPiAg
+ICAgY3JlYXRlcyBwYW5lbCBkZXZpY2UKPiAgICAgdHJpZ2dlcnMgcGFuZWwgbW9kdWxlIGxvYWQK
+PiAgICAgcGFuZWwgbm90IHByb2JlZCAobW9kdWxlIG5vdCBsb2FkZWQgb3IgcGFuZWwgcHJvYmUg
+c2xvdykKPiAgIGRybV9icmlkZ2VfYXR0YWNoCj4gICAgIGZhaWxzIHdpdGggLUVJTlZBTCBkdWUg
+dG8gZW1wdHkgcGFuZWxfYnJpZGdlCj4KPiBBZGRpdGlvbmFsbHkgdGhlIHBhbmVsIHByb2Jpbmcg
+Y2FuIHJ1biBjb25jdXJyZW50bHkgd2l0aCBkc2kgYnJpbmd1cAo+IG1ha2luZyBpdCBwb3NzaWJs
+ZSB0aGF0IHRoZSBwYW5lbCBjYW4gYWxyZWFkeSBiZSBmb3VuZCBidXQgZHNpLWF0dGFjaAo+IGhh
+c24ndCBmaW5pc2hlZCBydW5uaW5nLgo+Cj4gVGhlIG5ld2x5IGFkZGVkIGZ1bmN0aW9uIHByb3Zp
+ZGVzIHRoZSBhYmlsaXR5IGZvciBnbHVlIGRyaXZlcnMgdG8KPiBjaGVjayBpZiBhIGRzaSBkZXZp
+Y2Ugd2FzIGFjdHVhbGx5IGF0dGFjaGVkIGFuZCBhbHNvIHByb3RlY3RzCj4gdGhlIGF0dGFjaCBw
+YXJ0IHRvIHByZXZlbnQgY29uY3VycmVuY3kgaXNzdWVzIGZyb20gcGFuZWwtYXNzaWdubWVudAo+
+IGFuZCBkcm1fYnJpZGdlX2NyZWF0ZS4KPgo+IFVzaW5nIHRoYXQgY2hlY2sgZ2x1ZSBkcml2ZXJz
+IGFyZSBhYmxlIHRvIGZvciBleGFtcGxlIGRlZmVyIHByb2JlL2JpbmQKPiBpbiB0aGUgY2FzZSB0
+aGF0IHRoZSBwYW5lbCBpcyBub3QgY29tcGxldGVseSBzZXQgdXAgeWV0Lgo+Cj4gU2lnbmVkLW9m
+Zi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiAtLS0KPiAgZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIHwgMjUgKysrKysrKysrKysrKysr
+KysrKwo+ICBpbmNsdWRlL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuaCAgICAgICAgICAgICAgfCAg
+MSArCj4gIDIgZmlsZXMgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKQo+Cj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyBiL2RyaXZlcnMv
+Z3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYwo+IGluZGV4IGJiNGFlY2E1YzBm
+OS4uODhmZWQyMmZmM2Y2IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lu
+b3BzeXMvZHctbWlwaS1kc2kuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3Bz
+eXMvZHctbWlwaS1kc2kuYwo+IEBAIC0xMiw2ICsxMiw3IEBACj4gICNpbmNsdWRlIDxsaW51eC9j
+b21wb25lbnQuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5oPgo+ICAjaW5jbHVkZSA8bGlu
+dXgvbW9kdWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tdXRleC5oPgo+ICAjaW5jbHVkZSA8bGlu
+dXgvb2ZfZGV2aWNlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+Cj4gICNpbmNs
+dWRlIDxsaW51eC9yZXNldC5oPgo+IEBAIC0yMTksNiArMjIwLDcgQEAgc3RydWN0IGR3X21pcGlf
+ZHNpIHsKPiAgCXN0cnVjdCBkcm1fYnJpZGdlIGJyaWRnZTsKPiAgCXN0cnVjdCBtaXBpX2RzaV9o
+b3N0IGRzaV9ob3N0Owo+ICAJc3RydWN0IGRybV9icmlkZ2UgKnBhbmVsX2JyaWRnZTsKPiArCXN0
+cnVjdCBtdXRleCBwYW5lbF9tdXRleDsKPiAgCXN0cnVjdCBkZXZpY2UgKmRldjsKPiAgCXZvaWQg
+X19pb21lbSAqYmFzZTsKPiAgCj4gQEAgLTI5NiwxMCArMjk4LDE0IEBAIHN0YXRpYyBpbnQgZHdf
+bWlwaV9kc2lfaG9zdF9hdHRhY2goc3RydWN0IG1pcGlfZHNpX2hvc3QgKmhvc3QsCj4gIAkJCXJl
+dHVybiBQVFJfRVJSKGJyaWRnZSk7Cj4gIAl9Cj4gIAo+ICsJbXV0ZXhfbG9jaygmZHNpLT5wYW5l
+bF9tdXRleCk7Cj4gKwo+ICAJZHNpLT5wYW5lbF9icmlkZ2UgPSBicmlkZ2U7Cj4gIAo+ICAJZHJt
+X2JyaWRnZV9hZGQoJmRzaS0+YnJpZGdlKTsKPiAgCj4gKwltdXRleF91bmxvY2soJmRzaS0+cGFu
+ZWxfbXV0ZXgpOwo+ICsKPiAgCXJldHVybiAwOwo+ICB9Cj4gIAo+IEBAIC0zMDgsMTMgKzMxNCwz
+MCBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX2hvc3RfZGV0YWNoKHN0cnVjdCBtaXBpX2RzaV9o
+b3N0ICpob3N0LAo+ICB7Cj4gIAlzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSA9IGhvc3RfdG9fZHNp
+KGhvc3QpOwo+ICAKPiArCW11dGV4X2xvY2soJmRzaS0+cGFuZWxfbXV0ZXgpOwo+ICsKPiArCWRz
+aS0+cGFuZWxfYnJpZGdlID0gTlVMTDsKPiAgCWRybV9vZl9wYW5lbF9icmlkZ2VfcmVtb3ZlKGhv
+c3QtPmRldi0+b2Zfbm9kZSwgMSwgMCk7Cj4gIAo+ICAJZHJtX2JyaWRnZV9yZW1vdmUoJmRzaS0+
+YnJpZGdlKTsKPiAgCj4gKwltdXRleF91bmxvY2soJmRzaS0+cGFuZWxfbXV0ZXgpOwo+ICsKPiAg
+CXJldHVybiAwOwo+ICB9Cj4gIAo+ICtib29sIGR3X21pcGlfZHNpX2RldmljZV9hdHRhY2hlZChz
+dHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkKPiArewo+ICsJYm9vbCBvdXRwdXQ7Cj4gKwo+ICsJbXV0
+ZXhfbG9jaygmZHNpLT5wYW5lbF9tdXRleCk7Cj4gKwlvdXRwdXQgPSAhIWRzaS0+cGFuZWxfYnJp
+ZGdlOwo+ICsJbXV0ZXhfdW5sb2NrKCZkc2ktPnBhbmVsX211dGV4KTsKPiArCj4gKwlyZXR1cm4g
+b3V0cHV0Owo+ICt9Cj4gK0VYUE9SVF9TWU1CT0xfR1BMKGR3X21pcGlfZHNpX2RldmljZV9hdHRh
+Y2hlZCk7CgpUaGUgZnVuY3Rpb24gZG9lcyBub3QgbWFrZSBzZW5zZS4gQWZ0ZXIgcmVsZWFzaW5n
+IHBhbmVsX211dGV4IGRldmljZSBjYW4KYmUgZGV0YWNoZWQvKHJlLSlhdHRhY2hlZCBtdWx0aXBs
+ZSB0aW1lcy4gSWUgaXQgcmVwb3J0cyB1c2VsZXNzCmluZm9ybWF0aW9uLiBPZiBjb3Vyc2UgaW4g
+bW9zdCBjYXNlcyBpdCB3aWxsIHdvcmsgYXMgZXhwZWN0ZWQsIGJ1dCBmb3IKc3VyZSBpdCBpcyBu
+b3QgYnVsbGV0cHJvb2YuCgpSZWdhcmRzCkFuZHJ6ZWoKCj4gKwo+ICBzdGF0aWMgdm9pZCBkd19t
+aXBpX21lc3NhZ2VfY29uZmlnKHN0cnVjdCBkd19taXBpX2RzaSAqZHNpLAo+ICAJCQkJICAgY29u
+c3Qgc3RydWN0IG1pcGlfZHNpX21zZyAqbXNnKQo+ICB7Cj4gQEAgLTg2Nyw2ICs4OTAsOCBAQCBf
+X2R3X21pcGlfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCj4gIAlkc2kt
+PmRldiA9IGRldjsKPiAgCWRzaS0+cGxhdF9kYXRhID0gcGxhdF9kYXRhOwo+ICAKPiArCW11dGV4
+X2luaXQoJmRzaS0+cGFuZWxfbXV0ZXgpOwo+ICsKPiAgCWlmICghcGxhdF9kYXRhLT5waHlfb3Bz
+LT5pbml0IHx8ICFwbGF0X2RhdGEtPnBoeV9vcHMtPmdldF9sYW5lX21icHMpIHsKPiAgCQlEUk1f
+RVJST1IoIlBoeSBub3QgcHJvcGVybHkgY29uZmlndXJlZFxuIik7Cj4gIAkJcmV0dXJuIEVSUl9Q
+VFIoLUVOT0RFVik7Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2Rz
+aS5oIGIvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgKPiBpbmRleCA2ZDdmOGViNWQ5
+ZjIuLjEzMWZmMjU2OWVkNCAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2RybS9icmlkZ2UvZHdfbWlw
+aV9kc2kuaAo+ICsrKyBiL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oCj4gQEAgLTMx
+LDYgKzMxLDcgQEAgc3RydWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0YSB7Cj4gIAl2b2lkICpwcml2
+X2RhdGE7Cj4gIH07Cj4gIAo+ICtib29sIGR3X21pcGlfZHNpX2RldmljZV9hdHRhY2hlZChzdHJ1
+Y3QgZHdfbWlwaV9kc2kgKmRzaSk7Cj4gIHN0cnVjdCBkd19taXBpX2RzaSAqZHdfbWlwaV9kc2lf
+cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKPiAgCQkJCSAgICAgIGNvbnN0IHN0
+cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEKPiAgCQkJCSAgICAgICpwbGF0X2RhdGEpOwoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
