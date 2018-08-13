@@ -1,56 +1,118 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: i3c: Document Synopsys DesignWare I3C
- master bindings
-Date: Mon, 13 Aug 2018 08:15:35 -0600
-Message-ID: <CAL_JsqLMxyBtZBtzZOVN7Dx3guD7vgrGwH6E05P3d+ZFW7FOcg@mail.gmail.com>
-References: <1532120272-17157-1-git-send-email-soares@synopsys.com>
- <1532120272-17157-3-git-send-email-soares@synopsys.com> <20180725195733.GA14450@rob-hp-laptop>
- <c00cb815-ae82-312a-213b-145537a294bd@synopsys.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v8 3/4] drm/atmel-hlcdc: iterate over all output endpoints
+Date: Mon, 13 Aug 2018 16:24:49 +0200
+Message-ID: <0baac94e-f3d2-53fd-4af9-854bb4498345@axentia.se>
+References: <20180810130359.9882-1-peda@axentia.se>
+ <20180810130359.9882-4-peda@axentia.se>
+ <20180813135949.32vrlrevtazr5x7d@apu3b.nibble.pw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c00cb815-ae82-312a-213b-145537a294bd@synopsys.com>
+In-Reply-To: <20180813135949.32vrlrevtazr5x7d@apu3b.nibble.pw>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Pawel Moll <pawel.moll@arm.com>Mark Rutland <m>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 8, 2018 at 10:59 AM vitor <Vitor.Soares@synopsys.com> wrote:
->
-> Hi Rob,
->
->
-> On 25-07-2018 20:57, Rob Herring wrote:
-> > On Fri, Jul 20, 2018 at 09:57:51PM +0100, Vitor soares wrote:
-> >> This patch document Synopsys DesignWare I3C master DT bindings.
-> >>
-> >> Signed-off-by: Vitor soares <soares@synopsys.com>
-> >> ---
-> >>   .../devicetree/bindings/i3c/snps,dw-i3c-master.txt | 43 ++++++++++++++++++++++
-> >>   1 file changed, 43 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt b/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
-> >> new file mode 100644
-> >> index 0000000..7f5c8b0
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.txt
-> >> @@ -0,0 +1,43 @@
-> >> +Bindings for Synopsys DesignWare I3C master block
-> >> +=================================================
-> >> +
-> >> +Required properties:
-> >> +--------------------
-> >> +- compatible: shall be "snps,dw-i3c-master"
-> > Only one version and no version number?
-> >
-> > ... and an SoC specific compatible string.
->
-> I'm not understanding. Can you explain?
+On 2018-08-13 15:59, jacopo mondi wrote:
+> Hi Peter,
+> 
+> On Fri, Aug 10, 2018 at 03:03:58PM +0200, Peter Rosin wrote:
+>> This enables more flexible devicetrees. You can e.g. have two output
+>> nodes where one is not enabled, without the ordering affecting things.
+>>
+>> Prior to this patch the active node had to have endpoint id zero.
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>> ---
+>>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 32 ++++++++++++++++++------
+>>  1 file changed, 25 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>> index 8db51fb131db..16c1b2f54b42 100644
+>> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>> @@ -31,14 +31,16 @@ static const struct drm_encoder_funcs atmel_hlcdc_panel_encoder_funcs = {
+>>  	.destroy = drm_encoder_cleanup,
+>>  };
+>>  
+>> -static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
+>> +static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
+>> +				       struct of_endpoint *endpoint)
+>>  {
+>>  	struct drm_encoder *encoder;
+>>  	struct drm_panel *panel;
+>>  	struct drm_bridge *bridge;
+>>  	int ret;
+>>  
+>> -	ret = drm_of_find_panel_or_bridge(dev->dev->of_node, 0, endpoint,
+>> +	ret = drm_of_find_panel_or_bridge(dev->dev->of_node,
+>> +					  endpoint->port, endpoint->id,
+> 
+> You are refusing endpoint->port != 0 in the caller, so that could be
+> 0.
 
-Add the above line to the description. Experience shows that only an
-IP vendor compatible string is not sufficient. SoC vendors integrate
-different versions, configure the IP differently and/or integrate it
-differently.
+Yes, it could. However, I intentionally did not write 0 here, so that
+the logic related to "port has to be zero" was in one place and not
+scattered about. I guess it's up to Boris?
 
-Rob
+Maybe the port do not actually have to be zero at all? With the old
+code, it was kind of understandable that the port number was fixed,
+but for the code in my patch it does not matter at all AFAICT. There
+is nothing in the binding docs (except for the example) that hints
+that port has to be zero, so that's one thing in favor of just getting
+rid of the port number checking altogether...
+
+Cheers,
+Peter
+
+
+> Apart from that small nit:
+> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> 
+> Thanks
+>   j
+> 
+>>  					  &panel, &bridge);
+>>  	if (ret)
+>>  		return ret;
+>> @@ -77,13 +79,29 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
+>>  
+>>  int atmel_hlcdc_create_outputs(struct drm_device *dev)
+>>  {
+>> -	int endpoint, ret = 0;
+>> -
+>> -	for (endpoint = 0; !ret; endpoint++)
+>> -		ret = atmel_hlcdc_attach_endpoint(dev, endpoint);
+>> +	struct of_endpoint endpoint;
+>> +	struct device_node *node = NULL;
+>> +	int count = 0;
+>> +	int ret = 0;
+>> +
+>> +	for_each_endpoint_of_node(dev->dev->of_node, node) {
+>> +		of_graph_parse_endpoint(node, &endpoint);
+>> +
+>> +		if (endpoint.port)
+>> +			continue;
+>> +
+>> +		ret = atmel_hlcdc_attach_endpoint(dev, &endpoint);
+>> +		if (ret == -ENODEV)
+>> +			continue;
+>> +		if (ret) {
+>> +			of_node_put(node);
+>> +			break;
+>> +		}
+>> +		count++;
+>> +	}
+>>  
+>>  	/* At least one device was successfully attached.*/
+>> -	if (ret == -ENODEV && endpoint)
+>> +	if (ret == -ENODEV && count)
+>>  		return 0;
+>>  
+>>  	return ret;
+>> -- 
+>> 2.11.0
+>>
