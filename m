@@ -1,120 +1,278 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v3 3/8] drm/bridge/synopsys: dsi: add ability to check
- dsi-device attachment
-Date: Mon, 13 Aug 2018 12:23:21 +0200
-Message-ID: <20180813102323eucas1p123c92168767f5b39171ae51acbb15504~KapMWOZgT3012630126eucas1p1B@eucas1p1.samsung.com>
-References: <20180709134834.11035-1-heiko@sntech.de>
- <20180709134834.11035-4-heiko@sntech.de>
- <20180813082842eucas1p1e45c0bf5d61b9d0015a4795f54c565f1~KZFD69J9n0732107321eucas1p1Q@eucas1p1.samsung.com>
- <CGME20180813084434epcas4p1950d6982100f9bc6a687f81645565459@epcas4p1.samsung.com>
- <8621122.S3a5QVICDx@phil>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: Initial r8a774a1 SoC device tree
+Date: Mon, 13 Aug 2018 10:26:28 +0000
+Message-ID: <OSBPR01MB2103F339F8BB36042C8AD0E1B8390@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1534146093-1651-1-git-send-email-biju.das@bp.renesas.com>
+ <TY1PR01MB1770D16DDB50BF579ADF8335C0390@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <8621122.S3a5QVICDx@phil>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <TY1PR01MB1770D16DDB50BF579ADF8335C0390@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, mka@chromium.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTMuMDguMjAxOCAxMDo0NCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gSGkgQW5kcnplaiwK
-Pgo+IEFtIE1vbnRhZywgMTMuIEF1Z3VzdCAyMDE4LCAxMDoyODozOSBDRVNUIHNjaHJpZWIgQW5k
-cnplaiBIYWpkYToKPj4gT24gMDkuMDcuMjAxOCAxNTo0OCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6
-Cj4+PiBXaGVuIHRoZSBwYW5lbC1kcml2ZXIgaXMgYnVpbGQgYXMgYSBtb2R1bGUgaXQgY3VycmVu
-dGx5IGZhaWxzIGhhcmQgYXMgdGhlCj4+PiBwYW5lbCBjYW5ub3QgYmUgcHJvYmVkIGRpcmVjdGx5
-Ogo+Pj4KPj4+IGR3X21pcGlfZHNpX2JpbmQoKQo+Pj4gICBfX2R3X21pcGlfZHNpX3Byb2JlKCkK
-Pj4+ICAgICBjcmVhdGVzIGRzaSBidXMKPj4+ICAgICBjcmVhdGVzIHBhbmVsIGRldmljZQo+Pj4g
-ICAgIHRyaWdnZXJzIHBhbmVsIG1vZHVsZSBsb2FkCj4+PiAgICAgcGFuZWwgbm90IHByb2JlZCAo
-bW9kdWxlIG5vdCBsb2FkZWQgb3IgcGFuZWwgcHJvYmUgc2xvdykKPj4+ICAgZHJtX2JyaWRnZV9h
-dHRhY2gKPj4+ICAgICBmYWlscyB3aXRoIC1FSU5WQUwgZHVlIHRvIGVtcHR5IHBhbmVsX2JyaWRn
-ZQo+Pj4KPj4+IEFkZGl0aW9uYWxseSB0aGUgcGFuZWwgcHJvYmluZyBjYW4gcnVuIGNvbmN1cnJl
-bnRseSB3aXRoIGRzaSBicmluZ3VwCj4+PiBtYWtpbmcgaXQgcG9zc2libGUgdGhhdCB0aGUgcGFu
-ZWwgY2FuIGFscmVhZHkgYmUgZm91bmQgYnV0IGRzaS1hdHRhY2gKPj4+IGhhc24ndCBmaW5pc2hl
-ZCBydW5uaW5nLgo+Pj4KPj4+IFRoZSBuZXdseSBhZGRlZCBmdW5jdGlvbiBwcm92aWRlcyB0aGUg
-YWJpbGl0eSBmb3IgZ2x1ZSBkcml2ZXJzIHRvCj4+PiBjaGVjayBpZiBhIGRzaSBkZXZpY2Ugd2Fz
-IGFjdHVhbGx5IGF0dGFjaGVkIGFuZCBhbHNvIHByb3RlY3RzCj4+PiB0aGUgYXR0YWNoIHBhcnQg
-dG8gcHJldmVudCBjb25jdXJyZW5jeSBpc3N1ZXMgZnJvbSBwYW5lbC1hc3NpZ25tZW50Cj4+PiBh
-bmQgZHJtX2JyaWRnZV9jcmVhdGUuCj4+Pgo+Pj4gVXNpbmcgdGhhdCBjaGVjayBnbHVlIGRyaXZl
-cnMgYXJlIGFibGUgdG8gZm9yIGV4YW1wbGUgZGVmZXIgcHJvYmUvYmluZAo+Pj4gaW4gdGhlIGNh
-c2UgdGhhdCB0aGUgcGFuZWwgaXMgbm90IGNvbXBsZXRlbHkgc2V0IHVwIHlldC4KPj4+Cj4+PiBT
-aWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+Pj4gLS0tCj4+
-PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIHwgMjUgKysr
-KysrKysrKysrKysrKysrKwo+Pj4gIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oICAg
-ICAgICAgICAgICB8ICAxICsKPj4+ICAyIGZpbGVzIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykK
-Pj4+Cj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1t
-aXBpLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5j
-Cj4+PiBpbmRleCBiYjRhZWNhNWMwZjkuLjg4ZmVkMjJmZjNmNiAxMDA2NDQKPj4+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYwo+Pj4gKysrIGIvZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jCj4+PiBAQCAtMTIsNiAr
-MTIsNyBAQAo+Pj4gICNpbmNsdWRlIDxsaW51eC9jb21wb25lbnQuaD4KPj4+ICAjaW5jbHVkZSA8
-bGludXgvaW9wb2xsLmg+Cj4+PiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+Pj4gKyNpbmNs
-dWRlIDxsaW51eC9tdXRleC5oPgo+Pj4gICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KPj4+
-ICAjaW5jbHVkZSA8bGludXgvcG1fcnVudGltZS5oPgo+Pj4gICNpbmNsdWRlIDxsaW51eC9yZXNl
-dC5oPgo+Pj4gQEAgLTIxOSw2ICsyMjAsNyBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2kgewo+Pj4gIAlz
-dHJ1Y3QgZHJtX2JyaWRnZSBicmlkZ2U7Cj4+PiAgCXN0cnVjdCBtaXBpX2RzaV9ob3N0IGRzaV9o
-b3N0Owo+Pj4gIAlzdHJ1Y3QgZHJtX2JyaWRnZSAqcGFuZWxfYnJpZGdlOwo+Pj4gKwlzdHJ1Y3Qg
-bXV0ZXggcGFuZWxfbXV0ZXg7Cj4+PiAgCXN0cnVjdCBkZXZpY2UgKmRldjsKPj4+ICAJdm9pZCBf
-X2lvbWVtICpiYXNlOwo+Pj4gIAo+Pj4gQEAgLTI5NiwxMCArMjk4LDE0IEBAIHN0YXRpYyBpbnQg
-ZHdfbWlwaV9kc2lfaG9zdF9hdHRhY2goc3RydWN0IG1pcGlfZHNpX2hvc3QgKmhvc3QsCj4+PiAg
-CQkJcmV0dXJuIFBUUl9FUlIoYnJpZGdlKTsKPj4+ICAJfQo+Pj4gIAo+Pj4gKwltdXRleF9sb2Nr
-KCZkc2ktPnBhbmVsX211dGV4KTsKPj4+ICsKPj4+ICAJZHNpLT5wYW5lbF9icmlkZ2UgPSBicmlk
-Z2U7Cj4+PiAgCj4+PiAgCWRybV9icmlkZ2VfYWRkKCZkc2ktPmJyaWRnZSk7Cj4+PiAgCj4+PiAr
-CW11dGV4X3VubG9jaygmZHNpLT5wYW5lbF9tdXRleCk7Cj4+PiArCj4+PiAgCXJldHVybiAwOwo+
-Pj4gIH0KPj4+ICAKPj4+IEBAIC0zMDgsMTMgKzMxNCwzMCBAQCBzdGF0aWMgaW50IGR3X21pcGlf
-ZHNpX2hvc3RfZGV0YWNoKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0LAo+Pj4gIHsKPj4+ICAJ
-c3RydWN0IGR3X21pcGlfZHNpICpkc2kgPSBob3N0X3RvX2RzaShob3N0KTsKPj4+ICAKPj4+ICsJ
-bXV0ZXhfbG9jaygmZHNpLT5wYW5lbF9tdXRleCk7Cj4+PiArCj4+PiArCWRzaS0+cGFuZWxfYnJp
-ZGdlID0gTlVMTDsKPj4+ICAJZHJtX29mX3BhbmVsX2JyaWRnZV9yZW1vdmUoaG9zdC0+ZGV2LT5v
-Zl9ub2RlLCAxLCAwKTsKPj4+ICAKPj4+ICAJZHJtX2JyaWRnZV9yZW1vdmUoJmRzaS0+YnJpZGdl
-KTsKPj4+ICAKPj4+ICsJbXV0ZXhfdW5sb2NrKCZkc2ktPnBhbmVsX211dGV4KTsKPj4+ICsKPj4+
-ICAJcmV0dXJuIDA7Cj4+PiAgfQo+Pj4gIAo+Pj4gK2Jvb2wgZHdfbWlwaV9kc2lfZGV2aWNlX2F0
-dGFjaGVkKHN0cnVjdCBkd19taXBpX2RzaSAqZHNpKQo+Pj4gK3sKPj4+ICsJYm9vbCBvdXRwdXQ7
-Cj4+PiArCj4+PiArCW11dGV4X2xvY2soJmRzaS0+cGFuZWxfbXV0ZXgpOwo+Pj4gKwlvdXRwdXQg
-PSAhIWRzaS0+cGFuZWxfYnJpZGdlOwo+Pj4gKwltdXRleF91bmxvY2soJmRzaS0+cGFuZWxfbXV0
-ZXgpOwo+Pj4gKwo+Pj4gKwlyZXR1cm4gb3V0cHV0Owo+Pj4gK30KPj4+ICtFWFBPUlRfU1lNQk9M
-X0dQTChkd19taXBpX2RzaV9kZXZpY2VfYXR0YWNoZWQpOwo+PiBUaGUgZnVuY3Rpb24gZG9lcyBu
-b3QgbWFrZSBzZW5zZS4gQWZ0ZXIgcmVsZWFzaW5nIHBhbmVsX211dGV4IGRldmljZSBjYW4KPj4g
-YmUgZGV0YWNoZWQvKHJlLSlhdHRhY2hlZCBtdWx0aXBsZSB0aW1lcy4gSWUgaXQgcmVwb3J0cyB1
-c2VsZXNzCj4+IGluZm9ybWF0aW9uLiBPZiBjb3Vyc2UgaW4gbW9zdCBjYXNlcyBpdCB3aWxsIHdv
-cmsgYXMgZXhwZWN0ZWQsIGJ1dCBmb3IKPj4gc3VyZSBpdCBpcyBub3QgYnVsbGV0cHJvb2YuCj4g
-T2suIENhbiB5b3Ugc3VnZ2VzdCBob3cgd2Ugc2hvdWxkIGNoZWNrIGZvciB0aGUgZGVzY3JpYmVk
-IGNhc2U/Cj4gSS5lLiBpbml0aWFsbHkgSSB0cmllZCB0byBzaW1wbHkgZGVmZXIgaW4gZHdfbWlw
-aV9kc2lfYnJpZGdlX2F0dGFjaCBbMF0KPiB3aGVyZSB5b3Ugc3VnZ2VzdGVkIHRvIGRvIHRoYXQg
-aW4gcHJvYmUuCj4KPiBJIG1vdmVkIHRoZSBjaGVjayB0byBiaW5kIC0gc2VlIHBhdGNoIDUgLSB0
-byBmaXggdGhlIGlzc3VlIHJlZ2FyZGluZwo+IHBhbmVsIG9ubHkgcHJvYmluZyBhZnRlciB0aGUg
-ZHNpIGJ1cyBnZXRzIGNyZWF0ZWQsIHNvIHRoaXMgZnVuY3Rpb24KPiBpcyBhIG1lYW5zIHRvIGNo
-ZWNrIGlmIHRoZSBwYW5lbCBoYXMgZmluaXNoZWQgYXR0YWNoaW5nLCBvciB0byBkZWZlcgo+IGJp
-bmRpbmcgLSBzZWUgZHdfbWlwaV9kc2lfcm9ja2NoaXBfYmluZCBpbiBwYXRjaCA1Lgo+Cj4gU28g
-SSdtIHNvbWV3aGF0IG91dCBvZiBpZGVhcyByaWdodCBub3csIGhvdyB0byBkbyB0aGlzIHJpZ2h0
-LgoKSSBhbSBqdXN0IGFmdGVyIHZhY2F0aW9uLCBzbyBwbGVhc2UgYmUga2luZCBpZiBJIHdyaXRl
-IHN0aCBzdHVwaWQgOikKCkkgd291bGQgc3RpY2sgdG8gdGhlIHJ1bGUgImRvIG5vdCBleHBvc2Ug
-ZnVuY3Rpb25hbGl0eSB1bnRpbCB5b3UgZ2F0aGVyCnJlcXVpcmVkIHJlc291cmNlcyIuCldpdGgg
-dGhpcyBpbiBtaW5kIEkgd291bGQgdHJ5IHRoaXMgd2F5OgoxLiBJbiBicmlkZ2UgcHJvYmUgY3Jl
-YXRlIG1pcGkgYnVzLCBidXQgZG8gbm90IGV4cG9zZSBkcm1fYnJpZGdlIGFuZCBkbwpub3QgY2Fs
-bCBjb21wb25lbnRfYWRkIC0gYmVjYXVzZSB3ZSBzdGlsbCBkbyBub3QgaGF2ZSB0aGUgc2luawoo
-ZG93bnN0cmVhbSBwYW5lbCBvciBicmlkZ2UpLgoyLiBJbiBtaXBpX2RzaV9ob3N0X2F0dGFjaCBj
-YWxsYmFjayBnYXRoZXIgc2luayByZXNvdXJjZSBhbmQgdGhlbiBleHBvc2UKZHJtX2JyaWRnZSBh
-bmQgdGhlIGNvbXBvbmVudCAoYnkgY2FsbGluZyBjb21wb25lbnRfYWRkKSAtIGl0IHdpbGwgd29y
-awp3aXRoIGFzc3VtcHRpb24gdGhlIHNpbmsgaXMgcmVnaXN0ZXJlZC9hZGRlZCBiZWZvcmUgYXR0
-YWNoaW5nIHRvIGRzaSBidXMKWypdLgozLiBTaW1pbGFyIHdheSBpdCBzaG91bGQgYmUgZG9uZSBp
-biByZW1vdmUgcGF0aC4KClRoaXMgd2F5IGluIGJpbmQgY2FsbGJhY2sgYWxsIHJlc291cmNlcyBz
-aG91bGQgYmUgdGhlcmUuCgpbKl06IFRoaXMgY291bGQgYmUgc2VlbiBhcyBzdGggYWdhaW5zdCB0
-aGUgcnVsZSAiZmlyc3QgcmVzb3VyY2VzLCB0aGVuCmV4cG9zaXRpb24iLCBidXQgc2luY2UgcGFu
-ZWwvYnJpZGdlIGZyYW1ld29yayBkb2VzIG5vdCBwcm92aWRlCm5vdGlmaWNhdGlvbiBhYm91dCBh
-cHBlYXJhbmNlIG9mIHRoZSBvYmplY3RzLCBpdCB3b3JrcyBhcyBhIHdvcmthcm91bmQKZm9yIG1p
-c3Npbmcgbm90aWZpY2F0aW9uIHN5c3RlbS4KClJlZ2FyZHMKQW5kcnplagoKCgo+Cj4KPiBUaGFu
-a3MKPiBIZWlrbwo+Cj4gWzBdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA0
-NzA4MjEvCj4KPgo+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Hello Fabrizio,
+
+> Hello Biju,
+>
+> Thank you for your patch.
+>
+> > -----Original Message-----
+> > From: Biju Das <biju.das@bp.renesas.com>
+> > Sent: 13 August 2018 08:42
+> > To: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > <mark.rutland@arm.com>; Catalin Marinas <catalin.marinas@arm.com>;
+> > Will Deacon <will.deacon@arm.com>
+> > Cc: Biju Das <biju.das@bp.renesas.com>; Simon Horman
+> > <horms@verge.net.au>; Magnus Damm <magnus.damm@gmail.com>;
+> > linux-renesas-soc@vger.kernel.org; devicetree@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; Geert Uytterhoeven
+> > <geert+renesas@glider.be>; Chris Paterson
+> > <Chris.Paterson2@renesas.com>; Fabrizio Castro
+> > <fabrizio.castro@bp.renesas.com>
+> > Subject: [PATCH] arm64: dts: renesas: Initial r8a774a1 SoC device tree
+> >
+> > Basic support for the RZ/G2M SoC.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >  arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 192
+> > ++++++++++++++++++++++++++++++
+> >  1 file changed, 192 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > new file mode 100644
+> > index 0000000..f3641c0
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > @@ -0,0 +1,192 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the r8a774a1 SoC
+> > + *
+> > + * Copyright (C) 2018 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> > +
+> > +#define CPG_AUDIO_CLK_I10
+>
+> I believe there is no use case for this macro, therefore I think this device tree
+> can live without it.
+> With that fixed:
+
+This clock is SoC specific clock similar to R-Car Gen-3 H3/M3/M3N. Also the same clock is mentioned in Table  8.2b List of clocks of
+RZ/G2M hardware manual. So I think it is ok.
+
+ If you think defining SoC specific clock is wrong in this file , we need to fix other boards as well.
+
+
+> > +
+> > +/ {
+> > +compatible = "renesas,r8a774a1";
+> > +#address-cells = <2>;
+> > +#size-cells = <2>;
+> > +
+> > +/*
+> > + * The external audio clocks are configured as 0 Hz fixed frequency
+> > + * clocks by default.
+> > + * Boards that provide audio clocks should override them.
+> > + */
+> > +audio_clk_a: audio_clk_a {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +audio_clk_b: audio_clk_b {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +audio_clk_c: audio_clk_c {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +/* External CAN clock - to be overridden by boards that provide it */
+> > +can_clk: can {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +cpus {
+> > +#address-cells = <1>;
+> > +#size-cells = <0>;
+> > +
+> > +a57_0: cpu@0 {
+> > +compatible = "arm,cortex-a57", "arm,armv8";
+> > +reg = <0x0>;
+> > +device_type = "cpu";
+> > +power-domains = <&sysc 0>;
+> > +next-level-cache = <&L2_CA57>;
+> > +enable-method = "psci";
+> > +clocks =<&cpg CPG_CORE 0>;
+> > +};
+> > +
+> > +a57_1: cpu@1 {
+> > +compatible = "arm,cortex-a57", "arm,armv8";
+> > +reg = <0x1>;
+> > +device_type = "cpu";
+> > +power-domains = <&sysc 1>;
+> > +next-level-cache = <&L2_CA57>;
+> > +enable-method = "psci";
+> > +clocks =<&cpg CPG_CORE 0>;
+> > +};
+> > +
+> > +L2_CA57: cache-controller-0 {
+> > +compatible = "cache";
+> > +power-domains = <&sysc 12>;
+> > +cache-unified;
+> > +cache-level = <2>;
+> > +};
+> > +};
+> > +
+> > +extal_clk: extal {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +/* This value must be overridden by the board */
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +extalr_clk: extalr {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +/* This value must be overridden by the board */
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +/* External PCIe clock - can be overridden by the board */
+> > +pcie_bus_clk: pcie_bus {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +pmu_a57 {
+> > +compatible = "arm,cortex-a57-pmu";
+> > +interrupts-extended = <&gic GIC_SPI 72
+> IRQ_TYPE_LEVEL_HIGH>,
+> > +      <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+> > +interrupt-affinity = <&a57_0>, <&a57_1>;
+> > +};
+> > +
+> > +psci {
+> > +compatible = "arm,psci-1.0", "arm,psci-0.2";
+> > +method = "smc";
+> > +};
+> > +
+> > +/* External SCIF clock - to be overridden by boards that provide it */
+> > +scif_clk: scif {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +soc {
+> > +compatible = "simple-bus";
+> > +interrupt-parent = <&gic>;
+> > +#address-cells = <2>;
+> > +#size-cells = <2>;
+> > +ranges;
+> > +
+> > +cpg: clock-controller@e6150000 {
+> > +compatible = "renesas,r8a774a1-cpg-mssr";
+> > +reg = <0 0xe6150000 0 0x0bb0>;
+> > +clocks = <&extal_clk>, <&extalr_clk>;
+> > +clock-names = "extal", "extalr";
+> > +#clock-cells = <2>;
+> > +#power-domain-cells = <0>;
+> > +#reset-cells = <1>;
+> > +};
+> > +
+> > +rst: reset-controller@e6160000 {
+> > +compatible = "renesas,r8a774a1-rst";
+> > +reg = <0 0xe6160000 0 0x018c>;
+> > +};
+> > +
+> > +sysc: system-controller@e6180000 {
+> > +compatible = "renesas,r8a774a1-sysc";
+> > +reg = <0 0xe6180000 0 0x0400>;
+> > +#power-domain-cells = <1>;
+> > +};
+> > +
+> > +gic: interrupt-controller@f1010000 {
+> > +compatible = "arm,gic-400";
+> > +#interrupt-cells = <3>;
+> > +#address-cells = <0>;
+> > +interrupt-controller;
+> > +reg = <0x0 0xf1010000 0 0x1000>,
+> > +      <0x0 0xf1020000 0 0x20000>,
+> > +      <0x0 0xf1040000 0 0x20000>,
+> > +      <0x0 0xf1060000 0 0x20000>;
+> > +interrupts = <GIC_PPI 9
+> > +(GIC_CPU_MASK_SIMPLE(2) |
+> IRQ_TYPE_LEVEL_HIGH)>;
+> > +clocks = <&cpg CPG_MOD 408>;
+> > +clock-names = "clk";
+> > +power-domains = <&sysc 32>;
+> > +resets = <&cpg 408>;
+> > +};
+> > +
+> > +prr: chipid@fff00044 {
+> > +compatible = "renesas,prr";
+> > +reg = <0 0xfff00044 0 4>;
+> > +};
+> > +};
+> > +
+> > +timer {
+> > +compatible = "arm,armv8-timer";
+> > +interrupts-extended = <&gic GIC_PPI 13
+> (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> > +      <&gic GIC_PPI 14
+> (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> > +      <&gic GIC_PPI 11
+> (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> > +      <&gic GIC_PPI 10
+> (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
+> > +};
+> > +
+> > +/* External USB clocks - can be overridden by the board */
+> > +usb3s0_clk: usb3s0 {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +clock-frequency = <0>;
+> > +};
+> > +
+> > +usb_extal_clk: usb_extal {
+> > +compatible = "fixed-clock";
+> > +#clock-cells = <0>;
+> > +clock-frequency = <0>;
+> > +};
+> > +};
+> > --
+> > 2.7.4
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
