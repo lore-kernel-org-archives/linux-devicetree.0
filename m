@@ -1,210 +1,96 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v6 0/2] Input: Add Cypress Gen5 Touchscreen driver
-Date: Mon, 13 Aug 2018 08:36:32 -0700
-Message-ID: <CAKdAkRQQ27TNmDSSg5x4kGvhhBjRbM9G2Bv_1WBxAhYWNUkz1w@mail.gmail.com>
-References: <20180703094309.18514-1-mylene.josserand@bootlin.com>
- <20180704162158.euiw2v3hyv3hzofn@penguin> <20180724150046.7d70786c@dell-desktop.home>
- <20180724174053.GA61165@dtor-ws> <20180813172358.71912d55@dell-desktop.home>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: interrupt-controller: RISC-V local
+ interrupt controller
+Date: Mon, 13 Aug 2018 09:36:48 -0600
+Message-ID: <20180813153648.GA29089@rob-hp-laptop>
+References: <20180809075602.989-1-hch@lst.de>
+ <20180809075602.989-2-hch@lst.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180813172358.71912d55@dell-desktop.home>
+Content-Disposition: inline
+In-Reply-To: <20180809075602.989-2-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, lkml <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, anup@brainfault.org, atish.patra@wdc.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Myl=C3=A8ne,
+On Thu, Aug 09, 2018 at 09:56:00AM +0200, Christoph Hellwig wrote:
+> From: Palmer Dabbelt <palmer@dabbelt.com>
+> 
+> Add documentation on the RISC-V local interrupt controller, which is a
+> per-hart interrupt controller that manages all interrupts entering a
+> RISC-V hart.  This interrupt controller is present on all RISC-V systems.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> [hch: minor cleanups]
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  .../interrupt-controller/riscv,cpu-intc.txt   | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> new file mode 100644
+> index 000000000000..b0a8af51c388
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> @@ -0,0 +1,44 @@
+> +RISC-V Hart-Level Interrupt Controller (HLIC)
+> +---------------------------------------------
+> +
+> +RISC-V cores include Control Status Registers (CSRs) which are local to each
+> +CPU core (HART in RISC-V terminology) and can be read or written by software.
+> +Some of these CSRs are used to control local interrupts connected to the core.
+> +Every interrupt is ultimately routed through a hart's HLIC before it
+> +interrupts that hart.
+> +
+> +The RISC-V supervisor ISA manual specifies three interrupt sources that are
+> +attached to every HLIC: software interrupts, the timer interrupt, and external
+> +interrupts.  Software interrupts are used to send IPIs between cores.  The
+> +timer interrupt comes from an architecturally mandated real-time timer that is
+> +controller via Supervisor Binary Interface (SBI) calls and CSR reads.  External
 
-On Mon, Aug 13, 2018 at 8:24 AM Myl=C3=A8ne Josserand
-<mylene.josserand@bootlin.com> wrote:
->
-> Hi Dmitry,
->
-> On Tue, 24 Jul 2018 10:40:53 -0700
-> Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
->
-> > Hi Myl=C3=A8ne,
-> >
-> > On Tue, Jul 24, 2018 at 03:00:46PM +0200, Myl=C3=A8ne Josserand wrote:
-> > > Hello Dmitry,
-> > >
-> > > On Wed, 4 Jul 2018 16:21:58 +0000
-> > > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> > >
-> > > > Hi Myl=C3=A8ne,
-> > > >
-> > > > On Tue, Jul 03, 2018 at 11:43:07AM +0200, Myl=C3=A8ne Josserand wro=
-te:
-> > > > > Hello,
-> > > > >
-> > > > > Here is a V6 series to add the driver of the touchscreen Cypress,
-> > > > > TrueTouch Generation 5.
-> > > > > Based on v4.18-rc3.
-> > > > >
-> > > > > This patch series has already been posted in several iterations:
-> > > > >     - v1: Sent on 2017/05/29
-> > > > >     - v2: Sent on 2017/08/18
-> > > > >     - v3: Sent on 2017/09/27
-> > > > >     - v4: Sent on 2017/12/01
-> > > > >     - v5: Sent on 2017/12/20
-> > > > >
-> > > > > I did not have any comments the last 4 versions.
-> > > > > And no reviews on my v5 during 6 months. Could I have any updates
-> > > > > or feedback on my series to know why it is not merged (to be able=
- to
-> > > > > correct what is wrong)?
-> > > >
-> > > > Sorry, I must have missed the v5, sorry about that.
-> > > >
-> > > > I probably asked this question before, but just to make sure - I se=
-e
-> > > > references to HID in the patch - the device is really not HID
-> > > > compatible? Is there any hope it could be made work with i2c-hid +
-> > > > hid-multitouch?
-> > > >
-> > > > Thanks.
-> > > >
-> > >
-> > > I have checked and, for what I have seen, all the HID descriptor stuf=
-f
-> > > is HID compliant. We could definitely use i2c-hid and hid-multitouch
-> > > (there is the "hid-cypress" driver that exists also).
-> > >
-> > > The only problem is that this touchscreen has two modes: a bootloader
-> > > mode and an application mode (which is the one where we can send
-> > > HID commands). After a power-on-reset, it is always in "bootloader"
-> > > mode so we need to send some commands (called "bootloader commands") =
-to
-> > > switch to application mode.
-> >
-> > Is this a documented or observed behavior? In my practice devices (I am
-> > talking in general, not about Cypress) that have proper configuration
-> > loaded and that were brought up with appropriate power up sequence and
-> > timings automatically switch to application mode. They only end up in
-> > bootloader mode when proper power up sequence is not respected and they
-> > are unhappy.
->
-> I have checked and indeed, if everything is correctly performed, the
-> bootloader has a timeout to switch to application mode.
-> The datasheet says that this timeout can be configured and the "0" value
-> means that the bootloader will never automatically switch to application
-> unless a bootloader command is sent.
->
-> In our case, you were right, after a timeout, the touchscreen is
-> correctly switching to Application mode. Great news!
->
-> >
-> > > These commands are not HID-compliant as the
-> > > datasheet indicates:
-> > >
-> > > "Bootloader commands are not HID-over-I2C compliant."
-> >
-> > Any chance you could share the datasheet?
->
-> Sorry, it is not possible, the datasheet is under NDA :(
->
-> >
-> > >
-> > > I think that if the touchscreen would start directly in "application"
-> > > mode, we could directly use i2c-hid and hid-cypress drivers.
-> > > Unfortunately, this is not the case.
-> > >
-> > > In bootloader mode, the ProductID is 0xc101 and in application mode, =
-it
-> > > is 0xc001 (already available in hid-ids.h:
-> > > USB_DEVICE_ID_CYPRESS_TRUETOUCH but not handled)
-> > >
-> > > What would be the better approach here?
-> > > Should I add a new product ID to detect the bootloader mode in
-> > > hid-cypress driver and send non-HID commands to switch to
-> > > "application" mode in this driver?
-> > > Anyway, I guess that I will drop this cyttsp5 driver and update the
-> > > existing one, right?
-> >
-> > So it still accessible through HID, even when in bootloader mode? OK,
-> > then I guess there are 2 options:
-> >
-> > - if device is documented to always start in bootloader mode, you could
-> >   have a small stub driver that switches it into application mode in it=
-s
-> >   probe() code. The "bootloader" device will disappear and
-> >   "application" device will appear, and standard driver (hid-multitouch=
-)
-> >   will bind to it.
->
-> Okay, I see. In our case, we do not have the timeout to 0 as after a
-> moment, the application mode is automatically switched.
->
-> >
-> > - if device supposed to come up in application mode unless configuratio=
-n
-> >   is damaged: I'd recommend doing what we do on Chrome OS and have some
-> >   userspace software that runs on boot (or whenever device is
-> >   discovered) and check if it has the latest firmware/configuration, an=
-d
-> >   repair device if needed.
->
-> I see.
->
-> I tried to make the i2d-hid & hid-cypress working. This is not
-> successful for the moment because I can not retrieve the correct
-> bcdVersion. While debugging, I have noticed that the HID descriptors
-> don't seem to be exactly the same:
->
-> under i2c-hid.c:
->
-> struct i2c_hid_desc {
->         __le16 wHIDDescLength;
->         __le16 bcdVersion;
->         __le16 wReportDescLength;
->         __le16 wReportDescRegister;
->         __le16 wInputRegister;
->         __le16 wMaxInputLength;
->         __le16 wOutputRegister;
->         __le16 wMaxOutputLength;
->         __le16 wCommandRegister;
->         __le16 wDataRegister;
->         __le16 wVendorID;
->         __le16 wProductID;
->         __le16 wVersionID;
->         __le32 reserved;
-> } __packed;
->
-> whereas in my driver, I have:
->
-> struct cyttsp5_hid_desc {
->         __le16 hid_desc_len;
->         u8 packet_id;       <-- Different
->         u8 reserved_byte;   <-- Different
->         __le16 bcd_version;
->         __le16 report_desc_len;
->         __le16 report_desc_register;
->         __le16 input_register;
->         __le16 max_input_len;
->         __le16 output_register;
->         __le16 max_output_len;
->         __le16 command_register;
->         __le16 data_register;
->         __le16 vendor_id;
->         __le16 product_id;
->         __le16 version_id;
->         u8 reserved[4];
-> } __packed;
->
-> Have you already seen devices that are "HID compatible" with a different
-> HID descriptor's content like this?
+s/controller/controlled/
 
-That seems like a violation of Microsoft I2C HID protocol:
-https://docs.microsoft.com/en-us/previous-versions/windows/hardware/design/=
-dn642101(v=3Dvs.85)
-How do Cypress devices work in Windows? Might they have a compatible
-firmware?
+> +interrupts connect all other device interrupts to the HLIC, which are routed
+> +via the platform-level interrupt controller (PLIC).
+> +
+> +All RISC-V systems that conform to the supervisor ISA specification are
+> +required to have a HLIC with these three interrupt sources present.  Since the
+> +interrupt map is defined by the ISA it's not listed in the HLIC's device tree
+> +entry, though external interrupt controllers (like the PLIC, for example) will
+> +need to define how their interrupts map to the relevant HLICs.  This means
+> +a PLIC interrupt property will typically list the HLICs for all present HARTs
+> +in the system.
+> +
+> +Required properties:
+> +- compatible : "riscv,cpu-intc"
+> +- #interrupt-cells : should be <1>
 
-In any case, for all I2C HID things Benjamin (CCed) is your guy.
+Given that there's only 3 sources and they are fixed(?), you should 
+define the numbering of them here.
 
-Thanks.
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +
+> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
+> +definition of the hart whose CSRs control these local interrupts.
+> +
+> +An example device tree entry for a HLIC is show below.
+> +
+> +	cpu1: cpu@1 {
+> +		compatible = "riscv";
+> +		...
+> +		cpu1-intc: interrupt-controller {
+> +			#interrupt-cells = <1>;
+> +			compatible = "riscv,cpu-intc", "sifive,fu540-c000-cpu-intc";
 
---=20
-Dmitry
+The order here should be reversed (most specific first) and 
+"sifive,fu540-c000-cpu-intc" needs to be listed above.
+
+> +			interrupt-controller;
+> +		};
+> +	};
+> -- 
+> 2.18.0
+> 
