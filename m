@@ -1,118 +1,70 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v8 3/4] drm/atmel-hlcdc: iterate over all output endpoints
-Date: Mon, 13 Aug 2018 16:24:49 +0200
-Message-ID: <0baac94e-f3d2-53fd-4af9-854bb4498345@axentia.se>
-References: <20180810130359.9882-1-peda@axentia.se>
- <20180810130359.9882-4-peda@axentia.se>
- <20180813135949.32vrlrevtazr5x7d@apu3b.nibble.pw>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
+Date: Mon, 13 Aug 2018 16:47:26 +0200
+Message-ID: <264d51a0-7e41-6c27-d438-9ae337e6dcf0@microchip.com>
+References: <20180812184152.GA22343@ravnborg.org>
+ <20180812195536.GA29811@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180813135949.32vrlrevtazr5x7d@apu3b.nibble.pw>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180812195536.GA29811@ravnborg.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Joshua Henderson <joshua.henderson@microchip.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-13 15:59, jacopo mondi wrote:
-> Hi Peter,
+On 12/08/2018 at 21:55, Sam Ravnborg wrote:
+> The at91sam9263 has a few interesting "GPU" features:
 > 
-> On Fri, Aug 10, 2018 at 03:03:58PM +0200, Peter Rosin wrote:
->> This enables more flexible devicetrees. You can e.g. have two output
->> nodes where one is not enabled, without the ordering affecting things.
->>
->> Prior to this patch the active node had to have endpoint id zero.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 32 ++++++++++++++++++------
->>  1 file changed, 25 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
->> index 8db51fb131db..16c1b2f54b42 100644
->> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
->> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
->> @@ -31,14 +31,16 @@ static const struct drm_encoder_funcs atmel_hlcdc_panel_encoder_funcs = {
->>  	.destroy = drm_encoder_cleanup,
->>  };
->>  
->> -static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
->> +static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
->> +				       struct of_endpoint *endpoint)
->>  {
->>  	struct drm_encoder *encoder;
->>  	struct drm_panel *panel;
->>  	struct drm_bridge *bridge;
->>  	int ret;
->>  
->> -	ret = drm_of_find_panel_or_bridge(dev->dev->of_node, 0, endpoint,
->> +	ret = drm_of_find_panel_or_bridge(dev->dev->of_node,
->> +					  endpoint->port, endpoint->id,
+> - 2D memory addressing
+>    Data sheet says:
+> 	The LCDC can be configured to work on a frame buffer
+> 	larger than the actual screen size. By changing the
+> 	values in a few registers, it is easy to move the
+> 	displayed area along the frame buffer width and height
 > 
-> You are refusing endpoint->port != 0 in the caller, so that could be
-> 0.
-
-Yes, it could. However, I intentionally did not write 0 here, so that
-the logic related to "port has to be zero" was in one place and not
-scattered about. I guess it's up to Boris?
-
-Maybe the port do not actually have to be zero at all? With the old
-code, it was kind of understandable that the port number was fixed,
-but for the code in my patch it does not matter at all AFAICT. There
-is nothing in the binding docs (except for the example) that hints
-that port has to be zero, so that's one thing in favor of just getting
-rid of the port number checking altogether...
-
-Cheers,
-Peter
-
-
-> Apart from that small nit:
-> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> - 2D Graphics controller
+>    Data sheet says:
+> 	The Two D Graphics Controller (TDGC) features a
+> 	hardware accelerator which highly simplifies drawing
+> 	tasks and graphic management operations.
+> 	The hardware accelerator makes it easy to draw lines
+> 	and complex polygons and to perform block transfers
+> 	within the frame buffer.
+> 	The TDGC also features a draw command queue that
+> 	automatically executes a more complex drawing function
+> 	that is composed of several register accesses.
 > 
-> Thanks
->   j
+> The datasheet text is from: chapter 43.9 + chapter 44:
+> http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6249-32-bit-ARM926EJ-S-Embedded-Microprocessor-SAM9263_Datasheet.pdf
+> (No NDA required)
+
+(old memories) this 2D engine prove itself of being quite limited as the 
+fill polygon and clipping functions are not working.
+
+> Based on the above, would it be possible to utilise some
+> of these features without any dedicated userspace (mesa) support?
+> Any other driver that has something similar that can be used
+> for inspiration?
+
+This is really an interesting question indeed.
+
+> Or is this in reality a simple GPU that requires a
+> dedicated GPU driver?
 > 
->>  					  &panel, &bridge);
->>  	if (ret)
->>  		return ret;
->> @@ -77,13 +79,29 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
->>  
->>  int atmel_hlcdc_create_outputs(struct drm_device *dev)
->>  {
->> -	int endpoint, ret = 0;
->> -
->> -	for (endpoint = 0; !ret; endpoint++)
->> -		ret = atmel_hlcdc_attach_endpoint(dev, endpoint);
->> +	struct of_endpoint endpoint;
->> +	struct device_node *node = NULL;
->> +	int count = 0;
->> +	int ret = 0;
->> +
->> +	for_each_endpoint_of_node(dev->dev->of_node, node) {
->> +		of_graph_parse_endpoint(node, &endpoint);
->> +
->> +		if (endpoint.port)
->> +			continue;
->> +
->> +		ret = atmel_hlcdc_attach_endpoint(dev, &endpoint);
->> +		if (ret == -ENODEV)
->> +			continue;
->> +		if (ret) {
->> +			of_node_put(node);
->> +			break;
->> +		}
->> +		count++;
->> +	}
->>  
->>  	/* At least one device was successfully attached.*/
->> -	if (ret == -ENODEV && endpoint)
->> +	if (ret == -ENODEV && count)
->>  		return 0;
->>  
->>  	return ret;
->> -- 
->> 2.11.0
->>
+> 	Sam
+> 
+
+
+-- 
+Nicolas Ferre
