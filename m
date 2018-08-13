@@ -1,192 +1,31 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v6 0/2] Input: Add Cypress Gen5 Touchscreen driver
-Date: Mon, 13 Aug 2018 17:23:58 +0200
-Message-ID: <20180813172358.71912d55@dell-desktop.home>
-References: <20180703094309.18514-1-mylene.josserand@bootlin.com>
- <20180704162158.euiw2v3hyv3hzofn@penguin>
- <20180724150046.7d70786c@dell-desktop.home>
- <20180724174053.GA61165@dtor-ws>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 04/24] dt-bindings: Add doc for the Ingenic TCU drivers
+Date: Mon, 13 Aug 2018 09:24:22 -0600
+Message-ID: <20180813152422.GA18650@rob-hp-laptop>
+References: <20180809214414.20905-1-paul@crapouillou.net>
+ <20180809214414.20905-5-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180724174053.GA61165@dtor-ws>
+Content-Disposition: inline
+In-Reply-To: <20180809214414.20905-5-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On Tue, 24 Jul 2018 10:40:53 -0700
-Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-
-> Hi Mylène,
+On Thu, Aug 09, 2018 at 11:43:54PM +0200, Paul Cercueil wrote:
+> Add documentation about how to properly use the Ingenic TCU
+> (Timer/Counter Unit) drivers from devicetree.
 > 
-> On Tue, Jul 24, 2018 at 03:00:46PM +0200, Mylène Josserand wrote:
-> > Hello Dmitry,
-> > 
-> > On Wed, 4 Jul 2018 16:21:58 +0000
-> > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> >   
-> > > Hi Mylène,
-> > > 
-> > > On Tue, Jul 03, 2018 at 11:43:07AM +0200, Mylène Josserand wrote:  
-> > > > Hello,
-> > > > 
-> > > > Here is a V6 series to add the driver of the touchscreen Cypress,
-> > > > TrueTouch Generation 5.
-> > > > Based on v4.18-rc3.
-> > > > 
-> > > > This patch series has already been posted in several iterations:
-> > > >     - v1: Sent on 2017/05/29
-> > > >     - v2: Sent on 2017/08/18
-> > > >     - v3: Sent on 2017/09/27
-> > > >     - v4: Sent on 2017/12/01
-> > > >     - v5: Sent on 2017/12/20
-> > > > 
-> > > > I did not have any comments the last 4 versions.
-> > > > And no reviews on my v5 during 6 months. Could I have any updates
-> > > > or feedback on my series to know why it is not merged (to be able to
-> > > > correct what is wrong)?    
-> > > 
-> > > Sorry, I must have missed the v5, sorry about that.
-> > > 
-> > > I probably asked this question before, but just to make sure - I see
-> > > references to HID in the patch - the device is really not HID
-> > > compatible? Is there any hope it could be made work with i2c-hid +
-> > > hid-multitouch?
-> > > 
-> > > Thanks.
-> > >   
-> > 
-> > I have checked and, for what I have seen, all the HID descriptor stuff
-> > is HID compliant. We could definitely use i2c-hid and hid-multitouch
-> > (there is the "hid-cypress" driver that exists also).
-> > 
-> > The only problem is that this touchscreen has two modes: a bootloader
-> > mode and an application mode (which is the one where we can send
-> > HID commands). After a power-on-reset, it is always in "bootloader"
-> > mode so we need to send some commands (called "bootloader commands") to
-> > switch to application mode.  
-> 
-> Is this a documented or observed behavior? In my practice devices (I am
-> talking in general, not about Cypress) that have proper configuration
-> loaded and that were brought up with appropriate power up sequence and
-> timings automatically switch to application mode. They only end up in
-> bootloader mode when proper power up sequence is not respected and they
-> are unhappy.
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  .../devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt |  25 ----
+>  .../devicetree/bindings/timer/ingenic,tcu.txt      | 134 +++++++++++++++++++++
+>  .../bindings/watchdog/ingenic,jz4740-wdt.txt       |  17 ---
+>  3 files changed, 134 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt
 
-I have checked and indeed, if everything is correctly performed, the
-bootloader has a timeout to switch to application mode.
-The datasheet says that this timeout can be configured and the "0" value
-means that the bootloader will never automatically switch to application
-unless a bootloader command is sent.
-
-In our case, you were right, after a timeout, the touchscreen is
-correctly switching to Application mode. Great news!
-
-> 
-> > These commands are not HID-compliant as the
-> > datasheet indicates:
-> > 
-> > "Bootloader commands are not HID-over-I2C compliant."  
-> 
-> Any chance you could share the datasheet?
-
-Sorry, it is not possible, the datasheet is under NDA :(
-
-> 
-> > 
-> > I think that if the touchscreen would start directly in "application"
-> > mode, we could directly use i2c-hid and hid-cypress drivers.
-> > Unfortunately, this is not the case.
-> > 
-> > In bootloader mode, the ProductID is 0xc101 and in application mode, it
-> > is 0xc001 (already available in hid-ids.h:
-> > USB_DEVICE_ID_CYPRESS_TRUETOUCH but not handled)
-> > 
-> > What would be the better approach here?
-> > Should I add a new product ID to detect the bootloader mode in
-> > hid-cypress driver and send non-HID commands to switch to
-> > "application" mode in this driver?
-> > Anyway, I guess that I will drop this cyttsp5 driver and update the
-> > existing one, right?  
-> 
-> So it still accessible through HID, even when in bootloader mode? OK,
-> then I guess there are 2 options:
-> 
-> - if device is documented to always start in bootloader mode, you could
->   have a small stub driver that switches it into application mode in its
->   probe() code. The "bootloader" device will disappear and
->   "application" device will appear, and standard driver (hid-multitouch)
->   will bind to it.
-
-Okay, I see. In our case, we do not have the timeout to 0 as after a
-moment, the application mode is automatically switched.
-
-> 
-> - if device supposed to come up in application mode unless configuration
->   is damaged: I'd recommend doing what we do on Chrome OS and have some
->   userspace software that runs on boot (or whenever device is
->   discovered) and check if it has the latest firmware/configuration, and
->   repair device if needed.
-
-I see.
-
-I tried to make the i2d-hid & hid-cypress working. This is not
-successful for the moment because I can not retrieve the correct
-bcdVersion. While debugging, I have noticed that the HID descriptors
-don't seem to be exactly the same:
-
-under i2c-hid.c:
-
-struct i2c_hid_desc {
-        __le16 wHIDDescLength;
-        __le16 bcdVersion;
-        __le16 wReportDescLength;
-        __le16 wReportDescRegister;
-        __le16 wInputRegister;
-        __le16 wMaxInputLength;
-        __le16 wOutputRegister;
-        __le16 wMaxOutputLength;
-        __le16 wCommandRegister;
-        __le16 wDataRegister;
-        __le16 wVendorID;
-        __le16 wProductID;
-        __le16 wVersionID;
-        __le32 reserved;
-} __packed;
-
-whereas in my driver, I have:
-
-struct cyttsp5_hid_desc {
-        __le16 hid_desc_len;
-        u8 packet_id;       <-- Different
-        u8 reserved_byte;   <-- Different
-        __le16 bcd_version;
-        __le16 report_desc_len;
-        __le16 report_desc_register;
-        __le16 input_register;
-        __le16 max_input_len;
-        __le16 output_register;
-        __le16 max_output_len;
-        __le16 command_register;
-        __le16 data_register;
-        __le16 vendor_id;
-        __le16 product_id;
-        __le16 version_id;
-        u8 reserved[4];
-} __packed;
-
-Have you already seen devices that are "HID compatible" with a different
-HID descriptor's content like this?
-
-Thank you in advance,
-
-Best regards,
-
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Rob Herring <robh@kernel.org>
