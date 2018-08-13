@@ -1,7 +1,7 @@
 From: Craig Tatlor <ctatlor97@gmail.com>
 Subject: Re: [PATCH v2] pinctrl: qcom: Add sdm660 pinctrl driver
 Date: Mon, 13 Aug 2018 08:36:09 +0100
-Message-ID: <0041C2DD-2D93-49CE-9703-4C3FAC041F77@gmail.com>
+Message-ID: <653C916B-1891-4393-8C70-14617AC4CC7F@gmail.com>
 References: <20180812142413.20856-1-ctatlor97@gmail.com> <970132e2-63ec-da56-07a2-56858c5b01ce@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain;
