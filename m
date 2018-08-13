@@ -1,96 +1,170 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: interrupt-controller: RISC-V local
- interrupt controller
-Date: Mon, 13 Aug 2018 09:36:48 -0600
-Message-ID: <20180813153648.GA29089@rob-hp-laptop>
-References: <20180809075602.989-1-hch@lst.de>
- <20180809075602.989-2-hch@lst.de>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
+Date: Mon, 13 Aug 2018 17:54:48 +0200
+Message-ID: <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
+References: <20180812184152.GA22343@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180809075602.989-2-hch@lst.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: tglx@linutronix.de, palmer@sifive.com, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, anup@brainfault.org, atish.patra@wdc.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, shorne@gmail.com, Palmer Dabbelt <palmer@dabbelt.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180812184152.GA22343@ravnborg.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: devicetree@vger.kernel.org, Joshua Henderson <joshua.henderson@microchip.com>, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 09, 2018 at 09:56:00AM +0200, Christoph Hellwig wrote:
-> From: Palmer Dabbelt <palmer@dabbelt.com>
+On 12/08/2018 at 20:41, Sam Ravnborg wrote:
+> New DRM based driver for at91sam9 SOC's that uses the
+> Atmel LCDC IP core.
+
+I'm delighted to see this work: Thanks a lot Sam!
+
+> This is first version of a patch set that adds
+> drivers for the Atmel LCDC IP core.
+> Posted for review as the basics works now.
 > 
-> Add documentation on the RISC-V local interrupt controller, which is a
-> per-hart interrupt controller that manages all interrupts entering a
-> RISC-V hart.  This interrupt controller is present on all RISC-V systems.
+> The LCDC IP core contains two devices:
+> - a PWM often used for backlight
+> - a LCD display controller
 > 
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> [hch: minor cleanups]
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  .../interrupt-controller/riscv,cpu-intc.txt   | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> Both devices are supported today by the atmel_lcdfb driver.
+> For this new set of drivers the compatible strings was
+> selected to avoid clash with the existing compatible
+> strings used for the atmel_lcdfb driver to allow them
+> to co-exist.
+
+Would be good to have a plan to phase-out the old atmel_lcdfb fbdev 
+driver when this one addresses some TODO items that make sense.
+
+The mfd suffix seems strange to me. What about "atmel,at91sam9263-lcdc-mfd"
+=> "atmel,at91sam9263-lcd" (or "microchip,at91sam9263-lcdc").
+
+> This patchset implements three drivers.
+> - A MFD driver that include the generic parts.
+> - A PWM driver.
+> - A DRM display controller driver.
+> This is the same split as used for the Atmel hlcdc IP.
+
+Good, this is why I would use the same type of compatibility string for 
+the split mfd/pwm/lcd (just without the "h").
+
+> The hlcdc and lcdc has only a few things in common and
+> trying to share the code for them was not a viable solution.
+
+Yes, I agree.
+
+> The DRM implementation has a few shortcomings compared to the
+> existing fbdev based driver:
+>      - STN displays are not supported
+>              Binding support is missing but most of the
+>              STN specific functionality is otherwise ported
+>              from the fbdev driver.
+>              I assume the info should come from the panel
+>              but as I lack HW I have not looked too much
+>              into what is required.
+
+Yes, I'm not even sure if STN displays are still available those days... 
+Might not be worth it spending time on this.
+
+>      - gamma support is missing
+>              The driver utilises drm_simple_kms_helper and
+>              this helper lacks support for setting up gamma.
+>              If this is useful please let me know and I
+>              will extend drm_simple_kms_helper to support this
+>              and update the driver.
+>      - modesetting is not checked (see TODO in file)
+>              Is this required for such a simple setup?
+>      - support for extra modes as applicable (and lcd-wiring-mode)
+>      - support for AVR32 (is it relevant?)
+
+No, AVR32 is not relevant anymore as the core and SoC were removed some 
+years ago from Linux.
+All mention of AT32 or AVR32 can be remove then.
+
+> The first patch renames .../drm/atmel-hlcdc to .../drm/atmel
+> to have a nice home for both drivers.
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> new file mode 100644
-> index 000000000000..b0a8af51c388
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> @@ -0,0 +1,44 @@
-> +RISC-V Hart-Level Interrupt Controller (HLIC)
-> +---------------------------------------------
-> +
-> +RISC-V cores include Control Status Registers (CSRs) which are local to each
-> +CPU core (HART in RISC-V terminology) and can be read or written by software.
-> +Some of these CSRs are used to control local interrupts connected to the core.
-> +Every interrupt is ultimately routed through a hart's HLIC before it
-> +interrupts that hart.
-> +
-> +The RISC-V supervisor ISA manual specifies three interrupt sources that are
-> +attached to every HLIC: software interrupts, the timer interrupt, and external
-> +interrupts.  Software interrupts are used to send IPIs between cores.  The
-> +timer interrupt comes from an architecturally mandated real-time timer that is
-> +controller via Supervisor Binary Interface (SBI) calls and CSR reads.  External
+> The drivers _works_ on a proprietary at91sam9263 based board
+> and I will eventually migrate the at91sam9263ek over
+> to use it as well.
 
-s/controller/controlled/
+We'll be able to test it on other SoCs and boards.
 
-> +interrupts connect all other device interrupts to the HLIC, which are routed
-> +via the platform-level interrupt controller (PLIC).
-> +
-> +All RISC-V systems that conform to the supervisor ISA specification are
-> +required to have a HLIC with these three interrupt sources present.  Since the
-> +interrupt map is defined by the ISA it's not listed in the HLIC's device tree
-> +entry, though external interrupt controllers (like the PLIC, for example) will
-> +need to define how their interrupts map to the relevant HLICs.  This means
-> +a PLIC interrupt property will typically list the HLICs for all present HARTs
-> +in the system.
-> +
-> +Required properties:
-> +- compatible : "riscv,cpu-intc"
-> +- #interrupt-cells : should be <1>
+> Works is maybe a stretch - the following was tested:
+>    modetest shows reasonable output
+>    modetest -s shows some nice colored squares
 
-Given that there's only 3 sources and they are fixed(?), you should 
-define the numbering of them here.
+You must see something like this (without the overlay additional black 
+square):
+http://www.at91.com/linux4sam/bin/view/Linux4SAM/UsingAtmelDRMDriver#Some_modetest_commands
 
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +
-> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
-> +definition of the hart whose CSRs control these local interrupts.
-> +
-> +An example device tree entry for a HLIC is show below.
-> +
-> +	cpu1: cpu@1 {
-> +		compatible = "riscv";
-> +		...
-> +		cpu1-intc: interrupt-controller {
-> +			#interrupt-cells = <1>;
-> +			compatible = "riscv,cpu-intc", "sifive,fu540-c000-cpu-intc";
-
-The order here should be reversed (most specific first) and 
-"sifive,fu540-c000-cpu-intc" needs to be listed above.
-
-> +			interrupt-controller;
-> +		};
-> +	};
-> -- 
-> 2.18.0
+>    vbltest shows 45.70 Hz (after terminating modetest -s with SIGINT)
+>    drmdevice shows reasonable output
+>    brightness can be controlled
 > 
+> Anything else that can be recommended for some basic tests?
+> How to test suspend/resume?
+> 
+> REVIEW
+> Please give feedback on general structure/architecture
+> Please check if the drm framework is used in the optimal way
+> And then the usual review from spelling errors, names, style etc.
+> 
+> All feedback (from spelling errors to general structure) appreciated!
+
+On my side, it's mostly Nitpicking ;-)
+Now that we're Microchip for a little bit more than 2 years, I tend to 
+make this name prevalent compared to Atmel for new work around our 
+products... But I know this driver is for older SoCs and that it got 
+inspired by two former drivers that have this "atmel" naming everywhere. 
+MAINTAINERS and Kconfig changes could include Microchip name, so that 
+it's obvious for the newcomers...
+
+> 	Sam
+> 
+> Sam Ravnborg (7):
+>        atmel-hlcdc: renamed directory to drm/atmel/
+>        dt-binding: add bindings for Atmel LCDC mfd
+>        mfd: add atmel-lcdc driver
+>        dt-bindings: add bindings for Atmel LCDC pwm
+>        pwm: add pwm-atmel-lcdc driver
+>        dt-bindings: add bindings for Atmel lcdc-display-controller
+>        drm: add Atmel LCDC display controller support
+> 
+>   .../display/atmel/lcdc-display-controller.txt      |   40 +
+>   .../devicetree/bindings/mfd/atmel-lcdc.txt         |   75 ++
+>   .../devicetree/bindings/pwm/atmel-lcdc-pwm.txt     |   30 +
+>   MAINTAINERS                                        |    9 +-
+>   drivers/gpu/drm/Kconfig                            |    2 +-
+>   drivers/gpu/drm/Makefile                           |    2 +-
+>   drivers/gpu/drm/atmel-hlcdc/Kconfig                |   10 -
+>   drivers/gpu/drm/atmel/Kconfig                      |   28 +
+>   drivers/gpu/drm/{atmel-hlcdc => atmel}/Makefile    |    2 +
+>   .../drm/{atmel-hlcdc => atmel}/atmel_hlcdc_crtc.c  |    0
+>   .../drm/{atmel-hlcdc => atmel}/atmel_hlcdc_dc.c    |    0
+>   .../drm/{atmel-hlcdc => atmel}/atmel_hlcdc_dc.h    |    0
+>   .../{atmel-hlcdc => atmel}/atmel_hlcdc_output.c    |    0
+>   .../drm/{atmel-hlcdc => atmel}/atmel_hlcdc_plane.c |    0
+>   drivers/gpu/drm/atmel/atmel_lcdc-dc.c              | 1094 ++++++++++++++++++++
+>   drivers/mfd/Kconfig                                |   10 +
+>   drivers/mfd/Makefile                               |    1 +
+>   drivers/mfd/atmel-lcdc.c                           |  158 +++
+>   drivers/pwm/Kconfig                                |   13 +
+>   drivers/pwm/Makefile                               |    1 +
+>   drivers/pwm/pwm-atmel-lcdc.c                       |  178 ++++
+>   include/linux/mfd/atmel-lcdc.h                     |  184 ++++
+>   22 files changed, 1824 insertions(+), 13 deletions(-)
+> 
+
+
+-- 
+Nicolas Ferre
