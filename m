@@ -1,93 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: media: adv748x: Document re-mappable
- addresses
-Date: Mon, 13 Aug 2018 11:45:44 -0600
-Message-ID: <20180813174544.GA11379@rob-hp-laptop>
-References: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: Document the Rockchip VPU bindings
+Date: Mon, 13 Aug 2018 11:50:31 -0600
+Message-ID: <20180813175031.GA26254@rob-hp-laptop>
+References: <20180802200010.24365-1-ezequiel@collabora.com>
+ <20180802200010.24365-2-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, mchehab@kernel.org, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180802200010.24365-2-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 09, 2018 at 08:29:44PM +0100, Kieran Bingham wrote:
-> The ADV748x supports configurable slave addresses for its I2C pages.
-> Document the page names, and provide an example for setting each of the
-> pages explicitly.
-
-It would be good to say why you need this. The only use I can think of 
-is if there are other devices on the bus and you need to make sure the 
-addresses don't conflict. Arguably, that information could be figured 
-out without this in DT.
-
-Regardless,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
+On Thu, Aug 02, 2018 at 05:00:05PM -0300, Ezequiel Garcia wrote:
+> Add devicetree binding documentation for Rockchip Video Processing
+> Unit IP.
 > 
-> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> 
+> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 > ---
-> v2:
->  - Fix commit message
->  - Extend documentation for the "required property" reg:
-> 
-> v3
->  - Fix missing comment from Laurent.
->  - correct the reg descrption
-> ---
->  .../devicetree/bindings/media/i2c/adv748x.txt    | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> index 21ffb5ed8183..25a02496f4ba 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> @@ -10,7 +10,11 @@ Required Properties:
->      - "adi,adv7481" for the ADV7481
->      - "adi,adv7482" for the ADV7482
->  
-> -  - reg: I2C slave address
-> +  - reg: I2C slave addresses
-> +    The ADV748x has up to twelve 256-byte maps that can be accessed via the
-> +    main I2C ports. Each map has it own I2C address and acts as a standard
-> +    slave device on the I2C bus. The main address is mandatory, others are
-> +    optional and remain at default values if not specified.
->  
->  Optional Properties:
->  
-> @@ -18,6 +22,11 @@ Optional Properties:
->  		     "intrq3". All interrupts are optional. The "intrq3" interrupt
->  		     is only available on the adv7481
->    - interrupts: Specify the interrupt lines for the ADV748x
-> +  - reg-names : Names of maps with programmable addresses.
-> +		It shall contain all maps needing a non-default address.
-> +		Possible map names are:
-> +		  "main", "dpll", "cp", "hdmi", "edid", "repeater",
-> +		  "infoframe", "cbus", "cec", "sdp", "txa", "txb"
->  
->  The device node must contain one 'port' child node per device input and output
->  port, in accordance with the video interface bindings defined in
-> @@ -47,7 +56,10 @@ Example:
->  
->  	video-receiver@70 {
->  		compatible = "adi,adv7482";
-> -		reg = <0x70>;
-> +		reg = <0x70 0x71 0x72 0x73 0x74 0x75
-> +		       0x60 0x61 0x62 0x63 0x64 0x65>;
-> +		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
-> +			    "infoframe", "cbus", "cec", "sdp", "txa", "txb";
->  
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> -- 
-> 2.17.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  .../bindings/media/rockchip-vpu.txt           | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
