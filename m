@@ -1,137 +1,44 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
-Date: Mon, 13 Aug 2018 20:18:08 +0200
-Message-ID: <20180813181808.GA2357@ravnborg.org>
-References: <20180812184152.GA22343@ravnborg.org>
- <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2] clk: qcom: Add some missing gcc clks for msm8996
+Date: Mon, 13 Aug 2018 11:43:51 -0700
+Message-ID: <20180813184351.GG23866@tuxbook-pro>
+References: <20180809220119.18932-1-bjorn.andersson@linaro.org>
+ <153391387168.37448.10798348572941173469@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Joshua Henderson <joshua.henderson@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <153391387168.37448.10798348572941173469@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicholas.
+On Fri 10 Aug 08:11 PDT 2018, Stephen Boyd wrote:
 
-On Mon, Aug 13, 2018 at 05:54:48PM +0200, Nicolas Ferre wrote:
-> On 12/08/2018 at 20:41, Sam Ravnborg wrote:
-> >New DRM based driver for at91sam9 SOC's that uses the
-> >Atmel LCDC IP core.
+> Quoting Bjorn Andersson (2018-08-09 15:01:19)
+> > From: Rajendra Nayak <rnayak@codeaurora.org>
+> > 
+> > Add a few missing gcc clks for msm8996
+> > 
+> > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > [bjorn: omit aggre0_noc_qosgen_extref_clk]
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
 > 
-> I'm delighted to see this work: Thanks a lot Sam!
-Glad to hear.
-I was a bit worried that the response would be "this is
-waste of time as we have a working driver already".
-
+> This is still going on?! I'm going to ignore Rob's auto email on this
+> patch.
 > 
-> >This is first version of a patch set that adds
-> >drivers for the Atmel LCDC IP core.
-> >Posted for review as the basics works now.
-> >
-> >The LCDC IP core contains two devices:
-> >- a PWM often used for backlight
-> >- a LCD display controller
-> >
-> >Both devices are supported today by the atmel_lcdfb driver.
-> >For this new set of drivers the compatible strings was
-> >selected to avoid clash with the existing compatible
-> >strings used for the atmel_lcdfb driver to allow them
-> >to co-exist.
-> 
-> Would be good to have a plan to phase-out the old atmel_lcdfb fbdev
-> driver when this one addresses some TODO items that make sense.
-Agree on this.
-One approach could be to say that when all in-kernel users of atmel_lcdfb
-are ported, then the old driver could be dropped after a kernel release.
 
-> The mfd suffix seems strange to me. What about "atmel,at91sam9263-lcdc-mfd"
-> => "atmel,at91sam9263-lcd" (or "microchip,at91sam9263-lcdc").
-The "-mfd" suffix was added to avoid clashing with the current
-compatible string used by the atmel_lcdfb driver.
+There wasn't much "going on" since your last reply, found this on the
+floor between some chairs...
 
-I susggest we do the following:
-- use the microchip prefix, as this is now owned by microchip
-- and add the driver to a drm/microchip/ directory
-(Then we can only hope that microchip do not change name or
-are purchased by someone else).
 
-> 
-> >The DRM implementation has a few shortcomings compared to the
-> >existing fbdev based driver:
-> >     - STN displays are not supported
-> >             Binding support is missing but most of the
-> >             STN specific functionality is otherwise ported
-> >             from the fbdev driver.
-> >             I assume the info should come from the panel
-> >             but as I lack HW I have not looked too much
-> >             into what is required.
-> 
-> Yes, I'm not even sure if STN displays are still available those
-> days... Might not be worth it spending time on this.
-Then I will delete all the STN bits that was ported over.
-If we need them later they can be found on the mailign list.
+The issue pointed to you on v1 was that there was another patch that
+already added two of the clocks, so this v2 simply drops the two
+duplicated clocks; i.e. solves the merge conflict.
 
-> 
-> >     - gamma support is missing
-> >             The driver utilises drm_simple_kms_helper and
-> >             this helper lacks support for setting up gamma.
-> >             If this is useful please let me know and I
-> >             will extend drm_simple_kms_helper to support this
-> >             and update the driver.
-> >     - modesetting is not checked (see TODO in file)
-> >             Is this required for such a simple setup?
-> >     - support for extra modes as applicable (and lcd-wiring-mode)
-> >     - support for AVR32 (is it relevant?)
-> 
-> No, AVR32 is not relevant anymore as the core and SoC were removed
-> some years ago from Linux.
-> All mention of AT32 or AVR32 can be remove then.
-Ok, I will delete these.
+What I see now is that I did forget to carry Rob's R-b from v1.
 
-> >The drivers _works_ on a proprietary at91sam9263 based board
-> >and I will eventually migrate the at91sam9263ek over
-> >to use it as well.
-> 
-> We'll be able to test it on other SoCs and boards.
-Thanks!
-
-> 
-> >Works is maybe a stretch - the following was tested:
-> >   modetest shows reasonable output
-> >   modetest -s shows some nice colored squares
-> 
-> You must see something like this (without the overlay additional
-> black square):
-> http://www.at91.com/linux4sam/bin/view/Linux4SAM/UsingAtmelDRMDriver#Some_modetest_commands
-I posted a picture to G+ here:
-https://plus.google.com/+SamRavnborg/posts/YBt4jUGLgWa
-
-They look similar but are not equal. For now I assume this is OK.
-I will do some testing with a Qt app, and will test colors with this too.
-
-> >All feedback (from spelling errors to general structure) appreciated!
-> 
-> On my side, it's mostly Nitpicking ;-)
-> Now that we're Microchip for a little bit more than 2 years, I tend
-> to make this name prevalent compared to Atmel for new work around
-> our products... But I know this driver is for older SoCs and that it
-> got inspired by two former drivers that have this "atmel" naming
-> everywhere. MAINTAINERS and Kconfig changes could include Microchip
-> name, so that it's obvious for the newcomers...
-Will fix, as described above.
-
-Thanks for the inputs!
-
-	Sam
+Regards,
+Bjorn
