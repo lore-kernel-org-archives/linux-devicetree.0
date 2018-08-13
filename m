@@ -1,97 +1,96 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: interrupt-controller: Actions
- external interrupt controller
-Date: Mon, 13 Aug 2018 13:44:53 -0600
-Message-ID: <20180813194453.GA30702@rob-hp-laptop>
-References: <20180812122215.1079590-1-pn@denx.de>
- <20180812122215.1079590-2-pn@denx.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3] dt-bindings: media: adv748x: Document re-mappable addresses
+Date: Mon, 13 Aug 2018 23:06:52 +0300
+Message-ID: <2839443.megObXD3Cp@avalon>
+References: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180812122215.1079590-2-pn@denx.de>
+In-Reply-To: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Parthiban Nallathambi <pn@denx.de>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sravanhome@gmail.com, thomas.liau@actions-semi.com, mp-cs@actions-semi.com, linux@cubietech.com, edgar.righi@lsitec.org.br, laisa.costa@lsitec.org.br, guilherme.simoes@lsitec.org.br, mkzuffo@lsi.usp.br
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: mchehab@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 12, 2018 at 02:22:13PM +0200, Parthiban Nallathambi wrote:
-> Actions Semi OWL family SoC's provides support for external interrupt
-> controller to be connected and controlled using SIRQ pins. S500, S700
-> and S900 provides 3 SIRQ lines and works independently for 3 external
-> interrupt controllers.
+Hi Kieran,
+
+Thank you for the patch.
+
+On Thursday, 9 August 2018 22:29:44 EEST Kieran Bingham wrote:
+> The ADV748x supports configurable slave addresses for its I2C pages.
+> Document the page names, and provide an example for setting each of the
+> pages explicitly.
 > 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> 
 > ---
->  .../interrupt-controller/actions,owl-sirq.txt      | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
+> v2:
+>  - Fix commit message
+>  - Extend documentation for the "required property" reg:
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
-> new file mode 100644
-> index 000000000000..4b8437751331
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.txt
-> @@ -0,0 +1,46 @@
-> +Actions Semi Owl SoCs SIRQ interrupt controller
-> +
-> +S500, S700 and S900 SoC's from Actions provides 3 SPI's from GIC,
-> +in which external interrupt controller can be connected. 3 SPI's
-> +45, 46, 47 from GIC are directly exposed as SIRQ. It has
-> +the following properties:
-> +
-> +- inputs three interrupt signal from external interrupt controller
-> +
-> +Required properties:
-> +
-> +- compatible: should be "actions,owl-sirq"
-> +- reg: physical base address of the controller and length of memory mapped.
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
-> +  source, should be 2.
-
-> +- actions,sirq-shared-reg: Applicable for S500 and S700 where SIRQ register
-> +  details are maintained at same offset/register.
-> +- actions,sirq-offset: register offset for SIRQ interrupts. When registers are
-> +  shared, all the three offsets will be same (S500 and S700).
-
-You should have more specific compatible strings if there are 
-differences and these settings can be implied by them.
-
-> +- actions,sirq-clk-sel: external interrupt controller can be either
-> +  connected to 32Khz or 24Mhz external/internal clock. This needs
-> +  to be configured for per SIRQ line. Failing defaults to 32Khz clock.
-
-What are the valid values?
-
-> +
-> +Example for S900:
-> +
-> +sirq: interrupt-controller@e01b0000 {
-> +	compatible = "actions,owl-sirq";
-> +	reg = <0 0xe01b0000 0 0x1000>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <2>;
-> +	actions,sirq-clk-sel = <0 0 0>;
-
-If 0 is 32khz, then having this is pointless. But I can't tell what the 
-values correspond to.
-
-> +	actions,sirq-offset = <0x200 0x528 0x52c>;
-> +};
-> +
-> +Example for S500 and S700:
-> +
-> +sirq: interrupt-controller@e01b0000 {
-> +	compatible = "actions,owl-sirq";
-> +	reg = <0 0xe01b0000 0 0x1000>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <2>;
-> +	actions,sirq-shared-reg;
-> +	actions,sirq-clk-sel = <0 0 0>;
-> +	actions,sirq-offset = <0x200 0x200 0x200>;
-> +};
-> -- 
-> 2.14.4
+> v3
+>  - Fix missing comment from Laurent.
+>  - correct the reg descrption
+> ---
+>  .../devicetree/bindings/media/i2c/adv748x.txt    | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> b/Documentation/devicetree/bindings/media/i2c/adv748x.txt index
+> 21ffb5ed8183..25a02496f4ba 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> @@ -10,7 +10,11 @@ Required Properties:
+>      - "adi,adv7481" for the ADV7481
+>      - "adi,adv7482" for the ADV7482
+> 
+> -  - reg: I2C slave address
+> +  - reg: I2C slave addresses
+> +    The ADV748x has up to twelve 256-byte maps that can be accessed via the
+> +    main I2C ports. Each map has it own I2C address and acts as a standard
+> +    slave device on the I2C bus. The main address is mandatory, others are
+> +    optional and remain at default values if not specified.
+> 
+>  Optional Properties:
+> 
+> @@ -18,6 +22,11 @@ Optional Properties:
+>  		     "intrq3". All interrupts are optional. The "intrq3" interrupt
+>  		     is only available on the adv7481
+>    - interrupts: Specify the interrupt lines for the ADV748x
+> +  - reg-names : Names of maps with programmable addresses.
+> +		It shall contain all maps needing a non-default address.
+> +		Possible map names are:
+> +		  "main", "dpll", "cp", "hdmi", "edid", "repeater",
+> +		  "infoframe", "cbus", "cec", "sdp", "txa", "txb"
+
+Reading this again, the text doesn't document the "main" map very well. The 
+main I2C address is always required, but if no other I2C address needs to be 
+specified, the reg-names property can be omitted. Otherwise the "main" reg-
+names entry is required.
+
+This being said, this problem isn't specific to the adv748x bindings, so I 
+don't want to block this patch until we figure out a proper wording that can 
+be applied globally. For that reason,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  The device node must contain one 'port' child node per device input and
+> output port, in accordance with the video interface bindings defined in
+> @@ -47,7 +56,10 @@ Example:
+> 
+>  	video-receiver@70 {
+>  		compatible = "adi,adv7482";
+> -		reg = <0x70>;
+> +		reg = <0x70 0x71 0x72 0x73 0x74 0x75
+> +		       0x60 0x61 0x62 0x63 0x64 0x65>;
+> +		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
+> +			    "infoframe", "cbus", "cec", "sdp", "txa", "txb";
+> 
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+
+-- 
+Regards,
+
+Laurent Pinchart
