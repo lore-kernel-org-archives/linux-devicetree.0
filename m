@@ -1,69 +1,119 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
-Date: Tue, 14 Aug 2018 10:41:12 +0200
-Message-ID: <20180814084112.GE21634@phenom.ffwll.local>
-References: <20180812184152.GA22343@ravnborg.org>
- <20180812195536.GA29811@ravnborg.org>
- <264d51a0-7e41-6c27-d438-9ae337e6dcf0@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <264d51a0-7e41-6c27-d438-9ae337e6dcf0@microchip.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>, Joshua Henderson <joshua.henderson@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
+Subject: [PATCH10 1/3] ARM:dt-bindings:display Intel FPGA Video and Image Processing Suite
+Date: Tue, 14 Aug 2018 16:57:07 +0800
+Message-ID: <1534237029-2648-2-git-send-email-hean.loong.ong@intel.com>
+References: <1534237029-2648-1-git-send-email-hean.loong.ong@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534237029-2648-1-git-send-email-hean.loong.ong@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, David Airlie <airlied@linux.ie>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com, yves.vandervennet@intel.com, chin.liang.see@intel.com, Ong@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMTMsIDIwMTggYXQgMDQ6NDc6MjZQTSArMDIwMCwgTmljb2xhcyBGZXJyZSB3
-cm90ZToKPiBPbiAxMi8wOC8yMDE4IGF0IDIxOjU1LCBTYW0gUmF2bmJvcmcgd3JvdGU6Cj4gPiBU
-aGUgYXQ5MXNhbTkyNjMgaGFzIGEgZmV3IGludGVyZXN0aW5nICJHUFUiIGZlYXR1cmVzOgo+ID4g
-Cj4gPiAtIDJEIG1lbW9yeSBhZGRyZXNzaW5nCj4gPiAgICBEYXRhIHNoZWV0IHNheXM6Cj4gPiAJ
-VGhlIExDREMgY2FuIGJlIGNvbmZpZ3VyZWQgdG8gd29yayBvbiBhIGZyYW1lIGJ1ZmZlcgo+ID4g
-CWxhcmdlciB0aGFuIHRoZSBhY3R1YWwgc2NyZWVuIHNpemUuIEJ5IGNoYW5naW5nIHRoZQo+ID4g
-CXZhbHVlcyBpbiBhIGZldyByZWdpc3RlcnMsIGl0IGlzIGVhc3kgdG8gbW92ZSB0aGUKPiA+IAlk
-aXNwbGF5ZWQgYXJlYSBhbG9uZyB0aGUgZnJhbWUgYnVmZmVyIHdpZHRoIGFuZCBoZWlnaHQKPiA+
-IAo+ID4gLSAyRCBHcmFwaGljcyBjb250cm9sbGVyCj4gPiAgICBEYXRhIHNoZWV0IHNheXM6Cj4g
-PiAJVGhlIFR3byBEIEdyYXBoaWNzIENvbnRyb2xsZXIgKFRER0MpIGZlYXR1cmVzIGEKPiA+IAlo
-YXJkd2FyZSBhY2NlbGVyYXRvciB3aGljaCBoaWdobHkgc2ltcGxpZmllcyBkcmF3aW5nCj4gPiAJ
-dGFza3MgYW5kIGdyYXBoaWMgbWFuYWdlbWVudCBvcGVyYXRpb25zLgo+ID4gCVRoZSBoYXJkd2Fy
-ZSBhY2NlbGVyYXRvciBtYWtlcyBpdCBlYXN5IHRvIGRyYXcgbGluZXMKPiA+IAlhbmQgY29tcGxl
-eCBwb2x5Z29ucyBhbmQgdG8gcGVyZm9ybSBibG9jayB0cmFuc2ZlcnMKPiA+IAl3aXRoaW4gdGhl
-IGZyYW1lIGJ1ZmZlci4KPiA+IAlUaGUgVERHQyBhbHNvIGZlYXR1cmVzIGEgZHJhdyBjb21tYW5k
-IHF1ZXVlIHRoYXQKPiA+IAlhdXRvbWF0aWNhbGx5IGV4ZWN1dGVzIGEgbW9yZSBjb21wbGV4IGRy
-YXdpbmcgZnVuY3Rpb24KPiA+IAl0aGF0IGlzIGNvbXBvc2VkIG9mIHNldmVyYWwgcmVnaXN0ZXIg
-YWNjZXNzZXMuCj4gPiAKPiA+IFRoZSBkYXRhc2hlZXQgdGV4dCBpcyBmcm9tOiBjaGFwdGVyIDQz
-LjkgKyBjaGFwdGVyIDQ0Ogo+ID4gaHR0cDovL3d3MS5taWNyb2NoaXAuY29tL2Rvd25sb2Fkcy9l
-bi9EZXZpY2VEb2MvQXRtZWwtNjI0OS0zMi1iaXQtQVJNOTI2RUotUy1FbWJlZGRlZC1NaWNyb3By
-b2Nlc3Nvci1TQU05MjYzX0RhdGFzaGVldC5wZGYKPiA+IChObyBOREEgcmVxdWlyZWQpCj4gCj4g
-KG9sZCBtZW1vcmllcykgdGhpcyAyRCBlbmdpbmUgcHJvdmUgaXRzZWxmIG9mIGJlaW5nIHF1aXRl
-IGxpbWl0ZWQgYXMgdGhlCj4gZmlsbCBwb2x5Z29uIGFuZCBjbGlwcGluZyBmdW5jdGlvbnMgYXJl
-IG5vdCB3b3JraW5nLgo+IAo+ID4gQmFzZWQgb24gdGhlIGFib3ZlLCB3b3VsZCBpdCBiZSBwb3Nz
-aWJsZSB0byB1dGlsaXNlIHNvbWUKPiA+IG9mIHRoZXNlIGZlYXR1cmVzIHdpdGhvdXQgYW55IGRl
-ZGljYXRlZCB1c2Vyc3BhY2UgKG1lc2EpIHN1cHBvcnQ/Cj4gPiBBbnkgb3RoZXIgZHJpdmVyIHRo
-YXQgaGFzIHNvbWV0aGluZyBzaW1pbGFyIHRoYXQgY2FuIGJlIHVzZWQKPiA+IGZvciBpbnNwaXJh
-dGlvbj8KPiAKPiBUaGlzIGlzIHJlYWxseSBhbiBpbnRlcmVzdGluZyBxdWVzdGlvbiBpbmRlZWQu
-CgpOZWVkcyB1c2Vyc3BhY2UgbGlrZSBldmVyeXRoaW5nIGVsc2UuIFRoZXJlJ3MgdW5mb3J0dW5h
-dGVseSBubyByZWFsCnN0YW5kYXJkIGZvciAyZCBhcGlzIGluIHVzZXJzcGFjZSwgd2hpY2ggbWVh
-bnMgbm9uZSBvZiB0aGVzZSBlZmZvcnRzIGdvCnZlcnkgZmFyLiBNb3N0bHkgaXQncyBqdXN0IHNv
-bWUgY3VzdG9tLW1hZGUgWCBkcml2ZXJzLgoKQWRkaW5nIGEgZ2VuZXJpYyAyZCBhcGkgdG8gZHJt
-IGlzIGEgRkFRLCBhbmQgdGhlIGFuc3dlciBpcyAibm8iLgotRGFuaWVsCgo+IAo+ID4gT3IgaXMg
-dGhpcyBpbiByZWFsaXR5IGEgc2ltcGxlIEdQVSB0aGF0IHJlcXVpcmVzIGEKPiA+IGRlZGljYXRl
-ZCBHUFUgZHJpdmVyPwo+ID4gCj4gPiAJU2FtCj4gPiAKPiAKPiAKPiAtLSAKPiBOaWNvbGFzIEZl
-cnJlCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+
-IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-CgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24K
-aHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+From: Ong, Hean Loong <hean.loong.ong@intel.com>
+
+Device tree binding for Intel FPGA Video and Image Processing Suite. The binding involved would be generated from the Altera (Intel) Qsys system. The bindings would set the max width, max height, buts per pixel and memory port width. The device tree binding only supports the Intel
+Arria10 devkit and its variants. Vendor name retained as altr.
+
+V8:
+*Add port to Display port decoder
+
+V7:
+*Fix OF graph for better description
+*Add description for encoder
+
+V6:
+*Description have not describe DT device in general
+
+V5:
+*remove bindings for bits per symbol as it has only one value which is 8
+
+V4:
+*fix properties that does not describe the values
+
+V3:
+*OF graph not in accordance to graph.txt
+
+V2:
+*Remove Linux driver description
+
+V1:
+*Missing vendor prefix
+
+Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
+---
+ .../devicetree/bindings/display/altr,vip-fb2.txt   |   63 ++++++++++++++++++++
+ 1 files changed, 63 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+
+diff --git a/Documentation/devicetree/bindings/display/altr,vip-fb2.txt b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+new file mode 100644
+index 0000000..89a3b9e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+@@ -0,0 +1,63 @@
++Intel Video and Image Processing(VIP) Frame Buffer II bindings
++
++Supported hardware: Intel FPGA SoC Arria10 and above with display port IP
++
++The Video Frame Buffer II in Video Image Processing (VIP) suite is an IP core
++that interfaces between system memory and Avalon-ST video ports. The IP core
++can be configured to support the memory reader (from memory to Avalon-ST)
++and/or memory writer (from Avalon-ST to memory) interfaces.
++
++More information the FPGA video IP component can be acquired from
++https://www.altera.com/content/dam/altera-www/global/en_US/pdfs\
++/literature/ug/ug_vip.pdf
++
++DT-Bindings:
++=============
++Required properties:
++----------------------------
++- compatible: "altr,vip-frame-buffer-2.0"
++- reg: Physical base address and length of the framebuffer controller's
++	registers.
++- altr,max-width: The maximum width of the framebuffer in pixels.
++- altr,max-height: The maximum height of the framebuffer in pixels.
++- altr,mem-port-width = the bus width of the avalon master port
++	on the frame reader
++
++Optional sub-nodes:
++- ports: The connection to the encoder
++
++Connections between the Frame Buffer II and other video IP cores in the system
++are modelled using the OF graph DT bindings. The Frame Buffer II node has up
++to two OF graph ports. When the memory writer interface is enabled, port 0
++maps to the Avalon-ST Input (din) port. When the memory reader interface is
++enabled, port 1 maps to the Avalon-ST Output (dout) port.
++
++The encoder is built into the FPGA HW design and therefore would not
++be accessible from the DDR.
++
++		Port 0				Port1
++---------------------------------------------------------
++ARRIA10 AVALON_ST (DIN)		AVALON_ST (DOUT)
++
++Required Properties Example:
++----------------------------
++
++framebuffer@100000280 {
++		compatible = "altr,vip-frame-buffer-2.0";
++		reg = <0x00000001 0x00000280 0x00000040>;
++		altr,max-width = <1280>;
++		altr,max-height = <720>;
++		altr,mem-port-width = <128>;
++
++		ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++			port@1 {
++				reg = <1>;
++					fb_output: endpoint {
++						remote-endpoint = <&dp_encoder_input>;
++					};
++			};
++		};
++};
+-- 
+1.7.1
