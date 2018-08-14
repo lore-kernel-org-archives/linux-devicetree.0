@@ -1,71 +1,35 @@
-From: Janek Kotas <jank@cadence.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: ufs: Add bindings for Cadence UFS
-Date: Tue, 14 Aug 2018 07:21:40 +0000
-Message-ID: <38727B36-5200-4A3A-B3D1-88ADC5381622@global.cadence.com>
-References: <F39BF38C-FD85-4115-975C-8D923518A541@global.cadence.com>
- <20180813173759.GA7302@rob-hp-laptop>
+From: Oliver Neukum <oneukum@suse.com>
+Subject: Re: serdev: How to attach serdev devices to USB based tty devices?
+Date: Tue, 14 Aug 2018 09:23:06 +0200
+Message-ID: <1534231386.31827.3.camel@suse.com>
+References: <3639955d-5990-1c82-7158-ac07b33c41f2@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180813173759.GA7302@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <56140F381512A04882BAFD1BAAF4A1F6@namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Janek Kotas <jank@cadence.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <3639955d-5990-1c82-7158-ac07b33c41f2@suse.de>
+Sender: netdev-owner@vger.kernel.org
+To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Rob Herring <robh@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, linux-usb@vger.kernel.org
+Cc: Jian-Hong Pan <starnight@g.ncu.edu.tw>, Xue Liu <liuxuenetmail@gmail.com>, Ben Whitten <ben.whitten@lairdtech.com>, Linux-MIPS <linux-mips@linux-mips.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stefan Rehm <rehm@miromico.ch>, "LoRa_Community_Support@semtech.com" <LoRa_Community_Support@semtech.com>, Alexander Graf <agraf@suse.de>, devicetree@vger.kernel.org, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gT24gMTMgQXVnIDIwMTgsIGF0IDE5OjM3LCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPiB3cm90ZToNCj4gDQoNCj4gDQo+IE9uIFRodSwgQXVnIDA5LCAyMDE4IGF0IDAxOjI1OjE1
-UE0gKzAwMDAsIEphbmVrIEtvdGFzIHdyb3RlOg0KPj4gVGhpcyBwYXRjaCBhZGRzIGEgRFQgYmlu
-ZGluZyBkb2N1bWVudGF0aW9uIGZvcg0KPj4gQ2FkZW5jZSBVRlMgSG9zdCBDb250cm9sbGVyLg0K
-Pj4gDQo+PiBTaWduZWQtb2ZmLWJ5OiBKYW4gS290YXMgPGphbmtAY2FkZW5jZS5jb20+DQo+PiAt
-LS0NCj4+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9jZG5zLHVmc2hjLnR4dCAgICAgICAg
-IHwgMzEgKysrKysrKysrKysrKysrKysrKysrKw0KPj4gMSBmaWxlIGNoYW5nZWQsIDMxIGluc2Vy
-dGlvbnMoKykNCj4+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvdWZzL2NkbnMsdWZzaGMudHh0DQo+PiANCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2NkbnMsdWZzaGMudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9jZG5zLHVmc2hjLnR4dA0KPj4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAwLi5hMDRhNDk4OQ0KPj4gLS0tIC9kZXYvbnVs
-bA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9jZG5zLHVm
-c2hjLnR4dA0KPj4gQEAgLTAsMCArMSwzMSBAQA0KPj4gKyogQ2FkZW5jZSBVbml2ZXJzYWwgRmxh
-c2ggU3RvcmFnZSAoVUZTKSBDb250cm9sbGVyDQo+PiArDQo+PiArVUZTIG5vZGVzIGFyZSBkZWZp
-bmVkIHRvIGRlc2NyaWJlIG9uLWNoaXAgVUZTIGhvc3QgY29udHJvbGxlcnMuDQo+PiArRWFjaCBV
-RlMgY29udHJvbGxlciBpbnN0YW5jZSBzaG91bGQgaGF2ZSBpdHMgb3duIG5vZGUuDQo+PiArUGxl
-YXNlIHNlZSB0aGUgdWZzaGNkLXBsdGZybS50eHQgZm9yIGEgbGlzdCBvZiBhbGwgYXZhaWxhYmxl
-IHByb3BlcnRpZXMuDQo+PiArDQo+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4+ICstIGNvbXBh
-dGlibGUJOiBDb21wYXRpYmxlIGxpc3QsIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgY29udHJvbGxl
-cjoNCj4+ICsJCQkiY2Rucyx1ZnNoYyINCj4+ICsJCSAgY29tcGxlbWVudGVkIHdpdGggdGhlIEpF
-REVDIHZlcnNpb246DQo+PiArCQkJImplZGVjLHVmcy0yLjAiDQo+PiArDQo+PiArLSByZWcJCTog
-QWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBVRlMgcmVnaXN0ZXIgc2V0Lg0KPj4gKy0gaW50ZXJy
-dXB0cwk6IE9uZSBpbnRlcnJ1cHQgbWFwcGluZy4NCj4+ICstIGZyZXEtdGFibGUtaHoJOiBDbG9j
-ayBmcmVxdWVuY3kgdGFibGUuDQo+PiArCQkgIFNlZSB0aGUgdWZzaGNkLXBsdGZybS50eHQgZm9y
-IGRldGFpbHMuDQo+PiArLSBjbG9ja3MJOiBMaXN0IG9mIHBoYW5kbGUgYW5kIGNsb2NrIHNwZWNp
-ZmllciBwYWlycy4NCj4+ICstIGNsb2NrLW5hbWVzCTogTGlzdCBvZiBjbG9jayBpbnB1dCBuYW1l
-IHN0cmluZ3Mgc29ydGVkIGluIHRoZSBzYW1lDQo+PiArCQkgIG9yZGVyIGFzIHRoZSBjbG9ja3Mg
-cHJvcGVydHkuICJjb3JlX2NsayIgaXMgbWFuZGF0b3J5Lg0KPj4gKwkJICBEZXBlbmRpbmcgb24g
-YSB0eXBlIG9mIGEgUEhZLA0KPj4gKwkJICB0aGUgInBoeV9jbGsiIGNsb2NrIGNhbiBhbHNvIGJl
-IGFkZGVkLCBpZiBuZWVkZWQuDQo+IA0KPiBVbmZvcnR1bmF0ZWx5LCB5b3Ugd2VudCB0aGUgd3Jv
-bmcgZGlyZWN0aW9uLiBUaGUgJ19jbGsnIHBhcnQgaXMgDQo+IHJlZHVuZGFudC4gSnVzdCDigJhj
-b3Jl4oCZIGFuZCAncGh5Jy4NCg0KSSB1bmRlcnN0YW5kLCBob3dldmVyIHRoZSByZXN0IG9mIHRo
-ZSB1ZnMgZnJhbWV3b3JrIHVzZXMgdGhlICdfY2xrJyBzdWZmaXg6DQpkcml2ZXJzL3Njc2kvdWZz
-L3Vmc2hjZC5jOjY5OTk6DQoNCmlmICghSVNfRVJSX09SX05VTEwoY2xraS0+Y2xrKSkgewkJCQ0K
-CWlmIChza2lwX3JlZl9jbGsgJiYgIXN0cmNtcChjbGtpLT5uYW1lLCAicmVmX2NsayIpKQkJCQ0K
-CQljb250aW51ZTsNCg0KSSB3YW50ZWQgaXQgdG8gYmUgY29uc2lzdGVudCwgd2l0aCB0aGUgcmVz
-dCBvZiB0aGUgVUZTIGRyaXZlcnMuDQoNClJlZ2FyZHMsDQpKYW4NCg0KPiBXaXRoIHRoYXQsDQo+
-IA0KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gDQo+PiAr
-DQo+PiArRXhhbXBsZToNCj4+ICsJdWZzQGZkMDMwMDAwIHsNCj4+ICsJCWNvbXBhdGlibGUgPSAi
-Y2Rucyx1ZnNoYyIsICJqZWRlYyx1ZnMtMi4wIjsNCj4+ICsJCXJlZyA9IDwweGZkMDMwMDAwIDB4
-MTAwMDA+Ow0KPj4gKwkJaW50ZXJydXB0cyA9IDwwIDEgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+
-PiArCQlmcmVxLXRhYmxlLWh6ID0gPDAgMD4sIDwwIDA+Ow0KPj4gKwkJY2xvY2tzID0gPCZ1ZnNf
-Y29yZV9jbGs+LCA8JnVmc19waHlfY2xrPjsNCj4+ICsJCWNsb2NrLW5hbWVzID0gImNvcmVfY2xr
-IiwgInBoeV9jbGsiOw0KPj4gKwl9Ow0KPj4gLS0gDQo+PiAyLjE1LjANCj4+IA0KPj4gDQo+PiAt
-LQ0KPj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vi
-c2NyaWJlIGRldmljZXRyZWUiIGluDQo+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jk
-b21vQHZnZXIua2VybmVsLm9yZw0KPj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cHM6Ly91
-cmxkZWZlbnNlLnByb29mcG9pbnQuY29tL3YyL3VybD91PWh0dHAtM0FfX3ZnZXIua2VybmVsLm9y
-Z19tYWpvcmRvbW8tMkRpbmZvLmh0bWwmZD1Ed0lCQWcmYz1hVXE5ODNMMnB1ZTJGcUtGb1A2UEdI
-TUpReW9KN2tsM3MzR1otX2hhWHFZJnI9ZzdHQVFFTlZYeF9SUWR5WEhJblBNZyZtPWVjam15MlV2
-bDNoQnBNdVVRWUZtNEhTRndwWk9Oa1QyUXI4ci0tN2cxdzgmcz1EYlFSdjFvR2xydTB3bUhaSmhG
-WHpwN3l3a0dWODk1UFBQX0xBeS1XQmtNJmU9DQoNCg==
+On Di, 2018-08-14 at 04:28 +0200, Andreas Färber  wrote:
+> My idea then was that if we had some unique criteria like vendor and
+> product IDs (or whatever is supported in usb_device_id), we could write
+> a usb_driver with suitable USB_DEVICE*() macro. In its probe function we
+> could call into the existing tty driver's probe function and afterwards
+> try creating and attaching the appropriate serdev device, i.e. a fixed
+> USB-to-serdev driver mapping. Problem is that most devices don't seem to
+> implement any unique identifier I could make this depend on - either by
+> using a standard FT232/FT2232/CH340G chip or by using STMicroelectronics
+> virtual com port identifiers in CDC firmware and only differing in the
+> textual description [3] the usb_device_id does not seem to match on.
+
+If you really must do this you can benignly fail probe(). Thus you
+can compare strings within your probe() method.
+This sucks because you need to make sure your drivers are always
+loaded in a certain order and you really rely on undocumented
+properties, but it can be done.
+
+	Regards
+		Oliver
