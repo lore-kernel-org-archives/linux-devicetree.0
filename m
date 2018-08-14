@@ -1,35 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: bcm: Add Raspberry Pi CM3 and CM3L
-Date: Tue, 14 Aug 2018 14:29:33 -0600
-Message-ID: <20180814202933.GA15705@rob-hp-laptop>
-References: <1533381003-13367-1-git-send-email-stefan.wahren@i2se.com>
- <1533381003-13367-2-git-send-email-stefan.wahren@i2se.com>
+Subject: Re: [PATCH 3/3] clk: s2mps11: Use existing defines from bindings for
+ clock IDs
+Date: Tue, 14 Aug 2018 14:37:39 -0600
+Message-ID: <20180814203739.GA27965@rob-hp-laptop>
+References: <20180807161713.28073-1-krzk@kernel.org>
+ <20180807161713.28073-3-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1533381003-13367-2-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180807161713.28073-3-krzk@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Javier Martinez Canillas <javier@dowhile0.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat,  4 Aug 2018 13:10:02 +0200, Stefan Wahren wrote:
-> This adds the root properties for Raspberry Pi Compute Module 3 and
-> Compute Module 3 Lite.
+On Tue,  7 Aug 2018 18:17:13 +0200, Krzysztof Kozlowski wrote:
+> The clock IDs must match between DeviceTree bindings and the driver.
+> There is already a header file used by DeviceTree sources so include it
+> in the driver to remove duplicated symbols.
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/clk/clk-s2mps11.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
