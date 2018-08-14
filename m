@@ -1,61 +1,40 @@
 From: "Hean-Loong, Ong" <hean.loong.ong@intel.com>
-Subject: [PATCH10 0/3] Intel FPGA Video and Image Processing Suite
-Date: Tue, 14 Aug 2018 16:57:06 +0800
-Message-ID: <1534237029-2648-1-git-send-email-hean.loong.ong@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH10 2/3] ARM:socfpga-defconfig Intel FPGA Video and Image Processing Suite
+Date: Tue, 14 Aug 2018 16:57:08 +0800
+Message-ID: <1534237029-2648-3-git-send-email-hean.loong.ong@intel.com>
+References: <1534237029-2648-1-git-send-email-hean.loong.ong@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534237029-2648-1-git-send-email-hean.loong.ong@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, yves.vandervennet@intel.com, hean.loong.ong@intel.com, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Ong@freedesktop.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, hean.loong.ong@intel.com, yves.vandervennet@intel.com, chin.liang.see@intel.com, Ong@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogT25nLCBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+CgpUaGUgRlBH
-QSBGcmFtZUJ1ZmZlciBTb2Z0IElQIGNvdWxkIGJlIHNlZW4gIGFzIHRoZSBHUFUgYW5kIHRoZSBE
-Uk0gZHJpdmVyIHBhdGNoIApoZXJlIGlzIGFsbG9jYXRpbmcgbWVtb3J5IGZvciBpbmZvcm1hdGlv
-biB0byBiZSBzdHJlYW1lZCBmcm9tIHRoZSBBUk0vTGludXggCnRvIHRoZSBkaXNwbGF5IHBvcnQu
-IEJhc2ljYWxseSB0aGUgZHJpdmVyIGp1c3Qgd3JhcHMgdGhlIGluZm9ybWF0aW9uIHN1Y2ggYXMg
-CnRoZSBwaXhlbHMgdG8gYmUgZHJhd24gYnkgdGhlIEZQR0EgRnJhbWVCdWZmZXIgMi4KClRoZSBw
-aWVjZSBvZiBoYXJkd2FyZSBpbiBkaXNjdXNzaW9uIGlzIHRoZSBTb0MgRlBHQSB3aGVyZSBMaW51
-eCBydW5zIG9uIHRoZSAKQVJNIGNoaXAgYW5kIHRoZSBGR1BBIGlzIGRyaXZlbiBieSBpdHMgTklP
-UyBzb2Z0IGNvcmUgd2l0aCBpdHMgb3duIHByb3ByaWV0YXJ5IGZpcm13YXJlLgoKRm9yIGV4YW1w
-bGUgdGhlIGFwcGxpY2F0aW9uIGZyb20gdGhlIEFSTSBMaW51eCB3b3VsZCBoYXZlIHRvIHdyaXRl
-IGluZm9ybWF0aW9uIApvbiB0aGUgL2Rldi9mYjAgd2l0aCB0aGUgaW5mb3JtYXRpb24gc3RvcmVk
-IGluIHRoZSBTRFJBTSB0byBiZSBmZXRjaGVkIGJ5IHRoZSAKRlBHQSBmcmFtZWJ1ZmZlciBJUCBh
-bmQgZGlzcGxheWVkIG9uIHRoZSBEaXNwbGF5IFBvcnQgTW9uaXRvci4KCgpPbmcgSGVhbiBMb29u
-ZyAoMik6CiAgQVJNOnNvY2ZwZ2EtZGVmY29uZmlnIEludGVsIEZQR0EgVmlkZW8gYW5kIEltYWdl
-IFByb2Nlc3NpbmcgU3VpdGUKICBBUk06ZHJtIGl2aXAgSW50ZWwgRlBHQSBWaWRlbyBhbmQgSW1h
-Z2UgUHJvY2Vzc2luZyBTdWl0ZQoKT25nLCBIZWFuIExvb25nICgxKToKICBBUk06ZHQtYmluZGlu
-Z3M6ZGlzcGxheSBJbnRlbCBGUEdBIFZpZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nIFN1aXRlCgog
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1mYjIudHh0ICAgfCAgIDYz
-ICsrKysrKysKIGFyY2gvYXJtL2NvbmZpZ3Mvc29jZnBnYV9kZWZjb25maWcgICAgICAgICAgICAg
-ICAgIHwgICAgNSArCiBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgIDIgKwogZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9pdmlwL0tjb25maWcgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAxNCArKwogZHJpdmVycy9ncHUvZHJtL2l2aXAvTWFrZWZpbGUg
-ICAgICAgICAgICAgICAgICAgICAgfCAgICA5ICsKIGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVs
-X3ZpcF9jb25uLmMgICAgICAgICAgICAgIHwgICA5NSArKysrKysrKysrCiBkcml2ZXJzL2dwdS9k
-cm0vaXZpcC9pbnRlbF92aXBfY29yZS5jICAgICAgICAgICAgICB8ICAxNjEgKysrKysrKysrKysr
-KysrKwogZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX2Rydi5oICAgICAgICAgICAgICAg
-fCAgIDUyICsrKysrKwogZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX29mLmMgICAgICAg
-ICAgICAgICAgfCAgMTkzICsrKysrKysrKysrKysrKysrKysrCiAxMCBmaWxlcyBjaGFuZ2VkLCA1
-OTUgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbHRyLHZpcC1mYjIudHh0CiBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvS2NvbmZpZwogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX2Nvbm4uYwogY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9jb3JlLmMKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZpcC9pbnRlbF92aXBfZHJ2LmgKIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZpcC9pbnRlbF92aXBfb2YuYwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Ong Hean Loong <hean.loong.ong@intel.com>
+
+Intel FPGA Video and Image Processing Suite Frame Buffer II
+driver config for Arria 10 devkit and its variants
+
+Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
+---
+ arch/arm/configs/socfpga_defconfig |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/configs/socfpga_defconfig b/arch/arm/configs/socfpga_defconfig
+index 371fca4..21d8d2b 100644
+--- a/arch/arm/configs/socfpga_defconfig
++++ b/arch/arm/configs/socfpga_defconfig
+@@ -112,6 +112,11 @@ CONFIG_MFD_ALTERA_A10SR=y
+ CONFIG_MFD_STMPE=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_DRM=m
++CONFIG_DRM_IVIP=m
++CONFIG_DRM_IVIP_OF=m
++CONFIG_FB=y
++CONFIG_FB_SIMPLE=y
+ CONFIG_USB=y
+ CONFIG_USB_STORAGE=y
+ CONFIG_USB_DWC2=y
+-- 
+1.7.1
