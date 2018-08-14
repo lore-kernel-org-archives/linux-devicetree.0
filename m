@@ -1,37 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: media: Add i.MX Pixel Pipeline binding
-Date: Tue, 14 Aug 2018 14:52:30 -0600
-Message-ID: <20180814205230.GA16370@rob-hp-laptop>
-References: <20180810151822.18650-1-p.zabel@pengutronix.de>
- <20180810151822.18650-2-p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/4] dt-bindings: arm: hisilicon: Add binding for Hi3670
+ SoC
+Date: Tue, 14 Aug 2018 14:53:20 -0600
+Message-ID: <20180814205320.GA17448@rob-hp-laptop>
+References: <20180810175339.25421-1-manivannan.sadhasivam@linaro.org>
+ <20180810175339.25421-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180810151822.18650-2-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+In-Reply-To: <20180810175339.25421-2-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: xuwei5@hisilicon.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Aug 2018 17:18:20 +0200, Philipp Zabel wrote:
-> Add DT binding documentation for the Pixel Pipeline (PXP) found on
-> various NXP i.MX SoCs.
+On Fri, 10 Aug 2018 23:23:36 +0530, Manivannan Sadhasivam wrote:
+> Add devicetree binding for Hi3670 SoC.
 > 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  .../devicetree/bindings/media/fsl-pxp.txt     | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/fsl-pxp.txt
+>  Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
