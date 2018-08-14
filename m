@@ -1,116 +1,87 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v3] dt-bindings: media: adv748x: Document re-mappable
- addresses
-Date: Tue, 14 Aug 2018 10:00:07 +0100
-Message-ID: <e5f252b8-3188-b7a6-71fe-3c88be08d809@ideasonboard.com>
-References: <20180809192944.7371-1-kieran.bingham@ideasonboard.com>
- <20180813174544.GA11379@rob-hp-laptop>
- <dedade62-91ed-2c92-dac7-fe4a8f9d9452@ideasonboard.com>
- <CAL_JsqJQNtRNq+b3sJ4eEse1pzWy3F-WgbDF7=t-TrvFx6WcUQ@mail.gmail.com>
-Reply-To: kieran.bingham@ideasonboard.com
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH RESEND RFC 2/4] drivers: pinctrl: qcom: add wakeup gpio
+ map for sdm845
+Date: Tue, 14 Aug 2018 10:26:55 +0100
+Message-ID: <91ca518e-3906-9790-a27d-a06d15105655@arm.com>
+References: <20180801020021.9782-1-ilina@codeaurora.org>
+ <20180801020021.9782-3-ilina@codeaurora.org>
+ <8636vyxyub.wl-marc.zyngier@arm.com> <20180801200405.GB6422@codeaurora.org>
+ <20180813194152.GG5081@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJQNtRNq+b3sJ4eEse1pzWy3F-WgbDF7=t-TrvFx6WcUQ@mail.gmail.com>
+In-Reply-To: <20180813194152.GG5081@codeaurora.org>
 Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, bjorn.andersson@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 13/08/18 23:48, Rob Herring wrote:
-> On Mon, Aug 13, 2018 at 1:17 PM Kieran Bingham
-> <kieran.bingham@ideasonboard.com> wrote:
->>
->> On 13/08/18 18:45, Rob Herring wrote:
->>> On Thu, Aug 09, 2018 at 08:29:44PM +0100, Kieran Bingham wrote:
->>>> The ADV748x supports configurable slave addresses for its I2C pages.
->>>> Document the page names, and provide an example for setting each of the
->>>> pages explicitly.
+On 13/08/18 20:41, Lina Iyer wrote:
+> On Wed, Aug 01 2018 at 14:04 -0600, Lina Iyer wrote:
+>> On Wed, Aug 01 2018 at 02:42 -0600, Marc Zyngier wrote:
+>>> On Wed, 01 Aug 2018 03:00:19 +0100,
+>>> Lina Iyer <ilina@codeaurora.org> wrote:
+>>>>
+>>>> Add GPIO to PDC pin map for the SDM845 SoC.
+>>>>
+>>>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>>>> ---
+>>>> drivers/pinctrl/qcom/pinctrl-sdm845.c | 76 +++++++++++++++++++++++++++
+>>>> 1 file changed, 76 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+>>>> index 2ab7a8885757..e93660922dc2 100644
+>>>> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+>>>> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+>>>> @@ -1277,6 +1277,80 @@ static const struct msm_pingroup sdm845_groups[] = {
+>>>> 	UFS_RESET(ufs_reset, 0x99f000),
+>>>> };
+>>>>
+>>>> +static struct msm_pinctrl_pdc_map sdm845_wakeup_gpios[] = {
 >>>
->>> It would be good to say why you need this.
+>>> [huge array]
+>>>
+>>>> +};
+>>>
+>>> Why isn't that array part of the DT? I'd expect other SoCs to
+>>> eventually use a similar mechanism, no?
+>>>
+>> I agree and it should be.
 >>
->> In fact - I should probably have added a fixes tag here, which would
->> have added more context:
+>> One place I am thinking is to add it to the DT definition of PDC
+>> controller as a data argument -
 >>
->> Fixes: 67537fe960e5 ("media: i2c: adv748x: Add support for
->> i2c_new_secondary_device")
-> 
-> That doesn't really explain things from a DT perspective.
-> 
->> Should I repost with this fixes tag?
->> Or can it be collected with the RB tag?
-> 
-> I'll leave that to Hans.
-> 
->>> The only use I can think of
->>> is if there are other devices on the bus and you need to make sure the
->>> addresses don't conflict.
+>> 	tlmm: pinctrl@000000{
+>> 	[...]
+>> 		interrupts-extended = <&pdc 30 IRQ_TYPE_LEVEL_HIGH 1>,
+>>                     <&pdc 31 IRQ_TYPE_LEVEL_HIGH 3>,
+>> 		      <&pdc 32 IRQ_TYPE_LEVEL_HIGH 5>,
+>> 						   ^
+>> 						   |--- Provide the GPIO
+>> 						   for the PDC pin here.
+>> 	};
 >>
->> Yes, precisely. This driver has 'slave pages' which are created and
->> mapped by the driver. The device has default addresses which are used by
->> the driver - but it's very easy for these to conflict with other devices
->> on the same I2C bus.
+>> 	pdc: interrupt-controller@b220000 {
+>> 		compatible = "qcom,sdm845-pdc";
+>> 		reg = <0xb220000 0x30000>;
+>> 		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
+>> 		#interrupt-cells = <3>; <-------- Increase this from 2 ?
+>> 		interrupt-parent = <&intc>;
+>> 		interrupt-controller;
+>> 	};
 >>
->> Because the mappings are simply a software construct, we have a means to
->> specify the desired mappings through DT at the board level - which
->> allows the boards to ensure that conflicts do not appear.
+>> Would that be acceptable?
 >>
->>
->>> Arguably, that information could be figured out without this in DT.
->>
->> How so ?
->>
->> Scanning the bus is error prone, and dependant upon driver state (and
->> presence), and we have no means currently of requesting 'free/unused'
->> addresses from the I2C core framework.
-> 
-> True. But assuming all devices are in DT, then you just need to scan
-> the child nodes of the bus and get a map of the used addresses. Though
-> if you had 2 or more devices like this, then you'd need to maintain
-> s/w allocated addresses too. It could all be maintained with a bitmap
-> which you initialize with addresses in DT.
+> Any ideas on how to do this better?
 
-We do indeed have cases with platforms which use the same device
-populated twice:
+I don't think adding an extra argument to the PDC interrupt specifier is
+that great. I'd rather see some associated array in the PDC binding
+mapping an interrupt to a pin on which special treatment must be applied.
 
-See 1d26a5217187 ("ARM: dts: wheat: Fix ADV7513 address usage")
+Thanks,
 
-In that instance, a hardware bug means that if one of the two instances
-of the ADV7513 goes into standby, it will respond to it's default
-hardware slave map addresses. So because of this we must map *both*
-instances to be non defaults. (and ideally, we'd want to mark the actual
-defaults as unused - but - unusable; alas we don't have a means to do
-that yet)
-
-
-In the instance of this device (the adv748x) it has a default mapping at
-address 0x30 for the CBUS page. We have an expansion board, which adds
-GMSL cameras to the same board - of which reside on the same I2C bus -
-and are fixed to use 0x30 as the base address for one of the components.
-(Which even that then gets re-mapped - but it must be available to
-perform the remap in the first place)
-
-So we even have this concept of an address which is 'mostly' unused, but
-must be available for use at certain stages of the probe sequences.
-(There are 8 cameras attached, all with that same 0x30 address)
-
-
-The GMSL expansion is an 'overlay' (it's actually just an include file
-currently, but it /should/ be a DTO), and so I use this functionality to
-remap the ADV748x maps to a 'free' block of address space.
-
-Adding that patch [0] ([PATCH] arm64: dts: renesas: salvator-common:
-adv748x: Override secondary addresses) was what led me to notice that I
-had not updated the DT documentation for the feature, leading to this
-patch :)
-
-[0] https://www.spinics.net/lists/linux-renesas-soc/msg31194.html
-
+	M.
 -- 
-Regards
---
-Kieran
+Jazz is not dead. It just smells funny...
