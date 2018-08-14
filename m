@@ -1,49 +1,78 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] clk: imx6q: optionally get CCM inputs via standard
- clock handles
-Date: Tue, 14 Aug 2018 10:08:57 -0600
-Message-ID: <20180814160857.GA11979@rob-hp-laptop>
-References: <20180731102009.6710-1-l.stach@pengutronix.de>
- <20180731102009.6710-2-l.stach@pengutronix.de>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: dmaengine: xilinx_dma: Add binding
+ for Xilinx MCDMA IP
+Date: Tue, 14 Aug 2018 10:13:26 -0600
+Message-ID: <20180814161326.GA17341@rob-hp-laptop>
+References: <1533059173-21405-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1533059173-21405-2-git-send-email-radhey.shyam.pandey@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180731102009.6710-2-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, patchwork-lst@pengutronix.de, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1533059173-21405-2-git-send-email-radhey.shyam.pandey@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc: vkoul@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, dan.j.williams@intel.com, appanad@xilinx.com, lars@metafoo.de, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 12:20:08PM +0200, Lucas Stach wrote:
-> When specifying external clock inputs to the CCM the current code
-> requires the clocks to be in a "clocks" child node of the DT root.
-> This is not really conformant with DT best practices.
+On Tue, Jul 31, 2018 at 11:16:12PM +0530, Radhey Shyam Pandey wrote:
+> Add devicetree binding for Xilinx AXI Multichannel Direct Memory Access
+> (AXI MCDMA) IP. The AXI MCDMA provides high-bandwidth direct memory
+> access between memory and AXI4-Stream target peripherals. The AXI MCDMA
+> core provides scatter-gather interface with multiple channel support.
 > 
-> To avoid the need to deviate from those best practices, allow the
-> clock inputs to be specifies via standard clock handles. This is
-> in line with how drivers of the later CCM driver revisions on
-> newer i.MX SoCs handle this.
-> 
-> As we can't retroactively change the DT binding, allow this as an
-> option with a fallback to the old way of how this has been handled.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 > ---
->  .../devicetree/bindings/clock/imx6q-clock.txt |  5 +++++
+>  Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> index 174af2c..57bb02e 100644
+> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> @@ -11,9 +11,13 @@ is to receive from the device.
+>  Xilinx AXI CDMA engine, it does transfers between memory-mapped source
+>  address and a memory-mapped destination address.
+>  
+> +Xilinx AXI MCDMA engine, it does transfer between memory and AXI4 stream
+> +target devices. It can be configured to have up to 16 independent transmit
+> +and receive channels.
+> +
+>  Required properties:
+>  - compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00.a" or
+> -	      "xlnx,axi-cdma-1.00.a""
+> +	      "xlnx,axi-cdma-1.00.a" or "xlnx,axi-mcdma-1.00.a".
 
-Ignoring what my bot said if there's no other changes needed,
+Please reformat to 1 per line.
 
-Acked-by: Rob Herring <robh@kernel.org>
+>  - #dma-cells: Should be <1>, see "dmas" property below
+>  - reg: Should contain VDMA registers location and length.
+>  - xlnx,addrwidth: Should be the vdma addressing size in bits(ex: 32 bits).
+> @@ -56,6 +60,8 @@ Required child node properties:
+>  	For CDMA: It should be "xlnx,axi-cdma-channel".
+>  	For AXIDMA: It should be either "xlnx,axi-dma-mm2s-channel" or
+>  	"xlnx,axi-dma-s2mm-channel".
+> +	For MCDMA: It should be either "xlnx,axi-mcdma-mm2s-channel" or
+> +	"xlnx,axi-mcdma-s2mm-channel".
 
->  drivers/clk/imx/clk-imx6q.c                   | 22 ++++++++++++++-----
->  2 files changed, 22 insertions(+), 5 deletions(-)
+What's wrong with reusing the existing xlnx,axi-dma-* names? 
+
+>  - interrupts: Should contain per channel VDMA interrupts.
+>  - xlnx,datawidth: Should contain the stream data width, take values
+>  	{32,64...1024}.
+> @@ -68,7 +74,7 @@ Optional child node properties for VDMA:
+>  	enabled/disabled in hardware.
+>  - xlnx,enable-vert-flip: Tells vertical flip is
+>  	enabled/disabled in hardware(S2MM path).
+> -Optional child node properties for AXI DMA:
+> +Optional child node properties for AXI DMA and MCDMA:
+>  -dma-channels: Number of dma channels in child node.
+>  
+>  Example:
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
