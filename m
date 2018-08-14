@@ -1,7 +1,7 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: [RFC PATCH v1 1/3] dt-bindings: net: Add 'mac-address-lookup' property
-Date: Tue, 14 Aug 2018 15:37:56 -0700
-Message-ID: <20180814223758.117433-2-briannorris@chromium.org>
+Subject: [RFC PATCH v1 2/3] device property: Support complex MAC address lookup
+Date: Tue, 14 Aug 2018 15:37:57 -0700
+Message-ID: <20180814223758.117433-3-briannorris@chromium.org>
 References: <20180814223758.117433-1-briannorris@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,57 +12,182 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Some firmwares present data tables that can be parsed to retrieve
-device-specific details, like MAC addresses. While in some cases, one
-could teach the firmware to understand the device tree format and insert
-a 'mac-address'/'local-mac-address' property into the FDT on its own,
-this method can be brittle (e.g., involving memorizing expected FDT
-structure), and it's not strictly necessary -- especially when parsers
-for such firmware formats are already needed in the OS for other
-reasons.
+Some firmwares include data tables that can be used to derive a MAC
+address for devices on the system, but those firmwares don't directly
+stash the MAC address in a device property. Support having other drivers
+register lookup functions, where the device property contains
+"<format>:<key>" strings; a lookup driver can register support for
+handling "<format>", and "<key>" can be used by the format parser to
+identify which MAC address is being requested.
 
-One such format: the Vital Product Data (VPD) [1] used by Coreboot. It
-supports a table of key/value pairs, and some systems keep MAC addresses
-there in a well-known format. Allow a device tree to specify
-  (1) that the MAC address for a given device is stored in the VPD table
-      and
-  (2) what key should be used to retrieve the MAC address for said
-      device (e.g., "ethernet_mac0" or "wifi_mac1").
+This is particularly useful for the Google Vital Product Data (VPD)
+format [1], which holds various product-specific key/value pairs, often
+stashed in the boot flash.
 
 [1] Ref:
 https://chromium.googlesource.com/chromiumos/platform/vpd/+/master/README.md
-TL;DR: VPD consists of a TLV-like table, with key/value pairs of
-strings. This is often stored persistently on the boot flash and
-presented via in-memory Coreboot tables, for the operating system to
-read.
 
 Signed-off-by: Brian Norris <briannorris@chromium.org>
 ---
- Documentation/devicetree/bindings/net/ethernet.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/base/property.c  | 83 +++++++++++++++++++++++++++++++++++++++-
+ include/linux/property.h | 23 +++++++++++
+ 2 files changed, 104 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-index cfc376bc977a..d3fd1da18bf4 100644
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -4,6 +4,18 @@ NOTE: All 'phy*' properties documented below are Ethernet specific. For the
- generic PHY 'phys' property, see
- Documentation/devicetree/bindings/phy/phy-bindings.txt.
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 240ab5230ff6..fae3390fc56c 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -10,6 +10,7 @@
+ #include <linux/acpi.h>
+ #include <linux/export.h>
+ #include <linux/kernel.h>
++#include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_graph.h>
+@@ -1264,6 +1265,78 @@ static void *fwnode_get_mac_addr(struct fwnode_handle *fwnode,
+ 	return NULL;
+ }
  
-+- mac-address-lookup: string, indicating a method by which a MAC address may be
-+  discovered for this device. Methods may be parameterized by some value, such
-+  that the method can determine the device's MAC address using that parameter.
-+  For example, a firmware might store MAC addresses in a table, keyed by some
-+  predetermined string, and baked in read-only flash. A lookup method "foo"
-+  with a parameter "bar" should be written "foo:bar".
-+  Supported values for method:
-+    "google-vpd" - Google's Vital Product Data (VPD), as used in the Coreboot
-+      project. Documentation for VPD can be found at:
-+        https://chromium.googlesource.com/chromiumos/platform/vpd/+/master/README.md
-+  Example:
-+    mac-address-lookup = "google-vpd:ethernet_mac0"
- - local-mac-address: array of 6 bytes, specifies the MAC address that was
-   assigned to the network device;
- - mac-address: array of 6 bytes, specifies the MAC address that was last used by
++static LIST_HEAD(mac_addr_providers);
++static DEFINE_MUTEX(mac_addr_providers_mutex);
++
++void device_register_mac_addr_provider(struct device_mac_addr_provider *prov)
++{
++	mutex_lock(&mac_addr_providers_mutex);
++	list_add(&prov->entry, &mac_addr_providers);
++	mutex_unlock(&mac_addr_providers_mutex);
++}
++EXPORT_SYMBOL(device_register_mac_addr_provider);
++
++void device_unregister_mac_addr_provider(struct device_mac_addr_provider *prov)
++{
++	struct device_mac_addr_provider *p;
++
++	mutex_lock(&mac_addr_providers_mutex);
++	list_for_each_entry(p, &mac_addr_providers, entry) {
++		if (p == prov) {
++			list_del(&p->entry);
++			goto out;
++		}
++	}
++
++out:
++	mutex_unlock(&mac_addr_providers_mutex);
++}
++EXPORT_SYMBOL(device_unregister_mac_addr_provider);
++
++static void *fwnode_lookup_mac_addr(struct fwnode_handle *fwnode,
++				    char *addr, int alen)
++{
++	struct device_mac_addr_provider *prov;
++	const char *prop, *sep;
++	u8 mac[ETH_ALEN];
++	int ret;
++
++	ret = fwnode_property_read_string(fwnode, "mac-address-lookup", &prop);
++	if (ret)
++		return NULL;
++
++	sep = strchr(prop, ':');
++	if (!sep)
++		return NULL;
++
++	if (alen != ETH_ALEN)
++		return NULL;
++
++	mutex_lock(&mac_addr_providers_mutex);
++	list_for_each_entry(prov, &mac_addr_providers, entry) {
++		if (strncmp(prov->prefix, prop, strlen(prov->prefix)))
++			continue;
++
++		if (prop + strlen(prov->prefix) != sep)
++			continue;
++
++		ret = prov->lookup(sep + 1, mac);
++		if (ret)
++			continue;
++
++		if (!is_valid_ether_addr(mac))
++			continue;
++
++		ether_addr_copy(addr, mac);
++
++		mutex_unlock(&mac_addr_providers_mutex);
++		return addr;
++	}
++	mutex_unlock(&mac_addr_providers_mutex);
++
++	return NULL;
++}
++
+ /**
+  * fwnode_get_mac_address - Get the MAC from the firmware node
+  * @fwnode:	Pointer to the firmware node
+@@ -1274,7 +1347,9 @@ static void *fwnode_get_mac_addr(struct fwnode_handle *fwnode,
+  * checked first, because that is supposed to contain to "most recent" MAC
+  * address. If that isn't set, then 'local-mac-address' is checked next,
+  * because that is the default address.  If that isn't set, then the obsolete
+- * 'address' is checked, just in case we're using an old device tree.
++ * 'address' is checked, just in case we're using an old device tree.  And
++ * finally, we check for a method of indirect MAC address lookup, via
++ * 'mac-address-lookup'.
+  *
+  * Note that the 'address' property is supposed to contain a virtual address of
+  * the register set, but some DTS files have redefined that property to be the
+@@ -1299,7 +1374,11 @@ void *fwnode_get_mac_address(struct fwnode_handle *fwnode, char *addr, int alen)
+ 	if (res)
+ 		return res;
+ 
+-	return fwnode_get_mac_addr(fwnode, "address", addr, alen);
++	res = fwnode_get_mac_addr(fwnode, "address", addr, alen);
++	if (res)
++		return res;
++
++	return fwnode_lookup_mac_addr(fwnode, addr, alen);
+ }
+ EXPORT_SYMBOL(fwnode_get_mac_address);
+ 
+diff --git a/include/linux/property.h b/include/linux/property.h
+index ac8a1ebc4c1b..aca5dbb51e19 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -14,6 +14,7 @@
+ #define _LINUX_PROPERTY_H_
+ 
+ #include <linux/fwnode.h>
++#include <linux/list.h>
+ #include <linux/types.h>
+ 
+ struct device;
+@@ -285,6 +286,28 @@ const void *device_get_match_data(struct device *dev);
+ 
+ int device_get_phy_mode(struct device *dev);
+ 
++/**
++ * struct device_mac_addr_provider - MAC address provider
++ *
++ * Provide methods by which the rest of the kernel can retrieve MAC addresses,
++ * e.g., from a firmware table.
++ *
++ * @entry: list head, for keeping track of all providers
++ * @prefix: string which uniquely identifies the provider
++ * @lookup: Look up a MAC address by key. The provider may associate this @key
++ *	with a stored MAC address; if a match is found, the provider copies the
++ *	associated MAC address to @mac. If not found, a non-zero error code is
++ *	returned.
++ */
++struct device_mac_addr_provider {
++	struct list_head entry;
++	const char *prefix;
++	int (*lookup)(const char *key, u8 *mac);
++};
++
++void device_register_mac_addr_provider(struct device_mac_addr_provider *prov);
++void device_unregister_mac_addr_provider(struct device_mac_addr_provider *prov);
++
+ void *device_get_mac_address(struct device *dev, char *addr, int alen);
+ 
+ int fwnode_get_phy_mode(struct fwnode_handle *fwnode);
 -- 
 2.18.0.865.gffc8e1a3cd6-goog
