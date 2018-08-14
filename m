@@ -1,169 +1,177 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 2/2] leds: lm3697: Introduce the lm3697 driver
-Date: Tue, 14 Aug 2018 08:54:24 -0500
-Message-ID: <d76cb536-7ac0-6616-4979-8706ef22e9f3@ti.com>
-References: <20180807160442.8937-1-dmurphy@ti.com>
- <20180807160442.8937-2-dmurphy@ti.com> <20180808195909.GC20912@amd>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v8 3/4] drm/atmel-hlcdc: iterate over all output endpoints
+Date: Tue, 14 Aug 2018 08:33:03 -0600
+Message-ID: <CAL_JsqJHRL0f2YwvOJBpggKRVQwPWy8j08-+_nd-VifOOKYqFA@mail.gmail.com>
+References: <20180810130359.9882-1-peda@axentia.se>
+ <20180810130359.9882-4-peda@axentia.se>
+ <20180813135949.32vrlrevtazr5x7d@apu3b.nibble.pw>
+ <0baac94e-f3d2-53fd-4af9-854bb4498345@axentia.se>
+ <CAL_JsqJPzwpN2TFghy-FfHZppexG9gW4qBy6iYtGpyP_Bp6dUA@mail.gmail.com>
+ <5c9853fc-e2ea-6983-ac88-b52b6e9e6ecd@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808195909.GC20912@amd>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5c9853fc-e2ea-6983-ac88-b52b6e9e6ecd@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jmondi <jacopo@jmondi.org>, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Jyri Sarha <jsarha@ti.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Pavel
-
-Thanks for the review
-
-On 08/08/2018 02:59 PM, Pavel Machek wrote:
-> Hi!
-> 
->> Introduce the lm3697 LED driver for
->> backlighting and display.
->>
->> Datasheet location:
->> http://www.ti.com/lit/ds/symlink/lm3697.pdf
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> 
->> +
->> +#define LM3697_HVLED1_2_3_A		0
->> +#define LM3697_HVLED1_B_HVLED2_3_A	1
->> +#define LM3697_HVLED2_B_HVLED1_3_A	2
->> +#define LM3697_HVLED1_2_B_HVLED3_A	3
->> +#define LM3697_HVLED3_B_HVLED1_2_A	4
->> +#define LM3697_HVLED1_3_B_HVLED2_A	5
->> +#define LM3697_HVLED1_A_HVLED2_3_B	6
->> +#define LM3697_HVLED1_2_3_B		7
-> 
-> That's rather long and verbose way to describe a bitmap, right?
-
-It will be removed with v3
-
-> 
->> +static const struct regmap_config lm3697_regmap_config = {
->> +	.reg_bits = 8,
->> +	.val_bits = 8,
->> +
->> +	.max_register = LM3697_CTRL_ENABLE,
->> +	.reg_defaults = lm3697_reg_defs,
->> +	.num_reg_defaults = ARRAY_SIZE(lm3697_reg_defs),
->> +	.cache_type = REGCACHE_RBTREE,
->> +};
-> 
-> Is rbtree good idea? You don't have that many registers.
-
-ack
-
-> 
->> +static int lm3697_init(struct lm3697 *priv)
->> +{
->> +	int ret;
->> +
-> ....
->> +		regmap_write(priv->regmap, LM3697_RESET, LM3697_SW_RESET);
-> 
-> No error checking required here?
-
-Ack
-
-> 
->> +	if (priv->control_bank_config < LM3697_HVLED1_2_3_A ||
->> +	    priv->control_bank_config > LM3697_HVLED1_2_3_B) {
->> +		dev_err(&priv->client->dev, "Control bank configuration is out of range\n");
->> +		ret = -EINVAL;
->> +		goto out;
->> +	}
->> +
->> +	device_for_each_child_node(priv->dev, child) {
->> +		led = &priv->leds[i];
->> +
->> +		ret = fwnode_property_read_u32(child, "reg", &led->control_bank);
->> +		if (ret) {
->> +			dev_err(&priv->client->dev, "reg DT property missing\n");
->> +			goto child_out;
->> +		}
->> +
->> +		fwnode_property_read_string(child, "linux,default-trigger",
->> +					    &led->led_dev.default_trigger);
->> +
->> +		ret = fwnode_property_read_string(child, "label", &name);
->> +		if (ret)
->> +			snprintf(led->label, sizeof(led->label),
->> +				"%s::", priv->client->name);
->> +		else
->> +			snprintf(led->label, sizeof(led->label),
->> +				 "%s:%s", priv->client->name, name);
->> +
->> +
->> +		led->priv = priv;
->> +		led->led_dev.name = led->label;
->> +		led->led_dev.brightness_set_blocking = lm3697_brightness_set;
->> +
->> +		ret = devm_led_classdev_register(priv->dev, &led->led_dev);
->> +		if (ret) {
->> +			dev_err(&priv->client->dev, "led register err: %d\n", ret);
->> +			goto child_out;
->> +		}
->> +
->> +		if (priv->control_bank_config == LM3697_HVLED1_2_3_A ||
->> +		    priv->control_bank_config == LM3697_HVLED1_2_3_B)
->> +			goto child_out;
-> 
-> This checks if we have just one bank, I see it. Should it also check
-> the led actually uses the correct bank?
-
-It will be removed with v3
-
-> 
->> +		i++;
->> +		fwnode_handle_put(child);
->> +	}
->> +
->> +child_out:
->> +	fwnode_handle_put(child);
-> 
-> Is not the fwnode_handle_put() done twice for non-error case?
-
-Ack
-
-> 
->> +	ret = lm3697_init(led);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return ret;
->> +}
-> 
-> The if is not needed here.
-> 
-
-Ack
-
->> +static int lm3697_remove(struct i2c_client *client)
->> +{
->> +	struct lm3697 *led = i2c_get_clientdata(client);
->> +	int ret;
->> +
->> +	ret = regmap_update_bits(led->regmap, LM3697_CTRL_ENABLE,
->> +				 LM3697_CTRL_A_B_EN, 0);
->> +	if (ret) {
->> +		dev_err(&led->client->dev, "Failed to disable regulator\n");
->> +		return ret;
-> 
-> Misleading, this does nothing with regulators.
-
-Ack
-
-> 
-> 									Pavel
-> 
-
-
--- 
-------------------
-Dan Murphy
+T24gVHVlLCBBdWcgMTQsIDIwMTggYXQgMTI6MzYgQU0gUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRp
+YS5zZT4gd3JvdGU6Cj4KPiBPbiAyMDE4LTA4LTEzIDIyOjUyLCBSb2IgSGVycmluZyB3cm90ZToK
+PiA+IE9uIE1vbiwgQXVnIDEzLCAyMDE4IGF0IDg6MjUgQU0gUGV0ZXIgUm9zaW4gPHBlZGFAYXhl
+bnRpYS5zZT4gd3JvdGU6Cj4gPj4KPiA+PiBPbiAyMDE4LTA4LTEzIDE1OjU5LCBqYWNvcG8gbW9u
+ZGkgd3JvdGU6Cj4gPj4+IEhpIFBldGVyLAo+ID4+Pgo+ID4+PiBPbiBGcmksIEF1ZyAxMCwgMjAx
+OCBhdCAwMzowMzo1OFBNICswMjAwLCBQZXRlciBSb3NpbiB3cm90ZToKPiA+Pj4+IFRoaXMgZW5h
+YmxlcyBtb3JlIGZsZXhpYmxlIGRldmljZXRyZWVzLiBZb3UgY2FuIGUuZy4gaGF2ZSB0d28gb3V0
+cHV0Cj4gPj4+PiBub2RlcyB3aGVyZSBvbmUgaXMgbm90IGVuYWJsZWQsIHdpdGhvdXQgdGhlIG9y
+ZGVyaW5nIGFmZmVjdGluZyB0aGluZ3MuCj4gPgo+ID4gWW91ciBEVHMgYXJlIG5vdCBzdXBwb3Nl
+ZCB0byBiZSBmbGV4aWJsZS4gVGhleSBzaG91bGQgYmUgd2VsbCBkZWZpbmVkCj4gPiBieSB0aGUg
+YmluZGluZy4KPgo+IEkgZmVlbCB0aGUgbmVlZCB0byBleHBsYWluIHRoZSBzaXR1YXRpb24gd2l0
+aCBtb3JlIHdvcmRzLi4uCj4KPiBXZSBoYXZlIGEgYm9hcmQgd2l0aCB0aGlzIGF0bWVsLWhsY2Rj
+IHdpcmVkIHRvIGJvdGggYW4gTFZEUyBlbmNvZGVyCj4gYW5kIGFuIEhETUkgZW5jb2Rlci4gRGVw
+ZW5kaW5nIG9uIGhvdyB3ZSBpbnRlZ3JhdGUgdGhpcyBib2FyZCwgb25seQo+IG9uZSBvZiB0aGVz
+ZSBwYXRocyBtYWtlIHNlbnNlLiBIZW5jZSwgSSB3b3VsZCBsaWtlIHRvIGRvIHRoZSBmb2xsb3dp
+bmcKPiBpbiBhIC5kdHNpIGZvciB0aGF0IGJvYXJkOgo+Cj4gLyB7Cj4gICAgICAgICBobGNkYy1k
+aXNwbGF5LWNvbnRyb2xsZXIgewo+ICAgICAgICAgICAgICAgICAuLi4KPiAgICAgICAgICAgICAg
+ICAgcG9ydEAwIHsKPiAgICAgICAgICAgICAgICAgICAgICAgICBobGNkY19sdmRzOiBlbmRwb2lu
+dEAwIHsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmbHZkc19lbmNv
+ZGVyX2lucHV0PjsKPiAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+Cj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgaGxjZGNfaGRtaTogZW5kcG9pbnRAMSB7Cj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICByZWcgPSA8MT47Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICByZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfZW5jb2Rlcl9pbnB1dD47Cj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgfTsKPiAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgIH07Cj4KPiAgICAg
+ICAgIGx2ZHNfZW5jb2RlcjogbHZkcy1lbmNvZGVyIHsKPiAgICAgICAgICAgICAgICAgc3RhdHVz
+ID0gImRpc2FibGVkIjsKPgo+ICAgICAgICAgICAgICAgICAuLi4KPgo+ICAgICAgICAgICAgICAg
+ICBwb3J0cyB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47
+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4KPiAgICAgICAg
+ICAgICAgICAgICAgICAgICBwb3J0QDAgewo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgcmVnID0gPDA+Owo+Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsdmRzX2Vu
+Y29kZXJfaW5wdXQ6IGVuZHBvaW50IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZobGNkY19sdmRzPjsKPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgICAgICAgICAgfTsKPgo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMSB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICByZWcgPSA8MT47Cj4KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGx2
+ZHNfZW5jb2Rlcl9vdXRwdXQ6IGVuZHBvaW50IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIH07Cj4gICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgICAgICAgICAg
+fTsKPiAgICAgICAgIH07Cj4gfTsKPgo+ICZpMmMyIHsKPiAgICAgICAgIC4uLgo+ICAgICAgICAg
+aGRtaV9lbmNvZGVyOiBoZG1pLWVuY29kZXJANzAgewo+ICAgICAgICAgICAgICAgICBzdGF0dXMg
+PSAiZGlzYWJsZWQiOwo+Cj4gICAgICAgICAgICAgICAgIC4uLgo+Cj4gICAgICAgICAgICAgICAg
+IHBvcnQgewo+ICAgICAgICAgICAgICAgICAgICAgICAgIGhkbWlfZW5jb2Rlcl9pbnB1dDogZW5k
+cG9pbnQgewo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50
+ID0gPCZobGNkY19oZG1pPjsKPiAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAg
+ICAgICAgICB9Owo+ICAgICAgICAgfTsKPiB9Owo+Cj4KPiBBbmQgdGhlbiwgZGVwZW5kaW5nIG9u
+IHdoYXQgY29tcG9uZW50cyBhcmUgZml0dGVkIGFuZCB3aGF0IExWRFMgcGFuZWwgaGFzCj4gYmVl
+biBhdHRhY2hlZCB0byB0aGUgTFZEUyBlbmNvZGVyIG91dHB1dCwgdGhpcyBjYW4gYmUgdXNlZCBh
+cyBmb2xsb3dzCj4gaW4gdGhlIC5kdHMgZmlsZSBmb3IgTFZEUyBjYXNlOgo+Cj4gLyB7Cj4gICAg
+ICAgICBwYW5lbDogcGFuZWwgewo+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImxpdGVt
+YXgsZGxmMjExOCIsICJwYW5lbC1sdmRzIjsKPgo+ICAgICAgICAgICAgICAgICAuLi4KPgo+ICAg
+ICAgICAgICAgICAgICBwb3J0IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICBwYW5lbF9pbnB1
+dDogZW5kcG9pbnQgewo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVu
+ZHBvaW50ID0gPCZsdmRzX2VuY29kZXJfb3V0cHV0PjsKPiAgICAgICAgICAgICAgICAgICAgICAg
+ICB9Owo+ICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgfTsKPiB9Owo+Cj4KPiAmbHZkc19l
+bmNvZGVyIHsKPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiB9Owo+Cj4gJmx2ZHNfZW5jb2Rl
+cl9vdXRwdXQgewo+ICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbnB1dD47Cj4g
+fTsKPgo+Cj4gRm9yIHRoZSBIRE1JIGNhc2UsIGl0IHdvdWxkIGJlIHRoaXMgaW4gdGhlIC5kdHMg
+ZmlsZToKPgo+ICZoZG1pX2VuY29kZXIgewo+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+IH07
+Cj4KPgo+IFRoZSBhYm92ZSBzZWVtIHNvIG11Y2ggYmV0dGVyIHRoYW4ganVzdCBoYXZpbmcgdGhl
+IGZvbGxvd2luZyBpbgo+IHRoZSAuZHRzaSBmaWxlCj4KPiAvIHsKPiAgICAgICAgIGhsY2RjLWRp
+c3BsYXktY29udHJvbGxlciB7Cj4gICAgICAgICAgICAgICAgIC4uLgo+ICAgICAgICAgICAgICAg
+ICBwb3J0QDAgewo+ICAgICAgICAgICAgICAgICAgICAgICAgIGhsY2RjX2x2ZHM6IGVuZHBvaW50
+IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwm
+ZW5jb2Rlcl9pbnB1dD47Cj4gICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgICAg
+ICAgICAgfTsKPiAgICAgICAgIH07Cj4gfTsKPgo+IGFuZCBwdXNoaW5nIHRoZSBsdmRzLWVuY29k
+ZXIgYW5kIGhkbWktZW5jb2RlciBub2RlcyAoc2xpZ2h0bHkgbW9kaWZpZWQpIGRvd24KPiB0byB0
+aGUgcmVsZXZhbnQgLmR0cyBmaWxlcy4gRXNwZWNpYWxseSBzbyBzaW5jZSB3ZSBoYXZlIHRvIHRo
+aXMgcG9pbnQKPiBkZWxpdmVyZWQgc2V2ZXJhbCB2YXJpYW50cyB3aXRoIGRpZmZlcmVudCBMVkRT
+IHBhbmVscy4gVGhlIGR1cGxpY2F0aW9uCj4gaXMgdWdseSwgYW5kIHRoZSBudW1iZXIgb2YgZGlm
+ZmVyZW50IHBhbmVscyBpcyBleHBlY3RlZCB0byBncm93Li4uCj4KPiBCdXQgbWF5YmUgSSBoYXZl
+IG1pc3VuZGVyc3Rvb2Qgd2hhdCBlbmRwb2ludHMgYXJlIGFsbCBhYm91dCwgYnV0IHRvIG1lCj4g
+dGhlIGFjdHVhbCBlbmRwb2ludCBpZCBpcyBub3QgdGhhdCBpbnRlcmVzdGluZyBhbmQgSSBzZWUg
+bm90aGluZyBpbiB0aGUKPiBncmFwaCBiaW5kaW5nIHRoYXQgc3VnZ2VzdHMgdGhhdCBlbmRwb2lu
+dCBpZCAwIGhhcyB0byBiZSB1cCBhbmQga2lja2luZwo+IGluIG9yZGVyIGZvciBlbmRwb2ludCBp
+ZCAxIHRvIGJlIGV4YW1pbmVkIGF0IGFsbC4KCkkgZ3Vlc3MgaXQgZGVwZW5kcyBpZiB0aGUgbnVt
+YmVyaW5nIGlzIHNpZ25pZmljYW50LiBGb3IgYSBvbmUgdG8gbWFueQpmYW4gb3V0IGxpa2UgdGhp
+cywgbm90IHNvIG11Y2guIEZvciBhIG11eGVkIGlucHV0LCB0aGVuIGl0IHdvdWxkIGJlLgoKPiBG
+b3IgcG9ydHMsIHllcywgeW91IGFyZSByaWdodCB0aGF0IHRoZSBwb3J0IGlkIG5lZWRzIHRvIGJl
+IGRlZmluZWQgYW5kCj4gZml4ZWQgZm9yIGEgc3BlY2lmaWMgZnVuY3Rpb24sIHNvIHNjcmF0Y2gg
+dGhhdC4gSXQgd2FzIGp1c3QgYSAibWF5YmUiCj4gcXVlc3Rpb24gYW55d2F5Li4uCj4KPiA+Pj4+
+Cj4gPj4+PiBQcmlvciB0byB0aGlzIHBhdGNoIHRoZSBhY3RpdmUgbm9kZSBoYWQgdG8gaGF2ZSBl
+bmRwb2ludCBpZCB6ZXJvLgo+ID4+Pj4KPiA+Pj4+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFJvc2lu
+IDxwZWRhQGF4ZW50aWEuc2U+Cj4gPj4+PiAtLS0KPiA+Pj4+ICBkcml2ZXJzL2dwdS9kcm0vYXRt
+ZWwtaGxjZGMvYXRtZWxfaGxjZGNfb3V0cHV0LmMgfCAzMiArKysrKysrKysrKysrKysrKystLS0t
+LS0KPiA+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMo
+LSkKPiA+Pj4+Cj4gPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2Rj
+L2F0bWVsX2hsY2RjX291dHB1dC5jIGIvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVs
+X2hsY2RjX291dHB1dC5jCj4gPj4+PiBpbmRleCA4ZGI1MWZiMTMxZGIuLjE2YzFiMmY1NGI0MiAx
+MDA2NDQKPiA+Pj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNk
+Y19vdXRwdXQuYwo+ID4+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVs
+X2hsY2RjX291dHB1dC5jCj4gPj4+PiBAQCAtMzEsMTQgKzMxLDE2IEBAIHN0YXRpYyBjb25zdCBz
+dHJ1Y3QgZHJtX2VuY29kZXJfZnVuY3MgYXRtZWxfaGxjZGNfcGFuZWxfZW5jb2Rlcl9mdW5jcyA9
+IHsKPiA+Pj4+ICAgICAgLmRlc3Ryb3kgPSBkcm1fZW5jb2Rlcl9jbGVhbnVwLAo+ID4+Pj4gIH07
+Cj4gPj4+Pgo+ID4+Pj4gLXN0YXRpYyBpbnQgYXRtZWxfaGxjZGNfYXR0YWNoX2VuZHBvaW50KHN0
+cnVjdCBkcm1fZGV2aWNlICpkZXYsIGludCBlbmRwb2ludCkKPiA+Pj4+ICtzdGF0aWMgaW50IGF0
+bWVsX2hsY2RjX2F0dGFjaF9lbmRwb2ludChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ID4+Pj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IG9mX2VuZHBvaW50ICpl
+bmRwb2ludCkKPiA+Pj4+ICB7Cj4gPj4+PiAgICAgIHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2Rl
+cjsKPiA+Pj4+ICAgICAgc3RydWN0IGRybV9wYW5lbCAqcGFuZWw7Cj4gPj4+PiAgICAgIHN0cnVj
+dCBkcm1fYnJpZGdlICpicmlkZ2U7Cj4gPj4+PiAgICAgIGludCByZXQ7Cj4gPj4+Pgo+ID4+Pj4g
+LSAgICByZXQgPSBkcm1fb2ZfZmluZF9wYW5lbF9vcl9icmlkZ2UoZGV2LT5kZXYtPm9mX25vZGUs
+IDAsIGVuZHBvaW50LAo+ID4+Pj4gKyAgICByZXQgPSBkcm1fb2ZfZmluZF9wYW5lbF9vcl9icmlk
+Z2UoZGV2LT5kZXYtPm9mX25vZGUsCj4gPj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBlbmRwb2ludC0+cG9ydCwgZW5kcG9pbnQtPmlkLAo+ID4+Pgo+ID4+PiBZb3Ug
+YXJlIHJlZnVzaW5nIGVuZHBvaW50LT5wb3J0ICE9IDAgaW4gdGhlIGNhbGxlciwgc28gdGhhdCBj
+b3VsZCBiZQo+ID4+PiAwLgo+ID4+Cj4gPj4gWWVzLCBpdCBjb3VsZC4gSG93ZXZlciwgSSBpbnRl
+bnRpb25hbGx5IGRpZCBub3Qgd3JpdGUgMCBoZXJlLCBzbyB0aGF0Cj4gPj4gdGhlIGxvZ2ljIHJl
+bGF0ZWQgdG8gInBvcnQgaGFzIHRvIGJlIHplcm8iIHdhcyBpbiBvbmUgcGxhY2UgYW5kIG5vdAo+
+ID4+IHNjYXR0ZXJlZCBhYm91dC4gSSBndWVzcyBpdCdzIHVwIHRvIEJvcmlzPwo+ID4+Cj4gPj4g
+TWF5YmUgdGhlIHBvcnQgZG8gbm90IGFjdHVhbGx5IGhhdmUgdG8gYmUgemVybyBhdCBhbGw/IFdp
+dGggdGhlIG9sZAo+ID4+IGNvZGUsIGl0IHdhcyBraW5kIG9mIHVuZGVyc3RhbmRhYmxlIHRoYXQg
+dGhlIHBvcnQgbnVtYmVyIHdhcyBmaXhlZCwKPiA+PiBidXQgZm9yIHRoZSBjb2RlIGluIG15IHBh
+dGNoIGl0IGRvZXMgbm90IG1hdHRlciBhdCBhbGwgQUZBSUNULiBUaGVyZQo+ID4+IGlzIG5vdGhp
+bmcgaW4gdGhlIGJpbmRpbmcgZG9jcyAoZXhjZXB0IGZvciB0aGUgZXhhbXBsZSkgdGhhdCBoaW50
+cwo+ID4+IHRoYXQgcG9ydCBoYXMgdG8gYmUgemVybywgc28gdGhhdCdzIG9uZSB0aGluZyBpbiBm
+YXZvciBvZiBqdXN0IGdldHRpbmcKPiA+PiByaWQgb2YgdGhlIHBvcnQgbnVtYmVyIGNoZWNraW5n
+IGFsdG9nZXRoZXIuLi4KPiA+Cj4gPiBUaGUgcG9ydCBudW1iZXJpbmcgbXVzdCBiZSBkZWZpbmVk
+IGFuZCBmaXhlZC4gSWYgdGhhdCBpcyBub3QgY2xlYXIgaW4KPiA+IHRoZSBiaW5kaW5nLCBmaXgg
+dGhlIGJpbmRpbmcuCj4KPiBPaywgc28gdGhlIGNvZGUgaW4gbXkgcGF0Y2ggZG9lcyB0aGUgcmln
+aHQgdGhpbmcgZm9yY2luZyB0aGUgcG9ydAo+IG51bWJlciB0byB6ZXJvLgo+Cj4gPj4+PiBAQCAt
+NzcsMTMgKzc5LDI5IEBAIHN0YXRpYyBpbnQgYXRtZWxfaGxjZGNfYXR0YWNoX2VuZHBvaW50KHN0
+cnVjdCBkcm1fZGV2aWNlICpkZXYsIGludCBlbmRwb2ludCkKPiA+Pj4+Cj4gPj4+PiAgaW50IGF0
+bWVsX2hsY2RjX2NyZWF0ZV9vdXRwdXRzKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4gPj4+PiAg
+ewo+ID4+Pj4gLSAgICBpbnQgZW5kcG9pbnQsIHJldCA9IDA7Cj4gPj4+PiAtCj4gPj4+PiAtICAg
+IGZvciAoZW5kcG9pbnQgPSAwOyAhcmV0OyBlbmRwb2ludCsrKQo+ID4+Pj4gLSAgICAgICAgICAg
+IHJldCA9IGF0bWVsX2hsY2RjX2F0dGFjaF9lbmRwb2ludChkZXYsIGVuZHBvaW50KTsKPiA+Pj4+
+ICsgICAgc3RydWN0IG9mX2VuZHBvaW50IGVuZHBvaW50Owo+ID4+Pj4gKyAgICBzdHJ1Y3QgZGV2
+aWNlX25vZGUgKm5vZGUgPSBOVUxMOwo+ID4+Pj4gKyAgICBpbnQgY291bnQgPSAwOwo+ID4+Pj4g
+KyAgICBpbnQgcmV0ID0gMDsKPiA+Pj4+ICsKPiA+Pj4+ICsgICAgZm9yX2VhY2hfZW5kcG9pbnRf
+b2Zfbm9kZShkZXYtPmRldi0+b2Zfbm9kZSwgbm9kZSkgewo+ID4+Pj4gKyAgICAgICAgICAgIG9m
+X2dyYXBoX3BhcnNlX2VuZHBvaW50KG5vZGUsICZlbmRwb2ludCk7Cj4gPgo+ID4gSSdkIHJlYWxs
+eSBsaWtlIHRvIGtpbGwgb2ZmIG9mX2dyYXBoX3BhcnNlX2VuZHBvaW50LCBub3QgYWRkIG1vcmUK
+PiA+IHVzZXJzIChjaGVjayB0aGUgZ2l0IGhpc3Rvcnkgb24gdGhpcyBjb2RlKS4gWW91IHNob3Vs
+ZCBrbm93IHdoYXQgYXJlCj4gPiBwb3NzaWJsZSBwb3J0IGFuZCBlbmRwb2ludCBudW1iZXJzLCBz
+byBpdGVyYXRlIG92ZXIgdGhvc2UuCj4KPiBTbywgYWRkIGEgY29tbWVudCB0byB0aGF0IGVmZmVj
+dCBpbiB0aGUgZG9jcyBvZiB0aGUgb2ZfZ3JhcGhfcGFyc2VfZW5kcG9pbnQKPiBmdW5jdGlvbi4K
+Pgo+IEhvdyBjYW4gdGhlIGhsY2RjIGRyaXZlciBrbm93IHRoZSBhY3R1YWwgbnVtYmVyIG9mIGVu
+ZHBvaW50cz8gSXQncyBhCj4gb25lLXdheSBzaWduYWwgcGF0aCBvdXQgZnJvbSB0aGF0IHBvcnQs
+IGFuZCBpdCBjYW4gZWFzaWx5IGJlIHJvdXRlZCB0bwo+IDEsIDIsIDMgb3IgZXZlbiBtb3JlIHBs
+YWNlcy4gQXMgc2hvd24gYWJvdmUsIGZvcmNpbmcgdGhlIGVuZHBvaW50IGlkCj4gdG8gc3RhcnQg
+YXQgemVybyBpcyBhIG51aXNhbmNlLCBhbmQgSSBkb24ndCBzZWUgdGhlIHBvaW50IG9mIGl0Lgo+
+Cj4gQnV0IEkgd2VsY29tZSBzdWdnZXN0aW9ucyBvbiBob3cgdG8gYXJyYW5nZSB0aGUgYWJvdmUg
+ZHRzaS9kdHMgZnJhZ21lbnRzCj4gaW4gYSB3b3JsZCB3aGVyZSB0aGUgZW5kcG9pbnQgaWQgYWJz
+b2x1dGVseSBoYXMgdG8gc3RhcnQgYXQgemVyby4KCllvdXIgZHRzIGZpbGUgYXJyYW5nZW1lbnQg
+c2VlbXMgZmluZS4gQ2FuJ3QgeW91IGp1c3Qgbm90IGV4aXQgdGhlIGxvb3AKb24gLUVOT0RFVj8g
+SU9XLCBqdXN0IGl0ZXJhdGUgdGlsIHlvdSBmaW5kIGFuIGVuYWJsZWQgZW5kcG9pbnQuCgpSb2IK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
