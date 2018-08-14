@@ -1,214 +1,1368 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH V12 00/14] Krait clocks + Krait CPUfreq
-Date: Tue, 14 Aug 2018 17:50:38 +0530
-Message-ID: <2ae96741-94c0-ba4c-fc19-05d33179683c@codeaurora.org>
-References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v3 2/2] clk: meson-g12a: Add EE Clock controller driver
+Date: Tue, 14 Aug 2018 14:30:08 +0200
+Message-ID: <61ec411439d8756f17390bd00f161173cb51a1c0.camel@baylibre.com>
+References: <1533890858-113020-1-git-send-email-jian.hu@amlogic.com>
+ <1533890858-113020-3-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, robh@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, ctatlor97@gmail.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, mturquette@baylibre.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, linux@armlinux.org.uk, thierry.escande@linaro.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, niklas.cassel@linaro.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1533890858-113020-3-git-send-email-jian.hu@amlogic.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jian Hu <jian.hu@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: "Qianggui, song" <qianggui.song@amlogic.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, "Bo.yang" <bo.yang@amlogic.com>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, "Sunny.luo" <sunny.luo@amlogic.com>, linux-clk@vger.kernel.org, "Xingyu.chen" <xingyu.chen@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Craig,
+On Fri, 2018-08-10 at 16:47 +0800, Jian Hu wrote:
+> Add a Clock driver for the Everything-Else part
+> of the Amlogic Meson-G12A SoC.
+> 
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> ---
+>  drivers/clk/meson/Kconfig  |   10 +
+>  drivers/clk/meson/Makefile |    1 +
+>  drivers/clk/meson/g12a.c   | 1128 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/meson/g12a.h   |  128 +++++
+>  4 files changed, 1267 insertions(+)
+>  create mode 100644 drivers/clk/meson/g12a.c
+>  create mode 100644 drivers/clk/meson/g12a.h
+> 
+> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
+> index efaa70f..16edad8 100644
+> --- a/drivers/clk/meson/Kconfig
+> +++ b/drivers/clk/meson/Kconfig
+> @@ -54,3 +54,13 @@ config COMMON_CLK_AXG_AUDIO
+>  	help
+>  	  Support for the audio clock controller on AmLogic A113D devices,
+>  	  aka axg, Say Y if you want audio subsystem to work.
+> +
+> +config COMMON_CLK_G12A
+> +	bool
+> +	depends on COMMON_CLK_AMLOGIC
+> +	select RESET_CONTROLLER
+> +	select COMMON_CLK_REGMAP_MESON
+> +	select MFD_SYSCON
 
-On 8/14/2018 5:42 PM, Sricharan R wrote:
-> [v12]
->   * Added my signed-off that was missing in some patches.
->   * Added Bjorn's acked that i missed earlier.
-> 
+Please rebase your code. You'll see this not what the other SoCs are doing
+you should select COMMON_CLK_AMLOGIC (and not depend on it), it will select
+COMMON_CLK_REGMAP_MESON for you
 
-  Can you give this a try on your 8974 device and check if the
-  pvs version reporting, scaling for higher frequencies are fine ?
-  Sorry, i could not get hold of a 8974 device. So in-case if you still
-  have the issues with higher frequencies, can you give a quick debug
-  and report. That would be of great help.
+> +	help
+> +	  Support for the clock controller on Amlogic S905D2 devices, aka g12a.
+> +	  Say Y if you want peripherals and CPU frequency scaling to work.
+> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
+> index 72ec8c4..2b1a562 100644
+> --- a/drivers/clk/meson/Makefile
+> +++ b/drivers/clk/meson/Makefile
+> @@ -9,4 +9,5 @@ obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
+>  obj-$(CONFIG_COMMON_CLK_GXBB)	 += gxbb.o gxbb-aoclk.o gxbb-aoclk-32k.o
+>  obj-$(CONFIG_COMMON_CLK_AXG)	 += axg.o axg-aoclk.o
+>  obj-$(CONFIG_COMMON_CLK_AXG_AUDIO)	+= axg-audio.o
+> +obj-$(CONFIG_COMMON_CLK_G12A)	 += g12a.o
+>  obj-$(CONFIG_COMMON_CLK_REGMAP_MESON)	+= clk-regmap.o
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> new file mode 100644
+> index 0000000..0e845bc
+> --- /dev/null
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -0,0 +1,1128 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Amlogic Meson-G12A Clock Controller Driver
+> + *
+> + * Copyright (c) 2016 Baylibre SAS.
+> + * Author: Michael Turquette <mturquette@baylibre.com>
+> + *
+> + * Copyright (c) 2018 Amlogic, inc.
+> + * Author: Qiufang Dai <qiufang.dai@amlogic.com>
+> + * Author: Jian Hu <jian.hu@amlogic.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/init.h>
+> +#include <linux/of_device.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#include "clkc.h"
+> +#include "g12a.h"
+> +
+> +static DEFINE_SPINLOCK(meson_clk_lock);
+> +
+> +static struct clk_regmap g12a_fixed_pll_dco = {
+> +	.data = &(struct meson_clk_pll_data){
+> +		.en = {
+> +			.reg_off = HHI_FIX_PLL_CNTL0,
+> +			.shift   = 28,
+> +			.width   = 1,
+> +		},
+> +		.m = {
+> +			.reg_off = HHI_FIX_PLL_CNTL0,
+> +			.shift   = 0,
+> +			.width   = 8,
+> +		},
+> +		.n = {
+> +			.reg_off = HHI_FIX_PLL_CNTL0,
+> +			.shift   = 10,
+> +			.width   = 5,
+> +		},
+> +		.frac = {
+> +			.reg_off = HHI_FIX_PLL_CNTL1,
+> +			.shift   = 0,
+> +			.width   = 19,
+> +		},
+> +		.l = {
+> +			.reg_off = HHI_FIX_PLL_CNTL0,
+> +			.shift   = 31,
+> +			.width   = 1,
+> +		},
+> +		.rst = {
+> +			.reg_off = HHI_FIX_PLL_CNTL0,
+> +			.shift   = 29,
+> +			.width   = 1,
+> +		},
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fixed_pll_dco",
+> +		.ops = &meson_clk_pll_ro_ops,
+> +		.parent_names = (const char *[]){ "xtal" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_fixed_pll = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_FIX_PLL_CNTL0,
+> +		.shift = 16,
+> +		.width = 2,
+> +		.flags = CLK_DIVIDER_POWER_OF_TWO,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fixed_pll",
+> +		.ops = &clk_regmap_divider_ro_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll_dco" },
+> +		.num_parents = 1,
+> +		/*
+> +		 * This clock won't ever change at runtime so
+> +		 * CLK_SET_RATE_PARENT is not required
+> +		 */
+> +	},
+> +};
+> +
+> +static const struct reg_sequence g12a_sys_init_regs[] = {
+> +	{ .reg = HHI_SYS_PLL_CNTL1,	.def = 0x00000000 },
+> +	{ .reg = HHI_SYS_PLL_CNTL2,	.def = 0x00000000 },
+> +	{ .reg = HHI_SYS_PLL_CNTL3,	.def = 0x48681c00 },
+> +	{ .reg = HHI_SYS_PLL_CNTL4,	.def = 0x88770290 },
+> +	{ .reg = HHI_SYS_PLL_CNTL5,	.def = 0x39272000 },
+> +	{ .reg = HHI_SYS_PLL_CNTL6,	.def = 0x56540000 },
+> +};
+> +
+> +static struct clk_regmap g12a_sys_pll_dco = {
+> +	.data = &(struct meson_clk_pll_data){
+> +		.en = {
+> +			.reg_off = HHI_SYS_PLL_CNTL0,
+> +			.shift   = 28,
+> +			.width   = 1,
+> +		},
+> +		.m = {
+> +			.reg_off = HHI_SYS_PLL_CNTL0,
+> +			.shift   = 0,
+> +			.width   = 8,
+> +		},
+> +		.n = {
+> +			.reg_off = HHI_SYS_PLL_CNTL0,
+> +			.shift   = 10,
+> +			.width   = 5,
+> +		},
+> +		.l = {
+> +			.reg_off = HHI_SYS_PLL_CNTL0,
+> +			.shift   = 31,
+> +			.width   = 1,
+> +		},
+> +		.rst = {
+> +			.reg_off = HHI_SYS_PLL_CNTL0,
+> +			.shift   = 29,
+> +			.width   = 1,
+> +		},
+> +		.init_regs = g12a_sys_init_regs,
+> +		.init_count = ARRAY_SIZE(g12a_sys_init_regs),
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sys_pll_dco",
+> +		.ops = &meson_clk_pll_ro_ops,
+> +		.parent_names = (const char *[]){ "xtal" },
+> +		.num_parents = 1,
+> +		.flags = CLK_GET_RATE_NOCACHE,
 
-Regards,
- Sricharan
+His the sys pll altered outside CCF after linux boot ?
+If not, please drop this flag. If yes, please comment.
+
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_sys_pll = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_SYS_PLL_CNTL0,
+> +		.shift = 16,
+> +		.width = 3,
+> +		.flags = CLK_DIVIDER_POWER_OF_TWO,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sys_pll",
+> +		.ops = &clk_regmap_divider_ro_ops,
+> +		.parent_names = (const char *[]){ "sys_pll_dco" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static const struct pll_params_table g12a_gp0_pll_params_table[] = {
+> +	PLL_PARAMS(40, 1),
+> +	PLL_PARAMS(41, 1),
+> +	PLL_PARAMS(42, 1),
+> +	PLL_PARAMS(43, 1),
+> +	PLL_PARAMS(44, 1),
+> +	PLL_PARAMS(45, 1),
+> +	PLL_PARAMS(46, 1),
+> +	PLL_PARAMS(47, 1),
+> +	PLL_PARAMS(48, 1),
+> +	PLL_PARAMS(49, 1),
+> +	PLL_PARAMS(50, 1),
+> +	PLL_PARAMS(51, 1),
+> +	PLL_PARAMS(52, 1),
+> +	PLL_PARAMS(53, 1),
+> +	PLL_PARAMS(54, 1),
+> +	PLL_PARAMS(55, 1),
+> +	PLL_PARAMS(56, 1),
+> +	PLL_PARAMS(57, 1),
+> +	PLL_PARAMS(58, 1),
+> +	PLL_PARAMS(59, 1),
+> +	PLL_PARAMS(60, 1),
+> +	PLL_PARAMS(61, 1),
+> +	PLL_PARAMS(62, 1),
+> +	PLL_PARAMS(63, 1),
+> +	PLL_PARAMS(64, 1),
+> +	PLL_PARAMS(65, 1),
+> +	PLL_PARAMS(66, 1),
+> +	PLL_PARAMS(67, 1),
+> +	PLL_PARAMS(68, 1),
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static const struct reg_sequence g12a_gp0_init_regs[] = {
+> +	{ .reg = HHI_GP0_PLL_CNTL1,	.def = 0x00000000 },
+> +	{ .reg = HHI_GP0_PLL_CNTL2,	.def = 0x00000000 },
+> +	{ .reg = HHI_GP0_PLL_CNTL3,	.def = 0x48681c00 },
+> +	{ .reg = HHI_GP0_PLL_CNTL4,	.def = 0x33771290 },
+> +	{ .reg = HHI_GP0_PLL_CNTL5,	.def = 0x39272000 },
+> +	{ .reg = HHI_GP0_PLL_CNTL6,	.def = 0x56540000 },
+> +};
+> +
+> +static struct clk_regmap g12a_gp0_pll_dco = {
+> +	.data = &(struct meson_clk_pll_data){
+> +		.en = {
+> +			.reg_off = HHI_GP0_PLL_CNTL0,
+> +			.shift   = 28,
+> +			.width   = 1,
+> +		},
+> +		.m = {
+> +			.reg_off = HHI_GP0_PLL_CNTL0,
+> +			.shift   = 0,
+> +			.width   = 8,
+> +		},
+> +		.n = {
+> +			.reg_off = HHI_GP0_PLL_CNTL0,
+> +			.shift   = 10,
+> +			.width   = 5,
+> +		},
+> +		.frac = {
+> +			.reg_off = HHI_GP0_PLL_CNTL1,
+> +			.shift   = 0,
+> +			.width   = 19,
+> +		},
+> +		.l = {
+> +			.reg_off = HHI_GP0_PLL_CNTL0,
+> +			.shift   = 31,
+> +			.width   = 1,
+> +		},
+> +		.rst = {
+> +			.reg_off = HHI_GP0_PLL_CNTL0,
+> +			.shift   = 29,
+> +			.width   = 1,
+> +		},
+> +		.table =g12a_gp0_pll_params_table,
+missing space here   --^
+
+Please run checkpatch.pl --strict systematically before sending your patches.
 
 
-> [v11]
->   * Dropped patch 13 and 14 from v10 and
->     merged the qcom-cpufreq-krait driver to the existing qcom-cpufreq-kryo.c
->   * Rebased on top of clk-next
->   * Fixed a bug while populating the pvs version for krait.
-> 
-> [v10]
->   * Addressed Stephen's comments to add clocks bindings properties
->     to the newly introduced nodes.
->   * Added a change to include opp-supported-hw to qcom-cpufreq.c
->   * Rebased on top of clk-next
->   * Although there were minor changes to bindings and the driver
->     retained the acked-by tags from Rob and Viresh respectively.    
-> 
-> [v9]
->   * Fixed a rebase issue in Makefile and added Tag from Robh.
-> 
-> [v8]
->   * Fixed a bug in path#14 pointed out by Viresh and also added tags.
->     No change in any other patch.
-> 
-> [v7]
->   * Fixed comments from Viresh for cleaning up the error handling
->     in qcom-cpufreq.c. Also changed the init function to lateinit
->     call. This is required because nvmem which gets initialised with
->     module_init needs to go first.
->   * Fixed Rob's comments for bindings documentation
->   * Fixed kbuild build issue in clk-lpc32xx.c
->   * Rebased on top of clk-next
-> 
-> [v6]
->   * Adrressed comments from Viresh for patch #14 in v5 [5]
->   * Introduced a new binding operating-points-v2-krait-cpu
->     as per discussion with Rob
->   * Added Review tags
-> 
-> [v5]
->   * Addressed comments from Rob for bindings
->   * Addressed comments from Viresh to use dev_pm_opp_set_prop_name, accordingly
->     dropped patch #12 and corrected patch #11 from previous patch set in [4]
->   * Converted to use #spdx tags for newly introduced files
-> 
-> Mostly a resend of the v3 posted by Stephen quite some time back [1]
-> except for few changes.
->   Based on reading some feedback from list,
->   * Dropped the patch "clk: Add safe switch hook" from v3 [2].
->     Now this is taken care by patch#10 in this series only for Krait.
->   * Dropped the path "clk: Avoid sending high rates to downstream
-> 		      clocks during set_rate" from v3 [3].
->   * Rebased on top of clk-next.
->   * Dropped the DT update from the series. Will send separately
->   * Now with cpufreq-dt+opp supporting voltage scaling, registering the
->     krait cpu supplies in DT should be sufficient. But one issue is,
->     the qcom-cpufreq drivers reads the efuse and based on that registers
->     the opp data and then registers the cpufreq-dt device. So when
->     cpufreq-dt driver probes and registers the regulator to the OPP framework,
->     it expects that the opp data for the device should not be registered before
->     the regulator. Will send a RFC patch removing that check, to find out the
->     right way of doing it.
-> 
-> These patches provide cpufreq scaling on devices with Krait CPUs.
-> In Krait CPU designs there's one PLL and two muxes per CPU, allowing
-> us to switch CPU frequencies independently.
-> 
-> 				 secondary
-> 	 +-----+                    +
-> 	 | QSB |-------+------------|\
-> 	 +-----+       |            | |-+
-> 		       |    +-------|/  |
-> 		       |    |       +   |
-> 	 +-----+       |    |           |
-> 	 | PLL |----+-------+           |   primary
-> 	 +-----+    |  |                |     +
-> 		    |  |                +-----|\       +------+
-> 	 +-------+  |  |                      | \      |      |
-> 	 | HFPLL |----------+-----------------|  |-----| CPU0 |
-> 	 +-------+  |  |    |                 |  |     |      |
-> 		    |  |    | +-----+         | /      +------+
-> 		    |  |    +-| / 2 |---------|/
-> 		    |  |      +-----+         +
-> 		    |  |         secondary
-> 		    |  |            +
-> 		    |  +------------|\
-> 		    |               | |-+
-> 		    +---------------|/  |   primary
-> 				    +   |     +
-> 					+-----|\       +------+
-> 	 +-------+                            | \      |      |
-> 	 | HFPLL |----------------------------|  |-----| CPU1 |
-> 	 +-------+          |                 |  |     |      |
-> 			    | +-----+         | /      +------+
-> 			    +-| / 2 |---------|/
-> 			      +-----+         +
-> 
-> To support this in the common clock framework we model the muxes,
-> dividers, and PLLs as different clocks. CPUfreq only interacts
-> with the primary mux (farthest right in the diagram). When CPUfreq
-> sets a rate, the mux code finds the best parent that can provide the rate.
-> Due to the design, QSB and the top PLL are always a fixed rate and thus
-> only support one frequency each. These sources provide the lowest
-> frequencies for the CPUs. The HFPLLs are where we can make the CPU go
-> faster (GHz range). Sometimes we need to run the HFPLL twice as
-> fast and divide it by two to get a particular frequency.
-> 
-> When switching rates we can't leave the CPU clocked by the HFPLL because
-> we need to turn off the output of the PLL when changing its frequency.
-> This means we have to switch over to the secondary mux and use one of the
-> fixed sources. This is why we need something like the safe parent patch.
-> 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/332607.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/332615.html
-> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/332608.html
-> [4] https://lwn.net/Articles/740994/ 
-> [5] https://lkml.org/lkml/2017/12/19/537
-> 
-> 
-> Sricharan R (3):
->   clk: qcom: Add safe switch hook for krait mux clocks
->   cpufreq: qcom: Re-organise kryo cpufreq to use it for other nvmem
->     based qcom socs
->   cpufreq: qcom: Add support for krait based socs
-> 
-> Stephen Boyd (11):
->   ARM: Add Krait L2 register accessor functions
->   clk: qcom: Add support for High-Frequency PLLs (HFPLLs)
->   clk: qcom: Add HFPLL driver
->   dt-bindings: clock: Document qcom,hfpll
->   clk: qcom: Add MSM8960/APQ8064's HFPLLs
->   clk: qcom: Add IPQ806X's HFPLLs
->   clk: qcom: Add support for Krait clocks
->   clk: qcom: Add KPSS ACC/GCC driver
->   dt-bindings: arm: Document qcom,kpss-gcc
->   clk: qcom: Add Krait clock controller driver
->   dt-bindings: clock: Document qcom,krait-cc
-> 
->  .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  |  19 +
->  .../devicetree/bindings/arm/msm/qcom,kpss-gcc.txt  |  44 +++
->  .../devicetree/bindings/clock/qcom,hfpll.txt       |  60 ++++
->  .../devicetree/bindings/clock/qcom,krait-cc.txt    |  34 ++
->  .../{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt}   |   7 +-
->  arch/arm/common/Kconfig                            |   3 +
->  arch/arm/common/Makefile                           |   1 +
->  arch/arm/common/krait-l2-accessors.c               |  48 +++
->  arch/arm/include/asm/krait-l2-accessors.h          |   9 +
->  drivers/clk/qcom/Kconfig                           |  28 ++
->  drivers/clk/qcom/Makefile                          |   5 +
->  drivers/clk/qcom/clk-hfpll.c                       | 244 +++++++++++++
->  drivers/clk/qcom/clk-hfpll.h                       |  44 +++
->  drivers/clk/qcom/clk-krait.c                       | 126 +++++++
->  drivers/clk/qcom/clk-krait.h                       |  40 +++
->  drivers/clk/qcom/gcc-ipq806x.c                     |  82 +++++
->  drivers/clk/qcom/gcc-msm8960.c                     | 172 +++++++++
->  drivers/clk/qcom/hfpll.c                           |  96 +++++
->  drivers/clk/qcom/kpss-xcc.c                        |  87 +++++
->  drivers/clk/qcom/krait-cc.c                        | 397 +++++++++++++++++++++
->  drivers/cpufreq/Kconfig.arm                        |   6 +-
->  drivers/cpufreq/Makefile                           |   2 +-
->  drivers/cpufreq/cpufreq-dt-platdev.c               |   5 +
->  drivers/cpufreq/qcom-cpufreq-kryo.c                | 232 ------------
->  drivers/cpufreq/qcom-cpufreq-nvmem.c               | 387 ++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-msm8960.h       |   2 +
->  26 files changed, 1941 insertions(+), 239 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-gcc.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,hfpll.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,krait-cc.txt
->  rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (98%)
->  create mode 100644 arch/arm/common/krait-l2-accessors.c
->  create mode 100644 arch/arm/include/asm/krait-l2-accessors.h
->  create mode 100644 drivers/clk/qcom/clk-hfpll.c
->  create mode 100644 drivers/clk/qcom/clk-hfpll.h
->  create mode 100644 drivers/clk/qcom/clk-krait.c
->  create mode 100644 drivers/clk/qcom/clk-krait.h
->  create mode 100644 drivers/clk/qcom/hfpll.c
->  create mode 100644 drivers/clk/qcom/kpss-xcc.c
->  create mode 100644 drivers/clk/qcom/krait-cc.c
->  delete mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
->  create mode 100644 drivers/cpufreq/qcom-cpufreq-nvmem.c
-> 
+> +		.init_regs = g12a_gp0_init_regs,
+> +		.init_count = ARRAY_SIZE(g12a_gp0_init_regs),
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "gp0_pll_dco",
+> +		.ops = &meson_clk_pll_ops,
+> +		.parent_names = (const char *[]){ "xtal" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_gp0_pll = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_GP0_PLL_CNTL0,
+> +		.shift = 16,
+> +		.width = 3,
+> +		.flags = CLK_DIVIDER_POWER_OF_TWO,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "gp0_pll",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "gp0_pll_dco" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static const struct reg_sequence g12a_hifi_init_regs[] = {
+> +	{ .reg = HHI_HIFI_PLL_CNTL1,	.def = 0x00000000 },
+> +	{ .reg = HHI_HIFI_PLL_CNTL2,	.def = 0x00000000 },
+> +	{ .reg = HHI_HIFI_PLL_CNTL3,	.def = 0x6a285c00 },
+> +	{ .reg = HHI_HIFI_PLL_CNTL4,	.def = 0x65771290 },
+> +	{ .reg = HHI_HIFI_PLL_CNTL5,	.def = 0x39272000 },
+> +	{ .reg = HHI_HIFI_PLL_CNTL6,	.def = 0x56540000 },
+> +};
+> +
+> +static struct clk_regmap g12a_hifi_pll_dco = {
+> +	.data = &(struct meson_clk_pll_data){
+> +		.en = {
+> +			.reg_off = HHI_HIFI_PLL_CNTL0,
+> +			.shift   = 28,
+> +			.width   = 1,
+> +		},
+> +		.m = {
+> +			.reg_off = HHI_HIFI_PLL_CNTL0,
+> +			.shift   = 0,
+> +			.width   = 8,
+> +		},
+> +		.n = {
+> +			.reg_off = HHI_HIFI_PLL_CNTL0,
+> +			.shift   = 10,
+> +			.width   = 5,
+> +		},
+> +		.frac = {
+> +			.reg_off = HHI_HIFI_PLL_CNTL1,
+> +			.shift   = 0,
+> +			.width   = 19,
+> +		},
+> +		.l = {
+> +			.reg_off = HHI_HIFI_PLL_CNTL0,
+> +			.shift   = 31,
+> +			.width   = 1,
+> +		},
+> +		.rst = {
+> +			.reg_off = HHI_HIFI_PLL_CNTL0,
+> +			.shift   = 29,
+> +			.width   = 1,
+> +		},
+> +		.table = g12a_gp0_pll_params_table,
+> +		.init_regs = g12a_hifi_init_regs,
+> +		.init_count = ARRAY_SIZE(g12a_hifi_init_regs),
+> +		.flags = CLK_MESON_PLL_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "hifi_pll_dco",
+> +		.ops = &meson_clk_pll_ops,
+> +		.parent_names = (const char *[]){ "xtal" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_hifi_pll = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_HIFI_PLL_CNTL0,
+> +		.shift = 16,
+> +		.width = 2,
+> +		.flags = CLK_DIVIDER_POWER_OF_TWO,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "hifi_pll",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "hifi_pll_dco" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor g12a_fclk_div2_div = {
+> +	.mult = 1,
+> +	.div = 2,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div2_div",
+> +		.ops = &clk_fixed_factor_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_fclk_div2 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_FIX_PLL_CNTL1,
+> +		.bit_idx = 24,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div2",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "fclk_div2_div" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor g12a_fclk_div3_div = {
+> +	.mult = 1,
+> +	.div = 3,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div3_div",
+> +		.ops = &clk_fixed_factor_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_fclk_div3 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_FIX_PLL_CNTL1,
+> +		.bit_idx = 20,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div3",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "fclk_div3_div" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor g12a_fclk_div4_div = {
+> +	.mult = 1,
+> +	.div = 4,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div4_div",
+> +		.ops = &clk_fixed_factor_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_fclk_div4 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_FIX_PLL_CNTL1,
+> +		.bit_idx = 21,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div4",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "fclk_div4_div" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor g12a_fclk_div5_div = {
+> +	.mult = 1,
+> +	.div = 5,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div5_div",
+> +		.ops = &clk_fixed_factor_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_fclk_div5 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_FIX_PLL_CNTL1,
+> +		.bit_idx = 22,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div5",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "fclk_div5_div" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor g12a_fclk_div7_div = {
+> +	.mult = 1,
+> +	.div = 7,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div7_div",
+> +		.ops = &clk_fixed_factor_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_fclk_div7 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_FIX_PLL_CNTL1,
+> +		.bit_idx = 23,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div7",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "fclk_div7_div" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_fixed_factor g12a_fclk_div2p5_div = {
+> +	.mult = 2,
+> +	.div = 5,
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div2p5_div",
+> +		.ops = &clk_fixed_factor_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+This is what the documentation shows.
+According to the documentation, this clock should take the dco output and divide
+by 8.
+
+If this is not actually the case, please comment on it.
+
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_fclk_div2p5 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_FIX_PLL_CNTL1,
+> +		.bit_idx = 25,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "fclk_div2p5",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "fclk_div2p5_div" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpll0_div = {
+> +	.data = &(struct meson_clk_mpll_data){
+> +		.sdm = {
+> +			.reg_off = HHI_MPLL_CNTL1,
+> +			.shift   = 0,
+> +			.width   = 14,
+> +		},
+> +		.sdm_en = {
+> +			.reg_off = HHI_MPLL_CNTL1,
+> +			.shift   = 30,
+> +			.width	 = 1,
+> +		},
+> +		.n2 = {
+> +			.reg_off = HHI_MPLL_CNTL1,
+> +			.shift   = 20,
+> +			.width   = 9,
+> +		},
+> +		.ssen = {
+> +			.reg_off = HHI_MPLL_CNTL1,
+> +			.shift   = 29,
+> +			.width	 = 1,
+> +		},
+> +		.lock = &meson_clk_lock,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpll0_div",
+> +		.ops = &meson_clk_mpll_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+
+According to the documentation, the mplls are from a fixed divider by 2 which is
+fed by the dco ... it should not involve the od provided by "fixed_pll"
+
+Same goes for the other mplls
+
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpll0 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_MPLL_CNTL1,
+> +		.bit_idx = 31,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpll0",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "mpll0_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpll1_div = {
+> +	.data = &(struct meson_clk_mpll_data){
+> +		.sdm = {
+> +			.reg_off = HHI_MPLL_CNTL3,
+> +			.shift   = 0,
+> +			.width   = 14,
+> +		},
+> +		.sdm_en = {
+> +			.reg_off = HHI_MPLL_CNTL3,
+> +			.shift   = 30,
+> +			.width	 = 1,
+> +		},
+> +		.n2 = {
+> +			.reg_off = HHI_MPLL_CNTL3,
+> +			.shift   = 20,
+> +			.width   = 9,
+> +		},
+> +		.ssen = {
+> +			.reg_off = HHI_MPLL_CNTL3,
+> +			.shift   = 29,
+> +			.width	 = 1,
+> +		},
+> +		.lock = &meson_clk_lock,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpll1_div",
+> +		.ops = &meson_clk_mpll_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpll1 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_MPLL_CNTL3,
+> +		.bit_idx = 31,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpll1",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "mpll1_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpll2_div = {
+> +	.data = &(struct meson_clk_mpll_data){
+> +		.sdm = {
+> +			.reg_off = HHI_MPLL_CNTL5,
+> +			.shift   = 0,
+> +			.width   = 14,
+> +		},
+> +		.sdm_en = {
+> +			.reg_off = HHI_MPLL_CNTL5,
+> +			.shift   = 30,
+> +			.width	 = 1,
+> +		},
+> +		.n2 = {
+> +			.reg_off = HHI_MPLL_CNTL5,
+> +			.shift   = 20,
+> +			.width   = 9,
+> +		},
+> +		.ssen = {
+> +			.reg_off = HHI_MPLL_CNTL5,
+> +			.shift   = 29,
+> +			.width	 = 1,
+> +		},
+> +		.lock = &meson_clk_lock,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpll2_div",
+> +		.ops = &meson_clk_mpll_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpll2 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_MPLL_CNTL5,
+> +		.bit_idx = 31,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpll2",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "mpll2_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpll3_div = {
+> +	.data = &(struct meson_clk_mpll_data){
+> +		.sdm = {
+> +			.reg_off = HHI_MPLL_CNTL7,
+> +			.shift   = 0,
+> +			.width   = 14,
+> +		},
+> +		.sdm_en = {
+> +			.reg_off = HHI_MPLL_CNTL7,
+> +			.shift   = 30,
+> +			.width	 = 1,
+> +		},
+> +		.n2 = {
+> +			.reg_off = HHI_MPLL_CNTL7,
+> +			.shift   = 20,
+> +			.width   = 9,
+> +		},
+> +		.ssen = {
+> +			.reg_off = HHI_MPLL_CNTL7,
+> +			.shift   = 29,
+> +			.width	 = 1,
+> +		},
+> +		.lock = &meson_clk_lock,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpll3_div",
+> +		.ops = &meson_clk_mpll_ops,
+> +		.parent_names = (const char *[]){ "fixed_pll" },
+> +		.num_parents = 1,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpll3 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_MPLL_CNTL7,
+> +		.bit_idx = 31,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpll3",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "mpll3_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static u32 mux_table_clk81[]	= { 0, 2, 3, 4, 5, 6, 7 };
+> +static const char * const clk81_parent_names[] = {
+> +	"xtal", "fclk_div7", "mpll1", "mpll2", "fclk_div4",
+> +	"fclk_div3", "fclk_div5"
+> +};
+
+you've called the clock mpeg which is fine but be consistent and use the same
+for the parent tables above.
+
+> +
+> +static struct clk_regmap g12a_mpeg_clk_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_MPEG_CLK_CNTL,
+> +		.mask = 0x7,
+> +		.shift = 12,
+> +		.table = mux_table_clk81,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpeg_clk_sel",
+> +		.ops = &clk_regmap_mux_ro_ops,
+> +		.parent_names = clk81_parent_names,
+> +		.num_parents = ARRAY_SIZE(clk81_parent_names),
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_mpeg_clk_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_MPEG_CLK_CNTL,
+> +		.shift = 0,
+> +		.width = 7,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "mpeg_clk_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "mpeg_clk_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_clk81 = {
+
+s/g12a_clk81/g12a_mpeg_clk
+
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_MPEG_CLK_CNTL,
+> +		.bit_idx = 7,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "clk81",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "mpeg_clk_div" },
+> +		.num_parents = 1,
+> +		.flags = (CLK_SET_RATE_PARENT | CLK_IS_CRITICAL),
+> +	},
+> +};
+> +
+> +static const char * const g12a_sd_emmc_clk0_parent_names[] = {
+> +	"xtal", "fclk_div2", "fclk_div3", "fclk_div5", "fclk_div7",
+> +
+> +	/*
+> +	 * Following these parent clocks, we should also have had mpll2, mpll3
+> +	 * and gp0_pll but these clocks are too precious to be used here. All
+> +	 * the necessary rates for MMC and NAND operation can be acheived using
+> +	 * xtal or fclk_div clocks
+> +	 */
+> +};
+> +
+> +/* SDcard clock */
+> +static struct clk_regmap g12a_sd_emmc_b_clk0_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_SD_EMMC_CLK_CNTL,
+> +		.mask = 0x7,
+> +		.shift = 25,
+> +		.flags = CLK_MUX_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "sd_emmc_b_clk0_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = g12a_sd_emmc_clk0_parent_names,
+> +		.num_parents = ARRAY_SIZE(g12a_sd_emmc_clk0_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_sd_emmc_b_clk0_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_SD_EMMC_CLK_CNTL,
+> +		.shift = 16,
+> +		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "sd_emmc_b_clk0_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "sd_emmc_b_clk0_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_sd_emmc_b_clk0 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_SD_EMMC_CLK_CNTL,
+> +		.bit_idx = 23,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sd_emmc_b_clk0",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "sd_emmc_b_clk0_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +/* EMMC/NAND clock */
+> +static struct clk_regmap g12a_sd_emmc_c_clk0_sel = {
+> +	.data = &(struct clk_regmap_mux_data){
+> +		.offset = HHI_NAND_CLK_CNTL,
+> +		.mask = 0x7,
+> +		.shift = 9,
+> +		.flags = CLK_MUX_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "sd_emmc_c_clk0_sel",
+> +		.ops = &clk_regmap_mux_ops,
+> +		.parent_names = g12a_sd_emmc_clk0_parent_names,
+> +		.num_parents = ARRAY_SIZE(g12a_sd_emmc_clk0_parent_names),
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_sd_emmc_c_clk0_div = {
+> +	.data = &(struct clk_regmap_div_data){
+> +		.offset = HHI_NAND_CLK_CNTL,
+> +		.shift = 0,
+> +		.width = 7,
+> +		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+> +	},
+> +	.hw.init = &(struct clk_init_data) {
+> +		.name = "sd_emmc_c_clk0_div",
+> +		.ops = &clk_regmap_divider_ops,
+> +		.parent_names = (const char *[]){ "sd_emmc_c_clk0_sel" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +static struct clk_regmap g12a_sd_emmc_c_clk0 = {
+> +	.data = &(struct clk_regmap_gate_data){
+> +		.offset = HHI_NAND_CLK_CNTL,
+> +		.bit_idx = 7,
+> +	},
+> +	.hw.init = &(struct clk_init_data){
+> +		.name = "sd_emmc_c_clk0",
+> +		.ops = &clk_regmap_gate_ops,
+> +		.parent_names = (const char *[]){ "sd_emmc_c_clk0_div" },
+> +		.num_parents = 1,
+> +		.flags = CLK_SET_RATE_PARENT,
+> +	},
+> +};
+> +
+> +/* Everything Else (EE) domain gates */
+> +static MESON_GATE(g12a_ddr,			HHI_GCLK_MPEG0,	0);
+> +static MESON_GATE(g12a_dos,			HHI_GCLK_MPEG0,	1);
+> +static MESON_GATE(g12a_audio_locker,		HHI_GCLK_MPEG0,	2);
+> +static MESON_GATE(g12a_mipi_dsi_host,		HHI_GCLK_MPEG0,	3);
+> +static MESON_GATE(g12a_eth_phy,			HHI_GCLK_MPEG0,	4);
+> +static MESON_GATE(g12a_isa,			HHI_GCLK_MPEG0,	5);
+> +static MESON_GATE(g12a_pl301,			HHI_GCLK_MPEG0,	6);
+> +static MESON_GATE(g12a_periphs,			HHI_GCLK_MPEG0,	7);
+> +static MESON_GATE(g12a_spicc_0,			HHI_GCLK_MPEG0,	8);
+> +static MESON_GATE(g12a_i2c,			HHI_GCLK_MPEG0,	9);
+> +static MESON_GATE(g12a_sana,			HHI_GCLK_MPEG0,	10);
+> +static MESON_GATE(g12a_sd,			HHI_GCLK_MPEG0,	11);
+> +static MESON_GATE(g12a_rng0,			HHI_GCLK_MPEG0,	12);
+> +static MESON_GATE(g12a_uart0,			HHI_GCLK_MPEG0,	13);
+> +static MESON_GATE(g12a_spicc_1,			HHI_GCLK_MPEG0,	14);
+> +static MESON_GATE(g12a_hiu_reg,			HHI_GCLK_MPEG0,	19);
+> +static MESON_GATE(g12a_mipi_dsi_phy,		HHI_GCLK_MPEG0,	20);
+> +static MESON_GATE(g12a_assist_misc,		HHI_GCLK_MPEG0,	23);
+> +static MESON_GATE(g12a_emmc_a,			HHI_GCLK_MPEG0,	4);
+> +static MESON_GATE(g12a_emmc_b,			HHI_GCLK_MPEG0,	25);
+> +static MESON_GATE(g12a_emmc_c,			HHI_GCLK_MPEG0,	26);
+> +static MESON_GATE(g12a_audio_codec,		HHI_GCLK_MPEG0,	28);
+> +
+> +static MESON_GATE(g12a_audio,			HHI_GCLK_MPEG1,	0);
+> +static MESON_GATE(g12a_eth_core,		HHI_GCLK_MPEG1,	3);
+> +static MESON_GATE(g12a_demux,			HHI_GCLK_MPEG1,	4);
+> +static MESON_GATE(g12a_audio_ififo,		HHI_GCLK_MPEG1,	11);
+> +static MESON_GATE(g12a_adc,			HHI_GCLK_MPEG1,	13);
+> +static MESON_GATE(g12a_uart1,			HHI_GCLK_MPEG1,	16);
+> +static MESON_GATE(g12a_g2d,			HHI_GCLK_MPEG1,	20);
+> +static MESON_GATE(g12a_reset,			HHI_GCLK_MPEG1,	23);
+> +static MESON_GATE(g12a_pcie_comb,		HHI_GCLK_MPEG1,	24);
+> +static MESON_GATE(g12a_parser,			HHI_GCLK_MPEG1,	25);
+> +static MESON_GATE(g12a_usb_general,		HHI_GCLK_MPEG1,	26);
+> +static MESON_GATE(g12a_pcie_phy,		HHI_GCLK_MPEG1,	27);
+> +static MESON_GATE(g12a_ahb_arb0,		HHI_GCLK_MPEG1,	29);
+> +
+> +static MESON_GATE(g12a_ahb_data_bus,		HHI_GCLK_MPEG2,	1);
+> +static MESON_GATE(g12a_ahb_ctrl_bus,		HHI_GCLK_MPEG2,	2);
+> +static MESON_GATE(g12a_htx_hdcp22,		HHI_GCLK_MPEG2,	3);
+> +static MESON_GATE(g12a_htx_pclk,		HHI_GCLK_MPEG2,	4);
+> +static MESON_GATE(g12a_bt656,			HHI_GCLK_MPEG2,	6);
+> +static MESON_GATE(g12a_usb1_to_ddr,		HHI_GCLK_MPEG2,	8);
+> +static MESON_GATE(g12a_mmc_pclk,		HHI_GCLK_MPEG2,	11);
+> +static MESON_GATE(g12a_uart2,			HHI_GCLK_MPEG2,	15);
+> +static MESON_GATE(g12a_vpu_intr,		HHI_GCLK_MPEG2,	25);
+> +static MESON_GATE(g12a_gic,			HHI_GCLK_MPEG2,	30);
+> +
+> +static MESON_GATE(g12a_vclk2_venci0,		HHI_GCLK_OTHER,	1);
+> +static MESON_GATE(g12a_vclk2_venci1,		HHI_GCLK_OTHER,	2);
+> +static MESON_GATE(g12a_vclk2_vencp0,		HHI_GCLK_OTHER,	3);
+> +static MESON_GATE(g12a_vclk2_vencp1,		HHI_GCLK_OTHER,	4);
+> +static MESON_GATE(g12a_vclk2_venct0,		HHI_GCLK_OTHER,	5);
+> +static MESON_GATE(g12a_vclk2_venct1,		HHI_GCLK_OTHER,	6);
+> +static MESON_GATE(g12a_vclk2_other,		HHI_GCLK_OTHER,	7);
+> +static MESON_GATE(g12a_vclk2_enci,		HHI_GCLK_OTHER,	8);
+> +static MESON_GATE(g12a_vclk2_encp,		HHI_GCLK_OTHER,	9);
+> +static MESON_GATE(g12a_dac_clk,			HHI_GCLK_OTHER,	10);
+> +static MESON_GATE(g12a_aoclk_gate,		HHI_GCLK_OTHER,	14);
+> +static MESON_GATE(g12a_iec958_gate,		HHI_GCLK_OTHER,	16);
+> +static MESON_GATE(g12a_enc480p,			HHI_GCLK_OTHER,	20);
+> +static MESON_GATE(g12a_rng1,			HHI_GCLK_OTHER,	21);
+> +static MESON_GATE(g12a_vclk2_enct,		HHI_GCLK_OTHER,	22);
+> +static MESON_GATE(g12a_vclk2_encl,		HHI_GCLK_OTHER,	23);
+> +static MESON_GATE(g12a_vclk2_venclmmc,		HHI_GCLK_OTHER,	24);
+> +static MESON_GATE(g12a_vclk2_vencl,		HHI_GCLK_OTHER,	25);
+> +static MESON_GATE(g12a_vclk2_other1,		HHI_GCLK_OTHER,	26);
+> +
+> +/* Array of all clocks provided by this provider */
+> +static struct clk_hw_onecell_data g12a_hw_onecell_data = {
+> +	.hws = {
+> +		[CLKID_SYS_PLL]			= &g12a_sys_pll.hw,
+> +		[CLKID_FIXED_PLL]		= &g12a_fixed_pll.hw,
+> +		[CLKID_FCLK_DIV2]		= &g12a_fclk_div2.hw,
+> +		[CLKID_FCLK_DIV3]		= &g12a_fclk_div3.hw,
+> +		[CLKID_FCLK_DIV4]		= &g12a_fclk_div4.hw,
+> +		[CLKID_FCLK_DIV5]		= &g12a_fclk_div5.hw,
+> +		[CLKID_FCLK_DIV7]		= &g12a_fclk_div7.hw,
+> +		[CLKID_FCLK_DIV2P5]		= &g12a_fclk_div2p5.hw,
+> +		[CLKID_GP0_PLL]			= &g12a_gp0_pll.hw,
+> +		[CLKID_MPEG_SEL]		= &g12a_mpeg_clk_sel.hw,
+> +		[CLKID_MPEG_DIV]		= &g12a_mpeg_clk_div.hw,
+> +		[CLKID_CLK81]			= &g12a_clk81.hw,
+> +		[CLKID_MPLL0]			= &g12a_mpll0.hw,
+> +		[CLKID_MPLL1]			= &g12a_mpll1.hw,
+> +		[CLKID_MPLL2]			= &g12a_mpll2.hw,
+> +		[CLKID_MPLL3]			= &g12a_mpll3.hw,
+> +		[CLKID_DDR]			= &g12a_ddr.hw,
+> +		[CLKID_DOS]			= &g12a_dos.hw,
+> +		[CLKID_AUDIO_LOCKER]		= &g12a_audio_locker.hw,
+> +		[CLKID_MIPI_DSI_HOST]		= &g12a_mipi_dsi_host.hw,
+> +		[CLKID_ETH_PHY]			= &g12a_eth_phy.hw,
+> +		[CLKID_ISA]			= &g12a_isa.hw,
+> +		[CLKID_PL301]			= &g12a_pl301.hw,
+> +		[CLKID_PERIPHS]			= &g12a_periphs.hw,
+> +		[CLKID_SPICC0]			= &g12a_spicc_0.hw,
+> +		[CLKID_I2C]			= &g12a_i2c.hw,
+> +		[CLKID_SANA]			= &g12a_sana.hw,
+> +		[CLKID_SD]			= &g12a_sd.hw,
+> +		[CLKID_RNG0]			= &g12a_rng0.hw,
+> +		[CLKID_UART0]			= &g12a_uart0.hw,
+> +		[CLKID_SPICC1]			= &g12a_spicc_1.hw,
+> +		[CLKID_HIU_IFACE]		= &g12a_hiu_reg.hw,
+> +		[CLKID_MIPI_DSI_PHY]		= &g12a_mipi_dsi_phy.hw,
+> +		[CLKID_ASSIST_MISC]		= &g12a_assist_misc.hw,
+> +		[CLKID_SD_EMMC_A]		= &g12a_emmc_a.hw,
+> +		[CLKID_SD_EMMC_B]		= &g12a_emmc_b.hw,
+> +		[CLKID_SD_EMMC_C]		= &g12a_emmc_c.hw,
+> +		[CLKID_AUDIO_CODEC]		= &g12a_audio_codec.hw,
+> +		[CLKID_AUDIO]			= &g12a_audio.hw,
+> +		[CLKID_ETH]			= &g12a_eth_core.hw,
+> +		[CLKID_DEMUX]			= &g12a_demux.hw,
+> +		[CLKID_AUDIO_IFIFO]		= &g12a_audio_ififo.hw,
+> +		[CLKID_ADC]			= &g12a_adc.hw,
+> +		[CLKID_UART1]			= &g12a_uart1.hw,
+> +		[CLKID_G2D]			= &g12a_g2d.hw,
+> +		[CLKID_RESET]			= &g12a_reset.hw,
+> +		[CLKID_PCIE_COMB]		= &g12a_pcie_comb.hw,
+> +		[CLKID_PARSER]			= &g12a_parser.hw,
+> +		[CLKID_USB]			= &g12a_usb_general.hw,
+> +		[CLKID_PCIE_PHY]		= &g12a_pcie_phy.hw,
+> +		[CLKID_AHB_ARB0]		= &g12a_ahb_arb0.hw,
+> +		[CLKID_AHB_DATA_BUS]		= &g12a_ahb_data_bus.hw,
+> +		[CLKID_AHB_CTRL_BUS]		= &g12a_ahb_ctrl_bus.hw,
+> +		[CLKID_HTX_HDCP22]		= &g12a_htx_hdcp22.hw,
+> +		[CLKID_HTX_PCLK]		= &g12a_htx_pclk.hw,
+> +		[CLKID_BT656]			= &g12a_bt656.hw,
+> +		[CLKID_USB1_DDR_BRIDGE]		= &g12a_usb1_to_ddr.hw,
+> +		[CLKID_MMC_PCLK]		= &g12a_mmc_pclk.hw,
+> +		[CLKID_UART2]			= &g12a_uart2.hw,
+> +		[CLKID_VPU_INTR]		= &g12a_vpu_intr.hw,
+> +		[CLKID_GIC]			= &g12a_gic.hw,
+> +		[CLKID_SD_EMMC_B_CLK0_SEL]	= &g12a_sd_emmc_b_clk0_sel.hw,
+> +		[CLKID_SD_EMMC_B_CLK0_DIV]	= &g12a_sd_emmc_b_clk0_div.hw,
+> +		[CLKID_SD_EMMC_B_CLK0]		= &g12a_sd_emmc_b_clk0.hw,
+> +		[CLKID_SD_EMMC_C_CLK0_SEL]	= &g12a_sd_emmc_c_clk0_sel.hw,
+> +		[CLKID_SD_EMMC_C_CLK0_DIV]	= &g12a_sd_emmc_c_clk0_div.hw,
+> +		[CLKID_SD_EMMC_C_CLK0]		= &g12a_sd_emmc_c_clk0.hw,
+> +		[CLKID_MPLL0_DIV]		= &g12a_mpll0_div.hw,
+> +		[CLKID_MPLL1_DIV]		= &g12a_mpll1_div.hw,
+> +		[CLKID_MPLL2_DIV]		= &g12a_mpll2_div.hw,
+> +		[CLKID_MPLL3_DIV]		= &g12a_mpll3_div.hw,
+> +		[CLKID_FCLK_DIV2_DIV]		= &g12a_fclk_div2_div.hw,
+> +		[CLKID_FCLK_DIV3_DIV]		= &g12a_fclk_div3_div.hw,
+> +		[CLKID_FCLK_DIV4_DIV]		= &g12a_fclk_div4_div.hw,
+> +		[CLKID_FCLK_DIV5_DIV]		= &g12a_fclk_div5_div.hw,
+> +		[CLKID_FCLK_DIV7_DIV]		= &g12a_fclk_div7_div.hw,
+> +		[CLKID_FCLK_DIV2P5_DIV]		= &g12a_fclk_div2p5_div.hw,
+> +		[CLKID_HIFI_PLL]		= &g12a_hifi_pll.hw,
+> +		[CLKID_VCLK2_VENCI0]		= &g12a_vclk2_venci0.hw,
+> +		[CLKID_VCLK2_VENCI1]		= &g12a_vclk2_venci1.hw,
+> +		[CLKID_VCLK2_VENCP0]		= &g12a_vclk2_vencp0.hw,
+> +		[CLKID_VCLK2_VENCP1]		= &g12a_vclk2_vencp1.hw,
+> +		[CLKID_VCLK2_VENCT0]		= &g12a_vclk2_venct0.hw,
+> +		[CLKID_VCLK2_VENCT1]		= &g12a_vclk2_venct1.hw,
+> +		[CLKID_VCLK2_OTHER]		= &g12a_vclk2_other.hw,
+> +		[CLKID_VCLK2_ENCI]		= &g12a_vclk2_enci.hw,
+> +		[CLKID_VCLK2_ENCP]		= &g12a_vclk2_encp.hw,
+> +		[CLKID_DAC_CLK]			= &g12a_dac_clk.hw,
+> +		[CLKID_AOCLK]			= &g12a_aoclk_gate.hw,
+> +		[CLKID_IEC958]			= &g12a_iec958_gate.hw,
+> +		[CLKID_ENC480P]			= &g12a_enc480p.hw,
+> +		[CLKID_RNG1]			= &g12a_rng1.hw,
+> +		[CLKID_VCLK2_ENCT]		= &g12a_vclk2_enct.hw,
+> +		[CLKID_VCLK2_ENCL]		= &g12a_vclk2_encl.hw,
+> +		[CLKID_VCLK2_VENCLMMC]		= &g12a_vclk2_venclmmc.hw,
+> +		[CLKID_VCLK2_VENCL]		= &g12a_vclk2_vencl.hw,
+> +		[CLKID_VCLK2_OTHER1]		= &g12a_vclk2_other1.hw,
+> +		[CLKID_FIXED_PLL_DCO]		= &g12a_fixed_pll_dco.hw,
+> +		[CLKID_SYS_PLL_DCO]		= &g12a_sys_pll_dco.hw,
+> +		[CLKID_GP0_PLL_DCO]		= &g12a_gp0_pll_dco.hw,
+> +		[CLKID_HIFI_PLL_DCO]		= &g12a_hifi_pll_dco.hw,
+> +		[NR_CLKS]			= NULL,
+> +	},
+> +	.num = NR_CLKS,
+> +};
+> +
+> +/* Convenience table to populate regmap in .probe */
+> +static struct clk_regmap *const g12a_clk_regmaps[] = {
+> +	&g12a_clk81,
+> +	&g12a_dos,
+> +	&g12a_ddr,
+> +	&g12a_audio_locker,
+> +	&g12a_mipi_dsi_host,
+> +	&g12a_eth_phy,
+> +	&g12a_isa,
+> +	&g12a_pl301,
+> +	&g12a_periphs,
+> +	&g12a_spicc_0,
+> +	&g12a_i2c,
+> +	&g12a_sana,
+> +	&g12a_sd,
+> +	&g12a_rng0,
+> +	&g12a_uart0,
+> +	&g12a_spicc_1,
+> +	&g12a_hiu_reg,
+> +	&g12a_mipi_dsi_phy,
+> +	&g12a_assist_misc,
+> +	&g12a_emmc_a,
+> +	&g12a_emmc_b,
+> +	&g12a_emmc_c,
+> +	&g12a_audio_codec,
+> +	&g12a_audio,
+> +	&g12a_eth_core,
+> +	&g12a_demux,
+> +	&g12a_audio_ififo,
+> +	&g12a_adc,
+> +	&g12a_uart1,
+> +	&g12a_g2d,
+> +	&g12a_reset,
+> +	&g12a_pcie_comb,
+> +	&g12a_parser,
+> +	&g12a_usb_general,
+> +	&g12a_pcie_phy,
+> +	&g12a_ahb_arb0,
+> +	&g12a_ahb_data_bus,
+> +	&g12a_ahb_ctrl_bus,
+> +	&g12a_htx_hdcp22,
+> +	&g12a_htx_pclk,
+> +	&g12a_bt656,
+> +	&g12a_usb1_to_ddr,
+> +	&g12a_mmc_pclk,
+> +	&g12a_vpu_intr,
+> +	&g12a_gic,
+> +	&g12a_sd_emmc_b_clk0,
+> +	&g12a_sd_emmc_c_clk0,
+> +	&g12a_mpeg_clk_div,
+> +	&g12a_sd_emmc_b_clk0_div,
+> +	&g12a_sd_emmc_c_clk0_div,
+> +	&g12a_mpeg_clk_sel,
+> +	&g12a_sd_emmc_b_clk0_sel,
+> +	&g12a_sd_emmc_c_clk0_sel,
+> +	&g12a_mpll0,
+> +	&g12a_mpll1,
+> +	&g12a_mpll2,
+> +	&g12a_mpll3,
+> +	&g12a_mpll0_div,
+> +	&g12a_mpll1_div,
+> +	&g12a_mpll2_div,
+> +	&g12a_mpll3_div,
+> +	&g12a_fixed_pll,
+> +	&g12a_sys_pll,
+> +	&g12a_gp0_pll,
+> +	&g12a_hifi_pll,
+> +	&g12a_vclk2_venci0,
+> +	&g12a_vclk2_venci1,
+> +	&g12a_vclk2_vencp0,
+> +	&g12a_vclk2_vencp1,
+> +	&g12a_vclk2_venct0,
+> +	&g12a_vclk2_venct1,
+> +	&g12a_vclk2_other,
+> +	&g12a_vclk2_enci,
+> +	&g12a_vclk2_encp,
+> +	&g12a_dac_clk,
+> +	&g12a_aoclk_gate,
+> +	&g12a_iec958_gate,
+> +	&g12a_enc480p,
+> +	&g12a_rng1,
+> +	&g12a_vclk2_enct,
+> +	&g12a_vclk2_encl,
+> +	&g12a_vclk2_venclmmc,
+> +	&g12a_vclk2_vencl,
+> +	&g12a_vclk2_other1,
+> +	&g12a_fixed_pll_dco,
+> +	&g12a_sys_pll_dco,
+> +	&g12a_gp0_pll_dco,
+> +	&g12a_hifi_pll_dco,
+> +};
+> +
+> +static const struct of_device_id clkc_match_table[] = {
+> +	{ .compatible = "amlogic,g12a-clkc" },
+> +	{}
+> +};
+> +
+> +static const struct regmap_config clkc_regmap_config = {
+> +	.reg_bits       = 32,
+> +	.val_bits       = 32,
+> +	.reg_stride     = 4,
+> +};
+> +
+> +static int g12a_clkc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct regmap *map;
+> +	int ret, i;
+> +
+> +	/* Get the hhi system controller node if available */
+> +	map = syscon_node_to_regmap(of_get_parent(dev->of_node));
+> +	if (IS_ERR(map)) {
+> +		dev_err(dev,
+> +			"failed to get HHI regmap\n");
+> +		return PTR_ERR(map);
+> +	}
+> +
+> +	/* Populate regmap for the regmap backed clocks */
+> +	for (i = 0; i < ARRAY_SIZE(g12a_clk_regmaps); i++)
+> +		g12a_clk_regmaps[i]->map = map;
+> +
+> +	for (i = 0; i < g12a_hw_onecell_data.num; i++) {
+> +		/* array might be sparse */
+> +		if (!g12a_hw_onecell_data.hws[i])
+> +			continue;
+> +
+> +		ret = devm_clk_hw_register(dev, g12a_hw_onecell_data.hws[i]);
+> +		if (ret) {
+> +			dev_err(dev, "Clock registration failed\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
+> +					   &g12a_hw_onecell_data);
+> +}
+> +
+> +static struct platform_driver g12a_driver = {
+> +	.probe		= g12a_clkc_probe,
+> +	.driver		= {
+> +		.name	= "g12a-clkc",
+> +		.of_match_table = clkc_match_table,
+> +	},
+> +};
+> +
+> +builtin_platform_driver(g12a_driver);
+> diff --git a/drivers/clk/meson/g12a.h b/drivers/clk/meson/g12a.h
+> new file mode 100644
+> index 0000000..cbd793a
+> --- /dev/null
+> +++ b/drivers/clk/meson/g12a.h
+> @@ -0,0 +1,128 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+> +/*
+> + * Copyright (c) 2016 Amlogic, Inc.
+> + * Author: Michael Turquette <mturquette@baylibre.com>
+> + *
+> + * Copyright (c) 2018 Amlogic, inc.
+> + * Author: Qiufang Dai <qiufang.dai@amlogic.com>
+> + * Author: Jian Hu <jian.hu@amlogic.com>
+> + *
+> + */
+> +#ifndef __G12A_H
+> +#define __G12A_H
+> +
+> +/*
+> + * Clock controller register offsets
+> + *
+> + * Register offsets from the data sheet must be multiplied by 4 before
+> + * adding them to the base address to get the right value.
+> + */
+> +#define HHI_MIPI_CNTL0			0x000
+> +#define HHI_MIPI_CNTL1			0x004
+> +#define HHI_MIPI_CNTL2			0x008
+> +#define HHI_MIPI_STS			0x00C
+> +#define HHI_GP0_PLL_CNTL0		0x040
+> +#define HHI_GP0_PLL_CNTL1		0x044
+> +#define HHI_GP0_PLL_CNTL2		0x048
+> +#define HHI_GP0_PLL_CNTL3		0x04C
+> +#define HHI_GP0_PLL_CNTL4		0x050
+> +#define HHI_GP0_PLL_CNTL5		0x054
+> +#define HHI_GP0_PLL_CNTL6		0x058
+> +#define HHI_GP0_PLL_STS			0x05C
+> +#define HHI_PCIE_PLL_CNTL0		0x098
+> +#define HHI_PCIE_PLL_CNTL1		0x09C
+> +#define HHI_PCIE_PLL_CNTL2		0x0A0
+> +#define HHI_PCIE_PLL_CNTL3		0x0A4
+> +#define HHI_PCIE_PLL_CNTL4		0x0A8
+> +#define HHI_PCIE_PLL_CNTL5		0x0AC
+> +#define HHI_PCIE_PLL_STS		0x0B8
+> +#define HHI_HIFI_PLL_CNTL0		0x0D8
+> +#define HHI_HIFI_PLL_CNTL1		0x0DC
+> +#define HHI_HIFI_PLL_CNTL2		0x0E0
+> +#define HHI_HIFI_PLL_CNTL3		0x0E4
+> +#define HHI_HIFI_PLL_CNTL4		0x0E8
+> +#define HHI_HIFI_PLL_CNTL5		0x0EC
+> +#define HHI_HIFI_PLL_CNTL6		0x0F0
+> +#define HHI_GCLK_MPEG0			0x140
+> +#define HHI_GCLK_MPEG1			0x144
+> +#define HHI_GCLK_MPEG2			0x148
+> +#define HHI_GCLK_OTHER			0x150
+> +#define HHI_MPEG_CLK_CNTL		0x174
+> +#define HHI_AUD_CLK_CNTL		0x178
+> +#define HHI_VID_CLK_CNTL		0x17c
+> +#define HHI_TS_CLK_CNTL			0x190
+> +#define HHI_VID_CLK_CNTL2		0x194
+> +#define HHI_SYS_CPU_CLK_CNTL0		0x19c
+> +#define HHI_MALI_CLK_CNTL		0x1b0
+> +#define HHI_VPU_CLKC_CNTL		0x1b4
+> +#define HHI_VPU_CLK_CNTL		0x1bC
+> +#define HHI_HDMI_CLK_CNTL		0x1CC
+> +#define HHI_VDEC_CLK_CNTL		0x1E0
+> +#define HHI_VDEC2_CLK_CNTL		0x1E4
+> +#define HHI_VDEC3_CLK_CNTL		0x1E8
+> +#define HHI_VDEC4_CLK_CNTL		0x1EC
+> +#define HHI_HDCP22_CLK_CNTL		0x1F0
+> +#define HHI_VAPBCLK_CNTL		0x1F4
+> +#define HHI_VPU_CLKB_CNTL		0x20C
+> +#define HHI_GEN_CLK_CNTL		0x228
+> +#define HHI_VDIN_MEAS_CLK_CNTL		0x250
+> +#define HHI_MIPIDSI_PHY_CLK_CNTL	0x254
+> +#define HHI_NAND_CLK_CNTL		0x25C
+> +#define HHI_SD_EMMC_CLK_CNTL		0x264
+> +#define HHI_MPLL_CNTL0			0x278
+> +#define HHI_MPLL_CNTL1			0x27C
+> +#define HHI_MPLL_CNTL2			0x280
+> +#define HHI_MPLL_CNTL3			0x284
+> +#define HHI_MPLL_CNTL4			0x288
+> +#define HHI_MPLL_CNTL5			0x28c
+> +#define HHI_MPLL_CNTL6			0x290
+> +#define HHI_MPLL_CNTL7			0x294
+> +#define HHI_MPLL_CNTL8			0x298
+> +#define HHI_FIX_PLL_CNTL0		0x2A0
+> +#define HHI_FIX_PLL_CNTL1		0x2A4
+> +#define HHI_SYS_PLL_CNTL0		0x2f4
+> +#define HHI_SYS_PLL_CNTL1		0x2f8
+> +#define HHI_SYS_PLL_CNTL2		0x2fc
+> +#define HHI_SYS_PLL_CNTL3		0x300
+> +#define HHI_SYS_PLL_CNTL4		0x304
+> +#define HHI_SYS_PLL_CNTL5		0x308
+> +#define HHI_SYS_PLL_CNTL6		0x30c
+> +#define HHI_SPICC_CLK_CNTL		0x3dc
+> +
+> +/*
+> + * CLKID index values
+> + *
+> + * These indices are entirely contrived and do not map onto the hardware.
+> + * It has now been decided to expose everything by default in the DT header:
+> + * include/dt-bindings/clock/g12a-clkc.h. Only the clocks ids we don't want
+> + * to expose, such as the internal muxes and dividers of composite clocks,
+> + * will remain defined here.
+> + */
+> +#define CLKID_MPEG_SEL				8
+> +#define CLKID_MPEG_DIV				9
+> +#define CLKID_SD_EMMC_B_CLK0_SEL		62
+> +#define CLKID_SD_EMMC_B_CLK0_DIV		63
+> +#define CLKID_SD_EMMC_C_CLK0_SEL		64
+> +#define CLKID_SD_EMMC_C_CLK0_DIV		65
+> +#define CLKID_MPLL0_DIV				66
+> +#define CLKID_MPLL1_DIV				67
+> +#define CLKID_MPLL2_DIV				68
+> +#define CLKID_MPLL3_DIV				69
+> +#define CLKID_MPLL_PREDIV			70
+> +#define CLKID_FCLK_DIV2_DIV			72
+> +#define CLKID_FCLK_DIV3_DIV			73
+> +#define CLKID_FCLK_DIV4_DIV			74
+> +#define CLKID_FCLK_DIV5_DIV			75
+> +#define CLKID_FCLK_DIV7_DIV			76
+> +#define CLKID_FCLK_DIV2P5_DIV			97
+> +#define CLKID_FIXED_PLL_DCO			98
+> +#define CLKID_SYS_PLL_DCO			99
+> +#define CLKID_GP0_PLL_DCO			100
+> +#define CLKID_HIFI_PLL_DCO			101
+> +
+> +#define NR_CLKS					102
+> +
+> +/* include the CLKIDs that have been made part of the DT binding */
+> +#include <dt-bindings/clock/g12a-clkc.h>
+> +
+> +#endif /* __G12A_H */
