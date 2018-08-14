@@ -1,87 +1,75 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3] dt-bindings: media: adv748x: Document re-mappable addresses
-Date: Tue, 14 Aug 2018 08:40:37 +0300
-Message-ID: <2887621.fdKYYZGugR@avalon>
-References: <20180809192944.7371-1-kieran.bingham@ideasonboard.com> <dedade62-91ed-2c92-dac7-fe4a8f9d9452@ideasonboard.com> <CAL_JsqJQNtRNq+b3sJ4eEse1pzWy3F-WgbDF7=t-TrvFx6WcUQ@mail.gmail.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH v2 00/18] Allwinner R40 HDMI refactoring
+Date: Tue, 14 Aug 2018 13:43:08 +0800
+Message-ID: <87f1db37e70473cd1a77f5e0d2f9a779c6afe7db.camel@aosc.io>
+References: <20180710203511.18454-1-jernej.skrabec@siol.net>
+         <20180711083036.7attjq4hm5ay5gmn@flea> <2309112.TTVI9Fv1ar@jernej-laptop>
+         <20180724123741.bbkjgy2uwmzsj45k@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJQNtRNq+b3sJ4eEse1pzWy3F-WgbDF7=t-TrvFx6WcUQ@mail.gmail.com>
+In-Reply-To: <20180724123741.bbkjgy2uwmzsj45k@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Jernej =?gb2312?Q?=810=947krabec?= <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tuesday, 14 August 2018 01:48:05 EEST Rob Herring wrote:
-> On Mon, Aug 13, 2018 at 1:17 PM Kieran Bingham wrote:
-> > On 13/08/18 18:45, Rob Herring wrote:
-> > > On Thu, Aug 09, 2018 at 08:29:44PM +0100, Kieran Bingham wrote:
-> > >> The ADV748x supports configurable slave addresses for its I2C pages.
-> > >> Document the page names, and provide an example for setting each of the
-> > >> pages explicitly.
+在 2018-07-24二的 14:37 +0200，Maxime Ripard写道：
+> On Sun, Jul 22, 2018 at 04:43:56PM +0200, Jernej Škrabec wrote:
+> > Hi Maxime,
+> > 
+> > Dne sreda, 11. julij 2018 ob 10:30:36 CEST je Maxime Ripard
+> > napisal(a):
+> > > On Tue, Jul 10, 2018 at 10:34:53PM +0200, Jernej Skrabec wrote:
+> > > > This series fixes several issues found in R40 HDMI patch series
+> > > > after
+> > > > it was applied. Conversation can be found here:
+> > > > 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2018-June/586011.htm
+> > > > l
+> > > > 
+> > > > Patches are based on latest linux-next (next-20180710) and are
+> > > > ordered
+> > > > in such way that they don't break R40 HDMI at any time. Because
+> > > > of that
+> > > > I suggest that whole series goes through drm-misc to preserve
+> > > > that order.
+> > > > 
+> > > > I also tested those patches on H3 to make sure it doesn't break
+> > > > other
+> > > > platforms. However, it would be nice to test for regressions
+> > > > also on
+> > > > older SoCs (with DE1).
+> > > > 
+> > > > Best regards,
+> > > > Jernej
 > > > 
-> > > It would be good to say why you need this.
+> > > Applied all patches but the patch 10, thanks!
+> > > Maxime
 > > 
-> > In fact - I should probably have added a fixes tag here, which would
-> > have added more context:
+> > It seems that you forgot to merge some patches:
 > > 
-> > Fixes: 67537fe960e5 ("media: i2c: adv748x: Add support for
-> > i2c_new_secondary_device")
+> > [PATCH v2 12/18] drm/sun4i: tcon: Add another way for matching
+> > mixers with 
+> > tcon
+> > [PATCH v2 13/18] drm/sun4i: tcon: Add support for R40 TCON
+> > 
+> > Without them, R40 display pipeline can't work.
+> > 
+> > Maybe they are in your spam folder?
 > 
-> That doesn't really explain things from a DT perspective.
+> Thanks for telling me, I'm not quite sure what happened.
 > 
-> > Should I repost with this fixes tag?
-> > Or can it be collected with the RB tag?
-> 
-> I'll leave that to Hans.
-> 
-> > > The only use I can think of
-> > > is if there are other devices on the bus and you need to make sure the
-> > > addresses don't conflict.
-> > 
-> > Yes, precisely. This driver has 'slave pages' which are created and
-> > mapped by the driver. The device has default addresses which are used by
-> > the driver - but it's very easy for these to conflict with other devices
-> > on the same I2C bus.
-> > 
-> > Because the mappings are simply a software construct, we have a means to
-> > specify the desired mappings through DT at the board level - which
-> > allows the boards to ensure that conflicts do not appear.
-> > 
-> > > Arguably, that information could be figured out without this in DT.
-> > 
-> > How so ?
-> > 
-> > Scanning the bus is error prone, and dependant upon driver state (and
-> > presence), and we have no means currently of requesting 'free/unused'
-> > addresses from the I2C core framework.
-> 
-> True. But assuming all devices are in DT, then you just need to scan
-> the child nodes of the bus and get a map of the used addresses. Though
-> if you had 2 or more devices like this, then you'd need to maintain
-> s/w allocated addresses too. It could all be maintained with a bitmap
-> which you initialize with addresses in DT.
+> I've applied them.
 
-We've discussed this topic with Wolfram before, and unfortunately the base 
-assumption of assuming all devices are in DT often doesn't hold :-( For all 
-kind of reasons vendors often don't provide a full description of I2C buses, 
-especially when slave devices don't need to be accessed from Linux. Sometimes 
-they lack DT bindings for some I2C slaves that are not essential and still 
-want to provide a partial but functional DT. Sometimes devices are hooked up 
-to an I2C bus for debugging purposes only and end up never being used, so 
-nobody bothers describing them. Sometimes an I2C slave has multiple slave 
-addresses which DT writes are not aware of. Those are just a few examples.
+Sorry, but I still didn't find them in linux-next/master.
 
-One alternative would be to add a DT property to the I2C master node to list 
-the known to be free addresses. I'm not sure that's better though. We should 
-also keep in mind that some I2C slaves could have restrictions on which 
-secondary addresses can be used, so we would need to pass constraints to the 
-I2C address allocator, which would quickly become a mess.
-
--- 
-Regards,
-
-Laurent Pinchart
+> 
+> Sorry,
+> Maxime
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
