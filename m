@@ -1,46 +1,113 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: Applied "ASoC: dt-bindings: add dt bindings for wcd9335 audio
- codec" to the asoc tree
-Date: Tue, 14 Aug 2018 10:24:05 -0600
-Message-ID: <20180814162405.GA450@rob-hp-laptop>
-References: <20180727121806.18209-2-srinivas.kandagatla@linaro.org>
- <20180801112020.93C4A1124241@debutante.sirena.org.uk>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
+Date: Tue, 14 Aug 2018 18:43:43 +0200
+Message-ID: <20180814164343.GA13848@ravnborg.org>
+References: <20180812184152.GA22343@ravnborg.org>
+ <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
+ <20180813181808.GA2357@ravnborg.org>
+ <20180813220454.GA28913@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180801112020.93C4A1124241@debutante.sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, lee.jones@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, vkoul@kernel.org
+In-Reply-To: <20180813220454.GA28913@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Joshua Henderson <joshua.henderson@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 01, 2018 at 12:20:20PM +0100, Mark Brown wrote:
-> The patch
-> 
->    ASoC: dt-bindings: add dt bindings for wcd9335 audio codec
-> 
-> has been applied to the asoc tree at
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Hi Rob.
 
-Why is this applied when I had requested changes?
+> I don't know that 2 registers for a backlight PWM constitute an MFD. A 
+> single node can be both an LCD controller and a PWM.
 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.  
-> 
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
-> 
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
-> 
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
-> 
-> Thanks,
-> Mark
+Current suggestion from v1 patchset looks like this:
+	lcdc0: lcdc@700000 {
+		compatible = "atmel,at91sam9263-lcdc-mfd";
+		reg = <0x700000 0x1000>;
+		interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
+		clocks = <&lcd_clk>, <&lcd_clk>;
+		clock-names = "lcdc_clk", "hclk";
+
+		lcdc-display-controller {
+			compatible = "atmel,lcdc-display-controller";
+			lcd-supply = <&lcdc_reg>;
+
+			port@0 {
+			};
+		};
+
+		lcdc_pwm: lcdc-pwm {
+			compatible = "atmel,lcdc-pwm";
+			#pwm-cells = <3>;
+		};
+
+	};
+
+        backlight: backlight {
+                compatible = "pwm-backlight";
+                pwms = <&lcdc_pwm 0 50000 0>;
+        };
+
+
+We could have described the full binding in one file, rather than in
+three files like it is done in v1. But the structure was done so it matched
+what was done for hlcdc.
+
+
+If I understand the proposal from you correct an example binding would
+look like this:
+
+       lcdc0: lcdc@700000 {
+                compatible = "atmel,at91sam9263-lcdc";
+                reg = <0x700000 0x1000>;
+                interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
+                clocks = <&lcd_clk>, <&lcd_clk>;
+                clock-names = "lcdc_clk", "hclk";
+
+                lcd-supply = <&lcdc_reg>;
+
+                port@0 {
+                };
+
+                #pwm-cells = <3>;
+        };
+
+        backlight: backlight {
+                compatible = "pwm-backlight";
+                pwms = <&lcd0 0 50000 0>;
+        };
+
+
+This is doable, but IMO it is less obvious that the LCDC IP core implements
+two different features - a PWM and a LCD controller.
+Right now the preference is to stay with the v1 approach:
+- It is a mirror of what we do today for hlcdc, so no suprises
+- It shows in a nice way that the LCDC IP core implments both an LCD controller and a PWM
+- The pwm functionality is not hiddin inside the lcdc stuff, and it is thus
+  simpler to add good pin-ctrl handles with nice names that matches the usage.
+  (I could always add more pin-ctrl, but it is common to refer to a single pin-ctrl.
+
+
+One DT related Q:
+The LCD Controller supports BGR565, but as this is less common some HW implmentations
+exchange R and B, expessed in the old binding as wiring-mode like this:
+
+	atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
+
+How can we express this wiring-mode in a generic way, both in DT and in code?
+Is it something that in DRM belongs to the panel, the encoder, the connector, or?
+And can any of the exisitng flags be used?
+
+Thanks in advance,
+
+	Sam
