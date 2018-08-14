@@ -1,56 +1,77 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
-Date: Tue, 14 Aug 2018 16:36:03 +0200
-Message-ID: <20180814143603.GO943@piout.net>
-References: <20180812184152.GA22343@ravnborg.org>
- <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
- <20180813181808.GA2357@ravnborg.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: soc: amlogic: add meson-canvas documentation
+Date: Tue, 14 Aug 2018 08:39:00 -0600
+Message-ID: <CAL_JsqJFmhKpcSKGfym+YtVAP24sPi1VLkM5EuRoJ-rkBG6EsA@mail.gmail.com>
+References: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
+ <20180807220011.24436-3-maxi.jourdan@wanadoo.fr> <20180813190721.GA27621@rob-hp-laptop>
+ <CAHStOZ5i_SzamBsWk-b+X2n_gxdNJUPCHL1U0M-d6rdJgXkzrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180813181808.GA2357@ravnborg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Joshua Henderson <joshua.henderson@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHStOZ5i_SzamBsWk-b+X2n_gxdNJUPCHL1U0M-d6rdJgXkzrg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/08/2018 20:18:08+0200, Sam Ravnborg wrote:
-> > Would be good to have a plan to phase-out the old atmel_lcdfb fbdev
-> > driver when this one addresses some TODO items that make sense.
-> Agree on this.
-> One approach could be to say that when all in-kernel users of atmel_lcdfb
-> are ported, then the old driver could be dropped after a kernel release.
-> 
+On Mon, Aug 13, 2018 at 8:42 PM Maxime Jourdan <maxi.jourdan@wanadoo.fr> wrote:
+>
+> 2018-08-13 21:07 GMT+02:00 Rob Herring <robh@kernel.org>:
+> > On Wed, Aug 08, 2018 at 12:00:09AM +0200, Maxime Jourdan wrote:
+> >> DT bindings doc for amlogic,meson-canvas
+> >>
+> >> Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+> >> ---
+> >>  .../soc/amlogic/amlogic,meson-canvas.txt      | 36 +++++++++++++++++++
+> >>  1 file changed, 36 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt b/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
+> >> new file mode 100644
+> >> index 000000000000..5f0351717bee
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
+> >> @@ -0,0 +1,36 @@
+> >> +Amlogic Canvas
+> >> +================================
+> >> +
+> >> +A canvas is a collection of metadata that describes a pixel buffer.
+> >> +Those metadata include: width, height, phyaddr, wrapping, block mode
+> >> +and endianness.
+> >> +
+> >> +Many IPs within Amlogic SoCs rely on canvas indexes to read/write pixel data
+> >> +rather than use the phy addresses directly. For instance, this is the case for
+> >> +the video decoders and the display.
+> >> +
+> >> +Amlogic SoCs have 256 canvas.
+> >> +
+> >> +Device Tree Bindings:
+> >> +---------------------
+> >> +
+> >> +Canvas Provider
+> >> +--------------------------
+> >> +
+> >> +Required properties:
+> >> +- compatible: "amlogic,canvas"
+> >> +
+> >> +Parent node should have the following properties :
+> >> +- compatible: "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd"
+> >
+> > Is this documented somewhere? One child function is not a reason for an
+> > MFD and child nodes. And child nodes like this with no resources are
+> > unnecessary.
+> >
+>
+> Hi Rob, this was done to follow the same path as other buses on the
+> platform that have sysctrls in order to provide regmaps to the
+> devices.
+>
+> I can see how it's not really necessary here though, would it be okay
+> with you if I turned "canvas" into a simple bus subnode, using __iomem
+> in the device ?
 
-I would drop it only after an LTS release.
+That's a driver issue that has little to do with the binding. You can
+create a regmap for any node, "syscon" just does that automagically
+for you.
 
-> > The mfd suffix seems strange to me. What about "atmel,at91sam9263-lcdc-mfd"
-> > => "atmel,at91sam9263-lcd" (or "microchip,at91sam9263-lcdc").
-> The "-mfd" suffix was added to avoid clashing with the current
-> compatible string used by the atmel_lcdfb driver.
-> 
-> I susggest we do the following:
-> - use the microchip prefix, as this is now owned by microchip
-> - and add the driver to a drm/microchip/ directory
-> (Then we can only hope that microchip do not change name or
-> are purchased by someone else).
-> 
-
-The compatible string should remain the same but the drivers have to be
-mutually exclusive in Kconfig.
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Rob
