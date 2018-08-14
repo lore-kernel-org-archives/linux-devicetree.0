@@ -1,80 +1,68 @@
 From: Brian Norris <computersforpeace@gmail.com>
-Subject: [RFC PATCH v1 0/3] device property: Support MAC address in VPD
-Date: Tue, 14 Aug 2018 15:37:55 -0700
-Message-ID: <20180814223758.117433-1-briannorris@chromium.org>
+Subject: [RFC PATCH v1 1/3] dt-bindings: net: Add 'mac-address-lookup' property
+Date: Tue, 14 Aug 2018 15:37:56 -0700
+Message-ID: <20180814223758.117433-2-briannorris@chromium.org>
+References: <20180814223758.117433-1-briannorris@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180814223758.117433-1-briannorris@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
 Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Some firmwares present data tables that can be parsed to retrieve
+device-specific details, like MAC addresses. While in some cases, one
+could teach the firmware to understand the device tree format and insert
+a 'mac-address'/'local-mac-address' property into the FDT on its own,
+this method can be brittle (e.g., involving memorizing expected FDT
+structure), and it's not strictly necessary -- especially when parsers
+for such firmware formats are already needed in the OS for other
+reasons.
 
-Preface: I'm sure there are at least a few minor issues with this
-patchset as-is. But I'd appreciate ("RFC") if I can get general feedback
-on the approach here; perhaps there are alternatives, or perhaps I've
-missed similar proposals in the past. (My problems don't feel all that
-unique.)
+One such format: the Vital Product Data (VPD) [1] used by Coreboot. It
+supports a table of key/value pairs, and some systems keep MAC addresses
+there in a well-known format. Allow a device tree to specify
+  (1) that the MAC address for a given device is stored in the VPD table
+      and
+  (2) what key should be used to retrieve the MAC address for said
+      device (e.g., "ethernet_mac0" or "wifi_mac1").
 
----
-
-Today, we have generic support for 'mac-address' and 'local-mac-address'
-properties in both Device Tree nodes and in generic Device Properties,
-such that network device drivers can pick up a hardware address from
-there, in cases where the MAC address isn't baked into the network card.
-This method of MAC address retrieval presumes that either:
-(a) there's a unique device tree (or similar) stored on a given device
-    or
-(b) some other entity (e.g., boot firmware) will modify device nodes
-    runtime to place that MAC address into the appropriate device
-    properties.
-
-Option (a) is not feasbile for many systems.
-
-Option (b) can work, but there are some reasons why one might not want
-to do that:
- (1) This requires that system firmware understand the device tree
-     structure, sometimes to the point of memorizing path names (e.g.,
-     /soc/wifi@xxxxxxxx). At least for Device Tree, these path names are
-     not necessarily an ABI, and so this introduces unneeded fragility.
- (2) Other than this device-tree shim requirement, system firmware may
-     have no reason to understand anything about network devices.
-
-So instead, I'm looking for a way to have a device node describe where
-to find its MAC address, rather than having the device node contain the
-MAC address directly. Then system firmware doesn't have to manage
-anything.
-
-In particular, I add support for the Google Vital Product Data (VPD)
-format, used within the Coreboot project. The format is described here:
-
+[1] Ref:
 https://chromium.googlesource.com/chromiumos/platform/vpd/+/master/README.md
-
 TL;DR: VPD consists of a TLV-like table, with key/value pairs of
 strings. This is often stored persistently on the boot flash and
 presented via in-memory Coreboot tables, for the operating system to
 read.
 
-We already have a VPD driver that parses this table and presents it to
-user space. This series extends that driver to allow in-kernel lookups
-of MAC address entries.
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+ Documentation/devicetree/bindings/net/ethernet.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Thanks,
-Brian
-
-
-Brian Norris (3):
-  dt-bindings: net: Add 'mac-address-lookup' property
-  device property: Support complex MAC address lookup
-  firmware: vpd: add MAC address parser
-
- .../devicetree/bindings/net/ethernet.txt      | 12 +++
- drivers/base/property.c                       | 83 ++++++++++++++++++-
- drivers/firmware/google/vpd.c                 | 67 +++++++++++++++
- include/linux/property.h                      | 23 +++++
- 4 files changed, 183 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index cfc376bc977a..d3fd1da18bf4 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -4,6 +4,18 @@ NOTE: All 'phy*' properties documented below are Ethernet specific. For the
+ generic PHY 'phys' property, see
+ Documentation/devicetree/bindings/phy/phy-bindings.txt.
+ 
++- mac-address-lookup: string, indicating a method by which a MAC address may be
++  discovered for this device. Methods may be parameterized by some value, such
++  that the method can determine the device's MAC address using that parameter.
++  For example, a firmware might store MAC addresses in a table, keyed by some
++  predetermined string, and baked in read-only flash. A lookup method "foo"
++  with a parameter "bar" should be written "foo:bar".
++  Supported values for method:
++    "google-vpd" - Google's Vital Product Data (VPD), as used in the Coreboot
++      project. Documentation for VPD can be found at:
++        https://chromium.googlesource.com/chromiumos/platform/vpd/+/master/README.md
++  Example:
++    mac-address-lookup = "google-vpd:ethernet_mac0"
+ - local-mac-address: array of 6 bytes, specifies the MAC address that was
+   assigned to the network device;
+ - mac-address: array of 6 bytes, specifies the MAC address that was last used by
 -- 
 2.18.0.865.gffc8e1a3cd6-goog
