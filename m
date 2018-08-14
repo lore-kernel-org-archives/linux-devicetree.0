@@ -1,150 +1,165 @@
-From: <michael.hennerich@analog.com>
-Subject: [PATCH] drivers: hwmon: pmbus: ltc2978: Add support for LTM4686 uModule
-Date: Tue, 14 Aug 2018 14:18:28 +0200
-Message-ID: <1534249108-29765-1-git-send-email-michael.hennerich@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v12 12/14] clk: qcom: Add safe switch hook for krait mux clocks
+Date: Tue, 14 Aug 2018 17:42:31 +0530
+Message-ID: <1534248753-2440-13-git-send-email-sricharan@codeaurora.org>
+References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>
+To: mark.rutland@arm.com, robh@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, ctatlor97@gmail.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, mturquette@baylibre.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, linux@armlinux.org.uk, thierry.escande@linaro.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, niklas.cassel@linaro.org
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+When the Hfplls are reprogrammed during the rate change,
+the primary muxes which are sourced from the same hfpll
+for higher frequencies, needs to be switched to the 'safe
+secondary mux' as the parent for that small window. This
+is done by registering a clk notifier for the muxes and
+switching to the safe parent in the PRE_RATE_CHANGE notifier
+and back to the original parent in the POST_RATE_CHANGE notifier.
 
-This patch adds support for LTM4686 Ultrathin Dual 10A or
-Single 20A uModule Regulator with Digital Power System Management.
-
-Datasheet: http://www.analog.com/ltm4686
-
-
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 ---
- Documentation/devicetree/bindings/hwmon/ltc2978.txt | 2 ++
- Documentation/hwmon/ltc2978                         | 5 +++++
- drivers/hwmon/pmbus/Kconfig                         | 3 ++-
- drivers/hwmon/pmbus/ltc2978.c                       | 9 ++++++++-
- 4 files changed, 17 insertions(+), 2 deletions(-)
+ drivers/clk/qcom/clk-krait.c |  2 ++
+ drivers/clk/qcom/clk-krait.h |  3 +++
+ drivers/clk/qcom/krait-cc.c  | 56 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 61 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ltc2978.txt b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-index bf2a47b..b428a70 100644
---- a/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-+++ b/Documentation/devicetree/bindings/hwmon/ltc2978.txt
-@@ -15,6 +15,7 @@ Required properties:
-   * "lltc,ltm2987"
-   * "lltc,ltm4675"
-   * "lltc,ltm4676"
-+  * "lltc,ltm4686"
- - reg: I2C slave address
+diff --git a/drivers/clk/qcom/clk-krait.c b/drivers/clk/qcom/clk-krait.c
+index 7ede744..59f1af4 100644
+--- a/drivers/clk/qcom/clk-krait.c
++++ b/drivers/clk/qcom/clk-krait.c
+@@ -50,6 +50,8 @@ static int krait_mux_set_parent(struct clk_hw *hw, u8 index)
+ 	if (__clk_is_enabled(hw->clk))
+ 		__krait_mux_set_sel(mux, sel);
  
- Optional properties:
-@@ -30,6 +31,7 @@ Valid names of regulators depend on number of supplies supported per device:
-   * ltc3880, ltc3882, ltc3886 : vout0 - vout1
-   * ltc3883 : vout0
-   * ltm4676 : vout0 - vout1
-+  * ltm4686 : vout0 - vout1
++	mux->reparent = true;
++
+ 	return 0;
+ }
  
- Example:
- ltc2978@5e {
-diff --git a/Documentation/hwmon/ltc2978 b/Documentation/hwmon/ltc2978
-index 9a49d3c..dfb2caa 100644
---- a/Documentation/hwmon/ltc2978
-+++ b/Documentation/hwmon/ltc2978
-@@ -55,6 +55,10 @@ Supported chips:
-     Prefix: 'ltm4676'
-     Addresses scanned: -
-     Datasheet: http://www.linear.com/product/ltm4676
-+  * Analog Devices LTM4686
-+    Prefix: 'ltm4686'
-+    Addresses scanned: -
-+    Datasheet: http://www.analog.com/ltm4686
+diff --git a/drivers/clk/qcom/clk-krait.h b/drivers/clk/qcom/clk-krait.h
+index 441ba1e..9120bd2 100644
+--- a/drivers/clk/qcom/clk-krait.h
++++ b/drivers/clk/qcom/clk-krait.h
+@@ -12,6 +12,9 @@ struct krait_mux_clk {
+ 	u32		shift;
+ 	u32		en_mask;
+ 	bool		lpl;
++	u8		safe_sel;
++	u8		old_index;
++	bool		reparent;
  
- Author: Guenter Roeck <linux@roeck-us.net>
- 
-@@ -76,6 +80,7 @@ additional components on a single die. The chip is instantiated and reported
- as two separate chips on two different I2C bus addresses.
- LTM4675 is a dual 9A or single 18A μModule regulator
- LTM4676 is a dual 13A or single 26A uModule regulator.
-+LTM4686 is a dual 10A or single 20A uModule regulator.
- 
- 
- Usage Notes
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index e71aec6..28279a8 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -83,7 +83,8 @@ config SENSORS_LTC2978_REGULATOR
- 	depends on SENSORS_LTC2978 && REGULATOR
- 	help
- 	  If you say yes here you get regulator support for Linear
--	  Technology LTC2974, LTC2977, LTC2978, LTC3880, LTC3883, and LTM4676.
-+	  Technology LTC2974, LTC2977, LTC2978, LTC3880, LTC3883, LTM4676
-+	  and LTM4686.
- 
- config SENSORS_LTC3815
- 	tristate "Linear Technologies LTC3815"
-diff --git a/drivers/hwmon/pmbus/ltc2978.c b/drivers/hwmon/pmbus/ltc2978.c
-index 58b789c..07afb92 100644
---- a/drivers/hwmon/pmbus/ltc2978.c
-+++ b/drivers/hwmon/pmbus/ltc2978.c
-@@ -4,6 +4,7 @@
-  * Copyright (c) 2011 Ericsson AB.
-  * Copyright (c) 2013, 2014, 2015 Guenter Roeck
-  * Copyright (c) 2015 Linear Technology
-+ * Copyright (c) 2018 Analog Devices Inc.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-@@ -28,7 +29,7 @@
- #include "pmbus.h"
- 
- enum chips { ltc2974, ltc2975, ltc2977, ltc2978, ltc2980, ltc3880, ltc3882,
--	ltc3883, ltc3886, ltc3887, ltm2987, ltm4675, ltm4676 };
-+	ltc3883, ltc3886, ltc3887, ltm2987, ltm4675, ltm4676, ltm4686 };
- 
- /* Common for all chips */
- #define LTC2978_MFR_VOUT_PEAK		0xdd
-@@ -81,6 +82,7 @@ enum chips { ltc2974, ltc2975, ltc2977, ltc2978, ltc2980, ltc3880, ltc3882,
- #define LTM4676_ID_REV1			0x4400
- #define LTM4676_ID_REV2			0x4480
- #define LTM4676A_ID			0x47e0
-+#define LTM4686_ID			0x4770
- 
- #define LTC2974_NUM_PAGES		4
- #define LTC2978_NUM_PAGES		8
-@@ -512,6 +514,7 @@ static const struct i2c_device_id ltc2978_id[] = {
- 	{"ltm2987", ltm2987},
- 	{"ltm4675", ltm4675},
- 	{"ltm4676", ltm4676},
-+	{"ltm4686", ltm4686},
- 	{}
+ 	struct clk_hw	hw;
+ 	struct notifier_block   clk_nb;
+diff --git a/drivers/clk/qcom/krait-cc.c b/drivers/clk/qcom/krait-cc.c
+index 7c9dfb0..4d4b657 100644
+--- a/drivers/clk/qcom/krait-cc.c
++++ b/drivers/clk/qcom/krait-cc.c
+@@ -26,6 +26,49 @@
+ 	0,
  };
- MODULE_DEVICE_TABLE(i2c, ltc2978_id);
-@@ -588,6 +591,8 @@ static int ltc2978_get_id(struct i2c_client *client)
- 	else if (chip_id == LTM4676_ID_REV1 || chip_id == LTM4676_ID_REV2 ||
- 		 chip_id == LTM4676A_ID)
- 		return ltm4676;
-+	else if (chip_id == LTM4686_ID)
-+		return ltm4686;
  
- 	dev_err(&client->dev, "Unsupported chip ID 0x%x\n", chip_id);
- 	return -ENODEV;
-@@ -684,6 +689,7 @@ static int ltc2978_probe(struct i2c_client *client,
- 	case ltc3887:
- 	case ltm4675:
- 	case ltm4676:
-+	case ltm4686:
- 		data->features |= FEAT_CLEAR_PEAKS | FEAT_NEEDS_POLLING;
- 		info->read_word_data = ltc3880_read_word_data;
- 		info->pages = LTC3880_NUM_PAGES;
-@@ -770,6 +776,7 @@ static const struct of_device_id ltc2978_of_match[] = {
- 	{ .compatible = "lltc,ltm2987" },
- 	{ .compatible = "lltc,ltm4675" },
- 	{ .compatible = "lltc,ltm4676" },
-+	{ .compatible = "lltc,ltm4686" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, ltc2978_of_match);
++/*
++ * Notifier function for switching the muxes to safe parent
++ * while the hfpll is getting reprogrammed.
++ */
++static int krait_notifier_cb(struct notifier_block *nb,
++			     unsigned long event,
++			     void *data)
++{
++	int ret = 0;
++	struct krait_mux_clk *mux = container_of(nb, struct krait_mux_clk,
++						 clk_nb);
++	/* Switch to safe parent */
++	if (event == PRE_RATE_CHANGE) {
++		mux->old_index = krait_mux_clk_ops.get_parent(&mux->hw);
++		ret = krait_mux_clk_ops.set_parent(&mux->hw, mux->safe_sel);
++		mux->reparent = false;
++	/*
++	 * By the time POST_RATE_CHANGE notifier is called,
++	 * clk framework itself would have changed the parent for the new rate.
++	 * Only otherwise, put back to the old parent.
++	 */
++	} else if (event == POST_RATE_CHANGE) {
++		if (!mux->reparent)
++			ret = krait_mux_clk_ops.set_parent(&mux->hw,
++							   mux->old_index);
++	}
++
++	return notifier_from_errno(ret);
++}
++
++static int krait_notifier_register(struct device *dev, struct clk *clk,
++				   struct krait_mux_clk *mux)
++{
++	int ret = 0;
++
++	mux->clk_nb.notifier_call = krait_notifier_cb;
++	ret = clk_notifier_register(clk, &mux->clk_nb);
++	if (ret)
++		dev_err(dev, "failed to register clock notifier: %d\n", ret);
++
++	return ret;
++}
++
+ static int
+ krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
+ {
+@@ -70,6 +113,7 @@
+ krait_add_sec_mux(struct device *dev, int id, const char *s,
+ 		  unsigned int offset, bool unique_aux)
+ {
++	int ret;
+ 	struct krait_mux_clk *mux;
+ 	static const char *sec_mux_list[] = {
+ 		"acpu_aux",
+@@ -93,6 +137,7 @@
+ 	mux->shift = 2;
+ 	mux->parent_map = sec_mux_map;
+ 	mux->hw.init = &init;
++	mux->safe_sel = 0;
+ 
+ 	init.name = kasprintf(GFP_KERNEL, "krait%s_sec_mux", s);
+ 	if (!init.name)
+@@ -108,6 +153,11 @@
+ 
+ 	clk = devm_clk_register(dev, &mux->hw);
+ 
++	ret = krait_notifier_register(dev, clk, mux);
++	if (ret)
++		goto unique_aux;
++
++unique_aux:
+ 	if (unique_aux)
+ 		kfree(sec_mux_list[0]);
+ err_aux:
+@@ -119,6 +169,7 @@
+ krait_add_pri_mux(struct device *dev, int id, const char *s,
+ 		  unsigned int offset)
+ {
++	int ret;
+ 	struct krait_mux_clk *mux;
+ 	const char *p_names[3];
+ 	struct clk_init_data init = {
+@@ -139,6 +190,7 @@
+ 	mux->lpl = id >= 0;
+ 	mux->parent_map = pri_mux_map;
+ 	mux->hw.init = &init;
++	mux->safe_sel = 2;
+ 
+ 	init.name = kasprintf(GFP_KERNEL, "krait%s_pri_mux", s);
+ 	if (!init.name)
+@@ -164,6 +216,10 @@
+ 
+ 	clk = devm_clk_register(dev, &mux->hw);
+ 
++	ret = krait_notifier_register(dev, clk, mux);
++	if (ret)
++		goto err_p3;
++err_p3:
+ 	kfree(p_names[2]);
+ err_p2:
+ 	kfree(p_names[1]);
 -- 
-2.7.4
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
