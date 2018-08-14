@@ -1,65 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/3] dts: arm64/sdm845: Add node for qcom,smmu-v2
-Date: Tue, 14 Aug 2018 16:57:51 -0600
-Message-ID: <20180814225750.GA31263@rob-hp-laptop>
-References: <20180814102740.30222-1-vivek.gautam@codeaurora.org>
- <20180814102740.30222-4-vivek.gautam@codeaurora.org>
- <27372288-447d-6c9a-504a-8b8ef40e3d58@arm.com>
- <CAFp+6iG8HohQ5=gwL37OuykK+R4U407yfrp=WN6pSgOK-mdzzA@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [RFC PATCH v1 0/3] device property: Support MAC address in VPD
+Date: Tue, 14 Aug 2018 16:00:28 -0700
+Message-ID: <a240b3f9-d41b-30d7-ef11-5dcd1a981c0f@gmail.com>
+References: <20180814223758.117433-1-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iG8HohQ5=gwL37OuykK+R4U407yfrp=WN6pSgOK-mdzzA@mail.gmail.com>
+In-Reply-To: <20180814223758.117433-1-briannorris@chromium.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Jordan Crouse <jcrouse@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Andy Gross <andy.gross@linaro.org>, Will Deacon <will.deacon@arm.com>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2018 at 01:09:43AM +0530, Vivek Gautam wrote:
-> Adding Jordan here.
+On 08/14/2018 03:37 PM, Brian Norris wrote:
+> Hi all,
 > 
-> On Tue, Aug 14, 2018 at 4:19 PM, Robin Murphy <robin.murphy@arm.com> wrote:
-> > Hi Vivek,
-> >
-> > On 14/08/18 11:27, Vivek Gautam wrote:
-> >>
-> >> Add device node for qcom,smmu-v2 available on sdm845.
-> >> This smmu is available only to GPU device.
-> >>
-> >> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> >> ---
-> >>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 23 +++++++++++++++++++++++
-> >>   1 file changed, 23 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >> index 1c2be2082f33..bd1ec5fa5146 100644
-> >> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >> @@ -6,6 +6,7 @@
-> >>    */
-> >>     #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> >> +#include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-> >>   #include <dt-bindings/clock/qcom,rpmh.h>
-> >>   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-> >> @@ -989,6 +990,28 @@
-> >>                         cell-index = <0>;
-> >>                 };
-> >>   +             gpu_smmu: iommu@5040000 {
-> >> +                       compatible = "qcom,sdm845-smmu-v2",
-> >> "qcom,smmu-v2";
-> >
-> >
-> > Which of "sdm845" or "msm8996"[1] is the actual SoC name here?
+> Preface: I'm sure there are at least a few minor issues with this
+> patchset as-is. But I'd appreciate ("RFC") if I can get general feedback
+> on the approach here; perhaps there are alternatives, or perhaps I've
+> missed similar proposals in the past. (My problems don't feel all that
+> unique.)
 > 
-> Well, the bindings use the SoC prefix with smmu-v2, so it should be
-> sdm845 for this SoC. This is same as I posted in my v1 of the series [2].
-> Using 8996 based string in sdm845 makes things look awful.
+> ---
+> 
+> Today, we have generic support for 'mac-address' and 'local-mac-address'
+> properties in both Device Tree nodes and in generic Device Properties,
+> such that network device drivers can pick up a hardware address from
+> there, in cases where the MAC address isn't baked into the network card.
+> This method of MAC address retrieval presumes that either:
+> (a) there's a unique device tree (or similar) stored on a given device
+>     or
+> (b) some other entity (e.g., boot firmware) will modify device nodes
+>     runtime to place that MAC address into the appropriate device
+>     properties.
+> 
+> Option (a) is not feasbile for many systems.
+> 
+> Option (b) can work, but there are some reasons why one might not want
+> to do that:
+>  (1) This requires that system firmware understand the device tree
+>      structure, sometimes to the point of memorizing path names (e.g.,
+>      /soc/wifi@xxxxxxxx). At least for Device Tree, these path names are
+>      not necessarily an ABI, and so this introduces unneeded fragility.
 
-You need to list valid values of '<soc>' in the binding. Otherwise we 
-get this confusion.
+The path to a node is something that is well defined and should be
+stable given that the high level function of the node and its unit
+address are not supposed to change. Under which circumstances, besides
+incorrect specification of either of these two things, do they not
+consist an ABI? Not refuting your statement here, just curious when/how
+this can happen?
 
-Rob
+Also, aliases in DT are meant to provide some stability.
+
+>  (2) Other than this device-tree shim requirement, system firmware may
+>      have no reason to understand anything about network devices.
+> 
+> So instead, I'm looking for a way to have a device node describe where
+> to find its MAC address, rather than having the device node contain the
+> MAC address directly. Then system firmware doesn't have to manage
+> anything.
+> 
+> In particular, I add support for the Google Vital Product Data (VPD)
+> format, used within the Coreboot project. The format is described here:
+> 
+> https://chromium.googlesource.com/chromiumos/platform/vpd/+/master/README.md
+> 
+> TL;DR: VPD consists of a TLV-like table, with key/value pairs of
+> strings. This is often stored persistently on the boot flash and
+> presented via in-memory Coreboot tables, for the operating system to
+> read.
+> 
+> We already have a VPD driver that parses this table and presents it to
+> user space. This series extends that driver to allow in-kernel lookups
+> of MAC address entries.
+
+A possible alternative approach is to have the VPD driver become a NVMEM
+producer to expose the VPD keys, did you look into that and possibly
+found that it was not a good model? The downside to that approach though
+is that you might have to have a phandle for the VPD provider in the
+Device Tree, but AFAICS this should solve your needs?
+
+[1]: https://patchwork.ozlabs.org/cover/956062/
+[2]: https://lkml.org/lkml/2018/3/24/312
+
+> 
+> Thanks,
+> Brian
+> 
+> 
+> Brian Norris (3):
+>   dt-bindings: net: Add 'mac-address-lookup' property
+>   device property: Support complex MAC address lookup
+>   firmware: vpd: add MAC address parser
+> 
+>  .../devicetree/bindings/net/ethernet.txt      | 12 +++
+>  drivers/base/property.c                       | 83 ++++++++++++++++++-
+>  drivers/firmware/google/vpd.c                 | 67 +++++++++++++++
+>  include/linux/property.h                      | 23 +++++
+>  4 files changed, 183 insertions(+), 2 deletions(-)
+> 
+
+
+-- 
+Florian
