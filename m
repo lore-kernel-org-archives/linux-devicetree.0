@@ -1,144 +1,71 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH net-next 02/10] dt-bindings: net: ocelot: remove hsio
- from the list of register address spaces
-Date: Tue, 14 Aug 2018 08:49:53 +0200
-Message-ID: <20180814064953.vboz2gryq4jff34n@qschulz>
-References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
- <3558e538b55a2249b0a179c04c27e9d3715bbbaa.1532954208.git-series.quentin.schulz@bootlin.com>
- <20180813223103.GA16669@rob-hp-laptop>
+From: Janek Kotas <jank@cadence.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: ufs: Add bindings for Cadence UFS
+Date: Tue, 14 Aug 2018 07:21:40 +0000
+Message-ID: <38727B36-5200-4A3A-B3D1-88ADC5381622@global.cadence.com>
+References: <F39BF38C-FD85-4115-975C-8D923518A541@global.cadence.com>
+ <20180813173759.GA7302@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kwtbog5c7ae7sk2x"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180813223103.GA16669@rob-hp-laptop>
+In-Reply-To: <20180813173759.GA7302@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <56140F381512A04882BAFD1BAAF4A1F6@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com
+Cc: Janek Kotas <jank@cadence.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---kwtbog5c7ae7sk2x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Rob,
-
-On Mon, Aug 13, 2018 at 04:31:03PM -0600, Rob Herring wrote:
-> On Mon, Jul 30, 2018 at 02:43:47PM +0200, Quentin Schulz wrote:
-> > HSIO register address space should be handled outside of the MAC
-> > controller as there are some registers for PLL5 configuring,
-> > SerDes/switch port muxing and a thermal sensor IP, so let's remove it.
-> >=20
-> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> > ---
-> >  Documentation/devicetree/bindings/mips/mscc.txt       | 16 +++++++++++=
-+-
-> >  Documentation/devicetree/bindings/net/mscc-ocelot.txt |  9 ++-----
-> >  2 files changed, 19 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mips/mscc.txt b/Document=
-ation/devicetree/bindings/mips/mscc.txt
-> > index ae15ec3..bc817e9 100644
-> > --- a/Documentation/devicetree/bindings/mips/mscc.txt
-> > +++ b/Documentation/devicetree/bindings/mips/mscc.txt
-> > @@ -41,3 +41,19 @@ Example:
-> >  		compatible =3D "mscc,ocelot-cpu-syscon", "syscon";
-> >  		reg =3D <0x70000000 0x2c>;
-> >  	};
-> > +
-> > +o HSIO regs:
-> > +
-> > +The SoC has a few registers (HSIO) handling miscellaneous functionalit=
-ies:
-> > +configuration and status of PLL5, RCOMP, SyncE, SerDes configurations =
-and
-> > +status, SerDes muxing and a thermal sensor.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "mscc,ocelot-hsio", "syscon", "simple-mfd"
-> > +- reg : Should contain registers location and length
-> > +
-> > +Example:
-> > +	syscon@10d0000 {
-> > +		compatible =3D "mscc,ocelot-hsio", "syscon", "simple-mfd";
->=20
-> simple-mfd is not appropriate without child nodes, so drop it.
->=20
-
-Understood but it's an intermediate patch. Later (patch 8), the SerDes
-muxing "controller" is added as a child to this node. There most likely
-will be some others in the future (temperature sensor for example).
-
-Furthermore, there's already a simple-mfd without children in this file:
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bin=
-dings/mips/mscc.txt#L19
-
-How should we handle this case?
-
-Thanks,
-Quentin
-
-> > +		reg =3D <0x10d0000 0x10000>;
-> > +	};
-> > diff --git a/Documentation/devicetree/bindings/net/mscc-ocelot.txt b/Do=
-cumentation/devicetree/bindings/net/mscc-ocelot.txt
-> > index 0a84711..9e5c17d 100644
-> > --- a/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-> > +++ b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-> > @@ -12,7 +12,6 @@ Required properties:
-> >    - "sys"
-> >    - "rew"
-> >    - "qs"
-> > -  - "hsio"
-> >    - "qsys"
-> >    - "ana"
-> >    - "portX" with X from 0 to the number of last port index available o=
-n that
-> > @@ -45,7 +44,6 @@ Example:
-> >  		reg =3D <0x1010000 0x10000>,
-> >  		      <0x1030000 0x10000>,
-> >  		      <0x1080000 0x100>,
-> > -		      <0x10d0000 0x10000>,
-> >  		      <0x11e0000 0x100>,
-> >  		      <0x11f0000 0x100>,
-> >  		      <0x1200000 0x100>,
-> > @@ -59,10 +57,9 @@ Example:
-> >  		      <0x1280000 0x100>,
-> >  		      <0x1800000 0x80000>,
-> >  		      <0x1880000 0x10000>;
-> > -		reg-names =3D "sys", "rew", "qs", "hsio", "port0",
-> > -			    "port1", "port2", "port3", "port4", "port5",
-> > -			    "port6", "port7", "port8", "port9", "port10",
-> > -			    "qsys", "ana";
-> > +		reg-names =3D "sys", "rew", "qs", "port0", "port1", "port2",
-> > +			    "port3", "port4", "port5", "port6", "port7",
-> > +			    "port8", "port9", "port10", "qsys", "ana";
-> >  		interrupts =3D <21 22>;
-> >  		interrupt-names =3D "xtr", "inj";
-> > =20
-> > --=20
-> > git-series 0.9.1
-
---kwtbog5c7ae7sk2x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAltye5EACgkQhLiadT7g
-8aMjFA/7B6gmPueCPI1qNqQWD2y8yRqcNRU3jfGNLXuvlv8x6OmkgDc9ipMoCVJT
-yOSBVvVM1MIr0dLFxPuniI14wDTtGLNTQtb22DkivUbof1wm1c3kTAVHadut1Hsz
-L+SpopdvdOVh8Hc9MzWArjSOoa9xUezrCQdFNwznMFxuEwHS6cs88iU1WhzPw/HB
-o+kHRLUynb/Rmgx+PLYIhDwikvCxE9p3a13DGXP9S3SZEix19SRwbDMfJM3ygSel
-Q6sYnlU3AmglkP7aD/mNLUGdOV1QlphH2RljrpYxhpcyF3nhUGPW5NBqJ+rFFtkB
-3YyUJUSPtrGGn2zYccLQ4NgnhPTSyVTvpfdeXAgmDjhm0NMaahTq2bs11eT2fFM2
-aHky007kGfzPdW6U+Fb567z2DSqJDur8oNDEJI1IC2/EZ18IOWBEBIhhEgPdNOX/
-xMp5KRvBJn1mcYrHlVRNtFMldMwka7BVkrXx8r0M5YuH8/gSK/aimoiLxnv7mjEe
-pgAOFhOpeQpJjTLlokLUF896cBNOMBaBPNG24D0xYn6IOmvKdSSDtk9PVayTCEFR
-inhUcj38ooQBRUsoXzru/71hiYHg3P111eXY27bz18mTGR3+Vdq128AMaNdSGwdK
-KxjJI1e3kZtq0SuAXLnjOCTJildF3u1rFhf3fnU5biqijm2BaBc=
-=mcfF
------END PGP SIGNATURE-----
-
---kwtbog5c7ae7sk2x--
+DQoNCj4gT24gMTMgQXVnIDIwMTgsIGF0IDE5OjM3LCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPiB3cm90ZToNCj4gDQoNCj4gDQo+IE9uIFRodSwgQXVnIDA5LCAyMDE4IGF0IDAxOjI1OjE1
+UE0gKzAwMDAsIEphbmVrIEtvdGFzIHdyb3RlOg0KPj4gVGhpcyBwYXRjaCBhZGRzIGEgRFQgYmlu
+ZGluZyBkb2N1bWVudGF0aW9uIGZvcg0KPj4gQ2FkZW5jZSBVRlMgSG9zdCBDb250cm9sbGVyLg0K
+Pj4gDQo+PiBTaWduZWQtb2ZmLWJ5OiBKYW4gS290YXMgPGphbmtAY2FkZW5jZS5jb20+DQo+PiAt
+LS0NCj4+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9jZG5zLHVmc2hjLnR4dCAgICAgICAg
+IHwgMzEgKysrKysrKysrKysrKysrKysrKysrKw0KPj4gMSBmaWxlIGNoYW5nZWQsIDMxIGluc2Vy
+dGlvbnMoKykNCj4+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdWZzL2NkbnMsdWZzaGMudHh0DQo+PiANCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2NkbnMsdWZzaGMudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9jZG5zLHVmc2hjLnR4dA0KPj4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAwLi5hMDRhNDk4OQ0KPj4gLS0tIC9kZXYvbnVs
+bA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9jZG5zLHVm
+c2hjLnR4dA0KPj4gQEAgLTAsMCArMSwzMSBAQA0KPj4gKyogQ2FkZW5jZSBVbml2ZXJzYWwgRmxh
+c2ggU3RvcmFnZSAoVUZTKSBDb250cm9sbGVyDQo+PiArDQo+PiArVUZTIG5vZGVzIGFyZSBkZWZp
+bmVkIHRvIGRlc2NyaWJlIG9uLWNoaXAgVUZTIGhvc3QgY29udHJvbGxlcnMuDQo+PiArRWFjaCBV
+RlMgY29udHJvbGxlciBpbnN0YW5jZSBzaG91bGQgaGF2ZSBpdHMgb3duIG5vZGUuDQo+PiArUGxl
+YXNlIHNlZSB0aGUgdWZzaGNkLXBsdGZybS50eHQgZm9yIGEgbGlzdCBvZiBhbGwgYXZhaWxhYmxl
+IHByb3BlcnRpZXMuDQo+PiArDQo+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4+ICstIGNvbXBh
+dGlibGUJOiBDb21wYXRpYmxlIGxpc3QsIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgY29udHJvbGxl
+cjoNCj4+ICsJCQkiY2Rucyx1ZnNoYyINCj4+ICsJCSAgY29tcGxlbWVudGVkIHdpdGggdGhlIEpF
+REVDIHZlcnNpb246DQo+PiArCQkJImplZGVjLHVmcy0yLjAiDQo+PiArDQo+PiArLSByZWcJCTog
+QWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBVRlMgcmVnaXN0ZXIgc2V0Lg0KPj4gKy0gaW50ZXJy
+dXB0cwk6IE9uZSBpbnRlcnJ1cHQgbWFwcGluZy4NCj4+ICstIGZyZXEtdGFibGUtaHoJOiBDbG9j
+ayBmcmVxdWVuY3kgdGFibGUuDQo+PiArCQkgIFNlZSB0aGUgdWZzaGNkLXBsdGZybS50eHQgZm9y
+IGRldGFpbHMuDQo+PiArLSBjbG9ja3MJOiBMaXN0IG9mIHBoYW5kbGUgYW5kIGNsb2NrIHNwZWNp
+ZmllciBwYWlycy4NCj4+ICstIGNsb2NrLW5hbWVzCTogTGlzdCBvZiBjbG9jayBpbnB1dCBuYW1l
+IHN0cmluZ3Mgc29ydGVkIGluIHRoZSBzYW1lDQo+PiArCQkgIG9yZGVyIGFzIHRoZSBjbG9ja3Mg
+cHJvcGVydHkuICJjb3JlX2NsayIgaXMgbWFuZGF0b3J5Lg0KPj4gKwkJICBEZXBlbmRpbmcgb24g
+YSB0eXBlIG9mIGEgUEhZLA0KPj4gKwkJICB0aGUgInBoeV9jbGsiIGNsb2NrIGNhbiBhbHNvIGJl
+IGFkZGVkLCBpZiBuZWVkZWQuDQo+IA0KPiBVbmZvcnR1bmF0ZWx5LCB5b3Ugd2VudCB0aGUgd3Jv
+bmcgZGlyZWN0aW9uLiBUaGUgJ19jbGsnIHBhcnQgaXMgDQo+IHJlZHVuZGFudC4gSnVzdCDigJhj
+b3Jl4oCZIGFuZCAncGh5Jy4NCg0KSSB1bmRlcnN0YW5kLCBob3dldmVyIHRoZSByZXN0IG9mIHRo
+ZSB1ZnMgZnJhbWV3b3JrIHVzZXMgdGhlICdfY2xrJyBzdWZmaXg6DQpkcml2ZXJzL3Njc2kvdWZz
+L3Vmc2hjZC5jOjY5OTk6DQoNCmlmICghSVNfRVJSX09SX05VTEwoY2xraS0+Y2xrKSkgewkJCQ0K
+CWlmIChza2lwX3JlZl9jbGsgJiYgIXN0cmNtcChjbGtpLT5uYW1lLCAicmVmX2NsayIpKQkJCQ0K
+CQljb250aW51ZTsNCg0KSSB3YW50ZWQgaXQgdG8gYmUgY29uc2lzdGVudCwgd2l0aCB0aGUgcmVz
+dCBvZiB0aGUgVUZTIGRyaXZlcnMuDQoNClJlZ2FyZHMsDQpKYW4NCg0KPiBXaXRoIHRoYXQsDQo+
+IA0KPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gDQo+PiAr
+DQo+PiArRXhhbXBsZToNCj4+ICsJdWZzQGZkMDMwMDAwIHsNCj4+ICsJCWNvbXBhdGlibGUgPSAi
+Y2Rucyx1ZnNoYyIsICJqZWRlYyx1ZnMtMi4wIjsNCj4+ICsJCXJlZyA9IDwweGZkMDMwMDAwIDB4
+MTAwMDA+Ow0KPj4gKwkJaW50ZXJydXB0cyA9IDwwIDEgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+
+PiArCQlmcmVxLXRhYmxlLWh6ID0gPDAgMD4sIDwwIDA+Ow0KPj4gKwkJY2xvY2tzID0gPCZ1ZnNf
+Y29yZV9jbGs+LCA8JnVmc19waHlfY2xrPjsNCj4+ICsJCWNsb2NrLW5hbWVzID0gImNvcmVfY2xr
+IiwgInBoeV9jbGsiOw0KPj4gKwl9Ow0KPj4gLS0gDQo+PiAyLjE1LjANCj4+IA0KPj4gDQo+PiAt
+LQ0KPj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vi
+c2NyaWJlIGRldmljZXRyZWUiIGluDQo+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jk
+b21vQHZnZXIua2VybmVsLm9yZw0KPj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cHM6Ly91
+cmxkZWZlbnNlLnByb29mcG9pbnQuY29tL3YyL3VybD91PWh0dHAtM0FfX3ZnZXIua2VybmVsLm9y
+Z19tYWpvcmRvbW8tMkRpbmZvLmh0bWwmZD1Ed0lCQWcmYz1hVXE5ODNMMnB1ZTJGcUtGb1A2UEdI
+TUpReW9KN2tsM3MzR1otX2hhWHFZJnI9ZzdHQVFFTlZYeF9SUWR5WEhJblBNZyZtPWVjam15MlV2
+bDNoQnBNdVVRWUZtNEhTRndwWk9Oa1QyUXI4ci0tN2cxdzgmcz1EYlFSdjFvR2xydTB3bUhaSmhG
+WHpwN3l3a0dWODk1UFBQX0xBeS1XQmtNJmU9DQoNCg==
