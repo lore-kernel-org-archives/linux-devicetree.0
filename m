@@ -1,78 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: dmaengine: xilinx_dma: Add binding
- for Xilinx MCDMA IP
-Date: Tue, 14 Aug 2018 10:13:26 -0600
-Message-ID: <20180814161326.GA17341@rob-hp-laptop>
-References: <1533059173-21405-1-git-send-email-radhey.shyam.pandey@xilinx.com>
- <1533059173-21405-2-git-send-email-radhey.shyam.pandey@xilinx.com>
+Subject: Re: [PATCH 2/2] dt-bindings: clock: Add bindings for the Clocking
+ Wizard IP
+Date: Tue, 14 Aug 2018 10:16:50 -0600
+Message-ID: <20180814161650.GA22207@rob-hp-laptop>
+References: <20180801081950.10497-1-boris.brezillon@bootlin.com>
+ <20180801081950.10497-2-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1533059173-21405-2-git-send-email-radhey.shyam.pandey@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc: vkoul@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, dan.j.williams@intel.com, appanad@xilinx.com, lars@metafoo.de, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180801081950.10497-2-boris.brezillon@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Julien Su <juliensu@mxic.com.tw>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Kumar Gala <galak@codeaurora.org>, Mason Yang <masonccyang@mxic.com.tw>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhengxunli@mxic.com.tw
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 11:16:12PM +0530, Radhey Shyam Pandey wrote:
-> Add devicetree binding for Xilinx AXI Multichannel Direct Memory Access
-> (AXI MCDMA) IP. The AXI MCDMA provides high-bandwidth direct memory
-> access between memory and AXI4-Stream target peripherals. The AXI MCDMA
-> core provides scatter-gather interface with multiple channel support.
+On Wed, Aug 01, 2018 at 10:19:50AM +0200, Boris Brezillon wrote:
+> Document Xilinx Clocking Wizard bindings.
 > 
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 > ---
->  Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> index 174af2c..57bb02e 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> @@ -11,9 +11,13 @@ is to receive from the device.
->  Xilinx AXI CDMA engine, it does transfers between memory-mapped source
->  address and a memory-mapped destination address.
->  
-> +Xilinx AXI MCDMA engine, it does transfer between memory and AXI4 stream
-> +target devices. It can be configured to have up to 16 independent transmit
-> +and receive channels.
-> +
->  Required properties:
->  - compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00.a" or
-> -	      "xlnx,axi-cdma-1.00.a""
-> +	      "xlnx,axi-cdma-1.00.a" or "xlnx,axi-mcdma-1.00.a".
+>  .../devicetree/bindings/clock/xlnx,clk-wizard.txt  | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/xlnx,clk-wizard.txt
 
-Please reformat to 1 per line.
-
->  - #dma-cells: Should be <1>, see "dmas" property below
->  - reg: Should contain VDMA registers location and length.
->  - xlnx,addrwidth: Should be the vdma addressing size in bits(ex: 32 bits).
-> @@ -56,6 +60,8 @@ Required child node properties:
->  	For CDMA: It should be "xlnx,axi-cdma-channel".
->  	For AXIDMA: It should be either "xlnx,axi-dma-mm2s-channel" or
->  	"xlnx,axi-dma-s2mm-channel".
-> +	For MCDMA: It should be either "xlnx,axi-mcdma-mm2s-channel" or
-> +	"xlnx,axi-mcdma-s2mm-channel".
-
-What's wrong with reusing the existing xlnx,axi-dma-* names? 
-
->  - interrupts: Should contain per channel VDMA interrupts.
->  - xlnx,datawidth: Should contain the stream data width, take values
->  	{32,64...1024}.
-> @@ -68,7 +74,7 @@ Optional child node properties for VDMA:
->  	enabled/disabled in hardware.
->  - xlnx,enable-vert-flip: Tells vertical flip is
->  	enabled/disabled in hardware(S2MM path).
-> -Optional child node properties for AXI DMA:
-> +Optional child node properties for AXI DMA and MCDMA:
->  -dma-channels: Number of dma channels in child node.
->  
->  Example:
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
