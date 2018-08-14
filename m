@@ -1,57 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller
- documentation
-Date: Tue, 14 Aug 2018 14:27:20 -0600
-Message-ID: <20180814202720.GB26606@rob-hp-laptop>
-References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
- <20180807134121.GA7958@sirena.org.uk>
- <CAMz4kuJsyKv_fvrqRR3pdfKsLVy53Uj0KX+m_9jLxpcVcMvs9g@mail.gmail.com>
- <20180808095025.GB9346@sirena.org.uk>
- <CAMz4kuKZHxYiJaMHnqdAGth8XkfGnq3-Tsfc59cGjsHQHZaY7A@mail.gmail.com>
- <20180808105451.GE9346@sirena.org.uk>
- <1533754621.2283.270.camel@impinj.com>
- <CAMz4kuKwfBB8-8o5s8FQadFSFiD8KU=qNZYQjCWOfc-QpuVRSw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: bcm: Add Raspberry Pi CM3 and CM3L
+Date: Tue, 14 Aug 2018 14:29:33 -0600
+Message-ID: <20180814202933.GA15705@rob-hp-laptop>
+References: <1533381003-13367-1-git-send-email-stefan.wahren@i2se.com>
+ <1533381003-13367-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAMz4kuKwfBB8-8o5s8FQadFSFiD8KU=qNZYQjCWOfc-QpuVRSw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Trent Piepho <tpiepho@impinj.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>
+In-Reply-To: <1533381003-13367-2-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 09, 2018 at 11:03:11AM +0800, Baolin Wang wrote:
-> Hi Trent,
+On Sat,  4 Aug 2018 13:10:02 +0200, Stefan Wahren wrote:
+> This adds the root properties for Raspberry Pi Compute Module 3 and
+> Compute Module 3 Lite.
 > 
-> On 9 August 2018 at 02:57, Trent Piepho <tpiepho@impinj.com> wrote:
-> > On Wed, 2018-08-08 at 11:54 +0100, Mark Brown wrote:
-> >> On Wed, Aug 08, 2018 at 06:35:28PM +0800, Baolin Wang wrote:
-> >> > On 8 August 2018 at 17:50, Mark Brown <broonie@kernel.org> wrote:
-> >> > > Right, I don't think we added this yet (if we did I can't see
-> >> > > it).  I'd
-> >> > > add a new field to spi_transfer for this, then other controllers
-> >> > > with
-> >> > > the same support can implement it as well and drivers can start
-> >> > > using
-> >> > > it too.
-> >> > OK. So I will name the new filed as 'word_delay', is it OK for you?
-> >>
-> >> Sounds good, yes.
-> >
-> > Should it be in µs like the existing iter-transfer delay?  I think
-> > perhaps units of cycles of the SPI clock make more sense?
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> Since some SPI controllers just want some interval values (neither µs
-> unit nor cycles unit ) set into hardware, and the hardware will
-> convert to the correct delay time automatically. So I did not force
-> 'word_delay' unit as µs or cycle, and just let the slave devices
-> decide the unit which depends on the SPI hardware requirement.
 
-This needs to be defined units in DT, not decided by each controller.
-
-The controller capabilities just affect what are valid values (or what 
-the resolution is).
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
