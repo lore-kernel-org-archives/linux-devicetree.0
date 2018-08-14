@@ -1,64 +1,44 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v2 3/3] dts: arm64/sdm845: Add node for qcom,smmu-v2
-Date: Tue, 14 Aug 2018 15:57:40 +0530
-Message-ID: <20180814102740.30222-4-vivek.gautam@codeaurora.org>
-References: <20180814102740.30222-1-vivek.gautam@codeaurora.org>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: [PATCH v3 0/2] arm64: dts: meson-g12a: Introduce new DT files for Meson-G12A SoC
+Date: Tue, 14 Aug 2018 18:38:38 +0800
+Message-ID: <1534243121-33589-1-git-send-email-jianxin.pan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180814102740.30222-1-vivek.gautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: joro@8bytes.org, robh+dt@kernel.org, andy.gross@linaro.org, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, robin.murphy@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vivek Gautam <vivek.gautam@codeaurora.org>
+To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device node for qcom,smmu-v2 available on sdm845.
-This smmu is available only to GPU device.
+This attempt will try to add new DT files to support Meson-G12A SoC.
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+1) first, Please notice that, in this patch series, the DT node about 16M reserved
+memory for hwrom is removed, since it's not needed by G12A SoC.
+2) second, the pclk for uart_AO need to be fixed once G12A clock_ao driver is
+merged. In this version, it rely on bootloader to enable the pclk gate which 
+belong to AO clock domain. Please add clk_ignore_unused to bootargs.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 1c2be2082f33..bd1ec5fa5146 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -6,6 +6,7 @@
-  */
- 
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+#include <dt-bindings/clock/qcom,gpucc-sdm845.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-@@ -989,6 +990,28 @@
- 			cell-index = <0>;
- 		};
- 
-+		gpu_smmu: iommu@5040000 {
-+			compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
-+			reg = <0x5040000 0x10000>;
-+			#iommu-cells = <1>;
-+			#global-interrupts = <2>;
-+			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
-+				     <GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
-+			clock-names = "bus", "iface";
-+			clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-+				 <&gcc GCC_GPU_CFG_AHB_CLK>;
-+
-+			/*power-domains = <&gpucc GPU_CX_GDSC>;*/
-+		};
-+
- 		apps_smmu: iommu@15000000 {
- 			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
- 			reg = <0x15000000 0x80000>;
+Changes since v2 [1]:
+ - reorder subnodes
+ - collect Rob's Reviewed-by
+
+Changes since v1 [0]:
+ - fix signoff typo
+ - order subnodes by addresses when there is one and alphabetically when there is none
+
+[0] https://lore.kernel.org/lkml/1533802951-49919-2-git-send-email-jianxin.pan@amlogic.com/
+
+Jianxin Pan (2):
+  dt-bindings: arm: amlogic: Add Meson G12A binding
+  arm64: dts: meson-g12a: add initial g12a s905d2 SoC DT support
+
+ Documentation/devicetree/bindings/arm/amlogic.txt |   6 +
+ arch/arm64/boot/dts/amlogic/Makefile              |   1 +
+ arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts   |  22 +++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi       | 172 ++++++++++++++++++++++
+ 4 files changed, 201 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+1.9.1
