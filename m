@@ -1,88 +1,45 @@
-From: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Subject: Re: [PATCH v2 2/4] dt-bindings: soc: amlogic: add meson-canvas documentation
-Date: Tue, 14 Aug 2018 04:42:25 +0200
-Message-ID: <CAHStOZ5i_SzamBsWk-b+X2n_gxdNJUPCHL1U0M-d6rdJgXkzrg@mail.gmail.com>
-References: <20180807220011.24436-1-maxi.jourdan@wanadoo.fr>
- <20180807220011.24436-3-maxi.jourdan@wanadoo.fr> <20180813190721.GA27621@rob-hp-laptop>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [1/2] dt-bindings: phy: Add stingray usb phy documentation
+Date: Tue, 14 Aug 2018 08:43:44 +0530
+Message-ID: <CABe79T4sjn=BwjYtSd2N_HmDhCzrqr61DBu-ZZxC4DNnAswzmQ@mail.gmail.com>
+References: <1499432825-15820-2-git-send-email-srinath.mannam@broadcom.com> <20180814015416.GA29046@jc-sabre>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180813190721.GA27621@rob-hp-laptop>
+In-Reply-To: <20180814015416.GA29046@jc-sabre>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Maxime Jourdan <maxi.jourdan@wanadoo.fr>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Jayachandran C <jnair@caviumnetworks.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-08-13 21:07 GMT+02:00 Rob Herring <robh@kernel.org>:
-> On Wed, Aug 08, 2018 at 12:00:09AM +0200, Maxime Jourdan wrote:
->> DT bindings doc for amlogic,meson-canvas
->>
->> Signed-off-by: Maxime Jourdan <maxi.jourdan@wanadoo.fr>
->> ---
->>  .../soc/amlogic/amlogic,meson-canvas.txt      | 36 +++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt b/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
->> new file mode 100644
->> index 000000000000..5f0351717bee
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/amlogic/amlogic,meson-canvas.txt
->> @@ -0,0 +1,36 @@
->> +Amlogic Canvas
->> +================================
->> +
->> +A canvas is a collection of metadata that describes a pixel buffer.
->> +Those metadata include: width, height, phyaddr, wrapping, block mode
->> +and endianness.
->> +
->> +Many IPs within Amlogic SoCs rely on canvas indexes to read/write pixel data
->> +rather than use the phy addresses directly. For instance, this is the case for
->> +the video decoders and the display.
->> +
->> +Amlogic SoCs have 256 canvas.
->> +
->> +Device Tree Bindings:
->> +---------------------
->> +
->> +Canvas Provider
->> +--------------------------
->> +
->> +Required properties:
->> +- compatible: "amlogic,canvas"
->> +
->> +Parent node should have the following properties :
->> +- compatible: "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd"
+Hi JC,
+
+
+On Tue, Aug 14, 2018 at 7:24 AM, Jayachandran C
+<jnair@caviumnetworks.com> wrote:
+> Hi Srinath, Ray,
 >
-> Is this documented somewhere? One child function is not a reason for an
-> MFD and child nodes. And child nodes like this with no resources are
-> unnecessary.
->
-
-Hi Rob, this was done to follow the same path as other buses on the
-platform that have sysctrls in order to provide regmaps to the
-devices.
-
-I can see how it's not really necessary here though, would it be okay
-with you if I turned "canvas" into a simple bus subnode, using __iomem
-in the device ?
-
->> +- reg: base address and size of the DMC system control register space.
->> +
->> +Example:
->> +
->> +sysctrl_DMC: system-controller@0 {
->> +     compatible = "amlogic,gx-dmc-sysctrl", "syscon", "simple-mfd";
->> +     reg = <0x0 0x0 0x0 0x1000>;
->> +
->> +     canvas: canvas-provider@0 {
->> +             compatible = "amlogic,canvas";
->> +     };
->> +};
->> --
->> 2.18.0
+> On Fri, Jul 07, 2017 at 06:37:04PM +0530, Srinath Mannam wrote:
+>> Add DT binding document for stingray usb phy driver.
 >>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>
+> The Broadcom Vulcan chip (now Cavium ThunderX2) uses the same USB PHY
+> from what I understand. Our hardware team reports that there are some
+> failures seen without the a custom PHY driver.
+>
+> Do you require this PHY driver on regular operation on Stingray? Or is
+> this for some specific functionality? I am asking since the issue
+> reported here is on switching between a USB 3.0 and USB 2.0 devices.
+We need it for regular operation in stingray.
+>
+> Any plans on submitting this driver again?
+I will submit it ASAP.
+
+Regards,
+Srinath.
+>
+> Thanks,
+> JC
