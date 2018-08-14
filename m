@@ -1,71 +1,49 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH10 0/3] Intel FPGA Video and Image Processing Suite
-Date: Tue, 14 Aug 2018 10:48:37 -0500
-Message-ID: <3720ba74-947a-1b5d-5f5b-1ef03d5941aa@kernel.org>
-References: <1534237029-2648-1-git-send-email-hean.loong.ong@intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] clk: imx6q: optionally get CCM inputs via standard
+ clock handles
+Date: Tue, 14 Aug 2018 10:08:57 -0600
+Message-ID: <20180814160857.GA11979@rob-hp-laptop>
+References: <20180731102009.6710-1-l.stach@pengutronix.de>
+ <20180731102009.6710-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1534237029-2648-1-git-send-email-hean.loong.ong@intel.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "Hean-Loong, Ong" <hean.loong.ong@intel.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, yves.vandervennet@intel.com, chin.liang.see@intel.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180731102009.6710-2-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, patchwork-lst@pengutronix.de, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwOC8xNC8yMDE4IDAzOjU3IEFNLCBIZWFuLUxvb25nLCBPbmcgd3JvdGU6Cj4gRnJvbTog
-T25nLCBIZWFuIExvb25nIDxoZWFuLmxvb25nLm9uZ0BpbnRlbC5jb20+Cj4gCj4gVGhlIEZQR0Eg
-RnJhbWVCdWZmZXIgU29mdCBJUCBjb3VsZCBiZSBzZWVuICBhcyB0aGUgR1BVIGFuZCB0aGUgRFJN
-IGRyaXZlciBwYXRjaCAKPiBoZXJlIGlzIGFsbG9jYXRpbmcgbWVtb3J5IGZvciBpbmZvcm1hdGlv
-biB0byBiZSBzdHJlYW1lZCBmcm9tIHRoZSBBUk0vTGludXggCj4gdG8gdGhlIGRpc3BsYXkgcG9y
-dC4gQmFzaWNhbGx5IHRoZSBkcml2ZXIganVzdCB3cmFwcyB0aGUgaW5mb3JtYXRpb24gc3VjaCBh
-cyAKPiB0aGUgcGl4ZWxzIHRvIGJlIGRyYXduIGJ5IHRoZSBGUEdBIEZyYW1lQnVmZmVyIDIuCj4g
-Cj4gVGhlIHBpZWNlIG9mIGhhcmR3YXJlIGluIGRpc2N1c3Npb24gaXMgdGhlIFNvQyBGUEdBIHdo
-ZXJlIExpbnV4IHJ1bnMgb24gdGhlIAo+IEFSTSBjaGlwIGFuZCB0aGUgRkdQQSBpcyBkcml2ZW4g
-YnkgaXRzIE5JT1Mgc29mdCBjb3JlIHdpdGggaXRzIG93biBwcm9wcmlldGFyeSBmaXJtd2FyZS4K
-ClRoaXMgZHJpdmVyIGRvZXNuJ3QgaGF2ZSB0byBBUk0gc3BlY2lmaWMgZG9lcyBpdD8KCj4gCj4g
-Rm9yIGV4YW1wbGUgdGhlIGFwcGxpY2F0aW9uIGZyb20gdGhlIEFSTSBMaW51eCB3b3VsZCBoYXZl
-IHRvIHdyaXRlIGluZm9ybWF0aW9uIAo+IG9uIHRoZSAvZGV2L2ZiMCB3aXRoIHRoZSBpbmZvcm1h
-dGlvbiBzdG9yZWQgaW4gdGhlIFNEUkFNIHRvIGJlIGZldGNoZWQgYnkgdGhlIAo+IEZQR0EgZnJh
-bWVidWZmZXIgSVAgYW5kIGRpc3BsYXllZCBvbiB0aGUgRGlzcGxheSBQb3J0IE1vbml0b3IuCj4g
-Cj4gCj4gT25nIEhlYW4gTG9vbmcgKDIpOgo+ICAgQVJNOnNvY2ZwZ2EtZGVmY29uZmlnIEludGVs
-IEZQR0EgVmlkZW8gYW5kIEltYWdlIFByb2Nlc3NpbmcgU3VpdGUKPiAgIEFSTTpkcm0gaXZpcCBJ
-bnRlbCBGUEdBIFZpZGVvIGFuZCBJbWFnZSBQcm9jZXNzaW5nIFN1aXRlCj4gCj4gT25nLCBIZWFu
-IExvb25nICgxKToKPiAgIEFSTTpkdC1iaW5kaW5nczpkaXNwbGF5IEludGVsIEZQR0EgVmlkZW8g
-YW5kIEltYWdlIFByb2Nlc3NpbmcgU3VpdGUKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9hbHRyLHZpcC1mYjIudHh0ICAgfCAgIDYzICsrKysrKysKPiAgYXJjaC9hcm0vY29u
-Zmlncy9zb2NmcGdhX2RlZmNvbmZpZyAgICAgICAgICAgICAgICAgfCAgICA1ICsKPiAgZHJpdmVy
-cy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAyICsKPiAg
-ZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAx
-ICsKPiAgZHJpdmVycy9ncHUvZHJtL2l2aXAvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAg
-fCAgIDE0ICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9pdmlwL01ha2VmaWxlICAgICAgICAgICAgICAg
-ICAgICAgIHwgICAgOSArCj4gIGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9jb25uLmMg
-ICAgICAgICAgICAgIHwgICA5NSArKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9pdmlwL2lu
-dGVsX3ZpcF9jb3JlLmMgICAgICAgICAgICAgIHwgIDE2MSArKysrKysrKysrKysrKysrCj4gIGRy
-aXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9kcnYuaCAgICAgICAgICAgICAgIHwgICA1MiAr
-KysrKysKPiAgZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX29mLmMgICAgICAgICAgICAg
-ICAgfCAgMTkzICsrKysrKysrKysrKysrKysrKysrCj4gIDEwIGZpbGVzIGNoYW5nZWQsIDU5NSBp
-bnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYWx0cix2aXAtZmIyLnR4dAo+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvS2NvbmZpZwo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvTWFrZWZpbGUKPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9jb25uLmMKPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9jb3JlLmMKPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9kcnYuaAo+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX29mLmMKPiAKCkNh
-biB5b3UgY2xhcmlmeSB5b3VyIGNvbW1pdCBoZWFkZXI/IFdoYXQgaXMgIlBBVENIMTAiLCBpcyBp
-dCB2ZXJzaW9uIDEwPwpJZiBzbywgaXQgc2hvdWxkIGJlICJQQVRDSHYxMCIuCgpZb3UncmUgYWxz
-byBtaXNzaW5nIGEgZmV3IG90aGVyIG1haW50YWluZXJzIGluIHlvdXIgQ0MgbGlzdCwgdGhlICJE
-Uk0KRFJJVkVSUyBBTkQgTUlTQyBHUFUgUEFUQ0hFUyIgcGVvcGxlLgoKRGluaApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Jul 31, 2018 at 12:20:08PM +0200, Lucas Stach wrote:
+> When specifying external clock inputs to the CCM the current code
+> requires the clocks to be in a "clocks" child node of the DT root.
+> This is not really conformant with DT best practices.
+> 
+> To avoid the need to deviate from those best practices, allow the
+> clock inputs to be specifies via standard clock handles. This is
+> in line with how drivers of the later CCM driver revisions on
+> newer i.MX SoCs handle this.
+> 
+> As we can't retroactively change the DT binding, allow this as an
+> option with a fallback to the old way of how this has been handled.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  .../devicetree/bindings/clock/imx6q-clock.txt |  5 +++++
+
+Ignoring what my bot said if there's no other changes needed,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/clk/imx/clk-imx6q.c                   | 22 ++++++++++++++-----
+>  2 files changed, 22 insertions(+), 5 deletions(-)
