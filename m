@@ -1,58 +1,45 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] dt-bindings: net: ravb: Add support for r8a774a1 SoC
-Date: Tue, 14 Aug 2018 17:58:21 +0000
-Message-ID: <TY1PR01MB17704E702054D5368C84C029C0380@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1534250017-15725-1-git-send-email-fabrizio.castro@bp.renesas.com>
-        <20180814.100957.1728722828479885181.davem@davemloft.net>
-        <TY1PR01MB177019FF77871E7149595ED9C0380@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20180814.101934.1621967443721994871.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180814.101934.1621967443721994871.davem@davemloft.net>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, Biju Das <biju.das@bp.renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "horms@verge.net.au" <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>
+From: Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v3 0/2] i2c: npcm7xx: new driver for I2C controller
+Date: Tue, 14 Aug 2018 21:29:05 +0300
+Message-ID: <20180814182907.182139-1-tali.perry1@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tali.perry1@gmail.com, avifishman70@gmail.com, tmaimon77@gmail.com, venture@google.com, yuenn@google.com, brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, mchehab+samsung@kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, arnd@arndb.de, wsa@the-dreams.de, andriy.shevchenko@linux.intel.com, pierre-yves.mordret@st.com, cedric.madianga@gmail.com, baolin.wang@spreadtrum.com, jarkko.nikula@linux.intel.com, hdegoede@redhat.com, rmk+kernel@armlinux.org.uk, ard.biesheuvel@linaro.org, thor.thayer@linux.intel.com, geert@linux-m68k.org, heikki.krogerus@linux.intel.com, tglx@linutronix.de
+Cc: linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello David,
+Nuvoton NPCM7XX I2C Controller
+NPCM7xx includes 16 I2C contollers. This driver operates the controller.
+This module also includes a slave mode, which will be submitted later on.
 
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Date: Tue, 14 Aug 2018 17:13:30 +0000
->
-> > Hello David,
-> >
-> >> Subject: Re: [PATCH] dt-bindings: net: ravb: Add support for r8a774a1 =
-SoC
-> >>
-> >> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >> Date: Tue, 14 Aug 2018 13:33:37 +0100
-> >>
-> >> > Document RZ/G2M (R8A774A1) SoC bindings.
-> >> >
-> >> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> >>
-> >> Which tree is this targetting?
-> >
-> > This patch applies on next-20180814
->
-> I'm asking something different.  I'm asking which subsystem tree, and
-> which maintainer, should apply this patch.
+Any feedback would be appreciated.  
 
-I think this is appropriate for net-next, and as far as I can tell previous=
- patches have either been applied by you (mostly) or Rob Herring.
-Maybe I should have put "[PATCH net-next]" in the Subject like the followin=
-g?
-https://patchwork.kernel.org/patch/10314835/
+v3 -> v2:
+	- fix dt binding: compatible name: ommit "bus"
 
-Thanks,
-Fab
+v2 -> v1:
+	- run check patch in strict mode.
+	- use linux crc.
+	- define regs in constant offset without base.
+	- remove debug prints.
+	- no declerations for local functions.
+	
+v1: initial version
 
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
 
+---
+Tali Perry (2):
+  dt-bindings: i2c: npcm7xx: add binding for i2c controller
+  i2c: npcm7xx: add i2c controller master mode only
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+ .../devicetree/bindings/i2c/i2c-npcm7xx.txt        |   29 +
+ drivers/i2c/busses/Kconfig                         |   11 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-npcm7xx.c                   | 2017 ++++++++++++++++++++
+ 4 files changed, 2058 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
+ create mode 100644 drivers/i2c/busses/i2c-npcm7xx.c
+
+-- 
+2.14.1
