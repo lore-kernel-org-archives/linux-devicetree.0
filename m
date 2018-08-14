@@ -1,45 +1,56 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [1/2] dt-bindings: phy: Add stingray usb phy documentation
-Date: Tue, 14 Aug 2018 08:43:44 +0530
-Message-ID: <CABe79T4sjn=BwjYtSd2N_HmDhCzrqr61DBu-ZZxC4DNnAswzmQ@mail.gmail.com>
-References: <1499432825-15820-2-git-send-email-srinath.mannam@broadcom.com> <20180814015416.GA29046@jc-sabre>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180814015416.GA29046@jc-sabre>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jayachandran C <jnair@caviumnetworks.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] powerpc/mpc85xx: fix issues in clock node
+Date: Tue, 14 Aug 2018 10:50:20 +0800
+Message-ID: <20180814025020.13874-1-andy.tang@nxp.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, paulus@samba.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi JC,
+The compatible string is not correct in the clock node.
+The clocks property refers to the wrong node too.
+This patch is to fix them.
 
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+---
+ arch/powerpc/boot/dts/fsl/t1023si-post.dtsi |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
 
-On Tue, Aug 14, 2018 at 7:24 AM, Jayachandran C
-<jnair@caviumnetworks.com> wrote:
-> Hi Srinath, Ray,
->
-> On Fri, Jul 07, 2017 at 06:37:04PM +0530, Srinath Mannam wrote:
->> Add DT binding document for stingray usb phy driver.
->>
->> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->
-> The Broadcom Vulcan chip (now Cavium ThunderX2) uses the same USB PHY
-> from what I understand. Our hardware team reports that there are some
-> failures seen without the a custom PHY driver.
->
-> Do you require this PHY driver on regular operation on Stingray? Or is
-> this for some specific functionality? I am asking since the issue
-> reported here is on switching between a USB 3.0 and USB 2.0 devices.
-We need it for regular operation in stingray.
->
-> Any plans on submitting this driver again?
-I will submit it ASAP.
-
-Regards,
-Srinath.
->
-> Thanks,
-> JC
+diff --git a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+index 4908af5..763caf4 100644
+--- a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+@@ -348,7 +348,7 @@
+ 		mux0: mux0@0 {
+ 			#clock-cells = <0>;
+ 			reg = <0x0 4>;
+-			compatible = "fsl,core-mux-clock";
++			compatible = "fsl,qoriq-core-mux-2.0";
+ 			clocks = <&pll0 0>, <&pll0 1>;
+ 			clock-names = "pll0_0", "pll0_1";
+ 			clock-output-names = "cmux0";
+@@ -356,9 +356,9 @@
+ 		mux1: mux1@20 {
+ 			#clock-cells = <0>;
+ 			reg = <0x20 4>;
+-			compatible = "fsl,core-mux-clock";
+-			clocks = <&pll0 0>, <&pll0 1>;
+-			clock-names = "pll0_0", "pll0_1";
++			compatible = "fsl,qoriq-core-mux-2.0";
++			clocks = <&pll1 0>, <&pll1 1>;
++			clock-names = "pll1_0", "pll1_1";
+ 			clock-output-names = "cmux1";
+ 		};
+ 	};
+-- 
+1.7.1
