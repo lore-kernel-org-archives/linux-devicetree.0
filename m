@@ -1,71 +1,80 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v5 0/5] rtc: isl1208: fixes, documentation and isl1219
- support
-Date: Tue, 14 Aug 2018 23:27:10 +0200
-Message-ID: <20180814212710.GQ943@piout.net>
-References: <20180724095437.6016-1-Denis.Osterland@diehl.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: [RFC PATCH v1 0/3] device property: Support MAC address in VPD
+Date: Tue, 14 Aug 2018 15:37:55 -0700
+Message-ID: <20180814223758.117433-1-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180724095437.6016-1-Denis.Osterland@diehl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Denis OSTERLAND <denis.osterland@diehl.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi all,
 
-On 24/07/2018 11:31:21+0000, Denis OSTERLAND wrote:
-> changes since v4:
->  - fix 'souces' typo and change interrupt documentation
->  - change "isil,ev-evienb" type to int and do not touch bit if not present
->  - pass ISL1219_REG_EV_EVEN directly instead of assigning it to rc
->  - fix module build by adding EXPORT_SYMBOL to rtc_add_group(s)
->  - use kcalloc
->  - return error if device is already registered
->  - include helper functions into rtc_add_groups
-> 
-> Michael Grzeschik (1):
->     rtc: isl1208: add support for isl1219 with tamper detection
-> 
-> Denis Osterland (4):
->     rtc: sysfs: facilitate attribute add to rtc device
->     rtc: isl1208: Add "evdet" interrupt source for isl1219.
->     rtc: isl1208: set ev-evienb bit from device tree
->     rtc: isl1219: add device tree docu
-> 
+Preface: I'm sure there are at least a few minor issues with this
+patchset as-is. But I'd appreciate ("RFC") if I can get general feedback
+on the approach here; perhaps there are alternatives, or perhaps I've
+missed similar proposals in the past. (My problems don't feel all that
+unique.)
+
+---
+
+Today, we have generic support for 'mac-address' and 'local-mac-address'
+properties in both Device Tree nodes and in generic Device Properties,
+such that network device drivers can pick up a hardware address from
+there, in cases where the MAC address isn't baked into the network card.
+This method of MAC address retrieval presumes that either:
+(a) there's a unique device tree (or similar) stored on a given device
+    or
+(b) some other entity (e.g., boot firmware) will modify device nodes
+    runtime to place that MAC address into the appropriate device
+    properties.
+
+Option (a) is not feasbile for many systems.
+
+Option (b) can work, but there are some reasons why one might not want
+to do that:
+ (1) This requires that system firmware understand the device tree
+     structure, sometimes to the point of memorizing path names (e.g.,
+     /soc/wifi@xxxxxxxx). At least for Device Tree, these path names are
+     not necessarily an ABI, and so this introduces unneeded fragility.
+ (2) Other than this device-tree shim requirement, system firmware may
+     have no reason to understand anything about network devices.
+
+So instead, I'm looking for a way to have a device node describe where
+to find its MAC address, rather than having the device node contain the
+MAC address directly. Then system firmware doesn't have to manage
+anything.
+
+In particular, I add support for the Google Vital Product Data (VPD)
+format, used within the Coreboot project. The format is described here:
+
+https://chromium.googlesource.com/chromiumos/platform/vpd/+/master/README.md
+
+TL;DR: VPD consists of a TLV-like table, with key/value pairs of
+strings. This is often stored persistently on the boot flash and
+presented via in-memory Coreboot tables, for the operating system to
+read.
+
+We already have a VPD driver that parses this table and presents it to
+user space. This series extends that driver to allow in-kernel lookups
+of MAC address entries.
+
+Thanks,
+Brian
 
 
-I've now applied all the patches after fixing a few whitespace issues
-here and there.
+Brian Norris (3):
+  dt-bindings: net: Add 'mac-address-lookup' property
+  device property: Support complex MAC address lookup
+  firmware: vpd: add MAC address parser
 
->  .../devicetree/bindings/rtc/isil,isl1219.txt       |  29 ++++
->  drivers/rtc/rtc-core.h                             |  13 ++
->  drivers/rtc/rtc-isl1208.c                          | 192 ++++++++++++++++++---
->  drivers/rtc/rtc-sysfs.c                            |  43 +++++
->  4 files changed, 254 insertions(+), 23 deletions(-)
-> 
-> Message-Id: 20180710090710.9066-1-Denis.Osterland@diehl.com
-> 
-> 
-> 
-> 
-> 
-> Diehl Connectivity Solutions GmbH
-> Geschäftsführung: Horst Leonberger
-> Sitz der Gesellschaft: Nürnberg - Registergericht: Amtsgericht
-> Nürnberg: HRB 32315
-> ___________________________________________________________________________________________________
-> 
-> Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
-> Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhalten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
-> Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung und/oder Publikation dieser E-Mail ist strengstens untersagt.
-> The contents of the above mentioned e-mail is not legally binding. This e-mail contains confidential and/or legally protected information. Please inform us if you have received this e-mail by
-> mistake and delete it in such a case. Each unauthorized reproduction, disclosure, alteration, distribution and/or publication of this e-mail is strictly prohibited.
+ .../devicetree/bindings/net/ethernet.txt      | 12 +++
+ drivers/base/property.c                       | 83 ++++++++++++++++++-
+ drivers/firmware/google/vpd.c                 | 67 +++++++++++++++
+ include/linux/property.h                      | 23 +++++
+ 4 files changed, 183 insertions(+), 2 deletions(-)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.18.0.865.gffc8e1a3cd6-goog
