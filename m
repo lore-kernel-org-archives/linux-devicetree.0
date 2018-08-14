@@ -1,92 +1,277 @@
-From: Hanjie Lin <hanjie.lin@amlogic.com>
-Subject: [PATCH 1/2] dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe controller
-Date: Tue, 14 Aug 2018 02:18:41 -0400
-Message-ID: <1534227522-186798-2-git-send-email-hanjie.lin@amlogic.com>
-References: <1534227522-186798-1-git-send-email-hanjie.lin@amlogic.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v8 3/4] drm/atmel-hlcdc: iterate over all output endpoints
+Date: Tue, 14 Aug 2018 08:35:30 +0200
+Message-ID: <5c9853fc-e2ea-6983-ac88-b52b6e9e6ecd@axentia.se>
+References: <20180810130359.9882-1-peda@axentia.se>
+ <20180810130359.9882-4-peda@axentia.se>
+ <20180813135949.32vrlrevtazr5x7d@apu3b.nibble.pw>
+ <0baac94e-f3d2-53fd-4af9-854bb4498345@axentia.se>
+ <CAL_JsqJPzwpN2TFghy-FfHZppexG9gW4qBy6iYtGpyP_Bp6dUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534227522-186798-1-git-send-email-hanjie.lin@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yue Wang <yue.wang@amlogic.com>, Yue Wang <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJPzwpN2TFghy-FfHZppexG9gW4qBy6iYtGpyP_Bp6dUA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jmondi <jacopo@jmondi.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrzej Hajda <a.hajda@samsung.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Sakari Ailus <sakari.ailus@iki.fi>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yue Wang <yue.wang@amlogic.com>
+On 2018-08-13 22:52, Rob Herring wrote:
+> On Mon, Aug 13, 2018 at 8:25 AM Peter Rosin <peda@axentia.se> wrote:
+>>
+>> On 2018-08-13 15:59, jacopo mondi wrote:
+>>> Hi Peter,
+>>>
+>>> On Fri, Aug 10, 2018 at 03:03:58PM +0200, Peter Rosin wrote:
+>>>> This enables more flexible devicetrees. You can e.g. have two output
+>>>> nodes where one is not enabled, without the ordering affecting things.
+> 
+> Your DTs are not supposed to be flexible. They should be well defined
+> by the binding.
 
-The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-controller.
+I feel the need to explain the situation with more words...
 
-Signed-off-by: Yue Wang <hanjie.lin@amlogic.com>
-Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
----
- .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+We have a board with this atmel-hlcdc wired to both an LVDS encoder
+and an HDMI encoder. Depending on how we integrate this board, only
+one of these paths make sense. Hence, I would like to do the following
+in a .dtsi for that board:
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-new file mode 100644
-index 0000000..48233e4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-@@ -0,0 +1,57 @@
-+Amlogic Meson AXG DWC PCIE SoC controller
-+
-+Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-+It shares common functions with the PCIe DesignWare core driver and
-+inherits common properties defined in
-+Documentation/devicetree/bindings/pci/designware-pci.txt.
-+
-+Additional properties are described here:
-+
-+Required properties:
-+- compatible:
-+	should contain "amlogic,axg-pcie" to identify the core.
-+- reg:
-+	Should contain the configuration address space.
-+- reg-names: Must be
-+	- "elbi"	External local bus interface registers
-+	- "cfg"		Meson specific registers
-+	- "config"	PCIe configuration space
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Must include the following entries:
-+	- "pcie"
-+	- "pcie_bus"
-+	- "pcie_general"
-+	- "pcie_mipi_en"
-+
-+Example configuration:
-+
-+	pcie: pcie@dffff000 {
-+			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-+			reg = <0x0 0xf9800000 0x0 0x400000
-+					0x0 0xff646000 0x0 0x2000
-+					0x0 0xf9f00000 0x0 0x100000>;
-+			reg-names = "elbi", "cfg", "config";
-+			reset-gpio = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-+			interrupts = <0 177 IRQ_TYPE_EDGE_RISING>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-+			bus-range = <0x0 0xff>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			phys = <&pcie_phy>;
-+			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
-+			num-lanes = <1>;
-+			pcie-num = <1>;
-+
-+			clocks = <&clkc CLKID_USB
-+					&clkc CLKID_MIPI_ENABLE
-+					&clkc CLKID_PCIE_A
-+					&clkc CLKID_PCIE_CML_EN0>;
-+			clock-names = "pcie_general",
-+					"pcie_refpll",
-+					"pcie_mipi_en",
-+					"pcie",
-+					"port";
-+	};
--- 
-2.7.4
+/ {
+	hlcdc-display-controller {
+		...
+		port@0 {
+			hlcdc_lvds: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&lvds_encoder_input>;
+			};
+
+			hlcdc_hdmi: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&hdmi_encoder_input>;
+			};
+		};
+	};
+
+	lvds_encoder: lvds-encoder {
+		status = "disabled";
+
+		...
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+
+				lvds_encoder_input: endpoint {
+					remote-endpoint = <&hlcdc_lvds>;
+				};
+			};
+
+			port@1 {
+				reg = <1>;
+
+				lvds_encoder_output: endpoint {
+				};
+			};
+		};
+	};
+};
+
+&i2c2 {
+	...
+	hdmi_encoder: hdmi-encoder@70 {
+		status = "disabled";
+
+		...
+
+		port {
+			hdmi_encoder_input: endpoint {
+				remote-endpoint = <&hlcdc_hdmi>;
+			};
+		};
+	};
+};
+
+
+And then, depending on what components are fitted and what LVDS panel has
+been attached to the LVDS encoder output, this can be used as follows
+in the .dts file for LVDS case:
+
+/ {
+	panel: panel {
+		compatible = "litemax,dlf2118", "panel-lvds";
+
+		...
+
+		port {
+			panel_input: endpoint {
+				remote-endpoint = <&lvds_encoder_output>;
+			};
+		};
+	};
+};
+
+
+&lvds_encoder {
+	status = "okay";
+};
+
+&lvds_encoder_output {
+	remote-endpoint = <&panel_input>;
+};
+
+
+For the HDMI case, it would be this in the .dts file:
+
+&hdmi_encoder {
+	status = "okay";
+};
+
+
+The above seem so much better than just having the following in
+the .dtsi file
+
+/ {
+	hlcdc-display-controller {
+		...
+		port@0 {
+			hlcdc_lvds: endpoint {
+				remote-endpoint = <&encoder_input>;
+			};
+		};
+	};
+};
+
+and pushing the lvds-encoder and hdmi-encoder nodes (slightly modified) down
+to the relevant .dts files. Especially so since we have to this point
+delivered several variants with different LVDS panels. The duplication
+is ugly, and the number of different panels is expected to grow...
+
+But maybe I have misunderstood what endpoints are all about, but to me
+the actual endpoint id is not that interesting and I see nothing in the
+graph binding that suggests that endpoint id 0 has to be up and kicking
+in order for endpoint id 1 to be examined at all.
+
+For ports, yes, you are right that the port id needs to be defined and
+fixed for a specific function, so scratch that. It was just a "maybe"
+question anyway...
+
+>>>>
+>>>> Prior to this patch the active node had to have endpoint id zero.
+>>>>
+>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>>> ---
+>>>>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 32 ++++++++++++++++++------
+>>>>  1 file changed, 25 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>>>> index 8db51fb131db..16c1b2f54b42 100644
+>>>> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>>>> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
+>>>> @@ -31,14 +31,16 @@ static const struct drm_encoder_funcs atmel_hlcdc_panel_encoder_funcs = {
+>>>>      .destroy = drm_encoder_cleanup,
+>>>>  };
+>>>>
+>>>> -static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
+>>>> +static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
+>>>> +                                   struct of_endpoint *endpoint)
+>>>>  {
+>>>>      struct drm_encoder *encoder;
+>>>>      struct drm_panel *panel;
+>>>>      struct drm_bridge *bridge;
+>>>>      int ret;
+>>>>
+>>>> -    ret = drm_of_find_panel_or_bridge(dev->dev->of_node, 0, endpoint,
+>>>> +    ret = drm_of_find_panel_or_bridge(dev->dev->of_node,
+>>>> +                                      endpoint->port, endpoint->id,
+>>>
+>>> You are refusing endpoint->port != 0 in the caller, so that could be
+>>> 0.
+>>
+>> Yes, it could. However, I intentionally did not write 0 here, so that
+>> the logic related to "port has to be zero" was in one place and not
+>> scattered about. I guess it's up to Boris?
+>>
+>> Maybe the port do not actually have to be zero at all? With the old
+>> code, it was kind of understandable that the port number was fixed,
+>> but for the code in my patch it does not matter at all AFAICT. There
+>> is nothing in the binding docs (except for the example) that hints
+>> that port has to be zero, so that's one thing in favor of just getting
+>> rid of the port number checking altogether...
+> 
+> The port numbering must be defined and fixed. If that is not clear in
+> the binding, fix the binding.
+
+Ok, so the code in my patch does the right thing forcing the port
+number to zero.
+
+>>>> @@ -77,13 +79,29 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
+>>>>
+>>>>  int atmel_hlcdc_create_outputs(struct drm_device *dev)
+>>>>  {
+>>>> -    int endpoint, ret = 0;
+>>>> -
+>>>> -    for (endpoint = 0; !ret; endpoint++)
+>>>> -            ret = atmel_hlcdc_attach_endpoint(dev, endpoint);
+>>>> +    struct of_endpoint endpoint;
+>>>> +    struct device_node *node = NULL;
+>>>> +    int count = 0;
+>>>> +    int ret = 0;
+>>>> +
+>>>> +    for_each_endpoint_of_node(dev->dev->of_node, node) {
+>>>> +            of_graph_parse_endpoint(node, &endpoint);
+> 
+> I'd really like to kill off of_graph_parse_endpoint, not add more
+> users (check the git history on this code). You should know what are
+> possible port and endpoint numbers, so iterate over those.
+
+So, add a comment to that effect in the docs of the of_graph_parse_endpoint
+function.
+
+How can the hlcdc driver know the actual number of endpoints? It's a
+one-way signal path out from that port, and it can easily be routed to
+1, 2, 3 or even more places. As shown above, forcing the endpoint id
+to start at zero is a nuisance, and I don't see the point of it.
+
+But I welcome suggestions on how to arrange the above dtsi/dts fragments
+in a world where the endpoint id absolutely has to start at zero.
+
+Cheers,
+Peter
+
+>>>> +
+>>>> +            if (endpoint.port)
+>>>> +                    continue;
+>>>> +
+>>>> +            ret = atmel_hlcdc_attach_endpoint(dev, &endpoint);
+>>>> +            if (ret == -ENODEV)
+>>>> +                    continue;
+>>>> +            if (ret) {
+>>>> +                    of_node_put(node);
+>>>> +                    break;
+>>>> +            }
+>>>> +            count++;
+>>>> +    }
+>>>>
+>>>>      /* At least one device was successfully attached.*/
+>>>> -    if (ret == -ENODEV && endpoint)
+>>>> +    if (ret == -ENODEV && count)
+>>>>              return 0;
+>>>>
+>>>>      return ret;
+>>>> --
+>>>> 2.11.0
+>>>>
+>>
