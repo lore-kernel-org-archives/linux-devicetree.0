@@ -1,15 +1,14 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 RESEND 2/2] phy: add Rockchip Innosilicon hdmi phy
-Date: Tue, 14 Aug 2018 14:52:00 +0200
-Message-ID: <4194245.uYZyAYm7Hd@phil>
-References: <20180710134949.25203-1-heiko@sntech.de>
- <20180710134949.25203-2-heiko@sntech.de>
- <a0a84907-c51f-b484-33fa-592a23c756f9@ti.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 2/2] ARM: dts: imx6q-icore-mipi: Use 1.5 version of i.Core
+ MX6
+Date: Tue, 14 Aug 2018 15:21:46 +0200
+Message-ID: <1534252906-29554-3-git-send-email-jacopo+renesas@jmondi.org>
+References: <1534252906-29554-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a0a84907-c51f-b484-33fa-592a23c756f9@ti.com>
+In-Reply-To: <1534252906-29554-1-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,139 +18,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, jagan@amarulasolutions.com
+Cc: devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+From: Jacopo Mondi <jacopo@jmondi.org>
 
-thanks for your review.
+The "EDIMM STARTER KIT i.Core 1.5 MIPI Evaluation" is based on the 1.5 version
+of the i.Core MX6 cpu module. The 1.5 version differs from the original one for
+a few details, including the ethernet PHY interface clock provider.
 
+With this commit, the ethernet interface works properly:
+SMSC LAN8710/LAN8720 2188000.ethernet-1:00: attached PHY driver
 
-Am Freitag, 3. August 2018, 11:24:06 CEST schrieb Kishon Vijay Abraham I:
-> On Tuesday 10 July 2018 07:19 PM, Heiko Stuebner wrote:
-> > +config PHY_ROCKCHIP_INNO_HDMI
-> > +	tristate "Rockchip INNO HDMI PHY Driver"
-> > +	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
-> 
-> depends on COMMON_CLK since the phy registers a clock provider?
+While before using the 1.5 version, ethernet failed to startup do to un-clocked
+PHY interface:
+fec 2188000.ethernet eth0: could not attach to PHY
 
-ok
+Fixes: 3fe088357731 ("ARM: dts: imx6q: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit support")
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+---
+ arch/arm/boot/dts/imx6q-icore-mipi.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > +static const struct phy_config rk3228_phy_cfg[] = {
-> > +	{	165000000, {
-> > +			0xaa, 0x00, 0x44, 0x44, 0x00, 0x00, 0x00, 0x00, 0x00,
-> > +			0x00, 0x00, 0x00, 0x00, 0x00,
-> 
-> If these register configurations are not a tuning value or dividers (which can
-> have absolute values), then we should have macros for each of these configurations.
-
-That might get difficult.
-
-That phy register set is completely undocumented even in the vendor TRMs
-of the 2 socs. I pieced together most existing macros from code comments
-and such from the vendor kernel. And Innosilicon is not known to willingly
-share much of their register documentation it seems.
-
-
-> > +static unsigned long inno_hdmi_phy_get_tmdsclk(struct inno_hdmi_phy *inno,
-> > +					       unsigned long rate)
-> > +{
-> > +	int bus_width = phy_get_bus_width(inno->phy);
-> 
-> hmm, the bus_width could be a member of struct inno_hdmi_phy. PHY API's don't
-> have to be used for getting data within the PHY driver itself.
-> Looking at the phy_get_bus_width() implementation, we should have protected
-> bus-width set and get with mutex. With that there might be a deadlock here.
-
-ok, so just read phy->attrs.bus_width directly here?
-
-I don't see how this can be part of struct inno_hdmi_phy, as the bus-width
-depends on the color-depth used on the hdmi-controller side, so
-depending on that it will want to adapt the phy's bus_width.
-
-Right now our dw_hdmi in mainline only supports one output format
-requiring a bus_width of 8, but the vendor kernel shows [0] how this
-wants to be used with multiple output formats.
-
-[0] https://github.com/rockchip-linux/kernel/blob/release-4.4/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c#L817
-
-
-> > +static irqreturn_t inno_hdmi_phy_rk3328_irq(int irq, void *dev_id)
-> > +{
-> > +	struct inno_hdmi_phy *inno = dev_id;
-> > +
-> > +	inno_update_bits(inno, 0x02, RK3328_PDATA_EN, 0);
-> > +	usleep_range(9, 10);
-> 
-> This range looks very narrow. 10 to 20 should be okay?
-
-ok
-
-
-> > +static void inno_hdmi_phy_action(void *data)
-> > +{
-> > +	struct inno_hdmi_phy *inno = data;
-> > +
-> > +	clk_disable_unprepare(inno->refpclk);
-> > +	clk_disable_unprepare(inno->sysclk);
-> > +}
-> > +
-> > +static int inno_hdmi_phy_probe(struct platform_device *pdev)
-> > +{
-> > +	struct inno_hdmi_phy *inno;
-> > +	const struct of_device_id *match;
-> > +	struct phy_provider *phy_provider;
-> > +	struct resource *res;
-> > +	void __iomem *regs;
-> > +	int ret;
-> > +
-
-[...]
-
-> > +	/*
-> > +	 * Refpclk needs to be on, on at least the rk3328 for still
-> > +	 * unknown reasons.
-> > +	 */
-> > +	ret = clk_prepare_enable(inno->refpclk);
-> > +	if (ret) {
-> > +		dev_err(inno->dev, "failed to enable refpclk\n");
-> > +		clk_disable_unprepare(inno->sysclk);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = devm_add_action_or_reset(inno->dev, inno_hdmi_phy_action,
-> > +				       inno);
-> > +	if (ret) {
-> > +		clk_disable_unprepare(inno->refpclk);
-> > +		clk_disable_unprepare(inno->sysclk);
-> > +		return ret;
-> > +	}
-> > +
-> > +	inno->regmap = devm_regmap_init_mmio(inno->dev, regs,
-> > +					     &inno_hdmi_phy_regmap_config);
-> > +	if (IS_ERR(inno->regmap))
-> 
-> here too clk_disable_unprepare and all error handling below?
-> It's better if we just handle error handling at the bottom of the function.
-
-Nope ;-) ... I.e. the goal of registering the devm_action above is to have
-the clocks get disabled in the correct order when devm undoes the other
-things in sequence.
-
-Manual error handling for the clocks would also break devm, as then
-the clocks would get disabled before the devm cleanup kicks in.
-
-
-> > +	phy_provider = devm_of_phy_provider_register(inno->dev,
-> > +						     of_phy_simple_xlate);
-> > +	if (IS_ERR(phy_provider)) {
-> > +		dev_err(inno->dev, "failed to register PHY provider\n");
-> > +		return PTR_ERR(phy_provider);
-> > +	}
-> return PTR_ERR_OR_ZERO(phy_provider);?
-
-ok
-
-Thanks
-Heiko
+diff --git a/arch/arm/boot/dts/imx6q-icore-mipi.dts b/arch/arm/boot/dts/imx6q-icore-mipi.dts
+index 95b2efd..1f15882 100644
+--- a/arch/arm/boot/dts/imx6q-icore-mipi.dts
++++ b/arch/arm/boot/dts/imx6q-icore-mipi.dts
+@@ -8,10 +8,10 @@
+ /dts-v1/;
+ 
+ #include "imx6q.dtsi"
+-#include "imx6qdl-icore.dtsi"
++#include "imx6qdl-icore-1.5.dtsi"
+ 
+ / {
+-	model = "Engicam i.CoreM6 Quad/Dual MIPI Starter Kit";
++	model = "Engicam i.CoreM6 1.5 Quad/Dual MIPI Starter Kit";
+ 	compatible = "engicam,imx6-icore", "fsl,imx6q";
+ };
+ 
+-- 
+2.7.4
