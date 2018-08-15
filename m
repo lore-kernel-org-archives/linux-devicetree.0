@@ -1,29 +1,30 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/6] dt: bindings: add bindings for msa memory region
-Date: Wed, 15 Aug 2018 10:04:07 -0600
-Message-ID: <20180815160407.GA12553@rob-hp-laptop>
-References: <20180815092637.11455-1-govinds@codeaurora.org>
- <20180815092637.11455-4-govinds@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: Document R8A774A1 bindings
+Date: Wed, 15 Aug 2018 10:12:07 -0600
+Message-ID: <20180815161207.GA21034@rob-hp-laptop>
+References: <1534249935-15496-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180815092637.11455-4-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1534249935-15496-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2018 at 02:56:34PM +0530, Govind Singh wrote:
-> Add device tree binding documentation details of msa
-> memory region for ath10k qmi client for SDM845/APQ8098
-> SoC into "qcom,ath10k.txt".
+On Tue, 14 Aug 2018 13:32:15 +0100, Fabrizio Castro wrote:
+> Renesas' RZ/G2M (R8A774A1) SoC has DMA controllers compatible
+> with this driver, therefore document RZ/G2M specific bindings.
 > 
-> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 > ---
->  .../devicetree/bindings/net/wireless/qcom,ath10k.txt        | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-Please add acks/reviewed-bys when posting new versions.
+I'm assuming subsystem maintainers will take this series of Renesas 
+patches. They are bindings only, but you all update them frequently so 
+we don't want any conflicts.
 
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
