@@ -1,58 +1,49 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] firmware: qcom: scm: Add sdm660 soc compatible
-Date: Wed, 15 Aug 2018 13:31:26 -0700
-Message-ID: <153436508626.28926.521245329376033797@swboyd.mtv.corp.google.com>
-References: <20180811162453.10930-1-ctatlor97@gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v1 3/7] mfd: add atmel-lcdc driver
+Date: Wed, 15 Aug 2018 22:40:41 +0200
+Message-ID: <20180815204041.GA29041@ravnborg.org>
+References: <20180812184152.GA22343@ravnborg.org>
+ <20180812184629.3808-3-sam@ravnborg.org>
+ <20180815052435.GA6412@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180811162453.10930-1-ctatlor97@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: ctatlor97@gmail.com, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Sricharan R <sricharan@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180815052435.GA6412@dell>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Craig Tatlor (2018-08-11 09:24:50)
-> Add the compatible for SDM660.
-> This does not need clocks to do scm calls
-> =
+Hi Lee.
 
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-> ---
->  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 1 +
->  drivers/firmware/qcom_scm.c                             | 3 +++
->  2 files changed, 4 insertions(+)
-> =
+> > +
+> > +static const struct mfd_cell lcdc_cells[] = {
+> > +	{
+> > +		.name = "atmel-lcdc-pwm",
+> > +		.of_compatible = "atmel,lcdc-pwm",
+> > +	},
+> > +	{
+> > +		.name = "atmel-lcdc-dc",
+> > +		.of_compatible = "atmel,lcdc-display-controller",
+> > +	},
+> > +};
+> 
+> Will you be adding any more devices, or is this the entirety of the
+> device?  If the latter, I suggest that this doesn't warrant being an
+> MFD.
+Thats it. And others agree with you that this is not a good approach.
+So in v2 there will be no MFD.
 
-> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Do=
-cumentation/devicetree/bindings/firmware/qcom,scm.txt
-> index fcf6979c0b6d..499608fcc864 100644
-> --- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-> @@ -11,6 +11,7 @@ Required properties:
->   * "qcom,scm-msm8660" for MSM8660 platforms
->   * "qcom,scm-msm8690" for MSM8690 platforms
->   * "qcom,scm-msm8996" for MSM8996 platforms
-> + * "qcom,scm-sdm660" for SDM660 platforms
->   * "qcom,scm-ipq4019" for IPQ4019 platforms
->   * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
->  - clocks: One to three clocks may be required based on compatible.
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index e778af766fae..ee113ceb5d41 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -603,6 +603,9 @@ static const struct of_device_id qcom_scm_dt_match[] =
-=3D {
->         { .compatible =3D "qcom,scm-msm8996",
->           .data =3D NULL, /* no clocks */
->         },
-> +       { .compatible =3D "qcom,scm-sdm660",
-> +         .data =3D NULL, /* no clocks */
-> +       },
+Thanks for confirming that the non-mfd way is the better approach.
 
-Do you need to update the driver? It looks like the scm driver should be
-changed to just try and get all the clks it can and treat them as
-optional clks, i.e. don't fail if they aren't actually listed in DT.
-Then we can just have one qcom,scm compatible string in this driver but
-we're free to add different compatibles to the binding for all the
-different SoCs out there.
+	Sam
