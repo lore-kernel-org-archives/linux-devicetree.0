@@ -1,63 +1,55 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
-Date: Wed, 15 Aug 2018 17:04:47 +0200
-Message-ID: <CAKMK7uHm03UxLNUieJFR4TD3ppTMHwkitbQTrVq67K=Mjh6OYA@mail.gmail.com>
-References: <20180812184152.GA22343@ravnborg.org>
- <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
- <20180813181808.GA2357@ravnborg.org> <20180813220454.GA28913@rob-hp-laptop>
- <20180814164343.GA13848@ravnborg.org> <20180814224252.GA20667@rob-hp-laptop>
- <20180815044808.GA1806@ravnborg.org>
- <CAL_JsqLwazj=7hOwSeAtcyvnYCmMDP-Nw3H8xHSr0n3YGUS21A@mail.gmail.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] arm64: dts: stratix10: i2c clock running out of spec
+Date: Wed, 15 Aug 2018 10:08:24 -0500
+Message-ID: <dd109cc6-00a8-244b-07e9-97e29739d804@kernel.org>
+References: <20180808154241.3760-1-atull@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqLwazj=7hOwSeAtcyvnYCmMDP-Nw3H8xHSr0n3YGUS21A@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Joshua Henderson <joshua.henderson@microchip.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Sam Ravnborg <sam@ravnborg.org>, Peter Rosin <peda@axentia.se>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180808154241.3760-1-atull@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMTUsIDIwMTggYXQgNDo0NSBQTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4gT24gVHVlLCBBdWcgMTQsIDIwMTggYXQgMTA6NDggUE0gU2FtIFJhdm5i
-b3JnIDxzYW1AcmF2bmJvcmcub3JnPiB3cm90ZToKPj4KPgo+IFsuLi5dCj4KPj4gPiA+IE9uZSBE
-VCByZWxhdGVkIFE6Cj4+ID4gPiBUaGUgTENEIENvbnRyb2xsZXIgc3VwcG9ydHMgQkdSNTY1LCBi
-dXQgYXMgdGhpcyBpcyBsZXNzIGNvbW1vbiBzb21lIEhXIGltcGxtZW50YXRpb25zCj4+ID4gPiBl
-eGNoYW5nZSBSIGFuZCBCLCBleHBlc3NlZCBpbiB0aGUgb2xkIGJpbmRpbmcgYXMgd2lyaW5nLW1v
-ZGUgbGlrZSB0aGlzOgo+PiA+ID4KPj4gPiA+ICAgICBhdG1lbCxsY2Qtd2lyaW5nLW1vZGU6IGxj
-ZCB3aXJpbmcgbW9kZSAiUkdCIiBvciAiQlJHIgo+PiA+ID4KPj4gPiA+IEhvdyBjYW4gd2UgZXhw
-cmVzcyB0aGlzIHdpcmluZy1tb2RlIGluIGEgZ2VuZXJpYyB3YXksIGJvdGggaW4gRFQgYW5kIGlu
-IGNvZGU/Cj4+ID4gPiBJcyBpdCBzb21ldGhpbmcgdGhhdCBpbiBEUk0gYmVsb25ncyB0byB0aGUg
-cGFuZWwsIHRoZSBlbmNvZGVyLCB0aGUgY29ubmVjdG9yLCBvcj8KPj4gPiA+IEFuZCBjYW4gYW55
-IG9mIHRoZSBleGlzaXRuZyBmbGFncyBiZSB1c2VkPwo+PiA+Cj4+ID4gSSB0aG91Z2h0IHdlIGhh
-ZCBjb21lIHVwIHdpdGggYSBjb21tb24gZGVmaW5pdGlvbiwgYnV0IEkgZ3Vlc3MgaXQgZGlkbid0
-Cj4+ID4gbWFrZSBpdCB1cHN0cmVhbS4gSXQncyBkZWZpbml0ZWx5IG5lZWRlZCBhbmQgSSd2ZSBi
-ZWVuIHJlamVjdGluZwo+PiA+IGFueXRoaW5nIG5ldyB0aGF0J3MgdmVuZG9yIHNwZWNpZmljLgo+
-PiBJIGZvdW5kIHRoaXM6IGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvNjU5NTcw
-Lwo+PiBUaGUgc3VnZ2VzdGlvbiB3aXRoIGEgYm9vbGVhbiBzZWVtcyBzaW1wbGUgYW5kIEkgd2ls
-bCB0cnkgdGhhdC4KPgo+IFRoYXQncyByZWFsbHkgdG9vIHNpbXBsZSB0byBiZSBjb21tb24uIFRo
-ZXJlJ3MgYmVlbiBhIGZldyBvdGhlcgo+IGF0dGVtcHRzWzFdWzJdWzNdIChmb3IgQXRtZWwgSExD
-REMgaW4gZmFjdCkgd2l0aCBbM10gcHJvYmFibHkgYmVpbmcKPiB0aGUgY2xvc2VzdCB0byBtZXJn
-aW5nLiBUaGUgYmluZGluZyBsb29rZWQgZmluZSB0byBtZSwgYnV0IGxvb2tzIGxpa2UKPiB0aGUg
-RFJNIGltcGxlbWVudGF0aW9uIGhhZCBzb21lIGlzc3Vlcy4KPgo+IFJvYgo+Cj4gWzFdIGh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE4LUFwcmlsLzE3
-MzA4OS5odG1sCj4gWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTk2NTA3
-OS8KPiBbM10gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFybS1r
-ZXJuZWwvMjAxOC1NYXJjaC81Njg3MzEuaHRtbAoKVGhlcmUncyBhIHN0YW5kYXJkaXplZCBidXNf
-Zm9ybWF0IGZvciBkcm1fcGFuZWwuIElJcmMgdGhlcmUncyBiZWVuCmRpc2N1c3Npb25zIHRvIGFk
-ZCBzb21ldGhpbmcgc2ltaWxhciB0byBkcm1fYnJpZGdlLCBidXQgZGlkbid0IGdvIGFsbAp0aGF0
-IGZhciBmb3IgcmVhc29ucy4KCkxvdHMgb2YgZHJpdmVycyBqdXN0IGhhbmRsZSB0aGlzIGludGVy
-bmFsbHkgaW4gc29tZSB3YXkuIFNvIG5vIGlkZWEKd2h5IHRoaXMgYWxsIGdvdCBzdGFsbGVkLgot
-RGFuaWVsCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3Jh
-dGlvbgorNDEgKDApIDc5IDM2NSA1NyA0OCAtIGh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+On 08/08/2018 10:42 AM, Alan Tull wrote:
+> DesignWare I2C controller was observed running at 105.93kHz rather
+> than the specified 100kHz.  Adjust device tree settings to bring it
+> within spec (a slightly conservative 98 MHz).
+> 
+> Signed-off-by: Alan Tull <atull@kernel.org>
+> ---
+>  arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> index 6edc4fa..53cf195 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> @@ -124,6 +124,8 @@
+>  &i2c1 {
+>  	status = "okay";
+>  	clock-frequency = <100000>;
+> +	i2c-sda-falling-time-ns = <890>;  /* hcnt */
+> +	i2c-sdl-falling-time-ns = <890>;  /* lcnt */
+>  
+>  	adc@14 {
+>  		compatible = "lltc,ltc2497";
+> 
+
+Applied!
+
+Thanks,
+Dinh
