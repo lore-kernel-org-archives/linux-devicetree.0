@@ -1,80 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v1 1/3] dt-bindings: net: Add 'mac-address-lookup'
- property
-Date: Wed, 15 Aug 2018 14:45:29 -0600
-Message-ID: <20180815204529.GA24830@rob-hp-laptop>
-References: <20180814223758.117433-1-briannorris@chromium.org>
- <20180814223758.117433-2-briannorris@chromium.org>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
+Date: Wed, 15 Aug 2018 22:48:15 +0200
+Message-ID: <20180815204815.GB29041@ravnborg.org>
+References: <20180812184152.GA22343@ravnborg.org>
+ <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
+ <20180813181808.GA2357@ravnborg.org>
+ <20180813220454.GA28913@rob-hp-laptop>
+ <20180814164343.GA13848@ravnborg.org>
+ <20180814224252.GA20667@rob-hp-laptop>
+ <20180815044808.GA1806@ravnborg.org>
+ <CAL_JsqLwazj=7hOwSeAtcyvnYCmMDP-Nw3H8xHSr0n3YGUS21A@mail.gmail.com>
+ <CAKMK7uHm03UxLNUieJFR4TD3ppTMHwkitbQTrVq67K=Mjh6OYA@mail.gmail.com>
+ <4def26df-0f4b-77e5-fea9-6c8f3537d831@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180814223758.117433-2-briannorris@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Brian Norris <briannorris@chromium.org>
+In-Reply-To: <4def26df-0f4b-77e5-fea9-6c8f3537d831@axentia.se>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Joshua Henderson <joshua.henderson@microchip.com>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@bootlin.com>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 14, 2018 at 03:37:56PM -0700, Brian Norris wrote:
-> Some firmwares present data tables that can be parsed to retrieve
-> device-specific details, like MAC addresses. While in some cases, one
-> could teach the firmware to understand the device tree format and insert
-> a 'mac-address'/'local-mac-address' property into the FDT on its own,
-> this method can be brittle (e.g., involving memorizing expected FDT
-> structure), and it's not strictly necessary -- especially when parsers
-> for such firmware formats are already needed in the OS for other
-> reasons.
-
-If you have an 'ethernetN' alias then you don't need to know the 
-structure. IIRC, that is what u-boot does.
+Hi Peter.
 
 > 
-> One such format: the Vital Product Data (VPD) [1] used by Coreboot. It
-> supports a table of key/value pairs, and some systems keep MAC addresses
-> there in a well-known format. Allow a device tree to specify
->   (1) that the MAC address for a given device is stored in the VPD table
->       and
->   (2) what key should be used to retrieve the MAC address for said
->       device (e.g., "ethernet_mac0" or "wifi_mac1").
+> I stopped pushing that patch for reasons mentioned in
+> https://lkml.org/lkml/2018/4/9/108
 > 
-> [1] Ref:
-> https://chromium.googlesource.com/chromiumos/platform/vpd/+/master/README.md
-> TL;DR: VPD consists of a TLV-like table, with key/value pairs of
-> strings. This is often stored persistently on the boot flash and
-> presented via in-memory Coreboot tables, for the operating system to
-> read.
+> However, since then, the component approach mentioned in that mail was
+> shot down and instead the tda998x driver is now a bridge (or soon, I expect
+> the series from Russell King that to land in 4.19-rc1) which means that the
+> binding from that series is back on the table. At least I guess so? However,
+> in that series the approach is that the bridge states its expected input and
+> the output then adjusts to what is needed. However, the "problem" is really in
+> the atmel-hlcdc output (it moves the MSB for the RGB colors around depending
+> on the output mode) so I no longer subscribe to all ideas in that series
+> and think it is cleaner to state the needed bus format closer to the atmel-
+> hlcdc endpoint as is done e.g. in this latest series:
 > 
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
->  Documentation/devicetree/bindings/net/ethernet.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> https://lkml.org/lkml/2018/8/10/309
 > 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-> index cfc376bc977a..d3fd1da18bf4 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet.txt
-> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
-> @@ -4,6 +4,18 @@ NOTE: All 'phy*' properties documented below are Ethernet specific. For the
->  generic PHY 'phys' property, see
->  Documentation/devicetree/bindings/phy/phy-bindings.txt.
->  
-> +- mac-address-lookup: string, indicating a method by which a MAC address may be
-> +  discovered for this device. Methods may be parameterized by some value, such
-> +  that the method can determine the device's MAC address using that parameter.
-> +  For example, a firmware might store MAC addresses in a table, keyed by some
-> +  predetermined string, and baked in read-only flash. A lookup method "foo"
-> +  with a parameter "bar" should be written "foo:bar".
-> +  Supported values for method:
-> +    "google-vpd" - Google's Vital Product Data (VPD), as used in the Coreboot
-> +      project. Documentation for VPD can be found at:
-> +        https://chromium.googlesource.com/chromiumos/platform/vpd/+/master/README.md
-> +  Example:
-> +    mac-address-lookup = "google-vpd:ethernet_mac0"
+> This latest series uses the media/video-interface approach and specifies
+> the bus-width in the endpoint. However, the bus-width is alone obviously not
+> enough to differentiate rgb565 and brg565, so will not help Sam
+Some digging in diverse threads required.
+I may take the easy way in v2 and postpone this feature.
+But you all confirmed that doing something locally in the driver is the
+wrong approach so that is ruled out.
 
-This doesn't strike me as a very DT style way of describing this. I 
-would expect something like a phandle to the VPD and an identifier. 
+> (or is it bgr565 that Sam needs? The above quoted text is ambiguous).
+My bad. I need either rgb565 or bgr565 (at lest this is how I understood
+the application note from Atmel/Microchip - need to re-read this too).
 
-Also, an already common way besides local-mac-address is using nvmem 
-binding which wouldn't use this and perhaps could be used here? This 
-feels very much Google specific, not common (and maybe that is fine).
+Some of the IP cores have an intensify bit which I do not yet understand
+how to adapt to the supported formats. This is also on the todo list.
 
-Rob
+> I think something like my bus-format binding in [3] is generic enough to
+> also help Sam.
+Thanks, if I find time I will look into this, but first priority is to get the
+bindinns correct, and then the overall structure of the driver.
+
+	Sam
