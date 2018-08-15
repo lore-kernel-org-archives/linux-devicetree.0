@@ -1,79 +1,88 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: Applied "ASoC: dt-bindings: add dt bindings for
- wcd9335 audio codec" to the asoc tree
-Date: Wed, 15 Aug 2018 11:52:39 +0100
-Message-ID: <20180815105239.GV2414@sirena.org.uk>
-References: <20180727121806.18209-2-srinivas.kandagatla@linaro.org>
- <20180801112020.93C4A1124241@debutante.sirena.org.uk>
- <20180814162405.GA450@rob-hp-laptop>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH 2/4] dt-bindings: phy-rockchip-inno-usb2: add
+ documentation for extcon and utmi-avalid properties.
+Date: Wed, 15 Aug 2018 13:08:00 +0200
+Message-ID: <37512ec9-8d9a-6c0c-8808-6351b8501002@collabora.com>
+References: <20180815095934.11205-1-enric.balletbo@collabora.com>
+ <20180815095934.11205-3-enric.balletbo@collabora.com>
+ <2023816.cqyDmH3see@phil>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7386055971227199057=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180814162405.GA450@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, vkoul@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, lee.jones@linaro.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2023816.cqyDmH3see@phil>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-kernel@vger.kernel.org, amstan@chromium.org, groeck@google.com, kieran.bingham@ideasonboard.com, kernel@collabora.com, bleung@chromium.org, devicetree@vger.kernel.org, Frank Wang <frank.wang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Heiko,
 
---===============7386055971227199057==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xku3GkZTJumTa1rO"
-Content-Disposition: inline
+On 15/08/18 12:29, Heiko Stuebner wrote:
+> Hi Enric,
+> 
+> Am Mittwoch, 15. August 2018, 11:59:32 CEST schrieb Enric Balletbo i Serra:
+>> Commit 98898f3bc83c8 ("phy: rockchip-inno-usb2: support otg-port for
+>> rk3399") introduces two new properties. The extcon property is used to
+>> detect the cable-state, and the rockchip,utmi-avalid is used to indicate
+>> which register should be used to detect the vbus state.
+>>
+>> Document these properties in the documentation binding.
+>>
+>> Fixes: 98898f3bc83c8 ("phy: rockchip-inno-usb2: support otg-port for rk3399")
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
+>>  .../devicetree/bindings/phy/phy-rockchip-inno-usb2.txt         | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> index 074a7b3b0425..2d4808d3920b 100644
+>> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> @@ -23,6 +23,7 @@ Optional properties:
+>>  		 register files". When set driver will request its
+>>  		 phandle as one companion-grf for some special SoCs
+>>  		 (e.g RV1108).
+>> + - extcon : phandle to the extcon device for the otg phy.
+> 
+> That should probably mention that this is the extcon providing the cable-state?
 
+ack.
 
---xku3GkZTJumTa1rO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> 
+>>  Required nodes : a sub-node is required for each port the phy provides.
+>>  		 The sub-node name is used to identify host or otg port,
+>> @@ -45,6 +46,8 @@ Required properties (port (child) node):
+>>  Optional properties:
+>>   - phy-supply : phandle to a regulator that provides power to VBUS.
+>>  		See ./phy-bindings.txt for details.
+>> + - rockchip,utmi-avalid : boolean, use the avalid register to get vbus status.
+>> +			  Otherwise, use the bvalid register.
+> 
+> Not having looked to deeply into the usb2 phy, this might raise questions
+> on why this is a hardware-description? Is this needed when something is not
+> connected on the board?
 
-On Tue, Aug 14, 2018 at 10:24:05AM -0600, Rob Herring wrote:
-> On Wed, Aug 01, 2018 at 12:20:20PM +0100, Mark Brown wrote:
-> > The patch
-> >=20
-> >    ASoC: dt-bindings: add dt bindings for wcd9335 audio codec
-> >=20
-> > has been applied to the asoc tree at
-> >=20
-> >    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git=20
+I asked myself the same question and even I thought in just remove that code.
 
-> Why is this applied when I had requested changes?
+After some investigation, though, I saw that the UTMI+ specification [1] has two
+signals similar to ID signal (page 11), the AValid signal is used to indicate if
+the session for an A-peripheral is valid and the BValid signal that is used to
+indicate if the session for a B-peripheral is valid. I suppose that use of one
+or the other matters in some cases, but AFAICT this is not used and I didn't see
+any binding using it.
 
-Usually when this happens it's becasue I applied it before you requested
-changes, there's some lag between applying and pushing things out and if
-I'm working on my laptop also some extra lag before mail reaches me as
-well.
+Maybe someone else can give us more clues on the importance or not of this property?
 
---xku3GkZTJumTa1rO
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] https://www.nxp.com/docs/en/brochure/UTMI-PLUS-SPECIFICATION.pdf
 
------BEGIN PGP SIGNATURE-----
+Enric
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlt0BfIACgkQJNaLcl1U
-h9AbHgf/YwUj5W487kUnXYDmUInV5C1CzGSnoXIJmiJNKT9YnbdaDas1UWtc4Ea8
-02Jq0DckZ4+P81OBVBfCWPzaU4hXlp3/+6MOYzgyi0PBVBJK5gIOdSFAZ77/uzJv
-iN93JMFeI/ui/O+0jKck2Zwov4/IC5klHwR9y1l9gV/cvAGKUlkPBZcBByaoHQfc
-y1bFUsW0xqTb1u3RKKFksQzkTL0FLmW2c2B+M/Xs5Gi1pTMHvZ3sEB/qMiLImf8P
-dXsmzaFbXe+VSPe1QOHwXGMyIMDFkVsgdlX95K8V3gzY/ktdTOtEIG5fDiycbBSF
-dWU0Z5VXmD1XmUxbJW+JfE7Y62PG+w==
-=k4Ar
------END PGP SIGNATURE-----
-
---xku3GkZTJumTa1rO--
-
---===============7386055971227199057==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7386055971227199057==--
+> 
+> 
+> Heiko
+> 
+> 
