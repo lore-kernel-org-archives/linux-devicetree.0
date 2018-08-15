@@ -1,97 +1,71 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
-Date: Wed, 15 Aug 2018 17:41:52 +0200
-Message-ID: <4def26df-0f4b-77e5-fea9-6c8f3537d831@axentia.se>
-References: <20180812184152.GA22343@ravnborg.org>
- <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
- <20180813181808.GA2357@ravnborg.org> <20180813220454.GA28913@rob-hp-laptop>
- <20180814164343.GA13848@ravnborg.org> <20180814224252.GA20667@rob-hp-laptop>
- <20180815044808.GA1806@ravnborg.org>
- <CAL_JsqLwazj=7hOwSeAtcyvnYCmMDP-Nw3H8xHSr0n3YGUS21A@mail.gmail.com>
- <CAKMK7uHm03UxLNUieJFR4TD3ppTMHwkitbQTrVq67K=Mjh6OYA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAKMK7uHm03UxLNUieJFR4TD3ppTMHwkitbQTrVq67K=Mjh6OYA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Joshua Henderson <joshua.henderson@microchip.com>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Sam Ravnborg <sam@ravnborg.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH] net: dsa: add support for ksz9897 ethernet switch
+Date: Wed, 15 Aug 2018 16:51:23 +0100
+Message-ID: <1534348283-12790-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Woojung Huh <Woojung.Huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-15 17:04, Daniel Vetter wrote:
-> On Wed, Aug 15, 2018 at 4:45 PM, Rob Herring <robh@kernel.org> wrote:
->> On Tue, Aug 14, 2018 at 10:48 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->>>
->>
->> [...]
->>
->>>>> One DT related Q:
->>>>> The LCD Controller supports BGR565, but as this is less common some HW implmentations
->>>>> exchange R and B, expessed in the old binding as wiring-mode like this:
->>>>>
->>>>>     atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
->>>>>
->>>>> How can we express this wiring-mode in a generic way, both in DT and in code?
->>>>> Is it something that in DRM belongs to the panel, the encoder, the connector, or?
->>>>> And can any of the exisitng flags be used?
->>>>
->>>> I thought we had come up with a common definition, but I guess it didn't
->>>> make it upstream. It's definitely needed and I've been rejecting
->>>> anything new that's vendor specific.
->>> I found this: https://patchwork.ozlabs.org/patch/659570/
->>> The suggestion with a boolean seems simple and I will try that.
->>
->> That's really too simple to be common. There's been a few other
->> attempts[1][2][3] (for Atmel HLCDC in fact) with [3] probably being
->> the closest to merging. The binding looked fine to me, but looks like
->> the DRM implementation had some issues.
->>
->> Rob
->>
->> [1] https://lists.freedesktop.org/archives/dri-devel/2018-April/173089.html
->> [2] https://patchwork.kernel.org/patch/9965079/
->> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-March/568731.html
-> 
-> There's a standardized bus_format for drm_panel. IIrc there's been
-> discussions to add something similar to drm_bridge, but didn't go all
-> that far for reasons.
-> 
-> Lots of drivers just handle this internally in some way. So no idea
-> why this all got stalled.
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-I stopped pushing that patch for reasons mentioned in
-https://lkml.org/lkml/2018/4/9/108
+ksz9477 is superset of ksz9xx series, driver just works
+out of the box for ksz9897 chip with this patch.
 
-However, since then, the component approach mentioned in that mail was
-shot down and instead the tda998x driver is now a bridge (or soon, I expect
-the series from Russell King that to land in 4.19-rc1) which means that the
-binding from that series is back on the table. At least I guess so? However,
-in that series the approach is that the bridge states its expected input and
-the output then adjusts to what is needed. However, the "problem" is really in
-the atmel-hlcdc output (it moves the MSB for the RGB colors around depending
-on the output mode) so I no longer subscribe to all ideas in that series
-and think it is cleaner to state the needed bus format closer to the atmel-
-hlcdc endpoint as is done e.g. in this latest series:
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+---
+ Documentation/devicetree/bindings/net/dsa/ksz.txt | 4 +++-
+ drivers/net/dsa/microchip/ksz_common.c            | 9 +++++++++
+ drivers/net/dsa/microchip/ksz_spi.c               | 1 +
+ 3 files changed, 13 insertions(+), 1 deletion(-)
 
-https://lkml.org/lkml/2018/8/10/309
-
-This latest series uses the media/video-interface approach and specifies
-the bus-width in the endpoint. However, the bus-width is alone obviously not
-enough to differentiate rgb565 and brg565, so will not help Sam (or is it
-bgr565 that Sam needs? The above quoted text is ambiguous).
-
-I think something like my bus-format binding in [3] is generic enough to
-also help Sam.
-
-Cheers,
-Peter
+diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+index a700943..ac145b8 100644
+--- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
++++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+@@ -4,7 +4,9 @@ Microchip KSZ Series Ethernet switches
+ Required properties:
+ 
+ - compatible: For external switch chips, compatible string must be exactly one
+-  of: "microchip,ksz9477"
++  of the following:
++  - "microchip,ksz9477"
++  - "microchip,ksz9897"
+ 
+ See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
+ required and optional properties.
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index 7210c49..54e0ca6 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -1102,6 +1102,15 @@ static const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.cpu_ports = 0x7F,	/* can be configured as cpu port */
+ 		.port_cnt = 7,		/* total physical port count */
+ 	},
++	{
++		.chip_id = 0x00989700,
++		.dev_name = "KSZ9897",
++		.num_vlans = 4096,
++		.num_alus = 4096,
++		.num_statics = 16,
++		.cpu_ports = 0x7F,	/* can be configured as cpu port */
++		.port_cnt = 7,		/* total physical port count */
++	},
+ };
+ 
+ static int ksz_switch_init(struct ksz_device *dev)
+diff --git a/drivers/net/dsa/microchip/ksz_spi.c b/drivers/net/dsa/microchip/ksz_spi.c
+index c519469..8c1778b 100644
+--- a/drivers/net/dsa/microchip/ksz_spi.c
++++ b/drivers/net/dsa/microchip/ksz_spi.c
+@@ -195,6 +195,7 @@ static int ksz_spi_remove(struct spi_device *spi)
+ 
+ static const struct of_device_id ksz_dt_ids[] = {
+ 	{ .compatible = "microchip,ksz9477" },
++	{ .compatible = "microchip,ksz9897" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ksz_dt_ids);
+-- 
+2.7.4
