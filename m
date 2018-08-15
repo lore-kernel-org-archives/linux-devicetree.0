@@ -1,28 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/6] reset: imx7: Add PCIE_CTRL_APPS_TURNOFF
-Date: Wed, 15 Aug 2018 14:24:55 -0600
-Message-ID: <20180815202455.GA15583@rob-hp-laptop>
-References: <cover.1534264292.git.leonard.crestez@nxp.com>
- <88a5997e37d048cfc2dabb44cc13dce89c93d5eb.1534264292.git.leonard.crestez@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: David Bauer <mail@david-bauer.net>
+Subject: [PATCH] gpio: 74x164: add lines-initial-states property
+Date: Wed, 15 Aug 2018 22:18:54 +0200
+Message-ID: <20180815201855.29738-1-mail@david-bauer.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <88a5997e37d048cfc2dabb44cc13dce89c93d5eb.1534264292.git.leonard.crestez@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, Richard Zhu <hongxing.zhu@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: David Bauer <mail@david-bauer.net>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 14, 2018 at 07:50:17PM +0300, Leonard Crestez wrote:
-> This is required for the imx pci driver to send the PME_Turn_Off TLP.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> ---
->  drivers/reset/reset-imx7.c             | 1 +
+This adds the ability to define the initial state of each output line on
+device probe.
 
->  include/dt-bindings/reset/imx7-reset.h | 4 +++-
+Signed-off-by: David Bauer <mail@david-bauer.net>
+---
+ Documentation/devicetree/bindings/gpio/gpio-74x164.txt | 5 +++++
+ drivers/gpio/gpio-74x164.c                             | 3 +++
+ 2 files changed, 8 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  2 files changed, 4 insertions(+), 1 deletion(-)
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
+index 2a97553d8d76..580b18065ad3 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
+@@ -14,6 +14,11 @@ Required properties:
+ 
+ Optional properties:
+ - enable-gpios: GPIO connected to the OE (Output Enable) pin.
++- lines-initial-states: Bitmask that specifies the initial state of
++  each line. When a bit is set to zero, the corresponding output line
++  is initialized LOW. When a bit is set to one, the corresponding
++  output line is initialized HIGH. In case this property is not
++  defined, all lines will be initialized as LOW.
+ 
+ Example:
+ 
+diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+index fb7b620763a2..275310a0a538 100644
+--- a/drivers/gpio/gpio-74x164.c
++++ b/drivers/gpio/gpio-74x164.c
+@@ -150,6 +150,9 @@ static int gen_74x164_probe(struct spi_device *spi)
+ 	chip->gpio_chip.parent = &spi->dev;
+ 	chip->gpio_chip.owner = THIS_MODULE;
+ 
++	of_property_read_u8_array(spi->dev.of_node, "lines-initial-states",
++				  chip->buffer, chip->registers);
++
+ 	mutex_init(&chip->lock);
+ 
+ 	ret = __gen_74x164_write_config(chip);
+-- 
+2.18.0
