@@ -1,93 +1,90 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v1 3/7] mfd: add atmel-lcdc driver
-Date: Wed, 15 Aug 2018 06:24:35 +0100
-Message-ID: <20180815052435.GA6412@dell>
-References: <20180812184152.GA22343@ravnborg.org>
- <20180812184629.3808-3-sam@ravnborg.org>
+From: Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clk: meson-g12a: Add G12A AO Clock
+ Bindings
+Date: Wed, 15 Aug 2018 13:35:08 +0800
+Message-ID: <486c8771-ccbe-2f9b-e1e6-1ac9549432f0@amlogic.com>
+References: <1533894868-85815-1-git-send-email-jian.hu@amlogic.com>
+ <1533894868-85815-2-git-send-email-jian.hu@amlogic.com>
+ <20180814204801.GA9362@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180812184629.3808-3-sam@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180814204801.GA9362@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAxMiBBdWcgMjAxOCwgU2FtIFJhdm5ib3JnIHdyb3RlOgoKPiBUaGUgTENEQyBJUCB1
-c2VkIGJ5IHNvbWUgQXRtZWwgU09DJ3MgaGF2ZSBhCj4gICAgIG11bHRpZnVuY3Rpb24gZGV2aWNl
-IHRoYXQgaW5jbHVkZSB0d28gc3ViLWRldmljZXM6Cj4gICAgIC0gcHdtCj4gICAgIC0gZGlzcGxh
-eSBjb250cm9sbGVyCj4gCj4gVGhpcyBtZmQgZGV2aWNlIHByb3ZpZGUgYSByZWdtYXAgdGhhdCBj
-YW4gYmUgdXNlZCBieSB0aGUKPiBzdWItZGV2aWNlcyB0byBzYWZlbHkgYWNjZXNzIHRoZSByZWdp
-c3RlcnMuCj4gVGhlIG1mZCBkZXZpY2UgYWxzbyBzdXBwb3J0IHRoZSBjbG9jayB1c2VkIGJ5IHRo
-ZQo+IExDREMgSVAgKyBhIGJ1cyBjbG9jayB0aGF0IGluIHNvbWUgY2FzZXMgYXJlIHJlcXVpcmVk
-Lgo+IAo+IFRoZSBkcml2ZXIgaXMgYmFzZWQgb24gdGhlIGF0bWVsLWhsY2RjIGRyaXZlci4KPiAK
-PiBUaGUgQXRtZWwgU09DJ3MgYXJlIGF0OTFzYW05MjYxLCBhdDkxc2FtOTI2MyBldGMuCj4gCj4g
-U2lnbmVkLW9mZi1ieTogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPgo+IENjOiBMZWUg
-Sm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+IENjOiBCb3JpcyBCcmV6aWxsb24gPGJvcmlz
-LmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvbWZkL0tjb25m
-aWcgICAgICAgICAgICB8ICAxMCArKysKPiAgZHJpdmVycy9tZmQvTWFrZWZpbGUgICAgICAgICAg
-IHwgICAxICsKPiAgZHJpdmVycy9tZmQvYXRtZWwtbGNkYy5jICAgICAgIHwgMTU4ICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIGluY2x1ZGUvbGludXgvbWZkL2F0bWVsLWxj
-ZGMuaCB8IDE4NCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICA0
-IGZpbGVzIGNoYW5nZWQsIDM1MyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL21mZC9hdG1lbC1sY2RjLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGlu
-dXgvbWZkL2F0bWVsLWxjZGMuaAo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9LY29uZmln
-IGIvZHJpdmVycy9tZmQvS2NvbmZpZwo+IGluZGV4IGI4NjBlYjVhYTE5NC4uZjQ4NTFmMGYwMzNm
-IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbWZkL0tjb25maWcKPiArKysgYi9kcml2ZXJzL21mZC9L
-Y29uZmlnCj4gQEAgLTEyMSw2ICsxMjEsMTYgQEAgY29uZmlnIE1GRF9BVE1FTF9ITENEQwo+ICAJ
-ICBhZGRpdGlvbmFsIGRyaXZlcnMgbXVzdCBiZSBlbmFibGVkIGluIG9yZGVyIHRvIHVzZSB0aGUK
-PiAgCSAgZnVuY3Rpb25hbGl0eSBvZiB0aGUgZGV2aWNlLgo+ICAKPiArY29uZmlnIE1GRF9BVE1F
-TF9MQ0RDCj4gKwl0cmlzdGF0ZSAiQXRtZWwgTENEQyAoTENEIENvbnRyb2xsZXIpIgo+ICsJc2Vs
-ZWN0IE1GRF9DT1JFCj4gKwlkZXBlbmRzIG9uIE9GCj4gKwloZWxwCj4gKwkgIElmIHlvdSBzYXkg
-eWVzIGhlcmUgeW91IGdldCBzdXBwb3J0IGZvciB0aGUgTENEQyBibG9jay4KPiArCSAgVGhpcyBk
-cml2ZXIgcHJvdmlkZXMgY29tbW9uIHN1cHBvcnQgZm9yIGFjY2Vzc2luZyB0aGUgZGV2aWNlLAo+
-ICsJICBhZGRpdGlvbmFsIGRyaXZlcnMgbXVzdCBiZSBlbmFibGVkIGluIG9yZGVyIHRvIHVzZSB0
-aGUKPiArCSAgZnVuY3Rpb25hbGl0eSBvZiB0aGUgZGV2aWNlLgo+ICsKPiAgY29uZmlnIE1GRF9B
-VE1FTF9TTUMKPiAgCWJvb2wKPiAgCXNlbGVjdCBNRkRfU1lTQ09OCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbWZkL01ha2VmaWxlIGIvZHJpdmVycy9tZmQvTWFrZWZpbGUKPiBpbmRleCBlOWZkMjBk
-YmExOGQuLmRiYTg0NjVlMGQ5NiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9NYWtlZmlsZQo+
-ICsrKyBiL2RyaXZlcnMvbWZkL01ha2VmaWxlCj4gQEAgLTE4Niw2ICsxODYsNyBAQCBvYmotJChD
-T05GSUdfTUZEX1RQUzY1MDkwKQkrPSB0cHM2NTA5MC5vCj4gIG9iai0kKENPTkZJR19NRkRfQUFU
-Mjg3MF9DT1JFKQkrPSBhYXQyODcwLWNvcmUubwo+ICBvYmotJChDT05GSUdfTUZEX0FUTUVMX0ZM
-RVhDT00pCSs9IGF0bWVsLWZsZXhjb20ubwo+ICBvYmotJChDT05GSUdfTUZEX0FUTUVMX0hMQ0RD
-KQkrPSBhdG1lbC1obGNkYy5vCj4gK29iai0kKENPTkZJR19NRkRfQVRNRUxfTENEQykJKz0gYXRt
-ZWwtbGNkYy5vCj4gIG9iai0kKENPTkZJR19NRkRfQVRNRUxfU01DKQkrPSBhdG1lbC1zbWMubwo+
-ICBvYmotJChDT05GSUdfTUZEX0lOVEVMX0xQU1MpCSs9IGludGVsLWxwc3Mubwo+ICBvYmotJChD
-T05GSUdfTUZEX0lOVEVMX0xQU1NfUENJKQkrPSBpbnRlbC1scHNzLXBjaS5vCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvbWZkL2F0bWVsLWxjZGMuYyBiL2RyaXZlcnMvbWZkL2F0bWVsLWxjZGMuYwo+
-IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi44OTI4OTc2YmFmY2EK
-PiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9tZmQvYXRtZWwtbGNkYy5jCj4gQEAgLTAs
-MCArMSwxNTggQEAKPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKPiArLyoK
-PiArICogQ29weXJpZ2h0IChDKSAyMDE4IFNhbSBSYXZuYm9yZwo+ICsgKgo+ICsgKiBBdXRob3I6
-IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KPiArICoKPiArICogQmFzZWQgb24gYXRt
-ZWwtaGxjZGMuYyB3aWNoIGlzOgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTQgRnJlZSBFbGVjdHJv
-bnMKPiArICogQ29weXJpZ2h0IChDKSAyMDE0IEF0bWVsCj4gKyAqIEF1dGhvcjogQm9yaXMgQlJF
-WklMTE9OIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tPgo+ICsgKi8KPiArCj4g
-KyNpbmNsdWRlIDxsaW51eC9tZmQvYXRtZWwtbGNkYy5oPgo+ICsjaW5jbHVkZSA8bGludXgvbWZk
-L2NvcmUuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICsjaW5jbHVkZSA8bGludXgv
-cmVnbWFwLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2lv
-Lmg+Cj4gKwo+ICsjZGVmaW5lIEFUTUVMX0xDRENfUkVHX01BWAkJKDB4MTAwMCAtIDB4NCkKPiAr
-Cj4gK3N0cnVjdCBsY2RjX3JlZ21hcCB7Cj4gKwl2b2lkIF9faW9tZW0gKnJlZ3M7Cj4gK307Cj4g
-Kwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG1mZF9jZWxsIGxjZGNfY2VsbHNbXSA9IHsKPiArCXsK
-PiArCQkubmFtZSA9ICJhdG1lbC1sY2RjLXB3bSIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiYXRt
-ZWwsbGNkYy1wd20iLAo+ICsJfSwKPiArCXsKPiArCQkubmFtZSA9ICJhdG1lbC1sY2RjLWRjIiwK
-PiArCQkub2ZfY29tcGF0aWJsZSA9ICJhdG1lbCxsY2RjLWRpc3BsYXktY29udHJvbGxlciIsCj4g
-Kwl9LAo+ICt9OwoKV2lsbCB5b3UgYmUgYWRkaW5nIGFueSBtb3JlIGRldmljZXMsIG9yIGlzIHRo
-aXMgdGhlIGVudGlyZXR5IG9mIHRoZQpkZXZpY2U/ICBJZiB0aGUgbGF0dGVyLCBJIHN1Z2dlc3Qg
-dGhhdCB0aGlzIGRvZXNuJ3Qgd2FycmFudCBiZWluZyBhbgpNRkQuCgotLSAKTGVlIEpvbmVzIFvm
-nY7nkLzmlq9dCkxpbmFybyBTZXJ2aWNlcyBUZWNobmljYWwgTGVhZApMaW5hcm8ub3JnIOKUgiBP
-cGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sg
-fCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+
+
+On 2018/8/15 4:48, Rob Herring wrote:
+> On Fri, Aug 10, 2018 at 05:54:27PM +0800, Jian Hu wrote:
+>> Add new clock controller compatible and dt-bingdings headers
+>> for the Always-On domain of the g12a SoC
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   .../bindings/clock/amlogic,gxbb-aoclkc.txt         |  1 +
+>>   include/dt-bindings/clock/g12a-aoclkc.h            | 28 ++++++++++++++++++++++
+>>   2 files changed, 29 insertions(+)
+>>   create mode 100755 include/dt-bindings/clock/g12a-aoclkc.h
+> 
+> checkpatch says wrong mode.
+Yes, I have checked the g12a-aoclk.h file,It is wrong mode. I will chmod 
+a-x for it.Thank you for review.
+> 
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+>> index 3a88052..6f02288 100644
+>> --- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+>> @@ -10,6 +10,7 @@ Required Properties:
+>>   	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
+>>   	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
+>>   	- AXG (A113D, A113X) : "amlogic,meson-axg-aoclkc"
+>> +	- G12A (S905D2, S905X2) : "amlogic,g12a-aoclkc"
+>>   	followed by the common "amlogic,meson-gx-aoclkc"
+>>   
+>>   - #clock-cells: should be 1.
+>> diff --git a/include/dt-bindings/clock/g12a-aoclkc.h b/include/dt-bindings/clock/g12a-aoclkc.h
+>> new file mode 100755
+>> index 0000000..6b3f921
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/g12a-aoclkc.h
+>> @@ -0,0 +1,28 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
+>> +/*
+>> + * Copyright (c) 2016 BayLibre, SAS
+>> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+>> + *
+>> + * Copyright (c) 2018 Amlogic, inc.
+>> + * Author: Jian Hu<jian.hu@amlogic.com>
+>> + */
+>> +
+>> +#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
+>> +#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_G12A_AOCLK
+>> +
+>> +#define CLKID_AO_AHB_BUS		0
+>> +#define CLKID_AO_REMOTE			1
+>> +#define CLKID_AO_I2C_MASTER		2
+>> +#define CLKID_AO_I2C_SLAVE		3
+>> +#define CLKID_AO_UART1			4
+>> +#define CLKID_AO_PROD_I2C		5
+>> +#define CLKID_AO_UART2			6
+>> +#define CLKID_AO_IR_BLASTER		7
+>> +#define CLKID_AO_SAR_ADC		8
+>> +#define CLKID_AO_CLK81			9
+>> +#define CLKID_AO_SAR_ADC_SEL		10
+>> +#define CLKID_AO_SAR_ADC_DIV		11
+>> +#define CLKID_AO_SAR_ADC_CLK		12
+>> +#define CLKID_AO_ALT_XTAL		13
+>> +
+>> +#endif
+>> -- 
+>> 1.9.1
+>>
+> 
+> .
+> 
