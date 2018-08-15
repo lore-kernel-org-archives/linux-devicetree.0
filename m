@@ -1,72 +1,72 @@
-From: "Ong, Hean Loong" <hean.loong.ong@intel.com>
-Subject: Re: [PATCH10 0/3] Intel FPGA Video and Image Processing Suite
-Date: Wed, 15 Aug 2018 01:42:45 +0000
-Message-ID: <1534297365.3035.0.camel@intel.com>
-References: <1534237029-2648-1-git-send-email-hean.loong.ong@intel.com>
-         <3720ba74-947a-1b5d-5f5b-1ef03d5941aa@kernel.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller documentation
+Date: Wed, 15 Aug 2018 09:44:27 +0800
+Message-ID: <CAMz4kuKb_5gxMbLG1cfPwFHS9n666epy38Akz1FhDcjeAUik9A@mail.gmail.com>
+References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
+ <20180814202122.GA26606@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3720ba74-947a-1b5d-5f5b-1ef03d5941aa@kernel.org>
-Content-Language: en-US
-Content-ID: <2A66F67514536543AD8D00F20A84CC41@intel.com>
+In-Reply-To: <20180814202122.GA26606@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dinguyen@kernel.org" <dinguyen@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "airlied@linux.ie" <airlied@linux.ie>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "See, Chin Liang" <chin.liang.see@intel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Vandervennet, Yves" <yves.vandervennet@intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, lanqing.liu@spreadtrum.com, linux-spi@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE4LTA4LTE0IGF0IDEwOjQ4IC0wNTAwLCBEaW5oIE5ndXllbiB3cm90ZToNCj4g
-DQo+IE9uIDA4LzE0LzIwMTggMDM6NTcgQU0sIEhlYW4tTG9vbmcsIE9uZyB3cm90ZToNCj4gPiAN
-Cj4gPiBGcm9tOiBPbmcsIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4NCj4g
-PiANCj4gPiBUaGUgRlBHQSBGcmFtZUJ1ZmZlciBTb2Z0IElQIGNvdWxkIGJlIHNlZW7CoMKgYXMg
-dGhlIEdQVSBhbmQgdGhlIERSTQ0KPiA+IGRyaXZlciBwYXRjaMKgDQo+ID4gaGVyZSBpcyBhbGxv
-Y2F0aW5nIG1lbW9yeSBmb3IgaW5mb3JtYXRpb24gdG8gYmUgc3RyZWFtZWQgZnJvbSB0aGUNCj4g
-PiBBUk0vTGludXjCoA0KPiA+IHRvIHRoZSBkaXNwbGF5IHBvcnQuIEJhc2ljYWxseSB0aGUgZHJp
-dmVyIGp1c3Qgd3JhcHMgdGhlDQo+ID4gaW5mb3JtYXRpb24gc3VjaCBhc8KgDQo+ID4gdGhlIHBp
-eGVscyB0byBiZSBkcmF3biBieSB0aGUgRlBHQSBGcmFtZUJ1ZmZlciAyLg0KPiA+IA0KPiA+IFRo
-ZSBwaWVjZSBvZiBoYXJkd2FyZSBpbiBkaXNjdXNzaW9uIGlzIHRoZSBTb0MgRlBHQSB3aGVyZSBM
-aW51eA0KPiA+IHJ1bnMgb24gdGhlwqANCj4gPiBBUk0gY2hpcCBhbmQgdGhlIEZHUEEgaXMgZHJp
-dmVuIGJ5IGl0cyBOSU9TIHNvZnQgY29yZSB3aXRoIGl0cyBvd24NCj4gPiBwcm9wcmlldGFyeSBm
-aXJtd2FyZS4NCj4gVGhpcyBkcml2ZXIgZG9lc24ndCBoYXZlIHRvIEFSTSBzcGVjaWZpYyBkb2Vz
-IGl0Pw0KPiANCj4gPiANCj4gPiANCj4gPiBGb3IgZXhhbXBsZSB0aGUgYXBwbGljYXRpb24gZnJv
-bSB0aGUgQVJNIExpbnV4IHdvdWxkIGhhdmUgdG8gd3JpdGUNCj4gPiBpbmZvcm1hdGlvbsKgDQo+
-ID4gb24gdGhlIC9kZXYvZmIwIHdpdGggdGhlIGluZm9ybWF0aW9uIHN0b3JlZCBpbiB0aGUgU0RS
-QU0gdG8gYmUNCj4gPiBmZXRjaGVkIGJ5IHRoZcKgDQo+ID4gRlBHQSBmcmFtZWJ1ZmZlciBJUCBh
-bmQgZGlzcGxheWVkIG9uIHRoZSBEaXNwbGF5IFBvcnQgTW9uaXRvci4NCj4gPiANCj4gPiANCj4g
-PiBPbmcgSGVhbiBMb29uZyAoMik6DQo+ID4gwqAgQVJNOnNvY2ZwZ2EtZGVmY29uZmlnIEludGVs
-IEZQR0EgVmlkZW8gYW5kIEltYWdlIFByb2Nlc3NpbmcgU3VpdGUNCj4gPiDCoCBBUk06ZHJtIGl2
-aXAgSW50ZWwgRlBHQSBWaWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2luZyBTdWl0ZQ0KPiA+IA0KPiA+
-IE9uZywgSGVhbiBMb29uZyAoMSk6DQo+ID4gwqAgQVJNOmR0LWJpbmRpbmdzOmRpc3BsYXkgSW50
-ZWwgRlBHQSBWaWRlbyBhbmQgSW1hZ2UgUHJvY2Vzc2luZw0KPiA+IFN1aXRlDQo+ID4gDQo+ID4g
-wqAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIsdmlwLWZiMi50eHTCoMKgwqB8
-wqDCoMKgNjMgKysrKysrKw0KPiA+IMKgYXJjaC9hcm0vY29uZmlncy9zb2NmcGdhX2RlZmNvbmZp
-Z8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoMKgwqA1ICsNCj4gPiDCoGRy
-aXZlcnMvZ3B1L2RybS9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoMKgwqAyICsNCj4gPiDCoGRyaXZlcnMvZ3B1L2RybS9N
-YWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoHzCoMKgwqDCoDEgKw0KPiA+IMKgZHJpdmVycy9ncHUvZHJtL2l2aXAvS2NvbmZpZ8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoMKgMTQgKysNCj4g
-PiDCoGRyaXZlcnMvZ3B1L2RybS9pdmlwL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoMKgwqA5ICsNCj4gPiDCoGRyaXZlcnMvZ3B1L2RybS9p
-dmlwL2ludGVsX3ZpcF9jb25uLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqDCoDk1
-DQo+ID4gKysrKysrKysrKw0KPiA+IMKgZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX2Nv
-cmUuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoDE2MQ0KPiA+ICsrKysrKysrKysr
-KysrKysNCj4gPiDCoGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9kcnYuaMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHzCoMKgwqA1MiArKysrKysNCj4gPiDCoGRyaXZlcnMvZ3B1
-L2RybS9pdmlwL2ludGVsX3ZpcF9vZi5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8
-wqDCoDE5Mw0KPiA+ICsrKysrKysrKysrKysrKysrKysrDQo+ID4gwqAxMCBmaWxlcyBjaGFuZ2Vk
-LCA1OTUgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4gPiDCoGNyZWF0ZSBtb2RlIDEw
-MDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FsdHIs
-dmlwLWZiMi50eHQNCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZp
-cC9LY29uZmlnDQo+ID4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAv
-TWFrZWZpbGUNCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZpcC9p
-bnRlbF92aXBfY29ubi5jDQo+ID4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
-L2l2aXAvaW50ZWxfdmlwX2NvcmUuYw0KPiA+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-Z3B1L2RybS9pdmlwL2ludGVsX3ZpcF9kcnYuaA0KPiA+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9vZi5jDQo+ID4gDQo+IENhbiB5b3UgY2xhcmlm
-eSB5b3VyIGNvbW1pdCBoZWFkZXI/IFdoYXQgaXMgIlBBVENIMTAiLCBpcyBpdCB2ZXJzaW9uDQo+
-IDEwPw0KPiBJZiBzbywgaXQgc2hvdWxkIGJlICJQQVRDSHYxMCIuDQo+IA0KPiBZb3UncmUgYWxz
-byBtaXNzaW5nIGEgZmV3IG90aGVyIG1haW50YWluZXJzIGluIHlvdXIgQ0MgbGlzdCwgdGhlICJE
-Uk0NCj4gRFJJVkVSUyBBTkQgTUlTQyBHUFUgUEFUQ0hFUyIgcGVvcGxlLg0KPiANCk5vdGVkDQoN
-Cj4gRGluaA==
+Hi Rob,
+
+On 15 August 2018 at 04:21, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Aug 07, 2018 at 06:43:37PM +0800, Baolin Wang wrote:
+>> From: Lanqing Liu <lanqing.liu@spreadtrum.com>
+>>
+>> This patch adds the binding documentation for Spreadtrum SPI
+>> controller device.
+>>
+>> Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>>  Documentation/devicetree/bindings/spi/spi-sprd.txt |   31 ++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/spi-sprd.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-sprd.txt b/Documentation/devicetree/bindings/spi/spi-sprd.txt
+>> new file mode 100644
+>> index 0000000..06ff746
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-sprd.txt
+>> @@ -0,0 +1,31 @@
+>> +Spreadtrum SPI Controller
+>> +
+>> +Required properties:
+>> +- compatible: Should be "sprd,sc9860-spi".
+>> +- reg: Offset and length of SPI controller register space.
+>> +- interrupts: Should contain SPI interrupt.
+>> +- clock-names: Should contain following entries:
+>> +     "spi" for SPI clock,
+>> +     "source" for SPI source (parent) clock,
+>
+> Do the h/w block actually get this clock or the driver needs it? In the
+> latter case, it should not be in DT.
+
+Yes, we will get the actual SPI source clock form the "source" clock property.
+
+>
+>> +     "enable" for SPI module enable clock.
+>> +- clocks: List of clock input name strings sorted in the same order
+>> +     as the clock-names property.
+>> +- #address-cells: The number of cells required to define a chip select
+>> +     address on the SPI bus. Should be set to 1.
+>> +- #size-cells: Should be set to 0.
+>> +
+>> +Optional properties:
+>> +- sprd,spi-interval: Specify the intervals of two SPI frames, which can be
+>> +     converted to the delay clock cycles = interval number * 4 + 10.
+>
+> There are read and write delay properties you can use.
+
+Right. We've agreed introducing another field for spi_transfer to
+represent this and will remove 'sprd,spi-interval' from DT.
+
+-- 
+Baolin Wang
+Best Regards
