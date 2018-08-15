@@ -1,87 +1,112 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Add Spreadtrum SPI controller documentation
-Date: Wed, 15 Aug 2018 10:17:12 +0800
-Message-ID: <CAMz4kuK=n33V_AcmgmYjHHuXyDAZ+QAh947NL2g3XfOhsg_-gg@mail.gmail.com>
-References: <64681bf903104c8a02f118294e616e2a12a5ebe4.1533638405.git.baolin.wang@linaro.org>
- <20180807134121.GA7958@sirena.org.uk> <CAMz4kuJsyKv_fvrqRR3pdfKsLVy53Uj0KX+m_9jLxpcVcMvs9g@mail.gmail.com>
- <20180808095025.GB9346@sirena.org.uk> <CAMz4kuKZHxYiJaMHnqdAGth8XkfGnq3-Tsfc59cGjsHQHZaY7A@mail.gmail.com>
- <20180808105451.GE9346@sirena.org.uk> <1533754621.2283.270.camel@impinj.com>
- <CAMz4kuKwfBB8-8o5s8FQadFSFiD8KU=qNZYQjCWOfc-QpuVRSw@mail.gmail.com> <20180814202720.GB26606@rob-hp-laptop>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
+Date: Wed, 15 Aug 2018 06:48:08 +0200
+Message-ID: <20180815044808.GA1806@ravnborg.org>
+References: <20180812184152.GA22343@ravnborg.org>
+ <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
+ <20180813181808.GA2357@ravnborg.org>
+ <20180813220454.GA28913@rob-hp-laptop>
+ <20180814164343.GA13848@ravnborg.org>
+ <20180814224252.GA20667@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180814202720.GB26606@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180814224252.GA20667@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: Trent Piepho <tpiepho@impinj.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "lanqing.liu@spreadtrum.com" <lanqing.liu@spreadtrum.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Joshua Henderson <joshua.henderson@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Rob.
 
-On 15 August 2018 at 04:27, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Aug 09, 2018 at 11:03:11AM +0800, Baolin Wang wrote:
->> Hi Trent,
->>
->> On 9 August 2018 at 02:57, Trent Piepho <tpiepho@impinj.com> wrote:
->> > On Wed, 2018-08-08 at 11:54 +0100, Mark Brown wrote:
->> >> On Wed, Aug 08, 2018 at 06:35:28PM +0800, Baolin Wang wrote:
->> >> > On 8 August 2018 at 17:50, Mark Brown <broonie@kernel.org> wrote:
->> >> > > Right, I don't think we added this yet (if we did I can't see
->> >> > > it).  I'd
->> >> > > add a new field to spi_transfer for this, then other controllers
->> >> > > with
->> >> > > the same support can implement it as well and drivers can start
->> >> > > using
->> >> > > it too.
->> >> > OK. So I will name the new filed as 'word_delay', is it OK for you?
->> >>
->> >> Sounds good, yes.
->> >
->> > Should it be in =C2=B5s like the existing iter-transfer delay?  I thin=
-k
->> > perhaps units of cycles of the SPI clock make more sense?
->>
->> Since some SPI controllers just want some interval values (neither =C2=
-=B5s
->> unit nor cycles unit ) set into hardware, and the hardware will
->> convert to the correct delay time automatically. So I did not force
->> 'word_delay' unit as =C2=B5s or cycle, and just let the slave devices
->> decide the unit which depends on the SPI hardware requirement.
->
-> This needs to be defined units in DT, not decided by each controller.
+Thanks for the feedback, as I am rather new to this DT stuff
+a few iterations are no suprise.
 
-Do you mean we should introduce one standard property (maybe named as
-'word_delay_unit') to define the word_delay unit?
-If we really need to specify the unit of word_delay, I think we can
-add comments for spi_tansfer  to specify the unit, which will be
-better.
+> > If I understand the proposal from you correct an example binding would
+> > look like this:
+> > 
+> >        lcdc0: lcdc@700000 {
+> >                 compatible = "atmel,at91sam9263-lcdc";
+> >                 reg = <0x700000 0x1000>;
+> >                 interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
+> >                 clocks = <&lcd_clk>, <&lcd_clk>;
+> >                 clock-names = "lcdc_clk", "hclk";
+> > 
+> >                 lcd-supply = <&lcdc_reg>;
+> > 
+> >                 port@0 {
+> >                 };
+> > 
+> >                 #pwm-cells = <3>;
+> >         };
+> > 
+> >         backlight: backlight {
+> >                 compatible = "pwm-backlight";
+> >                 pwms = <&lcd0 0 50000 0>;
+> >         };
+> > 
+> > 
+> > This is doable, but IMO it is less obvious that the LCDC IP core implements
+> > two different features - a PWM and a LCD controller.
+> 
+> Features don't equate to nodes. If the sub-blocks can be separately 
+> instantiated or have their own resources then sub-nodes make sense. 
+> Otherwise, it's a single device (node) with multiple providers.
+> 
+> > Right now the preference is to stay with the v1 approach:
+> > - It is a mirror of what we do today for hlcdc, so no suprises
+> 
+> Which BTW doesn't appear to have actually been reviewed.
+> 
+> Do these IP blocks actually share anything? 
+They have registers in the same memory area - and I think that it.
 
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index a64235e..7a72c0a 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -711,6 +711,8 @@ extern void spi_res_release(struct spi_controller *ctlr=
-,
-  * @delay_usecs: microseconds to delay after this transfer before
-  * (optionally) changing the chipselect status, then starting
-  * the next transfer or completing this @spi_message.
-+ * @word_delay: clock cycles to inter word delay after each word size
-(set by bits_per_word)
-+ * transmission.
-  * @transfer_list: transfers are sequenced through @spi_message.transfers
-  * @tx_sg: Scatterlist for transmit, currently not for client use
-  * @rx_sg: Scatterlist for receive, currently not for client use
-@@ -793,6 +795,7 @@ struct spi_transfer {
-  u8 bits_per_word;
-  u16 delay_usecs;
-  u32 speed_hz;
-+ u16 word_delay;
+ 
+> Consistency is nice, but keeping compatibility with the existing binding 
+> by extending things in a backwards compatible way is more important. 
+> Implementing a new driver is not license to change the binding. Shall I 
+> let u-boot or *BSD developers change the binding too for their driver?
 
-  struct list_head transfer_list;
- };
+So in other words - the existing binding in atmel,lcdc.txt needs to be extended in
+a backward compatible way.
+I will take a look at that and post a proposal in v2.
 
 
---=20
-Baolin Wang
-Best Regards
+> > - It shows in a nice way that the LCDC IP core implments both an LCD controller and a PWM
+> > - The pwm functionality is not hiddin inside the lcdc stuff, and it is thus
+> >   simpler to add good pin-ctrl handles with nice names that matches the usage.
+> >   (I could always add more pin-ctrl, but it is common to refer to a single pin-ctrl.
+> 
+> Does anyone actually use this for a non-backlight PWM? I'm not sure the 
+> abstraction is worth it. The driver could just register itself as a 
+> backlight provider rather than a PWM provider.
+Makes sense.
+
+> 
+> > One DT related Q:
+> > The LCD Controller supports BGR565, but as this is less common some HW implmentations
+> > exchange R and B, expessed in the old binding as wiring-mode like this:
+> > 
+> > 	atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
+> > 
+> > How can we express this wiring-mode in a generic way, both in DT and in code?
+> > Is it something that in DRM belongs to the panel, the encoder, the connector, or?
+> > And can any of the exisitng flags be used?
+> 
+> I thought we had come up with a common definition, but I guess it didn't 
+> make it upstream. It's definitely needed and I've been rejecting 
+> anything new that's vendor specific.
+I found this: https://patchwork.ozlabs.org/patch/659570/
+The suggestion with a boolean seems simple and I will try that.
+
+	Sam
