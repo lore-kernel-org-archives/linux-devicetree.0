@@ -1,73 +1,62 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
-Date: Wed, 15 Aug 2018 22:48:15 +0200
-Message-ID: <20180815204815.GB29041@ravnborg.org>
-References: <20180812184152.GA22343@ravnborg.org>
- <f1f2a2d7-ae27-87af-8041-93d3f8fe07cc@microchip.com>
- <20180813181808.GA2357@ravnborg.org>
- <20180813220454.GA28913@rob-hp-laptop>
- <20180814164343.GA13848@ravnborg.org>
- <20180814224252.GA20667@rob-hp-laptop>
- <20180815044808.GA1806@ravnborg.org>
- <CAL_JsqLwazj=7hOwSeAtcyvnYCmMDP-Nw3H8xHSr0n3YGUS21A@mail.gmail.com>
- <CAKMK7uHm03UxLNUieJFR4TD3ppTMHwkitbQTrVq67K=Mjh6OYA@mail.gmail.com>
- <4def26df-0f4b-77e5-fea9-6c8f3537d831@axentia.se>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [RFC PATCH v1 0/3] device property: Support MAC address in VPD
+Date: Wed, 15 Aug 2018 15:07:00 -0700
+Message-ID: <153437082071.28926.11684780766239178367@swboyd.mtv.corp.google.com>
+References: <20180814223758.117433-1-briannorris@chromium.org>
+ <a240b3f9-d41b-30d7-ef11-5dcd1a981c0f@gmail.com>
+ <20180815002204.GA258561@ban.mtv.corp.google.com>
+ <bb1b2b7d-2c47-a6b3-7618-063351f379b2@gmail.com>
+ <20180815014436.GA17200@ban.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4def26df-0f4b-77e5-fea9-6c8f3537d831@axentia.se>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Joshua Henderson <joshua.henderson@microchip.com>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@bootlin.com>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180815014436.GA17200@ban.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Brian Norris <briannorris@chromium.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter.
+Quoting Brian Norris (2018-08-14 18:44:36)
+> Hi,
+> =
 
-> 
-> I stopped pushing that patch for reasons mentioned in
-> https://lkml.org/lkml/2018/4/9/108
-> 
-> However, since then, the component approach mentioned in that mail was
-> shot down and instead the tda998x driver is now a bridge (or soon, I expect
-> the series from Russell King that to land in 4.19-rc1) which means that the
-> binding from that series is back on the table. At least I guess so? However,
-> in that series the approach is that the bridge states its expected input and
-> the output then adjusts to what is needed. However, the "problem" is really in
-> the atmel-hlcdc output (it moves the MSB for the RGB colors around depending
-> on the output mode) so I no longer subscribe to all ideas in that series
-> and think it is cleaner to state the needed bus format closer to the atmel-
-> hlcdc endpoint as is done e.g. in this latest series:
-> 
-> https://lkml.org/lkml/2018/8/10/309
-> 
-> This latest series uses the media/video-interface approach and specifies
-> the bus-width in the endpoint. However, the bus-width is alone obviously not
-> enough to differentiate rgb565 and brg565, so will not help Sam
-Some digging in diverse threads required.
-I may take the easy way in v2 and postpone this feature.
-But you all confirmed that doing something locally in the driver is the
-wrong approach so that is ruled out.
+> On Tue, Aug 14, 2018 at 05:52:49PM -0700, Florian Fainelli wrote:
+> > On 08/14/2018 05:22 PM, Brian Norris wrote:
+> =
 
-> (or is it bgr565 that Sam needs? The above quoted text is ambiguous).
-My bad. I need either rgb565 or bgr565 (at lest this is how I understood
-the application note from Atmel/Microchip - need to re-read this too).
+> > >> Also, aliases in DT are meant to provide some stability.
+> > > =
 
-Some of the IP cores have an intensify bit which I do not yet understand
-how to adapt to the supported formats. This is also on the todo list.
+> > > How, specifically? I don't see any relevant binding description for
+> > > aliases under Documentation/devicetree/bindings/net/.
+> > =
 
-> I think something like my bus-format binding in [3] is generic enough to
-> also help Sam.
-Thanks, if I find time I will look into this, but first priority is to get the
-bindinns correct, and then the overall structure of the driver.
+> > Indeed they are not, likewise, we should probably update devicetree-spec
+> > to come up with standard names that of_alias_get_id() already consumes.
+> =
 
-	Sam
+> A quick grep shows we already have divergence: both "eth" and "ethernet"
+> are in use.
+> =
+
+> But anyway, would the idea be that you just put 'ethernet{0,1,...}' and
+> 'wifi{0,1,...}' aliases in the /chosen node, then require boot firmware
+> to insert any {ethernet,wifi}_mac{0,1,...} into the paths represented by
+> the corresponding aliases? I suppose that would reduce the problems with
+> (1), but it still doesn't really help with (2).
+
+Yes. Aliases are the way to do this. It obviates much of this discussion
+about finding things in DT by directly pointing to the node the
+bootloader wants to go modify.
+
+> > > =
+
+> > > And finally, this may be surmountable, but the existing APIs seem very
+> > > device tree centric. We use this same format on ACPI systems, and the
+> > > current series would theoretically work on both [1]. I'd have to rewr=
+ite
+> > > the current (OF-only) helpers to get equivalent support...
+
+Where does it go on ACPI systems? Does the firmware stick it into some
+ACPI table by reading from VPD?
