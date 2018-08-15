@@ -1,71 +1,29 @@
-From: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH] net: dsa: add support for ksz9897 ethernet switch
-Date: Wed, 15 Aug 2018 16:51:23 +0100
-Message-ID: <1534348283-12790-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Woojung Huh <Woojung.Huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 3/6] dt: bindings: add bindings for msa memory region
+Date: Wed, 15 Aug 2018 10:04:07 -0600
+Message-ID: <20180815160407.GA12553@rob-hp-laptop>
+References: <20180815092637.11455-1-govinds@codeaurora.org>
+ <20180815092637.11455-4-govinds@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180815092637.11455-4-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, niklas.cassel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+On Wed, Aug 15, 2018 at 02:56:34PM +0530, Govind Singh wrote:
+> Add device tree binding documentation details of msa
+> memory region for ath10k qmi client for SDM845/APQ8098
+> SoC into "qcom,ath10k.txt".
+> 
+> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/wireless/qcom,ath10k.txt        | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-ksz9477 is superset of ksz9xx series, driver just works
-out of the box for ksz9897 chip with this patch.
+Please add acks/reviewed-bys when posting new versions.
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
----
- Documentation/devicetree/bindings/net/dsa/ksz.txt | 4 +++-
- drivers/net/dsa/microchip/ksz_common.c            | 9 +++++++++
- drivers/net/dsa/microchip/ksz_spi.c               | 1 +
- 3 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-index a700943..ac145b8 100644
---- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-@@ -4,7 +4,9 @@ Microchip KSZ Series Ethernet switches
- Required properties:
- 
- - compatible: For external switch chips, compatible string must be exactly one
--  of: "microchip,ksz9477"
-+  of the following:
-+  - "microchip,ksz9477"
-+  - "microchip,ksz9897"
- 
- See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
- required and optional properties.
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index 7210c49..54e0ca6 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -1102,6 +1102,15 @@ static const struct ksz_chip_data ksz_switch_chips[] = {
- 		.cpu_ports = 0x7F,	/* can be configured as cpu port */
- 		.port_cnt = 7,		/* total physical port count */
- 	},
-+	{
-+		.chip_id = 0x00989700,
-+		.dev_name = "KSZ9897",
-+		.num_vlans = 4096,
-+		.num_alus = 4096,
-+		.num_statics = 16,
-+		.cpu_ports = 0x7F,	/* can be configured as cpu port */
-+		.port_cnt = 7,		/* total physical port count */
-+	},
- };
- 
- static int ksz_switch_init(struct ksz_device *dev)
-diff --git a/drivers/net/dsa/microchip/ksz_spi.c b/drivers/net/dsa/microchip/ksz_spi.c
-index c519469..8c1778b 100644
---- a/drivers/net/dsa/microchip/ksz_spi.c
-+++ b/drivers/net/dsa/microchip/ksz_spi.c
-@@ -195,6 +195,7 @@ static int ksz_spi_remove(struct spi_device *spi)
- 
- static const struct of_device_id ksz_dt_ids[] = {
- 	{ .compatible = "microchip,ksz9477" },
-+	{ .compatible = "microchip,ksz9897" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ksz_dt_ids);
--- 
-2.7.4
+Rob
