@@ -1,60 +1,50 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 2/4] dt-bindings: phy-rockchip-inno-usb2: add documentation for extcon and utmi-avalid properties.
-Date: Wed, 15 Aug 2018 12:29:55 +0200
-Message-ID: <2023816.cqyDmH3see@phil>
-References: <20180815095934.11205-1-enric.balletbo@collabora.com> <20180815095934.11205-3-enric.balletbo@collabora.com>
+Subject: Re: [PATCH 4/4] dt-bindings: phy-rockchip-inno-usb2: add new rockchip,force-bvalid property.
+Date: Wed, 15 Aug 2018 12:34:34 +0200
+Message-ID: <6944969.kWmPjI4VuS@phil>
+References: <20180815095934.11205-1-enric.balletbo@collabora.com> <20180815095934.11205-5-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180815095934.11205-3-enric.balletbo@collabora.com>
+In-Reply-To: <20180815095934.11205-5-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc: linux-kernel@vger.kernel.org, amstan@chromium.org, groeck@google.com, kieran.bingham@ideasonboard.com, kernel@collabora.com, bleung@chromium.org, devicetree@vger.kernel.org, Frank Wang <frank.wang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
-
-Am Mittwoch, 15. August 2018, 11:59:32 CEST schrieb Enric Balletbo i Serra:
-> Commit 98898f3bc83c8 ("phy: rockchip-inno-usb2: support otg-port for
-> rk3399") introduces two new properties. The extcon property is used to
-> detect the cable-state, and the rockchip,utmi-avalid is used to indicate
-> which register should be used to detect the vbus state.
+Am Mittwoch, 15. August 2018, 11:59:34 CEST schrieb Enric Balletbo i Serra:
+> This property is used when the otg-id pin is not connected. When this
+> property is set it forces to set the B-Device Session Valid bit when the
+> port works as device and clears that bit when the port works as host.
 > 
-> Document these properties in the documentation binding.
-> 
-> Fixes: 98898f3bc83c8 ("phy: rockchip-inno-usb2: support otg-port for rk3399")
 > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
 > 
->  .../devicetree/bindings/phy/phy-rockchip-inno-usb2.txt         | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../devicetree/bindings/phy/phy-rockchip-inno-usb2.txt       | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> index 074a7b3b0425..2d4808d3920b 100644
+> index 2d4808d3920b..55761f466c41 100644
 > --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
 > +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> @@ -23,6 +23,7 @@ Optional properties:
->  		 register files". When set driver will request its
->  		 phandle as one companion-grf for some special SoCs
->  		 (e.g RV1108).
-> + - extcon : phandle to the extcon device for the otg phy.
-
-That should probably mention that this is the extcon providing the cable-state?
-
-
->  Required nodes : a sub-node is required for each port the phy provides.
->  		 The sub-node name is used to identify host or otg port,
-> @@ -45,6 +46,8 @@ Required properties (port (child) node):
->  Optional properties:
->   - phy-supply : phandle to a regulator that provides power to VBUS.
+> @@ -48,6 +48,11 @@ Optional properties:
 >  		See ./phy-bindings.txt for details.
-> + - rockchip,utmi-avalid : boolean, use the avalid register to get vbus status.
-> +			  Otherwise, use the bvalid register.
+>   - rockchip,utmi-avalid : boolean, use the avalid register to get vbus status.
+>  			  Otherwise, use the bvalid register.
+> + - rockchip,force-bvalid : boolean, set this to force the B-Device Session
+> +			  Valid bit when the usb port is in device mode. This
+> +			  is used when the otg-id pin is not connected.
+> +			  Only supported in case of compatible being:
+> +			  * "rockchip,rk3399-usb2phy"
 
-Not having looked to deeply into the usb2 phy, this might raise questions
-on why this is a hardware-description? Is this needed when something is not
-connected on the board?
+I guess you could drop that rk3399 mention instead make the
+driver complain? Trying to keep that list up to date will get hard
+and I guess the other socs may very well hide that setting somewhere
+in their undocumented phy registers as well.
 
+I guess a bit of alphabetical ordering might also be nice,
+rockchip,force-bvalid above rockchip,utmi-avalid
+Makes it easier to read ;-)
 
 Heiko
