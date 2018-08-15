@@ -1,50 +1,79 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 4/4] dt-bindings: phy-rockchip-inno-usb2: add new rockchip,force-bvalid property.
-Date: Wed, 15 Aug 2018 12:34:34 +0200
-Message-ID: <6944969.kWmPjI4VuS@phil>
-References: <20180815095934.11205-1-enric.balletbo@collabora.com> <20180815095934.11205-5-enric.balletbo@collabora.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Applied "ASoC: dt-bindings: add dt bindings for
+ wcd9335 audio codec" to the asoc tree
+Date: Wed, 15 Aug 2018 11:52:39 +0100
+Message-ID: <20180815105239.GV2414@sirena.org.uk>
+References: <20180727121806.18209-2-srinivas.kandagatla@linaro.org>
+ <20180801112020.93C4A1124241@debutante.sirena.org.uk>
+ <20180814162405.GA450@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180815095934.11205-5-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: linux-kernel@vger.kernel.org, amstan@chromium.org, groeck@google.com, kieran.bingham@ideasonboard.com, kernel@collabora.com, bleung@chromium.org, devicetree@vger.kernel.org, Frank Wang <frank.wang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============7386055971227199057=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180814162405.GA450@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, vkoul@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 15. August 2018, 11:59:34 CEST schrieb Enric Balletbo i Serra:
-> This property is used when the otg-id pin is not connected. When this
-> property is set it forces to set the B-Device Session Valid bit when the
-> port works as device and clears that bit when the port works as host.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
-> 
->  .../devicetree/bindings/phy/phy-rockchip-inno-usb2.txt       | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> index 2d4808d3920b..55761f466c41 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-> @@ -48,6 +48,11 @@ Optional properties:
->  		See ./phy-bindings.txt for details.
->   - rockchip,utmi-avalid : boolean, use the avalid register to get vbus status.
->  			  Otherwise, use the bvalid register.
-> + - rockchip,force-bvalid : boolean, set this to force the B-Device Session
-> +			  Valid bit when the usb port is in device mode. This
-> +			  is used when the otg-id pin is not connected.
-> +			  Only supported in case of compatible being:
-> +			  * "rockchip,rk3399-usb2phy"
 
-I guess you could drop that rk3399 mention instead make the
-driver complain? Trying to keep that list up to date will get hard
-and I guess the other socs may very well hide that setting somewhere
-in their undocumented phy registers as well.
+--===============7386055971227199057==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xku3GkZTJumTa1rO"
+Content-Disposition: inline
 
-I guess a bit of alphabetical ordering might also be nice,
-rockchip,force-bvalid above rockchip,utmi-avalid
-Makes it easier to read ;-)
 
-Heiko
+--xku3GkZTJumTa1rO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Aug 14, 2018 at 10:24:05AM -0600, Rob Herring wrote:
+> On Wed, Aug 01, 2018 at 12:20:20PM +0100, Mark Brown wrote:
+> > The patch
+> >=20
+> >    ASoC: dt-bindings: add dt bindings for wcd9335 audio codec
+> >=20
+> > has been applied to the asoc tree at
+> >=20
+> >    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git=20
+
+> Why is this applied when I had requested changes?
+
+Usually when this happens it's becasue I applied it before you requested
+changes, there's some lag between applying and pushing things out and if
+I'm working on my laptop also some extra lag before mail reaches me as
+well.
+
+--xku3GkZTJumTa1rO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlt0BfIACgkQJNaLcl1U
+h9AbHgf/YwUj5W487kUnXYDmUInV5C1CzGSnoXIJmiJNKT9YnbdaDas1UWtc4Ea8
+02Jq0DckZ4+P81OBVBfCWPzaU4hXlp3/+6MOYzgyi0PBVBJK5gIOdSFAZ77/uzJv
+iN93JMFeI/ui/O+0jKck2Zwov4/IC5klHwR9y1l9gV/cvAGKUlkPBZcBByaoHQfc
+y1bFUsW0xqTb1u3RKKFksQzkTL0FLmW2c2B+M/Xs5Gi1pTMHvZ3sEB/qMiLImf8P
+dXsmzaFbXe+VSPe1QOHwXGMyIMDFkVsgdlX95K8V3gzY/ktdTOtEIG5fDiycbBSF
+dWU0Z5VXmD1XmUxbJW+JfE7Y62PG+w==
+=k4Ar
+-----END PGP SIGNATURE-----
+
+--xku3GkZTJumTa1rO--
+
+--===============7386055971227199057==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7386055971227199057==--
