@@ -1,41 +1,93 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 2/5] arm64: dts: mt7622: add a bluetooth 5 device node
-Date: Wed, 15 Aug 2018 13:18:14 +0800
-Message-ID: <aba82b5c68c840a36b902e7cb7eab4ed4516f003.1534130854.git.ryder.lee@mediatek.com>
-References: <68c4ca0158518d6bf50f2f7becfcb87ff3ce158a.1534130854.git.ryder.lee@mediatek.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 3/7] mfd: add atmel-lcdc driver
+Date: Wed, 15 Aug 2018 06:24:35 +0100
+Message-ID: <20180815052435.GA6412@dell>
+References: <20180812184152.GA22343@ravnborg.org>
+ <20180812184629.3808-3-sam@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <68c4ca0158518d6bf50f2f7becfcb87ff3ce158a.1534130854.git.ryder.lee@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180812184629.3808-3-sam@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a built-in bluetooth 5 support for MT7622.
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index b235df7..f8c3495 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -515,6 +515,13 @@
- 		reg-shift = <2>;
- 		reg-io-width = <4>;
- 		status = "disabled";
-+
-+		bluetooth {
-+			compatible = "mediatek,mt7622-bluetooth";
-+			power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
-+			clocks = <&clk25m>;
-+			clock-names = "ref";
-+		};
- 	};
- 
- 	nandc: nfi@1100d000 {
--- 
-1.9.1
+T24gU3VuLCAxMiBBdWcgMjAxOCwgU2FtIFJhdm5ib3JnIHdyb3RlOgoKPiBUaGUgTENEQyBJUCB1
+c2VkIGJ5IHNvbWUgQXRtZWwgU09DJ3MgaGF2ZSBhCj4gICAgIG11bHRpZnVuY3Rpb24gZGV2aWNl
+IHRoYXQgaW5jbHVkZSB0d28gc3ViLWRldmljZXM6Cj4gICAgIC0gcHdtCj4gICAgIC0gZGlzcGxh
+eSBjb250cm9sbGVyCj4gCj4gVGhpcyBtZmQgZGV2aWNlIHByb3ZpZGUgYSByZWdtYXAgdGhhdCBj
+YW4gYmUgdXNlZCBieSB0aGUKPiBzdWItZGV2aWNlcyB0byBzYWZlbHkgYWNjZXNzIHRoZSByZWdp
+c3RlcnMuCj4gVGhlIG1mZCBkZXZpY2UgYWxzbyBzdXBwb3J0IHRoZSBjbG9jayB1c2VkIGJ5IHRo
+ZQo+IExDREMgSVAgKyBhIGJ1cyBjbG9jayB0aGF0IGluIHNvbWUgY2FzZXMgYXJlIHJlcXVpcmVk
+Lgo+IAo+IFRoZSBkcml2ZXIgaXMgYmFzZWQgb24gdGhlIGF0bWVsLWhsY2RjIGRyaXZlci4KPiAK
+PiBUaGUgQXRtZWwgU09DJ3MgYXJlIGF0OTFzYW05MjYxLCBhdDkxc2FtOTI2MyBldGMuCj4gCj4g
+U2lnbmVkLW9mZi1ieTogU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPgo+IENjOiBMZWUg
+Sm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+IENjOiBCb3JpcyBCcmV6aWxsb24gPGJvcmlz
+LmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvbWZkL0tjb25m
+aWcgICAgICAgICAgICB8ICAxMCArKysKPiAgZHJpdmVycy9tZmQvTWFrZWZpbGUgICAgICAgICAg
+IHwgICAxICsKPiAgZHJpdmVycy9tZmQvYXRtZWwtbGNkYy5jICAgICAgIHwgMTU4ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIGluY2x1ZGUvbGludXgvbWZkL2F0bWVsLWxj
+ZGMuaCB8IDE4NCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICA0
+IGZpbGVzIGNoYW5nZWQsIDM1MyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL21mZC9hdG1lbC1sY2RjLmMKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGlu
+dXgvbWZkL2F0bWVsLWxjZGMuaAo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9LY29uZmln
+IGIvZHJpdmVycy9tZmQvS2NvbmZpZwo+IGluZGV4IGI4NjBlYjVhYTE5NC4uZjQ4NTFmMGYwMzNm
+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbWZkL0tjb25maWcKPiArKysgYi9kcml2ZXJzL21mZC9L
+Y29uZmlnCj4gQEAgLTEyMSw2ICsxMjEsMTYgQEAgY29uZmlnIE1GRF9BVE1FTF9ITENEQwo+ICAJ
+ICBhZGRpdGlvbmFsIGRyaXZlcnMgbXVzdCBiZSBlbmFibGVkIGluIG9yZGVyIHRvIHVzZSB0aGUK
+PiAgCSAgZnVuY3Rpb25hbGl0eSBvZiB0aGUgZGV2aWNlLgo+ICAKPiArY29uZmlnIE1GRF9BVE1F
+TF9MQ0RDCj4gKwl0cmlzdGF0ZSAiQXRtZWwgTENEQyAoTENEIENvbnRyb2xsZXIpIgo+ICsJc2Vs
+ZWN0IE1GRF9DT1JFCj4gKwlkZXBlbmRzIG9uIE9GCj4gKwloZWxwCj4gKwkgIElmIHlvdSBzYXkg
+eWVzIGhlcmUgeW91IGdldCBzdXBwb3J0IGZvciB0aGUgTENEQyBibG9jay4KPiArCSAgVGhpcyBk
+cml2ZXIgcHJvdmlkZXMgY29tbW9uIHN1cHBvcnQgZm9yIGFjY2Vzc2luZyB0aGUgZGV2aWNlLAo+
+ICsJICBhZGRpdGlvbmFsIGRyaXZlcnMgbXVzdCBiZSBlbmFibGVkIGluIG9yZGVyIHRvIHVzZSB0
+aGUKPiArCSAgZnVuY3Rpb25hbGl0eSBvZiB0aGUgZGV2aWNlLgo+ICsKPiAgY29uZmlnIE1GRF9B
+VE1FTF9TTUMKPiAgCWJvb2wKPiAgCXNlbGVjdCBNRkRfU1lTQ09OCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvbWZkL01ha2VmaWxlIGIvZHJpdmVycy9tZmQvTWFrZWZpbGUKPiBpbmRleCBlOWZkMjBk
+YmExOGQuLmRiYTg0NjVlMGQ5NiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9NYWtlZmlsZQo+
+ICsrKyBiL2RyaXZlcnMvbWZkL01ha2VmaWxlCj4gQEAgLTE4Niw2ICsxODYsNyBAQCBvYmotJChD
+T05GSUdfTUZEX1RQUzY1MDkwKQkrPSB0cHM2NTA5MC5vCj4gIG9iai0kKENPTkZJR19NRkRfQUFU
+Mjg3MF9DT1JFKQkrPSBhYXQyODcwLWNvcmUubwo+ICBvYmotJChDT05GSUdfTUZEX0FUTUVMX0ZM
+RVhDT00pCSs9IGF0bWVsLWZsZXhjb20ubwo+ICBvYmotJChDT05GSUdfTUZEX0FUTUVMX0hMQ0RD
+KQkrPSBhdG1lbC1obGNkYy5vCj4gK29iai0kKENPTkZJR19NRkRfQVRNRUxfTENEQykJKz0gYXRt
+ZWwtbGNkYy5vCj4gIG9iai0kKENPTkZJR19NRkRfQVRNRUxfU01DKQkrPSBhdG1lbC1zbWMubwo+
+ICBvYmotJChDT05GSUdfTUZEX0lOVEVMX0xQU1MpCSs9IGludGVsLWxwc3Mubwo+ICBvYmotJChD
+T05GSUdfTUZEX0lOVEVMX0xQU1NfUENJKQkrPSBpbnRlbC1scHNzLXBjaS5vCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvbWZkL2F0bWVsLWxjZGMuYyBiL2RyaXZlcnMvbWZkL2F0bWVsLWxjZGMuYwo+
+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi44OTI4OTc2YmFmY2EK
+PiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9tZmQvYXRtZWwtbGNkYy5jCj4gQEAgLTAs
+MCArMSwxNTggQEAKPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKPiArLyoK
+PiArICogQ29weXJpZ2h0IChDKSAyMDE4IFNhbSBSYXZuYm9yZwo+ICsgKgo+ICsgKiBBdXRob3I6
+IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KPiArICoKPiArICogQmFzZWQgb24gYXRt
+ZWwtaGxjZGMuYyB3aWNoIGlzOgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTQgRnJlZSBFbGVjdHJv
+bnMKPiArICogQ29weXJpZ2h0IChDKSAyMDE0IEF0bWVsCj4gKyAqIEF1dGhvcjogQm9yaXMgQlJF
+WklMTE9OIDxib3Jpcy5icmV6aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tPgo+ICsgKi8KPiArCj4g
+KyNpbmNsdWRlIDxsaW51eC9tZmQvYXRtZWwtbGNkYy5oPgo+ICsjaW5jbHVkZSA8bGludXgvbWZk
+L2NvcmUuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICsjaW5jbHVkZSA8bGludXgv
+cmVnbWFwLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2lv
+Lmg+Cj4gKwo+ICsjZGVmaW5lIEFUTUVMX0xDRENfUkVHX01BWAkJKDB4MTAwMCAtIDB4NCkKPiAr
+Cj4gK3N0cnVjdCBsY2RjX3JlZ21hcCB7Cj4gKwl2b2lkIF9faW9tZW0gKnJlZ3M7Cj4gK307Cj4g
+Kwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG1mZF9jZWxsIGxjZGNfY2VsbHNbXSA9IHsKPiArCXsK
+PiArCQkubmFtZSA9ICJhdG1lbC1sY2RjLXB3bSIsCj4gKwkJLm9mX2NvbXBhdGlibGUgPSAiYXRt
+ZWwsbGNkYy1wd20iLAo+ICsJfSwKPiArCXsKPiArCQkubmFtZSA9ICJhdG1lbC1sY2RjLWRjIiwK
+PiArCQkub2ZfY29tcGF0aWJsZSA9ICJhdG1lbCxsY2RjLWRpc3BsYXktY29udHJvbGxlciIsCj4g
+Kwl9LAo+ICt9OwoKV2lsbCB5b3UgYmUgYWRkaW5nIGFueSBtb3JlIGRldmljZXMsIG9yIGlzIHRo
+aXMgdGhlIGVudGlyZXR5IG9mIHRoZQpkZXZpY2U/ICBJZiB0aGUgbGF0dGVyLCBJIHN1Z2dlc3Qg
+dGhhdCB0aGlzIGRvZXNuJ3Qgd2FycmFudCBiZWluZyBhbgpNRkQuCgotLSAKTGVlIEpvbmVzIFvm
+nY7nkLzmlq9dCkxpbmFybyBTZXJ2aWNlcyBUZWNobmljYWwgTGVhZApMaW5hcm8ub3JnIOKUgiBP
+cGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sg
+fCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
