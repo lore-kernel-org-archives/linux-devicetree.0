@@ -1,114 +1,181 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: serdev: How to attach serdev devices to USB based tty devices?
-Date: Wed, 15 Aug 2018 13:53:42 -0600
-Message-ID: <CAL_JsqLofD1q=jTkY15um+fFw0ADL6ooRWRYSMMKbkqOM=TY9w@mail.gmail.com>
-References: <3639955d-5990-1c82-7158-ac07b33c41f2@suse.de>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFC PATCH v1 0/6] Resolve unwanted DMA backing with IOMMU
+Date: Wed, 15 Aug 2018 22:56:19 +0300
+Message-ID: <12474499.22jeAM5LNA@dimapc>
+References: <20180726231624.21084-1-digetx@gmail.com> <2887450.sPhIOOMKZK@dimapc> <2e7fab6e-0640-8f48-07b8-2d475538b8ae@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <3639955d-5990-1c82-7158-ac07b33c41f2@suse.de>
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux-MIPS <linux-mips@linux-mips.org>, rehm@miromico.ch, Xue Liu <liuxuenetmail@gmail.com>, LoRa_Community_Support@semtech.com, oneukum@suse.com, Alexander Graf <agraf@suse.de>, Ben Whitten <ben.whitten@lairdtech.com>, devicetree@vger.kernel.org, starnight@g.ncu.edu.tw, netdev <netdev@vger.kernel.org>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2e7fab6e-0640-8f48-07b8-2d475538b8ae@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>, Will Deacon <will.deacon@arm.com>, Mikko Perttunen <cyndis@kapsi.fi>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, nouveau@lists.freedesktop.org, "Rafael J. Wysocki" <rafael@kernel.org>, Nicolas Chauvet <kwizart@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, Jonathan Hunter <jonathanh@nvidia.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Ben Skeggs <bskeggs@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-tegra@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 13, 2018 at 8:28 PM Andreas F=C3=A4rber <afaerber@suse.de> wrot=
-e:
->
-> Hi Rob et al.,
->
-> For my LoRa network driver project [1] I have found your serdev
-> framework to be a valuable help for dealing with hardware modules
-> exposing some textual or binary UART interface.
->
-> In particular on arm(64) and mips this allows to define an unlimited
-> number of serdev drivers [2] that are associated via their Device Tree
-> compatible string and can optionally be configured via DT properties.
->
-> And in theory it seems serdev has also grown support for ACPI.
->
-> Now, a growing number of vendors are placing such modules on a USB stick
-> for easy evaluation on x86_64 PC hardware, or are designing mPCIe or M.2
-> cards using their USB pins. While I do not yet have access to such a
-> device myself, it is my understanding that devices with USB-UART bridge
-> chipsets (e.g., FTDI) will show up as /dev/ttyUSBx and devices with an
-> MCU implementing the CDC USB protocol (e.g., Pico-cell gateway =3D picoGW=
-)
-> will show up as /dev/ttyACMx.
-> On the Raspberry Pi I've seen that Device Tree nodes can be used to pass
-> information to on-board devices such as MAC address to Ethernet chipset,
-> but that does not seem all that useful for passing a serdev child node
-> to hot-plugged devices at unpredictable hub/port location (where it
-> should not interfere with regular USB-UART cables for debugging), nor
-> would it help ACPI based platforms such as x86_64.
->
-> My idea then was that if we had some unique criteria like vendor and
-> product IDs (or whatever is supported in usb_device_id), we could write
-> a usb_driver with suitable USB_DEVICE*() macro. In its probe function we
-> could call into the existing tty driver's probe function and afterwards
-> try creating and attaching the appropriate serdev device, i.e. a fixed
-> USB-to-serdev driver mapping. Problem is that most devices don't seem to
-> implement any unique identifier I could make this depend on - either by
-> using a standard FT232/FT2232/CH340G chip or by using STMicroelectronics
-> virtual com port identifiers in CDC firmware and only differing in the
-> textual description [3] the usb_device_id does not seem to match on.
->
-> The obvious solution would of course be if hardware vendors could revise
-> their designs to configure FTDI/etc. chips uniquely. I hear that that
-> may involve exchanging the chipset, increasing costs, and may impact
-> existing drivers. Wouldn't help for devices out there today either.
->
-> For the picoGW CDC firmware, Semtech does appear to own a USB vendor ID,
-> so it would seem possible to allocate their own product IDs for SX1301
-> and SX1308 respectively to replace the generic STMicroelectronics IDs,
-> which the various vendors could offer as firmware updates.
->
-> All outside my control though.
->
-> Oliver therefore suggested to not mess with USB drivers and instead use
-> a line discipline (ldisc). It seems that for example the userspace tool
-> slattach takes a tty device and performs an ioctl to switch the generic
-> tty device into a special N_SLIP protocol mode, implemented in [4].
->
-> However, the existing number of such ldisc modes appears to be below 30,
-> with hardly any vendor-specific implementation, so polluting its number
-> space seems undesirable? And in some cases I would like to use the same
-> protocol implementation over direct UART and over USB, so would like to
-> avoid duplicate serdev_device_driver and tty_ldisc_ops implementations.
->
-> Long story short, has there been any thinking about a userspace
-> interface to attach a given serdev driver to a tty device?
+On Friday, 3 August 2018 18:43:41 MSK Robin Murphy wrote:
+> On 02/08/18 19:24, Dmitry Osipenko wrote:
+> > On Friday, 27 July 2018 20:16:53 MSK Dmitry Osipenko wrote:
+> >> On Friday, 27 July 2018 20:03:26 MSK Jordan Crouse wrote:
+> >>> On Fri, Jul 27, 2018 at 05:02:37PM +0100, Robin Murphy wrote:
+> >>>> On 27/07/18 15:10, Dmitry Osipenko wrote:
+> >>>>> On Friday, 27 July 2018 12:03:28 MSK Will Deacon wrote:
+> >>>>>> On Fri, Jul 27, 2018 at 10:25:13AM +0200, Joerg Roedel wrote:
+> >>>>>>> On Fri, Jul 27, 2018 at 02:16:18AM +0300, Dmitry Osipenko wrote:
+> >>>>>>>> The proposed solution adds a new option to the base device driver
+> >>>>>>>> structure that allows device drivers to explicitly convey to the
+> >>>>>>>> drivers
+> >>>>>>>> core that the implicit IOMMU backing for devices must not happen.
+> >>>>>>> 
+> >>>>>>> Why is IOMMU mapping a problem for the Tegra GPU driver?
+> >>>>>>> 
+> >>>>>>> If we add something like this then it should not be the choice of
+> >>>>>>> the
+> >>>>>>> device driver, but of the user and/or the firmware.
+> >>>>>> 
+> >>>>>> Agreed, and it would still need somebody to configure an identity
+> >>>>>> domain
+> >>>>>> so
+> >>>>>> that transactions aren't aborted immediately. We currently allow the
+> >>>>>> identity domain to be used by default via a command-line option, so I
+> >>>>>> guess
+> >>>>>> we'd need a way for firmware to request that on a per-device basis.
+> >>>>> 
+> >>>>> The IOMMU mapping itself is not a problem, the problem is the
+> >>>>> management
+> >>>>> of
+> >>>>> the IOMMU. For Tegra we don't want anything to intrude into the IOMMU
+> >>>>> activities because:
+> >>>>> 
+> >>>>> 1) GPU HW require additional configuration for the IOMMU usage and
+> >>>>> dumb
+> >>>>> mapping of the allocations simply doesn't work.
+> >>>> 
+> >>>> Generally, that's already handled by the DRM drivers allocating
+> >>>> their own unmanaged domains. The only problem we really need to
+> >>>> solve in that regard is that currently the device DMA ops don't get
+> >>>> updated when moving away from the managed domain. That's been OK for
+> >>>> the VFIO case where the device is bound to a different driver which
+> >>>> we know won't make any explicit DMA API calls, but for the more
+> >>>> general case of IOMMU-aware drivers we could certainly do with a bit
+> >>>> of cooperation between the IOMMU API, DMA API, and arch code to
+> >>>> update the DMA ops dynamically to cope with intermediate subsystems
+> >>>> making DMA API calls on behalf of devices they don't know the
+> >>>> intimate details of.
+> >>>> 
+> >>>>> 2) Older Tegra generations have a limited resource and capabilities in
+> >>>>> regards to IOMMU usage, allocating IOMMU domain per-device is just
+> >>>>> impossible for example.
+> >>>>> 
+> >>>>> 3) HW performs context switches and so particular allocations have to
+> >>>>> be
+> >>>>> assigned to a particular contexts IOMMU domain.
+> >>>> 
+> >>>> I understand Qualcomm SoCs have a similar thing too, and AFAICS that
+> >>>> case just doesn't fit into the current API model at all. We need the
+> >>>> IOMMU driver to somehow know about the specific details of which
+> >>>> devices have magic associations with specific contexts, and we
+> >>>> almost certainly need a more expressive interface than
+> >>>> iommu_domain_alloc() to have any hope of reliable results.
+> >>> 
+> >>> This is correct for Qualcomm GPUs - The GPU hardware context switching
+> >>> requires a specific context and there are some restrictions around
+> >>> secure contexts as well.
+> >>> 
+> >>> We don't really care if the DMA attaches to a context just as long as it
+> >>> doesn't attach to the one(s) we care about. Perhaps a "valid context"
+> >>> mask
+> >>> would work in from the DT or the device struct to give the subsystems a
+> >>> clue as to which domains they were allowed to use. I recognize that
+> >>> there
+> >>> isn't a one-size-fits-all solution to this problem so I'm open to
+> >>> different
+> >>> ideas.
+> >> 
+> >> Designating whether implicit IOMMU backing is appropriate for a device
+> >> via
+> >> device-tree property sounds a bit awkward because that will be a kinda
+> >> software description (of a custom Linux driver model), while device-tree
+> >> is
+> >> supposed to describe HW.
+> >> 
+> >> What about to grant IOMMU drivers with ability to decide whether the
+> >> implicit backing for a device is appropriate? Like this:
+> >> 
+> >> bool implicit_iommu_for_dma_is_allowed(struct device *dev)
+> >> {
+> >> 
+> >> 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+> >> 	struct iommu_group *group;
+> >> 	
+> >> 	group = iommu_group_get(dev);
+> >> 	if (!group)
+> >> 	
+> >> 		return NULL;
+> >> 	
+> >> 	iommu_group_put(group);
+> >> 	
+> >> 	if (!ops->implicit_iommu_for_dma_is_allowed)
+> >> 	
+> >> 		return true;
+> >> 	
+> >> 	return ops->implicit_iommu_for_dma_is_allowed(dev);
+> >> 
+> >> }
+> >> 
+> >> Then arch_setup_dma_ops() could have a clue whether implicit IOMMU
+> >> backing
+> >> for a device is appropriate.
+> > 
+> > Guys, does it sound good to you or maybe you have something else on your
+> > mind? Even if it's not an ideal solution, it fixes the immediate problem
+> > and should be good enough for the starter.
+> 
+> To me that looks like a step ion the wrong direction that won't help at
+> all in actually addressing the underlying issues.
+> 
+> If the GPU driver wants to explicitly control IOMMU mappings instead of
+> relying on the IOMMU_DOMAIN_DMA abstraction, then it should use its own
+> unmanaged domain. At that point it shouldn't matter if a DMA ops domain
+> was allocated, since the GPU device will no longer be attached to it.
 
-There was this[1] posted.
+It is not obvious to me what solution you are proposing.. 
 
-The main problem is the only way we know to instantiate a serdev ctrlr
-is if there's a slave device described. I did make a series[2] that
-makes serdev and tty device co-exist. Then you can more easily
-manually attach a device. The problems are you get mismatches in
-opens/closes in the tty layer and what should the behavior be if
-userspace is trying to access the same port via both the tty and
-serdev. After breaking things last time I touched tty open and close,
-I'm hesitant to do that again. :)
+Are you saying that the detaching from the DMA IOMMU domain that is provided 
+by dma_ops() implementer (ARM32 arch for example) should be generalized and 
+hence there should be something like:
 
-> Or is there, on OF_DYNAMIC platforms, a way from userspace to associate
-> a DT fragment (!=3D DT Overlay) with a given USB device dynamically, to
-> attach a serdev node with sub-nodes?
+	dma_detach_device_from_iommu_dma_domain(dev);
 
-There's been some discussions but no real progress. I think we need to
-be able to support multiple DT roots and then assign/apply DTs to
-arbitrary devices. That's first going to require that of_root is not
-exposed outside of drivers/of/ and then there could be some issues
-with assuming root=3D=3DNULL is the base of the single DT. Beyond that, I
-haven't given it too much thought.
+that drivers will have to invoke.
 
-An alternative is we create DT nodes for all devices which don't have
-them (or only certain buses) and then we can apply overlays. This is
-kind of headed down the path of doing an OpenFirmware implementation
-which would enumerate all the devices and pass that DT to the OS.
+And hence there will be dma_map_ops.iommu_detach_device() that dma_ops() 
+provider will have to implement. Thereby provider will detach device from DMA 
+domain, destroy the domain and update the DMA ops of the device.
 
-Rob
+> Yes, there may be some improvements to make like having unused domains
+> not consume hardware contexts, but that's internal to the relevant IOMMU
+> drivers. If moving in and out of DMA ops domains leaves the actual
+> dma_ops broken, that's already a problem between the IOMMU API and the
+> arch DMA code as I've mentioned before.
+> 
+> Furthermore, given what the example above is trying to do,
+> arch_setup_dma_ops() is way too late to do it - the default domain was
+> already set up in iommu_group_get_for_dev() when the IOMMU driver first
+> saw that device. An "opt-out" mechanism that doesn't actually opt out
+> and just bodges around being opted-in after the fact doesn't strike me
+> as something which can grow to be robust and maintainable.
+> 
+> For the case where  a device has some special hardware relationship with
+> a particular IOMMU context, the IOMMU driver *has* to be completely
+> aware of that, i.e. it needs to be described in DT/ACPI, either via some
+> explicit binding or at least inferred from some SoC/instance-specific
+> IOMMU compatible. Then the IOMMU driver needs to know when the driver
+> for that device is requesting its special domain so that it provide the
+> correct context (and *not* allocate that context for other uses).
+> Anything which just relies on the order in which things currently happen
+> to be allocated is far too fragile long-term.
 
-[1] https://www.spinics.net/lists/linux-serial/msg30732.html
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/log/?h=
-=3Dserdev-ldisc-v2
+If hardware has some restrictions, then that should be reflected in the 
+hardware description. But that's not what we are trying to solve, at least 
+there is no such problem right now for NVIDIA Tegra.
