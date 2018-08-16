@@ -1,24 +1,43 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] dt-bindings: net: ravb: Add support for r8a774a1 SoC
-Date: Thu, 16 Aug 2018 12:09:57 -0700 (PDT)
-Message-ID: <20180816.120957.215136707226032537.davem@davemloft.net>
-References: <1534250017-15725-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v2 0/3] drivers: soc: xilinx: Add support for ZynqMP power domain driver
+Date: Thu, 16 Aug 2018 12:21:41 -0700
+Message-ID: <1534447304-12919-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534250017-15725-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: fabrizio.castro@bp.renesas.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, geert+renesas@glider.be, horms+renesas@verge.net.au, biju.das@bp.renesas.com, yoshihiro.shimoda.uh@renesas.com, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, horms@verge.net.au, Chris.Paterson2@renesas.com
+To: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Date: Tue, 14 Aug 2018 13:33:37 +0100
+The zynqmp power domain driver communicates the usage requirements
+for logical power domains / devices to the platform FW.
+FW is responsible for choosing appropriate power states,
+taking Linux' usage information into account.
 
-> Document RZ/G2M (R8A774A1) SoC bindings.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+This patch series is based on top of Xilinx firmware patch set:
+https://patchwork.kernel.org/cover/10555405/
 
-Applied, thanks.
+v2:
+ - Rebased on top of latest firmware driver patch series
+ - Updated driver name from zynqmp-genpd to zynqmp-power-controller
+ - Updated device tree bindings to move power controller node under firmware node
+
+Jolly Shah (1):
+  drivers: soc: xilinx: Add ZynqMP power domain driver
+
+Rajan Vaja (2):
+  dt-bindings: power: Add ZynqMP power domain bindings
+  firmware: xilinx: Add APIs to control node status/power
+
+ .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  47 +++
+ drivers/firmware/xilinx/zynqmp.c                   |  58 ++++
+ drivers/soc/xilinx/Kconfig                         |   9 +
+ drivers/soc/xilinx/Makefile                        |   2 +
+ drivers/soc/xilinx/zynqmp_pm_domains.c             | 352 +++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h               |  26 ++
+ 6 files changed, 494 insertions(+)
+ create mode 100644 drivers/soc/xilinx/zynqmp_pm_domains.c
+
+-- 
+2.7.4
