@@ -1,7 +1,7 @@
 From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v4 3/5] clk: imx: add SCCG PLL type
-Date: Thu, 16 Aug 2018 18:27:14 +0300
-Message-ID: <1534433236-8925-4-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v4 4/5] clk: imx: add imx composite clock
+Date: Thu, 16 Aug 2018 18:27:15 +0300
+Message-ID: <1534433236-8925-5-git-send-email-abel.vesa@nxp.com>
 References: <1534433236-8925-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,299 +12,525 @@ To: Lucas Stach <l.stach@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, F
 Cc: linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+Since a lot of clocks on imx8 are formed by a mux, gate, predivider and
+divider, the idea here is to combine all of those into one more complex
+clock type, therefore moving the complexity inside the composite clock and
+outside of the SoC specific clock driver.
 
-The SCCG is a new PLL type introduced on i.MX8. Add support for this.
-The driver currently misses the PLL lock check, as the preliminary
-documentation mentions lock configurations, but is quiet about where
-to find the actual lock status signal.
-
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- drivers/clk/imx/Makefile       |   3 +-
- drivers/clk/imx/clk-sccg-pll.c | 231 +++++++++++++++++++++++++++++++++++++++++
- drivers/clk/imx/clk.h          |   9 ++
- 3 files changed, 242 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/imx/clk-sccg-pll.c
+ drivers/clk/imx/Makefile        |   1 +
+ drivers/clk/imx/clk-composite.c | 471 ++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/imx/clk.h           |   9 +
+ 3 files changed, 481 insertions(+)
+ create mode 100644 drivers/clk/imx/clk-composite.c
 
 diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-index 4893c1f..b87513c 100644
+index b87513c..4fabb0a 100644
 --- a/drivers/clk/imx/Makefile
 +++ b/drivers/clk/imx/Makefile
-@@ -12,7 +12,8 @@ obj-y += \
- 	clk-pllv1.o \
- 	clk-pllv2.o \
- 	clk-pllv3.o \
--	clk-pfd.o
-+	clk-pfd.o \
-+	clk-sccg-pll.o
- 
- obj-$(CONFIG_SOC_IMX1)   += clk-imx1.o
- obj-$(CONFIG_SOC_IMX21)  += clk-imx21.o
-diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.c
+@@ -3,6 +3,7 @@
+ obj-y += \
+ 	clk.o \
+ 	clk-busy.o \
++	clk-composite.o \
+ 	clk-cpu.o \
+ 	clk-fixup-div.o \
+ 	clk-fixup-mux.o \
+diff --git a/drivers/clk/imx/clk-composite.c b/drivers/clk/imx/clk-composite.c
 new file mode 100644
-index 0000000..886ae03
+index 0000000..751dabf
 --- /dev/null
-+++ b/drivers/clk/imx/clk-sccg-pll.c
-@@ -0,0 +1,231 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++++ b/drivers/clk/imx/clk-composite.c
+@@ -0,0 +1,471 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright 2018 NXP.
++ * Copyright 2018 NXP
 + */
 +
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
++#include <linux/errno.h>
 +#include <linux/slab.h>
++#include <linux/clk-provider.h>
++#include <linux/clk.h>
 +
 +#include "clk.h"
 +
-+/* PLL CFGs */
-+#define PLL_CFG0	0x0
-+#define PLL_CFG1	0x4
-+#define PLL_CFG2	0x8
++#define PCG_PREDIV_SHIFT	16
++#define PCG_PREDIV_WIDTH	3
 +
-+#define PLL_DIVF1_SHIFT	13
-+#define PLL_DIVF2_SHIFT	7
-+#define PLL_DIVF_MASK	0x3f
++#define PCG_DIV_SHIFT		0
++#define PCG_DIV_WIDTH		6
 +
-+#define PLL_DIVR1_SHIFT	25
-+#define PLL_DIVR2_SHIFT	19
-+#define PLL_DIVR1_MASK	0x3
-+#define PLL_DIVR2_MASK	0x3f
-+#define PLL_REF_SHIFT	0
-+#define PLL_REF_MASK	0x3
++#define PCG_PCS_SHIFT		24
++#define PCG_PCS_MASK		0x7
 +
-+#define PLL_LOCK	31
-+#define PLL_PD		7
++#define PCG_CGC_SHIFT		28
 +
-+#define OSC_25M		25000000
-+#define OSC_27M		27000000
++#define to_clk_imx_composite(_hw) \
++		container_of(_hw, struct imx_clk_composite, hw)
 +
-+struct clk_sccg_pll {
++struct imx_clk_composite {
 +	struct clk_hw	hw;
-+	void __iomem	*base;
++	struct clk_ops	ops;
++
++	struct clk_hw	*mux_hw;
++	struct clk_hw	*prediv_hw;
++	struct clk_hw	*div_hw;
++	struct clk_hw	*gate_hw;
++
++	const struct clk_ops	*mux_ops;
++	const struct clk_ops	*prediv_ops;
++	const struct clk_ops	*div_ops;
++	const struct clk_ops	*gate_ops;
 +};
 +
-+#define to_clk_sccg_pll(_hw) container_of(_hw, struct clk_sccg_pll, hw)
-+
-+static int clk_pll1_is_prepared(struct clk_hw *hw)
++static u8 clk_imx_composite_get_parent(struct clk_hw *hw)
 +{
-+	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-+	u32 val;
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *mux_ops = clk->mux_ops;
++	struct clk_hw *mux_hw = clk->mux_hw;
 +
-+	val = readl_relaxed(pll->base + PLL_CFG0);
-+	return (val & (1 << PLL_PD)) ? 0 : 1;
++	__clk_hw_set_clk(mux_hw, hw);
++
++	return mux_ops->get_parent(mux_hw);
 +}
 +
-+static unsigned long clk_pll1_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
++static int clk_imx_composite_set_parent(struct clk_hw *hw, u8 index)
 +{
-+	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-+	u32 val, divf;
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *mux_ops = clk->mux_ops;
++	struct clk_hw *mux_hw = clk->mux_hw;
 +
-+	val = readl_relaxed(pll->base + PLL_CFG2);
-+	divf = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
++	__clk_hw_set_clk(mux_hw, hw);
 +
-+	return parent_rate * 2 * (divf + 1);
++	return mux_ops->set_parent(mux_hw, index);
 +}
 +
-+static long clk_pll1_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *prate)
++static unsigned long clk_imx_composite_recalc_rate(struct clk_hw *hw,
++					    unsigned long parent_rate)
 +{
-+	unsigned long parent_rate = *prate;
-+	u32 div;
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *div_ops = clk->div_ops;
++	struct clk_hw *div_hw = clk->div_hw;
 +
-+	div = rate / (parent_rate * 2);
++	__clk_hw_set_clk(div_hw, hw);
 +
-+	return parent_rate * div * 2;
++	return div_ops->recalc_rate(div_hw, parent_rate);
 +}
 +
-+static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate,
-+			    unsigned long parent_rate)
++static int clk_imx_composite_determine_rate(struct clk_hw *hw,
++					struct clk_rate_request *req)
 +{
-+	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-+	u32 val;
-+	u32 divf;
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *div_ops = clk->div_ops;
++	const struct clk_ops *mux_ops = clk->mux_ops;
++	struct clk_hw *div_hw = clk->div_hw;
++	struct clk_hw *mux_hw = clk->mux_hw;
++	struct clk_hw *parent;
++	unsigned long parent_rate;
++	long tmp_rate, best_rate = 0;
++	unsigned long rate_diff;
++	unsigned long best_rate_diff = ULONG_MAX;
++	long rate;
++	int i;
 +
-+	divf = rate / (parent_rate * 2);
++	if (div_hw && div_ops && div_ops->determine_rate) {
++		__clk_hw_set_clk(div_hw, hw);
++		return div_ops->determine_rate(div_hw, req);
++	} else if (div_hw && div_ops && div_ops->round_rate &&
++		   mux_hw && mux_ops && mux_ops->set_parent) {
++		req->best_parent_hw = NULL;
 +
-+	val = readl_relaxed(pll->base + PLL_CFG2);
-+	val &= ~(PLL_DIVF_MASK << PLL_DIVF1_SHIFT);
-+	val |= (divf - 1) << PLL_DIVF1_SHIFT;
-+	writel_relaxed(val, pll->base + PLL_CFG2);
++		if (clk_hw_get_flags(hw) & CLK_SET_RATE_NO_REPARENT) {
++			parent = clk_hw_get_parent(mux_hw);
++			req->best_parent_hw = parent;
++			req->best_parent_rate = clk_hw_get_rate(parent);
 +
-+	/* FIXME: PLL lock check */
++			rate = div_ops->round_rate(div_hw, req->rate,
++						    &req->best_parent_rate);
++			if (rate < 0)
++				return rate;
 +
-+	return 0;
++			req->rate = rate;
++			return 0;
++		}
++
++		for (i = 0; i < clk_hw_get_num_parents(mux_hw); i++) {
++			parent = clk_hw_get_parent_by_index(mux_hw, i);
++			if (!parent)
++				continue;
++
++			parent_rate = clk_hw_get_rate(parent);
++
++			tmp_rate = div_ops->round_rate(div_hw, req->rate,
++							&parent_rate);
++			if (tmp_rate < 0)
++				continue;
++
++			rate_diff = abs(req->rate - tmp_rate);
++
++			if (!rate_diff || !req->best_parent_hw
++				       || best_rate_diff > rate_diff) {
++				req->best_parent_hw = parent;
++				req->best_parent_rate = parent_rate;
++				best_rate_diff = rate_diff;
++				best_rate = tmp_rate;
++			}
++
++			if (!rate_diff)
++				return 0;
++		}
++
++		req->rate = best_rate;
++		return 0;
++	} else if (mux_hw && mux_ops && mux_ops->determine_rate) {
++		__clk_hw_set_clk(mux_hw, hw);
++		return mux_ops->determine_rate(mux_hw, req);
++	} else {
++		pr_err("clk: %s function called, but no mux or rate callback set!\n", __func__);
++		return -EINVAL;
++	}
 +}
 +
-+static int clk_pll1_prepare(struct clk_hw *hw)
++static long clk_imx_composite_round_rate(struct clk_hw *hw, unsigned long rate,
++				  unsigned long *prate)
 +{
-+	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-+	u32 val;
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *div_ops = clk->div_ops;
++	struct clk_hw *div_hw = clk->div_hw;
 +
-+	val = readl_relaxed(pll->base);
-+	val &= ~(1 << PLL_PD);
-+	writel_relaxed(val, pll->base);
++	__clk_hw_set_clk(div_hw, hw);
 +
-+	/* FIXME: PLL lock check */
-+
-+	return 0;
++	return div_ops->round_rate(div_hw, rate, prate);
 +}
 +
-+static void clk_pll1_unprepare(struct clk_hw *hw)
++static int clk_imx_composite_set_rate(struct clk_hw *hw, unsigned long rate,
++			       unsigned long parent_rate)
 +{
-+	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-+	u32 val;
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *div_ops = clk->div_ops;
++	struct clk_hw *div_hw = clk->div_hw;
 +
-+	val = readl_relaxed(pll->base);
-+	val |= (1 << PLL_PD);
-+	writel_relaxed(val, pll->base);
++	__clk_hw_set_clk(div_hw, hw);
++
++	return div_ops->set_rate(div_hw, rate, parent_rate);
 +}
 +
-+static unsigned long clk_pll2_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
++static int clk_imx_composite_set_rate_and_parent(struct clk_hw *hw,
++					     unsigned long rate,
++					     unsigned long parent_rate,
++					     u8 index)
 +{
-+	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-+	u32 val, ref, divr1, divf1, divr2, divf2;
-+	u64 temp64;
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *prediv_ops = clk->prediv_ops;
++	const struct clk_ops *div_ops = clk->div_ops;
++	const struct clk_ops *mux_ops = clk->mux_ops;
++	struct clk_hw *prediv_hw = clk->prediv_hw;
++	struct clk_hw *div_hw = clk->div_hw;
++	struct clk_hw *mux_hw = clk->mux_hw;
++	unsigned long temp_rate;
 +
-+	val = readl_relaxed(pll->base + PLL_CFG0);
-+	switch ((val >> PLL_REF_SHIFT) & PLL_REF_MASK) {
-+	case 0:
-+		ref = OSC_25M;
-+		break;
-+	case 1:
-+		ref = OSC_27M;
-+		break;
-+	default:
-+		ref = OSC_25M;
-+		break;
++	__clk_hw_set_clk(prediv_hw, hw);
++	__clk_hw_set_clk(mux_hw, hw);
++
++
++	temp_rate = prediv_ops->recalc_rate(div_hw, parent_rate);
++	if (temp_rate > rate) {
++		prediv_ops->set_rate(div_hw, rate, parent_rate);
++	} else {
++		mux_ops->set_parent(mux_hw, index);
++		prediv_ops->set_rate(div_hw, rate, parent_rate);
 +	}
 +
-+	val = readl_relaxed(pll->base + PLL_CFG2);
-+	divr1 = (val >> PLL_DIVR1_SHIFT) & PLL_DIVR1_MASK;
-+	divr2 = (val >> PLL_DIVR2_SHIFT) & PLL_DIVR2_MASK;
-+	divf1 = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
-+	divf2 = (val >> PLL_DIVF2_SHIFT) & PLL_DIVF_MASK;
-+
-+	temp64 = ref * 2;
-+	temp64 *= (divf1 + 1) * (divf2 + 1);
-+
-+	do_div(temp64, (divr1 + 1) * (divr2 + 1));
-+
-+	return (unsigned long)temp64;
-+}
-+
-+static long clk_pll2_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *prate)
-+{
-+	u32 div;
-+	unsigned long parent_rate = *prate;
-+
-+	div = rate / (parent_rate);
-+
-+	return parent_rate * div;
-+}
-+
-+static int clk_pll2_set_rate(struct clk_hw *hw, unsigned long rate,
-+			    unsigned long parent_rate)
-+{
-+	u32 val;
-+	u32 divf;
-+	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-+
-+	divf = rate / (parent_rate);
-+
-+	val = readl_relaxed(pll->base + PLL_CFG2);
-+	val &= ~(PLL_DIVF_MASK << PLL_DIVF2_SHIFT);
-+	val |= (divf - 1) << PLL_DIVF2_SHIFT;
-+	writel_relaxed(val, pll->base + PLL_CFG2);
-+
-+	/* FIXME: PLL lock check */
++	temp_rate = div_ops->recalc_rate(div_hw, parent_rate);
++	if (temp_rate > rate) {
++		div_ops->set_rate(div_hw, rate, parent_rate);
++		mux_ops->set_parent(mux_hw, index);
++	} else {
++		div_ops->set_rate(div_hw, rate, parent_rate);
++	}
 +
 +	return 0;
 +}
 +
-+static const struct clk_ops clk_sccg_pll1_ops = {
-+	.is_prepared	= clk_pll1_is_prepared,
-+	.recalc_rate	= clk_pll1_recalc_rate,
-+	.round_rate	= clk_pll1_round_rate,
-+	.set_rate	= clk_pll1_set_rate,
-+};
-+
-+static const struct clk_ops clk_sccg_pll2_ops = {
-+	.prepare	= clk_pll1_prepare,
-+	.unprepare	= clk_pll1_unprepare,
-+	.recalc_rate	= clk_pll2_recalc_rate,
-+	.round_rate	= clk_pll2_round_rate,
-+	.set_rate	= clk_pll2_set_rate,
-+};
-+
-+struct clk *imx_clk_sccg_pll(const char *name,
-+				const char *parent_name,
-+				void __iomem *base,
-+				enum imx_sccg_pll_type pll_type)
++static int clk_imx_composite_is_enabled(struct clk_hw *hw)
 +{
-+	struct clk_sccg_pll *pll;
-+	struct clk *clk;
-+	struct clk_init_data init;
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *gate_ops = clk->gate_ops;
++	struct clk_hw *gate_hw = clk->gate_hw;
 +
-+	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
-+	if (!pll)
++	__clk_hw_set_clk(gate_hw, hw);
++
++	return gate_ops->is_enabled(gate_hw);
++}
++
++static int clk_imx_composite_enable(struct clk_hw *hw)
++{
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *gate_ops = clk->gate_ops;
++	struct clk_hw *gate_hw = clk->gate_hw;
++
++	__clk_hw_set_clk(gate_hw, hw);
++
++	return gate_ops->enable(gate_hw);
++}
++
++static void clk_imx_composite_disable(struct clk_hw *hw)
++{
++	struct imx_clk_composite *clk = to_clk_imx_composite(hw);
++	const struct clk_ops *gate_ops = clk->gate_ops;
++	struct clk_hw *gate_hw = clk->gate_hw;
++
++	__clk_hw_set_clk(gate_hw, hw);
++
++	gate_ops->disable(gate_hw);
++}
++
++struct clk_hw *clk_hw_register_imx_composite(struct device *dev, const char *name,
++			const char * const *parent_names, int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *prediv_hw, const struct clk_ops *prediv_ops,
++			struct clk_hw *div_hw, const struct clk_ops *div_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	struct clk_hw *hw;
++	struct clk_init_data init;
++	struct imx_clk_composite *clk_imx8;
++	struct clk_ops *composite_ops;
++	int ret;
++
++	clk_imx8 = kzalloc(sizeof(*clk_imx8), GFP_KERNEL);
++	if (!clk_imx8)
 +		return ERR_PTR(-ENOMEM);
 +
-+	pll->base = base;
 +	init.name = name;
-+	switch (pll_type) {
-+	case SCCG_PLL1:
-+		init.ops = &clk_sccg_pll1_ops;
-+		break;
-+	case SCCG_PLL2:
-+		init.ops = &clk_sccg_pll2_ops;
-+		break;
++	init.flags = flags | CLK_IS_BASIC;
++	init.parent_names = parent_names;
++	init.num_parents = num_parents;
++	hw = &clk_imx8->hw;
++
++	composite_ops = &clk_imx8->ops;
++
++	if (mux_hw && mux_ops) {
++		if (!mux_ops->get_parent) {
++			hw = ERR_PTR(-EINVAL);
++			goto err;
++		}
++
++		clk_imx8->mux_hw = mux_hw;
++		clk_imx8->mux_ops = mux_ops;
++		composite_ops->get_parent = clk_imx_composite_get_parent;
++		if (mux_ops->set_parent)
++			composite_ops->set_parent =
++					clk_imx_composite_set_parent;
++		if (mux_ops->determine_rate)
++			composite_ops->determine_rate =
++					clk_imx_composite_determine_rate;
 +	}
 +
-+	init.flags = 0;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
++	if (prediv_hw && prediv_ops && div_hw && div_ops) {
++		if (!div_ops->recalc_rate) {
++			hw = ERR_PTR(-EINVAL);
++			goto err;
++		}
++		composite_ops->recalc_rate = clk_imx_composite_recalc_rate;
 +
-+	pll->hw.init = &init;
++		if (prediv_ops->determine_rate)
++			composite_ops->determine_rate =
++				clk_imx_composite_determine_rate;
++		else if (prediv_ops->round_rate)
++			composite_ops->round_rate =
++				clk_imx_composite_round_rate;
 +
-+	clk = clk_register(NULL, &pll->hw);
-+	if (IS_ERR(clk))
-+		kfree(pll);
++		/* .set_rate requires either .round_rate or .determine_rate */
++		if (prediv_ops->set_rate) {
++			if (prediv_ops->determine_rate || prediv_ops->round_rate)
++				composite_ops->set_rate =
++						clk_imx_composite_set_rate;
++			else
++				WARN(1, "%s: missing round_rate op is required\n",
++						__func__);
++		}
++
++		clk_imx8->prediv_hw = prediv_hw;
++		clk_imx8->prediv_ops = prediv_ops;
++		clk_imx8->div_hw = div_hw;
++		clk_imx8->div_ops = div_ops;
++	}
++
++	if (mux_hw && mux_ops) {
++		if ((prediv_hw && prediv_ops) || (div_hw && div_ops)) {
++			if (mux_ops->set_parent &&
++				(prediv_ops->set_rate && div_ops->set_rate))
++				composite_ops->set_rate_and_parent =
++				clk_imx_composite_set_rate_and_parent;
++		}
++	}
++
++	if (gate_hw && gate_ops) {
++		if (!gate_ops->is_enabled || !gate_ops->enable ||
++		    !gate_ops->disable) {
++			hw = ERR_PTR(-EINVAL);
++			goto err;
++		}
++
++		clk_imx8->gate_hw = gate_hw;
++		clk_imx8->gate_ops = gate_ops;
++		composite_ops->is_enabled = clk_imx_composite_is_enabled;
++		composite_ops->enable = clk_imx_composite_enable;
++		composite_ops->disable = clk_imx_composite_disable;
++	}
++
++	init.ops = composite_ops;
++	clk_imx8->hw.init = &init;
++
++	ret = clk_hw_register(dev, hw);
++	if (ret) {
++		hw = ERR_PTR(ret);
++		goto err;
++	}
++
++	if (clk_imx8->mux_hw)
++		clk_imx8->mux_hw->clk = hw->clk;
++
++	if (clk_imx8->prediv_hw)
++		clk_imx8->prediv_hw->clk = hw->clk;
++
++	if (clk_imx8->div_hw)
++		clk_imx8->div_hw->clk = hw->clk;
++
++	if (clk_imx8->gate_hw)
++		clk_imx8->gate_hw->clk = hw->clk;
++
++	return hw;
++
++err:
++	kfree(clk_imx8);
++	return hw;
++}
++
++struct clk *clk_register_imx_composite(struct device *dev, const char *name,
++			const char * const *parent_names, int num_parents,
++			struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
++			struct clk_hw *prediv_hw, const struct clk_ops *prediv_ops,
++			struct clk_hw *div_hw, const struct clk_ops *div_ops,
++			struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
++			unsigned long flags)
++{
++	struct clk_hw *hw;
++
++	hw = clk_hw_register_imx_composite(dev, name, parent_names, num_parents,
++			mux_hw, mux_ops, prediv_hw, prediv_ops,
++			div_hw, div_ops, gate_hw, gate_ops,
++			flags);
++	if (IS_ERR(hw))
++		return ERR_CAST(hw);
++	return hw->clk;
++}
++
++void clk_unregister_imx_composite(struct clk *clk)
++{
++	struct imx_clk_composite *clk_imx8;
++	struct clk_hw *hw;
++
++	hw = __clk_get_hw(clk);
++	if (!hw)
++		return;
++
++	clk_imx8 = to_clk_imx_composite(hw);
++
++	clk_unregister(clk);
++	kfree(clk_imx8);
++}
++
++struct clk *imx_clk_composite_flags(const char *name, const char **parent_names,
++			int num_parents, void __iomem *reg, unsigned long flags)
++{
++	struct clk_hw *mux_hw = NULL, *prediv_hw = NULL;
++	struct clk_hw *div_hw = NULL, *gate_hw = NULL;
++	struct clk_divider *prediv = NULL;
++	struct clk_divider *div = NULL;
++	struct clk_gate *gate = NULL;
++	struct clk_mux *mux = NULL;
++	struct clk *clk;
++
++	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
++	if (!mux)
++		return ERR_PTR(-ENOMEM);
++	mux_hw = &mux->hw;
++	mux->reg = reg;
++	mux->shift = PCG_PCS_SHIFT;
++	mux->mask = PCG_PCS_MASK;
++
++	prediv = kzalloc(sizeof(*prediv), GFP_KERNEL);
++	if (!prediv) {
++		kfree(mux);
++		return ERR_PTR(-ENOMEM);
++	}
++	prediv_hw = &prediv->hw;
++	prediv->reg = reg;
++	prediv->shift = PCG_PREDIV_SHIFT;
++	prediv->width = PCG_PREDIV_WIDTH;
++	prediv->lock = &imx_ccm_lock;
++	prediv->flags = CLK_DIVIDER_ROUND_CLOSEST;
++
++	div = kzalloc(sizeof(*prediv), GFP_KERNEL);
++	if (!div) {
++		kfree(mux);
++		return ERR_PTR(-ENOMEM);
++	}
++	div_hw = &div->hw;
++	div->reg = reg;
++	div->shift = PCG_DIV_SHIFT;
++	div->width = PCG_DIV_WIDTH;
++	div->lock = &imx_ccm_lock;
++	div->flags = CLK_DIVIDER_ROUND_CLOSEST;
++
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate) {
++		kfree(mux);
++		kfree(prediv);
++		kfree(div);
++		return ERR_PTR(-ENOMEM);
++	}
++	gate_hw = &gate->hw;
++	gate->reg = reg;
++	gate->bit_idx = PCG_CGC_SHIFT;
++
++	flags |= CLK_SET_RATE_NO_REPARENT | CLK_OPS_PARENT_ENABLE;
++
++	clk = clk_register_imx_composite(NULL, name, parent_names, num_parents,
++					mux_hw, &clk_mux_ops, prediv_hw,
++					&clk_divider_ops, div_hw,
++					&clk_divider_ops, gate_hw,
++					&clk_gate_ops, flags);
++	if (IS_ERR(clk)) {
++		kfree(mux);
++		kfree(prediv);
++		kfree(div);
++		kfree(gate);
++	}
 +
 +	return clk;
 +}
 diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index 13daf1c..12b3fd6 100644
+index 12b3fd6..9dbb680 100644
 --- a/drivers/clk/imx/clk.h
 +++ b/drivers/clk/imx/clk.h
-@@ -21,6 +21,11 @@ enum imx_pllv1_type {
- 	IMX_PLLV1_IMX35,
- };
+@@ -232,4 +232,13 @@ struct clk *imx_clk_cpu(const char *name, const char *parent_name,
+ 		struct clk *div, struct clk *mux, struct clk *pll,
+ 		struct clk *step);
  
-+enum imx_sccg_pll_type {
-+	SCCG_PLL1,
-+	SCCG_PLL2,
-+};
++struct clk *imx_clk_composite_flags(const char *name, const char **parent_names,
++		int num_parents, void __iomem *reg, unsigned long flags);
 +
- struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const char *name,
- 		const char *parent, void __iomem *base);
- 
-@@ -30,6 +35,10 @@ struct clk *imx_clk_pllv2(const char *name, const char *parent,
- struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
- 			     void __iomem *base);
- 
-+struct clk *imx_clk_sccg_pll(const char *name, const char *parent_name,
-+			     void __iomem *base,
-+			     enum imx_sccg_pll_type pll_type);
++#define imx_clk_composite(name, parent_names, reg) \
++	imx_clk_composite_flags(name, parent_names, ARRAY_SIZE(parent_names), reg, 0)
 +
- enum imx_pllv3_type {
- 	IMX_PLLV3_GENERIC,
- 	IMX_PLLV3_SYS,
++#define imx_clk_composite_critical(name, parent_names, reg) \
++	imx_clk_composite_flags(name, parent_names, ARRAY_SIZE(parent_names), reg, CLK_IS_CRITICAL)
++
+ #endif
 -- 
 2.7.4
