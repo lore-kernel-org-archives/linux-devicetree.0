@@ -1,104 +1,51 @@
-From: Wendy Liang <wendy.liang@xilinx.com>
-Subject: [PATCH 5/7] firmware: xlnx-zynqmp: Add shutdown/wakeup request
-Date: Thu, 16 Aug 2018 00:06:28 -0700
-Message-ID: <1534403190-28523-6-git-send-email-jliang@xilinx.com>
-References: <1534403190-28523-1-git-send-email-jliang@xilinx.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v1 1/7] atmel-hlcdc: renamed directory to drm/atmel/
+Date: Thu, 16 Aug 2018 09:41:23 +0200
+Message-ID: <20180816074123.GB21634@phenom.ffwll.local>
+References: <20180812184152.GA22343@ravnborg.org>
+ <20180812184629.3808-1-sam@ravnborg.org>
+ <20180814083913.GD21634@phenom.ffwll.local>
+ <20180814161952.GA27951@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534403190-28523-1-git-send-email-jliang@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ohad@wizery.com, bjorn.andersson@linaro.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, rajan.vaja@xilinx.com, jollys@xilinx.com
-Cc: linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wendy Liang <jliang@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180814161952.GA27951@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add shutdown/wakeup a resource eemi operations to shutdown
-or bringup a resource.
-
-Signed-off-by: Wendy Liang <jliang@xilinx.com>
----
- drivers/firmware/xilinx/zynqmp.c     | 35 +++++++++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |  8 ++++++++
- 2 files changed, 43 insertions(+)
-
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 2e97f60..aa83262 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -475,6 +475,39 @@ static int zynqmp_pm_release_node(const u32 node)
- 	return zynqmp_pm_invoke_fn(PM_RELEASE_NODE, node, 0, 0, 0, NULL);
- }
- 
-+/**
-+ * zynqmp_pm_force_powerdown - PM call to request for another PU or subsystem to
-+ *				be powered down forcefully
-+ * @target:	Node ID of the targeted PU or subsystem
-+ * @ack:	Flag to specify whether acknowledge is requested
-+ *
-+ * Return:	Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_force_powerdown(const u32 target,
-+				     const enum zynqmp_pm_request_ack ack)
-+{
-+	return zynqmp_pm_invoke_fn(PM_FORCE_POWERDOWN, target, ack, 0, 0, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_request_wakeup - PM call to wake up selected master or subsystem
-+ * @node:	Node ID of the master or subsystem
-+ * @set_addr:	Specifies whether the address argument is relevant
-+ * @address:	Address from which to resume when woken up
-+ * @ack:	Flag to specify whether acknowledge requested
-+ *
-+ * Return:	Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_request_wakeup(const u32 node,
-+				    const bool set_addr,
-+				    const u64 address,
-+				    const enum zynqmp_pm_request_ack ack)
-+{
-+	/* set_addr flag is encoded into 1st bit of address */
-+	return zynqmp_pm_invoke_fn(PM_REQUEST_WAKEUP, node, address | set_addr,
-+				   address >> 32, ack, NULL);
-+}
-+
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.ioctl = zynqmp_pm_ioctl,
-@@ -490,6 +523,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.clock_getparent = zynqmp_pm_clock_getparent,
- 	.request_node = zynqmp_pm_request_node,
- 	.release_node = zynqmp_pm_release_node,
-+	.force_powerdown = zynqmp_pm_force_powerdown,
-+	.request_wakeup = zynqmp_pm_request_wakeup,
- };
- 
- /**
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 02067a3..efc73bc 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -54,6 +54,8 @@ enum pm_api_id {
- 	PM_CLOCK_GETRATE,
- 	PM_CLOCK_SETPARENT,
- 	PM_CLOCK_GETPARENT,
-+	PM_FORCE_POWERDOWN = 8,
-+	PM_REQUEST_WAKEUP = 10,
- 	PM_REQUEST_NODE = 13,
- 	PM_RELEASE_NODE = 14,
- };
-@@ -137,6 +139,12 @@ struct zynqmp_eemi_ops {
- 			    const u32 qos,
- 			    const enum zynqmp_pm_request_ack ack);
- 	int (*release_node)(const u32 node);
-+	int (*force_powerdown)(const u32 target,
-+			       const enum zynqmp_pm_request_ack ack);
-+	int (*request_wakeup)(const u32 node,
-+			      const bool set_addr,
-+			      const u64 address,
-+			      const enum zynqmp_pm_request_ack ack);
- };
- 
- #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
--- 
-2.7.4
+T24gVHVlLCBBdWcgMTQsIDIwMTggYXQgMDY6MTk6NTJQTSArMDIwMCwgU2FtIFJhdm5ib3JnIHdy
+b3RlOgo+IEhpIERhbmllbC4KPiAKPiA+ID4gIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0ve2F0bWVs
+LWhsY2RjID0+IGF0bWVsfS9hdG1lbF9obGNkY19wbGFuZS5jICgxMDAlKQo+ID4gPiAKPiA+ID4g
+ZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKPiA+ID4gaW5kZXggOTZlOThl
+MjA2YjBkLi4wOWNlNzZhOWExZGMgMTAwNjQ0Cj4gPiA+IC0tLSBhL01BSU5UQUlORVJTCj4gPiA+
+ICsrKyBiL01BSU5UQUlORVJTCj4gPiA+IEBAIC00NjgxLDcgKzQ2ODEsNyBAQCBEUk0gRFJJVkVS
+UyBGT1IgQVRNRUwgSExDREMKPiA+ID4gIE06CUJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemls
+bG9uQGJvb3RsaW4uY29tPgo+ID4gPiAgTDoJZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+Zwo+ID4gPiAgUzoJU3VwcG9ydGVkCj4gPiA+IC1GOglkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxj
+ZGMvCj4gPiA+ICtGOglkcml2ZXJzL2dwdS9kcm0vYXRtZWwvYXRtZWwtaGxjZGMqCj4gPiAKPiA+
+IEknZCBzdHJvbmdseSBzdWdnZXN0IHlvdSBncm91cC1tYWludGFpbiB0aGUgZW50aXJlIGF0bWVs
+IHN0dWZmIGluCj4gPiBkcm0tbWlzYyBpbnN0ZWFkIG9mIG9ubHkgYXRtZWwtaGxjZGMuCj4gCj4g
+SWYgT0sgd2l0aCBCb3JpcyB0aGVuIEkgYW0gZmluZSB3aXRoIHRoaXMgdG9vLgo+IFdpbGwgc3Vn
+Z2VzdCBzbyBpbiB2Mi4KCkJvcmlzIGFja2VkIHRvbywgYnV0IGhlJ3Mgb24gdmFjYXRpb24uIEhl
+IHNhaWQgb24gaXJjIGhlJ2xsIHJldmlldyB0aGUKcGF0Y2hlcyB3aGVuIGhlJ3MgYmFjay4gTWVh
+bndoaWxlIEkgZ3Vlc3MgeW91IGNhbiBwcmVwIGJ5IGdldHRpbmcgdGhlIGZkLm8KYWNjb3VudCBy
+ZXF1ZXN0ZWQ6CgpodHRwczovL3d3dy5mcmVlZGVza3RvcC5vcmcvd2lraS9BY2NvdW50UmVxdWVz
+dHMvCgpBbmQgY2hlY2tpbmcgb3V0IHRoZSB0b29saW5nIHdlIHVzZSB0byBtYWludGFpbiBkcm0t
+bWlzYzoKCmh0dHBzOi8vZHJpLmZyZWVkZXNrdG9wLm9yZy9kb2NzL2RpbS9nZXR0aW5nLXN0YXJ0
+ZWQuaHRtbAoKQ2hlZXJzLCBEYW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5l
+ZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
