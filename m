@@ -1,7 +1,7 @@
 From: Wendy Liang <wendy.liang@xilinx.com>
-Subject: [PATCH 4/7] firmware: xlnx-zynqmp: Add request/release node
-Date: Thu, 16 Aug 2018 00:06:27 -0700
-Message-ID: <1534403190-28523-5-git-send-email-jliang@xilinx.com>
+Subject: [PATCH 5/7] firmware: xlnx-zynqmp: Add shutdown/wakeup request
+Date: Thu, 16 Aug 2018 00:06:28 -0700
+Message-ID: <1534403190-28523-6-git-send-email-jliang@xilinx.com>
 References: <1534403190-28523-1-git-send-email-jliang@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,84 +12,91 @@ To: ohad@wizery.com, bjorn.andersson@linaro.org, michal.simek@xilinx.com, robh+d
 Cc: linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wendy Liang <jliang@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add request/release resource node EEMI operations.
+Add shutdown/wakeup a resource eemi operations to shutdown
+or bringup a resource.
 
 Signed-off-by: Wendy Liang <jliang@xilinx.com>
 ---
- drivers/firmware/xilinx/zynqmp.c     | 30 ++++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |  7 +++++++
- 2 files changed, 37 insertions(+)
+ drivers/firmware/xilinx/zynqmp.c     | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h |  8 ++++++++
+ 2 files changed, 43 insertions(+)
 
 diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index ce6c746..2e97f60 100644
+index 2e97f60..aa83262 100644
 --- a/drivers/firmware/xilinx/zynqmp.c
 +++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -447,6 +447,34 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
- 	return ret;
+@@ -475,6 +475,39 @@ static int zynqmp_pm_release_node(const u32 node)
+ 	return zynqmp_pm_invoke_fn(PM_RELEASE_NODE, node, 0, 0, 0, NULL);
  }
  
 +/**
-+ * zynqmp_pm_request_node - PM call to request a node with specific capabilities
-+ * @node:		Node ID of the slave
-+ * @capabilities:	Requested capabilities of the slave
-+ * @qos:		Quality of service (not supported)
-+ * @ack:		Flag to specify whether acknowledge is requested
-+ *
-+ * Return:		Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_request_node(const u32 node, const u32 capabilities,
-+				  const u32 qos,
-+				  const enum zynqmp_pm_request_ack ack)
-+{
-+	return zynqmp_pm_invoke_fn(PM_REQUEST_NODE, node, capabilities,
-+				   qos, ack, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_release_node - PM call to release a node
-+ * @node:	Node ID of the slave
++ * zynqmp_pm_force_powerdown - PM call to request for another PU or subsystem to
++ *				be powered down forcefully
++ * @target:	Node ID of the targeted PU or subsystem
++ * @ack:	Flag to specify whether acknowledge is requested
 + *
 + * Return:	Returns status, either success or error+reason
 + */
-+static int zynqmp_pm_release_node(const u32 node)
++static int zynqmp_pm_force_powerdown(const u32 target,
++				     const enum zynqmp_pm_request_ack ack)
 +{
-+	return zynqmp_pm_invoke_fn(PM_RELEASE_NODE, node, 0, 0, 0, NULL);
++	return zynqmp_pm_invoke_fn(PM_FORCE_POWERDOWN, target, ack, 0, 0, NULL);
++}
++
++/**
++ * zynqmp_pm_request_wakeup - PM call to wake up selected master or subsystem
++ * @node:	Node ID of the master or subsystem
++ * @set_addr:	Specifies whether the address argument is relevant
++ * @address:	Address from which to resume when woken up
++ * @ack:	Flag to specify whether acknowledge requested
++ *
++ * Return:	Returns status, either success or error+reason
++ */
++static int zynqmp_pm_request_wakeup(const u32 node,
++				    const bool set_addr,
++				    const u64 address,
++				    const enum zynqmp_pm_request_ack ack)
++{
++	/* set_addr flag is encoded into 1st bit of address */
++	return zynqmp_pm_invoke_fn(PM_REQUEST_WAKEUP, node, address | set_addr,
++				   address >> 32, ack, NULL);
 +}
 +
  static const struct zynqmp_eemi_ops eemi_ops = {
  	.get_api_version = zynqmp_pm_get_api_version,
  	.ioctl = zynqmp_pm_ioctl,
-@@ -460,6 +488,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.clock_getrate = zynqmp_pm_clock_getrate,
- 	.clock_setparent = zynqmp_pm_clock_setparent,
+@@ -490,6 +523,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
  	.clock_getparent = zynqmp_pm_clock_getparent,
-+	.request_node = zynqmp_pm_request_node,
-+	.release_node = zynqmp_pm_release_node,
+ 	.request_node = zynqmp_pm_request_node,
+ 	.release_node = zynqmp_pm_release_node,
++	.force_powerdown = zynqmp_pm_force_powerdown,
++	.request_wakeup = zynqmp_pm_request_wakeup,
  };
  
  /**
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 83ebadf..02067a3 100644
+index 02067a3..efc73bc 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
 @@ -54,6 +54,8 @@ enum pm_api_id {
  	PM_CLOCK_GETRATE,
  	PM_CLOCK_SETPARENT,
  	PM_CLOCK_GETPARENT,
-+	PM_REQUEST_NODE = 13,
-+	PM_RELEASE_NODE = 14,
++	PM_FORCE_POWERDOWN = 8,
++	PM_REQUEST_WAKEUP = 10,
+ 	PM_REQUEST_NODE = 13,
+ 	PM_RELEASE_NODE = 14,
  };
- 
- /* PMU-FW return status codes */
-@@ -130,6 +132,11 @@ struct zynqmp_eemi_ops {
- 	int (*clock_getrate)(u32 clock_id, u64 *rate);
- 	int (*clock_setparent)(u32 clock_id, u32 parent_id);
- 	int (*clock_getparent)(u32 clock_id, u32 *parent_id);
-+	int (*request_node)(const u32 node,
-+			    const u32 capabilities,
-+			    const u32 qos,
-+			    const enum zynqmp_pm_request_ack ack);
-+	int (*release_node)(const u32 node);
+@@ -137,6 +139,12 @@ struct zynqmp_eemi_ops {
+ 			    const u32 qos,
+ 			    const enum zynqmp_pm_request_ack ack);
+ 	int (*release_node)(const u32 node);
++	int (*force_powerdown)(const u32 target,
++			       const enum zynqmp_pm_request_ack ack);
++	int (*request_wakeup)(const u32 node,
++			      const bool set_addr,
++			      const u64 address,
++			      const enum zynqmp_pm_request_ack ack);
  };
  
  #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
