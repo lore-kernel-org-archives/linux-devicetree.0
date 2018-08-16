@@ -1,30 +1,120 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/7] pinctrl: ingenic: Probe driver at subsys_initcall
-Date: Thu, 16 Aug 2018 18:35:38 +0200
-Message-ID: <20180816163544.9072-1-paul@crapouillou.net>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Thu, 16 Aug 2018 12:20:57 -0500
+Message-ID: <20180816172058.31700-1-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Using postcore_initcall() makes the driver try to initialize way too
-early.
+Add the device tree bindings for the lm3697
+LED driver for backlighting and display.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 6a1b6058b991..4bceae88d056 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -847,4 +847,4 @@ static int __init ingenic_pinctrl_drv_register(void)
- {
- 	return platform_driver_register(&ingenic_pinctrl_driver);
- }
--postcore_initcall(ingenic_pinctrl_drv_register);
-+subsys_initcall(ingenic_pinctrl_drv_register);
+v4 - Removed HVLED definition in favor of HVLED place definition - https://lore.kernel.org/patchwork/patch/974812/
+v3 - Updated subject with prefered title - https://lore.kernel.org/patchwork/patch/972337/
+v2 - Fixed subject and patch commit message - https://lore.kernel.org/patchwork/patch/971326/
+
+ .../devicetree/bindings/leds/leds-lm3697.txt  | 86 +++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+new file mode 100644
+index 000000000000..bcd67d53c889
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+@@ -0,0 +1,86 @@
++* Texas Instruments - LM3697 Highly Efficient White LED Driver
++
++The LM3697 11-bit LED driver provides high-
++performance backlight dimming for 1, 2, or 3 series
++LED strings while delivering up to 90% efficiency.
++
++This device is suitable for Display and Keypad Lighting
++
++Required properties:
++	- compatible:
++		"ti,lm3967"
++	- reg :  I2C slave address
++	- #address-cells : 1
++	- #size-cells : 0
++
++Optional properties:
++	- enable-gpios : gpio pin to enable/disable the device.
++	- vled-supply : LED supply
++
++Required child properties:
++	- reg : 0 - LED is Controlled by bank A
++		1 - LED is Controlled by bank B
++	- led-sources : Indicates which HVLED string is associated to which
++			control bank.  Each element in the array is associated
++			with a specific HVLED string.  Element 0 is HVLED1,
++			element 1 is HVLED2 and element 2 HVLED3.
++			Additional information is contained
++			in Documentation/devicetree/bindings/leds/common.txt
++			0 - HVLED is not active in this control bank
++			1 - HVLED string is controlled by this control bank
++
++Optional child properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
++	- linux,default-trigger :
++	   see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++HVLED string 1 and 2 controlled by control bank A and HVLED string controlled by
++control bank B.
++
++led-controller@36 {
++	compatible = "ti,lm3967";
++	reg = <0x36>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	vled-supply = <&vbatt>;
++
++	led@0 {
++		reg = <0>;
++		led-sources = <1 0 1>;
++		label = "white:first_backlight_cluster";
++		linux,default-trigger = "backlight";
++	};
++
++	led@1 {
++		reg = <1>;
++		led-sources = <0 1 0>;
++		label = "white:second_backlight_cluster";
++		linux,default-trigger = "backlight";
++	};
++}
++
++All HVLED strings controlled by control bank A
++
++led-controller@36 {
++	compatible = "ti,lm3967";
++	reg = <0x36>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	vled-supply = <&vbatt>;
++
++	led@0 {
++		reg = <0>;
++		led-sources = <1 1 1>;
++		label = "white:backlight_cluster";
++		linux,default-trigger = "backlight";
++	};
++}
++
++For more product information please see the link below:
++http://www.ti.com/lit/ds/symlink/lm3697.pdf
 -- 
-2.11.0
+2.17.0.582.gccdcbd54c
