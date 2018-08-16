@@ -1,56 +1,43 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v4 2/7] i2c: designware: move #ifdef CONFIG_OF to the top
-Date: Thu, 16 Aug 2018 10:45:16 +0200
-Message-ID: <20180816084521.16289-3-alexandre.belloni@bootlin.com>
-References: <20180816084521.16289-1-alexandre.belloni@bootlin.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v12 1/2] mfd: bd71837: mfd driver for ROHM BD71837 PMIC
+Date: Thu, 16 Aug 2018 10:06:10 +0100
+Message-ID: <20180816090610.GC10054@dell>
+References: <cover.1533292711.git.matti.vaittinen@fi.rohmeurope.com>
+ <4f49022ed8e4fa357bf5d213c57ad57752e72aa4.1533292711.git.matti.vaittinen@fi.rohmeurope.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180816084521.16289-1-alexandre.belloni@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <4f49022ed8e4fa357bf5d213c57ad57752e72aa4.1533292711.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, eballetbo@gmail.com, linus.walleij@linaro.org, mazziesaccount@gmail.com, dmitry.torokhov@gmail.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, broonie@kernel.org, linux-input@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Move the #ifdef CONFIG_OF section to the top of the file, after the ACPI
-section so functions defined there can be used in dw_i2c_plat_probe.
+On Fri, 03 Aug 2018, Matti Vaittinen wrote:
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/i2c/busses/i2c-designware-platdrv.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+> ROHM BD71837 PMIC MFD driver providing interrupts and support
+> for three subsystems:
+> - clk
+> - Regulators
+> - input/power-key
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+>  drivers/mfd/Kconfig              |  13 ++
+>  drivers/mfd/Makefile             |   1 +
+>  drivers/mfd/rohm-bd718x7.c       | 211 +++++++++++++++++++++++++
+>  include/linux/mfd/rohm-bd718x7.h | 332 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 557 insertions(+)
+>  create mode 100644 drivers/mfd/rohm-bd718x7.c
+>  create mode 100644 include/linux/mfd/rohm-bd718x7.h
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index d5936c32c075..776d4354f366 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -169,6 +169,14 @@ static inline int dw_i2c_acpi_configure(struct platform_device *pdev)
- }
- #endif
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id dw_i2c_of_match[] = {
-+	{ .compatible = "snps,designware-i2c", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
-+#endif
-+
- static void i2c_dw_configure_master(struct dw_i2c_dev *dev)
- {
- 	struct i2c_timings *t = &dev->timings;
-@@ -403,14 +411,6 @@ static int dw_i2c_plat_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_OF
--static const struct of_device_id dw_i2c_of_match[] = {
--	{ .compatible = "snps,designware-i2c", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
--#endif
--
- #ifdef CONFIG_PM_SLEEP
- static int dw_i2c_plat_prepare(struct device *dev)
- {
+Applied, thanks.
+
 -- 
-2.18.0
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
