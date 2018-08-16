@@ -1,103 +1,139 @@
 From: Hanjie Lin <hanjie.lin@amlogic.com>
 Subject: Re: [PATCH 1/2] dt-bindings: PCI: meson: add DT bindings for Amlogic
- Meson PCIe Phy controller
-Date: Thu, 16 Aug 2018 11:01:26 +0800
-Message-ID: <60f152b4-39b3-0205-794b-13a1617956d8@amlogic.com>
-References: <1534227134-151584-1-git-send-email-hanjie.lin@amlogic.com>
- <1534227134-151584-2-git-send-email-hanjie.lin@amlogic.com>
- <20180814225012.GA19305@rob-hp-laptop>
+ Meson PCIe controller
+Date: Thu, 16 Aug 2018 11:11:26 +0800
+Message-ID: <e83998fa-a4d2-5593-1a41-70bd232b4123@amlogic.com>
+References: <1534227522-186798-1-git-send-email-hanjie.lin@amlogic.com>
+ <1534227522-186798-2-git-send-email-hanjie.lin@amlogic.com>
+ <fd6b76f0c6f5b4dfd1527440b0f6275417e434c1.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180814225012.GA19305@rob-hp-laptop>
+In-Reply-To: <fd6b76f0c6f5b4dfd1527440b0f6275417e434c1.camel@baylibre.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Yue Wang <yue.wang@amlogic.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, shawn.lin@rock-chips.com, devicetree@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 2018/8/15 6:50, Rob Herring wrote:
-> On Tue, Aug 14, 2018 at 02:12:13AM -0400, Hanjie Lin wrote:
+On 2018/8/14 18:41, Jerome Brunet wrote:
+> On Tue, 2018-08-14 at 02:18 -0400, Hanjie Lin wrote:
 >> From: Yue Wang <yue.wang@amlogic.com>
-> 
-> Subject should be "dt-bindings: phy: ..."
-> 
->> The Meson-PCIE-PHY controller supports the 5-Gbps data rate
->> of the PCI Express Gen 2 specification and is backwardcompatible
-> 
-> space    
-
-yes, I will fix
-                                               ^
-> 
->> with the 2.5-Gbps Gen 1.1 specification with only
->> inferred idle detection supported on AMLOGIC SoCs.
-> 
-> AMLOGIC or Amlogic? 
-> 
-
-yes, we will stick to 'Amlogic'
-
 >>
+>> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+>> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
+>> controller.
+>>
+>> Signed-off-by: Yue Wang <hanjie.lin@amlogic.com>
 >> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
->> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
 >> ---
->>  .../bindings/phy/amlogic,meson-pcie-phy.txt        | 31 ++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt
+>>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 57 ++++++++++++++++++++++
+>>  1 file changed, 57 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt b/Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt
+>> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
 >> new file mode 100644
->> index 0000000..db99085
+>> index 0000000..48233e4
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt
->> @@ -0,0 +1,31 @@
->> +* Amlogic Meson AXG PCIE PHY binding
+>> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+>> @@ -0,0 +1,57 @@
+>> +Amlogic Meson AXG DWC PCIE SoC controller
+>> +
+>> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
+>> +It shares common functions with the PCIe DesignWare core driver and
+>> +inherits common properties defined in
+>> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+>> +
+>> +Additional properties are described here:
 >> +
 >> +Required properties:
->> +- compatible:	Should be
->> +	- "amlogic,axg-pcie-phy"
->> +- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
+>> +- compatible:
+>> +	should contain "amlogic,axg-pcie" to identify the core.
+>> +- reg:
+>> +	Should contain the configuration address space.
+>> +- reg-names: Must be
+>> +	- "elbi"	External local bus interface registers
+>> +	- "cfg"		Meson specific registers
+>> +	- "config"	PCIe configuration space
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +- clock-names: Must include the following entries:
+>> +	- "pcie"
+>> +	- "pcie_bus"
+>> +	- "pcie_general"
+>> +	- "pcie_mipi_en"
 > 
-> You don't need to distinguish port A and B?
-
-No, we don't. Theoretically there is only one phy in the chip,
-and we have distinguished ports by reset lines.
-
-Thanks for all corrections and suggestions.
-
+> Could you briefly describe what each clock is needed for ?
 > 
->> +- reg:		The base address and length of the registers
->> +- resets:	phandle to the reset lines
->> +- reset-names:	must contain "phy" and "peripheral"
->> +	- "port_a" Port A reset
->> +	- "port_b" Port B reset
->> +	- "phy"	PHY reset
->> +	- "apb"	APB reset
->> +Optional properties:
->> +- phy-supply:	see phy-bindings.txt in this directory
+
+Yes, is this more clear?
+
+- clock-names:  Amlogic Meson AXG
+Usage: required for  
+Value type: <stringlist>
+Definition: Should contain the following entries
+- "pclk"       PCIe GEN 100M PLL clock
+- "port"       PCIe_x(A 0r B) RC clock gate 
+- "general"    PCIe Phy clock 
+- "mipi"       PCIe_x(A or B) 100M ref clock gate
+
 >> +
->> +Example:
->> +	pcie_phy: pcie-phy@ff644000 {
->> +		#phy-cells = <0>;
->> +		compatible = "amlogic,axg-pcie-phy";
->> +		reg = <0x0 0xff644000 0x0 0x2000>;
->> +		resets = <&reset RESET_PCIE_A>,
->> +				<&reset RESET_PCIE_B>,
->> +				<&reset RESET_PCIE_PHY>,
->> +				<&reset RESET_PCIE_APB>;
->> +		reset-names =
->> +				"port_a",
->> +				"port_b",
->> +				"phy",
->> +				"apb";
+>> +Example configuration:
+>> +
+>> +	pcie: pcie@dffff000 {
+>> +			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
+>> +			reg = <0x0 0xf9800000 0x0 0x400000
+>> +					0x0 0xff646000 0x0 0x2000
+>> +					0x0 0xf9f00000 0x0 0x100000>;
+>> +			reg-names = "elbi", "cfg", "config";
+>> +			reset-gpio = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
+>> +			interrupts = <0 177 IRQ_TYPE_EDGE_RISING>;
+> 
+> replace 0 with GIC_SPI please
+
+Right, I will fix it.
+
+> 
+>> +			#interrupt-cells = <1>;
+>> +			interrupt-map-mask = <0 0 0 0>;
+>> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
+>> +			bus-range = <0x0 0xff>;
+>> +			#address-cells = <3>;
+>> +			#size-cells = <2>;
+>> +			device_type = "pci";
+>> +			phys = <&pcie_phy>;
+>> +			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
+>> +			num-lanes = <1>;
+>> +			pcie-num = <1>;
+>> +
+>> +			clocks = <&clkc CLKID_USB
+>> +					&clkc CLKID_MIPI_ENABLE
+>> +					&clkc CLKID_PCIE_A
+>> +					&clkc CLKID_PCIE_CML_EN0>;
+>> +			clock-names = "pcie_general",
+>> +					"pcie_refpll",
+>> +					"pcie_mipi_en",
+>> +					"pcie",
+>> +					"port";
+> 
+> Several things are disturbing above:
+> * pcie_general is provided by the USB clock gate ???
+> * pcie_refpll: I suppose this is a copy/paste error, not used in your driver
+> (and shouldn't be need BTW)
+> 
+> suggested names:
+> * pcie_general -> general
+> * pcie_mipi_en -> mipi
+> * pcie -> pclk
+> * port (OK)
+> 
+
+Thanks, we will follow your suggestion.
+
 >> +	};
->> -- 
->> 2.7.4
->>
+> 
 > 
 > .
 > 
