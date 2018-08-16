@@ -1,52 +1,64 @@
-Return-Path: <SRS0=nZrf=K4=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 6/7] [media] tvp5150: initialize subdev before parsing device tree
-Date: Mon, 13 Aug 2018 11:25:07 +0200
-Message-Id: <20180813092508.1334-7-m.felsch@pengutronix.de>
-In-Reply-To: <20180813092508.1334-1-m.felsch@pengutronix.de>
-References: <20180813092508.1334-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
+Return-Path: <SRS0=24TD=K7=ideasonboard.com=kieran.bingham+renesas@kernel.org>
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH/RFC 1/2] media: dt-bindings: adv748x: Fix decimal unit
+ addresses
+References: <1528984088-24801-1-git-send-email-geert+renesas@glider.be>
+ <1528984088-24801-2-git-send-email-geert+renesas@glider.be>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Message-ID: <ec3c39d5-17a6-50f2-b54d-d30c89aadf1f@ideasonboard.com>
+Date: Thu, 16 Aug 2018 09:40:50 +0100
+MIME-Version: 1.0
+In-Reply-To: <1528984088-24801-2-git-send-email-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Michael Tretter <m.tretter@pengutronix.de>
+Hi Geert,
 
-There are several debug prints in the tvp5150_parse_dt() function, which
-do not print the prefix, because the v4l2_subdev is not initialized, yet.
+On 14/06/18 14:48, Geert Uytterhoeven wrote:
+> With recent dtc and W=1:
+> 
+>     Warning (graph_port): video-receiver@70/port@10: graph node unit address error, expected "a"
+>     Warning (graph_port): video-receiver@70/port@11: graph node unit address error, expected "b"
+> 
+> Unit addresses are always hexadecimal (without prefix), while the bases
+> of reg property values depend on their prefixes.
+> 
+> Fixes: e69595170b1cad85 ("media: adv748x: Add adv7481, adv7482 bindings")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/adv748x.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> index 21ffb5ed818302ff..54d1d3bc186949fa 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> @@ -73,7 +73,7 @@ Example:
+>  			};
+>  		};
+>  
+> -		port@10 {
+> +		port@a {
+>  			reg = <10>;
+>  
+>  			adv7482_txa: endpoint {
+> @@ -83,7 +83,7 @@ Example:
+>  			};
+>  		};
+>  
+> -		port@11 {
+> +		port@b {
+>  			reg = <11>;
+>  
+>  			adv7482_txb: endpoint {
+> 
 
-Initialize the v4l2_subdev before parsing the device tree to fix the
-debug messages.
+Just looking back through these patches, to make sure they get integrated.
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Having read yours and Robs responses, I do agree that this is a correct fix.
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 825dcf3a9d83..e736f609fecd 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -2032,6 +2032,9 @@ static int tvp5150_probe(struct i2c_client *c,
- 
- 	core->regmap = map;
- 	sd = &core->sd;
-+	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
-+	sd->internal_ops = &tvp5150_internal_ops;
-+	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
- 
- 	if (IS_ENABLED(CONFIG_OF) && np) {
- 		res = tvp5150_parse_dt(core, np);
-@@ -2044,10 +2047,6 @@ static int tvp5150_probe(struct i2c_client *c,
- 		core->mbus_type = V4L2_MBUS_BT656;
- 	}
- 
--	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
--	sd->internal_ops = &tvp5150_internal_ops;
--	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
--
- 	res = tvp5150_mc_init(sd);
- 	if (res)
- 		goto err_cleanup_dt;
--- 
-2.18.0
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
