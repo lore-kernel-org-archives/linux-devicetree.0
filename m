@@ -1,45 +1,103 @@
-From: Roy Im <roy.im.opensource@diasemi.com>
-Subject: [PATCH V1 0/3]  da7280: haptic driver submission
-Date: Thu, 16 Aug 2018 11:02:44 +0900
-Message-ID: <cover.1534384964.git.Roy.Im@diasemi.com>
+From: Hanjie Lin <hanjie.lin@amlogic.com>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: meson: add DT bindings for Amlogic
+ Meson PCIe Phy controller
+Date: Thu, 16 Aug 2018 11:01:26 +0800
+Message-ID: <60f152b4-39b3-0205-794b-13a1617956d8@amlogic.com>
+References: <1534227134-151584-1-git-send-email-hanjie.lin@amlogic.com>
+ <1534227134-151584-2-git-send-email-hanjie.lin@amlogic.com>
+ <20180814225012.GA19305@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180814225012.GA19305@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Yue Wang <yue.wang@amlogic.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, shawn.lin@rock-chips.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Roy Im <roy.im.opensource@diasemi.com>
 
-This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-In this patch set the following is provided:
+On 2018/8/15 6:50, Rob Herring wrote:
+> On Tue, Aug 14, 2018 at 02:12:13AM -0400, Hanjie Lin wrote:
+>> From: Yue Wang <yue.wang@amlogic.com>
+> 
+> Subject should be "dt-bindings: phy: ..."
+> 
+>> The Meson-PCIE-PHY controller supports the 5-Gbps data rate
+>> of the PCI Express Gen 2 specification and is backwardcompatible
+> 
+> space    
 
-[PATCH V1 1/3] MAINTAINERS file update for DA7280
-[PATCH V1 2/3] DA7280 DT Binding
-[PATCH V1 3/3] DA7280 Driver
+yes, I will fix
+                                               ^
+> 
+>> with the 2.5-Gbps Gen 1.1 specification with only
+>> inferred idle detection supported on AMLOGIC SoCs.
+> 
+> AMLOGIC or Amlogic? 
+> 
 
-This patch applies against linux-next and v4.18
+yes, we will stick to 'Amlogic'
 
-Thank you,
-Roy Im, Dialog Semiconductor Ltd.
+>>
+>> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+>> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+>> ---
+>>  .../bindings/phy/amlogic,meson-pcie-phy.txt        | 31 ++++++++++++++++++++++
+>>  1 file changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt b/Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt
+>> new file mode 100644
+>> index 0000000..db99085
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt
+>> @@ -0,0 +1,31 @@
+>> +* Amlogic Meson AXG PCIE PHY binding
+>> +
+>> +Required properties:
+>> +- compatible:	Should be
+>> +	- "amlogic,axg-pcie-phy"
+>> +- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
+> 
+> You don't need to distinguish port A and B?
 
-Roy Im (3):
-  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
-  Documentation: devicetree: input: new binding for da7280
-  Input: new da7280 haptic driver
+No, we don't. Theoretically there is only one phy in the chip,
+and we have distinguished ports by reset lines.
 
- .../devicetree/bindings/input/dlg,da7280.txt       |   91 ++
- MAINTAINERS                                        |    2 +
- drivers/input/misc/Kconfig                         |   12 +
- drivers/input/misc/Makefile                        |    1 +
- drivers/input/misc/da7280.c                        | 1452 ++++++++++++++++++++
- drivers/input/misc/da7280.h                        |  412 ++++++
- 6 files changed, 1970 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
- create mode 100644 drivers/input/misc/da7280.c
- create mode 100644 drivers/input/misc/da7280.h
+Thanks for all corrections and suggestions.
 
--- 
-end-of-patch for PATCH V1
+> 
+>> +- reg:		The base address and length of the registers
+>> +- resets:	phandle to the reset lines
+>> +- reset-names:	must contain "phy" and "peripheral"
+>> +	- "port_a" Port A reset
+>> +	- "port_b" Port B reset
+>> +	- "phy"	PHY reset
+>> +	- "apb"	APB reset
+>> +Optional properties:
+>> +- phy-supply:	see phy-bindings.txt in this directory
+>> +
+>> +Example:
+>> +	pcie_phy: pcie-phy@ff644000 {
+>> +		#phy-cells = <0>;
+>> +		compatible = "amlogic,axg-pcie-phy";
+>> +		reg = <0x0 0xff644000 0x0 0x2000>;
+>> +		resets = <&reset RESET_PCIE_A>,
+>> +				<&reset RESET_PCIE_B>,
+>> +				<&reset RESET_PCIE_PHY>,
+>> +				<&reset RESET_PCIE_APB>;
+>> +		reset-names =
+>> +				"port_a",
+>> +				"port_b",
+>> +				"phy",
+>> +				"apb";
+>> +	};
+>> -- 
+>> 2.7.4
+>>
+> 
+> .
+> 
