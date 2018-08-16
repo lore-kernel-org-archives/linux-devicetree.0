@@ -1,253 +1,49 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 3/5] arm64: dts: mt7622: fix ram size for rfb1
-Date: Thu, 16 Aug 2018 16:07:46 +0800
-Message-ID: <1534406866.31978.47.camel@mtkswgap22>
-References: <68c4ca0158518d6bf50f2f7becfcb87ff3ce158a.1534130854.git.ryder.lee@mediatek.com>
-         <3be2ef51a1dffed93538d256273bdecfc59cdea5.1534130854.git.ryder.lee@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: 74x164: add lines-initial-states property
+Date: Thu, 16 Aug 2018 10:11:38 +0200
+Message-ID: <CACRpkdYTxvWjLizTr8Qg-FmSPjnnU+kj2+VrUUcz5F0nkhrUrg@mail.gmail.com>
+References: <20180815201855.29738-1-mail@david-bauer.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3be2ef51a1dffed93538d256273bdecfc59cdea5.1534130854.git.ryder.lee@mediatek.com>
+In-Reply-To: <20180815201855.29738-1-mail@david-bauer.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: mail@david-bauer.net
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-08-15 at 13:18 +0800, Ryder Lee wrote:
-> Fix ram size and sort nodes in alphabetical order.
-> 
+Hi David,
 
-The size of the ram should be selective range from 512 megabytes to 2
-gigabytes depending on what the specific application is being run on the
-Soc and I actually thought 512 megabytes should be the better value for
-the base of rfb1, so 
+On Wed, Aug 15, 2018 at 10:19 PM David Bauer <mail@david-bauer.net> wrote:
 
-Acked-by: Sean Wang <sean.wang@mediatek.com>
+> This adds the ability to define the initial state of each output line on
+> device probe.
+>
+> Signed-off-by: David Bauer <mail@david-bauer.net>
 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 196 +++++++++++++--------------
->  1 file changed, 98 insertions(+), 98 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> index b783764..033d7d1 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> @@ -51,7 +51,7 @@
->  	};
->  
->  	memory {
-> -		reg = <0 0x40000000 0 0x3F000000>;
-> +		reg = <0 0x40000000 0 0x20000000>;
->  	};
->  
->  	reg_1p8v: regulator-1p8v {
-> @@ -81,6 +81,103 @@
->  	};
->  };
->  
-> +&bch {
-> +	status = "disabled";
-> +};
-> +
-> +&btif {
-> +	status = "okay";
-> +};
-> +
-> +&cir {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&irrx_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&eth {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&eth_pins>;
-> +	status = "okay";
-> +
-> +	gmac1: mac@1 {
-> +		compatible = "mediatek,eth-mac";
-> +		reg = <1>;
-> +		phy-handle = <&phy5>;
-> +	};
-> +
-> +	mdio-bus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		phy5: ethernet-phy@5 {
-> +			reg = <5>;
-> +			phy-mode = "sgmii";
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_pins>;
-> +	status = "okay";
-> +};
-> +
-> +&mmc0 {
-> +	pinctrl-names = "default", "state_uhs";
-> +	pinctrl-0 = <&emmc_pins_default>;
-> +	pinctrl-1 = <&emmc_pins_uhs>;
-> +	status = "okay";
-> +	bus-width = <8>;
-> +	max-frequency = <50000000>;
-> +	cap-mmc-highspeed;
-> +	mmc-hs200-1_8v;
-> +	vmmc-supply = <&reg_3p3v>;
-> +	vqmmc-supply = <&reg_1p8v>;
-> +	assigned-clocks = <&topckgen CLK_TOP_MSDC30_0_SEL>;
-> +	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
-> +	non-removable;
-> +};
-> +
-> +&mmc1 {
-> +	pinctrl-names = "default", "state_uhs";
-> +	pinctrl-0 = <&sd0_pins_default>;
-> +	pinctrl-1 = <&sd0_pins_uhs>;
-> +	status = "okay";
-> +	bus-width = <4>;
-> +	max-frequency = <50000000>;
-> +	cap-sd-highspeed;
-> +	r_smpl = <1>;
-> +	cd-gpios = <&pio 81 GPIO_ACTIVE_LOW>;
-> +	vmmc-supply = <&reg_3p3v>;
-> +	vqmmc-supply = <&reg_3p3v>;
-> +	assigned-clocks = <&topckgen CLK_TOP_MSDC30_1_SEL>;
-> +	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
-> +};
-> +
-> +&nandc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&parallel_nand_pins>;
-> +	status = "disabled";
-> +};
-> +
-> +&nor_flash {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&spi_nor_pins>;
-> +	status = "disabled";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +	};
-> +};
-> +
->  &pcie {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pcie0_pins>;
-> @@ -344,103 +441,6 @@
->  	};
->  };
->  
-> -&bch {
-> -	status = "disabled";
-> -};
-> -
-> -&btif {
-> -	status = "okay";
-> -};
-> -
-> -&cir {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&irrx_pins>;
-> -	status = "okay";
-> -};
-> -
-> -&eth {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&eth_pins>;
-> -	status = "okay";
-> -
-> -	gmac1: mac@1 {
-> -		compatible = "mediatek,eth-mac";
-> -		reg = <1>;
-> -		phy-handle = <&phy5>;
-> -	};
-> -
-> -	mdio-bus {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		phy5: ethernet-phy@5 {
-> -			reg = <5>;
-> -			phy-mode = "sgmii";
-> -		};
-> -	};
-> -};
-> -
-> -&i2c1 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&i2c1_pins>;
-> -	status = "okay";
-> -};
-> -
-> -&i2c2 {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&i2c2_pins>;
-> -	status = "okay";
-> -};
-> -
-> -&mmc0 {
-> -	pinctrl-names = "default", "state_uhs";
-> -	pinctrl-0 = <&emmc_pins_default>;
-> -	pinctrl-1 = <&emmc_pins_uhs>;
-> -	status = "okay";
-> -	bus-width = <8>;
-> -	max-frequency = <50000000>;
-> -	cap-mmc-highspeed;
-> -	mmc-hs200-1_8v;
-> -	vmmc-supply = <&reg_3p3v>;
-> -	vqmmc-supply = <&reg_1p8v>;
-> -	assigned-clocks = <&topckgen CLK_TOP_MSDC30_0_SEL>;
-> -	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
-> -	non-removable;
-> -};
-> -
-> -&mmc1 {
-> -	pinctrl-names = "default", "state_uhs";
-> -	pinctrl-0 = <&sd0_pins_default>;
-> -	pinctrl-1 = <&sd0_pins_uhs>;
-> -	status = "okay";
-> -	bus-width = <4>;
-> -	max-frequency = <50000000>;
-> -	cap-sd-highspeed;
-> -	r_smpl = <1>;
-> -	cd-gpios = <&pio 81 GPIO_ACTIVE_LOW>;
-> -	vmmc-supply = <&reg_3p3v>;
-> -	vqmmc-supply = <&reg_3p3v>;
-> -	assigned-clocks = <&topckgen CLK_TOP_MSDC30_1_SEL>;
-> -	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
-> -};
-> -
-> -&nandc {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&parallel_nand_pins>;
-> -	status = "disabled";
-> -};
-> -
-> -&nor_flash {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&spi_nor_pins>;
-> -	status = "disabled";
-> -
-> -	flash@0 {
-> -		compatible = "jedec,spi-nor";
-> -		reg = <0>;
-> -	};
-> -};
-> -
->  &pwm {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pwm7_pins>;
+(...)
+>  Optional properties:
+>  - enable-gpios: GPIO connected to the OE (Output Enable) pin.
+> +- lines-initial-states: Bitmask that specifies the initial state of
+> +  each line. When a bit is set to zero, the corresponding output line
+> +  is initialized LOW. When a bit is set to one, the corresponding
+> +  output line is initialized HIGH. In case this property is not
+> +  defined, all lines will be initialized as LOW.
+
+This sounds like something that should be generic, and not use
+a bitmask, but offsets. It should work even if the number of
+GPIOs from the chip is > 32.
+
+Is the usecase different from hogs?
+See Documentation/devicetree/bindings/gpio.txt
+
+There has been extensive discussion about supporting initial values
+with something similar to hogs, but I haven't got anything ACKed
+by the DT maintainers so it has kind of stalled.
+
+I would make sure to both make it generic, get ACK from the DT
+mainatiners, and make sure to implement it in
+drivers/gpio/gpiolib-of.c and not locally in drivers.
+
+Yours,
+Linus Walleij
