@@ -1,126 +1,77 @@
-From: Hanjie Lin <hanjie.lin@amlogic.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: meson: add DT bindings for Amlogic
- Meson PCIe controller
-Date: Thu, 16 Aug 2018 11:14:25 +0800
-Message-ID: <4095e5f8-9c3b-0eb6-f803-105a2e5c1941@amlogic.com>
-References: <1534227522-186798-1-git-send-email-hanjie.lin@amlogic.com>
- <1534227522-186798-2-git-send-email-hanjie.lin@amlogic.com>
- <20180814225340.GA25470@rob-hp-laptop>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V4 3/8] backlight: qcom-wled: Add new properties for
+ PMI8998
+Date: Thu, 16 Aug 2018 10:53:11 +0530
+Message-ID: <897ab82c450bff71658c1fa32e7e6021@codeaurora.org>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
+ <1531131741-19971-4-git-send-email-kgunda@codeaurora.org>
+ <20180807052355.GA23866@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180814225340.GA25470@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <20180807052355.GA23866@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2018/8/15 6:53, Rob Herring wrote:
-> On Tue, Aug 14, 2018 at 02:18:41AM -0400, Hanjie Lin wrote:
->> From: Yue Wang <yue.wang@amlogic.com>
->>
->> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
->> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
->> controller.
->>
->> Signed-off-by: Yue Wang <hanjie.lin@amlogic.com>
->> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
->> ---
->>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 57 ++++++++++++++++++++++
->>  1 file changed, 57 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->> new file mode 100644
->> index 0000000..48233e4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->> @@ -0,0 +1,57 @@
->> +Amlogic Meson AXG DWC PCIE SoC controller
->> +
->> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
->> +It shares common functions with the PCIe DesignWare core driver and
->> +inherits common properties defined in
->> +Documentation/devicetree/bindings/pci/designware-pci.txt.
->> +
->> +Additional properties are described here:
->> +
->> +Required properties:
->> +- compatible:
->> +	should contain "amlogic,axg-pcie" to identify the core.
->> +- reg:
->> +	Should contain the configuration address space.
->> +- reg-names: Must be
->> +	- "elbi"	External local bus interface registers
->> +	- "cfg"		Meson specific registers
->> +	- "config"	PCIe configuration space
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +- clock-names: Must include the following entries:
->> +	- "pcie"
->> +	- "pcie_bus"
->> +	- "pcie_general"
->> +	- "pcie_mipi_en"
->> +
->> +Example configuration:
->> +
->> +	pcie: pcie@dffff000 {
+On 2018-08-07 10:53, Bjorn Andersson wrote:
+> On Mon 09 Jul 03:22 PDT 2018, Kiran Gunda wrote:
+>> diff --git 
+>> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt 
+>> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> [..]
+>>  - qcom,num-strings
+>>  	Usage:        optional
+>>  	Value type:   <u32>
+>>  	Definition:   #; number of led strings attached;
+>> -		      value from 1 to 3. default: 2
+>> -		      This property is supported only for PM8941.
+>> +		      value: For PM8941 from 1 to 3.
+>> +			     For PMI8998 from 1 to 4.
+> [..]
+>> +- qcom,enabled-strings
+>> +	Usage:        optional
+>> +	Value tyoe:   <u32 array>
+>> +	Definition:   Array of the WLED strings numbered from 0 to 3. Each
+>> +		      string of leds are operated individually. Specify the
+>> +		      list of strings used by the device. Any combination of
+>> +		      led strings can be used.
+> [..]
+>> 
+>>  Example:
+>> 
+>> @@ -99,4 +146,5 @@ pm8941-wled@d800 {
+>>  	qcom,switching-freq = <1600>;
+>>  	qcom,ovp = <29>;
+>>  	qcom,num-strings = <2>;
+>> +	qcom,enabled-strings = <0x00 0x01>;
 > 
-> Unit-address is wrong.
-
-Yes, I will fix it.
-
+> Nit. I would assume that specifying qcom,num-strings = <2> implies that
+> the first 2 strings are used, so one would not also specify
+> qcom,enabled-strings.
 > 
->> +			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
->> +			reg = <0x0 0xf9800000 0x0 0x400000
->> +					0x0 0xff646000 0x0 0x2000
->> +					0x0 0xf9f00000 0x0 0x100000>;
->> +			reg-names = "elbi", "cfg", "config";
->> +			reset-gpio = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-> 
-> Not documented and should be reset-gpios.
+Thanks Bjorn for reviewing the series !
 
-Yes, is this more clear?
-reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+"qcom,enabled-strings" need be specified along with the 
+"qcom,num-strings".
+Because the enabled-strings can be <0, 2> or <0, 3 > also. The driver 
+picks the string
+configuration from the enabled-strings array and enable only those 
+current-sinks.
 
+> (And you should use decimal for natural numbers)
 > 
->> +			interrupts = <0 177 IRQ_TYPE_EDGE_RISING>;
->> +			#interrupt-cells = <1>;
->> +			interrupt-map-mask = <0 0 0 0>;
->> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
->> +			bus-range = <0x0 0xff>;
->> +			#address-cells = <3>;
->> +			#size-cells = <2>;
->> +			device_type = "pci";
->> +			phys = <&pcie_phy>;
->> +			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
->> +			num-lanes = <1>;
->> +			pcie-num = <1>;
+I will modify it in next series.
 > 
-> Not documented. What's this?
-
-Yes, pcie-num is an useless parameter. I will delete it.
-
-Thanks for your comments.
-
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > 
->> +
->> +			clocks = <&clkc CLKID_USB
->> +					&clkc CLKID_MIPI_ENABLE
->> +					&clkc CLKID_PCIE_A
->> +					&clkc CLKID_PCIE_CML_EN0>;
->> +			clock-names = "pcie_general",
->> +					"pcie_refpll",
->> +					"pcie_mipi_en",
->> +					"pcie",
->> +					"port";
->> +	};
->> -- 
->> 2.7.4
->>
-> 
-> .
-> 
+> Regards,
+> Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
