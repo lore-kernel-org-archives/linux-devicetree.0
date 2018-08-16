@@ -1,7 +1,7 @@
 From: Wendy Liang <wendy.liang@xilinx.com>
-Subject: [PATCH 3/7] firmware: xilinx-zynqmp: Add request access capability macro
-Date: Thu, 16 Aug 2018 00:06:26 -0700
-Message-ID: <1534403190-28523-4-git-send-email-jliang@xilinx.com>
+Subject: [PATCH 2/7] firmware: xlnx-zynqmp: Add request ack enums
+Date: Thu, 16 Aug 2018 00:06:25 -0700
+Message-ID: <1534403190-28523-3-git-send-email-jliang@xilinx.com>
 References: <1534403190-28523-1-git-send-email-jliang@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,27 +12,30 @@ To: ohad@wizery.com, bjorn.andersson@linaro.org, michal.simek@xilinx.com, robh+d
 Cc: linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wendy Liang <jliang@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add request access capability macro which will be used to
-request access to a device node from Xilinx firmware.
+Add firmware request ack enums which will be used in firmware
+request calls.
 
 Signed-off-by: Wendy Liang <jliang@xilinx.com>
 ---
- include/linux/firmware/xlnx-zynqmp.h | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/firmware/xlnx-zynqmp.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index e3b7292..83ebadf 100644
+index 9c4258f..e3b7292 100644
 --- a/include/linux/firmware/xlnx-zynqmp.h
 +++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -32,6 +32,9 @@
+@@ -32,6 +32,12 @@
  /* Number of 32bits values in payload */
  #define PAYLOAD_ARG_CNT	4U
  
-+/* Request capability of a device node */
-+#define	ZYNQMP_PM_CAPABILITY_ACCESS	0x1U
++enum zynqmp_pm_request_ack {
++	ZYNQMP_PM_REQUEST_ACK_NO = 1,
++	ZYNQMP_PM_REQUEST_ACK_BLOCKING,
++	ZYNQMP_PM_REQUEST_ACK_NON_BLOCKING,
++};
 +
- enum zynqmp_pm_request_ack {
- 	ZYNQMP_PM_REQUEST_ACK_NO = 1,
- 	ZYNQMP_PM_REQUEST_ACK_BLOCKING,
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
+ 	PM_IOCTL = 34,
 -- 
 2.7.4
