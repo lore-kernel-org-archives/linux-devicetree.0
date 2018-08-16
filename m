@@ -1,51 +1,567 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v1 1/7] atmel-hlcdc: renamed directory to drm/atmel/
-Date: Thu, 16 Aug 2018 09:41:23 +0200
-Message-ID: <20180816074123.GB21634@phenom.ffwll.local>
-References: <20180812184152.GA22343@ravnborg.org>
- <20180812184629.3808-1-sam@ravnborg.org>
- <20180814083913.GD21634@phenom.ffwll.local>
- <20180814161952.GA27951@ravnborg.org>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH 4/5] arm64: dts: mt7622: add bananapi BPI-R64 board
+Date: Thu, 16 Aug 2018 15:52:21 +0800
+Message-ID: <1534405941.31978.36.camel@mtkswgap22>
+References: <68c4ca0158518d6bf50f2f7becfcb87ff3ce158a.1534130854.git.ryder.lee@mediatek.com>
+         <aaa12572cdce6db8e72265817e8ffc8ce05d641c.1534130854.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180814161952.GA27951@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <aaa12572cdce6db8e72265817e8ffc8ce05d641c.1534130854.git.ryder.lee@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBdWcgMTQsIDIwMTggYXQgMDY6MTk6NTJQTSArMDIwMCwgU2FtIFJhdm5ib3JnIHdy
-b3RlOgo+IEhpIERhbmllbC4KPiAKPiA+ID4gIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0ve2F0bWVs
-LWhsY2RjID0+IGF0bWVsfS9hdG1lbF9obGNkY19wbGFuZS5jICgxMDAlKQo+ID4gPiAKPiA+ID4g
-ZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKPiA+ID4gaW5kZXggOTZlOThl
-MjA2YjBkLi4wOWNlNzZhOWExZGMgMTAwNjQ0Cj4gPiA+IC0tLSBhL01BSU5UQUlORVJTCj4gPiA+
-ICsrKyBiL01BSU5UQUlORVJTCj4gPiA+IEBAIC00NjgxLDcgKzQ2ODEsNyBAQCBEUk0gRFJJVkVS
-UyBGT1IgQVRNRUwgSExDREMKPiA+ID4gIE06CUJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemls
-bG9uQGJvb3RsaW4uY29tPgo+ID4gPiAgTDoJZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-Zwo+ID4gPiAgUzoJU3VwcG9ydGVkCj4gPiA+IC1GOglkcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxj
-ZGMvCj4gPiA+ICtGOglkcml2ZXJzL2dwdS9kcm0vYXRtZWwvYXRtZWwtaGxjZGMqCj4gPiAKPiA+
-IEknZCBzdHJvbmdseSBzdWdnZXN0IHlvdSBncm91cC1tYWludGFpbiB0aGUgZW50aXJlIGF0bWVs
-IHN0dWZmIGluCj4gPiBkcm0tbWlzYyBpbnN0ZWFkIG9mIG9ubHkgYXRtZWwtaGxjZGMuCj4gCj4g
-SWYgT0sgd2l0aCBCb3JpcyB0aGVuIEkgYW0gZmluZSB3aXRoIHRoaXMgdG9vLgo+IFdpbGwgc3Vn
-Z2VzdCBzbyBpbiB2Mi4KCkJvcmlzIGFja2VkIHRvbywgYnV0IGhlJ3Mgb24gdmFjYXRpb24uIEhl
-IHNhaWQgb24gaXJjIGhlJ2xsIHJldmlldyB0aGUKcGF0Y2hlcyB3aGVuIGhlJ3MgYmFjay4gTWVh
-bndoaWxlIEkgZ3Vlc3MgeW91IGNhbiBwcmVwIGJ5IGdldHRpbmcgdGhlIGZkLm8KYWNjb3VudCBy
-ZXF1ZXN0ZWQ6CgpodHRwczovL3d3dy5mcmVlZGVza3RvcC5vcmcvd2lraS9BY2NvdW50UmVxdWVz
-dHMvCgpBbmQgY2hlY2tpbmcgb3V0IHRoZSB0b29saW5nIHdlIHVzZSB0byBtYWludGFpbiBkcm0t
-bWlzYzoKCmh0dHBzOi8vZHJpLmZyZWVkZXNrdG9wLm9yZy9kb2NzL2RpbS9nZXR0aW5nLXN0YXJ0
-ZWQuaHRtbAoKQ2hlZXJzLCBEYW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5l
-ZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi, Ryder
+
+On Wed, 2018-08-15 at 13:18 +0800, Ryder Lee wrote:
+> Add support for the bananapi R64 (BPI-R64) development board from
+> BIPAI KEJI. Detailed hardware information for BPI-R64 which could be
+> found on http://wiki.banana-pi.org/Banana_Pi_BPI-R64
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/Makefile              |   1 +
+>  .../boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts  | 508 +++++++++++++++++++++
+>  2 files changed, 509 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index ac17f60..2a1abe5 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -3,5 +3,6 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+> new file mode 100644
+> index 0000000..bc504fe
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+> @@ -0,0 +1,508 @@
+> +/*
+> + * Copyright (c) 2018 MediaTek Inc.
+> + * Author: Ryder Lee <ryder.lee@mediatek.com>
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +#include "mt7622.dtsi"
+> +#include "mt6380.dtsi"
+> +
+> +/ {
+> +	model = "Bananapi BPI-R64";
+> +	compatible = "bananapi,bpi-r64", "mediatek,mt7622";
+> +
+> +	chosen {
+> +		bootargs = "earlycon=uart8250,mmio32,0x11002000 console=ttyS0,115200n1 swiotlb=512";
+> +	};
+> +
+> +	cpus {
+> +		cpu@0 {
+> +			proc-supply = <&mt6380_vcpu_reg>;
+> +			sram-supply = <&mt6380_vm_reg>;
+> +		};
+> +
+> +		cpu@1 {
+> +			proc-supply = <&mt6380_vcpu_reg>;
+> +			sram-supply = <&mt6380_vm_reg>;
+> +		};
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		poll-interval = <100>;
+> +
+
+the property poll-interval seems be only for a gpio-keys-polled device
+
+> +		factory {
+> +			label = "factory";
+> +			linux,code = <BTN_0>;
+> +			gpios = <&pio 0 0>;
+> +		};
+> +
+> +		wps {
+> +			label = "wps";
+> +			linux,code = <KEY_WPS_BUTTON>;
+> +			gpios = <&pio 102 0>;
+> +		};
+> +	};
+> +
+> +	memory {
+> +		reg = <0 0x40000000 0 0x40000000>;
+> +	};
+> +
+> +	reg_1p8v: regulator-1p8v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "fixed-1.8V";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "fixed-3.3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_5v: regulator-5v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "fixed-5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&bch {
+> +	status = "disabled";
+> +};
+> +
+> +&btif {
+> +	status = "okay";
+> +};
+> +
+> +&cir {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&irrx_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&eth {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&eth_pins>;
+> +	status = "okay";
+> +
+> +	gmac1: mac@1 {
+> +		compatible = "mediatek,eth-mac";
+> +		reg = <1>;
+> +		phy-handle = <&phy5>;
+> +	};
+> +
+> +	mdio-bus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		phy5: ethernet-phy@5 {
+> +			reg = <5>;
+> +			phy-mode = "sgmii";
+> +		};
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +	pinctrl-names = "default", "state_uhs";
+> +	pinctrl-0 = <&emmc_pins_default>;
+> +	pinctrl-1 = <&emmc_pins_uhs>;
+> +	status = "okay";
+> +	bus-width = <8>;
+> +	max-frequency = <50000000>;
+> +	cap-mmc-highspeed;
+> +	mmc-hs200-1_8v;
+> +	vmmc-supply = <&reg_3p3v>;
+> +	vqmmc-supply = <&reg_1p8v>;
+> +	assigned-clocks = <&topckgen CLK_TOP_MSDC30_0_SEL>;
+> +	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
+> +	non-removable;
+> +};
+> +
+> +&mmc1 {
+> +	pinctrl-names = "default", "state_uhs";
+> +	pinctrl-0 = <&sd0_pins_default>;
+> +	pinctrl-1 = <&sd0_pins_uhs>;
+> +	status = "okay";
+> +	bus-width = <4>;
+> +	max-frequency = <50000000>;
+> +	cap-sd-highspeed;
+> +	r_smpl = <1>;
+> +	cd-gpios = <&pio 81 GPIO_ACTIVE_LOW>;
+> +	vmmc-supply = <&reg_3p3v>;
+> +	vqmmc-supply = <&reg_3p3v>;
+> +	assigned-clocks = <&topckgen CLK_TOP_MSDC30_1_SEL>;
+> +	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
+> +};
+> +
+> +&nandc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&parallel_nand_pins>;
+> +	status = "disabled";
+> +};
+> +
+> +&nor_flash {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi_nor_pins>;
+> +	status = "disabled";
+> +
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+> +	};
+> +};
+> +
+> +&pcie {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie0_pins>;
+> +	pinctrl-1 = <&pcie1_pins>;
+
+it should be pinctrl-0 = <&pcie0_pins>, <&pcie1_pins>;
+
+otherwise, no name is being mapped into pinctrl-1 setup
+
+> +	status = "okay";
+> +
+> +	pcie@0,0 {
+> +		status = "okay";
+> +	};
+> +
+> +	pcie@1,0 {
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&pio {
+> +	/* Attention: GPIO 90 is used to switch between PCIe@1,0 and
+> +	 * SATA functions. i.e. output-high: PCIe, output-low: SATA
+> +	 */
+
+
+the sata node  seems be missing in the newly added dts
+
+> +	asm_sel {
+> +		gpio-hog;
+> +		gpios = <90 GPIO_ACTIVE_HIGH>;
+> +		output-high;
+> +	};
+> +
+> +	/* eMMC is shared pin with parallel NAND */
+> +	emmc_pins_default: emmc-pins-default {
+> +		mux {
+> +			function = "emmc", "emmc_rst";
+> +			groups = "emmc";
+> +		};
+> +
+> +		/* "NDL0","NDL1","NDL2","NDL3","NDL4","NDL5","NDL6","NDL7",
+> +		 * "NRB","NCLE" pins are used as DAT0,DAT1,DAT2,DAT3,DAT4,
+> +		 * DAT5,DAT6,DAT7,CMD,CLK for eMMC respectively
+> +		 */
+> +		conf-cmd-dat {
+> +			pins = "NDL0", "NDL1", "NDL2",
+> +			       "NDL3", "NDL4", "NDL5",
+> +			       "NDL6", "NDL7", "NRB";
+> +			input-enable;
+> +			bias-pull-up;
+> +		};
+> +
+> +		conf-clk {
+> +			pins = "NCLE";
+> +			bias-pull-down;
+> +		};
+> +	};
+> +
+> +	emmc_pins_uhs: emmc-pins-uhs {
+> +		mux {
+> +			function = "emmc";
+> +			groups = "emmc";
+> +		};
+> +
+> +		conf-cmd-dat {
+> +			pins = "NDL0", "NDL1", "NDL2",
+> +			       "NDL3", "NDL4", "NDL5",
+> +			       "NDL6", "NDL7", "NRB";
+> +			input-enable;
+> +			drive-strength = <4>;
+> +			bias-pull-up;
+> +		};
+> +
+> +		conf-clk {
+> +			pins = "NCLE";
+> +			drive-strength = <4>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +
+> +	eth_pins: eth-pins {
+> +		mux {
+> +			function = "eth";
+> +			groups = "mdc_mdio", "rgmii_via_gmac2";
+> +		};
+> +	};
+> +
+> +	i2c1_pins: i2c1-pins {
+> +		mux {
+> +			function = "i2c";
+> +			groups =  "i2c1_0";
+> +		};
+> +	};
+> +
+> +	i2c2_pins: i2c2-pins {
+> +		mux {
+> +			function = "i2c";
+> +			groups =  "i2c2_0";
+> +		};
+> +	};
+> +
+> +	i2s1_pins: i2s1-pins {
+> +		mux {
+> +			function = "i2s";
+> +			groups =  "i2s_out_mclk_bclk_ws",
+> +				  "i2s1_in_data",
+> +				  "i2s1_out_data";
+> +		};
+> +
+> +		conf {
+> +			pins = "I2S1_IN", "I2S1_OUT", "I2S_BCLK",
+> +			       "I2S_WS", "I2S_MCLK";
+> +			drive-strength = <12>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +
+> +	irrx_pins: irrx-pins {
+> +		mux {
+> +			function = "ir";
+> +			groups =  "ir_1_rx";
+> +		};
+> +	};
+> +
+> +	irtx_pins: irtx-pins {
+> +		mux {
+> +			function = "ir";
+> +			groups =  "ir_1_tx";
+> +		};
+> +	};
+> +
+> +	/* Parallel nand is shared pin with eMMC */
+> +	parallel_nand_pins: parallel-nand-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "par_nand";
+> +		};
+> +	};
+> +
+> +	pcie0_pins: pcie0-pins {
+> +		mux {
+> +			function = "pcie";
+> +			groups = "pcie0_pad_perst",
+> +				 "pcie0_1_waken",
+> +				 "pcie0_1_clkreq";
+> +		};
+> +	};
+> +
+> +	pcie1_pins: pcie1-pins {
+> +		mux {
+> +			function = "pcie";
+> +			groups = "pcie1_pad_perst",
+> +				 "pcie1_0_waken",
+> +				 "pcie1_0_clkreq";
+> +		};
+> +	};
+> +
+> +	pmic_bus_pins: pmic-bus-pins {
+> +		mux {
+> +			function = "pmic";
+> +			groups = "pmic_bus";
+> +		};
+> +	};
+> +
+> +	pwm7_pins: pwm1-2-pins {
+> +		mux {
+> +			function = "pwm";
+> +			groups = "pwm_ch7_2";
+> +		};
+> +	};
+> +
+> +	wled_pins: wled-pins {
+> +		mux {
+> +			function = "led";
+> +			groups = "wled";
+> +		};
+> +	};
+> +
+> +	sd0_pins_default: sd0-pins-default {
+> +		mux {
+> +			function = "sd";
+> +			groups = "sd_0";
+> +		};
+> +
+> +		/* "I2S2_OUT, "I2S4_IN"", "I2S3_IN", "I2S2_IN",
+> +		 *  "I2S4_OUT", "I2S3_OUT" are used as DAT0, DAT1,
+> +		 *  DAT2, DAT3, CMD, CLK for SD respectively.
+> +		 */
+> +		conf-cmd-data {
+> +			pins = "I2S2_OUT", "I2S4_IN", "I2S3_IN",
+> +			       "I2S2_IN","I2S4_OUT";
+> +			input-enable;
+> +			drive-strength = <8>;
+> +			bias-pull-up;
+> +		};
+> +		conf-clk {
+> +			pins = "I2S3_OUT";
+> +			drive-strength = <12>;
+> +			bias-pull-down;
+> +		};
+> +		conf-cd {
+> +			pins = "TXD3";
+> +			bias-pull-up;
+> +		};
+> +	};
+> +
+> +	sd0_pins_uhs: sd0-pins-uhs {
+> +		mux {
+> +			function = "sd";
+> +			groups = "sd_0";
+> +		};
+> +
+> +		conf-cmd-data {
+> +			pins = "I2S2_OUT", "I2S4_IN", "I2S3_IN",
+> +			       "I2S2_IN","I2S4_OUT";
+> +			input-enable;
+> +			bias-pull-up;
+> +		};
+> +
+> +		conf-clk {
+> +			pins = "I2S3_OUT";
+> +			bias-pull-down;
+> +		};
+> +	};
+> +
+> +	/* Serial NAND is shared pin with SPI-NOR */
+> +	serial_nand_pins: serial-nand-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "snfi";
+> +		};
+> +	};
+> +
+> +	spic0_pins: spic0-pins {
+> +		mux {
+> +			function = "spi";
+> +			groups = "spic0_0";
+> +		};
+> +	};
+> +
+> +	spic1_pins: spic1-pins {
+> +		mux {
+> +			function = "spi";
+> +			groups = "spic1_0";
+> +		};
+> +	};
+> +
+> +	/* SPI-NOR is shared pin with serial NAND */
+> +	spi_nor_pins: spi-nor-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "spi_nor";
+> +		};
+> +	};
+> +
+> +	/* serial NAND is shared pin with SPI-NOR */
+> +	serial_nand_pins: serial-nand-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "snfi";
+> +		};
+> +	};
+> +
+> +	uart0_pins: uart0-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart0_0_tx_rx" ;
+> +		};
+> +	};
+> +
+> +	uart2_pins: uart2-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart2_1_tx_rx" ;
+> +		};
+> +	};
+> +
+> +	watchdog_pins: watchdog-pins {
+> +		mux {
+> +			function = "watchdog";
+> +			groups = "watchdog";
+> +		};
+> +	};
+> +};
+> +
+> +&pwm {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm7_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&pwrap {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pmic_bus_pins>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&spi0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spic0_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&spi1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spic1_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&ssusb {
+> +	vusb33-supply = <&reg_3p3v>;
+> +	vbus-supply = <&reg_5v>;
+> +	status = "okay";
+> +};
+> +
+> +&u3phy {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&watchdog {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&watchdog_pins>;
+> +	status = "okay";
+> +};
