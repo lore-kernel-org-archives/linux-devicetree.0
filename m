@@ -1,175 +1,48 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [RESEND PATCH v5 2/3] dt-bindings: display: atmel: optional
- video-interface of endpoints
-Date: Thu, 16 Aug 2018 14:52:41 +0200
-Message-ID: <061a99d5-4fe6-795c-7e91-cf7127fb8472@axentia.se>
-References: <20180803072308.14962-1-peda@axentia.se>
- <20180803072308.14962-3-peda@axentia.se> <20180803081128.GA4528@w540>
- <6fe3e84e-bd9d-0894-df8b-1b40c0f9477d@axentia.se>
- <20180803085143.GC4528@w540>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v2 1/3] spi: Introduce one new field to set word delay
+Date: Thu, 16 Aug 2018 20:54:49 +0800
+Message-ID: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803085143.GC4528@w540>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, baolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-03 10:51, jacopo mondi wrote:
-> On Fri, Aug 03, 2018 at 10:40:02AM +0200, Peter Rosin wrote:
->> On 2018-08-03 10:11, jacopo mondi wrote:
->>> Hi Peter!
->>>
->>> On Fri, Aug 03, 2018 at 09:23:07AM +0200, Peter Rosin wrote:
->>>> With bus-type/bus-width properties in the endpoint nodes, the video-
->>>> interface of the connection can be specified for cases where the
->>>> heuristic fails to select the correct output mode. This can happen
->>>> e.g. if not all RGB pins are routed on the PCB; the driver has no
->>>> way of knowing this, and needs to be told explicitly.
->>>>
->>>> This is critical for the devices that have the "conflicting output
->>>> formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
->>>> RGB bits move around depending on the selected output mode. For
->>>> devices that do not have the "conflicting output formats" issue
->>>> (SAMA5D2, SAMA5D4), this is completely irrelevant.
->>>>
->>>> Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
->>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>> Signed-off-by: Peter Rosin <peda@axentia.se>
->>>> ---
->>>>  .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 26 ++++++++++++++++++++++
->>>>  1 file changed, 26 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
->>>> index 82f2acb3d374..9de434a8f523 100644
->>>> --- a/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
->>>> +++ b/Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
->>>> @@ -15,6 +15,14 @@ Required children nodes:
->>>>   to external devices using the OF graph reprensentation (see ../graph.txt).
->>>>   At least one port node is required.
->>>>
->>>> +Optional properties in grandchild nodes:
->>>> + Any endpoint grandchild node may specify a desired video interface
->>>> + according to ../../media/video-interfaces.txt, specifically
->>>> + - bus-type: must be <0>.
->>>
->>> Is there any value in specifying this, if it has a fixed value to
->>> "autodetect"? I understand it's optional, so if nobody else objects,
->>> feels free to keep it there.
->>
->> That's just how media/video-interfaces.txt works.
->>
->> bus-type 0 means that other properties describe the bus type. In this
->> case bus-width is specified, so that means a parallel bus. But bus-width
->> has no meaning (or may not have) if bus-type is non-zero. But checking
->> that bus-type for zero in the code seemed like overkill to me since the
->> driver already knows that it is a parallel bus...
->>
-> 
-> Yeah, I felt like pointing that out since you're not cheking for its value,
-> and that property is only used by v4l2-fwnode to handle some
-> not-that-used-anymore bus as CCP2 is.
-> 
->> TL;DR I'd like to keep it.
->>
-> 
-> Fine with me then.
-> 
->>>
->>>> + - bus-width: recognized values are <12>, <16>, <18> and <24>, and
->>>> +   override any output mode selection heuristic, forcing "rgb444",
->>>> +   "rgb565", "rgb666" and "rgb888" respectively.
->>>> +
->>>>  Example:
->>>>
->>>>  	hlcdc: hlcdc@f0030000 {
->>>> @@ -50,3 +58,21 @@ Example:
->>>>  			#pwm-cells = <3>;
->>>>  		};
->>>>  	};
->>>> +
->>>
->>> Two blank lines here.
->>>
->>>> +
->>>> +Example 2: With a video interface override to force rgb565; as above
->>>> +but with these changes/additions:
->>>> +
->>>> +	&hlcdc {
->>>> +		hlcdc-display-controller {
->>>> +			pinctrl-names = "default";
->>>> +			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
->>>> +
->>>> +			port@0 {
->>>
->>> The node has a unit address specified, you're missing a reg = <0>
->>> property (no big deal, it's an example, but the other one has it)
->>>
->>>> +				hlcdc_panel_output: endpoint@0 {
->>>
->>> Missing reg here too.
->>
->> I'll fix those (I think they appeared for the original example after I
->> wrote the patch).
->>
-> 
-> Ok, then please consider also describing the port@0 node cell sizes too
-> since it has a child endpoint node.
+For some SPI controllers, after each word size (specified by bits_per_word)
+transimission, the hardware need some delay to make sure the slave has enough
+time to receive the whole data.
 
-Ok, I have now figured out why this was as it were, and I no longer agree
-with adding the extra properties. The whole of example 2 is inside a
-reference (using the &hlcdc notation) to the hlcdc node in example 1, and
-therefore these "missing" properties are not missing. I think they are
-just clutter that hides what is really needed/different between example 1
-and 2, and apparently Boris and Rob agreed when they acked/reviewed. The
-description of example 2 also clearly states that example 2 is changes
-and additions on top of example 1. So, I plan to have this in the next
-iteration:
+So introducing one new 'word_delay' field of struct spi_tansfer for slave
+devices to set this inter word delay time.
 
-	&hlcdc {
-		hlcdc-display-controller {
-			pinctrl-names = "default";
-			pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes from v1:
+ - New patch in v2.
+---
+ include/linux/spi/spi.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
-			port@0 {
-				hlcdc_panel_output: endpoint@0 {
-					bus-width = <16>;
-				};
-			};
-		};
-	};
-
-Jacopo, please let me know if you want me to keep your review tag anyway...
-
-
->> Cheers,
->> Peter
->>
->>> Minors apart:
-
-...because I interpret this to mean that I could add your tag if I made the
-changes you suggested. Or did it mean that I could add your tag regardless
-because the issues were minor?
-
-Cheers,
-Peter
-
->>>
->>> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->>>
->>> Thanks
->>>    j
->>>
->>>> +					bus-type = <0>;
->>>> +					bus-width = <16>;
->>>> +				};
->>>> +			};
->>>> +		};
->>>> +	};
->>>> --
->>>> 2.11.0
->>>>
->>
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index a64235e..d698f9d 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -711,6 +711,8 @@ extern void spi_res_release(struct spi_controller *ctlr,
+  * @delay_usecs: microseconds to delay after this transfer before
+  *	(optionally) changing the chipselect status, then starting
+  *	the next transfer or completing this @spi_message.
++ * @word_delay: clock cycles to inter word delay after each word size
++ *	(set by bits_per_word) transmission.
+  * @transfer_list: transfers are sequenced through @spi_message.transfers
+  * @tx_sg: Scatterlist for transmit, currently not for client use
+  * @rx_sg: Scatterlist for receive, currently not for client use
+@@ -793,6 +795,7 @@ struct spi_transfer {
+ 	u8		bits_per_word;
+ 	u16		delay_usecs;
+ 	u32		speed_hz;
++	u16		word_delay;
+ 
+ 	struct list_head transfer_list;
+ };
+-- 
+1.7.9.5
