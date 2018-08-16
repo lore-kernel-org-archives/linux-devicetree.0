@@ -1,30 +1,108 @@
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH v4 0/7] Add support for MSCC Ocelot i2c
-Date: Thu, 16 Aug 2018 13:58:02 +0300
-Message-ID: <7eb26433-9346-db9a-6d76-5c1da8b9baa3@linux.intel.com>
-References: <20180816084521.16289-1-alexandre.belloni@bootlin.com>
+From: Radhey Shyam Pandey <radheys@xilinx.com>
+Subject: RE: [RFC PATCH 1/2] dt-bindings: dmaengine: xilinx_dma: Add binding
+ for Xilinx MCDMA IP
+Date: Thu, 16 Aug 2018 11:41:00 +0000
+Message-ID: <CY4PR0201MB3619B5EE41F221455E78D075C73E0@CY4PR0201MB3619.namprd02.prod.outlook.com>
+References: <1533059173-21405-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1533059173-21405-2-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20180814161326.GA17341@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180816084521.16289-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <20180814161326.GA17341@rob-hp-laptop>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, James Hogan <jhogan@kernel.org>
-Cc: Paul Burton <paul.burton@mips.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microsemi.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "vkoul@kernel.org" <vkoul@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "lars@metafoo.de" <lars@metafoo.de>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/16/2018 11:45 AM, Alexandre Belloni wrote:
-> Hello,
-> 
-> Because the designware IP was not able to handle the SDA hold time before
-> version 1.11a, MSCC has its own implementation. Add support for it and then add
-> i2c on ocelot boards.
-> 
-> I would expect patches 1 to 5 to go through the i2c tree and 6-7 through
-> the mips tree once patch 4 has been reviewed by the DT maintainers.
-> 
-For the patches 1-3 and 5/7 that touch i2c-designware:
+Hi Rob,
 
-Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Thanks for the review.=20
+
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Tuesday, August 14, 2018 9:43 PM
+> To: Radhey Shyam Pandey <radheys@xilinx.com>
+> Cc: vkoul@kernel.org; mark.rutland@arm.com; Michal Simek
+> <michals@xilinx.com>; dan.j.williams@intel.com; Appana Durga Kedareswara
+> Rao <appanad@xilinx.com>; lars@metafoo.de; dmaengine@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [RFC PATCH 1/2] dt-bindings: dmaengine: xilinx_dma: Add bind=
+ing
+> for Xilinx MCDMA IP
+>=20
+> On Tue, Jul 31, 2018 at 11:16:12PM +0530, Radhey Shyam Pandey wrote:
+> > Add devicetree binding for Xilinx AXI Multichannel Direct Memory
+> > Access (AXI MCDMA) IP. The AXI MCDMA provides high-bandwidth direct
+> > memory access between memory and AXI4-Stream target peripherals. The
+> > AXI MCDMA core provides scatter-gather interface with multiple channel
+> support.
+> >
+> > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> > ---
+> >  Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 10
+> > ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> > b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> > index 174af2c..57bb02e 100644
+> > --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> > +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> > @@ -11,9 +11,13 @@ is to receive from the device.
+> >  Xilinx AXI CDMA engine, it does transfers between memory-mapped
+> > source  address and a memory-mapped destination address.
+> >
+> > +Xilinx AXI MCDMA engine, it does transfer between memory and AXI4
+> > +stream target devices. It can be configured to have up to 16
+> > +independent transmit and receive channels.
+> > +
+> >  Required properties:
+> >  - compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00.a=
+" or
+> > -	      "xlnx,axi-cdma-1.00.a""
+> > +	      "xlnx,axi-cdma-1.00.a" or "xlnx,axi-mcdma-1.00.a".
+>=20
+> Please reformat to 1 per line.
+Yes, I will fix it in v2.
+
+>=20
+> >  - #dma-cells: Should be <1>, see "dmas" property below
+> >  - reg: Should contain VDMA registers location and length.
+> >  - xlnx,addrwidth: Should be the vdma addressing size in bits(ex: 32 bi=
+ts).
+> > @@ -56,6 +60,8 @@ Required child node properties:
+> >  	For CDMA: It should be "xlnx,axi-cdma-channel".
+> >  	For AXIDMA: It should be either "xlnx,axi-dma-mm2s-channel" or
+> >  	"xlnx,axi-dma-s2mm-channel".
+> > +	For MCDMA: It should be either "xlnx,axi-mcdma-mm2s-channel" or
+> > +	"xlnx,axi-mcdma-s2mm-channel".
+>=20
+> What's wrong with reusing the existing xlnx,axi-dma-* names?
+Valid point. I think we can reuse it (Reason for adding was to follow
+similar convention as of DMA , VDMA IPs).  I will address it in v2.
+
+>=20
+> >  - interrupts: Should contain per channel VDMA interrupts.
+> >  - xlnx,datawidth: Should contain the stream data width, take values
+> >  	{32,64...1024}.
+> > @@ -68,7 +74,7 @@ Optional child node properties for VDMA:
+> >  	enabled/disabled in hardware.
+> >  - xlnx,enable-vert-flip: Tells vertical flip is
+> >  	enabled/disabled in hardware(S2MM path).
+> > -Optional child node properties for AXI DMA:
+> > +Optional child node properties for AXI DMA and MCDMA:=09
+> >  -dma-channels: Number of dma channels in child node.
+> >
+> >  Example:
+> > --
+> > 2.7.4
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree"
+> > in the body of a message to majordomo@vger.kernel.org More majordomo
+> > info at  http://vger.kernel.org/majordomo-info.html
