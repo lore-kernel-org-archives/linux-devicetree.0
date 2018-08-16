@@ -1,86 +1,50 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] net: dsa: add support for ksz9897 ethernet switch
-Date: Wed, 15 Aug 2018 17:24:53 -0700
-Message-ID: <12369b8d-0ae5-7b72-e21a-ee888ead070c@gmail.com>
-References: <1534348283-12790-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Roy Im <roy.im.opensource@diasemi.com>
+Subject: [PATCH V1 1/3] MAINTAINERS: da7280 updates to the Dialog
+ Semiconductor search terms
+Date: Thu, 16 Aug 2018 11:02:44 +0900
+Message-ID: <2d84d78e375cb6cb14f8ff0fa795def9a66f496e.1534384964.git.Roy.Im@diasemi.com>
+References: <cover.1534384964.git.Roy.Im@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1534348283-12790-1-git-send-email-prabhakar.csengg@gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Lad Prabhakar <prabhakar.csengg@gmail.com>, Woojung Huh <Woojung.Huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1534384964.git.Roy.Im@diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2018 08:51 AM, Lad Prabhakar wrote:
-> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-> 
-> ksz9477 is superset of ksz9xx series, driver just works
-> out of the box for ksz9897 chip with this patch.
 
-net-next is currently closed, but other than that:
+From: Roy Im <roy.im.opensource@diasemi.com>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+This patch adds the da7280 bindings doc and driver to the Dialog
+Semiconductor support list.
 
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> ---
->  Documentation/devicetree/bindings/net/dsa/ksz.txt | 4 +++-
->  drivers/net/dsa/microchip/ksz_common.c            | 9 +++++++++
->  drivers/net/dsa/microchip/ksz_spi.c               | 1 +
->  3 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> index a700943..ac145b8 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> @@ -4,7 +4,9 @@ Microchip KSZ Series Ethernet switches
->  Required properties:
->  
->  - compatible: For external switch chips, compatible string must be exactly one
-> -  of: "microchip,ksz9477"
-> +  of the following:
-> +  - "microchip,ksz9477"
-> +  - "microchip,ksz9897"
->  
->  See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
->  required and optional properties.
-> diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-> index 7210c49..54e0ca6 100644
-> --- a/drivers/net/dsa/microchip/ksz_common.c
-> +++ b/drivers/net/dsa/microchip/ksz_common.c
-> @@ -1102,6 +1102,15 @@ static const struct ksz_chip_data ksz_switch_chips[] = {
->  		.cpu_ports = 0x7F,	/* can be configured as cpu port */
->  		.port_cnt = 7,		/* total physical port count */
->  	},
-> +	{
-> +		.chip_id = 0x00989700,
-> +		.dev_name = "KSZ9897",
-> +		.num_vlans = 4096,
-> +		.num_alus = 4096,
-> +		.num_statics = 16,
-> +		.cpu_ports = 0x7F,	/* can be configured as cpu port */
-> +		.port_cnt = 7,		/* total physical port count */
-> +	},
->  };
->  
->  static int ksz_switch_init(struct ksz_device *dev)
-> diff --git a/drivers/net/dsa/microchip/ksz_spi.c b/drivers/net/dsa/microchip/ksz_spi.c
-> index c519469..8c1778b 100644
-> --- a/drivers/net/dsa/microchip/ksz_spi.c
-> +++ b/drivers/net/dsa/microchip/ksz_spi.c
-> @@ -195,6 +195,7 @@ static int ksz_spi_remove(struct spi_device *spi)
->  
->  static const struct of_device_id ksz_dt_ids[] = {
->  	{ .compatible = "microchip,ksz9477" },
-> +	{ .compatible = "microchip,ksz9897" },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, ksz_dt_ids);
-> 
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
+---
 
+ MAINTAINERS |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 544cac8..720f9fe 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4221,6 +4221,7 @@ S:	Supported
+ F:	Documentation/hwmon/da90??
+ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
++F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
+ F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
+ F:	Documentation/devicetree/bindings/watchdog/da90??-wdt.txt
+@@ -4229,6 +4230,7 @@ F:	drivers/gpio/gpio-da90??.c
+ F:	drivers/hwmon/da90??-hwmon.c
+ F:	drivers/iio/adc/da91??-*.c
+ F:	drivers/input/misc/da90??_onkey.c
++F:	drivers/input/misc/da72??.[ch]
+ F:	drivers/input/touchscreen/da9052_tsi.c
+ F:	drivers/leds/leds-da90??.c
+ F:	drivers/mfd/da903x.c
 -- 
-Florian
+end-of-patch for PATCH V1
