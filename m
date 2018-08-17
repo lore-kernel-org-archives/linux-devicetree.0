@@ -1,11 +1,13 @@
 From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH 1/3] ARM: dts: Add big-endian for IFC on LS1021A
-Date: Fri, 17 Aug 2018 15:49:18 +0530
-Message-ID: <20180817101920.20503-1-prabhakar.kushwaha@nxp.com>
+Subject: [PATCH 2/3] ARM: dts: Add big-endian in nor node for ls1021a
+Date: Fri, 17 Aug 2018 15:49:19 +0530
+Message-ID: <20180817101920.20503-2-prabhakar.kushwaha@nxp.com>
+References: <20180817101920.20503-1-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180817101920.20503-1-prabhakar.kushwaha@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,24 +18,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: Alison Wang <alison.wang@nxp.com>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Jagdish Gediya <jagdish.gediya@nxp.com>, linux-arm-kernel@lists.infradead.org
+Cc: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Register space of IFC controller is big-endian.
+NOR and IFC controller connectivity is big-endian.
+So add big-endian field in nor device tree node allowing
+IFC controller to read/write data from/to the flash correctly.
 
-So add big-endian in IFC device tree node.
-
-Signed-off-by: Alison Wang <alison.wang@nxp.com>
-Signed-off-by: Jagdish Gediya <jagdish.gediya@nxp.com>
 Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/ls1021a-qds.dts | 2 ++
+ arch/arm/boot/dts/ls1021a-twr.dts | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index f18490548c78..1f9cae75bad3 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
+diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
+index 499f41a2c6f0..923a25760516 100644
+--- a/arch/arm/boot/dts/ls1021a-qds.dts
++++ b/arch/arm/boot/dts/ls1021a-qds.dts
 @@ -1,5 +1,6 @@
  /*
   * Copyright 2013-2014 Freescale Semiconductor, Inc.
@@ -41,13 +42,32 @@ index f18490548c78..1f9cae75bad3 100644
   *
   * This file is dual-licensed: you can use it either under the terms
   * of the GPL or the X11 license, at your option. Note that this dual
-@@ -154,6 +155,7 @@
- 		ifc: ifc@1530000 {
- 			compatible = "fsl,ifc", "simple-bus";
- 			reg = <0x0 0x1530000 0x0 0x10000>;
-+			big-endian;
- 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
+@@ -235,6 +236,7 @@
+ 		#size-cells = <1>;
+ 		compatible = "cfi-flash";
+ 		reg = <0x0 0x0 0x8000000>;
++		big-endian;
+ 		bank-width = <2>;
+ 		device-width = <1>;
+ 	};
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+index f0c949d74833..8b48c3c7cd21 100644
+--- a/arch/arm/boot/dts/ls1021a-twr.dts
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -1,5 +1,6 @@
+ /*
+  * Copyright 2013-2014 Freescale Semiconductor, Inc.
++ * Copyright 2018 NXP
+  *
+  * This file is dual-licensed: you can use it either under the terms
+  * of the GPL or the X11 license, at your option. Note that this dual
+@@ -203,6 +204,7 @@
+ 		#size-cells = <1>;
+ 		compatible = "cfi-flash";
+ 		reg = <0x0 0x0 0x8000000>;
++		big-endian;
+ 		bank-width = <2>;
+ 		device-width = <1>;
+ 	};
 -- 
 2.14.1
