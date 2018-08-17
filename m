@@ -1,61 +1,78 @@
-Return-Path: <SRS0=roB9=K4=mentor.com=Harish_Kandiga@kernel.org>
-Subject: Re: [PATCH] Documentation: remove dynamic-resolution-notes reference
- to non-existent file
-References: <1532001244-8349-1-git-send-email-harish_kandiga@mentor.com>
- <9a6321f6-8706-97b4-3e6c-8f5d8724ecc2@gmail.com>
-From: Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <3e9a6139-fc84-188f-5139-349f491abea6@mentor.com>
-Date: Mon, 13 Aug 2018 15:03:40 +0530
-MIME-Version: 1.0
-In-Reply-To: <9a6321f6-8706-97b4-3e6c-8f5d8724ecc2@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Return-Path: <SRS0=v6br=LA=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH v3 5/5] ARM: dts: iwg23s-sbc: Add pinctl support for
+ EtherAVB
+Date: Fri, 17 Aug 2018 09:03:08 +0000
+Message-ID: 
+ <OSBPR01MB210363D03733F02F6515105CB83D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+References: <1533628626-26503-1-git-send-email-biju.das@bp.renesas.com>
+ <1533628626-26503-6-git-send-email-biju.das@bp.renesas.com>
+ <20180810121231.776wrl3cozakpsao@verge.net.au>
+ <OSBPR01MB2103211FDAC790771BFFB765B8240@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20180817084445.3iud4quiwvawhkbf@verge.net.au>
+In-Reply-To: <20180817084445.3iud4quiwvawhkbf@verge.net.au>
 Content-Language: en-US
-To: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Hi Simon,
 
-On Thursday 19 July 2018 09:48 PM, Frank Rowand wrote:
-> On 07/19/18 04:54, Harish Jenny K N wrote:
->> File dt-object-internal.txt does not exist. This patch removes
->> a reference to it.
->>
->> Signed-off-by: Harish Jenny K N <harish_kandiga@mentor.com>
->> ---
->>  Documentation/devicetree/dynamic-resolution-notes.txt | 5 ++---
->>  1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/dynamic-resolution-notes.txt b/Documentation/devicetree/dynamic-resolution-notes.txt
->> index 083d232..c24ec36 100644
->> --- a/Documentation/devicetree/dynamic-resolution-notes.txt
->> +++ b/Documentation/devicetree/dynamic-resolution-notes.txt
->> @@ -2,15 +2,14 @@ Device Tree Dynamic Resolver Notes
->>  ----------------------------------
->>
->>  This document describes the implementation of the in-kernel
->> -Device Tree resolver, residing in drivers/of/resolver.c and is a
->> -companion document to Documentation/devicetree/dt-object-internal.txt[1]
->> +Device Tree resolver, residing in drivers/of/resolver.c
->>
->>  How the resolver works
->>  ----------------------
->>
->>  The resolver is given as an input an arbitrary tree compiled with the
->>  proper dtc option and having a /plugin/ tag. This generates the
->> -appropriate __fixups__ & __local_fixups__ nodes as described in [1].
->> +appropriate __fixups__ & __local_fixups__ nodes.
->>
->>  In sequence the resolver works by the following steps:
->>
->> --
->> 2.7.4
->>
->>
-> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+Thanks for the feedback.
+
+> -----Original Message-----
+> From: devicetree-owner@vger.kernel.org <devicetree-
+> owner@vger.kernel.org> On Behalf Of Simon Horman
+> Sent: 17 August 2018 09:45
+> To: Biju Das <biju.das@bp.renesas.com>
+> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> linux-renesas-soc@vger.kernel.org; devicetree@vger.kernel.org; Geert
+> Uytterhoeven <geert+renesas@glider.be>; Chris Paterson
+> <Chris.Paterson2@renesas.com>; Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com>
+> Subject: Re: [PATCH v3 5/5] ARM: dts: iwg23s-sbc: Add pinctl support for
+> EtherAVB
+>
+> On Fri, Aug 10, 2018 at 01:47:12PM +0000, Biju Das wrote:
+> > Hello Simon,
+> >
+> > Thanks for the feedback.
+> >
+> > > Subject: Re: [PATCH v3 5/5] ARM: dts: iwg23s-sbc: Add pinctl support
+> > > for EtherAVB
+> > >
+> > > On Tue, Aug 07, 2018 at 08:57:06AM +0100, Biju Das wrote:
+> > > > Adding pinctrl support for EtherAVB interface.
+> > > >
+> > > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > ---
+> > > > V1-->V2
+> > > >      * No change
+> > > > V2-->V3
+> > > >      * No change
+> > > >      Depend onthe below patch
+> > > >        https://patchwork.kernel.org/patch/10546801/
+> > >
+> > > What is the effect of applying this patch without that dependency
+> present?
+> >
+> > No build dependency. Only driver probe will fail during run time.
+> > [    0.838091] ravb: probe of e6800000.ethernet failed with error -22
+>
+> Thanks, but does the driver probe fail without this patch?
+
+Drive probe works ok without  this patch.
+
+> If so I'd rather hold off on this until v4.21.
 
 
-Can anyone please commit this ?
 
-Thanks,
-Harish
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
