@@ -1,7 +1,7 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to GPIO
-Date: Fri, 17 Aug 2018 10:38:45 -0600
-Message-ID: <20180817163849.30750-2-ilina@codeaurora.org>
+Subject: [PATCH v2 2/5] dt-bindings: pinctrl: add wakeup capable GPIOs for SDM845
+Date: Fri, 17 Aug 2018 10:38:46 -0600
+Message-ID: <20180817163849.30750-3-ilina@codeaurora.org>
 References: <20180817163849.30750-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180817163849.30750-1-ilina@codeaurora.org>
@@ -10,169 +10,101 @@ To: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@
 Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
-domain can wakeup the SoC, when interrupts and GPIOs are routed to the
-its interrupt controller. Only select GPIOs that are deemed wakeup
-capable are routed to specific PDC pins. During low power state, the
-pinmux interrupt controller may be non-functional but the PDC would be.
-The PDC can detect the wakeup GPIO is triggered and bring the TLMM to an
-operational state.
+Update the documentation to use interrupts-extended format for
+specifying the TLMM summary IRQ line that is requested from GIC and the
+PDC interrupts corresponding to the wakeup capable GPIOs.
 
-Interrupts that are level triggered will be detected at the TLMM when
-the controller becomes operational. Edge interrupts however need to be
-replayed again.
+Update the example to show PDC interrupts for the wakeup capable GPIOs
+for SDM845.
 
-Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
-but keep it disabled. During suspend, we can enable the PDC IRQ instead
-of the GPIO IRQ, which may or not be detected.
-
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
-Changes in v1:
-	- Trigger GPIO in h/w from PDC IRQ handler
-	- Avoid big tables for GPIO-PDC map, pick from DT instead
-	- Use handler_data
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 97 ++++++++++++++++++++++++++++++
- 1 file changed, 97 insertions(+)
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 58 ++++++++++++++++++-
+ 1 file changed, 55 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 0e22f52b2a19..03ef1d29d078 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -687,11 +687,15 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	const struct msm_pingroup *g;
- 	unsigned long flags;
- 	u32 val;
-+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+index 665aadb5ea28..d7408cc74e01 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+@@ -13,10 +13,21 @@ SDM845 platform.
+ 	Value type: <prop-encoded-array>
+ 	Definition: the base address and size of the TLMM register space.
  
- 	g = &pctrl->soc->groups[d->hwirq];
+-- interrupts:
++- interrupts-extended:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+-	Definition: should specify the TLMM summary IRQ.
++	Definition: should specify the TLMM summary IRQ as the first
++		    interrupt. Optionally, wake up capable GPIOs may list
++		    their corresponding PDC interrupts here.
++
++- interrupt-names:
++	Usage: required
++	Value type: <string>
++	Definition: the names matching the interrupt definition in the
++		    interrupts-extended property. The first interrupt name
++		    must be "summary-irq" for the TLMM summary IRQ. PDC
++		    interrupts must be described by "gpioN", where N is the
++		    GPIO line corresponding to the PDC IRQ.
  
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ - interrupt-controller:
+ 	Usage: required
+@@ -155,11 +166,52 @@ Example:
+ 	tlmm: pinctrl@3400000 {
+ 		compatible = "qcom,sdm845-pinctrl";
+ 		reg = <0x03400000 0xc00000>;
+-		interrupts = <GIC_SPI 208 0>;
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++		interrupts-extended = <&intc GIC_SPI 208 0>,
++			<&pdc 510 0>, <&pdc 511 0>, <&pdc 512 0>, <&pdc 513 0>,
++			<&pdc 514 0>, <&pdc 515 0>, <&pdc 516 0>, <&pdc 517 0>,
++			<&pdc 518 0>, <&pdc 519 0>, <&pdc 632 0>, <&pdc 639 0>,
++			<&pdc 521 0>, <&pdc 522 0>, <&pdc 523 0>, <&pdc 524 0>,
++			<&pdc 525 0>, <&pdc 526 0>, <&pdc 527 0>, <&pdc 630 0>,
++			<&pdc 637 0>, <&pdc 529 0>, <&pdc 530 0>, <&pdc 531 0>,
++			<&pdc 532 0>, <&pdc 633 0>, <&pdc 640 0>, <&pdc 534 0>,
++			<&pdc 535 0>, <&pdc 536 0>, <&pdc 537 0>, <&pdc 538 0>,
++			<&pdc 539 0>, <&pdc 540 0>, <&pdc 541 0>, <&pdc 542 0>,
++			<&pdc 543 0>, <&pdc 544 0>, <&pdc 545 0>, <&pdc 546 0>,
++			<&pdc 547 0>, <&pdc 548 0>, <&pdc 549 0>, <&pdc 550 0>,
++			<&pdc 551 0>, <&pdc 552 0>, <&pdc 553 0>, <&pdc 554 0>,
++			<&pdc 555 0>, <&pdc 556 0>, <&pdc 557 0>, <&pdc 631 0>,
++			<&pdc 638 0>, <&pdc 559 0>, <&pdc 560 0>, <&pdc 561 0>,
++			<&pdc 562 0>, <&pdc 563 0>, <&pdc 564 0>, <&pdc 565 0>,
++			<&pdc 566 0>, <&pdc 570 0>, <&pdc 571 0>, <&pdc 572 0>,
++			<&pdc 573 0>, <&pdc 609 0>, <&pdc 610 0>, <&pdc 611 0>,
++			<&pdc 612 0>, <&pdc 613 0>, <&pdc 614 0>, <&pdc 615 0>,
++			<&pdc 617 0>, <&pdc 618 0>, <&pdc 619 0>, <&pdc 620 0>,
++			<&pdc 621 0>, <&pdc 622 0>, <&pdc 623 0>;
++		interrupt-names = "summary-irq",
++			"gpio1", "gpio3", "gpio5", "gpio10",
++			"gpio11", "gpio20", "gpio22", "gpio24",
++			"gpio26", "gpio30", "gpio31", "gpio31",
++			"gpio32", "gpio34", "gpio36", "gpio37",
++			"gpio38", "gpio39", "gpio40", "gpio41",
++			"gpio41", "gpio43", "gpio44", "gpio46",
++			"gpio48", "gpio49", "gpio49", "gpio52",
++			"gpio53", "gpio54", "gpio56", "gpio57",
++			"gpio58", "gpio59", "gpio60", "gpio61",
++			"gpio62", "gpio63", "gpio64", "gpio66",
++			"gpio68", "gpio71", "gpio73", "gpio77",
++			"gpio78", "gpio79", "gpio80", "gpio84",
++			"gpio85", "gpio86", "gpio88", "gpio89",
++			"gpio89", "gpio91", "gpio92", "gpio95",
++			"gpio96", "gpio97", "gpio101", "gpio103",
++			"gpio104", "gpio115", "gpio116", "gpio117",
++			"gpio118", "gpio119", "gpio120", "gpio121",
++			"gpio122", "gpio123", "gpio124", "gpio125",
++			"gpio127", "gpio128", "gpio129", "gpio130",
++			"gpio132", "gpio133", "gpio145";
  
-+	if (pdc_irqd)
-+		irq_set_irq_type(pdc_irqd->irq, type);
-+
- 	/*
- 	 * For hw without possibility of detecting both edges
- 	 */
-@@ -779,9 +783,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
- 	unsigned long flags;
-+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
-+	if (pdc_irqd)
-+		irq_set_irq_wake(pdc_irqd->irq, on);
-+
- 	irq_set_irq_wake(pctrl->irq, on);
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-@@ -863,6 +871,93 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
- 	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
- }
- 
-+static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
-+{
-+	struct irq_data *irqd = data;
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+	const struct msm_pingroup *g;
-+	unsigned long flags;
-+	u32 val;
-+
-+	if (!irqd_is_level_type(irqd)) {
-+		g = &pctrl->soc->groups[irqd->hwirq];
-+		raw_spin_lock_irqsave(&pctrl->lock, flags);
-+		val = BIT(g->intr_status_bit);
-+		writel(val, pctrl->regs + g->intr_status_reg);
-+		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int msm_gpio_pdc_pin_request(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+	struct platform_device *pdev = to_platform_device(pctrl->dev);
-+	unsigned irq;
-+	unsigned long trigger;
-+	const char *pin_name;
-+	int ret;
-+
-+	pin_name = kasprintf(GFP_KERNEL, "gpio%lu", d->hwirq);
-+	if (!pin_name)
-+		return -ENOMEM;
-+
-+	irq = platform_get_irq_byname(pdev, pin_name);
-+	if (irq < 0) {
-+		kfree(pin_name);
-+		return 0;
-+	}
-+
-+	trigger = irqd_get_trigger_type(d) | IRQF_ONESHOT | IRQF_NO_SUSPEND;
-+	ret = request_irq(irq, wake_irq_gpio_handler, trigger, pin_name, d);
-+	if (ret) {
-+		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
-+		kfree(pin_name);
-+		return ret;
-+	}
-+
-+	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
-+	disable_irq(irq);
-+
-+	return 0;
-+}
-+
-+static int msm_gpio_pdc_pin_release(struct irq_data *d)
-+{
-+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
-+
-+	if (pdc_irqd) {
-+		irq_set_handler_data(d->irq, NULL);
-+		free_irq(pdc_irqd->irq, d);
-+	}
-+
-+	return 0;
-+}
-+
-+static int msm_gpio_irq_reqres(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+
-+	if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
-+		dev_err(gc->parent,"unable to lock HW IRQ %lu for IRQ\n",
-+			irqd_to_hwirq(d));
-+		return -EINVAL;
-+	}
-+
-+	return msm_gpio_pdc_pin_request(d);
-+}
-+
-+static void msm_gpio_irq_relres(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+
-+	msm_gpio_pdc_pin_release(d);
-+	gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
-+}
-+
- static int msm_gpio_init(struct msm_pinctrl *pctrl)
- {
- 	struct gpio_chip *chip;
-@@ -887,6 +982,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
- 	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
- 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
-+	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
-+	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
- 
- 	ret = gpiochip_add_data(&pctrl->chip, pctrl);
- 	if (ret) {
+ 		qup9_active: qup9-active {
+ 			mux {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
