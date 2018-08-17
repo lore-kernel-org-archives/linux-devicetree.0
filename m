@@ -1,61 +1,52 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 2/2] leds: lm3697: Introduce the lm3697 driver
-Date: Fri, 17 Aug 2018 14:55:25 -0500
-Message-ID: <9b82ae9f-330b-0150-f768-0c1955ab4582@ti.com>
-References: <20180816172058.31700-1-dmurphy@ti.com>
- <20180816172058.31700-2-dmurphy@ti.com>
- <9ef9cd25-5c73-964c-ac09-55c0c78e5dc9@gmail.com>
- <c751759a-d0c2-4ee7-2299-99d83538bdc4@ti.com>
- <24e05753-8ec7-e1b0-8671-8443bc20130a@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Pierre-Jean Texier <texier.pj2@gmail.com>
+Subject: [PATCH] ARM: dts: imx7s-warp: enable i2c3 device support
+Date: Fri, 17 Aug 2018 23:23:17 +0200
+Message-ID: <1534540997-20094-1-git-send-email-texier.pj2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <24e05753-8ec7-e1b0-8671-8443bc20130a@gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Cc: texier.pj2@gmail.com, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+The WaRP7 has one mikroBUS socket on the back to plug click boards.
+This patch allows to interact with some of these
+i2c modules (EEPROM, RTC and so on).
 
-On 08/17/2018 02:37 PM, Jacek Anaszewski wrote:
-> Dan,
-> 
-> On 08/16/2018 10:44 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 08/16/2018 02:58 PM, Jacek Anaszewski wrote:
->>> Dan,
->>>
->>> Thank you for the patch.
->>>
->>> I didn't review DT parsing details in v3, but now I've produced
->>> diff between v3 and v4 to check what has changed.
->>>
->>> I'm quite surprised realizing that you're not validating
->>> HVLED and control banks assignment, having in mind earlier
->>> discussions and your concerns about numerous DT configurations
->>> to check.
->>>
->>> Is it on purpose?
->>>
->>
->> Yes.  It was on purpose.  After sleeping on it and going through the overall
->> control to HVLED assignments I realized the user will know quite quickly
->> that their configuration is messed up.
->>
->> The suggestions actually simplified the code quite nicely which I am happier to have
-> 
-> Ack. Thanks for the v5 - I'll let it sit on the lists for a week anyway,
-> until the merge window gets closed.
-> 
+Signed-off-by: Pierre-Jean Texier <texier.pj2@gmail.com>
+---
+ arch/arm/boot/dts/imx7s-warp.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Sounds good to me.
-
-Dan
-
+diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
+index fa390da..b3d0951 100644
+--- a/arch/arm/boot/dts/imx7s-warp.dts
++++ b/arch/arm/boot/dts/imx7s-warp.dts
+@@ -216,6 +216,13 @@
+ 	status = "okay";
+ };
+ 
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++};
++
+ &i2c4 {
+ 	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+@@ -346,6 +353,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX7D_PAD_I2C3_SDA__I2C3_SDA	0x4000007f
++			MX7D_PAD_I2C3_SCL__I2C3_SCL	0x4000007f
++		>;
++	};
++
+ 	pinctrl_i2c4: i2c4grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_I2C4_SCL__I2C4_SCL	0x4000007f
 -- 
-------------------
-Dan Murphy
+2.7.4
