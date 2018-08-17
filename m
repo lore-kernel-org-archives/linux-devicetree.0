@@ -1,51 +1,27 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] arm: dts: am4372: setup rtc as system-power-controller
-Date: Fri, 17 Aug 2018 07:28:45 -0700
-Message-ID: <20180817142842.GB7523@atomide.com>
-References: <1532498135-9031-1-git-send-email-j-keerthy@ti.com>
- <20180808090607.GR99251@atomide.com>
- <bc07ac40-accc-64aa-a277-063833645545@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/2] Add IPMMU compatibility for r8a774a1
+Date: Fri, 17 Aug 2018 15:31:03 +0100
+Message-ID: <1534516265-10059-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bc07ac40-accc-64aa-a277-063833645545@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: t-kristo@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Keerthy <j-keerthy@ti.com> [180808 09:11]:
-> 
-> 
-> On Wednesday 08 August 2018 02:36 PM, Tony Lindgren wrote:
-> > * Keerthy <j-keerthy@ti.com> [180725 05:59]:
-> >> RTC alarm2 is connected to pmic_en line and hence can be used to control
-> >> the pmic enabling/disabling. Hence add the system-power-controller for rtc
-> >> node.
-> >>
-> >> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> >> ---
-> >>  arch/arm/boot/dts/am4372.dtsi | 1 +
-> >>  1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> >> index f0cbd86..d4b7c59 100644
-> >> --- a/arch/arm/boot/dts/am4372.dtsi
-> >> +++ b/arch/arm/boot/dts/am4372.dtsi
-> >> @@ -469,6 +469,7 @@
-> >>  			ti,hwmods = "rtc";
-> >>  			clocks = <&clk_32768_ck>;
-> >>  			clock-names = "int-clk";
-> >> +			system-power-controller;
-> >>  			status = "disabled";
-> >>  		};
-> >>  
-> > 
-> > Should this be queued as a fix for v4.19-rc series?
-> 
-> Yes this makes pmic to shutdown during power off.
+Dear All,
 
-OK thanks applying into omap-for-v4.19/fixes.
+this series adds IPMMU compatibility for the RZ/G2M (a.k.a. R8A774A1).
 
-Tony
+Cheers,
+Fab
+
+Fabrizio Castro (2):
+  iommu/ipmmu-vmsa: Hook up R8A774A1 DT maching code
+  dt-bindings: iommu: ipmmu-vmsa: Add r8a774a1 support
+
+ Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt | 1 +
+ drivers/iommu/ipmmu-vmsa.c                                     | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+-- 
+2.7.4
