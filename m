@@ -1,47 +1,55 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: iommu: ipmmu-vmsa: Add r8a774a1 support
-Date: Fri, 17 Aug 2018 15:31:05 +0100
-Message-ID: <1534516265-10059-3-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1534516265-10059-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1534516265-10059-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH] dt-bindings: can: rcar_can: Add r8a774a1 support
+Date: Fri, 17 Aug 2018 15:38:23 +0100
+Message-ID: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document RZ/G2M (R8A774A1) SoC bindings.
+Document RZ/G2M (r8a774a1) SoC bindings.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 ---
 This patch applies on top of next-20180817
 
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/net/can/rcar_can.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-index ffadb7c..68446dd 100644
---- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-+++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-@@ -13,6 +13,7 @@ Required Properties:
-     - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
-     - "renesas,ipmmu-r8a7743" for the R8A7743 (RZ/G1M) IPMMU.
-     - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
-+    - "renesas,ipmmu-r8a774a1" for the R8A774A1 (RZ/G2M) IPMMU.
-     - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
-     - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
-     - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+index 94a7f33..84afc78 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+@@ -4,6 +4,7 @@ Renesas R-Car CAN controller Device Tree Bindings
+ Required properties:
+ - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A7743 SoC.
+ 	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
++	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 SoC.
+ 	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
+ 	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+ 	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+@@ -16,7 +17,8 @@ Required properties:
+ 	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
+ 	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+ 	      compatible device.
+-	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device.
++	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 or RZ/G2
++	      compatible device.
+ 	      When compatible with the generic version, nodes must list the
+ 	      SoC-specific version corresponding to the platform first
+ 	      followed by the generic version.
+@@ -24,7 +26,9 @@ Required properties:
+ - reg: physical base address and size of the R-Car CAN register map.
+ - interrupts: interrupt specifier for the sole interrupt.
+ - clocks: phandles and clock specifiers for 3 CAN clock inputs.
+-- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk".
++- clock-names: 2 clock input name strings for RZ/G2: "clkp1", "can_clk", and
++	       3 clock input name strings for every other SoC: "clkp1", "clkp2",
++	       "can_clk".
+ - pinctrl-0: pin control group to be used for this controller.
+ - pinctrl-names: must be "default".
+ 
 -- 
 2.7.4
