@@ -1,45 +1,53 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774a1
- support
-Date: Fri, 17 Aug 2018 15:09:41 +0100
-Message-ID: <4177b31e-dbef-a2f1-fc63-927fe8f70713@arm.com>
-References: <1534250008-15680-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v5 0/5] Add i.MX8MQ clock driver
+Date: Fri, 17 Aug 2018 17:10:41 +0300
+Message-ID: <1534515046-18529-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534250008-15680-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>
+Cc: linux-gpio@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 14/08/18 13:33, Fabrizio Castro wrote:
-> Document RZ/G2M (R8A774A1) SoC bindings.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> index 697ca2f2..a046ed3 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-> @@ -13,6 +13,7 @@ Required properties:
->      - "renesas,irqc-r8a7792" (R-Car V2H)
->      - "renesas,irqc-r8a7793" (R-Car M2-N)
->      - "renesas,irqc-r8a7794" (R-Car E2)
-> +    - "renesas,intc-ex-r8a774a1" (RZ/G2M)
->      - "renesas,intc-ex-r8a7795" (R-Car H3)
->      - "renesas,intc-ex-r8a7796" (R-Car M3-W)
->      - "renesas,intc-ex-r8a77965" (R-Car M3-N)
-> 
+Fourth version can be found here:
 
-Queued, thanks.
+https://lore.kernel.org/patchwork/cover/974998/
 
-	M.
+Changes since v4:
+ * Implemented divider ops and used clk-composite as suggested
+   by Sascha Hauer.
+
+Changes since v3:
+ * Added a composite clock type to get rid of some complexity
+   from clk-imx8mq. This new composite clock type will also be
+   used by all the imx8 socs that will follow.
+ * Added back the reviewed-by tag.
+
+Abel Vesa (1):
+  clk: imx: add imx composite clock
+
+Lucas Stach (4):
+  dt-bindings: add binding for i.MX8MQ CCM
+  clk: imx: add fractional PLL output clock
+  clk: imx: add SCCG PLL type
+  clk: imx: add clock driver for i.MX8MQ CCM
+
+ .../devicetree/bindings/clock/imx8mq-clock.txt     |  20 +
+ drivers/clk/imx/Makefile                           |   6 +-
+ drivers/clk/imx/clk-composite.c                    | 126 ++++
+ drivers/clk/imx/clk-frac-pll.c                     | 230 ++++++++
+ drivers/clk/imx/clk-imx8mq.c                       | 631 +++++++++++++++++++++
+ drivers/clk/imx/clk-sccg-pll.c                     | 231 ++++++++
+ drivers/clk/imx/clk.h                              |  57 ++
+ include/dt-bindings/clock/imx8mq-clock.h           | 410 +++++++++++++
+ 8 files changed, 1710 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+ create mode 100644 drivers/clk/imx/clk-composite.c
+ create mode 100644 drivers/clk/imx/clk-frac-pll.c
+ create mode 100644 drivers/clk/imx/clk-imx8mq.c
+ create mode 100644 drivers/clk/imx/clk-sccg-pll.c
+ create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
+
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
