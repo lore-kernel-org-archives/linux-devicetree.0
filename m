@@ -1,40 +1,97 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RESEND v1 3/5] drivers: pinctrl: qcom: sdm845: support GPIO wakeup from suspend
-Date: Fri, 17 Aug 2018 13:10:24 -0600
-Message-ID: <20180817191026.32245-4-ilina@codeaurora.org>
-References: <20180817191026.32245-1-ilina@codeaurora.org>
+Subject: [PATCH RESEND v1 0/5] Wakeup GPIO support for SDM845 SoC
+Date: Fri, 17 Aug 2018 13:10:21 -0600
+Message-ID: <20180817191026.32245-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180817191026.32245-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org
 Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
----
- drivers/pinctrl/qcom/pinctrl-sdm845.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hi,
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-index 2ab7a8885757..cc333b8afb99 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-@@ -1297,10 +1297,16 @@ static const struct of_device_id sdm845_pinctrl_of_match[] = {
- 	{ },
- };
- 
-+static const struct dev_pm_ops msm_pinctrl_dev_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(msm_pinctrl_suspend_late,
-+				     msm_pinctrl_resume_late)
-+};
-+
- static struct platform_driver sdm845_pinctrl_driver = {
- 	.driver = {
- 		.name = "sdm845-pinctrl",
- 		.of_match_table = sdm845_pinctrl_of_match,
-+		.pm = &msm_pinctrl_dev_pm_ops,
- 	},
- 	.probe = sdm845_pinctrl_probe,
- 	.remove = msm_pinctrl_remove,
--- 
+Resending as v1. The series was sent incorrectly as v2.
+
+Changes in v1:
+        - Avoid GPIO-PDC map in .c file
+        - Trigger GPIO by writing to the hardware
+        - Hooked up to suspend/resume callbacks
+        - Dropped PDC DT bindings (see dependencies)
+
+Dependencies:
+        https://lkml.org/lkml/2018/8/17/137
+        https://lkml.org/lkml/2018/8/15/289
+
+This is an attempt at a solution to enable wake up from suspend and deep idle
+using GPIO as a wakeup source. The 845 uses a new interrupt controller (PDC)
+that lies in the always-on domain and can sense interrupts that are routed to
+it, when the GIC is powered off. It would then wakeup the GIC and replay the
+interrupt which would then be relayed to the AP. The PDC interrupt controller
+driver is merged upstream [1],[2]. The following set of patches extends the
+wakeup capability to GPIOs using the PDC. The TLMM pinctrl driver for the SoC
+available at [3].
+
+The complexity with the solution stems from the fact that only a selected few
+GPIO lines are routed to the PDC in addition the TLMMs. They are also from
+different banks on the pinctrl and the TLMM summary line is not routed to the
+PDC. Hence the PDC cannot be considered as parent of the TLMM irqchip (or can
+we ?). This is what it looks like -
+
+   [ PIN ] -----[ TLMM ]---------------> [ GIC ] ---> [ CPU ]
+      |                  <summary IRQ>       ^
+      |                                      |
+      ----------------------------------> [ PDC ]
+                <wakeup IRQs>
+
+I had a brief discussion with Linus on this and the idea implemented is based
+on his suggestion.
+
+When an IRQ (let's call this latent IRQ) for a GPIO is requested, the
+->irq_request_resources() is used by the TLMM driver to request a PDC pin. The
+PDC pin associated with the GPIO is read from a  static map available in the
+pinctrl-sdm845.c. (I think there should be a better location than a static map,
+more on that later). Knowing the PDC pin from the map, we could look up the DT
+bindings and request the PDC interrupt with the same trigger mask as the
+interrupt requested. The ->set_type and ->set_wake are also trapped to set the
+PDC IRQ's polarity and enable it when the latent IRQ is requested. When the PDC
+detects the interrupt at suspend, it wakes up the GIC and replays the wakeup
+IRQ. The GPIO handler function for the latent IRQ is invoked in turn.
+
+Please review these patches and your inputs would be greatly appreciated and
+(kindly) let me know if I have committed any blunders with this approach. There
+is definitely opportunity to improve the location of the static GPIO-PDC pin
+map. We could possibly put it as an data argument in the interrupts definition
+of the PDC or with interrupt names. Also, I am still sorting out some issues
+with the IRQ handling part of these patches. And I am unsure of how to set the
+polarity of the PDC pin without locking, since we are not in hierarchy with the
+PDC interrupt controller. Again, your inputs on these would be greatly helpful.
+
+Thanks,
+Lina
+
+[1]. drivers/irqchip/qcom-pdc.c
+[2]. Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+[3]. drivers/pinctrl/qcom/pinctrl-msm.c
+
+*** BLURB HERE ***
+
+Lina Iyer (4):
+  dt-bindings: pinctrl: add wakeup capable GPIOs for SDM845
+  drivers: pinctrl: msm: enable PDC interrupt only during suspend
+  drivers: pinctrl: qcom: sdm845: support GPIO wakeup from suspend
+  arm64: dts: qcom: add wake up interrupts for GPIOs for SDM845
+
+Marc Zyngier (1):
+  irqchip/gic-v3: Allow interrupt to be configured as wake-up sources
+
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 58 +++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 57 +++++++++++++++++-
+ drivers/irqchip/irq-gic-v3.c                  |  8 ++-
+ drivers/pinctrl/qcom/pinctrl-msm.c            | 60 ++++++++++++++++++-
+ drivers/pinctrl/qcom/pinctrl-msm.h            |  3 +
+ drivers/pinctrl/qcom/pinctrl-sdm845.c         |  6 ++
+ 6 files changed, 185 insertions(+), 7 deletions(-)
+
+--
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
