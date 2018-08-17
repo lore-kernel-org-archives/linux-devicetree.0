@@ -1,40 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v12 14/14] cpufreq: qcom: Add support for krait based socs
-Date: Fri, 17 Aug 2018 09:09:27 -0600
-Message-ID: <20180817150927.GA20248@rob-hp-laptop>
-References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
- <1534248753-2440-15-git-send-email-sricharan@codeaurora.org>
+Subject: Re: [PATCH] net: dsa: add support for ksz9897 ethernet switch
+Date: Fri, 17 Aug 2018 09:09:37 -0600
+Message-ID: <20180817150937.GA20514@rob-hp-laptop>
+References: <1534348283-12790-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1534248753-2440-15-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: mark.rutland@arm.com, robh@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, ctatlor97@gmail.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, mturquette@baylibre.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, linux@armlinux.org.uk, thierry.escande@linaro.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, niklas.cassel@linaro.org, sricharan@codeaurora.org
+In-Reply-To: <1534348283-12790-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+Cc: Woojung Huh <Woojung.Huh@microchip.com>, Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi, this email is from Rob's (experimental) review bot. I found a couple
 of common problems with your patch. Please see below.
 
-On Tue, 14 Aug 2018 17:42:33 +0530, Sricharan R wrote:
-> In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
-> that has KRAIT processors the voltage/current value of each OPP
-> varies based on the silicon variant in use.
+On Wed, 15 Aug 2018 16:51:23 +0100, Lad Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 > 
-> The required OPP related data is determined based on
-> the efuse value. This is similar to the existing code for
-> kryo cores. So adding support for krait cores here.
+> ksz9477 is superset of ksz9xx series, driver just works
+> out of the box for ksz9897 chip with this patch.
 > 
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
 The preferred subject prefix is "dt-bindings: <binding dir>: ...".
 
 > ---
->  .../devicetree/bindings/opp/qcom-nvmem-cpufreq.txt |   3 +-
->  drivers/cpufreq/Kconfig.arm                        |   2 +-
->  drivers/cpufreq/cpufreq-dt-platdev.c               |   5 +
->  drivers/cpufreq/qcom-cpufreq-nvmem.c               | 151 +++++++++++++++++++--
->  4 files changed, 149 insertions(+), 12 deletions(-)
+>  Documentation/devicetree/bindings/net/dsa/ksz.txt | 4 +++-
+>  drivers/net/dsa/microchip/ksz_common.c            | 9 +++++++++
+>  drivers/net/dsa/microchip/ksz_spi.c               | 1 +
+>  3 files changed, 13 insertions(+), 1 deletion(-)
 > 
 
 DT bindings (including binding headers) should be a separate patch. See
