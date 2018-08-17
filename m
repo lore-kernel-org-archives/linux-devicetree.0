@@ -1,34 +1,114 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ASoC: rsnd: Add device tree binding for
-	r8a77990
-Date: Fri, 17 Aug 2018 12:05:18 +0200
-Message-ID: <20180817100517.m6eoeip55heuonru@verge.net.au>
-References: <1534492435-17859-1-git-send-email-ykaneko0929@gmail.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] media: Add controls for jpeg quantization tables
+Date: Fri, 17 Aug 2018 12:12:22 +0200
+Message-ID: <f91a8099-9780-1b90-dfed-23b07668cb27@xs4all.nl>
+References: <20180802200010.24365-1-ezequiel@collabora.com>
+ <20180802200010.24365-6-ezequiel@collabora.com>
+ <CAAFQd5C4jTfdB5Zmk6LQwTOBB2hs14ensZ+J-ZdTcQzzBNKn0A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1534492435-17859-1-git-send-email-ykaneko0929@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAAFQd5C4jTfdB5Zmk6LQwTOBB2hs14ensZ+J-ZdTcQzzBNKn0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 17, 2018 at 04:53:55PM +0900, Yoshihiro Kaneko wrote:
-> From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+On 17/08/18 04:10, Tomasz Figa wrote:
+> Hi Ezequiel,
 > 
-> This patch adds the device tree binding of the r8a77990 SoC.
+> On Fri, Aug 3, 2018 at 5:00 AM Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>>
+>> From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> Add V4L2_CID_JPEG_LUMA/CHROMA_QUANTIZATION controls to allow userspace
+>> configure the JPEG quantization tables.
+>>
+>> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>  Documentation/media/uapi/v4l/extended-controls.rst | 9 +++++++++
+>>  drivers/media/v4l2-core/v4l2-ctrls.c               | 4 ++++
+>>  include/uapi/linux/v4l2-controls.h                 | 3 +++
+>>  3 files changed, 16 insertions(+)
 > 
-> Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+> Thanks for this series and sorry for being late with review. Please
+> see my comments inline.
+> 
+>>
+>> diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
+>> index 9f7312bf3365..80e26f81900b 100644
+>> --- a/Documentation/media/uapi/v4l/extended-controls.rst
+>> +++ b/Documentation/media/uapi/v4l/extended-controls.rst
+>> @@ -3354,6 +3354,15 @@ JPEG Control IDs
+>>      Specify which JPEG markers are included in compressed stream. This
+>>      control is valid only for encoders.
+>>
+>> +.. _jpeg-quant-tables-control:
+>> +
+>> +``V4L2_CID_JPEG_LUMA_QUANTIZATION (__u8 matrix)``
+>> +    Sets the luma quantization table to be used for encoding
+>> +    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. This table is
+>> +    expected to be in JPEG zigzag order, as per the JPEG specification.
+> 
+> Should we also specify this to be 8x8?
+> 
+>> +
+>> +``V4L2_CID_JPEG_CHROMA_QUANTIZATION (__u8 matrix)``
+>> +    Sets the chroma quantization table.
+>>
+> 
+> nit: I guess we aff something like
+> 
+> "See also V4L2_CID_JPEG_LUMA_QUANTIZATION for details."
+> 
+> to avoid repeating the V4L2_PIX_FMT_JPEG_RAW and zigzag order bits? Or
+> maybe just repeating is better?
+> 
+>>
+>>  .. flat-table::
+>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+>> index 599c1cbff3b9..5c62c3101851 100644
+>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+>> @@ -999,6 +999,8 @@ const char *v4l2_ctrl_get_name(u32 id)
+>>         case V4L2_CID_JPEG_RESTART_INTERVAL:    return "Restart Interval";
+>>         case V4L2_CID_JPEG_COMPRESSION_QUALITY: return "Compression Quality";
+>>         case V4L2_CID_JPEG_ACTIVE_MARKER:       return "Active Markers";
+>> +       case V4L2_CID_JPEG_LUMA_QUANTIZATION:   return "Luminance Quantization Matrix";
+>> +       case V4L2_CID_JPEG_CHROMA_QUANTIZATION: return "Chrominance Quantization Matrix";
+>>
+>>         /* Image source controls */
+>>         /* Keep the order of the 'case's the same as in v4l2-controls.h! */
+>> @@ -1284,6 +1286,8 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>>                 *flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>>                 break;
+>>         case V4L2_CID_DETECT_MD_REGION_GRID:
+>> +       case V4L2_CID_JPEG_LUMA_QUANTIZATION:
+>> +       case V4L2_CID_JPEG_CHROMA_QUANTIZATION:
+> 
+> It looks like with this setup, the driver has to explicitly set dims
+> to { 8, 8 } and min/max to 0/255.
+> 
+> At least for min and max, we could set them here. For dims, i don't
+> see it handled in generic code, so I guess we can leave it to the
+> driver now and add move into generic code, if another driver shows up.
+> Hans, what do you think?
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+I noticed this when reviewing. I have a slight preference for setting the
+dims and min/max in the core. It's pretty standard how this should behave
+after all.
+
+Regards,
+
+	Hans
