@@ -1,37 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 7/7] gpio: ingenic: Remove driver
-Date: Fri, 17 Aug 2018 09:09:57 -0600
-Message-ID: <20180817150957.GE20845@rob-hp-laptop>
-References: <20180816163544.9072-1-paul@crapouillou.net>
- <20180816163544.9072-7-paul@crapouillou.net>
+Subject: Re: [PATCH V2 2/3] Documentation: devicetree: input: new binding for
+  da7280
+Date: Fri, 17 Aug 2018 09:10:00 -0600
+Message-ID: <20180817151000.GF20845@rob-hp-laptop>
+References: <cover.1534468025.git.Roy.Im@diasemi.com>
+ <6fe6130443ab72ef8fa0e95da6a2e0d63c2ec1d7.1534468025.git.Roy.Im@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180816163544.9072-7-paul@crapouillou.net>
+In-Reply-To: <6fe6130443ab72ef8fa0e95da6a2e0d63c2ec1d7.1534468025.git.Roy.Im@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Roy Im <roy.im.opensource@diasemi.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi, this email is from Rob's (experimental) review bot. I found a couple
 of common problems with your patch. Please see below.
 
-On Thu, 16 Aug 2018 18:35:44 +0200, Paul Cercueil wrote:
-> The pinctrl-ingenic driver is now handling the GPIO chips directly.
+On Fri, 17 Aug 2018 10:07:04 +0900, Roy Im wrote:
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> from: Roy Im <roy.im.opensource@diasemi.com>
+> 
+> Add device tree binding information for DA7280 haptic driver.
+> Example bindings for DA7280 are added.
+> 
+> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+> 
 
 The preferred subject prefix is "dt-bindings: <binding dir>: ...".
 
 > ---
->  .../devicetree/bindings/gpio/ingenic,gpio.txt      |  46 ---
->  drivers/gpio/Kconfig                               |  11 -
->  drivers/gpio/Makefile                              |   1 -
->  drivers/gpio/gpio-ingenic.c                        | 392 ---------------------
->  4 files changed, 450 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
->  delete mode 100644 drivers/gpio/gpio-ingenic.c
+> v2: No changes
 > 
-
-DT bindings (including binding headers) should be a separate patch. See
-Documentation/devicetree/bindings/submitting-patches.txt.
+> 
+>  .../devicetree/bindings/input/dlg,da7280.txt       |   91 ++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+> 
