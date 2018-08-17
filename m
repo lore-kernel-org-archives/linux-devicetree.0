@@ -1,28 +1,61 @@
-From: Trilok Soni <tsoni@codeaurora.org>
-Subject: Re: [PATCH v1 2/2] Embedded USB Debugger (EUD) driver
-Date: Fri, 17 Aug 2018 12:47:18 -0700
-Message-ID: <589f8341-580b-d1d0-5efd-261d8d4821b0@codeaurora.org>
-References: <1534464348-8227-1-git-send-email-pheragu@codeaurora.org>
- <1534464348-8227-3-git-send-email-pheragu@codeaurora.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 2/2] leds: lm3697: Introduce the lm3697 driver
+Date: Fri, 17 Aug 2018 14:55:25 -0500
+Message-ID: <9b82ae9f-330b-0150-f768-0c1955ab4582@ti.com>
+References: <20180816172058.31700-1-dmurphy@ti.com>
+ <20180816172058.31700-2-dmurphy@ti.com>
+ <9ef9cd25-5c73-964c-ac09-55c0c78e5dc9@gmail.com>
+ <c751759a-d0c2-4ee7-2299-99d83538bdc4@ti.com>
+ <24e05753-8ec7-e1b0-8671-8443bc20130a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534464348-8227-3-git-send-email-pheragu@codeaurora.org>
+In-Reply-To: <24e05753-8ec7-e1b0-8671-8443bc20130a@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prakruthi Deepak Heragu <pheragu@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, rnayak@codeaurora.org, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Prakruthi,
+Jacek
 
-On 8/16/2018 5:05 PM, Prakruthi Deepak Heragu wrote:
-> +
-> +#define EUD_INT_VBUS		BIT(2)
-> +#define EUD_INT_CHGR		BIT(3)
-> +#define EUD_INT_SAFE_MODE	BIT(4)
-> +
-> +#define EUD_NR			1
+On 08/17/2018 02:37 PM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 08/16/2018 10:44 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 08/16/2018 02:58 PM, Jacek Anaszewski wrote:
+>>> Dan,
+>>>
+>>> Thank you for the patch.
+>>>
+>>> I didn't review DT parsing details in v3, but now I've produced
+>>> diff between v3 and v4 to check what has changed.
+>>>
+>>> I'm quite surprised realizing that you're not validating
+>>> HVLED and control banks assignment, having in mind earlier
+>>> discussions and your concerns about numerous DT configurations
+>>> to check.
+>>>
+>>> Is it on purpose?
+>>>
+>>
+>> Yes.  It was on purpose.  After sleeping on it and going through the overall
+>> control to HVLED assignments I realized the user will know quite quickly
+>> that their configuration is messed up.
+>>
+>> The suggestions actually simplified the code quite nicely which I am happier to have
+> 
+> Ack. Thanks for the v5 - I'll let it sit on the lists for a week anyway,
+> until the merge window gets closed.
+> 
 
-I don't see any use of EUD_NR in the driver below. Do we need it?
+Sounds good to me.
+
+Dan
+
+-- 
+------------------
+Dan Murphy
