@@ -1,43 +1,129 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v2] arm64: dts: msm: add PDC device bindings for sdm845
-Date: Fri, 17 Aug 2018 10:08:02 -0600
-Message-ID: <20180817160802.24332-1-ilina@codeaurora.org>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH 7/7] Documentation: devicetree: Add Xilinx R5 rproc binding
+Date: Fri, 17 Aug 2018 09:31:55 -0700
+Message-ID: <CAAtXAHd0jmV32bSyxCyMSh9fcP63sM+6-SkTMS=gA1fJKGKtig@mail.gmail.com>
+References: <1534403190-28523-1-git-send-email-jliang@xilinx.com> <1534403190-28523-8-git-send-email-jliang@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534403190-28523-8-git-send-email-jliang@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, andy.gross@linaro.org
-Cc: marc.zyngier@arm.com, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, david.brown@linaro.org, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
+To: Wendy Liang <wendy.liang@xilinx.com>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, rajan.vaja@xilinx.com, jollys@xilinx.com, linux-remoteproc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wendy Liang <jliang@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PDC interrupt controller device bindings for SDM845.
+Hi Wendy,
 
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
-Changes in v2:
-	- Order by address
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+couple of minor stuff inline.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index cdaabeb3c995..516ab4c7acf8 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -221,6 +221,15 @@
- 			#interrupt-cells = <2>;
- 		};
- 
-+		pdc: interrupt-controller@b220000 {
-+			compatible = "qcom,sdm845-pdc";
-+			reg = <0xb220000 0x30000>;
-+			qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
-+			#interrupt-cells = <2>;
-+			interrupt-parent = <&intc>;
-+			interrupt-controller;
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0xc440000 0x1100>,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Thu, Aug 16, 2018 at 12:06 AM, Wendy Liang <wendy.liang@xilinx.com> wrote:
+> Add device tree binding for Xilinx Cortex-r5 remoteproc.
+>
+> Signed-off-by: Wendy Liang <jliang@xilinx.com>
+> ---
+>  .../remoteproc/xlnx,zynqmp-r5-remoteproc.txt       | 81 ++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
+> new file mode 100644
+> index 0000000..3940019
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
+> @@ -0,0 +1,81 @@
+> +Xilinx ARM Cortex A53-R5 remoteproc driver
+> +==========================================
+> +
+> +ZynqMP family of devices use two Cortex R5 processors to help with various
+> +low power / real time tasks.
+
+The ZynqMP family [..] uses [..]
+> +
+> +This driver requires specific ZynqMP hardware design.
+
+*a* specific ZynqMP hardware design. What does that mean?
+> +
+> +ZynqMP R5 RemoteProc Device Node:
+> +=================================
+> +A zynqmp_r5_remoteproc device node is used to represent a R5 IP instance
+> +within ZynqMP SoC.
+> +
+> +Required properties:
+> +--------------------
+> + - compatible : Should be "xlnx,zynqmp-r5-remoteproc-1.0"
+> + - reg : Address and length of the register set for the device. It
+> +        contains in the same order as described reg-names
+
+?
+> + - reg-names: Contain the register set names.
+
+Contains
+
+> +              "tcm_a" and "tcm_b" for TCM memories.
+> +              If the user uses the remoteproc driver with the RPMsg kernel
+> +              driver,"ipi" for the IPI register used to communicate with RPU
+> +              is also required.
+> +              Otherwise, if user only uses the remoteproc driver to boot RPU
+> +              firmware, "ipi" is not required.
+> + - tcm-pnode-id: TCM resources power nodes IDs which are used to request TCM
+> +                 resources for the remoteproc driver to access.
+> + - rpu-pnode-id : RPU power node id which is used by the remoteproc driver
+> +                  to start RPU or shut it down.
+> +
+> +Optional properties:
+> +--------------------
+> + - core_conf : R5 core configuration (valid string - split0 or split1 or
+> +               lock-step), default is lock-step.
+> + - memory-region: memories regions for RPU executable and DMA memory.
+> + - interrupts : Interrupt mapping for remoteproc IPI. It is required if the
+> +                user uses the remoteproc driver with the RPMsg kernel driver.
+> + - interrupt-parent : Phandle for the interrupt controller. It is required if
+> +                      the user uses the remoteproc driver with the RPMsg kernel
+> +                      kernel driver.
+> +
+> +Example:
+> +--------
+> +       reserved-memory {
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +               rproc_0_fw_reserved: rproc@3ed000000 {
+> +                       compatible = "rproc-prog-memory";
+> +                       no-map;
+> +                       reg = <0x0 0x3ed00000 0x0 0x40000>;
+> +               };
+> +               rproc_0_dma_reserved: rproc@3ed400000 {
+> +                       compatible = "shared-dma-pool";
+> +                       no-map;
+> +                       reg = <0x0 0x3ed40000 0x0 0x80000>;
+> +               };
+> +       };
+> +
+> +       firmware {
+> +               zynqmp_firmware: zynqmp-firmware {
+> +                       compatible = "xlnx,zynqmp-firmware";
+> +                       method = "smc";
+> +               };
+> +       };
+> +
+> +       zynqmp-r5-remoteproc@0 {
+> +               compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
+> +               reg = <0x0 0xFFE00000 0x0 0x10000>,
+> +                       <0x0 0xFFE20000 0x0 0x10000>,
+> +                       <0x0 0xff340000 0x0 0x100>;
+> +               reg-names = "tcm_a", "tcm_b", "ipi";
+> +               dma-ranges;
+> +               core_conf = "split0";
+> +               memory-region = <&rproc_0_fw_reserved>,
+> +                               <&rproc_0_dma_reserved>;
+> +               tcm-pnode-id = <0xf>, <0x10>;
+> +               rpu-pnode-id = <0x7>;
+> +               interrupt-parent = <&gic>;
+> +               interrupts = <0 29 4>;
+> +       } ;
+> --
+> 2.7.4
+>
+
+Cheers,
+Moritz
