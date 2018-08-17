@@ -1,25 +1,33 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] serial: sh-sci: Document r8a774a1 bindings
-Date: Fri, 17 Aug 2018 11:59:56 +0200
-Message-ID: <20180817095956.nd3r4yx4oj3qdyq6@verge.net.au>
-References: <1534250042-15815-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH 2/2] mmc: renesas_sdhi: Add r8a774a1 support
+Date: Fri, 17 Aug 2018 12:02:01 +0200
+Message-ID: <20180817100201.d762mirtkngr3am5@verge.net.au>
+References: <1534250074-15890-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1534250074-15890-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180815202405.GA13760@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1534250042-15815-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20180815202405.GA13760@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 14, 2018 at 01:34:02PM +0100, Fabrizio Castro wrote:
-> RZ/G2M (R8A774A1) SoC also has the R-Car Gen3 compatible SCIF and
-> HSCIF ports, so document the SoC specific bindings. While at it,
-> update the RZ/G1 and RZ/G2 family specific strings description as
-> outdated.
+On Wed, Aug 15, 2018 at 02:24:05PM -0600, Rob Herring wrote:
+> On Tue, Aug 14, 2018 at 01:34:34PM +0100, Fabrizio Castro wrote:
+> > Document RZ/G2M (R8A774A1) SoC bindings.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> Not sure why you didn't use 'dt-bindings: mmc: ' for the subject like 
+> the others, but anyways:
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
