@@ -1,40 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 2/3] Documentation: devicetree: input: new binding for
-  da7280
-Date: Fri, 17 Aug 2018 09:10:00 -0600
-Message-ID: <20180817151000.GF20845@rob-hp-laptop>
-References: <cover.1534468025.git.Roy.Im@diasemi.com>
- <6fe6130443ab72ef8fa0e95da6a2e0d63c2ec1d7.1534468025.git.Roy.Im@diasemi.com>
+Subject: Re: [PATCH] gpio: 74x164: add lines-initial-states property
+Date: Fri, 17 Aug 2018 09:10:05 -0600
+Message-ID: <20180817151005.GG20845@rob-hp-laptop>
+References: <20180815201855.29738-1-mail@david-bauer.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6fe6130443ab72ef8fa0e95da6a2e0d63c2ec1d7.1534468025.git.Roy.Im@diasemi.com>
+In-Reply-To: <20180815201855.29738-1-mail@david-bauer.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roy Im <roy.im.opensource@diasemi.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: David Bauer <mail@david-bauer.net>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi, this email is from Rob's (experimental) review bot. I found a couple
 of common problems with your patch. Please see below.
 
-On Fri, 17 Aug 2018 10:07:04 +0900, Roy Im wrote:
+On Wed, 15 Aug 2018 22:18:54 +0200, David Bauer wrote:
+> This adds the ability to define the initial state of each output line on
+> device probe.
 > 
-> from: Roy Im <roy.im.opensource@diasemi.com>
-> 
-> Add device tree binding information for DA7280 haptic driver.
-> Example bindings for DA7280 are added.
-> 
-> Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
-> 
+> Signed-off-by: David Bauer <mail@david-bauer.net>
 
 The preferred subject prefix is "dt-bindings: <binding dir>: ...".
 
 > ---
-> v2: No changes
+>  Documentation/devicetree/bindings/gpio/gpio-74x164.txt | 5 +++++
+>  drivers/gpio/gpio-74x164.c                             | 3 +++
+>  2 files changed, 8 insertions(+)
 > 
-> 
->  .../devicetree/bindings/input/dlg,da7280.txt       |   91 ++++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
-> 
+
+DT bindings (including binding headers) should be a separate patch. See
+Documentation/devicetree/bindings/submitting-patches.txt.
