@@ -1,7 +1,7 @@
 From: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
 Subject: [PATCH v1 0/2] Add Embedded USB Debugger (EUD) driver
-Date: Thu, 16 Aug 2018 17:01:11 -0700
-Message-ID: <1534464073-8154-1-git-send-email-pheragu@codeaurora.org>
+Date: Thu, 16 Aug 2018 17:05:46 -0700
+Message-ID: <1534464348-8227-1-git-send-email-pheragu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
