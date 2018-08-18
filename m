@@ -1,192 +1,60 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 1/3] iio: adc: add support for mcp3911
-Date: Sat, 18 Aug 2018 17:56:57 +0100
-Message-ID: <20180818175657.2c09d987@archlinux>
-References: <20180802191554.20176-1-marcus.folkesson@gmail.com>
-        <CAHp75Vf8kMLsoFN_EK150yW_FvH8XfgjiETYAtvW63et5NNurw@mail.gmail.com>
-        <20180803230922.22d628fc@archlinux>
-        <20180804065506.GB1727@gmail.com>
+Subject: Re: [PATCH v3 4/9] dt-bindings: iio: tsl2772: add new bindings
+Date: Sat, 18 Aug 2018 18:01:49 +0100
+Message-ID: <20180818180149.3bec7294@archlinux>
+References: <20180803001900.25371-1-masneyb@onstation.org>
+        <20180803001900.25371-5-masneyb@onstation.org>
+        <20180803224838.362d6cf5@archlinux>
+        <20180807165426.GA7007@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180804065506.GB1727@gmail.com>
+In-Reply-To: <20180807165426.GA7007@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Kent Gustavsson <kent@minoris.se>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio <linux-iio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Brian Masney <masneyb@onstation.org>, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 4 Aug 2018 08:55:06 +0200
-Marcus Folkesson <marcus.folkesson@gmail.com> wrote:
+On Tue, 7 Aug 2018 10:54:26 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-> Hi Andy and Jonathan,
-> 
-> 
-> On Fri, Aug 03, 2018 at 11:09:22PM +0100, Jonathan Cameron wrote:
-> > On Thu, 2 Aug 2018 22:52:00 +0300
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Fri, Aug 03, 2018 at 10:48:38PM +0100, Jonathan Cameron wrote:
+> > On Thu,  2 Aug 2018 20:18:55 -0400
+> > Brian Masney <masneyb@onstation.org> wrote:
 > >   
-> > > On Thu, Aug 2, 2018 at 10:15 PM, Marcus Folkesson
-> > > <marcus.folkesson@gmail.com> wrote:  
-> > > > MCP3911 is a dual channel Analog Front End (AFE) containing two
-> > > > synchronous sampling delta-sigma Analog-to-Digital Converters (ADC).
-> > > >
-> > > > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>    
-> > >   
-> > > > Signed-off-by: Kent Gustavsson <kent@minoris.se>    
+> > > This patch adds the new properties amstaos,proximity-diodes and
+> > > led-max-microamp to the tsl2772 driver. This patch also removes the
+> > > driver from the trivial-devices.txt.
 > > > 
-> > > What is this? Why it's here (presense and location in the message)?  
-> > To clarify... If Kent wrote the patch and you are simply acting
-> > as gatekeeper / upstreamer you should set the mail to be from Kent
-> > and put your own Signed-off after his to basically act as a submaintainer
-> > certifying you believe his sign off and all that entails.
+> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > ---  
+> > This and the implementation look fine to me, but I'll leave them for
+> > now to give Rob time to take a look if he wants to.
 > > 
-> > If it is a bit of a joint effort then that's fine but for copyright
-> > purposes there should be some indication of the split.  
-> 
-> First, thank you Andy for noticing.
-> 
-> I actually intended to use Co-Developed-by (a pretty new tag)
-> in combination with Signed-off-by.
-> But the tag must have disappeared in some preparation stage..
-> 
-> From Documentation/process/submitting-patches.rst ::
-> 
-> 	A Co-Developed-by: states that the patch was also created by another developer
-> 	along with the original author.  This is useful at times when multiple people
-> 	work on a single patch.  Note, this person also needs to have a Signed-off-by:
-> 	line in the patch as well.
-> 
-> I will switch order and add the Co-Developed-by-tag.
-> Is this correct?
-> 
-> Co-Developed-by: Kent Gustavsson <kent@minoris.se>   
-> Signed-off-by: Kent Gustavsson <kent@minoris.se>  
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>  
-> 
+> > Thanks,
 > > 
+> > Jonathan
 > >   
-> > >   
-> > > > + * Copyright (C) 2018 Kent Gustavsson <kent@minoris.se>    
-> > >   
-> > > > + *    
+> > > I got a Reviewed-by: Rob Herring <robh@kernel.org> on my last series but
+> > > didn't include it due to the new file tsl2772.txt in this patch. Device
+> > > tree bindings need to be complete.
 > > > 
-> > > Redundant.
-> > >   
-> > > > +static int mcp3911_read(struct mcp3911 *adc, u8 reg, u32 *val, u8 len)
-> > > > +{
-> > > > +       int ret;
-> > > > +
-> > > > +       reg = MCP3911_REG_READ(reg, adc->dev_addr);
-> > > > +       ret = spi_write_then_read(adc->spi, &reg, 1, val, len);
-> > > > +       if (ret < 0)
-> > > > +               return ret;
-> > > > +
-> > > > +       be32_to_cpus(val);
-> > > > +       *val >>= ((4 - len) * 8);
-> > > > +       dev_dbg(&adc->spi->dev, "reading 0x%x from register 0x%x\n", *val,
-> > > > +                       reg>>1);
-> > > > +       return ret;
-> > > > +}
-> > > > +
-> > > > +static int mcp3911_write(struct mcp3911 *adc, u8 reg, u32 val, u8 len)
-> > > > +{
-> > > > +       dev_dbg(&adc->spi->dev, "writing 0x%x to register 0x%x\n", val, reg);
-> > > > +
-> > > > +       val <<= (3 - len) * 8;
-> > > > +       cpu_to_be32s(&val);
-> > > > +       val |= MCP3911_REG_WRITE(reg, adc->dev_addr);
-> > > > +
-> > > > +       return spi_write(adc->spi, &val, len + 1);
-> > > > +}    
-> > > 
-> > > Can't you use REGMAP_SPI ?  
-> > My instinct is not really. The magic device-addr doesn't help.
-> > You could work around it but it's not that nice and you'd have
-> > to create the regmap mapping on the fly or carry static ones
-> > for each value of htat.
-> > 
-> > 
-> >   
-> > >   
-> > > > +       of_property_read_u32(of_node, "device-addr", &adc->dev_addr);
-> > > > +       if (adc->dev_addr > 3) {
-> > > > +               dev_err(&adc->spi->dev,
-> > > > +                               "invalid device address (%i). Must be in range 0-3.\n",
-> > > > +                               adc->dev_addr);
-> > > > +               return -EINVAL;
-> > > > +       }
-> > > > +       dev_dbg(&adc->spi->dev, "use device address %i\n", adc->dev_addr);    
-> > > 
-> > > Isn't what we called CS (chip select)?  
-> > Nope. We went around this in an earlier revision. It's an address transmitted
-> > in the control byte to allow you to 'share' a chip select line between multiple
-> > chips (crazy but true).
-> >   
-> > >   
-> > > > +       if (IS_ERR(adc->vref)) {    
-> > >   
-> > > > +    
-> > > 
-> > > Redundant.
-> > >   
-> > > > +       if (adc->clki)    
-> > > 
-> > > Seems to be redundant if clock is optional (it should be NULL and API
-> > > is NULL-aware).
-> > >   
-> > > > +               clk_disable_unprepare(adc->clki);    
-> > >   
-> > > > +       if (adc->clki)
-> > > > +               clk_disable_unprepare(adc->clki);    
-> > > 
-> > > Ditto.
-> > >   
-> > > > +#if defined(CONFIG_OF)    
-> > > 
-> > > This prevents playing with the device on ACPI enabled platforms.  
+> > >  .../devicetree/bindings/iio/light/tsl2772.txt | 37 +++++++++++++++++++
+> > >  .../devicetree/bindings/trivial-devices.txt   | 10 -----
+> > >  2 files changed, 37 insertions(+), 10 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt  
 > 
-> I will remove the defined(CONFIG_OF) and not use the of_match_ptr()
-> macro. 
-> 
-> > Yeah, that trickery is still little known (and I forget about it from
-> > time to time).
-> > 
-> > The upshot for those who have missed this is you can use a magic
-> > acpi device to instantiate based on device tree bindings :)
-> > 
-> > So we need to strip all this 'obvious' protection stuff out of drivers.  
-> 
-> Jonathan,
-> Do you want me to do the same changes for drivers in iio/ ?
-> I'm probably not the only one looking at other drivers when writing my
-> own, so I guess this is a rather frequent issue for new drivers?
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-A good question.   Hmm. I'm a bit in two minds.  It creates a lot
-of churn for something that I don't think is actually very heavily
-used.  As you say, the biggest reason to change it will be to stop
-others from copying the existing drivers and getting it 'wrong' going
-forward.
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to ignore it.
 
-I don't have strong feelings either way, but don't really want to
-see a huge number of patches around this (I haven't checked how
-many drivers are effected).  If you want to look at this, then perhaps
-do a small set at a time rather than a mass fixup to keep things
-manageable?
-
-Thanks,
+I'll apply the other dt bits to this as fixups.
 
 Jonathan
 
-> 
-> 
-> >   
-> > >   
-> > > > +               .of_match_table = of_match_ptr(mcp3911_dt_ids),    
-> > > 
-> > > Ditto for macro.
-> > >   
-> >   
-> 
-> Best regards,
-> Marcus Folkesson
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
