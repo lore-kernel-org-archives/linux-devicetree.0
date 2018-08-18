@@ -1,53 +1,38 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 10/19] memory: tegra: Read client ID on GART page fault
-Date: Sat, 18 Aug 2018 18:54:21 +0300
-Message-ID: <20180818155430.5586-11-digetx@gmail.com>
-References: <20180818155430.5586-1-digetx@gmail.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v1 5/5] dt-bindings: arm: mediatek: add support for bananapi BPI-R64 board
+Date: Sun, 19 Aug 2018 00:02:28 +0800
+Message-ID: <c90763cd9800a368f47754002585704a29a437bb.1534607107.git.ryder.lee@mediatek.com>
+References: <7d3ce6a89ffeb221dc3197b763521582bf300577.1534607107.git.ryder.lee@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180818155430.5586-1-digetx@gmail.com>
+In-Reply-To: <7d3ce6a89ffeb221dc3197b763521582bf300577.1534607107.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
-Cc: iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-With the device tree binding changes, now Memory Controller has access to
-GART registers. Hence it is now possible to read client ID on GART page
-fault to get information about what memory client causes the fault.
+Update binding document for bananapi BPI-R64 board being supported.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/memory/tegra/mc.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/mediatek.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-index 3bf3138769f4..ab383d7a7842 100644
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -38,6 +38,7 @@
- 
- #define MC_ERR_ADR 0x0c
- 
-+#define MC_GART_ERROR_REQ		0x30
- #define MC_DECERR_EMEM_OTHERS_STATUS	0x58
- #define MC_SECURITY_VIOLATION_STATUS	0x74
- 
-@@ -575,8 +576,15 @@ static __maybe_unused irqreturn_t tegra20_mc_irq(int irq, void *data)
- 			break;
- 
- 		case MC_INT_INVALID_GART_PAGE:
--			dev_err_ratelimited(mc->dev, "%s\n", error);
--			continue;
-+			reg = MC_GART_ERROR_REQ;
-+			value = mc_readl(mc, reg);
-+
-+			id = (value >> 1) & mc->soc->client_id_mask;
-+			desc = error_names[2];
-+
-+			if (value & BIT(0))
-+				direction = "write";
-+			break;
- 
- 		case MC_INT_SECURITY_VIOLATION:
- 			reg = MC_SECURITY_VIOLATION_STATUS;
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+index 8f260e5..d30f6ce 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+@@ -57,6 +57,9 @@ Supported boards:
+ - Reference board variant 1 for MT7622:
+     Required root node properties:
+       - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
++- Bananapi BPI-R64 for MT7622:
++    Required root node properties:
++      - compatible = "bananapi,bpi-r64", "mediatek,mt7622";
+ - Reference board for MT7623a with eMMC:
+     Required root node properties:
+       - compatible = "mediatek,mt7623a-rfb-emmc", "mediatek,mt7623";
 -- 
-2.18.0
+1.9.1
