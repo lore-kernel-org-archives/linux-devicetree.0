@@ -1,142 +1,119 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH v3 7/9] iio: tsl2772: add support for avago,apds9930
-Date: Sat, 18 Aug 2018 18:07:32 +0100
-Message-ID: <20180818180724.2a489d07@archlinux>
-References: <20180803001900.25371-1-masneyb@onstation.org>
-        <20180803001900.25371-8-masneyb@onstation.org>
-        <20180803225336.6cb5d581@archlinux>
+From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] media: Add controls for jpeg quantization tables
+Date: Sat, 18 Aug 2018 15:21:11 -0300
+Message-ID: <fe36727b86c1318b850e6d581b1bf337b0e3e15a.camel@collabora.com>
+References: <20180802200010.24365-1-ezequiel@collabora.com>
+ <20180802200010.24365-6-ezequiel@collabora.com>
+ <CAAFQd5C4jTfdB5Zmk6LQwTOBB2hs14ensZ+J-ZdTcQzzBNKn0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180803225336.6cb5d581@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, jonathan@marek.ca, jmaneyrol@invensense.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mkelly@xevo.com, fischerdouglasc@gmail.com, bshah@kde.org, ctatlor97@gmail.com
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAAFQd5C4jTfdB5Zmk6LQwTOBB2hs14ensZ+J-ZdTcQzzBNKn0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 3 Aug 2018 22:53:36 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
-
-> On Thu,  2 Aug 2018 20:18:58 -0400
-> Brian Masney <masneyb@onstation.org> wrote:
+On Fri, 2018-08-17 at 11:10 +0900, Tomasz Figa wrote:
+> Hi Ezequiel,
 > 
-> > The Avago APDS9930 has the same register set as the TAOS/AMS TSL2772 so
-> > this patch adds the correct bindings and the appropriate LUX table
-> > values derived from the values in the datasheet. Driver was tested on a
-> > LG Nexus 5 (hammerhead) phone.
+> On Fri, Aug 3, 2018 at 5:00 AM Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
 > > 
-> > avago,apds9930 datasheet:
-> > https://www.mouser.com/datasheet/2/678/avago_AV02-3190EN_DS_APDS-9930_2014-03-25[1]-1217273.pdf
+> > From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > > 
-> > tsl2772 datasheet:
-> > https://ams.com/eng/content/download/291503/1066377/file/TSL2772_DS000181_2-00.pdf
+> > Add V4L2_CID_JPEG_LUMA/CHROMA_QUANTIZATION controls to allow userspace
+> > configure the JPEG quantization tables.
 > > 
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>  
-> Glad you noticed they were the same.  will apply once precursors are in.
-> 
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> Thanks,
-> 
-> Jonathan
-> 
+> > Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 > > ---
-> >  drivers/iio/light/tsl2772.c | 18 ++++++++++++++++--
-> >  1 file changed, 16 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iio/light/tsl2772.c b/drivers/iio/light/tsl2772.c
-> > index 4a11bf77a4d0..83cece921843 100644
-> > --- a/drivers/iio/light/tsl2772.c
-> > +++ b/drivers/iio/light/tsl2772.c
-> > @@ -124,7 +124,8 @@ enum {
-> >  	tsl2672,
-> >  	tmd2672,
-> >  	tsl2772,
-> > -	tmd2772
-> > +	tmd2772,
-> > +	apds9930,
-> >  };
-> >  
-> >  enum {
-> > @@ -213,6 +214,12 @@ static const struct tsl2772_lux tmd2x72_lux_table[TSL2772_DEF_LUX_TABLE_SZ] = {
-> >  	{     0,      0 },
-> >  };
-> >  
-> > +static const struct tsl2772_lux apds9930_lux_table[TSL2772_DEF_LUX_TABLE_SZ] = {
-> > +	{ 52000,  96824 },
-> > +	{ 38792,  67132 },
-> > +	{     0,      0 },
-> > +};
-> > +
-> >  static const struct tsl2772_lux *tsl2772_default_lux_table_group[] = {
-> >  	[tsl2571] = tsl2x71_lux_table,
-> >  	[tsl2671] = tsl2x71_lux_table,
-> > @@ -224,6 +231,7 @@ static const struct tsl2772_lux *tsl2772_default_lux_table_group[] = {
-> >  	[tmd2672] = tmd2x72_lux_table,
-> >  	[tsl2772] = tsl2x72_lux_table,
-> >  	[tmd2772] = tmd2x72_lux_table,
-> > +	[apds9930] = apds9930_lux_table,
-> >  };
-> >  
-> >  static const struct tsl2772_settings tsl2772_default_settings = {
-> > @@ -274,6 +282,7 @@ static const int tsl2772_int_time_avail[][6] = {
-> >  	[tmd2672] = { 0, 2730, 0, 2730, 0, 699000 },
-> >  	[tsl2772] = { 0, 2730, 0, 2730, 0, 699000 },
-> >  	[tmd2772] = { 0, 2730, 0, 2730, 0, 699000 },
-> > +	[apds9930] = { 0, 2730, 0, 2730, 0, 699000 },
-> >  };
-> >  
-> >  static int tsl2772_int_calibscale_avail[] = { 1, 8, 16, 120 };
-> > @@ -299,7 +308,8 @@ static const u8 device_channel_config[] = {
-> >  	[tsl2672] = PRX2,
-> >  	[tmd2672] = PRX2,
-> >  	[tsl2772] = ALSPRX2,
-> > -	[tmd2772] = ALSPRX2
-> > +	[tmd2772] = ALSPRX2,
-> > +	[apds9930] = ALSPRX2,
-> >  };
-> >  
-> >  static int tsl2772_read_status(struct tsl2772_chip *chip)
-> > @@ -513,6 +523,7 @@ static int tsl2772_get_prox(struct iio_dev *indio_dev)
-> >  	case tmd2672:
-> >  	case tsl2772:
-> >  	case tmd2772:
-> > +	case apds9930:
-> >  		if (!(ret & TSL2772_STA_PRX_VALID)) {
-> >  			ret = -EINVAL;
-> >  			goto prox_poll_err;
-> > @@ -1393,6 +1404,7 @@ static int tsl2772_device_id_verif(int id, int target)
-> >  	case tmd2672:
-> >  	case tsl2772:
-> >  	case tmd2772:
-> > +	case apds9930:
-> >  		return (id & 0xf0) == SWORDFISH_ID;
-> >  	}
-> >  
-> > @@ -1932,6 +1944,7 @@ static const struct i2c_device_id tsl2772_idtable[] = {
-> >  	{ "tmd2672", tmd2672 },
-> >  	{ "tsl2772", tsl2772 },
-> >  	{ "tmd2772", tmd2772 },
-> > +	{ "apds9930", apds9930},
-> >  	{}
-> >  };
-> >  
-> > @@ -1948,6 +1961,7 @@ static const struct of_device_id tsl2772_of_match[] = {
-> >  	{ .compatible = "amstaos,tmd2672" },
-> >  	{ .compatible = "amstaos,tsl2772" },
-> >  	{ .compatible = "amstaos,tmd2772" },
-> > +	{ .compatible = "avago,apds9930" },
-> >  	{}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, tsl2772_of_match);  
+> >  Documentation/media/uapi/v4l/extended-controls.rst | 9 +++++++++
+> >  drivers/media/v4l2-core/v4l2-ctrls.c               | 4 ++++
+> >  include/uapi/linux/v4l2-controls.h                 | 3 +++
+> >  3 files changed, 16 insertions(+)
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks for this series and sorry for being late with review. Please
+> see my comments inline.
+> 
+> > 
+> > diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
+> > index 9f7312bf3365..80e26f81900b 100644
+> > --- a/Documentation/media/uapi/v4l/extended-controls.rst
+> > +++ b/Documentation/media/uapi/v4l/extended-controls.rst
+> > @@ -3354,6 +3354,15 @@ JPEG Control IDs
+> >      Specify which JPEG markers are included in compressed stream. This
+> >      control is valid only for encoders.
+> > 
+> > +.. _jpeg-quant-tables-control:
+> > +
+> > +``V4L2_CID_JPEG_LUMA_QUANTIZATION (__u8 matrix)``
+> > +    Sets the luma quantization table to be used for encoding
+> > +    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. This table is
+> > +    expected to be in JPEG zigzag order, as per the JPEG specification.
+> 
+> Should we also specify this to be 8x8?
+> 
+
+Yes, could be.
+
+> > +
+> > +``V4L2_CID_JPEG_CHROMA_QUANTIZATION (__u8 matrix)``
+> > +    Sets the chroma quantization table.
+> > 
+> 
+> nit: I guess we aff something like
+> 
+> "See also V4L2_CID_JPEG_LUMA_QUANTIZATION for details."
+> 
+> to avoid repeating the V4L2_PIX_FMT_JPEG_RAW and zigzag order bits? Or
+> maybe just repeating is better?
+> 
+
+In spec documentation I usually find it's clearer for readers to see
+stuff repeated. Better to have an excess of clarity :-)
+
+> > 
+> >  .. flat-table::
+> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > index 599c1cbff3b9..5c62c3101851 100644
+> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> > @@ -999,6 +999,8 @@ const char *v4l2_ctrl_get_name(u32 id)
+> >         case V4L2_CID_JPEG_RESTART_INTERVAL:    return "Restart Interval";
+> >         case V4L2_CID_JPEG_COMPRESSION_QUALITY: return "Compression Quality";
+> >         case V4L2_CID_JPEG_ACTIVE_MARKER:       return "Active Markers";
+> > +       case V4L2_CID_JPEG_LUMA_QUANTIZATION:   return "Luminance Quantization Matrix";
+> > +       case V4L2_CID_JPEG_CHROMA_QUANTIZATION: return "Chrominance Quantization Matrix";
+> > 
+> >         /* Image source controls */
+> >         /* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> > @@ -1284,6 +1286,8 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+> >                 *flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> >                 break;
+> >         case V4L2_CID_DETECT_MD_REGION_GRID:
+> > +       case V4L2_CID_JPEG_LUMA_QUANTIZATION:
+> > +       case V4L2_CID_JPEG_CHROMA_QUANTIZATION:
+> 
+> It looks like with this setup, the driver has to explicitly set dims
+> to { 8, 8 } and min/max to 0/255.
+> 
+> At least for min and max, we could set them here. For dims, i don't
+> see it handled in generic code, so I guess we can leave it to the
+> driver now and add move into generic code, if another driver shows up.
+> Hans, what do you think?
+> 
+
+Since Hans agrees to move this to the core, let's give it a try.
+I'll address this in v3.
+
+Thanks for the feedback!
+Eze
