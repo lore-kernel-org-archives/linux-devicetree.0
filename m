@@ -1,7 +1,7 @@
 From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Subject: [PATCH v2 4/4] dt-bindigs: msm: Update documentation of qcom,llcc
-Date: Fri, 17 Aug 2018 17:08:35 -0700
-Message-ID: <1534550915-18230-5-git-send-email-vnkgutta@codeaurora.org>
+Subject: [PATCH v2 2/4] drivers: soc: Add support to register LLCC EDAC driver
+Date: Fri, 17 Aug 2018 17:08:33 -0700
+Message-ID: <1534550915-18230-3-git-send-email-vnkgutta@codeaurora.org>
 References: <1534550915-18230-1-git-send-email-vnkgutta@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1534550915-18230-1-git-send-email-vnkgutta@codeaurora.org>
@@ -10,43 +10,79 @@ To: robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kerne
 Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add reg-names and interrupts for LLCC documentation and the usage
-examples. llcc broadcast base is added in addition to llcc base,
-which is used for llcc broadcast writes.
+Cache error reporting controller is to detect and report single
+and double bit errors on Last Level Cache Controller (LLCC) cache.
+Add required support to register LLCC EDAC driver as platform driver,
+from LLCC driver.
 
 Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 ---
- Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/soc/qcom/llcc-slice.c      | 18 ++++++++++++++++--
+ include/linux/soc/qcom/llcc-qcom.h |  2 ++
+ 2 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-index 5e85749..b4b1c86 100644
---- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-+++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-@@ -18,9 +18,22 @@ Properties:
- 	Value Type: <prop-encoded-array>
- 	Definition: Start address and the the size of the register region.
+diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
+index a63640d..09c8bb0 100644
+--- a/drivers/soc/qcom/llcc-slice.c
++++ b/drivers/soc/qcom/llcc-slice.c
+@@ -224,7 +224,7 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
+ 	u32 attr0_val;
+ 	u32 max_cap_cacheline;
+ 	u32 sz;
+-	int ret;
++	int ret = 0;
+ 	const struct llcc_slice_config *llcc_table;
+ 	struct llcc_slice_desc desc;
  
-+- reg-names:
-+        Usage: required
-+        Value Type: <stringlist>
-+        Definition: Register region names. Must be "llcc_base", "llcc_bcast_base".
-+
-+- interrupts:
-+	Usage: required
-+	Definition: The interrupt is associated with the llcc edac device.
-+			It's used for llcc cache single and double bit error detection
-+			and reporting.
-+
- Example:
+@@ -282,6 +282,7 @@ int qcom_llcc_probe(struct platform_device *pdev,
+ 	struct resource *llcc_banks_res, *llcc_bcast_res;
+ 	void __iomem *llcc_banks_base, *llcc_bcast_base;
+ 	int ret, i;
++	struct platform_device *llcc_edac;
  
- 	cache-controller@1100000 {
- 		compatible = "qcom,sdm845-llcc";
--		reg = <0x1100000 0x250000>;
-+		reg = <0x1100000 0x200000>, <0x1300000 0x50000> ;
-+		reg-names = "llcc_base", "llcc_bcast_base";
-+		interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
- 	};
+ 	drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
+ 	if (!drv_data)
+@@ -341,6 +342,19 @@ int qcom_llcc_probe(struct platform_device *pdev,
+ 	mutex_init(&drv_data->lock);
+ 	platform_set_drvdata(pdev, drv_data);
+ 
+-	return qcom_llcc_cfg_program(pdev);
++	ret = qcom_llcc_cfg_program(pdev);
++	if (ret)
++		return ret;
++
++	drv_data->ecc_irq = platform_get_irq(pdev, 0);
++	if (drv_data->ecc_irq >= 0) {
++		llcc_edac = platform_device_register_data(&pdev->dev,
++						"qcom_llcc_edac", -1, drv_data,
++						sizeof(*drv_data));
++		if (IS_ERR(llcc_edac))
++			dev_err(dev, "Failed to register llcc edac driver\n");
++	}
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(qcom_llcc_probe);
+diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
+index c681e79..2e4b34d 100644
+--- a/include/linux/soc/qcom/llcc-qcom.h
++++ b/include/linux/soc/qcom/llcc-qcom.h
+@@ -78,6 +78,7 @@ struct llcc_slice_config {
+  * @num_banks: Number of llcc banks
+  * @bitmap: Bit map to track the active slice ids
+  * @offsets: Pointer to the bank offsets array
++ * @ecc_irq: interrupt for llcc cache error detection and reporting
+  */
+ struct llcc_drv_data {
+ 	struct regmap *regmap;
+@@ -89,6 +90,7 @@ struct llcc_drv_data {
+ 	u32 num_banks;
+ 	unsigned long *bitmap;
+ 	u32 *offsets;
++	int ecc_irq;
+ };
+ 
+ #if IS_ENABLED(CONFIG_QCOM_LLCC)
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
