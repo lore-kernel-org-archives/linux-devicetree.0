@@ -1,7 +1,7 @@
 From: Jonathan Cameron <jic23@kernel.org>
 Subject: Re: [PATCH v6 4/6] iio:adxl372: Add FIFO and interrupts support
-Date: Sun, 19 Aug 2018 18:12:18 +0100
-Message-ID: <20180819181218.6a63a657@archlinux>
+Date: Sun, 19 Aug 2018 18:25:41 +0100
+Message-ID: <20180819182541.5cb2ea6f@archlinux>
 References: <1533890783-13456-1-git-send-email-stefan.popa@analog.com>
         <1533890783-13456-5-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
@@ -27,12 +27,33 @@ Stefan Popa <stefan.popa@analog.com> wrote:
 > 
 > Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 
-one minor item I'd missed previously.  I'll fix it whilst applying.
+Hi Stefan,  I'm afraid I missed a few things on previous versions of this.
 
-Applied to the togreg branch of iio.git and pushed out as testing
-to see what we've all missed that the autobuilders might find.
+If we are going to expose a general purpose trigger or allow a driver
+to use a general purpose trigger (this currently does both as neither validate
+function is provided to limit it's usage), then the trigger 'must' correspond
+to one interrupt per reading.  It's absolutely fine to have a device specific
+trigger where that isn't true though normally we would only bother exposing it
+as a trigger if there as an alternative.
 
-Thanks,
+A classic case would be that we have a fifo and use it if the trigger is the
+devices only trigger, but in the event of a different trigger being selected
+we are happy to use it with the fifo length set to 1 (or it just turned off).
+
+That allows the use of say a sysfs of hrtimer trigger with us getting the expected
+1 sample set per trigger, and the use of the fifo for this device alone.
+To do that you have make sure you have a validate_device callback provided
+for the trigger so it rejects other devices.
+
+We can just forgo alternative triggers and have the buffer driven directly.
+I don't really like that option though as it leads to abi changes if we ever
+want to add alternatives in future though we can sort of get around that using
+default triggers.
+
+So the simple solution for now is to provide validate_trigger and validate_device
+callbacks to fix it to use them only when they are the same device.
+
+We can do clever stuff later if needed to enable other triggers.
 
 Jonathan
 
@@ -58,6 +79,9 @@ Jonathan
 >  #include <linux/iio/sysfs.h>
 > +#include <linux/iio/buffer.h>
 > +#include <linux/iio/events.h>
+
+Why events?
+
 > +#include <linux/iio/trigger.h>
 > +#include <linux/iio/trigger_consumer.h>
 > +#include <linux/iio/triggered_buffer.h>
@@ -452,12 +476,6 @@ Jonathan
 >  	indio_dev->info = &adxl372_info;
 > -	indio_dev->modes = INDIO_DIRECT_MODE;
 > +	indio_dev->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
-
-This might be wrong if we don't have an interrupt.
-I'll move it when applying to be under the if (st->spi->irq) below.
-
-
-
 >  
 >  	ret = adxl372_setup(st);
 >  	if (ret < 0) {
