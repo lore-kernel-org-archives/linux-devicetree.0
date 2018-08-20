@@ -1,227 +1,75 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RESEND v1 2/5] drivers: pinctrl: msm: enable PDC
- interrupt only during suspend
-Date: Mon, 20 Aug 2018 09:26:29 -0600
-Message-ID: <20180820152629.GR5081@codeaurora.org>
-References: <20180817191026.32245-1-ilina@codeaurora.org>
- <20180817191026.32245-3-ilina@codeaurora.org>
- <86a7pjq0l1.wl-marc.zyngier@arm.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v7 2/8] dt-bindings: Introduce interconnect provider
+ bindings
+Date: Mon, 20 Aug 2018 17:32:07 +0200
+Message-ID: <20180820153207.xx5outviph7ec76p@flea>
+References: <20180731161340.13000-1-georgi.djakov@linaro.org>
+ <20180731161340.13000-3-georgi.djakov@linaro.org>
+ <CABGGisxq+hf91R18pnZ=VZ9f99GssWWPhpPCjNAROJmKg5-udA@mail.gmail.com>
+ <e114ed83-fd54-4952-f375-e1d94826ac6e@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nsqsqzl6ecisbpih"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <86a7pjq0l1.wl-marc.zyngier@arm.com>
+In-Reply-To: <e114ed83-fd54-4952-f375-e1d94826ac6e@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, skannan@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 18 2018 at 07:13 -0600, Marc Zyngier wrote:
->Hi Lina,
->
->On Fri, 17 Aug 2018 20:10:23 +0100,
->Lina Iyer <ilina@codeaurora.org> wrote:
->>
->> During suspend the system may power down some of the system rails. As a
->> result, the TLMM hw block may not be operational anymore and wakeup
->> capable GPIOs will not be detected. The PDC however will be operational
->> and the GPIOs that are routed to the PDC as IRQs can wake the system up.
->>
->> To avoid being interrupted twice (for TLMM and once for PDC IRQ) when a
->> GPIO trips, use TLMM for active and switch to PDC for suspend. When
->> entering suspend, disable the TLMM wakeup interrupt and instead enable
->> the PDC IRQ and revert upon resume.
->>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>  drivers/pinctrl/qcom/pinctrl-msm.c | 60 +++++++++++++++++++++++++++++-
->>  drivers/pinctrl/qcom/pinctrl-msm.h |  3 ++
->>  2 files changed, 62 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
->> index 03ef1d29d078..17e541f8f09d 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
->> @@ -37,6 +37,7 @@
->>  #include "../pinctrl-utils.h"
->>
->>  #define MAX_NR_GPIO 300
->> +#define MAX_PDC_IRQ 1024
->
->Where is this value coming from? Is it guaranteed to be an
->architectural maximum? Or something that is likely to vary in future
->implementations?
->
->>  #define PS_HOLD_OFFSET 0x820
->>
->>  /**
->> @@ -51,6 +52,7 @@
->>   * @enabled_irqs:   Bitmap of currently enabled irqs.
->>   * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
->>   *                  detection.
->> + * @pdc_irqs:       Bitmap of wakeup capable irqs.
->>   * @soc;            Reference to soc_data of platform specific data.
->>   * @regs:           Base address for the TLMM register map.
->>   */
->> @@ -68,11 +70,14 @@ struct msm_pinctrl {
->>
->>  	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
->>  	DECLARE_BITMAP(enabled_irqs, MAX_NR_GPIO);
->> +	DECLARE_BITMAP(pdc_irqs, MAX_PDC_IRQ);
->>
->>  	const struct msm_pinctrl_soc_data *soc;
->>  	void __iomem *regs;
->>  };
->>
->> +static bool in_suspend;
->> +
->>  static int msm_get_groups_count(struct pinctrl_dev *pctldev)
->>  {
->>  	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
->> @@ -787,8 +792,11 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
->>
->>  	raw_spin_lock_irqsave(&pctrl->lock, flags);
->>
->> -	if (pdc_irqd)
->> +	if (pdc_irqd && !in_suspend) {
->>  		irq_set_irq_wake(pdc_irqd->irq, on);
->> +		on ? set_bit(pdc_irqd->irq, pctrl->pdc_irqs) :
->> +		     clear_bit(pdc_irqd->irq, pctrl->pdc_irqs);
->
->I think we'll all survive the two extra lines if you write this as an
->'if' statement (unless you're competing for the next IOCCC, and then
->you need to up your game a bit).
->
->Also, are you indexing the bitmap using a Linux irq number? If so,
->that's an absolute NACK. Out of the box, a Linux IRQ can be up to
->NR_IRQS+8196 on arm64, and there are plans to push that to be a much
->larger space.
->
-I didn't realize this. I have been using linux IRQ number on this
-bitmask and I will need to fix this.
 
->> +	}
->>
->>  	irq_set_irq_wake(pctrl->irq, on);
->
->I'm a bit worried by the way you call into the irq subsystem with this
->spinlock held. Have you run that code with lockdep enabled?
->
-I have not tried lockdep. Will try it.
-This specific line is already part of the driver. I added a similar line
-irq_set_irq_wake(pdc_irqd->irq) just above following the same pattern.
+--nsqsqzl6ecisbpih
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>
->> @@ -920,6 +928,8 @@ static int msm_gpio_pdc_pin_request(struct irq_data *d)
->>  	}
->>
->>  	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
->> +	irq_set_handler_data(irq, d);
->> +	irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY);
->
->Could you explain what this is trying to do? I'm trying to understand
->this code, but this function isn't in 4.18...
->
-Oh, I have been able to test only on 4.14 so far. The flag does seem to
-exist at least, I didn't get a compiler error.
+Hi Georgi,
 
-I read this in kernel/irq/chip.c -
+On Tue, Aug 07, 2018 at 05:54:38PM +0300, Georgi Djakov wrote:
+> > There is also a patch series from Maxime Ripard that's addressing the
+> > same general area. See "dt-bindings: Add a dma-parent property". We
+> > don't need multiple ways to address describing the device to memory
+> > paths, so you all had better work out a common solution.
+>=20
+> Looks like this fits exactly into the interconnect API concept. I see
+> MBUS as interconnect provider and display/camera as consumers, that
+> report their bandwidth needs. I am also planning to add support for
+> priority.
 
-If the interrupt chip does not implement the irq_disable callback,
-a driver can disable the lazy approach for a particular irq line by
-calling 'irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY)'. This can
-be used for devices which cannot disable the interrupt at the
-device level under certain circumstances and have to use
-disable_irq[_nosync] instead.
+Thanks for working on this. After looking at your serie, the one thing
+I'm a bit uncertain about (and the most important one to us) is how we
+would be able to tell through which interconnect the DMA are done.
 
-And interpreted this as something that this would prevent 'relaxed'
-disable. I am enabling and disabling the IRQ in suspend path, that I
-thought this would help avoid issues caused by late disable. Am I
-mistaken?
+This is important to us since our topology is actually quite simple as
+you've seen, but the RAM is not mapped on that bus and on the CPU's,
+so we need to apply an offset to each buffer being DMA'd.
 
->>  	disable_irq(irq);
->>
->>  	return 0;
->> @@ -1070,6 +1080,54 @@ static void msm_pinctrl_setup_pm_reset(struct msm_pinctrl *pctrl)
->>  		}
->>  }
->>
->> +int __maybe_unused msm_pinctrl_suspend_late(struct device *dev)
->> +{
->> +	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
->> +	struct irq_data *irqd;
->> +	int i;
->> +
->> +	in_suspend = true;
->> +	for_each_set_bit(i, pctrl->pdc_irqs, MAX_PDC_IRQ) {
->> +		irqd = irq_get_handler_data(i);
->
->So this is what I though. You're using the Linux IRQ, and not the pin
->number (or whatever HW-dependent index that would otherwise make
->sense). Please fix it.
->
-Noted.
+Maxime
 
->> +		/*
->> +		 * We don't know if the TLMM will be functional
->> +		 * or not, during the suspend. If its functional,
->> +		 * we do not want duplicate interrupts from PDC.
->> +		 * Hence disable the GPIO IRQ and enable PDC IRQ.
->> +		 */
->> +		if (irqd_is_wakeup_set(irqd)) {
->> +			irq_set_irq_wake(irqd->irq, false);
->> +			disable_irq(irqd->irq);
->> +			enable_irq(i);
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int __maybe_unused msm_pinctrl_resume_late(struct device *dev)
->> +{
->> +	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
->> +	struct irq_data *irqd;
->> +	int i;
->> +
->> +	for_each_set_bit(i, pctrl->pdc_irqs, MAX_PDC_IRQ) {
->> +		irqd = irq_get_handler_data(i);
->> +		/*
->> +		 * The TLMM will be operational now, so disable
->> +		 * the PDC IRQ.
->> +		 */
->> +		if (irqd_is_wakeup_set(irq_get_irq_data(i))) {
->> +			disable_irq_nosync(i);
->> +			irq_set_irq_wake(irqd->irq, true);
->> +			enable_irq(irqd->irq);
->> +		}
->> +	}
->> +	in_suspend = false;
->> +
->> +	return 0;
->> +}
->> +
->>  int msm_pinctrl_probe(struct platform_device *pdev,
->>  		      const struct msm_pinctrl_soc_data *soc_data)
->>  {
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
->> index 9b9feea540ff..21b56fb5dae9 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
->> @@ -123,4 +123,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
->>  		      const struct msm_pinctrl_soc_data *soc_data);
->>  int msm_pinctrl_remove(struct platform_device *pdev);
->>
->> +int msm_pinctrl_suspend_late(struct device *dev);
->> +int msm_pinctrl_resume_late(struct device *dev);
->> +
->>  #endif
->
->I can't really review this code any further, as it seems that I'm
->missing some crucial dependencies. But there is a number of things
->that feel quite wrong in this code, and that need to be addressed
->anyway.
->
-Thanks for reviewing Marc.
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
--- Lina
+--nsqsqzl6ecisbpih
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlt63vYACgkQ0rTAlCFN
+r3TtAw//anYGPzaYAXU2DfIhIP1WNOqjhKjLIXnfx3R/tY+yQzvEmnSGYUWRcwGD
+WHtoOg6GYW1mUWWjyq6RFJeTbeBjLTcz2Lm7rYP/Oq78lCBUHO8jPWj/Ry10NuN/
+sM4emc7NyLJ4ZHzqLOIUXb5HEay6rN1pCbDKnTPM4eQf0Fewt2guDzr4lv9iCsYY
+NL6Xeval9Y/RhEJsaNcgYheMloheJAjmM3zo6CSjItA+PgRaaXI1wGCfLn8ilXty
+niTfLSVeJfVOVZ+WTfdUjhmWZ8mkt/jMvka39qLCI8njsvxLz/chwDkUAIIvHCmA
+qxvGhRbbLK6gzlW9ccE98bilvB/BcGEqq5SIZ+Uuu5CoO7vzqYbiXSqM4IUZJRCx
+VP5C+JXbT0fY6mn9OyvwGCeQ6TTbHPtFHiu7DSEfLg0eK6z9gobOVXWBqUO5o7Iz
+t9YyiwH2mU8uVRbhma4BjYghLoaE5v8O/QSNeEM6EyNqRYy0LdWJf4xOCt2szbGX
+xI3LYYe8lryCzfyQ9F+D0Rs7SI99KY7TYXEvl33YlszjWb5b8Qrb/YwnnlOybF84
+MvyXb8ru1Ku5ZUdn6VEXGqiR0MH9hFHq4aKyBQZQ/5gtxAHelt3zTvq+FMPjjyBa
+hdTlTFP/57Sc4s2OOFG/X+kpjrXaoohKoLFvUYMFx9tK9Y61Ook=
+=4UZ2
+-----END PGP SIGNATURE-----
+
+--nsqsqzl6ecisbpih--
