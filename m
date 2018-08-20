@@ -1,40 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ASoC: rsnd: Add device tree binding for
-	r8a77990
-Date: Mon, 20 Aug 2018 17:30:33 -0500
-Message-ID: <20180820223033.GA28364@bogus>
-References: <1534492435-17859-1-git-send-email-ykaneko0929@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: iommu: ipmmu-vmsa: Add r8a774a1 support
+Date: Mon, 20 Aug 2018 17:31:14 -0500
+Message-ID: <20180820223114.GA29387@bogus>
+References: <1534516265-10059-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1534516265-10059-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1534492435-17859-1-git-send-email-ykaneko0929@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+In-Reply-To: <1534516265-10059-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Joerg Roedel <joro@8bytes.org>, Mark Rutland <mark.rutland@arm.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Aug 2018 16:53:55 +0900, Yoshihiro Kaneko wrote:
-> From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+On Fri, 17 Aug 2018 15:31:05 +0100, Fabrizio Castro wrote:
+> Document RZ/G2M (R8A774A1) SoC bindings.
 > 
-> This patch adds the device tree binding of the r8a77990 SoC.
-> 
-> Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 > ---
+> This patch applies on top of next-20180817
 > 
-> This patch is based on the devel branch of Simon Horman's renesas tree.
-> 
->  Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
+>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
