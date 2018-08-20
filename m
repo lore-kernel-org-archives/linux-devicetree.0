@@ -1,50 +1,32 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] scripts/dtc: consolidate include path options in Makefile
-Date: Mon, 20 Aug 2018 16:32:06 -0500
-Message-ID: <CAL_Jsq+iAxmKvZ+RAD-VSOWirYOxc52mJHU5f5gybhWwQn2w_g@mail.gmail.com>
-References: <1530669563-32637-1-git-send-email-yamada.masahiro@socionext.com> <cfb66b67-f423-0c26-0b22-0d57a581b44a@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND v1 1/5] dt-bindings: pinctrl: add wakeup capable
+ GPIOs for SDM845
+Date: Mon, 20 Aug 2018 17:16:47 -0500
+Message-ID: <20180820221647.GA8711@bogus>
+References: <20180817191026.32245-1-ilina@codeaurora.org>
+ <20180817191026.32245-2-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cfb66b67-f423-0c26-0b22-0d57a581b44a@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180817191026.32245-2-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 20, 2018 at 1:55 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 07/03/18 18:59, Masahiro Yamada wrote:
-> > It is tedious to specify extra compiler options for every file.
-> > HOST_EXTRACFLAGS is useful to add options to all files in a
-> > directory.
-> >
-> > -I$(src)/libfdt is needed for all the files in this directory
-> > to include libfdt_env.h etc. from scripts/dtc/libfdt/.
-> >
-> > On the other hand, -I$(src) is used to include check-in headers
-> > from generated C files.  Thus, I added it only to dtc-lexer.lex.o
-> > and dtc-parser.tab.o .
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  scripts/dtc/Makefile | 18 ++++--------------
-> >  1 file changed, 4 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> > index 9cac65b..1c943e0 100644
-> > --- a/scripts/dtc/Makefile
-> > +++ b/scripts/dtc/Makefile
-> > @@ -9,21 +9,11 @@ dtc-objs    := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
-> >  dtc-objs     += dtc-lexer.lex.o dtc-parser.tab.o
-> >
-> >  # Source files need to get at the userspace version of libfdt_env.h to compile
-> > +HOST_EXTRACFLAGS := -I$(src)/libfdt
->
-> Shouldn't that be += instead of :=?
+On Fri, 17 Aug 2018 13:10:22 -0600, Lina Iyer wrote:
+> Update the documentation to use interrupts-extended format for
+> specifying the TLMM summary IRQ line that is requested from GIC and the
+> PDC interrupts corresponding to the wakeup capable GPIOs.
+> 
+> Update the example to show PDC interrupts for the wakeup capable GPIOs
+> for SDM845.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 58 ++++++++++++++++++-
+>  1 file changed, 55 insertions(+), 3 deletions(-)
+> 
 
-I don't think so. The definition is local to the file (and reset
-before each makefile is included).
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
