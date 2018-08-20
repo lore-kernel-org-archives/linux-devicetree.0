@@ -1,31 +1,33 @@
-From: pheragu@codeaurora.org
-Subject: Re: [PATCH v1 2/2] Embedded USB Debugger (EUD) driver
-Date: Mon, 20 Aug 2018 09:59:10 -0700
-Message-ID: <cffb39ab91d2922d5eb06fb9cf388d1f@codeaurora.org>
-References: <1534464348-8227-1-git-send-email-pheragu@codeaurora.org>
- <1534464348-8227-3-git-send-email-pheragu@codeaurora.org>
- <589f8341-580b-d1d0-5efd-261d8d4821b0@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Mon, 20 Aug 2018 12:57:49 -0500
+Message-ID: <20180820175749.GA13428@bogus>
+References: <20180817151528.21623-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <589f8341-580b-d1d0-5efd-261d8d4821b0@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180817151528.21623-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trilok Soni <tsoni@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, rnayak@codeaurora.org, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-17 12:47, Trilok Soni wrote:
-> Hi Prakruthi,
+On Fri, 17 Aug 2018 10:15:27 -0500, Dan Murphy wrote:
+> Add the device tree bindings for the lm3697
+> LED driver for backlighting and display.
 > 
-> On 8/16/2018 5:05 PM, Prakruthi Deepak Heragu wrote:
->> +
->> +#define EUD_INT_VBUS		BIT(2)
->> +#define EUD_INT_CHGR		BIT(3)
->> +#define EUD_INT_SAFE_MODE	BIT(4)
->> +
->> +#define EUD_NR			1
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
 > 
-> I don't see any use of EUD_NR in the driver below. Do we need it?
-Sorry about that. Will get rid of it.
+> v5 - Fix the comment for the example - https://lore.kernel.org/patchwork/patch/975060/
+> 
+> v4 - Removed HVLED definition in favor of HVLED place definition - https://lore.kernel.org/patchwork/patch/974812/
+> v3 - Updated subject with prefered title - https://lore.kernel.org/patchwork/patch/972337/
+> v2 - Fixed subject and patch commit message - https://lore.kernel.org/patchwork/patch/971326/
+> 
+>  .../devicetree/bindings/leds/leds-lm3697.txt  | 86 +++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
