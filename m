@@ -1,179 +1,54 @@
-From: Emmanuel Vadot <manu@bidouilliste.com>
-Subject: Re: [PATCH v3 0/4] allwinner: a64: add SRAM controller / system
- control
-Date: Mon, 20 Aug 2018 16:29:15 +0200
-Message-ID: <20180820162915.63f5298838819597e1047a1c@bidouilliste.com>
-References: <20180614153548.9644-1-wens@csie.org>
- <20180820094210.6d856029d51dad480782a783@bidouilliste.com>
- <CAGb2v66Eb4EoQs44cRwSKLf7MgwOtczNS0ufbtH5bLQBK24Lzg@mail.gmail.com>
- <20180820160149.65771a35c5b46f5ddb483428@bidouilliste.com>
- <CAGb2v67jB0kJSUE1wLgneAwgxr403Cb5nM1St2tBhW1aP9Db0A@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
+Date: Mon, 20 Aug 2018 07:31:53 -0700
+Message-ID: <20180820143153.GD7523@atomide.com>
+References: <20180605060510.32473-1-nm@ti.com>
+ <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
+ <454c277e-8a63-81cb-b341-a50f4e25cbea@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v67jB0kJSUE1wLgneAwgxr403Cb5nM1St2tBhW1aP9Db0A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <454c277e-8a63-81cb-b341-a50f4e25cbea@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Vignesh R <vigneshr@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Aug 2018 22:25:16 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
-
-> On Mon, Aug 20, 2018 at 10:01 PM, Emmanuel Vadot <manu@bidouilliste.com> wrote:
-> > On Mon, 20 Aug 2018 16:41:09 +0800
-> > Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> >> On Mon, Aug 20, 2018 at 3:42 PM, Emmanuel Vadot <manu@bidouilliste.com> wrote:
-> >> >
-> >> >  Hello Chen-Yu,
-> >> >
-> >> > On Thu, 14 Jun 2018 23:35:44 +0800
-> >> > Chen-Yu Tsai <wens@csie.org> wrote:
-> >> >
-> >> >> Hi,
-> >> >>
-> >> >> This series is the remaining A64 syscon changes from the R40 DWMAC
-> >> >> series. The series aligns how the A64 system control exports a regmap
-> >> >> for the sun8i DWMAC driver to access with what we've done for the R40.
-> >> >>
-> >> >> Originally the A64 used the generic syscon for this bit of hardware.
-> >> >> But this block also contains mapping bits for the onboard SRAM, used
-> >> >> by various peripherals, and other vendor specific bits we may use in
-> >> >> the future. It is by no means generic. And we already have a device
-> >> >> tree binding and driver for the SRAM part.
-> >> >>
-> >> >> The first patch make the SRAM control device export a regmap, exposing
-> >> >> a single EMAC control register, for the DWMAC driver to consume.
-> >> >>
-> >> >> The second and third patches rename the A64 compatible string to read
-> >> >> "system control", which is what the block is named in the user manual.
-> >> >>
-> >> >> The last patch fixes up the device node, and also adds the lone mappable
-> >> >> SRAM block, which is needed by the Display Engine.
-> >> >>
-> >> >> Changes since v2:
-> >> >>
-> >> >>   - changed the compatible string from "*-sram-controller" to
-> >> >>     "*-system-control"
-> >> >>
-> >> >>
-> >> >> ChenYu
-> >> >>
-> >> >> Chen-Yu Tsai (2):
-> >> >>   dt-bindings: sram: Rename A64 SRAM controller compatible
-> >> >>   soc: sunxi: sram: Add updated compatible string for A64 system control
-> >> >>
-> >> >> Icenowy Zheng (2):
-> >> >>   soc: sunxi: export a regmap for EMAC clock reg on A64
-> >> >>   arm64: dts: allwinner: a64: add SRAM controller device tree node
-> >> >>
-> >> >>  .../devicetree/bindings/sram/sunxi-sram.txt   |  3 +-
-> >> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19 +++++-
-> >> >>  drivers/soc/sunxi/sunxi_sram.c                | 61 ++++++++++++++++++-
-> >> >>  3 files changed, 78 insertions(+), 5 deletions(-)
-> >> >>
-> >> >> --
-> >> >> 2.17.1
-> >> >
-> >> >  I wish to have seen this serie before as it have some inconsistencies.
-> >> >
-> >> >  In patch 2 you renamed allwinner,sun50i-a64-sram-controller to
-> >> > allwinner,sun50i-a64-system-control but the former was never used in
-> >> > the DTS, the compatible used was allwinner,sun50i-a64-system-controller.
-> >> >  You also say that you've never seen use of it. How can you make that
-> >> > claim ? There is a lot of downstream users of DTS now (FreeBSD, NetBSD,
-> >> > OpenBSD and even RiscOS and Haiku iirc), it's not just Linux.
-> >>
-> >> The original "a64-sram-controller" was never used in any upstream device
-> >> tree, be it Linux or U-boot. Since the projects you listed all derive
-> >> their device trees from U-boot, with maybe some extra devices on top,
-> >> they would either have had the "system-controller" version, or the even
-> >> earlier version in U-boot where the emac node just lists the syscon
-> >> address range as its own.
-> >>
-> >> U-boot has the latter "system-controller" because it was copied from Linux.
-> >> The original use-case was a SoC-specific compatible string followed by the
-> >> very generic "syscon". The latter "syscon" binding is what we actually
-> >> support in Linux and U-boot. Same goes for NetBSD and OpenBSD.
-> >>
-> >> IMHO FreeBSD could also move to a generic syscon API, instead of
-> >> "system-controller" for sunxi and "grf" for rockchip.
-> >
-> >  We decided to always implement a specific driver if the node have
-> > another compatible than syscon (I don't see the point of having a
-> > syscon compatible plus another one)
+* Kishon Vijay Abraham I <kishon@ti.com> [180808 06:35]:
+> On Tuesday 05 June 2018 07:35 PM, Rob Herring wrote:
+> > Really need 64-bit addresses and sizes? Use ranges to limit the
+> > address space if possible.
 > 
-> In most cases, the fallback is there in situations when support for the
-> older or more generic device type can work with the new device, albeit
-> at lower efficiency or without full functionality.
+> We now have address-cells as <1>,
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/ti/k3-am65.dtsi#n49
 > 
-> Using a specific one with the "syscon" doesn't quite make sense to me
-> either, but some platforms, like Rockchip, do use it. I suppose it would
-> help them identify the type of syscon, but I think that is really tied
-> to the consumer.
-
- Maybe we should revised our decision then.
-
-> >> You can continue to support old device trees and the unlisted compatible
-> >> through the generic "syscon" fallback. For the updated device tree you will
-> >> have to support the new compatible, along with supporting the SRAM mappings.
-> >> The SRAM mappings are why the "syscon" compatible was removed. It just
-> >> doesn't fit the semantics described by the "syscon" binding.
-> >
-> >  I understand the removal of syscon since the sram addition, I just
-> > don't understand the strict renaming and why adding a new one couldn't
-> > work.
+> However each PCIe instance has 2 data regions and one of the regions
+> (PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT1/PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT1 specified
+> in the "MAIN Domain Memory Map" table of TRM http://www.ti.com/lit/pdf/spruid7)
+> is above the 32bit region and requires 2 cells to specify the start address.
+> This region is used to access MEM_SPACE of PCIe endpoint when operating in root
+> complex mode and access memory of PCI root complex when operating in endpoint mode.
 > 
-> You mean having something like the following?
-> 
->     compatible = "allwinner,sun50i-a64-system-control",
->                  "allwinner,sun50i-a64-system-controller";
+> In order to describe this, should we change the address-cells back to <2> or do
+> you suggest any other alternatives?
 
- Yes.
+It's probably best to have the top level cbass interconnect use
+#size-cells = <2> and then have it's child interconnects have
+#size-cells = <1> if they don't need ranges above 4GB.
 
-> Well, the "system-controller" compatible was never listed in any binding,
-> and it shouldn't have been there in the first place. And I think having
-> the compatibles match up with the datasheet is better. Last, it is not
-> an actual "controller". It is just a set of control registers.
+BTW, what's the difference between all these three similar PCIE
+ranges?
 
- Yes I think the main problem was that some non-documented binding was
-used.
+PCIE0_CORE_CORE_DAT_SLV_PCIE_CORE 0x0005500000 0x0005600000 1 MB
+PCIE1_CORE_CORE_DAT_SLV_PCIE_CORE 0x0005600000 0x0005700000 1 MB
 
-> ChenYu
-> 
-> >> >  Also this compatible is currently the one used in the u-boot dts,
-> >> > which mean that users of the embedded DTB use or can use it (which is
-> >> > the default for EFI users of U-Boot).
-> >>
-> >> As mentioned above, the old device tree uses the syscon binding, which
-> >> you can continue to support. The new binding is add support for the SRAM
-> >> mapping system. In addition, you probably don't want two device drivers
-> >> supporting the same compatible string. On Linux it's even worse, because
-> >> the "syscon" driver sidesteps the device model and isn't an actual device
-> >> driver.
-> >>
-> >> Regards
-> >> ChenYu
-> >>
-> >> _______________________________________________
-> >> linux-arm-kernel mailing list
-> >> linux-arm-kernel@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >
-> >
-> > --
-> > Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
+PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT0 0x0010000000 0x0018000000 128 MB
+PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT0 0x0018000000 0x0020000000 128 MB
 
+PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT1 0x4000000000 0x4100000000 4 GB
+PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT1 0x4100000000 0x4200000000 4 GB
 
--- 
-Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
+Regards,
+
+Tony
