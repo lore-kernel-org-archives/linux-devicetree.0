@@ -1,35 +1,41 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
-Date: Mon, 20 Aug 2018 07:21:24 -0700
-Message-ID: <20180820142124.GC7523@atomide.com>
-References: <20180605060510.32473-1-nm@ti.com>
- <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
- <20180607233853.p7iw7nlxxuyi66og@kahuna>
- <20180614123805.GF112168@atomide.com>
- <20180614130435.j2bmzam6corrjylx@kahuna>
- <20180615050108.GG112168@atomide.com>
- <a69fcb7a-f7a1-481b-8a02-1da7d1e20671@ti.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH] arm64: allwinner: dts: h6: fix Pine H64 MMC bus width
+Date: Mon, 20 Aug 2018 22:24:20 +0800
+Message-ID: <6e2df3d919b85f48c22c653124b7c2b594cb2d28.camel@aosc.io>
+References: <20180726044805.55888-1-icenowy@aosc.io>
+         <20180730082712.koiaej6dxjnnk6lb@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a69fcb7a-f7a1-481b-8a02-1da7d1e20671@ti.com>
+In-Reply-To: <20180730082712.koiaej6dxjnnk6lb@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, Vignesh R <vigneshr@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Sekhar Nori <nsekhar@ti.com> [180615 13:41]:
+在 2018-07-30一的 10:27 +0200，Maxime Ripard写道：
+> On Thu, Jul 26, 2018 at 12:48:05PM +0800, Icenowy Zheng wrote:
+> > Currently the enabled MMC controllers on Pine H64 do not have bus-
+> > width
+> > set, which make them fall back to 1-bit mode and become quite slow.
+> > 
+> > Fix this by add the corresponding bus-width properties.
+> > 
+> > Fixes: ecbd611882a1 ("arm64: allwinner: h6: enable MMC0/2 on Pine
+> > H64")
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 > 
-> How well we can reuse individual interconnect segments is something I
-> have to think about / experiment. Will have to be wary of any "short
-> paths" or "cross connections".
+> Applied, thanks!
 
-These short paths and cross connections are almost certainly just
-additional ranges from the parent interconnect. See for example
-what we have in Linux next for wdt3 in omap4.dtsi for separate
-ranges for L4 and L3 interconnects.
+BTW why didn't I see it in next-20180820?
 
-Regards,
+It's 3 weeks later, and you didn't say that the patch is queued for
+another version.
 
-Tony
+> Maxime
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
