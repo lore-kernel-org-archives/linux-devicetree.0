@@ -1,134 +1,45 @@
-From: Wendy Liang <sunnyliangjy@gmail.com>
-Subject: Re: [PATCH 7/7] Documentation: devicetree: Add Xilinx R5 rproc binding
-Date: Sun, 19 Aug 2018 22:55:53 -0700
-Message-ID: <CAA07jV8Bf5kxJPiPMGdpqs_6KhMnjnAC4=5GomJBKgTbVSXV4Q@mail.gmail.com>
-References: <1534403190-28523-1-git-send-email-jliang@xilinx.com>
- <1534403190-28523-8-git-send-email-jliang@xilinx.com> <CAAtXAHd0jmV32bSyxCyMSh9fcP63sM+6-SkTMS=gA1fJKGKtig@mail.gmail.com>
+From: Roy Im <roy.im.opensource@diasemi.com>
+Subject: [PATCH V3 0/3]  da7280: haptic driver submission
+Date: Mon, 20 Aug 2018 14:36:20 +0900
+Message-ID: <cover.1534743380.git.Roy.Im@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHd0jmV32bSyxCyMSh9fcP63sM+6-SkTMS=gA1fJKGKtig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Wendy Liang <wendy.liang@xilinx.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, rajan.vaja@xilinx.com, jollys@xilinx.com, linux-remoteproc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wendy Liang <jliang@xilinx.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 17, 2018 at 9:31 AM, Moritz Fischer
-<moritz.fischer@ettus.com> wrote:
-> Hi Wendy,
->
-> couple of minor stuff inline.
->
-> On Thu, Aug 16, 2018 at 12:06 AM, Wendy Liang <wendy.liang@xilinx.com> wrote:
->> Add device tree binding for Xilinx Cortex-r5 remoteproc.
->>
->> Signed-off-by: Wendy Liang <jliang@xilinx.com>
->> ---
->>  .../remoteproc/xlnx,zynqmp-r5-remoteproc.txt       | 81 ++++++++++++++++++++++
->>  1 file changed, 81 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
->> new file mode 100644
->> index 0000000..3940019
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
->> @@ -0,0 +1,81 @@
->> +Xilinx ARM Cortex A53-R5 remoteproc driver
->> +==========================================
->> +
->> +ZynqMP family of devices use two Cortex R5 processors to help with various
->> +low power / real time tasks.
->
-> The ZynqMP family [..] uses [..]
-Will update in next version
->> +
->> +This driver requires specific ZynqMP hardware design.
->
-> *a* specific ZynqMP hardware design. What does that mean?
->> +
->> +ZynqMP R5 RemoteProc Device Node:
->> +=================================
->> +A zynqmp_r5_remoteproc device node is used to represent a R5 IP instance
->> +within ZynqMP SoC.
->> +
->> +Required properties:
->> +--------------------
->> + - compatible : Should be "xlnx,zynqmp-r5-remoteproc-1.0"
->> + - reg : Address and length of the register set for the device. It
->> +        contains in the same order as described reg-names
->
-> ?
->> + - reg-names: Contain the register set names.
->
-> Contains
-Will update in next version
->
->> +              "tcm_a" and "tcm_b" for TCM memories.
->> +              If the user uses the remoteproc driver with the RPMsg kernel
->> +              driver,"ipi" for the IPI register used to communicate with RPU
->> +              is also required.
->> +              Otherwise, if user only uses the remoteproc driver to boot RPU
->> +              firmware, "ipi" is not required.
->> + - tcm-pnode-id: TCM resources power nodes IDs which are used to request TCM
->> +                 resources for the remoteproc driver to access.
->> + - rpu-pnode-id : RPU power node id which is used by the remoteproc driver
->> +                  to start RPU or shut it down.
->> +
->> +Optional properties:
->> +--------------------
->> + - core_conf : R5 core configuration (valid string - split0 or split1 or
->> +               lock-step), default is lock-step.
->> + - memory-region: memories regions for RPU executable and DMA memory.
->> + - interrupts : Interrupt mapping for remoteproc IPI. It is required if the
->> +                user uses the remoteproc driver with the RPMsg kernel driver.
->> + - interrupt-parent : Phandle for the interrupt controller. It is required if
->> +                      the user uses the remoteproc driver with the RPMsg kernel
->> +                      kernel driver.
->> +
->> +Example:
->> +--------
->> +       reserved-memory {
->> +               #address-cells = <2>;
->> +               #size-cells = <2>;
->> +               ranges;
->> +               rproc_0_fw_reserved: rproc@3ed000000 {
->> +                       compatible = "rproc-prog-memory";
->> +                       no-map;
->> +                       reg = <0x0 0x3ed00000 0x0 0x40000>;
->> +               };
->> +               rproc_0_dma_reserved: rproc@3ed400000 {
->> +                       compatible = "shared-dma-pool";
->> +                       no-map;
->> +                       reg = <0x0 0x3ed40000 0x0 0x80000>;
->> +               };
->> +       };
->> +
->> +       firmware {
->> +               zynqmp_firmware: zynqmp-firmware {
->> +                       compatible = "xlnx,zynqmp-firmware";
->> +                       method = "smc";
->> +               };
->> +       };
->> +
->> +       zynqmp-r5-remoteproc@0 {
->> +               compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
->> +               reg = <0x0 0xFFE00000 0x0 0x10000>,
->> +                       <0x0 0xFFE20000 0x0 0x10000>,
->> +                       <0x0 0xff340000 0x0 0x100>;
->> +               reg-names = "tcm_a", "tcm_b", "ipi";
->> +               dma-ranges;
->> +               core_conf = "split0";
->> +               memory-region = <&rproc_0_fw_reserved>,
->> +                               <&rproc_0_dma_reserved>;
->> +               tcm-pnode-id = <0xf>, <0x10>;
->> +               rpu-pnode-id = <0x7>;
->> +               interrupt-parent = <&gic>;
->> +               interrupts = <0 29 4>;
->> +       } ;
->> --
->> 2.7.4
->>
->
-> Cheers,
-> Moritz
+From: Roy Im <roy.im.opensource@diasemi.com>
+
+This patch adds support for the Dialog DA7280 Haptic driver IC.
+
+In this patch set the following is provided:
+
+[PATCH V2 1/3] MAINTAINERS file update for DA7280
+[PATCH V2 2/3] DA7280 DT Binding
+[PATCH V2 3/3] DA7280 Driver
+
+This patch applies against linux-next and v4.18
+
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
+
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
+
+ .../devicetree/bindings/input/dlg,da7280.txt       |   91 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   12 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1451 ++++++++++++++++++++
+ drivers/input/misc/da7280.h                        |  412 ++++++
+ 6 files changed, 1969 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+ create mode 100644 drivers/input/misc/da7280.h
+
+-- 
+end-of-patch for PATCH V3
