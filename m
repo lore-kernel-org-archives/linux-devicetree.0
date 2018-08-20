@@ -1,45 +1,54 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v4 0/2] i2c: Add support for Qcom CCI I2C controller
-Date: Mon, 20 Aug 2018 12:09:51 +0530
-Message-Id: <20180820063953.6866-1-vkoul@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=MlC+=LD=gmail.com=thierry.reding@kernel.org>
+Date: Mon, 20 Aug 2018 11:34:13 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] dt-bindings: pwm: rcar: Add bindings for R-Car E3 support
+Message-ID: <20180820093413.GD8242@ulmo>
+References: <1532951391-28792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KdquIMZPjGJQvRdI"
+Content-Disposition: inline
+In-Reply-To: <1532951391-28792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
 
-This series adds support for Qualcomm Camera Control Interface (CCI) I2C
-controller. This block contains one/two I2C masters and registers these
-adapters based on the controller probed on.
+--KdquIMZPjGJQvRdI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v4:
- - Add pm support
- - Fix based on Bjorn feedback
+On Mon, Jul 30, 2018 at 08:49:51PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds bindings for R-Car E3. No driver update is needed.
+>=20
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Changes in v3:
- - Update DT binding per RobH comments
- - Add the subnode for bus instances
- - Move all compataible data to driver data
- - add num_master data and use that to register and use masters
+Applied, thanks.
 
-Changes in v2:
- - Add support for two adapters
+Thierry
 
+--KdquIMZPjGJQvRdI
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlt6ixUACgkQ3SOs138+
+s6FaRw//TqIWGJRbFnwExifh8V64tkQmcrDSH3CE5AC00wYOb3argzOKkGfl8+ZW
+dBzzfgIpmpxQhXUGp7p18bewfoWKanxfYj0+oGcDTyAGkMme62d/JcGZyiQx5HmI
+JV4zsTOpnxV/K2G/pQhxdzF/YA6rDmQkmD3XNmrTiGKHxvaNIijE+KuuvMVn2jAN
+mMOISSXNVrquAFkZQAMOr8s2pLIFwh2zX0N1nJWx9DDLHoqNL2OV9xW5LaFbvCBZ
+h9pfObkj79EGCrVhcSMd2tmrcyLvooi0hWGbR4pfAs371OIl79ciIJjbeoUYvNK1
+Z5f5aPhKkVNsG1kt1yKJBApRsPTfxuJNzr7kbARRk+pE5kE6lN6f/bT79D4I5Je3
+BijeRyOobmZQzuN+3R/wQdVESIGGIG0yZC2gnQJIFBTKrUmEW+6sw+V0P5HHMfY0
+gLa7Iq3laa9WXs1K/V0o/OFPthGki4JiIvH1ZmwcA1ulmsaf5aL/EVmqdLhOZmqf
+aLqyMgNKgYQ5o0LJXNwNwH8bcknZytV+KoBbYQuSwXpdqu7uNoELV1Z/hlmmNc8S
+x8iMGZKtVPtjO526jnQKWAgtVniYeIetU0nf3/MAG7u/eMf0n/BMJVKpc7JFUXMh
+PtQnMlFytRo4iCe188HH4xCEfDQARTHZ3y1Ut5byWjH8K+0YE9Q=
+=TWcT
+-----END PGP SIGNATURE-----
 
-Todor Tomov (2):
-  dt-bindings: i2c: Add binding for Qualcomm CCI I2C controller
-  i2c: Add Qualcomm CCI I2C driver
-
- .../devicetree/bindings/i2c/i2c-qcom-cci.txt       |  83 ++
- drivers/i2c/busses/Kconfig                         |  10 +
- drivers/i2c/busses/Makefile                        |   1 +
- drivers/i2c/busses/i2c-qcom-cci.c                  | 879 +++++++++++++++++++++
- 4 files changed, 973 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
- create mode 100644 drivers/i2c/busses/i2c-qcom-cci.c
-
--- 
-2.14.4
+--KdquIMZPjGJQvRdI--
