@@ -1,130 +1,392 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun8i: r40/v40: rewrite BPi
- M2 Berry DTS to rebase on M2 Ultra
-Date: Mon, 20 Aug 2018 17:02:01 +0200
-Message-ID: <20180820150201.t2qoqvpsd66arprz@flea>
-References: <20180724163655.61365-1-icenowy@aosc.io>
- <20180726124119.dwne2sncws2p3sdi@flea>
- <dc8a28bcfbe082158bac5b097badb3ddf0f51ce8.camel@aosc.io>
- <20180820120046.7tonxtb52q43ocfq@flea>
- <2782CDF6-C36F-49EF-97AE-75382C416489@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v4 09/14] irqchip/irq-mvebu-icu: add support for System
+ Error Interrupts (SEI)
+Date: Mon, 20 Aug 2018 16:21:19 +0100
+Message-ID: <a88f62c0-7d7c-71da-fa45-487f7573dbb1@arm.com>
+References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
+ <20180705124011.7661-10-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ubiy6wokou235udw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5NP5PNQKGQENOIOE4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <2782CDF6-C36F-49EF-97AE-75382C416489-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180705124011.7661-10-miquel.raynal@bootlin.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/07/18 13:40, Miquel Raynal wrote:
+> An SEI driver provides an MSI domain through which it is possible to
+> raise SEIs.
 
---ubiy6wokou235udw
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is that really relevant to this patch? It is about the ICU driver, and I
+would expect you to explain how the ICU so far only handled NSR
+interrupts through GICP, but now can also generate SEIs by routing MSIs
+through the SEI block.
 
-On Mon, Aug 20, 2018 at 08:06:21PM +0800, Icenowy Zheng wrote:
->=20
->=20
-> =E4=BA=8E 2018=E5=B9=B48=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-8:00:46, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
-> >Hi!
-> >
-> >On Wed, Aug 08, 2018 at 06:36:56PM +0800, Icenowy Zheng wrote:
-> >> =E5=9C=A8 2018-07-26=E5=9B=9B=E7=9A=84 14:41 +0200=EF=BC=8CMaxime Ripa=
-rd=E5=86=99=E9=81=93=EF=BC=9A
-> >> > On Wed, Jul 25, 2018 at 12:36:55AM +0800, Icenowy Zheng wrote:
-> >> > > Banana Pi designs the BPi M2 Berry board to be software
-> >compatible
-> >> > > with
-> >> > > BPi M2 Ultra,
-> >> >=20
-> >> > Do you have a reference for this?
-> >> >=20
-> >> > > so it's based on M2 Ultra with some function cuts, including:
-> >> > >=20
-> >> > > - 2048MiB DRAM -> 1024MiB (this should be proceed by the
-> >> > > bootloader);
-> >> > > - dropped a LED;
-> >> > > - dropped eMMC;
-> >> > > - dropped USB2 and connect USB1 to a 4-port HUB.
-> >> >=20
-> >> > Is it the exhaustive list?
-> >>=20
-> >> I have asked Mikey from Sinovoip, and he has agreed this.
-> >>=20
-> >> Here's a list provided by him, which covers some things I forgot:
-> >> - 2GiB -> 1GiB
-> >> - no eMMC
-> >> - no onboard microphone
-> >> - no IR
-> >> - no charging (and power jack to USB)
-> >> - USB change
-> >> - one less LED
-> >>=20
-> >> Should I add this to the device tree's comment?
-> >
-> >Not really, because...
-> >
-> >> >=20
-> >> > I'm a bit reluctant to merge that kind of patches usually, since
-> >that
-> >> > would also imply that each time someone will commit something to
-> >the
-> >> > M2-Ultra, it would automatically apply to the M2-Berry, without any
-> >> > easy way to tell and / or test.
-> >
-> >... this still applies.
->=20
-> But I think few developers will have both boards at the same time.
+> 
+> Handle the NSR probe function in a more generic way to support other
+> type of interrupts (ie. the SEIs).
+> 
+> Each interrupt domain is a tree domain because of maximum 207 entries.
+> Reallocating an ICU slot is prevented by the use of an ICU-wide bitmap.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/irqchip/irq-mvebu-icu.c | 148 +++++++++++++++++++++++++++++++++-------
+>  1 file changed, 123 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+> index bb4f06833d17..0cf741dd0f51 100644
+> --- a/drivers/irqchip/irq-mvebu-icu.c
+> +++ b/drivers/irqchip/irq-mvebu-icu.c
+> @@ -26,6 +26,10 @@
+>  #define ICU_SETSPI_NSR_AH	0x14
+>  #define ICU_CLRSPI_NSR_AL	0x18
+>  #define ICU_CLRSPI_NSR_AH	0x1c
+> +#define ICU_SET_SEI_AL		0x50
+> +#define ICU_SET_SEI_AH		0x54
+> +#define ICU_CLR_SEI_AL		0x58
+> +#define ICU_CLR_SEI_AH		0x5C
+>  #define ICU_INT_CFG(x)          (0x100 + 4 * (x))
+>  #define   ICU_INT_ENABLE	BIT(24)
+>  #define   ICU_IS_EDGE		BIT(28)
+> @@ -36,12 +40,28 @@
+>  #define ICU_SATA0_ICU_ID	109
+>  #define ICU_SATA1_ICU_ID	107
+>  
+> +struct mvebu_icu_subset_data {
+> +	unsigned int icu_group;
+> +	unsigned int offset_set_ah;
+> +	unsigned int offset_set_al;
+> +	unsigned int offset_clr_ah;
+> +	unsigned int offset_clr_al;
+> +};
+> +
+>  struct mvebu_icu {
+>  	struct irq_chip irq_chip;
+>  	void __iomem *base;
+>  	struct device *dev;
+>  	bool is_legacy;
+> +	/* Lock on interrupt allocations/releases */
+> +	struct mutex msi_lock;
+> +	DECLARE_BITMAP(msi_bitmap, ICU_MAX_IRQS);
+> +};
+> +
+> +struct mvebu_icu_msi_data {
+> +	struct mvebu_icu *icu;
+>  	atomic_t initialized;
+> +	const struct mvebu_icu_subset_data *subset_data;
+>  };
+>  
+>  struct mvebu_icu_irq_data {
+> @@ -50,28 +70,38 @@ struct mvebu_icu_irq_data {
+>  	unsigned int type;
+>  };
+>  
+> -static void mvebu_icu_init(struct mvebu_icu *icu, struct msi_msg *msg)
+> +static void mvebu_icu_init(struct mvebu_icu *icu,
+> +			   struct mvebu_icu_msi_data *msi_data,
+> +			   struct msi_msg *msg)
+>  {
+> -	if (atomic_cmpxchg(&icu->initialized, false, true))
+> +	const struct mvebu_icu_subset_data *subset = msi_data->subset_data;
+> +
+> +	if (atomic_cmpxchg(&msi_data->initialized, false, true))
+> +		return;
+> +
+> +	/* Set 'SET' ICU SPI message address in AP */
+> +	writel_relaxed(msg[0].address_hi, icu->base + subset->offset_set_ah);
+> +	writel_relaxed(msg[0].address_lo, icu->base + subset->offset_set_al);
+> +
+> +	if (subset->icu_group != ICU_GRP_NSR)
+>  		return;
+>  
+> -	/* Set Clear/Set ICU SPI message address in AP */
+> -	writel_relaxed(msg[0].address_hi, icu->base + ICU_SETSPI_NSR_AH);
+> -	writel_relaxed(msg[0].address_lo, icu->base + ICU_SETSPI_NSR_AL);
+> -	writel_relaxed(msg[1].address_hi, icu->base + ICU_CLRSPI_NSR_AH);
+> -	writel_relaxed(msg[1].address_lo, icu->base + ICU_CLRSPI_NSR_AL);
+> +	/* Set 'CLEAR' ICU SPI message address in AP (level-MSI only) */
+> +	writel_relaxed(msg[1].address_hi, icu->base + subset->offset_clr_ah);
+> +	writel_relaxed(msg[1].address_lo, icu->base + subset->offset_clr_al);
+>  }
+>  
+>  static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
+>  {
+>  	struct irq_data *d = irq_get_irq_data(desc->irq);
+> +	struct mvebu_icu_msi_data *msi_data = platform_msi_get_host_data(d->domain);
+>  	struct mvebu_icu_irq_data *icu_irqd = d->chip_data;
+>  	struct mvebu_icu *icu = icu_irqd->icu;
+>  	unsigned int icu_int;
+>  
+>  	if (msg->address_lo || msg->address_hi) {
+> -		/* One off initialization */
+> -		mvebu_icu_init(icu, msg);
+> +		/* One off initialization per domain */
+> +		mvebu_icu_init(icu, msi_data, msg);
+>  		/* Configure the ICU with irq number & type */
+>  		icu_int = msg->data | ICU_INT_ENABLE;
+>  		if (icu_irqd->type & IRQ_TYPE_EDGE_RISING)
+> @@ -105,7 +135,8 @@ static int
+>  mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+>  			       unsigned long *hwirq, unsigned int *type)
+>  {
+> -	struct mvebu_icu *icu = platform_msi_get_host_data(d);
+> +	struct mvebu_icu_msi_data *msi_data = platform_msi_get_host_data(d);
+> +	struct mvebu_icu *icu = msi_data->icu;
+>  	unsigned int param_count = icu->is_legacy ? 3 : 2;
+>  
+>  	/* Check the count of the parameters in dt */
+> @@ -117,7 +148,7 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+>  
+>  	if (icu->is_legacy) {
+>  		*hwirq = fwspec->param[1];
+> -		*type = fwspec->param[2];
+> +		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+>  		if (fwspec->param[0] != ICU_GRP_NSR) {
+>  			dev_err(icu->dev, "wrong ICU group type %x\n",
+>  				fwspec->param[0]);
+> @@ -125,7 +156,7 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+>  		}
+>  	} else {
+>  		*hwirq = fwspec->param[0];
+> -		*type = fwspec->param[1];
+> +		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
 
-Which is only making it worse, because then someone with only the BPI
-m2-ultra, when changing the DT, will not be able to tell that:
+Shouldn't this change (and the one just above) be moved to another patch
+(such as patch #6)? They feel oddly out of place here.
 
- - it's applied to the M2-Berry too,
- - if it works on the M2-Berry.
+>  	}
+>  
+>  	if (*hwirq >= ICU_MAX_IRQS) {
+> @@ -133,12 +164,36 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+>  		return -EINVAL;
+>  	}
+>  
+> -	/* Mask the type to prevent wrong DT configuration */
+> -	*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+> +	/*
+> +	 * The ICU receives level-interrupts. MSI SEI are
+> +	 * edge-interrupts while MSI NSR are level-interrupts. Update the type
+> +	 * accordingly for the parent irqchip.
+> +	 */
+> +	if (msi_data->subset_data->icu_group == ICU_GRP_SEI)
+> +		*type = IRQ_TYPE_EDGE_RISING;
 
-Maxime
+That's interesting. How is the resampling done here?
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>  
+>  	return 0;
+>  }
+>  
+> +static int mvebu_icu_msi_bitmap_region_alloc(struct mvebu_icu *icu, int hwirq)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&icu->msi_lock);
+> +	ret = bitmap_allocate_region(icu->msi_bitmap, hwirq, 0);
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+See my earlier comment about the use of find_first_free/set_bit.
 
---ubiy6wokou235udw
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	mutex_unlock(&icu->msi_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static void mvebu_icu_msi_bitmap_region_release(struct mvebu_icu *icu,
+> +						int hwirq)
+> +{
+> +	mutex_lock(&icu->msi_lock);
+> +	bitmap_release_region(icu->msi_bitmap, hwirq, 0);
+> +	mutex_unlock(&icu->msi_lock);
+> +}
+> +
+>  static int
+>  mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  			   unsigned int nr_irqs, void *args)
+> @@ -146,7 +201,9 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  	int err;
+>  	unsigned long hwirq;
+>  	struct irq_fwspec *fwspec = args;
+> -	struct mvebu_icu *icu = platform_msi_get_host_data(domain);
+> +	struct mvebu_icu_msi_data *msi_data =
+> +		platform_msi_get_host_data(domain);
 
------BEGIN PGP SIGNATURE-----
+On a single line, please.
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlt61+gACgkQ0rTAlCFN
-r3T6cA/9HJs6NWHZ6nfVmUQT5rFNFR6ovzGPpAqny2McXM8oc1+Ytcj3tYqC6WZf
-H/kqoZzK6qU+Xmkw0l0kK0OIaQ7SYAhwQ5o1JzFoMewaiD5X2YpNfU55sX93qbc8
-bu5EW8nsm/knwFx1zFFVEmkA2TykOM8L3f1jj4xqqEfSfdIWjWL9ZvArNT6W5pvE
-zIZsUFmaaMb+Z+ndSGzzMdJtzDR+832kyiugqYjwy9GNAh0WhNpqetaR0owhjqc2
-/R3Emcdc4cpZl1zCE8mRPp6F69RhwXEvSZz7TqWQDaGBP/okuFsp+ULgHu06uJ18
-DOGtUc7PeqKJobXXftG20HiA05COno/2ta/iRBEv5D7O64X7saSOY5Kl3GHKcgt7
-WB5agJ8w4Tg8G4+n6MP5mmmJdjH3uNAiZPb6TR7Ex7MDf6gJiO4OJt2NIpimzz77
-9E+PAe6KR1ZgZjSpE+8ZO+7iUrOA7ehQP5D4cgtj3RomnCCWBsBoa4Ct0yP9Feob
-pvEZ+iWW9aYRuq2BaOIyBWn4Sd9h4RuBleMJ9qJuqpAZkd/E131qf7qFPvwGb0rD
-w7cUtFtjLEp8bXukUavxkyXFJeTBI0zQxsdy0OETJ1137RE5P3FwtVUgeWQVIL3P
-k4ABBfC6s8c2FpxE2ZkqC0PrtUDvEiprPSZ0gNfitlj7VGQiqYg=
-=bOvK
------END PGP SIGNATURE-----
+> +	struct mvebu_icu *icu = msi_data->icu;
+>  	struct mvebu_icu_irq_data *icu_irqd;
+>  
+>  	icu_irqd = kmalloc(sizeof(*icu_irqd), GFP_KERNEL);
+> @@ -160,16 +217,20 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  		goto free_irqd;
+>  	}
+>  
+> +	err = mvebu_icu_msi_bitmap_region_alloc(icu, hwirq);
+> +	if (err)
+> +		goto free_irqd;
+> +
+>  	if (icu->is_legacy)
+>  		icu_irqd->icu_group = fwspec->param[0];
+>  	else
+> -		icu_irqd->icu_group = ICU_GRP_NSR;
+> +		icu_irqd->icu_group = msi_data->subset_data->icu_group;
+>  	icu_irqd->icu = icu;
+>  
+>  	err = platform_msi_domain_alloc(domain, virq, nr_irqs);
+>  	if (err) {
+>  		dev_err(icu->dev, "failed to allocate ICU interrupt in parent domain\n");
+> -		goto free_irqd;
+> +		goto free_bitmap;
+>  	}
+>  
+>  	/* Make sure there is no interrupt left pending by the firmware */
+> @@ -188,6 +249,8 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  
+>  free_msi:
+>  	platform_msi_domain_free(domain, virq, nr_irqs);
+> +free_bitmap:
+> +	mvebu_icu_msi_bitmap_region_release(icu, hwirq);
+>  free_irqd:
+>  	kfree(icu_irqd);
+>  	return err;
+> @@ -197,12 +260,17 @@ static void
+>  mvebu_icu_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+>  			  unsigned int nr_irqs)
+>  {
+> +	struct mvebu_icu_msi_data *msi_data =
+> +		platform_msi_get_host_data(domain);
 
---ubiy6wokou235udw--
+Single line.
+
+
+> +	struct mvebu_icu *icu = msi_data->icu;
+>  	struct irq_data *d = irq_get_irq_data(virq);
+>  	struct mvebu_icu_irq_data *icu_irqd = d->chip_data;
+>  
+>  	kfree(icu_irqd);
+>  
+>  	platform_msi_domain_free(domain, virq, nr_irqs);
+> +
+> +	mvebu_icu_msi_bitmap_region_release(icu, d->hwirq);
+>  }
+>  
+>  static const struct irq_domain_ops mvebu_icu_domain_ops = {
+> @@ -211,28 +279,54 @@ static const struct irq_domain_ops mvebu_icu_domain_ops = {
+>  	.free      = mvebu_icu_irq_domain_free,
+>  };
+>  
+> +static const struct mvebu_icu_subset_data mvebu_icu_nsr_subset_data = {
+> +	.icu_group = ICU_GRP_NSR,
+> +	.offset_set_ah = ICU_SETSPI_NSR_AH,
+> +	.offset_set_al = ICU_SETSPI_NSR_AL,
+> +	.offset_clr_ah = ICU_CLRSPI_NSR_AH,
+> +	.offset_clr_al = ICU_CLRSPI_NSR_AL,
+> +};
+> +
+> +static const struct mvebu_icu_subset_data mvebu_icu_sei_subset_data = {
+> +	.icu_group = ICU_GRP_SEI,
+> +	.offset_set_ah = ICU_SET_SEI_AH,
+> +	.offset_set_al = ICU_SET_SEI_AL,
+> +};
+> +
+>  static const struct of_device_id mvebu_icu_subset_of_match[] = {
+>  	{
+>  		.compatible = "marvell,cp110-icu-nsr",
+> +		.data = &mvebu_icu_nsr_subset_data,
+> +	},
+> +	{
+> +		.compatible = "marvell,cp110-icu-sei",
+> +		.data = &mvebu_icu_sei_subset_data,
+>  	},
+>  	{},
+>  };
+>  
+>  static int mvebu_icu_subset_probe(struct platform_device *pdev)
+>  {
+> +	struct mvebu_icu_msi_data *msi_data;
+>  	struct device_node *msi_parent_dn;
+>  	struct device *dev = &pdev->dev;
+>  	struct irq_domain *irq_domain;
+> -	struct mvebu_icu *icu;
+> +
+> +	msi_data = devm_kzalloc(dev, sizeof(*msi_data), GFP_KERNEL);
+> +	if (!msi_data)
+> +		return -ENOMEM;
+>  
+>  	/*
+>  	 * Device data being populated means we are using the legacy bindings.
+>  	 * Using the parent device data means we are using the new bindings.
+>  	 */
+> -	if (dev_get_drvdata(dev))
+> -		icu = dev_get_drvdata(dev);
+> -	else
+> -		icu = dev_get_drvdata(dev->parent);
+> +	if (dev_get_drvdata(dev)) {
+> +		msi_data->icu = dev_get_drvdata(dev);
+> +		msi_data->subset_data = &mvebu_icu_nsr_subset_data;
+> +	} else {
+> +		msi_data->icu = dev_get_drvdata(dev->parent);
+> +		msi_data->subset_data = of_device_get_match_data(dev);
+> +	}
+>  
+>  	dev->msi_domain = of_msi_get_domain(dev, dev->of_node,
+>  					    DOMAIN_BUS_PLATFORM_MSI);
+> @@ -246,7 +340,7 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
+>  	irq_domain = platform_msi_create_device_tree_domain(dev, ICU_MAX_IRQS,
+>  							    mvebu_icu_write_msg,
+>  							    &mvebu_icu_domain_ops,
+> -							    icu);
+> +							    msi_data);
+>  	if (!irq_domain) {
+>  		dev_err(dev, "Failed to create ICU MSI domain\n");
+>  		return -ENOMEM;
+> @@ -284,6 +378,8 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  		return PTR_ERR(icu->base);
+>  	}
+>  
+> +	mutex_init(&icu->msi_lock);
+> +
+>  	icu->irq_chip.name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
+>  					    "ICU.%x",
+>  					    (unsigned int)res->start);
+> @@ -308,7 +404,7 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  #endif
+>  
+>  	/*
+> -	 * Clean all ICU interrupts with type SPI_NSR, required to
+> +	 * Clean all ICU interrupts of type NSR and SEI, required to
+>  	 * avoid unpredictable SPI assignments done by firmware.
+>  	 */
+>  	for (i = 0 ; i < ICU_MAX_IRQS ; i++) {
+> @@ -331,7 +427,9 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id mvebu_icu_of_match[] = {
+> -	{ .compatible = "marvell,cp110-icu", },
+> +	{
+> +		.compatible = "marvell,cp110-icu",
+> +	},
+
+Pointless change?
+
+>  	{},
+>  };
+>  
+> 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
