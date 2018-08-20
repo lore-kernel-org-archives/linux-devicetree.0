@@ -1,101 +1,112 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v4 6/8] drm/dsi: add helper function to find the second
- host in a dual-dsi setup
-Date: Mon, 20 Aug 2018 13:37:24 +0200
-Message-ID: <20180820113726eucas1p229037428a6ac9cee0bd85b6a46074a94~MlK2T-2GX2929829298eucas1p29@eucas1p2.samsung.com>
-References: <20180814102654.29113-1-heiko@sntech.de>
- <CGME20180814102717epcas3p17e5568502069f638e6eed5fecc8f9979@epcas3p1.samsung.com>
- <20180814102654.29113-7-heiko@sntech.de>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun8i: r40/v40: rewrite BPi
+ M2 Berry DTS to rebase on M2 Ultra
+Date: Mon, 20 Aug 2018 14:00:46 +0200
+Message-ID: <20180820120046.7tonxtb52q43ocfq@flea>
+References: <20180724163655.61365-1-icenowy@aosc.io>
+ <20180726124119.dwne2sncws2p3sdi@flea>
+ <dc8a28bcfbe082158bac5b097badb3ddf0f51ce8.camel@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180814102654.29113-7-heiko@sntech.de>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, seanpaul@chromium.org, mka@chromium.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gef5bru62hgkzpqm"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6W25LNQKGQEYMUZ22Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <dc8a28bcfbe082158bac5b097badb3ddf0f51ce8.camel-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQuMDguMjAxOCAxMjoyNiwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gPkZyb20gYSBzcGVj
-aWZpZWQgb3V0cHV0IHBvcnQgb2Ygb25lIGRzaSBjb250cm9sbGVyIHRoaXMgZnVuY3Rpb24gYWxs
-b3dzIHRvCj4gaXRlcmF0ZSBvdmVyIHRoZSBsaXN0IG9mIHJlZ2lzdGVyZWQgZHNpIGNvbnRyb2xs
-ZXJzIHRyeWluZyB0byBmaW5kIGEgc2Vjb25kCj4gaW5zdGFuY2UgY29ubmVjdGVkIHRvIHRoZSBz
-YW1lIGRpc3BsYXksIGxpa2UgaXQgaXMgdXNlZCBpbiBkdWFsLWRzaSBzZXR1cHMuCgpBcyBJIHNh
-aWQgZWFybGllciBpdCBsb29rcyBmb3IgbWUgaW5jb3JyZWN0bHkuIFlvdSBjcmVhdGUgaGVscGVy
-IHRvCmFjY2Vzcy9jb250cm9sIG9uZSBEU0kgY29udHJvbGxlciBmcm9tIGFub3RoZXIgYnV0IHRo
-ZXJlIGlzIG5vIHBvaW50IGluCmRvaW5nIGl0LiBJZiBDUlRDIGlzIGFibGUgdG8gc2VuZCB2aWRl
-byBzdHJlYW0gdmlhIHR3byBsaW5rcyBpdCBzaG91bGQKYmUgQ1JUQydzIHJlc3BvbnNpYmlsaXR5
-IHRvIHNldHVwIGFuZCB1c2UgRFNJIGNvbnRyb2xsZXJzIGF0dGFjaGVkIHRvCnRoZXNlIGxpbmtz
-LiBJZiB0aGUgcGFuZWwgaXMgYWJsZSB0byBjb21iaW5lIHN0cmVhbSBmcm9tIHR3byBEU0kgbGlu
-a3MKaW50byBvbmUgaW1hZ2UgaXQgc2hvdWxkIGJlIHBhbmVsJ3MgcmVzcG9uc2liaWxpdHkgdG8g
-aW5mb3JtIERTSQpjb250cm9sbGVycyBhYm91dCBlYWNoIGxpbmsncyBjb25maWd1cmF0aW9uLgoK
-TW9yZW92ZXIgZnJvbSB1c2FnZSBvZiB0aGlzIGhlbHBlciAocGF0Y2ggOC84KSBpdCBsb29rcyBs
-aWtlIHlvdQphc3N1bWVzLCB0aGF0IHNlY29uZCBob3N0IG11c3QgYmUgYWxzbyBzeW5vcHN5cywg
-dGhpcyBpcyBub3QKdHJ1ZS9nZW5lcmljIGF0IGFsbC4KCkkga25vdyB0aGVyZSBjb3VsZCBiZSBt
-YW55IG9ic3RhY2xlcyBpbiBhbHRlcm5hdGl2ZSBhcHByb2FjaCwgc28geW91CnJlYWxseSBpbnNp
-c3Qgb24gdGhpcyBoYWNrLCBwbGVhc2UgdXNlIGl0IGluc2lkZSB0aGUgZHJpdmVyLCB5b3UgY2Fu
-IHVzZQpmb3IgZXhhbXBsZSBkcml2ZXJfZm9yX2VhY2hfZGV2aWNlL2RyaXZlcl9maW5kX2Rldmlj
-ZSB0byBmaW5kIDJuZCBEU0kgaG9zdC4KClJlZ2FyZHMKQW5kcnplagoKPgo+IFNpZ25lZC1vZmYt
-Ynk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1
-L2RybS9kcm1fbWlwaV9kc2kuYyB8IDU2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysKPiAgaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmggICAgIHwgIDIgKysKPiAgMiBmaWxlcyBj
-aGFuZ2VkLCA1OCBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L2RybV9taXBpX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9taXBpX2RzaS5jCj4gaW5kZXgg
-YmM3M2I3ZjViOWZjLi4wYzNjOWM3YWEzYjggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L2RybV9taXBpX2RzaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2RybV9taXBpX2RzaS5jCj4g
-QEAgLTMwLDYgKzMwLDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgo+ICAjaW5jbHVk
-ZSA8bGludXgvbW9kdWxlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KPiArI2lu
-Y2x1ZGUgPGxpbnV4L29mX2dyYXBoLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+
-Cj4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+Cj4gIAo+IEBAIC0yODIsNiArMjgzLDYxIEBAIHN0
-cnVjdCBtaXBpX2RzaV9ob3N0ICpvZl9maW5kX21pcGlfZHNpX2hvc3RfYnlfbm9kZShzdHJ1Y3Qg
-ZGV2aWNlX25vZGUgKm5vZGUpCj4gIH0KPiAgRVhQT1JUX1NZTUJPTChvZl9maW5kX21pcGlfZHNp
-X2hvc3RfYnlfbm9kZSk7Cj4gIAo+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX21pcGlfZHNpX2Zp
-bmRfc2Vjb25kX2hvc3Qoc3RydWN0IGRldmljZV9ub2RlICpmaXJzdF9ucCwKPiArCQkJCQkJIGlu
-dCBwb3J0LCBpbnQgZW5kcG9pbnQpCj4gK3sKPiArCXN0cnVjdCBtaXBpX2RzaV9ob3N0ICpmaXJz
-dCwgKmhvc3Q7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKnJlbW90ZSwgKm5wLCAqc2Vjb25kX25w
-ID0gTlVMTDsKPiArCWludCBudW0gPSAwOwo+ICsKPiArCWZpcnN0ID0gb2ZfZmluZF9taXBpX2Rz
-aV9ob3N0X2J5X25vZGUoZmlyc3RfbnApOwo+ICsJaWYgKCFmaXJzdCkgewo+ICsJCXByX2Vycigi
-bm8gZHNpLWhvc3QgZm9yIG5vZGUgJXNcbiIsIGZpcnN0X25wLT5mdWxsX25hbWUpOwo+ICsJCXJl
-dHVybiBFUlJfUFRSKC1FTk9ERVYpOwo+ICsJfQo+ICsKPiArCS8qIG91dHB1dC1ub2RlIG9mIHRo
-ZSBrbm93biBkc2ktaG9zdCAqLwo+ICsJcmVtb3RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9ub2Rl
-KGZpcnN0X25wLCBwb3J0LCBlbmRwb2ludCk7Cj4gKwlpZiAoIXJlbW90ZSkgewo+ICsJCWRldl9l
-cnIoZmlyc3QtPmRldiwgIm5vIG91dHB1dCBub2RlIGZvdW5kXG4iKTsKPiArCQlyZXR1cm4gRVJS
-X1BUUigtRU5PREVWKTsKPiArCX0KPiArCj4gKwltdXRleF9sb2NrKCZob3N0X2xvY2spOwo+ICsK
-PiArCWxpc3RfZm9yX2VhY2hfZW50cnkoaG9zdCwgJmhvc3RfbGlzdCwgbGlzdCkgewo+ICsJCW5w
-ID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9ub2RlKGhvc3QtPmRldi0+b2Zfbm9kZSwKPiArCQkJCQkg
-ICAgICBwb3J0LCBlbmRwb2ludCk7Cj4gKwo+ICsJCS8qIGZvdW5kIGEgaG9zdCBjb25uZWN0ZWQg
-dG8gdGhpcyBwYW5lbCAqLwo+ICsJCWlmIChucCA9PSByZW1vdGUpCj4gKwkJCW51bSsrOwo+ICsK
-PiArCQkvKiBmb3VuZCBvbmUgc2Vjb25kIGhvc3QgKi8KPiArCQlpZiAoaG9zdC0+ZGV2LT5vZl9u
-b2RlICE9IGZpcnN0X25wKQo+ICsJCQlzZWNvbmRfbnAgPSBob3N0LT5kZXYtPm9mX25vZGU7Cj4g
-Kwo+ICsJCW9mX25vZGVfcHV0KG5wKTsKPiArCX0KPiArCj4gKwkvKiBvZl9ub2RlX2dldCB0aGUg
-bm9kZSB1bmRlciBob3N0X2xvY2sgKi8KPiArCWlmIChudW0gPT0gMikKPiArCQlvZl9ub2RlX2dl
-dChzZWNvbmRfbnApOwo+ICsKPiArCW11dGV4X3VubG9jaygmaG9zdF9sb2NrKTsKPiArCj4gKwlv
-Zl9ub2RlX3B1dChyZW1vdGUpOwo+ICsKPiArCWlmIChudW0gPiAyKSB7Cj4gKwkJZGV2X2Vycihm
-aXJzdC0+ZGV2LAo+ICsJCQkgICAgICAidG9vIG1hbnkgRFNJIGxpbmtzIGZvciBvdXRwdXQ6ICVk
-IGxpbmtzXG4iLCBudW0pOwo+ICsJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ICsJfQo+ICsK
-PiArCXJldHVybiBzZWNvbmRfbnA7Cj4gK30KPiArRVhQT1JUX1NZTUJPTChvZl9taXBpX2RzaV9m
-aW5kX3NlY29uZF9ob3N0KTsKPiArCj4gIGludCBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKHN0cnVj
-dCBtaXBpX2RzaV9ob3N0ICpob3N0KQo+ICB7Cj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGU7
-Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oIGIvaW5jbHVkZS9kcm0v
-ZHJtX21pcGlfZHNpLmgKPiBpbmRleCA0ZmVmMTkwNjRiMGYuLjg5NTMyYWU2OWM5MSAxMDA2NDQK
-PiAtLS0gYS9pbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaAo+ICsrKyBiL2luY2x1ZGUvZHJtL2Ry
-bV9taXBpX2RzaS5oCj4gQEAgLTEwNyw2ICsxMDcsOCBAQCBzdHJ1Y3QgbWlwaV9kc2lfaG9zdCB7
-Cj4gIGludCBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0
-KTsKPiAgdm9pZCBtaXBpX2RzaV9ob3N0X3VucmVnaXN0ZXIoc3RydWN0IG1pcGlfZHNpX2hvc3Qg
-Kmhvc3QpOwo+ICBzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAqb2ZfZmluZF9taXBpX2RzaV9ob3N0X2J5
-X25vZGUoc3RydWN0IGRldmljZV9ub2RlICpub2RlKTsKPiArc3RydWN0IGRldmljZV9ub2RlICpv
-Zl9taXBpX2RzaV9maW5kX3NlY29uZF9ob3N0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZmlyc3RfbnAs
-Cj4gKwkJCQkJCSBpbnQgcG9ydCwgaW50IGVuZHBvaW50KTsKPiAgCj4gIC8qIERTSSBtb2RlIGZs
-YWdzICovCj4gIAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+
+--gef5bru62hgkzpqm
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+On Wed, Aug 08, 2018 at 06:36:56PM +0800, Icenowy Zheng wrote:
+> =E5=9C=A8 2018-07-26=E5=9B=9B=E7=9A=84 14:41 +0200=EF=BC=8CMaxime Ripard=
+=E5=86=99=E9=81=93=EF=BC=9A
+> > On Wed, Jul 25, 2018 at 12:36:55AM +0800, Icenowy Zheng wrote:
+> > > Banana Pi designs the BPi M2 Berry board to be software compatible
+> > > with
+> > > BPi M2 Ultra,
+> >=20
+> > Do you have a reference for this?
+> >=20
+> > > so it's based on M2 Ultra with some function cuts, including:
+> > >=20
+> > > - 2048MiB DRAM -> 1024MiB (this should be proceed by the
+> > > bootloader);
+> > > - dropped a LED;
+> > > - dropped eMMC;
+> > > - dropped USB2 and connect USB1 to a 4-port HUB.
+> >=20
+> > Is it the exhaustive list?
+>=20
+> I have asked Mikey from Sinovoip, and he has agreed this.
+>=20
+> Here's a list provided by him, which covers some things I forgot:
+> - 2GiB -> 1GiB
+> - no eMMC
+> - no onboard microphone
+> - no IR
+> - no charging (and power jack to USB)
+> - USB change
+> - one less LED
+>=20
+> Should I add this to the device tree's comment?
+
+Not really, because...
+
+> >=20
+> > I'm a bit reluctant to merge that kind of patches usually, since that
+> > would also imply that each time someone will commit something to the
+> > M2-Ultra, it would automatically apply to the M2-Berry, without any
+> > easy way to tell and / or test.
+
+... this still applies.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--gef5bru62hgkzpqm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlt6rW4ACgkQ0rTAlCFN
+r3ScGQ/9FrHdE9AWrObaIPhRZd5VO2sFPBr/SECyAthbaX4lZgbYQK3E7ogdWVk8
+g5MUEW7DIJ5FmlpDqq6qNEp2NL/XTtFgSlKmJ8JpiL8cNvfPa5GzXGkqIJnMdISu
+yyN8/kxXr1McD5Vl/USxKdv/eqCimS8vfcQeFgmktIM8j9EDcO6r+BBXNFciun6R
+JCPeEYWwM67DxAypXaosbw00YoAu7FXOiaVTBXsOS9YC37ZKnnH2OhkBZxZkiQ0x
+GtsAo6mG1aCQloBwZ2tFBD9DEYNkFmS3Jr/+ZeHsCY0oKm/0S/mz35PhHDK+eFgD
++RRiFaE6KCu7M1E7YJ53PgoXT+RJNy/DXK7pJejwCR77TyVC7UoVpK0s/k0gc0ce
+jJgOV0RxYn85FqRDJ+kBujL1N9yypMuCSHYme/KD3RvEQ2IdjGGPWFCEUPb5Pj7/
+scZOe3BY8UB9Vt768gwDv1yAVZ/FwlXAk3TIwCOKnXx1puek6te//UWAqxyXntzR
+FlLrOzMBfzk/DWfxl5XUghO85omb0eco8UvV5Xkycx21371LDn0/UgYpi4crhmj2
+iFRiR7W9Jofw+Cs5brw6FLAoxyek2NMRMhCXYuRTLP8b6NG0R2S749/5aiIU/PTY
+cx8tT4AD1APZZ6YUgfSiIY62czOJv5rcHWZfiPTqqBgNc1B3m0w=
+=oeS9
+-----END PGP SIGNATURE-----
+
+--gef5bru62hgkzpqm--
