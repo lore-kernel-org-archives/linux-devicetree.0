@@ -1,62 +1,53 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/8] drm/rockchip: dsi: migrate to use dw-mipi-dsi
- bridge driver
-Date: Mon, 20 Aug 2018 13:01:20 +0200
-Message-ID: <20180820110122eucas1p2c96a08d8b2d3b718d46b2ee6924a42c4~MkrXBgXCP0070300703eucas1p2z@eucas1p2.samsung.com>
-References: <20180814102654.29113-1-heiko@sntech.de>
- <CGME20180814102725epcas2p198e2308bf18fda5f2d108122e26e3fcb@epcas2p1.samsung.com>
- <20180814102654.29113-6-heiko@sntech.de>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 3/3] arm: dts: ls1021a: Enable I2C DMA support
+Date: Mon, 20 Aug 2018 13:14:48 +0200
+Message-ID: <20180820111448.5njestngbsupcpwl@ninjato>
+References: <20180816084315.7857-1-esben.haabendal@gmail.com>
+ <20180816084315.7857-4-esben.haabendal@gmail.com>
+ <20180820091531.komc6ypyybnq22nw@ninjato>
+ <87zhxhgzmm.fsf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180814102654.29113-6-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org, yannick.fertre-qxv4g6HH51o@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p36gfmphq3omwcpo"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87zhxhgzmm.fsf@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Esben Haabendal <esben.haabendal@gmail.com>
+Cc: linux-i2c@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQuMDguMjAxOCAxMjoyNiwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gRnJvbTogTmlja2V5
-IFlhbmcgPG5pY2tleS55YW5nQHJvY2stY2hpcHMuY29tPgo+Cj4gQWRkIHRoZSBST0NLQ0hJUCBE
-U0kgY29udHJvbGxlciBkcml2ZXIgdGhhdCB1c2VzIHRoZSBTeW5vcHN5cyBEZXNpZ25XYXJlCj4g
-TUlQSSBEU0kgaG9zdCBjb250cm9sbGVyIGJyaWRnZSBhbmQgcmVtb3ZlIHRoZSBvbGQgc2VwYXJh
-dGUgb25lLgo+Cj4gY2hhbmdlczoKPgo+IHYyOgo+ICAgIGFkZCBlcnJfcGxscmVmLCByZW1vdmUg
-dW5uZWNlc3NhcnkgZW5jb2Rlci5lbmFibGUgJiBkaXNhYmxlCj4gICAgY29ycmVjdCBzcGVsbGlu
-ZyBtaXN0YWtlcwo+IHYzOgo+ICAgIGNhbGwgZHdfbWlwaV9kc2lfdW5iaW5kKCkgaW4gZHdfbWlw
-aV9kc2lfcm9ja2NoaXBfdW5iaW5kKCkKPiAgICBmaXggdHlwbywgdXNlIG9mX2RldmljZV9nZXRf
-bWF0Y2hfZGF0YSgpLAo+ICAgIGNoYW5nZSBzb21lIGJpbmQoKSBsb2dpYyBpbnRvIHByb2JlKCkK
-PiAgICBhZGQgJ2Rldl9zZXRfZHJ2ZGF0YSgpJwo+IHY0Ogo+ICAgcmV0dXJuIC1FSU5WQUwgd2hl
-biBjYW4gbm90IGdldCBiZXN0X2ZyZXEKPiAgIGFkZCBhIGNsYXJpZnlpbmcgY29tbWVudCB3aGVu
-IGdldCB2Y28KPiAgIGFkZCByZXZpZXcgdGFnCj4gdjU6Cj4gICBrZWVwIG91ciBwb3dlciBkb21h
-aW4gZW5hYmxlZCB3aGlsZSB0b3VjaGluZyBHUkYKPiB2NjoKPiAgIGNoYW5nZSBmdW5jIG5hbWUg
-ZHdfbWlwaV9lbmNvZGVyX2Rpc2FibGUgdG8KPiAgIGR3X21pcGlfZHNpX2VuY29kZXJfZGlzYWJs
-ZQo+IHY3Ogo+ICAgbm9uZQo+IHY4OiBIZWlrbwo+ICAgYWRkIEFyY2hpdCdzIFJldmlldyB0YWcK
-PiAgIGFkYXB0IHRvIHJlY2VudCBjaGFuZ2VzIGluIHRoZSBvcmlnaW5hbCByb2NrY2hpcC1kc2kg
-ZHJpdmVyCj4gICBiZWF1dGlmeSBncmYtaGFuZGxpbmcKPiAgIHNwbGl0IGh3LXNldHVwIChyZXNv
-dXJjZXMsIGRzaS1ob3N0KSBmcm9tIGJpbmQgaW50byBwcm9iZQo+IHYyLW5ldzogSGVpa28KPiAg
-IGFkZCBTUERYIGhlYWRlciBpbnN0ZWFkIG9mIGxpY2Vuc2UgYmx1cmIKPiAgIGRyb3Agb2xkIHZl
-cnNpb25pbmcgdG8gbm90IGNvbmZ1c2UgcGVvcGxlCj4gdjMtbmV3OiBIZWlrbwo+ICAgaW5jbHVk
-ZSBvcmRlcmluZwo+ICAgbW92ZWQgaHdhY2Nlc3MgZnJvbSBtb2RlX3NldCB0byBlbmFibGUgY2Fs
-bGJhY2sKPiAgIG1vdmUgcGxscmVmX2NsayBlbmFibGVtZW50IHRvIGJpbmQgKG5lZWRlZCBieSBi
-cmlkZ2UgbW9kZV9zZXQtPmxhbmVfbWJwcykKPiB2NC1uZXc6IEhlaWtvCj4gICByZWJhc2UgYWdh
-aW5zdCByZWNlbnQgcm9ja2NoaXAtZHNpIGNoYW5nZXMKPiAgIG1vdmUgdG8gY2FsbCBjb21wb25l
-bnRfYWRkIGluIHRoZSBuZXcgZ2x1ZSBob3N0LWF0dGFjaAo+Cj4gU2lnbmVkLW9mZi1ieTogTmlj
-a2V5IFlhbmcgPG5pY2tleS55YW5nQHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEJy
-aWFuIE5vcnJpcyA8YnJpYW5ub3JyaXNAY2hyb21pdW0ub3JnPgo+IFJldmlld2VkLWJ5OiBCcmlh
-biBOb3JyaXMgPGJyaWFubm9ycmlzQGNocm9taXVtLm9yZz4KPiBSZXZpZXdlZC1ieTogU2VhbiBQ
-YXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+Cj4gUmV2aWV3ZWQtYnk6IEFyY2hpdCBUYW5lamEg
-PGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIg
-PGhlaWtvQHNudGVjaC5kZT4KClJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNh
-bXN1bmcuY29tPgoKwqAtLQpSZWdhcmRzCkFuZHJ6ZWoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4LXJvY2tjaGlwIG1haWxpbmcgbGlzdApMaW51
-eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+
+--p36gfmphq3omwcpo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> Ok, do I need to send to additional list(s)?
+> linux-arm-kernel@lists.infradead.org?
+
+I'd say resend this patch after rc1 is out and the other 2 patches are
+upstream.
+
+
+--p36gfmphq3omwcpo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlt6oqQACgkQFA3kzBSg
+KbZTehAAkNpisXhL/VDgIfEQ734n6+rqFsegC8LNNttXaJ/7OaQYe/S/I8HeY4ZG
+BoIU8haBmHDV5Jdpv9PMDNzC7MecoVQqafo1FFO9xD8UyOUVIg40tdOuv59ux8eF
+oCn6ZFsEG9ZheutO0lx1GF3A20TorIeaLj9MlceLjbdAsst+V9hBeZA+gCp2Q5cC
+1UO74ACv1S9cO35q/qRQGq11rsaEUpqMLifAi5uH4avrH+dLROVRuVY8+VbdW29O
+MdsWTFvwilB4bU2NLwFCbGVhT5VxxXYtkFmxSX8fzeHoI0b2AAE46YAJIgzHzqz1
+7n8fF0oUtEpT2i7bUSlcep7XhMmwoX3kg0E9FgQONfRk8LL0t2egWvwWfDuua8tp
+RROD7kP83eYsjj75euG/Glmgjk371Did8JU01yFleDdzLHCbZGJ5ZoIrSlWGAtqj
+DFOj/KuGZ/v1hgrLaSLrBe5QrXGXGz0iGLk9Oig2yLp6/n4sX5qslgx6oEb4x9mq
+lnNVERxUkfwEbBewvKrYQ+TOtWol5qB7QFpqedeu+uHWVgKqBHfMmkg+e2kgAdp7
+3ut6IZacZuW9LvWZPBzljahMwJZDrVLGgIdyOWwT5UT1VyLdnyCj8DZ+67ApC7DS
+cDZosmMvmrwt4rM1ppLwqNt6sFTzoklLDI87txw6zo+6g0GWBgY=
+=6hns
+-----END PGP SIGNATURE-----
+
+--p36gfmphq3omwcpo--
