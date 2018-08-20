@@ -1,79 +1,59 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: Re: [PATCH] dt-bindings: riscv,cpu-intc: Cleanups from a missed
- review
-Date: Mon, 20 Aug 2018 16:10:04 -0700
-Message-ID: <51924de4-4a16-07a0-f499-753e0df49678@wdc.com>
-References: <20180820230011.25368-1-palmer@sifive.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH RESEND v1 1/5] dt-bindings: pinctrl: add wakeup capable
+ GPIOs for SDM845
+Date: Mon, 20 Aug 2018 16:19:01 -0700
+Message-ID: <20180820231901.GA5603@tuxbook-pro>
+References: <20180817191026.32245-1-ilina@codeaurora.org>
+ <20180817191026.32245-2-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180820230011.25368-1-palmer@sifive.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180817191026.32245-2-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Palmer Dabbelt <palmer@sifive.com>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Rob Herring <robh@kernel.org>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Karsten Merker <merker@debian.org>, "tglx@linutronix.de" <tglx@linutronix.de>
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: marc.zyngier@arm.com, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/20/18 4:01 PM, Palmer Dabbelt wrote:
-> I managed to miss one of Rob's code reviews on the mailing list
-> <http://lists.infradead.org/pipermail/linux-riscv/2018-August/001139.html>.
-> The patch has already been merged, so I'm submitting a fixup.
-> 
-> Sorry!
-> 
-> Fixes: b67bc7cb4088 ("dt-bindings: interrupt-controller: RISC-V local interrupt controller")
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Karsten Merker <merker@debian.org>
-> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
-> ---
->   .../bindings/interrupt-controller/riscv,cpu-intc.txt       | 14 +++++++++++---
->   1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> index b0a8af51c388..265b223cd978 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> @@ -11,7 +11,7 @@ The RISC-V supervisor ISA manual specifies three interrupt sources that are
->   attached to every HLIC: software interrupts, the timer interrupt, and external
->   interrupts.  Software interrupts are used to send IPIs between cores.  The
->   timer interrupt comes from an architecturally mandated real-time timer that is
-> -controller via Supervisor Binary Interface (SBI) calls and CSR reads.  External
-> +controlled via Supervisor Binary Interface (SBI) calls and CSR reads.  External
->   interrupts connect all other device interrupts to the HLIC, which are routed
->   via the platform-level interrupt controller (PLIC).
->   
-> @@ -25,7 +25,15 @@ in the system.
->   
->   Required properties:
->   - compatible : "riscv,cpu-intc"
+On Fri 17 Aug 12:10 PDT 2018, Lina Iyer wrote:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+[..]
+> @@ -155,11 +166,52 @@ Example:
+>  	tlmm: pinctrl@3400000 {
+>  		compatible = "qcom,sdm845-pinctrl";
+>  		reg = <0x03400000 0xc00000>;
+> -		interrupts = <GIC_SPI 208 0>;
+>  		gpio-controller;
+>  		#gpio-cells = <2>;
+>  		interrupt-controller;
+>  		#interrupt-cells = <2>;
+> +		interrupts-extended = <&intc GIC_SPI 208 0>,
+> +			<&pdc 510 0>, <&pdc 511 0>, <&pdc 512 0>, <&pdc 513 0>,
+> +			<&pdc 514 0>, <&pdc 515 0>, <&pdc 516 0>, <&pdc 517 0>,
+> +			<&pdc 518 0>, <&pdc 519 0>, <&pdc 632 0>, <&pdc 639 0>,
+> +			<&pdc 521 0>, <&pdc 522 0>, <&pdc 523 0>, <&pdc 524 0>,
+> +			<&pdc 525 0>, <&pdc 526 0>, <&pdc 527 0>, <&pdc 630 0>,
+> +			<&pdc 637 0>, <&pdc 529 0>, <&pdc 530 0>, <&pdc 531 0>,
+> +			<&pdc 532 0>, <&pdc 633 0>, <&pdc 640 0>, <&pdc 534 0>,
+> +			<&pdc 535 0>, <&pdc 536 0>, <&pdc 537 0>, <&pdc 538 0>,
+> +			<&pdc 539 0>, <&pdc 540 0>, <&pdc 541 0>, <&pdc 542 0>,
+> +			<&pdc 543 0>, <&pdc 544 0>, <&pdc 545 0>, <&pdc 546 0>,
+> +			<&pdc 547 0>, <&pdc 548 0>, <&pdc 549 0>, <&pdc 550 0>,
+> +			<&pdc 551 0>, <&pdc 552 0>, <&pdc 553 0>, <&pdc 554 0>,
+> +			<&pdc 555 0>, <&pdc 556 0>, <&pdc 557 0>, <&pdc 631 0>,
+> +			<&pdc 638 0>, <&pdc 559 0>, <&pdc 560 0>, <&pdc 561 0>,
+> +			<&pdc 562 0>, <&pdc 563 0>, <&pdc 564 0>, <&pdc 565 0>,
+> +			<&pdc 566 0>, <&pdc 570 0>, <&pdc 571 0>, <&pdc 572 0>,
+> +			<&pdc 573 0>, <&pdc 609 0>, <&pdc 610 0>, <&pdc 611 0>,
+> +			<&pdc 612 0>, <&pdc 613 0>, <&pdc 614 0>, <&pdc 615 0>,
+> +			<&pdc 617 0>, <&pdc 618 0>, <&pdc 619 0>, <&pdc 620 0>,
+> +			<&pdc 621 0>, <&pdc 622 0>, <&pdc 623 0>;
 
-Since this is a fix up patch, we should update the compatible string 
-with the sifive specific one as well. no?
+I would expect that there are about 80 WARN_ON() hit in the irq code
+when you boot mainline with this. Have you tried that?
+
+
+Looks reasonable otherwise.
 
 Regards,
-Atish
-> -- #interrupt-cells : should be <1>
-> +- #interrupt-cells : should be <1>.  The interrupt sources are defined by the
-> +  RISC-V supervisor ISA manual, with only the following three interrupts being
-> +  defined for supervisor mode:
-> +    - Source 1 is the supervisor software interrupt, which can be sent by an SBI
-> +      call and is reserved for use by software.
-> +    - Source 5 is the supervisor timer interrupt, which can be configured by
-> +      SBI calls and implements a one-shot timer.
-> +    - Source 9 is the supervisor external interrupt, which chains to all other
-> +      device interrupts.
->   - interrupt-controller : Identifies the node as an interrupt controller
->   
->   Furthermore, this interrupt-controller MUST be embedded inside the cpu
-> @@ -38,7 +46,7 @@ An example device tree entry for a HLIC is show below.
->   		...
->   		cpu1-intc: interrupt-controller {
->   			#interrupt-cells = <1>;
-> -			compatible = "riscv,cpu-intc", "sifive,fu540-c000-cpu-intc";
-> +			compatible = "sifive,fu540-c000-cpu-intc", "riscv,cpu-intc";
->   			interrupt-controller;
->   		};
->   	};
-> 
+Bjorn
