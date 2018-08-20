@@ -1,34 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: spi: Add Spreadtrum SPI controller
- documentation
-Date: Mon, 20 Aug 2018 14:38:26 -0500
-Message-ID: <20180820193826.GA20541@bogus>
-References: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
- <53e9467b4b16911576bcfb71c50c108ea83a803c.1534423916.git.baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: soc: Add ZynqMP PM bindings
+Date: Mon, 20 Aug 2018 14:40:57 -0500
+Message-ID: <20180820194057.GA21738@bogus>
+References: <1534446483-12156-1-git-send-email-jollys@xilinx.com>
+ <1534446483-12156-2-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53e9467b4b16911576bcfb71c50c108ea83a803c.1534423916.git.baolin.wang@linaro.org>
+In-Reply-To: <1534446483-12156-2-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, baolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jolly Shah <jolly.shah@xilinx.com>
+Cc: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, mark.rutland@arm.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 16 Aug 2018 20:54:50 +0800, Baolin Wang wrote:
-> From: Lanqing Liu <lanqing.liu@spreadtrum.com>
+On Thu, Aug 16, 2018 at 12:08:01PM -0700, Jolly Shah wrote:
+> From: Rajan Vaja <rajan.vaja@xilinx.com>
 > 
-> This patch adds the binding documentation for Spreadtrum SPI
-> controller device.
+> Add documentation to describe Xilinx ZynqMP power management
+> bindings.
 > 
-> Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
 > ---
-> Changes from v1:
->  - Remove the sprd,spi-interval property.
-> ---
->  Documentation/devicetree/bindings/spi/spi-sprd.txt |   26 ++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-sprd.txt
+>  .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> index d215d15..cb9a6b7 100644
+> --- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> @@ -64,6 +64,17 @@ Output clocks are registered based on clock information received
+>  from firmware. Output clocks indexes are mentioned in
+>  include/dt-bindings/clock/xlnx,zynqmp-clk.h.
+>  
+> +--------------------------------------------------------------------
+> +Device Tree Bindings for the Xilinx Zynq MPSoC Power Management
+> +--------------------------------------------------------------------
+> +The zynqmp-power node describes the power management configurations.
+> +It will control remote suspend/shutdown interfaces.
+> +
+> +Required properties:
+> + - compatible:		Must contain:	"xlnx,zynqmp-power"
+> + - interrupt-parent:	Interrupt controller the interrupt is routed through
+
+interrupt-parent is implied and could be in a parent node, so remove.
+
+With that,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> + - interrupts:		Interrupt specifier
+> +
+>  -------
+>  Example
+>  -------
+> @@ -78,5 +89,10 @@ firmware {
+>  			clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
+>  			clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
+>  		};
+> +		zynqmp_power: zynqmp-power {
+> +			compatible = "xlnx,zynqmp-power";
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <0 35 4>;
+> +		};
+>  	};
+>  };
+> -- 
+> 2.7.4
+> 
