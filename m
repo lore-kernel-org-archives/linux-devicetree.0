@@ -1,76 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: soc: Add ZynqMP PM bindings
-Date: Mon, 20 Aug 2018 14:49:06 -0500
-Message-ID: <20180820194906.GB26783@bogus>
-References: <1534446483-12156-1-git-send-email-jollys@xilinx.com>
- <1534446483-12156-2-git-send-email-jollys@xilinx.com>
- <20180820194057.GA21738@bogus>
+Subject: Re: [PATCH v2 4/4] dt-bindigs: msm: Update documentation of qcom,llcc
+Date: Mon, 20 Aug 2018 14:53:41 -0500
+Message-ID: <20180820195341.GA3358@bogus>
+References: <1534550915-18230-1-git-send-email-vnkgutta@codeaurora.org>
+ <1534550915-18230-5-git-send-email-vnkgutta@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180820194057.GA21738@bogus>
+In-Reply-To: <1534550915-18230-5-git-send-email-vnkgutta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>
-Cc: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, mark.rutland@arm.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+To: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Cc: mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de, evgreen@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 20, 2018 at 02:40:57PM -0500, Rob Herring wrote:
-> On Thu, Aug 16, 2018 at 12:08:01PM -0700, Jolly Shah wrote:
-> > From: Rajan Vaja <rajan.vaja@xilinx.com>
-> > 
-> > Add documentation to describe Xilinx ZynqMP power management
-> > bindings.
-> > 
-> > Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> > ---
-> >  .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16 ++++++++++++++++
+On Fri, Aug 17, 2018 at 05:08:35PM -0700, Venkata Narendra Kumar Gutta wrote:
+> Add reg-names and interrupts for LLCC documentation and the usage
+> examples. llcc broadcast base is added in addition to llcc base,
+> which is used for llcc broadcast writes.
 
-Also, this should be located in bindings/power/reset/
+Typo in the subject.
 
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> > index d215d15..cb9a6b7 100644
-> > --- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> > +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> > @@ -64,6 +64,17 @@ Output clocks are registered based on clock information received
-> >  from firmware. Output clocks indexes are mentioned in
-> >  include/dt-bindings/clock/xlnx,zynqmp-clk.h.
-> >  
-> > +--------------------------------------------------------------------
-> > +Device Tree Bindings for the Xilinx Zynq MPSoC Power Management
-> > +--------------------------------------------------------------------
-> > +The zynqmp-power node describes the power management configurations.
-> > +It will control remote suspend/shutdown interfaces.
-> > +
-> > +Required properties:
-> > + - compatible:		Must contain:	"xlnx,zynqmp-power"
-> > + - interrupt-parent:	Interrupt controller the interrupt is routed through
+This binding just landed recently and it's already being updated? Sigh.
+Bindings should be complete from the start. Technically, you can't add 
+new required properties.
+
 > 
-> interrupt-parent is implied and could be in a parent node, so remove.
+> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
 > 
-> With that,
+> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> index 5e85749..b4b1c86 100644
+> --- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+> @@ -18,9 +18,22 @@ Properties:
+>  	Value Type: <prop-encoded-array>
+>  	Definition: Start address and the the size of the register region.
+>  
+> +- reg-names:
+> +        Usage: required
+> +        Value Type: <stringlist>
+> +        Definition: Register region names. Must be "llcc_base", "llcc_bcast_base".
+
+reg needs to be updated that there are 2 entries.
+
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Definition: The interrupt is associated with the llcc edac device.
+> +			It's used for llcc cache single and double bit error detection
+> +			and reporting.
+> +
+>  Example:
+>  
+>  	cache-controller@1100000 {
+>  		compatible = "qcom,sdm845-llcc";
+> -		reg = <0x1100000 0x250000>;
+> +		reg = <0x1100000 0x200000>, <0x1300000 0x50000> ;
+> +		reg-names = "llcc_base", "llcc_bcast_base";
+> +		interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+>  	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> > + - interrupts:		Interrupt specifier
-> > +
-> >  -------
-> >  Example
-> >  -------
-> > @@ -78,5 +89,10 @@ firmware {
-> >  			clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
-> >  			clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
-> >  		};
-> > +		zynqmp_power: zynqmp-power {
-> > +			compatible = "xlnx,zynqmp-power";
-> > +			interrupt-parent = <&gic>;
-> > +			interrupts = <0 35 4>;
-> > +		};
-> >  	};
-> >  };
-> > -- 
-> > 2.7.4
-> > 
