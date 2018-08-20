@@ -1,48 +1,48 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: sdm845-mtp: Add RPMh VRM/XOB regulators
-Date: Mon, 20 Aug 2018 11:18:47 -0700
-Message-ID: <153478912722.28926.1278085207557745493@swboyd.mtv.corp.google.com>
-References: <20180810215150.82490-1-dianders@chromium.org>
- <20180810215150.82490-3-dianders@chromium.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/7] dt-bindings: Add DT bindings documentation for
+ Allwinner Thermal Sensor Controller
+Date: Mon, 20 Aug 2018 13:47:35 -0500
+Message-ID: <CAL_JsqKzCySH0q=4Ly9tJBiDaW23Mz9Q0j-_qb55CcL2F5fYOA@mail.gmail.com>
+References: <20180804070355.14857-1-manu@freebsd.org> <20180820111755.rzg7l2lznmbpuf2e@flea>
+ <CAL_JsqLVQDRH1esAXghfQdxmp+iorWVCArM2qTwjbgmQzmhzQw@mail.gmail.com> <20180820140737.xmqhu5ndqzehvkql@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180810215150.82490-3-dianders@chromium.org>
+In-Reply-To: <20180820140737.xmqhu5ndqzehvkql@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Emmanuel Vadot <manu@freebsd.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Douglas Anderson (2018-08-10 14:51:49)
-> @@ -20,6 +21,450 @@
->         chosen {
->                 stdout-path =3D "serial0:115200n8";
->         };
-> +
-> +       vph_pwr: vph-pwr-regulator {
-> +               compatible =3D "regulator-fixed";
-> +               regulator-name =3D "vph_pwr";
-> +               regulator-min-microvolt =3D <3700000>;
-> +               regulator-max-microvolt =3D <3700000>;
-> +       };
-> +
-> +       /*
-> +        * Apparently RPMh does not provide support for PM8998 S4 because=
- it
-> +        * is always-on; model it as a fixed regulator.
-> +        */
-> +       vreg_s4a_1p8: pm8998-smps4 {
-> +               compatible =3D "regulator-fixed";
-> +               regulator-name =3D "vreg_s4a_1p8";
-> +
-> +               regulator-min-microvolt =3D <1800000>;
-> +               regulator-max-microvolt =3D <1800000>;
-> +
-> +               regulator-always-on;
-> +               regulator-boot-on;
+On Mon, Aug 20, 2018 at 9:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Mon, Aug 20, 2018 at 07:41:22AM -0600, Rob Herring wrote:
+> > On Mon, Aug 20, 2018 at 5:17 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Sat, Aug 04, 2018 at 09:03:49AM +0200, Emmanuel Vadot wrote:
+> > > > This patch adds documentation for Device-Tree bindings for the Allwinner
+> > > > Thermal Sensor Controller found on the H3, H5 and A64 SoCs
+> > > >
+> > > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> > >
+> > > I'm not going to merge a binding for a device that doesn't have any
+> > > driver implemented at the moment in Linux.
+> >
+> > I'll take it then. Linux is not the only DT client.
+>
+> Then don't complain if we ever have to break the ABI.
 
-Can vin be vph_pwr? That would properly model this.
+My only complaint is when breaking ABIs and not being clear about
+doing so. Otherwise, it is up to platform maintainers to not upset
+their users (including if some of those users are FreeBSD).
 
-> +       };
-> +};
+> We never tested
+> that hardware, never had any code running on it, and it *will* cause
+> some issues. For example, the calibration data have never been used
+> and how they should be represented have never been described, since no
+> one ever actually tried to use it.
+
+Then perhaps that part of the binding should be omitted for now. But I
+don't see how if this works for FreeBSD how it wouldn't for Linux.
+
+Rob
