@@ -1,91 +1,65 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: allwinner: dts: h6: fix Pine H64 MMC
- bus width
-Date: Mon, 20 Aug 2018 16:46:57 +0200
-Message-ID: <20180820144657.pexeoupw5h5xwcc5@flea>
-References: <20180726044805.55888-1-icenowy@aosc.io>
- <20180730082712.koiaej6dxjnnk6lb@flea>
- <6e2df3d919b85f48c22c653124b7c2b594cb2d28.camel@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: [PATCH v3 net-next] dt-bindings: can: rcar_can: document r8a77965 support
+Date: Mon, 20 Aug 2018 16:49:10 +0200
+Message-ID: <20180820144910.13210-1-erosca@de.adit-jv.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="twmsbk4y6bcyavqt"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3FI5PNQKGQETIPRMAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <6e2df3d919b85f48c22c653124b7c2b594cb2d28.camel-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, linux-renesas-soc@vger.kernel.org
+Cc: Eugeniu Rosca <erosca@de.adit-jv.com>, Eugeniu Rosca <rosca.eugeniu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Eugeniu Rosca <rosca.eugeniu@gmail.com>
 
---twmsbk4y6bcyavqt
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Document the support for rcar_can on R8A77965 SoC devices.
+Add R8A77965 to the list of SoCs which require the "assigned-clocks" and
+"assigned-clock-rates" properties (thanks, Sergei).
 
-On Mon, Aug 20, 2018 at 10:24:20PM +0800, Icenowy Zheng wrote:
-> =E5=9C=A8 2018-07-30=E4=B8=80=E7=9A=84 10:27 +0200=EF=BC=8CMaxime Ripard=
-=E5=86=99=E9=81=93=EF=BC=9A
-> > On Thu, Jul 26, 2018 at 12:48:05PM +0800, Icenowy Zheng wrote:
-> > > Currently the enabled MMC controllers on Pine H64 do not have bus-
-> > > width
-> > > set, which make them fall back to 1-bit mode and become quite slow.
-> > >=20
-> > > Fix this by add the corresponding bus-width properties.
-> > >=20
-> > > Fixes: ecbd611882a1 ("arm64: allwinner: h6: enable MMC0/2 on Pine
-> > > H64")
-> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >=20
-> > Applied, thanks!
->=20
-> BTW why didn't I see it in next-20180820?
->=20
-> It's 3 weeks later, and you didn't say that the patch is queued for
-> another version.
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+---
+Changes in v3:
+ - [Simon Horman] Added more recipients.
+ - [Simon Horman] Dropped redundant "can" word in summary line.
+ - [Simon Horman] Added Reviewed-by.
+ - [Kieran Bingham] Added Reviewed-by.
+Changes in v2:
+ - [Kieran Bingham] Simplified commit description. Rewrapped text.
+ - [Sergei Shtylyov] Replaced footnotes with inline text.
+ - Pushed all dt-bindings patches to the beginning of the series.
+---
+ Documentation/devicetree/bindings/net/can/rcar_can.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-This has been merged to a fix branch we'll send for 4.19 once rc1 is
-out.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---twmsbk4y6bcyavqt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlt61GAACgkQ0rTAlCFN
-r3S92A/9ESkWSTDWOv3o8zqiDdTI8CCI1Y4i9iECngE+xDJsuQ49j/raF/JSp8bV
-udPM0mRikDkVoKnzae7UQGhhU4YjFcePopC4KTsSMXac/KszIIitsd3QDLnYhqKo
-3gXNN2yt3g2pUBFcisjARVUTuKVnLbn0xWOVIeOkUA9LplCwCfF79kCmGWZOvTds
-C7u1J3gxQlXGEJoZwrvg+gFy7P3uc/BKn6J+uJYau/1MuoTgsjO4wK+9W7hHa54R
-gFYx5iWAPlg0zU7/1AFlF2XUEYOppYWl6y3kcblsvKEH92XqoidCGp1FUjrD71L6
-YPRvj0WVr/LNetnP3AZT/KDDYZPammT7+V6kNsAAthfXXiUNQggU8XNTQ1zDk0Pp
-BAWlMXjlt6ldeCVleAdcz4ObSf5+OQaYM56x9HwmgVKBlkHMx6jB0p93uBB9i/Mr
-OZcbPnNP7MJM5yUMa9tiFvGnzT+w1hz/FbzIaSZQCw+wMwlzxg/hKVjpD2ndrYPc
-IMrqwviW0Qdr7NEYdkCR+FQfq/sniVBziFBR+HR6kCKXAWghyQQPRWdKHjueTlFa
-iSAhyr30UJWVaIwLyxhXf6ZoQxbhREM6YQ+QLB+DMCjUzSIA6R5fz6/NRarhHyWF
-if6jZViGdz7yDQGGqS7Oe27sEpjTn//39Br3ojkAZRmsFC3tCAY=
-=QYFG
------END PGP SIGNATURE-----
-
---twmsbk4y6bcyavqt--
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+index 94a7f33ac5e9..60daa878c9a2 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+@@ -13,6 +13,7 @@ Required properties:
+ 	      "renesas,can-r8a7794" if CAN controller is a part of R8A7794 SoC.
+ 	      "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
+ 	      "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
++	      "renesas,can-r8a77965" if CAN controller is a part of R8A77965 SoC.
+ 	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
+ 	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+ 	      compatible device.
+@@ -28,11 +29,10 @@ Required properties:
+ - pinctrl-0: pin control group to be used for this controller.
+ - pinctrl-names: must be "default".
+ 
+-Required properties for "renesas,can-r8a7795" and "renesas,can-r8a7796"
+-compatible:
+-In R8A7795 and R8A7796 SoCs, "clkp2" can be CANFD clock. This is a div6 clock
+-and can be used by both CAN and CAN FD controller at the same time. It needs to
+-be scaled to maximum frequency if any of these controllers use it. This is done
++Required properties for R8A7795, R8A7796 and R8A77965:
++For the denoted SoCs, "clkp2" can be CANFD clock. This is a div6 clock and can
++be used by both CAN and CAN FD controller at the same time. It needs to be
++scaled to maximum frequency if any of these controllers use it. This is done
+ using the below properties:
+ 
+ - assigned-clocks: phandle of clkp2(CANFD) clock.
+-- 
+2.18.0
