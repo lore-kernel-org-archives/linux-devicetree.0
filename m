@@ -1,41 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 net-next] dt-bindings: can: rcar_can: document
- r8a77965 support
-Date: Mon, 20 Aug 2018 14:37:02 -0500
-Message-ID: <20180820193702.GA18715@bogus>
-References: <20180820144910.13210-1-erosca@de.adit-jv.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: spi: Add Spreadtrum SPI controller
+ documentation
+Date: Mon, 20 Aug 2018 14:38:26 -0500
+Message-ID: <20180820193826.GA20541@bogus>
+References: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
+ <53e9467b4b16911576bcfb71c50c108ea83a803c.1534423916.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180820144910.13210-1-erosca@de.adit-jv.com>
-Sender: netdev-owner@vger.kernel.org
-Cc: Simon Horman <horms+renesas@verge.net.au>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, linux-renesas-soc@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>, Eugeniu Rosca <rosca.eugeniu@gmail.com>
+In-Reply-To: <53e9467b4b16911576bcfb71c50c108ea83a803c.1534423916.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, baolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 20 Aug 2018 16:49:10 +0200, Eugeniu Rosca wrote:
-> From: Eugeniu Rosca <rosca.eugeniu@gmail.com>
+On Thu, 16 Aug 2018 20:54:50 +0800, Baolin Wang wrote:
+> From: Lanqing Liu <lanqing.liu@spreadtrum.com>
 > 
-> Document the support for rcar_can on R8A77965 SoC devices.
-> Add R8A77965 to the list of SoCs which require the "assigned-clocks" and
-> "assigned-clock-rates" properties (thanks, Sergei).
+> This patch adds the binding documentation for Spreadtrum SPI
+> controller device.
 > 
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
-> Changes in v3:
->  - [Simon Horman] Added more recipients.
->  - [Simon Horman] Dropped redundant "can" word in summary line.
->  - [Simon Horman] Added Reviewed-by.
->  - [Kieran Bingham] Added Reviewed-by.
-> Changes in v2:
->  - [Kieran Bingham] Simplified commit description. Rewrapped text.
->  - [Sergei Shtylyov] Replaced footnotes with inline text.
->  - Pushed all dt-bindings patches to the beginning of the series.
+> Changes from v1:
+>  - Remove the sprd,spi-interval property.
 > ---
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  Documentation/devicetree/bindings/spi/spi-sprd.txt |   26 ++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-sprd.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
