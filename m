@@ -1,141 +1,45 @@
-Return-Path: <SRS0=p9ww=LD=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [RFT 6/8] arm64: dts: r8a77990: Add VIN and CSI-2 device nodes
-Date: Mon, 20 Aug 2018 12:16:40 +0200
-Message-Id: <1534760202-20114-7-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1534760202-20114-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1534760202-20114-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, kieran.bingham+renesas@ideasonboard.com, niklas.soderlund+renesas@ragnatech.se, damm+renesas@opensource.se, ulrich.hecht+renesas@gmail.com, linux-renesas-soc@vger.kernel.org, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v4 0/2] i2c: Add support for Qcom CCI I2C controller
+Date: Mon, 20 Aug 2018 12:09:51 +0530
+Message-Id: <20180820063953.6866-1-vkoul@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Vinod Koul <vkoul@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
+Hi,
 
-Add device nodes for VIN4, VIN5 and CSI40 to R-Car E3 R8A77990 device tree.
+This series adds support for Qualcomm Camera Control Interface (CCI) I2C
+controller. This block contains one/two I2C masters and registers these
+adapters based on the controller probed on.
 
-Signed-off-by: Koji Matsuoka <koji.matsuoka.xm@renesas.com>
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
-Compared to other SoCs, VIN4 and VIN5 on E3 have a single endpoint.
-If I describe with a unit address, I get a DTC warning
+Changes in v4:
+ - Add pm support
+ - Fix based on Bjorn feedback
 
-arch/arm64/boot/dts/renesas/r8a77990-ebisu.dtb: Warning (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node has single child node 'endpoint@0', #address-cells/#size-cells are not necessary
+Changes in v3:
+ - Update DT binding per RobH comments
+ - Add the subnode for bus instances
+ - Move all compataible data to driver data
+ - add num_master data and use that to register and use masters
 
-So I removed the unit address, hoping this won't break the VIN DT parsing
-routine
-
- 				#size-cells = <0>;
-
- 				port@1 {
--					#address-cells = <1>;
--					#size-cells = <0>;
--
- 					reg = <1>;
-
--					vin4csi40: endpoint@0 {
--						reg = <0>;
-+					vin4csi40: endpoint {
- 						remote-endpoint= <&csi40vin4>;
- 					};
- 				};
-
-Just pointing it out in case somethine goes bad when testing.
+Changes in v2:
+ - Add support for two adapters
 
 
----
- arch/arm64/boot/dts/renesas/r8a77990.dtsi | 79 +++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-index 2c8f119..b7d498b 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-@@ -337,6 +337,85 @@
- 			status = "disabled";
- 		};
 
-+		csi40: csi2@feaa0000 {
-+			compatible = "renesas,r8a77990-csi2", "renesas,rcar-gen3-csi2";
-+			reg = <0 0xfeaa0000 0 0x10000>;
-+			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 716>;
-+			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-+			resets = <&cpg 716>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					csi40vin4: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&vin4csi40>;
-+					};
-+					csi40vin5: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&vin5csi40>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin4: video@e6ef4000 {
-+			compatible = "renesas,vin-r8a77990";
-+			reg = <0 0xe6ef4000 0 0x1000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 807>;
-+			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-+			resets = <&cpg 807>;
-+			renesas,id = <4>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					vin4csi40: endpoint {
-+						remote-endpoint= <&csi40vin4>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin5: video@e6ef5000 {
-+			compatible = "renesas,vin-r8a77990";
-+			reg = <0 0xe6ef5000 0 0x1000>;
-+			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 806>;
-+			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-+			resets = <&cpg 806>;
-+			renesas,id = <5>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					vin5csi40: endpoint {
-+						remote-endpoint= <&csi40vin5>;
-+					};
-+				};
-+			};
-+		};
-+
- 		scif2: serial@e6e88000 {
- 			compatible = "renesas,scif-r8a77990",
- 				     "renesas,rcar-gen3-scif", "renesas,scif";
---
-2.7.4
+Todor Tomov (2):
+  dt-bindings: i2c: Add binding for Qualcomm CCI I2C controller
+  i2c: Add Qualcomm CCI I2C driver
+
+ .../devicetree/bindings/i2c/i2c-qcom-cci.txt       |  83 ++
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-qcom-cci.c                  | 879 +++++++++++++++++++++
+ 4 files changed, 973 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+ create mode 100644 drivers/i2c/busses/i2c-qcom-cci.c
+
+-- 
+2.14.4
