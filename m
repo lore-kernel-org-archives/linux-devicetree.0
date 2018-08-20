@@ -1,139 +1,70 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: [PATCH 5/5] arm64: dts: add LX2160ARDB board support
-Date: Mon, 20 Aug 2018 12:17:16 +0530
-Message-ID: <1534747636-20064-6-git-send-email-vabhav.sharma@nxp.com>
-References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] scripts/dtc: consolidate include path options in Makefile
+Date: Mon, 20 Aug 2018 11:55:03 -0700
+Message-ID: <cfb66b67-f423-0c26-0b22-0d57a581b44a@gmail.com>
+References: <1530669563-32637-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
+In-Reply-To: <1530669563-32637-1-git-send-email-yamada.masahiro@socionext.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, gregkh@linuxfoundation.org, arnd@arndb.de, kstewart@linuxfoundation.org, yamada.masahiro@socionext.com
-Cc: linux@armlinux.org.uk, V.Sethi@nxp.com, udit.kumar@nxp.com, Vabhav Sharma <vabhav.sharma@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Sriram Dash <sriram.dash@nxp.com>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-LX2160A reference design board (RDB) is a high-performance
-computing, evaluation, and development platform with LX2160A
-SoC.
+On 07/03/18 18:59, Masahiro Yamada wrote:
+> It is tedious to specify extra compiler options for every file.
+> HOST_EXTRACFLAGS is useful to add options to all files in a
+> directory.
+> 
+> -I$(src)/libfdt is needed for all the files in this directory
+> to include libfdt_env.h etc. from scripts/dtc/libfdt/.
+> 
+> On the other hand, -I$(src) is used to include check-in headers
+> from generated C files.  Thus, I added it only to dtc-lexer.lex.o
+> and dtc-parser.tab.o .
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  scripts/dtc/Makefile | 18 ++++--------------
+>  1 file changed, 4 insertions(+), 14 deletions(-)
+> 
+> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> index 9cac65b..1c943e0 100644
+> --- a/scripts/dtc/Makefile
+> +++ b/scripts/dtc/Makefile
+> @@ -9,21 +9,11 @@ dtc-objs	:= dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
+>  dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
+>  
+>  # Source files need to get at the userspace version of libfdt_env.h to compile
+> +HOST_EXTRACFLAGS := -I$(src)/libfdt
 
-Signed-off-by: Priyanka Jain <priyanka.jain@nxp.com>
-Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
-Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
----
- arch/arm64/boot/dts/freescale/Makefile            |  1 +
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 95 +++++++++++++++++++++++
- 2 files changed, 96 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+Shouldn't that be += instead of :=?
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 86e18ad..445b72b 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -13,3 +13,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-new file mode 100644
-index 0000000..70fad20
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Device Tree file for LX2160ARDB
-+//
-+// Copyright 2018 NXP
-+
-+/dts-v1/;
-+
-+#include "fsl-lx2160a.dtsi"
-+
-+/ {
-+	model = "NXP Layerscape LX2160ARDB";
-+	compatible = "fsl,lx2160a-rdb", "fsl,lx2160a";
-+
-+	aliases {
-+		crypto = &crypto;
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+	};
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	pca9547@77 {
-+		compatible = "nxp,pca9547";
-+		reg = <0x77>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x2>;
-+
-+			ina220@40 {
-+				compatible = "ti,ina220";
-+				reg = <0x40>;
-+				shunt-resistor = <1000>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+
-+			sa56004@4c {
-+				compatible = "nxp,sa56004";
-+				reg = <0x4c>;
-+			};
-+
-+			sa56004@4d {
-+				compatible = "nxp,sa56004";
-+				reg = <0x4d>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+
-+	rtc@51 {
-+		compatible = "nxp,pcf2129";
-+		reg = <0x51>;
-+		// IRQ10_B
-+		interrupts = <0 150 0x4>;
-+		};
-+
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&crypto {
-+	status = "okay";
-+};
--- 
-2.7.4
+-Frank
+
+>  
+> -HOSTCFLAGS_DTC := -I$(src) -I$(src)/libfdt
+> -
+> -HOSTCFLAGS_checks.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_data.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_dtc.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_flattree.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_fstree.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_livetree.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_srcpos.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_treesource.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_util.o := $(HOSTCFLAGS_DTC)
+> -
+> -HOSTCFLAGS_dtc-lexer.lex.o := $(HOSTCFLAGS_DTC)
+> -HOSTCFLAGS_dtc-parser.tab.o := $(HOSTCFLAGS_DTC)
+> +# Generated files need one more search path to include headers in source tree
+> +HOSTCFLAGS_dtc-lexer.lex.o := -I$(src)
+> +HOSTCFLAGS_dtc-parser.tab.o := -I$(src)
+>  
+>  # dependencies on generated files need to be listed explicitly
+>  $(obj)/dtc-lexer.lex.o: $(obj)/dtc-parser.tab.h
+> 
