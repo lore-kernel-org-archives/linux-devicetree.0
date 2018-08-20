@@ -1,70 +1,103 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v14 0/4] iommu/arm-smmu: Add runtime pm/sleep support
-Date: Mon, 20 Aug 2018 18:31:03 +0900
-Message-ID: <CAAFQd5C+ctVA-ynrWy=0=pjKZj0TGmHL+bWAu2yWWjYe4Oyf8w@mail.gmail.com>
-References: <20180727070224.23966-1-vivek.gautam@codeaurora.org>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/8] drm/bridge/synopsys: dsi: add ability to have
+ glue-specific attach and detach
+Date: Mon, 20 Aug 2018 12:34:37 +0200
+Message-ID: <20180820103439eucas1p24d5507784cab3b79161f6cd61fada54c~MkUCMQTJD0184001840eucas1p2U@eucas1p2.samsung.com>
+References: <20180814102654.29113-1-heiko@sntech.de>
+ <CGME20180814102717epcas5p2035152247276761b64573fab1bc0dc31@epcas5p2.samsung.com>
+ <20180814102654.29113-4-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180727070224.23966-1-vivek.gautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Will Deacon <will.deacon@arm.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, freedreno <freedreno@lists.freedesktop.org>, Alex Williamson <alex.williamson@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Linux PM <linux-pm@vger.kernel.org>, sboyd@kernel.org, jcrouse@codeaurora.org, Sricharan R <sricharan@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180814102654.29113-4-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org, yannick.fertre-qxv4g6HH51o@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
-
-On Fri, Jul 27, 2018 at 4:02 PM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-> This series provides the support for turning on the arm-smmu's
-> clocks/power domains using runtime pm. This is done using
-> device links between smmu and client devices. The device link
-> framework keeps the two devices in correct order for power-cycling
-> across runtime PM or across system-wide PM.
->
-> With addition of a new device link flag DL_FLAG_AUTOREMOVE_SUPPLIER [8]
-> (available in linux-next of Rafael's linux-pm tree [9]), the device links
-> created between arm-smmu and its clients will be automatically purged
-> when arm-smmu driver unbinds from its device.
->
-> As not all implementations support clock/power gating, we are checking
-> for a valid 'smmu->dev's pm_domain' to conditionally enable the runtime
-> power management for such smmu implementations that can support it.
-> Otherwise, the clocks are turned to be always on in .probe until .remove.
-> With conditional runtime pm now, we avoid touching dev->power.lock
-> in fastpaths for smmu implementations that don't need to do anything
-> useful with pm_runtime.
-> This lets us to use the much-argued pm_runtime_get_sync/put_sync()
-> calls in map/unmap callbacks so that the clients do not have to
-> worry about handling any of the arm-smmu's power.
->
-> This series also adds support for Qcom's arm-smmu-v2 variant that
-> has different clocks and power requirements.
->
-> Previous version of this patch series is @ [2].
->
-> Tested this series on msm8996, and sdm845 after pulling in Rafael's linux-pm
-> linux-next[9] and Joerg's iommu next[10] branches, and related changes for
-> device tree, etc.
->
-> Hi Robin, Will,
-> I have addressed the comments for v13. If there's still a chance
-> can you please consider pulling this for v4.19.
-> Thanks.
->
-> [v14]
->    * Moved arm_smmu_device_reset() from arm_smmu_pm_resume() to
->      arm_smmu_runtime_resume() so that the pm_resume callback calls
->      only runtime_resume to resume the device.
->      This should take care of restoring the state of smmu in systems
->      in which smmu lose register state on power-domain collapse.
-
-It's been a while since this series was posted and no more comments
-seem to be left anymore. Would you have some time to take a look
-again? Thanks.
-
-Best regards,
-Tomasz
+T24gMTQuMDguMjAxOCAxMjoyNiwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gV2l0aCB0aGUgcmVn
+dWxhciBtZWFucyBvZiBhZGRpbmcgdGhlIGRzaS1jb21wb25lbnQgaW4gcHJvYmUgaXQgY3JlYXRl
+cwo+IGEgcmFjZSBjb25kaXRpb24gd2l0aCB0aGUgcGFuZWwgcHJvYmluZywgYXMgdGhlIHBhbmVs
+IGRldmljZSBvbmx5IGdldHMKPiBjcmVhdGVkIGFmdGVyIHRoZSBkc2ktYnVzIGdvdCBjcmVhdGVk
+Lgo+Cj4gV2hlbiB0aGUgcGFuZWwtZHJpdmVyIGlzIGJ1aWxkIGFzIGEgbW9kdWxlIGl0IGN1cnJl
+bnRseSBmYWlscyBoYXJkIGFzIHRoZQo+IHBhbmVsIGNhbm5vdCBiZSBwcm9iZWQgZGlyZWN0bHk6
+Cj4KPiBkd19taXBpX2RzaV9iaW5kKCkKPiAgIF9fZHdfbWlwaV9kc2lfcHJvYmUoKQo+ICAgICBj
+cmVhdGVzIGRzaSBidXMKPiAgICAgY3JlYXRlcyBwYW5lbCBkZXZpY2UKPiAgICAgdHJpZ2dlcnMg
+cGFuZWwgbW9kdWxlIGxvYWQKPiAgICAgcGFuZWwgbm90IHByb2JlZCAobW9kdWxlIG5vdCBsb2Fk
+ZWQgb3IgcGFuZWwgcHJvYmUgc2xvdykKPiAgIGRybV9icmlkZ2VfYXR0YWNoCj4gICAgIGZhaWxz
+IHdpdGggLUVJTlZBTCBkdWUgdG8gZW1wdHkgcGFuZWxfYnJpZGdlCj4KPiBBZGRpdGlvbmFsbHkg
+dGhlIHBhbmVsIHByb2JpbmcgY2FuIHJ1biBjb25jdXJyZW50bHkgd2l0aCBkc2kgYnJpbmd1cAo+
+IG1ha2luZyBpdCBwb3NzaWJsZSB0aGF0IHRoZSBwYW5lbCBjYW4gYWxyZWFkeSBiZSBmb3VuZCBi
+dXQgZHNpLWF0dGFjaAo+IGhhc24ndCBmaW5pc2hlZCBydW5uaW5nLgo+Cj4gVG8gc29sdmUgdGhh
+dCBjbGVhbmx5IHdlIG1heSB3YW50IHRvIG9ubHkgY3JlYXRlIHRoZSBjb21wb25lbnQgYWZ0ZXIK
+PiB0aGUgcGFuZWwgaGFzIGZpbmlzaGVkIHByb2JpbmcsIGJ5IGNhbGxpbmcgY29tcG9uZW50X2Fk
+ZCBmcm9tIHRoZQo+IGhvc3QtYXR0YWNoIGRzaSBjYWxsYmFjay4KPgo+IEFzIHRoYXQgaXMgc3Bl
+Y2lmaWMgdG8gZ2x1ZSBkcml2ZXJzLCBhZGQgYSBuZXcgc3RydWN0IGZvciBob3N0X29wcwo+IHNv
+IHRoYXQgZ2x1ZSBkcml2ZXJzIGNhbiB0ZWxsIHRoZSBicmlkZ2UgdG8gY2FsbCBzcGVjaWZpYyBm
+dW5jdGlvbnMKPiBhZnRlciB0aGUgY29tbW9uIGhvc3QtYXR0YWNoIGFuZCBiZWZvcmUgdGhlIGNv
+bW1vbiBob3N0LWRldGFjaCBydW4uCgpTb21ldGltZXMgSSBoYXZlIGFuIGltcHJlc3Npb24gdGhh
+dCBjb3JlL2dsdWUgZHJpdmVyIGFyY2hpdGVjdHVyZSB3aXRoCmNhbGxiYWNrcyB0byBnbHVlIGRy
+aXZlcnMgaXMgcXVpdGUgY29tcGxpY2F0ZWQsIGFuZCBzbWVsbHMgbWlkLWxheWVyCm1pc3Rha2Ug
+OiksIEkgd29uZGVyIGlmIHNpbXBsZSBidW5jaCBvZiBoZWxwZXJzIHdpdGggc29tZSBiYXNlIG9i
+amVjdAp3b3VsZG4ndCBiZSBiZXR0ZXIsIGJ1dCB0aGlzIGlzIHN1YmplY3QgZm9yIG90aGVyIGRp
+c2N1c3Npb24uCgo+Cj4gU3VnZ2VzdGVkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1
+bmcuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+
+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYyB8
+IDE1ICsrKysrKysrKysrKysrKwo+ICBpbmNsdWRlL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuaCAg
+ICAgICAgICAgICAgfCAgOCArKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDIzIGluc2VydGlv
+bnMoKykKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3
+LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNp
+LmMKPiBpbmRleCBiYjRhZWNhNWMwZjkuLjM5NjJlNWQ4NGUxZSAxMDA2NDQKPiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMKPiArKysgYi9kcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMKPiBAQCAtMjcwLDYgKzI3MCw3
+IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfaG9zdF9hdHRhY2goc3RydWN0IG1pcGlfZHNpX2hv
+c3QgKmhvc3QsCj4gIAkJCQkgICBzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkZXZpY2UpCj4gIHsK
+PiAgCXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gaG9zdF90b19kc2koaG9zdCk7Cj4gKwljb25z
+dCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhICpwZGF0YSA9IGRzaS0+cGxhdF9kYXRhOwo+
+ICAJc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZTsKPiAgCXN0cnVjdCBkcm1fcGFuZWwgKnBhbmVs
+Owo+ICAJaW50IHJldDsKPiBAQCAtMzAwLDYgKzMwMSwxMiBAQCBzdGF0aWMgaW50IGR3X21pcGlf
+ZHNpX2hvc3RfYXR0YWNoKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0LAo+ICAKPiAgCWRybV9i
+cmlkZ2VfYWRkKCZkc2ktPmJyaWRnZSk7Cj4gIAo+ICsJaWYgKHBkYXRhLT5ob3N0X29wcyAmJiBw
+ZGF0YS0+aG9zdF9vcHMtPmF0dGFjaCkgewo+ICsJCXJldCA9IHBkYXRhLT5ob3N0X29wcy0+YXR0
+YWNoKHBkYXRhLT5wcml2X2RhdGEsIGRldmljZSk7Cj4gKwkJaWYgKHJldCA8IDApCj4gKwkJCXJl
+dHVybiByZXQ7CgpJdCBjb3VsZCBiZSByZXBsYWNlZCBieToKwqDCoMKgIHJldHVybiBwZGF0YS0+
+aG9zdF9vcHMtPmF0dGFjaChwZGF0YS0+cHJpdl9kYXRhLCBkZXZpY2UpOwoKQnV0IG5vIHN0cm9u
+ZyBmZWVsaW5ncy4gV2l0aCBvciB3aXRob3V0IHRoZSBjaGFuZ2U6CgpSZXZpZXdlZC1ieTogQW5k
+cnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KCsKgLS0KUmVnYXJkcwpBbmRyemVqCgo+
+ICsJfQo+ICsKPiAgCXJldHVybiAwOwo+ICB9Cj4gIAo+IEBAIC0zMDcsNiArMzE0LDE0IEBAIHN0
+YXRpYyBpbnQgZHdfbWlwaV9kc2lfaG9zdF9kZXRhY2goc3RydWN0IG1pcGlfZHNpX2hvc3QgKmhv
+c3QsCj4gIAkJCQkgICBzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkZXZpY2UpCj4gIHsKPiAgCXN0
+cnVjdCBkd19taXBpX2RzaSAqZHNpID0gaG9zdF90b19kc2koaG9zdCk7Cj4gKwljb25zdCBzdHJ1
+Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhICpwZGF0YSA9IGRzaS0+cGxhdF9kYXRhOwo+ICsJaW50
+IHJldDsKPiArCj4gKwlpZiAocGRhdGEtPmhvc3Rfb3BzICYmIHBkYXRhLT5ob3N0X29wcy0+ZGV0
+YWNoKSB7Cj4gKwkJcmV0ID0gcGRhdGEtPmhvc3Rfb3BzLT5kZXRhY2gocGRhdGEtPnByaXZfZGF0
+YSwgZGV2aWNlKTsKPiArCQlpZiAocmV0IDwgMCkKPiArCQkJcmV0dXJuIHJldDsKPiArCX0KPiAg
+Cj4gIAlkcm1fb2ZfcGFuZWxfYnJpZGdlX3JlbW92ZShob3N0LT5kZXYtPm9mX25vZGUsIDEsIDAp
+Owo+ICAKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmggYi9p
+bmNsdWRlL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuaAo+IGluZGV4IDZkN2Y4ZWI1ZDlmMi4uYTlj
+MDMwOTljZjNlIDEwMDY0NAo+IC0tLSBhL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5o
+Cj4gKysrIGIvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgKPiBAQCAtMTksNiArMTks
+MTMgQEAgc3RydWN0IGR3X21pcGlfZHNpX3BoeV9vcHMgewo+ICAJCQkgICAgIHVuc2lnbmVkIGlu
+dCAqbGFuZV9tYnBzKTsKPiAgfTsKPiAgCj4gK3N0cnVjdCBkd19taXBpX2RzaV9ob3N0X29wcyB7
+Cj4gKwlpbnQgKCphdHRhY2gpKHZvaWQgKnByaXZfZGF0YSwKPiArCQkgICAgICBzdHJ1Y3QgbWlw
+aV9kc2lfZGV2aWNlICpkc2kpOwo+ICsJaW50ICgqZGV0YWNoKSh2b2lkICpwcml2X2RhdGEsCj4g
+KwkJICAgICAgc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKTsKPiArfTsKPiArCj4gIHN0cnVj
+dCBkd19taXBpX2RzaV9wbGF0X2RhdGEgewo+ICAJdm9pZCBfX2lvbWVtICpiYXNlOwo+ICAJdW5z
+aWduZWQgaW50IG1heF9kYXRhX2xhbmVzOwo+IEBAIC0yNyw2ICszNCw3IEBAIHN0cnVjdCBkd19t
+aXBpX2RzaV9wbGF0X2RhdGEgewo+ICAJCQkJCSAgIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9t
+b2RlICptb2RlKTsKPiAgCj4gIAljb25zdCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGh5X29wcyAqcGh5
+X29wczsKPiArCWNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV9ob3N0X29wcyAqaG9zdF9vcHM7Cj4g
+IAo+ICAJdm9pZCAqcHJpdl9kYXRhOwo+ICB9OwoKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgt
+cm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
