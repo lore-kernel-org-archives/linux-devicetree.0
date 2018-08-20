@@ -1,117 +1,56 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] allwinner: a64: add SRAM controller
- / system control
-Date: Mon, 20 Aug 2018 16:41:09 +0800
-Message-ID: <CAGb2v66Eb4EoQs44cRwSKLf7MgwOtczNS0ufbtH5bLQBK24Lzg@mail.gmail.com>
-References: <20180614153548.9644-1-wens@csie.org> <20180820094210.6d856029d51dad480782a783@bidouilliste.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 3/3] arm: dts: ls1021a: Enable I2C DMA support
+Date: Mon, 20 Aug 2018 11:15:31 +0200
+Message-ID: <20180820091531.komc6ypyybnq22nw@ninjato>
+References: <20180816084315.7857-1-esben.haabendal@gmail.com>
+ <20180816084315.7857-4-esben.haabendal@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBPH55HNQKGQES3GGTYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180820094210.6d856029d51dad480782a783-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qusmn7mhub7xlmsj"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180816084315.7857-4-esben.haabendal@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Esben Haabendal <esben.haabendal@gmail.com>
+Cc: linux-i2c@vger.kernel.org, Esben Haabendal <eha@deif.com>, Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 20, 2018 at 3:42 PM, Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org> wrote:
->
->  Hello Chen-Yu,
->
-> On Thu, 14 Jun 2018 23:35:44 +0800
-> Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
->> Hi,
->>
->> This series is the remaining A64 syscon changes from the R40 DWMAC
->> series. The series aligns how the A64 system control exports a regmap
->> for the sun8i DWMAC driver to access with what we've done for the R40.
->>
->> Originally the A64 used the generic syscon for this bit of hardware.
->> But this block also contains mapping bits for the onboard SRAM, used
->> by various peripherals, and other vendor specific bits we may use in
->> the future. It is by no means generic. And we already have a device
->> tree binding and driver for the SRAM part.
->>
->> The first patch make the SRAM control device export a regmap, exposing
->> a single EMAC control register, for the DWMAC driver to consume.
->>
->> The second and third patches rename the A64 compatible string to read
->> "system control", which is what the block is named in the user manual.
->>
->> The last patch fixes up the device node, and also adds the lone mappable
->> SRAM block, which is needed by the Display Engine.
->>
->> Changes since v2:
->>
->>   - changed the compatible string from "*-sram-controller" to
->>     "*-system-control"
->>
->>
->> ChenYu
->>
->> Chen-Yu Tsai (2):
->>   dt-bindings: sram: Rename A64 SRAM controller compatible
->>   soc: sunxi: sram: Add updated compatible string for A64 system control
->>
->> Icenowy Zheng (2):
->>   soc: sunxi: export a regmap for EMAC clock reg on A64
->>   arm64: dts: allwinner: a64: add SRAM controller device tree node
->>
->>  .../devicetree/bindings/sram/sunxi-sram.txt   |  3 +-
->>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 19 +++++-
->>  drivers/soc/sunxi/sunxi_sram.c                | 61 ++++++++++++++++++-
->>  3 files changed, 78 insertions(+), 5 deletions(-)
->>
->> --
->> 2.17.1
->
->  I wish to have seen this serie before as it have some inconsistencies.
->
->  In patch 2 you renamed allwinner,sun50i-a64-sram-controller to
-> allwinner,sun50i-a64-system-control but the former was never used in
-> the DTS, the compatible used was allwinner,sun50i-a64-system-controller.
->  You also say that you've never seen use of it. How can you make that
-> claim ? There is a lot of downstream users of DTS now (FreeBSD, NetBSD,
-> OpenBSD and even RiscOS and Haiku iirc), it's not just Linux.
 
-The original "a64-sram-controller" was never used in any upstream device
-tree, be it Linux or U-boot. Since the projects you listed all derive
-their device trees from U-boot, with maybe some extra devices on top,
-they would either have had the "system-controller" version, or the even
-earlier version in U-boot where the emac node just lists the syscon
-address range as its own.
+--qusmn7mhub7xlmsj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-U-boot has the latter "system-controller" because it was copied from Linux.
-The original use-case was a SoC-specific compatible string followed by the
-very generic "syscon". The latter "syscon" binding is what we actually
-support in Linux and U-boot. Same goes for NetBSD and OpenBSD.
+On Thu, Aug 16, 2018 at 10:43:14AM +0200, Esben Haabendal wrote:
+> From: Esben Haabendal <eha@deif.com>
+>=20
+> Gives substantial performance improvement for transfers larger than 16
+> bytes (DMA_THRESHOLD).  Smaller transfers are unaffected.
+>=20
+> Signed-off-by: Esben Haabendal <eha@deif.com>
 
-IMHO FreeBSD could also move to a generic syscon API, instead of
-"system-controller" for sunxi and "grf" for rockchip.
+This needs to go via arm-soc. The two other patches will be in v4.19
+with my pull request later this week.
 
-You can continue to support old device trees and the unlisted compatible
-through the generic "syscon" fallback. For the updated device tree you will
-have to support the new compatible, along with supporting the SRAM mappings.
-The SRAM mappings are why the "syscon" compatible was removed. It just
-doesn't fit the semantics described by the "syscon" binding.
 
->  Also this compatible is currently the one used in the u-boot dts,
-> which mean that users of the embedded DTB use or can use it (which is
-> the default for EFI users of U-Boot).
+--qusmn7mhub7xlmsj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-As mentioned above, the old device tree uses the syscon binding, which
-you can continue to support. The new binding is add support for the SRAM
-mapping system. In addition, you probably don't want two device drivers
-supporting the same compatible string. On Linux it's even worse, because
-the "syscon" driver sidesteps the device model and isn't an actual device
-driver.
+-----BEGIN PGP SIGNATURE-----
 
-Regards
-ChenYu
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlt6hrMACgkQFA3kzBSg
+KbYi3hAAlkTYvh3KgXN65zQCR1k9LRHJUYwOBLwyRhrSHBspxnjiorSRk5mUDI7t
+fnsfHkPbaiTbHBQpltJRy3rkmEkgqU/20DJLQsVwQGtGgjBvHgH/bqYPyA2cxjQh
+lySVYZW2/a8ug88/v5AcrLQwe1QIvbXbyxO/Cabyv/WYeimjLahZr80Q7yGq+8OK
+T1bVU467EEqPua91CJ5ORyWctb7Jx4h4qkHfvsIFafv/ltXKSWrMwQTCm18YLF2n
+GLhbzJ+NBjtIqRM6mtv3KZfb+giiRMEnx1mfdet9N1T235rmcPtzqWtPe8csAkS2
+w/gkHjiVi+ZSrBUS9koEAIG76PGXFxCVTxWszhFyOaIu/OFwwue5tPXeGMQk5Z1V
+Mykhk6qeYpyWKcAPiR3nk/cX6/KKFjIzwoQOFpwsLGYCh6LA37oQYiNxYEgPtiAJ
+xsIp69QPGy55ZI2qcTW99tTCwMIZD+M+zTD2RvW4davYczfeZ7j24mf75x3VYrQm
+Wq9muxUJGu7+C4mrBCZFMxuTCq1erEREnGWpWdvHS+YyNf5erPewQhyHWfR1kAi7
+DD0C8zXcuYTGN96enwXsYXuXlRv+QczHzNQZ8W1oq5rv8h3MxKBGTITZZ2lJigb3
+6/AmRq5SvBYz8Cb0Y5mhkKYAZhVd+Rtn4NAEQ6USO20sVbyu26g=
+=J5iM
+-----END PGP SIGNATURE-----
+
+--qusmn7mhub7xlmsj--
