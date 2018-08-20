@@ -1,60 +1,101 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/7] dt-bindings: Add DT bindings documentation for
- Allwinner Thermal Sensor Controller
-Date: Mon, 20 Aug 2018 13:17:55 +0200
-Message-ID: <20180820111755.rzg7l2lznmbpuf2e@flea>
-References: <20180804070355.14857-1-manu@freebsd.org>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v4 6/8] drm/dsi: add helper function to find the second
+ host in a dual-dsi setup
+Date: Mon, 20 Aug 2018 13:37:24 +0200
+Message-ID: <20180820113726eucas1p229037428a6ac9cee0bd85b6a46074a94~MlK2T-2GX2929829298eucas1p29@eucas1p2.samsung.com>
+References: <20180814102654.29113-1-heiko@sntech.de>
+ <CGME20180814102717epcas3p17e5568502069f638e6eed5fecc8f9979@epcas3p1.samsung.com>
+ <20180814102654.29113-7-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3wnikgdamrq32ce2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180804070355.14857-1-manu@freebsd.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@freebsd.org>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180814102654.29113-7-heiko@sntech.de>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, seanpaul@chromium.org, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-
---3wnikgdamrq32ce2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Aug 04, 2018 at 09:03:49AM +0200, Emmanuel Vadot wrote:
-> This patch adds documentation for Device-Tree bindings for the Allwinner
-> Thermal Sensor Controller found on the H3, H5 and A64 SoCs
->=20
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-
-I'm not going to merge a binding for a device that doesn't have any
-driver implemented at the moment in Linux.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---3wnikgdamrq32ce2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlt6o2IACgkQ0rTAlCFN
-r3TBUQ//Zzcda8FBwMHlOeqZgRlXnJc1Q9VU/IeQIRCOXWDjIeJCiYUmuyuDV2Ry
-aF7wBQjAIHld6t4IzFchoBJTyykEBJn+l6d//2ap8qoG0TrmVevVwXVkN2Gsu7yP
-SiqPApfsq6OT7WuBGi43PyfgwNNgwBTICRcYMAszfXJv+c0WK4Doapwd24RTJ4pR
-rRmfCtU6bZlKdQ6Sj+eIJgKcuCSpkfiHCcogZ8CwanKWr1I9pPSRejzVLjwhTOtB
-Bg5YW5PTdqrJ+wNh7JotWDFQTk9zGNy1qBnw2yNReynCnQhmYL1j7MhEAGcL3kDd
-iS7pKNSFx+OhyO/KsQRYeFzTm9iMY/wNm+3w5/HJgtvhPBfYrH8uZ9035qlBXZlI
-SNrr5A2fxguV9+Wt14BMIn+bcFrDi+WMD8JoJuAAp5YfpWZI369DSm+laNgRuw23
-5ZPPMsIzMWvvWwH2h8cyByOBMQYW5e16MtQbmyyJsrKanuH5gVk76M3H8sE1TTZC
-GpkvqQc2SrKCiRLSXXBEDJvU0v4PMjVHaW8til03/WJobRwEwMsm71CwIrxe5rh7
-6OS7HvDxncKsa+GQZ/SN85/4p5P3z9Q1ZcyrK8xHhf8wRhi0YzvWwUV6ZWO9AG7R
-0NJRPoyP7X/qnKiEEmmHtXIEmSmKQhjYgR//9hCo1CDH7dxde/o=
-=0Njf
------END PGP SIGNATURE-----
-
---3wnikgdamrq32ce2--
+T24gMTQuMDguMjAxOCAxMjoyNiwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gPkZyb20gYSBzcGVj
+aWZpZWQgb3V0cHV0IHBvcnQgb2Ygb25lIGRzaSBjb250cm9sbGVyIHRoaXMgZnVuY3Rpb24gYWxs
+b3dzIHRvCj4gaXRlcmF0ZSBvdmVyIHRoZSBsaXN0IG9mIHJlZ2lzdGVyZWQgZHNpIGNvbnRyb2xs
+ZXJzIHRyeWluZyB0byBmaW5kIGEgc2Vjb25kCj4gaW5zdGFuY2UgY29ubmVjdGVkIHRvIHRoZSBz
+YW1lIGRpc3BsYXksIGxpa2UgaXQgaXMgdXNlZCBpbiBkdWFsLWRzaSBzZXR1cHMuCgpBcyBJIHNh
+aWQgZWFybGllciBpdCBsb29rcyBmb3IgbWUgaW5jb3JyZWN0bHkuIFlvdSBjcmVhdGUgaGVscGVy
+IHRvCmFjY2Vzcy9jb250cm9sIG9uZSBEU0kgY29udHJvbGxlciBmcm9tIGFub3RoZXIgYnV0IHRo
+ZXJlIGlzIG5vIHBvaW50IGluCmRvaW5nIGl0LiBJZiBDUlRDIGlzIGFibGUgdG8gc2VuZCB2aWRl
+byBzdHJlYW0gdmlhIHR3byBsaW5rcyBpdCBzaG91bGQKYmUgQ1JUQydzIHJlc3BvbnNpYmlsaXR5
+IHRvIHNldHVwIGFuZCB1c2UgRFNJIGNvbnRyb2xsZXJzIGF0dGFjaGVkIHRvCnRoZXNlIGxpbmtz
+LiBJZiB0aGUgcGFuZWwgaXMgYWJsZSB0byBjb21iaW5lIHN0cmVhbSBmcm9tIHR3byBEU0kgbGlu
+a3MKaW50byBvbmUgaW1hZ2UgaXQgc2hvdWxkIGJlIHBhbmVsJ3MgcmVzcG9uc2liaWxpdHkgdG8g
+aW5mb3JtIERTSQpjb250cm9sbGVycyBhYm91dCBlYWNoIGxpbmsncyBjb25maWd1cmF0aW9uLgoK
+TW9yZW92ZXIgZnJvbSB1c2FnZSBvZiB0aGlzIGhlbHBlciAocGF0Y2ggOC84KSBpdCBsb29rcyBs
+aWtlIHlvdQphc3N1bWVzLCB0aGF0IHNlY29uZCBob3N0IG11c3QgYmUgYWxzbyBzeW5vcHN5cywg
+dGhpcyBpcyBub3QKdHJ1ZS9nZW5lcmljIGF0IGFsbC4KCkkga25vdyB0aGVyZSBjb3VsZCBiZSBt
+YW55IG9ic3RhY2xlcyBpbiBhbHRlcm5hdGl2ZSBhcHByb2FjaCwgc28geW91CnJlYWxseSBpbnNp
+c3Qgb24gdGhpcyBoYWNrLCBwbGVhc2UgdXNlIGl0IGluc2lkZSB0aGUgZHJpdmVyLCB5b3UgY2Fu
+IHVzZQpmb3IgZXhhbXBsZSBkcml2ZXJfZm9yX2VhY2hfZGV2aWNlL2RyaXZlcl9maW5kX2Rldmlj
+ZSB0byBmaW5kIDJuZCBEU0kgaG9zdC4KClJlZ2FyZHMKQW5kcnplagoKPgo+IFNpZ25lZC1vZmYt
+Ynk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1
+L2RybS9kcm1fbWlwaV9kc2kuYyB8IDU2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPiAgaW5jbHVkZS9kcm0vZHJtX21pcGlfZHNpLmggICAgIHwgIDIgKysKPiAgMiBmaWxlcyBj
+aGFuZ2VkLCA1OCBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L2RybV9taXBpX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9taXBpX2RzaS5jCj4gaW5kZXgg
+YmM3M2I3ZjViOWZjLi4wYzNjOWM3YWEzYjggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L2RybV9taXBpX2RzaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2RybV9taXBpX2RzaS5jCj4g
+QEAgLTMwLDYgKzMwLDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgo+ICAjaW5jbHVk
+ZSA8bGludXgvbW9kdWxlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KPiArI2lu
+Y2x1ZGUgPGxpbnV4L29mX2dyYXBoLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+
+Cj4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+Cj4gIAo+IEBAIC0yODIsNiArMjgzLDYxIEBAIHN0
+cnVjdCBtaXBpX2RzaV9ob3N0ICpvZl9maW5kX21pcGlfZHNpX2hvc3RfYnlfbm9kZShzdHJ1Y3Qg
+ZGV2aWNlX25vZGUgKm5vZGUpCj4gIH0KPiAgRVhQT1JUX1NZTUJPTChvZl9maW5kX21pcGlfZHNp
+X2hvc3RfYnlfbm9kZSk7Cj4gIAo+ICtzdHJ1Y3QgZGV2aWNlX25vZGUgKm9mX21pcGlfZHNpX2Zp
+bmRfc2Vjb25kX2hvc3Qoc3RydWN0IGRldmljZV9ub2RlICpmaXJzdF9ucCwKPiArCQkJCQkJIGlu
+dCBwb3J0LCBpbnQgZW5kcG9pbnQpCj4gK3sKPiArCXN0cnVjdCBtaXBpX2RzaV9ob3N0ICpmaXJz
+dCwgKmhvc3Q7Cj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKnJlbW90ZSwgKm5wLCAqc2Vjb25kX25w
+ID0gTlVMTDsKPiArCWludCBudW0gPSAwOwo+ICsKPiArCWZpcnN0ID0gb2ZfZmluZF9taXBpX2Rz
+aV9ob3N0X2J5X25vZGUoZmlyc3RfbnApOwo+ICsJaWYgKCFmaXJzdCkgewo+ICsJCXByX2Vycigi
+bm8gZHNpLWhvc3QgZm9yIG5vZGUgJXNcbiIsIGZpcnN0X25wLT5mdWxsX25hbWUpOwo+ICsJCXJl
+dHVybiBFUlJfUFRSKC1FTk9ERVYpOwo+ICsJfQo+ICsKPiArCS8qIG91dHB1dC1ub2RlIG9mIHRo
+ZSBrbm93biBkc2ktaG9zdCAqLwo+ICsJcmVtb3RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9ub2Rl
+KGZpcnN0X25wLCBwb3J0LCBlbmRwb2ludCk7Cj4gKwlpZiAoIXJlbW90ZSkgewo+ICsJCWRldl9l
+cnIoZmlyc3QtPmRldiwgIm5vIG91dHB1dCBub2RlIGZvdW5kXG4iKTsKPiArCQlyZXR1cm4gRVJS
+X1BUUigtRU5PREVWKTsKPiArCX0KPiArCj4gKwltdXRleF9sb2NrKCZob3N0X2xvY2spOwo+ICsK
+PiArCWxpc3RfZm9yX2VhY2hfZW50cnkoaG9zdCwgJmhvc3RfbGlzdCwgbGlzdCkgewo+ICsJCW5w
+ID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9ub2RlKGhvc3QtPmRldi0+b2Zfbm9kZSwKPiArCQkJCQkg
+ICAgICBwb3J0LCBlbmRwb2ludCk7Cj4gKwo+ICsJCS8qIGZvdW5kIGEgaG9zdCBjb25uZWN0ZWQg
+dG8gdGhpcyBwYW5lbCAqLwo+ICsJCWlmIChucCA9PSByZW1vdGUpCj4gKwkJCW51bSsrOwo+ICsK
+PiArCQkvKiBmb3VuZCBvbmUgc2Vjb25kIGhvc3QgKi8KPiArCQlpZiAoaG9zdC0+ZGV2LT5vZl9u
+b2RlICE9IGZpcnN0X25wKQo+ICsJCQlzZWNvbmRfbnAgPSBob3N0LT5kZXYtPm9mX25vZGU7Cj4g
+Kwo+ICsJCW9mX25vZGVfcHV0KG5wKTsKPiArCX0KPiArCj4gKwkvKiBvZl9ub2RlX2dldCB0aGUg
+bm9kZSB1bmRlciBob3N0X2xvY2sgKi8KPiArCWlmIChudW0gPT0gMikKPiArCQlvZl9ub2RlX2dl
+dChzZWNvbmRfbnApOwo+ICsKPiArCW11dGV4X3VubG9jaygmaG9zdF9sb2NrKTsKPiArCj4gKwlv
+Zl9ub2RlX3B1dChyZW1vdGUpOwo+ICsKPiArCWlmIChudW0gPiAyKSB7Cj4gKwkJZGV2X2Vycihm
+aXJzdC0+ZGV2LAo+ICsJCQkgICAgICAidG9vIG1hbnkgRFNJIGxpbmtzIGZvciBvdXRwdXQ6ICVk
+IGxpbmtzXG4iLCBudW0pOwo+ICsJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ICsJfQo+ICsK
+PiArCXJldHVybiBzZWNvbmRfbnA7Cj4gK30KPiArRVhQT1JUX1NZTUJPTChvZl9taXBpX2RzaV9m
+aW5kX3NlY29uZF9ob3N0KTsKPiArCj4gIGludCBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKHN0cnVj
+dCBtaXBpX2RzaV9ob3N0ICpob3N0KQo+ICB7Cj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGU7
+Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9taXBpX2RzaS5oIGIvaW5jbHVkZS9kcm0v
+ZHJtX21pcGlfZHNpLmgKPiBpbmRleCA0ZmVmMTkwNjRiMGYuLjg5NTMyYWU2OWM5MSAxMDA2NDQK
+PiAtLS0gYS9pbmNsdWRlL2RybS9kcm1fbWlwaV9kc2kuaAo+ICsrKyBiL2luY2x1ZGUvZHJtL2Ry
+bV9taXBpX2RzaS5oCj4gQEAgLTEwNyw2ICsxMDcsOCBAQCBzdHJ1Y3QgbWlwaV9kc2lfaG9zdCB7
+Cj4gIGludCBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0
+KTsKPiAgdm9pZCBtaXBpX2RzaV9ob3N0X3VucmVnaXN0ZXIoc3RydWN0IG1pcGlfZHNpX2hvc3Qg
+Kmhvc3QpOwo+ICBzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAqb2ZfZmluZF9taXBpX2RzaV9ob3N0X2J5
+X25vZGUoc3RydWN0IGRldmljZV9ub2RlICpub2RlKTsKPiArc3RydWN0IGRldmljZV9ub2RlICpv
+Zl9taXBpX2RzaV9maW5kX3NlY29uZF9ob3N0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZmlyc3RfbnAs
+Cj4gKwkJCQkJCSBpbnQgcG9ydCwgaW50IGVuZHBvaW50KTsKPiAgCj4gIC8qIERTSSBtb2RlIGZs
+YWdzICovCj4gIAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
