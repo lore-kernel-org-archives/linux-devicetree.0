@@ -1,45 +1,59 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v12 13/14] cpufreq: qcom: Re-organise kryo cpufreq to use
- it for other nvmem based qcom socs
-Date: Mon, 20 Aug 2018 18:15:12 +0530
-Message-ID: <a89bd80c-bdfc-77ed-1de9-9cad38da7cf5@codeaurora.org>
-References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
- <1534248753-2440-14-git-send-email-sricharan@codeaurora.org>
- <20180817150902.GA19164@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 2/2] arm64: dts: sunxi: Don't use cd-inverted in
+ sun50i-a64-pinebook
+Date: Mon, 20 Aug 2018 14:56:11 +0200
+Message-ID: <20180820125611.3txlxkxhzppfmztp@flea>
+References: <20180807232554.16825-1-tuomas@tuxera.com>
+ <20180807232554.16825-2-tuomas@tuxera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cmpxf4oasnmpljug"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180817150902.GA19164@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180807232554.16825-2-tuomas@tuxera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, sudeep.holla@arm.com, linux@arm.linux.org.uk, ctatlor97@gmail.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, mturquette@baylibre.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, linux@armlinux.org.uk, thierry.escande@linaro.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, niklas.cassel@linaro.org
+To: Tuomas Tynkkynen <tuomas@tuxera.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 8/17/2018 8:39 PM, Rob Herring wrote:
-> Hi, this email is from Rob's (experimental) review bot. I found a couple
-> of common problems with your patch. Please see below.
-> 
-> On Tue, 14 Aug 2018 17:42:32 +0530, Sricharan R wrote:
->> The kryo cpufreq driver reads the nvmem cell and uses that data to
->> populate the opps. There are other qcom cpufreq socs like krait which
->> does similar thing. Except for the interpretation of the read data,
->> rest of the driver is same for both the cases. So pull the common things
->> out for reuse.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> 
-> The preferred subject prefix is "dt-bindings: <binding dir>: ...".
-> 
+--cmpxf4oasnmpljug
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- ok, will change and keep the bindings update part out for this and the next
- patch.
+On Wed, Aug 08, 2018 at 02:25:54AM +0300, Tuomas Tynkkynen wrote:
+> Another user of cd-inverted seems to have crept in. Switch it away from
+> cd-inverted to be consistent with other sunxi boards.
+>=20
+> Signed-off-by: Tuomas Tynkkynen <tuomas@tuxera.com>
 
-Regards,
- Sricharan
+Queued for 4.20, thanks!
+Maxime
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--cmpxf4oasnmpljug
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlt6umoACgkQ0rTAlCFN
+r3TMOQ/5AVmGOh1lCU1MQm7ch86Gj/ZuFKIaSGGWz43osYD3nEDYtc/1QeOASMra
+9CRvYb6F1htjdcWNcvFVed0pv9UCHglsc3NDibxMVlr039ABpriI2ZGU4W+O/hPk
+F6XUkBii23YGPUp+Xz9oVls5Kjs7NuhWd4NdaKcra/TgfivOg4UmL7qMxA/hXKGx
+M0so0wVVl4QVReD/Y+cFA137ZasG6/UBA2n/JoZ5Ae2JEd5EkgWxmgy8uTMc5z/7
+IOUeBp1qWmjV495rP5DzNEtooSI+Js6GVzcPiSbsrgxNrwbMZHvgptQp9BfpOx8P
+9Pe/9TV42mcnxF8fQlF7DDTVw5yf41TZksRm0jrbvEQQr75LbwmxMc8qzgelyUAS
+lddcXtr5aGOLy1na8D/749WwoRDIQMH0PBNBsc/L82RYHLt86V/YdV4K43y0z611
+tFGvTEsRrJKt7+Sn8MTjMG/jaTR9YU5VpqUfLZhCeZsaeX/bn2ah0dJFHzqKJUJG
+HltULGABgGxwTlXhLYshfOCB8RyHgwD93aS48WXTJI8JYNDViR9X+1eqWjJrzb1N
+VDgtO1hdziuW81DgqxTg64Gr24aKINMZNZJ1Ute/0wpTyZbXAo1VsvTb3Ho3XPaY
+p975ca3I2lsyGjEXkPt7iakYPQrFHcjlqnbiBWF4mw7B0ZHCJB4=
+=+uPK
+-----END PGP SIGNATURE-----
+
+--cmpxf4oasnmpljug--
