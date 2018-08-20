@@ -1,54 +1,91 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
-Date: Mon, 20 Aug 2018 07:31:53 -0700
-Message-ID: <20180820143153.GD7523@atomide.com>
-References: <20180605060510.32473-1-nm@ti.com>
- <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
- <454c277e-8a63-81cb-b341-a50f4e25cbea@ti.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: allwinner: dts: h6: fix Pine H64 MMC
+ bus width
+Date: Mon, 20 Aug 2018 16:46:57 +0200
+Message-ID: <20180820144657.pexeoupw5h5xwcc5@flea>
+References: <20180726044805.55888-1-icenowy@aosc.io>
+ <20180730082712.koiaej6dxjnnk6lb@flea>
+ <6e2df3d919b85f48c22c653124b7c2b594cb2d28.camel@aosc.io>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="twmsbk4y6bcyavqt"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3FI5PNQKGQETIPRMAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <454c277e-8a63-81cb-b341-a50f4e25cbea@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Vignesh R <vigneshr@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>
+In-Reply-To: <6e2df3d919b85f48c22c653124b7c2b594cb2d28.camel-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [180808 06:35]:
-> On Tuesday 05 June 2018 07:35 PM, Rob Herring wrote:
-> > Really need 64-bit addresses and sizes? Use ranges to limit the
-> > address space if possible.
-> 
-> We now have address-cells as <1>,
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/ti/k3-am65.dtsi#n49
-> 
-> However each PCIe instance has 2 data regions and one of the regions
-> (PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT1/PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT1 specified
-> in the "MAIN Domain Memory Map" table of TRM http://www.ti.com/lit/pdf/spruid7)
-> is above the 32bit region and requires 2 cells to specify the start address.
-> This region is used to access MEM_SPACE of PCIe endpoint when operating in root
-> complex mode and access memory of PCI root complex when operating in endpoint mode.
-> 
-> In order to describe this, should we change the address-cells back to <2> or do
-> you suggest any other alternatives?
 
-It's probably best to have the top level cbass interconnect use
-#size-cells = <2> and then have it's child interconnects have
-#size-cells = <1> if they don't need ranges above 4GB.
+--twmsbk4y6bcyavqt
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-BTW, what's the difference between all these three similar PCIE
-ranges?
+On Mon, Aug 20, 2018 at 10:24:20PM +0800, Icenowy Zheng wrote:
+> =E5=9C=A8 2018-07-30=E4=B8=80=E7=9A=84 10:27 +0200=EF=BC=8CMaxime Ripard=
+=E5=86=99=E9=81=93=EF=BC=9A
+> > On Thu, Jul 26, 2018 at 12:48:05PM +0800, Icenowy Zheng wrote:
+> > > Currently the enabled MMC controllers on Pine H64 do not have bus-
+> > > width
+> > > set, which make them fall back to 1-bit mode and become quite slow.
+> > >=20
+> > > Fix this by add the corresponding bus-width properties.
+> > >=20
+> > > Fixes: ecbd611882a1 ("arm64: allwinner: h6: enable MMC0/2 on Pine
+> > > H64")
+> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >=20
+> > Applied, thanks!
+>=20
+> BTW why didn't I see it in next-20180820?
+>=20
+> It's 3 weeks later, and you didn't say that the patch is queued for
+> another version.
 
-PCIE0_CORE_CORE_DAT_SLV_PCIE_CORE 0x0005500000 0x0005600000 1 MB
-PCIE1_CORE_CORE_DAT_SLV_PCIE_CORE 0x0005600000 0x0005700000 1 MB
+This has been merged to a fix branch we'll send for 4.19 once rc1 is
+out.
 
-PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT0 0x0010000000 0x0018000000 128 MB
-PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT0 0x0018000000 0x0020000000 128 MB
+Maxime
 
-PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT1 0x4000000000 0x4100000000 4 GB
-PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT1 0x4100000000 0x4200000000 4 GB
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Regards,
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-Tony
+--twmsbk4y6bcyavqt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlt61GAACgkQ0rTAlCFN
+r3S92A/9ESkWSTDWOv3o8zqiDdTI8CCI1Y4i9iECngE+xDJsuQ49j/raF/JSp8bV
+udPM0mRikDkVoKnzae7UQGhhU4YjFcePopC4KTsSMXac/KszIIitsd3QDLnYhqKo
+3gXNN2yt3g2pUBFcisjARVUTuKVnLbn0xWOVIeOkUA9LplCwCfF79kCmGWZOvTds
+C7u1J3gxQlXGEJoZwrvg+gFy7P3uc/BKn6J+uJYau/1MuoTgsjO4wK+9W7hHa54R
+gFYx5iWAPlg0zU7/1AFlF2XUEYOppYWl6y3kcblsvKEH92XqoidCGp1FUjrD71L6
+YPRvj0WVr/LNetnP3AZT/KDDYZPammT7+V6kNsAAthfXXiUNQggU8XNTQ1zDk0Pp
+BAWlMXjlt6ldeCVleAdcz4ObSf5+OQaYM56x9HwmgVKBlkHMx6jB0p93uBB9i/Mr
+OZcbPnNP7MJM5yUMa9tiFvGnzT+w1hz/FbzIaSZQCw+wMwlzxg/hKVjpD2ndrYPc
+IMrqwviW0Qdr7NEYdkCR+FQfq/sniVBziFBR+HR6kCKXAWghyQQPRWdKHjueTlFa
+iSAhyr30UJWVaIwLyxhXf6ZoQxbhREM6YQ+QLB+DMCjUzSIA6R5fz6/NRarhHyWF
+if6jZViGdz7yDQGGqS7Oe27sEpjTn//39Br3ojkAZRmsFC3tCAY=
+=QYFG
+-----END PGP SIGNATURE-----
+
+--twmsbk4y6bcyavqt--
