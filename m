@@ -1,58 +1,55 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/2] ARM: dts: sunxi: Don't use cd-inverted in
- sun8i-r40-bananapi-m2-ultra
-Date: Mon, 20 Aug 2018 14:56:46 +0200
-Message-ID: <20180820125646.z5lsdczc5maf7vyu@flea>
-References: <20180807232554.16825-1-tuomas@tuxera.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: sun8i: Add initial Orangepi
+ Zero Plus 2 H3 support
+Date: Mon, 20 Aug 2018 15:33:18 +0200
+Message-ID: <20180820133318.pgkyoajf7il7o4e2@flea>
+References: <20180730115223.14161-1-diego.rondini@kynetics.com>
+ <20180803075625.13289-1-diego.rondini@kynetics.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="t2lseczjazydlsib"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="zd7a7kldtq2qaeib"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBKMG5PNQKGQEJZUIAAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180807232554.16825-1-tuomas@tuxera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tuomas Tynkkynen <tuomas@tuxera.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180803075625.13289-1-diego.rondini-WVsNeAwskfdWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Diego Rondini <diego.rondini-WVsNeAwskfdWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---t2lseczjazydlsib
-Content-Type: text/plain; charset=us-ascii
+--zd7a7kldtq2qaeib
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 08, 2018 at 02:25:53AM +0300, Tuomas Tynkkynen wrote:
-> Another user of cd-inverted seems to have crept in. Switch it away from
-> cd-inverted to be consistent with other sunxi boards.
->=20
-> Signed-off-by: Tuomas Tynkkynen <tuomas@tuxera.com>
+On Fri, Aug 03, 2018 at 09:56:25AM +0200, Diego Rondini wrote:
+> Orangepi Zero Plus 2 is an open-source single-board computer, available in two
+> Allwinner SOC variants, H3 and H5. We add support for H3 variant here, as the
+> H5 is already supported by sun50i-h5-orangepi-zero-plus2.dts.
+> 
+> H3 Orangepi Zero Plus 2 has:
+> - Quad-core Cortex-A7
+> - 512MB DDR3
+> - microSD slot and 8GB eMMC
+> - Debug TTL UART
+> - HDMI
+> - Wifi + BT
+> - OTG + power supply
+> 
+> Signed-off-by: Diego Rondini <diego.rondini-WVsNeAwskfdWk0Htik3J/w@public.gmane.org>
 
-Queued for 4.20, thanks!
+queued for 4.20
+
 Maxime
 
---=20
+-- 
 Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---t2lseczjazydlsib
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlt6uo0ACgkQ0rTAlCFN
-r3TiHw/9EzjEe8Oida7uxehd3cudPL4GqPV/kN8/JMBpzZ9Sc1gBcLMzutQ3pgwM
-f5QLKCvim+Qu1CjX/OsT2QVOFTX251GWhyhOR7CNZCN+VrNdrLXcfOUFbyT/8CLa
-/KToXG+T4pJi8S4Yk8qbAZN1SLI8w9f3laLhEBdNZ8IRdFavVQ9vUPblNWdazYyH
-aCHCNUjI9rsZNZKeebB4TRUXCZDZdHmcpqX/uR19rx+vOFUH3d6hLvZhp9UzSHn4
-g48QbTsjJ3dbXRwGo9O11Aa8Fu3wk3D9pfkDCVeJ4sRffp/aDpl5BE1BVzliFMWP
-unuD5YufvbzCG5HWrV0e8DS8X8OHgIXYH5NewO0dg8EArDF3iVCev9w0fOQulfB0
-SIvZ6DmDkRbG3tu0wZdoczQStsiQp9BSgbHaORkwSXJl7e7XTsCVnV20jiVfQaSb
-Np/KXXtwAaYOPwfftutmkU5se9v3mYM9cMENtAZZ1an6xEQVTg3Sn8QupP3NYcdn
-koB7RDHd8cC+Nrz128ty3XAfn+o15gs7ctAHJsuwRC1AgObQwE2InO66gTQBpyMz
-dlRMoRpCDLuUmmgBLcRcB4idR1rnbv9tJIWWsu9mqztsB0W/WZBUbGodwiuoVIxx
-/QGvFpqB43n7LYPzTPM2QFCYMrpVHjMJZunOE2yswgEkWbPIjO0=
-=2dWH
------END PGP SIGNATURE-----
-
---t2lseczjazydlsib--
+--zd7a7kldtq2qaeib--
