@@ -1,50 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: input: pwm-vibrator: correct pwm-names in
- example
-Date: Mon, 20 Aug 2018 17:38:10 -0500
-Message-ID: <20180820223810.GA1780@bogus>
-References: <20180818195855.13429-1-masneyb@onstation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: [PATCH] dt-bindings: riscv,cpu-intc: Cleanups from a missed review
+Date: Mon, 20 Aug 2018 16:00:11 -0700
+Message-ID: <20180820230011.25368-1-palmer@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180818195855.13429-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sebastian.reichel@collabora.co.uk, mark.rutland@arm.com
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, Rob Herring <robh@kernel.org>, Christoph Hellwig <hch@infradead.org>, Karsten Merker <merker@debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 18, 2018 at 03:58:55PM -0400, Brian Masney wrote:
-> In the example for the pwm-vibrator bindings, pwm8 is the direction pin,
-> and pwm9 is the enable pin. The pwm-names on the vibrator node has these
-> two values swapped. This patch corrects the values for pwm-names.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> arch/arm/boot/dts/omap4-droid4-xt894.dts is actual implementation for
-> the example and it is correct.
-> 
->  Documentation/devicetree/bindings/input/pwm-vibrator.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/pwm-vibrator.txt b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-> index 09145d18491d..2731cbb7e8d7 100644
-> --- a/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-> +++ b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-> @@ -60,7 +60,7 @@ Example from Motorola Droid 4:
->  		compatible = "pwm-vibrator";
->  		pwms = <&pwm8 0 1000000000 0>,
->  		       <&pwm9 0 1000000000 0>;
-> -		pwm-names = "enable", "direction";
-> +		pwm-names = "direction", "enable";
+I managed to miss one of Rob's code reviews on the mailing list
+<http://lists.infradead.org/pipermail/linux-riscv/2018-August/001139.html>.
+The patch has already been merged, so I'm submitting a fixup.
 
-As enable is required and direction is optional, enable should come 
-first. So fix the pwms property instead. (And perhaps make the binding 
-more explicit as to what the order should be.
+Sorry!
 
->  		direction-duty-cycle-ns = <1000000000>;
->  	};
->  };
-> -- 
-> 2.17.1
-> 
+Fixes: b67bc7cb4088 ("dt-bindings: interrupt-controller: RISC-V local interrupt controller")
+Cc: Rob Herring <robh@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Karsten Merker <merker@debian.org>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+---
+ .../bindings/interrupt-controller/riscv,cpu-intc.txt       | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+index b0a8af51c388..265b223cd978 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+@@ -11,7 +11,7 @@ The RISC-V supervisor ISA manual specifies three interrupt sources that are
+ attached to every HLIC: software interrupts, the timer interrupt, and external
+ interrupts.  Software interrupts are used to send IPIs between cores.  The
+ timer interrupt comes from an architecturally mandated real-time timer that is
+-controller via Supervisor Binary Interface (SBI) calls and CSR reads.  External
++controlled via Supervisor Binary Interface (SBI) calls and CSR reads.  External
+ interrupts connect all other device interrupts to the HLIC, which are routed
+ via the platform-level interrupt controller (PLIC).
+ 
+@@ -25,7 +25,15 @@ in the system.
+ 
+ Required properties:
+ - compatible : "riscv,cpu-intc"
+-- #interrupt-cells : should be <1>
++- #interrupt-cells : should be <1>.  The interrupt sources are defined by the
++  RISC-V supervisor ISA manual, with only the following three interrupts being
++  defined for supervisor mode:
++    - Source 1 is the supervisor software interrupt, which can be sent by an SBI
++      call and is reserved for use by software.
++    - Source 5 is the supervisor timer interrupt, which can be configured by
++      SBI calls and implements a one-shot timer.
++    - Source 9 is the supervisor external interrupt, which chains to all other
++      device interrupts.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ 
+ Furthermore, this interrupt-controller MUST be embedded inside the cpu
+@@ -38,7 +46,7 @@ An example device tree entry for a HLIC is show below.
+ 		...
+ 		cpu1-intc: interrupt-controller {
+ 			#interrupt-cells = <1>;
+-			compatible = "riscv,cpu-intc", "sifive,fu540-c000-cpu-intc";
++			compatible = "sifive,fu540-c000-cpu-intc", "riscv,cpu-intc";
+ 			interrupt-controller;
+ 		};
+ 	};
+-- 
+2.16.4
