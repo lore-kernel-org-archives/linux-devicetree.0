@@ -1,32 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND v1 1/5] dt-bindings: pinctrl: add wakeup capable
- GPIOs for SDM845
-Date: Mon, 20 Aug 2018 17:16:47 -0500
-Message-ID: <20180820221647.GA8711@bogus>
-References: <20180817191026.32245-1-ilina@codeaurora.org>
- <20180817191026.32245-2-ilina@codeaurora.org>
+Subject: Re: [PATCH] ASoC: rsnd: Add device tree binding for
+	r8a77990
+Date: Mon, 20 Aug 2018 17:30:33 -0500
+Message-ID: <20180820223033.GA28364@bogus>
+References: <1534492435-17859-1-git-send-email-ykaneko0929@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20180817191026.32245-2-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
+In-Reply-To: <1534492435-17859-1-git-send-email-ykaneko0929@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 Aug 2018 13:10:22 -0600, Lina Iyer wrote:
-> Update the documentation to use interrupts-extended format for
-> specifying the TLMM summary IRQ line that is requested from GIC and the
-> PDC interrupts corresponding to the wakeup capable GPIOs.
+On Fri, 17 Aug 2018 16:53:55 +0900, Yoshihiro Kaneko wrote:
+> From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
 > 
-> Update the example to show PDC interrupts for the wakeup capable GPIOs
-> for SDM845.
+> This patch adds the device tree binding of the r8a77990 SoC.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+> Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
 > ---
->  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 58 ++++++++++++++++++-
->  1 file changed, 55 insertions(+), 3 deletions(-)
+> 
+> This patch is based on the devel branch of Simon Horman's renesas tree.
+> 
+>  Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
