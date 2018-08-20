@@ -1,392 +1,227 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 09/14] irqchip/irq-mvebu-icu: add support for System
- Error Interrupts (SEI)
-Date: Mon, 20 Aug 2018 16:21:19 +0100
-Message-ID: <a88f62c0-7d7c-71da-fa45-487f7573dbb1@arm.com>
-References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
- <20180705124011.7661-10-miquel.raynal@bootlin.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RESEND v1 2/5] drivers: pinctrl: msm: enable PDC
+ interrupt only during suspend
+Date: Mon, 20 Aug 2018 09:26:29 -0600
+Message-ID: <20180820152629.GR5081@codeaurora.org>
+References: <20180817191026.32245-1-ilina@codeaurora.org>
+ <20180817191026.32245-3-ilina@codeaurora.org>
+ <86a7pjq0l1.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180705124011.7661-10-miquel.raynal@bootlin.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <86a7pjq0l1.wl-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/18 13:40, Miquel Raynal wrote:
-> An SEI driver provides an MSI domain through which it is possible to
-> raise SEIs.
+On Sat, Aug 18 2018 at 07:13 -0600, Marc Zyngier wrote:
+>Hi Lina,
+>
+>On Fri, 17 Aug 2018 20:10:23 +0100,
+>Lina Iyer <ilina@codeaurora.org> wrote:
+>>
+>> During suspend the system may power down some of the system rails. As a
+>> result, the TLMM hw block may not be operational anymore and wakeup
+>> capable GPIOs will not be detected. The PDC however will be operational
+>> and the GPIOs that are routed to the PDC as IRQs can wake the system up.
+>>
+>> To avoid being interrupted twice (for TLMM and once for PDC IRQ) when a
+>> GPIO trips, use TLMM for active and switch to PDC for suspend. When
+>> entering suspend, disable the TLMM wakeup interrupt and instead enable
+>> the PDC IRQ and revert upon resume.
+>>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>>  drivers/pinctrl/qcom/pinctrl-msm.c | 60 +++++++++++++++++++++++++++++-
+>>  drivers/pinctrl/qcom/pinctrl-msm.h |  3 ++
+>>  2 files changed, 62 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> index 03ef1d29d078..17e541f8f09d 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> @@ -37,6 +37,7 @@
+>>  #include "../pinctrl-utils.h"
+>>
+>>  #define MAX_NR_GPIO 300
+>> +#define MAX_PDC_IRQ 1024
+>
+>Where is this value coming from? Is it guaranteed to be an
+>architectural maximum? Or something that is likely to vary in future
+>implementations?
+>
+>>  #define PS_HOLD_OFFSET 0x820
+>>
+>>  /**
+>> @@ -51,6 +52,7 @@
+>>   * @enabled_irqs:   Bitmap of currently enabled irqs.
+>>   * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
+>>   *                  detection.
+>> + * @pdc_irqs:       Bitmap of wakeup capable irqs.
+>>   * @soc;            Reference to soc_data of platform specific data.
+>>   * @regs:           Base address for the TLMM register map.
+>>   */
+>> @@ -68,11 +70,14 @@ struct msm_pinctrl {
+>>
+>>  	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+>>  	DECLARE_BITMAP(enabled_irqs, MAX_NR_GPIO);
+>> +	DECLARE_BITMAP(pdc_irqs, MAX_PDC_IRQ);
+>>
+>>  	const struct msm_pinctrl_soc_data *soc;
+>>  	void __iomem *regs;
+>>  };
+>>
+>> +static bool in_suspend;
+>> +
+>>  static int msm_get_groups_count(struct pinctrl_dev *pctldev)
+>>  {
+>>  	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+>> @@ -787,8 +792,11 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+>>
+>>  	raw_spin_lock_irqsave(&pctrl->lock, flags);
+>>
+>> -	if (pdc_irqd)
+>> +	if (pdc_irqd && !in_suspend) {
+>>  		irq_set_irq_wake(pdc_irqd->irq, on);
+>> +		on ? set_bit(pdc_irqd->irq, pctrl->pdc_irqs) :
+>> +		     clear_bit(pdc_irqd->irq, pctrl->pdc_irqs);
+>
+>I think we'll all survive the two extra lines if you write this as an
+>'if' statement (unless you're competing for the next IOCCC, and then
+>you need to up your game a bit).
+>
+>Also, are you indexing the bitmap using a Linux irq number? If so,
+>that's an absolute NACK. Out of the box, a Linux IRQ can be up to
+>NR_IRQS+8196 on arm64, and there are plans to push that to be a much
+>larger space.
+>
+I didn't realize this. I have been using linux IRQ number on this
+bitmask and I will need to fix this.
 
-Is that really relevant to this patch? It is about the ICU driver, and I
-would expect you to explain how the ICU so far only handled NSR
-interrupts through GICP, but now can also generate SEIs by routing MSIs
-through the SEI block.
+>> +	}
+>>
+>>  	irq_set_irq_wake(pctrl->irq, on);
+>
+>I'm a bit worried by the way you call into the irq subsystem with this
+>spinlock held. Have you run that code with lockdep enabled?
+>
+I have not tried lockdep. Will try it.
+This specific line is already part of the driver. I added a similar line
+irq_set_irq_wake(pdc_irqd->irq) just above following the same pattern.
 
-> 
-> Handle the NSR probe function in a more generic way to support other
-> type of interrupts (ie. the SEIs).
-> 
-> Each interrupt domain is a tree domain because of maximum 207 entries.
-> Reallocating an ICU slot is prevented by the use of an ICU-wide bitmap.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/irqchip/irq-mvebu-icu.c | 148 +++++++++++++++++++++++++++++++++-------
->  1 file changed, 123 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-> index bb4f06833d17..0cf741dd0f51 100644
-> --- a/drivers/irqchip/irq-mvebu-icu.c
-> +++ b/drivers/irqchip/irq-mvebu-icu.c
-> @@ -26,6 +26,10 @@
->  #define ICU_SETSPI_NSR_AH	0x14
->  #define ICU_CLRSPI_NSR_AL	0x18
->  #define ICU_CLRSPI_NSR_AH	0x1c
-> +#define ICU_SET_SEI_AL		0x50
-> +#define ICU_SET_SEI_AH		0x54
-> +#define ICU_CLR_SEI_AL		0x58
-> +#define ICU_CLR_SEI_AH		0x5C
->  #define ICU_INT_CFG(x)          (0x100 + 4 * (x))
->  #define   ICU_INT_ENABLE	BIT(24)
->  #define   ICU_IS_EDGE		BIT(28)
-> @@ -36,12 +40,28 @@
->  #define ICU_SATA0_ICU_ID	109
->  #define ICU_SATA1_ICU_ID	107
->  
-> +struct mvebu_icu_subset_data {
-> +	unsigned int icu_group;
-> +	unsigned int offset_set_ah;
-> +	unsigned int offset_set_al;
-> +	unsigned int offset_clr_ah;
-> +	unsigned int offset_clr_al;
-> +};
-> +
->  struct mvebu_icu {
->  	struct irq_chip irq_chip;
->  	void __iomem *base;
->  	struct device *dev;
->  	bool is_legacy;
-> +	/* Lock on interrupt allocations/releases */
-> +	struct mutex msi_lock;
-> +	DECLARE_BITMAP(msi_bitmap, ICU_MAX_IRQS);
-> +};
-> +
-> +struct mvebu_icu_msi_data {
-> +	struct mvebu_icu *icu;
->  	atomic_t initialized;
-> +	const struct mvebu_icu_subset_data *subset_data;
->  };
->  
->  struct mvebu_icu_irq_data {
-> @@ -50,28 +70,38 @@ struct mvebu_icu_irq_data {
->  	unsigned int type;
->  };
->  
-> -static void mvebu_icu_init(struct mvebu_icu *icu, struct msi_msg *msg)
-> +static void mvebu_icu_init(struct mvebu_icu *icu,
-> +			   struct mvebu_icu_msi_data *msi_data,
-> +			   struct msi_msg *msg)
->  {
-> -	if (atomic_cmpxchg(&icu->initialized, false, true))
-> +	const struct mvebu_icu_subset_data *subset = msi_data->subset_data;
-> +
-> +	if (atomic_cmpxchg(&msi_data->initialized, false, true))
-> +		return;
-> +
-> +	/* Set 'SET' ICU SPI message address in AP */
-> +	writel_relaxed(msg[0].address_hi, icu->base + subset->offset_set_ah);
-> +	writel_relaxed(msg[0].address_lo, icu->base + subset->offset_set_al);
-> +
-> +	if (subset->icu_group != ICU_GRP_NSR)
->  		return;
->  
-> -	/* Set Clear/Set ICU SPI message address in AP */
-> -	writel_relaxed(msg[0].address_hi, icu->base + ICU_SETSPI_NSR_AH);
-> -	writel_relaxed(msg[0].address_lo, icu->base + ICU_SETSPI_NSR_AL);
-> -	writel_relaxed(msg[1].address_hi, icu->base + ICU_CLRSPI_NSR_AH);
-> -	writel_relaxed(msg[1].address_lo, icu->base + ICU_CLRSPI_NSR_AL);
-> +	/* Set 'CLEAR' ICU SPI message address in AP (level-MSI only) */
-> +	writel_relaxed(msg[1].address_hi, icu->base + subset->offset_clr_ah);
-> +	writel_relaxed(msg[1].address_lo, icu->base + subset->offset_clr_al);
->  }
->  
->  static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
->  {
->  	struct irq_data *d = irq_get_irq_data(desc->irq);
-> +	struct mvebu_icu_msi_data *msi_data = platform_msi_get_host_data(d->domain);
->  	struct mvebu_icu_irq_data *icu_irqd = d->chip_data;
->  	struct mvebu_icu *icu = icu_irqd->icu;
->  	unsigned int icu_int;
->  
->  	if (msg->address_lo || msg->address_hi) {
-> -		/* One off initialization */
-> -		mvebu_icu_init(icu, msg);
-> +		/* One off initialization per domain */
-> +		mvebu_icu_init(icu, msi_data, msg);
->  		/* Configure the ICU with irq number & type */
->  		icu_int = msg->data | ICU_INT_ENABLE;
->  		if (icu_irqd->type & IRQ_TYPE_EDGE_RISING)
-> @@ -105,7 +135,8 @@ static int
->  mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
->  			       unsigned long *hwirq, unsigned int *type)
->  {
-> -	struct mvebu_icu *icu = platform_msi_get_host_data(d);
-> +	struct mvebu_icu_msi_data *msi_data = platform_msi_get_host_data(d);
-> +	struct mvebu_icu *icu = msi_data->icu;
->  	unsigned int param_count = icu->is_legacy ? 3 : 2;
->  
->  	/* Check the count of the parameters in dt */
-> @@ -117,7 +148,7 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
->  
->  	if (icu->is_legacy) {
->  		*hwirq = fwspec->param[1];
-> -		*type = fwspec->param[2];
-> +		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
->  		if (fwspec->param[0] != ICU_GRP_NSR) {
->  			dev_err(icu->dev, "wrong ICU group type %x\n",
->  				fwspec->param[0]);
-> @@ -125,7 +156,7 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
->  		}
->  	} else {
->  		*hwirq = fwspec->param[0];
-> -		*type = fwspec->param[1];
-> +		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+>>
+>> @@ -920,6 +928,8 @@ static int msm_gpio_pdc_pin_request(struct irq_data *d)
+>>  	}
+>>
+>>  	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
+>> +	irq_set_handler_data(irq, d);
+>> +	irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY);
+>
+>Could you explain what this is trying to do? I'm trying to understand
+>this code, but this function isn't in 4.18...
+>
+Oh, I have been able to test only on 4.14 so far. The flag does seem to
+exist at least, I didn't get a compiler error.
 
-Shouldn't this change (and the one just above) be moved to another patch
-(such as patch #6)? They feel oddly out of place here.
+I read this in kernel/irq/chip.c -
 
->  	}
->  
->  	if (*hwirq >= ICU_MAX_IRQS) {
-> @@ -133,12 +164,36 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
->  		return -EINVAL;
->  	}
->  
-> -	/* Mask the type to prevent wrong DT configuration */
-> -	*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-> +	/*
-> +	 * The ICU receives level-interrupts. MSI SEI are
-> +	 * edge-interrupts while MSI NSR are level-interrupts. Update the type
-> +	 * accordingly for the parent irqchip.
-> +	 */
-> +	if (msi_data->subset_data->icu_group == ICU_GRP_SEI)
-> +		*type = IRQ_TYPE_EDGE_RISING;
+If the interrupt chip does not implement the irq_disable callback,
+a driver can disable the lazy approach for a particular irq line by
+calling 'irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY)'. This can
+be used for devices which cannot disable the interrupt at the
+device level under certain circumstances and have to use
+disable_irq[_nosync] instead.
 
-That's interesting. How is the resampling done here?
+And interpreted this as something that this would prevent 'relaxed'
+disable. I am enabling and disabling the IRQ in suspend path, that I
+thought this would help avoid issues caused by late disable. Am I
+mistaken?
 
->  
->  	return 0;
->  }
->  
-> +static int mvebu_icu_msi_bitmap_region_alloc(struct mvebu_icu *icu, int hwirq)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&icu->msi_lock);
-> +	ret = bitmap_allocate_region(icu->msi_bitmap, hwirq, 0);
+>>  	disable_irq(irq);
+>>
+>>  	return 0;
+>> @@ -1070,6 +1080,54 @@ static void msm_pinctrl_setup_pm_reset(struct msm_pinctrl *pctrl)
+>>  		}
+>>  }
+>>
+>> +int __maybe_unused msm_pinctrl_suspend_late(struct device *dev)
+>> +{
+>> +	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
+>> +	struct irq_data *irqd;
+>> +	int i;
+>> +
+>> +	in_suspend = true;
+>> +	for_each_set_bit(i, pctrl->pdc_irqs, MAX_PDC_IRQ) {
+>> +		irqd = irq_get_handler_data(i);
+>
+>So this is what I though. You're using the Linux IRQ, and not the pin
+>number (or whatever HW-dependent index that would otherwise make
+>sense). Please fix it.
+>
+Noted.
 
-See my earlier comment about the use of find_first_free/set_bit.
+>> +		/*
+>> +		 * We don't know if the TLMM will be functional
+>> +		 * or not, during the suspend. If its functional,
+>> +		 * we do not want duplicate interrupts from PDC.
+>> +		 * Hence disable the GPIO IRQ and enable PDC IRQ.
+>> +		 */
+>> +		if (irqd_is_wakeup_set(irqd)) {
+>> +			irq_set_irq_wake(irqd->irq, false);
+>> +			disable_irq(irqd->irq);
+>> +			enable_irq(i);
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int __maybe_unused msm_pinctrl_resume_late(struct device *dev)
+>> +{
+>> +	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
+>> +	struct irq_data *irqd;
+>> +	int i;
+>> +
+>> +	for_each_set_bit(i, pctrl->pdc_irqs, MAX_PDC_IRQ) {
+>> +		irqd = irq_get_handler_data(i);
+>> +		/*
+>> +		 * The TLMM will be operational now, so disable
+>> +		 * the PDC IRQ.
+>> +		 */
+>> +		if (irqd_is_wakeup_set(irq_get_irq_data(i))) {
+>> +			disable_irq_nosync(i);
+>> +			irq_set_irq_wake(irqd->irq, true);
+>> +			enable_irq(irqd->irq);
+>> +		}
+>> +	}
+>> +	in_suspend = false;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  int msm_pinctrl_probe(struct platform_device *pdev,
+>>  		      const struct msm_pinctrl_soc_data *soc_data)
+>>  {
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+>> index 9b9feea540ff..21b56fb5dae9 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
+>> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+>> @@ -123,4 +123,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+>>  		      const struct msm_pinctrl_soc_data *soc_data);
+>>  int msm_pinctrl_remove(struct platform_device *pdev);
+>>
+>> +int msm_pinctrl_suspend_late(struct device *dev);
+>> +int msm_pinctrl_resume_late(struct device *dev);
+>> +
+>>  #endif
+>
+>I can't really review this code any further, as it seems that I'm
+>missing some crucial dependencies. But there is a number of things
+>that feel quite wrong in this code, and that need to be addressed
+>anyway.
+>
+Thanks for reviewing Marc.
 
-> +	mutex_unlock(&icu->msi_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static void mvebu_icu_msi_bitmap_region_release(struct mvebu_icu *icu,
-> +						int hwirq)
-> +{
-> +	mutex_lock(&icu->msi_lock);
-> +	bitmap_release_region(icu->msi_bitmap, hwirq, 0);
-> +	mutex_unlock(&icu->msi_lock);
-> +}
-> +
->  static int
->  mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  			   unsigned int nr_irqs, void *args)
-> @@ -146,7 +201,9 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  	int err;
->  	unsigned long hwirq;
->  	struct irq_fwspec *fwspec = args;
-> -	struct mvebu_icu *icu = platform_msi_get_host_data(domain);
-> +	struct mvebu_icu_msi_data *msi_data =
-> +		platform_msi_get_host_data(domain);
-
-On a single line, please.
-
-> +	struct mvebu_icu *icu = msi_data->icu;
->  	struct mvebu_icu_irq_data *icu_irqd;
->  
->  	icu_irqd = kmalloc(sizeof(*icu_irqd), GFP_KERNEL);
-> @@ -160,16 +217,20 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  		goto free_irqd;
->  	}
->  
-> +	err = mvebu_icu_msi_bitmap_region_alloc(icu, hwirq);
-> +	if (err)
-> +		goto free_irqd;
-> +
->  	if (icu->is_legacy)
->  		icu_irqd->icu_group = fwspec->param[0];
->  	else
-> -		icu_irqd->icu_group = ICU_GRP_NSR;
-> +		icu_irqd->icu_group = msi_data->subset_data->icu_group;
->  	icu_irqd->icu = icu;
->  
->  	err = platform_msi_domain_alloc(domain, virq, nr_irqs);
->  	if (err) {
->  		dev_err(icu->dev, "failed to allocate ICU interrupt in parent domain\n");
-> -		goto free_irqd;
-> +		goto free_bitmap;
->  	}
->  
->  	/* Make sure there is no interrupt left pending by the firmware */
-> @@ -188,6 +249,8 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->  
->  free_msi:
->  	platform_msi_domain_free(domain, virq, nr_irqs);
-> +free_bitmap:
-> +	mvebu_icu_msi_bitmap_region_release(icu, hwirq);
->  free_irqd:
->  	kfree(icu_irqd);
->  	return err;
-> @@ -197,12 +260,17 @@ static void
->  mvebu_icu_irq_domain_free(struct irq_domain *domain, unsigned int virq,
->  			  unsigned int nr_irqs)
->  {
-> +	struct mvebu_icu_msi_data *msi_data =
-> +		platform_msi_get_host_data(domain);
-
-Single line.
-
-
-> +	struct mvebu_icu *icu = msi_data->icu;
->  	struct irq_data *d = irq_get_irq_data(virq);
->  	struct mvebu_icu_irq_data *icu_irqd = d->chip_data;
->  
->  	kfree(icu_irqd);
->  
->  	platform_msi_domain_free(domain, virq, nr_irqs);
-> +
-> +	mvebu_icu_msi_bitmap_region_release(icu, d->hwirq);
->  }
->  
->  static const struct irq_domain_ops mvebu_icu_domain_ops = {
-> @@ -211,28 +279,54 @@ static const struct irq_domain_ops mvebu_icu_domain_ops = {
->  	.free      = mvebu_icu_irq_domain_free,
->  };
->  
-> +static const struct mvebu_icu_subset_data mvebu_icu_nsr_subset_data = {
-> +	.icu_group = ICU_GRP_NSR,
-> +	.offset_set_ah = ICU_SETSPI_NSR_AH,
-> +	.offset_set_al = ICU_SETSPI_NSR_AL,
-> +	.offset_clr_ah = ICU_CLRSPI_NSR_AH,
-> +	.offset_clr_al = ICU_CLRSPI_NSR_AL,
-> +};
-> +
-> +static const struct mvebu_icu_subset_data mvebu_icu_sei_subset_data = {
-> +	.icu_group = ICU_GRP_SEI,
-> +	.offset_set_ah = ICU_SET_SEI_AH,
-> +	.offset_set_al = ICU_SET_SEI_AL,
-> +};
-> +
->  static const struct of_device_id mvebu_icu_subset_of_match[] = {
->  	{
->  		.compatible = "marvell,cp110-icu-nsr",
-> +		.data = &mvebu_icu_nsr_subset_data,
-> +	},
-> +	{
-> +		.compatible = "marvell,cp110-icu-sei",
-> +		.data = &mvebu_icu_sei_subset_data,
->  	},
->  	{},
->  };
->  
->  static int mvebu_icu_subset_probe(struct platform_device *pdev)
->  {
-> +	struct mvebu_icu_msi_data *msi_data;
->  	struct device_node *msi_parent_dn;
->  	struct device *dev = &pdev->dev;
->  	struct irq_domain *irq_domain;
-> -	struct mvebu_icu *icu;
-> +
-> +	msi_data = devm_kzalloc(dev, sizeof(*msi_data), GFP_KERNEL);
-> +	if (!msi_data)
-> +		return -ENOMEM;
->  
->  	/*
->  	 * Device data being populated means we are using the legacy bindings.
->  	 * Using the parent device data means we are using the new bindings.
->  	 */
-> -	if (dev_get_drvdata(dev))
-> -		icu = dev_get_drvdata(dev);
-> -	else
-> -		icu = dev_get_drvdata(dev->parent);
-> +	if (dev_get_drvdata(dev)) {
-> +		msi_data->icu = dev_get_drvdata(dev);
-> +		msi_data->subset_data = &mvebu_icu_nsr_subset_data;
-> +	} else {
-> +		msi_data->icu = dev_get_drvdata(dev->parent);
-> +		msi_data->subset_data = of_device_get_match_data(dev);
-> +	}
->  
->  	dev->msi_domain = of_msi_get_domain(dev, dev->of_node,
->  					    DOMAIN_BUS_PLATFORM_MSI);
-> @@ -246,7 +340,7 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
->  	irq_domain = platform_msi_create_device_tree_domain(dev, ICU_MAX_IRQS,
->  							    mvebu_icu_write_msg,
->  							    &mvebu_icu_domain_ops,
-> -							    icu);
-> +							    msi_data);
->  	if (!irq_domain) {
->  		dev_err(dev, "Failed to create ICU MSI domain\n");
->  		return -ENOMEM;
-> @@ -284,6 +378,8 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  		return PTR_ERR(icu->base);
->  	}
->  
-> +	mutex_init(&icu->msi_lock);
-> +
->  	icu->irq_chip.name = devm_kasprintf(&pdev->dev, GFP_KERNEL,
->  					    "ICU.%x",
->  					    (unsigned int)res->start);
-> @@ -308,7 +404,7 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  #endif
->  
->  	/*
-> -	 * Clean all ICU interrupts with type SPI_NSR, required to
-> +	 * Clean all ICU interrupts of type NSR and SEI, required to
->  	 * avoid unpredictable SPI assignments done by firmware.
->  	 */
->  	for (i = 0 ; i < ICU_MAX_IRQS ; i++) {
-> @@ -331,7 +427,9 @@ static int mvebu_icu_probe(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id mvebu_icu_of_match[] = {
-> -	{ .compatible = "marvell,cp110-icu", },
-> +	{
-> +		.compatible = "marvell,cp110-icu",
-> +	},
-
-Pointless change?
-
->  	{},
->  };
->  
-> 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+-- Lina
