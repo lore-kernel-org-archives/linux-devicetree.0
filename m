@@ -1,63 +1,31 @@
-From: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 2/2] drm/msm/dpu: fix for cursor blend issue
-Date: Tue, 21 Aug 2018 17:54:10 +0530
-Message-ID: <20180821122410.17280-3-skolluku@codeaurora.org>
-References: <20180821122410.17280-1-skolluku@codeaurora.org>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH 0/3] dt-bindings: connector: Add USB-PD PPS APDO support
+Date: Tue, 21 Aug 2018 13:28:20 +0100
+Message-ID: <cover.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180821122410.17280-1-skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, Li Jun <jun.li@nxp.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGN1cnJlbnQgZHJpdmVyIGhhcyB0aGUgb3BhcXVlIGJsZW5kIG1vZGUgc2V0IGFzIHRoZQpk
-ZWZhdWx0IGNhdXNpbmcgdGhlIGJsYWNrIGJveCBlZmZlY3QgYXJvdW5kIHRoZSBjdXJzb3IuClRo
-ZSBmaXggZW5hYmxlcyBjaG9vc2luZyBhIGRpZmZlcmVudCBibGVuZCBtb2RlIGZvciBhbHBoYQpl
-bmFibGVkIGZvcm1hdHMuCgpTaWduZWQtb2ZmLWJ5OiBTcmF2YW50aGkgS29sbHVrdWR1cnUgPHNr
-b2xsdWt1QGNvZGVhdXJvcmEub3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUx
-L2RwdV9jcnRjLmMgfCAyNiArKysrKysrKysrKysrKysrKysrKystLS0tLQogMSBmaWxlIGNoYW5n
-ZWQsIDIxIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20v
-ZGlzcC9kcHUxL2RwdV9jcnRjLmMKaW5kZXggMGNkOTQ1NmE2YzRjLi5mYzYyMDBjNzQ2MTQgMTAw
-NjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRjLmMKKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2NydGMuYwpAQCAtMjk3LDE0ICsyOTcs
-MjkgQEAgc3RhdGljIHZvaWQgZHB1X2NydGNfZGVzdHJveShzdHJ1Y3QgZHJtX2NydGMgKmNydGMp
-CiB9CiAKIHN0YXRpYyB2b2lkIF9kcHVfY3J0Y19zZXR1cF9ibGVuZF9jZmcoc3RydWN0IGRwdV9j
-cnRjX21peGVyICptaXhlciwKLQkJc3RydWN0IGRwdV9wbGFuZV9zdGF0ZSAqcHN0YXRlKQorCQlz
-dHJ1Y3QgZHB1X3BsYW5lX3N0YXRlICpwc3RhdGUsIHN0cnVjdCBkcHVfZm9ybWF0ICpmb3JtYXQp
-CiB7CiAJc3RydWN0IGRwdV9od19taXhlciAqbG0gPSBtaXhlci0+aHdfbG07CisJdWludDMyX3Qg
-YmxlbmRfb3A7CiAKIAkvKiBkZWZhdWx0IHRvIG9wYXF1ZSBibGVuZGluZyAqLwotCWxtLT5vcHMu
-c2V0dXBfYmxlbmRfY29uZmlnKGxtLCBwc3RhdGUtPnN0YWdlLCAwWEZGLCAwLAotCQkJCURQVV9C
-TEVORF9GR19BTFBIQV9GR19DT05TVCB8Ci0JCQkJRFBVX0JMRU5EX0JHX0FMUEhBX0JHX0NPTlNU
-KTsKKwlibGVuZF9vcCA9IERQVV9CTEVORF9GR19BTFBIQV9GR19DT05TVCB8CisJCURQVV9CTEVO
-RF9CR19BTFBIQV9CR19DT05TVDsKKworCWlmIChmb3JtYXQtPmFscGhhX2VuYWJsZSkgeworCQkv
-KiBjb3ZlcmFnZSBibGVuZGluZyAqLworCQlibGVuZF9vcCA9IERQVV9CTEVORF9GR19BTFBIQV9G
-R19QSVhFTCB8CisJCQlEUFVfQkxFTkRfQkdfQUxQSEFfRkdfUElYRUwgfAorCQkJRFBVX0JMRU5E
-X0JHX0lOVl9BTFBIQTsKKwl9CisKKwlsbS0+b3BzLnNldHVwX2JsZW5kX2NvbmZpZyhsbSwgcHN0
-YXRlLT5zdGFnZSwKKwkJCQkweEZGLCAwLCBibGVuZF9vcCk7CisKKwlEUFVfREVCVUcoCisJCSJm
-b3JtYXQ6JTQuNHMsIGFscGhhX2VuKCV1KSBibGVuZF9vcDoweCV4XG4iLAorCQkoY2hhciAqKSAm
-Zm9ybWF0LT5iYXNlLnBpeGVsX2Zvcm1hdCwKKwkJCWZvcm1hdC0+YWxwaGFfZW5hYmxlLCBibGVu
-ZF9vcCk7CiB9CiAKIHN0YXRpYyB2b2lkIF9kcHVfY3J0Y19wcm9ncmFtX2xtX291dHB1dF9yb2ko
-c3RydWN0IGRybV9jcnRjICpjcnRjKQpAQCAtNDAxLDcgKzQxNiw4IEBAIHN0YXRpYyB2b2lkIF9k
-cHVfY3J0Y19ibGVuZF9zZXR1cF9taXhlcihzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCiAKIAkJLyog
-YmxlbmQgY29uZmlnIHVwZGF0ZSAqLwogCQlmb3IgKGxtX2lkeCA9IDA7IGxtX2lkeCA8IGRwdV9j
-cnRjLT5udW1fbWl4ZXJzOyBsbV9pZHgrKykgewotCQkJX2RwdV9jcnRjX3NldHVwX2JsZW5kX2Nm
-ZyhtaXhlciArIGxtX2lkeCwgcHN0YXRlKTsKKwkJCV9kcHVfY3J0Y19zZXR1cF9ibGVuZF9jZmco
-bWl4ZXIgKyBsbV9pZHgsCisJCQkJCQlwc3RhdGUsIGZvcm1hdCk7CiAKIAkJCW1peGVyW2xtX2lk
-eF0uZmx1c2hfbWFzayB8PSBmbHVzaF9tYXNrOwogCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlv
-biBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExp
-bnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVk
-cmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+This patch set adds DT bindings support for PPS APDOs, and updates the FUSB302
+to use the generic connector bindings allowing for PPS support in this Type-C
+port controller. Existing FUSB302 device specific bindings still work, but
+are now deprecated in favour of the generic connector approach.
+
+Adam Thomson (3):
+  dt-bindings: connector: Add support for USB-PD PPS APDOs to bindings
+  dt-bindings: usb: fusb302: Use usb-connector bindings for
+    configuration
+  usb: typec: fusb302: Populate tcpc fwnode for TCPM property handling
+
+ .../bindings/connector/usb-connector.txt           |  8 +++---
+ .../devicetree/bindings/usb/fcs,fusb302.txt        | 32 +++++++++++++++++-----
+ drivers/usb/typec/fusb302/fusb302.c                |  3 ++
+ include/dt-bindings/usb/pd.h                       | 26 ++++++++++++++++++
+ 4 files changed, 58 insertions(+), 11 deletions(-)
+
+-- 
+1.9.1
