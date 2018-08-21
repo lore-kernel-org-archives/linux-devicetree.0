@@ -1,114 +1,117 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 3/8] nios2: use common rules to build built-in dtb
-Date: Tue, 21 Aug 2018 16:55:19 -0500
-Message-ID: <20180821215524.23040-4-robh@kernel.org>
+Subject: [PATCH 5/8] c6x: use common built-in dtb support
+Date: Tue, 21 Aug 2018 16:55:21 -0500
+Message-ID: <20180821215524.23040-6-robh@kernel.org>
 References: <20180821215524.23040-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180821215524.23040-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>, Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <jacquiot.aurelien@gmail.com>, linux-c6x-dev@linux-c6x.org
 List-Id: devicetree@vger.kernel.org
 
 Using the common build support for built-in dtb files just requires
 adding a .dtb.o target to obj-y.
 
-This has the side effect that CONFIG_NIOS2_DTB_SOURCE should now be just
-the dts filename in arch/nios2/boot/dts/ directory. Before any path was
-supported, but if you want to build in your dtb to the kernel, it should
-be in the kernel tree.
+The dtb now needs to be copied when unflattened because an init section
+is used now.
 
-Cc: Ley Foon Tan <lftan@altera.com>
-Cc: nios2-dev@lists.rocketboards.org
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Cc: linux-c6x-dev@linux-c6x.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/nios2/Makefile          |  6 ++----
- arch/nios2/boot/Makefile     | 14 --------------
- arch/nios2/boot/dts/Makefile |  2 ++
- arch/nios2/boot/linked_dtb.S | 19 -------------------
- 4 files changed, 4 insertions(+), 37 deletions(-)
- delete mode 100644 arch/nios2/boot/linked_dtb.S
+I couldn't find a built cross-compiler for c6x, so this had no testing.
 
-diff --git a/arch/nios2/Makefile b/arch/nios2/Makefile
-index 50eece1c6adb..db2e78fe65c7 100644
---- a/arch/nios2/Makefile
-+++ b/arch/nios2/Makefile
-@@ -49,16 +49,14 @@ BOOT_TARGETS = vmImage zImage
- PHONY += $(BOOT_TARGETS) install
- KBUILD_IMAGE := $(nios2-boot)/vmImage
- 
--ifneq ($(CONFIG_NIOS2_DTB_SOURCE),"")
--	core-y	+= $(nios2-boot)/
--endif
-+core-y	+= $(nios2-boot)/dts/
- 
- all: vmImage
- 
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(nios2-boot)
- 
--%.dtb: | scripts
-+%.dtb %.dtb.S %.dtb.o: | scripts
- 	$(Q)$(MAKE) $(build)=$(nios2-boot)/dts $(nios2-boot)/dts/$@
- 
- dtbs:
-diff --git a/arch/nios2/boot/Makefile b/arch/nios2/boot/Makefile
-index 007586094dde..0b48f1bf086d 100644
---- a/arch/nios2/boot/Makefile
-+++ b/arch/nios2/boot/Makefile
-@@ -31,20 +31,6 @@ $(obj)/zImage: $(obj)/compressed/vmlinux FORCE
- $(obj)/compressed/vmlinux: $(obj)/vmlinux.gz FORCE
- 	$(Q)$(MAKE) $(build)=$(obj)/compressed $@
- 
--# Rule to build device tree blobs
--DTB_SRC := $(patsubst "%",%,$(CONFIG_NIOS2_DTB_SOURCE))
+ arch/c6x/boot/dts/Makefile      | 11 +----------
+ arch/c6x/boot/dts/linked_dtb.S  |  2 --
+ arch/c6x/include/asm/sections.h |  1 -
+ arch/c6x/kernel/setup.c         |  4 ++--
+ arch/c6x/kernel/vmlinux.lds.S   | 10 ----------
+ 5 files changed, 3 insertions(+), 25 deletions(-)
+ delete mode 100644 arch/c6x/boot/dts/linked_dtb.S
+
+diff --git a/arch/c6x/boot/dts/Makefile b/arch/c6x/boot/dts/Makefile
+index b212d278ebc4..fd937f781d16 100644
+--- a/arch/c6x/boot/dts/Makefile
++++ b/arch/c6x/boot/dts/Makefile
+@@ -6,14 +6,5 @@
+ DTC_FLAGS ?= -p 1024
+
+ ifneq ($(DTB),)
+-obj-y += linked_dtb.o
++obj-y += $(DTB).dtb.o
+ endif
 -
--# Make sure the generated dtb gets removed during clean
--extra-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) += system.dtb
+-quiet_cmd_cp = CP      $< $@$2
+-	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
 -
--$(obj)/system.dtb: $(DTB_SRC) FORCE
--	$(call cmd,dtc)
+-# Generate builtin.dtb from $(DTB).dtb
+-$(obj)/builtin.dtb: $(obj)/$(DTB).dtb
+-	$(call if_changed,cp)
 -
--# Ensure system.dtb exists
--$(obj)/linked_dtb.o: $(obj)/system.dtb
--
--obj-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) += linked_dtb.o
--
- targets += $(dtb-y)
- 
- $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
-diff --git a/arch/nios2/boot/dts/Makefile b/arch/nios2/boot/dts/Makefile
-index f66554cd5c45..f6358e395b25 100644
---- a/arch/nios2/boot/dts/Makefile
-+++ b/arch/nios2/boot/dts/Makefile
-@@ -1 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
-+
-+obj-y := $(patsubst "%.dts",%.dtb.o,$(CONFIG_NIOS2_DTB_SOURCE))
-diff --git a/arch/nios2/boot/linked_dtb.S b/arch/nios2/boot/linked_dtb.S
+-$(obj)/linked_dtb.o: $(obj)/builtin.dtb
+diff --git a/arch/c6x/boot/dts/linked_dtb.S b/arch/c6x/boot/dts/linked_dtb.S
 deleted file mode 100644
-index 071f922db338..000000000000
---- a/arch/nios2/boot/linked_dtb.S
+index cf347f1d16ce..000000000000
+--- a/arch/c6x/boot/dts/linked_dtb.S
 +++ /dev/null
-@@ -1,19 +0,0 @@
--/*
-- * Copyright (C) 2011 Thomas Chou <thomas@wytron.com.tw>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- *
-- */
--.section .dtb.init.rodata,"a"
--.incbin "arch/nios2/boot/system.dtb"
--- 
+@@ -1,2 +0,0 @@
+-.section __fdt_blob,"a"
+-.incbin "arch/c6x/boot/dts/builtin.dtb"
+diff --git a/arch/c6x/include/asm/sections.h b/arch/c6x/include/asm/sections.h
+index d6c591ab5b7e..dc2f15eb3bde 100644
+--- a/arch/c6x/include/asm/sections.h
++++ b/arch/c6x/include/asm/sections.h
+@@ -8,6 +8,5 @@ extern char _vectors_start[];
+ extern char _vectors_end[];
+
+ extern char _data_lma[];
+-extern char _fdt_start[], _fdt_end[];
+
+ #endif /* _ASM_C6X_SECTIONS_H */
+diff --git a/arch/c6x/kernel/setup.c b/arch/c6x/kernel/setup.c
+index 786e36e2f61d..509c5f086496 100644
+--- a/arch/c6x/kernel/setup.c
++++ b/arch/c6x/kernel/setup.c
+@@ -270,7 +270,7 @@ int __init c6x_add_memory(phys_addr_t start, unsigned long size)
+ notrace void __init machine_init(unsigned long dt_ptr)
+ {
+ 	void *dtb = __va(dt_ptr);
+-	void *fdt = _fdt_start;
++	void *fdt = __dtb_start;
+
+ 	/* interrupts must be masked */
+ 	set_creg(IER, 2);
+@@ -363,7 +363,7 @@ void __init setup_arch(char **cmdline_p)
+ 					 memory_end >> PAGE_SHIFT);
+ 	memblock_reserve(memory_start, bootmap_size);
+
+-	unflatten_device_tree();
++	unflatten_and_copy_device_tree();
+
+ 	c6x_cache_init();
+
+diff --git a/arch/c6x/kernel/vmlinux.lds.S b/arch/c6x/kernel/vmlinux.lds.S
+index 1fba5b421eee..584bab2bace6 100644
+--- a/arch/c6x/kernel/vmlinux.lds.S
++++ b/arch/c6x/kernel/vmlinux.lds.S
+@@ -90,16 +90,6 @@ SECTIONS
+ 		*(.switch)
+ 	}
+
+-	. = ALIGN (8) ;
+-	__fdt_blob : AT(ADDR(__fdt_blob) - LOAD_OFFSET)
+-	{
+-		_fdt_start = . ;	/* place for fdt blob */
+-		*(__fdt_blob) ;		/* Any link-placed DTB */
+-		BYTE(0);		/* section always has contents */
+-	        . = _fdt_start + 0x4000;	/* Pad up to 16kbyte */
+-		_fdt_end = . ;
+-	}
+-
+ 	_etext = .;
+
+ 	/*
+--
 2.17.1
