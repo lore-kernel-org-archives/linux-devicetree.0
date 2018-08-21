@@ -1,66 +1,74 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 09/14] irqchip/irq-mvebu-icu: add support for System
- Error Interrupts (SEI)
-Date: Tue, 21 Aug 2018 10:19:04 +0100
-Message-ID: <07e90507-1d51-6435-b006-c46f865a636c@arm.com>
-References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
- <20180705124011.7661-10-miquel.raynal@bootlin.com>
- <a88f62c0-7d7c-71da-fa45-487f7573dbb1@arm.com>
- <20180821110825.2fbec982@xps13>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: add DT binding for UniPhier
+ MIO DMAC
+Date: Tue, 21 Aug 2018 18:47:59 +0900
+Message-ID: <CAK7LNASr=rf_foQ7PDTNS440rx3TLuY_TBagfQ-gCHxXpFB2vw@mail.gmail.com>
+References: <1534843809-4137-1-git-send-email-yamada.masahiro@socionext.com> <1534843809-4137-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180821110825.2fbec982@xps13>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534843809-4137-2-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/08/18 10:08, Miquel Raynal wrote:
-> Hi Marc,
-> 
-> I'm fine with the rest of the comments, please find just one last
-> question below.
-> 
-> [...]
-> 
->>> @@ -133,12 +164,36 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
->>>  		return -EINVAL;
->>>  	}
->>>  
->>> -	/* Mask the type to prevent wrong DT configuration */
->>> -	*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
->>> +	/*
->>> +	 * The ICU receives level-interrupts. MSI SEI are
->>> +	 * edge-interrupts while MSI NSR are level-interrupts. Update the type
->>> +	 * accordingly for the parent irqchip.
->>> +	 */
->>> +	if (msi_data->subset_data->icu_group == ICU_GRP_SEI)
->>> +		*type = IRQ_TYPE_EDGE_RISING;  
->>
->> That's interesting. How is the resampling done here?
-> 
-> I'm not sure to understand the question. What does 'resampling' means
-> in such context? MSI SEIs are of type "edge" and use the traditional
-> MSI signalling infrastructure. I'm asking to be sure not to ignore
-> something wrong in my code.
+(+CC Rob, DT, LKML)
 
-You seems to be turning a level interrupt into an edge. You can do that,
-but only if you resample the level on EOI (and regenerate the
-corresponding edge if the level is still high).
+I forgot to CC this to DT community...
 
-Or am I reading it the wrong way?
 
-	M.
+2018-08-21 18:30 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> The MIO DMAC (Media IO DMA Controller) is used in UniPhier LD4,
+> Pro4, and sLD8 SoCs.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  .../devicetree/bindings/dma/uniphier-mio-dmac.txt  | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+>
+> diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+> new file mode 100644
+> index 0000000..a9e969e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+> @@ -0,0 +1,28 @@
+> +UniPhier Media IO DMA controller
+> +
+> +This works as an external DMA engine for SD/eMMC controllers etc.
+> +found in UniPhier LD4, Pro4, sLD8 SoCs.
+> +
+> +Required properties:
+> +- compatible: should be "socionext,uniphier-mio-dmac".
+> +- reg: offset and length of the register set for the device.
+> +- interrupts: a list of interrupt specifiers associated with the DMA channels.
+> +- clocks: a single clock specifier
+> +- #dma-cells: should be <1>. The single cell represents the channel number.
+> +- dma-channels: specify the number of the DMA channels. This should match to
+> +  the number of tuples in the interrupts property.
+> +
+> +Example:
+> +       dmac: dmac@5a000000 {
+> +               compatible = "socionext,uniphier-mio-dmac";
+> +               reg = <0x5a000000 0x1000>;
+> +               interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
+> +                            <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
+> +               clocks = <&mio_clk 7>;
+> +               #dma-cells = <1>;
+> +               dma-channels = <8>;
+> +       };
+> +
+> +Note:
+> +In the example above, "interrupts = <0 68 4>, <0 68 4>, ..." is not a typo.
+> +The first two channels share a single interrupt line.
+> --
+> 2.7.4
+>
+
+
+
 -- 
-Jazz is not dead. It just smells funny...
+Best Regards
+Masahiro Yamada
