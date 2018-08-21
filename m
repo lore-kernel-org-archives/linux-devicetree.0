@@ -1,32 +1,118 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] dt-bindings: pwm: rcar: Add r8a774a1 support
-Date: Tue, 21 Aug 2018 17:03:46 +0100
-Message-ID: <1534867426-25533-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Frank Kunz <mailinglists@kunz-im-inter.net>
+Subject: Re: serdev: How to attach serdev devices to USB based tty devices?
+Date: Tue, 21 Aug 2018 18:32:42 +0200
+Message-ID: <b00d8330-dab4-e444-e02c-dee6b54abc81@kunz-im-inter.net>
+References: <3639955d-5990-1c82-7158-ac07b33c41f2@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3639955d-5990-1c82-7158-ac07b33c41f2@suse.de>
+Content-Language: de-DE
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Rob Herring <robh@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, linux-usb@vger.kernel.org
+Cc: Linux-MIPS <linux-mips@linux-mips.org>, Xue Liu <liuxuenetmail@gmail.com>, Ben Whitten <ben.whitten@lairdtech.com>, devicetree@vger.kernel.org, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Oliver Neukum <oneukum@suse.com>, Alexander Graf <agraf@suse.de>, "LoRa_Community_Support@semtech.com" <LoRa_Community_Support@semtech.com>, Jian-Hong Pan <starnight@g.ncu.edu.tw>, Stefan Rehm <rehm@miromico.ch>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Document RZ/G2M (R8A774A1) SoC bindings.
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-index 35a3b97..fa19c26 100644
---- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-+++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-@@ -4,6 +4,7 @@ Required Properties:
- - compatible: should be "renesas,pwm-rcar" and one of the following.
-  - "renesas,pwm-r8a7743": for RZ/G1M
-  - "renesas,pwm-r8a7745": for RZ/G1E
-+ - "renesas,pwm-r8a774a1": for RZ/G2M
-  - "renesas,pwm-r8a7778": for R-Car M1A
-  - "renesas,pwm-r8a7779": for R-Car H1
-  - "renesas,pwm-r8a7790": for R-Car H2
--- 
-2.7.4
+QW0gMTQuMDguMjAxOCB1bSAwNDoyOCBzY2hyaWViIEFuZHJlYXMgRsOkcmJlcjoKPiBIaSBSb2Ig
+ZXQgYWwuLAo+IAo+IEZvciBteSBMb1JhIG5ldHdvcmsgZHJpdmVyIHByb2plY3QgWzFdIEkgaGF2
+ZSBmb3VuZCB5b3VyIHNlcmRldgo+IGZyYW1ld29yayB0byBiZSBhIHZhbHVhYmxlIGhlbHAgZm9y
+IGRlYWxpbmcgd2l0aCBoYXJkd2FyZSBtb2R1bGVzCj4gZXhwb3Npbmcgc29tZSB0ZXh0dWFsIG9y
+IGJpbmFyeSBVQVJUIGludGVyZmFjZS4KPiAKPiBJbiBwYXJ0aWN1bGFyIG9uIGFybSg2NCkgYW5k
+IG1pcHMgdGhpcyBhbGxvd3MgdG8gZGVmaW5lIGFuIHVubGltaXRlZAo+IG51bWJlciBvZiBzZXJk
+ZXYgZHJpdmVycyBbMl0gdGhhdCBhcmUgYXNzb2NpYXRlZCB2aWEgdGhlaXIgRGV2aWNlIFRyZWUK
+PiBjb21wYXRpYmxlIHN0cmluZyBhbmQgY2FuIG9wdGlvbmFsbHkgYmUgY29uZmlndXJlZCB2aWEg
+RFQgcHJvcGVydGllcy4KPiAKPiBBbmQgaW4gdGhlb3J5IGl0IHNlZW1zIHNlcmRldiBoYXMgYWxz
+byBncm93biBzdXBwb3J0IGZvciBBQ1BJLgo+IAo+IE5vdywgYSBncm93aW5nIG51bWJlciBvZiB2
+ZW5kb3JzIGFyZSBwbGFjaW5nIHN1Y2ggbW9kdWxlcyBvbiBhIFVTQiBzdGljawo+IGZvciBlYXN5
+IGV2YWx1YXRpb24gb24geDg2XzY0IFBDIGhhcmR3YXJlLCBvciBhcmUgZGVzaWduaW5nIG1QQ0ll
+IG9yIE0uMgo+IGNhcmRzIHVzaW5nIHRoZWlyIFVTQiBwaW5zLiBXaGlsZSBJIGRvIG5vdCB5ZXQg
+aGF2ZSBhY2Nlc3MgdG8gc3VjaCBhCj4gZGV2aWNlIG15c2VsZiwgaXQgaXMgbXkgdW5kZXJzdGFu
+ZGluZyB0aGF0IGRldmljZXMgd2l0aCBVU0ItVUFSVCBicmlkZ2UKPiBjaGlwc2V0cyAoZS5nLiwg
+RlRESSkgd2lsbCBzaG93IHVwIGFzIC9kZXYvdHR5VVNCeCBhbmQgZGV2aWNlcyB3aXRoIGFuCj4g
+TUNVIGltcGxlbWVudGluZyB0aGUgQ0RDIFVTQiBwcm90b2NvbCAoZS5nLiwgUGljby1jZWxsIGdh
+dGV3YXkgPSBwaWNvR1cpCj4gd2lsbCBzaG93IHVwIGFzIC9kZXYvdHR5QUNNeC4KPiBPbiB0aGUg
+UmFzcGJlcnJ5IFBpIEkndmUgc2VlbiB0aGF0IERldmljZSBUcmVlIG5vZGVzIGNhbiBiZSB1c2Vk
+IHRvIHBhc3MKPiBpbmZvcm1hdGlvbiB0byBvbi1ib2FyZCBkZXZpY2VzIHN1Y2ggYXMgTUFDIGFk
+ZHJlc3MgdG8gRXRoZXJuZXQgY2hpcHNldCwKPiBidXQgdGhhdCBkb2VzIG5vdCBzZWVtIGFsbCB0
+aGF0IHVzZWZ1bCBmb3IgcGFzc2luZyBhIHNlcmRldiBjaGlsZCBub2RlCj4gdG8gaG90LXBsdWdn
+ZWQgZGV2aWNlcyBhdCB1bnByZWRpY3RhYmxlIGh1Yi9wb3J0IGxvY2F0aW9uICh3aGVyZSBpdAo+
+IHNob3VsZCBub3QgaW50ZXJmZXJlIHdpdGggcmVndWxhciBVU0ItVUFSVCBjYWJsZXMgZm9yIGRl
+YnVnZ2luZyksIG5vcgo+IHdvdWxkIGl0IGhlbHAgQUNQSSBiYXNlZCBwbGF0Zm9ybXMgc3VjaCBh
+cyB4ODZfNjQuCj4gCj4gTXkgaWRlYSB0aGVuIHdhcyB0aGF0IGlmIHdlIGhhZCBzb21lIHVuaXF1
+ZSBjcml0ZXJpYSBsaWtlIHZlbmRvciBhbmQKPiBwcm9kdWN0IElEcyAob3Igd2hhdGV2ZXIgaXMg
+c3VwcG9ydGVkIGluIHVzYl9kZXZpY2VfaWQpLCB3ZSBjb3VsZCB3cml0ZQo+IGEgdXNiX2RyaXZl
+ciB3aXRoIHN1aXRhYmxlIFVTQl9ERVZJQ0UqKCkgbWFjcm8uIEluIGl0cyBwcm9iZSBmdW5jdGlv
+biB3ZQo+IGNvdWxkIGNhbGwgaW50byB0aGUgZXhpc3RpbmcgdHR5IGRyaXZlcidzIHByb2JlIGZ1
+bmN0aW9uIGFuZCBhZnRlcndhcmRzCj4gdHJ5IGNyZWF0aW5nIGFuZCBhdHRhY2hpbmcgdGhlIGFw
+cHJvcHJpYXRlIHNlcmRldiBkZXZpY2UsIGkuZS4gYSBmaXhlZAo+IFVTQi10by1zZXJkZXYgZHJp
+dmVyIG1hcHBpbmcuIFByb2JsZW0gaXMgdGhhdCBtb3N0IGRldmljZXMgZG9uJ3Qgc2VlbSB0bwo+
+IGltcGxlbWVudCBhbnkgdW5pcXVlIGlkZW50aWZpZXIgSSBjb3VsZCBtYWtlIHRoaXMgZGVwZW5k
+IG9uIC0gZWl0aGVyIGJ5Cj4gdXNpbmcgYSBzdGFuZGFyZCBGVDIzMi9GVDIyMzIvQ0gzNDBHIGNo
+aXAgb3IgYnkgdXNpbmcgU1RNaWNyb2VsZWN0cm9uaWNzCj4gdmlydHVhbCBjb20gcG9ydCBpZGVu
+dGlmaWVycyBpbiBDREMgZmlybXdhcmUgYW5kIG9ubHkgZGlmZmVyaW5nIGluIHRoZQo+IHRleHR1
+YWwgZGVzY3JpcHRpb24gWzNdIHRoZSB1c2JfZGV2aWNlX2lkIGRvZXMgbm90IHNlZW0gdG8gbWF0
+Y2ggb24uCj4gCj4gVGhlIG9idmlvdXMgc29sdXRpb24gd291bGQgb2YgY291cnNlIGJlIGlmIGhh
+cmR3YXJlIHZlbmRvcnMgY291bGQgcmV2aXNlCj4gdGhlaXIgZGVzaWducyB0byBjb25maWd1cmUg
+RlRESS9ldGMuIGNoaXBzIHVuaXF1ZWx5LiBJIGhlYXIgdGhhdCB0aGF0Cj4gbWF5IGludm9sdmUg
+ZXhjaGFuZ2luZyB0aGUgY2hpcHNldCwgaW5jcmVhc2luZyBjb3N0cywgYW5kIG1heSBpbXBhY3QK
+PiBleGlzdGluZyBkcml2ZXJzLiBXb3VsZG4ndCBoZWxwIGZvciBkZXZpY2VzIG91dCB0aGVyZSB0
+b2RheSBlaXRoZXIuCgpUaGV5IG5lZWQgdG8gcHV0IGFuIGV4dHJhIGVlcHJvbSAoY2VudHMpIGlu
+dG8gdGhlaXIgZGVzaWduIGFuZCBwcm9ncmFtIGl0LgoKPiAKPiBGb3IgdGhlIHBpY29HVyBDREMg
+ZmlybXdhcmUsIFNlbXRlY2ggZG9lcyBhcHBlYXIgdG8gb3duIGEgVVNCIHZlbmRvciBJRCwKPiBz
+byBpdCB3b3VsZCBzZWVtIHBvc3NpYmxlIHRvIGFsbG9jYXRlIHRoZWlyIG93biBwcm9kdWN0IElE
+cyBmb3IgU1gxMzAxCj4gYW5kIFNYMTMwOCByZXNwZWN0aXZlbHkgdG8gcmVwbGFjZSB0aGUgZ2Vu
+ZXJpYyBTVE1pY3JvZWxlY3Ryb25pY3MgSURzLAo+IHdoaWNoIHRoZSB2YXJpb3VzIHZlbmRvcnMg
+Y291bGQgb2ZmZXIgYXMgZmlybXdhcmUgdXBkYXRlcy4KPiAKPiBBbGwgb3V0c2lkZSBteSBjb250
+cm9sIHRob3VnaC4KPiAKPiBPbGl2ZXIgdGhlcmVmb3JlIHN1Z2dlc3RlZCB0byBub3QgbWVzcyB3
+aXRoIFVTQiBkcml2ZXJzIGFuZCBpbnN0ZWFkIHVzZQo+IGEgbGluZSBkaXNjaXBsaW5lIChsZGlz
+YykuIEl0IHNlZW1zIHRoYXQgZm9yIGV4YW1wbGUgdGhlIHVzZXJzcGFjZSB0b29sCj4gc2xhdHRh
+Y2ggdGFrZXMgYSB0dHkgZGV2aWNlIGFuZCBwZXJmb3JtcyBhbiBpb2N0bCB0byBzd2l0Y2ggdGhl
+IGdlbmVyaWMKPiB0dHkgZGV2aWNlIGludG8gYSBzcGVjaWFsIE5fU0xJUCBwcm90b2NvbCBtb2Rl
+LCBpbXBsZW1lbnRlZCBpbiBbNF0uCj4gCj4gSG93ZXZlciwgdGhlIGV4aXN0aW5nIG51bWJlciBv
+ZiBzdWNoIGxkaXNjIG1vZGVzIGFwcGVhcnMgdG8gYmUgYmVsb3cgMzAsCj4gd2l0aCBoYXJkbHkg
+YW55IHZlbmRvci1zcGVjaWZpYyBpbXBsZW1lbnRhdGlvbiwgc28gcG9sbHV0aW5nIGl0cyBudW1i
+ZXIKPiBzcGFjZSBzZWVtcyB1bmRlc2lyYWJsZT8gQW5kIGluIHNvbWUgY2FzZXMgSSB3b3VsZCBs
+aWtlIHRvIHVzZSB0aGUgc2FtZQo+IHByb3RvY29sIGltcGxlbWVudGF0aW9uIG92ZXIgZGlyZWN0
+IFVBUlQgYW5kIG92ZXIgVVNCLCBzbyB3b3VsZCBsaWtlIHRvCj4gYXZvaWQgZHVwbGljYXRlIHNl
+cmRldl9kZXZpY2VfZHJpdmVyIGFuZCB0dHlfbGRpc2Nfb3BzIGltcGxlbWVudGF0aW9ucy4KPiAK
+PiBMb25nIHN0b3J5IHNob3J0LCBoYXMgdGhlcmUgYmVlbiBhbnkgdGhpbmtpbmcgYWJvdXQgYSB1
+c2Vyc3BhY2UKPiBpbnRlcmZhY2UgdG8gYXR0YWNoIGEgZ2l2ZW4gc2VyZGV2IGRyaXZlciB0byBh
+IHR0eSBkZXZpY2U/Cj4gCj4gT3IgaXMgdGhlcmUsIG9uIE9GX0RZTkFNSUMgcGxhdGZvcm1zLCBh
+IHdheSBmcm9tIHVzZXJzcGFjZSB0byBhc3NvY2lhdGUKPiBhIERUIGZyYWdtZW50ICghPSBEVCBP
+dmVybGF5KSB3aXRoIGEgZ2l2ZW4gVVNCIGRldmljZSBkeW5hbWljYWxseSwgdG8KPiBhdHRhY2gg
+YSBzZXJkZXYgbm9kZSB3aXRoIHN1Yi1ub2Rlcz8KPiAKPiBBbnkgb3RoZXIgaWRlYXMgaG93IHRv
+IGNsZWFubHkgc29sdmUgdGhpcz8KPiAKPiBJbiBzb21lIGNhc2VzIHdlJ3JlIHRhbGtpbmcgYWJv
+dXQgYSAic2ltcGxlIiBBVC1saWtlIGNvbW1hbmQgaW50ZXJmYWNlOwo+IHRoZSBwaWNvR1cgaW1w
+bGVtZW50cyBhIHNlbWktZ2VuZXJpYyBVU0ItU1BJIGJyaWRnZSB0aGF0IG1heSBob3N0IGEKPiBj
+aG9pY2Ugb2YgMisgY2hpcHNldHMsIHdoaWNoIGluIHR1cm4gaGFzIHR3byBmdXJ0aGVyIHN1Yi1k
+ZXZpY2VzIHdpdGggMysKPiBjaGlwc2V0IGNob2ljZXMgKHRoZW9yZXRpY2FsbHkgY2xrIG91dHB1
+dCBhbmQgcngvdHggb3B0aW9ucyBldGMuKSBlYWNoLgo+IChGb3IgdGhlIGxhdHRlciBJJ20gdGhp
+bmtpbmcgd2UnbGwgbmVlZCBhIHNlcmRldiBkcml2ZXIgZXhwb3NpbmcgYQo+IHJlZ21hcF9idXMg
+YW5kIHRoZW4gaW1wbGVtZW50IHJlZ21hcF9idXMgYmFzZWQgdmVyc2lvbnMgb2YgdGhlIFNQSQo+
+IGRyaXZlcnMgbGlrZSBCZW4gYW5kIEkgcmVmYWN0b3JlZCBTWDEyNTcgaW4gWzJdIGxhc3Qgd2Vl
+a2VuZC4pPgoKVGhlcmUgaXMgYSBtUENJZSBtb2R1bGUgKFJBSzgzMykgYXZhaWxhYmxlIGJ5IFJB
+SyB3aXJlbGVzcyB0aGF0IHVzZXMgYQpGVDIyMzIgYXMgVVNCLVNQSSBicmlkZ2UsIG5vdCB1YXJ0
+LiBJIGhhdmUgb25lIGhlcmUgZm9yIGV4cGVyaW1lbnRzLiBJdAppcyBkZXRlY3RlZCBhcyBnZW5l
+cmljIEZUMjIzMiBkZXZpY2Ugb24gdXNiLiBBcyBmYXIgYXMgSSB1bmRlcnN0b29kIHNvCmZhciB0
+aGUgc2VyZGV2IGRvZXMgb25seSBzdXBwb3J0IHVhcnQgYmFzZWQgY29tbXVuaWNhdGlvbiwgaXMg
+dGhlcmUgYQpjaGFuY2UgdG8gZ2V0IFVTQi1TUEkgYnJpZGdlZCBtb2R1bGVzIGFsc28gd29ya2lu
+Zz8KCkJyLApGcmFuawoKPiBUaGFua3MsCj4gQW5kcmVhcwo+IAo+IFsxXSBodHRwczovL3BhdGNo
+d29yay5vemxhYnMub3JnL2NvdmVyLzkzNzU0NS8KPiBbMl0KPiBodHRwczovL2dpdC5rZXJuZWwu
+b3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9hZmFlcmJlci9saW51eC1sb3JhLmdpdC90cmVl
+L2RyaXZlcnMvbmV0L2xvcmE/aD1sb3JhLW5leHQKPiBbM10KPiBodHRwczovL2dpdGh1Yi5jb20v
+TG9yYS1uZXQvcGljb0dXX21jdS9ibG9iL21hc3Rlci9zcmMvdXNiX2NkYy9TcmMvdXNiZF9kZXNj
+LmNwcCNMNTkKPiBbNF0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9kcml2ZXJzL25ldC9zbGlwL3NsaXAuYyNu
+MTI4MQo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
