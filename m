@@ -1,180 +1,126 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to
- GPIO
-Date: Mon, 20 Aug 2018 23:08:44 -0700
-Message-ID: <20180821060844.GB5603@tuxbook-pro>
-References: <20180817163849.30750-1-ilina@codeaurora.org>
- <20180817163849.30750-2-ilina@codeaurora.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RESEND v5 4/5] clk: imx: add imx composite clock
+Date: Tue, 21 Aug 2018 08:58:30 +0200
+Message-ID: <20180821065830.x5illrgyqct6h3nf@pengutronix.de>
+References: <1534749367-31085-1-git-send-email-abel.vesa@nxp.com>
+ <1534749367-31085-5-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180817163849.30750-2-ilina@codeaurora.org>
+In-Reply-To: <1534749367-31085-5-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: marc.zyngier@arm.com, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 17 Aug 09:38 PDT 2018, Lina Iyer wrote:
-
-Thanks Lina, I think this looks like a very reasonable approach!
-
-> QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
-> domain can wakeup the SoC, when interrupts and GPIOs are routed to the
-> its interrupt controller. Only select GPIOs that are deemed wakeup
-> capable are routed to specific PDC pins. During low power state, the
-> pinmux interrupt controller may be non-functional but the PDC would be.
-> The PDC can detect the wakeup GPIO is triggered and bring the TLMM to an
-> operational state.
+On Mon, Aug 20, 2018 at 10:16:06AM +0300, Abel Vesa wrote:
+> Since a lot of clocks on imx8 are formed by a mux, gate, predivider and
+> divider, the idea here is to combine all of those into one more complex
+> clock type, therefore moving the complexity inside the composite clock and
+> outside of the SoC specific clock driver.
 > 
-> Interrupts that are level triggered will be detected at the TLMM when
-> the controller becomes operational. Edge interrupts however need to be
-> replayed again.
-> 
-> Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
-> but keep it disabled. During suspend, we can enable the PDC IRQ instead
-> of the GPIO IRQ, which may or not be detected.
-> 
-
-Afaict we can model a driver for the MPM hardware - for previous
-platforms - after your PDC driver and all of this logic will be reused.
-
-As such I think it would be better to use the word "wake" instead of
-"pdc" in the implementation. I don't see a problem with the commit
-message being specific and talking about the PDC though, so keep that.
-
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
 > ---
-> Changes in v1:
-> 	- Trigger GPIO in h/w from PDC IRQ handler
-> 	- Avoid big tables for GPIO-PDC map, pick from DT instead
-> 	- Use handler_data
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 97 ++++++++++++++++++++++++++++++
->  1 file changed, 97 insertions(+)
+>  drivers/clk/imx/Makefile        |   1 +
+>  drivers/clk/imx/clk-composite.c | 126 ++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/imx/clk.h           |   9 +++
+>  3 files changed, 136 insertions(+)
+>  create mode 100644 drivers/clk/imx/clk-composite.c
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 0e22f52b2a19..03ef1d29d078 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -687,11 +687,15 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  	const struct msm_pingroup *g;
->  	unsigned long flags;
->  	u32 val;
-> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->  
->  	g = &pctrl->soc->groups[d->hwirq];
->  
->  	raw_spin_lock_irqsave(&pctrl->lock, flags);
->  
-> +	if (pdc_irqd)
-> +		irq_set_irq_type(pdc_irqd->irq, type);
+> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+> index b87513c..4fabb0a 100644
+> --- a/drivers/clk/imx/Makefile
+> +++ b/drivers/clk/imx/Makefile
+> @@ -3,6 +3,7 @@
+>  obj-y += \
+>  	clk.o \
+>  	clk-busy.o \
+> +	clk-composite.o \
+>  	clk-cpu.o \
+>  	clk-fixup-div.o \
+>  	clk-fixup-mux.o \
+> diff --git a/drivers/clk/imx/clk-composite.c b/drivers/clk/imx/clk-composite.c
+> new file mode 100644
+> index 0000000..717c6f1
+> --- /dev/null
+> +++ b/drivers/clk/imx/clk-composite.c
+> @@ -0,0 +1,126 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2018 NXP
+> + */
 > +
->  	/*
->  	 * For hw without possibility of detecting both edges
->  	 */
-> @@ -779,9 +783,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->  	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->  	unsigned long flags;
-> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->  
->  	raw_spin_lock_irqsave(&pctrl->lock, flags);
->  
-> +	if (pdc_irqd)
-> +		irq_set_irq_wake(pdc_irqd->irq, on);
+> +#include <linux/errno.h>
+> +#include <linux/slab.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clk.h>
 > +
->  	irq_set_irq_wake(pctrl->irq, on);
-
-Given that the TLMM summary logic isn't powered during a collapse, is
-there really a point in toggling the wake of the summary irq? (I wrote
-this, not sure it is correct)
-
-Also, we're not modifying any tlmm state here, so we shouldn't need that
-spinlock.
-
->  
->  	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> @@ -863,6 +871,93 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
->  	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
->  }
->  
-> +static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
+> +#include "clk.h"
+> +
+> +#define PCG_PREDIV_SHIFT	16
+> +#define PCG_PREDIV_WIDTH	3
+> +
+> +#define PCG_DIV_SHIFT		0
+> +#define PCG_DIV_WIDTH		6
+> +
+> +#define PCG_PCS_SHIFT		24
+> +#define PCG_PCS_MASK		0x7
+> +
+> +#define PCG_CGC_SHIFT		28
+> +
+> +static unsigned long imx_clk_composite_divider_recalc_rate(struct clk_hw *hw,
+> +						unsigned long parent_rate)
 > +{
-> +	struct irq_data *irqd = data;
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> +	const struct msm_pingroup *g;
-> +	unsigned long flags;
+> +	return clk_divider_ops.recalc_rate(hw, parent_rate);
+> +}
+> +
+> +static long imx_clk_composite_divider_round_rate(struct clk_hw *hw,
+> +						unsigned long rate,
+> +						unsigned long *prate)
+> +{
+> +	return clk_divider_ops.round_rate(hw, rate, prate);
+> +}
+> +
+> +static int imx_clk_composite_divider_set_rate(struct clk_hw *hw,
+> +					unsigned long rate,
+> +					unsigned long parent_rate)
+> +{
+> +	struct clk_divider *divider = to_clk_divider(hw);
+> +	int value;
+> +	unsigned long flags = 0;
 > +	u32 val;
 > +
-> +	if (!irqd_is_level_type(irqd)) {
-
-This deserves a comment in the code as well.
-
-> +		g = &pctrl->soc->groups[irqd->hwirq];
-> +		raw_spin_lock_irqsave(&pctrl->lock, flags);
-> +		val = BIT(g->intr_status_bit);
-> +		writel(val, pctrl->regs + g->intr_status_reg);
-> +		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> +	}
+> +	value = divider_get_val(rate, parent_rate, NULL,
+> +				PCG_PREDIV_WIDTH, CLK_DIVIDER_ROUND_CLOSEST);
+> +	if (value < 0)
+> +		return value;
 > +
-> +	return IRQ_HANDLED;
-> +}
+> +	spin_lock_irqsave(divider->lock, flags);
 > +
-> +static int msm_gpio_pdc_pin_request(struct irq_data *d)
-> +{
-> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> +	struct platform_device *pdev = to_platform_device(pctrl->dev);
-> +	unsigned irq;
-> +	unsigned long trigger;
-> +	const char *pin_name;
-> +	int ret;
+> +	val = clk_readl(divider->reg);
+> +	val &= ~((clk_div_mask(divider->width) << divider->shift) |
+> +			(clk_div_mask(PCG_DIV_WIDTH) << PCG_DIV_SHIFT));
 > +
-> +	pin_name = kasprintf(GFP_KERNEL, "gpio%lu", d->hwirq);
-
-pin_name needs to be released in msm_gpio_pdc_pin_release() as well.
-
-> +	if (!pin_name)
-> +		return -ENOMEM;
+> +	val |= (u32)value << divider->shift;
+> +	val |= (u32)value << PCG_DIV_SHIFT;
+> +	clk_writel(val, divider->reg);
 > +
-> +	irq = platform_get_irq_byname(pdev, pin_name);
-> +	if (irq < 0) {
-> +		kfree(pin_name);
-> +		return 0;
-> +	}
-> +
-> +	trigger = irqd_get_trigger_type(d) | IRQF_ONESHOT | IRQF_NO_SUSPEND;
-> +	ret = request_irq(irq, wake_irq_gpio_handler, trigger, pin_name, d);
-> +	if (ret) {
-> +		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
-> +		kfree(pin_name);
-> +		return ret;
-> +	}
-> +
-> +	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
-> +	disable_irq(irq);
+> +	spin_unlock_irqrestore(divider->lock, flags);
 > +
 > +	return 0;
 > +}
-> +
-> +static int msm_gpio_pdc_pin_release(struct irq_data *d)
-> +{
-> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
-> +
-> +	if (pdc_irqd) {
-> +		irq_set_handler_data(d->irq, NULL);
-> +		free_irq(pdc_irqd->irq, d);
 
-free_irq() returns what was "pin_name" in msm_gpio_pdc_pin_request(), so
-you should be able to free that.
+Have you tested this works? I thought those are two cascaded dividers
+and you program both to the same value. Normally you would have to
+calculate individual values for each divider which together give you the
+desired output rate.
 
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+Sascha
 
-Regards,
-Bjorn
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
