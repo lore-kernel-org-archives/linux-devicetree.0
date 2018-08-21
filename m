@@ -1,126 +1,80 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [RESEND v5 4/5] clk: imx: add imx composite clock
-Date: Tue, 21 Aug 2018 08:58:30 +0200
-Message-ID: <20180821065830.x5illrgyqct6h3nf@pengutronix.de>
-References: <1534749367-31085-1-git-send-email-abel.vesa@nxp.com>
- <1534749367-31085-5-git-send-email-abel.vesa@nxp.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH RESEND v1 2/5] drivers: pinctrl: msm: enable PDC
+ interrupt only during suspend
+Date: Tue, 21 Aug 2018 08:11:55 +0100
+Message-ID: <20180821081155.1865db14@why.wild-wind.fr.eu.org>
+References: <20180817191026.32245-1-ilina@codeaurora.org>
+        <20180817191026.32245-3-ilina@codeaurora.org>
+        <86a7pjq0l1.wl-marc.zyngier@arm.com>
+        <20180820152629.GR5081@codeaurora.org>
+        <047d37fb-1011-0650-6517-e6052ba47a18@arm.com>
+        <20180820154959.GS5081@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1534749367-31085-5-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <20180820154959.GS5081@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 20, 2018 at 10:16:06AM +0300, Abel Vesa wrote:
-> Since a lot of clocks on imx8 are formed by a mux, gate, predivider and
-> divider, the idea here is to combine all of those into one more complex
-> clock type, therefore moving the complexity inside the composite clock and
-> outside of the SoC specific clock driver.
-> 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  drivers/clk/imx/Makefile        |   1 +
->  drivers/clk/imx/clk-composite.c | 126 ++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/imx/clk.h           |   9 +++
->  3 files changed, 136 insertions(+)
->  create mode 100644 drivers/clk/imx/clk-composite.c
-> 
-> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> index b87513c..4fabb0a 100644
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -3,6 +3,7 @@
->  obj-y += \
->  	clk.o \
->  	clk-busy.o \
-> +	clk-composite.o \
->  	clk-cpu.o \
->  	clk-fixup-div.o \
->  	clk-fixup-mux.o \
-> diff --git a/drivers/clk/imx/clk-composite.c b/drivers/clk/imx/clk-composite.c
-> new file mode 100644
-> index 0000000..717c6f1
-> --- /dev/null
-> +++ b/drivers/clk/imx/clk-composite.c
-> @@ -0,0 +1,126 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright 2018 NXP
-> + */
-> +
-> +#include <linux/errno.h>
-> +#include <linux/slab.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/clk.h>
-> +
-> +#include "clk.h"
-> +
-> +#define PCG_PREDIV_SHIFT	16
-> +#define PCG_PREDIV_WIDTH	3
-> +
-> +#define PCG_DIV_SHIFT		0
-> +#define PCG_DIV_WIDTH		6
-> +
-> +#define PCG_PCS_SHIFT		24
-> +#define PCG_PCS_MASK		0x7
-> +
-> +#define PCG_CGC_SHIFT		28
-> +
-> +static unsigned long imx_clk_composite_divider_recalc_rate(struct clk_hw *hw,
-> +						unsigned long parent_rate)
-> +{
-> +	return clk_divider_ops.recalc_rate(hw, parent_rate);
-> +}
-> +
-> +static long imx_clk_composite_divider_round_rate(struct clk_hw *hw,
-> +						unsigned long rate,
-> +						unsigned long *prate)
-> +{
-> +	return clk_divider_ops.round_rate(hw, rate, prate);
-> +}
-> +
-> +static int imx_clk_composite_divider_set_rate(struct clk_hw *hw,
-> +					unsigned long rate,
-> +					unsigned long parent_rate)
-> +{
-> +	struct clk_divider *divider = to_clk_divider(hw);
-> +	int value;
-> +	unsigned long flags = 0;
-> +	u32 val;
-> +
-> +	value = divider_get_val(rate, parent_rate, NULL,
-> +				PCG_PREDIV_WIDTH, CLK_DIVIDER_ROUND_CLOSEST);
-> +	if (value < 0)
-> +		return value;
-> +
-> +	spin_lock_irqsave(divider->lock, flags);
-> +
-> +	val = clk_readl(divider->reg);
-> +	val &= ~((clk_div_mask(divider->width) << divider->shift) |
-> +			(clk_div_mask(PCG_DIV_WIDTH) << PCG_DIV_SHIFT));
-> +
-> +	val |= (u32)value << divider->shift;
-> +	val |= (u32)value << PCG_DIV_SHIFT;
-> +	clk_writel(val, divider->reg);
-> +
-> +	spin_unlock_irqrestore(divider->lock, flags);
-> +
-> +	return 0;
-> +}
+On Mon, 20 Aug 2018 09:49:59 -0600
+Lina Iyer <ilina@codeaurora.org> wrote:
 
-Have you tested this works? I thought those are two cascaded dividers
-and you program both to the same value. Normally you would have to
-calculate individual values for each divider which together give you the
-desired output rate.
+> On Mon, Aug 20 2018 at 09:34 -0600, Marc Zyngier wrote:
+> >On 20/08/18 16:26, Lina Iyer wrote:  
+> >> On Sat, Aug 18 2018 at 07:13 -0600, Marc Zyngier wrote:  
+> >>> Hi Lina,
+> >>>
+> >>> On Fri, 17 Aug 2018 20:10:23 +0100,
+> >>> Lina Iyer <ilina@codeaurora.org> wrote:  
+> >
+> >[...]
+> >  
+> >>>> @@ -920,6 +928,8 @@ static int msm_gpio_pdc_pin_request(struct irq_data *d)
+> >>>>  	}
+> >>>>
+> >>>>  	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
+> >>>> +	irq_set_handler_data(irq, d);
+> >>>> +	irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY);  
+> >>>
+> >>> Could you explain what this is trying to do? I'm trying to understand
+> >>> this code, but this function isn't in 4.18...
+> >>>  
+> >> Oh, I have been able to test only on 4.14 so far. The flag does seem to
+> >> exist at least, I didn't get a compiler error.
+> >>
+> >> I read this in kernel/irq/chip.c -
+> >>
+> >> If the interrupt chip does not implement the irq_disable callback,
+> >> a driver can disable the lazy approach for a particular irq line by
+> >> calling 'irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY)'. This can
+> >> be used for devices which cannot disable the interrupt at the
+> >> device level under certain circumstances and have to use
+> >> disable_irq[_nosync] instead.
+> >>
+> >> And interpreted this as something that this would prevent 'relaxed'
+> >> disable. I am enabling and disabling the IRQ in suspend path, that I
+> >> thought this would help avoid issues caused by late disable. Am I
+> >> mistaken?  
+> >
+> >Sorry, I wasn't clear enough. I'm talking about what you're trying to do
+> >in this particular function (msm_gpio_pdc_pin_request), which doesn't
+> >exist in 4.18. Short of having a bit of context, I can hardly review this.
+> >  
+> Sorry, my patch generation during the resend is messed up. Seems like I
+> didn't send that patch out during the resend.
 
-Sascha
+Please make sure you test with mainline. Basing your developments on
+something as old as 4.14 makes no sense for something that targets
+mainline. You should write your code on mainline, test it there, and
+eventually backport it to whatever version you want to use.
 
+Otherwise, we are guaranteed to merge something that will not work.
+
+Thanks,
+
+	M.
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Without deviation from the norm, progress is not possible.
