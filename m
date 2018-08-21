@@ -1,48 +1,75 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 3/3] usb: typec: fusb302: Populate tcpc fwnode for TCPM
- property handling
-Date: Tue, 21 Aug 2018 16:22:27 +0300
-Message-ID: <20180821132227.GB31230@kuha.fi.intel.com>
-References: <cover.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
- <5ab35968fea28abb54326423523af38dd887ddcc.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 3/8] drm/bridge/synopsys: dsi: add ability to have
+ glue-specific attach and detach
+Date: Tue, 21 Aug 2018 15:49:31 +0200
+Message-ID: <2394974.Lru8Xtrb0a@phil>
+References: <20180814102654.29113-1-heiko@sntech.de>
+ <20180814102654.29113-4-heiko@sntech.de>
+ <20180820103439eucas1p24d5507784cab3b79161f6cd61fada54c~MkUCMQTJD0184001840eucas1p2U@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5ab35968fea28abb54326423523af38dd887ddcc.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, Li Jun <jun.li@nxp.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180820103439eucas1p24d5507784cab3b79161f6cd61fada54c~MkUCMQTJD0184001840eucas1p2U@eucas1p2.samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, seanpaul@chromium.org, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2018 at 01:28:23PM +0100, Adam Thomson wrote:
-> This update populates the tcpc handle's fwnode pointer with the
-> child usb-connector node, if it exists, so that TCPM can perform
-> generic property handling to define the ports capabilities.
-> 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-> ---
->  drivers/usb/typec/fusb302/fusb302.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
-> index 82bed98..1b464c9 100644
-> --- a/drivers/usb/typec/fusb302/fusb302.c
-> +++ b/drivers/usb/typec/fusb302/fusb302.c
-> @@ -1736,6 +1736,9 @@ static int fusb302_probe(struct i2c_client *client,
->  	chip->tcpc_dev.config = &chip->tcpc_config;
->  	mutex_init(&chip->lock);
->  
-> +	chip->tcpc_dev.fwnode =
-> +		device_get_named_child_node(dev, "connector");
-> +
->  	if (!device_property_read_u32(dev, "fcs,operating-sink-microwatt", &v))
->  		chip->tcpc_config.operating_snk_mw = v / 1000;
-
-Thanks,
-
--- 
-heikki
+SGksCgpBbSBNb250YWcsIDIwLiBBdWd1c3QgMjAxOCwgMTI6MzQ6MzcgQ0VTVCBzY2hyaWViIEFu
+ZHJ6ZWogSGFqZGE6Cj4gT24gMTQuMDguMjAxOCAxMjoyNiwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6
+Cj4gPiBXaXRoIHRoZSByZWd1bGFyIG1lYW5zIG9mIGFkZGluZyB0aGUgZHNpLWNvbXBvbmVudCBp
+biBwcm9iZSBpdCBjcmVhdGVzCj4gPiBhIHJhY2UgY29uZGl0aW9uIHdpdGggdGhlIHBhbmVsIHBy
+b2JpbmcsIGFzIHRoZSBwYW5lbCBkZXZpY2Ugb25seSBnZXRzCj4gPiBjcmVhdGVkIGFmdGVyIHRo
+ZSBkc2ktYnVzIGdvdCBjcmVhdGVkLgo+ID4KPiA+IFdoZW4gdGhlIHBhbmVsLWRyaXZlciBpcyBi
+dWlsZCBhcyBhIG1vZHVsZSBpdCBjdXJyZW50bHkgZmFpbHMgaGFyZCBhcyB0aGUKPiA+IHBhbmVs
+IGNhbm5vdCBiZSBwcm9iZWQgZGlyZWN0bHk6Cj4gPgo+ID4gZHdfbWlwaV9kc2lfYmluZCgpCj4g
+PiAgIF9fZHdfbWlwaV9kc2lfcHJvYmUoKQo+ID4gICAgIGNyZWF0ZXMgZHNpIGJ1cwo+ID4gICAg
+IGNyZWF0ZXMgcGFuZWwgZGV2aWNlCj4gPiAgICAgdHJpZ2dlcnMgcGFuZWwgbW9kdWxlIGxvYWQK
+PiA+ICAgICBwYW5lbCBub3QgcHJvYmVkIChtb2R1bGUgbm90IGxvYWRlZCBvciBwYW5lbCBwcm9i
+ZSBzbG93KQo+ID4gICBkcm1fYnJpZGdlX2F0dGFjaAo+ID4gICAgIGZhaWxzIHdpdGggLUVJTlZB
+TCBkdWUgdG8gZW1wdHkgcGFuZWxfYnJpZGdlCj4gPgo+ID4gQWRkaXRpb25hbGx5IHRoZSBwYW5l
+bCBwcm9iaW5nIGNhbiBydW4gY29uY3VycmVudGx5IHdpdGggZHNpIGJyaW5ndXAKPiA+IG1ha2lu
+ZyBpdCBwb3NzaWJsZSB0aGF0IHRoZSBwYW5lbCBjYW4gYWxyZWFkeSBiZSBmb3VuZCBidXQgZHNp
+LWF0dGFjaAo+ID4gaGFzbid0IGZpbmlzaGVkIHJ1bm5pbmcuCj4gPgo+ID4gVG8gc29sdmUgdGhh
+dCBjbGVhbmx5IHdlIG1heSB3YW50IHRvIG9ubHkgY3JlYXRlIHRoZSBjb21wb25lbnQgYWZ0ZXIK
+PiA+IHRoZSBwYW5lbCBoYXMgZmluaXNoZWQgcHJvYmluZywgYnkgY2FsbGluZyBjb21wb25lbnRf
+YWRkIGZyb20gdGhlCj4gPiBob3N0LWF0dGFjaCBkc2kgY2FsbGJhY2suCj4gPgo+ID4gQXMgdGhh
+dCBpcyBzcGVjaWZpYyB0byBnbHVlIGRyaXZlcnMsIGFkZCBhIG5ldyBzdHJ1Y3QgZm9yIGhvc3Rf
+b3BzCj4gPiBzbyB0aGF0IGdsdWUgZHJpdmVycyBjYW4gdGVsbCB0aGUgYnJpZGdlIHRvIGNhbGwg
+c3BlY2lmaWMgZnVuY3Rpb25zCj4gPiBhZnRlciB0aGUgY29tbW9uIGhvc3QtYXR0YWNoIGFuZCBi
+ZWZvcmUgdGhlIGNvbW1vbiBob3N0LWRldGFjaCBydW4uCj4gCj4gU29tZXRpbWVzIEkgaGF2ZSBh
+biBpbXByZXNzaW9uIHRoYXQgY29yZS9nbHVlIGRyaXZlciBhcmNoaXRlY3R1cmUgd2l0aAo+IGNh
+bGxiYWNrcyB0byBnbHVlIGRyaXZlcnMgaXMgcXVpdGUgY29tcGxpY2F0ZWQsIGFuZCBzbWVsbHMg
+bWlkLWxheWVyCj4gbWlzdGFrZSA6KSwgSSB3b25kZXIgaWYgc2ltcGxlIGJ1bmNoIG9mIGhlbHBl
+cnMgd2l0aCBzb21lIGJhc2Ugb2JqZWN0Cj4gd291bGRuJ3QgYmUgYmV0dGVyLCBidXQgdGhpcyBp
+cyBzdWJqZWN0IGZvciBvdGhlciBkaXNjdXNzaW9uLgo+IAo+ID4KPiA+IFN1Z2dlc3RlZC1ieTog
+QW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IEhl
+aWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cgo+ID4gQEAgLTMwMCw2ICszMDEsMTIgQEAg
+c3RhdGljIGludCBkd19taXBpX2RzaV9ob3N0X2F0dGFjaChzdHJ1Y3QgbWlwaV9kc2lfaG9zdCAq
+aG9zdCwKPiA+ICAKPiA+ICAJZHJtX2JyaWRnZV9hZGQoJmRzaS0+YnJpZGdlKTsKPiA+ICAKPiA+
+ICsJaWYgKHBkYXRhLT5ob3N0X29wcyAmJiBwZGF0YS0+aG9zdF9vcHMtPmF0dGFjaCkgewo+ID4g
+KwkJcmV0ID0gcGRhdGEtPmhvc3Rfb3BzLT5hdHRhY2gocGRhdGEtPnByaXZfZGF0YSwgZGV2aWNl
+KTsKPiA+ICsJCWlmIChyZXQgPCAwKQo+ID4gKwkJCXJldHVybiByZXQ7Cj4gCj4gSXQgY291bGQg
+YmUgcmVwbGFjZWQgYnk6Cj4gICAgIHJldHVybiBwZGF0YS0+aG9zdF9vcHMtPmF0dGFjaChwZGF0
+YS0+cHJpdl9kYXRhLCBkZXZpY2UpOwo+IAo+IEJ1dCBubyBzdHJvbmcgZmVlbGluZ3MuIFdpdGgg
+b3Igd2l0aG91dCB0aGUgY2hhbmdlOgoKSSdsbCBrZWVwIGl0IHRoZSB3YXkgaXQgaXMgdGhlbiA7
+LSkgLgoKTXkgcmF0aW9uYWxlIGlzIHRoYXQgdGhlICJyZXR1cm4gMCIgYmVsb3cgaXMgdGhlIGxh
+c3QgbGluZSBvZiB0aGlzCmZ1bmN0aW9uIGFuZCByZXR1cm5zIHRoZSBzdWNjZXNzLgoKVGhlIHNw
+ZWNpYWxpemVkIGF0dGFjaCBpcyBvbmx5IGNhbGxlZCBpbiBhIGZyYWN0aW9uIG9mIGluc3RhbmNl
+cywgc28KaGF2aW5nIGEgcmV0dXJuIG9uIHN1Y2Nlc3MgaW4gdGhlcmUsIG1pZ2h0IGJlIHN1cnBy
+aXNpbmcgaWYgbGF0ZXIgb24KYWRkaXRpb25hbCBjb2RlIGdldHMgYWRkZWQgYmV0d2VlbiB0aGUg
+YXR0YWNoIGNhbGwgYW5kIHRoZSByZXR1cm4gYmVsb3cKYW5kIG1pZ2h0IGJlIG1pc3NlZCB0byBt
+b2RpZnkgaW4gdGhhdCBjYXNlLCBwb3NzaWJseSBjYXVzaW5nIGJyZWFrYWdlLgoKCj4gPiArCX0K
+PiA+ICsKPiA+ICAJcmV0dXJuIDA7Cj4gPiAgfQoKCkhlaWtvCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
