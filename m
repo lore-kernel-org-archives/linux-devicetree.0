@@ -1,114 +1,77 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v4 1/2] dt-bindings: i2c: Add binding for Qualcomm CCI I2C controller
-Date: Mon, 20 Aug 2018 12:09:52 +0530
-Message-Id: <20180820063953.6866-2-vkoul@kernel.org>
-In-Reply-To: <20180820063953.6866-1-vkoul@kernel.org>
-References: <20180820063953.6866-1-vkoul@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>, Vinod Koul <vkoul@kernel.org>
+Return-Path: <SRS0=wSxN=LE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:59329 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbeHUKEF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 21 Aug 2018 06:04:05 -0400
+Date: Tue, 21 Aug 2018 08:45:05 +0200
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [RFT 1/8] media: dt-bindings: media: rcar-vin: Add R8A77990
+ support
+Message-ID: <20180821064505.GG30122@w540>
+References: <1534760202-20114-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1534760202-20114-2-git-send-email-jacopo+renesas@jmondi.org>
+ <20180820223947.GA7090@bogus>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
+Content-Disposition: inline
+In-Reply-To: <20180820223947.GA7090@bogus>
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, mark.rutland@arm.com, kieran.bingham+renesas@ideasonboard.com, niklas.soderlund+renesas@ragnatech.se, damm+renesas@opensource.se, ulrich.hecht+renesas@gmail.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Todor Tomov <todor.tomov@linaro.org>
 
-Add DT binding document for Qualcomm Camera Control Interface (CCI)
-I2C controller.
+--RMedoP2+Pr6Rq0N2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- .../devicetree/bindings/i2c/i2c-qcom-cci.txt       | 83 ++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
+Hi Rob,
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
-new file mode 100644
-index 000000000000..b7f4240ce5c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-qcom-cci.txt
-@@ -0,0 +1,83 @@
-+Qualcomm Camera Control Interface (CCI) I2C controller
-+
-+PROPERTIES:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		"qcom,msm-8916-cci"
-+		"qcom,msm-8996-cci"
-+
-+- reg
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: base address CCI I2C controller and length of memory
-+		    mapped region.
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: specifies the CCI I2C interrupt. The format of the
-+		    specifier is defined by the binding document describing
-+		    the node's interrupt parent.
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: a list of phandle, should contain an entry for each
-+		    entries in clock-names.
-+
-+- clock-names
-+	Usage: required
-+	Value type: <string>
-+	Definition: a list of clock names, must include these entries:
-+		"mmss_mmagic_ahb" - on "qcom,msm-8996-cci" only;
-+		"camss_top_ahb";
-+		"cci_ahb";
-+		"cci";
-+		"camss_ahb";
-+
-+- power-domains
-+	Usage: required for "qcom,msm-8996-cci"
-+	Value type: <prop-encoded-array>
-+	Definition:
-+
-+SUBNODES:
-+
-+The CCI provides I2C masters for one or two i2c busses, described as
-+subdevices named "i2c-bus0" and "i2c-bus1".
-+
-+PROPERTIES:
-+
-+- clock-frequency:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: Desired I2C bus clock frequency in Hz, defaults to 100
-+		    kHz if omitted.
-+
-+Example:
-+
-+	cci@a0c000 {
-+		compatible = "qcom,msm-8996-cci";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0xa0c000 0x1000>;
-+		interrupts = <GIC_SPI 295 IRQ_TYPE_EDGE_RISING>;
-+		clocks = <&mmcc MMSS_MMAGIC_AHB_CLK>,
-+                <&mmcc CAMSS_TOP_AHB_CLK>,
-+                <&mmcc CAMSS_CCI_AHB_CLK>,
-+                <&mmcc CAMSS_CCI_CLK>,
-+                <&mmcc CAMSS_AHB_CLK>;
-+		clock-names = "mmss_mmagic_ahb",
-+			"camss_top_ahb",
-+			"cci_ahb",
-+			"cci",
-+			"camss_ahb";
-+		i2c-bus0 {
-+			clock-frequency = <400000>;
-+		};
-+		i2c-bus1 {
-+			clock-frequency = <400000>;
-+		};
-+	};
--- 
-2.14.4
+On Mon, Aug 20, 2018 at 05:39:47PM -0500, Rob Herring wrote:
+> On Mon, Aug 20, 2018 at 12:16:35PM +0200, Jacopo Mondi wrote:
+> > Add compatible string for R-Car E3 R8A77990 to the list of SoCs supported by
+> > rcar-vin driver.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+>
+> Why the inconsistent subjects for patches 1 and 3?
+>
+
+Beacause I initially used "dt-bindings: media" for both then later realized all
+other patches were "media: dt-bindings" and just fixed the first one :/
+
+Sorry for being sloppy, I'll fix in v2.
+
+Thanks
+   j
+
+> Otherwise,
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+--RMedoP2+Pr6Rq0N2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJbe7TwAAoJEHI0Bo8WoVY8xcgQAKhEC4GHbxL0yVJIXXeG4FNT
+GIJGR6kWEhIU8R14ziJ10jajqJQVWKWk9c8S6awbquMiMAnpjMn3U1VYI5gww/oJ
+1axpikUxpEGr0+8uzCG43GINkDgp2ngN5DgkAIxYb7RmQPxPFcHy9We7IY/m0FlO
++RIA9ab28Di+npfIYsphkAtTB9xuzpAxWVlN2o7LFDLazuwnJ7y99Yt3f1/ZKj5L
+tHweeQ8Z4muo4OIkx01nXkjSfsY0dZnj4DvrrZ3utWl90K8RXnfb0az7y91CTzcT
+GJEM/2igk+UpKUCNzYnI05NxxTCHwrxvPae8OhalCEx85ZAye6naoBnkgayjg7sx
+Ik6mr+v9pTJ4HWBrPPHJ54xhlYkluAdsWPi590x5cs8OYqlkcyeyMRpR7Zl2arZU
+PJ2imTtUMx9zUMbctzSF5T+HpKfWyVY5f3xWlvM9wT9ghl9gasDK6eyQe4NiQrOA
+mfkTonpLb7DQt6G/uw3hKQHYk73h2xNMzRVP5ODTKi4gXWe8tvX/ZyzwUScKqNIR
+Zk2NzlMqza0VHYkFMEfLbVZ/siuhp3iCUpIDlTtxt1r/Ll8mH03PJbX2TfWARt41
+wtFPRmaiw3y+rnj0mwRX70S6uZdGT53eIos3+dYqo5YMJfobmdMjqljGPO5+nRt4
+PiVG+MV9Hb3eSd3X0+nd
+=WqRU
+-----END PGP SIGNATURE-----
+
+--RMedoP2+Pr6Rq0N2--
