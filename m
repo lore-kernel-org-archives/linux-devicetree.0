@@ -1,47 +1,50 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 3/3] usb: typec: fusb302: Populate tcpc fwnode for TCPM
- property handling
-Date: Tue, 21 Aug 2018 07:03:38 -0700
-Message-ID: <20180821140338.GE17160@roeck-us.net>
-References: <cover.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
- <5ab35968fea28abb54326423523af38dd887ddcc.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v5 1/7] drm/bridge/synopsys: dsi: move
+ mipi_dsi_host_unregister to __dw_mipi_dsi_remove
+Date: Tue, 21 Aug 2018 16:05:09 +0200
+Message-ID: <20180821140515.22246-2-heiko@sntech.de>
+References: <20180821140515.22246-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5ab35968fea28abb54326423523af38dd887ddcc.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, Li Jun <jun.li@nxp.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180821140515.22246-1-heiko@sntech.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, seanpaul@chromium.org, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2018 at 01:28:23PM +0100, Adam Thomson wrote:
-> This update populates the tcpc handle's fwnode pointer with the
-> child usb-connector node, if it exists, so that TCPM can perform
-> generic property handling to define the ports capabilities.
-> 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  drivers/usb/typec/fusb302/fusb302.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
-> index 82bed98..1b464c9 100644
-> --- a/drivers/usb/typec/fusb302/fusb302.c
-> +++ b/drivers/usb/typec/fusb302/fusb302.c
-> @@ -1736,6 +1736,9 @@ static int fusb302_probe(struct i2c_client *client,
->  	chip->tcpc_dev.config = &chip->tcpc_config;
->  	mutex_init(&chip->lock);
->  
-> +	chip->tcpc_dev.fwnode =
-> +		device_get_named_child_node(dev, "connector");
-> +
->  	if (!device_property_read_u32(dev, "fcs,operating-sink-microwatt", &v))
->  		chip->tcpc_config.operating_snk_mw = v / 1000;
->  
-> -- 
-> 1.9.1
-> 
+UmlnaHQgbm93IHRoZSBob3N0IGlzIG9ubHkgdW5yZWdpc3RlcmVkIHdoZW4gdGhlIGRyaXZlciBp
+cyB1c2VkIHZpYSB0aGUKYnJpZGdlIGFwaSBhbmQgbm90IHZpYSB0aGUgY29tcG9uZW50IGFwaSwg
+bGVhZGluZyB0byB0aGUgaG9zdCBzdGF5aW5nCnJlZ2lzdGVyZWQgaW4gY2FzZXMgbGlrZSBwcm9i
+ZSBkZWZlcnJhbC4KClNvIG1vdmUgdGhlIGhvc3QgdW5yZWdpc3RlciB0byB0aGUgZ2VuZXJhbCBy
+ZW1vdmUgZnVuY3Rpb24sIHNvIHRoYXQgaXQKZ2V0cyBjbGVhbmVkIHVwIGluIGFsbCBjYXNlcy4K
+ClNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+ClJldmlld2Vk
+LWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgpSZXZpZXdlZC1ieTogUGhp
+bGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4KVGVzdGVkLWJ5OiBQaGlsaXBwZSBD
+b3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+c3lub3BzeXMvZHctbWlwaS1kc2kuYyB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
+aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9w
+c3lzL2R3LW1pcGktZHNpLmMKaW5kZXggZmQ3OTk5NjQyY2Y4Li4wN2NkZTI1NWNhYjIgMTAwNjQ0
+Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYworKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMKQEAgLTk0MSw2
+ICs5NDEsOCBAQCBfX2R3X21pcGlfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYsCiAKIHN0YXRpYyB2b2lkIF9fZHdfbWlwaV9kc2lfcmVtb3ZlKHN0cnVjdCBkd19taXBpX2Rz
+aSAqZHNpKQogeworCW1pcGlfZHNpX2hvc3RfdW5yZWdpc3RlcigmZHNpLT5kc2lfaG9zdCk7CisK
+IAlwbV9ydW50aW1lX2Rpc2FibGUoZHNpLT5kZXYpOwogfQogCkBAIC05NTcsOCArOTU5LDYgQEAg
+RVhQT1JUX1NZTUJPTF9HUEwoZHdfbWlwaV9kc2lfcHJvYmUpOwogCiB2b2lkIGR3X21pcGlfZHNp
+X3JlbW92ZShzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkKIHsKLQltaXBpX2RzaV9ob3N0X3VucmVn
+aXN0ZXIoJmRzaS0+ZHNpX2hvc3QpOwotCiAJX19kd19taXBpX2RzaV9yZW1vdmUoZHNpKTsKIH0K
+IEVYUE9SVF9TWU1CT0xfR1BMKGR3X21pcGlfZHNpX3JlbW92ZSk7Ci0tIAoyLjE3LjAKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
