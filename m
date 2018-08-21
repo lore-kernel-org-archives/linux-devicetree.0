@@ -1,14 +1,15 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/4] dt-bindings: reset: Add PDC reset binding for SDM845
- SoCs
-Date: Tue, 21 Aug 2018 15:08:26 -0700
-Message-ID: <20180821220826.GA2353@minitux>
+Subject: Re: [PATCH 2/4] reset: qcom: PDC (Power Domain Controller) reset
+ controller
+Date: Tue, 21 Aug 2018 15:17:40 -0700
+Message-ID: <20180821221740.GB2353@minitux>
 References: <20180727152811.15258-1-sibis@codeaurora.org>
+ <20180727152811.15258-2-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180727152811.15258-1-sibis@codeaurora.org>
+In-Reply-To: <20180727152811.15258-2-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sibi Sankar <sibis@codeaurora.org>
 Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
@@ -16,72 +17,43 @@ List-Id: devicetree@vger.kernel.org
 
 On Fri 27 Jul 08:28 PDT 2018, Sibi Sankar wrote:
 
-> Add SDM845 PDC (Power Domain Controller) reset controller binding
+> Add reset controller for SDM845 SoC to control reset signals
+> provided by PDC for Modem, Compute, Display, GPU, Debug, AOP,
+> Sensors, Audio, SP and APPS
 > 
-
-Even though this is currently describing only a reset controller I think
-this binding better be talking about the "PDC Global" hardware.
-
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  .../bindings/reset/qcom,pdc-reset.txt         | 52 +++++++++++++++++++
->  include/dt-bindings/reset/qcom,sdm845-pdc.h   | 20 +++++++
->  2 files changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
->  create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
+>  drivers/reset/Kconfig          |   9 +++
+>  drivers/reset/Makefile         |   1 +
+>  drivers/reset/reset-qcom-pdc.c | 139 +++++++++++++++++++++++++++++++++
+>  3 files changed, 149 insertions(+)
+>  create mode 100644 drivers/reset/reset-qcom-pdc.c
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 13d28fdbdbb5..5344e202a630 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -98,6 +98,15 @@ config RESET_QCOM_AOSS
+>  	  reset signals provided by AOSS for Modem, Venus, ADSP,
+>  	  GPU, Camera, Wireless, Display subsystem. Otherwise, say N.
+>  
+> +config RESET_QCOM_PDC
+> +	bool "Qcom PDC Reset Driver"
 
-Rename this qcom,pdc-global to match the compatible, and hardware name.
+"Qualcomm"
 
-> new file mode 100644
-> index 000000000000..85e159962e08
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/qcom,pdc-reset.txt
-> @@ -0,0 +1,52 @@
-> +PDC Reset Controller
+And I do not see a strong reason for this not being tristate, the
+consumers we've talked about so far can all be modules.
 
-PDC Global
-
-> +======================================
-> +
-> +This binding describes a reset-controller found on PDC-Global(Power Domain
-> +Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
-
-This looks good.
-
-> +
-> +Required properties:
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be:
-> +		    "qcom,sdm845-pdc-global"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: must specify the base address and size of the register
-> +	            space.
-> +
-> +- #reset-cells:
-> +	Usage: required
-> +	Value type: <uint>
-> +	Definition: must be 1; cell entry represents the reset index.
-> +
-> +Example:
-> +
-> +pdc_reset: reset-controller@b2e0000 {
-
-This is perfectly fine, in its current form it is a reset-controller.
-
-> +	compatible = "qcom,sdm845-pdc-global";
-> +	reg = <0xb2e0000 0x20000>;
-> +	#reset-cells = <1>;
-> +};
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	help
+> +	  This enables the PDC (Power Domain Controller) reset driver
+> +	  for Qualcomm Technologies Inc SDM845 SoCs. Say Y if you want
+> +	  to control reset signals provided by PDC for Modem, Compute,
+> +	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
 > +
 
-Apart from this, the binding looks good!
+Implementation looks fine.
 
 Regards,
 Bjorn
