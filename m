@@ -1,85 +1,108 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH 1/3] dt-bindings: connector: Add support for USB-PD PPS APDOs
- to bindings
-Date: Tue, 21 Aug 2018 13:28:21 +0100
-Message-ID: <0d3a589560b519ab07ed6aaaf012959098c5a2ea.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
-References: <cover.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/3] clk: ingenic: Add proper Kconfig entries
+Date: Tue, 21 Aug 2018 14:38:17 +0200
+Message-ID: <20180821123819.25020-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, Li Jun <jun.li@nxp.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: od@zcrc.me, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add support for PPS APDOs to connector bindings so a port controller
-can specify support for PPS, as per existing FIXED/BATT/VAR PDOs.
+Previously, the CGU code corresponding to the SoC for which we're
+compiling the kernel was the only one enabled, which made it impossible
+to build one kernel that supports them all.
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Now, it is possible to select more than one SoC to support.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- .../bindings/connector/usb-connector.txt           |  8 +++----
- include/dt-bindings/usb/pd.h                       | 26 ++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 4 deletions(-)
+ drivers/clk/Kconfig          |  1 +
+ drivers/clk/Makefile         |  2 +-
+ drivers/clk/ingenic/Kconfig  | 37 ++++++++++++++++++++++++++++++++++++
+ drivers/clk/ingenic/Makefile |  8 ++++----
+ 4 files changed, 43 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/clk/ingenic/Kconfig
 
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-index 8855bfc..d90e17e 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-@@ -29,15 +29,15 @@ Required properties for usb-c-connector with power delivery support:
-   in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
-   Source_Capabilities Message, the order of each entry(PDO) should follow
-   the PD spec chapter 6.4.1. Required for power source and power dual role.
--  User can specify the source PDO array via PDO_FIXED/BATT/VAR() defined in
--  dt-bindings/usb/pd.h.
-+  User can specify the source PDO array via PDO_FIXED/BATT/VAR/PPS_APDO()
-+  defined in dt-bindings/usb/pd.h.
- - sink-pdos: An array of u32 with each entry providing supported power
-   sink data object(PDO), the detailed bit definitions of PDO can be found
-   in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
-   Sink Capabilities Message, the order of each entry(PDO) should follow
-   the PD spec chapter 6.4.1. Required for power sink and power dual role.
--  User can specify the sink PDO array via PDO_FIXED/BATT/VAR() defined in
--  dt-bindings/usb/pd.h.
-+  User can specify the sink PDO array via PDO_FIXED/BATT/VAR/PPS_APDO() defined
-+  in dt-bindings/usb/pd.h.
- - op-sink-microwatt: Sink required operating power in microwatt, if source
-   can't offer the power, Capability Mismatch is set. Required for power
-   sink and power dual role.
-diff --git a/include/dt-bindings/usb/pd.h b/include/dt-bindings/usb/pd.h
-index 7b7a92f..985f2bb 100644
---- a/include/dt-bindings/usb/pd.h
-+++ b/include/dt-bindings/usb/pd.h
-@@ -59,4 +59,30 @@
- 	(PDO_TYPE(PDO_TYPE_VAR) | PDO_VAR_MIN_VOLT(min_mv) |	\
- 	 PDO_VAR_MAX_VOLT(max_mv) | PDO_VAR_MAX_CURR(max_ma))
- 
-+#define APDO_TYPE_PPS		0
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 721572a8c429..95a9627cdf1d 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -281,6 +281,7 @@ source "drivers/clk/actions/Kconfig"
+ source "drivers/clk/bcm/Kconfig"
+ source "drivers/clk/hisilicon/Kconfig"
+ source "drivers/clk/imgtec/Kconfig"
++source "drivers/clk/ingenic/Kconfig"
+ source "drivers/clk/keystone/Kconfig"
+ source "drivers/clk/mediatek/Kconfig"
+ source "drivers/clk/meson/Kconfig"
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 0bb25dd009d1..3b3da7d84496 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -71,7 +71,7 @@ obj-$(CONFIG_H8300)			+= h8300/
+ obj-$(CONFIG_ARCH_HISI)			+= hisilicon/
+ obj-y					+= imgtec/
+ obj-$(CONFIG_ARCH_MXC)			+= imx/
+-obj-$(CONFIG_MACH_INGENIC)		+= ingenic/
++obj-y					+= ingenic/
+ obj-$(CONFIG_ARCH_KEYSTONE)		+= keystone/
+ obj-$(CONFIG_MACH_LOONGSON32)		+= loongson1/
+ obj-y					+= mediatek/
+diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
+new file mode 100644
+index 000000000000..851a5662f119
+--- /dev/null
++++ b/drivers/clk/ingenic/Kconfig
+@@ -0,0 +1,37 @@
++menu "Ingenic JZ47xx CGU drivers"
++	depends on MIPS || COMPILE_TEST
 +
-+#define PDO_APDO_TYPE_SHIFT	28	/* Only valid value currently is 0x0 - PPS */
-+#define PDO_APDO_TYPE_MASK	0x3
++config INGENIC_CGU_COMMON
++	bool
 +
-+#define PDO_APDO_TYPE(t)	((t) << PDO_APDO_TYPE_SHIFT)
++config INGENIC_CGU_JZ4740
++	bool "Ingenic JZ4740 CGU driver"
++	default MACH_JZ4740
++	select INGENIC_CGU_COMMON
++	help
++	  Support the clocks provided by the CGU hardware on Ingenic JZ4740
++	  and compatible SoCs.
 +
-+#define PDO_PPS_APDO_MAX_VOLT_SHIFT	17	/* 100mV units */
-+#define PDO_PPS_APDO_MIN_VOLT_SHIFT	8	/* 100mV units */
-+#define PDO_PPS_APDO_MAX_CURR_SHIFT	0	/* 50mA units */
++	  If building for a JZ4740 SoC, you want to say Y here.
 +
-+#define PDO_PPS_APDO_VOLT_MASK	0xff
-+#define PDO_PPS_APDO_CURR_MASK	0x7f
++config INGENIC_CGU_JZ4770
++	bool "Ingenic JZ4770 CGU driver"
++	default MACH_JZ4770
++	select INGENIC_CGU_COMMON
++	help
++	  Support the clocks provided by the CGU hardware on Ingenic JZ4770
++	  and compatible SoCs.
 +
-+#define PDO_PPS_APDO_MIN_VOLT(mv)	\
-+	((((mv) / 100) & PDO_PPS_APDO_VOLT_MASK) << PDO_PPS_APDO_MIN_VOLT_SHIFT)
-+#define PDO_PPS_APDO_MAX_VOLT(mv)	\
-+	((((mv) / 100) & PDO_PPS_APDO_VOLT_MASK) << PDO_PPS_APDO_MAX_VOLT_SHIFT)
-+#define PDO_PPS_APDO_MAX_CURR(ma)	\
-+	((((ma) / 50) & PDO_PPS_APDO_CURR_MASK) << PDO_PPS_APDO_MAX_CURR_SHIFT)
++	  If building for a JZ4770 SoC, you want to say Y here.
 +
-+#define PDO_PPS_APDO(min_mv, max_mv, max_ma)					\
-+	(PDO_TYPE(PDO_TYPE_APDO) | PDO_APDO_TYPE(APDO_TYPE_PPS) |		\
-+	 PDO_PPS_APDO_MIN_VOLT(min_mv) | PDO_PPS_APDO_MAX_VOLT(max_mv) |	\
-+	 PDO_PPS_APDO_MAX_CURR(max_ma))
++config INGENIC_CGU_JZ4780
++	bool "Ingenic JZ4780 CGU driver"
++	default MACH_JZ4780
++	select INGENIC_CGU_COMMON
++	help
++	  Support the clocks provided by the CGU hardware on Ingenic JZ4780
++	  and compatible SoCs.
 +
-  #endif /* __DT_POWER_DELIVERY_H */
++	  If building for a JZ4780 SoC, you want to say Y here.
++
++endmenu
+diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
+index 1456e4cdb562..8b8dc79c7ce6 100644
+--- a/drivers/clk/ingenic/Makefile
++++ b/drivers/clk/ingenic/Makefile
+@@ -1,4 +1,4 @@
+-obj-y				+= cgu.o
+-obj-$(CONFIG_MACH_JZ4740)	+= jz4740-cgu.o
+-obj-$(CONFIG_MACH_JZ4770)	+= jz4770-cgu.o
+-obj-$(CONFIG_MACH_JZ4780)	+= jz4780-cgu.o
++obj-$(CONFIG_INGENIC_CGU_COMMON)	+= cgu.o
++obj-$(CONFIG_INGENIC_CGU_JZ4740)	+= jz4740-cgu.o
++obj-$(CONFIG_INGENIC_CGU_JZ4770)	+= jz4770-cgu.o
++obj-$(CONFIG_INGENIC_CGU_JZ4780)	+= jz4780-cgu.o
 -- 
-1.9.1
+2.18.0
