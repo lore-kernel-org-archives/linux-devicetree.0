@@ -1,130 +1,63 @@
-From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [RFC PATCH 2/2] pmw: imx: Configure output to GPIO in disabled state
-Date: Tue, 21 Aug 2018 16:38:53 +0200
-Message-ID: <1534862333-27950-3-git-send-email-michal.vokac@ysoft.com>
-References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] mmc: jz4740: Add support for the JZ4725B
+Date: Tue, 21 Aug 2018 17:21:51 +0200
+Message-ID: <20180821152151.32113-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@karo-electronics.de>, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Ezequiel Garcia <ezequiel@collabora.co.uk>, od@zcrc.me, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The PWM output is held at zero whenever the PWM block is disabled.
-This can cause issues when inverted PWM signal polarity is needed.
+The JZ4725B is the first JZ SoC version that introduced a 32-bit IMASK
+register, not the JZ4750.
 
-Allow users to set a "default" pinctrl state that will be used when
-PWM is disabled and a "pwm" pinctrl state that will be used when
-PWM output is needed.
-
-As an example, with this a PWM controlled backlight with inversed
-signal polarity can be used in full brightness range. Without this
-the backlight could not be turned off as brightness = 0 disables
-the PWM and that in turn set output to 0V, that is full brightness.
-
-When the pinctrl states are not correctly specifid in DT the logic
-will work as before.
-
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/pwm/pwm-imx.c | 56 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ Documentation/devicetree/bindings/mmc/jz4740.txt | 1 +
+ drivers/mmc/host/jz4740_mmc.c                    | 5 +++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
-index 1d5242c..6212c98 100644
---- a/drivers/pwm/pwm-imx.c
-+++ b/drivers/pwm/pwm-imx.c
-@@ -13,6 +13,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/io.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/pwm.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-@@ -52,10 +53,39 @@ struct imx_chip {
- 	void __iomem	*mmio_base;
+diff --git a/Documentation/devicetree/bindings/mmc/jz4740.txt b/Documentation/devicetree/bindings/mmc/jz4740.txt
+index 7cd8c432d7c8..8a6f87f13114 100644
+--- a/Documentation/devicetree/bindings/mmc/jz4740.txt
++++ b/Documentation/devicetree/bindings/mmc/jz4740.txt
+@@ -7,6 +7,7 @@ described in mmc.txt.
+ Required properties:
+ - compatible: Should be one of the following:
+   - "ingenic,jz4740-mmc" for the JZ4740
++  - "ingenic,jz4725b-mmc" for the JZ4725B
+   - "ingenic,jz4780-mmc" for the JZ4780
+ - reg: Should contain the MMC controller registers location and length.
+ - interrupts: Should contain the interrupt specifier of the MMC controller.
+diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+index 993386c9ea50..0c1efd5100b7 100644
+--- a/drivers/mmc/host/jz4740_mmc.c
++++ b/drivers/mmc/host/jz4740_mmc.c
+@@ -115,7 +115,7 @@
  
- 	struct pwm_chip	chip;
-+
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *pinctrl_pins_default;
-+	struct pinctrl_state *pinctrl_pins_pwm;
+ enum jz4740_mmc_version {
+ 	JZ_MMC_JZ4740,
+-	JZ_MMC_JZ4750,
++	JZ_MMC_JZ4725B,
+ 	JZ_MMC_JZ4780,
  };
  
-+
- #define to_imx_chip(chip)	container_of(chip, struct imx_chip, chip)
- 
-+static int imx_pwm_init_pinctrl_info(struct imx_chip *imx_chip,
-+		struct platform_device *pdev)
-+{
-+	imx_chip->pinctrl = devm_pinctrl_get(&pdev->dev);
-+	if (!imx_chip->pinctrl || IS_ERR(imx_chip->pinctrl)) {
-+		dev_info(&pdev->dev, "can not get pinctrl\n");
-+		return PTR_ERR(imx_chip->pinctrl);
-+	}
-+
-+	imx_chip->pinctrl_pins_default = pinctrl_lookup_state(imx_chip->pinctrl,
-+			PINCTRL_STATE_DEFAULT);
-+	imx_chip->pinctrl_pins_pwm = pinctrl_lookup_state(imx_chip->pinctrl,
-+			"pwm");
-+
-+	if (IS_ERR(imx_chip->pinctrl_pins_default) ||
-+	    IS_ERR(imx_chip->pinctrl_pins_pwm)) {
-+		dev_info(&pdev->dev, "PWM output mux information incomplete\n");
-+		devm_pinctrl_put(imx_chip->pinctrl);
-+		imx_chip->pinctrl = NULL;
-+	}
-+
-+	return 0;
-+}
-+
- static int imx_pwm_config_v1(struct pwm_chip *chip,
- 		struct pwm_device *pwm, int duty_ns, int period_ns)
+@@ -176,7 +176,7 @@ struct jz4740_mmc_host {
+ static void jz4740_mmc_write_irq_mask(struct jz4740_mmc_host *host,
+ 				      uint32_t val)
  {
-@@ -216,7 +246,29 @@ static int imx_pwm_apply_v2(struct pwm_chip *chip, struct pwm_device *pwm,
- 			cr |= MX3_PWMCR_POUTC;
+-	if (host->version >= JZ_MMC_JZ4750)
++	if (host->version >= JZ_MMC_JZ4725B)
+ 		return writel(val, host->base + JZ_REG_MMC_IMASK);
+ 	else
+ 		return writew(val, host->base + JZ_REG_MMC_IMASK);
+@@ -1012,6 +1012,7 @@ static void jz4740_mmc_free_gpios(struct platform_device *pdev)
  
- 		writel(cr, imx->mmio_base + MX3_PWMCR);
-+
-+		/*
-+		 * If we are in charge of pinctrl then switch output to
-+		 * the PWM signal.
-+		 */
-+		if (imx->pinctrl)
-+			pinctrl_select_state(imx->pinctrl,
-+					imx->pinctrl_pins_pwm);
- 	} else if (cstate.enabled) {
-+		/*
-+		 * PWM block will be disabled. Normally its output will go
-+		 * to 0 no matter what polarity is set. In case reversed PWM
-+		 * polarity is required reconfigure the output pin to GPIO to
-+		 * keep the output at the same level as for duty-cycle = 0.
-+		 *
-+		 * First switch the muxing and then disable the PWM. In that
-+		 * order we do not get unwanted logic level changes on the
-+		 * output.
-+		 */
-+		if (imx->pinctrl)
-+			pinctrl_select_state(imx->pinctrl,
-+					imx->pinctrl_pins_default);
-+
- 		writel(0, imx->mmio_base + MX3_PWMCR);
- 
- 		clk_disable_unprepare(imx->clk_per);
-@@ -294,6 +346,10 @@ static int imx_pwm_probe(struct platform_device *pdev)
- 		imx->chip.of_pwm_n_cells = 3;
- 	}
- 
-+	ret = imx_pwm_init_pinctrl_info(imx, pdev);
-+	if (ret)
-+		return ret;
-+
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	imx->mmio_base = devm_ioremap_resource(&pdev->dev, r);
- 	if (IS_ERR(imx->mmio_base))
+ static const struct of_device_id jz4740_mmc_of_match[] = {
+ 	{ .compatible = "ingenic,jz4740-mmc", .data = (void *) JZ_MMC_JZ4740 },
++	{ .compatible = "ingenic,jz4725b-mmc", .data = (void *)JZ_MMC_JZ4725B },
+ 	{ .compatible = "ingenic,jz4780-mmc", .data = (void *) JZ_MMC_JZ4780 },
+ 	{},
+ };
 -- 
-2.1.4
+2.11.0
