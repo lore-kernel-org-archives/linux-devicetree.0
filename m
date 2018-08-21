@@ -1,56 +1,148 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V5 1/5] dt-bindings: arm: fsl: add scu binding doc
-Date: Tue, 21 Aug 2018 11:51:49 +0000
-Message-ID: <AM0PR04MB421175C894CFA5F16C2CB79C80310@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1534781305-4770-1-git-send-email-aisheng.dong@nxp.com>
- <1534781305-4770-2-git-send-email-aisheng.dong@nxp.com>
- <20180820181155.GA13901@bogus>
- <AM0PR04MB4211B9113831B292110C709280310@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v4 2/4] venus: firmware: move load firmware in a separate
+ function
+Date: Tue, 21 Aug 2018 15:08:44 +0300
+Message-ID: <8ffd63d9-ba9f-44b2-e1c0-7edce167fd9c@linaro.org>
+References: <1533562085-8773-1-git-send-email-vgarodia@codeaurora.org>
+ <1533562085-8773-3-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB4211B9113831B292110C709280310@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533562085-8773-3-git-send-email-vgarodia@codeaurora.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J.
- Wysocki" <rjw@rjwysocki.net>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vikash Garodia <vgarodia@codeaurora.org>, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Vikash,
 
-> > > +Clock bindings based on SCU Message Protocol
-> > > +------------------------------------------------------------
-> > > +
-> > > +This binding uses the common clock binding[1].
-> > > +
-> > > +Required properties:
-> > > +- compatible:		Should be "fsl,imx8qxp-clock".
-> > > +- #clock-cells:		Should be 1. Contains the Clock ID value.
-> >
-> > There was a recent patch adding input clocks to other i.MX CCM bindings.
-> > Is that needed here?
-> >
+On 08/06/2018 04:28 PM, Vikash Garodia wrote:
+> Separate firmware loading part into a new function.
 > 
-> Will double check it, thanks for reminder.
+> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.c     |  4 +--
+>  drivers/media/platform/qcom/venus/firmware.c | 54 +++++++++++++++++-----------
+>  drivers/media/platform/qcom/venus/firmware.h |  2 +-
+>  3 files changed, 37 insertions(+), 23 deletions(-)
+> 
 
-It should work for mx8 as well.
+<snip>
 
-I will add them like below:
-+- clocks:              List of clock specifiers, must contain an entry for
-+                       each required entry in clock-names
-+- clock-names:         Should include entries "xtal_32KHz", "xtal_24MHz"
+> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+> index 3aa6b37..4577043 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.c
+> +++ b/drivers/media/platform/qcom/venus/firmware.c
+> @@ -58,20 +58,18 @@ int venus_set_hw_state(struct venus_core *core, bool resume)
+>  	return 0;
+>  }
+>  
+> -int venus_boot(struct device *dev, const char *fwname)
+> +static int venus_load_fw(struct venus_core *core, const char *fwname,
+> +			phys_addr_t *mem_phys, size_t *mem_size)
 
-Thanks for the suggestion.
+fix indentation
 
-Regards
-Dong Aisheng
+>  {
+>  	const struct firmware *mdt;
+>  	struct device_node *node;
+> -	phys_addr_t mem_phys;
+> +	struct device *dev;
+>  	struct resource r;
+>  	ssize_t fw_size;
+> -	size_t mem_size;
+>  	void *mem_va;
+>  	int ret;
+>  
+> -	if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER) || !qcom_scm_is_available())
+> -		return -EPROBE_DEFER;
+> -
+> +	dev = core->dev;
+>  	node = of_parse_phandle(dev->of_node, "memory-region", 0);
+>  	if (!node) {
+>  		dev_err(dev, "no memory-region specified\n");
+> @@ -82,16 +80,16 @@ int venus_boot(struct device *dev, const char *fwname)
+>  	if (ret)
+>  		return ret;
+>  
+> -	mem_phys = r.start;
+> -	mem_size = resource_size(&r);
+> +	*mem_phys = r.start;
+> +	*mem_size = resource_size(&r);
+>  
+> -	if (mem_size < VENUS_FW_MEM_SIZE)
+> +	if (*mem_size < VENUS_FW_MEM_SIZE)
+>  		return -EINVAL;
+>  
+> -	mem_va = memremap(r.start, mem_size, MEMREMAP_WC);
+> +	mem_va = memremap(r.start, *mem_size, MEMREMAP_WC);
+>  	if (!mem_va) {
+>  		dev_err(dev, "unable to map memory region: %pa+%zx\n",
+> -			&r.start, mem_size);
+> +			&r.start, *mem_size);
+>  		return -ENOMEM;
+>  	}
+>  
+> @@ -106,23 +104,39 @@ int venus_boot(struct device *dev, const char *fwname)
+>  		goto err_unmap;
+>  	}
+>  
+> -	ret = qcom_mdt_load(dev, mdt, fwname, VENUS_PAS_ID, mem_va, mem_phys,
+> -			    mem_size, NULL);
+> +	if (core->no_tz)
+> +		ret = qcom_mdt_load_no_init(dev, mdt, fwname, VENUS_PAS_ID,
+> +					mem_va, *mem_phys, *mem_size, NULL);
+> +	else
+> +		ret = qcom_mdt_load(dev, mdt, fwname, VENUS_PAS_ID,
+> +				mem_va, *mem_phys, *mem_size, NULL);
+
+Please fix the indentation issues above.
+
+>  
+>  	release_firmware(mdt);
+>  
+> -	if (ret)
+> -		goto err_unmap;
+> -
+> -	ret = qcom_scm_pas_auth_and_reset(VENUS_PAS_ID);
+> -	if (ret)
+> -		goto err_unmap;
+> -
+>  err_unmap:
+>  	memunmap(mem_va);
+>  	return ret;
+>  }
+>  
+> +int venus_boot(struct venus_core *core)
+> +{
+> +	phys_addr_t mem_phys;
+> +	struct device *dev = core->dev;
+
+move this one row upper.
+
+> +	size_t mem_size;
+> +	int ret;
+> +
+> +	if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER) ||
+> +		(!core->no_tz && !qcom_scm_is_available()))
+> +		return -EPROBE_DEFER;
+
+fix indentation
+
+> +
+> +	ret = venus_load_fw(core, core->res->fwname, &mem_phys, &mem_size);
+> +	if (ret) {
+> +		dev_err(dev, "fail to load video firmware\n");
+> +		return -EINVAL;
+> +	}
+
+blank line here
+
+> +	return qcom_scm_pas_auth_and_reset(VENUS_PAS_ID);
+> +}
+
+-- 
+regards,
+Stan
