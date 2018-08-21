@@ -1,287 +1,114 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 3/3] clk: Add Ingenic jz4725b CGU driver
-Date: Tue, 21 Aug 2018 14:38:19 +0200
-Message-ID: <20180821123819.25020-3-paul@crapouillou.net>
-References: <20180821123819.25020-1-paul@crapouillou.net>
+From: =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+Subject: [PATCH] ARM: dts: stm32: enable display on stm32mp157c-ev1 board
+Date: Tue, 21 Aug 2018 14:58:36 +0200
+Message-ID: <1534856316-30346-1-git-send-email-yannick.fertre@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180821123819.25020-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: od@zcrc.me, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Benjamin Gaignard <benjamin.gaignard@st.com>, Yannick Fertre <yannick.fertre@st.com>, Patrice Chotard <patrice.chotard@st.com>, Philippe Cornu <philippe.cornu@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the clocks provided by the CGU in the Ingenic JZ4725B
-SoC.
+Enable panel raydium RM68200, DSI bridge & display controller.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
 ---
- drivers/clk/ingenic/Kconfig       |  10 ++
- drivers/clk/ingenic/Makefile      |   1 +
- drivers/clk/ingenic/jz4725b-cgu.c | 225 ++++++++++++++++++++++++++++++
- 3 files changed, 236 insertions(+)
- create mode 100644 drivers/clk/ingenic/jz4725b-cgu.c
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 60 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
-index 851a5662f119..a3a158a0c946 100644
---- a/drivers/clk/ingenic/Kconfig
-+++ b/drivers/clk/ingenic/Kconfig
-@@ -14,6 +14,16 @@ config INGENIC_CGU_JZ4740
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 372bc2e..cd9062a 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
  
- 	  If building for a JZ4740 SoC, you want to say Y here.
+ #include "stm32mp157c-ed1.dts"
++#include <dt-bindings/gpio/gpio.h>
  
-+config INGENIC_CGU_JZ4725B
-+	bool "Ingenic JZ4725B CGU driver"
-+	default MACH_JZ4725B
-+	select INGENIC_CGU_COMMON
-+	help
-+	  Support the clocks provided by the CGU hardware on Ingenic JZ4725B
-+	  and compatible SoCs.
+ / {
+ 	model = "STMicroelectronics STM32MP157C eval daughter on eval mother";
+@@ -19,6 +20,12 @@
+ 		serial0 = &uart4;
+ 		ethernet0 = &ethernet0;
+ 	};
++	panel_backlight: panel-backlight {
++		compatible = "gpio-backlight";
++		gpios = <&gpiod 13 GPIO_ACTIVE_LOW>;
++		default-on;
++		status = "okay";
++	};
+ };
+ 
+ &ethernet0 {
+@@ -46,6 +53,45 @@
+ 	status = "okay";
+ };
+ 
++&dsi {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
 +
-+	  If building for a JZ4725B SoC, you want to say Y here.
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
- config INGENIC_CGU_JZ4770
- 	bool "Ingenic JZ4770 CGU driver"
- 	default MACH_JZ4770
-diff --git a/drivers/clk/ingenic/Makefile b/drivers/clk/ingenic/Makefile
-index 8b8dc79c7ce6..00a79b2fba10 100644
---- a/drivers/clk/ingenic/Makefile
-+++ b/drivers/clk/ingenic/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_INGENIC_CGU_COMMON)	+= cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4740)	+= jz4740-cgu.o
-+obj-$(CONFIG_INGENIC_CGU_JZ4725B)	+= jz4725b-cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4770)	+= jz4770-cgu.o
- obj-$(CONFIG_INGENIC_CGU_JZ4780)	+= jz4780-cgu.o
-diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
-new file mode 100644
-index 000000000000..584ff4ff81c7
---- /dev/null
-+++ b/drivers/clk/ingenic/jz4725b-cgu.c
-@@ -0,0 +1,225 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Ingenic JZ4725B SoC CGU driver
-+ *
-+ * Copyright (C) 2018 Paul Cercueil
-+ * Author: Paul Cercueil <paul@crapouillou.net>
-+ */
++		port@0 {
++			reg = <0>;
++			dsi_in: endpoint {
++				remote-endpoint = <&ltdc_ep0_out>;
++			};
++		};
 +
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/of.h>
-+#include <dt-bindings/clock/jz4725b-cgu.h>
-+#include "cgu.h"
++		port@1 {
++			reg = <1>;
++			dsi_out: endpoint {
++				remote-endpoint = <&dsi_panel_in>;
++			};
++		};
++	};
 +
-+/* CGU register offsets */
-+#define CGU_REG_CPCCR		0x00
-+#define CGU_REG_LCR		0x04
-+#define CGU_REG_CPPCR		0x10
-+#define CGU_REG_CLKGR		0x20
-+#define CGU_REG_OPCR		0x24
-+#define CGU_REG_I2SCDR		0x60
-+#define CGU_REG_LPCDR		0x64
-+#define CGU_REG_MSCCDR		0x68
-+#define CGU_REG_SSICDR		0x74
-+#define CGU_REG_CIMCDR		0x78
++	panel-dsi@0 {
++		compatible = "raydium,rm68200";
++		reg = <0>;
++		reset-gpios = <&gpiof 15 GPIO_ACTIVE_LOW>;
++		backlight = <&panel_backlight>;
++		status = "okay";
 +
-+/* bits within the LCR register */
-+#define LCR_SLEEP		BIT(0)
-+
-+static struct ingenic_cgu *cgu;
-+
-+static const s8 pll_od_encoding[4] = {
-+	0x0, 0x1, -1, 0x3,
++		port {
++			dsi_panel_in: endpoint {
++				remote-endpoint = <&dsi_out>;
++			};
++		};
++	};
 +};
 +
-+static const struct ingenic_cgu_clk_info jz4725b_cgu_clocks[] = {
+ &i2c2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c2_pins_a>;
+@@ -62,6 +108,20 @@
+ 	status = "okay";
+ };
+ 
++&ltdc {
++	status = "okay";
 +
-+	/* External clocks */
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+	[JZ4725B_CLK_EXT] = { "ext", CGU_CLK_EXT },
-+	[JZ4725B_CLK_OSC32K] = { "osc32k", CGU_CLK_EXT },
-+
-+	[JZ4725B_CLK_PLL] = {
-+		"pll", CGU_CLK_PLL,
-+		.parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
-+		.pll = {
-+			.reg = CGU_REG_CPPCR,
-+			.m_shift = 23,
-+			.m_bits = 9,
-+			.m_offset = 2,
-+			.n_shift = 18,
-+			.n_bits = 5,
-+			.n_offset = 2,
-+			.od_shift = 16,
-+			.od_bits = 2,
-+			.od_max = 4,
-+			.od_encoding = pll_od_encoding,
-+			.stable_bit = 10,
-+			.bypass_bit = 9,
-+			.enable_bit = 8,
-+		},
-+	},
-+
-+	/* Muxes & dividers */
-+
-+	[JZ4725B_CLK_PLL_HALF] = {
-+		"pll half", CGU_CLK_DIV,
-+		.parents = { JZ4725B_CLK_PLL, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 21, 1, 1, -1, -1, -1 },
-+	},
-+
-+	[JZ4725B_CLK_CCLK] = {
-+		"cclk", CGU_CLK_DIV,
-+		.parents = { JZ4725B_CLK_PLL, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[JZ4725B_CLK_HCLK] = {
-+		"hclk", CGU_CLK_DIV,
-+		.parents = { JZ4725B_CLK_PLL, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[JZ4725B_CLK_PCLK] = {
-+		"pclk", CGU_CLK_DIV,
-+		.parents = { JZ4725B_CLK_PLL, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 8, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[JZ4725B_CLK_MCLK] = {
-+		"mclk", CGU_CLK_DIV,
-+		.parents = { JZ4725B_CLK_PLL, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 12, 1, 4, 22, -1, -1 },
-+	},
-+
-+	[JZ4725B_CLK_IPU] = {
-+		"ipu", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_PLL, -1, -1, -1 },
-+		.div = { CGU_REG_CPCCR, 16, 1, 4, 22, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 13 },
-+	},
-+
-+	[JZ4725B_CLK_LCD] = {
-+		"lcd", CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_PLL_HALF, -1, -1, -1 },
-+		.div = { CGU_REG_LPCDR, 0, 1, 11, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 9 },
-+	},
-+
-+	[JZ4725B_CLK_I2S] = {
-+		"i2s", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_EXT, JZ4725B_CLK_PLL_HALF, -1, -1 },
-+		.mux = { CGU_REG_CPCCR, 31, 1 },
-+		.div = { CGU_REG_I2SCDR, 0, 1, 9, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 6 },
-+	},
-+
-+	[JZ4725B_CLK_SPI] = {
-+		"spi", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_EXT, JZ4725B_CLK_PLL, -1, -1 },
-+		.mux = { CGU_REG_SSICDR, 31, 1 },
-+		.div = { CGU_REG_SSICDR, 0, 1, 4, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 4 },
-+	},
-+
-+	[JZ4725B_CLK_MMC_MUX] = {
-+		"mmc_mux", CGU_CLK_DIV,
-+		.parents = { JZ4725B_CLK_PLL_HALF, -1, -1, -1 },
-+		.div = { CGU_REG_MSCCDR, 0, 1, 5, -1, -1, -1 },
-+	},
-+
-+	[JZ4725B_CLK_UDC] = {
-+		"udc", CGU_CLK_MUX | CGU_CLK_DIV,
-+		.parents = { JZ4725B_CLK_EXT, JZ4725B_CLK_PLL_HALF, -1, -1 },
-+		.mux = { CGU_REG_CPCCR, 29, 1 },
-+		.div = { CGU_REG_CPCCR, 23, 1, 6, -1, -1, -1 },
-+	},
-+
-+	/* Gate-only clocks */
-+
-+	[JZ4725B_CLK_UART] = {
-+		"uart", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 0 },
-+	},
-+
-+	[JZ4725B_CLK_DMA] = {
-+		"dma", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_PCLK, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 12 },
-+	},
-+
-+	[JZ4725B_CLK_ADC] = {
-+		"adc", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 7 },
-+	},
-+
-+	[JZ4725B_CLK_I2C] = {
-+		"i2c", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 3 },
-+	},
-+
-+	[JZ4725B_CLK_AIC] = {
-+		"aic", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_EXT, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 5 },
-+	},
-+
-+	[JZ4725B_CLK_MMC0] = {
-+		"mmc0", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_MMC_MUX, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 6 },
-+	},
-+
-+	[JZ4725B_CLK_MMC1] = {
-+		"mmc1", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_MMC_MUX, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 16 },
-+	},
-+
-+	[JZ4725B_CLK_BCH] = {
-+		"bch", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_MCLK/* not sure */, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 11 },
-+	},
-+
-+	[JZ4725B_CLK_TCU] = {
-+		"tcu", CGU_CLK_GATE,
-+		.parents = { JZ4725B_CLK_EXT/* not sure */, -1, -1, -1 },
-+		.gate = { CGU_REG_CLKGR, 1 },
-+	},
-+
-+	[JZ4725B_CLK_EXT512] = {
-+		"ext/512", CGU_CLK_FIXDIV,
-+		.parents = { JZ4725B_CLK_EXT },
-+
-+		/* Doc calls it EXT512, but it seems to be /256... */
-+		.fixdiv = { 256 },
-+	},
-+
-+	[JZ4725B_CLK_RTC] = {
-+		"rtc", CGU_CLK_MUX,
-+		.parents = { JZ4725B_CLK_EXT512, JZ4725B_CLK_OSC32K, -1, -1 },
-+		.mux = { CGU_REG_OPCR, 2, 1},
-+	},
++		ltdc_ep0_out: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&dsi_in>;
++		};
++	};
 +};
 +
-+static void __init jz4725b_cgu_init(struct device_node *np)
-+{
-+	int retval;
-+
-+	cgu = ingenic_cgu_new(jz4725b_cgu_clocks,
-+			      ARRAY_SIZE(jz4725b_cgu_clocks), np);
-+	if (!cgu) {
-+		pr_err("%s: failed to initialise CGU\n", __func__);
-+		return;
-+	}
-+
-+	retval = ingenic_cgu_register_clocks(cgu);
-+	if (retval)
-+		pr_err("%s: failed to register CGU Clocks\n", __func__);
-+}
-+CLK_OF_DECLARE(jz4725b_cgu, "ingenic,jz4725b-cgu", jz4725b_cgu_init);
+ &m_can1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&m_can1_pins_a>;
 -- 
-2.18.0
+2.7.4
