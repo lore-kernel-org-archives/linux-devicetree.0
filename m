@@ -1,85 +1,90 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: add DT binding for UniPhier
- MIO DMAC
-Date: Tue, 21 Aug 2018 14:09:20 -0500
-Message-ID: <CAL_JsqJwXKx3MKE-8GuHqnJZ-047GxhHUB5LpW3O8j58OsAKuA@mail.gmail.com>
-References: <1534843809-4137-1-git-send-email-yamada.masahiro@socionext.com>
- <1534843809-4137-2-git-send-email-yamada.masahiro@socionext.com> <CAK7LNASr=rf_foQ7PDTNS440rx3TLuY_TBagfQ-gCHxXpFB2vw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 4/4] [WIP] ARM: shmobile: Enable ARM_GLOBAL_TIMER on
+ Cortex-A9 MPCore SoCs
+Date: Tue, 21 Aug 2018 21:37:13 +0200
+Message-ID: <CAMuHMdWSsjO731VwMeLXqDjCboH=7k546PjovN5yPEHwn8zu9g@mail.gmail.com>
+References: <20180731160855.6758-1-geert+renesas@glider.be>
+ <20180731160855.6758-5-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNASr=rf_foQ7PDTNS440rx3TLuY_TBagfQ-gCHxXpFB2vw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Vinod <vkoul@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180731160855.6758-5-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2018 at 4:48 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Tue, Jul 31, 2018 at 6:08 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> SH-Mobile AG5 and R-Car H1 SoCs are based on the Cortex-A9 MPCore, which
+> includes a global timer.
 >
-> (+CC Rob, DT, LKML)
+> Enable the ARM global timer on these SoCs, which will be used for:
+>   - the scheduler clock, improving scheduler accuracy from 10 ms to 3 or
+>     4 ns,
+>   - delay loops, allowing removal of calls to shmobile_init_delay() from
+>     the corresponding machine vectors.
 >
-> I forgot to CC this to DT community...
+> Note that when using an old DTB lacking the global timer, the kernel
+> will still work.  However, loops-per-jiffies will no longer be preset,
+> and the delay loop will need to be calibrated during boot.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-You really need to resend so that patchwork will pick it up and I'll
-see it for sure.
+This seems to cause random system resume issues on the venerable SH-Mobile
+AG5, ranging from plain lockups to RCU warnings:
 
->
->
-> 2018-08-21 18:30 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> > The MIO DMAC (Media IO DMA Controller) is used in UniPhier LD4,
-> > Pro4, and sLD8 SoCs.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  .../devicetree/bindings/dma/uniphier-mio-dmac.txt  | 28 ++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-> > new file mode 100644
-> > index 0000000..a9e969e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-> > @@ -0,0 +1,28 @@
-> > +UniPhier Media IO DMA controller
-> > +
-> > +This works as an external DMA engine for SD/eMMC controllers etc.
-> > +found in UniPhier LD4, Pro4, sLD8 SoCs.
-> > +
-> > +Required properties:
-> > +- compatible: should be "socionext,uniphier-mio-dmac".
-> > +- reg: offset and length of the register set for the device.
-> > +- interrupts: a list of interrupt specifiers associated with the DMA channels.
-> > +- clocks: a single clock specifier
-> > +- #dma-cells: should be <1>. The single cell represents the channel number.
-> > +- dma-channels: specify the number of the DMA channels. This should match to
-> > +  the number of tuples in the interrupts property.
-> > +
-> > +Example:
-> > +       dmac: dmac@5a000000 {
+WARNING: suspicious RCU usage
+4.18.0-kzm9g-00218-gaf4425056bd09e9e #38 Not tainted
+-----------------------------
+kernel/sched/fair.c:6231 suspicious rcu_dereference_check() usage!
 
-dma-controller@...
+other info that might help us debug this:
 
-> > +               compatible = "socionext,uniphier-mio-dmac";
-> > +               reg = <0x5a000000 0x1000>;
-> > +               interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
-> > +                            <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
-> > +               clocks = <&mio_clk 7>;
-> > +               #dma-cells = <1>;
-> > +               dma-channels = <8>;
-> > +       };
-> > +
-> > +Note:
-> > +In the example above, "interrupts = <0 68 4>, <0 68 4>, ..." is not a typo.
-> > +The first two channels share a single interrupt line.
-> > --
-> > 2.7.4
-> >
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+
+RCU used illegally from offline CPU!
+rcu_scheduler_active = 2, debug_locks = 1
+3 locks held by swapper/1/0:
+ #0: 6d7f5781 ((cpu_died).wait.lock){....}, at: complete+0x14/0x48
+ #1: 84ce6f8e (&p->pi_lock){-.-.}, at: try_to_wake_up+0x30/0x3cc
+ #2: 93591133 (rcu_read_lock){....}, at: select_task_rq_fair+0x5c/0xe8c
+
+stack backtrace:
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted
+4.18.0-kzm9g-00218-gaf4425056bd09e9e #38
+Hardware name: Generic SH73A0 (Flattened Device Tree)
+[<c010f22c>] (unwind_backtrace) from [<c010bab0>] (show_stack+0x10/0x14)
+[<c010bab0>] (show_stack) from [<c0599750>] (dump_stack+0x9c/0xd4)
+[<c0599750>] (dump_stack) from [<c01542c8>] (select_task_rq_fair+0x140/0xe8c)
+[<c01542c8>] (select_task_rq_fair) from [<c0149494>]
+(try_to_wake_up+0x210/0x3cc)
+[<c0149494>] (try_to_wake_up) from [<c016355c>] (__wake_up_common+0xcc/0x140)
+[<c016355c>] (__wake_up_common) from [<c01636a8>] (__wake_up_locked+0x14/0x1c)
+[<c01636a8>] (__wake_up_locked) from [<c016450c>] (complete+0x38/0x48)
+[<c016450c>] (complete) from [<c010d66c>] (arch_cpu_idle_dead+0x2c/0x8c)
+[<c010d66c>] (arch_cpu_idle_dead) from [<c014edec>] (do_idle+0x98/0x148)
+[<c014edec>] (do_idle) from [<c014f1fc>] (cpu_startup_entry+0x18/0x1c)
+[<c014f1fc>] (cpu_startup_entry) from [<4010246c>] (0x4010246c)
+
+Given secondary CPU startup is already quite flaky on this SoC, perhaps
+it's best to leave it alone?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
