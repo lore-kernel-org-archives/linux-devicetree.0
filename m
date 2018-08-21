@@ -1,77 +1,97 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v5 2/7] drm/bridge/synopsys: dsi: don't call
- __dw_mipi_dsi_probe from dw_mipi_dsi_bind
-Date: Tue, 21 Aug 2018 16:05:10 +0200
-Message-ID: <20180821140515.22246-3-heiko@sntech.de>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v5 4/7] dt-bindings: display: rockchip: update DSI controller
+Date: Tue, 21 Aug 2018 16:05:12 +0200
+Message-ID: <20180821140515.22246-5-heiko@sntech.de>
 References: <20180821140515.22246-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180821140515.22246-1-heiko@sntech.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, seanpaul@chromium.org, mka@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180821140515.22246-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org, yannick.fertre-qxv4g6HH51o@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-X19kd19taXBpX2RzaV9wcm9iZSgpIGRvZXMgYWxsIHRoZSBncmFiYmluZyBvZiByZXNvdXJjZXMg
-YW5kIGRvZXMgaXQgdXNpbmcKZGV2bS1oZWxwZXJzLiBTbyB0aGlzIGlzIGhhcHBlbmluZyBvbiBl
-YWNoIHRyeSBvZiBtYXN0ZXIgYnJpbmd1cCBwb3NzaWJseQpzbG93aW5nIGRvd24gdGhpbmdzIGEg
-bG90LgoKRHJpdmVycyB1c2luZyB0aGUgY29tcG9uZW50IGZyYW1ld29yayBtYXkgaW5zdGVhZCB3
-YW50IHRvIGNhbGwKZHdfbWlwaV9kc2lfcHJvYmUgc2VwYXJhdGVseSBpbiB0aGVpciBwcm9iZSBm
-dW5jdGlvbiB0byBzZXR1cCByZXNvdXJjZXMKZWFybHkuIFRoYXQgd2F5IHRoZSBkc2kgYnVzIGFs
-c28gZ2V0cyBjcmVhdGVkIGVhcmxpZXIgYW5kIGFsc28gbm90CnJlY3JlYXRlZCBvbiBlYWNoIGJp
-bmQtdHJ5LCBzbyB0aGF0IGF0dGFjaGVkIHBhbmVscyBjYW4gbG9hZCB0aGVpciBtb2R1bGVzCmFu
-ZCBiZSBwcm9iZWQgd2F5IGJlZm9yZSB0aGUgYnJpZGdlLWF0dGFjaCBpbiB0aGUgYmluZCBjYWxs
-LgoKU28gZHJvcCB0aGUgY2FsbCB0byBfX2R3X21pcGlfZHNpX3Byb2JlIGFuZCBtb2RpZnkgdGhl
-IGZ1bmN0aW9uIHRvIHRha2UKYSBzdHJ1Y3QgZHdfbWlwaV9kc2kgaW5zdGVhZCBvZiB0aGUgcGxh
-dGZvcm0tZGV2aWNlLgoKU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVj
-aC5kZT4KUmV2aWV3ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Ci0t
-LQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jIHwgMTUgKysr
-LS0tLS0tLS0tLS0tCiBpbmNsdWRlL2RybS9icmlkZ2UvZHdfbWlwaV9kc2kuaCAgICAgICAgICAg
-ICAgfCAgNSArLS0tLQogMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDE2IGRlbGV0
-aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHct
-bWlwaS1kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2ku
-YwppbmRleCAwN2NkZTI1NWNhYjIuLmJiNGFlY2E1YzBmOSAxMDA2NDQKLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYwpAQCAtOTY2LDMxICs5NjYsMjIgQEAgRVhQ
-T1JUX1NZTUJPTF9HUEwoZHdfbWlwaV9kc2lfcmVtb3ZlKTsKIC8qCiAgKiBCaW5kL3VuYmluZCBB
-UEksIHVzZWQgZnJvbSBwbGF0Zm9ybXMgYmFzZWQgb24gdGhlIGNvbXBvbmVudCBmcmFtZXdvcmsu
-CiAgKi8KLXN0cnVjdCBkd19taXBpX2RzaSAqCi1kd19taXBpX2RzaV9iaW5kKHN0cnVjdCBwbGF0
-Zm9ybV9kZXZpY2UgKnBkZXYsIHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlciwKLQkJIGNvbnN0
-IHN0cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEgKnBsYXRfZGF0YSkKK2ludCBkd19taXBpX2Rz
-aV9iaW5kKHN0cnVjdCBkd19taXBpX2RzaSAqZHNpLCBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29k
-ZXIpCiB7Ci0Jc3RydWN0IGR3X21pcGlfZHNpICpkc2k7CiAJaW50IHJldDsKIAotCWRzaSA9IF9f
-ZHdfbWlwaV9kc2lfcHJvYmUocGRldiwgcGxhdF9kYXRhKTsKLQlpZiAoSVNfRVJSKGRzaSkpCi0J
-CXJldHVybiBkc2k7Ci0KIAlyZXQgPSBkcm1fYnJpZGdlX2F0dGFjaChlbmNvZGVyLCAmZHNpLT5i
-cmlkZ2UsIE5VTEwpOwogCWlmIChyZXQpIHsKLQkJZHdfbWlwaV9kc2lfcmVtb3ZlKGRzaSk7CiAJ
-CURSTV9FUlJPUigiRmFpbGVkIHRvIGluaXRpYWxpemUgYnJpZGdlIHdpdGggZHJtXG4iKTsKLQkJ
-cmV0dXJuIEVSUl9QVFIocmV0KTsKKwkJcmV0dXJuIHJldDsKIAl9CiAKLQlyZXR1cm4gZHNpOwor
-CXJldHVybiByZXQ7CiB9CiBFWFBPUlRfU1lNQk9MX0dQTChkd19taXBpX2RzaV9iaW5kKTsKIAog
-dm9pZCBkd19taXBpX2RzaV91bmJpbmQoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpCiB7Ci0JX19k
-d19taXBpX2RzaV9yZW1vdmUoZHNpKTsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKGR3X21pcGlfZHNp
-X3VuYmluZCk7CiAKZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5o
-IGIvaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgKaW5kZXggZDljNmQ1NDlmOTcxLi42
-ZDdmOGViNWQ5ZjIgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5o
-CisrKyBiL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19taXBpX2RzaS5oCkBAIC0zNSwxMCArMzUsNyBA
-QCBzdHJ1Y3QgZHdfbWlwaV9kc2kgKmR3X21pcGlfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYsCiAJCQkJICAgICAgY29uc3Qgc3RydWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0
-YQogCQkJCSAgICAgICpwbGF0X2RhdGEpOwogdm9pZCBkd19taXBpX2RzaV9yZW1vdmUoc3RydWN0
-IGR3X21pcGlfZHNpICpkc2kpOwotc3RydWN0IGR3X21pcGlfZHNpICpkd19taXBpX2RzaV9iaW5k
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCi0JCQkJICAgICBzdHJ1Y3QgZHJtX2VuY29k
-ZXIgKmVuY29kZXIsCi0JCQkJICAgICBjb25zdCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRh
-Ci0JCQkJICAgICAqcGxhdF9kYXRhKTsKK2ludCBkd19taXBpX2RzaV9iaW5kKHN0cnVjdCBkd19t
-aXBpX2RzaSAqZHNpLCBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpOwogdm9pZCBkd19taXBp
-X2RzaV91bmJpbmQoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpOwogCiAjZW5kaWYgLyogX19EV19N
-SVBJX0RTSV9fICovCi0tIAoyLjE3LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+From: Nickey Yang <nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+This patch update describe panel/port links, including
+unit addresses in documentation of device tree bindings
+for the rockchip DSI controller based on the Synopsys
+DesignWare MIPI DSI host controller.
+
+Signed-off-by: Nickey Yang <nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ .../display/rockchip/dw_mipi_dsi_rockchip.txt | 23 +++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
+index 6bb59ab39f2f..ce4c1fc9116c 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
++++ b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
+@@ -14,6 +14,8 @@ Required properties:
+ - rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
+ - ports: contain a port node with endpoint definitions as defined in [2].
+   For vopb,set the reg = <0> and set the reg = <1> for vopl.
++- video port 0 for the VOP input, the remote endpoint maybe vopb or vopl
++- video port 1 for either a panel or subsequent encoder
+ 
+ Optional properties:
+ - power-domains: a phandle to mipi dsi power domain node.
+@@ -40,11 +42,12 @@ Example:
+ 		ports {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+-			reg = <1>;
+ 
+-			mipi_in: port {
++			mipi_in: port@0 {
++				reg = <0>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
++
+ 				mipi_in_vopb: endpoint@0 {
+ 					reg = <0>;
+ 					remote-endpoint = <&vopb_out_mipi>;
+@@ -54,6 +57,16 @@ Example:
+ 					remote-endpoint = <&vopl_out_mipi>;
+ 				};
+ 			};
++
++			mipi_out: port@1 {
++				reg = <1>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				mipi_out_panel: endpoint {
++					remote-endpoint = <&panel_in_mipi>;
++				};
++			};
+ 		};
+ 
+ 		panel {
+@@ -64,5 +77,11 @@ Example:
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&lcd_en>;
+ 			backlight = <&backlight>;
++
++			port {
++				panel_in_mipi: endpoint {
++					remote-endpoint = <&mipi_out_panel>;
++				};
++			};
+ 		};
+ 	};
+-- 
+2.17.0
