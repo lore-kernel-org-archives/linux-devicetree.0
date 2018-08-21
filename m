@@ -1,48 +1,76 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: serdev: How to attach serdev devices to USB based tty devices?
-Date: Tue, 21 Aug 2018 16:29:10 +0200
-Message-ID: <20180821142910.GJ14967@localhost>
-References: <3639955d-5990-1c82-7158-ac07b33c41f2@suse.de>
- <20180815182150.wsd5oxlucsox2qig@earth.universe>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180815182150.wsd5oxlucsox2qig@earth.universe>
-Sender: netdev-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, linux-usb@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, Xue Liu <liuxuenetmail@gmail.com>, Ben Whitten <ben.whitten@lairdtech.com>, devicetree@vger.kernel.org, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Oliver Neukum <oneukum@suse.com>, Alexander Graf <agraf@suse.de>, "LoRa_Community_Support@semtech.com" <LoRa_Community_Support@semtech.com>, Jian-Hong Pan <starnight@g.ncu.edu.tw>, Stefan Rehm <rehm@miromico.ch>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: [PATCH 8/8] dt-binding: mtd: Document gpio-addr-flash
+Date: Tue, 21 Aug 2018 16:31:52 +0200
+Message-ID: <20180821143152.32293-9-ricardo.ribalda@gmail.com>
+References: <20180821143152.32293-1-ricardo.ribalda@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180821143152.32293-1-ricardo.ribalda@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 15, 2018 at 08:21:50PM +0200, Sebastian Reichel wrote:
-> Hi,
-> 
-> +cc Johan Hovold <johan@kernel.org>
-> 
-> Johan told me, that he is working on this at ELCE 2017. Also he is
-> the subsystem maintainer of the USB serial subsystem.
+Add documentation for gpio-addr-flash. This binding allow creating
+flash devices that are paged using GPIOs.
 
-I haven't done much work on this; it's more of a low-priority background
-task that keeps popping up. ;)
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+---
+ .../bindings/mtd/gpio-addr-flash.txt          | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
 
-Rob already linked to Ricardo's series in which this was recently
-discussed [1][2].
-
-In one of those threads I also posted to some code I've been using to
-test serdev with USB-serial devices [3]. There are some known issues
-blocking this from being merged (e.g. serdev not supporting hangups and
-agreement on DT bindings), but it would otherwise allow you to use
-serdev for fixed topologies (i.e. you know beforehand which port you'll
-be plugging your USB-serial device into). So that might still be useful
-for development purposes as is.
-
-With DT-overlay support this could be extended also to the dynamic case
-(e.g. loading overlays from userspace or passing the equivalent data
-from a tty driver).
-
-Johan
-
-
-[1] https://lkml.kernel.org/r/CAPybu_0RRNMsdzv4CKyw922hX3_EF=-LKD_QWZV0DoQmjG0aRQ@mail.gmail.com
-[2] https://lkml.kernel.org/r/20180611115240.32606-1-ricardo.ribalda@gmail.com
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/johan/usb-serial.git/log/?h=usb-serial-of
+diff --git a/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+new file mode 100644
+index 000000000000..4279e8cad09b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+@@ -0,0 +1,46 @@
++Memory Mapped flash with some address lines addressed using GPIOs
++
++Handle the case where a flash device is mostly addressed using physical
++line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
++to a 2MiB memory range and use the GPIOs to select a particular range.
++
++ - compatible : "cfi-gpio-addr-flash"
++ - reg : Address range of the mtd chip that is memory mapped, this is,
++   on the previous example 2MiB.
++ - bank-width : Width (in bytes) of the bank.  Equal to the
++   device width times the number of interleaved chips.
++ - probe-type : (optional) "cfi_probe", "jedec_probe". How the mtd chip
++   is going to be probed. If omitted, assumed to be equal to "cfi_probe".
++ - #address-cells, #size-cells : Must be present if the device has
++   sub-nodes representing partitions (see below).  In this case
++   both #address-cells and #size-cells must be equal to 1.
++
++The device tree may optionally contain sub-nodes describing partitions of the
++address space. See partition.txt for more detail.
++
++Example:
++
++	cfi_flash_0: cfi_flash {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "cfi-gpio-addr-flash";
++		bank-width = <2>;
++		reg = < 0x00300000 0x00200000 >;
++		gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
++		partition@0 {
++			reg = < 0x0 0x200000 >;
++			label = "Golden Bitstream";
++		};
++		partition@200000 {
++			reg = < 0x200000 0x200000 >;
++			label = "User Bitstream";
++		};
++		partition@400000 {
++			reg = < 0x400000 0x200000 >;
++			label = "V4L Controls";
++		};
++		partition@600000 {
++			reg = < 0x600000 0x200000 >;
++			label = "Production Data";
++		};
++	} ;
+-- 
+2.18.0
