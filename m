@@ -1,15 +1,16 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ull: keep IMX6UL_ prefix for signals
- on both i.MX6UL and i.MX6ULL
-Date: Tue, 21 Aug 2018 16:53:37 +0800
-Message-ID: <20180821085336.GB31070@dragon>
-References: <20180720102321.23291-1-sebastien.szymanski@armadeus.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 2/3] clk: imx6q: optionally get CCM inputs via standard
+ clock handles
+Date: Tue, 21 Aug 2018 08:56:09 +0000
+Message-ID: <AM0PR04MB4211DE29E5644C8C9A33278780310@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180731102009.6710-1-l.stach@pengutronix.de>
+ <20180731102009.6710-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180720102321.23291-1-sebastien.szymanski@armadeus.com>
+In-Reply-To: <20180731102009.6710-2-l.stach@pengutronix.de>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,123 +20,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 20, 2018 at 12:23:21PM +0200, S=E9bastien Szymanski wrote:
-> Signals available on both i.MX6UL and i.MX6ULL should have the same name
-> because it is the case of all others common signals, it avoids to make
-> mistakes (use the wrong ones) and it makes writing device tree files
-> less complicated. For example:
-> =
+Hi Lucas,
 
-> imx6ul-imx6ull-board.dtsi:
->  ...
->  pinctrl_uart5: uart5grp {
-> 	fsl,pins =3D <
-> 		MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX   0x1b0b1
-> 	 	MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX   0x1b0b1
->  	 >;
->  };
-> =
+> -----Original Message-----
+> From: Lucas Stach <l.stach@pengutronix.de>
+> Sent: Tuesday, July 31, 2018 6:20 PM
 
-> imx6ul-board.dts:
->  #include <imx6ul.dtsi>
->  #include <imx6ul-imx6ull-board.dtsi>
->  ...
-> =
+[...]
 
-> imx6ull-board.dts:
->  #include <imx6ull.dtsi>
->  #include <imx6ul-imx6ull-board.dtsi>
->  ...
-> =
-
-> Without this patch, the imx6ull-board.dtb will use
-> MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX instead of
-> MX6ULL_PAD_UART5_RX_DATA__UART5_DCE_RX and the uart5 will be
-> misconfigured.
-> =
-
-> Signed-off-by: S=E9bastien Szymanski <sebastien.szymanski@armadeus.com>
+> When specifying external clock inputs to the CCM the current code requires
+> the clocks to be in a "clocks" child node of the DT root.
+> This is not really conformant with DT best practices.
+> 
+> To avoid the need to deviate from those best practices, allow the clock inputs
+> to be specifies via standard clock handles. This is in line with how drivers of
+> the later CCM driver revisions on newer i.MX SoCs handle this.
+> 
+> As we can't retroactively change the DT binding, allow this as an option with a
+> fallback to the old way of how this has been handled.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 > ---
->  arch/arm/boot/dts/imx6ull-pinfunc.h | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
-> =
+>  .../devicetree/bindings/clock/imx6q-clock.txt |  5 +++++
+>  drivers/clk/imx/clk-imx6q.c                   | 22 ++++++++++++++-----
+>  2 files changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> index a45ca67a9d5f..ce6aa9920c05 100644
+> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+> @@ -6,6 +6,11 @@ Required properties:
+>  - interrupts: Should contain CCM interrupt
+>  - #clock-cells: Should be <1>
+> 
+> +Optional properties:
+> +- clocks: list of clock specifiers, must contain an entry for each entry
+> +          in clock-names
+> +- clock-names: valid names are "osc", "ckil", "ckil", "anaclk1" and "anaclk2"
 
-> diff --git a/arch/arm/boot/dts/imx6ull-pinfunc.h b/arch/arm/boot/dts/imx6=
-ull-pinfunc.h
-> index fdc46bb09cc1..7d7f05f7ea77 100644
-> --- a/arch/arm/boot/dts/imx6ull-pinfunc.h
-> +++ b/arch/arm/boot/dts/imx6ull-pinfunc.h
-> @@ -14,14 +14,25 @@
->   * The pin function ID is a tuple of
->   * <mux_reg conf_reg input_reg mux_mode input_val>
->   */
-> -#define MX6ULL_PAD_UART1_TX_DATA__UART5_DTE_RX                    0x0084=
- 0x0310 0x0644 0x9 0x4
-> -#define MX6ULL_PAD_UART1_RX_DATA__UART5_DCE_RX                    0x0088=
- 0x0314 0x0644 0x9 0x5
-> -#define MX6ULL_PAD_UART1_CTS_B__UART5_DCE_RTS                     0x008C=
- 0x0318 0x0640 0x9 0x3
-> -#define MX6ULL_PAD_UART1_RTS_B__UART5_DTE_RTS                     0x0090=
- 0x031C 0x0640 0x9 0x4
-> -#define MX6ULL_PAD_UART5_TX_DATA__UART5_DTE_RX                    0x00BC=
- 0x0348 0x0644 0x0 0x6
-> -#define MX6ULL_PAD_UART5_RX_DATA__UART5_DCE_RX                    0x00C0=
- 0x034C 0x0644 0x0 0x7
-> -#define MX6ULL_PAD_ENET1_RX_EN__UART5_DCE_RTS                     0x00CC=
- 0x0358 0x0640 0x1 0x5
-> -#define MX6ULL_PAD_ENET1_TX_DATA0__UART5_DTE_RTS                  0x00D0=
- 0x035C 0x0640 0x1 0x6
-> +/* signals common for i.MX6UL and i.MX6ULL */
-> +#undef MX6UL_PAD_UART1_TX_DATA__UART5_DTE_RX
-> +#define MX6UL_PAD_UART1_TX_DATA__UART5_DTE_RX                    0x0084 =
-0x0310 0x0644 0x9 0x4
-> +#undef MX6UL_PAD_UART1_RX_DATA__UART5_DCE_RX
-> +#define MX6UL_PAD_UART1_RX_DATA__UART5_DCE_RX                    0x0088 =
-0x0314 0x0644 0x9 0x5
-> +#undef MX6UL_PAD_UART1_CTS_B__UART5_DCE_RTS
-> +#define MX6UL_PAD_UART1_CTS_B__UART5_DCE_RTS                     0x008C =
-0x0318 0x0640 0x9 0x3
-> +#undef MX6UL_PAD_UART1_RTS_B__UART5_DTE_RTS
-> +#define MX6UL_PAD_UART1_RTS_B__UART5_DTE_RTS                     0x0090 =
-0x031C 0x0640 0x9 0x4
+A minor issue: 
+The third name should be "ckih1".
 
-I do not see these 4 pinfunc in imx6ul-pinfunc.h.  Are they really
-available for i.MX6UL?
+Otherwise:
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-Shawn
-
-> +#undef MX6UL_PAD_UART5_TX_DATA__UART5_DTE_RX
-> +#define MX6UL_PAD_UART5_TX_DATA__UART5_DTE_RX                    0x00BC =
-0x0348 0x0644 0x0 0x6
-> +#undef MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX
-> +#define MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX                    0x00C0 =
-0x034C 0x0644 0x0 0x7
-> +#undef MX6UL_PAD_ENET1_RX_EN__UART5_DCE_RTS
-> +#define MX6UL_PAD_ENET1_RX_EN__UART5_DCE_RTS                     0x00CC =
-0x0358 0x0640 0x1 0x5
-> +#undef MX6UL_PAD_ENET1_TX_DATA0__UART5_DTE_RTS
-> +#define MX6UL_PAD_ENET1_TX_DATA0__UART5_DTE_RTS                  0x00D0 =
-0x035C 0x0640 0x1 0x6
-> +
-> +/* signals for i.MX6ULL only */
->  #define MX6ULL_PAD_ENET2_RX_DATA0__EPDC_SDDO08                    0x00E4=
- 0x0370 0x0000 0x9 0x0
->  #define MX6ULL_PAD_ENET2_RX_DATA1__EPDC_SDDO09                    0x00E8=
- 0x0374 0x0000 0x9 0x0
->  #define MX6ULL_PAD_ENET2_RX_EN__EPDC_SDDO10                       0x00EC=
- 0x0378 0x0000 0x9 0x0
-> -- =
-
-> 2.16.4
-> =
-
-> =
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Regards
+Dong Aisheng
