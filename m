@@ -1,63 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: riscv,cpu-intc: Cleanups from a missed review
-Date: Tue, 21 Aug 2018 07:59:03 -0500
-Message-ID: <CABGGisyZ=kuWesNkKRQQATsSf6_aiWTscmW1OANLtTSJAKQ0EA@mail.gmail.com>
-References: <20180820230011.25368-1-palmer@sifive.com> <51924de4-4a16-07a0-f499-753e0df49678@wdc.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v14 0/4] iommu/arm-smmu: Add runtime
+ pm/sleep support
+Date: Tue, 21 Aug 2018 14:03:44 +0100
+Message-ID: <afc4be51-56b1-6455-71e1-d2fddd622426@linaro.org>
+References: <20180727070224.23966-1-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51924de4-4a16-07a0-f499-753e0df49678@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atish.patra@wdc.com
-Cc: palmer@sifive.com, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hch@infradead.org, merker@debian.org, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180727070224.23966-1-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 20, 2018 at 6:10 PM Atish Patra <atish.patra@wdc.com> wrote:
->
-> On 8/20/18 4:01 PM, Palmer Dabbelt wrote:
-> > I managed to miss one of Rob's code reviews on the mailing list
-> > <http://lists.infradead.org/pipermail/linux-riscv/2018-August/001139.html>.
-> > The patch has already been merged, so I'm submitting a fixup.
-> >
-> > Sorry!
-> >
-> > Fixes: b67bc7cb4088 ("dt-bindings: interrupt-controller: RISC-V local interrupt controller")
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Christoph Hellwig <hch@infradead.org>
-> > Cc: Karsten Merker <merker@debian.org>
-> > Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
-> > ---
-> >   .../bindings/interrupt-controller/riscv,cpu-intc.txt       | 14 +++++++++++---
-> >   1 file changed, 11 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> > index b0a8af51c388..265b223cd978 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> > @@ -11,7 +11,7 @@ The RISC-V supervisor ISA manual specifies three interrupt sources that are
-> >   attached to every HLIC: software interrupts, the timer interrupt, and external
-> >   interrupts.  Software interrupts are used to send IPIs between cores.  The
-> >   timer interrupt comes from an architecturally mandated real-time timer that is
-> > -controller via Supervisor Binary Interface (SBI) calls and CSR reads.  External
-> > +controlled via Supervisor Binary Interface (SBI) calls and CSR reads.  External
-> >   interrupts connect all other device interrupts to the HLIC, which are routed
-> >   via the platform-level interrupt controller (PLIC).
-> >
-> > @@ -25,7 +25,15 @@ in the system.
-> >
-> >   Required properties:
-> >   - compatible : "riscv,cpu-intc"
->
-> Since this is a fix up patch, we should update the compatible string
-> with the sifive specific one as well. no?
-
-I think it is fine as is if my understanding is correct. Given this is
-part of the RISC-V spec(s), then using 'riscv' here for riscv,cpu-intc
-is fine. It was only the PLIC which didn't have any standard
-definition that I had issue with. Plus, with the SoC specific string,
-I'm not too worried about what the fallback is.
-
-However, sifive,fu540-c000-cpu-intc does need to be documented.
-Putting it in the example is not documenting it.
-
-Rob
+CgpPbiAyNy8wNy8xOCAwODowMiwgVml2ZWsgR2F1dGFtIHdyb3RlOgo+IFNyaWNoYXJhbiBSICgz
+KToKPiAgICBpb21tdS9hcm0tc21tdTogQWRkIHBtX3J1bnRpbWUvc2xlZXAgb3BzCj4gICAgaW9t
+bXUvYXJtLXNtbXU6IEludm9rZSBwbV9ydW50aW1lIGR1cmluZyBwcm9iZSwgYWRkL3JlbW92ZSBk
+ZXZpY2UKPiAgICBpb21tdS9hcm0tc21tdTogQWRkIHRoZSBkZXZpY2VfbGluayBiZXR3ZWVuIG1h
+c3RlcnMgYW5kIHNtbXUKPiAKPiBWaXZlayBHYXV0YW0gKDEpOgo+ICAgIGlvbW11L2FybS1zbW11
+OiBBZGQgc3VwcG9ydCBmb3IgcWNvbSxzbW11LXYyIHZhcmlhbnQKPiAKPiAgIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dCAgICAgICAgIHwgIDQyICsrKysrCj4gICBk
+cml2ZXJzL2lvbW11L2FybS1zbW11LmMgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDE5NCAr
+KysrKysrKysrKysrKysrKysrLS0KPiAgIDIgZmlsZXMgY2hhbmdlZCwgMjI1IGluc2VydGlvbnMo
+KyksIDExIGRlbGV0aW9ucygtKQpNU004ODk2IGF1ZGlvIGFuZCBkaXNwbGF5IG9uIHRvcCBvZiBt
+YWlubGluZSB0b3RhbGx5IGRlcGVuZHMgb24gdGhpcyAKcGF0Y2hlcywgSSBoYXZlIGJlZW4gdGVz
+dGluZyB2YXJpb3VzIHZlcnNpb24gdGhpcyBzZXJpZXMgb24gREI4MjBjIGZvciAKYm90aCBkaXNw
+bGF5IGFuZCBhdWRpby4KClRlc3RlZC1ieTogU3Jpbml2YXMgS2FuZGFnYXRsYSA8c3Jpbml2YXMu
+a2FuZGFnYXRsYUBsaW5hcm8ub3JnPgoKCi0tc3JpbmkKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9A
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
