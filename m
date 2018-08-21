@@ -1,67 +1,141 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH RESEND v1 1/5] dt-bindings: pinctrl: add wakeup capable
- GPIOs for SDM845
-Date: Tue, 21 Aug 2018 09:37:02 +0100
-Message-ID: <9606d47c-78b4-c8c6-97c8-11b606a61496@arm.com>
-References: <20180817191026.32245-1-ilina@codeaurora.org>
- <20180817191026.32245-2-ilina@codeaurora.org>
- <20180820231901.GA5603@tuxbook-pro>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6ull: keep IMX6UL_ prefix for signals
+ on both i.MX6UL and i.MX6ULL
+Date: Tue, 21 Aug 2018 16:53:37 +0800
+Message-ID: <20180821085336.GB31070@dragon>
+References: <20180720102321.23291-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180820231901.GA5603@tuxbook-pro>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Lina Iyer <ilina@codeaurora.org>
-Cc: sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180720102321.23291-1-sebastien.szymanski@armadeus.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/08/18 00:19, Bjorn Andersson wrote:
-> On Fri 17 Aug 12:10 PDT 2018, Lina Iyer wrote:
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> [..]
->> @@ -155,11 +166,52 @@ Example:
->>  	tlmm: pinctrl@3400000 {
->>  		compatible = "qcom,sdm845-pinctrl";
->>  		reg = <0x03400000 0xc00000>;
->> -		interrupts = <GIC_SPI 208 0>;
->>  		gpio-controller;
->>  		#gpio-cells = <2>;
->>  		interrupt-controller;
->>  		#interrupt-cells = <2>;
->> +		interrupts-extended = <&intc GIC_SPI 208 0>,
->> +			<&pdc 510 0>, <&pdc 511 0>, <&pdc 512 0>, <&pdc 513 0>,
->> +			<&pdc 514 0>, <&pdc 515 0>, <&pdc 516 0>, <&pdc 517 0>,
->> +			<&pdc 518 0>, <&pdc 519 0>, <&pdc 632 0>, <&pdc 639 0>,
->> +			<&pdc 521 0>, <&pdc 522 0>, <&pdc 523 0>, <&pdc 524 0>,
->> +			<&pdc 525 0>, <&pdc 526 0>, <&pdc 527 0>, <&pdc 630 0>,
->> +			<&pdc 637 0>, <&pdc 529 0>, <&pdc 530 0>, <&pdc 531 0>,
->> +			<&pdc 532 0>, <&pdc 633 0>, <&pdc 640 0>, <&pdc 534 0>,
->> +			<&pdc 535 0>, <&pdc 536 0>, <&pdc 537 0>, <&pdc 538 0>,
->> +			<&pdc 539 0>, <&pdc 540 0>, <&pdc 541 0>, <&pdc 542 0>,
->> +			<&pdc 543 0>, <&pdc 544 0>, <&pdc 545 0>, <&pdc 546 0>,
->> +			<&pdc 547 0>, <&pdc 548 0>, <&pdc 549 0>, <&pdc 550 0>,
->> +			<&pdc 551 0>, <&pdc 552 0>, <&pdc 553 0>, <&pdc 554 0>,
->> +			<&pdc 555 0>, <&pdc 556 0>, <&pdc 557 0>, <&pdc 631 0>,
->> +			<&pdc 638 0>, <&pdc 559 0>, <&pdc 560 0>, <&pdc 561 0>,
->> +			<&pdc 562 0>, <&pdc 563 0>, <&pdc 564 0>, <&pdc 565 0>,
->> +			<&pdc 566 0>, <&pdc 570 0>, <&pdc 571 0>, <&pdc 572 0>,
->> +			<&pdc 573 0>, <&pdc 609 0>, <&pdc 610 0>, <&pdc 611 0>,
->> +			<&pdc 612 0>, <&pdc 613 0>, <&pdc 614 0>, <&pdc 615 0>,
->> +			<&pdc 617 0>, <&pdc 618 0>, <&pdc 619 0>, <&pdc 620 0>,
->> +			<&pdc 621 0>, <&pdc 622 0>, <&pdc 623 0>;
-> 
-> I would expect that there are about 80 WARN_ON() hit in the irq code
-> when you boot mainline with this. Have you tried that?
+On Fri, Jul 20, 2018 at 12:23:21PM +0200, S=E9bastien Szymanski wrote:
+> Signals available on both i.MX6UL and i.MX6ULL should have the same name
+> because it is the case of all others common signals, it avoids to make
+> mistakes (use the wrong ones) and it makes writing device tree files
+> less complicated. For example:
+> =
 
-Dunno about the ones pointing to the PDC, but the one pointing to the
-GIC is definitely a howler.
+> imx6ul-imx6ull-board.dtsi:
+>  ...
+>  pinctrl_uart5: uart5grp {
+> 	fsl,pins =3D <
+> 		MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX   0x1b0b1
+> 	 	MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX   0x1b0b1
+>  	 >;
+>  };
+> =
 
-Another reason for this code to be developed and tested with mainline.
+> imx6ul-board.dts:
+>  #include <imx6ul.dtsi>
+>  #include <imx6ul-imx6ull-board.dtsi>
+>  ...
+> =
 
-Thanks,
+> imx6ull-board.dts:
+>  #include <imx6ull.dtsi>
+>  #include <imx6ul-imx6ull-board.dtsi>
+>  ...
+> =
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> Without this patch, the imx6ull-board.dtb will use
+> MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX instead of
+> MX6ULL_PAD_UART5_RX_DATA__UART5_DCE_RX and the uart5 will be
+> misconfigured.
+> =
+
+> Signed-off-by: S=E9bastien Szymanski <sebastien.szymanski@armadeus.com>
+> ---
+>  arch/arm/boot/dts/imx6ull-pinfunc.h | 27 +++++++++++++++++++--------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+> =
+
+> diff --git a/arch/arm/boot/dts/imx6ull-pinfunc.h b/arch/arm/boot/dts/imx6=
+ull-pinfunc.h
+> index fdc46bb09cc1..7d7f05f7ea77 100644
+> --- a/arch/arm/boot/dts/imx6ull-pinfunc.h
+> +++ b/arch/arm/boot/dts/imx6ull-pinfunc.h
+> @@ -14,14 +14,25 @@
+>   * The pin function ID is a tuple of
+>   * <mux_reg conf_reg input_reg mux_mode input_val>
+>   */
+> -#define MX6ULL_PAD_UART1_TX_DATA__UART5_DTE_RX                    0x0084=
+ 0x0310 0x0644 0x9 0x4
+> -#define MX6ULL_PAD_UART1_RX_DATA__UART5_DCE_RX                    0x0088=
+ 0x0314 0x0644 0x9 0x5
+> -#define MX6ULL_PAD_UART1_CTS_B__UART5_DCE_RTS                     0x008C=
+ 0x0318 0x0640 0x9 0x3
+> -#define MX6ULL_PAD_UART1_RTS_B__UART5_DTE_RTS                     0x0090=
+ 0x031C 0x0640 0x9 0x4
+> -#define MX6ULL_PAD_UART5_TX_DATA__UART5_DTE_RX                    0x00BC=
+ 0x0348 0x0644 0x0 0x6
+> -#define MX6ULL_PAD_UART5_RX_DATA__UART5_DCE_RX                    0x00C0=
+ 0x034C 0x0644 0x0 0x7
+> -#define MX6ULL_PAD_ENET1_RX_EN__UART5_DCE_RTS                     0x00CC=
+ 0x0358 0x0640 0x1 0x5
+> -#define MX6ULL_PAD_ENET1_TX_DATA0__UART5_DTE_RTS                  0x00D0=
+ 0x035C 0x0640 0x1 0x6
+> +/* signals common for i.MX6UL and i.MX6ULL */
+> +#undef MX6UL_PAD_UART1_TX_DATA__UART5_DTE_RX
+> +#define MX6UL_PAD_UART1_TX_DATA__UART5_DTE_RX                    0x0084 =
+0x0310 0x0644 0x9 0x4
+> +#undef MX6UL_PAD_UART1_RX_DATA__UART5_DCE_RX
+> +#define MX6UL_PAD_UART1_RX_DATA__UART5_DCE_RX                    0x0088 =
+0x0314 0x0644 0x9 0x5
+> +#undef MX6UL_PAD_UART1_CTS_B__UART5_DCE_RTS
+> +#define MX6UL_PAD_UART1_CTS_B__UART5_DCE_RTS                     0x008C =
+0x0318 0x0640 0x9 0x3
+> +#undef MX6UL_PAD_UART1_RTS_B__UART5_DTE_RTS
+> +#define MX6UL_PAD_UART1_RTS_B__UART5_DTE_RTS                     0x0090 =
+0x031C 0x0640 0x9 0x4
+
+I do not see these 4 pinfunc in imx6ul-pinfunc.h.  Are they really
+available for i.MX6UL?
+
+Shawn
+
+> +#undef MX6UL_PAD_UART5_TX_DATA__UART5_DTE_RX
+> +#define MX6UL_PAD_UART5_TX_DATA__UART5_DTE_RX                    0x00BC =
+0x0348 0x0644 0x0 0x6
+> +#undef MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX
+> +#define MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX                    0x00C0 =
+0x034C 0x0644 0x0 0x7
+> +#undef MX6UL_PAD_ENET1_RX_EN__UART5_DCE_RTS
+> +#define MX6UL_PAD_ENET1_RX_EN__UART5_DCE_RTS                     0x00CC =
+0x0358 0x0640 0x1 0x5
+> +#undef MX6UL_PAD_ENET1_TX_DATA0__UART5_DTE_RTS
+> +#define MX6UL_PAD_ENET1_TX_DATA0__UART5_DTE_RTS                  0x00D0 =
+0x035C 0x0640 0x1 0x6
+> +
+> +/* signals for i.MX6ULL only */
+>  #define MX6ULL_PAD_ENET2_RX_DATA0__EPDC_SDDO08                    0x00E4=
+ 0x0370 0x0000 0x9 0x0
+>  #define MX6ULL_PAD_ENET2_RX_DATA1__EPDC_SDDO09                    0x00E8=
+ 0x0374 0x0000 0x9 0x0
+>  #define MX6ULL_PAD_ENET2_RX_EN__EPDC_SDDO10                       0x00EC=
+ 0x0378 0x0000 0x9 0x0
+> -- =
+
+> 2.16.4
+> =
+
+> =
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
