@@ -1,122 +1,76 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] scripts/dtc: consolidate include path options in Makefile
-Date: Tue, 21 Aug 2018 16:18:34 +0900
-Message-ID: <CAK7LNAR5aHQ9Vo=-KTg8fzmk-1Nxu8WaXUT9wHM2n9Wr4wHFYw@mail.gmail.com>
-References: <1530669563-32637-1-git-send-email-yamada.masahiro@socionext.com>
- <cfb66b67-f423-0c26-0b22-0d57a581b44a@gmail.com> <CAL_Jsq+iAxmKvZ+RAD-VSOWirYOxc52mJHU5f5gybhWwQn2w_g@mail.gmail.com>
- <7fba348e-9fd3-9661-248d-82917f8f6676@gmail.com> <CAK7LNATFbykSHcDZqovTZ0aN9kHvZw3Q4Mamb1gwMwRhg7_s-A@mail.gmail.com>
- <78d8984c-211a-65c3-ab43-b3c02373ef0a@gmail.com>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 1/3] clk: imx6q: reset exclusive gates on init
+Date: Tue, 21 Aug 2018 08:01:25 +0000
+Message-ID: <AM0PR04MB421125B3E115822BCA0B1C3E80310@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180731102009.6710-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <78d8984c-211a-65c3-ab43-b3c02373ef0a@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180731102009.6710-1-l.stach@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+> -----Original Message-----
+> From: Lucas Stach <l.stach@pengutronix.de>
+> Sent: Tuesday, July 31, 2018 6:20 PM
 
+[...]
 
-2018-08-21 14:37 GMT+09:00 Frank Rowand <frowand.list@gmail.com>:
-> On 08/20/18 19:08, Masahiro Yamada wrote:
->> Hi Frank,
->>
->> 2018-08-21 10:31 GMT+09:00 Frank Rowand <frowand.list@gmail.com>:
->>> On 08/20/18 14:32, Rob Herring wrote:
->>>> On Mon, Aug 20, 2018 at 1:55 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>>>>
->>>>> On 07/03/18 18:59, Masahiro Yamada wrote:
->>>>>> It is tedious to specify extra compiler options for every file.
->>>>>> HOST_EXTRACFLAGS is useful to add options to all files in a
->>>>>> directory.
->>>>>>
->>>>>> -I$(src)/libfdt is needed for all the files in this directory
->>>>>> to include libfdt_env.h etc. from scripts/dtc/libfdt/.
->>>>>>
->>>>>> On the other hand, -I$(src) is used to include check-in headers
->>>>>> from generated C files.  Thus, I added it only to dtc-lexer.lex.o
->>>>>> and dtc-parser.tab.o .
->>>>>>
->>>>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->>>>>> ---
->>>>>>
->>>>>>  scripts/dtc/Makefile | 18 ++++--------------
->>>>>>  1 file changed, 4 insertions(+), 14 deletions(-)
->>>>>>
->>>>>> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
->>>>>> index 9cac65b..1c943e0 100644
->>>>>> --- a/scripts/dtc/Makefile
->>>>>> +++ b/scripts/dtc/Makefile
->>>>>> @@ -9,21 +9,11 @@ dtc-objs    := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
->>>>>>  dtc-objs     += dtc-lexer.lex.o dtc-parser.tab.o
->>>>>>
->>>>>>  # Source files need to get at the userspace version of libfdt_env.h to compile
->>>>>> +HOST_EXTRACFLAGS := -I$(src)/libfdt
->>>>>
->>>>> Shouldn't that be += instead of :=?
->>>>
->>>> I don't think so. The definition is local to the file (and reset
->>>> before each makefile is included).
->>>>
->>>> Rob
->>>>
->>>
->>> Every other place where HOST_EXTRACFLAGS is assigned a value, += is used
->>> instead of :=, including the example in Documentation/kbuild/makefiles.txt
->>>
->>> What makes scripts/dtc/Makefile different than the other makefiles?
->>>
->>> -Frank
->>>
->>
->>
->> := and += work in the same way in here.
->
-> Unless I do: HOST_EXTRACFLAGS=xxx make
-> where "xxx" is some random flag I feel like adding in a particular build.
+> 
+> The exclusive gates may be set up in the wrong way by software running
+> before the clock driver comes up. In that case the exclusive setup is locked in
+> its initial state, as the complementary function can't be activated without
+> disabling the initial setup first.
+> 
+> To avoid this lock situation, reset the exclusive gates to the off state and
+> allow the kernel to provide the proper setup.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 
+Reviewed-by: Dong Aisheng <Aisheng.dong@nxp.com>
 
+BTW, I'm just a bit curious what software may do a wrong setting before?
 
-This is not the intended usage of HOST_EXTRACFLAGS.
+Regards
+Dong Aisheng
 
-HOST_EXTRACFLAGS is supposed to be set by Makefile in the kernel tree.
-
-
-Documentation/kbuild/makefiles.txt explains this:
-
-       To set flags that will take effect for all host programs created
-       in that Makefile, use the variable HOST_EXTRACFLAGS.
-
-
-
-If you want to pass additional host compiler flags,
-please use HOSTCFLAGS instead.
-
-
-Documentation/kbuild/kbuild.txt lists officially supported
-environment variables / command line variables.
-
-    HOSTCFLAGS
-    --------------------------------------------------
-    Additional flags to be passed to $(HOSTCC) when building host programs.
-
-
-
-
-Maybe I should add
-
-HOST_EXTRACFLAGS   :=
-HOST_EXTRACXXFLAGS :=
-
-to the top of scripts/Makefile.build
-to reset the variables explicitly
-in case people try to abuse them.
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> ---
+>  drivers/clk/imx/clk-imx6q.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c index
+> b9ea7037e193..9059a369ae95 100644
+> --- a/drivers/clk/imx/clk-imx6q.c
+> +++ b/drivers/clk/imx/clk-imx6q.c
+> @@ -515,8 +515,12 @@ static void __init imx6q_clocks_init(struct
+> device_node *ccm_node)
+>  	 * lvds1_gate and lvds2_gate are pseudo-gates.  Both can be
+>  	 * independently configured as clock inputs or outputs.  We treat
+>  	 * the "output_enable" bit as a gate, even though it's really just
+> -	 * enabling clock output.
+> +	 * enabling clock output. Initially the gate bits are cleared, as
+> +	 * otherwise the exclusive configuration gets locked in the setup
+> done
+> +	 * by software running before the clock driver, with no way to change
+> +	 * it.
+>  	 */
+> +	writel(readl(base + 0x160) & ~0x3c00, base + 0x160);
+>  	clk[IMX6QDL_CLK_LVDS1_GATE] =
+> imx_clk_gate_exclusive("lvds1_gate", "lvds1_sel", base + 0x160, 10, BIT(12));
+>  	clk[IMX6QDL_CLK_LVDS2_GATE] =
+> imx_clk_gate_exclusive("lvds2_gate", "lvds2_sel", base + 0x160, 11, BIT(13));
+> 
+> --
+> 2.18.0
