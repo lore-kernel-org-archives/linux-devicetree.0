@@ -1,193 +1,203 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v4 1/4] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Tue, 21 Aug 2018 15:06:38 +0200
-Message-ID: <20180821130638.GC30528@nazgul.tnic>
-References: <1533374735-16662-1-git-send-email-manish.narani@xilinx.com>
- <1533374735-16662-2-git-send-email-manish.narani@xilinx.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v4 3/4] venus: firmware: add no TZ boot and shutdown
+ routine
+Date: Tue, 21 Aug 2018 16:07:51 +0300
+Message-ID: <a8df5189-fe17-0437-6706-f689efd2655e@linaro.org>
+References: <1533562085-8773-1-git-send-email-vgarodia@codeaurora.org>
+ <1533562085-8773-4-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1533374735-16662-2-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <1533562085-8773-4-git-send-email-vgarodia@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, mdf@kernel.org, edgar.iglesias@xilinx.com, shubhrajyoti.datta@xilinx.com, naga.sureshkumar.relli@xilinx.com, bharat.kumar.gogada@xilinx.com, stefan.krsmanovic@aggios.com, sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+To: Vikash Garodia <vgarodia@codeaurora.org>, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 04, 2018 at 02:55:32PM +0530, Manish Narani wrote:
-> Add platform specific structures, so that we can add different IP
-> support later using quirks.
+Hi Vikash,
+
+On 08/06/2018 04:28 PM, Vikash Garodia wrote:
+> Video hardware is mainly comprised of vcodec subsystem and video
+> control subsystem. Video control has ARM9 which executes the video
+> firmware instructions whereas vcodec does the video frame processing.
+> This change adds support to load the video firmware and bring ARM9
+> out of reset for platforms which does not have trustzone.
 > 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
 > ---
->  drivers/edac/synopsys_edac.c | 83 ++++++++++++++++++++++++++++++++++----------
->  1 file changed, 65 insertions(+), 18 deletions(-)
+>  drivers/media/platform/qcom/venus/core.c         |  6 +-
+>  drivers/media/platform/qcom/venus/core.h         |  6 ++
+>  drivers/media/platform/qcom/venus/firmware.c     | 91 +++++++++++++++++++++++-
+>  drivers/media/platform/qcom/venus/firmware.h     |  2 +-
+>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  1 +
+>  5 files changed, 99 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-> index 0c9c59e..b3c54e7 100644
-> --- a/drivers/edac/synopsys_edac.c
-> +++ b/drivers/edac/synopsys_edac.c
-> @@ -22,6 +22,7 @@
->  #include <linux/edac.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of.h>
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 75b9785..393994e 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -76,7 +76,7 @@ static void venus_sys_error_handler(struct work_struct *work)
+>  	hfi_core_deinit(core, true);
+>  	hfi_destroy(core);
+>  	mutex_lock(&core->lock);
+> -	venus_shutdown(core->dev);
+> +	venus_shutdown(core);
 >  
->  #include "edac_module.h"
+>  	pm_runtime_put_sync(core->dev);
 >  
-> @@ -130,6 +131,7 @@ struct synps_ecc_status {
->   * @baseaddr:	Base address of the DDR controller
->   * @message:	Buffer for framing the event specific info
->   * @stat:	ECC status information
-> + * @p_data:	Pointer to platform data
->   * @ce_cnt:	Correctable Error count
->   * @ue_cnt:	Uncorrectable Error count
->   */
-> @@ -137,24 +139,47 @@ struct synps_edac_priv {
->  	void __iomem *baseaddr;
->  	char message[SYNPS_EDAC_MSG_SIZE];
->  	struct synps_ecc_status stat;
-> +	const struct synps_platform_data *p_data;
->  	u32 ce_cnt;
->  	u32 ue_cnt;
+> @@ -323,7 +323,7 @@ static int venus_probe(struct platform_device *pdev)
+>  err_core_deinit:
+>  	hfi_core_deinit(core, false);
+>  err_venus_shutdown:
+> -	venus_shutdown(dev);
+> +	venus_shutdown(core);
+>  err_runtime_disable:
+>  	pm_runtime_set_suspended(dev);
+>  	pm_runtime_disable(dev);
+> @@ -344,7 +344,7 @@ static int venus_remove(struct platform_device *pdev)
+>  	WARN_ON(ret);
+>  
+>  	hfi_destroy(core);
+> -	venus_shutdown(dev);
+> +	venus_shutdown(core);
+>  	of_platform_depopulate(dev);
+>  
+>  	pm_runtime_put_sync(dev);
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index eb5ee66..8c64177 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -81,6 +81,11 @@ struct venus_caps {
+>  	bool valid;	/* used only for Venus v1xx */
 >  };
 >  
->  /**
-> + * struct synps_platform_data -  synps platform data structure
-> + * @edac_geterror_info:	function pointer to synps edac error info
-> + * @edac_get_mtype:	function pointer to synps edac mtype
-> + * @edac_get_dtype:	function pointer to synps edac dtype
-> + * @edac_get_eccstate:	function pointer to synps edac eccstate
-> + * @quirks:		to differentiate IPs
-> + */
-> +struct synps_platform_data {
-> +	int (*edac_geterror_info)(struct synps_edac_priv *priv);
-> +	enum mem_type (*edac_get_mtype)(const void __iomem *base);
-> +	enum dev_type (*edac_get_dtype)(const void __iomem *base);
-> +	bool (*edac_get_eccstate)(void __iomem *base);
-> +	int quirks;
+> +struct video_firmware {
+> +	struct device *dev;
+> +	struct iommu_domain *iommu_domain;
 > +};
 > +
-> +/**
->   * synps_edac_geterror_info - Get the current ecc error info
-> - * @base:	Pointer to the base address of the ddr memory controller
-> - * @p:		Pointer to the synopsys ecc status structure
-> + * @priv:	Pointer to DDR memory controller private instance data
+>  /**
+>   * struct venus_core - holds core parameters valid for all instances
 >   *
->   * Determines there is any ecc error or not
+> @@ -129,6 +134,7 @@ struct venus_core {
+>  	struct device *dev;
+>  	struct device *dev_dec;
+>  	struct device *dev_enc;
+> +	struct video_firmware fw;
+>  	bool no_tz;
+>  	struct mutex lock;
+>  	struct list_head instances;
+> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+> index 4577043..30130d4 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.c
+> +++ b/drivers/media/platform/qcom/venus/firmware.c
+> @@ -12,8 +12,10 @@
 >   *
->   * Return: one if there is no error otherwise returns zero
 >   */
-> -static int synps_edac_geterror_info(void __iomem *base,
-> -				    struct synps_ecc_status *p)
-> +static int synps_edac_geterror_info(struct synps_edac_priv *priv)
->  {
-> +	void __iomem *base;
-> +	struct synps_ecc_status *p;
->  	u32 regval, clearval = 0;
 >  
-> +	if (!priv)
-> +		return 1;
-> +
-> +	base = priv->baseaddr;
-> +	p = &priv->stat;
-> +
->  	regval = readl(base + STAT_OFST);
->  	if (!regval)
->  		return 1;
-> @@ -240,9 +265,10 @@ static void synps_edac_handle_error(struct mem_ctl_info *mci,
->  static void synps_edac_check(struct mem_ctl_info *mci)
->  {
->  	struct synps_edac_priv *priv = mci->pvt_info;
-> +	const struct synps_platform_data *p_data = priv->p_data;
->  	int status;
->  
-> -	status = synps_edac_geterror_info(priv->baseaddr, &priv->stat);
-> +	status = p_data->edac_geterror_info(priv);
->  	if (status)
->  		return;
->  
-> @@ -362,6 +388,7 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
->  	struct csrow_info *csi;
->  	struct dimm_info *dimm;
->  	struct synps_edac_priv *priv = mci->pvt_info;
-> +	const struct synps_platform_data *p_data = priv->p_data;
->  	u32 size;
->  	int row, j;
->  
-> @@ -370,12 +397,13 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
->  		size = synps_edac_get_memsize();
->  
->  		for (j = 0; j < csi->nr_channels; j++) {
-> -			dimm            = csi->channels[j]->dimm;
-> +			dimm = csi->channels[j]->dimm;
->  			dimm->edac_mode = EDAC_FLAG_SECDED;
-> -			dimm->mtype     = synps_edac_get_mtype(priv->baseaddr);
-> -			dimm->nr_pages  = (size >> PAGE_SHIFT) / csi->nr_channels;
-> -			dimm->grain     = SYNPS_EDAC_ERR_GRAIN;
-> -			dimm->dtype     = synps_edac_get_dtype(priv->baseaddr);
-> +			dimm->mtype = p_data->edac_get_mtype(priv->baseaddr);
-> +			dimm->nr_pages = (size >> PAGE_SHIFT) /
-> +						csi->nr_channels;
+> +#include <linux/platform_device.h>
 
-Why do you have to break that line? Just let it stick out.
+please keep includes alphabetically ordered.
 
-And why can't you keep the nice vertical alignment on the '=' signs for
-better readability?
+>  #include <linux/device.h>
+>  #include <linux/firmware.h>
+> +#include <linux/iommu.h>
 
-> +			dimm->grain = SYNPS_EDAC_ERR_GRAIN;
-> +			dimm->dtype = p_data->edac_get_dtype(priv->baseaddr);
->  		}
->  	}
->  
-> @@ -423,6 +451,21 @@ static int synps_edac_mc_init(struct mem_ctl_info *mci,
->  	return status;
+and here too
+
+>  #include <linux/kernel.h>
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+> @@ -118,6 +120,76 @@ static int venus_load_fw(struct venus_core *core, const char *fwname,
+>  	return ret;
 >  }
 >  
-> +static const struct synps_platform_data zynq_edac_def = {
-> +	.edac_geterror_info	= synps_edac_geterror_info,
-> +	.edac_get_mtype		= synps_edac_get_mtype,
-> +	.edac_get_dtype		= synps_edac_get_dtype,
-> +	.edac_get_eccstate	= synps_edac_get_eccstate,
-> +	.quirks			= 0,
-
-... like you've done here, for example.
-
-> +};
+> +static int venus_boot_no_tz(struct venus_core *core, phys_addr_t mem_phys,
+> +			size_t mem_size)
+> +{
+> +	struct iommu_domain *iommu_dom;
+> +	struct device *dev;
+> +	int ret;
 > +
-> +static const struct of_device_id synps_edac_match[] = {
-> +	{ .compatible = "xlnx,zynq-ddrc-a05", .data = (void *)&zynq_edac_def },
-> +	{ /* end of table */ }
-> +};
+> +	dev = core->fw.dev;
+> +	if (!dev)
+> +		return -EPROBE_DEFER;
 > +
-> +MODULE_DEVICE_TABLE(of, synps_edac_match);
+> +	iommu_dom = iommu_domain_alloc(&platform_bus_type);
+> +	if (!iommu_dom) {
+> +		dev_err(dev, "Failed to allocate iommu domain\n");
+> +		return -ENOMEM;
+> +	}
 > +
->  /**
->   * synps_edac_mc_probe - Check controller and bind driver
->   * @pdev:	Pointer to the platform_device struct
-> @@ -440,13 +483,22 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
->  	int rc;
->  	struct resource *res;
->  	void __iomem *baseaddr;
-> +	const struct of_device_id *match;
-> +	const struct synps_platform_data *p_data;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	baseaddr = devm_ioremap_resource(&pdev->dev, res);
->  	if (IS_ERR(baseaddr))
->  		return PTR_ERR(baseaddr);
->  
-> -	if (!synps_edac_get_eccstate(baseaddr)) {
-> +	match = of_match_node(synps_edac_match, pdev->dev.of_node);
-> +	if (!match && !match->data) {
-> +		dev_err(&pdev->dev, "of_match_node() failed\n");
+> +	ret = iommu_attach_device(iommu_dom, dev);
+> +	if (ret) {
+> +		dev_err(dev, "could not attach device\n");
+> +		goto err_attach;
+> +	}
+> +
+> +	ret = iommu_map(iommu_dom, VENUS_FW_START_ADDR, mem_phys, mem_size,
+> +			IOMMU_READ | IOMMU_WRITE | IOMMU_PRIV);
+> +	if (ret) {
+> +		dev_err(dev, "could not map video firmware region\n");
+> +		goto err_map;
+> +	}
+> +
+> +	core->fw.iommu_domain = iommu_dom;
+> +	venus_reset_cpu(core);
+> +
+> +	return 0;
+> +
+> +err_map:
+> +	iommu_detach_device(iommu_dom, dev);
+> +err_attach:
+> +	iommu_domain_free(iommu_dom);
+> +	return ret;
+> +}
+> +
+> +static int venus_shutdown_no_tz(struct venus_core *core)
+> +{
+> +	struct iommu_domain *iommu;
+> +	size_t unmapped = 0;
 
-That error message is not really helpful.
+no need to initialize unmapped variable.
+
+> +	u32 reg;
+> +	struct device *dev = core->fw.dev;
+
+could you move longer lines at the beginning of the function
+
+> +	void __iomem *reg_base = core->base;
+
+renaming reg_base to base will give you shorter line(s), otherwise I
+think you should use core->base directly
+
+> +
+> +	/* Assert the reset to ARM9 */
+> +	reg = readl_relaxed(reg_base + WRAPPER_A9SS_SW_RESET);
+> +	reg |= WRAPPER_A9SS_SW_RESET_BIT;
+> +	writel_relaxed(reg, reg_base + WRAPPER_A9SS_SW_RESET);
+> +
+> +	/* Make sure reset is asserted before the mapping is removed */
+> +	mb();
+> +
+> +	iommu = core->fw.iommu_domain;
+> +
+> +	unmapped = iommu_unmap(iommu, VENUS_FW_START_ADDR, VENUS_FW_MEM_SIZE);
+> +	if (unmapped != VENUS_FW_MEM_SIZE)
+> +		dev_err(dev, "failed to unmap firmware\n");
+> +
+> +	iommu_detach_device(iommu, dev);
+> +	iommu_domain_free(iommu);
+> +
+
+the function doesn't return error why don't make it to return void? Up
+to you.
+
+> +	return 0;
+> +}
 
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+regards,
+Stan
