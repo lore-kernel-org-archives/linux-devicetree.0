@@ -1,59 +1,47 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 6/8] drm/dsi: add helper function to find the second
- host in a dual-dsi setup
-Date: Tue, 21 Aug 2018 15:56:59 +0200
-Message-ID: <3000898.fNWOa9lLO7@phil>
-References: <20180814102654.29113-1-heiko@sntech.de>
- <20180814102654.29113-7-heiko@sntech.de>
- <20180820113726eucas1p229037428a6ac9cee0bd85b6a46074a94~MlK2T-2GX2929829298eucas1p29@eucas1p2.samsung.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 3/3] usb: typec: fusb302: Populate tcpc fwnode for TCPM
+ property handling
+Date: Tue, 21 Aug 2018 07:03:38 -0700
+Message-ID: <20180821140338.GE17160@roeck-us.net>
+References: <cover.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
+ <5ab35968fea28abb54326423523af38dd887ddcc.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180820113726eucas1p229037428a6ac9cee0bd85b6a46074a94~MlK2T-2GX2929829298eucas1p29@eucas1p2.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, seanpaul@chromium.org, mka@chromium.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5ab35968fea28abb54326423523af38dd887ddcc.1534853047.git.Adam.Thomson.Opensource@diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, Li Jun <jun.li@nxp.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcnplaiwKCkFtIE1vbnRhZywgMjAuIEF1Z3VzdCAyMDE4LCAxMzozNzoyNCBDRVNUIHNj
-aHJpZWIgQW5kcnplaiBIYWpkYToKPiBPbiAxNC4wOC4yMDE4IDEyOjI2LCBIZWlrbyBTdHVlYm5l
-ciB3cm90ZToKPiA+ID5Gcm9tIGEgc3BlY2lmaWVkIG91dHB1dCBwb3J0IG9mIG9uZSBkc2kgY29u
-dHJvbGxlciB0aGlzIGZ1bmN0aW9uIGFsbG93cyB0bwo+ID4gaXRlcmF0ZSBvdmVyIHRoZSBsaXN0
-IG9mIHJlZ2lzdGVyZWQgZHNpIGNvbnRyb2xsZXJzIHRyeWluZyB0byBmaW5kIGEgc2Vjb25kCj4g
-PiBpbnN0YW5jZSBjb25uZWN0ZWQgdG8gdGhlIHNhbWUgZGlzcGxheSwgbGlrZSBpdCBpcyB1c2Vk
-IGluIGR1YWwtZHNpIHNldHVwcy4KPiAKPiBBcyBJIHNhaWQgZWFybGllciBpdCBsb29rcyBmb3Ig
-bWUgaW5jb3JyZWN0bHkuIFlvdSBjcmVhdGUgaGVscGVyIHRvCj4gYWNjZXNzL2NvbnRyb2wgb25l
-IERTSSBjb250cm9sbGVyIGZyb20gYW5vdGhlciBidXQgdGhlcmUgaXMgbm8gcG9pbnQgaW4KPiBk
-b2luZyBpdC4gSWYgQ1JUQyBpcyBhYmxlIHRvIHNlbmQgdmlkZW8gc3RyZWFtIHZpYSB0d28gbGlu
-a3MgaXQgc2hvdWxkCj4gYmUgQ1JUQydzIHJlc3BvbnNpYmlsaXR5IHRvIHNldHVwIGFuZCB1c2Ug
-RFNJIGNvbnRyb2xsZXJzIGF0dGFjaGVkIHRvCj4gdGhlc2UgbGlua3MuIElmIHRoZSBwYW5lbCBp
-cyBhYmxlIHRvIGNvbWJpbmUgc3RyZWFtIGZyb20gdHdvIERTSSBsaW5rcwo+IGludG8gb25lIGlt
-YWdlIGl0IHNob3VsZCBiZSBwYW5lbCdzIHJlc3BvbnNpYmlsaXR5IHRvIGluZm9ybSBEU0kKPiBj
-b250cm9sbGVycyBhYm91dCBlYWNoIGxpbmsncyBjb25maWd1cmF0aW9uLgo+IAo+IE1vcmVvdmVy
-IGZyb20gdXNhZ2Ugb2YgdGhpcyBoZWxwZXIgKHBhdGNoIDgvOCkgaXQgbG9va3MgbGlrZSB5b3UK
-PiBhc3N1bWVzLCB0aGF0IHNlY29uZCBob3N0IG11c3QgYmUgYWxzbyBzeW5vcHN5cywgdGhpcyBp
-cyBub3QKPiB0cnVlL2dlbmVyaWMgYXQgYWxsLgo+IAo+IEkga25vdyB0aGVyZSBjb3VsZCBiZSBt
-YW55IG9ic3RhY2xlcyBpbiBhbHRlcm5hdGl2ZSBhcHByb2FjaCwgc28geW91Cj4gcmVhbGx5IGlu
-c2lzdCBvbiB0aGlzIGhhY2ssIHBsZWFzZSB1c2UgaXQgaW5zaWRlIHRoZSBkcml2ZXIsIHlvdSBj
-YW4gdXNlCj4gZm9yIGV4YW1wbGUgZHJpdmVyX2Zvcl9lYWNoX2RldmljZS9kcml2ZXJfZmluZF9k
-ZXZpY2UgdG8gZmluZCAybmQgRFNJIGhvc3QuCgpPaywgSSdsbCBtb3ZlIHRoYXQgaW5zaWRlIHRo
-ZSByb2NrY2hpcC1kcml2ZXIuCgpNeSByYXRpb25hbGUgc3RpbGwgaXMgdGhhdCBib3RoIG1zbSAo
-d2l0aCBhIENvbW1pdHRlci1TaWduZWQtb2ZmIGJ5IFJvYgpDbGFyaykgYW5kIFRlZ3JhIChjb2Rl
-IGZyb20gVGhpZXJyeSksIGRvIGZvbGxvdyB0aGUgZXhwZWN0YXRpb24gb2YgdHdvCmNvbnRyb2xs
-ZXJzIG9mIHRoZSBzYW1lIHR5cGUpIC4uLiBwZW9wbGUgZG9pbmcgZ3JhcGhpY3Mgc3R1ZmYgd2F5
-IGxvbmdlcgp0aGFuIG1lLiBTbyBJJ2QgbGlrZSB0byBiZWxpZXZlIHRoZSB2YWxpZCBpc3N1ZSB5
-b3UgYXJlIHJhaXNpbmcgd2lsbCBoYXZlCmJlZW4gZGlzY3Vzc2VkIGF0IGxlYXN0IHR3byB0aW1l
-cyBhbHJlYWR5IDstKSAuCgpTbyBJIHJlYWxseSBwcmVmZXIgbm90IHRvIG9wZW4gdGhhdCBjYW4g
-b2Ygd29ybXMgbXlzZWxmIGlmIEkgZG9uJ3QgaGF2ZQp0byA7LSkgLgoKCkhlaWtvCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Aug 21, 2018 at 01:28:23PM +0100, Adam Thomson wrote:
+> This update populates the tcpc handle's fwnode pointer with the
+> child usb-connector node, if it exists, so that TCPM can perform
+> generic property handling to define the ports capabilities.
+> 
+> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/usb/typec/fusb302/fusb302.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
+> index 82bed98..1b464c9 100644
+> --- a/drivers/usb/typec/fusb302/fusb302.c
+> +++ b/drivers/usb/typec/fusb302/fusb302.c
+> @@ -1736,6 +1736,9 @@ static int fusb302_probe(struct i2c_client *client,
+>  	chip->tcpc_dev.config = &chip->tcpc_config;
+>  	mutex_init(&chip->lock);
+>  
+> +	chip->tcpc_dev.fwnode =
+> +		device_get_named_child_node(dev, "connector");
+> +
+>  	if (!device_property_read_u32(dev, "fcs,operating-sink-microwatt", &v))
+>  		chip->tcpc_config.operating_snk_mw = v / 1000;
+>  
+> -- 
+> 1.9.1
+> 
