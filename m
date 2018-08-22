@@ -1,81 +1,70 @@
-From: Punit Agrawal <punit.agrawal@arm.com>
-Subject: Re: [PATCH] dt-binding: arm/cpus.txt: fix dynamic-power-coefficient unit
-Date: Wed, 22 Aug 2018 11:11:22 +0100
-Message-ID: <87ftz6ww1h.fsf@e105922-lin.cambridge.arm.com>
-References: <1534869685-22221-1-git-send-email-vincent.guittot@linaro.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: can: rcar_can: Add r8a774a1 support
+Date: Wed, 22 Aug 2018 12:48:56 +0200
+Message-ID: <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
+References: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534869685-22221-1-git-send-email-vincent.guittot@linaro.org>
-        (Vincent Guittot's message of "Tue, 21 Aug 2018 18:41:25 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, edubezval@gmail.com, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
+On Fri, Aug 17, 2018 at 03:38:23PM +0100, Fabrizio Castro wrote:
+> Document RZ/G2M (r8a774a1) SoC bindings.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-Thanks for the patch. One comment about the choice of units below.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Vincent Guittot <vincent.guittot@linaro.org> writes:
-
-> The unit of dynamic-power-coefficient is described as mW/MHz/uV^2 whereas
-> its usage in the code assumes that unit is mW/GHz/V^2
-
-Instead of choosing GHz as the base, I'd prefer to use uW/MHz/V^2. It'll
-avoid introducing fractional GHz value for frequency calculations.
-
-> In drivers/thermal/cpu_cooling.c, the code is :
->
-> power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
-> do_div(power, 1000000000);
->
-> which can be summarized as :
-> power (mW) = capacitance * freq_mhz/1000 * (voltage_mv/1000)^2
-
-Which would then translate to -
-
-power (mW) = power (uW) / 1000 = capacitance * freq_mhz * (voltage_mv/1000)^2
-
-Thanks,
-Punit
-
->
-> Furthermore, if we test basic values like :
-> voltage_mv = 1000mV = 1V
-> freq_mhz = 1000Mhz = 1Ghz
->
-> The minimum possible power, when dynamic-power-coefficient equals 1, will
-> be :
-> min power = 1 * 1000  * (1000000)^2 = 10^15 mW
-> which is not realistic
->
-> With the unit used by the code, the min power is
-> min power =  1 * 1 * 1^2 = 1mW which is far more realistic
->
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 29e1dc5..0148d7d 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -274,7 +274,7 @@ described below.
->  		Usage: optional
->  		Value type: <prop-encoded-array>
->  		Definition: A u32 value that represents the running time dynamic
-> -			    power coefficient in units of mW/MHz/uV^2. The
-> +			    power coefficient in units of mW/GHz/V^2. The
->  			    coefficient can either be calculated from power
->  			    measurements or derived by analysis.
+> This patch applies on top of next-20180817
+> 
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> index 94a7f33..84afc78 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> @@ -4,6 +4,7 @@ Renesas R-Car CAN controller Device Tree Bindings
+>  Required properties:
+>  - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A7743 SoC.
+>  	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
+> +	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 SoC.
+>  	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
+>  	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+>  	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+> @@ -16,7 +17,8 @@ Required properties:
+>  	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
+>  	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+>  	      compatible device.
+> -	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device.
+> +	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 or RZ/G2
+> +	      compatible device.
+>  	      When compatible with the generic version, nodes must list the
+>  	      SoC-specific version corresponding to the platform first
+>  	      followed by the generic version.
+> @@ -24,7 +26,9 @@ Required properties:
+>  - reg: physical base address and size of the R-Car CAN register map.
+>  - interrupts: interrupt specifier for the sole interrupt.
+>  - clocks: phandles and clock specifiers for 3 CAN clock inputs.
+> -- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk".
+> +- clock-names: 2 clock input name strings for RZ/G2: "clkp1", "can_clk", and
+
+Minor comment: Personally I would start a new sentence at "and".
+
+Question: Is a driver update required so support 2-clock SoCs?
+
+> +	       3 clock input name strings for every other SoC: "clkp1", "clkp2",
+> +	       "can_clk".
+>  - pinctrl-0: pin control group to be used for this controller.
+>  - pinctrl-names: must be "default".
 >  
-> @@ -285,7 +285,7 @@ described below.
->  
->  			    Pdyn = dynamic-power-coefficient * V^2 * f
->  
-> -			    where voltage is in uV, frequency is in MHz.
-> +			    where voltage is in V, frequency is in GHz.
->  
->  Example 1 (dual-cluster big.LITTLE system 32-bit):
+> -- 
+> 2.7.4
+> 
