@@ -1,134 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: condor/v3hsk: add
- DU/LVDS/HDMI support
-Date: Wed, 22 Aug 2018 22:27:45 +0300
-Message-ID: <47f27732-e276-9808-a580-e31061258fec@cogentembedded.com>
-References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
- <c78f1228-afb0-54cf-5d9e-5c812b678de3@cogentembedded.com>
- <2345061.kvOJ0NRlsT@avalon>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v1 1/7] atmel-hlcdc: renamed directory to drm/atmel/
+Date: Wed, 22 Aug 2018 22:09:42 +0200
+Message-ID: <20180822200942.GA22148@ravnborg.org>
+References: <20180812184152.GA22343@ravnborg.org>
+ <20180812184629.3808-1-sam@ravnborg.org>
+ <20180814083913.GD21634@phenom.ffwll.local>
+ <20180814161952.GA27951@ravnborg.org>
+ <20180816074123.GB21634@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2345061.kvOJ0NRlsT@avalon>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180816074123.GB21634@phenom.ffwll.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 08/13/2018 06:19 PM, Laurent Pinchart wrote:
-
->> Define the Condor/V3HSK board dependent parts of the DU and  LVDS device
->> nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
->> Analog Devices ADV7511W HDMI transmitter...
->>
->> Based on the original (and large) patch by Vladimir Barinov.
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->> Changes in version 2:
->> - added the V3HSK DT update, reworded the description, renamed the patch;
->> - added a space between the HDMI node name and a brace.
->>
->>  arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 ++++++++++++++++++++
->>  arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts  |  120 ++++++++++++++++++++
->>  2 files changed, 226 insertions(+)
-> 
-> I would have split that in two patchees.
-> 
->>
->> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
->> ===================================================================
->> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
->> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-[...]
->> Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
->> ===================================================================
->> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
->> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
->> @@ -27,6 +27,63 @@
->>  		/* first 128MB is reserved for secure area. */
->>  		reg = <0 0x48000000 0 0x78000000>;
->>  	};
->> +
->> +	hdmi-out {
->> +		compatible = "hdmi-connector";
->> +		type = "a";
->> +
->> +		port {
->> +			hdmi_con: endpoint {
->> +				remote-endpoint = <&adv7511_out>;
->> +			};
->> +		};
->> +	};
->> +
->> +	lvds-decoder {
->> +		compatible = "thine,thc63lvd1024";
->> +		vcc-supply = <&vcc3v3_d5>;
->> +
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			port@0 {
->> +				reg = <0>;
->> +				thc63lvd1024_in: endpoint {
->> +					remote-endpoint = <&lvds0_out>;
->> +				};
->> +			};
->> +
->> +			port@2 {
->> +				reg = <2>;
->> +				thc63lvd1024_out: endpoint {
->> +					remote-endpoint = <&adv7511_in>;
->> +				};
->> +			};
->> +		};
->> +	};
->> +
->> +	vcc1v8_d4: regulator-0 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "VCC1V8_D4";
->> +		regulator-min-microvolt = <1800000>;
->> +		regulator-max-microvolt = <1800000>;
->> +		regulator-boot-on;
->> +		regulator-always-on;
->> +	};
->> +
->> +	vcc3v3_d5: regulator-1 {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "VCC3V3_D5";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		regulator-boot-on;
->> +		regulator-always-on;
->> +	};
->> +};
->> +
->> +&du {
->> +	status = "okay";
-> 
-> No dot clock for the DU ?
-
-   You're right, there's OSC1 providing 148.5 MHz. Fixed.
- 
-> Apart from that,
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-  Thanks.
-
-MBR, Sergei
+SGkgRGFuaWVsLgoKPiA+ID4gCj4gPiA+IEknZCBzdHJvbmdseSBzdWdnZXN0IHlvdSBncm91cC1t
+YWludGFpbiB0aGUgZW50aXJlIGF0bWVsIHN0dWZmIGluCj4gPiA+IGRybS1taXNjIGluc3RlYWQg
+b2Ygb25seSBhdG1lbC1obGNkYy4KPiA+IAo+ID4gSWYgT0sgd2l0aCBCb3JpcyB0aGVuIEkgYW0g
+ZmluZSB3aXRoIHRoaXMgdG9vLgo+ID4gV2lsbCBzdWdnZXN0IHNvIGluIHYyLgo+IAo+IEJvcmlz
+IGFja2VkIHRvbywgYnV0IGhlJ3Mgb24gdmFjYXRpb24uIEhlIHNhaWQgb24gaXJjIGhlJ2xsIHJl
+dmlldyB0aGUKPiBwYXRjaGVzIHdoZW4gaGUncyBiYWNrLiBNZWFud2hpbGUgSSBndWVzcyB5b3Ug
+Y2FuIHByZXAgYnkgZ2V0dGluZyB0aGUgZmQubwo+IGFjY291bnQgcmVxdWVzdGVkOgo+IAo+IGh0
+dHBzOi8vd3d3LmZyZWVkZXNrdG9wLm9yZy93aWtpL0FjY291bnRSZXF1ZXN0cy8KPiAKPiBBbmQg
+Y2hlY2tpbmcgb3V0IHRoZSB0b29saW5nIHdlIHVzZSB0byBtYWludGFpbiBkcm0tbWlzYzoKPiAK
+PiBodHRwczovL2RyaS5mcmVlZGVza3RvcC5vcmcvZG9jcy9kaW0vZ2V0dGluZy1zdGFydGVkLmh0
+bWwKCldpdGggZW5vdWdoIG9uIHRoZSBwbGF0ZSBhbHJlYWR5IEkgZGVjaWRlZCB0byBwb3N0cG9u
+ZSB0aGlzCnBhcnQgdW50aWwgdGhlIG1pZ3JhdGlvbiB0byBnaXRsYWIgaXMgZG9uZS4KSnVzdCB0
+byB0ZWxsIHRoaXMgd2FzIG5vdCBpZ25vcmVkLCBvbmx5IHBvc3Rwb25lZC4KCglTYW0KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
