@@ -1,59 +1,291 @@
 From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v6 0/5] Add i.MX8MQ clock driver
-Date: Wed, 22 Aug 2018 16:48:18 +0300
-Message-ID: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v6 2/5] clk: imx: add fractional PLL output clock
+Date: Wed, 22 Aug 2018 16:48:20 +0300
+Message-ID: <1534945703-4730-3-git-send-email-abel.vesa@nxp.com>
+References: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>
 Cc: linux-clk@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Fifth version can be found here:
+From: Lucas Stach <l.stach@pengutronix.de>
 
-https://lkml.org/lkml/2018/8/20/83
+This is a new clock type introduced on i.MX8.
 
-Changes since v5:
- * Fixed the predivider and divider register values as
-   reported by Sascha.
- * Changed the commit message of the 4th patch to match
-   with what the commit is adding
-
-Changes since v4:
- * Implemented divider ops and used clk-composite as suggested
-   by Sascha Hauer.
-
-Changes since v3:
- * Added a composite clock type to get rid of some complexity
-   from clk-imx8mq. This new composite clock type will also be
-   used by all the imx8 socs that will follow.
- * Added back the reviewed-by tag.
-
-Abel Vesa (1):
-  clk: imx: add imx composite clock
-
-Lucas Stach (4):
-  dt-bindings: add binding for i.MX8MQ CCM
-  clk: imx: add fractional PLL output clock
-  clk: imx: add SCCG PLL type
-  clk: imx: add clock driver for i.MX8MQ CCM
-
- .../devicetree/bindings/clock/imx8mq-clock.txt     |  20 +
- drivers/clk/imx/Makefile                           |   6 +-
- drivers/clk/imx/clk-composite.c                    | 157 +++++
- drivers/clk/imx/clk-frac-pll.c                     | 230 ++++++++
- drivers/clk/imx/clk-imx8mq.c                       | 631 +++++++++++++++++++++
- drivers/clk/imx/clk-sccg-pll.c                     | 231 ++++++++
- drivers/clk/imx/clk.h                              |  57 ++
- include/dt-bindings/clock/imx8mq-clock.h           | 410 +++++++++++++
- 8 files changed, 1741 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
- create mode 100644 drivers/clk/imx/clk-composite.c
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ drivers/clk/imx/Makefile       |   1 +
+ drivers/clk/imx/clk-frac-pll.c | 230 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/imx/clk.h          |   3 +
+ 3 files changed, 234 insertions(+)
  create mode 100644 drivers/clk/imx/clk-frac-pll.c
- create mode 100644 drivers/clk/imx/clk-imx8mq.c
- create mode 100644 drivers/clk/imx/clk-sccg-pll.c
- create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
 
+diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+index 8c3baa7..4893c1f 100644
+--- a/drivers/clk/imx/Makefile
++++ b/drivers/clk/imx/Makefile
+@@ -6,6 +6,7 @@ obj-y += \
+ 	clk-cpu.o \
+ 	clk-fixup-div.o \
+ 	clk-fixup-mux.o \
++	clk-frac-pll.o \
+ 	clk-gate-exclusive.o \
+ 	clk-gate2.o \
+ 	clk-pllv1.o \
+diff --git a/drivers/clk/imx/clk-frac-pll.c b/drivers/clk/imx/clk-frac-pll.c
+new file mode 100644
+index 0000000..c80c6ed
+--- /dev/null
++++ b/drivers/clk/imx/clk-frac-pll.c
+@@ -0,0 +1,230 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2018 NXP.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/jiffies.h>
++#include <linux/slab.h>
++
++#include "clk.h"
++
++#define PLL_CFG0		0x0
++#define PLL_CFG1		0x4
++
++#define PLL_LOCK_STATUS		BIT(31)
++#define PLL_PD			19
++#define PLL_PD_MASK		BIT(PLL_PD)
++#define PLL_BYPASS		14
++#define PLL_BYPASS_MASK		BIT(PLL_BYPASS)
++#define PLL_NEWDIV_VAL		BIT(12)
++#define PLL_NEWDIV_ACK		BIT(11)
++#define PLL_FRAC_DIV_MASK	0xffffff
++#define PLL_INT_DIV_MASK	0x7f
++#define PLL_OUTPUT_DIV_MASK	0x1f
++#define PLL_FRAC_DENOM		0x1000000
++
++struct clk_frac_pll {
++	struct clk_hw	hw;
++	void __iomem	*base;
++};
++
++#define to_clk_frac_pll(_hw) container_of(_hw, struct clk_frac_pll, hw)
++
++static int clk_wait_lock(struct clk_frac_pll *pll)
++{
++	unsigned long timeout = jiffies + msecs_to_jiffies(10);
++	u32 val;
++
++	/* Wait for PLL to lock */
++	do {
++		if (readl_relaxed(pll->base) & PLL_LOCK_STATUS)
++			break;
++		if (time_after(jiffies, timeout))
++			break;
++	} while (1);
++
++	return readl_poll_timeout(pll->base, val,
++					val & PLL_LOCK_STATUS, 0, 1000);
++}
++
++static int clk_wait_ack(struct clk_frac_pll *pll)
++{
++	unsigned long timeout = jiffies + msecs_to_jiffies(50);
++	u32 val;
++
++	/* return directly if the pll is in powerdown or in bypass */
++	if (readl_relaxed(pll->base) & (PLL_PD_MASK | PLL_BYPASS_MASK))
++		return 0;
++
++	/* Wait for the pll's divfi and divff to be reloaded */
++	do {
++		if (readl_relaxed(pll->base) & PLL_NEWDIV_ACK)
++			break;
++		if (time_after(jiffies, timeout))
++			break;
++	} while (1);
++
++	return readl_poll_timeout(pll->base, val,
++					val & PLL_NEWDIV_ACK, 0, 1000);
++}
++
++static int clk_pll_prepare(struct clk_hw *hw)
++{
++	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
++	u32 val;
++
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	val &= ~PLL_PD_MASK;
++	writel_relaxed(val, pll->base + PLL_CFG0);
++
++	return clk_wait_lock(pll);
++}
++
++static void clk_pll_unprepare(struct clk_hw *hw)
++{
++	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
++	u32 val;
++
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	val |= PLL_PD_MASK;
++	writel_relaxed(val, pll->base + PLL_CFG0);
++}
++
++static int clk_pll_is_prepared(struct clk_hw *hw)
++{
++	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
++	u32 val;
++
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	return (val & PLL_PD_MASK) ? 0 : 1;
++}
++
++static unsigned long clk_pll_recalc_rate(struct clk_hw *hw,
++					 unsigned long parent_rate)
++{
++	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
++	u32 val, divff, divfi, divq;
++	u64 temp64;
++
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	divq = ((val & PLL_OUTPUT_DIV_MASK) + 1) * 2;
++	val = readl_relaxed(pll->base + PLL_CFG1);
++	divff = (val >> 7) & PLL_FRAC_DIV_MASK;
++	divfi = (val & PLL_INT_DIV_MASK);
++
++	temp64 = (u64)parent_rate * 8;
++	temp64 *= divff;
++	do_div(temp64, PLL_FRAC_DENOM);
++	temp64 /= divq;
++
++	return parent_rate * 8 * (divfi + 1) / divq + (unsigned long)temp64;
++}
++
++static long clk_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++			       unsigned long *prate)
++{
++	unsigned long parent_rate = *prate;
++	u32 divff, divfi;
++	u64 temp64;
++
++	parent_rate *= 8;
++	rate *= 2;
++	divfi = rate / parent_rate;
++	temp64 = (u64)(rate - divfi * parent_rate);
++	temp64 *= PLL_FRAC_DENOM;
++	do_div(temp64, parent_rate);
++	divff = temp64;
++
++	temp64 = (u64)parent_rate;
++	temp64 *= divff;
++	do_div(temp64, PLL_FRAC_DENOM);
++
++	return (parent_rate * divfi + (unsigned long)temp64) / 2;
++}
++
++/*
++ * To simplify the clock calculation, we can keep the 'PLL_OUTPUT_VAL' at zero
++ * (means the PLL output will be divided by 2). So the PLL output can use
++ * the below formula:
++ * pllout = parent_rate * 8 / 2 * DIVF_VAL;
++ * where DIVF_VAL = 1 + DIVFI + DIVFF / 2^24.
++ */
++static int clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++			    unsigned long parent_rate)
++{
++	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
++	u32 val, divfi, divff;
++	u64 temp64;
++	int ret;
++
++	parent_rate *= 8;
++	rate *= 2;
++	divfi = rate / parent_rate;
++	temp64 = (u64) (rate - divfi * parent_rate);
++	temp64 *= PLL_FRAC_DENOM;
++	do_div(temp64, parent_rate);
++	divff = temp64;
++
++	val = readl_relaxed(pll->base + PLL_CFG1);
++	val &= ~((PLL_FRAC_DIV_MASK << 7) | (PLL_INT_DIV_MASK));
++	val |= ((divff << 7) | (divfi - 1));
++	writel_relaxed(val, pll->base + PLL_CFG1);
++
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	val &= ~0x1f;
++	writel_relaxed(val, pll->base + PLL_CFG0);
++
++	/* Set the NEV_DIV_VAL to reload the DIVFI and DIVFF */
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	val |= PLL_NEWDIV_VAL;
++	writel_relaxed(val, pll->base + PLL_CFG0);
++
++	ret = clk_wait_ack(pll);
++
++	/* clear the NEV_DIV_VAL */
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	val &= ~PLL_NEWDIV_VAL;
++	writel_relaxed(val, pll->base + PLL_CFG0);
++
++	return ret;
++}
++
++static const struct clk_ops clk_frac_pll_ops = {
++	.prepare	= clk_pll_prepare,
++	.unprepare	= clk_pll_unprepare,
++	.is_prepared	= clk_pll_is_prepared,
++	.recalc_rate	= clk_pll_recalc_rate,
++	.round_rate	= clk_pll_round_rate,
++	.set_rate	= clk_pll_set_rate,
++};
++
++struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
++			     void __iomem *base)
++{
++	struct clk_init_data init;
++	struct clk_frac_pll *pll;
++	struct clk *clk;
++
++	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
++	if (!pll)
++		return ERR_PTR(-ENOMEM);
++
++	pll->base = base;
++	init.name = name;
++	init.ops = &clk_frac_pll_ops;
++	init.flags = 0;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++
++	pll->hw.init = &init;
++
++	clk = clk_register(NULL, &pll->hw);
++	if (IS_ERR(clk))
++		kfree(pll);
++
++	return clk;
++}
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index 8076ec0..13daf1c 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -27,6 +27,9 @@ struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const char *name,
+ struct clk *imx_clk_pllv2(const char *name, const char *parent,
+ 		void __iomem *base);
+ 
++struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
++			     void __iomem *base);
++
+ enum imx_pllv3_type {
+ 	IMX_PLLV3_GENERIC,
+ 	IMX_PLLV3_SYS,
 -- 
 2.7.4
