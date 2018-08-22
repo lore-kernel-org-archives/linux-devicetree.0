@@ -1,47 +1,107 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 0/9] of: fix compatible-child-node lookups
-Date: Wed, 22 Aug 2018 16:46:55 +0200
-Message-ID: <20180822144655.GO14967@localhost>
-References: <20180822105547.9634-1-johan@kernel.org>
- <CABGGisx6CDoDqxTo=q=jKBAb19Xx38N6pR=XrwzBHuSDtp_Wcw@mail.gmail.com>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH] dt-bindings: can: rcar_can: Add r8a774a1 support
+Date: Wed, 22 Aug 2018 15:12:26 +0000
+Message-ID: <TYAPR01MB2285834E95AB0D0D3E2C5B72B7300@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+References: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABGGisx6CDoDqxTo=q=jKBAb19Xx38N6pR=XrwzBHuSDtp_Wcw@mail.gmail.com>
+In-Reply-To: <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Johan <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ck.hu@mediatek.com, p.zabel@pengutronix.de, Rob Clark <robdclark@gmail.com>, airlied@linux.ie, Ulf Hansson <ulf.hansson@linaro.org>, rainyfeeling@outlook.com, boris.brezillon@bootlin.com, opendmb@gmail.com, Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, sameo@linux.intel.com, sre@kernel.org
+To: Simon Horman <horms@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 22, 2018 at 09:32:11AM -0500, Rob Herring wrote:
-> On Wed, Aug 22, 2018 at 5:57 AM Johan Hovold <johan@kernel.org> wrote:
+Hello Simon,
+
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 22 August 2018 11:49
+>=20
+> On Fri, Aug 17, 2018 at 03:38:23PM +0100, Fabrizio Castro wrote:
+> > Document RZ/G2M (r8a774a1) SoC bindings.
 > >
-> > Several drivers currently use of_find_compatible_node() to lookup child
-> > nodes while failing to notice that the of_find_ functions search the
-> > entire tree depth-first and therefore can match unrelated (non-child)
-> > nodes.
-> 
-> That is not quite right. It searches all nodes following 'from', so
-> not the entire tree unless 'from' is NULL. The purpose of 'from' is to
-> iterate to find all compatible nodes. But you are correct that anyone
-> calling of_find_compatible_node directly with from != NULL is wrong.
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+>=20
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Yeah, sorry, I guess I could have been more specific. I just find
-qualifying "searching the entire tree" with "starting from the node
-specified in the first argument" to be too cumbersome to write. And it's
-sort of implicit as the functions *are* iterators meant for searching
-the entire tree (passing NULL as the first argument the first time).
+Thank you.
 
-> > This is related to the fixes I posted about a year ago, which addressed
-> > a similar anti-pattern when looking up child nodes by name. Since it
-> > took me more than a year to get all those fixes into Linus' tree (one
-> > fix is still pending), and as these fixes depend on the new helper, I'm
-> > suggesting that these all go in through Rob's or Greg's trees.
-> 
-> I'm happy to take them or apply the dependency now and then anything
-> not picked up by sub-maintainers for 4.20.
+>=20
+> > ---
+> > This patch applies on top of next-20180817
+> >
+> >  Documentation/devicetree/bindings/net/can/rcar_can.txt | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > index 94a7f33..84afc78 100644
+> > --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > @@ -4,6 +4,7 @@ Renesas R-Car CAN controller Device Tree Bindings
+> > Required properties:
+> >  - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A=
+7743
+> SoC.
+> >  	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 So=
+C.
+> > +	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 =
+SoC.
+> >  	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 So=
+C.
+> >  	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 So=
+C.
+> >  	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 So=
+C.
+> > @@ -16,7 +17,8 @@ Required properties:
+> >  	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible dev=
+ice.
+> >  	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+> >  	      compatible device.
+> > -	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible dev=
+ice.
+> > +	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 or RZ/G2
+> > +	      compatible device.
+> >  	      When compatible with the generic version, nodes must list the
+> >  	      SoC-specific version corresponding to the platform first
+> >  	      followed by the generic version.
+> > @@ -24,7 +26,9 @@ Required properties:
+> >  - reg: physical base address and size of the R-Car CAN register map.
+> >  - interrupts: interrupt specifier for the sole interrupt.
+> >  - clocks: phandles and clock specifiers for 3 CAN clock inputs.
+> > -- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk"=
+.
+> > +- clock-names: 2 clock input name strings for RZ/G2: "clkp1",
+> > +"can_clk", and
+>=20
+> Minor comment: Personally I would start a new sentence at "and".
+>=20
+> Question: Is a driver update required so support 2-clock SoCs?
 
-Thanks, let's see if what the others prefer.
+The driver will work okay as-is.
 
-Johan
+In theory CAN could be broken if renesas,can-clock-select is set to 0x1 (cl=
+kp2) in the DT, as this value will be written to the CAN Clock Select Regis=
+ter. However if the documentation is followed there will be no problems.
+
+We should probably update the driver to fix this though, which will be a ch=
+ange specific to all RZ/G2 devices, so perhaps we should also be adding a "=
+renesas,rzg-gen2-can" family compatible string as well? (to driver and docu=
+mentation)
+
+Kind regards, Chris
+
+>=20
+> > +	       3 clock input name strings for every other SoC: "clkp1", "clkp=
+2",
+> > +	       "can_clk".
+> >  - pinctrl-0: pin control group to be used for this controller.
+> >  - pinctrl-names: must be "default".
+> >
+> > --
+> > 2.7.4
+> >
