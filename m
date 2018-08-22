@@ -1,75 +1,44 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 7/9] net: stmmac: dwmac-sun8i: fix OF child-node lookup
-Date: Wed, 22 Aug 2018 12:55:45 +0200
-Message-ID: <20180822105547.9634-8-johan@kernel.org>
+Subject: [PATCH 6/9] net: bcmgenet: fix OF child-node lookup
+Date: Wed, 22 Aug 2018 12:55:44 +0200
+Message-ID: <20180822105547.9634-7-johan@kernel.org>
 References: <20180822105547.9634-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180822105547.9634-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S . Miller" <davem@davemloft.net>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_get_compatible_child() helper to lookup the mdio-internal
-child node instead of using of_find_compatible_node(), which searches
-the entire tree and thus can return an unrelated (i.e. non-child) node.
+Use the new of_get_compatible_child() helper to lookup the mdio child
+node instead of using of_find_compatible_node(), which searches the
+entire tree and thus can return an unrelated (i.e. non-child) node.
 
 This also addresses a potential use-after-free (e.g. after probe
 deferral) as the tree-wide helper drops a reference to its first
-argument (i.e. the mdio-mux node). Fortunately, this was inadvertently
-balanced by a failure to drop the mdio-mux reference after lookup.
+argument (i.e. the node of the device being probed).
 
-While at it, also fix the related mdio-internal- and phy-node reference
-leaks.
-
-Fixes: 634db83b8265 ("net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs")
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
+Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
+Cc: stable <stable@vger.kernel.org>     # 3.15
+Cc: Florian Fainelli <f.fainelli@gmail.com>
 Cc: David S. Miller <davem@davemloft.net>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index f9a61f90cfbc..0f660af01a4b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -714,8 +714,9 @@ static int get_ephy_nodes(struct stmmac_priv *priv)
- 		return -ENODEV;
- 	}
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index 5333274a283c..87fc65560ceb 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -333,7 +333,7 @@ static struct device_node *bcmgenet_mii_of_find_mdio(struct bcmgenet_priv *priv)
+ 	if (!compat)
+ 		return NULL;
  
--	mdio_internal = of_find_compatible_node(mdio_mux, NULL,
-+	mdio_internal = of_get_compatible_child(mdio_mux,
- 						"allwinner,sun8i-h3-mdio-internal");
-+	of_node_put(mdio_mux);
- 	if (!mdio_internal) {
- 		dev_err(priv->device, "Cannot get internal_mdio node\n");
- 		return -ENODEV;
-@@ -729,13 +730,20 @@ static int get_ephy_nodes(struct stmmac_priv *priv)
- 		gmac->rst_ephy = of_reset_control_get_exclusive(iphynode, NULL);
- 		if (IS_ERR(gmac->rst_ephy)) {
- 			ret = PTR_ERR(gmac->rst_ephy);
--			if (ret == -EPROBE_DEFER)
-+			if (ret == -EPROBE_DEFER) {
-+				of_node_put(iphynode);
-+				of_node_put(mdio_internal);
- 				return ret;
-+			}
- 			continue;
- 		}
- 		dev_info(priv->device, "Found internal PHY node\n");
-+		of_node_put(iphynode);
-+		of_node_put(mdio_internal);
- 		return 0;
- 	}
-+
-+	of_node_put(mdio_internal);
- 	return -ENODEV;
- }
- 
+-	priv->mdio_dn = of_find_compatible_node(dn, NULL, compat);
++	priv->mdio_dn = of_get_compatible_child(dn, compat);
+ 	kfree(compat);
+ 	if (!priv->mdio_dn) {
+ 		dev_err(kdev, "unable to find MDIO bus node\n");
 -- 
 2.18.0
