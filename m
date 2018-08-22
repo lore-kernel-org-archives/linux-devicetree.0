@@ -1,38 +1,50 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/4] memory: jz4780_nemc: Drop dependency on MACH_JZ4780, use COMPILE_TEST
-Date: Wed, 22 Aug 2018 19:29:51 +0200
-Message-ID: <20180822172953.11281-2-paul@crapouillou.net>
-References: <20180822172953.11281-1-paul@crapouillou.net>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v3 0/3] arm64: dts: sdm845: Add RPMh-regulators and usb
+Date: Wed, 22 Aug 2018 10:36:26 -0700
+Message-ID: <20180822173629.202885-1-dianders@chromium.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822172953.11281-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alex Smith <alex@alex-smith.me.uk>
-Cc: od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, swboyd@chromium.org, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Depending on MACH_JZ4780 prevent us from creating a generic kernel that
-works on more than one MIPS board. Instead, we just depend on MIPS being
-set.
+This series adds device tree nodes for the RPMh regulators and USB.
+These patches are based on patches in various downstream kernels from
+Manu Gautam, David Collins, and Vivek Gautam.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/memory/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This series was tested on SDM845-MTP (with no-AC firmware) atop
+linuxnext (next-20180822) with some extra patches:
 
-diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-index 8d731d6c3e54..68bf8b2b45f6 100644
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@ -120,8 +120,8 @@ config FSL_IFC
- 
- config JZ4780_NEMC
- 	bool "Ingenic JZ4780 SoC NEMC driver"
--	default y
--	depends on MACH_JZ4780
-+	default MACH_JZ4780
-+	depends on MIPS || COMPILE_TEST
- 	help
- 	  This driver is for the NAND/External Memory Controller (NEMC) in
- 	  the Ingenic JZ4780. This controller is used to handle external
+>From the mailing list:
+- dts: arm64/sdm845: Add node for arm,mmu-500
+  https://lkml.kernel.org/r/20180814102740.30222-3-vivek.gautam@codeaurora.org
+
+Changes in v3:
+- Don't just fix qfprom unit address, fix the reg too (Stephen).
+- Rebased to next-20180822
+- Set vin-supply for s4a_1p8 properly (Stephen).
+- All regulators now HPM / disallow mode change; see commit text.
+- Added a few extra labels for some regulators.
+- Updated commit text descriptions.
+
+Changes in v2:
+- Use "0x784000" for qfprom rather than "0x780000" as per docs.
+- Add calibration for 2nd USB port too
+- LDO14 initial mode is LPM and shouldn't be always on (Vivek G)
+- LDO25 should have min voltage of 3.3V
+
+Douglas Anderson (2):
+  arm64: dts: qcom: sdm845-mtp: Add RPMh VRM/XOB regulators
+  arm64: dts: qcom: sdm845-mtp: Add nodes for USB
+
+Manu Gautam (1):
+  arm64: dts: qcom: sdm845: Add USB-related nodes
+
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 382 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi    | 196 ++++++++++++
+ 2 files changed, 578 insertions(+)
+
 -- 
-2.18.0
+2.18.0.1017.ga543ac7ca45-goog
