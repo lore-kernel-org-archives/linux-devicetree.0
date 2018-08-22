@@ -1,257 +1,30 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v3 1/3] arm64: dts: qcom: sdm845: Add USB-related nodes
-Date: Wed, 22 Aug 2018 10:36:27 -0700
-Message-ID: <20180822173629.202885-2-dianders@chromium.org>
-References: <20180822173629.202885-1-dianders@chromium.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sdm845: Add USB-related nodes
+Date: Wed, 22 Aug 2018 10:37:54 -0700
+Message-ID: <CAD=FV=V=Me8g1MN1ZnV2JzHuLLppGr1JwnXZBBPDY1iHVivFFw@mail.gmail.com>
+References: <20180810215150.82490-1-dianders@chromium.org> <20180810215150.82490-2-dianders@chromium.org>
+ <153478902525.28926.6688429060107225232@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822173629.202885-1-dianders@chromium.org>
+In-Reply-To: <153478902525.28926.6688429060107225232@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, swboyd@chromium.org, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Tomasz Figa <tfiga@chromium.org>, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Manu Gautam <mgautam@codeaurora.org>
+Hi,
 
-This adds nodes for USB and related PHYs.
+On Mon, Aug 20, 2018 at 11:17 AM, Stephen Boyd <swboyd@chromium.org> wrote:
+>> +               qfprom@784000 {
+>
+> This doesn't match reg property.
+>
+>> +                       compatible = "qcom,qfprom";
+>> +                       reg = <0x780000 0x8ff>;
+>
+> Because this should be 0x784000?
 
-Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-[dianders: reworked quite a bit]
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Thank you for catching.  This ought to be fixed in v3.
 
-Changes in v3:
-- Don't just fix qfprom unit address, fix the reg too (Stephen).
-- Rebased to next-20180822
-
-Changes in v2:
-- Use "0x784000" for qfprom rather than "0x780000" as per docs.
-- Add calibration for 2nd USB port too
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 196 +++++++++++++++++++++++++++
- 1 file changed, 196 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 627e8c181c20..8c2088de3a8d 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/phy/phy-qcom-qusb2.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- 
- / {
-@@ -249,6 +250,23 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		qfprom@784000 {
-+			compatible = "qcom,qfprom";
-+			reg = <0x784000 0x8ff>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			qusb2p_hstx_trim: hstx-trim-primary@1eb {
-+				reg = <0x1eb 0x1>;
-+				bits = <1 4>;
-+			};
-+
-+			qusb2s_hstx_trim: hstx-trim-secondary@1eb {
-+				reg = <0x1eb 0x2>;
-+				bits = <6 4>;
-+			};
-+		};
-+
- 		qupv3_id_0: geniqup@8c0000 {
- 			compatible = "qcom,geni-se-qup";
- 			reg = <0x8c0000 0x6000>;
-@@ -962,6 +980,184 @@
- 			};
- 		};
- 
-+		usb_1_hsphy: phy@88e2000 {
-+			compatible = "qcom,sdm845-qusb2-phy";
-+			reg = <0x88e2000 0x400>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+
-+			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "cfg_ahb", "ref";
-+
-+			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+
-+			nvmem-cells = <&qusb2p_hstx_trim>;
-+		};
-+
-+		usb_2_hsphy: phy@88e3000 {
-+			compatible = "qcom,sdm845-qusb2-phy";
-+			reg = <0x88e3000 0x400>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+
-+			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "cfg_ahb", "ref";
-+
-+			resets = <&gcc GCC_QUSB2PHY_SEC_BCR>;
-+
-+			nvmem-cells = <&qusb2s_hstx_trim>;
-+		};
-+
-+		usb_1_qmpphy: phy@88e9000 {
-+			compatible = "qcom,sdm845-qmp-usb3-phy";
-+			reg = <0x88e9000 0x18c>,
-+			      <0x88e8000 0x10>;
-+			reg-names = "reg-base", "dp_com";
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
-+				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-+				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
-+			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
-+
-+			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
-+				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb_1_ssphy: lane@88e9200 {
-+				reg = <0x88e9200 0x128>,
-+				      <0x88e9400 0x200>,
-+				      <0x88e9c00 0x218>,
-+				      <0x88e9a00 0x100>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		usb_2_qmpphy: phy@88eb000 {
-+			compatible = "qcom,sdm845-qmp-usb3-uni-phy";
-+			reg = <0x88eb000 0x18c>;
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
-+				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&gcc GCC_USB3_SEC_CLKREF_CLK>,
-+				 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
-+			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
-+
-+			resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
-+				 <&gcc GCC_USB3_PHY_SEC_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb_2_ssphy: lane@88eb200 {
-+				reg = <0x88eb200 0x128>,
-+				      <0x88eb400 0x1fc>,
-+				      <0x88eb800 0x218>,
-+				      <0x88e9600 0x70>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_uni_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		usb_1: usb@a6f8800 {
-+			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
-+			reg = <0xa6f8800 0x400>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep";
-+
-+			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <150000000>;
-+
-+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "ss_phy_irq",
-+					  "dm_hs_phy_irq", "dp_hs_phy_irq";
-+
-+			power-domains = <&gcc USB30_PRIM_GDSC>;
-+
-+			resets = <&gcc GCC_USB30_PRIM_BCR>;
-+
-+			usb_1_dwc3: dwc3@a600000 {
-+				compatible = "snps,dwc3";
-+				reg = <0xa600000 0xcd00>;
-+				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
-+
-+		usb_2: usb@a8f8800 {
-+			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
-+			reg = <0xa8f8800 0x400>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_SEC_AXI_CLK>,
-+				 <&gcc GCC_USB30_SEC_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_SEC_AXI_CLK>,
-+				 <&gcc GCC_USB30_SEC_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_SEC_SLEEP_CLK>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep";
-+
-+			assigned-clocks = <&gcc GCC_USB30_SEC_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_SEC_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <150000000>;
-+
-+			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 487 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 490 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 491 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "ss_phy_irq",
-+					  "dm_hs_phy_irq", "dp_hs_phy_irq";
-+
-+			power-domains = <&gcc USB30_SEC_GDSC>;
-+
-+			resets = <&gcc GCC_USB30_SEC_BCR>;
-+
-+			usb_2_dwc3: dwc3@a800000 {
-+				compatible = "snps,dwc3";
-+				reg = <0xa800000 0xcd00>;
-+				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&usb_2_hsphy>, <&usb_2_ssphy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
-+
- 		tsens0: thermal-sensor@c263000 {
- 			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
- 			reg = <0xc263000 0x1ff>, /* TM */
--- 
-2.18.0.1017.ga543ac7ca45-goog
+-Doug
