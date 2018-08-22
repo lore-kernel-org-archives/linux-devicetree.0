@@ -1,70 +1,58 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5/9] mtd: nand: atmel: fix OF child-node lookup
-Date: Wed, 22 Aug 2018 12:55:43 +0200
-Message-ID: <20180822105547.9634-6-johan@kernel.org>
+Subject: [PATCH 3/9] drm/msm: fix OF child-node lookup
+Date: Wed, 22 Aug 2018 12:55:41 +0200
+Message-ID: <20180822105547.9634-4-johan@kernel.org>
 References: <20180822105547.9634-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180822105547.9634-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Jordan Crouse <jcrouse@codeaurora.org>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_get_compatible_child() helper to lookup the nfc child
-node instead of using of_find_compatible_node(), which searches the
-entire tree and thus can return an unrelated (i.e. non-child) node.
+Use the new of_get_compatible_child() helper to lookup the legacy
+pwrlevels child node instead of using of_find_compatible_node(), which
+searches the entire tree and thus can return an unrelated (i.e.
+non-child) node.
 
 This also addresses a potential use-after-free (e.g. after probe
 deferral) as the tree-wide helper drops a reference to its first
-argument (i.e. the node of the device being probed).
+argument (i.e. the probed device's node).
 
-While at it, also fix a related nfc-node reference leak.
+While at it, also fix the related child-node reference leak.
 
-Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
-Cc: stable <stable@vger.kernel.org>     # 4.11
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Josh Wu <rainyfeeling@outlook.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>
+Fixes: e2af8b6b0ca1 ("drm/msm: gpu: Use OPP tables if we can")
+Cc: stable <stable@vger.kernel.org>     # 4.12
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: David Airlie <airlied@linux.ie>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/mtd/nand/raw/atmel/nand-controller.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-index a068b214ebaa..d3dfe63956ac 100644
---- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-+++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-@@ -2061,8 +2061,7 @@ atmel_hsmc_nand_controller_legacy_init(struct atmel_hsmc_nand_controller *nc)
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index da1363a0c54d..93d70f4a2154 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -633,8 +633,7 @@ static int adreno_get_legacy_pwrlevels(struct device *dev)
+ 	struct device_node *child, *node;
  	int ret;
  
- 	nand_np = dev->of_node;
--	nfc_np = of_find_compatible_node(dev->of_node, NULL,
--					 "atmel,sama5d3-nfc");
-+	nfc_np = of_get_compatible_child(dev->of_node, "atmel,sama5d3-nfc");
- 
- 	nc->clk = of_clk_get(nfc_np, 0);
- 	if (IS_ERR(nc->clk)) {
-@@ -2472,15 +2471,19 @@ static int atmel_nand_controller_probe(struct platform_device *pdev)
+-	node = of_find_compatible_node(dev->of_node, NULL,
+-		"qcom,gpu-pwrlevels");
++	node = of_get_compatible_child(dev->of_node, "qcom,gpu-pwrlevels");
+ 	if (!node) {
+ 		dev_err(dev, "Could not find the GPU powerlevels\n");
+ 		return -ENXIO;
+@@ -655,6 +654,8 @@ static int adreno_get_legacy_pwrlevels(struct device *dev)
+ 			dev_pm_opp_add(dev, val, 0);
  	}
  
- 	if (caps->legacy_of_bindings) {
-+		struct device_node *nfc_node;
- 		u32 ale_offs = 21;
++	of_node_put(node);
++
+ 	return 0;
+ }
  
- 		/*
- 		 * If we are parsing legacy DT props and the DT contains a
- 		 * valid NFC node, forward the request to the sama5 logic.
- 		 */
--		if (of_find_compatible_node(pdev->dev.of_node, NULL,
--					    "atmel,sama5d3-nfc"))
-+		nfc_node = of_get_compatible_child(pdev->dev.of_node,
-+						   "atmel,sama5d3-nfc");
-+		if (nfc_node) {
- 			caps = &atmel_sama5_nand_caps;
-+			of_node_put(nfc_node);
-+		}
- 
- 		/*
- 		 * Even if the compatible says we are dealing with an
 -- 
 2.18.0
