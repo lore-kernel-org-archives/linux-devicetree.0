@@ -1,16 +1,15 @@
-From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6ull: keep IMX6UL_ prefix for signals on
- both i.MX6UL and i.MX6ULL
-Date: Wed, 22 Aug 2018 13:41:16 +0200
-Message-ID: <d2d5e3db-70ca-bf06-5b65-6428cc979520@armadeus.com>
-References: <20180720102321.23291-1-sebastien.szymanski@armadeus.com>
- <20180821085336.GB31070@dragon>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: v3msk: add eMMC support
+Date: Wed, 22 Aug 2018 13:31:00 +0200
+Message-ID: <20180822113100.edpyplj2kteomr2j@verge.net.au>
+References: <1af46bf9-d9e5-8dcf-0ac7-a85e7348a34e@cogentembedded.com>
+ <9da672a2-0269-4860-8912-189414b43d4c@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180821085336.GB31070@dragon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <9da672a2-0269-4860-8912-189414b43d4c@cogentembedded.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,87 +19,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMjEvMjAxOCAxMDo1MyBBTSwgU2hhd24gR3VvIHdyb3RlOgo+IE9uIEZyaSwgSnVsIDIw
-LCAyMDE4IGF0IDEyOjIzOjIxUE0gKzAyMDAsIFPDqWJhc3RpZW4gU3p5bWFuc2tpIHdyb3RlOgo+
-PiBTaWduYWxzIGF2YWlsYWJsZSBvbiBib3RoIGkuTVg2VUwgYW5kIGkuTVg2VUxMIHNob3VsZCBo
-YXZlIHRoZSBzYW1lIG5hbWUKPj4gYmVjYXVzZSBpdCBpcyB0aGUgY2FzZSBvZiBhbGwgb3RoZXJz
-IGNvbW1vbiBzaWduYWxzLCBpdCBhdm9pZHMgdG8gbWFrZQo+PiBtaXN0YWtlcyAodXNlIHRoZSB3
-cm9uZyBvbmVzKSBhbmQgaXQgbWFrZXMgd3JpdGluZyBkZXZpY2UgdHJlZSBmaWxlcwo+PiBsZXNz
-IGNvbXBsaWNhdGVkLiBGb3IgZXhhbXBsZToKPj4KPj4gaW14NnVsLWlteDZ1bGwtYm9hcmQuZHRz
-aToKPj4gIC4uLgo+PiAgcGluY3RybF91YXJ0NTogdWFydDVncnAgewo+PiAJZnNsLHBpbnMgPSA8
-Cj4+IAkJTVg2VUxfUEFEX1VBUlQ1X1RYX0RBVEFfX1VBUlQ1X0RDRV9UWCAgIDB4MWIwYjEKPj4g
-CSAJTVg2VUxfUEFEX1VBUlQ1X1JYX0RBVEFfX1VBUlQ1X0RDRV9SWCAgIDB4MWIwYjEKPj4gIAkg
-PjsKPj4gIH07Cj4+Cj4+IGlteDZ1bC1ib2FyZC5kdHM6Cj4+ICAjaW5jbHVkZSA8aW14NnVsLmR0
-c2k+Cj4+ICAjaW5jbHVkZSA8aW14NnVsLWlteDZ1bGwtYm9hcmQuZHRzaT4KPj4gIC4uLgo+Pgo+
-PiBpbXg2dWxsLWJvYXJkLmR0czoKPj4gICNpbmNsdWRlIDxpbXg2dWxsLmR0c2k+Cj4+ICAjaW5j
-bHVkZSA8aW14NnVsLWlteDZ1bGwtYm9hcmQuZHRzaT4KPj4gIC4uLgo+Pgo+PiBXaXRob3V0IHRo
-aXMgcGF0Y2gsIHRoZSBpbXg2dWxsLWJvYXJkLmR0YiB3aWxsIHVzZQo+PiBNWDZVTF9QQURfVUFS
-VDVfUlhfREFUQV9fVUFSVDVfRENFX1JYIGluc3RlYWQgb2YKPj4gTVg2VUxMX1BBRF9VQVJUNV9S
-WF9EQVRBX19VQVJUNV9EQ0VfUlggYW5kIHRoZSB1YXJ0NSB3aWxsIGJlCj4+IG1pc2NvbmZpZ3Vy
-ZWQuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFPDqWJhc3RpZW4gU3p5bWFuc2tpIDxzZWJhc3RpZW4u
-c3p5bWFuc2tpQGFybWFkZXVzLmNvbT4KPj4gLS0tCj4+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2
-dWxsLXBpbmZ1bmMuaCB8IDI3ICsrKysrKysrKysrKysrKysrKystLS0tLS0tLQo+PiAgMSBmaWxl
-IGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaCBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDZ1bGwtcGluZnVuYy5oCj4+IGluZGV4IGZkYzQ2YmIwOWNjMS4uN2Q3ZjA1ZjdlYTc3
-IDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaAo+PiAr
-KysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLXBpbmZ1bmMuaAo+PiBAQCAtMTQsMTQgKzE0
-LDI1IEBACj4+ICAgKiBUaGUgcGluIGZ1bmN0aW9uIElEIGlzIGEgdHVwbGUgb2YKPj4gICAqIDxt
-dXhfcmVnIGNvbmZfcmVnIGlucHV0X3JlZyBtdXhfbW9kZSBpbnB1dF92YWw+Cj4+ICAgKi8KPj4g
-LSNkZWZpbmUgTVg2VUxMX1BBRF9VQVJUMV9UWF9EQVRBX19VQVJUNV9EVEVfUlggICAgICAgICAg
-ICAgICAgICAgIDB4MDA4NCAweDAzMTAgMHgwNjQ0IDB4OSAweDQKPj4gLSNkZWZpbmUgTVg2VUxM
-X1BBRF9VQVJUMV9SWF9EQVRBX19VQVJUNV9EQ0VfUlggICAgICAgICAgICAgICAgICAgIDB4MDA4
-OCAweDAzMTQgMHgwNjQ0IDB4OSAweDUKPj4gLSNkZWZpbmUgTVg2VUxMX1BBRF9VQVJUMV9DVFNf
-Ql9fVUFSVDVfRENFX1JUUyAgICAgICAgICAgICAgICAgICAgIDB4MDA4QyAweDAzMTggMHgwNjQw
-IDB4OSAweDMKPj4gLSNkZWZpbmUgTVg2VUxMX1BBRF9VQVJUMV9SVFNfQl9fVUFSVDVfRFRFX1JU
-UyAgICAgICAgICAgICAgICAgICAgIDB4MDA5MCAweDAzMUMgMHgwNjQwIDB4OSAweDQKPj4gLSNk
-ZWZpbmUgTVg2VUxMX1BBRF9VQVJUNV9UWF9EQVRBX19VQVJUNV9EVEVfUlggICAgICAgICAgICAg
-ICAgICAgIDB4MDBCQyAweDAzNDggMHgwNjQ0IDB4MCAweDYKPj4gLSNkZWZpbmUgTVg2VUxMX1BB
-RF9VQVJUNV9SWF9EQVRBX19VQVJUNV9EQ0VfUlggICAgICAgICAgICAgICAgICAgIDB4MDBDMCAw
-eDAzNEMgMHgwNjQ0IDB4MCAweDcKPj4gLSNkZWZpbmUgTVg2VUxMX1BBRF9FTkVUMV9SWF9FTl9f
-VUFSVDVfRENFX1JUUyAgICAgICAgICAgICAgICAgICAgIDB4MDBDQyAweDAzNTggMHgwNjQwIDB4
-MSAweDUKPj4gLSNkZWZpbmUgTVg2VUxMX1BBRF9FTkVUMV9UWF9EQVRBMF9fVUFSVDVfRFRFX1JU
-UyAgICAgICAgICAgICAgICAgIDB4MDBEMCAweDAzNUMgMHgwNjQwIDB4MSAweDYKPj4gKy8qIHNp
-Z25hbHMgY29tbW9uIGZvciBpLk1YNlVMIGFuZCBpLk1YNlVMTCAqLwo+PiArI3VuZGVmIE1YNlVM
-X1BBRF9VQVJUMV9UWF9EQVRBX19VQVJUNV9EVEVfUlgKPj4gKyNkZWZpbmUgTVg2VUxfUEFEX1VB
-UlQxX1RYX0RBVEFfX1VBUlQ1X0RURV9SWCAgICAgICAgICAgICAgICAgICAgMHgwMDg0IDB4MDMx
-MCAweDA2NDQgMHg5IDB4NAo+PiArI3VuZGVmIE1YNlVMX1BBRF9VQVJUMV9SWF9EQVRBX19VQVJU
-NV9EQ0VfUlgKPj4gKyNkZWZpbmUgTVg2VUxfUEFEX1VBUlQxX1JYX0RBVEFfX1VBUlQ1X0RDRV9S
-WCAgICAgICAgICAgICAgICAgICAgMHgwMDg4IDB4MDMxNCAweDA2NDQgMHg5IDB4NQo+PiArI3Vu
-ZGVmIE1YNlVMX1BBRF9VQVJUMV9DVFNfQl9fVUFSVDVfRENFX1JUUwo+PiArI2RlZmluZSBNWDZV
-TF9QQURfVUFSVDFfQ1RTX0JfX1VBUlQ1X0RDRV9SVFMgICAgICAgICAgICAgICAgICAgICAweDAw
-OEMgMHgwMzE4IDB4MDY0MCAweDkgMHgzCj4+ICsjdW5kZWYgTVg2VUxfUEFEX1VBUlQxX1JUU19C
-X19VQVJUNV9EVEVfUlRTCj4+ICsjZGVmaW5lIE1YNlVMX1BBRF9VQVJUMV9SVFNfQl9fVUFSVDVf
-RFRFX1JUUyAgICAgICAgICAgICAgICAgICAgIDB4MDA5MCAweDAzMUMgMHgwNjQwIDB4OSAweDQK
-PiAKPiBJIGRvIG5vdCBzZWUgdGhlc2UgNCBwaW5mdW5jIGluIGlteDZ1bC1waW5mdW5jLmguICBB
-cmUgdGhleSByZWFsbHkKPiBhdmFpbGFibGUgZm9yIGkuTVg2VUw/CgpUaGV5IGFyZSBub3QuIEkn
-dmUganVzdCBzZW50IGEgdjIuClRoYW5rcy4KClJlZ2FyZHMsCgo+IAo+IFNoYXduCj4gCj4+ICsj
-dW5kZWYgTVg2VUxfUEFEX1VBUlQ1X1RYX0RBVEFfX1VBUlQ1X0RURV9SWAo+PiArI2RlZmluZSBN
-WDZVTF9QQURfVUFSVDVfVFhfREFUQV9fVUFSVDVfRFRFX1JYICAgICAgICAgICAgICAgICAgICAw
-eDAwQkMgMHgwMzQ4IDB4MDY0NCAweDAgMHg2Cj4+ICsjdW5kZWYgTVg2VUxfUEFEX1VBUlQ1X1JY
-X0RBVEFfX1VBUlQ1X0RDRV9SWAo+PiArI2RlZmluZSBNWDZVTF9QQURfVUFSVDVfUlhfREFUQV9f
-VUFSVDVfRENFX1JYICAgICAgICAgICAgICAgICAgICAweDAwQzAgMHgwMzRDIDB4MDY0NCAweDAg
-MHg3Cj4+ICsjdW5kZWYgTVg2VUxfUEFEX0VORVQxX1JYX0VOX19VQVJUNV9EQ0VfUlRTCj4+ICsj
-ZGVmaW5lIE1YNlVMX1BBRF9FTkVUMV9SWF9FTl9fVUFSVDVfRENFX1JUUyAgICAgICAgICAgICAg
-ICAgICAgIDB4MDBDQyAweDAzNTggMHgwNjQwIDB4MSAweDUKPj4gKyN1bmRlZiBNWDZVTF9QQURf
-RU5FVDFfVFhfREFUQTBfX1VBUlQ1X0RURV9SVFMKPj4gKyNkZWZpbmUgTVg2VUxfUEFEX0VORVQx
-X1RYX0RBVEEwX19VQVJUNV9EVEVfUlRTICAgICAgICAgICAgICAgICAgMHgwMEQwIDB4MDM1QyAw
-eDA2NDAgMHgxIDB4Ngo+PiArCj4+ICsvKiBzaWduYWxzIGZvciBpLk1YNlVMTCBvbmx5ICovCj4+
-ICAjZGVmaW5lIE1YNlVMTF9QQURfRU5FVDJfUlhfREFUQTBfX0VQRENfU0RETzA4ICAgICAgICAg
-ICAgICAgICAgICAweDAwRTQgMHgwMzcwIDB4MDAwMCAweDkgMHgwCj4+ICAjZGVmaW5lIE1YNlVM
-TF9QQURfRU5FVDJfUlhfREFUQTFfX0VQRENfU0RETzA5ICAgICAgICAgICAgICAgICAgICAweDAw
-RTggMHgwMzc0IDB4MDAwMCAweDkgMHgwCj4+ICAjZGVmaW5lIE1YNlVMTF9QQURfRU5FVDJfUlhf
-RU5fX0VQRENfU0RETzEwICAgICAgICAgICAgICAgICAgICAgICAweDAwRUMgMHgwMzc4IDB4MDAw
-MCAweDkgMHgwCj4+IC0tIAo+PiAyLjE2LjQKPj4KPj4KPj4gX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KPj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKPj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4+IGh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKCi0tIApT
-w6liYXN0aWVuIFN6eW1hbnNraQpTb2Z0d2FyZSBlbmdpbmVlciwgQXJtYWRldXMgU3lzdGVtcwpU
-ZWw6ICszMyAoMCk5IDcyIDI5IDQxIDQ0CkZheDogKzMzICgwKTkgNzIgMjggNzkgMjYKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Tue, Aug 21, 2018 at 10:50:31PM +0300, Sergei Shtylyov wrote:
+> Add the eMMC chip support for the V3M Started Kit board.
+> 
+> Based on the original (and large) patches by Vladimir Barinov.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+Thanks,
+
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+I am, however, curious to know about HS200.
+Is it supported on the v3msk? If so, do you have any plans to enable it?
