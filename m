@@ -1,24 +1,175 @@
-From: pheragu@codeaurora.org
-Subject: Reminder to review series of patches
-Date: Wed, 22 Aug 2018 14:57:28 -0700
-Message-ID: <c0fd219eeba038e4d2375f5ff9c29ff8@codeaurora.org>
+From: "George G. Davis" <ggdavisiv@gmail.com>
+Subject: Re: [PATCH v2 1/2] Input: atmel_mxt_ts: Add support for  optional
+ regulators.
+Date: Wed, 22 Aug 2018 18:53:21 -0400
+Message-ID: <20180822225321.GA1364@gandalf.middle.earth.net>
+References: <1531851386-17840-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <1531851386-17840-2-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <20180717210005.GA21416@hairyalien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180717210005.GA21416@hairyalien>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux-arm Msm <linux-arm-msm@vger.kernel.org>, Linux Usb <linux-usb@vger.kernel.org>, Devicetree <devicetree@vger.kernel.org>
-Cc: Linux Kernel <linux-kernel@vger.kernel.org>, Ckadabi <ckadabi@codeaurora.org>, Tsoni <tsoni@codeaurora.org>, Bryanh <bryanh@codeaurora.org>, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>, Rnayak <rnayak@codeaurora.org>, psodagud@codeaurora.org
+To: Nick Dyer <nick@shmanahar.org>
+Cc: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is reminder to review a series of patches sent a
-week ago pertaining to EUD driver. These are the links for
-the patches -
+Hello Nick,
 
-https://patchwork.kernel.org/cover/10568275/ - cover-letter
-https://lore.kernel.org/patchwork/patch/975228/ - dt-binding
-https://patchwork.kernel.org/patch/10568281/ - EUD driver
+On Tue, Jul 17, 2018 at 10:00:05PM +0100, Nick Dyer wrote:
+> On Tue, Jul 17, 2018 at 08:16:25PM +0200, Paweł Chmiel wrote:
+> > This patch adds optional regulators, which can be used to power
+> > up touchscreen. After enabling regulators, we need to wait 150msec.
+> > This value is taken from official driver.
+> > 
+> > It was tested on Samsung Galaxy i9000 (based on Samsung S5PV210 SOC).
+> > 
+> > Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > ---
+> > Changes from v1:
+> >   - Enable regulators only if reset_gpio is present.
+> >   - Switch from devm_regulator_get_optional to devm_regulator_get
+> > ---
+> >  drivers/input/touchscreen/atmel_mxt_ts.c | 46 ++++++++++++++++++++++++++++++--
+> >  1 file changed, 44 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> > index 54fe190fd4bc..005f0fee9fc8 100644
+> > --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> > +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/of.h>
+> >  #include <linux/property.h>
+> > +#include <linux/regulator/consumer.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/gpio/consumer.h>
+> >  #include <linux/property.h>
+> > @@ -194,10 +195,10 @@ enum t100_type {
+> >  
+> >  /* Delay times */
+> >  #define MXT_BACKUP_TIME		50	/* msec */
+> > -#define MXT_RESET_GPIO_TIME	20	/* msec */
+> >  #define MXT_RESET_INVALID_CHG	100	/* msec */
+> >  #define MXT_RESET_TIME		200	/* msec */
+> >  #define MXT_RESET_TIMEOUT	3000	/* msec */
+> > +#define MXT_REGULATOR_DELAY	150	/* msec */
+> >  #define MXT_CRC_TIMEOUT		1000	/* msec */
+> >  #define MXT_FW_RESET_TIME	3000	/* msec */
+> >  #define MXT_FW_CHG_TIMEOUT	300	/* msec */
+> > @@ -310,6 +311,8 @@ struct mxt_data {
+> >  	struct t7_config t7_cfg;
+> >  	struct mxt_dbg dbg;
+> >  	struct gpio_desc *reset_gpio;
+> > +	struct regulator *vdd_reg;
+> > +	struct regulator *avdd_reg;
+> >  
+> >  	/* Cached parameters from object table */
+> >  	u16 T5_address;
+> > @@ -3076,6 +3079,22 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+> >  		return error;
+> >  	}
+> >  
+> > +	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
+> > +	if (IS_ERR(data->vdd_reg)) {
+> > +		error = PTR_ERR(data->vdd_reg);
+> > +		dev_err(&client->dev, "Failed to get vdd regulator: %d\n",
+> > +			error);
+> > +		return error;
+> > +	}
+> > +
+> > +	data->avdd_reg = devm_regulator_get(&client->dev, "avdd");
+> > +	if (IS_ERR(data->avdd_reg)) {
+> > +		error = PTR_ERR(data->avdd_reg);
+> > +		dev_err(&client->dev, "Failed to get avdd regulator: %d\n",
+> > +			error);
+> > +		return error;
+> > +	}
+> > +
+> >  	error = devm_request_threaded_irq(&client->dev, client->irq,
+> >  					  NULL, mxt_interrupt, IRQF_ONESHOT,
+> >  					  client->name, data);
+> > @@ -3087,7 +3106,26 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+> >  	disable_irq(client->irq);
+> >  
+> >  	if (data->reset_gpio) {
+> > -		msleep(MXT_RESET_GPIO_TIME);
+> > +		error = regulator_enable(data->vdd_reg);
+> > +		if (error) {
+> > +			dev_err(&client->dev, "Failed to enable vdd regulator: %d\n",
+> > +				error);
+> > +			return error;
+> > +		}
+> > +
+> > +		error = regulator_enable(data->avdd_reg);
+> > +		if (error) {
+> > +			dev_err(&client->dev, "Failed to enable avdd regulator: %d\n",
+> > +				error);
+> > +			return error;
+> > +		}
+> > +
+> > +		/*
+> > +		 * According to maXTouch power sequencing specification, RESET line
+> > +		 * must be kept low until some time after regulators come up to
+> > +		 * voltage
+> > +		 */
+> > +		msleep(MXT_REGULATOR_DELAY);
+> >  		gpiod_set_value(data->reset_gpio, 1);
+> >  		msleep(MXT_RESET_INVALID_CHG);
+> 
+> Hi Pawel-
+> 
+> I see you've borrowed some of the logic from the patch I wrote a while
+> back (see https://github.com/ndyer/linux/commit/8e9687e41ed062 )
 
+I'm actually quite interested in your work and notice that it has
+languished for some time now. If you have rebased any of your earlier
+work to more recent kernel versions, I'd be happy to assist with testing
+and review.
+
+--
 Regards,
-Prakruthi Deepak Heragu
+George
+
+> The correct behaviour according to Atmel should be:
+> 
+> * Make RESET zero
+> * Bring up regulators
+> * Wait for a period to settle (150 msec)
+> * Release RESET
+> * Wait for 100 msec whilst device gets through bootloader
+> * Wait for CHG line assert before reading info block
+> 
+> I can't see the first and last steps in your patch at present.
+> 
+> The only downside with this approach is that there are a lot of
+> delays during driver probe, but I believe the asynchronous probe stuff
+> that's landed since I wrote the original patch should address that.
+> 
+> cheers
+> 
+> Nick
+> 
+> >  	}
+> > @@ -3116,6 +3154,10 @@ static int mxt_remove(struct i2c_client *client)
+> >  	struct mxt_data *data = i2c_get_clientdata(client);
+> >  
+> >  	disable_irq(data->irq);
+> > +	if (data->reset_gpio) {
+> > +		regulator_disable(data->avdd_reg);
+> > +		regulator_disable(data->vdd_reg);
+> > +	}
+> >  	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+> >  	mxt_free_input_device(data);
+> >  	mxt_free_object_table(data);
+> > -- 
+> > 2.7.4
+> > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
