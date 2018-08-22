@@ -1,50 +1,40 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: sdm845-mtp: Add RPMh VRM/XOB regulators
-Date: Wed, 22 Aug 2018 10:38:28 -0700
-Message-ID: <CAD=FV=VY-n2maPD6Pyy-XQqppPrTnN2yM9SxsFEhmY0FZ9U8mg@mail.gmail.com>
-References: <20180810215150.82490-1-dianders@chromium.org> <20180810215150.82490-3-dianders@chromium.org>
- <153478912722.28926.1278085207557745493@swboyd.mtv.corp.google.com>
+From: Sravanthi Kollukuduru <skolluku@codeaurora.org>
+Subject: [PATCH v2 0/2] Enable cursor plane on DPU
+Date: Wed, 22 Aug 2018 23:19:55 +0530
+Message-ID: <20180822174957.22684-1-skolluku@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153478912722.28926.1278085207557745493@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Tomasz Figa <tfiga@chromium.org>, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: sean@poorly.run, seanpaul@chromium.org, Sravanthi Kollukuduru <skolluku@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Aug 20, 2018 at 11:18 AM, Stephen Boyd <swboyd@chromium.org> wrote:
-> Quoting Douglas Anderson (2018-08-10 14:51:49)
->> @@ -20,6 +21,450 @@
->>         chosen {
->>                 stdout-path = "serial0:115200n8";
->>         };
->> +
->> +       vph_pwr: vph-pwr-regulator {
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "vph_pwr";
->> +               regulator-min-microvolt = <3700000>;
->> +               regulator-max-microvolt = <3700000>;
->> +       };
->> +
->> +       /*
->> +        * Apparently RPMh does not provide support for PM8998 S4 because it
->> +        * is always-on; model it as a fixed regulator.
->> +        */
->> +       vreg_s4a_1p8: pm8998-smps4 {
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "vreg_s4a_1p8";
->> +
->> +               regulator-min-microvolt = <1800000>;
->> +               regulator-max-microvolt = <1800000>;
->> +
->> +               regulator-always-on;
->> +               regulator-boot-on;
->
-> Can vin be vph_pwr? That would properly model this.
-
-Yes, good suggestion.  Fixed in v3.
-
--Doug
+cyBwYXRjaHNldCBhZGRzIHRoZSBjdXJzb3IgcGxhbmUgc3VwcG9ydCBvbiBEUFUgZHJpdmVyLgpJ
+dCBhbHNvIGluY2x1ZGVzIHRoZSBmaXggZm9yIHRoZSBibGFjayBib3ggYXJ0aWZhY3RzIHNlZW4K
+YXJvdW5kIHRoZSBjdXJzb3Igd2hlbiBlbmFibGVkLgoKQ2hhbmdlcyBpbiBWMjoKCS0gTWlub3Ig
+Y29tbWVudHMgaW4gbG9nZ2luZyBpbiBibGVuZCBjb25maWcgZnVuY3Rpb24gKFNlYW4pCgpTcmF2
+YW50aGkgS29sbHVrdWR1cnUgKDIpOgogIGRybS9tc20vZHB1OiBlbmFibGUgY3Vyc29yIHBsYW5l
+IG9uIGRwdQogIGRybS9tc20vZHB1OiBmaXggZm9yIGN1cnNvciBibGVuZCBpc3N1ZQoKIGRyaXZl
+cnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRjLmMgICAgICAgfCAzMSArKysrKysrKysr
+Ky0tLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRjLmggICAgICAgfCAg
+NCArLQogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2NhdGFsb2cuYyB8IDUz
+ICsrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1
+MS9kcHVfa21zLmMgICAgICAgIHwgMzUgKysrKysrKysrKystLS0tLS0KIGRyaXZlcnMvZ3B1L2Ry
+bS9tc20vZGlzcC9kcHUxL2RwdV9wbGFuZS5jICAgICAgfCAgOSArLS0tLQogZHJpdmVycy9ncHUv
+ZHJtL21zbS9kaXNwL2RwdTEvZHB1X3BsYW5lLmggICAgICB8ICA0ICstCiA2IGZpbGVzIGNoYW5n
+ZWQsIDc2IGluc2VydGlvbnMoKyksIDYwIGRlbGV0aW9ucygtKQoKLS0gClRoZSBRdWFsY29tbSBJ
+bm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9y
+dW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
