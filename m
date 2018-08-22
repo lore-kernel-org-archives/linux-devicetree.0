@@ -1,61 +1,61 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 2/9] drm/mediatek: fix OF sibling-node lookup
-Date: Wed, 22 Aug 2018 12:55:40 +0200
-Message-ID: <20180822105547.9634-3-johan@kernel.org>
-References: <20180822105547.9634-1-johan@kernel.org>
+Subject: [PATCH 0/9] of: fix compatible-child-node lookups
+Date: Wed, 22 Aug 2018 12:55:38 +0200
+Message-ID: <20180822105547.9634-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822105547.9634-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Jie Qiu <jie.qiu@mediatek.com>, Junzhi Zhao <junzhi.zhao@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>, David Airlie <airlied@linux.ie>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Ulf Hansson <ulf.hansson@linaro.org>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Doug Berger <opendmb@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_get_compatible_child() helper to lookup the sibling
-instead of using of_find_compatible_node(), which searches the entire
-tree and thus can return an unrelated (i.e. non-sibling) node.
+Several drivers currently use of_find_compatible_node() to lookup child
+nodes while failing to notice that the of_find_ functions search the
+entire tree depth-first and therefore can match unrelated (non-child)
+nodes.
 
-This also addresses a potential use-after-free (e.g. after probe
-deferral) as the tree-wide helper drops a reference to its first
-argument (i.e. the parent device node).
+The fact that these functions also drop a reference to the node they
+start searching from (e.g. the parent node) is typically also
+overlooked, something which can lead to use-after-free bugs (e.g. after
+probe deferrals).
 
-While at it, also fix the related cec-node reference leak.
+This series adds a new helper, similar to of_get_child_by_name(), 
+that can be used to lookup compatible child nodes, and uses the new
+helper to fix child-node lookups throughout the tree.
 
-Fixes: 8f83f26891e1 ("drm/mediatek: Add HDMI support")
-Cc: stable <stable@vger.kernel.org>     # 4.8
-Cc: Jie Qiu <jie.qiu@mediatek.com>
-Cc: Junzhi Zhao <junzhi.zhao@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: CK Hu <ck.hu@mediatek.com>
-Cc: David Airlie <airlied@linux.ie>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This is related to the fixes I posted about a year ago, which addressed
+a similar anti-pattern when looking up child nodes by name. Since it
+took me more than a year to get all those fixes into Linus' tree (one
+fix is still pending), and as these fixes depend on the new helper, I'm
+suggesting that these all go in through Rob's or Greg's trees.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 2d45d1dd9554..643f5edd68fe 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1446,8 +1446,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	}
- 
- 	/* The CEC module handles HDMI hotplug detection */
--	cec_np = of_find_compatible_node(np->parent, NULL,
--					 "mediatek,mt8173-cec");
-+	cec_np = of_get_compatible_child(np->parent, "mediatek,mt8173-cec");
- 	if (!cec_np) {
- 		dev_err(dev, "Failed to find CEC node\n");
- 		return -EINVAL;
-@@ -1457,8 +1456,10 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	if (!cec_pdev) {
- 		dev_err(hdmi->dev, "Waiting for CEC device %pOF\n",
- 			cec_np);
-+		of_node_put(cec_np);
- 		return -EPROBE_DEFER;
- 	}
-+	of_node_put(cec_np);
- 	hdmi->cec_dev = &cec_pdev->dev;
- 
- 	/*
+Alternatively, the helper could go into to -rc2, and I'll be pinging
+submaintainers for coming year as well. ;)
+
+Johan
+
+
+Johan Hovold (9):
+  of: add helper to lookup compatible child node
+  drm/mediatek: fix OF sibling-node lookup
+  drm/msm: fix OF child-node lookup
+  mmc: meson-mx-sdio: fix OF child-node lookup
+  mtd: nand: atmel: fix OF child-node lookup
+  net: bcmgenet: fix OF child-node lookup
+  net: stmmac: dwmac-sun8i: fix OF child-node lookup
+  NFC: nfcmrvl_uart: fix OF child-node lookup
+  power: supply: twl4030-charger: fix OF sibling-node lookup
+
+ drivers/gpu/drm/mediatek/mtk_hdmi.c           |  5 ++--
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  5 ++--
+ drivers/mmc/host/meson-mx-sdio.c              |  8 ++++--
+ drivers/mtd/nand/raw/atmel/nand-controller.c  | 11 +++++---
+ drivers/net/ethernet/broadcom/genet/bcmmii.c  |  2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 12 +++++++--
+ drivers/nfc/nfcmrvl/uart.c                    |  5 ++--
+ drivers/of/base.c                             | 25 +++++++++++++++++++
+ drivers/power/supply/twl4030_charger.c        |  5 ++--
+ include/linux/of.h                            |  8 ++++++
+ 10 files changed, 68 insertions(+), 18 deletions(-)
+
 -- 
 2.18.0
