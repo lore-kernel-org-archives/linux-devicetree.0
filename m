@@ -1,91 +1,175 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/3] clk: ingenic: Add proper Kconfig entries
-Date: Wed, 22 Aug 2018 09:30:24 +0800
-Message-ID: <201808220915.eyVfvvWX%fengguang.wu@intel.com>
-References: <20180821123819.25020-1-paul@crapouillou.net>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v3 1/4] dt-bindings: phy: add DT bindings for UniPhier USB3
+ PHY driver
+Date: Wed, 22 Aug 2018 12:50:31 +0900
+Message-ID: <1534909834-16754-2-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1534909834-16754-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180821123819.25020-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1534909834-16754-1-git-send-email-hayashi.kunihiko@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: devicetree@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Add DT bindings for PHY interface built into USB3 controller
+implemented in UniPhier SoCs.
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on clk/clk-next]
-[also build test WARNING on v4.18 next-20180821]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Paul-Cercueil/clk-ingenic-Add-proper-Kconfig-entries/20180822-003241
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/clk/ingenic/cgu.c:137:13: sparse: expression using sizeof(void)
->> drivers/clk/ingenic/cgu.c:137:13: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:138:13: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:138:13: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:141:13: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:141:13: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:142:13: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:142:13: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:408:15: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:408:15: sparse: expression using sizeof(void)
-   drivers/clk/ingenic/cgu.c:409:15: sparse: expression using sizeof(void)
-   include/linux/slab.h:631:13: sparse: undefined identifier '__builtin_mul_overflow'
-
-vim +137 drivers/clk/ingenic/cgu.c
-
-b066303f Paul Burton 2015-05-24  120  
-b066303f Paul Burton 2015-05-24  121  static unsigned long
-b066303f Paul Burton 2015-05-24  122  ingenic_pll_calc(const struct ingenic_cgu_clk_info *clk_info,
-b066303f Paul Burton 2015-05-24  123  		 unsigned long rate, unsigned long parent_rate,
-b066303f Paul Burton 2015-05-24  124  		 unsigned *pm, unsigned *pn, unsigned *pod)
-b066303f Paul Burton 2015-05-24  125  {
-b066303f Paul Burton 2015-05-24  126  	const struct ingenic_cgu_pll_info *pll_info;
-b066303f Paul Burton 2015-05-24  127  	unsigned m, n, od;
-b066303f Paul Burton 2015-05-24  128  
-b066303f Paul Burton 2015-05-24  129  	pll_info = &clk_info->pll;
-b066303f Paul Burton 2015-05-24  130  	od = 1;
-b066303f Paul Burton 2015-05-24  131  
-b066303f Paul Burton 2015-05-24  132  	/*
-b066303f Paul Burton 2015-05-24  133  	 * The frequency after the input divider must be between 10 and 50 MHz.
-b066303f Paul Burton 2015-05-24  134  	 * The highest divider yields the best resolution.
-b066303f Paul Burton 2015-05-24  135  	 */
-b066303f Paul Burton 2015-05-24  136  	n = parent_rate / (10 * MHZ);
-b066303f Paul Burton 2015-05-24 @137  	n = min_t(unsigned, n, 1 << clk_info->pll.n_bits);
-b066303f Paul Burton 2015-05-24  138  	n = max_t(unsigned, n, pll_info->n_offset);
-b066303f Paul Burton 2015-05-24  139  
-b066303f Paul Burton 2015-05-24  140  	m = (rate / MHZ) * od * n / (parent_rate / MHZ);
-b066303f Paul Burton 2015-05-24  141  	m = min_t(unsigned, m, 1 << clk_info->pll.m_bits);
-b066303f Paul Burton 2015-05-24  142  	m = max_t(unsigned, m, pll_info->m_offset);
-b066303f Paul Burton 2015-05-24  143  
-b066303f Paul Burton 2015-05-24  144  	if (pm)
-b066303f Paul Burton 2015-05-24  145  		*pm = m;
-b066303f Paul Burton 2015-05-24  146  	if (pn)
-b066303f Paul Burton 2015-05-24  147  		*pn = n;
-b066303f Paul Burton 2015-05-24  148  	if (pod)
-b066303f Paul Burton 2015-05-24  149  		*pod = od;
-b066303f Paul Burton 2015-05-24  150  
-b066303f Paul Burton 2015-05-24  151  	return div_u64((u64)parent_rate * m, n * od);
-b066303f Paul Burton 2015-05-24  152  }
-b066303f Paul Burton 2015-05-24  153  
-
-:::::: The code at line 137 was first introduced by commit
-:::::: b066303fb3e72a902a1f94dc06636ce82c3a5577 clk: ingenic: add driver for Ingenic SoC CGU clocks
-
-:::::: TO: Paul Burton <paul.burton@imgtec.com>
-:::::: CC: Ralf Baechle <ralf@linux-mips.org>
-
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ .../bindings/phy/uniphier-usb3-hsphy.txt           | 69 ++++++++++++++++++++++
+ .../bindings/phy/uniphier-usb3-ssphy.txt           | 57 ++++++++++++++++++
+ 2 files changed, 126 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/uniphier-usb3-hsphy.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/uniphier-usb3-ssphy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/uniphier-usb3-hsphy.txt b/Documentation/devicetree/bindings/phy/uniphier-usb3-hsphy.txt
+new file mode 100644
+index 0000000..e8d8086
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/uniphier-usb3-hsphy.txt
+@@ -0,0 +1,69 @@
++Socionext UniPhier USB3 High-Speed (HS) PHY
++
++This describes the devicetree bindings for PHY interfaces built into
++USB3 controller implemented on Socionext UniPhier SoCs.
++Although the controller includes High-Speed PHY and Super-Speed PHY,
++this describes about High-Speed PHY.
++
++Required properties:
++- compatible: Should contain one of the following:
++    "socionext,uniphier-pro4-usb3-hsphy" - for Pro4 SoC
++    "socionext,uniphier-pxs2-usb3-hsphy" - for PXs2 SoC
++    "socionext,uniphier-ld20-usb3-hsphy" - for LD20 SoC
++    "socionext,uniphier-pxs3-usb3-hsphy" - for PXs3 SoC
++- reg: Specifies offset and length of the register set for the device.
++- #phy-cells: Should be 0.
++- clocks: A list of phandles to the clock gate for USB3 glue layer.
++	According to the clock-names, appropriate clocks are required.
++- clock-names: Should contain the following:
++    "gio", "link" - for Pro4 SoC
++    "phy", "phy-ext", "link" - for PXs3 SoC, "phy-ext" is optional.
++    "phy", "link" - for others
++- resets: A list of phandles to the reset control for USB3 glue layer.
++	According to the reset-names, appropriate resets are required.
++- reset-names: Should contain the following:
++    "gio", "link" - for Pro4 SoC
++    "phy", "link" - for others
++
++Optional properties:
++- vbus-supply: A phandle to the regulator for USB VBUS.
++- nvmem-cells: Phandles to nvmem cell that contains the trimming data.
++	Available only for HS-PHY implemented on LD20 and PXs3, and
++	if unspecified, default value is used.
++- nvmem-cell-names: Should be the following names, which correspond to
++	each nvmem-cells.
++	All of the 3 parameters associated with the following names are
++	required for each port, if any one is omitted, the trimming data
++	of the port will not be set at all.
++    "rterm", "sel_t", "hs_i" - Each cell name for phy parameters
++
++Refer to phy/phy-bindings.txt for the generic PHY binding properties.
++
++Example:
++
++	usb-glue@65b00000 {
++		compatible = "socionext,uniphier-ld20-dwc3-glue",
++			     "simple-mfd";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x65b00000 0x400>;
++
++		usb_vbus0: regulator {
++			...
++		};
++
++		usb_hsphy0: hs-phy@200 {
++			compatible = "socionext,uniphier-ld20-usb3-hsphy";
++			reg = <0x200 0x10>;
++			#phy-cells = <0>;
++			clock-names = "link", "phy";
++			clocks = <&sys_clk 14>, <&sys_clk 16>;
++			reset-names = "link", "phy";
++			resets = <&sys_rst 14>, <&sys_rst 16>;
++			vbus-supply = <&usb_vbus0>;
++			nvmem-cell-names = "rterm", "sel_t", "hs_i";
++			nvmem-cells = <&usb_rterm0>, <&usb_sel_t0>,
++				      <&usb_hs_i0>;
++		};
++		...
++	};
+diff --git a/Documentation/devicetree/bindings/phy/uniphier-usb3-ssphy.txt b/Documentation/devicetree/bindings/phy/uniphier-usb3-ssphy.txt
+new file mode 100644
+index 0000000..490b815
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/uniphier-usb3-ssphy.txt
+@@ -0,0 +1,57 @@
++Socionext UniPhier USB3 Super-Speed (SS) PHY
++
++This describes the devicetree bindings for PHY interfaces built into
++USB3 controller implemented on Socionext UniPhier SoCs.
++Although the controller includes High-Speed PHY and Super-Speed PHY,
++this describes about Super-Speed PHY.
++
++Required properties:
++- compatible: Should contain one of the following:
++    "socionext,uniphier-pro4-usb3-ssphy" - for Pro4 SoC
++    "socionext,uniphier-pxs2-usb3-ssphy" - for PXs2 SoC
++    "socionext,uniphier-ld20-usb3-ssphy" - for LD20 SoC
++    "socionext,uniphier-pxs3-usb3-ssphy" - for PXs3 SoC
++- reg: Specifies offset and length of the register set for the device.
++- #phy-cells: Should be 0.
++- clocks: A list of phandles to the clock gate for USB3 glue layer.
++	According to the clock-names, appropriate clocks are required.
++- clock-names:
++    "gio", "link" - for Pro4 SoC
++    "phy", "phy-ext", "link" - for PXs3 SoC, "phy-ext" is optional.
++    "phy", "link" - for others
++- resets: A list of phandles to the reset control for USB3 glue layer.
++	According to the reset-names, appropriate resets are required.
++- reset-names:
++    "gio", "link" - for Pro4 SoC
++    "phy", "link" - for others
++
++Optional properties:
++- vbus-supply: A phandle to the regulator for USB VBUS.
++
++Refer to phy/phy-bindings.txt for the generic PHY binding properties.
++
++Example:
++
++	usb-glue@65b00000 {
++		compatible = "socionext,uniphier-ld20-dwc3-glue",
++			     "simple-mfd";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x65b00000 0x400>;
++
++		usb_vbus0: regulator {
++			...
++		};
++
++		usb_ssphy0: ss-phy@300 {
++			compatible = "socionext,uniphier-ld20-usb3-ssphy";
++			reg = <0x300 0x10>;
++			#phy-cells = <0>;
++			clock-names = "link", "phy";
++			clocks = <&sys_clk 14>, <&sys_clk 16>;
++			reset-names = "link", "phy";
++			resets = <&sys_rst 14>, <&sys_rst 16>;
++			vbus-supply = <&usb_vbus0>;
++		};
++		...
++	};
+-- 
+2.7.4
