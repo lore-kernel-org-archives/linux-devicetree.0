@@ -1,65 +1,187 @@
-From: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 2/2] drm/msm/dpu: fix for cursor blend issue
-Date: Wed, 22 Aug 2018 23:19:57 +0530
-Message-ID: <20180822174957.22684-3-skolluku@codeaurora.org>
-References: <20180822174957.22684-1-skolluku@codeaurora.org>
+From: "George G. Davis" <ggdavisiv@gmail.com>
+Subject: Re: [PATCH v3 1/3] Input: atmel_mxt_ts: Add support for optional
+ regulators.
+Date: Wed, 22 Aug 2018 14:06:03 -0400
+Message-ID: <20180822180603.GA4102@gandalf.middle.earth.net>
+References: <1533050291-11502-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <1533050291-11502-2-git-send-email-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180822174957.22684-1-skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1533050291-11502-2-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: nick@shmanahar.org, mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGN1cnJlbnQgZHJpdmVyIGhhcyB0aGUgb3BhcXVlIGJsZW5kIG1vZGUgc2V0IGFzIHRoZQpk
-ZWZhdWx0IGNhdXNpbmcgdGhlIGJsYWNrIGJveCBlZmZlY3QgYXJvdW5kIHRoZSBjdXJzb3IuClRo
-ZSBmaXggZW5hYmxlcyBjaG9vc2luZyBhIGRpZmZlcmVudCBibGVuZCBtb2RlIGZvciBhbHBoYQpl
-bmFibGVkIGZvcm1hdHMuCgpDaGFuZ2VzIGluIFYyOgoJLSBVc2UgZHJtX2dldF9mb3JtYXRfbmFt
-ZSgpIGluIHRoZSBsb2dzIChTZWFuKQoKU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3Vk
-dXJ1IDxza29sbHVrdUBjb2RlYXVyb3JhLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rp
-c3AvZHB1MS9kcHVfY3J0Yy5jIHwgMjYgKysrKysrKysrKysrKysrKysrKysrLS0tLS0KIDEgZmls
-ZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9k
-cm0vbXNtL2Rpc3AvZHB1MS9kcHVfY3J0Yy5jCmluZGV4IDBjZDk0NTZhNmM0Yy4uMDdjMmQxNWI0
-NWYyIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfY3J0Yy5j
-CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jcnRjLmMKQEAgLTI5Nywx
-NCArMjk3LDI5IEBAIHN0YXRpYyB2b2lkIGRwdV9jcnRjX2Rlc3Ryb3koc3RydWN0IGRybV9jcnRj
-ICpjcnRjKQogfQogCiBzdGF0aWMgdm9pZCBfZHB1X2NydGNfc2V0dXBfYmxlbmRfY2ZnKHN0cnVj
-dCBkcHVfY3J0Y19taXhlciAqbWl4ZXIsCi0JCXN0cnVjdCBkcHVfcGxhbmVfc3RhdGUgKnBzdGF0
-ZSkKKwkJc3RydWN0IGRwdV9wbGFuZV9zdGF0ZSAqcHN0YXRlLCBzdHJ1Y3QgZHB1X2Zvcm1hdCAq
-Zm9ybWF0KQogewogCXN0cnVjdCBkcHVfaHdfbWl4ZXIgKmxtID0gbWl4ZXItPmh3X2xtOworCXVp
-bnQzMl90IGJsZW5kX29wOworCXN0cnVjdCBkcm1fZm9ybWF0X25hbWVfYnVmIGZvcm1hdF9uYW1l
-OwogCiAJLyogZGVmYXVsdCB0byBvcGFxdWUgYmxlbmRpbmcgKi8KLQlsbS0+b3BzLnNldHVwX2Js
-ZW5kX2NvbmZpZyhsbSwgcHN0YXRlLT5zdGFnZSwgMFhGRiwgMCwKLQkJCQlEUFVfQkxFTkRfRkdf
-QUxQSEFfRkdfQ09OU1QgfAotCQkJCURQVV9CTEVORF9CR19BTFBIQV9CR19DT05TVCk7CisJYmxl
-bmRfb3AgPSBEUFVfQkxFTkRfRkdfQUxQSEFfRkdfQ09OU1QgfAorCQlEUFVfQkxFTkRfQkdfQUxQ
-SEFfQkdfQ09OU1Q7CisKKwlpZiAoZm9ybWF0LT5hbHBoYV9lbmFibGUpIHsKKwkJLyogY292ZXJh
-Z2UgYmxlbmRpbmcgKi8KKwkJYmxlbmRfb3AgPSBEUFVfQkxFTkRfRkdfQUxQSEFfRkdfUElYRUwg
-fAorCQkJRFBVX0JMRU5EX0JHX0FMUEhBX0ZHX1BJWEVMIHwKKwkJCURQVV9CTEVORF9CR19JTlZf
-QUxQSEE7CisJfQorCisJbG0tPm9wcy5zZXR1cF9ibGVuZF9jb25maWcobG0sIHBzdGF0ZS0+c3Rh
-Z2UsCisJCQkJMHhGRiwgMCwgYmxlbmRfb3ApOworCisJRFBVX0RFQlVHKCJmb3JtYXQ6JXMsIGFs
-cGhhX2VuOiV1IGJsZW5kX29wOjB4JXhcbiIsCisJCWRybV9nZXRfZm9ybWF0X25hbWUoZm9ybWF0
-LT5iYXNlLnBpeGVsX2Zvcm1hdCwgJmZvcm1hdF9uYW1lKSwKKwkJZm9ybWF0LT5hbHBoYV9lbmFi
-bGUsIGJsZW5kX29wKTsKIH0KIAogc3RhdGljIHZvaWQgX2RwdV9jcnRjX3Byb2dyYW1fbG1fb3V0
-cHV0X3JvaShzdHJ1Y3QgZHJtX2NydGMgKmNydGMpCkBAIC00MDEsNyArNDE2LDggQEAgc3RhdGlj
-IHZvaWQgX2RwdV9jcnRjX2JsZW5kX3NldHVwX21peGVyKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywK
-IAogCQkvKiBibGVuZCBjb25maWcgdXBkYXRlICovCiAJCWZvciAobG1faWR4ID0gMDsgbG1faWR4
-IDwgZHB1X2NydGMtPm51bV9taXhlcnM7IGxtX2lkeCsrKSB7Ci0JCQlfZHB1X2NydGNfc2V0dXBf
-YmxlbmRfY2ZnKG1peGVyICsgbG1faWR4LCBwc3RhdGUpOworCQkJX2RwdV9jcnRjX3NldHVwX2Js
-ZW5kX2NmZyhtaXhlciArIGxtX2lkeCwKKwkJCQkJCXBzdGF0ZSwgZm9ybWF0KTsKIAogCQkJbWl4
-ZXJbbG1faWR4XS5mbHVzaF9tYXNrIHw9IGZsdXNoX21hc2s7CiAKLS0gClRoZSBRdWFsY29tbSBJ
-bm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9y
-dW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxp
-c3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Hello Paweł,
+
+
+I would suggest dropping sentence punctuation in the patch subject line:
+
+Input: atmel_mxt_ts: Add support for optional regulators.
+
+More below...
+
+On Tue, Jul 31, 2018 at 05:18:09PM +0200, Paweł Chmiel wrote:
+> This patch adds optional regulators, which can be used to power
+> up touchscreen. After enabling regulators, we need to wait 150msec.
+> This value is taken from official driver.
+> 
+> It was tested on Samsung Galaxy i9000 (based on Samsung S5PV210 SOC).
+> 
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+> Changes from v2:
+>   - Move code enabling regulators into separate method,
+>     to make code more readable.
+> 
+> Changes from v1:
+>   - Enable regulators only if reset_gpio is present.
+>   - Switch from devm_regulator_get_optional to devm_regulator_get
+> ---
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 65 +++++++++++++++++++++++++++++---
+>  1 file changed, 59 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index 54fe190fd4bc..2cd7f6db6ba9 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/of.h>
+>  #include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/property.h>
+> @@ -194,10 +195,10 @@ enum t100_type {
+>  
+>  /* Delay times */
+>  #define MXT_BACKUP_TIME		50	/* msec */
+> -#define MXT_RESET_GPIO_TIME	20	/* msec */
+>  #define MXT_RESET_INVALID_CHG	100	/* msec */
+>  #define MXT_RESET_TIME		200	/* msec */
+>  #define MXT_RESET_TIMEOUT	3000	/* msec */
+> +#define MXT_REGULATOR_DELAY	150	/* msec */
+>  #define MXT_CRC_TIMEOUT		1000	/* msec */
+>  #define MXT_FW_RESET_TIME	3000	/* msec */
+>  #define MXT_FW_CHG_TIMEOUT	300	/* msec */
+> @@ -310,6 +311,8 @@ struct mxt_data {
+>  	struct t7_config t7_cfg;
+>  	struct mxt_dbg dbg;
+>  	struct gpio_desc *reset_gpio;
+> +	struct regulator *vdd_reg;
+> +	struct regulator *avdd_reg;
+>  
+>  	/* Cached parameters from object table */
+>  	u16 T5_address;
+> @@ -3016,6 +3019,38 @@ static const struct dmi_system_id chromebook_T9_suspend_dmi[] = {
+>  	{ }
+>  };
+>  
+> +static int mxt_regulator_enable(struct mxt_data *data)
+> +{
+> +	int error;
+> +
+> +	if (data->reset_gpio) {
+> +		error = regulator_enable(data->vdd_reg);
+> +		if (error) {
+> +			dev_err(&data->client->dev, "Failed to enable vdd regulator: %d\n",
+> +				error);
+> +			return error;
+> +		}
+> +
+> +		error = regulator_enable(data->avdd_reg);
+> +		if (error) {
+> +			dev_err(&data->client->dev, "Failed to enable avdd regulator: %d\n",
+> +				error);
+> +			return error;
+> +		}
+> +
+> +		/*
+> +		 * According to maXTouch power sequencing specification, RESET line
+
+Please fix the following checkpatch issue:
+
+drivers/input/touchscreen/atmel_mxt_ts.c:3065: WARNING:LONG_LINE_COMMENT: line over 80 characters
+
+Thanks!
+
+--
+Regards,
+George
+
+> +		 * must be kept low until some time after regulators come up to
+> +		 * voltage
+> +		 */
+> +		msleep(MXT_REGULATOR_DELAY);
+> +		gpiod_set_value(data->reset_gpio, 1);
+> +		msleep(MXT_RESET_INVALID_CHG);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  {
+>  	struct mxt_data *data;
+> @@ -3076,6 +3111,22 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  		return error;
+>  	}
+>  
+> +	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
+> +	if (IS_ERR(data->vdd_reg)) {
+> +		error = PTR_ERR(data->vdd_reg);
+> +		dev_err(&client->dev, "Failed to get vdd regulator: %d\n",
+> +			error);
+> +		return error;
+> +	}
+> +
+> +	data->avdd_reg = devm_regulator_get(&client->dev, "avdd");
+> +	if (IS_ERR(data->avdd_reg)) {
+> +		error = PTR_ERR(data->avdd_reg);
+> +		dev_err(&client->dev, "Failed to get avdd regulator: %d\n",
+> +			error);
+> +		return error;
+> +	}
+> +
+>  	error = devm_request_threaded_irq(&client->dev, client->irq,
+>  					  NULL, mxt_interrupt, IRQF_ONESHOT,
+>  					  client->name, data);
+> @@ -3086,11 +3137,9 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  
+>  	disable_irq(client->irq);
+>  
+> -	if (data->reset_gpio) {
+> -		msleep(MXT_RESET_GPIO_TIME);
+> -		gpiod_set_value(data->reset_gpio, 1);
+> -		msleep(MXT_RESET_INVALID_CHG);
+> -	}
+> +	error = mxt_regulator_enable(data);
+> +	if (error)
+> +		return error;
+>  
+>  	error = mxt_initialize(data);
+>  	if (error)
+> @@ -3116,6 +3165,10 @@ static int mxt_remove(struct i2c_client *client)
+>  	struct mxt_data *data = i2c_get_clientdata(client);
+>  
+>  	disable_irq(data->irq);
+> +	if (data->reset_gpio) {
+> +		regulator_disable(data->avdd_reg);
+> +		regulator_disable(data->vdd_reg);
+> +	}
+>  	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+>  	mxt_free_input_device(data);
+>  	mxt_free_object_table(data);
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
