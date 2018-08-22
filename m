@@ -1,58 +1,22 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 3/9] drm/msm: fix OF child-node lookup
-Date: Wed, 22 Aug 2018 12:55:41 +0200
-Message-ID: <20180822105547.9634-4-johan@kernel.org>
-References: <20180822105547.9634-1-johan@kernel.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: pwm: rcar: Add r8a774a1 support
+Date: Wed, 22 Aug 2018 13:18:36 +0200
+Message-ID: <20180822111835.dwj2dcfeaxkl6nzq@verge.net.au>
+References: <1534867426-25533-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822105547.9634-1-johan@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1534867426-25533-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Jordan Crouse <jcrouse@codeaurora.org>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_get_compatible_child() helper to lookup the legacy
-pwrlevels child node instead of using of_find_compatible_node(), which
-searches the entire tree and thus can return an unrelated (i.e.
-non-child) node.
+On Tue, Aug 21, 2018 at 05:03:46PM +0100, Fabrizio Castro wrote:
+> Document RZ/G2M (R8A774A1) SoC bindings.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-This also addresses a potential use-after-free (e.g. after probe
-deferral) as the tree-wide helper drops a reference to its first
-argument (i.e. the probed device's node).
-
-While at it, also fix the related child-node reference leak.
-
-Fixes: e2af8b6b0ca1 ("drm/msm: gpu: Use OPP tables if we can")
-Cc: stable <stable@vger.kernel.org>     # 4.12
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: David Airlie <airlied@linux.ie>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index da1363a0c54d..93d70f4a2154 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -633,8 +633,7 @@ static int adreno_get_legacy_pwrlevels(struct device *dev)
- 	struct device_node *child, *node;
- 	int ret;
- 
--	node = of_find_compatible_node(dev->of_node, NULL,
--		"qcom,gpu-pwrlevels");
-+	node = of_get_compatible_child(dev->of_node, "qcom,gpu-pwrlevels");
- 	if (!node) {
- 		dev_err(dev, "Could not find the GPU powerlevels\n");
- 		return -ENXIO;
-@@ -655,6 +654,8 @@ static int adreno_get_legacy_pwrlevels(struct device *dev)
- 			dev_pm_opp_add(dev, val, 0);
- 	}
- 
-+	of_node_put(node);
-+
- 	return 0;
- }
- 
--- 
-2.18.0
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
