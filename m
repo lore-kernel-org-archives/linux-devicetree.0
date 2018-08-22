@@ -1,54 +1,21 @@
-From: Jan Tuerk <jan.tuerk@emtrion.com>
-Subject: [PATCH v5 4/4] ARM: imx_v6_v7_defconfig: Enable DA0963 PMIC support.
-Date: Wed, 22 Aug 2018 17:51:33 +0200
-Message-ID: <20180822155137.10018-4-jan.tuerk@emtrion.com>
-References: <20180427132445.3458-1-jan.tuerk@emtrion.com>
- <20180822155137.10018-1-jan.tuerk@emtrion.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v5 4/4] ARM: imx_v6_v7_defconfig: Enable DA0963 PMIC support.
+Date: Wed, 22 Aug 2018 13:26:47 -0300
+Message-ID: <CAOMZO5Bb=T49ZOfsc+LbUKM8iRH7GAFkKyFMT_FCfkT16LDdDw@mail.gmail.com>
+References: <20180427132445.3458-1-jan.tuerk@emtrion.com> <20180822155137.10018-1-jan.tuerk@emtrion.com>
+ <20180822155137.10018-4-jan.tuerk@emtrion.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822155137.10018-1-jan.tuerk@emtrion.com>
+In-Reply-To: <20180822155137.10018-4-jan.tuerk@emtrion.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Russell King <linux@armlinux.org.uk>, "GitAuthor: Jan Tuerk" <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jan Tuerk <jan.tuerk@emtrion.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-All recent emtrion modules based on i.mx6 make use of the DA0963.
-Therefore enable it with the following defaults:
-	- CONFIG_MFD_DA9063=y
-	- CONFIG_REGULATOR_DA9063=y
-	- CONFIG_DA9063_WATCHDOG=m
-MFD and REGULATOR are built-in to have it at Kernel boot-time.
-The WATCHDOG is optional and could be loaded from userspace.
+On Wed, Aug 22, 2018 at 12:51 PM, Jan Tuerk <jan.tuerk@emtrion.com> wrote:
+> All recent emtrion modules based on i.mx6 make use of the DA0963.
 
-Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
----
- arch/arm/configs/imx_v6_v7_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+s/DA0963/DA9063/
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 200ebda47e0c..736c5ed3fd9b 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -219,10 +219,12 @@ CONFIG_CPU_THERMAL=y
- CONFIG_IMX_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_DA9062_WATCHDOG=y
-+CONFIG_DA9063_WATCHDOG=m
- CONFIG_RN5T618_WATCHDOG=y
- CONFIG_IMX2_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_DA9062=y
-+CONFIG_MFD_DA9063=y
- CONFIG_MFD_MC13XXX_SPI=y
- CONFIG_MFD_MC13XXX_I2C=y
- CONFIG_MFD_RN5T618=y
-@@ -232,6 +234,7 @@ CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_ANATOP=y
- CONFIG_REGULATOR_DA9052=y
- CONFIG_REGULATOR_DA9062=y
-+CONFIG_REGULATOR_DA9063=y
- CONFIG_REGULATOR_GPIO=y
- CONFIG_REGULATOR_MC13783=y
- CONFIG_REGULATOR_MC13892=y
--- 
-2.18.0
+In the Subject line there is also the same typo.
