@@ -1,31 +1,59 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v4 3/4] edac: synopsys: Add EDAC ECC support for ZynqMP
- DDRC
-Date: Wed, 22 Aug 2018 15:34:57 +0200
-Message-ID: <20180822133457.GA6462@nazgul.tnic>
-References: <1533374735-16662-1-git-send-email-manish.narani@xilinx.com>
- <1533374735-16662-4-git-send-email-manish.narani@xilinx.com>
- <20180821130946.GD30528@nazgul.tnic>
- <DM6PR02MB522788F1286F18FBC6458E0EC1300@DM6PR02MB5227.namprd02.prod.outlook.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v6 0/5] Add i.MX8MQ clock driver
+Date: Wed, 22 Aug 2018 16:48:18 +0300
+Message-ID: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DM6PR02MB522788F1286F18FBC6458E0EC1300@DM6PR02MB5227.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <MNARANI@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, Edgar Iglesias <edgari@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, Naga Sureshkumar Relli <nagasure@xilinx.com>, Bharat Kumar Gogada <bharatku@xilinx.com>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, Srinivas Goud <sgoud@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>
+Cc: linux-clk@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 22, 2018 at 01:02:40PM +0000, Manish Narani wrote:
->  I could remove 'synps_enh' from the prefix and keep 'zynq' and
-> 'zynqmp' to differentiate. Please suggest.
+Fifth version can be found here:
 
-Makes sense and it is shorter, sure.
+https://lkml.org/lkml/2018/8/20/83
+
+Changes since v5:
+ * Fixed the predivider and divider register values as
+   reported by Sascha.
+ * Changed the commit message of the 4th patch to match
+   with what the commit is adding
+
+Changes since v4:
+ * Implemented divider ops and used clk-composite as suggested
+   by Sascha Hauer.
+
+Changes since v3:
+ * Added a composite clock type to get rid of some complexity
+   from clk-imx8mq. This new composite clock type will also be
+   used by all the imx8 socs that will follow.
+ * Added back the reviewed-by tag.
+
+Abel Vesa (1):
+  clk: imx: add imx composite clock
+
+Lucas Stach (4):
+  dt-bindings: add binding for i.MX8MQ CCM
+  clk: imx: add fractional PLL output clock
+  clk: imx: add SCCG PLL type
+  clk: imx: add clock driver for i.MX8MQ CCM
+
+ .../devicetree/bindings/clock/imx8mq-clock.txt     |  20 +
+ drivers/clk/imx/Makefile                           |   6 +-
+ drivers/clk/imx/clk-composite.c                    | 157 +++++
+ drivers/clk/imx/clk-frac-pll.c                     | 230 ++++++++
+ drivers/clk/imx/clk-imx8mq.c                       | 631 +++++++++++++++++++++
+ drivers/clk/imx/clk-sccg-pll.c                     | 231 ++++++++
+ drivers/clk/imx/clk.h                              |  57 ++
+ include/dt-bindings/clock/imx8mq-clock.h           | 410 +++++++++++++
+ 8 files changed, 1741 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+ create mode 100644 drivers/clk/imx/clk-composite.c
+ create mode 100644 drivers/clk/imx/clk-frac-pll.c
+ create mode 100644 drivers/clk/imx/clk-imx8mq.c
+ create mode 100644 drivers/clk/imx/clk-sccg-pll.c
+ create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
 
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+2.7.4
