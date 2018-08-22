@@ -1,92 +1,61 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 1/9] of: add helper to lookup compatible child node
-Date: Wed, 22 Aug 2018 12:55:39 +0200
-Message-ID: <20180822105547.9634-2-johan@kernel.org>
+Subject: [PATCH 2/9] drm/mediatek: fix OF sibling-node lookup
+Date: Wed, 22 Aug 2018 12:55:40 +0200
+Message-ID: <20180822105547.9634-3-johan@kernel.org>
 References: <20180822105547.9634-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180822105547.9634-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Jie Qiu <jie.qiu@mediatek.com>, Junzhi Zhao <junzhi.zhao@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-Add of_get_compatible_child() helper that can be used to lookup
-compatible child nodes.
+Use the new of_get_compatible_child() helper to lookup the sibling
+instead of using of_find_compatible_node(), which searches the entire
+tree and thus can return an unrelated (i.e. non-sibling) node.
 
-Several drivers currently use of_find_compatible_node() to lookup child
-nodes while failing to notice that the of_find_ functions search the
-entire tree depth-first and therefore can match unrelated (non-child)
-nodes. The fact that these functions also drop a reference to the node
-they start searching from (e.g. the parent node) is typically also
-overlooked, something which can lead to use-after-free bugs.
+This also addresses a potential use-after-free (e.g. after probe
+deferral) as the tree-wide helper drops a reference to its first
+argument (i.e. the parent device node).
 
+While at it, also fix the related cec-node reference leak.
+
+Fixes: 8f83f26891e1 ("drm/mediatek: Add HDMI support")
+Cc: stable <stable@vger.kernel.org>     # 4.8
+Cc: Jie Qiu <jie.qiu@mediatek.com>
+Cc: Junzhi Zhao <junzhi.zhao@mediatek.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: CK Hu <ck.hu@mediatek.com>
+Cc: David Airlie <airlied@linux.ie>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/of/base.c  | 25 +++++++++++++++++++++++++
- include/linux/of.h |  8 ++++++++
- 2 files changed, 33 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_hdmi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 466e3c8582f0..bc420d2aa5f5 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -719,6 +719,31 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
- }
- EXPORT_SYMBOL(of_get_next_available_child);
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+index 2d45d1dd9554..643f5edd68fe 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+@@ -1446,8 +1446,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+ 	}
  
-+/**
-+ * of_get_compatible_child - Find compatible child node
-+ * @parent:	parent node
-+ * @compatible:	compatible string
-+ *
-+ * Lookup child node whose compatible property contains the given compatible
-+ * string.
-+ *
-+ * Returns a node pointer with refcount incremented, use of_node_put() on it
-+ * when done; or NULL if not found.
-+ */
-+struct device_node *of_get_compatible_child(const struct device_node *parent,
-+				const char *compatible)
-+{
-+	struct device_node *child;
-+
-+	for_each_child_of_node(parent, child) {
-+		if (of_device_is_compatible(child, compatible))
-+			break;
-+	}
-+
-+	return child;
-+}
-+EXPORT_SYMBOL(of_get_compatible_child);
-+
- /**
-  *	of_get_child_by_name - Find the child node by name for a given parent
-  *	@node:	parent node
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4d25e4f952d9..c22982fc1bff 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -290,6 +290,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
- extern struct device_node *of_get_next_available_child(
- 	const struct device_node *node, struct device_node *prev);
+ 	/* The CEC module handles HDMI hotplug detection */
+-	cec_np = of_find_compatible_node(np->parent, NULL,
+-					 "mediatek,mt8173-cec");
++	cec_np = of_get_compatible_child(np->parent, "mediatek,mt8173-cec");
+ 	if (!cec_np) {
+ 		dev_err(dev, "Failed to find CEC node\n");
+ 		return -EINVAL;
+@@ -1457,8 +1456,10 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+ 	if (!cec_pdev) {
+ 		dev_err(hdmi->dev, "Waiting for CEC device %pOF\n",
+ 			cec_np);
++		of_node_put(cec_np);
+ 		return -EPROBE_DEFER;
+ 	}
++	of_node_put(cec_np);
+ 	hdmi->cec_dev = &cec_pdev->dev;
  
-+extern struct device_node *of_get_compatible_child(const struct device_node *parent,
-+					const char *compatible);
- extern struct device_node *of_get_child_by_name(const struct device_node *node,
- 					const char *name);
- 
-@@ -632,6 +634,12 @@ static inline bool of_have_populated_dt(void)
- 	return false;
- }
- 
-+static struct device_node *of_get_compatible_child(const struct device_node *parent,
-+					const char *compatible)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *of_get_child_by_name(
- 					const struct device_node *node,
- 					const char *name)
+ 	/*
 -- 
 2.18.0
