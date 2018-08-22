@@ -1,43 +1,92 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v2] ARM: multi_v7_defconfig: enable STM32 SPI
-Date: Wed, 22 Aug 2018 12:49:49 +0200
-Message-ID: <1534934989-22292-1-git-send-email-amelie.delaunay@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Arnd
- Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH 1/9] of: add helper to lookup compatible child node
+Date: Wed, 22 Aug 2018 12:55:39 +0200
+Message-ID: <20180822105547.9634-2-johan@kernel.org>
+References: <20180822105547.9634-1-johan@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180822105547.9634-1-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the STM32 SPI driver, implemented on STM32MP1 SoC.
+Add of_get_compatible_child() helper that can be used to lookup
+compatible child nodes.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Several drivers currently use of_find_compatible_node() to lookup child
+nodes while failing to notice that the of_find_ functions search the
+entire tree depth-first and therefore can match unrelated (non-child)
+nodes. The fact that these functions also drop a reference to the node
+they start searching from (e.g. the parent node) is typically also
+overlooked, something which can lead to use-after-free bugs.
+
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/of/base.c  | 25 +++++++++++++++++++++++++
+ include/linux/of.h |  8 ++++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index b749d1e..4cdb622 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -417,6 +417,7 @@ CONFIG_SPI_S3C64XX=m
- CONFIG_SPI_SH_MSIOF=m
- CONFIG_SPI_SH_HSPI=y
- CONFIG_SPI_SIRF=y
-+CONFIG_SPI_STM32=m
- CONFIG_SPI_SUN4I=y
- CONFIG_SPI_SUN6I=y
- CONFIG_SPI_TEGRA114=y
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 466e3c8582f0..bc420d2aa5f5 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -719,6 +719,31 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ }
+ EXPORT_SYMBOL(of_get_next_available_child);
+ 
++/**
++ * of_get_compatible_child - Find compatible child node
++ * @parent:	parent node
++ * @compatible:	compatible string
++ *
++ * Lookup child node whose compatible property contains the given compatible
++ * string.
++ *
++ * Returns a node pointer with refcount incremented, use of_node_put() on it
++ * when done; or NULL if not found.
++ */
++struct device_node *of_get_compatible_child(const struct device_node *parent,
++				const char *compatible)
++{
++	struct device_node *child;
++
++	for_each_child_of_node(parent, child) {
++		if (of_device_is_compatible(child, compatible))
++			break;
++	}
++
++	return child;
++}
++EXPORT_SYMBOL(of_get_compatible_child);
++
+ /**
+  *	of_get_child_by_name - Find the child node by name for a given parent
+  *	@node:	parent node
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4d25e4f952d9..c22982fc1bff 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -290,6 +290,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+ extern struct device_node *of_get_next_available_child(
+ 	const struct device_node *node, struct device_node *prev);
+ 
++extern struct device_node *of_get_compatible_child(const struct device_node *parent,
++					const char *compatible);
+ extern struct device_node *of_get_child_by_name(const struct device_node *node,
+ 					const char *name);
+ 
+@@ -632,6 +634,12 @@ static inline bool of_have_populated_dt(void)
+ 	return false;
+ }
+ 
++static struct device_node *of_get_compatible_child(const struct device_node *parent,
++					const char *compatible)
++{
++	return NULL;
++}
++
+ static inline struct device_node *of_get_child_by_name(
+ 					const struct device_node *node,
+ 					const char *name)
 -- 
-2.7.4
+2.18.0
