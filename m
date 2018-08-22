@@ -1,74 +1,66 @@
-From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] drm/msm/dpu: fix for cursor blend
- issue
-Date: Wed, 22 Aug 2018 15:11:00 -0400
-Message-ID: <20180822191100.GY164269@art_vandelay>
-References: <20180822174957.22684-1-skolluku@codeaurora.org>
- <20180822174957.22684-3-skolluku@codeaurora.org>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: dac: add bindings for ltc1660
+Date: Wed, 22 Aug 2018 21:25:18 +0200
+Message-ID: <20180822192518.GA694@gmail.com>
+References: <20180821193126.15733-1-marcus.folkesson@gmail.com>
+ <20180821193126.15733-2-marcus.folkesson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180822174957.22684-3-skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+In-Reply-To: <20180821193126.15733-2-marcus.folkesson@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMjIsIDIwMTggYXQgMTE6MTk6NTdQTSArMDUzMCwgU3JhdmFudGhpIEtvbGx1
-a3VkdXJ1IHdyb3RlOgo+IFRoZSBjdXJyZW50IGRyaXZlciBoYXMgdGhlIG9wYXF1ZSBibGVuZCBt
-b2RlIHNldCBhcyB0aGUKPiBkZWZhdWx0IGNhdXNpbmcgdGhlIGJsYWNrIGJveCBlZmZlY3QgYXJv
-dW5kIHRoZSBjdXJzb3IuCj4gVGhlIGZpeCBlbmFibGVzIGNob29zaW5nIGEgZGlmZmVyZW50IGJs
-ZW5kIG1vZGUgZm9yIGFscGhhCj4gZW5hYmxlZCBmb3JtYXRzLgo+IAo+IENoYW5nZXMgaW4gVjI6
-Cj4gCS0gVXNlIGRybV9nZXRfZm9ybWF0X25hbWUoKSBpbiB0aGUgbG9ncyAoU2VhbikKPiAKPiBT
-aWduZWQtb2ZmLWJ5OiBTcmF2YW50aGkgS29sbHVrdWR1cnUgPHNrb2xsdWt1QGNvZGVhdXJvcmEu
-b3JnPgoKUmV2aWV3ZWQtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgoKSSd2
-ZSBhcHBsaWVkIHRoaXMgdG8gZHB1LXN0YWdpbmcvZm9yLW5leHQuCgo+IC0tLQo+ICBkcml2ZXJz
-L2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfY3J0Yy5jIHwgMjYgKysrKysrKysrKysrKysrKysr
-KysrLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25z
-KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9j
-cnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfY3J0Yy5jCj4gaW5kZXgg
-MGNkOTQ1NmE2YzRjLi4wN2MyZDE1YjQ1ZjIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L21zbS9kaXNwL2RwdTEvZHB1X2NydGMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlz
-cC9kcHUxL2RwdV9jcnRjLmMKPiBAQCAtMjk3LDE0ICsyOTcsMjkgQEAgc3RhdGljIHZvaWQgZHB1
-X2NydGNfZGVzdHJveShzdHJ1Y3QgZHJtX2NydGMgKmNydGMpCj4gIH0KPiAgCj4gIHN0YXRpYyB2
-b2lkIF9kcHVfY3J0Y19zZXR1cF9ibGVuZF9jZmcoc3RydWN0IGRwdV9jcnRjX21peGVyICptaXhl
-ciwKPiAtCQlzdHJ1Y3QgZHB1X3BsYW5lX3N0YXRlICpwc3RhdGUpCj4gKwkJc3RydWN0IGRwdV9w
-bGFuZV9zdGF0ZSAqcHN0YXRlLCBzdHJ1Y3QgZHB1X2Zvcm1hdCAqZm9ybWF0KQo+ICB7Cj4gIAlz
-dHJ1Y3QgZHB1X2h3X21peGVyICpsbSA9IG1peGVyLT5od19sbTsKPiArCXVpbnQzMl90IGJsZW5k
-X29wOwo+ICsJc3RydWN0IGRybV9mb3JtYXRfbmFtZV9idWYgZm9ybWF0X25hbWU7Cj4gIAo+ICAJ
-LyogZGVmYXVsdCB0byBvcGFxdWUgYmxlbmRpbmcgKi8KPiAtCWxtLT5vcHMuc2V0dXBfYmxlbmRf
-Y29uZmlnKGxtLCBwc3RhdGUtPnN0YWdlLCAwWEZGLCAwLAo+IC0JCQkJRFBVX0JMRU5EX0ZHX0FM
-UEhBX0ZHX0NPTlNUIHwKPiAtCQkJCURQVV9CTEVORF9CR19BTFBIQV9CR19DT05TVCk7Cj4gKwli
-bGVuZF9vcCA9IERQVV9CTEVORF9GR19BTFBIQV9GR19DT05TVCB8Cj4gKwkJRFBVX0JMRU5EX0JH
-X0FMUEhBX0JHX0NPTlNUOwo+ICsKPiArCWlmIChmb3JtYXQtPmFscGhhX2VuYWJsZSkgewo+ICsJ
-CS8qIGNvdmVyYWdlIGJsZW5kaW5nICovCj4gKwkJYmxlbmRfb3AgPSBEUFVfQkxFTkRfRkdfQUxQ
-SEFfRkdfUElYRUwgfAo+ICsJCQlEUFVfQkxFTkRfQkdfQUxQSEFfRkdfUElYRUwgfAo+ICsJCQlE
-UFVfQkxFTkRfQkdfSU5WX0FMUEhBOwo+ICsJfQo+ICsKPiArCWxtLT5vcHMuc2V0dXBfYmxlbmRf
-Y29uZmlnKGxtLCBwc3RhdGUtPnN0YWdlLAo+ICsJCQkJMHhGRiwgMCwgYmxlbmRfb3ApOwo+ICsK
-PiArCURQVV9ERUJVRygiZm9ybWF0OiVzLCBhbHBoYV9lbjoldSBibGVuZF9vcDoweCV4XG4iLAo+
-ICsJCWRybV9nZXRfZm9ybWF0X25hbWUoZm9ybWF0LT5iYXNlLnBpeGVsX2Zvcm1hdCwgJmZvcm1h
-dF9uYW1lKSwKPiArCQlmb3JtYXQtPmFscGhhX2VuYWJsZSwgYmxlbmRfb3ApOwo+ICB9Cj4gIAo+
-ICBzdGF0aWMgdm9pZCBfZHB1X2NydGNfcHJvZ3JhbV9sbV9vdXRwdXRfcm9pKHN0cnVjdCBkcm1f
-Y3J0YyAqY3J0YykKPiBAQCAtNDAxLDcgKzQxNiw4IEBAIHN0YXRpYyB2b2lkIF9kcHVfY3J0Y19i
-bGVuZF9zZXR1cF9taXhlcihzdHJ1Y3QgZHJtX2NydGMgKmNydGMsCj4gIAo+ICAJCS8qIGJsZW5k
-IGNvbmZpZyB1cGRhdGUgKi8KPiAgCQlmb3IgKGxtX2lkeCA9IDA7IGxtX2lkeCA8IGRwdV9jcnRj
-LT5udW1fbWl4ZXJzOyBsbV9pZHgrKykgewo+IC0JCQlfZHB1X2NydGNfc2V0dXBfYmxlbmRfY2Zn
-KG1peGVyICsgbG1faWR4LCBwc3RhdGUpOwo+ICsJCQlfZHB1X2NydGNfc2V0dXBfYmxlbmRfY2Zn
-KG1peGVyICsgbG1faWR4LAo+ICsJCQkJCQlwc3RhdGUsIGZvcm1hdCk7Cj4gIAo+ICAJCQltaXhl
-cltsbV9pZHhdLmZsdXNoX21hc2sgfD0gZmx1c2hfbWFzazsKPiAgCj4gLS0gCj4gVGhlIFF1YWxj
-b21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9y
-YSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCgot
-LSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1h
-aWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On Tue, Aug 21, 2018 at 09:31:25PM +0200, Marcus Folkesson wrote:
+> LTC1665/LTC1660 is a 8/10-bit Digital-to-Analog Converter (DAC)
+> with eight individual channels.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+
+Rob, sorry I missed your tag.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> ---
+> 
+> Notes:
+>     v2:
+>     	- rename file, ltc166x -> ltc1660
+> 
+>  .../devicetree/bindings/iio/dac/ltc1660.txt         | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ltc1660.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ltc1660.txt b/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
+> new file mode 100644
+> index 000000000000..c5b5f22d6c64
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
+> @@ -0,0 +1,21 @@
+> +* Linear Technology Micropower octal 8-Bit and 10-Bit DACs
+> +
+> +Required properties:
+> + - compatible: Must be one of the following:
+> +		"lltc,ltc1660"
+> +		"lltc,ltc1665"
+> + - reg: SPI chip select number for the device
+> + - vref-supply: Phandle to the voltage reference supply
+> +
+> +Recommended properties:
+> + - spi-max-frequency: Definition as per
+> +	 Documentation/devicetree/bindings/spi/spi-bus.txt.
+> +	 Max frequency for this chip is 5 MHz.
+> +
+> +Example:
+> +dac@0 {
+> +	compatible = "lltc,ltc1660";
+> +	reg = <0>;
+> +	spi-max-frequency = <5000000>;
+> +	vref-supply = <&vref_reg>;
+> +};
+> -- 
+> 2.11.0.rc2
+> 
