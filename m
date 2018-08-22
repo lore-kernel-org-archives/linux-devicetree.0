@@ -1,107 +1,159 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH] dt-bindings: can: rcar_can: Add r8a774a1 support
-Date: Wed, 22 Aug 2018 15:12:26 +0000
-Message-ID: <TYAPR01MB2285834E95AB0D0D3E2C5B72B7300@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-References: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v14 4/4] iommu/arm-smmu: Add support for qcom,smmu-v2
+	variant
+Date: Wed, 22 Aug 2018 16:27:04 +0100
+Message-ID: <44c79159-bf14-cdf0-70ab-421b1dc3c83e@arm.com>
+References: <20180727070224.23966-1-vivek.gautam@codeaurora.org>
+	<20180727070224.23966-5-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180727070224.23966-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+On 27/07/18 08:02, Vivek Gautam wrote:
+> qcom,smmu-v2 is an arm,smmu-v2 implementation with specific
+> clock and power requirements. This smmu core is used with
+> multiple masters on msm8996, viz. mdss, video, etc.
+> Add bindings for the same.
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> 
+> Change since v13:
+>   - No change.
+> 
+>   .../devicetree/bindings/iommu/arm,smmu.txt         | 42 ++++++++++++++++++++++
+>   drivers/iommu/arm-smmu.c                           | 13 +++++++
+>   2 files changed, 55 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index 8a6ffce12af5..7c71a6ed465a 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -17,10 +17,19 @@ conditions.
+>                           "arm,mmu-401"
+>                           "arm,mmu-500"
+>                           "cavium,smmu-v2"
+> +                        "qcom,<soc>-smmu-v2", "qcom,smmu-v2"
+>   
+>                     depending on the particular implementation and/or the
+>                     version of the architecture implemented.
+>   
+> +                  A number of Qcom SoCs use qcom,smmu-v2 version of the IP.
+> +                  "qcom,<soc>-smmu-v2" represents a soc specific compatible
+> +                  string that should be present along with the "qcom,smmu-v2"
+> +                  to facilitate SoC specific clocks/power connections and to
+> +                  address specific bug fixes.
 
-> From: Simon Horman <horms@verge.net.au>
-> Sent: 22 August 2018 11:49
->=20
-> On Fri, Aug 17, 2018 at 03:38:23PM +0100, Fabrizio Castro wrote:
-> > Document RZ/G2M (r8a774a1) SoC bindings.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
->=20
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+As demonstrated in the GPU thread, this proves a bit too vague for a 
+useful binding. Provided Qcom folks can reach a consensus on what a 
+given SoC is actually called, I'd rather just unambiguously list 
+whatever sets of fully-defined strings we need.
 
-Thank you.
+Robin.
 
->=20
-> > ---
-> > This patch applies on top of next-20180817
-> >
-> >  Documentation/devicetree/bindings/net/can/rcar_can.txt | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > index 94a7f33..84afc78 100644
-> > --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > @@ -4,6 +4,7 @@ Renesas R-Car CAN controller Device Tree Bindings
-> > Required properties:
-> >  - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A=
-7743
-> SoC.
-> >  	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 So=
-C.
-> > +	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 =
-SoC.
-> >  	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 So=
-C.
-> >  	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 So=
-C.
-> >  	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 So=
-C.
-> > @@ -16,7 +17,8 @@ Required properties:
-> >  	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible dev=
-ice.
-> >  	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
-> >  	      compatible device.
-> > -	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible dev=
-ice.
-> > +	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 or RZ/G2
-> > +	      compatible device.
-> >  	      When compatible with the generic version, nodes must list the
-> >  	      SoC-specific version corresponding to the platform first
-> >  	      followed by the generic version.
-> > @@ -24,7 +26,9 @@ Required properties:
-> >  - reg: physical base address and size of the R-Car CAN register map.
-> >  - interrupts: interrupt specifier for the sole interrupt.
-> >  - clocks: phandles and clock specifiers for 3 CAN clock inputs.
-> > -- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk"=
-.
-> > +- clock-names: 2 clock input name strings for RZ/G2: "clkp1",
-> > +"can_clk", and
->=20
-> Minor comment: Personally I would start a new sentence at "and".
->=20
-> Question: Is a driver update required so support 2-clock SoCs?
-
-The driver will work okay as-is.
-
-In theory CAN could be broken if renesas,can-clock-select is set to 0x1 (cl=
-kp2) in the DT, as this value will be written to the CAN Clock Select Regis=
-ter. However if the documentation is followed there will be no problems.
-
-We should probably update the driver to fix this though, which will be a ch=
-ange specific to all RZ/G2 devices, so perhaps we should also be adding a "=
-renesas,rzg-gen2-can" family compatible string as well? (to driver and docu=
-mentation)
-
-Kind regards, Chris
-
->=20
-> > +	       3 clock input name strings for every other SoC: "clkp1", "clkp=
-2",
-> > +	       "can_clk".
-> >  - pinctrl-0: pin control group to be used for this controller.
-> >  - pinctrl-names: must be "default".
-> >
-> > --
-> > 2.7.4
-> >
+> +                  An example string would be -
+> +                  "qcom,msm8996-smmu-v2", "qcom,smmu-v2".
+> +
+>   - reg           : Base address and size of the SMMU.
+>   
+>   - #global-interrupts : The number of global interrupts exposed by the
+> @@ -71,6 +80,22 @@ conditions.
+>                     or using stream matching with #iommu-cells = <2>, and
+>                     may be ignored if present in such cases.
+>   
+> +- clock-names:    List of the names of clocks input to the device. The
+> +                  required list depends on particular implementation and
+> +                  is as follows:
+> +                  - for "qcom,smmu-v2":
+> +                    - "bus": clock required for downstream bus access and
+> +                             for the smmu ptw,
+> +                    - "iface": clock required to access smmu's registers
+> +                               through the TCU's programming interface.
+> +                  - unspecified for other implementations.
+> +
+> +- clocks:         Specifiers for all clocks listed in the clock-names property,
+> +                  as per generic clock bindings.
+> +
+> +- power-domains:  Specifiers for power domains required to be powered on for
+> +                  the SMMU to operate, as per generic power domain bindings.
+> +
+>   ** Deprecated properties:
+>   
+>   - mmu-masters (deprecated in favour of the generic "iommus" binding) :
+> @@ -137,3 +162,20 @@ conditions.
+>                   iommu-map = <0 &smmu3 0 0x400>;
+>                   ...
+>           };
+> +
+> +	/* Qcom's arm,smmu-v2 implementation */
+> +	smmu4: iommu {
+> +		compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+> +		reg = <0xd00000 0x10000>;
+> +
+> +		#global-interrupts = <1>;
+> +		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
+> +		#iommu-cells = <1>;
+> +		power-domains = <&mmcc MDSS_GDSC>;
+> +
+> +		clocks = <&mmcc SMMU_MDP_AXI_CLK>,
+> +			 <&mmcc SMMU_MDP_AHB_CLK>;
+> +		clock-names = "bus", "iface";
+> +	};
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index e558abf1ecfc..2b4edba188a5 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -119,6 +119,7 @@ enum arm_smmu_implementation {
+>   	GENERIC_SMMU,
+>   	ARM_MMU500,
+>   	CAVIUM_SMMUV2,
+> +	QCOM_SMMUV2,
+>   };
+>   
+>   struct arm_smmu_s2cr {
+> @@ -1971,6 +1972,17 @@ ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
+>   ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
+>   ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
+>   
+> +static const char * const qcom_smmuv2_clks[] = {
+> +	"bus", "iface",
+> +};
+> +
+> +static const struct arm_smmu_match_data qcom_smmuv2 = {
+> +	.version = ARM_SMMU_V2,
+> +	.model = QCOM_SMMUV2,
+> +	.clks = qcom_smmuv2_clks,
+> +	.num_clks = ARRAY_SIZE(qcom_smmuv2_clks),
+> +};
+> +
+>   static const struct of_device_id arm_smmu_of_match[] = {
+>   	{ .compatible = "arm,smmu-v1", .data = &smmu_generic_v1 },
+>   	{ .compatible = "arm,smmu-v2", .data = &smmu_generic_v2 },
+> @@ -1978,6 +1990,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
+>   	{ .compatible = "arm,mmu-401", .data = &arm_mmu401 },
+>   	{ .compatible = "arm,mmu-500", .data = &arm_mmu500 },
+>   	{ .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
+> +	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
+>   	{ },
+>   };
+>   MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+> 
