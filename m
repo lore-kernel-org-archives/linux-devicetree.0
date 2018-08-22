@@ -1,61 +1,54 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 0/9] of: fix compatible-child-node lookups
-Date: Wed, 22 Aug 2018 12:55:38 +0200
-Message-ID: <20180822105547.9634-1-johan@kernel.org>
+Subject: [PATCH 9/9] power: supply: twl4030-charger: fix OF sibling-node lookup
+Date: Wed, 22 Aug 2018 12:55:47 +0200
+Message-ID: <20180822105547.9634-10-johan@kernel.org>
+References: <20180822105547.9634-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180822105547.9634-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Ulf Hansson <ulf.hansson@linaro.org>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Doug Berger <opendmb@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, NeilBrown <neilb@suse.de>, Felipe Balbi <balbi@ti.com>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Several drivers currently use of_find_compatible_node() to lookup child
-nodes while failing to notice that the of_find_ functions search the
-entire tree depth-first and therefore can match unrelated (non-child)
-nodes.
+Use the new of_get_compatible_child() helper to lookup the usb sibling
+node instead of using of_find_compatible_node(), which searches the
+entire tree and thus can return an unrelated (non-sibling) node.
 
-The fact that these functions also drop a reference to the node they
-start searching from (e.g. the parent node) is typically also
-overlooked, something which can lead to use-after-free bugs (e.g. after
-probe deferrals).
+This also addresses a potential use-after-free (e.g. after probe
+deferral) as the tree-wide helper drops a reference to its first
+argument (i.e. the parent device node).
 
-This series adds a new helper, similar to of_get_child_by_name(), 
-that can be used to lookup compatible child nodes, and uses the new
-helper to fix child-node lookups throughout the tree.
+While at it, also fix the related phy-node reference leak.
 
-This is related to the fixes I posted about a year ago, which addressed
-a similar anti-pattern when looking up child nodes by name. Since it
-took me more than a year to get all those fixes into Linus' tree (one
-fix is still pending), and as these fixes depend on the new helper, I'm
-suggesting that these all go in through Rob's or Greg's trees.
+Fixes: f5e4edb8c888 ("power: twl4030_charger: find associated phy by more reliable means.")
+Cc: stable <stable@vger.kernel.org>     # 4.2
+Cc: NeilBrown <neilb@suse.de>
+Cc: Felipe Balbi <balbi@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/power/supply/twl4030_charger.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Alternatively, the helper could go into to -rc2, and I'll be pinging
-submaintainers for coming year as well. ;)
-
-Johan
-
-
-Johan Hovold (9):
-  of: add helper to lookup compatible child node
-  drm/mediatek: fix OF sibling-node lookup
-  drm/msm: fix OF child-node lookup
-  mmc: meson-mx-sdio: fix OF child-node lookup
-  mtd: nand: atmel: fix OF child-node lookup
-  net: bcmgenet: fix OF child-node lookup
-  net: stmmac: dwmac-sun8i: fix OF child-node lookup
-  NFC: nfcmrvl_uart: fix OF child-node lookup
-  power: supply: twl4030-charger: fix OF sibling-node lookup
-
- drivers/gpu/drm/mediatek/mtk_hdmi.c           |  5 ++--
- drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  5 ++--
- drivers/mmc/host/meson-mx-sdio.c              |  8 ++++--
- drivers/mtd/nand/raw/atmel/nand-controller.c  | 11 +++++---
- drivers/net/ethernet/broadcom/genet/bcmmii.c  |  2 +-
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 12 +++++++--
- drivers/nfc/nfcmrvl/uart.c                    |  5 ++--
- drivers/of/base.c                             | 25 +++++++++++++++++++
- drivers/power/supply/twl4030_charger.c        |  5 ++--
- include/linux/of.h                            |  8 ++++++
- 10 files changed, 68 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
+index bbcaee56db9d..b6a7d9f74cf3 100644
+--- a/drivers/power/supply/twl4030_charger.c
++++ b/drivers/power/supply/twl4030_charger.c
+@@ -996,12 +996,13 @@ static int twl4030_bci_probe(struct platform_device *pdev)
+ 	if (bci->dev->of_node) {
+ 		struct device_node *phynode;
+ 
+-		phynode = of_find_compatible_node(bci->dev->of_node->parent,
+-						  NULL, "ti,twl4030-usb");
++		phynode = of_get_compatible_child(bci->dev->of_node->parent,
++						  "ti,twl4030-usb");
+ 		if (phynode) {
+ 			bci->usb_nb.notifier_call = twl4030_bci_usb_ncb;
+ 			bci->transceiver = devm_usb_get_phy_by_node(
+ 				bci->dev, phynode, &bci->usb_nb);
++			of_node_put(phynode);
+ 			if (IS_ERR(bci->transceiver)) {
+ 				ret = PTR_ERR(bci->transceiver);
+ 				if (ret == -EPROBE_DEFER)
 -- 
 2.18.0
