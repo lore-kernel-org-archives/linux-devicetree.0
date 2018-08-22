@@ -1,135 +1,189 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM
- output between PWM and GPIO
-Date: Wed, 22 Aug 2018 16:10:36 +0200
-Message-ID: <20180822161036.4d69bdc1@ipc1.ka-ro>
-References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
-        <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
-        <20180822081436.13d8f55b@ipc1.ka-ro>
-        <175003bc-eae7-1b30-ebfe-b56ffc58705e@ysoft.com>
-        <20180822131758.162d5351@ipc1.ka-ro>
-        <18b4a847-bc59-4450-331a-0b17f27c97a8@ysoft.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] scripts/dtc: consolidate include path options in Makefile
+Date: Wed, 22 Aug 2018 23:18:10 +0900
+Message-ID: <CAK7LNAQMBVZaQxbGAz-_9hU-NemmHU25GQ=OEvz9i+hr4KVs0w@mail.gmail.com>
+References: <1530669563-32637-1-git-send-email-yamada.masahiro@socionext.com>
+ <cfb66b67-f423-0c26-0b22-0d57a581b44a@gmail.com> <CAL_Jsq+iAxmKvZ+RAD-VSOWirYOxc52mJHU5f5gybhWwQn2w_g@mail.gmail.com>
+ <7fba348e-9fd3-9661-248d-82917f8f6676@gmail.com> <CAK7LNATFbykSHcDZqovTZ0aN9kHvZw3Q4Mamb1gwMwRhg7_s-A@mail.gmail.com>
+ <78d8984c-211a-65c3-ab43-b3c02373ef0a@gmail.com> <CAK7LNAR5aHQ9Vo=-KTg8fzmk-1Nxu8WaXUT9wHM2n9Wr4wHFYw@mail.gmail.com>
+ <7c81314d-2c57-375d-d037-872faa70b227@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <18b4a847-bc59-4450-331a-0b17f27c97a8@ysoft.com>
+In-Reply-To: <7c81314d-2c57-375d-d037-872faa70b227@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Michal Vokáč <michal.vokac@ysoft.com> wrote:
+Hi Frank
 
-> On 22.8.2018 13:17, Lothar Waßmann wrote:
-> > Michal Vokáč <michal.vokac@ysoft.com> wrote:
-> >   
-> >> On 22.8.2018 08:14, Lothar Waßmann wrote:  
-> >>> Michal Vokáč <michal.vokac@ysoft.com> wrote:
-> >>>      
-> >>>> Output of the PWM block of i.MX SoCs is always zero volts when the block
-> >>>> is disabled. This can caue issues when inverted PWM polarity is needed.
-> >>>> With inverted polarity a duty cycle = 0% corresponds to solid high level
-> >>>> on the output. If the PWM is dissabled its output instantly goes to solid
-> >>>> zero which corresponds to duty cycle = 100%.
-> >>>>
-> >>>> To have a trully inverted PWM output configure the PWM pad as a GPIO
-> >>>> with pull-up. Then switch the pad to PWM output whenever non-zero
-> >>>> duty cycle is needed.
-> >>>>
-> >>>> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-> >>>> ---
-> >>>>    Documentation/devicetree/bindings/pwm/imx-pwm.txt | 44 +++++++++++++++++++++++
-> >>>>    1 file changed, 44 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> >>>> index c61bdf8..3b1bc4c 100644
-> >>>> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> >>>> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> >>>> @@ -14,6 +14,12 @@ See the clock consumer binding,
-> >>>>    	Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>>>    - interrupts: The interrupt for the pwm controller
-> >>>>    
-> >>>> +Optional properties:
-> >>>> +- pinctrl: For i.MX27 and newer SoCs. Add extra pinctrl to configure the PWM
-> >>>> +  pin to gpio function.  It allows control over the pin output level when the
-> >>>> +  PWM block is disabled. This is meant to be used if inverted polarity of the
-> >>>> +  PWM signal is required. See "Inverted PWM output" section bellow.
-> >>>> +
-> >>>>    Example:
-> >>>>    
-> >>>>    pwm1: pwm@53fb4000 {
-> >>>> @@ -25,3 +31,41 @@ pwm1: pwm@53fb4000 {
-> >>>>    	clock-names = "ipg", "per";
-> >>>>    	interrupts = <61>;
-> >>>>    };
-> >>>> +
-> >>>> +Inverted PWM output
-> >>>> +-------------------
-> >>>> +
-> >>>> +The i.MX SoC has such limitation that whenever a pad is configured as a PWM
-> >>>> +output, the output level is always zero volts when the PWM block is disabled.
-> >>>> +The zero output level is actively driven by the output stage of the PWM block
-> >>>> +and can not be overridden by pull-up. It also does not matter what PWM polarity
-> >>>> +a PWM client (e.g. backlight) requested.
-> >>>> +
-> >>>> +To gain control of the PWM output level in disabled state two pinctrl states
-> >>>> +can be used. The "default" state and the "pwm" state. In the default state the
-> >>>>     
-> >>> The "default" function of a PWM is to deliver a PWM signal. So it is
-> >>> more sensible to me to have the PWM function as "default" and a "gpio"
-> >>> function as alternative state.  
-> >>
-> >> Yes, I totally agree that using "default" for PWM and "gpio" as the
-> >> alternative function seems more sensible. That is actually how I started.
-> >> Then I realized that that way you end up with the PWM pad set to zero
-> >> until the first call of imx_pwm_apply_v2 where you can select the GPIO
-> >> function. On my system that first call is made by pwm-backlight more than
-> >> 3s after pinctrl init.
-> >>
-> >> I suggested to use the "default" state as a GPIO function as the only way
-> >> how to get a truly inverted PWM output all the time from power-up to
-> >> power-down.
-> >>
-> >> In my opinion it is up to the DT author what pad configuration he uses for
-> >> each pinctrl function as he knows what the HW really needs. I see that this
-> >> approach is kind of controversial but I hope that with good documentation
-> >> this would not be a problem. And as I wrote in the intro, it is absolutely
-> >> optional. If you do not need it, you do not use it.
-> >>  
-> > This is OK so far.
-> > But the approach with the pin being driven high via the pullup
-> > configuration has a fundamental flaw:
-> > The pwm polarity is specified by the PWM client (e.g: the pwm-backlight
-> > driver:
-> > 	pwms = <&pwm0 0 PWM_POLARITY_INVERTED>;
-> > )
-> > The pinconfig is defined in the pinctrl of the PWM driver.
-> > 
-> > If you have clients that may use the same PWM instance and require
-> > different polarity, there is no way to set the pullup/-down
-> > configuration in accordance with the clients needs.  
-> 
-> Hmm, I did not think about more than one PWM client. Is it even possible
-> to design such board? Do you have an example of such usage? It would mean
+2018-08-22 3:02 GMT+09:00 Frank Rowand <frowand.list@gmail.com>:
+> On 08/21/18 00:18, Masahiro Yamada wrote:
+>> Hi Frank,
+>>
+>>
+>> 2018-08-21 14:37 GMT+09:00 Frank Rowand <frowand.list@gmail.com>:
+>>> On 08/20/18 19:08, Masahiro Yamada wrote:
+>>>> Hi Frank,
+>>>>
+>>>> 2018-08-21 10:31 GMT+09:00 Frank Rowand <frowand.list@gmail.com>:
+>>>>> On 08/20/18 14:32, Rob Herring wrote:
+>>>>>> On Mon, Aug 20, 2018 at 1:55 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>>>>>>
+>>>>>>> On 07/03/18 18:59, Masahiro Yamada wrote:
+>>>>>>>> It is tedious to specify extra compiler options for every file.
+>>>>>>>> HOST_EXTRACFLAGS is useful to add options to all files in a
+>>>>>>>> directory.
+>>>>>>>>
+>>>>>>>> -I$(src)/libfdt is needed for all the files in this directory
+>>>>>>>> to include libfdt_env.h etc. from scripts/dtc/libfdt/.
+>>>>>>>>
+>>>>>>>> On the other hand, -I$(src) is used to include check-in headers
+>>>>>>>> from generated C files.  Thus, I added it only to dtc-lexer.lex.o
+>>>>>>>> and dtc-parser.tab.o .
+>>>>>>>>
+>>>>>>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>>>>>>> ---
+>>>>>>>>
+>>>>>>>>  scripts/dtc/Makefile | 18 ++++--------------
+>>>>>>>>  1 file changed, 4 insertions(+), 14 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+>>>>>>>> index 9cac65b..1c943e0 100644
+>>>>>>>> --- a/scripts/dtc/Makefile
+>>>>>>>> +++ b/scripts/dtc/Makefile
+>>>>>>>> @@ -9,21 +9,11 @@ dtc-objs    := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
+>>>>>>>>  dtc-objs     += dtc-lexer.lex.o dtc-parser.tab.o
+>>>>>>>>
+>>>>>>>>  # Source files need to get at the userspace version of libfdt_env.h to compile
+>>>>>>>> +HOST_EXTRACFLAGS := -I$(src)/libfdt
+>>>>>>>
+>>>>>>> Shouldn't that be += instead of :=?
+>>>>>>
+>>>>>> I don't think so. The definition is local to the file (and reset
+>>>>>> before each makefile is included).
+>>>>>>
+>>>>>> Rob
+>>>>>>
+>>>>>
+>>>>> Every other place where HOST_EXTRACFLAGS is assigned a value, += is used
+>>>>> instead of :=, including the example in Documentation/kbuild/makefiles.txt
+>>>>>
+>>>>> What makes scripts/dtc/Makefile different than the other makefiles?
+>>>>>
+>>>>> -Frank
+>>>>>
+>>>>
+>>>>
+>>>> := and += work in the same way in here.
+>>>
+>>> Unless I do: HOST_EXTRACFLAGS=xxx make
+>>> where "xxx" is some random flag I feel like adding in a particular build.
+>>
+>>
+>>
+>> This is not the intended usage of HOST_EXTRACFLAGS.
 >
-My use case is attaching different displays to the same baseboard,
-where some displays have the brightness control pin inverted with
-respect to the others. It's easy to change the compatible string for
-the simple-panel driver and the PWM polarity setting for the
-pwm-backlight driver from U-Boot according to the display model, but
-it's not so easy, to edit the pinctrl settings from pull-up to
-pull-down or vice versa.
+> I seem to have found a useful feature for making a specific object in a
+> development context with additional compiler flags.  But a feature that
+> you say is not intended.
+>
+> I do understand that there is an intended difference between HOSTCFLAGS
+> and HOST_EXTRACFLAGS.  But I do not agree that using HOST_EXTRACFLAGS
+> on the make commandline when building a single object in a development
+> context is abuse.
+>
+>
+>> HOST_EXTRACFLAGS is supposed to be set by Makefile in the kernel tree.
+>
+> But it is not set, thus it is currently available (and has been for many
+> years) for the usage that I specified above.
 
 
-Lothar Waßmann
+
+Right.  People often find something that happens to work.
+
+
+
+HOST_EXTRACFLAGS=xxx make
+
+works, but
+
+make HOST_EXTRACFLAGS=xxx
+
+does not because it really overrides += in makefiles.
+
+
+
+>
+>> Documentation/kbuild/makefiles.txt explains this:
+>>
+>>        To set flags that will take effect for all host programs created
+>>        in that Makefile, use the variable HOST_EXTRACFLAGS.
+>>
+>>
+>>
+>> If you want to pass additional host compiler flags,
+>> please use HOSTCFLAGS instead.
+>
+> That will not work because the top level Makefile has:
+>
+>    HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 \
+>
+>
+>> Documentation/kbuild/kbuild.txt lists officially supported
+>> environment variables / command line variables.>
+>>     HOSTCFLAGS
+>>     --------------------------------------------------
+>>     Additional flags to be passed to $(HOSTCC) when building host programs.
+>
+> HOSTCFLAGS is not in my 4.18.0 Documentation/kbuild/kbuild.txt.  What version are
+> you looking at?
+>
+>   $ git log -n1
+>   commit 94710cac0ef4ee177a63b5227664b38c95bbf703
+>   Author: Linus Torvalds <torvalds@linux-foundation.org>
+>   Date:   Sun Aug 12 13:41:04 2018 -0700
+>
+>       Linux 4.18
+>   $ git grep HOSTCFLAGS Documentation/kbuild/kbuild.txt
+>   $
+
+Please check the latest Linus tree.
+
+Commit f92d19e0ef9bbbb2984845682e740934ad45473b
+was merged in this MW.
+
+
+
+>
+> But this is where I concede that HOST_EXTRACFLAGS is also not listed as
+> an officially supported environment variable or command line variable.  I
+> had not checked here for that limitation.
+>
+>
+>>
+>>
+>> Maybe I should add
+>>
+>> HOST_EXTRACFLAGS   :=
+>> HOST_EXTRACXXFLAGS :=
+>>
+>> to the top of scripts/Makefile.build
+>> to reset the variables explicitly
+>> in case people try to abuse them.
+>
+> Yes, if you intend that it not be possible to initialize them in the make
+> command then you should initialize them.  If you do that, it is easy
+> enough for me to patch the initialization out in cases where I want the
+> extra functionality.
+
+
+
+
+
+
 -- 
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstraße 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Geschäftsführer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+Best Regards
+Masahiro Yamada
