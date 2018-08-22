@@ -1,100 +1,88 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 9/9] power: supply: twl4030-charger: fix OF sibling-node
- lookup
-Date: Wed, 22 Aug 2018 23:36:58 +0200
-Message-ID: <20180822213658.uuzsalnlxbayc4ml@earth.universe>
-References: <20180822105547.9634-1-johan@kernel.org>
- <20180822105547.9634-10-johan@kernel.org>
+From: vnkgutta@codeaurora.org
+Subject: Re: [PATCH v2 4/4] dt-bindigs: msm: Update documentation of qcom,llcc
+Date: Wed, 22 Aug 2018 14:46:32 -0700
+Message-ID: <713d4db0899096456befe8dbe94a4997@codeaurora.org>
+References: <1534550915-18230-1-git-send-email-vnkgutta@codeaurora.org>
+ <1534550915-18230-5-git-send-email-vnkgutta@codeaurora.org>
+ <20180820195341.GA3358@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kfx3tqsq374xuhtg"
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180822105547.9634-10-johan@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>, NeilBrown <neilb@suse.de>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180820195341.GA3358@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de, evgreen@chromium.org
 List-Id: devicetree@vger.kernel.org
 
+On 2018-08-20 12:53, Rob Herring wrote:
+> On Fri, Aug 17, 2018 at 05:08:35PM -0700, Venkata Narendra Kumar Gutta 
+> wrote:
+>> Add reg-names and interrupts for LLCC documentation and the usage
+>> examples. llcc broadcast base is added in addition to llcc base,
+>> which is used for llcc broadcast writes.
+> 
+> Typo in the subject.
+> 
+> This binding just landed recently and it's already being updated? Sigh.
+> Bindings should be complete from the start. Technically, you can't add
+> new required properties.
 
---kfx3tqsq374xuhtg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure, I'll correct the typo.
 
-Hi,
+llcc broadcast base was being computed from the number of banks which 
+was incorrect,
+so we have to add this property.
 
-On Wed, Aug 22, 2018 at 12:55:47PM +0200, Johan Hovold wrote:
-> Use the new of_get_compatible_child() helper to lookup the usb sibling
-> node instead of using of_find_compatible_node(), which searches the
-> entire tree and thus can return an unrelated (non-sibling) node.
->=20
-> This also addresses a potential use-after-free (e.g. after probe
-> deferral) as the tree-wide helper drops a reference to its first
-> argument (i.e. the parent device node).
->=20
-> While at it, also fix the related phy-node reference leak.
->=20
-> Fixes: f5e4edb8c888 ("power: twl4030_charger: find associated phy by more=
- reliable means.")
-> Cc: stable <stable@vger.kernel.org>     # 4.2
-> Cc: NeilBrown <neilb@suse.de>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
+And the interrupt is needed for EDAC functionality.
 
-Reviewed-by: Sebastian Reichel <sre@kernel.org>
+> 
+>> 
+>> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt | 15 
+>> ++++++++++++++-
+>>  1 file changed, 14 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt 
+>> b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>> index 5e85749..b4b1c86 100644
+>> --- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
+>> @@ -18,9 +18,22 @@ Properties:
+>>  	Value Type: <prop-encoded-array>
+>>  	Definition: Start address and the the size of the register region.
+>> 
+>> +- reg-names:
+>> +        Usage: required
+>> +        Value Type: <stringlist>
+>> +        Definition: Register region names. Must be "llcc_base", 
+>> "llcc_bcast_base".
+> 
+> reg needs to be updated that there are 2 entries.
 
--- Sebastian
+Ok, I'll update this in the next version.
 
->  drivers/power/supply/twl4030_charger.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/suppl=
-y/twl4030_charger.c
-> index bbcaee56db9d..b6a7d9f74cf3 100644
-> --- a/drivers/power/supply/twl4030_charger.c
-> +++ b/drivers/power/supply/twl4030_charger.c
-> @@ -996,12 +996,13 @@ static int twl4030_bci_probe(struct platform_device=
- *pdev)
->  	if (bci->dev->of_node) {
->  		struct device_node *phynode;
-> =20
-> -		phynode =3D of_find_compatible_node(bci->dev->of_node->parent,
-> -						  NULL, "ti,twl4030-usb");
-> +		phynode =3D of_get_compatible_child(bci->dev->of_node->parent,
-> +						  "ti,twl4030-usb");
->  		if (phynode) {
->  			bci->usb_nb.notifier_call =3D twl4030_bci_usb_ncb;
->  			bci->transceiver =3D devm_usb_get_phy_by_node(
->  				bci->dev, phynode, &bci->usb_nb);
-> +			of_node_put(phynode);
->  			if (IS_ERR(bci->transceiver)) {
->  				ret =3D PTR_ERR(bci->transceiver);
->  				if (ret =3D=3D -EPROBE_DEFER)
-> --=20
-> 2.18.0
->=20
-
---kfx3tqsq374xuhtg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlt913cACgkQ2O7X88g7
-+pqSrhAAgJWkbj4ZZr0TfSV4uMcPbTetTFIezbONmXZrVGme1CcgxsR7F36fJT+M
-JSSj5+MyASYbc7O9eLRThkq3t05SHu7jf9WdV8pwEgHdHLJPGalIrWpmK5i4SxOc
-d4m/S075tKYqTQEo2tMNzsdQAMBMU+2QYDc/Q5aBEW73Iyqww098rMZsgPEykF9q
-G4Mk3gpu/GY46W6grbQKLWPpBX3bN5lRM/5Vz9rbZGj39AUqAnAWHmZU24USTnVg
-AjOcZZ3kyZqRx+Lu5dpqhzmpsD5g7ZQ3DrYzJqZvlCvPC1gn+L9FbXKwuubMHbZ2
-qhC6vwWNNGry/OwnfsbGNcWweX2O3JN7aWFgTSnpRGvAQeZB1GF7GIJG966oLpwW
-11lGN5G0qqf+6e5OhCPs1oCM1n9i2en6Env65bIBOp3Pe0VHr58UcLs/7EFa7Mu6
-5bOFFfCqr65XtHw5lm0LLRAy8XDLhHKFF7eLj6zCiKeafdxW4Ey/H9ACW48GpybB
-1cQzWtYueiqDeCtrVYPBEtZPuNSp6R6pvsDGu/AFV/tjkVRP6F2IuM2LWlYC5YKB
-zwEA87iPBp6trkSoc0b495FAbKkc6/hl44wVTzPip6p9ZEraGOFpzQLWl5wAMN43
-ambgNNO72a6H+QTnYcpnKt78RwzAYIBugyOG4V+9wL69YK8iOZs=
-=FeKy
------END PGP SIGNATURE-----
-
---kfx3tqsq374xuhtg--
+> 
+>> +
+>> +- interrupts:
+>> +	Usage: required
+>> +	Definition: The interrupt is associated with the llcc edac device.
+>> +			It's used for llcc cache single and double bit error detection
+>> +			and reporting.
+>> +
+>>  Example:
+>> 
+>>  	cache-controller@1100000 {
+>>  		compatible = "qcom,sdm845-llcc";
+>> -		reg = <0x1100000 0x250000>;
+>> +		reg = <0x1100000 0x200000>, <0x1300000 0x50000> ;
+>> +		reg-names = "llcc_base", "llcc_bcast_base";
+>> +		interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+>>  	};
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
