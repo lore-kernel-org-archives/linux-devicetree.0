@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 4/4] memory: jz4780_nemc: Add support for the JZ4725B
-Date: Wed, 22 Aug 2018 19:29:53 +0200
-Message-ID: <20180822172953.11281-4-paul@crapouillou.net>
+Subject: [PATCH 2/4] memory: jz4780_nemc: Drop dependency on MACH_JZ4780, use COMPILE_TEST
+Date: Wed, 22 Aug 2018 19:29:51 +0200
+Message-ID: <20180822172953.11281-2-paul@crapouillou.net>
 References: <20180822172953.11281-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180822172953.11281-1-paul@crapouillou.net>
@@ -10,81 +10,29 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alex 
 Cc: od@zcrc.me, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The NEMC module in the JZ4725B is very similar to the one in the JZ4780.
-The only difference I could spot was that the TAS/TAH timings are
-limited to 7 clock ticks on the JZ4725B instead of 15 on the JZ4780.
+Depending on MACH_JZ4780 prevent us from creating a generic kernel that
+works on more than one MIPS board. Instead, we just depend on MIPS being
+set.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/memory/jz4780-nemc.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/memory/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index ef3f20e46590..c52d254988dc 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -44,9 +44,14 @@
- #define NEMC_NFCSR_NFCEn(n)	BIT((((n) - 1) << 1) + 1)
- #define NEMC_NFCSR_TNFEn(n)	BIT(16 + (n) - 1)
+diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+index 8d731d6c3e54..68bf8b2b45f6 100644
+--- a/drivers/memory/Kconfig
++++ b/drivers/memory/Kconfig
+@@ -120,8 +120,8 @@ config FSL_IFC
  
-+struct jz4780_nemc_soc_info {
-+	uint8_t tas_tah_cycles_max;
-+};
-+
- struct jz4780_nemc {
- 	spinlock_t lock;
- 	struct device *dev;
-+	const struct jz4780_nemc_soc_info *soc_info;
- 	void __iomem *base;
- 	struct clk *clk;
- 	uint32_t clk_period;
-@@ -202,7 +207,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAS", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAS_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAS %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -214,7 +219,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAH", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAH_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAH %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -278,6 +283,10 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
- 	if (!nemc)
- 		return -ENOMEM;
- 
-+	nemc->soc_info = device_get_match_data(dev);
-+	if (!nemc->soc_info)
-+		return -EINVAL;
-+
- 	spin_lock_init(&nemc->lock);
- 	nemc->dev = dev;
- 
-@@ -370,8 +379,17 @@ static int jz4780_nemc_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct jz4780_nemc_soc_info jz4725b_soc_info = {
-+	.tas_tah_cycles_max = 7,
-+};
-+
-+static const struct jz4780_nemc_soc_info jz4780_soc_info = {
-+	.tas_tah_cycles_max = 15,
-+};
-+
- static const struct of_device_id jz4780_nemc_dt_match[] = {
--	{ .compatible = "ingenic,jz4780-nemc" },
-+	{ .compatible = "ingenic,jz4725b-nemc", .data = &jz4725b_soc_info, },
-+	{ .compatible = "ingenic,jz4780-nemc", .data = &jz4780_soc_info, },
- 	{},
- };
- 
+ config JZ4780_NEMC
+ 	bool "Ingenic JZ4780 SoC NEMC driver"
+-	default y
+-	depends on MACH_JZ4780
++	default MACH_JZ4780
++	depends on MIPS || COMPILE_TEST
+ 	help
+ 	  This driver is for the NAND/External Memory Controller (NEMC) in
+ 	  the Ingenic JZ4780. This controller is used to handle external
 -- 
 2.18.0
