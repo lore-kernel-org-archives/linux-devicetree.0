@@ -1,107 +1,55 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] dt-binding: arm/cpus.txt: fix dynamic-power-coefficient unit
-Date: Wed, 22 Aug 2018 16:32:39 +0200
-Message-ID: <CAKfTPtBGJf3tPgUXwVGbQBxgCwuW4TKhLtyeXYp5SZZxmyXEsg@mail.gmail.com>
-References: <1534869685-22221-1-git-send-email-vincent.guittot@linaro.org> <87ftz6ww1h.fsf@e105922-lin.cambridge.arm.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 3/9] drm/msm: fix OF child-node lookup
+Date: Wed, 22 Aug 2018 09:41:04 -0500
+Message-ID: <CAL_Jsq+6rftT-FfXGs_WSFDMLqNWbgBqHwtEXmxkgCjf9yf07g@mail.gmail.com>
+References: <20180822105547.9634-1-johan@kernel.org> <20180822105547.9634-4-johan@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87ftz6ww1h.fsf@e105922-lin.cambridge.arm.com>
+In-Reply-To: <20180822105547.9634-4-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Punit Agrawal <punit.agrawal@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, viresh kumar <viresh.kumar@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Jordan Crouse <jcrouse@codeaurora.org>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-Hi Amit,
+On Wed, Aug 22, 2018 at 5:57 AM Johan Hovold <johan@kernel.org> wrote:
+>
+> Use the new of_get_compatible_child() helper to lookup the legacy
+> pwrlevels child node instead of using of_find_compatible_node(), which
+> searches the entire tree and thus can return an unrelated (i.e.
+> non-child) node.
+>
+> This also addresses a potential use-after-free (e.g. after probe
+> deferral) as the tree-wide helper drops a reference to its first
+> argument (i.e. the probed device's node).
+>
+> While at it, also fix the related child-node reference leak.
+>
+> Fixes: e2af8b6b0ca1 ("drm/msm: gpu: Use OPP tables if we can")
+> Cc: stable <stable@vger.kernel.org>     # 4.12
+> Cc: Jordan Crouse <jcrouse@codeaurora.org>
+> Cc: Rob Clark <robdclark@gmail.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index da1363a0c54d..93d70f4a2154 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -633,8 +633,7 @@ static int adreno_get_legacy_pwrlevels(struct device *dev)
+>         struct device_node *child, *node;
+>         int ret;
+>
+> -       node = of_find_compatible_node(dev->of_node, NULL,
+> -               "qcom,gpu-pwrlevels");
+> +       node = of_get_compatible_child(dev->of_node, "qcom,gpu-pwrlevels");
 
-On Wed, 22 Aug 2018 at 12:11, Punit Agrawal <punit.agrawal@arm.com> wrote:
->
-> Hi Vincent,
->
-> Thanks for the patch. One comment about the choice of units below.
->
-> Vincent Guittot <vincent.guittot@linaro.org> writes:
->
-> > The unit of dynamic-power-coefficient is described as mW/MHz/uV^2 whereas
-> > its usage in the code assumes that unit is mW/GHz/V^2
->
-> Instead of choosing GHz as the base, I'd prefer to use uW/MHz/V^2. It'll
-> avoid introducing fractional GHz value for frequency calculations.
+Not really your problem, but this is undocumented and a downstream
+binding. There's been OPP support in addition for more than a year
+now, we should just remove this code IMO. For some reason though, no
+one updated the 8064 dts though.
 
-I don't understand your concern about fractional Ghz value for
-frequency calculation ?
-I mean, why it's a problem for frequency with Ghz vs Mhz but not a
-problem for voltage with V vs mV ?
-Don't we have the same "problem" in both case ?
-
->
-> > In drivers/thermal/cpu_cooling.c, the code is :
-> >
-> > power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
-> > do_div(power, 1000000000);
-> >
-> > which can be summarized as :
-> > power (mW) = capacitance * freq_mhz/1000 * (voltage_mv/1000)^2
->
-> Which would then translate to -
->
-> power (mW) = power (uW) / 1000 = capacitance * freq_mhz * (voltage_mv/1000)^2
-
-Not sure that the equation above is correct. If we consider uW/MHz/V^2
-for the unit, the equation becomes :
-power (mW) = power (uW) / 1000 = capacitance * freq_mhz *
-(voltage_mv/1000)^2 / 1000
-which can be rearranged as
-power (mW) = power (uW) / 1000 = capacitance * freq_mhz/ 1000 *
-(voltage_mv/1000)^2
-
-TBH, I don't really mind between  mW/GHz/V^2 or uW/MHz/V^2 as they are
-the same at the end
-but I don't catch your reasoning
-
-Regards,
-Vincent
-
->
-> Thanks,
-> Punit
->
-> >
-> > Furthermore, if we test basic values like :
-> > voltage_mv = 1000mV = 1V
-> > freq_mhz = 1000Mhz = 1Ghz
-> >
-> > The minimum possible power, when dynamic-power-coefficient equals 1, will
-> > be :
-> > min power = 1 * 1000  * (1000000)^2 = 10^15 mW
-> > which is not realistic
-> >
-> > With the unit used by the code, the min power is
-> > min power =  1 * 1 * 1^2 = 1mW which is far more realistic
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> > index 29e1dc5..0148d7d 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> > @@ -274,7 +274,7 @@ described below.
-> >               Usage: optional
-> >               Value type: <prop-encoded-array>
-> >               Definition: A u32 value that represents the running time dynamic
-> > -                         power coefficient in units of mW/MHz/uV^2. The
-> > +                         power coefficient in units of mW/GHz/V^2. The
-> >                           coefficient can either be calculated from power
-> >                           measurements or derived by analysis.
-> >
-> > @@ -285,7 +285,7 @@ described below.
-> >
-> >                           Pdyn = dynamic-power-coefficient * V^2 * f
-> >
-> > -                         where voltage is in uV, frequency is in MHz.
-> > +                         where voltage is in V, frequency is in GHz.
-> >
-> >  Example 1 (dual-cluster big.LITTLE system 32-bit):
+Rob
