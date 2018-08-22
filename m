@@ -1,49 +1,64 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 8/9] NFC: nfcmrvl_uart: fix OF child-node lookup
-Date: Wed, 22 Aug 2018 12:55:46 +0200
-Message-ID: <20180822105547.9634-9-johan@kernel.org>
+Subject: [PATCH 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
+Date: Wed, 22 Aug 2018 12:55:42 +0200
+Message-ID: <20180822105547.9634-5-johan@kernel.org>
 References: <20180822105547.9634-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180822105547.9634-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Vincent Cuissard <cuissard@marvell.com>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_get_compatible_child() helper to lookup the nfc child
+Use the new of_get_compatible_child() helper to lookup the slot child
 node instead of using of_find_compatible_node(), which searches the
 entire tree and thus can return an unrelated (i.e. non-child) node.
 
 This also addresses a potential use-after-free (e.g. after probe
 deferral) as the tree-wide helper drops a reference to its first
-argument (i.e. the parent node).
+argument (i.e. the node of the device being probed).
 
-Fixes: e097dc624f78 ("NFC: nfcmrvl: add UART driver")
-Fixes: d8e018c0b321 ("NFC: nfcmrvl: update device tree bindings for Marvell NFC")
-Cc: stable <stable@vger.kernel.org>     # 4.2
-Cc: Vincent Cuissard <cuissard@marvell.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>
+While at it, also fix up the related slot-node reference leak.
+
+Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+Cc: stable <stable@vger.kernel.org>     # 4.15
+Cc: Carlo Caione <carlo@endlessm.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/nfc/nfcmrvl/uart.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/mmc/host/meson-mx-sdio.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/nfcmrvl/uart.c b/drivers/nfc/nfcmrvl/uart.c
-index 91162f8e0366..9a22056e8d9e 100644
---- a/drivers/nfc/nfcmrvl/uart.c
-+++ b/drivers/nfc/nfcmrvl/uart.c
-@@ -73,10 +73,9 @@ static int nfcmrvl_uart_parse_dt(struct device_node *node,
- 	struct device_node *matched_node;
- 	int ret;
+diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+index 09cb89645d06..2cfec33178c1 100644
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -517,19 +517,23 @@ static struct mmc_host_ops meson_mx_mmc_ops = {
+ static struct platform_device *meson_mx_mmc_slot_pdev(struct device *parent)
+ {
+ 	struct device_node *slot_node;
++	struct platform_device *pdev;
  
--	matched_node = of_find_compatible_node(node, NULL, "marvell,nfc-uart");
-+	matched_node = of_get_compatible_child(node, "marvell,nfc-uart");
- 	if (!matched_node) {
--		matched_node = of_find_compatible_node(node, NULL,
--						       "mrvl,nfc-uart");
-+		matched_node = of_get_compatible_child(node, "mrvl,nfc-uart");
- 		if (!matched_node)
- 			return -ENODEV;
+ 	/*
+ 	 * TODO: the MMC core framework currently does not support
+ 	 * controllers with multiple slots properly. So we only register
+ 	 * the first slot for now
+ 	 */
+-	slot_node = of_find_compatible_node(parent->of_node, NULL, "mmc-slot");
++	slot_node = of_get_compatible_child(parent->of_node, "mmc-slot");
+ 	if (!slot_node) {
+ 		dev_warn(parent, "no 'mmc-slot' sub-node found\n");
+ 		return ERR_PTR(-ENOENT);
  	}
+ 
+-	return of_platform_device_create(slot_node, NULL, parent);
++	pdev = of_platform_device_create(slot_node, NULL, parent);
++	of_node_put(slot_node);
++
++	return pdev;
+ }
+ 
+ static int meson_mx_mmc_add_host(struct meson_mx_mmc_host *host)
 -- 
 2.18.0
