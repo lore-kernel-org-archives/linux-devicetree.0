@@ -1,70 +1,43 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] dt-bindings: can: rcar_can: Add r8a774a1 support
-Date: Wed, 22 Aug 2018 12:48:56 +0200
-Message-ID: <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
-References: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH v2] ARM: multi_v7_defconfig: enable STM32 SPI
+Date: Wed, 22 Aug 2018 12:49:49 +0200
+Message-ID: <1534934989-22292-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Arnd
+ Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 17, 2018 at 03:38:23PM +0100, Fabrizio Castro wrote:
-> Document RZ/G2M (r8a774a1) SoC bindings.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Enable the STM32 SPI driver, implemented on STM32MP1 SoC.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
-> This patch applies on top of next-20180817
-> 
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> index 94a7f33..84afc78 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> @@ -4,6 +4,7 @@ Renesas R-Car CAN controller Device Tree Bindings
->  Required properties:
->  - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A7743 SoC.
->  	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
-> +	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 SoC.
->  	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
->  	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
->  	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
-> @@ -16,7 +17,8 @@ Required properties:
->  	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
->  	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
->  	      compatible device.
-> -	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device.
-> +	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 or RZ/G2
-> +	      compatible device.
->  	      When compatible with the generic version, nodes must list the
->  	      SoC-specific version corresponding to the platform first
->  	      followed by the generic version.
-> @@ -24,7 +26,9 @@ Required properties:
->  - reg: physical base address and size of the R-Car CAN register map.
->  - interrupts: interrupt specifier for the sole interrupt.
->  - clocks: phandles and clock specifiers for 3 CAN clock inputs.
-> -- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk".
-> +- clock-names: 2 clock input name strings for RZ/G2: "clkp1", "can_clk", and
-
-Minor comment: Personally I would start a new sentence at "and".
-
-Question: Is a driver update required so support 2-clock SoCs?
-
-> +	       3 clock input name strings for every other SoC: "clkp1", "clkp2",
-> +	       "can_clk".
->  - pinctrl-0: pin control group to be used for this controller.
->  - pinctrl-names: must be "default".
->  
-> -- 
-> 2.7.4
-> 
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index b749d1e..4cdb622 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -417,6 +417,7 @@ CONFIG_SPI_S3C64XX=m
+ CONFIG_SPI_SH_MSIOF=m
+ CONFIG_SPI_SH_HSPI=y
+ CONFIG_SPI_SIRF=y
++CONFIG_SPI_STM32=m
+ CONFIG_SPI_SUN4I=y
+ CONFIG_SPI_SUN6I=y
+ CONFIG_SPI_TEGRA114=y
+-- 
+2.7.4
