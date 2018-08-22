@@ -1,79 +1,69 @@
-From: Patrick Venture <venture@google.com>
-Subject: [PATCH 2/2] ARM: dts: aspeed: quanta-q7l1: Add four PSUs
-Date: Wed, 22 Aug 2018 10:12:38 -0700
-Message-ID: <20180822171238.227972-1-venture@google.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v7 0/8] Cedrus driver for the Allwinner Video Engine,
+ using media requests
+Date: Wed, 22 Aug 2018 14:25:00 -0300
+Message-ID: <828bf3b9f5f2edc2f05b7982ccc5d9777f1a19e3.camel@collabora.com>
+References: <20180809090435.17248-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: venture@google.com, joel@jms.id.au, robh+dt@kernel.org, andrew@aj.id.au, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180809090435.17248-1-paul.kocialkowski@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-sunxi@googlegroups.com, Randy Li <ayaka@soulik.info>, Hans Verkuil <hverkuil@xs4all.nl>, Tomasz Figa <tfiga@chromium.org>, Alexandre Courbot <acourbot@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable the four PSUs via generic PMBUS.
+Hey Paul,
 
-Signed-off-by: Patrick Venture <venture@google.com>
----
- arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On Thu, 2018-08-09 at 11:04 +0200, Paul Kocialkowski wrote:
+> This is the seventh iteration of the updated Cedrus driver,
+> that supports the Video Engine found on most Allwinner SoCs, starting
+> with the A10. It was tested on the A13, A20, A33 and H3.
+> 
+> The initial version of this driver[0] was originally written and
+> submitted by Florent Revest using a previous version of the request API
+> that is necessary to provide coherency between controls and the buffers
+> they apply to.
+> 
+> The driver was adapted to use the latest version of the media request
+> API[1], as submitted by Hans Verkuil. Media request API support is a
+> hard requirement for the Cedrus driver.
+> 
+> The driver itself currently only supports MPEG2 and more codecs will be
+> added eventually. The default output frame format provided by the Video
+> Engine is a multi-planar tiled YUV format (based on NV12). A specific
+> format is introduced in the V4L2 API to describe it. Starting with the
+> A33, the Video Engine can also output untiled YUV formats.
+> 
+> This implementation is based on the significant work that was conducted
+> by various members of the linux-sunxi community for understanding and
+> documenting the Video Engine's innards.
+> 
+> In addition to the media requests API, the following series are required
+> for Cedrus:
+> * vicodec: the Virtual Codec driver
+> * allwinner: a64: add SRAM controller / system control
+> * SRAM patches from the Cedrus VPU driver series version 5
+> 
+> Changes since v6:
+> * Reworked MPEG2 controls to stick closer to the bitstream;
+> * Updated controls documentation accordingly and added requested fixes;
+> * Renamed tiled format to V4L2_PIX_FMT_SUNXI_TILED_NV12;
+> * Added various minor driver fixes based on Hans' feedback;
+> * Fixed dst frame alignment based on Jernej's feedback and tests;
+> * Removed set bits for the disabled secondary output.
+> 
+> Changes since v5:
+> * Added MPEG2 quantization matrices definitions and support;
+> * Cleaned up registers definitions;
+> * Moved the driver to staging as requested;
+> 
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-index 586050e1c0e6..c655564e6c6d 100644
---- a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-@@ -318,24 +318,44 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0>;
-+
-+			psu@59 {
-+				compatible = "pmbus";
-+				reg = <0x59>;
-+			};
- 		};
- 
- 		i2c_psu1: i2c@1 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <1>;
-+
-+			psu@58 {
-+				compatible = "pmbus";
-+				reg = <0x58>;
-+			};
- 		};
- 
- 		i2c_psu3: i2c@2 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <2>;
-+
-+			psu@58 {
-+				compatible = "pmbus";
-+				reg = <0x58>;
-+			};
- 		};
- 
- 		i2c_psu2: i2c@3 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <3>;
-+
-+			psu@59 {
-+				compatible = "pmbus";
-+				reg = <0x59>;
-+			};
- 		};
- 	};
- 
--- 
-2.18.0.1017.ga543ac7ca45-goog
+I tried to find the reason for moving this driver to staging,
+but couldn't find it in the discussion.
+
+If there's a legitimate reason, shouldn't you add a TODO file?
+
+Thanks,
+Eze
