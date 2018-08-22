@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v3 3/7] arm64: dts: rockchip: add VPU device node for RK3399
-Date: Wed, 22 Aug 2018 13:59:33 -0300
-Message-ID: <20180822165937.8700-4-ezequiel@collabora.com>
+Subject: [PATCH v3 6/7] media: Add controls for JPEG quantization tables
+Date: Wed, 22 Aug 2018 13:59:36 -0300
+Message-ID: <20180822165937.8700-7-ezequiel@collabora.com>
 References: <20180822165937.8700-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,51 +18,90 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the Video Processing Unit node for the RK3399 SoC.
+From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Also, fix the VPU IOMMU node, which was disabled and lacking
-its power domain property.
+Add V4L2_CID_JPEG_LUMA/CHROMA_QUANTIZATION controls to allow userspace
+configure the JPEG quantization tables.
 
+Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ Documentation/media/uapi/v4l/extended-controls.rst | 13 +++++++++++++
+ drivers/media/v4l2-core/v4l2-ctrls.c               | 13 +++++++++++++
+ include/uapi/linux/v4l2-controls.h                 |  3 +++
+ 3 files changed, 29 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 6ba438427515..5dd840b3deb1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1231,6 +1231,18 @@
- 		status = "disabled";
- 	};
+diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
+index 9f7312bf3365..1189750a022c 100644
+--- a/Documentation/media/uapi/v4l/extended-controls.rst
++++ b/Documentation/media/uapi/v4l/extended-controls.rst
+@@ -3354,6 +3354,19 @@ JPEG Control IDs
+     Specify which JPEG markers are included in compressed stream. This
+     control is valid only for encoders.
  
-+	vpu: video-codec@ff650000 {
-+		compatible = "rockchip,rk3399-vpu";
-+		reg = <0x0 0xff650000 0x0 0x800>;
-+		interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "vepu", "vdpu";
-+		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
-+		clock-names = "aclk", "hclk";
-+		power-domains = <&power RK3399_PD_VCODEC>;
-+		iommus = <&vpu_mmu>;
-+	};
++.. _jpeg-quant-tables-control:
 +
- 	vpu_mmu: iommu@ff650800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff650800 0x0 0x40>;
-@@ -1238,8 +1250,8 @@
- 		interrupt-names = "vpu_mmu";
- 		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
- 		clock-names = "aclk", "iface";
-+		power-domains = <&power RK3399_PD_VCODEC>;
- 		#iommu-cells = <0>;
--		status = "disabled";
- 	};
++``V4L2_CID_JPEG_LUMA_QUANTIZATION (__u8 matrix)``
++    Sets the luma quantization table to be used for encoding
++    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. This table is
++    a 8x8-byte matrix, and it's expected to be in JPEG zigzag order,
++    as per the JPEG specification.
++
++``V4L2_CID_JPEG_CHROMA_QUANTIZATION (__u8 matrix)``
++    Sets the chroma quantization table to be used for encoding
++    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. This table is
++    a 8x8-byte matrix, and it's expected to be in JPEG zigzag order,
++    as per the JPEG specification.
  
- 	vdec_mmu: iommu@ff660480 {
+ 
+ .. flat-table::
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 6ab15f4a0fea..677af8069bfc 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -999,6 +999,8 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_JPEG_RESTART_INTERVAL:	return "Restart Interval";
+ 	case V4L2_CID_JPEG_COMPRESSION_QUALITY:	return "Compression Quality";
+ 	case V4L2_CID_JPEG_ACTIVE_MARKER:	return "Active Markers";
++	case V4L2_CID_JPEG_LUMA_QUANTIZATION:	return "Luminance Quantization Matrix";
++	case V4L2_CID_JPEG_CHROMA_QUANTIZATION:	return "Chrominance Quantization Matrix";
+ 
+ 	/* Image source controls */
+ 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+@@ -1286,6 +1288,17 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_DETECT_MD_REGION_GRID:
+ 		*type = V4L2_CTRL_TYPE_U8;
+ 		break;
++	case V4L2_CID_JPEG_LUMA_QUANTIZATION:
++	case V4L2_CID_JPEG_CHROMA_QUANTIZATION:
++		*min = *def = 0;
++		*max = 0xff;
++		*step = 1;
++		*type = V4L2_CTRL_TYPE_U8;
++		if (dims) {
++			memset(dims, 0, V4L2_CTRL_MAX_DIMS * sizeof(dims[0]));
++			dims[0] = dims[1] = 8;
++		}
++		break;
+ 	case V4L2_CID_DETECT_MD_THRESHOLD_GRID:
+ 		*type = V4L2_CTRL_TYPE_U16;
+ 		break;
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index e4ee10ee917d..a466acf40625 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -987,6 +987,9 @@ enum v4l2_jpeg_chroma_subsampling {
+ #define	V4L2_JPEG_ACTIVE_MARKER_DQT		(1 << 17)
+ #define	V4L2_JPEG_ACTIVE_MARKER_DHT		(1 << 18)
+ 
++#define V4L2_CID_JPEG_LUMA_QUANTIZATION		(V4L2_CID_JPEG_CLASS_BASE + 5)
++#define V4L2_CID_JPEG_CHROMA_QUANTIZATION	(V4L2_CID_JPEG_CLASS_BASE + 6)
++
+ 
+ /* Image source controls */
+ #define V4L2_CID_IMAGE_SOURCE_CLASS_BASE	(V4L2_CTRL_CLASS_IMAGE_SOURCE | 0x900)
 -- 
 2.18.0
