@@ -1,151 +1,122 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v4 1/4] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Wed, 22 Aug 2018 12:20:42 +0000
-Message-ID: <DM6PR02MB5227404E171F81043D5E4D1FC1300@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1533374735-16662-1-git-send-email-manish.narani@xilinx.com>
- <1533374735-16662-2-git-send-email-manish.narani@xilinx.com>
- <20180821130638.GC30528@nazgul.tnic>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM
+ output between PWM and GPIO
+Date: Wed, 22 Aug 2018 13:17:58 +0200
+Message-ID: <20180822131758.162d5351@ipc1.ka-ro>
+References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
+        <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
+        <20180822081436.13d8f55b@ipc1.ka-ro>
+        <175003bc-eae7-1b30-ebfe-b56ffc58705e@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180821130638.GC30528@nazgul.tnic>
-Content-Language: en-US
+In-Reply-To: <175003bc-eae7-1b30-ebfe-b56ffc58705e@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, Edgar Iglesias <edgari@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, Naga Sureshkumar Relli <nagasure@xilinx.com>, Bharat Kumar Gogada <bharatku@xilinx.com>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, Srinivas Goud <sgoud@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNClRoYW5rIHlvdSBzbyBtdWNoIGZvciB0aGUgcmV2aWV3Lg0KDQo+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEJvcmlzbGF2IFBldGtvdiBbbWFpbHRvOmJw
-QGFsaWVuOC5kZV0NCj4gU2VudDogVHVlc2RheSwgQXVndXN0IDIxLCAyMDE4IDY6MzcgUE0NCj4g
-VG86IE1hbmlzaCBOYXJhbmkgPE1OQVJBTklAeGlsaW54LmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0K
-PiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47
-DQo+IG1jaGVoYWJAa2VybmVsLm9yZzsgbWRmQGtlcm5lbC5vcmc7IEVkZ2FyIElnbGVzaWFzIDxl
-ZGdhcmlAeGlsaW54LmNvbT47DQo+IFNodWJocmFqeW90aSBEYXR0YSA8c2h1YmhyYWpAeGlsaW54
-LmNvbT47IE5hZ2EgU3VyZXNoa3VtYXIgUmVsbGkNCj4gPG5hZ2FzdXJlQHhpbGlueC5jb20+OyBC
-aGFyYXQgS3VtYXIgR29nYWRhIDxiaGFyYXRrdUB4aWxpbnguY29tPjsNCj4gc3RlZmFuLmtyc21h
-bm92aWNAYWdnaW9zLmNvbTsgU3Jpbml2YXMgR291ZCA8c2dvdWRAeGlsaW54LmNvbT47IEFuaXJ1
-ZGhhDQo+IFNhcmFuZ2kgPGFuaXJ1ZGhAeGlsaW54LmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBlZGFjQHZnZXIua2VybmVsLm9yZw0KPiBT
-dWJqZWN0OiBSZTogW1BBVENIIHY0IDEvNF0gZWRhYzogc3lucHM6IEFkZCBwbGF0Zm9ybSBzcGVj
-aWZpYyBzdHJ1Y3R1cmVzIGZvcg0KPiBkZHJjIGNvbnRyb2xsZXINCj4gDQo+IE9uIFNhdCwgQXVn
-IDA0LCAyMDE4IGF0IDAyOjU1OjMyUE0gKzA1MzAsIE1hbmlzaCBOYXJhbmkgd3JvdGU6DQo+ID4g
-QWRkIHBsYXRmb3JtIHNwZWNpZmljIHN0cnVjdHVyZXMsIHNvIHRoYXQgd2UgY2FuIGFkZCBkaWZm
-ZXJlbnQgSVANCj4gPiBzdXBwb3J0IGxhdGVyIHVzaW5nIHF1aXJrcy4NCj4gPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IE1hbmlzaCBOYXJhbmkgPG1hbmlzaC5uYXJhbmlAeGlsaW54LmNvbT4NCj4gPiAt
-LS0NCj4gPiAgZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYyB8IDgzDQo+ID4gKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDY1IGluc2VydGlvbnMoKyksIDE4IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMNCj4gPiBiL2RyaXZlcnMvZWRhYy9zeW5vcHN5
-c19lZGFjLmMgaW5kZXggMGM5YzU5ZS4uYjNjNTRlNyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
-L2VkYWMvc3lub3BzeXNfZWRhYy5jDQo+ID4gKysrIGIvZHJpdmVycy9lZGFjL3N5bm9wc3lzX2Vk
-YWMuYw0KPiA+IEBAIC0yMiw2ICsyMiw3IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9lZGFjLmg+
-DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L3Bs
-YXRmb3JtX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPg0KPiA+ICAj
-aW5jbHVkZSAiZWRhY19tb2R1bGUuaCINCj4gPg0KPiA+IEBAIC0xMzAsNiArMTMxLDcgQEAgc3Ry
-dWN0IHN5bnBzX2VjY19zdGF0dXMgew0KPiA+ICAgKiBAYmFzZWFkZHI6CUJhc2UgYWRkcmVzcyBv
-ZiB0aGUgRERSIGNvbnRyb2xsZXINCj4gPiAgICogQG1lc3NhZ2U6CUJ1ZmZlciBmb3IgZnJhbWlu
-ZyB0aGUgZXZlbnQgc3BlY2lmaWMgaW5mbw0KPiA+ICAgKiBAc3RhdDoJRUNDIHN0YXR1cyBpbmZv
-cm1hdGlvbg0KPiA+ICsgKiBAcF9kYXRhOglQb2ludGVyIHRvIHBsYXRmb3JtIGRhdGENCj4gPiAg
-ICogQGNlX2NudDoJQ29ycmVjdGFibGUgRXJyb3IgY291bnQNCj4gPiAgICogQHVlX2NudDoJVW5j
-b3JyZWN0YWJsZSBFcnJvciBjb3VudA0KPiA+ICAgKi8NCj4gPiBAQCAtMTM3LDI0ICsxMzksNDcg
-QEAgc3RydWN0IHN5bnBzX2VkYWNfcHJpdiB7DQo+ID4gIAl2b2lkIF9faW9tZW0gKmJhc2VhZGRy
-Ow0KPiA+ICAJY2hhciBtZXNzYWdlW1NZTlBTX0VEQUNfTVNHX1NJWkVdOw0KPiA+ICAJc3RydWN0
-IHN5bnBzX2VjY19zdGF0dXMgc3RhdDsNCj4gPiArCWNvbnN0IHN0cnVjdCBzeW5wc19wbGF0Zm9y
-bV9kYXRhICpwX2RhdGE7DQo+ID4gIAl1MzIgY2VfY250Ow0KPiA+ICAJdTMyIHVlX2NudDsNCj4g
-PiAgfTsNCj4gPg0KPiA+ICAvKioNCj4gPiArICogc3RydWN0IHN5bnBzX3BsYXRmb3JtX2RhdGEg
-LSAgc3lucHMgcGxhdGZvcm0gZGF0YSBzdHJ1Y3R1cmUNCj4gPiArICogQGVkYWNfZ2V0ZXJyb3Jf
-aW5mbzoJZnVuY3Rpb24gcG9pbnRlciB0byBzeW5wcyBlZGFjIGVycm9yIGluZm8NCj4gPiArICog
-QGVkYWNfZ2V0X210eXBlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBzIGVkYWMgbXR5cGUNCj4g
-PiArICogQGVkYWNfZ2V0X2R0eXBlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBzIGVkYWMgZHR5
-cGUNCj4gPiArICogQGVkYWNfZ2V0X2VjY3N0YXRlOglmdW5jdGlvbiBwb2ludGVyIHRvIHN5bnBz
-IGVkYWMgZWNjc3RhdGUNCj4gPiArICogQHF1aXJrczoJCXRvIGRpZmZlcmVudGlhdGUgSVBzDQo+
-ID4gKyAqLw0KPiA+ICtzdHJ1Y3Qgc3lucHNfcGxhdGZvcm1fZGF0YSB7DQo+ID4gKwlpbnQgKCpl
-ZGFjX2dldGVycm9yX2luZm8pKHN0cnVjdCBzeW5wc19lZGFjX3ByaXYgKnByaXYpOw0KPiA+ICsJ
-ZW51bSBtZW1fdHlwZSAoKmVkYWNfZ2V0X210eXBlKShjb25zdCB2b2lkIF9faW9tZW0gKmJhc2Up
-Ow0KPiA+ICsJZW51bSBkZXZfdHlwZSAoKmVkYWNfZ2V0X2R0eXBlKShjb25zdCB2b2lkIF9faW9t
-ZW0gKmJhc2UpOw0KPiA+ICsJYm9vbCAoKmVkYWNfZ2V0X2VjY3N0YXRlKSh2b2lkIF9faW9tZW0g
-KmJhc2UpOw0KPiA+ICsJaW50IHF1aXJrczsNCj4gPiArfTsNCj4gPiArDQo+ID4gKy8qKg0KPiA+
-ICAgKiBzeW5wc19lZGFjX2dldGVycm9yX2luZm8gLSBHZXQgdGhlIGN1cnJlbnQgZWNjIGVycm9y
-IGluZm8NCj4gPiAtICogQGJhc2U6CVBvaW50ZXIgdG8gdGhlIGJhc2UgYWRkcmVzcyBvZiB0aGUg
-ZGRyIG1lbW9yeSBjb250cm9sbGVyDQo+ID4gLSAqIEBwOgkJUG9pbnRlciB0byB0aGUgc3lub3Bz
-eXMgZWNjIHN0YXR1cyBzdHJ1Y3R1cmUNCj4gPiArICogQHByaXY6CVBvaW50ZXIgdG8gRERSIG1l
-bW9yeSBjb250cm9sbGVyIHByaXZhdGUgaW5zdGFuY2UgZGF0YQ0KPiA+ICAgKg0KPiA+ICAgKiBE
-ZXRlcm1pbmVzIHRoZXJlIGlzIGFueSBlY2MgZXJyb3Igb3Igbm90DQo+ID4gICAqDQo+ID4gICAq
-IFJldHVybjogb25lIGlmIHRoZXJlIGlzIG5vIGVycm9yIG90aGVyd2lzZSByZXR1cm5zIHplcm8N
-Cj4gPiAgICovDQo+ID4gLXN0YXRpYyBpbnQgc3lucHNfZWRhY19nZXRlcnJvcl9pbmZvKHZvaWQg
-X19pb21lbSAqYmFzZSwNCj4gPiAtCQkJCSAgICBzdHJ1Y3Qgc3lucHNfZWNjX3N0YXR1cyAqcCkN
-Cj4gPiArc3RhdGljIGludCBzeW5wc19lZGFjX2dldGVycm9yX2luZm8oc3RydWN0IHN5bnBzX2Vk
-YWNfcHJpdiAqcHJpdikNCj4gPiAgew0KPiA+ICsJdm9pZCBfX2lvbWVtICpiYXNlOw0KPiA+ICsJ
-c3RydWN0IHN5bnBzX2VjY19zdGF0dXMgKnA7DQo+ID4gIAl1MzIgcmVndmFsLCBjbGVhcnZhbCA9
-IDA7DQo+ID4NCj4gPiArCWlmICghcHJpdikNCj4gPiArCQlyZXR1cm4gMTsNCj4gPiArDQo+ID4g
-KwliYXNlID0gcHJpdi0+YmFzZWFkZHI7DQo+ID4gKwlwID0gJnByaXYtPnN0YXQ7DQo+ID4gKw0K
-PiA+ICAJcmVndmFsID0gcmVhZGwoYmFzZSArIFNUQVRfT0ZTVCk7DQo+ID4gIAlpZiAoIXJlZ3Zh
-bCkNCj4gPiAgCQlyZXR1cm4gMTsNCj4gPiBAQCAtMjQwLDkgKzI2NSwxMCBAQCBzdGF0aWMgdm9p
-ZCBzeW5wc19lZGFjX2hhbmRsZV9lcnJvcihzdHJ1Y3QNCj4gPiBtZW1fY3RsX2luZm8gKm1jaSwg
-IHN0YXRpYyB2b2lkIHN5bnBzX2VkYWNfY2hlY2soc3RydWN0IG1lbV9jdGxfaW5mbw0KPiA+ICpt
-Y2kpICB7DQo+ID4gIAlzdHJ1Y3Qgc3lucHNfZWRhY19wcml2ICpwcml2ID0gbWNpLT5wdnRfaW5m
-bzsNCj4gPiArCWNvbnN0IHN0cnVjdCBzeW5wc19wbGF0Zm9ybV9kYXRhICpwX2RhdGEgPSBwcml2
-LT5wX2RhdGE7DQo+ID4gIAlpbnQgc3RhdHVzOw0KPiA+DQo+ID4gLQlzdGF0dXMgPSBzeW5wc19l
-ZGFjX2dldGVycm9yX2luZm8ocHJpdi0+YmFzZWFkZHIsICZwcml2LT5zdGF0KTsNCj4gPiArCXN0
-YXR1cyA9IHBfZGF0YS0+ZWRhY19nZXRlcnJvcl9pbmZvKHByaXYpOw0KPiA+ICAJaWYgKHN0YXR1
-cykNCj4gPiAgCQlyZXR1cm47DQo+ID4NCj4gPiBAQCAtMzYyLDYgKzM4OCw3IEBAIHN0YXRpYyBp
-bnQgc3lucHNfZWRhY19pbml0X2Nzcm93cyhzdHJ1Y3QNCj4gbWVtX2N0bF9pbmZvICptY2kpDQo+
-ID4gIAlzdHJ1Y3QgY3Nyb3dfaW5mbyAqY3NpOw0KPiA+ICAJc3RydWN0IGRpbW1faW5mbyAqZGlt
-bTsNCj4gPiAgCXN0cnVjdCBzeW5wc19lZGFjX3ByaXYgKnByaXYgPSBtY2ktPnB2dF9pbmZvOw0K
-PiA+ICsJY29uc3Qgc3RydWN0IHN5bnBzX3BsYXRmb3JtX2RhdGEgKnBfZGF0YSA9IHByaXYtPnBf
-ZGF0YTsNCj4gPiAgCXUzMiBzaXplOw0KPiA+ICAJaW50IHJvdywgajsNCj4gPg0KPiA+IEBAIC0z
-NzAsMTIgKzM5NywxMyBAQCBzdGF0aWMgaW50IHN5bnBzX2VkYWNfaW5pdF9jc3Jvd3Moc3RydWN0
-DQo+IG1lbV9jdGxfaW5mbyAqbWNpKQ0KPiA+ICAJCXNpemUgPSBzeW5wc19lZGFjX2dldF9tZW1z
-aXplKCk7DQo+ID4NCj4gPiAgCQlmb3IgKGogPSAwOyBqIDwgY3NpLT5ucl9jaGFubmVsczsgaisr
-KSB7DQo+ID4gLQkJCWRpbW0gICAgICAgICAgICA9IGNzaS0+Y2hhbm5lbHNbal0tPmRpbW07DQo+
-ID4gKwkJCWRpbW0gPSBjc2ktPmNoYW5uZWxzW2pdLT5kaW1tOw0KPiA+ICAJCQlkaW1tLT5lZGFj
-X21vZGUgPSBFREFDX0ZMQUdfU0VDREVEOw0KPiA+IC0JCQlkaW1tLT5tdHlwZSAgICAgPSBzeW5w
-c19lZGFjX2dldF9tdHlwZShwcml2LQ0KPiA+YmFzZWFkZHIpOw0KPiA+IC0JCQlkaW1tLT5ucl9w
-YWdlcyAgPSAoc2l6ZSA+PiBQQUdFX1NISUZUKSAvIGNzaS0NCj4gPm5yX2NoYW5uZWxzOw0KPiA+
-IC0JCQlkaW1tLT5ncmFpbiAgICAgPSBTWU5QU19FREFDX0VSUl9HUkFJTjsNCj4gPiAtCQkJZGlt
-bS0+ZHR5cGUgICAgID0gc3lucHNfZWRhY19nZXRfZHR5cGUocHJpdi0NCj4gPmJhc2VhZGRyKTsN
-Cj4gPiArCQkJZGltbS0+bXR5cGUgPSBwX2RhdGEtPmVkYWNfZ2V0X210eXBlKHByaXYtDQo+ID5i
-YXNlYWRkcik7DQo+ID4gKwkJCWRpbW0tPm5yX3BhZ2VzID0gKHNpemUgPj4gUEFHRV9TSElGVCkg
-Lw0KPiA+ICsJCQkJCQljc2ktPm5yX2NoYW5uZWxzOw0KPiANCj4gV2h5IGRvIHlvdSBoYXZlIHRv
-IGJyZWFrIHRoYXQgbGluZT8gSnVzdCBsZXQgaXQgc3RpY2sgb3V0LltdIA0KT2theS4gSSB3aWxs
-IHVwZGF0ZSB0aGlzIGluIHY1Lg0KDQo+IA0KPiBBbmQgd2h5IGNhbid0IHlvdSBrZWVwIHRoZSBu
-aWNlIHZlcnRpY2FsIGFsaWdubWVudCBvbiB0aGUgJz0nIHNpZ25zIGZvciBiZXR0ZXINCj4gcmVh
-ZGFiaWxpdHk/DQpPa2F5LiBUaGlzIHdpbGwgYnJpbmcgY2hlY2twYXRjaCB3YXJuaW5nIChhYm92
-ZSA4MCBsaW5lcyksIGJ1dCBmb3IgYmV0dGVyIHJlYWRhYmlsaXR5LCBJIHdpbGwgdXBkYXRlIHRo
-aXMgaW4gdjUuDQoNCj4gDQo+ID4gKwkJCWRpbW0tPmdyYWluID0gU1lOUFNfRURBQ19FUlJfR1JB
-SU47DQo+ID4gKwkJCWRpbW0tPmR0eXBlID0gcF9kYXRhLT5lZGFjX2dldF9kdHlwZShwcml2LQ0K
-PiA+YmFzZWFkZHIpOw0KPiA+ICAJCX0NCj4gPiAgCX0NCj4gPg0KPiA+IEBAIC00MjMsNiArNDUx
-LDIxIEBAIHN0YXRpYyBpbnQgc3lucHNfZWRhY19tY19pbml0KHN0cnVjdCBtZW1fY3RsX2luZm8N
-Cj4gKm1jaSwNCj4gPiAgCXJldHVybiBzdGF0dXM7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMg
-Y29uc3Qgc3RydWN0IHN5bnBzX3BsYXRmb3JtX2RhdGEgenlucV9lZGFjX2RlZiA9IHsNCj4gPiAr
-CS5lZGFjX2dldGVycm9yX2luZm8JPSBzeW5wc19lZGFjX2dldGVycm9yX2luZm8sDQo+ID4gKwku
-ZWRhY19nZXRfbXR5cGUJCT0gc3lucHNfZWRhY19nZXRfbXR5cGUsDQo+ID4gKwkuZWRhY19nZXRf
-ZHR5cGUJCT0gc3lucHNfZWRhY19nZXRfZHR5cGUsDQo+ID4gKwkuZWRhY19nZXRfZWNjc3RhdGUJ
-PSBzeW5wc19lZGFjX2dldF9lY2NzdGF0ZSwNCj4gPiArCS5xdWlya3MJCQk9IDAsDQo+IA0KPiAu
-Li4gbGlrZSB5b3UndmUgZG9uZSBoZXJlLCBmb3IgZXhhbXBsZS4NCj4gDQo+ID4gK307DQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBzeW5wc19lZGFjX21hdGNo
-W10gPSB7DQo+ID4gKwl7IC5jb21wYXRpYmxlID0gInhsbngsenlucS1kZHJjLWEwNSIsIC5kYXRh
-ID0gKHZvaWQgKikmenlucV9lZGFjX2RlZiB9LA0KPiA+ICsJeyAvKiBlbmQgb2YgdGFibGUgKi8g
-fQ0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgc3lucHNfZWRh
-Y19tYXRjaCk7DQo+ID4gKw0KPiA+ICAvKioNCj4gPiAgICogc3lucHNfZWRhY19tY19wcm9iZSAt
-IENoZWNrIGNvbnRyb2xsZXIgYW5kIGJpbmQgZHJpdmVyDQo+ID4gICAqIEBwZGV2OglQb2ludGVy
-IHRvIHRoZSBwbGF0Zm9ybV9kZXZpY2Ugc3RydWN0DQo+ID4gQEAgLTQ0MCwxMyArNDgzLDIyIEBA
-IHN0YXRpYyBpbnQgc3lucHNfZWRhY19tY19wcm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KPiA+ICAJaW50IHJjOw0KPiA+ICAJc3RydWN0IHJlc291cmNlICpyZXM7DQo+ID4g
-IAl2b2lkIF9faW9tZW0gKmJhc2VhZGRyOw0KPiA+ICsJY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCAqbWF0Y2g7DQo+ID4gKwljb25zdCBzdHJ1Y3Qgc3lucHNfcGxhdGZvcm1fZGF0YSAqcF9kYXRh
-Ow0KPiA+DQo+ID4gIAlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJD
-RV9NRU0sIDApOw0KPiA+ICAJYmFzZWFkZHIgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoJnBkZXYt
-PmRldiwgcmVzKTsNCj4gPiAgCWlmIChJU19FUlIoYmFzZWFkZHIpKQ0KPiA+ICAJCXJldHVybiBQ
-VFJfRVJSKGJhc2VhZGRyKTsNCj4gPg0KPiA+IC0JaWYgKCFzeW5wc19lZGFjX2dldF9lY2NzdGF0
-ZShiYXNlYWRkcikpIHsNCj4gPiArCW1hdGNoID0gb2ZfbWF0Y2hfbm9kZShzeW5wc19lZGFjX21h
-dGNoLCBwZGV2LT5kZXYub2Zfbm9kZSk7DQo+ID4gKwlpZiAoIW1hdGNoICYmICFtYXRjaC0+ZGF0
-YSkgew0KPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgIm9mX21hdGNoX25vZGUoKSBmYWlsZWRc
-biIpOw0KPiANCj4gVGhhdCBlcnJvciBtZXNzYWdlIGlzIG5vdCByZWFsbHkgaGVscGZ1bC4NCk9r
-YXkuIEkgd2lsbCB1cGRhdGUgdGhhdCBwYXJ0IG9mIGNvZGUuDQoNClRoYW5rcywNCk1hbmlzaCBO
-YXJhbmkNCg0K
+Michal Vokáč <michal.vokac@ysoft.com> wrote:
+
+> On 22.8.2018 08:14, Lothar Waßmann wrote:
+> > Michal Vokáč <michal.vokac@ysoft.com> wrote:
+> >   
+> >> Output of the PWM block of i.MX SoCs is always zero volts when the block
+> >> is disabled. This can caue issues when inverted PWM polarity is needed.
+> >> With inverted polarity a duty cycle = 0% corresponds to solid high level
+> >> on the output. If the PWM is dissabled its output instantly goes to solid
+> >> zero which corresponds to duty cycle = 100%.
+> >>
+> >> To have a trully inverted PWM output configure the PWM pad as a GPIO
+> >> with pull-up. Then switch the pad to PWM output whenever non-zero
+> >> duty cycle is needed.
+> >>
+> >> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/pwm/imx-pwm.txt | 44 +++++++++++++++++++++++
+> >>   1 file changed, 44 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> >> index c61bdf8..3b1bc4c 100644
+> >> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> >> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> >> @@ -14,6 +14,12 @@ See the clock consumer binding,
+> >>   	Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >>   - interrupts: The interrupt for the pwm controller
+> >>   
+> >> +Optional properties:
+> >> +- pinctrl: For i.MX27 and newer SoCs. Add extra pinctrl to configure the PWM
+> >> +  pin to gpio function.  It allows control over the pin output level when the
+> >> +  PWM block is disabled. This is meant to be used if inverted polarity of the
+> >> +  PWM signal is required. See "Inverted PWM output" section bellow.
+> >> +
+> >>   Example:
+> >>   
+> >>   pwm1: pwm@53fb4000 {
+> >> @@ -25,3 +31,41 @@ pwm1: pwm@53fb4000 {
+> >>   	clock-names = "ipg", "per";
+> >>   	interrupts = <61>;
+> >>   };
+> >> +
+> >> +Inverted PWM output
+> >> +-------------------
+> >> +
+> >> +The i.MX SoC has such limitation that whenever a pad is configured as a PWM
+> >> +output, the output level is always zero volts when the PWM block is disabled.
+> >> +The zero output level is actively driven by the output stage of the PWM block
+> >> +and can not be overridden by pull-up. It also does not matter what PWM polarity
+> >> +a PWM client (e.g. backlight) requested.
+> >> +
+> >> +To gain control of the PWM output level in disabled state two pinctrl states
+> >> +can be used. The "default" state and the "pwm" state. In the default state the
+> >>  
+> > The "default" function of a PWM is to deliver a PWM signal. So it is
+> > more sensible to me to have the PWM function as "default" and a "gpio"
+> > function as alternative state.  
+> 
+> Yes, I totally agree that using "default" for PWM and "gpio" as the
+> alternative function seems more sensible. That is actually how I started.
+> Then I realized that that way you end up with the PWM pad set to zero
+> until the first call of imx_pwm_apply_v2 where you can select the GPIO
+> function. On my system that first call is made by pwm-backlight more than
+> 3s after pinctrl init.
+> 
+> I suggested to use the "default" state as a GPIO function as the only way
+> how to get a truly inverted PWM output all the time from power-up to
+> power-down.
+> 
+> In my opinion it is up to the DT author what pad configuration he uses for
+> each pinctrl function as he knows what the HW really needs. I see that this
+> approach is kind of controversial but I hope that with good documentation
+> this would not be a problem. And as I wrote in the intro, it is absolutely
+> optional. If you do not need it, you do not use it.
+> 
+This is OK so far.
+But the approach with the pin being driven high via the pullup
+configuration has a fundamental flaw:
+The pwm polarity is specified by the PWM client (e.g: the pwm-backlight
+driver:
+	pwms = <&pwm0 0 PWM_POLARITY_INVERTED>;
+)
+The pinconfig is defined in the pinctrl of the PWM driver.
+
+If you have clients that may use the same PWM instance and require
+different polarity, there is no way to set the pullup/-down
+configuration in accordance with the clients needs.
+
+IMO the PWM driver should actively set the pin to the 'INACTIVE' state
+according to the polarity specified by the current client using the PWM.
+
+
+Lothar Waßmann
+-- 
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstraße 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Geschäftsführer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
