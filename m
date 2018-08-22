@@ -1,59 +1,81 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 01/14] ata: ahci-platform: add reset control support and the flag to specify using reset
-Date: Wed, 22 Aug 2018 19:06:22 +0900
-Message-ID: <20180822190622.9750.4A936039@socionext.com>
-References: <1534923430-9692-2-git-send-email-hayashi.kunihiko@socionext.com> <1d221236-636e-962e-2e4e-3db228689c5e@cogentembedded.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH] dt-binding: arm/cpus.txt: fix dynamic-power-coefficient unit
+Date: Wed, 22 Aug 2018 11:11:22 +0100
+Message-ID: <87ftz6ww1h.fsf@e105922-lin.cambridge.arm.com>
+References: <1534869685-22221-1-git-send-email-vincent.guittot@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1d221236-636e-962e-2e4e-3db228689c5e@cogentembedded.com>
+In-Reply-To: <1534869685-22221-1-git-send-email-vincent.guittot@linaro.org>
+        (Vincent Guittot's message of "Tue, 21 Aug 2018 18:41:25 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, edubezval@gmail.com, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Vincent,
 
-On Wed, 22 Aug 2018 12:34:30 +0300 <sergei.shtylyov@cogentembedded.com> wrote:
+Thanks for the patch. One comment about the choice of units below.
 
-> Hello!
-> 
-> On 8/22/2018 10:36 AM, Kunihiko Hayashi wrote:
-> 
-> > Add support to get and control a list of resets for the device
-> > as optional and shared. These resets must be kept de-asserted until
-> > the device is enabled.
-> > > This is specified as shared because some SoCs like UniPhier series
-> > have common reset controls with all ahci controller instances.
-> > > However, according to Thierry's view,
-> > https://www.spinics.net/lists/linux-ide/msg55357.html
-> > some hardware-specific drivers already use their own resets,
-> > and the common reset make a path to occur double controls of resets.
-> > > Now this add the flag to ahci_platform_get_resources() indicating
-> > whether to use the resources, currently resets only, and existing
-> > drivers set 0 to this flags.
-> > > Suggested-by: Hans de Goede <hdegoede@redhat.com>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> [...]
-> 
-> > diff --git a/include/linux/ahci_platform.h b/include/linux/ahci_platform.h
-> > index 1b0a17b..eaedca5f 100644
-> > --- a/include/linux/ahci_platform.h
-> > +++ b/include/linux/ahci_platform.h
-> > @@ -30,7 +30,7 @@ void ahci_platform_disable_regulators(struct ahci_host_priv *hpriv);
-> >   int ahci_platform_enable_resources(struct ahci_host_priv *hpriv);
-> >   void ahci_platform_disable_resources(struct ahci_host_priv *hpriv);
-> >   struct ahci_host_priv *ahci_platform_get_resources(
-> > -	struct platform_device *pdev);
-> > +	struct platform_device *pdev, unsigned int flags);
-> 
->     That breaks all the users of this API. You should fix the callers in this same patch to avoid breakage.
+Vincent Guittot <vincent.guittot@linaro.org> writes:
 
-Thank you for your point.
-Indeed, these splitted patches break git bisect. I'll fix it.
+> The unit of dynamic-power-coefficient is described as mW/MHz/uV^2 whereas
+> its usage in the code assumes that unit is mW/GHz/V^2
 
----
-Best Regards,
-Kunihiko Hayashi
+Instead of choosing GHz as the base, I'd prefer to use uW/MHz/V^2. It'll
+avoid introducing fractional GHz value for frequency calculations.
+
+> In drivers/thermal/cpu_cooling.c, the code is :
+>
+> power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
+> do_div(power, 1000000000);
+>
+> which can be summarized as :
+> power (mW) = capacitance * freq_mhz/1000 * (voltage_mv/1000)^2
+
+Which would then translate to -
+
+power (mW) = power (uW) / 1000 = capacitance * freq_mhz * (voltage_mv/1000)^2
+
+Thanks,
+Punit
+
+>
+> Furthermore, if we test basic values like :
+> voltage_mv = 1000mV = 1V
+> freq_mhz = 1000Mhz = 1Ghz
+>
+> The minimum possible power, when dynamic-power-coefficient equals 1, will
+> be :
+> min power = 1 * 1000  * (1000000)^2 = 10^15 mW
+> which is not realistic
+>
+> With the unit used by the code, the min power is
+> min power =  1 * 1 * 1^2 = 1mW which is far more realistic
+>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 29e1dc5..0148d7d 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -274,7 +274,7 @@ described below.
+>  		Usage: optional
+>  		Value type: <prop-encoded-array>
+>  		Definition: A u32 value that represents the running time dynamic
+> -			    power coefficient in units of mW/MHz/uV^2. The
+> +			    power coefficient in units of mW/GHz/V^2. The
+>  			    coefficient can either be calculated from power
+>  			    measurements or derived by analysis.
+>  
+> @@ -285,7 +285,7 @@ described below.
+>  
+>  			    Pdyn = dynamic-power-coefficient * V^2 * f
+>  
+> -			    where voltage is in uV, frequency is in MHz.
+> +			    where voltage is in V, frequency is in GHz.
+>  
+>  Example 1 (dual-cluster big.LITTLE system 32-bit):
