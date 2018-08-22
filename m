@@ -1,309 +1,111 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v3 4/4] phy: socionext: add USB2 PHY driver for UniPhier SoC
-Date: Wed, 22 Aug 2018 12:50:34 +0900
-Message-ID: <1534909834-16754-5-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1534909834-16754-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM
+ output between PWM and GPIO
+Date: Wed, 22 Aug 2018 08:14:36 +0200
+Message-ID: <20180822081436.13d8f55b@ipc1.ka-ro>
+References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
+        <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534909834-16754-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for PHY interface built into USB2 controller implemented on
-UniPhier SoCs. This driver supports HS-PHY for Pro4 and LD11.
+Michal Vokáč <michal.vokac@ysoft.com> wrote:
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/phy/socionext/Kconfig             |  13 ++
- drivers/phy/socionext/Makefile            |   1 +
- drivers/phy/socionext/phy-uniphier-usb2.c | 244 ++++++++++++++++++++++++++++++
- 3 files changed, 258 insertions(+)
- create mode 100644 drivers/phy/socionext/phy-uniphier-usb2.c
+> Output of the PWM block of i.MX SoCs is always zero volts when the block
+> is disabled. This can caue issues when inverted PWM polarity is needed.
+> With inverted polarity a duty cycle = 0% corresponds to solid high level
+> on the output. If the PWM is dissabled its output instantly goes to solid
+> zero which corresponds to duty cycle = 100%.
+> 
+> To have a trully inverted PWM output configure the PWM pad as a GPIO
+> with pull-up. Then switch the pad to PWM output whenever non-zero
+> duty cycle is needed.
+> 
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 44 +++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> index c61bdf8..3b1bc4c 100644
+> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> @@ -14,6 +14,12 @@ See the clock consumer binding,
+>  	Documentation/devicetree/bindings/clock/clock-bindings.txt
+>  - interrupts: The interrupt for the pwm controller
+>  
+> +Optional properties:
+> +- pinctrl: For i.MX27 and newer SoCs. Add extra pinctrl to configure the PWM
+> +  pin to gpio function.  It allows control over the pin output level when the
+> +  PWM block is disabled. This is meant to be used if inverted polarity of the
+> +  PWM signal is required. See "Inverted PWM output" section bellow.
+> +
+>  Example:
+>  
+>  pwm1: pwm@53fb4000 {
+> @@ -25,3 +31,41 @@ pwm1: pwm@53fb4000 {
+>  	clock-names = "ipg", "per";
+>  	interrupts = <61>;
+>  };
+> +
+> +Inverted PWM output
+> +-------------------
+> +
+> +The i.MX SoC has such limitation that whenever a pad is configured as a PWM
+> +output, the output level is always zero volts when the PWM block is disabled.
+> +The zero output level is actively driven by the output stage of the PWM block
+> +and can not be overridden by pull-up. It also does not matter what PWM polarity
+> +a PWM client (e.g. backlight) requested.
+> +
+> +To gain control of the PWM output level in disabled state two pinctrl states
+> +can be used. The "default" state and the "pwm" state. In the default state the
+>
+The "default" function of a PWM is to deliver a PWM signal. So it is
+more sensible to me to have the PWM function as "default" and a "gpio"
+function as alternative state.
 
-diff --git a/drivers/phy/socionext/Kconfig b/drivers/phy/socionext/Kconfig
-index 4a172fc..497ca38 100644
---- a/drivers/phy/socionext/Kconfig
-+++ b/drivers/phy/socionext/Kconfig
-@@ -2,6 +2,19 @@
- # PHY drivers for Socionext platforms.
- #
- 
-+config PHY_UNIPHIER_USB2
-+	tristate "UniPhier USB2 PHY driver"
-+	depends on ARCH_UNIPHIER || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support USB PHY implemented on USB2 controller
-+	  on UniPhier SoCs. This driver provides interface to interact
-+	  with USB 2.0 PHY that is part of the UniPhier SoC.
-+	  In case of Pro4, it is necessary to specify this USB2 PHY instead
-+	  of USB3 HS-PHY.
-+
- config PHY_UNIPHIER_USB3
- 	tristate "UniPhier USB3 PHY driver"
- 	depends on ARCH_UNIPHIER || COMPILE_TEST
-diff --git a/drivers/phy/socionext/Makefile b/drivers/phy/socionext/Makefile
-index e230fa31..91e4825 100644
---- a/drivers/phy/socionext/Makefile
-+++ b/drivers/phy/socionext/Makefile
-@@ -3,4 +3,5 @@
- # Makefile for the phy drivers.
- #
- 
-+obj-$(CONFIG_PHY_UNIPHIER_USB2)	+= phy-uniphier-usb2.o
- obj-$(CONFIG_PHY_UNIPHIER_USB3)	+= phy-uniphier-usb3hs.o phy-uniphier-usb3ss.o
-diff --git a/drivers/phy/socionext/phy-uniphier-usb2.c b/drivers/phy/socionext/phy-uniphier-usb2.c
-new file mode 100644
-index 0000000..3f2086e
---- /dev/null
-+++ b/drivers/phy/socionext/phy-uniphier-usb2.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * phy-uniphier-usb2.c - PHY driver for UniPhier USB2 controller
-+ * Copyright 2015-2018 Socionext Inc.
-+ * Author:
-+ *      Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+ */
-+
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+
-+#define SG_USBPHY1CTRL		0x500
-+#define SG_USBPHY1CTRL2		0x504
-+#define SG_USBPHY2CTRL		0x508
-+#define SG_USBPHY2CTRL2		0x50c	/* LD11 */
-+#define SG_USBPHY12PLL		0x50c	/* Pro4 */
-+#define SG_USBPHY3CTRL		0x510
-+#define SG_USBPHY3CTRL2		0x514
-+#define SG_USBPHY4CTRL		0x518	/* Pro4 */
-+#define SG_USBPHY4CTRL2		0x51c	/* Pro4 */
-+#define SG_USBPHY34PLL		0x51c	/* Pro4 */
-+
-+struct uniphier_u2phy_param {
-+	u32 offset;
-+	u32 value;
-+};
-+
-+struct uniphier_u2phy_soc_data {
-+	struct uniphier_u2phy_param config0;
-+	struct uniphier_u2phy_param config1;
-+};
-+
-+struct uniphier_u2phy_priv {
-+	struct regmap *regmap;
-+	struct phy *phy;
-+	struct regulator *vbus;
-+	const struct uniphier_u2phy_soc_data *data;
-+	struct uniphier_u2phy_priv *next;
-+};
-+
-+static int uniphier_u2phy_power_on(struct phy *phy)
-+{
-+	struct uniphier_u2phy_priv *priv = phy_get_drvdata(phy);
-+	int ret = 0;
-+
-+	if (priv->vbus)
-+		ret = regulator_enable(priv->vbus);
-+
-+	return ret;
-+}
-+
-+static int uniphier_u2phy_power_off(struct phy *phy)
-+{
-+	struct uniphier_u2phy_priv *priv = phy_get_drvdata(phy);
-+
-+	if (priv->vbus)
-+		regulator_disable(priv->vbus);
-+
-+	return 0;
-+}
-+
-+static int uniphier_u2phy_init(struct phy *phy)
-+{
-+	struct uniphier_u2phy_priv *priv = phy_get_drvdata(phy);
-+
-+	if (!priv->data)
-+		return 0;
-+
-+	regmap_write(priv->regmap, priv->data->config0.offset,
-+		     priv->data->config0.value);
-+	regmap_write(priv->regmap, priv->data->config1.offset,
-+		     priv->data->config1.value);
-+
-+	return 0;
-+}
-+
-+static struct phy *uniphier_u2phy_xlate(struct device *dev,
-+					struct of_phandle_args *args)
-+{
-+	struct uniphier_u2phy_priv *priv = dev_get_drvdata(dev);
-+
-+	while (priv && args->np != priv->phy->dev.of_node)
-+		priv = priv->next;
-+
-+	if (!priv) {
-+		dev_err(dev, "Failed to find appropriate phy\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return priv->phy;
-+}
-+
-+static const struct phy_ops uniphier_u2phy_ops = {
-+	.init      = uniphier_u2phy_init,
-+	.power_on  = uniphier_u2phy_power_on,
-+	.power_off = uniphier_u2phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int uniphier_u2phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *parent, *child;
-+	struct uniphier_u2phy_priv *priv = NULL, *next = NULL;
-+	struct phy_provider *phy_provider;
-+	struct regmap *regmap;
-+	const struct uniphier_u2phy_soc_data *data;
-+	int ret, data_idx, ndatas;
-+
-+	data = of_device_get_match_data(dev);
-+	if (WARN_ON(!data))
-+		return -EINVAL;
-+
-+	/* get number of data */
-+	for (ndatas = 0; data[ndatas].config0.offset; ndatas++)
-+		;
-+
-+	parent = of_get_parent(dev->of_node);
-+	regmap = syscon_node_to_regmap(parent);
-+	of_node_put(parent);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to get regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	for_each_child_of_node(dev->of_node, child) {
-+		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+		if (!priv) {
-+			ret = -ENOMEM;
-+			goto out_put_child;
-+		}
-+		priv->regmap = regmap;
-+
-+		priv->vbus = devm_regulator_get_optional(dev, "vbus");
-+		if (IS_ERR(priv->vbus)) {
-+			if (PTR_ERR(priv->vbus) == -EPROBE_DEFER) {
-+				ret = PTR_ERR(priv->vbus);
-+				goto out_put_child;
-+			}
-+			priv->vbus = NULL;
-+		}
-+
-+		priv->phy = devm_phy_create(dev, child, &uniphier_u2phy_ops);
-+		if (IS_ERR(priv->phy)) {
-+			dev_err(dev, "Failed to create phy\n");
-+			ret = PTR_ERR(priv->phy);
-+			goto out_put_child;
-+		}
-+
-+		ret = of_property_read_u32(child, "reg", &data_idx);
-+		if (ret) {
-+			dev_err(dev, "Failed to get reg property\n");
-+			goto out_put_child;
-+		}
-+
-+		if (data_idx < ndatas)
-+			priv->data = &data[data_idx];
-+		else
-+			dev_warn(dev, "No phy configuration: %s\n",
-+				 child->full_name);
-+
-+		phy_set_drvdata(priv->phy, priv);
-+		priv->next = next;
-+		next = priv;
-+	}
-+
-+	dev_set_drvdata(dev, priv);
-+	phy_provider = devm_of_phy_provider_register(dev,
-+						     uniphier_u2phy_xlate);
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+
-+out_put_child:
-+	of_node_put(child);
-+
-+	return ret;
-+}
-+
-+static const struct uniphier_u2phy_soc_data uniphier_pro4_data[] = {
-+	{
-+		.config0 = { SG_USBPHY1CTRL, 0x05142400 },
-+		.config1 = { SG_USBPHY12PLL, 0x00010010 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY2CTRL, 0x05142400 },
-+		.config1 = { SG_USBPHY12PLL, 0x00010010 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY3CTRL, 0x05142400 },
-+		.config1 = { SG_USBPHY34PLL, 0x00010010 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY4CTRL, 0x05142400 },
-+		.config1 = { SG_USBPHY34PLL, 0x00010010 },
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static const struct uniphier_u2phy_soc_data uniphier_ld11_data[] = {
-+	{
-+		.config0 = { SG_USBPHY1CTRL,  0x82280000 },
-+		.config1 = { SG_USBPHY1CTRL2, 0x00000106 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY2CTRL,  0x82280000 },
-+		.config1 = { SG_USBPHY2CTRL2, 0x00000106 },
-+	},
-+	{
-+		.config0 = { SG_USBPHY3CTRL,  0x82280000 },
-+		.config1 = { SG_USBPHY3CTRL2, 0x00000106 },
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static const struct of_device_id uniphier_u2phy_match[] = {
-+	{
-+		.compatible = "socionext,uniphier-pro4-usb2-phy",
-+		.data = &uniphier_pro4_data,
-+	},
-+	{
-+		.compatible = "socionext,uniphier-ld11-usb2-phy",
-+		.data = &uniphier_ld11_data,
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, uniphier_u2phy_match);
-+
-+static struct platform_driver uniphier_u2phy_driver = {
-+	.probe = uniphier_u2phy_probe,
-+	.driver = {
-+		.name = "uniphier-usb2-phy",
-+		.of_match_table = uniphier_u2phy_match,
-+	},
-+};
-+module_platform_driver(uniphier_u2phy_driver);
-+
-+MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
-+MODULE_DESCRIPTION("UniPhier PHY driver for USB2 controller");
-+MODULE_LICENSE("GPL v2");
+> +PWM output is configured as a GPIO with pull-up. In the "pwm" state the output
+> +is configured as a PWM output. This setup assures that the PWM output is at
+> +the required level that corresponds to duty cycle = 0 when PWM is disabled.
+> +E.g. at boot.
+> +
+> +Example:
+> +
+> +&pwm1 {
+> +	pinctrl-names = "default", "pwm";
+> +	pinctrl-0 = <&pinctrl_backlight_gpio>;
+> +	pinctrl-1 = <&pinctrl_backlight_pwm>;
+> +}
+> +
+> +pinctrl_backlight_gpio: pwm1grp-gpio {
+> +	fsl,pins = <
+> +		/* GPIO with 22kOhm pull-up */
+> +		MX6QDL_PAD_GPIO_9__GPIO1_IO09	0xF008
+> +	>;
+> +};
+> +
+> +pinctrl_backlight_pwm: pwm1grp-pwm {
+> +	fsl,pins = <
+> +		/* PWM output */
+> +		MX6QDL_PAD_GPIO_9__PWM1_OUT	0x8
+> +	>;
+> +};
+
+
+
 -- 
-2.7.4
+___________________________________________________________
+
+Ka-Ro electronics GmbH | Pascalstraße 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Geschäftsführer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
