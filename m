@@ -1,68 +1,31 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 0/3] ata: ahci-platform: add reset control support
- except for existing drivers
-Date: Wed, 22 Aug 2018 15:33:31 +0200
-Message-ID: <02526d3d-70cb-e22b-39bd-583d516ba639@redhat.com>
-References: <1534939983-16264-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v4 3/4] edac: synopsys: Add EDAC ECC support for ZynqMP
+ DDRC
+Date: Wed, 22 Aug 2018 15:34:57 +0200
+Message-ID: <20180822133457.GA6462@nazgul.tnic>
+References: <1533374735-16662-1-git-send-email-manish.narani@xilinx.com>
+ <1533374735-16662-4-git-send-email-manish.narani@xilinx.com>
+ <20180821130946.GD30528@nazgul.tnic>
+ <DM6PR02MB522788F1286F18FBC6458E0EC1300@DM6PR02MB5227.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534939983-16264-1-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <DM6PR02MB522788F1286F18FBC6458E0EC1300@DM6PR02MB5227.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-ide@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Manish Narani <MNARANI@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "mdf@kernel.org" <mdf@kernel.org>, Edgar Iglesias <edgari@xilinx.com>, Shubhrajyoti Datta <shubhraj@xilinx.com>, Naga Sureshkumar Relli <nagasure@xilinx.com>, Bharat Kumar Gogada <bharatku@xilinx.com>, "stefan.krsmanovic@aggios.com" <stefan.krsmanovic@aggios.com>, Srinivas Goud <sgoud@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Aug 22, 2018 at 01:02:40PM +0000, Manish Narani wrote:
+>  I could remove 'synps_enh' from the prefix and keep 'zynq' and
+> 'zynqmp' to differentiate. Please suggest.
 
-On 22-08-18 14:13, Kunihiko Hayashi wrote:
-> Add support to get and control a list of resets for the device, and
-> add the flag indicating whether to use the reset. Existing SoC-dependent
-> drivers set 0 to this flag.
-> 
-> This series solves the issue of the previous patch [1] that was already
-> reverted [2].
-> [1] https://www.spinics.net/lists/linux-ide/msg55299.html
-> [2] https://www.spinics.net/lists/linux-ide/msg55379.html
-> 
-> Changes since v1:
-> - collect patches for each soc-dependent driver
-> - separate into 3 patches not to affect existing code
+Makes sense and it is shorter, sure.
 
-Thanks, series looks good to me now:
+-- 
+Regards/Gruss,
+    Boris.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-> 
-> Kunihiko Hayashi (3):
->    ata: add an extra argument to ahci_platform_get_resources()
->    ata: libahci_platform: add reset control support
->    ata: ahci_platform: enable to get and control reset
-> 
->   .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
->   drivers/ata/ahci.h                                 |  1 +
->   drivers/ata/ahci_brcm.c                            |  2 +-
->   drivers/ata/ahci_ceva.c                            |  2 +-
->   drivers/ata/ahci_da850.c                           |  2 +-
->   drivers/ata/ahci_dm816.c                           |  2 +-
->   drivers/ata/ahci_imx.c                             |  2 +-
->   drivers/ata/ahci_mtk.c                             |  2 +-
->   drivers/ata/ahci_mvebu.c                           |  2 +-
->   drivers/ata/ahci_platform.c                        |  3 +-
->   drivers/ata/ahci_qoriq.c                           |  2 +-
->   drivers/ata/ahci_seattle.c                         |  2 +-
->   drivers/ata/ahci_st.c                              |  2 +-
->   drivers/ata/ahci_sunxi.c                           |  2 +-
->   drivers/ata/ahci_tegra.c                           |  2 +-
->   drivers/ata/ahci_xgene.c                           |  2 +-
->   drivers/ata/libahci_platform.c                     | 35 ++++++++++++++++++----
->   include/linux/ahci_platform.h                      |  4 ++-
->   18 files changed, 49 insertions(+), 21 deletions(-)
-> 
+ECO tip #101: Trim your mails when you reply.
+--
