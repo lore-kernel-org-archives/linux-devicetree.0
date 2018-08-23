@@ -1,116 +1,54 @@
-From: Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: add DT binding for UniPhier
- MIO DMAC
-Date: Thu, 23 Aug 2018 11:08:44 +0530
-Message-ID: <CAJe_ZheNp9t0DNQjmiQKMyZsbHBjMxqV87mE_3nQ1N_RS9znYQ@mail.gmail.com>
-References: <1534843809-4137-1-git-send-email-yamada.masahiro@socionext.com>
- <1534843809-4137-2-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNASr=rf_foQ7PDTNS440rx3TLuY_TBagfQ-gCHxXpFB2vw@mail.gmail.com>
- <CAJe_ZhdZbUa2njAvSazGzv+7UgG+QHCTS+-Y-Ckqze+pMf9KQA@mail.gmail.com> <CAK7LNAT3MufLZhFB8HDnch09WUdEcLyDCU05dTYroOwWYcx=pQ@mail.gmail.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
+Date: Thu, 23 Aug 2018 08:16:47 +0200
+Message-ID: <CAKMK7uFC-gmJQqJnDBNYJi0KXQ2=z9ukz2E+eQuSC2W+3QXRTw@mail.gmail.com>
+References: <20180812184152.GA22343@ravnborg.org>
+ <20180812195536.GA29811@ravnborg.org>
+ <264d51a0-7e41-6c27-d438-9ae337e6dcf0@microchip.com>
+ <20180814084112.GE21634@phenom.ffwll.local>
+ <20180822201226.GB22148@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAT3MufLZhFB8HDnch09WUdEcLyDCU05dTYroOwWYcx=pQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Rob Herring <robh+dt@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180822201226.GB22148@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm <linux-pwm@vger.kernel.org>, Joshua Henderson <joshua.henderson@microchip.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel <dri-devel@lists.freedesktop.org>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23 August 2018 at 10:48, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Hi Jassi,
->
->
-> 2018-08-21 19:44 GMT+09:00 Jassi Brar <jaswinder.singh@linaro.org>:
->> On 21 August 2018 at 15:17, Masahiro Yamada
->> <yamada.masahiro@socionext.com> wrote:
->>> (+CC Rob, DT, LKML)
->>>
->>> I forgot to CC this to DT community...
->>>
->>>
->>> 2018-08-21 18:30 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
->>>> The MIO DMAC (Media IO DMA Controller) is used in UniPhier LD4,
->>>> Pro4, and sLD8 SoCs.
->>>>
->>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->>>> ---
->>>>
->>>>  .../devicetree/bindings/dma/uniphier-mio-dmac.txt  | 28 ++++++++++++++++++++++
->>>>  1 file changed, 28 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
->>>> new file mode 100644
->>>> index 0000000..a9e969e
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
->>>> @@ -0,0 +1,28 @@
->>>> +UniPhier Media IO DMA controller
->>>> +
->>>> +This works as an external DMA engine for SD/eMMC controllers etc.
->>>> +found in UniPhier LD4, Pro4, sLD8 SoCs.
->>>> +
->>>> +Required properties:
->>>> +- compatible: should be "socionext,uniphier-mio-dmac".
->>>> +- reg: offset and length of the register set for the device.
->>>> +- interrupts: a list of interrupt specifiers associated with the DMA channels.
->>>> +- clocks: a single clock specifier
->>>> +- #dma-cells: should be <1>. The single cell represents the channel number.
->>>> +- dma-channels: specify the number of the DMA channels. This should match to
->>>> +  the number of tuples in the interrupts property.
->>>> +
->> Can we not infer the number of channels from interrupt tuples? After
->> all the driver assumes they are same.
->
->
-> It would be possible to count the number of tuples
-> in "interrupts".
->
->
->
-> I know of_irq_count(), but I do not see any driver
-> in drivers/dma/ that calls it.
->
->
-> I guess the reason is that of_irq_count() is not exported,
-> so tristate drivers like this cannot use it.
->
->
-> I checked Documentation/devicetree/bindings/dma/,
-> and some controllers specify _redundant_ dma-channels property.
->
-> fsl-mxs-dma.txt
-> renesas,rcar-dmac.txt
-> renesas,usb-dmac.txt
->
-:) I am not sure "because others are doing it" is a good reason to
-introduce redundancy.
-
-
-> I also see counter-implementation.
->
->
-> bcm2835-dma.c hard-codes the number of channels in the driver.
-> tegra210-adma.c associates nr_channels with compatible string.
->
->
->
-> I will wait for comments from the maintainers.
->
-> If desired, I will export of_irq_count()
-> and use it from my driver.
->
-If you don't want to leave too much footprint, you could do
-
-  count = 0;
-  while (of_irq_parse_one(dev, count, &irq) == 0) count++
-
-of_irq_parse_one() is already exported.
-
-A good side-effect is you wouldn't have to hardcode the count in the
-driver (like bcm and tegra examples you quote).
-
-Having said that, I wouldn't lose sleep over it. So ....
-
-Cheers!
+T24gV2VkLCBBdWcgMjIsIDIwMTggYXQgMTA6MTIgUE0sIFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5i
+b3JnLm9yZz4gd3JvdGU6Cj4gSGkgRGFuaWVsLgo+Cj4+ID4gPiBCYXNlZCBvbiB0aGUgYWJvdmUs
+IHdvdWxkIGl0IGJlIHBvc3NpYmxlIHRvIHV0aWxpc2Ugc29tZQo+PiA+ID4gb2YgdGhlc2UgZmVh
+dHVyZXMgd2l0aG91dCBhbnkgZGVkaWNhdGVkIHVzZXJzcGFjZSAobWVzYSkgc3VwcG9ydD8KPj4g
+PiA+IEFueSBvdGhlciBkcml2ZXIgdGhhdCBoYXMgc29tZXRoaW5nIHNpbWlsYXIgdGhhdCBjYW4g
+YmUgdXNlZAo+PiA+ID4gZm9yIGluc3BpcmF0aW9uPwo+PiA+Cj4+ID4gVGhpcyBpcyByZWFsbHkg
+YW4gaW50ZXJlc3RpbmcgcXVlc3Rpb24gaW5kZWVkLgo+Pgo+PiBOZWVkcyB1c2Vyc3BhY2UgbGlr
+ZSBldmVyeXRoaW5nIGVsc2UuIFRoZXJlJ3MgdW5mb3J0dW5hdGVseSBubyByZWFsCj4+IHN0YW5k
+YXJkIGZvciAyZCBhcGlzIGluIHVzZXJzcGFjZSwgd2hpY2ggbWVhbnMgbm9uZSBvZiB0aGVzZSBl
+ZmZvcnRzIGdvCj4+IHZlcnkgZmFyLiBNb3N0bHkgaXQncyBqdXN0IHNvbWUgY3VzdG9tLW1hZGUg
+WCBkcml2ZXJzLgo+Pgo+PiBBZGRpbmcgYSBnZW5lcmljIDJkIGFwaSB0byBkcm0gaXMgYSBGQVEs
+IGFuZCB0aGUgYW5zd2VyIGlzICJubyIuCj4KPiBBbmQgdGhlbiB5b3Ugd2VudCBvZmYgd3JpdGlu
+ZyBhIGJsb2cgcG9zdCBhYm91dCBpdCAtIHRoYW5rcy4KPiBUaGUgYmxvZyBwb3N0IHByb3ZpZGVk
+IGEgbG90IG9mIHVzZWZ1bCBhbnN3ZXJzIC0gZ3JlYXQuCgpZZWFoIEkgZmlndXJlZCBtb3JlIGRl
+dGFpbCB0aGFuIHRoaXMgaGVyZSB3b3VsZCBiZSBnb29kLCBidXQgYWxzbwp3YW50ZWQgdG8gYXZv
+aWQgaGF2aW5nIHRvIHJldHlwZSB0aGF0IGV2ZXIgYWdhaW4uCgo+IChPciByYXRoZXIgeW91IHdp
+bGwgd3JpdGUgdGhlIGJsb2cgaW4gNSBkYXlzLCBzZWVtcyB0byBiZSBzb21lIHRpbWUKPiAgbWFj
+aGluZSBpbnZvbHZlZC4gKERhdGUgaXMgdGhlIDI3dGggYmVsb3cgdGhlIHRpdGxlKSkuCgpNeSBi
+bG9nIHBsYXRmb3JtIHB1bGxlZCBvbmUgb24gbWUgLSBwdXNoZWQgaXQgb3V0IHdpdGggYSBmdXR1
+cmUgZGF0ZSwKd2l0aCB0aGUgaWRlYSB0byBwcm9vZi1yZWFkIGEgYml0IG1vcmUuIERpZG4ndCB3
+b3JrLCBzbyBldmVyeW9uZSByZWFkCnRoZSBzbGlnaHRseSBkcmFmdC1pc2ggdmVyc2lvbiA6LS8g
+SW4gdGhlIHBhc3QgdGhpcyBkaWQgd29yaywgYW5kIHdhcwp2ZXJ5IG5lYXQuCi1EYW5pZWwKLS0g
+CkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCis0MSAo
+MCkgNzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
