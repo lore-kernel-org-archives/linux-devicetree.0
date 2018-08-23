@@ -1,52 +1,74 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 1/4] eeprom: at24: Allow passing gpiodesc from pdata
-Date: Thu, 23 Aug 2018 13:14:32 +0200
-Message-ID: <CAMRc=MeR242hFhk4Nts9Fo2110NYAKoULDZPpe_mTrpdA2CNSw@mail.gmail.com>
-References: <20180823103332.32047-1-linus.walleij@linaro.org>
- <20180823103332.32047-2-linus.walleij@linaro.org>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM
+ output between PWM and GPIO
+Date: Thu, 23 Aug 2018 13:18:16 +0200
+Message-ID: <20180823131816.741c09cc@ipc1.ka-ro>
+References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
+        <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
+        <20180822081436.13d8f55b@ipc1.ka-ro>
+        <175003bc-eae7-1b30-ebfe-b56ffc58705e@ysoft.com>
+        <20180822131758.162d5351@ipc1.ka-ro>
+        <18b4a847-bc59-4450-331a-0b17f27c97a8@ysoft.com>
+        <20180822161036.4d69bdc1@ipc1.ka-ro>
+        <5b13d21c-f83f-49b0-eedd-9a4995dbd469@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180823103332.32047-2-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev@lists.96boards.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5b13d21c-f83f-49b0-eedd-9a4995dbd469@ysoft.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-08-23 12:33 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
-> This makes it possible to pass an initialized GPIO descriptor
-> to the driver through platform data.
+Michal Vokáč <michal.vokac@ysoft.com> wrote:
+> On 22.8.2018 16:10, Lothar Waßmann wrote:
+> > My use case is attaching different displays to the same baseboard,
+> > where some displays have the brightness control pin inverted with
+> > respect to the others. It's easy to change the compatible string for
+> > the simple-panel driver and the PWM polarity setting for the
+> > pwm-backlight driver from U-Boot according to the display model, but
+> > it's not so easy, to edit the pinctrl settings from pull-up to
+> > pull-down or vice versa.  
+> 
+> OK, I got it. Though that is something different than having two clients,
+> right?
 >
-> This is useful when we are dealing with EEPROMs on expansion
-> boards where the GPIO has to be looked up indirectly using a
-> connector abstraction (several systems using the same
-> connector) so the machine descriptor tables cannot be used
-> to associate the descriptor with the device and we then want
-> to pass this descriptor on to the EEPROM driver this way
-> instead.
->
+> You do not actually need to change the pinctrl pull-up/down configuration
+> in bootloader. You define the two pinctrl groups as I suggested in the
+> example. Or more precisely, you add a new pinctrl group where the PWM
+> output pad is configured as a GPIO with pull-up. You add this group to
+> all your common device trees. This does no harm as the group is not used
+> yet.
+> 
+> In bootloader you detect the type of the panel. Normal PWM polarity? OK,
+> do nothing and boot. Inverted PWM polarity? Set the pinctrl-names property
+> to "default", "pwm". Set the pinctrl-0 property to point to the GPIO group
+> and set pinctrl-1 property to point to the old PWM group.
+> 
+> E.g. something like:
+> 
+> => fdt set /soc/aips-bus@2000000/pwm@2080000 pinctrl-names default pwm
+> => fdt get value gpio-phandle /soc/aips-bus@2000000/iomuxc@20e0000/pwm1grp-gpio phandle
+> => fdt get value pwm-phandle /soc/aips-bus@2000000/iomuxc@20e0000/pwm1grp-pwm phandle
+> => fdt set /soc/aips-bus@2000000/pwm@2080000 pinctrl-0 ${gpio-phandle}
+> => fdt set /soc/aips-bus@2000000/pwm@2080000 pinctrl-1 ${pwm-phandle}  
+> 
+> Will this work for you?
+> 
+This would probably work, but it's quite ugly.
+I'd still prefer to set the pin output state to the desired level
+rather than relying on the chip internal pullup/pulldown facility.
 
-Ugh I don't like this at all. In fact I'm right now trying to *get
-rid* of platform_data from at24 in favor of device properties[1].
 
-Part of the changes from my series actually removes the setup function
-from at24 and replaces it with a notifier fired by the nvmem
-framework.
+Lothar Waßmann
+-- 
+___________________________________________________________
 
-I would really prefer that we introduce some generic way of handling
-write-protect mechanisms in nvmem. Maybe starting by moving the
-wp_gpio to nvmem and then passing it in nvmem_config?
+Ka-Ro electronics GmbH | Pascalstraße 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Geschäftsführer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
 
-Best regards,
-Bartosz Golaszewski
-
-[1] https://patchwork.kernel.org/cover/10562365/
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
