@@ -1,38 +1,45 @@
-Return-Path: <SRS0=NkPt=LD=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:33883 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbeHTNcA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 20 Aug 2018 09:32:00 -0400
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [RFT 1/8] media: dt-bindings: media: rcar-vin: Add R8A77990 support
-Date: Mon, 20 Aug 2018 12:16:35 +0200
-Message-Id: <1534760202-20114-2-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1534760202-20114-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1534760202-20114-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: devicetree-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, kieran.bingham+renesas@ideasonboard.com, niklas.soderlund+renesas@ragnatech.se, damm+renesas@opensource.se, ulrich.hecht+renesas@gmail.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=XkR4=LG=g.ncu.edu.tw=starnight@kernel.org>
+From: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+Subject: [RFC 3/3 net] lorawan: List LORAWAN in menuconfig
+Date: Fri, 24 Aug 2018 01:15:43 +0800
+Message-Id: <cd021897a590ee57605a497b23e7ea9341889aef.1535039998.git.starnight@g.ncu.edu.tw>
+In-Reply-To: <cover.1535039998.git.starnight@g.ncu.edu.tw>
+References: <cover.1535039998.git.starnight@g.ncu.edu.tw>
+To: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?q?Michael=20R=C3=B6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?q?Konstantin=20B=C3=B6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, "contact@snootlab.com" <contact@snootlab.com>, Ben Whitten <ben.whitten@lairdtech.com>, Brian Ray <brian.ray@link-labs.com>, lora@globalsat.com.tw, Alexander Graf <agraf@suse.de>, =?UTF-8?q?Michal=20Kube=C4=8Dek?= <mkubecek@suse.cz>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Steve deRosier <derosier@gmail.com>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Pieter ROBYNS <pieter.robyns@uhasselt.be>, Hasnain Virk <Hasnain.Virk@arm.com>, linux-wpan - ML <linux-wpan@vger.kernel.org>, Stefan Schmidt <stefan@datenfreihafen.org>, Daniele Comel <dcomel@mipot.com>, shess@hessware.de, Xue Liu <liuxuenetmail@gmail.com>
+Cc: Jian-Hong Pan <starnight@g.ncu.edu.tw>
 List-ID: <devicetree@vger.kernel.org>
 
-Add compatible string for R-Car E3 R8A77990 to the list of SoCs supported by
-rcar-vin driver.
+List LORAWAN in menuconfig and enable it to be built.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Jian-Hong Pan <starnight@g.ncu.edu.tw>
 ---
- Documentation/devicetree/bindings/media/rcar_vin.txt | 1 +
- 1 file changed, 1 insertion(+)
+ net/Kconfig  | 1 +
+ net/Makefile | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index 2f42005..dfd6058 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -23,6 +23,7 @@ on Gen3 platforms to a CSI-2 receiver.
-    - "renesas,vin-r8a7796" for the R8A7796 device
-    - "renesas,vin-r8a77965" for the R8A77965 device
-    - "renesas,vin-r8a77970" for the R8A77970 device
-+   - "renesas,vin-r8a77990" for the R8A77990 device
-    - "renesas,vin-r8a77995" for the R8A77995 device
-    - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
-      device.
---
-2.7.4
+diff --git a/net/Kconfig b/net/Kconfig
+index 053b36998c18..499c931ba0fa 100644
+--- a/net/Kconfig
++++ b/net/Kconfig
+@@ -224,6 +224,7 @@ source "net/6lowpan/Kconfig"
+ source "net/ieee802154/Kconfig"
+ source "net/mac802154/Kconfig"
+ source "net/lora/Kconfig"
++source "net/maclorawan/Kconfig"
+ source "net/sched/Kconfig"
+ source "net/dcb/Kconfig"
+ source "net/dns_resolver/Kconfig"
+diff --git a/net/Makefile b/net/Makefile
+index e80b84313851..5341d0e23586 100644
+--- a/net/Makefile
++++ b/net/Makefile
+@@ -63,6 +63,7 @@ obj-$(CONFIG_6LOWPAN)		+= 6lowpan/
+ obj-$(CONFIG_IEEE802154)	+= ieee802154/
+ obj-$(CONFIG_MAC802154)		+= mac802154/
+ obj-$(CONFIG_LORA)		+= lora/
++obj-$(CONFIG_LORAWAN)		+= maclorawan/
+ 
+ ifeq ($(CONFIG_NET),y)
+ obj-$(CONFIG_SYSCTL)		+= sysctl_net.o
+-- 
+2.18.0
