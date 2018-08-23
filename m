@@ -1,59 +1,46 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
-Date: Thu, 23 Aug 2018 11:38:31 -0700
-Message-ID: <153504951102.28926.11593809590549791317@swboyd.mtv.corp.google.com>
-References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
- <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
- <CAE=gft7_5SZKpU0i9Jbi6UV-eqW8=6Fm7rw4oKVXG6J9Q7_E+g@mail.gmail.com>
- <1ddda4b9e6dcd7ad415235f4d6af2dc7@codeaurora.org>
- <153333504360.10763.8964005567051510823@swboyd.mtv.corp.google.com>
- <4d37a1ee4f2d5b30da3f62cbfca756a8@codeaurora.org>
- <153370933225.220756.12056174025047430491@swboyd.mtv.corp.google.com>
- <c83e4248-aef2-bb40-8d8e-47d9b2918cc7@codeaurora.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
+Date: Thu, 23 Aug 2018 20:50:23 +0200
+Message-ID: <CAFBinCAKNUA5_fz4bXqj-aCaDEHk--Ax5GXJt+nzVKSjbVHxLg@mail.gmail.com>
+References: <20180822105547.9634-1-johan@kernel.org> <20180822105547.9634-5-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c83e4248-aef2-bb40-8d8e-47d9b2918cc7@codeaurora.org>
+In-Reply-To: <20180822105547.9634-5-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>, skannan@codeaurora.org
-Cc: Evan Green <evgreen@google.com>, rjw@rjwysocki.net, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org
+To: johan@kernel.org
+Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, carlo@endlessm.com, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2018-08-08 03:15:26)
-> =
+Hi Johan,
 
-> =
+On Wed, Aug 22, 2018 at 12:57 PM Johan Hovold <johan@kernel.org> wrote:
+>
+> Use the new of_get_compatible_child() helper to lookup the slot child
+> node instead of using of_find_compatible_node(), which searches the
+> entire tree and thus can return an unrelated (i.e. non-child) node.
+that new helper is much appreciated, thank you!
 
-> On 8/8/2018 11:52 AM, Stephen Boyd wrote:
-> >>
-> >> Binding describes hardware controllable by the OS. That's the reality.
-> >> Let's not add mandatory clock bindings for clocks that the OS can't do
-> >> anything about.
-> >>
-> > =
+> This also addresses a potential use-after-free (e.g. after probe
+> deferral) as the tree-wide helper drops a reference to its first
+> argument (i.e. the node of the device being probed).
+>
+> While at it, also fix up the related slot-node reference leak.
+not sure why both issues went unnoticed so far - good that they're now
+both fixed. thank you!
 
-> > It seems that you believe clks should only be used to turn on/off and
-> > control rates. That is not the whole truth. Sometimes clks are there
-> > just to express the clk frequencies that are present in the design so
-> > that drivers can figure out what to do.
-> > =
+> Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+> Cc: stable <stable@vger.kernel.org>     # 4.15
+backporting only works if the patch introducing
+of_get_compatible_child is also backported
+do we have to inform Greg somehow?
 
-> =
-
-> Stephen,
-> =
-
-> As this clock is not configurable by linux clock drivers and we really =
-
-> do not care the parent src(as mentioned by Saravana) to generate the =
-
-> 300MHz, would it be good to define a fixed rate clock so as to express =
-
-> the HW connectivity & frequency?
-> =
+> Cc: Carlo Caione <carlo@endlessm.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
 
-As a hack that works great, but why do we need to workaround problems by
-adding a fixed rate clk to DT for this PLL? The PLL is provided by GCC
-node so it should be connected to the GCC node.
+Regards
+Martin
