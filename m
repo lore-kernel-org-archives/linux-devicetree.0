@@ -1,92 +1,54 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx6ull: correct machine model name
-Date: Thu, 23 Aug 2018 06:58:49 +0000
-Message-ID: <DB3PR0402MB3916F5B4C327E4F08125C4DAF5370@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1535005849-14046-1-git-send-email-Anson.Huang@nxp.com>
- <20180823065717.ibntomnnamkdbyyq@pengutronix.de>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 1/9] of: add helper to lookup compatible child node
+Date: Thu, 23 Aug 2018 09:39:53 +0200
+Message-ID: <20180823073953.GP14967@localhost>
+References: <20180822105547.9634-2-johan@kernel.org>
+ <201808231057.oOgtDWTB%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180823065717.ibntomnnamkdbyyq@pengutronix.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201808231057.oOgtDWTB%fengguang.wu@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Johan Hovold <johan@kernel.org>, kbuild-all@01.org, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Sacha
-
-Anson Huang
-Best Regards!
-
-
-> -----Original Message-----
-> From: Sascha Hauer <s.hauer@pengutronix.de>
-> Sent: Thursday, August 23, 2018 2:57 PM
-> To: Anson Huang <anson.huang@nxp.com>
-> Cc: shawnguo@kernel.org; kernel@pengutronix.de; Fabio Estevam
-> <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
-> linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> linux-kernel@vger.kernel.org; dl-linux-imx <linux-imx@nxp.com>
-> Subject: Re: [PATCH] ARM: dts: imx6ull: correct machine model name
+On Thu, Aug 23, 2018 at 11:17:26AM +0800, kbuild test robot wrote:
+> Hi Johan,
 > 
-> Hi Anson,
+> I love your patch! Yet something to improve:
 > 
-> The board name should be in the subject to let the reader know this is no
-> generic i.MX6ull change.
- 
-Thanks for comment, will fix it in V2 patch.
+> [auto build test ERROR on robh/for-next]
+> [also build test ERROR on v4.18 next-20180822]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Johan-Hovold/of-fix-compatible-child-node-lookups/20180823-074211
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+> config: mips-decstation_defconfig (attached as .config)
+> compiler: mipsel-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.2.0 make.cross ARCH=mips 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from include/linux/irqdomain.h:35:0,
+>                     from arch/mips/include/asm/irq.h:14,
+>                     from include/linux/irq.h:23,
+>                     from include/asm-generic/hardirq.h:13,
+>                     from arch/mips/include/asm/hardirq.h:16,
+>                     from include/linux/hardirq.h:9,
+>                     from include/linux/interrupt.h:11,
+>                     from arch/mips/dec/ecc-berr.c:16:
+> >> include/linux/of.h:637:28: error: 'of_get_compatible_child' defined but not used [-Werror=unused-function]
+>     static struct device_node *of_get_compatible_child(const struct device_node *parent,
+>                                ^~~~~~~~~~~~~~~~~~~~~~~
+>    cc1: all warnings being treated as errors
 
-Anson.
+Bah, I forgot the inline keyword. I'll fix this in a v2, and I can amend
+the commit message and mention the start node while at it.
 
-> 
-> Sascha
-> 
-> On Thu, Aug 23, 2018 at 02:30:49PM +0800, Anson Huang wrote:
-> > i.MX6ULL is a lite version of i.MX6UL, its full name is i.MX6
-> > UltraLiteLite, NOT UlltraLite.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  arch/arm/boot/dts/imx6ull-14x14-evk.dts | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/imx6ull-14x14-evk.dts
-> > b/arch/arm/boot/dts/imx6ull-14x14-evk.dts
-> > index 30ef603..0ba6454 100644
-> > --- a/arch/arm/boot/dts/imx6ull-14x14-evk.dts
-> > +++ b/arch/arm/boot/dts/imx6ull-14x14-evk.dts
-> > @@ -45,7 +45,7 @@
-> >  #include "imx6ul-14x14-evk.dtsi"
-> >
-> >  / {
-> > -	model = "Freescale i.MX6 UlltraLite 14x14 EVK Board";
-> > +	model = "Freescale i.MX6 UltraLiteLite 14x14 EVK Board";
-> >  	compatible = "fsl,imx6ull-14x14-evk", "fsl,imx6ull";  };
-> >
-> > --
-> > 2.7.4
-> >
-> >
-> 
-> --
-> Pengutronix e.K.                           |
-> |
-> Industrial Linux Solutions                 |
-> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.
-> pengutronix.de%2F&amp;data=02%7C01%7Canson.huang%40nxp.com%7C59
-> 4938583dae4ac0ab1208d608c5af45%7C686ea1d3bc2b4c6fa92cd99c5c301635
-> %7C0%7C0%7C636706042476455956&amp;sdata=bMBKPPTa17ALKbCF8jvTtIj
-> dviMwKxXMW%2F%2F02xkzWO8%3D&amp;reserved=0  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:
-> +49-5121-206917-5555 |
+Johan
