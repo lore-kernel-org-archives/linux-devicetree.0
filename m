@@ -1,91 +1,67 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v4 09/14] irqchip/irq-mvebu-icu: add support for System
- Error Interrupts (SEI)
-Date: Thu, 23 Aug 2018 13:44:10 +0200
-Message-ID: <20180823134410.2df84fa4@xps13>
-References: <20180705124011.7661-1-miquel.raynal@bootlin.com>
- <20180705124011.7661-10-miquel.raynal@bootlin.com>
- <a88f62c0-7d7c-71da-fa45-487f7573dbb1@arm.com>
- <20180821110825.2fbec982@xps13>
- <07e90507-1d51-6435-b006-c46f865a636c@arm.com>
- <20180821122819.726c434b@xps13>
- <9c3168e2-3653-5359-7ddb-9e6ac1b47bb8@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: DT case sensitivity
+Date: Thu, 23 Aug 2018 06:43:42 -0500
+Message-ID: <CAL_Jsq+1T8k5mtc-DgDBtX3Qco9sQG9RWv6FTZ8NXppNbNg3Ww@mail.gmail.com>
+References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
+ <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
+ <CAL_JsqKqkO31ekVMFKs+osLvKdZyDzRowF1thWXn5=tWhrJgvw@mail.gmail.com>
+ <18175413a0148f7859ab36ed9715dce7a598f318.camel@kernel.crashing.org>
+ <13bf5b39-0461-351e-57e3-60264eaa374d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9c3168e2-3653-5359-7ddb-9e6ac1b47bb8@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <13bf5b39-0461-351e-57e3-60264eaa374d@arm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Grant Likely <grant.likely@arm.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Kumar Gala <kumar.gala@linaro.org>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFR1
-ZSwgMjEgQXVnIDIwMTggMTE6Mzc6NDcKKzAxMDA6Cgo+IE9uIDIxLzA4LzE4IDExOjI4LCBNaXF1
-ZWwgUmF5bmFsIHdyb3RlOgo+ID4gSGkgTWFyYywKPiA+IAo+ID4gTWFyYyBaeW5naWVyIDxtYXJj
-Lnp5bmdpZXJAYXJtLmNvbT4gd3JvdGUgb24gVHVlLCAyMSBBdWcgMjAxOCAxMDoxOTowNAo+ID4g
-KzAxMDA6Cj4gPiAgIAo+ID4+IE9uIDIxLzA4LzE4IDEwOjA4LCBNaXF1ZWwgUmF5bmFsIHdyb3Rl
-OiAgCj4gPj4+IEhpIE1hcmMsCj4gPj4+Cj4gPj4+IEknbSBmaW5lIHdpdGggdGhlIHJlc3Qgb2Yg
-dGhlIGNvbW1lbnRzLCBwbGVhc2UgZmluZCBqdXN0IG9uZSBsYXN0Cj4gPj4+IHF1ZXN0aW9uIGJl
-bG93Lgo+ID4+Pgo+ID4+PiBbLi4uXQo+ID4+PiAgICAgCj4gPj4+Pj4gQEAgLTEzMywxMiArMTY0
-LDM2IEBAIG12ZWJ1X2ljdV9pcnFfZG9tYWluX3RyYW5zbGF0ZShzdHJ1Y3QgaXJxX2RvbWFpbiAq
-ZCwgc3RydWN0IGlycV9md3NwZWMgKmZ3c3BlYywKPiA+Pj4+PiAgCQlyZXR1cm4gLUVJTlZBTDsK
-PiA+Pj4+PiAgCX0KPiA+Pj4+PiAgCj4gPj4+Pj4gLQkvKiBNYXNrIHRoZSB0eXBlIHRvIHByZXZl
-bnQgd3JvbmcgRFQgY29uZmlndXJhdGlvbiAqLwo+ID4+Pj4+IC0JKnR5cGUgPSBmd3NwZWMtPnBh
-cmFtWzJdICYgSVJRX1RZUEVfU0VOU0VfTUFTSzsKPiA+Pj4+PiArCS8qCj4gPj4+Pj4gKwkgKiBU
-aGUgSUNVIHJlY2VpdmVzIGxldmVsLWludGVycnVwdHMuIE1TSSBTRUkgYXJlCj4gPj4+Pj4gKwkg
-KiBlZGdlLWludGVycnVwdHMgd2hpbGUgTVNJIE5TUiBhcmUgbGV2ZWwtaW50ZXJydXB0cy4gVXBk
-YXRlIHRoZSB0eXBlCj4gPj4+Pj4gKwkgKiBhY2NvcmRpbmdseSBmb3IgdGhlIHBhcmVudCBpcnFj
-aGlwLgo+ID4+Pj4+ICsJICovCj4gPj4+Pj4gKwlpZiAobXNpX2RhdGEtPnN1YnNldF9kYXRhLT5p
-Y3VfZ3JvdXAgPT0gSUNVX0dSUF9TRUkpCj4gPj4+Pj4gKwkJKnR5cGUgPSBJUlFfVFlQRV9FREdF
-X1JJU0lORzsgICAgICAKPiA+Pj4+Cj4gPj4+PiBUaGF0J3MgaW50ZXJlc3RpbmcuIEhvdyBpcyB0
-aGUgcmVzYW1wbGluZyBkb25lIGhlcmU/ICAgIAo+ID4+Pgo+ID4+PiBJJ20gbm90IHN1cmUgdG8g
-dW5kZXJzdGFuZCB0aGUgcXVlc3Rpb24uIFdoYXQgZG9lcyAncmVzYW1wbGluZycgbWVhbnMKPiA+
-Pj4gaW4gc3VjaCBjb250ZXh0PyBNU0kgU0VJcyBhcmUgb2YgdHlwZSAiZWRnZSIgYW5kIHVzZSB0
-aGUgdHJhZGl0aW9uYWwKPiA+Pj4gTVNJIHNpZ25hbGxpbmcgaW5mcmFzdHJ1Y3R1cmUuIEknbSBh
-c2tpbmcgdG8gYmUgc3VyZSBub3QgdG8gaWdub3JlCj4gPj4+IHNvbWV0aGluZyB3cm9uZyBpbiBt
-eSBjb2RlLiAgICAKPiA+Pgo+ID4+IFlvdSBzZWVtcyB0byBiZSB0dXJuaW5nIGEgbGV2ZWwgaW50
-ZXJydXB0IGludG8gYW4gZWRnZS4gIAo+ID4gCj4gPiBJZiBpcyBhbiBTRUkgaW50ZXJydXB0LCBp
-dCBjYW5ub3QgYmUgYSBsZXZlbCBpbnRlcnJ1cHQgYW5kIHRoZSB0eXBlCj4gPiB3aWxsIGJlIElS
-UV9UWVBFX0VER0VfUklTSU5HLgo+ID4gICAKPiA+PiBZb3UgY2FuIGRvIHRoYXQsCj4gPj4gYnV0
-IG9ubHkgaWYgeW91IHJlc2FtcGxlIHRoZSBsZXZlbCBvbiBFT0kgKGFuZCByZWdlbmVyYXRlIHRo
-ZQo+ID4+IGNvcnJlc3BvbmRpbmcgZWRnZSBpZiB0aGUgbGV2ZWwgaXMgc3RpbGwgaGlnaCkuICAK
-PiA+IAo+ID4gV2hhdCBpcyBiZWZvcmUgaXMgYSAnJiBJUlFfVFlQRV9TRU5TRV9NQVNLJyBvcGVy
-YXRpb24uIEluIHRoZW9yeSwKPiA+ICp0eXBlIGNvdWxkIGJlIGFueXRoaW5nIG9mIElSUV9UWVBF
-X3tFREdFLExFVkVMfV8qIGF0IHRoaXMgbW9tZW50LiBCdXQsCj4gPiBhcyBzdGF0ZWQgYWJvdmUs
-IGl0IGNhbm5vdCBiZSBhbnl0aGluZyBlbHNlIHRoYW4gSVJRX1RZUEVfRURHRV9SSVNJTkcuCj4g
-PiBJIHRob3VnaHQgbW9yZSBjbGVhciB0byBlbmZvcmNlIGl0IGJ1dCBpZiB0aGlzIHVuY2xlYXIg
-YW5kIHVzZWxlc3MsCj4gPiBsZXQncyBkcm9wIGl0PyAgCj4gCj4gSSB0aGluayBvdmVycmlkaW5n
-IHRoZSB0cmlnZ2VyIHRoYXQgd2F5IGlzIHZlcnkgY29uZnVzaW5nLiBFaXRoZXIgaXQKPiBjb21l
-cyBmcm9tIERULCBvciBpdCBjb21lcyBmcm9tIHRoZSBNU0kgZnJhbXdvcmsuIEluIGJvdGggY2Fz
-ZXMsIGl0IGhhcwo+IHRvIGJlIGNvcnJlY3QsIGFuZCBvdmVycmlkaW5nIGl0IGlzIGp1c3QgcGFw
-ZXJpbmcgb3ZlciBvdGhlciBidWdzLgo+IAo+IEknZCByYXRoZXIgeW91IHB1dCBhIFdBUk5fT04g
-aWYgeW91IGVuY291bnRlciBhbiBpbGxlZ2FsIGludGVycnVwdCB0cmlnZ2VyLgoKQWN0dWFsbHkg
-SSBkbyByZW1lbWJlciBub3cgd2h5IEkgZW5mb3JjZWQgdGhlIHR5cGU6CgpMZXQncyBzYXkgbXkg
-dGhlcm1hbCBJUCBpbiBhIENQMTEwIHRyaWdnZXJzIGFuIGludGVycnVwdC4gVGhpcwppbnRlcnJ1
-cHQgaXMgb2YgdHlwZSBMRVZFTF9ISUdILCBhbmQgaXQgaXMgZGVjbGFyZWQgaW4gdGhlIERUIGFz
-OgoKICAgIHRoZXJtYWw6IHRoZXJtYWwtc2Vuc29yQC4uLiB7CiAgICAgICAgWy4uLl0KICAgICAg
-ICBpbnRlcnJ1cHRzLWV4dGVuZGVkID0gPCZpY3Vfc2VpIDExNiBJUlFfVFlQRV9MRVZFTF9ISUdI
-PjsKICAgIH07CgpUaGUgSUNVIGNhbGxiYWNrIC0+dHJhbnNsYXRlKCkgd2lsbCBiZSBjYWxsZWQg
-d2l0aCBmd3NwZWMgYmVpbmcgdGhlIEMKdmlldyBvZiB0aGUgYWJvdmUgImludGVycnVwdHMtZXh0
-ZW5kZWQiIHByb3BlcnR5LCBzbyB0aGUgaW50ZXJydXB0IHR5cGUKd2lsbCBiZSBMRVZFTF9ISUdI
-LgoKSG93ZXZlciwgdGhlICJpY3Vfc2VpIiBwYXJlbnQgaXMgdGhlIFNFSSBJUCBpbiB0aGUgQVA4
-MDYgYW5kIHRoaXMgSVAKb25seSByZWNlaXZlcyBlZGdlIGludGVycnVwdHMuIFdoYXQgaGFwcGVu
-cyBpcyB0aGF0IHRoZSBTRUkncwotPnNldF90eXBlKCkgY2FsbGJhY2sgaXMgY2FsbGVkIHdpdGgg
-TEVWRUxfSElHSCB0eXBlICh3aGlsZSBpdApvbmx5IHN1cHBvcnRzIEVER0VfUklTSU5HIGludGVy
-cnVwdHMpIGFuZCBJIHdhbnQgdGhlIGRyaXZlciB0byB0aHJvdyBhbgplcnJvciBpbiB0aGlzIGNh
-c2UuCgpNeSB3YXkgb2YgaGFuZGxpbmcgdGhpcyB3YXMgdG8gZm9yY2UgKnR5cGUgdG8gYmUgRURH
-RV9SSVNJTkcgaW4gdGhlIElDVQotPnRyYW5zbGF0ZSgpIGNhbGxiYWNrIHdoZW5ldmVyIGFuIFNF
-SSB3YXMgdHJpZ2dlcmVkLiBBcyB0aGlzIHNlZW1zIG5vdAp0byBiZSBjb3JyZWN0LCBob3cgd291
-bGQgeW91IGhhbmRsZSBzdWNoIHNpdHVhdGlvbj8KClRoYW5rcywKTWlxdcOobAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Aug 23, 2018 at 4:02 AM Grant Likely <grant.likely@arm.com> wrote:
+>
+> On 23/08/2018 02:29, Benjamin Herrenschmidt wrote:
+> > On Wed, 2018-08-22 at 20:26 -0500, Rob Herring wrote:
+> >> On Wed, Aug 22, 2018 at 8:14 PM Benjamin Herrenschmidt
+> >> <benh@kernel.crashing.org> wrote:
+> >>>
+> >>> On Wed, 2018-08-22 at 19:47 -0500, Rob Herring wrote:
+> >>>> The default DT string handling in the kernel is node names and
+> >>>> compatibles are case insensitive and property names are case sensitive
+> >>>> (Sparc is the the only variation and is opposite). It seems only PPC
+> >>>> (and perhaps only Power Macs?) needs to support case insensitive
+> >>>> comparisons. It was probably a mistake to follow PPC for new arches
+> >>>> and we should have made everything case sensitive from the start. So I
+> >>>> have a few questions for the DT historians. :)
+> >>>
+> >>> Open Firmware itself is insensitive.
+> >>
+> >> Doesn't it depend on the implementation? Otherwise, how is Sparc different?
+> >
+> > Not sure ... Forth itself is insensitive for words but maybe not for
+> > string comparisons.
+>
+> What problem are you trying to solve?
+
+I'm looking at removing device_node.name and using full_name instead
+(which now is only the local node name plus unit-address). This means
+replacing of_node_cmp() (and still some strcmp) calls in a lot of
+places. I need to use either strncmp or strncasecmp instead.
+
+> I would think making everything
+> case insensitive would be the direction to go if you do anything. Least
+> possibility of breaking existing platforms in that scenario.
+
+Really? Even if all the "new" arches are effectively case sensitive?
+Anything using dtc and libfdt are (and json-schema certainly will be).
+But I frequently say the kernel's job is not DT validation, so you
+pass crap in, you get undefined results.
+
+Rob
