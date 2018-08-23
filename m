@@ -1,100 +1,53 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 9/9] arm64: dts: renesas: r8a774a1: Add FCPF and FCPV instances
-Date: Thu, 23 Aug 2018 14:43:08 +0100
-Message-ID: <1535031788-19907-10-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 0/2] GPIO: add single-register gpio via creg driver
+Date: Thu, 23 Aug 2018 18:00:11 +0300
+Message-ID: <20180823150013.21837-1-Eugeniy.Paltsev@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-snps-arc@lists.infradead.org, linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Add FCPF and FCPV instances to the r8a774a1 dtsi, similarly
-to what was done for the r8a7796 with commits 41dbbf0c5 ("arm64: dts:
-r8a7796: Add FCPF and FCPV instances"), 69490bc96 ("arm64: dts:
-renesas: r8a7796: Point FDP1 via FCPF to IPMMU-VI0"), and cef942d0b
-("arm64: dts: renesas: r8a7796: Point VSPI via FCPVI to IPMMU-VC0").
+Add single-register MMIO gpio driver for complex cases where
+only several fields in register belong to GPIO and each GPIO
+owns field with different length and on/off values.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 52 +++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Here is the example:
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index f23bbfd..5b2ee60 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -1260,6 +1260,58 @@
- 			resets = <&cpg 408>;
- 		};
- 
-+		fcpf0: fcp@fe950000 {
-+			compatible = "renesas,fcpf";
-+			reg = <0 0xfe950000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 615>;
-+			power-domains = <&sysc 14>;
-+			resets = <&cpg 615>;
-+		};
-+
-+		fcpvb0: fcp@fe96f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe96f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 607>;
-+			power-domains = <&sysc 14>;
-+			resets = <&cpg 607>;
-+		};
-+
-+		fcpvd0: fcp@fea27000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea27000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 603>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 603>;
-+			iommus = <&ipmmu_vi0 8>;
-+		};
-+
-+		fcpvd1: fcp@fea2f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea2f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 602>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 602>;
-+			iommus = <&ipmmu_vi0 9>;
-+		};
-+
-+		fcpvd2: fcp@fea37000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea37000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 601>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 601>;
-+			iommus = <&ipmmu_vi0 10>;
-+		};
-+
-+		fcpvi0: fcp@fe9af000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe9af000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 611>;
-+			power-domains = <&sysc 14>;
-+			resets = <&cpg 611>;
-+			iommus = <&ipmmu_vc0 19>;
-+		};
-+
- 		prr: chipid@fff00044 {
- 			compatible = "renesas,prr";
- 			reg = <0 0xfff00044 0 4>;
+31            11        8         7        5         0   < bit number
+|              |        |         |        |         |
+[   not used   | gpio-1 | shift-1 | gpio-0 | shift-0 ]   < 32 bit MMIO
+                   ^                  ^
+                (3 bit)            (2 bit)
+                   |                  |
+                   |                  |
+                   |           write 0x2 == set output to "1" (on)
+                   |           write 0x3 == set output to "0" (off)
+                   |
+            write 0x1 == set output to "1" (on)
+            write 0x4 == set output to "0" (off)
+
+This is different from gpio-reg, gpio-mmio and gpio-74xx-mmio:
+* They all don't support cases when GPIO output register have
+  more than one bit per GPIO line.
+* They don't support holes in MMIO register.
+* They don't support cases when GPIO lines have different on/off
+  values.
+
+This driver supports GPIOs via CREG on various Synopsys SoCs/boards.
+
+Eugeniy Paltsev (2):
+  GPIO: add single-register gpio via creg driver
+  dt-bindings: Document the Synopsys GPIO via CREG bindings
+
+ .../devicetree/bindings/gpio/snps,creg-gpio.txt    |  48 ++++
+ MAINTAINERS                                        |   6 +
+ drivers/gpio/Kconfig                               |   9 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-creg-snps.c                      | 242 +++++++++++++++++++++
+ 5 files changed, 306 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
+ create mode 100644 drivers/gpio/gpio-creg-snps.c
+
 -- 
-2.7.4
+2.14.4
