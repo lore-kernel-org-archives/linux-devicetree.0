@@ -1,116 +1,63 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: RE: [PATCH 5/5] arm64: dts: add LX2160ARDB board support
-Date: Thu, 23 Aug 2018 15:08:07 +0000
-Message-ID: <AM6PR04MB478980C90EE825D024D8B977F3370@AM6PR04MB4789.eurprd04.prod.outlook.com>
-References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
- <1534747636-20064-6-git-send-email-vabhav.sharma@nxp.com>
- <CAL_JsqKH4haGy2F2_2EP=evC8ip7DmGR8J4wzrO0wWnOLsaZqA@mail.gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 1/2] GPIO: add single-register gpio via creg driver
+Date: Thu, 23 Aug 2018 08:08:34 -0700
+Message-ID: <c5f75b43-6ef3-31e2-0366-b6c8623d3f5d@infradead.org>
+References: <20180823150013.21837-1-Eugeniy.Paltsev@synopsys.com>
+ <20180823150013.21837-2-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKH4haGy2F2_2EP=evC8ip7DmGR8J4wzrO0wWnOLsaZqA@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180823150013.21837-2-Eugeniy.Paltsev@synopsys.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, linux-snps-arc@lists.infradead.org, linux-gpio@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iIEhlcnJpbmcgPHJv
-YmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogV2VkbmVzZGF5LCBBdWd1c3QgMjIsIDIwMTggMjox
-NSBBTQ0KPiBUbzogVmFiaGF2IFNoYXJtYSA8dmFiaGF2LnNoYXJtYUBueHAuY29tPg0KPiBDYzog
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBsaW51eHBwYy1kZXYgPGxp
-bnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnPjsNCj4gbW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVT
-Q0FMRSBJTVggLyBNWEMgQVJNIEFSQ0hJVEVDVFVSRSA8bGludXgtYXJtLQ0KPiBrZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZz47IE1pY2hhZWwgVHVycXVldHRlIDxtdHVycXVldHRlQGJheWxpYnJl
-LmNvbT47DQo+IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz47IFJhZmFlbCBKLiBXeXNv
-Y2tpIDxyandAcmp3eXNvY2tpLm5ldD47DQo+IFZpcmVzaCBLdW1hciA8dmlyZXNoLmt1bWFyQGxp
-bmFyby5vcmc+OyBsaW51eC1jbGsgPGxpbnV4LQ0KPiBjbGtAdmdlci5rZXJuZWwub3JnPjsgb3Bl
-biBsaXN0OlRIRVJNQUwgPGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZz47IGxpbnV4LQ0KPiBrZXJu
-ZWwtb3duZXJAdmdlci5rZXJuZWwub3JnOyBDYXRhbGluIE1hcmluYXMgPGNhdGFsaW4ubWFyaW5h
-c0Bhcm0uY29tPjsNCj4gV2lsbCBEZWFjb24gPHdpbGwuZGVhY29uQGFybS5jb20+OyBHcmVnIEty
-b2FoLUhhcnRtYW4NCj4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgQXJuZCBCZXJnbWFu
-biA8YXJuZEBhcm5kYi5kZT47IEthdGUNCj4gU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0
-aW9uLm9yZz47IE1hc2FoaXJvIFlhbWFkYQ0KPiA8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5j
-b20+OyBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybWxpbnV4Lm9yZy51az47DQo+IFZhcnVuIFNldGhp
-IDxWLlNldGhpQG54cC5jb20+OyBVZGl0IEt1bWFyIDx1ZGl0Lmt1bWFyQG54cC5jb20+Ow0KPiBQ
-cml5YW5rYSBKYWluIDxwcml5YW5rYS5qYWluQG54cC5jb20+OyBTcmlyYW0gRGFzaA0KPiA8c3Jp
-cmFtLmRhc2hAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCA1LzVdIGFybTY0OiBkdHM6
-IGFkZCBMWDIxNjBBUkRCIGJvYXJkIHN1cHBvcnQNCj4gDQo+IE9uIE1vbiwgQXVnIDIwLCAyMDE4
-IGF0IDE6NTIgUE0gVmFiaGF2IFNoYXJtYQ0KPiA8dmFiaGF2LnNoYXJtYUBueHAuY29tPiB3cm90
-ZToNCj4gPg0KPiA+IExYMjE2MEEgcmVmZXJlbmNlIGRlc2lnbiBib2FyZCAoUkRCKSBpcyBhIGhp
-Z2gtcGVyZm9ybWFuY2UgY29tcHV0aW5nLA0KPiA+IGV2YWx1YXRpb24sIGFuZCBkZXZlbG9wbWVu
-dCBwbGF0Zm9ybSB3aXRoIExYMjE2MEEgU29DLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUHJp
-eWFua2EgSmFpbiA8cHJpeWFua2EuamFpbkBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNy
-aXJhbSBEYXNoIDxzcmlyYW0uZGFzaEBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFZhYmhh
-diBTaGFybWEgPHZhYmhhdi5zaGFybWFAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvTWFrZWZpbGUgICAgICAgICAgICB8ICAxICsNCj4gPiAgYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWx4MjE2MGEtcmRiLmR0cyB8IDk1DQo+ID4g
-KysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA5NiBpbnNlcnRp
-b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
-Y2FsZS9mc2wtbHgyMTYwYS1yZGIuZHRzDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvTWFrZWZpbGUNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL01ha2VmaWxlDQo+ID4gaW5kZXggODZlMThhZC4uNDQ1YjcyYiAxMDA2NDQNCj4g
-PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZQ0KPiA+ICsrKyBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL01ha2VmaWxlDQo+ID4gQEAgLTEzLDMgKzEz
-LDQgQEAgZHRiLSQoQ09ORklHX0FSQ0hfTEFZRVJTQ0FQRSkgKz0gZnNsLWxzMjA4MGEtDQo+IHJk
-Yi5kdGINCj4gPiAgZHRiLSQoQ09ORklHX0FSQ0hfTEFZRVJTQ0FQRSkgKz0gZnNsLWxzMjA4MGEt
-c2ltdS5kdGINCj4gPiAgZHRiLSQoQ09ORklHX0FSQ0hfTEFZRVJTQ0FQRSkgKz0gZnNsLWxzMjA4
-OGEtcWRzLmR0Yg0KPiA+ICBkdGItJChDT05GSUdfQVJDSF9MQVlFUlNDQVBFKSArPSBmc2wtbHMy
-MDg4YS1yZGIuZHRiDQo+ID4gK2R0Yi0kKENPTkZJR19BUkNIX0xBWUVSU0NBUEUpICs9IGZzbC1s
-eDIxNjBhLXJkYi5kdGINCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWx4MjE2MGEtcmRiLmR0cw0KPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWx4MjE2MGEtcmRiLmR0cw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4g
-aW5kZXggMDAwMDAwMC4uNzBmYWQyMA0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHgyMTYwYS1yZGIuZHRzDQo+ID4gQEAgLTAs
-MCArMSw5NSBAQA0KPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAgT1Ig
-TUlUKSAvLyAvLyBEZXZpY2UgVHJlZSBmaWxlDQo+ID4gK2ZvciBMWDIxNjBBUkRCIC8vIC8vIENv
-cHlyaWdodCAyMDE4IE5YUA0KPiA+ICsNCj4gPiArL2R0cy12MS87DQo+ID4gKw0KPiA+ICsjaW5j
-bHVkZSAiZnNsLWx4MjE2MGEuZHRzaSINCj4gPiArDQo+ID4gKy8gew0KPiA+ICsgICAgICAgbW9k
-ZWwgPSAiTlhQIExheWVyc2NhcGUgTFgyMTYwQVJEQiI7DQo+ID4gKyAgICAgICBjb21wYXRpYmxl
-ID0gImZzbCxseDIxNjBhLXJkYiIsICJmc2wsbHgyMTYwYSI7DQo+ID4gKw0KPiA+ICsgICAgICAg
-YWxpYXNlcyB7DQo+ID4gKyAgICAgICAgICAgICAgIGNyeXB0byA9ICZjcnlwdG87DQo+IA0KPiBE
-cm9wIHRoaXMuIEFsaWFzZXMgc2hvdWxkIGJlIG51bWJlcmVkLCBhbmQgdGhpcyBpcyBub3QgYSBz
-dGFuZGFyZCBhbGlhcyBuYW1lDQo+IGVpdGhlci4NCk9rDQo+IA0KPiA+ICsgICAgICAgICAgICAg
-ICBzZXJpYWwwID0gJnVhcnQwOw0KPiA+ICsgICAgICAgICAgICAgICBzZXJpYWwxID0gJnVhcnQx
-Ow0KPiA+ICsgICAgICAgICAgICAgICBzZXJpYWwyID0gJnVhcnQyOw0KPiA+ICsgICAgICAgICAg
-ICAgICBzZXJpYWwzID0gJnVhcnQzOw0KPiA+ICsgICAgICAgfTsNCj4gPiArICAgICAgIGNob3Nl
-biB7DQo+ID4gKyAgICAgICAgICAgICAgIHN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgi
-Ow0KPiA+ICsgICAgICAgfTsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZ1YXJ0MCB7DQo+ID4gKyAg
-ICAgICBzdGF0dXMgPSAib2theSI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmdWFydDEgew0KPiA+
-ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJmkyYzAgew0K
-PiA+ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+ICsgICAgICAgcGNhOTU0N0A3NyB7DQo+
-IA0KPiBpMmMtbXV4QDc3DQpTdXJlDQo+IA0KPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxl
-ID0gIm54cCxwY2E5NTQ3IjsNCj4gPiArICAgICAgICAgICAgICAgcmVnID0gPDB4Nzc+Ow0KPiA+
-ICsgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArICAgICAgICAgICAg
-ICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBpMmNAMiB7
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgcmVnID0gPDB4Mj47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIGluYTIyMEA0MCB7DQpwb3dlci1zZW5zb3JANDANCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAidGksaW5hMjIwIjsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDQwPjsNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHNodW50LXJlc2lzdG9yID0gPDEwMDA+Ow0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIH07DQo+ID4gKyAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAg
-ICAgICAgICAgICBpMmNAMyB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8
-MD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4Mz47DQo+ID4gKw0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIHNhNTYwMDRANGMgew0KPiANCj4gdGVtcGVyYXR1cmUt
-c2Vuc29yQDRjDQpPaywgdGVtcGVyYXR1cmUtc2Vuc29yLTFANGMNCj4gDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm54cCxzYTU2MDA0IjsNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDRjPjsNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBz
-YTU2MDA0QDRkIHsNCk9rLHRlbXBlcmF0dXJlLXNlbnNvci0yQDRkDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm54cCxzYTU2MDA0IjsNCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDRkPjsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgfTsN
-Cj4gPiArfTsNCj4gPiArDQo+ID4gKyZpMmM0IHsNCj4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5
-IjsNCj4gPiArDQo+ID4gKyAgICAgICBydGNANTEgew0KPiA+ICsgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gIm54cCxwY2YyMTI5IjsNCj4gPiArICAgICAgICAgICAgICAgcmVnID0gPDB4NTE+
-Ow0KPiA+ICsgICAgICAgICAgICAgICAvLyBJUlExMF9CDQo+ID4gKyAgICAgICAgICAgICAgIGlu
-dGVycnVwdHMgPSA8MCAxNTAgMHg0PjsNCj4gPiArICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+
-ID4gK307DQo+ID4gKw0KPiA+ICsmdXNiMCB7DQo+ID4gKyAgICAgICBzdGF0dXMgPSAib2theSI7
-DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmdXNiMSB7DQo+ID4gKyAgICAgICBzdGF0dXMgPSAib2th
-eSI7DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmY3J5cHRvIHsNCj4gPiArICAgICAgIHN0YXR1cyA9
-ICJva2F5IjsNCj4gPiArfTsNCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCg==
+On 08/23/2018 08:00 AM, Eugeniy Paltsev wrote:
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 71c0ab46f216..0f9cc1582cab 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -430,6 +430,15 @@ config GPIO_REG
+>  	  A 32-bit single register GPIO fixed in/out implementation.  This
+>  	  can be used to represent any register as a set of GPIO signals.
+>  
+> +config GPIO_SNPS_CREG
+> +	bool "GPIO via CREG (Control REGisers) driver"
+
+	                             REGisters)
+
+> +	select OF_GPIO
+> +	help
+> +	  This driver supports GPIOs via CREG on various Synopsys SoCs.
+> +	  This is is single-register MMIO gpio driver for complex cases
+
+	  This is a                  MMIO GPIO
+
+> +	  where only several fields in register belong to GPIO and
+
+	                            in a register
+
+> +	  each GPIO owns field with different length and on/off values.
+
+maybe:
+	                 fields with different lengths
+
+> +
+>  config GPIO_SPEAR_SPICS
+>  	bool "ST SPEAr13xx SPI Chip Select as GPIO support"
+>  	depends on PLAT_SPEAR
+
+
+-- 
+~Randy
