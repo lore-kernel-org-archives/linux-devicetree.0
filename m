@@ -1,37 +1,338 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 0/2] Add R-Car V3H (R8A77980) support to the R-Car LVDS
- driver
-Date: Thu, 23 Aug 2018 19:53:33 +0300
-Message-ID: <a5aae3ff-2585-8eb6-82ef-dc3677eb5abb@cogentembedded.com>
-References: <ef3c6b7e-98f2-7012-71c5-6693e6e48999@cogentembedded.com>
+Subject: [PATCH v4] arm64: dts: renesas: condor/v3hsk: add DU/LVDS/HDMI support
+Date: Thu, 23 Aug 2018 19:59:20 +0300
+Message-ID: <fe3794e1-2452-d1af-5c30-203fcbb9932e@cogentembedded.com>
+References: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <ef3c6b7e-98f2-7012-71c5-6693e6e48999@cogentembedded.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <95d0db34-713d-8206-00c2-ee9a42aab823@cogentembedded.com>
 Content-Language: en-MW
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDYvMDUvMjAxOCAxMToyNSBQTSwgU2VyZ2VpIFNodHlseW92IHdyb3RlOgoKPiBIZXJlJ3Mg
-dGhlIHNldCBvZiAyIHBhdGNoZXMgYWdhaW5zdCB0aGUgJ2RybS1uZXh0JyBicmFuY2ggb2YgdGhl
-ICdkcm0uZ2l0JyByZXBvLgo+IFRoZSBwdXJwb3NlIG9mIHRoZXNlIHBhdGNoZXMgaXMgdG8gYWRk
-IHRoZSBSLUNhciBWM0ggKFI4QTc3OTgwKSBzdXBwb3J0IHRvIHRoZQo+IFItQ2FyIExWRFMgZHJp
-dmVyLgo+IAo+IFsxLzJdIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiByZW5lc2FzOiBsdmRzOiBkb2N1
-bWVudCBSOEE3Nzk4MCBiaW5kaW5ncwo+IFsyLzJdIGRybTogcmNhci1kdTogbHZkczogYWRkIFI4
-QTc3OTgwIHN1cHBvcnQKCiAgIExhdXJlbnQsIEknbSBub3Qgc2VlaW5nIHRoZXNlIHBhdGNoZXMg
-bWVyZ2VkLi4uIHRoZXkgYXJlIDIuNSBtb250aHMgb2xkIHdpdGhvdXQKYSBjb21tZW50ISA6LSgK
-Ck1CUiwgU2VyZ2VpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+Define the Condor/V3HSK board dependent parts of the DU and  LVDS device
+nodes. Also add the device nodes for Thine THC63LVD1024 LVDS decoder and
+Analog Devices ADV7511W HDMI transmitter...
+
+Based on the original (and large) patch by Vladimir Barinov.
+
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+---
+The patch is against the 'renesas-devel-20180822-v4.18' tag of Simon Horman's
+'renesas.git' repo. The only driver support still unmerged seems to be the
+R8A77980 LVDS support patches...
+
+Changes in version 4:
+- added the OSC1 clock node and a reference to it from the DU device node in
+  the V3HSK board DT;
+- added Ulrich's and Laurent's tags.
+
+Changes in version 2:
+- added the V3HSK DT update, reworded the description, renamed the patch;
+- added a space between the HDMI node name and a brace.
+
+ arch/arm64/boot/dts/renesas/r8a77980-condor.dts |  106 +++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts  |  129 ++++++++++++++++++++++++
+ 2 files changed, 235 insertions(+)
+
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
++++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+@@ -45,6 +45,56 @@
+ 		regulator-boot-on;
+ 		regulator-always-on;
+ 	};
++
++	d1_8v: regulator-2 {
++		compatible = "regulator-fixed";
++		regulator-name = "D1.8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&adv7511_out>;
++			};
++		};
++	};
++
++	lvds-decoder {
++		compatible = "thine,thc63lvd1024";
++		vcc-supply = <&d3_3v>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				thc63lvd1024_in: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++				thc63lvd1024_out: endpoint {
++					remote-endpoint = <&adv7511_in>;
++				};
++			};
++		};
++	};
++
++	x1_clk: x1-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <148500000>;
++	};
+ };
+ 
+ &avb {
+@@ -74,6 +124,13 @@
+ 	};
+ };
+ 
++&du {
++	clocks = <&cpg CPG_MOD 724>,
++		 <&x1_clk>;
++	clock-names = "du.0", "dclkin.0";
++	status = "okay";
++};
++
+ &extal_clk {
+ 	clock-frequency = <16666666>;
+ };
+@@ -102,6 +159,55 @@
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 	};
++
++	hdmi@39 {
++		compatible = "adi,adv7511w";
++		reg = <0x39>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
++		avdd-supply = <&d1_8v>;
++		dvdd-supply = <&d1_8v>;
++		pvdd-supply = <&d1_8v>;
++		bgvdd-supply = <&d1_8v>;
++		dvdd-3v-supply = <&d3_3v>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7511_in: endpoint {
++					remote-endpoint = <&thc63lvd1024_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7511_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
++};
++
++&lvds0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&thc63lvd1024_in>;
++			};
++		};
++	};
+ };
+ 
+ &mmc0 {
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
++++ renesas/arch/arm64/boot/dts/renesas/r8a77980-v3hsk.dts
+@@ -27,6 +27,72 @@
+ 		/* first 128MB is reserved for secure area. */
+ 		reg = <0 0x48000000 0 0x78000000>;
+ 	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&adv7511_out>;
++			};
++		};
++	};
++
++	lvds-decoder {
++		compatible = "thine,thc63lvd1024";
++		vcc-supply = <&vcc3v3_d5>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				thc63lvd1024_in: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++				thc63lvd1024_out: endpoint {
++					remote-endpoint = <&adv7511_in>;
++				};
++			};
++		};
++	};
++
++	osc1_clk: osc1-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <148500000>;
++	};
++
++	vcc1v8_d4: regulator-0 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC1V8_D4";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vcc3v3_d5: regulator-1 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC3V3_D5";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++};
++
++&du {
++	clocks = <&cpg CPG_MOD 724>,
++		 <&osc1_clk>;
++	clock-names = "du.0", "dclkin.0";
++	status = "okay";
+ };
+ 
+ &extal_clk {
+@@ -53,6 +119,64 @@
+ 	};
+ };
+ 
++&lvds0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			lvds0_out: endpoint {
++				remote-endpoint = <&thc63lvd1024_in>;
++			};
++		};
++	};
++};
++
++&i2c0 {
++	pinctrl-0 = <&i2c0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hdmi@39 {
++		compatible = "adi,adv7511w";
++		#sound-dai-cells = <0>;
++		reg = <0x39>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
++		avdd-supply = <&vcc1v8_d4>;
++		dvdd-supply = <&vcc1v8_d4>;
++		pvdd-supply = <&vcc1v8_d4>;
++		bgvdd-supply = <&vcc1v8_d4>;
++		dvdd-3v-supply = <&vcc3v3_d5>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7511_in: endpoint {
++					remote-endpoint = <&thc63lvd1024_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7511_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
++};
++
+ &pfc {
+ 	gether_pins: gether {
+ 		groups = "gether_mdio_a", "gether_rgmii",
+@@ -60,6 +184,11 @@
+ 		function = "gether";
+ 	};
+ 
++	i2c0_pins: i2c0 {
++		groups = "i2c0";
++		function = "i2c0";
++	};
++
+ 	scif0_pins: scif0 {
+ 		groups = "scif0_data";
+ 		function = "scif0";
