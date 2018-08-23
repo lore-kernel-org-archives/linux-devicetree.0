@@ -1,47 +1,76 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: [PATCH v3 3/3] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
-Date: Thu, 23 Aug 2018 13:49:54 +0200
-Message-ID: <20180823114954.30704-4-mjourdan@baylibre.com>
-References: <20180823114954.30704-1-mjourdan@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180823114954.30704-1-mjourdan@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Maxime Jourdan <mjourdan@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: DT case sensitivity
+Date: Thu, 23 Aug 2018 07:08:43 -0500
+Message-ID: <CAL_JsqKnbFAydf7ets0=KySm3P3b_7np-EVWz3Gh6qO+imJ+eg@mail.gmail.com>
+References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
+ <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
+ <CAL_JsqKqkO31ekVMFKs+osLvKdZyDzRowF1thWXn5=tWhrJgvw@mail.gmail.com>
+ <18175413a0148f7859ab36ed9715dce7a598f318.camel@kernel.crashing.org>
+ <13bf5b39-0461-351e-57e3-60264eaa374d@arm.com>
+ <CAL_Jsq+1T8k5mtc-DgDBtX3Qco9sQG9RWv6FTZ8NXppNbNg3Ww@mail.gmail.com>
+ <e9009f6dd3aded2b9aa735973f4eed8386dd9afb.camel@kernel.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <e9009f6dd3aded2b9aa735973f4eed8386dd9afb.camel@kernel.crashing.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Kumar Gala <kumar.gala@linaro.org>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-DMC is a small memory region with various registers,
-including the ones needed for the canvas module.
+On Thu, Aug 23, 2018 at 6:48 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Thu, 2018-08-23 at 06:43 -0500, Rob Herring wrote:
+> > On Thu, Aug 23, 2018 at 4:02 AM Grant Likely <grant.likely@arm.com> wrote:
+> > >
+> > >
+> > > What problem are you trying to solve?
+> >
+> > I'm looking at removing device_node.name and using full_name instead
+> > (which now is only the local node name plus unit-address). This means
+> > replacing of_node_cmp() (and still some strcmp) calls in a lot of
+> > places. I need to use either strncmp or strncasecmp instead.
+> >
+> > > I would think making everything
+> > > case insensitive would be the direction to go if you do anything. Least
+> > > possibility of breaking existing platforms in that scenario.
+> >
+> > Really? Even if all the "new" arches are effectively case sensitive?
+> > Anything using dtc and libfdt are (and json-schema certainly will be).
+> > But I frequently say the kernel's job is not DT validation, so you
+> > pass crap in, you get undefined results.
+>
+> I tend to agree with Grant. Let's put it this way:
+>
+> What is the drawback of being case insensitive ?
 
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+It's a more expensive comparison. I don't think it's a hot path, but
+we do do a lot of string compares.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index b8dc4dbb391b..5dd63ecf8b05 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -423,6 +423,19 @@
- 			};
- 		};
- 
-+		dmcbus: bus@c8838000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xc8838000 0x0 0x400>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xc8838000 0x0 0x400>;
-+
-+			canvas: video-lut@48 {
-+				compatible = "amlogic,canvas";
-+				reg = <0x0 0x48 0x0 0x14>;
-+			};
-+		};
-+
- 		hiubus: bus@c883c000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xc883c000 0x0 0x2000>;
--- 
-2.18.0
+Property names are case sensitive already. It would be nice if
+everything was treated the same way.
+
+If we're case sensitive then it is well defined which node we'll match
+and which one will be ignored. Otherwise, it is whichever one we
+happen to match first.
+
+> Do we expect that there exist a case where we will want to distinguish
+> between nodes that have the same name with a different case ?
+
+If someone has a DT with a node in the wrong case (as defined in the
+DT spec or a binding doc) and the kernel accepts it, then it's an ABI.
+Yes, as Grant says, validation is the place that should catch it, but
+we're not there yet and it's cheap (cheaper in fact) for the kernel to
+do.
+
+Rob
