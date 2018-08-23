@@ -1,73 +1,47 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
+From: Li Yang <leoyang.li@nxp.com>
 Subject: Re: [PATCH] arm64: dts: Fix various entry-method properties to
  reflect documentation
-Date: Fri, 24 Aug 2018 01:32:39 +0530
-Message-ID: <CAHLCerNoRj6GQRF=NJXwc0U+mJNe=06JGADQr7uT-chD2W-J+A@mail.gmail.com>
+Date: Thu, 23 Aug 2018 15:46:47 -0500
+Message-ID: <CADRPPNRpquUgwjft=vLNcxy223BLrS=toWii1XExPb7SghGr-A@mail.gmail.com>
 References: <113f28acbc55f64762c9f0bcefe076a811f2ed82.1535014078.git.amit.kucheria@linaro.org>
- <20180823153110.GA19131@e107155-lin>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180823153110.GA19131@e107155-lin>
+In-Reply-To: <113f28acbc55f64762c9f0bcefe076a811f2ed82.1535014078.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Shawn Guo <shawnguo@kernel.org>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Minghuan Lian <minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Yuan Yao <yao.yuan@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, Marc
+To: amit.kucheria@linaro.org
+Cc: lkml <linux-kernel@vger.kernel.org>, lorenzo.pieralisi@arm.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, liviu.dudau@arm.com, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, matthias.bgg@gmail.com, orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com, Michal Simek <michal.simek@xilinx.com>, Shawn Guo <shawnguo@kernel.org>, Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, Minghuan Lian <minghuan.Lian@nxp.com>, andy.tang@nxp.com, Ran Wang <ran.wang_1@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Yao Yuan <yao.yuan@nxp.com>, sumit.garg@nxp.com, Marc Zyngier <marc.zyngier@arm.com>, madalin.bucur@nxp.com, Thomas Gleixner <tglx@linutronix.de>, open list:OPEN FIRMW
 List-Id: devicetree@vger.kernel.org
 
-(Adding arm-soc folks)
+On Thu, Aug 23, 2018 at 3:55 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> The idle-states binding documentation[1] mentions that the
+> 'entry-method' property is required on 64-bit platforms and must be
+> set to "psci".
+>
+> commit a13f18f59d26 ("Documentation: arm: Fix typo in the idle-states
+> bindings examples") attempted to fix this earlier but clearly more is
+> needed.
+>
+> Fix the cpu-capacity.txt documentation that uses the incorrect value so
+> we don't get copy-paste errors like these. Clarify the language in
+> idle-states.txt by removing the reference to the psci bindings that
+> might be causing this confusion.
+>
+> Finally, fix devicetrees of various boards to reflect current
+> documentation.
+>
+> [1] Documentation/devicetree/bindings/arm/idle-states.txt (see
+> idle-states node)
+>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-On Thu, Aug 23, 2018 at 9:01 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> Hi Amit,
->
-> Thanks for fixing this.
->
-> On Thu, Aug 23, 2018 at 02:23:29PM +0530, Amit Kucheria wrote:
->> The idle-states binding documentation[1] mentions that the
->> 'entry-method' property is required on 64-bit platforms and must be
->> set to "psci".
->>
->> commit a13f18f59d26 ("Documentation: arm: Fix typo in the idle-states
->> bindings examples") attempted to fix this earlier but clearly more is
->> needed.
->>
->
-> In fact, I assumed I fixed things with commit 978fa436231a ("drivers:
-> firmware: psci: unify enable-method binding on ARM {64,32}-bit systems"),
-> but I was wrong. I left quite a few instances including juno dtbs.
->
->> Fix the cpu-capacity.txt documentation that uses the incorrect value so
->> we don't get copy-paste errors like these. Clarify the language in
->> idle-states.txt by removing the reference to the psci bindings that
->> might be causing this confusion.
->>
->> Finally, fix devicetrees of various boards to reflect current
->> documentation.
->>
->> [1] Documentation/devicetree/bindings/arm/idle-states.txt (see
->> idle-states node)
->>
->> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
->>  Documentation/devicetree/bindings/arm/idle-states.txt  | 4 ++--
->>  arch/arm64/boot/dts/arm/juno-r1.dts                    | 2 +-
->>  arch/arm64/boot/dts/arm/juno-r2.dts                    | 2 +-
->>  arch/arm64/boot/dts/arm/juno.dts                       | 2 +-
->
-> For all the above files,
->
-> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-Thanks for reviewing, Sudeep.
+For fsl/nxp device trees:
 
-> How do you plan to merge ? I prefer if you can send it via arm-soc as
-> fixes for this cycle with all the necessary acks. Otherwise you may have
-> to split this to send via platform maintainers which is bit mundane.
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi         | 2 +-
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi         | 2 +-
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi         | 2 +-
 
-I was hoping to get this merged thru arm-soc tree instead of creating
-a patch per platform. But if anybody feels strongly about it, I'm
-happy to split them up and feed it through the platform maintainer
-trees.
-
-Regards,
-Amit
+- Leo
