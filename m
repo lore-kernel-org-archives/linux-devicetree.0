@@ -1,56 +1,186 @@
-From: Segher Boessenkool <segher@kernel.crashing.org>
-Subject: Re: DT case sensitivity
-Date: Thu, 23 Aug 2018 07:19:29 -0500
-Message-ID: <20180823121929.GS24439@gate.crashing.org>
-References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
- <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM
+ output between PWM and GPIO
+Date: Thu, 23 Aug 2018 14:36:00 +0200
+Message-ID: <20180823143600.3e417542@jawa>
+References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
+        <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
+        <20180823123759.68b78e9f@jawa>
+        <0691e93d-c2e2-21e5-374f-c29e7765de93@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robh@kernel.org>, Kumar Gala <kumar.gala@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-spec@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, Grant Likely <grant.likely@arm.com>, Frank Rowand <frowand.list@gmail.com>, David Gibson <david@gibson.dropbear.id.au>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/bSzWo+0iYXRf0ckL35a+C5W"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0691e93d-c2e2-21e5-374f-c29e7765de93@ysoft.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 11:03:28AM +1000, Benjamin Herrenschmidt wrote:
-> On Wed, 2018-08-22 at 19:47 -0500, Rob Herring wrote:
-> > The default DT string handling in the kernel is node names and
-> > compatibles are case insensitive and property names are case sensitive
-> > (Sparc is the the only variation and is opposite). It seems only PPC
-> > (and perhaps only Power Macs?) needs to support case insensitive
-> > comparisons. It was probably a mistake to follow PPC for new arches
-> > and we should have made everything case sensitive from the start. So I
-> > have a few questions for the DT historians. :)
-> 
-> Open Firmware itself is insensitive.
+--Sig_/bSzWo+0iYXRf0ckL35a+C5W
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Some implementations are, yes.  But those are technically broken.
+Hi Michal,
 
-> > What PPC systems are case insensitive? Can we limit that to certain systems?
-> 
-> All PowerMacs at least, the problem is that I don't have DT images or
-> access to all the historical systems (and yes some people occasionally
-> still use them) to properly test a change in that area.
+> On 23.8.2018 12:40, Lukasz Majewski wrote:
+>=20
+> Hi Lukasz, thanks for the reply!
+> > Hi Michal,
+> >  =20
+> >> Output of the PWM block of i.MX SoCs is always zero volts when the
+> >> block is disabled. This can caue issues when inverted PWM polarity
+> >> is needed. With inverted polarity a duty cycle =3D 0% corresponds to
+> >> solid high level on the output. If the PWM is dissabled its output
+> >> instantly goes to solid zero which corresponds to duty cycle =3D
+> >> 100%.
+> >>
+> >> To have a trully inverted PWM output configure the PWM pad as a
+> >> GPIO with pull-up. Then switch the pad to PWM output whenever
+> >> non-zero duty cycle is needed. =20
+> >=20
+> > Just to ask - Is your display equipped with power supply
+> > enable/disable pin? =20
+>=20
+> No it is not. The backlight on my display is just a bunch of serial-
+> parallel connected LEDs with separate GND and VCC pins on a separate
+> flex cable. And the display itself also does not have a reset or
+> enable signal. It is a PITA=C2=A0to use it I must say..
 
-If one implementation does case insensitive, it will most likely just work,
-because people do not make insane names differing only in case on purpose.
-Now people write other things that they only test against that implementation,
-and those things now only work with case-insensitive.  And you do not know
-without testing if anything breaks.  (But the laws of big numbers are against
-you here).  Since there isn't really a drawback to doing case-insensitive
-always, that is a much safer way forward, much less work for everyone, even
-if technically the wrong thing to do :-)
+Yes, it seems so. I must have had more luck than you with the HW....
+
+>  =20
+> > As fair as I remember the trick to avoid flickering the display
+> > was to disable the display (enable-gpio property) and set the PWM
+> > PIN as GPIO to high in u-boot. =20
+>=20
+> Yes, I know about that. I can not use this as the PWM output is the
+> only signal I have to control the backlight. I mentioned that
+> somewhere in the previous discussion with Lothar.
+
+Yes, I've read it. I also find the PWM pinctrl as "default" state more
+natural.
+
+One more idea - though.
+
+In iMX6Q it was possible to specify the pinctrl PIN setup as 0x80000000
+- this means that it goes untouched to the IP block (configured by
+  bootloader).
+
+Maybe it would work to:
+
+1. Setup the PWM output as GPIO in u-boot (high)
+
+2. In PWM IMX probe configure PWM to be 100% duty cycle. And switch
+iomux to PWM function of the pin
+
+3. Then latter in the code PWM gets configured and we can control it in
+"normal" way ?
+
+Or am I missing some important point?
+
+>=20
+> I also think this could be useful not only for backlight. Any circuit
+> that requires truly inverted PWM signal can use it. I see it as an
+> enhancement to what you with Lothar have already done ;)
+>  =20
+> >>
+> >> Signed-off-by: Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/pwm/imx-pwm.txt | 44
+> >> +++++++++++++++++++++++ 1 file changed, 44 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> >> b/Documentation/devicetree/bindings/pwm/imx-pwm.txt index
+> >> c61bdf8..3b1bc4c 100644 ---
+> >> a/Documentation/devicetree/bindings/pwm/imx-pwm.txt +++
+> >> b/Documentation/devicetree/bindings/pwm/imx-pwm.txt @@ -14,6 +14,12
+> >> @@ See the clock consumer binding,
+> >> Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >>   - interrupts: The interrupt for the pwm controller
+> >>  =20
+> >> +Optional properties:
+> >> +- pinctrl: For i.MX27 and newer SoCs. Add extra pinctrl to
+> >> configure the PWM
+> >> +  pin to gpio function.  It allows control over the pin output
+> >> level when the
+> >> +  PWM block is disabled. This is meant to be used if inverted
+> >> polarity of the
+> >> +  PWM signal is required. See "Inverted PWM output" section
+> >> bellow. +
+> >>   Example:
+> >>  =20
+> >>   pwm1: pwm@53fb4000 {
+> >> @@ -25,3 +31,41 @@ pwm1: pwm@53fb4000 {
+> >>   	clock-names =3D "ipg", "per";
+> >>   	interrupts =3D <61>;
+> >>   };
+> >> +
+> >> +Inverted PWM output
+> >> +-------------------
+> >> +
+> >> +The i.MX SoC has such limitation that whenever a pad is configured
+> >> as a PWM +output, the output level is always zero volts when the
+> >> PWM block is disabled. +The zero output level is actively driven
+> >> by the output stage of the PWM block +and can not be overridden by
+> >> pull-up. It also does not matter what PWM polarity +a PWM client
+> >> (e.g. backlight) requested. +
+> >> +To gain control of the PWM output level in disabled state two
+> >> pinctrl states +can be used. The "default" state and the "pwm"
+> >> state. In the default state the +PWM output is configured as a
+> >> GPIO with pull-up. In the "pwm" state the output +is configured as
+> >> a PWM output. This setup assures that the PWM output is at +the
+> >> required level that corresponds to duty cycle =3D 0 when PWM is
+> >> disabled. +E.g. at boot. +
+> >> +Example:
+> >> +
+> >> +&pwm1 {
+> >> +	pinctrl-names =3D "default", "pwm";
+> >> +	pinctrl-0 =3D <&pinctrl_backlight_gpio>;
+> >> +	pinctrl-1 =3D <&pinctrl_backlight_pwm>;
+> >> +}
+> >> +
+> >> +pinctrl_backlight_gpio: pwm1grp-gpio {
+> >> +	fsl,pins =3D <
+> >> +		/* GPIO with 22kOhm pull-up */
+> >> +		MX6QDL_PAD_GPIO_9__GPIO1_IO09	0xF008
+> >> +	>;
+> >> +};
+> >> +
+> >> +pinctrl_backlight_pwm: pwm1grp-pwm {
+> >> +	fsl,pins =3D <
+> >> +		/* PWM output */
+> >> +		MX6QDL_PAD_GPIO_9__PWM1_OUT	0x8
+> >> +	>;
+> >> +}; =20
 
 
-Segher
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/bSzWo+0iYXRf0ckL35a+C5W
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlt+qjAACgkQAR8vZIA0
+zr2jVgf/cT9BMXZrWumniSwKM1BMNZQUsUM5wnxP8jaTMvl0JRS74z7CRbTe3j5J
+FexaDCLnIf6eE62XjGikn/j3pjMJ43/G7n6sTn/6B2JU1FDVrL+pfXseSLNXuRt3
+STW+nAU45T9OO4Q/yM7MY8IziOY7leS+FWdXeP4LN9aoWFAEC08YRKbUrGisiLzt
+CbJpZ9qGZaMk6rSEjOR792kkmlIqKahpSVqe39VqYJv9/lDkDV2PPc3U5Pi8xR0p
+0CSDKBeZnk9opqJC42vqAO6nc9V1xZWxOUGlGK62rZjdwyFHI6gKqJNxGAOLwqlz
+MDADTr1fgZjQTSnmr73SpoeCdylmyg==
+=TSWt
+-----END PGP SIGNATURE-----
+
+--Sig_/bSzWo+0iYXRf0ckL35a+C5W--
