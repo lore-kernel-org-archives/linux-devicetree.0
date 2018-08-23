@@ -1,191 +1,40 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH] arm64: dts: Fix various entry-method properties to reflect documentation
-Date: Thu, 23 Aug 2018 14:23:29 +0530
-Message-ID: <113f28acbc55f64762c9f0bcefe076a811f2ed82.1535014078.git.amit.kucheria@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: lorenzo.pieralisi@arm.com, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Shawn Guo <shawnguo@kernel.org>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Minghuan Lian <minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Yuan Yao <yao.yuan@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Mada
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 0/5] Add SYS-DMAC/INTC-EX/[H]SCIF/EAVB/RWDT support
+Date: Thu, 23 Aug 2018 09:58:46 +0100
+Message-ID: <1535014731-64472-1-git-send-email-biju.das@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The idle-states binding documentation[1] mentions that the
-'entry-method' property is required on 64-bit platforms and must be
-set to "psci".
+This patch series aims to add support for SYS-DMAC/INTC-EX/SCIF/HSCIF/
+EAVB/RWDT on RZ/G2M SoC dtsi.
 
-commit a13f18f59d26 ("Documentation: arm: Fix typo in the idle-states
-bindings examples") attempted to fix this earlier but clearly more is
-needed.
+THis patch series based on renesas-devel-20180822-v4.18.
 
-Fix the cpu-capacity.txt documentation that uses the incorrect value so
-we don't get copy-paste errors like these. Clarify the language in
-idle-states.txt by removing the reference to the psci bindings that
-might be causing this confusion.
+Biju Das (3):
+  arm64: dts: renesas: r8a774a1: Add SYS-DMAC controller nodes
+  arm64: dts: renesas: r8a774a1: Add INTC-EX device node
+  arm64: dts: renesas: r8a774a1: Add RWDT node
 
-Finally, fix devicetrees of various boards to reflect current
-documentation.
+Fabrizio Castro (2):
+  arm64: dts: renesas: r8a774a1: Add SCIF and HSCIF nodes
+  arm64: dts: renesas: r8a774a1: Add Ethernet AVB node
 
-[1] Documentation/devicetree/bindings/arm/idle-states.txt (see
-idle-states node)
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 358 ++++++++++++++++++++++++++++++
+ 1 file changed, 358 insertions(+)
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
- Documentation/devicetree/bindings/arm/idle-states.txt  | 4 ++--
- arch/arm64/boot/dts/arm/juno-r1.dts                    | 2 +-
- arch/arm64/boot/dts/arm/juno-r2.dts                    | 2 +-
- arch/arm64/boot/dts/arm/juno.dts                       | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi         | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi         | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi         | 2 +-
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi              | 2 +-
- arch/arm64/boot/dts/sprd/sc9860.dtsi                   | 2 +-
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi                 | 2 +-
- 11 files changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-index 7809fbe0cdb7..9b5685a1d15d 100644
---- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-+++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
-@@ -94,7 +94,7 @@ cpus {
- 	};
- 
- 	idle-states {
--		entry-method = "arm,psci";
-+		entry-method = "psci";
- 
- 		CPU_SLEEP_0: cpu-sleep-0 {
- 			compatible = "arm,idle-state";
-diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
-index 7a591333f2b1..2c73847499ab 100644
---- a/Documentation/devicetree/bindings/arm/idle-states.txt
-+++ b/Documentation/devicetree/bindings/arm/idle-states.txt
-@@ -237,8 +237,8 @@ processor idle states, defined as device tree nodes, are listed.
- 		Value type: <stringlist>
- 		Usage and definition depend on ARM architecture version.
- 			# On ARM v8 64-bit this property is required and must
--			  be one of:
--			   - "psci" (see bindings in [2])
-+			  be:
-+			   - "psci"
- 			# On ARM 32-bit systems this property is optional
- 
- The nodes describing the idle states (state) can only be defined within the
-diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
-index 2c5db03f226c..b2b7ced633cf 100644
---- a/arch/arm64/boot/dts/arm/juno-r1.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r1.dts
-@@ -63,7 +63,7 @@
- 		};
- 
- 		idle-states {
--			entry-method = "arm,psci";
-+			entry-method = "psci";
- 
- 			CPU_SLEEP_0: cpu-sleep-0 {
- 				compatible = "arm,idle-state";
-diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
-index c51950f4a1b6..ab77adb4f3c2 100644
---- a/arch/arm64/boot/dts/arm/juno-r2.dts
-+++ b/arch/arm64/boot/dts/arm/juno-r2.dts
-@@ -63,7 +63,7 @@
- 		};
- 
- 		idle-states {
--			entry-method = "arm,psci";
-+			entry-method = "psci";
- 
- 			CPU_SLEEP_0: cpu-sleep-0 {
- 				compatible = "arm,idle-state";
-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
-index 2b2bf39c30ef..1fb5c5a0f32e 100644
---- a/arch/arm64/boot/dts/arm/juno.dts
-+++ b/arch/arm64/boot/dts/arm/juno.dts
-@@ -62,7 +62,7 @@
- 		};
- 
- 		idle-states {
--			entry-method = "arm,psci";
-+			entry-method = "psci";
- 
- 			CPU_SLEEP_0: cpu-sleep-0 {
- 				compatible = "arm,idle-state";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 205f0f4c5df0..3a2784117139 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -79,7 +79,7 @@
- 		 * PSCI node is not added default, U-boot will add missing
- 		 * parts if it determines to use PSCI.
- 		 */
--		entry-method = "arm,psci";
-+		entry-method = "psci";
- 
- 		CPU_PH20: cpu-ph20 {
- 			compatible = "arm,idle-state";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 1109f22bda5e..e238b86e95fb 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -121,7 +121,7 @@
- 		 * PSCI node is not added default, U-boot will add missing
- 		 * parts if it determines to use PSCI.
- 		 */
--		entry-method = "arm,psci";
-+		entry-method = "psci";
- 
- 		CPU_PH20: cpu-ph20 {
- 			compatible = "arm,idle-state";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 136ebfa9b333..1b200f7be0ba 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -117,7 +117,7 @@
- 		 * PSCI node is not added default, U-boot will add missing
- 		 * parts if it determines to use PSCI.
- 		 */
--		entry-method = "arm,psci";
-+		entry-method = "psci";
- 
- 		CPU_PH20: cpu-ph20 {
- 			compatible = "arm,idle-state";
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-index 6d8532af8346..75cc0f7cc088 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-@@ -119,7 +119,7 @@
- 		};
- 
- 		idle-states {
--			entry-method = "arm,psci";
-+			entry-method = "psci";
- 
- 			CPU_SLEEP_0: cpu-sleep-0 {
- 				compatible = "arm,idle-state";
-diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-index 3f5160d2f130..48f5928ed45c 100644
---- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-@@ -114,7 +114,7 @@
- 	};
- 
- 	idle-states{
--		entry-method = "arm,psci";
-+		entry-method = "psci";
- 
- 		CORE_PD: core_pd {
- 			compatible = "arm,idle-state";
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index a091e6f03014..29ce23422acf 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -58,7 +58,7 @@
- 		};
- 
- 		idle-states {
--			entry-method = "arm,psci";
-+			entry-method = "psci";
- 
- 			CPU_SLEEP_0: cpu-sleep-0 {
- 				compatible = "arm,idle-state";
 -- 
-2.17.1
+2.7.4
