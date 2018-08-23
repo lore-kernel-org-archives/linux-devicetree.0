@@ -1,178 +1,191 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 00/40] Tegra SDHCI add support for HS200 and UHS
- signaling
-Date: Thu, 23 Aug 2018 10:47:04 +0200
-Message-ID: <20180823084704.GA28696@ulmo>
-References: <1533924522-1037-1-git-send-email-avienamo@nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH] arm64: dts: Fix various entry-method properties to reflect documentation
+Date: Thu, 23 Aug 2018 14:23:29 +0530
+Message-ID: <113f28acbc55f64762c9f0bcefe076a811f2ed82.1535014078.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1533924522-1037-1-git-send-email-avienamo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: lorenzo.pieralisi@arm.com, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Shawn Guo <shawnguo@kernel.org>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Minghuan Lian <minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Yuan Yao <yao.yuan@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Mada
 List-Id: devicetree@vger.kernel.org
 
+The idle-states binding documentation[1] mentions that the
+'entry-method' property is required on 64-bit platforms and must be
+set to "psci".
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit a13f18f59d26 ("Documentation: arm: Fix typo in the idle-states
+bindings examples") attempted to fix this earlier but clearly more is
+needed.
 
-On Fri, Aug 10, 2018 at 09:08:02PM +0300, Aapo Vienamo wrote:
-> Hi all,
->=20
-> This series implements support for faster signaling modes on Tegra
-> SDHCI controllers. This series consist of several parts: changes
-> requried for 1.8 V signaling and pad control, pad calibration, and
-> tuning. Following earlies patch sets have been merged into this
-> larger set: "Tegra PMC pinctrl pad configuration", "Tegra SDHCI enable
-> 1.8 V signaling on Tegar210 and Tegra186", "Tegra SDHCI update the
-> padautocal procedure". Also the patches for enabling SDHCI tuning
-> are added.
->=20
-> Changelog:
-> v2:
-> 	- Fix grammar in PMC device tree bindings docs
-> 	- Remove a stray line from tegra sdhci bindings
-> 	- Cosmetic changes to PMC pinctrl driver
-> 	- Fix a typo in "soc/tegra: pmc: Implement
-> 	  tegra_io_pad_is_powered()" commit message
-> 	- Declare mask and value on the same line in
-> 	  tegra_io_pad_is_powered()
-> 	- Move the call to tegra_sdhci_is_pad_and_regulator_valid() to
-> 	  inside the if condition in tegra_sdhci_reset()
-> 	- Use usleep_range() in tegra_sdhci_configure_cal_pad()
-> 	- Move sdhci_writel() out of the enable if-else body in
-> 	  tegra_sdhci_configure_cal_pad()
-> 	- Add a delay before starting polling in
-> 	  tegra_sdhci_pad_autocalib()
-> 	- Use usleep_range() in tegra_sdhci_set_tap()
-> 	- Rename orig_enabled to status in
-> 	  tegra_sdhci_configure_card_clk()
-> 	- Fix if condition wrapping alignment in tegra_sdhci_set_tap()
->=20
-> v1:
-> 	- Probe the regulator voltage capabilities to determine whether pinctrl
-> 	  is needed in tegra_sdhci_r eset
-> 	- Don't remove tegra_sdhci_voltage_switch()
-> 	- Use dev_warn() in tegra_sdhci_init_pinctrl_info()
-> 	- Don't change start_signal_voltage_switch callback if pinctrl info
-> 	  invalid
-> 	- Only call udelay(1) on enable in tegra_sdhci_configure_cal_pad()
-> 	- Add nvidia, prefix to pad autocal offset dt props in the example
->=20
-> See the original patch sets for earlier changelogs.
->=20
-> Aapo Vienamo (40):
->   dt-bindings: Add Tegra PMC pad configuration bindings
->   dt-bindings: mmc: tegra: Add pad voltage control properties
->   dt-bindings: Add Tegra SDHCI pad pdpu offset bindings
->   dt-bindings: mmc: Add Tegra SDHCI sampling trimmer values
->   soc/tegra: pmc: Fix pad voltage configuration for Tegra186
->   soc/tegra: pmc: Factor out DPD register bit calculation
->   soc/tegra: pmc: Implement tegra_io_pad_is_powered()
->   soc/tegra: pmc: Use X macro to generate IO pad tables
->   soc/tegra: pmc: Remove public pad voltage APIs
->   soc/tegra: pmc: Implement pad configuration via pinctrl
->   mmc: sdhci: Add a quirk to skip clearing the transfer mode register on
->     tuning
->   mmc: tegra: Reconfigure pad voltages during voltage switching
->   mmc: tegra: Poll for calibration completion
->   mmc: tegra: Set calibration pad voltage reference
->   mmc: tegra: Power on the calibration pad
->   mmc: tegra: Disable card clock during pad calibration
->   mmc: tegra: Program pad autocal offsets from dt
->   mmc: tegra: Perform pad calibration after voltage switch
->   mmc: tegra: Enable pad calibration on Tegra210 and Tegra186
->   mmc: tegra: Add a workaround for tap value change glitch
->   mmc: tegra: Parse default trim and tap from dt
->   mmc: tegra: Configure default tap values
->   mmc: tegra: Configure default trim value on reset
->   mmc: tegra: Use standard SDHCI tuning on Tegra210 and Tegra186
->   mmc: sdhci: Add a quirk to disable card clock during tuning
->   mmc: tegra: Enable workaround for tuning transfer mode bug
->   mmc: tegra: Set SDHCI_QUIRK2_TUNE_DIS_CARD_CLK on Tegra210
->   mmc: tegra: Enable UHS and HS200 modes for Tegra210
->   mmc: tegra: Enable UHS and HS200 modes for Tegra186
->   arm64: dts: Add Tegra210 sdmmc pinctrl voltage states
->   arm64: dts: Add Tegra186 sdmmc pinctrl voltage states
->   arm64: dts: tegra210-p2180: Allow ldo2 to go down to 1.8 V
->   arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
->   arm64: dts: tegra210-p2597: Remove no-1-8-v from sdmmc1
->   arm64: dts: tegra186: Add sdmmc pad auto calibration offsets
->   arm64: dts: tegra210: Add sdmmc pad auto calibration offsets
->   arm64: dts: tegra210: Add SDHCI tap and trim values
->   arm64: dts: tegra186: Add SDHCI tap and trim values
->   arm64: dts: tegra186: Assign clocks for sdmmc1 and sdmmc4
->   arm64: dts: tegra210: Assign clocks for sdmmc1 and sdmmc4
->=20
->  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  93 ++++
->  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 103 ++++
->  .../bindings/mmc/nvidia,tegra20-sdhci.txt          |  68 +++
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  74 +++
->  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |  12 +-
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   1 -
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  55 ++
->  drivers/mmc/host/sdhci-tegra.c                     | 556 +++++++++++++++=
-++++--
->  drivers/mmc/host/sdhci.c                           |  21 +
->  drivers/mmc/host/sdhci.h                           |   4 +
->  drivers/soc/tegra/pmc.c                            | 511 ++++++++++++++-=
-----
->  include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h |  18 +
->  include/soc/tegra/pmc.h                            |  20 +-
->  13 files changed, 1324 insertions(+), 212 deletions(-)
->  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+Fix the cpu-capacity.txt documentation that uses the incorrect value so
+we don't get copy-paste errors like these. Clarify the language in
+idle-states.txt by removing the reference to the psci bindings that
+might be causing this confusion.
 
-Hi Ulf, Adrian,
+Finally, fix devicetrees of various boards to reflect current
+documentation.
 
-I've been running some tests on this on various Tegra boards and this
-all seems to work fine. I'm also pretty happy with how this turned out,
-so the whole series is:
+[1] Documentation/devicetree/bindings/arm/idle-states.txt (see
+idle-states node)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
+ Documentation/devicetree/bindings/arm/idle-states.txt  | 4 ++--
+ arch/arm64/boot/dts/arm/juno-r1.dts                    | 2 +-
+ arch/arm64/boot/dts/arm/juno-r2.dts                    | 2 +-
+ arch/arm64/boot/dts/arm/juno.dts                       | 2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi         | 2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi         | 2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi         | 2 +-
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi              | 2 +-
+ arch/arm64/boot/dts/sprd/sc9860.dtsi                   | 2 +-
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi                 | 2 +-
+ 11 files changed, 12 insertions(+), 12 deletions(-)
 
-In order to get this merged, I think it'd be best for you guys to pick
-up the MMC patches, since they are all independent of the rest. There is
-a runtime dependency on the PMC bits for the faster modes, but things
-will fallback to the status quo if those bits are not enabled. The only
-dependency here is between the PMC and DTS changes, which I usually pick
-up into the Tegra tree anyway, so I can sort that out there.
-
-Since I've already gone through the process of splitting up the series,
-I can offer to rebase the MMC patches on top of v4.19-rc1 when it's out
-and send a pull request for the MMC patches. Alternatively I can further
-split that branch up into two parts, one with the two patches that touch
-the core and another with the remainder, if that's what you prefer. Or
-you can of course feel free to apply all of the MMC patches yourselves
-with my above Acked-by if you want to.
-
-Any thought on the above?
-
-Thanks,
-Thierry
-
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlt+dIYACgkQ3SOs138+
-s6HBgQ/+LNk9y6KpgR/vb4jhvXJSFL/o55wBlqhQB9kYXq1+2pRLyzCObtcl8sgX
-3Uk8uZfWAEjmlWL4nW4OETcezHvSWNtYG6stIbIy0ZSLrMmvy/yy3BZkzdWbDOj1
-xvpias4n/FZLVPyUWjG+JVudZx61EyP5ll0FlYrRLYmDpwrB3JL1K6Bj9TKurdxe
-/HJumGE1UX/TQaScoAkU43onDMP8s19T+k/IXH6w/oguch6XN3Znm0e/aBRswKyN
-B9q2XKR4+T285qX/ChjY2ezKE7awez9/2+0OHTR+sCq1Zjlwp86ToCqExlqyKwqS
-It+UPn6c9nJAbw/VfATh6wPvNhrbyBZv5rJNmqVac+FaufuHvak7VaFyQ5YI3+Xt
-mlaW6xAcYg+mqVTlFODWpNhDupIPHMzhmOa6HIkFjJvuaEUuVBfH/SHkqmIC74de
-VBOpPikF7pCog5ygEYPZie0r6rga4nVJgysauxTRwjn9xkcnl9uH4PdAm3fVFpf7
-W9gU+odEEllf8NJapITkAwHzAko0mBdz9o8f5koL9KRPDU9mpgcbupmDNHM2JpJt
-yaDSg8+cXQo/aCue/Nt5ocbfzbvvD0CrUq/SsYFnLvLrXXywyyHGfh526Ryor7Li
-p+ySNKlGCK2qyFvPCZqJHZpZ9TYtie7RSleYd1NwXjpWI+fMHT4=
-=83Da
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
+diff --git a/Documentation/devicetree/bindings/arm/cpu-capacity.txt b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+index 7809fbe0cdb7..9b5685a1d15d 100644
+--- a/Documentation/devicetree/bindings/arm/cpu-capacity.txt
++++ b/Documentation/devicetree/bindings/arm/cpu-capacity.txt
+@@ -94,7 +94,7 @@ cpus {
+ 	};
+ 
+ 	idle-states {
+-		entry-method = "arm,psci";
++		entry-method = "psci";
+ 
+ 		CPU_SLEEP_0: cpu-sleep-0 {
+ 			compatible = "arm,idle-state";
+diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
+index 7a591333f2b1..2c73847499ab 100644
+--- a/Documentation/devicetree/bindings/arm/idle-states.txt
++++ b/Documentation/devicetree/bindings/arm/idle-states.txt
+@@ -237,8 +237,8 @@ processor idle states, defined as device tree nodes, are listed.
+ 		Value type: <stringlist>
+ 		Usage and definition depend on ARM architecture version.
+ 			# On ARM v8 64-bit this property is required and must
+-			  be one of:
+-			   - "psci" (see bindings in [2])
++			  be:
++			   - "psci"
+ 			# On ARM 32-bit systems this property is optional
+ 
+ The nodes describing the idle states (state) can only be defined within the
+diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+index 2c5db03f226c..b2b7ced633cf 100644
+--- a/arch/arm64/boot/dts/arm/juno-r1.dts
++++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+@@ -63,7 +63,7 @@
+ 		};
+ 
+ 		idle-states {
+-			entry-method = "arm,psci";
++			entry-method = "psci";
+ 
+ 			CPU_SLEEP_0: cpu-sleep-0 {
+ 				compatible = "arm,idle-state";
+diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
+index c51950f4a1b6..ab77adb4f3c2 100644
+--- a/arch/arm64/boot/dts/arm/juno-r2.dts
++++ b/arch/arm64/boot/dts/arm/juno-r2.dts
+@@ -63,7 +63,7 @@
+ 		};
+ 
+ 		idle-states {
+-			entry-method = "arm,psci";
++			entry-method = "psci";
+ 
+ 			CPU_SLEEP_0: cpu-sleep-0 {
+ 				compatible = "arm,idle-state";
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index 2b2bf39c30ef..1fb5c5a0f32e 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -62,7 +62,7 @@
+ 		};
+ 
+ 		idle-states {
+-			entry-method = "arm,psci";
++			entry-method = "psci";
+ 
+ 			CPU_SLEEP_0: cpu-sleep-0 {
+ 				compatible = "arm,idle-state";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 205f0f4c5df0..3a2784117139 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -79,7 +79,7 @@
+ 		 * PSCI node is not added default, U-boot will add missing
+ 		 * parts if it determines to use PSCI.
+ 		 */
+-		entry-method = "arm,psci";
++		entry-method = "psci";
+ 
+ 		CPU_PH20: cpu-ph20 {
+ 			compatible = "arm,idle-state";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 1109f22bda5e..e238b86e95fb 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -121,7 +121,7 @@
+ 		 * PSCI node is not added default, U-boot will add missing
+ 		 * parts if it determines to use PSCI.
+ 		 */
+-		entry-method = "arm,psci";
++		entry-method = "psci";
+ 
+ 		CPU_PH20: cpu-ph20 {
+ 			compatible = "arm,idle-state";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 136ebfa9b333..1b200f7be0ba 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -117,7 +117,7 @@
+ 		 * PSCI node is not added default, U-boot will add missing
+ 		 * parts if it determines to use PSCI.
+ 		 */
+-		entry-method = "arm,psci";
++		entry-method = "psci";
+ 
+ 		CPU_PH20: cpu-ph20 {
+ 			compatible = "arm,idle-state";
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+index 6d8532af8346..75cc0f7cc088 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -119,7 +119,7 @@
+ 		};
+ 
+ 		idle-states {
+-			entry-method = "arm,psci";
++			entry-method = "psci";
+ 
+ 			CPU_SLEEP_0: cpu-sleep-0 {
+ 				compatible = "arm,idle-state";
+diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+index 3f5160d2f130..48f5928ed45c 100644
+--- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
++++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+@@ -114,7 +114,7 @@
+ 	};
+ 
+ 	idle-states{
+-		entry-method = "arm,psci";
++		entry-method = "psci";
+ 
+ 		CORE_PD: core_pd {
+ 			compatible = "arm,idle-state";
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index a091e6f03014..29ce23422acf 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -58,7 +58,7 @@
+ 		};
+ 
+ 		idle-states {
+-			entry-method = "arm,psci";
++			entry-method = "psci";
+ 
+ 			CPU_SLEEP_0: cpu-sleep-0 {
+ 				compatible = "arm,idle-state";
+-- 
+2.17.1
