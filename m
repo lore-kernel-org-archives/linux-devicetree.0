@@ -1,42 +1,81 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v2 3/4] drivers: edac: Add EDAC driver support for QCOM SoCs
-Date: Thu, 23 Aug 2018 16:07:30 -0700
-Message-ID: <CAE=gft6GTuk+j81J+jTNqD_6VFQym=gb6aJ==cbcg-6odVq3qg@mail.gmail.com>
-References: <1534550915-18230-1-git-send-email-vnkgutta@codeaurora.org>
- <1534550915-18230-4-git-send-email-vnkgutta@codeaurora.org> <CAE=gft4vheqe9Yqb3H_gMChUmQqvmBeeWvKWCf_j4sWrFceFiQ@mail.gmail.com>
+From: Grant Likely <grant.likely@arm.com>
+Subject: Re: DT case sensitivity
+Date: Thu, 23 Aug 2018 10:02:38 +0100
+Message-ID: <13bf5b39-0461-351e-57e3-60264eaa374d@arm.com>
+References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
+ <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
+ <CAL_JsqKqkO31ekVMFKs+osLvKdZyDzRowF1thWXn5=tWhrJgvw@mail.gmail.com>
+ <18175413a0148f7859ab36ed9715dce7a598f318.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft4vheqe9Yqb3H_gMChUmQqvmBeeWvKWCf_j4sWrFceFiQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vnkgutta@codeaurora.org
-Cc: robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <18175413a0148f7859ab36ed9715dce7a598f318.camel@kernel.crashing.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Kumar Gala <kumar.gala@linaro.org>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 4:04 PM Evan Green <evgreen@chromium.org> wrote:
+On 23/08/2018 02:29, Benjamin Herrenschmidt wrote:
+> On Wed, 2018-08-22 at 20:26 -0500, Rob Herring wrote:
+>> On Wed, Aug 22, 2018 at 8:14 PM Benjamin Herrenschmidt
+>> <benh@kernel.crashing.org> wrote:
+>>>
+>>> On Wed, 2018-08-22 at 19:47 -0500, Rob Herring wrote:
+>>>> The default DT string handling in the kernel is node names and
+>>>> compatibles are case insensitive and property names are case sensitive
+>>>> (Sparc is the the only variation and is opposite). It seems only PPC
+>>>> (and perhaps only Power Macs?) needs to support case insensitive
+>>>> comparisons. It was probably a mistake to follow PPC for new arches
+>>>> and we should have made everything case sensitive from the start. So I
+>>>> have a few questions for the DT historians. :)
+>>>
+>>> Open Firmware itself is insensitive.
+>>
+>> Doesn't it depend on the implementation? Otherwise, how is Sparc differe=
+nt?
 >
-> On Fri, Aug 17, 2018 at 5:08 PM Venkata Narendra Kumar Gutta
-> <vnkgutta@codeaurora.org> wrote:
-> >
-> > From: Channagoud Kadabi <ckadabi@codeaurora.org>
+> Not sure ... Forth itself is insensitive for words but maybe not for
+> string comparisons.
 
-Also checkpatch.pl complains a bit about this patch:
+What problem are you trying to solve? I would think making everything
+case insensitive would be the direction to go if you do anything. Least
+possibility of breaking existing platforms in that scenario.
 
-            WARNING: Non-standard signature: Co-developed-by:
-            #14:
-            Co-developed-by: Venkata Narendra Kumar Gutta
-<vnkgutta@codeaurora.org>
+g.
 
-            WARNING: please write a paragraph that describes the
-config symbol fully
-            #63: FILE: drivers/edac/Kconfig:460:
-            +config EDAC_QCOM
+>
+>>
+>>>> What PPC systems are case insensitive? Can we limit that to certain sy=
+stems?
+>>>
+>>> All PowerMacs at least, the problem is that I don't have DT images or
+>>> access to all the historical systems (and yes some people occasionally
+>>> still use them) to properly test a change in that area.
+>>
+>> I'm temped to break them so I can find folks to provide me with DT dumps=
+. :)
+>
+> I have a collection of DT dumps but I'm not sure about the legality of
+> publishing them...
+>
+> Cheers,
+> Ben.
+>
+>
 
-            WARNING: DT compatible string "qcom,llcc-edac" appears
-un-documented -- check ./Documentation/devicetree/bindings/
-            #536: FILE: drivers/edac/qcom_edac.c:430:
-            + { .compatible = "qcom,llcc-edac" },
-
-            total: 0 errors, 3 warnings, 533 lines checked
-
--Evan
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
