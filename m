@@ -1,60 +1,54 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: DT case sensitivity
-Date: Thu, 23 Aug 2018 21:47:30 +1000
-Message-ID: <e9009f6dd3aded2b9aa735973f4eed8386dd9afb.camel@kernel.crashing.org>
-References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
- <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
- <CAL_JsqKqkO31ekVMFKs+osLvKdZyDzRowF1thWXn5=tWhrJgvw@mail.gmail.com>
- <18175413a0148f7859ab36ed9715dce7a598f318.camel@kernel.crashing.org>
- <13bf5b39-0461-351e-57e3-60264eaa374d@arm.com>
- <CAL_Jsq+1T8k5mtc-DgDBtX3Qco9sQG9RWv6FTZ8NXppNbNg3Ww@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <CAL_Jsq+1T8k5mtc-DgDBtX3Qco9sQG9RWv6FTZ8NXppNbNg3Ww@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@arm.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Kumar Gala <kumar.gala@linaro.org>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>, David Gibson <david@gibson.dropbear.id.au>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH v3 0/3] soc: amlogic: add meson-canvas
+Date: Thu, 23 Aug 2018 13:49:51 +0200
+Message-ID: <20180823114954.30704-1-mjourdan@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org
+Cc: Maxime Jourdan <mjourdan@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-08-23 at 06:43 -0500, Rob Herring wrote:
-> On Thu, Aug 23, 2018 at 4:02 AM Grant Likely <grant.likely@arm.com> wrote:
-> > 
-> > 
-> > What problem are you trying to solve?
-> 
-> I'm looking at removing device_node.name and using full_name instead
-> (which now is only the local node name plus unit-address). This means
-> replacing of_node_cmp() (and still some strcmp) calls in a lot of
-> places. I need to use either strncmp or strncasecmp instead.
-> 
-> > I would think making everything
-> > case insensitive would be the direction to go if you do anything. Least
-> > possibility of breaking existing platforms in that scenario.
-> 
-> Really? Even if all the "new" arches are effectively case sensitive?
-> Anything using dtc and libfdt are (and json-schema certainly will be).
-> But I frequently say the kernel's job is not DT validation, so you
-> pass crap in, you get undefined results.
+Amlogic SoCs feature a set of 256 canvas that act as pixel buffer
+descriptors. Some IPs like the display and video decoders access those
+pixels by using canvas IDs rather than direct phy addresses.
 
-I tend to agree with Grant. Let's put it this way:
+As such, allocating/manipulating canvases can be done concurrently and
+there is a need for a standalone, lock-aware canvas provider module.
 
-What is the drawback of being case insensitive ?
+Currently, canvas code lies in the drm/meson module as it is the sole
+user.
 
-Do we expect that there exist a case where we will want to distinguish
-between nodes that have the same name with a different case ?
+This patchset adds such canvas provider module.
 
-If not, I don't see the point of being strict about it.
+Changes since v2: [1]
+ - Don't include the drm changes in the serie.
+ - Remove the syscon node in the dts and doc
+ - Rename meson_canvas_setup to meson_canvas_config
 
-Cheers,
-Ben.
+Changes since v1: [0]
+ - Convert ops struct to a public API
+ - Added comments
+ - Hid the of-node probe code behind meson_canvas_get
+ - Changed device lock to a spinlock with irqsave
+
+[0]: https://lkml.org/lkml/2018/8/1/1512
+[1]: https://lkml.org/lkml/2018/8/7/894
+
+Maxime Jourdan (3):
+  dt-bindings: soc: amlogic: add meson-canvas documentation
+  soc: amlogic: add meson-canvas driver
+  ARM64: dts: meson-gx: add dmcbus and canvas nodes.
+
+ .../bindings/soc/amlogic/amlogic,canvas.txt   |  29 +++
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |  13 ++
+ drivers/soc/amlogic/Kconfig                   |   7 +
+ drivers/soc/amlogic/Makefile                  |   1 +
+ drivers/soc/amlogic/meson-canvas.c            | 185 ++++++++++++++++++
+ include/linux/soc/amlogic/meson-canvas.h      |  65 ++++++
+ 6 files changed, 300 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/amlogic/amlogic,canvas.txt
+ create mode 100644 drivers/soc/amlogic/meson-canvas.c
+ create mode 100644 include/linux/soc/amlogic/meson-canvas.h
+
+-- 
+2.18.0
