@@ -1,46 +1,73 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
-Date: Thu, 23 Aug 2018 20:50:23 +0200
-Message-ID: <CAFBinCAKNUA5_fz4bXqj-aCaDEHk--Ax5GXJt+nzVKSjbVHxLg@mail.gmail.com>
-References: <20180822105547.9634-1-johan@kernel.org> <20180822105547.9634-5-johan@kernel.org>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH] arm64: dts: Fix various entry-method properties to
+ reflect documentation
+Date: Fri, 24 Aug 2018 01:32:39 +0530
+Message-ID: <CAHLCerNoRj6GQRF=NJXwc0U+mJNe=06JGADQr7uT-chD2W-J+A@mail.gmail.com>
+References: <113f28acbc55f64762c9f0bcefe076a811f2ed82.1535014078.git.amit.kucheria@linaro.org>
+ <20180823153110.GA19131@e107155-lin>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822105547.9634-5-johan@kernel.org>
+In-Reply-To: <20180823153110.GA19131@e107155-lin>
 Sender: linux-kernel-owner@vger.kernel.org
-To: johan@kernel.org
-Cc: robh+dt@kernel.org, gregkh@linuxfoundation.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, carlo@endlessm.com, ulf.hansson@linaro.org
+To: Sudeep Holla <sudeep.holla@arm.com>, arm@kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Shawn Guo <shawnguo@kernel.org>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Minghuan Lian <minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Yuan Yao <yao.yuan@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, Marc
 List-Id: devicetree@vger.kernel.org
 
-Hi Johan,
+(Adding arm-soc folks)
 
-On Wed, Aug 22, 2018 at 12:57 PM Johan Hovold <johan@kernel.org> wrote:
+On Thu, Aug 23, 2018 at 9:01 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> Hi Amit,
 >
-> Use the new of_get_compatible_child() helper to lookup the slot child
-> node instead of using of_find_compatible_node(), which searches the
-> entire tree and thus can return an unrelated (i.e. non-child) node.
-that new helper is much appreciated, thank you!
-
-> This also addresses a potential use-after-free (e.g. after probe
-> deferral) as the tree-wide helper drops a reference to its first
-> argument (i.e. the node of the device being probed).
+> Thanks for fixing this.
 >
-> While at it, also fix up the related slot-node reference leak.
-not sure why both issues went unnoticed so far - good that they're now
-both fixed. thank you!
+> On Thu, Aug 23, 2018 at 02:23:29PM +0530, Amit Kucheria wrote:
+>> The idle-states binding documentation[1] mentions that the
+>> 'entry-method' property is required on 64-bit platforms and must be
+>> set to "psci".
+>>
+>> commit a13f18f59d26 ("Documentation: arm: Fix typo in the idle-states
+>> bindings examples") attempted to fix this earlier but clearly more is
+>> needed.
+>>
+>
+> In fact, I assumed I fixed things with commit 978fa436231a ("drivers:
+> firmware: psci: unify enable-method binding on ARM {64,32}-bit systems"),
+> but I was wrong. I left quite a few instances including juno dtbs.
+>
+>> Fix the cpu-capacity.txt documentation that uses the incorrect value so
+>> we don't get copy-paste errors like these. Clarify the language in
+>> idle-states.txt by removing the reference to the psci bindings that
+>> might be causing this confusion.
+>>
+>> Finally, fix devicetrees of various boards to reflect current
+>> documentation.
+>>
+>> [1] Documentation/devicetree/bindings/arm/idle-states.txt (see
+>> idle-states node)
+>>
+>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
+>>  Documentation/devicetree/bindings/arm/idle-states.txt  | 4 ++--
+>>  arch/arm64/boot/dts/arm/juno-r1.dts                    | 2 +-
+>>  arch/arm64/boot/dts/arm/juno-r2.dts                    | 2 +-
+>>  arch/arm64/boot/dts/arm/juno.dts                       | 2 +-
+>
+> For all the above files,
+>
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
-> Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-> Cc: stable <stable@vger.kernel.org>     # 4.15
-backporting only works if the patch introducing
-of_get_compatible_child is also backported
-do we have to inform Greg somehow?
+Thanks for reviewing, Sudeep.
 
-> Cc: Carlo Caione <carlo@endlessm.com>
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> How do you plan to merge ? I prefer if you can send it via arm-soc as
+> fixes for this cycle with all the necessary acks. Otherwise you may have
+> to split this to send via platform maintainers which is bit mundane.
 
+I was hoping to get this merged thru arm-soc tree instead of creating
+a patch per platform. But if anybody feels strongly about it, I'm
+happy to split them up and feed it through the platform maintainer
+trees.
 
-Regards
-Martin
+Regards,
+Amit
