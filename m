@@ -1,121 +1,197 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: add DT binding for UniPhier
- MIO DMAC
-Date: Thu, 23 Aug 2018 08:21:37 -0500
-Message-ID: <CAL_Jsq+ppQP9icJVhpUYGj_JCyxudi0Z4=+mKiBueMKZftrQ7A@mail.gmail.com>
-References: <1534843809-4137-1-git-send-email-yamada.masahiro@socionext.com>
- <1534843809-4137-2-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNASr=rf_foQ7PDTNS440rx3TLuY_TBagfQ-gCHxXpFB2vw@mail.gmail.com>
- <CAJe_ZhdZbUa2njAvSazGzv+7UgG+QHCTS+-Y-Ckqze+pMf9KQA@mail.gmail.com>
- <CAK7LNAT3MufLZhFB8HDnch09WUdEcLyDCU05dTYroOwWYcx=pQ@mail.gmail.com> <CAJe_ZheNp9t0DNQjmiQKMyZsbHBjMxqV87mE_3nQ1N_RS9znYQ@mail.gmail.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 2/9] arm64: dts: renesas: r8a774a1: Add I2C and IIC-DVFS
+ support
+Date: Thu, 23 Aug 2018 14:43:01 +0100
+Message-ID: <1535031788-19907-3-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJe_ZheNp9t0DNQjmiQKMyZsbHBjMxqV87mE_3nQ1N_RS9znYQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jaswinder.singh@linaro.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Vinod <vkoul@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 12:38 AM Jassi Brar <jaswinder.singh@linaro.org> wrote:
->
-> On 23 August 2018 at 10:48, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> > Hi Jassi,
-> >
-> >
-> > 2018-08-21 19:44 GMT+09:00 Jassi Brar <jaswinder.singh@linaro.org>:
-> >> On 21 August 2018 at 15:17, Masahiro Yamada
-> >> <yamada.masahiro@socionext.com> wrote:
-> >>> (+CC Rob, DT, LKML)
-> >>>
-> >>> I forgot to CC this to DT community...
-> >>>
-> >>>
-> >>> 2018-08-21 18:30 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> >>>> The MIO DMAC (Media IO DMA Controller) is used in UniPhier LD4,
-> >>>> Pro4, and sLD8 SoCs.
-> >>>>
-> >>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> >>>> ---
-> >>>>
-> >>>>  .../devicetree/bindings/dma/uniphier-mio-dmac.txt  | 28 ++++++++++++++++++++++
-> >>>>  1 file changed, 28 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..a9e969e
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
-> >>>> @@ -0,0 +1,28 @@
-> >>>> +UniPhier Media IO DMA controller
-> >>>> +
-> >>>> +This works as an external DMA engine for SD/eMMC controllers etc.
-> >>>> +found in UniPhier LD4, Pro4, sLD8 SoCs.
-> >>>> +
-> >>>> +Required properties:
-> >>>> +- compatible: should be "socionext,uniphier-mio-dmac".
-> >>>> +- reg: offset and length of the register set for the device.
-> >>>> +- interrupts: a list of interrupt specifiers associated with the DMA channels.
-> >>>> +- clocks: a single clock specifier
-> >>>> +- #dma-cells: should be <1>. The single cell represents the channel number.
-> >>>> +- dma-channels: specify the number of the DMA channels. This should match to
-> >>>> +  the number of tuples in the interrupts property.
-> >>>> +
-> >> Can we not infer the number of channels from interrupt tuples? After
-> >> all the driver assumes they are same.
-> >
-> >
-> > It would be possible to count the number of tuples
-> > in "interrupts".
-> >
-> >
-> >
-> > I know of_irq_count(), but I do not see any driver
-> > in drivers/dma/ that calls it.
-> >
-> >
-> > I guess the reason is that of_irq_count() is not exported,
-> > so tristate drivers like this cannot use it.
-> >
-> >
-> > I checked Documentation/devicetree/bindings/dma/,
-> > and some controllers specify _redundant_ dma-channels property.
-> >
-> > fsl-mxs-dma.txt
-> > renesas,rcar-dmac.txt
-> > renesas,usb-dmac.txt
-> >
-> :) I am not sure "because others are doing it" is a good reason to
-> introduce redundancy.
->
->
-> > I also see counter-implementation.
-> >
-> >
-> > bcm2835-dma.c hard-codes the number of channels in the driver.
-> > tegra210-adma.c associates nr_channels with compatible string.
-> >
-> >
-> >
-> > I will wait for comments from the maintainers.
-> >
-> > If desired, I will export of_irq_count()
-> > and use it from my driver.
-> >
-> If you don't want to leave too much footprint, you could do
->
->   count = 0;
->   while (of_irq_parse_one(dev, count, &irq) == 0) count++
->
-> of_irq_parse_one() is already exported.
+From: Biju Das <biju.das@bp.renesas.com>
 
-Yes, but we really don't more users and drivers shouldn't be using it.
-Grepping DT functions and when the only users are pretty much powerpc,
-that's a good indication not to use the function.
+Add the I2C[0-6] and IIC Bus Interface for DVFS (IIC for DVFS)
+devices nodes to the r8a774a1 device tree.
 
-And you don't want to use of_irq_count either. platform_irq_count is
-what should be used here. It's already exported.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 142 ++++++++++++++++++++++++++++++
+ 1 file changed, 142 insertions(+)
 
-Rob
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+index 7640856..5775451 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+@@ -14,6 +14,17 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
++		i2c4 = &i2c4;
++		i2c5 = &i2c5;
++		i2c6 = &i2c6;
++		i2c7 = &i2c_dvfs;
++	};
++
+ 	/*
+ 	 * The external audio clocks are configured as 0 Hz fixed frequency
+ 	 * clocks by default.
+@@ -170,6 +181,137 @@
+ 			resets = <&cpg 407>;
+ 		};
+ 
++		i2c0: i2c@e6500000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a774a1",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe6500000 0 0x40>;
++			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 931>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 931>;
++			dmas = <&dmac1 0x91>, <&dmac1 0x90>,
++			       <&dmac2 0x91>, <&dmac2 0x90>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@e6508000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a774a1",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe6508000 0 0x40>;
++			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 930>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 930>;
++			dmas = <&dmac1 0x93>, <&dmac1 0x92>,
++			       <&dmac2 0x93>, <&dmac2 0x92>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@e6510000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a774a1",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe6510000 0 0x40>;
++			interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 929>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 929>;
++			dmas = <&dmac1 0x95>, <&dmac1 0x94>,
++			       <&dmac2 0x95>, <&dmac2 0x94>;
++			dma-names = "tx", "rx", "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
++
++		i2c3: i2c@e66d0000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a774a1",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66d0000 0 0x40>;
++			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 928>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 928>;
++			dmas = <&dmac0 0x97>, <&dmac0 0x96>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
++
++		i2c4: i2c@e66d8000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a774a1",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66d8000 0 0x40>;
++			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 927>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 927>;
++			dmas = <&dmac0 0x99>, <&dmac0 0x98>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
++
++		i2c5: i2c@e66e0000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a774a1",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66e0000 0 0x40>;
++			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 919>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 919>;
++			dmas = <&dmac0 0x9b>, <&dmac0 0x9a>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
++
++		i2c6: i2c@e66e8000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a774a1",
++				     "renesas,rcar-gen3-i2c";
++			reg = <0 0xe66e8000 0 0x40>;
++			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 918>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 918>;
++			dmas = <&dmac0 0x9d>, <&dmac0 0x9c>;
++			dma-names = "tx", "rx";
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
++
++		i2c_dvfs: i2c@e60b0000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,iic-r8a774a1",
++				     "renesas,rcar-gen3-iic",
++				     "renesas,rmobile-iic";
++			reg = <0 0xe60b0000 0 0x425>;
++			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 926>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 926>;
++			dmas = <&dmac0 0x11>, <&dmac0 0x10>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
+ 		hscif0: serial@e6540000 {
+ 			compatible = "renesas,hscif-r8a774a1",
+ 				     "renesas,rcar-gen3-hscif",
+-- 
+2.7.4
