@@ -1,140 +1,161 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM
- output between PWM and GPIO
-Date: Thu, 23 Aug 2018 12:40:13 +0200
-Message-ID: <20180823123759.68b78e9f@jawa>
-References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
-        <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 00/40] Tegra SDHCI add support for HS200 and UHS signaling
+Date: Thu, 23 Aug 2018 12:42:14 +0200
+Message-ID: <CAPDyKFq=Ox+BfU+-D-T6pd81x+_WG_P_VztNRTJ97sAEe8sNDQ@mail.gmail.com>
+References: <1533924522-1037-1-git-send-email-avienamo@nvidia.com> <20180823084704.GA28696@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/SsAnwfOlOr+S3rQE6dj.GB/"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <20180823084704.GA28696@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?UTF-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@karo-electronics.de>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, DTML <devicetree@vger.kernel.org>, linux-tegra@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/SsAnwfOlOr+S3rQE6dj.GB/
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On 23 August 2018 at 10:47, Thierry Reding <thierry.reding@gmail.com> wrote:
+> On Fri, Aug 10, 2018 at 09:08:02PM +0300, Aapo Vienamo wrote:
+>> Hi all,
+>>
+>> This series implements support for faster signaling modes on Tegra
+>> SDHCI controllers. This series consist of several parts: changes
+>> requried for 1.8 V signaling and pad control, pad calibration, and
+>> tuning. Following earlies patch sets have been merged into this
+>> larger set: "Tegra PMC pinctrl pad configuration", "Tegra SDHCI enable
+>> 1.8 V signaling on Tegar210 and Tegra186", "Tegra SDHCI update the
+>> padautocal procedure". Also the patches for enabling SDHCI tuning
+>> are added.
+>>
+>> Changelog:
+>> v2:
+>>       - Fix grammar in PMC device tree bindings docs
+>>       - Remove a stray line from tegra sdhci bindings
+>>       - Cosmetic changes to PMC pinctrl driver
+>>       - Fix a typo in "soc/tegra: pmc: Implement
+>>         tegra_io_pad_is_powered()" commit message
+>>       - Declare mask and value on the same line in
+>>         tegra_io_pad_is_powered()
+>>       - Move the call to tegra_sdhci_is_pad_and_regulator_valid() to
+>>         inside the if condition in tegra_sdhci_reset()
+>>       - Use usleep_range() in tegra_sdhci_configure_cal_pad()
+>>       - Move sdhci_writel() out of the enable if-else body in
+>>         tegra_sdhci_configure_cal_pad()
+>>       - Add a delay before starting polling in
+>>         tegra_sdhci_pad_autocalib()
+>>       - Use usleep_range() in tegra_sdhci_set_tap()
+>>       - Rename orig_enabled to status in
+>>         tegra_sdhci_configure_card_clk()
+>>       - Fix if condition wrapping alignment in tegra_sdhci_set_tap()
+>>
+>> v1:
+>>       - Probe the regulator voltage capabilities to determine whether pinctrl
+>>         is needed in tegra_sdhci_r eset
+>>       - Don't remove tegra_sdhci_voltage_switch()
+>>       - Use dev_warn() in tegra_sdhci_init_pinctrl_info()
+>>       - Don't change start_signal_voltage_switch callback if pinctrl info
+>>         invalid
+>>       - Only call udelay(1) on enable in tegra_sdhci_configure_cal_pad()
+>>       - Add nvidia, prefix to pad autocal offset dt props in the example
+>>
+>> See the original patch sets for earlier changelogs.
+>>
+>> Aapo Vienamo (40):
+>>   dt-bindings: Add Tegra PMC pad configuration bindings
+>>   dt-bindings: mmc: tegra: Add pad voltage control properties
+>>   dt-bindings: Add Tegra SDHCI pad pdpu offset bindings
+>>   dt-bindings: mmc: Add Tegra SDHCI sampling trimmer values
+>>   soc/tegra: pmc: Fix pad voltage configuration for Tegra186
+>>   soc/tegra: pmc: Factor out DPD register bit calculation
+>>   soc/tegra: pmc: Implement tegra_io_pad_is_powered()
+>>   soc/tegra: pmc: Use X macro to generate IO pad tables
+>>   soc/tegra: pmc: Remove public pad voltage APIs
+>>   soc/tegra: pmc: Implement pad configuration via pinctrl
+>>   mmc: sdhci: Add a quirk to skip clearing the transfer mode register on
+>>     tuning
+>>   mmc: tegra: Reconfigure pad voltages during voltage switching
+>>   mmc: tegra: Poll for calibration completion
+>>   mmc: tegra: Set calibration pad voltage reference
+>>   mmc: tegra: Power on the calibration pad
+>>   mmc: tegra: Disable card clock during pad calibration
+>>   mmc: tegra: Program pad autocal offsets from dt
+>>   mmc: tegra: Perform pad calibration after voltage switch
+>>   mmc: tegra: Enable pad calibration on Tegra210 and Tegra186
+>>   mmc: tegra: Add a workaround for tap value change glitch
+>>   mmc: tegra: Parse default trim and tap from dt
+>>   mmc: tegra: Configure default tap values
+>>   mmc: tegra: Configure default trim value on reset
+>>   mmc: tegra: Use standard SDHCI tuning on Tegra210 and Tegra186
+>>   mmc: sdhci: Add a quirk to disable card clock during tuning
+>>   mmc: tegra: Enable workaround for tuning transfer mode bug
+>>   mmc: tegra: Set SDHCI_QUIRK2_TUNE_DIS_CARD_CLK on Tegra210
+>>   mmc: tegra: Enable UHS and HS200 modes for Tegra210
+>>   mmc: tegra: Enable UHS and HS200 modes for Tegra186
+>>   arm64: dts: Add Tegra210 sdmmc pinctrl voltage states
+>>   arm64: dts: Add Tegra186 sdmmc pinctrl voltage states
+>>   arm64: dts: tegra210-p2180: Allow ldo2 to go down to 1.8 V
+>>   arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
+>>   arm64: dts: tegra210-p2597: Remove no-1-8-v from sdmmc1
+>>   arm64: dts: tegra186: Add sdmmc pad auto calibration offsets
+>>   arm64: dts: tegra210: Add sdmmc pad auto calibration offsets
+>>   arm64: dts: tegra210: Add SDHCI tap and trim values
+>>   arm64: dts: tegra186: Add SDHCI tap and trim values
+>>   arm64: dts: tegra186: Assign clocks for sdmmc1 and sdmmc4
+>>   arm64: dts: tegra210: Assign clocks for sdmmc1 and sdmmc4
+>>
+>>  .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |  93 ++++
+>>  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 103 ++++
+>>  .../bindings/mmc/nvidia,tegra20-sdhci.txt          |  68 +++
+>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  74 +++
+>>  arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi     |  12 +-
+>>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   1 -
+>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  55 ++
+>>  drivers/mmc/host/sdhci-tegra.c                     | 556 +++++++++++++++++++--
+>>  drivers/mmc/host/sdhci.c                           |  21 +
+>>  drivers/mmc/host/sdhci.h                           |   4 +
+>>  drivers/soc/tegra/pmc.c                            | 511 ++++++++++++++-----
+>>  include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h |  18 +
+>>  include/soc/tegra/pmc.h                            |  20 +-
+>>  13 files changed, 1324 insertions(+), 212 deletions(-)
+>>  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
+>
+> Hi Ulf, Adrian,
+>
+> I've been running some tests on this on various Tegra boards and this
+> all seems to work fine. I'm also pretty happy with how this turned out,
+> so the whole series is:
+>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+>
+> In order to get this merged, I think it'd be best for you guys to pick
+> up the MMC patches, since they are all independent of the rest. There is
+> a runtime dependency on the PMC bits for the faster modes, but things
+> will fallback to the status quo if those bits are not enabled. The only
+> dependency here is between the PMC and DTS changes, which I usually pick
+> up into the Tegra tree anyway, so I can sort that out there.
 
-Hi Michal,
+Great, thanks for clarifying the dependency.
 
-> Output of the PWM block of i.MX SoCs is always zero volts when the
-> block is disabled. This can caue issues when inverted PWM polarity is
-> needed. With inverted polarity a duty cycle =3D 0% corresponds to solid
-> high level on the output. If the PWM is dissabled its output
-> instantly goes to solid zero which corresponds to duty cycle =3D 100%.
->=20
-> To have a trully inverted PWM output configure the PWM pad as a GPIO
-> with pull-up. Then switch the pad to PWM output whenever non-zero
-> duty cycle is needed.
+>
+> Since I've already gone through the process of splitting up the series,
+> I can offer to rebase the MMC patches on top of v4.19-rc1 when it's out
+> and send a pull request for the MMC patches.
 
-Just to ask - Is your display equipped with power supply enable/disable
-pin?
+That sounds convenient for me. Please also include the corresponding
+dt doc changes for mmc, as I am normally queuing these via my mmc
+tree.
 
-As fair as I remember the trick to avoid flickering the display
-was to disable the display (enable-gpio property) and set the PWM PIN
-as GPIO to high in u-boot.
+Although, I think it's better to wait until Adrian has given his ack
+for the series.
 
->=20
-> Signed-off-by: Michal Vok=C3=A1=C4=8D <michal.vokac@ysoft.com>
-> ---
->  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 44
-> +++++++++++++++++++++++ 1 file changed, 44 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-> b/Documentation/devicetree/bindings/pwm/imx-pwm.txt index
-> c61bdf8..3b1bc4c 100644 ---
-> a/Documentation/devicetree/bindings/pwm/imx-pwm.txt +++
-> b/Documentation/devicetree/bindings/pwm/imx-pwm.txt @@ -14,6 +14,12
-> @@ See the clock consumer binding,
-> Documentation/devicetree/bindings/clock/clock-bindings.txt
->  - interrupts: The interrupt for the pwm controller
-> =20
-> +Optional properties:
-> +- pinctrl: For i.MX27 and newer SoCs. Add extra pinctrl to configure
-> the PWM
-> +  pin to gpio function.  It allows control over the pin output level
-> when the
-> +  PWM block is disabled. This is meant to be used if inverted
-> polarity of the
-> +  PWM signal is required. See "Inverted PWM output" section bellow.
-> +
->  Example:
-> =20
->  pwm1: pwm@53fb4000 {
-> @@ -25,3 +31,41 @@ pwm1: pwm@53fb4000 {
->  	clock-names =3D "ipg", "per";
->  	interrupts =3D <61>;
->  };
-> +
-> +Inverted PWM output
-> +-------------------
-> +
-> +The i.MX=C2=A0SoC has such limitation that whenever a pad is configured
-> as a PWM +output, the output level is always zero volts when the PWM
-> block is disabled. +The zero output level is actively driven by the
-> output stage of the PWM block +and can not be overridden by pull-up.
-> It also does not matter what PWM polarity +a PWM client (e.g.
-> backlight) requested. +
-> +To gain control of the PWM output level in disabled state two
-> pinctrl states +can be used. The "default" state and the "pwm" state.
-> In the default state the +PWM output is configured as a GPIO with
-> pull-up. In the "pwm" state the output +is configured as a PWM
-> output. This setup assures that the PWM output is at +the required
-> level that corresponds to duty cycle =3D 0 when PWM is disabled. +E.g.
-> at boot. +
-> +Example:
-> +
-> +&pwm1 {
-> +	pinctrl-names =3D "default", "pwm";
-> +	pinctrl-0 =3D <&pinctrl_backlight_gpio>;
-> +	pinctrl-1 =3D <&pinctrl_backlight_pwm>;
-> +}
-> +
-> +pinctrl_backlight_gpio: pwm1grp-gpio {
-> +	fsl,pins =3D <
-> +		/* GPIO with 22kOhm pull-up */
-> +		MX6QDL_PAD_GPIO_9__GPIO1_IO09	0xF008
-> +	>;
-> +};
-> +
-> +pinctrl_backlight_pwm: pwm1grp-pwm {
-> +	fsl,pins =3D <
-> +		/* PWM output */
-> +		MX6QDL_PAD_GPIO_9__PWM1_OUT	0x8
-> +	>;
-> +};
+> Alternatively I can further
+> split that branch up into two parts, one with the two patches that touch
+> the core and another with the remainder, if that's what you prefer. Or
+> you can of course feel free to apply all of the MMC patches yourselves
+> with my above Acked-by if you want to.
+>
+> Any thought on the above?
 
+Let's see how it goes, if there are any struggles, I don't have a
+problem to cherry-pick the mmc parts of the series.
 
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/SsAnwfOlOr+S3rQE6dj.GB/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlt+jw0ACgkQAR8vZIA0
-zr3mEAf/REK+lHwHbo/LSJwTaFQuKnHAyWohjN8rW3U6OrVB+3G1nIVpLWUc6EGd
-cOFMSUr01+iEFfmQiuFgpfhukEVu9GvApG1+HXw9vrynqDV9+Ty9LgKAFTmABSKU
-q6opYlmy3nNgN6ukFxKVKsUZNmAb+hK4XrLp9wXcBnJ1eC5xnLl96Kv4ovmCQD/h
-TM+XqoiD5GmRxZqUbo7Wxuu30oAXMNOB8/pNRhMqy6Zw9p+cKZZyvwy9kuyMolpy
-ejx+8+FXjlbdapLemjFfxUTGXQyEpT/0Xb0JOZBvUBgBmeZeLUjd6bFuoSAis+9C
-DvVybQ0OFfp1kpLDaG/4Ob/ah/kjbw==
-=qAdX
------END PGP SIGNATURE-----
-
---Sig_/SsAnwfOlOr+S3rQE6dj.GB/--
+Kind regards
+Uffe
