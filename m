@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/4] spi: Make of_find_spi_device_by_node() available
-Date: Thu, 23 Aug 2018 12:33:30 +0200
-Message-ID: <20180823103332.32047-3-linus.walleij@linaro.org>
+Subject: [PATCH 1/4] eeprom: at24: Allow passing gpiodesc from pdata
+Date: Thu, 23 Aug 2018 12:33:29 +0200
+Message-ID: <20180823103332.32047-2-linus.walleij@linaro.org>
 References: <20180823103332.32047-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,99 +18,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dev@lists.96boards.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Andy Shevchenko <andy@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-i2c@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This externalizes and exports the symbol
-of_find_spi_device_by_node() from the SPI core akin to how
-of_find_i2c_adapter_by_node() is already available. As we will
-need this also for non-dynamic OF setups, we move it under a
-CONFIG_OF check.
+This makes it possible to pass an initialized GPIO descriptor
+to the driver through platform data.
 
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org
+This is useful when we are dealing with EEPROMs on expansion
+boards where the GPIO has to be looked up indirectly using a
+connector abstraction (several systems using the same
+connector) so the machine descriptor tables cannot be used
+to associate the descriptor with the device and we then want
+to pass this descriptor on to the EEPROM driver this way
+instead.
+
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-i2c@vger.kernel.org
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-ChangeLog RFC->v1:
+ChangeLog v1->v2:
 - No changes
-- Requesting an ACK from the SPI mainatiner so that this patch
-  can be applied with the rest of the series.
+- Requesting an ACK from the EEPROM maintainer (Bartosz) so
+  we can apply this to the ARM SoC tree with the series depending
+  on it.
 ---
- drivers/spi/spi.c       | 33 ++++++++++++++++++---------------
- include/linux/spi/spi.h |  4 ++++
- 2 files changed, 22 insertions(+), 15 deletions(-)
+ drivers/misc/eeprom/at24.c         | 6 +++++-
+ include/linux/platform_data/at24.h | 2 ++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index ec395a6baf9c..6a1085077317 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -3314,27 +3314,14 @@ EXPORT_SYMBOL_GPL(spi_write_then_read);
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index f5cc517d1131..d577cdbe221e 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -662,7 +662,11 @@ static int at24_probe(struct i2c_client *client)
+ 	at24->client[0].client = client;
+ 	at24->client[0].regmap = regmap;
  
- /*-------------------------------------------------------------------------*/
+-	at24->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
++	if (pdata.wp_gpiod)
++		at24->wp_gpio = pdata.wp_gpiod;
++	else
++		at24->wp_gpio =
++			devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(at24->wp_gpio))
+ 		return PTR_ERR(at24->wp_gpio);
  
--#if IS_ENABLED(CONFIG_OF_DYNAMIC)
--static int __spi_of_device_match(struct device *dev, void *data)
--{
--	return dev->of_node == data;
--}
--
--/* must call put_device() when done with returned spi_device device */
--static struct spi_device *of_find_spi_device_by_node(struct device_node *node)
--{
--	struct device *dev = bus_find_device(&spi_bus_type, NULL, node,
--						__spi_of_device_match);
--	return dev ? to_spi_device(dev) : NULL;
--}
--
-+#if IS_ENABLED(CONFIG_OF)
- static int __spi_of_controller_match(struct device *dev, const void *data)
- {
- 	return dev->of_node == data;
- }
+diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
+index 63507ff464ee..5606fb2ef76c 100644
+--- a/include/linux/platform_data/at24.h
++++ b/include/linux/platform_data/at24.h
+@@ -11,6 +11,7 @@
+ #include <linux/types.h>
+ #include <linux/nvmem-consumer.h>
+ #include <linux/bitops.h>
++#include <linux/gpio/consumer.h>
  
- /* the spi controllers are not using spi_bus, so we find it with another way */
--static struct spi_controller *of_find_spi_controller_by_node(struct device_node *node)
-+struct spi_controller *of_find_spi_controller_by_node(struct device_node *node)
- {
- 	struct device *dev;
+ /**
+  * struct at24_platform_data - data to set up at24 (generic eeprom) driver
+@@ -55,6 +56,7 @@ struct at24_platform_data {
  
-@@ -3349,6 +3336,22 @@ static struct spi_controller *of_find_spi_controller_by_node(struct device_node
- 	/* reference got in class_find_device */
- 	return container_of(dev, struct spi_controller, dev);
- }
-+EXPORT_SYMBOL_GPL(of_find_spi_controller_by_node);
-+#endif
-+
-+#if IS_ENABLED(CONFIG_OF_DYNAMIC)
-+static int __spi_of_device_match(struct device *dev, void *data)
-+{
-+	return dev->of_node == data;
-+}
-+
-+/* must call put_device() when done with returned spi_device device */
-+static struct spi_device *of_find_spi_device_by_node(struct device_node *node)
-+{
-+	struct device *dev = bus_find_device(&spi_bus_type, NULL, node,
-+						__spi_of_device_match);
-+	return dev ? to_spi_device(dev) : NULL;
-+}
+ 	void		(*setup)(struct nvmem_device *nvmem, void *context);
+ 	void		*context;
++	struct gpio_desc *wp_gpiod;
+ };
  
- static int of_spi_notify(struct notifier_block *nb, unsigned long action,
- 			 void *arg)
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index a64235e05321..c2be93224bd1 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -639,6 +639,10 @@ extern int devm_spi_register_controller(struct device *dev,
- 					struct spi_controller *ctlr);
- extern void spi_unregister_controller(struct spi_controller *ctlr);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+struct spi_controller *of_find_spi_controller_by_node(struct device_node *node);
-+#endif
-+
- extern struct spi_controller *spi_busnum_to_master(u16 busnum);
- 
- /*
+ #endif /* _LINUX_AT24_H */
 -- 
 2.17.0
