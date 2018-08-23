@@ -1,10 +1,13 @@
-From: Rob Herring <robh@kernel.org>
-Subject: DT case sensitivity
-Date: Wed, 22 Aug 2018 19:47:34 -0500
-Message-ID: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: DT case sensitivity
+Date: Thu, 23 Aug 2018 11:03:28 +1000
+Message-ID: <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
+References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
  <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
@@ -15,24 +18,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Sender: "Linuxppc-dev"
  <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Grant Likely <grant.likely@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Kumar Gala <kumar.gala@linaro.org>, David Gibson <david@gibson.dropbear.id.au>, Frank Rowand <frowand.list@gmail.com>, devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+To: Rob Herring <robh@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Grant Likely <grant.likely@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Kumar Gala <kumar.gala@linaro.org>, David Gibson <david@gibson.dropbear.id.au>, Frank Rowand <frowand.list@gmail.com>, devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-The default DT string handling in the kernel is node names and
-compatibles are case insensitive and property names are case sensitive
-(Sparc is the the only variation and is opposite). It seems only PPC
-(and perhaps only Power Macs?) needs to support case insensitive
-comparisons. It was probably a mistake to follow PPC for new arches
-and we should have made everything case sensitive from the start. So I
-have a few questions for the DT historians. :)
+On Wed, 2018-08-22 at 19:47 -0500, Rob Herring wrote:
+> The default DT string handling in the kernel is node names and
+> compatibles are case insensitive and property names are case sensitive
+> (Sparc is the the only variation and is opposite). It seems only PPC
+> (and perhaps only Power Macs?) needs to support case insensitive
+> comparisons. It was probably a mistake to follow PPC for new arches
+> and we should have made everything case sensitive from the start. So I
+> have a few questions for the DT historians. :)
 
-What PPC systems are case insensitive? Can we limit that to certain systems?
+Open Firmware itself is insensitive.
 
-AFAICT, dtc at least (if not anything FDT based) has always been case
-sensitive at least for node and property names. I'm not sure about
-compatible strings?
+> What PPC systems are case insensitive? Can we limit that to certain systems?
 
-Anyone see potential issues with switching all platforms except PPC
-and Sparc to case sensitive comparisons?
+All PowerMacs at least, the problem is that I don't have DT images or
+access to all the historical systems (and yes some people occasionally
+still use them) to properly test a change in that area.
 
-Rob
+> AFAICT, dtc at least (if not anything FDT based) has always been case
+> sensitive at least for node and property names. I'm not sure about
+> compatible strings?
+> 
+> Anyone see potential issues with switching all platforms except PPC
+> and Sparc to case sensitive comparisons?
+
+Cheers,
+Ben.
