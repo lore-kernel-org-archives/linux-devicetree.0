@@ -1,62 +1,65 @@
 From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 1/2] GPIO: add single-register gpio via creg driver
-Date: Thu, 23 Aug 2018 08:08:34 -0700
-Message-ID: <c5f75b43-6ef3-31e2-0366-b6c8623d3f5d@infradead.org>
-References: <20180823150013.21837-1-Eugeniy.Paltsev@synopsys.com>
- <20180823150013.21837-2-Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH V4 3/3] Input: new da7280 haptic driver
+Date: Thu, 23 Aug 2018 08:28:24 -0700
+Message-ID: <6115d6ca-8df6-1830-3c61-681610d8f2b0@infradead.org>
+References: <cover.1534830272.git.Roy.Im@diasemi.com>
+ <2c28a93093c075e0145b70e7bc999f2654d0431d.1534830272.git.Roy.Im@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180823150013.21837-2-Eugeniy.Paltsev@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2c28a93093c075e0145b70e7bc999f2654d0431d.1534830272.git.Roy.Im@diasemi.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, linux-snps-arc@lists.infradead.org, linux-gpio@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roy Im <roy.im.opensource@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2018 08:00 AM, Eugeniy Paltsev wrote:
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 71c0ab46f216..0f9cc1582cab 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -430,6 +430,15 @@ config GPIO_REG
->  	  A 32-bit single register GPIO fixed in/out implementation.  This
->  	  can be used to represent any register as a set of GPIO signals.
+On 08/20/2018 10:44 PM, Roy Im wrote:
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index ca59a2b..6e0de69 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -851,4 +851,16 @@ config INPUT_SC27XX_VIBRA
+>  	  To compile this driver as a module, choose M here. The module will
+>  	  be called sc27xx_vibra.
 >  
-> +config GPIO_SNPS_CREG
-> +	bool "GPIO via CREG (Control REGisers) driver"
 
-	                             REGisters)
+Hi,
+Can you explain the "depends on" below, please.
 
-> +	select OF_GPIO
+> +config INPUT_DA7280_HAPTICS
+> +	tristate "Dialog Semiconductor DA7280 haptics support"
+> +	depends on (INPUT && I2C && SYSFS) || PWM
+> +	select INPUT_FF_MEMLESS
+> +	select REGMAP_I2C
+
+If INPUT is disabled, and I2C is disabled, and SYSFS is disabled, but PWM=y,
+then the "select"s will have problems with unmet dependencies.
+
 > +	help
-> +	  This driver supports GPIOs via CREG on various Synopsys SoCs.
-> +	  This is is single-register MMIO gpio driver for complex cases
+> +	  Say Y to enable support for the haptics controller on
+> +	  Dialog DA7280 chip.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called da7280-haptic.
 
-	  This is a                  MMIO GPIO
-
-> +	  where only several fields in register belong to GPIO and
-
-	                            in a register
-
-> +	  each GPIO owns field with different length and on/off values.
-
-maybe:
-	                 fields with different lengths
+That module name doesn't match what's in the Makefile (below).
 
 > +
->  config GPIO_SPEAR_SPICS
->  	bool "ST SPEAr13xx SPI Chip Select as GPIO support"
->  	depends on PLAT_SPEAR
+>  endif
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index 9d0f9d1..d941348 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -25,6 +25,7 @@ obj-$(CONFIG_INPUT_CMA3000)		+= cma3000_d0x.o
+>  obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
+>  obj-$(CONFIG_INPUT_COBALT_BTNS)		+= cobalt_btns.o
+>  obj-$(CONFIG_INPUT_CPCAP_PWRBUTTON)	+= cpcap-pwrbutton.o
+> +obj-$(CONFIG_INPUT_DA7280_HAPTICS)	+= da7280.o
+>  obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
+>  obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
+>  obj-$(CONFIG_INPUT_DA9063_ONKEY)	+= da9063_onkey.o
 
 
 -- 
