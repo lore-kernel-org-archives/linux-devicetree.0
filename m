@@ -1,109 +1,111 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/4] bus: Add DT bindings for 96Boards low speed connector
-Date: Thu, 23 Aug 2018 08:45:52 -0500
-Message-ID: <CAL_JsqK2tdGHkeJ0OceLbBiki7VUqKrstDSiB7KRpZ-FExHtQw@mail.gmail.com>
-References: <20180823103332.32047-1-linus.walleij@linaro.org>
- <20180823103332.32047-4-linus.walleij@linaro.org>
+From: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 0/8] drm/rockchip: migrate to common dw-mipi-dsi bridge
+ and dual-dsi
+Date: Thu, 23 Aug 2018 13:48:49 +0000
+Message-ID: <d0e324cb-45f9-9386-821d-64f1a3474ee7@st.com>
+References: <20180821140515.22246-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180823103332.32047-4-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Michal Simek <michal.simek@xilinx.com>, dev@lists.96boards.org, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180821140515.22246-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Content-Language: en-US
+Content-ID: <D8EF1E4E84E51443B4F30D73C64AE2AD-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hoegsberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 5:33 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> We need to be able to grab resources on a 96Boards low
-> speed connector to populate and use a daughterboard, so
-> define some very rudimentary properties simply passing
-> phandles for the resources used on the low speed
-> connector.
+Hi Heiko,
 
-This only works for describing what's on the connector, but does
-nothing for describing downstream devices on the connector. We already
-have a way to do the former with label properties at least for uart,
-i2c and spi. And gpio has it's own method of labeling lines.
+On 08/21/2018 04:05 PM, Heiko Stuebner wrote:
+> The Rockchip DSI driver was separate till now, not using the common
+> bridge driver that was introduced a bit later. So this series migrates
+> over to use that common bridge driver and then also adds support for
+> dual-dsi to both the bridge and Rockchip glue code.
+> 
+> The bridge-migration itself is based on Nickeys earlier v8
+> work, but adapted to current kernels and with a new split between probe
+> and bind, so that we do not create and drop the dsi-host on each deferred
+> bind attempt.
+> 
+> changes in v2:
+> - rebase against newer drm code (dsi-bridge+rockchip changes)
+> - add SPDX header to new glue driver
+> - expect regular interface lanes from panel (like 4) not the double number
+>    Similar to tegra
+> - keep links to both master and slave
+> changes in v3:
+> - don't defer in bridge_attach, instead add ability to check for finalized
+>    panel attachement, for example in bind
+> - address bridge-conversion comments from Andrzej:
+>    - include ordering
+>    - moved hwaccess from mode_set to enable callback
+>    - move pllref_clk enablement to bind (needed by bridge mode_set->lane_mbps)
+> - limited slave settings to dw_mipi_dsi_set_slave
+> - address dual-dsi comments from Philippe:
+>    - remove unneeded separate variables
+>    - remove unneeded second slave settings
+>    - disable slave before master
+>    - lane-sum calculation comments
+> changes in v4:
+> - rebase against some legacy rockchip-dsi changes
+> - add dsi-component only after panel has attached to dsi host
+>    This solves quite some concurrency problems that happen when trying
+>    to determine dsi-panel availability
+> changes in v5:
+> - use driver-internal method to find second host
+> - drop of-graph based dsi method for it
 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../bus/96boards,low-speed-connector.txt      | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/96boards,low-speed-connector.txt
->
-> diff --git a/Documentation/devicetree/bindings/bus/96boards,low-speed-connector.txt b/Documentation/devicetree/bindings/bus/96boards,low-speed-connector.txt
-> new file mode 100644
-> index 000000000000..6631b3edd01f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/96boards,low-speed-connector.txt
-> @@ -0,0 +1,50 @@
-> +96Boards Low Speed Connectors
-> +
-> +The 96Boards connectors represent a non-dicoverable Low Speed (LS)
-> +and High Speed (HS) external bus on the 96Board development
-> +boards. Each 96Board presents both of these connectors.
-> +
-> +The Low Speed (LS) connector is a 40 pin 2x20 female pin header:
-> +- Power
-> +- Two buttons: power and reset
-> +- 2 x UART one optional with just RX/TX, one required with modem
-> +  CTS/RTS
-> +- 2 x I2C
-> +- 1 x SPI
-> +- 1 x I2S (audio)
-> +- 12 x GPIO lines named GPIO-A thru GPIO-L
-> +
-> +Further details on the electronics and signals are available in
-> +"96Boards Consumer Edition, Low Cost Hardware Platform Specification"
-> +As of writing version 1.0, January 2015.
-> +
-> +Required properties:
-> +
-> +- compatible: shall be "96boards,low-speed-connector"
-> +- i2c0: phandle to the I2C0 bus
-> +- i2c1: phandle to the I2C1 bus
-> +- spi: phandle to the SPI bus
-> +- gpios: a list of phandles to the GPIOs connected to the
-> +  connector. The handles need to be uniformly specified with the
-> +  0 flag as the connector is not the end consumer.
-> +
-> +Example:
-> +
-> +lscon: connector {
-> +       compatible = "96boards,low-speed-connector";
-> +       i2c0 = <&i2csw_0>;
-> +       i2c1 = <&i2csw_1>;
-> +       spi = <&spi0>;
+FYI, Yannick tested successfully the v5 version on stm32 boards. Note 
+that drm stm32 drivers do not use bind/unbind & dual-dsi so this email 
+is simply to share with you this minor information: "v5 patch does not 
+break stm32 dsi", hope it helps a little.
+Many thanks,
+Philippe :-)
 
-David G has suggested using aliases (in this node, not top-level) for
-this purpose of mapping things like spi and i2c, and I think that's a
-good use of aliases (versus spi and i2c aliases at the top level which
-I don't). The hard part is still how to structure the child devices.
-
-> +       gpios = <&gpio 36 0>, /* GPIO-A */
-
-We defined 'gpio-map' specifically for handling GPIOs thru connectors.
-It's in the DT spec (though not a released version yet). Use it here.
-
-Sorry, but the only halfway solution I'm going to accept is one which
-can evolve into a full solution. Define the basic structure and add
-each interface one by one. Maybe that starts with just:
-
-lscon: connector {
-       compatible = "96boards,low-speed-connector";
-};
-
-That's not really my recommendation as that's really just kicking the
-can down the road.
-
-Rob
+> 
+> Unchanged from review comments:
+> - kept dw_mipi_dsi_bind, as the dsi->bridge member is only part of the
+>    bridge drivers struct, so not accessible from glue drivers
+> - kept dual-dsi handling that mimicks tegra
+> 
+> 
+> Heiko Stuebner (4):
+>    drm/bridge/synopsys: dsi: move mipi_dsi_host_unregister to
+>      __dw_mipi_dsi_remove
+>    drm/bridge/synopsys: dsi: don't call __dw_mipi_dsi_probe from
+>      dw_mipi_dsi_bind
+>    drm/bridge/synopsys: dsi: add ability to have glue-specific attach and
+>      detach
+>    drm/rockchip: dsi: add dual mipi support
+> 
+> Nickey Yang (3):
+>    dt-bindings: display: rockchip: update DSI controller
+>    drm/rockchip: dsi: migrate to use dw-mipi-dsi bridge driver
+>    drm/bridge/synopsys: dsi: add dual-dsi support
+> 
+>   .../display/rockchip/dw_mipi_dsi_rockchip.txt |   23 +-
+>   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c |  114 +-
+>   drivers/gpu/drm/rockchip/Kconfig              |    2 +-
+>   drivers/gpu/drm/rockchip/Makefile             |    2 +-
+>   .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 1044 +++++++++++++
+>   drivers/gpu/drm/rockchip/dw-mipi-dsi.c        | 1349 -----------------
+>   drivers/gpu/drm/rockchip/rockchip_drm_drv.c   |    2 +-
+>   drivers/gpu/drm/rockchip/rockchip_drm_drv.h   |    3 +-
+>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c   |    3 +
+>   drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |    4 +
+>   drivers/gpu/drm/rockchip/rockchip_vop_reg.c   |    1 +
+>   include/drm/bridge/dw_mipi_dsi.h              |   14 +-
+>   12 files changed, 1182 insertions(+), 1379 deletions(-)
+>   create mode 100644 drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+>   delete mode 100644 drivers/gpu/drm/rockchip/dw-mipi-dsi.c
+> 
