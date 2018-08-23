@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely@arm.com>
 Subject: Re: DT case sensitivity
-Date: Thu, 23 Aug 2018 12:56:10 +0100
-Message-ID: <ffede83b-cdfe-7f96-3678-f63522c4ef40@arm.com>
+Date: Thu, 23 Aug 2018 13:48:00 +0100
+Message-ID: <d0e8b2f1-788e-2ad8-10de-7bbc412c301d@arm.com>
 References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
  <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
  <CAL_JsqKqkO31ekVMFKs+osLvKdZyDzRowF1thWXn5=tWhrJgvw@mail.gmail.com>
@@ -9,11 +9,12 @@ References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
  <13bf5b39-0461-351e-57e3-60264eaa374d@arm.com>
  <CAL_Jsq+1T8k5mtc-DgDBtX3Qco9sQG9RWv6FTZ8NXppNbNg3Ww@mail.gmail.com>
  <e9009f6dd3aded2b9aa735973f4eed8386dd9afb.camel@kernel.crashing.org>
+ <CAL_JsqKnbFAydf7ets0=KySm3P3b_7np-EVWz3Gh6qO+imJ+eg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <e9009f6dd3aded2b9aa735973f4eed8386dd9afb.camel@kernel.crashing.org>
+In-Reply-To: <CAL_JsqKnbFAydf7ets0=KySm3P3b_7np-EVWz3Gh6qO+imJ+eg@mail.gmail.com>
 Content-Language: en-GB
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
  <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
@@ -25,52 +26,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Sender: "Linuxppc-dev"
  <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh@kernel.org>
+To: Rob Herring <robh@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Kumar Gala <kumar.gala@linaro.org>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On 23/08/2018 12:47, Benjamin Herrenschmidt wrote:
-> On Thu, 2018-08-23 at 06:43 -0500, Rob Herring wrote:
->> On Thu, Aug 23, 2018 at 4:02 AM Grant Likely <grant.likely@arm.com> wrot=
-e:
+On 23/08/2018 13:08, Rob Herring wrote:
+> On Thu, Aug 23, 2018 at 6:48 AM Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+>>
+>> On Thu, 2018-08-23 at 06:43 -0500, Rob Herring wrote:
+>>> On Thu, Aug 23, 2018 at 4:02 AM Grant Likely <grant.likely@arm.com> wro=
+te:
+>>>>
+>>>>
+>>>> What problem are you trying to solve?
 >>>
+>>> I'm looking at removing device_node.name and using full_name instead
+>>> (which now is only the local node name plus unit-address). This means
+>>> replacing of_node_cmp() (and still some strcmp) calls in a lot of
+>>> places. I need to use either strncmp or strncasecmp instead.
 >>>
->>> What problem are you trying to solve?
+>>>> I would think making everything
+>>>> case insensitive would be the direction to go if you do anything. Leas=
+t
+>>>> possibility of breaking existing platforms in that scenario.
+>>>
+>>> Really? Even if all the "new" arches are effectively case sensitive?
+>>> Anything using dtc and libfdt are (and json-schema certainly will be).
+>>> But I frequently say the kernel's job is not DT validation, so you
+>>> pass crap in, you get undefined results.
 >>
->> I'm looking at removing device_node.name and using full_name instead
->> (which now is only the local node name plus unit-address). This means
->> replacing of_node_cmp() (and still some strcmp) calls in a lot of
->> places. I need to use either strncmp or strncasecmp instead.
-Makes sense. Simplifies the code.
-
+>> I tend to agree with Grant. Let's put it this way:
 >>
->>> I would think making everything
->>> case insensitive would be the direction to go if you do anything. Least
->>> possibility of breaking existing platforms in that scenario.
->>
->> Really? Even if all the "new" arches are effectively case sensitive?
->> Anything using dtc and libfdt are (and json-schema certainly will be).
->> But I frequently say the kernel's job is not DT validation, so you
->> pass crap in, you get undefined results.
+>> What is the drawback of being case insensitive ?
 >
-> I tend to agree with Grant. Let's put it this way:
->
-> What is the drawback of being case insensitive ?
->
-> Do we expect that there exist a case where we will want to distinguish
-> between nodes that have the same name with a different case ? >
-> If not, I don't see the point of being strict about it.
+> It's a more expensive comparison. I don't think it's a hot path, but
+> we do do a lot of string compares.
 
-I'd also add that any place where there are two nodes or props with the
-same name, but different case, then it is probably a bug (or a really
-bad design). Going the direction of case-insensitive eliminates the
-possibility.
+I'd hazard to argue that the cost of the string compare will not be a
+source of performance problems when compared to doing a linear search
+everytime a DT lookup is performed. The search algorithm is far more
+problematic.
 
-I do understand that that you'd like the kernel to be strict about what
-it accepts, but that strictness probably makes more sense back in DTC
-where it can also be checked against schema.
+> Property names are case sensitive already. It would be nice if
+> everything was treated the same way.
+>
+> If we're case sensitive then it is well defined which node we'll match
+> and which one will be ignored. Otherwise, it is whichever one we
+> happen to match first.
+
+If case-insensitive-always is chosen, then the kernel should probably
+complain at add node time if another matching node name already exists.
+That's a relatively easy thing to test.
+
+You are right however that in the FDT world we're case-sensitive now and
+if it is relaxed then we're never going back. You could try switching
+everyone over to case-sensitive and see if anything falls out in
+linux-next for a few cycles. I would not touch the PPC or SPARC
+behaviour. I don't think it is worth the risk to make the kernel more
+strict when we cannot test the result. Only if everything was changed to
+case-insensitive would it make sense to touch PPC and SPARC at the same
+time because it reduces the number of platform variations.
+
+If you do change compatible matches to be case sensitive, then you
+should be prepared to fix bugs where the driver uses a different case
+from the DTS. In which case drivers will need to be modified to accept
+the deviant property names.
 
 g.
+
 IMPORTANT NOTICE: The contents of this email and any attachments are confid=
 ential and may also be privileged. If you are not the intended recipient, p=
 lease notify the sender immediately and do not disclose the contents to any=
