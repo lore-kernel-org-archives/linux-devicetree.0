@@ -1,181 +1,100 @@
-From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: [PATCH v6 4/4] venus: firmware: register separate platform_device for firmware loader
-Date: Thu, 23 Aug 2018 19:58:48 +0530
-Message-ID: <1535034528-11590-5-git-send-email-vgarodia@codeaurora.org>
-References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org, vgarodia@codeaurora.org
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 9/9] arm64: dts: renesas: r8a774a1: Add FCPF and FCPV instances
+Date: Thu, 23 Aug 2018 14:43:08 +0100
+Message-ID: <1535031788-19907-10-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Add FCPF and FCPV instances to the r8a774a1 dtsi, similarly
+to what was done for the r8a7796 with commits 41dbbf0c5 ("arm64: dts:
+r8a7796: Add FCPF and FCPV instances"), 69490bc96 ("arm64: dts:
+renesas: r8a7796: Point FDP1 via FCPF to IPMMU-VI0"), and cef942d0b
+("arm64: dts: renesas: r8a7796: Point VSPI via FCPVI to IPMMU-VC0").
 
-This registers a firmware platform_device and associate it with
-video-firmware DT subnode. Then calls dma configure to initialize
-dma and iommu.
-
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 ---
- .../devicetree/bindings/media/qcom,venus.txt       | 13 +++++-
- drivers/media/platform/qcom/venus/core.c           | 14 +++++--
- drivers/media/platform/qcom/venus/firmware.c       | 49 ++++++++++++++++++++++
- drivers/media/platform/qcom/venus/firmware.h       |  2 +
- 4 files changed, 73 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 52 +++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-index 00d0d1b..7e04586 100644
---- a/Documentation/devicetree/bindings/media/qcom,venus.txt
-+++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-@@ -53,7 +53,7 @@
- 
- * Subnodes
- The Venus video-codec node must contain two subnodes representing
--video-decoder and video-encoder.
-+video-decoder and video-encoder, and one optional firmware subnode.
- 
- Every of video-encoder or video-decoder subnode should have:
- 
-@@ -79,6 +79,13 @@ Every of video-encoder or video-decoder subnode should have:
- 		    power domain which is responsible for collapsing
- 		    and restoring power to the subcore.
- 
-+The firmware subnode must have:
-+
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
-+
- * An Example
- 	video-codec@1d00000 {
- 		compatible = "qcom,msm8916-venus";
-@@ -105,4 +112,8 @@ Every of video-encoder or video-decoder subnode should have:
- 			clock-names = "core";
- 			power-domains = <&mmcc VENUS_CORE1_GDSC>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+index f23bbfd..5b2ee60 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+@@ -1260,6 +1260,58 @@
+ 			resets = <&cpg 408>;
  		};
-+
-+		video-firmware {
-+			iommus = <&apps_iommu 0x10b2 0x0>;
+ 
++		fcpf0: fcp@fe950000 {
++			compatible = "renesas,fcpf";
++			reg = <0 0xfe950000 0 0x200>;
++			clocks = <&cpg CPG_MOD 615>;
++			power-domains = <&sysc 14>;
++			resets = <&cpg 615>;
 +		};
- 	};
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 393994e..3bd3b8a 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -284,6 +284,14 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_runtime_disable;
- 
-+	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
-+	if (ret)
-+		goto err_runtime_disable;
 +
-+	ret = venus_firmware_init(core);
-+	if (ret)
-+		goto err_runtime_disable;
++		fcpvb0: fcp@fe96f000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfe96f000 0 0x200>;
++			clocks = <&cpg CPG_MOD 607>;
++			power-domains = <&sysc 14>;
++			resets = <&cpg 607>;
++		};
 +
- 	ret = venus_boot(core);
- 	if (ret)
- 		goto err_runtime_disable;
-@@ -308,10 +316,6 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_core_deinit;
- 
--	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
--	if (ret)
--		goto err_dev_unregister;
--
- 	ret = pm_runtime_put_sync(dev);
- 	if (ret)
- 		goto err_dev_unregister;
-@@ -347,6 +351,8 @@ static int venus_remove(struct platform_device *pdev)
- 	venus_shutdown(core);
- 	of_platform_depopulate(dev);
- 
-+	venus_firmware_deinit(core);
++		fcpvd0: fcp@fea27000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfea27000 0 0x200>;
++			clocks = <&cpg CPG_MOD 603>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 603>;
++			iommus = <&ipmmu_vi0 8>;
++		};
 +
- 	pm_runtime_put_sync(dev);
- 	pm_runtime_disable(dev);
- 
-diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-index 79b3858..86a26fb 100644
---- a/drivers/media/platform/qcom/venus/firmware.c
-+++ b/drivers/media/platform/qcom/venus/firmware.c
-@@ -20,6 +20,7 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/platform_device.h>
-+#include <linux/of_device.h>
- #include <linux/qcom_scm.h>
- #include <linux/sizes.h>
- #include <linux/soc/qcom/mdt_loader.h>
-@@ -228,3 +229,51 @@ int venus_shutdown(struct venus_core *core)
- 
- 	return ret;
- }
++		fcpvd1: fcp@fea2f000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfea2f000 0 0x200>;
++			clocks = <&cpg CPG_MOD 602>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 602>;
++			iommus = <&ipmmu_vi0 9>;
++		};
 +
-+int venus_firmware_init(struct venus_core *core)
-+{
-+	struct platform_device_info info;
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	int ret;
++		fcpvd2: fcp@fea37000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfea37000 0 0x200>;
++			clocks = <&cpg CPG_MOD 601>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 601>;
++			iommus = <&ipmmu_vi0 10>;
++		};
 +
-+	np = of_get_child_by_name(core->dev->of_node, "video-firmware");
-+	if (!np)
-+		return 0;
++		fcpvi0: fcp@fe9af000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfe9af000 0 0x200>;
++			clocks = <&cpg CPG_MOD 611>;
++			power-domains = <&sysc 14>;
++			resets = <&cpg 611>;
++			iommus = <&ipmmu_vc0 19>;
++		};
 +
-+	memset(&info, 0, sizeof(info));
-+	info.fwnode = &np->fwnode;
-+	info.parent = core->dev;
-+	info.name = np->name;
-+	info.dma_mask = DMA_BIT_MASK(32);
-+
-+	pdev = platform_device_register_full(&info);
-+	if (IS_ERR(pdev)) {
-+		of_node_put(np);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	pdev->dev.of_node = np;
-+
-+	ret = of_dma_configure(&pdev->dev, np);
-+	if (ret)
-+		dev_err(core->dev, "dma configure fail\n");
-+
-+	of_node_put(np);
-+
-+	if (ret)
-+		return ret;
-+
-+	core->no_tz = true;
-+	core->fw.dev = &pdev->dev;
-+
-+	return 0;
-+}
-+
-+void venus_firmware_deinit(struct venus_core *core)
-+{
-+	if (!core->fw.dev)
-+		return;
-+
-+	platform_device_unregister(to_platform_device(core->fw.dev));
-+}
-diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
-index f41b615..119a9a4 100644
---- a/drivers/media/platform/qcom/venus/firmware.h
-+++ b/drivers/media/platform/qcom/venus/firmware.h
-@@ -16,6 +16,8 @@
- 
- struct device;
- 
-+int venus_firmware_init(struct venus_core *core);
-+void venus_firmware_deinit(struct venus_core *core);
- int venus_boot(struct venus_core *core);
- int venus_shutdown(struct venus_core *core);
- int venus_set_hw_state(struct venus_core *core, bool suspend);
+ 		prr: chipid@fff00044 {
+ 			compatible = "renesas,prr";
+ 			reg = <0 0xfff00044 0 4>;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
