@@ -1,18 +1,93 @@
 From: Tony Xie <tony.xie@rock-chips.com>
 Subject: [PATCH] arm64: dts: rockchip: Add idle-states to device tree for rk3399
-Date: Fri, 24 Aug 2018 18:02:59 +0800
-Message-ID: <1535104980-8456-1-git-send-email-tony.xie@rock-chips.com>
+Date: Fri, 24 Aug 2018 18:03:00 +0800
+Message-ID: <1535104980-8456-2-git-send-email-tony.xie@rock-chips.com>
+References: <1535104980-8456-1-git-send-email-tony.xie@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535104980-8456-1-git-send-email-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Tony Xie (1):
-  arm64: dts: rockchip: Add idle-states to device tree for rk3399
-
+Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+---
  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 28 ++++++++++++++++++++++++++++
  1 file changed, 28 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index e0040b6..49fb57f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -111,6 +111,7 @@
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			clocks = <&cru ARMCLKL>;
+ 			dynamic-power-coefficient = <100>;
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu_l1: cpu@1 {
+@@ -120,6 +121,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKL>;
+ 			dynamic-power-coefficient = <100>;
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu_l2: cpu@2 {
+@@ -129,6 +131,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKL>;
+ 			dynamic-power-coefficient = <100>;
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu_l3: cpu@3 {
+@@ -138,6 +141,7 @@
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKL>;
+ 			dynamic-power-coefficient = <100>;
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu_b0: cpu@100 {
+@@ -148,6 +152,7 @@
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			clocks = <&cru ARMCLKB>;
+ 			dynamic-power-coefficient = <436>;
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu_b1: cpu@101 {
+@@ -157,6 +162,29 @@
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKB>;
+ 			dynamic-power-coefficient = <436>;
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
++		};
++
++		idle-states {
++			entry-method = "psci";
++
++			CPU_SLEEP: cpu-sleep {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x0010000>;
++				entry-latency-us = <120>;
++				exit-latency-us = <250>;
++				min-residency-us = <900>;
++			};
++
++			CLUSTER_SLEEP: cluster-sleep {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x1010000>;
++				entry-latency-us = <400>;
++				exit-latency-us = <500>;
++				min-residency-us = <2000>;
++			};
+ 		};
+ 	};
+ 
 -- 
 1.9.1
