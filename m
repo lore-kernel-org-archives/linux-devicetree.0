@@ -1,94 +1,82 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 0/8] Tegra SDHCI support HS400 on Tegra210 and Tegra186
-Date: Fri, 24 Aug 2018 11:11:03 +0200
-Message-ID: <20180824091103.GA9100@ulmo>
-References: <1533924845-1466-1-git-send-email-avienamo@nvidia.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/3] dt-bindings: can: rcar_can: Add r8a774a1 support
+Date: Fri, 24 Aug 2018 11:17:06 +0200
+Message-ID: <20180824091706.pcxymf7suyxcdprz@verge.net.au>
+References: <1535029653-7418-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1535029653-7418-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1533924845-1466-1-git-send-email-avienamo@nvidia.com>
+In-Reply-To: <1535029653-7418-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 23, 2018 at 02:07:33PM +0100, Fabrizio Castro wrote:
+> Document RZ/G2M (r8a774a1) SoC specific bindings and RZ/G2
+> generic bindings.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Are we sure these clocks are for all RZ/G2 SoCs?
+If so:
 
-On Fri, Aug 10, 2018 at 09:13:57PM +0300, Aapo Vienamo wrote:
-> Hi all,
-> This series implements support for HS400 signaling on Tegra210 and
-> Tegra186. This includes programming the DQS trimmer values, implementing
-> enhanced strobe and HS400 delay line calibration.
->=20
-> This series depends on the "Tegra SDHCI add support for HS200 and UHS
-> signaling" series.
->=20
-> Changelog:
-> v2:
-> 	- Document in dt-bindings which controllers support HS400
-> 	- Use val instead of reg in tegra_sdhci_set_dqs_trim()
-> 	- Change "dt" to "DT" in "mmc: tegra: Parse and program DQS trim
-> 	  value" commit message
-> 	- Add spaces around << in tegra_sdhci_set_dqs_trim()
-> 	- Make the "mmc: tegra: Implement HS400 enhanced strobe" commit
-> 	  message more detailed
-> 	- Remove a debug print from tegra_sdhci_hs400_enhanced_strobe()
-> 	- Add blank lines around if-else-block in
-> 	  tegra_sdhci_hs400_enhanced_strobe()
-> 	- Use val instead of reg in tegra_sdhci_hs400_enhanced_strobe()
-> 	- Make commit message of "mmc: tegra: Implement HS400 delay line
-> 	  calibration" more detailed
->=20
-> Aapo Vienamo (8):
->   dt-bindings: mmc: Add DQS trim value to Tegra SDHCI
->   mmc: tegra: Parse and program DQS trim value
->   mmc: tegra: Implement HS400 enhanced strobe
->   mmc: tegra: Implement HS400 delay line calibration
->   arm64: dts: tegra186: Add SDMMC4 DQS trim value
->   arm64: dts: tegra210: Add SDMMC4 DQS trim value
->   arm64: dts: tegra186: Enable HS400
->   arm64: dts: tegra210: Enable HS400
->=20
->  .../bindings/mmc/nvidia,tegra20-sdhci.txt          |  4 ++
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  2 +
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  2 +
->  drivers/mmc/host/sdhci-tegra.c                     | 84 ++++++++++++++++=
-+++++-
->  4 files changed, 89 insertions(+), 3 deletions(-)
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Ulf, Adrian,
-
-Aapo just reminded me of this small series that also has a dependency on
-the UHS signalling series posted earlier. I think it's easiest if I just
-stash this on top of the existing branch that I have and send this along
-with the rest as part of a pull request early after v4.19-rc1.
-
-Thierry
-
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlt/y6QACgkQ3SOs138+
-s6Geow/8CNBjRVUWrjNn8USykHyGclhdyCpr/77F6uuL3MmDMAVZGt1U7o0RTDYb
-T55DEJ+4e1uoaWjSbd+DnPQ+IHKON+sSykG0rrGJvQxnEWEYZjnzfKkmfpnQZPna
-R13JQlTVtRCa4/QYBJUMu1Do9e4kCgrA5Kd8h1cRTrAerQkJXWX6mELxnYx8Bk6R
-zYefZ7pPxjQCoRLD3sMiLLsd+hxdLKsuIda5ztEySErZWQYZzhHGgltvDPkfeZ//
-N9ZmGHyLSpwsGj2WL13SzRCbgqUt8s6ZtgtEz4W3WqNq+Dw1Gid0WtdUeVvzQHH8
-eK6F2keTobhlMEqQCgyWd3HGiugnZCFaEa2nAa8lcGXNhxKWLVxDfJ7QGtSeATVj
-5zL+sm7obWV+juGM3U/IHW/u4wn8N+BgAT1sm0f91rDTMcOQyOIh8gBhX/vNm60h
-OJaoZKVv0NnDK9E3VJ+Iw3a4b1DODnTl8AX5wpBYMk+QdG8OiLJjGPLGwBFN1vtg
-xnzRej7hSSkQOaFB8GZGppXibn63qZ19gLM1j1GIJElQGVVUtBTmXKcdZ2WwwIAB
-fmSAj0yItCi6UacuoVzTkdaYb60F86wDF9ohUlehD1fLJOFWpxZzfq6sZQpJyMie
-x7OGxoHF6l84SSz6pUVXNn4LByqu4n6Nweh3FcrpWEvjJEiNbdc=
-=gC/o
------END PGP SIGNATURE-----
-
---RnlQjJ0d97Da+TV1--
+> ---
+> 
+> This patch applies on next-20180823
+> 
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> index 94a7f33..ae8fccc 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> @@ -4,6 +4,7 @@ Renesas R-Car CAN controller Device Tree Bindings
+>  Required properties:
+>  - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A7743 SoC.
+>  	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
+> +	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 SoC.
+>  	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
+>  	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+>  	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+> @@ -17,6 +18,7 @@ Required properties:
+>  	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+>  	      compatible device.
+>  	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device.
+> +	      "renesas,rzg-gen2-can" for a generic RZ/G2 compatible device.
+>  	      When compatible with the generic version, nodes must list the
+>  	      SoC-specific version corresponding to the platform first
+>  	      followed by the generic version.
+> @@ -24,7 +26,9 @@ Required properties:
+>  - reg: physical base address and size of the R-Car CAN register map.
+>  - interrupts: interrupt specifier for the sole interrupt.
+>  - clocks: phandles and clock specifiers for 3 CAN clock inputs.
+> -- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk".
+> +- clock-names: 2 clock input name strings for RZ/G2: "clkp1", "can_clk".
+> +	       3 clock input name strings for every other SoC: "clkp1", "clkp2",
+> +	       "can_clk".
+>  - pinctrl-0: pin control group to be used for this controller.
+>  - pinctrl-names: must be "default".
+>  
+> @@ -41,8 +45,9 @@ using the below properties:
+>  Optional properties:
+>  - renesas,can-clock-select: R-Car CAN Clock Source Select. Valid values are:
+>  			    <0x0> (default) : Peripheral clock (clkp1)
+> -			    <0x1> : Peripheral clock (clkp2)
+> -			    <0x3> : Externally input clock
+> +			    <0x1> : Peripheral clock (clkp2) (not supported by
+> +				    RZ/G2 devices)
+> +			    <0x3> : External input clock
+>  
+>  Example
+>  -------
+> -- 
+> 2.7.4
+> 
