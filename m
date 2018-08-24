@@ -1,152 +1,117 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v2 1/3] dt-bindings: power: Add ZynqMP power domain
- bindings
-Date: Fri, 24 Aug 2018 22:22:03 +0000
-Message-ID: <CY1PR02MB2138CD14431A976812492D0BB8360@CY1PR02MB2138.namprd02.prod.outlook.com>
-References: <1534447304-12919-1-git-send-email-jollys@xilinx.com>
- <1534447304-12919-2-git-send-email-jollys@xilinx.com>
- <20180820194628.GA26783@bogus>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: Add DT bindings documentation for
+ Allwinner Thermal Sensor Controller
+Date: Fri, 24 Aug 2018 16:03:40 -0700
+Message-ID: <20180824230338.GA19399@localhost.localdomain>
+References: <20180804070355.14857-1-manu@freebsd.org>
+ <20180820111755.rzg7l2lznmbpuf2e@flea>
+ <CAL_JsqLVQDRH1esAXghfQdxmp+iorWVCArM2qTwjbgmQzmhzQw@mail.gmail.com>
+ <20180820140737.xmqhu5ndqzehvkql@flea>
+ <20180820162715.49e6d8a469ece983f3c1d288@bidouilliste.com>
+ <20180824145840.isdcg3fr6mw4ntzg@flea>
+ <20180824215921.59d060b54eb3a1e7d1552bde@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180820194628.GA26783@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180824215921.59d060b54eb3a1e7d1552bde@bidouilliste.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "andy.gross@linaro.org" <andy.gross@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, Michal Simek <michals@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>Rajan Vaja <RAJANV@xilinx.com>
+To: Emmanuel Vadot <manu@bidouilliste.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Emmanuel Vadot <manu@freebsd.org>, Chen-Yu Tsai <wens@csie.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Monday, August 20, 2018 12:46 PM
-> To: Jolly Shah <JOLLYS@xilinx.com>
-> Cc: matthias.bgg@gmail.com; andy.gross@linaro.org; shawnguo@kernel.org;
-> geert+renesas@glider.be; bjorn.andersson@linaro.org;
-> sean.wang@mediatek.com; m.szyprowski@samsung.com; Michal Simek
-> <michals@xilinx.com>; mark.rutland@arm.com; Rajan Vaja
-> <RAJANV@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Rajan Vaja
-> <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>
-> Subject: Re: [PATCH v2 1/3] dt-bindings: power: Add ZynqMP power domain
-> bindings
+On Fri, Aug 24, 2018 at 09:59:21PM +0200, Emmanuel Vadot wrote:
 >=20
-> On Thu, Aug 16, 2018 at 12:21:42PM -0700, Jolly Shah wrote:
-> > From: Rajan Vaja <rajan.vaja@xilinx.com>
-> >
-> > Add documentation to describe ZynqMP power domain bindings.
-> >
-> > Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> > ---
-> >  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       | 47
-> ++++++++++++++++++++++
+>  Hi,
 >=20
-> This should be with all the other power domain bindings.
+> On Fri, 24 Aug 2018 16:58:40 +0200
+> Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >=20
-
-The firmware node has clock, reset and power domain subnodes. Please sugges=
-t the right location for binding.
-
-> >  1 file changed, 47 insertions(+)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
-> > re.txt
-> > b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
-> > re.txt
-> > index d215d15..5fa10a0 100644
-> > ---
-> > a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
-> > re.txt
-> > +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-fi
-> > +++ rmware.txt
-> > @@ -64,6 +64,29 @@ Output clocks are registered based on clock
-> > information received  from firmware. Output clocks indexes are
-> > mentioned in  include/dt-bindings/clock/xlnx,zynqmp-clk.h.
-> >
-> > +-----------------------------------------------------------
-> > +Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
-> > +-----------------------------------------------------------
-> > +The binding for zynqmp-power-controller follow the common generic PM
-> > +domain binding[1].
-> > +
-> > +[1] Documentation/devicetree/bindings/power/power_domain.txt
-> > +
-> > +=3D=3D Zynq MPSoC Generic PM Domain Node =3D=3D
-> > +
-> > +Required properties:
-> > + - compatible:	Must be: "xlnx,zynqmp-power-controller"
-> > +
-> > +This node contains a number of subnodes, each representing a single
-> > +PM domain that PM domain consumer devices reference.
-> > +
-> > +=3D=3D PM Domain Nodes =3D=3D
-> > +
-> > +Required properties:
-> > + - #power-domain-cells:	Number of cells in a PM domain specifier. Must
-> be 0.
-> > + - pd-id:		Domain identifier as defined by platform firmware.
-> > +			This identifier is passed to the PM firmware.
+> > Hi,
+> >=20
+> > On Mon, Aug 20, 2018 at 04:27:15PM +0200, Emmanuel Vadot wrote:
+> > > On Mon, 20 Aug 2018 16:07:37 +0200
+> > > Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >=20
+> > > > On Mon, Aug 20, 2018 at 07:41:22AM -0600, Rob Herring wrote:
+> > > > > On Mon, Aug 20, 2018 at 5:17 AM Maxime Ripard <maxime.ripard@boot=
+lin.com> wrote:
+> > > > > >
+> > > > > > On Sat, Aug 04, 2018 at 09:03:49AM +0200, Emmanuel Vadot wrote:
+> > > > > > > This patch adds documentation for Device-Tree bindings for th=
+e Allwinner
+> > > > > > > Thermal Sensor Controller found on the H3, H5 and A64 SoCs
+> > > > > > >
+> > > > > > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+> > > > > >
+> > > > > > I'm not going to merge a binding for a device that doesn't have=
+ any
+> > > > > > driver implemented at the moment in Linux.
+> > > > >=20
+> > > > > I'll take it then. Linux is not the only DT client.
+> > > >=20
+> > > > Then don't complain if we ever have to break the ABI. We never test=
+ed
+> > > > that hardware, never had any code running on it, and it *will* cause
+> > > > some issues. For example, the calibration data have never been used
+> > > > and how they should be represented have never been described, since=
+ no
+> > > > one ever actually tried to use it.
+> > > >=20
+> > > > And sure, Linux is not the only DT client. Just like FreeBSD isn't.
+> > >=20
+> > >  What kind of data would you need for me to make things better ?
+> > >  We have the driver in FreeBSD for almost two years now, whne I start=
+ed
+> > > to see how to upstream it I noticed a lot of problems and spent 4 or 5
+> > > days to try on all the SoCs mentionned in the serie, the only SoC I
+> > > didn't include it the A83T as for some reason I couldn't make the
+> > > driver work.
+> >=20
+> > Do you have a link to that driver?=20
 >=20
-> Make this a cell for the power domain consumer.
+>  https://github.com/freebsd/freebsd/blob/master/sys/arm/allwinner/aw_ther=
+mal.c
 >=20
-
-I am not clear here. Do you suggest to move pd-id property under consumer n=
-odes? Right now, consumer nodes use power-domains property as below:
-
-usb0: usb0@ff9d0000 {
-                        #address-cells =3D <2>;
-	          ...................................................
-                        power-domains =3D <&pd_usb0>;
-	};
-
-Thanks,
-Jolly Shah
-
-> > +
-> >  -------
-> >  Example
-> >  -------
-> > @@ -78,5 +101,29 @@ firmware {
-> >  			clocks =3D <&pss_ref_clk>, <&video_clk>,
-> <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
-> >  			clock-names =3D "pss_ref_clk", "video_clk",
-> "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
-> >  		};
-> > +		zynqmp-power-controller {
-> > +			compatible =3D "xlnx,zynqmp-power-controller";
-> > +
-> > +			pd_usb0: pd-usb0 {
-> > +				pd-id =3D <22>;
-> > +				#power-domain-cells =3D <0>;
-> > +			};
-> > +
-> > +			pd_sata: pd-sata {
-> > +				pd-id =3D <28>;
-> > +				#power-domain-cells =3D <0>;
-> > +			};
-> > +
-> > +			pd_gpu : pd-gpu {
-> > +				pd-id =3D <58 20 21>;
-> > +				#power-domain-cells =3D <0>;
-> > +			};
-> > +		};
-> >  	};
-> >  };
-> > +
-> > +sata0: ahci@SATA_AHCI_HBA {
+> > How and how much did you test it?
 >=20
-> Don't use defines in unit-addresses (or reg for that matter). It's pointl=
-ess
-> indirection.
+>  Using a cheap IR thermometer as it's all I can afford.
+>  Then running multiples cpufreq-a53 process and comparing the result.
+>  Did the same without using the calibration data, result where closer
+> when I used them.
 >=20
-> > +	...
-> > +	power-domains =3D <&pd_sata>;
-> > +	...
-> > +};
-> > --
-> > 2.7.4
-> >
+> > Are you using the calibration data stored in the SID?
+>=20
+>  Yes, which is why the serie contain the nvmem cell for the SID.
+>=20
+> >=20
+> > > I just hope that you understand that we cannot wait for Linux to
+> > > have a driver to have some bindings.
+> >=20
+> > Just like I'm sure you can understand that just merging the DT bits
+> > without testing anything caused some troubles in the past, and I don't
+> > want to discover it in a year from now.
+>=20
+>  I do, I don't like wrong DT info as much as you do I think. I had
+> the unfortunate event to find that the sun4i-a10-timer compatible used
+> in every soc is plain wrong for !A10 and !A13, patches comming soon.
+>  I want those bits merged but I also want that they reflect reality,
+> this is not a hard driver to do, NetBSD also have one I think, maybe
+> OpenBSD do to.
+
+
+I would prefer to see a series of DT bindings + driver. Can you send
+your next iteration with the driver so we can review both together?
+
+>=20
+> > Maxime
+> >=20
+> > --=20
+> > Maxime Ripard, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+>=20
+>=20
+> --=20
+> Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
