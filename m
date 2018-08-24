@@ -1,41 +1,51 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 6/6] usb: gadget: udc: renesas_usb3: Add r8a774a1 support
-Date: Fri, 24 Aug 2018 08:56:15 +0100
-Message-ID: <1535097375-5561-7-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1535097375-5561-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v6 5/5] clk: imx: add clock driver for i.MX8MQ CCM
+Date: Fri, 24 Aug 2018 09:58:27 +0200
+Message-ID: <20180824075827.l54jghjbetulzntg@pengutronix.de>
+References: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com>
+ <1534945703-4730-6-git-send-email-abel.vesa@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535097375-5561-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Disposition: inline
+In-Reply-To: <1534945703-4730-6-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@linux.com>, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document RZ/G2M (R8A774A1) SoC bindings.
+On Wed, Aug 22, 2018 at 04:48:23PM +0300, Abel Vesa wrote:
+> From: Lucas Stach <l.stach@pengutronix.de>
+> 
+> Add driver for the Clock Control Module found on i.MX8MQ.
+> 
+> This is largely based on the downstream driver from Anson Huang and
+> Bai Ping at NXP, with only some small adaptions to mainline from me.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/usb/renesas_usb3.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+It's time to rephrase the commit message. With the new composite clock
+the adaptions are no longer that small.
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-index 2c071bb5..b22f0a5 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-@@ -2,11 +2,12 @@ Renesas Electronics USB3.0 Peripheral driver
- 
- Required properties:
-   - compatible: Must contain one of the following:
-+	- "renesas,r8a774a1-usb3-peri"
- 	- "renesas,r8a7795-usb3-peri"
- 	- "renesas,r8a7796-usb3-peri"
- 	- "renesas,r8a77965-usb3-peri"
--	- "renesas,rcar-gen3-usb3-peri" for a generic R-Car Gen3 compatible
--	  device
-+	- "renesas,rcar-gen3-usb3-peri" for a generic R-Car Gen3 or RZ/G2
-+	  compatible device
- 
-     When compatible with the generic version, nodes must list the
-     SoC-specific version corresponding to the platform first
+> +
+> +static int const clks_init_on[] __initconst = {
+> +	IMX8MQ_CLK_DRAM_CORE, IMX8MQ_CLK_AHB_CG,
+> +	IMX8MQ_CLK_NOC, IMX8MQ_CLK_NOC_APB,
+> +	IMX8MQ_CLK_USB_BUS, IMX8MQ_CLK_NAND_USDHC_BUS,
+> +	IMX8MQ_CLK_MAIN_AXI, IMX8MQ_CLK_A53_CG,
+> +	IMX8MQ_CLK_AUDIO_AHB_DIV, IMX8MQ_CLK_TMU_ROOT,
+> +	IMX8MQ_CLK_DRAM_APB,
+> +};
+
+This is unused and you seem to have converted all these clocks to add
+the CLK_IS_CRITICAL flag.
+
+Are all these really needed? some clocks like IMX8MQ_CLK_AUDIO_AHB_DIV,
+IMX8MQ_CLK_USB_BUS and IMX8MQ_CLK_NAND_USDHC_BUS look suspicious.
+
+Sascha
+
+
 -- 
-2.7.4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
