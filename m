@@ -1,102 +1,97 @@
-From: Emmanuel Vadot <manu@bidouilliste.com>
-Subject: Re: [PATCH 1/7] dt-bindings: Add DT bindings documentation for
- Allwinner Thermal Sensor Controller
-Date: Fri, 24 Aug 2018 21:59:21 +0200
-Message-ID: <20180824215921.59d060b54eb3a1e7d1552bde@bidouilliste.com>
-References: <20180804070355.14857-1-manu@freebsd.org>
-        <20180820111755.rzg7l2lznmbpuf2e@flea>
-        <CAL_JsqLVQDRH1esAXghfQdxmp+iorWVCArM2qTwjbgmQzmhzQw@mail.gmail.com>
-        <20180820140737.xmqhu5ndqzehvkql@flea>
-        <20180820162715.49e6d8a469ece983f3c1d288@bidouilliste.com>
-        <20180824145840.isdcg3fr6mw4ntzg@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v2 0/5] Wakeup GPIO support for SDM845 SoC
+Date: Fri, 24 Aug 2018 14:01:52 -0600
+Message-ID: <20180824200157.9993-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180824145840.isdcg3fr6mw4ntzg@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Emmanuel Vadot <manu@freebsd.org>, Chen-Yu Tsai <wens@csie.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
+To: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org
+Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
- Hi,
+Changes in v2:
+	- Compile and test on 4.18 on SDM845
+	- Fix IRQ map in patch #3
+	- Address review comments
+	(I still need to find a way to free memory allocated for PDC IRQ.)
+	- Specify type for IRQ in DT
+	- This series needs V3 of the PDC DT bingings [4]
+	- gic-v3 settings are also needed [5]
 
-On Fri, 24 Aug 2018 16:58:40 +0200
-Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+Changes in v1:
+        - Avoid GPIO-PDC map in .c file
+        - Trigger GPIO by writing to the hardware
+        - Hooked up to suspend/resume callbacks
+        - Dropped PDC DT bindings (see dependencies)
 
-> Hi,
-> 
-> On Mon, Aug 20, 2018 at 04:27:15PM +0200, Emmanuel Vadot wrote:
-> > On Mon, 20 Aug 2018 16:07:37 +0200
-> > Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > 
-> > > On Mon, Aug 20, 2018 at 07:41:22AM -0600, Rob Herring wrote:
-> > > > On Mon, Aug 20, 2018 at 5:17 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > >
-> > > > > On Sat, Aug 04, 2018 at 09:03:49AM +0200, Emmanuel Vadot wrote:
-> > > > > > This patch adds documentation for Device-Tree bindings for the Allwinner
-> > > > > > Thermal Sensor Controller found on the H3, H5 and A64 SoCs
-> > > > > >
-> > > > > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-> > > > >
-> > > > > I'm not going to merge a binding for a device that doesn't have any
-> > > > > driver implemented at the moment in Linux.
-> > > > 
-> > > > I'll take it then. Linux is not the only DT client.
-> > > 
-> > > Then don't complain if we ever have to break the ABI. We never tested
-> > > that hardware, never had any code running on it, and it *will* cause
-> > > some issues. For example, the calibration data have never been used
-> > > and how they should be represented have never been described, since no
-> > > one ever actually tried to use it.
-> > > 
-> > > And sure, Linux is not the only DT client. Just like FreeBSD isn't.
-> > 
-> >  What kind of data would you need for me to make things better ?
-> >  We have the driver in FreeBSD for almost two years now, whne I started
-> > to see how to upstream it I noticed a lot of problems and spent 4 or 5
-> > days to try on all the SoCs mentionned in the serie, the only SoC I
-> > didn't include it the A83T as for some reason I couldn't make the
-> > driver work.
-> 
-> Do you have a link to that driver? 
+This is an attempt at a solution to enable wake up from suspend and deep idle
+using GPIO as a wakeup source. The 845 uses a new interrupt controller (PDC)
+that lies in the always-on domain and can sense interrupts that are routed to
+it, when the GIC is powered off. It would then wakeup the GIC and replay the
+interrupt which would then be relayed to the AP. The PDC interrupt controller
+driver is merged upstream [1],[2]. The following set of patches extends the
+wakeup capability to GPIOs using the PDC. The TLMM pinctrl driver for the SoC
+available at [3].
 
- https://github.com/freebsd/freebsd/blob/master/sys/arm/allwinner/aw_thermal.c
+The complexity with the solution stems from the fact that only a selected few
+GPIO lines are routed to the PDC in addition the TLMMs. They are also from
+different banks on the pinctrl and the TLMM summary line is not routed to the
+PDC. Hence the PDC cannot be considered as parent of the TLMM irqchip (or can
+we ?). This is what it looks like -
 
-> How and how much did you test it?
+   [ PIN ] -----[ TLMM ]---------------> [ GIC ] ---> [ CPU ]
+      |                  <summary IRQ>       ^
+      |                                      |
+      ----------------------------------> [ PDC ]
+                <wakeup IRQs>
 
- Using a cheap IR thermometer as it's all I can afford.
- Then running multiples cpufreq-a53 process and comparing the result.
- Did the same without using the calibration data, result where closer
-when I used them.
+I had a brief discussion with Linus on this and the idea implemented is based
+on his suggestion.
 
-> Are you using the calibration data stored in the SID?
+When an IRQ (let's call this latent IRQ) for a GPIO is requested, the
+->irq_request_resources() is used by the TLMM driver to request a PDC pin. The
+PDC pin associated with the GPIO is read from a  static map available in the
+pinctrl-sdm845.c. (I think there should be a better location than a static map,
+more on that later). Knowing the PDC pin from the map, we could look up the DT
+bindings and request the PDC interrupt with the same trigger mask as the
+interrupt requested. The ->set_type and ->set_wake are also trapped to set the
+PDC IRQ's polarity and enable it when the latent IRQ is requested. When the PDC
+detects the interrupt at suspend, it wakes up the GIC and replays the wakeup
+IRQ. The GPIO handler function for the latent IRQ is invoked in turn.
 
- Yes, which is why the serie contain the nvmem cell for the SID.
+Please review these patches and your inputs would be greatly appreciated and
+(kindly) let me know if I have committed any blunders with this approach. There
+is definitely opportunity to improve the location of the static GPIO-PDC pin
+map. We could possibly put it as an data argument in the interrupts definition
+of the PDC or with interrupt names. Also, I am still sorting out some issues
+with the IRQ handling part of these patches. And I am unsure of how to set the
+polarity of the PDC pin without locking, since we are not in hierarchy with the
+PDC interrupt controller. Again, your inputs on these would be greatly helpful.
 
-> 
-> > I just hope that you understand that we cannot wait for Linux to
-> > have a driver to have some bindings.
-> 
-> Just like I'm sure you can understand that just merging the DT bits
-> without testing anything caused some troubles in the past, and I don't
-> want to discover it in a year from now.
+Thanks,
+Lina
 
- I do, I don't like wrong DT info as much as you do I think. I had
-the unfortunate event to find that the sun4i-a10-timer compatible used
-in every soc is plain wrong for !A10 and !A13, patches comming soon.
- I want those bits merged but I also want that they reflect reality,
-this is not a hard driver to do, NetBSD also have one I think, maybe
-OpenBSD do to.
+[1]. drivers/irqchip/qcom-pdc.c
+[2]. Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+[3]. drivers/pinctrl/qcom/pinctrl-msm.c
+[4]. https://lore.kernel.org/patchwork/patch/977589/
+[5]. https://lore.kernel.org/patchwork/patch/975425/
 
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Lina Iyer (5):
+  drivers: pinctrl: qcom: add wakeup capability to GPIO
+  dt-bindings: pinctrl: add wakeup capable GPIOs for SDM845
+  drivers: pinctrl: msm: enable PDC interrupt only during suspend
+  drivers: pinctrl: qcom: sdm845: support GPIO wakeup from suspend
+  arm64: dts: qcom: add wake up interrupts for GPIOs for SDM845
 
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 104 ++++++++++-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 152 +++++++++++++++-
+ drivers/pinctrl/qcom/pinctrl-msm.c            | 164 ++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-msm.h            |   3 +
+ drivers/pinctrl/qcom/pinctrl-sdm845.c         |   6 +
+ 5 files changed, 425 insertions(+), 4 deletions(-)
 
--- 
-Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
