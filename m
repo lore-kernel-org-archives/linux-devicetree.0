@@ -1,39 +1,87 @@
-From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
-Subject: [PATCH 1/1] ARM: dts: imx6ul: Add weim node
-Date: Fri, 24 Aug 2018 18:36:05 +0200
-Message-ID: <20180824163605.12521-1-sebastien.szymanski@armadeus.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v8 3/4] drm/atmel-hlcdc: iterate over all output endpoints
+Date: Fri, 24 Aug 2018 11:33:28 -0500
+Message-ID: <CAL_Jsq+DaCQ09kwxy_m_Jfotejd-Oo7BV13R0s43r9LRq403LQ@mail.gmail.com>
+References: <20180810130359.9882-1-peda@axentia.se> <20180810130359.9882-4-peda@axentia.se>
+ <20180813135949.32vrlrevtazr5x7d@apu3b.nibble.pw> <0baac94e-f3d2-53fd-4af9-854bb4498345@axentia.se>
+ <CAL_JsqJPzwpN2TFghy-FfHZppexG9gW4qBy6iYtGpyP_Bp6dUA@mail.gmail.com>
+ <5c9853fc-e2ea-6983-ac88-b52b6e9e6ecd@axentia.se> <CAL_JsqJHRL0f2YwvOJBpggKRVQwPWy8j08-+_nd-VifOOKYqFA@mail.gmail.com>
+ <56016787-0487-1571-7c28-2767033cda23@axentia.se> <20180824094701.1f17393f@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180824094701.1f17393f@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Peter Rosin <peda@axentia.se>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jmondi <jacopo@jmondi.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrzej Hajda <a.hajda@samsung.com>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Sakari Ailus <sakari.ailus@iki.fi>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHdlaW0gbm9kZSBmb3IgaS5NWDZVTCBTT0MuCgpTaWduZWQtb2ZmLWJ5OiBTw6liYXN0aWVu
-IFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+Ci0tLQogYXJjaC9h
-cm0vYm9vdC9kdHMvaW14NnVsLmR0c2kgfCAxMSArKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
-IDExIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwu
-ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC5kdHNpCmluZGV4IDQ3YTM0NTNhNDIxMS4u
-N2IwMGVmZDkzZDE4IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQor
-KysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaQpAQCAtOTEyLDYgKzkxMiwxNyBAQAog
-CQkJCXJlZyA9IDwweDAyMWIwMDAwIDB4NDAwMD47CiAJCQl9OwogCisJCQl3ZWltOiB3ZWltQDIx
-YjgwMDAgeworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDI+OworCQkJCSNzaXplLWNlbGxzID0gPDE+
-OworCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDZ1bC13ZWltIiwgImZzbCxpbXg2cS13ZWltIjsK
-KwkJCQlyZWcgPSA8MHgwMjFiODAwMCAweDQwMDA+OworCQkJCWludGVycnVwdHMgPSA8MCAxNCBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCQljbG9ja3MgPSA8JmNsa3MgSU1YNlVMX0NMS19FSU0+
-OworCQkJCWZzbCx3ZWltLWNzLWdwciA9IDwmZ3ByPjsKKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-OworCQkJfTsKKwogCQkJb2NvdHA6IG9jb3RwLWN0cmxAMjFiYzAwMCB7CiAJCQkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47CiAJCQkJI3NpemUtY2VsbHMgPSA8MT47Ci0tIAoyLjE2LjQKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Aug 24, 2018 at 2:47 AM Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+>
+> On Tue, 14 Aug 2018 17:05:29 +0200
+> Peter Rosin <peda@axentia.se> wrote:
+>
+> > >>>>>> @@ -77,13 +79,29 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
+> > >>>>>>
+> > >>>>>>  int atmel_hlcdc_create_outputs(struct drm_device *dev)
+> > >>>>>>  {
+> > >>>>>> -    int endpoint, ret = 0;
+> > >>>>>> -
+> > >>>>>> -    for (endpoint = 0; !ret; endpoint++)
+> > >>>>>> -            ret = atmel_hlcdc_attach_endpoint(dev, endpoint);
+> > >>>>>> +    struct of_endpoint endpoint;
+> > >>>>>> +    struct device_node *node = NULL;
+> > >>>>>> +    int count = 0;
+> > >>>>>> +    int ret = 0;
+> > >>>>>> +
+> > >>>>>> +    for_each_endpoint_of_node(dev->dev->of_node, node) {
+> > >>>>>> +            of_graph_parse_endpoint(node, &endpoint);
+> > >>>
+> > >>> I'd really like to kill off of_graph_parse_endpoint, not add more
+> > >>> users (check the git history on this code). You should know what are
+> > >>> possible port and endpoint numbers, so iterate over those.
+> > >>
+> > >> So, add a comment to that effect in the docs of the of_graph_parse_endpoint
+> > >> function.
+> > >>
+> > >> How can the hlcdc driver know the actual number of endpoints? It's a
+> > >> one-way signal path out from that port, and it can easily be routed to
+> > >> 1, 2, 3 or even more places. As shown above, forcing the endpoint id
+> > >> to start at zero is a nuisance, and I don't see the point of it.
+> > >>
+> > >> But I welcome suggestions on how to arrange the above dtsi/dts fragments
+> > >> in a world where the endpoint id absolutely has to start at zero.
+> > >
+> > > Your dts file arrangement seems fine. Can't you just not exit the loop
+> > > on -ENODEV? IOW, just iterate til you find an enabled endpoint.
+> >
+> > That would regress cases where two (or more) endpoints are enabled
+> > (which is currently supported). As I see it, the driver will have a
+> > very hard time knowing when to stop iterating with any solution not
+> > involving the equivalent of the functions for_each_endpoint_of_node
+> > and of_graph_parse_endpoint. Open-coding of_graph_parse_endpoint just
+> > to avoid it is a bit more than silly IMHO...
+>
+> I agree, and actually, I think this is Rob who suggested to do what we
+> do here :-) (iterate from 0 to X, and stop as soon as
+> -ENODEV is returned).
+
+By suggested, you mean implemented because that is what it currently
+does. My suggestion now is to do this:
+
+for (endpoint = 0; endpoint < SOME_REASONABLE_MAX_NUMBER_OF_ENDPOINTS;
+endpoint++) {
+  ret = atmel_hlcdc_attach_endpoint(dev, endpoint);
+  if (ret == -ENODEV)
+    continue;
+  // handle other errors?
+}
+
+And SOME_REASONABLE_MAX_NUMBER_OF_ENDPOINTS is something you make up
+based on how many connections any board will have and physics (I
+suppose you could have trees worth of buffers, but really what is the
+worst case in an actual board design?). I would think 4 would be
+plenty. If not, double it to 8.
+
+Rob
