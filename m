@@ -1,122 +1,58 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v1 1/7] atmel-hlcdc: renamed directory to drm/atmel/
-Date: Fri, 24 Aug 2018 10:28:43 +0200
-Message-ID: <20180824102843.666bc465@bbrezillon>
-References: <20180812184152.GA22343@ravnborg.org>
- <20180812184629.3808-1-sam@ravnborg.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] dt-bindings: can: rcar_can: Add r8a774a1 support
+Date: Fri, 24 Aug 2018 08:31:42 +0000
+Message-ID: <TY1PR01MB177055864EEAD487C2917860C0360@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
+ <TYAPR01MB2285834E95AB0D0D3E2C5B72B7300@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+ <20180824082643.7eapxf72iuvkdw3j@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180812184629.3808-1-sam@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180824082643.7eapxf72iuvkdw3j@verge.net.au>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAxMiBBdWcgMjAxOCAyMDo0NjoyMyArMDIwMApTYW0gUmF2bmJvcmcgPHNhbUByYXZu
-Ym9yZy5vcmc+IHdyb3RlOgoKPiBVc2UgdmVuZG9yIG5hbWUgZm9yIGRpcmVjdG9yeSwgYWRkaW5n
-IGEgc3VpdGFibGUgcGxhY2UKPiBmb3IgbW9yZSBhdG1lbCBEUk0gZHJpdmVycy4KPiAKPiBTaWdu
-ZWQtb2ZmLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+Cj4gQ2M6IEJvcmlzIEJy
-ZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGJvb3RsaW4uY29tPgo+IC0tLQo+ICBNQUlOVEFJTkVS
-UyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIgKy0K
-PiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAyICstCj4gIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgMiArLQo+ICBkcml2ZXJzL2dwdS9kcm0ve2F0bWVsLWhsY2Rj
-ID0+IGF0bWVsfS9LY29uZmlnICAgICAgICAgICAgICB8IDYgKysrKysrCj4gIGRyaXZlcnMvZ3B1
-L2RybS97YXRtZWwtaGxjZGMgPT4gYXRtZWx9L01ha2VmaWxlICAgICAgICAgICAgIHwgMAo+ICBk
-cml2ZXJzL2dwdS9kcm0ve2F0bWVsLWhsY2RjID0+IGF0bWVsfS9hdG1lbF9obGNkY19jcnRjLmMg
-ICB8IDAKPiAgZHJpdmVycy9ncHUvZHJtL3thdG1lbC1obGNkYyA9PiBhdG1lbH0vYXRtZWxfaGxj
-ZGNfZGMuYyAgICAgfCAwCj4gIGRyaXZlcnMvZ3B1L2RybS97YXRtZWwtaGxjZGMgPT4gYXRtZWx9
-L2F0bWVsX2hsY2RjX2RjLmggICAgIHwgMAo+ICBkcml2ZXJzL2dwdS9kcm0ve2F0bWVsLWhsY2Rj
-ID0+IGF0bWVsfS9hdG1lbF9obGNkY19vdXRwdXQuYyB8IDAKPiAgZHJpdmVycy9ncHUvZHJtL3th
-dG1lbC1obGNkYyA9PiBhdG1lbH0vYXRtZWxfaGxjZGNfcGxhbmUuYyAgfCAwCj4gIDEwIGZpbGVz
-IGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiAgcmVuYW1lIGRyaXZl
-cnMvZ3B1L2RybS97YXRtZWwtaGxjZGMgPT4gYXRtZWx9L0tjb25maWcgKDgzJSkKPiAgcmVuYW1l
-IGRyaXZlcnMvZ3B1L2RybS97YXRtZWwtaGxjZGMgPT4gYXRtZWx9L01ha2VmaWxlICgxMDAlKQo+
-ICByZW5hbWUgZHJpdmVycy9ncHUvZHJtL3thdG1lbC1obGNkYyA9PiBhdG1lbH0vYXRtZWxfaGxj
-ZGNfY3J0Yy5jICgxMDAlKQo+ICByZW5hbWUgZHJpdmVycy9ncHUvZHJtL3thdG1lbC1obGNkYyA9
-PiBhdG1lbH0vYXRtZWxfaGxjZGNfZGMuYyAoMTAwJSkKPiAgcmVuYW1lIGRyaXZlcnMvZ3B1L2Ry
-bS97YXRtZWwtaGxjZGMgPT4gYXRtZWx9L2F0bWVsX2hsY2RjX2RjLmggKDEwMCUpCj4gIHJlbmFt
-ZSBkcml2ZXJzL2dwdS9kcm0ve2F0bWVsLWhsY2RjID0+IGF0bWVsfS9hdG1lbF9obGNkY19vdXRw
-dXQuYyAoMTAwJSkKPiAgcmVuYW1lIGRyaXZlcnMvZ3B1L2RybS97YXRtZWwtaGxjZGMgPT4gYXRt
-ZWx9L2F0bWVsX2hsY2RjX3BsYW5lLmMgKDEwMCUpCj4gCj4gZGlmZiAtLWdpdCBhL01BSU5UQUlO
-RVJTIGIvTUFJTlRBSU5FUlMKPiBpbmRleCA5NmU5OGUyMDZiMGQuLjA5Y2U3NmE5YTFkYyAxMDA2
-NDQKPiAtLS0gYS9NQUlOVEFJTkVSUwo+ICsrKyBiL01BSU5UQUlORVJTCj4gQEAgLTQ2ODEsNyAr
-NDY4MSw3IEBAIERSTSBEUklWRVJTIEZPUiBBVE1FTCBITENEQwo+ICBNOglCb3JpcyBCcmV6aWxs
-b24gPGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbT4KPiAgTDoJZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwo+ICBTOglTdXBwb3J0ZWQKPiAtRjoJZHJpdmVycy9ncHUvZHJtL2F0bWVs
-LWhsY2RjLwo+ICtGOglkcml2ZXJzL2dwdS9kcm0vYXRtZWwvYXRtZWwtaGxjZGMqCgoJCQkgICAg
-ICBhdG1lbF9obGNkYyoKCkFsc28sIEkgdGhpbmsgeW91IGNhbiBrZWVwIHRoZSB3aG9sZSBkaXJl
-Y3RvcnksIGFuZCBhZGQgeW91ciBuYW1lIHBsdXMKdXBkYXRlIHRoZSBlbnRyeSBkZXNjcmlwdGlv
-biBhZnRlciBhZGRpbmcgY29kZSBmb3IgdGhlIExDREMgYmxvY2suCgo+ICBGOglEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hdG1lbC8KPiAgVDoJZ2l0IGdpdDovL2Fu
-b25naXQuZnJlZWRlc2t0b3Aub3JnL2RybS9kcm0tbWlzYwo+ICAKPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+IGluZGV4IDJh
-NzJkMmZlYjc2ZC4uNDEzMGRmMGMwZGJhIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9L
-Y29uZmlnCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL0tjb25maWcKPiBAQCAtMjMyLDcgKzIzMiw3
-IEBAIHNvdXJjZSAiZHJpdmVycy9ncHUvZHJtL2NpcnJ1cy9LY29uZmlnIgo+ICAKPiAgc291cmNl
-ICJkcml2ZXJzL2dwdS9kcm0vYXJtYWRhL0tjb25maWciCj4gIAo+IC1zb3VyY2UgImRyaXZlcnMv
-Z3B1L2RybS9hdG1lbC1obGNkYy9LY29uZmlnIgo+ICtzb3VyY2UgImRyaXZlcnMvZ3B1L2RybS9h
-dG1lbC9LY29uZmlnIgo+ICAKPiAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9LY29u
-ZmlnIgo+ICAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlIGIvZHJpdmVy
-cy9ncHUvZHJtL01ha2VmaWxlCj4gaW5kZXggZWY5ZjNkYWIyODdmLi5jZTk4Mjk5NjcxMjggMTAw
-NjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL01ha2VmaWxlCj4gQEAgLTc2LDcgKzc2LDcgQEAgb2JqLSQoQ09ORklHX0RSTV9HTUE1MDAp
-ICs9IGdtYTUwMC8KPiAgb2JqLSQoQ09ORklHX0RSTV9VREwpICs9IHVkbC8KPiAgb2JqLSQoQ09O
-RklHX0RSTV9BU1QpICs9IGFzdC8KPiAgb2JqLSQoQ09ORklHX0RSTV9BUk1BREEpICs9IGFybWFk
-YS8KPiAtb2JqLSQoQ09ORklHX0RSTV9BVE1FTF9ITENEQykJKz0gYXRtZWwtaGxjZGMvCj4gK29i
-ai0kKENPTkZJR19EUk1fQVRNRUwpCSs9IGF0bWVsLwo+ICBvYmotJChDT05GSUdfRFJNX1JDQVJf
-RFUpICs9IHJjYXItZHUvCj4gIG9iai0kKENPTkZJR19EUk1fU0hNT0JJTEUpICs9c2htb2JpbGUv
-Cj4gIG9iai15CQkJKz0gb21hcGRybS8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2F0
-bWVsLWhsY2RjL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vYXRtZWwvS2NvbmZpZwo+IHNpbWls
-YXJpdHkgaW5kZXggODMlCj4gcmVuYW1lIGZyb20gZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2Rj
-L0tjb25maWcKPiByZW5hbWUgdG8gZHJpdmVycy9ncHUvZHJtL2F0bWVsL0tjb25maWcKPiBpbmRl
-eCAzMmJjYzRiYWQwNmEuLjdjZDM4NjJmOWQxOCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vYXRtZWwtaGxjZGMvS2NvbmZpZwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC9LY29u
-ZmlnCj4gQEAgLTEsNiArMSwxMiBAQAo+ICtjb25maWcgRFJNX0FUTUVMCj4gKwlib29sCj4gKwlo
-ZWxwCj4gKwkgIEVuYWJsZSBBdG1lbCBEUk0gc3VwcG9ydAo+ICsKCk5vdCBzdXJlIHdoeSB5b3Ug
-bmVlZCBhbiBleHRyYSBLY29uZmlnIG9wdGlvbj8gQW5kIGlmIHlvdSByZWFsbHkgZG8KKGJlY2F1
-c2UgeW91IHdhbnQgdG8gc2hhcmUgY29tbW9uIGNvZGUpLCBpdCBzaG91bGQgYmUgaW1wbGljaXRs
-eQpzZWxlY3RlZCBieSBEUk1fQVRNRUxfSExDREMgYW5kIERSTV9BVE1FTF9MQ0RDLgoKPiAgY29u
-ZmlnIERSTV9BVE1FTF9ITENEQwo+ICAJdHJpc3RhdGUgIkRSTSBTdXBwb3J0IGZvciBBVE1FTCBI
-TENEQyBEaXNwbGF5IENvbnRyb2xsZXIiCj4gIAlkZXBlbmRzIG9uIERSTSAmJiBPRiAmJiBDT01N
-T05fQ0xLICYmIE1GRF9BVE1FTF9ITENEQyAmJiBBUk0KPiArCXNlbGVjdCBEUk1fQVRNRUwKPiAg
-CXNlbGVjdCBEUk1fR0VNX0NNQV9IRUxQRVIKPiAgCXNlbGVjdCBEUk1fS01TX0hFTFBFUgo+ICAJ
-c2VsZWN0IERSTV9LTVNfQ01BX0hFTFBFUgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-YXRtZWwtaGxjZGMvTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vYXRtZWwvTWFrZWZpbGUKPiBz
-aW1pbGFyaXR5IGluZGV4IDEwMCUKPiByZW5hbWUgZnJvbSBkcml2ZXJzL2dwdS9kcm0vYXRtZWwt
-aGxjZGMvTWFrZWZpbGUKPiByZW5hbWUgdG8gZHJpdmVycy9ncHUvZHJtL2F0bWVsL01ha2VmaWxl
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9hdG1lbF9obGNkY19j
-cnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vYXRtZWwvYXRtZWxfaGxjZGNfY3J0Yy5jCj4gc2ltaWxh
-cml0eSBpbmRleCAxMDAlCj4gcmVuYW1lIGZyb20gZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2Rj
-L2F0bWVsX2hsY2RjX2NydGMuYwo+IHJlbmFtZSB0byBkcml2ZXJzL2dwdS9kcm0vYXRtZWwvYXRt
-ZWxfaGxjZGNfY3J0Yy5jCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNk
-Yy9hdG1lbF9obGNkY19kYy5jIGIvZHJpdmVycy9ncHUvZHJtL2F0bWVsL2F0bWVsX2hsY2RjX2Rj
-LmMKPiBzaW1pbGFyaXR5IGluZGV4IDEwMCUKPiByZW5hbWUgZnJvbSBkcml2ZXJzL2dwdS9kcm0v
-YXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuYwo+IHJlbmFtZSB0byBkcml2ZXJzL2dwdS9kcm0v
-YXRtZWwvYXRtZWxfaGxjZGNfZGMuYwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXRt
-ZWwtaGxjZGMvYXRtZWxfaGxjZGNfZGMuaCBiL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC9hdG1lbF9o
-bGNkY19kYy5oCj4gc2ltaWxhcml0eSBpbmRleCAxMDAlCj4gcmVuYW1lIGZyb20gZHJpdmVycy9n
-cHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX2RjLmgKPiByZW5hbWUgdG8gZHJpdmVycy9n
-cHUvZHJtL2F0bWVsL2F0bWVsX2hsY2RjX2RjLmgKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1dC5jIGIvZHJpdmVycy9ncHUvZHJtL2F0
-bWVsL2F0bWVsX2hsY2RjX291dHB1dC5jCj4gc2ltaWxhcml0eSBpbmRleCAxMDAlCj4gcmVuYW1l
-IGZyb20gZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0bWVsX2hsY2RjX291dHB1dC5jCj4g
-cmVuYW1lIHRvIGRyaXZlcnMvZ3B1L2RybS9hdG1lbC9hdG1lbF9obGNkY19vdXRwdXQuYwo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXRtZWwtaGxjZGMvYXRtZWxfaGxjZGNfcGxhbmUu
-YyBiL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC9hdG1lbF9obGNkY19wbGFuZS5jCj4gc2ltaWxhcml0
-eSBpbmRleCAxMDAlCj4gcmVuYW1lIGZyb20gZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL2F0
-bWVsX2hsY2RjX3BsYW5lLmMKPiByZW5hbWUgdG8gZHJpdmVycy9ncHUvZHJtL2F0bWVsL2F0bWVs
-X2hsY2RjX3BsYW5lLmMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Hello Simon,
+
+Thank you for the feedback!
+
+> >
+> > In theory CAN could be broken if renesas,can-clock-select is set to 0x1
+> > (clkp2) in the DT, as this value will be written to the CAN Clock Selec=
+t
+> > Register. However if the documentation is followed there will be no
+> > problems.
+> >
+> > We should probably update the driver to fix this though, which will be =
+a
+> > change specific to all RZ/G2 devices, so perhaps we should also be addi=
+ng
+> > a "renesas,rzg-gen2-can" family compatible string as well? (to driver a=
+nd
+> > documentation)
+>
+> Yes, I think that sounds reasonable.
+>
+> But in that case we should pre-emptively not use renesas,rcar-gen3-can fo=
+r
+> RZ/G2.
+
+What do you think about the following:
+https://patchwork.kernel.org/patch/10573795/
+https://patchwork.kernel.org/patch/10573791/
+https://patchwork.kernel.org/patch/10573805/
+
+Thanks,
+Fab
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
