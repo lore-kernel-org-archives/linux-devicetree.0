@@ -1,41 +1,80 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/2] Add R-Car V3H (R8A77980) support to the R-Car LVDS
- driver
-Date: Fri, 24 Aug 2018 14:29:42 +0300
-Message-ID: <1941633.yX5tMUPcR0@avalon>
-References: <ef3c6b7e-98f2-7012-71c5-6693e6e48999@cogentembedded.com>
- <a5aae3ff-2585-8eb6-82ef-dc3677eb5abb@cogentembedded.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v5 2/2] leds: lm3697: Introduce the lm3697 driver
+Date: Fri, 24 Aug 2018 06:58:36 -0500
+Message-ID: <e5abd336-9861-66f3-3991-40cf1302ce8d@ti.com>
+References: <20180817151528.21623-1-dmurphy@ti.com>
+ <20180817151528.21623-2-dmurphy@ti.com> <20180824100549.GC4045@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <a5aae3ff-2585-8eb6-82ef-dc3677eb5abb@cogentembedded.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180824100549.GC4045@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VyZ2VpLAoKT24gVGh1cnNkYXksIDIzIEF1Z3VzdCAyMDE4IDE5OjUzOjMzIEVFU1QgU2Vy
-Z2VpIFNodHlseW92IHdyb3RlOgo+IE9uIDA2LzA1LzIwMTggMTE6MjUgUE0sIFNlcmdlaSBTaHR5
-bHlvdiB3cm90ZToKPiA+IEhlcmUncyB0aGUgc2V0IG9mIDIgcGF0Y2hlcyBhZ2FpbnN0IHRoZSAn
-ZHJtLW5leHQnIGJyYW5jaCBvZiB0aGUgJ2RybS5naXQnCj4gPiByZXBvLiBUaGUgcHVycG9zZSBv
-ZiB0aGVzZSBwYXRjaGVzIGlzIHRvIGFkZCB0aGUgUi1DYXIgVjNIIChSOEE3Nzk4MCkKPiA+IHN1
-cHBvcnQgdG8gdGhlIFItQ2FyIExWRFMgZHJpdmVyLgo+ID4gCj4gPiBbMS8yXSBkdC1iaW5kaW5n
-czogZGlzcGxheTogcmVuZXNhczogbHZkczogZG9jdW1lbnQgUjhBNzc5ODAgYmluZGluZ3MKPiA+
-IFsyLzJdIGRybTogcmNhci1kdTogbHZkczogYWRkIFI4QTc3OTgwIHN1cHBvcnQKPiAKPiAgICBM
-YXVyZW50LCBJJ20gbm90IHNlZWluZyB0aGVzZSBwYXRjaGVzIG1lcmdlZC4uLiB0aGV5IGFyZSAy
-LjUgbW9udGhzIG9sZAo+IHdpdGhvdXQgYSBjb21tZW50ISA6LSgKClRoYW5rIHlvdSBmb3IgcGlu
-Z2luZyBtZSwgSSd2ZSBub3cgYXBwbGllZCBib3RoIHBhdGNoZXMgdG8gbXkgdHJlZSBhbmQgd2ls
-bCAKcHVzaCBpbmNsdWRlIHRoZW0gaW4gbXkgdjQuMjAgcHVsbCByZXF1ZXN0LgoKLS0gClJlZ2Fy
-ZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Jacek
+
+On 08/24/2018 05:05 AM, Pavel Machek wrote:
+> Hi!
+> 
+>> +/**
+>> + * struct lm3697 -
+>> + * @enable_gpio - Hardware enable gpio
+>> + * @regulator - LED supply regulator pointer
+>> + * @client - Pointer to the I2C client
+>> + * @regmap - Devices register map
+>> + * @dev - Pointer to the devices device struct
+>> + * @lock - Lock for reading/writing the device
+>> + * @leds - Array of LED strings.
+>> + */
+> 
+> extra .
+> 
+>> +	ret = regmap_write(led->priv->regmap, brt_msb_reg, brt_val);
+>> +	if (ret) {
+>> +		dev_err(&led->priv->client->dev, "Cannot write MSB\n");
+>> +		goto out;
+>> +	}
+>> +out:
+> 
+> I'd avoid this goto.
+> 
+>> +static int lm3697_set_control_bank(struct lm3697 *priv)
+>> +{
+>> +	u8 control_bank_config = 0;
+>> +	struct lm3697_led *led;
+>> +	int ret, i;
+>> +
+>> +	led = &priv->leds[0];
+>> +	if (led->control_bank == LM3697_CONTROL_A)
+>> +		led = &priv->leds[1];
+> 
+> I'd expect CONTROL_A to correspond to leds[0]...?
+> 
+>> +	for (i = 0; i < LM3697_MAX_LED_STRINGS; i++) {
+>> +		if (led->hvled_strings[i] == LM3697_HVLED_ASSIGNMENT)
+>> +			control_bank_config |= 1 << i;
+>> +	}
+> 
+> Extra {}s.
+> 
+>> +	priv->regulator = devm_regulator_get(&priv->client->dev, "vled");
+>> +	if (IS_ERR(priv->regulator))
+>> +		priv->regulator = NULL;
+> 
+> If vled regulator is specified in dt and _get fails, is it worth a
+> warning?
+> 
+> 									Pavel
+> 
+
+Do you want v6 or a new patch on top?
+
+Dan
+
+-- 
+------------------
+Dan Murphy
