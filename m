@@ -1,34 +1,45 @@
-From: SZ Lin =?utf-8?B?KOael+S4iuaZuik=?= <sz.lin@moxa.com>
-Subject: Re: [PATCH] Add DT support for Octavo Systems OSD3358-SM-RED based
- on TI AM335x
-Date: Fri, 24 Aug 2018 13:50:01 +0800
-Message-ID: <20180824055001.GA19335@localhost>
-References: <20180713163314.1099-1-neeraj.dantu@octavosystems.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
+Date: Fri, 24 Aug 2018 08:41:01 +0200
+Message-ID: <20180824064101.GT14967@localhost>
+References: <20180822105547.9634-1-johan@kernel.org>
+ <20180822105547.9634-5-johan@kernel.org>
+ <CAFBinCAKNUA5_fz4bXqj-aCaDEHk--Ax5GXJt+nzVKSjbVHxLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180713163314.1099-1-neeraj.dantu@octavosystems.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Tony Lindgren <tony@atomide.com>, Jason Kridner <jkridner@gmail.com>, SZ Lin =?utf-8?B?KOael+S4iuaZuik=?= <sz.lin@moxa.com>, Robert Nelson <robertcnelson@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>
+In-Reply-To: <CAFBinCAKNUA5_fz4bXqj-aCaDEHk--Ax5GXJt+nzVKSjbVHxLg@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: johan@kernel.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, carlo@endlessm.com, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgo8c25pcD4KCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1vc2Qz
-MzU4LXNtLXJlZC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtb3NkMzM1OC1zbS1yZWQu
-ZHRzCj4gbmV3IGZpbGUgbW9kZSAxMDA3NTUKCkkgdGhpbmsgdGhlIHBlcm1pc3Npb24gaGVyZSBz
-aG91bGQgYmUgMTAwNjQ0IGluc3RlYWQgb2YgMTAwNzU1LgoKPiBpbmRleCAwMDAwMDAwLi40ZDk2
-OTAxCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1vc2Qz
-MzU4LXNtLXJlZC5kdHMKCi0tIApTWiBMaW4gKOael+S4iuaZuikgCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, Aug 23, 2018 at 08:50:23PM +0200, Martin Blumenstingl wrote:
+> On Wed, Aug 22, 2018 at 12:57 PM Johan Hovold <johan@kernel.org> wrote:
+
+> > Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+> > Cc: stable <stable@vger.kernel.org>     # 4.15
+>
+> backporting only works if the patch introducing
+> of_get_compatible_child is also backported
+> do we have to inform Greg somehow?
+
+Greg is on CC, but he also sends out a notice in case a stable patch
+fails to apply or compile.
+
+Note that if the helper had gone in before the rest of the series, I
+could have referenced it in the stable tags using its commit id in order
+to facilitate the process:
+
+	Cc: stable <stable@vger.kernel.org>     # 4.15: <commit id>
+
+> > Cc: Carlo Caione <carlo@endlessm.com>
+> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+Thanks for the ack.
+
+Johan
