@@ -1,176 +1,152 @@
 From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v11 00/11] drivers: Introduce firmware dnd clock river for
- ZynqMP core
-Date: Fri, 24 Aug 2018 22:04:24 +0000
-Message-ID: <CY1PR02MB213840050AB61B70F3C2CC6FB8360@CY1PR02MB2138.namprd02.prod.outlook.com>
-References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+Subject: RE: [PATCH v2 1/3] dt-bindings: power: Add ZynqMP power domain
+ bindings
+Date: Fri, 24 Aug 2018 22:22:03 +0000
+Message-ID: <CY1PR02MB2138CD14431A976812492D0BB8360@CY1PR02MB2138.namprd02.prod.outlook.com>
+References: <1534447304-12919-1-git-send-email-jollys@xilinx.com>
+ <1534447304-12919-2-git-send-email-jollys@xilinx.com>
+ <20180820194628.GA26783@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+In-Reply-To: <20180820194628.GA26783@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <JOLLYS@xilinx.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, Michal Simek <michals@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "andy.gross@linaro.org" <andy.gross@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "sean.wang@mediatek.com" <sean.wang@mediatek.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, Michal Simek <michals@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>Rajan Vaja <RAJANV@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi Rob,
 
-Please review below patch series. It addresses all your pending comments fo=
-r clock driver.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Monday, August 20, 2018 12:46 PM
+> To: Jolly Shah <JOLLYS@xilinx.com>
+> Cc: matthias.bgg@gmail.com; andy.gross@linaro.org; shawnguo@kernel.org;
+> geert+renesas@glider.be; bjorn.andersson@linaro.org;
+> sean.wang@mediatek.com; m.szyprowski@samsung.com; Michal Simek
+> <michals@xilinx.com>; mark.rutland@arm.com; Rajan Vaja
+> <RAJANV@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Rajan Vaja
+> <RAJANV@xilinx.com>; Jolly Shah <JOLLYS@xilinx.com>
+> Subject: Re: [PATCH v2 1/3] dt-bindings: power: Add ZynqMP power domain
+> bindings
+>=20
+> On Thu, Aug 16, 2018 at 12:21:42PM -0700, Jolly Shah wrote:
+> > From: Rajan Vaja <rajan.vaja@xilinx.com>
+> >
+> > Add documentation to describe ZynqMP power domain bindings.
+> >
+> > Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> > ---
+> >  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       | 47
+> ++++++++++++++++++++++
+>=20
+> This should be with all the other power domain bindings.
+>=20
+
+The firmware node has clock, reset and power domain subnodes. Please sugges=
+t the right location for binding.
+
+> >  1 file changed, 47 insertions(+)
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
+> > re.txt
+> > b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
+> > re.txt
+> > index d215d15..5fa10a0 100644
+> > ---
+> > a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
+> > re.txt
+> > +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-fi
+> > +++ rmware.txt
+> > @@ -64,6 +64,29 @@ Output clocks are registered based on clock
+> > information received  from firmware. Output clocks indexes are
+> > mentioned in  include/dt-bindings/clock/xlnx,zynqmp-clk.h.
+> >
+> > +-----------------------------------------------------------
+> > +Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
+> > +-----------------------------------------------------------
+> > +The binding for zynqmp-power-controller follow the common generic PM
+> > +domain binding[1].
+> > +
+> > +[1] Documentation/devicetree/bindings/power/power_domain.txt
+> > +
+> > +=3D=3D Zynq MPSoC Generic PM Domain Node =3D=3D
+> > +
+> > +Required properties:
+> > + - compatible:	Must be: "xlnx,zynqmp-power-controller"
+> > +
+> > +This node contains a number of subnodes, each representing a single
+> > +PM domain that PM domain consumer devices reference.
+> > +
+> > +=3D=3D PM Domain Nodes =3D=3D
+> > +
+> > +Required properties:
+> > + - #power-domain-cells:	Number of cells in a PM domain specifier. Must
+> be 0.
+> > + - pd-id:		Domain identifier as defined by platform firmware.
+> > +			This identifier is passed to the PM firmware.
+>=20
+> Make this a cell for the power domain consumer.
+>=20
+
+I am not clear here. Do you suggest to move pd-id property under consumer n=
+odes? Right now, consumer nodes use power-domains property as below:
+
+usb0: usb0@ff9d0000 {
+                        #address-cells =3D <2>;
+	          ...................................................
+                        power-domains =3D <&pd_usb0>;
+	};
 
 Thanks,
 Jolly Shah
 
-> -----Original Message-----
-> From: Jolly Shah [mailto:jolly.shah@xilinx.com]
-> Sent: Friday, August 03, 2018 10:53 AM
-> To: ard.biesheuvel@linaro.org; mingo@kernel.org;
-> gregkh@linuxfoundation.org; matt@codeblueprint.co.uk;
-> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
-> dmitry.torokhov@gmail.com; mturquette@baylibre.com;
-> sboyd@codeaurora.org; Michal Simek <michals@xilinx.com>;
-> robh+dt@kernel.org; mark.rutland@arm.com; linux-clk@vger.kernel.org
-> Cc: Rajan Vaja <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
-> <JOLLYS@xilinx.com>
-> Subject: [PATCH v11 00/11] drivers: Introduce firmware dnd clock river fo=
-r
-> ZynqMP core
+> > +
+> >  -------
+> >  Example
+> >  -------
+> > @@ -78,5 +101,29 @@ firmware {
+> >  			clocks =3D <&pss_ref_clk>, <&video_clk>,
+> <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
+> >  			clock-names =3D "pss_ref_clk", "video_clk",
+> "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
+> >  		};
+> > +		zynqmp-power-controller {
+> > +			compatible =3D "xlnx,zynqmp-power-controller";
+> > +
+> > +			pd_usb0: pd-usb0 {
+> > +				pd-id =3D <22>;
+> > +				#power-domain-cells =3D <0>;
+> > +			};
+> > +
+> > +			pd_sata: pd-sata {
+> > +				pd-id =3D <28>;
+> > +				#power-domain-cells =3D <0>;
+> > +			};
+> > +
+> > +			pd_gpu : pd-gpu {
+> > +				pd-id =3D <58 20 21>;
+> > +				#power-domain-cells =3D <0>;
+> > +			};
+> > +		};
+> >  	};
+> >  };
+> > +
+> > +sata0: ahci@SATA_AHCI_HBA {
 >=20
-> This patchset is adding communication layer with firmware and clock drive=
-r who
-> uses those APIs to communicate with PMU.
-> Firmware driver provides an interface to firmware APIs.Interface APIs can=
- be
-> used by any driver to communicate to PMUFW(Platform Management Unit). All
-> requests go through ATF.
-> This patchset adds CCF compliant clock driver for ZynqMP.Clock driver que=
-ries
-> supported clock information from firmware and regiters pll and output clo=
-cks
-> with CCF.
+> Don't use defines in unit-addresses (or reg for that matter). It's pointl=
+ess
+> indirection.
 >=20
-> v11:
->  - Removed "Reveiwed-by:Stephen Boyd" tag from firmware binding
->  - Updated clock and firmware driver to use probe method instead of init
->  - Marked PMU payload arguments with __le32 for proper endienness code
->=20
-> v10:
->  - Incorporated code review comments from v9 patch series. Discussed belo=
-w:
-> 	https://patchwork.kernel.org/patch/10478575/
-> 	https://patchwork.kernel.org/patch/10478457/
-> 	https://patchwork.kernel.org/patch/10478461/
-> 	https://patchwork.kernel.org/patch/10478463/
->=20
-> v9:
->  - Fixed minor typo comments
->=20
-> v8:
->  - Corrected typo in clk Kconfig
->=20
-> v7:
->  - Removed xilinx specific clock debugfs API support
->  - Added reviewed-by tags for FW and clock bindings
->  - Updated clock node name to clock-controller
->=20
-> v6:
->  - Broke patch series to have base FW driver and Clock driver user
->  - Incorporated code review comments from last FW and Clock driver patch
-> series. Discussed below:
-> 	https://patchwork.kernel.org/patch/10230759/
-> 	https://patchwork.kernel.org/patch/10250047/
->=20
-> v5:
->  - Added ATF version check support
->  - Updated some functions to be static
->  - Minor function name corrections
->=20
-> v4:
->  - Changed clock setrate/getrate API prototype to support 64 bit rate
->  - Defined macros for get_node_status return values
->  - Moved DT node as a child of firmware
->  - Changed debugfs APIs to return data to debugfs buffer instead of dumpi=
-ng to
-> kernel log
->  - Minor changes to incorporate other review comments from v3 patch serie=
-s
->=20
-> v3:
->  - added some fixes to firmware-ggs.c
->  - updated pinmux get/set function argument names to specify function id
-> instead of node id
->  - added new pinctrl query macros
->  - incorporated review comments from v2 patch series
->=20
-> v2:
->  - change SPDX-License-Identifier license text style
->  - split patch into multiple patches
->  - Updated copyrights
->  - Added ABI documentation
->  - incorporated logical review comments from previuos patch. Discussed be=
-low:
-> 	https://patchwork.kernel.org/patch/10150665/
->=20
-> Jolly Shah (1):
->   drivers: clk: Add ZynqMP clock driver
->=20
-> Rajan Vaja (10):
->   dt-bindings: firmware: Add bindings for ZynqMP firmware
->   firmware: xilinx: Add Zynqmp firmware driver
->   firmware: xilinx: Add zynqmp IOCTL API for device control
->   firmware: xilinx: Add query data API
->   firmware: xilinx: Add clock APIs
->   firmware: xilinx: Add debugfs interface
->   firmware: xilinx: Add debugfs for IOCTL API
->   firmware: xilinx: Add debugfs for query data API
->   dt-bindings: clock: Add bindings for ZynqMP clock driver
->   firmware: xilinx: Replace init call with probe method
->=20
->  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  82 +++
->  arch/arm64/Kconfig.platforms                       |   1 +
->  drivers/clk/Kconfig                                |   1 +
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/zynqmp/Kconfig                         |  10 +
->  drivers/clk/zynqmp/Makefile                        |   4 +
->  drivers/clk/zynqmp/clk-gate-zynqmp.c               | 144 +++++
->  drivers/clk/zynqmp/clk-mux-zynqmp.c                | 141 ++++
->  drivers/clk/zynqmp/clk-zynqmp.h                    |  68 ++
->  drivers/clk/zynqmp/clkc.c                          | 716 +++++++++++++++=
-++++++
->  drivers/clk/zynqmp/divider.c                       | 217 +++++++
->  drivers/clk/zynqmp/pll.c                           | 335 ++++++++++
->  drivers/firmware/Kconfig                           |   1 +
->  drivers/firmware/Makefile                          |   1 +
->  drivers/firmware/xilinx/Kconfig                    |  23 +
->  drivers/firmware/xilinx/Makefile                   |   5 +
->  drivers/firmware/xilinx/zynqmp-debug.c             | 249 +++++++
->  drivers/firmware/xilinx/zynqmp-debug.h             |  22 +
->  drivers/firmware/xilinx/zynqmp.c                   | 535 +++++++++++++++
->  include/dt-bindings/clock/xlnx,zynqmp-clk.h        | 116 ++++
->  include/linux/firmware/xlnx-zynqmp.h               | 116 ++++
->  21 files changed, 2788 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.tx=
-t
->  create mode 100644 drivers/clk/zynqmp/Kconfig  create mode 100644
-> drivers/clk/zynqmp/Makefile  create mode 100644 drivers/clk/zynqmp/clk-ga=
-te-
-> zynqmp.c
->  create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
->  create mode 100644 drivers/clk/zynqmp/clk-zynqmp.h  create mode 100644
-> drivers/clk/zynqmp/clkc.c  create mode 100644 drivers/clk/zynqmp/divider.=
-c
-> create mode 100644 drivers/clk/zynqmp/pll.c  create mode 100644
-> drivers/firmware/xilinx/Kconfig  create mode 100644
-> drivers/firmware/xilinx/Makefile  create mode 100644
-> drivers/firmware/xilinx/zynqmp-debug.c
->  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
->  create mode 100644 drivers/firmware/xilinx/zynqmp.c  create mode 100644
-> include/dt-bindings/clock/xlnx,zynqmp-clk.h
->  create mode 100644 include/linux/firmware/xlnx-zynqmp.h
->=20
-> --
-> 2.7.4
+> > +	...
+> > +	power-domains =3D <&pd_sata>;
+> > +	...
+> > +};
+> > --
+> > 2.7.4
+> >
