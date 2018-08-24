@@ -1,64 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 2/8] dt-bindings: Introduce interconnect provider bindings
-Date: Fri, 24 Aug 2018 10:35:23 -0500
-Message-ID: <CAL_JsqKMPm=qmfYMQH99_gqSv0-ynUSvbkoNjjeDKtyxfgE1tg@mail.gmail.com>
-References: <20180731161340.13000-1-georgi.djakov@linaro.org>
- <20180731161340.13000-3-georgi.djakov@linaro.org> <CABGGisxq+hf91R18pnZ=VZ9f99GssWWPhpPCjNAROJmKg5-udA@mail.gmail.com>
- <e114ed83-fd54-4952-f375-e1d94826ac6e@linaro.org> <20180820153207.xx5outviph7ec76p@flea>
- <672e6c6c-222f-5e7f-5d0c-acc8da68b1ab@linaro.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] arm64: dts: Fix various entry-method properties to
+ reflect documentation
+Date: Fri, 24 Aug 2018 08:38:04 -0700
+Message-ID: <CAOesGMjcs=h4DHn7coo5iixUUY2GR2wWeTyMWQ_SBE9rrPZQgg@mail.gmail.com>
+References: <113f28acbc55f64762c9f0bcefe076a811f2ed82.1535014078.git.amit.kucheria@linaro.org>
+ <20180823153110.GA19131@e107155-lin> <CAHLCerNoRj6GQRF=NJXwc0U+mJNe=06JGADQr7uT-chD2W-J+A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <672e6c6c-222f-5e7f-5d0c-acc8da68b1ab@linaro.org>
+In-Reply-To: <CAHLCerNoRj6GQRF=NJXwc0U+mJNe=06JGADQr7uT-chD2W-J+A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Evan Green <evgreen@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, moderated list:
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ARM-SoC Maintainers <arm@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Shawn Guo <shawnguo@kernel.org>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Minghuan Lian <minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Fabio Estevam <fabio.estevam@nxp.>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 24, 2018 at 9:51 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+On Thu, Aug 23, 2018 at 1:02 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> (Adding arm-soc folks)
 >
-> Hi Maxime,
+> On Thu, Aug 23, 2018 at 9:01 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> Hi Amit,
+>>
+>> Thanks for fixing this.
+>>
+>> On Thu, Aug 23, 2018 at 02:23:29PM +0530, Amit Kucheria wrote:
+>>> The idle-states binding documentation[1] mentions that the
+>>> 'entry-method' property is required on 64-bit platforms and must be
+>>> set to "psci".
+>>>
+>>> commit a13f18f59d26 ("Documentation: arm: Fix typo in the idle-states
+>>> bindings examples") attempted to fix this earlier but clearly more is
+>>> needed.
+>>>
+>>
+>> In fact, I assumed I fixed things with commit 978fa436231a ("drivers:
+>> firmware: psci: unify enable-method binding on ARM {64,32}-bit systems"),
+>> but I was wrong. I left quite a few instances including juno dtbs.
+>>
+>>> Fix the cpu-capacity.txt documentation that uses the incorrect value so
+>>> we don't get copy-paste errors like these. Clarify the language in
+>>> idle-states.txt by removing the reference to the psci bindings that
+>>> might be causing this confusion.
+>>>
+>>> Finally, fix devicetrees of various boards to reflect current
+>>> documentation.
+>>>
+>>> [1] Documentation/devicetree/bindings/arm/idle-states.txt (see
+>>> idle-states node)
+>>>
+>>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
+>>>  Documentation/devicetree/bindings/arm/idle-states.txt  | 4 ++--
+>>>  arch/arm64/boot/dts/arm/juno-r1.dts                    | 2 +-
+>>>  arch/arm64/boot/dts/arm/juno-r2.dts                    | 2 +-
+>>>  arch/arm64/boot/dts/arm/juno.dts                       | 2 +-
+>>
+>> For all the above files,
+>>
+>> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 >
-> On 08/20/2018 06:32 PM, Maxime Ripard wrote:
-> > Hi Georgi,
-> >
-> > On Tue, Aug 07, 2018 at 05:54:38PM +0300, Georgi Djakov wrote:
-> >>> There is also a patch series from Maxime Ripard that's addressing the
-> >>> same general area. See "dt-bindings: Add a dma-parent property". We
-> >>> don't need multiple ways to address describing the device to memory
-> >>> paths, so you all had better work out a common solution.
-> >>
-> >> Looks like this fits exactly into the interconnect API concept. I see
-> >> MBUS as interconnect provider and display/camera as consumers, that
-> >> report their bandwidth needs. I am also planning to add support for
-> >> priority.
-> >
-> > Thanks for working on this. After looking at your serie, the one thing
-> > I'm a bit uncertain about (and the most important one to us) is how we
-> > would be able to tell through which interconnect the DMA are done.
-> >
-> > This is important to us since our topology is actually quite simple as
-> > you've seen, but the RAM is not mapped on that bus and on the CPU's,
-> > so we need to apply an offset to each buffer being DMA'd.
+> Thanks for reviewing, Sudeep.
 >
-> Ok, i see - your problem is not about bandwidth scaling but about using
-> different memory ranges by the driver to access the same location. So
-> this is not really the same and your problem is different. Also the
-> interconnect bindings are describing a path and endpoints. However i am
-> open to any ideas.
+>> How do you plan to merge ? I prefer if you can send it via arm-soc as
+>> fixes for this cycle with all the necessary acks. Otherwise you may have
+>> to split this to send via platform maintainers which is bit mundane.
+>
+> I was hoping to get this merged thru arm-soc tree instead of creating
+> a patch per platform. But if anybody feels strongly about it, I'm
+> happy to split them up and feed it through the platform maintainer
+> trees.
 
-It may be different things you need, but both are related to the path
-between a bus master and memory. We can't have each 'problem'
-described in a different way. Well, we could as long as each platform
-has different problems, but that's unlikely.
+Given that we're at the tail end of the merge window, before -rc1,
+it's easiest if we just take it directly and platform maintainers base
+their new contents on top of it.
 
-It could turn out that the only commonality is property naming
-convention, but that's still better than 2 independent solutions.
+Applying to our next/late (i.e. merge-window-fixes) branch now.
 
-I know you each want to just fix your issues, but the fact that DT
-doesn't model the DMA side of the bus structure has been an issue at
-least since the start of DT on ARM. Either we should address this in a
-flexible way or we can just continue to manage without. So I'm not
-inclined to take something that only addresses one SoC family.
 
-Rob
+-Olof
