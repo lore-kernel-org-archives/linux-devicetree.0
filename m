@@ -1,68 +1,135 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
-Date: Fri, 24 Aug 2018 14:23:08 +0200
-Message-ID: <20180824122308.3092-1-linus.walleij@linaro.org>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: Re: [PATCH v6 3/4] venus: firmware: add no TZ boot and shutdown
+ routine
+Date: Fri, 24 Aug 2018 17:56:47 +0530
+Message-ID: <9e9417cf2fccfed4015f6893045e4f7f@codeaurora.org>
+References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
+ <1535034528-11590-4-git-send-email-vgarodia@codeaurora.org>
+ <CAPBb6MV1jjksgbSaCuUcY_ZbjfGeK-GaQ_+OZ7LWUv4ehA3dGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Liviu Dudau <liviu.dudau@arm.com>, devicetree@vger.kernel.org
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, dri-devel@lists.freedesktop.org, Ryan Harkin <ryan.harkin@linaro.org>, robh+dt@kernel.org, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPBb6MV1jjksgbSaCuUcY_ZbjfGeK-GaQ_+OZ7LWUv4ehA3dGQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@chromium.org>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGJpbmRpbmdzIGZvciBhIHZpcnR1YWwgZGlzcGxheSB0byBiZSB1c2VkIHdpdGgg
-ZGlzcGxheXMKaW5zaWRlIGVudGlyZWx5IHZpcnR1YWwgZW52aXJvbm1lbnRzIHdoaWNoIGRvIG5v
-dCBlbXVsYXRlIHRoaW5ncwpsaWtlIG1vbml0b3JzIGJ1dCBqdXN0IG5lZWQgdGltaW5nIGluZm9y
-bWF0aW9uIHRvIGJlIHN1cHBsaWVkIHRvCml0cyBkaXNwbGF5IGNvbnRyb2xsZXIuCgpUaGlzIGlz
-IGluc3BpcmVkIGJ5IGVhcmxpZXIgd29yayBieSBMaXZpdSBEdWRhdS4KCkNjOiBMaXZpdSBEdWRh
-dSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4KQ2M6IFJ5YW4gSGFya2luIDxyeWFuLmhhcmtpbkBsaW5h
-cm8ub3JnPgpTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFy
-by5vcmc+Ci0tLQogLi4uL2Rpc3BsYXkvYnJpZGdlL3ZpcnR1YWwtZGlzcGxheS1icmlkZ2UudHh0
-IHwgNjIgKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDYyIGluc2VydGlvbnMo
-KykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2UvdmlydHVhbC1kaXNwbGF5LWJyaWRnZS50eHQKCmRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdmlydHVhbC1k
-aXNwbGF5LWJyaWRnZS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2UvdmlydHVhbC1kaXNwbGF5LWJyaWRnZS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2
-NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5lYTRmNWE5MWFiOTQKLS0tIC9kZXYvbnVsbAorKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdmlydHVhbC1k
-aXNwbGF5LWJyaWRnZS50eHQKQEAgLTAsMCArMSw2MiBAQAorVmlydHVhbCBEaXNwbGF5IEJyaWRn
-ZQorCitUaGlzIHJlcHJlc2VudHMgYSBkaXNwbGF5IHRoYXQgaXMgY29udGFpbmVkIHdpdGhpbiBh
-biBlbXVsYXRlZAorZW52aXJvbm1lbnQuCisKK1RoaXMgbWVhbnMgdGhhdCB0aGUgZGlzcGxheSBl
-bmdpbmUgbWFpbmx5IGV4cGVjdHMgc29tZSB0aW1pbmcKK3BhcmFtZXRlcnMgdG8gYmUgd3JpdHRl
-biBpbnRvIGl0LCBhbmQgYWZ0ZXIgdGhhdCB0aGUgZW11bGF0b3Igd2lsbAorcmVzcG9uZCBieSBj
-cmVhdGluZyBhIHZpcnR1YWwgZGlzcGxheSB3aXRoIHRoZSByZXF1ZXN0ZWQKK3Jlc29sdXRpb24g
-Y2hhcmFjdGVyaXN0aWNzLgorCitBcyB0aGUgb3BlcmF0aW5nIHN5c3RlbSBjYW5ub3QgImRldGVj
-dCIgc3VjaCBhIGRpc3BsYXksIHJhdGhlciB0aGUKK2VtdWxhdG9yIHdpbGwgcmVzcG9uZCB0byB3
-aGF0IHRoZSBjb250cm9sbGVyIG91dHB1dHMsIGEKK2NoaWNrZW4tYW5kLWVnZyBwcm9ibGVtIG5l
-ZWRzIHRvIGJlIHNvbHZlZDogdGhlIHJlc29sdXRpb24gYW5kCit0aW1pbmcgY2hhcmFjdGVyaXN0
-aWNzIG5lZWQgdG8gYmUgZGVmaW5lZCBhbmQgc2V0IHVwIHNvbWV3aGVyZS4KKworVGhlIHZpcnR1
-YWwgZGlzcGxheSBicmlkZ2Ugc29sdmVzIHRoaXMgYnkgZGVmaW5pbmcgYSBicmlkZ2Ugd2l0aAor
-YWxsIHRpbWluZyBjaGFyYWN0ZXJpc3RpY3MgZW5jb2RlZCBpbnRvIHRoZSBkZXZpY2UgdHJlZSBu
-b2RlLgorCitSZXF1aXJlZCBwcm9wZXJpZXM6CistIGNvbXBhdGlibGU6IHNoYWxsIGJlICJ2aXJ0
-dWFsLWRpc3BsYXktYnJpZGdlIgorCitSZXF1aXJlZCBzdWJub2RlczoKKy0gZGlzcGxheS10aW1p
-bmdzOiBjb250YWlucyBpbiB0dXJuIGEgZGlzcGxheSB0aW1pbmcgbm9kZQorICBzZWUgZGlzcGxh
-eS10aW1pbmcudHh0CistIHBvcnRzOiBjb250YWlucyB0aGUgZGlzcGxheSBwb3J0cywgc2VlIG1l
-ZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CisKK0V4YW1wbGU6CisKK2JyaWRnZSB7CisJY29tcGF0
-aWJsZSA9ICJ2aXJ0dWFsLWRpc3BsYXktYnJpZGdlIjsKKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsK
-Kwkjc2l6ZS1jZWxscyA9IDwwPjsKKworCWRpc3BsYXktdGltaW5ncyB7CisJCS8qIFNvbWUgc3Rh
-bmRhcmQgVkdBIHRpbWluZyAqLworCQl0aW1pbmcwIHsKKwkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwy
-Mzc1MD47CisJCQloYWN0aXZlID0gPDY0MD47CisJCQl2YWN0aXZlID0gPDQ4MD47CisJCQloZnJv
-bnQtcG9yY2ggPSA8NDg+OworCQkJaGJhY2stcG9yY2ggPSA8MTY+OworCQkJaHN5bmMtbGVuID0g
-PDk2PjsKKwkJCXZmcm9udC1wb3JjaCA9IDwzMz47CisJCQl2YmFjay1wb3JjaCA9IDw5PjsKKwkJ
-CXZzeW5jLWxlbiA9IDwzPjsKKwkJCXZyZWZyZXNoID0gPDYwPjsKKwkJfTsKKwl9OworCisJcG9y
-dHMgeworCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJ
-cG9ydEAwIHsKKwkJCXJlZyA9IDwwPjsKKworCQkJZGlzcGxheV9icmlkZ2VfaW46IGVuZHBvaW50
-IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmZvbz47CisJCQl9OworCQl9OworCX07Cit9Owot
-LSAKMi4xNy4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Alex,
+
+On 2018-08-24 13:09, Alexandre Courbot wrote:
+> On Thu, Aug 23, 2018 at 11:29 PM Vikash Garodia 
+> <vgarodia@codeaurora.org> wrote:
+
+[snip]
+
+>> +struct video_firmware {
+>> +       struct device *dev;
+>> +       struct iommu_domain *iommu_domain;
+>> +};
+>> +
+>>  /**
+>>   * struct venus_core - holds core parameters valid for all instances
+>>   *
+>> @@ -98,6 +103,7 @@ struct venus_caps {
+>>   * @dev:               convenience struct device pointer
+>>   * @dev_dec:   convenience struct device pointer for decoder device
+>>   * @dev_enc:   convenience struct device pointer for encoder device
+>> + * @fw:                a struct for venus firmware info
+>>   * @no_tz:     a flag that suggests presence of trustzone
+>>   * @lock:      a lock for this strucure
+>>   * @instances: a list_head of all instances
+>> @@ -130,6 +136,7 @@ struct venus_core {
+>>         struct device *dev;
+>>         struct device *dev_dec;
+>>         struct device *dev_enc;
+>> +       struct video_firmware fw;
+> 
+> Since struct video_firmware is only used here I think you can declare
+> it inline, i.e.
+> 
+>     struct {
+>         struct device *dev;
+>         struct iommu_domain *iommu_domain;
+>     } fw;
+> 
+> This structure is actually a good candidate to hold the firmware
+> memory area start address and size.
+
+I can make it inline.
+Memory area and size are common parameters populated
+locally while loading the firmware with or without tz. Firmware struct 
+has
+info more specific to firmware device.
+
+[snip]
+
+> 
+>> +{
+>> +       struct iommu_domain *iommu_dom;
+>> +       struct device *dev;
+>> +       int ret;
+>> +
+>> +       dev = core->fw.dev;
+>> +       if (!dev)
+>> +               return -EPROBE_DEFER;
+>> +
+>> +       iommu_dom = iommu_domain_alloc(&platform_bus_type);
+>> +       if (!iommu_dom) {
+>> +               dev_err(dev, "Failed to allocate iommu domain\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       ret = iommu_attach_device(iommu_dom, dev);
+>> +       if (ret) {
+>> +               dev_err(dev, "could not attach device\n");
+>> +               goto err_attach;
+>> +       }
+> 
+> I think like the above belongs more in venus_firmware_init()
+> (introduced in patch 4/4) than here. There is no reason to
+> detach/reattach the iommu if we stop the firmware.
+
+Consider the case when we want to reload the firmware during error 
+recovery.
+Boot and shutdown will be needed in such case without the need to 
+populate
+the firmware device again.
+
+[snip]
+
+>> +static int venus_shutdown_no_tz(struct venus_core *core)
+>> +{
+>> +       struct iommu_domain *iommu;
+>> +       size_t unmapped;
+>> +       u32 reg;
+>> +       struct device *dev = core->fw.dev;
+>> +       void __iomem *base = core->base;
+>> +
+>> +       /* Assert the reset to ARM9 */
+>> +       reg = readl_relaxed(base + WRAPPER_A9SS_SW_RESET);
+>> +       reg |= WRAPPER_A9SS_SW_RESET_BIT;
+>> +       writel_relaxed(reg, base + WRAPPER_A9SS_SW_RESET);
+>> +
+>> +       /* Make sure reset is asserted before the mapping is removed 
+>> */
+>> +       mb();
+>> +
+>> +       iommu = core->fw.iommu_domain;
+>> +
+>> +       unmapped = iommu_unmap(iommu, VENUS_FW_START_ADDR, 
+>> VENUS_FW_MEM_SIZE);
+>> +       if (unmapped != VENUS_FW_MEM_SIZE)
+>> +               dev_err(dev, "failed to unmap firmware\n");
+>> +
+>> +       iommu_detach_device(iommu, dev);
+>> +       iommu_domain_free(iommu);
+> 
+> Accordingly, this would also be moved into venus_firmware_deinit().
+
+Same explanation here as well.
+
+Thanks,
+Vikash
