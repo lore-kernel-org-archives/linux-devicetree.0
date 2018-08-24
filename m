@@ -1,146 +1,90 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 2/2] iio: adc: sc27xx: Add ADC scale calibration
-Date: Fri, 24 Aug 2018 17:53:16 +0800
-Message-ID: <cc6b76c5d660818d3ff7833ea5be4f32ed960f54.1535103920.git.baolin.wang@linaro.org>
-References: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Fri, 24 Aug 2018 11:55:15 +0200
+Message-ID: <20180824095515.GB4045@amd>
+References: <20180817151528.21623-1-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
-In-Reply-To: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
-References: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180817151528.21623-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, baolin.wang@linaro.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to read calibration values from the eFuse
-controller to calibrate the ADC channel scales, which can make ADC
-sample data more accurate.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- .../bindings/iio/adc/sprd,sc27xx-adc.txt           |    4 ++
- drivers/iio/adc/sc27xx_adc.c                       |   52 ++++++++++++++++++--
- 2 files changed, 53 insertions(+), 3 deletions(-)
+--XF85m9dhOBO43t/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
-index 8aad960..b4daa15 100644
---- a/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
-@@ -12,6 +12,8 @@ Required properties:
- - interrupts: The interrupt number for the ADC device.
- - #io-channel-cells: Number of cells in an IIO specifier.
- - hwlocks: Reference to a phandle of a hwlock provider node.
-+- nvmem-cells: A phandle to the calibration cells provided by eFuse device.
-+- nvmem-cell-names: Should be "big_scale_calib", "small_scale_calib".
- 
- Example:
- 
-@@ -32,5 +34,7 @@ Example:
- 			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
- 			#io-channel-cells = <1>;
- 			hwlocks = <&hwlock 4>;
-+			nvmem-cells = <&adc_big_scale>, <&adc_small_scale>;
-+			nvmem-cell-names = "big_scale_calib", "small_scale_calib";
- 		};
- 	};
-diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
-index 153c311..7ac78eda 100644
---- a/drivers/iio/adc/sc27xx_adc.c
-+++ b/drivers/iio/adc/sc27xx_adc.c
-@@ -5,6 +5,7 @@
- #include <linux/iio/iio.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/nvmem-consumer.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-@@ -87,16 +88,48 @@ struct sc27xx_adc_linear_graph {
-  * should use the small-scale graph, and if more than 1.2v, we should use the
-  * big-scale graph.
-  */
--static const struct sc27xx_adc_linear_graph big_scale_graph = {
-+static struct sc27xx_adc_linear_graph big_scale_graph = {
- 	4200, 3310,
- 	3600, 2832,
- };
- 
--static const struct sc27xx_adc_linear_graph small_scale_graph = {
-+static struct sc27xx_adc_linear_graph small_scale_graph = {
- 	1000, 3413,
- 	100, 341,
- };
- 
-+static const struct sc27xx_adc_linear_graph big_scale_graph_calib = {
-+	4200, 856,
-+	3600, 733,
-+};
-+
-+static const struct sc27xx_adc_linear_graph small_scale_graph_calib = {
-+	1000, 833,
-+	100, 80,
-+};
-+
-+static int sc27xx_adc_get_calib_data(u32 calib_data, int calib_adc)
-+{
-+	return ((calib_data & 0xff) + calib_adc - 128) * 4;
-+}
-+
-+static void
-+sc27xx_adc_scale_calibration(const struct sc27xx_adc_linear_graph *calib_graph,
-+			     u32 calib_data, bool big_scale)
-+{
-+	struct sc27xx_adc_linear_graph *graph;
-+
-+	if (big_scale)
-+		graph = &big_scale_graph;
-+	else
-+		graph = &small_scale_graph;
-+
-+	/* Only need to calibrate the adc values in the linear graph. */
-+	graph->adc0 = sc27xx_adc_get_calib_data(calib_data, calib_graph->adc0);
-+	graph->adc1 = sc27xx_adc_get_calib_data(calib_data >> 8,
-+						calib_graph->adc1);
-+}
-+
- static int sc27xx_adc_get_ratio(int channel, int scale)
- {
- 	switch (channel) {
-@@ -209,7 +242,7 @@ static void sc27xx_adc_volt_ratio(struct sc27xx_adc_data *data,
- 	*div_denominator = ratio & SC27XX_RATIO_DENOMINATOR_MASK;
- }
- 
--static int sc27xx_adc_to_volt(const struct sc27xx_adc_linear_graph *graph,
-+static int sc27xx_adc_to_volt(struct sc27xx_adc_linear_graph *graph,
- 			      int raw_adc)
- {
- 	int tmp;
-@@ -371,6 +404,7 @@ static int sc27xx_adc_write_raw(struct iio_dev *indio_dev,
- 
- static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
- {
-+	u32 val;
- 	int ret;
- 
- 	ret = regmap_update_bits(data->regmap, SC27XX_MODULE_EN,
-@@ -390,6 +424,18 @@ static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
- 	if (ret)
- 		goto disable_clk;
- 
-+	/* ADC channel scales' calibration from nvmem device */
-+	ret = nvmem_cell_read_u32(data->dev, "big_scale_calib", &val);
-+	if (ret)
-+		goto disable_clk;
-+
-+	sc27xx_adc_scale_calibration(&big_scale_graph_calib, val, true);
-+
-+	ret = nvmem_cell_read_u32(data->dev, "small_scale_calib", &val);
-+	if (ret)
-+		goto disable_clk;
-+
-+	sc27xx_adc_scale_calibration(&small_scale_graph_calib, val, false);
- 	return 0;
- 
- disable_clk:
--- 
-1.7.9.5
+On Fri 2018-08-17 10:15:27, Dan Murphy wrote:
+> Add the device tree bindings for the lm3697
+> LED driver for backlighting and display.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+Some nits are below.
+
+> +The LM3697 11-bit LED driver provides high-
+> +performance backlight dimming for 1, 2, or 3 series
+> +LED strings while delivering up to 90% efficiency.
+
+LED core is 8-bit only... so full dynamic range can not be currently
+used in linux -- right? Is there any plan to change/fix that?
+
+> +This device is suitable for Display and Keypad Lighting
+
+"display and keypad lighting."
+
+> +Optional properties:
+> +	- enable-gpios : gpio pin to enable/disable the device.
+
+Remove "." at end of sentence, for consistency. "GPIO"?
+
+> +All HVLED strings controlled by control bank A
+
+":"?
+
+> +led-controller@36 {
+> +	compatible =3D "ti,lm3967";
+> +	reg =3D <0x36>;
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <0>;
+> +
+> +	enable-gpios =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +	vled-supply =3D <&vbatt>;
+> +
+> +	led@0 {
+> +		reg =3D <0>;
+> +		led-sources =3D <1 1 1>;
+> +		label =3D "white:backlight_cluster";
+> +		linux,default-trigger =3D "backlight";
+> +	};
+> +}
+> +
+> +For more product information please see the link below:
+> +http://www.ti.com/lit/ds/symlink/lm3697.pdf
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--XF85m9dhOBO43t/C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlt/1gMACgkQMOfwapXb+vJ7sQCfQERZBzCfSk1cLZSRcQj6SuJw
+o9sAn0U3Yg2Pa2vLQIQUWc/jzi5nhnTG
+=+Hlr
+-----END PGP SIGNATURE-----
+
+--XF85m9dhOBO43t/C--
