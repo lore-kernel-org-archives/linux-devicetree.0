@@ -1,168 +1,653 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] sh_eth: Add R7S9210 support
-Date: Fri, 24 Aug 2018 19:07:43 +0300
-Message-ID: <8efee9e2-2c2c-b02b-db8d-a421a8928448@cogentembedded.com>
-References: <20180822205705.20835-1-chris.brandt@renesas.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2 3/4] drivers: edac: Add EDAC driver support for QCOM SoCs
+Date: Fri, 24 Aug 2018 09:11:49 -0700
+Message-ID: <153512710906.28926.10438185172171294721@swboyd.mtv.corp.google.com>
+References: <1534550915-18230-1-git-send-email-vnkgutta@codeaurora.org>
+ <1534550915-18230-4-git-send-email-vnkgutta@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180822205705.20835-1-chris.brandt@renesas.com>
-Content-Language: en-MW
-Sender: netdev-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534550915-18230-4-git-send-email-vnkgutta@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, bp@alien8.de, ckadabi@codeaurora.org, devicetree@vger.kernel.org, evgreen@chromium.org, linux-arm-msm@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, mark.rutland@arm.com, mchehab@kernel.org, rishabhb@codeaurora.org, robh+dt@kernel.org, robh@kernel.org, tsoni@codeaurora.org
+Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2018 11:57 PM, Chris Brandt wrote:
+Quoting Venkata Narendra Kumar Gutta (2018-08-17 17:08:34)
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 57304b2..da8f150 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -460,4 +460,32 @@ config EDAC_TI
+>           Support for error detection and correction on the
+>            TI SoCs.
+>  =
 
-> Add support for the R7S9210 which is part of the RZ/A2 series.
-
-   Is the manual publicly available? I tried to find it on Renesas' website
-but it appears royally broken...
-
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
->  Documentation/devicetree/bindings/net/sh_eth.txt |   1 +
->  drivers/net/ethernet/renesas/sh_eth.c            | 107 +++++++++++++++++++++++
->  drivers/net/ethernet/renesas/sh_eth.h            |   1 +
->  3 files changed, 109 insertions(+)
-> 
-[...]
-> diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-> index 5573199c4536..f3a575e56ae4 100644
-> --- a/drivers/net/ethernet/renesas/sh_eth.c
-> +++ b/drivers/net/ethernet/renesas/sh_eth.c
-> @@ -216,6 +216,59 @@ static const u16 sh_eth_offset_fast_rz[SH_ETH_MAX_REGISTER_OFFSET] = {
->  	[RXALCR0]	= 0x008C,
->  };
->  
-> +static const u16 sh_eth_offset_fast_rza2[SH_ETH_MAX_REGISTER_OFFSET] = {
-> +	SH_ETH_OFFSET_DEFAULTS,
+> +config EDAC_QCOM
+> +       tristate "QCOM EDAC Controller"
+> +       depends on EDAC
+> +       help
+> +         Support for error detection and correction on the
+> +         QCOM SoCs.
 > +
-> +	[EDMR]		= 0x0000,
-> +	[EDTRR]		= 0x0008,
-> +	[EDRRR]		= 0x0010,
-> +	[EESR]		= 0x0028,
-> +	[EESIPR]	= 0x0030,
-> +	[TDLAR]		= 0x0018,
-> +	[TBRAR]		= 0x00d4,
-> +	[TDFAR]		= 0x00d8,
-> +	[RDLAR]		= 0x0020,
-> +	[RBWAR]		= 0x00c8,
-> +	[RDFAR]		= 0x00cc,
-> +	[TRSCER]	= 0x0038,
-> +	[RMFCR]		= 0x0040,
-> +	[TFTR]		= 0x0048,
-> +	[FDR]		= 0x0050,
-> +	[RMCR]		= 0x0058,
-> +	[TFUCR]		= 0x0064,
-> +	[RFOCR]		= 0x0068,
-> +	[RPADIR]	= 0x0078,
-> +	[TRIMD]		= 0x007c,
-> +	[FCFTR]		= 0x0070,
+> +config EDAC_QCOM_LLCC
+> +       tristate "QCOM EDAC Controller for LLCC Cache"
+> +       depends on EDAC_QCOM && QCOM_LLCC
+> +       help
+> +         Support for error detection and correction on the
+> +         QCOM LLCC cache. Report errors caught by LLCC ECC
+> +         mechanism.
 > +
-> +	[ECMR]		= 0x0100,
-> +	[RFLR]		= 0x0108,
-> +	[ECSR]		= 0x0110,
-> +	[ECSIPR]	= 0x0118,
-> +	[PIR]		= 0x0120,
-> +	[PSR]		= 0x0128,
-> +	[RDMLR]		= 0x0140,
-> +	[IPGR]		= 0x0150,
-> +	[APR]		= 0x0154,
-> +	[MPR]		= 0x0158,
-> +	[RFCF]		= 0x0160,
-> +	[TPAUSER]	= 0x0164,
-> +	[TPAUSECR]	= 0x0168,
-> +	[BCFRR]		= 0x016c,
-> +	[MAHR]		= 0x01c0,
-> +	[MALR]		= 0x01c8,
-> +	[TROCR]		= 0x01d0,
-> +	[CDCR]		= 0x01d4,
-> +	[LCCR]		= 0x01d8,
-> +	[CNDCR]		= 0x01dc,
-> +	[CEFCR]		= 0x01e4,
-> +	[FRECR]		= 0x01e8,
-> +	[TSFRCR]	= 0x01ec,
-> +	[TLFRCR]	= 0x01f0,
-> +	[RFCR]		= 0x01f4,
-> +	[MAFCR]		= 0x01f8,
+> +         For debugging issues having to do with stability and overall sy=
+stem
+> +          health, you should probably say 'Y' here.
+> +
+> +config EDAC_QCOM_LLCC_PANIC_ON_UE
+> +       bool "Panic on uncorrectable errors - qcom llcc"
+
+Why isn't this a generic option for all EDAC?
+
+> +       depends on EDAC_QCOM_LLCC
+> +       help
+> +         Forcibly cause a kernel panic if an uncorrectable error (UE) is
+> +         detected. This can reduce debugging times on hardware which may=
+ be
+> +         operating at voltages or frequencies outside normal specificati=
+on.
+> +
+> +         For production builds, you should probably say 'N' here.
+> +
+>  endif # EDAC
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index 02b43a7..716096d 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -77,3 +77,4 @@ obj-$(CONFIG_EDAC_ALTERA)             +=3D altera_edac.o
+>  obj-$(CONFIG_EDAC_SYNOPSYS)            +=3D synopsys_edac.o
+>  obj-$(CONFIG_EDAC_XGENE)               +=3D xgene_edac.o
+>  obj-$(CONFIG_EDAC_TI)                  +=3D ti_edac.o
+> +obj-$(CONFIG_EDAC_QCOM)                        +=3D qcom_edac.o
+
+Maybe put this in sort of alphabetical order so conflicts don't happen.
+
+> diff --git a/drivers/edac/qcom_edac.c b/drivers/edac/qcom_edac.c
+> new file mode 100644
+> index 0000000..9a8c670
+> --- /dev/null
+> +++ b/drivers/edac/qcom_edac.c
+> @@ -0,0 +1,446 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/edac.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of_device.h>
+
+Used? Maybe it should just be linux/of.h
+
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/smp.h>
+
+Why?
+
+> +#include <linux/soc/qcom/llcc-qcom.h>
+> +
+> +#include "edac_mc.h"
+> +#include "edac_device.h"
+> +
+> +#ifdef CONFIG_EDAC_QCOM_LLCC_PANIC_ON_UE
+> +#define LLCC_ERP_PANIC_ON_UE            1
+> +#else
+> +#define LLCC_ERP_PANIC_ON_UE            0
+> +#endif
+> +
+> +#define EDAC_LLCC                       "qcom_llcc"
+> +
+> +#define TRP_SYN_REG_CNT                 6
+> +
+> +#define DRP_SYN_REG_CNT                 8
+> +
+> +#define LLCC_COMMON_STATUS0             0x0003000C
+> +#define LLCC_LB_CNT_MASK                GENMASK(31, 28)
+> +#define LLCC_LB_CNT_SHIFT               28
+> +
+> +/* single & Double Bit syndrome register offsets */
+> +#define TRP_ECC_SB_ERR_SYN0             0x0002304C
+> +#define TRP_ECC_DB_ERR_SYN0             0x00020370
+> +#define DRP_ECC_SB_ERR_SYN0             0x0004204C
+> +#define DRP_ECC_DB_ERR_SYN0             0x00042070
+> +
+> +/* Error register offsets */
+> +#define TRP_ECC_ERROR_STATUS1           0x00020348
+> +#define TRP_ECC_ERROR_STATUS0           0x00020344
+> +#define DRP_ECC_ERROR_STATUS1           0x00042048
+> +#define DRP_ECC_ERROR_STATUS0           0x00042044
+> +
+> +/* TRP, DRP interrupt register offsets */
+> +#define DRP_INTERRUPT_STATUS            0x00041000
+> +#define TRP_INTERRUPT_0_STATUS          0x00020480
+> +#define DRP_INTERRUPT_CLEAR             0x00041008
+> +#define DRP_ECC_ERROR_CNTR_CLEAR        0x00040004
+> +#define TRP_INTERRUPT_0_CLEAR           0x00020484
+> +#define TRP_ECC_ERROR_CNTR_CLEAR        0x00020440
+> +
+> +/* Mask and shift macros */
+> +#define ECC_DB_ERR_COUNT_MASK           GENMASK(4, 0)
+> +#define ECC_DB_ERR_WAYS_MASK            GENMASK(31, 16)
+> +#define ECC_DB_ERR_WAYS_SHIFT           BIT(4)
+> +
+> +#define ECC_SB_ERR_COUNT_MASK           GENMASK(23, 16)
+> +#define ECC_SB_ERR_COUNT_SHIFT          BIT(4)
+> +#define ECC_SB_ERR_WAYS_MASK            GENMASK(15, 0)
+> +
+> +#define SB_ECC_ERROR                    BIT(0)
+> +#define DB_ECC_ERROR                    BIT(1)
+> +
+> +#define DRP_TRP_INT_CLEAR               GENMASK(1, 0)
+> +#define DRP_TRP_CNT_CLEAR               GENMASK(1, 0)
+> +
+> +/* Config registers offsets*/
+> +#define DRP_ECC_ERROR_CFG               0x00040000
+> +
+> +/* TRP, DRP interrupt register offsets */
+> +#define CMN_INTERRUPT_0_ENABLE          0x0003001C
+> +#define CMN_INTERRUPT_2_ENABLE          0x0003003C
+> +#define TRP_INTERRUPT_0_ENABLE          0x00020488
+> +#define DRP_INTERRUPT_ENABLE            0x0004100C
+> +
+> +#define SB_ERROR_THRESHOLD              0x1
+> +#define SB_ERROR_THRESHOLD_SHIFT        24
+> +#define SB_DB_TRP_INTERRUPT_ENABLE      0x3
+> +#define TRP0_INTERRUPT_ENABLE           0x1
+> +#define DRP0_INTERRUPT_ENABLE           BIT(6)
+> +#define SB_DB_DRP_INTERRUPT_ENABLE      0x3
+> +
+> +enum {
+> +       LLCC_DRAM_CE =3D 0,
+> +       LLCC_DRAM_UE,
+> +       LLCC_TRAM_CE,
+> +       LLCC_TRAM_UE,
+> +       LLCC_ERR_TYPE_MAX =3D LLCC_TRAM_UE + 1,
+
+What's the point?
+
 > +};
 > +
-
-   This array is absolutely the same as sh_eth_offset_fast_sh4[], except the latter
-is (more or less) sorted.
-
->  static const u16 sh_eth_offset_fast_rcar[SH_ETH_MAX_REGISTER_OFFSET] = {
->  	SH_ETH_OFFSET_DEFAULTS,
->  
-> @@ -635,6 +688,56 @@ static struct sh_eth_cpu_data r7s72100_data = {
->  	.no_tx_cntrs	= 1,
->  };
->  
-> +/* R7S9210 */
-> +static void sh_eth_set_rate_r7s9210(struct net_device *ndev)
+> +static int qcom_llcc_core_setup(struct regmap *llcc_bcast_regmap)
 > +{
-> +	struct sh_eth_private *mdp = netdev_priv(ndev);
-> +	unsigned long RTM = 0x00000004;
-
-  Use #define, please.
-
+> +       u32 sb_err_threshold;
+> +       int ret;
 > +
-> +	switch (mdp->speed) {
-> +	case 10: /* 10BASE */
-> +		sh_eth_modify(ndev, ECMR, RTM, 0);
-> +		break;
-> +	case 100:/* 100BASE */
-> +		sh_eth_modify(ndev, ECMR, RTM, RTM);
-> +		break;
-> +	}
+> +       /* Enable TRP in instance 2 of common interrupt enable register */
+
+What is TRP?
+
+> +       ret =3D regmap_update_bits(llcc_bcast_regmap, CMN_INTERRUPT_2_ENA=
+BLE,
+> +                                TRP0_INTERRUPT_ENABLE,
+> +                                TRP0_INTERRUPT_ENABLE);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Enable ECC interrupts on Tag Ram */
+> +       ret =3D regmap_update_bits(llcc_bcast_regmap, TRP_INTERRUPT_0_ENA=
+BLE,
+> +                                SB_DB_TRP_INTERRUPT_ENABLE,
+> +                                SB_DB_TRP_INTERRUPT_ENABLE);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Enable SB error for Data RAM */
+
+SB is single bit?
+
+> +       sb_err_threshold =3D (SB_ERROR_THRESHOLD << SB_ERROR_THRESHOLD_SH=
+IFT);
+> +       ret =3D regmap_write(llcc_bcast_regmap, DRP_ECC_ERROR_CFG,
+> +                          sb_err_threshold);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Enable DRP in instance 2 of common interrupt enable register */
+
+DRP is double bit?
+
+> +       ret =3D regmap_update_bits(llcc_bcast_regmap, CMN_INTERRUPT_2_ENA=
+BLE,
+> +                                DRP0_INTERRUPT_ENABLE,
+> +                                DRP0_INTERRUPT_ENABLE);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Enable ECC interrupts on Data Ram */
+> +       ret =3D regmap_write(llcc_bcast_regmap, DRP_INTERRUPT_ENABLE,
+> +                          SB_DB_DRP_INTERRUPT_ENABLE);
+> +       return ret;
 > +}
 > +
+> +/* Clear the error interrupt and counter registers */
+> +static int
+> +qcom_llcc_clear_errors_status(int err_type, struct llcc_drv_data *drv)
+> +{
+> +       int ret =3D 0;
+> +
+> +       switch (err_type) {
+> +       case LLCC_DRAM_CE:
+> +       case LLCC_DRAM_UE:
+> +               /* Clear the interrupt */
+> +               ret =3D regmap_write(drv->bcast_regmap, DRP_INTERRUPT_CLE=
+AR,
+> +                                  DRP_TRP_INT_CLEAR);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               /* Clear the counters */
 
-  Seems the same as sh_eth_set_rate_rcar(), except for the bit name...
+A lot of these comments are just saying what the register write is doing
+which is fairly obvious from the register names. Can you remove these
+obvious comments?
 
-> +static struct sh_eth_cpu_data r7s9210_data = {
-> +	.soft_reset	= sh_eth_soft_reset,
+> +               ret =3D regmap_write(drv->bcast_regmap, DRP_ECC_ERROR_CNT=
+R_CLEAR,
+> +                                  DRP_TRP_CNT_CLEAR);
+> +               if (ret)
+> +                       return ret;
+> +               break;
+> +       case LLCC_TRAM_CE:
+> +       case LLCC_TRAM_UE:
+> +               ret =3D regmap_write(drv->bcast_regmap, TRP_INTERRUPT_0_C=
+LEAR,
+> +                                  DRP_TRP_INT_CLEAR);
+> +               if (ret)
+> +                       return ret;
 > +
-> +	.set_duplex	= sh_eth_set_duplex,
-> +	.set_rate	= sh_eth_set_rate_r7s9210,
+> +               ret =3D regmap_write(drv->bcast_regmap, TRP_ECC_ERROR_CNT=
+R_CLEAR,
+> +                                  DRP_TRP_CNT_CLEAR);
+> +               if (ret)
+> +                       return ret;
+> +               break;
+> +       }
+> +       return ret;
+> +}
 > +
-> +	.register_type	= SH_ETH_REG_FAST_RZA2,
+> +/* Dump Syndrome registers data for Tag RAM, Data RAM bit errors*/
+> +static int
+> +dump_syn_reg_values(struct llcc_drv_data *drv, u32 bank, int err_type)
+> +{
+> +       struct llcc_edac_reg_data *reg_data =3D &(drv->edac_reg[err_type]=
+);
+
+const? Also, drop the useless parenthesis.
+
+> +       int err_cnt, err_ways, ret, i;
+> +       u32 synd_reg, synd_val;
 > +
-> +	.edtrr_trns	= EDTRR_TRNS_ETHER,
-> +	.ecsr_value	= ECSR_ICD,
-> +	.ecsipr_value	= ECSIPR_ICDIP,
-> +	.eesipr_value	= EESIPR_TWBIP | EESIPR_TABTIP | EESIPR_RABTIP |
-> +			  EESIPR_RFCOFIP | EESIPR_ECIIP | EESIPR_FTCIP |
-> +			  EESIPR_TDEIP | EESIPR_TFUFIP | EESIPR_FRIP |
-> +			  EESIPR_RDEIP | EESIPR_RFOFIP | EESIPR_CNDIP |
-> +			  EESIPR_DLCIP | EESIPR_CDIP | EESIPR_TROIP |
-> +			  EESIPR_RMAFIP | EESIPR_RRFIP | EESIPR_RTLFIP |
-> +			  EESIPR_RTSFIP | EESIPR_PREIP | EESIPR_CERFIP,
+> +       for (i =3D 0; i < reg_data->reg_cnt; i++) {
+> +               synd_reg =3D reg_data->synd_reg + (i * 4);
+> +               ret =3D regmap_read(drv->regmap, drv->offsets[bank] + syn=
+d_reg,
+> +                                 &synd_val);
+> +               if (ret)
+> +                       goto clear;
+> +               edac_printk(KERN_CRIT, EDAC_LLCC, "%s: ECC_SYN%d: 0x%8x\n=
+",
+> +                           reg_data->err_name, i, synd_val);
+> +       }
 > +
-> +	.tx_check	= EESR_FTC | EESR_CND | EESR_DLC | EESR_CD | EESR_TRO,
-> +	.eesr_err_check	= EESR_TWB | EESR_TABT | EESR_RABT | EESR_RFE |
-> +			  EESR_RDE | EESR_RFRMER | EESR_TFE | EESR_TDE,
+> +       ret =3D regmap_read(drv->regmap,
+> +                         drv->offsets[bank] + reg_data->err_status_reg,
+> +                         &err_cnt);
+> +       if (ret)
+> +               goto clear;
 > +
-> +	.fdr_value	= 0x0000070f,
+> +       err_cnt &=3D reg_data->err_count_mask;
+> +       err_cnt >>=3D reg_data->err_count_shift;
+> +       edac_printk(KERN_CRIT, EDAC_LLCC, "%s: error count: 0x%4x\n",
+> +                   reg_data->err_name, err_cnt);
 > +
-> +	.apr		= 1,
-> +	.mpr		= 1,
-> +	.tpauser	= 1,
-> +	.hw_swap	= 1,
-> +	.rpadir		= 1,
-> +	.no_ade		= 1,
-> +	.xdfar_rw	= 1,
+> +       ret =3D regmap_read(drv->regmap,
+> +                         drv->offsets[bank] + reg_data->err_ways_status,
+> +                         &err_ways);
+> +       if (ret)
+> +               goto clear;
+> +
+> +       err_ways &=3D reg_data->err_ways_mask;
+> +       err_ways >>=3D reg_data->err_ways_shift;
+> +
+> +       edac_printk(KERN_CRIT, EDAC_LLCC, "%s: error ways: 0x%4x\n",
+> +                   reg_data->err_name, err_ways);
+> +
+> +clear:
+> +       ret =3D qcom_llcc_clear_errors_status(err_type, drv);
+> +       return ret;
+
+Just 'return qcom_llcc_clear_errors_status(...)'
+
+> +}
+> +
+> +static int
+> +dump_syn_reg(struct edac_device_ctl_info *edev_ctl, int err_type, u32 ba=
+nk)
+> +{
+> +       struct llcc_drv_data *drv =3D edev_ctl->pvt_info;
+> +       int ret =3D 0;
+
+Please don't assign local variables at the start of a function and then
+reassign them again immediately after. It hides initialization problems.
+
+> +
+> +       ret =3D dump_syn_reg_values(drv, bank, err_type);
+> +       if (ret)
+> +               return ret;
+> +
+> +       switch (err_type) {
+> +       case LLCC_DRAM_CE:
+> +               edac_device_handle_ce(edev_ctl, 0, bank,
+> +                                     "LLCC Data RAM correctable Error");
+> +               break;
+> +       case LLCC_DRAM_UE:
+> +               edac_device_handle_ue(edev_ctl, 0, bank,
+> +                                     "LLCC Data RAM uncorrectable Error"=
+);
+> +               break;
+> +       case LLCC_TRAM_CE:
+> +               edac_device_handle_ce(edev_ctl, 0, bank,
+> +                                     "LLCC Tag RAM correctable Error");
+> +               break;
+> +       case LLCC_TRAM_UE:
+> +               edac_device_handle_ue(edev_ctl, 0, bank,
+> +                                     "LLCC Tag RAM uncorrectable Error");
+> +               break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static irqreturn_t
+> +llcc_ecc_irq_handler(int irq, void *edev_ctl)
+> +{
+> +       struct edac_device_ctl_info *edac_dev_ctl;
+> +       irqreturn_t irq_rc =3D IRQ_NONE;
+> +       u32 drp_error, trp_error, i;
+> +       struct llcc_drv_data *drv;
+> +       int ret;
+> +
+> +       edac_dev_ctl =3D (struct edac_device_ctl_info *)edev_ctl;
+
+Remove useless cast please.
+
+> +       drv =3D edac_dev_ctl->pvt_info;
+> +
+> +       for (i =3D 0; i < drv->num_banks; i++) {
+> +               /* Look for Data RAM errors */
+> +               ret =3D regmap_read(drv->regmap,
+> +                                 drv->offsets[i] + DRP_INTERRUPT_STATUS,
+> +                                 &drp_error);
+> +               if (ret)
+> +                       return irq_rc;
+> +
+> +               if (drp_error & SB_ECC_ERROR) {
+> +                       edac_printk(KERN_CRIT, EDAC_LLCC,
+> +                                   "Single Bit Error detected in Data Ra=
+m\n");
+> +                       ret =3D dump_syn_reg(edev_ctl, LLCC_DRAM_CE, i);
+> +                       if (!ret)
+> +                               irq_rc =3D IRQ_HANDLED;
+
+Rename 'irq_rc' to 'handled' and make it a bool and then break from all
+these 'return irq_rc' places and 'if (handled) return IRQ_HANDLED;
+return IRQ_NONE;' at the end of this function so we have one exit point
+from the irq handler.
+
+> +               } else if (drp_error & DB_ECC_ERROR) {
+> +                       edac_printk(KERN_CRIT, EDAC_LLCC,
+> +                                   "Double Bit Error detected in Data Ra=
+m\n");
+> +                       ret =3D dump_syn_reg(edev_ctl, LLCC_DRAM_UE, i);
+> +                       if (!ret)
+> +                               irq_rc =3D IRQ_HANDLED;
+> +               }
+> +
+> +               /* Look for Tag RAM errors */
+> +               ret =3D regmap_read(drv->regmap,
+> +                                 drv->offsets[i] + TRP_INTERRUPT_0_STATU=
+S,
+> +                                 &trp_error);
+> +               if (ret)
+> +                       return irq_rc;
+> +
+> +               if (trp_error & SB_ECC_ERROR) {
+> +                       edac_printk(KERN_CRIT, EDAC_LLCC,
+> +                                   "Single Bit Error detected in Tag Ram=
+\n");
+> +                       ret =3D dump_syn_reg(edev_ctl, LLCC_TRAM_CE, i);
+> +                       if (!ret)
+> +                               irq_rc =3D IRQ_HANDLED;
+> +               } else if (trp_error & DB_ECC_ERROR) {
+> +                       edac_printk(KERN_CRIT, EDAC_LLCC,
+> +                                   "Double Bit Error detected in Tag Ram=
+\n");
+> +                       ret =3D dump_syn_reg(edev_ctl, LLCC_TRAM_UE, i);
+> +                       if (!ret)
+> +                               irq_rc =3D IRQ_HANDLED;
+> +               }
+> +       }
+> +
+> +       return irq_rc;
+> +}
+> +
+> +static void llcc_edac_reg_data_init(struct llcc_edac_reg_data *edac_reg)
+> +{
+> +
+> +       struct llcc_edac_reg_data *reg_data;
+> +
+> +       /* Initialize register info for LLCC_DRAM_CE */
+> +       reg_data =3D &edac_reg[LLCC_DRAM_CE];
+> +       reg_data->err_name =3D "DRAM Single-bit";
+> +       reg_data->reg_cnt =3D DRP_SYN_REG_CNT;
+> +       reg_data->synd_reg =3D DRP_ECC_SB_ERR_SYN0;
+> +       reg_data->err_status_reg =3D DRP_ECC_ERROR_STATUS1;
+> +       reg_data->err_count_mask =3D ECC_SB_ERR_COUNT_MASK;
+> +       reg_data->err_count_shift =3D ECC_SB_ERR_COUNT_SHIFT;
+> +       reg_data->err_ways_status =3D DRP_ECC_ERROR_STATUS0;
+> +       reg_data->err_ways_mask =3D ECC_SB_ERR_WAYS_MASK;
+> +
+> +       /* Initialize register info for LLCC_DRAM_UE */
+> +       reg_data =3D &edac_reg[LLCC_DRAM_UE];
+> +       reg_data->err_name =3D "DRAM Double-bit";
+> +       reg_data->reg_cnt =3D DRP_SYN_REG_CNT;
+> +       reg_data->synd_reg =3D DRP_ECC_DB_ERR_SYN0;
+> +       reg_data->err_status_reg =3D DRP_ECC_ERROR_STATUS1;
+> +       reg_data->err_count_mask =3D ECC_DB_ERR_COUNT_MASK;
+> +       reg_data->err_ways_status =3D DRP_ECC_ERROR_STATUS0;
+> +       reg_data->err_ways_mask =3D ECC_DB_ERR_WAYS_MASK;
+> +       reg_data->err_ways_shift =3D ECC_DB_ERR_WAYS_SHIFT;
+> +
+> +       /* Initialize register info for LLCC_TRAM_CE */
+> +       reg_data =3D &edac_reg[LLCC_TRAM_CE];
+> +       reg_data->err_name =3D "TRAM Single-bit";
+> +       reg_data->reg_cnt =3D TRP_SYN_REG_CNT;
+> +       reg_data->synd_reg =3D TRP_ECC_SB_ERR_SYN0;
+> +       reg_data->err_status_reg =3D TRP_ECC_ERROR_STATUS1;
+> +       reg_data->err_count_mask =3D ECC_SB_ERR_COUNT_MASK;
+> +       reg_data->err_count_shift =3D ECC_SB_ERR_COUNT_SHIFT;
+> +       reg_data->err_ways_status =3D TRP_ECC_ERROR_STATUS0;
+> +       reg_data->err_ways_mask =3D ECC_SB_ERR_WAYS_MASK;
+> +
+> +       /* Initialize register info for LLCC_TRAM_UE */
+> +       reg_data =3D &edac_reg[LLCC_TRAM_UE];
+> +       reg_data->err_name =3D "TRAM Double-bit";
+> +       reg_data->reg_cnt =3D TRP_SYN_REG_CNT;
+> +       reg_data->synd_reg =3D TRP_ECC_DB_ERR_SYN0;
+> +       reg_data->err_status_reg =3D TRP_ECC_ERROR_STATUS1;
+> +       reg_data->err_count_mask =3D ECC_DB_ERR_COUNT_MASK;
+> +       reg_data->err_ways_status =3D TRP_ECC_ERROR_STATUS0;
+> +       reg_data->err_ways_mask =3D ECC_DB_ERR_WAYS_MASK;
+> +       reg_data->err_ways_shift =3D ECC_DB_ERR_WAYS_SHIFT;
+
+Why can't these things be a static const array that the driver looks up
+in? What's the point of it being per-device instance?
+
+> +}
+> +
+> +static int qcom_llcc_edac_probe(struct platform_device *pdev)
+> +{
+> +       struct llcc_drv_data *llcc_driv_data =3D pdev->dev.platform_data;
+> +       struct edac_device_ctl_info *edev_ctl;
+> +       struct device *dev =3D &pdev->dev;
+> +       int ecc_irq;
+> +       int rc;
+> +
+> +       /* Initialize register set for the error types*/
+> +       llcc_driv_data->edac_reg =3D devm_kcalloc(dev, LLCC_ERR_TYPE_MAX,
+> +                                       sizeof(struct llcc_edac_reg_data),
+> +                                       GFP_KERNEL);
+> +       llcc_edac_reg_data_init(llcc_driv_data->edac_reg);
+> +
+> +       rc =3D qcom_llcc_core_setup(llcc_driv_data->bcast_regmap);
+> +       if (rc)
+> +               return rc;
+> +
+> +       /* Allocate edac control info */
+> +       edev_ctl =3D edac_device_alloc_ctl_info(0, "qcom-llcc", 1, "bank",
+> +                                             llcc_driv_data->num_banks, =
+1,
+> +                                             NULL, 0,
+> +                                             edac_device_alloc_index());
+> +
+> +       if (!edev_ctl)
+> +               return -ENOMEM;
+> +
+> +       edev_ctl->dev =3D dev;
+> +       edev_ctl->mod_name =3D dev_name(dev);
+> +       edev_ctl->dev_name =3D dev_name(dev);
+> +       edev_ctl->ctl_name =3D "llcc";
+> +       edev_ctl->panic_on_ue =3D LLCC_ERP_PANIC_ON_UE;
+> +       edev_ctl->pvt_info =3D llcc_driv_data;
+> +
+> +       rc =3D edac_device_add_device(edev_ctl);
+> +       if (rc)
+> +               goto out_mem;
+> +
+> +       platform_set_drvdata(pdev, edev_ctl);
+> +
+> +       /* Request for ecc irq */
+> +       ecc_irq =3D llcc_driv_data->ecc_irq;
+> +       if (ecc_irq < 0) {
+> +               rc =3D -ENODEV;
+
+Return error code from platform_get_irq()? Oh, that's weird. Why is some
+other driver getting and storing the irq away? Hopefully it isn't a
+shared IRQ.
+
+> +               goto out_dev;
+> +       }
+> +       rc =3D devm_request_irq(dev, ecc_irq, llcc_ecc_irq_handler,
+> +                             IRQF_TRIGGER_HIGH, "llcc_ecc", edev_ctl);
+> +       if (rc)
+> +               goto out_dev;
+> +
+> +       return rc;
+> +
+> +out_dev:
+> +       edac_device_del_device(edev_ctl->dev);
+> +out_mem:
+> +       edac_device_free_ctl_info(edev_ctl);
+> +
+> +       return rc;
+> +}
+> +
+> +static int qcom_llcc_edac_remove(struct platform_device *pdev)
+> +{
+> +       struct edac_device_ctl_info *edev_ctl =3D dev_get_drvdata(&pdev->=
+dev);
+> +
+> +       edac_device_del_device(edev_ctl->dev);
+> +       edac_device_free_ctl_info(edev_ctl);
+> +       platform_set_drvdata(pdev, NULL);
+
+No need. Don't set platform data to NULL.
+
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_llcc_edac_match_table[] =3D {
+> +#ifdef EDAC_QCOM_LLCC
+
+Huh? Shouldn't this driver only be compiled when this config is enabled?
+
+> +       { .compatible =3D "qcom,llcc-edac" },
+> +#endif
+> +       { },
 > +};
 > +
+> +static struct platform_driver qcom_llcc_edac_driver =3D {
+> +       .probe =3D qcom_llcc_edac_probe,
+> +       .remove =3D qcom_llcc_edac_remove,
+> +       .driver =3D {
+> +               .name =3D "qcom_llcc_edac",
+> +               .of_match_table =3D qcom_llcc_edac_match_table,
+> +       },
+> +};
+> +module_platform_driver(qcom_llcc_edac_driver);
+> +
+> +MODULE_DESCRIPTION("QCOM EDAC driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/=
+llcc-qcom.h
+> index 2e4b34d..25096e0 100644
+> --- a/include/linux/soc/qcom/llcc-qcom.h
+> +++ b/include/linux/soc/qcom/llcc-qcom.h
+> @@ -84,6 +84,7 @@ struct llcc_drv_data {
+>         struct regmap *regmap;
+>         struct regmap *bcast_regmap;
+>         const struct llcc_slice_config *cfg;
+> +       struct llcc_edac_reg_data *edac_reg;
 
-   Can't check these w/o the manual...
+Why a pointer instead of an array of proper size?
 
->  static void sh_eth_chip_reset_r8a7740(struct net_device *ndev)
->  {
->  	sh_eth_chip_reset(ndev);
-[...]
+>         struct mutex lock;
+>         u32 cfg_size;
+>         u32 max_slices;
+> @@ -93,6 +94,30 @@ struct llcc_drv_data {
+>         int ecc_irq;
+>  };
+>  =
 
-MNR, Sergei
+> +/**
+> + * llcc_edac_reg_data - llcc edac registers data for each error type
+> + * @err_name: name of the error
+> + * @reg_cnt: number of registers
+> + * @synd_reg: syndrome register address
+> + * @err_status_reg: Status register address to read the error count
+> + * @err_count_mask: Mask value to get the error count
+> + * @err_count_shift: Shift value to get the error count
+> + * @err_ways_status: Status register address to read error ways
+> + * @err_ways_mask: Mask value to get the error ways
+> + * @err_ways_shift: Shift value to get the error ways
+> + */
+> +struct llcc_edac_reg_data {
+> +       char *err_name;
+
+Just name instead?
+
+> +       int reg_cnt;
+> +       int synd_reg;
+> +       int err_status_reg;
+> +       int err_count_mask;
+> +       int err_count_shift;
+> +       int err_ways_status;
+> +       int err_ways_mask;
+> +       int err_ways_shift;
+
+Do any of these need to be signed types? Use u8 for register offsets and
+shifts, u32 for masks and unsigned ints for counts please.
+
+> +};
