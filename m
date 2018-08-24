@@ -1,126 +1,53 @@
-From: Tony Xie <tony.xie@rock-chips.com>
-Subject: [PATCH v3 5/5] clk: RK808: add RK809 and RK817 support.
-Date: Fri, 24 Aug 2018 11:36:02 +0800
-Message-ID: <1535081762-20844-1-git-send-email-tony.xie@rock-chips.com>
-References: <1535081441-20718-1-git-send-email-tony.xie@rock-chips.com>
+From: Roy Im <roy.im.opensource@diasemi.com>
+Subject: RE: [PATCH V4 3/3] Input: new da7280 haptic driver
+Date: Fri, 24 Aug 2018 05:35:54 +0000
+Message-ID: <DB7PR10MB216980706A65A8E913A1BE7285360@DB7PR10MB2169.EURPRD10.PROD.OUTLOOK.COM>
+References: <cover.1534830272.git.Roy.Im@diasemi.com>
+ <2c28a93093c075e0145b70e7bc999f2654d0431d.1534830272.git.Roy.Im@diasemi.com>
+ <6115d6ca-8df6-1830-3c61-681610d8f2b0@infradead.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535081441-20718-1-git-send-email-tony.xie@rock-chips.com>
+In-Reply-To: <6115d6ca-8df6-1830-3c61-681610d8f2b0@infradead.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
+To: Randy Dunlap <rdunlap@infradead.org>, Roy Im <roy.im.opensource@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <Support.Opensource@diasemi.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RK809 and RK817 are power management IC chips for multimedia products.
-most of their functions and registers are same, including the clkout
-funciton.
-
-Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
----
- drivers/clk/Kconfig     |  9 ++++---
- drivers/clk/clk-rk808.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 65 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 721572a..92cf5ad 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -46,13 +46,12 @@ config COMMON_CLK_MAX77686
- 	  clock.
- 
- config COMMON_CLK_RK808
--	tristate "Clock driver for RK805/RK808/RK818"
-+	tristate "Clock driver for RK805/RK808/RK809/RK817/RK818"
- 	depends on MFD_RK808
- 	---help---
--	  This driver supports RK805, RK808 and RK818 crystal oscillator clock. These
--	  multi-function devices have two fixed-rate oscillators,
--	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
--	  by control register.
-+	  This driver supports RK805, RK809 and RK817, RK808 and RK818 crystal oscillator clock.
-+	  These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
-+	  Clkout1 is always on, Clkout2 can off by control register.
- 
- config COMMON_CLK_HI655X
- 	tristate "Clock driver for Hi655x" if EXPERT
-diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-index 6461f28..c5d3492 100644
---- a/drivers/clk/clk-rk808.c
-+++ b/drivers/clk/clk-rk808.c
-@@ -96,6 +96,66 @@ static int rk808_clkout2_is_prepared(struct clk_hw *hw)
- 	return idx ? &rk808_clkout->clkout2_hw : &rk808_clkout->clkout1_hw;
- }
- 
-+static int rk817_clkout2_enable(struct clk_hw *hw, bool enable)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+
-+	return regmap_update_bits(rk808->regmap, RK817_SYS_CFG(1),
-+				  RK817_CLK32KOUT2_EN,
-+				  enable ? RK817_CLK32KOUT2_EN : 0);
-+}
-+
-+static int rk817_clkout2_prepare(struct clk_hw *hw)
-+{
-+	return rk817_clkout2_enable(hw, true);
-+}
-+
-+static void rk817_clkout2_unprepare(struct clk_hw *hw)
-+{
-+	rk817_clkout2_enable(hw, false);
-+}
-+
-+static int rk817_clkout2_is_prepared(struct clk_hw *hw)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+	unsigned int val;
-+
-+	int ret = regmap_read(rk808->regmap, RK817_SYS_CFG(1), &val);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return (val & RK817_CLK32KOUT2_EN) ? 1 : 0;
-+}
-+
-+static const struct clk_ops rk817_clkout2_ops = {
-+	.prepare = rk817_clkout2_prepare,
-+	.unprepare = rk817_clkout2_unprepare,
-+	.is_prepared = rk817_clkout2_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static const struct clk_ops *rkpmic_get_ops(long variant)
-+{
-+	switch (variant) {
-+	case RK809_ID:
-+	case RK817_ID:
-+		return &rk817_clkout2_ops;
-+	case RK805_ID:
-+	case RK808_ID:
-+	case RK818_ID:
-+		return &rk808_clkout2_ops;
-+	}
-+
-+	return &rk808_clkout2_ops;
-+}
-+
- static int rk808_clkout_probe(struct platform_device *pdev)
- {
- 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-@@ -127,7 +187,7 @@ static int rk808_clkout_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	init.name = "rk808-clkout2";
--	init.ops = &rk808_clkout2_ops;
-+	init.ops = rkpmic_get_ops(rk808->variant);
- 	rk808_clkout->clkout2_hw.init = &init;
- 
- 	/* optional override of the clockname */
--- 
-1.9.1
+SGkgUmFuZHksDQoNCk9uIDA4LzI0LzIwMTggMTI6MjggQU0sIFJhbmR5IER1bmxhcCB3cm90ZToN
+Cg0KPiBPbiAwOC8yMC8yMDE4IDEwOjQ0IFBNLCBSb3kgSW0gd3JvdGU6DQo+ID4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvaW5wdXQvbWlzYy9LY29uZmlnIGIvZHJpdmVycy9pbnB1dC9taXNjL0tjb25m
+aWcNCj4gPiBpbmRleCBjYTU5YTJiLi42ZTBkZTY5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
+aW5wdXQvbWlzYy9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9pbnB1dC9taXNjL0tjb25maWcN
+Cj4gPiBAQCAtODUxLDQgKzg1MSwxNiBAQCBjb25maWcgSU5QVVRfU0MyN1hYX1ZJQlJBDQo+ID4g
+IAkgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhlcmUuIFRo
+ZSBtb2R1bGUNCj4gd2lsbA0KPiA+ICAJICBiZSBjYWxsZWQgc2MyN3h4X3ZpYnJhLg0KPiA+DQo+
+IA0KPiBIaSwNCj4gQ2FuIHlvdSBleHBsYWluIHRoZSAiZGVwZW5kcyBvbiIgYmVsb3csIHBsZWFz
+ZS4NCj4gDQo+ID4gK2NvbmZpZyBJTlBVVF9EQTcyODBfSEFQVElDUw0KPiA+ICsJdHJpc3RhdGUg
+IkRpYWxvZyBTZW1pY29uZHVjdG9yIERBNzI4MCBoYXB0aWNzIHN1cHBvcnQiDQo+ID4gKwlkZXBl
+bmRzIG9uIChJTlBVVCAmJiBJMkMgJiYgU1lTRlMpIHx8IFBXTQ0KPiA+ICsJc2VsZWN0IElOUFVU
+X0ZGX01FTUxFU1MNCj4gPiArCXNlbGVjdCBSRUdNQVBfSTJDDQo+IA0KPiBJZiBJTlBVVCBpcyBk
+aXNhYmxlZCwgYW5kIEkyQyBpcyBkaXNhYmxlZCwgYW5kIFNZU0ZTIGlzIGRpc2FibGVkLCBidXQN
+Cj4gUFdNPXksDQo+IHRoZW4gdGhlICJzZWxlY3QicyB3aWxsIGhhdmUgcHJvYmxlbXMgd2l0aCB1
+bm1ldCBkZXBlbmRlbmNpZXMuDQoNCkkgd2lsbCBmaXggdGhpcyBpbiB2NS4NCg0KPiANCj4gPiAr
+CWhlbHANCj4gPiArCSAgU2F5IFkgdG8gZW5hYmxlIHN1cHBvcnQgZm9yIHRoZSBoYXB0aWNzIGNv
+bnRyb2xsZXIgb24NCj4gPiArCSAgRGlhbG9nIERBNzI4MCBjaGlwLg0KPiA+ICsNCj4gPiArCSAg
+VG8gY29tcGlsZSB0aGlzIGRyaXZlciBhcyBhIG1vZHVsZSwgY2hvb3NlIE0gaGVyZTogdGhlDQo+
+ID4gKwkgIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBkYTcyODAtaGFwdGljLg0KPiANCj4gVGhhdCBt
+b2R1bGUgbmFtZSBkb2Vzbid0IG1hdGNoIHdoYXQncyBpbiB0aGUgTWFrZWZpbGUgKGJlbG93KS4N
+Cg0KSSB3aWxsIGZpeCB0aGlzIGFzIHdlbGwgaW4gdjUuDQoNCj4gDQo+ID4gKw0KPiA+ICBlbmRp
+Zg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lucHV0L21pc2MvTWFrZWZpbGUgYi9kcml2ZXJz
+L2lucHV0L21pc2MvTWFrZWZpbGUNCj4gPiBpbmRleCA5ZDBmOWQxLi5kOTQxMzQ4IDEwMDY0NA0K
+PiA+IC0tLSBhL2RyaXZlcnMvaW5wdXQvbWlzYy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMv
+aW5wdXQvbWlzYy9NYWtlZmlsZQ0KPiA+IEBAIC0yNSw2ICsyNSw3IEBAIG9iai0kKENPTkZJR19J
+TlBVVF9DTUEzMDAwKQkJKz0NCj4gY21hMzAwMF9kMHgubw0KPiA+ICBvYmotJChDT05GSUdfSU5Q
+VVRfQ01BMzAwMF9JMkMpCQkrPSBjbWEzMDAwX2QweF9pMmMubw0KPiA+ICBvYmotJChDT05GSUdf
+SU5QVVRfQ09CQUxUX0JUTlMpCQkrPSBjb2JhbHRfYnRucy5vDQo+ID4gIG9iai0kKENPTkZJR19J
+TlBVVF9DUENBUF9QV1JCVVRUT04pCSs9IGNwY2FwLXB3cmJ1dHRvbi5vDQo+ID4gK29iai0kKENP
+TkZJR19JTlBVVF9EQTcyODBfSEFQVElDUykJKz0gZGE3MjgwLm8NCj4gPiAgb2JqLSQoQ09ORklH
+X0lOUFVUX0RBOTA1Ml9PTktFWSkJKz0gZGE5MDUyX29ua2V5Lm8NCj4gPiAgb2JqLSQoQ09ORklH
+X0lOUFVUX0RBOTA1NV9PTktFWSkJKz0gZGE5MDU1X29ua2V5Lm8NCj4gPiAgb2JqLSQoQ09ORklH
+X0lOUFVUX0RBOTA2M19PTktFWSkJKz0gZGE5MDYzX29ua2V5Lm8NCj4gDQo+IA0KPiAtLQ0KPiB+
+UmFuZHkNCg0KUmVnYXJkcywNClJveQ0K
