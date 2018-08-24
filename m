@@ -1,66 +1,88 @@
-From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: Re: [PATCH v6 1/4] venus: firmware: add routine to reset ARM9
-Date: Fri, 24 Aug 2018 18:05:00 +0530
-Message-ID: <d6661f5a8f6c64b017dad5b7b8000042@codeaurora.org>
-References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
- <1535034528-11590-2-git-send-email-vgarodia@codeaurora.org>
- <CAPBb6MUZawT84Wcrhi+MEyn+zSCWOpn_iOZMMudZz+_Urixsrw@mail.gmail.com>
- <51cc9d6b-0483-76a6-d413-3f5cc63f3f56@linaro.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Fri, 24 Aug 2018 14:39:34 +0200
+Message-ID: <20180824143934.6d6b6487@bbrezillon>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+        <20180719152930.3715-2-boris.brezillon@bootlin.com>
+        <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51cc9d6b-0483-76a6-d413-3f5cc63f3f56@linaro.org>
+In-Reply-To: <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media-owner@vger.kernel.org
+To: vitor <Vitor.Soares@synopsys.com>, linux-gpio@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hel>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-24 14:27, Stanimir Varbanov wrote:
-> Hi Alex,
+Hi Vitor,
+
+On Wed, 22 Aug 2018 17:43:34 +0100
+vitor <Vitor.Soares@synopsys.com> wrote:
+
+> Hi Boris,
 > 
-> On 08/24/2018 10:38 AM, Alexandre Courbot wrote:
->> On Thu, Aug 23, 2018 at 11:29 PM Vikash Garodia 
->> <vgarodia@codeaurora.org> wrote:
->>> 
-
-[snip]
-
->>> index c4a5778..a9d042e 100644
->>> --- a/drivers/media/platform/qcom/venus/firmware.c
->>> +++ b/drivers/media/platform/qcom/venus/firmware.c
->>> @@ -22,10 +22,43 @@
->>>  #include <linux/sizes.h>
->>>  #include <linux/soc/qcom/mdt_loader.h>
->>> 
->>> +#include "core.h"
->>>  #include "firmware.h"
->>> +#include "hfi_venus_io.h"
->>> 
->>>  #define VENUS_PAS_ID                   9
->>>  #define VENUS_FW_MEM_SIZE              (6 * SZ_1M)
->> 
->> This is making a strong assumption about the size of the FW memory
->> region, which in practice is not always true (I had to reduce it to
->> 5MB). How about having this as a member of venus_core, which is
 > 
-> Why you reduced to 5MB? Is there an issue with 6MB or you don't want to
-> waste reserved memory?
+> On 19-07-2018 16:29, Boris Brezillon wrote:
+> > +int i3c_bus_register(struct i3c_bus *i3cbus)
+> > +{
+> > +	struct i2c_dev_desc *desc;
+> > +
+> > +	i3c_bus_for_each_i2cdev(i3cbus, desc) {
+> > +		switch (desc->boardinfo->lvr & I3C_LVR_I2C_INDEX_MASK) {
+> > +		case I3C_LVR_I2C_INDEX(0):
+> > +			if (i3cbus->mode < I3C_BUS_MODE_MIXED_FAST)
+> > +				i3cbus->mode = I3C_BUS_MODE_MIXED_FAST;
+> > +			break;
+> > +
+> > +		case I3C_LVR_I2C_INDEX(1):
+> > +		case I3C_LVR_I2C_INDEX(2):
+> > +			if (i3cbus->mode < I3C_BUS_MODE_MIXED_SLOW)
+> > +				i3cbus->mode = I3C_BUS_MODE_MIXED_SLOW;
+> > +			break;
+> > +
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	if (!i3cbus->scl_rate.i3c)
+> > +		i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+> > +
+> > +	if (!i3cbus->scl_rate.i2c) {
+> > +		if (i3cbus->mode == I3C_BUS_MODE_MIXED_SLOW)
+> > +			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
+> > +		else
+> > +			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
+> > +	}
+> > +
+> > +	/*
+> > +	 * I3C/I2C frequency may have been overridden, check that user-provided
+> > +	 * values are not exceeding max possible frequency.
+> > +	 */
+> > +	if (i3cbus->scl_rate.i3c > I3C_BUS_MAX_I3C_SCL_RATE ||
+> > +	    i3cbus->scl_rate.i2c > I3C_BUS_I2C_FM_PLUS_SCL_RATE) {
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	dev_set_name(&i3cbus->dev, "i3c-%d", i3cbus->id);
+> > +
+> > +	return device_add(&i3cbus->dev);
+> > +}  
+> During the tests of the bus with i2c devices I found the i2c_dev_desc 
+> objects aren't allocated before this function. This cause i3cbus->mode = 
+> I3C_BUS_MODE_PURE.
+
+I just checked and DT parsing (+ I2C descs creation) is done before
+i3c_bus_register() is called, so we should be good. How did you declare
+your I2C devices (right now, only DT declaration is supported).
+
 > 
->> initialized in venus_load_fw() from the actual size of the memory
->> region? You could do this as an extra patch that comes before this
->> one.
+> I want to do something for the slave and secondary master, do you 
+> already have infrastructure that you can share?
 
-I would go with existing design than relying on the size specified in 
-the
-memory-region for venus. size loaded is always taken from DT while the
-VENUS_FW_MEM_SIZE serves the purpose of sanity check.
+What do you mean?
 
-> The size is 6MB by historical reasons and they are no more valid, so I
-> think we could safely decrease to 5MB. I could prepare a patch for 
-> that.
+Regards,
 
-Thanks Stan. Initial patch in this series had 5MB. We discussed earlier 
-to keep
-it as is and take it as a separate patch to update from 6MB to 5MB.
+Boris
