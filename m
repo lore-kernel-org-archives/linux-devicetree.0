@@ -1,102 +1,61 @@
-From: Grant Likely <grant.likely@arm.com>
-Subject: Re: DT case sensitivity
-Date: Thu, 23 Aug 2018 13:48:00 +0100
-Message-ID: <d0e8b2f1-788e-2ad8-10de-7bbc412c301d@arm.com>
-References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
- <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
- <CAL_JsqKqkO31ekVMFKs+osLvKdZyDzRowF1thWXn5=tWhrJgvw@mail.gmail.com>
- <18175413a0148f7859ab36ed9715dce7a598f318.camel@kernel.crashing.org>
- <13bf5b39-0461-351e-57e3-60264eaa374d@arm.com>
- <CAL_Jsq+1T8k5mtc-DgDBtX3Qco9sQG9RWv6FTZ8NXppNbNg3Ww@mail.gmail.com>
- <e9009f6dd3aded2b9aa735973f4eed8386dd9afb.camel@kernel.crashing.org>
- <CAL_JsqKnbFAydf7ets0=KySm3P3b_7np-EVWz3Gh6qO+imJ+eg@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: add DT binding for UniPhier
+ MIO DMAC
+Date: Fri, 24 Aug 2018 10:34:49 +0900
+Message-ID: <CAK7LNASDULBeDdydetMLQXauvV7KBe8a5QXUXy=-GKkTyWkfbQ@mail.gmail.com>
+References: <1534843809-4137-1-git-send-email-yamada.masahiro@socionext.com>
+ <1534843809-4137-2-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNASr=rf_foQ7PDTNS440rx3TLuY_TBagfQ-gCHxXpFB2vw@mail.gmail.com>
+ <CAJe_ZhdZbUa2njAvSazGzv+7UgG+QHCTS+-Y-Ckqze+pMf9KQA@mail.gmail.com>
+ <CAK7LNAT3MufLZhFB8HDnch09WUdEcLyDCU05dTYroOwWYcx=pQ@mail.gmail.com>
+ <CAJe_ZheNp9t0DNQjmiQKMyZsbHBjMxqV87mE_3nQ1N_RS9znYQ@mail.gmail.com>
+ <CAL_Jsq+ppQP9icJVhpUYGj_JCyxudi0Z4=+mKiBueMKZftrQ7A@mail.gmail.com> <CAJe_Zhee-qQtAt7+k_LZ+CGabLBr3v3t2MYvbVYG9N1nHZcL=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <CAL_JsqKnbFAydf7ets0=KySm3P3b_7np-EVWz3Gh6qO+imJ+eg@mail.gmail.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robh@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Kumar Gala <kumar.gala@linaro.org>, devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>, David Gibson <david@gibson.dropbear.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJe_Zhee-qQtAt7+k_LZ+CGabLBr3v3t2MYvbVYG9N1nHZcL=g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Vinod <vkoul@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/08/2018 13:08, Rob Herring wrote:
-> On Thu, Aug 23, 2018 at 6:48 AM Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
->>
->> On Thu, 2018-08-23 at 06:43 -0500, Rob Herring wrote:
->>> On Thu, Aug 23, 2018 at 4:02 AM Grant Likely <grant.likely@arm.com> wro=
-te:
->>>>
->>>>
->>>> What problem are you trying to solve?
->>>
->>> I'm looking at removing device_node.name and using full_name instead
->>> (which now is only the local node name plus unit-address). This means
->>> replacing of_node_cmp() (and still some strcmp) calls in a lot of
->>> places. I need to use either strncmp or strncasecmp instead.
->>>
->>>> I would think making everything
->>>> case insensitive would be the direction to go if you do anything. Leas=
-t
->>>> possibility of breaking existing platforms in that scenario.
->>>
->>> Really? Even if all the "new" arches are effectively case sensitive?
->>> Anything using dtc and libfdt are (and json-schema certainly will be).
->>> But I frequently say the kernel's job is not DT validation, so you
->>> pass crap in, you get undefined results.
->>
->> I tend to agree with Grant. Let's put it this way:
->>
->> What is the drawback of being case insensitive ?
+Hi Rob, Jassi,
+
+
+2018-08-23 23:12 GMT+09:00 Jassi Brar <jaswinder.singh@linaro.org>:
+> On 23 August 2018 at 18:51, Rob Herring <robh+dt@kernel.org> wrote:
+>> On Thu, Aug 23, 2018 at 12:38 AM Jassi Brar <jaswinder.singh@linaro.org> wrote:
+>>> On 23 August 2018 at 10:48, Masahiro Yamada
 >
-> It's a more expensive comparison. I don't think it's a hot path, but
-> we do do a lot of string compares.
-
-I'd hazard to argue that the cost of the string compare will not be a
-source of performance problems when compared to doing a linear search
-everytime a DT lookup is performed. The search algorithm is far more
-problematic.
-
-> Property names are case sensitive already. It would be nice if
-> everything was treated the same way.
+>>> >
+>>> > If desired, I will export of_irq_count()
+>>> > and use it from my driver.
+>>> >
+>>> If you don't want to leave too much footprint, you could do
+>>>
+>>>   count = 0;
+>>>   while (of_irq_parse_one(dev, count, &irq) == 0) count++
+>>>
+>>> of_irq_parse_one() is already exported.
+>>
+>> Yes, but we really don't more users and drivers shouldn't be using it.
+>> Grepping DT functions and when the only users are pretty much powerpc,
+>> that's a good indication not to use the function.
+>>
+>> And you don't want to use of_irq_count either. platform_irq_count is
+>> what should be used here. It's already exported.
+>>
+> Thanks, platform_irq_count() is definitely better.
 >
-> If we're case sensitive then it is well defined which node we'll match
-> and which one will be ignored. Otherwise, it is whichever one we
-> happen to match first.
+> Yamada-san, for example, gpio-tegra.c infers the number of banks from
+> platform_irq_count() rather than the 'gpio-banks' property.
 
-If case-insensitive-always is chosen, then the kernel should probably
-complain at add node time if another matching node name already exists.
-That's a relatively easy thing to test.
 
-You are right however that in the FDT world we're case-sensitive now and
-if it is relaxed then we're never going back. You could try switching
-everyone over to case-sensitive and see if anything falls out in
-linux-next for a few cycles. I would not touch the PPC or SPARC
-behaviour. I don't think it is worth the risk to make the kernel more
-strict when we cannot test the result. Only if everything was changed to
-case-insensitive would it make sense to touch PPC and SPARC at the same
-time because it reduces the number of platform variations.
+I did not platform_irq_count().  I will send v2 with it.
 
-If you do change compatible matches to be case sensitive, then you
-should be prepared to fix bugs where the driver uses a different case
-from the DTS. In which case drivers will need to be modified to accept
-the deviant property names.
+Thanks.
 
-g.
 
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+-- 
+Best Regards
+Masahiro Yamada
