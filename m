@@ -1,7 +1,7 @@
 From: Tony Xie <tony.xie@rock-chips.com>
 Subject: [PATCH v3 4/5] rtc: rk808: add RK809 and RK817 support.
-Date: Fri, 24 Aug 2018 11:30:40 +0800
-Message-ID: <1535081441-20718-5-git-send-email-tony.xie@rock-chips.com>
+Date: Fri, 24 Aug 2018 11:35:36 +0800
+Message-ID: <1535081736-20798-1-git-send-email-tony.xie@rock-chips.com>
 References: <1535081441-20718-1-git-send-email-tony.xie@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1535081441-20718-1-git-send-email-tony.xie@rock-chips.com>
