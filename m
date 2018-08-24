@@ -1,40 +1,74 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: sdm845-mtp: Add nodes for USB
-Date: Fri, 24 Aug 2018 09:13:37 -0700
-Message-ID: <153512721757.28926.8065711677671939620@swboyd.mtv.corp.google.com>
-References: <20180822173629.202885-1-dianders@chromium.org>
- <20180822173629.202885-4-dianders@chromium.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 5/5] arm64: dts: add LX2160ARDB board support
+Date: Fri, 24 Aug 2018 11:16:28 -0500
+Message-ID: <CAL_Jsq+QrDR_YyZ+icftUrwOoMZcSCMkmj8cR=bqEJ-q+pdntg@mail.gmail.com>
+References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
+ <1534747636-20064-6-git-send-email-vabhav.sharma@nxp.com> <CAL_JsqKH4haGy2F2_2EP=evC8ip7DmGR8J4wzrO0wWnOLsaZqA@mail.gmail.com>
+ <AM6PR04MB478980C90EE825D024D8B977F3370@AM6PR04MB4789.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822173629.202885-4-dianders@chromium.org>
+In-Reply-To: <AM6PR04MB478980C90EE825D024D8B977F3370@AM6PR04MB4789.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+To: vabhav.sharma@nxp.com
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-kernel-owner@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Kate Stewart <kstewart@linuxfoundation.org>Ma
 List-Id: devicetree@vger.kernel.org
 
-Quoting Douglas Anderson (2018-08-22 10:36:29)
-> Set the various nodes to "okay" and hook up the regulators.
-> =
+On Thu, Aug 23, 2018 at 10:08 AM Vabhav Sharma <vabhav.sharma@nxp.com> wrote:
 
-> NOTE: For now the main USB port (the one that goes out the Type C
-> connector) is forced to host.  Eventually someone will need to get the
-> Type C detection hooked up and get this all integrated with the
-> PMI8998 PMIC.  The reason for forcing to "host" in the meantime is
-> that this will leave us with one "host" and one "peripheral" port.
-> =
+[...]
 
-> In order for host mode this to work, we assume that the bootloader
-> left things configured enough for us.  Apparently the magic for that
-> is is to do these writes on pmi8998:
-> - pm_comm_write_byte(2, 0x1153, 0x2C, 0);
-> - pm_comm_write_byte(2, 0x1152, 0x07, 0);
-> - pm_comm_write_byte(2, 0x1140, 0x00, 0);
-> - pm_comm_write_byte(2, 0x1140, 0x01, 0);
-> =
+> > > +               i2c@3 {
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <0>;
+> > > +                       reg = <0x3>;
+> > > +
+> > > +                       sa56004@4c {
+> >
+> > temperature-sensor@4c
+> Ok, temperature-sensor-1@4c
 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+No, that's not what I said. You don't need the '-1' because the
+unit-address makes the node name unique. Node names are supposed to be
+generic based on the class/type of device. See the DT spec.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> >
+> > > +                               compatible = "nxp,sa56004";
+> > > +                               reg = <0x4c>;
+> > > +                       };
+> > > +
+> > > +                       sa56004@4d {
+> Ok,temperature-sensor-2@4d
+> > > +                               compatible = "nxp,sa56004";
+> > > +                               reg = <0x4d>;
+> > > +                       };
+> > > +               };
+> > > +       };
+> > > +};
+> > > +
+> > > +&i2c4 {
+> > > +       status = "okay";
+> > > +
+> > > +       rtc@51 {
+> > > +               compatible = "nxp,pcf2129";
+> > > +               reg = <0x51>;
+> > > +               // IRQ10_B
+> > > +               interrupts = <0 150 0x4>;
+> > > +               };
+> > > +
+> > > +};
+> > > +
+> > > +&usb0 {
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&usb1 {
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&crypto {
+> > > +       status = "okay";
+> > > +};
+> > > --
+> > > 2.7.4
+> > >
