@@ -1,98 +1,70 @@
-From: Hanjie Lin <hanjie.lin@amlogic.com>
-Subject: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe controller
-Date: Fri, 24 Aug 2018 15:36:03 +0800
-Message-ID: <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
-References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
+From: Alexandre Courbot <acourbot@chromium.org>
+Subject: Re: [PATCH v6 1/4] venus: firmware: add routine to reset ARM9
+Date: Fri, 24 Aug 2018 16:38:59 +0900
+Message-ID: <CAPBb6MUZawT84Wcrhi+MEyn+zSCWOpn_iOZMMudZz+_Urixsrw@mail.gmail.com>
+References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org> <1535034528-11590-2-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
+In-Reply-To: <1535034528-11590-2-git-send-email-vgarodia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yue Wang <yue.wang@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+To: vgarodia@codeaurora.org
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yue Wang <yue.wang@amlogic.com>
+On Thu, Aug 23, 2018 at 11:29 PM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+>
+> Add routine to reset the ARM9 and brings it out of reset. Also
+> abstract the Venus CPU state handling with a new function. This
+> is in preparation to add PIL functionality in venus driver.
+>
+> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.h         |  2 ++
+>  drivers/media/platform/qcom/venus/firmware.c     | 33 ++++++++++++++++++++++++
+>  drivers/media/platform/qcom/venus/firmware.h     | 11 ++++++++
+>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++-------
+>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  7 +++++
+>  5 files changed, 57 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+> index 2f02365..dfd5c10 100644
+> --- a/drivers/media/platform/qcom/venus/core.h
+> +++ b/drivers/media/platform/qcom/venus/core.h
+> @@ -98,6 +98,7 @@ struct venus_caps {
+>   * @dev:               convenience struct device pointer
+>   * @dev_dec:   convenience struct device pointer for decoder device
+>   * @dev_enc:   convenience struct device pointer for encoder device
+> + * @no_tz:     a flag that suggests presence of trustzone
+>   * @lock:      a lock for this strucure
+>   * @instances: a list_head of all instances
+>   * @insts_count:       num of instances
+> @@ -129,6 +130,7 @@ struct venus_core {
+>         struct device *dev;
+>         struct device *dev_dec;
+>         struct device *dev_enc;
+> +       bool no_tz;
+>         struct mutex lock;
+>         struct list_head instances;
+>         atomic_t insts_count;
+> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+> index c4a5778..a9d042e 100644
+> --- a/drivers/media/platform/qcom/venus/firmware.c
+> +++ b/drivers/media/platform/qcom/venus/firmware.c
+> @@ -22,10 +22,43 @@
+>  #include <linux/sizes.h>
+>  #include <linux/soc/qcom/mdt_loader.h>
+>
+> +#include "core.h"
+>  #include "firmware.h"
+> +#include "hfi_venus_io.h"
+>
+>  #define VENUS_PAS_ID                   9
+>  #define VENUS_FW_MEM_SIZE              (6 * SZ_1M)
 
-The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-controller.
-
-Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
----
- .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-new file mode 100644
-index 0000000..8a831d1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-@@ -0,0 +1,63 @@
-+Amlogic Meson AXG DWC PCIE SoC controller
-+
-+Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-+It shares common functions with the PCIe DesignWare core driver and
-+inherits common properties defined in
-+Documentation/devicetree/bindings/pci/designware-pci.txt.
-+
-+Additional properties are described here:
-+
-+Required properties:
-+- compatible:
-+	should contain "amlogic,axg-pcie" to identify the core.
-+- reg:
-+	Should contain the configuration address space.
-+- reg-names: Must be
-+	- "elbi"	External local bus interface registers
-+	- "cfg"		Meson specific registers
-+	- "config"	PCIe configuration space
-+- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Must include the following entries:
-+	- "pclk"       PCIe GEN 100M PLL clock
-+	- "port"       PCIe_x(A or B) RC clock gate
-+	- "general"    PCIe Phy clock
-+	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-+- resets: phandle to the reset lines.
-+- reset-names: must contain "phy" and "peripheral"
-+       - "port" Port A or B reset
-+       - "apb" APB reset
-+
-+Example configuration:
-+
-+	pcie: pcie@f9800000 {
-+			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-+			reg = <0x0 0xf9800000 0x0 0x400000
-+					0x0 0xff646000 0x0 0x2000
-+					0x0 0xf9f00000 0x0 0x100000>;
-+			reg-names = "elbi", "cfg", "config";
-+			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-+			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-+			bus-range = <0x0 0xff>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			phys = <&pcie_phy>;
-+			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
-+
-+			clocks = <&clkc CLKID_USB
-+					&clkc CLKID_MIPI_ENABLE
-+					&clkc CLKID_PCIE_A
-+					&clkc CLKID_PCIE_CML_EN0>;
-+			clock-names = "general",
-+					"mipi",
-+					"pclk",
-+					"port";
-+			resets = <&reset RESET_PCIE_A>,
-+				<&reset RESET_PCIE_APB>;
-+			reset-names = "port",
-+					"apb";
-+	};
--- 
-2.7.4
+This is making a strong assumption about the size of the FW memory
+region, which in practice is not always true (I had to reduce it to
+5MB). How about having this as a member of venus_core, which is
+initialized in venus_load_fw() from the actual size of the memory
+region? You could do this as an extra patch that comes before this
+one.
