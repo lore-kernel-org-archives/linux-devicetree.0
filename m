@@ -1,69 +1,45 @@
-From: vnkgutta@codeaurora.org
-Subject: Re: [PATCH v2 3/4] drivers: edac: Add EDAC driver support for QCOM
- SoCs
-Date: Fri, 24 Aug 2018 11:38:10 -0700
-Message-ID: <ffe2184066ddc9b4be4bf1bafc3497be@codeaurora.org>
-References: <1534550915-18230-1-git-send-email-vnkgutta@codeaurora.org>
- <1534550915-18230-4-git-send-email-vnkgutta@codeaurora.org>
- <CAE=gft4vheqe9Yqb3H_gMChUmQqvmBeeWvKWCf_j4sWrFceFiQ@mail.gmail.com>
- <CAE=gft6GTuk+j81J+jTNqD_6VFQym=gb6aJ==cbcg-6odVq3qg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v3 1/2] arm64: dts: msm: add PDC device bindings for sdm845
+Date: Fri, 24 Aug 2018 13:11:10 -0600
+Message-ID: <20180824191111.14571-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft6GTuk+j81J+jTNqD_6VFQym=gb6aJ==cbcg-6odVq3qg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de
+To: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org
+Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-23 16:07, Evan Green wrote:
-> On Thu, Aug 23, 2018 at 4:04 PM Evan Green <evgreen@chromium.org> 
-> wrote:
->> 
->> On Fri, Aug 17, 2018 at 5:08 PM Venkata Narendra Kumar Gutta
->> <vnkgutta@codeaurora.org> wrote:
->> >
->> > From: Channagoud Kadabi <ckadabi@codeaurora.org>
-> 
-> Also checkpatch.pl complains a bit about this patch:
-> 
->             WARNING: Non-standard signature: Co-developed-by:
->             #14:
->             Co-developed-by: Venkata Narendra Kumar Gutta
-> <vnkgutta@codeaurora.org>
+Add PDC interrupt controller device bindings for SDM845.
 
-This needs to be there as the original author is Channagoud Kadabi
-and I'm the one who is modifying and upstreaming this driver.
-It was suggested to have this kind of signature from the earlier 
-patchset comments.
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+Changes in v3:
+	- Fix PDC map, use GIC SPI port number for hwirq
+Changes in v2:
+	- Order by address
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Can we do anything about this?
-
-> 
->             WARNING: please write a paragraph that describes the
-> config symbol fully
->             #63: FILE: drivers/edac/Kconfig:460:
->             +config EDAC_QCOM
-
-This is also, I will check if I can get rid of this by writing more in 
-the description.
-I don't really understand why do we need a paragraph here.
-
-> 
->             WARNING: DT compatible string "qcom,llcc-edac" appears
-> un-documented -- check ./Documentation/devicetree/bindings/
->             #536: FILE: drivers/edac/qcom_edac.c:430:
->             + { .compatible = "qcom,llcc-edac" },
-
-This file is not added in the dt-bindings as there are no properties 
-(like reg-names or interrupts) for this driver
-and anyway initialized from llcc driver.
-
-Do we still need to have the Documentation in place?
-
-> 
->             total: 0 errors, 3 warnings, 533 lines checked
-> 
-> -Evan
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b3d7af097edf..0208f8557ffa 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -966,6 +966,15 @@
+ 			};
+ 		};
+ 
++		pdc: interrupt-controller@b220000 {
++			compatible = "qcom,sdm845-pdc";
++			reg = <0xb220000 0x30000>;
++			qcom,pdc-ranges = <0 480 94>, <94 609 15>, <115 630 7>;
++			#interrupt-cells = <2>;
++			interrupt-parent = <&intc>;
++			interrupt-controller;
++		};
++
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0xc440000 0x1100>,
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
