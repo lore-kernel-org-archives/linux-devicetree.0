@@ -1,6 +1,6 @@
 Return-Path: <SRS0=RiwX=LH=bwave.cc=wulina@kernel.org>
-Message-ID: <5b7fda86.1c69fb81.3ac58.1236SMTPIN_ADDED_BROKEN@mx.google.com>
-Date: Fri, 24 Aug 2018 18:14:21 +0800
+Message-ID: <5b7fc28b.1c69fb81.1b089.1a23SMTPIN_ADDED_BROKEN@mx.google.com>
+Date: Fri, 24 Aug 2018 16:30:13 +0800
 From: "=?gb2312?B?zuLA9sTI?=" <wulina@bwave.cc>
 Subject: [PATCH] media: platform: rcar-dab: add the dab module driver for renesas r8a77965.
 Mime-Version: 1.0
@@ -10,8 +10,6 @@ Content-Transfer-Encoding: 7bit
 To: robh+dt <robh+dt@kernel.org>, "mark.rutland" <mark.rutland@arm.com>, "catalin.marinas" <catalin.marinas@arm.com>, "will.deacon" <will.deacon@arm.com>, mturquette <mturquette@baylibre.com>, sboyd <sboyd@codeaurora.org>, mchehab <mchehab@kernel.org>
 Cc: devicetree <devicetree@vger.kernel.org>, linux-renesas-soc <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
-
-Update the comment information.
 
 This patch adds dab driver in order to provide the dab related interfaces.
 It contains fft, fic and msc sub-modules.
@@ -38,14 +36,14 @@ Signed-off-by: wulina <wulina@bwave.cc>
 
 diff --git a/Documentation/devicetree/bindings/media/renesas,dab.txt b/Documentation/devicetree/bindings/media/renesas,dab.txt
 new file mode 100644
-index 0000000..134716d
+index 0000000..ad9c2d7
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/media/renesas,dab.txt
 @@ -0,0 +1,20 @@
 +Renesas R-Car Gen3 DAB hardware accelerator (DAB)
 +------------------------------------------------------------
 +Bindings, specific for this driver:
-+ - compatible: Should be "renesas,dab"
++ - compatible: Should be "renesas,sh-mobile-ceu"
 + - reg: register base and size.
 + - interrupts: associated with that channel.
 + - clocks: phandle and clock specifier of that channel.
@@ -138,14 +136,14 @@ index 0000000..216412f
 +dab-objs			:= rcar_dab.o dabdev.o
 diff --git a/drivers/media/platform/rcar-dab/dabdev.c b/drivers/media/platform/rcar-dab/dabdev.c
 new file mode 100644
-index 0000000..03fc545
+index 0000000..6f5a684
 --- /dev/null
 +++ b/drivers/media/platform/rcar-dab/dabdev.c
 @@ -0,0 +1,453 @@
 +/*
 + * Driver for Renesas R-Car DAB
 + *
-+ * Copyright (C) 2018 Shanghai Bwave Technology Co.,Ltd.
++ * Copyright (C) 2018 Bwave Technology Co.,Ltd.
 + *
 + * This program is free software; you can redistribute  it and/or modify it
 + * under  the terms of  the GNU General  Public License as published by the
@@ -597,14 +595,14 @@ index 0000000..03fc545
 +
 diff --git a/drivers/media/platform/rcar-dab/dabdev.h b/drivers/media/platform/rcar-dab/dabdev.h
 new file mode 100644
-index 0000000..db3dc9b
+index 0000000..33bf5ae
 --- /dev/null
 +++ b/drivers/media/platform/rcar-dab/dabdev.h
 @@ -0,0 +1,44 @@
 +/*
 + * Driver for Renesas R-Car DAB
 + *
-+ * Copyright (C) 2018 Shanghai Bwave Technology Co.,Ltd.
++ * Copyright (C) 2018 Bwave Technology Co.,Ltd.
 + *
 + * This program is free software; you can redistribute  it and/or modify it
 + * under  the terms of  the GNU General  Public License as published by the
@@ -647,14 +645,14 @@ index 0000000..db3dc9b
 +#endif
 diff --git a/drivers/media/platform/rcar-dab/rcar_dab.c b/drivers/media/platform/rcar-dab/rcar_dab.c
 new file mode 100644
-index 0000000..6a0f29e
+index 0000000..aa0fac9
 --- /dev/null
 +++ b/drivers/media/platform/rcar-dab/rcar_dab.c
 @@ -0,0 +1,166 @@
 +/*
 + * Driver for Renesas R-Car DAB
 + *
-+ * Copyright (C) 2018 Shanghai Bwave Technology Co.,Ltd.
++ * Copyright (C) 2018 Bwave Technology Co.,Ltd.
 + *
 + * This program is free software; you can redistribute  it and/or modify it
 + * under  the terms of  the GNU General  Public License as published by the
@@ -819,14 +817,14 @@ index 0000000..6a0f29e
 +
 diff --git a/drivers/media/platform/rcar-dab/rcar_dab.h b/drivers/media/platform/rcar-dab/rcar_dab.h
 new file mode 100644
-index 0000000..c391b95
+index 0000000..1c4db3e
 --- /dev/null
 +++ b/drivers/media/platform/rcar-dab/rcar_dab.h
 @@ -0,0 +1,146 @@
 +/*
 + * Driver for Renesas R-Car DAB
 + *
-+ * Copyright (C) 2018 Shanghai Bwave Technology Co.,Ltd.
++ * Copyright (C) 2018 Bwave Technology Co.,Ltd.
 + *
 + * This program is free software; you can redistribute  it and/or modify it
 + * under  the terms of  the GNU General  Public License as published by the
