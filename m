@@ -1,193 +1,33 @@
 From: Alexandre Courbot <acourbot@chromium.org>
-Subject: Re: [PATCH v6 4/4] venus: firmware: register separate platform_device
- for firmware loader
-Date: Fri, 24 Aug 2018 16:39:09 +0900
-Message-ID: <CAPBb6MW8uN5_ghxx7h3g0TjmULUpvNSDn8g=trTC5fOegHP1QQ@mail.gmail.com>
-References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org> <1535034528-11590-5-git-send-email-vgarodia@codeaurora.org>
+Subject: Re: [PATCH v6 0/4] Venus updates - PIL
+Date: Fri, 24 Aug 2018 16:39:25 +0900
+Message-ID: <CAPBb6MW8rxj7SQLqKV07CQjjJth7b6iBT9bH8XYd3chtiXcKnw@mail.gmail.com>
+References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535034528-11590-5-git-send-email-vgarodia@codeaurora.org>
+In-Reply-To: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: vgarodia@codeaurora.org
 Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Vikash,
+
 On Thu, Aug 23, 2018 at 11:29 PM Vikash Garodia <vgarodia@codeaurora.org> wrote:
 >
-> From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Hello,
 >
-> This registers a firmware platform_device and associate it with
-> video-firmware DT subnode. Then calls dma configure to initialize
-> dma and iommu.
+> Here is v6 with following comments addressed:
 >
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  .../devicetree/bindings/media/qcom,venus.txt       | 13 +++++-
->  drivers/media/platform/qcom/venus/core.c           | 14 +++++--
->  drivers/media/platform/qcom/venus/firmware.c       | 49 ++++++++++++++++++++++
->  drivers/media/platform/qcom/venus/firmware.h       |  2 +
->  4 files changed, 73 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> index 00d0d1b..7e04586 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,venus.txt
-> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> @@ -53,7 +53,7 @@
->
->  * Subnodes
->  The Venus video-codec node must contain two subnodes representing
-> -video-decoder and video-encoder.
-> +video-decoder and video-encoder, and one optional firmware subnode.
+> * 4/4 from earlier series was dropped as .probe was not needed.
+> * indentation as per checkpatch --strict option.
+> * tested on Venus v4 hardware.
 
-Just noticed that the document does not explain in which case the
-firmware subnode must be used. Maybe we should have a sentence
-explaining that without it we will be using TrustZone to load the
-firmware?
+I have tested this series and it seems to be working fine! Thanks for
+pushing it forward!
 
->
->  Every of video-encoder or video-decoder subnode should have:
->
-> @@ -79,6 +79,13 @@ Every of video-encoder or video-decoder subnode should have:
->                     power domain which is responsible for collapsing
->                     and restoring power to the subcore.
->
-> +The firmware subnode must have:
-> +
-> +- iommus:
-> +       Usage: required
-> +       Value type: <prop-encoded-array>
-> +       Definition: A list of phandle and IOMMU specifier pairs.
-> +
->  * An Example
->         video-codec@1d00000 {
->                 compatible = "qcom,msm8916-venus";
-> @@ -105,4 +112,8 @@ Every of video-encoder or video-decoder subnode should have:
->                         clock-names = "core";
->                         power-domains = <&mmcc VENUS_CORE1_GDSC>;
->                 };
-> +
-> +               video-firmware {
-> +                       iommus = <&apps_iommu 0x10b2 0x0>;
-> +               };
->         };
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-> index 393994e..3bd3b8a 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
-> @@ -284,6 +284,14 @@ static int venus_probe(struct platform_device *pdev)
->         if (ret < 0)
->                 goto err_runtime_disable;
->
-> +       ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
-> +       if (ret)
-> +               goto err_runtime_disable;
-> +
-> +       ret = venus_firmware_init(core);
-> +       if (ret)
-> +               goto err_runtime_disable;
-> +
->         ret = venus_boot(core);
->         if (ret)
->                 goto err_runtime_disable;
-> @@ -308,10 +316,6 @@ static int venus_probe(struct platform_device *pdev)
->         if (ret)
->                 goto err_core_deinit;
->
-> -       ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
-> -       if (ret)
-> -               goto err_dev_unregister;
-> -
->         ret = pm_runtime_put_sync(dev);
->         if (ret)
->                 goto err_dev_unregister;
-> @@ -347,6 +351,8 @@ static int venus_remove(struct platform_device *pdev)
->         venus_shutdown(core);
->         of_platform_depopulate(dev);
->
-> +       venus_firmware_deinit(core);
-> +
->         pm_runtime_put_sync(dev);
->         pm_runtime_disable(dev);
->
-> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-> index 79b3858..86a26fb 100644
-> --- a/drivers/media/platform/qcom/venus/firmware.c
-> +++ b/drivers/media/platform/qcom/venus/firmware.c
-> @@ -20,6 +20,7 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of_device.h>
->  #include <linux/qcom_scm.h>
->  #include <linux/sizes.h>
->  #include <linux/soc/qcom/mdt_loader.h>
-> @@ -228,3 +229,51 @@ int venus_shutdown(struct venus_core *core)
->
->         return ret;
->  }
-> +
-> +int venus_firmware_init(struct venus_core *core)
-> +{
-> +       struct platform_device_info info;
-> +       struct platform_device *pdev;
-> +       struct device_node *np;
-> +       int ret;
-> +
-> +       np = of_get_child_by_name(core->dev->of_node, "video-firmware");
-> +       if (!np)
-> +               return 0;
-> +
-> +       memset(&info, 0, sizeof(info));
-> +       info.fwnode = &np->fwnode;
-> +       info.parent = core->dev;
-> +       info.name = np->name;
-> +       info.dma_mask = DMA_BIT_MASK(32);
-> +
-> +       pdev = platform_device_register_full(&info);
-> +       if (IS_ERR(pdev)) {
-> +               of_node_put(np);
-> +               return PTR_ERR(pdev);
-> +       }
-> +
-> +       pdev->dev.of_node = np;
-> +
-> +       ret = of_dma_configure(&pdev->dev, np);
-> +       if (ret)
-> +               dev_err(core->dev, "dma configure fail\n");
-> +
-> +       of_node_put(np);
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       core->no_tz = true;
-> +       core->fw.dev = &pdev->dev;
-> +
-> +       return 0;
-> +}
-> +
-> +void venus_firmware_deinit(struct venus_core *core)
-> +{
-> +       if (!core->fw.dev)
-> +               return;
-> +
-> +       platform_device_unregister(to_platform_device(core->fw.dev));
-> +}
-> diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
-> index f41b615..119a9a4 100644
-> --- a/drivers/media/platform/qcom/venus/firmware.h
-> +++ b/drivers/media/platform/qcom/venus/firmware.h
-> @@ -16,6 +16,8 @@
->
->  struct device;
->
-> +int venus_firmware_init(struct venus_core *core);
-> +void venus_firmware_deinit(struct venus_core *core);
->  int venus_boot(struct venus_core *core);
->  int venus_shutdown(struct venus_core *core);
->  int venus_set_hw_state(struct venus_core *core, bool suspend);
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+I have made a few comments inline, but some may be difficult to apply
+without reorganizing the series a bit. If my explanations are not
+clear, I can take care of submitting the next spin of this series if
+you wish.
