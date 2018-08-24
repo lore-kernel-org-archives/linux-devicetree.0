@@ -1,53 +1,99 @@
-From: Roy Im <roy.im.opensource@diasemi.com>
-Subject: RE: [PATCH V4 3/3] Input: new da7280 haptic driver
-Date: Fri, 24 Aug 2018 05:35:54 +0000
-Message-ID: <DB7PR10MB216980706A65A8E913A1BE7285360@DB7PR10MB2169.EURPRD10.PROD.OUTLOOK.COM>
-References: <cover.1534830272.git.Roy.Im@diasemi.com>
- <2c28a93093c075e0145b70e7bc999f2654d0431d.1534830272.git.Roy.Im@diasemi.com>
- <6115d6ca-8df6-1830-3c61-681610d8f2b0@infradead.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] arm64: dts: allwinner: h5: Add device node for
+ Mali-450 GPU
+Date: Fri, 24 Aug 2018 13:38:49 +0800
+Message-ID: <20180824053849.7666-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6115d6ca-8df6-1830-3c61-681610d8f2b0@infradead.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, Roy Im <roy.im.opensource@diasemi.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <Support.Opensource@diasemi.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB4NT73NQKGQEPY7JL2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUmFuZHksDQoNCk9uIDA4LzI0LzIwMTggMTI6MjggQU0sIFJhbmR5IER1bmxhcCB3cm90ZToN
-Cg0KPiBPbiAwOC8yMC8yMDE4IDEwOjQ0IFBNLCBSb3kgSW0gd3JvdGU6DQo+ID4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvaW5wdXQvbWlzYy9LY29uZmlnIGIvZHJpdmVycy9pbnB1dC9taXNjL0tjb25m
-aWcNCj4gPiBpbmRleCBjYTU5YTJiLi42ZTBkZTY5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
-aW5wdXQvbWlzYy9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9pbnB1dC9taXNjL0tjb25maWcN
-Cj4gPiBAQCAtODUxLDQgKzg1MSwxNiBAQCBjb25maWcgSU5QVVRfU0MyN1hYX1ZJQlJBDQo+ID4g
-IAkgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhlcmUuIFRo
-ZSBtb2R1bGUNCj4gd2lsbA0KPiA+ICAJICBiZSBjYWxsZWQgc2MyN3h4X3ZpYnJhLg0KPiA+DQo+
-IA0KPiBIaSwNCj4gQ2FuIHlvdSBleHBsYWluIHRoZSAiZGVwZW5kcyBvbiIgYmVsb3csIHBsZWFz
-ZS4NCj4gDQo+ID4gK2NvbmZpZyBJTlBVVF9EQTcyODBfSEFQVElDUw0KPiA+ICsJdHJpc3RhdGUg
-IkRpYWxvZyBTZW1pY29uZHVjdG9yIERBNzI4MCBoYXB0aWNzIHN1cHBvcnQiDQo+ID4gKwlkZXBl
-bmRzIG9uIChJTlBVVCAmJiBJMkMgJiYgU1lTRlMpIHx8IFBXTQ0KPiA+ICsJc2VsZWN0IElOUFVU
-X0ZGX01FTUxFU1MNCj4gPiArCXNlbGVjdCBSRUdNQVBfSTJDDQo+IA0KPiBJZiBJTlBVVCBpcyBk
-aXNhYmxlZCwgYW5kIEkyQyBpcyBkaXNhYmxlZCwgYW5kIFNZU0ZTIGlzIGRpc2FibGVkLCBidXQN
-Cj4gUFdNPXksDQo+IHRoZW4gdGhlICJzZWxlY3QicyB3aWxsIGhhdmUgcHJvYmxlbXMgd2l0aCB1
-bm1ldCBkZXBlbmRlbmNpZXMuDQoNCkkgd2lsbCBmaXggdGhpcyBpbiB2NS4NCg0KPiANCj4gPiAr
-CWhlbHANCj4gPiArCSAgU2F5IFkgdG8gZW5hYmxlIHN1cHBvcnQgZm9yIHRoZSBoYXB0aWNzIGNv
-bnRyb2xsZXIgb24NCj4gPiArCSAgRGlhbG9nIERBNzI4MCBjaGlwLg0KPiA+ICsNCj4gPiArCSAg
-VG8gY29tcGlsZSB0aGlzIGRyaXZlciBhcyBhIG1vZHVsZSwgY2hvb3NlIE0gaGVyZTogdGhlDQo+
-ID4gKwkgIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBkYTcyODAtaGFwdGljLg0KPiANCj4gVGhhdCBt
-b2R1bGUgbmFtZSBkb2Vzbid0IG1hdGNoIHdoYXQncyBpbiB0aGUgTWFrZWZpbGUgKGJlbG93KS4N
-Cg0KSSB3aWxsIGZpeCB0aGlzIGFzIHdlbGwgaW4gdjUuDQoNCj4gDQo+ID4gKw0KPiA+ICBlbmRp
-Zg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lucHV0L21pc2MvTWFrZWZpbGUgYi9kcml2ZXJz
-L2lucHV0L21pc2MvTWFrZWZpbGUNCj4gPiBpbmRleCA5ZDBmOWQxLi5kOTQxMzQ4IDEwMDY0NA0K
-PiA+IC0tLSBhL2RyaXZlcnMvaW5wdXQvbWlzYy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2RyaXZlcnMv
-aW5wdXQvbWlzYy9NYWtlZmlsZQ0KPiA+IEBAIC0yNSw2ICsyNSw3IEBAIG9iai0kKENPTkZJR19J
-TlBVVF9DTUEzMDAwKQkJKz0NCj4gY21hMzAwMF9kMHgubw0KPiA+ICBvYmotJChDT05GSUdfSU5Q
-VVRfQ01BMzAwMF9JMkMpCQkrPSBjbWEzMDAwX2QweF9pMmMubw0KPiA+ICBvYmotJChDT05GSUdf
-SU5QVVRfQ09CQUxUX0JUTlMpCQkrPSBjb2JhbHRfYnRucy5vDQo+ID4gIG9iai0kKENPTkZJR19J
-TlBVVF9DUENBUF9QV1JCVVRUT04pCSs9IGNwY2FwLXB3cmJ1dHRvbi5vDQo+ID4gK29iai0kKENP
-TkZJR19JTlBVVF9EQTcyODBfSEFQVElDUykJKz0gZGE3MjgwLm8NCj4gPiAgb2JqLSQoQ09ORklH
-X0lOUFVUX0RBOTA1Ml9PTktFWSkJKz0gZGE5MDUyX29ua2V5Lm8NCj4gPiAgb2JqLSQoQ09ORklH
-X0lOUFVUX0RBOTA1NV9PTktFWSkJKz0gZGE5MDU1X29ua2V5Lm8NCj4gPiAgb2JqLSQoQ09ORklH
-X0lOUFVUX0RBOTA2M19PTktFWSkJKz0gZGE5MDYzX29ua2V5Lm8NCj4gDQo+IA0KPiAtLQ0KPiB+
-UmFuZHkNCg0KUmVnYXJkcywNClJveQ0K
+The H5 has a Mali-450 GPU with 4 Pixel Processor cores.
+
+Interestingly, while the datasheet lists an interrupt line for the GPU's
+PMU, the hardware block itself doesn't seem to have it. Reads from the
+PMU address range all return zero, and writes are ignored.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+
+This was tested with ARM's kernel driver from 
+
+    https://github.com/superna9999/meson_gx_mali_450
+
+patched with sunxi glue, and userspace driver from
+
+    https://github.com/rockchip-linux/libmali
+
+es2gears achieves ~60 fps once the PMU is removed.
+
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 43 ++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index 62d646baac3c..b41dc1aab67d 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -92,6 +92,49 @@
+ 			     <GIC_PPI 10
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
++
++	soc {
++		mali: gpu@1e80000 {
++			compatible = "allwinner,sun50i-h5-mali", "arm,mali-450";
++			reg = <0x01e80000 0x30000>;
++			/*
++			 * While the datasheet lists an interrupt for the
++			 * PMU, the actual silicon does not have the PMU
++			 * block. Reads all return zero, and writes are
++			 * ignored.
++			 */
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "gp",
++					  "gpmmu",
++					  "pp",
++					  "pp0",
++					  "ppmmu0",
++					  "pp1",
++					  "ppmmu1",
++					  "pp2",
++					  "ppmmu2",
++					  "pp3",
++					  "ppmmu3",
++					  "pmu";
++			clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
++			clock-names = "bus", "core";
++			resets = <&ccu RST_BUS_GPU>;
++
++			assigned-clocks = <&ccu CLK_GPU>;
++			assigned-clock-rates = <384000000>;
++		};
++	};
+ };
+ 
+ &ccu {
+-- 
+2.18.0
