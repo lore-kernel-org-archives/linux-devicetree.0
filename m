@@ -1,7 +1,7 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v2 5/5] arm64: dts: qcom: add wake up interrupts for GPIOs for SDM845
-Date: Fri, 24 Aug 2018 14:01:57 -0600
-Message-ID: <20180824200157.9993-6-ilina@codeaurora.org>
+Subject: [PATCH v2 4/5] drivers: pinctrl: qcom: sdm845: support GPIO wakeup from suspend
+Date: Fri, 24 Aug 2018 14:01:56 -0600
+Message-ID: <20180824200157.9993-5-ilina@codeaurora.org>
 References: <20180824200157.9993-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180824200157.9993-1-ilina@codeaurora.org>
@@ -10,188 +10,38 @@ To: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@
 Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-GPIOs that are wakeup capable have interrupt lines that are routed to
-the always-on interrupt controller (PDC) in parallel to the pinctrl. The
-interrupts listed here are the wake up lines corresponding to GPIOs.
+Enable TLMM IRQs to be sensed by PDC when we enter suspend. It is
+possible that the TLMM may be powered off and not detect GPIOs that are
+configured as wake up interrupts. By hooking into suspend callbacks, we
+allow PDC IRQs to take over and wake up the system if wakeup interrupts
+are triggered.
 
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
-Changes in v2:
-	- Define IRQ trigger type in DT
-Changes in v1:
-	- Use interrupt-extended for all TLMM interrupts
-	- Define GPIO-PDC map using interrupt-names
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 152 ++++++++++++++++++++++++++-
- 1 file changed, 151 insertions(+), 1 deletion(-)
+ drivers/pinctrl/qcom/pinctrl-sdm845.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 0208f8557ffa..8d87794092b0 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -712,11 +712,161 @@
- 		tlmm: pinctrl@3400000 {
- 			compatible = "qcom,sdm845-pinctrl";
- 			reg = <0x03400000 0xc00000>;
--			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			interrupts-extended =
-+				<&intc GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 30 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 31 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 32 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 33 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 34 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 35 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 36 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 37 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 38 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 39 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 41 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 42 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 43 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 44 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 45 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 46 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 47 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 49 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 50 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 51 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 52 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 54 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 55 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 56 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 57 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 58 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 59 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 60 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 61 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 62 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 63 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 64 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 65 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 66 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 67 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 68 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 69 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 70 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 71 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 72 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 73 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 74 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 75 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 76 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 77 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 79 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 80 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 81 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 82 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 83 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 84 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 85 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 86 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 90 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 91 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 92 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 95 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 96 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 97 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 98 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 99 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 100 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 102 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 103 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 104 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 105 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 106 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 107 IRQ_TYPE_LEVEL_HIGH>,
-+				<&pdc 108 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "summary-irq",
-+				"gpio1",
-+				"gpio3",
-+				"gpio5",
-+				"gpio10",
-+				"gpio11",
-+				"gpio20",
-+				"gpio22",
-+				"gpio24",
-+				"gpio26",
-+				"gpio30",
-+				"gpio32",
-+				"gpio34",
-+				"gpio36",
-+				"gpio37",
-+				"gpio38",
-+				"gpio39",
-+				"gpio40",
-+				"gpio43",
-+				"gpio44",
-+				"gpio46",
-+				"gpio48",
-+				"gpio52",
-+				"gpio53",
-+				"gpio54",
-+				"gpio56",
-+				"gpio57",
-+				"gpio58",
-+				"gpio59",
-+				"gpio60",
-+				"gpio61",
-+				"gpio62",
-+				"gpio63",
-+				"gpio64",
-+				"gpio66",
-+				"gpio68",
-+				"gpio71",
-+				"gpio73",
-+				"gpio77",
-+				"gpio78",
-+				"gpio79",
-+				"gpio80",
-+				"gpio84",
-+				"gpio85",
-+				"gpio86",
-+				"gpio88",
-+				"gpio91",
-+				"gpio92",
-+				"gpio95",
-+				"gpio96",
-+				"gpio97",
-+				"gpio101",
-+				"gpio103",
-+				"gpio104",
-+				"gpio115",
-+				"gpio116",
-+				"gpio117",
-+				"gpio118",
-+				"gpio119",
-+				"gpio120",
-+				"gpio121",
-+				"gpio122",
-+				"gpio123",
-+				"gpio124",
-+				"gpio125",
-+				"gpio127",
-+				"gpio128",
-+				"gpio129",
-+				"gpio130",
-+				"gpio132",
-+				"gpio133",
-+				"gpio145",
-+				"gpio41",
-+				"gpio89",
-+				"gpio31",
-+				"gpio49",
-+				"gpio41",
-+				"gpio89",
-+				"gpio31",
-+				"gpio49";
+diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+index 2ab7a8885757..cc333b8afb99 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
++++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+@@ -1297,10 +1297,16 @@ static const struct of_device_id sdm845_pinctrl_of_match[] = {
+ 	{ },
+ };
  
- 			qup_i2c0_default: qup-i2c0-default {
- 				pinmux {
++static const struct dev_pm_ops msm_pinctrl_dev_pm_ops = {
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(msm_pinctrl_suspend_late,
++				     msm_pinctrl_resume_late)
++};
++
+ static struct platform_driver sdm845_pinctrl_driver = {
+ 	.driver = {
+ 		.name = "sdm845-pinctrl",
+ 		.of_match_table = sdm845_pinctrl_of_match,
++		.pm = &msm_pinctrl_dev_pm_ops,
+ 	},
+ 	.probe = sdm845_pinctrl_probe,
+ 	.remove = msm_pinctrl_remove,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
