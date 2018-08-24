@@ -1,72 +1,92 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
-Date: Fri, 24 Aug 2018 10:22:33 +0200
-Message-ID: <20180824102233.73852596@bbrezillon>
-References: <20180812184152.GA22343@ravnborg.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: can: rcar_can: Add r8a774a1 support
+Date: Fri, 24 Aug 2018 10:26:44 +0200
+Message-ID: <20180824082643.7eapxf72iuvkdw3j@verge.net.au>
+References: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
+ <TYAPR01MB2285834E95AB0D0D3E2C5B72B7300@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180812184152.GA22343@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB2285834E95AB0D0D3E2C5B72B7300@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+Sender: netdev-owner@vger.kernel.org
+To: Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FtLAoKT24gU3VuLCAxMiBBdWcgMjAxOCAyMDo0MTo1MiArMDIwMApTYW0gUmF2bmJvcmcg
-PHNhbUByYXZuYm9yZy5vcmc+IHdyb3RlOgoKPiBOZXcgRFJNIGJhc2VkIGRyaXZlciBmb3IgYXQ5
-MXNhbTkgU09DJ3MgdGhhdCB1c2VzIHRoZQo+IEF0bWVsIExDREMgSVAgY29yZS4KCkZpcnN0IG9m
-IGFsbCwgdGhhbmtzIGZvciB0aGlzIGNvbnRyaWJ1dGlvbi4KCj4gCj4gVGhpcyBpcyBmaXJzdCB2
-ZXJzaW9uIG9mIGEgcGF0Y2ggc2V0IHRoYXQgYWRkcwo+IGRyaXZlcnMgZm9yIHRoZSBBdG1lbCBM
-Q0RDIElQIGNvcmUuCj4gUG9zdGVkIGZvciByZXZpZXcgYXMgdGhlIGJhc2ljcyB3b3JrcyBub3cu
-Cj4gCj4gVGhlIExDREMgSVAgY29yZSBjb250YWlucyB0d28gZGV2aWNlczoKPiAtIGEgUFdNIG9m
-dGVuIHVzZWQgZm9yIGJhY2tsaWdodAo+IC0gYSBMQ0QgZGlzcGxheSBjb250cm9sbGVyCj4gCj4g
-Qm90aCBkZXZpY2VzIGFyZSBzdXBwb3J0ZWQgdG9kYXkgYnkgdGhlIGF0bWVsX2xjZGZiIGRyaXZl
-ci4KPiBGb3IgdGhpcyBuZXcgc2V0IG9mIGRyaXZlcnMgdGhlIGNvbXBhdGlibGUgc3RyaW5ncyB3
-YXMKPiBzZWxlY3RlZCB0byBhdm9pZCBjbGFzaCB3aXRoIHRoZSBleGlzdGluZyBjb21wYXRpYmxl
-Cj4gc3RyaW5ncyB1c2VkIGZvciB0aGUgYXRtZWxfbGNkZmIgZHJpdmVyIHRvIGFsbG93IHRoZW0K
-PiB0byBjby1leGlzdC4KCkhtLCBJIHRoaW5rIFJvYiBjb21tZW50ZWQgb24gdGhhdCBhbHJlYWR5
-LCBidXQgd2UgdXN1YWxseSB0cnkgdG8gc3RheQpjb21wYXRpYmxlIHdpdGggdGhlIGV4aXNpdGlu
-Zy9vbGQgYmluZGluZ3Mgd2hlbiBpbnRyb2R1Y2luZyBhIG5ldyBvbmUuCkRvbid0IGtub3cgaG93
-IGZlYXNpYmxlIHRoaXMgaXMgaW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UgdGhvdWdoLgoKPiAKPiBU
-aGlzIHBhdGNoc2V0IGltcGxlbWVudHMgdGhyZWUgZHJpdmVycy4KPiAtIEEgTUZEIGRyaXZlciB0
-aGF0IGluY2x1ZGUgdGhlIGdlbmVyaWMgcGFydHMuCj4gLSBBIFBXTSBkcml2ZXIuCj4gLSBBIERS
-TSBkaXNwbGF5IGNvbnRyb2xsZXIgZHJpdmVyLgo+IFRoaXMgaXMgdGhlIHNhbWUgc3BsaXQgYXMg
-dXNlZCBmb3IgdGhlIEF0bWVsIGhsY2RjIElQLgo+IAo+IFRoZSBobGNkYyBhbmQgbGNkYyBoYXMg
-b25seSBhIGZldyB0aGluZ3MgaW4gY29tbW9uIGFuZAo+IHRyeWluZyB0byBzaGFyZSB0aGUgY29k
-ZSBmb3IgdGhlbSB3YXMgbm90IGEgdmlhYmxlIHNvbHV0aW9uLgo+IAo+IFRoZSBEUk0gaW1wbGVt
-ZW50YXRpb24gaGFzIGEgZmV3IHNob3J0Y29taW5ncyBjb21wYXJlZCB0byB0aGUKPiBleGlzdGlu
-ZyBmYmRldiBiYXNlZCBkcml2ZXI6Cj4gICAgIC0gU1ROIGRpc3BsYXlzIGFyZSBub3Qgc3VwcG9y
-dGVkCj4gICAgICAgICAgICAgQmluZGluZyBzdXBwb3J0IGlzIG1pc3NpbmcgYnV0IG1vc3Qgb2Yg
-dGhlCj4gICAgICAgICAgICAgU1ROIHNwZWNpZmljIGZ1bmN0aW9uYWxpdHkgaXMgb3RoZXJ3aXNl
-IHBvcnRlZAo+ICAgICAgICAgICAgIGZyb20gdGhlIGZiZGV2IGRyaXZlci4KPiAgICAgICAgICAg
-ICBJIGFzc3VtZSB0aGUgaW5mbyBzaG91bGQgY29tZSBmcm9tIHRoZSBwYW5lbAo+ICAgICAgICAg
-ICAgIGJ1dCBhcyBJIGxhY2sgSFcgSSBoYXZlIG5vdCBsb29rZWQgdG9vIG11Y2gKPiAgICAgICAg
-ICAgICBpbnRvIHdoYXQgaXMgcmVxdWlyZWQuCj4gICAgIC0gZ2FtbWEgc3VwcG9ydCBpcyBtaXNz
-aW5nCj4gICAgICAgICAgICAgVGhlIGRyaXZlciB1dGlsaXNlcyBkcm1fc2ltcGxlX2ttc19oZWxw
-ZXIgYW5kCj4gICAgICAgICAgICAgdGhpcyBoZWxwZXIgbGFja3Mgc3VwcG9ydCBmb3Igc2V0dGlu
-ZyB1cCBnYW1tYS4KPiAgICAgICAgICAgICBJZiB0aGlzIGlzIHVzZWZ1bCBwbGVhc2UgbGV0IG1l
-IGtub3cgYW5kIEkKPiAgICAgICAgICAgICB3aWxsIGV4dGVuZCBkcm1fc2ltcGxlX2ttc19oZWxw
-ZXIgdG8gc3VwcG9ydCB0aGlzCj4gICAgICAgICAgICAgYW5kIHVwZGF0ZSB0aGUgZHJpdmVyLgoK
-SSBndWVzcyB5b3UgY2FuIHNraXAgdGhhdCBmb3Igbm93LgoKPiAgICAgLSBtb2Rlc2V0dGluZyBp
-cyBub3QgY2hlY2tlZCAoc2VlIFRPRE8gaW4gZmlsZSkKPiAgICAgICAgICAgICBJcyB0aGlzIHJl
-cXVpcmVkIGZvciBzdWNoIGEgc2ltcGxlIHNldHVwPwoKV2VsbCwgdGhhdCdzIGFsd2F5cyBiZXR0
-ZXIgaWYgeW91IGNhbiBjaGVjayB0aGF0IHRoZSByZXF1ZXN0ZWQgZGlzcGxheQptb2RlIGlzIHN1
-cHBvcnRlZCBiZWZvcmUgdHJ5aW5nIHRvIGFwcGx5IGl0LgoKPiAgICAgLSBzdXBwb3J0IGZvciBl
-eHRyYSBtb2RlcyBhcyBhcHBsaWNhYmxlIChhbmQgbGNkLXdpcmluZy1tb2RlKQoKUGV0ZXIgYWxy
-ZWFkeSBzdWdnZXN0ZWQgc29tZXRoaW5nIEkgdGhpbmsuCgo+ICAgICAtIHN1cHBvcnQgZm9yIEFW
-UjMyIChpcyBpdCByZWxldmFudD8pCgpJdCBpcywgQVZSMzIgaXMgbm8gbG9uZ2VyIHN1cHBvcnRl
-ZCBpbiBtYWlubGluZS4KCj4gCj4gVGhlIGZpcnN0IHBhdGNoIHJlbmFtZXMgLi4uL2RybS9hdG1l
-bC1obGNkYyB0byAuLi4vZHJtL2F0bWVsCj4gdG8gaGF2ZSBhIG5pY2UgaG9tZSBmb3IgYm90aCBk
-cml2ZXJzLgoKU291bmRzIGdvb2QuCgpSZWdhcmRzLAoKQm9yaXMKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Aug 22, 2018 at 03:12:26PM +0000, Chris Paterson wrote:
+> Hello Simon,
+> 
+> > From: Simon Horman <horms@verge.net.au>
+> > Sent: 22 August 2018 11:49
+> > 
+> > On Fri, Aug 17, 2018 at 03:38:23PM +0100, Fabrizio Castro wrote:
+> > > Document RZ/G2M (r8a774a1) SoC bindings.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > 
+> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> Thank you.
+> 
+> > 
+> > > ---
+> > > This patch applies on top of next-20180817
+> > >
+> > >  Documentation/devicetree/bindings/net/can/rcar_can.txt | 8 ++++++--
+> > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > > b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > > index 94a7f33..84afc78 100644
+> > > --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > > +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > > @@ -4,6 +4,7 @@ Renesas R-Car CAN controller Device Tree Bindings
+> > > Required properties:
+> > >  - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A7743
+> > SoC.
+> > >  	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
+> > > +	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 SoC.
+> > >  	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
+> > >  	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+> > >  	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+> > > @@ -16,7 +17,8 @@ Required properties:
+> > >  	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
+> > >  	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
+> > >  	      compatible device.
+> > > -	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device.
+> > > +	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 or RZ/G2
+> > > +	      compatible device.
+> > >  	      When compatible with the generic version, nodes must list the
+> > >  	      SoC-specific version corresponding to the platform first
+> > >  	      followed by the generic version.
+> > > @@ -24,7 +26,9 @@ Required properties:
+> > >  - reg: physical base address and size of the R-Car CAN register map.
+> > >  - interrupts: interrupt specifier for the sole interrupt.
+> > >  - clocks: phandles and clock specifiers for 3 CAN clock inputs.
+> > > -- clock-names: 3 clock input name strings: "clkp1", "clkp2", "can_clk".
+> > > +- clock-names: 2 clock input name strings for RZ/G2: "clkp1",
+> > > +"can_clk", and
+> > 
+> > Minor comment: Personally I would start a new sentence at "and".
+> > 
+> > Question: Is a driver update required so support 2-clock SoCs?
+> 
+> The driver will work okay as-is.
+> 
+> In theory CAN could be broken if renesas,can-clock-select is set to 0x1
+> (clkp2) in the DT, as this value will be written to the CAN Clock Select
+> Register. However if the documentation is followed there will be no
+> problems.
+> 
+> We should probably update the driver to fix this though, which will be a
+> change specific to all RZ/G2 devices, so perhaps we should also be adding
+> a "renesas,rzg-gen2-can" family compatible string as well? (to driver and
+> documentation)
+
+Yes, I think that sounds reasonable.
+
+But in that case we should pre-emptively not use renesas,rcar-gen3-can for
+RZ/G2.
