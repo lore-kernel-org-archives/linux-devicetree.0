@@ -1,103 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/7] dt-bindings: Add DT bindings documentation for
- Allwinner Thermal Sensor Controller
-Date: Fri, 24 Aug 2018 16:58:40 +0200
-Message-ID: <20180824145840.isdcg3fr6mw4ntzg@flea>
-References: <20180804070355.14857-1-manu@freebsd.org>
- <20180820111755.rzg7l2lznmbpuf2e@flea>
- <CAL_JsqLVQDRH1esAXghfQdxmp+iorWVCArM2qTwjbgmQzmhzQw@mail.gmail.com>
- <20180820140737.xmqhu5ndqzehvkql@flea>
- <20180820162715.49e6d8a469ece983f3c1d288@bidouilliste.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: h5: Add device node
+ for Mali-450 GPU
+Date: Fri, 24 Aug 2018 16:59:41 +0200
+Message-ID: <20180824145941.xmz7bbrvwsj6eyoy@flea>
+References: <20180824053849.7666-1-wens@csie.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ctw732jamwpz6sc5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="cqimevuo4e7fpgx3"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXV2QDOAKGQEE5G2HCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180820162715.49e6d8a469ece983f3c1d288@bidouilliste.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Emmanuel Vadot <manu@bidouilliste.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Emmanuel Vadot <manu@freebsd.org>, Chen-Yu Tsai <wens@csie.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org
+In-Reply-To: <20180824053849.7666-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ctw732jamwpz6sc5
-Content-Type: text/plain; charset=us-ascii
+--cqimevuo4e7fpgx3
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Aug 24, 2018 at 01:38:49PM +0800, Chen-Yu Tsai wrote:
+> The H5 has a Mali-450 GPU with 4 Pixel Processor cores.
+> 
+> Interestingly, while the datasheet lists an interrupt line for the GPU's
+> PMU, the hardware block itself doesn't seem to have it. Reads from the
+> PMU address range all return zero, and writes are ignored.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-On Mon, Aug 20, 2018 at 04:27:15PM +0200, Emmanuel Vadot wrote:
-> On Mon, 20 Aug 2018 16:07:37 +0200
-> Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->=20
-> > On Mon, Aug 20, 2018 at 07:41:22AM -0600, Rob Herring wrote:
-> > > On Mon, Aug 20, 2018 at 5:17 AM Maxime Ripard <maxime.ripard@bootlin.=
-com> wrote:
-> > > >
-> > > > On Sat, Aug 04, 2018 at 09:03:49AM +0200, Emmanuel Vadot wrote:
-> > > > > This patch adds documentation for Device-Tree bindings for the Al=
-lwinner
-> > > > > Thermal Sensor Controller found on the H3, H5 and A64 SoCs
-> > > > >
-> > > > > Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-> > > >
-> > > > I'm not going to merge a binding for a device that doesn't have any
-> > > > driver implemented at the moment in Linux.
-> > >=20
-> > > I'll take it then. Linux is not the only DT client.
-> >=20
-> > Then don't complain if we ever have to break the ABI. We never tested
-> > that hardware, never had any code running on it, and it *will* cause
-> > some issues. For example, the calibration data have never been used
-> > and how they should be represented have never been described, since no
-> > one ever actually tried to use it.
-> >=20
-> > And sure, Linux is not the only DT client. Just like FreeBSD isn't.
->=20
->  What kind of data would you need for me to make things better ?
->  We have the driver in FreeBSD for almost two years now, whne I started
-> to see how to upstream it I noticed a lot of problems and spent 4 or 5
-> days to try on all the SoCs mentionned in the serie, the only SoC I
-> didn't include it the A83T as for some reason I couldn't make the
-> driver work.
-
-Do you have a link to that driver? How and how much did you test it?
-
-Are you using the calibration data stored in the SID?
-
-> I just hope that you understand that we cannot wait for Linux to
-> have a driver to have some bindings.
-
-Just like I'm sure you can understand that just merging the DT bits
-without testing anything caused some troubles in the past, and I don't
-want to discover it in a year from now.
-
+Queued for 4.20, thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---ctw732jamwpz6sc5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluAHR8ACgkQ0rTAlCFN
-r3SZQRAAmXuqaVEN/HMxUrhEiqWT9FyK11pZERNZsHYv+YfegdJDZw23huBgiJUH
-4rAtpVwXukCaf0EzUyNL84lwYS+kVQA3Y+Y0gArCyEhUB96lUJYtbdsoJwZ/KKcj
-Y5dhAgSLaYzpnGtcpVx5fhrpCQ6XkDSEhSvWrmeanVCDdpMqw7CVL3z/BEqJVBvO
-obCFucd3aQqYDqtvxfcF2jD08BeQBbxtcKweQaFIJEP0u/G0HzrIIgFaasyrpsUe
-npZCOZyHIiT8+ANG34sG/t4T9tl6DWuaVc1YGIFVD77Umin3Jkt4Co7XCF1PprlZ
-2c0WEEogAffVGlQl/TPScXgLDXjByllikb4Gag+6sZwEmUYkunjSC3S65LX8ix7K
-CchCpEelxO6Yx9RnGBVDrHNJf/bfaIf8dweiuEN4/0lujdKmYZ/qytQZZE3yc0wP
-rUL5af8SMLabWA+dM8JeOrJTksz/styrBBrB5Vi5rZXaZfgbeCGrOL62OabJ2Fcn
-HcvgGMGVUe7O608ML7wKxCKJduJuRmjhb6wNU0rYPUnS/wJVOvLN5yDcUPAie3mJ
-1GgAOMtZ18RuGgmYwVS8WZHcp2NAVV5nKS91vYS/oxPTpE5C1Ypye+Pla6zMWXzD
-R1Cs1CJTpMQxNVgE6j8yjfe98wkdBYYajLmRsncke1TyXbY14js=
-=1xTs
------END PGP SIGNATURE-----
-
---ctw732jamwpz6sc5--
+--cqimevuo4e7fpgx3--
