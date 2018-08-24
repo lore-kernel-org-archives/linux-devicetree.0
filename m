@@ -1,27 +1,37 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v6 4/4] venus: firmware: register separate platform_device for
- firmware loader
-Date: Thu, 23 Aug 2018 23:45:13 -0700
-Message-ID: <153509311396.28926.9155836717358532427@swboyd.mtv.corp.google.com>
-References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
- <1535034528-11590-5-git-send-email-vgarodia@codeaurora.org>
+From: Hanjie Lin <hanjie.lin@amlogic.com>
+Subject: [PATCH v2 0/2] add the Amlogic Meson PCIe controller driver.
+Date: Fri, 24 Aug 2018 15:36:02 +0800
+Message-ID: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535034528-11590-5-git-send-email-vgarodia@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, hverkuil@xs4all.nl, mark.rutland@arm.com, mchehab@kernel.org, robh@kernel.org, stanimir.varbanov@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org, vgarodia@codeaurora.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vikash Garodia (2018-08-23 07:28:48)
-> From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> =
+The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+PCI core. This patchset add the driver and dt-bindings of the controller.
 
-> This registers a firmware platform_device and associate it with
-> video-firmware DT subnode. Then calls dma configure to initialize
-> dma and iommu.
+Changes since v1: [0]
+ - use gpio lib instead open code
+ - move 'apb' and 'port' reset from phy driver
+ - format correcting
 
-Yes, but why? Commit text isn't supposed to say what is obvious from the
-code.
+[0] : https://lkml.org/lkml/2018/8/14/70
+
+Yue Wang (2):
+  dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe
+    controller
+  PCI: meson: add the Amlogic Meson PCIe controller driver
+
+ .../devicetree/bindings/pci/amlogic,meson-pcie.txt |  63 +++
+ drivers/pci/controller/dwc/Kconfig                 |  12 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pci-meson.c             | 613 +++++++++++++++++++++
+ 4 files changed, 689 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+ create mode 100644 drivers/pci/controller/dwc/pci-meson.c
+
+-- 
+2.7.4
