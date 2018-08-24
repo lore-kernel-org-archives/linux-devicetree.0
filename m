@@ -1,80 +1,104 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] arm64: dts: Fix various entry-method properties to
- reflect documentation
-Date: Fri, 24 Aug 2018 08:38:04 -0700
-Message-ID: <CAOesGMjcs=h4DHn7coo5iixUUY2GR2wWeTyMWQ_SBE9rrPZQgg@mail.gmail.com>
-References: <113f28acbc55f64762c9f0bcefe076a811f2ed82.1535014078.git.amit.kucheria@linaro.org>
- <20180823153110.GA19131@e107155-lin> <CAHLCerNoRj6GQRF=NJXwc0U+mJNe=06JGADQr7uT-chD2W-J+A@mail.gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v1 1/7] atmel-hlcdc: renamed directory to drm/atmel/
+Date: Fri, 24 Aug 2018 17:43:29 +0200
+Message-ID: <20180824154329.GA26678@ravnborg.org>
+References: <20180812184152.GA22343@ravnborg.org>
+ <20180812184629.3808-1-sam@ravnborg.org>
+ <20180824102843.666bc465@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHLCerNoRj6GQRF=NJXwc0U+mJNe=06JGADQr7uT-chD2W-J+A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ARM-SoC Maintainers <arm@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Chunyan Zhang <zhang.lyra@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Shawn Guo <shawnguo@kernel.org>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Minghuan Lian <minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Fabio Estevam <fabio.estevam@nxp.>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180824102843.666bc465@bbrezillon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 1:02 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> (Adding arm-soc folks)
->
-> On Thu, Aug 23, 2018 at 9:01 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> Hi Amit,
->>
->> Thanks for fixing this.
->>
->> On Thu, Aug 23, 2018 at 02:23:29PM +0530, Amit Kucheria wrote:
->>> The idle-states binding documentation[1] mentions that the
->>> 'entry-method' property is required on 64-bit platforms and must be
->>> set to "psci".
->>>
->>> commit a13f18f59d26 ("Documentation: arm: Fix typo in the idle-states
->>> bindings examples") attempted to fix this earlier but clearly more is
->>> needed.
->>>
->>
->> In fact, I assumed I fixed things with commit 978fa436231a ("drivers:
->> firmware: psci: unify enable-method binding on ARM {64,32}-bit systems"),
->> but I was wrong. I left quite a few instances including juno dtbs.
->>
->>> Fix the cpu-capacity.txt documentation that uses the incorrect value so
->>> we don't get copy-paste errors like these. Clarify the language in
->>> idle-states.txt by removing the reference to the psci bindings that
->>> might be causing this confusion.
->>>
->>> Finally, fix devicetrees of various boards to reflect current
->>> documentation.
->>>
->>> [1] Documentation/devicetree/bindings/arm/idle-states.txt (see
->>> idle-states node)
->>>
->>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
->>> ---
->>>  Documentation/devicetree/bindings/arm/cpu-capacity.txt | 2 +-
->>>  Documentation/devicetree/bindings/arm/idle-states.txt  | 4 ++--
->>>  arch/arm64/boot/dts/arm/juno-r1.dts                    | 2 +-
->>>  arch/arm64/boot/dts/arm/juno-r2.dts                    | 2 +-
->>>  arch/arm64/boot/dts/arm/juno.dts                       | 2 +-
->>
->> For all the above files,
->>
->> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
->
-> Thanks for reviewing, Sudeep.
->
->> How do you plan to merge ? I prefer if you can send it via arm-soc as
->> fixes for this cycle with all the necessary acks. Otherwise you may have
->> to split this to send via platform maintainers which is bit mundane.
->
-> I was hoping to get this merged thru arm-soc tree instead of creating
-> a patch per platform. But if anybody feels strongly about it, I'm
-> happy to split them up and feed it through the platform maintainer
-> trees.
-
-Given that we're at the tail end of the merge window, before -rc1,
-it's easiest if we just take it directly and platform maintainers base
-their new contents on top of it.
-
-Applying to our next/late (i.e. merge-window-fixes) branch now.
-
-
--Olof
+SGkgQm9yaXMuCgpPbiBGcmksIEF1ZyAyNCwgMjAxOCBhdCAxMDoyODo0M0FNICswMjAwLCBCb3Jp
+cyBCcmV6aWxsb24gd3JvdGU6Cj4gT24gU3VuLCAxMiBBdWcgMjAxOCAyMDo0NjoyMyArMDIwMAo+
+IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4gd3JvdGU6Cj4gCj4gPiBVc2UgdmVuZG9y
+IG5hbWUgZm9yIGRpcmVjdG9yeSwgYWRkaW5nIGEgc3VpdGFibGUgcGxhY2UKPiA+IGZvciBtb3Jl
+IGF0bWVsIERSTSBkcml2ZXJzLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBTYW0gUmF2bmJvcmcg
+PHNhbUByYXZuYm9yZy5vcmc+Cj4gPiBDYzogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxs
+b25AYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIgKy0KPiA+ICBkcml2ZXJzL2dwdS9k
+cm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIgKy0KPiA+
+ICBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8IDIgKy0KPiA+ICBkcml2ZXJzL2dwdS9kcm0ve2F0bWVsLWhsY2RjID0+IGF0bWVsfS9L
+Y29uZmlnICAgICAgICAgICAgICB8IDYgKysrKysrCj4gPiAgZHJpdmVycy9ncHUvZHJtL3thdG1l
+bC1obGNkYyA9PiBhdG1lbH0vTWFrZWZpbGUgICAgICAgICAgICAgfCAwCj4gPiAgZHJpdmVycy9n
+cHUvZHJtL3thdG1lbC1obGNkYyA9PiBhdG1lbH0vYXRtZWxfaGxjZGNfY3J0Yy5jICAgfCAwCj4g
+PiAgZHJpdmVycy9ncHUvZHJtL3thdG1lbC1obGNkYyA9PiBhdG1lbH0vYXRtZWxfaGxjZGNfZGMu
+YyAgICAgfCAwCj4gPiAgZHJpdmVycy9ncHUvZHJtL3thdG1lbC1obGNkYyA9PiBhdG1lbH0vYXRt
+ZWxfaGxjZGNfZGMuaCAgICAgfCAwCj4gPiAgZHJpdmVycy9ncHUvZHJtL3thdG1lbC1obGNkYyA9
+PiBhdG1lbH0vYXRtZWxfaGxjZGNfb3V0cHV0LmMgfCAwCj4gPiAgZHJpdmVycy9ncHUvZHJtL3th
+dG1lbC1obGNkYyA9PiBhdG1lbH0vYXRtZWxfaGxjZGNfcGxhbmUuYyAgfCAwCj4gPiAgMTAgZmls
+ZXMgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+ID4gIHJlbmFtZSBk
+cml2ZXJzL2dwdS9kcm0ve2F0bWVsLWhsY2RjID0+IGF0bWVsfS9LY29uZmlnICg4MyUpCj4gPiAg
+cmVuYW1lIGRyaXZlcnMvZ3B1L2RybS97YXRtZWwtaGxjZGMgPT4gYXRtZWx9L01ha2VmaWxlICgx
+MDAlKQo+ID4gIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0ve2F0bWVsLWhsY2RjID0+IGF0bWVsfS9h
+dG1lbF9obGNkY19jcnRjLmMgKDEwMCUpCj4gPiAgcmVuYW1lIGRyaXZlcnMvZ3B1L2RybS97YXRt
+ZWwtaGxjZGMgPT4gYXRtZWx9L2F0bWVsX2hsY2RjX2RjLmMgKDEwMCUpCj4gPiAgcmVuYW1lIGRy
+aXZlcnMvZ3B1L2RybS97YXRtZWwtaGxjZGMgPT4gYXRtZWx9L2F0bWVsX2hsY2RjX2RjLmggKDEw
+MCUpCj4gPiAgcmVuYW1lIGRyaXZlcnMvZ3B1L2RybS97YXRtZWwtaGxjZGMgPT4gYXRtZWx9L2F0
+bWVsX2hsY2RjX291dHB1dC5jICgxMDAlKQo+ID4gIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0ve2F0
+bWVsLWhsY2RjID0+IGF0bWVsfS9hdG1lbF9obGNkY19wbGFuZS5jICgxMDAlKQo+ID4gCj4gPiBk
+aWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwo+ID4gaW5kZXggOTZlOThlMjA2
+YjBkLi4wOWNlNzZhOWExZGMgMTAwNjQ0Cj4gPiAtLS0gYS9NQUlOVEFJTkVSUwo+ID4gKysrIGIv
+TUFJTlRBSU5FUlMKPiA+IEBAIC00NjgxLDcgKzQ2ODEsNyBAQCBEUk0gRFJJVkVSUyBGT1IgQVRN
+RUwgSExDREMKPiA+ICBNOglCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBib290bGlu
+LmNvbT4KPiA+ICBMOglkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gPiAgUzoJU3Vw
+cG9ydGVkCj4gPiAtRjoJZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjLwo+ID4gK0Y6CWRyaXZl
+cnMvZ3B1L2RybS9hdG1lbC9hdG1lbC1obGNkYyoKPiAKPiAJCQkgICAgICBhdG1lbF9obGNkYyoK
+PiAKPiBBbHNvLCBJIHRoaW5rIHlvdSBjYW4ga2VlcCB0aGUgd2hvbGUgZGlyZWN0b3J5LCBhbmQg
+YWRkIHlvdXIgbmFtZSBwbHVzCj4gdXBkYXRlIHRoZSBlbnRyeSBkZXNjcmlwdGlvbiBhZnRlciBh
+ZGRpbmcgY29kZSBmb3IgdGhlIExDREMgYmxvY2suCgpUaGFua3MsIHdpbGwgZG8gc28gaW4gdjIu
+Cgo+IAo+ID4gIEY6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2F0
+bWVsLwo+ID4gIFQ6CWdpdCBnaXQ6Ly9hbm9uZ2l0LmZyZWVkZXNrdG9wLm9yZy9kcm0vZHJtLW1p
+c2MKPiA+ICAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyBiL2RyaXZl
+cnMvZ3B1L2RybS9LY29uZmlnCj4gPiBpbmRleCAyYTcyZDJmZWI3NmQuLjQxMzBkZjBjMGRiYSAx
+MDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnCj4gPiArKysgYi9kcml2ZXJz
+L2dwdS9kcm0vS2NvbmZpZwo+ID4gQEAgLTIzMiw3ICsyMzIsNyBAQCBzb3VyY2UgImRyaXZlcnMv
+Z3B1L2RybS9jaXJydXMvS2NvbmZpZyIKPiA+ICAKPiA+ICBzb3VyY2UgImRyaXZlcnMvZ3B1L2Ry
+bS9hcm1hZGEvS2NvbmZpZyIKPiA+ICAKPiA+IC1zb3VyY2UgImRyaXZlcnMvZ3B1L2RybS9hdG1l
+bC1obGNkYy9LY29uZmlnIgo+ID4gK3NvdXJjZSAiZHJpdmVycy9ncHUvZHJtL2F0bWVsL0tjb25m
+aWciCj4gPiAgCj4gPiAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9LY29uZmlnIgo+
+ID4gIAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSBiL2RyaXZlcnMv
+Z3B1L2RybS9NYWtlZmlsZQo+ID4gaW5kZXggZWY5ZjNkYWIyODdmLi5jZTk4Mjk5NjcxMjggMTAw
+NjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUKPiA+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9NYWtlZmlsZQo+ID4gQEAgLTc2LDcgKzc2LDcgQEAgb2JqLSQoQ09ORklHX0RSTV9H
+TUE1MDApICs9IGdtYTUwMC8KPiA+ICBvYmotJChDT05GSUdfRFJNX1VETCkgKz0gdWRsLwo+ID4g
+IG9iai0kKENPTkZJR19EUk1fQVNUKSArPSBhc3QvCj4gPiAgb2JqLSQoQ09ORklHX0RSTV9BUk1B
+REEpICs9IGFybWFkYS8KPiA+IC1vYmotJChDT05GSUdfRFJNX0FUTUVMX0hMQ0RDKQkrPSBhdG1l
+bC1obGNkYy8KPiA+ICtvYmotJChDT05GSUdfRFJNX0FUTUVMKQkrPSBhdG1lbC8KPiA+ICBvYmot
+JChDT05GSUdfRFJNX1JDQVJfRFUpICs9IHJjYXItZHUvCj4gPiAgb2JqLSQoQ09ORklHX0RSTV9T
+SE1PQklMRSkgKz1zaG1vYmlsZS8KPiA+ICBvYmoteQkJCSs9IG9tYXBkcm0vCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL0tjb25maWcgYi9kcml2ZXJzL2dwdS9k
+cm0vYXRtZWwvS2NvbmZpZwo+ID4gc2ltaWxhcml0eSBpbmRleCA4MyUKPiA+IHJlbmFtZSBmcm9t
+IGRyaXZlcnMvZ3B1L2RybS9hdG1lbC1obGNkYy9LY29uZmlnCj4gPiByZW5hbWUgdG8gZHJpdmVy
+cy9ncHUvZHJtL2F0bWVsL0tjb25maWcKPiA+IGluZGV4IDMyYmNjNGJhZDA2YS4uN2NkMzg2MmY5
+ZDE4IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2F0bWVsLWhsY2RjL0tjb25maWcK
+PiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hdG1lbC9LY29uZmlnCj4gPiBAQCAtMSw2ICsxLDEy
+IEBACj4gPiArY29uZmlnIERSTV9BVE1FTAo+ID4gKwlib29sCj4gPiArCWhlbHAKPiA+ICsJICBF
+bmFibGUgQXRtZWwgRFJNIHN1cHBvcnQKPiA+ICsKPiAKPiBOb3Qgc3VyZSB3aHkgeW91IG5lZWQg
+YW4gZXh0cmEgS2NvbmZpZyBvcHRpb24/IEFuZCBpZiB5b3UgcmVhbGx5IGRvCj4gKGJlY2F1c2Ug
+eW91IHdhbnQgdG8gc2hhcmUgY29tbW9uIGNvZGUpLCBpdCBzaG91bGQgYmUgaW1wbGljaXRseQo+
+IHNlbGVjdGVkIGJ5IERSTV9BVE1FTF9ITENEQyBhbmQgRFJNX0FUTUVMX0xDREMuCgpUaGUgZXh0
+cmEgY29uZmlnIG9wdGlvbiBpcyB0byBhdm9pZCBleHBvc2luZyBldmVyeSBzaW5nbGUgb3B0aW9u
+CnRvIHRoZSBkcm0gbWFrZWZpbGUsIGFuZCBpdCBpcyBpbmRlZWQgc2VsZWN0ZWQgYnkgdGhlIGlu
+ZGl2aWR1YWwKZHJpdmVycy4KU2ltaWxhciBwYXR0ZXJuIHVzZWQgaW4gYXJtL0tjb25maWcuCkJ1
+dCBJIHNlZSBtb3N0IG90aGVyIHBsYWNlcyBoYXZlIGEgcHJvbXB0IHRoYXQgZW5hYmxlIHRoZSBk
+cml2ZXJzCnNvIEkgd2lsbCBjaGFuZ2UgdGhpcyB0byBhIHByb21wdCBpbiB2Mi4KCglTYW0KX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
