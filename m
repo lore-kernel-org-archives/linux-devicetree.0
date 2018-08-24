@@ -1,104 +1,88 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 9/9] arm64: dts: renesas: r8a774a1: Add FCPF and FCPV
- instances
-Date: Fri, 24 Aug 2018 10:30:29 +0100
-Message-ID: <1535103029-10576-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <c27a266e-3eaa-a879-85ab-0e0aeb5f8b31@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: DT case sensitivity
+Date: Fri, 24 Aug 2018 10:14:01 -0500
+Message-ID: <CAL_Jsq+VnhT_4H4yECWsuXnmpQRnSHNRXAohRYds1LxcRjUHkw@mail.gmail.com>
+References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
+ <3335cff2cc999c1dda58d75949ab3d12185fca79.camel@kernel.crashing.org>
+ <CAL_JsqKqkO31ekVMFKs+osLvKdZyDzRowF1thWXn5=tWhrJgvw@mail.gmail.com>
+ <18175413a0148f7859ab36ed9715dce7a598f318.camel@kernel.crashing.org>
+ <20180823123650.GT24439@gate.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c27a266e-3eaa-a879-85ab-0e0aeb5f8b31@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20180823123650.GT24439@gate.crashing.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: segher@kernel.crashing.org
+Cc: devicetree@vger.kernel.org, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-spec@vger.kernel.org, Grant Likely <grant.likely@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Add FCPF and FCPV instances to the r8a774a1 dtsi, similarly
-to what was done for the r8a7796 with commits 41dbbf0c5 ("arm64: dts:
-r8a7796: Add FCPF and FCPV instances"), 69490bc9665d ("arm64: dts:
-renesas: r8a7796: Point FDP1 via FCPF to IPMMU-VI0"), and cef942d0bd89
-("arm64: dts: renesas: r8a7796: Point VSPI via FCPVI to IPMMU-VC0").
+On Thu, Aug 23, 2018 at 7:37 AM Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> On Thu, Aug 23, 2018 at 11:29:01AM +1000, Benjamin Herrenschmidt wrote:
+> > On Wed, 2018-08-22 at 20:26 -0500, Rob Herring wrote:
+> > > On Wed, Aug 22, 2018 at 8:14 PM Benjamin Herrenschmidt
+> > > <benh@kernel.crashing.org> wrote:
+> > > >
+> > > > On Wed, 2018-08-22 at 19:47 -0500, Rob Herring wrote:
+> > > > > The default DT string handling in the kernel is node names and
+> > > > > compatibles are case insensitive and property names are case sensitive
+> > > > > (Sparc is the the only variation and is opposite). It seems only PPC
+> > > > > (and perhaps only Power Macs?) needs to support case insensitive
+> > > > > comparisons. It was probably a mistake to follow PPC for new arches
+> > > > > and we should have made everything case sensitive from the start. So I
+> > > > > have a few questions for the DT historians. :)
+> > > >
+> > > > Open Firmware itself is insensitive.
+> > >
+> > > Doesn't it depend on the implementation? Otherwise, how is Sparc different?
+> >
+> > Not sure ...
+>
+> The standard requires case-sensitive.
+>
+> > Forth itself is insensitive for words
+>
+> Not even.   http://forth.sourceforge.net/std/dpans/dpans3.htm#3.3.1.2
+>
+> (Most non-ancient implementations are though).
+>
+> > but maybe not for string comparisons.
+>
+> Only COMPARE is standardised, and that is case-sensitive comparison.  Many
+> systems have other words to do case-insensitive comparisons, or words where
+> some runtime flag determines the case-sensitivity.
+>
+> Btw.  A node name in Open Firmware is generically
+>   driver-name@unit-address:device-arguments
+> where driver-name is the part that is in the "name" property; this whole
+> case-sensitivity business is even worse for FDT, where you also treat the
+> unit address as part of the name.  In real Open Firmware the address is
+> compared *as a number* (or as a few numbers), so it is naturally case-
+> insensitive (it does not care if you write 01a0 or 01A0, or 1a0 or 000001a0
+> etc.)
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
-v1->v2:
-* moved SHA1 hex to 12 digits as per Sergei comment
+True, but it is very rare at least in Linux to look at the
+unit-addresses. dtc now does some checking on unit-addresses too, so
+we should at least be consistent.
 
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 52 +++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Another question: Is there ever a case where the node name in the path
+aka 'driver-name' doesn't match the 'name' property? I think this
+generally can't happen on FDT as the 'name' property is generated when
+we unflatten it though I suppose one could craft an FDT with name
+properties.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index f23bbfd..5b2ee60 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -1260,6 +1260,58 @@
- 			resets = <&cpg 408>;
- 		};
- 
-+		fcpf0: fcp@fe950000 {
-+			compatible = "renesas,fcpf";
-+			reg = <0 0xfe950000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 615>;
-+			power-domains = <&sysc 14>;
-+			resets = <&cpg 615>;
-+		};
-+
-+		fcpvb0: fcp@fe96f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe96f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 607>;
-+			power-domains = <&sysc 14>;
-+			resets = <&cpg 607>;
-+		};
-+
-+		fcpvd0: fcp@fea27000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea27000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 603>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 603>;
-+			iommus = <&ipmmu_vi0 8>;
-+		};
-+
-+		fcpvd1: fcp@fea2f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea2f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 602>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 602>;
-+			iommus = <&ipmmu_vi0 9>;
-+		};
-+
-+		fcpvd2: fcp@fea37000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea37000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 601>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 601>;
-+			iommus = <&ipmmu_vi0 10>;
-+		};
-+
-+		fcpvi0: fcp@fe9af000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe9af000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 611>;
-+			power-domains = <&sysc 14>;
-+			resets = <&cpg 611>;
-+			iommus = <&ipmmu_vc0 19>;
-+		};
-+
- 		prr: chipid@fff00044 {
- 			compatible = "renesas,prr";
- 			reg = <0 0xfff00044 0 4>;
--- 
-2.7.4
+There's also various places in the kernel that check for a NULL name
+which doesn't seem like it could happen either other than the root
+node.
+
+Rob
