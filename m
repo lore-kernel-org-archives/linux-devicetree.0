@@ -1,40 +1,45 @@
-Return-Path: <SRS0=dj/7=LO=oracle.com=dan.carpenter@kernel.org>
-Date: Fri, 31 Aug 2018 20:39:28 +0300
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [bug report] of/unittest: remove use of node name pointer in overlay
- high level test
-Message-ID: <20180831173928.bbt6a5ttrtgzbabk@kili.mountain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-To: robh@kernel.org
-Cc: devicetree@vger.kernel.org
+Return-Path: <SRS0=Fvmt=LH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:27371 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbeHXMwy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 24 Aug 2018 08:52:54 -0400
+From: Ulrich Hecht <uli+renesas@fpond.eu>
+Subject: [RESEND PATCH] spi: sh-msiof: Document R-Car D3 support
+Date: Fri, 24 Aug 2018 11:12:31 +0200
+Message-Id: <1535101951-11221-1-git-send-email-uli+renesas@fpond.eu>
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, wsa@the-dreams.de, geert@linux-m68k.org, linux-spi@vger.kernel.org, Ulrich Hecht <uli+renesas@fpond.eu>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Rob Herring,
+Document support for the MSIOF module in the Renesas D3 (r8a77995) SoC.
 
-The patch 4785d169abd5: "of/unittest: remove use of node name pointer
-in overlay high level test" from Aug 27, 2018, leads to the following
-static checker warning:
+No driver update is needed.
 
-	drivers/of/unittest.c:2356 of_unittest_overlay_high_level()
-	info: ignoring unreachable code.
+Signed-off-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+This patch fell by the wayside, probably because I forgot to cc devicetree.
 
-drivers/of/unittest.c
-  2354          for_each_child_of_node(overlay_base_root, np) {
-  2355                  struct device_node *base_child;
-  2356                  for_each_child_of_node(of_root, base_child) {
-  2357                          if (!strcmp(np->full_name, base_child->full_name))
-  2358                                  unittest(0, "illegal node name in overlay_base %pOFn",
-  2359                                          np);
-  2360                          return;
+CU
+Uli
 
-You wanted to only return on error probably?  Smatch is complaining
-that we don't iterate through the inside loop more than once.
 
-  2361                  }
-  2362          }
-  2363  
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-regards,
-dan carpenter
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index bfbc203..fd15715 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 			 "renesas,msiof-r8a7795" (R-Car H3)
+ 			 "renesas,msiof-r8a7796" (R-Car M3-W)
+ 			 "renesas,msiof-r8a77965" (R-Car M3-N)
++			 "renesas,msiof-r8a77995" (R-Car D3)
+ 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+ 			 "renesas,sh-mobile-msiof" (generic SH-Mobile compatibile device)
+ 			 "renesas,rcar-gen2-msiof" (generic R-Car Gen2 and RZ/G1 compatible device)
+-- 
+2.7.4
