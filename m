@@ -1,99 +1,49 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH] arm64: dts: allwinner: h5: Add device node for
- Mali-450 GPU
-Date: Fri, 24 Aug 2018 13:38:49 +0800
-Message-ID: <20180824053849.7666-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: DT case sensitivity
+Date: Fri, 24 Aug 2018 15:39:19 +1000
+Message-ID: <87tvnkjpbs.fsf@concordia.ellerman.id.au>
+References: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB4NT73NQKGQEPY7JL2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CAL_Jsq+XacT2O15CQ=F_6dmWf6OqNf8_fKAOrMJNR79a6mORaw@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Rob Herring <robh@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Grant Likely <grant.likely@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Kumar Gala <kumar.gala@linaro.org>, David Gibson <david@gibson.dropbear.id.au>, Frank Rowand <frowand.list@gmail.com>, devicetree-spec@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-The H5 has a Mali-450 GPU with 4 Pixel Processor cores.
+Rob Herring <robh@kernel.org> writes:
 
-Interestingly, while the datasheet lists an interrupt line for the GPU's
-PMU, the hardware block itself doesn't seem to have it. Reads from the
-PMU address range all return zero, and writes are ignored.
+> The default DT string handling in the kernel is node names and
+> compatibles are case insensitive and property names are case sensitive
+> (Sparc is the the only variation and is opposite). It seems only PPC
+> (and perhaps only Power Macs?) needs to support case insensitive
+> comparisons. It was probably a mistake to follow PPC for new arches
+> and we should have made everything case sensitive from the start. So I
+> have a few questions for the DT historians. :)
+>
+> What PPC systems are case insensitive? Can we limit that to certain systems?
+>
+> AFAICT, dtc at least (if not anything FDT based) has always been case
+> sensitive at least for node and property names. I'm not sure about
+> compatible strings?
+>
+> Anyone see potential issues with switching all platforms except PPC
+> and Sparc to case sensitive comparisons?
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
+Looking at some old device trees, on ppc we do definitely have mixed
+case compatible strings, and I see a few hundred of those appear in the
+kernel source. So I think for us it's too late.
 
-This was tested with ARM's kernel driver from 
+But I don't see why that prevents other arches from switching to case
+sensitive, I don't think it really hurts us in any way.
 
-    https://github.com/superna9999/meson_gx_mali_450
-
-patched with sunxi glue, and userspace driver from
-
-    https://github.com/rockchip-linux/libmali
-
-es2gears achieves ~60 fps once the PMU is removed.
-
----
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 43 ++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-index 62d646baac3c..b41dc1aab67d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-@@ -92,6 +92,49 @@
- 			     <GIC_PPI 10
- 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
-+
-+	soc {
-+		mali: gpu@1e80000 {
-+			compatible = "allwinner,sun50i-h5-mali", "arm,mali-450";
-+			reg = <0x01e80000 0x30000>;
-+			/*
-+			 * While the datasheet lists an interrupt for the
-+			 * PMU, the actual silicon does not have the PMU
-+			 * block. Reads all return zero, and writes are
-+			 * ignored.
-+			 */
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "gp",
-+					  "gpmmu",
-+					  "pp",
-+					  "pp0",
-+					  "ppmmu0",
-+					  "pp1",
-+					  "ppmmu1",
-+					  "pp2",
-+					  "ppmmu2",
-+					  "pp3",
-+					  "ppmmu3",
-+					  "pmu";
-+			clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
-+			clock-names = "bus", "core";
-+			resets = <&ccu RST_BUS_GPU>;
-+
-+			assigned-clocks = <&ccu CLK_GPU>;
-+			assigned-clock-rates = <384000000>;
-+		};
-+	};
- };
- 
- &ccu {
--- 
-2.18.0
+cheers
