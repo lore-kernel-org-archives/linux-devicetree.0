@@ -1,88 +1,51 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
-Date: Fri, 24 Aug 2018 14:39:34 +0200
-Message-ID: <20180824143934.6d6b6487@bbrezillon>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
-        <20180719152930.3715-2-boris.brezillon@bootlin.com>
-        <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 0/6] Add support for PDC Global on SDM845 SoCs
+Date: Fri, 24 Aug 2018 18:48:54 +0530
+Message-ID: <20180824131900.5353-1-sibis@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vitor <Vitor.Soares@synopsys.com>, linux-gpio@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hel>
+To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vitor,
+This patch series add support for PDC Global (Power Domain Controller)
+on SDM845 SoCs and adds pdc reset lines assert/deassert to remoteproc
+Q6v5 modem-pil. The first two patches adds PDC Global reset driver to
+control reset signals of Modem, Compute, Display, GPU, Debug, AOP,
+Sensors, Audio, SP and APPS. The last four patches (cleans up)/adds pdc
+reset lines to q6v5 bindings and asserts/deasserts in modem start/stop
+path.
 
-On Wed, 22 Aug 2018 17:43:34 +0100
-vitor <Vitor.Soares@synopsys.com> wrote:
+v2:
+  Incorporated Philipp/Bjorn/Rob suggestions
+  Renamed reset binding to pdc-global.txt
+  replaced offset with #define of register name
+  replaced with devm_reset_control_get_exclusive()
+  Separted dt binding from the drivers 
 
-> Hi Boris,
-> 
-> 
-> On 19-07-2018 16:29, Boris Brezillon wrote:
-> > +int i3c_bus_register(struct i3c_bus *i3cbus)
-> > +{
-> > +	struct i2c_dev_desc *desc;
-> > +
-> > +	i3c_bus_for_each_i2cdev(i3cbus, desc) {
-> > +		switch (desc->boardinfo->lvr & I3C_LVR_I2C_INDEX_MASK) {
-> > +		case I3C_LVR_I2C_INDEX(0):
-> > +			if (i3cbus->mode < I3C_BUS_MODE_MIXED_FAST)
-> > +				i3cbus->mode = I3C_BUS_MODE_MIXED_FAST;
-> > +			break;
-> > +
-> > +		case I3C_LVR_I2C_INDEX(1):
-> > +		case I3C_LVR_I2C_INDEX(2):
-> > +			if (i3cbus->mode < I3C_BUS_MODE_MIXED_SLOW)
-> > +				i3cbus->mode = I3C_BUS_MODE_MIXED_SLOW;
-> > +			break;
-> > +
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +
-> > +	if (!i3cbus->scl_rate.i3c)
-> > +		i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
-> > +
-> > +	if (!i3cbus->scl_rate.i2c) {
-> > +		if (i3cbus->mode == I3C_BUS_MODE_MIXED_SLOW)
-> > +			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
-> > +		else
-> > +			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
-> > +	}
-> > +
-> > +	/*
-> > +	 * I3C/I2C frequency may have been overridden, check that user-provided
-> > +	 * values are not exceeding max possible frequency.
-> > +	 */
-> > +	if (i3cbus->scl_rate.i3c > I3C_BUS_MAX_I3C_SCL_RATE ||
-> > +	    i3cbus->scl_rate.i2c > I3C_BUS_I2C_FM_PLUS_SCL_RATE) {
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	dev_set_name(&i3cbus->dev, "i3c-%d", i3cbus->id);
-> > +
-> > +	return device_add(&i3cbus->dev);
-> > +}  
-> During the tests of the bus with i2c devices I found the i2c_dev_desc 
-> objects aren't allocated before this function. This cause i3cbus->mode = 
-> I3C_BUS_MODE_PURE.
+The last 4 remoteproc patches can be picked up after the pdc global
+reset driver lands on linux-next.
 
-I just checked and DT parsing (+ I2C descs creation) is done before
-i3c_bus_register() is called, so we should be good. How did you declare
-your I2C devices (right now, only DT declaration is supported).
+Sibi Sankar (6):
+  dt-bindings: reset: Add PDC Global binding for SDM845 SoCs
+  reset: qcom: PDC Global (Power Domain Controller) reset controller
+  dt-bindings: remoteproc: Remove additional definition tag
+  dt-bindings: remoteproc: Add PDC reset binding for Q6V5 PIL
+  remoteproc: qcom: q6v5-pil: Explicitly get mss_restart line
+  remoteproc: qcom: q6v5-pil: Add PDC reset for modem on SDM845 SoCs
 
-> 
-> I want to do something for the slave and secondary master, do you 
-> already have infrastructure that you can share?
+ .../bindings/remoteproc/qcom,q6v5.txt         |   6 +-
+ .../bindings/reset/qcom,pdc-global.txt        |  52 +++++++
+ drivers/remoteproc/qcom_q6v5_pil.c            |  31 +++-
+ drivers/reset/Kconfig                         |   9 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-qcom-pdc.c                | 142 ++++++++++++++++++
+ include/dt-bindings/reset/qcom,sdm845-pdc.h   |  20 +++
+ 7 files changed, 254 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
+ create mode 100644 drivers/reset/reset-qcom-pdc.c
+ create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
 
-What do you mean?
-
-Regards,
-
-Boris
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
