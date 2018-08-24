@@ -1,16 +1,14 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2 9/9] arm64: dts: renesas: r8a774a1: Add FCPF and FCPV
- instances
-Date: Fri, 24 Aug 2018 09:33:30 +0000
-Message-ID: <TY1PR01MB17700155CB2AB613EA824D6FC0360@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <c27a266e-3eaa-a879-85ab-0e0aeb5f8b31@cogentembedded.com>
- <1535103029-10576-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/4 v1] Mezzanine Low Speed connector bus
+Date: Fri, 24 Aug 2018 09:28:05 +0200
+Message-ID: <CACRpkdbmPkeT8ywBryxVq0jki7Xp6Yo_FJorjucKXQvycPC1DQ@mail.gmail.com>
+References: <20180823103332.32047-1-linus.walleij@linaro.org>
+ <cd3100ee-03a0-9218-b166-14f15d7669f6@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1535103029-10576-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: en-US
+In-Reply-To: <cd3100ee-03a0-9218-b166-14f15d7669f6@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,108 +18,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dev <dev@lists.96boards.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 24, 2018 at 1:06 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> On 08/23/18 03:33, Linus Walleij wrote:
 
-
-> -----Original Message-----
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Sent: 24 August 2018 10:30
-> To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Catalin Marinas <catalin.marinas@arm.com>; Will Deacon <will.deacon@arm.com>
-> Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Simon Horman <horms@verge.net.au>; Magnus Damm
-> <magnus.damm@gmail.com>; linux-renesas-soc@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; Geert Uytterhoeven <geert+renesas@glider.be>; Chris Paterson <Chris.Paterson2@renesas.com>; Biju
-> Das <biju.das@bp.renesas.com>
-> Subject: [PATCH v2 9/9] arm64: dts: renesas: r8a774a1: Add FCPF and FCPV instances
+> > - Some indication that binding the connector like this will
+> >   not implicate or screw things up for the DT-overlays
+> >   idea, i.e. a both/and and not either/or approach.
+(...)
 >
-> Add FCPF and FCPV instances to the r8a774a1 dtsi, similarly
-> to what was done for the r8a7796 with commits 41dbbf0c5 ("arm64: dts:
+> For the moment, NACK since there is not a substantive change
+> from before.  This is without having read beyond this
+> introduction.
 
-Scratch that! Will send a v3!
+So I guess you disagree with the previous statement, and
+I need some elaboration to understand exactly what in this
+approach works counter to the goals of DT overlays.
 
-> r8a7796: Add FCPF and FCPV instances"), 69490bc9665d ("arm64: dts:
-> renesas: r8a7796: Point FDP1 via FCPF to IPMMU-VI0"), and cef942d0bd89
-> ("arm64: dts: renesas: r8a7796: Point VSPI via FCPVI to IPMMU-VC0").
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> ---
-> v1->v2:
-> * moved SHA1 hex to 12 digits as per Sergei comment
->
->  arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 52 +++++++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> index f23bbfd..5b2ee60 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> @@ -1260,6 +1260,58 @@
->  resets = <&cpg 408>;
->  };
->
-> +fcpf0: fcp@fe950000 {
-> +compatible = "renesas,fcpf";
-> +reg = <0 0xfe950000 0 0x200>;
-> +clocks = <&cpg CPG_MOD 615>;
-> +power-domains = <&sysc 14>;
-> +resets = <&cpg 615>;
-> +};
-> +
-> +fcpvb0: fcp@fe96f000 {
-> +compatible = "renesas,fcpv";
-> +reg = <0 0xfe96f000 0 0x200>;
-> +clocks = <&cpg CPG_MOD 607>;
-> +power-domains = <&sysc 14>;
-> +resets = <&cpg 607>;
-> +};
-> +
-> +fcpvd0: fcp@fea27000 {
-> +compatible = "renesas,fcpv";
-> +reg = <0 0xfea27000 0 0x200>;
-> +clocks = <&cpg CPG_MOD 603>;
-> +power-domains = <&sysc 32>;
-> +resets = <&cpg 603>;
-> +iommus = <&ipmmu_vi0 8>;
-> +};
-> +
-> +fcpvd1: fcp@fea2f000 {
-> +compatible = "renesas,fcpv";
-> +reg = <0 0xfea2f000 0 0x200>;
-> +clocks = <&cpg CPG_MOD 602>;
-> +power-domains = <&sysc 32>;
-> +resets = <&cpg 602>;
-> +iommus = <&ipmmu_vi0 9>;
-> +};
-> +
-> +fcpvd2: fcp@fea37000 {
-> +compatible = "renesas,fcpv";
-> +reg = <0 0xfea37000 0 0x200>;
-> +clocks = <&cpg CPG_MOD 601>;
-> +power-domains = <&sysc 32>;
-> +resets = <&cpg 601>;
-> +iommus = <&ipmmu_vi0 10>;
-> +};
-> +
-> +fcpvi0: fcp@fe9af000 {
-> +compatible = "renesas,fcpv";
-> +reg = <0 0xfe9af000 0 0x200>;
-> +clocks = <&cpg CPG_MOD 611>;
-> +power-domains = <&sysc 14>;
-> +resets = <&cpg 611>;
-> +iommus = <&ipmmu_vc0 19>;
-> +};
-> +
->  prr: chipid@fff00044 {
->  compatible = "renesas,prr";
->  reg = <0 0xfff00044 0 4>;
-> --
-> 2.7.4
+It's not like I'm overly infatuated with my own approach, but
+I want to get to a point where people can start to use these
+daughterboards no matter whether they use DT or ACPI.
 
+I'm missing ACPI input though, the DT people are more
+responsive :/
 
+> I will read through the rest of the series and revisit my
+> previous conclusions, but most likely not for a few days.
 
+OK no problem there is no immediate hurry.
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+Yours,
+Linus Walleij
