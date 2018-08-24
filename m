@@ -1,367 +1,176 @@
-From: vnkgutta@codeaurora.org
-Subject: Re: [PATCH v2 3/4] drivers: edac: Add EDAC driver support for QCOM
- SoCs
-Date: Fri, 24 Aug 2018 14:05:19 -0700
-Message-ID: <93f11f3728ef658f903509ae0bc00d03@codeaurora.org>
-References: <1534550915-18230-1-git-send-email-vnkgutta@codeaurora.org>
- <1534550915-18230-4-git-send-email-vnkgutta@codeaurora.org>
- <CAE=gft4vheqe9Yqb3H_gMChUmQqvmBeeWvKWCf_j4sWrFceFiQ@mail.gmail.com>
- <fc5ab365cc3808161294af4b1b2b6312@codeaurora.org>
- <CAE=gft4ywi9+2HJVs4bjwQqo0-pMnzQzAq-WTiriLbxiPeg21g@mail.gmail.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v11 00/11] drivers: Introduce firmware dnd clock river for
+ ZynqMP core
+Date: Fri, 24 Aug 2018 22:04:24 +0000
+Message-ID: <CY1PR02MB213840050AB61B70F3C2CC6FB8360@CY1PR02MB2138.namprd02.prod.outlook.com>
+References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft4ywi9+2HJVs4bjwQqo0-pMnzQzAq-WTiriLbxiPeg21g@mail.gmail.com>
+In-Reply-To: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de
+To: Jolly Shah <JOLLYS@xilinx.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, Michal Simek <michals@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Rajan Vaja <RAJANV@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-24 13:18, Evan Green wrote:
-> On Fri, Aug 24, 2018 at 11:32 AM <vnkgutta@codeaurora.org> wrote:
->> 
->> On 2018-08-23 16:04, Evan Green wrote:
->> > On Fri, Aug 17, 2018 at 5:08 PM Venkata Narendra Kumar Gutta
->> > <vnkgutta@codeaurora.org> wrote:
->> >>
->> >> From: Channagoud Kadabi <ckadabi@codeaurora.org>
->> >>
->> >> Add error reporting driver for Single Bit Errors (SBEs) and Double Bit
->> >> Errors (DBEs). As of now, this driver supports erp for Last Level
->> >> Cache
->> >> Controller (LLCC). This driver takes care of dumping registers and
->> >> adding
->> >> config options to enable and disable panic when the errors happen in
->> >> cache.
->> >>
->> >> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
->> >> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
->> >> Co-developed-by: Venkata Narendra Kumar Gutta
->> >> <vnkgutta@codeaurora.org>
->> >> ---
->> >>  MAINTAINERS                        |   8 +
->> >>  drivers/edac/Kconfig               |  28 +++
->> >>  drivers/edac/Makefile              |   1 +
->> >>  drivers/edac/qcom_edac.c           | 446
->> >> +++++++++++++++++++++++++++++++++++++
->> >>  include/linux/soc/qcom/llcc-qcom.h |  25 +++
->> >>  5 files changed, 508 insertions(+)
->> >>  create mode 100644 drivers/edac/qcom_edac.c
->> >>
->> >> diff --git a/MAINTAINERS b/MAINTAINERS
->> >> index 0a23427..0bff713 100644
->> >> --- a/MAINTAINERS
->> >> +++ b/MAINTAINERS
->> >> @@ -5227,6 +5227,14 @@ L:       linux-edac@vger.kernel.org
->> >>  S:     Maintained
->> >>  F:     drivers/edac/ti_edac.c
->> >>
->> >> +EDAC-QUALCOMM
->> >> +M:     Channagoud Kadabi <ckadabi@codeaurora.org>
->> >> +M:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
->> >> +L:     linux-arm-msm@vger.kernel.org
->> >> +L:     linux-edac@vger.kernel.org
->> >> +S:     Maintained
->> >> +F:     drivers/edac/qcom_edac.c
->> >> +
->> >>  EDIROL UA-101/UA-1000 DRIVER
->> >>  M:     Clemens Ladisch <clemens@ladisch.de>
->> >>  L:     alsa-devel@alsa-project.org (moderated for non-subscribers)
->> >> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
->> >> index 57304b2..da8f150 100644
->> >> --- a/drivers/edac/Kconfig
->> >> +++ b/drivers/edac/Kconfig
->> >> @@ -460,4 +460,32 @@ config EDAC_TI
->> >>           Support for error detection and correction on the
->> >>            TI SoCs.
->> >>
->> >> +config EDAC_QCOM
->> >> +       tristate "QCOM EDAC Controller"
->> >> +       depends on EDAC
->> >> +       help
->> >> +         Support for error detection and correction on the
->> >> +         QCOM SoCs.
->> >> +
->> >> +config EDAC_QCOM_LLCC
->> >> +       tristate "QCOM EDAC Controller for LLCC Cache"
->> >> +       depends on EDAC_QCOM && QCOM_LLCC
->> >> +       help
->> >> +         Support for error detection and correction on the
->> >> +         QCOM LLCC cache. Report errors caught by LLCC ECC
->> >> +         mechanism.
->> >> +
->> >> +         For debugging issues having to do with stability and overall
->> >> system
->> >> +          health, you should probably say 'Y' here.
->> >> +
->> >> +config EDAC_QCOM_LLCC_PANIC_ON_UE
->> >> +       bool "Panic on uncorrectable errors - qcom llcc"
->> >> +       depends on EDAC_QCOM_LLCC
->> >> +       help
->> >> +         Forcibly cause a kernel panic if an uncorrectable error (UE)
->> >> is
->> >> +         detected. This can reduce debugging times on hardware which
->> >> may be
->> >> +         operating at voltages or frequencies outside normal
->> >> specification.
->> >> +
->> >> +         For production builds, you should probably say 'N' here.
->> >> +
->> >>  endif # EDAC
->> >> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
->> >> index 02b43a7..716096d 100644
->> >> --- a/drivers/edac/Makefile
->> >> +++ b/drivers/edac/Makefile
->> >> @@ -77,3 +77,4 @@ obj-$(CONFIG_EDAC_ALTERA)             +=
->> >> altera_edac.o
->> >>  obj-$(CONFIG_EDAC_SYNOPSYS)            += synopsys_edac.o
->> >>  obj-$(CONFIG_EDAC_XGENE)               += xgene_edac.o
->> >>  obj-$(CONFIG_EDAC_TI)                  += ti_edac.o
->> >> +obj-$(CONFIG_EDAC_QCOM)                        += qcom_edac.o
->> >> diff --git a/drivers/edac/qcom_edac.c b/drivers/edac/qcom_edac.c
->> >> new file mode 100644
->> >> index 0000000..9a8c670
->> >> --- /dev/null
->> >> +++ b/drivers/edac/qcom_edac.c
->> >> @@ -0,0 +1,446 @@
->> >> +// SPDX-License-Identifier: GPL-2.0
->> >> +/*
->> >> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> >> + */
->> >> +
->> >> +#include <linux/edac.h>
->> >> +#include <linux/interrupt.h>
->> >> +#include <linux/kernel.h>
->> >> +#include <linux/of_device.h>
->> >> +#include <linux/platform_device.h>
->> >> +#include <linux/regmap.h>
->> >> +#include <linux/smp.h>
->> >> +#include <linux/soc/qcom/llcc-qcom.h>
->> >> +
->> >> +#include "edac_mc.h"
->> >> +#include "edac_device.h"
->> >> +
->> >> +#ifdef CONFIG_EDAC_QCOM_LLCC_PANIC_ON_UE
->> >> +#define LLCC_ERP_PANIC_ON_UE            1
->> >> +#else
->> >> +#define LLCC_ERP_PANIC_ON_UE            0
->> >> +#endif
->> >> +
->> >> +#define EDAC_LLCC                       "qcom_llcc"
->> >> +
->> >> +#define TRP_SYN_REG_CNT                 6
->> >> +
->> >> +#define DRP_SYN_REG_CNT                 8
->> >> +
->> >> +#define LLCC_COMMON_STATUS0             0x0003000C
->> >> +#define LLCC_LB_CNT_MASK                GENMASK(31, 28)
->> >> +#define LLCC_LB_CNT_SHIFT               28
->> >> +
->> >> +/* single & Double Bit syndrome register offsets */
->> >
->> > Strange capitalization going on here.
->> I'll fix this.
->> 
->> >
->> >> +#define TRP_ECC_SB_ERR_SYN0             0x0002304C
->> >> +#define TRP_ECC_DB_ERR_SYN0             0x00020370
->> >> +#define DRP_ECC_SB_ERR_SYN0             0x0004204C
->> >> +#define DRP_ECC_DB_ERR_SYN0             0x00042070
->> >
->> > I think the convention is to use lowercase hex everywhere.
->> 
->> I didn't get you. Do you mean, the Macros should be in lower case or 
->> the
->> comments?
-> 
-> I mean 0x0002304C should be 0x0002304c.
+Hi Stephen,
 
-Oh, I see. I'll update it, Thanks.
+Please review below patch series. It addresses all your pending comments fo=
+r clock driver.
 
-> 
->> 
->> >
->> >> +
->> >> +/* Error register offsets */
->> >> +#define TRP_ECC_ERROR_STATUS1           0x00020348
->> >> +#define TRP_ECC_ERROR_STATUS0           0x00020344
->> >> +#define DRP_ECC_ERROR_STATUS1           0x00042048
->> >> +#define DRP_ECC_ERROR_STATUS0           0x00042044
->> >> +
->> >> +/* TRP, DRP interrupt register offsets */
->> >> +#define DRP_INTERRUPT_STATUS            0x00041000
->> >> +#define TRP_INTERRUPT_0_STATUS          0x00020480
->> >> +#define DRP_INTERRUPT_CLEAR             0x00041008
->> >> +#define DRP_ECC_ERROR_CNTR_CLEAR        0x00040004
->> >> +#define TRP_INTERRUPT_0_CLEAR           0x00020484
->> >> +#define TRP_ECC_ERROR_CNTR_CLEAR        0x00020440
->> >> +
->> >> +/* Mask and shift macros */
->> >> +#define ECC_DB_ERR_COUNT_MASK           GENMASK(4, 0)
->> >> +#define ECC_DB_ERR_WAYS_MASK            GENMASK(31, 16)
->> >> +#define ECC_DB_ERR_WAYS_SHIFT           BIT(4)
->> >> +
->> >> +#define ECC_SB_ERR_COUNT_MASK           GENMASK(23, 16)
->> >> +#define ECC_SB_ERR_COUNT_SHIFT          BIT(4)
->> >> +#define ECC_SB_ERR_WAYS_MASK            GENMASK(15, 0)
->> >> +
->> >> +#define SB_ECC_ERROR                    BIT(0)
->> >> +#define DB_ECC_ERROR                    BIT(1)
->> >> +
->> >> +#define DRP_TRP_INT_CLEAR               GENMASK(1, 0)
->> >> +#define DRP_TRP_CNT_CLEAR               GENMASK(1, 0)
->> >> +
->> >> +/* Config registers offsets*/
->> >> +#define DRP_ECC_ERROR_CFG               0x00040000
->> >> +
->> >> +/* TRP, DRP interrupt register offsets */
->> >> +#define CMN_INTERRUPT_0_ENABLE          0x0003001C
->> >> +#define CMN_INTERRUPT_2_ENABLE          0x0003003C
->> >> +#define TRP_INTERRUPT_0_ENABLE          0x00020488
->> >> +#define DRP_INTERRUPT_ENABLE            0x0004100C
->> >> +
->> >> +#define SB_ERROR_THRESHOLD              0x1
->> >> +#define SB_ERROR_THRESHOLD_SHIFT        24
->> >> +#define SB_DB_TRP_INTERRUPT_ENABLE      0x3
->> >> +#define TRP0_INTERRUPT_ENABLE           0x1
->> >> +#define DRP0_INTERRUPT_ENABLE           BIT(6)
->> >> +#define SB_DB_DRP_INTERRUPT_ENABLE      0x3
->> >> +
->> >> +enum {
->> >> +       LLCC_DRAM_CE = 0,
->> >> +       LLCC_DRAM_UE,
->> >> +       LLCC_TRAM_CE,
->> >> +       LLCC_TRAM_UE,
->> >> +       LLCC_ERR_TYPE_MAX = LLCC_TRAM_UE + 1,
->> >
->> > This is a nit, or perhaps personal preference, but I prefer to not
->> > have initializers for sentinel values, since it's one more thing
->> > someone could forget to update when adding new values.
->> 
->> I'll get rid of this, I was using this one to allocate the memory for
->> llcc_driv_data->edac_reg, (struct llcc_edac_reg_data).
->> But the suggestion was to initialize that one statically.
-> 
-> Sounds good.
-> 
->> 
->> 
->> >
->> >> +};
->> >> +
->> >> +static int qcom_llcc_core_setup(struct regmap *llcc_bcast_regmap)
->> >> +{
->> >> +       u32 sb_err_threshold;
->> >> +       int ret;
->> >> +
->> >> +       /* Enable TRP in instance 2 of common interrupt enable
->> >> register */
->> >
->> > Can we get a comment explaining what's so special about instance 2?
->> > Instances 1 and 3 get no love?
->> 
->> I'll try to elaborate on this.
->> 
->> >
->> >> +       ret = regmap_update_bits(llcc_bcast_regmap,
->> >> CMN_INTERRUPT_2_ENABLE,
->> >> +                                TRP0_INTERRUPT_ENABLE,
->> >> +                                TRP0_INTERRUPT_ENABLE);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       /* Enable ECC interrupts on Tag Ram */
->> >> +       ret = regmap_update_bits(llcc_bcast_regmap,
->> >> TRP_INTERRUPT_0_ENABLE,
->> >> +                                SB_DB_TRP_INTERRUPT_ENABLE,
->> >> +                                SB_DB_TRP_INTERRUPT_ENABLE);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       /* Enable SB error for Data RAM */
->> >> +       sb_err_threshold = (SB_ERROR_THRESHOLD <<
->> >> SB_ERROR_THRESHOLD_SHIFT);
->> >> +       ret = regmap_write(llcc_bcast_regmap, DRP_ECC_ERROR_CFG,
->> >> +                          sb_err_threshold);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       /* Enable DRP in instance 2 of common interrupt enable
->> >> register */
->> >> +       ret = regmap_update_bits(llcc_bcast_regmap,
->> >> CMN_INTERRUPT_2_ENABLE,
->> >> +                                DRP0_INTERRUPT_ENABLE,
->> >> +                                DRP0_INTERRUPT_ENABLE);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       /* Enable ECC interrupts on Data Ram */
->> >> +       ret = regmap_write(llcc_bcast_regmap, DRP_INTERRUPT_ENABLE,
->> >> +                          SB_DB_DRP_INTERRUPT_ENABLE);
->> >> +       return ret;
->> >> +}
->> >> +
->> >> +/* Clear the error interrupt and counter registers */
->> >> +static int
->> >> +qcom_llcc_clear_errors_status(int err_type, struct llcc_drv_data
->> >> *drv)
->> >
->> > Another nit: errors_status is kind of weird. Maybe
->> > qcom_llcc_clear_errors or qcom_llcc_clear_error_status?
->> 
->> I'll update the name.
->> 
->> >
->> >> +{
->> >> +       int ret = 0;
->> >> +
->> >> +       switch (err_type) {
->> >> +       case LLCC_DRAM_CE:
->> >> +       case LLCC_DRAM_UE:
->> >> +               /* Clear the interrupt */
->> >> +               ret = regmap_write(drv->bcast_regmap,
->> >> DRP_INTERRUPT_CLEAR,
->> >> +                                  DRP_TRP_INT_CLEAR);
->> >> +               if (ret)
->> >> +                       return ret;
->> >> +
->> >> +               /* Clear the counters */
->> >> +               ret = regmap_write(drv->bcast_regmap,
->> >> DRP_ECC_ERROR_CNTR_CLEAR,
->> >> +                                  DRP_TRP_CNT_CLEAR);
->> >> +               if (ret)
->> >> +                       return ret;
->> >> +               break;
->> >> +       case LLCC_TRAM_CE:
->> >> +       case LLCC_TRAM_UE:
->> >> +               ret = regmap_write(drv->bcast_regmap,
->> >> TRP_INTERRUPT_0_CLEAR,
->> >> +                                  DRP_TRP_INT_CLEAR);
->> >> +               if (ret)
->> >> +                       return ret;
->> >> +
->> >> +               ret = regmap_write(drv->bcast_regmap,
->> >> TRP_ECC_ERROR_CNTR_CLEAR,
->> >> +                                  DRP_TRP_CNT_CLEAR);
->> >> +               if (ret)
->> >> +                       return ret;
->> >> +               break;
->> >
->> > A default case that errors or complains or both would be nice.
->> 
->> Ok, I had this thought too, but we never run into that scenario,
->> that's we don't ever call this function with any other types,
->> Had it been an API it makes sense to have a default case.
->> The internal functions require them too! I don't know!!
->> What do you think?
->> As we say, if it's good to have it, I'll add it.
-> 
-> I personally like the default case, I find it to be defensive against
-> someone adding code later who passes the wrong value or type down.
-> Others might disagree. It's up to you.
+Thanks,
+Jolly Shah
 
-It makes sense to have a defensive code against someone adding the code 
-later,
-I'll add it.
+> -----Original Message-----
+> From: Jolly Shah [mailto:jolly.shah@xilinx.com]
+> Sent: Friday, August 03, 2018 10:53 AM
+> To: ard.biesheuvel@linaro.org; mingo@kernel.org;
+> gregkh@linuxfoundation.org; matt@codeblueprint.co.uk;
+> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
+> dmitry.torokhov@gmail.com; mturquette@baylibre.com;
+> sboyd@codeaurora.org; Michal Simek <michals@xilinx.com>;
+> robh+dt@kernel.org; mark.rutland@arm.com; linux-clk@vger.kernel.org
+> Cc: Rajan Vaja <RAJANV@xilinx.com>; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
+> <JOLLYS@xilinx.com>
+> Subject: [PATCH v11 00/11] drivers: Introduce firmware dnd clock river fo=
+r
+> ZynqMP core
+>=20
+> This patchset is adding communication layer with firmware and clock drive=
+r who
+> uses those APIs to communicate with PMU.
+> Firmware driver provides an interface to firmware APIs.Interface APIs can=
+ be
+> used by any driver to communicate to PMUFW(Platform Management Unit). All
+> requests go through ATF.
+> This patchset adds CCF compliant clock driver for ZynqMP.Clock driver que=
+ries
+> supported clock information from firmware and regiters pll and output clo=
+cks
+> with CCF.
+>=20
+> v11:
+>  - Removed "Reveiwed-by:Stephen Boyd" tag from firmware binding
+>  - Updated clock and firmware driver to use probe method instead of init
+>  - Marked PMU payload arguments with __le32 for proper endienness code
+>=20
+> v10:
+>  - Incorporated code review comments from v9 patch series. Discussed belo=
+w:
+> 	https://patchwork.kernel.org/patch/10478575/
+> 	https://patchwork.kernel.org/patch/10478457/
+> 	https://patchwork.kernel.org/patch/10478461/
+> 	https://patchwork.kernel.org/patch/10478463/
+>=20
+> v9:
+>  - Fixed minor typo comments
+>=20
+> v8:
+>  - Corrected typo in clk Kconfig
+>=20
+> v7:
+>  - Removed xilinx specific clock debugfs API support
+>  - Added reviewed-by tags for FW and clock bindings
+>  - Updated clock node name to clock-controller
+>=20
+> v6:
+>  - Broke patch series to have base FW driver and Clock driver user
+>  - Incorporated code review comments from last FW and Clock driver patch
+> series. Discussed below:
+> 	https://patchwork.kernel.org/patch/10230759/
+> 	https://patchwork.kernel.org/patch/10250047/
+>=20
+> v5:
+>  - Added ATF version check support
+>  - Updated some functions to be static
+>  - Minor function name corrections
+>=20
+> v4:
+>  - Changed clock setrate/getrate API prototype to support 64 bit rate
+>  - Defined macros for get_node_status return values
+>  - Moved DT node as a child of firmware
+>  - Changed debugfs APIs to return data to debugfs buffer instead of dumpi=
+ng to
+> kernel log
+>  - Minor changes to incorporate other review comments from v3 patch serie=
+s
+>=20
+> v3:
+>  - added some fixes to firmware-ggs.c
+>  - updated pinmux get/set function argument names to specify function id
+> instead of node id
+>  - added new pinctrl query macros
+>  - incorporated review comments from v2 patch series
+>=20
+> v2:
+>  - change SPDX-License-Identifier license text style
+>  - split patch into multiple patches
+>  - Updated copyrights
+>  - Added ABI documentation
+>  - incorporated logical review comments from previuos patch. Discussed be=
+low:
+> 	https://patchwork.kernel.org/patch/10150665/
+>=20
+> Jolly Shah (1):
+>   drivers: clk: Add ZynqMP clock driver
+>=20
+> Rajan Vaja (10):
+>   dt-bindings: firmware: Add bindings for ZynqMP firmware
+>   firmware: xilinx: Add Zynqmp firmware driver
+>   firmware: xilinx: Add zynqmp IOCTL API for device control
+>   firmware: xilinx: Add query data API
+>   firmware: xilinx: Add clock APIs
+>   firmware: xilinx: Add debugfs interface
+>   firmware: xilinx: Add debugfs for IOCTL API
+>   firmware: xilinx: Add debugfs for query data API
+>   dt-bindings: clock: Add bindings for ZynqMP clock driver
+>   firmware: xilinx: Replace init call with probe method
+>=20
+>  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |  82 +++
+>  arch/arm64/Kconfig.platforms                       |   1 +
+>  drivers/clk/Kconfig                                |   1 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/zynqmp/Kconfig                         |  10 +
+>  drivers/clk/zynqmp/Makefile                        |   4 +
+>  drivers/clk/zynqmp/clk-gate-zynqmp.c               | 144 +++++
+>  drivers/clk/zynqmp/clk-mux-zynqmp.c                | 141 ++++
+>  drivers/clk/zynqmp/clk-zynqmp.h                    |  68 ++
+>  drivers/clk/zynqmp/clkc.c                          | 716 +++++++++++++++=
+++++++
+>  drivers/clk/zynqmp/divider.c                       | 217 +++++++
+>  drivers/clk/zynqmp/pll.c                           | 335 ++++++++++
+>  drivers/firmware/Kconfig                           |   1 +
+>  drivers/firmware/Makefile                          |   1 +
+>  drivers/firmware/xilinx/Kconfig                    |  23 +
+>  drivers/firmware/xilinx/Makefile                   |   5 +
+>  drivers/firmware/xilinx/zynqmp-debug.c             | 249 +++++++
+>  drivers/firmware/xilinx/zynqmp-debug.h             |  22 +
+>  drivers/firmware/xilinx/zynqmp.c                   | 535 +++++++++++++++
+>  include/dt-bindings/clock/xlnx,zynqmp-clk.h        | 116 ++++
+>  include/linux/firmware/xlnx-zynqmp.h               | 116 ++++
+>  21 files changed, 2788 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.tx=
+t
+>  create mode 100644 drivers/clk/zynqmp/Kconfig  create mode 100644
+> drivers/clk/zynqmp/Makefile  create mode 100644 drivers/clk/zynqmp/clk-ga=
+te-
+> zynqmp.c
+>  create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
+>  create mode 100644 drivers/clk/zynqmp/clk-zynqmp.h  create mode 100644
+> drivers/clk/zynqmp/clkc.c  create mode 100644 drivers/clk/zynqmp/divider.=
+c
+> create mode 100644 drivers/clk/zynqmp/pll.c  create mode 100644
+> drivers/firmware/xilinx/Kconfig  create mode 100644
+> drivers/firmware/xilinx/Makefile  create mode 100644
+> drivers/firmware/xilinx/zynqmp-debug.c
+>  create mode 100644 drivers/firmware/xilinx/zynqmp-debug.h
+>  create mode 100644 drivers/firmware/xilinx/zynqmp.c  create mode 100644
+> include/dt-bindings/clock/xlnx,zynqmp-clk.h
+>  create mode 100644 include/linux/firmware/xlnx-zynqmp.h
+>=20
+> --
+> 2.7.4
