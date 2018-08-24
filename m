@@ -1,109 +1,72 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
- Amlogic Meson PCIe controller
-Date: Fri, 24 Aug 2018 10:22:55 +0200
-Message-ID: <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
-References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
-         <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [RFC PATCH 0/7] add at91sam9 LCDC DRM driver
+Date: Fri, 24 Aug 2018 10:22:33 +0200
+Message-ID: <20180824102233.73852596@bbrezillon>
+References: <20180812184152.GA22343@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hanjie Lin <hanjie.lin@amlogic.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180812184152.GA22343@ravnborg.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
-> From: Yue Wang <yue.wang@amlogic.com>
-> 
-> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-> controller.
-> 
-> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-> ---
->  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> new file mode 100644
-> index 0000000..8a831d1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> @@ -0,0 +1,63 @@
-> +Amlogic Meson AXG DWC PCIE SoC controller
-> +
-> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-> +It shares common functions with the PCIe DesignWare core driver and
-> +inherits common properties defined in
-> +Documentation/devicetree/bindings/pci/designware-pci.txt.
-> +
-> +Additional properties are described here:
-> +
-> +Required properties:
-> +- compatible:
-> +	should contain "amlogic,axg-pcie" to identify the core.
-> +- reg:
-> +	Should contain the configuration address space.
-> +- reg-names: Must be
-> +	- "elbi"	External local bus interface registers
-> +	- "cfg"		Meson specific registers
-> +	- "config"	PCIe configuration space
-> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +- clock-names: Must include the following entries:
-> +	- "pclk"       PCIe GEN 100M PLL clock
-> +	- "port"       PCIe_x(A or B) RC clock gate
-> +	- "general"    PCIe Phy clock
-> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-> +- resets: phandle to the reset lines.
-> +- reset-names: must contain "phy" and "peripheral"
-> +       - "port" Port A or B reset
-> +       - "apb" APB reset
-
-The above description is not coherent (phy <=> port)
-
-> +
-> +Example configuration:
-> +
-> +	pcie: pcie@f9800000 {
-> +			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-> +			reg = <0x0 0xf9800000 0x0 0x400000
-> +					0x0 0xff646000 0x0 0x2000
-> +					0x0 0xf9f00000 0x0 0x100000>;
-> +			reg-names = "elbi", "cfg", "config";
-> +			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-> +			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0>;
-> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-> +			bus-range = <0x0 0xff>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-
-Not described above - is it even used ?
-
-> +			phys = <&pcie_phy>;
-
-Not documented and not necessary. Please remove this.
-
-> +			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
-> +
-> +			clocks = <&clkc CLKID_USB
-> +					&clkc CLKID_MIPI_ENABLE
-> +					&clkc CLKID_PCIE_A
-> +					&clkc CLKID_PCIE_CML_EN0>;
-> +			clock-names = "general",
-> +					"mipi",
-> +					"pclk",
-> +					"port";
-> +			resets = <&reset RESET_PCIE_A>,
-> +				<&reset RESET_PCIE_APB>;
-> +			reset-names = "port",
-> +					"apb";
-> +	};
+SGkgU2FtLAoKT24gU3VuLCAxMiBBdWcgMjAxOCAyMDo0MTo1MiArMDIwMApTYW0gUmF2bmJvcmcg
+PHNhbUByYXZuYm9yZy5vcmc+IHdyb3RlOgoKPiBOZXcgRFJNIGJhc2VkIGRyaXZlciBmb3IgYXQ5
+MXNhbTkgU09DJ3MgdGhhdCB1c2VzIHRoZQo+IEF0bWVsIExDREMgSVAgY29yZS4KCkZpcnN0IG9m
+IGFsbCwgdGhhbmtzIGZvciB0aGlzIGNvbnRyaWJ1dGlvbi4KCj4gCj4gVGhpcyBpcyBmaXJzdCB2
+ZXJzaW9uIG9mIGEgcGF0Y2ggc2V0IHRoYXQgYWRkcwo+IGRyaXZlcnMgZm9yIHRoZSBBdG1lbCBM
+Q0RDIElQIGNvcmUuCj4gUG9zdGVkIGZvciByZXZpZXcgYXMgdGhlIGJhc2ljcyB3b3JrcyBub3cu
+Cj4gCj4gVGhlIExDREMgSVAgY29yZSBjb250YWlucyB0d28gZGV2aWNlczoKPiAtIGEgUFdNIG9m
+dGVuIHVzZWQgZm9yIGJhY2tsaWdodAo+IC0gYSBMQ0QgZGlzcGxheSBjb250cm9sbGVyCj4gCj4g
+Qm90aCBkZXZpY2VzIGFyZSBzdXBwb3J0ZWQgdG9kYXkgYnkgdGhlIGF0bWVsX2xjZGZiIGRyaXZl
+ci4KPiBGb3IgdGhpcyBuZXcgc2V0IG9mIGRyaXZlcnMgdGhlIGNvbXBhdGlibGUgc3RyaW5ncyB3
+YXMKPiBzZWxlY3RlZCB0byBhdm9pZCBjbGFzaCB3aXRoIHRoZSBleGlzdGluZyBjb21wYXRpYmxl
+Cj4gc3RyaW5ncyB1c2VkIGZvciB0aGUgYXRtZWxfbGNkZmIgZHJpdmVyIHRvIGFsbG93IHRoZW0K
+PiB0byBjby1leGlzdC4KCkhtLCBJIHRoaW5rIFJvYiBjb21tZW50ZWQgb24gdGhhdCBhbHJlYWR5
+LCBidXQgd2UgdXN1YWxseSB0cnkgdG8gc3RheQpjb21wYXRpYmxlIHdpdGggdGhlIGV4aXNpdGlu
+Zy9vbGQgYmluZGluZ3Mgd2hlbiBpbnRyb2R1Y2luZyBhIG5ldyBvbmUuCkRvbid0IGtub3cgaG93
+IGZlYXNpYmxlIHRoaXMgaXMgaW4gdGhpcyBwYXJ0aWN1bGFyIGNhc2UgdGhvdWdoLgoKPiAKPiBU
+aGlzIHBhdGNoc2V0IGltcGxlbWVudHMgdGhyZWUgZHJpdmVycy4KPiAtIEEgTUZEIGRyaXZlciB0
+aGF0IGluY2x1ZGUgdGhlIGdlbmVyaWMgcGFydHMuCj4gLSBBIFBXTSBkcml2ZXIuCj4gLSBBIERS
+TSBkaXNwbGF5IGNvbnRyb2xsZXIgZHJpdmVyLgo+IFRoaXMgaXMgdGhlIHNhbWUgc3BsaXQgYXMg
+dXNlZCBmb3IgdGhlIEF0bWVsIGhsY2RjIElQLgo+IAo+IFRoZSBobGNkYyBhbmQgbGNkYyBoYXMg
+b25seSBhIGZldyB0aGluZ3MgaW4gY29tbW9uIGFuZAo+IHRyeWluZyB0byBzaGFyZSB0aGUgY29k
+ZSBmb3IgdGhlbSB3YXMgbm90IGEgdmlhYmxlIHNvbHV0aW9uLgo+IAo+IFRoZSBEUk0gaW1wbGVt
+ZW50YXRpb24gaGFzIGEgZmV3IHNob3J0Y29taW5ncyBjb21wYXJlZCB0byB0aGUKPiBleGlzdGlu
+ZyBmYmRldiBiYXNlZCBkcml2ZXI6Cj4gICAgIC0gU1ROIGRpc3BsYXlzIGFyZSBub3Qgc3VwcG9y
+dGVkCj4gICAgICAgICAgICAgQmluZGluZyBzdXBwb3J0IGlzIG1pc3NpbmcgYnV0IG1vc3Qgb2Yg
+dGhlCj4gICAgICAgICAgICAgU1ROIHNwZWNpZmljIGZ1bmN0aW9uYWxpdHkgaXMgb3RoZXJ3aXNl
+IHBvcnRlZAo+ICAgICAgICAgICAgIGZyb20gdGhlIGZiZGV2IGRyaXZlci4KPiAgICAgICAgICAg
+ICBJIGFzc3VtZSB0aGUgaW5mbyBzaG91bGQgY29tZSBmcm9tIHRoZSBwYW5lbAo+ICAgICAgICAg
+ICAgIGJ1dCBhcyBJIGxhY2sgSFcgSSBoYXZlIG5vdCBsb29rZWQgdG9vIG11Y2gKPiAgICAgICAg
+ICAgICBpbnRvIHdoYXQgaXMgcmVxdWlyZWQuCj4gICAgIC0gZ2FtbWEgc3VwcG9ydCBpcyBtaXNz
+aW5nCj4gICAgICAgICAgICAgVGhlIGRyaXZlciB1dGlsaXNlcyBkcm1fc2ltcGxlX2ttc19oZWxw
+ZXIgYW5kCj4gICAgICAgICAgICAgdGhpcyBoZWxwZXIgbGFja3Mgc3VwcG9ydCBmb3Igc2V0dGlu
+ZyB1cCBnYW1tYS4KPiAgICAgICAgICAgICBJZiB0aGlzIGlzIHVzZWZ1bCBwbGVhc2UgbGV0IG1l
+IGtub3cgYW5kIEkKPiAgICAgICAgICAgICB3aWxsIGV4dGVuZCBkcm1fc2ltcGxlX2ttc19oZWxw
+ZXIgdG8gc3VwcG9ydCB0aGlzCj4gICAgICAgICAgICAgYW5kIHVwZGF0ZSB0aGUgZHJpdmVyLgoK
+SSBndWVzcyB5b3UgY2FuIHNraXAgdGhhdCBmb3Igbm93LgoKPiAgICAgLSBtb2Rlc2V0dGluZyBp
+cyBub3QgY2hlY2tlZCAoc2VlIFRPRE8gaW4gZmlsZSkKPiAgICAgICAgICAgICBJcyB0aGlzIHJl
+cXVpcmVkIGZvciBzdWNoIGEgc2ltcGxlIHNldHVwPwoKV2VsbCwgdGhhdCdzIGFsd2F5cyBiZXR0
+ZXIgaWYgeW91IGNhbiBjaGVjayB0aGF0IHRoZSByZXF1ZXN0ZWQgZGlzcGxheQptb2RlIGlzIHN1
+cHBvcnRlZCBiZWZvcmUgdHJ5aW5nIHRvIGFwcGx5IGl0LgoKPiAgICAgLSBzdXBwb3J0IGZvciBl
+eHRyYSBtb2RlcyBhcyBhcHBsaWNhYmxlIChhbmQgbGNkLXdpcmluZy1tb2RlKQoKUGV0ZXIgYWxy
+ZWFkeSBzdWdnZXN0ZWQgc29tZXRoaW5nIEkgdGhpbmsuCgo+ICAgICAtIHN1cHBvcnQgZm9yIEFW
+UjMyIChpcyBpdCByZWxldmFudD8pCgpJdCBpcywgQVZSMzIgaXMgbm8gbG9uZ2VyIHN1cHBvcnRl
+ZCBpbiBtYWlubGluZS4KCj4gCj4gVGhlIGZpcnN0IHBhdGNoIHJlbmFtZXMgLi4uL2RybS9hdG1l
+bC1obGNkYyB0byAuLi4vZHJtL2F0bWVsCj4gdG8gaGF2ZSBhIG5pY2UgaG9tZSBmb3IgYm90aCBk
+cml2ZXJzLgoKU291bmRzIGdvb2QuCgpSZWdhcmRzLAoKQm9yaXMKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
