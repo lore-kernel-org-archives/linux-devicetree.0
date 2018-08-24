@@ -1,64 +1,168 @@
-From: Jian-Hong Pan <starnight@g.ncu.edu.tw>
-Subject: Re: [RFC 1/3 net] lorawan: Add LoRaWAN class module
-Date: Fri, 24 Aug 2018 23:58:29 +0800
-Message-ID: <CAC=mGzjMm6OdJJXB=G0NEBkGASWyJv1cgeS=_wiUhDn+WYaqGQ@mail.gmail.com>
-References: <cover.1535039998.git.starnight@g.ncu.edu.tw> <fc737f3940bbe91341fb15d85ac11931eb56d1fc.1535039998.git.starnight@g.ncu.edu.tw>
- <30b75248-7589-fc98-819f-2b68844522f1@infradead.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] sh_eth: Add R7S9210 support
+Date: Fri, 24 Aug 2018 19:07:43 +0300
+Message-ID: <8efee9e2-2c2c-b02b-db8d-a421a8928448@cogentembedded.com>
+References: <20180822205705.20835-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <30b75248-7589-fc98-819f-2b68844522f1@infradead.org>
+In-Reply-To: <20180822205705.20835-1-chris.brandt@renesas.com>
+Content-Language: en-MW
 Sender: netdev-owner@vger.kernel.org
-To: rdunlap@infradead.org
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, netdev@vger.kernel.org, "<linux-arm-kernel@lists.infradead.org\\" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org>," <linux-kernel@vger.kernel.org>, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=C3=B6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=C3=B6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, "linux-kernel@vger.kernel.org>," <contact@snootlab.com>, Ben Whitten <ben.whitten@lairdte>
+To: Chris Brandt <chris.brandt@renesas.com>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Randy Dunlap <rdunlap@infradead.org> =E6=96=BC 2018=E5=B9=B48=E6=9C=8824=E6=
-=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:43=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi,
->
-> On 08/23/2018 10:15 AM, Jian-Hong Pan wrote:
-> > diff --git a/net/maclorawan/Kconfig b/net/maclorawan/Kconfig
-> > new file mode 100644
-> > index 000000000000..741992b059c6
-> > --- /dev/null
-> > +++ b/net/maclorawan/Kconfig
-> > @@ -0,0 +1,14 @@
-> > +config LORAWAN
-> > +     tristate "MAC layer of LoRaWAN Network support"
-> > +     select CRYPTO
-> > +     select CRYPTO_CMAC
-> > +     select CRYPTO_CBC
-> > +     select CRYPTO_AES
-> > +     ---help---
-> > +       LoRaWAN defines a low data rate, low power and long range wirel=
-ess
-> > +       wide area networks. It was designed to organise networks of sen=
-sors,
-> > +       switches and actuators, etc automation devices.  It could opera=
-te as
-> > +       multiple kilometers wide.
->
-> There are several things that I would change.  How about this instead?
->
->
->           LoRaWAN defines low data rate, low power and long range wireles=
-s
->           wide area networks. It was designed to organise networks of aut=
-omation
->           devices, such as sensors, switches and actuators. It can operat=
-e
->           multiple kilometers wide.
+On 08/22/2018 11:57 PM, Chris Brandt wrote:
 
-That becomes better!  Thank you
+> Add support for the R7S9210 which is part of the RZ/A2 series.
 
-> > +
-> > +       Say Y here to compile LoRaWAN support into the kernel or say M =
-to
-> > +       compile it as modules.
->
->
-> --
-> ~Randy
+   Is the manual publicly available? I tried to find it on Renesas' website
+but it appears royally broken...
+
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/net/sh_eth.txt |   1 +
+>  drivers/net/ethernet/renesas/sh_eth.c            | 107 +++++++++++++++++++++++
+>  drivers/net/ethernet/renesas/sh_eth.h            |   1 +
+>  3 files changed, 109 insertions(+)
+> 
+[...]
+> diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+> index 5573199c4536..f3a575e56ae4 100644
+> --- a/drivers/net/ethernet/renesas/sh_eth.c
+> +++ b/drivers/net/ethernet/renesas/sh_eth.c
+> @@ -216,6 +216,59 @@ static const u16 sh_eth_offset_fast_rz[SH_ETH_MAX_REGISTER_OFFSET] = {
+>  	[RXALCR0]	= 0x008C,
+>  };
+>  
+> +static const u16 sh_eth_offset_fast_rza2[SH_ETH_MAX_REGISTER_OFFSET] = {
+> +	SH_ETH_OFFSET_DEFAULTS,
+> +
+> +	[EDMR]		= 0x0000,
+> +	[EDTRR]		= 0x0008,
+> +	[EDRRR]		= 0x0010,
+> +	[EESR]		= 0x0028,
+> +	[EESIPR]	= 0x0030,
+> +	[TDLAR]		= 0x0018,
+> +	[TBRAR]		= 0x00d4,
+> +	[TDFAR]		= 0x00d8,
+> +	[RDLAR]		= 0x0020,
+> +	[RBWAR]		= 0x00c8,
+> +	[RDFAR]		= 0x00cc,
+> +	[TRSCER]	= 0x0038,
+> +	[RMFCR]		= 0x0040,
+> +	[TFTR]		= 0x0048,
+> +	[FDR]		= 0x0050,
+> +	[RMCR]		= 0x0058,
+> +	[TFUCR]		= 0x0064,
+> +	[RFOCR]		= 0x0068,
+> +	[RPADIR]	= 0x0078,
+> +	[TRIMD]		= 0x007c,
+> +	[FCFTR]		= 0x0070,
+> +
+> +	[ECMR]		= 0x0100,
+> +	[RFLR]		= 0x0108,
+> +	[ECSR]		= 0x0110,
+> +	[ECSIPR]	= 0x0118,
+> +	[PIR]		= 0x0120,
+> +	[PSR]		= 0x0128,
+> +	[RDMLR]		= 0x0140,
+> +	[IPGR]		= 0x0150,
+> +	[APR]		= 0x0154,
+> +	[MPR]		= 0x0158,
+> +	[RFCF]		= 0x0160,
+> +	[TPAUSER]	= 0x0164,
+> +	[TPAUSECR]	= 0x0168,
+> +	[BCFRR]		= 0x016c,
+> +	[MAHR]		= 0x01c0,
+> +	[MALR]		= 0x01c8,
+> +	[TROCR]		= 0x01d0,
+> +	[CDCR]		= 0x01d4,
+> +	[LCCR]		= 0x01d8,
+> +	[CNDCR]		= 0x01dc,
+> +	[CEFCR]		= 0x01e4,
+> +	[FRECR]		= 0x01e8,
+> +	[TSFRCR]	= 0x01ec,
+> +	[TLFRCR]	= 0x01f0,
+> +	[RFCR]		= 0x01f4,
+> +	[MAFCR]		= 0x01f8,
+> +};
+> +
+
+   This array is absolutely the same as sh_eth_offset_fast_sh4[], except the latter
+is (more or less) sorted.
+
+>  static const u16 sh_eth_offset_fast_rcar[SH_ETH_MAX_REGISTER_OFFSET] = {
+>  	SH_ETH_OFFSET_DEFAULTS,
+>  
+> @@ -635,6 +688,56 @@ static struct sh_eth_cpu_data r7s72100_data = {
+>  	.no_tx_cntrs	= 1,
+>  };
+>  
+> +/* R7S9210 */
+> +static void sh_eth_set_rate_r7s9210(struct net_device *ndev)
+> +{
+> +	struct sh_eth_private *mdp = netdev_priv(ndev);
+> +	unsigned long RTM = 0x00000004;
+
+  Use #define, please.
+
+> +
+> +	switch (mdp->speed) {
+> +	case 10: /* 10BASE */
+> +		sh_eth_modify(ndev, ECMR, RTM, 0);
+> +		break;
+> +	case 100:/* 100BASE */
+> +		sh_eth_modify(ndev, ECMR, RTM, RTM);
+> +		break;
+> +	}
+> +}
+> +
+
+  Seems the same as sh_eth_set_rate_rcar(), except for the bit name...
+
+> +static struct sh_eth_cpu_data r7s9210_data = {
+> +	.soft_reset	= sh_eth_soft_reset,
+> +
+> +	.set_duplex	= sh_eth_set_duplex,
+> +	.set_rate	= sh_eth_set_rate_r7s9210,
+> +
+> +	.register_type	= SH_ETH_REG_FAST_RZA2,
+> +
+> +	.edtrr_trns	= EDTRR_TRNS_ETHER,
+> +	.ecsr_value	= ECSR_ICD,
+> +	.ecsipr_value	= ECSIPR_ICDIP,
+> +	.eesipr_value	= EESIPR_TWBIP | EESIPR_TABTIP | EESIPR_RABTIP |
+> +			  EESIPR_RFCOFIP | EESIPR_ECIIP | EESIPR_FTCIP |
+> +			  EESIPR_TDEIP | EESIPR_TFUFIP | EESIPR_FRIP |
+> +			  EESIPR_RDEIP | EESIPR_RFOFIP | EESIPR_CNDIP |
+> +			  EESIPR_DLCIP | EESIPR_CDIP | EESIPR_TROIP |
+> +			  EESIPR_RMAFIP | EESIPR_RRFIP | EESIPR_RTLFIP |
+> +			  EESIPR_RTSFIP | EESIPR_PREIP | EESIPR_CERFIP,
+> +
+> +	.tx_check	= EESR_FTC | EESR_CND | EESR_DLC | EESR_CD | EESR_TRO,
+> +	.eesr_err_check	= EESR_TWB | EESR_TABT | EESR_RABT | EESR_RFE |
+> +			  EESR_RDE | EESR_RFRMER | EESR_TFE | EESR_TDE,
+> +
+> +	.fdr_value	= 0x0000070f,
+> +
+> +	.apr		= 1,
+> +	.mpr		= 1,
+> +	.tpauser	= 1,
+> +	.hw_swap	= 1,
+> +	.rpadir		= 1,
+> +	.no_ade		= 1,
+> +	.xdfar_rw	= 1,
+> +};
+> +
+
+   Can't check these w/o the manual...
+
+>  static void sh_eth_chip_reset_r8a7740(struct net_device *ndev)
+>  {
+>  	sh_eth_chip_reset(ndev);
+[...]
+
+MNR, Sergei
