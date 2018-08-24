@@ -1,95 +1,94 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v6 2/4] venus: firmware: move load firmware in a separate
- function
-Date: Fri, 24 Aug 2018 12:01:40 +0300
-Message-ID: <ee7f8db9-8624-9e08-7ea2-7ea99c0ad289@linaro.org>
-References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
- <1535034528-11590-3-git-send-email-vgarodia@codeaurora.org>
- <CAPBb6MXydrrfbWOps-xV4eRzgN6n6pT45B2C=H5tuF2pZOesZQ@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 0/8] Tegra SDHCI support HS400 on Tegra210 and Tegra186
+Date: Fri, 24 Aug 2018 11:11:03 +0200
+Message-ID: <20180824091103.GA9100@ulmo>
+References: <1533924845-1466-1-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPBb6MXydrrfbWOps-xV4eRzgN6n6pT45B2C=H5tuF2pZOesZQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1533924845-1466-1-git-send-email-avienamo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@chromium.org>, vgarodia@codeaurora.org
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
 
-On 08/24/2018 10:39 AM, Alexandre Courbot wrote:
-> On Thu, Aug 23, 2018 at 11:29 PM Vikash Garodia <vgarodia@codeaurora.org> wrote:
->>
->> Separate firmware loading part into a new function.
->>
->> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
->> ---
->>  drivers/media/platform/qcom/venus/core.c     |  4 +-
->>  drivers/media/platform/qcom/venus/firmware.c | 55 ++++++++++++++++++----------
->>  drivers/media/platform/qcom/venus/firmware.h |  2 +-
->>  3 files changed, 38 insertions(+), 23 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
->> index bb6add9..75b9785 100644
->> --- a/drivers/media/platform/qcom/venus/core.c
->> +++ b/drivers/media/platform/qcom/venus/core.c
->> @@ -84,7 +84,7 @@ static void venus_sys_error_handler(struct work_struct *work)
->>
->>         pm_runtime_get_sync(core->dev);
->>
->> -       ret |= venus_boot(core->dev, core->res->fwname);
->> +       ret |= venus_boot(core);
->>
->>         ret |= hfi_core_resume(core, true);
->>
->> @@ -284,7 +284,7 @@ static int venus_probe(struct platform_device *pdev)
->>         if (ret < 0)
->>                 goto err_runtime_disable;
->>
->> -       ret = venus_boot(dev, core->res->fwname);
->> +       ret = venus_boot(core);
->>         if (ret)
->>                 goto err_runtime_disable;
->>
->> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
->> index a9d042e..34224eb 100644
->> --- a/drivers/media/platform/qcom/venus/firmware.c
->> +++ b/drivers/media/platform/qcom/venus/firmware.c
->> @@ -60,20 +60,18 @@ int venus_set_hw_state(struct venus_core *core, bool resume)
->>         return 0;
->>  }
->>
->> -int venus_boot(struct device *dev, const char *fwname)
->> +static int venus_load_fw(struct venus_core *core, const char *fwname,
->> +                        phys_addr_t *mem_phys, size_t *mem_size)
-> 
-> Following the remarks of the previous patch, you would have mem_phys
-> and mem_size as members of venus_core (probably renamed as fw_mem_addr
-> and fw_mem_size).
-> 
->>  {
->>         const struct firmware *mdt;
->>         struct device_node *node;
->> -       phys_addr_t mem_phys;
->> +       struct device *dev;
->>         struct resource r;
->>         ssize_t fw_size;
->> -       size_t mem_size;
->>         void *mem_va;
->>         int ret;
->>
->> -       if (!IS_ENABLED(CONFIG_QCOM_MDT_LOADER) || !qcom_scm_is_available())
->> -               return -EPROBE_DEFER;
-> 
-> !IS_ENABLED(CONFIG_QCOM_MDT_LOADER) is not a condition that can change
-> at runtime, and returning -EPROBE_DEFER in that case seems erroneous
-> to me. Instead, wouldn't it make more sense to make the driver depend
-> on QCOM_MDT_LOADER?
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That was made on purpose, for more info git show b8f9bdc151e4a
+On Fri, Aug 10, 2018 at 09:13:57PM +0300, Aapo Vienamo wrote:
+> Hi all,
+> This series implements support for HS400 signaling on Tegra210 and
+> Tegra186. This includes programming the DQS trimmer values, implementing
+> enhanced strobe and HS400 delay line calibration.
+>=20
+> This series depends on the "Tegra SDHCI add support for HS200 and UHS
+> signaling" series.
+>=20
+> Changelog:
+> v2:
+> 	- Document in dt-bindings which controllers support HS400
+> 	- Use val instead of reg in tegra_sdhci_set_dqs_trim()
+> 	- Change "dt" to "DT" in "mmc: tegra: Parse and program DQS trim
+> 	  value" commit message
+> 	- Add spaces around << in tegra_sdhci_set_dqs_trim()
+> 	- Make the "mmc: tegra: Implement HS400 enhanced strobe" commit
+> 	  message more detailed
+> 	- Remove a debug print from tegra_sdhci_hs400_enhanced_strobe()
+> 	- Add blank lines around if-else-block in
+> 	  tegra_sdhci_hs400_enhanced_strobe()
+> 	- Use val instead of reg in tegra_sdhci_hs400_enhanced_strobe()
+> 	- Make commit message of "mmc: tegra: Implement HS400 delay line
+> 	  calibration" more detailed
+>=20
+> Aapo Vienamo (8):
+>   dt-bindings: mmc: Add DQS trim value to Tegra SDHCI
+>   mmc: tegra: Parse and program DQS trim value
+>   mmc: tegra: Implement HS400 enhanced strobe
+>   mmc: tegra: Implement HS400 delay line calibration
+>   arm64: dts: tegra186: Add SDMMC4 DQS trim value
+>   arm64: dts: tegra210: Add SDMMC4 DQS trim value
+>   arm64: dts: tegra186: Enable HS400
+>   arm64: dts: tegra210: Enable HS400
+>=20
+>  .../bindings/mmc/nvidia,tegra20-sdhci.txt          |  4 ++
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  2 +
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  2 +
+>  drivers/mmc/host/sdhci-tegra.c                     | 84 ++++++++++++++++=
++++++-
+>  4 files changed, 89 insertions(+), 3 deletions(-)
 
--- 
-regards,
-Stan
+Ulf, Adrian,
+
+Aapo just reminded me of this small series that also has a dependency on
+the UHS signalling series posted earlier. I think it's easiest if I just
+stash this on top of the existing branch that I have and send this along
+with the rest as part of a pull request early after v4.19-rc1.
+
+Thierry
+
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlt/y6QACgkQ3SOs138+
+s6Geow/8CNBjRVUWrjNn8USykHyGclhdyCpr/77F6uuL3MmDMAVZGt1U7o0RTDYb
+T55DEJ+4e1uoaWjSbd+DnPQ+IHKON+sSykG0rrGJvQxnEWEYZjnzfKkmfpnQZPna
+R13JQlTVtRCa4/QYBJUMu1Do9e4kCgrA5Kd8h1cRTrAerQkJXWX6mELxnYx8Bk6R
+zYefZ7pPxjQCoRLD3sMiLLsd+hxdLKsuIda5ztEySErZWQYZzhHGgltvDPkfeZ//
+N9ZmGHyLSpwsGj2WL13SzRCbgqUt8s6ZtgtEz4W3WqNq+Dw1Gid0WtdUeVvzQHH8
+eK6F2keTobhlMEqQCgyWd3HGiugnZCFaEa2nAa8lcGXNhxKWLVxDfJ7QGtSeATVj
+5zL+sm7obWV+juGM3U/IHW/u4wn8N+BgAT1sm0f91rDTMcOQyOIh8gBhX/vNm60h
+OJaoZKVv0NnDK9E3VJ+Iw3a4b1DODnTl8AX5wpBYMk+QdG8OiLJjGPLGwBFN1vtg
+xnzRej7hSSkQOaFB8GZGppXibn63qZ19gLM1j1GIJElQGVVUtBTmXKcdZ2WwwIAB
+fmSAj0yItCi6UacuoVzTkdaYb60F86wDF9ohUlehD1fLJOFWpxZzfq6sZQpJyMie
+x7OGxoHF6l84SSz6pUVXNn4LByqu4n6Nweh3FcrpWEvjJEiNbdc=
+=gC/o
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
