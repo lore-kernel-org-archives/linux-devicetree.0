@@ -1,78 +1,64 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v1 2/7] dt-binding: add bindings for Atmel LCDC mfd
-Date: Fri, 24 Aug 2018 17:58:24 +0200
-Message-ID: <20180824155824.GC26678@ravnborg.org>
-References: <20180812184152.GA22343@ravnborg.org>
- <20180812184629.3808-2-sam@ravnborg.org>
- <20180824104517.29f24f44@bbrezillon>
+From: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+Subject: Re: [RFC 1/3 net] lorawan: Add LoRaWAN class module
+Date: Fri, 24 Aug 2018 23:58:29 +0800
+Message-ID: <CAC=mGzjMm6OdJJXB=G0NEBkGASWyJv1cgeS=_wiUhDn+WYaqGQ@mail.gmail.com>
+References: <cover.1535039998.git.starnight@g.ncu.edu.tw> <fc737f3940bbe91341fb15d85ac11931eb56d1fc.1535039998.git.starnight@g.ncu.edu.tw>
+ <30b75248-7589-fc98-819f-2b68844522f1@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180824104517.29f24f44@bbrezillon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <30b75248-7589-fc98-819f-2b68844522f1@infradead.org>
+Sender: netdev-owner@vger.kernel.org
+To: rdunlap@infradead.org
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, netdev@vger.kernel.org, "<linux-arm-kernel@lists.infradead.org\\" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org>," <linux-kernel@vger.kernel.org>, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=C3=B6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=C3=B6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, "linux-kernel@vger.kernel.org>," <contact@snootlab.com>, Ben Whitten <ben.whitten@lairdte>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMuCgo+ID4gK1RoZSBMQ0RDIElQIGV4cG9zZXMgdHdvIHN1YmRldmljZXM6Cj4gPiAr
-IC0gYSBQV00gY2hpcDogc2VlIC4uL3B3bS9hdG1lbC1sY2RjLXB3bS50eHQKPiA+ICsgLSBhIERp
-c3BsYXkgQ29udHJvbGxlcjogc2VlIC4uL2Rpc3BsYXkvYXRtZWwvbGNkYy1kaXNwbGF5LWNvbnRy
-b2xsZXIudHh0Cj4gPiArCj4gPiArRXhhbXBsZToKPiA+ICsJbGNkYzA6IGxjZGNANzAwMDAwIHsK
-PiA+ICsJCWNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5MXNhbTkyNjMtbGNkYy1tZmQiOwo+ID4gKwkJ
-cmVnID0gPDB4NzAwMDAwIDB4MTAwMD47Cj4gPiArCQlpbnRlcnJ1cHRzID0gPDI2IElSUV9UWVBF
-X0xFVkVMX0hJR0ggMz47Cj4gPiArCQljbG9ja3MgPSA8JmxjZF9jbGs+LCA8JmxjZF9jbGs+Owo+
-ID4gKwkJY2xvY2stbmFtZXMgPSAibGNkY19jbGsiLCAiaGNsayI7Cj4gPiArCj4gPiArCQlsY2Rj
-LWRpc3BsYXktY29udHJvbGxlciB7Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJhdG1lbCxsY2RjLWRp
-c3BsYXktY29udHJvbGxlciI7Cj4gPiArCQkJbGNkLXN1cHBseSA9IDwmbGNkY19yZWc+Owo+ID4g
-KwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ID4g
-Kwo+ID4gKwkJCXBvcnRAMCB7Cj4gPiArCQkJCXJlZyA9IDwwPjsKPiA+ICsJCQkJI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47Cj4gPiArCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ID4gKwkJCQlsY2RjX3Bh
-bmVsX291dHB1dDogZW5kcG9pbnRAMCB7Cj4gPiArCQkJCQlyZWcgPSA8MD47Cj4gPiArCQkJCQly
-ZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2lucHV0PjsKPiA+ICsJCQkJfTsKPiA+ICsJCQl9Owo+
-ID4gKwkJfTsKPiA+ICsKPiA+ICsJCWxjZGNfcHdtOiBsY2RjLXB3bSB7Cj4gPiArCQkJY29tcGF0
-aWJsZSA9ICJhdG1lbCxsY2RjLXB3bSI7Cj4gPiArCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0
-IjsKPiA+ICsJCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfbGNkY19wd20+Owo+ID4gKwkJCSNwd20t
-Y2VsbHMgPSA8Mz47Cj4gPiArCQl9Owo+ID4gKwo+ID4gKwl9Owo+IAo+IEFsc28sIEkgZG9uJ3Qg
-cmVtZW1iZXIgd2h5IEkgZGVjaWRlZCB0byBkZWNsYXJlIGRpc3RpbmN0IG5vZGVzIGZvciB0aGUK
-PiBQV00gYW5kIGRpc3BsYXkgY29udHJvbGxlciwgYnV0IHlvdSBzaG91bGQgcHJvYmFibHkgdHJ5
-IHRvIG9ubHkgZGVjbGFyZQo+IHRoZSBsY2RjIG5vZGUuIFNvbWV0aGluZyBsaWtlIHRoYXQ6Cj4g
-Cj4gCWxjZGMwOiBsY2RjQDcwMDAwMCB7Cj4gCQljb21wYXRpYmxlID0gImF0bWVsLGF0OTFzYW05
-MjYzLWxjZGMiOwo+IAkJcmVnID0gPDB4NzAwMDAwIDB4MTAwMD47Cj4gCQlpbnRlcnJ1cHRzID0g
-PDI2IElSUV9UWVBFX0xFVkVMX0hJR0ggMz47Cj4gCQljbG9ja3MgPSA8JmxjZF9jbGs+LCA8Jmxj
-ZF9jbGs+Owo+IAkJY2xvY2stbmFtZXMgPSAibGNkY19jbGsiLCAiaGNsayI7Cj4gCQlwaW5jdHJs
-LW5hbWVzID0gImRlZmF1bHQiOwo+IAkJcGluY3RybC0wID0gPCZwaW5jdHJsX2xjZGNfcHdtIC4u
-Lj47Cj4gCQkjcHdtLWNlbGxzID0gPDM+Owo+IAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gCQkj
-c2l6ZS1jZWxscyA9IDwwPjsKPiAKPiAJCXBvcnRAMCB7Cj4gCQkJcmVnID0gPDA+Owo+IAkJCSNh
-ZGRyZXNzLWNlbGxzID0gPDE+Owo+IAkJCSNzaXplLWNlbGxzID0gPDA+Owo+IAkJCWxjZGNfcGFu
-ZWxfb3V0cHV0OiBlbmRwb2ludEAwIHsKPiAJCQkJcmVnID0gPDA+Owo+IAkJCQlyZW1vdGUtZW5k
-cG9pbnQgPSA8JnBhbmVsX2lucHV0PjsKPiAJCQl9Owo+IAkJfTsKPiAJfTsKPiAKPiBOb3RlIHRo
-YXQgdGhpcyByZXByZXNlbnRhdGlvbiBkb2VzIG5vdCBwcmV2ZW50IHVzIGZyb20gaGF2aW5nIGFu
-IE1GRAo+IHdoaWNoIGRlY2xhcmVzIHRoZSBQV00gYW5kIERpc3BsYXkgRW5naW5lLCBpdCdzIGp1
-c3QgdGhhdCBhbGwgZGV2cyB3aWxsCj4gcG9pbnQgdG8gdGhlIHNhbWUgb2Zfbm9kZS4KCkkgaGF2
-ZSBzb21ldGhpbmcgc2ltaWxhciBpbiBteSB0cmVlIG5vdywganVzdCBuZWVkIHRvIGZpZ3VyZSBv
-dXQgdGhlIG1mZCBwYXJ0cy4KCj4gCj4gPiArCj4gPiArCQlsY2RjLWRpc3BsYXktY29udHJvbGxl
-ciB7Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJhdG1lbCxsY2RjLWRpc3BsYXktY29udHJvbGxlciI7
-Cj4gPiArCQkJbGNkLXN1cHBseSA9IDwmbGNkY19yZWc+Owo+IAo+IEhtLCBpcyB0aGlzIGEgcmVn
-dWxhdG9yIGZvciB0aGUgTENEIGNvbnRyb2xsZXIgb3IgdGhlIExDRD8gSWYgaXQncyBmb3IKPiB0
-aGUgTENEIGl0IHNob3VsZCBiZSBwbGFjZWQgdW5kZXIgdGhlIHBhbmVsIG5vZGUuCkl0IHdhcyBh
-ZGRlZCBvbmx5IGJlY2F1c2UgSSBjb3VsZCBkbyBpdCBhbmQgSSB3YXMgKGFuZCBjb250aW51ZSB0
-byBiZSkgYQpEVCBuZXdiaWUuICBXaWxsIGRyb3AgaXQgaW4gdjIgYXMgdGhpcyBpcyBqdXN0IGFu
-IGV4YW1wbGUgd2hpY2ggdGhpcyBwYXJ0IGRvCm5vdCBhZGQgYW55IHZhbHVlIHRvLgoKPiA+ICsJ
-cGFuZWw6IHBhbmVsIHsKPiA+ICsJCWNvbXBhdGlibGUgPSAibG9naWN0ZWNobm9sb2dpZXMsbHR0
-ZDgwMDQ4MDA3MC1sMnJ0IiwgInNpbXBsZS1wYW5lbCI7ClJlbWluZHMgbWUgdGhhdCBJIG5lZWQg
-dG8gZGlnIG91dCBhIHBhbmVsLXNpbXBsZSBwYXRjaCBmb3IgYSBmZXcKZGlzcGxheXMgSSB1c2Ug
-KGxvZ2ljICsgc2Vpa28pLgpCdXQgdGhleSBhcmUgb3RoZXJ3aXNlIG5vdCByZWxhdGVkIHRvIHRo
-aXMgd29yay4KCglTYW0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Randy Dunlap <rdunlap@infradead.org> =E6=96=BC 2018=E5=B9=B48=E6=9C=8824=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:43=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi,
+>
+> On 08/23/2018 10:15 AM, Jian-Hong Pan wrote:
+> > diff --git a/net/maclorawan/Kconfig b/net/maclorawan/Kconfig
+> > new file mode 100644
+> > index 000000000000..741992b059c6
+> > --- /dev/null
+> > +++ b/net/maclorawan/Kconfig
+> > @@ -0,0 +1,14 @@
+> > +config LORAWAN
+> > +     tristate "MAC layer of LoRaWAN Network support"
+> > +     select CRYPTO
+> > +     select CRYPTO_CMAC
+> > +     select CRYPTO_CBC
+> > +     select CRYPTO_AES
+> > +     ---help---
+> > +       LoRaWAN defines a low data rate, low power and long range wirel=
+ess
+> > +       wide area networks. It was designed to organise networks of sen=
+sors,
+> > +       switches and actuators, etc automation devices.  It could opera=
+te as
+> > +       multiple kilometers wide.
+>
+> There are several things that I would change.  How about this instead?
+>
+>
+>           LoRaWAN defines low data rate, low power and long range wireles=
+s
+>           wide area networks. It was designed to organise networks of aut=
+omation
+>           devices, such as sensors, switches and actuators. It can operat=
+e
+>           multiple kilometers wide.
+
+That becomes better!  Thank you
+
+> > +
+> > +       Say Y here to compile LoRaWAN support into the kernel or say M =
+to
+> > +       compile it as modules.
+>
+>
+> --
+> ~Randy
