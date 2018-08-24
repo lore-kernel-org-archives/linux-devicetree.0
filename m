@@ -1,86 +1,103 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RESEND v1 2/5] drivers: pinctrl: msm: enable PDC
- interrupt only during suspend
-Date: Fri, 24 Aug 2018 11:14:32 -0600
-Message-ID: <20180824171432.GM5081@codeaurora.org>
-References: <20180817191026.32245-1-ilina@codeaurora.org>
- <20180817191026.32245-3-ilina@codeaurora.org>
- <153509896098.28926.3622217918056498792@swboyd.mtv.corp.google.com>
+From: vitor <Vitor.Soares@synopsys.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Fri, 24 Aug 2018 18:52:52 +0100
+Message-ID: <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <20180719152930.3715-2-boris.brezillon@bootlin.com>
+ <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
+ <20180824143934.6d6b6487@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <153509896098.28926.3622217918056498792@swboyd.mtv.corp.google.com>
+In-Reply-To: <20180824143934.6d6b6487@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: bjorn.andersson@linaro.org, evgreen@chromium.org, linus.walleij@linaro.org, marc.zyngier@arm.com, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, vitor <Vitor.Soares@synopsys.com>, linux-gpio@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetr>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 24 2018 at 02:22 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2018-08-17 12:10:23)
->> During suspend the system may power down some of the system rails. As a
->> result, the TLMM hw block may not be operational anymore and wakeup
->> capable GPIOs will not be detected. The PDC however will be operational
->> and the GPIOs that are routed to the PDC as IRQs can wake the system up.
+Hi Boris,
+
+
+On 24-08-2018 13:39, Boris Brezillon wrote:
+> Hi Vitor,
+>
+> On Wed, 22 Aug 2018 17:43:34 +0100
+> vitor <Vitor.Soares@synopsys.com> wrote:
+>
+>> Hi Boris,
 >>
->> To avoid being interrupted twice (for TLMM and once for PDC IRQ) when a
->> GPIO trips, use TLMM for active and switch to PDC for suspend. When
->> entering suspend, disable the TLMM wakeup interrupt and instead enable
->> the PDC IRQ and revert upon resume.
->
->What about idle paths? Don't we want to disable the TLMM interrupt and
->enable the PDC interrupt when the whole cluster goes idle so we get
->wakeup interrupts?
-We would need to do this from the idle paths. When we have that support
-(a patch for cluster power down is in the works), we would need to hook
-up to TLMM and do the same.
->It's really unfortunate that the hardware can't
->replay the interrupt from PDC to TLMM when it knows TLMM didn't get the
->interrupt (because the whole chip was off) or the GIC didn't get the
->summary irq (because the GIC was powered off). A little more hardware
->effort would make this completely transparent to software and make TLMM
->work across all low power modes.
->
-I wouln't pretend to understand what it entails in the hardware. But, I
-believe the complication stems from the fact that PDC is sensing the raw
-GPIO just as TLMM when active and sensing itself. To know when to replay
-only the interrupt lines for the TLMM (knowing the TLMM was powered off)
-might be a lot of hardware.
+>>
+>> On 19-07-2018 16:29, Boris Brezillon wrote:
+>>> +int i3c_bus_register(struct i3c_bus *i3cbus)
+>>> +{
+>>> +	struct i2c_dev_desc *desc;
+>>> +
+>>> +	i3c_bus_for_each_i2cdev(i3cbus, desc) {
+>>> +		switch (desc->boardinfo->lvr & I3C_LVR_I2C_INDEX_MASK) {
+>>> +		case I3C_LVR_I2C_INDEX(0):
+>>> +			if (i3cbus->mode < I3C_BUS_MODE_MIXED_FAST)
+>>> +				i3cbus->mode = I3C_BUS_MODE_MIXED_FAST;
+>>> +			break;
+>>> +
+>>> +		case I3C_LVR_I2C_INDEX(1):
+>>> +		case I3C_LVR_I2C_INDEX(2):
+>>> +			if (i3cbus->mode < I3C_BUS_MODE_MIXED_SLOW)
+>>> +				i3cbus->mode = I3C_BUS_MODE_MIXED_SLOW;
+>>> +			break;
+>>> +
+>>> +		default:
+>>> +			return -EINVAL;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	if (!i3cbus->scl_rate.i3c)
+>>> +		i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+>>> +
+>>> +	if (!i3cbus->scl_rate.i2c) {
+>>> +		if (i3cbus->mode == I3C_BUS_MODE_MIXED_SLOW)
+>>> +			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
+>>> +		else
+>>> +			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
+>>> +	}
+>>> +
+>>> +	/*
+>>> +	 * I3C/I2C frequency may have been overridden, check that user-provided
+>>> +	 * values are not exceeding max possible frequency.
+>>> +	 */
+>>> +	if (i3cbus->scl_rate.i3c > I3C_BUS_MAX_I3C_SCL_RATE ||
+>>> +	    i3cbus->scl_rate.i2c > I3C_BUS_I2C_FM_PLUS_SCL_RATE) {
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	dev_set_name(&i3cbus->dev, "i3c-%d", i3cbus->id);
+>>> +
+>>> +	return device_add(&i3cbus->dev);
+>>> +}
+>> During the tests of the bus with i2c devices I found the i2c_dev_desc
+>> objects aren't allocated before this function. This cause i3cbus->mode =
+>> I3C_BUS_MODE_PURE.
+> I just checked and DT parsing (+ I2C descs creation) is done before
+> i3c_bus_register() is called, so we should be good. How did you declare
+> your I2C devices (right now, only DT declaration is supported).
+During the DT parsing, you create the i2c_dev_boardinfo. the 
+i2c_dev_desc is created in i3c_master_bus_init() which is after the 
+i3c_mater_create_bus(). One possible way to fix this is to pass master 
+also to i3c_bus_register and iterate over i2c_dev_board_info list.
 
->Because of this complicated dance, it may make sense to always get the
->interrupt at the PDC and then replay it into the TLMM chip "manually"
->with the irq_set_irqchip_state() APIs. This way the duplicate interrupt
->can't happen. The only way for the interrupt handler to run would be by
->PDC poking the TLMM hardware to inject the irq into the status register.
-If the PDC interrupt was always enabled and the interrupt at TLMM was
-always disabled, all we would need to set the action handler of the PDC
-interrupt to that of the TLMM. I couldn't find a way to retrieve that
-nicely.
-
->I think with the TLMM that's possible if we configure the pin to have
->the raw status bit disabled (so that edges on the physical line don't
->latch into the GPIO interrupt status register) and the normal status bit
->enabled (so that if the status register changes we'll interrupt the
->CPU). It needs some testing to make sure that actually works though. If
->it does work, then we have a way to inject interrupts on TLMM without
->worry that the TLMM hardware will also see the interrupt.
-
+>> I want to do something for the slave and secondary master, do you
+>> already have infrastructure that you can share?
+> What do you mean?
 >
->Is there a good way to test an interrupt to see if it's edge or level
->type configured? And is it really a problem to make PDC the hierarchical
->parent of TLMM here so that PDC can intercept the type and wake state of
->the GPIO irq?
-Alternately, could we just return the PDC interrupt in gpio_to_irq() and
-let the driver manipulate only the PDC interrupt ? Ofcourse, drivers
-that request the GPIO as interrupt in DT, would now have to request the
-PDC interrupt directly. That could avoid the dance during every
-idle/suspend. I am not sure how nice it is do this, would like to know
-your thoughts.
-
->Plus there's the part where a GIC SPI interrupt runs for
->some GPIO irq, and that needs to be decoded to figure out which GPIO it
->is for and if it should be replayed or not. Maybe all types of GPIO irqs
->can be replayed and if it's a level type interrupt we waste some time
->handling the PDC interrupt just to do nothing besides forward what would
->presumably already work without PDC intervention.
+> Regards,
 >
+> Boris
+
+I want start to add the secondary master functionality but it is also 
+necessary to add the infrastructure to the subsystem.
+So, to avoid duplicated work can you share your plans for the secondary 
+master?
+
+Best regards,
+Vitor Soares
