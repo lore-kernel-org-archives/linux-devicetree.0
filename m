@@ -1,60 +1,109 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH RESEND v1 2/5] drivers: pinctrl: msm: enable PDC interrupt only
- during suspend
-Date: Fri, 24 Aug 2018 01:22:40 -0700
-Message-ID: <153509896098.28926.3622217918056498792@swboyd.mtv.corp.google.com>
-References: <20180817191026.32245-1-ilina@codeaurora.org>
- <20180817191026.32245-3-ilina@codeaurora.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
+ Amlogic Meson PCIe controller
+Date: Fri, 24 Aug 2018 10:22:55 +0200
+Message-ID: <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
+References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
+         <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180817191026.32245-3-ilina@codeaurora.org>
+In-Reply-To: <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, evgreen@chromium.org, linus.walleij@linaro.org, marc.zyngier@arm.com
-Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
+To: Hanjie Lin <hanjie.lin@amlogic.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lina Iyer (2018-08-17 12:10:23)
-> During suspend the system may power down some of the system rails. As a
-> result, the TLMM hw block may not be operational anymore and wakeup
-> capable GPIOs will not be detected. The PDC however will be operational
-> and the GPIOs that are routed to the PDC as IRQs can wake the system up.
-> =
+On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
+> From: Yue Wang <yue.wang@amlogic.com>
+> 
+> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
+> controller.
+> 
+> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+> ---
+>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> new file mode 100644
+> index 0000000..8a831d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> @@ -0,0 +1,63 @@
+> +Amlogic Meson AXG DWC PCIE SoC controller
+> +
+> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
+> +It shares common functions with the PCIe DesignWare core driver and
+> +inherits common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+> +
+> +Additional properties are described here:
+> +
+> +Required properties:
+> +- compatible:
+> +	should contain "amlogic,axg-pcie" to identify the core.
+> +- reg:
+> +	Should contain the configuration address space.
+> +- reg-names: Must be
+> +	- "elbi"	External local bus interface registers
+> +	- "cfg"		Meson specific registers
+> +	- "config"	PCIe configuration space
+> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +- clock-names: Must include the following entries:
+> +	- "pclk"       PCIe GEN 100M PLL clock
+> +	- "port"       PCIe_x(A or B) RC clock gate
+> +	- "general"    PCIe Phy clock
+> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate
+> +- resets: phandle to the reset lines.
+> +- reset-names: must contain "phy" and "peripheral"
+> +       - "port" Port A or B reset
+> +       - "apb" APB reset
 
-> To avoid being interrupted twice (for TLMM and once for PDC IRQ) when a
-> GPIO trips, use TLMM for active and switch to PDC for suspend. When
-> entering suspend, disable the TLMM wakeup interrupt and instead enable
-> the PDC IRQ and revert upon resume.
+The above description is not coherent (phy <=> port)
 
-What about idle paths? Don't we want to disable the TLMM interrupt and
-enable the PDC interrupt when the whole cluster goes idle so we get
-wakeup interrupts? It's really unfortunate that the hardware can't
-replay the interrupt from PDC to TLMM when it knows TLMM didn't get the
-interrupt (because the whole chip was off) or the GIC didn't get the
-summary irq (because the GIC was powered off). A little more hardware
-effort would make this completely transparent to software and make TLMM
-work across all low power modes.
+> +
+> +Example configuration:
+> +
+> +	pcie: pcie@f9800000 {
+> +			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
+> +			reg = <0x0 0xf9800000 0x0 0x400000
+> +					0x0 0xff646000 0x0 0x2000
+> +					0x0 0xf9f00000 0x0 0x100000>;
+> +			reg-names = "elbi", "cfg", "config";
+> +			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
+> +			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
+> +			bus-range = <0x0 0xff>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
 
-Because of this complicated dance, it may make sense to always get the
-interrupt at the PDC and then replay it into the TLMM chip "manually"
-with the irq_set_irqchip_state() APIs. This way the duplicate interrupt
-can't happen. The only way for the interrupt handler to run would be by
-PDC poking the TLMM hardware to inject the irq into the status register.
-I think with the TLMM that's possible if we configure the pin to have
-the raw status bit disabled (so that edges on the physical line don't
-latch into the GPIO interrupt status register) and the normal status bit
-enabled (so that if the status register changes we'll interrupt the
-CPU). It needs some testing to make sure that actually works though. If
-it does work, then we have a way to inject interrupts on TLMM without
-worry that the TLMM hardware will also see the interrupt.
+Not described above - is it even used ?
 
-Is there a good way to test an interrupt to see if it's edge or level
-type configured? And is it really a problem to make PDC the hierarchical
-parent of TLMM here so that PDC can intercept the type and wake state of
-the GPIO irq? Plus there's the part where a GIC SPI interrupt runs for
-some GPIO irq, and that needs to be decoded to figure out which GPIO it
-is for and if it should be replayed or not. Maybe all types of GPIO irqs
-can be replayed and if it's a level type interrupt we waste some time
-handling the PDC interrupt just to do nothing besides forward what would
-presumably already work without PDC intervention.
+> +			phys = <&pcie_phy>;
+
+Not documented and not necessary. Please remove this.
+
+> +			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
+> +
+> +			clocks = <&clkc CLKID_USB
+> +					&clkc CLKID_MIPI_ENABLE
+> +					&clkc CLKID_PCIE_A
+> +					&clkc CLKID_PCIE_CML_EN0>;
+> +			clock-names = "general",
+> +					"mipi",
+> +					"pclk",
+> +					"port";
+> +			resets = <&reset RESET_PCIE_A>,
+> +				<&reset RESET_PCIE_APB>;
+> +			reset-names = "port",
+> +					"apb";
+> +	};
