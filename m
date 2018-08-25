@@ -1,107 +1,78 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v1 01/10] arm/arm64: dts: msm8974/msm8916: thermal: Split
- address space into two
-Date: Fri, 24 Aug 2018 16:27:49 -0700
-Message-ID: <20180824232747.GE25163@localhost.localdomain>
-References: <cover.1533815718.git.amit.kucheria@linaro.org>
- <d01f560abed221b536b27bfaa42a530257642974.1533815718.git.amit.kucheria@linaro.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH V3] spi: spi-geni-qcom: Add SPI driver support for GENI
+ based QUP
+Date: Sat, 25 Aug 2018 13:21:25 +0800
+Message-ID: <201808251010.KRlMjZ8C%fengguang.wu@intel.com>
+References: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d01f560abed221b536b27bfaa42a530257642974.1533815718.git.amit.kucheria@linaro.org>
+In-Reply-To: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: kbuild-all@01.org, swboyd@chromium.org, broonie@kernel.org, mka@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>, Dilip Kota <dkota@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 09, 2018 at 06:02:33PM +0530, Amit Kucheria wrote:
-> We've earlier added support to split the register address space into TM
-> and SROT regions.
-> 
-> Split up the regmap address space into two for the remaining platforms that
-> have a similar register layout and make corresponding changes to the
-> get_temp_common() function used by these platforms.
-> 
-> Since tsens-common.c/init_common() currently only registers one address
-> space, the order is important (TM before SROT).  This is OK since the code
-> doesn't really use the SROT functionality yet.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm/boot/dts/qcom-msm8974.dtsi   | 6 ++++--
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 6 ++++--
->  drivers/thermal/qcom/tsens-common.c   | 5 +++--
->  3 files changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> index d9019a49b292..3c4b81c29798 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> @@ -427,11 +427,13 @@
->  			};
->  		};
->  
-> -		tsens: thermal-sensor@fc4a8000 {
-> +		tsens: thermal-sensor@fc4a9000 {
->  			compatible = "qcom,msm8974-tsens";
-> -			reg = <0xfc4a8000 0x2000>;
-> +			reg = <0xfc4a9000 0x1000>, /* TM */
-> +			      <0xfc4a8000 0x1000>; /* SROT */
->  			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
->  			nvmem-cell-names = "calib", "calib_backup";
-> +			#qcom,sensors = <11>;
->  			#thermal-sensor-cells = <1>;
->  		};
->  
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index cc1040eacdf5..abf84df5a7bc 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -774,11 +774,13 @@
->  			};
->  		};
->  
-> -		tsens: thermal-sensor@4a8000 {
-> +		tsens: thermal-sensor@4a9000 {
->  			compatible = "qcom,msm8916-tsens";
-> -			reg = <0x4a8000 0x2000>;
-> +			reg = <0x4a9000 0x1000>, /* TM */
-> +			      <0x4a8000 0x1000>; /* SROT */
->  			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
->  			nvmem-cell-names = "calib", "calib_sel";
-> +			#qcom,sensors = <5>;
->  			#thermal-sensor-cells = <1>;
+Hi Girish,
 
-Looking closer to this, I fail to remember the reasoning why
-#qcom,sensors property was needed.
+Thank you for the patch! Yet something to improve:
 
->  		};
->  
-> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> index 6207d8d92351..478739543bbc 100644
-> --- a/drivers/thermal/qcom/tsens-common.c
-> +++ b/drivers/thermal/qcom/tsens-common.c
-> @@ -21,7 +21,7 @@
->  #include <linux/regmap.h>
->  #include "tsens.h"
->  
-> -#define S0_ST_ADDR		0x1030
-> +#define STATUS_OFFSET		0x30
->  #define SN_ADDR_OFFSET		0x4
->  #define SN_ST_TEMP_MASK		0x3ff
->  #define CAL_DEGC_PT1		30
-> @@ -107,8 +107,9 @@ int get_temp_common(struct tsens_device *tmdev, int id, int *temp)
->  	unsigned int status_reg;
->  	int last_temp = 0, ret;
->  
-> -	status_reg = S0_ST_ADDR + s->hw_id * SN_ADDR_OFFSET;
-> +	status_reg = tmdev->tm_offset + STATUS_OFFSET + s->hw_id * SN_ADDR_OFFSET;
->  	ret = regmap_read(tmdev->map, status_reg, &code);
-> +
->  	if (ret)
->  		return ret;
->  	last_temp = code & SN_ST_TEMP_MASK;
-> -- 
-> 2.17.1
-> 
+[auto build test ERROR on spi/for-next]
+[also build test ERROR on v4.18]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Dilip-Kota/spi-spi-geni-qcom-Add-SPI-driver-support-for-GENI-based-QUP/20180824-190528
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+config: i386-allmodconfig
+compiler: gcc-7 (Debian 7.3.0-16) 7.3.0
+reproduce:
+        make ARCH=i386  allmodconfig
+        make ARCH=i386 
+
+All errors (new ones prefixed by >>):
+
+
+vim +239 drivers/spi/spi-geni-qcom.c
+
+   212	
+   213	static int spi_geni_prepare_transfer_hardware(struct spi_master *spi)
+   214	{
+   215		struct spi_geni_master *mas = spi_master_get_devdata(spi);
+   216		struct geni_se *se = &mas->se;
+   217	
+   218		if (!mas->setup) {
+   219			unsigned int proto = geni_se_read_proto(se);
+   220			unsigned int major, minor, step, ver;
+   221	
+   222			if (proto != GENI_SE_SPI) {
+   223				dev_err(mas->dev, "Invalid proto %d\n", proto);
+   224				return -ENXIO;
+   225			}
+   226			mas->tx_fifo_depth = geni_se_get_tx_fifo_depth(se);
+   227			mas->rx_fifo_depth = geni_se_get_rx_fifo_depth(se);
+   228			mas->tx_fifo_width = geni_se_get_tx_fifo_width(se);
+   229	
+   230			/*
+   231			 * Hardware programming guide suggests to configure
+   232			 * RX FIFO RFR level to fifo_depth-2.
+   233			 */
+   234			geni_se_init(se, 0x0, mas->tx_fifo_depth - 2);
+   235			mas->oversampling = 1;
+   236			/* Transmit an entire FIFO worth of data per IRQ */
+   237			mas->tx_wm = 1;
+   238			ver = geni_se_get_qup_hw_version(se);
+ > 239			major = GENI_SE_VERSION_MAJOR(ver);
+ > 240			minor = GENI_SE_VERSION_MINOR(ver);
+ > 241			step = GENI_SE_VERSION_STEP(ver);
+   242	
+   243			if (major == 1 && minor == 0)
+   244				mas->oversampling = 2;
+   245			mas->setup = 1;
+   246		}
+   247		return 0;
+   248	}
+   249	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
