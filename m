@@ -1,77 +1,56 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: dac: add bindings for ltc1660
-Date: Sat, 25 Aug 2018 09:27:20 +0100
-Message-ID: <20180825092720.0cb8fbb6@archlinux>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: add entry for ltc1660 DAC driver
+Date: Sat, 25 Aug 2018 09:27:54 +0100
+Message-ID: <20180825092754.109510f2@archlinux>
 References: <20180821193126.15733-1-marcus.folkesson@gmail.com>
-        <20180821193126.15733-2-marcus.folkesson@gmail.com>
-        <20180822192518.GA694@gmail.com>
+        <20180821193126.15733-3-marcus.folkesson@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822192518.GA694@gmail.com>
+In-Reply-To: <20180821193126.15733-3-marcus.folkesson@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Marcus Folkesson <marcus.folkesson@gmail.com>
 Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 22 Aug 2018 21:25:18 +0200
+On Tue, 21 Aug 2018 21:31:26 +0200
 Marcus Folkesson <marcus.folkesson@gmail.com> wrote:
 
-> On Tue, Aug 21, 2018 at 09:31:25PM +0200, Marcus Folkesson wrote:
-> > LTC1665/LTC1660 is a 8/10-bit Digital-to-Analog Converter (DAC)
-> > with eight individual channels.
-> > 
-> > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>  
+> Add entry for ltc1660 DAC driver and add myself as
+> maintainer of this driver.
 > 
-> Rob, sorry I missed your tag.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Applied to the togreg branch of iio.git and pushed out as testing
-to be largely ignored by the autobuilders.
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Applied.
 
 Thanks,
 
 Jonathan
 
+> ---
 > 
-> > ---
-> > 
-> > Notes:
-> >     v2:
-> >     	- rename file, ltc166x -> ltc1660
-> > 
-> >  .../devicetree/bindings/iio/dac/ltc1660.txt         | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/dac/ltc1660.txt b/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-> > new file mode 100644
-> > index 000000000000..c5b5f22d6c64
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-> > @@ -0,0 +1,21 @@
-> > +* Linear Technology Micropower octal 8-Bit and 10-Bit DACs
-> > +
-> > +Required properties:
-> > + - compatible: Must be one of the following:
-> > +		"lltc,ltc1660"
-> > +		"lltc,ltc1665"
-> > + - reg: SPI chip select number for the device
-> > + - vref-supply: Phandle to the voltage reference supply
-> > +
-> > +Recommended properties:
-> > + - spi-max-frequency: Definition as per
-> > +	 Documentation/devicetree/bindings/spi/spi-bus.txt.
-> > +	 Max frequency for this chip is 5 MHz.
-> > +
-> > +Example:
-> > +dac@0 {
-> > +	compatible = "lltc,ltc1660";
-> > +	reg = <0>;
-> > +	spi-max-frequency = <5000000>;
-> > +	vref-supply = <&vref_reg>;
-> > +};
-> > -- 
-> > 2.11.0.rc2
-> >   
+> Notes:
+>     v2:
+>     	- rename enumerated files, ltc166x* -> ltc1660*
+> 
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9276da915d9d..3db1edaf68bd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8363,6 +8363,13 @@ L:	linux-scsi@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/scsi/sym53c8xx_2/
+>  
+> +LTC1660 DAC DRIVER
+> +M:	Marcus Folkesson <marcus.folkesson@gmail.com>
+> +L:	linux-iio@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/iio/dac/ltc1660.txt
+> +F:	drivers/iio/dac/ltc1660.c
+> +
+>  LTC4261 HARDWARE MONITOR DRIVER
+>  M:	Guenter Roeck <linux@roeck-us.net>
+>  L:	linux-hwmon@vger.kernel.org
