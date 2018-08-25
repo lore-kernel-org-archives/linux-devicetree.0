@@ -1,155 +1,59 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] iio: adc: sc27xx: Add ADC scale calibration
-Date: Sat, 25 Aug 2018 09:43:57 +0100
-Message-ID: <20180825094357.6425ab4a@archlinux>
-References: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
-        <cc6b76c5d660818d3ff7833ea5be4f32ed960f54.1535103920.git.baolin.wang@linaro.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v9 0/4] drm/atmel-hlcdc: bus-width override support
+Date: Sat, 25 Aug 2018 10:56:16 +0200
+Message-ID: <20180825085620.10566-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cc6b76c5d660818d3ff7833ea5be4f32ed960f54.1535103920.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Aug 2018 17:53:16 +0800
-Baolin Wang <baolin.wang@linaro.org> wrote:
+Hi!
 
-> This patch adds support to read calibration values from the eFuse
-> controller to calibrate the ADC channel scales, which can make ADC
-> sample data more accurate.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-This looks good to me.  I'll leave it for now though given open questions
-on patch 1 and to allow others time to comment on this if they wish -
-particularly as it includes a binding addition.
+The background for these patches is that our PCB interface between
+the SAMA5D3 and the ds90c185 lvds encoder is only using 16 bits, and
+this has to be described somewhere, or the atmel-hlcdc driver have no
+chance of selecting the correct output mode. Since we have similar
+problems with a tda19988 HDMI encoder I added patches to override
+the atmel-hlcdc output format via DT properties compatible with the
+media video-interface binding and things start to play together.
 
-Jonathan
+Cheers,
+Peter
 
-> ---
->  .../bindings/iio/adc/sprd,sc27xx-adc.txt           |    4 ++
->  drivers/iio/adc/sc27xx_adc.c                       |   52 ++++++++++++++++++--
->  2 files changed, 53 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
-> index 8aad960..b4daa15 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/sprd,sc27xx-adc.txt
-> @@ -12,6 +12,8 @@ Required properties:
->  - interrupts: The interrupt number for the ADC device.
->  - #io-channel-cells: Number of cells in an IIO specifier.
->  - hwlocks: Reference to a phandle of a hwlock provider node.
-> +- nvmem-cells: A phandle to the calibration cells provided by eFuse device.
-> +- nvmem-cell-names: Should be "big_scale_calib", "small_scale_calib".
->  
->  Example:
->  
-> @@ -32,5 +34,7 @@ Example:
->  			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
->  			#io-channel-cells = <1>;
->  			hwlocks = <&hwlock 4>;
-> +			nvmem-cells = <&adc_big_scale>, <&adc_small_scale>;
-> +			nvmem-cell-names = "big_scale_calib", "small_scale_calib";
->  		};
->  	};
-> diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
-> index 153c311..7ac78eda 100644
-> --- a/drivers/iio/adc/sc27xx_adc.c
-> +++ b/drivers/iio/adc/sc27xx_adc.c
-> @@ -5,6 +5,7 @@
->  #include <linux/iio/iio.h>
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/platform_device.h>
-> @@ -87,16 +88,48 @@ struct sc27xx_adc_linear_graph {
->   * should use the small-scale graph, and if more than 1.2v, we should use the
->   * big-scale graph.
->   */
-> -static const struct sc27xx_adc_linear_graph big_scale_graph = {
-> +static struct sc27xx_adc_linear_graph big_scale_graph = {
->  	4200, 3310,
->  	3600, 2832,
->  };
->  
-> -static const struct sc27xx_adc_linear_graph small_scale_graph = {
-> +static struct sc27xx_adc_linear_graph small_scale_graph = {
->  	1000, 3413,
->  	100, 341,
->  };
->  
-> +static const struct sc27xx_adc_linear_graph big_scale_graph_calib = {
-> +	4200, 856,
-> +	3600, 733,
-> +};
-> +
-> +static const struct sc27xx_adc_linear_graph small_scale_graph_calib = {
-> +	1000, 833,
-> +	100, 80,
-> +};
-> +
-> +static int sc27xx_adc_get_calib_data(u32 calib_data, int calib_adc)
-> +{
-> +	return ((calib_data & 0xff) + calib_adc - 128) * 4;
-> +}
-> +
-> +static void
-> +sc27xx_adc_scale_calibration(const struct sc27xx_adc_linear_graph *calib_graph,
-> +			     u32 calib_data, bool big_scale)
-> +{
-> +	struct sc27xx_adc_linear_graph *graph;
-> +
-> +	if (big_scale)
-> +		graph = &big_scale_graph;
-> +	else
-> +		graph = &small_scale_graph;
-> +
-> +	/* Only need to calibrate the adc values in the linear graph. */
-> +	graph->adc0 = sc27xx_adc_get_calib_data(calib_data, calib_graph->adc0);
-> +	graph->adc1 = sc27xx_adc_get_calib_data(calib_data >> 8,
-> +						calib_graph->adc1);
-> +}
-> +
->  static int sc27xx_adc_get_ratio(int channel, int scale)
->  {
->  	switch (channel) {
-> @@ -209,7 +242,7 @@ static void sc27xx_adc_volt_ratio(struct sc27xx_adc_data *data,
->  	*div_denominator = ratio & SC27XX_RATIO_DENOMINATOR_MASK;
->  }
->  
-> -static int sc27xx_adc_to_volt(const struct sc27xx_adc_linear_graph *graph,
-> +static int sc27xx_adc_to_volt(struct sc27xx_adc_linear_graph *graph,
->  			      int raw_adc)
->  {
->  	int tmp;
-> @@ -371,6 +404,7 @@ static int sc27xx_adc_write_raw(struct iio_dev *indio_dev,
->  
->  static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
->  {
-> +	u32 val;
->  	int ret;
->  
->  	ret = regmap_update_bits(data->regmap, SC27XX_MODULE_EN,
-> @@ -390,6 +424,18 @@ static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
->  	if (ret)
->  		goto disable_clk;
->  
-> +	/* ADC channel scales' calibration from nvmem device */
-> +	ret = nvmem_cell_read_u32(data->dev, "big_scale_calib", &val);
-> +	if (ret)
-> +		goto disable_clk;
-> +
-> +	sc27xx_adc_scale_calibration(&big_scale_graph_calib, val, true);
-> +
-> +	ret = nvmem_cell_read_u32(data->dev, "small_scale_calib", &val);
-> +	if (ret)
-> +		goto disable_clk;
-> +
-> +	sc27xx_adc_scale_calibration(&small_scale_graph_calib, val, false);
->  	return 0;
->  
->  disable_clk:
+Changes since v8  https://lkml.org/lkml/2018/8/10/309
+- go back to the solution in v7 (but the ep device_node leak fixed)
+  for patch 4/4
+- redo (part of) 3/4 w/o using the disliked of_graph_parse_endpoint
+
+Changes since v7  https://lkml.org/lkml/2018/8/4/288
+- The ep device_node was leaked in v7 patch 3/3, so add patch 3/4
+  which simplifies fixing this in patch 4/4 (and adds flexibility)
+  and adjust patch 4/4 to the changes done in the new 3/4.
+- return -ENOMEM on allocation failure in patch 4/4
+
+Changes since v6  https://lkml.org/lkml/2018/8/3/333
+- zap bus-type from the binding in patch 2/3
+
+Changes since (the shortened) v5  https://lkml.org/lkml/2018/8/3/182
+- add reg properties (and #*-cells) to the example in patch 2/3
+- prohibit bus-width 0 in the device-tree in patch 3/3
+- added reviewed-by from Jacopo to patch 2/3 and 3/3
+
+Peter Rosin (4):
+  dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
+  dt-bindings: display: atmel: optional video-interface of endpoints
+  drm/atmel-hlcdc: always iterate over the first 4 output endpoints
+  drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
+
+ .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 23 ++++++
+ .../bindings/display/bridge/lvds-transmitter.txt   |  8 +-
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     | 70 +++++++++++-----
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |  1 +
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   | 92 +++++++++++++++++++---
+ 5 files changed, 163 insertions(+), 31 deletions(-)
+
+-- 
+2.11.0
