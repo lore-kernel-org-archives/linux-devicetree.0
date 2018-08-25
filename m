@@ -1,56 +1,145 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: add entry for ltc1660 DAC driver
-Date: Sat, 25 Aug 2018 09:27:54 +0100
-Message-ID: <20180825092754.109510f2@archlinux>
-References: <20180821193126.15733-1-marcus.folkesson@gmail.com>
-        <20180821193126.15733-3-marcus.folkesson@gmail.com>
+Subject: Re: [PATCH 1/2] iio: adc: sc27xx: Add raw data support
+Date: Sat, 25 Aug 2018 09:38:41 +0100
+Message-ID: <20180825093841.72a5d099@archlinux>
+References: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180821193126.15733-3-marcus.folkesson@gmail.com>
+In-Reply-To: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Aug 2018 21:31:26 +0200
-Marcus Folkesson <marcus.folkesson@gmail.com> wrote:
+On Fri, 24 Aug 2018 17:53:15 +0800
+Baolin Wang <baolin.wang@linaro.org> wrote:
 
-> Add entry for ltc1660 DAC driver and add myself as
-> maintainer of this driver.
+> The headset device will use channel 20 of ADC controller to detect events,
+> but it needs the raw ADC data to do conversion according to its own formula.
 > 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-Applied.
+> Thus we should configure the channel mask separately and configure channel
+> 20 as IIO_CHAN_INFO_RAW, as well as adding raw data read support.
 
-Thanks,
+So is this a general thing, i.e. that channel is 'meant' to be used for the
+headset, or just a one off for a particular board?
 
-Jonathan
+If it is a general thing, than I'm fine with this (unlikely we'll break any
+other users), but if not we need to find a nicer way to do it.
+I am a little unclear on how a channel would provide the voltage on it's pin
+but that could be wrong when used for a different purpose?
+If it's just a matter of unusual loading characteristics then perhaps that
+is valid, but I'd like to understand this a little.
 
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
+>  drivers/iio/adc/sc27xx_adc.c |   80 ++++++++++++++++++++++++------------------
+>  1 file changed, 45 insertions(+), 35 deletions(-)
 > 
-> Notes:
->     v2:
->     	- rename enumerated files, ltc166x* -> ltc1660*
-> 
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9276da915d9d..3db1edaf68bd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8363,6 +8363,13 @@ L:	linux-scsi@vger.kernel.org
->  S:	Maintained
->  F:	drivers/scsi/sym53c8xx_2/
+> diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+> index 2b60efe..153c311 100644
+> --- a/drivers/iio/adc/sc27xx_adc.c
+> +++ b/drivers/iio/adc/sc27xx_adc.c
+> @@ -273,6 +273,17 @@ static int sc27xx_adc_read_raw(struct iio_dev *indio_dev,
+>  	int ret, tmp;
 >  
-> +LTC1660 DAC DRIVER
-> +M:	Marcus Folkesson <marcus.folkesson@gmail.com>
-> +L:	linux-iio@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-> +F:	drivers/iio/dac/ltc1660.c
+>  	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		mutex_lock(&indio_dev->mlock);
+> +		ret = sc27xx_adc_read(data, chan->channel, scale, &tmp);
+> +		mutex_unlock(&indio_dev->mlock);
 > +
->  LTC4261 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = tmp;
+> +		return IIO_VAL_INT;
+> +
+>  	case IIO_CHAN_INFO_PROCESSED:
+>  		mutex_lock(&indio_dev->mlock);
+>  		ret = sc27xx_adc_read_processed(data, chan->channel, scale,
+> @@ -315,48 +326,47 @@ static int sc27xx_adc_write_raw(struct iio_dev *indio_dev,
+>  	.write_raw = &sc27xx_adc_write_raw,
+>  };
+>  
+> -#define SC27XX_ADC_CHANNEL(index) {				\
+> +#define SC27XX_ADC_CHANNEL(index, mask) {			\
+>  	.type = IIO_VOLTAGE,					\
+>  	.channel = index,					\
+> -	.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |	\
+> -			      BIT(IIO_CHAN_INFO_SCALE),		\
+> +	.info_mask_separate = mask | BIT(IIO_CHAN_INFO_SCALE),	\
+>  	.datasheet_name = "CH##index",				\
+>  	.indexed = 1,						\
+>  }
+>  
+>  static const struct iio_chan_spec sc27xx_channels[] = {
+> -	SC27XX_ADC_CHANNEL(0),
+> -	SC27XX_ADC_CHANNEL(1),
+> -	SC27XX_ADC_CHANNEL(2),
+> -	SC27XX_ADC_CHANNEL(3),
+> -	SC27XX_ADC_CHANNEL(4),
+> -	SC27XX_ADC_CHANNEL(5),
+> -	SC27XX_ADC_CHANNEL(6),
+> -	SC27XX_ADC_CHANNEL(7),
+> -	SC27XX_ADC_CHANNEL(8),
+> -	SC27XX_ADC_CHANNEL(9),
+> -	SC27XX_ADC_CHANNEL(10),
+> -	SC27XX_ADC_CHANNEL(11),
+> -	SC27XX_ADC_CHANNEL(12),
+> -	SC27XX_ADC_CHANNEL(13),
+> -	SC27XX_ADC_CHANNEL(14),
+> -	SC27XX_ADC_CHANNEL(15),
+> -	SC27XX_ADC_CHANNEL(16),
+> -	SC27XX_ADC_CHANNEL(17),
+> -	SC27XX_ADC_CHANNEL(18),
+> -	SC27XX_ADC_CHANNEL(19),
+> -	SC27XX_ADC_CHANNEL(20),
+> -	SC27XX_ADC_CHANNEL(21),
+> -	SC27XX_ADC_CHANNEL(22),
+> -	SC27XX_ADC_CHANNEL(23),
+> -	SC27XX_ADC_CHANNEL(24),
+> -	SC27XX_ADC_CHANNEL(25),
+> -	SC27XX_ADC_CHANNEL(26),
+> -	SC27XX_ADC_CHANNEL(27),
+> -	SC27XX_ADC_CHANNEL(28),
+> -	SC27XX_ADC_CHANNEL(29),
+> -	SC27XX_ADC_CHANNEL(30),
+> -	SC27XX_ADC_CHANNEL(31),
+> +	SC27XX_ADC_CHANNEL(0, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(1, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(2, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(3, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(4, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(5, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(6, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(7, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(8, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(9, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(10, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(11, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(12, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(13, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(14, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(15, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(16, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(17, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(18, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(19, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(20, BIT(IIO_CHAN_INFO_RAW)),
+> +	SC27XX_ADC_CHANNEL(21, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(22, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(23, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(24, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(25, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(26, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(27, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(28, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(29, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(30, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(31, BIT(IIO_CHAN_INFO_PROCESSED)),
+>  };
+>  
+>  static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
