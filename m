@@ -1,265 +1,70 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v9 4/4] drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
-Date: Sat, 25 Aug 2018 10:56:20 +0200
-Message-ID: <20180825085620.10566-5-peda@axentia.se>
-References: <20180825085620.10566-1-peda@axentia.se>
+From: Emmanuel Vadot <manu@bidouilliste.com>
+Subject: Re: [PATCH 1/7] dt-bindings: Add DT bindings documentation for
+ Allwinner Thermal Sensor Controller
+Date: Sat, 25 Aug 2018 17:42:48 +0200
+Message-ID: <20180825174248.c76565fe20a3457e3c766d1a@bidouilliste.com>
+References: <66249ae2a698cdc7@bloch.sibelius.xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180825085620.10566-1-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Boris Brezillon <boris.brezillon@bootlin.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <66249ae2a698cdc7@bloch.sibelius.xs4all.nl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Kettenis <mark.kettenis@xs4all.nl>
+Cc: Emmanuel Vadot <manu@freebsd.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This beats the heuristic that the connector is involved in what format
-should be output for cases where this fails.
 
-E.g. if there is a bridge that changes format between the encoder and the
-connector, or if some of the RGB pins between the lcd controller and the
-encoder are not routed on the PCB.
+ Hi Mark,
 
-This is critical for the devices that have the "conflicting output
-formats" issue (SAM9N12, SAM9X5, SAMA5D3), since the most significant
-RGB bits move around depending on the selected output mode. For
-devices that do not have the "conflicting output formats" issue
-(SAMA5D2, SAMA5D4), this is completely irrelevant.
+On Sat, 25 Aug 2018 13:07:40 +0200 (CEST)
+Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
 
-Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c   | 70 +++++++++++++++------
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h     |  1 +
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 77 +++++++++++++++++++++---
- 3 files changed, 120 insertions(+), 28 deletions(-)
+> Hi Emmanuel,
+> 
+> I think the following bit in your proposed binding is wrong:
+> 
+> +- #thermal-sensor-cells : Depend on the SoC
+> +   For H3 should be 0
+> +   For H5 should be 1
+> +   For A64 should be 2
+> +   See ./thermal.txt for a description.
+> 
+> I think what you're trying to say here is that H3 has a single sensor
+> and that H5 and A64 have more sensors.  But even though the number of
+> sensors is different for H5 and A64 (two for H3, three for A64) you
+> need only a single cell to describe which sensor to read.  So
+> #thermal-sensors-cells should be 1 for both H5 and A64.
 
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-index d73281095fac..c38a479ada98 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -226,6 +226,55 @@ static void atmel_hlcdc_crtc_atomic_enable(struct drm_crtc *c,
- #define ATMEL_HLCDC_RGB888_OUTPUT	BIT(3)
- #define ATMEL_HLCDC_OUTPUT_MODE_MASK	GENMASK(3, 0)
- 
-+static int atmel_hlcdc_connector_output_mode(struct drm_connector_state *state)
-+{
-+	struct drm_connector *connector = state->connector;
-+	struct drm_display_info *info = &connector->display_info;
-+	struct drm_encoder *encoder;
-+	unsigned int supported_fmts = 0;
-+	int j;
-+
-+	encoder = state->best_encoder;
-+	if (!encoder)
-+		encoder = connector->encoder;
-+
-+	switch (atmel_hlcdc_encoder_get_bus_fmt(encoder)) {
-+	case 0:
-+		break;
-+	case MEDIA_BUS_FMT_RGB444_1X12:
-+		return ATMEL_HLCDC_RGB444_OUTPUT;
-+	case MEDIA_BUS_FMT_RGB565_1X16:
-+		return ATMEL_HLCDC_RGB565_OUTPUT;
-+	case MEDIA_BUS_FMT_RGB666_1X18:
-+		return ATMEL_HLCDC_RGB666_OUTPUT;
-+	case MEDIA_BUS_FMT_RGB888_1X24:
-+		return ATMEL_HLCDC_RGB888_OUTPUT;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	for (j = 0; j < info->num_bus_formats; j++) {
-+		switch (info->bus_formats[j]) {
-+		case MEDIA_BUS_FMT_RGB444_1X12:
-+			supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB565_1X16:
-+			supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB666_1X18:
-+			supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
-+			break;
-+		case MEDIA_BUS_FMT_RGB888_1X24:
-+			supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return supported_fmts;
-+}
-+
- static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
- {
- 	unsigned int output_fmts = ATMEL_HLCDC_OUTPUT_MODE_MASK;
-@@ -238,31 +287,12 @@ static int atmel_hlcdc_crtc_select_output_mode(struct drm_crtc_state *state)
- 	crtc = drm_crtc_to_atmel_hlcdc_crtc(state->crtc);
- 
- 	for_each_new_connector_in_state(state->state, connector, cstate, i) {
--		struct drm_display_info *info = &connector->display_info;
- 		unsigned int supported_fmts = 0;
--		int j;
- 
- 		if (!cstate->crtc)
- 			continue;
- 
--		for (j = 0; j < info->num_bus_formats; j++) {
--			switch (info->bus_formats[j]) {
--			case MEDIA_BUS_FMT_RGB444_1X12:
--				supported_fmts |= ATMEL_HLCDC_RGB444_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB565_1X16:
--				supported_fmts |= ATMEL_HLCDC_RGB565_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB666_1X18:
--				supported_fmts |= ATMEL_HLCDC_RGB666_OUTPUT;
--				break;
--			case MEDIA_BUS_FMT_RGB888_1X24:
--				supported_fmts |= ATMEL_HLCDC_RGB888_OUTPUT;
--				break;
--			default:
--				break;
--			}
--		}
-+		supported_fmts = atmel_hlcdc_connector_output_mode(cstate);
- 
- 		if (crtc->dc->desc->conflicting_output_formats)
- 			output_fmts &= supported_fmts;
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-index 60c937f42114..4cc1e03f0aee 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h
-@@ -441,5 +441,6 @@ void atmel_hlcdc_crtc_irq(struct drm_crtc *c);
- int atmel_hlcdc_crtc_create(struct drm_device *dev);
- 
- int atmel_hlcdc_create_outputs(struct drm_device *dev);
-+int atmel_hlcdc_encoder_get_bus_fmt(struct drm_encoder *encoder);
- 
- #endif /* DRM_ATMEL_HLCDC_H */
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-index c05c2b744981..f73d8a92274e 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-@@ -27,33 +27,94 @@
- 
- #include "atmel_hlcdc_dc.h"
- 
-+struct atmel_hlcdc_rgb_output {
-+	struct drm_encoder encoder;
-+	int bus_fmt;
-+};
-+
- static const struct drm_encoder_funcs atmel_hlcdc_panel_encoder_funcs = {
- 	.destroy = drm_encoder_cleanup,
- };
- 
-+static struct atmel_hlcdc_rgb_output *
-+atmel_hlcdc_encoder_to_rgb_output(struct drm_encoder *encoder)
-+{
-+	return container_of(encoder, struct atmel_hlcdc_rgb_output, encoder);
-+}
-+
-+int atmel_hlcdc_encoder_get_bus_fmt(struct drm_encoder *encoder)
-+{
-+	struct atmel_hlcdc_rgb_output *output;
-+
-+	output = atmel_hlcdc_encoder_to_rgb_output(encoder);
-+
-+	return output->bus_fmt;
-+}
-+
-+static int atmel_hlcdc_of_bus_fmt(const struct device_node *ep)
-+{
-+	u32 bus_width;
-+	int ret;
-+
-+	ret = of_property_read_u32(ep, "bus-width", &bus_width);
-+	if (ret == -EINVAL)
-+		return 0;
-+	if (ret)
-+		return ret;
-+
-+	switch (bus_width) {
-+	case 12:
-+		return MEDIA_BUS_FMT_RGB444_1X12;
-+	case 16:
-+		return MEDIA_BUS_FMT_RGB565_1X16;
-+	case 18:
-+		return MEDIA_BUS_FMT_RGB666_1X18;
-+	case 24:
-+		return MEDIA_BUS_FMT_RGB888_1X24;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
- {
--	struct drm_encoder *encoder;
-+	struct atmel_hlcdc_rgb_output *output;
-+	struct device_node *ep;
- 	struct drm_panel *panel;
- 	struct drm_bridge *bridge;
- 	int ret;
- 
-+	ep = of_graph_get_endpoint_by_regs(dev->dev->of_node, 0, endpoint);
-+	if (!ep)
-+		return -ENODEV;
-+
- 	ret = drm_of_find_panel_or_bridge(dev->dev->of_node, 0, endpoint,
- 					  &panel, &bridge);
--	if (ret)
-+	if (ret) {
-+		of_node_put(ep);
- 		return ret;
-+	}
- 
--	encoder = devm_kzalloc(dev->dev, sizeof(*encoder), GFP_KERNEL);
--	if (!encoder)
-+	output = devm_kzalloc(dev->dev, sizeof(*output), GFP_KERNEL);
-+	if (!output) {
-+		of_node_put(ep);
-+		return -ENOMEM;
-+	}
-+
-+	output->bus_fmt = atmel_hlcdc_of_bus_fmt(ep);
-+	of_node_put(ep);
-+	if (output->bus_fmt < 0) {
-+		dev_err(dev->dev, "endpoint %d: invalid bus width\n", endpoint);
- 		return -EINVAL;
-+	}
- 
--	ret = drm_encoder_init(dev, encoder,
-+	ret = drm_encoder_init(dev, &output->encoder,
- 			       &atmel_hlcdc_panel_encoder_funcs,
- 			       DRM_MODE_ENCODER_NONE, NULL);
- 	if (ret)
- 		return ret;
- 
--	encoder->possible_crtcs = 0x1;
-+	output->encoder.possible_crtcs = 0x1;
- 
- 	if (panel) {
- 		bridge = drm_panel_bridge_add(panel, DRM_MODE_CONNECTOR_Unknown);
-@@ -62,7 +123,7 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
- 	}
- 
- 	if (bridge) {
--		ret = drm_bridge_attach(encoder, bridge, NULL);
-+		ret = drm_bridge_attach(&output->encoder, bridge, NULL);
- 		if (!ret)
- 			return 0;
- 
-@@ -70,7 +131,7 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev, int endpoint)
- 			drm_panel_bridge_remove(bridge);
- 	}
- 
--	drm_encoder_cleanup(encoder);
-+	drm_encoder_cleanup(&output->encoder);
- 
- 	return ret;
- }
+ You might be right, this part wasn't really clear for me reading the
+thermal binding docs. Can someone double-confirm that ?
+
+> As far as I can see this proposed binding is compatible with the
+> OpenBSD's sxitemp(4) driver. 
+
+ Go to know.
+
+> That driver also supports the R40 with
+> "allwinner,sun8i-r40-ths" as the compatible string.  The R40 has two
+> sensors so #thermal-sensor-cells should be 1 for this SoC as well.
+
+ I don't have R40 board, I guess the best thing will be for you to send
+a patch to update the binding docs and dts when this serie will be
+merged/acked.
+
+> Cheers,
+> 
+> Mark
+
+ Cheers,
+
 -- 
-2.11.0
+Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
