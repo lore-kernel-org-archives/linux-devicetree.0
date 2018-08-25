@@ -1,86 +1,77 @@
-From: Emmanuel Vadot <manu@bidouilliste.com>
-Subject: Re: [PATCH 1/7] dt-bindings: Add DT bindings documentation for
- Allwinner Thermal Sensor Controller
-Date: Sat, 25 Aug 2018 17:49:02 +0200
-Message-ID: <20180825174902.f23f704a67d1b0cc57a640f5@bidouilliste.com>
-References: <66249ae2a698cdc7@bloch.sibelius.xs4all.nl>
- <20180825174248.c76565fe20a3457e3c766d1a@bidouilliste.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180825174248.c76565fe20a3457e3c766d1a@bidouilliste.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Afonso Bordado <afonsobordado@az8.co>
+Subject: [PATCH 2/4] iio: gyro: add device tree support for fxas21002c
+Date: Sat, 25 Aug 2018 22:19:08 +0100
+Message-ID: <20180825211910.22929-2-afonsobordado@az8.co>
+References: <20180825211910.22929-1-afonsobordado@az8.co>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180825211910.22929-1-afonsobordado@az8.co>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 25 Aug 2018 17:42:48 +0200
-Emmanuel Vadot <manu@bidouilliste.com> wrote:
+This patch adds device tree support for the fxas21002c driver, including
+bindings.
 
-> 
->  Hi Mark,
-> 
-> On Sat, 25 Aug 2018 13:07:40 +0200 (CEST)
-> Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> 
-> > Hi Emmanuel,
-> > 
-> > I think the following bit in your proposed binding is wrong:
-> > 
-> > +- #thermal-sensor-cells : Depend on the SoC
-> > +   For H3 should be 0
-> > +   For H5 should be 1
-> > +   For A64 should be 2
-> > +   See ./thermal.txt for a description.
-> > 
-> > I think what you're trying to say here is that H3 has a single sensor
-> > and that H5 and A64 have more sensors.  But even though the number of
-> > sensors is different for H5 and A64 (two for H3, three for A64) you
-> > need only a single cell to describe which sensor to read.  So
-> > #thermal-sensors-cells should be 1 for both H5 and A64.
-> 
->  You might be right, this part wasn't really clear for me reading the
-> thermal binding docs. Can someone double-confirm that ?
+Signed-off-by: Afonso Bordado <afonsobordado@az8.co>
+---
+ .../bindings/iio/gyroscope/fsl,fxas21002c.txt        | 12 ++++++++++++
+ drivers/iio/gyro/fxas21002c.c                        | 10 +++++++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
 
- Re-reading the doc with this information and now it's clear, I'll
-correct this in the new serie.
-
-> > As far as I can see this proposed binding is compatible with the
-> > OpenBSD's sxitemp(4) driver. 
-> 
->  Go to know.
-> 
-> > That driver also supports the R40 with
-> > "allwinner,sun8i-r40-ths" as the compatible string.  The R40 has two
-> > sensors so #thermal-sensor-cells should be 1 for this SoC as well.
-> 
->  I don't have R40 board, I guess the best thing will be for you to send
-> a patch to update the binding docs and dts when this serie will be
-> merged/acked.
-> 
-> > Cheers,
-> > 
-> > Mark
-> 
->  Cheers,
-> 
-> -- 
-> Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
+new file mode 100644
+index 000000000000..62f8c1bad85a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
+@@ -0,0 +1,12 @@
++* Freescale FXAS21002C Digital Angular Rate Gyroscope
++
++Required properties:
++
++  - compatible: must be "fsl,fxas21002c"
++  - reg : the I2C address of the sensor
++
++Example:
++gyroscope@0 {
++       compatible = "fsl,fxas21002c";
++       reg = <0x20>;
++};
+diff --git a/drivers/iio/gyro/fxas21002c.c b/drivers/iio/gyro/fxas21002c.c
+index 7626b2f88d72..6fef210630e0 100644
+--- a/drivers/iio/gyro/fxas21002c.c
++++ b/drivers/iio/gyro/fxas21002c.c
+@@ -8,7 +8,6 @@
+  * Datasheet: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
+  * TODO:
+  *        ODR / Scale Support
+- *        Devicetree
+  *        Power management
+  *        LowPass/HighPass Filters
+  *        Buffers
+@@ -340,6 +339,14 @@ static int fxas21002c_remove(struct i2c_client *client)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id fxas21002c_of_ids[] = {
++	{.compatible = "fsl,fxas21002c"},
++	{}
++};
++MODULE_DEVICE_TABLE(of, fxas21002c_of_ids);
++#endif
++
+ static const struct i2c_device_id fxas21002c_id[] = {
+ 	{"fxas21002c", ID_FXAS21002C},
+ 	{}
+@@ -350,6 +357,7 @@ MODULE_DEVICE_TABLE(i2c, fxas21002c_id);
+ static struct i2c_driver fxas21002c_driver = {
+ 	.driver = {
+ 		.name = FXAS21002C_DRV_NAME,
++		.of_match_table = of_match_ptr(fxas21002c_of_ids),
+ 	},
+ 	.probe		= fxas21002c_probe,
+ 	.remove		= fxas21002c_remove,
 -- 
-Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
+2.18.0
