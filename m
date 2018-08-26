@@ -1,69 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to GPIO
-Date: Sun, 26 Aug 2018 16:33:15 +0200
-Message-ID: <CACRpkdb+Opdn1eWZSRydS1Bafpqwcg83xEcT-YJC6D-kSSi1ew@mail.gmail.com>
-References: <20180817163849.30750-1-ilina@codeaurora.org> <20180817163849.30750-2-ilina@codeaurora.org>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v1 7/7] drm: add Atmel LCDC display controller support
+Date: Sun, 26 Aug 2018 16:58:01 +0200
+Message-ID: <20180826145801.GA18144@ravnborg.org>
+References: <20180812184152.GA22343@ravnborg.org>
+ <20180812184629.3808-7-sam@ravnborg.org>
+ <8581453a-8abe-c321-17c1-493f805510b1@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180817163849.30750-2-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ilina@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@kernel.org>, evgreen@chromium.org, rplsssn@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <8581453a-8abe-c321-17c1-493f805510b1@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 17, 2018 at 6:39 PM Lina Iyer <ilina@codeaurora.org> wrote:
-
-> QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
-> domain can wakeup the SoC, when interrupts and GPIOs are routed to the
-> its interrupt controller. Only select GPIOs that are deemed wakeup
-> capable are routed to specific PDC pins. During low power state, the
-> pinmux interrupt controller may be non-functional but the PDC would be.
-> The PDC can detect the wakeup GPIO is triggered and bring the TLMM to an
-> operational state.
->
-> Interrupts that are level triggered will be detected at the TLMM when
-> the controller becomes operational. Edge interrupts however need to be
-> replayed again.
->
-> Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
-> but keep it disabled. During suspend, we can enable the PDC IRQ instead
-> of the GPIO IRQ, which may or not be detected.
->
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
-> Changes in v1:
->         - Trigger GPIO in h/w from PDC IRQ handler
->         - Avoid big tables for GPIO-PDC map, pick from DT instead
->         - Use handler_data
-
-Just for the record this is an impressive and much needed patch
-set, no other SoC developer has yet taken on the task of making this
-work so I very much appreciate that Qualcomm show the way.
-
-> +static int msm_gpio_pdc_pin_request(struct irq_data *d)
-> +static int msm_gpio_pdc_pin_release(struct irq_data *d)
-> +static int msm_gpio_irq_reqres(struct irq_data *d)
-> +{
-(...)
-> +       if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
-(...)
-> +static void msm_gpio_irq_relres(struct irq_data *d)
-> +{
-> +       gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
-> +}
-
-FYI Hans Verkuil is working on a patch set that moves the
-lock/unlock as IRQ call to the irqchip request() and release()
-functions so we can switch a GPIO irqchip line from IRQ
-mode to say output at runtime without too much trouble.
-(CEC needs this.)
-
-I suspect that will make your work easier?
-
-Hans can you include Lina in the loop for your patches
-so she can take that into accoun because I think we might
-need that as a base for this.
-
-Yours,
-Linus Walleij
+SGkgTm9yYWxmLgoKPiA+Ky8qIENvbmZpZ3VyYXRpb24gb2YgaW5kaXZpZHVhbCBDUFUncyAqLwo+
+ID4rc3RhdGljIGNvbnN0IHN0cnVjdCBhdG1lbF9sY2RjX2RjX2Rlc2MgYXRtZWxfbGNkY19kY19h
+dDkxc2FtOTI2MSA9IHsKPiA+KwkuZ3VhcmRfdGltZSA9IDEsCj4gPisJLmZpZm9fc2l6ZSA9IDUx
+MiwKPiA+KwkubWluX3dpZHRoID0gMCwKPiA+KwkubWluX2hlaWdodCA9IDAsCj4gCj4gTG9va3Mg
+bGlrZSB0aGUgbWluaW11bSBpcyBhbHdheXMgemVybywgbWF5YmUgZHJvcCBpdD8KSSBrZXB0IGlz
+IGF0IGluIHJlYWxpdHkgMCBpcyBub3QgYW4gT0sgdmFsdWUuCldpbGwgcmV2aXNpdCB0aGUgZGF0
+YXNoZWV0cyBhbmQgY2hlY2sgd2hhdCB0aGV5IHNheS4KCkFzIGZvciBhbGwgdGhlIG90aGVyIGNv
+bW1lbnRzIC0gdGhhbmtzIQpJIHdpbGwgYWRkcmVzcyB0aGVtIGluIHYyLgoKQ3VycmVudGx5IHdv
+cmtpbmcgb24gYSBsYXJnZXIgcmVmYWN0b3JpbmcgdG8gYWRkcmVzcyBhbGwKdGhlIGZlZWRiYWNr
+LgpUaGluZ3MgYmVjb21lcyBzaW1wbGVyIHdoaWNoIGlzIGFsd2F5cyBnb29kLgoKCVNhbQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
