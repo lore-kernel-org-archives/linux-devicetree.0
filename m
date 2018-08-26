@@ -1,79 +1,161 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v1 7/7] drm: add Atmel LCDC display controller support
-Date: Sun, 26 Aug 2018 20:41:21 +0200
-Message-ID: <20180826184121.GA24867@ravnborg.org>
-References: <20180812184152.GA22343@ravnborg.org>
- <20180812184629.3808-7-sam@ravnborg.org>
- <20180824143125.4e99e791@bbrezillon>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 6/8] kbuild: consolidate Devicetree dtb build rules
+Date: Sun, 26 Aug 2018 18:56:14 -0500
+Message-ID: <CAL_JsqJJ6DCT8AjVYqkbFuJ+fO0VmVch24B=XRp4pJPkUQYAww@mail.gmail.com>
+References: <20180821215524.23040-1-robh@kernel.org> <20180821215524.23040-7-robh@kernel.org>
+ <CAK7LNATcYSvwh0BEEdyUuDa_Y9X-AqQAzA5MrbNhOSMmSzqhTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180824143125.4e99e791@bbrezillon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-pwm@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATcYSvwh0BEEdyUuDa_Y9X-AqQAzA5MrbNhOSMmSzqhTg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Ley Foon Tan <lftan@altera.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMuCgpWZXJ5IHVzZWZ1bGwgZmVlZGJhY2shCkkgYW0gd29ya2luZyBvbiB2MiwgYW5k
-IGhhdmUgYWRkcmVzc2VkIHlvdXIgcmV2aWV3IGl0ZW1zLgpKdXN0IGEgZmV3IGNvbW1lbnRzIGJl
-bG93IHRvIGEgZmV3IGl0ZW1zLgpUaGUgcmVzdCBpcyBwcm9jZXNzZWQvZG9uZS4KCkkgaG9wZSB0
-byBwb3N0IHYyIGluIHRoZSB3ZWVrIHRvIGNvbWUuCgo+ID4gK3N0YXRpYyBpbnQgbGNkY19kY19s
-b2FkKHN0cnVjdCBkcm1fZGV2aWNlICpkcm0pCj4gPiArewo+ID4gKwljb25zdCBzdHJ1Y3Qgb2Zf
-ZGV2aWNlX2lkICptYXRjaDsKPiA+ICsJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldjsKPiA+
-ICsJc3RydWN0IGxjZGNfZGMgKmxjZGNfZGM7Cj4gPiArCXN0cnVjdCBkZXZpY2UgKmRldjsKPiA+
-ICsJaW50IHJldDsKPiA+ICsKPiA+ICsJZGV2ID0gZHJtLT5kZXY7Cj4gPiArCXBkZXYgPSB0b19w
-bGF0Zm9ybV9kZXZpY2UoZGV2KTsKPiA+ICsKPiA+ICsJbWF0Y2ggPSBvZl9tYXRjaF9ub2RlKGF0
-bWVsX2xjZGNfb2ZfbWF0Y2gsIGRldi0+cGFyZW50LT5vZl9ub2RlKTsKPiA+ICsJaWYgKCFtYXRj
-aCkgewo+ID4gKwkJRFJNX0RFVl9FUlJPUihkZXYsICJpbnZhbGlkIGNvbXBhdGlibGUgc3RyaW5n
-IChub2RlPSVzKSIsCj4gPiArCQkJICAgICAgZGV2LT5wYXJlbnQtPm9mX25vZGUtPm5hbWUpOwo+
-ID4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4gPiArCX0KPiA+ICsKPiA+ICsJaWYgKCFtYXRjaC0+ZGF0
-YSkgewo+ID4gKwkJRFJNX0RFVl9FUlJPUihkZXYsICJpbnZhbGlkIGxjZGNfZGMgZGVzY3JpcHRp
-b25cbiIpOwo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gPiArCX0KPiA+ICsKPiA+ICsJbGNkY19k
-YyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbGNkY19kYyksIEdGUF9LRVJORUwpOwo+ID4g
-KwlpZiAoIWxjZGNfZGMpIHsKPiA+ICsJCURSTV9ERVZfRVJST1IoZGV2LCAiRmFpbGVkIHRvIGFs
-bG9jYXRlIGxjZGNfZGNcbiIpOwo+ID4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gPiArCX0KPiA+ICsK
-PiA+ICsJLyogcmVzZXQgb2YgbGNkYyBtaWdodCBzbGVlcCBhbmQgcmVxdWlyZSBhIHByZWVtcHRp
-YmxlIHRhc2sgY29udGV4dCAqLwo+ID4gKwlJTklUX1dPUksoJmxjZGNfZGMtPnJlc2V0X2xjZGNf
-d29yaywgcmVzZXRfbGNkY193b3JrKTsKPiA+ICsKPiA+ICsJcGxhdGZvcm1fc2V0X2RydmRhdGEo
-cGRldiwgZHJtKTsKPiA+ICsJZGV2X3NldF9kcnZkYXRhKGRldiwgbGNkY19kYyk7Cj4gPiArCj4g
-PiArCWxjZGNfZGMtPm1mZF9sY2RjID0gZGV2X2dldF9kcnZkYXRhKGRldi0+cGFyZW50KTsKPiA+
-ICsJZHJtLT5kZXZfcHJpdmF0ZSA9IGxjZGNfZGM7Cj4gPiArCj4gPiArCWxjZGNfZGMtPnJlZ21h
-cCA9IGxjZGNfZGMtPm1mZF9sY2RjLT5yZWdtYXA7Cj4gPiArCWxjZGNfZGMtPmRlc2MgPSBtYXRj
-aC0+ZGF0YTsKPiA+ICsJbGNkY19kYy0+ZGV2ID0gZGV2Owo+ID4gKwo+ID4gKwlsY2RjX2RjLT5s
-Y2Rfc3VwcGx5ID0gZGV2bV9yZWd1bGF0b3JfZ2V0KGRldiwgImxjZCIpOwo+ID4gKwlpZiAoSVNf
-RVJSKGxjZGNfZGMtPmxjZF9zdXBwbHkpKSB7Cj4gPiArCQlEUk1fREVWX0VSUk9SKGRldiwgIkZh
-aWxlZCB0byBnZXQgbGNkLXN1cHBseSAoJWxkKVxuIiwKPiA+ICsJCQkgICAgICBQVFJfRVJSKGxj
-ZGNfZGMtPmxjZF9zdXBwbHkpKTsKPiA+ICsJCWxjZGNfZGMtPmxjZF9zdXBwbHkgPSBOVUxMOwo+
-ID4gKwl9Cj4gPiArCj4gPiArCWxjZGNfZGNfc3RhcnRfY2xvY2sobGNkY19kYyk7Cj4gCj4gSG0s
-IGRvIHlvdSByZWFsbHkgbmVlZCB0byBjYWxsIHRoYXQgaGVyZT8gSSdkIG1ha2UgaXQgcGFydCBv
-ZiB0aGUKPiBydW50aW1lIFBNIHJlc3VtZSBob29rLCBhbmQgcHV0IGEgbGNkY19kY19zdG9wX2Ns
-b2NrKCkgaW4gdGhlIHN1c3BlbmQKPiBob29rLgoKQXMgc3VnZ2VzdGVkIEkgaGF2ZSBpbnRyb2R1
-Y2VkIHN1c3BlbmQvcmVzdW1lIGhvb2tzIGFuZCBoYXZlIGluY2x1ZGVkCnN0YXJ0L3N0b3AgY2xv
-Y2sgY2FsbHMuCgpCdXQgYXMgdGhlIHN1c3BlbmQvcmVzdW1lIGhvb2tzIGRlcGVuZHMgb24gQ09O
-RklHX1BNX1NMRUVQIEkKc3RpbGwgbmVlZCB0aGUgZXhwbGljaXQgY2FsbCBpbiB0aGlzIGZ1bmN0
-aW9uLgoKPiA+ICsKPiA+ICsJcG1fcnVudGltZV9lbmFibGUoZGV2KTsKPiA+ICsKPiA+ICsJcmV0
-ID0gZHJtX3ZibGFua19pbml0KGRybSwgMSk7Cj4gPiArCWlmIChyZXQpIHsKPiA+ICsJCURSTV9E
-RVZfRVJST1IoZGV2LCAiZmFpbGVkIHRvIGluaXRpYWxpemUgdmJsYW5rICglZClcbiIsCj4gPiAr
-CQkJICAgICAgcmV0KTsKPiA+ICsJCWdvdG8gZXJyX3BtX3J1bnRpbWVfZGlzYWJsZTsKPiA+ICsJ
-fQo+ID4gKwo+ID4gKwlyZXQgPSBsY2RjX2RjX21vZGVzZXRfaW5pdChsY2RjX2RjLCBkcm0pOwo+
-ID4gKwlpZiAocmV0KSB7Cj4gPiArCQlEUk1fREVWX0VSUk9SKGRldiwgIm1vZGVzZXRfaW5pdCBm
-YWlsZWQgKCVkKSIsIHJldCk7Cj4gPiArCQlnb3RvIGVycl9wbV9ydW50aW1lX2Rpc2FibGU7Cj4g
-PiArCX0KPiA+ICsKPiA+ICsJcG1fcnVudGltZV9nZXRfc3luYyhkZXYpOwo+IAo+IFRoaXMgY2Fs
-bCB3aWxsIGF1dG9tYXRpY2FsbHkgY2FsbCB0aGUgcnVudGltZSBQTSByZXN1bWUgaG9vaywgc28g
-aWYgeW91Cj4gbmVlZCB0aGUgY2xrIHRvIGJlIGVuYWJsZWQgYmVmb3JlIHRoYXQgcG9pbnQgeW91
-IHNob3VsZCBwdXQgaXQgZWFybGllci4KPiAKPiBBbHNvLCB5b3Ugc2hvdWxkIGNhbGwgcG1fcnVu
-dGltZV9nZXRfc3luYygpIGluIHRoZSAtPmVuYWJsZSgpIHBhdGggYW5kCj4gcG1fcnVudGltZV9w
-dXQoKSBpbiB0aGUgLT5kaXNhYmxlKCkgcGF0aC4KR29vZCBjYXRjaCEgQWRkZWQuCgoJU2FtCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Sat, Aug 25, 2018 at 9:06 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Hi Rob,
+>
+>
+> 2018-08-22 6:55 GMT+09:00 Rob Herring <robh@kernel.org>:
+> > There is nothing arch specific about building dtb files other than their
+> > location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+> > The dependencies and supported targets are all slightly different.
+> > Also, a cross-compiler for each arch is needed, but really the host
+> > compiler preprocessor is perfectly fine for building dtbs. Move the
+> > build rules to a common location and remove the arch specific ones. This
+> > is done in a single step to avoid warnings about overriding rules.
+> >
+> > The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+> > These pull in several dependencies some of which need a target compiler
+> > (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+> > All that is really needed is dtc, so adjust the dependencies to only be
+> > dtc.
+> >
+> > This change enables support 'dtbs_install' on some arches which were
+> > missing the target.
+> >
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Michal Marek <michal.lkml@markovi.net>
+> > Cc: Vineet Gupta <vgupta@synopsys.com>
+> > Cc: Russell King <linux@armlinux.org.uk>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> > Cc: Michal Simek <monstr@monstr.eu>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Paul Burton <paul.burton@mips.com>
+> > Cc: James Hogan <jhogan@kernel.org>
+> > Cc: Ley Foon Tan <lftan@altera.com>
+> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Cc: Paul Mackerras <paulus@samba.org>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Chris Zankel <chris@zankel.net>
+> > Cc: Max Filippov <jcmvbkbc@gmail.com>
+> > Cc: linux-kbuild@vger.kernel.org
+> > Cc: linux-snps-arc@lists.infradead.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: uclinux-h8-devel@lists.sourceforge.jp
+> > Cc: linux-mips@linux-mips.org
+> > Cc: nios2-dev@lists.rocketboards.org
+> > Cc: linuxppc-dev@lists.ozlabs.org
+> > Cc: linux-xtensa@linux-xtensa.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Makefile                 | 30 ++++++++++++++++++++++++++++++
+> >  arch/arc/Makefile        |  6 ------
+> >  arch/arm/Makefile        | 20 +-------------------
+> >  arch/arm64/Makefile      | 17 +----------------
+> >  arch/c6x/Makefile        |  2 --
+> >  arch/h8300/Makefile      | 11 +----------
+> >  arch/microblaze/Makefile |  4 +---
+> >  arch/mips/Makefile       | 15 +--------------
+> >  arch/nds32/Makefile      |  2 +-
+> >  arch/nios2/Makefile      |  7 -------
+> >  arch/nios2/boot/Makefile |  4 ----
+> >  arch/powerpc/Makefile    |  3 ---
+> >  arch/xtensa/Makefile     | 12 +-----------
+> >  scripts/Makefile         |  1 -
+> >  scripts/Makefile.lib     |  2 +-
+> >  15 files changed, 38 insertions(+), 98 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index c13f8b85ba60..6d89e673f192 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1212,6 +1212,30 @@ kselftest-merge:
+> >                 $(srctree)/tools/testing/selftests/*/config
+> >         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+> >
+> > +# ---------------------------------------------------------------------------
+> > +# Devicetree files
+> > +
+> > +dtstree := $(wildcard arch/$(SRCARCH)/boot/dts)
+
+BTW, there's an error here too. It doesn't work right with
+KBUILD_OUTPUT set and should be:
+
+ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
+dtstree := arch/$(SRCARCH)/boot/dts
+endif
+
+> > +
+> > +ifdef CONFIG_OF_EARLY_FLATTREE
+> > +
+> > +%.dtb %.dtb.S %.dtb.o: | dtc
+>
+> I think the pipe operator is unnecessary
+> because Kbuild will descend to $(dtstree) anyway.
+
+The pipe means 'order-only', right? So it is just a weaker dependency
+for things which are not input files as dtc is not. The 'dtc' here is
+just the dtc rule below, not the actual executable. Or am I missing
+something?
+
+> > +       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+> > +
+> > +PHONY += dtbs
+> > +dtbs: | dtc
+>
+> Ditto.
+>
+>
+> > +       $(Q)$(MAKE) $(build)=$(dtstree)
+> > +
+> > +dtbs_install: dtbs
+> > +       $(Q)$(MAKE) $(dtbinst)=$(dtstree)
+> > +
+> > +all: dtbs
+> > +
+> > +dtc:
+> > +       $(Q)$(MAKE) $(build)=scripts/dtc
+> > +
+> > +endif
+> > +
+>
+>
+> arch/*/boot/dts/ are not only directories that
+> require dtc.
+
+Ah yes, of course...
+
+> > diff --git a/scripts/Makefile b/scripts/Makefile
+> > index 61affa300d25..a716a6b10954 100644
+> > --- a/scripts/Makefile
+> > +++ b/scripts/Makefile
+> > @@ -39,7 +39,6 @@ build_unifdef: $(obj)/unifdef
+> >  subdir-$(CONFIG_MODVERSIONS) += genksyms
+> >  subdir-y                     += mod
+> >  subdir-$(CONFIG_SECURITY_SELINUX) += selinux
+> > -subdir-$(CONFIG_DTC)         += dtc
+> >  subdir-$(CONFIG_GDB_SCRIPTS) += gdb
+> >
+> >  # Let clean descend into subdirs
+
+Looks like I need to leave this line to fix the above and cleaning.
+
+Thanks for the review.
+
+Rob
