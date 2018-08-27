@@ -1,35 +1,163 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 1/3] ARM: dts: NSP: Enable SFP on bcm958625hr
-Date: Mon, 27 Aug 2018 23:26:46 +0100
-Message-ID: <20180827222646.GF30658@n2100.armlinux.org.uk>
-References: <20180827200344.16158-1-f.fainelli@gmail.com>
- <20180827200344.16158-2-f.fainelli@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to
+ GPIO
+Date: Mon, 27 Aug 2018 15:35:02 -0700
+Message-ID: <20180827223502.GV160295@google.com>
+References: <20180824200157.9993-1-ilina@codeaurora.org>
+ <20180824200157.9993-2-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180827200344.16158-2-f.fainelli@gmail.com>
+In-Reply-To: <20180824200157.9993-2-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, andrew@lunn.ch
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 01:03:42PM -0700, Florian Fainelli wrote:
-> Enable the SFP connected to port 5 of the switch and wire up all GPIOs
-> to the SFP cage. Because of a hardware limitation of the i2c controller
-> on the iProc SoCs which prevents large i2c (> 256 bytes) transactions to
-> work, we use the i2c-gpio interface instead, which does not have that
-> limitation. This allows us to read the SFP module EEPROM, which would
-> not be possible otherwise since it exceeds that size during a single
-> read transfer.
+Hi Lina,
 
-We shouldn't exceed 256 bytes, since 256 bytes is the "page" size
-of the EEPROM.  The most that we read in one block is either
-ETH_MODULE_SFF_8079_LEN or (ETH_MODULE_SFF_8472_LEN - 
-ETH_MODULE_SFF_8079_LEN), both of which result in no more than 256
-byte reads.
+On Fri, Aug 24, 2018 at 02:01:53PM -0600, Lina Iyer wrote:
+> QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
+> domain can wakeup the SoC, when interrupts and GPIOs are routed to the
+> its interrupt controller. Only select GPIOs that are deemed wakeup
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 13.8Mbps down 630kbps up
-According to speedtest.net: 13Mbps down 490kbps up
+wording nit: "are routed to the|its interrupt controller"
+
+> capable are routed to specific PDC pins. During low power state, the
+> pinmux interrupt controller may be non-functional but the PDC would be.
+> The PDC can detect the wakeup GPIO is triggered and bring the TLMM to an
+> operational state.
+> 
+> Interrupts that are level triggered will be detected at the TLMM when
+> the controller becomes operational. Edge interrupts however need to be
+> replayed again.
+> 
+> Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
+> but keep it disabled. During suspend, we can enable the PDC IRQ instead
+> of the GPIO IRQ, which may or not be detected.
+> 
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+> Changes in v2:
+> 	- Remove IRQF_NO_SUSPEND and IRQF_ONE_SHOT from PDC IRQ
+> Changes in v1:
+> 	- Trigger GPIO in h/w from PDC IRQ handler
+> 	- Avoid big tables for GPIO-PDC map, pick from DT instead
+> 	- Use handler_data
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 96 ++++++++++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 0e22f52b2a19..b675ea56a4ff 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -687,11 +687,15 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+>  	const struct msm_pingroup *g;
+>  	unsigned long flags;
+>  	u32 val;
+> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
+>  
+>  	g = &pctrl->soc->groups[d->hwirq];
+>  
+>  	raw_spin_lock_irqsave(&pctrl->lock, flags);
+>  
+> +	if (pdc_irqd)
+> +		irq_set_irq_type(pdc_irqd->irq, type);
+> +
+>  	/*
+>  	 * For hw without possibility of detecting both edges
+>  	 */
+> @@ -779,9 +783,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>  	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+>  	unsigned long flags;
+> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
+>  
+>  	raw_spin_lock_irqsave(&pctrl->lock, flags);
+>  
+> +	if (pdc_irqd)
+> +		irq_set_irq_wake(pdc_irqd->irq, on);
+> +
+>  	irq_set_irq_wake(pctrl->irq, on);
+>  
+>  	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> @@ -863,6 +871,92 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
+>  	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
+>  }
+>  
+> +static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
+> +{
+> +	struct irq_data *irqd = data;
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
+> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+> +	const struct msm_pingroup *g;
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	if (!irqd_is_level_type(irqd)) {
+> +		g = &pctrl->soc->groups[irqd->hwirq];
+> +		raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +		val = BIT(g->intr_status_bit);
+> +		writel(val, pctrl->regs + g->intr_status_reg);
+> +		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int msm_gpio_pdc_pin_request(struct irq_data *d)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+> +	struct platform_device *pdev = to_platform_device(pctrl->dev);
+> +	const char *pin_name;
+> +	int irq;
+> +	int ret;
+> +
+> +	pin_name = kasprintf(GFP_KERNEL, "gpio%lu", d->hwirq);
+> +	if (!pin_name)
+> +		return -ENOMEM;
+> +
+> +	irq = platform_get_irq_byname(pdev, pin_name);
+> +	if (irq < 0) {
+> +		kfree(pin_name);
+> +		return 0;
+
+Do I understand correctly that this is the case where the pin isn't
+routed to the PDC?
+
+> +	}
+> +
+> +	ret = request_irq(irq, wake_irq_gpio_handler, irqd_get_trigger_type(d),
+> +			  pin_name, d);
+> +	if (ret) {
+> +		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
+
+'\n' is missing
+
+> +		kfree(pin_name);
+> +		return ret;
+> +	}
+> +
+> +	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
+> +	disable_irq(irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int msm_gpio_pdc_pin_release(struct irq_data *d)
+> +{
+> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
+> +
+> +	if (pdc_irqd) {
+> +		irq_set_handler_data(d->irq, NULL);
+> +		free_irq(pdc_irqd->irq, d);
+
+You need to free 'pin_name' allocated in msm_gpio_pdc_pin_request().
+IIUC it should be available in irq_desc->action->name.
+
+Cheers
+
+Matthias
