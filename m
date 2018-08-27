@@ -1,97 +1,74 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2 11/40] mmc: sdhci: Add a quirk to skip clearing the
- transfer mode register on tuning
-Date: Mon, 27 Aug 2018 14:01:52 +0300
-Message-ID: <d603be8f-986a-80e1-d98a-daea9c9684aa@intel.com>
-References: <1533924522-1037-1-git-send-email-avienamo@nvidia.com>
- <1533924522-1037-12-git-send-email-avienamo@nvidia.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] dts: arm64/sdm845: Add node for qcom,smmu-v2
+Date: Mon, 27 Aug 2018 16:42:33 +0530
+Message-ID: <1fa25d20-94c8-569d-df32-14b66a1092fc@codeaurora.org>
+References: <20180814102740.30222-1-vivek.gautam@codeaurora.org>
+	<20180814102740.30222-4-vivek.gautam@codeaurora.org>
+	<27372288-447d-6c9a-504a-8b8ef40e3d58@arm.com>
+	<CAFp+6iG8HohQ5=gwL37OuykK+R4U407yfrp=WN6pSgOK-mdzzA@mail.gmail.com>
+	<20180814225750.GA31263@rob-hp-laptop>
+	<f8d638bd-d0cb-e03d-bac2-3bc2e30c5422@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533924522-1037-12-git-send-email-avienamo@nvidia.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <f8d638bd-d0cb-e03d-bac2-3bc2e30c5422-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/18 21:08, Aapo Vienamo wrote:
-> Add SDHCI_QUIRK2_TUNE_SKIP_XFERRMODE_REG_PROG to skip programming the
-> SDHCI_TRANSFER_MODE in sdhci_set_transfer_mode() if tuning command is
-> being sent.
-> 
-> On Tegra210 and Tegra186 the tuning sequence hangs if the SDHCI
-> transfer mode register is touched.
-> 
-> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> ---
->  drivers/mmc/host/sdhci.c | 6 ++++++
->  drivers/mmc/host/sdhci.h | 2 ++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index a7b5602..04dc443 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1028,6 +1028,12 @@ static void sdhci_set_transfer_mode(struct sdhci_host *host,
->  
->  	if (data == NULL) {
->  		if (host->quirks2 &
-> +			SDHCI_QUIRK2_TUNE_SKIP_XFERMODE_REG_PROG &&
-> +				(cmd->opcode == MMC_SEND_TUNING_BLOCK ||
-> +				 cmd->opcode == MMC_SEND_TUNING_BLOCK_HS200)) {
-> +			return;
-> +		}
-
-Rather than introduce a quirk, can't we just dodge the unnecessary write e.g.
-
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 1b3fbd9bd5c5..68af6a67e397 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1033,10 +1033,19 @@ static void sdhci_set_transfer_mode(struct sdhci_host *host,
- 			if (cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200)
- 				sdhci_writew(host, 0x0, SDHCI_TRANSFER_MODE);
- 		} else {
--		/* clear Auto CMD settings for no data CMDs */
-+			u16 orig;
-+
-+			/* clear Auto CMD settings for no data CMDs */
- 			mode = sdhci_readw(host, SDHCI_TRANSFER_MODE);
--			sdhci_writew(host, mode & ~(SDHCI_TRNS_AUTO_CMD12 |
--				SDHCI_TRNS_AUTO_CMD23), SDHCI_TRANSFER_MODE);
-+			orig = mode;
-+			mode &= ~(SDHCI_TRNS_AUTO_CMD12 | SDHCI_TRNS_AUTO_CMD23);
-+			/*
-+			 * Do not write transfer mode unnecessarily because it
-+			 * can upset some host controllers (e.g. sdhci-tregra)
-+			 * during tuning.
-+			 */
-+			if (mode != orig)
-+				sdhci_writew(host, new_mode, SDHCI_TRANSFER_MODE);
- 		}
- 		return;
- 	}
-
-
-Alternatively 
-
-> +		if (host->quirks2 &
->  			SDHCI_QUIRK2_CLEAR_TRANSFERMODE_REG_BEFORE_CMD) {
->  			sdhci_writew(host, 0x0, SDHCI_TRANSFER_MODE);
->  		} else {
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 23966f8..0a99008 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -450,6 +450,8 @@ struct sdhci_host {
->   * obtainable timeout.
->   */
->  #define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT			(1<<17)
-> +/* Don't clear the SDHCI_TRANSFER_MODE register on tuning commands */
-> +#define SDHCI_QUIRK2_TUNE_SKIP_XFERMODE_REG_PROG	(1<<18)
->  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> 
+CgpPbiA4LzI3LzIwMTggMjoyNiBQTSwgVml2ZWsgR2F1dGFtIHdyb3RlOgo+IEhpIFJvYiwgUm9i
+aW4sCj4KPgo+IE9uIDgvMTUvMjAxOCA0OjI3IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPj4gT24g
+V2VkLCBBdWcgMTUsIDIwMTggYXQgMDE6MDk6NDNBTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdyb3Rl
+Ogo+Pj4gQWRkaW5nIEpvcmRhbiBoZXJlLgo+Pj4KPj4+IE9uIFR1ZSwgQXVnIDE0LCAyMDE4IGF0
+IDQ6MTkgUE0sIFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+IAo+Pj4gd3JvdGU6
+Cj4+Pj4gSGkgVml2ZWssCj4+Pj4KPj4+PiBPbiAxNC8wOC8xOCAxMToyNywgVml2ZWsgR2F1dGFt
+IHdyb3RlOgo+Pj4+PiBBZGQgZGV2aWNlIG5vZGUgZm9yIHFjb20sc21tdS12MiBhdmFpbGFibGUg
+b24gc2RtODQ1Lgo+Pj4+PiBUaGlzIHNtbXUgaXMgYXZhaWxhYmxlIG9ubHkgdG8gR1BVIGRldmlj
+ZS4KPj4+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1A
+Y29kZWF1cm9yYS5vcmc+Cj4+Pj4+IC0tLQo+Pj4+PiDCoMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+cWNvbS9zZG04NDUuZHRzaSB8IDIzICsrKysrKysrKysrKysrKysrKysrKysrCj4+Pj4+IMKgwqAg
+MSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKykKPj4+Pj4KPj4+Pj4gZGlmZiAtLWdpdCBh
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+Pj4+PiBiL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+Pj4+PiBpbmRleCAxYzJiZTIwODJmMzMuLmJkMWVj
+NWZhNTE0NiAxMDA2NDQKPj4+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0
+NS5kdHNpCj4+Pj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+
+Pj4+PiBAQCAtNiw2ICs2LDcgQEAKPj4+Pj4gwqDCoMKgICovCj4+Pj4+IMKgwqDCoMKgICNpbmNs
+dWRlIDxkdC1iaW5kaW5ncy9jbG9jay9xY29tLGdjYy1zZG04NDUuaD4KPj4+Pj4gKyNpbmNsdWRl
+IDxkdC1iaW5kaW5ncy9jbG9jay9xY29tLGdwdWNjLXNkbTg0NS5oPgo+Pj4+PiDCoMKgICNpbmNs
+dWRlIDxkdC1iaW5kaW5ncy9jbG9jay9xY29tLHJwbWguaD4KPj4+Pj4gwqDCoCAjaW5jbHVkZSA8
+ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPgo+Pj4+PiDCoMKgICNp
+bmNsdWRlIDxkdC1iaW5kaW5ncy9zb2MvcWNvbSxycG1oLXJzYy5oPgo+Pj4+PiBAQCAtOTg5LDYg
+Kzk5MCwyOCBAQAo+Pj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgY2VsbC1pbmRleCA9IDwwPjsKPj4+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfTsKPj4+Pj4gwqDCoCArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdwdV9zbW11
+OiBpb21tdUA1MDQwMDAwIHsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGNvbXBhdGlibGUgPSAicWNvbSxzZG04NDUtc21tdS12MiIsCj4+Pj4+ICJx
+Y29tLHNtbXUtdjIiOwo+Pj4+Cj4+Pj4gV2hpY2ggb2YgInNkbTg0NSIgb3IgIm1zbTg5OTYiWzFd
+IGlzIHRoZSBhY3R1YWwgU29DIG5hbWUgaGVyZT8KPj4+IFdlbGwsIHRoZSBiaW5kaW5ncyB1c2Ug
+dGhlIFNvQyBwcmVmaXggd2l0aCBzbW11LXYyLCBzbyBpdCBzaG91bGQgYmUKPj4+IHNkbTg0NSBm
+b3IgdGhpcyBTb0MuIFRoaXMgaXMgc2FtZSBhcyBJIHBvc3RlZCBpbiBteSB2MSBvZiB0aGUgc2Vy
+aWVzIAo+Pj4gWzJdLgo+Pj4gVXNpbmcgODk5NiBiYXNlZCBzdHJpbmcgaW4gc2RtODQ1IG1ha2Vz
+IHRoaW5ncyBsb29rIGF3ZnVsLgo+PiBZb3UgbmVlZCB0byBsaXN0IHZhbGlkIHZhbHVlcyBvZiAn
+PHNvYz4nIGluIHRoZSBiaW5kaW5nLiBPdGhlcndpc2Ugd2UKPj4gZ2V0IHRoaXMgY29uZnVzaW9u
+Lgo+Cj4gU29ycnkgZm9yIGRlbGF5ZWQgcmVzcG9uc2UsIEkgd2FzIGF3YXkgb24gdmFjYXRpb24u
+Cj4gSSB3aWxsIGxpc3QgZG93biB0aGUgdmFsaWQgdmFsdWVzIGZvciAnPHNvYz4nIGFzIHN1Z2dl
+c3RlZCwgYW5kIHJlc3BpbiAKPiB0aGlzIHNlcmllcywgYW5kCj4gc21tdSBiaW5kaW5ncyBwYXRj
+aCB0aGF0IGNvbWVzIGFzIHBhcnQgb2YgdGhlIHJ1bnRpbWUgcG0gc2VyaWVzIFszXS4KPgo+IFsz
+XSBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvOTY4MDE3Lwo+CgpJIGhh
+dmUgdXBkYXRlZCB0aGUgYmluZGluZyBkb2Mgd2l0aCB2YWxpZCB2YWx1ZXMgZm9yICc8c29jPicg
+c3RyaW5nIFs0XS4KS2luZGx5IHJldmlldyB0aGlzIGJhc2VkIG9uIFs0XS4KCls0XSBodHRwczov
+L2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvOTc3ODg4LwoKQmVzdCByZWdhcmRzClZp
+dmVrCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11
+IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xp
+c3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
