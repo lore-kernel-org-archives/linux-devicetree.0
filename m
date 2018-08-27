@@ -1,45 +1,120 @@
-Return-Path: <SRS0=XkR4=LG=g.ncu.edu.tw=starnight@kernel.org>
-From: Jian-Hong Pan <starnight@g.ncu.edu.tw>
-Subject: [RFC 3/3 net] lorawan: List LORAWAN in menuconfig
-Date: Fri, 24 Aug 2018 01:15:43 +0800
-Message-Id: <cd021897a590ee57605a497b23e7ea9341889aef.1535039998.git.starnight@g.ncu.edu.tw>
-In-Reply-To: <cover.1535039998.git.starnight@g.ncu.edu.tw>
-References: <cover.1535039998.git.starnight@g.ncu.edu.tw>
-To: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?q?Michael=20R=C3=B6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?q?Konstantin=20B=C3=B6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, "contact@snootlab.com" <contact@snootlab.com>, Ben Whitten <ben.whitten@lairdtech.com>, Brian Ray <brian.ray@link-labs.com>, lora@globalsat.com.tw, Alexander Graf <agraf@suse.de>, =?UTF-8?q?Michal=20Kube=C4=8Dek?= <mkubecek@suse.cz>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Steve deRosier <derosier@gmail.com>, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Pieter ROBYNS <pieter.robyns@uhasselt.be>, Hasnain Virk <Hasnain.Virk@arm.com>, linux-wpan - ML <linux-wpan@vger.kernel.org>, Stefan Schmidt <stefan@datenfreihafen.org>, Daniele Comel <dcomel@mipot.com>, shess@hessware.de, Xue Liu <liuxuenetmail@gmail.com>
-Cc: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54566 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727169AbeH0NP5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Aug 2018 09:15:57 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 08/23] v4l: fwnode: Detect bus type correctly
+Date: Mon, 27 Aug 2018 12:29:45 +0300
+Message-Id: <20180827093000.29165-9-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-List LORAWAN in menuconfig and enable it to be built.
+In case the device supports multiple video bus types on an endpoint, the
+V4L2 fwnode framework attempts to detect the type based on the available
+information. This wasn't working really well, and sometimes could lead to
+the V4L2 fwnode endpoint struct as being mishandled between the bus types.
 
-Signed-off-by: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+Default to Bt.656 if no properties suggesting a bus type are found.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- net/Kconfig  | 1 +
- net/Makefile | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 31 +++++++++++++++++--------------
+ include/media/v4l2-mediabus.h         |  2 ++
+ 2 files changed, 19 insertions(+), 14 deletions(-)
 
-diff --git a/net/Kconfig b/net/Kconfig
-index 053b36998c18..499c931ba0fa 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -224,6 +224,7 @@ source "net/6lowpan/Kconfig"
- source "net/ieee802154/Kconfig"
- source "net/mac802154/Kconfig"
- source "net/lora/Kconfig"
-+source "net/maclorawan/Kconfig"
- source "net/sched/Kconfig"
- source "net/dcb/Kconfig"
- source "net/dns_resolver/Kconfig"
-diff --git a/net/Makefile b/net/Makefile
-index e80b84313851..5341d0e23586 100644
---- a/net/Makefile
-+++ b/net/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_6LOWPAN)		+= 6lowpan/
- obj-$(CONFIG_IEEE802154)	+= ieee802154/
- obj-$(CONFIG_MAC802154)		+= mac802154/
- obj-$(CONFIG_LORA)		+= lora/
-+obj-$(CONFIG_LORAWAN)		+= maclorawan/
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 801831c802a9..52bd9f839fb2 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -114,8 +114,11 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 		flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
+ 	}
  
- ifeq ($(CONFIG_NET),y)
- obj-$(CONFIG_SYSCTL)		+= sysctl_net.o
+-	bus->flags = flags;
+-	vep->bus_type = V4L2_MBUS_CSI2_DPHY;
++	if (lanes_used || have_clk_lane ||
++	    (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
++		bus->flags = flags;
++		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
++	}
+ 
+ 	return 0;
+ }
+@@ -145,11 +148,6 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 		pr_debug("field-even-active %s\n", v ? "high" : "low");
+ 	}
+ 
+-	if (flags)
+-		vep->bus_type = V4L2_MBUS_PARALLEL;
+-	else
+-		vep->bus_type = V4L2_MBUS_BT656;
+-
+ 	if (!fwnode_property_read_u32(fwnode, "pclk-sample", &v)) {
+ 		flags |= v ? V4L2_MBUS_PCLK_SAMPLE_RISING :
+ 			V4L2_MBUS_PCLK_SAMPLE_FALLING;
+@@ -192,13 +190,21 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 	}
+ 
+ 	bus->flags = flags;
+-
++	if (flags & (V4L2_MBUS_HSYNC_ACTIVE_HIGH |
++		     V4L2_MBUS_HSYNC_ACTIVE_LOW |
++		     V4L2_MBUS_VSYNC_ACTIVE_HIGH |
++		     V4L2_MBUS_VSYNC_ACTIVE_LOW |
++		     V4L2_MBUS_FIELD_EVEN_HIGH |
++		     V4L2_MBUS_FIELD_EVEN_LOW))
++		vep->bus_type = V4L2_MBUS_PARALLEL;
++	else
++		vep->bus_type = V4L2_MBUS_BT656;
+ }
+ 
+ static void
+ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
+ 				    struct v4l2_fwnode_endpoint *vep,
+-				    u32 bus_type)
++				    enum v4l2_fwnode_bus_type bus_type)
+ {
+ 	struct v4l2_fwnode_bus_mipi_csi1 *bus = &vep->bus.mipi_csi1;
+ 	u32 v;
+@@ -250,11 +256,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep);
+ 		if (rval)
+ 			return rval;
+-		/*
+-		 * Parse the parallel video bus properties only if none
+-		 * of the MIPI CSI-2 specific properties were found.
+-		 */
+-		if (vep->bus.mipi_csi2.flags == 0)
++
++		if (vep->bus_type == V4L2_MBUS_UNKNOWN)
+ 			v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep);
+ 
+ 		break;
+diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
+index 26e1c644ded6..df1d552e9df6 100644
+--- a/include/media/v4l2-mediabus.h
++++ b/include/media/v4l2-mediabus.h
+@@ -70,6 +70,7 @@
+ 
+ /**
+  * enum v4l2_mbus_type - media bus type
++ * @V4L2_MBUS_UNKNOWN:	unknown bus type, no V4L2 mediabus configuration
+  * @V4L2_MBUS_PARALLEL:	parallel interface with hsync and vsync
+  * @V4L2_MBUS_BT656:	parallel interface with embedded synchronisation, can
+  *			also be used for BT.1120
+@@ -79,6 +80,7 @@
+  * @V4L2_MBUS_CSI2_CPHY: MIPI CSI-2 serial interface, with C-PHY
+  */
+ enum v4l2_mbus_type {
++	V4L2_MBUS_UNKNOWN,
+ 	V4L2_MBUS_PARALLEL,
+ 	V4L2_MBUS_BT656,
+ 	V4L2_MBUS_CSI1,
 -- 
-2.18.0
+2.11.0
