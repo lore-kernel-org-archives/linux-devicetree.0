@@ -1,74 +1,91 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dts: arm64/sdm845: Add node for qcom,smmu-v2
-Date: Mon, 27 Aug 2018 16:42:33 +0530
-Message-ID: <1fa25d20-94c8-569d-df32-14b66a1092fc@codeaurora.org>
-References: <20180814102740.30222-1-vivek.gautam@codeaurora.org>
-	<20180814102740.30222-4-vivek.gautam@codeaurora.org>
-	<27372288-447d-6c9a-504a-8b8ef40e3d58@arm.com>
-	<CAFp+6iG8HohQ5=gwL37OuykK+R4U407yfrp=WN6pSgOK-mdzzA@mail.gmail.com>
-	<20180814225750.GA31263@rob-hp-laptop>
-	<f8d638bd-d0cb-e03d-bac2-3bc2e30c5422@codeaurora.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v2 25/40] mmc: sdhci: Add a quirk to disable card clock
+ during tuning
+Date: Mon, 27 Aug 2018 14:25:44 +0300
+Message-ID: <b0b761ac-00fb-5a79-7a38-89b08c620c02@intel.com>
+References: <1533924522-1037-1-git-send-email-avienamo@nvidia.com>
+ <1533924522-1037-26-git-send-email-avienamo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <f8d638bd-d0cb-e03d-bac2-3bc2e30c5422-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533924522-1037-26-git-send-email-avienamo@nvidia.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiA4LzI3LzIwMTggMjoyNiBQTSwgVml2ZWsgR2F1dGFtIHdyb3RlOgo+IEhpIFJvYiwgUm9i
-aW4sCj4KPgo+IE9uIDgvMTUvMjAxOCA0OjI3IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPj4gT24g
-V2VkLCBBdWcgMTUsIDIwMTggYXQgMDE6MDk6NDNBTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdyb3Rl
-Ogo+Pj4gQWRkaW5nIEpvcmRhbiBoZXJlLgo+Pj4KPj4+IE9uIFR1ZSwgQXVnIDE0LCAyMDE4IGF0
-IDQ6MTkgUE0sIFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+IAo+Pj4gd3JvdGU6
-Cj4+Pj4gSGkgVml2ZWssCj4+Pj4KPj4+PiBPbiAxNC8wOC8xOCAxMToyNywgVml2ZWsgR2F1dGFt
-IHdyb3RlOgo+Pj4+PiBBZGQgZGV2aWNlIG5vZGUgZm9yIHFjb20sc21tdS12MiBhdmFpbGFibGUg
-b24gc2RtODQ1Lgo+Pj4+PiBUaGlzIHNtbXUgaXMgYXZhaWxhYmxlIG9ubHkgdG8gR1BVIGRldmlj
-ZS4KPj4+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1A
-Y29kZWF1cm9yYS5vcmc+Cj4+Pj4+IC0tLQo+Pj4+PiDCoMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMv
-cWNvbS9zZG04NDUuZHRzaSB8IDIzICsrKysrKysrKysrKysrKysrKysrKysrCj4+Pj4+IMKgwqAg
-MSBmaWxlIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKykKPj4+Pj4KPj4+Pj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+Pj4+PiBiL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+Pj4+PiBpbmRleCAxYzJiZTIwODJmMzMuLmJkMWVj
-NWZhNTE0NiAxMDA2NDQKPj4+Pj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0
-NS5kdHNpCj4+Pj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+
-Pj4+PiBAQCAtNiw2ICs2LDcgQEAKPj4+Pj4gwqDCoMKgICovCj4+Pj4+IMKgwqDCoMKgICNpbmNs
-dWRlIDxkdC1iaW5kaW5ncy9jbG9jay9xY29tLGdjYy1zZG04NDUuaD4KPj4+Pj4gKyNpbmNsdWRl
-IDxkdC1iaW5kaW5ncy9jbG9jay9xY29tLGdwdWNjLXNkbTg0NS5oPgo+Pj4+PiDCoMKgICNpbmNs
-dWRlIDxkdC1iaW5kaW5ncy9jbG9jay9xY29tLHJwbWguaD4KPj4+Pj4gwqDCoCAjaW5jbHVkZSA8
-ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPgo+Pj4+PiDCoMKgICNp
-bmNsdWRlIDxkdC1iaW5kaW5ncy9zb2MvcWNvbSxycG1oLXJzYy5oPgo+Pj4+PiBAQCAtOTg5LDYg
-Kzk5MCwyOCBAQAo+Pj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgY2VsbC1pbmRleCA9IDwwPjsKPj4+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgfTsKPj4+Pj4gwqDCoCArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdwdV9zbW11
-OiBpb21tdUA1MDQwMDAwIHsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIGNvbXBhdGlibGUgPSAicWNvbSxzZG04NDUtc21tdS12MiIsCj4+Pj4+ICJx
-Y29tLHNtbXUtdjIiOwo+Pj4+Cj4+Pj4gV2hpY2ggb2YgInNkbTg0NSIgb3IgIm1zbTg5OTYiWzFd
-IGlzIHRoZSBhY3R1YWwgU29DIG5hbWUgaGVyZT8KPj4+IFdlbGwsIHRoZSBiaW5kaW5ncyB1c2Ug
-dGhlIFNvQyBwcmVmaXggd2l0aCBzbW11LXYyLCBzbyBpdCBzaG91bGQgYmUKPj4+IHNkbTg0NSBm
-b3IgdGhpcyBTb0MuIFRoaXMgaXMgc2FtZSBhcyBJIHBvc3RlZCBpbiBteSB2MSBvZiB0aGUgc2Vy
-aWVzIAo+Pj4gWzJdLgo+Pj4gVXNpbmcgODk5NiBiYXNlZCBzdHJpbmcgaW4gc2RtODQ1IG1ha2Vz
-IHRoaW5ncyBsb29rIGF3ZnVsLgo+PiBZb3UgbmVlZCB0byBsaXN0IHZhbGlkIHZhbHVlcyBvZiAn
-PHNvYz4nIGluIHRoZSBiaW5kaW5nLiBPdGhlcndpc2Ugd2UKPj4gZ2V0IHRoaXMgY29uZnVzaW9u
-Lgo+Cj4gU29ycnkgZm9yIGRlbGF5ZWQgcmVzcG9uc2UsIEkgd2FzIGF3YXkgb24gdmFjYXRpb24u
-Cj4gSSB3aWxsIGxpc3QgZG93biB0aGUgdmFsaWQgdmFsdWVzIGZvciAnPHNvYz4nIGFzIHN1Z2dl
-c3RlZCwgYW5kIHJlc3BpbiAKPiB0aGlzIHNlcmllcywgYW5kCj4gc21tdSBiaW5kaW5ncyBwYXRj
-aCB0aGF0IGNvbWVzIGFzIHBhcnQgb2YgdGhlIHJ1bnRpbWUgcG0gc2VyaWVzIFszXS4KPgo+IFsz
-XSBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvOTY4MDE3Lwo+CgpJIGhh
-dmUgdXBkYXRlZCB0aGUgYmluZGluZyBkb2Mgd2l0aCB2YWxpZCB2YWx1ZXMgZm9yICc8c29jPicg
-c3RyaW5nIFs0XS4KS2luZGx5IHJldmlldyB0aGlzIGJhc2VkIG9uIFs0XS4KCls0XSBodHRwczov
-L2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gvOTc3ODg4LwoKQmVzdCByZWdhcmRzClZp
-dmVrCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11
-IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xp
-c3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
+On 10/08/18 21:08, Aapo Vienamo wrote:
+> Add a quirk to disable card clock when the tuning command is sent.
+> 
+> This has to be done to prevent the SDHCI controller from hanging on
+> Tegra210. Without the quirk enabled there appears to be around 10%
+> chance that the tuning sequence will fail and time out due to the
+> controller locking up.
+> 
+> Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
+> ---
+>  drivers/mmc/host/sdhci.c | 15 +++++++++++++++
+>  drivers/mmc/host/sdhci.h |  2 ++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 04dc443..166b16f 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -2175,6 +2175,7 @@ static void sdhci_send_tuning(struct sdhci_host *host, u32 opcode)
+>  	struct mmc_request mrq = {};
+>  	unsigned long flags;
+>  	u32 b = host->sdma_boundary;
+> +	u16 clk;
+>  
+>  	spin_lock_irqsave(&host->lock, flags);
+>  
+> @@ -2183,6 +2184,13 @@ static void sdhci_send_tuning(struct sdhci_host *host, u32 opcode)
+>  	cmd.mrq = &mrq;
+>  
+>  	mrq.cmd = &cmd;
+> +
+> +	if (host->quirks2 & SDHCI_QUIRK2_TUNE_DIS_CARD_CLK) {
+> +		clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +		clk &= ~SDHCI_CLOCK_CARD_EN;
+> +		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+
+Rather than using a quirk, could you use the sdhci I/O accessors to disable
+the clock before the tuning comment is written, udelay(1), and then enable
+it again?
+
+> +	}
+> +
+>  	/*
+>  	 * In response to CMD19, the card sends 64 bytes of tuning
+>  	 * block to the Host Controller. So we set the block size
+> @@ -2213,6 +2221,13 @@ static void sdhci_send_tuning(struct sdhci_host *host, u32 opcode)
+>  	mmiowb();
+>  	spin_unlock_irqrestore(&host->lock, flags);
+>  
+> +	if (host->quirks2 & SDHCI_QUIRK2_TUNE_DIS_CARD_CLK) {
+> +		udelay(1);
+> +		clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +		clk |= SDHCI_CLOCK_CARD_EN;
+> +		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +	}
+> +
+>  	/* Wait for Buffer Read Ready interrupt */
+>  	wait_event_timeout(host->buf_ready_int, (host->tuning_done == 1),
+>  			   msecs_to_jiffies(50));
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 0a99008..cc411b0 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -452,6 +452,8 @@ struct sdhci_host {
+>  #define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT			(1<<17)
+>  /* Don't clear the SDHCI_TRANSFER_MODE register on tuning commands */
+>  #define SDHCI_QUIRK2_TUNE_SKIP_XFERMODE_REG_PROG	(1<<18)
+> +/* Disable card clock during tuning */
+> +#define SDHCI_QUIRK2_TUNE_DIS_CARD_CLK			(1<<19)
+>  
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
+> 
