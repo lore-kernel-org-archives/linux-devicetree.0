@@ -1,45 +1,93 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH v2 6/9] net: bcmgenet: fix OF child-node lookup
-Date: Mon, 27 Aug 2018 10:21:50 +0200
-Message-ID: <20180827082153.22537-7-johan@kernel.org>
+Subject: [PATCH v2 1/9] of: add helper to lookup compatible child node
+Date: Mon, 27 Aug 2018 10:21:45 +0200
+Message-ID: <20180827082153.22537-2-johan@kernel.org>
 References: <20180827082153.22537-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180827082153.22537-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_get_compatible_child() helper to lookup the mdio child
-node instead of using of_find_compatible_node(), which searches the
-entire tree from a given start node and thus can return an unrelated
-(i.e. non-child) node.
+Add of_get_compatible_child() helper that can be used to lookup
+compatible child nodes.
 
-This also addresses a potential use-after-free (e.g. after probe
-deferral) as the tree-wide helper drops a reference to its first
-argument (i.e. the node of the device being probed).
+Several drivers currently use of_find_compatible_node() to lookup child
+nodes while failing to notice that the of_find_ functions search the
+entire tree depth-first (from a given start node) and therefore can
+match unrelated nodes. The fact that these functions also drop a
+reference to the node they start searching from (e.g. the parent node)
+is typically also overlooked, something which can lead to use-after-free
+bugs.
 
-Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
-Cc: stable <stable@vger.kernel.org>     # 3.15
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: David S. Miller <davem@davemloft.net>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmmii.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/base.c  | 25 +++++++++++++++++++++++++
+ include/linux/of.h |  8 ++++++++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 5333274a283c..87fc65560ceb 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -333,7 +333,7 @@ static struct device_node *bcmgenet_mii_of_find_mdio(struct bcmgenet_priv *priv)
- 	if (!compat)
- 		return NULL;
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 466e3c8582f0..bc420d2aa5f5 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -719,6 +719,31 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ }
+ EXPORT_SYMBOL(of_get_next_available_child);
  
--	priv->mdio_dn = of_find_compatible_node(dn, NULL, compat);
-+	priv->mdio_dn = of_get_compatible_child(dn, compat);
- 	kfree(compat);
- 	if (!priv->mdio_dn) {
- 		dev_err(kdev, "unable to find MDIO bus node\n");
++/**
++ * of_get_compatible_child - Find compatible child node
++ * @parent:	parent node
++ * @compatible:	compatible string
++ *
++ * Lookup child node whose compatible property contains the given compatible
++ * string.
++ *
++ * Returns a node pointer with refcount incremented, use of_node_put() on it
++ * when done; or NULL if not found.
++ */
++struct device_node *of_get_compatible_child(const struct device_node *parent,
++				const char *compatible)
++{
++	struct device_node *child;
++
++	for_each_child_of_node(parent, child) {
++		if (of_device_is_compatible(child, compatible))
++			break;
++	}
++
++	return child;
++}
++EXPORT_SYMBOL(of_get_compatible_child);
++
+ /**
+  *	of_get_child_by_name - Find the child node by name for a given parent
+  *	@node:	parent node
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4d25e4f952d9..b99a1a8c2952 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -290,6 +290,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+ extern struct device_node *of_get_next_available_child(
+ 	const struct device_node *node, struct device_node *prev);
+ 
++extern struct device_node *of_get_compatible_child(const struct device_node *parent,
++					const char *compatible);
+ extern struct device_node *of_get_child_by_name(const struct device_node *node,
+ 					const char *name);
+ 
+@@ -632,6 +634,12 @@ static inline bool of_have_populated_dt(void)
+ 	return false;
+ }
+ 
++static inline struct device_node *of_get_compatible_child(const struct device_node *parent,
++					const char *compatible)
++{
++	return NULL;
++}
++
+ static inline struct device_node *of_get_child_by_name(
+ 					const struct device_node *node,
+ 					const char *name)
 -- 
 2.18.0
