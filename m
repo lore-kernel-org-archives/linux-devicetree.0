@@ -1,56 +1,66 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH v2 9/9] power: supply: twl4030-charger: fix OF sibling-node lookup
-Date: Mon, 27 Aug 2018 10:21:53 +0200
-Message-ID: <20180827082153.22537-10-johan@kernel.org>
+Subject: [PATCH v2 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
+Date: Mon, 27 Aug 2018 10:21:48 +0200
+Message-ID: <20180827082153.22537-5-johan@kernel.org>
 References: <20180827082153.22537-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180827082153.22537-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, NeilBrown <neilb@suse.de>, Felipe Balbi <felipe.balbi@linux.intel.com>, Sebastian Reichel <sre@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_get_compatible_child() helper to lookup the usb sibling
+Use the new of_get_compatible_child() helper to lookup the slot child
 node instead of using of_find_compatible_node(), which searches the
 entire tree from a given start node and thus can return an unrelated
-(non-sibling) node.
+(i.e. non-child) node.
 
 This also addresses a potential use-after-free (e.g. after probe
 deferral) as the tree-wide helper drops a reference to its first
-argument (i.e. the parent device node).
+argument (i.e. the node of the device being probed).
 
-While at it, also fix the related phy-node reference leak.
+While at it, also fix up the related slot-node reference leak.
 
-Fixes: f5e4edb8c888 ("power: twl4030_charger: find associated phy by more reliable means.")
-Cc: stable <stable@vger.kernel.org>     # 4.2
-Cc: NeilBrown <neilb@suse.de>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Sebastian Reichel <sre@kernel.org>
-Reviewed-by: Sebastian Reichel <sre@kernel.org>
+Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+Cc: stable <stable@vger.kernel.org>     # 4.15
+Cc: Carlo Caione <carlo@endlessm.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/power/supply/twl4030_charger.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mmc/host/meson-mx-sdio.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
-index bbcaee56db9d..b6a7d9f74cf3 100644
---- a/drivers/power/supply/twl4030_charger.c
-+++ b/drivers/power/supply/twl4030_charger.c
-@@ -996,12 +996,13 @@ static int twl4030_bci_probe(struct platform_device *pdev)
- 	if (bci->dev->of_node) {
- 		struct device_node *phynode;
+diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+index 09cb89645d06..2cfec33178c1 100644
+--- a/drivers/mmc/host/meson-mx-sdio.c
++++ b/drivers/mmc/host/meson-mx-sdio.c
+@@ -517,19 +517,23 @@ static struct mmc_host_ops meson_mx_mmc_ops = {
+ static struct platform_device *meson_mx_mmc_slot_pdev(struct device *parent)
+ {
+ 	struct device_node *slot_node;
++	struct platform_device *pdev;
  
--		phynode = of_find_compatible_node(bci->dev->of_node->parent,
--						  NULL, "ti,twl4030-usb");
-+		phynode = of_get_compatible_child(bci->dev->of_node->parent,
-+						  "ti,twl4030-usb");
- 		if (phynode) {
- 			bci->usb_nb.notifier_call = twl4030_bci_usb_ncb;
- 			bci->transceiver = devm_usb_get_phy_by_node(
- 				bci->dev, phynode, &bci->usb_nb);
-+			of_node_put(phynode);
- 			if (IS_ERR(bci->transceiver)) {
- 				ret = PTR_ERR(bci->transceiver);
- 				if (ret == -EPROBE_DEFER)
+ 	/*
+ 	 * TODO: the MMC core framework currently does not support
+ 	 * controllers with multiple slots properly. So we only register
+ 	 * the first slot for now
+ 	 */
+-	slot_node = of_find_compatible_node(parent->of_node, NULL, "mmc-slot");
++	slot_node = of_get_compatible_child(parent->of_node, "mmc-slot");
+ 	if (!slot_node) {
+ 		dev_warn(parent, "no 'mmc-slot' sub-node found\n");
+ 		return ERR_PTR(-ENOENT);
+ 	}
+ 
+-	return of_platform_device_create(slot_node, NULL, parent);
++	pdev = of_platform_device_create(slot_node, NULL, parent);
++	of_node_put(slot_node);
++
++	return pdev;
+ }
+ 
+ static int meson_mx_mmc_add_host(struct meson_mx_mmc_host *host)
 -- 
 2.18.0
