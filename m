@@ -1,73 +1,83 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2 0/8] Tegra SDHCI support HS400 on Tegra210 and Tegra186
-Date: Mon, 27 Aug 2018 14:47:49 +0300
-Message-ID: <aed782d2-9bf1-f750-88eb-3501fab5ecd3@intel.com>
-References: <1533924845-1466-1-git-send-email-avienamo@nvidia.com>
- <20180827100826.GA18542@ulmo>
- <095142c4-2697-d9e1-4930-a39e27b7ef40@intel.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
+Date: Mon, 27 Aug 2018 13:53:00 +0200
+Message-ID: <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
+References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
+ <20180824122308.3092-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <095142c4-2697-d9e1-4930-a39e27b7ef40@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180824122308.3092-1-linus.walleij@linaro.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Aapo Vienamo <avienamo@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Liviu Dudau <liviu.dudau@arm.com>, devicetree@vger.kernel.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, dri-devel@lists.freedesktop.org, Ryan Harkin <ryan.harkin@linaro.org>, robh+dt@kernel.org, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/08/18 13:26, Adrian Hunter wrote:
-> On 27/08/18 13:08, Thierry Reding wrote:
->> On Fri, Aug 10, 2018 at 09:13:57PM +0300, Aapo Vienamo wrote:
->>> Hi all,
->>> This series implements support for HS400 signaling on Tegra210 and
->>> Tegra186. This includes programming the DQS trimmer values, implementing
->>> enhanced strobe and HS400 delay line calibration.
->>>
->>> This series depends on the "Tegra SDHCI add support for HS200 and UHS
->>> signaling" series.
->>>
->>> Changelog:
->>> v2:
->>> 	- Document in dt-bindings which controllers support HS400
->>> 	- Use val instead of reg in tegra_sdhci_set_dqs_trim()
->>> 	- Change "dt" to "DT" in "mmc: tegra: Parse and program DQS trim
->>> 	  value" commit message
->>> 	- Add spaces around << in tegra_sdhci_set_dqs_trim()
->>> 	- Make the "mmc: tegra: Implement HS400 enhanced strobe" commit
->>> 	  message more detailed
->>> 	- Remove a debug print from tegra_sdhci_hs400_enhanced_strobe()
->>> 	- Add blank lines around if-else-block in
->>> 	  tegra_sdhci_hs400_enhanced_strobe()
->>> 	- Use val instead of reg in tegra_sdhci_hs400_enhanced_strobe()
->>> 	- Make commit message of "mmc: tegra: Implement HS400 delay line
->>> 	  calibration" more detailed
->>>
->>> Aapo Vienamo (8):
->>>   dt-bindings: mmc: Add DQS trim value to Tegra SDHCI
->>>   mmc: tegra: Parse and program DQS trim value
->>>   mmc: tegra: Implement HS400 enhanced strobe
->>>   mmc: tegra: Implement HS400 delay line calibration
->>>   arm64: dts: tegra186: Add SDMMC4 DQS trim value
->>>   arm64: dts: tegra210: Add SDMMC4 DQS trim value
->>>   arm64: dts: tegra186: Enable HS400
->>>   arm64: dts: tegra210: Enable HS400
->>>
->>>  .../bindings/mmc/nvidia,tegra20-sdhci.txt          |  4 ++
->>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  2 +
->>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  2 +
->>>  drivers/mmc/host/sdhci-tegra.c                     | 84 +++++++++++++++++++++-
->>>  4 files changed, 89 insertions(+), 3 deletions(-)
->>
->> Adrian,
->>
->> any chance you could take a brief look at these? They are a prerequisite
->> for the 2-patch series ("[PATCH 0/2] Tegra SDHCI rerun pad calibration
->> periodically") that you already acked.
-> 
-> Sure, I'll try and have a look today.
-> 
-
-These are fine. For the sdhci-tegra patches (patches 2 - 4):
-
-	Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+T24gMjQuMDguMjAxOCAxNDoyMywgTGludXMgV2FsbGVpaiB3cm90ZToKPiBUaGlzIGFkZHMgYmlu
+ZGluZ3MgZm9yIGEgdmlydHVhbCBkaXNwbGF5IHRvIGJlIHVzZWQgd2l0aCBkaXNwbGF5cwo+IGlu
+c2lkZSBlbnRpcmVseSB2aXJ0dWFsIGVudmlyb25tZW50cyB3aGljaCBkbyBub3QgZW11bGF0ZSB0
+aGluZ3MKPiBsaWtlIG1vbml0b3JzIGJ1dCBqdXN0IG5lZWQgdGltaW5nIGluZm9ybWF0aW9uIHRv
+IGJlIHN1cHBsaWVkIHRvCj4gaXRzIGRpc3BsYXkgY29udHJvbGxlci4KPgo+IFRoaXMgaXMgaW5z
+cGlyZWQgYnkgZWFybGllciB3b3JrIGJ5IExpdml1IER1ZGF1LgoKSWYgdGhpcyBpcyBwdXJlIHZp
+cnR1YWwgdGhlbiBpdCBzaG91bGQgYmUgY29ubmVjdGVkIHRvIG90aGVyIHB1cmUKdmlydHVhbCBj
+b21wb25lbnRzLgpXaGF0IHdpbGwgYmUgdGhpcyB2aXJ0dWFsIGJyaWRnZSBhdHRhY2hlZCB0bz8g
+SSBleHBlY3Qgc29tZSB2aXJ0dWFsCmVuY29kZXIsIHZpcnR1YWwgY3J0Yz8gSWYgeWVzIHRoZW4g
+d2h5IGRvbid0IHlvdSBjcmVhdGUgd2hvbGUgdmlydHVhbApkcm0gcGlwZWxpbmUgaW4gb25lIHBh
+dGNoc2V0PwpDb3VsZCB5b3UgZGVzY3JpYmUgbW9yZSB3aGF0IGRvIHlvdSB3YW50IHRvIGRvLgpB
+bmQgb25lIG1vcmUgdGhpbmcsIHlvdSBhcmUgZGVmaW5pbmcgdmlydHVhbCBwYW5lbCBidXQgeW91
+IGFyZSB1c2luZwpkcm1fYnJpZGdlIGZyYW1ld29yaywgd2h5IG5vdCBkcm1fcGFuZWw/CgpSZWdh
+cmRzCkFuZHJ6ZWoKCj4KPiBDYzogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+Cj4g
+Q2M6IFJ5YW4gSGFya2luIDxyeWFuLmhhcmtpbkBsaW5hcm8ub3JnPgo+IFNpZ25lZC1vZmYtYnk6
+IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KPiAtLS0KPiAgLi4uL2Rp
+c3BsYXkvYnJpZGdlL3ZpcnR1YWwtZGlzcGxheS1icmlkZ2UudHh0IHwgNjIgKysrKysrKysrKysr
+KysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNjIgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3ZpcnR1YWwtZGlzcGxheS1icmlkZ2UudHh0Cj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3ZpcnR1YWwtZGlzcGxheS1icmlk
+Z2UudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3ZpcnR1YWwtZGlzcGxheS1icmlkZ2UudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRl
+eCAwMDAwMDAwMDAwMDAuLmVhNGY1YTkxYWI5NAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdmlydHVhbC1kaXNw
+bGF5LWJyaWRnZS50eHQKPiBAQCAtMCwwICsxLDYyIEBACj4gK1ZpcnR1YWwgRGlzcGxheSBCcmlk
+Z2UKPiArCj4gK1RoaXMgcmVwcmVzZW50cyBhIGRpc3BsYXkgdGhhdCBpcyBjb250YWluZWQgd2l0
+aGluIGFuIGVtdWxhdGVkCj4gK2Vudmlyb25tZW50Lgo+ICsKPiArVGhpcyBtZWFucyB0aGF0IHRo
+ZSBkaXNwbGF5IGVuZ2luZSBtYWlubHkgZXhwZWN0cyBzb21lIHRpbWluZwo+ICtwYXJhbWV0ZXJz
+IHRvIGJlIHdyaXR0ZW4gaW50byBpdCwgYW5kIGFmdGVyIHRoYXQgdGhlIGVtdWxhdG9yIHdpbGwK
+PiArcmVzcG9uZCBieSBjcmVhdGluZyBhIHZpcnR1YWwgZGlzcGxheSB3aXRoIHRoZSByZXF1ZXN0
+ZWQKPiArcmVzb2x1dGlvbiBjaGFyYWN0ZXJpc3RpY3MuCj4gKwo+ICtBcyB0aGUgb3BlcmF0aW5n
+IHN5c3RlbSBjYW5ub3QgImRldGVjdCIgc3VjaCBhIGRpc3BsYXksIHJhdGhlciB0aGUKPiArZW11
+bGF0b3Igd2lsbCByZXNwb25kIHRvIHdoYXQgdGhlIGNvbnRyb2xsZXIgb3V0cHV0cywgYQo+ICtj
+aGlja2VuLWFuZC1lZ2cgcHJvYmxlbSBuZWVkcyB0byBiZSBzb2x2ZWQ6IHRoZSByZXNvbHV0aW9u
+IGFuZAo+ICt0aW1pbmcgY2hhcmFjdGVyaXN0aWNzIG5lZWQgdG8gYmUgZGVmaW5lZCBhbmQgc2V0
+IHVwIHNvbWV3aGVyZS4KPiArCj4gK1RoZSB2aXJ0dWFsIGRpc3BsYXkgYnJpZGdlIHNvbHZlcyB0
+aGlzIGJ5IGRlZmluaW5nIGEgYnJpZGdlIHdpdGgKPiArYWxsIHRpbWluZyBjaGFyYWN0ZXJpc3Rp
+Y3MgZW5jb2RlZCBpbnRvIHRoZSBkZXZpY2UgdHJlZSBub2RlLgo+ICsKPiArUmVxdWlyZWQgcHJv
+cGVyaWVzOgo+ICstIGNvbXBhdGlibGU6IHNoYWxsIGJlICJ2aXJ0dWFsLWRpc3BsYXktYnJpZGdl
+Igo+ICsKPiArUmVxdWlyZWQgc3Vibm9kZXM6Cj4gKy0gZGlzcGxheS10aW1pbmdzOiBjb250YWlu
+cyBpbiB0dXJuIGEgZGlzcGxheSB0aW1pbmcgbm9kZQo+ICsgIHNlZSBkaXNwbGF5LXRpbWluZy50
+eHQKPiArLSBwb3J0czogY29udGFpbnMgdGhlIGRpc3BsYXkgcG9ydHMsIHNlZSBtZWRpYS92aWRl
+by1pbnRlcmZhY2VzLnR4dAo+ICsKPiArRXhhbXBsZToKPiArCj4gK2JyaWRnZSB7Cj4gKwljb21w
+YXRpYmxlID0gInZpcnR1YWwtZGlzcGxheS1icmlkZ2UiOwo+ICsJI2FkZHJlc3MtY2VsbHMgPSA8
+MT47Cj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwlkaXNwbGF5LXRpbWluZ3Mgewo+ICsJ
+CS8qIFNvbWUgc3RhbmRhcmQgVkdBIHRpbWluZyAqLwo+ICsJCXRpbWluZzAgewo+ICsJCQljbG9j
+ay1mcmVxdWVuY3kgPSA8MjM3NTA+Owo+ICsJCQloYWN0aXZlID0gPDY0MD47Cj4gKwkJCXZhY3Rp
+dmUgPSA8NDgwPjsKPiArCQkJaGZyb250LXBvcmNoID0gPDQ4PjsKPiArCQkJaGJhY2stcG9yY2gg
+PSA8MTY+Owo+ICsJCQloc3luYy1sZW4gPSA8OTY+Owo+ICsJCQl2ZnJvbnQtcG9yY2ggPSA8MzM+
+Owo+ICsJCQl2YmFjay1wb3JjaCA9IDw5PjsKPiArCQkJdnN5bmMtbGVuID0gPDM+Owo+ICsJCQl2
+cmVmcmVzaCA9IDw2MD47Cj4gKwkJfTsKPiArCX07Cj4gKwo+ICsJcG9ydHMgewo+ICsJCSNhZGRy
+ZXNzLWNlbGxzID0gPDE+Owo+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQlwb3J0QDAg
+ewo+ICsJCQlyZWcgPSA8MD47Cj4gKwo+ICsJCQlkaXNwbGF5X2JyaWRnZV9pbjogZW5kcG9pbnQg
+ewo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZmb28+Owo+ICsJCQl9Owo+ICsJCX07Cj4gKwl9
+Owo+ICt9OwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
