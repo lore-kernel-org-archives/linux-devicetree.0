@@ -1,74 +1,88 @@
-Return-Path: <SRS0=s5iF=LL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:54644 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbeH1GHz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 28 Aug 2018 02:07:55 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] ARM: dts: omap4-droid4: Fix emmc errors seen on some devices
-Date: Mon, 27 Aug 2018 19:18:21 -0700
-Message-Id: <20180828021821.88563-1-tony@atomide.com>
+Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54586 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727130AbeH0NP5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Aug 2018 09:15:57 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 11/23] v4l: fwnode: Only assign configuration if there is no error
+Date: Mon, 27 Aug 2018 12:29:48 +0300
+Message-Id: <20180827093000.29165-12-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Merlijn Wajer <merlijn@wizzup.org>, Michael Scott <hashcode0f@gmail.com>, NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-Otherwise we can get the following errors occasionally on some devices:
+Only assign endpoint configuration if the endpoint is parsed successfully.
 
-mmc1: tried to HW reset card, got error -110
-mmcblk1: error -110 requesting status
-mmcblk1: recovery failed!
-print_req_error: I/O error, dev mmcblk1, sector 14329
-...
-
-I have one device that hits this error almost on every boot, and another
-one that hits it only rarely with the other ones I've used behave without
-problems. I'm not sure if the issue is related to a particular eMMC card
-model, but in case it is, both of the machines with issues have:
-
-# cat /sys/class/mmc_host/mmc1/mmc1:0001/manfid \
-/sys/class/mmc_host/mmc1/mmc1:0001/oemid \
-/sys/class/mmc_host/mmc1/mmc1:0001/name
-0x000045
-0x0100
-SEM16G
-
-and the working ones have:
-
-0x000011
-0x0100
-016G92
-
-Note that "ti,non-removable" is different as omap_hsmmc_reg_get() does not
-call omap_hsmmc_disable_boot_regulators() if no_regulator_off_init is set.
-And currently we set no_regulator_off_init only for "ti,non-removable" and
-not for "non-removable". It seems that we should have "non-removable" with
-some other mmc generic property behave in the same way instead of having to
-use a non-generic property. But let's fix the issue first.
-
-Fixes: 7e2f8c0ae670 ("ARM: dts: Add minimal support for motorola droid 4
-xt894")
-Cc: Marcel Partap <mpartap@gmx.net>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Michael Scott <hashcode0f@gmail.com>
-Cc: NeKit <nekit1000@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- arch/arm/boot/dts/omap4-droid4-xt894.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -375,7 +375,7 @@
- &mmc2 {
- 	vmmc-supply = <&vsdio>;
- 	bus-width = <8>;
--	non-removable;
-+	ti,non-removable;
- };
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index fb086242d2d9..ea9262305968 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -47,7 +47,7 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 					       enum v4l2_fwnode_bus_type bus_type)
+ {
+ 	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vep->bus.mipi_csi2;
+-	bool have_clk_lane = false;
++	bool have_clk_lane = false, have_lane_polarities = false;
+ 	unsigned int flags = 0, lanes_used = 0;
+ 	u32 array[1 + V4L2_FWNODE_CSI2_MAX_DATA_LANES];
+ 	unsigned int num_data_lanes = 0;
+@@ -73,7 +73,6 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 					array[i]);
+ 			lanes_used |= BIT(array[i]);
  
- &mmc3 {
+-			bus->data_lanes[i] = array[i];
+ 			pr_debug("lane %u position %u\n", i, array[i]);
+ 		}
+ 	}
+@@ -87,16 +86,7 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 			return -EINVAL;
+ 		}
+ 
+-		fwnode_property_read_u32_array(fwnode, "lane-polarities", array,
+-					       1 + num_data_lanes);
+-
+-		for (i = 0; i < 1 + num_data_lanes; i++) {
+-			bus->lane_polarities[i] = array[i];
+-			pr_debug("lane %u polarity %sinverted",
+-				 i, array[i] ? "" : "not ");
+-		}
+-	} else {
+-		pr_debug("no lane polarities defined, assuming not inverted\n");
++		have_lane_polarities = true;
+ 	}
+ 
+ 	if (!fwnode_property_read_u32(fwnode, "clock-lanes", &v)) {
+@@ -121,6 +111,22 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 		bus->flags = flags;
+ 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
+ 		bus->num_data_lanes = num_data_lanes;
++		for (i = 0; i < num_data_lanes; i++)
++			bus->data_lanes[i] = array[i];
++
++		if (have_lane_polarities) {
++			fwnode_property_read_u32_array(fwnode,
++						       "lane-polarities", array,
++						       1 + num_data_lanes);
++
++			for (i = 0; i < 1 + num_data_lanes; i++) {
++				bus->lane_polarities[i] = array[i];
++				pr_debug("lane %u polarity %sinverted",
++					 i, array[i] ? "" : "not ");
++			}
++		} else {
++			pr_debug("no lane polarities defined, assuming not inverted\n");
++		}
+ 	}
+ 
+ 	return 0;
 -- 
-2.18.0
+2.11.0
