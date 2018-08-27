@@ -1,113 +1,89 @@
-From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: Re: [PATCH v6 3/4] venus: firmware: add no TZ boot and shutdown
- routine
-Date: Mon, 27 Aug 2018 18:19:29 +0530
-Message-ID: <002138192bcb3f7e6bf55e090d1b5328@codeaurora.org>
-References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
- <1535034528-11590-4-git-send-email-vgarodia@codeaurora.org>
- <CAPBb6MV1jjksgbSaCuUcY_ZbjfGeK-GaQ_+OZ7LWUv4ehA3dGQ@mail.gmail.com>
- <9e9417cf2fccfed4015f6893045e4f7f@codeaurora.org>
- <CAPBb6MX7EQvXfq_F+8b2FcqROpGY7ud4M6UyttGzoELsw=NJ=Q@mail.gmail.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v1 01/10] arm/arm64: dts: msm8974/msm8916: thermal: Split
+ address space into two
+Date: Mon, 27 Aug 2018 18:24:55 +0530
+Message-ID: <CAP245DWcQ1DQCoMv_92wJweySUDaH60+ySwGeQHR9hL1PpD0uw@mail.gmail.com>
+References: <cover.1533815718.git.amit.kucheria@linaro.org>
+ <d01f560abed221b536b27bfaa42a530257642974.1533815718.git.amit.kucheria@linaro.org>
+ <20180824232747.GE25163@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPBb6MX7EQvXfq_F+8b2FcqROpGY7ud4M6UyttGzoELsw=NJ=Q@mail.gmail.com>
+In-Reply-To: <20180824232747.GE25163@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@chromium.org>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, smohanad@codeaurora.org, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Lists LAKML <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-27 08:36, Alexandre Courbot wrote:
-> On Fri, Aug 24, 2018 at 9:26 PM Vikash Garodia 
-> <vgarodia@codeaurora.org> wrote:
->> 
->> Hi Alex,
->> 
->> On 2018-08-24 13:09, Alexandre Courbot wrote:
->> > On Thu, Aug 23, 2018 at 11:29 PM Vikash Garodia
->> > <vgarodia@codeaurora.org> wrote:
->> 
->> [snip]
->> 
->> >> +struct video_firmware {
->> >> +       struct device *dev;
->> >> +       struct iommu_domain *iommu_domain;
->> >> +};
->> >> +
->> >>  /**
->> >>   * struct venus_core - holds core parameters valid for all instances
->> >>   *
->> >> @@ -98,6 +103,7 @@ struct venus_caps {
->> >>   * @dev:               convenience struct device pointer
->> >>   * @dev_dec:   convenience struct device pointer for decoder device
->> >>   * @dev_enc:   convenience struct device pointer for encoder device
->> >> + * @fw:                a struct for venus firmware info
->> >>   * @no_tz:     a flag that suggests presence of trustzone
->> >>   * @lock:      a lock for this strucure
->> >>   * @instances: a list_head of all instances
->> >> @@ -130,6 +136,7 @@ struct venus_core {
->> >>         struct device *dev;
->> >>         struct device *dev_dec;
->> >>         struct device *dev_enc;
->> >> +       struct video_firmware fw;
->> >
->> > Since struct video_firmware is only used here I think you can declare
->> > it inline, i.e.
->> >
->> >     struct {
->> >         struct device *dev;
->> >         struct iommu_domain *iommu_domain;
->> >     } fw;
->> >
->> > This structure is actually a good candidate to hold the firmware
->> > memory area start address and size.
->> 
->> I can make it inline.
->> Memory area and size are common parameters populated
->> locally while loading the firmware with or without tz. Firmware struct
->> has
->> info more specific to firmware device.
->> 
->> [snip]
->> 
->> >
->> >> +{
->> >> +       struct iommu_domain *iommu_dom;
->> >> +       struct device *dev;
->> >> +       int ret;
->> >> +
->> >> +       dev = core->fw.dev;
->> >> +       if (!dev)
->> >> +               return -EPROBE_DEFER;
->> >> +
->> >> +       iommu_dom = iommu_domain_alloc(&platform_bus_type);
->> >> +       if (!iommu_dom) {
->> >> +               dev_err(dev, "Failed to allocate iommu domain\n");
->> >> +               return -ENOMEM;
->> >> +       }
->> >> +
->> >> +       ret = iommu_attach_device(iommu_dom, dev);
->> >> +       if (ret) {
->> >> +               dev_err(dev, "could not attach device\n");
->> >> +               goto err_attach;
->> >> +       }
->> >
->> > I think like the above belongs more in venus_firmware_init()
->> > (introduced in patch 4/4) than here. There is no reason to
->> > detach/reattach the iommu if we stop the firmware.
->> 
->> Consider the case when we want to reload the firmware during error
->> recovery.
->> Boot and shutdown will be needed in such case without the need to
->> populate
->> the firmware device again.
-> 
-> Is there a need to reattach the iommu domain in case of an error?
+On Sat, Aug 25, 2018 at 4:58 AM Eduardo Valentin <edubezval@gmail.com> wrote:
+>
+> On Thu, Aug 09, 2018 at 06:02:33PM +0530, Amit Kucheria wrote:
+> > We've earlier added support to split the register address space into TM
+> > and SROT regions.
+> >
+> > Split up the regmap address space into two for the remaining platforms that
+> > have a similar register layout and make corresponding changes to the
+> > get_temp_common() function used by these platforms.
+> >
+> > Since tsens-common.c/init_common() currently only registers one address
+> > space, the order is important (TM before SROT).  This is OK since the code
+> > doesn't really use the SROT functionality yet.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/qcom-msm8974.dtsi   | 6 ++++--
+> >  arch/arm64/boot/dts/qcom/msm8916.dtsi | 6 ++++--
+> >  drivers/thermal/qcom/tsens-common.c   | 5 +++--
+> >  3 files changed, 11 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > index d9019a49b292..3c4b81c29798 100644
+> > --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > @@ -427,11 +427,13 @@
+> >                       };
+> >               };
+> >
+> > -             tsens: thermal-sensor@fc4a8000 {
+> > +             tsens: thermal-sensor@fc4a9000 {
+> >                       compatible = "qcom,msm8974-tsens";
+> > -                     reg = <0xfc4a8000 0x2000>;
+> > +                     reg = <0xfc4a9000 0x1000>, /* TM */
+> > +                           <0xfc4a8000 0x1000>; /* SROT */
+> >                       nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+> >                       nvmem-cell-names = "calib", "calib_backup";
+> > +                     #qcom,sensors = <11>;
+> >                       #thermal-sensor-cells = <1>;
+> >               };
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > index cc1040eacdf5..abf84df5a7bc 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > @@ -774,11 +774,13 @@
+> >                       };
+> >               };
+> >
+> > -             tsens: thermal-sensor@4a8000 {
+> > +             tsens: thermal-sensor@4a9000 {
+> >                       compatible = "qcom,msm8916-tsens";
+> > -                     reg = <0x4a8000 0x2000>;
+> > +                     reg = <0x4a9000 0x1000>, /* TM */
+> > +                           <0x4a8000 0x1000>; /* SROT */
+> >                       nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+> >                       nvmem-cell-names = "calib", "calib_sel";
+> > +                     #qcom,sensors = <5>;
+> >                       #thermal-sensor-cells = <1>;
+>
+> Looking closer to this, I fail to remember the reasoning why
+> #qcom,sensors property was needed.
 
-re-attach is not needed. We can have alloc/attach in init and 
-detach/free in deinit.
-map/reset and unmap/reset can continue to remain in boot and shutdown 
-calls. Let me
-know if this is good, i can repatch the series.
+It is necessary for platforms that have multiple TSENS blocks. This
+then allows us to specify the number of connected sensors per block.
+See commit 6d7c70d1cd65 ("thermal: qcom: tsens: Allow number of
+sensors to come from DT") for details.
+
+As requested by Matthias, I'm moving this bit to its own patch in v2.
+
+Regards,
+Amit
