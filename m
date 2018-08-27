@@ -1,46 +1,36 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] dt-bindings: can: rcar_can: Add r8a774a1 support
-Date: Mon, 27 Aug 2018 14:55:10 +0200
-Message-ID: <20180827125510.ahpk6basgrxbzq6i@verge.net.au>
-References: <1534516703-11448-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180822104856.34nusjd4ajtwb4ef@verge.net.au>
- <TYAPR01MB2285834E95AB0D0D3E2C5B72B7300@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20180824082643.7eapxf72iuvkdw3j@verge.net.au>
- <TY1PR01MB177055864EEAD487C2917860C0360@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/2] clk: meson-g12a: Add AO Clock controller driver
+Date: Mon, 27 Aug 2018 15:07:46 +0200
+Message-ID: <89b058a7bba26058fab95dea01155221dbb642ce.camel@baylibre.com>
+References: <1533894868-85815-1-git-send-email-jian.hu@amlogic.com>
+         <1533894868-85815-3-git-send-email-jian.hu@amlogic.com>
+         <6c855dc62fe6ed1a01216bd708d401a280f8762c.camel@baylibre.com>
+         <fff1f982-c9f3-8aa4-b108-6c0998827e79@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB177055864EEAD487C2917860C0360@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <fff1f982-c9f3-8aa4-b108-6c0998827e79@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jian Hu <jian.hu@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 24, 2018 at 08:31:42AM +0000, Fabrizio Castro wrote:
-> Hello Simon,
+On Fri, 2018-08-24 at 21:34 +0800, Jian Hu wrote:
+> > 
 > 
-> Thank you for the feedback!
+> I am confued about aoclk81's parent clocks.
 > 
-> > >
-> > > In theory CAN could be broken if renesas,can-clock-select is set to 0x1
-> > > (clkp2) in the DT, as this value will be written to the CAN Clock Select
-> > > Register. However if the documentation is followed there will be no
-> > > problems.
-> > >
-> > > We should probably update the driver to fix this though, which will be a
-> > > change specific to all RZ/G2 devices, so perhaps we should also be adding
-> > > a "renesas,rzg-gen2-can" family compatible string as well? (to driver and
-> > > documentation)
-> >
-> > Yes, I think that sounds reasonable.
-> >
-> > But in that case we should pre-emptively not use renesas,rcar-gen3-can for
-> > RZ/G2.
-> 
-> What do you think about the following:
-> https://patchwork.kernel.org/patch/10573795/
-> https://patchwork.kernel.org/patch/10573791/
-> https://patchwork.kernel.org/patch/10573805/
+> I can not get the example of axg audio clock driver, Could you provide 
+> the link? Had it merged into clk-meson.git?
 
-I think that is the right approach.
+Yes and mainline as well : drivers/clk/meson/axg-audio.c
+
+Basically this driver is creating bypass input clocks (audio_pclk, mst_in[0-9],
+etc...) .
+
+This allows to collect input clocks from DT (like any consumer should) will
+keeping constant in the controller clock tree.
+
+>From what I've seen of your controller drivers, the EE controller should have
+one input, the AO should have 3.
