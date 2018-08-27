@@ -1,66 +1,100 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 5/6] arm64: dts: ti: Add Support for AM654 SoC
-Date: Mon, 27 Aug 2018 08:32:21 +0530
-Message-ID: <40cecb47-bd32-04aa-b7cd-ff16c1eb28f3@ti.com>
-References: <20180605060510.32473-1-nm@ti.com>
- <CAL_JsqJusWTvr4A_-Bk81meYddMHBMJ4=Fch6L0MFoF7HfBW2w@mail.gmail.com>
- <454c277e-8a63-81cb-b341-a50f4e25cbea@ti.com>
- <20180820143153.GD7523@atomide.com>
+From: Alexandre Courbot <acourbot@chromium.org>
+Subject: Re: [PATCH v6 3/4] venus: firmware: add no TZ boot and shutdown routine
+Date: Mon, 27 Aug 2018 12:06:14 +0900
+Message-ID: <CAPBb6MX7EQvXfq_F+8b2FcqROpGY7ud4M6UyttGzoELsw=NJ=Q@mail.gmail.com>
+References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
+ <1535034528-11590-4-git-send-email-vgarodia@codeaurora.org>
+ <CAPBb6MV1jjksgbSaCuUcY_ZbjfGeK-GaQ_+OZ7LWUv4ehA3dGQ@mail.gmail.com> <9e9417cf2fccfed4015f6893045e4f7f@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180820143153.GD7523@atomide.com>
+In-Reply-To: <9e9417cf2fccfed4015f6893045e4f7f@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Vignesh R <vigneshr@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <linux@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>
+To: vgarodia@codeaurora.org
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Fri, Aug 24, 2018 at 9:26 PM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+>
+> Hi Alex,
+>
+> On 2018-08-24 13:09, Alexandre Courbot wrote:
+> > On Thu, Aug 23, 2018 at 11:29 PM Vikash Garodia
+> > <vgarodia@codeaurora.org> wrote:
+>
+> [snip]
+>
+> >> +struct video_firmware {
+> >> +       struct device *dev;
+> >> +       struct iommu_domain *iommu_domain;
+> >> +};
+> >> +
+> >>  /**
+> >>   * struct venus_core - holds core parameters valid for all instances
+> >>   *
+> >> @@ -98,6 +103,7 @@ struct venus_caps {
+> >>   * @dev:               convenience struct device pointer
+> >>   * @dev_dec:   convenience struct device pointer for decoder device
+> >>   * @dev_enc:   convenience struct device pointer for encoder device
+> >> + * @fw:                a struct for venus firmware info
+> >>   * @no_tz:     a flag that suggests presence of trustzone
+> >>   * @lock:      a lock for this strucure
+> >>   * @instances: a list_head of all instances
+> >> @@ -130,6 +136,7 @@ struct venus_core {
+> >>         struct device *dev;
+> >>         struct device *dev_dec;
+> >>         struct device *dev_enc;
+> >> +       struct video_firmware fw;
+> >
+> > Since struct video_firmware is only used here I think you can declare
+> > it inline, i.e.
+> >
+> >     struct {
+> >         struct device *dev;
+> >         struct iommu_domain *iommu_domain;
+> >     } fw;
+> >
+> > This structure is actually a good candidate to hold the firmware
+> > memory area start address and size.
+>
+> I can make it inline.
+> Memory area and size are common parameters populated
+> locally while loading the firmware with or without tz. Firmware struct
+> has
+> info more specific to firmware device.
+>
+> [snip]
+>
+> >
+> >> +{
+> >> +       struct iommu_domain *iommu_dom;
+> >> +       struct device *dev;
+> >> +       int ret;
+> >> +
+> >> +       dev = core->fw.dev;
+> >> +       if (!dev)
+> >> +               return -EPROBE_DEFER;
+> >> +
+> >> +       iommu_dom = iommu_domain_alloc(&platform_bus_type);
+> >> +       if (!iommu_dom) {
+> >> +               dev_err(dev, "Failed to allocate iommu domain\n");
+> >> +               return -ENOMEM;
+> >> +       }
+> >> +
+> >> +       ret = iommu_attach_device(iommu_dom, dev);
+> >> +       if (ret) {
+> >> +               dev_err(dev, "could not attach device\n");
+> >> +               goto err_attach;
+> >> +       }
+> >
+> > I think like the above belongs more in venus_firmware_init()
+> > (introduced in patch 4/4) than here. There is no reason to
+> > detach/reattach the iommu if we stop the firmware.
+>
+> Consider the case when we want to reload the firmware during error
+> recovery.
+> Boot and shutdown will be needed in such case without the need to
+> populate
+> the firmware device again.
 
-On Monday 20 August 2018 08:01 PM, Tony Lindgren wrote:
-> * Kishon Vijay Abraham I <kishon@ti.com> [180808 06:35]:
->> On Tuesday 05 June 2018 07:35 PM, Rob Herring wrote:
->>> Really need 64-bit addresses and sizes? Use ranges to limit the
->>> address space if possible.
->>
->> We now have address-cells as <1>,
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/ti/k3-am65.dtsi#n49
->>
->> However each PCIe instance has 2 data regions and one of the regions
->> (PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT1/PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT1 specified
->> in the "MAIN Domain Memory Map" table of TRM http://www.ti.com/lit/pdf/spruid7)
->> is above the 32bit region and requires 2 cells to specify the start address.
->> This region is used to access MEM_SPACE of PCIe endpoint when operating in root
->> complex mode and access memory of PCI root complex when operating in endpoint mode.
->>
->> In order to describe this, should we change the address-cells back to <2> or do
->> you suggest any other alternatives?
-> 
-> It's probably best to have the top level cbass interconnect use
-> #size-cells = <2> and then have it's child interconnects have
-> #size-cells = <1> if they don't need ranges above 4GB.
-
-PCIe has a region starting at 0x40_00000000 and size 4GB. We need 2 address
-cells and 2 size cells to describe this no?
-> 
-> BTW, what's the difference between all these three similar PCIE
-> ranges?
-> 
-> PCIE0_CORE_CORE_DAT_SLV_PCIE_CORE 0x0005500000 0x0005600000 1 MB
-> PCIE1_CORE_CORE_DAT_SLV_PCIE_CORE 0x0005600000 0x0005700000 1 MB
-
-This is the register space for the two instances of PCIe controller.
-> 
-> PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT0 0x0010000000 0x0018000000 128 MB
-> PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT0 0x0018000000 0x0020000000 128 MB
-> 
-> PCIE0_CORE_CORE_DAT_SLV_PCIE_DAT1 0x4000000000 0x4100000000 4 GB
-> PCIE1_CORE_CORE_DAT_SLV_PCIE_DAT1 0x4100000000 0x4200000000 4 GB
-
-The above are regions which can be used by CPU/DMA to access the PCIe address
-space. The mapping from the above regions to the PCIe address space will be
-programmed in the PCIe controller.
-
-Thanks
-Kishon
+Is there a need to reattach the iommu domain in case of an error?
