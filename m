@@ -1,170 +1,171 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v6 1/4] venus: firmware: add routine to reset ARM9
-Date: Mon, 27 Aug 2018 13:56:15 +0300
-Message-ID: <85ffba9c-8b29-4c7a-7aec-999af94aeda0@linaro.org>
-References: <1535034528-11590-1-git-send-email-vgarodia@codeaurora.org>
- <1535034528-11590-2-git-send-email-vgarodia@codeaurora.org>
- <CAPBb6MUZawT84Wcrhi+MEyn+zSCWOpn_iOZMMudZz+_Urixsrw@mail.gmail.com>
- <51cc9d6b-0483-76a6-d413-3f5cc63f3f56@linaro.org>
- <CAPBb6MWMQeXAabnis0iJxE91MCSscacbim3T_K6VF6OODw5TuQ@mail.gmail.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [Patch v15 0/5] iommu/arm-smmu: Add runtime pm/sleep
+ support
+Date: Mon, 27 Aug 2018 16:25:46 +0530
+Message-ID: <20180827105551.16346-1-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPBb6MWMQeXAabnis0iJxE91MCSscacbim3T_K6VF6OODw5TuQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@chromium.org>
-Cc: vgarodia@codeaurora.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/27/2018 06:04 AM, Alexandre Courbot wrote:
-> On Fri, Aug 24, 2018 at 5:57 PM Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
->>
->> Hi Alex,
->>
->> On 08/24/2018 10:38 AM, Alexandre Courbot wrote:
->>> On Thu, Aug 23, 2018 at 11:29 PM Vikash Garodia <vgarodia@codeaurora.org> wrote:
->>>>
->>>> Add routine to reset the ARM9 and brings it out of reset. Also
->>>> abstract the Venus CPU state handling with a new function. This
->>>> is in preparation to add PIL functionality in venus driver.
->>>>
->>>> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
->>>> ---
->>>>  drivers/media/platform/qcom/venus/core.h         |  2 ++
->>>>  drivers/media/platform/qcom/venus/firmware.c     | 33 ++++++++++++++++++++++++
->>>>  drivers/media/platform/qcom/venus/firmware.h     | 11 ++++++++
->>>>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++-------
->>>>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  7 +++++
->>>>  5 files changed, 57 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
->>>> index 2f02365..dfd5c10 100644
->>>> --- a/drivers/media/platform/qcom/venus/core.h
->>>> +++ b/drivers/media/platform/qcom/venus/core.h
->>>> @@ -98,6 +98,7 @@ struct venus_caps {
->>>>   * @dev:               convenience struct device pointer
->>>>   * @dev_dec:   convenience struct device pointer for decoder device
->>>>   * @dev_enc:   convenience struct device pointer for encoder device
->>>> + * @no_tz:     a flag that suggests presence of trustzone
->>>>   * @lock:      a lock for this strucure
->>>>   * @instances: a list_head of all instances
->>>>   * @insts_count:       num of instances
->>>> @@ -129,6 +130,7 @@ struct venus_core {
->>>>         struct device *dev;
->>>>         struct device *dev_dec;
->>>>         struct device *dev_enc;
->>>> +       bool no_tz;
->>>>         struct mutex lock;
->>>>         struct list_head instances;
->>>>         atomic_t insts_count;
->>>> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
->>>> index c4a5778..a9d042e 100644
->>>> --- a/drivers/media/platform/qcom/venus/firmware.c
->>>> +++ b/drivers/media/platform/qcom/venus/firmware.c
->>>> @@ -22,10 +22,43 @@
->>>>  #include <linux/sizes.h>
->>>>  #include <linux/soc/qcom/mdt_loader.h>
->>>>
->>>> +#include "core.h"
->>>>  #include "firmware.h"
->>>> +#include "hfi_venus_io.h"
->>>>
->>>>  #define VENUS_PAS_ID                   9
->>>>  #define VENUS_FW_MEM_SIZE              (6 * SZ_1M)
->>>
->>> This is making a strong assumption about the size of the FW memory
->>> region, which in practice is not always true (I had to reduce it to
->>> 5MB). How about having this as a member of venus_core, which is
->>
->> Why you reduced to 5MB? Is there an issue with 6MB or you don't want to
->> waste reserved memory?
-> 
-> The DT layout of our board only has 5MB reserved for Venus.
-> 
->>> initialized in venus_load_fw() from the actual size of the memory
->>> region? You could do this as an extra patch that comes before this
->>> one.
->>>
->>
->> The size is 6MB by historical reasons and they are no more valid, so I
->> think we could safely decrease to 5MB. I could prepare a patch for that.
-> 
-> Whether we settle with 6MB or 5MB, that size remains arbitrary and not
-> based on the actual firmware size. And __qcom_mdt_load() does check
-
-If we go with 5MB it will not be arbitrary, cause all firmware we have
-support to are expecting that size of memory.
-
-> that the firmware fits the memory area. So I don't understand what
-> extra safety is added by ensuring the memory region is larger than a
-> given number of megabytes?
-> 
-
-OK, is that fine for you? Drop size and check does memory region size is
-big enough to contain the firmware.
-
-diff --git a/drivers/media/platform/qcom/venus/firmware.c
-b/driver/media/platform/qcom/venus/firmware.c
-index c4a577848dd7..9bf0d21e02d4 100644
---- a/drivers/media/platform/qcom/venus/firmware.c
-+++ b/drivers/media/platform/qcom/venus/firmware.c
-@@ -25,7 +25,6 @@
- #include "firmware.h"
-
- #define VENUS_PAS_ID                   9
--#define VENUS_FW_MEM_SIZE              (6 * SZ_1M)
-
- int venus_boot(struct device *dev, const char *fwname)
- {
-@@ -54,25 +53,28 @@ int venus_boot(struct device *dev, const char *fwname)
-        mem_phys = r.start;
-        mem_size = resource_size(&r);
-
--       if (mem_size < VENUS_FW_MEM_SIZE)
--               return -EINVAL;
--
--       mem_va = memremap(r.start, mem_size, MEMREMAP_WC);
--       if (!mem_va) {
--               dev_err(dev, "unable to map memory region: %pa+%zx\n",
--                       &r.start, mem_size);
--               return -ENOMEM;
--       }
--
-        ret = request_firmware(&mdt, fwname, dev);
-        if (ret < 0)
--               goto err_unmap;
-+               return ret;
-
-        fw_size = qcom_mdt_get_size(mdt);
-        if (fw_size < 0) {
-                ret = fw_size;
-                release_firmware(mdt);
--               goto err_unmap;
-+               return ret;
-+       }
-+
-+       if (mem_size < fw_size) {
-+               release_firmware(mdt);
-+               return -EINVAL;
-+       }
-+
-+       mem_va = memremap(r.start, mem_size, MEMREMAP_WC);
-+       if (!mem_va) {
-+               release_firmware(mdt);
-+               dev_err(dev, "unable to map memory region: %pa+%zx\n",
-+                       &r.start, mem_size);
-+               return -ENOMEM;
-        }
-
-        ret = qcom_mdt_load(dev, mdt, fwname, VENUS_PAS_ID, mem_va,
-mem_phys,
-
-
--- 
-regards,
-Stan
+VGhpcyBzZXJpZXMgcHJvdmlkZXMgdGhlIHN1cHBvcnQgZm9yIHR1cm5pbmcgb24gdGhlIGFybS1z
+bW11J3MKY2xvY2tzL3Bvd2VyIGRvbWFpbnMgdXNpbmcgcnVudGltZSBwbS4gVGhpcyBpcyBkb25l
+IHVzaW5nCmRldmljZSBsaW5rcyBiZXR3ZWVuIHNtbXUgYW5kIGNsaWVudCBkZXZpY2VzLiBUaGUg
+ZGV2aWNlIGxpbmsKZnJhbWV3b3JrIGtlZXBzIHRoZSB0d28gZGV2aWNlcyBpbiBjb3JyZWN0IG9y
+ZGVyIGZvciBwb3dlci1jeWNsaW5nCmFjcm9zcyBydW50aW1lIFBNIG9yIGFjcm9zcyBzeXN0ZW0t
+d2lkZSBQTS4KCldpdGggYWRkaXRpb24gb2YgYSBuZXcgZGV2aWNlIGxpbmsgZmxhZyBETF9GTEFH
+X0FVVE9SRU1PVkVfU1VQUExJRVIgWzhdLAp0aGUgZGV2aWNlIGxpbmtzIGNyZWF0ZWQgYmV0d2Vl
+biBhcm0tc21tdSBhbmQgaXRzIGNsaWVudHMgd2lsbCBiZQphdXRvbWF0aWNhbGx5IHB1cmdlZCB3
+aGVuIGFybS1zbW11IGRyaXZlciB1bmJpbmRzIGZyb20gaXRzIGRldmljZS4KCkFzIG5vdCBhbGwg
+aW1wbGVtZW50YXRpb25zIHN1cHBvcnQgY2xvY2svcG93ZXIgZ2F0aW5nLCB3ZSBhcmUgY2hlY2tp
+bmcKZm9yIGEgdmFsaWQgJ3NtbXUtPmRldidzIHBtX2RvbWFpbicgdG8gY29uZGl0aW9uYWxseSBl
+bmFibGUgdGhlIHJ1bnRpbWUKcG93ZXIgbWFuYWdlbWVudCBmb3Igc3VjaCBzbW11IGltcGxlbWVu
+dGF0aW9ucyB0aGF0IGNhbiBzdXBwb3J0IGl0LgpPdGhlcndpc2UsIHRoZSBjbG9ja3MgYXJlIHR1
+cm5lZCB0byBiZSBhbHdheXMgb24gaW4gLnByb2JlIHVudGlsIC5yZW1vdmUuCldpdGggY29uZGl0
+aW9uYWwgcnVudGltZSBwbSBub3csIHdlIGF2b2lkIHRvdWNoaW5nIGRldi0+cG93ZXIubG9jawpp
+biBmYXN0cGF0aHMgZm9yIHNtbXUgaW1wbGVtZW50YXRpb25zIHRoYXQgZG9uJ3QgbmVlZCB0byBk
+byBhbnl0aGluZwp1c2VmdWwgd2l0aCBwbV9ydW50aW1lLgpUaGlzIGxldHMgdXMgdG8gdXNlIHRo
+ZSBtdWNoLWFyZ3VlZCBwbV9ydW50aW1lX2dldF9zeW5jL3B1dF9zeW5jKCkKY2FsbHMgaW4gbWFw
+L3VubWFwIGNhbGxiYWNrcyBzbyB0aGF0IHRoZSBjbGllbnRzIGRvIG5vdCBoYXZlIHRvCndvcnJ5
+IGFib3V0IGhhbmRsaW5nIGFueSBvZiB0aGUgYXJtLXNtbXUncyBwb3dlci4KClRoaXMgc2VyaWVz
+IGFsc28gYWRkcyBzdXBwb3J0IGZvciBRY29tJ3MgYXJtLXNtbXUtdjIgdmFyaWFudCB0aGF0Cmhh
+cyBkaWZmZXJlbnQgY2xvY2tzIGFuZCBwb3dlciByZXF1aXJlbWVudHMuCgpQcmV2aW91cyB2ZXJz
+aW9uIG9mIHRoaXMgcGF0Y2ggc2VyaWVzIGlzIEAgWzJdLgoKQnVpbGQgdGVzdGVkIHRoZSBzZXJp
+ZXMgYmFzZWQgb24gNC4xOS1yYzEuCgpbdjE1XQogICAqIEFkZGVkIGEgbGlzdCBvZiB2YWxpZCB2
+YWx1ZXMgb2YgJzxzb2M+JyBpbiAicWNvbSw8c29jPi1zbW11LXYyIgogICAgIGNvbXBhdGlibGUg
+c3RyaW5nIGFzIHBvaW50ZWQgb3V0IGJ5IFJvYmluLCBhbmQgUm9iIGluIHRoZSB0aHJlYWQgWzld
+OgogICAqIEFkZGVkIFNyaW5pJ3MgVGVzdGVkLWJ5LgogICAqIFNlcGFyYXRlZCBvdXQgdGhlIGR0
+LWJpbmRpbmdzIGNoYW5nZSBmcm9tIGRyaXZlciBjaGFuZ2UgaW50byBhIG5ldwogICAgIHBhdGNo
+IGFzIHN1Z2dlc3RlZCBieSBuZXcgY2hlY2twYXRjaCB3YXJuaW5nLgoKICAgICBSb2IsIEkgdG9v
+ayB0aGUgbGliZXJ0eSBvZiByZW1vdmluZyB5b3VyIFJldmlld2VkLWJ5IChmb3IgeW91cgogICAg
+IGNvbW1lbnQgb24gJzxzb2M+JykgZm9yIHRoZSBuZXcgZHQtYmluZGluZ3MgcGF0Y2ggNC81Lgog
+ICAgIFBsZWFzZSBmZWVsIGZyZWUgdG8gcmV2aWV3IGl0IGFnYWluLiBUaGFua3MhCgpbdjE0XQog
+ICAqIE1vdmVkIGFybV9zbW11X2RldmljZV9yZXNldCgpIGZyb20gYXJtX3NtbXVfcG1fcmVzdW1l
+KCkgdG8KICAgICBhcm1fc21tdV9ydW50aW1lX3Jlc3VtZSgpIHNvIHRoYXQgdGhlIHBtX3Jlc3Vt
+ZSBjYWxsYmFjayBjYWxscwogICAgIG9ubHkgcnVudGltZV9yZXN1bWUgdG8gcmVzdW1lIHRoZSBk
+ZXZpY2UuCiAgICAgVGhpcyBzaG91bGQgdGFrZSBjYXJlIG9mIHJlc3RvcmluZyB0aGUgc3RhdGUg
+b2Ygc21tdSBpbiBzeXN0ZW1zCiAgICAgaW4gd2hpY2ggc21tdSBsb3NlIHJlZ2lzdGVyIHN0YXRl
+IG9uIHBvd2VyLWRvbWFpbiBjb2xsYXBzZS4KClt2MTNdCiAgIEFkZHJlc3NpbmcgUmFmYWVsJ3Mg
+Y29tbWVudHM6CiAgICogQWRkZWQgLnN1c3BlbmQgcG0gY2FsbGJhY2sgdG8gZGlzYWJsZSB0aGUg
+Y2xvY2tzIGluIHN5c3RlbSB3aWRlIHN1c3BlbmQuCiAgICogQWRkZWQgY29ycmVzcG9uZGluZyBj
+bG9jayBlbmFibGUgaW4gLnJlc3VtZSBwbSBjYWxsYmFjay4KICAgKiBFeHBsaWNpdGx5IGVuYWJs
+aW5nL2Rpc2FibGluZyB0aGUgY2xvY2tzIG5vdyB3aGVuIHJ1bnRpbWUgUE0gaXMgZGlzYWJsZWQu
+CiAgICogZGV2aWNlX2xpbmtfYWRkKCkgZG9lc24ndCBkZXBlbmQgb24gcG1fcnVudGltZV9lbmFi
+bGVkKCkgYXMgd2UgY2FuCiAgICAgdXNlIGRldmljZSBsaW5rcyBhY3Jvc3Mgc3lzdGVtIHN1c3Bl
+bmQvcmVzdW1lIHRvby4KCiAgIEFkZHJlc3NpbmcgUm9iaW4ncyBjb21tZW50czoKICAgKiBNYWtp
+bmcgZGV2aWNlX2xpbmtfYWRkIGZhaWx1cmVzIGFzIG5vbi1mYXRhbC4KCiAgICogUmVtb3ZlZCBJ
+T01NVV9PRl9ERUNMQVJFKCkgZGVjbGFyYXRpb24gYXMgd2UgZG9uJ3QgbmVlZCB0aGlzIGFmdGVy
+IFJvYidzCiAgICAgcGF0Y2ggdGhhdCByZW1vdmVkIGFsbCBvZiB0aGVzZSBkZWNsYXJhdGlvbnMu
+CgpbdjEyXQogICAqIFVzZSBuZXcgZGV2aWNlIGxpbmsncyBmbGFnIGludHJvZHVjZWQgaW4gWzhd
+IC0KICAgICBETF9GTEFHX0FVVE9SRU1PVkVfU1VQUExJRVIuIFdpdGggdGhpcyBkZXZpY2VzIGxp
+bmtzIGFyZSBhdXRvbWF0aWNhbGx5CiAgICAgcHVyZ2VkIHdoZW4gYXJtLXNtbXUgZHJpdmVyIHVu
+YmluZHMuCiAgICogVXNpbmcgcG1fcnVudGltZV9mb3JjZV9zdXNwZW5kKCkgaW5zdGVhZCBvZiBw
+bV9ydW50aW1lX2Rpc2FibGUoKSB0bwogICAgIGF2b2lkIGZvbGxvd2luZyB3YXJuaW5nIGZyb20g
+YXJtX3NtbXVfZGV2aWNlX3JlbW92ZSgpCgogICAgIFsyOTU3MTEuNTM3NTA3XSAtLS0tLS0tLS0t
+LS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0KICAgICBbMjk1NzExLjU0NDIyNl0gVW5wcmVwYXJp
+bmcgZW5hYmxlZCBzbW11X21kcF9haGJfY2xrCiAgICAgWzI5NTcxMS41NDkwOTldIFdBUk5JTkc6
+IENQVTogMCBQSUQ6IDEgYXQgLi4vZHJpdmVycy9jbGsvY2xrLmM6Njk3CiAgICAgICAgICAgICAg
+ICAgICAgIGNsa19jb3JlX3VucHJlcGFyZSsweGQ4LzB4ZTAKICAgICAuLi4KICAgICBbMjk1NzEx
+LjY3NDA3M10gQ2FsbCB0cmFjZToKICAgICBbMjk1NzExLjY3OTQ1NF0gIGNsa19jb3JlX3VucHJl
+cGFyZSsweGQ4LzB4ZTAKICAgICBbMjk1NzExLjY4MjA1OV0gIGNsa191bnByZXBhcmUrMHgyOC8w
+eDQwCiAgICAgWzI5NTcxMS42ODU5NjRdICBjbGtfYnVsa191bnByZXBhcmUrMHgyOC8weDQwCiAg
+ICAgWzI5NTcxMS42ODk3MDFdICBhcm1fc21tdV9kZXZpY2VfcmVtb3ZlKzB4ODgvMHhkOAogICAg
+IFsyOTU3MTEuNjkzNjkyXSAgYXJtX3NtbXVfZGV2aWNlX3NodXRkb3duKzB4Yy8weDE4CiAgICAg
+WzI5NTcxMS42OTgxMjBdICBwbGF0Zm9ybV9kcnZfc2h1dGRvd24rMHgyMC8weDMwCgpbdjExXQog
+ICAqIFNvbWUgbW9yZSBjbGVhbnVwcyBmb3IgZGV2aWNlIGxpbmsuIFdlIGRvbid0IG5lZWQgYW4g
+ZXhwbGljaXQKICAgICBkZWxldGUgZm9yIGRldmljZSBsaW5rIGZyb20gdGhlIGRyaXZlciwgYnV0
+IGp1c3Qgc2V0IHRoZSBmbGFnCiAgICAgRExfRkxBR19BVVRPUkVNT1ZFLgogICAgIGRldmljZV9s
+aW5rX2FkZCgpIEFQSSBkZXNjcmlwdGlvbiBzYXlzIC0KICAgICAiSWYgdGhlIERMX0ZMQUdfQVVU
+T1JFTU9WRSBpcyBzZXQsIHRoZSBsaW5rIHdpbGwgYmUgcmVtb3ZlZAogICAgIGF1dG9tYXRpY2Fs
+bHkgd2hlbiB0aGUgY29uc3VtZXIgZGV2aWNlIGRyaXZlciB1bmJpbmRzLiIKICAgKiBBZGRyZXNz
+ZWQgdGhlIGNvbW1lbnRzIGZvciAnc21tdScgaW4gYXJtX3NtbXVfbWFwL3VubWFwKCkuCiAgICog
+RHJvcHBlZCB0aGUgcGF0Y2ggWzddIHRoYXQgaW50cm9kdWNlZCBkZXZpY2VfbGlua19kZWxfZGV2
+KCkgQVBJLiAKClt2MTBdCiAgICogSW50cm9kdWNlIGRldmljZV9saW5rX2RlbF9kZXYoKSBBUEkg
+dG8gZGVsZXRlIHRoZSBsaW5rIGJldHdlZW4KICAgICBnaXZlbiBjb25zdW1lciBhbmQgc3VwcGxp
+ZXIgZGV2aWNlcy4gVGhlIHVzZXJzIG9mIGRldmljZSBsaW5rCiAgICAgZG8gbm90IG5lZWQgdG8g
+c3RvcmUgbGluayBwb2ludGVyIHRvIGRlbGV0ZSB0aGUgbGluayBsYXRlci4KICAgICBUaGV5IGNh
+biBzdHJhaWdodGF3YXkgdXNlIHRoaXMgQVBJIGJ5IHBhc3NpbmcgY29uc3VtZXIgYW5kCiAgICAg
+c3VwcGxpZXIgZGV2aWNlcy4KICAgKiBNYWRlIGNvcnJlc3BvbmRpbmcgY2hhbmdlcyB0byBhcm0t
+c21tdSBkcml2ZXIgcGF0Y2ggaGFuZGxpbmcgdGhlCiAgICAgZGV2aWNlIGxpbmtzLgogICAqIERy
+b3BwZWQgdGhlIHBhdGNoIFs2XSB0aGF0IHdhcyBhZGRpbmcgZGV2aWNlX2xpbmtfZmluZCgpIEFQ
+SSB0bwogICAgIGRldmljZSBjb3JlIGxheWVyLiBkZXZpY2VfbGlua19kZWxfZGV2KCkgc2VydmVz
+IHRoZSBwdXJwb3NlIHRvCiAgICAgZGlyZWN0bHkgZGVsZXRlIHRoZSBsaW5rIGJldHdlZW4gdHdv
+IGdpdmVuIGRldmljZXMuCgpbdjldCiAgICogUmVtb3ZlZCAncnBtX3N1cHBvcnRlZCcgZmxhZywg
+aW5zdGVhZCBjaGVja2luZyBvbiBwbV9kb21haW4KICAgICB0byBlbmFibGUgcnVudGltZSBwbS4K
+ICAgKiBDcmVhdGluZyBkZXZpY2UgbGluayBvbmx5IHdoZW4gdGhlIHJ1bnRpbWUgcG0gaXMgZW5h
+YmxlZCwgYXMgd2UKICAgICBkb24ndCBuZWVkIGEgZGV2aWNlIGxpbmsgYmVzaWRlcyBtYW5hZ2lu
+ZyB0aGUgcG93ZXIgZGVwZW5kZW5jeQogICAgIGJldHdlZW4gc3VwcGxpZXIgYW5kIGNvbnN1bWVy
+IGRldmljZXMuCiAgICogSW50cm9kdWNpbmcgYSBwYXRjaCB0byBhZGQgZGV2aWNlX2xpbmtfZmlu
+ZCgpIEFQSSB0aGF0IGZpbmRzCiAgICAgYW5kIGV4aXN0aW5nIGxpbmsgYmV0d2VlbiBzdXBwbGll
+ciBhbmQgY29uc3VtZXIgZGV2aWNlcy4KICAgICBBbHNvLCBtYWRlIG5lY2Vzc2FyeSBjaGFuZ2Ug
+dG8gZGV2aWNlX2xpbmtfYWRkKCkgdG8gdXNlIHRoaXMgQVBJLgogICAqIGFybV9zbW11X3JlbW92
+ZV9kZXZpY2UoKSBub3cgdXNlcyB0aGlzIGRldmljZV9saW5rX2ZpbmQoKSB0byBmaW5kCiAgICAg
+dGhlIGRldmljZSBsaW5rIGJldHdlZW4gc21tdSBkZXZpY2UgYW5kIHRoZSBtYXN0ZXIgZGV2aWNl
+LCBhbmQgdGhlbgogICAgIGRlbGV0ZSB0aGlzIGxpbmsuCiAgICogRHJvcHBlZCB0aGUgZGVzdHJv
+eV9kb21haW5fY29udGV4dCgpIGZpeCBbNV0gYXMgaXQgd2FzIHJhdGhlciwKICAgICBpbnRyb2R1
+Y2luZyBjYXRhc3Ryb3BoaWNhbGx5IGJhZCBwcm9ibGVtIGJ5IGRlc3Ryb3lpbmcKICAgICAnZ29v
+ZCBkZXYncyBkb21haW4gY29udGV4dC4KICAgKiBBZGRlZCAnUmV2aXdlZC1ieScgdGFnIGZvciBU
+b21hc3oncyByZXZpZXcuCgpbdjhdCiAgICogTWFqb3IgY2hhbmdlIC0KICAgICAtIEFkZGVkIGEg
+ZmxhZyAncnBtX3N1cHBvcnRlZCcgd2hpY2ggZWFjaCBwbGF0Zm9ybSB0aGF0IHN1cHBvcnRzCiAg
+ICAgICBydW50aW1lIHBtLCBjYW4gZW5hYmxlLCBhbmQgd2UgZW5hYmxlIHJ1bnRpbWVfcG0gb3Zl
+ciBhcm0tc21tdQogICAgICAgb25seSB3aGVuIHRoaXMgZmxhZyBpcyBzZXQuCiAgICAgLSBBZGRp
+bmcgdGhlIGNvbmRpdGlvbmFsIHBtX3J1bnRpbWVfZ2V0L3B1dCgpIGNhbGxzIHRvIC5tYXAsIC51
+bm1hcAogICAgICAgYW5kIC5hdHRhY2hfZGV2IG9wcy4KICAgICAtIERyb3BwZWQgdGhlIHBhdGNo
+IFszXSB0aGF0IGV4cG9ydGVkIHBtX3J1bnRpbV9nZXQvcHV0X3N1dXBsaWVycygpLAogICAgICAg
+YW5kIGFsc28gZHJvcHBlZCB0aGUgdXNlciBkcml2ZXIgcGF0Y2ggWzRdIGZvciB0aGVzZSBBUElz
+LgoKICAgKiBDbG9jayBjb2RlIGZ1cnRoZXIgY2xlYW51cAogICAgIC0gZG9pbmcgb25seSBjbGtf
+YnVsa19lbmFibGUoKSBhbmQgY2xrX2J1bGtfZGlzYWJsZSgpIGluIHJ1bnRpbWUgcG0KICAgICAg
+IGNhbGxiYWNrcy4gV2Ugc2hvdWxkbid0IGJlIHRha2luZyBhIHNsb3cgcGF0aCAoY2xrX3ByZXBh
+cmUvdW5wcmVwYXJlKCkpCiAgICAgICBmcm9tIHRoZXNlIHJ1bnRpbWUgcG0gY2FsbGJhY2tzLiBU
+aGVyZWJ5LCBtb3ZlZCBjbGtfYnVsa19wcmVwYXJlKCkgdG8KICAgICAgIGFybV9zbW11X2Rldmlj
+ZV9wcm9iZSgpLCBhbmQgY2xrX2J1bGtfdW5wcmVwYXJlKCkgdG8KICAgICAgIGFybV9zbW11X2Rl
+dmljZV9yZW1vdmUoKS4KICAgICAtIGNsayBkYXRhIGZpbGxpbmcgdG8gYSBjb21tb24gbWV0aG9k
+IGFybV9zbW11X2ZpbGxfY2xrX2RhdGEoKSB0aGF0CiAgICAgICBmaWxscyB0aGUgY2xvY2sgaWRz
+IGFuZCBudW1iZXIgb2YgY2xvY2tzLgoKICAgKiBBZGRyZXNzZWQgb3RoZXIgbml0cyBhbmQgY29t
+bWVudHMKICAgICAtIGRldmljZV9saW5rX2FkZCgpIGVycm9yIHBhdGggZml4ZWQuCiAgICAgLSBG
+aXggZm9yIGNoZWNraW5nIG5lZ2F0aXZlIGVycm9yIHZhbHVlIGZyb20gcG1fcnVudGltZV9nZXRf
+c3luYygpLgogICAgIC0gRG9jdW1lbnRhdGlvbiByZWRvLgoKICAgKiBBZGRlZCBhbm90aGVyIHBh
+dGNoIGZpeGluZyB0aGUgZXJyb3IgcGF0aCBpbiBhcm1fc21tdV9hdHRhY2hfZGV2KCkKICAgICB0
+byBkZXN0cm95IGFsbG9jYXRlZCBkb21haW4gY29udGV4dC4KClt2N10KICAgKiBBZGRyZXNzZWQg
+cmV2aWV3IGNvbW1lbnRzIGdpdmVuIGJ5IFJvYmluIE11cnBoeSAtCiAgICAgLSBBZGRlZCBkZXZp
+Y2VfbGlua19kZWwoKSBpbiAucmVtb3ZlX2RldmljZSBwYXRoLgogICAgIC0gRXJyb3IgcGF0aCBj
+bGVhbnVwIGluIGFybV9zbW11X2FkZF9kZXZpY2UoKS4KICAgICAtIEFkZGVkIHBtX3J1bnRpbWVf
+Z2V0L3B1dF9zeW5jKCkgaW4gLnJlbW92ZSBwYXRoLCBhbmQgcmVwbGFjZWQKICAgICAgICBwbV9y
+dW50aW1lX2ZvcmNlX3N1c3BlbmQoKSB3aXRoIHBtX3J1bnRpbWVfZGlzYWJsZSgpLgogICAgIC0g
+Y2xrX25hbWVzIGNsZWFudXAgaW4gYXJtX3NtbXVfaW5pdF9jbGtzKCkKICAgKiBBZGRlZCAnUmV2
+aWV3ZWQtYnknIGdpdmVuIGJ5IFJvYiBILgoKKiogQ2hhbmdlIGxvZ3MgZm9yIHByZXZpb3VzIHZl
+cnNpb25zIGlzIGF2YWlsYWJsZSBpbiBwcmV2aW91cyBzZXJpZXMgWzRdLgoKWzFdIGh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyMDQ5MjUvClsyXSBodHRwczovL2xvcmUua2Vy
+bmVsLm9yZy9wYXRjaHdvcmsvY292ZXIvOTY4MDEzLwpbM10gaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC8xMDIwNDk0NS8KWzRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvMTAyMDQ5MjUvCls1XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEw
+MjU0MTA1LwpbNl0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDI3Nzk3NS8K
+WzddIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyODE2MTMvCls4XSBodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNDkxNDgxLwpbOV0gaHR0cHM6Ly9sb3Jl
+Lmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzk3NDExNi8KClNyaWNoYXJhbiBSICgzKToKICBp
+b21tdS9hcm0tc21tdTogQWRkIHBtX3J1bnRpbWUvc2xlZXAgb3BzCiAgaW9tbXUvYXJtLXNtbXU6
+IEludm9rZSBwbV9ydW50aW1lIGR1cmluZyBwcm9iZSwgYWRkL3JlbW92ZSBkZXZpY2UKICBpb21t
+dS9hcm0tc21tdTogQWRkIHRoZSBkZXZpY2VfbGluayBiZXR3ZWVuIG1hc3RlcnMgYW5kIHNtbXUK
+ClZpdmVrIEdhdXRhbSAoMik6CiAgZHQtYmluZGluZ3M6IGFybS1zbW11OiBBZGQgYmluZGluZ3Mg
+Zm9yIHFjb20sc21tdS12MgogIGlvbW11L2FybS1zbW11OiBBZGQgc3VwcG9ydCBmb3IgcWNvbSxz
+bW11LXYyIHZhcmlhbnQKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50
+eHQgICAgICAgICB8ICA0NyArKysrKwogZHJpdmVycy9pb21tdS9hcm0tc21tdS5jICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCAxOTQgKysrKysrKysrKysrKysrKysrKy0tCiAyIGZpbGVzIGNo
+YW5nZWQsIDIzMCBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkKCi0tIApRVUFMQ09NTSBJ
+TkRJQSwgb24gYmVoYWxmIG9mIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEg
+bWVtYmVyCm9mIENvZGUgQXVyb3JhIEZvcnVtLCBob3N0ZWQgYnkgVGhlIExpbnV4IEZvdW5kYXRp
+b24KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
+cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
