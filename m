@@ -1,44 +1,76 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v7 0/3] ARM: dts: at91: sama5d2: Add nodes for I2S
-Date: Mon, 27 Aug 2018 16:40:49 +0200
-Message-ID: <20180827144049.GC23428@piout.net>
-References: <20180806111948.4522-1-codrin.ciubotariu@microchip.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
+Date: Mon, 27 Aug 2018 16:44:44 +0200
+Message-ID: <CAPDyKFot-Nx=R83vxS=WQp2kSFmMiQ7wfOK4m6hbPt0MB3Z25A@mail.gmail.com>
+References: <20180827082153.22537-1-johan@kernel.org> <20180827082153.22537-5-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180806111948.4522-1-codrin.ciubotariu@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc: nicolas.ferre@microchip.com, Claudiu.Beznea@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Cristian.Birsan@microchip.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180827082153.22537-5-johan@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2018 14:19:45+0300, Codrin Ciubotariu wrote:
-> These are the remaining dts patches from the series:
-> [PATCH v5 0/5] ASoC: add driver for Atmel I2S controller
-> 
-> v6 -> v7
->  - addressed some comments regarding pin conflicts;
-> 
-> v5 -> v6
->  - removed unnecessary phandles to audio PLL clock from the I2S nodes;
->  - using assigned clocks to set gclk as parent of i2smuxclk;
-> 
-> Codrin Ciubotariu (1):
->   ARM: dts: at91: sama5d2: add I2S clock muxing nodes
-> 
-> Cyrille Pitchen (2):
->   ARM: dts: at91: sama5d2: add nodes for I2S controllers
->   ARM: dts: at91: sama5d2 Xplained: add pin muxing for I2S
-> 
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 30 +++++++++++
->  arch/arm/boot/dts/sama5d2.dtsi              | 56 +++++++++++++++++++++
->  2 files changed, 86 insertions(+)
-> 
+On 27 August 2018 at 10:21, Johan Hovold <johan@kernel.org> wrote:
+> Use the new of_get_compatible_child() helper to lookup the slot child
+> node instead of using of_find_compatible_node(), which searches the
+> entire tree from a given start node and thus can return an unrelated
+> (i.e. non-child) node.
+>
+> This also addresses a potential use-after-free (e.g. after probe
+> deferral) as the tree-wide helper drops a reference to its first
+> argument (i.e. the node of the device being probed).
+>
+> While at it, also fix up the related slot-node reference leak.
+>
+> Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+> Cc: stable <stable@vger.kernel.org>     # 4.15
+> Cc: Carlo Caione <carlo@endlessm.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
-All applied, thanks!
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Kind regards
+Uffe
+
+> ---
+>  drivers/mmc/host/meson-mx-sdio.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
+> index 09cb89645d06..2cfec33178c1 100644
+> --- a/drivers/mmc/host/meson-mx-sdio.c
+> +++ b/drivers/mmc/host/meson-mx-sdio.c
+> @@ -517,19 +517,23 @@ static struct mmc_host_ops meson_mx_mmc_ops = {
+>  static struct platform_device *meson_mx_mmc_slot_pdev(struct device *parent)
+>  {
+>         struct device_node *slot_node;
+> +       struct platform_device *pdev;
+>
+>         /*
+>          * TODO: the MMC core framework currently does not support
+>          * controllers with multiple slots properly. So we only register
+>          * the first slot for now
+>          */
+> -       slot_node = of_find_compatible_node(parent->of_node, NULL, "mmc-slot");
+> +       slot_node = of_get_compatible_child(parent->of_node, "mmc-slot");
+>         if (!slot_node) {
+>                 dev_warn(parent, "no 'mmc-slot' sub-node found\n");
+>                 return ERR_PTR(-ENOENT);
+>         }
+>
+> -       return of_platform_device_create(slot_node, NULL, parent);
+> +       pdev = of_platform_device_create(slot_node, NULL, parent);
+> +       of_node_put(slot_node);
+> +
+> +       return pdev;
+>  }
+>
+>  static int meson_mx_mmc_add_host(struct meson_mx_mmc_host *host)
+> --
+> 2.18.0
+>
