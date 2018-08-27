@@ -1,56 +1,80 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH net-next 02/10] dt-bindings: net: ocelot: remove hsio
- from the list of register address spaces
-Date: Mon, 27 Aug 2018 22:57:03 +0200
-Message-ID: <20180827205703.GE24549@piout.net>
-References: <cover.aa759035f6eefdd0bb2a5ae335dab5bd5399bd46.1532954208.git-series.quentin.schulz@bootlin.com>
- <3558e538b55a2249b0a179c04c27e9d3715bbbaa.1532954208.git-series.quentin.schulz@bootlin.com>
- <20180813223103.GA16669@rob-hp-laptop>
- <20180814064953.vboz2gryq4jff34n@qschulz>
- <20180814124135.GK943@piout.net>
- <20180816142514.pf4eiqeditoy4uei@qschulz>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/3] ARM: dts: NSP: Enable SFP on bcm958625hr
+Date: Mon, 27 Aug 2018 23:09:16 +0200
+Message-ID: <20180827210916.GP27483@lunn.ch>
+References: <20180827200344.16158-1-f.fainelli@gmail.com>
+ <20180827200344.16158-2-f.fainelli@gmail.com>
+ <20180827203500.GN27483@lunn.ch>
+ <4a0e7b46-f7b6-3e9a-5f67-8160537482c8@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180816142514.pf4eiqeditoy4uei@qschulz>
+In-Reply-To: <4a0e7b46-f7b6-3e9a-5f67-8160537482c8@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, allan.nielsen@microsemi.com, thomas.petazzoni@bootlin.com
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, rmk+kernel@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 16/08/2018 16:25:14+0200, Quentin Schulz wrote:
-> Hi Alexandre,
-> 
-> On Tue, Aug 14, 2018 at 02:41:35PM +0200, Alexandre Belloni wrote:
-> > On 14/08/2018 08:49:53+0200, Quentin Schulz wrote:
-> > > Understood but it's an intermediate patch. Later (patch 8), the SerDes
-> > > muxing "controller" is added as a child to this node. There most likely
-> > > will be some others in the future (temperature sensor for example).
-> > > 
-> > > Furthermore, there's already a simple-mfd without children in this file:
-> > > https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/mips/mscc.txt#L19
-> > > 
-> > > How should we handle this case?
-> > > 
+On Mon, Aug 27, 2018 at 01:52:42PM -0700, Florian Fainelli wrote:
+> On 08/27/2018 01:35 PM, Andrew Lunn wrote:
+> >> @@ -210,6 +228,17 @@
+> >>  			reg = <4>;
+> >>  		};
+> >>  
+> >> +		port@5 {
+> >> +			label = "sfp";
+> >> +			phy-mode = "sgmii";
+> >> +			reg = <5>;
+> >> +			sfp = <&sfp>;
+> >> +			fixed-link {
+> >> +				speed = <1000>;
+> >> +				full-duplex;
+> >> +			};
 > > 
-> > There were child nodes in previous version of the binding. You can
-> > remove simple-mfd now. The useful registers that are not used by any
-> > drivers are gpr and chipid.
+> > Hi Florian
 > > 
+> > You might want to add a comment about why you are using fixed-link and
+> > sgmii, which seems very odd. Is it even correct?
 > 
-> And what about the use case I'm facing? I've got child nodes defined in
-> it but with a later patch (but they actually haven't made it to the
-> DT binding documentation, so that's for the next version of the patch
-> series).
+> Probably not, this is kind of left over from before adding the sfp
+> phandle, but if I do remove it, and I can see the DSA slave network
+> device fail to initialize, likely because we destroy the PHYLINK instance.
 > 
+> AFAIR, when we talked about this with Russell, I did not see why we had
+> to comment out the following:
+> 
+> diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+> index 962c4fd338ba..f3ae16dbf8d8 100644
+> --- a/net/dsa/slave.c
+> +++ b/net/dsa/slave.c
+> @@ -1227,7 +1227,7 @@ static int dsa_slave_phy_setup(struct net_device
+> *slave_dev)
+>                         netdev_err(slave_dev,
+>                                    "failed to connect to port %d: %d\n",
+>                                    dp->index, ret);
+> -                       phylink_destroy(dp->pl);
+> +                       //phylink_destroy(dp->pl);
+>                         return ret;
+>                 }
+>         }
+> 
+> maybe you know?
 
-I guess you should keep simple-mfd for hsio because it will have child
-nodes.
+Hi Florian
 
+I didn't need anything like this for the mv88e6xxx. I had patches
+merged in -rc1 to make SFF work connected to the mv88e6390. The DT
+change was not merged, but it is here:
 
+https://patchwork.ozlabs.org/patch/955635/
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
++					port@9 {
++						reg = <9>;
++						label = "sff2";
++						phy-mode = "sgmii";
++						managed = "in-band-status";
++						sfp = <&sff2>;
++					};
+
+	Andrew
