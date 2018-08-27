@@ -1,39 +1,98 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V5 4/8] backlight: qcom-wled: Rename PM8941* to WLED3
-Date: Mon, 27 Aug 2018 08:04:29 -0700
-Message-ID: <20180827150429.GM3048@tuxbook-pro>
-References: <1535106467-17843-1-git-send-email-kgunda@codeaurora.org>
- <1535106467-17843-5-git-send-email-kgunda@codeaurora.org>
- <20180827100448.GF31905@amd>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v7 2/8] dt-bindings: Introduce interconnect provider
+ bindings
+Date: Mon, 27 Aug 2018 17:08:36 +0200
+Message-ID: <20180827150836.shl7einpuvuw42p7@flea>
+References: <20180731161340.13000-1-georgi.djakov@linaro.org>
+ <20180731161340.13000-3-georgi.djakov@linaro.org>
+ <CABGGisxq+hf91R18pnZ=VZ9f99GssWWPhpPCjNAROJmKg5-udA@mail.gmail.com>
+ <e114ed83-fd54-4952-f375-e1d94826ac6e@linaro.org>
+ <20180820153207.xx5outviph7ec76p@flea>
+ <672e6c6c-222f-5e7f-5d0c-acc8da68b1ab@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tlmv2cpuyt6qe6ep"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180827100448.GF31905@amd>
+In-Reply-To: <672e6c6c-222f-5e7f-5d0c-acc8da68b1ab@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Kiran Gunda <kgunda@codeaurora.org>, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, skannan@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-On Mon 27 Aug 03:04 PDT 2018, Pavel Machek wrote:
 
-> On Fri 2018-08-24 15:57:43, Kiran Gunda wrote:
-> > Rename the PM8941* references as WLED3 to make the driver
-> > generic and have WLED support for other PMICs. Also rename
-> > "i_boost_limit" and "i_limit" variables to "boost_i_limit"
-> > and "string_i_limit" respectively to resemble the corresponding
-> > register names.
-> 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> 
-> > -MODULE_DESCRIPTION("pm8941 wled driver");
-> > +MODULE_DESCRIPTION("Qualcomm WLED driver");
-> 
-> "... supporting pm8941, xxx devices" ?
-> 
+--tlmv2cpuyt6qe6ep
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I would suggest not doing this. There's quite a long list of different
-PMICs containing some version of this hardware block.
+Hi!
 
-Regards,
-Bjorn
+On Fri, Aug 24, 2018 at 05:51:37PM +0300, Georgi Djakov wrote:
+> Hi Maxime,
+>=20
+> On 08/20/2018 06:32 PM, Maxime Ripard wrote:
+> > Hi Georgi,
+> >=20
+> > On Tue, Aug 07, 2018 at 05:54:38PM +0300, Georgi Djakov wrote:
+> >>> There is also a patch series from Maxime Ripard that's addressing the
+> >>> same general area. See "dt-bindings: Add a dma-parent property". We
+> >>> don't need multiple ways to address describing the device to memory
+> >>> paths, so you all had better work out a common solution.
+> >>
+> >> Looks like this fits exactly into the interconnect API concept. I see
+> >> MBUS as interconnect provider and display/camera as consumers, that
+> >> report their bandwidth needs. I am also planning to add support for
+> >> priority.
+> >=20
+> > Thanks for working on this. After looking at your serie, the one thing
+> > I'm a bit uncertain about (and the most important one to us) is how we
+> > would be able to tell through which interconnect the DMA are done.
+> >=20
+> > This is important to us since our topology is actually quite simple as
+> > you've seen, but the RAM is not mapped on that bus and on the CPU's,
+> > so we need to apply an offset to each buffer being DMA'd.
+>=20
+> Ok, i see - your problem is not about bandwidth scaling but about using
+> different memory ranges by the driver to access the same location.
+
+Well, it turns out that the problem we are bitten by at the moment is
+the memory range one, but the controller it goes through also provides
+bandwidth scaling, priorities and so on, so it's not too far off.
+
+> So this is not really the same and your problem is different. Also
+> the interconnect bindings are describing a path and
+> endpoints. However i am open to any ideas.
+
+It's describing a path and endpoints, but it can describe multiple of
+them for the same device, right? If so, we'd need to provide
+additional information to distinguish which path is used for DMA.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--tlmv2cpuyt6qe6ep
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluEE/QACgkQ0rTAlCFN
+r3TDkRAAj4uNEPLFjyHIix2x+VjZqXaBDLhJZaZz8qwSZ1xWQqcYwJnqS1V65QdW
+o4VI5AuIymA8yMjKjkOHceEYCrod2tNUiBh7SvQG38tQJD/zMsu5m8xM2JswURjj
+JfTtDLthBottb8p3lzq6dyUNrrAO92sZXTHjqn4RuxOhNtHDzPrY7Cg91ZQUxg79
+NeJHEyUHRJ8i/KGRXXu0lsBEQHmoqLchIEUz2X5tSazdpVnHlcipdMg10jQkf6xQ
+jbGcj7KCW1tGf1YA1TJ4E5t1GqZorUFAVQh1Ja9BVny0uYqiRK5Z73kz1n7gh2MU
+LmKqFfLv//MivaHV5GMbcEYUfZbc3/EXZ9gPXXkShNtWIQT6dOQmGSd7rKnqS/up
+1RnEVHLnvPBPZXMKptvxZaqXVnl5X+z82w6ucH3vCXtX+Hj96VYZDGHDgY5MVrsn
+5tcBLMNBHxrlBRN+sBR123Ao0J1cMpol69kqqkRe72RY++gvRehXdueBjoOK4pKR
+YXtUxuyx2h7Jf0qcusdQhntsPfKCC3/bT7955qwmYeAvU00VQqzEYY3oqz/SvUK2
+mYQ30V5IpO0LysFXROko5UTVO6m861RjELJFES5/NpqZFh+c4i0kTaKDg0zkyvug
+4RZ9w1crO5XQxArKc4DahgYPyvSROOK6Aibs1Cave8e+F8Whb1A=
+=M/QC
+-----END PGP SIGNATURE-----
+
+--tlmv2cpuyt6qe6ep--
