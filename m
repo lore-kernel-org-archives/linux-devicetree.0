@@ -1,57 +1,64 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
+From: Peter Rosin <peda@axentia.se>
 Subject: Re: [PATCH v9 0/4] drm/atmel-hlcdc: bus-width override support
-Date: Mon, 27 Aug 2018 22:40:55 +0200
-Message-ID: <20180827224055.3ab63c43@bbrezillon>
+Date: Mon, 27 Aug 2018 22:48:11 +0200
+Message-ID: <26d4d0c2-b59a-40ad-57d1-ab2677253b71@axentia.se>
 References: <20180825085620.10566-1-peda@axentia.se>
  <20180827212449.723bdc99@bbrezillon>
  <ca38bd82-09d2-8e55-a3a2-e0e559abdf7f@axentia.se>
- <20180827223505.7e2fe6f6@bbrezillon>
+ <20180827223505.7e2fe6f6@bbrezillon> <20180827224055.3ab63c43@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180827223505.7e2fe6f6@bbrezillon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sakari Ailus <sakari.ailus@iki.fi>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Jyri Sarha <jsarha@ti.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180827224055.3ab63c43@bbrezillon>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyNyBBdWcgMjAxOCAyMjozNTowNSArMDIwMApCb3JpcyBCcmV6aWxsb24gPGJvcmlz
-LmJyZXppbGxvbkBib290bGluLmNvbT4gd3JvdGU6Cgo+IE9uIE1vbiwgMjcgQXVnIDIwMTggMjI6
-MzE6MjIgKzAyMDAKPiBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlhLnNlPiB3cm90ZToKPiAKPiA+
-IE9uIDIwMTgtMDgtMjcgMjE6MjQsIEJvcmlzIEJyZXppbGxvbiB3cm90ZTogIAo+ID4gPiBPbiBT
-YXQsIDI1IEF1ZyAyMDE4IDEwOjU2OjE2ICswMjAwCj4gPiA+IFBldGVyIFJvc2luIDxwZWRhQGF4
-ZW50aWEuc2U+IHdyb3RlOgo+ID4gPiAgICAgCj4gPiA+PiBIaSEKPiA+ID4+Cj4gPiA+PiBUaGUg
-YmFja2dyb3VuZCBmb3IgdGhlc2UgcGF0Y2hlcyBpcyB0aGF0IG91ciBQQ0IgaW50ZXJmYWNlIGJl
-dHdlZW4KPiA+ID4+IHRoZSBTQU1BNUQzIGFuZCB0aGUgZHM5MGMxODUgbHZkcyBlbmNvZGVyIGlz
-IG9ubHkgdXNpbmcgMTYgYml0cywgYW5kCj4gPiA+PiB0aGlzIGhhcyB0byBiZSBkZXNjcmliZWQg
-c29tZXdoZXJlLCBvciB0aGUgYXRtZWwtaGxjZGMgZHJpdmVyIGhhdmUgbm8KPiA+ID4+IGNoYW5j
-ZSBvZiBzZWxlY3RpbmcgdGhlIGNvcnJlY3Qgb3V0cHV0IG1vZGUuIFNpbmNlIHdlIGhhdmUgc2lt
-aWxhcgo+ID4gPj4gcHJvYmxlbXMgd2l0aCBhIHRkYTE5OTg4IEhETUkgZW5jb2RlciBJIGFkZGVk
-IHBhdGNoZXMgdG8gb3ZlcnJpZGUKPiA+ID4+IHRoZSBhdG1lbC1obGNkYyBvdXRwdXQgZm9ybWF0
-IHZpYSBEVCBwcm9wZXJ0aWVzIGNvbXBhdGlibGUgd2l0aCB0aGUKPiA+ID4+IG1lZGlhIHZpZGVv
-LWludGVyZmFjZSBiaW5kaW5nIGFuZCB0aGluZ3Mgc3RhcnQgdG8gcGxheSB0b2dldGhlci4gICAg
-Cj4gPiA+IAo+ID4gPiBRdWV1ZWQgdG8gZHJtLW1pc2MtbmV4dC4gICAgCj4gPiAKPiA+IFRoYW5r
-cyEKPiA+IAo+ID4gTWludXRlIGlzc3VlLCB5b3Ugc2VlbSB0byBoYXZlIHNvbWUgc3BlbGwtY2hl
-Y2sgZ29pbmcgb24gb3Igc29tZXRoaW5nLAo+ID4gYmVjYXVzZSB0aGUgc3ViamVjdCBvZiBwYXRj
-aCAxLzQgaGFzIGJlZW4gImNvcnJlY3RlZCIgZnJvbQo+ID4gIi4uLmFkZCB0aSxkczkwYzE4NSIg
-dG8gIi4uLmFkZCB0aSwgZHM5MGMxODUiCj4gPiAKPiA+IFlvdSBtaWdodCB3YW50IHRvIGV2YWx1
-YXRlIGlmIHRoYXQgYXV0by1jb3JyZWN0aW9uICJmZWF0dXJlIiBzaG91bGQgYmUKPiA+IGRpc2Fi
-bGVkL3R3ZWFrZWQvd2hhdGV2ZXIuLi4gIAo+IAo+IEhtLCB3ZWlyZC4gSSBqdXN0IGRvd25sb2Fk
-ZWQgdGhlIG1ib3ggZnJvbSBkcmktZGV2ZWwncyBwYXRjaHdvcmsgYW5kCj4gcGFzc2VkIGl0IHRv
-IGRpbSBhcHBseS4gZGltIHRlbmRzIHRvIGRvIGEgbG90IG9mIHRoaW5ncyBiZWhpbmQgdGhlCj4g
-c2NlbmUsIHNvIG1heWJlIGl0J3MgYWxzbyB0cnlpbmcgdG8gZml4IHR5cG9zIDotKS4KCk5vcGUs
-IGxvb2tzIGxpa2UgaXQgd2FzIGFscmVhZHkgd3Jvbmcgb24gcGF0Y2h3b3JrIFsxXSwgZG9uJ3Qg
-a25vdyB3aGF0CmhhcHBlbmVkLCBiZWNhdXNlIHRoZSB2ZXJzaW9uIEkgaGF2ZSBpbiBteSBtYWls
-Ym94IGlzIGNvcnJlY3QuCgpbMV1odHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0
-Y2gvMjQ2MDM5LwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 2018-08-27 22:40, Boris Brezillon wrote:
+> On Mon, 27 Aug 2018 22:35:05 +0200
+> Boris Brezillon <boris.brezillon@bootlin.com> wrote:
+> 
+>> On Mon, 27 Aug 2018 22:31:22 +0200
+>> Peter Rosin <peda@axentia.se> wrote:
+>>
+>>> On 2018-08-27 21:24, Boris Brezillon wrote:  
+>>>> On Sat, 25 Aug 2018 10:56:16 +0200
+>>>> Peter Rosin <peda@axentia.se> wrote:
+>>>>     
+>>>>> Hi!
+>>>>>
+>>>>> The background for these patches is that our PCB interface between
+>>>>> the SAMA5D3 and the ds90c185 lvds encoder is only using 16 bits, and
+>>>>> this has to be described somewhere, or the atmel-hlcdc driver have no
+>>>>> chance of selecting the correct output mode. Since we have similar
+>>>>> problems with a tda19988 HDMI encoder I added patches to override
+>>>>> the atmel-hlcdc output format via DT properties compatible with the
+>>>>> media video-interface binding and things start to play together.    
+>>>>
+>>>> Queued to drm-misc-next.    
+>>>
+>>> Thanks!
+>>>
+>>> Minute issue, you seem to have some spell-check going on or something,
+>>> because the subject of patch 1/4 has been "corrected" from
+>>> "...add ti,ds90c185" to "...add ti, ds90c185"
+>>>
+>>> You might want to evaluate if that auto-correction "feature" should be
+>>> disabled/tweaked/whatever...  
+>>
+>> Hm, weird. I just downloaded the mbox from dri-devel's patchwork and
+>> passed it to dim apply. dim tends to do a lot of things behind the
+>> scene, so maybe it's also trying to fix typos :-).
+> 
+> Nope, looks like it was already wrong on patchwork [1], don't know what
+> happened, because the version I have in my mailbox is correct.
+> 
+> [1]https://patchwork.freedesktop.org/patch/246039/
+
+Apparently a known issue: https://github.com/getpatchwork/patchwork/issues/197
+
+Cheers,
+Peter
