@@ -1,40 +1,46 @@
-Return-Path: <SRS0=sFwS=KY=gmail.com=esben.haabendal@kernel.org>
-Sender: Esben Haabendal <esbenhaabendal@gmail.com>
-From: Esben Haabendal <esben.haabendal@gmail.com>
-Subject: [PATCH v3 0/3] i2c: imx: Fix and enable DMA support for LS1021A
-Date: Thu,  9 Aug 2018 14:32:04 +0200
-Message-Id: <20180809123207.9732-1-esben.haabendal@gmail.com>
-To: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Esben Haabendal <eha@deif.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54566 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727308AbeH0NP6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Aug 2018 09:15:58 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 23/23] smiapp: Query the V4L2 endpoint for a specific bus type
+Date: Mon, 27 Aug 2018 12:30:00 +0300
+Message-Id: <20180827093000.29165-24-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Esben Haabendal <eha@deif.com>
+Instead of opportunistically trying to gather some information from the
+V4L2 endpoint, set the bus type and let the V4L2 fwnode framework figure
+out the configuration.
 
-This patch series fixes two race conditions and minor issues with tracking
-the stopped state when something goes wrong.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/i2c/smiapp/smiapp-core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-With that in place, DMA support works with NXP LS1021A, so it is enabled in
-the last patch.
-
-Changes in v3:
-
-* Rebased to v4.18-rc8, dropping patch 1/4 which have been merged
-* Avoid unnecessary register write in patch 2/3
-* Removed unneeded braces in patch 3/3
-
-Changes in v2:
-
-* Fixed speling mistake in commit message
-* Rebased to v4.18-rc4
-
-Esben Haabendal (3):
-  i2c: imx: Fix race condition in dma read
-  i2c: imx: Simplify stopped state tracking
-  arm: dts: ls1021a: Enable I2C DMA support
-
- arch/arm/boot/dts/ls1021a.dtsi |  6 ++++++
- drivers/i2c/busses/i2c-imx.c   | 20 +++++++++-----------
- 2 files changed, 15 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
+index 048ab6cfaa97..0d660349b13c 100644
+--- a/drivers/media/i2c/smiapp/smiapp-core.c
++++ b/drivers/media/i2c/smiapp/smiapp-core.c
+@@ -2775,7 +2775,13 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
+ 	if (!ep)
+ 		return NULL;
+ 
++	bus_cfg.bus_type = V4L2_MBUS_CSI2_DPHY;
+ 	rval = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
++	if (rval == -ENXIO) {
++		bus_cfg = (struct v4l2_fwnode_endpoint)
++			{ .bus_type = V4L2_MBUS_CCP2 };
++		rval = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
++	}
+ 	if (rval)
+ 		goto out_err;
+ 
 -- 
-2.18.0
+2.11.0
