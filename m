@@ -1,36 +1,64 @@
-Return-Path: <SRS0=Jnje=LK=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH] clk: renesas: cpg-mssr: Add R7S9210 support
-Date: Mon, 27 Aug 2018 22:13:01 +0000
-Message-ID: 
- <TY1PR01MB15620184F9EA4E62E21D1D688A0B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20180821032020.81254-1-chris.brandt@renesas.com>
- <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=SWuu=LK=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+References: <20180821032020.81254-1-chris.brandt@renesas.com>
+ <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com> <TY1PR01MB1562C6473AC295F7F58AB2258A0B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562C6473AC295F7F58AB2258A0B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 27 Aug 2018 20:31:47 +0200
+Message-ID: <CAMuHMdVkWhUZ8=7QWT3E-eFre7T=VtOOUQ2VScix38-GQp95HQ@mail.gmail.com>
+Subject: Re: [PATCH] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCk9uIE1vbmRheSwgQXVndXN0IDI3LCAyMDE4IDEsIEdlZXJ0IFV5dHRlcmhv
-ZXZlbiB3cm90ZToNCj4gR2l2ZW4gdGhlIGRpZmZlcmVuY2VzLCBhbmQgdGhlIGxpbWl0ZWQgYW1v
-dW50IG9mIFJBTSBvbiBSWi9BMiwgSSB0aGluayB5b3UNCj4gd291bGQgYmUgYmV0dGVyIG9mZiB3
-aXRoIGEgc2VwYXJhdGUgcmVuZXNhcy1jcGctc3RiY3IgZHJpdmVyLCBhbmQgYW4NCj4gcjdzOTIx
-MC1jcGctc3RiY3IgY291bnRlcnBhcnQuDQoNCkkgd2VudCBhbmQgbWVhc3VyZWQgdGhlIGFtb3Vu
-dCBvZiBSQU0gYmVpbmcgdXNlZCBieSB0aGUgZHJpdmVyIA0KKGFsbG9jYXRlZCBkdXJpbmcgYm9v
-dCB3aGVuIHRoZSBkcml2ZXIgaXMgbG9hZGVkIGFuZCBwcm9iZWQpLCBhbmQgaXQncyBvbmx5IDhL
-Qi4gDQpUaGF0J3Mgbm90IHJlYWxseSBtdWNoIGNvbXBhcmVkIHRvIG90aGVyIGRyaXZlcnMgYW5k
-IHN1YnN5c3RlbXMgYmVpbmcgDQpsb2FkZWQgaW4gdGhlIHN5c3RlbS4gT2YgY291cnNlIFJaL0Eg
-dHJpZXMgdG8gYmUgUkFNIHNlbnNpdGl2ZS4uLmJ1dCA4S0IgDQpmb3IgYSBjbG9jayBkcml2ZXIg
-aXMgbm90IG15IGJpZ2dlc3QgY29uY2Vybi4NCg0KU28gd2l0aCB0aGF0IHNhaWQsIEkgY291bGQg
-YWRkIGluIGEgZHJpdmVyIG9wdGlvbiB0byBub3QgcmVnaXN0ZXIgdGhlIA0KcmVzZXQgY29udHJv
-bGxlci4gQW5kLCBhbHNvIG1ha2UgYSBtYWNybyBzbyB1c2VycyBjYW4gc3BlY2lmeSAiMzYiIGlu
-c3RlYWQNCm9mICIzMDYiIGluIHRoZSBEVC4NCkFuZCB0aGVuLCBJIG5vIGxvbmdlciBoYXZlIHRv
-IHdvcnJ5IGFib3V0IGR1cGxpY2F0ZSBjb2RlICgyIGRyaXZlcnMgZG8gDQphbG1vc3QgdGhlIHNh
-bWUgdGhpbmcpLg0KDQpXaGF0IGRvIHlvdSB0aGluaz8NCldlcmUgeW91IGV4cGVjdGluZyB0aGUg
-ZHJpdmVyIHRvIGFsbG9jYXRlIG1vcmUgdGhhbiA4SyBvZiBSQU0gb24gYm9vdD8NCg0KVGhhbmtz
-LA0KQ2hyaXMNCg0K
+Hi Chris,
+
+On Mon, Aug 27, 2018 at 6:59 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Monday, August 27, 2018 1, Geert Uytterhoeven wrote:
+> > Given the differences, and the limited amount of RAM on RZ/A2, I think you
+> > would be better off with a separate renesas-cpg-stbcr driver, and an
+> > r7s9210-cpg-stbcr counterpart.
+>
+> If you really think there will be a lot of wasted RAM, then I will look
+> into it.
+>
+> So are you saying I should first copy/rename renesas-cpg-mssr.c to
+> renesas-cpg-stbr.c and then start hacking away at it?
+
+Exactly.
+
+It's debatable: from one side, it's good to reuse code. From the other other,
+to much conditional logic complicates everything.
+
+The reset controller part will be different anyway.
+But the clock domain part and most of the core/module logic is the same.
+Perhaps some common code can be spun off?
+
+> > 4. Your module clocks can use e.g. "36" instead of "306" (also in the DTS),
+> >    matching the datasheet.
+>
+> Yes, that would be much nicer!
+
+At least in DTS and the module clock table, you can get that with cpg-mssr, too,
+if you use a different macro.
+
+> Just FYI,
+> I like this new driver method, but the one downfall is that I have to go
+> back and change my timer driver (renesas-ostm.c). The current OSTM
+> driver uses TIMER_OF_DECLARE(). But when you use TIMER_OF_DECLARE, your
+> timer driver gets probed VERY early in boot, before subsys_initcall, so none
+> of your clocks are registered yet and the probe fails.
+
+IC. When CPG/MSSR was introduced, we had ordering issues on R-Car, too.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
