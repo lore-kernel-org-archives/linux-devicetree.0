@@ -1,96 +1,193 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 8/9] drm/msm/a6xx: Add support for an
- interconnect path
-Date: Mon, 27 Aug 2018 09:11:11 -0600
-Message-ID: <20180827151112.25211-9-jcrouse@codeaurora.org>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 00/40] Tegra SDHCI add support for HS200 and UHS
+ signaling
+Date: Mon, 27 Aug 2018 17:50:53 +0200
+Message-ID: <20180827155053.GA6458@ulmo>
+References: <1533924522-1037-1-git-send-email-avienamo@nvidia.com>
+ <1535379056.14664.13.camel@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180827151112.25211-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1535379056.14664.13.camel@toradex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Aapo Vienamo <avienamo@nvidia.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "mperttunen@nvidia.com" <mperttunen@nvidia.com>, "stefan@agner.ch" <stefan@agner.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIHNldHRpbmcgdGhlIE9QUCBkZWZpbmVkIGJhbmR3aWR0aCBmb3IgYSBn
-aXZlbgpHUFUgZnJlcXVlbmN5IHZhbHVlIGZvciBhNnh4LiBPbiBzZG04NDUgZXZlbiB0aG91Z2gg
-dGhlIEdQVQpmcmVxdWVuY3kgaXMgc2V0IGJ5IHRoZSBHTVUgYnV0IHRoZSBidXMgYmFuZHdpZHRo
-IHF1b3RhIGlzCnNldCBieSB0aGUgQ1BVLgoKU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8
-amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9h
-Nnh4X2dtdS5jICAgfCAyNyArKysrKysrKysrKysrKysrKysrKysrKy0tCiBkcml2ZXJzL2dwdS9k
-cm0vbXNtL2FkcmVuby9hZHJlbm9fZ3B1LmMgfCAgNyArKysrKysrCiBkcml2ZXJzL2dwdS9kcm0v
-bXNtL21zbV9ncHUuaCAgICAgICAgICAgfCAgMyArKysKIDMgZmlsZXMgY2hhbmdlZCwgMzUgaW5z
-ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-bXNtL2FkcmVuby9hNnh4X2dtdS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYTZ4eF9n
-bXUuYwppbmRleCBkMGRhYzRjMmUzZTcuLmQ2M2VlZmM3Yzc0ZCAxMDA2NDQKLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL21zbS9hZHJlbm8vYTZ4eF9nbXUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNt
-L2FkcmVuby9hNnh4X2dtdS5jCkBAIC00LDYgKzQsNyBAQAogI2luY2x1ZGUgPGxpbnV4L2Nsay5o
-PgogI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5oPgogI2luY2x1ZGUgPGxpbnV4L3BtX29wcC5oPgor
-I2luY2x1ZGUgPGxpbnV4L2ludGVyY29ubmVjdC5oPgogI2luY2x1ZGUgPHNvYy9xY29tL2NtZC1k
-Yi5oPgogCiAjaW5jbHVkZSAiYTZ4eF9ncHUuaCIKQEAgLTY1LDggKzY2LDE1IEBAIHN0YXRpYyBi
-b29sIGE2eHhfZ211X2d4X2lzX29uKHN0cnVjdCBhNnh4X2dtdSAqZ211KQogCQlBNlhYX0dNVV9T
-UFRQUkFDX1BXUl9DTEtfU1RBVFVTX0dYX0hNX0NMS19PRkYpKTsKIH0KIAotc3RhdGljIGludCBh
-Nnh4X2dtdV9zZXRfZnJlcShzdHJ1Y3QgYTZ4eF9nbXUgKmdtdSwgaW50IGluZGV4KQorc3RhdGlj
-IHZvaWQgYTZ4eF9nbXVfc2V0X2ZyZXEoc3RydWN0IGE2eHhfZ211ICpnbXUsIGludCBpbmRleCkK
-IHsKKwlzdHJ1Y3QgYTZ4eF9ncHUgKmE2eHhfZ3B1ID0gY29udGFpbmVyX29mKGdtdSwgc3RydWN0
-IGE2eHhfZ3B1LCBnbXUpOworCXN0cnVjdCBhZHJlbm9fZ3B1ICphZHJlbm9fZ3B1ID0gJmE2eHhf
-Z3B1LT5iYXNlOworCXN0cnVjdCBtc21fZ3B1ICpncHUgPSAmYWRyZW5vX2dwdS0+YmFzZTsKKwlz
-dHJ1Y3QgZGV2X3BtX29wcCAqb3BwOworCXU2NCBhYiwgaWI7CisJaW50IHJldDsKKwogCWdtdV93
-cml0ZShnbXUsIFJFR19BNlhYX0dNVV9EQ1ZTX0FDS19PUFRJT04sIDApOwogCiAJZ211X3dyaXRl
-KGdtdSwgUkVHX0E2WFhfR01VX0RDVlNfUEVSRl9TRVRUSU5HLApAQCAtODIsNyArOTAsMjIgQEAg
-c3RhdGljIGludCBhNnh4X2dtdV9zZXRfZnJlcShzdHJ1Y3QgYTZ4eF9nbXUgKmdtdSwgaW50IGlu
-ZGV4KQogCWE2eHhfZ211X3NldF9vb2IoZ211LCBHTVVfT09CX0RDVlNfU0VUKTsKIAlhNnh4X2dt
-dV9jbGVhcl9vb2IoZ211LCBHTVVfT09CX0RDVlNfU0VUKTsKIAotCXJldHVybiBnbXVfcmVhZChn
-bXUsIFJFR19BNlhYX0dNVV9EQ1ZTX1JFVFVSTik7CisJcmV0ID0gZ211X3JlYWQoZ211LCBSRUdf
-QTZYWF9HTVVfRENWU19SRVRVUk4pOworCWlmIChyZXQpCisJCWRldl9lcnIoZ211LT5kZXYsICJH
-TVUgc2V0IEdQVSBmcmVxdWVuY3kgZXJyb3I6ICVkXG4iLCByZXQpOworCisJLyogU2V0IHRoZSBp
-bnRlcmNvbm5lY3QgYmFuZHdpZHRoIGZyb20gdGhlIENQVSAqLworCWlmIChJU19FUlJfT1JfTlVM
-TChncHUtPmljY19wYXRoKSkKKwkJcmV0dXJuOworCisJb3BwID0gZGV2X3BtX29wcF9maW5kX2Zy
-ZXFfZXhhY3QoJmdwdS0+cGRldi0+ZGV2LAorCQlnbXUtPmdwdV9mcmVxc1tpbmRleF0sIHRydWUp
-OworCWlmICghSVNfRVJSX09SX05VTEwob3BwKSkgeworCQlpZiAoIWRldl9wbV9vcHBfZ2V0X2lu
-dGVyY29ubmVjdF9idyhvcHAsICJwb3J0MCIsICZhYiwgJmliKSkKKwkJCWljY19zZXQoZ3B1LT5p
-Y2NfcGF0aCwgYWIsIGliKTsKKworCQlkZXZfcG1fb3BwX3B1dChvcHApOworCX0KIH0KIAogc3Rh
-dGljIGJvb2wgYTZ4eF9nbXVfY2hlY2tfaWRsZV9sZXZlbChzdHJ1Y3QgYTZ4eF9nbXUgKmdtdSkK
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuYyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuYwppbmRleCBkYTEzNjNhMGM1NGQu
-LjJlYWNlOWJmMzJjNyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRy
-ZW5vX2dwdS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19ncHUuYwpA
-QCAtMjEsNiArMjEsNyBAQAogI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgogI2luY2x1ZGUgPGxp
-bnV4L3BtX29wcC5oPgogI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KKyNpbmNsdWRlIDxsaW51eC9p
-bnRlcmNvbm5lY3QuaD4KICNpbmNsdWRlICJhZHJlbm9fZ3B1LmgiCiAjaW5jbHVkZSAibXNtX2dl
-bS5oIgogI2luY2x1ZGUgIm1zbV9tbXUuaCIKQEAgLTY5NCw2ICs2OTUsOSBAQCBzdGF0aWMgaW50
-IGFkcmVub19nZXRfcHdybGV2ZWxzKHN0cnVjdCBkZXZpY2UgKmRldiwKIAogCURCRygiZmFzdF9y
-YXRlPSV1LCBzbG93X3JhdGU9MjcwMDAwMDAiLCBncHUtPmZhc3RfcmF0ZSk7CiAKKwkvKiBDaGVj
-ayBmb3IgYW4gaW50ZXJjb25uZWN0IHBhdGggZm9yIHRoZSBidXMgKi8KKwlncHUtPmljY19wYXRo
-ID0gb2ZfaWNjX2dldChkZXYsICJwb3J0MCIpOworCiAJcmV0dXJuIDA7CiB9CiAKQEAgLTczMiwx
-MCArNzM2LDEzIEBAIGludCBhZHJlbm9fZ3B1X2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRybSwg
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwKIAogdm9pZCBhZHJlbm9fZ3B1X2NsZWFudXAo
-c3RydWN0IGFkcmVub19ncHUgKmFkcmVub19ncHUpCiB7CisJc3RydWN0IG1zbV9ncHUgKmdwdSA9
-ICZhZHJlbm9fZ3B1LT5iYXNlOwogCXVuc2lnbmVkIGludCBpOwogCiAJZm9yIChpID0gMDsgaSA8
-IEFSUkFZX1NJWkUoYWRyZW5vX2dwdS0+aW5mby0+ZncpOyBpKyspCiAJCXJlbGVhc2VfZmlybXdh
-cmUoYWRyZW5vX2dwdS0+ZndbaV0pOwogCisJaWNjX3B1dChncHUtPmljY19wYXRoKTsKKwogCW1z
-bV9ncHVfY2xlYW51cCgmYWRyZW5vX2dwdS0+YmFzZSk7CiB9CmRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vbXNtL21zbV9ncHUuaCBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2dwdS5oCmlu
-ZGV4IDkxMjJlZTZlNTVlNC4uOWM4NTFkMDNmMzQ0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vbXNtL21zbV9ncHUuaAorKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9ncHUuaApAQCAt
-MjAsNiArMjAsNyBAQAogCiAjaW5jbHVkZSA8bGludXgvY2xrLmg+CiAjaW5jbHVkZSA8bGludXgv
-cmVndWxhdG9yL2NvbnN1bWVyLmg+CisjaW5jbHVkZSA8bGludXgvaW50ZXJjb25uZWN0Lmg+CiAK
-ICNpbmNsdWRlICJtc21fZHJ2LmgiCiAjaW5jbHVkZSAibXNtX2ZlbmNlLmgiCkBAIC0xMTcsNiAr
-MTE4LDggQEAgc3RydWN0IG1zbV9ncHUgewogCXN0cnVjdCBjbGsgKmViaTFfY2xrLCAqY29yZV9j
-bGssICpyYmJtdGltZXJfY2xrOwogCXVpbnQzMl90IGZhc3RfcmF0ZTsKIAorCXN0cnVjdCBpY2Nf
-cGF0aCAqaWNjX3BhdGg7CisKIAkvKiBIYW5nIGFuZCBJbmFjdGl2aXR5IERldGVjdGlvbjoKIAkg
-Ki8KICNkZWZpbmUgRFJNX01TTV9JTkFDVElWRV9QRVJJT0QgICA2NiAvKiBpbiBtcyAocm91Z2hs
-eSBmb3VyIGZyYW1lcykgKi8KLS0gCjIuMTguMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZnJlZWRyZW5vCg==
+
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Aug 27, 2018 at 02:10:58PM +0000, Marcel Ziswiler wrote:
+> On Fri, 2018-08-10 at 21:08 +0300, Aapo Vienamo wrote:
+> > Hi all,
+> >=20
+> > This series implements support for faster signaling modes on Tegra
+> > SDHCI controllers. This series consist of several parts: changes
+> > requried for 1.8 V signaling and pad control, pad calibration, and
+> > tuning. Following earlies patch sets have been merged into this
+> > larger set: "Tegra PMC pinctrl pad configuration", "Tegra SDHCI
+> > enable
+> > 1.8 V signaling on Tegar210 and Tegra186", "Tegra SDHCI update the
+> > padautocal procedure". Also the patches for enabling SDHCI tuning
+> > are added.
+>=20
+> I tried your tkln/hs200 branch on Colibri T20, Apalis/Colibri T30 and
+> Apalis TK1. It at least does not seem to make things any worse but
+> HS200 on TK1 still seems to behave strangely. During boot I do get the
+> following message (mmc0 being the SDHCI instance of one of them SD card
+> slots):
+>=20
+> [    3.238360] mmc0: Internal clock never stabilised.
+> [    3.243183] mmc0: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D SDHCI RE=
+GISTER DUMP
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [    3.249649] mmc0: sdhci: Sys addr:  0x00000000 |
+> Version:  0x00000303
+> [    3.256138] mmc0: sdhci: Blk size:  0x00000000 | Blk
+> cnt:  0x00000000
+> [    3.262657] mmc0: sdhci: Argument:  0x00000000 | Trn mode:
+> 0x00000000
+> [    3.269119] mmc0: sdhci: Present:   0x01fb00f0 | Host ctl:
+> 0x00000000
+> [    3.275580] mmc0: sdhci: Power:     0x0000000f | Blk
+> gap:  0x00000000
+> [    3.282041] mmc0: sdhci: Wake-up:   0x00000000 |
+> Clock:    0x00000401
+> [    3.288485] mmc0: sdhci: Timeout:   0x00000000 | Int stat:
+> 0x00000000
+> [    3.295037] mmc0: sdhci: Int enab:  0x00ff0003 | Sig enab:
+> 0x00fc0003
+> [    3.301559] mmc0: sdhci: AC12 err:  0x00000000 | Slot int:
+> 0x00000000
+> [    3.308022] mmc0: sdhci: Caps:      0x376fd080 |
+> Caps_1:   0x10000f70
+> [    3.314527] mmc0: sdhci: Cmd:       0x00000000 | Max curr:
+> 0x00000000
+> [    3.321159] mmc0: sdhci: Resp[0]:   0x00000000 |
+> Resp[1]:  0x00000000
+> [    3.327642] mmc0: sdhci: Resp[2]:   0x00000000 |
+> Resp[3]:  0x00000000
+> [    3.334144] mmc0: sdhci: Host ctl2: 0x00000000
+> [    3.338613] mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr:
+> 0x00000000
+> [    3.345110] mmc0: sdhci:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> And it subsequently stalls waiting for interrupt for more than 8
+> seconds before continuing to mount the rootfs as follows (mmc2 being
+> the SDHCI instance of the eMMC):
+>=20
+> [    4.874017] tegra-hdmi 54280000.hdmi: cannot set audio to 48000 Hz
+> at 297000000 Hz pixel clock
+> [   13.930136] mmc2: Timeout waiting for hardware interrupt.
+> [   13.935603] mmc2: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D SDHCI RE=
+GISTER DUMP
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [   13.942071] mmc2: sdhci: Sys addr:  0x00000000 |
+> Version:  0x00000303
+> [   13.948511] mmc2: sdhci: Blk size:  0x00007080 | Blk
+> cnt:  0x00000001
+> [   13.954948] mmc2: sdhci: Argument:  0x00000000 | Trn mode:
+> 0x00000013
+> [   13.961385] mmc2: sdhci: Present:   0x01fb00f0 | Host ctl:
+> 0x00000031
+> [   13.967821] mmc2: sdhci: Power:     0x00000001 | Blk
+> gap:  0x00000000
+> [   13.974263] mmc2: sdhci: Wake-up:   0x00000000 |
+> Clock:    0x00000007
+> [   13.980692] mmc2: sdhci: Timeout:   0x0000000e | Int stat:
+> 0x00000000
+> [   13.987119] mmc2: sdhci: Int enab:  0x02ff000b | Sig enab:
+> 0x02fc000b
+> [   13.993546] mmc2: sdhci: AC12 err:  0x00000000 | Slot int:
+> 0x00000000
+> [   13.999974] mmc2: sdhci: Caps:      0x376fd080 |
+> Caps_1:   0x10000f70
+> [   14.006415] mmc2: sdhci: Cmd:       0x0000153a | Max curr:
+> 0x00000000
+> [   14.012845] mmc2: sdhci: Resp[0]:   0x00000b00 |
+> Resp[1]:  0x048062bf
+> [   14.019272] mmc2: sdhci: Resp[2]:   0x314a8000 |
+> Resp[3]:  0x00000240
+> [   14.025697] mmc2: sdhci: Host ctl2: 0x0000000b
+> [   14.030132] mmc2: sdhci: ADMA Err:  0x00000000 | ADMA Ptr:
+> 0xfbc6b208
+> [   14.036561] mmc2: sdhci:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [   14.044332] mmc2: new HS200 MMC card at address 0001
+> [   14.050656] mmcblk2: mmc2:0001 016G30 14.7 GiB
+> [   14.056376] mmcblk2boot0: mmc2:0001 016G30 partition 1 4.00 MiB
+> [   14.063563] mmcblk2boot1: mmc2:0001 016G30 partition 2 4.00 MiB
+> [   14.069589] mmcblk2rpmb: mmc2:0001 016G30 partition 3 4.00 MiB,
+> chardev (247:0)
+> [   14.078260]  mmcblk2: p1 p2
+>=20
+> After that it actually seems to work quite nicely:
+>=20
+> root@apalis-tk1-mainline:~# cat /sys/kernel/debug/mmc2/ios
+> clock:          200000000 Hz
+> actual clock:   163200000 Hz
+> vdd:            21 (3.3 ~ 3.4 V)
+> bus mode:       2 (push-pull)
+> chip select:    0 (don't care)
+> power mode:     2 (on)
+> bus width:      3 (8 bits)
+> timing spec:    9 (mmc HS200)
+> signal voltage: 1 (1.80 V)
+> driver type:    0 (driver type B)
+> root@apalis-tk1-mainline:~# hdparm -t /dev/mmcblk2
+>=20
+> /dev/mmcblk2:
+>  Timing buffered disk reads: 408 MB in  3.01 seconds =3D 135.39 MB/sec
+>=20
+> Have you ever observed similar behaviour? What could cause this?
+>=20
+> Anybody else tried it on TK1?
+
+I can't reproduce this on Jetson TK1. Things boot normally and I don't
+see the controllers switch into HS200 for either eMMC or SD card.
+
+Did you update the device tree to enable HS200 on Apalis?
+
+Aapo, isn't there a mechanism to prevent HS200 on devices where it
+hasn't explicitly been tested (and enabled)? I thought we had discussed
+that this was going to depend on pinmux DTS entries, but I can't find
+the actual code where any of that would be checked. I only see checking
+NVQUIRK_NEEDS_PAD_CONTROL in tegra_sdhci_is_pad_and_regulator_valid(),
+but since we don't enable that quirk on Tegra124, it would seem to me
+that we always enable fast modes on boards that don't need pad control.
+Is that really what we want?
+
+Also, if the above is correct, then why am I not seeing faster modes
+getting enabled on Jetson TK1?
+
+Thierry
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluEHdsACgkQ3SOs138+
+s6F3VhAAoQTAu+tI11tyTh/3QuI5dlKcgB5GOtnRbfgr/BJFwzZjd30bO++yjdIM
+L7tIl59h/hbfB7pQcN9WyIQR9iWEE02vtLoyYR4h5sO0EaBLh5ZigPRiDXjlSajc
+pEeXx+1RWowUQolpCGbqQ+a5nZOy6nNvjj8ZrsQ1ahTNKlLMfFAdenHuscbV8J1Z
+e6vl/UQAOMOxhRAxboy2BX3lhXoVS3VdehZLgkar8dD76mL2SLaR6sXZIZPvvmSs
+6nkLpZOYK7faOg9U6D0JTnVxHbbN7nMhZlxafBI/Fqh5m9qiMaJS0r1dIFXt3EE4
+LfLAsNEwMgIAwlv+MkoeCFd7dh0qYWVOuEk33xkFgIcSEtKpwANmy1oMel88DIaq
+IS8KyGOprHDLQ3WAN/sIuhTYmcftEJJuMX7g0fv+HJnNztPHMb9SWp4In9FIATGN
+jRHslWKiJ8pLjKd2clufMS8DBnt+5YINVjyQ42q7UqgutYqpyIbDDIe8G7kzkfkB
+zl98SwQ6LcLGXADSMkDDEPCzBiQxC5qqTJi5vJVKWRUudnu9NCFqFhWuaXYz0qbP
+Yab7TFP2jQNFP17zoOJ3mnznjpY7td9tGBVioLF65q0pNouL40g3VTkBnKO3uOMC
+hxI2rL46jPi4c12qQ62UwrqaF+0Nzgo1voIxE2xjeUhTPclzQj4=
+=32Fn
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
