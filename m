@@ -1,43 +1,54 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 9/9] arm64: dts: renesas: r8a774a1: Add FCPF and FCPV
- instances
-Date: Mon, 27 Aug 2018 11:48:09 +0200
-Message-ID: <20180827094805.luhtm4apitaxrsqg@verge.net.au>
-References: <TY1PR01MB17700155CB2AB613EA824D6FC0360@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <1535106074-14032-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH V5 1/8] backlight: qcom-wled: Rename pm8941-wled.c to
+ qcom-wled.c
+Date: Mon, 27 Aug 2018 11:49:42 +0200
+Message-ID: <20180827094942.GC31905@amd>
+References: <1535106467-17843-1-git-send-email-kgunda@codeaurora.org>
+ <1535106467-17843-2-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0vzXIDBeUiKkjNJl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1535106074-14032-1-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1535106467-17843-2-git-send-email-kgunda@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 24, 2018 at 11:21:14AM +0100, Fabrizio Castro wrote:
-> Add FCPF and FCPV instances to the r8a774a1 dtsi, similarly
-> to what was done for the r8a7796 with commit 41dbbf0c5b4e
-> ("arm64: dts: r8a7796: Add FCPF and FCPV instances"),
-> commit 69490bc9665d ("arm64: dts: renesas: r8a7796: Point
-> FDP1 via FCPF to IPMMU-VI0"), and commit cef942d0bd89 ("arm64:
-> dts: renesas: r8a7796: Point VSPI via FCPVI to IPMMU-VC0").
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-Thanks,
+--0vzXIDBeUiKkjNJl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
+On Fri 2018-08-24 15:57:40, Kiran Gunda wrote:
+> pm8941-wled.c driver is supporting the WLED peripheral
+> on pm8941. Rename it to qcom-wled.c so that it can support
+> WLED on multiple PMICs.
+>=20
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--0vzXIDBeUiKkjNJl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAluDyTYACgkQMOfwapXb+vKHhgCeMpcjzzRmYUR+qKOubQZk79MN
+twsAnj71ap1/mc79IShd39VHPOuO+lpm
+=rNK8
+-----END PGP SIGNATURE-----
+
+--0vzXIDBeUiKkjNJl--
