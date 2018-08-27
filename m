@@ -1,25 +1,75 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 3/3] arm: dts: ls1021a: Enable I2C DMA support
-Date: Mon, 27 Aug 2018 14:51:11 +0800
-Message-ID: <20180827065106.GD3850@dragon>
-References: <20180809123207.9732-1-esben.haabendal@gmail.com>
- <20180809123207.9732-4-esben.haabendal@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: imx6ull: add pxp support
+Date: Mon, 27 Aug 2018 14:59:29 +0800
+Message-ID: <20180827065927.GE3850@dragon>
+References: <20180810151822.18650-1-p.zabel@pengutronix.de>
+ <20180810151822.18650-3-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180809123207.9732-4-esben.haabendal@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Esben Haabendal <esben.haabendal@gmail.com>
-Cc: linux-i2c@vger.kernel.org, Esben Haabendal <eha@deif.com>, kernel@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20180810151822.18650-3-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 09, 2018 at 02:32:07PM +0200, Esben Haabendal wrote:
-> From: Esben Haabendal <eha@deif.com>
+On Fri, Aug 10, 2018 at 05:18:21PM +0200, Philipp Zabel wrote:
+> Add the device node for the i.MX6ULL Pixel Pipeline (PXP).
 > 
-> Gives substantial performance improvement for transfers larger than 16
-> bytes (DMA_THRESHOLD).  Smaller transfers are unaffected.
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/imx6ul.dtsi  | 8 ++++++++
+>  arch/arm/boot/dts/imx6ull.dtsi | 6 ++++++
+>  2 files changed, 14 insertions(+)
 > 
-> Signed-off-by: Esben Haabendal <eha@deif.com>
+> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+> index 47a3453a4211..e80a660c14f2 100644
+> --- a/arch/arm/boot/dts/imx6ul.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> @@ -928,6 +928,14 @@
+>  				};
+>  			};
+>  
+> +			pxp: pxp@21cc000 {
+> +				compatible = "fsl,imx6ul-pxp";
+> +				reg = <0x021cc000 0x4000>;
+> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +				clock-names = "axi";
+> +				clocks = <&clks IMX6UL_CLK_PXP>;
+> +			};
+> +
+>  			lcdif: lcdif@21c8000 {
 
-Applied, thanks.
+In order of unit-address, pxp@21cc000 should go after lcdif@21c8000.
+
+Shawn
+
+>  				compatible = "fsl,imx6ul-lcdif", "fsl,imx28-lcdif";
+>  				reg = <0x021c8000 0x4000>;
+> diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
+> index ebc25c98e5e1..91d2b6dd9b1b 100644
+> --- a/arch/arm/boot/dts/imx6ull.dtsi
+> +++ b/arch/arm/boot/dts/imx6ull.dtsi
+> @@ -75,3 +75,9 @@
+>  		};
+>  	};
+>  };
+> +
+> +&pxp {
+> +	compatible = "fsl,imx6ull-pxp";
+> +	interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+> -- 
+> 2.18.0
+> 
