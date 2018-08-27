@@ -1,93 +1,56 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH v2 1/9] of: add helper to lookup compatible child node
-Date: Mon, 27 Aug 2018 10:21:45 +0200
-Message-ID: <20180827082153.22537-2-johan@kernel.org>
+Subject: [PATCH v2 9/9] power: supply: twl4030-charger: fix OF sibling-node lookup
+Date: Mon, 27 Aug 2018 10:21:53 +0200
+Message-ID: <20180827082153.22537-10-johan@kernel.org>
 References: <20180827082153.22537-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180827082153.22537-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, NeilBrown <neilb@suse.de>, Felipe Balbi <felipe.balbi@linux.intel.com>, Sebastian Reichel <sre@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add of_get_compatible_child() helper that can be used to lookup
-compatible child nodes.
+Use the new of_get_compatible_child() helper to lookup the usb sibling
+node instead of using of_find_compatible_node(), which searches the
+entire tree from a given start node and thus can return an unrelated
+(non-sibling) node.
 
-Several drivers currently use of_find_compatible_node() to lookup child
-nodes while failing to notice that the of_find_ functions search the
-entire tree depth-first (from a given start node) and therefore can
-match unrelated nodes. The fact that these functions also drop a
-reference to the node they start searching from (e.g. the parent node)
-is typically also overlooked, something which can lead to use-after-free
-bugs.
+This also addresses a potential use-after-free (e.g. after probe
+deferral) as the tree-wide helper drops a reference to its first
+argument (i.e. the parent device node).
 
+While at it, also fix the related phy-node reference leak.
+
+Fixes: f5e4edb8c888 ("power: twl4030_charger: find associated phy by more reliable means.")
+Cc: stable <stable@vger.kernel.org>     # 4.2
+Cc: NeilBrown <neilb@suse.de>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Reviewed-by: Sebastian Reichel <sre@kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/of/base.c  | 25 +++++++++++++++++++++++++
- include/linux/of.h |  8 ++++++++
- 2 files changed, 33 insertions(+)
+ drivers/power/supply/twl4030_charger.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 466e3c8582f0..bc420d2aa5f5 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -719,6 +719,31 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
- }
- EXPORT_SYMBOL(of_get_next_available_child);
+diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
+index bbcaee56db9d..b6a7d9f74cf3 100644
+--- a/drivers/power/supply/twl4030_charger.c
++++ b/drivers/power/supply/twl4030_charger.c
+@@ -996,12 +996,13 @@ static int twl4030_bci_probe(struct platform_device *pdev)
+ 	if (bci->dev->of_node) {
+ 		struct device_node *phynode;
  
-+/**
-+ * of_get_compatible_child - Find compatible child node
-+ * @parent:	parent node
-+ * @compatible:	compatible string
-+ *
-+ * Lookup child node whose compatible property contains the given compatible
-+ * string.
-+ *
-+ * Returns a node pointer with refcount incremented, use of_node_put() on it
-+ * when done; or NULL if not found.
-+ */
-+struct device_node *of_get_compatible_child(const struct device_node *parent,
-+				const char *compatible)
-+{
-+	struct device_node *child;
-+
-+	for_each_child_of_node(parent, child) {
-+		if (of_device_is_compatible(child, compatible))
-+			break;
-+	}
-+
-+	return child;
-+}
-+EXPORT_SYMBOL(of_get_compatible_child);
-+
- /**
-  *	of_get_child_by_name - Find the child node by name for a given parent
-  *	@node:	parent node
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4d25e4f952d9..b99a1a8c2952 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -290,6 +290,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
- extern struct device_node *of_get_next_available_child(
- 	const struct device_node *node, struct device_node *prev);
- 
-+extern struct device_node *of_get_compatible_child(const struct device_node *parent,
-+					const char *compatible);
- extern struct device_node *of_get_child_by_name(const struct device_node *node,
- 					const char *name);
- 
-@@ -632,6 +634,12 @@ static inline bool of_have_populated_dt(void)
- 	return false;
- }
- 
-+static inline struct device_node *of_get_compatible_child(const struct device_node *parent,
-+					const char *compatible)
-+{
-+	return NULL;
-+}
-+
- static inline struct device_node *of_get_child_by_name(
- 					const struct device_node *node,
- 					const char *name)
+-		phynode = of_find_compatible_node(bci->dev->of_node->parent,
+-						  NULL, "ti,twl4030-usb");
++		phynode = of_get_compatible_child(bci->dev->of_node->parent,
++						  "ti,twl4030-usb");
+ 		if (phynode) {
+ 			bci->usb_nb.notifier_call = twl4030_bci_usb_ncb;
+ 			bci->transceiver = devm_usb_get_phy_by_node(
+ 				bci->dev, phynode, &bci->usb_nb);
++			of_node_put(phynode);
+ 			if (IS_ERR(bci->transceiver)) {
+ 				ret = PTR_ERR(bci->transceiver);
+ 				if (ret == -EPROBE_DEFER)
 -- 
 2.18.0
