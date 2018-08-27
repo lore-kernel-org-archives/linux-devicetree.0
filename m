@@ -1,30 +1,80 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 0/2] ARM: dts: imx: Add Engicam 1.5 MX6 support
-Date: Mon, 27 Aug 2018 15:03:01 +0800
-Message-ID: <20180827070259.GF3850@dragon>
-References: <1534252906-29554-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 1/2] devicetree/bindings: display: Add document for
+ rockchip RGB output
+Date: Mon, 27 Aug 2018 09:11:37 +0200
+Message-ID: <7915686.3ERLj9EHQN@phil>
+References: <1529997340-156879-1-git-send-email-hjc@rock-chips.com>
+ <20180703182559.GA12809@rob-hp-laptop>
+ <725cc93f-a441-22bc-ef58-b4b38ec34e17@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1534252906-29554-1-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, linux@armlinux.org.uk, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org, jagan@amarulasolutions.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <725cc93f-a441-22bc-ef58-b4b38ec34e17@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sandy Huang <hjc@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, seanpaul@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 14, 2018 at 03:21:44PM +0200, Jacopo Mondi wrote:
-> Jacopo Mondi (2):
->   ARM: dts: imx6qdl: Add Engicam i.Core 1.5 MX6
->   ARM: dts: imx6q-icore-mipi: Use 1.5 version of i.Core MX6
-
-Applied both, thanks.
+SGkgU2FuZHksCgp0cnlpbmcgdG8gbW92ZSB0aGlzIGZvcndhcmQgYSBiaXQgOi0pCgpBbSBNaXR0
+d29jaCwgNC4gSnVsaSAyMDE4LCAxNDowOTo1NiBDRVNUIHNjaHJpZWIgU2FuZHkgSHVhbmc6Cj4g
+SGkgUm9iIEhlcnJpbmcsCj4gVGhhbmtzIGZvciB5b3VyIHJldmlldy4KPiAKPiDlnKggMjAxOC83
+LzQgMjoyNSwgUm9iIEhlcnJpbmcg5YaZ6YGTOgo+ID4gT24gVHVlLCBKdW4gMjYsIDIwMTggYXQg
+MDM6MTU6MzlQTSArMDgwMCwgU2FuZHkgSHVhbmcgd3JvdGU6Cj4gPj4gVGhpcyBwYXRoIGFkZCBz
+dXBwb3J0IHJ2MTEwOCBhbmQgcHgzMCByZ2Igb3V0cHV0IGludGVyZmFjZSBkcml2ZXIuCj4gPiAK
+PiA+IEJpbmRpbmdzIGFyZSBmb3IgaC93LCBub3QgZHJpdmVycy4KPiA+IAo+IEkgd2lsbCB1cGRh
+dGUgYXQgbmV4dCB2ZXJzaW9uIGFzIGZvbGxvd2luZzoKPiBUaGlzIHBhdGNoIGFkZCBzdXBwb3J0
+IHJ2MTEwOCBhbmQgcHgzMCByZ2Igb3V0cHV0IGludGVyZmFjZQo+ID4+Cj4gPj4gU2lnbmVkLW9m
+Zi1ieTogU2FuZHkgSHVhbmcgPGhqY0Byb2NrLWNoaXBzLmNvbT4KPiA+PiBMaW5rOiBodHRwczov
+L3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gvbXNnaWQvMTUwOTUyMjc2NS0xMTg3NTkt
+MS1naXQtc2VuZC1lbWFpbC1oamNAcm9jay1jaGlwcy5jb20KPiA+PiAtLS0KPiA+Pgo+ID4+IENo
+YW5nZXMgaW4gdjQ6IEFkZCBzdXBwb3J0IHB4MzAKPiA+PiBDaGFuZ2VzIGluIHYzOiBOb25lCj4g
+Pj4gQ2hhbmdlcyBpbiB2MjogTm9uZQo+ID4+Cj4gPj4gLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9j
+a2NoaXAvcm9ja2NoaXAtcmdiLnR4dCAgICAgfCA3MyArKysrKysrKysrKysrKysrKysrKysrCj4g
+Pj4gICAxIGZpbGUgY2hhbmdlZCwgNzMgaW5zZXJ0aW9ucygrKQo+ID4+ICAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlw
+L3JvY2tjaGlwLXJnYi50eHQKPiA+Pgo+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAt
+cmdiLnR4dAo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4gaW5kZXggMDAwMDAwMC4uMDc3
+YjlhZAo+ID4+IC0tLSAvZGV2L251bGwKPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0Cj4gPj4gQEAgLTAs
+MCArMSw3MyBAQAo+ID4+ICtSb2NrY2hpcCBSVjExMDggUkdCIGludGVyZmFjZQo+ID4+ICs9PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+ID4+ICsKPiA+PiArUmVxdWlyZWQgcHJvcGVy
+dGllczoKPiA+PiArLSBjb21wYXRpYmxlOiBtYXRjaGluZyB0aGUgc29jIHR5cGU6Cj4gPj4gKwkt
+ICJyb2NrY2hpcCxweDMwLXJnYiI7Cj4gPj4gKwktICJyb2NrY2hpcCxydjExMDgtcmdiIjsKPiA+
+IAo+ID4gVGhpcyBkb2Vzbid0IGxvb2sgcmlnaHQ/IFdoYXQgKGFuZCBob3cpIGlzIGdldHRpbmcg
+cHJvZ3JhbW1lZCBoZXJlCj4gPiBiZWNhdXNlIHlvdSBkb24ndCBoYXZlIGFueSByZWdpc3RlciBp
+bnRlcmZhY2UuCj4gPiAKPiBUaGlzIGlzIHJlZ2lzdGVyIGZvciBEUk0gZW5jb2RlciBhbmQgY29u
+bmVjdGVyIG9yIGJyaWRnZSBmb3Igc29tZSBSR0IgCj4gY29udmVydCBjaGlwcyBkcml2ZXIuCj4g
+c28gZmFyIHdlIGRvbid0IGhhdmUgYW55IHJlZ2lzdGVyIGZvciByZ2IgaW50ZXJmYWNlLCBidXQg
+aXQncyBtb3N0IAo+IHByb2JhYmxlIG5lZWQgdG8gY29uZmlnIHNvbWUgcmVnaXN0ZXIgZm9yIHJn
+YiBpbnRlcmZhY2UgaW4gZmVhdXR1cmUgZm9yIAo+IHJvY2tjaGlwIHBsYXRmb3JtLgoKSSB0aGlu
+ayB0aGUgYmFzaWMtaXNzdWUgUm9iIHdhcyBwb2ludGluZyBvdXQgaXMgdGhhdCB0aGUgZGV2aWNl
+dHJlZQpkZXNjcmliZXMgaGFyZHdhcmUgYmxvY2tzIGFuZCBub3QgdGhlIHNvZnR3YXJlIHJlcHJl
+c2VudGF0aW9uLgoKQW5kIHRoZSByZ2Igb3V0cHV0IGlzIG5vdCBhIHNlcGFyYXRlIGJsb2NrLCBi
+dXQgaW5zdGVhZCBqdXN0IGEgcHJvcGVydHkKb2YgdGhlIHZvcCBpdHNlbGYsIGhlbmNlIHNob3Vs
+ZCBwb3NzaWJseSBub3QgaGF2ZSBhIHNlcGFyYXRlICJkZXZpY2UiLgoKQXMgSSdtIGN1cnJlbnRs
+eSB0aW5rZXJpbmcgd2l0aCByazMxODggZGlzcGxheSBzdXBwb3J0IFswXSAtIHdoaWNoIG9ubHkg
+aGFzCnJnYiBvdXRwdXQgYXQgYWxsIC0gSSBtb2RpZmllZCB5b3VyIHBhdGNoIGEgYml0IHRvIHRv
+IHNob3djYXNlIGhvdyB0aGF0CmNvdWxkIGxvb2sgWzFdLCB3aGVyZSB0aGUgc29jIHZvcCBzdHJ1
+Y3Qgc2ltcGx5IGhhcyBhIGZlYXR1cmUgZmxhZwppbmRpY2F0aW5nIGluZGljYXRpbmcgYSByYXcg
+cmdiIG91dHB1dCBhbmQgdGhlIHJnYiBkcml2ZXIgdGhlbgpsb29rcyBmb3IgYnJpZGdlcyBpbiB0
+aGUgdm9wIGVuZHBvaW50cyB0byBkaXN0aW5ndWlzaCB0aGVtIGZyb20Kc29jLWludGVybmFscyBv
+dXRwdXQgZW5jb2RlcnMuCgpMZXQgbWUga25vdyB3aGF0IHlvdSB0aGluayA6LSkKSGVpa28KClsw
+XSBodHRwczovL2dpdGh1Yi5jb20vbW1pbmQvbGludXgtcm9ja2NoaXAvY29tbWl0cy93aXAvcmsz
+MTg4LWxjZGMKWzFdIGh0dHBzOi8vZ2l0aHViLmNvbS9tbWluZC9saW51eC1yb2NrY2hpcC9jb21t
+aXQvZmU3NGQyYzRkNzZiY2I2MDM1YjcyMDc3NTNlNmFmYjg1MzM1YjZjZApuZWVkcyBhbHNvIGh0
+dHBzOi8vZ2l0aHViLmNvbS9tbWluZC9saW51eC1yb2NrY2hpcC9jb21taXQvYzVhNDhjNzcyZjM1
+NjQyMTFkY2QxZWM3MTAwNGRlMWQ2ZGJiMDMwNwoKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
