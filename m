@@ -1,139 +1,219 @@
-Return-Path: <SRS0=nZrf=K4=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 4/7] [media] v4l2-subdev: fix v4l2_subdev_get_try_* dependency
-Date: Mon, 13 Aug 2018 11:25:05 +0200
-Message-Id: <20180813092508.1334-5-m.felsch@pengutronix.de>
-In-Reply-To: <20180813092508.1334-1-m.felsch@pengutronix.de>
-References: <20180813092508.1334-1-m.felsch@pengutronix.de>
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
+Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54586 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727272AbeH0NP6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Aug 2018 09:15:58 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 18/23] v4l: fwnode: Use media bus type for bus parser selection
+Date: Mon, 27 Aug 2018 12:29:55 +0300
+Message-Id: <20180827093000.29165-19-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-These helpers make us of the media-controller entity which is only
-available if the CONFIG_MEDIA_CONTROLLER is enabled.
+Use the media bus types instead of the fwnode bus types internally. This
+is the interface to the drivers as well, making the use of the fwnode bus
+types more localised to the V4L2 fwnode framework.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- include/media/v4l2-subdev.h | 100 ++++++++++++++++++------------------
- 1 file changed, 50 insertions(+), 50 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 100 +++++++++++++++++++++++++++-------
+ 1 file changed, 80 insertions(+), 20 deletions(-)
 
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index ce48f1fcf295..79c066934ad2 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -912,6 +912,56 @@ struct v4l2_subdev_fh {
- #define to_v4l2_subdev_fh(fh)	\
- 	container_of(fh, struct v4l2_subdev_fh, vfh)
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 6c5a76442667..d502abd7406b 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -42,9 +42,66 @@ enum v4l2_fwnode_bus_type {
+ 	NR_OF_V4L2_FWNODE_BUS_TYPE,
+ };
  
-+extern const struct v4l2_file_operations v4l2_subdev_fops;
++static const struct v4l2_fwnode_bus_conv {
++	enum v4l2_fwnode_bus_type fwnode_bus_type;
++	enum v4l2_mbus_type mbus_type;
++	const char *name;
++} busses[] = {
++	{
++		V4L2_FWNODE_BUS_TYPE_GUESS,
++		V4L2_MBUS_UNKNOWN,
++		"not specified",
++	}, {
++		V4L2_FWNODE_BUS_TYPE_CSI2_CPHY,
++		V4L2_MBUS_CSI2_CPHY,
++		"MIPI CSI-2 C-PHY",
++	}, {
++		V4L2_FWNODE_BUS_TYPE_CSI1,
++		V4L2_MBUS_CSI1,
++		"MIPI CSI-1",
++	}, {
++		V4L2_FWNODE_BUS_TYPE_CCP2,
++		V4L2_MBUS_CCP2,
++		"compact camera port 2",
++	}, {
++		V4L2_FWNODE_BUS_TYPE_CSI2_DPHY,
++		V4L2_MBUS_CSI2_DPHY,
++		"MIPI CSI-2 D-PHY",
++	}, {
++		V4L2_FWNODE_BUS_TYPE_PARALLEL,
++		V4L2_MBUS_PARALLEL,
++		"parallel",
++	}, {
++		V4L2_FWNODE_BUS_TYPE_BT656,
++		V4L2_MBUS_BT656,
++		"Bt.656",
++	}
++};
 +
-+/**
-+ * v4l2_set_subdevdata - Sets V4L2 dev private device data
-+ *
-+ * @sd: pointer to &struct v4l2_subdev
-+ * @p: pointer to the private device data to be stored.
-+ */
-+static inline void v4l2_set_subdevdata(struct v4l2_subdev *sd, void *p)
++static const struct v4l2_fwnode_bus_conv *
++get_v4l2_fwnode_bus_conv_by_fwnode_bus(enum v4l2_fwnode_bus_type type)
 +{
-+	sd->dev_priv = p;
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(busses); i++)
++		if (busses[i].fwnode_bus_type == type)
++			return &busses[i];
++
++	return NULL;
 +}
 +
-+/**
-+ * v4l2_get_subdevdata - Gets V4L2 dev private device data
-+ *
-+ * @sd: pointer to &struct v4l2_subdev
-+ *
-+ * Returns the pointer to the private device data to be stored.
-+ */
-+static inline void *v4l2_get_subdevdata(const struct v4l2_subdev *sd)
++static enum v4l2_mbus_type
++v4l2_fwnode_bus_type_to_mbus(enum v4l2_fwnode_bus_type type)
 +{
-+	return sd->dev_priv;
++	const struct v4l2_fwnode_bus_conv *conv =
++		get_v4l2_fwnode_bus_conv_by_fwnode_bus(type);
++
++	return conv ? conv->mbus_type : V4L2_MBUS_UNKNOWN;
 +}
 +
-+/**
-+ * v4l2_set_subdev_hostdata - Sets V4L2 dev private host data
-+ *
-+ * @sd: pointer to &struct v4l2_subdev
-+ * @p: pointer to the private data to be stored.
-+ */
-+static inline void v4l2_set_subdev_hostdata(struct v4l2_subdev *sd, void *p)
-+{
-+	sd->host_priv = p;
-+}
-+
-+/**
-+ * v4l2_get_subdev_hostdata - Gets V4L2 dev private data
-+ *
-+ * @sd: pointer to &struct v4l2_subdev
-+ *
-+ * Returns the pointer to the private host data to be stored.
-+ */
-+static inline void *v4l2_get_subdev_hostdata(const struct v4l2_subdev *sd)
-+{
-+	return sd->host_priv;
-+}
-+
-+#ifdef CONFIG_MEDIA_CONTROLLER
-+
- /**
-  * v4l2_subdev_get_try_format - ancillary routine to call
-  *	&struct v4l2_subdev_pad_config->try_fmt
-@@ -978,56 +1028,6 @@ static inline struct v4l2_rect
- #endif
- }
+ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 					       struct v4l2_fwnode_endpoint *vep,
+-					       enum v4l2_fwnode_bus_type bus_type)
++					       enum v4l2_mbus_type bus_type)
+ {
+ 	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vep->bus.mipi_csi2;
+ 	bool have_clk_lane = false, have_data_lanes = false,
+@@ -58,7 +115,7 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 	u32 v;
+ 	int rval;
  
--extern const struct v4l2_file_operations v4l2_subdev_fops;
--
--/**
-- * v4l2_set_subdevdata - Sets V4L2 dev private device data
-- *
-- * @sd: pointer to &struct v4l2_subdev
-- * @p: pointer to the private device data to be stored.
-- */
--static inline void v4l2_set_subdevdata(struct v4l2_subdev *sd, void *p)
--{
--	sd->dev_priv = p;
--}
--
--/**
-- * v4l2_get_subdevdata - Gets V4L2 dev private device data
-- *
-- * @sd: pointer to &struct v4l2_subdev
-- *
-- * Returns the pointer to the private device data to be stored.
-- */
--static inline void *v4l2_get_subdevdata(const struct v4l2_subdev *sd)
--{
--	return sd->dev_priv;
--}
--
--/**
-- * v4l2_set_subdev_hostdata - Sets V4L2 dev private host data
-- *
-- * @sd: pointer to &struct v4l2_subdev
-- * @p: pointer to the private data to be stored.
-- */
--static inline void v4l2_set_subdev_hostdata(struct v4l2_subdev *sd, void *p)
--{
--	sd->host_priv = p;
--}
--
--/**
-- * v4l2_get_subdev_hostdata - Gets V4L2 dev private data
-- *
-- * @sd: pointer to &struct v4l2_subdev
-- *
-- * Returns the pointer to the private host data to be stored.
-- */
--static inline void *v4l2_get_subdev_hostdata(const struct v4l2_subdev *sd)
--{
--	return sd->host_priv;
--}
--
--#ifdef CONFIG_MEDIA_CONTROLLER
--
- /**
-  * v4l2_subdev_link_validate_default - validates a media link
-  *
+-	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY) {
++	if (bus_type == V4L2_MBUS_CSI2_DPHY) {
+ 		use_default_lane_mapping = true;
+ 
+ 		num_data_lanes = min_t(u32, bus->num_data_lanes,
+@@ -134,7 +191,7 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 		flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
+ 	}
+ 
+-	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY || lanes_used ||
++	if (bus_type == V4L2_MBUS_CSI2_DPHY || lanes_used ||
+ 	    have_clk_lane || (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
+ 		bus->flags = flags;
+ 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
+@@ -177,7 +234,7 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 
+ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 	struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep,
+-	enum v4l2_fwnode_bus_type bus_type)
++	enum v4l2_mbus_type bus_type)
+ {
+ 	struct v4l2_fwnode_bus_parallel *bus = &vep->bus.parallel;
+ 	unsigned int flags = 0;
+@@ -274,11 +331,11 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ 		else
+ 			vep->bus_type = V4L2_MBUS_BT656;
+ 		break;
+-	case V4L2_FWNODE_BUS_TYPE_PARALLEL:
++	case V4L2_MBUS_PARALLEL:
+ 		vep->bus_type = V4L2_MBUS_PARALLEL;
+ 		bus->flags = flags;
+ 		break;
+-	case V4L2_FWNODE_BUS_TYPE_BT656:
++	case V4L2_MBUS_BT656:
+ 		vep->bus_type = V4L2_MBUS_BT656;
+ 		bus->flags = flags & ~PARALLEL_MBUS_FLAGS;
+ 		break;
+@@ -288,7 +345,7 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
+ static void
+ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
+ 				    struct v4l2_fwnode_endpoint *vep,
+-				    enum v4l2_fwnode_bus_type bus_type)
++				    enum v4l2_mbus_type bus_type)
+ {
+ 	struct v4l2_fwnode_bus_mipi_csi1 *bus = &vep->bus.mipi_csi1;
+ 	u32 v;
+@@ -313,7 +370,7 @@ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
+ 		pr_debug("clock-lanes %u\n", v);
+ 	}
+ 
+-	if (bus_type == V4L2_FWNODE_BUS_TYPE_CCP2)
++	if (bus_type == V4L2_MBUS_CCP2)
+ 		vep->bus_type = V4L2_MBUS_CCP2;
+ 	else
+ 		vep->bus_type = V4L2_MBUS_CSI1;
+@@ -323,6 +380,7 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 					struct v4l2_fwnode_endpoint *vep)
+ {
+ 	u32 bus_type = 0;
++	enum v4l2_mbus_type mbus_type;
+ 	int rval;
+ 
+ 	if (vep->bus_type == V4L2_MBUS_UNKNOWN) {
+@@ -341,10 +399,12 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 
+ 	fwnode_property_read_u32(fwnode, "bus-type", &bus_type);
+ 
+-	switch (bus_type) {
+-	case V4L2_FWNODE_BUS_TYPE_GUESS:
++	mbus_type = v4l2_fwnode_bus_type_to_mbus(bus_type);
++
++	switch (mbus_type) {
++	case V4L2_MBUS_UNKNOWN:
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
+-							   bus_type);
++							   mbus_type);
+ 		if (rval)
+ 			return rval;
+ 
+@@ -353,26 +413,26 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 				fwnode, vep, V4L2_MBUS_UNKNOWN);
+ 
+ 		break;
+-	case V4L2_FWNODE_BUS_TYPE_CCP2:
+-	case V4L2_FWNODE_BUS_TYPE_CSI1:
+-		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, bus_type);
++	case V4L2_MBUS_CCP2:
++	case V4L2_MBUS_CSI1:
++		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, mbus_type);
+ 
+ 		break;
+-	case V4L2_FWNODE_BUS_TYPE_CSI2_DPHY:
++	case V4L2_MBUS_CSI2_DPHY:
+ 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
+-							   bus_type);
++							   mbus_type);
+ 		if (rval)
+ 			return rval;
+ 
+ 		break;
+-	case V4L2_FWNODE_BUS_TYPE_PARALLEL:
+-	case V4L2_FWNODE_BUS_TYPE_BT656:
+-		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, bus_type);
++	case V4L2_MBUS_PARALLEL:
++	case V4L2_MBUS_BT656:
++		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, mbus_type);
+ 
+ 		break;
+ 	default:
+-		pr_warn("unsupported bus type %u\n", bus_type);
++		pr_warn("unsupported bus type %u\n", mbus_type);
+ 		return -EINVAL;
+ 	}
+ 
 -- 
-2.18.0
+2.11.0
