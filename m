@@ -1,68 +1,86 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 3/3] ARM: dts: NSP: Wire up switch interrupts
-Date: Mon, 27 Aug 2018 13:03:44 -0700
-Message-ID: <20180827200344.16158-4-f.fainelli@gmail.com>
-References: <20180827200344.16158-1-f.fainelli@gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v9 0/4] drm/atmel-hlcdc: bus-width override support
+Date: Mon, 27 Aug 2018 22:31:22 +0200
+Message-ID: <ca38bd82-09d2-8e55-a3a2-e0e559abdf7f@axentia.se>
+References: <20180825085620.10566-1-peda@axentia.se>
+ <20180827212449.723bdc99@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827200344.16158-1-f.fainelli@gmail.com>
+In-Reply-To: <20180827212449.723bdc99@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM
-        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, andrew@lunn.ch, rmk+kernel@armlinux.org.uk
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>, Daniel Vetter <daniel@ffwll.ch>, Andrzej Hajda <a.hajda@samsung.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-The Switch Register Access Block (SRAB) has one interrupt for link state
-change on each ports (0-5, 7-8) a PHY interrupt, timestamping interrupt
-and sleep timer interrupts for each management ports (5,7,8). Wire those
-up so we can utilize them to speed up link resolution.
+On 2018-08-27 21:24, Boris Brezillon wrote:
+> On Sat, 25 Aug 2018 10:56:16 +0200
+> Peter Rosin <peda@axentia.se> wrote:
+> 
+>> Hi!
+>>
+>> The background for these patches is that our PCB interface between
+>> the SAMA5D3 and the ds90c185 lvds encoder is only using 16 bits, and
+>> this has to be described somewhere, or the atmel-hlcdc driver have no
+>> chance of selecting the correct output mode. Since we have similar
+>> problems with a tda19988 HDMI encoder I added patches to override
+>> the atmel-hlcdc output format via DT properties compatible with the
+>> media video-interface binding and things start to play together.
+> 
+> Queued to drm-misc-next.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+Thanks!
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 09ba85046322..ec869a80f9ba 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -377,7 +377,36 @@
- 
- 		srab: srab@36000 {
- 			compatible = "brcm,nsp-srab";
--			reg = <0x36000 0x1000>;
-+			reg = <0x36000 0x1000>,
-+			      <0x3f308 0x8>,
-+			      <0x3f410 0xc>;
-+			reg-names = "srab", "mux_config", "sgmii";
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "link_state_p0",
-+					  "link_state_p1",
-+					  "link_state_p2",
-+					  "link_state_p3",
-+					  "link_state_p4",
-+					  "link_state_p5",
-+					  "link_state_p7",
-+					  "link_state_p8",
-+					  "phy",
-+					  "ts",
-+					  "imp_sleep_timer_p5",
-+					  "imp_sleep_timer_p7",
-+					  "imp_sleep_timer_p8";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 
--- 
-2.17.1
+Minute issue, you seem to have some spell-check going on or something,
+because the subject of patch 1/4 has been "corrected" from
+"...add ti,ds90c185" to "...add ti, ds90c185"
+
+You might want to evaluate if that auto-correction "feature" should be
+disabled/tweaked/whatever...
+
+Cheers,
+Peter
+
+> Thanks,
+> 
+> Boris
+> 
+>>
+>> Cheers,
+>> Peter
+>>
+>> Changes since v8  https://lkml.org/lkml/2018/8/10/309
+>> - go back to the solution in v7 (but the ep device_node leak fixed)
+>>   for patch 4/4
+>> - redo (part of) 3/4 w/o using the disliked of_graph_parse_endpoint
+>>
+>> Changes since v7  https://lkml.org/lkml/2018/8/4/288
+>> - The ep device_node was leaked in v7 patch 3/3, so add patch 3/4
+>>   which simplifies fixing this in patch 4/4 (and adds flexibility)
+>>   and adjust patch 4/4 to the changes done in the new 3/4.
+>> - return -ENOMEM on allocation failure in patch 4/4
+>>
+>> Changes since v6  https://lkml.org/lkml/2018/8/3/333
+>> - zap bus-type from the binding in patch 2/3
+>>
+>> Changes since (the shortened) v5  https://lkml.org/lkml/2018/8/3/182
+>> - add reg properties (and #*-cells) to the example in patch 2/3
+>> - prohibit bus-width 0 in the device-tree in patch 3/3
+>> - added reviewed-by from Jacopo to patch 2/3 and 3/3
+>>
+>> Peter Rosin (4):
+>>   dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c185
+>>   dt-bindings: display: atmel: optional video-interface of endpoints
+>>   drm/atmel-hlcdc: always iterate over the first 4 output endpoints
+>>   drm/atmel-hlcdc: support bus-width (12/16/18/24) in endpoint nodes
+>>
+>>  .../devicetree/bindings/display/atmel/hlcdc-dc.txt | 23 ++++++
+>>  .../bindings/display/bridge/lvds-transmitter.txt   |  8 +-
+>>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c     | 70 +++++++++++-----
+>>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_dc.h       |  1 +
+>>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c   | 92 +++++++++++++++++++---
+>>  5 files changed, 163 insertions(+), 31 deletions(-)
+>>
+> 
