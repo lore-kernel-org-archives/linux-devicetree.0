@@ -1,57 +1,36 @@
-Return-Path: <SRS0=H6vz=LL=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=Jnje=LK=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH] clk: renesas: cpg-mssr: Add R7S9210 support
+Date: Mon, 27 Aug 2018 22:13:01 +0000
+Message-ID: 
+ <TY1PR01MB15620184F9EA4E62E21D1D688A0B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20180821032020.81254-1-chris.brandt@renesas.com>
- <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com> <TY1PR01MB15620184F9EA4E62E21D1D688A0B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB15620184F9EA4E62E21D1D688A0B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 28 Aug 2018 09:10:37 +0200
-Message-ID: <CAMuHMdVd7wT5vPrHFAgHYqNWtJNjbSG7GaaPaMVD12cfkg8E2A@mail.gmail.com>
-Subject: Re: [PATCH] clk: renesas: cpg-mssr: Add R7S9210 support
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+ <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris,
-
-On Tue, Aug 28, 2018 at 12:13 AM Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Monday, August 27, 2018 1, Geert Uytterhoeven wrote:
-> > Given the differences, and the limited amount of RAM on RZ/A2, I think you
-> > would be better off with a separate renesas-cpg-stbcr driver, and an
-> > r7s9210-cpg-stbcr counterpart.
->
-> I went and measured the amount of RAM being used by the driver
-> (allocated during boot when the driver is loaded and probed), and it's only 8KB.
-> That's not really much compared to other drivers and subsystems being
-> loaded in the system. Of course RZ/A tries to be RAM sensitive...but 8KB
-> for a clock driver is not my biggest concern.
->
-> So with that said, I could add in a driver option to not register the
-> reset controller. And, also make a macro so users can specify "36" instead
-> of "306" in the DT.
-> And then, I no longer have to worry about duplicate code (2 drivers do
-> almost the same thing).
->
-> What do you think?
-
-OK for me.
-
-Changing the print format in the debug prints is probably too much work,
-but those matter less than the clock numbers in the DTS.
-
-> Were you expecting the driver to allocate more than 8K of RAM on boot?
-
-I was thinking mainly about code size. But you're right, (a) you use XIP
-(with plenty of FLASH?), and (b) RAM size should be similar for a combined
-and a separate driver.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNCk9uIE1vbmRheSwgQXVndXN0IDI3LCAyMDE4IDEsIEdlZXJ0IFV5dHRlcmhv
+ZXZlbiB3cm90ZToNCj4gR2l2ZW4gdGhlIGRpZmZlcmVuY2VzLCBhbmQgdGhlIGxpbWl0ZWQgYW1v
+dW50IG9mIFJBTSBvbiBSWi9BMiwgSSB0aGluayB5b3UNCj4gd291bGQgYmUgYmV0dGVyIG9mZiB3
+aXRoIGEgc2VwYXJhdGUgcmVuZXNhcy1jcGctc3RiY3IgZHJpdmVyLCBhbmQgYW4NCj4gcjdzOTIx
+MC1jcGctc3RiY3IgY291bnRlcnBhcnQuDQoNCkkgd2VudCBhbmQgbWVhc3VyZWQgdGhlIGFtb3Vu
+dCBvZiBSQU0gYmVpbmcgdXNlZCBieSB0aGUgZHJpdmVyIA0KKGFsbG9jYXRlZCBkdXJpbmcgYm9v
+dCB3aGVuIHRoZSBkcml2ZXIgaXMgbG9hZGVkIGFuZCBwcm9iZWQpLCBhbmQgaXQncyBvbmx5IDhL
+Qi4gDQpUaGF0J3Mgbm90IHJlYWxseSBtdWNoIGNvbXBhcmVkIHRvIG90aGVyIGRyaXZlcnMgYW5k
+IHN1YnN5c3RlbXMgYmVpbmcgDQpsb2FkZWQgaW4gdGhlIHN5c3RlbS4gT2YgY291cnNlIFJaL0Eg
+dHJpZXMgdG8gYmUgUkFNIHNlbnNpdGl2ZS4uLmJ1dCA4S0IgDQpmb3IgYSBjbG9jayBkcml2ZXIg
+aXMgbm90IG15IGJpZ2dlc3QgY29uY2Vybi4NCg0KU28gd2l0aCB0aGF0IHNhaWQsIEkgY291bGQg
+YWRkIGluIGEgZHJpdmVyIG9wdGlvbiB0byBub3QgcmVnaXN0ZXIgdGhlIA0KcmVzZXQgY29udHJv
+bGxlci4gQW5kLCBhbHNvIG1ha2UgYSBtYWNybyBzbyB1c2VycyBjYW4gc3BlY2lmeSAiMzYiIGlu
+c3RlYWQNCm9mICIzMDYiIGluIHRoZSBEVC4NCkFuZCB0aGVuLCBJIG5vIGxvbmdlciBoYXZlIHRv
+IHdvcnJ5IGFib3V0IGR1cGxpY2F0ZSBjb2RlICgyIGRyaXZlcnMgZG8gDQphbG1vc3QgdGhlIHNh
+bWUgdGhpbmcpLg0KDQpXaGF0IGRvIHlvdSB0aGluaz8NCldlcmUgeW91IGV4cGVjdGluZyB0aGUg
+ZHJpdmVyIHRvIGFsbG9jYXRlIG1vcmUgdGhhbiA4SyBvZiBSQU0gb24gYm9vdD8NCg0KVGhhbmtz
+LA0KQ2hyaXMNCg0K
