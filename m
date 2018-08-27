@@ -1,13 +1,13 @@
 Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54588 "EHLO
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54562 "EHLO
         hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727144AbeH0NP5 (ORCPT
+        by vger.kernel.org with ESMTP id S1727290AbeH0NP6 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Aug 2018 09:15:57 -0400
+        Mon, 27 Aug 2018 09:15:58 -0400
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 13/23] v4l: fwnode: Support default CSI-2 lane mapping for drivers
-Date: Mon, 27 Aug 2018 12:29:50 +0300
-Message-Id: <20180827093000.29165-14-sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 20/23] v4l: fwnode: Use V4L2 fwnode endpoint media bus type if set
+Date: Mon, 27 Aug 2018 12:29:57 +0300
+Message-Id: <20180827093000.29165-21-sakari.ailus@linux.intel.com>
 In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
 References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
@@ -15,125 +15,85 @@ To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-Most hardware doesn't support re-mapping of the CSI-2 lanes. Especially
-sensor drivers have a default number of lanes. Instead of requiring the
-caller (the driver) to provide such a unit mapping, provide one if no
-mapping is configured.
+Use the given media bus type set by the caller. If none is given (i.e. the
+mbus type is V4L2_MBUS_UNKNOWN, or 0), fall back to the old behaviour.
+This is to obtain the information from the DT or try to guess the bus
+type.
+
+-ENXIO is returned if the caller sets the bus type but that does not match
+with what's in DT. Also return -ENXIO if bus type detection failed to
+separate this from the rest of the errors.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 60 +++++++++++++++++++++++++++--------
- 1 file changed, 46 insertions(+), 14 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 282595c90818..0ddf05bb589a 100644
+index 4c7f16ff79fa..4c2f7d709c5d 100644
 --- a/drivers/media/v4l2-core/v4l2-fwnode.c
 +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -47,20 +47,35 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 					       enum v4l2_fwnode_bus_type bus_type)
+@@ -409,7 +409,7 @@ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_handle *fwnode,
+ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 					struct v4l2_fwnode_endpoint *vep)
  {
- 	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vep->bus.mipi_csi2;
--	bool have_clk_lane = false, have_lane_polarities = false;
-+	bool have_clk_lane = false, have_data_lanes = false,
-+		have_lane_polarities = false;
- 	unsigned int flags = 0, lanes_used = 0;
- 	u32 array[1 + V4L2_FWNODE_CSI2_MAX_DATA_LANES];
-+	u32 clock_lane = 0;
- 	unsigned int num_data_lanes = 0;
-+	bool use_default_lane_mapping = false;
- 	unsigned int i;
- 	u32 v;
+-	u32 bus_type = 0;
++	u32 bus_type = V4L2_FWNODE_BUS_TYPE_GUESS;
+ 	enum v4l2_mbus_type mbus_type;
  	int rval;
  
- 	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY) {
-+		use_default_lane_mapping = true;
-+
- 		num_data_lanes = min_t(u32, bus->num_data_lanes,
- 				       V4L2_FWNODE_CSI2_MAX_DATA_LANES);
- 
--		for (i = 0; i < num_data_lanes; i++)
-+		clock_lane = bus->clock_lane;
-+		if (clock_lane)
-+			use_default_lane_mapping = false;
-+
-+		for (i = 0; i < num_data_lanes; i++) {
- 			array[i] = bus->data_lanes[i];
-+			if (array[i])
-+				use_default_lane_mapping = false;
-+		}
-+
-+		if (use_default_lane_mapping)
-+			pr_debug("using default lane mapping\n");
- 	}
- 
- 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
-@@ -70,15 +85,21 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 
- 		fwnode_property_read_u32_array(fwnode, "data-lanes", array,
- 					       num_data_lanes);
-+
-+		have_data_lanes = true;
- 	}
- 
- 	for (i = 0; i < num_data_lanes; i++) {
--		if (lanes_used & BIT(array[i]))
--			pr_warn("duplicated lane %u in data-lanes\n",
--				array[i]);
-+		if (lanes_used & BIT(array[i])) {
-+			if (have_data_lanes || !use_default_lane_mapping)
-+				pr_warn("duplicated lane %u in data-lanes, using defaults\n",
-+					array[i]);
-+			use_default_lane_mapping = true;
-+		}
- 		lanes_used |= BIT(array[i]);
- 
--		pr_debug("lane %u position %u\n", i, array[i]);
-+		if (have_data_lanes)
-+			pr_debug("lane %u position %u\n", i, array[i]);
- 	}
- 
- 	rval = fwnode_property_read_u32_array(fwnode, "lane-polarities", NULL,
-@@ -94,13 +115,16 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 	}
- 
- 	if (!fwnode_property_read_u32(fwnode, "clock-lanes", &v)) {
--		if (lanes_used & BIT(v))
--			pr_warn("duplicated lane %u in clock-lanes\n", v);
--		lanes_used |= BIT(v);
+@@ -432,13 +432,24 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		 v4l2_fwnode_bus_type_to_string(bus_type), bus_type,
+ 		 v4l2_fwnode_mbus_type_to_string(vep->bus_type),
+ 		 vep->bus_type);
 -
--		bus->clock_lane = v;
--		have_clk_lane = true;
-+		clock_lane = v;
- 		pr_debug("clock lane position %u\n", v);
-+		have_clk_lane = true;
+ 	mbus_type = v4l2_fwnode_bus_type_to_mbus(bus_type);
+ 
+-	switch (mbus_type) {
++	if (vep->bus_type != V4L2_MBUS_UNKNOWN) {
++		if (mbus_type != V4L2_MBUS_UNKNOWN &&
++		    vep->bus_type != mbus_type) {
++			pr_debug("expecting bus type %s\n",
++				 v4l2_fwnode_mbus_type_to_string(
++					 vep->bus_type));
++			return -ENXIO;
++		}
++	} else {
++		vep->bus_type = mbus_type;
 +	}
 +
-+	if (lanes_used & BIT(clock_lane)) {
-+		if (have_clk_lane || !use_default_lane_mapping)
-+			pr_warn("duplicated lane %u in clock-lanes, using defaults\n",
-+			v);
-+		use_default_lane_mapping = true;
- 	}
++	switch (vep->bus_type) {
+ 	case V4L2_MBUS_UNKNOWN:
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
+-							   mbus_type);
++							   V4L2_MBUS_UNKNOWN);
+ 		if (rval)
+ 			return rval;
  
- 	if (fwnode_property_present(fwnode, "clock-noncontinuous")) {
-@@ -115,8 +139,16 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 		bus->flags = flags;
- 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
- 		bus->num_data_lanes = num_data_lanes;
--		for (i = 0; i < num_data_lanes; i++)
--			bus->data_lanes[i] = array[i];
-+
-+		if (use_default_lane_mapping) {
-+			bus->clock_lane = 0;
-+			for (i = 0; i < num_data_lanes; i++)
-+				bus->data_lanes[i] = 1 + i;
-+		} else {
-+			bus->clock_lane = clock_lane;
-+			for (i = 0; i < num_data_lanes; i++)
-+				bus->data_lanes[i] = array[i];
-+		}
+@@ -453,20 +464,20 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		break;
+ 	case V4L2_MBUS_CCP2:
+ 	case V4L2_MBUS_CSI1:
+-		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, mbus_type);
++		v4l2_fwnode_endpoint_parse_csi1_bus(fwnode, vep, vep->bus_type);
  
- 		if (have_lane_polarities) {
- 			fwnode_property_read_u32_array(fwnode,
+ 		break;
+ 	case V4L2_MBUS_CSI2_DPHY:
+-		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
+ 		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
+-							   mbus_type);
++							   vep->bus_type);
+ 		if (rval)
+ 			return rval;
+ 
+ 		break;
+ 	case V4L2_MBUS_PARALLEL:
+ 	case V4L2_MBUS_BT656:
+-		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep, mbus_type);
++		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep,
++							vep->bus_type);
+ 
+ 		break;
+ 	default:
 -- 
 2.11.0
