@@ -1,99 +1,117 @@
-Return-Path: <SRS0=Jnje=LK=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH] clk: renesas: cpg-mssr: Add R7S9210 support
-Date: Mon, 27 Aug 2018 16:58:57 +0000
-Message-ID: 
- <TY1PR01MB1562C6473AC295F7F58AB2258A0B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20180821032020.81254-1-chris.brandt@renesas.com>
- <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=SWuu=LK=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+References: <20180821032020.81254-1-chris.brandt@renesas.com>
+In-Reply-To: <20180821032020.81254-1-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 27 Aug 2018 18:37:26 +0200
+Message-ID: <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com>
+Subject: Re: [PATCH] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgaGF2aW5nIGEgbG9vayBhdCB0aGlzLg0KDQpPbiBN
-b25kYXksIEF1Z3VzdCAyNywgMjAxOCAxLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+IEdp
-dmVuIHRoZSBkaWZmZXJlbmNlcywgYW5kIHRoZSBsaW1pdGVkIGFtb3VudCBvZiBSQU0gb24gUlov
-QTIsIEkgdGhpbmsgeW91DQo+IHdvdWxkIGJlIGJldHRlciBvZmYgd2l0aCBhIHNlcGFyYXRlIHJl
-bmVzYXMtY3BnLXN0YmNyIGRyaXZlciwgYW5kIGFuDQo+IHI3czkyMTAtY3BnLXN0YmNyIGNvdW50
-ZXJwYXJ0Lg0KDQpJZiB5b3UgcmVhbGx5IHRoaW5rIHRoZXJlIHdpbGwgYmUgYSBsb3Qgb2Ygd2Fz
-dGVkIFJBTSwgdGhlbiBJIHdpbGwgbG9vayANCmludG8gaXQuDQoNClNvIGFyZSB5b3Ugc2F5aW5n
-IEkgc2hvdWxkIGZpcnN0IGNvcHkvcmVuYW1lIHJlbmVzYXMtY3BnLW1zc3IuYyB0byANCnJlbmVz
-YXMtY3BnLXN0YnIuYyBhbmQgdGhlbiBzdGFydCBoYWNraW5nIGF3YXkgYXQgaXQ/DQoNCg0KPiA0
-LiBZb3VyIG1vZHVsZSBjbG9ja3MgY2FuIHVzZSBlLmcuICIzNiIgaW5zdGVhZCBvZiAiMzA2IiAo
-YWxzbyBpbiB0aGUgRFRTKSwNCj4gICAgbWF0Y2hpbmcgdGhlIGRhdGFzaGVldC4NCg0KWWVzLCB0
-aGF0IHdvdWxkIGJlIG11Y2ggbmljZXIhDQoNCg0KSnVzdCBGWUksDQpJIGxpa2UgdGhpcyBuZXcg
-ZHJpdmVyIG1ldGhvZCwgYnV0IHRoZSBvbmUgZG93bmZhbGwgaXMgdGhhdCBJIGhhdmUgdG8gZ28N
-CmJhY2sgYW5kIGNoYW5nZSBteSB0aW1lciBkcml2ZXIgKHJlbmVzYXMtb3N0bS5jKS4gVGhlIGN1
-cnJlbnQgT1NUTSANCmRyaXZlciB1c2VzIFRJTUVSX09GX0RFQ0xBUkUoKS4gQnV0IHdoZW4geW91
-IHVzZSBUSU1FUl9PRl9ERUNMQVJFLCB5b3VyIA0KdGltZXIgZHJpdmVyIGdldHMgcHJvYmVkIFZF
-UlkgZWFybHkgaW4gYm9vdCwgYmVmb3JlIHN1YnN5c19pbml0Y2FsbCwgc28gbm9uZQ0Kb2YgeW91
-ciBjbG9ja3MgYXJlIHJlZ2lzdGVyZWQgeWV0IGFuZCB0aGUgcHJvYmUgZmFpbHMuDQoNCg0KQ2hy
-aXMNCg0KDQo+IA0KPiBUaGF0IG1lYW5zOg0KPiANCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY2xvY2svcmVuZXNhcyxjcGctbXNzci50eHQgfCAgIDMgKy0NCj4gDQo+IDEuIEEgc2VwYXJh
-dGUgYmluZGluZyBkb2N1bWVudC4NCj4gDQo+ID4gIGRyaXZlcnMvY2xrL3JlbmVzYXMvS2NvbmZp
-ZyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsNCj4gPiAgZHJpdmVycy9jbGsvcmVuZXNh
-cy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KPiA+ICBkcml2ZXJzL2Ns
-ay9yZW5lc2FzL3I3czkyMTAtY3BnLW1zc3IuYyAgICAgICAgICAgICB8IDE4OQ0KPiArKysrKysr
-KysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy9jbGsvcmVuZXNhcy9yZW5lc2FzLWNwZy1tc3Ny
-LmMgICAgICAgICAgICAgfCAgNjYgKysrKystLQ0KPiA+ICBkcml2ZXJzL2Nsay9yZW5lc2FzL3Jl
-bmVzYXMtY3BnLW1zc3IuaCAgICAgICAgICAgICB8ICAgNiArDQo+ID4gIGluY2x1ZGUvZHQtYmlu
-ZGluZ3MvY2xvY2svcjdzOTIxMC1jcGctbXNzci5oICAgICAgIHwgIDIxICsrKw0KPiA+ICA3IGZp
-bGVzIGNoYW5nZWQsIDI4MCBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4gPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL3JlbmVzYXMvcjdzOTIxMC1jcGctbXNzci5jDQo+
-ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3I3czkyMTAt
-Y3BnLW1zc3IuaA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9jbG9jay9yZW5lc2FzLGNwZy0NCj4gbXNzci50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcmVuZXNhcyxjcGctbXNzci50eHQNCj4gPiBpbmRl
-eCBkYjU0MmFiYWRiNzUuLjY2Y2E5NzNlZGQ3NyAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcmVuZXNhcyxjcGctbXNzci50eHQNCj4gPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcmVuZXNhcyxjcGct
-bXNzci50eHQNCj4gPiBAQCAtMTMsNiArMTMsNyBAQCBUaGV5IHByb3ZpZGUgdGhlIGZvbGxvd2lu
-ZyBmdW5jdGlvbmFsaXRpZXM6DQo+ID4NCj4gPiAgUmVxdWlyZWQgUHJvcGVydGllczoNCj4gPiAg
-ICAtIGNvbXBhdGlibGU6IE11c3QgYmUgb25lIG9mOg0KPiA+ICsgICAgICAtICJyZW5lc2FzLHI3
-czkyMTAtY3BnLW1zc3IiIGZvciB0aGUgcjdzOTIxMCBTb0MgKFJaL0EyKQ0KPiA+ICAgICAgICAt
-ICJyZW5lc2FzLHI4YTc3NDMtY3BnLW1zc3IiIGZvciB0aGUgcjhhNzc0MyBTb0MgKFJaL0cxTSkN
-Cj4gPiAgICAgICAgLSAicmVuZXNhcyxyOGE3NzQ1LWNwZy1tc3NyIiBmb3IgdGhlIHI4YTc3NDUg
-U29DIChSWi9HMUUpDQo+ID4gICAgICAgIC0gInJlbmVzYXMscjhhNzc0NzAtY3BnLW1zc3IiIGZv
-ciB0aGUgcjhhNzc0NzAgU29DIChSWi9HMUMpDQo+ID4gQEAgLTM3LDcgKzM4LDcgQEAgUmVxdWly
-ZWQgUHJvcGVydGllczoNCj4gPiAgICAtIGNsb2NrLW5hbWVzOiBMaXN0IG9mIGV4dGVybmFsIHBh
-cmVudCBjbG9jayBuYW1lcy4gVmFsaWQgbmFtZXMgYXJlOg0KPiA+ICAgICAgICAtICJleHRhbCIg
-KHI4YTc3NDMsIHI4YTc3NDUsIHI4YTc3NDcwLCByOGE3NzkwLCByOGE3NzkxLCByOGE3NzkyLA0K
-PiA+ICAgICAgICAgICAgICAgICAgcjhhNzc5MywgcjhhNzc5NCwgcjhhNzc5NSwgcjhhNzc5Niwg
-cjhhNzc5NjUsIHI4YTc3OTcwLA0KPiA+IC0gICAgICAgICAgICAgICAgcjhhNzc5ODAsIHI4YTc3
-OTkwLCByOGE3Nzk5NSkNCj4gPiArICAgICAgICAgICAgICAgIHI4YTc3OTgwLCByOGE3Nzk5MCwg
-cjhhNzc5OTUsIHI3czkyMTApDQo+ID4gICAgICAgIC0gImV4dGFsciIgKHI4YTc3OTUsIHI4YTc3
-OTYsIHI4YTc3OTY1LCByOGE3Nzk3MCwgcjhhNzc5ODApDQo+ID4gICAgICAgIC0gInVzYl9leHRh
-bCIgKHI4YTc3NDMsIHI4YTc3NDUsIHI4YTc3NDcwLCByOGE3NzkwLCByOGE3NzkxLA0KPiByOGE3
-NzkzLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgIHI4YTc3OTQpDQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvY2xrL3JlbmVzYXMvS2NvbmZpZyBiL2RyaXZlcnMvY2xrL3JlbmVzYXMvS2NvbmZp
-Zw0KPiA+IGluZGV4IDkwMjJiYmUxMjk3ZS4uZDhjY2RhYmE1MTAzIDEwMDY0NA0KPiA+IC0tLSBh
-L2RyaXZlcnMvY2xrL3JlbmVzYXMvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvY2xrL3JlbmVz
-YXMvS2NvbmZpZw0KPiANCj4gPiBAQCAtNDUsNiArNDYsMTAgQEAgY29uZmlnIENMS19SWkExDQo+
-ID4gICAgICAgICBib29sICJSWi9BMUggY2xvY2sgc3VwcG9ydCIgaWYgQ09NUElMRV9URVNUDQo+
-ID4gICAgICAgICBzZWxlY3QgQ0xLX1JFTkVTQVNfQ1BHX01TVFANCj4gPg0KPiA+ICtjb25maWcg
-Q0xLX1I3UzkyMTANCj4gPiArICAgICAgIGJvb2wgIlJaL0EyIGNsb2NrIHN1cHBvcnQiIGlmIENP
-TVBJTEVfVEVTVA0KPiA+ICsgICAgICAgc2VsZWN0IENMS19SRU5FU0FTX0NQR19NU1NSDQo+IA0K
-PiAyLiBhIHNlcGFyYXRlIENMS19SRU5FU0FTX0NQR19TVEJDUiBzeW1ib2wuDQo+IA0KPiA+IC0t
-LSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9yZW5lc2FzL3I3czkyMTAtY3BnLW1z
-c3IuYw0KPiANCj4gMy4gQWxtb3N0IGFsbCBvZiB0aGlzIGNhbiBzdGF5IHRoZSBzYW1lLCBtb2R1
-bG8gc29tZSByZW5hbWVzLg0KPiANCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtc3NyX21vZF9j
-bGsgcjdzOTIxMF9tb2RfY2xrc1tdIF9faW5pdGNvbnN0ID0gew0KPiA+ICsgICAgICAgREVGX01P
-RCgib3N0bTAiLCAgICAgICAgIDMwNiwgICBSN1M5MjEwX0NMS19QMUMpLA0KPiANCj4gNC4gWW91
-ciBtb2R1bGUgY2xvY2tzIGNhbiB1c2UgZS5nLiAiMzYiIGluc3RlYWQgb2YgIjMwNiIgKGFsc28g
-aW4gdGhlIERUUyksDQo+ICAgIG1hdGNoaW5nIHRoZSBkYXRhc2hlZXQuDQo+IA0KPiA+IC0tLSAv
-ZGV2L251bGwNCj4gPiArKysgYi9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3I3czkyMTAtY3Bn
-LW1zc3IuaA0KPiANCj4gNS4gQWxtb3N0IGFsbCBvZiB0aGlzIGNhbiBzdGF5IHRoZSBzYW1lLCBt
-b2R1bG8gc29tZSByZW5hbWVzLg0KPiANCj4gV2hhdCBkbyB5b3UgdGhpbms/DQo+IA0KPiBHcntv
-ZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0K
-PiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9u
-ZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29u
-dmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIu
-DQo+IEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInBy
-b2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlDQo+IHRoYXQuDQo+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
+Hi Chris,
+
+On Tue, Aug 21, 2018 at 5:20 AM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add support for the R7S9210 (RZ/A2) Clock Pulse Generator and Module
+> Standby.
+
+Thanks for your patch, looks mostly OK to me!
+
+> The Module Standby HW in the RZ/A series is very close to R-Car HW, except
+> for how the registers are laid out.
+> The MSTP registers are only 8-bits wide, there is no status registers
+> (MSTPST), and the register offsets are a little different. Since the RZ/A
+> hardware manuals refer to these registers as the Standby Control Registers,
+> we'll use that name to distinguish the RZ/A type for the R-Car type.
+
+And it doesn't have the reset control registers, so you should not register
+the reset controller (or register a different one, when you add the support).
+
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+
+Given the differences, and the limited amount of RAM on RZ/A2, I think you
+would be better off with a separate renesas-cpg-stbcr driver, and an
+r7s9210-cpg-stbcr counterpart.
+
+That means:
+
+>  .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   3 +-
+
+1. A separate binding document.
+
+>  drivers/clk/renesas/Kconfig                        |   5 +
+>  drivers/clk/renesas/Makefile                       |   1 +
+>  drivers/clk/renesas/r7s9210-cpg-mssr.c             | 189 +++++++++++++++++++++
+>  drivers/clk/renesas/renesas-cpg-mssr.c             |  66 +++++--
+>  drivers/clk/renesas/renesas-cpg-mssr.h             |   6 +
+>  include/dt-bindings/clock/r7s9210-cpg-mssr.h       |  21 +++
+>  7 files changed, 280 insertions(+), 11 deletions(-)
+>  create mode 100644 drivers/clk/renesas/r7s9210-cpg-mssr.c
+>  create mode 100644 include/dt-bindings/clock/r7s9210-cpg-mssr.h
+>
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+> index db542abadb75..66ca973edd77 100644
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+> @@ -13,6 +13,7 @@ They provide the following functionalities:
+>
+>  Required Properties:
+>    - compatible: Must be one of:
+> +      - "renesas,r7s9210-cpg-mssr" for the r7s9210 SoC (RZ/A2)
+>        - "renesas,r8a7743-cpg-mssr" for the r8a7743 SoC (RZ/G1M)
+>        - "renesas,r8a7745-cpg-mssr" for the r8a7745 SoC (RZ/G1E)
+>        - "renesas,r8a77470-cpg-mssr" for the r8a77470 SoC (RZ/G1C)
+> @@ -37,7 +38,7 @@ Required Properties:
+>    - clock-names: List of external parent clock names. Valid names are:
+>        - "extal" (r8a7743, r8a7745, r8a77470, r8a7790, r8a7791, r8a7792,
+>                  r8a7793, r8a7794, r8a7795, r8a7796, r8a77965, r8a77970,
+> -                r8a77980, r8a77990, r8a77995)
+> +                r8a77980, r8a77990, r8a77995, r7s9210)
+>        - "extalr" (r8a7795, r8a7796, r8a77965, r8a77970, r8a77980)
+>        - "usb_extal" (r8a7743, r8a7745, r8a77470, r8a7790, r8a7791, r8a7793,
+>                      r8a7794)
+> diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
+> index 9022bbe1297e..d8ccdaba5103 100644
+> --- a/drivers/clk/renesas/Kconfig
+> +++ b/drivers/clk/renesas/Kconfig
+
+> @@ -45,6 +46,10 @@ config CLK_RZA1
+>         bool "RZ/A1H clock support" if COMPILE_TEST
+>         select CLK_RENESAS_CPG_MSTP
+>
+> +config CLK_R7S9210
+> +       bool "RZ/A2 clock support" if COMPILE_TEST
+> +       select CLK_RENESAS_CPG_MSSR
+
+2. a separate CLK_RENESAS_CPG_STBCR symbol.
+
+> --- /dev/null
+> +++ b/drivers/clk/renesas/r7s9210-cpg-mssr.c
+
+3. Almost all of this can stay the same, modulo some renames.
+
+> +static const struct mssr_mod_clk r7s9210_mod_clks[] __initconst = {
+> +       DEF_MOD("ostm0",         306,   R7S9210_CLK_P1C),
+
+4. Your module clocks can use e.g. "36" instead of "306" (also in the DTS),
+   matching the datasheet.
+
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r7s9210-cpg-mssr.h
+
+5. Almost all of this can stay the same, modulo some renames.
+
+What do you think?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
