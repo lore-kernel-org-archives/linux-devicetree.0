@@ -1,37 +1,76 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/9] arm64: dts: renesas: r8a774a1: Add SDHI nodes
-Date: Mon, 27 Aug 2018 10:12:02 +0200
-Message-ID: <20180827081202.vgdnbmdkbtkteh63@verge.net.au>
-References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1535031788-19907-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1535031788-19907-2-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH v2 7/9] net: stmmac: dwmac-sun8i: fix OF child-node lookup
+Date: Mon, 27 Aug 2018 10:21:51 +0200
+Message-ID: <20180827082153.22537-8-johan@kernel.org>
+References: <20180827082153.22537-1-johan@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180827082153.22537-1-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, Corentin Labbe <clabbe.montjoie@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S . Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 02:43:00PM +0100, Fabrizio Castro wrote:
-> Add SDHI nodes to the DT of the r8a774a1 SoC.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Use the new of_get_compatible_child() helper to lookup the mdio-internal
+child node instead of using of_find_compatible_node(), which searches
+the entire tree from a given start node and thus can return an unrelated
+(i.e. non-child) node.
 
-Thanks,
+This also addresses a potential use-after-free (e.g. after probe
+deferral) as the tree-wide helper drops a reference to its first
+argument (i.e. the mdio-mux node). Fortunately, this was inadvertently
+balanced by a failure to drop the mdio-mux reference after lookup.
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
+While at it, also fix the related mdio-internal- and phy-node reference
+leaks.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 634db83b8265 ("net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs")
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index f9a61f90cfbc..0f660af01a4b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -714,8 +714,9 @@ static int get_ephy_nodes(struct stmmac_priv *priv)
+ 		return -ENODEV;
+ 	}
+ 
+-	mdio_internal = of_find_compatible_node(mdio_mux, NULL,
++	mdio_internal = of_get_compatible_child(mdio_mux,
+ 						"allwinner,sun8i-h3-mdio-internal");
++	of_node_put(mdio_mux);
+ 	if (!mdio_internal) {
+ 		dev_err(priv->device, "Cannot get internal_mdio node\n");
+ 		return -ENODEV;
+@@ -729,13 +730,20 @@ static int get_ephy_nodes(struct stmmac_priv *priv)
+ 		gmac->rst_ephy = of_reset_control_get_exclusive(iphynode, NULL);
+ 		if (IS_ERR(gmac->rst_ephy)) {
+ 			ret = PTR_ERR(gmac->rst_ephy);
+-			if (ret == -EPROBE_DEFER)
++			if (ret == -EPROBE_DEFER) {
++				of_node_put(iphynode);
++				of_node_put(mdio_internal);
+ 				return ret;
++			}
+ 			continue;
+ 		}
+ 		dev_info(priv->device, "Found internal PHY node\n");
++		of_node_put(iphynode);
++		of_node_put(mdio_internal);
+ 		return 0;
+ 	}
++
++	of_node_put(mdio_internal);
+ 	return -ENODEV;
+ }
+ 
+-- 
+2.18.0
