@@ -1,52 +1,70 @@
-Return-Path: <SRS0=QYpu=LN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36867 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726727AbeHaA5X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Aug 2018 20:57:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id u12-v6so9256066wrr.4
-        for <devicetree@vger.kernel.org>; Thu, 30 Aug 2018 13:53:22 -0700 (PDT)
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Subject: [PATCH 2/5] iio: imu: st_lsm6dsx: make st_lsm6dsx_check_odr() non-static
-Date: Thu, 30 Aug 2018 22:52:56 +0200
-Message-Id: <20180830205259.7029-3-lorenzo.bianconi@redhat.com>
+Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54584 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727159AbeH0NP5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Aug 2018 09:15:57 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 12/23] v4l: fwnode: Support driver-defined lane mapping defaults
+Date: Mon, 27 Aug 2018 12:29:49 +0300
+Message-Id: <20180827093000.29165-13-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-Remove static qualifier from st_lsm6dsx_check_odr() definition in order to
-use it for the support of new devices
+Make use of the default CSI-2 lane mapping from caller-passed
+configuration.
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      | 1 +
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 3 +--
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index a0a6c07aad62..6cf806f10787 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -180,5 +180,6 @@ int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
- int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
- 			     enum st_lsm6dsx_fifo_mode fifo_mode);
- int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw);
-+int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr, u8 *val);
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index ea9262305968..282595c90818 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -55,10 +55,14 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 	u32 v;
+ 	int rval;
  
- #endif /* ST_LSM6DSX_H */
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 394bcd3719e0..5a43d8139950 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -398,8 +398,7 @@ static int st_lsm6dsx_set_full_scale(struct st_lsm6dsx_sensor *sensor,
- 	return 0;
- }
+-	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY)
++	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY) {
+ 		num_data_lanes = min_t(u32, bus->num_data_lanes,
+ 				       V4L2_FWNODE_CSI2_MAX_DATA_LANES);
  
--static int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr,
--				u8 *val)
-+int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u16 odr, u8 *val)
- {
- 	int i;
++		for (i = 0; i < num_data_lanes; i++)
++			array[i] = bus->data_lanes[i];
++	}
++
+ 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
+ 	if (rval > 0) {
+ 		num_data_lanes =
+@@ -66,15 +70,15 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
  
+ 		fwnode_property_read_u32_array(fwnode, "data-lanes", array,
+ 					       num_data_lanes);
++	}
+ 
+-		for (i = 0; i < num_data_lanes; i++) {
+-			if (lanes_used & BIT(array[i]))
+-				pr_warn("duplicated lane %u in data-lanes\n",
+-					array[i]);
+-			lanes_used |= BIT(array[i]);
++	for (i = 0; i < num_data_lanes; i++) {
++		if (lanes_used & BIT(array[i]))
++			pr_warn("duplicated lane %u in data-lanes\n",
++				array[i]);
++		lanes_used |= BIT(array[i]);
+ 
+-			pr_debug("lane %u position %u\n", i, array[i]);
+-		}
++		pr_debug("lane %u position %u\n", i, array[i]);
+ 	}
+ 
+ 	rval = fwnode_property_read_u32_array(fwnode, "lane-polarities", NULL,
 -- 
-2.18.0
+2.11.0
