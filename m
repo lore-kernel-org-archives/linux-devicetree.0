@@ -1,14 +1,12 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2 3/3] arm64: dts: broadcom: Add reference to Compute Module
- IO Board V3
-Date: Mon, 27 Aug 2018 20:05:48 +0200
-Message-ID: <1535393148-24163-4-git-send-email-stefan.wahren@i2se.com>
-References: <1535393148-24163-1-git-send-email-stefan.wahren@i2se.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/2] Add R8A77980/Condor PCIe support
+Date: Mon, 27 Aug 2018 21:48:53 +0300
+Message-ID: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1535393148-24163-1-git-send-email-stefan.wahren@i2se.com>
+Content-Language: en-MW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,40 +16,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a reference to the dts of the Compute Module IO Board V3 in arm,
-so we don't need to maintain the content in arm64.
+Hello!
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm64/boot/dts/broadcom/Makefile                | 3 ++-
- arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20180827-v4.19-rc1' tag. We're adding the R8A77980 PCIe
+related device nodes and then enable PCIe on the Condor board.
 
-diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
-index 1193a9e..3d98f5f 100644
---- a/arch/arm64/boot/dts/broadcom/Makefile
-+++ b/arch/arm64/boot/dts/broadcom/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb \
--			      bcm2837-rpi-3-b-plus.dtb
-+			      bcm2837-rpi-3-b-plus.dtb \
-+			      bcm2837-rpi-cm3-io3.dts
- 
- subdir-y	+= northstar2
- subdir-y	+= stingray
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
-new file mode 100644
-index 0000000..b1c4ab2
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
-@@ -0,0 +1,2 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "arm/bcm2837-rpi-cm3-io3.dts"
--- 
-2.7.4
+[1/2] arm64: dts: renesas: r8a77980: add PCIe support
+[2/2] arm64: dts: renesas: condor: add PCIe support
+
+WBR, Sergei
