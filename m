@@ -1,29 +1,113 @@
 From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v4 00/18] JZ47xx DMA patchset v4
-Date: Mon, 27 Aug 2018 10:44:50 +0530
-Message-ID: <20180827051450.GS2388@vkoul-mobl>
-References: <20180807114218.20091-1-paul@crapouillou.net>
+Subject: Re: [PATCH v4 2/7] dmaengine: xilinx_dma: in axidma slave_sg and
+ dma_cylic mode align split descriptors
+Date: Mon, 27 Aug 2018 11:00:02 +0530
+Message-ID: <20180827053002.GT2388@vkoul-mobl>
+References: <20180802141012.19970-1-andrea.merello@gmail.com>
+ <20180802141012.19970-2-andrea.merello@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180807114218.20091-1-paul@crapouillou.net>
+In-Reply-To: <20180802141012.19970-2-andrea.merello@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+To: Andrea Merello <andrea.merello@gmail.com>
+Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, v4-000linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On 07-08-18, 13:42, Paul Cercueil wrote:
-> Hi,
+On 02-08-18, 16:10, Andrea Merello wrote:
+
+s/cylic/cyclic in patch title
+
+> Whenever a single or cyclic transaction is prepared, the driver
+> could eventually split it over several SG descriptors in order
+> to deal with the HW maximum transfer length.
 > 
-> This is the V4 of my Ingenic JZ47xx DMA patchset.
+> This could end up in DMA operations starting from a misaligned
+> address. This seems fatal for the HW if DRE is not enabled.
 
-This does not apply for me. Please rebase on rc1, fix Rob's and my
-comment and send
+DRE?
 
-Also I noticed checkpatch gave warns on some style issues (--strict
-option) please see if they make sense and fix if it does.
+> 
+> This patch eventually adjusts the transfer size in order to make sure
+> all operations start from an aligned address.
+> 
+> Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> ---
+> Changes in v2:
+>         - don't introduce copy_mask field, rather rely on already-esistent
+>           copy_align field. Suggested by Radhey Shyam Pandey
+>         - reword title
+> Changes in v3:
+> 	- fix bug introduced in v2: wrong copy size when DRE is enabled
+> 	- use implementation suggested by Radhey Shyam Pandey
+> Changes in v4:
+> 	- rework on the top of 1/6
+> ---
+>  drivers/dma/xilinx/xilinx_dma.c | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index a3aaa0e34cc7..aaa6de8a70e4 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -954,15 +954,28 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
+>  
+>  /**
+>   * xilinx_dma_calc_copysize - Calculate the amount of data to copy
+> + * @chan: Driver specific DMA channel
+>   * @size: Total data that needs to be copied
+>   * @done: Amount of data that has been already copied
+>   *
+>   * Return: Amount of data that has to be copied
+>   */
+> -static int xilinx_dma_calc_copysize(int size, int done)
+> +static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
+> +				    int size, int done)
 
-Thanks
+please align with opening brace
+
+>  {
+> -	return min_t(size_t, size - done,
+> +	size_t copy = min_t(size_t, size - done,
+>  		     XILINX_DMA_MAX_TRANS_LEN);
+> +
+> +	if ((copy + done < size) &&
+> +	    chan->xdev->common.copy_align) {
+> +		/*
+> +		 * If this is not the last descriptor, make sure
+> +		 * the next one will be properly aligned
+> +		 */
+> +		copy = rounddown(copy,
+> +				 (1 << chan->xdev->common.copy_align));
+> +	}
+> +	return copy;
+>  }
+>  
+>  /**
+> @@ -1804,7 +1817,7 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
+>  			 * Calculate the maximum number of bytes to transfer,
+>  			 * making sure it is less than the hw limit
+>  			 */
+> -			copy = xilinx_dma_calc_copysize(sg_dma_len(sg),
+> +			copy = xilinx_dma_calc_copysize(chan, sg_dma_len(sg),
+>  							sg_used);
+>  			hw = &segment->hw;
+>  
+> @@ -1909,7 +1922,8 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_dma_cyclic(
+>  			 * Calculate the maximum number of bytes to transfer,
+>  			 * making sure it is less than the hw limit
+>  			 */
+> -			copy = xilinx_dma_calc_copysize(period_len, sg_used);
+> +			copy = xilinx_dma_calc_copysize(chan,
+> +							period_len, sg_used);
+>  			hw = &segment->hw;
+>  			xilinx_axidma_buf(chan, hw, buf_addr, sg_used,
+>  					  period_len * i);
+> -- 
+> 2.17.1
+
 -- 
 ~Vinod
