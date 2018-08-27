@@ -1,15 +1,15 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 7/9] arm64: dts: renesas: r8a774a1: Add PWM device nodes
-Date: Mon, 27 Aug 2018 11:12:39 +0200
-Message-ID: <20180827091239.26vdgiw36ehzkfge@verge.net.au>
+Subject: Re: [PATCH 8/9] arm64: dts: renesas: r8a774a1: Add audio support
+Date: Mon, 27 Aug 2018 11:32:52 +0200
+Message-ID: <20180827093251.fu5oqbqemzi3y4u5@verge.net.au>
 References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1535031788-19907-8-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1535031788-19907-9-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1535031788-19907-8-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1535031788-19907-9-git-send-email-fabrizio.castro@bp.renesas.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,12 +23,16 @@ To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 02:43:06PM +0100, Fabrizio Castro wrote:
-> This patch adds PWM[0123456] device nodes to the RZ/G2M (a.k.a R8A774A1)
-> device tree.
+On Thu, Aug 23, 2018 at 02:43:07PM +0100, Fabrizio Castro wrote:
+> From: Biju Das <biju.das@bp.renesas.com>
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> Add sound support for the RZ/G2M SoC (a.k.a. R8A774A1).
+> 
+> This work is based on similar work done on the R8A7796 SoC
+> by Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
 Thanks,
 
