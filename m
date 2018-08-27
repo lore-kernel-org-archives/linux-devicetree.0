@@ -1,69 +1,41 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
-Date: Mon, 27 Aug 2018 10:48:42 +0200
-Message-ID: <20180827104842.26bce912@bbrezillon>
-References: <20180827082153.22537-1-johan@kernel.org>
-        <20180827082153.22537-6-johan@kernel.org>
-        <20180827102820.3abf7291@bbrezillon>
-        <20180827084414.GZ14967@localhost>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/9] arm64: dts: renesas: r8a774a1: Add I2C and IIC-DVFS
+ support
+Date: Mon, 27 Aug 2018 10:51:35 +0200
+Message-ID: <20180827085135.bjzbiws7tdtig5kd@verge.net.au>
+References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1535031788-19907-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180827084414.GZ14967@localhost>
-Sender: stable-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1535031788-19907-3-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Aug 2018 10:44:14 +0200
-Johan Hovold <johan@kernel.org> wrote:
-
-> On Mon, Aug 27, 2018 at 10:28:20AM +0200, Boris Brezillon wrote:
-> > Hi Johan
-> > 
-> > On Mon, 27 Aug 2018 10:21:49 +0200
-> > Johan Hovold <johan@kernel.org> wrote:
-> >   
-> > > Use the new of_get_compatible_child() helper to lookup the nfc child
-> > > node instead of using of_find_compatible_node(), which searches the
-> > > entire tree from a given start node and thus can return an unrelated
-> > > (i.e. non-child) node.
-> > > 
-> > > This also addresses a potential use-after-free (e.g. after probe
-> > > deferral) as the tree-wide helper drops a reference to its first
-> > > argument (i.e. the node of the device being probed).
-> > > 
-> > > While at it, also fix a related nfc-node reference leak.
-> > > 
-> > > Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
-> > > Cc: stable <stable@vger.kernel.org>     # 4.11
-> > > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> > > Cc: Josh Wu <rainyfeeling@outlook.com>
-> > > Cc: Boris Brezillon <boris.brezillon@bootlin.com>
-> > > Signed-off-by: Johan Hovold <johan@kernel.org>  
-> > 
-> > Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>  
+On Thu, Aug 23, 2018 at 02:43:01PM +0100, Fabrizio Castro wrote:
+> From: Biju Das <biju.das@bp.renesas.com>
 > 
-> Thanks for the ack.
+> Add the I2C[0-6] and IIC Bus Interface for DVFS (IIC for DVFS)
+> devices nodes to the r8a774a1 device tree.
 > 
-> > I'll let Miquel queue this patch to the nand/next branch, unless you
-> > want it to be merged in 4.19, in which case I'll queue it to the
-> > mtd/fixes branch.  
-> 
-> Note that there's a dependency on the first patch of the series which
-> adds the new helper.
-
-I was not Cc-ed on this patch :P.
-
-> Rob can pick up the entire series if the various
-> maintainers agree, otherwise I'll try to get at the least the helper
-> into -rc2.
-
-If everything goes in 4.19-rc2 through Rob's tree that's fine, but if
-it's queued for 4.20 we might need an immutable tag just in case we
-queue conflicting changes to the NAND tree.
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
 Thanks,
 
-Boris
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
