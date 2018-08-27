@@ -1,76 +1,76 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
-Date: Mon, 27 Aug 2018 16:44:44 +0200
-Message-ID: <CAPDyKFot-Nx=R83vxS=WQp2kSFmMiQ7wfOK4m6hbPt0MB3Z25A@mail.gmail.com>
-References: <20180827082153.22537-1-johan@kernel.org> <20180827082153.22537-5-johan@kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V5 8/8] backlight: qcom-wled: Add auto string detection
+ logic
+Date: Mon, 27 Aug 2018 07:54:20 -0700
+Message-ID: <20180827145420.GL3048@tuxbook-pro>
+References: <1535106467-17843-1-git-send-email-kgunda@codeaurora.org>
+ <1535106467-17843-9-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180827082153.22537-5-johan@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1535106467-17843-9-git-send-email-kgunda@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 August 2018 at 10:21, Johan Hovold <johan@kernel.org> wrote:
-> Use the new of_get_compatible_child() helper to lookup the slot child
-> node instead of using of_find_compatible_node(), which searches the
-> entire tree from a given start node and thus can return an unrelated
-> (i.e. non-child) node.
->
-> This also addresses a potential use-after-free (e.g. after probe
-> deferral) as the tree-wide helper drops a reference to its first
-> argument (i.e. the node of the device being probed).
->
-> While at it, also fix up the related slot-node reference leak.
->
-> Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
-> Cc: stable <stable@vger.kernel.org>     # 4.15
-> Cc: Carlo Caione <carlo@endlessm.com>
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+On Fri 24 Aug 03:27 PDT 2018, Kiran Gunda wrote:
+> diff --git a/drivers/video/backlight/qcom-wled.c b/drivers/video/backlight/qcom-wled.c
+[..]
+>  struct wled {
+> @@ -135,16 +146,22 @@ struct wled {
+>  	struct regmap *regmap;
+>  	struct mutex lock;	/* Lock to avoid race from thread irq handler */
+>  	ktime_t last_short_event;
+> +	ktime_t start_ovp_fault_time;
+>  	u16 ctrl_addr;
+>  	u16 sink_addr;
+>  	u16 max_string_count;
+> +	u16 auto_detection_ovp_count;
+>  	u32 brightness;
+>  	u32 max_brightness;
+>  	u32 short_count;
+> +	u32 auto_detect_count;
+>  	bool disabled_by_short;
+>  	bool has_short_detect;
+> +	int ovp_irq;
+> +	bool ovp_irq_disabled;
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+ovp_irq_disabled is now only assigned, never read. So you should be able
+to drop it.
 
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/host/meson-mx-sdio.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/meson-mx-sdio.c b/drivers/mmc/host/meson-mx-sdio.c
-> index 09cb89645d06..2cfec33178c1 100644
-> --- a/drivers/mmc/host/meson-mx-sdio.c
-> +++ b/drivers/mmc/host/meson-mx-sdio.c
-> @@ -517,19 +517,23 @@ static struct mmc_host_ops meson_mx_mmc_ops = {
->  static struct platform_device *meson_mx_mmc_slot_pdev(struct device *parent)
->  {
->         struct device_node *slot_node;
-> +       struct platform_device *pdev;
->
->         /*
->          * TODO: the MMC core framework currently does not support
->          * controllers with multiple slots properly. So we only register
->          * the first slot for now
->          */
-> -       slot_node = of_find_compatible_node(parent->of_node, NULL, "mmc-slot");
-> +       slot_node = of_get_compatible_child(parent->of_node, "mmc-slot");
->         if (!slot_node) {
->                 dev_warn(parent, "no 'mmc-slot' sub-node found\n");
->                 return ERR_PTR(-ENOENT);
->         }
->
-> -       return of_platform_device_create(slot_node, NULL, parent);
-> +       pdev = of_platform_device_create(slot_node, NULL, parent);
-> +       of_node_put(slot_node);
+[..]
+> @@ -200,7 +226,18 @@ static int wled_module_enable(struct wled *wled, int val)
+>  				WLED_CTRL_REG_MOD_EN,
+>  				WLED_CTRL_REG_MOD_EN_MASK,
+>  				val << WLED_CTRL_REG_MOD_EN_SHIFT);
+> -	return rc;
+> +	if (rc < 0)
+> +		return rc;
 > +
-> +       return pdev;
->  }
->
->  static int meson_mx_mmc_add_host(struct meson_mx_mmc_host *host)
-> --
-> 2.18.0
->
+> +	if (val) {
+> +		schedule_delayed_work(&wled->ovp_work, HZ / 100);
+
+wled_ovp_work() is a nop when ovp_irq == 0, so wrap the entire if/else
+in a check for ovp_irq > 0 (rather than include it in the else) and drop
+it from the worker.
+
+> +	} else {
+> +		if (!cancel_delayed_work_sync(&wled->ovp_work) &&
+> +		    wled->ovp_irq > 0)
+> +			disable_irq(wled->ovp_irq);
+> +	}
+> +
+> +	return 0;
+
+Also, if a user calls rmmod within 10ms of enabling module we will
+schedule work of code that's no longer available in the kernel. So you
+need to also cancel_delayed_work_sync() in the remove function of the
+driver.
+
+
+Apart from this I think this patch looks good now!
+
+Regards,
+Bjorn
