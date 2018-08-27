@@ -1,52 +1,63 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH 1/4] iio: gyro: add support for fxas21002c
-Date: Mon, 27 Aug 2018 13:50:08 -0700
-Message-ID: <0c3d98ffd218e455eb864fdfd7715af19d43230c.camel@perches.com>
-References: <20180825211910.22929-1-afonsobordado@az8.co>
-         <20180827180805.7d4b9f4e@archlinux>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: NSP: Enable SFP on bcm958625hr
+Date: Mon, 27 Aug 2018 13:52:42 -0700
+Message-ID: <4a0e7b46-f7b6-3e9a-5f67-8160537482c8@gmail.com>
+References: <20180827200344.16158-1-f.fainelli@gmail.com>
+ <20180827200344.16158-2-f.fainelli@gmail.com>
+ <20180827203500.GN27483@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827180805.7d4b9f4e@archlinux>
+In-Reply-To: <20180827203500.GN27483@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Afonso Bordado <afonsobordado@az8.co>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, rmk+kernel@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-08-27 at 18:08 +0100, Jonathan Cameron wrote:
-> On Sat, 25 Aug 2018 22:19:07 +0100
-> Afonso Bordado <afonsobordado@az8.co> wrote:
+On 08/27/2018 01:35 PM, Andrew Lunn wrote:
+>> @@ -210,6 +228,17 @@
+>>  			reg = <4>;
+>>  		};
+>>  
+>> +		port@5 {
+>> +			label = "sfp";
+>> +			phy-mode = "sgmii";
+>> +			reg = <5>;
+>> +			sfp = <&sfp>;
+>> +			fixed-link {
+>> +				speed = <1000>;
+>> +				full-duplex;
+>> +			};
 > 
-> > FXAS21002C is a 3 axis gyroscope with integrated temperature sensor
-> > 
-> > Signed-off-by: Afonso Bordado <afonsobordado@az8.co>
+> Hi Florian
 > 
-> Hi,
-> 
-> Driver is pretty clean so only a few minor comments inline.
-> If we were late in a cycle I'd probably just have taken it and fixed up
-> but as we have lots of time and I'm inherently lazy I'll let you do a v2 :)
-> 
-> Good job, thanks!
-[]
-> > diff --git a/drivers/iio/gyro/fxas21002c.c b/drivers/iio/gyro/fxas21002c.c
-[]
-> /* ... */
-> 
-> Please run checkpatch as IIRC it complains about this.
+> You might want to add a comment about why you are using fixed-link and
+> sgmii, which seems very odd. Is it even correct?
 
-Running checkpatch and paying attention to what it bleats
-is generally a good idea, as long as its bleats aren't
-mindlessly followed.
+Probably not, this is kind of left over from before adding the sfp
+phandle, but if I do remove it, and I can see the DSA slave network
+device fail to initialize, likely because we destroy the PHYLINK instance.
 
-And c99 style // comments have been ignored since:
+AFAIR, when we talked about this with Russell, I did not see why we had
+to comment out the following:
 
-commit dadf680de3c2eb4cba9840619991eda0cfe98778
-Author: Joe Perches <joe@perches.com>
-Date:   Tue Aug 2 14:04:33 2016 -0700
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 962c4fd338ba..f3ae16dbf8d8 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -1227,7 +1227,7 @@ static int dsa_slave_phy_setup(struct net_device
+*slave_dev)
+                        netdev_err(slave_dev,
+                                   "failed to connect to port %d: %d\n",
+                                   dp->index, ret);
+-                       phylink_destroy(dp->pl);
++                       //phylink_destroy(dp->pl);
+                        return ret;
+                }
+        }
 
-    checkpatch: allow c99 style // comments
-    
-    Sanitise the lines that contain c99 comments so that the error doesn't
-    get emitted.
+maybe you know?
+-- 
+Florian
