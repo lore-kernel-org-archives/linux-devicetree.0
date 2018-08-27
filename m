@@ -1,42 +1,75 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 8/9] arm64: dts: renesas: r8a774a1: Add audio support
-Date: Mon, 27 Aug 2018 11:32:52 +0200
-Message-ID: <20180827093251.fu5oqbqemzi3y4u5@verge.net.au>
-References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1535031788-19907-9-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
+Date: Mon, 27 Aug 2018 11:44:23 +0200
+Message-ID: <20180827094423.GA14967@localhost>
+References: <20180827082153.22537-1-johan@kernel.org>
+ <20180827082153.22537-6-johan@kernel.org>
+ <20180827102820.3abf7291@bbrezillon>
+ <20180827084414.GZ14967@localhost>
+ <20180827104842.26bce912@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1535031788-19907-9-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180827104842.26bce912@bbrezillon>
+Sender: stable-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 02:43:07PM +0100, Fabrizio Castro wrote:
-> From: Biju Das <biju.das@bp.renesas.com>
+On Mon, Aug 27, 2018 at 10:48:42AM +0200, Boris Brezillon wrote:
+> On Mon, 27 Aug 2018 10:44:14 +0200
+> Johan Hovold <johan@kernel.org> wrote:
 > 
-> Add sound support for the RZ/G2M SoC (a.k.a. R8A774A1).
+> > On Mon, Aug 27, 2018 at 10:28:20AM +0200, Boris Brezillon wrote:
+> > > Hi Johan
+> > > 
+> > > On Mon, 27 Aug 2018 10:21:49 +0200
+> > > Johan Hovold <johan@kernel.org> wrote:
+> > >   
+> > > > Use the new of_get_compatible_child() helper to lookup the nfc child
+> > > > node instead of using of_find_compatible_node(), which searches the
+> > > > entire tree from a given start node and thus can return an unrelated
+> > > > (i.e. non-child) node.
+> > > > 
+> > > > This also addresses a potential use-after-free (e.g. after probe
+> > > > deferral) as the tree-wide helper drops a reference to its first
+> > > > argument (i.e. the node of the device being probed).
+> > > > 
+> > > > While at it, also fix a related nfc-node reference leak.
+> > > > 
+> > > > Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
+> > > > Cc: stable <stable@vger.kernel.org>     # 4.11
+> > > > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> > > > Cc: Josh Wu <rainyfeeling@outlook.com>
+> > > > Cc: Boris Brezillon <boris.brezillon@bootlin.com>
+> > > > Signed-off-by: Johan Hovold <johan@kernel.org>  
+> > > 
+> > > Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>  
+> > 
+> > Thanks for the ack.
+> > 
+> > > I'll let Miquel queue this patch to the nand/next branch, unless you
+> > > want it to be merged in 4.19, in which case I'll queue it to the
+> > > mtd/fixes branch.  
+> > 
+> > Note that there's a dependency on the first patch of the series which
+> > adds the new helper.
 > 
-> This work is based on similar work done on the R8A7796 SoC
-> by Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>.
+> I was not Cc-ed on this patch :P.
+
+Yeah, sorry about that. I made sure everyone was CCed on the
+cover letter, but guess I could have reused that list for the helper as
+well.
+
+> > Rob can pick up the entire series if the various
+> > maintainers agree, otherwise I'll try to get at the least the helper
+> > into -rc2.
 > 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> If everything goes in 4.19-rc2 through Rob's tree that's fine, but if
+> it's queued for 4.20 we might need an immutable tag just in case we
+> queue conflicting changes to the NAND tree.
 
-Thanks,
+Ok, thanks.
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Johan
