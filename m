@@ -1,14 +1,15 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a774a1: Add GPIO device nodes
-Date: Mon, 27 Aug 2018 10:00:20 +0200
-Message-ID: <20180827080019.ry5pbwm24qlmnk7k@verge.net.au>
-References: <1535033898-23610-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 1/1] ARM: dts: imx6ull: keep IMX6UL_ prefix for
+ signals on both i.MX6UL and i.MX6ULL
+Date: Mon, 27 Aug 2018 16:00:11 +0800
+Message-ID: <20180827080008.GL3850@dragon>
+References: <20180822113803.20965-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1535033898-23610-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20180822113803.20965-1-sebastien.szymanski@armadeus.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,23 +19,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 03:18:18PM +0100, Fabrizio Castro wrote:
-> Add GPIO device nodes to the DT of the r8a774a1 SoC.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> ---
-> 
-> This patch depends on:
-> https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg30549.html
+On Wed, Aug 22, 2018 at 01:38:03PM +0200, S=E9bastien Szymanski wrote:
+> Signals available on both i.MX6UL and i.MX6ULL should have the same name
+> because it is the case of all others common signals, it avoids to make
+> mistakes (use the wrong ones) and it makes writing device tree files
+> less complicated. For example:
+> =
 
-Thanks,
+> imx6ul-imx6ull-board.dtsi:
+>  ...
+>  pinctrl_uart5: uart5grp {
+> 	fsl,pins =3D <
+> 		MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX   0x1b0b1
+> 	 	MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX   0x1b0b1
+>  	 >;
+>  };
+> =
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
+> imx6ul-board.dts:
+>  #include <imx6ul.dtsi>
+>  #include <imx6ul-imx6ull-board.dtsi>
+>  ...
+> =
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> imx6ull-board.dts:
+>  #include <imx6ull.dtsi>
+>  #include <imx6ul-imx6ull-board.dtsi>
+>  ...
+> =
+
+> Without this patch, the imx6ull-board.dtb will use
+> MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX instead of
+> MX6ULL_PAD_UART5_RX_DATA__UART5_DCE_RX and the uart5 will be
+> misconfigured.
+> =
+
+> Signed-off-by: S=E9bastien Szymanski <sebastien.szymanski@armadeus.com>
+
+Rob and Fabio gave their review/ack tags on v1, so I applied the patch
+with the tags collected.
+
+Shawn
