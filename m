@@ -1,13 +1,13 @@
 Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54564 "EHLO
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54572 "EHLO
         hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726921AbeH0NP4 (ORCPT
+        by vger.kernel.org with ESMTP id S1727100AbeH0NP4 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
         Mon, 27 Aug 2018 09:15:56 -0400
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 07/23] v4l: fwnode: Let the caller provide V4L2 fwnode endpoint
-Date: Mon, 27 Aug 2018 12:29:44 +0300
-Message-Id: <20180827093000.29165-8-sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 10/23] v4l: fwnode: Read lane inversion information despite lane numbering
+Date: Mon, 27 Aug 2018 12:29:47 +0300
+Message-Id: <20180827093000.29165-11-sakari.ailus@linux.intel.com>
 In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
 References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
@@ -15,370 +15,139 @@ To: linux-media@vger.kernel.org
 Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-Instead of allocating the V4L2 fwnode endpoint in
-v4l2_fwnode_endpoint_alloc_parse, let the caller to do this. This allows
-setting default parameters for the endpoint which is a very common need
-for drivers.
+Read the lane inversion independently of whether the "data-lanes" property
+exists. This makes sense since the caller may pass the number of lanes as
+the default configuration while the lane inversion configuration may still
+be available in firmware.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/i2c/ov2659.c             | 14 +++++-----
- drivers/media/i2c/smiapp/smiapp-core.c | 26 +++++++++---------
- drivers/media/i2c/tc358743.c           | 26 +++++++++---------
- drivers/media/v4l2-core/v4l2-fwnode.c  | 49 +++++++++++++---------------------
- include/media/v4l2-fwnode.h            | 10 ++++---
- 5 files changed, 60 insertions(+), 65 deletions(-)
+ drivers/media/v4l2-core/v4l2-fwnode.c | 65 +++++++++++++++++++----------------
+ 1 file changed, 35 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 4715edc8ca33..799acce803fe 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1347,8 +1347,9 @@ static struct ov2659_platform_data *
- ov2659_get_pdata(struct i2c_client *client)
- {
- 	struct ov2659_platform_data *pdata;
--	struct v4l2_fwnode_endpoint *bus_cfg;
-+	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
- 	struct device_node *endpoint;
-+	int ret;
- 
- 	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
- 		return client->dev.platform_data;
-@@ -1357,8 +1358,9 @@ ov2659_get_pdata(struct i2c_client *client)
- 	if (!endpoint)
- 		return NULL;
- 
--	bus_cfg = v4l2_fwnode_endpoint_alloc_parse(of_fwnode_handle(endpoint));
--	if (IS_ERR(bus_cfg)) {
-+	ret = v4l2_fwnode_endpoint_alloc_parse(of_fwnode_handle(endpoint),
-+					       &bus_cfg);
-+	if (ret) {
- 		pdata = NULL;
- 		goto done;
- 	}
-@@ -1367,17 +1369,17 @@ ov2659_get_pdata(struct i2c_client *client)
- 	if (!pdata)
- 		goto done;
- 
--	if (!bus_cfg->nr_of_link_frequencies) {
-+	if (!bus_cfg.nr_of_link_frequencies) {
- 		dev_err(&client->dev,
- 			"link-frequencies property not found or too many\n");
- 		pdata = NULL;
- 		goto done;
- 	}
- 
--	pdata->link_frequency = bus_cfg->link_frequencies[0];
-+	pdata->link_frequency = bus_cfg.link_frequencies[0];
- 
- done:
--	v4l2_fwnode_endpoint_free(bus_cfg);
-+	v4l2_fwnode_endpoint_free(&bus_cfg);
- 	of_node_put(endpoint);
- 	return pdata;
- }
-diff --git a/drivers/media/i2c/smiapp/smiapp-core.c b/drivers/media/i2c/smiapp/smiapp-core.c
-index 9e33c2008ba6..048ab6cfaa97 100644
---- a/drivers/media/i2c/smiapp/smiapp-core.c
-+++ b/drivers/media/i2c/smiapp/smiapp-core.c
-@@ -2761,7 +2761,7 @@ static int __maybe_unused smiapp_resume(struct device *dev)
- static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
- {
- 	struct smiapp_hwconfig *hwcfg;
--	struct v4l2_fwnode_endpoint *bus_cfg;
-+	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
- 	struct fwnode_handle *ep;
- 	struct fwnode_handle *fwnode = dev_fwnode(dev);
- 	u32 rotation;
-@@ -2775,27 +2775,27 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
- 	if (!ep)
- 		return NULL;
- 
--	bus_cfg = v4l2_fwnode_endpoint_alloc_parse(ep);
--	if (IS_ERR(bus_cfg))
-+	rval = v4l2_fwnode_endpoint_alloc_parse(ep, &bus_cfg);
-+	if (rval)
- 		goto out_err;
- 
- 	hwcfg = devm_kzalloc(dev, sizeof(*hwcfg), GFP_KERNEL);
- 	if (!hwcfg)
- 		goto out_err;
- 
--	switch (bus_cfg->bus_type) {
-+	switch (bus_cfg.bus_type) {
- 	case V4L2_MBUS_CSI2_DPHY:
- 		hwcfg->csi_signalling_mode = SMIAPP_CSI_SIGNALLING_MODE_CSI2;
--		hwcfg->lanes = bus_cfg->bus.mipi_csi2.num_data_lanes;
-+		hwcfg->lanes = bus_cfg.bus.mipi_csi2.num_data_lanes;
- 		break;
- 	case V4L2_MBUS_CCP2:
--		hwcfg->csi_signalling_mode = (bus_cfg->bus.mipi_csi1.strobe) ?
-+		hwcfg->csi_signalling_mode = (bus_cfg.bus.mipi_csi1.strobe) ?
- 		SMIAPP_CSI_SIGNALLING_MODE_CCP2_DATA_STROBE :
- 		SMIAPP_CSI_SIGNALLING_MODE_CCP2_DATA_CLOCK;
- 		hwcfg->lanes = 1;
- 		break;
- 	default:
--		dev_err(dev, "unsupported bus %u\n", bus_cfg->bus_type);
-+		dev_err(dev, "unsupported bus %u\n", bus_cfg.bus_type);
- 		goto out_err;
- 	}
- 
-@@ -2827,28 +2827,28 @@ static struct smiapp_hwconfig *smiapp_get_hwconfig(struct device *dev)
- 	dev_dbg(dev, "nvm %d, clk %d, mode %d\n",
- 		hwcfg->nvm_size, hwcfg->ext_clk, hwcfg->csi_signalling_mode);
- 
--	if (!bus_cfg->nr_of_link_frequencies) {
-+	if (!bus_cfg.nr_of_link_frequencies) {
- 		dev_warn(dev, "no link frequencies defined\n");
- 		goto out_err;
- 	}
- 
- 	hwcfg->op_sys_clock = devm_kcalloc(
--		dev, bus_cfg->nr_of_link_frequencies + 1 /* guardian */,
-+		dev, bus_cfg.nr_of_link_frequencies + 1 /* guardian */,
- 		sizeof(*hwcfg->op_sys_clock), GFP_KERNEL);
- 	if (!hwcfg->op_sys_clock)
- 		goto out_err;
- 
--	for (i = 0; i < bus_cfg->nr_of_link_frequencies; i++) {
--		hwcfg->op_sys_clock[i] = bus_cfg->link_frequencies[i];
-+	for (i = 0; i < bus_cfg.nr_of_link_frequencies; i++) {
-+		hwcfg->op_sys_clock[i] = bus_cfg.link_frequencies[i];
- 		dev_dbg(dev, "freq %d: %lld\n", i, hwcfg->op_sys_clock[i]);
- 	}
- 
--	v4l2_fwnode_endpoint_free(bus_cfg);
-+	v4l2_fwnode_endpoint_free(&bus_cfg);
- 	fwnode_handle_put(ep);
- 	return hwcfg;
- 
- out_err:
--	v4l2_fwnode_endpoint_free(bus_cfg);
-+	v4l2_fwnode_endpoint_free(&bus_cfg);
- 	fwnode_handle_put(ep);
- 	return NULL;
- }
-diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
-index 6a2064597124..8402d540eb8c 100644
---- a/drivers/media/i2c/tc358743.c
-+++ b/drivers/media/i2c/tc358743.c
-@@ -1895,11 +1895,11 @@ static void tc358743_gpio_reset(struct tc358743_state *state)
- static int tc358743_probe_of(struct tc358743_state *state)
- {
- 	struct device *dev = &state->i2c_client->dev;
--	struct v4l2_fwnode_endpoint *endpoint;
-+	struct v4l2_fwnode_endpoint endpoint = { .bus_type = 0 };
- 	struct device_node *ep;
- 	struct clk *refclk;
- 	u32 bps_pr_lane;
--	int ret = -EINVAL;
-+	int ret;
- 
- 	refclk = devm_clk_get(dev, "refclk");
- 	if (IS_ERR(refclk)) {
-@@ -1915,26 +1915,28 @@ static int tc358743_probe_of(struct tc358743_state *state)
- 		return -EINVAL;
- 	}
- 
--	endpoint = v4l2_fwnode_endpoint_alloc_parse(of_fwnode_handle(ep));
--	if (IS_ERR(endpoint)) {
-+	ret = v4l2_fwnode_endpoint_alloc_parse(of_fwnode_handle(ep), &endpoint);
-+	if (ret) {
- 		dev_err(dev, "failed to parse endpoint\n");
--		ret = PTR_ERR(endpoint);
-+		ret = ret;
- 		goto put_node;
- 	}
- 
--	if (endpoint->bus_type != V4L2_MBUS_CSI2_DPHY ||
--	    endpoint->bus.mipi_csi2.num_data_lanes == 0 ||
--	    endpoint->nr_of_link_frequencies == 0) {
-+	if (endpoint.bus_type != V4L2_MBUS_CSI2_DPHY ||
-+	    endpoint.bus.mipi_csi2.num_data_lanes == 0 ||
-+	    endpoint.nr_of_link_frequencies == 0) {
- 		dev_err(dev, "missing CSI-2 properties in endpoint\n");
-+		ret = -EINVAL;
- 		goto free_endpoint;
- 	}
- 
--	if (endpoint->bus.mipi_csi2.num_data_lanes > 4) {
-+	if (endpoint.bus.mipi_csi2.num_data_lanes > 4) {
- 		dev_err(dev, "invalid number of lanes\n");
-+		ret = -EINVAL;
- 		goto free_endpoint;
- 	}
- 
--	state->bus = endpoint->bus.mipi_csi2;
-+	state->bus = endpoint.bus.mipi_csi2;
- 
- 	ret = clk_prepare_enable(refclk);
- 	if (ret) {
-@@ -1967,7 +1969,7 @@ static int tc358743_probe_of(struct tc358743_state *state)
- 	 * The CSI bps per lane must be between 62.5 Mbps and 1 Gbps.
- 	 * The default is 594 Mbps for 4-lane 1080p60 or 2-lane 720p60.
- 	 */
--	bps_pr_lane = 2 * endpoint->link_frequencies[0];
-+	bps_pr_lane = 2 * endpoint.link_frequencies[0];
- 	if (bps_pr_lane < 62500000U || bps_pr_lane > 1000000000U) {
- 		dev_err(dev, "unsupported bps per lane: %u bps\n", bps_pr_lane);
- 		goto disable_clk;
-@@ -2013,7 +2015,7 @@ static int tc358743_probe_of(struct tc358743_state *state)
- disable_clk:
- 	clk_disable_unprepare(refclk);
- free_endpoint:
--	v4l2_fwnode_endpoint_free(endpoint);
-+	v4l2_fwnode_endpoint_free(&endpoint);
- put_node:
- 	of_node_put(ep);
- 	return ret;
 diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 4f351d93b826..801831c802a9 100644
+index ff34a7e47967..fb086242d2d9 100644
 --- a/drivers/media/v4l2-core/v4l2-fwnode.c
 +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -290,23 +290,17 @@ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep)
- 		return;
+@@ -43,26 +43,31 @@ enum v4l2_fwnode_bus_type {
+ };
  
- 	kfree(vep->link_frequencies);
--	kfree(vep);
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_free);
- 
--struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
--	struct fwnode_handle *fwnode)
-+int v4l2_fwnode_endpoint_alloc_parse(
-+	struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep)
+ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+-					       struct v4l2_fwnode_endpoint *vep)
++					       struct v4l2_fwnode_endpoint *vep,
++					       enum v4l2_fwnode_bus_type bus_type)
  {
--	struct v4l2_fwnode_endpoint *vep;
+ 	struct v4l2_fwnode_bus_mipi_csi2 *bus = &vep->bus.mipi_csi2;
+ 	bool have_clk_lane = false;
+ 	unsigned int flags = 0, lanes_used = 0;
++	u32 array[1 + V4L2_FWNODE_CSI2_MAX_DATA_LANES];
++	unsigned int num_data_lanes = 0;
+ 	unsigned int i;
+ 	u32 v;
  	int rval;
  
--	vep = kzalloc(sizeof(*vep), GFP_KERNEL);
--	if (!vep)
--		return ERR_PTR(-ENOMEM);
++	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY)
++		num_data_lanes = min_t(u32, bus->num_data_lanes,
++				       V4L2_FWNODE_CSI2_MAX_DATA_LANES);
++
+ 	rval = fwnode_property_read_u32_array(fwnode, "data-lanes", NULL, 0);
+ 	if (rval > 0) {
+-		u32 array[1 + V4L2_FWNODE_CSI2_MAX_DATA_LANES];
 -
- 	rval = __v4l2_fwnode_endpoint_parse(fwnode, vep);
- 	if (rval < 0)
--		goto out_err;
-+		return rval;
+-		bus->num_data_lanes =
++		num_data_lanes =
+ 			min_t(int, V4L2_FWNODE_CSI2_MAX_DATA_LANES, rval);
  
- 	rval = fwnode_property_read_u64_array(fwnode, "link-frequencies",
- 					      NULL, 0);
-@@ -316,18 +310,18 @@ struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
- 		vep->link_frequencies =
- 			kmalloc_array(rval, sizeof(*vep->link_frequencies),
- 				      GFP_KERNEL);
--		if (!vep->link_frequencies) {
--			rval = -ENOMEM;
--			goto out_err;
--		}
-+		if (!vep->link_frequencies)
-+			return -ENOMEM;
+ 		fwnode_property_read_u32_array(fwnode, "data-lanes", array,
+-					       bus->num_data_lanes);
++					       num_data_lanes);
  
- 		vep->nr_of_link_frequencies = rval;
+-		for (i = 0; i < bus->num_data_lanes; i++) {
++		for (i = 0; i < num_data_lanes; i++) {
+ 			if (lanes_used & BIT(array[i]))
+ 				pr_warn("duplicated lane %u in data-lanes\n",
+ 					array[i]);
+@@ -71,30 +76,27 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 			bus->data_lanes[i] = array[i];
+ 			pr_debug("lane %u position %u\n", i, array[i]);
+ 		}
++	}
  
- 		rval = fwnode_property_read_u64_array(
- 			fwnode, "link-frequencies", vep->link_frequencies,
- 			vep->nr_of_link_frequencies);
--		if (rval < 0)
--			goto out_err;
-+		if (rval < 0) {
-+			v4l2_fwnode_endpoint_free(vep);
-+			return rval;
+-		rval = fwnode_property_read_u32_array(fwnode,
+-						      "lane-polarities", NULL,
+-						      0);
+-		if (rval > 0) {
+-			if (rval != 1 + bus->num_data_lanes /* clock+data */) {
+-				pr_warn("invalid number of lane-polarities entries (need %u, got %u)\n",
+-					1 + bus->num_data_lanes, rval);
+-				return -EINVAL;
+-			}
++	rval = fwnode_property_read_u32_array(fwnode, "lane-polarities", NULL,
++					      0);
++	if (rval > 0) {
++		if (rval != 1 + num_data_lanes /* clock+data */) {
++			pr_warn("invalid number of lane-polarities entries (need %u, got %u)\n",
++				1 + num_data_lanes, rval);
++			return -EINVAL;
 +		}
  
- 		for (i = 0; i < vep->nr_of_link_frequencies; i++)
- 			pr_info("link-frequencies %u value %llu\n", i,
-@@ -336,11 +330,7 @@ struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
+-			fwnode_property_read_u32_array(fwnode,
+-						       "lane-polarities", array,
+-						       1 + bus->num_data_lanes);
++		fwnode_property_read_u32_array(fwnode, "lane-polarities", array,
++					       1 + num_data_lanes);
  
- 	pr_debug("===== end V4L2 endpoint properties\n");
- 
--	return vep;
+-			for (i = 0; i < 1 + bus->num_data_lanes; i++) {
+-				bus->lane_polarities[i] = array[i];
+-				pr_debug("lane %u polarity %sinverted",
+-					 i, array[i] ? "" : "not ");
+-			}
+-		} else {
+-			pr_debug("no lane polarities defined, assuming not inverted\n");
++		for (i = 0; i < 1 + num_data_lanes; i++) {
++			bus->lane_polarities[i] = array[i];
++			pr_debug("lane %u polarity %sinverted",
++				 i, array[i] ? "" : "not ");
+ 		}
 -
--out_err:
--	v4l2_fwnode_endpoint_free(vep);
--	return ERR_PTR(rval);
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_alloc_parse);
- 
-@@ -392,9 +382,9 @@ static int v4l2_async_notifier_fwnode_parse_endpoint(
- 			    struct v4l2_fwnode_endpoint *vep,
- 			    struct v4l2_async_subdev *asd))
- {
-+	struct v4l2_fwnode_endpoint vep = { .bus_type = V4L2_MBUS_UNKNOWN };
- 	struct v4l2_async_subdev *asd;
--	struct v4l2_fwnode_endpoint *vep;
--	int ret = 0;
-+	int ret;
- 
- 	asd = kzalloc(asd_struct_size, GFP_KERNEL);
- 	if (!asd)
-@@ -409,23 +399,22 @@ static int v4l2_async_notifier_fwnode_parse_endpoint(
- 		goto out_err;
++	} else {
++		pr_debug("no lane polarities defined, assuming not inverted\n");
  	}
  
--	vep = v4l2_fwnode_endpoint_alloc_parse(endpoint);
--	if (IS_ERR(vep)) {
--		ret = PTR_ERR(vep);
-+	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &vep);
-+	if (ret) {
- 		dev_warn(dev, "unable to parse V4L2 fwnode endpoint (%d)\n",
- 			 ret);
- 		goto out_err;
+ 	if (!fwnode_property_read_u32(fwnode, "clock-lanes", &v)) {
+@@ -114,10 +116,11 @@ static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
+ 		flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
  	}
  
--	ret = parse_endpoint ? parse_endpoint(dev, vep, asd) : 0;
-+	ret = parse_endpoint ? parse_endpoint(dev, &vep, asd) : 0;
- 	if (ret == -ENOTCONN)
--		dev_dbg(dev, "ignoring port@%u/endpoint@%u\n", vep->base.port,
--			vep->base.id);
-+		dev_dbg(dev, "ignoring port@%u/endpoint@%u\n", vep.base.port,
-+			vep.base.id);
- 	else if (ret < 0)
- 		dev_warn(dev,
- 			 "driver could not parse port@%u/endpoint@%u (%d)\n",
--			 vep->base.port, vep->base.id, ret);
--	v4l2_fwnode_endpoint_free(vep);
-+			 vep.base.port, vep.base.id, ret);
-+	v4l2_fwnode_endpoint_free(&vep);
- 	if (ret < 0)
- 		goto out_err;
+-	if (lanes_used || have_clk_lane ||
+-	    (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
++	if (bus_type == V4L2_FWNODE_BUS_TYPE_CSI2_DPHY || lanes_used ||
++	    have_clk_lane || (flags & ~V4L2_MBUS_CSI2_CONTINUOUS_CLOCK)) {
+ 		bus->flags = flags;
+ 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
++		bus->num_data_lanes = num_data_lanes;
+ 	}
  
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 8b4873c37098..4a371c3ad86c 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -161,6 +161,7 @@ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
- /**
-  * v4l2_fwnode_endpoint_alloc_parse() - parse all fwnode node properties
-  * @fwnode: pointer to the endpoint's fwnode handle
-+ * @vep: pointer to the V4L2 fwnode data structure
-  *
-  * All properties are optional. If none are found, we don't set any flags. This
-  * means the port has a static configuration and no properties have to be
-@@ -170,6 +171,8 @@ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
-  * set the V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag. The caller should hold a
-  * reference to @fwnode.
-  *
-+ * The caller must set the bus_type field of @vep to zero.
-+ *
-  * v4l2_fwnode_endpoint_alloc_parse() has two important differences to
-  * v4l2_fwnode_endpoint_parse():
-  *
-@@ -178,11 +181,10 @@ void v4l2_fwnode_endpoint_free(struct v4l2_fwnode_endpoint *vep);
-  * 2. The memory it has allocated to store the variable size data must be freed
-  *    using v4l2_fwnode_endpoint_free() when no longer needed.
-  *
-- * Return: Pointer to v4l2_fwnode_endpoint if successful, on an error pointer
-- * on error.
-+ * Return: 0 on success or a negative error code on failure.
-  */
--struct v4l2_fwnode_endpoint *v4l2_fwnode_endpoint_alloc_parse(
--	struct fwnode_handle *fwnode);
-+int v4l2_fwnode_endpoint_alloc_parse(
-+	struct fwnode_handle *fwnode, struct v4l2_fwnode_endpoint *vep);
+ 	return 0;
+@@ -273,7 +276,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
  
- /**
-  * v4l2_fwnode_parse_link() - parse a link between two endpoints
+ 	switch (bus_type) {
+ 	case V4L2_FWNODE_BUS_TYPE_GUESS:
+-		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep);
++		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
++							   bus_type);
+ 		if (rval)
+ 			return rval;
+ 
+@@ -289,7 +293,8 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 		break;
+ 	case V4L2_FWNODE_BUS_TYPE_CSI2_DPHY:
+ 		vep->bus_type = V4L2_MBUS_CSI2_DPHY;
+-		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep);
++		rval = v4l2_fwnode_endpoint_parse_csi2_bus(fwnode, vep,
++							   bus_type);
+ 		if (rval)
+ 			return rval;
+ 
 -- 
 2.11.0
