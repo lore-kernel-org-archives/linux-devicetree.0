@@ -1,54 +1,137 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v4 11/18] dmaengine: dma-jz4780: Add missing residue DTC
- mask
-Date: Mon, 27 Aug 2018 10:30:57 +0530
-Message-ID: <20180827050057.GR2388@vkoul-mobl>
-References: <20180807114218.20091-1-paul@crapouillou.net>
- <20180807114218.20091-12-paul@crapouillou.net>
+From: Roy Im <roy.im.opensource@diasemi.com>
+Subject: RE: [PATCH V4 2/3] dt-bindings: input: Add document bindings for
+ DA7280
+Date: Mon, 27 Aug 2018 05:02:24 +0000
+Message-ID: <DB7PR10MB2169FA41DB1196ACCDFEE333850B0@DB7PR10MB2169.EURPRD10.PROD.OUTLOOK.COM>
+References: <cover.1534830272.git.Roy.Im@diasemi.com>
+ <0d2a3c034a567d3a3ccd2e965f40e9af28f7e4d3.1534830272.git.Roy.Im@diasemi.com>
+ <20180826065157.GA25309@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180807114218.20091-12-paul@crapouillou.net>
+In-Reply-To: <20180826065157.GA25309@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Daniel Silsby <dansilsby@gmail.com>
+To: Pavel Machek <pavel@ucw.cz>, Roy Im <roy.im.opensource@diasemi.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Support Opensource <Support.Opensource@diasemi.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07-08-18, 13:42, Paul Cercueil wrote:
-> From: Daniel Silsby <dansilsby@gmail.com>
-> 
-> The 'dtc' word in jz DMA descriptors contains two fields: The
-> lowest 24 bits are the transfer count, and upper 8 bits are the DOA
-> offset to next descriptor. The upper 8 bits are now correctly masked
-> off when computing residue in jz4780_dma_desc_residue(). Note that
-> reads of the DTCn hardware reg are automatically masked this way.
-> 
-> Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Tested-by: Mathieu Malaterre <malat@debian.org>
-> ---
->  drivers/dma/dma-jz4780.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
->  v2: No change
-> 
->  v3: No change
-> 
->  v4: Add my Signed-off-by
-> 
-> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-> index 3a4d0a4b550d..a4292ac4c686 100644
-> --- a/drivers/dma/dma-jz4780.c
-> +++ b/drivers/dma/dma-jz4780.c
-> @@ -616,7 +616,8 @@ static size_t jz4780_dma_desc_residue(struct jz4780_dma_chan *jzchan,
->  	residue = 0;
->  
->  	for (i = next_sg; i < desc->count; i++)
-> -		residue += desc->desc[i].dtc << jzchan->transfer_shift;
-> +		residue += (desc->desc[i].dtc & 0xffffff) <<
+Hi Pavel,
 
-GENMASK(23, 0) please.
+On Sunday, August 26, 2018 3:52 PM, Pavel Machek wrote:
+>
+> > +++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+> > @@ -0,0 +1,101 @@
+> > +Dialog Semiconductor DA7280 Haptics bindings
+> > +
+> > +Required properties:
+> > +- compatible: Should be "dlg,da7280".
+> > +- reg: Specifies the I2C slave address.
+> > +
+> > +- interrupt-parent : Specifies the phandle of the interrupt
+> > +controller to
+> > +  which the IRQs from DA7280 are delivered to.
+> > +
+> > +- dlg,vib-mode:
+> > +  "LRA-MODE" - Linear Resonance Actuator mode.
+> > +  "ERM-BAR" - Bar type Eccentric Rotating Mass mode.
+> > +  "ERM-COIN" - Coin type Eccentric Rotating Mass mode.
+>=20
+> So this is some kind of "vibration motor" on steroids)?
 
--- 
-~Vinod
+I will add some descriptions more here in v5.
+
+> > +- dlg,op-mode: Haptic operation mode.
+> > +  Possible values:
+> > +	1 - Direct register override mode triggered by i2c(default),
+> > +	2 - PWM data source mode setting duty to 0 - 0xffff(0% - 100%),
+>=20
+> Space after 0xffff?
+
+I will remove this in v5.
+
+>=20
+> > +	3 - Register triggered waveform memory mode, the pattern assigned
+> > +	    to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
+> > +	4 - Edge triggered waveform memory mode, external GPI(N) condtrol
+>=20
+> "control"
+
+I will fix this in v5
+
+>
+> > +	    are required to enable/disable and it needs to keep
+> > +	    device enabled by sending magnitude (X > 0),
+> > +	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below
+>=20
+> "below."
+
+I will fix this in v5
+
+>=20
+> > +- dlg,imax-microamp: Actuator max current rating.
+> > +  Valid values: 0 - 252000.
+> > +  Default: 130000.
+> > +- dlg,impd-micro-ohms: the impedance of the actuator in micro ohm,
+>=20
+> "ohms"
+
+I will fix this in v5.
+
+>=20
+> > +  as read from its datasheet.
+>=20
+> "as read" does not sound english.
+
+I will correct this in v5.
+
+>=20
+> > +- dlg,mem-array: use in case that memory registers should be updated,
+> > +  Please fill the whole buffers(100 bytes) to avoid any error in drive=
+r.
+> > +  For example,
+> > +	dlg,mem-array =3D <
+> > +		0x01 0x02 0x03 0x04 0x05 0x06 0x07 0x08 0x09 0x0A
+> > +		...
+> > +		0x71 0x72 0x73 0x74 0x75 0x76 0x77 0x78 0x79 0x7A
+> > +		0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+> > +		0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+> > +	>;
+>=20
+> I'd not understand what this is from this description. (And I'd put
+> example below... in the exampls section).
+
+I will improve and update the description including the example section in =
+v5.
+
+Regards,
+Roy
+
+>=20
+> > +For further information, see device datasheet.
+> > +
+> > +=3D=3D=3D=3D=3D=3D
+> > +
+> > +Example:
+> > +
+> > +	haptics: da7280-haptics@4a {
+> > +		compatible =3D "dlg,da7280";
+> > +		reg =3D <0x4a>;
+> > +		interrupt-parent =3D <&gpio6>;
+> > +		interrupts =3D <11 IRQ_TYPE_LEVEL_LOW>;
+> > +		dlg,vib-mode =3D "LRA-MODE";
+> > +		dlg,op-mode =3D <1>;
+> > +		dlg,nom-microvolt =3D <2000000>;
+> > +		dlg,abs-max-microvolt =3D <2000000>;
+> > +		dlg,imax-microamp =3D <170000>;
+> > +		dlg,resonant-freq-hz =3D <180>;
+> > +		dlg,impd-micro-ohms =3D <10500000>;
+> > +		dlg,freq-track-enable;
+> > +		dlg,rapid-stop-enable;
+> > +	};
+>=20
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures)
+> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
