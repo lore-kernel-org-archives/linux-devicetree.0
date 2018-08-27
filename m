@@ -1,29 +1,57 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 0/3] usb: renesas_usbhs: add reset_control and multiple clocks management
-Date: Fri, 31 Aug 2018 15:48:36 +0900
-Message-Id: <1535698119-10132-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54574 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727264AbeH0NP6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 27 Aug 2018 09:15:58 -0400
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 17/23] v4l: fwnode: Only zero the struct if bus type is set to V4L2_MBUS_UNKNOWN
+Date: Mon, 27 Aug 2018 12:29:54 +0300
+Message-Id: <20180827093000.29165-18-sakari.ailus@linux.intel.com>
+In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set is based on Felipe's usb.git / testing/next branch
-(the commit id is 5b394b2ddf0347bef56e50c69a58773c94343ff3) with
-the following patch:
+In order to prepare for allowing drivers to set the defaults for a given
+bus, make zeroing the struct conditional based on detecting the bus.
+All callers now set the bus type to zero which allows only zeroing the
+remaining bus union.
 
-https://patchwork.kernel.org/patch/10574875/
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/v4l2-core/v4l2-fwnode.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Yoshihiro Shimoda (3):
-  usb: renesas_usbhs: Add reset_control
-  dt-bindings: usb: renesas_usbhs: add clock-names property
-  usb: renesas_usbhs: Add multiple clocks management
-
- .../devicetree/bindings/usb/renesas_usbhs.txt      |  2 +
- drivers/usb/renesas_usbhs/common.c                 | 53 ++++++++++++++++++++++
- drivers/usb/renesas_usbhs/common.h                 |  5 ++
- 3 files changed, 60 insertions(+)
-
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index ba51c1ead314..6c5a76442667 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -325,6 +325,12 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 	u32 bus_type = 0;
+ 	int rval;
+ 
++	if (vep->bus_type == V4L2_MBUS_UNKNOWN) {
++		/* Zero fields from bus union to until the end */
++		memset(&vep->bus, 0,
++		       sizeof(*vep) - offsetof(typeof(*vep), bus));
++	}
++
+ 	pr_debug("===== begin V4L2 endpoint properties\n");
+ 
+ 	/*
+@@ -333,10 +339,6 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
+ 	 */
+ 	memset(&vep->base, 0, sizeof(vep->base));
+ 
+-	/* Zero fields from bus_type to until the end */
+-	memset(&vep->bus_type, 0, sizeof(*vep) -
+-	       offsetof(typeof(*vep), bus_type));
+-
+ 	fwnode_property_read_u32(fwnode, "bus-type", &bus_type);
+ 
+ 	switch (bus_type) {
 -- 
-1.9.1
+2.11.0
