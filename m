@@ -1,77 +1,37 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v2 3/3] dts: arm64/sdm845: Add node for qcom,smmu-v2
-Date: Mon, 27 Aug 2018 14:26:21 +0530
-Message-ID: <f8d638bd-d0cb-e03d-bac2-3bc2e30c5422@codeaurora.org>
-References: <20180814102740.30222-1-vivek.gautam@codeaurora.org>
- <20180814102740.30222-4-vivek.gautam@codeaurora.org>
- <27372288-447d-6c9a-504a-8b8ef40e3d58@arm.com>
- <CAFp+6iG8HohQ5=gwL37OuykK+R4U407yfrp=WN6pSgOK-mdzzA@mail.gmail.com>
- <20180814225750.GA31263@rob-hp-laptop>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 4/9] arm64: dts: renesas: r8a774a1: Add IPMMU device nodes
+Date: Mon, 27 Aug 2018 11:02:36 +0200
+Message-ID: <20180827090236.efu5ezcy4yjecgf3@verge.net.au>
+References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1535031788-19907-5-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180814225750.GA31263@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, Jordan Crouse <jcrouse@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Andy Gross <andy.gross@linaro.org>, Will Deacon <will.deacon@arm.com>, "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>Joerg Roedel <joro@8bytes.org>iommu@lists.linux-foundation.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1535031788-19907-5-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Robin,
+On Thu, Aug 23, 2018 at 02:43:03PM +0100, Fabrizio Castro wrote:
+> Add r8a774a1 IPMMU nodes.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
+Thanks,
 
-On 8/15/2018 4:27 AM, Rob Herring wrote:
-> On Wed, Aug 15, 2018 at 01:09:43AM +0530, Vivek Gautam wrote:
->> Adding Jordan here.
->>
->> On Tue, Aug 14, 2018 at 4:19 PM, Robin Murphy <robin.murphy@arm.com> wrote:
->>> Hi Vivek,
->>>
->>> On 14/08/18 11:27, Vivek Gautam wrote:
->>>> Add device node for qcom,smmu-v2 available on sdm845.
->>>> This smmu is available only to GPU device.
->>>>
->>>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->>>> ---
->>>>    arch/arm64/boot/dts/qcom/sdm845.dtsi | 23 +++++++++++++++++++++++
->>>>    1 file changed, 23 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>>> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>>> index 1c2be2082f33..bd1ec5fa5146 100644
->>>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>>> @@ -6,6 +6,7 @@
->>>>     */
->>>>      #include <dt-bindings/clock/qcom,gcc-sdm845.h>
->>>> +#include <dt-bindings/clock/qcom,gpucc-sdm845.h>
->>>>    #include <dt-bindings/clock/qcom,rpmh.h>
->>>>    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>>    #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->>>> @@ -989,6 +990,28 @@
->>>>                          cell-index = <0>;
->>>>                  };
->>>>    +             gpu_smmu: iommu@5040000 {
->>>> +                       compatible = "qcom,sdm845-smmu-v2",
->>>> "qcom,smmu-v2";
->>>
->>> Which of "sdm845" or "msm8996"[1] is the actual SoC name here?
->> Well, the bindings use the SoC prefix with smmu-v2, so it should be
->> sdm845 for this SoC. This is same as I posted in my v1 of the series [2].
->> Using 8996 based string in sdm845 makes things look awful.
-> You need to list valid values of '<soc>' in the binding. Otherwise we
-> get this confusion.
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-Sorry for delayed response, I was away on vacation.
-I will list down the valid values for '<soc>' as suggested, and respin 
-this series, and
-smmu bindings patch that comes as part of the runtime pm series [1].
-
-[1] https://lore.kernel.org/patchwork/patch/968017/
-
-Best regards
-Vivek
-
->
-> Rob
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
