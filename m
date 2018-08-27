@@ -1,89 +1,43 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
-Date: Mon, 27 Aug 2018 10:28:20 +0200
-Message-ID: <20180827102820.3abf7291@bbrezillon>
-References: <20180827082153.22537-1-johan@kernel.org>
-        <20180827082153.22537-6-johan@kernel.org>
+From: Roy Im <roy.im.opensource@diasemi.com>
+Subject: [PATCH V5 0/3]  da7280: haptic driver submission
+Date: Mon, 27 Aug 2018 17:21:35 +0900
+Message-ID: <cover.1535358095.git.Roy.Im@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180827082153.22537-6-johan@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Johan
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-On Mon, 27 Aug 2018 10:21:49 +0200
-Johan Hovold <johan@kernel.org> wrote:
+In this patch set the following is provided:
 
-> Use the new of_get_compatible_child() helper to lookup the nfc child
-> node instead of using of_find_compatible_node(), which searches the
-> entire tree from a given start node and thus can return an unrelated
-> (i.e. non-child) node.
-> 
-> This also addresses a potential use-after-free (e.g. after probe
-> deferral) as the tree-wide helper drops a reference to its first
-> argument (i.e. the node of the device being probed).
-> 
-> While at it, also fix a related nfc-node reference leak.
-> 
-> Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
-> Cc: stable <stable@vger.kernel.org>     # 4.11
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Josh Wu <rainyfeeling@outlook.com>
-> Cc: Boris Brezillon <boris.brezillon@bootlin.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+[PATCH V2 1/3] MAINTAINERS file update for DA7280
+[PATCH V2 2/3] DA7280 DT Binding
+[PATCH V2 3/3] DA7280 Driver
 
-Acked-by: Boris Brezillon <boris.brezillon@bootlin.com>
+This patch applies against linux-next and v4.18
 
-I'll let Miquel queue this patch to the nand/next branch, unless you
-want it to be merged in 4.19, in which case I'll queue it to the
-mtd/fixes branch.
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
 
-Thanks,
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
 
-Boris
+ .../devicetree/bindings/input/dlg,da7280.txt       |  105 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1438 ++++++++++++++++++++
+ drivers/input/misc/da7280.h                        |  412 ++++++
+ 6 files changed, 1971 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+ create mode 100644 drivers/input/misc/da7280.h
 
-> ---
->  drivers/mtd/nand/raw/atmel/nand-controller.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-> index a068b214ebaa..d3dfe63956ac 100644
-> --- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-> +++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-> @@ -2061,8 +2061,7 @@ atmel_hsmc_nand_controller_legacy_init(struct atmel_hsmc_nand_controller *nc)
->  	int ret;
->  
->  	nand_np = dev->of_node;
-> -	nfc_np = of_find_compatible_node(dev->of_node, NULL,
-> -					 "atmel,sama5d3-nfc");
-> +	nfc_np = of_get_compatible_child(dev->of_node, "atmel,sama5d3-nfc");
->  
->  	nc->clk = of_clk_get(nfc_np, 0);
->  	if (IS_ERR(nc->clk)) {
-> @@ -2472,15 +2471,19 @@ static int atmel_nand_controller_probe(struct platform_device *pdev)
->  	}
->  
->  	if (caps->legacy_of_bindings) {
-> +		struct device_node *nfc_node;
->  		u32 ale_offs = 21;
->  
->  		/*
->  		 * If we are parsing legacy DT props and the DT contains a
->  		 * valid NFC node, forward the request to the sama5 logic.
->  		 */
-> -		if (of_find_compatible_node(pdev->dev.of_node, NULL,
-> -					    "atmel,sama5d3-nfc"))
-> +		nfc_node = of_get_compatible_child(pdev->dev.of_node,
-> +						   "atmel,sama5d3-nfc");
-> +		if (nfc_node) {
->  			caps = &atmel_sama5_nand_caps;
-> +			of_node_put(nfc_node);
-> +		}
->  
->  		/*
->  		 * Even if the compatible says we are dealing with an
+-- 
+end-of-patch for PATCH V5
