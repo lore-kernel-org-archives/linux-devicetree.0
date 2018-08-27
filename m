@@ -1,88 +1,23 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: NSP: Enable SFP on bcm958625hr
-Date: Mon, 27 Aug 2018 14:17:24 -0700
-Message-ID: <cd82f8a8-ddd2-dda9-95ad-38265fa406c9@gmail.com>
-References: <20180827200344.16158-1-f.fainelli@gmail.com>
- <20180827200344.16158-2-f.fainelli@gmail.com>
- <20180827203500.GN27483@lunn.ch>
- <4a0e7b46-f7b6-3e9a-5f67-8160537482c8@gmail.com>
- <20180827210916.GP27483@lunn.ch>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/3] clk: max77686: Add SPDX license identifiers
+Date: Mon, 27 Aug 2018 14:17:56 -0700
+Message-ID: <153540467625.129321.9618139836664773308@swboyd.mtv.corp.google.com>
+References: <20180807161713.28073-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827210916.GP27483@lunn.ch>
-Content-Language: en-US
+In-Reply-To: <20180807161713.28073-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, rmk+kernel@armlinux.org.uk
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2018 02:09 PM, Andrew Lunn wrote:
-> On Mon, Aug 27, 2018 at 01:52:42PM -0700, Florian Fainelli wrote:
->> On 08/27/2018 01:35 PM, Andrew Lunn wrote:
->>>> @@ -210,6 +228,17 @@
->>>>  			reg = <4>;
->>>>  		};
->>>>  
->>>> +		port@5 {
->>>> +			label = "sfp";
->>>> +			phy-mode = "sgmii";
->>>> +			reg = <5>;
->>>> +			sfp = <&sfp>;
->>>> +			fixed-link {
->>>> +				speed = <1000>;
->>>> +				full-duplex;
->>>> +			};
->>>
->>> Hi Florian
->>>
->>> You might want to add a comment about why you are using fixed-link and
->>> sgmii, which seems very odd. Is it even correct?
->>
->> Probably not, this is kind of left over from before adding the sfp
->> phandle, but if I do remove it, and I can see the DSA slave network
->> device fail to initialize, likely because we destroy the PHYLINK instance.
->>
->> AFAIR, when we talked about this with Russell, I did not see why we had
->> to comment out the following:
->>
->> diff --git a/net/dsa/slave.c b/net/dsa/slave.c
->> index 962c4fd338ba..f3ae16dbf8d8 100644
->> --- a/net/dsa/slave.c
->> +++ b/net/dsa/slave.c
->> @@ -1227,7 +1227,7 @@ static int dsa_slave_phy_setup(struct net_device
->> *slave_dev)
->>                         netdev_err(slave_dev,
->>                                    "failed to connect to port %d: %d\n",
->>                                    dp->index, ret);
->> -                       phylink_destroy(dp->pl);
->> +                       //phylink_destroy(dp->pl);
->>                         return ret;
->>                 }
->>         }
->>
->> maybe you know?
-> 
-> Hi Florian
-> 
-> I didn't need anything like this for the mv88e6xxx. I had patches
-> merged in -rc1 to make SFF work connected to the mv88e6390. The DT
-> change was not merged, but it is here:
-> 
-> https://patchwork.ozlabs.org/patch/955635/
-> 
-> +					port@9 {
-> +						reg = <9>;
-> +						label = "sff2";
-> +						phy-mode = "sgmii";
-> +						managed = "in-band-status";
+Quoting Krzysztof Kozlowski (2018-08-07 09:17:11)
+> Replace GPL v2.0 and v2.0+ license statements with SPDX license
+> identifiers.
+> =
 
-						^=====
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-Yes that is what I was missing, thanks Andrew! Still not 100% sure why
-having a "sfp" phandle is not enough, but I suppose there are
-problematic cases like the ZII Devel Rev. B where we have a SFF and we
-are not able to auto-negotiate the fiber connection.
--- 
-Florian
+Applied to clk-next
