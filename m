@@ -1,90 +1,32 @@
-Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54584 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726921AbeH0NP6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Aug 2018 09:15:58 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 19/23] v4l: fwnode: Print bus type
-Date: Mon, 27 Aug 2018 12:29:56 +0300
-Message-Id: <20180827093000.29165-20-sakari.ailus@linux.intel.com>
-In-Reply-To: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
-References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
+Return-Path: <SRS0=SWuu=LK=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1534168353-4177-1-git-send-email-biju.das@bp.renesas.com> <1534168353-4177-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1534168353-4177-2-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 27 Aug 2018 17:17:30 +0200
+Message-ID: <CAMuHMdV33g03y3V9AS+oBqrEa93SNvEsLFjqN9hffBrJiRujFg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: sh-pfc: Document r8a774a1 PFC support
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Print bus type either as set by the driver or as parsed from the bus-type
-property, as well as the guessed V4L2 media bus type.
+On Mon, Aug 13, 2018 at 3:58 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Document PFC support for the R8A774A1 SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 38 +++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v4.2.0.
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index d502abd7406b..4c7f16ff79fa 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -99,6 +99,36 @@ v4l2_fwnode_bus_type_to_mbus(enum v4l2_fwnode_bus_type type)
- 	return conv ? conv->mbus_type : V4L2_MBUS_UNKNOWN;
- }
- 
-+static const char *
-+v4l2_fwnode_bus_type_to_string(enum v4l2_fwnode_bus_type type)
-+{
-+	const struct v4l2_fwnode_bus_conv *conv =
-+		get_v4l2_fwnode_bus_conv_by_fwnode_bus(type);
-+
-+	return conv ? conv->name : "not found";
-+}
-+
-+static const struct v4l2_fwnode_bus_conv *
-+get_v4l2_fwnode_bus_conv_by_mbus(enum v4l2_mbus_type type)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(busses); i++)
-+		if (busses[i].mbus_type == type)
-+			return &busses[i];
-+
-+	return NULL;
-+}
-+
-+static const char *
-+v4l2_fwnode_mbus_type_to_string(enum v4l2_mbus_type type)
-+{
-+	const struct v4l2_fwnode_bus_conv *conv =
-+		get_v4l2_fwnode_bus_conv_by_mbus(type);
-+
-+	return conv ? conv->name : "not found";
-+}
-+
- static int v4l2_fwnode_endpoint_parse_csi2_bus(struct fwnode_handle *fwnode,
- 					       struct v4l2_fwnode_endpoint *vep,
- 					       enum v4l2_mbus_type bus_type)
-@@ -398,6 +428,10 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 	memset(&vep->base, 0, sizeof(vep->base));
- 
- 	fwnode_property_read_u32(fwnode, "bus-type", &bus_type);
-+	pr_debug("fwnode video bus type %s (%u), mbus type %s (%u)\n",
-+		 v4l2_fwnode_bus_type_to_string(bus_type), bus_type,
-+		 v4l2_fwnode_mbus_type_to_string(vep->bus_type),
-+		 vep->bus_type);
- 
- 	mbus_type = v4l2_fwnode_bus_type_to_mbus(bus_type);
- 
-@@ -412,6 +446,10 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 			v4l2_fwnode_endpoint_parse_parallel_bus(
- 				fwnode, vep, V4L2_MBUS_UNKNOWN);
- 
-+		pr_debug("assuming media bus type %s (%u)\n",
-+			 v4l2_fwnode_mbus_type_to_string(vep->bus_type),
-+			 vep->bus_type);
-+
- 		break;
- 	case V4L2_MBUS_CCP2:
- 	case V4L2_MBUS_CSI1:
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.11.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
