@@ -1,65 +1,90 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH 1/3] ARM: dts: Add big-endian for IFC on LS1021A
-Date: Mon, 27 Aug 2018 14:29:56 -0500
-Message-ID: <CADRPPNRkJ0Hz0yyB8jKqGPn2+zq+xJa1L9Vc3_8ai06+tO7t1Q@mail.gmail.com>
-References: <20180817101920.20503-1-prabhakar.kushwaha@nxp.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH RESEND v1 2/5] drivers: pinctrl: msm: enable PDC interrupt only
+ during suspend
+Date: Mon, 27 Aug 2018 13:00:53 -0700
+Message-ID: <153540005334.129321.18196967002233663397@swboyd.mtv.corp.google.com>
+References: <20180817191026.32245-1-ilina@codeaurora.org>
+ <20180817191026.32245-3-ilina@codeaurora.org>
+ <153509896098.28926.3622217918056498792@swboyd.mtv.corp.google.com>
+ <20180824171432.GM5081@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180817101920.20503-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Alison Wang <alison.wang@nxp.com>, jagdish.gediya@nxp.com, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180824171432.GM5081@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, evgreen@chromium.org, linus.walleij@linaro.org, marc.zyngier@arm.com, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 17, 2018 at 5:20 AM Prabhakar Kushwaha
-<prabhakar.kushwaha@nxp.com> wrote:
->
-> Register space of IFC controller is big-endian.
->
-> So add big-endian in IFC device tree node.
+Quoting Lina Iyer (2018-08-24 10:14:32)
+> On Fri, Aug 24 2018 at 02:22 -0600, Stephen Boyd wrote:
+> >Quoting Lina Iyer (2018-08-17 12:10:23)
+> >> During suspend the system may power down some of the system rails. As a
+> >> result, the TLMM hw block may not be operational anymore and wakeup
+> >> capable GPIOs will not be detected. The PDC however will be operational
+> >> and the GPIOs that are routed to the PDC as IRQs can wake the system u=
+p.
+> >>
+> >> To avoid being interrupted twice (for TLMM and once for PDC IRQ) when a
+> >> GPIO trips, use TLMM for active and switch to PDC for suspend. When
+> >> entering suspend, disable the TLMM wakeup interrupt and instead enable
+> >> the PDC IRQ and revert upon resume.
+> >
+> >What about idle paths? Don't we want to disable the TLMM interrupt and
+> >enable the PDC interrupt when the whole cluster goes idle so we get
+> >wakeup interrupts?
+> We would need to do this from the idle paths. When we have that support
+> (a patch for cluster power down is in the works), we would need to hook
+> up to TLMM and do the same.
 
-Is this change necessary?  The current binding of IFC says:
+Ok so then this approach doesn't really seem to work for the CPU idle
+paths.
 
-- little-endian : If this property is absent, the big-endian mode will
-                  be in use as default for registers.
+> >Because of this complicated dance, it may make sense to always get the
+> >interrupt at the PDC and then replay it into the TLMM chip "manually"
+> >with the irq_set_irqchip_state() APIs. This way the duplicate interrupt
+> >can't happen. The only way for the interrupt handler to run would be by
+> >PDC poking the TLMM hardware to inject the irq into the status register.
+> If the PDC interrupt was always enabled and the interrupt at TLMM was
+> always disabled, all we would need to set the action handler of the PDC
+> interrupt to that of the TLMM. I couldn't find a way to retrieve that
+> nicely.
 
->
-> Signed-off-by: Alison Wang <alison.wang@nxp.com>
-> Signed-off-by: Jagdish Gediya <jagdish.gediya@nxp.com>
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-> ---
->  arch/arm/boot/dts/ls1021a.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index f18490548c78..1f9cae75bad3 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -1,5 +1,6 @@
->  /*
->   * Copyright 2013-2014 Freescale Semiconductor, Inc.
-> + * Copyright 2018 NXP
->   *
->   * This file is dual-licensed: you can use it either under the terms
->   * of the GPL or the X11 license, at your option. Note that this dual
-> @@ -154,6 +155,7 @@
->                 ifc: ifc@1530000 {
->                         compatible = "fsl,ifc", "simple-bus";
->                         reg = <0x0 0x1530000 0x0 0x10000>;
-> +                       big-endian;
->                         interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
->                 };
->
-> --
-> 2.14.1
->
+Can't we just configure a different chained IRQ handler with
+irq_set_chained_handler_and_data() for each of the GPIO IRQs that are
+handled by PDC to be the interrupts provide by the PDC irq controller
+that match the GPIOs? And then set their parent irq with
+irq_set_parent() for completeness? And also move those GPIOs from the
+existing msm_gpio irqchip to a different PDC gpio irqchip that does
+nothing besides push irqchip calls up to the PDC irqchip? Then we don't
+even have to think about resending anything and we can rely on PDC to do
+all the interrupt sensing all the time but still provide the irqs from
+the GPIO controller.
+
+> =
+
+> >I think with the TLMM that's possible if we configure the pin to have
+> >the raw status bit disabled (so that edges on the physical line don't
+> >latch into the GPIO interrupt status register) and the normal status bit
+> >enabled (so that if the status register changes we'll interrupt the
+> >CPU). It needs some testing to make sure that actually works though. If
+> >it does work, then we have a way to inject interrupts on TLMM without
+> >worry that the TLMM hardware will also see the interrupt.
+> =
+
+> >
+> >Is there a good way to test an interrupt to see if it's edge or level
+> >type configured? And is it really a problem to make PDC the hierarchical
+> >parent of TLMM here so that PDC can intercept the type and wake state of
+> >the GPIO irq?
+> Alternately, could we just return the PDC interrupt in gpio_to_irq() and
+> let the driver manipulate only the PDC interrupt ? Ofcourse, drivers
+> that request the GPIO as interrupt in DT, would now have to request the
+> PDC interrupt directly. That could avoid the dance during every
+> idle/suspend. I am not sure how nice it is do this, would like to know
+> your thoughts.
+> =
+
+
+I hope it doesn't come to that.
