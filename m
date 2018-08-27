@@ -1,61 +1,71 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH v2 2/9] drm/mediatek: fix OF sibling-node lookup
-Date: Mon, 27 Aug 2018 10:21:46 +0200
-Message-ID: <20180827082153.22537-3-johan@kernel.org>
+Subject: [PATCH v2 5/9] mtd: nand: atmel: fix OF child-node lookup
+Date: Mon, 27 Aug 2018 10:21:49 +0200
+Message-ID: <20180827082153.22537-6-johan@kernel.org>
 References: <20180827082153.22537-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180827082153.22537-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Junzhi Zhao <junzhi.zhao@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>, David Airlie <airlied@linux.ie>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, stable <stable@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Use the new of_get_compatible_child() helper to lookup the sibling
-instead of using of_find_compatible_node(), which searches the entire
-tree from a given start node and thus can return an unrelated (i.e.
-non-sibling) node.
+Use the new of_get_compatible_child() helper to lookup the nfc child
+node instead of using of_find_compatible_node(), which searches the
+entire tree from a given start node and thus can return an unrelated
+(i.e. non-child) node.
 
 This also addresses a potential use-after-free (e.g. after probe
 deferral) as the tree-wide helper drops a reference to its first
-argument (i.e. the parent device node).
+argument (i.e. the node of the device being probed).
 
-While at it, also fix the related cec-node reference leak.
+While at it, also fix a related nfc-node reference leak.
 
-Fixes: 8f83f26891e1 ("drm/mediatek: Add HDMI support")
-Cc: stable <stable@vger.kernel.org>     # 4.8
-Cc: Junzhi Zhao <junzhi.zhao@mediatek.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: CK Hu <ck.hu@mediatek.com>
-Cc: David Airlie <airlied@linux.ie>
+Fixes: f88fc122cc34 ("mtd: nand: Cleanup/rework the atmel_nand driver")
+Cc: stable <stable@vger.kernel.org>     # 4.11
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Josh Wu <rainyfeeling@outlook.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/atmel/nand-controller.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 2d45d1dd9554..643f5edd68fe 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1446,8 +1446,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
+index a068b214ebaa..d3dfe63956ac 100644
+--- a/drivers/mtd/nand/raw/atmel/nand-controller.c
++++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
+@@ -2061,8 +2061,7 @@ atmel_hsmc_nand_controller_legacy_init(struct atmel_hsmc_nand_controller *nc)
+ 	int ret;
+ 
+ 	nand_np = dev->of_node;
+-	nfc_np = of_find_compatible_node(dev->of_node, NULL,
+-					 "atmel,sama5d3-nfc");
++	nfc_np = of_get_compatible_child(dev->of_node, "atmel,sama5d3-nfc");
+ 
+ 	nc->clk = of_clk_get(nfc_np, 0);
+ 	if (IS_ERR(nc->clk)) {
+@@ -2472,15 +2471,19 @@ static int atmel_nand_controller_probe(struct platform_device *pdev)
  	}
  
- 	/* The CEC module handles HDMI hotplug detection */
--	cec_np = of_find_compatible_node(np->parent, NULL,
--					 "mediatek,mt8173-cec");
-+	cec_np = of_get_compatible_child(np->parent, "mediatek,mt8173-cec");
- 	if (!cec_np) {
- 		dev_err(dev, "Failed to find CEC node\n");
- 		return -EINVAL;
-@@ -1457,8 +1456,10 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	if (!cec_pdev) {
- 		dev_err(hdmi->dev, "Waiting for CEC device %pOF\n",
- 			cec_np);
-+		of_node_put(cec_np);
- 		return -EPROBE_DEFER;
- 	}
-+	of_node_put(cec_np);
- 	hdmi->cec_dev = &cec_pdev->dev;
+ 	if (caps->legacy_of_bindings) {
++		struct device_node *nfc_node;
+ 		u32 ale_offs = 21;
  
- 	/*
+ 		/*
+ 		 * If we are parsing legacy DT props and the DT contains a
+ 		 * valid NFC node, forward the request to the sama5 logic.
+ 		 */
+-		if (of_find_compatible_node(pdev->dev.of_node, NULL,
+-					    "atmel,sama5d3-nfc"))
++		nfc_node = of_get_compatible_child(pdev->dev.of_node,
++						   "atmel,sama5d3-nfc");
++		if (nfc_node) {
+ 			caps = &atmel_sama5_nand_caps;
++			of_node_put(nfc_node);
++		}
+ 
+ 		/*
+ 		 * Even if the compatible says we are dealing with an
 -- 
 2.18.0
