@@ -1,86 +1,124 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: rsnd: Add r8a774a1 support" to the asoc
-	tree
-Date: Tue, 28 Aug 2018 21:28:56 +0100 (BST)
-Message-ID: <20180828202856.DEDB2440078@finisterre.ee.mobilebroadband>
-References: <1534869748-26661-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [Patch v15 4/5] dt-bindings: arm-smmu: Add bindings for
+ qcom,smmu-v2
+Date: Tue, 28 Aug 2018 15:34:18 -0500
+Message-ID: <20180828203418.GA18366@bogus>
+References: <20180827105551.16346-1-vivek.gautam@codeaurora.org>
+ <20180827105551.16346-5-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1534869748-26661-1-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon Horman <horms@verge.net.au>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180827105551.16346-5-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: joro@8bytes.org, robin.murphy@arm.com, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, freedreno@lists.freedesktop.org, alex.williamson@redhat.com, mark.rutland@arm.com, rjw@rjwysocki.net, robdclark@gmail.com, andy.gross@linaro.org, linux-pm@vger.kernel.org, sboyd@kernel.org, tfiga@chromium.org, jcrouse@codeaurora.org, sricharan@codeaurora.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Mon, Aug 27, 2018 at 04:25:50PM +0530, Vivek Gautam wrote:
+> Add bindings doc for Qcom's smmu-v2 implementation.
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+> 
+> Changes since v14:
+>  - This is a new patch added in v15 after noticing the new
+>    checkpatch warning for separate dt-bindings doc.
+>  - This patch also addresses comments given by Rob and Robin to add
+>    a list of valid values of '<soc>' in "qcom,<soc>-smmu-v2"
+>    compatible string.
+> 
+>  .../devicetree/bindings/iommu/arm,smmu.txt         | 47 ++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index 8a6ffce12af5..52198a539606 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -17,10 +17,24 @@ conditions.
+>                          "arm,mmu-401"
+>                          "arm,mmu-500"
+>                          "cavium,smmu-v2"
+> +                        "qcom,<soc>-smmu-v2", "qcom,smmu-v2"
 
-   ASoC: rsnd: Add r8a774a1 support
+The v2 in the compatible string is kind of redundant unless the SoC has 
+other SMMU types.
 
-has been applied to the asoc tree at
+>  
+>                    depending on the particular implementation and/or the
+>                    version of the architecture implemented.
+>  
+> +                  A number of Qcom SoCs use qcom,smmu-v2 version of the IP.
+> +                  "qcom,<soc>-smmu-v2" represents a soc specific compatible
+> +                  string that should be present along with the "qcom,smmu-v2"
+> +                  to facilitate SoC specific clocks/power connections and to
+> +                  address specific bug fixes.
+> +                  '<soc>' string in "qcom,<soc>-smmu-v2" should be one of the
+> +                  following:
+> +                  msm8996 - for msm8996 Qcom SoC.
+> +                  sdm845 - for sdm845 Qcom Soc.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Rather than all this prose, it would be simpler to just add 2 lines with 
+the full compatibles rather than <soc>. The <soc> thing is not going to 
+work when/if we move bindings to json-schema also.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> +
+> +                  An example string would be -
+> +                  "qcom,msm8996-smmu-v2", "qcom,smmu-v2".
+> +
+>  - reg           : Base address and size of the SMMU.
+>  
+>  - #global-interrupts : The number of global interrupts exposed by the
+> @@ -71,6 +85,22 @@ conditions.
+>                    or using stream matching with #iommu-cells = <2>, and
+>                    may be ignored if present in such cases.
+>  
+> +- clock-names:    List of the names of clocks input to the device. The
+> +                  required list depends on particular implementation and
+> +                  is as follows:
+> +                  - for "qcom,smmu-v2":
+> +                    - "bus": clock required for downstream bus access and
+> +                             for the smmu ptw,
+> +                    - "iface": clock required to access smmu's registers
+> +                               through the TCU's programming interface.
+> +                  - unspecified for other implementations.
+> +
+> +- clocks:         Specifiers for all clocks listed in the clock-names property,
+> +                  as per generic clock bindings.
+> +
+> +- power-domains:  Specifiers for power domains required to be powered on for
+> +                  the SMMU to operate, as per generic power domain bindings.
+> +
+>  ** Deprecated properties:
+>  
+>  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
+> @@ -137,3 +167,20 @@ conditions.
+>                  iommu-map = <0 &smmu3 0 0x400>;
+>                  ...
+>          };
+> +
+> +	/* Qcom's arm,smmu-v2 implementation */
+> +	smmu4: iommu {
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Needs a unit-address.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 6fbf9d8e2793b81dd5f8738999163582ce61dba7 Mon Sep 17 00:00:00 2001
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Date: Tue, 21 Aug 2018 17:42:28 +0100
-Subject: [PATCH] ASoC: rsnd: Add r8a774a1 support
-
-Document RZ/G2M (R8A774A1) SoC bindings.
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-index 9e764270c36b..8083f0d8f263 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -340,10 +340,11 @@ Required properties:
- - compatible			: "renesas,rcar_sound-<soctype>", fallbacks
- 				  "renesas,rcar_sound-gen1" if generation1, and
- 				  "renesas,rcar_sound-gen2" if generation2 (or RZ/G1)
--				  "renesas,rcar_sound-gen3" if generation3
-+				  "renesas,rcar_sound-gen3" if generation3 (or RZ/G2)
- 				  Examples with soctypes are:
- 				    - "renesas,rcar_sound-r8a7743" (RZ/G1M)
- 				    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
-+				    - "renesas,rcar_sound-r8a774a1" (RZ/G2M)
- 				    - "renesas,rcar_sound-r8a7778" (R-Car M1A)
- 				    - "renesas,rcar_sound-r8a7779" (R-Car H1)
- 				    - "renesas,rcar_sound-r8a7790" (R-Car H2)
--- 
-2.18.0
+> +		compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
+> +		reg = <0xd00000 0x10000>;
+> +
+> +		#global-interrupts = <1>;
+> +		interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
+> +		#iommu-cells = <1>;
+> +		power-domains = <&mmcc MDSS_GDSC>;
+> +
+> +		clocks = <&mmcc SMMU_MDP_AXI_CLK>,
+> +			 <&mmcc SMMU_MDP_AHB_CLK>;
+> +		clock-names = "bus", "iface";
+> +	};
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
