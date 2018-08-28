@@ -1,49 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/4] of/unittest: remove use of node name pointer in overlay high level test
-Date: Tue, 28 Aug 2018 10:52:51 -0500
-Message-ID: <20180828155254.10709-2-robh@kernel.org>
-References: <20180828155254.10709-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828155254.10709-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] Fix file permission for am335x-osd3358-sm-red.dts
+Date: Tue, 28 Aug 2018 08:53:51 -0700
+Message-ID: <20180828155351.GN7523@atomide.com>
+References: <20180828153816.1152-1-neeraj.dantu@octavosystems.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180828153816.1152-1-neeraj.dantu@octavosystems.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neeraj Dantu <dantuguf14105@gmail.com>
+Cc: devicetree@vger.kernel.org, Jason Kridner <jkridner@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>, linux-omap@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation for removing the node name pointer, it needs to be
-removed from of_unittest_overlay_high_level. However, it's not really
-correct to use the node name without the unit-address and we should use
-the full node name. This most easily done by iterating over the child
-nodes with for_each_child_of_node() which is what of_get_child_by_name()
-does internally. While at it, we might as well convert the outer loop to
-use for_each_child_of_node() too instead of open coding it.
+* Neeraj Dantu <dantuguf14105@gmail.com> [180828 15:42]:
+> OSD3358-SM-RED is a dev board for OSD335x System-in-Package(SiP) devices from
+> Octavo Systems.
+> 
+> This board family can be indentified by the A335BNLTOS00 in the at24 eeprom:
+> A2: [aa 55 33 ee 41 33 33 35  42 4e 4c 54 4f 53 30 30 |.U3.A335BNLTOS00|]
+> 
+> https://octavosystems.com/octavo_products/osd3358-sm-red/
 
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/of/unittest.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Hmm can you please repost with a correct patch description?
+Something along the lines of:
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 722537e14848..69a522e48970 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -2347,10 +2347,12 @@ static __init void of_unittest_overlay_high_level(void)
- 		}
- 	}
- 
--	for (np = overlay_base_root->child; np; np = np->sibling) {
--		if (of_get_child_by_name(of_root, np->name)) {
--			unittest(0, "illegal node name in overlay_base %s",
--				np->name);
-+	for_each_child_of_node(overlay_base_root, np) {
-+		struct device_node *base_child;
-+		for_each_child_of_node(of_root, base_child) {
-+			if (!strcmp(np->full_name, base_child->full_name))
-+				unittest(0, "illegal node name in overlay_base %pOFn",
-+					np);
- 			return;
- 		}
- 	}
--- 
-2.17.1
+Fix wrong mode for dts file added by commit bb3e3fbbac86
+("ARM: dts: Add DT support for Octavo Systems OSD3358-SM-RED
+based on TI AM335x").
+
+Regards,
+
+Tony
+
+> Signed-off-by: Neeraj Dantu <neeraj.dantu@octavosystems.com>
+> CC: Tony Lindgren <tony@atomide.com>
+> CC: Robert Nelson <robertcnelson@gmail.com>
+> CC: Jason Kridner <jkridner@gmail.com>
+> ---
+> Changes:
+> - Fix file permission
+> ---
+>  arch/arm/boot/dts/am335x-osd3358-sm-red.dts | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  mode change 100755 => 100644 arch/arm/boot/dts/am335x-osd3358-sm-red.dts
+> 
+> diff --git a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
+> old mode 100755
+> new mode 100644
+> -- 
+> 2.7.4
+> 
