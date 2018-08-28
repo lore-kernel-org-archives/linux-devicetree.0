@@ -1,38 +1,55 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add USB-DMAC and
- HSUSB device nodes
-Date: Tue, 28 Aug 2018 15:17:39 +0200
-Message-ID: <20180828131738.rqhiamruboaggxfz@verge.net.au>
-References: <1535107429-5458-1-git-send-email-biju.das@bp.renesas.com>
- <1535107429-5458-3-git-send-email-biju.das@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1535107429-5458-3-git-send-email-biju.das@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-arm-kernel@lists.infradead.org
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v2 00/11] Another round of tsens cleanups
+Date: Tue, 28 Aug 2018 19:08:29 +0530
+Message-ID: <cover.1535462942.git.amit.kucheria@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 24, 2018 at 11:43:48AM +0100, Biju Das wrote:
-> Add usb dmac and hsusb device nodes on RZ/G2M SoC dtsi.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+This is another series of tsens cleanups before we add interrupt support. This applies on top of 4.19-rc1.
 
-Thanks,
+In this series, we have the following:
+- splitup 8916 and 8974 register address spaces for SROT and TM
+- cleanups: move to spdx, dead code removal, removal of id field
+- Add support to map the SROT address space for DTs that list it separately
+- Check if TSENS IP is enabled in firmware by querying the SROT space
+- Add reg-names property to get more readable outputs in /proc/iomem
+- Add myself as maintainer of tsens
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
+Changes since v1:
+- Split up changes that split the address space and added qcom,sensors
+  property into two separate patches
+- Remove brackets in typo correction patch
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Amit Kucheria (11):
+  arm/arm64: dts: msm8974/msm8916: thermal: Split address space into two
+  arm/arm64: dts: msm8974/msm8916: thermal: Add "qcom,sensors" property
+  dt-bindings: thermal: Fix a typo in documentation
+  thermal: tsens: Add SPDX license identifiers
+  thermal: tsens: Get rid of dead code
+  thermal: tsens: Rename map field in order to add a second address map
+  thermal: tsens: Add the SROT address map
+  thermal: tsens: Check if the IP is correctly enabled by firmware
+  thermal: tsens: Get rid of 'id' field
+  arm64: dts: qcom: Add reg-names for all tsens nodes
+  MAINTAINERS: Add entry for Qualcomm TSENS thermal drivers
+
+ .../devicetree/bindings/thermal/thermal.txt   |  2 +-
+ MAINTAINERS                                   |  7 +++
+ arch/arm/boot/dts/qcom-msm8974.dtsi           |  7 ++-
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |  7 ++-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  2 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  2 +
+ drivers/thermal/qcom/tsens-8916.c             | 11 +---
+ drivers/thermal/qcom/tsens-8960.c             | 41 +++++-------
+ drivers/thermal/qcom/tsens-8974.c             | 11 +---
+ drivers/thermal/qcom/tsens-common.c           | 62 ++++++++++++-------
+ drivers/thermal/qcom/tsens-v2.c               |  6 +-
+ drivers/thermal/qcom/tsens.c                  | 21 +------
+ drivers/thermal/qcom/tsens.h                  | 24 +++----
+ 13 files changed, 99 insertions(+), 104 deletions(-)
+
+-- 
+2.17.1
