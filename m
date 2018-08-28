@@ -1,37 +1,76 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: r8a774a1: Add USB3.0 device nodes
-Date: Tue, 28 Aug 2018 15:42:05 +0200
-Message-ID: <20180828134201.npegmd2js66db5rt@verge.net.au>
-References: <1535107429-5458-1-git-send-email-biju.das@bp.renesas.com>
- <1535107429-5458-4-git-send-email-biju.das@bp.renesas.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
+Date: Tue, 28 Aug 2018 15:45:53 +0200
+Message-ID: <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
+References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
+ <20180824122308.3092-1-linus.walleij@linaro.org>
+ <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1535107429-5458-4-git-send-email-biju.das@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 24, 2018 at 11:43:49AM +0100, Biju Das wrote:
-> Add usb3.0 phy, host and function device nodes on RZ/G2M SoC dtsi.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
-Thanks,
-
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+T24gTW9uLCBBdWcgMjcsIDIwMTggYXQgMTo1MyBQTSBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNh
+bXN1bmcuY29tPiB3cm90ZToKCj4gT24gMjQuMDguMjAxOCAxNDoyMywgTGludXMgV2FsbGVpaiB3
+cm90ZToKPiA+IFRoaXMgYWRkcyBiaW5kaW5ncyBmb3IgYSB2aXJ0dWFsIGRpc3BsYXkgdG8gYmUg
+dXNlZCB3aXRoIGRpc3BsYXlzCj4gPiBpbnNpZGUgZW50aXJlbHkgdmlydHVhbCBlbnZpcm9ubWVu
+dHMgd2hpY2ggZG8gbm90IGVtdWxhdGUgdGhpbmdzCj4gPiBsaWtlIG1vbml0b3JzIGJ1dCBqdXN0
+IG5lZWQgdGltaW5nIGluZm9ybWF0aW9uIHRvIGJlIHN1cHBsaWVkIHRvCj4gPiBpdHMgZGlzcGxh
+eSBjb250cm9sbGVyLgo+ID4KPiA+IFRoaXMgaXMgaW5zcGlyZWQgYnkgZWFybGllciB3b3JrIGJ5
+IExpdml1IER1ZGF1Lgo+Cj4gSWYgdGhpcyBpcyBwdXJlIHZpcnR1YWwgdGhlbiBpdCBzaG91bGQg
+YmUgY29ubmVjdGVkIHRvIG90aGVyIHB1cmUKPiB2aXJ0dWFsIGNvbXBvbmVudHMuCgpPSyBpdCdz
+IGEgYml0IG9mIGhhbGYtaGFsZiBidXQgb3V0c2lkZSBvZiBteSBncmFzcCwgSSBhbSBqdXN0IHRy
+eWluZwp0byBzdXBwb3J0IGxlZ2FjeSBzeXN0ZW1zLgoKVGhlIGRldmljZSB0cmVlIGlzIHRoZXJl
+OgphcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9ydHNtX3ZlLWFlbXY4YS5kdHMKYXJjaC9hcm02NC9i
+b290L2R0cy9hcm0vcnRzbV92ZS1tb3RoZXJib2FyZC5kdHNpCgpUaGUgbGF0dGVyIGNvbnRhaW5z
+IHRoZSBDTENEIHdoaWNoIGlzIHRoZSBkaXNwbGF5IGRyaXZlci4KCkluIFJUU00sIHdoaWNoIGlz
+IGFuIEFSTSBwcm9kdWN0IEkgZG8gbm90IGRldmVsb3AgYW5kCmNhbm5vdCBtYWtlIGNoYW5nZXMg
+dG8sIHRoZXJlIGlzIGFuIGVtdWxhdGVkIENMQ0QuIFNvCnRoYXQgcGFydCBhcHBlYXIgYXMgaWYg
+aXQgd2FzIHJlYWwgaGFyZHdhcmUuIExpa2UgaW4gUUVNVS4KCkJ1dCB0aGUgZGlzcGxheSBkb2Vz
+IG5vdCBoYXZlIGFueSBlbXVsYXRpb24uIFRoZSByYXcKb3V0cHV0IGZyb20gdGhlIENMQ0QgaXMg
+bGF0Y2hlZCBvdXQgdG8gdGhlIHNjcmVlbi4KCkkgZG8gbm90IGtub3cgZXhhY3RseSBrbm93IGhv
+dyB0aGUgUlRTTSBlbXVsYXRvcgphY3R1YWxseSB3b3JrcywgYnV0IEkgc3VzcGVjdCB0aGF0IHRo
+ZSBsaXR0bGUgZ3JhcGhpYyB3aW5kb3cKb24gdGhlIHNjcmVlZW4gYWRhcHRzIHRvIHdoYXQgZ2V0
+cyB3cml0dGVuIGludG8gdGhlCkNMQ0QgY29udHJvbCByZWdpc3RlcnMsIHNvIGFueXRoaW5nIGdv
+ZXMsIG1vcmUgb3IgbGVzcy4KClRvIHNhdGlzZnkgdGhlIENMQ0Qgd2l0aCBzb21lIHRpbWluZ3Mg
+YW5kIHJlc29sdXRpb24sCnRoaXMgYnJpZGdlIGdpdmVzIGl0IHRoYXQsIGZyb20gdGhlIGRldmlj
+ZSB0cmVlLCBpbiBhIHdheQp0aGF0IGNsZWFybHkgY29udmV5cyB0aGF0ICJ0aGlzIGlzIG5vdCBh
+IHJlYWwgdGhpbmciLgoKVGhlIG9sZCBjb2RlIHVzZXMgRFBJLiBUaGlzIGlzIG5vdCBEUEksIG5v
+dCBldmVuIGNsb3NlCnRvIGl0LiBJdCB3b3JrZWQgc2ltcGx5IGJlY2F1c2UgYWxsIHRoZSBEUEkg
+cmVhbGx5IGRvZXMgaXMKd2hhdCB0aGlzIHBhdGNoIGRvZXM6IHByb3ZpZGUgdGltaW5ncy4KCkJ5
+IGNvbnRyYXN0IG9uIFFFTVUgSSBoYXZlIHBhdGNoZXMgdGhlIGVtdWxhdG9yIHRvCnByb3Blcmx5
+IHJlcHJlc2VudCB0aGUgSTJDIEREQyBsaW5rIGFuZCBwcm92aWRlIEVESUQKc28gdGhhdCBpcyBh
+bGwgZmluZS4KCkkgY2Fubm90IHBhdGNoIFJUU00gdG8gZW11bGF0ZSBJMkMgYW5kIEREQy4gSXQn
+cyBub3QKb3BlbiBzb3VyY2UuIEJ1dCB0aGUgZGV2aWNlIHRyZWUgaW4gdGhlIGtlcm5lbCBzdXBw
+b3J0cwp0aGlzICJtYWNoaW5lIiBhbmQgc28sIEkgaGF2ZSB0byBtYWludGFpbiBpdCB3aGVuIG1v
+ZGVybml6bmcKdGhlIGZiZGV2IGRyaXZlciB0byBhIERSTSBkcml2ZXIuCgpJJ20gc29ycnkgUlRT
+TSBpcyBoYWxmL2hhbGYuIE5vdCBteSBmYXVsdC4gSSBjYW4ndCBmaXguLi4KCj4gQW5kIG9uZSBt
+b3JlIHRoaW5nLCB5b3UgYXJlIGRlZmluaW5nIHZpcnR1YWwgcGFuZWwgYnV0IHlvdSBhcmUgdXNp
+bmcKPiBkcm1fYnJpZGdlIGZyYW1ld29yaywgd2h5IG5vdCBkcm1fcGFuZWw/CgpUaGlzIHdhcyBk
+aXNjdXNzZWQgYmVmb3JlIGluIHRoZSBwcmV2aW91cyBwYXRjaCBzZXQ6Cmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE4LUp1bHkvMTgzNTE2Lmh0bWwK
+CkVzc2VudGlhbGx5LCBpdCdzIGJlY2F1c2UgdGhlIGRpc3BsYXkgZHJpdmVyIGlzIGp1c3QgY29u
+bmVjdGVkCnRvICJzb21ldGhpbmciIG5vdCBhIHBhbmVsIGFuZCBhIGJyaWRnZSBpcyBsaWtlbHkg
+dGhlIGJlc3QgSQpjYW4gY29tZSB1cCB3aXRoIC0gYSBicmlkZ2Ugb3ZlciB0byBhIHZpcnR1YWwg
+ZGlzcGxheS4KCkEgcGF0Y2ggdG8gYWRkICJWR0EiLCAiU0dBIiBhbmQgIlhHQSIgdG8gdGhlIHNp
+bXBsZSBwYW5lbHMKd2FzIE5BQ0tlZCAoc29ydCBvZiwgcG9saXRlbHkpOgpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1KdWx5LzE4MzY5OC5odG1s
+CgpBbHNvIGl0IHdhcyBub3RlZCB0aGF0IGl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBzb21ldGhp
+bmcgdGhhdAp3b3VsZCBtYWtlIGl0IGVhc3kgdG8gY2hhbmdlIHJlc29sdXRpb25zIG9uIHRoZXNl
+IHZpcnR1YWwKZGlzcGxheSB0aGluZ3MuIFZvaWxhLgoKWW91cnMsCkxpbnVzIFdhbGxlaWoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
