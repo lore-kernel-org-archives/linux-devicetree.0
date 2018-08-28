@@ -1,112 +1,87 @@
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Subject: Re: [PATCH v5 1/2] devicetree/bindings: display: Add document for
- rockchip RGB output
-Date: Tue, 28 Aug 2018 10:31:15 +0200
-Message-ID: <2858027f-69f5-57ee-d14a-2f0b329e8e0e@ysoft.com>
-References: <1535443954-38806-1-git-send-email-hjc@rock-chips.com>
- <1535443954-38806-2-git-send-email-hjc@rock-chips.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH] remoteproc: qcom: adsp: Add SDM845 ADSP and CDSP support
+Date: Tue, 28 Aug 2018 14:13:49 +0530
+Message-ID: <bc66f41f8e96e92af424af473cd746d5@codeaurora.org>
+References: <20180828071458.26858-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535443954-38806-2-git-send-email-hjc@rock-chips.com>
-Content-Language: en-US
+In-Reply-To: <20180828071458.26858-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sandy Huang <hjc@rock-chips.com>, heiko@sntech.de, robh@kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28.8.2018 10:12, Sandy Huang wrote:
-> This path add support rv1108 and px30 rgb output interface driver.
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
 
-Hi Sandy,
-Seems like you forgot to address Rob's comment regarding the "driver" word.
-Also fix the typo: s/path/patch
-The subject could be improved as well: s/devicetree\/bindings/dt-bindings
-
-Best regards, Michal
+On 2018-08-28 12:44, Bjorn Andersson wrote:
+> Add support for booting the Audio and Compute DSPs found in Qualcomm's
+> SDM845 platform.
 > 
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-> Link: https://patchwork.freedesktop.org/patch/msgid/1509522765-118759-1-git-send-email-hjc@rock-chips.com
+> As with the previous platforms the power rail handling needs to be
+> updated once the appropriate support lands upstream.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->   .../bindings/display/rockchip/rockchip-rgb.txt     | 70 ++++++++++++++++++++++
->   1 file changed, 70 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+>  .../devicetree/bindings/remoteproc/qcom,adsp.txt     |  2 ++
+>  drivers/remoteproc/qcom_q6v5_pas.c                   | 12 ++++++++++++
+>  2 files changed, 14 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
-> new file mode 100644
-> index 0000000..1f4909c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
-> @@ -0,0 +1,70 @@
-> +Rockchip RV1108 RGB interface
-> +================================
-> +
-> +Required properties:
-> +- compatible: matching the soc type:
-> +	- "rockchip,px30-rgb";
-> +	- "rockchip,rv1108-rgb";
-> +
-> +Optional properties:
-> +- pinctrl-names: should be a "lcdc" entry or a "default" entry.
-> +- pinctrl-0: pin control group to be used for this interface.
-> +
-> +The rgb has two video ports described by:
-> +	Documentation/devicetree/bindings/media/video-interfaces.txt
-> +Their connections are modeled using the OF graph bindings specified in
-> +	Documentation/devicetree/bindings/graph.txt.
-> +
-> +- video port 0 for the VOP input, the remote endpoint maybe vopb/vopl/vop
-> +- video port 1 for either a panel or subsequent encoder
-> +
-> +the panel described by:
-> +	Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> +Panel other required properties:
-> +- ports for remote rgb output.
-> +
-> +Example:
-> +
-> +panel: panel {
-> +	compatible = "auo,b101ean01";
-> +	enable-gpios = <&gpio7 21 GPIO_ACTIVE_HIGH>;
-> +
-> +	ports {
-> +		panel_in_rgb: endpoint {
-> +			remote-endpoint = <&rgb_out_panel>;
-> +		};
-> +	};
+> diff --git
+> a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> index 728e4193f7a6..b7d058228185 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> @@ -10,6 +10,8 @@ on the Qualcomm ADSP Hexagon core.
+>  		    "qcom,msm8974-adsp-pil"
+>  		    "qcom,msm8996-adsp-pil"
+>  		    "qcom,msm8996-slpi-pil"
+> +		    "qcom,sdm845-adsp-pas"
+> +		    "qcom,sdm845-cdsp-pas"
+> 
+>  - interrupts-extended:
+>  	Usage: required
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c
+> b/drivers/remoteproc/qcom_q6v5_pas.c
+> index 2478ef3cd519..53eff2afda06 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -342,6 +342,16 @@ static const struct adsp_data adsp_resource_init = 
+> {
+>  		.ssctl_id = 0x14,
+>  };
+> 
+> +static const struct adsp_data cdsp_resource_init = {
+> +	.crash_reason_smem = 601,
+> +	.firmware_name = "cdsp.mdt",
+> +	.pas_id = 18,
+> +	.has_aggre2_clk = false,
+> +	.ssr_name = "cdsp",
+> +	.sysmon_name = "cdsp",
+> +	.ssctl_id = 0x17,
 > +};
 > +
-> +For Rockchip RV1108:
-> +
-> +	rgb: rgb {
-> +		compatible = "rockchip,rv1108-rgb";
-> +		pinctrl-names = "lcdc";
-> +		pinctrl-0 = <&lcdc_ctl>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			rgb_in: port@0 {
-> +				reg = <0>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				rgb_in_vop: endpoint {
-> +					remote-endpoint = <&vop_out_rgb>;
-> +				};
-> +			};
-> +
-> +			rgb_out: port@1 {
-> +				reg = <1>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				rgb_out_panel: endpoint {
-> +					remote-endpoint = <&panel_in_rgb>;
-> +				};
-> +			};
-> +		};
-> +	};
-> 
+>  static const struct adsp_data slpi_resource_init = {
+>  		.crash_reason_smem = 424,
+>  		.firmware_name = "slpi.mdt",
+> @@ -355,6 +365,8 @@ static const struct adsp_data slpi_resource_init = 
+> {
+>  static const struct of_device_id adsp_of_match[] = {
+>  	{ .compatible = "qcom,msm8974-adsp-pil", .data = 
+> &adsp_resource_init},
+>  	{ .compatible = "qcom,msm8996-adsp-pil", .data = 
+> &adsp_resource_init},
+>  	{ .compatible = "qcom,msm8996-slpi-pil", .data = 
+> &slpi_resource_init},
+> +	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
+> +	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
+>  	{ },
+>  };
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
