@@ -1,47 +1,66 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 1/2] GPIO: add single-register gpio via creg driver
-Date: Tue, 28 Aug 2018 11:15:47 -0700
-Message-ID: <024be088-15ff-89ed-3766-09eb64e47342@infradead.org>
-References: <20180828112721.28178-1-Eugeniy.Paltsev@synopsys.com>
- <20180828112721.28178-2-Eugeniy.Paltsev@synopsys.com>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 9/9] arm64: dts: Add interconnect for the
+ GPU on SDM845
+Date: Tue, 28 Aug 2018 12:16:58 -0600
+Message-ID: <20180828181658.GA7254@jcrouse-lnx.qualcomm.com>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-10-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828112721.28178-2-Eugeniy.Paltsev@synopsys.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, linux-snps-arc@lists.infradead.org, linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180827151112.25211-10-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-I don't see any updates/corrections here.  :(
-
-On 08/28/2018 04:27 AM, Eugeniy Paltsev wrote:
-
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 71c0ab46f216..0f9cc1582cab 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -430,6 +430,15 @@ config GPIO_REG
->  	  A 32-bit single register GPIO fixed in/out implementation.  This
->  	  can be used to represent any register as a set of GPIO signals.
->  
-> +config GPIO_SNPS_CREG
-> +	bool "GPIO via CREG (Control REGisers) driver"
-> +	select OF_GPIO
-> +	help
-> +	  This driver supports GPIOs via CREG on various Synopsys SoCs.
-> +	  This is is single-register MMIO gpio driver for complex cases
-> +	  where only several fields in register belong to GPIO and
-> +	  each GPIO owns field with different length and on/off values.
-> +
->  config GPIO_SPEAR_SPICS
->  	bool "ST SPEAr13xx SPI Chip Select as GPIO support"
->  	depends on PLAT_SPEAR
-
-
--- 
-~Randy
+T24gTW9uLCBBdWcgMjcsIDIwMTggYXQgMDk6MTE6MTJBTSAtMDYwMCwgSm9yZGFuIENyb3VzZSB3
+cm90ZToKPiBBZGQgdGhlIGludGVyY29ubmVjdCBwcm9wZXJ0aWVzIGZvciB0aGUgR1BVIG9uIFNE
+TTg0NQo+IGFuZCBzZXQgdGhlIGNvcnJlc3BvbmRpbmcgT1BQIGJhbmR3aWR0aCB2YWx1ZXMuCj4g
+Cj4gU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4K
+PiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIHwgMTAgKysrKysr
+KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBpbmRleCAxMGRiMGNlYjM2OTkuLjFlNjdmNGZkZDdkMSAx
+MDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtMTk4LDM2ICsxOTgs
+NDMgQEAgZ3B1X29wcF90YWJsZTogYWRyZW5vLW9wcC10YWJsZSB7Cj4gIAkJb3BwLTcxMDAwMDAw
+MCB7Cj4gIAkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NzEwMDAwMDAwPjsKPiAgCQkJcWNvbSxsZXZl
+bCA9IDw0MTY+Owo+ICsJCQlvcHAtaW50ZXJjb25uZWN0LWJ3LXBvcnQwID0gL2JpdHMvIDY0IDww
+IDcyMTYwMDAwMDA+Owo+ICAJCX07Cj4gIAo+ICAJCW9wcC02NzUwMDAwMDAgewo+ICAJCQlvcHAt
+aHogPSAvYml0cy8gNjQgPDY3NTAwMDAwMD47Cj4gIAkJCXFjb20sbGV2ZWwgPSA8Mzg0PjsKPiAr
+CQkJb3BwLWludGVyY29ubmVjdC1idy1wb3J0MCA9IC9iaXRzLyA2NCA8MCA3MjE2MDAwMDAwPjsK
+PiAgCQl9Owo+ICAKPiAgCQlvcHAtNTk2MDAwMDAwIHsKPiAgCQkJb3BwLWh6ID0gL2JpdHMvIDY0
+IDw1OTYwMDAwMDA+Owo+ICAJCQlxY29tLGxldmVsID0gPDMyMD47Cj4gKwkJCW9wcC1pbnRlcmNv
+bm5lY3QtYnctcG9ydDAgPSAvYml0cy8gNjQgPDAgNTE4NDAwMDAwMD47Cj4gIAkJfTsKPiAgCj4g
+IAkJb3BwLTUyMDAwMDAwMCB7Cj4gIAkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NTIwMDAwMDAwPjsK
+PiAgCQkJcWNvbSxsZXZlbCA9IDwyNTY+Owo+ICsJCQlvcHAtaW50ZXJjb25uZWN0LWJ3LXBvcnQw
+ID0gL2JpdHMvIDY0IDwwIDQwNjgwMDAwMDA+Owo+ICAJCX07Cj4gIAo+ICAJCW9wcC00MTQwMDAw
+MDAgewo+ICAJCQlvcHAtaHogPSAvYml0cy8gNjQgPDQxNDAwMDAwMD47Cj4gIAkJCXFjb20sbGV2
+ZWwgPSA8MTkyPjsKPiArCQkJb3BwLWludGVyY29ubmVjdC1idy1wb3J0MCA9IC9iaXRzLyA2NCA8
+MCAzMDcyMDAwMDAwPjsKPiAgCQl9Owo+ICAKPiAgCQlvcHAtMzQyMDAwMDAwIHsKPiAgCQkJb3Bw
+LWh6ID0gL2JpdHMvIDY0IDwzNDIwMDAwMDA+Owo+ICAJCQlxY29tLGxldmVsID0gPDEyOD47Cj4g
+KwkJCW9wcC1pbnRlcmNvbm5lY3QtYnctcG9ydDAgPSAvYml0cy8gNjQgPDAgMjE4ODAwMDAwMD47
+Cj4gIAkJfTsKPiAgCj4gIAkJb3BwLTI1NzAwMDAwMCB7Cj4gIAkJCW9wcC1oeiA9IC9iaXRzLyA2
+NCA8MjU3MDAwMDAwPjsKPiAgCQkJcWNvbSxsZXZlbCA9IDw2ND47Cj4gKwkJCW9wcC1pbnRlcmNv
+bm5lY3QtYnctcG9ydDAgPSAvYml0cy8gNjQgPDAgMTIwMDAwMDAwMD47Cj4gIAkJfTsKPiAgCX07
+Cj4gIAo+IEBAIC00MTgsNiArNDI1LDkgQEAgZ3B1X29wcF90YWJsZTogYWRyZW5vLW9wcC10YWJs
+ZSB7Cj4gIAo+ICAJCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsKPiAg
+Cj4gKwkJCWludGVyY29ubmVjdHMgPSA8JnFub2MgMjYgJnFub2MgNTEyPjsKClBvaW50aW5nIG91
+dCBmb3IgcG9zdGVyaXR5IHRoYXQgdGhlIHNyY19pZCBoZXJlIGlzIGluY29ycmVjdC4gSXQgc2hv
+dWxkIGJlIDM2LgoKSm9yZGFuCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJ
+bmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24g
+Q29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2ZyZWVkcmVubwo=
