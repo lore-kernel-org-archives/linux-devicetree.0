@@ -1,43 +1,73 @@
-Return-Path: <SRS0=EyOi=LL=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH] clk: renesas: cpg-mssr: Add R7S9210 support
-Date: Tue, 28 Aug 2018 18:04:55 +0000
-Message-ID: 
- <TY1PR01MB15620BFB056C2EAB29C928E98A0A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=H6vz=LL=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
 References: <20180821032020.81254-1-chris.brandt@renesas.com>
  <CAMuHMdUVfMgUYat8TR__hiOQEWHXL1EYMN11iMc5TGnhnZALLQ@mail.gmail.com>
  <TY1PR01MB15620184F9EA4E62E21D1D688A0B0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <CAMuHMdVd7wT5vPrHFAgHYqNWtJNjbSG7GaaPaMVD12cfkg8E2A@mail.gmail.com>
- <TY1PR01MB1562485EE3C0F9C5A3827CDD8A0A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <CAMuHMdVBcKP_RTw1B4fty5u5OhStZPydigKVob+7+uc4YWFzDg@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdVBcKP_RTw1B4fty5u5OhStZPydigKVob+7+uc4YWFzDg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+ <CAMuHMdVd7wT5vPrHFAgHYqNWtJNjbSG7GaaPaMVD12cfkg8E2A@mail.gmail.com> <TY1PR01MB1562485EE3C0F9C5A3827CDD8A0A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562485EE3C0F9C5A3827CDD8A0A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 28 Aug 2018 19:35:41 +0200
+Message-ID: <CAMuHMdVBcKP_RTw1B4fty5u5OhStZPydigKVob+7+uc4YWFzDg@mail.gmail.com>
+Subject: Re: [PATCH] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCk9uIFR1ZXNkYXksIEF1Z3VzdCAyOCwgMjAxOCwgR2VlcnQgVXl0dGVyaG9l
-dmVuIHdyb3RlOg0KPiBTZXJpb3VzbHksIHlvdSBkbyBoYXZlIHRvIHByZXZlbnQgcmVnaXN0ZXJp
-bmcgdGhlIHJlc2V0IGNvbnRyb2xsZXIgd2hlbg0KPiBydW5uaW5nIG9uIFJaL0EyIChiYXNlZCBv
-biBjcGdfbXNzcl9pbmZvLnN0YnljdHJsIG9yIHNvbWUgb3RoZXIgaW5kaWNhdG9yKS4NCg0KT0su
-IFNpbmNlIHRoZSByZXNldCBjb250cm9sbGVyIHJlZ2lzdHJhdGlvbiBpcyB0aGUgbGFzdCB0aGlu
-ZyBkb25lIA0KY3BnX21zc3JfcHJvYmUsIEknbGwganVzdCByZXR1cm4uDQoNCisJaWYgKGluZm8t
-PnN0YnljdHJsKQ0KKwkJcmV0dXJuIDA7DQorDQoJZXJyb3IgPSBjcGdfbXNzcl9yZXNldF9jb250
-cm9sbGVyX3JlZ2lzdGVyKHByaXYpOw0KCWlmIChlcnJvcikNCgkJcmV0dXJuIGVycm9yOw0KDQoJ
-cmV0dXJuIDA7DQp9DQoNCg0KPiBXaGVuIHJ1bm5pbmcgb24gUlovQTIsIEknZCB1c2UgYSBkaWZm
-ZXJlbnQgcGFjayBmdW5jdGlvbiBpbg0KPiBjcGdfbXNzcl9jbGtfc3JjX3R3b2NlbGxfZ2V0KCkg
-aW5zdGVhZCwgc28geW91IGNhbiBqdXN0IHdyaXRlOg0KPiANCj4gICAgIGNsb2NrID0gPCZjcGcg
-Q1BHX01PRCAzNj47DQo+IA0KPiA+IHI3czkyMTAtY3BnLW1zc3IuYzoNCj4gPiAtLS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KPiA+IHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXNzcl9tb2RfY2xrIHI3czkyMTBf
-bW9kX2Nsa3NbXSBfX2luaXRjb25zdCA9IHsNCj4gPiAgICAgICAgIERFRl9NT0QoIm9zdG0wIiwg
-ICAgICAgIFNUQkNSX0lEKDM2KSwgICBSN1M5MjEwX0NMS19QMUMpLA0KPiA+ICAgICAgICAgREVG
-X01PRCgib3N0bTEiLCAgICAgICAgU1RCQ1JfSUQoMzUpLCAgIFI3UzkyMTBfQ0xLX1AxQyksDQo+
-ID4gICAgICAgICBERUZfTU9EKCJvc3RtMiIsICAgICAgICBTVEJDUl9JRCgzNCksICAgUjdTOTIx
-MF9DTEtfUDFDKSwNCj4gDQo+IC4uLiBhbmQgYSBkaWZmZXJlbnQgREVGX01PRCgpIG1hY3JvIGhl
-cmUsIHNvIHlvdSBjYW4ganVzdCB3cml0ZToNCj4gDQo+ICAgICBERUZfTU9EKCJvc3RtMCIsICAg
-ICAgICAzNiwgICBSN1M5MjEwX0NMS19QMUMpLA0KDQpPSy4gSSB3aWxsIGRvIHRoYXQgaW5zdGVh
-ZC4NCg0KDQpUaGFuayB5b3UsDQpDaHJpcw0KDQo=
+Hi Chris,
+
+On Tue, Aug 28, 2018 at 7:18 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> Since my config for RZ/A2 does not set CONFIG_RESET_CONTROLLER, none of
+> the reset code is built and cpg_mssr_reset_controller_register() just
+> ends up being an empty function.
+
+Let's try shmobile_defconfig instead :-)
+
+Seriously, you do have to prevent registering the reset controller when
+running on RZ/A2 (based on cpg_mssr_info.stbyctrl or some other indicator).
+
+> So basically my only change at this point is to make DTS and the module
+> clock table use "36" instead of "306".
+>
+> Are you OK with the idea of adding a macro ("STBCR_ID") in
+> include/dt-bindings/clock/renesas-cpg-mssr.h?
+>
+>
+> DTS:
+> --------------------
+>         ostm0: timer@e803b000 {
+>                 compatible = "renesas,r7s9210-ostm", "renesas,ostm";
+>                 reg = <0xe803b000 0x30>;
+>                 interrupts = <GIC_SPI 56 IRQ_TYPE_EDGE_RISING>;
+>                 clocks = <&cpg CPG_MOD STBCR_ID(36)>;
+>                 clock-names = "ostm0";
+>                 power-domains = <&cpg>;
+>                 status = "disabled";
+>         };
+
+When running on RZ/A2, I'd use a different pack function in
+cpg_mssr_clk_src_twocell_get() instead, so you can just write:
+
+    clock = <&cpg CPG_MOD 36>;
+
+> r7s9210-cpg-mssr.c:
+> --------------------
+> static const struct mssr_mod_clk r7s9210_mod_clks[] __initconst = {
+>         DEF_MOD("ostm0",        STBCR_ID(36),   R7S9210_CLK_P1C),
+>         DEF_MOD("ostm1",        STBCR_ID(35),   R7S9210_CLK_P1C),
+>         DEF_MOD("ostm2",        STBCR_ID(34),   R7S9210_CLK_P1C),
+
+... and a different DEF_MOD() macro here, so you can just write:
+
+    DEF_MOD("ostm0",        36,   R7S9210_CLK_P1C),
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
