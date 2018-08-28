@@ -1,67 +1,68 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH 6/7] ARM: dts: ti: add support for building Texas Instruments
- specific overlays
-Date: Tue, 28 Aug 2018 15:32:11 +0300
-Message-ID: <1535459532-17211-7-git-send-email-t-kristo@ti.com>
-References: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
+From: Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Tue, 28 Aug 2018 12:55:20 +0000
+Message-ID: <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <20180719152930.3715-2-boris.brezillon@bootlin.com>
+ <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
+ <20180824143934.6d6b6487@bbrezillon>
+ <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
+ <20180824201600.7d80bca9@bbrezillon>
+ <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
+ <20180828140209.29155d00@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, frowand.list@gmail.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180828140209.29155d00@bbrezillon>
+Content-Language: en-US
+Content-ID: <7221CDCC1D9B3D43B80DADC4629BDEAB@namprd07.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, vitor <Vitor.Soares@synopsys.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@>
 List-Id: devicetree@vger.kernel.org
 
-Add support for TI specific DT subdir, along with support for building
-DT overlays. Right now, no DT files are specified in this directory,
-those are to be added later.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm/boot/dts/Makefile    | 1 +
- arch/arm/boot/dts/ti/Makefile | 9 +++++++++
- 2 files changed, 10 insertions(+)
- create mode 100644 arch/arm/boot/dts/ti/Makefile
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b5bd3de..59a4b63 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -755,6 +755,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
- 	dra72-evm-revc.dtb \
- 	dra71-evm.dtb \
- 	dra76-evm.dtb
-+subdir-$(CONFIG_SOC_DRA7XX) += ti
- dtb-$(CONFIG_ARCH_ORION5X) += \
- 	orion5x-kuroboxpro.dtb \
- 	orion5x-lacie-d2-network.dtb \
-diff --git a/arch/arm/boot/dts/ti/Makefile b/arch/arm/boot/dts/ti/Makefile
-new file mode 100644
-index 0000000..e0203ba
---- /dev/null
-+++ b/arch/arm/boot/dts/ti/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Make file to build device tree binaries for boards based on
-+# Texas Instruments Inc processors
-+#
-+# Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+#
-+
-+DTC_FLAGS += -@
--- 
-1.9.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGkgVml0b3IsDQoNCkkgaGF2ZSBhbHJlYWR5IGltcGxlbWVudGVkIE1hc3RlcnNoaXAgcmVxdWVz
+dC9oYW5kb3ZlciBidXQgd2UgYXJlIHdhaXRpbmcgZm9yIEJvcmlz4oCZcyBwYXRjaCB0byBiZSBh
+Y2NlcHRlZCBhbmQgbWVyZ2VkLiBBbnl3YXksIG15IGNvbW1lbnRzIGJlbG93Lg0KDQrvu79PbiA4
+LzI4LzE4LCAyOjAyIFBNLCAiQm9yaXMgQnJlemlsbG9uIiA8Ym9yaXMuYnJlemlsbG9uQGJvb3Rs
+aW4uY29tPiB3cm90ZToNCg0KICAgIEVYVEVSTkFMIE1BSUwNCiAgICANCiAgICANCiAgICBIaSBW
+aXRvciwNCiAgICANCiAgICBPbiBUdWUsIDI4IEF1ZyAyMDE4IDEyOjUwOjEyICswMTAwDQogICAg
+dml0b3IgPFZpdG9yLlNvYXJlc0BzeW5vcHN5cy5jb20+IHdyb3RlOg0KICAgIA0KICAgID4gSGkg
+Qm9yaXMsDQogICAgPiANCiAgICA+IFRoZSBEVCBCaW5kaW5ncyBzYXkgIlRoZSBub2RlIGRlc2Ny
+aWJpbmcgYW4gSTNDIGJ1cyBzaG91bGQgYmUgbmFtZWQgDQogICAgPiBpM2MtbWFzdGVyLiIuIERv
+IHlvdSBoYXZlIGEgZmllbGQgZm9yIHNlY29uZGFyeSBtYXN0ZXI/DQoNCkkgdGhpbmsgd2UgZG9u
+4oCZdCBuZWVkIHNlcGFyYXRlIGZpZWxkIGZvciBzZWNvbmRhcnkgbWFzdGVyLiBNYWluIGFuZCBz
+ZWNvbmRhcnkgbWFzdGVycyANCnN1cHBvcnQgc2ltaWxhciBmdW5jdGlvbmFsaXRpZXMuIEl04oCZ
+cyBlbm91Z2ggdG8gaGF2ZSB0aGlzIHN0YXRlIGludGVybmFsbHkgYW5kIGRvIG1hc3RlcnNoaXAg
+aXQgaXQncyBuZWVkZWQuDQoNCiAgICA+IA0KICAgID4gT24gMjQtMDgtMjAxOCAxOToxNiwgQm9y
+aXMgQnJlemlsbG9uIHdyb3RlOg0KICAgID4gPiBXZWxsLCBiZWZvcmUgZXZlbiBjb25zaWRlcmlu
+ZyBzdXBwb3J0aW5nIHNlY29uZGFyeSBtYXN0ZXIgcmVnaXN0cmF0aW9uLA0KICAgID4gPiB3ZSBu
+ZWVkIHRvIGhhbmRsZSBtYXN0ZXJzaGlwIGhhbmRvdmVyLiBBcyBmb3IgdGhlIERBQSBvcGVyYXRp
+b24sIGl0J3MNCiAgICA+ID4gbGlrZWx5IHRvIGJlIGhvc3Qgc3BlY2lmaWMsIHNvIHdlJ2xsIGhh
+dmUgdG8gYWRkIGEgbmV3IGhvb2sgdG8gdGhlDQogICAgPiA+IGkzY19tYXN0ZXJfY29udHJvbGxl
+cl9vcHMgc3RydWN0LiAgDQogICAgPiBEbyB5b3UgbWVhbiB3aGVuIG1hc3RlciB0cnkgdG8gZGVs
+ZWdhdGUgdGhlIGJ1cyBvd25lcnNoaXAgdGhyb3VnaCANCiAgICA+IEdFVEFDQ01TVD8gb3IgdG8g
+Z2V0IHRoZSBidXMgb3duZXJzaGlwIHdpdGggSUJJLU1SPw0KICAgIA0KICAgIEkgdGhpbmsgd2Ug
+bmVlZCB0byBzdXBwb3J0IGJvdGguDQoNCkkgYWdyZWUuDQogICAgDQogICAgPiANCiAgICA+IEkg
+dGhpbmsgdGhhdCBjb3VsZCBiZSB1c2VmdWwgdG8gcGFzcyB0aGUgaWJpIHR5cGUgb24gcmVxdWVz
+dF9pYmkoKSwgDQogICAgPiB0aGVyZSBpcyBzb21lIGNhc2Ugd2hlcmUgdGhlIG1hc3RlciBkb2Vz
+bid0IHN1cHBvcnQgSUJJLU1SLg0KICAgIA0KICAgIEFjdHVhbGx5LCBJIHdhcyBwbGFubmluZyBv
+biBtYWtpbmcgaXQgY29tcGxldGVseSBzZXBhcmF0ZSBmcm9tDQogICAgcmVndWxhciBzbGF2ZSBJ
+QklzLiBUaGF0IGlzLCB0aGUgbWFzdGVyIGNvbnRyb2xsZXIgZHJpdmVyIHdvdWxkIGRlbXV4DQog
+ICAgdGhlIHNsYXZlLCBNUiBhbmQgSG90IEpvaW4gSUJJcywgYW5kIGlmIHRoZXJlJ3MgYW4gTVIg
+cmVxdWVzdCwgcXVldWUgYQ0KICAgIG1hc3RlcnNoaXAgaGFuZG92ZXIgd29yayB0byB0aGUgd29y
+a3F1ZXVlIChwcmV0dHkgbXVjaCB3aGF0IHdlIGRvIGZvcg0KICAgIEhvdC1Kb2luIGFscmVhZHkp
+LiBNYXN0ZXJzaGlwIGhhbmRvdmVyIGlzIGFueXdheSBsaWtlbHkgdG8gYmUgSVANCiAgICBzcGVj
+aWZpYywgc28gSSBkb24ndCB0aGluayB0aGVyZSdzIGEgbmVlZCB0byBtYWtlIGl0IGxvb2sgbGlr
+ZSBhDQogICAgcmVndWxhciBJQkkuDQoNCkkgdGhpbmsgaXQncyBiZXR0ZXIgdG8gaGF2ZSBzZXBh
+cmF0ZSBmdW5jdGlvbiB0byBkbyBtYXN0ZXJzaGlwIHJlcXVlc3QuDQogICAgDQogICAgUmVnYXJk
+aW5nIHdoZXRoZXIgSUJJLU1SIHN1cHBvcnQgc2hvdWxkIGJlIGV4cG9zZWQgdG8gdGhlIEkzQyBm
+cmFtZXdvcmsNCiAgICBvciBub3QgZGVwZW5kcyBvbiBob3cgbXVjaCB3aWxsIGJlIGF1dG9tYXRl
+ZCBvbiB0aGUgZnJhbWV3b3JrIHNpZGUuIEkNCiAgICBkb24ndCB0aGUgYW5zd2VyIHlldCwgYnV0
+IHRoYXQncyBwcm9iYWJseSBzb21ldGhpbmcgd2lsbCBmaWd1cmUgb3V0DQogICAgYWxvbmcgdGhl
+IHJvYWQuDQoNCk15IGN1cnJlbnQgaW1wbGVtZW50YXRpb24gaXM6IHdoZW4gcmVxdWVzdF9tYXN0
+ZXJzaGlwIGZpZWxkIA0Kb2YgaTNjX21hc3Rlcl9jb250cm9sbGVyX29wcyBzdHJ1Y3R1cmUgaXMg
+c2V0LCBtYXN0ZXIgZHJpdmVyIHN1cHBvcnRzIG1hc3RlcnNoaXAgcmVxdWVzdHMuDQpUaGF0J3Mg
+aG93IEkgY2hlY2sgaWYgdGhpcyBpcyBzdXBwb3J0ZWQgb3Igbm90Lg0KICAgIA0KICAgIFJlZ2Fy
+ZHMsDQogICAgDQogICAgQm9yaXMNCiAgICANClJlZ2FyZHMsDQpQcnplbWVrDQoNCg==
