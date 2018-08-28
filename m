@@ -1,215 +1,46 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v1] arm64: dts: sdm845: enable tsens thermal zones
-Date: Tue, 28 Aug 2018 21:07:03 +0530
-Message-ID: <CAHLCerOxDvueVoCn7H197x01-kJ2C7C+hNqYT5T1yCNHJAioTQ@mail.gmail.com>
-References: <cover.1531899325.git.amit.kucheria@linaro.org> <b3c25cedfa3a9b8a4b481e714992afe62b84ca3b.1531899325.git.amit.kucheria@linaro.org>
+From: Neeraj Dantu <dantuguf14105@gmail.com>
+Subject: [PATCH] Fix file permission for am335x-osd3358-sm-red.dts
+Date: Tue, 28 Aug 2018 15:38:16 +0000
+Message-ID: <20180828153816.1152-1-neeraj.dantu@octavosystems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b3c25cedfa3a9b8a4b481e714992afe62b84ca3b.1531899325.git.amit.kucheria@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Eduardo Valentin <edubezval@gmail.com>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Tony Lindgren <tony@atomide.com>, Jason Kridner <jkridner@gmail.com>, Robert Nelson <robertcnelson@gmail.com>, Neeraj Dantu <neeraj.dantu@octavosystems.com>
 List-Id: devicetree@vger.kernel.org
 
-Andy,
+OSD3358-SM-RED is a dev board for OSD335x System-in-Package(SiP) devices from
+Octavo Systems.
 
-Do you have any feedback for this patch?
+This board family can be indentified by the A335BNLTOS00 in the at24 eeprom:
+A2: [aa 55 33 ee 41 33 33 35  42 4e 4c 54 4f 53 30 30 |.U3.A335BNLTOS00|]
 
-Regards,
-Amit
+https://octavosystems.com/octavo_products/osd3358-sm-red/
 
-On Wed, Jul 18, 2018 at 1:19 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> One thermal zone per cpu is defined
->
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 170 +++++++++++++++++++++++++++++++++++
->  1 file changed, 170 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 01ff146..a75be7c 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -340,4 +340,174 @@
->                         };
->                 };
->         };
-> +
-> +       thermal-zones {
-> +               cpu0-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 1>;
-> +
-> +                       trips {
-> +                               cpu_alert0: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit0: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu1-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 2>;
-> +
-> +                       trips {
-> +                               cpu_alert1: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit1: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu2-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 3>;
-> +
-> +                       trips {
-> +                               cpu_alert2: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit2: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu3-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 4>;
-> +
-> +                       trips {
-> +                               cpu_alert3: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit3: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu4-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 7>;
-> +
-> +                       trips {
-> +                               cpu_alert4: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit4: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu5-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 8>;
-> +
-> +                       trips {
-> +                               cpu_alert5: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit5: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu6-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 9>;
-> +
-> +                       trips {
-> +                               cpu_alert6: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit6: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu7-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 10>;
-> +
-> +                       trips {
-> +                               cpu_alert7: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit7: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +       };
->  };
-> --
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Neeraj Dantu <neeraj.dantu@octavosystems.com>
+CC: Tony Lindgren <tony@atomide.com>
+CC: Robert Nelson <robertcnelson@gmail.com>
+CC: Jason Kridner <jkridner@gmail.com>
+---
+Changes:
+- Fix file permission
+---
+ arch/arm/boot/dts/am335x-osd3358-sm-red.dts | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ mode change 100755 => 100644 arch/arm/boot/dts/am335x-osd3358-sm-red.dts
+
+diff --git a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
+old mode 100755
+new mode 100644
+-- 
+2.7.4
