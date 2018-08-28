@@ -1,78 +1,54 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCHv8 7/9] defconfig: enable fpga and service layer
-Date: Tue, 28 Aug 2018 09:11:42 -0500
-Message-ID: <54ccf9d5-1cf4-edf6-47c6-be7cc5badb3e@kernel.org>
-References: <1535464245-11638-1-git-send-email-richard.gong@linux.intel.com>
- <1535464245-11638-8-git-send-email-richard.gong@linux.intel.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 0/3] Add SPI dts node for UniPhier SoCs
+Date: Tue, 28 Aug 2018 23:25:59 +0900
+Message-ID: <CAK7LNAQH+Y0xxXDRATV5JTK-DnG5bkeJv2wCCSkRcauT2EYm-Q@mail.gmail.com>
+References: <1532589000-19602-1-git-send-email-hayashibara.keiji@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535464245-11638-8-git-send-email-richard.gong@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <1532589000-19602-1-git-send-email-hayashibara.keiji@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: richard.gong@linux.intel.com, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, corbet@lwn.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com
+To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, DTML <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+2018-07-26 16:09 GMT+09:00 Keiji Hayashibara <hayashibara.keiji@socionext.com>:
+> This series adds SPI pin-mux node and SPI node for UniPhier SoCs.
+>
+> Changes since v1:
+> - remove the node for MCSSI which support multiple channels.
+>   Since the current driver doesn't support MCSSI, it deletes this node.
 
 
-On 08/28/2018 08:50 AM, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
-> 
-> Enable fpga framework, Stratix 10 SoC FPGA manager and Stratix10
-> Service Layer
-> 
-
-Please update your commit header be "arm64: defconfig: enable fpga and
-service layer"
+Applied. Thanks.
 
 
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> Signed-off-by: Alan Tull <atull@kernel.org>
-> ---
-> v2: this patch is added in patch set version 2
-> v3: no change
-> v4: s/CONFIG_INTEL_SERVICE/CONFIG_STRATIX10_SERVICE/
->     add CONFIG_OF_FPGA_REGION=y
->     s/Intel/Stratix10/ in subject line
-> v5: no change
-> v6: no change
-> v7: no change
-> v8: no change
-> ---
->  arch/arm64/configs/defconfig | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index f67e8d5..2ad50a5 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -185,6 +185,7 @@ CONFIG_BLK_DEV_LOOP=y
->  CONFIG_BLK_DEV_NBD=m
->  CONFIG_VIRTIO_BLK=y
->  CONFIG_BLK_DEV_NVME=m
-> +CONFIG_STRATIX10_SERVICE=y
+> Kunihiko Hayashi (3):
+>   ARM: dts: uniphier: add SPI pin-mux node
+>   ARM: dts: uniphier: add SPI node for UniPhier 32bit SoCs
+>   arm64: dts: uniphier: add SPI node for LD20, LD11 and PXs3
+>
+>  arch/arm/boot/dts/uniphier-ld4.dtsi              | 11 ++++++
+>  arch/arm/boot/dts/uniphier-pinctrl.dtsi          | 20 +++++++++++
+>  arch/arm/boot/dts/uniphier-pro4.dtsi             | 11 ++++++
+>  arch/arm/boot/dts/uniphier-pro5.dtsi             | 22 ++++++++++++
+>  arch/arm/boot/dts/uniphier-pxs2.dtsi             | 22 ++++++++++++
+>  arch/arm/boot/dts/uniphier-sld8.dtsi             | 11 ++++++
+>  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 22 ++++++++++++
+>  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 44 ++++++++++++++++++++++++
+>  arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi | 22 ++++++++++++
+>  9 files changed, 185 insertions(+)
+>
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Can this be a module?
 
->  CONFIG_SRAM=y
->  CONFIG_EEPROM_AT25=m
->  # CONFIG_SCSI_PROC_FS is not set
-> @@ -642,6 +643,12 @@ CONFIG_PHY_TEGRA_XUSB=y
->  CONFIG_HISI_PMU=y
->  CONFIG_QCOM_L2_PMU=y
->  CONFIG_QCOM_L3_PMU=y
-> +CONFIG_MESON_EFUSE=m
 
-What does this change have to do with this patch?
-
-> +CONFIG_FPGA=y
-> +CONFIG_FPGA_MGR_STRATIX10_SOC=y
-> +CONFIG_FPGA_REGION=y
-> +CONFIG_FPGA_BRIDGE=y
-> +CONFIG_OF_FPGA_REGION=y
-
-Can these be modules?
-
-Dinh
+-- 
+Best Regards
+Masahiro Yamada
