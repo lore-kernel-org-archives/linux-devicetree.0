@@ -1,66 +1,85 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 9/9] arm64: dts: Add interconnect for the
- GPU on SDM845
-Date: Tue, 28 Aug 2018 12:16:58 -0600
-Message-ID: <20180828181658.GA7254@jcrouse-lnx.qualcomm.com>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
- <20180827151112.25211-10-jcrouse@codeaurora.org>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH] arm64: dts: remove big-endian filed from IFC controller
+Date: Tue, 28 Aug 2018 13:38:23 -0500
+Message-ID: <CADRPPNTCZVkjzFfn7k2As2_VXGx3gXStVcrEOhYDV-i8QiSoeA@mail.gmail.com>
+References: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180827151112.25211-10-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMjcsIDIwMTggYXQgMDk6MTE6MTJBTSAtMDYwMCwgSm9yZGFuIENyb3VzZSB3
-cm90ZToKPiBBZGQgdGhlIGludGVyY29ubmVjdCBwcm9wZXJ0aWVzIGZvciB0aGUgR1BVIG9uIFNE
-TTg0NQo+IGFuZCBzZXQgdGhlIGNvcnJlc3BvbmRpbmcgT1BQIGJhbmR3aWR0aCB2YWx1ZXMuCj4g
-Cj4gU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4K
-PiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIHwgMTAgKysrKysr
-KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBpbmRleCAxMGRiMGNlYjM2OTkuLjFlNjdmNGZkZDdkMSAx
-MDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtMTk4LDM2ICsxOTgs
-NDMgQEAgZ3B1X29wcF90YWJsZTogYWRyZW5vLW9wcC10YWJsZSB7Cj4gIAkJb3BwLTcxMDAwMDAw
-MCB7Cj4gIAkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NzEwMDAwMDAwPjsKPiAgCQkJcWNvbSxsZXZl
-bCA9IDw0MTY+Owo+ICsJCQlvcHAtaW50ZXJjb25uZWN0LWJ3LXBvcnQwID0gL2JpdHMvIDY0IDww
-IDcyMTYwMDAwMDA+Owo+ICAJCX07Cj4gIAo+ICAJCW9wcC02NzUwMDAwMDAgewo+ICAJCQlvcHAt
-aHogPSAvYml0cy8gNjQgPDY3NTAwMDAwMD47Cj4gIAkJCXFjb20sbGV2ZWwgPSA8Mzg0PjsKPiAr
-CQkJb3BwLWludGVyY29ubmVjdC1idy1wb3J0MCA9IC9iaXRzLyA2NCA8MCA3MjE2MDAwMDAwPjsK
-PiAgCQl9Owo+ICAKPiAgCQlvcHAtNTk2MDAwMDAwIHsKPiAgCQkJb3BwLWh6ID0gL2JpdHMvIDY0
-IDw1OTYwMDAwMDA+Owo+ICAJCQlxY29tLGxldmVsID0gPDMyMD47Cj4gKwkJCW9wcC1pbnRlcmNv
-bm5lY3QtYnctcG9ydDAgPSAvYml0cy8gNjQgPDAgNTE4NDAwMDAwMD47Cj4gIAkJfTsKPiAgCj4g
-IAkJb3BwLTUyMDAwMDAwMCB7Cj4gIAkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NTIwMDAwMDAwPjsK
-PiAgCQkJcWNvbSxsZXZlbCA9IDwyNTY+Owo+ICsJCQlvcHAtaW50ZXJjb25uZWN0LWJ3LXBvcnQw
-ID0gL2JpdHMvIDY0IDwwIDQwNjgwMDAwMDA+Owo+ICAJCX07Cj4gIAo+ICAJCW9wcC00MTQwMDAw
-MDAgewo+ICAJCQlvcHAtaHogPSAvYml0cy8gNjQgPDQxNDAwMDAwMD47Cj4gIAkJCXFjb20sbGV2
-ZWwgPSA8MTkyPjsKPiArCQkJb3BwLWludGVyY29ubmVjdC1idy1wb3J0MCA9IC9iaXRzLyA2NCA8
-MCAzMDcyMDAwMDAwPjsKPiAgCQl9Owo+ICAKPiAgCQlvcHAtMzQyMDAwMDAwIHsKPiAgCQkJb3Bw
-LWh6ID0gL2JpdHMvIDY0IDwzNDIwMDAwMDA+Owo+ICAJCQlxY29tLGxldmVsID0gPDEyOD47Cj4g
-KwkJCW9wcC1pbnRlcmNvbm5lY3QtYnctcG9ydDAgPSAvYml0cy8gNjQgPDAgMjE4ODAwMDAwMD47
-Cj4gIAkJfTsKPiAgCj4gIAkJb3BwLTI1NzAwMDAwMCB7Cj4gIAkJCW9wcC1oeiA9IC9iaXRzLyA2
-NCA8MjU3MDAwMDAwPjsKPiAgCQkJcWNvbSxsZXZlbCA9IDw2ND47Cj4gKwkJCW9wcC1pbnRlcmNv
-bm5lY3QtYnctcG9ydDAgPSAvYml0cy8gNjQgPDAgMTIwMDAwMDAwMD47Cj4gIAkJfTsKPiAgCX07
-Cj4gIAo+IEBAIC00MTgsNiArNDI1LDkgQEAgZ3B1X29wcF90YWJsZTogYWRyZW5vLW9wcC10YWJs
-ZSB7Cj4gIAo+ICAJCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsKPiAg
-Cj4gKwkJCWludGVyY29ubmVjdHMgPSA8JnFub2MgMjYgJnFub2MgNTEyPjsKClBvaW50aW5nIG91
-dCBmb3IgcG9zdGVyaXR5IHRoYXQgdGhlIHNyY19pZCBoZXJlIGlzIGluY29ycmVjdC4gSXQgc2hv
-dWxkIGJlIDM2LgoKSm9yZGFuCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJ
-bmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24g
-Q29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2ZyZWVkcmVubwo=
+On Tue, Aug 28, 2018 at 2:02 AM Prabhakar Kushwaha
+<prabhakar.kushwaha@nxp.com> wrote:
+>
+> As per IFC binding, Absence of "little-endian" field causes registers
+> access in big-endian mode.
+> So no need to set explicit big-endian field IFC node for LS1043A and
+> LS1046A.
+>
+> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 2 +-
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index b9f5d2ff4ff2..68af84a8ade8 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -3,6 +3,7 @@
+>   * Device Tree Include file for Freescale Layerscape-1043A family SoC.
+>   *
+>   * Copyright 2014-2015 Freescale Semiconductor, Inc.
+> + * Copyright 2018 NXP
+>   *
+>   * Mingkai Hu <Mingkai.hu@freescale.com>
+>   */
+> @@ -280,7 +281,6 @@
+>                 ifc: ifc@1530000 {
+>                         compatible = "fsl,ifc", "simple-bus";
+>                         reg = <0x0 0x1530000 0x0 0x10000>;
+> -                       big-endian;
+>                         interrupts = <0 43 0x4>;
+>                 };
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 65ce1c3cb568..9f5acb4dfaf3 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -4,6 +4,8 @@
+>   *
+>   * Copyright 2016 Freescale Semiconductor, Inc.
+>   *
+> + * Copyright 2018 NXP
+> + *
+
+Probably better to align with the other files to not have empty line
+between copyright claims?
+
+>   * Mingkai Hu <mingkai.hu@nxp.com>
+>   */
+>
+> @@ -198,7 +200,6 @@
+>                 ifc: ifc@1530000 {
+>                         compatible = "fsl,ifc", "simple-bus";
+>                         reg = <0x0 0x1530000 0x0 0x10000>;
+> -                       big-endian;
+>                         interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+>                 };
+>
+> --
+> 2.14.1
+>
