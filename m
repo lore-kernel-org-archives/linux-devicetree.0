@@ -1,63 +1,93 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v2 4/5] drivers: pinctrl: qcom: sdm845: support GPIO
- wakeup from suspend
-Date: Mon, 27 Aug 2018 19:44:33 -0600
-Message-ID: <20180828014433.GA13998@codeaurora.org>
-References: <20180824200157.9993-1-ilina@codeaurora.org>
- <20180824200157.9993-5-ilina@codeaurora.org>
- <20180828003131.GD2523@minitux>
+Subject: Re: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to
+ GPIO
+Date: Mon, 27 Aug 2018 19:46:52 -0600
+Message-ID: <20180828014652.GB13998@codeaurora.org>
+References: <20180817163849.30750-1-ilina@codeaurora.org>
+ <20180817163849.30750-2-ilina@codeaurora.org>
+ <CACRpkdb+Opdn1eWZSRydS1Bafpqwcg83xEcT-YJC6D-kSSi1ew@mail.gmail.com>
+ <20180827165644.GR5081@codeaurora.org>
+ <20180828002641.GC2523@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180828003131.GD2523@minitux>
+In-Reply-To: <20180828002641.GC2523@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: marc.zyngier@arm.com, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@kernel.org>, evgreen@chromium.org, rplsssn@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27 2018 at 18:31 -0600, Bjorn Andersson wrote:
->On Fri 24 Aug 13:01 PDT 2018, Lina Iyer wrote:
+On Mon, Aug 27 2018 at 18:26 -0600, Bjorn Andersson wrote:
+>On Mon 27 Aug 09:56 PDT 2018, Lina Iyer wrote:
 >
->> Enable TLMM IRQs to be sensed by PDC when we enter suspend. It is
->> possible that the TLMM may be powered off and not detect GPIOs that are
->> configured as wake up interrupts. By hooking into suspend callbacks, we
->> allow PDC IRQs to take over and wake up the system if wakeup interrupts
->> are triggered.
+>> On Sun, Aug 26 2018 at 08:33 -0600, Linus Walleij wrote:
+>> > On Fri, Aug 17, 2018 at 6:39 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>> >
+>> > > QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
+>> > > domain can wakeup the SoC, when interrupts and GPIOs are routed to the
+>> > > its interrupt controller. Only select GPIOs that are deemed wakeup
+>> > > capable are routed to specific PDC pins. During low power state, the
+>> > > pinmux interrupt controller may be non-functional but the PDC would be.
+>> > > The PDC can detect the wakeup GPIO is triggered and bring the TLMM to an
+>> > > operational state.
+>> > >
+>> > > Interrupts that are level triggered will be detected at the TLMM when
+>> > > the controller becomes operational. Edge interrupts however need to be
+>> > > replayed again.
+>> > >
+>> > > Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
+>> > > but keep it disabled. During suspend, we can enable the PDC IRQ instead
+>> > > of the GPIO IRQ, which may or not be detected.
+>> > >
+>> > > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> > > ---
+>> > > Changes in v1:
+>> > >         - Trigger GPIO in h/w from PDC IRQ handler
+>> > >         - Avoid big tables for GPIO-PDC map, pick from DT instead
+>> > >         - Use handler_data
+>> >
+>> > Just for the record this is an impressive and much needed patch
+>> > set, no other SoC developer has yet taken on the task of making this
+>> > work so I very much appreciate that Qualcomm show the way.
+>> >
+>> > > +static int msm_gpio_pdc_pin_request(struct irq_data *d)
+>> > > +static int msm_gpio_pdc_pin_release(struct irq_data *d)
+>> > > +static int msm_gpio_irq_reqres(struct irq_data *d)
+>> > > +{
+>> > (...)
+>> > > +       if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
+>> > (...)
+>> > > +static void msm_gpio_irq_relres(struct irq_data *d)
+>> > > +{
+>> > > +       gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
+>> > > +}
+>> >
+>> > FYI Hans Verkuil is working on a patch set that moves the
+>> > lock/unlock as IRQ call to the irqchip request() and release()
+>> > functions so we can switch a GPIO irqchip line from IRQ
+>> > mode to say output at runtime without too much trouble.
+>> > (CEC needs this.)
+>> >
+>> Thanks, I will look into Hans's RFCv2. But what would help me would be
+>> to avoid creating the IRQ for the GPIO itself (I have the latent IRQ),
+>> if I could just return that instead in gpio_to_irq(), it might be
+>> easier. I understand ->to_irq() is supposed to be a translate function
+>> only, I can avoid the dance of enabling and diabling the PDC IRQ on
+>> suspend and resume.
 >>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>  drivers/pinctrl/qcom/pinctrl-sdm845.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
->> index 2ab7a8885757..cc333b8afb99 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
->> @@ -1297,10 +1297,16 @@ static const struct of_device_id sdm845_pinctrl_of_match[] = {
->>  	{ },
->>  };
->>
->> +static const struct dev_pm_ops msm_pinctrl_dev_pm_ops = {
->> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(msm_pinctrl_suspend_late,
->> +				     msm_pinctrl_resume_late)
->> +};
->> +
 >
->I expect these four lines to be duplicated in every platform file, so I
->think it would be better to just move it to pinctrl-msm.c and extern
->declare it in pinctrl-msm.h.
+>I did implement gpio_to_irq() like this in the PMIC gpio/mpp drivers and
+>we've since concluded that we need to move this to some hierarchical
+>interrupt controller, because people like Linus expect to be able to say
 >
-Sure.
+>  interrupts = <&gpio_controller 1 IRQ_TYPE_EDGE_RISING>
+>
+>which is something used all over the place with the TLMM driver today.
 
->>  static struct platform_driver sdm845_pinctrl_driver = {
->>  	.driver = {
->>  		.name = "sdm845-pinctrl",
->>  		.of_match_table = sdm845_pinctrl_of_match,
->> +		.pm = &msm_pinctrl_dev_pm_ops,
->>  	},
->>  	.probe = sdm845_pinctrl_probe,
->>  	.remove = msm_pinctrl_remove,
->
->Regards,
->Bjorn
+Does it have to be &gpio_controller, can it be another interrupt controller?
+
+Say,
+	interrupts-extended = <&pdc 1 IRQ_TYPE_EDGE_RISING>;
+
+-- Lina
