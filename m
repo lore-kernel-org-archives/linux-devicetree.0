@@ -1,84 +1,161 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 2/6] reset: qcom: PDC Global (Power Domain Controller)
- reset controller
-Date: Mon, 27 Aug 2018 20:02:53 -0700
-Message-ID: <20180828030253.GF2523@minitux>
-References: <20180824131900.5353-1-sibis@codeaurora.org>
- <20180824131900.5353-3-sibis@codeaurora.org>
- <20180828002236.GX160295@google.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] iio: adc: sc27xx: Add raw data support
+Date: Tue, 28 Aug 2018 11:14:09 +0800
+Message-ID: <CAMz4kuJnEg4_hDx75w3md2J6E0gJ_2O+iCMe9W_F+EpxJVj-cw@mail.gmail.com>
+References: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
+ <20180825093841.72a5d099@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180828002236.GX160295@google.com>
+In-Reply-To: <20180825093841.72a5d099@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Sibi Sankar <sibis@codeaurora.org>, p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, freeman.liu@spreadtrum.com, Mark Brown <broonie@kernel.org>, DTML <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 27 Aug 17:22 PDT 2018, Matthias Kaehlcke wrote:
-> On Fri, Aug 24, 2018 at 06:48:56PM +0530, Sibi Sankar wrote:
-> > diff --git a/drivers/reset/reset-qcom-pdc.c b/drivers/reset/reset-qcom-pdc.c
-[..]
-> > +struct qcom_pdc_desc {
-> > +	const struct regmap_config *config;
-> > +	const struct qcom_pdc_reset_map *resets;
-> > +	size_t num_resets;
-> > +};
-> 
-> Not sure if this structure adds much value or just a layer of
-> indirection:
-> 
-> - .config is only accessed in _probe(), sdm845_pdc_regmap_config could
->   be used directly
-> - .resets is used in _(de)assert(), sdm845_pdc_resets could be used
->   directly
-> - .num_resets is only accessed in _probe(),
->   ARRAY_SIZE(sdm845_pdc_resets) could be used instead
-> 
-> It probably makes sense if it is planned to support reset controllers
-> of other SoCs with this driver.
-> 
+Hi Jonathan,
 
-I like this suggestion, once we need the configurability we can add the
-type for it. It also shows that only .resets would need to be referenced
-by qcom_pdc_reset_data.
+On 25 August 2018 at 16:38, Jonathan Cameron <jic23@kernel.org> wrote:
+> On Fri, 24 Aug 2018 17:53:15 +0800
+> Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+>> The headset device will use channel 20 of ADC controller to detect events,
+>> but it needs the raw ADC data to do conversion according to its own formula.
+>>
+>> Thus we should configure the channel mask separately and configure channel
+>> 20 as IIO_CHAN_INFO_RAW, as well as adding raw data read support.
+>
+> So is this a general thing, i.e. that channel is 'meant' to be used for the
+> headset, or just a one off for a particular board?
+> If it is a general thing, than I'm fine with this (unlikely we'll break any
+> other users), but if not we need to find a nicer way to do it.
 
-> > +struct qcom_pdc_reset_data {
-> > +	struct reset_controller_dev rcdev;
-> > +	struct regmap *regmap;
-> > +	const struct qcom_pdc_desc *desc;
-> > +};
-[..]
-> > +static int qcom_pdc_reset_probe(struct platform_device *pdev)
-> > +{
-[..]
-> > +	data->regmap = devm_regmap_init_mmio(dev, base, desc->config);
-> > +	if (IS_ERR(data->regmap)) {
-> > +		dev_err(dev, "Unable to get pdc-global regmap");
-> 
-> Add missing '\n'
-> 
-> Say 'pdc-reset' instead of 'pdc-global'? (see also my other comment
-> below).
-> 
+Yes, it is a general thing. Now channel 20 is always used for the headset.
 
-This regmap is created out of the single anonymous "reg", so I think the
-error should be reduced to "Unable to initialize regmap\n".
+> I am a little unclear on how a channel would provide the voltage on it's pin
+> but that could be wrong when used for a different purpose?
+> If it's just a matter of unusual loading characteristics then perhaps that
+> is valid, but I'd like to understand this a little.
 
-[..]
-> > +static const struct of_device_id qcom_pdc_reset_of_match[] = {
-> > +	{ .compatible = "qcom,sdm845-pdc-global", .data = &sdm845_pdc_desc },
-> 
-> Should this be 'qcom,sdm845-pdc-reset' which is more specific than
-> 'global' and in line with the name and purpose of the driver?
-> Obviously this would require to adjust the bindings doc too.
-> 
+On our platform, the headset will use this voltage value reading from
+ADC to check the headset events: headset buttons, headset plugin and
+so on.
 
-No, the binding describes the hardware block named "PDC Global",
-currently implemented as a reset controller. The reason for doing this
-is so that we one day can expose additional interfaces in a backwards
-compatible fashion.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>>  drivers/iio/adc/sc27xx_adc.c |   80 ++++++++++++++++++++++++------------------
+>>  1 file changed, 45 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+>> index 2b60efe..153c311 100644
+>> --- a/drivers/iio/adc/sc27xx_adc.c
+>> +++ b/drivers/iio/adc/sc27xx_adc.c
+>> @@ -273,6 +273,17 @@ static int sc27xx_adc_read_raw(struct iio_dev *indio_dev,
+>>       int ret, tmp;
+>>
+>>       switch (mask) {
+>> +     case IIO_CHAN_INFO_RAW:
+>> +             mutex_lock(&indio_dev->mlock);
+>> +             ret = sc27xx_adc_read(data, chan->channel, scale, &tmp);
+>> +             mutex_unlock(&indio_dev->mlock);
+>> +
+>> +             if (ret)
+>> +                     return ret;
+>> +
+>> +             *val = tmp;
+>> +             return IIO_VAL_INT;
+>> +
+>>       case IIO_CHAN_INFO_PROCESSED:
+>>               mutex_lock(&indio_dev->mlock);
+>>               ret = sc27xx_adc_read_processed(data, chan->channel, scale,
+>> @@ -315,48 +326,47 @@ static int sc27xx_adc_write_raw(struct iio_dev *indio_dev,
+>>       .write_raw = &sc27xx_adc_write_raw,
+>>  };
+>>
+>> -#define SC27XX_ADC_CHANNEL(index) {                          \
+>> +#define SC27XX_ADC_CHANNEL(index, mask) {                    \
+>>       .type = IIO_VOLTAGE,                                    \
+>>       .channel = index,                                       \
+>> -     .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |    \
+>> -                           BIT(IIO_CHAN_INFO_SCALE),         \
+>> +     .info_mask_separate = mask | BIT(IIO_CHAN_INFO_SCALE),  \
+>>       .datasheet_name = "CH##index",                          \
+>>       .indexed = 1,                                           \
+>>  }
+>>
+>>  static const struct iio_chan_spec sc27xx_channels[] = {
+>> -     SC27XX_ADC_CHANNEL(0),
+>> -     SC27XX_ADC_CHANNEL(1),
+>> -     SC27XX_ADC_CHANNEL(2),
+>> -     SC27XX_ADC_CHANNEL(3),
+>> -     SC27XX_ADC_CHANNEL(4),
+>> -     SC27XX_ADC_CHANNEL(5),
+>> -     SC27XX_ADC_CHANNEL(6),
+>> -     SC27XX_ADC_CHANNEL(7),
+>> -     SC27XX_ADC_CHANNEL(8),
+>> -     SC27XX_ADC_CHANNEL(9),
+>> -     SC27XX_ADC_CHANNEL(10),
+>> -     SC27XX_ADC_CHANNEL(11),
+>> -     SC27XX_ADC_CHANNEL(12),
+>> -     SC27XX_ADC_CHANNEL(13),
+>> -     SC27XX_ADC_CHANNEL(14),
+>> -     SC27XX_ADC_CHANNEL(15),
+>> -     SC27XX_ADC_CHANNEL(16),
+>> -     SC27XX_ADC_CHANNEL(17),
+>> -     SC27XX_ADC_CHANNEL(18),
+>> -     SC27XX_ADC_CHANNEL(19),
+>> -     SC27XX_ADC_CHANNEL(20),
+>> -     SC27XX_ADC_CHANNEL(21),
+>> -     SC27XX_ADC_CHANNEL(22),
+>> -     SC27XX_ADC_CHANNEL(23),
+>> -     SC27XX_ADC_CHANNEL(24),
+>> -     SC27XX_ADC_CHANNEL(25),
+>> -     SC27XX_ADC_CHANNEL(26),
+>> -     SC27XX_ADC_CHANNEL(27),
+>> -     SC27XX_ADC_CHANNEL(28),
+>> -     SC27XX_ADC_CHANNEL(29),
+>> -     SC27XX_ADC_CHANNEL(30),
+>> -     SC27XX_ADC_CHANNEL(31),
+>> +     SC27XX_ADC_CHANNEL(0, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(1, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(2, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(3, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(4, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(5, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(6, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(7, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(8, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(9, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(10, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(11, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(12, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(13, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(14, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(15, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(16, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(17, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(18, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(19, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(20, BIT(IIO_CHAN_INFO_RAW)),
+>> +     SC27XX_ADC_CHANNEL(21, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(22, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(23, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(24, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(25, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(26, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(27, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(28, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(29, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(30, BIT(IIO_CHAN_INFO_PROCESSED)),
+>> +     SC27XX_ADC_CHANNEL(31, BIT(IIO_CHAN_INFO_PROCESSED)),
+>>  };
+>>
+>>  static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
+>
 
-Regards,
-Bjorn
+
+
+-- 
+Baolin Wang
+Best Regards
