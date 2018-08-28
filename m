@@ -1,15 +1,11 @@
 From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: RE: [PATCH 1/3] ARM: dts: Add big-endian for IFC on LS1021A
-Date: Tue, 28 Aug 2018 06:53:00 +0000
-Message-ID: <VI1PR0402MB3854BD46A68F8127B5779116970A0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
-References: <20180817101920.20503-1-prabhakar.kushwaha@nxp.com>
- <CADRPPNRkJ0Hz0yyB8jKqGPn2+zq+xJa1L9Vc3_8ai06+tO7t1Q@mail.gmail.com>
+Subject: [PATCH] arm64: dts: remove big-endian filed from IFC controller
+Date: Tue, 28 Aug 2018 12:29:34 +0530
+Message-ID: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CADRPPNRkJ0Hz0yyB8jKqGPn2+zq+xJa1L9Vc3_8ai06+tO7t1Q@mail.gmail.com>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,41 +15,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Li <leoyang.li@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Alison Wang <alison.wang@nxp.com>, Jagdish Gediya <jagdish.gediya@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated
- list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
+Cc: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi leo
+As per IFC binding, Absence of "little-endian" field causes registers
+access in big-endian mode.
+So no need to set explicit big-endian field IFC node for LS1043A and
+LS1046A.
 
-> -----Original Message-----
-> From: Li Yang <leoyang.li@nxp.com>
-> Sent: Tuesday, August 28, 2018 1:00 AM
-> To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-> Cc: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> <devicetree@vger.kernel.org>; Rob Herring <robh@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; Shawn Guo <shawnguo@kernel.org>;
-> moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE <linux-arm-
-> kernel@lists.infradead.org>; Alison Wang <alison.wang@nxp.com>; Jagdish
-> Gediya <jagdish.gediya@nxp.com>
-> Subject: Re: [PATCH 1/3] ARM: dts: Add big-endian for IFC on LS1021A
-> 
-> On Fri, Aug 17, 2018 at 5:20 AM Prabhakar Kushwaha
-> <prabhakar.kushwaha@nxp.com> wrote:
-> >
-> > Register space of IFC controller is big-endian.
-> >
-> > So add big-endian in IFC device tree node.
-> 
-> Is this change necessary?  The current binding of IFC says:
-> 
-> - little-endian : If this property is absent, the big-endian mode will
->                   be in use as default for registers.
-> 
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-I agree.. this patch is not required.
-
-But your comments has remind me to remove big-endian property from ls1043a and ls0146a also under IFC controller.
-
-Thanks
---pk
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index b9f5d2ff4ff2..68af84a8ade8 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -3,6 +3,7 @@
+  * Device Tree Include file for Freescale Layerscape-1043A family SoC.
+  *
+  * Copyright 2014-2015 Freescale Semiconductor, Inc.
++ * Copyright 2018 NXP
+  *
+  * Mingkai Hu <Mingkai.hu@freescale.com>
+  */
+@@ -280,7 +281,6 @@
+ 		ifc: ifc@1530000 {
+ 			compatible = "fsl,ifc", "simple-bus";
+ 			reg = <0x0 0x1530000 0x0 0x10000>;
+-			big-endian;
+ 			interrupts = <0 43 0x4>;
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 65ce1c3cb568..9f5acb4dfaf3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -4,6 +4,8 @@
+  *
+  * Copyright 2016 Freescale Semiconductor, Inc.
+  *
++ * Copyright 2018 NXP
++ *
+  * Mingkai Hu <mingkai.hu@nxp.com>
+  */
+ 
+@@ -198,7 +200,6 @@
+ 		ifc: ifc@1530000 {
+ 			compatible = "fsl,ifc", "simple-bus";
+ 			reg = <0x0 0x1530000 0x0 0x10000>;
+-			big-endian;
+ 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-- 
+2.14.1
