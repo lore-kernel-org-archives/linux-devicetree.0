@@ -1,11 +1,13 @@
 From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: [PATCH 0/5] mtd: bcm63xxpart: add device tree support
-Date: Tue, 28 Aug 2018 13:19:39 +0200
-Message-ID: <20180828111944.5956-1-jonas.gorski@gmail.com>
+Subject: [PATCH 5/5] mtd: parser_imagetag: add of_match_table support
+Date: Tue, 28 Aug 2018 13:19:44 +0200
+Message-ID: <20180828111944.5956-6-jonas.gorski@gmail.com>
+References: <20180828111944.5956-1-jonas.gorski@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180828111944.5956-1-jonas.gorski@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
@@ -19,45 +21,43 @@ To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
 Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds appropriate bindings for parsing various bcm963xx NOR
-flash layouts found in the wild.
+Allow matching the imagetag parser for fixed partitions defined in the
+device tree.
 
-The image header is quite limited, and only has fixed fields for the
-offsets and sizes of the kernel and rootfs partitions. If any additional
-partitions exist, they need to be described externally, e.g. through
-fixed partition layouts.
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+---
+ drivers/mtd/parsers/parser_imagetag.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-The first two patches add the bindings for the full flash parser for the
-"common" case: first erase block bootloader, last erase block nvram,
-reminder available for firmware.
-
-The third patch splits out the image header parsing into its own parser.
-
-Then patches four and five add bindings for the split out parser, to
-support non-trivial cases with additional partitions, or a non-standard
-offset of the firmware partition.
-
-These patches have been in used since a while in OpenWrt.
-
-Jonas Gorski (5):
-  dt-bindings: mtd: describe the simple BCM963XX NOR flash layout
-  mtd: bcm63xxpart: add of_match_table support
-  mtd: bcm63xxpart: move imagetag parsing to its own parser
-  dt-bindings: mtd: describe BCM963XX ImageTag format and usage
-  mtd: parser_imagetag: add of_match_table support
-
- .../brcm,bcm963xx-cfe-nor-partitions.txt           |  24 +++
- .../mtd/partitions/brcm,bcm963xx-imagetag.txt      |  78 ++++++++
- drivers/mtd/Kconfig                                |   1 +
- drivers/mtd/bcm63xxpart.c                          | 163 ++-------------
- drivers/mtd/parsers/Kconfig                        |  11 +
- drivers/mtd/parsers/Makefile                       |   1 +
- drivers/mtd/parsers/parser_imagetag.c              | 222 +++++++++++++++++++++
- 7 files changed, 353 insertions(+), 147 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-cfe-nor-partitions.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
- create mode 100644 drivers/mtd/parsers/parser_imagetag.c
-
+diff --git a/drivers/mtd/parsers/parser_imagetag.c b/drivers/mtd/parsers/parser_imagetag.c
+index 81e2fc70c889..6897a8c37142 100644
+--- a/drivers/mtd/parsers/parser_imagetag.c
++++ b/drivers/mtd/parsers/parser_imagetag.c
+@@ -24,6 +24,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/partitions.h>
++#include <linux/of.h>
+ 
+ /* Ensure strings read from flash structs are null terminated */
+ #define STR_NULL_TERMINATE(x) \
+@@ -200,9 +201,16 @@ static int bcm963xx_parse_imagetag_partitions(struct mtd_info *master,
+ 	return nrparts;
+ }
+ 
++static const struct of_device_id parse_bcm963xx_imagetag_match_table[] = {
++	{ .compatible = "brcm,bcm963xx-imagetag" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, parse_bcm963xx_imagetag_match_table);
++
+ static struct mtd_part_parser bcm963xx_imagetag_parser = {
+ 	.parse_fn = bcm963xx_parse_imagetag_partitions,
+ 	.name = "bcm963xx-imagetag",
++	.of_match_table = parse_bcm963xx_imagetag_match_table,
+ };
+ module_mtd_part_parser(bcm963xx_imagetag_parser);
+ 
 -- 
 2.13.2
 
