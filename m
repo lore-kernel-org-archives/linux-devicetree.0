@@ -1,39 +1,64 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 2/2] iio: adc: sc27xx: Add ADC scale calibration
-Date: Tue, 28 Aug 2018 11:20:25 +0800
-Message-ID: <CAMz4kuKdw9EiZ2txKuPJrHt1oeKv7ye6P8GjS=KXuaJYWRs4eQ@mail.gmail.com>
-References: <4a7e33457617e6f0f7c9627fe20ddd3039e4fe82.1535103920.git.baolin.wang@linaro.org>
- <cc6b76c5d660818d3ff7833ea5be4f32ed960f54.1535103920.git.baolin.wang@linaro.org>
- <20180825094357.6425ab4a@archlinux>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to
+ GPIO
+Date: Mon, 27 Aug 2018 20:20:34 -0700
+Message-ID: <20180828032034.GG2523@minitux>
+References: <20180817163849.30750-1-ilina@codeaurora.org>
+ <20180817163849.30750-2-ilina@codeaurora.org>
+ <CACRpkdb+Opdn1eWZSRydS1Bafpqwcg83xEcT-YJC6D-kSSi1ew@mail.gmail.com>
+ <20180827165644.GR5081@codeaurora.org>
+ <20180828002641.GC2523@minitux>
+ <20180828014652.GB13998@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180825094357.6425ab4a@archlinux>
+Content-Disposition: inline
+In-Reply-To: <20180828014652.GB13998@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, freeman.liu@spreadtrum.com, Mark Brown <broonie@kernel.org>, DTML <devicetree@vger.kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@kernel.org>, evgreen@chromium.org, rplsssn@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+On Mon 27 Aug 18:46 PDT 2018, Lina Iyer wrote:
+> On Mon, Aug 27 2018 at 18:26 -0600, Bjorn Andersson wrote:
+> > On Mon 27 Aug 09:56 PDT 2018, Lina Iyer wrote:
+[..]
+> > > Thanks, I will look into Hans's RFCv2. But what would help me would be
+> > > to avoid creating the IRQ for the GPIO itself (I have the latent IRQ),
+> > > if I could just return that instead in gpio_to_irq(), it might be
+> > > easier. I understand ->to_irq() is supposed to be a translate function
+> > > only, I can avoid the dance of enabling and diabling the PDC IRQ on
+> > > suspend and resume.
+> > > 
+> > 
+> > I did implement gpio_to_irq() like this in the PMIC gpio/mpp drivers and
+> > we've since concluded that we need to move this to some hierarchical
+> > interrupt controller, because people like Linus expect to be able to say
+> > 
+> >  interrupts = <&gpio_controller 1 IRQ_TYPE_EDGE_RISING>
+> > 
+> > which is something used all over the place with the TLMM driver today.
+> 
+> Does it have to be &gpio_controller, can it be another interrupt controller?
+> 
+> Say,
+> 	interrupts-extended = <&pdc 1 IRQ_TYPE_EDGE_RISING>;
+> 
 
-On 25 August 2018 at 16:43, Jonathan Cameron <jic23@kernel.org> wrote:
-> On Fri, 24 Aug 2018 17:53:16 +0800
-> Baolin Wang <baolin.wang@linaro.org> wrote:
->
->> This patch adds support to read calibration values from the eFuse
->> controller to calibrate the ADC channel scales, which can make ADC
->> sample data more accurate.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> This looks good to me.  I'll leave it for now though given open questions
-> on patch 1 and to allow others time to comment on this if they wish -
-> particularly as it includes a binding addition.
+It would require that the GPIO interrupt number space of the PDC matches
+the pin numbering of the TLMM, to be somewhat maintainable.
 
-Thanks for your reviewing. But after more testing, we found one issue
-when reading calibration data from efuse, which is not always 4 bytes
-(sizeof(u32)). So I will change to use nvmem_cell_read() instead of
-nvmem_cell_read_u32() in next version.
+And it would still require DT-writers to know that if the implementation
+of a compatible, that references a TLMM IRQ, wants to mark the IRQ wake
+capable it needs to reference the PDC instead...while still having a
+pinmux/pinconf setting for the TLMM.
 
--- 
-Baolin Wang
-Best Regards
+And for gpio_to_irq() we would need to do the mapping that you suggest,
+so the TLMM still needs to have all these references to the PDC.
+
+
+So I think it would be nice if we could avoid this scenario, but I don't
+have any good ideas of how to do this right now...
+
+Regards,
+Bjorn
