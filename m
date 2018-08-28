@@ -1,119 +1,111 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 1/2] ARM: uniphier: dts: add more clocks to Denali NAND
- controller node
-Date: Tue, 28 Aug 2018 23:26:33 +0900
-Message-ID: <CAK7LNAS6YZeM5s=kxYFKfCDKHEmArqG-+R3Hoy20rX165iqMBA@mail.gmail.com>
-References: <1532076645-10769-1-git-send-email-yamada.masahiro@socionext.com>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
+Date: Tue, 28 Aug 2018 15:35:46 +0100
+Message-ID: <20180828143546.GG907@e110455-lin.cambridge.arm.com>
+References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
+ <20180824122308.3092-1-linus.walleij@linaro.org>
+ <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532076645-10769-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, dri-devel@lists.freedesktop.org, Ryan Harkin <ryan.harkin@linaro.org>, robh+dt@kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2018-07-20 17:50 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> Catch up with the new binding of the Denali IP where three clocks,
-> "nand", "nand_x", "ecc" are required.
->
-> For UniPhier SoCs, the "nand_x" and "ecc" are tied up because they
-> are both 200MHz.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-
-
-Both applied.
-
-
->  arch/arm/boot/dts/uniphier-ld4.dtsi  | 3 ++-
->  arch/arm/boot/dts/uniphier-pro4.dtsi | 3 ++-
->  arch/arm/boot/dts/uniphier-pro5.dtsi | 3 ++-
->  arch/arm/boot/dts/uniphier-pxs2.dtsi | 3 ++-
->  arch/arm/boot/dts/uniphier-sld8.dtsi | 3 ++-
->  5 files changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
-> index 37950ad..2a17066 100644
-> --- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-> +++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-> @@ -347,7 +347,8 @@
->                         interrupts = <0 65 4>;
->                         pinctrl-names = "default";
->                         pinctrl-0 = <&pinctrl_nand2cs>;
-> -                       clocks = <&sys_clk 2>;
-> +                       clock-names = "nand", "nand_x", "ecc";
-> +                       clocks = <&sys_clk 2>, <&sys_clk 3>, <&sys_clk 3>;
->                         resets = <&sys_rst 2>;
->                 };
->         };
-> diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
-> index 49539f0..da88ccc 100644
-> --- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-> +++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-> @@ -394,7 +394,8 @@
->                         interrupts = <0 65 4>;
->                         pinctrl-names = "default";
->                         pinctrl-0 = <&pinctrl_nand>;
-> -                       clocks = <&sys_clk 2>;
-> +                       clock-names = "nand", "nand_x", "ecc";
-> +                       clocks = <&sys_clk 2>, <&sys_clk 3>, <&sys_clk 3>;
->                         resets = <&sys_rst 2>;
->                 };
->         };
-> diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
-> index 06c2cef..40a84f2 100644
-> --- a/arch/arm/boot/dts/uniphier-pro5.dtsi
-> +++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
-> @@ -439,7 +439,8 @@
->                         interrupts = <0 65 4>;
->                         pinctrl-names = "default";
->                         pinctrl-0 = <&pinctrl_nand2cs>;
-> -                       clocks = <&sys_clk 2>;
-> +                       clock-names = "nand", "nand_x", "ecc";
-> +                       clocks = <&sys_clk 2>, <&sys_clk 3>, <&sys_clk 3>;
->                         resets = <&sys_rst 2>;
->                 };
->         };
-> diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> index 641d961..1903752 100644
-> --- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> +++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> @@ -528,7 +528,8 @@
->                         interrupts = <0 65 4>;
->                         pinctrl-names = "default";
->                         pinctrl-0 = <&pinctrl_nand2cs>;
-> -                       clocks = <&sys_clk 2>;
-> +                       clock-names = "nand", "nand_x", "ecc";
-> +                       clocks = <&sys_clk 2>, <&sys_clk 3>, <&sys_clk 3>;
->                         resets = <&sys_rst 2>;
->                 };
->         };
-> diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
-> index e9b9b4f..dc723bf 100644
-> --- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-> +++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-> @@ -351,7 +351,8 @@
->                         interrupts = <0 65 4>;
->                         pinctrl-names = "default";
->                         pinctrl-0 = <&pinctrl_nand2cs>;
-> -                       clocks = <&sys_clk 2>;
-> +                       clock-names = "nand", "nand_x", "ecc";
-> +                       clocks = <&sys_clk 2>, <&sys_clk 3>, <&sys_clk 3>;
->                         resets = <&sys_rst 2>;
->                 };
->         };
-> --
-> 2.7.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+SGkgQW5kcnplaiwKCkNoaXJwaW5nIGluLCBhcyBpdCB3YXMgb3JpZ2luYWxseSBteSB3b3JrIHRo
+YXQgTGludXMgaXMgYWRvcHRpbmcuCgpPbiBNb24sIEF1ZyAyNywgMjAxOCBhdCAwMTo1MzowMFBN
+ICswMjAwLCBBbmRyemVqIEhhamRhIHdyb3RlOgo+IE9uIDI0LjA4LjIwMTggMTQ6MjMsIExpbnVz
+IFdhbGxlaWogd3JvdGU6Cj4gPiBUaGlzIGFkZHMgYmluZGluZ3MgZm9yIGEgdmlydHVhbCBkaXNw
+bGF5IHRvIGJlIHVzZWQgd2l0aCBkaXNwbGF5cwo+ID4gaW5zaWRlIGVudGlyZWx5IHZpcnR1YWwg
+ZW52aXJvbm1lbnRzIHdoaWNoIGRvIG5vdCBlbXVsYXRlIHRoaW5ncwo+ID4gbGlrZSBtb25pdG9y
+cyBidXQganVzdCBuZWVkIHRpbWluZyBpbmZvcm1hdGlvbiB0byBiZSBzdXBwbGllZCB0bwo+ID4g
+aXRzIGRpc3BsYXkgY29udHJvbGxlci4KPiA+Cj4gPiBUaGlzIGlzIGluc3BpcmVkIGJ5IGVhcmxp
+ZXIgd29yayBieSBMaXZpdSBEdWRhdS4KPiAKPiBJZiB0aGlzIGlzIHB1cmUgdmlydHVhbCB0aGVu
+IGl0IHNob3VsZCBiZSBjb25uZWN0ZWQgdG8gb3RoZXIgcHVyZQo+IHZpcnR1YWwgY29tcG9uZW50
+cy4KCkFueSByZWFzb24gd2h5IHlvdSB0aGluayB0aGlzIGlzIHRoZSBvbmx5IHdheSB0aGlzIHNo
+b3VsZCBiZSBjb25uZWN0ZWQ/Ck15IG9yaWdpbmFsIGltcGxlbWVudGF0aW9uIChhbmQgSSBoYXZl
+bid0IHNlZW4gYW55dGhpbmcgaW4gdGhpcyBwYXRjaAp0aGF0IHdvdWxkIGludmFsaWRhdGUgaXQp
+IGFzc3VtZWQgdGhhdCB0aGUgdmlydHVhbCBicmlkZ2UgY2FuIGJlIHVzZWQgYnkKYW55IGRyaXZl
+ciB0aGF0IHVzZXMgdGhlIGNvbXBvbmVudCBmcmFtZXdvcmsuIEhpZGluZyBpbXBsZW1lbnRhdGlv
+bgpkZXRhaWxzIGlzIG9uZSBvZiB0aGUgYmVuZWZpdHMgb2YgdXNpbmcgdGhlIGNvbXBvbmVudCBm
+cmFtZXdvcmssIHNvIEkKZG9uJ3Qgc2VlIHdoYXQgeW91IGdhaW4gYnkgcmVzdHJpY3RpbmcgY29u
+bmVjdGlvbiB0byBvbmx5IG90aGVyIHB1cmUKdmlydHVhbCBjb21wb25lbnRzLgoKPiBXaGF0IHdp
+bGwgYmUgdGhpcyB2aXJ0dWFsIGJyaWRnZSBhdHRhY2hlZCB0bz8gSSBleHBlY3Qgc29tZSB2aXJ0
+dWFsCj4gZW5jb2RlciwgdmlydHVhbCBjcnRjPyBJZiB5ZXMgdGhlbiB3aHkgZG9uJ3QgeW91IGNy
+ZWF0ZSB3aG9sZSB2aXJ0dWFsCj4gZHJtIHBpcGVsaW5lIGluIG9uZSBwYXRjaHNldD8KClRoaXMg
+Y29tbWVudCBpcyBwcm9iYWJseSBtb3JlIHJlbGV2YW50IHRvIHBhdGNoIDIvMiwgYnV0IEkgYWdy
+ZWUgdGhhdAppdCBwcm9iYWJseSBuZWVkcyBhIHZpcnR1YWwgZW5jb2Rlci4gQXMgZm9yIHRoZSBD
+UlRDLCBpdCBzaG91bGQgd29yawp3aXRoIGFueSByZWFsIERSTSBkcml2ZXIsIEFGQUlDVC4KCj4g
+Q291bGQgeW91IGRlc2NyaWJlIG1vcmUgd2hhdCBkbyB5b3Ugd2FudCB0byBkby4KCkhlIHdhbnRz
+IHRvIGVuYWJsZSB0aGUgUEwxMTAgRFJNIGRyaXZlciBvbiBzeXN0ZW1zIHRoYXQgbGFjayBhIHdh
+eSBvZgpkZXRlY3RpbmcgdGhlIGFjdHVhbCBlbmNvZGVyIGFuZCBjb25uZWN0b3IgYmVpbmcgdXNl
+ZCAoZWl0aGVyIGJlY2F1c2UKdGhlcmUgaXMgbm9uZSBhbmQgdGhleSBhcmUgZW11bGF0ZWQgaW4g
+c29mdHdhcmUgdGhhdCBkb2Vzbid0IG1pbWljIHRoZQpIVyBiZWhhdmlvdXIsIG9yIGJlY2F1c2Ug
+dGhlIHdheSB5b3UgYWNjZXNzIHRoZSBIVyBpcyBkb25lIGluIGEgd2F5IHRoYXQKZG9lc24ndCBt
+b2RlbCBlYXNpbHkgaW4gdGhlIGN1cnJlbnQgRFJNIGZyYW1ld29yazogYnkgZmlybXdhcmUsIGZv
+cgpleGFtcGxlKS4KCkJlc3QgcmVnYXJkcywKTGl2aXUKCj4gQW5kIG9uZSBtb3JlIHRoaW5nLCB5
+b3UgYXJlIGRlZmluaW5nIHZpcnR1YWwgcGFuZWwgYnV0IHlvdSBhcmUgdXNpbmcKPiBkcm1fYnJp
+ZGdlIGZyYW1ld29yaywgd2h5IG5vdCBkcm1fcGFuZWw/Cj4gCj4gUmVnYXJkcwo+IEFuZHJ6ZWoK
+PiAKPiA+Cj4gPiBDYzogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+Cj4gPiBDYzog
+UnlhbiBIYXJraW4gPHJ5YW4uaGFya2luQGxpbmFyby5vcmc+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBM
+aW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4gPiAtLS0KPiA+ICAuLi4v
+ZGlzcGxheS9icmlkZ2UvdmlydHVhbC1kaXNwbGF5LWJyaWRnZS50eHQgfCA2MiArKysrKysrKysr
+KysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYyIGluc2VydGlvbnMoKykKPiA+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+YnJpZGdlL3ZpcnR1YWwtZGlzcGxheS1icmlkZ2UudHh0Cj4gPgo+ID4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS92aXJ0dWFsLWRp
+c3BsYXktYnJpZGdlLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS92aXJ0dWFsLWRpc3BsYXktYnJpZGdlLnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uZWE0ZjVhOTFhYjk0Cj4gPiAtLS0gL2Rldi9u
+dWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvdmlydHVhbC1kaXNwbGF5LWJyaWRnZS50eHQKPiA+IEBAIC0wLDAgKzEsNjIgQEAKPiA+
+ICtWaXJ0dWFsIERpc3BsYXkgQnJpZGdlCj4gPiArCj4gPiArVGhpcyByZXByZXNlbnRzIGEgZGlz
+cGxheSB0aGF0IGlzIGNvbnRhaW5lZCB3aXRoaW4gYW4gZW11bGF0ZWQKPiA+ICtlbnZpcm9ubWVu
+dC4KPiA+ICsKPiA+ICtUaGlzIG1lYW5zIHRoYXQgdGhlIGRpc3BsYXkgZW5naW5lIG1haW5seSBl
+eHBlY3RzIHNvbWUgdGltaW5nCj4gPiArcGFyYW1ldGVycyB0byBiZSB3cml0dGVuIGludG8gaXQs
+IGFuZCBhZnRlciB0aGF0IHRoZSBlbXVsYXRvciB3aWxsCj4gPiArcmVzcG9uZCBieSBjcmVhdGlu
+ZyBhIHZpcnR1YWwgZGlzcGxheSB3aXRoIHRoZSByZXF1ZXN0ZWQKPiA+ICtyZXNvbHV0aW9uIGNo
+YXJhY3RlcmlzdGljcy4KPiA+ICsKPiA+ICtBcyB0aGUgb3BlcmF0aW5nIHN5c3RlbSBjYW5ub3Qg
+ImRldGVjdCIgc3VjaCBhIGRpc3BsYXksIHJhdGhlciB0aGUKPiA+ICtlbXVsYXRvciB3aWxsIHJl
+c3BvbmQgdG8gd2hhdCB0aGUgY29udHJvbGxlciBvdXRwdXRzLCBhCj4gPiArY2hpY2tlbi1hbmQt
+ZWdnIHByb2JsZW0gbmVlZHMgdG8gYmUgc29sdmVkOiB0aGUgcmVzb2x1dGlvbiBhbmQKPiA+ICt0
+aW1pbmcgY2hhcmFjdGVyaXN0aWNzIG5lZWQgdG8gYmUgZGVmaW5lZCBhbmQgc2V0IHVwIHNvbWV3
+aGVyZS4KPiA+ICsKPiA+ICtUaGUgdmlydHVhbCBkaXNwbGF5IGJyaWRnZSBzb2x2ZXMgdGhpcyBi
+eSBkZWZpbmluZyBhIGJyaWRnZSB3aXRoCj4gPiArYWxsIHRpbWluZyBjaGFyYWN0ZXJpc3RpY3Mg
+ZW5jb2RlZCBpbnRvIHRoZSBkZXZpY2UgdHJlZSBub2RlLgo+ID4gKwo+ID4gK1JlcXVpcmVkIHBy
+b3BlcmllczoKPiA+ICstIGNvbXBhdGlibGU6IHNoYWxsIGJlICJ2aXJ0dWFsLWRpc3BsYXktYnJp
+ZGdlIgo+ID4gKwo+ID4gK1JlcXVpcmVkIHN1Ym5vZGVzOgo+ID4gKy0gZGlzcGxheS10aW1pbmdz
+OiBjb250YWlucyBpbiB0dXJuIGEgZGlzcGxheSB0aW1pbmcgbm9kZQo+ID4gKyAgc2VlIGRpc3Bs
+YXktdGltaW5nLnR4dAo+ID4gKy0gcG9ydHM6IGNvbnRhaW5zIHRoZSBkaXNwbGF5IHBvcnRzLCBz
+ZWUgbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKPiA+ICsKPiA+ICtFeGFtcGxlOgo+ID4gKwo+
+ID4gK2JyaWRnZSB7Cj4gPiArCWNvbXBhdGlibGUgPSAidmlydHVhbC1kaXNwbGF5LWJyaWRnZSI7
+Cj4gPiArCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPiA+
+ICsKPiA+ICsJZGlzcGxheS10aW1pbmdzIHsKPiA+ICsJCS8qIFNvbWUgc3RhbmRhcmQgVkdBIHRp
+bWluZyAqLwo+ID4gKwkJdGltaW5nMCB7Cj4gPiArCQkJY2xvY2stZnJlcXVlbmN5ID0gPDIzNzUw
+PjsKPiA+ICsJCQloYWN0aXZlID0gPDY0MD47Cj4gPiArCQkJdmFjdGl2ZSA9IDw0ODA+Owo+ID4g
+KwkJCWhmcm9udC1wb3JjaCA9IDw0OD47Cj4gPiArCQkJaGJhY2stcG9yY2ggPSA8MTY+Owo+ID4g
+KwkJCWhzeW5jLWxlbiA9IDw5Nj47Cj4gPiArCQkJdmZyb250LXBvcmNoID0gPDMzPjsKPiA+ICsJ
+CQl2YmFjay1wb3JjaCA9IDw5PjsKPiA+ICsJCQl2c3luYy1sZW4gPSA8Mz47Cj4gPiArCQkJdnJl
+ZnJlc2ggPSA8NjA+Owo+ID4gKwkJfTsKPiA+ICsJfTsKPiA+ICsKPiA+ICsJcG9ydHMgewo+ID4g
+KwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiA+ICsK
+PiA+ICsJCXBvcnRAMCB7Cj4gPiArCQkJcmVnID0gPDA+Owo+ID4gKwo+ID4gKwkJCWRpc3BsYXlf
+YnJpZGdlX2luOiBlbmRwb2ludCB7Cj4gPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZm9vPjsK
+PiA+ICsJCQl9Owo+ID4gKwkJfTsKPiA+ICsJfTsKPiA+ICt9Owo+IAo+IAoKLS0gCj09PT09PT09
+PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtlIHRvIHwKfCBmaXggdGhlIHdvcmxkLCAgfAp8IGJ1
+dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1lIHRoZSAgIHwKIFwgc291cmNlIGNvZGUhICAvCiAg
+LS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOODhClfL8KvCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
