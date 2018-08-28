@@ -1,76 +1,139 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
-Date: Tue, 28 Aug 2018 15:45:53 +0200
-Message-ID: <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
-References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
- <20180824122308.3092-1-linus.walleij@linaro.org>
- <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
+From: richard.gong@linux.intel.com
+Subject: [PATCHv8 0/9] Add Intel Stratix10 FPGA manager and service layer
+Date: Tue, 28 Aug 2018 08:50:36 -0500
+Message-ID: <1535464245-11638-1-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, corbet@lwn.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMjcsIDIwMTggYXQgMTo1MyBQTSBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNh
-bXN1bmcuY29tPiB3cm90ZToKCj4gT24gMjQuMDguMjAxOCAxNDoyMywgTGludXMgV2FsbGVpaiB3
-cm90ZToKPiA+IFRoaXMgYWRkcyBiaW5kaW5ncyBmb3IgYSB2aXJ0dWFsIGRpc3BsYXkgdG8gYmUg
-dXNlZCB3aXRoIGRpc3BsYXlzCj4gPiBpbnNpZGUgZW50aXJlbHkgdmlydHVhbCBlbnZpcm9ubWVu
-dHMgd2hpY2ggZG8gbm90IGVtdWxhdGUgdGhpbmdzCj4gPiBsaWtlIG1vbml0b3JzIGJ1dCBqdXN0
-IG5lZWQgdGltaW5nIGluZm9ybWF0aW9uIHRvIGJlIHN1cHBsaWVkIHRvCj4gPiBpdHMgZGlzcGxh
-eSBjb250cm9sbGVyLgo+ID4KPiA+IFRoaXMgaXMgaW5zcGlyZWQgYnkgZWFybGllciB3b3JrIGJ5
-IExpdml1IER1ZGF1Lgo+Cj4gSWYgdGhpcyBpcyBwdXJlIHZpcnR1YWwgdGhlbiBpdCBzaG91bGQg
-YmUgY29ubmVjdGVkIHRvIG90aGVyIHB1cmUKPiB2aXJ0dWFsIGNvbXBvbmVudHMuCgpPSyBpdCdz
-IGEgYml0IG9mIGhhbGYtaGFsZiBidXQgb3V0c2lkZSBvZiBteSBncmFzcCwgSSBhbSBqdXN0IHRy
-eWluZwp0byBzdXBwb3J0IGxlZ2FjeSBzeXN0ZW1zLgoKVGhlIGRldmljZSB0cmVlIGlzIHRoZXJl
-OgphcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9ydHNtX3ZlLWFlbXY4YS5kdHMKYXJjaC9hcm02NC9i
-b290L2R0cy9hcm0vcnRzbV92ZS1tb3RoZXJib2FyZC5kdHNpCgpUaGUgbGF0dGVyIGNvbnRhaW5z
-IHRoZSBDTENEIHdoaWNoIGlzIHRoZSBkaXNwbGF5IGRyaXZlci4KCkluIFJUU00sIHdoaWNoIGlz
-IGFuIEFSTSBwcm9kdWN0IEkgZG8gbm90IGRldmVsb3AgYW5kCmNhbm5vdCBtYWtlIGNoYW5nZXMg
-dG8sIHRoZXJlIGlzIGFuIGVtdWxhdGVkIENMQ0QuIFNvCnRoYXQgcGFydCBhcHBlYXIgYXMgaWYg
-aXQgd2FzIHJlYWwgaGFyZHdhcmUuIExpa2UgaW4gUUVNVS4KCkJ1dCB0aGUgZGlzcGxheSBkb2Vz
-IG5vdCBoYXZlIGFueSBlbXVsYXRpb24uIFRoZSByYXcKb3V0cHV0IGZyb20gdGhlIENMQ0QgaXMg
-bGF0Y2hlZCBvdXQgdG8gdGhlIHNjcmVlbi4KCkkgZG8gbm90IGtub3cgZXhhY3RseSBrbm93IGhv
-dyB0aGUgUlRTTSBlbXVsYXRvcgphY3R1YWxseSB3b3JrcywgYnV0IEkgc3VzcGVjdCB0aGF0IHRo
-ZSBsaXR0bGUgZ3JhcGhpYyB3aW5kb3cKb24gdGhlIHNjcmVlZW4gYWRhcHRzIHRvIHdoYXQgZ2V0
-cyB3cml0dGVuIGludG8gdGhlCkNMQ0QgY29udHJvbCByZWdpc3RlcnMsIHNvIGFueXRoaW5nIGdv
-ZXMsIG1vcmUgb3IgbGVzcy4KClRvIHNhdGlzZnkgdGhlIENMQ0Qgd2l0aCBzb21lIHRpbWluZ3Mg
-YW5kIHJlc29sdXRpb24sCnRoaXMgYnJpZGdlIGdpdmVzIGl0IHRoYXQsIGZyb20gdGhlIGRldmlj
-ZSB0cmVlLCBpbiBhIHdheQp0aGF0IGNsZWFybHkgY29udmV5cyB0aGF0ICJ0aGlzIGlzIG5vdCBh
-IHJlYWwgdGhpbmciLgoKVGhlIG9sZCBjb2RlIHVzZXMgRFBJLiBUaGlzIGlzIG5vdCBEUEksIG5v
-dCBldmVuIGNsb3NlCnRvIGl0LiBJdCB3b3JrZWQgc2ltcGx5IGJlY2F1c2UgYWxsIHRoZSBEUEkg
-cmVhbGx5IGRvZXMgaXMKd2hhdCB0aGlzIHBhdGNoIGRvZXM6IHByb3ZpZGUgdGltaW5ncy4KCkJ5
-IGNvbnRyYXN0IG9uIFFFTVUgSSBoYXZlIHBhdGNoZXMgdGhlIGVtdWxhdG9yIHRvCnByb3Blcmx5
-IHJlcHJlc2VudCB0aGUgSTJDIEREQyBsaW5rIGFuZCBwcm92aWRlIEVESUQKc28gdGhhdCBpcyBh
-bGwgZmluZS4KCkkgY2Fubm90IHBhdGNoIFJUU00gdG8gZW11bGF0ZSBJMkMgYW5kIEREQy4gSXQn
-cyBub3QKb3BlbiBzb3VyY2UuIEJ1dCB0aGUgZGV2aWNlIHRyZWUgaW4gdGhlIGtlcm5lbCBzdXBw
-b3J0cwp0aGlzICJtYWNoaW5lIiBhbmQgc28sIEkgaGF2ZSB0byBtYWludGFpbiBpdCB3aGVuIG1v
-ZGVybml6bmcKdGhlIGZiZGV2IGRyaXZlciB0byBhIERSTSBkcml2ZXIuCgpJJ20gc29ycnkgUlRT
-TSBpcyBoYWxmL2hhbGYuIE5vdCBteSBmYXVsdC4gSSBjYW4ndCBmaXguLi4KCj4gQW5kIG9uZSBt
-b3JlIHRoaW5nLCB5b3UgYXJlIGRlZmluaW5nIHZpcnR1YWwgcGFuZWwgYnV0IHlvdSBhcmUgdXNp
-bmcKPiBkcm1fYnJpZGdlIGZyYW1ld29yaywgd2h5IG5vdCBkcm1fcGFuZWw/CgpUaGlzIHdhcyBk
-aXNjdXNzZWQgYmVmb3JlIGluIHRoZSBwcmV2aW91cyBwYXRjaCBzZXQ6Cmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE4LUp1bHkvMTgzNTE2Lmh0bWwK
-CkVzc2VudGlhbGx5LCBpdCdzIGJlY2F1c2UgdGhlIGRpc3BsYXkgZHJpdmVyIGlzIGp1c3QgY29u
-bmVjdGVkCnRvICJzb21ldGhpbmciIG5vdCBhIHBhbmVsIGFuZCBhIGJyaWRnZSBpcyBsaWtlbHkg
-dGhlIGJlc3QgSQpjYW4gY29tZSB1cCB3aXRoIC0gYSBicmlkZ2Ugb3ZlciB0byBhIHZpcnR1YWwg
-ZGlzcGxheS4KCkEgcGF0Y2ggdG8gYWRkICJWR0EiLCAiU0dBIiBhbmQgIlhHQSIgdG8gdGhlIHNp
-bXBsZSBwYW5lbHMKd2FzIE5BQ0tlZCAoc29ydCBvZiwgcG9saXRlbHkpOgpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1KdWx5LzE4MzY5OC5odG1s
-CgpBbHNvIGl0IHdhcyBub3RlZCB0aGF0IGl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBzb21ldGhp
-bmcgdGhhdAp3b3VsZCBtYWtlIGl0IGVhc3kgdG8gY2hhbmdlIHJlc29sdXRpb25zIG9uIHRoZXNl
-IHZpcnR1YWwKZGlzcGxheSB0aGluZ3MuIFZvaWxhLgoKWW91cnMsCkxpbnVzIFdhbGxlaWoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Richard Gong <richard.gong@intel.com>
+
+This is the 8th submission of Intel Stratix10 service layer and FPGA manager
+driver patches. This submission includes one additional patch for supporting
+remote status update, the second Stratix10 service layer client. Intel
+Stratix10 FPGA manager, which is 1st Stratix10 service layer client, is
+included in this submission.
+
+I have moved the stratix10-smc.h to include/linux since it is being reused.
+Header stratix10-smc.h defines a secure messaging protocol that used by
+Stratix10 service layer and EDAC/DWMAC drivers for:
+1. FPGA programming.
+2. RSU (remote status update). This updates some booting parameters that
+   happen on reboot, before the kernel boots the next time.
+3. reading and writing the secure registers.
+
+Stratix10 service layer patches have been reviewed internally by Alan Tull
+and other colleagues at Intel.
+
+Some features of the Intel Stratix10 SoC require a level of privilege
+higher than the kernel is granted. Such secure features include
+FPGA programming, remote status update, read and write the secure registers.
+In terms of the ARMv8 architecture, the kernel runs at Exception Level 1 (EL1),
+access to the features requires Exception Level 3 (EL3).
+
+The Intel Stratix10 service layer provides kernel APIs for drivers to
+request access to the secure features. The requests are queued and processed
+one by one. ARM’s SMCCC is used to pass the execution of the requests on to
+a secure monitor (EL3).
+
+Later the Intel Stratix10 service layer driver will be extended to provide
+services for QSPI, Crypto and warm reset.
+
+v2: add patches for FPGA manager, FPGA manager binding, dts and defconfig
+    remove intel-service subdirectory and intel-service.h, move intel-smc.h
+    and intel-service.c to driver/misc subdirectory
+    remove global variables
+    change service layer driver be 'default n'
+    correct SPDX markers
+    add timeout for do..while() loop
+    add kernel-doc for the functions and structs, correct multiline comments
+    replace kfifo_in/kfifo_out with kfifo_in_spinlocked/kfifo_out_spinlocked
+    rename struct intel_svc_data (at client header) to intel_svc_client_msg
+    rename struct intel_svc_private_mem to intel_svc_data
+    other corrections/changes from Intel internal code reviews
+v3: change all exported functions with "intel_svc_" as the prefix
+    increase timeout values for claiming back submitted buffer(s)
+    rename struct intel_command_reconfig_payload to
+    struct intel_svc_command_reconfig_payload
+    add pr_err() to provide the error return value
+    change to put fpga_mgr node under firmware/svc node
+    change to FPGA manager to align the update of service client APIs, and the
+    update of fpga_mgr device node
+    Other corrections/changes
+v4: s/intel/stratix10/ on some variables, structs, functions, and file names
+    intel-service.c -> stratix10-svc.c
+    intel-smc.h -> stratix10-smc.h
+    intel-service-client.h -> stratix10-svc-client.h
+    remove non-kernel-doc formatting
+    s/fpga-mgr@0/fpga-mgr/ to remove unit_address at fpga_mgr node
+    add Rob's Reviewed-by
+    add Richard's signed-off-by
+v5: add a new API statix10_svc_done() which is called by service client
+    when client request is completed or error occurs during request
+    process. Which allows service layer to free its resources.
+    remove dummy client from service layer client header and service layer
+    source file.
+    add Rob's Reviewed-by
+    add a new file stratix10-svc.rst and add that to driver-api/index.rst
+    kernel-doc fixes
+v6: replace kthread_create_on_cpu() with kthread_create_on_node()
+    extend stratix_svc_send() to support service client which doesn't use
+    memory allocated by service layer
+    add S10_RECONFIG_TIMEOUT
+    rename s/S10_BUF_TIMEOUT/S10_BUFFER_TIMEOUT/
+    fix service layer and FPGA manager Klocwork errors
+v7: add remote status update client support
+    s/pr_debug/dev_dbg, s/dev_info/dev_dbg
+    add unlock buffer if s10_svc_send_msg() fails
+    add release channel if fpga_mgr_create() fails
+    handle invalid pointer at svc if the client passed an invalid name
+v8: move stratix10-smc.h to include/linux from driver/misc
+    revert version 7 error code & smc function ID value changes at
+    stratix10-smc.h
+    add a goto and common error handling at the end of fpga driver's
+    probe function
+
+Alan Tull (3):
+  dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
+  arm64: dts: stratix10: add fpga manager and region
+  fpga: add intel stratix10 soc fpga manager driver
+
+Richard Gong (6):
+  dt-bindings, firmware: add Intel Stratix10 service layer binding
+  arm64: dts: stratix10: add stratix10 service driver binding to base
+    dtsi
+  misc: add Intel Stratix10 service layer driver
+  defconfig: enable fpga and service layer
+  Documentation: driver-api: add stratix10 service layer
+  misc: add remote status update client support
+
+ .../bindings/firmware/intel,stratix10-svc.txt      |   57 ++
+ .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt |   17 +
+ Documentation/driver-api/index.rst                 |    1 +
+ Documentation/driver-api/stratix10-svc.rst         |   32 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   33 +
+ arch/arm64/configs/defconfig                       |    7 +
+ drivers/fpga/Kconfig                               |    6 +
+ drivers/fpga/Makefile                              |    1 +
+ drivers/fpga/stratix10-soc.c                       |  560 ++++++++++
+ drivers/misc/Kconfig                               |   12 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/stratix10-svc.c                       | 1066 ++++++++++++++++++++
+ include/linux/stratix10-smc.h                      |  312 ++++++
+ include/linux/stratix10-svc-client.h               |  217 ++++
+ 14 files changed, 2322 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+ create mode 100644 Documentation/driver-api/stratix10-svc.rst
+ create mode 100644 drivers/fpga/stratix10-soc.c
+ create mode 100644 drivers/misc/stratix10-svc.c
+ create mode 100644 include/linux/stratix10-smc.h
+ create mode 100644 include/linux/stratix10-svc-client.h
+
+-- 
+2.7.4
