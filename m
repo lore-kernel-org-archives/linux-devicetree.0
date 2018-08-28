@@ -1,99 +1,119 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH 2/2][RESEND] arm64: dts: Add big-endian in nor node for ls104xa
-Date: Tue, 28 Aug 2018 12:29:36 +0530
-Message-ID: <20180828065936.8040-3-prabhakar.kushwaha@nxp.com>
-References: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845: Add smp2p nodes
+Date: Tue, 28 Aug 2018 00:12:03 -0700
+Message-ID: <20180828071203.26740-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-NOR and IFC controller connectivity is big-endian.
-So add big-endian field in nor device tree node allowing
-IFC controller to read/write data from/to the flash correctly.
+Add the SMP2P nodes for the remoteproc states for adsp, cdsp, mpss and
+slpi.
 
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-Based on 147395ea40b36b "dt-bindings: mtd-physmap: Add endianness supports"
-RESEND keeping Li Yang <leoyang.li@nxp.com> 
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 88 ++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
- arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 2 ++
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 2 ++
- arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 2 ++
- 3 files changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-index c7b8d2c009cd..dff3d648172e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-@@ -3,6 +3,7 @@
-  * Device Tree Include file for Freescale Layerscape-1043A family SoC.
-  *
-  * Copyright 2014-2015 Freescale Semiconductor, Inc.
-+ * Copyright 2018 NXP
-  *
-  * Mingkai Hu <Mingkai.hu@freescale.com>
-  */
-@@ -50,6 +51,7 @@
- 	nor@0,0 {
- 		compatible = "cfi-flash";
- 		reg = <0x0 0x0 0x8000000>;
-+		big-endian;
- 		bank-width = <2>;
- 		device-width = <1>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 0c9a2aa6a1b5..d977117acac4 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -230,6 +230,94 @@
+ 		hwlocks = <&tcsr_mutex 3>;
  	};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index 7b01ba8d3b7e..17ca357e854f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -3,6 +3,7 @@
-  * Device Tree Include file for Freescale Layerscape-1043A family SoC.
-  *
-  * Copyright 2014-2015 Freescale Semiconductor, Inc.
-+ * Copyright 2018 NXP
-  *
-  * Mingkai Hu <Mingkai.hu@freescale.com>
-  */
-@@ -65,6 +66,7 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			reg = <0x0 0x0 0x8000000>;
-+			big-endian;
- 			bank-width = <2>;
- 			device-width = <1>;
- 		};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-index e69306e6b0b1..e58a8ca1386c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-@@ -3,6 +3,7 @@
-  * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-  *
-  * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2018 NXP
-  *
-  * Shaohui Xie <Shaohui.Xie@nxp.com>
-  */
-@@ -141,6 +142,7 @@
- 	nor@0,0 {
- 		compatible = "cfi-flash";
- 		reg = <0x0 0x0 0x8000000>;
-+		big-endian;
- 		bank-width = <2>;
- 		device-width = <1>;
- 	};
+ 
++	smp2p-cdsp {
++		compatible = "qcom,smp2p";
++		qcom,smem = <94>, <432>;
++
++		interrupts = <GIC_SPI 576 IRQ_TYPE_EDGE_RISING>;
++
++		mboxes = <&apss_shared 6>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <5>;
++
++		cdsp_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		cdsp_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
++	smp2p-lpass {
++		compatible = "qcom,smp2p";
++		qcom,smem = <443>, <429>;
++
++		interrupts = <GIC_SPI 158 IRQ_TYPE_EDGE_RISING>;
++
++		mboxes = <&apss_shared 10>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <2>;
++
++		adsp_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		adsp_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
++	smp2p-mpss {
++		compatible = "qcom,smp2p";
++		qcom,smem = <435>, <428>;
++		interrupts = <GIC_SPI 451 IRQ_TYPE_EDGE_RISING>;
++		mboxes = <&apss_shared 14>;
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <1>;
++
++		modem_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		modem_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
++	smp2p-slpi {
++		compatible = "qcom,smp2p";
++		qcom,smem = <481>, <430>;
++		interrupts = <GIC_SPI 172 IRQ_TYPE_EDGE_RISING>;
++		mboxes = <&apss_shared 26>;
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <3>;
++
++		slpi_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		slpi_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
 -- 
-2.14.1
+2.18.0
