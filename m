@@ -1,34 +1,103 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v1] arm64: dts: ls1043a: Add configure-gfladj property to
- USB3 node
-Date: Tue, 28 Aug 2018 07:30:39 -0300
-Message-ID: <CAOMZO5DJXjWWAOzx_hQKUzjvkb_cCXhGF9nEwnxk8nwTvagh6g@mail.gmail.com>
-References: <20180828101213.25750-1-yinbo.zhu@nxp.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Tue, 28 Aug 2018 16:00:32 +0530
+Message-ID: <CAFp+6iHFB1Z9zQ4Uitt=4xCh+G+bfK3Xsjo=iMSPTveuTxwWsg@mail.gmail.com>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-6-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828101213.25750-1-yinbo.zhu@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ran Wang <ran.wang_1@nxp.com>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, Yuantian Tang <andy.tang@nxp.com>, Changming Huang <jerry.huang@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, xiaobo.xie@nxp.com, Li Yang <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.in>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180827151112.25211-6-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2018 at 7:12 AM, Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
-> From: Rajesh Bhagat <rajesh.bhagat@freescale.com>
-
-freescale.com addresses are no longer valid.
-
-The From and the first Signed-off-by lines should match, so use
-nxp.com here instead.
-
-> Add "configure-gfladj" boolean property to USB3 node. This property
-
-I don't find any dt-binding doc for this property.
-
-> is used to determine whether frame length adjustent is required or
-> not
->
-> Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-
-You missed to add your Signed-off-by tag.
+SGkgSm9yZGFuLAoKT24gTW9uLCBBdWcgMjcsIDIwMTggYXQgODo0MiBQTSBKb3JkYW4gQ3JvdXNl
+IDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPgo+IEFkZCB0aGUgbm9kZXMgdG8gZGVz
+Y3JpYmUgdGhlIEFkcmVubyBHUFUgYW5kIEdNVSBkZXZpY2VzLgo+Cj4gU2lnbmVkLW9mZi1ieTog
+Sm9yZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgYXJjaC9hcm02
+NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIHwgMTIxICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTIxIGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBpbmRleCBjZGFhYmViM2M5OTUuLjEwZGIwY2ViMzY5OSAx
+MDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtMTkyLDYgKzE5Miw1
+OSBAQAo+ICAgICAgICAgICAgICAgICBtZXRob2QgPSAic21jIjsKPiAgICAgICAgIH07Cj4KPiAr
+Z3B1X29wcF90YWJsZTogYWRyZW5vLW9wcC10YWJsZSB7Cj4gKyAgICAgICAgICAgICAgIGNvbXBh
+dGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12Mi1xY29tLWxldmVsIjsKPiArCj4gKyAgICAgICAg
+ICAgICAgIG9wcC03MTAwMDAwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIG9wcC1oeiA9
+IC9iaXRzLyA2NCA8NzEwMDAwMDAwPjsKPiArICAgICAgICAgICAgICAgICAgICAgICBxY29tLGxl
+dmVsID0gPDQxNj47Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICBv
+cHAtNjc1MDAwMDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBvcHAtaHogPSAvYml0cy8g
+NjQgPDY3NTAwMDAwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcWNvbSxsZXZlbCA9IDwz
+ODQ+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAgICAgICAgb3BwLTU5NjAw
+MDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDw1OTYw
+MDAwMDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIHFjb20sbGV2ZWwgPSA8MzIwPjsKPiAr
+ICAgICAgICAgICAgICAgfTsKPiArCj4gKyAgICAgICAgICAgICAgIG9wcC01MjAwMDAwMDAgewo+
+ICsgICAgICAgICAgICAgICAgICAgICAgIG9wcC1oeiA9IC9iaXRzLyA2NCA8NTIwMDAwMDAwPjsK
+PiArICAgICAgICAgICAgICAgICAgICAgICBxY29tLGxldmVsID0gPDI1Nj47Cj4gKyAgICAgICAg
+ICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICBvcHAtNDE0MDAwMDAwIHsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDQxNDAwMDAwMD47Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgcWNvbSxsZXZlbCA9IDwxOTI+Owo+ICsgICAgICAgICAgICAgICB9
+Owo+ICsKPiArICAgICAgICAgICAgICAgb3BwLTM0MjAwMDAwMCB7Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDwzNDIwMDAwMDA+Owo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIHFjb20sbGV2ZWwgPSA8MTI4PjsKPiArICAgICAgICAgICAgICAgfTsKPiArCj4g
+KyAgICAgICAgICAgICAgIG9wcC0yNTcwMDAwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IG9wcC1oeiA9IC9iaXRzLyA2NCA8MjU3MDAwMDAwPjsKPiArICAgICAgICAgICAgICAgICAgICAg
+ICBxY29tLGxldmVsID0gPDY0PjsKPiArICAgICAgICAgICAgICAgfTsKPiArICAgICAgIH07Cj4g
+Kwo+ICsgICAgICAgZ211X29wcF90YWJsZTogYWRyZW5vLWdtdS1vcHAtdGFibGUgewo+ICsgICAg
+ICAgICAgICAgICBjb21wYXRpYmxlID0gIm9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCI7
+Cj4gKwo+ICsgICAgICAgICAgICAgICBvcHAtNDAwMDAwMDAwIHsKPiArICAgICAgICAgICAgICAg
+ICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDQwMDAwMDAwMD47Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgcWNvbSxsZXZlbCA9IDwxMjg+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsKPiAr
+ICAgICAgICAgICAgICAgb3BwLTIwMDAwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+b3BwLWh6ID0gL2JpdHMvIDY0IDwyMDAwMDAwMDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IHFjb20sbGV2ZWwgPSA8NDg+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgfTsKPiAr
+Cj4gICAgICAgICBzb2M6IHNvYyB7Cj4gICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0g
+PDE+Owo+ICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsKPiBAQCAtMzIzLDUgKzM3
+Niw3MyBAQAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2Fi
+bGVkIjsKPiAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgICB9Owo+
+ICsKPiArICAgICAgICAgICAgICAgYWRyZW5vX3NtbXU6IGFkcmVuby1zbW11QDUwNDAwMDAgewoK
+aW9tbXVANTA0MDAwMCBhcyBwb2ludGVkIG91dCBieSBSb2IgaW4gWzFdCgo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxzZG04NDUtc21tdS12MiIsICJxY29tLHNt
+bXUtdjIiOwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDUwNDAwMDAgMHgxMDAw
+MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2lvbW11LWNlbGxzID0gPDE+Owo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICNnbG9iYWwtaW50ZXJydXB0cyA9IDwyPjsKPiArICAgICAgICAg
+ICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI5IElSUV9UWVBFX0xFVkVMX0hJ
+R0g+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1NQSSAy
+MzEgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIDxHSUNfU1BJIDM2NCBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM2NSBJUlFfVFlQRV9FREdF
+X1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNf
+U1BJIDM2NiBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM2NyBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM2OCBJUlFfVFlQ
+RV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDxHSUNfU1BJIDM2OSBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM3MCBJUlFfVFlQRV9FREdFX1JJU0lORz4s
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM3MSBJ
+UlFfVFlQRV9FREdFX1JJU0lORz47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0g
+PCZnY2MgR0NDX0dQVV9NRU1OT0NfR0ZYX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICA8JmdjYyBHQ0NfR1BVX0NGR19BSEJfQ0xLPjsKPiArICAgICAgICAgICAgICAgICAg
+ICAgICBjbG9jay1uYW1lcyA9ICJidXMiLCAiaWZhY2UiOwo+ICsKPiArICAgICAgICAgICAgICAg
+ICAgICAgICBwb3dlci1kb21haW5zID0gPCZncHVjYyBHUFVfQ1hfR0RTQz47CgphbmQgZm9yIHRo
+aXMgeW91IG5lZWQgdG8gaW5jbHVkZSB0aGUgZ3B1Y2MgZHQtYmluZGluZ3MgaGVhZGVyIHdoaWNo
+IGlzIGNvbWluZwpmcm9tIEFtaXQncyBncHVjYyBkcml2ZXIgcGF0Y2guCgpbMV0gaHR0cHM6Ly9w
+YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDUzNDk5OS8KCkJlc3QgcmVnYXJkcwpWaXZlawoK
+W3NuaXBdCgotLSAKUVVBTENPTU0gSU5ESUEsIG9uIGJlaGFsZiBvZiBRdWFsY29tbSBJbm5vdmF0
+aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlcgpvZiBDb2RlIEF1cm9yYSBGb3J1bSwgaG9zdGVk
+IGJ5IFRoZSBMaW51eCBGb3VuZGF0aW9uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2ZyZWVkcmVubwo=
