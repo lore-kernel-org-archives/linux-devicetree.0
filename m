@@ -1,15 +1,15 @@
 From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/2][RESEND] ARM: dts: Add big-endian in nor node for
- ls1021a
-Date: Tue, 28 Aug 2018 19:25:48 -0300
-Message-ID: <CAOMZO5BVrK98ksQ2KBiXTy6O-nXjOG8_fFueRRXHZOwCMJ1UGg@mail.gmail.com>
+Subject: Re: [PATCH 2/2][RESEND] arm64: dts: Add big-endian in nor node for
+ ls104xa
+Date: Tue, 28 Aug 2018 19:26:30 -0300
+Message-ID: <CAOMZO5CvzOcQ5pvDUL1W2oLk3LMAoTVR_kF8JjmoC+qL8ye6Rw@mail.gmail.com>
 References: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
- <20180828065936.8040-2-prabhakar.kushwaha@nxp.com>
+ <20180828065936.8040-3-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180828065936.8040-2-prabhakar.kushwaha@nxp.com>
+In-Reply-To: <20180828065936.8040-3-prabhakar.kushwaha@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,13 +26,14 @@ List-Id: devicetree@vger.kernel.org
 On Tue, Aug 28, 2018 at 3:59 AM, Prabhakar Kushwaha
 <prabhakar.kushwaha@nxp.com> wrote:
 
-> diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
-> index 499f41a2c6f0..923a25760516 100644
-> --- a/arch/arm/boot/dts/ls1021a-qds.dts
-> +++ b/arch/arm/boot/dts/ls1021a-qds.dts
-> @@ -1,5 +1,6 @@
->  /*
->   * Copyright 2013-2014 Freescale Semiconductor, Inc.
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> index c7b8d2c009cd..dff3d648172e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> @@ -3,6 +3,7 @@
+>   * Device Tree Include file for Freescale Layerscape-1043A family SoC.
+>   *
+>   * Copyright 2014-2015 Freescale Semiconductor, Inc.
 > + * Copyright 2018 NXP
 
-This line is unrelated to the big-endian change.
+Same comment as in the other patch.
