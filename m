@@ -1,50 +1,65 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v8 6/8] ARM: dts: sun7i-a20: Add Video
- Engine and reserved memory nodes
-Date: Tue, 28 Aug 2018 16:55:04 +0200
-Message-ID: <20180828145504.473xga3lur372wld@flea>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v8 7/8] ARM: dts: sun8i-a33: Add Video Engine and
+ reserved memory nodes
+Date: Tue, 28 Aug 2018 16:55:17 +0200
+Message-ID: <20180828145517.p2ijrsfu576xwf7t@flea>
 References: <20180828073424.30247-1-paul.kocialkowski@bootlin.com>
- <20180828073424.30247-7-paul.kocialkowski@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+ <20180828073424.30247-8-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ifhmj27lpg6g3hp7"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBU6ESXOAKGQERELEB6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="fbdscder4rhklhjs"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180828073424.30247-7-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180828073424.30247-8-paul.kocialkowski@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Randy Li <ayaka@soulik.info>, Hans Verkuil <hverkuil@xs4all.nl>, Ezequiel Garcia <ezequiel@collabora.com>, Tomasz Figa <tfiga@chromium.org>, Alexandre Courbot <acourbot@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 
---ifhmj27lpg6g3hp7
-Content-Type: text/plain; charset="UTF-8"
+--fbdscder4rhklhjs
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 28, 2018 at 09:34:22AM +0200, Paul Kocialkowski wrote:
+On Tue, Aug 28, 2018 at 09:34:23AM +0200, Paul Kocialkowski wrote:
 > This adds nodes for the Video Engine and the associated reserved memory
-> for the A20. Up to 96 MiB of memory are dedicated to the CMA pool.
-> 
+> for the A33. Up to 96 MiB of memory are dedicated to the CMA pool.
+>=20
 > The VPU can only map the first 256 MiB of DRAM, so the reserved memory
 > pool has to be located in that area. Following Allwinner's decision in
 > downstream software, the last 96 MiB of the first 256 MiB of RAM are
 > reserved for this purpose.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+>=20
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---ifhmj27lpg6g3hp7--
+
+--fbdscder4rhklhjs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluFYlQACgkQ0rTAlCFN
+r3TMPw//eoo4xqYQREx1gDmx1S9VTiUHhbA/6nKaTcvIkks7WWn7Lt2Ygmaf9c8s
+DXFu2i8QUctdlcP0MLO7Tq8+jWkaJ9KVdhERypSQ8bdLxVnKqxCAQFlPkrnZOvIH
+9ZdGhMuCdjZn2lFEP9MLoTgj83l54n7Swwv/yhCK1npfLyhrPls3OS2Ea/519aOw
+tCdkrZtkGKFq9mF+J1dJ0H9WGaqCQ/wND0H2W//N9FaKg30eqV48oUGLzRAMgY1u
+tGmsNTzc3Joa+yLnDlZehbrcmv+yu33frgWtdPB+wBXKftZ129XD32NkaFqou3Yw
+l6EYptSSvFxI5UnrirKegts59NP6zRth1xzM2pPjnb2Fm9sY4s/HpQ04T57YhUAq
+Kc5VBMU3LWtmoQg6szf6Nws5S8IN23VAW8i3TIof0mNFahgRDUVvdtJDMboUvkna
+M6npW9Hf8EDEOjmp1sGFORhoWhiKNVF4duuwkRXMFx4RjCSY3ri4cDEFx/BrKFx2
+2zROchTBpR+RVACcQSVtzNWjbrATZidAhafQALWu4DJNV+IYAHF+uRsVIDDJomgI
+HsDn/z3OlLaPV25sqh2+Bsw+NJ7O4fkyxMno0R+43LvaeQaNBELdN9riIs4mxhTU
+wBMx7Nu7zyNVwDCsIlS3tNmFxYzE0u6GqdmS0UUbaK4IUmmyOVI=
+=vYN0
+-----END PGP SIGNATURE-----
+
+--fbdscder4rhklhjs--
