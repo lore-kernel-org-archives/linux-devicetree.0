@@ -1,64 +1,65 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to
- GPIO
-Date: Mon, 27 Aug 2018 20:20:34 -0700
-Message-ID: <20180828032034.GG2523@minitux>
-References: <20180817163849.30750-1-ilina@codeaurora.org>
- <20180817163849.30750-2-ilina@codeaurora.org>
- <CACRpkdb+Opdn1eWZSRydS1Bafpqwcg83xEcT-YJC6D-kSSi1ew@mail.gmail.com>
- <20180827165644.GR5081@codeaurora.org>
- <20180828002641.GC2523@minitux>
- <20180828014652.GB13998@codeaurora.org>
+From: Jian Hu <jian.hu@amlogic.com>
+Subject: Re: [PATCH 2/2] clk: meson-g12a: Add AO Clock controller driver
+Date: Tue, 28 Aug 2018 11:35:32 +0800
+Message-ID: <977d8010-6d82-5eac-5da5-6dbe0f73971a@amlogic.com>
+References: <1533894868-85815-1-git-send-email-jian.hu@amlogic.com>
+ <1533894868-85815-3-git-send-email-jian.hu@amlogic.com>
+ <6c855dc62fe6ed1a01216bd708d401a280f8762c.camel@baylibre.com>
+ <fff1f982-c9f3-8aa4-b108-6c0998827e79@amlogic.com>
+ <89b058a7bba26058fab95dea01155221dbb642ce.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180828014652.GB13998@codeaurora.org>
+In-Reply-To: <89b058a7bba26058fab95dea01155221dbb642ce.camel@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@kernel.org>, evgreen@chromium.org, rplsssn@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 27 Aug 18:46 PDT 2018, Lina Iyer wrote:
-> On Mon, Aug 27 2018 at 18:26 -0600, Bjorn Andersson wrote:
-> > On Mon 27 Aug 09:56 PDT 2018, Lina Iyer wrote:
-[..]
-> > > Thanks, I will look into Hans's RFCv2. But what would help me would be
-> > > to avoid creating the IRQ for the GPIO itself (I have the latent IRQ),
-> > > if I could just return that instead in gpio_to_irq(), it might be
-> > > easier. I understand ->to_irq() is supposed to be a translate function
-> > > only, I can avoid the dance of enabling and diabling the PDC IRQ on
-> > > suspend and resume.
-> > > 
-> > 
-> > I did implement gpio_to_irq() like this in the PMIC gpio/mpp drivers and
-> > we've since concluded that we need to move this to some hierarchical
-> > interrupt controller, because people like Linus expect to be able to say
-> > 
-> >  interrupts = <&gpio_controller 1 IRQ_TYPE_EDGE_RISING>
-> > 
-> > which is something used all over the place with the TLMM driver today.
+Hi: Jerome
+
+On 2018/8/27 21:07, Jerome Brunet wrote:
+> On Fri, 2018-08-24 at 21:34 +0800, Jian Hu wrote:
+>>>
+>>
+>> I am confued about aoclk81's parent clocks.
+>>
+>> I can not get the example of axg audio clock driver, Could you provide
+>> the link? Had it merged into clk-meson.git?
 > 
-> Does it have to be &gpio_controller, can it be another interrupt controller?
+> Yes and mainline as well : drivers/clk/meson/axg-audio.c
 > 
-> Say,
-> 	interrupts-extended = <&pdc 1 IRQ_TYPE_EDGE_RISING>;
+> Basically this driver is creating bypass input clocks (audio_pclk, mst_in[0-9],
+> etc...) .
 > 
+> This allows to collect input clocks from DT (like any consumer should) will
+> keeping constant in the controller clock tree.
+> 
+>>From what I've seen of your controller drivers, the EE controller should have
+> one input, the AO should have 3.
+> 
+> 
+> 
+> .
+> 
+I still can not get the example meaning in axg audio driver.
 
-It would require that the GPIO interrupt number space of the PDC matches
-the pin numbering of the TLMM, to be somewhat maintainable.
+In 26 page of A113D_Datasheet V0.7 20170725-Baylibre.pdf,We can see the 
+aoclk81 has two parents. clk81 and ao_slow_clk. I can not get 3 parents.
 
-And it would still require DT-writers to know that if the implementation
-of a compatible, that references a TLMM IRQ, wants to mark the IRQ wake
-capable it needs to reference the PDC instead...while still having a
-pinmux/pinconf setting for the TLMM.
+                          clk81|\
+                        -------| \        aoclk81
+src0 |\                       |  |-------------------
+-----| \     ao_slow_clk      |  |
+      |  |---------------------| /
+-----| /                      |/
+  src1|/
 
-And for gpio_to_irq() we would need to do the mapping that you suggest,
-so the TLMM still needs to have all these references to the PDC.
 
+src0 is from xtal, if can generate 32k clock, but it is never used.
+src1 is from gpio clock, It is never used. If necessary， the ao_slow_clk 
+maybe described.
 
-So I think it would be nice if we could avoid this scenario, but I don't
-have any good ideas of how to do this right now...
-
-Regards,
-Bjorn
+So why aoclk81 has 3 parents?
