@@ -1,66 +1,83 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: Re: [PATCH v2 25/40] mmc: sdhci: Add a quirk to disable card clock
- during tuning
-Date: Tue, 28 Aug 2018 18:41:29 +0300
-Message-ID: <20180828184129.525439ba@dhcp-10-21-25-168>
-References: <1533924522-1037-1-git-send-email-avienamo@nvidia.com>
-        <1533924522-1037-26-git-send-email-avienamo@nvidia.com>
-        <b0b761ac-00fb-5a79-7a38-89b08c620c02@intel.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 1/3] spis: mediatek: add bindings for Mediatek MT2712 soc
+ platform
+Date: Tue, 28 Aug 2018 17:44:21 +0200
+Message-ID: <d91449a1-87f4-77e0-dd94-09e9989aaa7e@gmail.com>
+References: <1535437685-30230-1-git-send-email-leilk.liu@mediatek.com>
+ <1535437685-30230-2-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b0b761ac-00fb-5a79-7a38-89b08c620c02@intel.com>
+In-Reply-To: <1535437685-30230-2-git-send-email-leilk.liu@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Leilk Liu <leilk.liu@mediatek.com>, Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, mengqi.zhang@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Aug 2018 14:25:44 +0300
-Adrian Hunter <adrian.hunter@intel.com> wrote:
 
-> On 10/08/18 21:08, Aapo Vienamo wrote:
-> > Add a quirk to disable card clock when the tuning command is sent.
-> > 
-> > This has to be done to prevent the SDHCI controller from hanging on
-> > Tegra210. Without the quirk enabled there appears to be around 10%
-> > chance that the tuning sequence will fail and time out due to the
-> > controller locking up.
-> > 
-> > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> > ---
-> >  drivers/mmc/host/sdhci.c | 15 +++++++++++++++
-> >  drivers/mmc/host/sdhci.h |  2 ++
-> >  2 files changed, 17 insertions(+)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index 04dc443..166b16f 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -2175,6 +2175,7 @@ static void sdhci_send_tuning(struct sdhci_host *host, u32 opcode)
-> >  	struct mmc_request mrq = {};
-> >  	unsigned long flags;
-> >  	u32 b = host->sdma_boundary;
-> > +	u16 clk;
-> >  
-> >  	spin_lock_irqsave(&host->lock, flags);
-> >  
-> > @@ -2183,6 +2184,13 @@ static void sdhci_send_tuning(struct sdhci_host *host, u32 opcode)
-> >  	cmd.mrq = &mrq;
-> >  
-> >  	mrq.cmd = &cmd;
-> > +
-> > +	if (host->quirks2 & SDHCI_QUIRK2_TUNE_DIS_CARD_CLK) {
-> > +		clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> > +		clk &= ~SDHCI_CLOCK_CARD_EN;
-> > +		sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);  
+
+On 28/08/18 08:28, Leilk Liu wrote:
+> This patch adds a DT binding documentation for the MT2712 soc.
 > 
-> Rather than using a quirk, could you use the sdhci I/O accessors to disable
-> the clock before the tuning comment is written, udelay(1), and then enable
-> it again?
+> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
+> ---
+>  .../devicetree/bindings/spi/spi-slave-mt27xx.txt   |   39 ++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
 
-This was the way it was implemented in the downstream kernel. However,
-doing it in the IO accessor when a tuning command is sent seems to work
-too.
+Do I understand correctly that mt6xxx, mt7xxx and mt8xxx SoCs have a totally
+different architecture then mt27xx so they will need a totally different
+binding. If not, then please rename the binding description file and the driver.
 
- -Aapo
+Regards,
+Matthias
+
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+> new file mode 100644
+> index 0000000..dcb8934
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+> @@ -0,0 +1,39 @@
+> +Binding for MTK SPI Slave controller
+> +
+> +Required properties:
+> +- compatible: should be one of the following.
+> +    - mediatek,mt2712-spi: for mt2712 platforms
+> +
+> +- reg: Address and length of the register set for the device
+> +
+> +- interrupts: Should contain spi interrupt
+> +
+> +- clocks: phandles to input clocks.
+> +  The first should be one of the following. It's PLL.
+> +   -  <&topckgen CLK_TOP_UNIVPLL1_D2>: specify parent clock 312MHZ.
+> +				      It's the default one.
+> +   -  <&topckgen CLK_TOP_UNIVPLL1_D4>: specify parent clock 156MHZ.
+> +   -  <&topckgen CLK_TOP_UNIVPLL2_D4>: specify parent clock 104MHZ.
+> +   -  <&topckgen CLK_TOP_UNIVPLL1_D8>: specify parent clock 78MHZ.
+> +  The second should be <&topckgen CLK_TOP_SPISLV_SEL>. It's clock mux.
+> +  The third is <&infracfg CLK_INFRA_AO_SPI1>. It's clock gate.
+> +
+> +- clock-names: shall be "parent-clk" for the parent clock, "sel-clk" for the
+> +  muxes clock, and "spi-clk" for the clock gate.
+> +
+> +- spi-slave: Empty property indicating the SPI controller is used in slave mode.
+> +
+> +Example:
+> +
+> +- SoC Specific Portion:
+> +spis: spi@10013000 {
+> +	compatible = "mediatek,mt2712-spi-slave";
+> +	reg = <0 0x10013000 0 0x100>;
+> +	interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_LOW>;
+> +	clocks = <&topckgen CLK_TOP_UNIVPLL1_D2>,
+> +		<&topckgen CLK_TOP_SPISLV_SEL>,
+> +		<&infracfg CLK_INFRA_AO_SPI1>;
+> +	clock-names = "parent-clk", "sel-clk", "spi-clk";
+> +	spi-slave;
+> +	status = "disabled";
+> +};
+> 
