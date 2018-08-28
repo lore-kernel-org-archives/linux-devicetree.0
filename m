@@ -1,137 +1,230 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 3/5] drivers: pinctrl: msm: enable PDC interrupt only
- during suspend
-Date: Mon, 27 Aug 2018 15:57:23 -0700
-Message-ID: <20180827225723.GW160295@google.com>
-References: <20180824200157.9993-1-ilina@codeaurora.org>
- <20180824200157.9993-4-ilina@codeaurora.org>
+Subject: Re: [PATCH v2 2/6] reset: qcom: PDC Global (Power Domain Controller)
+ reset controller
+Date: Mon, 27 Aug 2018 17:22:36 -0700
+Message-ID: <20180828002236.GX160295@google.com>
+References: <20180824131900.5353-1-sibis@codeaurora.org>
+ <20180824131900.5353-3-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180824200157.9993-4-ilina@codeaurora.org>
+In-Reply-To: <20180824131900.5353-3-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lina,
+Hi Sibi,
 
-On Fri, Aug 24, 2018 at 02:01:55PM -0600, Lina Iyer wrote:
-> During suspend the system may power down some of the system rails. As a
-> result, the TLMM hw block may not be operational anymore and wakeup
-> capable GPIOs will not be detected. The PDC however will be operational
-> and the GPIOs that are routed to the PDC as IRQs can wake the system up.
+On Fri, Aug 24, 2018 at 06:48:56PM +0530, Sibi Sankar wrote:
+> Add reset controller for SDM845 SoCs to control reset signals provided
+> by PDC Global for Modem, Compute, Display, GPU, Debug, AOP, Sensors,
+> Audio, SP and APPS
 > 
-> To avoid being interrupted twice (for TLMM and once for PDC IRQ) when a
-> GPIO trips, use TLMM for active and switch to PDC for suspend. When
-> entering suspend, disable the TLMM wakeup interrupt and instead enable
-> the PDC IRQ and revert upon resume.
-> 
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
-> Changes in v2:
-> 	- Fix PDC IRQ max port, 126 is the max supported in h/w
-> 	- Use PDC hwirq in bitmap, linux numbers could be large
-> 	- Setup DISABLE_UNLAZY for both TLMM and PDC IRQs
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 70 +++++++++++++++++++++++++++++-
->  drivers/pinctrl/qcom/pinctrl-msm.h |  3 ++
->  2 files changed, 72 insertions(+), 1 deletion(-)
+>  drivers/reset/Kconfig          |   9 +++
+>  drivers/reset/Makefile         |   1 +
+>  drivers/reset/reset-qcom-pdc.c | 142 +++++++++++++++++++++++++++++++++
+>  3 files changed, 152 insertions(+)
+>  create mode 100644 drivers/reset/reset-qcom-pdc.c
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index b675ea56a4ff..a880cefbd248 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -37,6 +37,7 @@
->  #include "../pinctrl-utils.h"
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 13d28fdbdbb5..c21da9fe51ec 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -98,6 +98,15 @@ config RESET_QCOM_AOSS
+>  	  reset signals provided by AOSS for Modem, Venus, ADSP,
+>  	  GPU, Camera, Wireless, Display subsystem. Otherwise, say N.
 >  
->  #define MAX_NR_GPIO 300
-> +#define MAX_PDC_HWIRQ 126
->  #define PS_HOLD_OFFSET 0x820
->  
->  /**
-> @@ -51,6 +52,7 @@
->   * @enabled_irqs:   Bitmap of currently enabled irqs.
->   * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
->   *                  detection.
-> + * @pdc_hwirqs:     Bitmap of wakeup capable irqs.
->   * @soc;            Reference to soc_data of platform specific data.
->   * @regs:           Base address for the TLMM register map.
->   */
-> @@ -68,11 +70,15 @@ struct msm_pinctrl {
->  
->  	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
->  	DECLARE_BITMAP(enabled_irqs, MAX_NR_GPIO);
-> +	DECLARE_BITMAP(pdc_hwirqs, MAX_PDC_HWIRQ);
->  
->  	const struct msm_pinctrl_soc_data *soc;
->  	void __iomem *regs;
-> +	struct irq_domain *pdc_irq_domain;
->  };
->  
-> +static bool in_suspend;
+> +config RESET_QCOM_PDC
+> +	tristate "Qualcomm PDC Reset Driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	help
+> +	  This enables the PDC (Power Domain Controller) reset driver
+> +	  for Qualcomm Technologies Inc SDM845 SoCs. Say Y if you want
+> +	  to control reset signals provided by PDC for Modem, Compute,
+> +	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
+
+What exactly does APPS mean? The AP cores, the entire SoC, something
+else?
+
 > +
->  static int msm_get_groups_count(struct pinctrl_dev *pctldev)
->  {
->  	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> @@ -787,8 +793,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
->  
->  	raw_spin_lock_irqsave(&pctrl->lock, flags);
->  
-> -	if (pdc_irqd)
-> +	if (pdc_irqd && !in_suspend) {
->  		irq_set_irq_wake(pdc_irqd->irq, on);
-> +		if (on)
-> +			set_bit(pdc_irqd->hwirq, pctrl->pdc_hwirqs);
-> +		else
-> +			clear_bit(pdc_irqd->hwirq, pctrl->pdc_hwirqs);
-> +	}
->  
->  	irq_set_irq_wake(pctrl->irq, on);
->  
-> @@ -919,7 +930,12 @@ static int msm_gpio_pdc_pin_request(struct irq_data *d)
->  	}
->  
->  	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
-> +	irq_set_handler_data(irq, d);
-> +	irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY);
-> +	irq_set_status_flags(d->irq, IRQ_DISABLE_UNLAZY);
->  	disable_irq(irq);
-> +	if (!pctrl->pdc_irq_domain)
-> +		pctrl->pdc_irq_domain = irq_get_irq_data(irq)->domain;
->  
->  	return 0;
->  }
-> @@ -1069,6 +1085,58 @@ static void msm_pinctrl_setup_pm_reset(struct msm_pinctrl *pctrl)
->  		}
->  }
->  
-> +int __maybe_unused msm_pinctrl_suspend_late(struct device *dev)
+>  config RESET_SIMPLE
+>  	bool "Simple Reset Controller Driver" if COMPILE_TEST
+>  	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 4243c38228e2..d08e8b90046a 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_RESET_MESON_AUDIO_ARB) += reset-meson-audio-arb.o
+>  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+>  obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
+>  obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
+> +obj-$(CONFIG_RESET_QCOM_PDC) += reset-qcom-pdc.o
+>  obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
+>  obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
+>  obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+> diff --git a/drivers/reset/reset-qcom-pdc.c b/drivers/reset/reset-qcom-pdc.c
+> new file mode 100644
+> index 000000000000..bb6a5e5ee0f8
+> --- /dev/null
+> +++ b/drivers/reset/reset-qcom-pdc.c
+> @@ -0,0 +1,142 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_device.h>
+> +#include <dt-bindings/reset/qcom,sdm845-pdc.h>
+
+Headers should be sorted in alphabetical order.
+
+> +
+> +#define RPMH_PDC_SYNC_RESET	0x100
+> +
+> +struct qcom_pdc_reset_map {
+> +	u8 bit;
+> +};
+> +
+> +struct qcom_pdc_desc {
+> +	const struct regmap_config *config;
+> +	const struct qcom_pdc_reset_map *resets;
+> +	size_t num_resets;
+> +};
+
+Not sure if this structure adds much value or just a layer of
+indirection:
+
+- .config is only accessed in _probe(), sdm845_pdc_regmap_config could
+  be used directly
+- .resets is used in _(de)assert(), sdm845_pdc_resets could be used
+  directly
+- .num_resets is only accessed in _probe(),
+  ARRAY_SIZE(sdm845_pdc_resets) could be used instead
+
+It probably makes sense if it is planned to support reset controllers
+of other SoCs with this driver.
+
+> +struct qcom_pdc_reset_data {
+> +	struct reset_controller_dev rcdev;
+> +	struct regmap *regmap;
+> +	const struct qcom_pdc_desc *desc;
+> +};
+> +
+> +static const struct regmap_config sdm845_pdc_regmap_config = {
+> +	.name		= "pdc-reset",
+> +	.reg_bits	= 32,
+> +	.reg_stride	= 4,
+> +	.val_bits	= 32,
+> +	.max_register	= 0x20000,
+> +	.fast_io	= true,
+> +};
+> +
+> +static const struct qcom_pdc_reset_map sdm845_pdc_resets[] = {
+> +	[PDC_APPS_SYNC_RESET] = {0},
+> +	[PDC_SP_SYNC_RESET] = {1},
+> +	[PDC_AUDIO_SYNC_RESET] = {2},
+> +	[PDC_SENSORS_SYNC_RESET] = {3},
+> +	[PDC_AOP_SYNC_RESET] = {4},
+> +	[PDC_DEBUG_SYNC_RESET] = {5},
+> +	[PDC_GPU_SYNC_RESET] = {6},
+> +	[PDC_DISPLAY_SYNC_RESET] = {7},
+> +	[PDC_COMPUTE_SYNC_RESET] = {8},
+> +	[PDC_MODEM_SYNC_RESET] = {9},
+> +};
+> +
+> +static const struct qcom_pdc_desc sdm845_pdc_desc = {
+> +	.config = &sdm845_pdc_regmap_config,
+> +	.resets = sdm845_pdc_resets,
+> +	.num_resets = ARRAY_SIZE(sdm845_pdc_resets),
+> +};
+> +
+> +static inline struct qcom_pdc_reset_data *to_qcom_pdc_reset_data(
+> +				struct reset_controller_dev *rcdev)
 > +{
-> +	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
-> +	struct irq_data *irqd;
-> +	unsigned int irq;
-> +	int i;
+> +	return container_of(rcdev, struct qcom_pdc_reset_data, rcdev);
+> +}
 > +
-> +	in_suspend = true;
-> +	for_each_set_bit(i, pctrl->pdc_hwirqs, MAX_PDC_HWIRQ) {
-> +		irq = irq_find_mapping(pctrl->pdc_irq_domain, i);
-> +		irqd = irq_get_handler_data(irq);
-> +		/*
-> +		 * We don't know if the TLMM will be functional
-> +		 * or not, during the suspend. If its functional,
-> +		 * we do not want duplicate interrupts from PDC.
-> +		 * Hence disable the GPIO IRQ and enable PDC IRQ.
-> +		 */
-> +		if (irqd_is_wakeup_set(irqd)) {
-> +			disable_irq_wake(irqd->irq);
-> +			disable_irq(irqd->irq);
-> +			enable_irq(irq);
-> +		}
+> +static int qcom_pdc_control_assert(struct reset_controller_dev *rcdev,
+> +					unsigned long idx)
+> +{
+> +	struct qcom_pdc_reset_data *data = to_qcom_pdc_reset_data(rcdev);
+> +	const struct qcom_pdc_reset_map *map = &data->desc->resets[idx];
+> +
+> +	return regmap_update_bits(data->regmap, RPMH_PDC_SYNC_RESET,
+> +					BIT(map->bit), BIT(map->bit));
+> +}
+> +
+> +static int qcom_pdc_control_deassert(struct reset_controller_dev *rcdev,
+> +					unsigned long idx)
+> +{
+> +	struct qcom_pdc_reset_data *data = to_qcom_pdc_reset_data(rcdev);
+> +	const struct qcom_pdc_reset_map *map = &data->desc->resets[idx];
+> +
+> +	return regmap_update_bits(data->regmap, RPMH_PDC_SYNC_RESET,
+> +					BIT(map->bit), 0);
+> +}
+> +
+> +static const struct reset_control_ops qcom_pdc_reset_ops = {
+> +	.assert = qcom_pdc_control_assert,
+> +	.deassert = qcom_pdc_control_deassert,
+> +};
+> +
+> +static int qcom_pdc_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct qcom_pdc_reset_data *data;
+> +	struct device *dev = &pdev->dev;
+> +	const struct qcom_pdc_desc *desc;
+> +	void __iomem *base;
+> +	struct resource *res;
+> +
+> +	desc = of_device_get_match_data(dev);
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->desc = desc;
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	data->regmap = devm_regmap_init_mmio(dev, base, desc->config);
+> +	if (IS_ERR(data->regmap)) {
+> +		dev_err(dev, "Unable to get pdc-global regmap");
 
-Would it make sense to limit this to edge triggered interrupts since
-the interrupt handler does nothing for level triggered ones?
+Add missing '\n'
+
+Say 'pdc-reset' instead of 'pdc-global'? (see also my other comment
+below).
+
+> +		return PTR_ERR(data->regmap);
+> +	}
+> +
+> +	data->rcdev.owner = THIS_MODULE;
+> +	data->rcdev.ops = &qcom_pdc_reset_ops;
+> +	data->rcdev.nr_resets = desc->num_resets;
+> +	data->rcdev.of_node = dev->of_node;
+> +
+> +	return devm_reset_controller_register(dev, &data->rcdev);
+> +}
+> +
+> +static const struct of_device_id qcom_pdc_reset_of_match[] = {
+> +	{ .compatible = "qcom,sdm845-pdc-global", .data = &sdm845_pdc_desc },
+
+Should this be 'qcom,sdm845-pdc-reset' which is more specific than
+'global' and in line with the name and purpose of the driver?
+Obviously this would require to adjust the bindings doc too.
 
 Cheers
 
