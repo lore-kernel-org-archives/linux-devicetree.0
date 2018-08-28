@@ -1,93 +1,84 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to
- GPIO
-Date: Mon, 27 Aug 2018 19:46:52 -0600
-Message-ID: <20180828014652.GB13998@codeaurora.org>
-References: <20180817163849.30750-1-ilina@codeaurora.org>
- <20180817163849.30750-2-ilina@codeaurora.org>
- <CACRpkdb+Opdn1eWZSRydS1Bafpqwcg83xEcT-YJC6D-kSSi1ew@mail.gmail.com>
- <20180827165644.GR5081@codeaurora.org>
- <20180828002641.GC2523@minitux>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 2/6] reset: qcom: PDC Global (Power Domain Controller)
+ reset controller
+Date: Mon, 27 Aug 2018 20:02:53 -0700
+Message-ID: <20180828030253.GF2523@minitux>
+References: <20180824131900.5353-1-sibis@codeaurora.org>
+ <20180824131900.5353-3-sibis@codeaurora.org>
+ <20180828002236.GX160295@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180828002641.GC2523@minitux>
+In-Reply-To: <20180828002236.GX160295@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Hans Verkuil <hans.verkuil@cisco.com>, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@kernel.org>, evgreen@chromium.org, rplsssn@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Sibi Sankar <sibis@codeaurora.org>, p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27 2018 at 18:26 -0600, Bjorn Andersson wrote:
->On Mon 27 Aug 09:56 PDT 2018, Lina Iyer wrote:
->
->> On Sun, Aug 26 2018 at 08:33 -0600, Linus Walleij wrote:
->> > On Fri, Aug 17, 2018 at 6:39 PM Lina Iyer <ilina@codeaurora.org> wrote:
->> >
->> > > QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
->> > > domain can wakeup the SoC, when interrupts and GPIOs are routed to the
->> > > its interrupt controller. Only select GPIOs that are deemed wakeup
->> > > capable are routed to specific PDC pins. During low power state, the
->> > > pinmux interrupt controller may be non-functional but the PDC would be.
->> > > The PDC can detect the wakeup GPIO is triggered and bring the TLMM to an
->> > > operational state.
->> > >
->> > > Interrupts that are level triggered will be detected at the TLMM when
->> > > the controller becomes operational. Edge interrupts however need to be
->> > > replayed again.
->> > >
->> > > Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
->> > > but keep it disabled. During suspend, we can enable the PDC IRQ instead
->> > > of the GPIO IRQ, which may or not be detected.
->> > >
->> > > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> > > ---
->> > > Changes in v1:
->> > >         - Trigger GPIO in h/w from PDC IRQ handler
->> > >         - Avoid big tables for GPIO-PDC map, pick from DT instead
->> > >         - Use handler_data
->> >
->> > Just for the record this is an impressive and much needed patch
->> > set, no other SoC developer has yet taken on the task of making this
->> > work so I very much appreciate that Qualcomm show the way.
->> >
->> > > +static int msm_gpio_pdc_pin_request(struct irq_data *d)
->> > > +static int msm_gpio_pdc_pin_release(struct irq_data *d)
->> > > +static int msm_gpio_irq_reqres(struct irq_data *d)
->> > > +{
->> > (...)
->> > > +       if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
->> > (...)
->> > > +static void msm_gpio_irq_relres(struct irq_data *d)
->> > > +{
->> > > +       gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
->> > > +}
->> >
->> > FYI Hans Verkuil is working on a patch set that moves the
->> > lock/unlock as IRQ call to the irqchip request() and release()
->> > functions so we can switch a GPIO irqchip line from IRQ
->> > mode to say output at runtime without too much trouble.
->> > (CEC needs this.)
->> >
->> Thanks, I will look into Hans's RFCv2. But what would help me would be
->> to avoid creating the IRQ for the GPIO itself (I have the latent IRQ),
->> if I could just return that instead in gpio_to_irq(), it might be
->> easier. I understand ->to_irq() is supposed to be a translate function
->> only, I can avoid the dance of enabling and diabling the PDC IRQ on
->> suspend and resume.
->>
->
->I did implement gpio_to_irq() like this in the PMIC gpio/mpp drivers and
->we've since concluded that we need to move this to some hierarchical
->interrupt controller, because people like Linus expect to be able to say
->
->  interrupts = <&gpio_controller 1 IRQ_TYPE_EDGE_RISING>
->
->which is something used all over the place with the TLMM driver today.
+On Mon 27 Aug 17:22 PDT 2018, Matthias Kaehlcke wrote:
+> On Fri, Aug 24, 2018 at 06:48:56PM +0530, Sibi Sankar wrote:
+> > diff --git a/drivers/reset/reset-qcom-pdc.c b/drivers/reset/reset-qcom-pdc.c
+[..]
+> > +struct qcom_pdc_desc {
+> > +	const struct regmap_config *config;
+> > +	const struct qcom_pdc_reset_map *resets;
+> > +	size_t num_resets;
+> > +};
+> 
+> Not sure if this structure adds much value or just a layer of
+> indirection:
+> 
+> - .config is only accessed in _probe(), sdm845_pdc_regmap_config could
+>   be used directly
+> - .resets is used in _(de)assert(), sdm845_pdc_resets could be used
+>   directly
+> - .num_resets is only accessed in _probe(),
+>   ARRAY_SIZE(sdm845_pdc_resets) could be used instead
+> 
+> It probably makes sense if it is planned to support reset controllers
+> of other SoCs with this driver.
+> 
 
-Does it have to be &gpio_controller, can it be another interrupt controller?
+I like this suggestion, once we need the configurability we can add the
+type for it. It also shows that only .resets would need to be referenced
+by qcom_pdc_reset_data.
 
-Say,
-	interrupts-extended = <&pdc 1 IRQ_TYPE_EDGE_RISING>;
+> > +struct qcom_pdc_reset_data {
+> > +	struct reset_controller_dev rcdev;
+> > +	struct regmap *regmap;
+> > +	const struct qcom_pdc_desc *desc;
+> > +};
+[..]
+> > +static int qcom_pdc_reset_probe(struct platform_device *pdev)
+> > +{
+[..]
+> > +	data->regmap = devm_regmap_init_mmio(dev, base, desc->config);
+> > +	if (IS_ERR(data->regmap)) {
+> > +		dev_err(dev, "Unable to get pdc-global regmap");
+> 
+> Add missing '\n'
+> 
+> Say 'pdc-reset' instead of 'pdc-global'? (see also my other comment
+> below).
+> 
 
--- Lina
+This regmap is created out of the single anonymous "reg", so I think the
+error should be reduced to "Unable to initialize regmap\n".
+
+[..]
+> > +static const struct of_device_id qcom_pdc_reset_of_match[] = {
+> > +	{ .compatible = "qcom,sdm845-pdc-global", .data = &sdm845_pdc_desc },
+> 
+> Should this be 'qcom,sdm845-pdc-reset' which is more specific than
+> 'global' and in line with the name and purpose of the driver?
+> Obviously this would require to adjust the bindings doc too.
+> 
+
+No, the binding describes the hardware block named "PDC Global",
+currently implemented as a reset controller. The reason for doing this
+is so that we one day can expose additional interfaces in a backwards
+compatible fashion.
+
+Regards,
+Bjorn
