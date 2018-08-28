@@ -1,8 +1,8 @@
 From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: [PATCH 1/5] dt-bindings: mtd: describe the simple BCM963XX NOR flash
- layout
-Date: Tue, 28 Aug 2018 13:19:40 +0200
-Message-ID: <20180828111944.5956-2-jonas.gorski@gmail.com>
+Subject: [PATCH 4/5] dt-bindings: mtd: describe BCM963XX ImageTag format and
+ usage
+Date: Tue, 28 Aug 2018 13:19:43 +0200
+Message-ID: <20180828111944.5956-5-jonas.gorski@gmail.com>
 References: <20180828111944.5956-1-jonas.gorski@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,43 +22,97 @@ To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
 Cc: Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Boris Brezillon <boris.brezillon@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the standard CFE based BCM963XX flash
-layout, found in most devices using a BCM63XX SoC with NOR flash.
+Describe how to use the BCM963XX ImageTag format in a mixed flash layout
+environment.
 
 Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 ---
- .../brcm,bcm963xx-cfe-nor-partitions.txt           | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-cfe-nor-partitions.txt
+ .../mtd/partitions/brcm,bcm963xx-imagetag.txt      | 78 ++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
 
-diff --git a/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-cfe-nor-partitions.txt b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-cfe-nor-partitions.txt
+diff --git a/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
 new file mode 100644
-index 000000000000..9f630e95f180
+index 000000000000..f4a444d69d9a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-cfe-nor-partitions.txt
-@@ -0,0 +1,24 @@
-+Broadcom BCM963XX CFE Loader NOR Flash Partitions
-+=================================================
++++ b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
+@@ -0,0 +1,78 @@
++Broadcom BCM963XX ImageTag Partition Container
++==============================================
 +
-+Most Broadcom BCM63XX SoC based devices follow the Broadcom reference layout for
-+NOR. The first erase block used for the CFE bootloader, the last for an
-+NVRAM partition, and the remainder in-between for one to two firmware partitions
-+at fixed offsets. A valid firmware partition is identified by the ImageTag
-+header found at beginning of the second erase block, containing the rootfs and
-+kernel offsets and sizes within the firmware partition.
++Some Broadcom BCM63XX SoC based devices contain additional, non discoverable
++partitions or non standard bootloader partition sizes. For these a mixed layout
++needs to be used with an explicit firmware partition.
++
++The BCM963XX ImageTag is a simple firmware header describing the offsets and
++sizes of the rootfs and kernel parts contained in the firmware.
 +
 +Required properties:
-+- compatible : must be "brcm,bcm963xx-cfe-nor-partitions"
++- compatible : must be "brcm,bcm963xx-imagetag"
 +
-+Example:
++Examples:
 +
-+flash@1fc00000 {
++flash@1e000000 {
 +	compatible = "cfi-flash";
-+	reg = <0x1fc00000 0x400000>;
++	reg = <0x1e000000 0x2000000>;
 +	bank-width = <2>;
 +
 +	partitions {
-+		compatible = "brcm,bcm963xx-cfe-nor-partitions";
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		cfe@0 {
++			reg = <0x0 0x10000>;
++			read-only;
++		};
++
++		firmware@10000 {
++			reg = <0x10000 0x7d0000>;
++			compatible = "brcm,bcm963xx-imagetag";
++		};
++
++		caldata@7e0000 {
++			reg = <0x7e0000 0x10000>;
++			read-only;
++		};
++
++		nvram@7f0000 {
++			reg = <0x7f0000 0x10000>;
++		};
++	};
++};
++
++
++flash@1e000000 {
++	compatible = "cfi-flash";
++	reg = <0x1e000000 0x2000000>;
++	bank-width = <2>;
++
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/*
++		 * Some devices use a flash chip with 64k erase blocks, some
++		 * use one with 128k erase blocks, so the vendor decided to
++		 * always use 128k as the firmware offset.
++		 */
++
++		cfe@0 {
++			reg = <0x0 0x20000>;
++			read-only;
++		};
++
++		firmware@20000 {
++			reg = <0x20000 0x7c0000>;
++			compatible = "brcm,bcm963xx-imagetag";
++		};
++
++		nvram@7e0000 {
++			reg = <0x7e0000 0x20000>;
++		};
 +	};
 +};
 -- 
