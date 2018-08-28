@@ -1,18 +1,16 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sh-msiof: Add r8a774a1 support" to the spi tree
-Date: Tue, 28 Aug 2018 21:56:35 +0100 (BST)
-Message-ID: <20180828205635.E7107440095@finisterre.ee.mobilebroadband>
-References: <1534517914-15406-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Applied "spi: Add Spreadtrum SPI controller documentation" to the spi tree
+Date: Tue, 28 Aug 2018 21:57:35 +0100 (BST)
+Message-ID: <20180828205735.3411A44009A@finisterre.ee.mobilebroadband>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534517914-15406-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: 
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
+Cc: Baolin Wang <baolin.wang@linaro.org>, Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.combaolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi: sh-msiof: Add r8a774a1 support
+   spi: Add Spreadtrum SPI controller documentation
 
 has been applied to the spi tree at
 
@@ -37,42 +35,54 @@ to this mail.
 Thanks,
 Mark
 
->From 864822235f1897219409ec1f0af076fcc9057c57 Mon Sep 17 00:00:00 2001
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Date: Fri, 17 Aug 2018 15:58:34 +0100
-Subject: [PATCH] spi: sh-msiof: Add r8a774a1 support
+>From 862cf93e4b9ba17f6375dc68c1e01da3210d5310 Mon Sep 17 00:00:00 2001
+From: Lanqing Liu <lanqing.liu@spreadtrum.com>
+Date: Thu, 16 Aug 2018 20:54:50 +0800
+Subject: [PATCH] spi: Add Spreadtrum SPI controller documentation
 
-Document RZ/G2M (R8A774A1) SoC bindings.
+This patch adds the binding documentation for Spreadtrum SPI
+controller device.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/sh-msiof.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/spi/spi-sprd.txt      | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-sprd.txt
 
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index bfbc2035fb6b..8f7bb6aaff2e 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -3,6 +3,7 @@ Renesas MSIOF spi controller
- Required properties:
- - compatible           : "renesas,msiof-r8a7743" (RZ/G1M)
- 			 "renesas,msiof-r8a7745" (RZ/G1E)
-+			 "renesas,msiof-r8a774a1" (RZ/G2M)
- 			 "renesas,msiof-r8a7790" (R-Car H2)
- 			 "renesas,msiof-r8a7791" (R-Car M2-W)
- 			 "renesas,msiof-r8a7792" (R-Car V2H)
-@@ -14,7 +15,7 @@ Required properties:
- 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
- 			 "renesas,sh-mobile-msiof" (generic SH-Mobile compatibile device)
- 			 "renesas,rcar-gen2-msiof" (generic R-Car Gen2 and RZ/G1 compatible device)
--			 "renesas,rcar-gen3-msiof" (generic R-Car Gen3 compatible device)
-+			 "renesas,rcar-gen3-msiof" (generic R-Car Gen3 and RZ/G2 compatible device)
- 			 "renesas,sh-msiof"      (deprecated)
- 
- 			 When compatible with the generic version, nodes
+diff --git a/Documentation/devicetree/bindings/spi/spi-sprd.txt b/Documentation/devicetree/bindings/spi/spi-sprd.txt
+new file mode 100644
+index 000000000000..bad211a19da4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-sprd.txt
+@@ -0,0 +1,26 @@
++Spreadtrum SPI Controller
++
++Required properties:
++- compatible: Should be "sprd,sc9860-spi".
++- reg: Offset and length of SPI controller register space.
++- interrupts: Should contain SPI interrupt.
++- clock-names: Should contain following entries:
++	"spi" for SPI clock,
++	"source" for SPI source (parent) clock,
++	"enable" for SPI module enable clock.
++- clocks: List of clock input name strings sorted in the same order
++	as the clock-names property.
++- #address-cells: The number of cells required to define a chip select
++	address on the SPI bus. Should be set to 1.
++- #size-cells: Should be set to 0.
++
++Example:
++spi0: spi@70a00000{
++	compatible = "sprd,sc9860-spi";
++	reg = <0 0x70a00000 0 0x1000>;
++	interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++	clock-names = "spi", "source","enable";
++	clocks = <&clk_spi0>, <&ext_26m>, <&clk_ap_apb_gates 5>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++};
 -- 
 2.18.0
