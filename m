@@ -1,39 +1,28 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 2/2][RESEND] arm64: dts: Add big-endian in nor node for
- ls104xa
-Date: Tue, 28 Aug 2018 19:26:30 -0300
-Message-ID: <CAOMZO5CvzOcQ5pvDUL1W2oLk3LMAoTVR_kF8JjmoC+qL8ye6Rw@mail.gmail.com>
-References: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
- <20180828065936.8040-3-prabhakar.kushwaha@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v5 5/9] pwm: add PWM modes
+Date: Tue, 28 Aug 2018 17:27:08 -0500
+Message-ID: <20180828222708.GA22527@bogus>
+References: <1535461286-12308-1-git-send-email-claudiu.beznea@microchip.com>
+ <1535461286-12308-6-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180828065936.8040-3-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1535461286-12308-6-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: thierry.reding@gmail.com, shc_work@mail.ru, mark.rutland@arm.com, corbet@lwn.net, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2018 at 3:59 AM, Prabhakar Kushwaha
-<prabhakar.kushwaha@nxp.com> wrote:
+On Tue, Aug 28, 2018 at 04:01:22PM +0300, Claudiu Beznea wrote:
+> Add PWM normal and complementary modes.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm.txt |  9 +++++++--
 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> index c7b8d2c009cd..dff3d648172e 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> @@ -3,6 +3,7 @@
->   * Device Tree Include file for Freescale Layerscape-1043A family SoC.
->   *
->   * Copyright 2014-2015 Freescale Semiconductor, Inc.
-> + * Copyright 2018 NXP
+Acked-by: Rob Herring <robh@kernel.org>
 
-Same comment as in the other patch.
+>  Documentation/pwm.txt                         | 26 +++++++++++++++++++++++---
+>  include/dt-bindings/pwm/pwm.h                 |  1 +
+>  3 files changed, 31 insertions(+), 5 deletions(-)
