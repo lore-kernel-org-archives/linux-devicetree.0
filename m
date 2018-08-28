@@ -1,81 +1,76 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: reset: Add PDC Global binding for
- SDM845 SoCs
-Date: Tue, 28 Aug 2018 10:11:58 -0700
-Message-ID: <20180828171158.GB10879@google.com>
-References: <20180824131900.5353-1-sibis@codeaurora.org>
- <20180824131900.5353-2-sibis@codeaurora.org>
- <20180828003823.GY160295@google.com>
- <c675b609fcd0d243e4db2e6637c70902@codeaurora.org>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH v7 05/24] clocksource: Add a new timer-ingenic driver
+Date: Tue, 28 Aug 2018 10:23:05 -0700
+Message-ID: <20180828172305.bohg6cggnzm3wsuj@pburton-laptop>
+References: <20180821171635.22740-1-paul@crapouillou.net>
+ <20180821171635.22740-6-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c675b609fcd0d243e4db2e6637c70902@codeaurora.org>
+In-Reply-To: <20180821171635.22740-6-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sibis@codeaurora.org
-Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Jonathan Corbet <corbet@lwn.net>, od@zcrc.me, Mathieu Malaterre <malat@debian.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2018 at 11:38:26AM +0530, sibis@codeaurora.org wrote:
-> Hi Matthias,
-> Thanks for the review
-> 
-> On 2018-08-28 06:08, Matthias Kaehlcke wrote:
-> > Hi Sibi,
-> > 
-> > On Fri, Aug 24, 2018 at 06:48:55PM +0530, Sibi Sankar wrote:
-> > > Add PDC Global(Power Domain Controller) binding for SDM845 SoCs.
-> > 
-> > nit: missing blank before the opening parenthesis.
-> > 
-> 
-> Will fix it
-> 
-> > > 
-> > > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > > ---
-> > >  .../bindings/reset/qcom,pdc-global.txt        | 52
-> > > +++++++++++++++++++
-> > >  include/dt-bindings/reset/qcom,sdm845-pdc.h   | 20 +++++++
-> > >  2 files changed, 72 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
-> > >  create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
-> > > 
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
-> > > b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
-> > > new file mode 100644
-> > > index 000000000000..69f9edca9503
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
-> > > @@ -0,0 +1,52 @@
-> > > +PDC Global
-> > > +======================================
-> > > +
-> > > +This binding describes a reset-controller found on PDC-Global(Power
-> > > Domain
-> > > +Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
-> > 
-> > Are there other PDC reset controllers that aren't 'global'? Otherwise
-> > I'd suggest to use 'pdc-reset' instead of 'pdc-global', which is more
-> > specific and in line with the name of the driver added by this series.
-> > Or something like 'pdc-reset-global/main' if there are other
-> > controllers?
-> > 
-> 
-> These are the only reset lines found in the pdc-global register space. But
-> as
-> explained by Bjorn, wouldn't it be better to leave it as such since
-> pdc-global
-> best describes the hardware without being limited by the current
-> functionality
-> it is being used for?
+Hi Daniel & Thomas,
 
-If I understand Bjorn's reply on
-https://patchwork.kernel.org/patch/10575335/ correctly it is planned
-to use the 'pdc-global' compatible string in the future in some sort
-of MFD driver for the 'PDC Global' IP block, which then instantiates
-other drivers like the reset controller. In this case I agree that
-'pdc-global' seems a reasonable choice.
+On Tue, Aug 21, 2018 at 07:16:16PM +0200, Paul Cercueil wrote:
+> This driver handles the TCU (Timer Counter Unit) present on the Ingenic
+> JZ47xx SoCs, and provides the kernel with a system timer, and optionally
+> with a clocksource and a sched_clock.
+> 
+> It also provides clocks and interrupt handling to client drivers.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>      v2: Use SPDX identifier for the license
+>     
+>      v3: - Move documentation to its own patch
+>          - Search the devicetree for PWM clients, and use all the TCU
+>     	   channels that won't be used for PWM
+>     
+>      v4: - Add documentation about why we search for PWM clients
+>          - Verify that the PWM clients are for the TCU PWM driver
+>     
+>      v5: Major overhaul. Too many changes to list. Consider it's a new
+>          patch.
+>     
+>      v6: - Add two API functions ingenic_tcu_request_channel and
+>            ingenic_tcu_release_channel. To be used by the PWM driver to
+>            request the use of a TCU channel. The driver will now dynamically
+>            move away the system timer or clocksource to a new TCU channel.
+>          - The system timer now defaults to channel 0, the clocksource now
+>            defaults to channel 1 and is no more optional. The
+>            ingenic,timer-channel and ingenic,clocksource-channel devicetree
+>            properties are now gone.
+>          - Fix round_rate / set_rate not calculating the prescale divider
+>            the same way. This caused problems when (parent_rate / div) would
+>            give a non-integer result. The behaviour is correct now.
+>          - The clocksource clock is turned off on suspend now.
+>     
+>      v7: Fix section mismatch by using builtin_platform_driver_probe()
+> 
+>  drivers/clocksource/Kconfig         |   10 +
+>  drivers/clocksource/Makefile        |    1 +
+>  drivers/clocksource/ingenic-timer.c | 1124 +++++++++++++++++++++++++++++++++++
+>  drivers/clocksource/ingenic-timer.h |   15 +
+>  include/linux/mfd/ingenic-tcu.h     |    3 +
+>  5 files changed, 1153 insertions(+)
+>  create mode 100644 drivers/clocksource/ingenic-timer.c
+>  create mode 100644 drivers/clocksource/ingenic-timer.h
+>%
+
+How is this & patch 6 of the series looking to you from a
+drivers/clocksource perspective?
+
+If you're happy with them it'd be great to get an ack so I can take this
+through the MIPS tree with the rest of the series. The alternative would
+be to get the drivers in first then the MIPS bits in the next release
+cycle.
+
+Thanks,
+    Paul
