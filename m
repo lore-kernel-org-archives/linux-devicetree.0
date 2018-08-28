@@ -1,65 +1,215 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] arm64: dts: allwinner: a64: pinmux cleanups
-Date: Tue, 28 Aug 2018 17:11:40 +0200
-Message-ID: <20180828151140.7vc44czdlv4yhan2@flea>
-References: <20180828100132.12975-1-wens@csie.org>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v1] arm64: dts: sdm845: enable tsens thermal zones
+Date: Tue, 28 Aug 2018 21:07:03 +0530
+Message-ID: <CAHLCerOxDvueVoCn7H197x01-kJ2C7C+hNqYT5T1yCNHJAioTQ@mail.gmail.com>
+References: <cover.1531899325.git.amit.kucheria@linaro.org> <b3c25cedfa3a9b8a4b481e714992afe62b84ca3b.1531899325.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gftyfld4tocymb7e"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSWMSXOAKGQERXDTNDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180828100132.12975-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b3c25cedfa3a9b8a4b481e714992afe62b84ca3b.1531899325.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Eduardo Valentin <edubezval@gmail.com>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Andy,
 
---gftyfld4tocymb7e
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Do you have any feedback for this patch?
 
-On Tue, Aug 28, 2018 at 06:01:29PM +0800, Chen-Yu Tsai wrote:
-> Hi,
-> 
-> This series does some cleanup of the Allwinner A64 pinmux groups.
-> 
-> The first addresses a limitation on the A64 where we have the eMMC's
-> DS in always muxed in. The DS pin is shared with SPI0's MISO, thereby
-> preventing SPI0 from being used. In this patch we split out the DS
-> pin into a separate group for boards that actually utilize it to
-> select on their own.
-> 
-> The other two patches just rename pinmux group node names and labels
-> from <func>_pins_<[a-z]> to <func>_<pingroup/pin names>_pins. The latter
-> is the style we adopted later on, and is easier to know which pins they
-> correspond to, i.e. easier to review.
-> 
-> Please have a look.
+Regards,
+Amit
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-
-> While I want to do some more cleanup, I realized that the label and/or
-> node names might be used by distro (Armbian comes to mind) or personal
-> device tree overlay files. Do we need to have these remain fixed? Do
-> we or can we provide a fallback? (Is that even possible?)
-
-I wouldn't worry too much about this. We broke it a number of times
-already, and we probably will in the future for other stuff, I'm not
-sure we have to provide any guarantee there, as long as the old,
-compiled, dt still works.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---gftyfld4tocymb7e--
+On Wed, Jul 18, 2018 at 1:19 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> One thermal zone per cpu is defined
+>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 170 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 170 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 01ff146..a75be7c 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -340,4 +340,174 @@
+>                         };
+>                 };
+>         };
+> +
+> +       thermal-zones {
+> +               cpu0-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 1>;
+> +
+> +                       trips {
+> +                               cpu_alert0: trip0 {
+> +                                       temperature = <75000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit0: trip1 {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu1-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 2>;
+> +
+> +                       trips {
+> +                               cpu_alert1: trip0 {
+> +                                       temperature = <75000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit1: trip1 {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu2-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 3>;
+> +
+> +                       trips {
+> +                               cpu_alert2: trip0 {
+> +                                       temperature = <75000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit2: trip1 {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu3-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 4>;
+> +
+> +                       trips {
+> +                               cpu_alert3: trip0 {
+> +                                       temperature = <75000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit3: trip1 {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu4-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 7>;
+> +
+> +                       trips {
+> +                               cpu_alert4: trip0 {
+> +                                       temperature = <75000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit4: trip1 {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu5-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 8>;
+> +
+> +                       trips {
+> +                               cpu_alert5: trip0 {
+> +                                       temperature = <75000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit5: trip1 {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu6-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 9>;
+> +
+> +                       trips {
+> +                               cpu_alert6: trip0 {
+> +                                       temperature = <75000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit6: trip1 {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               cpu7-thermal {
+> +                       polling-delay-passive = <250>;
+> +                       polling-delay = <1000>;
+> +
+> +                       thermal-sensors = <&tsens0 10>;
+> +
+> +                       trips {
+> +                               cpu_alert7: trip0 {
+> +                                       temperature = <75000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               cpu_crit7: trip1 {
+> +                                       temperature = <110000>;
+> +                                       hysteresis = <1000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +       };
+>  };
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
