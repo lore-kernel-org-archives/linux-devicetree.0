@@ -1,103 +1,120 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 5/9] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Tue, 28 Aug 2018 16:00:32 +0530
-Message-ID: <CAFp+6iHFB1Z9zQ4Uitt=4xCh+G+bfK3Xsjo=iMSPTveuTxwWsg@mail.gmail.com>
-References: <20180827151112.25211-1-jcrouse@codeaurora.org>
- <20180827151112.25211-6-jcrouse@codeaurora.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 06/19] dt-bindings: memory: tegra: Squash tegra20-gart
+	into tegra20-mc
+Date: Tue, 28 Aug 2018 12:47:55 +0200
+Message-ID: <20180828104755.GC9386@ulmo>
+References: <20180818155430.5586-1-digetx@gmail.com>
+	<20180818155430.5586-7-digetx@gmail.com>
+	<20180820191209.GA28618@bogus>
+	<b46cac22-9b31-9aa7-7eca-4725156346bb@gmail.com>
+	<4538309b-fcb3-73ee-04e3-6cefcedd376d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180827151112.25211-6-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============5878688527189627948=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4538309b-fcb3-73ee-04e3-6cefcedd376d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9yZGFuLAoKT24gTW9uLCBBdWcgMjcsIDIwMTggYXQgODo0MiBQTSBKb3JkYW4gQ3JvdXNl
-IDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPgo+IEFkZCB0aGUgbm9kZXMgdG8gZGVz
-Y3JpYmUgdGhlIEFkcmVubyBHUFUgYW5kIEdNVSBkZXZpY2VzLgo+Cj4gU2lnbmVkLW9mZi1ieTog
-Sm9yZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgYXJjaC9hcm02
-NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIHwgMTIxICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTIxIGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBpbmRleCBjZGFhYmViM2M5OTUuLjEwZGIwY2ViMzY5OSAx
-MDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysg
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtMTkyLDYgKzE5Miw1
-OSBAQAo+ICAgICAgICAgICAgICAgICBtZXRob2QgPSAic21jIjsKPiAgICAgICAgIH07Cj4KPiAr
-Z3B1X29wcF90YWJsZTogYWRyZW5vLW9wcC10YWJsZSB7Cj4gKyAgICAgICAgICAgICAgIGNvbXBh
-dGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12Mi1xY29tLWxldmVsIjsKPiArCj4gKyAgICAgICAg
-ICAgICAgIG9wcC03MTAwMDAwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIG9wcC1oeiA9
-IC9iaXRzLyA2NCA8NzEwMDAwMDAwPjsKPiArICAgICAgICAgICAgICAgICAgICAgICBxY29tLGxl
-dmVsID0gPDQxNj47Cj4gKyAgICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICBv
-cHAtNjc1MDAwMDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBvcHAtaHogPSAvYml0cy8g
-NjQgPDY3NTAwMDAwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcWNvbSxsZXZlbCA9IDwz
-ODQ+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsKPiArICAgICAgICAgICAgICAgb3BwLTU5NjAw
-MDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDw1OTYw
-MDAwMDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIHFjb20sbGV2ZWwgPSA8MzIwPjsKPiAr
-ICAgICAgICAgICAgICAgfTsKPiArCj4gKyAgICAgICAgICAgICAgIG9wcC01MjAwMDAwMDAgewo+
-ICsgICAgICAgICAgICAgICAgICAgICAgIG9wcC1oeiA9IC9iaXRzLyA2NCA8NTIwMDAwMDAwPjsK
-PiArICAgICAgICAgICAgICAgICAgICAgICBxY29tLGxldmVsID0gPDI1Nj47Cj4gKyAgICAgICAg
-ICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICBvcHAtNDE0MDAwMDAwIHsKPiArICAgICAg
-ICAgICAgICAgICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDQxNDAwMDAwMD47Cj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgcWNvbSxsZXZlbCA9IDwxOTI+Owo+ICsgICAgICAgICAgICAgICB9
-Owo+ICsKPiArICAgICAgICAgICAgICAgb3BwLTM0MjAwMDAwMCB7Cj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgb3BwLWh6ID0gL2JpdHMvIDY0IDwzNDIwMDAwMDA+Owo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHFjb20sbGV2ZWwgPSA8MTI4PjsKPiArICAgICAgICAgICAgICAgfTsKPiArCj4g
-KyAgICAgICAgICAgICAgIG9wcC0yNTcwMDAwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAg
-IG9wcC1oeiA9IC9iaXRzLyA2NCA8MjU3MDAwMDAwPjsKPiArICAgICAgICAgICAgICAgICAgICAg
-ICBxY29tLGxldmVsID0gPDY0PjsKPiArICAgICAgICAgICAgICAgfTsKPiArICAgICAgIH07Cj4g
-Kwo+ICsgICAgICAgZ211X29wcF90YWJsZTogYWRyZW5vLWdtdS1vcHAtdGFibGUgewo+ICsgICAg
-ICAgICAgICAgICBjb21wYXRpYmxlID0gIm9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCI7
-Cj4gKwo+ICsgICAgICAgICAgICAgICBvcHAtNDAwMDAwMDAwIHsKPiArICAgICAgICAgICAgICAg
-ICAgICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDQwMDAwMDAwMD47Cj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgcWNvbSxsZXZlbCA9IDwxMjg+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsKPiAr
-ICAgICAgICAgICAgICAgb3BwLTIwMDAwMDAwMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-b3BwLWh6ID0gL2JpdHMvIDY0IDwyMDAwMDAwMDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAg
-IHFjb20sbGV2ZWwgPSA8NDg+Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgfTsKPiAr
-Cj4gICAgICAgICBzb2M6IHNvYyB7Cj4gICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0g
-PDE+Owo+ICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsKPiBAQCAtMzIzLDUgKzM3
-Niw3MyBAQAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2Fi
-bGVkIjsKPiAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgICB9Owo+
-ICsKPiArICAgICAgICAgICAgICAgYWRyZW5vX3NtbXU6IGFkcmVuby1zbW11QDUwNDAwMDAgewoK
-aW9tbXVANTA0MDAwMCBhcyBwb2ludGVkIG91dCBieSBSb2IgaW4gWzFdCgo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxzZG04NDUtc21tdS12MiIsICJxY29tLHNt
-bXUtdjIiOwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDUwNDAwMDAgMHgxMDAw
-MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2lvbW11LWNlbGxzID0gPDE+Owo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICNnbG9iYWwtaW50ZXJydXB0cyA9IDwyPjsKPiArICAgICAgICAg
-ICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjI5IElSUV9UWVBFX0xFVkVMX0hJ
-R0g+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8R0lDX1NQSSAy
-MzEgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDxHSUNfU1BJIDM2NCBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM2NSBJUlFfVFlQRV9FREdF
-X1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNf
-U1BJIDM2NiBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM2NyBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM2OCBJUlFfVFlQ
-RV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IDxHSUNfU1BJIDM2OSBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM3MCBJUlFfVFlQRV9FREdFX1JJU0lORz4s
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDM3MSBJ
-UlFfVFlQRV9FREdFX1JJU0lORz47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tzID0g
-PCZnY2MgR0NDX0dQVV9NRU1OT0NfR0ZYX0NMSz4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICA8JmdjYyBHQ0NfR1BVX0NGR19BSEJfQ0xLPjsKPiArICAgICAgICAgICAgICAgICAg
-ICAgICBjbG9jay1uYW1lcyA9ICJidXMiLCAiaWZhY2UiOwo+ICsKPiArICAgICAgICAgICAgICAg
-ICAgICAgICBwb3dlci1kb21haW5zID0gPCZncHVjYyBHUFVfQ1hfR0RTQz47CgphbmQgZm9yIHRo
-aXMgeW91IG5lZWQgdG8gaW5jbHVkZSB0aGUgZ3B1Y2MgZHQtYmluZGluZ3MgaGVhZGVyIHdoaWNo
-IGlzIGNvbWluZwpmcm9tIEFtaXQncyBncHVjYyBkcml2ZXIgcGF0Y2guCgpbMV0gaHR0cHM6Ly9w
-YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDUzNDk5OS8KCkJlc3QgcmVnYXJkcwpWaXZlawoK
-W3NuaXBdCgotLSAKUVVBTENPTU0gSU5ESUEsIG9uIGJlaGFsZiBvZiBRdWFsY29tbSBJbm5vdmF0
-aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlcgpvZiBDb2RlIEF1cm9yYSBGb3J1bSwgaG9zdGVk
-IGJ5IFRoZSBMaW51eCBGb3VuZGF0aW9uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2ZyZWVkcmVubwo=
+
+--===============5878688527189627948==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="w7PDEPdKQumQfZlR"
+Content-Disposition: inline
+
+
+--w7PDEPdKQumQfZlR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Aug 20, 2018 at 10:35:54PM +0300, Dmitry Osipenko wrote:
+> On 20.08.2018 22:27, Dmitry Osipenko wrote:
+> > On 20.08.2018 22:12, Rob Herring wrote:
+> >> On Sat, Aug 18, 2018 at 06:54:17PM +0300, Dmitry Osipenko wrote:
+> >>> Splitting GART and Memory Controller wasn't a good decision that was =
+made
+> >>> back in the day. Given that the GART driver hasn't ever been used by
+> >>> anything in the kernel, we decided that it will be better to correct =
+the
+> >>> mistakes of the past and merge two bindings into a single one. In a r=
+esult
+> >>
+> >> As a result...
+> >>
+> >>> there is a DT ABI change for the Memory Controller that allows not to
+> >>> break newer kernels using older DT by introducing a new required prop=
+erty,
+> >>> the memory clock. Adding the new clock property also puts the tegra20=
+-mc
+> >>> binding in line with the bindings of the later Tegra generations.
+> >>
+> >> I don't understand this part. It looks to me like you are breaking=20
+> >> compatibility. The driver failing to probe with an old DT is okay?
+> >=20
+> > Yes, DT compatibility is broken. New driver won't probe/load with the o=
+ld DT,
+> > that's what we want.
+> >=20
+> >> OS's like OpenSUSE use new DTs with older kernel versions, so you shou=
+ld=20
+> >> consider how to not break them as well. I guess if all this is optiona=
+l=20
+> >> or has been unused, then there shouldn't be a problem.
+> >=20
+> > That's interesting.. Memory Controller isn't optional, I guess we could=
+ change
+> > compatible to "nvidia,tegra20-mc-gart".
+>=20
+> * I meant it's not optional in a sense that it's enabled in kernels confi=
+g by
+> default and driver is functional, but it's okay if MC driver will stop to=
+ probe
+> with older kernels as it is used only for reporting memory errors.
+
+Yeah, we don't really regress at runtime. The errors reported by the
+current driver are very rare, and even if you encounter them, they're
+pretty cryptic, so I think this is one of the exceptional cases where
+breaking the ABI "for the greater good" is acceptable.
+
+Thierry
+
+--w7PDEPdKQumQfZlR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluFKFsACgkQ3SOs138+
+s6GS/A/9FhKnGuXL6ULi7ClHQ6T1WzcoA6pRh6hBKmB9PF5mRwBVTSXS8Gp8rcP5
+V3UPHXcmSvNY9nhIaBUUehhYzlscsbnwcXeSsOmZ9j82WeVblDAZc5410/vXI5HE
+8/lUptmH735FWQvDvadSNAknz482xvZ6FyAP7eXwYUK9Zx1x59EfP7BVfotVrk4O
+hjeUYZuhyLc5vz3Cnu7Rs+dCjNIabr/cRGENZP7HNpZoRwePtjoplk3xtkZg5riL
+PQpPgVUueHEo5Wk1IhpKXoroNfRKBTY0im65Qmf9k4/SdPp0ewEFaUsvD96k5sFV
+5sIApSAr3KubixXCgNQke+kRFYM120pT4ybGAi7/VN414t9vJu5QKcDRj3qFGqaY
+7NscjWhSk1kHFgpsgyqs72RZWklA8BbxU1WSQQbRHdPgdwVv0mHCWtzPG/sXD5sh
+ImrJcREiVXmNwvQMPwquSiY5xNueH6avqPxdaHwYz4CECrzKihiasLXg8hfIE/2L
+Xf+2MGJ95qv5ZpoFBR6JPYgiR+JLhi90UE2iRJZpFuwCjIPTY6l1yPHpobB5wJVP
+2zXAiAU3teTmip6K4lx+pFs/YN48OaOGlAHeTGZCr9M2ZxqBZsw2DsKnq8WC5Nn9
+d2SJ31Cj2vJGBSQtOnKAqPIvamEC67kLk8tG10pOSM1AIZV2WZ4=
+=9ErX
+-----END PGP SIGNATURE-----
+
+--w7PDEPdKQumQfZlR--
+
+--===============5878688527189627948==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5878688527189627948==--
