@@ -1,85 +1,130 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH] remoteproc: qcom: adsp: Add SDM845 ADSP and CDSP support
-Date: Tue, 28 Aug 2018 14:13:49 +0530
-Message-ID: <bc66f41f8e96e92af424af473cd746d5@codeaurora.org>
-References: <20180828071458.26858-1-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845: Add smp2p nodes
+Date: Tue, 28 Aug 2018 14:22:55 +0530
+Message-ID: <ab17f50051abd65aa6bead48567a003e@codeaurora.org>
+References: <20180828071203.26740-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828071458.26858-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20180828071203.26740-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
-On 2018-08-28 12:44, Bjorn Andersson wrote:
-> Add support for booting the Audio and Compute DSPs found in Qualcomm's
-> SDM845 platform.
-> 
-> As with the previous platforms the power rail handling needs to be
-> updated once the appropriate support lands upstream.
+On 2018-08-28 12:42, Bjorn Andersson wrote:
+> Add the SMP2P nodes for the remoteproc states for adsp, cdsp, mpss and
+> slpi.
 > 
 > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  .../devicetree/bindings/remoteproc/qcom,adsp.txt     |  2 ++
->  drivers/remoteproc/qcom_q6v5_pas.c                   | 12 ++++++++++++
->  2 files changed, 14 insertions(+)
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 88 ++++++++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
 > 
-> diff --git
-> a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> index 728e4193f7a6..b7d058228185 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> @@ -10,6 +10,8 @@ on the Qualcomm ADSP Hexagon core.
->  		    "qcom,msm8974-adsp-pil"
->  		    "qcom,msm8996-adsp-pil"
->  		    "qcom,msm8996-slpi-pil"
-> +		    "qcom,sdm845-adsp-pas"
-> +		    "qcom,sdm845-cdsp-pas"
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 0c9a2aa6a1b5..d977117acac4 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -230,6 +230,94 @@
+>  		hwlocks = <&tcsr_mutex 3>;
+>  	};
 > 
->  - interrupts-extended:
->  	Usage: required
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c
-> b/drivers/remoteproc/qcom_q6v5_pas.c
-> index 2478ef3cd519..53eff2afda06 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -342,6 +342,16 @@ static const struct adsp_data adsp_resource_init = 
-> {
->  		.ssctl_id = 0x14,
->  };
-> 
-> +static const struct adsp_data cdsp_resource_init = {
-> +	.crash_reason_smem = 601,
-> +	.firmware_name = "cdsp.mdt",
-> +	.pas_id = 18,
-> +	.has_aggre2_clk = false,
-> +	.ssr_name = "cdsp",
-> +	.sysmon_name = "cdsp",
-> +	.ssctl_id = 0x17,
-> +};
+> +	smp2p-cdsp {
+> +		compatible = "qcom,smp2p";
+> +		qcom,smem = <94>, <432>;
 > +
->  static const struct adsp_data slpi_resource_init = {
->  		.crash_reason_smem = 424,
->  		.firmware_name = "slpi.mdt",
-> @@ -355,6 +365,8 @@ static const struct adsp_data slpi_resource_init = 
-> {
->  static const struct of_device_id adsp_of_match[] = {
->  	{ .compatible = "qcom,msm8974-adsp-pil", .data = 
-> &adsp_resource_init},
->  	{ .compatible = "qcom,msm8996-adsp-pil", .data = 
-> &adsp_resource_init},
->  	{ .compatible = "qcom,msm8996-slpi-pil", .data = 
-> &slpi_resource_init},
-> +	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
-> +	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
->  	{ },
->  };
+> +		interrupts = <GIC_SPI 576 IRQ_TYPE_EDGE_RISING>;
+> +
+> +		mboxes = <&apss_shared 6>;
+> +
+> +		qcom,local-pid = <0>;
+> +		qcom,remote-pid = <5>;
+> +
+> +		cdsp_smp2p_out: master-kernel {
+> +			qcom,entry-name = "master-kernel";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		cdsp_smp2p_in: slave-kernel {
+> +			qcom,entry-name = "slave-kernel";
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+> +	smp2p-lpass {
+> +		compatible = "qcom,smp2p";
+> +		qcom,smem = <443>, <429>;
+> +
+> +		interrupts = <GIC_SPI 158 IRQ_TYPE_EDGE_RISING>;
+> +
+> +		mboxes = <&apss_shared 10>;
+> +
+> +		qcom,local-pid = <0>;
+> +		qcom,remote-pid = <2>;
+> +
+> +		adsp_smp2p_out: master-kernel {
+> +			qcom,entry-name = "master-kernel";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		adsp_smp2p_in: slave-kernel {
+> +			qcom,entry-name = "slave-kernel";
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+> +	smp2p-mpss {
+> +		compatible = "qcom,smp2p";
+> +		qcom,smem = <435>, <428>;
+> +		interrupts = <GIC_SPI 451 IRQ_TYPE_EDGE_RISING>;
+> +		mboxes = <&apss_shared 14>;
+> +		qcom,local-pid = <0>;
+> +		qcom,remote-pid = <1>;
+> +
+> +		modem_smp2p_out: master-kernel {
+> +			qcom,entry-name = "master-kernel";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		modem_smp2p_in: slave-kernel {
+> +			qcom,entry-name = "slave-kernel";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+> +	smp2p-slpi {
+> +		compatible = "qcom,smp2p";
+> +		qcom,smem = <481>, <430>;
+> +		interrupts = <GIC_SPI 172 IRQ_TYPE_EDGE_RISING>;
+> +		mboxes = <&apss_shared 26>;
+> +		qcom,local-pid = <0>;
+> +		qcom,remote-pid = <3>;
+> +
+> +		slpi_smp2p_out: master-kernel {
+> +			qcom,entry-name = "master-kernel";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		slpi_smp2p_in: slave-kernel {
+> +			qcom,entry-name = "slave-kernel";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+>  	psci {
+>  		compatible = "arm,psci-1.0";
+>  		method = "smc";
 
 -- 
 -- Sibi Sankar --
