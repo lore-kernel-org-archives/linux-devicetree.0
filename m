@@ -1,115 +1,31 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: Re: [PATCH v2 11/40] mmc: sdhci: Add a quirk to skip clearing the
- transfer mode register on tuning
-Date: Tue, 28 Aug 2018 17:45:51 +0300
-Message-ID: <20180828174551.12f1d9bf@dhcp-10-21-25-168>
-References: <1533924522-1037-1-git-send-email-avienamo@nvidia.com>
-        <1533924522-1037-12-git-send-email-avienamo@nvidia.com>
-        <d603be8f-986a-80e1-d98a-daea9c9684aa@intel.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 3/8] dt-bindings: media: Document
+ bindings for the Cedrus VPU driver
+Date: Tue, 28 Aug 2018 16:47:27 +0200
+Message-ID: <20180828144727.GB25644@Red>
+References: <20180828073424.30247-1-paul.kocialkowski@bootlin.com>
+ <20180828073424.30247-4-paul.kocialkowski@bootlin.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d603be8f-986a-80e1-d98a-daea9c9684aa@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBA6BSXOAKGQE4HS7A4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180828073424.30247-4-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Aug 2018 14:01:52 +0300
-Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Tue, Aug 28, 2018 at 09:34:19AM +0200, Paul Kocialkowski wrote:
+> This adds a device-tree binding document that specifies the properties
+> used by the Cedurs VPU driver, as well as examples.
 
-> On 10/08/18 21:08, Aapo Vienamo wrote:
-> > Add SDHCI_QUIRK2_TUNE_SKIP_XFERRMODE_REG_PROG to skip programming the
-> > SDHCI_TRANSFER_MODE in sdhci_set_transfer_mode() if tuning command is
-> > being sent.
-> > 
-> > On Tegra210 and Tegra186 the tuning sequence hangs if the SDHCI
-> > transfer mode register is touched.
-> > 
-> > Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-> > ---
-> >  drivers/mmc/host/sdhci.c | 6 ++++++
-> >  drivers/mmc/host/sdhci.h | 2 ++
-> >  2 files changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index a7b5602..04dc443 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -1028,6 +1028,12 @@ static void sdhci_set_transfer_mode(struct sdhci_host *host,
-> >  
-> >  	if (data == NULL) {
-> >  		if (host->quirks2 &
-> > +			SDHCI_QUIRK2_TUNE_SKIP_XFERMODE_REG_PROG &&
-> > +				(cmd->opcode == MMC_SEND_TUNING_BLOCK ||
-> > +				 cmd->opcode == MMC_SEND_TUNING_BLOCK_HS200)) {
-> > +			return;
-> > +		}  
-> 
-> Rather than introduce a quirk, can't we just dodge the unnecessary write e.g.
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 1b3fbd9bd5c5..68af6a67e397 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1033,10 +1033,19 @@ static void sdhci_set_transfer_mode(struct sdhci_host *host,
->  			if (cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200)
->  				sdhci_writew(host, 0x0, SDHCI_TRANSFER_MODE);
->  		} else {
-> -		/* clear Auto CMD settings for no data CMDs */
-> +			u16 orig;
-> +
-> +			/* clear Auto CMD settings for no data CMDs */
->  			mode = sdhci_readw(host, SDHCI_TRANSFER_MODE);
-> -			sdhci_writew(host, mode & ~(SDHCI_TRNS_AUTO_CMD12 |
-> -				SDHCI_TRNS_AUTO_CMD23), SDHCI_TRANSFER_MODE);
-> +			orig = mode;
-> +			mode &= ~(SDHCI_TRNS_AUTO_CMD12 | SDHCI_TRNS_AUTO_CMD23);
-> +			/*
-> +			 * Do not write transfer mode unnecessarily because it
-> +			 * can upset some host controllers (e.g. sdhci-tregra)
-> +			 * during tuning.
-> +			 */
-> +			if (mode != orig)
-> +				sdhci_writew(host, new_mode, SDHCI_TRANSFER_MODE);
->  		}
->  		return;
->  	}
-> 
-> 
-> Alternatively 
-> 
-> > +		if (host->quirks2 &
-> >  			SDHCI_QUIRK2_CLEAR_TRANSFERMODE_REG_BEFORE_CMD) {
-> >  			sdhci_writew(host, 0x0, SDHCI_TRANSFER_MODE);
-> >  		} else {
-> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> > index 23966f8..0a99008 100644
-> > --- a/drivers/mmc/host/sdhci.h
-> > +++ b/drivers/mmc/host/sdhci.h
-> > @@ -450,6 +450,8 @@ struct sdhci_host {
-> >   * obtainable timeout.
-> >   */
-> >  #define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT			(1<<17)
-> > +/* Don't clear the SDHCI_TRANSFER_MODE register on tuning commands */
-> > +#define SDHCI_QUIRK2_TUNE_SKIP_XFERMODE_REG_PROG	(1<<18)
-> >  
-> >  	int irq;		/* Device IRQ */
-> >  	void __iomem *ioaddr;	/* Mapped address */
-> >   
-> 
+typo Cedurs=>Cedrus
 
-Looks like writes to the transfer mode register are deferred until the
-command register is written by tegra_sdhci_writew(). This code was
-introduced due to a quirk in Tegra114/124. The Tegra114 ops struct was
-probably just copied over when support for Tegra210 was added, so we
-end up with this code also getting run on Tegra210.
-
-The issue with tegra_sdhci_writew() is that it breaks successive
-read-modify-write operations. The value written to the transfer mode
-register isn't returned on read until the command register is also
-touched. Removing the write_w accessor from tegra210_sdhci_ops seems to
-make the issue originally addressed by this patch to go away.
-
- -Aapo
+Regards
