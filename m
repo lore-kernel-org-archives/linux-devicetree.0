@@ -1,85 +1,112 @@
-From: Sandy Huang <hjc@rock-chips.com>
-Subject: Re: [PATCH v4 1/2] devicetree/bindings: display: Add document for
+From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Subject: Re: [PATCH v5 1/2] devicetree/bindings: display: Add document for
  rockchip RGB output
-Date: Tue, 28 Aug 2018 16:14:33 +0800
-Message-ID: <ae0ae53f-2933-c9dc-e09e-c3df6ec2dce9@rock-chips.com>
-References: <1529997340-156879-1-git-send-email-hjc@rock-chips.com>
- <20180703182559.GA12809@rob-hp-laptop>
- <725cc93f-a441-22bc-ef58-b4b38ec34e17@rock-chips.com>
- <7915686.3ERLj9EHQN@phil>
+Date: Tue, 28 Aug 2018 10:31:15 +0200
+Message-ID: <2858027f-69f5-57ee-d14a-2f0b329e8e0e@ysoft.com>
+References: <1535443954-38806-1-git-send-email-hjc@rock-chips.com>
+ <1535443954-38806-2-git-send-email-hjc@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <7915686.3ERLj9EHQN@phil>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, seanpaul@chromium.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535443954-38806-2-git-send-email-hjc@rock-chips.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sandy Huang <hjc@rock-chips.com>, heiko@sntech.de, robh@kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CuWcqCAyMDE4LzgvMjcgMTU6MTEsIEhlaWtvIFN0dWVibmVyIOWGmemBkzoKPiBIaSBTYW5keSwK
-Pgo+IHRyeWluZyB0byBtb3ZlIHRoaXMgZm9yd2FyZCBhIGJpdCA6LSkKSGkgaGVpa28sCiDCoMKg
-wqDCoCB1cGRhdGUgYXQgdmVyc2lvbjUgYW5kIGFkZCBTUERYLUxpY2Vuc2UtSWRlbnRpZmllciB0
-YWcuCj4KPiBBbSBNaXR0d29jaCwgNC4gSnVsaSAyMDE4LCAxNDowOTo1NiBDRVNUIHNjaHJpZWIg
-U2FuZHkgSHVhbmc6Cj4gPiBIaSBSb2IgSGVycmluZywKPiA+IFRoYW5rcyBmb3IgeW91ciByZXZp
-ZXcuCj4gPgo+ID4g5ZyoIDIwMTgvNy80IDI6MjUsIFJvYiBIZXJyaW5nIOWGmemBkzoKPiA+PiBP
-biBUdWUsIEp1biAyNiwgMjAxOCBhdCAwMzoxNTozOVBNICswODAwLCBTYW5keSBIdWFuZyB3cm90
-ZToKPiA+Pj4gVGhpcyBwYXRoIGFkZCBzdXBwb3J0IHJ2MTEwOCBhbmQgcHgzMCByZ2Igb3V0cHV0
-IGludGVyZmFjZSBkcml2ZXIuCj4gPj4KPiA+PiBCaW5kaW5ncyBhcmUgZm9yIGgvdywgbm90IGRy
-aXZlcnMuCj4gPj4KPiA+IEkgd2lsbCB1cGRhdGUgYXQgbmV4dCB2ZXJzaW9uIGFzIGZvbGxvd2lu
-ZzoKPiA+IFRoaXMgcGF0Y2ggYWRkIHN1cHBvcnQgcnYxMTA4IGFuZCBweDMwIHJnYiBvdXRwdXQg
-aW50ZXJmYWNlCj4gPj4+Cj4gPj4+IFNpZ25lZC1vZmYtYnk6IFNhbmR5IEh1YW5nIDxoamNAcm9j
-ay1jaGlwcy5jb20+Cj4gPj4+IExpbms6IGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9y
-Zy9wYXRjaC9tc2dpZC8xNTA5NTIyNzY1LTExODc1OS0xLWdpdC1zZW5kLWVtYWlsLWhqY0Byb2Nr
-LWNoaXBzLmNvbQo+ID4+PiAtLS0KPiA+Pj4KPiA+Pj4gQ2hhbmdlcyBpbiB2NDogQWRkIHN1cHBv
-cnQgcHgzMAo+ID4+PiBDaGFuZ2VzIGluIHYzOiBOb25lCj4gPj4+IENoYW5nZXMgaW4gdjI6IE5v
-bmUKPiA+Pj4KPiA+Pj4gLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtcmdi
-LnR4dMKgwqDCoMKgIHwgNzMgKysrKysrKysrKysrKysrKysrKysrKwo+ID4+PsKgwqDCoCAxIGZp
-bGUgY2hhbmdlZCwgNzMgaW5zZXJ0aW9ucygrKQo+ID4+PsKgwqDCoCBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9j
-a2NoaXAtcmdiLnR4dAo+ID4+Pgo+ID4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtcmdiLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXJn
-Yi50eHQKPiA+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+Pj4gaW5kZXggMDAwMDAwMC4uMDc3
-YjlhZAo+ID4+PiAtLS0gL2Rldi9udWxsCj4gPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXJnYi50eHQKPiA+Pj4gQEAg
-LTAsMCArMSw3MyBAQAo+ID4+PiArUm9ja2NoaXAgUlYxMTA4IFJHQiBpbnRlcmZhY2UKPiA+Pj4g
-Kz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gPj4+ICsKPiA+Pj4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6Cj4gPj4+ICstIGNvbXBhdGlibGU6IG1hdGNoaW5nIHRoZSBzb2MgdHlwZToK
-PiA+Pj4gK8KgwqAgwqAtICJyb2NrY2hpcCxweDMwLXJnYiI7Cj4gPj4+ICvCoMKgIMKgLSAicm9j
-a2NoaXAscnYxMTA4LXJnYiI7Cj4gPj4KPiA+PiBUaGlzIGRvZXNuJ3QgbG9vayByaWdodD8gV2hh
-dCAoYW5kIGhvdykgaXMgZ2V0dGluZyBwcm9ncmFtbWVkIGhlcmUKPiA+PiBiZWNhdXNlIHlvdSBk
-b24ndCBoYXZlIGFueSByZWdpc3RlciBpbnRlcmZhY2UuCj4gPj4KPiA+IFRoaXMgaXMgcmVnaXN0
-ZXIgZm9yIERSTSBlbmNvZGVyIGFuZCBjb25uZWN0ZXIgb3IgYnJpZGdlIGZvciBzb21lIFJHQgo+
-ID4gY29udmVydCBjaGlwcyBkcml2ZXIuCj4gPiBzbyBmYXIgd2UgZG9uJ3QgaGF2ZSBhbnkgcmVn
-aXN0ZXIgZm9yIHJnYiBpbnRlcmZhY2UsIGJ1dCBpdCdzIG1vc3QKPiA+IHByb2JhYmxlIG5lZWQg
-dG8gY29uZmlnIHNvbWUgcmVnaXN0ZXIgZm9yIHJnYiBpbnRlcmZhY2UgaW4gZmVhdXR1cmUgZm9y
-Cj4gPiByb2NrY2hpcCBwbGF0Zm9ybS4KPgo+IEkgdGhpbmsgdGhlIGJhc2ljLWlzc3VlIFJvYiB3
-YXMgcG9pbnRpbmcgb3V0IGlzIHRoYXQgdGhlIGRldmljZXRyZWUKPiBkZXNjcmliZXMgaGFyZHdh
-cmUgYmxvY2tzIGFuZCBub3QgdGhlIHNvZnR3YXJlIHJlcHJlc2VudGF0aW9uLgo+Cj4gQW5kIHRo
-ZSByZ2Igb3V0cHV0IGlzIG5vdCBhIHNlcGFyYXRlIGJsb2NrLCBidXQgaW5zdGVhZCBqdXN0IGEg
-cHJvcGVydHkKPiBvZiB0aGUgdm9wIGl0c2VsZiwgaGVuY2Ugc2hvdWxkIHBvc3NpYmx5IG5vdCBo
-YXZlIGEgc2VwYXJhdGUgImRldmljZSIuCj4KPiBBcyBJJ20gY3VycmVudGx5IHRpbmtlcmluZyB3
-aXRoIHJrMzE4OCBkaXNwbGF5IHN1cHBvcnQgWzBdIC0gd2hpY2ggb25seSBoYXMKPiByZ2Igb3V0
-cHV0IGF0IGFsbCAtIEkgbW9kaWZpZWQgeW91ciBwYXRjaCBhIGJpdCB0byB0byBzaG93Y2FzZSBo
-b3cgdGhhdAo+IGNvdWxkIGxvb2sgWzFdLCB3aGVyZSB0aGUgc29jIHZvcCBzdHJ1Y3Qgc2ltcGx5
-IGhhcyBhIGZlYXR1cmUgZmxhZwo+IGluZGljYXRpbmcgaW5kaWNhdGluZyBhIHJhdyByZ2Igb3V0
-cHV0IGFuZCB0aGUgcmdiIGRyaXZlciB0aGVuCj4gbG9va3MgZm9yIGJyaWRnZXMgaW4gdGhlIHZv
-cCBlbmRwb2ludHMgdG8gZGlzdGluZ3Vpc2ggdGhlbSBmcm9tCj4gc29jLWludGVybmFscyBvdXRw
-dXQgZW5jb2RlcnMuCj4KPiBMZXQgbWUga25vdyB3aGF0IHlvdSB0aGluayA6LSkKPiBIZWlrbwo+
-Cj4gWzBdIGh0dHBzOi8vZ2l0aHViLmNvbS9tbWluZC9saW51eC1yb2NrY2hpcC9jb21taXRzL3dp
-cC9yazMxODgtbGNkYwo+IFsxXSBodHRwczovL2dpdGh1Yi5jb20vbW1pbmQvbGludXgtcm9ja2No
-aXAvY29tbWl0L2ZlNzRkMmM0ZDc2YmNiNjAzNWI3MjA3NzUzZTZhZmI4NTMzNWI2Y2QKPiBuZWVk
-cyBhbHNvIGh0dHBzOi8vZ2l0aHViLmNvbS9tbWluZC9saW51eC1yb2NrY2hpcC9jb21taXQvYzVh
-NDhjNzcyZjM1NjQyMTFkY2QxZWM3MTAwNGRlMWQ2ZGJiMDMwNwo+Cj4KPgo+Cj4KPgoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 28.8.2018 10:12, Sandy Huang wrote:
+> This path add support rv1108 and px30 rgb output interface driver.
+
+Hi Sandy,
+Seems like you forgot to address Rob's comment regarding the "driver" word.
+Also fix the typo: s/path/patch
+The subject could be improved as well: s/devicetree\/bindings/dt-bindings
+
+Best regards, Michal
+> 
+> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+> Link: https://patchwork.freedesktop.org/patch/msgid/1509522765-118759-1-git-send-email-hjc@rock-chips.com
+> ---
+>   .../bindings/display/rockchip/rockchip-rgb.txt     | 70 ++++++++++++++++++++++
+>   1 file changed, 70 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+> new file mode 100644
+> index 0000000..1f4909c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-rgb.txt
+> @@ -0,0 +1,70 @@
+> +Rockchip RV1108 RGB interface
+> +================================
+> +
+> +Required properties:
+> +- compatible: matching the soc type:
+> +	- "rockchip,px30-rgb";
+> +	- "rockchip,rv1108-rgb";
+> +
+> +Optional properties:
+> +- pinctrl-names: should be a "lcdc" entry or a "default" entry.
+> +- pinctrl-0: pin control group to be used for this interface.
+> +
+> +The rgb has two video ports described by:
+> +	Documentation/devicetree/bindings/media/video-interfaces.txt
+> +Their connections are modeled using the OF graph bindings specified in
+> +	Documentation/devicetree/bindings/graph.txt.
+> +
+> +- video port 0 for the VOP input, the remote endpoint maybe vopb/vopl/vop
+> +- video port 1 for either a panel or subsequent encoder
+> +
+> +the panel described by:
+> +	Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> +Panel other required properties:
+> +- ports for remote rgb output.
+> +
+> +Example:
+> +
+> +panel: panel {
+> +	compatible = "auo,b101ean01";
+> +	enable-gpios = <&gpio7 21 GPIO_ACTIVE_HIGH>;
+> +
+> +	ports {
+> +		panel_in_rgb: endpoint {
+> +			remote-endpoint = <&rgb_out_panel>;
+> +		};
+> +	};
+> +};
+> +
+> +For Rockchip RV1108:
+> +
+> +	rgb: rgb {
+> +		compatible = "rockchip,rv1108-rgb";
+> +		pinctrl-names = "lcdc";
+> +		pinctrl-0 = <&lcdc_ctl>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			rgb_in: port@0 {
+> +				reg = <0>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				rgb_in_vop: endpoint {
+> +					remote-endpoint = <&vop_out_rgb>;
+> +				};
+> +			};
+> +
+> +			rgb_out: port@1 {
+> +				reg = <1>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				rgb_out_panel: endpoint {
+> +					remote-endpoint = <&panel_in_rgb>;
+> +				};
+> +			};
+> +		};
+> +	};
+> 
