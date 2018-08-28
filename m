@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v8 5/8] ARM: dts: sun5i: Add Video Engine
- and reserved memory nodes
-Date: Tue, 28 Aug 2018 16:55:54 +0200
-Message-ID: <20180828145554.vj3kewgdr7owxgn4@flea>
+Subject: Re: [PATCH v8 4/8] media: platform: Add Cedrus VPU
+ decoder driver
+Date: Tue, 28 Aug 2018 16:56:14 +0200
+Message-ID: <20180828145614.rovduhq676eag3gz@flea>
 References: <20180828073424.30247-1-paul.kocialkowski@bootlin.com>
- <20180828073424.30247-6-paul.kocialkowski@bootlin.com>
+ <20180828073424.30247-5-paul.kocialkowski@bootlin.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="e7ywqriiswgh6hjv"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBWFSXOAKGQEV5THL4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="2unr7vok42r5f56p"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIOFSXOAKGQELCWLJKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180828073424.30247-6-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20180828073424.30247-5-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,19 +24,24 @@ Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 List-Id: devicetree@vger.kernel.org
 
 
---e7ywqriiswgh6hjv
+--2unr7vok42r5f56p
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Tue, Aug 28, 2018 at 09:34:21AM +0200, Paul Kocialkowski wrote:
-> This adds nodes for the Video Engine and the associated reserved memory
-> for sun5i-based platforms. Up to 96 MiB of memory are dedicated to the
-> CMA pool.
+On Tue, Aug 28, 2018 at 09:34:20AM +0200, Paul Kocialkowski wrote:
+> This introduces the Cedrus VPU driver that supports the VPU found in
+> Allwinner SoCs, also known as Video Engine. It is implemented through
+> a v4l2 m2m decoder device and a media device (used for media requests).
+> So far, it only supports MPEG2 decoding.
 > 
-> The VPU can only map the first 256 MiB of DRAM, so the reserved memory
-> pool has to be located in that area. Following Allwinner's decision in
-> downstream software, the last 96 MiB of the first 256 MiB of RAM are
-> reserved for this purpose.
+> Since this VPU is stateless, synchronization with media requests is
+> required in order to ensure consistency between frame headers that
+> contain metadata about the frame to process and the raw slice data that
+> is used to generate the frame.
+> 
+> This driver was made possible thanks to the long-standing effort
+> carried out by the linux-sunxi community in the interest of reverse
+> engineering, documenting and implementing support for Allwinner VPU.
 > 
 > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
@@ -48,4 +53,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---e7ywqriiswgh6hjv--
+--2unr7vok42r5f56p--
