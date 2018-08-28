@@ -1,85 +1,392 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH] arm64: dts: remove big-endian filed from IFC controller
-Date: Tue, 28 Aug 2018 13:38:23 -0500
-Message-ID: <CADRPPNTCZVkjzFfn7k2As2_VXGx3gXStVcrEOhYDV-i8QiSoeA@mail.gmail.com>
-References: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v6 5/5] clk: imx: add clock driver for i.MX8MQ CCM
+Date: Tue, 28 Aug 2018 11:45:58 -0700
+Message-ID: <CAHQ1cqHnp9BaE91+=BMYUjC6Haz4RCLmJcrTWgVQ098FmoHrag@mail.gmail.com>
+References: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com> <1534945703-4730-6-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534945703-4730-6-git-send-email-abel.vesa@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, linux-clk@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, abelvesa@linux.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2018 at 2:02 AM Prabhakar Kushwaha
-<prabhakar.kushwaha@nxp.com> wrote:
+On Wed, Aug 22, 2018 at 7:05 AM Abel Vesa <abel.vesa@nxp.com> wrote:
 >
-> As per IFC binding, Absence of "little-endian" field causes registers
-> access in big-endian mode.
-> So no need to set explicit big-endian field IFC node for LS1043A and
-> LS1046A.
+> From: Lucas Stach <l.stach@pengutronix.de>
 >
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+> Add driver for the Clock Control Module found on i.MX8MQ.
+>
+> This is largely based on the downstream driver from Anson Huang and
+> Bai Ping at NXP, with only some small adaptions to mainline from me.
+>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 2 +-
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
+>  drivers/clk/imx/Makefile     |   1 +
+>  drivers/clk/imx/clk-imx8mq.c | 631 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/imx/clk.h        |  36 +++
+>  3 files changed, 668 insertions(+)
+>  create mode 100644 drivers/clk/imx/clk-imx8mq.c
 >
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index b9f5d2ff4ff2..68af84a8ade8 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -3,6 +3,7 @@
->   * Device Tree Include file for Freescale Layerscape-1043A family SoC.
->   *
->   * Copyright 2014-2015 Freescale Semiconductor, Inc.
-> + * Copyright 2018 NXP
->   *
->   * Mingkai Hu <Mingkai.hu@freescale.com>
->   */
-> @@ -280,7 +281,6 @@
->                 ifc: ifc@1530000 {
->                         compatible = "fsl,ifc", "simple-bus";
->                         reg = <0x0 0x1530000 0x0 0x10000>;
-> -                       big-endian;
->                         interrupts = <0 43 0x4>;
->                 };
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index 65ce1c3cb568..9f5acb4dfaf3 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -4,6 +4,8 @@
->   *
->   * Copyright 2016 Freescale Semiconductor, Inc.
->   *
-> + * Copyright 2018 NXP
-> + *
+> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+> index 4fabb0a..64e695c 100644
+> --- a/drivers/clk/imx/Makefile
+> +++ b/drivers/clk/imx/Makefile
+> @@ -30,3 +30,4 @@ obj-$(CONFIG_SOC_IMX6SX) += clk-imx6sx.o
+>  obj-$(CONFIG_SOC_IMX6UL) += clk-imx6ul.o
+>  obj-$(CONFIG_SOC_IMX7D)  += clk-imx7d.o
+>  obj-$(CONFIG_SOC_VF610)  += clk-vf610.o
+> +obj-$(CONFIG_SOC_IMX8MQ) += clk-imx8mq.o
+> diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+> new file mode 100644
+> index 0000000..d3a9e31
+> --- /dev/null
+> +++ b/drivers/clk/imx/clk-imx8mq.c
+> @@ -0,0 +1,631 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2018 NXP.
+> + * Copyright (C) 2017 Pengutronix, Lucas Stach <kernel@pengutronix.de>
+> + */
+> +
+> +#include <dt-bindings/clock/imx8mq-clock.h>
+> +#include <linux/clk.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/types.h>
+> +
+> +#include "clk.h"
+> +
+> +static u32 share_count_sai1;
+> +static u32 share_count_sai2;
+> +static u32 share_count_sai3;
+> +static u32 share_count_sai4;
+> +static u32 share_count_sai5;
+> +static u32 share_count_sai6;
+> +static u32 share_count_dcss;
+> +static u32 share_count_nand;
+> +
+> +static struct clk *clks[IMX8MQ_CLK_END];
+> +
+> +static const char *pll_ref_sels[] = { "osc_25m", "osc_27m", "dummy", "dummy", };
+> +static const char *arm_pll_bypass_sels[] = {"arm_pll", "arm_pll_ref_sel", };
+> +static const char *gpu_pll_bypass_sels[] = {"gpu_pll", "gpu_pll_ref_sel", };
+> +static const char *vpu_pll_bypass_sels[] = {"vpu_pll", "vpu_pll_ref_sel", };
+> +static const char *audio_pll1_bypass_sels[] = {"audio_pll1", "audio_pll1_ref_sel", };
+> +static const char *audio_pll2_bypass_sels[] = {"audio_pll2", "audio_pll2_ref_sel", };
+> +static const char *video_pll1_bypass_sels[] = {"video_pll1", "video_pll1_ref_sel", };
+> +
+> +static const char *sys1_pll1_out_sels[] = {"sys1_pll1", "sys1_pll1_ref_sel", };
+> +static const char *sys2_pll1_out_sels[] = {"sys2_pll1", "sys1_pll1_ref_sel", };
+> +static const char *sys3_pll1_out_sels[] = {"sys3_pll1", "sys3_pll1_ref_sel", };
+> +static const char *dram_pll1_out_sels[] = {"dram_pll1", "dram_pll1_ref_sel", };
+> +static const char *video2_pll1_out_sels[] = {"video2_pll1", "video2_pll1_ref_sel", };
+> +
+> +static const char *sys1_pll2_out_sels[] = {"sys1_pll2_div", "sys1_pll1_ref_sel", };
+> +static const char *sys2_pll2_out_sels[] = {"sys2_pll2_div", "sys2_pll1_ref_sel", };
+> +static const char *sys3_pll2_out_sels[] = {"sys3_pll2_div", "sys2_pll1_ref_sel", };
+> +static const char *dram_pll2_out_sels[] = {"dram_pll2_div", "dram_pll1_ref_sel", };
+> +static const char *video2_pll2_out_sels[] = {"video2_pll2_div", "video2_pll1_ref_sel", };
+> +
+> +/* CCM ROOT */
+> +static const char *imx8mq_a53_sels[] = {"osc_25m", "arm_pll_out", "sys2_pll_500m", "sys2_pll_1000m",
+> +                                       "sys1_pll_800m", "sys1_pll_400m", "audio_pll1_out", "sys3_pll2_out", };
+> +
+> +static const char *imx8mq_vpu_sels[] = {"osc_25m", "arm_pll_out", "sys2_pll_500m", "sys2_pll_1000m",
+> +                                       "sys1_pll_800m", "sys1_pll_400m", "audio_pll1_out", "vpu_pll_out", };
+> +
+> +static const char *imx8mq_gpu_core_sels[] = {"osc_25m", "gpu_pll_out", "sys1_pll_800m", "sys3_pll2_out",
+> +                                            "sys2_pll_1000m", "audio_pll1_out", "video_pll1_out", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_gpu_shader_sels[] = {"osc_25m", "gpu_pll_out", "sys1_pll_800m", "sys3_pll2_out",
+> +                                              "sys2_pll_1000m", "audio_pll1_out", "video_pll1_out", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_main_axi_sels[] = {"osc_25m", "sys2_pll_333m", "sys1_pll_800m", "sys2_pll_250m",
+> +                                            "sys2_pll_1000m", "audio_pll1_out", "video_pll1_out", "sys1_pll_100m",};
+> +
+> +static const char *imx8mq_enet_axi_sels[] = {"osc_25m", "sys1_pll_266m", "sys1_pll_800m", "sys2_pll_250m",
+> +                                            "sys2_pll_200m", "audio_pll1_out", "video_pll1_out", "sys3_pll2_out", };
+> +
+> +static const char *imx8mq_nand_usdhc_sels[] = {"osc_25m", "sys1_pll_266m", "sys1_pll_800m", "sys2_pll_200m",
+> +                                              "sys1_pll_133m", "sys3_pll2_out", "sys2_pll_250m", "audio_pll1_out", };
+> +
+> +static const char *imx8mq_vpu_bus_sels[] = {"osc_25m", "sys1_pll_800m", "vpu_pll_out", "audio_pll2_out", "sys3_pll2_out", "sys2_pll_1000m", "sys2_pll_200m", "sys1_pll_100m", };
+> +
+> +static const char *imx8mq_disp_axi_sels[] = {"osc_25m", "sys2_pll_125m", "sys1_pll_800m", "sys3_pll2_out", "sys1_pll_400m", "audio_pll2_out", "clk_ext1", "clk_ext4", };
+> +
+> +static const char *imx8mq_disp_apb_sels[] = {"osc_25m", "sys2_pll_125m", "sys1_pll_800m", "sys3_pll2_out",
+> +                                            "sys1_pll_40m", "audio_pll2_out", "clk_ext1", "clk_ext3", };
+> +
+> +static const char *imx8mq_disp_rtrm_sels[] = {"osc_25m", "sys1_pll_800m", "sys2_pll_200m", "sys1_pll_400m",
+> +                                             "audio_pll1_out", "video_pll1_out", "clk_ext2", "clk_ext3", };
+> +
+> +static const char *imx8mq_usb_bus_sels[] = {"osc_25m", "sys2_pll_500m", "sys1_pll_800m", "sys2_pll_100m",
+> +                                           "sys2_pll_200m", "clk_ext2", "clk_ext4", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_gpu_axi_sels[] = {"osc_25m", "sys1_pll_800m", "gpu_pll_out", "sys3_pll2_out", "sys2_pll_1000m",
+> +                                           "audio_pll1_out", "video_pll1_out", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_gpu_ahb_sels[] = {"osc_25m", "sys1_pll_800m", "gpu_pll_out", "sys3_pll2_out", "sys2_pll_1000m",
+> +                                           "audio_pll1_out", "video_pll1_out", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_noc_sels[] = {"osc_25m", "sys1_pll_800m", "sys3_pll2_out", "sys2_pll_1000m", "sys2_pll_500m",
+> +                                       "audio_pll1_out", "video_pll1_out", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_noc_apb_sels[] = {"osc_25m", "sys1_pll_400m", "sys3_pll2_out", "sys2_pll_333m", "sys2_pll_200m",
+> +                                           "sys1_pll_800m", "audio_pll1_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_ahb_sels[] = {"osc_25m", "sys1_pll_133m", "sys1_pll_800m", "sys1_pll_400m",
+> +                                       "sys2_pll_125m", "sys3_pll2_out", "audio_pll1_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_audio_ahb_sels[] = {"osc_25m", "sys2_pll_500m", "sys1_pll_800m", "sys2_pll_1000m",
+> +                                                 "sys2_pll_166m", "sys3_pll2_out", "audio_pll1_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_dsi_ahb_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_80m", "sys1_pll_800m",
+> +                                               "sys2_pll_1000m", "sys3_pll2_out", "clk_ext3", "audio_pll2_out"};
+> +
+> +static const char *imx8mq_dram_alt_sels[] = {"osc_25m", "sys1_pll_800m", "sys1_pll_100m", "sys2_pll_500m",
+> +                                               "sys2_pll_250m", "sys1_pll_400m", "audio_pll1_out", "sys1_pll_266m", };
+> +
+> +static const char *imx8mq_dram_apb_sels[] = {"osc_25m", "sys2_pll_200m", "sys1_pll_40m", "sys1_pll_160m",
+> +                                               "sys1_pll_800m", "sys3_pll2_out", "sys2_pll_250m", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_vpu_g1_sels[] = {"osc_25m", "vpu_pll_out", "sys1_pll_800m", "sys2_pll_1000m", "sys1_pll_100m", "sys2_pll_125m", "sys3_pll2_out", "audio_pll1_out", };
+> +
+> +static const char *imx8mq_vpu_g2_sels[] = {"osc_25m", "vpu_pll_out", "sys1_pll_800m", "sys2_pll_1000m", "sys1_pll_100m", "sys2_pll_125m", "sys3_pll2_out", "audio_pll1_out", };
+> +
+> +static const char *imx8mq_disp_dtrc_sels[] = {"osc_25m", "vpu_pll_out", "sys1_pll_800m", "sys2_pll_1000m", "sys1_pll_160m", "sys2_pll_100m", "sys3_pll2_out", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_disp_dc8000_sels[] = {"osc_25m", "vpu_pll_out", "sys1_pll_800m", "sys2_pll_1000m", "sys1_pll_160m", "sys2_pll_100m", "sys3_pll2_out", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_pcie1_ctrl_sels[] = {"osc_25m", "sys2_pll_250m", "sys2_pll_200m", "sys1_pll_266m",
+> +                                              "sys1_pll_800m", "sys2_pll_500m", "sys2_pll_250m", "sys3_pll2_out", };
+> +
+> +static const char *imx8mq_pcie1_phy_sels[] = {"osc_25m", "sys2_pll_100m", "sys2_pll_500m", "clk_ext1", "clk_ext2",
+> +                                             "clk_ext3", "clk_ext4", };
+> +
+> +static const char *imx8mq_pcie1_aux_sels[] = {"osc_25m", "sys2_pll_200m", "sys2_pll_500m", "sys3_pll2_out",
+> +                                             "sys2_pll_100m", "sys1_pll_80m", "sys1_pll_160m", "sys1_pll_200m", };
+> +
+> +static const char *imx8mq_dc_pixel_sels[] = {"osc_25m", "video_pll1_out", "audio_pll2_out", "audio_pll1_out", "sys1_pll_800m", "sys2_pll_1000m", "sys3_pll2_out", "clk_ext4", };
+> +
+> +static const char *imx8mq_lcdif_pixel_sels[] = {"osc_25m", "video_pll1_out", "audio_pll2_out", "audio_pll1_out", "sys1_pll_800m", "sys2_pll_1000m", "sys3_pll2_out", "clk_ext4", };
+> +
+> +static const char *imx8mq_sai1_sels[] = {"osc_25m", "audio_pll1_out", "audio_pll2_out", "video_pll1_out", "sys1_pll_133m", "osc_27m", "clk_ext1", "clk_ext2", };
+> +
+> +static const char *imx8mq_sai2_sels[] = {"osc_25m", "audio_pll1_out", "audio_pll2_out", "video_pll1_out", "sys1_pll_133m", "osc_27m", "clk_ext2", "clk_ext3", };
+> +
+> +static const char *imx8mq_sai3_sels[] = {"osc_25m", "audio_pll1_out", "audio_pll2_out", "video_pll1_out", "sys1_pll_133m", "osc_27m", "clk_ext3", "clk_ext4", };
+> +
+> +static const char *imx8mq_sai4_sels[] = {"osc_25m", "audio_pll1_out", "audio_pll2_out", "video_pll1_out", "sys1_pll_133m", "osc_27m", "clk_ext1", "clk_ext2", };
+> +
+> +static const char *imx8mq_sai5_sels[] = {"osc_25m", "audio_pll1_out", "audio_pll2_out", "video_pll1_out", "sys1_pll_133m", "osc_27m", "clk_ext2", "clk_ext3", };
+> +
+> +static const char *imx8mq_sai6_sels[] = {"osc_25m", "audio_pll1_out", "audio_pll2_out", "video_pll1_out", "sys1_pll_133m", "osc_27m", "clk_ext3", "clk_ext4", };
+> +
+> +static const char *imx8mq_spdif1_sels[] = {"osc_25m", "audio_pll1_out", "audio_pll2_out", "video_pll1_out", "sys1_pll_133m", "osc_27m", "clk_ext2", "clk_ext3", };
+> +
+> +static const char *imx8mq_spdif2_sels[] = {"osc_25m", "audio_pll1_out", "audio_pll2_out", "video_pll1_out", "sys1_pll_133m", "osc_27m", "clk_ext3", "clk_ext4", };
+> +
+> +static const char *imx8mq_enet_ref_sels[] = {"osc_25m", "sys2_pll_125m", "sys2_pll_500m", "sys2_pll_100m",
+> +                                            "sys1_pll_160m", "audio_pll1_out", "video_pll1_out", "clk_ext4", };
+> +
+> +static const char *imx8mq_enet_timer_sels[] = {"osc_25m", "sys2_pll_100m", "audio_pll1_out", "clk_ext1", "clk_ext2",
+> +                                              "clk_ext3", "clk_ext4", "video_pll1_out", };
+> +
+> +static const char *imx8mq_enet_phy_sels[] = {"osc_25m", "sys2_pll_50m", "sys2_pll_125m", "sys2_pll_500m",
+> +                                            "audio_pll1_out", "video_pll1_out", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_nand_sels[] = {"osc_25m", "sys2_pll_500m", "audio_pll1_out", "sys1_pll_400m",
+> +                                        "audio_pll2_out", "sys3_pll2_out", "sys2_pll_250m", "video_pll1_out", };
+> +
+> +static const char *imx8mq_qspi_sels[] = {"osc_25m", "sys1_pll_400m", "sys1_pll_800m", "sys2_pll_500m",
+> +                                        "audio_pll2_out", "sys1_pll_266m", "sys3_pll2_out", "sys1_pll_100m", };
+> +
+> +static const char *imx8mq_usdhc1_sels[] = {"osc_25m", "sys1_pll_400m", "sys1_pll_800m", "sys2_pll_500m",
+> +                                        "audio_pll2_out", "sys1_pll_266m", "sys3_pll2_out", "sys1_pll_100m", };
+> +
+> +static const char *imx8mq_usdhc2_sels[] = {"osc_25m", "sys1_pll_400m", "sys1_pll_800m", "sys2_pll_500m",
+> +                                        "audio_pll2_out", "sys1_pll_266m", "sys3_pll2_out", "sys1_pll_100m", };
+> +
+> +static const char *imx8mq_i2c1_sels[] = {"osc_25m", "sys1_pll_160m", "sys2_pll_50m", "sys3_pll2_out", "audio_pll1_out",
+> +                                        "video_pll1_out", "audio_pll2_out", "sys1_pll_133m", };
+> +
+> +static const char *imx8mq_i2c2_sels[] = {"osc_25m", "sys1_pll_160m", "sys2_pll_50m", "sys3_pll2_out", "audio_pll1_out",
+> +                                        "video_pll1_out", "audio_pll2_out", "sys1_pll_133m", };
+> +
+> +static const char *imx8mq_i2c3_sels[] = {"osc_25m", "sys1_pll_160m", "sys2_pll_50m", "sys3_pll2_out", "audio_pll1_out",
+> +                                        "video_pll1_out", "audio_pll2_out", "sys1_pll_133m", };
+> +
+> +static const char *imx8mq_i2c4_sels[] = {"osc_25m", "sys1_pll_160m", "sys2_pll_50m", "sys3_pll2_out", "audio_pll1_out",
+> +                                        "video_pll1_out", "audio_pll2_out", "sys1_pll_133m", };
+> +
+> +static const char *imx8mq_uart1_sels[] = {"osc_25m", "sys1_pll_80m", "sys2_pll_200m", "sys2_pll_100m",
+> +                                         "sys3_pll2_out", "clk_ext2", "clk_ext4", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_uart2_sels[] = {"osc_25m", "sys1_pll_80m", "sys2_pll_200m", "sys2_pll_100m",
+> +                                         "sys3_pll2_out", "clk_ext2", "clk_ext3", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_uart3_sels[] = {"osc_25m", "sys1_pll_80m", "sys2_pll_200m", "sys2_pll_100m",
+> +                                         "sys3_pll2_out", "clk_ext2", "clk_ext4", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_uart4_sels[] = {"osc_25m", "sys1_pll_80m", "sys2_pll_200m", "sys2_pll_100m",
+> +                                         "sys3_pll2_out", "clk_ext2", "clk_ext3", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_usb_core_sels[] = {"osc_25m", "sys1_pll_100m", "sys1_pll_40m", "sys2_pll_100m",
+> +                                            "sys2_pll_200m", "clk_ext2", "clk_ext3", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_usb_phy_sels[] = {"osc_25m", "sys1_pll_100m", "sys1_pll_40m", "sys2_pll_100m",
+> +                                            "sys2_pll_200m", "clk_ext2", "clk_ext3", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_ecspi1_sels[] = {"osc_25m", "sys2_pll_200m", "sys1_pll_40m", "sys1_pll_160m",
+> +                                          "sys1_pll_800m", "sys3_pll2_out", "sys2_pll_250m", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_ecspi2_sels[] = {"osc_25m", "sys2_pll_200m", "sys1_pll_40m", "sys1_pll_160m",
+> +                                          "sys1_pll_800m", "sys3_pll2_out", "sys2_pll_250m", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_pwm1_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_160m", "sys1_pll_40m",
+> +                                        "sys3_pll2_out", "clk_ext1", "sys1_pll_80m", "video_pll1_out", };
+> +
+> +static const char *imx8mq_pwm2_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_160m", "sys1_pll_40m",
+> +                                        "sys3_pll2_out", "clk_ext1", "sys1_pll_80m", "video_pll1_out", };
+> +
+> +static const char *imx8mq_pwm3_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_160m", "sys1_pll_40m",
+> +                                        "sys3_pll2_out", "clk_ext2", "sys1_pll_80m", "video_pll1_out", };
+> +
+> +static const char *imx8mq_pwm4_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_160m", "sys1_pll_40m",
+> +                                        "sys3_pll2_out", "clk_ext2", "sys1_pll_80m", "video_pll1_out", };
+> +
+> +static const char *imx8mq_gpt1_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_400m", "sys1_pll_40m",
+> +                                        "sys1_pll_80m", "audio_pll1_out", "clk_ext1", };
+> +
+> +static const char *imx8mq_wdog_sels[] = {"osc_25m", "sys1_pll_133m", "sys1_pll_160m", "vpu_pll_out",
+> +                                        "sys2_pll_125m", "sys3_pll2_out", "sys1_pll_80m", "sys2_pll_166m", };
+> +
+> +static const char *imx8mq_wrclk_sels[] = {"osc_25m", "sys1_pll_40m", "vpu_pll_out", "sys3_pll2_out", "sys2_pll_200m",
+> +                                         "sys1_pll_266m", "sys2_pll_500m", "sys1_pll_100m", };
+> +
+> +static const char *imx8mq_dsi_core_sels[] = {"osc_25m", "sys1_pll_266m", "sys2_pll_250m", "sys1_pll_800m",
+> +                                            "sys2_pll_1000m", "sys3_pll2_out", "audio_pll2_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_dsi_phy_sels[] = {"osc_25m", "sys2_pll_125m", "sys2_pll_100m", "sys1_pll_800m",
+> +                                           "sys2_pll_1000m", "clk_ext2", "audio_pll2_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_dsi_dbi_sels[] = {"osc_25m", "sys1_pll_266m", "sys2_pll_100m", "sys1_pll_800m",
+> +                                           "sys2_pll_1000m", "sys3_pll2_out", "audio_pll2_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_dsi_esc_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_80m", "sys1_pll_800m",
+> +                                           "sys2_pll_1000m", "sys3_pll2_out", "clk_ext3", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_csi1_core_sels[] = {"osc_25m", "sys1_pll_266m", "sys2_pll_250m", "sys1_pll_800m",
+> +                                             "sys2_pll_1000m", "sys3_pll2_out", "audio_pll2_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_csi1_phy_sels[] = {"osc_25m", "sys2_pll_125m", "sys2_pll_100m", "sys1_pll_800m",
+> +                                            "sys2_pll_1000m", "clk_ext2", "audio_pll2_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_csi1_esc_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_80m", "sys1_pll_800m",
+> +                                            "sys2_pll_1000m", "sys3_pll2_out", "clk_ext3", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_csi2_core_sels[] = {"osc_25m", "sys1_pll_266m", "sys2_pll_250m", "sys1_pll_800m",
+> +                                             "sys2_pll_1000m", "sys3_pll2_out", "audio_pll2_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_csi2_phy_sels[] = {"osc_25m", "sys2_pll_125m", "sys2_pll_100m", "sys1_pll_800m",
+> +                                            "sys2_pll_1000m", "clk_ext2", "audio_pll2_out", "video_pll1_out", };
+> +
+> +static const char *imx8mq_csi2_esc_sels[] = {"osc_25m", "sys2_pll_100m", "sys1_pll_80m", "sys1_pll_800m",
+> +                                            "sys2_pll_1000m", "sys3_pll2_out", "clk_ext3", "audio_pll2_out", };
+> +
+> +static const char *imx8mq_pcie2_ctrl_sels[] = {"osc_25m", "sys2_pll_250m", "sys2_pll_200m", "sys1_pll_266m",
+> +                                              "sys1_pll_800m", "sys2_pll_500m", "sys2_pll_333m", "sys3_pll2_out", };
+> +
+> +static const char *imx8mq_pcie2_phy_sels[] = {"osc_25m", "sys2_pll_100m", "sys2_pll_500m", "clk_ext1",
+> +                                             "clk_ext2", "clk_ext3", "clk_ext4", "sys1_pll_400m", };
+> +
+> +static const char *imx8mq_pcie2_aux_sels[] = {"osc_25m", "sys2_pll_200m", "sys2_pll_50m", "sys3_pll2_out",
+> +                                             "sys2_pll_100m", "sys1_pll_80m", "sys1_pll_160m", "sys1_pll_200m", };
+> +
+> +static const char *imx8mq_ecspi3_sels[] = {"osc_25m", "sys2_pll_200m", "sys1_pll_40m", "sys1_pll_160m",
+> +                                          "sys1_pll_800m", "sys3_pll2_out", "sys2_pll_250m", "audio_pll2_out", };
+> +static const char *imx8mq_dram_core_sels[] = {"dram_pll_out", "dram_alt_root", };
+> +
+> +static const char *imx8mq_clko2_sels[] = {"osc_25m", "sys2_pll_200m", "sys1_pll_400m", "sys2_pll_166m", "audio_pll1_out",
+> +                                        "video_pll1_out", "ckil", };
+> +
+> +static int const clks_init_on[] __initconst = {
+> +       IMX8MQ_CLK_DRAM_CORE, IMX8MQ_CLK_AHB_CG,
+> +       IMX8MQ_CLK_NOC, IMX8MQ_CLK_NOC_APB,
+> +       IMX8MQ_CLK_USB_BUS, IMX8MQ_CLK_NAND_USDHC_BUS,
+> +       IMX8MQ_CLK_MAIN_AXI, IMX8MQ_CLK_A53_CG,
+> +       IMX8MQ_CLK_AUDIO_AHB_DIV, IMX8MQ_CLK_TMU_ROOT,
+> +       IMX8MQ_CLK_DRAM_APB,
+> +};
+> +
+> +static struct clk_onecell_data clk_data;
+> +
+> +static void __init imx8mq_clocks_init(struct device_node *ccm_node)
+> +{
+> +       struct device_node *np;
+> +       void __iomem *base;
+> +       int i;
+> +
+> +       clks[IMX8MQ_CLK_DUMMY] = imx_clk_fixed("dummy", 0);
+> +       clks[IMX8MQ_CLK_32K] = of_clk_get_by_name(ccm_node, "ckil");
+> +       clks[IMX8MQ_CLK_25M] = of_clk_get_by_name(ccm_node, "osc_25m");
+> +       clks[IMX8MQ_CLK_27M] = of_clk_get_by_name(ccm_node, "osc_27m");
+> +       clks[IMX8MQ_CLK_EXT1] = of_clk_get_by_name(ccm_node, "clk_ext1");
+> +       clks[IMX8MQ_CLK_EXT2] = of_clk_get_by_name(ccm_node, "clk_ext2");
+> +       clks[IMX8MQ_CLK_EXT3] = of_clk_get_by_name(ccm_node, "clk_ext3");
+> +       clks[IMX8MQ_CLK_EXT4] = of_clk_get_by_name(ccm_node, "clk_ext4");
+> +
+> +       np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-anatop");
+> +       base = of_iomap(np, 0);
+> +       WARN_ON(!base);
+> +
+> +       clks[IMX8MQ_ARM_PLL_REF_SEL] = imx_clk_mux("arm_pll_ref_sel", base + 0x28, 16, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_GPU_PLL_REF_SEL] = imx_clk_mux("gpu_pll_ref_sel", base + 0x18, 16, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_VPU_PLL_REF_SEL] = imx_clk_mux("vpu_pll_ref_sel", base + 0x20, 16, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_AUDIO_PLL1_REF_SEL] = imx_clk_mux("audio_pll1_ref_sel", base + 0x0, 16, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_AUDIO_PLL2_REF_SEL] = imx_clk_mux("audio_pll2_ref_sel", base + 0x8, 16, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_VIDEO_PLL1_REF_SEL] = imx_clk_mux("video_pll1_ref_sel", base + 0x10, 16, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_SYS1_PLL1_REF_SEL]  = imx_clk_mux("sys1_pll1_ref_sel", base + 0x30, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_SYS2_PLL1_REF_SEL]  = imx_clk_mux("sys2_pll1_ref_sel", base + 0x3c, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_SYS3_PLL1_REF_SEL]  = imx_clk_mux("sys3_pll1_ref_sel", base + 0x48, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_DRAM_PLL1_REF_SEL]  = imx_clk_mux("dram_pll1_ref_sel", base + 0x60, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MQ_VIDEO2_PLL1_REF_SEL] = imx_clk_mux("video2_pll1_ref_sel", base + 0x54, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +
+> +       clks[IMX8MQ_ARM_PLL_REF_DIV]    = imx_clk_divider("arm_pll_ref_div", "arm_pll_ref_sel", base + 0x28, 5, 6);
+> +       clks[IMX8MQ_GPU_PLL_REF_DIV]    = imx_clk_divider("gpu_pll_ref_div", "gpu_pll_ref_sel", base + 0x18, 5, 6);
+> +       clks[IMX8MQ_VPU_PLL_REF_DIV]    = imx_clk_divider("vpu_pll_ref_div", "vpu_pll_ref_sel", base + 0x20, 5, 6);
+> +       clks[IMX8MQ_AUDIO_PLL1_REF_DIV] = imx_clk_divider("audio_pll1_ref_div", "audio_pll1_ref_sel", base + 0x0, 5, 6);
+> +       clks[IMX8MQ_AUDIO_PLL2_REF_DIV] = imx_clk_divider("audio_pll2_ref_div", "audio_pll2_ref_sel", base + 0x8, 5, 6);
+> +       clks[IMX8MQ_VIDEO_PLL1_REF_DIV] = imx_clk_divider("video_pll1_ref_div", "video_pll1_ref_sel", base + 0x10, 5, 6);
+> +       clks[IMX8MQ_SYS1_PLL1_REF_DIV]  = imx_clk_divider("sys1_pll1_ref_div", "sys1_pll1_ref_sel", base + 0x38, 25, 3);
+> +       clks[IMX8MQ_SYS2_PLL1_REF_DIV]  = imx_clk_divider("sys2_pll1_ref_div", "sys2_pll1_ref_sel", base + 0x44, 25, 3);
+> +       clks[IMX8MQ_SYS3_PLL1_REF_DIV]  = imx_clk_divider("sys3_pll1_ref_div", "sys3_pll1_ref_sel", base + 0x50, 25, 3);
+> +       clks[IMX8MQ_DRAM_PLL1_REF_DIV]  = imx_clk_divider("dram_pll1_ref_div", "dram_pll1_ref_sel", base + 0x68, 25, 3);
+> +       clks[IMX8MQ_VIDEO2_PLL1_REF_DIV]  = imx_clk_divider("video2_pll1_ref_div", "video2_pll1_ref_sel", base + 0x5c, 25, 3);
+> +
+> +       clks[IMX8MQ_ARM_PLL] = imx_clk_frac_pll("arm_pll", "arm_pll_ref_div", base + 0x28);
+> +       clks[IMX8MQ_GPU_PLL] = imx_clk_frac_pll("gpu_pll", "gpu_pll_ref_div", base + 0x18);
+> +       clks[IMX8MQ_VPU_PLL] = imx_clk_frac_pll("vpu_pll", "vpu_pll_ref_div", base + 0x20);
+> +       clks[IMX8MQ_AUDIO_PLL1] = imx_clk_frac_pll("audio_pll1", "audio_pll1_ref_div", base + 0x0);
+> +       clks[IMX8MQ_AUDIO_PLL2] = imx_clk_frac_pll("audio_pll2", "audio_pll2_ref_div", base + 0x8);
+> +       clks[IMX8MQ_VIDEO_PLL1] = imx_clk_frac_pll("video_pll1", "video_pll1_ref_div", base + 0x10);
+> +       clks[IMX8MQ_SYS1_PLL1] = imx_clk_sccg_pll("sys1_pll1", "sys1_pll1_ref_div", base + 0x30, SCCG_PLL1);
+> +       clks[IMX8MQ_SYS2_PLL1] = imx_clk_sccg_pll("sys2_pll1", "sys2_pll1_ref_div", base + 0x3c, SCCG_PLL1);
+> +       clks[IMX8MQ_SYS3_PLL1] = imx_clk_sccg_pll("sys3_pll1", "sys3_pll1_ref_div", base + 0x48, SCCG_PLL1);
+> +       clks[IMX8MQ_DRAM_PLL1] = imx_clk_sccg_pll("dram_pll1", "dram_pll1_ref_div", base + 0x60, SCCG_PLL1);
+> +       clks[IMX8MQ_VIDEO2_PLL1] = imx_clk_sccg_pll("video2_pll1", "video2_pll1_ref_div", base + 0x5c, 3);
 
-Probably better to align with the other files to not have empty line
-between copyright claims?
+This is a bug which will result in a crash once IMX8MQ_VIDEO2_PLL1 is
+exercised (I know that from having to debug this issue when using this
+code in Barebox). Last argument should be SCCG_PLL1.
 
->   * Mingkai Hu <mingkai.hu@nxp.com>
->   */
->
-> @@ -198,7 +200,6 @@
->                 ifc: ifc@1530000 {
->                         compatible = "fsl,ifc", "simple-bus";
->                         reg = <0x0 0x1530000 0x0 0x10000>;
-> -                       big-endian;
->                         interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
->                 };
->
-> --
-> 2.14.1
->
+Thanks,
+Andrey Smirnov
