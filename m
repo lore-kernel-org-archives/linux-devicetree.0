@@ -1,25 +1,74 @@
 Return-Path: <SRS0=s5iF=LL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from 172-245-210-172-host.colocrossing.com ([172.245.210.172]:55933
-        "EHLO binglee.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727224AbeH1ROQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Aug 2018 13:14:16 -0400
-Subject: Solutions
-Message-ID: <92d74f011195dc632c1e98b2372ac3c9@racingradios.com>
-Date: Tue, 28 Aug 2018 12:33:19 +0200
-From: "Jason" <xisani@bulbstagelightingie.com>
-Reply-To: hansrekan@outlook.com
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Received: from muru.com ([72.249.23.125]:54644 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbeH1GHz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 28 Aug 2018 02:07:55 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH] ARM: dts: omap4-droid4: Fix emmc errors seen on some devices
+Date: Mon, 27 Aug 2018 19:18:21 -0700
+Message-Id: <20180828021821.88563-1-tony@atomide.com>
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Merlijn Wajer <merlijn@wizzup.org>, Michael Scott <hashcode0f@gmail.com>, NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Do you have photos for cutting out,or adding clipping path?
+Otherwise we can get the following errors occasionally on some devices:
 
-We are here to help you for that also including retouching.
+mmc1: tried to HW reset card, got error -110
+mmcblk1: error -110 requesting status
+mmcblk1: recovery failed!
+print_req_error: I/O error, dev mmcblk1, sector 14329
+...
 
-Both for product photos and portrait photos.
+I have one device that hits this error almost on every boot, and another
+one that hits it only rarely with the other ones I've used behave without
+problems. I'm not sure if the issue is related to a particular eMMC card
+model, but in case it is, both of the machines with issues have:
 
-Yours,
-Jason
+# cat /sys/class/mmc_host/mmc1/mmc1:0001/manfid \
+/sys/class/mmc_host/mmc1/mmc1:0001/oemid \
+/sys/class/mmc_host/mmc1/mmc1:0001/name
+0x000045
+0x0100
+SEM16G
+
+and the working ones have:
+
+0x000011
+0x0100
+016G92
+
+Note that "ti,non-removable" is different as omap_hsmmc_reg_get() does not
+call omap_hsmmc_disable_boot_regulators() if no_regulator_off_init is set.
+And currently we set no_regulator_off_init only for "ti,non-removable" and
+not for "non-removable". It seems that we should have "non-removable" with
+some other mmc generic property behave in the same way instead of having to
+use a non-generic property. But let's fix the issue first.
+
+Fixes: 7e2f8c0ae670 ("ARM: dts: Add minimal support for motorola droid 4
+xt894")
+Cc: Marcel Partap <mpartap@gmx.net>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Michael Scott <hashcode0f@gmail.com>
+Cc: NeKit <nekit1000@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/omap4-droid4-xt894.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -375,7 +375,7 @@
+ &mmc2 {
+ 	vmmc-supply = <&vsdio>;
+ 	bus-width = <8>;
+-	non-removable;
++	ti,non-removable;
+ };
+ 
+ &mmc3 {
+-- 
+2.18.0
