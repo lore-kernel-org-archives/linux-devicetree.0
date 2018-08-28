@@ -1,117 +1,115 @@
-From: Damian Kos <dkos@cadence.com>
-Subject: [PATCH v3 3/5] drm/dp: make dp_link_status and dp_get_lane_status usable from outside of the core
-Date: Tue, 28 Aug 2018 11:24:46 +0100
-Message-ID: <1535451894-2518-4-git-send-email-dkos@cadence.com>
-References: <1535451894-2518-1-git-send-email-dkos@cadence.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-am65: Change #address-cells and #size-cells of interconnect to 2
+Date: Tue, 28 Aug 2018 15:56:42 +0530
+Message-ID: <20180828102642.26482-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535451894-2518-1-git-send-email-dkos@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Damian Kos <dkos@cadence.com>, Quentin Schulz <quentin.schulz@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: pgaj@cadence.com, ltyrala@cadence.com, stelford@cadence.com, jartur@cadence.com, piotrs@cadence.com
+To: Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
+AM65 has two PCIe controllers and each PCIe controller has '2' address
+spaces one within the 4GB address space of the SoC and the other above
+the 4GB address space of the SoC in addition to the register space. The
+size of the address space above the 4GB SoC address space is 4GB. These
+address ranges will be used by CPU/DMA to access the PCIe address space.
+In order to represent the address space above the 4GB SoC address space
+and to represent the size of this address space as 4GB, change
+address-cells and size-cells of interconnect to 2.
 
-dp_link_status and dp_get_lane_status are pretty generic and can be used for
-other means, so let's make it "public".
-
-This adds drm_dp_link_status and drm_dp_get_lane_status to the header file and
-add the appropriate EXPORT_SYMBOL for it so that it can be used by other
-drivers, be they compiled built-in or as modules.
-
-Signed-off-by: Damian Kos <dkos@cadence.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/gpu/drm/drm_dp_helper.c | 20 +++++++++++---------
- include/drm/drm_dp_helper.h     |  3 +++
- 2 files changed, 14 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 10 +++----
+ arch/arm64/boot/dts/ti/k3-am65.dtsi      | 38 ++++++++++++------------
+ 2 files changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 4b5bf6ee7fa7..ee9ec2ccf878 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -43,19 +43,21 @@
-  */
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 569618b411f0..fbd6fab8dd5e 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -8,13 +8,13 @@
+ &cbass_main {
+ 	gic500: interrupt-controller@1800000 {
+ 		compatible = "arm,gic-v3";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
++		#address-cells = <2>;
++		#size-cells = <2>;
+ 		ranges;
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+-		reg = <0x01800000 0x10000>,	/* GICD */
+-		      <0x01880000 0x90000>;	/* GICR */
++		reg = <0x00 0x01800000 0x00 0x10000>,	/* GICD */
++		      <0x00 0x01880000 0x00 0x90000>;	/* GICR */
+ 		/*
+ 		 * vcpumntirq:
+ 		 * virtual CPU interface maintenance interrupt
+@@ -23,7 +23,7 @@
  
- /* Helpers for DP link training */
--static u8 dp_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r)
-+u8 drm_dp_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r)
- {
- 	return link_status[r - DP_LANE0_1_STATUS];
- }
-+EXPORT_SYMBOL(drm_dp_link_status);
+ 		gic_its: gic-its@18200000 {
+ 			compatible = "arm,gic-v3-its";
+-			reg = <0x01820000 0x10000>;
++			reg = <0x00 0x01820000 0x00 0x10000>;
+ 			msi-controller;
+ 			#msi-cells = <1>;
+ 		};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+index 17a053552852..5d1eb877e128 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+@@ -54,31 +54,31 @@
  
--static u8 dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE],
-+u8 drm_dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE],
- 			     int lane)
- {
- 	int i = DP_LANE0_1_STATUS + (lane >> 1);
- 	int s = (lane & 1) * 4;
--	u8 l = dp_link_status(link_status, i);
-+	u8 l = drm_dp_link_status(link_status, i);
- 	return (l >> s) & 0xf;
- }
-+EXPORT_SYMBOL(drm_dp_get_lane_status);
+ 	cbass_main: interconnect@100000 {
+ 		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0x00100000 0x00 0x00100000 0x00020000>, /* ctrl mmr */
+-			 <0x00600000 0x00 0x00600000 0x00001100>, /* GPIO */
+-			 <0x00900000 0x00 0x00900000 0x00012000>, /* serdes */
+-			 <0x01000000 0x00 0x01000000 0x0af02400>, /* Most peripherals */
+-			 <0x30800000 0x00 0x30800000 0x0bc00000>, /* MAIN NAVSS */
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
++			 <0x00 0x00600000 0x00 0x00600000 0x00 0x00001100>, /* GPIO */
++			 <0x00 0x00900000 0x00 0x00900000 0x00 0x00012000>, /* serdes */
++			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0af02400>, /* Most peripherals */
++			 <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>, /* MAIN NAVSS */
+ 			 /* MCUSS Range */
+-			 <0x28380000 0x00 0x28380000 0x03880000>,
+-			 <0x40200000 0x00 0x40200000 0x00900100>,
+-			 <0x42040000 0x00 0x42040000 0x03ac2400>,
+-			 <0x45100000 0x00 0x45100000 0x00c24000>,
+-			 <0x46000000 0x00 0x46000000 0x00200000>,
+-			 <0x47000000 0x00 0x47000000 0x00068400>;
++			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
++			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
++			 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>,
++			 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>,
++			 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>,
++			 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>;
  
- bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 			  int lane_count)
-@@ -64,12 +66,12 @@ bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 	u8 lane_status;
- 	int lane;
+ 		cbass_mcu: interconnect@28380000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges = <0x28380000 0x28380000 0x03880000>, /* MCU NAVSS*/
+-				 <0x40200000 0x40200000 0x00900100>, /* First peripheral window */
+-				 <0x42040000 0x42040000 0x03ac2400>, /* WKUP */
+-				 <0x45100000 0x45100000 0x00c24000>, /* MMRs, remaining NAVSS */
+-				 <0x46000000 0x46000000 0x00200000>, /* CPSW */
+-				 <0x47000000 0x47000000 0x00068400>; /* OSPI space 1 */
++			ranges = <0x28380000 0x00 0x28380000 0x03880000>, /* MCU NAVSS*/
++				 <0x40200000 0x00 0x40200000 0x00900100>, /* First peripheral window */
++				 <0x42040000 0x00 0x42040000 0x03ac2400>, /* WKUP */
++				 <0x45100000 0x00 0x45100000 0x00c24000>, /* MMRs, remaining NAVSS */
++				 <0x46000000 0x00 0x46000000 0x00200000>, /* CPSW */
++				 <0x47000000 0x00 0x47000000 0x00068400>; /* OSPI space 1 */
  
--	lane_align = dp_link_status(link_status,
--				    DP_LANE_ALIGN_STATUS_UPDATED);
-+	lane_align = drm_dp_link_status(link_status,
-+					DP_LANE_ALIGN_STATUS_UPDATED);
- 	if ((lane_align & DP_INTERLANE_ALIGN_DONE) == 0)
- 		return false;
- 	for (lane = 0; lane < lane_count; lane++) {
--		lane_status = dp_get_lane_status(link_status, lane);
-+		lane_status = drm_dp_get_lane_status(link_status, lane);
- 		if ((lane_status & DP_CHANNEL_EQ_BITS) != DP_CHANNEL_EQ_BITS)
- 			return false;
- 	}
-@@ -84,7 +86,7 @@ bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 	u8 lane_status;
- 
- 	for (lane = 0; lane < lane_count; lane++) {
--		lane_status = dp_get_lane_status(link_status, lane);
-+		lane_status = drm_dp_get_lane_status(link_status, lane);
- 		if ((lane_status & DP_LANE_CR_DONE) == 0)
- 			return false;
- 	}
-@@ -99,7 +101,7 @@ u8 drm_dp_get_adjust_request_voltage(const u8 link_status[DP_LINK_STATUS_SIZE],
- 	int s = ((lane & 1) ?
- 		 DP_ADJUST_VOLTAGE_SWING_LANE1_SHIFT :
- 		 DP_ADJUST_VOLTAGE_SWING_LANE0_SHIFT);
--	u8 l = dp_link_status(link_status, i);
-+	u8 l = drm_dp_link_status(link_status, i);
- 
- 	return ((l >> s) & 0x3) << DP_TRAIN_VOLTAGE_SWING_SHIFT;
- }
-@@ -112,7 +114,7 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
- 	int s = ((lane & 1) ?
- 		 DP_ADJUST_PRE_EMPHASIS_LANE1_SHIFT :
- 		 DP_ADJUST_PRE_EMPHASIS_LANE0_SHIFT);
--	u8 l = dp_link_status(link_status, i);
-+	u8 l = drm_dp_link_status(link_status, i);
- 
- 	return ((l >> s) & 0x3) << DP_TRAIN_PRE_EMPHASIS_SHIFT;
- }
-diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 06a478679781..9930b2b269f2 100644
---- a/include/drm/drm_dp_helper.h
-+++ b/include/drm/drm_dp_helper.h
-@@ -952,6 +952,9 @@
- #define DP_MST_LOGICAL_PORT_0 8
- 
- #define DP_LINK_STATUS_SIZE	   6
-+
-+u8 drm_dp_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r);
-+u8 drm_dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE], int lane);
- bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 			  int lane_count);
- bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
+ 			cbass_wakeup: interconnect@42040000 {
+ 				compatible = "simple-bus";
 -- 
-2.17.1
+2.18.0
