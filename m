@@ -1,114 +1,35 @@
-From: sibis@codeaurora.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: reset: Add PDC Global binding for
- SDM845 SoCs
-Date: Tue, 28 Aug 2018 11:38:26 +0530
-Message-ID: <c675b609fcd0d243e4db2e6637c70902@codeaurora.org>
-References: <20180824131900.5353-1-sibis@codeaurora.org>
- <20180824131900.5353-2-sibis@codeaurora.org>
- <20180828003823.GY160295@google.com>
+From: Leilk Liu <leilk.liu@mediatek.com>
+Subject: [PATCH 0/3] Add Mediatek SPI slave driver
+Date: Tue, 28 Aug 2018 14:28:02 +0800
+Message-ID: <1535437685-30230-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828003823.GY160295@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, mengqi.zhang@mediatek.com, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-Thanks for the review
+>From 5ba1b2c0cd279255b49ecc8fa18c04ceb292a214 Mon Sep 17 00:00:00 2001
+From: Leilk Liu <leilk.liu@mediatek.com>
+Date: Tue, 28 Aug 2018 14:18:56 +0800
+Subject: [PATCH 0/3] Add Mediatek SPI slave driver
 
-On 2018-08-28 06:08, Matthias Kaehlcke wrote:
-> Hi Sibi,
-> 
-> On Fri, Aug 24, 2018 at 06:48:55PM +0530, Sibi Sankar wrote:
->> Add PDC Global(Power Domain Controller) binding for SDM845 SoCs.
-> 
-> nit: missing blank before the opening parenthesis.
-> 
+This series are based on 4.19-rc1 and provide three patches to add mediatek spi slave driver.
 
-Will fix it
+Leilk Liu (3):
+  spis: mediatek: add bindings for Mediatek MT2712 soc platform
+  spis: mediatek: add spi slave for Mediatek MT2712
+  arm64: dts: Add spi slave dts
 
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  .../bindings/reset/qcom,pdc-global.txt        | 52 
->> +++++++++++++++++++
->>  include/dt-bindings/reset/qcom,sdm845-pdc.h   | 20 +++++++
->>  2 files changed, 72 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
->>  create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt 
->> b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
->> new file mode 100644
->> index 000000000000..69f9edca9503
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
->> @@ -0,0 +1,52 @@
->> +PDC Global
->> +======================================
->> +
->> +This binding describes a reset-controller found on PDC-Global(Power 
->> Domain
->> +Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
-> 
-> Are there other PDC reset controllers that aren't 'global'? Otherwise
-> I'd suggest to use 'pdc-reset' instead of 'pdc-global', which is more
-> specific and in line with the name of the driver added by this series.
-> Or something like 'pdc-reset-global/main' if there are other
-> controllers?
-> 
+ .../devicetree/bindings/spi/spi-slave-mt27xx.txt   |   39 ++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |   12 +
+ drivers/spi/Kconfig                                |    8 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-slave-mt27xx.c                     |  613 ++++++++++++++++++++
+ 5 files changed, 673 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+ create mode 100644 drivers/spi/spi-slave-mt27xx.c
 
-These are the only reset lines found in the pdc-global register space. 
-But as
-explained by Bjorn, wouldn't it be better to leave it as such since 
-pdc-global
-best describes the hardware without being limited by the current 
-functionality
-it is being used for?
-
->> +Required properties:
->> +- compatible:
->> +	Usage: required
->> +	Value type: <string>
->> +	Definition: must be:
->> +		    "qcom,sdm845-pdc-global"
->> +
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: must specify the base address and size of the register
->> +	            space.
->> +
->> +- #reset-cells:
->> +	Usage: required
->> +	Value type: <uint>
->> +	Definition: must be 1; cell entry represents the reset index.
->> +
->> +Example:
->> +
->> +pdc_reset: reset-controller@b2e0000 {
->> +	compatible = "qcom,sdm845-pdc-global";
->> +	reg = <0xb2e0000 0x20000>;
->> +	#reset-cells = <1>;
->> +};
->> +
->> +PDC reset clients
->> +======================================
->> +
->> +Device nodes that need access to reset lines should
->> +specify them as a reset phandle in their corresponding node as
->> +specified in reset.txt.
->> +
->> +For list of all valid reset indicies see
-> 
-> s/indicies/indices/ (or s/indicies/lines/ ?)
-> 
-> Cheers
-> 
-> Matthias
+-- 
+1.7.9.5
