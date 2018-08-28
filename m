@@ -1,59 +1,123 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 4/5] drivers: pinctrl: qcom: sdm845: support GPIO
- wakeup from suspend
-Date: Mon, 27 Aug 2018 17:31:31 -0700
-Message-ID: <20180828003131.GD2523@minitux>
-References: <20180824200157.9993-1-ilina@codeaurora.org>
- <20180824200157.9993-5-ilina@codeaurora.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: reset: Add PDC Global binding for
+ SDM845 SoCs
+Date: Mon, 27 Aug 2018 17:33:02 -0700
+Message-ID: <20180828003302.GE2523@minitux>
+References: <20180824131900.5353-1-sibis@codeaurora.org>
+ <20180824131900.5353-2-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180824200157.9993-5-ilina@codeaurora.org>
+In-Reply-To: <20180824131900.5353-2-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: marc.zyngier@arm.com, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 24 Aug 13:01 PDT 2018, Lina Iyer wrote:
+On Fri 24 Aug 06:18 PDT 2018, Sibi Sankar wrote:
 
-> Enable TLMM IRQs to be sensed by PDC when we enter suspend. It is
-> possible that the TLMM may be powered off and not detect GPIOs that are
-> configured as wake up interrupts. By hooking into suspend callbacks, we
-> allow PDC IRQs to take over and wake up the system if wakeup interrupts
-> are triggered.
+> Add PDC Global(Power Domain Controller) binding for SDM845 SoCs.
 > 
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-sdm845.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> index 2ab7a8885757..cc333b8afb99 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
-> @@ -1297,10 +1297,16 @@ static const struct of_device_id sdm845_pinctrl_of_match[] = {
->  	{ },
->  };
->  
-> +static const struct dev_pm_ops msm_pinctrl_dev_pm_ops = {
-> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(msm_pinctrl_suspend_late,
-> +				     msm_pinctrl_resume_late)
-> +};
-> +
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-I expect these four lines to be duplicated in every platform file, so I
-think it would be better to just move it to pinctrl-msm.c and extern
-declare it in pinctrl-msm.h.
-
->  static struct platform_driver sdm845_pinctrl_driver = {
->  	.driver = {
->  		.name = "sdm845-pinctrl",
->  		.of_match_table = sdm845_pinctrl_of_match,
-> +		.pm = &msm_pinctrl_dev_pm_ops,
->  	},
->  	.probe = sdm845_pinctrl_probe,
->  	.remove = msm_pinctrl_remove,
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
+
+> ---
+>  .../bindings/reset/qcom,pdc-global.txt        | 52 +++++++++++++++++++
+>  include/dt-bindings/reset/qcom,sdm845-pdc.h   | 20 +++++++
+>  2 files changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
+>  create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
+> new file mode 100644
+> index 000000000000..69f9edca9503
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
+> @@ -0,0 +1,52 @@
+> +PDC Global
+> +======================================
+> +
+> +This binding describes a reset-controller found on PDC-Global(Power Domain
+> +Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
+> +
+> +Required properties:
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be:
+> +		    "qcom,sdm845-pdc-global"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: must specify the base address and size of the register
+> +	            space.
+> +
+> +- #reset-cells:
+> +	Usage: required
+> +	Value type: <uint>
+> +	Definition: must be 1; cell entry represents the reset index.
+> +
+> +Example:
+> +
+> +pdc_reset: reset-controller@b2e0000 {
+> +	compatible = "qcom,sdm845-pdc-global";
+> +	reg = <0xb2e0000 0x20000>;
+> +	#reset-cells = <1>;
+> +};
+> +
+> +PDC reset clients
+> +======================================
+> +
+> +Device nodes that need access to reset lines should
+> +specify them as a reset phandle in their corresponding node as
+> +specified in reset.txt.
+> +
+> +For list of all valid reset indicies see
+> +<dt-bindings/reset/qcom,sdm845-pdc.h>
+> +
+> +Example:
+> +
+> +modem-pil@4080000 {
+> +	...
+> +
+> +	resets = <&pdc_reset PDC_MODEM_SYNC_RESET>;
+> +	reset-names = "pdc_reset";
+> +
+> +	...
+> +};
+> diff --git a/include/dt-bindings/reset/qcom,sdm845-pdc.h b/include/dt-bindings/reset/qcom,sdm845-pdc.h
+> new file mode 100644
+> index 000000000000..53c37f9c319a
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/qcom,sdm845-pdc.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_PDC_SDM_845_H
+> +#define _DT_BINDINGS_RESET_PDC_SDM_845_H
+> +
+> +#define PDC_APPS_SYNC_RESET	0
+> +#define PDC_SP_SYNC_RESET	1
+> +#define PDC_AUDIO_SYNC_RESET	2
+> +#define PDC_SENSORS_SYNC_RESET	3
+> +#define PDC_AOP_SYNC_RESET	4
+> +#define PDC_DEBUG_SYNC_RESET	5
+> +#define PDC_GPU_SYNC_RESET	6
+> +#define PDC_DISPLAY_SYNC_RESET	7
+> +#define PDC_COMPUTE_SYNC_RESET	8
+> +#define PDC_MODEM_SYNC_RESET	9
+> +
+> +#endif
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
