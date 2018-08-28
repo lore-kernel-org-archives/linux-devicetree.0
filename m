@@ -1,120 +1,132 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 06/19] dt-bindings: memory: tegra: Squash tegra20-gart
-	into tegra20-mc
-Date: Tue, 28 Aug 2018 12:47:55 +0200
-Message-ID: <20180828104755.GC9386@ulmo>
-References: <20180818155430.5586-1-digetx@gmail.com>
-	<20180818155430.5586-7-digetx@gmail.com>
-	<20180820191209.GA28618@bogus>
-	<b46cac22-9b31-9aa7-7eca-4725156346bb@gmail.com>
-	<4538309b-fcb3-73ee-04e3-6cefcedd376d@gmail.com>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH v6 3/5] clk: imx: add SCCG PLL type
+Date: Tue, 28 Aug 2018 10:58:22 +0000
+Message-ID: <20180828105821.gbd7tba7uvmeeqcx@fsr-ub1664-175>
+References: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com>
+ <1534945703-4730-4-git-send-email-abel.vesa@nxp.com>
+ <20180824074011.lufm653imkf6fyd3@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5878688527189627948=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <4538309b-fcb3-73ee-04e3-6cefcedd376d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180824074011.lufm653imkf6fyd3@pengutronix.de>
+Content-Language: en-US
+Content-ID: <9567F8D0E4488A42A2BA7920776C568F@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abel Vesa <abelvesa@linux.com>, dl-linux-imx <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============5878688527189627948==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="w7PDEPdKQumQfZlR"
-Content-Disposition: inline
-
-
---w7PDEPdKQumQfZlR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 20, 2018 at 10:35:54PM +0300, Dmitry Osipenko wrote:
-> On 20.08.2018 22:27, Dmitry Osipenko wrote:
-> > On 20.08.2018 22:12, Rob Herring wrote:
-> >> On Sat, Aug 18, 2018 at 06:54:17PM +0300, Dmitry Osipenko wrote:
-> >>> Splitting GART and Memory Controller wasn't a good decision that was =
-made
-> >>> back in the day. Given that the GART driver hasn't ever been used by
-> >>> anything in the kernel, we decided that it will be better to correct =
-the
-> >>> mistakes of the past and merge two bindings into a single one. In a r=
-esult
-> >>
-> >> As a result...
-> >>
-> >>> there is a DT ABI change for the Memory Controller that allows not to
-> >>> break newer kernels using older DT by introducing a new required prop=
-erty,
-> >>> the memory clock. Adding the new clock property also puts the tegra20=
--mc
-> >>> binding in line with the bindings of the later Tegra generations.
-> >>
-> >> I don't understand this part. It looks to me like you are breaking=20
-> >> compatibility. The driver failing to probe with an old DT is okay?
-> >=20
-> > Yes, DT compatibility is broken. New driver won't probe/load with the o=
-ld DT,
-> > that's what we want.
-> >=20
-> >> OS's like OpenSUSE use new DTs with older kernel versions, so you shou=
-ld=20
-> >> consider how to not break them as well. I guess if all this is optiona=
-l=20
-> >> or has been unused, then there shouldn't be a problem.
-> >=20
-> > That's interesting.. Memory Controller isn't optional, I guess we could=
- change
-> > compatible to "nvidia,tegra20-mc-gart".
+On Fri, Aug 24, 2018 at 09:40:11AM +0200, Sascha Hauer wrote:
+> +Cc Andrey Smirnov who made me aware of this issue.
 >=20
-> * I meant it's not optional in a sense that it's enabled in kernels confi=
-g by
-> default and driver is functional, but it's okay if MC driver will stop to=
- probe
-> with older kernels as it is used only for reporting memory errors.
+> On Wed, Aug 22, 2018 at 04:48:21PM +0300, Abel Vesa wrote:
+> > From: Lucas Stach <l.stach@pengutronix.de>
+> >=20
+> > The SCCG is a new PLL type introduced on i.MX8. Add support for this.
+> > The driver currently misses the PLL lock check, as the preliminary
+> > documentation mentions lock configurations, but is quiet about where
+> > to find the actual lock status signal.
+> >=20
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > ---
+> > +static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate,
+> > +			    unsigned long parent_rate)
+> > +{
+> > +	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
+> > +	u32 val;
+> > +	u32 divf;
+> > +
+> > +	divf =3D rate / (parent_rate * 2);
+> > +
+> > +	val =3D readl_relaxed(pll->base + PLL_CFG2);
+> > +	val &=3D ~(PLL_DIVF_MASK << PLL_DIVF1_SHIFT);
+> > +	val |=3D (divf - 1) << PLL_DIVF1_SHIFT;
+> > +	writel_relaxed(val, pll->base + PLL_CFG2);
+> > +
+> > +	/* FIXME: PLL lock check */
+>=20
+> Shouldn't be too hard to add, no?
 
-Yeah, we don't really regress at runtime. The errors reported by the
-current driver are very rare, and even if you encounter them, they're
-pretty cryptic, so I think this is one of the exceptional cases where
-breaking the ABI "for the greater good" is acceptable.
+Added to the next version which I intend to send today.
 
-Thierry
+>=20
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int clk_pll1_prepare(struct clk_hw *hw)
+> > +{
+> > +	struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
+> > +	u32 val;
+> > +
+> > +	val =3D readl_relaxed(pll->base);
+> > +	val &=3D ~(1 << PLL_PD);
+> > +	writel_relaxed(val, pll->base);
+>=20
+> pll->base + PLL_CFG0 please.
 
---w7PDEPdKQumQfZlR
-Content-Type: application/pgp-signature; name="signature.asc"
+Same as above.
 
------BEGIN PGP SIGNATURE-----
+>=20
+> > +static const struct clk_ops clk_sccg_pll1_ops =3D {
+> > +	.is_prepared	=3D clk_pll1_is_prepared,
+> > +	.recalc_rate	=3D clk_pll1_recalc_rate,
+> > +	.round_rate	=3D clk_pll1_round_rate,
+> > +	.set_rate	=3D clk_pll1_set_rate,
+> > +};
+> > +
+> > +static const struct clk_ops clk_sccg_pll2_ops =3D {
+> > +	.prepare	=3D clk_pll1_prepare,
+> > +	.unprepare	=3D clk_pll1_unprepare,
+> > +	.recalc_rate	=3D clk_pll2_recalc_rate,
+> > +	.round_rate	=3D clk_pll2_round_rate,
+> > +	.set_rate	=3D clk_pll2_set_rate,
+> > +};
+>=20
+> So these are two PLLs that share the same enable register. Doing the
+> prepare/unprepare for only one PLL can lead to all kinds of trouble.
+> Finding a good abstraction the properly handles this case with the
+> clock framework is probably also not easy.
+>=20
+> I could imagine we'll need to track the enable state on both PLLs and
+> only if both are disabled we disable it in hardware.
+>=20
+> With the current code we disable the PLLs when all consumers are
+> reparented to pll1, which probably has bad effects.
+>=20
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluFKFsACgkQ3SOs138+
-s6GS/A/9FhKnGuXL6ULi7ClHQ6T1WzcoA6pRh6hBKmB9PF5mRwBVTSXS8Gp8rcP5
-V3UPHXcmSvNY9nhIaBUUehhYzlscsbnwcXeSsOmZ9j82WeVblDAZc5410/vXI5HE
-8/lUptmH735FWQvDvadSNAknz482xvZ6FyAP7eXwYUK9Zx1x59EfP7BVfotVrk4O
-hjeUYZuhyLc5vz3Cnu7Rs+dCjNIabr/cRGENZP7HNpZoRwePtjoplk3xtkZg5riL
-PQpPgVUueHEo5Wk1IhpKXoroNfRKBTY0im65Qmf9k4/SdPp0ewEFaUsvD96k5sFV
-5sIApSAr3KubixXCgNQke+kRFYM120pT4ybGAi7/VN414t9vJu5QKcDRj3qFGqaY
-7NscjWhSk1kHFgpsgyqs72RZWklA8BbxU1WSQQbRHdPgdwVv0mHCWtzPG/sXD5sh
-ImrJcREiVXmNwvQMPwquSiY5xNueH6avqPxdaHwYz4CECrzKihiasLXg8hfIE/2L
-Xf+2MGJ95qv5ZpoFBR6JPYgiR+JLhi90UE2iRJZpFuwCjIPTY6l1yPHpobB5wJVP
-2zXAiAU3teTmip6K4lx+pFs/YN48OaOGlAHeTGZCr9M2ZxqBZsw2DsKnq8WC5Nn9
-d2SJ31Cj2vJGBSQtOnKAqPIvamEC67kLk8tG10pOSM1AIZV2WZ4=
-=9ErX
------END PGP SIGNATURE-----
+So it took me a while to understand exactly why this needs to stay like it =
+is.
 
---w7PDEPdKQumQfZlR--
+The PLL1 is never used by any device, instead it is used as a source for PL=
+L2.
 
---===============5878688527189627948==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+But because the interlink between the two of them is too complicated,
+the PLLs 1 and 2 need to be separate clocks.
 
+As for the disabling, it's safe to disable just the second one because,
+as mentioned above, the first PLL is never used alone by a device.
 
---===============5878688527189627948==--
+If there isn't anything else here to discuss, I would like to send the next
+version of this patchset with all the other comments taken care of.
+
+Abel
+
+> Sascha
+>=20
+> --=20
+> Pengutronix e.K.                           |                             =
+|
+> Industrial Linux Solutions                 | https://emea01.safelinks.pro=
+tection.outlook.com/?url=3Dhttp%3A%2F%2Fwww.pengutronix.de%2F&amp;data=3D02=
+%7C01%7Cabel.vesa%40nxp.com%7C5e9c7c6f9e464ed522f108d60994d471%7C686ea1d3bc=
+2b4c6fa92cd99c5c301635%7C0%7C0%7C636706932168087639&amp;sdata=3DXbfFq5z%2FR=
+tkq6yGgwSyk6dNCZVuXOzY%2Fiygmwle3C2I%3D&amp;reserved=3D0  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    =
+|
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
+|
+
+-- =
