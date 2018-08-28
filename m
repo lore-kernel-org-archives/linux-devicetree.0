@@ -1,425 +1,118 @@
-From: Urja Rannikko <urjaman@gmail.com>
-Subject: [PATCH 5/7] drm: dw_hdmi-rockchip: better clock selection logic and
- dts-based rate list
-Date: Tue, 28 Aug 2018 18:55:11 +0000
-Message-ID: <20180828185513.13216-6-urjaman@gmail.com>
-References: <20180828185513.13216-1-urjaman@gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v6 3/5] clk: imx: add SCCG PLL type
+Date: Tue, 28 Aug 2018 12:11:13 -0700
+Message-ID: <CAHQ1cqEsHoF0ZFY5+CpQFJ+b3sKd3yJPvmRZMAbaa9+Xzhe3=g@mail.gmail.com>
+References: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com>
+ <1534945703-4730-4-git-send-email-abel.vesa@nxp.com> <20180824074011.lufm653imkf6fyd3@pengutronix.de>
+ <20180828105821.gbd7tba7uvmeeqcx@fsr-ub1664-175>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180828185513.13216-1-urjaman@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Urja Rannikko <urjaman@gmail.com>, devicetree@vger.kernel.org, heiko@sntech.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180828105821.gbd7tba7uvmeeqcx@fsr-ub1664-175>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abel Vesa <abel.vesa@nxp.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, sboyd@kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel <linux-kernel@vger.kernel.org>, abelvesa@linux.com, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This contains traces of the following commits from the ChromeOS 3.14
-tree, which improve RF/EMI performance and detach the clock selection
-logic from the HDMI PHY configurations, plus support for configuring
-the allowed clock rates via device tree as they are dependent on
-PLL configuration and maybe even the PCB layout and other hardware things,
-eg. interference to wifi or such (EMI).
+On Tue, Aug 28, 2018 at 3:58 AM Abel Vesa <abel.vesa@nxp.com> wrote:
+>
+> On Fri, Aug 24, 2018 at 09:40:11AM +0200, Sascha Hauer wrote:
+> > +Cc Andrey Smirnov who made me aware of this issue.
+> >
+> > On Wed, Aug 22, 2018 at 04:48:21PM +0300, Abel Vesa wrote:
+> > > From: Lucas Stach <l.stach@pengutronix.de>
+> > >
+> > > The SCCG is a new PLL type introduced on i.MX8. Add support for this.
+> > > The driver currently misses the PLL lock check, as the preliminary
+> > > documentation mentions lock configurations, but is quiet about where
+> > > to find the actual lock status signal.
+> > >
+> > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > > ---
+> > > +static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate,
+> > > +                       unsigned long parent_rate)
+> > > +{
+> > > +   struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> > > +   u32 val;
+> > > +   u32 divf;
+> > > +
+> > > +   divf = rate / (parent_rate * 2);
+> > > +
+> > > +   val = readl_relaxed(pll->base + PLL_CFG2);
+> > > +   val &= ~(PLL_DIVF_MASK << PLL_DIVF1_SHIFT);
+> > > +   val |= (divf - 1) << PLL_DIVF1_SHIFT;
+> > > +   writel_relaxed(val, pll->base + PLL_CFG2);
+> > > +
+> > > +   /* FIXME: PLL lock check */
+> >
+> > Shouldn't be too hard to add, no?
+>
+> Added to the next version which I intend to send today.
+>
+> >
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +
+> > > +static int clk_pll1_prepare(struct clk_hw *hw)
+> > > +{
+> > > +   struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> > > +   u32 val;
+> > > +
+> > > +   val = readl_relaxed(pll->base);
+> > > +   val &= ~(1 << PLL_PD);
+> > > +   writel_relaxed(val, pll->base);
+> >
+> > pll->base + PLL_CFG0 please.
+>
+> Same as above.
+>
+> >
+> > > +static const struct clk_ops clk_sccg_pll1_ops = {
+> > > +   .is_prepared    = clk_pll1_is_prepared,
+> > > +   .recalc_rate    = clk_pll1_recalc_rate,
+> > > +   .round_rate     = clk_pll1_round_rate,
+> > > +   .set_rate       = clk_pll1_set_rate,
+> > > +};
+> > > +
+> > > +static const struct clk_ops clk_sccg_pll2_ops = {
+> > > +   .prepare        = clk_pll1_prepare,
+> > > +   .unprepare      = clk_pll1_unprepare,
+> > > +   .recalc_rate    = clk_pll2_recalc_rate,
+> > > +   .round_rate     = clk_pll2_round_rate,
+> > > +   .set_rate       = clk_pll2_set_rate,
+> > > +};
+> >
+> > So these are two PLLs that share the same enable register. Doing the
+> > prepare/unprepare for only one PLL can lead to all kinds of trouble.
+> > Finding a good abstraction the properly handles this case with the
+> > clock framework is probably also not easy.
+> >
+> > I could imagine we'll need to track the enable state on both PLLs and
+> > only if both are disabled we disable it in hardware.
+> >
+> > With the current code we disable the PLLs when all consumers are
+> > reparented to pll1, which probably has bad effects.
+> >
+>
+> So it took me a while to understand exactly why this needs to stay like it is.
+>
 
-Rates that were allowed previous to this patch are added as the fallback
-list if no dts configuration exists.
+IMHO this means that, if nothing else, all of the below should be
+documented in code as a comment, otherwise simpletons like me are
+going to continue stumbling over it and wondering what's going on.
 
-CHROMIUM: drm: rockchip/dw_hdmi-rockchip: Adjust rockchip_mpll_cfg for 146.25
-CHROMIUM: drm: rockchip/dw_hdmi-rockchip: expand the informal mpll config
-CHROMIUM: drm: rockchip/dw_hdmi-rockchip: add slop to more tables
-CHROMIUM: drm: rockchip/dw_hdmi-rockchip: redo rockchip hdmi to allow slop
-CHROMIUM: drm: rockchip/dw_hdmi-rockchip: Use auto-generated tables
-CHROMIUM: drm: rockchip/dw_hdmi-rockchip: Fixup the clock to be what we expect
-CHROMIUM: drm/rockchip: hdmi: adjust cklvl & txlvl for RF/EMI
-CHROMIUM: drm: rockchip/dw_hdmi-rockchip: Set cur_ctr to 0 always
-CHROMIUM: drm: rockchip/dw_hdmi-rockchip: Decrease slop
+> The PLL1 is never used by any device, instead it is used as a source for PLL2.
+>
+> But because the interlink between the two of them is too complicated,
+> the PLLs 1 and 2 need to be separate clocks.
+>
 
-Signed-off-by: Urja Rannikko <urjaman@gmail.com>
----
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 269 +++++++++++++-------
- 1 file changed, 175 insertions(+), 94 deletions(-)
+Can you go a little bit more into detail as for why PLL1 needs to be
+exposed in the first place and can't just be dealt with behind the
+scenes as a part of PLL2 abstraction? Are there use-cases where the
+rates of the two are going to be adjusted individually in Linux?
 
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 11309a2a4e43..740b0aeea796 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -49,122 +49,141 @@ struct rockchip_hdmi {
- 	struct clk *vpll_clk;
- 	struct clk *grf_clk;
- 	struct dw_hdmi *hdmi;
-+	u32* rates;
-+	u32 rates_cnt;
- };
- 
-+#define CLK_SLOP(clk)		((clk) / 1000)
-+#define CLK_PLUS_SLOP(clk)	((clk) + CLK_SLOP(clk))
-+
- #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
- 
-+/* These were the rates allowed by the driver before rates list in device tree,
-+ * so keep them around as a fallback */
-+static const u32 dw_hdmi_fallback_rates[] = {
-+	27000000,
-+	36000000,
-+	40000000,
-+	54000000,
-+	65000000,
-+	66000000,
-+	74250000,
-+	83500000,
-+	106500000,
-+	108000000,
-+	146250000,
-+	148500000
-+};
-+
- static const struct dw_hdmi_mpll_config rockchip_mpll_cfg[] = {
- 	{
--		27000000, {
--			{ 0x00b3, 0x0000},
--			{ 0x2153, 0x0000},
--			{ 0x40f3, 0x0000}
-+		30666000, {
-+			{ 0x00b3, 0x0000 },
-+			{ 0x2153, 0x0000 },
-+			{ 0x40f3, 0x0000 },
-+		},
-+	},  {
-+		36800000, {
-+			{ 0x00b3, 0x0000 },
-+			{ 0x2153, 0x0000 },
-+			{ 0x40a2, 0x0001 },
- 		},
--	}, {
--		36000000, {
--			{ 0x00b3, 0x0000},
--			{ 0x2153, 0x0000},
--			{ 0x40f3, 0x0000}
-+	},  {
-+		46000000, {
-+			{ 0x00b3, 0x0000 },
-+			{ 0x2142, 0x0001 },
-+			{ 0x40a2, 0x0001 },
- 		},
--	}, {
--		40000000, {
--			{ 0x00b3, 0x0000},
--			{ 0x2153, 0x0000},
--			{ 0x40f3, 0x0000}
-+	},  {
-+		61333000, {
-+			{ 0x0072, 0x0001 },
-+			{ 0x2142, 0x0001 },
-+			{ 0x40a2, 0x0001 },
- 		},
--	}, {
--		54000000, {
--			{ 0x0072, 0x0001},
--			{ 0x2142, 0x0001},
--			{ 0x40a2, 0x0001},
-+	},  {
-+		73600000, {
-+			{ 0x0072, 0x0001 },
-+			{ 0x2142, 0x0001 },
-+			{ 0x4061, 0x0002 },
- 		},
--	}, {
--		65000000, {
--			{ 0x0072, 0x0001},
--			{ 0x2142, 0x0001},
--			{ 0x40a2, 0x0001},
-+	},  {
-+		92000000, {
-+			{ 0x0072, 0x0001 },
-+			{ 0x2145, 0x0002 },
-+			{ 0x4061, 0x0002 },
- 		},
--	}, {
--		66000000, {
--			{ 0x013e, 0x0003},
--			{ 0x217e, 0x0002},
--			{ 0x4061, 0x0002}
-+	},  {
-+		122666000, {
-+			{ 0x0051, 0x0002 },
-+			{ 0x2145, 0x0002 },
-+			{ 0x4061, 0x0002 },
- 		},
--	}, {
--		74250000, {
--			{ 0x0072, 0x0001},
--			{ 0x2145, 0x0002},
--			{ 0x4061, 0x0002}
-+	},  {
-+		147200000, {
-+			{ 0x0051, 0x0002 },
-+			{ 0x2145, 0x0002 },
-+			{ 0x4064, 0x0003 },
- 		},
--	}, {
--		83500000, {
--			{ 0x0072, 0x0001},
-+	},  {
-+		184000000, {
-+			{ 0x0051, 0x0002 },
-+			{ 0x214c, 0x0003 },
-+			{ 0x4064, 0x0003 },
- 		},
--	}, {
--		108000000, {
--			{ 0x0051, 0x0002},
--			{ 0x2145, 0x0002},
--			{ 0x4061, 0x0002}
-+	},  {
-+		226666000, {
-+			{ 0x0040, 0x0003 },
-+			{ 0x214c, 0x0003 },
-+			{ 0x4064, 0x0003 },
- 		},
--	}, {
--		106500000, {
--			{ 0x0051, 0x0002},
--			{ 0x2145, 0x0002},
--			{ 0x4061, 0x0002}
-+	},  {
-+		272000000, {
-+			{ 0x0040, 0x0003 },
-+			{ 0x214c, 0x0003 },
-+			{ 0x5a64, 0x0003 },
- 		},
--	}, {
--		146250000, {
--			{ 0x0051, 0x0002},
--			{ 0x2145, 0x0002},
--			{ 0x4061, 0x0002}
-+	},  {
-+		340000000, {
-+			{ 0x0040, 0x0003 },
-+			{ 0x3b4c, 0x0003 },
-+			{ 0x5a64, 0x0003 },
- 		},
--	}, {
--		148500000, {
--			{ 0x0051, 0x0003},
--			{ 0x214c, 0x0003},
--			{ 0x4064, 0x0003}
-+	},  {
-+		600000000, {
-+			{ 0x1a40, 0x0003 },
-+			{ 0x3b4c, 0x0003 },
-+			{ 0x5a64, 0x0003 },
- 		},
--	}, {
-+	},  {
- 		~0UL, {
--			{ 0x00a0, 0x000a },
--			{ 0x2001, 0x000f },
--			{ 0x4002, 0x000f },
-+			{ 0x0000, 0x0000 },
-+			{ 0x0000, 0x0000 },
-+			{ 0x0000, 0x0000 },
- 		},
- 	}
- };
- 
- static const struct dw_hdmi_curr_ctrl rockchip_cur_ctr[] = {
--	/*      pixelclk    bpp8    bpp10   bpp12 */
-+	/*      pixelclk     bpp8    bpp10   bpp12 */
- 	{
--		40000000,  { 0x0018, 0x0018, 0x0018 },
--	}, {
--		65000000,  { 0x0028, 0x0028, 0x0028 },
--	}, {
--		66000000,  { 0x0038, 0x0038, 0x0038 },
--	}, {
--		74250000,  { 0x0028, 0x0038, 0x0038 },
--	}, {
--		83500000,  { 0x0028, 0x0038, 0x0038 },
--	}, {
--		146250000, { 0x0038, 0x0038, 0x0038 },
--	}, {
--		148500000, { 0x0000, 0x0038, 0x0038 },
--	}, {
--		~0UL,      { 0x0000, 0x0000, 0x0000},
--	}
-+		600000000, { 0x0000, 0x0000, 0x0000 },
-+	},  {
-+		~0UL,      { 0x0000, 0x0000, 0x0000 },
-+	},
- };
- 
- static const struct dw_hdmi_phy_config rockchip_phy_config[] = {
- 	/*pixelclk   symbol   term   vlev*/
--	{ 74250000,  0x8009, 0x0004, 0x0272},
--	{ 148500000, 0x802b, 0x0004, 0x028d},
--	{ 297000000, 0x8039, 0x0005, 0x028d},
--	{ ~0UL,	     0x0000, 0x0000, 0x0000}
-+	{ CLK_PLUS_SLOP(74250000),  0x8009, 0x0004, 0x0272},
-+	{ CLK_PLUS_SLOP(165000000), 0x802b, 0x0004, 0x0209},
-+	{ CLK_PLUS_SLOP(297000000), 0x8039, 0x0005, 0x028d},
-+	{ ~0UL,	                    0x0000, 0x0000, 0x0000}
- };
- 
- static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
- {
- 	struct device_node *np = hdmi->dev->of_node;
-+	int rates_cnt;
- 
- 	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
- 	if (IS_ERR(hdmi->regmap)) {
-@@ -192,26 +211,55 @@ static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
- 		return PTR_ERR(hdmi->grf_clk);
- 	}
- 
-+	if ((rates_cnt = of_property_count_u32_elems(np, "rockchip,hdmi-rates-hz")) > 0) {
-+		int rv;
-+		u32 *rates = devm_kmalloc_array(hdmi->dev, rates_cnt, sizeof(u32), GFP_KERNEL);
-+		if (!rates)
-+			return -ENOMEM;
-+		rv = of_property_read_u32_array(np, "rockchip,hdmi-rates-hz", rates, rates_cnt);
-+		if (rv)
-+			return rv;
-+		hdmi->rates = rates;
-+		hdmi->rates_cnt = rates_cnt;
-+	} else {
-+		rates_cnt = ARRAY_SIZE(dw_hdmi_fallback_rates);
-+		hdmi->rates = devm_kmalloc_array(hdmi->dev, rates_cnt, sizeof(u32), GFP_KERNEL);
-+		if (!hdmi->rates)
-+			return -ENOMEM;
-+		memcpy(hdmi->rates, dw_hdmi_fallback_rates, rates_cnt * sizeof(u32));
-+		hdmi->rates_cnt = rates_cnt;
-+	}
-+
-+
- 	return 0;
- }
- 
- static enum drm_mode_status
--dw_hdmi_rockchip_mode_valid(struct drm_connector *connector,
-+dw_hdmi_rockchip_encoder_mode_valid(struct drm_encoder *encoder,
- 			    const struct drm_display_mode *mode)
- {
--	const struct dw_hdmi_mpll_config *mpll_cfg = rockchip_mpll_cfg;
-+	struct rockchip_hdmi *hdmi = to_rockchip_hdmi(encoder);
- 	int pclk = mode->clock * 1000;
--	bool valid = false;
-+	int num_rates = hdmi->rates_cnt;
- 	int i;
- 
--	for (i = 0; mpll_cfg[i].mpixelclock != (~0UL); i++) {
--		if (pclk == mpll_cfg[i].mpixelclock) {
--			valid = true;
--			break;
--		}
-+	/*
-+	 * Pixel clocks we support are always < 2GHz and so fit in an
-+	 * int.  We should make sure source rate does too so we don't get
-+	 * overflow when we multiply by 1000.
-+	 */
-+	if (mode->clock > INT_MAX / 1000)
-+		return MODE_BAD;
-+
-+	for (i = 0; i < num_rates; i++) {
-+		int slop = CLK_SLOP(pclk);
-+
-+		if ((pclk >= hdmi->rates[i] - slop) &&
-+		    (pclk <= hdmi->rates[i] + slop))
-+			return MODE_OK;
- 	}
- 
--	return (valid) ? MODE_OK : MODE_BAD;
-+	return MODE_BAD;
- }
- 
- static const struct drm_encoder_funcs dw_hdmi_rockchip_encoder_funcs = {
-@@ -227,7 +275,39 @@ dw_hdmi_rockchip_encoder_mode_fixup(struct drm_encoder *encoder,
- 				    const struct drm_display_mode *mode,
- 				    struct drm_display_mode *adj_mode)
- {
--	return true;
-+	struct rockchip_hdmi *hdmi = to_rockchip_hdmi(encoder);
-+	int pclk = adj_mode->clock * 1000;
-+	int best_diff = INT_MAX;
-+	int best_clock = 0;
-+	int slop;
-+	int i;
-+
-+	/* Pick the best clock */
-+	for (i = 0; i < hdmi->rates_cnt; i++) {
-+		int diff = hdmi->rates[i] - pclk;
-+
-+		if (diff < 0)
-+			diff = -diff;
-+		if (diff < best_diff) {
-+			best_diff = diff;
-+			best_clock = hdmi->rates[i];
-+
-+			/* Bail early if we're exact */
-+			if (best_diff == 0)
-+				return true;
-+		}
-+	}
-+
-+	/* Double check that it's OK */
-+	slop = CLK_SLOP(pclk);
-+	if ((pclk >= best_clock - slop) && (pclk <= best_clock + slop)) {
-+		adj_mode->clock = DIV_ROUND_UP(best_clock, 1000);
-+		return true;
-+	}
-+
-+	/* Shoudn't be here; we should have said rate wasn't valid */
-+	dev_warn(hdmi->dev, "tried to set invalid rate %d\n", adj_mode->clock);
-+	return false;
- }
- 
- static void dw_hdmi_rockchip_encoder_mode_set(struct drm_encoder *encoder,
-@@ -280,6 +360,7 @@ dw_hdmi_rockchip_encoder_atomic_check(struct drm_encoder *encoder,
- }
- 
- static const struct drm_encoder_helper_funcs dw_hdmi_rockchip_encoder_helper_funcs = {
-+	.mode_valid = dw_hdmi_rockchip_encoder_mode_valid,
- 	.mode_fixup = dw_hdmi_rockchip_encoder_mode_fixup,
- 	.mode_set   = dw_hdmi_rockchip_encoder_mode_set,
- 	.enable     = dw_hdmi_rockchip_encoder_enable,
-@@ -294,7 +375,6 @@ static struct rockchip_hdmi_chip_data rk3288_chip_data = {
- };
- 
- static const struct dw_hdmi_plat_data rk3288_hdmi_drv_data = {
--	.mode_valid = dw_hdmi_rockchip_mode_valid,
- 	.mpll_cfg   = rockchip_mpll_cfg,
- 	.cur_ctr    = rockchip_cur_ctr,
- 	.phy_config = rockchip_phy_config,
-@@ -308,7 +388,6 @@ static struct rockchip_hdmi_chip_data rk3399_chip_data = {
- };
- 
- static const struct dw_hdmi_plat_data rk3399_hdmi_drv_data = {
--	.mode_valid = dw_hdmi_rockchip_mode_valid,
- 	.mpll_cfg   = rockchip_mpll_cfg,
- 	.cur_ctr    = rockchip_cur_ctr,
- 	.phy_config = rockchip_phy_config,
-@@ -387,6 +466,7 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
- 	 */
- 	if (IS_ERR(hdmi->hdmi)) {
- 		ret = PTR_ERR(hdmi->hdmi);
-+		devm_kfree(hdmi->dev, hdmi->rates);
- 		drm_encoder_cleanup(encoder);
- 		clk_disable_unprepare(hdmi->vpll_clk);
- 	}
-@@ -399,6 +479,7 @@ static void dw_hdmi_rockchip_unbind(struct device *dev, struct device *master,
- {
- 	struct rockchip_hdmi *hdmi = dev_get_drvdata(dev);
- 
-+	devm_kfree(hdmi->dev, hdmi->rates);
- 	dw_hdmi_unbind(hdmi->hdmi);
- 	clk_disable_unprepare(hdmi->vpll_clk);
- }
--- 
-2.18.0
+Thanks,
+Andrey Smirnov
