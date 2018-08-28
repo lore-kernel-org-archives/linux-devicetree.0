@@ -1,51 +1,32 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 3/6] dt-bindings: remoteproc: Remove additional
- definition tag
-Date: Mon, 27 Aug 2018 17:44:22 -0700
-Message-ID: <20180828004422.GZ160295@google.com>
-References: <20180824131900.5353-1-sibis@codeaurora.org>
- <20180824131900.5353-4-sibis@codeaurora.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V3 0/2] firmware: ti_sci: Add host-id as an optional parameter
+Date: Mon, 27 Aug 2018 19:59:22 -0500
+Message-ID: <20180828005924.13092-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180824131900.5353-4-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sibi,
+Hi Santosh,
 
-Subject: dt-bindings: remoteproc: Remove additional definition tag
+This is the rebase to v4.19-rc1 and repost of the patch series [1]
+Please find attached series to enable host-id as an optional dt property.
 
-nit: the subject is a bit generic, you probably should at least add
-'qcom: ' to the 'path'.
+[1] https://patchwork.ozlabs.org/cover/931822/
 
-On Fri, Aug 24, 2018 at 06:48:57PM +0530, Sibi Sankar wrote:
-> Remove the additional definition tag declared for WCSS sub-system
-> under reset-names.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> index 601dd9f389aa..c45e4c131fa2 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> @@ -58,7 +58,7 @@ on the Qualcomm Hexagon core.
->  	Usage: required
->  	Value type: <stringlist>
->  	Definition: must be "mss_restart" for the modem sub-system
-> -	Definition: must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
-> +		    must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
->  		    for the wcss syb-system
+No Functional changes. Will be great if we can get this in rc cycle,
+but, will defer to you.
 
-Since you are already at it you might also want to fix the typo in
-'wcss syb-system'.
+Nishanth Menon (2):
+  Documentation: dt: keystone: ti-sci: Add optional host-id parameter
+  firmware: ti_sci: Provide host-id as an optional dt parameter
 
-Other than the nits:
+ .../devicetree/bindings/arm/keystone/ti,sci.txt    |  4 ++++
+ drivers/firmware/ti_sci.c                          | 24 ++++++++++++++++++----
+ 2 files changed, 24 insertions(+), 4 deletions(-)
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+-- 
+2.15.1
