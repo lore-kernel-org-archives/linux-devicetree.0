@@ -1,46 +1,69 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v2 7/9] net: stmmac: dwmac-sun8i: fix OF child-node lookup
-Date: Tue, 28 Aug 2018 10:06:24 +0200
-Message-ID: <20180828080624.GA25644@Red>
-References: <20180827082153.22537-1-johan@kernel.org>
- <20180827082153.22537-8-johan@kernel.org>
+From: Sandy Huang <hjc@rock-chips.com>
+Subject: [PATCH v5 1/2] devicetree/bindings: display: Add document for
+ rockchip RGB output
+Date: Tue, 28 Aug 2018 16:12:33 +0800
+Message-ID: <1535443954-38806-2-git-send-email-hjc@rock-chips.com>
+References: <1535443954-38806-1-git-send-email-hjc@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180827082153.22537-8-johan@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S . Miller" <davem@davemloft.net>, maxime.ripard@bootlin.com, wens@csie.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1535443954-38806-1-git-send-email-hjc@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: hjc@rock-chips.com, heiko@sntech.de, robh@kernel.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 10:21:51AM +0200, Johan Hovold wrote:
-> Use the new of_get_compatible_child() helper to lookup the mdio-internal
-> child node instead of using of_find_compatible_node(), which searches
-> the entire tree from a given start node and thus can return an unrelated
-> (i.e. non-child) node.
-> 
-> This also addresses a potential use-after-free (e.g. after probe
-> deferral) as the tree-wide helper drops a reference to its first
-> argument (i.e. the mdio-mux node). Fortunately, this was inadvertently
-> balanced by a failure to drop the mdio-mux reference after lookup.
-> 
-> While at it, also fix the related mdio-internal- and phy-node reference
-> leaks.
-> 
-> Fixes: 634db83b8265 ("net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs")
-> Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Jose Abreu <joabreu@synopsys.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-
-You should have CCed sunxi maintainers 
-Maxime Ripard <maxime.ripard@bootlin.com> (maintainer:ARM/Allwinner sunXi SoC support)
-Chen-Yu Tsai <wens@csie.org> (maintainer:ARM/Allwinner sunXi SoC support)
-
-Since I am just back from holidays, I will test this patch this week.
-
-Regards
+VGhpcyBwYXRoIGFkZCBzdXBwb3J0IHJ2MTEwOCBhbmQgcHgzMCByZ2Igb3V0cHV0IGludGVyZmFj
+ZSBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBTYW5keSBIdWFuZyA8aGpjQHJvY2stY2hpcHMuY29t
+PgpMaW5rOiBodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gvbXNnaWQvMTUw
+OTUyMjc2NS0xMTg3NTktMS1naXQtc2VuZC1lbWFpbC1oamNAcm9jay1jaGlwcy5jb20KLS0tCiAu
+Li4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0ICAgICB8IDcwICsr
+KysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA3MCBpbnNlcnRpb25zKCspCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcm9ja2NoaXAvcm9ja2NoaXAtcmdiLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXJnYi50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hp
+cC1yZ2IudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjFmNDkwOWMKLS0t
+IC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9yb2NrY2hpcC9yb2NrY2hpcC1yZ2IudHh0CkBAIC0wLDAgKzEsNzAgQEAKK1JvY2tjaGlwIFJW
+MTEwOCBSR0IgaW50ZXJmYWNlCis9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQorCitS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBtYXRjaGluZyB0aGUgc29jIHR5cGU6
+CisJLSAicm9ja2NoaXAscHgzMC1yZ2IiOworCS0gInJvY2tjaGlwLHJ2MTEwOC1yZ2IiOworCitP
+cHRpb25hbCBwcm9wZXJ0aWVzOgorLSBwaW5jdHJsLW5hbWVzOiBzaG91bGQgYmUgYSAibGNkYyIg
+ZW50cnkgb3IgYSAiZGVmYXVsdCIgZW50cnkuCistIHBpbmN0cmwtMDogcGluIGNvbnRyb2wgZ3Jv
+dXAgdG8gYmUgdXNlZCBmb3IgdGhpcyBpbnRlcmZhY2UuCisKK1RoZSByZ2IgaGFzIHR3byB2aWRl
+byBwb3J0cyBkZXNjcmliZWQgYnk6CisJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CitUaGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxl
+ZCB1c2luZyB0aGUgT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCisJRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KKworLSB2aWRlbyBwb3J0IDAgZm9yIHRo
+ZSBWT1AgaW5wdXQsIHRoZSByZW1vdGUgZW5kcG9pbnQgbWF5YmUgdm9wYi92b3BsL3ZvcAorLSB2
+aWRlbyBwb3J0IDEgZm9yIGVpdGhlciBhIHBhbmVsIG9yIHN1YnNlcXVlbnQgZW5jb2RlcgorCit0
+aGUgcGFuZWwgZGVzY3JpYmVkIGJ5OgorCURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKK1BhbmVsIG90aGVyIHJlcXVpcmVkIHBy
+b3BlcnRpZXM6CistIHBvcnRzIGZvciByZW1vdGUgcmdiIG91dHB1dC4KKworRXhhbXBsZToKKwor
+cGFuZWw6IHBhbmVsIHsKKwljb21wYXRpYmxlID0gImF1byxiMTAxZWFuMDEiOworCWVuYWJsZS1n
+cGlvcyA9IDwmZ3BpbzcgMjEgR1BJT19BQ1RJVkVfSElHSD47CisKKwlwb3J0cyB7CisJCXBhbmVs
+X2luX3JnYjogZW5kcG9pbnQgeworCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZyZ2Jfb3V0X3BhbmVs
+PjsKKwkJfTsKKwl9OworfTsKKworRm9yIFJvY2tjaGlwIFJWMTEwODoKKworCXJnYjogcmdiIHsK
+KwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxydjExMDgtcmdiIjsKKwkJcGluY3RybC1uYW1lcyA9
+ICJsY2RjIjsKKwkJcGluY3RybC0wID0gPCZsY2RjX2N0bD47CisKKwkJcG9ydHMgeworCQkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJcmdiX2luOiBw
+b3J0QDAgeworCQkJCXJlZyA9IDwwPjsKKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkj
+c2l6ZS1jZWxscyA9IDwwPjsKKworCQkJCXJnYl9pbl92b3A6IGVuZHBvaW50IHsKKwkJCQkJcmVt
+b3RlLWVuZHBvaW50ID0gPCZ2b3Bfb3V0X3JnYj47CisJCQkJfTsKKwkJCX07CisKKwkJCXJnYl9v
+dXQ6IHBvcnRAMSB7CisJCQkJcmVnID0gPDE+OworCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owor
+CQkJCSNzaXplLWNlbGxzID0gPDA+OworCisJCQkJcmdiX291dF9wYW5lbDogZW5kcG9pbnQgewor
+CQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luX3JnYj47CisJCQkJfTsKKwkJCX07CisJ
+CX07CisJfTsKLS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
