@@ -1,277 +1,68 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v6 3/5] clk: imx: add SCCG PLL type
-Date: Tue, 28 Aug 2018 11:47:23 -0700
-Message-ID: <CAHQ1cqEJe24Zad9BL0FrKmPJjy4RO41n1rDU08Ua_uAq4dB=KA@mail.gmail.com>
-References: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com> <1534945703-4730-4-git-send-email-abel.vesa@nxp.com>
+From: Urja Rannikko <urjaman@gmail.com>
+Subject: [PATCH 0/7] [RFC] rk3288 veyron chromebook hdmi frequencies
+Date: Tue, 28 Aug 2018 18:55:06 +0000
+Message-ID: <20180828185513.13216-1-urjaman@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534945703-4730-4-git-send-email-abel.vesa@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Abel Vesa <abel.vesa@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, linux-clk@vger.kernel.org, linux-imx@nxp.com, Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, abelvesa@linux.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Urja Rannikko <urjaman@gmail.com>, devicetree@vger.kernel.org, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 22, 2018 at 6:52 AM Abel Vesa <abel.vesa@nxp.com> wrote:
->
-> From: Lucas Stach <l.stach@pengutronix.de>
->
-> The SCCG is a new PLL type introduced on i.MX8. Add support for this.
-> The driver currently misses the PLL lock check, as the preliminary
-> documentation mentions lock configurations, but is quiet about where
-> to find the actual lock status signal.
->
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  drivers/clk/imx/Makefile       |   3 +-
->  drivers/clk/imx/clk-sccg-pll.c | 231 +++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/imx/clk.h          |   9 ++
->  3 files changed, 242 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/imx/clk-sccg-pll.c
->
-> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> index 4893c1f..b87513c 100644
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -12,7 +12,8 @@ obj-y += \
->         clk-pllv1.o \
->         clk-pllv2.o \
->         clk-pllv3.o \
-> -       clk-pfd.o
-> +       clk-pfd.o \
-> +       clk-sccg-pll.o
->
->  obj-$(CONFIG_SOC_IMX1)   += clk-imx1.o
->  obj-$(CONFIG_SOC_IMX21)  += clk-imx21.o
-> diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.c
-> new file mode 100644
-> index 0000000..886ae03
-> --- /dev/null
-> +++ b/drivers/clk/imx/clk-sccg-pll.c
-> @@ -0,0 +1,231 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright 2018 NXP.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/slab.h>
-> +
-> +#include "clk.h"
-> +
-> +/* PLL CFGs */
-> +#define PLL_CFG0       0x0
-> +#define PLL_CFG1       0x4
-> +#define PLL_CFG2       0x8
-> +
-> +#define PLL_DIVF1_SHIFT        13
-> +#define PLL_DIVF2_SHIFT        7
-> +#define PLL_DIVF_MASK  0x3f
-> +
-> +#define PLL_DIVR1_SHIFT        25
-> +#define PLL_DIVR2_SHIFT        19
-> +#define PLL_DIVR1_MASK 0x3
-> +#define PLL_DIVR2_MASK 0x3f
-> +#define PLL_REF_SHIFT  0
-> +#define PLL_REF_MASK   0x3
-> +
-> +#define PLL_LOCK       31
-> +#define PLL_PD         7
-> +
-> +#define OSC_25M                25000000
-> +#define OSC_27M                27000000
-> +
-> +struct clk_sccg_pll {
-> +       struct clk_hw   hw;
-> +       void __iomem    *base;
-> +};
-> +
-> +#define to_clk_sccg_pll(_hw) container_of(_hw, struct clk_sccg_pll, hw)
-> +
-> +static int clk_pll1_is_prepared(struct clk_hw *hw)
-> +{
-> +       struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +       u32 val;
-> +
-> +       val = readl_relaxed(pll->base + PLL_CFG0);
-> +       return (val & (1 << PLL_PD)) ? 0 : 1;
-> +}
-> +
-> +static unsigned long clk_pll1_recalc_rate(struct clk_hw *hw,
-> +                                        unsigned long parent_rate)
-> +{
-> +       struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +       u32 val, divf;
-> +
-> +       val = readl_relaxed(pll->base + PLL_CFG2);
-> +       divf = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
-> +
-> +       return parent_rate * 2 * (divf + 1);
-> +}
-> +
-> +static long clk_pll1_round_rate(struct clk_hw *hw, unsigned long rate,
-> +                              unsigned long *prate)
-> +{
-> +       unsigned long parent_rate = *prate;
-> +       u32 div;
-> +
-> +       div = rate / (parent_rate * 2);
-> +
-> +       return parent_rate * div * 2;
-> +}
-> +
-> +static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate,
-> +                           unsigned long parent_rate)
-> +{
-> +       struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +       u32 val;
-> +       u32 divf;
-> +
-> +       divf = rate / (parent_rate * 2);
-> +
-> +       val = readl_relaxed(pll->base + PLL_CFG2);
-> +       val &= ~(PLL_DIVF_MASK << PLL_DIVF1_SHIFT);
-> +       val |= (divf - 1) << PLL_DIVF1_SHIFT;
-> +       writel_relaxed(val, pll->base + PLL_CFG2);
-> +
-> +       /* FIXME: PLL lock check */
-> +
-> +       return 0;
-> +}
-> +
-> +static int clk_pll1_prepare(struct clk_hw *hw)
-> +{
-> +       struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +       u32 val;
-> +
-> +       val = readl_relaxed(pll->base);
-> +       val &= ~(1 << PLL_PD);
-> +       writel_relaxed(val, pll->base);
-> +
-> +       /* FIXME: PLL lock check */
-> +
-> +       return 0;
-> +}
-> +
-> +static void clk_pll1_unprepare(struct clk_hw *hw)
-> +{
-> +       struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +       u32 val;
-> +
-> +       val = readl_relaxed(pll->base);
-> +       val |= (1 << PLL_PD);
-> +       writel_relaxed(val, pll->base);
-> +}
-> +
-> +static unsigned long clk_pll2_recalc_rate(struct clk_hw *hw,
-> +                                        unsigned long parent_rate)
-> +{
-> +       struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +       u32 val, ref, divr1, divf1, divr2, divf2;
-> +       u64 temp64;
-> +
-> +       val = readl_relaxed(pll->base + PLL_CFG0);
-> +       switch ((val >> PLL_REF_SHIFT) & PLL_REF_MASK) {
-> +       case 0:
-> +               ref = OSC_25M;
-> +               break;
-> +       case 1:
-> +               ref = OSC_27M;
-> +               break;
-> +       default:
-> +               ref = OSC_25M;
-> +               break;
-> +       }
-> +
-> +       val = readl_relaxed(pll->base + PLL_CFG2);
-> +       divr1 = (val >> PLL_DIVR1_SHIFT) & PLL_DIVR1_MASK;
-> +       divr2 = (val >> PLL_DIVR2_SHIFT) & PLL_DIVR2_MASK;
-> +       divf1 = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
-> +       divf2 = (val >> PLL_DIVF2_SHIFT) & PLL_DIVF_MASK;
-> +
-> +       temp64 = ref * 2;
-> +       temp64 *= (divf1 + 1) * (divf2 + 1);
-> +
-> +       do_div(temp64, (divr1 + 1) * (divr2 + 1));
-> +
-> +       return (unsigned long)temp64;
-> +}
-> +
-> +static long clk_pll2_round_rate(struct clk_hw *hw, unsigned long rate,
-> +                              unsigned long *prate)
-> +{
-> +       u32 div;
-> +       unsigned long parent_rate = *prate;
-> +
-> +       div = rate / (parent_rate);
-> +
-> +       return parent_rate * div;
-> +}
-> +
-> +static int clk_pll2_set_rate(struct clk_hw *hw, unsigned long rate,
-> +                           unsigned long parent_rate)
-> +{
-> +       u32 val;
-> +       u32 divf;
-> +       struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +
-> +       divf = rate / (parent_rate);
-> +
-> +       val = readl_relaxed(pll->base + PLL_CFG2);
-> +       val &= ~(PLL_DIVF_MASK << PLL_DIVF2_SHIFT);
-> +       val |= (divf - 1) << PLL_DIVF2_SHIFT;
-> +       writel_relaxed(val, pll->base + PLL_CFG2);
-> +
-> +       /* FIXME: PLL lock check */
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct clk_ops clk_sccg_pll1_ops = {
-> +       .is_prepared    = clk_pll1_is_prepared,
-> +       .recalc_rate    = clk_pll1_recalc_rate,
-> +       .round_rate     = clk_pll1_round_rate,
-> +       .set_rate       = clk_pll1_set_rate,
-> +};
-> +
-> +static const struct clk_ops clk_sccg_pll2_ops = {
-> +       .prepare        = clk_pll1_prepare,
-> +       .unprepare      = clk_pll1_unprepare,
-> +       .recalc_rate    = clk_pll2_recalc_rate,
-> +       .round_rate     = clk_pll2_round_rate,
-> +       .set_rate       = clk_pll2_set_rate,
-> +};
-> +
-> +struct clk *imx_clk_sccg_pll(const char *name,
-> +                               const char *parent_name,
-> +                               void __iomem *base,
-> +                               enum imx_sccg_pll_type pll_type)
-> +{
-> +       struct clk_sccg_pll *pll;
-> +       struct clk *clk;
-> +       struct clk_init_data init;
-> +
-> +       pll = kzalloc(sizeof(*pll), GFP_KERNEL);
-> +       if (!pll)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       pll->base = base;
-> +       init.name = name;
-> +       switch (pll_type) {
-> +       case SCCG_PLL1:
-> +               init.ops = &clk_sccg_pll1_ops;
-> +               break;
-> +       case SCCG_PLL2:
-> +               init.ops = &clk_sccg_pll2_ops;
-> +               break;
-> +       }
+Hi all,
 
-Please add error checking in the switch above since it's pretty clear
-that a wrong kind of argument can be passed as a pll_type without it
-being noticeable.
+This is a series trying to make the "hack" of dedicating a pll (npll)
+on these chromebooks to one of the VOPs (that is used for HDMI)
+more acceptable for upstream.
+Notably it should change nothing for non-chromebook rk3288 designs,
+and allows enough configurability that such designs could later
+use this feature for either VOP if it is desirable.
 
-Thanks,
-Andrey Smirnov
+I expect the first patch to be acceptable (atleast almost) as-is.
+It just adds the PLL frequencies used for HDMI into the PLL configuration
+list, so they're ready to be used for hdmi whether by fixed configuration,
+automagic magicness or dedicating a PLL.
+
+For the device tree bindings, I added a binding for the list of 
+allowed hdmi frequencies (that quite closely a hardware property both
+due to EMI/RF considerations and clock/PLL configuration...) as
+"rockchip,hdmi-rates-hz" but i think this could have a common name.
+Suggestions?
+
+This has been tested on my ASUS C201, and effectively gives
+the same display compatibility as ChromeOS has. (This journey
+started with me plugging in my 1920x1200 samsung 2443BW and
+getting 1280x1024 at 55.555... Hz.)
+
+Urja Rannikko (7):
+  clk: rockchip: improve rk3288 pll rates for better hdmi output
+  dt-bindings: clock: rk3288-cru: Add property to dedicate NPLL for VOPx
+  drivers: clk-rk3288: support for dedicating NPLL to a VOP
+  dt-bindings: display/rockchip: dw_hdmi: Add property for HDMI
+    frequency list
+  drm: dw_hdmi-rockchip: better clock selection logic and dts-based rate
+    list
+  dts: rk3288: support for dedicating npll to a vop
+  dts: rk3288-veyron-chromebook: dedicate npll to VOP0/HDMI + HDMI rates
+
+ .../bindings/clock/rockchip,rk3288-cru.txt    |   3 +
+ .../display/rockchip/dw_hdmi-rockchip.txt     |   1 +
+ .../boot/dts/rk3288-veyron-chromebook.dtsi    |  67 +++++
+ arch/arm/boot/dts/rk3288.dtsi                 |   6 +-
+ drivers/clk/rockchip/clk-rk3288.c             |  98 +++++--
+ drivers/clk/rockchip/clk.h                    |   3 +
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c   | 269 ++++++++++++------
+ 7 files changed, 335 insertions(+), 112 deletions(-)
+
+-- 
+2.18.0
