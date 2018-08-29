@@ -1,65 +1,67 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: RE: [PATCH 1/2][RESEND] ARM: dts: Add big-endian in nor node for
- ls1021a
-Date: Wed, 29 Aug 2018 02:55:47 +0000
-Message-ID: <VI1PR0402MB3854E14A0468CEFBDFDFE48B97090@VI1PR0402MB3854.eurprd04.prod.outlook.com>
-References: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
- <20180828065936.8040-2-prabhakar.kushwaha@nxp.com>
- <CAOMZO5BVrK98ksQ2KBiXTy6O-nXjOG8_fFueRRXHZOwCMJ1UGg@mail.gmail.com>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] media: Add controls for JPEG quantization tables
+Date: Wed, 29 Aug 2018 12:00:18 +0900
+Message-ID: <CAAFQd5Dx87Mmx4kpUGeK1E=FZ4B5OgpVvadAFYOM+D-8-ACXKQ@mail.gmail.com>
+References: <20180822165937.8700-1-ezequiel@collabora.com>
+ <20180822165937.8700-7-ezequiel@collabora.com>
+ <3a92082b201776bfed0f68facc30577cb7d2a5c1.camel@bootlin.com>
+ <d55bf57ed63ba82524af1dcae3201a513cec9f48.camel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5BVrK98ksQ2KBiXTy6O-nXjOG8_fFueRRXHZOwCMJ1UGg@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated
- list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <d55bf57ed63ba82524af1dcae3201a513cec9f48.camel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Fabio,
+On Wed, Aug 29, 2018 at 11:50 AM Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>
+> On Mon, 2018-08-27 at 09:47 +0200, Paul Kocialkowski wrote:
+> > Hi,
+> >
+> > On Wed, 2018-08-22 at 13:59 -0300, Ezequiel Garcia wrote:
+> > > From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > >
+> > > Add V4L2_CID_JPEG_LUMA/CHROMA_QUANTIZATION controls to allow userspace
+> > > configure the JPEG quantization tables.
+> >
+> > How about having a single control for quantization?
+> >
+> > In MPEG-2/H.264/H.265, we have a single control exposed as a structure,
+> > which contains the tables for both luma and chroma. In the case of JPEG,
+> > it's not that big a deal, but for advanced video formats, it would be
+> > too much hassle to have one control per table.
+> >
+> > In order to keep the interface consistent, I think it'd be best to merge
+> > both matrices into a single control.
+> >
+> > What do you think?
+> >
+>
+> I think it makes a lot of sense. I don't see the benefit in having luma
+> and chroma separated, and consistency is good.
+>
+> I guess the more consistent solution would be to expose a compound
+> control, similar to the video quantization one.
+>
+> struct v4l2_ctrl_jpeg_quantization {
+>        __u8    luma_quantization_matrix[64];
+>        __u8    chroma_quantization_matrix[64];
+> };
 
-> -----Original Message-----
-> From: Fabio Estevam <festevam@gmail.com>
-> Sent: Wednesday, August 29, 2018 3:56 AM
-> To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-> Cc: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> <devicetree@vger.kernel.org>; Rob Herring <robh@kernel.org>; Mark
-> Rutland <mark.rutland@arm.com>; Shawn Guo <shawnguo@kernel.org>;
-> moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE <linux-arm-
-> kernel@lists.infradead.org>; Leo Li <leoyang.li@nxp.com>
-> Subject: Re: [PATCH 1/2][RESEND] ARM: dts: Add big-endian in nor node for
-> ls1021a
-> 
-> On Tue, Aug 28, 2018 at 3:59 AM, Prabhakar Kushwaha
-> <prabhakar.kushwaha@nxp.com> wrote:
-> 
-> > diff --git a/arch/arm/boot/dts/ls1021a-qds.dts
-> > b/arch/arm/boot/dts/ls1021a-qds.dts
-> > index 499f41a2c6f0..923a25760516 100644
-> > --- a/arch/arm/boot/dts/ls1021a-qds.dts
-> > +++ b/arch/arm/boot/dts/ls1021a-qds.dts
-> > @@ -1,5 +1,6 @@
-> >  /*
-> >   * Copyright 2013-2014 Freescale Semiconductor, Inc.
-> > + * Copyright 2018 NXP
-> 
-> This line is unrelated to the big-endian change.
+Makes sense indeed. It also lets us avoid the hassle of setting
+.min/.max/.dims and other array control stuff, since everything is
+already defined by the C struct itself.
 
-Yes, this line is unrelated to this change.
-
-Freeescale has been acquired by NXP in 2016. 
-We want to add NXP copyright wherever freescale's copyright is present. But it is not possible in one-go.
-
-So we are adding NXP copyright as and when any file having freescale's copyright  being touched.  
-
---pk
+Best regards,
+Tomasz
