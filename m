@@ -1,79 +1,94 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: Introduce one new field to set word delay" to the spi tree
-Date: Wed, 29 Aug 2018 12:02:32 +0100 (BST)
-Message-ID: <20180829110232.2D6081124859@debutante.sirena.org.uk>
-References: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
+From: dkota@codeaurora.org
+Subject: Re: [PATCH V3] spi: spi-geni-qcom: Add SPI driver support for GENI
+ based QUP
+Date: Wed, 29 Aug 2018 16:49:28 +0530
+Message-ID: <d751bc90ab1cfce84d6f419400790566@codeaurora.org>
+References: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
+ <20180829002535.GA4224@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
+In-Reply-To: <20180829002535.GA4224@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, baolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: swboyd@chromium.org, broonie@kernel.org, mka@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 2018-08-29 05:55, Rob Herring wrote:
+> On Fri, Aug 24, 2018 at 04:12:15PM +0530, Dilip Kota wrote:
+>> From: Girish Mahadevan <girishm@codeaurora.org>
+>> 
+>> This driver supports GENI based SPI Controller in the Qualcomm SOCs. 
+>> The
+>> Qualcomm Generic Interface (GENI) is a programmable module supporting 
+>> a
+>> wide range of serial interfaces including SPI. This driver supports 
+>> SPI
+>> operations using FIFO mode of transfer.
+>> 
+>> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+>> Signed-off-by: Dilip Kota <dkota@codeaurora.org>
+>> ---
+>> Addressing all the reviewer commets given in Patchset1.
+>> Summerizing all the comments below:
+>> 
+>> 	MAKEFILE: Arrange SPI-GENI driver in alphabetical order
+>> 	Kconfig: Mark SPI_GENI driver dependent on QCOM_GENI_SE
+>> 	Enable SPI core auto runtime pm, and remove runtime pm calls.
+>> 	Remove spi_geni_unprepare_message(), 
+>> spi_geni_unprepare_transfer_hardware()
+>> 	Remove likely/unlikely keywords.
+>> 	Remove get_spi_master() and use dev_get_drvdata()
+>> 	Move request_irq to probe()
+>> 	Mark bus number assignment to -1 as SPI core framework will assign 
+>> dynamically
+>> 	Use devm_spi_register_master()
+>> 	Include platform_device.h instead of of_platform.h
+>> 	Removing macros which are used only once:
+>> 	        #define SPI_NUM_CHIPSELECT     4
+>> 	        #define SPI_XFER_TIMEOUT_MS    250
+>> 	Place Register field definitions next to respective Register 
+>> definitions.
+>> 	Replace int and u32 declerations to unsigned int.
+>> 	Remove Hex numbers in debug prints.
+>> 	Declare mode as u16 in spi_setup_word_len()
+>> 	Remove the labels: setup_fifo_params_exit: 
+>> exit_prepare_transfer_hardware:
+>> 	Declaring struct spi_master as spi everywhere in the file.
+>> 	Calling spi_finalize_current_transfer() for end of transfer.
+>> 	Hard code the SPI controller max frequency instead of reading from 
+>> DTSI node.
+>> 	Spinlock not required, removed it.
+>> 	Removed unrequired error prints.
+>> 	Fix KASAN error in geni_spi_isr().
+>> 	Remove spi-geni-qcom.h
+>> 	Remove inter words delay and CS to Clock toggle delay logic in the 
+>> driver, as of now no clients are using it.
+>> 	Will submit this logic in the next patchset.
+>> 	Use major, minor and step macros to read from hardware version 
+>> register.
+>> 
+>>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |   2 -
+> 
+> Please split to a separate patch and explain why you are removing
+> spi-max-frequency?
 
-   spi: Introduce one new field to set word delay
+Hi Rob Herring,
 
-has been applied to the spi tree at
+In this patch, added changes for Driver not to read the SPI controller 
+Maximum frequency from the device tree. Accordingly I removed it in the 
+device tree documentation file. As both the files need to updated so did 
+in the same patch.
+Could you please let me know the reason for making a separate patch.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+--Dilip
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From eeaceb8b7d1fb64b6030249ca0dd1d902ef3069e Mon Sep 17 00:00:00 2001
-From: Baolin Wang <baolin.wang@linaro.org>
-Date: Thu, 16 Aug 2018 20:54:49 +0800
-Subject: [PATCH] spi: Introduce one new field to set word delay
-
-For some SPI controllers, after each word size (specified by bits_per_word)
-transimission, the hardware need some delay to make sure the slave has enough
-time to receive the whole data.
-
-So introducing one new 'word_delay' field of struct spi_tansfer for slave
-devices to set this inter word delay time.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- include/linux/spi/spi.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index a64235e05321..d698f9db3484 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -711,6 +711,8 @@ extern void spi_res_release(struct spi_controller *ctlr,
-  * @delay_usecs: microseconds to delay after this transfer before
-  *	(optionally) changing the chipselect status, then starting
-  *	the next transfer or completing this @spi_message.
-+ * @word_delay: clock cycles to inter word delay after each word size
-+ *	(set by bits_per_word) transmission.
-  * @transfer_list: transfers are sequenced through @spi_message.transfers
-  * @tx_sg: Scatterlist for transmit, currently not for client use
-  * @rx_sg: Scatterlist for receive, currently not for client use
-@@ -793,6 +795,7 @@ struct spi_transfer {
- 	u8		bits_per_word;
- 	u16		delay_usecs;
- 	u32		speed_hz;
-+	u16		word_delay;
- 
- 	struct list_head transfer_list;
- };
--- 
-2.18.0
+> 
+>>  drivers/spi/Kconfig                                |  12 +
+>>  drivers/spi/Makefile                               |   1 +
+>>  drivers/spi/spi-geni-qcom.c                        | 678 
+>> +++++++++++++++++++++
+>>  4 files changed, 691 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/spi/spi-geni-qcom.c
