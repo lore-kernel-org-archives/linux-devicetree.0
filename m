@@ -1,103 +1,48 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
-Date: Wed, 29 Aug 2018 11:01:52 +0100
-Message-ID: <20180829100152.GL907@e110455-lin.cambridge.arm.com>
-References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
- <20180824122308.3092-1-linus.walleij@linaro.org>
- <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
- <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
- <20180829095822eucas1p1fe4336ca7944765c01fc6ad1e941b8b0~PUn7YujBw3056130561eucas1p1_@eucas1p1.samsung.com>
+From: Jan Tuerk <jan.tuerk@emtrion.com>
+Subject: [PATCH v7 1/4] ARM: dts: imx: Add an cpu0 label for imx6dl devices.
+Date: Wed, 29 Aug 2018 12:07:57 +0200
+Message-ID: <20180829100811.55836-1-jan.tuerk@emtrion.com>
+References: <20180824132617.43975-1-jan.tuerk@emtrion.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180829095822eucas1p1fe4336ca7944765c01fc6ad1e941b8b0~PUn7YujBw3056130561eucas1p1_@eucas1p1.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180824132617.43975-1-jan.tuerk@emtrion.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Russell King <linux@armlinux.org.uk>, "GitAuthor: Jan Tuerk" <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMjksIDIwMTggYXQgMTE6NTg6MjBBTSArMDIwMCwgQW5kcnplaiBIYWpkYSB3
-cm90ZToKPiBPbiAyOC4wOC4yMDE4IDE1OjQ1LCBMaW51cyBXYWxsZWlqIHdyb3RlOgo+ID4gT24g
-TW9uLCBBdWcgMjcsIDIwMTggYXQgMTo1MyBQTSBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1
-bmcuY29tPiB3cm90ZToKPiA+Cj4gPj4gT24gMjQuMDguMjAxOCAxNDoyMywgTGludXMgV2FsbGVp
-aiB3cm90ZToKPiA+Pj4gVGhpcyBhZGRzIGJpbmRpbmdzIGZvciBhIHZpcnR1YWwgZGlzcGxheSB0
-byBiZSB1c2VkIHdpdGggZGlzcGxheXMKPiA+Pj4gaW5zaWRlIGVudGlyZWx5IHZpcnR1YWwgZW52
-aXJvbm1lbnRzIHdoaWNoIGRvIG5vdCBlbXVsYXRlIHRoaW5ncwo+ID4+PiBsaWtlIG1vbml0b3Jz
-IGJ1dCBqdXN0IG5lZWQgdGltaW5nIGluZm9ybWF0aW9uIHRvIGJlIHN1cHBsaWVkIHRvCj4gPj4+
-IGl0cyBkaXNwbGF5IGNvbnRyb2xsZXIuCj4gPj4+Cj4gPj4+IFRoaXMgaXMgaW5zcGlyZWQgYnkg
-ZWFybGllciB3b3JrIGJ5IExpdml1IER1ZGF1Lgo+ID4+IElmIHRoaXMgaXMgcHVyZSB2aXJ0dWFs
-IHRoZW4gaXQgc2hvdWxkIGJlIGNvbm5lY3RlZCB0byBvdGhlciBwdXJlCj4gPj4gdmlydHVhbCBj
-b21wb25lbnRzLgo+ID4gT0sgaXQncyBhIGJpdCBvZiBoYWxmLWhhbGYgYnV0IG91dHNpZGUgb2Yg
-bXkgZ3Jhc3AsIEkgYW0ganVzdCB0cnlpbmcKPiA+IHRvIHN1cHBvcnQgbGVnYWN5IHN5c3RlbXMu
-Cj4gPgo+ID4gVGhlIGRldmljZSB0cmVlIGlzIHRoZXJlOgo+ID4gYXJjaC9hcm02NC9ib290L2R0
-cy9hcm0vcnRzbV92ZS1hZW12OGEuZHRzCj4gPiBhcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9ydHNt
-X3ZlLW1vdGhlcmJvYXJkLmR0c2kKPiA+Cj4gPiBUaGUgbGF0dGVyIGNvbnRhaW5zIHRoZSBDTENE
-IHdoaWNoIGlzIHRoZSBkaXNwbGF5IGRyaXZlci4KPiA+Cj4gPiBJbiBSVFNNLCB3aGljaCBpcyBh
-biBBUk0gcHJvZHVjdCBJIGRvIG5vdCBkZXZlbG9wIGFuZAo+ID4gY2Fubm90IG1ha2UgY2hhbmdl
-cyB0bywgdGhlcmUgaXMgYW4gZW11bGF0ZWQgQ0xDRC4gU28KPiA+IHRoYXQgcGFydCBhcHBlYXIg
-YXMgaWYgaXQgd2FzIHJlYWwgaGFyZHdhcmUuIExpa2UgaW4gUUVNVS4KPiA+Cj4gPiBCdXQgdGhl
-IGRpc3BsYXkgZG9lcyBub3QgaGF2ZSBhbnkgZW11bGF0aW9uLiBUaGUgcmF3Cj4gPiBvdXRwdXQg
-ZnJvbSB0aGUgQ0xDRCBpcyBsYXRjaGVkIG91dCB0byB0aGUgc2NyZWVuLgo+ID4KPiA+IEkgZG8g
-bm90IGtub3cgZXhhY3RseSBrbm93IGhvdyB0aGUgUlRTTSBlbXVsYXRvcgo+ID4gYWN0dWFsbHkg
-d29ya3MsIGJ1dCBJIHN1c3BlY3QgdGhhdCB0aGUgbGl0dGxlIGdyYXBoaWMgd2luZG93Cj4gPiBv
-biB0aGUgc2NyZWVlbiBhZGFwdHMgdG8gd2hhdCBnZXRzIHdyaXR0ZW4gaW50byB0aGUKPiA+IENM
-Q0QgY29udHJvbCByZWdpc3RlcnMsIHNvIGFueXRoaW5nIGdvZXMsIG1vcmUgb3IgbGVzcy4KPiA+
-Cj4gPiBUbyBzYXRpc2Z5IHRoZSBDTENEIHdpdGggc29tZSB0aW1pbmdzIGFuZCByZXNvbHV0aW9u
-LAo+ID4gdGhpcyBicmlkZ2UgZ2l2ZXMgaXQgdGhhdCwgZnJvbSB0aGUgZGV2aWNlIHRyZWUsIGlu
-IGEgd2F5Cj4gPiB0aGF0IGNsZWFybHkgY29udmV5cyB0aGF0ICJ0aGlzIGlzIG5vdCBhIHJlYWwg
-dGhpbmciLgo+ID4KPiA+IFRoZSBvbGQgY29kZSB1c2VzIERQSS4gVGhpcyBpcyBub3QgRFBJLCBu
-b3QgZXZlbiBjbG9zZQo+ID4gdG8gaXQuIEl0IHdvcmtlZCBzaW1wbHkgYmVjYXVzZSBhbGwgdGhl
-IERQSSByZWFsbHkgZG9lcyBpcwo+ID4gd2hhdCB0aGlzIHBhdGNoIGRvZXM6IHByb3ZpZGUgdGlt
-aW5ncy4KPiA+Cj4gPiBCeSBjb250cmFzdCBvbiBRRU1VIEkgaGF2ZSBwYXRjaGVzIHRoZSBlbXVs
-YXRvciB0bwo+ID4gcHJvcGVybHkgcmVwcmVzZW50IHRoZSBJMkMgRERDIGxpbmsgYW5kIHByb3Zp
-ZGUgRURJRAo+ID4gc28gdGhhdCBpcyBhbGwgZmluZS4KPiA+Cj4gPiBJIGNhbm5vdCBwYXRjaCBS
-VFNNIHRvIGVtdWxhdGUgSTJDIGFuZCBEREMuIEl0J3Mgbm90Cj4gPiBvcGVuIHNvdXJjZS4gQnV0
-IHRoZSBkZXZpY2UgdHJlZSBpbiB0aGUga2VybmVsIHN1cHBvcnRzCj4gPiB0aGlzICJtYWNoaW5l
-IiBhbmQgc28sIEkgaGF2ZSB0byBtYWludGFpbiBpdCB3aGVuIG1vZGVybml6bmcKPiA+IHRoZSBm
-YmRldiBkcml2ZXIgdG8gYSBEUk0gZHJpdmVyLgo+ID4KPiA+IEknbSBzb3JyeSBSVFNNIGlzIGhh
-bGYvaGFsZi4gTm90IG15IGZhdWx0LiBJIGNhbid0IGZpeC4uLgo+IAo+IEkgZG8gbm90IGtub3cg
-dGhlIHBsYXRmb3JtLCBzbyBJwqAgSSBoYXZlIGR1ZyBsaXR0bGUgYml0LCBidXQgSSB3YW4ndAo+
-IGNhbGwgaXTCoCB0aG9yb3VnaCByZXNlYXJjaC4gSnVzdCBwbGVhc2UgYmUga2luZCBpZiBJIHdy
-b3RlIHN0aCBzdHVwaWQuCj4gV2hhdCBJIGhhdmUgZm91bmQ6Cj4gMS4gRFRTIHNob3dzIENMQ0Qg
-aXMgcGwxMTEuCj4gMi4gcGwxMTEgZG9jdW1lbnRhdGlvbiBzYXlzIGl0J3Mgb3V0cHV0IGludGVy
-ZmFjZSBzdXBwb3J0cyBTVE4gYW5kIFRGVAo+IHVwIHRvIDI0LWJpdCBidXMuIEkgZG8gbm90IGtu
-b3cgU1ROLCBidXQgVEZUIHNlZW1zIHRvIGJlIGNvbXBhdGlibGUgd2l0aAo+IERQSS4KPiAKPiBJ
-ZiBpdCBpcyBjb3JyZWN0LCBkcGkgcGFuZWwgc2VlbXMgdG8gYmUgT0suIEFuZCBJIHRoaW5rIGl0
-IGlzIGxlc3MKPiBpbXBvcnRhbnQgaG93IHRoZSBlbXVsYXRvciB3b3JrcywgbW9yZSBpbXBvcnRh
-bnQgaXMgdGhhdCBpdCBzaG91bGQKPiBlbXVsYXRlIHBsMTExLCBpbmNsdWRpbmcgaXQncyBvdXRw
-dXQgaW50ZXJmYWNlcy4KClllYWgsIHVuZm9ydHVuYXRlbHkgdGhhdCBzaGlwIGhhcyBzYWlsZWQg
-YSBsb25nIHRpbWUgYWdvLiBUaGUgZW11bGF0b3IKcGVvcGxlIHRob3VnaHQgZW11bGF0aW5nIHRo
-ZSByZWdpc3RlciBpbnRlcmZhY2UgaXMgZ29vZCBlbm91Z2ggYW5kIHRvb2sKbGliZXJ0aWVzIG9u
-IGhvdyB0aGUgYmVoYXZpb3VyIHdhcyAiZW11bGF0ZWQiLiBFbmQgcmVzdWx0OiBvdXRwdXQKaW50
-ZXJmYWNlcyBhcmUgbm90IHRoZSBzYW1lLgoKQmVzdCByZWdhcmRzLApMaXZpdQoKPiAKPiBSZWdh
-cmRzCj4gQW5kcnplago+ID4KPiA+PiBBbmQgb25lIG1vcmUgdGhpbmcsIHlvdSBhcmUgZGVmaW5p
-bmcgdmlydHVhbCBwYW5lbCBidXQgeW91IGFyZSB1c2luZwo+ID4+IGRybV9icmlkZ2UgZnJhbWV3
-b3JrLCB3aHkgbm90IGRybV9wYW5lbD8KPiA+IFRoaXMgd2FzIGRpc2N1c3NlZCBiZWZvcmUgaW4g
-dGhlIHByZXZpb3VzIHBhdGNoIHNldDoKPiA+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE4LUp1bHkvMTgzNTE2Lmh0bWwKPiA+Cj4gPiBFc3NlbnRp
-YWxseSwgaXQncyBiZWNhdXNlIHRoZSBkaXNwbGF5IGRyaXZlciBpcyBqdXN0IGNvbm5lY3RlZAo+
-ID4gdG8gInNvbWV0aGluZyIgbm90IGEgcGFuZWwgYW5kIGEgYnJpZGdlIGlzIGxpa2VseSB0aGUg
-YmVzdCBJCj4gPiBjYW4gY29tZSB1cCB3aXRoIC0gYSBicmlkZ2Ugb3ZlciB0byBhIHZpcnR1YWwg
-ZGlzcGxheS4KPiA+Cj4gPiBBIHBhdGNoIHRvIGFkZCAiVkdBIiwgIlNHQSIgYW5kICJYR0EiIHRv
-IHRoZSBzaW1wbGUgcGFuZWxzCj4gPiB3YXMgTkFDS2VkIChzb3J0IG9mLCBwb2xpdGVseSk6Cj4g
-PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1K
-dWx5LzE4MzY5OC5odG1sCj4gPgo+ID4gQWxzbyBpdCB3YXMgbm90ZWQgdGhhdCBpdCB3b3VsZCBi
-ZSBuaWNlIHRvIGhhdmUgc29tZXRoaW5nIHRoYXQKPiA+IHdvdWxkIG1ha2UgaXQgZWFzeSB0byBj
-aGFuZ2UgcmVzb2x1dGlvbnMgb24gdGhlc2UgdmlydHVhbAo+ID4gZGlzcGxheSB0aGluZ3MuIFZv
-aWxhLgo+IAo+IAo+IAo+ID4KPiA+IFlvdXJzLAo+ID4gTGludXMgV2FsbGVpago+ID4KPiA+Cj4g
-CgotLSAKPT09PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUg
-d29ybGQsICB8CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3Vy
-Y2UgY29kZSEgIC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Adding the label cpu0 allows the adjustment of cpu-parameters
+by reference in overlaying dtsi files in the same way as it
+is possible for imx6q devices.
+
+Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
+---
+ arch/arm/boot/dts/imx6dl.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Unchanged since v1 (rebased)
+
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index f0607eb41df4..2ed10310a7b7 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -15,7 +15,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a9";
+ 			device_type = "cpu";
+ 			reg = <0>;
+-- 
+emtrion GmbH
+Alter Schlachthof 45
+76131 Karlsruhe
+GERMANY
+https://www.emtrion.de
+
+Amtsgericht Mannheim
+HRB 110 300
+Geschäftsführer: Dieter Baur, Ramona Maurer
