@@ -1,84 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
- Amlogic Meson PCIe controller
-Date: Tue, 28 Aug 2018 19:41:22 -0500
-Message-ID: <20180829004122.GA25928@bogus>
-References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
- <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
- <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
- <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Subject: [PATCH v3 0/4] Add EDAC driver for QCOM SoCs
+Date: Tue, 28 Aug 2018 17:42:23 -0700
+Message-ID: <1535503347-20507-1-git-send-email-vnkgutta@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hanjie Lin <hanjie.lin@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+To: evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, bp@alien8.de, swboyd@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 04:55:20PM +0800, Hanjie Lin wrote:
-> 
-> 
-> On 2018/8/24 16:22, Jerome Brunet wrote:
-> > On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
-> >> From: Yue Wang <yue.wang@amlogic.com>
-> >>
-> >> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-> >> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-> >> controller.
-> >>
-> >> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> >> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-> >> ---
-> >>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
-> >>  1 file changed, 63 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> >> new file mode 100644
-> >> index 0000000..8a831d1
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> >> @@ -0,0 +1,63 @@
-> >> +Amlogic Meson AXG DWC PCIE SoC controller
-> >> +
-> >> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-> >> +It shares common functions with the PCIe DesignWare core driver and
-> >> +inherits common properties defined in
-> >> +Documentation/devicetree/bindings/pci/designware-pci.txt.
-> >> +
-> >> +Additional properties are described here:
-> >> +
-> >> +Required properties:
-> >> +- compatible:
-> >> +	should contain "amlogic,axg-pcie" to identify the core.
-> >> +- reg:
-> >> +	Should contain the configuration address space.
-> >> +- reg-names: Must be
-> >> +	- "elbi"	External local bus interface registers
-> >> +	- "cfg"		Meson specific registers
-> >> +	- "config"	PCIe configuration space
-> >> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
-> >> +- clocks: Must contain an entry for each entry in clock-names.
-> >> +- clock-names: Must include the following entries:
-> >> +	- "pclk"       PCIe GEN 100M PLL clock
-> >> +	- "port"       PCIe_x(A or B) RC clock gate
-> >> +	- "general"    PCIe Phy clock
-> >> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-> >> +- resets: phandle to the reset lines.
-> >> +- reset-names: must contain "phy" and "peripheral"
-> >> +       - "port" Port A or B reset
-> >> +       - "apb" APB reset
-> > 
-> > The above description is not coherent (phy <=> port)
-> > 
-> 
-> Yes, this should be port and apb here.
-> We'll integrate phy driver into ctrl driver, and move phy reset to here also.
+This series implements EDAC driver for QCOM SoCs. As of now, this driver
+supports EDAC for Last Level Cache Controller (LLCC). LLCC EDAC driver is
+to detect and report single and double bit errors on Last Level Cache
+Controller (LLCC) cache. Interrupts are triggered when the errors happen
+in the cache, the driver handles those interrupts and dumps the syndrome
+registers.
 
-Why? That's the wrong thing to do if they are separate h/w blocks. You 
-can do whatever you like in the drivers, but the DT should reflect the 
-h/w.
+The driver functionality is implemented in:
+qcom_edac.c : This platform driver registers to edac framework and
+handles the single and double bit errors in cache by registering
+interrupt handlers.
 
-Rob
+llcc-slice.c: It invokes the llcc edac driver and passes platform
+data to it.
+
+This patchset depends on the LLCC driver, which is part of 4.19 release.
+Link: https://patchwork.kernel.org/patch/10422531/
+Link: http://lists-archives.com/linux-kernel/29157082-dt-bindings-documentation-for-qcom-llcc.html
+
+Patch wise description given below:
+
+Patch 1 adds the broadcast base regmap for broadcast writes in llcc.
+
+Patch 2 adds the required changes to register edac driver from llcc driver.
+
+Patch 3 adds the EDAC driver support for QCOM SoCS.
+
+Patch 4 updates the dt bindings of llcc.
+
+Changes since v2:
+  * Modified the edac driver and Kconfig
+    -  removed unnecessary header files, typecasting and redundant comments.
+    -  Changed the initialization of reg_data datastructure to static, 
+       Also updated the llcc_edac_reg_data member names and datatypes.
+    -  Removed "EDAC_QCOM_LLCC_PANIC_ON_UE" Kconfig variable
+
+Changes since v1:
+  * Modified the edac driver
+    - Removed duplicate functions that are used to dump the syndrome registers,
+      replaced that with a common function and a reg_data datastructure.
+    - Removed structure containing function pointers.
+    - Addressed comments on error handling to clear the interrupt status.
+  * updated Kconfig
+
+Changes since v0:
+  * Added EDAC_QCOM config and updated the driver
+  * Addressed comments related to indentation and other minor ones
+
+Channagoud Kadabi (1):
+  drivers: edac: Add EDAC driver support for QCOM SoCs
+
+Venkata Narendra Kumar Gutta (3):
+  drivers: soc: Add broadcast base for Last Level Cache Controller
+    (LLCC)
+  drivers: soc: Add support to register LLCC EDAC driver
+  dt-bindings: msm: Update documentation of qcom,llcc
+
+ .../devicetree/bindings/arm/msm/qcom,llcc.txt      |  19 +-
+ MAINTAINERS                                        |   8 +
+ drivers/edac/Kconfig                               |  22 ++
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/qcom_edac.c                           | 421 +++++++++++++++++++++
+ drivers/soc/qcom/llcc-slice.c                      |  73 ++--
+ include/linux/soc/qcom/llcc-qcom.h                 |  30 +-
+ 7 files changed, 546 insertions(+), 28 deletions(-)
+ create mode 100644 drivers/edac/qcom_edac.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
