@@ -1,152 +1,94 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
-Date: Wed, 29 Aug 2018 09:51:55 +0100
-Message-ID: <20180829085155.GJ907@e110455-lin.cambridge.arm.com>
-References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
- <20180824122308.3092-1-linus.walleij@linaro.org>
- <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
- <20180828143546.GG907@e110455-lin.cambridge.arm.com>
- <20180829081637eucas1p21ebead8d65d823a3cb2bec8839600573~PTPFKjnEJ1080610806eucas1p23@eucas1p2.samsung.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v7 05/24] clocksource: Add a new timer-ingenic driver
+Date: Wed, 29 Aug 2018 11:10:42 +0200
+Message-ID: <62569807-7be8-51df-4683-82392224432d@linaro.org>
+References: <20180821171635.22740-1-paul@crapouillou.net>
+ <20180821171635.22740-6-paul@crapouillou.net>
+ <20180828172305.bohg6cggnzm3wsuj@pburton-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180829081637eucas1p21ebead8d65d823a3cb2bec8839600573~PTPFKjnEJ1080610806eucas1p23@eucas1p2.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, dri-devel@lists.freedesktop.org, Ryan Harkin <ryan.harkin@linaro.org>, robh+dt@kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180828172305.bohg6cggnzm3wsuj@pburton-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Burton <paul.burton@mips.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Jonathan Corbet <corbet@lwn.net>, od@zcrc.me, Mathieu Malaterre <malat@debian.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMjksIDIwMTggYXQgMTA6MTY6MzRBTSArMDIwMCwgQW5kcnplaiBIYWpkYSB3
-cm90ZToKPiBPbiAyOC4wOC4yMDE4IDE2OjM1LCBMaXZpdSBEdWRhdSB3cm90ZToKPiA+IEhpIEFu
-ZHJ6ZWosCj4gPgo+ID4gQ2hpcnBpbmcgaW4sIGFzIGl0IHdhcyBvcmlnaW5hbGx5IG15IHdvcmsg
-dGhhdCBMaW51cyBpcyBhZG9wdGluZy4KPiA+Cj4gPiBPbiBNb24sIEF1ZyAyNywgMjAxOCBhdCAw
-MTo1MzowMFBNICswMjAwLCBBbmRyemVqIEhhamRhIHdyb3RlOgo+ID4+IE9uIDI0LjA4LjIwMTgg
-MTQ6MjMsIExpbnVzIFdhbGxlaWogd3JvdGU6Cj4gPj4+IFRoaXMgYWRkcyBiaW5kaW5ncyBmb3Ig
-YSB2aXJ0dWFsIGRpc3BsYXkgdG8gYmUgdXNlZCB3aXRoIGRpc3BsYXlzCj4gPj4+IGluc2lkZSBl
-bnRpcmVseSB2aXJ0dWFsIGVudmlyb25tZW50cyB3aGljaCBkbyBub3QgZW11bGF0ZSB0aGluZ3MK
-PiA+Pj4gbGlrZSBtb25pdG9ycyBidXQganVzdCBuZWVkIHRpbWluZyBpbmZvcm1hdGlvbiB0byBi
-ZSBzdXBwbGllZCB0bwo+ID4+PiBpdHMgZGlzcGxheSBjb250cm9sbGVyLgo+ID4+Pgo+ID4+PiBU
-aGlzIGlzIGluc3BpcmVkIGJ5IGVhcmxpZXIgd29yayBieSBMaXZpdSBEdWRhdS4KPiA+PiBJZiB0
-aGlzIGlzIHB1cmUgdmlydHVhbCB0aGVuIGl0IHNob3VsZCBiZSBjb25uZWN0ZWQgdG8gb3RoZXIg
-cHVyZQo+ID4+IHZpcnR1YWwgY29tcG9uZW50cy4KPiA+IEFueSByZWFzb24gd2h5IHlvdSB0aGlu
-ayB0aGlzIGlzIHRoZSBvbmx5IHdheSB0aGlzIHNob3VsZCBiZSBjb25uZWN0ZWQ/Cj4gCj4gSSB0
-aGluayBwdXJlIHZpcnR1YWwgc2luayBkZXZpY2UgY2Fubm90IGJlIGNvbm5lY3RlZCB0byByZWFs
-IHBpbnMgb2YKPiBzb3VyY2UgZGV2aWNlIDopCgpJIGd1ZXNzIEkgaGF2ZSBhIHdpZGVyIHZpZXcg
-b24gd2hhdCBhIHNvdXJjZSBkZXZpY2UgY2FuIGJlLiA6KQoKPiBFaXRoZXIgc291cmNlIGV4cG9z
-ZXMgc29tZSB2aXJ0dWFsIGludGVyZmFjZXMgZWl0aGVyIGl0cyBvdXRwdXQgd2lsbCBnbwo+IHRv
-IC9kZXYvbnVsbCwgaXQgd291bGQgYmUgZ29vZCB0byBrbm93IHdoaWNoIGNhc2UgYXV0aG9yIHdh
-bnQgdG8gYWRkcmVzcwo+IHdpdGggdGhlc2UgcGF0Y2hlcy4KClR3byBzY2VuYXJpb3Mgd2hlcmUg
-dGhpcyBpcyB1c2VmdWw6IGluIGFuIGVtdWxhdG9yIChsaWtlIFFFTVUgb3IgQXJtJ3MKUlRTTSkg
-dGhlIENSVEMgZGV2aWNlIGlzIGJlaW5nIGVtdWxhdGVkLCBidXQgdGhlIHJlc3Qgb2YgdGhlIGRp
-c3BsYXkKY2hhaW4gaXMgYmVpbmcgc2hvcnRjdXQgYnkgcmVhZGluZyB0aGUgZnJhbWVidWZmZXIg
-ZGF0YSBhc3NpZ25lZCB0byB0aGUKQ1JUQyBhbmQgZGlzcGxheWluZyBpdCBkaXJlY3RseSAoZWl0
-aGVyIGJ5IHVzaW5nIGFuIFgxMSB3aW5kb3csIG9yIGJ5CnN0cmVhbWluZyBpdCBvdXQgdG8gYSBW
-TkMgY2xpZW50KS4gT3IgeW91IGhhdmUgc29tZSByZWFsIGhhcmR3YXJlLCB3aGVyZQp0aGUgcmVh
-bCBwaW5zIGFyZSBjb25uZWN0ZWQgdG8gYSBicmlkZ2UsIGJ1dCB0aGUgYnJpZGdlIGlzIHVuZGVy
-IHRoZQpjb250cm9sIG9mIHRoZSBmaXJtd2FyZSBhbmQgY2FuIG9ubHkgYmUgY29uZmlndXJlZCBi
-eSBpdCwgd2l0aG91dCBhbnkKQVBJIHRvIGludGVyYWN0IHdpdGggZnJvbSB0aGUga2VybmVsIHNp
-ZGUuIEluIHRoYXQgY2FzZSB0aGUgYmVzdCB5b3UgY2FuCmRvIGlzIHRvIHB1dCBpbiB0aGUgZGV2
-aWNlIHRyZWUgYSBkZXNjcmlwdGlvbiBvZiB3aGF0IHRoZSBmaXJtd2FyZSBkaWQKYW5kIHVzZSB0
-aGF0LgoKPiAKPiA+IE15IG9yaWdpbmFsIGltcGxlbWVudGF0aW9uIChhbmQgSSBoYXZlbid0IHNl
-ZW4gYW55dGhpbmcgaW4gdGhpcyBwYXRjaAo+ID4gdGhhdCB3b3VsZCBpbnZhbGlkYXRlIGl0KSBh
-c3N1bWVkIHRoYXQgdGhlIHZpcnR1YWwgYnJpZGdlIGNhbiBiZSB1c2VkIGJ5Cj4gPiBhbnkgZHJp
-dmVyIHRoYXQgdXNlcyB0aGUgY29tcG9uZW50IGZyYW1ld29yay4gSGlkaW5nIGltcGxlbWVudGF0
-aW9uCj4gPiBkZXRhaWxzIGlzIG9uZSBvZiB0aGUgYmVuZWZpdHMgb2YgdXNpbmcgdGhlIGNvbXBv
-bmVudCBmcmFtZXdvcmssIHNvIEkKPiA+IGRvbid0IHNlZSB3aGF0IHlvdSBnYWluIGJ5IHJlc3Ry
-aWN0aW5nIGNvbm5lY3Rpb24gdG8gb25seSBvdGhlciBwdXJlCj4gPiB2aXJ0dWFsIGNvbXBvbmVu
-dHMuCj4gCj4gSSBzdXBwb3NlIHRoZXNlIHBhdGNoZXMgd2VyZSBjcmVhdGVkIGZvciBzb21lIHJl
-YXNvbiwgc28gbW9yZQo+IGV4cGxhbmF0aW9uIHdpbGwgYmUgaGVscGZ1bC4KPiAKPiA+Cj4gPj4g
-V2hhdCB3aWxsIGJlIHRoaXMgdmlydHVhbCBicmlkZ2UgYXR0YWNoZWQgdG8/IEkgZXhwZWN0IHNv
-bWUgdmlydHVhbAo+ID4+IGVuY29kZXIsIHZpcnR1YWwgY3J0Yz8gSWYgeWVzIHRoZW4gd2h5IGRv
-bid0IHlvdSBjcmVhdGUgd2hvbGUgdmlydHVhbAo+ID4+IGRybSBwaXBlbGluZSBpbiBvbmUgcGF0
-Y2hzZXQ/Cj4gPiBUaGlzIGNvbW1lbnQgaXMgcHJvYmFibHkgbW9yZSByZWxldmFudCB0byBwYXRj
-aCAyLzIsIGJ1dCBJIGFncmVlIHRoYXQKPiA+IGl0IHByb2JhYmx5IG5lZWRzIGEgdmlydHVhbCBl
-bmNvZGVyLiBBcyBmb3IgdGhlIENSVEMsIGl0IHNob3VsZCB3b3JrCj4gPiB3aXRoIGFueSByZWFs
-IERSTSBkcml2ZXIsIEFGQUlDVC4KPiAKPiBJIGRvIG5vdCB0aGluayBzbywgSSBndWVzcyBpdCBj
-b3VsZCB3b3JrIHdpdGggc291cmNlcyB3aGljaCBkbyBub3QKPiBjb21tdW5pY2F0ZSB3aXRoIHNp
-bmtzLCBpZS4gdGhleSBoYXZlIG9ubHkgb3V0cHV0IHBpbnMgLSBpbiBzdWNoIGNhc2UKPiB2aWRl
-byBzdHJlYW0gd2lsbCBub3QgYmUgdmlzaWJsZSwgaXMgdGhpcyBzb21ldGhpbmcgd2Ugd2FudD8g
-V2h5Pwo+IEluIGNhc2Ugc291cmNlIGV4cGVjdHMgc29tZSBzaWduYWxzIG9uIHBpbnMgY29ubmVj
-dGVkIHRvIHNpbmssIGl0IGNvdWxkCj4gYmUgcHJvYmxlbWF0aWMuCgpJdCBpcyBub3QgYWJvdXQg
-aG93IHRoZSBoYXJkd2FyZSBpcyBjb25uZWN0ZWQsIGl0IGlzIGFib3V0IGRpc2NvdmVyYWJpbGl0
-eQphbmQgdGhlIGFiaWxpdHkgdG8gY29udHJvbCBzb21lIG9mIHRoZSBwYXJ0cyBpbiB0aGUgY2hh
-aW4uIFdoZW4gdGhhdCBhYmlsaXR5CmlzIG1pc3NpbmcsIHlvdSBhcmUgZm9yY2VkIHRvIGVtdWxh
-dGUgdGhlIHBhcnRzIHdpdGggYSAidmlydHVhbCIgYnJpZGdlLgoKQmVzdCByZWdhcmRzLApMaXZp
-dQoKPiAKPiA+Cj4gPj4gQ291bGQgeW91IGRlc2NyaWJlIG1vcmUgd2hhdCBkbyB5b3Ugd2FudCB0
-byBkby4KPiA+IEhlIHdhbnRzIHRvIGVuYWJsZSB0aGUgUEwxMTAgRFJNIGRyaXZlciBvbiBzeXN0
-ZW1zIHRoYXQgbGFjayBhIHdheSBvZgo+ID4gZGV0ZWN0aW5nIHRoZSBhY3R1YWwgZW5jb2RlciBh
-bmQgY29ubmVjdG9yIGJlaW5nIHVzZWQgKGVpdGhlciBiZWNhdXNlCj4gPiB0aGVyZSBpcyBub25l
-IGFuZCB0aGV5IGFyZSBlbXVsYXRlZCBpbiBzb2Z0d2FyZSB0aGF0IGRvZXNuJ3QgbWltaWMgdGhl
-Cj4gPiBIVyBiZWhhdmlvdXIsIG9yIGJlY2F1c2UgdGhlIHdheSB5b3UgYWNjZXNzIHRoZSBIVyBp
-cyBkb25lIGluIGEgd2F5IHRoYXQKPiA+IGRvZXNuJ3QgbW9kZWwgZWFzaWx5IGluIHRoZSBjdXJy
-ZW50IERSTSBmcmFtZXdvcms6IGJ5IGZpcm13YXJlLCBmb3IKPiA+IGV4YW1wbGUpLgo+IAo+IEFu
-ZCBmaW5hbGx5IGhlcmUgaXMgcmVhbCByZWFzb24gdG8gY29wZSB3aXRoLiBTaW5jZSBMaW51cyBh
-bHNvIGV4cGxhaW5lZAo+IGl0IGluIHNlcGFyYXRlIG1haWwgSSB3aWxsIGNvbnRpbnVlIHRoZSB0
-aHJlYWQgd2l0aCBhbnN3ZXJpbmcgdG8gaGlzIG1haWwuCj4gCj4gCj4gUmVnYXJkcwo+IEFuZHJ6
-ZWoKPiAKPiA+Cj4gPiBCZXN0IHJlZ2FyZHMsCj4gPiBMaXZpdQo+ID4KPiA+PiBBbmQgb25lIG1v
-cmUgdGhpbmcsIHlvdSBhcmUgZGVmaW5pbmcgdmlydHVhbCBwYW5lbCBidXQgeW91IGFyZSB1c2lu
-Zwo+ID4+IGRybV9icmlkZ2UgZnJhbWV3b3JrLCB3aHkgbm90IGRybV9wYW5lbD8KPiA+Pgo+ID4+
-IFJlZ2FyZHMKPiA+PiBBbmRyemVqCj4gPj4KPiA+Pj4gQ2M6IExpdml1IER1ZGF1IDxMaXZpdS5E
-dWRhdUBhcm0uY29tPgo+ID4+PiBDYzogUnlhbiBIYXJraW4gPHJ5YW4uaGFya2luQGxpbmFyby5v
-cmc+Cj4gPj4+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGlu
-YXJvLm9yZz4KPiA+Pj4gLS0tCj4gPj4+ICAuLi4vZGlzcGxheS9icmlkZ2UvdmlydHVhbC1kaXNw
-bGF5LWJyaWRnZS50eHQgfCA2MiArKysrKysrKysrKysrKysrKysrCj4gPj4+ICAxIGZpbGUgY2hh
-bmdlZCwgNjIgaW5zZXJ0aW9ucygrKQo+ID4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS92aXJ0dWFsLWRpc3BsYXkt
-YnJpZGdlLnR4dAo+ID4+Pgo+ID4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3ZpcnR1YWwtZGlzcGxheS1icmlkZ2UudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3ZpcnR1YWwt
-ZGlzcGxheS1icmlkZ2UudHh0Cj4gPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4+IGluZGV4
-IDAwMDAwMDAwMDAwMC4uZWE0ZjVhOTFhYjk0Cj4gPj4+IC0tLSAvZGV2L251bGwKPiA+Pj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3ZpcnR1
-YWwtZGlzcGxheS1icmlkZ2UudHh0Cj4gPj4+IEBAIC0wLDAgKzEsNjIgQEAKPiA+Pj4gK1ZpcnR1
-YWwgRGlzcGxheSBCcmlkZ2UKPiA+Pj4gKwo+ID4+PiArVGhpcyByZXByZXNlbnRzIGEgZGlzcGxh
-eSB0aGF0IGlzIGNvbnRhaW5lZCB3aXRoaW4gYW4gZW11bGF0ZWQKPiA+Pj4gK2Vudmlyb25tZW50
-Lgo+ID4+PiArCj4gPj4+ICtUaGlzIG1lYW5zIHRoYXQgdGhlIGRpc3BsYXkgZW5naW5lIG1haW5s
-eSBleHBlY3RzIHNvbWUgdGltaW5nCj4gPj4+ICtwYXJhbWV0ZXJzIHRvIGJlIHdyaXR0ZW4gaW50
-byBpdCwgYW5kIGFmdGVyIHRoYXQgdGhlIGVtdWxhdG9yIHdpbGwKPiA+Pj4gK3Jlc3BvbmQgYnkg
-Y3JlYXRpbmcgYSB2aXJ0dWFsIGRpc3BsYXkgd2l0aCB0aGUgcmVxdWVzdGVkCj4gPj4+ICtyZXNv
-bHV0aW9uIGNoYXJhY3RlcmlzdGljcy4KPiA+Pj4gKwo+ID4+PiArQXMgdGhlIG9wZXJhdGluZyBz
-eXN0ZW0gY2Fubm90ICJkZXRlY3QiIHN1Y2ggYSBkaXNwbGF5LCByYXRoZXIgdGhlCj4gPj4+ICtl
-bXVsYXRvciB3aWxsIHJlc3BvbmQgdG8gd2hhdCB0aGUgY29udHJvbGxlciBvdXRwdXRzLCBhCj4g
-Pj4+ICtjaGlja2VuLWFuZC1lZ2cgcHJvYmxlbSBuZWVkcyB0byBiZSBzb2x2ZWQ6IHRoZSByZXNv
-bHV0aW9uIGFuZAo+ID4+PiArdGltaW5nIGNoYXJhY3RlcmlzdGljcyBuZWVkIHRvIGJlIGRlZmlu
-ZWQgYW5kIHNldCB1cCBzb21ld2hlcmUuCj4gPj4+ICsKPiA+Pj4gK1RoZSB2aXJ0dWFsIGRpc3Bs
-YXkgYnJpZGdlIHNvbHZlcyB0aGlzIGJ5IGRlZmluaW5nIGEgYnJpZGdlIHdpdGgKPiA+Pj4gK2Fs
-bCB0aW1pbmcgY2hhcmFjdGVyaXN0aWNzIGVuY29kZWQgaW50byB0aGUgZGV2aWNlIHRyZWUgbm9k
-ZS4KPiA+Pj4gKwo+ID4+PiArUmVxdWlyZWQgcHJvcGVyaWVzOgo+ID4+PiArLSBjb21wYXRpYmxl
-OiBzaGFsbCBiZSAidmlydHVhbC1kaXNwbGF5LWJyaWRnZSIKPiA+Pj4gKwo+ID4+PiArUmVxdWly
-ZWQgc3Vibm9kZXM6Cj4gPj4+ICstIGRpc3BsYXktdGltaW5nczogY29udGFpbnMgaW4gdHVybiBh
-IGRpc3BsYXkgdGltaW5nIG5vZGUKPiA+Pj4gKyAgc2VlIGRpc3BsYXktdGltaW5nLnR4dAo+ID4+
-PiArLSBwb3J0czogY29udGFpbnMgdGhlIGRpc3BsYXkgcG9ydHMsIHNlZSBtZWRpYS92aWRlby1p
-bnRlcmZhY2VzLnR4dAo+ID4+PiArCj4gPj4+ICtFeGFtcGxlOgo+ID4+PiArCj4gPj4+ICticmlk
-Z2Ugewo+ID4+PiArCWNvbXBhdGlibGUgPSAidmlydHVhbC1kaXNwbGF5LWJyaWRnZSI7Cj4gPj4+
-ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4+ICsJI3NpemUtY2VsbHMgPSA8MD47Cj4gPj4+
-ICsKPiA+Pj4gKwlkaXNwbGF5LXRpbWluZ3Mgewo+ID4+PiArCQkvKiBTb21lIHN0YW5kYXJkIFZH
-QSB0aW1pbmcgKi8KPiA+Pj4gKwkJdGltaW5nMCB7Cj4gPj4+ICsJCQljbG9jay1mcmVxdWVuY3kg
-PSA8MjM3NTA+Owo+ID4+PiArCQkJaGFjdGl2ZSA9IDw2NDA+Owo+ID4+PiArCQkJdmFjdGl2ZSA9
-IDw0ODA+Owo+ID4+PiArCQkJaGZyb250LXBvcmNoID0gPDQ4PjsKPiA+Pj4gKwkJCWhiYWNrLXBv
-cmNoID0gPDE2PjsKPiA+Pj4gKwkJCWhzeW5jLWxlbiA9IDw5Nj47Cj4gPj4+ICsJCQl2ZnJvbnQt
-cG9yY2ggPSA8MzM+Owo+ID4+PiArCQkJdmJhY2stcG9yY2ggPSA8OT47Cj4gPj4+ICsJCQl2c3lu
-Yy1sZW4gPSA8Mz47Cj4gPj4+ICsJCQl2cmVmcmVzaCA9IDw2MD47Cj4gPj4+ICsJCX07Cj4gPj4+
-ICsJfTsKPiA+Pj4gKwo+ID4+PiArCXBvcnRzIHsKPiA+Pj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47Cj4gPj4+ICsJCSNzaXplLWNlbGxzID0gPDA+Owo+ID4+PiArCj4gPj4+ICsJCXBvcnRAMCB7
-Cj4gPj4+ICsJCQlyZWcgPSA8MD47Cj4gPj4+ICsKPiA+Pj4gKwkJCWRpc3BsYXlfYnJpZGdlX2lu
-OiBlbmRwb2ludCB7Cj4gPj4+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZmb28+Owo+ID4+PiAr
-CQkJfTsKPiA+Pj4gKwkJfTsKPiA+Pj4gKwl9Owo+ID4+PiArfTsKPiA+Pgo+IAoKLS0gCj09PT09
-PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtlIHRvIHwKfCBmaXggdGhlIHdvcmxkLCAgfAp8
-IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1lIHRoZSAgIHwKIFwgc291cmNlIGNvZGUhICAv
-CiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOODhClfL8KvCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 28/08/2018 19:23, Paul Burton wrote:
+> Hi Daniel & Thomas,
+> 
+> On Tue, Aug 21, 2018 at 07:16:16PM +0200, Paul Cercueil wrote:
+>> This driver handles the TCU (Timer Counter Unit) present on the Ingenic
+>> JZ47xx SoCs, and provides the kernel with a system timer, and optionally
+>> with a clocksource and a sched_clock.
+>>
+>> It also provides clocks and interrupt handling to client drivers.
+>>
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>
+>> Notes:
+>>      v2: Use SPDX identifier for the license
+>>     
+>>      v3: - Move documentation to its own patch
+>>          - Search the devicetree for PWM clients, and use all the TCU
+>>     	   channels that won't be used for PWM
+>>     
+>>      v4: - Add documentation about why we search for PWM clients
+>>          - Verify that the PWM clients are for the TCU PWM driver
+>>     
+>>      v5: Major overhaul. Too many changes to list. Consider it's a new
+>>          patch.
+>>     
+>>      v6: - Add two API functions ingenic_tcu_request_channel and
+>>            ingenic_tcu_release_channel. To be used by the PWM driver to
+>>            request the use of a TCU channel. The driver will now dynamically
+>>            move away the system timer or clocksource to a new TCU channel.
+>>          - The system timer now defaults to channel 0, the clocksource now
+>>            defaults to channel 1 and is no more optional. The
+>>            ingenic,timer-channel and ingenic,clocksource-channel devicetree
+>>            properties are now gone.
+>>          - Fix round_rate / set_rate not calculating the prescale divider
+>>            the same way. This caused problems when (parent_rate / div) would
+>>            give a non-integer result. The behaviour is correct now.
+>>          - The clocksource clock is turned off on suspend now.
+>>     
+>>      v7: Fix section mismatch by using builtin_platform_driver_probe()
+>>
+>>  drivers/clocksource/Kconfig         |   10 +
+>>  drivers/clocksource/Makefile        |    1 +
+>>  drivers/clocksource/ingenic-timer.c | 1124 +++++++++++++++++++++++++++++++++++
+>>  drivers/clocksource/ingenic-timer.h |   15 +
+>>  include/linux/mfd/ingenic-tcu.h     |    3 +
+>>  5 files changed, 1153 insertions(+)
+>>  create mode 100644 drivers/clocksource/ingenic-timer.c
+>>  create mode 100644 drivers/clocksource/ingenic-timer.h
+>> %
+> 
+> How is this & patch 6 of the series looking to you from a
+> drivers/clocksource perspective?
+
+The presence of completion, mutexes, etc ... makes me think the driver
+is not going to the right direction.
+
+I have to review the drivers again but it will take some time because
+I'm returning from vacations and there are a trillion emails to sort out :/
+
+> If you're happy with them it'd be great to get an ack so I can take this
+> through the MIPS tree with the rest of the series. The alternative would
+> be to get the drivers in first then the MIPS bits in the next release
+> cycle.
+> 
+> Thanks,
+>     Paul
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
