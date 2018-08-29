@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v5 03/18] dmaengine: dma-jz4780: Avoid hardcoding number of channels
-Date: Wed, 29 Aug 2018 23:32:45 +0200
-Message-ID: <20180829213300.22829-4-paul@crapouillou.net>
+Subject: [PATCH v5 09/18] dmaengine: dma-jz4780: Add support for the JZ4725B SoC
+Date: Wed, 29 Aug 2018 23:32:51 +0200
+Message-ID: <20180829213300.22829-10-paul@crapouillou.net>
 References: <20180829213300.22829-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180829213300.22829-1-paul@crapouillou.net>
@@ -10,147 +10,89 @@ To: Vinod Koul <vkoul@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burt
 Cc: od@zcrc.me, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-As part of the work to support various other Ingenic JZ47xx SoC versions,
-which don't feature the same number of DMA channels per core, we now
-deduce the number of DMA channels available from the devicetree
-compatible string.
+The JZ4725B has one DMA core starring six DMA channels.
+As for the JZ4770, each DMA channel's clock can be enabled with
+a register write, the difference here being that once started, it
+is not possible to turn it off.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Mathieu Malaterre <malat@debian.org>
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 ---
 
 Notes:
-     v2: - don't hardcode jz_version to ID_JZ4780 when not probed from DT,
-           because it cannot happen
-         - Put SoC-specific data into a jz4780_dma_soc_data structure
+     v2: - Add comments about channel enabling/disabling
+         - The documentation update is now in patch 01/17
     
      v3: No change
     
-     v4: Remove jz_version; pass the jz4780_dma_soc_data structure pointer
-         as devicetree match data, and use device_get_match_data().
+     v4: Drop the SoC version ID and use the 'flags' field of the
+         jz4780_dma_soc_data structure
     
      v5: No change
 
- drivers/dma/dma-jz4780.c | 34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+ drivers/dma/dma-jz4780.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 987899610b46..9ec22cf15a33 100644
+index 2d194dfa697e..565971c2a33c 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -16,6 +16,7 @@
- #include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/of_dma.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-@@ -23,8 +24,6 @@
- #include "dmaengine.h"
- #include "virt-dma.h"
+@@ -94,6 +94,7 @@
+ #define JZ_SOC_DATA_ALLOW_LEGACY_DT	BIT(0)
+ #define JZ_SOC_DATA_PROGRAMMABLE_DMA	BIT(1)
+ #define JZ_SOC_DATA_PER_CHAN_PM		BIT(2)
++#define JZ_SOC_DATA_NO_DCKES_DCKEC	BIT(3)
  
--#define JZ_DMA_NR_CHANNELS	32
--
- /* Global registers. */
- #define JZ_DMA_REG_DMAC		0x1000
- #define JZ_DMA_REG_DIRQP	0x1004
-@@ -135,14 +134,19 @@ struct jz4780_dma_chan {
- 	unsigned int curr_hwdesc;
- };
- 
-+struct jz4780_dma_soc_data {
-+	unsigned int nb_channels;
-+};
-+
- struct jz4780_dma_dev {
- 	struct dma_device dma_device;
- 	void __iomem *base;
- 	struct clk *clk;
- 	unsigned int irq;
-+	const struct jz4780_dma_soc_data *soc_data;
- 
- 	uint32_t chan_reserved;
--	struct jz4780_dma_chan chan[JZ_DMA_NR_CHANNELS];
-+	struct jz4780_dma_chan chan[];
- };
- 
- struct jz4780_dma_filter_data {
-@@ -648,7 +652,7 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
- 
- 	pending = jz4780_dma_readl(jzdma, JZ_DMA_REG_DIRQP);
- 
--	for (i = 0; i < JZ_DMA_NR_CHANNELS; i++) {
-+	for (i = 0; i < jzdma->soc_data->nb_channels; i++) {
- 		if (!(pending & (1<<i)))
- 			continue;
- 
-@@ -728,7 +732,7 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
- 	data.channel = dma_spec->args[1];
- 
- 	if (data.channel > -1) {
--		if (data.channel >= JZ_DMA_NR_CHANNELS) {
-+		if (data.channel >= jzdma->soc_data->nb_channels) {
- 			dev_err(jzdma->dma_device.dev,
- 				"device requested non-existent channel %u\n",
- 				data.channel);
-@@ -755,6 +759,7 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
- static int jz4780_dma_probe(struct platform_device *pdev)
+ /**
+  * struct jz4780_dma_hwdesc - descriptor structure read by the DMA controller.
+@@ -208,14 +209,23 @@ static inline void jz4780_dma_ctrl_writel(struct jz4780_dma_dev *jzdma,
+ static inline void jz4780_dma_chan_enable(struct jz4780_dma_dev *jzdma,
+ 	unsigned int chn)
  {
- 	struct device *dev = &pdev->dev;
-+	const struct jz4780_dma_soc_data *soc_data;
- 	struct jz4780_dma_dev *jzdma;
- 	struct jz4780_dma_chan *jzchan;
- 	struct dma_device *dd;
-@@ -766,10 +771,17 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	jzdma = devm_kzalloc(dev, sizeof(*jzdma), GFP_KERNEL);
-+	soc_data = device_get_match_data(dev);
-+	if (!soc_data)
-+		return -EINVAL;
+-	if (jzdma->soc_data->flags & JZ_SOC_DATA_PER_CHAN_PM)
+-		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKES, BIT(chn));
++	if (jzdma->soc_data->flags & JZ_SOC_DATA_PER_CHAN_PM) {
++		unsigned int reg;
 +
-+	jzdma = devm_kzalloc(dev, sizeof(*jzdma)
-+				+ sizeof(*jzdma->chan) * soc_data->nb_channels,
-+				GFP_KERNEL);
- 	if (!jzdma)
- 		return -ENOMEM;
- 
-+	jzdma->soc_data = soc_data;
- 	platform_set_drvdata(pdev, jzdma);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -844,7 +856,7 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 
- 	INIT_LIST_HEAD(&dd->channels);
- 
--	for (i = 0; i < JZ_DMA_NR_CHANNELS; i++) {
-+	for (i = 0; i < soc_data->nb_channels; i++) {
- 		jzchan = &jzdma->chan[i];
- 		jzchan->id = i;
- 
-@@ -889,15 +901,19 @@ static int jz4780_dma_remove(struct platform_device *pdev)
- 
- 	free_irq(jzdma->irq, jzdma);
- 
--	for (i = 0; i < JZ_DMA_NR_CHANNELS; i++)
-+	for (i = 0; i < jzdma->soc_data->nb_channels; i++)
- 		tasklet_kill(&jzdma->chan[i].vchan.task);
- 
- 	dma_async_device_unregister(&jzdma->dma_device);
- 	return 0;
++		if (jzdma->soc_data->flags & JZ_SOC_DATA_NO_DCKES_DCKEC)
++			reg = JZ_DMA_REG_DCKE;
++		else
++			reg = JZ_DMA_REG_DCKES;
++
++		jz4780_dma_ctrl_writel(jzdma, reg, BIT(chn));
++	}
  }
  
-+static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
-+	.nb_channels = 32,
+ static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev *jzdma,
+ 	unsigned int chn)
+ {
+-	if (jzdma->soc_data->flags & JZ_SOC_DATA_PER_CHAN_PM)
++	if ((jzdma->soc_data->flags & JZ_SOC_DATA_PER_CHAN_PM) &&
++			!(jzdma->soc_data->flags & JZ_SOC_DATA_NO_DCKES_DCKEC))
+ 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
+ }
+ 
+@@ -978,6 +988,12 @@ static const struct jz4780_dma_soc_data jz4740_dma_soc_data = {
+ 	.transfer_ord_max = 5,
+ };
+ 
++static const struct jz4780_dma_soc_data jz4725b_dma_soc_data = {
++	.nb_channels = 6,
++	.transfer_ord_max = 5,
++	.flags = JZ_SOC_DATA_PER_CHAN_PM | JZ_SOC_DATA_NO_DCKES_DCKEC,
 +};
 +
+ static const struct jz4780_dma_soc_data jz4770_dma_soc_data = {
+ 	.nb_channels = 6,
+ 	.transfer_ord_max = 6,
+@@ -992,6 +1008,7 @@ static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
+ 
  static const struct of_device_id jz4780_dma_dt_match[] = {
--	{ .compatible = "ingenic,jz4780-dma", .data = NULL },
-+	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
++	{ .compatible = "ingenic,jz4725b-dma", .data = &jz4725b_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = &jz4770_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
  	{},
- };
- MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
 -- 
 2.11.0
