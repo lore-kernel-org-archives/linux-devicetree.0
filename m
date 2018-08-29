@@ -1,45 +1,65 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH 03/31] ARM: tegra: colibri_t20: iris: annotate i2c busses
-Date: Wed, 29 Aug 2018 10:13:39 +0200
-Message-ID: <20180829081407.11304-4-marcel@ziswiler.com>
-References: <20180829081407.11304-1-marcel@ziswiler.com>
+From: Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v5 0/5] Add Actions Semi S700 pinctrl support
+Date: Wed, 29 Aug 2018 10:24:08 +0200
+Message-ID: <20180829082413.2512005-1-sravanhome@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180829081407.11304-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: manivannan.sadhasivam@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, pn@denx.de, mp-cs@actions-semi.com, jeff.chen@actions-semi.com, thomas.liau@actions-semi.com, linux@cubietech.com, Saravanan Sekar <sravanhome@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+This patchset adds pinctrl support for Actions Semi S700 SoC.
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-Annotate I2C busses: GEN2_I2C and CAM_I2C (I2C3) being unused and
-DDC_CLOCK/DATA on X3 pin 15/16 e.g. used for display EDID.
+pinctrl driver is verified using the Cubieboard7.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+common functionalities from s900 is moved for all Actions Semi
+SoC's usage.
+Common pad control configurations are moved to SoC specific
 
----
+dts entry for pinctrl depends on clock driver which is still under review:
+https://patchwork.kernel.org/patch/10533959/
 
- arch/arm/boot/dts/tegra20-colibri-iris.dts | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Thanks,
+Saravanan
+Parthiban
 
-diff --git a/arch/arm/boot/dts/tegra20-colibri-iris.dts b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-index b6d05da8c93c..cbf1f4d76813 100644
---- a/arch/arm/boot/dts/tegra20-colibri-iris.dts
-+++ b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-@@ -8,10 +8,12 @@
- 	compatible = "toradex,iris", "toradex,colibri_t20-512", "nvidia,tegra20";
- 
- 	aliases {
--		rtc0 = "/i2c@7000d000/tps6586x@34";
--		rtc1 = "/rtc@7000e000";
-+		rtc0 = "/i2c@7000c000/rtc@68";
-+		rtc1 = "/i2c@7000d000/tps6586x@34";
-+		rtc2 = "/rtc@7000e000";
- 		serial0 = &uarta;
- 		serial1 = &uartd;
-+		serial2 = &uartb;
- 	};
- 
- 	chosen {
+Changelog in v2
+- GPIO Interrupt support is added
+- Device tree entry for GPIO and Interrupt configured
+- GPIO and pinctrl define reorder, commit message findings fixed
+
+depends on owl GPIO Interrupt support
+https://patchwork.kernel.org/patch/10483477/
+
+Chnagelog in v3
+- Fixed 0-DAY bisectibility error
+
+Chnagelog in v4
+- Fixed 0-DAY sparse warnings on static declaration
+
+Chnagelog in v5
+- Rebase to mainline
+
+Saravanan Sekar (5):
+  pinctrl: actions: define constructor generic to Actions Semi SoC's
+  pinctrl: actions: define pad control configurtion to SoC specific
+  dt-bindings: pinctrl: Add bindings for Actions Semi S700 SoC
+  pinctrl: actions: Add Actions Semi S700 pinctrl driver
+  arm64: dts: actions: Add pinctrl node for Actions Semi S700
+
+ .../bindings/pinctrl/actions,s700-pinctrl.txt      |  170 ++
+ arch/arm64/boot/dts/actions/s700.dtsi              |   16 +
+ drivers/pinctrl/actions/Kconfig                    |    6 +
+ drivers/pinctrl/actions/Makefile                   |    1 +
+ drivers/pinctrl/actions/pinctrl-owl.c              |   71 +-
+ drivers/pinctrl/actions/pinctrl-owl.h              |  142 +-
+ drivers/pinctrl/actions/pinctrl-s700.c             | 1925 ++++++++++++++++++++
+ drivers/pinctrl/actions/pinctrl-s900.c             |  205 +--
+ 8 files changed, 2337 insertions(+), 199 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s700-pinctrl.txt
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s700.c
+
 -- 
 2.14.4
