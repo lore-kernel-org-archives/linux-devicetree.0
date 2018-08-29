@@ -1,40 +1,22 @@
-Return-Path: <SRS0=WyUm=LO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from 107-174-235-237-host.colocrossing.com ([107.174.235.237]:33310
-        "EHLO etennisonline.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727085AbeHaXxu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 31 Aug 2018 19:53:50 -0400
-Subject: Adding path
-Message-ID: <8237bbf77bd4cf35b15f20736aae911e@cosstores.com>
-Date: Fri, 31 Aug 2018 13:04:33 +0200
-From: "Jimmy Wilson" <keffdeilarsata@email.jp>
-Reply-To: heztermine@sina.com
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Return-Path: <SRS0=wcnV=LM=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 0/2] clocksource: ostm: Add support for RZ/A2
+Date: Wed, 29 Aug 2018 08:29:52 -0500
+Message-Id: <20180829132954.64862-1-chris.brandt@renesas.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Modify the driver to take into accound clock drivers that are not 100% DT,
+and also update the binding documentation.
 
-Have you received my email from last week?
+Chris Brandt (2):
+  clocksource/drivers/ostm: Delay driver registration
+  dt-bindings: timer: ostm: Add R7S9210 support
 
-I would like to speak with the person who manage your photos for your
-company?
+ .../devicetree/bindings/timer/renesas,ostm.txt     |  3 +-
+ drivers/clocksource/renesas-ostm.c                 | 35 ++++++++++++++++++++--
+ 2 files changed, 35 insertions(+), 3 deletions(-)
 
-We are here to provide you all kinds of imaging editing.
-
-What we can provide you:
-Cutting out for photos
-Clipping path for photos
-Masking for photos
-Retouching for your photos
-Retouching for the Beauty Model and Portraits.
-
-We have 20 staffs in house and daily basis 1000 images can be processed.
-
-We give testing for your photos.
-
-Thanks,
-Jimmy Wilson
+-- 
+2.16.1
