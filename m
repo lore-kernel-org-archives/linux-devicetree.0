@@ -1,56 +1,70 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: [PATCH v2] arm64: dts: ls1043a: Add configure-gfladj property to USB3 node
-Date: Wed, 29 Aug 2018 11:30:55 +0800
-Message-ID: <20180829033055.22245-1-yinbo.zhu@nxp.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] ARM: dts: imx7s: enable cpuidle driver
+Date: Wed, 29 Aug 2018 13:00:46 +0800
+Message-ID: <1535518847-24417-1-git-send-email-Anson.Huang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: yinbo.zhu@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ran Wang <ran.wang_1@nxp.com>, linux-kernel@vger.kernel.org
-Cc: xiaobo.xie@nxp.com, Shawn Guo <shawnguo@kernel.org>, Minghuan Lian <Minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Changming Huang <jerry.huang@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajesh Bhagat <rajesh.bhagat@freescale.com>
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Rajesh Bhagat <rajesh.bhagat@freescale.com>
+Enable cpuidle for i.MX7S/D using generic ARM cpuidle
+driver, below 2 idle states enabled:
 
-Add "configure-gfladj" boolean property to USB3 node. This property
-is used to determine whether frame length adjustment is required or
-not
+1. ARM WFI;
+2. SoC WAIT mode.
 
-Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-Change in v2:
-		Modified some word misspellings in commit information
+ arch/arm/boot/dts/imx7d.dtsi |  1 +
+ arch/arm/boot/dts/imx7s.dtsi | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 7881e3d..ed3fa79 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -609,6 +609,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			configure-gfladj;
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 7cbc2ff..4d0d0f6 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -20,6 +20,7 @@
+ 			reg = <1>;
+ 			clock-frequency = <996000000>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
++			cpu-idle-states = <&CPU_SLEEP>;
  		};
+ 	};
  
- 		usb1: usb3@3000000 {
-@@ -618,6 +619,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			configure-gfladj;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 93884ce..cf5570b 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -54,6 +54,19 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		idle-states {
++			entry-method = "psci";
++
++			CPU_SLEEP: WAIT {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x0010000>;
++				local-timer-stop;
++				entry-latency-us = <100>;
++				exit-latency-us = <50>;
++				min-residency-us = <1000>;
++			};
++		};
++
+ 		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+@@ -61,6 +74,7 @@
+ 			clock-frequency = <792000000>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clks IMX7D_CLK_ARM>;
++			cpu-idle-states = <&CPU_SLEEP>;
  		};
+ 	};
  
- 		usb2: usb3@3100000 {
-@@ -627,6 +629,7 @@
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
-+			configure-gfladj;
- 		};
- 
- 		sata: sata@3200000 {
 -- 
-1.7.1
+2.7.4
