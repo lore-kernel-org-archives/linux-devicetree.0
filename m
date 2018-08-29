@@ -1,68 +1,97 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v2] dt-binding: arm/cpus.txt: fix dynamic-power-coefficient unit
-Date: Wed, 29 Aug 2018 09:08:38 +0200
-Message-ID: <1535526518-29022-1-git-send-email-vincent.guittot@linaro.org>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V5 5/8] backlight: qcom-wled: Restructure the driver for
+ WLED3
+Date: Wed, 29 Aug 2018 12:40:24 +0530
+Message-ID: <bcd99b19d4a7586ba47c05b8b5bd2bcf@codeaurora.org>
+References: <1535106467-17843-1-git-send-email-kgunda@codeaurora.org>
+ <1535106467-17843-6-git-send-email-kgunda@codeaurora.org>
+ <20180827100939.GG31905@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180827100939.GG31905@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, punit.agrawal@arm.com
-Cc: edubezval@gmail.com, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The unit of dynamic-power-coefficient is described as mW/MHz/uV^2 whereas
-its usage in the code assumes that unit is uW/MHz/V^2
+On 2018-08-27 15:39, Pavel Machek wrote:
+> On Fri 2018-08-24 15:57:44, Kiran Gunda wrote:
+>> Restructure the driver to add the support for new WLED
+>> peripherals.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+>> ---
+>> Changes from V3:
+>>     - This is the new patch after splitting the
+>>       "backlight: qcom-wled: Add support for WLED4 peripheral" patch
+>>       to seperate the WLED3 specific restructure.
+>> 
+>> Changes from V4:
+>>     - Initialize wled->cfg.enabled_strings to 0,1,2,3.
+>>     - Replaced the WLED3 macro with 3.
+>> 
+>>  drivers/video/backlight/qcom-wled.c | 395 
+>> ++++++++++++++++++++++--------------
+>>  1 file changed, 245 insertions(+), 150 deletions(-)
+>> 
+>> diff --git a/drivers/video/backlight/qcom-wled.c 
+>> b/drivers/video/backlight/qcom-wled.c
+>> index 3cd6e75..a746bec 100644
+>> --- a/drivers/video/backlight/qcom-wled.c
+>> +++ b/drivers/video/backlight/qcom-wled.c
+>> @@ -15,59 +15,71 @@
+>>  #include <linux/module.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_device.h>
+>> +#include <linux/of_address.h>
+>>  #include <linux/regmap.h>
+>> 
+>>  /* From DT binding */
+>> +#define WLED_MAX_STRINGS				4
+>> +
+>>  #define WLED_DEFAULT_BRIGHTNESS				2048
+>> 
+>> -#define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
+>> -#define WLED3_CTRL_REG_VAL_BASE				0x40
+>> +#define WLED_SINK_REG_BRIGHT_MAX			0xFFF
+> 
+> Stop this, no. In previous patch you renamed from ABC123_ to WLED3_,
+> now you are renaming back to WLED?
+> 
+> Stop messing with the names. I'd actually prefer you to stick with
+> original driver name, and just add note that this now supports more
+> hardware.
+> 
+> But yes, _one_ rename is okay. I guess. But renaming it twice in one
+> series is not acceptable.
+> 
+ok. I will stop renaming from WLED3 to WLED in this patch. I did it 
+because these registers
+are common for both WLED3 and WLED4 and Bjorn also suggested the same. 
+Anyways I will stop
+this renaming in this patch from WLED3 to WLED.
 
-In drivers/thermal/cpu_cooling.c, the code is :
-
-power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
-do_div(power, 1000000000);
-
-which can be summarized as :
-power (mW) = capacitance * freq_mhz/1000 * (voltage_mv/1000)^2
-or
-power (mW) = (capacitance * freq_mhz * (voltage_mv/1000)^2) / 1000
-then
-power (mW) = power (uW) / 1000
-so
-power (uW) = capacitance * freq_mhz * (voltage_mv/1000)^2
-
-Furthermore, if we test basic values like :
-voltage_mv = 1000mV = 1V
-freq_mhz = 1000Mhz
-
-The minimum possible power, when dynamic-power-coefficient equals 1, will
-be with current unit:
-min power = 1 * 1000  * (1000000)^2 = 10^15 mW
-which is not realistic
-
-With the unit used by the code, the min power is
-min power =  1 * 1000 * 1^2 = 1000uW = 1mW which is far more realistic
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 29e1dc5..71d8cd0 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -274,7 +274,7 @@ described below.
- 		Usage: optional
- 		Value type: <prop-encoded-array>
- 		Definition: A u32 value that represents the running time dynamic
--			    power coefficient in units of mW/MHz/uV^2. The
-+			    power coefficient in units of uW/MHz/V^2. The
- 			    coefficient can either be calculated from power
- 			    measurements or derived by analysis.
- 
-@@ -285,7 +285,7 @@ described below.
- 
- 			    Pdyn = dynamic-power-coefficient * V^2 * f
- 
--			    where voltage is in uV, frequency is in MHz.
-+			    where voltage is in V, frequency is in MHz.
- 
- Example 1 (dual-cluster big.LITTLE system 32-bit):
- 
--- 
-2.7.4
+>> @@ -365,6 +433,15 @@ static int wled_configure(struct wled *wled, 
+>> struct device *dev)
+>> 
+>>  	cfg->num_strings = cfg->num_strings + 1;
+>> 
+>> +	string_len = of_property_count_elems_of_size(dev->of_node,
+>> +						     "qcom,enabled-strings",
+>> +						     sizeof(u32));
+>> +	if (string_len > 0)
+>> +		rc = of_property_read_u32_array(dev->of_node,
+>> +						"qcom,enabled-strings",
+>> +						wled->cfg.enabled_strings,
+>> +						sizeof(u32));
+>> +
+>>  	return 0;
+>>  }
+> 
+> rc is assigned but never used.
+Will address it next series.
+> 									Pavel
