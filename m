@@ -1,23 +1,35 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V2 1/2] ARM: dts: imx6ull-14x14-evk: correct machine
- model name
-Date: Wed, 29 Aug 2018 22:44:40 +0800
-Message-ID: <20180829144438.GP3850@dragon>
-References: <1535013674-21356-1-git-send-email-Anson.Huang@nxp.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH 0/2] ASoC: Add support for MikroElektronika PROTO codec
+Date: Wed, 29 Aug 2018 17:47:25 +0300
+Message-ID: <20180829144727.13757-1-codrin.ciubotariu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1535013674-21356-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, stefan.wahren@i2se.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, broonie@kernel.org, robh+dt@kernel.org, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, florian.meier@koalo.de, cristian.birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 04:41:13PM +0800, Anson Huang wrote:
-> i.MX6ULL is a lite version of i.MX6UL, its full name
-> is i.MX6 UltraLiteLite, NOT UlltraLite.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+This patchset is based on Florian's initial PROTO driver:
+https://lkml.org/lkml/2013/5/22/342
 
-Applied both, thanks.
+My changes made the driver more generic, so that we could connect other
+I2S CPU DAIs, by using device-tree.
+
+Tested with sama5d2 I2S driver.
+
+Codrin Ciubotariu (2):
+  ASoC: Add driver for PROTO Audio CODEC (with a WM8731)
+  ASoC: mikroe-proto: dt-bindings: add DT bindings for PROTO board
+
+ .../bindings/sound/mikroe,mikroe-proto.txt    |  23 +++
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ sound/soc/atmel/Kconfig                       |   7 +
+ sound/soc/atmel/Makefile                      |   2 +
+ sound/soc/atmel/mikroe-proto.c                | 189 ++++++++++++++++++
+ 5 files changed, 222 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mikroe,mikroe-proto.txt
+ create mode 100644 sound/soc/atmel/mikroe-proto.c
+
+-- 
+2.17.1
