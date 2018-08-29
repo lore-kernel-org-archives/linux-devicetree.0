@@ -1,114 +1,79 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
-Date: Wed, 29 Aug 2018 12:00:45 +0100
-Message-ID: <20180829110045.GN907@e110455-lin.cambridge.arm.com>
-References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
- <20180824122308.3092-1-linus.walleij@linaro.org>
- <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
- <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
- <20180829095822eucas1p1fe4336ca7944765c01fc6ad1e941b8b0~PUn7YujBw3056130561eucas1p1_@eucas1p1.samsung.com>
- <20180829100152.GL907@e110455-lin.cambridge.arm.com>
- <20180829102320eucas1p28f05f1c765eb85195a06199bb68b87ce~PU9ukgvXA1734817348eucas1p2L@eucas1p2.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180829102320eucas1p28f05f1c765eb85195a06199bb68b87ce~PU9ukgvXA1734817348eucas1p2L@eucas1p2.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: Introduce one new field to set word delay" to the spi tree
+Date: Wed, 29 Aug 2018 12:02:32 +0100 (BST)
+Message-ID: <20180829110232.2D6081124859@debutante.sirena.org.uk>
+References: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, baolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMjksIDIwMTggYXQgMTI6MjM6MThQTSArMDIwMCwgQW5kcnplaiBIYWpkYSB3
-cm90ZToKPiBPbiAyOS4wOC4yMDE4IDEyOjAxLCBMaXZpdSBEdWRhdSB3cm90ZToKPiA+IE9uIFdl
-ZCwgQXVnIDI5LCAyMDE4IGF0IDExOjU4OjIwQU0gKzAyMDAsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6
-Cj4gPj4gT24gMjguMDguMjAxOCAxNTo0NSwgTGludXMgV2FsbGVpaiB3cm90ZToKPiA+Pj4gT24g
-TW9uLCBBdWcgMjcsIDIwMTggYXQgMTo1MyBQTSBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1
-bmcuY29tPiB3cm90ZToKPiA+Pj4KPiA+Pj4+IE9uIDI0LjA4LjIwMTggMTQ6MjMsIExpbnVzIFdh
-bGxlaWogd3JvdGU6Cj4gPj4+Pj4gVGhpcyBhZGRzIGJpbmRpbmdzIGZvciBhIHZpcnR1YWwgZGlz
-cGxheSB0byBiZSB1c2VkIHdpdGggZGlzcGxheXMKPiA+Pj4+PiBpbnNpZGUgZW50aXJlbHkgdmly
-dHVhbCBlbnZpcm9ubWVudHMgd2hpY2ggZG8gbm90IGVtdWxhdGUgdGhpbmdzCj4gPj4+Pj4gbGlr
-ZSBtb25pdG9ycyBidXQganVzdCBuZWVkIHRpbWluZyBpbmZvcm1hdGlvbiB0byBiZSBzdXBwbGll
-ZCB0bwo+ID4+Pj4+IGl0cyBkaXNwbGF5IGNvbnRyb2xsZXIuCj4gPj4+Pj4KPiA+Pj4+PiBUaGlz
-IGlzIGluc3BpcmVkIGJ5IGVhcmxpZXIgd29yayBieSBMaXZpdSBEdWRhdS4KPiA+Pj4+IElmIHRo
-aXMgaXMgcHVyZSB2aXJ0dWFsIHRoZW4gaXQgc2hvdWxkIGJlIGNvbm5lY3RlZCB0byBvdGhlciBw
-dXJlCj4gPj4+PiB2aXJ0dWFsIGNvbXBvbmVudHMuCj4gPj4+IE9LIGl0J3MgYSBiaXQgb2YgaGFs
-Zi1oYWxmIGJ1dCBvdXRzaWRlIG9mIG15IGdyYXNwLCBJIGFtIGp1c3QgdHJ5aW5nCj4gPj4+IHRv
-IHN1cHBvcnQgbGVnYWN5IHN5c3RlbXMuCj4gPj4+Cj4gPj4+IFRoZSBkZXZpY2UgdHJlZSBpcyB0
-aGVyZToKPiA+Pj4gYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92ZS1hZW12OGEuZHRzCj4g
-Pj4+IGFyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL3J0c21fdmUtbW90aGVyYm9hcmQuZHRzaQo+ID4+
-Pgo+ID4+PiBUaGUgbGF0dGVyIGNvbnRhaW5zIHRoZSBDTENEIHdoaWNoIGlzIHRoZSBkaXNwbGF5
-IGRyaXZlci4KPiA+Pj4KPiA+Pj4gSW4gUlRTTSwgd2hpY2ggaXMgYW4gQVJNIHByb2R1Y3QgSSBk
-byBub3QgZGV2ZWxvcCBhbmQKPiA+Pj4gY2Fubm90IG1ha2UgY2hhbmdlcyB0bywgdGhlcmUgaXMg
-YW4gZW11bGF0ZWQgQ0xDRC4gU28KPiA+Pj4gdGhhdCBwYXJ0IGFwcGVhciBhcyBpZiBpdCB3YXMg
-cmVhbCBoYXJkd2FyZS4gTGlrZSBpbiBRRU1VLgo+ID4+Pgo+ID4+PiBCdXQgdGhlIGRpc3BsYXkg
-ZG9lcyBub3QgaGF2ZSBhbnkgZW11bGF0aW9uLiBUaGUgcmF3Cj4gPj4+IG91dHB1dCBmcm9tIHRo
-ZSBDTENEIGlzIGxhdGNoZWQgb3V0IHRvIHRoZSBzY3JlZW4uCj4gPj4+Cj4gPj4+IEkgZG8gbm90
-IGtub3cgZXhhY3RseSBrbm93IGhvdyB0aGUgUlRTTSBlbXVsYXRvcgo+ID4+PiBhY3R1YWxseSB3
-b3JrcywgYnV0IEkgc3VzcGVjdCB0aGF0IHRoZSBsaXR0bGUgZ3JhcGhpYyB3aW5kb3cKPiA+Pj4g
-b24gdGhlIHNjcmVlZW4gYWRhcHRzIHRvIHdoYXQgZ2V0cyB3cml0dGVuIGludG8gdGhlCj4gPj4+
-IENMQ0QgY29udHJvbCByZWdpc3RlcnMsIHNvIGFueXRoaW5nIGdvZXMsIG1vcmUgb3IgbGVzcy4K
-PiA+Pj4KPiA+Pj4gVG8gc2F0aXNmeSB0aGUgQ0xDRCB3aXRoIHNvbWUgdGltaW5ncyBhbmQgcmVz
-b2x1dGlvbiwKPiA+Pj4gdGhpcyBicmlkZ2UgZ2l2ZXMgaXQgdGhhdCwgZnJvbSB0aGUgZGV2aWNl
-IHRyZWUsIGluIGEgd2F5Cj4gPj4+IHRoYXQgY2xlYXJseSBjb252ZXlzIHRoYXQgInRoaXMgaXMg
-bm90IGEgcmVhbCB0aGluZyIuCj4gPj4+Cj4gPj4+IFRoZSBvbGQgY29kZSB1c2VzIERQSS4gVGhp
-cyBpcyBub3QgRFBJLCBub3QgZXZlbiBjbG9zZQo+ID4+PiB0byBpdC4gSXQgd29ya2VkIHNpbXBs
-eSBiZWNhdXNlIGFsbCB0aGUgRFBJIHJlYWxseSBkb2VzIGlzCj4gPj4+IHdoYXQgdGhpcyBwYXRj
-aCBkb2VzOiBwcm92aWRlIHRpbWluZ3MuCj4gPj4+Cj4gPj4+IEJ5IGNvbnRyYXN0IG9uIFFFTVUg
-SSBoYXZlIHBhdGNoZXMgdGhlIGVtdWxhdG9yIHRvCj4gPj4+IHByb3Blcmx5IHJlcHJlc2VudCB0
-aGUgSTJDIEREQyBsaW5rIGFuZCBwcm92aWRlIEVESUQKPiA+Pj4gc28gdGhhdCBpcyBhbGwgZmlu
-ZS4KPiA+Pj4KPiA+Pj4gSSBjYW5ub3QgcGF0Y2ggUlRTTSB0byBlbXVsYXRlIEkyQyBhbmQgRERD
-LiBJdCdzIG5vdAo+ID4+PiBvcGVuIHNvdXJjZS4gQnV0IHRoZSBkZXZpY2UgdHJlZSBpbiB0aGUg
-a2VybmVsIHN1cHBvcnRzCj4gPj4+IHRoaXMgIm1hY2hpbmUiIGFuZCBzbywgSSBoYXZlIHRvIG1h
-aW50YWluIGl0IHdoZW4gbW9kZXJuaXpuZwo+ID4+PiB0aGUgZmJkZXYgZHJpdmVyIHRvIGEgRFJN
-IGRyaXZlci4KPiA+Pj4KPiA+Pj4gSSdtIHNvcnJ5IFJUU00gaXMgaGFsZi9oYWxmLiBOb3QgbXkg
-ZmF1bHQuIEkgY2FuJ3QgZml4Li4uCj4gPj4gSSBkbyBub3Qga25vdyB0aGUgcGxhdGZvcm0sIHNv
-IEnCoCBJIGhhdmUgZHVnIGxpdHRsZSBiaXQsIGJ1dCBJIHdhbid0Cj4gPj4gY2FsbCBpdMKgIHRo
-b3JvdWdoIHJlc2VhcmNoLiBKdXN0IHBsZWFzZSBiZSBraW5kIGlmIEkgd3JvdGUgc3RoIHN0dXBp
-ZC4KPiA+PiBXaGF0IEkgaGF2ZSBmb3VuZDoKPiA+PiAxLiBEVFMgc2hvd3MgQ0xDRCBpcyBwbDEx
-MS4KPiA+PiAyLiBwbDExMSBkb2N1bWVudGF0aW9uIHNheXMgaXQncyBvdXRwdXQgaW50ZXJmYWNl
-IHN1cHBvcnRzIFNUTiBhbmQgVEZUCj4gPj4gdXAgdG8gMjQtYml0IGJ1cy4gSSBkbyBub3Qga25v
-dyBTVE4sIGJ1dCBURlQgc2VlbXMgdG8gYmUgY29tcGF0aWJsZSB3aXRoCj4gPj4gRFBJLgo+ID4+
-Cj4gPj4gSWYgaXQgaXMgY29ycmVjdCwgZHBpIHBhbmVsIHNlZW1zIHRvIGJlIE9LLiBBbmQgSSB0
-aGluayBpdCBpcyBsZXNzCj4gPj4gaW1wb3J0YW50IGhvdyB0aGUgZW11bGF0b3Igd29ya3MsIG1v
-cmUgaW1wb3J0YW50IGlzIHRoYXQgaXQgc2hvdWxkCj4gPj4gZW11bGF0ZSBwbDExMSwgaW5jbHVk
-aW5nIGl0J3Mgb3V0cHV0IGludGVyZmFjZXMuCj4gPiBZZWFoLCB1bmZvcnR1bmF0ZWx5IHRoYXQg
-c2hpcCBoYXMgc2FpbGVkIGEgbG9uZyB0aW1lIGFnby4gVGhlIGVtdWxhdG9yCj4gPiBwZW9wbGUg
-dGhvdWdodCBlbXVsYXRpbmcgdGhlIHJlZ2lzdGVyIGludGVyZmFjZSBpcyBnb29kIGVub3VnaCBh
-bmQgdG9vawo+ID4gbGliZXJ0aWVzIG9uIGhvdyB0aGUgYmVoYXZpb3VyIHdhcyAiZW11bGF0ZWQi
-LiBFbmQgcmVzdWx0OiBvdXRwdXQKPiA+IGludGVyZmFjZXMgYXJlIG5vdCB0aGUgc2FtZS4KPiAK
-PiBTbyB3aGF0IGlzIHdyb25nL21pc3Npbmcgd2l0aCBkcGkgcGFuZWw/CgpMaW51cyBleHBsYWlu
-ZWQgaW4gdGhlIGxpbmtzIGhlIHF1b3RlZCBiZWxvdy4gSSdsbCBsZXQgaGltIGFkZCBtb3JlIGlm
-CmhlIGhhcyBhZGRpdGlvbmFsIGluZm9ybWF0aW9uLgoKQmVzdCByZWdhcmRzLApMaXZpdQoKPiAK
-PiBSZWdhcmRzCj4gQW5kcnplago+IAo+ID4KPiA+IEJlc3QgcmVnYXJkcywKPiA+IExpdml1Cj4g
-Pgo+ID4+IFJlZ2FyZHMKPiA+PiBBbmRyemVqCj4gPj4+PiBBbmQgb25lIG1vcmUgdGhpbmcsIHlv
-dSBhcmUgZGVmaW5pbmcgdmlydHVhbCBwYW5lbCBidXQgeW91IGFyZSB1c2luZwo+ID4+Pj4gZHJt
-X2JyaWRnZSBmcmFtZXdvcmssIHdoeSBub3QgZHJtX3BhbmVsPwo+ID4+PiBUaGlzIHdhcyBkaXNj
-dXNzZWQgYmVmb3JlIGluIHRoZSBwcmV2aW91cyBwYXRjaCBzZXQ6Cj4gPj4+IGh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE4LUp1bHkvMTgzNTE2Lmh0
-bWwKPiA+Pj4KPiA+Pj4gRXNzZW50aWFsbHksIGl0J3MgYmVjYXVzZSB0aGUgZGlzcGxheSBkcml2
-ZXIgaXMganVzdCBjb25uZWN0ZWQKPiA+Pj4gdG8gInNvbWV0aGluZyIgbm90IGEgcGFuZWwgYW5k
-IGEgYnJpZGdlIGlzIGxpa2VseSB0aGUgYmVzdCBJCj4gPj4+IGNhbiBjb21lIHVwIHdpdGggLSBh
-IGJyaWRnZSBvdmVyIHRvIGEgdmlydHVhbCBkaXNwbGF5Lgo+ID4+Pgo+ID4+PiBBIHBhdGNoIHRv
-IGFkZCAiVkdBIiwgIlNHQSIgYW5kICJYR0EiIHRvIHRoZSBzaW1wbGUgcGFuZWxzCj4gPj4+IHdh
-cyBOQUNLZWQgKHNvcnQgb2YsIHBvbGl0ZWx5KToKPiA+Pj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTgtSnVseS8xODM2OTguaHRtbAo+ID4+Pgo+
-ID4+PiBBbHNvIGl0IHdhcyBub3RlZCB0aGF0IGl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBzb21l
-dGhpbmcgdGhhdAo+ID4+PiB3b3VsZCBtYWtlIGl0IGVhc3kgdG8gY2hhbmdlIHJlc29sdXRpb25z
-IG9uIHRoZXNlIHZpcnR1YWwKPiA+Pj4gZGlzcGxheSB0aGluZ3MuIFZvaWxhLgo+ID4+Cj4gPj4K
-PiA+Pj4gWW91cnMsCj4gPj4+IExpbnVzIFdhbGxlaWoKPiA+Pj4KPiA+Pj4KPiAKCi0tIAo9PT09
-PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3JsZCwgIHwK
-fCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBjb2RlISAg
-LwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The patch
+
+   spi: Introduce one new field to set word delay
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From eeaceb8b7d1fb64b6030249ca0dd1d902ef3069e Mon Sep 17 00:00:00 2001
+From: Baolin Wang <baolin.wang@linaro.org>
+Date: Thu, 16 Aug 2018 20:54:49 +0800
+Subject: [PATCH] spi: Introduce one new field to set word delay
+
+For some SPI controllers, after each word size (specified by bits_per_word)
+transimission, the hardware need some delay to make sure the slave has enough
+time to receive the whole data.
+
+So introducing one new 'word_delay' field of struct spi_tansfer for slave
+devices to set this inter word delay time.
+
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ include/linux/spi/spi.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index a64235e05321..d698f9db3484 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -711,6 +711,8 @@ extern void spi_res_release(struct spi_controller *ctlr,
+  * @delay_usecs: microseconds to delay after this transfer before
+  *	(optionally) changing the chipselect status, then starting
+  *	the next transfer or completing this @spi_message.
++ * @word_delay: clock cycles to inter word delay after each word size
++ *	(set by bits_per_word) transmission.
+  * @transfer_list: transfers are sequenced through @spi_message.transfers
+  * @tx_sg: Scatterlist for transmit, currently not for client use
+  * @rx_sg: Scatterlist for receive, currently not for client use
+@@ -793,6 +795,7 @@ struct spi_transfer {
+ 	u8		bits_per_word;
+ 	u16		delay_usecs;
+ 	u32		speed_hz;
++	u16		word_delay;
+ 
+ 	struct list_head transfer_list;
+ };
+-- 
+2.18.0
