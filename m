@@ -1,57 +1,104 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH 8/8] regulator: bd718xx: renme bd71837 to 718xx
-Date: Wed, 29 Aug 2018 15:39:54 +0300
-Message-ID: <9b442ffad56fad12a726dc9c0e4b07985adb8b8d.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] spi: dw-mmio: add MSCC Jaguar2 support
+Date: Wed, 29 Aug 2018 14:45:48 +0200
+Message-ID: <20180829124548.4703-1-alexandre.belloni@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+To: Mark Brown <broonie@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-rename bd71837-regulator.c to bd718x7-regulator.c to reflect the
-fact that also BD71847 is now supported by the driver.
+Unfortunately, the Jaguar2 CPU_SYSTEM_CTRL register set has a different
+layout than the Ocelot one. Handle that while keeping most of the code
+common.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/regulator/Kconfig                                      | 2 +-
- drivers/regulator/Makefile                                     | 2 +-
- drivers/regulator/{bd71837-regulator.c => bd718x7-regulator.c} | 0
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename drivers/regulator/{bd71837-regulator.c => bd718x7-regulator.c} (100%)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 329cdd33ed62..6e96ef1bd74a 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -189,7 +189,7 @@ config REGULATOR_BD718XX
- 	  and LDO regulators.
+Hi,
+
+This is really unfortunate and I hope it will not be necessary to do the same
+for every SoC in the line.
+
+I didn't use a regmap_field because it is only accessed once at probe time.
+
+ drivers/spi/spi-dw-mmio.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index e80f60ed6fdf..351f49976161 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -34,8 +34,8 @@ struct dw_spi_mmio {
+ };
  
- 	  This driver can also be built as a module. If so, the module
--	  will be called bd71837-regulator.
-+	  will be called bd718x7-regulator.
+ #define MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL	0x24
+-#define OCELOT_IF_SI_OWNER_MASK			GENMASK(5, 4)
+ #define OCELOT_IF_SI_OWNER_OFFSET		4
++#define JAGUAR2_IF_SI_OWNER_OFFSET		6
+ #define MSCC_IF_SI_OWNER_SISL			0
+ #define MSCC_IF_SI_OWNER_SIBM			1
+ #define MSCC_IF_SI_OWNER_SIMC			2
+@@ -76,7 +76,8 @@ static void dw_spi_mscc_set_cs(struct spi_device *spi, bool enable)
+ }
  
- config REGULATOR_BD9571MWV
- 	tristate "ROHM BD9571MWV Regulators"
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 801d9a34a203..eac4d794f3b8 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -27,7 +27,7 @@ obj-$(CONFIG_REGULATOR_AS3711) += as3711-regulator.o
- obj-$(CONFIG_REGULATOR_AS3722) += as3722-regulator.o
- obj-$(CONFIG_REGULATOR_AXP20X) += axp20x-regulator.o
- obj-$(CONFIG_REGULATOR_BCM590XX) += bcm590xx-regulator.o
--obj-$(CONFIG_REGULATOR_BD718XX) += bd71837-regulator.o
-+obj-$(CONFIG_REGULATOR_BD718XX) += bd718x7-regulator.o
- obj-$(CONFIG_REGULATOR_BD9571MWV) += bd9571mwv-regulator.o
- obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
- obj-$(CONFIG_REGULATOR_DA9052)	+= da9052-regulator.o
-diff --git a/drivers/regulator/bd71837-regulator.c b/drivers/regulator/bd718x7-regulator.c
-similarity index 100%
-rename from drivers/regulator/bd71837-regulator.c
-rename to drivers/regulator/bd718x7-regulator.c
+ static int dw_spi_mscc_init(struct platform_device *pdev,
+-			    struct dw_spi_mmio *dwsmmio)
++			    struct dw_spi_mmio *dwsmmio,
++			    const char *cpu_syscon, u32 if_si_owner_offset)
+ {
+ 	struct dw_spi_mscc *dwsmscc;
+ 	struct resource *res;
+@@ -92,7 +93,7 @@ static int dw_spi_mscc_init(struct platform_device *pdev,
+ 		return PTR_ERR(dwsmscc->spi_mst);
+ 	}
+ 
+-	dwsmscc->syscon = syscon_regmap_lookup_by_compatible("mscc,ocelot-cpu-syscon");
++	dwsmscc->syscon = syscon_regmap_lookup_by_compatible(cpu_syscon);
+ 	if (IS_ERR(dwsmscc->syscon))
+ 		return PTR_ERR(dwsmscc->syscon);
+ 
+@@ -101,8 +102,8 @@ static int dw_spi_mscc_init(struct platform_device *pdev,
+ 
+ 	/* Select the owner of the SI interface */
+ 	regmap_update_bits(dwsmscc->syscon, MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL,
+-			   OCELOT_IF_SI_OWNER_MASK,
+-			   MSCC_IF_SI_OWNER_SIMC << OCELOT_IF_SI_OWNER_OFFSET);
++			   0x3 << if_si_owner_offset,
++			   MSCC_IF_SI_OWNER_SIMC << if_si_owner_offset);
+ 
+ 	dwsmmio->dws.set_cs = dw_spi_mscc_set_cs;
+ 	dwsmmio->priv = dwsmscc;
+@@ -110,6 +111,20 @@ static int dw_spi_mscc_init(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++static int dw_spi_mscc_ocelot_init(struct platform_device *pdev,
++				   struct dw_spi_mmio *dwsmmio)
++{
++	return dw_spi_mscc_init(pdev, dwsmmio, "mscc,ocelot-cpu-syscon",
++				OCELOT_IF_SI_OWNER_OFFSET);
++}
++
++static int dw_spi_mscc_jaguar2_init(struct platform_device *pdev,
++				    struct dw_spi_mmio *dwsmmio)
++{
++	return dw_spi_mscc_init(pdev, dwsmmio, "mscc,jaguar2-cpu-syscon",
++				JAGUAR2_IF_SI_OWNER_OFFSET);
++}
++
+ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ {
+ 	int (*init_func)(struct platform_device *pdev,
+@@ -212,7 +227,8 @@ static int dw_spi_mmio_remove(struct platform_device *pdev)
+ 
+ static const struct of_device_id dw_spi_mmio_of_match[] = {
+ 	{ .compatible = "snps,dw-apb-ssi", },
+-	{ .compatible = "mscc,ocelot-spi", .data = dw_spi_mscc_init},
++	{ .compatible = "mscc,ocelot-spi", .data = dw_spi_mscc_ocelot_init},
++	{ .compatible = "mscc,jaguar2-spi", .data = dw_spi_mscc_jaguar2_init},
+ 	{ /* end of table */}
+ };
+ MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
 -- 
-2.14.3
+2.18.0
