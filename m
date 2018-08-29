@@ -1,74 +1,69 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 0/6] mmc: tmio: refactor TMIO core a bit and add
- UniPhier SD/eMMC controller support
-Date: Wed, 29 Aug 2018 10:27:09 +0200
-Message-ID: <20180829082708.2li4opnruodugo36@ninjato>
-References: <1534999460-15111-1-git-send-email-yamada.masahiro@socionext.com>
- <CAPDyKFore4GkGyMn-4VA-2h1MbNp9sQ0Szif+Mjj5qtM-7autw@mail.gmail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2] usb: core: phy: fix return value checking about
+ devm_of_phy_get_by_index()
+Date: Wed, 29 Aug 2018 10:30:50 +0200
+Message-ID: <20180829083050.GG28861@localhost>
+References: <8263a8d0f87d595dd35efa5432d294d9f7b38719.1535507412.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cebslwlmy6zsog4x"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFore4GkGyMn-4VA-2h1MbNp9sQ0Szif+Mjj5qtM-7autw@mail.gmail.com>
+In-Reply-To: <8263a8d0f87d595dd35efa5432d294d9f7b38719.1535507412.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 29, 2018 at 10:10:48AM +0800, Chunfeng Yun wrote:
+> Use IS_ERR() instead of IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
+> never return NULL value;
+> But still need ignore the error of -ENODEV, for more information, please
+> refer to:
+> [0] https://lkml.org/lkml/2018/4/19/88
+> [1] https://patchwork.kernel.org/patch/10160181/
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> V2: keep the -ENODEV check
+> ---
+>  drivers/usb/core/phy.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+> index 9879767..e3cc743 100644
+> --- a/drivers/usb/core/phy.c
+> +++ b/drivers/usb/core/phy.c
+> @@ -23,14 +23,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
+>  				   struct list_head *list)
+>  {
+>  	struct usb_phy_roothub *roothub_entry;
+> -	struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
+> +	struct phy *phy;
+>  
+> -	if (IS_ERR_OR_NULL(phy)) {
+> -		if (!phy || PTR_ERR(phy) == -ENODEV)
+> -			return 0;
+> -		else
+> -			return PTR_ERR(phy);
+> -	}
+> +	phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
+> +	if (IS_ERR(phy))
+> +		return (PTR_ERR(phy) == -ENODEV) ? 0 : PTR_ERR(phy);
 
---cebslwlmy6zsog4x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I prefer not to use the terse ternary operator in general, and
+especially so in this case where we are doing something unexpected (i.e.
+we want to highlight that the -ENODEV case is special).
 
-On Thu, Aug 23, 2018 at 12:43:31PM +0200, Ulf Hansson wrote:
-> On 23 August 2018 at 06:44, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Add UniPhier SD/eMMC controller support.
-> >
-> > As a preparation, I changed tmio_mmc_set_clock() to a platform hook.
-> > The clock rate setting is platform-specific, and UniPhier variants
-> > will add another way.  I thought it would be better to split this
-> > to a hook to avoid a mess.
-> >
-> > V3 is rebase on top of Linus' tree.
->=20
-> I have queued patch 1 -> 4, waiting for further reviews for patch 5 and 6.
+So please keep the current construct, and just replace IS_ERR_OR_NULL
+and drop the !phy test.
 
-I have re-tested patches 1-4 as applied to mmc/next and it all works
-fine. For those
+I think separating the declaration and (non-trivial) initialisation of
+phy here is a good thing that can remain in the patch, even if it's
+arguable separate change.
 
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>  
+>  	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
+>  	if (!roothub_entry)
 
-Now, going to check patches 5+6...
-
-> > I dropped 6/7 because Renesas added more quirks
-> > in the current MW.
-
-Totally fine. We need to cleanup HS400 support more, then we can try the
-simplification you did for tmio_mmc.c, too. Thanks!
-
-
---cebslwlmy6zsog4x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAluGWNgACgkQFA3kzBSg
-KbZx3w//Wl0REQpw7bHVLUNFsr+rZYLXxVh2tOiagstUyLIo0LEbSWgT8v1wD2FM
-f/fAVq0/YABZRHJdF8T8yq7nsHicxhkbEmQEmrAfpYOL6HOCm9U3YiMZXuKx+NFZ
-mex9FRk3VyqPKDeKoYNvMoFSVkQeWwAB1WqKxgym0AmbggLK/mg2ehNQHrMYMCVE
-p1u6rTNEkx48nDvmsO/zOU6Nm9y7A59+dBjLz94Fzm85+Xq2daSKiOysERXEgep/
-plj22wcdeIoFMSZTl6hrB6n9wAhQeAferpvJQ74sE3Zd9QTcAujylS4SxGC62F2p
-Pz3rO7Dm31xuI/3jwm4UnPqXqEooeO7N90NoX8oeaTOpITLCHst9o7u2dbL8EYUL
-epQCGH/4eLarrYm89bQ2VxOz6ELoiRajVpeZo2naThKFT3YILRNc666C3YpfEbDj
-a/cBh3j9MiqkkjsfMuFXrPhSoA5/Z0LvEbQ6tI0N383NIgqGif2w5uKudvOl+tdL
-s4seGwFYFAs+SA55IeabRMKIB0SGlzEIjIJEyCb4mfA3gyrs83xdUHqVDYvULCGu
-/YRqwFZLltX27jxvgO4TrTH2Ad37BM2i8thINpSsgp5tyz42ZPiZalhghlnxhsYD
-unrToWX16xTd6yf/vQTtopZ7lbCbPQTNuILCXxENBRA9rYM6YKU=
-=7Y8v
------END PGP SIGNATURE-----
-
---cebslwlmy6zsog4x--
+Thanks,
+Johan
