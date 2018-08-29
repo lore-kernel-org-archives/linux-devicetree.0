@@ -1,118 +1,79 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v3 2/2] scsi: ufs: Add UFS platform driver for Cadence UFS
-Date: Wed, 29 Aug 2018 15:57:22 +0530
-Message-ID: <0b273e2e-6d60-ac10-a1d5-78ea2346c1d9@ti.com>
-References: <66C16650-56D0-46A3-8050-A5540E48C702@global.cadence.com>
+From: "Zhu, Yi Xin" <yixin.zhu@linux.intel.com>
+Subject: Re: [PATCH v2 02/18] clk: intel: Add clock driver for Intel MIPS SoCs
+Date: Wed, 29 Aug 2018 18:34:26 +0800
+Message-ID: <65a8518b-8fd8-847b-f952-0370be3d786a@linux.intel.com>
+References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
+ <20180803030237.3366-3-songjun.wu@linux.intel.com>
+ <153370742214.220756.2039365625963765922@swboyd.mtv.corp.google.com>
+ <571d2d40-8728-fa7c-5d89-73d2a7b6293b@linux.intel.com>
+ <153539697928.129321.2605078315090527674@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <66C16650-56D0-46A3-8050-A5540E48C702@global.cadence.com>
+In-Reply-To: <153539697928.129321.2605078315090527674@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Janek Kotas <jank@cadence.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>, Songjun Wu <songjun.wu@linux.intel.com>, chuanhua.lei@linux.intel.com, hua.ma@linux.intel.com, qi-ming.wu@intel.com
+Cc: linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 August 2018 06:55 PM, Janek Kotas wrote:
-> This patch adds a device tree platform driver for
-> Cadence UFS Host Controller.
-> It can be enabled with SCSI_UFS_CDNS_PLATFORM Kconfig option.
-> 
-> Signed-off-by: Jan Kotas <jank@cadence.com>
+>>>> +}
+>>>> +
+>>>> +CLK_OF_DECLARE(intel_grx500_cgu, "intel,grx500-cgu", grx500_clk_init);
+>>> Any reason a platform driver can't be used instead of CLK_OF_DECLARE()?
+>> It provides CPU clock which is used in early boot stage.
+>>
+> Ok. What is the CPU clock doing in early boot stage? Some sort of timer
+> frequency? If the driver can be split into two pieces, one to handle the
+> really early stuff that must be in place to get timers up and running
+> and the other to register the rest of the clks that aren't critical from
+> a regular platform driver it would be good. That's preferred model if
+> something is super critical.
+>
+Just to make sure my approach is same as you think.
 
-[...]
+In the driver, there's two clock registrations.
 
-> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
-> new file mode 100644
-> index 00000000..5d9e4875
-> --- /dev/null
-> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
-> @@ -0,0 +1,147 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Platform UFS Host driver for Cadence controller
-> + *
-> + * Copyright (C) 2018 Cadence Design Systems, Inc.
-> + *
-> + * Authors:
-> + *	Jan Kotas <jank@cadence.com>
-> + *
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/time.h>
-> +
-> +#include "ufshcd-pltfrm.h"
-> +
-> +#define CDNS_UFS_REG_HCLKDIV 0xFC
-> +
-> +/**
-> + * Sets HCLKDIV register value based on the core_clk
-> + * @hba: host controller instance
-> + *
-> + * Return zero for success and non-zero for failure
-> + */
-> +static int cdns_ufs_set_hclkdiv(struct ufs_hba *hba)
-> +{
-> +	struct ufs_clk_info *clki;
-> +	struct list_head *head = &hba->clk_list_head;
-> +	unsigned long core_clk_rate = 0;
-> +	u32 core_clk_div = 0;
-> +
-> +	if (list_empty(head))
-> +		return 0;
-> +
-> +	list_for_each_entry(clki, head, list) {
-> +		if (IS_ERR_OR_NULL(clki->clk))
-> +			continue;
-> +		if (!strcmp(clki->name, "core_clk"))
-> +			core_clk_rate = clk_get_rate(clki->clk);
-> +	}
-> +
-> +	if (!core_clk_rate) {
-> +		dev_err(hba->dev, "%s: unable to find core_clk rate\n",
-> +			__func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	core_clk_div = core_clk_rate / USEC_PER_SEC;
-> +
-> +	ufshcd_writel(hba, core_clk_div, CDNS_UFS_REG_HCLKDIV);
-> +	/* Make sure the register was updated */
-> +	mb();
+- One through CLK_OF_DECLARE for early stage clocks.
 
-Why is it critical to ensure write completed here?
+- The other via platform driver for the non-critical clocks.
 
-> +
-> +	return 0;
-> +}
-> +
+In the device tree,  two clock device nodes are required.
 
-> +/**
-> + * cdns_ufs_pltfrm_remove - set driver_data of the device to NULL
+e.g. device tree:
 
-This appear to do more than setting driver_data to NULL.
+cgu: cgu@16200000 {
+                 compatible = "intel,grx500-clk", "syscon";
+                 reg = <0x16200000 0x200>;
+                 #clock-cells = <1>;
+};
 
-> + * @pdev: pointer to platform device handle
-> + *
-> + * Always returns 0
-> + */
-> +static int cdns_ufs_pltfrm_remove(struct platform_device *pdev)
-> +{
-> +	struct ufs_hba *hba =  platform_get_drvdata(pdev);
-> +
-> +	pm_runtime_get_sync(&(pdev)->dev);
+clk: clk {
+                 compatible = "intel,grx500-cgu";
+                 #clock-cells = <1>;
+                 intel,cgu-syscon = <&cgu>;
+};
 
-This looks suspect. Why do you need this get_sync() on remove() and
-where is the corresponding put_sync()?
+source code:
 
-> +	ufshcd_remove(hba);
-> +	return 0;
-> +}
+CLK_OF_DECLARE(intel_grx500_cgu, "intel,grx500-cgu", grx500_clk_init);
 
-Thanks,
-Sekhar
+static const struct of_device_id of_intel_grx500_cgu_match[] = {
+         { .compatible = "intel,grx500-clk" },
+         {}
+};
+
+static struct platform_driver intel_grx500_clk_driver = {
+         .probe  = intel_grx500_clk_probe,
+         .driver = {
+                 .name = "grx500-cgu",
+                 .of_match_table = of_match_ptr(of_intel_grx500_cgu_match),
+         },
+};
+
+static int __init intel_grx500_cgu_init(void)
+{
+         return platform_driver_register(&intel_grx500_clk_driver);
+}
+arch_initcall(intel_grx500_cgu_init);
