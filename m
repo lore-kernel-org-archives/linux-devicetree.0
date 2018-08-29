@@ -1,86 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/3] spi: Introduce one new field to set word delay
-Date: Wed, 29 Aug 2018 12:47:05 +0100
-Message-ID: <20180829114705.GC27808@sirena.org.uk>
-References: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
- <01c9b188-5b67-40c0-b08d-99a0543ddf54@cesnet.cz>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v5 1/2] devicetree/bindings: display: Add document for
+ rockchip RGB output
+Date: Wed, 29 Aug 2018 14:15:04 +0200
+Message-ID: <1862757.LMSXp8aoQ6@phil>
+References: <1535443954-38806-1-git-send-email-hjc@rock-chips.com>
+ <1535443954-38806-2-git-send-email-hjc@rock-chips.com>
+ <2858027f-69f5-57ee-d14a-2f0b329e8e0e@ysoft.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="L6iaP+gRLNZHKoI4"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <01c9b188-5b67-40c0-b08d-99a0543ddf54@cesnet.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jan =?iso-8859-1?Q?Kundr=E1t?= <jan.kundrat@cesnet.cz>
-Cc: Baolin Wang <baolin.wang@linaro.org>, linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2858027f-69f5-57ee-d14a-2f0b329e8e0e@ysoft.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---L6iaP+gRLNZHKoI4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Aug 29, 2018 at 01:33:24PM +0200, Jan Kundr=C3=A1t wrote:
-> On =C4=8Dtvrtek 16. srpna 2018 14:54:49 CEST, Baolin Wang wrote:
-> > + * @word_delay: clock cycles to inter word delay after each word size
-> > + *	(set by bits_per_word) transmission.
-
-> The description can be improved because it left me wondering what "clock
-> this is about. I suppose it's about the SPI clock cycles and not CPU clock
-> cycles, right? I'll be hapy to patch this once Baolin confirms that that =
-is
-> the intended meaning.
-
-That's certainly how I read it.
-
-> It seems that this is only implemented in one newly added driver. I'm
-> interested in supporting this in spi-orion.c, but that sounds like
-> driver-specific work for something which is pretty generic. How should th=
-is
-> be implemented? Given that drivers for SPI masters can implement a functi=
-on
-> which transfers several words at once, there are not that many better
-> possibilities than adding udelay()s, though. Thoughts?
-
-Yeah, you'd need to split the transfer into words and then add a delay
-between which would be rather expensive but it's about as good as we can
-get I think.
-
-> What is your plan to do with drivers which do not implement this (yet)? I=
-f a
-> spi_transfer gets queued which asks for a word_delay delay, it is silently
-> ignored now, AFAIU.
-
-Yes.  A generic handler would be best.
-
-> What about userspace support, spidev and spi_ioc_transfer (that's my targ=
-et,
-> actually)? Is it OK to s/pad/word_delay/ in the spidev code and pass that=
- to
-> the generated struct spi_transfer? In my opinion, once we support specify=
-ing
-> this from userspace, one has to definitely check that the SPI controller =
-is
-> ready to honor this request. Do we want a new bit in spi_controller.flags
-> for this?
-
-Not seeing pad in the spidev code?  A feature flag would make sense along
-with a generic implementation.
-
---L6iaP+gRLNZHKoI4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluGh7kACgkQJNaLcl1U
-h9BTMgf/WsVnPfRsreSpuhbtndOSz23d4L5il38ytg2aGPqBlmb0zOOL6R/O54sm
-kqmLj8hmcyudwQtWslTsqqnRXEwvQnIMBXKIW0ah6eA1nPulgQMaq8rWatGqcF/f
-H6Sv6tYoQk1pCBpfgoINoPelAd8RyG/kgrSmxf1W4oUGv2m4Ejkaaujah7smUed8
-chJQ055evB+dBOr/j8MRc9rsguA5z6dZwVNAqnLbzZBpAlqloBtC9CfRLCWbgkgD
-F+Zxp2ZK78tfxIyaPIAnhdtI239vf21j9wy2+WvjtKE0LLERCF0bc957aGDWgUAB
-KaMI6qlq2ikq44ged3Dx70VgxF3o8Q==
-=LMiq
------END PGP SIGNATURE-----
-
---L6iaP+gRLNZHKoI4--
+SGkgTWljaGFsLAoKQW0gRGllbnN0YWcsIDI4LiBBdWd1c3QgMjAxOCwgMTA6MzE6MTUgQ0VTVCBz
+Y2hyaWViIE1pY2hhbCBWb2vDocSNOgo+IE9uIDI4LjguMjAxOCAxMDoxMiwgU2FuZHkgSHVhbmcg
+d3JvdGU6Cj4gPiBUaGlzIHBhdGggYWRkIHN1cHBvcnQgcnYxMTA4IGFuZCBweDMwIHJnYiBvdXRw
+dXQgaW50ZXJmYWNlIGRyaXZlci4KPiAKPiBIaSBTYW5keSwKPiBTZWVtcyBsaWtlIHlvdSBmb3Jn
+b3QgdG8gYWRkcmVzcyBSb2IncyBjb21tZW50IHJlZ2FyZGluZyB0aGUgImRyaXZlciIgd29yZC4K
+PiBBbHNvIGZpeCB0aGUgdHlwbzogcy9wYXRoL3BhdGNoCj4gVGhlIHN1YmplY3QgY291bGQgYmUg
+aW1wcm92ZWQgYXMgd2VsbDogcy9kZXZpY2V0cmVlXC9iaW5kaW5ncy9kdC1iaW5kaW5ncwoKV2Ug
+YWN0dWFsbHkgaG9ub3JlZCBSb2IncyBiaWdnZXIgY29uY2VybiBvZiB0aGUgcmdiIG91dHB1dCBu
+b3QgYmVpbmcKYW4gYWN0dWFsIGRldmljZSBiYWNrZWQgYnkgcHJvZ3JhbW1hYmxlIGhhcmR3YXJl
+IGFuZCBtb3ZlZCB0aGUgcmdiCm91dHB1dCBpbnNpZGUgdGhlIGRyaXZlciwgc2VlIHY3IG9mIHRo
+ZSBwYXRjaHNldCBbMF0uCgoKSGVpa28KClswXSBodHRwczovL3BhdGNod29yay5mcmVlZGVza3Rv
+cC5vcmcvcGF0Y2gvMjQ2Mjk3LwpodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0
+Y2gvMjQ2Mjk4LwpodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gvMjQ2Mjk5
+LwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
