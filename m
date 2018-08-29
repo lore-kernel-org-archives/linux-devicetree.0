@@ -1,48 +1,117 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH 13/26] ARM: tegra: colibri_t30: use proper irq-gpio for
- stmpe811
-Date: Wed, 29 Aug 2018 14:56:59 +0000
-Message-ID: <1535554617.14664.30.camel@toradex.com>
-References: <20180723123658.980-1-marcel@ziswiler.com>
-         <20180723123658.980-14-marcel@ziswiler.com>
-         <844bac7c4e00a014f5e5b857e38a47bf@agner.ch>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH] iio: dac: ad5758: Add support for hard reset
+Date: Wed, 29 Aug 2018 17:58:42 +0300
+Message-ID: <1535554722-1094-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <844bac7c4e00a014f5e5b857e38a47bf@agner.ch>
-Content-Language: en-US
-Content-ID: <D45AECD8DCABB548B2590B692D3CAE5E@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "stefan@agner.ch" <stefan@agner.ch>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "linux-tegra-owner@vger.kernel.org" <linux-tegra-owner@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Popa <stefan.popa@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE4LTA3LTI2IGF0IDEwOjA3ICswMjAwLCBTdGVmYW4gQWduZXIgd3JvdGU6DQo+
-IE9uIDIzLjA3LjIwMTggMTQ6MzYsIE1hcmNlbCBaaXN3aWxlciB3cm90ZToNCj4gPiBGcm9tOiBN
-YXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCj4gPiANCj4gPiBV
-c2UgcHJvcGVyIGlycS1ncGlvIGZvciBzdG1wZTgxMSB0b3VjaCBjb250cm9sbGVyLg0KPiANCj4g
-SSBkb24ndCB0aGluayB0aGlzIGNoYW5nZSBpcyBuZWNlc3NhcnksIGludGVycnVwdHMvaW50ZXJy
-dXB0LXBhcmVudA0KPiBzcGVjaWZpY2F0aW9uIHNlZW1zIHRvIGJlIHN1cHBvcnRlZCBieSB0aGUg
-ZHJpdmVyIGFzIHdlbGwuDQoNClllcywgaG93ZXZlciwgc2hvdWxkIHlvdSBsb29rIGF0IHRoZSBk
-cml2ZXIgbW9yZSBjbG9zZWx5IHlvdSBtYXkgbm90aWNlDQp0aGF0IG9ubHkgaWYgdXNpbmcgaXJx
-LWdwaW8gdGhlIEdQSU8gaW4gcXVlc3Rpb24gYWxzbyBkb2VzIGdldCBwcm9wZXJseQ0KcmVxdWVz
-dGVkIGJ5IGRldm1fZ3Bpb19yZXF1ZXN0X29uZSgpIHdpdGggYW4gInN0bXBlIiBsYWJlbC4gU28g
-SSByZWFsbHkNCmRvIHRoaW5rIGRvaW5nIGl0IHRoaXMgd2F5IGlzIGFkdmFudGFnZW91cy4gSSBk
-aWQgbm90aWNlIHRoaXMNCmRpZmZlcmVuY2UgYnkgY2hhbmNlIHdoZW4gZmlnaHRpbmcgc29tZSBw
-cm9iZSBkZWZlciBpc3N1ZXMgZWFybGllci4NCg0KPiAtLQ0KPiBTdGVmYW4NCj4gDQo+ID4gDQo+
-ID4gU2lnbmVkLW9mZi1ieTogTWFyY2VsIFppc3dpbGVyIDxtYXJjZWwuemlzd2lsZXJAdG9yYWRl
-eC5jb20+DQo+ID4gDQo+ID4gLS0tDQo+ID4gDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3Jh
-MzAtY29saWJyaS5kdHNpIHwgMyArLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
-KCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
-L2R0cy90ZWdyYTMwLWNvbGlicmkuZHRzaQ0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEz
-MC1jb2xpYnJpLmR0c2kNCj4gPiBpbmRleCBjODBiOWJmNDQ3NTIuLmFjZTcyYTUzMTg2YSAxMDA2
-NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWNvbGlicmkuZHRzaQ0KPiA+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtY29saWJyaS5kdHNpDQo+ID4gQEAgLTgz
-Niw4ICs4MzYsNyBAQA0KPiA+ICAJCXN0bXBlODExQDQxIHsNCj4gPiAgCQkJY29tcGF0aWJsZSA9
-ICJzdCxzdG1wZTgxMSI7DQo+ID4gIAkJCXJlZyA9IDwweDQxPjsNCj4gPiAtCQkJaW50ZXJydXB0
-cyA9IDxURUdSQV9HUElPKFYsIDApDQo+ID4gSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gPiAtCQkJ
-aW50ZXJydXB0LXBhcmVudCA9IDwmZ3Bpbz47DQo+ID4gKwkJCWlycS1ncGlvID0gPCZncGlvIFRF
-R1JBX0dQSU8oViwgMCkNCj4gPiBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICAJCQlpbnRlcnJ1
-cHQtY29udHJvbGxlcjsNCj4gPiAgCQkJaWQgPSA8MD47DQo+ID4gIAkJCWJsb2NrcyA9IDwweDU+
-Ow==
+The ad5758 has a hardware reset active low input pin. This patch adds a
+devicetree entry for a reset GPIO and a new ad5758_reset() function.
+During
+initialization, it is checked if the reset property is specified and the
+the GPIO is being asserted, therefore the device will become active.
+
+When the reset function is called, if the gpio_reset var is set, then
+the
+GPIO will be toggled, otherwise a software reset is performed.
+
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ .../devicetree/bindings/iio/dac/ad5758.txt         |  5 ++++
+ drivers/iio/dac/ad5758.c                           | 27 ++++++++++++++++++++--
+ 2 files changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+index bba01a5..bbcd789 100644
+--- a/Documentation/devicetree/bindings/iio/dac/ad5758.txt
++++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+@@ -50,6 +50,9 @@ Required properties:
+ 
+ Optional properties:
+ 
++ - reset-gpios : GPIO spec for the RESET pin. If specified, it will be
++ 		 asserted during driver probe.
++
+  - adi,dc-dc-ilim-microamp: The dc-to-dc converter current limit
+ 		   The following values are currently supported [uA]:
+ 			* 150000
+@@ -71,6 +74,8 @@ AD5758 Example:
+ 		spi-max-frequency = <1000000>;
+ 		spi-cpha;
+ 
++		reset-gpios = <&gpio 22 0>;
++
+ 		adi,dc-dc-mode = <2>;
+ 		adi,range-microvolt = <0 10000000>;
+ 		adi,dc-dc-ilim-microamp = <200000>;
+diff --git a/drivers/iio/dac/ad5758.c b/drivers/iio/dac/ad5758.c
+index bd36333..b5cc5bd 100644
+--- a/drivers/iio/dac/ad5758.c
++++ b/drivers/iio/dac/ad5758.c
+@@ -12,6 +12,7 @@
+ #include <linux/module.h>
+ #include <linux/property.h>
+ #include <linux/spi/spi.h>
++#include <linux/gpio/consumer.h>
+ 
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+@@ -108,6 +109,7 @@ struct ad5758_range {
+ struct ad5758_state {
+ 	struct spi_device *spi;
+ 	struct mutex lock;
++	struct gpio_desc *gpio_reset;
+ 	struct ad5758_range out_range;
+ 	unsigned int dc_dc_mode;
+ 	unsigned int dc_dc_ilim;
+@@ -474,6 +476,22 @@ static int ad5758_internal_buffers_en(struct ad5758_state *st, bool enable)
+ 					     AD5758_CAL_MEM_UNREFRESHED_MSK);
+ }
+ 
++static int ad5758_reset(struct ad5758_state *st)
++{
++	if (st->gpio_reset) {
++		gpiod_set_value(st->gpio_reset, 0);
++		usleep_range(100, 1000);
++		gpiod_set_value(st->gpio_reset, 1);
++	} else {
++		/* Perform a software reset */
++		return ad5758_soft_reset(st);
++	}
++
++	usleep_range(100, 1000);
++
++	return 0;
++}
++
+ static int ad5758_reg_access(struct iio_dev *indio_dev,
+ 			     unsigned int reg,
+ 			     unsigned int writeval,
+@@ -768,13 +786,18 @@ static int ad5758_init(struct ad5758_state *st)
+ {
+ 	int regval, ret;
+ 
++	st->gpio_reset = devm_gpiod_get_optional(&st->spi->dev, "reset",
++						 GPIOD_OUT_HIGH);
++	if (IS_ERR(st->gpio_reset))
++		return PTR_ERR(st->gpio_reset);
++
+ 	/* Disable CRC checks */
+ 	ret = ad5758_crc_disable(st);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	/* Perform a software reset */
+-	ret = ad5758_soft_reset(st);
++	/* Perform a reset */
++	ret = ad5758_reset(st);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-- 
+2.7.4
