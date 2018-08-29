@@ -1,54 +1,73 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 7/9] net: stmmac: dwmac-sun8i: fix OF child-node lookup
-Date: Wed, 29 Aug 2018 09:54:29 +0200
-Message-ID: <20180829075429.GD28861@localhost>
-References: <20180827082153.22537-1-johan@kernel.org>
- <20180827082153.22537-8-johan@kernel.org>
- <20180828080624.GA25644@Red>
+From: Parthiban Nallathambi <pn@denx.de>
+Subject: Re: [PATCH v4 0/5] Add Actions Semi S700 pinctrl support
+Date: Wed, 29 Aug 2018 09:55:48 +0200
+Message-ID: <3c8a46a3-4884-ba0e-c72e-2e03357d6e40@denx.de>
+References: <0180729200038.11795-1-sravanhome@gmail.com>
+ <20180731194743.13678-1-sravanhome@gmail.com>
+ <CACRpkda=q+LZMUN5xJ777ZGWxYRBdZTvG0naNqr5BoLnVQ1=aA@mail.gmail.com>
+ <20180829074119.GA24958@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180828080624.GA25644@Red>
+In-Reply-To: <20180829074119.GA24958@Mani-XPS-13-9360>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S . Miller" <davem@davemloft.net>, maxime.ripard@bootlin.com, wens@csie.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: pn@denx.de, sravanhome@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, mp-cs@actions-semi.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, linux@cubietech.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2018 at 10:06:24AM +0200, Corentin Labbe wrote:
-> On Mon, Aug 27, 2018 at 10:21:51AM +0200, Johan Hovold wrote:
-> > Use the new of_get_compatible_child() helper to lookup the mdio-internal
-> > child node instead of using of_find_compatible_node(), which searches
-> > the entire tree from a given start node and thus can return an unrelated
-> > (i.e. non-child) node.
-> > 
-> > This also addresses a potential use-after-free (e.g. after probe
-> > deferral) as the tree-wide helper drops a reference to its first
-> > argument (i.e. the mdio-mux node). Fortunately, this was inadvertently
-> > balanced by a failure to drop the mdio-mux reference after lookup.
-> > 
-> > While at it, also fix the related mdio-internal- and phy-node reference
-> > leaks.
-> > 
-> > Fixes: 634db83b8265 ("net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs")
-> > Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > Cc: Andrew Lunn <andrew@lunn.ch>
-> > Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> > Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> > Cc: Jose Abreu <joabreu@synopsys.com>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Signed-off-by: Johan Hovold <johan@kernel.org>
+Hi Mani,
+
+On 08/29/2018 09:41 AM, Manivannan Sadhasivam wrote:
+> On Wed, Aug 29, 2018 at 09:35:38AM +0200, Linus Walleij wrote:
+>> On Tue, Jul 31, 2018 at 9:48 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
+>>
+>>> This patchset adds pinctrl support for Actions Semi S700 SoC.
+>>> Pinmux functions are only accessible for pin groups while pinconf
+>>> parameters are available for both pin groups and individual pins.
+>>>
+>>> pinctrl driver is verified using the Cubieboard7.
+>>>
+>>> common functionalities from s900 is moved for all Actions Semi
+>>> SoC's usage.
+>>> Common pad control configurations are moved to SoC specific
+>>>
+>>> dts entry for pinctrl depends on clock driver which is still under review:
+>>> https://patchwork.kernel.org/patch/10533959/
+>>
+>> So what is the status of this patch set?
+>>
 > 
-> You should have CCed sunxi maintainers 
-> Maxime Ripard <maxime.ripard@bootlin.com> (maintainer:ARM/Allwinner sunXi SoC support)
-> Chen-Yu Tsai <wens@csie.org> (maintainer:ARM/Allwinner sunXi SoC support)
+> Oops. This one slipped through the cracks...
+> 
+>> I am happy to apply it once you have the right buildtime dependencies
+>> and Manivannan's ACK on the patch set! (Looks good to me.)
+>>
+> 
+> Sadly mutt played its part on this patchset and 1,3 patches got
+> deleted accidentally.
+> 
+>> Maybe you want to rebase on v4.19-rc1 and resend as v5 before
+>> I do that though?
+>>
+> 
+> Parthiban,
+> 
+> Can you please rebase and send the next iteration as Linus said. I'll take a
+> look.
 
-Yeah, I cut down the CC list somewhat (I think because they didn't seem
-to be actively involved in the stmmac patch handling). Thanks for adding
-them back.
+Sure, will send it today after rebase.
 
-> Since I am just back from holidays, I will test this patch this week.
+> 
+> Sorry for the late reply.
+> 
+> Regards,
+> Mani
+> 
+>> Yours,
+>> Linus Walleij
 
-Thanks, that would be great.
-
-Johan
+-- 
+Thanks,
+Parthiban N
