@@ -1,92 +1,74 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v7 2/8] dt-bindings: Introduce interconnect provider
- bindings
-Date: Wed, 29 Aug 2018 15:33:29 +0300
-Message-ID: <ec22950d-ae18-0cec-3bef-a4840618eb7d@linaro.org>
-References: <20180731161340.13000-1-georgi.djakov@linaro.org>
- <20180731161340.13000-3-georgi.djakov@linaro.org>
- <CABGGisxq+hf91R18pnZ=VZ9f99GssWWPhpPCjNAROJmKg5-udA@mail.gmail.com>
- <e114ed83-fd54-4952-f375-e1d94826ac6e@linaro.org>
- <20180820153207.xx5outviph7ec76p@flea>
- <672e6c6c-222f-5e7f-5d0c-acc8da68b1ab@linaro.org>
- <CAL_JsqKMPm=qmfYMQH99_gqSv0-ynUSvbkoNjjeDKtyxfgE1tg@mail.gmail.com>
- <20180827151140.luysp2kfbcq6patg@flea>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH 0/8] regulator/mfd/dt_bindings: bd718x7: Support ROHM bd71847
+Date: Wed, 29 Aug 2018 15:35:38 +0300
+Message-ID: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827151140.luysp2kfbcq6patg@flea>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh@kernel.org>
-Cc: "open list:THERMAL" <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Evan Green <evgreen@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob and Maxime,
+Patch series adding support for ROHM BD71847 PMIC.
 
-On 08/27/2018 06:11 PM, Maxime Ripard wrote:
-> On Fri, Aug 24, 2018 at 10:35:23AM -0500, Rob Herring wrote:
->> On Fri, Aug 24, 2018 at 9:51 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>>
->>> Hi Maxime,
->>>
->>> On 08/20/2018 06:32 PM, Maxime Ripard wrote:
->>>> Hi Georgi,
->>>>
->>>> On Tue, Aug 07, 2018 at 05:54:38PM +0300, Georgi Djakov wrote:
->>>>>> There is also a patch series from Maxime Ripard that's addressing the
->>>>>> same general area. See "dt-bindings: Add a dma-parent property". We
->>>>>> don't need multiple ways to address describing the device to memory
->>>>>> paths, so you all had better work out a common solution.
->>>>>
->>>>> Looks like this fits exactly into the interconnect API concept. I see
->>>>> MBUS as interconnect provider and display/camera as consumers, that
->>>>> report their bandwidth needs. I am also planning to add support for
->>>>> priority.
->>>>
->>>> Thanks for working on this. After looking at your serie, the one thing
->>>> I'm a bit uncertain about (and the most important one to us) is how we
->>>> would be able to tell through which interconnect the DMA are done.
->>>>
->>>> This is important to us since our topology is actually quite simple as
->>>> you've seen, but the RAM is not mapped on that bus and on the CPU's,
->>>> so we need to apply an offset to each buffer being DMA'd.
->>>
->>> Ok, i see - your problem is not about bandwidth scaling but about using
->>> different memory ranges by the driver to access the same location. So
->>> this is not really the same and your problem is different. Also the
->>> interconnect bindings are describing a path and endpoints. However i am
->>> open to any ideas.
->>
->> It may be different things you need, but both are related to the path
->> between a bus master and memory. We can't have each 'problem'
->> described in a different way. Well, we could as long as each platform
->> has different problems, but that's unlikely.
->>
->> It could turn out that the only commonality is property naming
->> convention, but that's still better than 2 independent solutions.
-> 
-> Yeah, I really don't think the two issues are unrelated. Can we maybe
-> have a particular interconnect-names value to mark the interconnect
-> being used to perform DMA?
+ROHM BD71847 is modified version of ROHM BD71837 Power Management IC.
+BD71847 integrates 6 buck regulators and 6  LDO’s.
 
-We can call one of the paths "dma" and use it to perform DMA for the
-current device. I don't see a problem with this. The name of the path is
-descriptive and makes sense. And by doing we avoid adding more DT
-properties, which would be an other option.
+The patch series adds support for BD71847 in BD71837 driver. It also
+extends BD71837 to support all BUCK/LDO output voltages.
 
-This also makes me think that it might be a good idea to have a standard
-name for the path to memory as i expect some people will call it "mem",
-others "ddr" etc.
+Support for "pickable voltage ranges" is introduced in order to fully
+support BD71837/BD71847 voltage selection registers. Some of the voltage
+regulators provide different multiple voltage ranges and output voltage
+is determined by range selection bit(s) and voltage selection bits
+instead of plain voltage selection bits.
 
-Thanks,
-Georgi
+Patch 1:
+	BD71837/BD71847 voltage monitoring fix.
+Patch 2:
+	limited BD71847 support (without range selection)
+Patch 3:
+	BD71847 device-tree bindings for regulators
+Patch 4:
+	BD71847 device-tree bindings for mfd
+Patch 5:
+	Voltage range selection support to regulator helpers
+Patch 6:
+	Simple renaming plenty of BD71837 occurrences to BD718XX
+Patch 7:
+	BD71837/BD71847 Full voltage range support using helpers from
+	patch 5
+Patch 8:
+	Renaming bd71837 regulator driver to bd718x7
 
->> I know you each want to just fix your issues, but the fact that DT
->> doesn't model the DMA side of the bus structure has been an issue at
->> least since the start of DT on ARM. Either we should address this in a
->> flexible way or we can just continue to manage without. So I'm not
->> inclined to take something that only addresses one SoC family.
-> 
-> I'd really like to have it addressed. We're getting bit by this, and
-> the hacks we have don't work well anymore.
+this patch series is based on linux-next tag next-20180823.
+
+Matti Vaittinen (8):
+  regulator: bd71837: Disable voltage monitoring for LDO3/4
+  regulator: Support ROHM BD71847 power management IC
+  regulator: dt bindings: add BD71847 device-tree binding documentation
+  mfd: dt bindings: add BD71847 device-tree binding documentation
+  regulator: Support regulators where voltage ranges are selectable
+  regulator/mfd: bd718xx: rename bd71837/bd71847 common instances
+  regulator: bd718XX use pickable ranges
+  regulator: bd718xx: renme bd71837 to 718xx
+
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |   17 +-
+ .../bindings/regulator/rohm,bd71837-regulator.txt  |   12 +-
+ drivers/mfd/rohm-bd718x7.c                         |  182 ++--
+ drivers/regulator/Kconfig                          |    2 +-
+ drivers/regulator/Makefile                         |    2 +-
+ drivers/regulator/bd71837-regulator.c              |  626 -----------
+ drivers/regulator/bd718x7-regulator.c              | 1138 ++++++++++++++++++++
+ drivers/regulator/core.c                           |    5 +
+ drivers/regulator/helpers.c                        |  232 ++++
+ include/linux/mfd/rohm-bd718x7.h                   |  375 +++----
+ include/linux/regulator/driver.h                   |   20 +-
+ 11 files changed, 1714 insertions(+), 897 deletions(-)
+ delete mode 100644 drivers/regulator/bd71837-regulator.c
+ create mode 100644 drivers/regulator/bd718x7-regulator.c
+
+-- 
+2.14.3
