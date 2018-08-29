@@ -1,37 +1,85 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 2/2] ARM: imx_v6_v7_defconfig: select CONFIG_ARM_CPUIDLE by default
-Date: Wed, 29 Aug 2018 13:00:47 +0800
-Message-ID: <1535518847-24417-2-git-send-email-Anson.Huang@nxp.com>
-References: <1535518847-24417-1-git-send-email-Anson.Huang@nxp.com>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V5 3/8] backlight: qcom-wled: Add new properties for
+ PMI8998
+Date: Wed, 29 Aug 2018 11:22:08 +0530
+Message-ID: <a32ac1da9453d45be3f70496fc6fe82b@codeaurora.org>
+References: <1535106467-17843-1-git-send-email-kgunda@codeaurora.org>
+ <1535106467-17843-4-git-send-email-kgunda@codeaurora.org>
+ <20180827100143.GE31905@amd>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535518847-24417-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180827100143.GE31905@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Pavel Machek <pavel@ucw.cz>
+Cc: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some i.MX platforms like i.MX7S/D uses generic ARM cpuidle
-driver and psci method to support cpuidle feature, select
-CONFIG_ARM_CPUIDLE by default for such platforms.
+On 2018-08-27 15:31, Pavel Machek wrote:
+> Hi!
+> 
+> On Fri 2018-08-24 15:57:42, Kiran Gunda wrote:
+>> Update the bindings with the new properties used for
+>> PMI8998.
+> 
+>> Changes from V3:
+>>     - Removed the default values.
+> 
+> Why?
+> 
+As per Bjorn's comment I have removed the default values.
+Do you want to add them back ?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+>> +- qcom,current-limit-microamp
+>> +	Usage:        optional
+>> +	Value type:   <u32>
+>> +	Definition:   uA; per-string current limit; value from 0 to 30000 
+>> with
+>> +		      2500 uA step.
+>> 
+>>  - qcom,current-boost-limit
+>>  	Usage:        optional
+>>  	Value type:   <u32>
+>>  	Definition:   mA; boost current limit.
+>>  		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
+>> -		      1680. Default: 805 mA
+>> +		      1680.
+>>  		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
+>> -		      1500. Default: 970 mA
+>> +		      1500.
+>> 
+> 
+> I'd say that optional properties should list default values...?
+> 
+Same as above.
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index e2c1276..65df4b2 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -62,6 +62,7 @@ CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
- CONFIG_CPUFREQ_DT=y
- CONFIG_ARM_IMX6Q_CPUFREQ=y
- CONFIG_CPU_IDLE=y
-+CONFIG_ARM_CPUIDLE=y
- CONFIG_VFP=y
- CONFIG_NEON=y
- CONFIG_BINFMT_MISC=m
--- 
-2.7.4
+>>  - qcom,ovp
+>>  	Usage:        optional
+>>  	Value type:   <u32>
+>>  	Definition:   V; Over-voltage protection limit; one of:
+>> -		      27, 29, 32, 35. default: 29V
+>> +		      27, 29, 32, 35.
+>>  		      This property is supported only for PM8941.
+>> 
+> 
+> Same here.
+> 
+Same as above.
+>> +- qcom,ovp-millivolt
+>> +	Usage:        optional
+>> +	Value type:   <u32>
+>> +	Definition:   mV; Over-voltage protection limit;
+>> +		      For pmi8998: one of 18100, 19600, 29600, 31100
+>> +		      If this property is not specified for PM8941, it
+>> +		      falls back to "qcom,ovp" property.
+>> +
+> 
+> "voltage-limit-millivolt"? "ovp" is not really well known acronym.
+> 									Pavel
+"ovp" is already being used in pm8941-wled.c driver. That's why I am 
+using ovp-millivolt.
+If I rename this, i think I have to rename the existing "qcom,ovp" also, 
+which will break
+the backward compatibility.
