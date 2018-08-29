@@ -1,116 +1,60 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [Patch v15 4/5] dt-bindings: arm-smmu: Add bindings
- for qcom, smmu-v2
-Date: Wed, 29 Aug 2018 16:53:25 +0530
-Message-ID: <CAFp+6iGHus-kZv+Zr5aiYRLct07NCFBL3k44bX=c4eW7J24kZg@mail.gmail.com>
-References: <20180827105551.16346-1-vivek.gautam@codeaurora.org>
- <20180827105551.16346-5-vivek.gautam@codeaurora.org>
- <20180828203418.GA18366@bogus>
- <a1e31d1e-aaa4-5951-2261-3169033c636a@codeaurora.org>
+From: =?iso-8859-1?Q?Jan_Kundr=E1t?= <jan.kundrat@cesnet.cz>
+Subject: Re: [PATCH v2 1/3] spi: Introduce one new field to set word delay
+Date: Wed, 29 Aug 2018 13:33:24 +0200
+Message-ID: <01c9b188-5b67-40c0-b08d-99a0543ddf54@cesnet.cz>
+References: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <a1e31d1e-aaa4-5951-2261-3169033c636a-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>, broonie@kernel.org, linux-spi@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@spreadtrum.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBBdWcgMjksIDIwMTggYXQgMjowNSBQTSBWaXZlayBHYXV0YW0KPHZpdmVrLmdhdXRh
-bUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPiBIaSBSb2IsCj4KPgo+IE9uIDgvMjkvMjAxOCAy
-OjA0IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiA+IE9uIE1vbiwgQXVnIDI3LCAyMDE4IGF0IDA0
-OjI1OjUwUE0gKzA1MzAsIFZpdmVrIEdhdXRhbSB3cm90ZToKPiA+PiBBZGQgYmluZGluZ3MgZG9j
-IGZvciBRY29tJ3Mgc21tdS12MiBpbXBsZW1lbnRhdGlvbi4KPiA+Pgo+ID4+IFNpZ25lZC1vZmYt
-Ynk6IFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPgo+ID4+IFJldmll
-d2VkLWJ5OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPgo+ID4+IFRlc3RlZC1ieTog
-U3Jpbml2YXMgS2FuZGFnYXRsYSA8c3Jpbml2YXMua2FuZGFnYXRsYUBsaW5hcm8ub3JnPgo+ID4+
-IC0tLQo+ID4+Cj4gPj4gQ2hhbmdlcyBzaW5jZSB2MTQ6Cj4gPj4gICAtIFRoaXMgaXMgYSBuZXcg
-cGF0Y2ggYWRkZWQgaW4gdjE1IGFmdGVyIG5vdGljaW5nIHRoZSBuZXcKPiA+PiAgICAgY2hlY2tw
-YXRjaCB3YXJuaW5nIGZvciBzZXBhcmF0ZSBkdC1iaW5kaW5ncyBkb2MuCj4gPj4gICAtIFRoaXMg
-cGF0Y2ggYWxzbyBhZGRyZXNzZXMgY29tbWVudHMgZ2l2ZW4gYnkgUm9iIGFuZCBSb2JpbiB0byBh
-ZGQKPiA+PiAgICAgYSBsaXN0IG9mIHZhbGlkIHZhbHVlcyBvZiAnPHNvYz4nIGluICJxY29tLDxz
-b2M+LXNtbXUtdjIiCj4gPj4gICAgIGNvbXBhdGlibGUgc3RyaW5nLgo+ID4+Cj4gPj4gICAuLi4v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQgICAgICAgICB8IDQ3ICsrKysr
-KysrKysrKysrKysrKysrKysKPiA+PiAgIDEgZmlsZSBjaGFuZ2VkLCA0NyBpbnNlcnRpb25zKCsp
-Cj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2lvbW11L2FybSxzbW11LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-b21tdS9hcm0sc21tdS50eHQKPiA+PiBpbmRleCA4YTZmZmNlMTJhZjUuLjUyMTk4YTUzOTYwNiAx
-MDA2NDQKPiA+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUv
-YXJtLHNtbXUudHh0Cj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2lvbW11L2FybSxzbW11LnR4dAo+ID4+IEBAIC0xNywxMCArMTcsMjQgQEAgY29uZGl0aW9ucy4K
-PiA+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICJhcm0sbW11LTQwMSIKPiA+PiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICJhcm0sbW11LTUwMCIKPiA+PiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICJjYXZpdW0sc21tdS12MiIKPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAgInFj
-b20sPHNvYz4tc21tdS12MiIsICJxY29tLHNtbXUtdjIiCj4gPiBUaGUgdjIgaW4gdGhlIGNvbXBh
-dGlibGUgc3RyaW5nIGlzIGtpbmQgb2YgcmVkdW5kYW50IHVubGVzcyB0aGUgU29DIGhhcwo+ID4g
-b3RoZXIgU01NVSB0eXBlcy4KPgo+IHNkbTg0NSBoYXMgc21tdS12MiwgYW5kIHNtbXUtNTAwIFsx
-XS4KPgo+ID4+Cj4gPj4gICAgICAgICAgICAgICAgICAgICBkZXBlbmRpbmcgb24gdGhlIHBhcnRp
-Y3VsYXIgaW1wbGVtZW50YXRpb24gYW5kL29yIHRoZQo+ID4+ICAgICAgICAgICAgICAgICAgICAg
-dmVyc2lvbiBvZiB0aGUgYXJjaGl0ZWN0dXJlIGltcGxlbWVudGVkLgo+ID4+Cj4gPj4gKyAgICAg
-ICAgICAgICAgICAgIEEgbnVtYmVyIG9mIFFjb20gU29DcyB1c2UgcWNvbSxzbW11LXYyIHZlcnNp
-b24gb2YgdGhlIElQLgo+ID4+ICsgICAgICAgICAgICAgICAgICAicWNvbSw8c29jPi1zbW11LXYy
-IiByZXByZXNlbnRzIGEgc29jIHNwZWNpZmljIGNvbXBhdGlibGUKPiA+PiArICAgICAgICAgICAg
-ICAgICAgc3RyaW5nIHRoYXQgc2hvdWxkIGJlIHByZXNlbnQgYWxvbmcgd2l0aCB0aGUgInFjb20s
-c21tdS12MiIKPiA+PiArICAgICAgICAgICAgICAgICAgdG8gZmFjaWxpdGF0ZSBTb0Mgc3BlY2lm
-aWMgY2xvY2tzL3Bvd2VyIGNvbm5lY3Rpb25zIGFuZCB0bwo+ID4+ICsgICAgICAgICAgICAgICAg
-ICBhZGRyZXNzIHNwZWNpZmljIGJ1ZyBmaXhlcy4KPiA+PiArICAgICAgICAgICAgICAgICAgJzxz
-b2M+JyBzdHJpbmcgaW4gInFjb20sPHNvYz4tc21tdS12MiIgc2hvdWxkIGJlIG9uZSBvZiB0aGUK
-PiA+PiArICAgICAgICAgICAgICAgICAgZm9sbG93aW5nOgo+ID4+ICsgICAgICAgICAgICAgICAg
-ICBtc204OTk2IC0gZm9yIG1zbTg5OTYgUWNvbSBTb0MuCj4gPj4gKyAgICAgICAgICAgICAgICAg
-IHNkbTg0NSAtIGZvciBzZG04NDUgUWNvbSBTb2MuCj4gPiBSYXRoZXIgdGhhbiBhbGwgdGhpcyBw
-cm9zZSwgaXQgd291bGQgYmUgc2ltcGxlciB0byBqdXN0IGFkZCAyIGxpbmVzIHdpdGgKPiA+IHRo
-ZSBmdWxsIGNvbXBhdGlibGVzIHJhdGhlciB0aGFuIDxzb2M+LiBUaGUgPHNvYz4gdGhpbmcgaXMg
-bm90IGdvaW5nIHRvCj4gPiB3b3JrIHdoZW4vaWYgd2UgbW92ZSBiaW5kaW5ncyB0byBqc29uLXNj
-aGVtYSBhbHNvLgo+Cj4gdGhlbiB3ZSBrZWVwIGFkZGluZwo+ICAgICAgICAgICAicWNvbSxtc204
-OTk2LXNtbXUtdjIiLCAicWNvbSxzbW11LXYyIgo+ICAgICAgICAgICAicWNvbSxtc204OTk4LXNt
-bXUtdjIiLCAicWNvbSxzbW11LXYyIgo+ICAgICAgICAgICAicWNvbSxzZG04NDUtc21tdS12MiIs
-ICJxY29tLHNtbXUtdjIiLAo+IGFuZCBmcm9tIFsxXQo+ICAgICAgICAgICAicWNvbSxzZG04NDUt
-c21tdS01MDAiLCAiYXJtLG1tdS01MDAiLCBldGMuCj4gZm9yIGVhY2ggU29Dcz8KCkhvdyBhYm91
-dCBmb2xsb3dpbmcgZGlmZiBvbiB0b3Agb2YgdGhpcyBwYXRjaD8KCmRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUudHh0CmIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dAppbmRleCA1MjE5
-OGE1Mzk2MDYuLjVlNmMwNDg3NjUzMyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUudHh0CkBAIC0xNywyMyArMTcsMTggQEAgY29u
-ZGl0aW9ucy4KICAgICAgICAgICAgICAgICAgICAgICAgICJhcm0sbW11LTQwMSIKICAgICAgICAg
-ICAgICAgICAgICAgICAgICJhcm0sbW11LTUwMCIKICAgICAgICAgICAgICAgICAgICAgICAgICJj
-YXZpdW0sc21tdS12MiIKLSAgICAgICAgICAgICAgICAgICAgICAgICJxY29tLDxzb2M+LXNtbXUt
-djIiLCAicWNvbSxzbW11LXYyIgorICAgICAgICAgICAgICAgICAgICAgICAgInFjb20sc21tdS12
-MiIKCiAgICAgICAgICAgICAgICAgICBkZXBlbmRpbmcgb24gdGhlIHBhcnRpY3VsYXIgaW1wbGVt
-ZW50YXRpb24gYW5kL29yIHRoZQogICAgICAgICAgICAgICAgICAgdmVyc2lvbiBvZiB0aGUgYXJj
-aGl0ZWN0dXJlIGltcGxlbWVudGVkLgoKLSAgICAgICAgICAgICAgICAgIEEgbnVtYmVyIG9mIFFj
-b20gU29DcyB1c2UgcWNvbSxzbW11LXYyIHZlcnNpb24gb2YgdGhlIElQLgotICAgICAgICAgICAg
-ICAgICAgInFjb20sPHNvYz4tc21tdS12MiIgcmVwcmVzZW50cyBhIHNvYyBzcGVjaWZpYyBjb21w
-YXRpYmxlCi0gICAgICAgICAgICAgICAgICBzdHJpbmcgdGhhdCBzaG91bGQgYmUgcHJlc2VudCBh
-bG9uZyB3aXRoIHRoZSAicWNvbSxzbW11LXYyIgotICAgICAgICAgICAgICAgICAgdG8gZmFjaWxp
-dGF0ZSBTb0Mgc3BlY2lmaWMgY2xvY2tzL3Bvd2VyIGNvbm5lY3Rpb25zIGFuZCB0bwotICAgICAg
-ICAgICAgICAgICAgYWRkcmVzcyBzcGVjaWZpYyBidWcgZml4ZXMuCi0gICAgICAgICAgICAgICAg
-ICAnPHNvYz4nIHN0cmluZyBpbiAicWNvbSw8c29jPi1zbW11LXYyIiBzaG91bGQgYmUgb25lIG9m
-IHRoZQotICAgICAgICAgICAgICAgICAgZm9sbG93aW5nOgotICAgICAgICAgICAgICAgICAgbXNt
-ODk5NiAtIGZvciBtc204OTk2IFFjb20gU29DLgotICAgICAgICAgICAgICAgICAgc2RtODQ1IC0g
-Zm9yIHNkbTg0NSBRY29tIFNvYy4KLQotICAgICAgICAgICAgICAgICAgQW4gZXhhbXBsZSBzdHJp
-bmcgd291bGQgYmUgLQotICAgICAgICAgICAgICAgICAgInFjb20sbXNtODk5Ni1zbW11LXYyIiwg
-InFjb20sc21tdS12MiIuCisgICAgICAgICAgICAgICAgICBRY29tIFNvQ3MgdXNpbmcgcWNvbSxz
-bW11LXYyIG11c3QgaGF2ZSBzb2Mgc3BlY2lmaWMKKyAgICAgICAgICAgICAgICAgIGNvbXBhdGli
-bGUgc3RyaW5nIGF0dGFjaGVkIHRvICJxY29tLHNtbXUtdjIiIHRvIHRha2UgY2FyZQorICAgICAg
-ICAgICAgICAgICAgb2YgU29DIHNwZWNpZmljIGNsb2Nrcy9wb3dlciBjb25uZWN0aW9ucyBhbmQg
-dG8gYWRkcmVzcworICAgICAgICAgICAgICAgICAgc3BlY2lmaWMgYnVnIGZpeGVzLgorICAgICAg
-ICAgICAgICAgICAgUHJlY2lzZWx5LCBpdCBzaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmc6
-CisgICAgICAgICAgICAgICAgICAicWNvbSxtc204OTk2LXNtbXUtdjIiLCAicWNvbSxzbW11LXYy
-IiwKKyAgICAgICAgICAgICAgICAgICJxY29tLHNkbTg0NS1zbW11LXYyIiwgInFjb20sc21tdS12
-MiIuCgpUaGFua3MhCkJlc3QgcmVnYXJkcwpWaXZlawoKLS0gClFVQUxDT01NIElORElBLCBvbiBi
-ZWhhbGYgb2YgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIKb2Yg
-Q29kZSBBdXJvcmEgRm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGlu
-ZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On =C4=8Dtvrtek 16. srpna 2018 14:54:49 CEST, Baolin Wang wrote:
+> + * @word_delay: clock cycles to inter word delay after each word size
+> + *=09(set by bits_per_word) transmission.
+
+I need a similar functionality for talking to a SPI device from userspace =20=
+
+-- see my attempt for implementing this in spi-orion.c at [1]. The device's=20=
+
+datasheet says that I should wait, e.g., 3=C2=B5s between each two words. I=20=
+
+therefore like this patch :).
+
+The description can be improved because it left me wondering what "clock=20
+this is about. I suppose it's about the SPI clock cycles and not CPU clock=20=
+
+cycles, right? I'll be hapy to patch this once Baolin confirms that that is=20=
+
+the intended meaning.
+
+It seems that this is only implemented in one newly added driver. I'm=20
+interested in supporting this in spi-orion.c, but that sounds like=20
+driver-specific work for something which is pretty generic. How should this=20=
+
+be implemented? Given that drivers for SPI masters can implement a function=20=
+
+which transfers several words at once, there are not that many better=20
+possibilities than adding udelay()s, though. Thoughts?
+
+What is your plan to do with drivers which do not implement this (yet)? If=20=
+
+a spi_transfer gets queued which asks for a word_delay delay, it is=20
+silently ignored now, AFAIU.
+
+What about userspace support, spidev and spi_ioc_transfer (that's my=20
+target, actually)? Is it OK to s/pad/word_delay/ in the spidev code and=20
+pass that to the generated struct spi_transfer? In my opinion, once we=20
+support specifying this from userspace, one has to definitely check that=20
+the SPI controller is ready to honor this request. Do we want a new bit in=20=
+
+spi_controller.flags for this?
+
+With kind regards,
+Jan
+
+[1] https://patchwork.kernel.org/patch/10221397/
