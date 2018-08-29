@@ -1,85 +1,132 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V5 3/8] backlight: qcom-wled: Add new properties for
- PMI8998
-Date: Wed, 29 Aug 2018 11:22:08 +0530
-Message-ID: <a32ac1da9453d45be3f70496fc6fe82b@codeaurora.org>
-References: <1535106467-17843-1-git-send-email-kgunda@codeaurora.org>
- <1535106467-17843-4-git-send-email-kgunda@codeaurora.org>
- <20180827100143.GE31905@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v2 1/2] iio: adc: sc27xx: Add raw data support
+Date: Wed, 29 Aug 2018 14:04:04 +0800
+Message-ID: <0adef2f9eafa913eb9f4bc1ed3dc643d09bf02a2.1535434262.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827100143.GE31905@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, baolin.wang@linaro.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-08-27 15:31, Pavel Machek wrote:
-> Hi!
-> 
-> On Fri 2018-08-24 15:57:42, Kiran Gunda wrote:
->> Update the bindings with the new properties used for
->> PMI8998.
-> 
->> Changes from V3:
->>     - Removed the default values.
-> 
-> Why?
-> 
-As per Bjorn's comment I have removed the default values.
-Do you want to add them back ?
+The headset device will use channel 20 of ADC controller to detect events,
+but it needs the raw ADC data to do conversion according to its own formula.
 
->> +- qcom,current-limit-microamp
->> +	Usage:        optional
->> +	Value type:   <u32>
->> +	Definition:   uA; per-string current limit; value from 0 to 30000 
->> with
->> +		      2500 uA step.
->> 
->>  - qcom,current-boost-limit
->>  	Usage:        optional
->>  	Value type:   <u32>
->>  	Definition:   mA; boost current limit.
->>  		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
->> -		      1680. Default: 805 mA
->> +		      1680.
->>  		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
->> -		      1500. Default: 970 mA
->> +		      1500.
->> 
-> 
-> I'd say that optional properties should list default values...?
-> 
-Same as above.
+Thus we should configure the channel mask separately and configure channel
+20 as IIO_CHAN_INFO_RAW, as well as adding raw data read support.
 
->>  - qcom,ovp
->>  	Usage:        optional
->>  	Value type:   <u32>
->>  	Definition:   V; Over-voltage protection limit; one of:
->> -		      27, 29, 32, 35. default: 29V
->> +		      27, 29, 32, 35.
->>  		      This property is supported only for PM8941.
->> 
-> 
-> Same here.
-> 
-Same as above.
->> +- qcom,ovp-millivolt
->> +	Usage:        optional
->> +	Value type:   <u32>
->> +	Definition:   mV; Over-voltage protection limit;
->> +		      For pmi8998: one of 18100, 19600, 29600, 31100
->> +		      If this property is not specified for PM8941, it
->> +		      falls back to "qcom,ovp" property.
->> +
-> 
-> "voltage-limit-millivolt"? "ovp" is not really well known acronym.
-> 									Pavel
-"ovp" is already being used in pm8941-wled.c driver. That's why I am 
-using ovp-millivolt.
-If I rename this, i think I have to rename the existing "qcom,ovp" also, 
-which will break
-the backward compatibility.
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+Changes from v1:
+ - None.
+
+---
+ drivers/iio/adc/sc27xx_adc.c |   80 ++++++++++++++++++++++++------------------
+ 1 file changed, 45 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+index 2b60efe..153c311 100644
+--- a/drivers/iio/adc/sc27xx_adc.c
++++ b/drivers/iio/adc/sc27xx_adc.c
+@@ -273,6 +273,17 @@ static int sc27xx_adc_read_raw(struct iio_dev *indio_dev,
+ 	int ret, tmp;
+ 
+ 	switch (mask) {
++	case IIO_CHAN_INFO_RAW:
++		mutex_lock(&indio_dev->mlock);
++		ret = sc27xx_adc_read(data, chan->channel, scale, &tmp);
++		mutex_unlock(&indio_dev->mlock);
++
++		if (ret)
++			return ret;
++
++		*val = tmp;
++		return IIO_VAL_INT;
++
+ 	case IIO_CHAN_INFO_PROCESSED:
+ 		mutex_lock(&indio_dev->mlock);
+ 		ret = sc27xx_adc_read_processed(data, chan->channel, scale,
+@@ -315,48 +326,47 @@ static int sc27xx_adc_write_raw(struct iio_dev *indio_dev,
+ 	.write_raw = &sc27xx_adc_write_raw,
+ };
+ 
+-#define SC27XX_ADC_CHANNEL(index) {				\
++#define SC27XX_ADC_CHANNEL(index, mask) {			\
+ 	.type = IIO_VOLTAGE,					\
+ 	.channel = index,					\
+-	.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |	\
+-			      BIT(IIO_CHAN_INFO_SCALE),		\
++	.info_mask_separate = mask | BIT(IIO_CHAN_INFO_SCALE),	\
+ 	.datasheet_name = "CH##index",				\
+ 	.indexed = 1,						\
+ }
+ 
+ static const struct iio_chan_spec sc27xx_channels[] = {
+-	SC27XX_ADC_CHANNEL(0),
+-	SC27XX_ADC_CHANNEL(1),
+-	SC27XX_ADC_CHANNEL(2),
+-	SC27XX_ADC_CHANNEL(3),
+-	SC27XX_ADC_CHANNEL(4),
+-	SC27XX_ADC_CHANNEL(5),
+-	SC27XX_ADC_CHANNEL(6),
+-	SC27XX_ADC_CHANNEL(7),
+-	SC27XX_ADC_CHANNEL(8),
+-	SC27XX_ADC_CHANNEL(9),
+-	SC27XX_ADC_CHANNEL(10),
+-	SC27XX_ADC_CHANNEL(11),
+-	SC27XX_ADC_CHANNEL(12),
+-	SC27XX_ADC_CHANNEL(13),
+-	SC27XX_ADC_CHANNEL(14),
+-	SC27XX_ADC_CHANNEL(15),
+-	SC27XX_ADC_CHANNEL(16),
+-	SC27XX_ADC_CHANNEL(17),
+-	SC27XX_ADC_CHANNEL(18),
+-	SC27XX_ADC_CHANNEL(19),
+-	SC27XX_ADC_CHANNEL(20),
+-	SC27XX_ADC_CHANNEL(21),
+-	SC27XX_ADC_CHANNEL(22),
+-	SC27XX_ADC_CHANNEL(23),
+-	SC27XX_ADC_CHANNEL(24),
+-	SC27XX_ADC_CHANNEL(25),
+-	SC27XX_ADC_CHANNEL(26),
+-	SC27XX_ADC_CHANNEL(27),
+-	SC27XX_ADC_CHANNEL(28),
+-	SC27XX_ADC_CHANNEL(29),
+-	SC27XX_ADC_CHANNEL(30),
+-	SC27XX_ADC_CHANNEL(31),
++	SC27XX_ADC_CHANNEL(0, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(1, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(2, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(3, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(4, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(5, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(6, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(7, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(8, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(9, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(10, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(11, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(12, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(13, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(14, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(15, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(16, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(17, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(18, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(19, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(20, BIT(IIO_CHAN_INFO_RAW)),
++	SC27XX_ADC_CHANNEL(21, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(22, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(23, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(24, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(25, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(26, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(27, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(28, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(29, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(30, BIT(IIO_CHAN_INFO_PROCESSED)),
++	SC27XX_ADC_CHANNEL(31, BIT(IIO_CHAN_INFO_PROCESSED)),
+ };
+ 
+ static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
+-- 
+1.7.9.5
