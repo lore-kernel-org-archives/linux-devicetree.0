@@ -1,78 +1,77 @@
-From: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] arm64: dts: rockchip: perfection vop property define for px30
-Date: Wed, 29 Aug 2018 11:17:13 +0800
-Message-ID: <1535512642-81253-1-git-send-email-hjc@rock-chips.com>
+From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Subject: [PATCH][v2] arm64: dts: remove big-endian filed from IFC controller
+Date: Wed, 29 Aug 2018 08:57:49 +0530
+Message-ID: <20180829032749.9309-1-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
+Cc: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Add display ports for display-subsystem and add reset property
-for vop node, if missing this two define, drm driver can't
-probe sucess.
+As per IFC binding, Absence of "little-endian" field causes registers
+access in big-endian mode.
+So no need to set explicit big-endian field IFC node for LS1043A and
+LS1046A.
 
-Signed-off-by: Sandy Huang <hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
 ---
- arch/arm64/boot/dts/rockchip/px30.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Changes for v2: Incorporated Leo's comments
+	- Remove new line between copyrights
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index dc3b22c..b2f1716 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -157,6 +157,7 @@
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index b9f5d2ff4ff2..68af84a8ade8 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -3,6 +3,7 @@
+  * Device Tree Include file for Freescale Layerscape-1043A family SoC.
+  *
+  * Copyright 2014-2015 Freescale Semiconductor, Inc.
++ * Copyright 2018 NXP
+  *
+  * Mingkai Hu <Mingkai.hu@freescale.com>
+  */
+@@ -280,7 +281,6 @@
+ 		ifc: ifc@1530000 {
+ 			compatible = "fsl,ifc", "simple-bus";
+ 			reg = <0x0 0x1530000 0x0 0x10000>;
+-			big-endian;
+ 			interrupts = <0 43 0x4>;
+ 		};
  
- 	display_subsystem: display-subsystem {
- 		compatible = "rockchip,display-subsystem";
-+		ports = <&vopb_out>, <&vopl_out>;
- 		status = "disabled";
- 	};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 65ce1c3cb568..ae4ca865131b 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -3,6 +3,7 @@
+  * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+  *
+  * Copyright 2016 Freescale Semiconductor, Inc.
++ * Copyright 2018 NXP
+  *
+  * Mingkai Hu <mingkai.hu@nxp.com>
+  */
+@@ -198,7 +199,6 @@
+ 		ifc: ifc@1530000 {
+ 			compatible = "fsl,ifc", "simple-bus";
+ 			reg = <0x0 0x1530000 0x0 0x10000>;
+-			big-endian;
+ 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
-@@ -795,10 +796,16 @@
- 		clocks = <&cru ACLK_VOPB>, <&cru DCLK_VOPB>,
- 			 <&cru HCLK_VOPB>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		resets = <&cru SRST_VOPB_A>, <&cru SRST_VOPB_H>, <&cru SRST_VOPB>;
-+		reset-names = "axi", "ahb", "dclk";
- 		iommus = <&vopb_mmu>;
- 		power-domains = <&power PX30_PD_VO>;
- 		rockchip,grf = <&grf>;
- 		status = "disabled";
-+		vopb_out: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
- 	};
- 
- 	vopb_mmu: iommu@ff460f00 {
-@@ -820,10 +827,16 @@
- 		clocks = <&cru ACLK_VOPL>, <&cru DCLK_VOPL>,
- 			 <&cru HCLK_VOPL>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		resets = <&cru SRST_VOPL_A>, <&cru SRST_VOPL_H>, <&cru SRST_VOPL>;
-+		reset-names = "axi", "ahb", "dclk";
- 		iommus = <&vopl_mmu>;
- 		power-domains = <&power PX30_PD_VO>;
- 		rockchip,grf = <&grf>;
- 		status = "disabled";
-+		vopl_out: port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
- 	};
- 
- 	vopl_mmu: iommu@ff470f00 {
 -- 
-2.7.4
+2.14.1
