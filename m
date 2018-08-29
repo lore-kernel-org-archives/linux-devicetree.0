@@ -1,79 +1,114 @@
-From: "Zhu, Yi Xin" <yixin.zhu@linux.intel.com>
-Subject: Re: [PATCH v2 02/18] clk: intel: Add clock driver for Intel MIPS SoCs
-Date: Wed, 29 Aug 2018 18:34:26 +0800
-Message-ID: <65a8518b-8fd8-847b-f952-0370be3d786a@linux.intel.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-3-songjun.wu@linux.intel.com>
- <153370742214.220756.2039365625963765922@swboyd.mtv.corp.google.com>
- <571d2d40-8728-fa7c-5d89-73d2a7b6293b@linux.intel.com>
- <153539697928.129321.2605078315090527674@swboyd.mtv.corp.google.com>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
+Date: Wed, 29 Aug 2018 12:00:45 +0100
+Message-ID: <20180829110045.GN907@e110455-lin.cambridge.arm.com>
+References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
+ <20180824122308.3092-1-linus.walleij@linaro.org>
+ <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
+ <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
+ <20180829095822eucas1p1fe4336ca7944765c01fc6ad1e941b8b0~PUn7YujBw3056130561eucas1p1_@eucas1p1.samsung.com>
+ <20180829100152.GL907@e110455-lin.cambridge.arm.com>
+ <20180829102320eucas1p28f05f1c765eb85195a06199bb68b87ce~PU9ukgvXA1734817348eucas1p2L@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153539697928.129321.2605078315090527674@swboyd.mtv.corp.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Songjun Wu <songjun.wu@linux.intel.com>, chuanhua.lei@linux.intel.com, hua.ma@linux.intel.com, qi-ming.wu@intel.com
-Cc: linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180829102320eucas1p28f05f1c765eb85195a06199bb68b87ce~PU9ukgvXA1734817348eucas1p2L@eucas1p2.samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
->>>> +}
->>>> +
->>>> +CLK_OF_DECLARE(intel_grx500_cgu, "intel,grx500-cgu", grx500_clk_init);
->>> Any reason a platform driver can't be used instead of CLK_OF_DECLARE()?
->> It provides CPU clock which is used in early boot stage.
->>
-> Ok. What is the CPU clock doing in early boot stage? Some sort of timer
-> frequency? If the driver can be split into two pieces, one to handle the
-> really early stuff that must be in place to get timers up and running
-> and the other to register the rest of the clks that aren't critical from
-> a regular platform driver it would be good. That's preferred model if
-> something is super critical.
->
-Just to make sure my approach is same as you think.
-
-In the driver, there's two clock registrations.
-
-- One through CLK_OF_DECLARE for early stage clocks.
-
-- The other via platform driver for the non-critical clocks.
-
-In the device tree,  two clock device nodes are required.
-
-e.g. device tree:
-
-cgu: cgu@16200000 {
-                 compatible = "intel,grx500-clk", "syscon";
-                 reg = <0x16200000 0x200>;
-                 #clock-cells = <1>;
-};
-
-clk: clk {
-                 compatible = "intel,grx500-cgu";
-                 #clock-cells = <1>;
-                 intel,cgu-syscon = <&cgu>;
-};
-
-source code:
-
-CLK_OF_DECLARE(intel_grx500_cgu, "intel,grx500-cgu", grx500_clk_init);
-
-static const struct of_device_id of_intel_grx500_cgu_match[] = {
-         { .compatible = "intel,grx500-clk" },
-         {}
-};
-
-static struct platform_driver intel_grx500_clk_driver = {
-         .probe  = intel_grx500_clk_probe,
-         .driver = {
-                 .name = "grx500-cgu",
-                 .of_match_table = of_match_ptr(of_intel_grx500_cgu_match),
-         },
-};
-
-static int __init intel_grx500_cgu_init(void)
-{
-         return platform_driver_register(&intel_grx500_clk_driver);
-}
-arch_initcall(intel_grx500_cgu_init);
+T24gV2VkLCBBdWcgMjksIDIwMTggYXQgMTI6MjM6MThQTSArMDIwMCwgQW5kcnplaiBIYWpkYSB3
+cm90ZToKPiBPbiAyOS4wOC4yMDE4IDEyOjAxLCBMaXZpdSBEdWRhdSB3cm90ZToKPiA+IE9uIFdl
+ZCwgQXVnIDI5LCAyMDE4IGF0IDExOjU4OjIwQU0gKzAyMDAsIEFuZHJ6ZWogSGFqZGEgd3JvdGU6
+Cj4gPj4gT24gMjguMDguMjAxOCAxNTo0NSwgTGludXMgV2FsbGVpaiB3cm90ZToKPiA+Pj4gT24g
+TW9uLCBBdWcgMjcsIDIwMTggYXQgMTo1MyBQTSBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1
+bmcuY29tPiB3cm90ZToKPiA+Pj4KPiA+Pj4+IE9uIDI0LjA4LjIwMTggMTQ6MjMsIExpbnVzIFdh
+bGxlaWogd3JvdGU6Cj4gPj4+Pj4gVGhpcyBhZGRzIGJpbmRpbmdzIGZvciBhIHZpcnR1YWwgZGlz
+cGxheSB0byBiZSB1c2VkIHdpdGggZGlzcGxheXMKPiA+Pj4+PiBpbnNpZGUgZW50aXJlbHkgdmly
+dHVhbCBlbnZpcm9ubWVudHMgd2hpY2ggZG8gbm90IGVtdWxhdGUgdGhpbmdzCj4gPj4+Pj4gbGlr
+ZSBtb25pdG9ycyBidXQganVzdCBuZWVkIHRpbWluZyBpbmZvcm1hdGlvbiB0byBiZSBzdXBwbGll
+ZCB0bwo+ID4+Pj4+IGl0cyBkaXNwbGF5IGNvbnRyb2xsZXIuCj4gPj4+Pj4KPiA+Pj4+PiBUaGlz
+IGlzIGluc3BpcmVkIGJ5IGVhcmxpZXIgd29yayBieSBMaXZpdSBEdWRhdS4KPiA+Pj4+IElmIHRo
+aXMgaXMgcHVyZSB2aXJ0dWFsIHRoZW4gaXQgc2hvdWxkIGJlIGNvbm5lY3RlZCB0byBvdGhlciBw
+dXJlCj4gPj4+PiB2aXJ0dWFsIGNvbXBvbmVudHMuCj4gPj4+IE9LIGl0J3MgYSBiaXQgb2YgaGFs
+Zi1oYWxmIGJ1dCBvdXRzaWRlIG9mIG15IGdyYXNwLCBJIGFtIGp1c3QgdHJ5aW5nCj4gPj4+IHRv
+IHN1cHBvcnQgbGVnYWN5IHN5c3RlbXMuCj4gPj4+Cj4gPj4+IFRoZSBkZXZpY2UgdHJlZSBpcyB0
+aGVyZToKPiA+Pj4gYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92ZS1hZW12OGEuZHRzCj4g
+Pj4+IGFyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL3J0c21fdmUtbW90aGVyYm9hcmQuZHRzaQo+ID4+
+Pgo+ID4+PiBUaGUgbGF0dGVyIGNvbnRhaW5zIHRoZSBDTENEIHdoaWNoIGlzIHRoZSBkaXNwbGF5
+IGRyaXZlci4KPiA+Pj4KPiA+Pj4gSW4gUlRTTSwgd2hpY2ggaXMgYW4gQVJNIHByb2R1Y3QgSSBk
+byBub3QgZGV2ZWxvcCBhbmQKPiA+Pj4gY2Fubm90IG1ha2UgY2hhbmdlcyB0bywgdGhlcmUgaXMg
+YW4gZW11bGF0ZWQgQ0xDRC4gU28KPiA+Pj4gdGhhdCBwYXJ0IGFwcGVhciBhcyBpZiBpdCB3YXMg
+cmVhbCBoYXJkd2FyZS4gTGlrZSBpbiBRRU1VLgo+ID4+Pgo+ID4+PiBCdXQgdGhlIGRpc3BsYXkg
+ZG9lcyBub3QgaGF2ZSBhbnkgZW11bGF0aW9uLiBUaGUgcmF3Cj4gPj4+IG91dHB1dCBmcm9tIHRo
+ZSBDTENEIGlzIGxhdGNoZWQgb3V0IHRvIHRoZSBzY3JlZW4uCj4gPj4+Cj4gPj4+IEkgZG8gbm90
+IGtub3cgZXhhY3RseSBrbm93IGhvdyB0aGUgUlRTTSBlbXVsYXRvcgo+ID4+PiBhY3R1YWxseSB3
+b3JrcywgYnV0IEkgc3VzcGVjdCB0aGF0IHRoZSBsaXR0bGUgZ3JhcGhpYyB3aW5kb3cKPiA+Pj4g
+b24gdGhlIHNjcmVlZW4gYWRhcHRzIHRvIHdoYXQgZ2V0cyB3cml0dGVuIGludG8gdGhlCj4gPj4+
+IENMQ0QgY29udHJvbCByZWdpc3RlcnMsIHNvIGFueXRoaW5nIGdvZXMsIG1vcmUgb3IgbGVzcy4K
+PiA+Pj4KPiA+Pj4gVG8gc2F0aXNmeSB0aGUgQ0xDRCB3aXRoIHNvbWUgdGltaW5ncyBhbmQgcmVz
+b2x1dGlvbiwKPiA+Pj4gdGhpcyBicmlkZ2UgZ2l2ZXMgaXQgdGhhdCwgZnJvbSB0aGUgZGV2aWNl
+IHRyZWUsIGluIGEgd2F5Cj4gPj4+IHRoYXQgY2xlYXJseSBjb252ZXlzIHRoYXQgInRoaXMgaXMg
+bm90IGEgcmVhbCB0aGluZyIuCj4gPj4+Cj4gPj4+IFRoZSBvbGQgY29kZSB1c2VzIERQSS4gVGhp
+cyBpcyBub3QgRFBJLCBub3QgZXZlbiBjbG9zZQo+ID4+PiB0byBpdC4gSXQgd29ya2VkIHNpbXBs
+eSBiZWNhdXNlIGFsbCB0aGUgRFBJIHJlYWxseSBkb2VzIGlzCj4gPj4+IHdoYXQgdGhpcyBwYXRj
+aCBkb2VzOiBwcm92aWRlIHRpbWluZ3MuCj4gPj4+Cj4gPj4+IEJ5IGNvbnRyYXN0IG9uIFFFTVUg
+SSBoYXZlIHBhdGNoZXMgdGhlIGVtdWxhdG9yIHRvCj4gPj4+IHByb3Blcmx5IHJlcHJlc2VudCB0
+aGUgSTJDIEREQyBsaW5rIGFuZCBwcm92aWRlIEVESUQKPiA+Pj4gc28gdGhhdCBpcyBhbGwgZmlu
+ZS4KPiA+Pj4KPiA+Pj4gSSBjYW5ub3QgcGF0Y2ggUlRTTSB0byBlbXVsYXRlIEkyQyBhbmQgRERD
+LiBJdCdzIG5vdAo+ID4+PiBvcGVuIHNvdXJjZS4gQnV0IHRoZSBkZXZpY2UgdHJlZSBpbiB0aGUg
+a2VybmVsIHN1cHBvcnRzCj4gPj4+IHRoaXMgIm1hY2hpbmUiIGFuZCBzbywgSSBoYXZlIHRvIG1h
+aW50YWluIGl0IHdoZW4gbW9kZXJuaXpuZwo+ID4+PiB0aGUgZmJkZXYgZHJpdmVyIHRvIGEgRFJN
+IGRyaXZlci4KPiA+Pj4KPiA+Pj4gSSdtIHNvcnJ5IFJUU00gaXMgaGFsZi9oYWxmLiBOb3QgbXkg
+ZmF1bHQuIEkgY2FuJ3QgZml4Li4uCj4gPj4gSSBkbyBub3Qga25vdyB0aGUgcGxhdGZvcm0sIHNv
+IEnCoCBJIGhhdmUgZHVnIGxpdHRsZSBiaXQsIGJ1dCBJIHdhbid0Cj4gPj4gY2FsbCBpdMKgIHRo
+b3JvdWdoIHJlc2VhcmNoLiBKdXN0IHBsZWFzZSBiZSBraW5kIGlmIEkgd3JvdGUgc3RoIHN0dXBp
+ZC4KPiA+PiBXaGF0IEkgaGF2ZSBmb3VuZDoKPiA+PiAxLiBEVFMgc2hvd3MgQ0xDRCBpcyBwbDEx
+MS4KPiA+PiAyLiBwbDExMSBkb2N1bWVudGF0aW9uIHNheXMgaXQncyBvdXRwdXQgaW50ZXJmYWNl
+IHN1cHBvcnRzIFNUTiBhbmQgVEZUCj4gPj4gdXAgdG8gMjQtYml0IGJ1cy4gSSBkbyBub3Qga25v
+dyBTVE4sIGJ1dCBURlQgc2VlbXMgdG8gYmUgY29tcGF0aWJsZSB3aXRoCj4gPj4gRFBJLgo+ID4+
+Cj4gPj4gSWYgaXQgaXMgY29ycmVjdCwgZHBpIHBhbmVsIHNlZW1zIHRvIGJlIE9LLiBBbmQgSSB0
+aGluayBpdCBpcyBsZXNzCj4gPj4gaW1wb3J0YW50IGhvdyB0aGUgZW11bGF0b3Igd29ya3MsIG1v
+cmUgaW1wb3J0YW50IGlzIHRoYXQgaXQgc2hvdWxkCj4gPj4gZW11bGF0ZSBwbDExMSwgaW5jbHVk
+aW5nIGl0J3Mgb3V0cHV0IGludGVyZmFjZXMuCj4gPiBZZWFoLCB1bmZvcnR1bmF0ZWx5IHRoYXQg
+c2hpcCBoYXMgc2FpbGVkIGEgbG9uZyB0aW1lIGFnby4gVGhlIGVtdWxhdG9yCj4gPiBwZW9wbGUg
+dGhvdWdodCBlbXVsYXRpbmcgdGhlIHJlZ2lzdGVyIGludGVyZmFjZSBpcyBnb29kIGVub3VnaCBh
+bmQgdG9vawo+ID4gbGliZXJ0aWVzIG9uIGhvdyB0aGUgYmVoYXZpb3VyIHdhcyAiZW11bGF0ZWQi
+LiBFbmQgcmVzdWx0OiBvdXRwdXQKPiA+IGludGVyZmFjZXMgYXJlIG5vdCB0aGUgc2FtZS4KPiAK
+PiBTbyB3aGF0IGlzIHdyb25nL21pc3Npbmcgd2l0aCBkcGkgcGFuZWw/CgpMaW51cyBleHBsYWlu
+ZWQgaW4gdGhlIGxpbmtzIGhlIHF1b3RlZCBiZWxvdy4gSSdsbCBsZXQgaGltIGFkZCBtb3JlIGlm
+CmhlIGhhcyBhZGRpdGlvbmFsIGluZm9ybWF0aW9uLgoKQmVzdCByZWdhcmRzLApMaXZpdQoKPiAK
+PiBSZWdhcmRzCj4gQW5kcnplago+IAo+ID4KPiA+IEJlc3QgcmVnYXJkcywKPiA+IExpdml1Cj4g
+Pgo+ID4+IFJlZ2FyZHMKPiA+PiBBbmRyemVqCj4gPj4+PiBBbmQgb25lIG1vcmUgdGhpbmcsIHlv
+dSBhcmUgZGVmaW5pbmcgdmlydHVhbCBwYW5lbCBidXQgeW91IGFyZSB1c2luZwo+ID4+Pj4gZHJt
+X2JyaWRnZSBmcmFtZXdvcmssIHdoeSBub3QgZHJtX3BhbmVsPwo+ID4+PiBUaGlzIHdhcyBkaXNj
+dXNzZWQgYmVmb3JlIGluIHRoZSBwcmV2aW91cyBwYXRjaCBzZXQ6Cj4gPj4+IGh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE4LUp1bHkvMTgzNTE2Lmh0
+bWwKPiA+Pj4KPiA+Pj4gRXNzZW50aWFsbHksIGl0J3MgYmVjYXVzZSB0aGUgZGlzcGxheSBkcml2
+ZXIgaXMganVzdCBjb25uZWN0ZWQKPiA+Pj4gdG8gInNvbWV0aGluZyIgbm90IGEgcGFuZWwgYW5k
+IGEgYnJpZGdlIGlzIGxpa2VseSB0aGUgYmVzdCBJCj4gPj4+IGNhbiBjb21lIHVwIHdpdGggLSBh
+IGJyaWRnZSBvdmVyIHRvIGEgdmlydHVhbCBkaXNwbGF5Lgo+ID4+Pgo+ID4+PiBBIHBhdGNoIHRv
+IGFkZCAiVkdBIiwgIlNHQSIgYW5kICJYR0EiIHRvIHRoZSBzaW1wbGUgcGFuZWxzCj4gPj4+IHdh
+cyBOQUNLZWQgKHNvcnQgb2YsIHBvbGl0ZWx5KToKPiA+Pj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTgtSnVseS8xODM2OTguaHRtbAo+ID4+Pgo+
+ID4+PiBBbHNvIGl0IHdhcyBub3RlZCB0aGF0IGl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBzb21l
+dGhpbmcgdGhhdAo+ID4+PiB3b3VsZCBtYWtlIGl0IGVhc3kgdG8gY2hhbmdlIHJlc29sdXRpb25z
+IG9uIHRoZXNlIHZpcnR1YWwKPiA+Pj4gZGlzcGxheSB0aGluZ3MuIFZvaWxhLgo+ID4+Cj4gPj4K
+PiA+Pj4gWW91cnMsCj4gPj4+IExpbnVzIFdhbGxlaWoKPiA+Pj4KPiA+Pj4KPiAKCi0tIAo9PT09
+PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRoZSB3b3JsZCwgIHwK
+fCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNvdXJjZSBjb2RlISAg
+LwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
