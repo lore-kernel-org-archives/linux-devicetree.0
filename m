@@ -1,73 +1,48 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 3/6] dt-bindings: remoteproc: Remove additional
- definition tag
-Date: Wed, 29 Aug 2018 22:08:52 +0530
-Message-ID: <c3e417189c150114b67af9e5ded668b6@codeaurora.org>
-References: <20180824131900.5353-1-sibis@codeaurora.org>
- <20180824131900.5353-4-sibis@codeaurora.org>
- <20180828004422.GZ160295@google.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [andriy.shevchenko@linux.intel.com: Re: [PATCH] spi: dw-mmio: add
+ MSCC Jaguar2 support]
+Date: Wed, 29 Aug 2018 19:52:54 +0300
+Message-ID: <CAHp75VeUF7ww7cNy0qHqFSp7bA65Ln3qj_U9AC0UNCX4FRrutg@mail.gmail.com>
+References: <20180829150955.GB7459@smile.fi.intel.com> <20180829151501.GE27808@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828004422.GZ160295@google.com>
+In-Reply-To: <20180829151501.GE27808@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, ohad@wizery.com, mark.rutland@arm.com, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-spi <linux-spi@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, allan.nielsen@microchip.com, Alexandre Belloni <alexandre.belloni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-Thanks for the review!
+On Wed, Aug 29, 2018 at 6:16 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Aug 29, 2018 at 06:09:55PM +0300, Andy Shevchenko wrote:
+> > ----- Forwarded message from Andy Shevchenko <andriy.shevchenko@linux.intel.com> -----
+> >
+> > Date: Wed, 29 Aug 2018 18:08:31 +0300
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Subject: Re: [PATCH] spi: dw-mmio: add MSCC Jaguar2 support
+> > User-Agent: Mutt/1.10.1 (2018-07-13)
+> >
+> > On Wed, Aug 29, 2018 at 02:45:48PM +0200, Alexandre Belloni wrote:
+> > > Unfortunately, the Jaguar2 CPU_SYSTEM_CTRL register set has a different
+> > > layout than the Ocelot one. Handle that while keeping most of the code
+> > > common.
+> >
+> > > -#define OCELOT_IF_SI_OWNER_MASK                    GENMASK(5, 4)
+> >
+> > > +                      0x3 << if_si_owner_offset,
+> >
+> > Perhaps,
+> >
+> > #define MSCC_IF_SI_OWNER_MASK         GENMASK(1, 0)
+>
+> Oops, sorry - that seems to have been eaten somewhere.  :(
 
-On 2018-08-28 06:14, Matthias Kaehlcke wrote:
-> Hi Sibi,
-> 
-> Subject: dt-bindings: remoteproc: Remove additional definition tag
-> 
-> nit: the subject is a bit generic, you probably should at least add
-> 'qcom: ' to the 'path'.
-> 
-
-Will add
-
-> On Fri, Aug 24, 2018 at 06:48:57PM +0530, Sibi Sankar wrote:
->> Remove the additional definition tag declared for WCSS sub-system
->> under reset-names.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt 
->> b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> index 601dd9f389aa..c45e4c131fa2 100644
->> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> @@ -58,7 +58,7 @@ on the Qualcomm Hexagon core.
->>  	Usage: required
->>  	Value type: <stringlist>
->>  	Definition: must be "mss_restart" for the modem sub-system
->> -	Definition: must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
->> +		    must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
->>  		    for the wcss syb-system
-> 
-> Since you are already at it you might also want to fix the typo in
-> 'wcss syb-system'.
-> 
-
-nice catch, will correct it.
-
-I missed your query in the other thread, APPS refers to the pdc_sync 
-reset line for the Application processor.
-
-> Other than the nits:
-> 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Nothing to sorry about, I'm in a process on move to mutt, so, I
+mispushed 'r' (Reply) instead of 'g' (Group Reply).
+I just forwarded the first one.
 
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+With Best Regards,
+Andy Shevchenko
