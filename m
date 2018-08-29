@@ -1,59 +1,41 @@
-Return-Path: <SRS0=CDzY=LN=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=wcnV=LM=renesas.com=Chris.Brandt@kernel.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 1/2] clocksource/drivers/ostm: Delay driver registration
+Date: Wed, 29 Aug 2018 19:57:49 +0000
+Message-ID: 
+ <TY1PR01MB1562642EB669405672A4731C8A090@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20180829132954.64862-1-chris.brandt@renesas.com>
- <20180829132954.64862-2-chris.brandt@renesas.com> <1ff04fa1-ee3b-6095-bcd8-f16dbb99b57a@linaro.org>
+ <20180829132954.64862-2-chris.brandt@renesas.com>
+ <1ff04fa1-ee3b-6095-bcd8-f16dbb99b57a@linaro.org>
  <TY1PR01MB156202DC354E70F1C8C5B18A8A090@TY1PR01MB1562.jpnprd01.prod.outlook.com>
  <c16b82c0-e675-8f86-19e6-75cb5995813b@linaro.org>
 In-Reply-To: <c16b82c0-e675-8f86-19e6-75cb5995813b@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 Aug 2018 09:54:46 +0200
-Message-ID: <CAMuHMdX9nXYan-m14k6h7OU1UCGW_irDLvMMi==dnM0cdUR_nA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] clocksource/drivers/ostm: Delay driver registration
-Content-Type: text/plain; charset="UTF-8"
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Chris Brandt <Chris.Brandt@renesas.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Daniel,
-
-On Wed, Aug 29, 2018 at 6:26 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
-> On 29/08/2018 17:44, Chris Brandt wrote:
-> > On Wednesday, August 29, 2018 1, Daniel Lezcano wrote:
-> >> Can the boot constraints [1] solve this issue instead of the changes you
-> >> are proposing ?
-> >>
-> >> [1] https://lwn.net/Articles/747250/
-> >
-> > Thanks for the suggestion, but...
-> >
-> > I grepped for "boot_constraint" and it shows up nowhere in the current
-> > kernel.
-> >
-> > Also, this article was written Feb 16, 2018, and I can see that the
-> > patch series was still being submitted (V7) as of Feb 23, 2018.
->
-> Ah ok, fair enough, I thought it was merged. In any case, after thinking
-> about it, it wouldn't have helped.
->
-> My concern is if we can avoid changing the TIMER_OF_DECLARE because of
-> the boot order, it would be better.
->
-> Can returning EPROBE_DEFER fix this issue? Or use the 'complex
-> dependencies' [1]?
-
-*_OF_DECLARE() is not compatible with EPROBE_DEFER, which causes
-issues with complex dependencies.
-That's exactly why many subsystems are moving away from it.
-E.g. IOMMU_OF_DECLARE was removed in v4.19-rc1.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gV2VkbmVzZGF5LCBBdWd1c3QgMjksIDIwMTggMSwgRGFuaWVsIExlemNhbm8gd3JvdGU6DQo+
+IE15IGNvbmNlcm4gaXMgaWYgd2UgY2FuIGF2b2lkIGNoYW5naW5nIHRoZSBUSU1FUl9PRl9ERUNM
+QVJFIGJlY2F1c2Ugb2YNCj4gdGhlIGJvb3Qgb3JkZXIsIGl0IHdvdWxkIGJlIGJldHRlci4NCj4g
+DQo+IENhbiByZXR1cm5pbmcgRVBST0JFX0RFRkVSIGZpeCB0aGlzIGlzc3VlPyBPciB1c2UgdGhl
+ICdjb21wbGV4DQo+IGRlcGVuZGVuY2llcycgWzFdPw0KDQpTbyBJIHRyaWVkIGp1c3QgcmV0dXJu
+aW5nIC1FUFJPQkVfREVGRVIsIGJ1dCBpdCBkaWRuJ3Qgd29yay4NCg0KVGhlIG1haW4gcmVhc29u
+IGlzIG9zdG1faW5pdCgpIGlzIGNhbGxlZCBmcm9tIHRpbWVyX3Byb2JlKCkuDQoNCiBzdGFydF9r
+ZXJuZWwoKSAtPiB0aW1lX2luaXQoKSAtPiB0aW1lcl9wcm9iZSgpIC0+IG9zdG1faW5pdCgpDQoN
+CklmIHlvdSBsb29rIGF0IHRpbWVyX3Byb2JlLCBpdCBvbmx5IGxvb2tzIHRvIHNlZSBpZiB0aGUg
+cmV0dXJuIHZhbHVlIHdhcw0Kbm9uLXplcm8gdG8ga25vdyBpZiBzb21ldGhpbmcgd2VudCB3cm9u
+Zy4gSXQgZG9lc24ndCByZWFsbHkgY2FyZSB3aGF0IA0KdGhlIGFjdHVhbCB2YWx1ZSB3YXMsIG9y
+IGRvIGFueXRoaW5nIGRpZmZlcmVudCwgc28gcmV0dXJuaW5nIA0KLUVQUk9CRV9ERUZFUiBkb2Vz
+IHlvdSBubyBnb29kLg0KDQpXaGVuIHlvdSB1c2UgVElNRVJfT0ZfREVDTEFSRSwgdGhhdCBwdXRz
+IHlvdXIgZHJpdmVyIGludG8gdGhlIA0KX190aW1lcl9vZl90YWJsZSwgYW5kIHN0YXJ0X2tlcm5l
+bC90aW1lX2luaXQvdGltZXJfcHJvYmUgaXMgeW91ciBvbmx5IHNob3QgYXQgDQpnZXR0aW5nIHlv
+dXIgZHJpdmVyIHJ1bm5pbmcuIFlvdSBkb24ndCBnZXQgYW5vdGhlciBjaGFuY2UgbGF0ZXIgaW4g
+Ym9vdC4NClNvLCBldmVuIGlmIHRoYXQgYm9vdCBjb25zdHJhaW50IGRpZCBleGlzdCwgaXQgd291
+bGRuJ3Qgd29yayBmb3IgdGltZXJzIA0KdGhhdCB1c2VkIFRJTUVSX09GX0RFQ0xBUkUuDQoNCkkg
+Z3Vlc3MgYXMgYSBydWxlIG9mIHRodW1iLCBpZiB5b3VyIHRpbWVyIHJlcXVpcmVzIGEgY2xvY2ss
+IHRoYXQgY2xvY2sgDQpkcml2ZXIgaGFzIHRvIGJlIGFuIE9GIGNsb2NrIGJlY2F1c2UgaXQgbmVl
+ZHMgdG8gcmVzaWRlIGluIHRoZSANCl9fY2xrX29mX3RhYmxlLg0KDQpDaHJpcw0KDQo=
