@@ -1,39 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 0/5] Add Actions Semi S700 pinctrl support
-Date: Wed, 29 Aug 2018 09:35:38 +0200
-Message-ID: <CACRpkda=q+LZMUN5xJ777ZGWxYRBdZTvG0naNqr5BoLnVQ1=aA@mail.gmail.com>
-References: <0180729200038.11795-1-sravanhome@gmail.com> <20180731194743.13678-1-sravanhome@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: [PATCH v1] arm64: dts: dwc3: Add description of 'configure-gfladj'
+Date: Wed, 29 Aug 2018 15:33:24 +0800
+Message-ID: <20180829073324.36866-1-yinbo.zhu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180731194743.13678-1-sravanhome@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sravanhome@gmail.com
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, pn@denx.de, mp-cs@actions-semi.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, linux@cubietech.com
+To: yinbo.zhu@nxp.com, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: xiaobo.xie@nxp.com, Ran Wang <ran.wang_1@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, festevam@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 31, 2018 at 9:48 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
+This patch is to add description of 'configure-gfladj' to binding
+so that configuring devicetree
 
-> This patchset adds pinctrl support for Actions Semi S700 SoC.
-> Pinmux functions are only accessible for pin groups while pinconf
-> parameters are available for both pin groups and individual pins.
->
-> pinctrl driver is verified using the Cubieboard7.
->
-> common functionalities from s900 is moved for all Actions Semi
-> SoC's usage.
-> Common pad control configurations are moved to SoC specific
->
-> dts entry for pinctrl depends on clock driver which is still under review:
-> https://patchwork.kernel.org/patch/10533959/
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-So what is the status of this patch set?
-
-I am happy to apply it once you have the right buildtime dependencies
-and Manivannan's ACK on the patch set! (Looks good to me.)
-
-Maybe you want to rebase on v4.19-rc1 and resend as v5 before
-I do that though?
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 3e4c38b..40c6568 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -101,6 +101,7 @@ Optional properties:
+ 			When just one value, which means INCRX burst mode enabled. When
+ 			more than one value, which means undefined length INCR burst type
+ 			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
++ - configure-gfladj: determine whether frame length adjustment is required or not.
+ 
+  - in addition all properties from usb-xhci.txt from the current directory are
+    supported as well
+-- 
+1.7.1
