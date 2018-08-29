@@ -1,77 +1,56 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH][v2] arm64: dts: remove big-endian filed from IFC controller
-Date: Wed, 29 Aug 2018 08:57:49 +0530
-Message-ID: <20180829032749.9309-1-prabhakar.kushwaha@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com
+From: Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: [PATCH v2] arm64: dts: ls1043a: Add configure-gfladj property to USB3 node
+Date: Wed, 29 Aug 2018 11:30:55 +0800
+Message-ID: <20180829033055.22245-1-yinbo.zhu@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: yinbo.zhu@nxp.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ran Wang <ran.wang_1@nxp.com>, linux-kernel@vger.kernel.org
+Cc: xiaobo.xie@nxp.com, Shawn Guo <shawnguo@kernel.org>, Minghuan Lian <Minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Changming Huang <jerry.huang@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajesh Bhagat <rajesh.bhagat@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-As per IFC binding, Absence of "little-endian" field causes registers
-access in big-endian mode.
-So no need to set explicit big-endian field IFC node for LS1043A and
-LS1046A.
+From: Rajesh Bhagat <rajesh.bhagat@freescale.com>
 
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Add "configure-gfladj" boolean property to USB3 node. This property
+is used to determine whether frame length adjustment is required or
+not
+
+Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 ---
-Changes for v2: Incorporated Leo's comments
-	- Remove new line between copyrights
+Change in v2:
+		Modified some word misspellings in commit information
 
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index b9f5d2ff4ff2..68af84a8ade8 100644
+index 7881e3d..ed3fa79 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -3,6 +3,7 @@
-  * Device Tree Include file for Freescale Layerscape-1043A family SoC.
-  *
-  * Copyright 2014-2015 Freescale Semiconductor, Inc.
-+ * Copyright 2018 NXP
-  *
-  * Mingkai Hu <Mingkai.hu@freescale.com>
-  */
-@@ -280,7 +281,6 @@
- 		ifc: ifc@1530000 {
- 			compatible = "fsl,ifc", "simple-bus";
- 			reg = <0x0 0x1530000 0x0 0x10000>;
--			big-endian;
- 			interrupts = <0 43 0x4>;
+@@ -609,6 +609,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			configure-gfladj;
  		};
  
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 65ce1c3cb568..ae4ca865131b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -3,6 +3,7 @@
-  * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-  *
-  * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2018 NXP
-  *
-  * Mingkai Hu <mingkai.hu@nxp.com>
-  */
-@@ -198,7 +199,6 @@
- 		ifc: ifc@1530000 {
- 			compatible = "fsl,ifc", "simple-bus";
- 			reg = <0x0 0x1530000 0x0 0x10000>;
--			big-endian;
- 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+ 		usb1: usb3@3000000 {
+@@ -618,6 +619,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			configure-gfladj;
  		};
  
+ 		usb2: usb3@3100000 {
+@@ -627,6 +629,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			configure-gfladj;
+ 		};
+ 
+ 		sata: sata@3200000 {
 -- 
-2.14.1
+1.7.1
