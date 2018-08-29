@@ -1,225 +1,90 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v1] arm64: dts: sdm845: enable tsens thermal zones
-Date: Wed, 29 Aug 2018 11:39:12 +0200
-Message-ID: <f416d38c-b91f-f58e-8cde-d4ad09a0a726@linaro.org>
-References: <cover.1531899325.git.amit.kucheria@linaro.org>
- <b3c25cedfa3a9b8a4b481e714992afe62b84ca3b.1531899325.git.amit.kucheria@linaro.org>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
+Date: Wed, 29 Aug 2018 11:58:20 +0200
+Message-ID: <20180829095822eucas1p1fe4336ca7944765c01fc6ad1e941b8b0~PUn7YujBw3056130561eucas1p1_@eucas1p1.samsung.com>
+References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
+ <20180824122308.3092-1-linus.walleij@linaro.org>
+ <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
+ <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b3c25cedfa3a9b8a4b481e714992afe62b84ca3b.1531899325.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org
-Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, edubezval@gmail.com, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/07/2018 09:49, Amit Kucheria wrote:
-> One thermal zone per cpu is defined
-
-The thermal zones are very close, especially when the CPUs belong to the
-same 'cluster'. Very likely the temperature will propagate from one core
-to another core, so when one core reaches the trip0, there is good
-chance the other cores will be close and cross the trip0 threshold too.
-
-Having multiple thermal zones, one per CPU, may trigger an interrupts
-storm with the passive polling timer delay.
-
-Does this board have a cooling device per CPU also ?
-
-
-
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 170 +++++++++++++++++++++++++++++++++++
->  1 file changed, 170 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 01ff146..a75be7c 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -340,4 +340,174 @@
->  			};
->  		};
->  	};
-> +
-> +	thermal-zones {
-> +		cpu0-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 1>;
-> +
-> +			trips {
-> +				cpu_alert0: trip0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit0: trip1 {
-> +					temperature = <110000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu1-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 2>;
-> +
-> +			trips {
-> +				cpu_alert1: trip0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit1: trip1 {
-> +					temperature = <110000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu2-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 3>;
-> +
-> +			trips {
-> +				cpu_alert2: trip0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit2: trip1 {
-> +					temperature = <110000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu3-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 4>;
-> +
-> +			trips {
-> +				cpu_alert3: trip0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit3: trip1 {
-> +					temperature = <110000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu4-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 7>;
-> +
-> +			trips {
-> +				cpu_alert4: trip0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit4: trip1 {
-> +					temperature = <110000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu5-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 8>;
-> +
-> +			trips {
-> +				cpu_alert5: trip0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit5: trip1 {
-> +					temperature = <110000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu6-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 9>;
-> +
-> +			trips {
-> +				cpu_alert6: trip0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit6: trip1 {
-> +					temperature = <110000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu7-thermal {
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +
-> +			thermal-sensors = <&tsens0 10>;
-> +
-> +			trips {
-> +				cpu_alert7: trip0 {
-> +					temperature = <75000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit7: trip1 {
-> +					temperature = <110000>;
-> +					hysteresis = <1000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +	};
->  };
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+T24gMjguMDguMjAxOCAxNTo0NSwgTGludXMgV2FsbGVpaiB3cm90ZToKPiBPbiBNb24sIEF1ZyAy
+NywgMjAxOCBhdCAxOjUzIFBNIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+IHdy
+b3RlOgo+Cj4+IE9uIDI0LjA4LjIwMTggMTQ6MjMsIExpbnVzIFdhbGxlaWogd3JvdGU6Cj4+PiBU
+aGlzIGFkZHMgYmluZGluZ3MgZm9yIGEgdmlydHVhbCBkaXNwbGF5IHRvIGJlIHVzZWQgd2l0aCBk
+aXNwbGF5cwo+Pj4gaW5zaWRlIGVudGlyZWx5IHZpcnR1YWwgZW52aXJvbm1lbnRzIHdoaWNoIGRv
+IG5vdCBlbXVsYXRlIHRoaW5ncwo+Pj4gbGlrZSBtb25pdG9ycyBidXQganVzdCBuZWVkIHRpbWlu
+ZyBpbmZvcm1hdGlvbiB0byBiZSBzdXBwbGllZCB0bwo+Pj4gaXRzIGRpc3BsYXkgY29udHJvbGxl
+ci4KPj4+Cj4+PiBUaGlzIGlzIGluc3BpcmVkIGJ5IGVhcmxpZXIgd29yayBieSBMaXZpdSBEdWRh
+dS4KPj4gSWYgdGhpcyBpcyBwdXJlIHZpcnR1YWwgdGhlbiBpdCBzaG91bGQgYmUgY29ubmVjdGVk
+IHRvIG90aGVyIHB1cmUKPj4gdmlydHVhbCBjb21wb25lbnRzLgo+IE9LIGl0J3MgYSBiaXQgb2Yg
+aGFsZi1oYWxmIGJ1dCBvdXRzaWRlIG9mIG15IGdyYXNwLCBJIGFtIGp1c3QgdHJ5aW5nCj4gdG8g
+c3VwcG9ydCBsZWdhY3kgc3lzdGVtcy4KPgo+IFRoZSBkZXZpY2UgdHJlZSBpcyB0aGVyZToKPiBh
+cmNoL2FybTY0L2Jvb3QvZHRzL2FybS9ydHNtX3ZlLWFlbXY4YS5kdHMKPiBhcmNoL2FybTY0L2Jv
+b3QvZHRzL2FybS9ydHNtX3ZlLW1vdGhlcmJvYXJkLmR0c2kKPgo+IFRoZSBsYXR0ZXIgY29udGFp
+bnMgdGhlIENMQ0Qgd2hpY2ggaXMgdGhlIGRpc3BsYXkgZHJpdmVyLgo+Cj4gSW4gUlRTTSwgd2hp
+Y2ggaXMgYW4gQVJNIHByb2R1Y3QgSSBkbyBub3QgZGV2ZWxvcCBhbmQKPiBjYW5ub3QgbWFrZSBj
+aGFuZ2VzIHRvLCB0aGVyZSBpcyBhbiBlbXVsYXRlZCBDTENELiBTbwo+IHRoYXQgcGFydCBhcHBl
+YXIgYXMgaWYgaXQgd2FzIHJlYWwgaGFyZHdhcmUuIExpa2UgaW4gUUVNVS4KPgo+IEJ1dCB0aGUg
+ZGlzcGxheSBkb2VzIG5vdCBoYXZlIGFueSBlbXVsYXRpb24uIFRoZSByYXcKPiBvdXRwdXQgZnJv
+bSB0aGUgQ0xDRCBpcyBsYXRjaGVkIG91dCB0byB0aGUgc2NyZWVuLgo+Cj4gSSBkbyBub3Qga25v
+dyBleGFjdGx5IGtub3cgaG93IHRoZSBSVFNNIGVtdWxhdG9yCj4gYWN0dWFsbHkgd29ya3MsIGJ1
+dCBJIHN1c3BlY3QgdGhhdCB0aGUgbGl0dGxlIGdyYXBoaWMgd2luZG93Cj4gb24gdGhlIHNjcmVl
+ZW4gYWRhcHRzIHRvIHdoYXQgZ2V0cyB3cml0dGVuIGludG8gdGhlCj4gQ0xDRCBjb250cm9sIHJl
+Z2lzdGVycywgc28gYW55dGhpbmcgZ29lcywgbW9yZSBvciBsZXNzLgo+Cj4gVG8gc2F0aXNmeSB0
+aGUgQ0xDRCB3aXRoIHNvbWUgdGltaW5ncyBhbmQgcmVzb2x1dGlvbiwKPiB0aGlzIGJyaWRnZSBn
+aXZlcyBpdCB0aGF0LCBmcm9tIHRoZSBkZXZpY2UgdHJlZSwgaW4gYSB3YXkKPiB0aGF0IGNsZWFy
+bHkgY29udmV5cyB0aGF0ICJ0aGlzIGlzIG5vdCBhIHJlYWwgdGhpbmciLgo+Cj4gVGhlIG9sZCBj
+b2RlIHVzZXMgRFBJLiBUaGlzIGlzIG5vdCBEUEksIG5vdCBldmVuIGNsb3NlCj4gdG8gaXQuIEl0
+IHdvcmtlZCBzaW1wbHkgYmVjYXVzZSBhbGwgdGhlIERQSSByZWFsbHkgZG9lcyBpcwo+IHdoYXQg
+dGhpcyBwYXRjaCBkb2VzOiBwcm92aWRlIHRpbWluZ3MuCj4KPiBCeSBjb250cmFzdCBvbiBRRU1V
+IEkgaGF2ZSBwYXRjaGVzIHRoZSBlbXVsYXRvciB0bwo+IHByb3Blcmx5IHJlcHJlc2VudCB0aGUg
+STJDIEREQyBsaW5rIGFuZCBwcm92aWRlIEVESUQKPiBzbyB0aGF0IGlzIGFsbCBmaW5lLgo+Cj4g
+SSBjYW5ub3QgcGF0Y2ggUlRTTSB0byBlbXVsYXRlIEkyQyBhbmQgRERDLiBJdCdzIG5vdAo+IG9w
+ZW4gc291cmNlLiBCdXQgdGhlIGRldmljZSB0cmVlIGluIHRoZSBrZXJuZWwgc3VwcG9ydHMKPiB0
+aGlzICJtYWNoaW5lIiBhbmQgc28sIEkgaGF2ZSB0byBtYWludGFpbiBpdCB3aGVuIG1vZGVybml6
+bmcKPiB0aGUgZmJkZXYgZHJpdmVyIHRvIGEgRFJNIGRyaXZlci4KPgo+IEknbSBzb3JyeSBSVFNN
+IGlzIGhhbGYvaGFsZi4gTm90IG15IGZhdWx0LiBJIGNhbid0IGZpeC4uLgoKSSBkbyBub3Qga25v
+dyB0aGUgcGxhdGZvcm0sIHNvIEnCoCBJIGhhdmUgZHVnIGxpdHRsZSBiaXQsIGJ1dCBJIHdhbid0
+CmNhbGwgaXTCoCB0aG9yb3VnaCByZXNlYXJjaC4gSnVzdCBwbGVhc2UgYmUga2luZCBpZiBJIHdy
+b3RlIHN0aCBzdHVwaWQuCldoYXQgSSBoYXZlIGZvdW5kOgoxLiBEVFMgc2hvd3MgQ0xDRCBpcyBw
+bDExMS4KMi4gcGwxMTEgZG9jdW1lbnRhdGlvbiBzYXlzIGl0J3Mgb3V0cHV0IGludGVyZmFjZSBz
+dXBwb3J0cyBTVE4gYW5kIFRGVAp1cCB0byAyNC1iaXQgYnVzLiBJIGRvIG5vdCBrbm93IFNUTiwg
+YnV0IFRGVCBzZWVtcyB0byBiZSBjb21wYXRpYmxlIHdpdGgKRFBJLgoKSWYgaXQgaXMgY29ycmVj
+dCwgZHBpIHBhbmVsIHNlZW1zIHRvIGJlIE9LLiBBbmQgSSB0aGluayBpdCBpcyBsZXNzCmltcG9y
+dGFudCBob3cgdGhlIGVtdWxhdG9yIHdvcmtzLCBtb3JlIGltcG9ydGFudCBpcyB0aGF0IGl0IHNo
+b3VsZAplbXVsYXRlIHBsMTExLCBpbmNsdWRpbmcgaXQncyBvdXRwdXQgaW50ZXJmYWNlcy4KClJl
+Z2FyZHMKQW5kcnplago+Cj4+IEFuZCBvbmUgbW9yZSB0aGluZywgeW91IGFyZSBkZWZpbmluZyB2
+aXJ0dWFsIHBhbmVsIGJ1dCB5b3UgYXJlIHVzaW5nCj4+IGRybV9icmlkZ2UgZnJhbWV3b3JrLCB3
+aHkgbm90IGRybV9wYW5lbD8KPiBUaGlzIHdhcyBkaXNjdXNzZWQgYmVmb3JlIGluIHRoZSBwcmV2
+aW91cyBwYXRjaCBzZXQ6Cj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMv
+ZHJpLWRldmVsLzIwMTgtSnVseS8xODM1MTYuaHRtbAo+Cj4gRXNzZW50aWFsbHksIGl0J3MgYmVj
+YXVzZSB0aGUgZGlzcGxheSBkcml2ZXIgaXMganVzdCBjb25uZWN0ZWQKPiB0byAic29tZXRoaW5n
+IiBub3QgYSBwYW5lbCBhbmQgYSBicmlkZ2UgaXMgbGlrZWx5IHRoZSBiZXN0IEkKPiBjYW4gY29t
+ZSB1cCB3aXRoIC0gYSBicmlkZ2Ugb3ZlciB0byBhIHZpcnR1YWwgZGlzcGxheS4KPgo+IEEgcGF0
+Y2ggdG8gYWRkICJWR0EiLCAiU0dBIiBhbmQgIlhHQSIgdG8gdGhlIHNpbXBsZSBwYW5lbHMKPiB3
+YXMgTkFDS2VkIChzb3J0IG9mLCBwb2xpdGVseSk6Cj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIwMTgtSnVseS8xODM2OTguaHRtbAo+Cj4gQWxzbyBp
+dCB3YXMgbm90ZWQgdGhhdCBpdCB3b3VsZCBiZSBuaWNlIHRvIGhhdmUgc29tZXRoaW5nIHRoYXQK
+PiB3b3VsZCBtYWtlIGl0IGVhc3kgdG8gY2hhbmdlIHJlc29sdXRpb25zIG9uIHRoZXNlIHZpcnR1
+YWwKPiBkaXNwbGF5IHRoaW5ncy4gVm9pbGEuCgoKCj4KPiBZb3VycywKPiBMaW51cyBXYWxsZWlq
+Cj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
