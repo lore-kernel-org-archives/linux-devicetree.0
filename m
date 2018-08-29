@@ -1,117 +1,62 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH] iio: dac: ad5758: Add support for hard reset
-Date: Wed, 29 Aug 2018 17:58:42 +0300
-Message-ID: <1535554722-1094-1-git-send-email-stefan.popa@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Popa <stefan.popa@analog.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 1/2] dt-bindings: net: cpsw: Document cpsw-phy-sel usage but prefer phandle
+Date: Wed, 29 Aug 2018 08:00:23 -0700
+Message-ID: <20180829150024.43210-1-tony@atomide.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Grygorii Strashko <grygorii.strashko@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The ad5758 has a hardware reset active low input pin. This patch adds a
-devicetree entry for a reset GPIO and a new ad5758_reset() function.
-During
-initialization, it is checked if the reset property is specified and the
-the GPIO is being asserted, therefore the device will become active.
+The current cpsw usage for cpsw-phy-sel is undocumented but is used for
+all the boards using cpsw. And cpsw-phy-sel is not really a child of
+the cpsw device, it lives in the system control module instead.
 
-When the reset function is called, if the gpio_reset var is set, then
-the
-GPIO will be toggled, otherwise a software reset is performed.
+Let's document the existing usage, and improve it a bit where we prefer
+to use a phandle instead of a child device for it. That way we can
+properly describe the hardware in dts files for things like genpd.
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Cc: devicetree@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- .../devicetree/bindings/iio/dac/ad5758.txt         |  5 ++++
- drivers/iio/dac/ad5758.c                           | 27 ++++++++++++++++++++--
- 2 files changed, 30 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/net/cpsw.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
-index bba01a5..bbcd789 100644
---- a/Documentation/devicetree/bindings/iio/dac/ad5758.txt
-+++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
-@@ -50,6 +50,9 @@ Required properties:
+diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+--- a/Documentation/devicetree/bindings/net/cpsw.txt
++++ b/Documentation/devicetree/bindings/net/cpsw.txt
+@@ -19,6 +19,10 @@ Required properties:
+ - slaves		: Specifies number for slaves
+ - active_slave		: Specifies the slave to use for time stamping,
+ 			  ethtool and SIOCGMIIPHY
++- cpsw-phy-sel		: Specifies the phandle to the CPSW phy mode selection
++			  device. See also cpsw-phy-sel.txt for it's binding.
++			  Note that in legacy cases cpsw-phy-sel may be
++			  a child device instead of a phandle.
  
  Optional properties:
- 
-+ - reset-gpios : GPIO spec for the RESET pin. If specified, it will be
-+ 		 asserted during driver probe.
-+
-  - adi,dc-dc-ilim-microamp: The dc-to-dc converter current limit
- 		   The following values are currently supported [uA]:
- 			* 150000
-@@ -71,6 +74,8 @@ AD5758 Example:
- 		spi-max-frequency = <1000000>;
- 		spi-cpha;
- 
-+		reset-gpios = <&gpio 22 0>;
-+
- 		adi,dc-dc-mode = <2>;
- 		adi,range-microvolt = <0 10000000>;
- 		adi,dc-dc-ilim-microamp = <200000>;
-diff --git a/drivers/iio/dac/ad5758.c b/drivers/iio/dac/ad5758.c
-index bd36333..b5cc5bd 100644
---- a/drivers/iio/dac/ad5758.c
-+++ b/drivers/iio/dac/ad5758.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/property.h>
- #include <linux/spi/spi.h>
-+#include <linux/gpio/consumer.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -108,6 +109,7 @@ struct ad5758_range {
- struct ad5758_state {
- 	struct spi_device *spi;
- 	struct mutex lock;
-+	struct gpio_desc *gpio_reset;
- 	struct ad5758_range out_range;
- 	unsigned int dc_dc_mode;
- 	unsigned int dc_dc_ilim;
-@@ -474,6 +476,22 @@ static int ad5758_internal_buffers_en(struct ad5758_state *st, bool enable)
- 					     AD5758_CAL_MEM_UNREFRESHED_MSK);
- }
- 
-+static int ad5758_reset(struct ad5758_state *st)
-+{
-+	if (st->gpio_reset) {
-+		gpiod_set_value(st->gpio_reset, 0);
-+		usleep_range(100, 1000);
-+		gpiod_set_value(st->gpio_reset, 1);
-+	} else {
-+		/* Perform a software reset */
-+		return ad5758_soft_reset(st);
-+	}
-+
-+	usleep_range(100, 1000);
-+
-+	return 0;
-+}
-+
- static int ad5758_reg_access(struct iio_dev *indio_dev,
- 			     unsigned int reg,
- 			     unsigned int writeval,
-@@ -768,13 +786,18 @@ static int ad5758_init(struct ad5758_state *st)
- {
- 	int regval, ret;
- 
-+	st->gpio_reset = devm_gpiod_get_optional(&st->spi->dev, "reset",
-+						 GPIOD_OUT_HIGH);
-+	if (IS_ERR(st->gpio_reset))
-+		return PTR_ERR(st->gpio_reset);
-+
- 	/* Disable CRC checks */
- 	ret = ad5758_crc_disable(st);
- 	if (ret < 0)
- 		return ret;
- 
--	/* Perform a software reset */
--	ret = ad5758_soft_reset(st);
-+	/* Perform a reset */
-+	ret = ad5758_reset(st);
- 	if (ret < 0)
- 		return ret;
- 
+ - ti,hwmods		: Must be "cpgmac0"
+@@ -75,6 +79,7 @@ Examples:
+ 		cpts_clock_mult = <0x80000000>;
+ 		cpts_clock_shift = <29>;
+ 		syscon = <&cm>;
++		cpsw-phy-sel = <&phy_sel>;
+ 		cpsw_emac0: slave@0 {
+ 			phy_id = <&davinci_mdio>, <0>;
+ 			phy-mode = "rgmii-txid";
+@@ -103,6 +108,7 @@ Examples:
+ 		cpts_clock_mult = <0x80000000>;
+ 		cpts_clock_shift = <29>;
+ 		syscon = <&cm>;
++		cpsw-phy-sel = <&phy_sel>;
+ 		cpsw_emac0: slave@0 {
+ 			phy_id = <&davinci_mdio>, <0>;
+ 			phy-mode = "rgmii-txid";
 -- 
-2.7.4
+2.18.0
