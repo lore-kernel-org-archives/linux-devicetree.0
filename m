@@ -1,130 +1,76 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
-Date: Wed, 29 Aug 2018 14:16:25 +0200
-Message-ID: <20180829121627eucas1p2f41ba35016ce90185f3cc08af1a67e23~PWge4MaXN2588725887eucas1p2h@eucas1p2.samsung.com>
-References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
- <20180824122308.3092-1-linus.walleij@linaro.org>
- <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
- <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
- <20180829095822eucas1p1fe4336ca7944765c01fc6ad1e941b8b0~PUn7YujBw3056130561eucas1p1_@eucas1p1.samsung.com>
- <20180829100152.GL907@e110455-lin.cambridge.arm.com>
- <20180829102320eucas1p28f05f1c765eb85195a06199bb68b87ce~PU9ukgvXA1734817348eucas1p2L@eucas1p2.samsung.com>
- <20180829110045.GN907@e110455-lin.cambridge.arm.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v7 2/8] dt-bindings: Introduce interconnect provider
+ bindings
+Date: Wed, 29 Aug 2018 15:31:16 +0300
+Message-ID: <75f1d8f8-84e8-e621-b91d-84b4d15edfa1@linaro.org>
+References: <20180731161340.13000-1-georgi.djakov@linaro.org>
+ <20180731161340.13000-3-georgi.djakov@linaro.org>
+ <CABGGisxq+hf91R18pnZ=VZ9f99GssWWPhpPCjNAROJmKg5-udA@mail.gmail.com>
+ <e114ed83-fd54-4952-f375-e1d94826ac6e@linaro.org>
+ <20180820153207.xx5outviph7ec76p@flea>
+ <672e6c6c-222f-5e7f-5d0c-acc8da68b1ab@linaro.org>
+ <20180827150836.shl7einpuvuw42p7@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180829110045.GN907@e110455-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180827150836.shl7einpuvuw42p7@flea>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <liviu.dudau@arm.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED
- DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "open list:DRM PANEL
- DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, skannan@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.ke
 List-Id: devicetree@vger.kernel.org
 
-T24gMjkuMDguMjAxOCAxMzowMCwgTGl2aXUgRHVkYXUgd3JvdGU6Cj4gT24gV2VkLCBBdWcgMjks
-IDIwMTggYXQgMTI6MjM6MThQTSArMDIwMCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4gT24gMjku
-MDguMjAxOCAxMjowMSwgTGl2aXUgRHVkYXUgd3JvdGU6Cj4+PiBPbiBXZWQsIEF1ZyAyOSwgMjAx
-OCBhdCAxMTo1ODoyMEFNICswMjAwLCBBbmRyemVqIEhhamRhIHdyb3RlOgo+Pj4+IE9uIDI4LjA4
-LjIwMTggMTU6NDUsIExpbnVzIFdhbGxlaWogd3JvdGU6Cj4+Pj4+IE9uIE1vbiwgQXVnIDI3LCAy
-MDE4IGF0IDE6NTMgUE0gQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4gd3JvdGU6
-Cj4+Pj4+Cj4+Pj4+PiBPbiAyNC4wOC4yMDE4IDE0OjIzLCBMaW51cyBXYWxsZWlqIHdyb3RlOgo+
-Pj4+Pj4+IFRoaXMgYWRkcyBiaW5kaW5ncyBmb3IgYSB2aXJ0dWFsIGRpc3BsYXkgdG8gYmUgdXNl
-ZCB3aXRoIGRpc3BsYXlzCj4+Pj4+Pj4gaW5zaWRlIGVudGlyZWx5IHZpcnR1YWwgZW52aXJvbm1l
-bnRzIHdoaWNoIGRvIG5vdCBlbXVsYXRlIHRoaW5ncwo+Pj4+Pj4+IGxpa2UgbW9uaXRvcnMgYnV0
-IGp1c3QgbmVlZCB0aW1pbmcgaW5mb3JtYXRpb24gdG8gYmUgc3VwcGxpZWQgdG8KPj4+Pj4+PiBp
-dHMgZGlzcGxheSBjb250cm9sbGVyLgo+Pj4+Pj4+Cj4+Pj4+Pj4gVGhpcyBpcyBpbnNwaXJlZCBi
-eSBlYXJsaWVyIHdvcmsgYnkgTGl2aXUgRHVkYXUuCj4+Pj4+PiBJZiB0aGlzIGlzIHB1cmUgdmly
-dHVhbCB0aGVuIGl0IHNob3VsZCBiZSBjb25uZWN0ZWQgdG8gb3RoZXIgcHVyZQo+Pj4+Pj4gdmly
-dHVhbCBjb21wb25lbnRzLgo+Pj4+PiBPSyBpdCdzIGEgYml0IG9mIGhhbGYtaGFsZiBidXQgb3V0
-c2lkZSBvZiBteSBncmFzcCwgSSBhbSBqdXN0IHRyeWluZwo+Pj4+PiB0byBzdXBwb3J0IGxlZ2Fj
-eSBzeXN0ZW1zLgo+Pj4+Pgo+Pj4+PiBUaGUgZGV2aWNlIHRyZWUgaXMgdGhlcmU6Cj4+Pj4+IGFy
-Y2gvYXJtNjQvYm9vdC9kdHMvYXJtL3J0c21fdmUtYWVtdjhhLmR0cwo+Pj4+PiBhcmNoL2FybTY0
-L2Jvb3QvZHRzL2FybS9ydHNtX3ZlLW1vdGhlcmJvYXJkLmR0c2kKPj4+Pj4KPj4+Pj4gVGhlIGxh
-dHRlciBjb250YWlucyB0aGUgQ0xDRCB3aGljaCBpcyB0aGUgZGlzcGxheSBkcml2ZXIuCj4+Pj4+
-Cj4+Pj4+IEluIFJUU00sIHdoaWNoIGlzIGFuIEFSTSBwcm9kdWN0IEkgZG8gbm90IGRldmVsb3Ag
-YW5kCj4+Pj4+IGNhbm5vdCBtYWtlIGNoYW5nZXMgdG8sIHRoZXJlIGlzIGFuIGVtdWxhdGVkIENM
-Q0QuIFNvCj4+Pj4+IHRoYXQgcGFydCBhcHBlYXIgYXMgaWYgaXQgd2FzIHJlYWwgaGFyZHdhcmUu
-IExpa2UgaW4gUUVNVS4KPj4+Pj4KPj4+Pj4gQnV0IHRoZSBkaXNwbGF5IGRvZXMgbm90IGhhdmUg
-YW55IGVtdWxhdGlvbi4gVGhlIHJhdwo+Pj4+PiBvdXRwdXQgZnJvbSB0aGUgQ0xDRCBpcyBsYXRj
-aGVkIG91dCB0byB0aGUgc2NyZWVuLgo+Pj4+Pgo+Pj4+PiBJIGRvIG5vdCBrbm93IGV4YWN0bHkg
-a25vdyBob3cgdGhlIFJUU00gZW11bGF0b3IKPj4+Pj4gYWN0dWFsbHkgd29ya3MsIGJ1dCBJIHN1
-c3BlY3QgdGhhdCB0aGUgbGl0dGxlIGdyYXBoaWMgd2luZG93Cj4+Pj4+IG9uIHRoZSBzY3JlZWVu
-IGFkYXB0cyB0byB3aGF0IGdldHMgd3JpdHRlbiBpbnRvIHRoZQo+Pj4+PiBDTENEIGNvbnRyb2wg
-cmVnaXN0ZXJzLCBzbyBhbnl0aGluZyBnb2VzLCBtb3JlIG9yIGxlc3MuCj4+Pj4+Cj4+Pj4+IFRv
-IHNhdGlzZnkgdGhlIENMQ0Qgd2l0aCBzb21lIHRpbWluZ3MgYW5kIHJlc29sdXRpb24sCj4+Pj4+
-IHRoaXMgYnJpZGdlIGdpdmVzIGl0IHRoYXQsIGZyb20gdGhlIGRldmljZSB0cmVlLCBpbiBhIHdh
-eQo+Pj4+PiB0aGF0IGNsZWFybHkgY29udmV5cyB0aGF0ICJ0aGlzIGlzIG5vdCBhIHJlYWwgdGhp
-bmciLgo+Pj4+Pgo+Pj4+PiBUaGUgb2xkIGNvZGUgdXNlcyBEUEkuIFRoaXMgaXMgbm90IERQSSwg
-bm90IGV2ZW4gY2xvc2UKPj4+Pj4gdG8gaXQuIEl0IHdvcmtlZCBzaW1wbHkgYmVjYXVzZSBhbGwg
-dGhlIERQSSByZWFsbHkgZG9lcyBpcwo+Pj4+PiB3aGF0IHRoaXMgcGF0Y2ggZG9lczogcHJvdmlk
-ZSB0aW1pbmdzLgo+Pj4+Pgo+Pj4+PiBCeSBjb250cmFzdCBvbiBRRU1VIEkgaGF2ZSBwYXRjaGVz
-IHRoZSBlbXVsYXRvciB0bwo+Pj4+PiBwcm9wZXJseSByZXByZXNlbnQgdGhlIEkyQyBEREMgbGlu
-ayBhbmQgcHJvdmlkZSBFRElECj4+Pj4+IHNvIHRoYXQgaXMgYWxsIGZpbmUuCj4+Pj4+Cj4+Pj4+
-IEkgY2Fubm90IHBhdGNoIFJUU00gdG8gZW11bGF0ZSBJMkMgYW5kIEREQy4gSXQncyBub3QKPj4+
-Pj4gb3BlbiBzb3VyY2UuIEJ1dCB0aGUgZGV2aWNlIHRyZWUgaW4gdGhlIGtlcm5lbCBzdXBwb3J0
-cwo+Pj4+PiB0aGlzICJtYWNoaW5lIiBhbmQgc28sIEkgaGF2ZSB0byBtYWludGFpbiBpdCB3aGVu
-IG1vZGVybml6bmcKPj4+Pj4gdGhlIGZiZGV2IGRyaXZlciB0byBhIERSTSBkcml2ZXIuCj4+Pj4+
-Cj4+Pj4+IEknbSBzb3JyeSBSVFNNIGlzIGhhbGYvaGFsZi4gTm90IG15IGZhdWx0LiBJIGNhbid0
-IGZpeC4uLgo+Pj4+IEkgZG8gbm90IGtub3cgdGhlIHBsYXRmb3JtLCBzbyBJwqAgSSBoYXZlIGR1
-ZyBsaXR0bGUgYml0LCBidXQgSSB3YW4ndAo+Pj4+IGNhbGwgaXTCoCB0aG9yb3VnaCByZXNlYXJj
-aC4gSnVzdCBwbGVhc2UgYmUga2luZCBpZiBJIHdyb3RlIHN0aCBzdHVwaWQuCj4+Pj4gV2hhdCBJ
-IGhhdmUgZm91bmQ6Cj4+Pj4gMS4gRFRTIHNob3dzIENMQ0QgaXMgcGwxMTEuCj4+Pj4gMi4gcGwx
-MTEgZG9jdW1lbnRhdGlvbiBzYXlzIGl0J3Mgb3V0cHV0IGludGVyZmFjZSBzdXBwb3J0cyBTVE4g
-YW5kIFRGVAo+Pj4+IHVwIHRvIDI0LWJpdCBidXMuIEkgZG8gbm90IGtub3cgU1ROLCBidXQgVEZU
-IHNlZW1zIHRvIGJlIGNvbXBhdGlibGUgd2l0aAo+Pj4+IERQSS4KPj4+Pgo+Pj4+IElmIGl0IGlz
-IGNvcnJlY3QsIGRwaSBwYW5lbCBzZWVtcyB0byBiZSBPSy4gQW5kIEkgdGhpbmsgaXQgaXMgbGVz
-cwo+Pj4+IGltcG9ydGFudCBob3cgdGhlIGVtdWxhdG9yIHdvcmtzLCBtb3JlIGltcG9ydGFudCBp
-cyB0aGF0IGl0IHNob3VsZAo+Pj4+IGVtdWxhdGUgcGwxMTEsIGluY2x1ZGluZyBpdCdzIG91dHB1
-dCBpbnRlcmZhY2VzLgo+Pj4gWWVhaCwgdW5mb3J0dW5hdGVseSB0aGF0IHNoaXAgaGFzIHNhaWxl
-ZCBhIGxvbmcgdGltZSBhZ28uIFRoZSBlbXVsYXRvcgo+Pj4gcGVvcGxlIHRob3VnaHQgZW11bGF0
-aW5nIHRoZSByZWdpc3RlciBpbnRlcmZhY2UgaXMgZ29vZCBlbm91Z2ggYW5kIHRvb2sKPj4+IGxp
-YmVydGllcyBvbiBob3cgdGhlIGJlaGF2aW91ciB3YXMgImVtdWxhdGVkIi4gRW5kIHJlc3VsdDog
-b3V0cHV0Cj4+PiBpbnRlcmZhY2VzIGFyZSBub3QgdGhlIHNhbWUuCj4+IFNvIHdoYXQgaXMgd3Jv
-bmcvbWlzc2luZyB3aXRoIGRwaSBwYW5lbD8KPiBMaW51cyBleHBsYWluZWQgaW4gdGhlIGxpbmtz
-IGhlIHF1b3RlZCBiZWxvdy4gSSdsbCBsZXQgaGltIGFkZCBtb3JlIGlmCj4gaGUgaGFzIGFkZGl0
-aW9uYWwgaW5mb3JtYXRpb24uCgpJbiBsaW5rcyBiZWxvdyBMaW51cyBwcm9wb3NlZCBWR0EsIGZv
-ciBtZSBpdCBzZWVtcyBpbmNvcnJlY3QgcGwxMTEsIGRvZXMKbm90IHByb2R1Y2UgYW5hbG9nIFZH
-QSBzaWduYWwuIFdoeSBkbyB5b3UgKG9yIExpbnVzKSB3YW50IHRvIHVzZSBpdC4gSXQKZG9lcyBu
-b3QgbWFrZSBzZW5zZS4KU1ZHQSBhbmQgWEdBIGFyZSB3b3JzZSwgdGhleSBkbyBub3QgaWRlbnRp
-ZnkgdmlkZW8gc2lnbmFsIHN0YW5kYXJkLCB0aGV5CmlkZW50aWZ5IG9ubHkgcmVzb2x1dGlvbi4K
-Ck15IHF1ZXN0aW9uIHN0aWxsIHN0YW5kczogd2hhdCBpcyB3cm9uZy9taXNzaW5nIHdpdGggZHBp
-IHBhbmVsPwoKSSBkaWQgbm90IGFuYWx5emUgZGV0YWlscywgYnV0IHBsMTExIG91dHB1dCBzZWVt
-cyB0byBiZSBEUEkgY29tcGF0aWJsZS4KUGxlYXNlIG5vdGUgdGhhdCBEUEkgc3RhbmRhcmQgKHVu
-bGlrZSBEU0kpIGlzIGEga2luZCBvZgpwb3N0LWltcGxlbWVudGF0aW9uIHN0YW5kYXJkIC0gaXQg
-d2FzIGNyZWF0ZWQgdG8gZGVzY3JpYmUgZXhpc3RpbmcKZGlzcGxheSBwYXJhbGxlbCBpbnRlcmZh
-Y2VzLCB3aGljaCBhcmUgaWRlbnRpZmllZCB1c2luZyBkaWZmZXJlbnQgbmFtZXM6ClJHQiwgcGFy
-YWxsZWwsIFRGVCg/KSwgTENELCBwYW5lbCwuLi4gU28gZXZlbiBpZiBkb2N1bWVudGF0aW9uIHNh
-eXMKbm90aGluZyBhYm91dCBEUEkgaXQgZG9lcyBub3QgbWVhbiBpdCBpcyBub3QgRFBJICdjb21w
-bGlhbnQnLiBVc3VhbGx5Cm1vc3QgZGlnaXRhbCBpbnRlcmZhY2VzIHdpdGggMjQtbGluZXMgZm9y
-IFJHQiBkYXRhLCBWU1lOQywgSFNZTkMsIFBDTEsKYW5kIERFIHNpZ25hbHMgY2FuIGJlIHRyZWF0
-ZWQgYXMgRFBJIGludGVyZmFjZXMuCgpSZWdhcmRzCkFuZHJ6ZWoKCgo+Cj4gQmVzdCByZWdhcmRz
-LAo+IExpdml1Cj4KPj4gUmVnYXJkcwo+PiBBbmRyemVqCj4+Cj4+PiBCZXN0IHJlZ2FyZHMsCj4+
-PiBMaXZpdQo+Pj4KPj4+PiBSZWdhcmRzCj4+Pj4gQW5kcnplago+Pj4+Pj4gQW5kIG9uZSBtb3Jl
-IHRoaW5nLCB5b3UgYXJlIGRlZmluaW5nIHZpcnR1YWwgcGFuZWwgYnV0IHlvdSBhcmUgdXNpbmcK
-Pj4+Pj4+IGRybV9icmlkZ2UgZnJhbWV3b3JrLCB3aHkgbm90IGRybV9wYW5lbD8KPj4+Pj4gVGhp
-cyB3YXMgZGlzY3Vzc2VkIGJlZm9yZSBpbiB0aGUgcHJldmlvdXMgcGF0Y2ggc2V0Ogo+Pj4+PiBo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1KdWx5
-LzE4MzUxNi5odG1sCj4+Pj4+Cj4+Pj4+IEVzc2VudGlhbGx5LCBpdCdzIGJlY2F1c2UgdGhlIGRp
-c3BsYXkgZHJpdmVyIGlzIGp1c3QgY29ubmVjdGVkCj4+Pj4+IHRvICJzb21ldGhpbmciIG5vdCBh
-IHBhbmVsIGFuZCBhIGJyaWRnZSBpcyBsaWtlbHkgdGhlIGJlc3QgSQo+Pj4+PiBjYW4gY29tZSB1
-cCB3aXRoIC0gYSBicmlkZ2Ugb3ZlciB0byBhIHZpcnR1YWwgZGlzcGxheS4KPj4+Pj4KPj4+Pj4g
-QSBwYXRjaCB0byBhZGQgIlZHQSIsICJTR0EiIGFuZCAiWEdBIiB0byB0aGUgc2ltcGxlIHBhbmVs
-cwo+Pj4+PiB3YXMgTkFDS2VkIChzb3J0IG9mLCBwb2xpdGVseSk6Cj4+Pj4+IGh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE4LUp1bHkvMTgzNjk4Lmh0
-bWwKPj4+Pj4KPj4+Pj4gQWxzbyBpdCB3YXMgbm90ZWQgdGhhdCBpdCB3b3VsZCBiZSBuaWNlIHRv
-IGhhdmUgc29tZXRoaW5nIHRoYXQKPj4+Pj4gd291bGQgbWFrZSBpdCBlYXN5IHRvIGNoYW5nZSBy
-ZXNvbHV0aW9ucyBvbiB0aGVzZSB2aXJ0dWFsCj4+Pj4+IGRpc3BsYXkgdGhpbmdzLiBWb2lsYS4K
-Pj4+Pgo+Pj4+PiBZb3VycywKPj4+Pj4gTGludXMgV2FsbGVpago+Pj4+Pgo+Pj4+PgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Maxime,
+
+On 08/27/2018 06:08 PM, Maxime Ripard wrote:
+> Hi!
+> 
+> On Fri, Aug 24, 2018 at 05:51:37PM +0300, Georgi Djakov wrote:
+>> Hi Maxime,
+>>
+>> On 08/20/2018 06:32 PM, Maxime Ripard wrote:
+>>> Hi Georgi,
+>>>
+>>> On Tue, Aug 07, 2018 at 05:54:38PM +0300, Georgi Djakov wrote:
+>>>>> There is also a patch series from Maxime Ripard that's addressing the
+>>>>> same general area. See "dt-bindings: Add a dma-parent property". We
+>>>>> don't need multiple ways to address describing the device to memory
+>>>>> paths, so you all had better work out a common solution.
+>>>>
+>>>> Looks like this fits exactly into the interconnect API concept. I see
+>>>> MBUS as interconnect provider and display/camera as consumers, that
+>>>> report their bandwidth needs. I am also planning to add support for
+>>>> priority.
+>>>
+>>> Thanks for working on this. After looking at your serie, the one thing
+>>> I'm a bit uncertain about (and the most important one to us) is how we
+>>> would be able to tell through which interconnect the DMA are done.
+>>>
+>>> This is important to us since our topology is actually quite simple as
+>>> you've seen, but the RAM is not mapped on that bus and on the CPU's,
+>>> so we need to apply an offset to each buffer being DMA'd.
+>>
+>> Ok, i see - your problem is not about bandwidth scaling but about using
+>> different memory ranges by the driver to access the same location.
+> 
+> Well, it turns out that the problem we are bitten by at the moment is
+> the memory range one, but the controller it goes through also provides
+> bandwidth scaling, priorities and so on, so it's not too far off.
+
+Thanks for the clarification. Alright, so this will fit nicely into the
+model as a provider. I agree that we should try to use the same binding
+to describe a path from a master to memory in DT.
+
+>> So this is not really the same and your problem is different. Also
+>> the interconnect bindings are describing a path and
+>> endpoints. However i am open to any ideas.
+> 
+> It's describing a path and endpoints, but it can describe multiple of
+> them for the same device, right? If so, we'd need to provide
+> additional information to distinguish which path is used for DMA.
+
+Sure, multiple paths are supported.
+
+BR,
+Georgi
