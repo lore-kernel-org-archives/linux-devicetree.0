@@ -1,27 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/5] dt-bindings: drm/bridge Document Cadence MHDP
- DPI/DP bridge bindings
-Date: Tue, 28 Aug 2018 19:28:19 -0500
-Message-ID: <20180829002819.GA12330@bogus>
-References: <1535451894-2518-1-git-send-email-dkos@cadence.com>
- <1535451894-2518-5-git-send-email-dkos@cadence.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH 5/5] arm64: dts: add LX2160ARDB board support
+Date: Tue, 28 Aug 2018 19:28:06 -0500
+Message-ID: <1dd3074eabb496155c4d1abb83c82c52529a656a.camel@buserror.net>
+References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
+         <1534747636-20064-6-git-send-email-vabhav.sharma@nxp.com>
+         <CAL_JsqKH4haGy2F2_2EP=evC8ip7DmGR8J4wzrO0wWnOLsaZqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1535451894-2518-5-git-send-email-dkos@cadence.com>
+In-Reply-To: <CAL_JsqKH4haGy2F2_2EP=evC8ip7DmGR8J4wzrO0wWnOLsaZqA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Damian Kos <dkos@cadence.com>, Quentin Schulz <quentin.schulz@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, pgaj@cadence.com, ltyrala@cadence.com, stelford@cadence.com, jartur@cadence.com, piotrs@cadence.com
+To: Rob Herring <robh+dt@kernel.org>, vabhav.sharma@nxp.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-kernel-owner@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Sriram Dash <sriram.dash@nxp.com>, linux-clk <linux-clk@vger.kernel.org>, Udit Kumar <udit.kumar@nxp.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, V.Sethi@nxp.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@kernel.org>, Priyanka Jain <priyanka.jain@>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Aug 2018 11:24:47 +0100, Damian Kos wrote:
-> From: Quentin Schulz <quentin.schulz@bootlin.com>
+On Tue, 2018-08-21 at 15:45 -0500, Rob Herring wrote:
+> On Mon, Aug 20, 2018 at 1:52 PM Vabhav Sharma <vabhav.sharma@nxp.com> wrote:
+> > +/ {
+> > +       model = "NXP Layerscape LX2160ARDB";
+> > +       compatible = "fsl,lx2160a-rdb", "fsl,lx2160a";
+> > +
+> > +       aliases {
+> > +               crypto = &crypto;
 > 
-> Signed-off-by: Damian Kos <dkos@cadence.com>
-> ---
->  .../bindings/display/bridge/cdns,mhdp.txt     | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.txt
-> 
+> Drop this. Aliases should be numbered, and this is not a standard
+> alias name either.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Is this a new rule?  In any case, U-Boot looks for a "crypto" alias.
+
+-Scott
