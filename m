@@ -1,44 +1,51 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx7d-sdb: enable gpio buttons as wakeup source
-Date: Wed, 29 Aug 2018 09:45:38 +0800
-Message-ID: <1535507138-4626-1-git-send-email-Anson.Huang@nxp.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v2] usb: core: phy: fix return value checking about devm_of_phy_get_by_index()
+Date: Wed, 29 Aug 2018 10:10:48 +0800
+Message-ID: <8263a8d0f87d595dd35efa5432d294d9f7b38719.1535507412.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Johan Hovold <johan@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables i.MX7D SDB board's below GPIO buttons
-as wakeup sources:
+Use IS_ERR() instead of IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
+never return NULL value;
+But still need ignore the error of -ENODEV, for more information, please
+refer to:
+[0] https://lkml.org/lkml/2018/4/19/88
+[1] https://patchwork.kernel.org/patch/10160181/
 
-S1(FUNC1): KEY_VOLUMEUP
-S3(FUNC2): KEY_VOLUMEDOWN
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- arch/arm/boot/dts/imx7d-sdb.dts | 2 ++
- 1 file changed, 2 insertions(+)
+V2: keep the -ENODEV check
+---
+ drivers/usb/core/phy.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index c9b3c60..f1bafda 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -27,12 +27,14 @@
- 			label = "Volume Up";
- 			gpios = <&gpio5 11 GPIO_ACTIVE_LOW>;
- 			linux,code = <KEY_VOLUMEUP>;
-+			wakeup-source;
- 		};
+diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+index 9879767..e3cc743 100644
+--- a/drivers/usb/core/phy.c
++++ b/drivers/usb/core/phy.c
+@@ -23,14 +23,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
+ 				   struct list_head *list)
+ {
+ 	struct usb_phy_roothub *roothub_entry;
+-	struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
++	struct phy *phy;
  
- 		volume-down {
- 			label = "Volume Down";
- 			gpios = <&gpio5 10 GPIO_ACTIVE_LOW>;
- 			linux,code = <KEY_VOLUMEDOWN>;
-+			wakeup-source;
- 		};
- 	};
+-	if (IS_ERR_OR_NULL(phy)) {
+-		if (!phy || PTR_ERR(phy) == -ENODEV)
+-			return 0;
+-		else
+-			return PTR_ERR(phy);
+-	}
++	phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
++	if (IS_ERR(phy))
++		return (PTR_ERR(phy) == -ENODEV) ? 0 : PTR_ERR(phy);
  
+ 	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
+ 	if (!roothub_entry)
 -- 
-2.7.4
+1.9.1
