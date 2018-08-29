@@ -1,51 +1,91 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2] usb: core: phy: fix return value checking about devm_of_phy_get_by_index()
-Date: Wed, 29 Aug 2018 10:10:48 +0800
-Message-ID: <8263a8d0f87d595dd35efa5432d294d9f7b38719.1535507412.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH 2/2] usb: mtu3: disable vbus rise/fall interrupts of ltssm
+Date: Wed, 29 Aug 2018 10:36:50 +0800
+Message-ID: <72ee83112167ceb394ec5d89a824be866a7a21f0.1535509922.git.chunfeng.yun@mediatek.com>
+References: <c4279eccff765006b78f87bf3c8c9ac94a06c04d.1535509922.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c4279eccff765006b78f87bf3c8c9ac94a06c04d.1535509922.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Johan Hovold <johan@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use IS_ERR() instead of IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
-never return NULL value;
-But still need ignore the error of -ENODEV, for more information, please
-refer to:
-[0] https://lkml.org/lkml/2018/4/19/88
-[1] https://patchwork.kernel.org/patch/10160181/
+The vbus rise & fall interrupts are used to enable and disable
+U3 function of device automatically, this cause some issues when
+class driver is initialized as deactivated, and will skip over
+software-controlled connect by pullup(), but UDC wants to keep
+disconnect until usb_gadget_activate() is called which calls
+pullup() if needed. So we disable vbus rise & fall interrupts
+and just use pullup() to enable & disable U3 function, and reset
+mtu3 state when disconnect instead when vbus fall.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-V2: keep the -ENODEV check
----
- drivers/usb/core/phy.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/usb/mtu3/mtu3_core.c   |  4 ++--
+ drivers/usb/mtu3/mtu3_gadget.c | 22 ++++++++++++++--------
+ 2 files changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-index 9879767..e3cc743 100644
---- a/drivers/usb/core/phy.c
-+++ b/drivers/usb/core/phy.c
-@@ -23,14 +23,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
- 				   struct list_head *list)
+diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
+index d045d84..ae70b9b 100644
+--- a/drivers/usb/mtu3/mtu3_core.c
++++ b/drivers/usb/mtu3/mtu3_core.c
+@@ -185,8 +185,8 @@ static void mtu3_intr_enable(struct mtu3 *mtu)
+ 
+ 	if (mtu->is_u3_ip) {
+ 		/* Enable U3 LTSSM interrupts */
+-		value = HOT_RST_INTR | WARM_RST_INTR | VBUS_RISE_INTR |
+-		    VBUS_FALL_INTR | ENTER_U3_INTR | EXIT_U3_INTR;
++		value = HOT_RST_INTR | WARM_RST_INTR |
++			ENTER_U3_INTR | EXIT_U3_INTR;
+ 		mtu3_writel(mbase, U3D_LTSSM_INTR_ENABLE, value);
+ 	}
+ 
+diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
+index 5c60a8c..bbcd333 100644
+--- a/drivers/usb/mtu3/mtu3_gadget.c
++++ b/drivers/usb/mtu3/mtu3_gadget.c
+@@ -585,6 +585,17 @@ static int mtu3_gadget_stop(struct usb_gadget *g)
+ 	.udc_stop = mtu3_gadget_stop,
+ };
+ 
++static void mtu3_state_reset(struct mtu3 *mtu)
++{
++	mtu->address = 0;
++	mtu->ep0_state = MU3D_EP0_STATE_SETUP;
++	mtu->may_wakeup = 0;
++	mtu->u1_enable = 0;
++	mtu->u2_enable = 0;
++	mtu->delayed_status = false;
++	mtu->test_mode = false;
++}
++
+ static void init_hw_ep(struct mtu3 *mtu, struct mtu3_ep *mep,
+ 		u32 epnum, u32 is_in)
  {
- 	struct usb_phy_roothub *roothub_entry;
--	struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-+	struct phy *phy;
+@@ -702,6 +713,7 @@ void mtu3_gadget_disconnect(struct mtu3 *mtu)
+ 		spin_lock(&mtu->lock);
+ 	}
  
--	if (IS_ERR_OR_NULL(phy)) {
--		if (!phy || PTR_ERR(phy) == -ENODEV)
--			return 0;
--		else
--			return PTR_ERR(phy);
--	}
-+	phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-+	if (IS_ERR(phy))
-+		return (PTR_ERR(phy) == -ENODEV) ? 0 : PTR_ERR(phy);
++	mtu3_state_reset(mtu);
+ 	usb_gadget_set_state(&mtu->g, USB_STATE_NOTATTACHED);
+ }
  
- 	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
- 	if (!roothub_entry)
+@@ -712,12 +724,6 @@ void mtu3_gadget_reset(struct mtu3 *mtu)
+ 	/* report disconnect, if we didn't flush EP state */
+ 	if (mtu->g.speed != USB_SPEED_UNKNOWN)
+ 		mtu3_gadget_disconnect(mtu);
+-
+-	mtu->address = 0;
+-	mtu->ep0_state = MU3D_EP0_STATE_SETUP;
+-	mtu->may_wakeup = 0;
+-	mtu->u1_enable = 0;
+-	mtu->u2_enable = 0;
+-	mtu->delayed_status = false;
+-	mtu->test_mode = false;
++	else
++		mtu3_state_reset(mtu);
+ }
 -- 
 1.9.1
