@@ -1,65 +1,105 @@
-From: Jan Tuerk <jan.tuerk@emtrion.com>
-Subject: [PATCH v7 4/4] ARM: imx_v6_v7_defconfig: Enable DA9063 PMIC support.
-Date: Wed, 29 Aug 2018 12:08:00 +0200
-Message-ID: <20180829100811.55836-4-jan.tuerk@emtrion.com>
-References: <20180824132617.43975-1-jan.tuerk@emtrion.com>
- <20180829100811.55836-1-jan.tuerk@emtrion.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 1/2] drm/bridge: Add virtual display DT bindings
+Date: Wed, 29 Aug 2018 12:23:18 +0200
+Message-ID: <20180829102320eucas1p28f05f1c765eb85195a06199bb68b87ce~PU9ukgvXA1734817348eucas1p2L@eucas1p2.samsung.com>
+References: <CGME20180824122324epcas3p2922f3e5415dacf4c89cfb136fa5c77b2@epcas3p2.samsung.com>
+ <20180824122308.3092-1-linus.walleij@linaro.org>
+ <20180827115302eucas1p24d36cfaf9835ccb217ac81e508484aa1~Ou5eTkYW-3006130061eucas1p2Z@eucas1p2.samsung.com>
+ <CACRpkdaGNhxY-xAAEL1Bu4EMr8x7qTGoM9s-At2v7Ev8PwOTDw@mail.gmail.com>
+ <20180829095822eucas1p1fe4336ca7944765c01fc6ad1e941b8b0~PUn7YujBw3056130561eucas1p1_@eucas1p1.samsung.com>
+ <20180829100152.GL907@e110455-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180829100811.55836-1-jan.tuerk@emtrion.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Russell King <linux@armlinux.org.uk>, "GitAuthor: Jan Tuerk" <jan.tuerk@emtrion.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180829100152.GL907@e110455-lin.cambridge.arm.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Liviu Dudau <liviu.dudau@arm.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED
+ DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "open list:DRM PANEL
+ DRIVERS" <dri-devel@lists.freedesktop.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sudeep Holla <sudeep.holla@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-All recent emtrion modules based on i.mx6 make use of the DA9063.
-Therefore enable it with the following defaults:
-	- CONFIG_MFD_DA9063=y
-	- CONFIG_REGULATOR_DA9063=y
-	- CONFIG_DA9063_WATCHDOG=m
-MFD and REGULATOR are built-in to have it at Kernel boot-time.
-The WATCHDOG is optional and could be loaded from userspace.
-
-Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
----
- arch/arm/configs/imx_v6_v7_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-Unchanged since v6
-
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index e2c127608bcc..445e493d69d7 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -218,10 +218,12 @@ CONFIG_CPU_THERMAL=y
- CONFIG_IMX_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_DA9062_WATCHDOG=y
-+CONFIG_DA9063_WATCHDOG=m
- CONFIG_RN5T618_WATCHDOG=y
- CONFIG_IMX2_WDT=y
- CONFIG_MFD_DA9052_I2C=y
- CONFIG_MFD_DA9062=y
-+CONFIG_MFD_DA9063=y
- CONFIG_MFD_MC13XXX_SPI=y
- CONFIG_MFD_MC13XXX_I2C=y
- CONFIG_MFD_RN5T618=y
-@@ -231,6 +233,7 @@ CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_ANATOP=y
- CONFIG_REGULATOR_DA9052=y
- CONFIG_REGULATOR_DA9062=y
-+CONFIG_REGULATOR_DA9063=y
- CONFIG_REGULATOR_GPIO=y
- CONFIG_REGULATOR_MC13783=y
- CONFIG_REGULATOR_MC13892=y
--- 
-emtrion GmbH
-Alter Schlachthof 45
-76131 Karlsruhe
-GERMANY
-https://www.emtrion.de
-
-Amtsgericht Mannheim
-HRB 110 300
-Geschäftsführer: Dieter Baur, Ramona Maurer
+T24gMjkuMDguMjAxOCAxMjowMSwgTGl2aXUgRHVkYXUgd3JvdGU6Cj4gT24gV2VkLCBBdWcgMjks
+IDIwMTggYXQgMTE6NTg6MjBBTSArMDIwMCwgQW5kcnplaiBIYWpkYSB3cm90ZToKPj4gT24gMjgu
+MDguMjAxOCAxNTo0NSwgTGludXMgV2FsbGVpaiB3cm90ZToKPj4+IE9uIE1vbiwgQXVnIDI3LCAy
+MDE4IGF0IDE6NTMgUE0gQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4gd3JvdGU6
+Cj4+Pgo+Pj4+IE9uIDI0LjA4LjIwMTggMTQ6MjMsIExpbnVzIFdhbGxlaWogd3JvdGU6Cj4+Pj4+
+IFRoaXMgYWRkcyBiaW5kaW5ncyBmb3IgYSB2aXJ0dWFsIGRpc3BsYXkgdG8gYmUgdXNlZCB3aXRo
+IGRpc3BsYXlzCj4+Pj4+IGluc2lkZSBlbnRpcmVseSB2aXJ0dWFsIGVudmlyb25tZW50cyB3aGlj
+aCBkbyBub3QgZW11bGF0ZSB0aGluZ3MKPj4+Pj4gbGlrZSBtb25pdG9ycyBidXQganVzdCBuZWVk
+IHRpbWluZyBpbmZvcm1hdGlvbiB0byBiZSBzdXBwbGllZCB0bwo+Pj4+PiBpdHMgZGlzcGxheSBj
+b250cm9sbGVyLgo+Pj4+Pgo+Pj4+PiBUaGlzIGlzIGluc3BpcmVkIGJ5IGVhcmxpZXIgd29yayBi
+eSBMaXZpdSBEdWRhdS4KPj4+PiBJZiB0aGlzIGlzIHB1cmUgdmlydHVhbCB0aGVuIGl0IHNob3Vs
+ZCBiZSBjb25uZWN0ZWQgdG8gb3RoZXIgcHVyZQo+Pj4+IHZpcnR1YWwgY29tcG9uZW50cy4KPj4+
+IE9LIGl0J3MgYSBiaXQgb2YgaGFsZi1oYWxmIGJ1dCBvdXRzaWRlIG9mIG15IGdyYXNwLCBJIGFt
+IGp1c3QgdHJ5aW5nCj4+PiB0byBzdXBwb3J0IGxlZ2FjeSBzeXN0ZW1zLgo+Pj4KPj4+IFRoZSBk
+ZXZpY2UgdHJlZSBpcyB0aGVyZToKPj4+IGFyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL3J0c21fdmUt
+YWVtdjhhLmR0cwo+Pj4gYXJjaC9hcm02NC9ib290L2R0cy9hcm0vcnRzbV92ZS1tb3RoZXJib2Fy
+ZC5kdHNpCj4+Pgo+Pj4gVGhlIGxhdHRlciBjb250YWlucyB0aGUgQ0xDRCB3aGljaCBpcyB0aGUg
+ZGlzcGxheSBkcml2ZXIuCj4+Pgo+Pj4gSW4gUlRTTSwgd2hpY2ggaXMgYW4gQVJNIHByb2R1Y3Qg
+SSBkbyBub3QgZGV2ZWxvcCBhbmQKPj4+IGNhbm5vdCBtYWtlIGNoYW5nZXMgdG8sIHRoZXJlIGlz
+IGFuIGVtdWxhdGVkIENMQ0QuIFNvCj4+PiB0aGF0IHBhcnQgYXBwZWFyIGFzIGlmIGl0IHdhcyBy
+ZWFsIGhhcmR3YXJlLiBMaWtlIGluIFFFTVUuCj4+Pgo+Pj4gQnV0IHRoZSBkaXNwbGF5IGRvZXMg
+bm90IGhhdmUgYW55IGVtdWxhdGlvbi4gVGhlIHJhdwo+Pj4gb3V0cHV0IGZyb20gdGhlIENMQ0Qg
+aXMgbGF0Y2hlZCBvdXQgdG8gdGhlIHNjcmVlbi4KPj4+Cj4+PiBJIGRvIG5vdCBrbm93IGV4YWN0
+bHkga25vdyBob3cgdGhlIFJUU00gZW11bGF0b3IKPj4+IGFjdHVhbGx5IHdvcmtzLCBidXQgSSBz
+dXNwZWN0IHRoYXQgdGhlIGxpdHRsZSBncmFwaGljIHdpbmRvdwo+Pj4gb24gdGhlIHNjcmVlZW4g
+YWRhcHRzIHRvIHdoYXQgZ2V0cyB3cml0dGVuIGludG8gdGhlCj4+PiBDTENEIGNvbnRyb2wgcmVn
+aXN0ZXJzLCBzbyBhbnl0aGluZyBnb2VzLCBtb3JlIG9yIGxlc3MuCj4+Pgo+Pj4gVG8gc2F0aXNm
+eSB0aGUgQ0xDRCB3aXRoIHNvbWUgdGltaW5ncyBhbmQgcmVzb2x1dGlvbiwKPj4+IHRoaXMgYnJp
+ZGdlIGdpdmVzIGl0IHRoYXQsIGZyb20gdGhlIGRldmljZSB0cmVlLCBpbiBhIHdheQo+Pj4gdGhh
+dCBjbGVhcmx5IGNvbnZleXMgdGhhdCAidGhpcyBpcyBub3QgYSByZWFsIHRoaW5nIi4KPj4+Cj4+
+PiBUaGUgb2xkIGNvZGUgdXNlcyBEUEkuIFRoaXMgaXMgbm90IERQSSwgbm90IGV2ZW4gY2xvc2UK
+Pj4+IHRvIGl0LiBJdCB3b3JrZWQgc2ltcGx5IGJlY2F1c2UgYWxsIHRoZSBEUEkgcmVhbGx5IGRv
+ZXMgaXMKPj4+IHdoYXQgdGhpcyBwYXRjaCBkb2VzOiBwcm92aWRlIHRpbWluZ3MuCj4+Pgo+Pj4g
+QnkgY29udHJhc3Qgb24gUUVNVSBJIGhhdmUgcGF0Y2hlcyB0aGUgZW11bGF0b3IgdG8KPj4+IHBy
+b3Blcmx5IHJlcHJlc2VudCB0aGUgSTJDIEREQyBsaW5rIGFuZCBwcm92aWRlIEVESUQKPj4+IHNv
+IHRoYXQgaXMgYWxsIGZpbmUuCj4+Pgo+Pj4gSSBjYW5ub3QgcGF0Y2ggUlRTTSB0byBlbXVsYXRl
+IEkyQyBhbmQgRERDLiBJdCdzIG5vdAo+Pj4gb3BlbiBzb3VyY2UuIEJ1dCB0aGUgZGV2aWNlIHRy
+ZWUgaW4gdGhlIGtlcm5lbCBzdXBwb3J0cwo+Pj4gdGhpcyAibWFjaGluZSIgYW5kIHNvLCBJIGhh
+dmUgdG8gbWFpbnRhaW4gaXQgd2hlbiBtb2Rlcm5pem5nCj4+PiB0aGUgZmJkZXYgZHJpdmVyIHRv
+IGEgRFJNIGRyaXZlci4KPj4+Cj4+PiBJJ20gc29ycnkgUlRTTSBpcyBoYWxmL2hhbGYuIE5vdCBt
+eSBmYXVsdC4gSSBjYW4ndCBmaXguLi4KPj4gSSBkbyBub3Qga25vdyB0aGUgcGxhdGZvcm0sIHNv
+IEnCoCBJIGhhdmUgZHVnIGxpdHRsZSBiaXQsIGJ1dCBJIHdhbid0Cj4+IGNhbGwgaXTCoCB0aG9y
+b3VnaCByZXNlYXJjaC4gSnVzdCBwbGVhc2UgYmUga2luZCBpZiBJIHdyb3RlIHN0aCBzdHVwaWQu
+Cj4+IFdoYXQgSSBoYXZlIGZvdW5kOgo+PiAxLiBEVFMgc2hvd3MgQ0xDRCBpcyBwbDExMS4KPj4g
+Mi4gcGwxMTEgZG9jdW1lbnRhdGlvbiBzYXlzIGl0J3Mgb3V0cHV0IGludGVyZmFjZSBzdXBwb3J0
+cyBTVE4gYW5kIFRGVAo+PiB1cCB0byAyNC1iaXQgYnVzLiBJIGRvIG5vdCBrbm93IFNUTiwgYnV0
+IFRGVCBzZWVtcyB0byBiZSBjb21wYXRpYmxlIHdpdGgKPj4gRFBJLgo+Pgo+PiBJZiBpdCBpcyBj
+b3JyZWN0LCBkcGkgcGFuZWwgc2VlbXMgdG8gYmUgT0suIEFuZCBJIHRoaW5rIGl0IGlzIGxlc3MK
+Pj4gaW1wb3J0YW50IGhvdyB0aGUgZW11bGF0b3Igd29ya3MsIG1vcmUgaW1wb3J0YW50IGlzIHRo
+YXQgaXQgc2hvdWxkCj4+IGVtdWxhdGUgcGwxMTEsIGluY2x1ZGluZyBpdCdzIG91dHB1dCBpbnRl
+cmZhY2VzLgo+IFllYWgsIHVuZm9ydHVuYXRlbHkgdGhhdCBzaGlwIGhhcyBzYWlsZWQgYSBsb25n
+IHRpbWUgYWdvLiBUaGUgZW11bGF0b3IKPiBwZW9wbGUgdGhvdWdodCBlbXVsYXRpbmcgdGhlIHJl
+Z2lzdGVyIGludGVyZmFjZSBpcyBnb29kIGVub3VnaCBhbmQgdG9vawo+IGxpYmVydGllcyBvbiBo
+b3cgdGhlIGJlaGF2aW91ciB3YXMgImVtdWxhdGVkIi4gRW5kIHJlc3VsdDogb3V0cHV0Cj4gaW50
+ZXJmYWNlcyBhcmUgbm90IHRoZSBzYW1lLgoKU28gd2hhdCBpcyB3cm9uZy9taXNzaW5nIHdpdGgg
+ZHBpIHBhbmVsPwoKUmVnYXJkcwpBbmRyemVqCgo+Cj4gQmVzdCByZWdhcmRzLAo+IExpdml1Cj4K
+Pj4gUmVnYXJkcwo+PiBBbmRyemVqCj4+Pj4gQW5kIG9uZSBtb3JlIHRoaW5nLCB5b3UgYXJlIGRl
+ZmluaW5nIHZpcnR1YWwgcGFuZWwgYnV0IHlvdSBhcmUgdXNpbmcKPj4+PiBkcm1fYnJpZGdlIGZy
+YW1ld29yaywgd2h5IG5vdCBkcm1fcGFuZWw/Cj4+PiBUaGlzIHdhcyBkaXNjdXNzZWQgYmVmb3Jl
+IGluIHRoZSBwcmV2aW91cyBwYXRjaCBzZXQ6Cj4+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9hcmNoaXZlcy9kcmktZGV2ZWwvMjAxOC1KdWx5LzE4MzUxNi5odG1sCj4+Pgo+Pj4gRXNz
+ZW50aWFsbHksIGl0J3MgYmVjYXVzZSB0aGUgZGlzcGxheSBkcml2ZXIgaXMganVzdCBjb25uZWN0
+ZWQKPj4+IHRvICJzb21ldGhpbmciIG5vdCBhIHBhbmVsIGFuZCBhIGJyaWRnZSBpcyBsaWtlbHkg
+dGhlIGJlc3QgSQo+Pj4gY2FuIGNvbWUgdXAgd2l0aCAtIGEgYnJpZGdlIG92ZXIgdG8gYSB2aXJ0
+dWFsIGRpc3BsYXkuCj4+Pgo+Pj4gQSBwYXRjaCB0byBhZGQgIlZHQSIsICJTR0EiIGFuZCAiWEdB
+IiB0byB0aGUgc2ltcGxlIHBhbmVscwo+Pj4gd2FzIE5BQ0tlZCAoc29ydCBvZiwgcG9saXRlbHkp
+Ogo+Pj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvYXJjaGl2ZXMvZHJpLWRldmVsLzIw
+MTgtSnVseS8xODM2OTguaHRtbAo+Pj4KPj4+IEFsc28gaXQgd2FzIG5vdGVkIHRoYXQgaXQgd291
+bGQgYmUgbmljZSB0byBoYXZlIHNvbWV0aGluZyB0aGF0Cj4+PiB3b3VsZCBtYWtlIGl0IGVhc3kg
+dG8gY2hhbmdlIHJlc29sdXRpb25zIG9uIHRoZXNlIHZpcnR1YWwKPj4+IGRpc3BsYXkgdGhpbmdz
+LiBWb2lsYS4KPj4KPj4KPj4+IFlvdXJzLAo+Pj4gTGludXMgV2FsbGVpago+Pj4KPj4+CgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
