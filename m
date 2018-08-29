@@ -1,42 +1,84 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: add DT bindings for Amlogic
- Meson PCIe Phy controller
-Date: Tue, 28 Aug 2018 19:37:22 -0500
-Message-ID: <20180829003722.GA25763@bogus>
-References: <1535096006-152091-1-git-send-email-hanjie.lin@amlogic.com>
- <1535096006-152091-2-git-send-email-hanjie.lin@amlogic.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
+ Amlogic Meson PCIe controller
+Date: Tue, 28 Aug 2018 19:41:22 -0500
+Message-ID: <20180829004122.GA25928@bogus>
+References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
+ <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
+ <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
+ <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1535096006-152091-2-git-send-email-hanjie.lin@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-pci@vger.kernel.org, Yixun Lan <yixun.lan@amlogic.com>, Yue Wang <yue.wang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hanjie Lin <hanjie.lin@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Aug 2018 15:33:25 +0800, Hanjie Lin wrote:
-> From: Yue Wang <yue.wang@amlogic.com>
+On Mon, Aug 27, 2018 at 04:55:20PM +0800, Hanjie Lin wrote:
 > 
-> The Meson-PCIE-PHY controller supports the 5-Gbps data rate
-> of the PCI Express Gen 2 specification and is backward compatible
-> with the 2.5-Gbps Gen 1.1 specification with only
-> inferred idle detection supported on Amlogic SoCs.
 > 
-> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> ---
->  .../bindings/phy/amlogic,meson-pcie-phy.txt         | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-pcie-phy.txt
+> On 2018/8/24 16:22, Jerome Brunet wrote:
+> > On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
+> >> From: Yue Wang <yue.wang@amlogic.com>
+> >>
+> >> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+> >> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
+> >> controller.
+> >>
+> >> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+> >> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+> >> ---
+> >>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
+> >>  1 file changed, 63 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> >> new file mode 100644
+> >> index 0000000..8a831d1
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> >> @@ -0,0 +1,63 @@
+> >> +Amlogic Meson AXG DWC PCIE SoC controller
+> >> +
+> >> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
+> >> +It shares common functions with the PCIe DesignWare core driver and
+> >> +inherits common properties defined in
+> >> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+> >> +
+> >> +Additional properties are described here:
+> >> +
+> >> +Required properties:
+> >> +- compatible:
+> >> +	should contain "amlogic,axg-pcie" to identify the core.
+> >> +- reg:
+> >> +	Should contain the configuration address space.
+> >> +- reg-names: Must be
+> >> +	- "elbi"	External local bus interface registers
+> >> +	- "cfg"		Meson specific registers
+> >> +	- "config"	PCIe configuration space
+> >> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+> >> +- clocks: Must contain an entry for each entry in clock-names.
+> >> +- clock-names: Must include the following entries:
+> >> +	- "pclk"       PCIe GEN 100M PLL clock
+> >> +	- "port"       PCIe_x(A or B) RC clock gate
+> >> +	- "general"    PCIe Phy clock
+> >> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate
+> >> +- resets: phandle to the reset lines.
+> >> +- reset-names: must contain "phy" and "peripheral"
+> >> +       - "port" Port A or B reset
+> >> +       - "apb" APB reset
+> > 
+> > The above description is not coherent (phy <=> port)
+> > 
 > 
+> Yes, this should be port and apb here.
+> We'll integrate phy driver into ctrl driver, and move phy reset to here also.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Why? That's the wrong thing to do if they are separate h/w blocks. You 
+can do whatever you like in the drivers, but the DT should reflect the 
+h/w.
+
+Rob
