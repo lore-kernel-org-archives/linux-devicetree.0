@@ -1,28 +1,29 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 2/2] pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO driver
-Date: Wed, 29 Aug 2018 10:31:08 +0200
-Message-ID: <CACRpkdb5PSx52xqeqiCO-dcQXT0uuUZGstvKP2YKUFnCnoWOpw@mail.gmail.com>
-References: <20180808092526.87405-1-tmaimon77@gmail.com> <20180808092526.87405-3-tmaimon77@gmail.com>
+Subject: Re: [PATCH v3 1/2] documentation: pinctrl: Add compatibles for
+ Amlogic Meson G12A pin controllers
+Date: Wed, 29 Aug 2018 10:34:30 +0200
+Message-ID: <CACRpkdY+FRs0xbyrK1szAFLsLKz4uDRUJs-1U=brs8M92NJTUg@mail.gmail.com>
+References: <20180807020634.18182-1-yixun.lan@amlogic.com> <20180807020634.18182-2-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180808092526.87405-3-tmaimon77@gmail.com>
+In-Reply-To: <20180807020634.18182-2-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, avifishman70@gmail.com, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Xingyu Chen <xingyu.chen@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 8, 2018 at 11:26 AM Tomer Maimon <tmaimon77@gmail.com> wrote:
+On Tue, Aug 7, 2018 at 4:07 AM Yixun Lan <yixun.lan@amlogic.com> wrote:
 
-> Add Nuvoton BMC NPCM750/730/715/705 Pinmux and
-> GPIO controller driver.
+> Add new compatible name for Amlogic's Meson-G12A pin controllers,
+> add a dt-binding header file which document the detail pin names.
 >
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 
-Patch applied! It's a very nice driver.
-
-I had to add back select GPIO_GENERIC as the driver
-uses bgpio_init() exactly as I wanted.
+Patch applied for v4.20.
 
 Yours,
 Linus Walleij
