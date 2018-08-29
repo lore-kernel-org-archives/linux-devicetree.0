@@ -1,71 +1,69 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH 3/5] drivers: clk-qoriq: Add clockgen support for lx2160a
-Date: Tue, 28 Aug 2018 19:18:50 -0500
-Message-ID: <4a9ea6b451683ec98c92e86a5ae6b91213a6afcf.camel@buserror.net>
-References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
- <1534747636-20064-4-git-send-email-vabhav.sharma@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3] spi: spi-geni-qcom: Add SPI driver support for GENI
+ based QUP
+Date: Tue, 28 Aug 2018 19:25:35 -0500
+Message-ID: <20180829002535.GA4224@bogus>
+References: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1534747636-20064-4-git-send-email-vabhav.sharma@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vabhav Sharma <vabhav.sharma@nxp.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, gregkh@linuxfoundation.org, arnd@arndb.de, kstewart@linuxfoundation.org, yamada.masahiro@socionext.com
-Cc: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, Tang Yuantian <andy.tang@nxp.com>, linux@armlinux.org.uk, V.Sethi@nxp.com, udit.kumar@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dilip Kota <dkota@codeaurora.org>
+Cc: swboyd@chromium.org, broonie@kernel.org, mka@chromium.org, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-08-20 at 12:17 +0530, Vabhav Sharma wrote:
-> From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+On Fri, Aug 24, 2018 at 04:12:15PM +0530, Dilip Kota wrote:
+> From: Girish Mahadevan <girishm@codeaurora.org>
 > 
-> Add clockgen support for lx2160a.
-> Added entry for compat 'fsl,lx2160a-clockgen'.
-> As LX2160A is 16 core, so modified value for NUM_CMUX
+> This driver supports GENI based SPI Controller in the Qualcomm SOCs. The
+> Qualcomm Generic Interface (GENI) is a programmable module supporting a
+> wide range of serial interfaces including SPI. This driver supports SPI
+> operations using FIFO mode of transfer.
 > 
-> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
-> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> Signed-off-by: Dilip Kota <dkota@codeaurora.org>
 > ---
->  drivers/clk/clk-qoriq.c         | 14 +++++++++++++-
->  drivers/cpufreq/qoriq-cpufreq.c |  1 +
->  2 files changed, 14 insertions(+), 1 deletion(-)
+> Addressing all the reviewer commets given in Patchset1.
+> Summerizing all the comments below:
 > 
-> diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-> index 3a1812f..fc6e308 100644
-> --- a/drivers/clk/clk-qoriq.c
-> +++ b/drivers/clk/clk-qoriq.c
-> @@ -60,7 +60,7 @@ struct clockgen_muxinfo {
->  };
->  
->  #define NUM_HWACCEL	5
-> -#define NUM_CMUX	8
-> +#define NUM_CMUX	16
->  
->  struct clockgen;
->  
-> @@ -570,6 +570,17 @@ static const struct clockgen_chipinfo chipinfo[] = {
->  		.flags = CG_VER3 | CG_LITTLE_ENDIAN,
->  	},
->  	{
-> +		.compat = "fsl,lx2160a-clockgen",
-> +		.cmux_groups = {
-> +			&clockgen2_cmux_cga12, &clockgen2_cmux_cgb
-> +		},
-> +		.cmux_to_group = {
-> +			0, 0, 0, 0, 1, 1, 1, 1, -1
-> +		},
-> +		.pll_mask = 0x37,
-> +		.flags = CG_VER3 | CG_LITTLE_ENDIAN,
-> +	},
+> 	MAKEFILE: Arrange SPI-GENI driver in alphabetical order
+> 	Kconfig: Mark SPI_GENI driver dependent on QCOM_GENI_SE
+> 	Enable SPI core auto runtime pm, and remove runtime pm calls.
+> 	Remove spi_geni_unprepare_message(), spi_geni_unprepare_transfer_hardware()
+> 	Remove likely/unlikely keywords.
+> 	Remove get_spi_master() and use dev_get_drvdata()
+> 	Move request_irq to probe()
+> 	Mark bus number assignment to -1 as SPI core framework will assign dynamically
+> 	Use devm_spi_register_master()
+> 	Include platform_device.h instead of of_platform.h
+> 	Removing macros which are used only once:
+> 	        #define SPI_NUM_CHIPSELECT     4
+> 	        #define SPI_XFER_TIMEOUT_MS    250
+> 	Place Register field definitions next to respective Register definitions.
+> 	Replace int and u32 declerations to unsigned int.
+> 	Remove Hex numbers in debug prints.
+> 	Declare mode as u16 in spi_setup_word_len()
+> 	Remove the labels: setup_fifo_params_exit: exit_prepare_transfer_hardware:
+> 	Declaring struct spi_master as spi everywhere in the file.
+> 	Calling spi_finalize_current_transfer() for end of transfer.
+> 	Hard code the SPI controller max frequency instead of reading from DTSI node.
+> 	Spinlock not required, removed it.
+> 	Removed unrequired error prints.
+> 	Fix KASAN error in geni_spi_isr().
+> 	Remove spi-geni-qcom.h
+> 	Remove inter words delay and CS to Clock toggle delay logic in the driver, as of now no clients are using it.
+> 	Will submit this logic in the next patchset.	
+> 	Use major, minor and step macros to read from hardware version register.
+> 
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |   2 -
 
-Why are you increasing NUM_CMUX beyond 8 for a chip that only has 8 entries in
-cmux_to_group?
+Please split to a separate patch and explain why you are removing 
+spi-max-frequency?
 
--Scott
+>  drivers/spi/Kconfig                                |  12 +
+>  drivers/spi/Makefile                               |   1 +
+>  drivers/spi/spi-geni-qcom.c                        | 678 +++++++++++++++++++++
+>  4 files changed, 691 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/spi/spi-geni-qcom.c
