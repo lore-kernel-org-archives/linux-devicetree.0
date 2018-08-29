@@ -1,32 +1,40 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH 5/5] arm64: dts: add LX2160ARDB board support
-Date: Tue, 28 Aug 2018 19:28:06 -0500
-Message-ID: <1dd3074eabb496155c4d1abb83c82c52529a656a.camel@buserror.net>
-References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
-         <1534747636-20064-6-git-send-email-vabhav.sharma@nxp.com>
-         <CAL_JsqKH4haGy2F2_2EP=evC8ip7DmGR8J4wzrO0wWnOLsaZqA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: Update pinctrl-ingenic for
+ JZ4725B and GPIO merge
+Date: Tue, 28 Aug 2018 19:32:35 -0500
+Message-ID: <20180829003235.GA12527@bogus>
+References: <20180821164236.21101-1-paul@crapouillou.net>
+ <20180821164236.21101-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKH4haGy2F2_2EP=evC8ip7DmGR8J4wzrO0wWnOLsaZqA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180821164236.21101-2-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, vabhav.sharma@nxp.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Kate Stewart <kstewart@linuxfoundation.org>, linux-kernel-owner@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Sriram Dash <sriram.dash@nxp.com>, linux-clk <linux-clk@vger.kernel.org>, Udit Kumar <udit.kumar@nxp.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, V.Sethi@nxp.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@kernel.org>, Priyanka Jain <priyanka.jain@>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-08-21 at 15:45 -0500, Rob Herring wrote:
-> On Mon, Aug 20, 2018 at 1:52 PM Vabhav Sharma <vabhav.sharma@nxp.com> wrote:
-> > +/ {
-> > +       model = "NXP Layerscape LX2160ARDB";
-> > +       compatible = "fsl,lx2160a-rdb", "fsl,lx2160a";
-> > +
-> > +       aliases {
-> > +               crypto = &crypto;
+On Tue, Aug 21, 2018 at 06:42:29PM +0200, Paul Cercueil wrote:
+> The pinctrl-ingenic driver now supports the JZ4725B SoC.
 > 
-> Drop this. Aliases should be numbered, and this is not a standard
-> alias name either.
+> Furthermore, the gpio-ingenic driver was dropped and the pinctrl-ingenic
+> driver is now responsible for providing the GPIO functionality.
 
-Is this a new rule?  In any case, U-Boot looks for a "crypto" alias.
+Driver changes aren't really valid reasons to change the binding. This 
+is really just "combine the gpio binding with the pinctrl as it is all 
+one block." In any case,
 
--Scott
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v2: New patch
+> 
+>  .../devicetree/bindings/gpio/ingenic,gpio.txt      | 46 ----------------------
+>  .../bindings/pinctrl/ingenic,pinctrl.txt           | 39 ++++++++++++++++--
+>  2 files changed, 35 insertions(+), 50 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
