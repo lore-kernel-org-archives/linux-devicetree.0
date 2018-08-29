@@ -1,22 +1,34 @@
-Return-Path: <SRS0=wcnV=LM=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH 0/2] clocksource: ostm: Add support for RZ/A2
-Date: Wed, 29 Aug 2018 08:29:52 -0500
-Message-Id: <20180829132954.64862-1-chris.brandt@renesas.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 28 Aug 2018 19:45:46 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 04/23] dt-bindings: media: Specify bus type for MIPI
+ D-PHY, others, explicitly
+Message-ID: <20180829004546.GA4879@bogus>
+References: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+ <20180827093000.29165-5-sakari.ailus@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180827093000.29165-5-sakari.ailus@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
 List-ID: <devicetree@vger.kernel.org>
 
-Modify the driver to take into accound clock drivers that are not 100% DT,
-and also update the binding documentation.
+On Mon, 27 Aug 2018 12:29:41 +0300, Sakari Ailus wrote:
+> Allow specifying the bus type explicitly for MIPI D-PHY, parallel and
+> Bt.656 busses. This is useful for devices that can make use of different
+> bus types. There are CSI-2 transmitters and receivers but the PHY
+> selection needs to be made between C-PHY and D-PHY; many devices also
+> support parallel and Bt.656 interfaces but the means to pass that
+> information to software wasn't there.
+> 
+> Autodetection (value 0) is removed as an option as the property could be
+> simply omitted in that case.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-Chris Brandt (2):
-  clocksource/drivers/ostm: Delay driver registration
-  dt-bindings: timer: ostm: Add R7S9210 support
-
- .../devicetree/bindings/timer/renesas,ostm.txt     |  3 +-
- drivers/clocksource/renesas-ostm.c                 | 35 ++++++++++++++++++++--
- 2 files changed, 35 insertions(+), 3 deletions(-)
-
--- 
-2.16.1
+Reviewed-by: Rob Herring <robh@kernel.org>
