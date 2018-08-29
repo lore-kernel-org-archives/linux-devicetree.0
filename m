@@ -1,33 +1,20 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH 1/4] clock: aspeed: Add VIDEO reset index definition
-Date: Wed, 29 Aug 2018 16:09:30 -0500
-Message-ID: <1535576973-8067-2-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v5 00/18] JZ4780 DMA patchset v5
+Date: Wed, 29 Aug 2018 23:32:42 +0200
+Message-ID: <20180829213300.22829-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-media@vger.kernel.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, andrew@aj.id.au, mchehab@kernel.org, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, Eddie James <eajames@linux.vnet.ibm.com>
+To: Vinod Koul <vkoul@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>
+Cc: od@zcrc.me, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Add an index into the array of resets kept in the Aspeed clock driver.
-This isn't a HW bit definition.
+Hi Vinod,
 
-Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
----
- include/dt-bindings/clock/aspeed-clock.h | 1 +
- 1 file changed, 1 insertion(+)
+This is the V5 of my Ingenic JZ4780 DMA patchset.
 
-diff --git a/include/dt-bindings/clock/aspeed-clock.h b/include/dt-bindings/clock/aspeed-clock.h
-index f437386..15a9059 100644
---- a/include/dt-bindings/clock/aspeed-clock.h
-+++ b/include/dt-bindings/clock/aspeed-clock.h
-@@ -50,5 +50,6 @@
- #define ASPEED_RESET_I2C		7
- #define ASPEED_RESET_AHB		8
- #define ASPEED_RESET_CRT1		9
-+#define ASPEED_RESET_VIDEO		10
- 
- #endif
--- 
-1.8.3.1
+- Patch [01/18] dropped the "doc:" in the patch title;
+- Patches [11/18] and [12/18] now use the GENMASK() macro.
+- The rest is untouched.
+
+Thanks,
+-Paul Cercueil
