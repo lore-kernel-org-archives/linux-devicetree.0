@@ -1,40 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: Update pinctrl-ingenic for
- JZ4725B and GPIO merge
-Date: Tue, 28 Aug 2018 19:32:35 -0500
-Message-ID: <20180829003235.GA12527@bogus>
-References: <20180821164236.21101-1-paul@crapouillou.net>
- <20180821164236.21101-2-paul@crapouillou.net>
+Subject: Re: [PATCH v2 2/3] ata: libahci_platform: add reset control support
+Date: Tue, 28 Aug 2018 19:34:18 -0500
+Message-ID: <20180829003418.GA18849@bogus>
+References: <1534939983-16264-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1534939983-16264-3-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180821164236.21101-2-paul@crapouillou.net>
+In-Reply-To: <1534939983-16264-3-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, od@zcrc.me, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Mark Rutland <mark.rutland@arm.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2018 at 06:42:29PM +0200, Paul Cercueil wrote:
-> The pinctrl-ingenic driver now supports the JZ4725B SoC.
+On Wed, Aug 22, 2018 at 09:13:02PM +0900, Kunihiko Hayashi wrote:
+> Add support to get and control a list of resets for the device
+> as optional and shared. These resets must be kept de-asserted until
+> the device is enabled.
 > 
-> Furthermore, the gpio-ingenic driver was dropped and the pinctrl-ingenic
-> driver is now responsible for providing the GPIO functionality.
-
-Driver changes aren't really valid reasons to change the binding. This 
-is really just "combine the gpio binding with the pinctrl as it is all 
-one block." In any case,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
+> This is specified as shared because some SoCs like UniPhier series
+> have common reset controls with all ahci controller instances.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> However, according to Thierry's view,
+> https://www.spinics.net/lists/linux-ide/msg55357.html
+> some hardware-specific drivers already use their own resets,
+> and the common reset make a path to occur double controls of resets.
+> 
+> The ahci_platform_get_resources() can get and control the reset
+> only when the second argument includes AHCI_PLATFORM_GET_RESETS bit.
+> 
+> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
-> 
-> Notes:
->     v2: New patch
-> 
->  .../devicetree/bindings/gpio/ingenic,gpio.txt      | 46 ----------------------
->  .../bindings/pinctrl/ingenic,pinctrl.txt           | 39 ++++++++++++++++--
->  2 files changed, 35 insertions(+), 50 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+>  .../devicetree/bindings/ata/ahci-platform.txt      |  1 +
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/ata/ahci.h                                 |  1 +
+>  drivers/ata/libahci_platform.c                     | 31 ++++++++++++++++++----
+>  include/linux/ahci_platform.h                      |  2 ++
+>  4 files changed, 30 insertions(+), 5 deletions(-)
