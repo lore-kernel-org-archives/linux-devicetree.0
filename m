@@ -1,82 +1,194 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v7 05/24] clocksource: Add a new timer-ingenic driver
-Date: Wed, 29 Aug 2018 10:43:41 -0700
-Message-ID: <20180829174341.nbcebor5herksvld@pburton-laptop>
-References: <20180821171635.22740-1-paul@crapouillou.net>
- <20180821171635.22740-6-paul@crapouillou.net>
- <20180828172305.bohg6cggnzm3wsuj@pburton-laptop>
- <62569807-7be8-51df-4683-82392224432d@linaro.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Wed, 29 Aug 2018 11:01:22 -0700
+Message-ID: <20180829180122.GC10879@google.com>
+References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
+ <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <62569807-7be8-51df-4683-82392224432d@linaro.org>
+In-Reply-To: <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Jonathan Corbet <corbet@lwn.net>, od@zcrc.me, Mathieu Malaterre <malat@debian.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hi Taniya,
 
-On Wed, Aug 29, 2018 at 11:10:42AM +0200, Daniel Lezcano wrote:
-> On 28/08/2018 19:23, Paul Burton wrote:
-> > On Tue, Aug 21, 2018 at 07:16:16PM +0200, Paul Cercueil wrote:
-> >> This driver handles the TCU (Timer Counter Unit) present on the Ingenic
-> >> JZ47xx SoCs, and provides the kernel with a system timer, and optionally
-> >> with a clocksource and a sched_clock.
-> >>
-> >> It also provides clocks and interrupt handling to client drivers.
-> >>
-> >> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >> ---
-> >>
-> >> Notes:
-> >>      v2: Use SPDX identifier for the license
-> >>     
-> >>      v3: - Move documentation to its own patch
-> >>          - Search the devicetree for PWM clients, and use all the TCU
-> >>     	   channels that won't be used for PWM
-> >>     
-> >>      v4: - Add documentation about why we search for PWM clients
-> >>          - Verify that the PWM clients are for the TCU PWM driver
-> >>     
-> >>      v5: Major overhaul. Too many changes to list. Consider it's a new
-> >>          patch.
-> >>     
-> >>      v6: - Add two API functions ingenic_tcu_request_channel and
-> >>            ingenic_tcu_release_channel. To be used by the PWM driver to
-> >>            request the use of a TCU channel. The driver will now dynamically
-> >>            move away the system timer or clocksource to a new TCU channel.
-> >>          - The system timer now defaults to channel 0, the clocksource now
-> >>            defaults to channel 1 and is no more optional. The
-> >>            ingenic,timer-channel and ingenic,clocksource-channel devicetree
-> >>            properties are now gone.
-> >>          - Fix round_rate / set_rate not calculating the prescale divider
-> >>            the same way. This caused problems when (parent_rate / div) would
-> >>            give a non-integer result. The behaviour is correct now.
-> >>          - The clocksource clock is turned off on suspend now.
-> >>     
-> >>      v7: Fix section mismatch by using builtin_platform_driver_probe()
-> >>
-> >>  drivers/clocksource/Kconfig         |   10 +
-> >>  drivers/clocksource/Makefile        |    1 +
-> >>  drivers/clocksource/ingenic-timer.c | 1124 +++++++++++++++++++++++++++++++++++
-> >>  drivers/clocksource/ingenic-timer.h |   15 +
-> >>  include/linux/mfd/ingenic-tcu.h     |    3 +
-> >>  5 files changed, 1153 insertions(+)
-> >>  create mode 100644 drivers/clocksource/ingenic-timer.c
-> >>  create mode 100644 drivers/clocksource/ingenic-timer.h
-> >> %
-> > 
-> > How is this & patch 6 of the series looking to you from a
-> > drivers/clocksource perspective?
+On Tue, Jul 24, 2018 at 04:12:50PM +0530, Taniya Das wrote:
+> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
+> for changing the frequency of CPUs. The driver implements the cpufreq
+> driver interface for this hardware engine.
 > 
-> The presence of completion, mutexes, etc ... makes me think the driver
-> is not going to the right direction.
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm       |  11 ++
+>  drivers/cpufreq/Makefile          |   1 +
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 348 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 360 insertions(+)
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
 > 
-> I have to review the drivers again but it will take some time because
-> I'm returning from vacations and there are a trillion emails to sort out :/
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 0cd8eb7..93a9d72 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -298,3 +298,14 @@ config ARM_PXA2xx_CPUFREQ
+>  	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
+> 
+>  	  If in doubt, say N.
+> +
+> +config ARM_QCOM_CPUFREQ_HW
+> +	bool "QCOM CPUFreq HW driver"
+> +	depends on ARCH_QCOM
+> +	help
+> +	 Support for the CPUFreq HW driver.
+> +	 Some QCOM chipsets have a HW engine to offload the steps
+> +	 necessary for changing the frequency of the CPUs. Firmware loaded
+> +	 in this engine exposes a programming interface to the OS.
+> +	 The driver implements the cpufreq interface for this HW engine.
+> +	 Say Y if you want to support CPUFreq HW.
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index c1ffeab..ca48a1d 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -85,6 +85,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+>  obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
+> 
+> 
+>  ##################################################################################
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> new file mode 100644
+> index 0000000..ea8f7d1
+> --- /dev/null
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -0,0 +1,348 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/cpufreq.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +
+> +#define INIT_RATE			300000000UL
+> +#define LUT_MAX_ENTRIES			40U
+> +#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
+> +#define LUT_ROW_SIZE			32
+> +
+> +enum {
+> +	REG_ENABLE,
+> +	REG_LUT_TABLE,
+> +	REG_PERF_STATE,
+> +
+> +	REG_ARRAY_SIZE,
+> +};
+> +
+> +struct cpufreq_qcom {
+> +	struct cpufreq_frequency_table *table;
+> +	struct device *dev;
 
-OK no problem, thanks for the heads up!
+'dev' is not used and can be removed.
 
-Paul
+> ...
+> 
+> +static int qcom_cpu_resources_init(struct platform_device *pdev,
+> +				   struct device_node *np, unsigned int cpu,
+> +				   unsigned long xo_rate)
+> +{
+> +	struct cpufreq_qcom *c;
+> +	struct resource res;
+> +	struct device *dev = &pdev->dev;
+> +	const u16 *offsets;
+> +	int ret, i, cpu_first, cpu_r;
+> +	void __iomem *base;
+> +
+> +	if (qcom_freq_domain_map[cpu])
+> +		return 0;
+> +
+> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
+> +	if (!c)
+> +		return -ENOMEM;
+> +
+> +	offsets = of_device_get_match_data(&pdev->dev);
+> +	if (!offsets)
+> +		return -EINVAL;
+> +
+> +	if (of_address_to_resource(np, 0, &res))
+> +		return -ENOMEM;
+> +
+> +	base = devm_ioremap_resource(dev, &res);
+> +	if (!base)
+> +		return -ENOMEM;
+> +
+> +	for (i = REG_ENABLE; i < REG_ARRAY_SIZE; i++)
+> +		c->reg_bases[i] = base + offsets[i];
+> +
+> +	/* HW should be in enabled state to proceed */
+> +	if (!(readl_relaxed(c->reg_bases[REG_ENABLE]) & 0x1)) {
+> +		dev_err(dev, "%s cpufreq hardware not enabled\n", np->name);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = qcom_get_related_cpus(np, &c->related_cpus);
+> +	if (ret) {
+> +		dev_err(dev, "%s failed to get related CPUs\n", np->name);
+> +		return ret;
+> +	}
+> +
+> +	c->max_cores = cpumask_weight(&c->related_cpus);
+> +	if (!c->max_cores)
+> +		return -ENOENT;
+> +
+> +	c->xo_rate = xo_rate;
+> +
+> +	ret = qcom_cpufreq_hw_read_lut(pdev, c);
+> +	if (ret) {
+> +		dev_err(dev, "%s failed to read LUT\n", np->name);
+> +		return ret;
+> +	}
+> +
+> +	qcom_freq_domain_map[cpu] = c;
+> +
+> +	/* Related CPUs */
+> +	cpu_first = cpumask_first(&c->related_cpus);
+> +
+> +	for_each_cpu(cpu_r, &c->related_cpus) {
+> +		if (cpu_r != cpu_first)
+> +			qcom_freq_domain_map[cpu_r] =
+> +				qcom_freq_domain_map[cpu_first];
+> +	}
+
+The above ten lines could be simplified to:
+
+	for_each_cpu(cpu_r, &c->related_cpus)
+		qcom_freq_domain_map[cpu_r] = c;
+
+> ...
+> 
+> +static int __init qcom_cpufreq_hw_init(void)
+> +{
+> +	return platform_driver_register(&qcom_cpufreq_hw_driver);
+> +}
+> +subsys_initcall(qcom_cpufreq_hw_init);
+
+Is subsys_initcall used for a particular reason? It will cause
+problems when registering cooling devices, since the thermal device
+class is initialized through an fs_initcall, which are executed
+later.
+
+Most cpufreq drivers use module_init, device_initcall or
+late_initcall, can't this driver use one of those?
+
+Cheers
+
+Matthias
