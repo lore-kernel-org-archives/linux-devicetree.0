@@ -1,61 +1,85 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 0/5] Add Actions Semi S700 pinctrl support
-Date: Wed, 29 Aug 2018 13:11:19 +0530
-Message-ID: <20180829074119.GA24958@Mani-XPS-13-9360>
-References: <0180729200038.11795-1-sravanhome@gmail.com>
- <20180731194743.13678-1-sravanhome@gmail.com>
- <CACRpkda=q+LZMUN5xJ777ZGWxYRBdZTvG0naNqr5BoLnVQ1=aA@mail.gmail.com>
+From: Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Wed, 29 Aug 2018 07:41:53 +0000
+Message-ID: <BC0C856B-BC5C-4404-8DEC-075FC84312B7@cadence.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <20180719152930.3715-2-boris.brezillon@bootlin.com>
+ <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
+ <20180824143934.6d6b6487@bbrezillon>
+ <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
+ <20180824201600.7d80bca9@bbrezillon>
+ <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
+ <20180828140209.29155d00@bbrezillon>
+ <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
+ <20180828150114.2a816c4a@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkda=q+LZMUN5xJ777ZGWxYRBdZTvG0naNqr5BoLnVQ1=aA@mail.gmail.com>
+In-Reply-To: <20180828150114.2a816c4a@bbrezillon>
+Content-Language: en-US
+Content-ID: <DAD3960BB6FE7848AF2F5863AF1963B0@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: sravanhome@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, pn@denx.de, mp-cs@actions-semi.com, Jeff Chen <jeff.chen@actions-semi.com>, "Thomas C. Liau" <thomas.liau@actions-semi.com>, linux@cubietech.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: vitor <Vitor.Soares@synopsys.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzon>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 09:35:38AM +0200, Linus Walleij wrote:
-> On Tue, Jul 31, 2018 at 9:48 PM Saravanan Sekar <sravanhome@gmail.com> wrote:
-> 
-> > This patchset adds pinctrl support for Actions Semi S700 SoC.
-> > Pinmux functions are only accessible for pin groups while pinconf
-> > parameters are available for both pin groups and individual pins.
-> >
-> > pinctrl driver is verified using the Cubieboard7.
-> >
-> > common functionalities from s900 is moved for all Actions Semi
-> > SoC's usage.
-> > Common pad control configurations are moved to SoC specific
-> >
-> > dts entry for pinctrl depends on clock driver which is still under review:
-> > https://patchwork.kernel.org/patch/10533959/
-> 
-> So what is the status of this patch set?
->
-
-Oops. This one slipped through the cracks...
-
-> I am happy to apply it once you have the right buildtime dependencies
-> and Manivannan's ACK on the patch set! (Looks good to me.)
-> 
-
-Sadly mutt played its part on this patchset and 1,3 patches got
-deleted accidentally.
-
-> Maybe you want to rebase on v4.19-rc1 and resend as v5 before
-> I do that though?
-> 
-
-Parthiban,
-
-Can you please rebase and send the next iteration as Linus said. I'll take a
-look.
-
-Sorry for the late reply.
-
-Regards,
-Mani
-
-> Yours,
-> Linus Walleij
+SGkgQm9yaXMsDQoNCu+7v09uIDgvMjgvMTgsIDM6MDEgUE0sICJCb3JpcyBCcmV6aWxsb24iIDxi
+b3Jpcy5icmV6aWxsb25AYm9vdGxpbi5jb20+IHdyb3RlOg0KDQogICAgRVhURVJOQUwgTUFJTA0K
+ICAgIA0KICAgIA0KICAgIEhpIFByemVtZWssDQogICAgDQogICAgT24gVHVlLCAyOCBBdWcgMjAx
+OCAxMjo1NToyMCArMDAwMA0KICAgIFByemVteXNsYXcgR2FqIDxwZ2FqQGNhZGVuY2UuY29tPiB3
+cm90ZToNCiAgICANCiAgICA+IEhpIFZpdG9yLA0KICAgID4gDQogICAgPiBJIGhhdmUgYWxyZWFk
+eSBpbXBsZW1lbnRlZCBNYXN0ZXJzaGlwIHJlcXVlc3QvaGFuZG92ZXIgYnV0IHdlIGFyZSB3YWl0
+aW5nIGZvciBCb3Jpc+KAmXMgcGF0Y2ggdG8gYmUgYWNjZXB0ZWQgYW5kIG1lcmdlZC4gQW55d2F5
+LCBteSBjb21tZW50cyBiZWxvdy4NCiAgICA+IA0KICAgID4gT24gOC8yOC8xOCwgMjowMiBQTSwg
+IkJvcmlzIEJyZXppbGxvbiIgPGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbT4gd3JvdGU6DQog
+ICAgPiANCiAgICA+ICAgICBFWFRFUk5BTCBNQUlMDQogICAgPiAgICAgDQogICAgPiAgICAgDQog
+ICAgPiAgICAgSGkgVml0b3IsDQogICAgPiAgICAgDQogICAgPiAgICAgT24gVHVlLCAyOCBBdWcg
+MjAxOCAxMjo1MDoxMiArMDEwMA0KICAgID4gICAgIHZpdG9yIDxWaXRvci5Tb2FyZXNAc3lub3Bz
+eXMuY29tPiB3cm90ZToNCiAgICA+ICAgICANCiAgICA+ICAgICA+IEhpIEJvcmlzLA0KICAgID4g
+ICAgID4gDQogICAgPiAgICAgPiBUaGUgRFQgQmluZGluZ3Mgc2F5ICJUaGUgbm9kZSBkZXNjcmli
+aW5nIGFuIEkzQyBidXMgc2hvdWxkIGJlIG5hbWVkIA0KICAgID4gICAgID4gaTNjLW1hc3Rlci4i
+LiBEbyB5b3UgaGF2ZSBhIGZpZWxkIGZvciBzZWNvbmRhcnkgbWFzdGVyPyAgDQogICAgPiANCiAg
+ICA+IEkgdGhpbmsgd2UgZG9u4oCZdCBuZWVkIHNlcGFyYXRlIGZpZWxkIGZvciBzZWNvbmRhcnkg
+bWFzdGVyLiBNYWluIGFuZCBzZWNvbmRhcnkgbWFzdGVycyANCiAgICA+IHN1cHBvcnQgc2ltaWxh
+ciBmdW5jdGlvbmFsaXRpZXMuIEl04oCZcyBlbm91Z2ggdG8gaGF2ZSB0aGlzIHN0YXRlIGludGVy
+bmFsbHkgYW5kIGRvIG1hc3RlcnNoaXAgaXQgaXQncyBuZWVkZWQuDQogICAgPiANCiAgICA+ICAg
+ICA+IA0KICAgID4gICAgID4gT24gMjQtMDgtMjAxOCAxOToxNiwgQm9yaXMgQnJlemlsbG9uIHdy
+b3RlOiAgDQogICAgPiAgICAgPiA+IFdlbGwsIGJlZm9yZSBldmVuIGNvbnNpZGVyaW5nIHN1cHBv
+cnRpbmcgc2Vjb25kYXJ5IG1hc3RlciByZWdpc3RyYXRpb24sDQogICAgPiAgICAgPiA+IHdlIG5l
+ZWQgdG8gaGFuZGxlIG1hc3RlcnNoaXAgaGFuZG92ZXIuIEFzIGZvciB0aGUgREFBIG9wZXJhdGlv
+biwgaXQncw0KICAgID4gICAgID4gPiBsaWtlbHkgdG8gYmUgaG9zdCBzcGVjaWZpYywgc28gd2Un
+bGwgaGF2ZSB0byBhZGQgYSBuZXcgaG9vayB0byB0aGUNCiAgICA+ICAgICA+ID4gaTNjX21hc3Rl
+cl9jb250cm9sbGVyX29wcyBzdHJ1Y3QuICAgIA0KICAgID4gICAgID4gRG8geW91IG1lYW4gd2hl
+biBtYXN0ZXIgdHJ5IHRvIGRlbGVnYXRlIHRoZSBidXMgb3duZXJzaGlwIHRocm91Z2ggDQogICAg
+PiAgICAgPiBHRVRBQ0NNU1Q/IG9yIHRvIGdldCB0aGUgYnVzIG93bmVyc2hpcCB3aXRoIElCSS1N
+Uj8gIA0KICAgID4gICAgIA0KICAgID4gICAgIEkgdGhpbmsgd2UgbmVlZCB0byBzdXBwb3J0IGJv
+dGguDQogICAgPiANCiAgICA+IEkgYWdyZWUuDQogICAgPiAgICAgDQogICAgPiAgICAgPiANCiAg
+ICA+ICAgICA+IEkgdGhpbmsgdGhhdCBjb3VsZCBiZSB1c2VmdWwgdG8gcGFzcyB0aGUgaWJpIHR5
+cGUgb24gcmVxdWVzdF9pYmkoKSwgDQogICAgPiAgICAgPiB0aGVyZSBpcyBzb21lIGNhc2Ugd2hl
+cmUgdGhlIG1hc3RlciBkb2Vzbid0IHN1cHBvcnQgSUJJLU1SLiAgDQogICAgPiAgICAgDQogICAg
+PiAgICAgQWN0dWFsbHksIEkgd2FzIHBsYW5uaW5nIG9uIG1ha2luZyBpdCBjb21wbGV0ZWx5IHNl
+cGFyYXRlIGZyb20NCiAgICA+ICAgICByZWd1bGFyIHNsYXZlIElCSXMuIFRoYXQgaXMsIHRoZSBt
+YXN0ZXIgY29udHJvbGxlciBkcml2ZXIgd291bGQgZGVtdXgNCiAgICA+ICAgICB0aGUgc2xhdmUs
+IE1SIGFuZCBIb3QgSm9pbiBJQklzLCBhbmQgaWYgdGhlcmUncyBhbiBNUiByZXF1ZXN0LCBxdWV1
+ZSBhDQogICAgPiAgICAgbWFzdGVyc2hpcCBoYW5kb3ZlciB3b3JrIHRvIHRoZSB3b3JrcXVldWUg
+KHByZXR0eSBtdWNoIHdoYXQgd2UgZG8gZm9yDQogICAgPiAgICAgSG90LUpvaW4gYWxyZWFkeSku
+IE1hc3RlcnNoaXAgaGFuZG92ZXIgaXMgYW55d2F5IGxpa2VseSB0byBiZSBJUA0KICAgID4gICAg
+IHNwZWNpZmljLCBzbyBJIGRvbid0IHRoaW5rIHRoZXJlJ3MgYSBuZWVkIHRvIG1ha2UgaXQgbG9v
+ayBsaWtlIGENCiAgICA+ICAgICByZWd1bGFyIElCSS4NCiAgICA+IA0KICAgID4gSSB0aGluayBp
+dCdzIGJldHRlciB0byBoYXZlIHNlcGFyYXRlIGZ1bmN0aW9uIHRvIGRvIG1hc3RlcnNoaXAgcmVx
+dWVzdC4NCiAgICA+ICAgICANCiAgICA+ICAgICBSZWdhcmRpbmcgd2hldGhlciBJQkktTVIgc3Vw
+cG9ydCBzaG91bGQgYmUgZXhwb3NlZCB0byB0aGUgSTNDIGZyYW1ld29yaw0KICAgID4gICAgIG9y
+IG5vdCBkZXBlbmRzIG9uIGhvdyBtdWNoIHdpbGwgYmUgYXV0b21hdGVkIG9uIHRoZSBmcmFtZXdv
+cmsgc2lkZS4gSQ0KICAgID4gICAgIGRvbid0IHRoZSBhbnN3ZXIgeWV0LCBidXQgdGhhdCdzIHBy
+b2JhYmx5IHNvbWV0aGluZyB3aWxsIGZpZ3VyZSBvdXQNCiAgICA+ICAgICBhbG9uZyB0aGUgcm9h
+ZC4NCiAgICA+IA0KICAgID4gTXkgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBpczogd2hlbiByZXF1
+ZXN0X21hc3RlcnNoaXAgZmllbGQgDQogICAgPiBvZiBpM2NfbWFzdGVyX2NvbnRyb2xsZXJfb3Bz
+IHN0cnVjdHVyZSBpcyBzZXQsIG1hc3RlciBkcml2ZXIgc3VwcG9ydHMgbWFzdGVyc2hpcCByZXF1
+ZXN0cy4NCiAgICA+IFRoYXQncyBob3cgSSBjaGVjayBpZiB0aGlzIGlzIHN1cHBvcnRlZCBvciBu
+b3QuDQogICAgDQogICAgQ2FuIHlvdSBtYXliZSBob3N0IHlvdXIgY29kZSBvbiBhIHB1YmxpYyBy
+ZXBvIChJIGNhbiBwdXNoIGl0IGZvciB5b3UgaWYNCiAgICBuZWVkZWQpIHNvIHRoYXQgeW91IGFu
+ZCBWaXRvciBjYW4gc3RhcnQgZGlzY3Vzc2luZyBpbXBsZW1lbnRhdGlvbg0KICAgIGRldGFpbHMu
+DQoNClN1cmUhIFBsZWFzZSBnaXZlIG1lIHNvbWUgdGltZS4gSSdsbCB0cnkgdG8gZG8gaXQgdGhp
+cyB3ZWVrIG9yIGVhcmx5IG5leHQgd2Vlay4NCiAgICANCiAgICBUaGFua3MsDQogICAgDQogICAg
+Qm9yaXMNCiAgICANClRoYW5rcywNClByemVtZWsNCg0K
