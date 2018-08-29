@@ -1,24 +1,137 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx7d-sdb: enable gpio buttons as wakeup source
-Date: Wed, 29 Aug 2018 10:32:44 -0300
-Message-ID: <CAOMZO5DvoxbSCLDDaMy9LnYRpHQR+Yr47qzZGtK_OD6WBGE7tw@mail.gmail.com>
-References: <1535507138-4626-1-git-send-email-Anson.Huang@nxp.com>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: [PATCH 2/2] phy: zynqmp: Add dt bindings for ZynqMP phy
+Date: Wed, 29 Aug 2018 19:37:28 +0530
+Message-ID: <1535551648-29534-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
+References: <1535551648-29534-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535507138-4626-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1535551648-29534-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>
+To: kishon@ti.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, vivek.gautam@codeaurora.org
+Cc: v.anuragkumar@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2018 at 10:45 PM, Anson Huang <Anson.Huang@nxp.com> wrote:
-> This patch enables i.MX7D SDB board's below GPIO buttons
-> as wakeup sources:
->
-> S1(FUNC1): KEY_VOLUMEUP
-> S3(FUNC2): KEY_VOLUMEDOWN
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+This patch adds the document describing dt bindings for ZynqMP
+phy. ZynqMP SOC has a High Speed Processing System Gigabit
+Transceiver which provides PHY capabilties to USB, SATA,
+PCIE, Display Port and Ehernet SGMII controllers.
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+---
+ .../devicetree/bindings/phy/phy-zynqmp.txt         | 104 +++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+new file mode 100644
+index 0000000..2eed553
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+@@ -0,0 +1,104 @@
++Xilinx ZynqMP PHY binding
++
++This binding describes a ZynqMP PHY device that is used to control ZynqMP
++High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
++and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
++
++Phy provider node
++=================
++
++Required properties:
++- compatible	: Can be "xlnx,zynqmp-psgtr-v1.1" or "xlnx,zynqmp-psgtr"
++		  "xlnx,zynqmp-psgtr-v1.1" has "xlnx,tx_termination_fix" removed
++
++- reg           : Address and length of register sets for each device in
++                  "reg-names"
++
++- reg-names     : The names of the register addresses corresponding to the
++		  registers filled in "reg":
++			- serdes: SERDES block register set
++			- siou: SIOU block register set
++
++Optional properties:
++- xlnx,tx_termination_fix : Include this for fixing functional issue with the
++		  TX termination resistance in GT, which can be out of spec for
++		  the XCZU9EG silicon version.
++
++Required nodes	:  A sub-node is required for each lane the controller
++		   provides.
++
++Phy sub-nodes
++=============
++
++Required properties:
++lane0:
++- #phy-cells	: Should be 4
++
++lane1:
++- #phy-cells	: Should be 4
++
++lane2:
++- #phy-cells	: Should be 4
++
++lane3:
++- #phy-cells	: Should be 4
++
++Example:
++	serdes: zynqmp_phy@fd400000 {
++		compatible = "xlnx,zynqmp-psgtr-v1.1";
++		status = "okay";
++		reg = <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000 0x0 0x1000>;
++		reg-names = "serdes", "siou";
++
++		lane0: lane@0 {
++			#phy-cells = <4>;
++		};
++		lane1: lane@1 {
++			#phy-cells = <4>;
++		};
++		lane2: lane@2 {
++			#phy-cells = <4>;
++		};
++		lane3: lane@3 {
++			#phy-cells = <4>;
++		};
++	};
++
++Specifying phy control of devices
++=================================
++
++Device nodes should specify the configuration required in their "phys"
++property, containing a phandle to the phy port node and a device type.
++
++phys = <PHANDLE CONTROLLER_TYPE CONTROLLER_INSTANCE LANE_NUM LANE_FREQ>;
++
++PHANDLE                 = &lane0 or &lane1 or &lane2 or &lane3
++CONTROLLER_TYPE         = PHY_TYPE_PCIE or PHY_TYPE_SATA or PHY_TYPE_USB
++			  or PHY_TYPE_DP or PHY_TYPE_SGMII
++CONTROLLER_INSTANCE     = Depends on controller type used, can be any of
++				PHY_TYPE_PCIE : 0 or 1 or 2 or 3
++				PHY_TYPE_SATA : 0 or 1
++				PHY_TYPE_USB  : 0 or 1
++				PHY_TYPE_DP   : 0 or 1
++				PHY_TYPE_SGMII: 0 or 1 or 2 or 3
++LANE_NUM                = Depends on which lane clock is used as ref clk, can be
++			  0 or 1 or 2 or 3
++LANE_FREQ               = Frequency that controller can operate, can be any of
++			  19.2Mhz,20Mhz,24Mhz,26Mhz,27Mhz,28.4Mhz,40Mhz,52Mhz,
++			  100Mhz,108Mhz,125Mhz,135Mhz,150Mhz
++
++Example:
++
++#include <dt-bindings/phy/phy.h>
++
++	usb@fe200000 {
++		...
++		phys	  = <&lane2 PHY_TYPE_USB3 0 2 2600000>;
++		...
++	};
++
++	ahci@fd0c0000 {
++		...
++		phys	  = <&lane3 PHY_TYPE_SATA 1 1 125000000>;
++		...
++	};
+-- 
+2.1.1
