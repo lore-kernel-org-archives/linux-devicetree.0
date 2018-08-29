@@ -1,27 +1,49 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 00/32] Device Tree Updates for GTA04 (A3/A4/A5
- variants)
-Date: Wed, 29 Aug 2018 12:36:16 -0700
-Message-ID: <20180829193616.GS7523@atomide.com>
-References: <cover.1533021093.git.hns@goldelico.com>
- <25356247-C081-4B9E-9CE2-2D10EFE56F6C@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH 0/4] media: platform: Add Aspeed Video Engine driver
+Date: Wed, 29 Aug 2018 16:09:29 -0500
+Message-ID: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <25356247-C081-4B9E-9CE2-2D10EFE56F6C@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Marek Belisko <marek@goldelico.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, andrew@aj.id.au, mchehab@kernel.org, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-kernel@lists.infradead.org, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [180829 07:24]:
-> Hi OMAP3 DTS Maintainers,
-> is there any progress in merging this patch series?
+The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+can capture and compress video data from digital or analog sources. With
+the Aspeed chip acting as a service processor, the Video Engine can
+capture the host processor graphics output.
 
-Looks good to me in general, I'll be getting into applying
-patches for v4.20 in few days.
+This series adds a V4L2 driver for the VE, providing a read() interface
+only. The driver triggers the hardware to capture the host graphics output
+and compress it to JPEG format.
 
-Regards,
+Testing on an AST2500 determined that the videobuf/streaming/mmap interface
+was significantly slower than the simple read() interface, so I have not
+included the streaming part.
 
-Tony
+It's also possible to use an automatic mode for the VE such that
+re-triggering the HW every frame isn't necessary. However this wasn't
+reliable on the AST2400, and probably used more CPU anyway due to excessive
+interrupts. It was approximately 15% faster.
+
+The series also adds the necessary parent clock definitions to the Aspeed
+clock driver, with both a mux and clock divider.
+
+Eddie James (4):
+  clock: aspeed: Add VIDEO reset index definition
+  clock: aspeed: Setup video engine clocking
+  dt-bindings: media: Add Aspeed Video Engine binding documentation
+  media: platform: Add Aspeed Video Engine driver
+
+ .../devicetree/bindings/media/aspeed-video.txt     |   23 +
+ drivers/clk/clk-aspeed.c                           |   41 +-
+ drivers/media/platform/Kconfig                     |    8 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/aspeed-video.c              | 1307 ++++++++++++++++++++
+ include/dt-bindings/clock/aspeed-clock.h           |    1 +
+ 6 files changed, 1379 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+ create mode 100644 drivers/media/platform/aspeed-video.c
+
+-- 
+1.8.3.1
