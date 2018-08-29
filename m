@@ -1,35 +1,62 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v1] arm64: dts: sdm845: enable tsens thermal zones
-Date: Wed, 29 Aug 2018 11:12:16 -0700
-Message-ID: <20180829181216.GD10879@google.com>
-References: <cover.1531899325.git.amit.kucheria@linaro.org>
- <b3c25cedfa3a9b8a4b481e714992afe62b84ca3b.1531899325.git.amit.kucheria@linaro.org>
- <f416d38c-b91f-f58e-8cde-d4ad09a0a726@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 0/7] ARM32/64: DT overlay build support
+Date: Wed, 29 Aug 2018 11:40:58 -0700
+Message-ID: <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
+References: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f416d38c-b91f-f58e-8cde-d4ad09a0a726@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, dianders@chromium.org, edubezval@gmail.com, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Taniya Das <tdas@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 11:39:12AM +0200, Daniel Lezcano wrote:
-> On 18/07/2018 09:49, Amit Kucheria wrote:
-> > One thermal zone per cpu is defined
-> 
-> The thermal zones are very close, especially when the CPUs belong to the
-> same 'cluster'. Very likely the temperature will propagate from one core
-> to another core, so when one core reaches the trip0, there is good
-> chance the other cores will be close and cross the trip0 threshold too.
-> 
-> Having multiple thermal zones, one per CPU, may trigger an interrupts
-> storm with the passive polling timer delay.
-> 
-> Does this board have a cooling device per CPU also ?
++ Mark Rutland, just in case he is interested
 
-The cpufreq driver is still under development:
-https://lore.kernel.org/patchwork/patch/966833/ . It currently doesn't
-register cooling devices, but since CPUs from a 'cluster' use the same
-cpufreq policy I think there will be one cooling device per 'cluster'.
+On 08/28/18 05:32, Tero Kristo wrote:
+> Hi,
+> 
+> This series introduces devicetree overlay building support for ARM
+> platforms. The .dtbo target is introduced globally, then makefile
+> changes for both arm32/64 for supporting the .dtbo target, changes
+> to support sub-dir makefile flags, and finally adding the DTC flags
+> override for TI platforms, as that is where we want to introduce
+> the DT overlay support initially.
+> 
+> The ARM makefile changes for supporting DTS sub-makefiles don't look
+> too clean, but that was the only way I could figure out how to
+> get it done.
+> 
+> -Tero
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+
+This series does three unrelated things:
+
+(1) create a ti specific dts subdirectory arch/arm/boot/dts/ti/
+
+(2) create a rule for creating a .dtbo from a .dtso
+
+(3) add a dtc compile flag to add phandle symbol information to
+    all .dtb files created from arch/arm/boot/dts/ti/ and
+    arch/arm64/boot/dts/ti/
+
+Please split the patches into three independent series so that
+each of the three concepts can be discussed separately.
+
+Thanks,
+
+Frank
