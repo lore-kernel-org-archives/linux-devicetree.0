@@ -1,56 +1,26 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: power: Add Spreadtrum SC2731 charger documentation
-Date: Wed, 29 Aug 2018 16:08:08 +0200
-Message-ID: <CAJKOXPd9-aLYFLBHwUyNecneHA6X+VbnZSK4paXsMcmvobnGhA@mail.gmail.com>
-References: <5fcd93bbbcd55a5c23f1c75effdc3670ce7a811b.1535446321.git.baolin.wang@linaro.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: imx6sll: add gpio clocks
+Date: Wed, 29 Aug 2018 22:30:38 +0800
+Message-ID: <20180829143032.GO3850@dragon>
+References: <1529649154-5724-1-git-send-email-Anson.Huang@nxp.com>
+ <1529649154-5724-2-git-send-email-Anson.Huang@nxp.com>
+ <20180712025203.GQ6959@dragon>
+ <DB3PR0402MB39163FACD5AE40052010B390F5090@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5fcd93bbbcd55a5c23f1c75effdc3670ce7a811b.1535446321.git.baolin.wang@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB39163FACD5AE40052010B390F5090@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: baolin.wang@linaro.org
-Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Aug 2018 at 11:04, Baolin Wang <baolin.wang@linaro.org> wrote:
->
-> This patch adds the binding documentation for Spreadtrum SC2731 charger
-> device.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  .../bindings/power/supply/sc2731_charger.txt       |   14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt b/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
-> new file mode 100644
-> index 0000000..02b616c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
-> @@ -0,0 +1,14 @@
-> +Spreadtrum SC2731 PMIC battery charger binding
-> +
-> +Required properties:
-> + - compatible: Should be "sprd,sc2731-charger".
-> + - reg: Address offset of charger register.
-> + - phys: Contains a phandle to the USB phy.
-> +
-> +Example:
-> +
-> +       charger@0 {
-> +               compatible = "sprd,sc2731-charger";
-> +               reg = <0x0>;
+On Wed, Aug 29, 2018 at 01:12:04AM +0000, Anson Huang wrote:
+> Hi, Shawn
+> 	I saw v4.19-rc1 is created, can you please apply this patch?
+> 
 
-Can you include also few lines of parent node? You use this "reg"
-later as a base address so probably your parent node requires address
-mapping. It would be nice to see it in example.
+Applied.  Thanks for reminding.
 
-Best regards,
-Krzysztof
-
-> +               phys = <&ssphy>;
-> +       };
-> --
-> 1.7.9.5
->
+Shawn
