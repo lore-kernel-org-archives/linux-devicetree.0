@@ -1,171 +1,102 @@
 From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 2/9] Documentation: hwmon: Add OCC documentation
-Date: Thu, 30 Aug 2018 16:29:09 -0500
-Message-ID: <aa1d5818-6b64-2088-ec59-dbe09d6a3902@linux.vnet.ibm.com>
-References: <1531342898-15790-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1531342898-15790-3-git-send-email-eajames@linux.vnet.ibm.com>
- <20180725163604.GA21332@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v5 00/10] hwmon and fsi: Add On-Chip Controller Driver
+Date: Thu, 30 Aug 2018 16:32:31 -0500
+Message-ID: <1535664761-86018-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180725163604.GA21332@roeck-us.net>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com
+To: linux-kernel@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux@roeck-us.net, joel@jms.id.au, benh@kernel.crashing.org, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
+This series adds a hwmon driver to support the OCC on POWER8 and POWER9
+processors. The OCC is an embedded processor that provides realtime power and
+thermal monitoring and management.
 
+The series also adds a "bus" driver to handle atomic communication between the
+service processor and the OCC on a POWER9 chip. This communication takes place
+over FSI bus to the SBE (Self-Boot engine) FIFO, which in turn communicates
+with the OCC. The driver for the SBEFIFO is already available as an FSI client
+driver.
 
-On 07/25/2018 11:36 AM, Guenter Roeck wrote:
-> On Wed, Jul 11, 2018 at 04:01:31PM -0500, Eddie James wrote:
->> Document the hwmon interface for the OCC.
->>
->> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
->> ---
->>   Documentation/hwmon/occ | 73 +++++++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 73 insertions(+)
->>   create mode 100644 Documentation/hwmon/occ
->>
->> diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
->> new file mode 100644
->> index 0000000..465fa1a
->> --- /dev/null
->> +++ b/Documentation/hwmon/occ
->> @@ -0,0 +1,73 @@
->> +Kernel driver occ-hwmon
->> +=======================
->> +
->> +Supported chips:
->> +  * POWER8
->> +  * POWER9
->> +
->> +Author: Eddie James <eajames@linux.vnet.ibm.com>
->> +
->> +Description
->> +-----------
->> +
->> +This driver supports hardware monitoring for the On-Chip Controller (OCC)
->> +embedded on POWER processors. The OCC is a device that collects and aggregates
->> +sensor data from the processor and the system. The OCC can provide the raw
->> +sensor data as well as perform thermal and power management on the system.
->> +
->> +The P8 version of this driver is a client driver of I2C. It may be probed
->> +manually if an "ibm,p8-occ-hwmon" compatible device is found under the
->> +appropriate I2C bus node in the device-tree.
->> +
->> +The P9 version of this driver is a client driver of the FSI-based OCC driver.
->> +It will be probed automatically by the FSI-based OCC driver.
->> +
->> +Sysfs entries
->> +-------------
->> +
->> +The following attributes are supported. All attributes are read-only unless
->> +specified.
->> +
->> +temp[1-n]_label		OCC sensor id.
->> +temp[1-n]_input		Measured temperature in millidegrees C.
->> +[with temperature sensor version 2+]
->> +    temp[1-n]_fru_type		Given FRU (Field Replaceable Unit) type.
-> What is this ? An integer ? A string ?
->
->> +    temp[1-n]_fault		Temperature sensor fault.
->> +
->> +freq[1-n]_label		OCC sensor id.
->> +freq[1-n]_input		Measured frequency.
-> What does that have to do with hardware monitoring, and what exactly does it
-> measure ? AC voltage frequency ? Frequency of rainstorms in the surrounding
-> area ?
->
->> +
->> +power[1-n]_label	OCC sensor id.
->> +power[1-n]_input	Measured power in microwatts.
->> +power[1-n]_update_tag	Number of 250us samples represented in accumulator.
-> update_tag to represent number of samples ? Odd choice for
-> an attribute name. Why not "_samples" ? Also, if each sample
-> represents a specific amount of time, why not report a time ?
->
->> +power[1-n]_accumulator	Accumulation of 250us power readings.
-> There is no explanation of "accumulation". Is this the energy ?
-> If so, why not use energy attributes ? And what is the unit of
-> this measurement ?
->
->> +[with power sensor version 2+]
->> +    power[1-n]_function_id	Identifies what the power reading is for.
-> String ? Number ? Slot index ?  Bitmap ? And why isn't that reported
-> in the label ? After all, that is what the label is supposed to be
-> used for.
->
->> +    power[1-n]_apss_channel	Indicates APSS channel.
->> +
-> Does that provide any value to the user ?
->
->> +[power version 0xa0 only]
->> +power1_id			OCC sensor id.
-> This is inconsistent with the other attributes and even with itself.
->
->> +power[1-n]_label		Sensor type, "system", "proc", "vdd", or "vdn".
->> +power[1-n]_input		Most recent power reading in microwatts.
-> Overall I am left with no idea what
-> 	_id
-> 	_label
-> 	_function_id
-> 	_apps_channel
-> are and how they relate to each other, except that it all looks quite
-> inconsistent. You might want to consider merging all those attributes into
-> the label in some consistent way.
->
->> +power[1-n]_update_tag		Number of samples in the accumulator.
->> +power[1-n]_accumulator		Accumulation of power readings.
-> Same as above.
->
->> +[with sensor type "system" and "proc" only]
->> +    power[1-n]_update_time	Time in us that the power value is read.
->> +
->> +caps1_current		Current OCC power cap in watts.
->> +caps1_reading		Current system output power in watts.
->> +caps1_norm		Power cap without redundant power.
->> +caps1_max		Maximum power cap.
-> Why do those have to be non-standard attributes ? Please explain why you can not
-> use power[1-n]_cap attributes.
->
->> +[caps version 1 and 2 only]
->> +    caps1_min		Minimum power cap.
->> +[caps version 3+]
->> +    caps1_min_hard		Hard minimum cap that can be set and held.
->> +    caps1_min_soft		Soft minimum cap below hard, not guaranteed.
->> +caps1_user		The powercap specified by the user. Will be 0 if no
->> +			user powercap exists. This attribute is read-write.
->> +[caps version 1+]
->> +    caps1_user_source	Indicates how the user power limit was set.
->> +
->> +extn[1-n]_label		ASCII id or sensor id.
->> +extn[1-n]_flags		Indicates type of label attribute.
->> +extn[1-n]_input		Data.
-> Great non-explanation.
->
-> Not reviewing the series further. I am sure I asked that each non-standard
-> attribute is explained. There is neither an explanation why the attributes
-> are needed nor, in many cases, why non-standard attributes were chosen
-> instead of standard ones. On top of that, the non-standard attributes are
-> not even documented properly, leaving the reader wondering not only why
-> they are needed, but what they are used for in the first place.
+For POWER8 OCCs, communication between the service processor and the OCC is
+achieved over I2C bus.
 
-Hi,
+Changes since v4:
+ * Make the hwmon attributes conform almost completely to standard names and
+   values. The only exception is powerX_cap_user and powerX_cap_user_source.
+ * Improve hwmon documentation.
+ * Add ibm,p9-occ dt documentation.
 
-Thanks for the feedback Guenter. I am about to put up a new patch set 
-with fixes for many of the issues you indicated and better descriptions. 
-Now all the attributes except two should conform to standard hwmon 
-attributes. The exceptions are for the user power cap and user power cap 
-source. These are needed in order to make decisions about power 
-management while controlling the system. Please look at their 
-documentation to see if they're acceptable.
+Changes since v3:
+ * Add the FSI OCC driver.
+ * Pull the sysfs attribute code into it's own file for cleanliness.
+ * Various fixes for attribute creation and integer overflow.
 
-Let me know what you think!
-Thanks,
-Eddie
+Changes since v2:
+ * Add sysfs_notify for the error and throttling attributes when change is
+   detected.
+ * Removed occs_present counting of devices bound.
+ * Improved remove() of P9 driver to avoid bad behavior with relation to OCC
+   driver when unbound.
+ * Added default cases (return EINVAL) for all sensor show functions.
+ * Added temperature fault sensor.
+ * Added back dt binding documentation for P9 to address checkpatch warning.
+ * Added occs_present attribute from the poll response.
 
->
-> Guenter
->
+Changes since v1:
+ * Remove wait loop in P9 code, as that is now handled by FSI OCC driver.
+ * Removed dt binding documentation for P9, FSI OCC driver will probe OCC hwmon
+   driver automatically.
+ * Moved OCC response code definitions to the OCC include file.
+ * Fixed includes.
+ * Changed some structure fields to __beXX as that is what they are.
+ * Changed some errnos.
+ * Removed some dev_err().
+ * Refactored P8 code a bit to use #defined addresses and magic values, and
+   changed "goto retry" to a loop.
+ * Refactored error handling a bit.
+
+Eddie James (10):
+  dt-bindings: fsi: Add P9 OCC device documentation
+  fsi: Add On-Chip Controller (OCC) driver
+  Documentation: hwmon: Add OCC documentation
+  dt-bindings: i2c: Add P8 OCC hwmon device documentation
+  hwmon: Add On-Chip Controller (OCC) hwmon driver
+  hwmon (occ): Add command transport method for P8 and P9
+  hwmon (occ): Parse OCC poll response
+  hwmon (occ): Add sensor types and versions
+  hwmon (occ): Add sensor attributes and register hwmon device
+  hwmon (occ): Add sysfs attributes for additional OCC data
+
+ .../devicetree/bindings/fsi/ibm,p9-occ.txt         |   15 +
+ .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   |   25 +
+ Documentation/hwmon/occ                            |  112 ++
+ drivers/fsi/Kconfig                                |   10 +
+ drivers/fsi/Makefile                               |    1 +
+ drivers/fsi/fsi-occ.c                              |  599 +++++++++++
+ drivers/hwmon/Kconfig                              |    2 +
+ drivers/hwmon/Makefile                             |    1 +
+ drivers/hwmon/occ/Kconfig                          |   28 +
+ drivers/hwmon/occ/Makefile                         |   11 +
+ drivers/hwmon/occ/common.c                         | 1098 ++++++++++++++++++++
+ drivers/hwmon/occ/common.h                         |  128 +++
+ drivers/hwmon/occ/p8_i2c.c                         |  255 +++++
+ drivers/hwmon/occ/p9_sbe.c                         |  106 ++
+ drivers/hwmon/occ/sysfs.c                          |  188 ++++
+ include/linux/fsi-occ.h                            |   25 +
+ 16 files changed, 2604 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+ create mode 100644 Documentation/hwmon/occ
+ create mode 100644 drivers/fsi/fsi-occ.c
+ create mode 100644 drivers/hwmon/occ/Kconfig
+ create mode 100644 drivers/hwmon/occ/Makefile
+ create mode 100644 drivers/hwmon/occ/common.c
+ create mode 100644 drivers/hwmon/occ/common.h
+ create mode 100644 drivers/hwmon/occ/p8_i2c.c
+ create mode 100644 drivers/hwmon/occ/p9_sbe.c
+ create mode 100644 drivers/hwmon/occ/sysfs.c
+ create mode 100644 include/linux/fsi-occ.h
+
+-- 
+1.8.3.1
