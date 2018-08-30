@@ -1,15 +1,16 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a774a1: Add CAN nodes
-Date: Thu, 30 Aug 2018 14:26:49 +0200
-Message-ID: <20180830122649.smz2mjmunwav4o6i@verge.net.au>
-References: <1535034166-24798-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180827095335.poe5kwl6ca35ntrz@verge.net.au>
+Subject: Re: [PATCH 1/3] arm64: dts: renesas: r8a774a1: Add USB2.0 phy and
+ host(EHCI/OHCI) device nodes
+Date: Thu, 30 Aug 2018 14:28:08 +0200
+Message-ID: <20180830122808.4eiaiedjpenm6u7k@verge.net.au>
+References: <1535107429-5458-1-git-send-email-biju.das@bp.renesas.com>
+ <1535107429-5458-2-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180827095335.poe5kwl6ca35ntrz@verge.net.au>
+In-Reply-To: <1535107429-5458-2-git-send-email-biju.das@bp.renesas.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,22 +20,14 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <chris.paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 11:53:35AM +0200, Simon Horman wrote:
-> On Thu, Aug 23, 2018 at 03:22:46PM +0100, Fabrizio Castro wrote:
-> > From: Chris Paterson <chris.paterson2@renesas.com>
-> > 
-> > Add the device nodes for both RZ/G2M CAN channels.
-> > 
-> > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+On Fri, Aug 24, 2018 at 11:43:47AM +0100, Biju Das wrote:
+> Add USB2.0 phy and host (EHCI/OHCI) device nodes on RZ/G2M SoC dtsi.
 > 
-> Thanks,
-> 
-> This looks fine to me but I will wait to see if there are other reviews
-> before applying.
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Thanks again, applied for v4.20.
+Thanks, applied for v4.20.
