@@ -1,16 +1,17 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 5/9] arm64: dts: renesas: r8a774a1: Add all MSIOF nodes
-Date: Thu, 30 Aug 2018 14:23:06 +0200
-Message-ID: <20180830122306.abbzvcma26jsztwo@verge.net.au>
+Subject: Re: [PATCH 6/9] arm64: dts: renesas: r8a774a1: Add Cortex-A53 CPU
+ cores
+Date: Thu, 30 Aug 2018 14:23:40 +0200
+Message-ID: <20180830122340.2viwqv3hitpemu3g@verge.net.au>
 References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1535031788-19907-6-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180827090552.676szw35asab7j4a@verge.net.au>
+ <1535031788-19907-7-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180827090833.h3rtup4lqo36brgb@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180827090552.676szw35asab7j4a@verge.net.au>
+In-Reply-To: <20180827090833.h3rtup4lqo36brgb@verge.net.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,15 +25,17 @@ To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 11:05:52AM +0200, Simon Horman wrote:
-> On Thu, Aug 23, 2018 at 02:43:04PM +0100, Fabrizio Castro wrote:
+On Mon, Aug 27, 2018 at 11:08:33AM +0200, Simon Horman wrote:
+> On Thu, Aug 23, 2018 at 02:43:05PM +0100, Fabrizio Castro wrote:
 > > From: Biju Das <biju.das@bp.renesas.com>
 > > 
-> > Add the device nodes for all MSIOF SPI controllers on RZ/G2M SoC.
+> > This patch adds definitions for L2 cache for the Cortex-A53 CPU
+> > cores (512 KiB in size, organized as 32 KiB x 16 ways), adds
+> > Cortex-A53 CPU cores (setting a total of 6 cores, 2 x Cortex-A57
+> > + 4 x Cortex-A53), and finally enables the performance monitor
+> > unit for the Cortex-A53 cores on the R8A774A1 SoC.
 > > 
-> > Based on several similar patches of the R8A7796 device tree
-> > by Geert Uytterhoeven <geert+renesas@glider.be>
-> > and Simon Horman <horms+renesas@verge.net.au>.
+> > Based on work done for r8a7796 SoC.
 > > 
 > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 > > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
