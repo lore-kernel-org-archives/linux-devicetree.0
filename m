@@ -1,100 +1,102 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
- Amlogic Meson PCIe controller
-Date: Thu, 30 Aug 2018 08:59:19 -0500
-Message-ID: <CAL_JsqJPzfp1OimYXa26tEqTexyiuKMeKszveobHN3rKP8+RYQ@mail.gmail.com>
-References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
- <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
- <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
- <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com> <20180829004122.GA25928@bogus>
- <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [Patch v15 2/5] iommu/arm-smmu: Invoke pm_runtime during probe,
+ add/remove device
+Date: Thu, 30 Aug 2018 19:29:46 +0530
+Message-ID: <CAFp+6iGgePK14WGOdrE2cHLMpZ0JbS6qUvVoP-0mW55xh5haHg@mail.gmail.com>
+References: <20180827105551.16346-1-vivek.gautam@codeaurora.org>
+ <20180827105551.16346-3-vivek.gautam@codeaurora.org> <CAFp+6iGbfHZQjG5oEVKhQ=4rOaaU=5ePykEuwMqYbPTryX6DnA@mail.gmail.com>
+ <CAAFQd5BrJppNSo8ETT6ywjuLEULk4nAvWDQEuNiMCvdddeUq1A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
+In-Reply-To: <CAAFQd5BrJppNSo8ETT6ywjuLEULk4nAvWDQEuNiMCvdddeUq1A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hanjie Lin <hanjie.lin@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, alex.williamson@redhat.com, Linux PM <linux-pm@vger.kernel.org>, sboyd@kernel.org, freedreno <freedreno@lists.freedesktop.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, robh+dt <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2018 at 2:37 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+On Thu, Aug 30, 2018 at 3:04 PM Tomasz Figa <tfiga@chromium.org> wrote:
 >
->
->
-> On 2018/8/29 8:41, Rob Herring wrote:
-> > On Mon, Aug 27, 2018 at 04:55:20PM +0800, Hanjie Lin wrote:
-> >>
-> >>
-> >> On 2018/8/24 16:22, Jerome Brunet wrote:
-> >>> On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
-> >>>> From: Yue Wang <yue.wang@amlogic.com>
-> >>>>
-> >>>> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-> >>>> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-> >>>> controller.
-> >>>>
-> >>>> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> >>>> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-> >>>> ---
-> >>>>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
-> >>>>  1 file changed, 63 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..8a831d1
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> >>>> @@ -0,0 +1,63 @@
-> >>>> +Amlogic Meson AXG DWC PCIE SoC controller
-> >>>> +
-> >>>> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-> >>>> +It shares common functions with the PCIe DesignWare core driver and
-> >>>> +inherits common properties defined in
-> >>>> +Documentation/devicetree/bindings/pci/designware-pci.txt.
-> >>>> +
-> >>>> +Additional properties are described here:
-> >>>> +
-> >>>> +Required properties:
-> >>>> +- compatible:
-> >>>> +  should contain "amlogic,axg-pcie" to identify the core.
-> >>>> +- reg:
-> >>>> +  Should contain the configuration address space.
-> >>>> +- reg-names: Must be
-> >>>> +  - "elbi"        External local bus interface registers
-> >>>> +  - "cfg"         Meson specific registers
-> >>>> +  - "config"      PCIe configuration space
-> >>>> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
-> >>>> +- clocks: Must contain an entry for each entry in clock-names.
-> >>>> +- clock-names: Must include the following entries:
-> >>>> +  - "pclk"       PCIe GEN 100M PLL clock
-> >>>> +  - "port"       PCIe_x(A or B) RC clock gate
-> >>>> +  - "general"    PCIe Phy clock
-> >>>> +  - "mipi"       PCIe_x(A or B) 100M ref clock gate
-> >>>> +- resets: phandle to the reset lines.
-> >>>> +- reset-names: must contain "phy" and "peripheral"
-> >>>> +       - "port" Port A or B reset
-> >>>> +       - "apb" APB reset
-> >>>
-> >>> The above description is not coherent (phy <=> port)
-> >>>
-> >>
-> >> Yes, this should be port and apb here.
-> >> We'll integrate phy driver into ctrl driver, and move phy reset to here also.
+> On Thu, Aug 30, 2018 at 6:22 PM Vivek Gautam
+> <vivek.gautam@codeaurora.org> wrote:
 > >
-> > Why? That's the wrong thing to do if they are separate h/w blocks. You
-> > can do whatever you like in the drivers, but the DT should reflect the
-> > h/w.
+> > On Mon, Aug 27, 2018 at 4:27 PM Vivek Gautam
+> > <vivek.gautam@codeaurora.org> wrote:
+> > >
+> > > From: Sricharan R <sricharan@codeaurora.org>
+> > >
+> > > The smmu device probe/remove and add/remove master device callbacks
+> > > gets called when the smmu is not linked to its master, that is without
+> > > the context of the master device. So calling runtime apis in those places
+> > > separately.
+> > >
+> > > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> > > [vivek: Cleanup pm runtime calls]
+> > > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > > Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> > > Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > ---
+> > >
+> > > Changes since v14:
+> > >  - none.
+> > >
+> > >  drivers/iommu/arm-smmu.c | 101 +++++++++++++++++++++++++++++++++++++++++++----
+> > >  1 file changed, 93 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > > index a81224bc6637..23b4a60149b6 100644
+> > > --- a/drivers/iommu/arm-smmu.c
+> > > +++ b/drivers/iommu/arm-smmu.c
 > >
-> > Rob
+> > [snip]
 > >
-> > .
+> > > @@ -2131,6 +2188,26 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+> > >         if (err)
+> > >                 return err;
+> > >
+> > > +       /*
+> > > +        * We want to avoid touching dev->power.lock in fastpaths unless
+> > > +        * it's really going to do something useful - pm_runtime_enabled()
+> > > +        * can serve as an ideal proxy for that decision. So, conditionally
+> > > +        * enable pm_runtime.
+> > > +        */
+> > > +       if (dev->pm_domain)
+> > > +               pm_runtime_enable(dev);
+> > > +
+> > > +       err = arm_smmu_rpm_get(smmu);
+> >
+> > We shouldn't be doing a runtime_get() yet, as this eventually calls
+> > arm_smmu_device_reset().
+> > arm_smmu_device_reset() should be called only after arm_smmu_device_cfg_probe().
+> > So, I plan to replace the pm_runtime_get/put() calls in probe() with
+> > simple clk_bulk_enable()
+> > to let the driver initialize smmu, and at the end of the probe we can
+> > disable the clocks and
+> > enable runtime pm over the device to let it take care of the device further-on.
 > >
 >
-> We have the dedicated phy driver which only process reset job,
-> and we consider that it's too overkill to do just these things .
-> So we will integrate phy reset job into the controller driver int the next version.
+> We can avoid the explicit clock disable by just calling
+> pm_runtime_set_active() before pm_runtime_enable(), assuming that what
+> probe does is symmetrical with the suspend callback, which would be
+> called after the latter.
 
-What's in the separate register space you had for the phy?
+Sure, that sounds reasonable. Will use pm_runtime_set_active() instead
+of explicitly disabling the clocks.Thanks.
 
-Rob
+Best regards
+Vivek
+
+>
+> Best regards,
+> Tomasz
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
