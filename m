@@ -1,36 +1,89 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH] ARM: dts: imx6ull: fix pinmux input_val for uart5 rx pin
-Date: Thu, 30 Aug 2018 14:47:02 +0200
-Message-ID: <20180830124702.12572-1-hs@denx.de>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys GPIO via CREG
+ bindings
+Date: Thu, 30 Aug 2018 13:12:39 +0000
+Message-ID: <1535634758.4465.63.camel@synopsys.com>
+References: <20180828112721.28178-1-Eugeniy.Paltsev@synopsys.com>
+         <20180828112721.28178-3-Eugeniy.Paltsev@synopsys.com>
+         <20180829010230.GA16393@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180829010230.GA16393@bogus>
+Content-Language: en-US
+Content-ID: <BD686D552B71D340988D6C9C6B2A5231@internal.synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Heiko Schocher <hs@denx.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Peter Chen <peter.chen@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>
+To: "robh@kernel.org" <robh@kernel.org>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-on the imx6ull the input_val for uart5 rx function
-of pin MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX
-is 7 and not 5 as on the imx6ul. With this
-patch, console on an imx6ull based board works
-with uart5.
-
-Signed-off-by: Heiko Schocher <hs@denx.de>
-
----
-
- arch/arm/boot/dts/imx6ull-pinfunc.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/imx6ull-pinfunc.h b/arch/arm/boot/dts/imx6ull-pinfunc.h
-index fdc46bb09cc1a..d835aeae5485b 100644
---- a/arch/arm/boot/dts/imx6ull-pinfunc.h
-+++ b/arch/arm/boot/dts/imx6ull-pinfunc.h
-@@ -61,5 +61,6 @@
- #define MX6ULL_PAD_CSI_DATA05__ESAI_TX_CLK                        0x01F8 0x0484 0x0000 0x9 0x0
- #define MX6ULL_PAD_CSI_DATA06__ESAI_TX5_RX0                       0x01FC 0x0488 0x0000 0x9 0x0
- #define MX6ULL_PAD_CSI_DATA07__ESAI_T0                            0x0200 0x048C 0x0000 0x9 0x0
-+#define MX6ULL_PAD_UART5_RX_DATA__UART5_DCE_RX		0x00C0 0x034C 0x0644 0 7
- 
- #endif /* __DTS_IMX6ULL_PINFUNC_H */
--- 
-2.14.4
+T24gVHVlLCAyMDE4LTA4LTI4IGF0IDIwOjAyIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVHVlLCBBdWcgMjgsIDIwMTggYXQgMDI6Mjc6MjFQTSArMDMwMCwgRXVnZW5peSBQYWx0c2V2
+IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBkb2N1bWVudGF0aW9uIG9mIGRldmljZSB0cmVl
+IGJpbmRpbmdzIGZvciB0aGUgU3lub3BzeXMNCj4gPiBHUElPIHZpYSBDUkVHIGRyaXZlci4NCj4g
+PiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBz
+eW5vcHN5cy5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8v
+c25wcyxjcmVnLWdwaW8udHh0ICAgIHwgNDkgKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAx
+IGZpbGUgY2hhbmdlZCwgNDkgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vc25wcyxjcmVnLWdwaW8udHh0
+DQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9ncGlvL3NucHMsY3JlZy1ncGlvLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9ncGlvL3NucHMsY3JlZy1ncGlvLnR4dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+
+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5lYjAyMmQ0NGNjZGENCj4gPiAtLS0gL2Rldi9udWxsDQo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vc25wcyxjcmVn
+LWdwaW8udHh0DQo+ID4gQEAgLTAsMCArMSw0OSBAQA0KPiA+ICtHUElPIHZpYSBDUkVHIChDb250
+cm9sIFJFR2lzZXJzKSBkcml2ZXINCj4gDQo+IEJpbmRpbmdzIGRvbid0IGRlc2NyaWJlIGRyaXZl
+cnMuDQo+IA0KPiA+ICsNCj4gPiArVGhpcyBpcyBpcyBzaW5nbGUtcmVnaXN0ZXIgTU1JTyBHUElP
+IGRyaXZlciB0byBjb250cm9sIHN1Y2ggc3RyYW5nZWx5IG1hcHBlZCANCj4gPiArb3V0cHV0czoN
+Cj4gPiArDQo+ID4gKzMxICAgICAgICAgICAgMTEgICAgICAgIDggICAgICAgICA3ICAgICAgICA1
+ICAgICAgICAgMCAgIDwgYml0IG51bWJlcg0KPiA+ICt8ICAgICAgICAgICAgICB8ICAgICAgICB8
+ICAgICAgICAgfCAgICAgICAgfCAgICAgICAgIHwNCj4gPiArWyAgIG5vdCB1c2VkICAgfCBncGlv
+LTEgfCBzaGlmdC0xIHwgZ3Bpby0wIHwgc2hpZnQtMCBdICAgPCAzMiBiaXQgTU1JTyByZWdpc3Rl
+cg0KPiA+ICsgICAgICAgICAgICAgICAgICAgXiAgICAgICAgICAgICAgICAgIF4NCj4gPiArICAg
+ICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICB8DQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICB8ICAgICAgICAgICB3cml0ZSAweDIgPT0gc2V0IG91dHB1dCB0byAiMSIgKG9uKQ0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgd3JpdGUgMHgzID09IHNldCBvdXRwdXQg
+dG8gIjAiIChvZmYpDQo+ID4gKyAgICAgICAgICAgICAgICAgICB8DQo+ID4gKyAgICAgICAgICAg
+IHdyaXRlIDB4MSA9PSBzZXQgb3V0cHV0IHRvICIxIiAob24pDQo+ID4gKyAgICAgICAgICAgIHdy
+aXRlIDB4NCA9PSBzZXQgb3V0cHV0IHRvICIwIiAob2ZmKQ0KPiANCj4gV2hhdCBraW5kIG9mIGNy
+YXp5IGgvdyBkZXNpZ25lciBkZXNpZ25lZCB0aGlzPw0KDQpBY3R1YWxseSB0aGlzIGZpZWxkcyBp
+biByZWdpc3RlciBjb250cm9scyBzb21lIG11bHRpcGxleGVycywgd2hpY2ggd2Ugd2FudCB0byB1
+c2UgYXMgSU8gcG9ydCwNCnNlZSB0aGUgZXhhbXBsZTogIA0KDQogICAgICAgICAgICAgICAgL3wN
+CiAgICAgICAgICAgICAgIC8gfA0KICAgICAgICAgICAgICB8ICB8LS0tLS0tIHNvbWUgaW50ZXJu
+YWwgbGluZSANCklPIFBJTiAtLS0tLS0tfCAgfC0tLS0tLSBsb2dpYyAwDQogICAgICAgICAgICAg
+IHwgIHwtLS0tLS0gbG9naWMgMQ0KICAgICAgICAgICAgICB8ICB8LS0tLS0tIG5vdCB1c2VkDQog
+ICAgICAgICAgICAgICBcIHwNCiAgICAgICAgICAgICAgIHxcfA0KICAgICAgICAgICAgICAgfA0K
+ICAgICAgICAgICAgICAgQ1JFRyBmaWVsZA0KDQoNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoN
+Cj4gPiArLSBjb21wYXRpYmxlIDogInNucHMsY3JlZy1ncGlvIg0KPiA+ICstIHJlZyA6IEV4YWN0
+bHkgb25lIHJlZ2lzdGVyIHJhbmdlIHdpdGggbGVuZ3RoIDB4NC4NCj4gPiArLSAjZ3Bpby1jZWxs
+cyA6IFNob3VsZCBiZSBvbmUgLSB0aGUgcGluIG51bWJlci4NCj4gPiArLSBncGlvLWNvbnRyb2xs
+ZXIgOiBNYXJrcyB0aGUgZGV2aWNlIG5vZGUgYXMgYSBHUElPIGNvbnRyb2xsZXIuDQo+ID4gKy0g
+c25wcyxuZ3Bpb3M6IE51bWJlciBvZiBHUElPIHBpbnMuDQo+ID4gKy0gc25wcyxiaXQtcGVyLWxp
+bmU6IE51bWJlciBvZiBiaXRzIHBlciBlYWNoIGdwaW8gbGluZSAoc2VlIHBpY3R1cmUpLg0KPiA+
+ICsgIEFycmF5IHRoZSBzaXplIG9mICJzbnBzLG5ncGlvcyINCj4gPiArLSBzbnBzLHNoaWZ0OiBT
+aGlmdCAoaW4gYml0cykgb2YgdGhlIGVhY2ggR1BJTyBmaWVsZCBmcm9tIHRoZSBwcmV2aW91cyBv
+bmUgaW4NCj4gPiArICByZWdpc3RlciAoc2VlIHBpY3R1cmUpLiBBcnJheSB0aGUgc2l6ZSBvZiAi
+c25wcyxuZ3Bpb3MiDQo+ID4gKy0gc25wcyxvbi12YWw6IFZhbHVlIHNob3VsZCBiZSBzZXQgaW4g
+Y29ycmVzcG9uZGluZyBmaWVsZCB0byBzZXQNCj4gPiArICBvdXRwdXQgdG8gIjEiIChzZWUgcGlj
+dHVyZSkuIEFycmF5IHRoZSBzaXplIG9mICJzbnBzLG5ncGlvcyINCj4gPiArLSBzbnBzLG9mZi12
+YWw6IFZhbHVlIHNob3VsZCBiZSBzZXQgaW4gY29ycmVzcG9uZGluZyBmaWVsZCB0byBzZXQNCj4g
+PiArICBvdXRwdXQgdG8gIjAiIChzZWUgcGljdHVyZSkuIEFycmF5IHRoZSBzaXplIG9mICJzbnBz
+LG5ncGlvcyINCj4gDQo+IENvbnZpbmNlIG1lIHdlIG5lZWQgdG8gcGFyYW1ldGVyaXplIGFsbCB0
+aGlzLiBXZSB0cnkgdG8gYXZvaWQgZGVzY3JpYmluZyANCj4gaC93IGxpa2UgdGhpcy4NCg0KV2Vs
+bCwgSSBnb2luZyB0byB1c2UgdGhpcyBkcml2ZXIgb24gMyBhbHJlYWR5IHVwc3RyZWFtZWQgcGxh
+dGZvcm1zIGFuZCBvbmUgdXBjb21pbmcuDQpUaGV5IGFsbCBoYXZlIHN1Y2ggQ1JFRyAnR1BJT3Mn
+IGRpZmZlcmVudGx5IG1hcHBlZCB3aXRoIGRpZmZlcmVudCBJTyBsaW5lcyBudW1iZXIsDQpkaWZm
+ZXJlbnQgZW5hYmxlL2Rpc2FibGUgdmFsdWUsIGV0Yy4uLg0KDQpTbyBJIHJlYWxseSB3YW50IHRv
+IGNyZWF0ZSBzb21lIGdlbmVyaWMgYW5kIGNvbmZpZ3VyYWJsZSBkcml2ZXIgdG8gaGFuZGxlIGJv
+dGggZXhpc3RpbmcNCmFuZCB1cGNvbWluZyBwbGF0Zm9ybXMuDQoNCj4gPiArDQo+ID4gK09wdGlv
+bmFsIHByb3BlcnRpZXM6DQo+ID4gKy0gc25wcyxkZWZhdWx0LXZhbDogZGVmYXVsdCBvdXRwdXQg
+ZmllbGQgdmFsdWVzLiBBcnJheSB0aGUgc2l6ZSBvZiAic25wcyxuZ3Bpb3MiDQo+ID4gKw0KPiA+
+ICtFeGFtcGxlIChzZWUgcGljdHVyZSk6DQo+ID4gKw0KPiA+ICtncGlvOiBncGlvQGYwMDAxNGIw
+IHsNCj4gPiArCWNvbXBhdGlibGUgPSAic25wcyxjcmVnLWdwaW8iOw0KPiA+ICsJcmVnID0gPDB4
+ZjAwMDE0YjAgMHg0PjsNCj4gPiArCWdwaW8tY29udHJvbGxlcjsNCj4gPiArCSNncGlvLWNlbGxz
+ID0gPDE+Ow0KPiA+ICsJc25wcyxuZ3Bpb3MgPSA8Mj47DQo+ID4gKwlzbnBzLHNoaWZ0ID0gPDUg
+MT47DQo+ID4gKwlzbnBzLGJpdC1wZXItbGluZSA9IDwyIDM+Ow0KPiA+ICsJc25wcyxvbi12YWwg
+PSA8MiAxPjsNCj4gPiArCXNucHMsb2ZmLXZhbCA9IDwzIDQ+Ow0KPiA+ICsJc25wcyxkZWZhdWx0
+LXZhbCA9IDwyIDE+Ow0KPiA+ICt9Ow0KPiA+IC0tIA0KPiA+IDIuMTQuNA0KPiA+IA0KLS0gDQog
+RXVnZW5peSBQYWx0c2V2
