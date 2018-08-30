@@ -1,13 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 19/30] iio: adc: sun4i-gpadc-iio: rework:
- support nvmem calibration data
-Date: Thu, 30 Aug 2018 17:45:07 +0200
-Message-ID: <20180830154518.29507-20-embed3d@gmail.com>
+Subject: [PATCH v3 29/30] ARM: dts: sun8i: a83t: add thermal
+ zone to A83T
+Date: Thu, 30 Aug 2018 17:45:17 +0200
+Message-ID: <20180830154518.29507-30-embed3d@gmail.com>
 References: <20180830154518.29507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBL5CUDOAKGQEMYLRCFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBMFCUDOAKGQELWGPZNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,77 +20,147 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch reworks the driver to support nvmem calibration cells.
-The driver checks if the nvmem calibration is supported and reads out
-the nvmem.
+This patch adds the thermal zones to the A83T. Sensor 0 is located
+besides the cpu cluster 0. Sensor 1 is located besides cluster 1 and
+sensor 2 is located besides in the gpu.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 103 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index 18ab72e52d78..2fd73d143815 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -27,6 +27,7 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/nvmem-consumer.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-@@ -70,6 +71,7 @@ struct gpadc_data {
- 	bool		has_mod_clk;
- 	u32		temp_data_base;
- 	int		sensor_count;
-+	bool		supports_nvmem;
- };
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index f2f745930b08..78aa448e869f 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -50,6 +50,7 @@
+ #include <dt-bindings/reset/sun8i-a83t-ccu.h>
+ #include <dt-bindings/reset/sun8i-de2.h>
+ #include <dt-bindings/reset/sun8i-r-ccu.h>
++#include <dt-bindings/thermal/thermal.h>
  
- static irqreturn_t sun4i_gpadc_data_irq_handler(int irq, void *dev_id);
-@@ -146,6 +148,7 @@ struct sun4i_gpadc_iio {
- 	struct clk			*bus_clk;
- 	struct clk			*mod_clk;
- 	struct reset_control		*reset;
-+	u32				calibration_data[2];
- };
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -69,6 +70,9 @@
+ 			cci-control-port = <&cci_control0>;
+ 			enable-method = "allwinner,sun8i-a83t-smp";
+ 			reg = <0>;
++			#cooling-cells = <2>;
++			cooling-min-level = <0>;
++			cooling-max-level = <7>;
+ 		};
  
- static const struct iio_chan_spec sun4i_gpadc_channels[] = {
-@@ -484,6 +487,9 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
- 	struct resource *mem;
- 	void __iomem *base;
- 	int ret;
-+	struct nvmem_cell *cell;
-+	ssize_t cell_size;
-+	u32 *cell_data;
+ 		cpu@1 {
+@@ -107,6 +111,9 @@
+ 			cci-control-port = <&cci_control1>;
+ 			enable-method = "allwinner,sun8i-a83t-smp";
+ 			reg = <0x100>;
++			#cooling-cells = <2>;
++			cooling-min-level = <0>;
++			cooling-max-level = <7>;
+ 		};
  
- 	info->data = of_device_get_match_data(&pdev->dev);
- 	if (!info->data)
-@@ -494,6 +500,24 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
-+	if (info->data->supports_nvmem) {
+ 		cpu@101 {
+@@ -1035,4 +1042,100 @@
+ 			#size-cells = <0>;
+ 		};
+ 	};
 +
-+		cell = nvmem_cell_get(&pdev->dev, "calibration");
-+		if (IS_ERR(cell)) {
-+			if (PTR_ERR(cell) == -EPROBE_DEFER)
-+				return PTR_ERR(cell);
-+		} else {
-+			cell_data = (u32 *)nvmem_cell_read(cell, &cell_size);
-+			if (cell_size != 8)
-+				dev_err(&pdev->dev,
-+					"Calibration data has wrong size\n");
-+			else {
-+				info->calibration_data[0] = cell_data[0];
-+				info->calibration_data[1] = cell_data[1];
-+			}
-+		}
-+	}
++	thermal-zones {
++		cpu0_thermal: cpu0-thermal {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&ths 0>;
 +
- 	if (info->data->has_bus_clk)
- 		info->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "bus",
- 				base, &sun4i_gpadc_regmap_config);
++			trips {
++				cpu0_warm: cpu_warm {
++					temperature = <70000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu0_hot: cpu_hot {
++					temperature = <80000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu0_very_hot: cpu_very_hot {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu0_crit: cpu_crit {
++					temperature = <105000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				cpu_warm_limit_cpu {
++					trip = <&cpu0_warm>;
++					cooling-device = <&cpu0 THERMAL_NO_LIMIT 4>;
++				};
++				cpu_hot_limit_cpu {
++					trip = <&cpu0_hot>;
++					cooling-device = <&cpu0 5 5>;
++				};
++				cpu_very_hot_limit_cpu {
++					trip = <&cpu0_very_hot>;
++					cooling-device = <&cpu0 7 THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		cpu1_thermal: cpu1-thermal {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&ths 1>;
++
++			trips {
++				cpu1_warm: cpu_warm {
++					temperature = <70000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu1_hot: cpu_hot {
++					temperature = <80000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu1_very_hot: cpu_very_hot {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu1_crit: cpu_crit {
++					temperature = <105000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				cpu_warm_limit_cpu {
++					trip = <&cpu1_warm>;
++					cooling-device = <&cpu100 THERMAL_NO_LIMIT 4>;
++				};
++				cpu_hot_limit_cpu {
++					trip = <&cpu1_hot>;
++					cooling-device = <&cpu100 5 5>;
++				};
++				cpu_very_hot_limit_cpu {
++					trip = <&cpu1_very_hot>;
++					cooling-device = <&cpu100 7 THERMAL_NO_LIMIT>;
++				};
++			};
++		};
++
++		gpu_thermal: gpu-thermal {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&ths 2>;
++		};
++	};
+ };
 -- 
 2.11.0
