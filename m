@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 08/14] arm64: marvell: enable SEI driver
-Date: Thu, 30 Aug 2018 09:35:29 +0200
-Message-ID: <20180830073535.10710-9-miquel.raynal@bootlin.com>
+Subject: [PATCH v5 14/14] arm64: dts: marvell: add CP110 ICU SEI subnode
+Date: Thu, 30 Aug 2018 09:35:35 +0200
+Message-ID: <20180830073535.10710-15-miquel.raynal@bootlin.com>
 References: <20180830073535.10710-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,27 +21,32 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, M
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the newly introduced Marvell SEI driver for the 64-bit Marvell
-EBU platforms.
+The ICU handles several interrupt groups, each of them being a subpart
+of the ICU node.
 
-Suggested-by: Haim Boot <hayim@marvell.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 393d2b524284..5a89a957641b 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -128,6 +128,7 @@ config ARCH_MVEBU
- 	select MVEBU_ICU
- 	select MVEBU_ODMI
- 	select MVEBU_PIC
-+	select MVEBU_SEI
- 	select OF_GPIO
- 	select PINCTRL
- 	select PINCTRL_ARMADA_37XX
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+index 261c35855ce3..4315eeb0a473 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+@@ -160,6 +160,14 @@
+ 				interrupt-controller;
+ 				msi-parent = <&gicp>;
+ 			};
++
++			CP110_LABEL(icu_sei): interrupt-controller@50 {
++				compatible = "marvell,cp110-icu-sei";
++				reg = <0x50 0x10>;
++				#interrupt-cells = <2>;
++				interrupt-controller;
++				msi-parent = <&sei>;
++			};
+ 		};
+ 
+ 		CP110_LABEL(rtc): rtc@284000 {
 -- 
 2.17.1
