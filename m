@@ -1,86 +1,98 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 1/2] dt-bindings: net: cpsw: Document cpsw-phy-sel usage
- but prefer phandle
-Date: Wed, 29 Aug 2018 19:08:45 -0500
-Message-ID: <90e0f25f-45f5-b2c0-59d9-cdf25eb06c0c@ti.com>
-References: <20180829150024.43210-1-tony@atomide.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3] spi: spi-geni-qcom: Add SPI driver support for GENI
+ based QUP
+Date: Wed, 29 Aug 2018 19:30:59 -0500
+Message-ID: <CAL_JsqL+prmJDKfXGdcB6mQBzA93PjfTqnpk3_07fmOt4=fx7w@mail.gmail.com>
+References: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
+ <20180829002535.GA4224@bogus> <d751bc90ab1cfce84d6f419400790566@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180829150024.43210-1-tony@atomide.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d751bc90ab1cfce84d6f419400790566@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dilip Kota <dkota@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Mark Brown <broonie@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Wed, Aug 29, 2018 at 6:19 AM <dkota@codeaurora.org> wrote:
+>
+> On 2018-08-29 05:55, Rob Herring wrote:
+> > On Fri, Aug 24, 2018 at 04:12:15PM +0530, Dilip Kota wrote:
+> >> From: Girish Mahadevan <girishm@codeaurora.org>
+> >>
+> >> This driver supports GENI based SPI Controller in the Qualcomm SOCs.
+> >> The
+> >> Qualcomm Generic Interface (GENI) is a programmable module supporting
+> >> a
+> >> wide range of serial interfaces including SPI. This driver supports
+> >> SPI
+> >> operations using FIFO mode of transfer.
+> >>
+> >> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> >> Signed-off-by: Dilip Kota <dkota@codeaurora.org>
+> >> ---
+> >> Addressing all the reviewer commets given in Patchset1.
+> >> Summerizing all the comments below:
+> >>
+> >>      MAKEFILE: Arrange SPI-GENI driver in alphabetical order
+> >>      Kconfig: Mark SPI_GENI driver dependent on QCOM_GENI_SE
+> >>      Enable SPI core auto runtime pm, and remove runtime pm calls.
+> >>      Remove spi_geni_unprepare_message(),
+> >> spi_geni_unprepare_transfer_hardware()
+> >>      Remove likely/unlikely keywords.
+> >>      Remove get_spi_master() and use dev_get_drvdata()
+> >>      Move request_irq to probe()
+> >>      Mark bus number assignment to -1 as SPI core framework will assign
+> >> dynamically
+> >>      Use devm_spi_register_master()
+> >>      Include platform_device.h instead of of_platform.h
+> >>      Removing macros which are used only once:
+> >>              #define SPI_NUM_CHIPSELECT     4
+> >>              #define SPI_XFER_TIMEOUT_MS    250
+> >>      Place Register field definitions next to respective Register
+> >> definitions.
+> >>      Replace int and u32 declerations to unsigned int.
+> >>      Remove Hex numbers in debug prints.
+> >>      Declare mode as u16 in spi_setup_word_len()
+> >>      Remove the labels: setup_fifo_params_exit:
+> >> exit_prepare_transfer_hardware:
+> >>      Declaring struct spi_master as spi everywhere in the file.
+> >>      Calling spi_finalize_current_transfer() for end of transfer.
+> >>      Hard code the SPI controller max frequency instead of reading from
+> >> DTSI node.
+> >>      Spinlock not required, removed it.
+> >>      Removed unrequired error prints.
+> >>      Fix KASAN error in geni_spi_isr().
+> >>      Remove spi-geni-qcom.h
+> >>      Remove inter words delay and CS to Clock toggle delay logic in the
+> >> driver, as of now no clients are using it.
+> >>      Will submit this logic in the next patchset.
+> >>      Use major, minor and step macros to read from hardware version
+> >> register.
+> >>
+> >>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |   2 -
+> >
+> > Please split to a separate patch and explain why you are removing
+> > spi-max-frequency?
+>
+> Hi Rob Herring,
+>
+> In this patch, added changes for Driver not to read the SPI controller
+> Maximum frequency from the device tree. Accordingly I removed it in the
+> device tree documentation file. As both the files need to updated so did
+> in the same patch.
 
-On 08/29/2018 10:00 AM, Tony Lindgren wrote:
-> The current cpsw usage for cpsw-phy-sel is undocumented but is used for
-> all the boards using cpsw. And cpsw-phy-sel is not really a child of
-> the cpsw device, it lives in the system control module instead.
-> 
-> Let's document the existing usage, and improve it a bit where we prefer
-> to use a phandle instead of a child device for it. That way we can
-> properly describe the hardware in dts files for things like genpd.
+Just because the Linux driver doesn't use it isn't a reason. What if
+there is another OS driver for it? The binding is the h/w description,
+not what the driver uses currently.
 
-I'm ok with this series, but I really don't like cpsw-phy-sel in general.
+> Could you please let me know the reason for making a separate patch.
 
-It was introduced long time back and now I'm thinking about possibility to replace it with
-one of current generic interfaces - for example mux-controller. 
-Each port will control up to 3 muxes (port mode, idmode and rmii_ext_clk) and  
-transform phy-mode => mux states.
-What do you think?
+- Step 1 of Documentation/devicetree/bindings/submitting-patches.txt says so
+- I only review the binding generally, so my ack or reviewed by only
+applies to it.
+- It makes the commit history of the DT only tree[1] more logical.
 
-Another option is to use phy, but it'd be complicated.
+ Rob
 
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-> Cc: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Murali Karicheri <m-karicheri2@ti.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->   Documentation/devicetree/bindings/net/cpsw.txt | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
-> --- a/Documentation/devicetree/bindings/net/cpsw.txt
-> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
-> @@ -19,6 +19,10 @@ Required properties:
->   - slaves		: Specifies number for slaves
->   - active_slave		: Specifies the slave to use for time stamping,
->   			  ethtool and SIOCGMIIPHY
-> +- cpsw-phy-sel		: Specifies the phandle to the CPSW phy mode selection
-> +			  device. See also cpsw-phy-sel.txt for it's binding.
-> +			  Note that in legacy cases cpsw-phy-sel may be
-> +			  a child device instead of a phandle.
->   
->   Optional properties:
->   - ti,hwmods		: Must be "cpgmac0"
-> @@ -75,6 +79,7 @@ Examples:
->   		cpts_clock_mult = <0x80000000>;
->   		cpts_clock_shift = <29>;
->   		syscon = <&cm>;
-> +		cpsw-phy-sel = <&phy_sel>;
->   		cpsw_emac0: slave@0 {
->   			phy_id = <&davinci_mdio>, <0>;
->   			phy-mode = "rgmii-txid";
-> @@ -103,6 +108,7 @@ Examples:
->   		cpts_clock_mult = <0x80000000>;
->   		cpts_clock_shift = <29>;
->   		syscon = <&cm>;
-> +		cpsw-phy-sel = <&phy_sel>;
->   		cpsw_emac0: slave@0 {
->   			phy_id = <&davinci_mdio>, <0>;
->   			phy-mode = "rgmii-txid";
-> 
-
--- 
-regards,
--grygorii
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
