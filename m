@@ -1,93 +1,101 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [RESEND PATCH 1/4] arm64: dts: marvell: move AP806/CP110 thermal
- nodes into a new syscon
-Date: Thu, 30 Aug 2018 10:14:58 +0200
-Message-ID: <20180830081501.11569-1-miquel.raynal@bootlin.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v4 0/6] Add power domain driver for corners on
+ msm8996/sdm845
+Date: Thu, 30 Aug 2018 10:21:10 +0200
+Message-ID: <20180830082110.GA13528@centauri.lan>
+References: <20180627045234.27403-1-rnayak@codeaurora.org>
+ <91ece266-025b-0b70-6563-5041b70f84b8@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <91ece266-025b-0b70-6563-5041b70f84b8@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-New bindings impose to declare the thermal IP from within a new syscon.
+On Thu, Aug 30, 2018 at 12:05:14PM +0530, Rajendra Nayak wrote:
+> 
+> 
+> On 6/27/2018 10:22 AM, Rajendra Nayak wrote:
+> > Changes in v4:
+> > * Included the patch to add qcom-opp bindings (dropped accidentally in v3)
+> > * merged the patches to add bindings for rpm and rpmh, added consumer binding example
+> > * Made the drivers built in, removed .remove
+> > * Added better description in changelog for PATCH 6/6
+> > * Updated rpmhpd_aggregate_corner() based on Davids feedback
+> > * rpmhpd_set_performance_state() returns max corner, in cases where its called
+> > with an INT_MAX
+> > * Dropped the patch to max vote on all corners at init, the patch did not
+> > work anyway, and it shouldn't be needed now
+> 
+> These patches have been out on the list for a while (8 weeks).
+> I haven't seen any further comments from anyone, except on PATCH 2/6
+> by Rob. I requested Rob to provide his Ack if he is fine with the bindings.
+> 
+> Can we plan to pull these in for 4.20?
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 14 ++++++++++----
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 18 ++++++++++++------
- 2 files changed, 22 insertions(+), 10 deletions(-)
+Hello Rajendra,
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 92215342b453..3da3a13f7ee1 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -256,10 +256,16 @@
- 				};
- 			};
- 
--			ap_thermal: thermal@6f808c {
--				compatible = "marvell,armada-ap806-thermal";
--				reg = <0x6f808c 0x4>,
--				      <0x6f8084 0x8>;
-+			ap_syscon1: system-controller@6f8000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x6f8000 0x1000>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				ap_thermal: thermal-sensor@80 {
-+					compatible = "marvell,armada-ap806-thermal";
-+					reg = <0x80 0x10>;
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-index 4315eeb0a473..62842fae2571 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
-@@ -177,12 +177,6 @@
- 			interrupts = <77 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
--		CP110_LABEL(thermal): thermal@400078 {
--			compatible = "marvell,armada-cp110-thermal";
--			reg = <0x400078 0x4>,
--			<0x400070 0x8>;
--		};
--
- 		CP110_LABEL(syscon0): system-controller@440000 {
- 			compatible = "syscon", "simple-mfd";
- 			reg = <0x440000 0x2000>;
-@@ -223,6 +217,18 @@
- 			};
- 		};
- 
-+		CP110_LABEL(syscon1): system-controller@400000 {
-+			compatible = "syscon", "simple-mfd";
-+			reg = <0x400000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			CP110_LABEL(thermal): thermal-sensor@70 {
-+				compatible = "marvell,armada-cp110-thermal";
-+				reg = <0x70 0x10>;
-+			};
-+		};
-+
- 		CP110_LABEL(usb3_0): usb3@500000 {
- 			compatible = "marvell,armada-8k-xhci",
- 			"generic-xhci";
--- 
-2.17.1
+FYI: these patches do no longer cleanly apply to v4.19-rc1, it's a trivial
+conflict, but most maintainers prefer for the patch author to rebase, not
+sure what Andy prefers.
+
+If it builds correctly with COMPILE_TEST, please consider adding that to
+your new Kconfig:
+depends on MFD_QCOM_RPM && QCOM_SMD_RPM || COMPILE_TEST
+
+Kind regards,
+Niklas
+
+> 
+> > 
+> > Changes in v3:
+> > * Bindings split into seperate patches
+> > * Bindings updated to remove duplicate OPP table phandles
+> > * DT headers defining macros for Power domain indexes and OPP levels
+> > * Optimisations to use rpmh_write_async() whereever applicable
+> > * Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
+> > * Fixed the vlvl to hlvl conversions in set_performance
+> > * Other minor fixes based on review of v2
+> > * TODO: This series does not handle the case where all VDD_MX votes
+> > should be higher than VDD_CX from APPs, as pointed out
+> > by David Collins in v2. This needs support at genpd to propogate performance
+> > state up the parents, if we model these as Parent/Child to handle the
+> > interdependency.
+> > 
+> > Changes in v2:
+> > * added a power domain driver for sdm845 which supports communicating to RPMh
+> > * dropped the changes to sdhc driver to move over to using OPP
+> > as there is active discussion on using OPP as the interface vs
+> > handling all of it in clock drivers
+> > * Other minor binding updates based on review of v1
+> > 
+> > With performance state support for genpd/OPP merged, this is an effort
+> > to model a power domain driver to communicate corner/level
+> > values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
+> > 
+> > Rajendra Nayak (6):
+> >    dt-bindings: opp: Introduce qcom-opp bindings
+> >    dt-bindings: power: Add qcom rpm power domain driver bindings
+> >    soc: qcom: rpmpd: Add a Power domain driver to model corners
+> >    soc: qcom: rpmpd: Add support for get/set performance state
+> >    arm64: dts: msm8996: Add rpmpd device node
+> >    soc: qcom: rpmhpd: Add RPMh Power domain driver
+> > 
+> >   .../devicetree/bindings/opp/qcom-opp.txt      |  25 ++
+> >   .../devicetree/bindings/power/qcom,rpmpd.txt  | 146 +++++++
+> >   arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
+> >   drivers/soc/qcom/Kconfig                      |  18 +
+> >   drivers/soc/qcom/Makefile                     |   2 +
+> >   drivers/soc/qcom/rpmhpd.c                     | 406 ++++++++++++++++++
+> >   drivers/soc/qcom/rpmpd.c                      | 340 +++++++++++++++
+> >   include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
+> >   8 files changed, 1010 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
+> >   create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> >   create mode 100644 drivers/soc/qcom/rpmhpd.c
+> >   create mode 100644 drivers/soc/qcom/rpmpd.c
+> >   create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
+> > 
