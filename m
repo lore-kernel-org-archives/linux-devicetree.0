@@ -1,163 +1,49 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 13/13 DONOTMERGE] ata: ahci_sunxi: remove PHY code
-Date: Thu, 30 Aug 2018 21:01:20 +0200
-Message-ID: <20180830190120.722-14-clabbe.montjoie@gmail.com>
-References: <20180830190120.722-1-clabbe.montjoie@gmail.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBHP6UDOAKGQERPI7JJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180830190120.722-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/3] of/fdt: Scan the root node properties earlier
+Date: Thu, 30 Aug 2018 14:05:21 -0500
+Message-ID: <20180830190523.31474-2-robh@kernel.org>
+References: <20180830190523.31474-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180830190523.31474-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since PHY code is now handled by sun4i-a10-sata-phy, the code in
-ahci_sunxi is useless, remove it.
+Scan the root node properties (#{size,address}-cells) earlier, so that
+the dt_root_addr_cells and dt_root_size_cells variables are initialized
+and can be used.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/ata/ahci_sunxi.c | 93 ------------------------------------------------
- 1 file changed, 93 deletions(-)
+ drivers/of/fdt.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ata/ahci_sunxi.c b/drivers/ata/ahci_sunxi.c
-index b8cf3a1be80b..af17f8ce65b2 100644
---- a/drivers/ata/ahci_sunxi.c
-+++ b/drivers/ata/ahci_sunxi.c
-@@ -58,15 +58,6 @@ MODULE_PARM_DESC(enable_pmp,
- #define AHCI_P0PHYCR	0x0178
- #define AHCI_P0PHYSR	0x017c
- 
--static void sunxi_clrbits(void __iomem *reg, u32 clr_val)
--{
--	u32 reg_val;
--
--	reg_val = readl(reg);
--	reg_val &= ~(clr_val);
--	writel(reg_val, reg);
--}
--
- static void sunxi_setbits(void __iomem *reg, u32 set_val)
- {
- 	u32 reg_val;
-@@ -86,81 +77,6 @@ static void sunxi_clrsetbits(void __iomem *reg, u32 clr_val, u32 set_val)
- 	writel(reg_val, reg);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 800ad252cf9c..49abe18f1bde 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1215,6 +1215,10 @@ bool __init early_init_dt_verify(void *params)
+ 	initial_boot_params = params;
+ 	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
+ 				fdt_totalsize(initial_boot_params));
++
++	/* Initialize {size,address}-cells info */
++	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++
+ 	return true;
  }
  
--static u32 sunxi_getbits(void __iomem *reg, u8 mask, u8 shift)
--{
--	return (readl(reg) >> shift) & mask;
--}
--
--static int ahci_sunxi_phy_init(struct device *dev, void __iomem *reg_base)
--{
--	u32 reg_val;
--	int timeout;
--
--	/*
--	 * When using the new binding, the presence of a sata port node
--	 * means that PHY is handled by the PHY driver.
--	 * */
--	if (of_get_child_count(dev->of_node)) {
--		dev_info(dev, "Bypassing PHY init\n");
--		return 0;
--	}
--
--	/* This magic is from the original code */
--	writel(0, reg_base + AHCI_RWCR);
--	msleep(5);
--
--	sunxi_setbits(reg_base + AHCI_PHYCS1R, BIT(19));
--	sunxi_clrsetbits(reg_base + AHCI_PHYCS0R,
--			 (0x7 << 24),
--			 (0x5 << 24) | BIT(23) | BIT(18));
--	sunxi_clrsetbits(reg_base + AHCI_PHYCS1R,
--			 (0x3 << 16) | (0x1f << 8) | (0x3 << 6),
--			 (0x2 << 16) | (0x6 << 8) | (0x2 << 6));
--	sunxi_setbits(reg_base + AHCI_PHYCS1R, BIT(28) | BIT(15));
--	sunxi_clrbits(reg_base + AHCI_PHYCS1R, BIT(19));
--	sunxi_clrsetbits(reg_base + AHCI_PHYCS0R,
--			 (0x7 << 20), (0x3 << 20));
--	sunxi_clrsetbits(reg_base + AHCI_PHYCS2R,
--			 (0x1f << 5), (0x19 << 5));
--	msleep(5);
--
--	sunxi_setbits(reg_base + AHCI_PHYCS0R, (0x1 << 19));
--
--	timeout = 250; /* Power up takes aprox 50 us */
--	do {
--		reg_val = sunxi_getbits(reg_base + AHCI_PHYCS0R, 0x7, 28);
--		if (reg_val == 0x02)
--			break;
--
--		if (--timeout == 0) {
--			dev_err(dev, "PHY power up failed.\n");
--			return -EIO;
--		}
--		udelay(1);
--	} while (1);
--
--	sunxi_setbits(reg_base + AHCI_PHYCS2R, (0x1 << 24));
--
--	timeout = 100; /* Calibration takes aprox 10 us */
--	do {
--		reg_val = sunxi_getbits(reg_base + AHCI_PHYCS2R, 0x1, 24);
--		if (reg_val == 0x00)
--			break;
--
--		if (--timeout == 0) {
--			dev_err(dev, "PHY calibration failed.\n");
--			return -EIO;
--		}
--		udelay(1);
--	} while (1);
--
--	msleep(15);
--
--	writel(0x7, reg_base + AHCI_RWCR);
--
--	return 0;
--}
--
- static void ahci_sunxi_start_engine(struct ata_port *ap)
- {
- 	void __iomem *port_mmio = ahci_port_base(ap);
-@@ -186,7 +102,6 @@ static struct scsi_host_template ahci_platform_sht = {
+@@ -1224,9 +1228,6 @@ void __init early_init_dt_scan_nodes(void)
+ 	/* Retrieve various information from the /chosen node */
+ 	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
  
- static int ahci_sunxi_probe(struct platform_device *pdev)
- {
--	struct device *dev = &pdev->dev;
- 	struct ahci_host_priv *hpriv;
- 	int rc;
- 
-@@ -200,10 +115,6 @@ static int ahci_sunxi_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
--	rc = ahci_sunxi_phy_init(dev, hpriv->mmio);
--	if (rc)
--		goto disable_resources;
+-	/* Initialize {size,address}-cells info */
+-	of_scan_flat_dt(early_init_dt_scan_root, NULL);
 -
- 	hpriv->flags = AHCI_HFLAG_32BIT_ONLY | AHCI_HFLAG_NO_MSI |
- 		       AHCI_HFLAG_YES_NCQ;
- 
-@@ -238,10 +149,6 @@ static int ahci_sunxi_resume(struct device *dev)
- 	if (rc)
- 		return rc;
- 
--	rc = ahci_sunxi_phy_init(dev, hpriv->mmio);
--	if (rc)
--		goto disable_resources;
--
- 	rc = ahci_platform_resume_host(dev);
- 	if (rc)
- 		goto disable_resources;
+ 	/* Setup memory, calling early_init_dt_add_memory_arch */
+ 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+ }
 -- 
-2.16.4
+2.17.1
