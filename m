@@ -1,53 +1,47 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v8 0/5] Support for Qualcomm UFS QMP PHY on SDM845
-Date: Thu, 30 Aug 2018 16:14:22 +0530
-Message-ID: <CAFp+6iGDvt9UX8y7HCwC+QdTdyCLxuj5pNWbbttJAHGEPW+tyw@mail.gmail.com>
-References: <20180731100914.19856-1-cang@codeaurora.org> <20180830061604.GM2523@minitux>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [andriy.shevchenko@linux.intel.com: Re: [PATCH] spi: dw-mmio:
+ add MSCC Jaguar2 support]
+Date: Thu, 30 Aug 2018 11:50:41 +0100
+Message-ID: <20180830105041.GA7301@sirena.org.uk>
+References: <20180829150955.GB7459@smile.fi.intel.com>
+ <20180829151501.GE27808@sirena.org.uk>
+ <20180829180242.GH16561@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830061604.GM2523@minitux>
+Content-Disposition: inline
+In-Reply-To: <20180829180242.GH16561@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Can Guo <cang@codeaurora.org>, Subhash Jadavani <subhashj@codeaurora.org>, asutoshd@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2018 at 11:46 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Tue 31 Jul 03:09 PDT 2018, Can Guo wrote:
->
-> > This patch series adds support for UFS QMP PHY on SDM845 and the
-> > compatible string for it. This patch series depends on the current
-> > proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
-> > the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
-> > rebased on updated pipe_clk initialization sequence [3]. This series
-> > can only be merged once the dependent patches do.
-> > [1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
-> > [2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
-> > [3] https://patchwork.kernel.org/patch/10376551/
-> >
->
-> Hi Can,
->
-> We still have the issue that the older non-QMP phy driver takes a direct
-> call to ufs_qcom_phy_set_tx_lane_enable(), which means that pointing
-> UFSHCD to this phy implementation results in a kernel panic.
 
-Hi Bjorn,
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I have a series that removes couple of these function calls -
-ufs_qcom_phy_set_tx_lane_enable(), and
-ufs_qcom_phy_save_controller_version() from ufs-qcom, and
-make phy-qcom-ufs-qmp-20nm as broken.
-I can post it out if that sounds okay.
+On Wed, Aug 29, 2018 at 08:02:42PM +0200, Alexandre Belloni wrote:
 
-Best regards
-Vivek
+> Do you want me to send a new version or a patch that you could squash in
+> the second one?
 
-[snip]
+A followup would be best given that I applied it.
 
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluHy/4ACgkQJNaLcl1U
+h9BDEQf/Sg5eEdY++mdA1LKs0fAgW/QtDv2RvWwMtbwcBEUO2wuNeq7VyAANVOuD
+Z6J92qS8/gES01pxny06K9pzGwwTPQMcM05BIqUFQb2GZ9drOxWtt36+WpXzJS0k
+8fhVQaaeXzP97fEMwYklCGaeLhAa/+oCLt9P7AQl4v38wqQGYkIuLejUm5ThSjjp
+I+mIecxcauO4heYwy7b5ScN2W43oEQjHgLOzH7i6iEsuVYFcn3AtjUZjcqEfODzY
+T2ceA91nFvVBsXY+FXOH7TgYILAzwY0jLsPXgj1pTCflHiAL9+k+1214qUv0zmEi
+y0deOslRpejH2Ezvg7n4oDf1zVePGw==
+=USG2
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
