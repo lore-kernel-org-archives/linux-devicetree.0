@@ -1,33 +1,66 @@
-From: Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v4 00/13] ata: ahci_platform: support allwinner R40 AHCI
-Date: Thu, 30 Aug 2018 14:31:34 -0600
-Message-ID: <f5838eae-fa6c-8699-14a4-95d0daa8a960@kernel.dk>
-References: <20180830190120.722-1-clabbe.montjoie@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 0/7] ARM32/64: DT overlay build support
+Date: Thu, 30 Aug 2018 13:32:28 -0700
+Message-ID: <a137359f-f836-c8eb-61b4-9d1d4907ad93@gmail.com>
+References: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
+ <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
+ <183d979a-3849-7199-417f-3572b00dca5b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830190120.722-1-clabbe.montjoie@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <183d979a-3849-7199-417f-3572b00dca5b@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>, hdegoede@redhat.com, kishon@ti.com, mark.rutland@arm.com, maxime.ripard@bootlin.com, robh+dt@kernel.org, wens@csie.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/30/18 1:01 PM, Corentin Labbe wrote:
-> Hello
-> 
-> This patchset add support for allwinner R40 AHCI controller.
-> 
-> The whole patchset is tested on sun8i-r40-bananapi-m2-ultra and
-> on sun7i-a20-cubieboard2 which doesnt have any of the ressources added
-> by this serie, so no regression should come with it.
-> 
-> The last patch(ata: ahci_sunxi: remove PHY code) should not be merged,
-> but will be resent for inclustion when all patchs will have hit linus
-> tree.
-
-Applied 1-12 with Hans's blessing, thanks Corentin.
-
--- 
-Jens Axboe
+SGkgVGVybywKCihSZWFsbHkgYWRkaW5nIE1hcmsgYXMgYSBjYzogdGhpcyB0aW1lLiAgTGFzdCB0
+aW1lIEkgYWRkZWQgaGltIGFzCmEgYmNjOiBieSBtaXN0YWtlLikKCgpPbiAwOC8zMC8xOCAxMDox
+MiwgVGVybyBLcmlzdG8gd3JvdGU6Cj4gT24gMjkvMDgvMTggMjE6NDAsIEZyYW5rIFJvd2FuZCB3
+cm90ZToKPj4gKyBNYXJrIFJ1dGxhbmQsIGp1c3QgaW4gY2FzZSBoZSBpcyBpbnRlcmVzdGVkCj4+
+Cj4+IE9uIDA4LzI4LzE4IDA1OjMyLCBUZXJvIEtyaXN0byB3cm90ZToKPj4+IEhpLAo+Pj4KPj4+
+IFRoaXMgc2VyaWVzIGludHJvZHVjZXMgZGV2aWNldHJlZSBvdmVybGF5IGJ1aWxkaW5nIHN1cHBv
+cnQgZm9yIEFSTQo+Pj4gcGxhdGZvcm1zLiBUaGUgLmR0Ym8gdGFyZ2V0IGlzIGludHJvZHVjZWQg
+Z2xvYmFsbHksIHRoZW4gbWFrZWZpbGUKPj4+IGNoYW5nZXMgZm9yIGJvdGggYXJtMzIvNjQgZm9y
+IHN1cHBvcnRpbmcgdGhlIC5kdGJvIHRhcmdldCwgY2hhbmdlcwo+Pj4gdG8gc3VwcG9ydCBzdWIt
+ZGlyIG1ha2VmaWxlIGZsYWdzLCBhbmQgZmluYWxseSBhZGRpbmcgdGhlIERUQyBmbGFncwo+Pj4g
+b3ZlcnJpZGUgZm9yIFRJIHBsYXRmb3JtcywgYXMgdGhhdCBpcyB3aGVyZSB3ZSB3YW50IHRvIGlu
+dHJvZHVjZQo+Pj4gdGhlIERUIG92ZXJsYXkgc3VwcG9ydCBpbml0aWFsbHkuCj4+Pgo+Pj4gVGhl
+IEFSTSBtYWtlZmlsZSBjaGFuZ2VzIGZvciBzdXBwb3J0aW5nIERUUyBzdWItbWFrZWZpbGVzIGRv
+bid0IGxvb2sKPj4+IHRvbyBjbGVhbiwgYnV0IHRoYXQgd2FzIHRoZSBvbmx5IHdheSBJIGNvdWxk
+IGZpZ3VyZSBvdXQgaG93IHRvCj4+PiBnZXQgaXQgZG9uZS4KPj4+Cj4+PiAtVGVybwo+Pj4KPj4+
+IC0tIAo+Pj4KPj4KPj4gVGhpcyBzZXJpZXMgZG9lcyB0aHJlZSB1bnJlbGF0ZWQgdGhpbmdzOgo+
+IAo+IFdlbGwsIEkgd2FzIGtpbmQgb2YgdHJ5aW5nIHRvIHNob3cgdGhlIHdob2xlIHNvbHV0aW9u
+IGhlcmUgYnV0Li4uCgpUaGF0IGFjdHVhbGx5IG1ha2VzIHNlbnNlLCBhbmQgbm9ybWFsbHkgSSB3
+b3VsZG4ndCBoYXZlIGFza2VkIGZvciB0aGUKc3BsaXQuICBJdCBtaWdodCBiZSB0aGUgY2FzZSB0
+aGF0IEkgYW0gYmVpbmcgdG9vIGNhdXRpb3VzLCBhbmQgbWF5YmUKdGhlcmUgd29uJ3QgYmUgbXVj
+aCBkaXNjdXNzaW9uIGF0IGFsbC4gIEkgd2FzIGp1c3QgY29uY2VybmVkIHRoYXQgaW4KdGhpcyBj
+YXNlIHNvbWUgb2YgdGhlIGNvbmNlcHRzIG1pZ2h0IGdldCBvdmVybG9va2VkIGR1ZSB0byBkaXNj
+dXNzaW9uCm9mIG90aGVyIGNvbmNlcHRzLiAgSSdtIGFsc28gZXhwZWN0aW5nIGRpZmZlcmVudCBw
+ZW9wbGUgdG8gY2FyZQphYm91dCBlYWNoIG9mIHRoZSBjb25jZXB0cy4KCj4gCj4+ICgxKSBjcmVh
+dGUgYSB0aSBzcGVjaWZpYyBkdHMgc3ViZGlyZWN0b3J5IGFyY2gvYXJtL2Jvb3QvZHRzL3RpLwo+
+Pgo+PiAoMikgY3JlYXRlIGEgcnVsZSBmb3IgY3JlYXRpbmcgYSAuZHRibyBmcm9tIGEgLmR0c28K
+Pj4KPj4gKDMpIGFkZCBhIGR0YyBjb21waWxlIGZsYWcgdG8gYWRkIHBoYW5kbGUgc3ltYm9sIGlu
+Zm9ybWF0aW9uIHRvCj4+IMKgwqDCoMKgIGFsbCAuZHRiIGZpbGVzIGNyZWF0ZWQgZnJvbSBhcmNo
+L2FybS9ib290L2R0cy90aS8gYW5kCj4+IMKgwqDCoMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkv
+Cj4+Cj4+IFBsZWFzZSBzcGxpdCB0aGUgcGF0Y2hlcyBpbnRvIHRocmVlIGluZGVwZW5kZW50IHNl
+cmllcyBzbyB0aGF0Cj4+IGVhY2ggb2YgdGhlIHRocmVlIGNvbmNlcHRzIGNhbiBiZSBkaXNjdXNz
+ZWQgc2VwYXJhdGVseS4gCj4gCj4gT2sgd2lsbCBkbyB0aGF0LCBob3BlZnVsbHkgdG9tb3Jyb3cu
+IERpZG4ndCBtYW5hZ2UgdG8gc3F1ZWV6ZSBpbiB0aW1lIHRvIGRvIGl0IHRvZGF5LgoKVGhhbmtz
+LCBJIGFwcHJlY2lhdGUgeW91ciBmbGV4aWJpbGl0eS4KCi1GcmFuawoKPiAKPiAtVGVybwo+IC0t
+IAo+IFRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgw
+IEhlbHNpbmtpLiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0Rv
+bWljaWxlOiBIZWxzaW5raQo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
