@@ -1,68 +1,98 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2] ARM: tegra: tegra20: Fix mixed tabs-spaces indentation
-Date: Thu, 30 Aug 2018 19:21:53 +0200
-Message-ID: <20180830172153.20653-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Krzysztof Kozlowski <krzk@kernel.org>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH 3/5] drivers: clk-qoriq: Add clockgen support for lx2160a
+Date: Thu, 30 Aug 2018 12:39:44 -0500
+Message-ID: <d2cfd49eb33a3ce74f0e78f2b53d3954d2cb3e76.camel@buserror.net>
+References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
+ <1534747636-20064-4-git-send-email-vabhav.sharma@nxp.com>
+ <4a9ea6b451683ec98c92e86a5ae6b91213a6afcf.camel@buserror.net>
+ <VI1PR04MB4800E8B1E8541FCA9221A1CFF3080@VI1PR04MB4800.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB4800E8B1E8541FCA9221A1CFF3080@VI1PR04MB4800.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vabhav Sharma <vabhav.sharma@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, gregkh@lin
+Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Andy Tang <andy.tang@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Varun Sethi <V.Sethi@nxp.com>, Udit Kumar <udit.kumar@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix indentation and alignment when spaces were used instead of tabs.
-This fixes checkpatch errors like:
+On Thu, 2018-08-30 at 07:36 +0000, Vabhav Sharma wrote:
+> > -----Original Message-----
+> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> > owner@vger.kernel.org> On Behalf Of Scott Wood
+> > Sent: Wednesday, August 29, 2018 5:49 AM
+> > To: Vabhav Sharma <vabhav.sharma@nxp.com>; linux-
+> > kernel@vger.kernel.org; devicetree@vger.kernel.org; robh+dt@kernel.org;
+> > mark.rutland@arm.com; linuxppc-dev@lists.ozlabs.org; linux-arm-
+> > kernel@lists.infradead.org; mturquette@baylibre.com; sboyd@kernel.org;
+> > rjw@rjwysocki.net; viresh.kumar@linaro.org; linux-clk@vger.kernel.org;
+> > linux-pm@vger.kernel.org; linux-kernel-owner@vger.kernel.org;
+> > catalin.marinas@arm.com; will.deacon@arm.com;
+> > gregkh@linuxfoundation.org; arnd@arndb.de;
+> > kstewart@linuxfoundation.org; yamada.masahiro@socionext.com
+> > Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>; Andy Tang
+> > <andy.tang@nxp.com>; Udit Kumar <udit.kumar@nxp.com>;
+> > linux@armlinux.org.uk; Varun Sethi <V.Sethi@nxp.com>
+> > Subject: Re: [PATCH 3/5] drivers: clk-qoriq: Add clockgen support for
+> > lx2160a
+> > 
+> > On Mon, 2018-08-20 at 12:17 +0530, Vabhav Sharma wrote:
+> > > From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> > > 
+> > > Add clockgen support for lx2160a.
+> > > Added entry for compat 'fsl,lx2160a-clockgen'.
+> > > As LX2160A is 16 core, so modified value for NUM_CMUX
+> > > 
+> > > Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+> > > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> > > Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> > > ---
+> > >  drivers/clk/clk-qoriq.c         | 14 +++++++++++++-
+> > >  drivers/cpufreq/qoriq-cpufreq.c |  1 +
+> > >  2 files changed, 14 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c index
+> > > 3a1812f..fc6e308 100644
+> > > --- a/drivers/clk/clk-qoriq.c
+> > > +++ b/drivers/clk/clk-qoriq.c
+> > > @@ -60,7 +60,7 @@ struct clockgen_muxinfo {  };
+> > > 
+> > >  #define NUM_HWACCEL	5
+> > > -#define NUM_CMUX	8
+> > > +#define NUM_CMUX	16
+> > > 
+> > >  struct clockgen;
+> > > 
+> > > @@ -570,6 +570,17 @@ static const struct clockgen_chipinfo chipinfo[] =
+> > > {
+> > >  		.flags = CG_VER3 | CG_LITTLE_ENDIAN,
+> > >  	},
+> > >  	{
+> > > +		.compat = "fsl,lx2160a-clockgen",
+> > > +		.cmux_groups = {
+> > > +			&clockgen2_cmux_cga12, &clockgen2_cmux_cgb
+> > > +		},
+> > > +		.cmux_to_group = {
+> > > +			0, 0, 0, 0, 1, 1, 1, 1, -1
+> > > +		},
+> > > +		.pll_mask = 0x37,
+> > > +		.flags = CG_VER3 | CG_LITTLE_ENDIAN,
+> > > +	},
+> > 
+> > Why are you increasing NUM_CMUX beyond 8 for a chip that only has 8
+> > entries in cmux_to_group?
+> 
+> Configuration is 16 cores,8 cluster with 2 cores in each cluster
 
-    ERROR: code indent should use tabs where possible
-    #306: FILE: arch/arm/boot/dts/tegra20-paz00.dts:306:
-    +^I^I         <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;$
+So?  This is about cmuxes, not cores.  You're increasing the array without
+ever using the new size.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
----
-
-Changes since v1:
-1. Add Marcel's ack.
----
- arch/arm/boot/dts/tegra20-colibri.dtsi | 2 +-
- arch/arm/boot/dts/tegra20-paz00.dts    | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra20-colibri.dtsi b/arch/arm/boot/dts/tegra20-colibri.dtsi
-index e7b9ab09908a..fa1af2dc276c 100644
---- a/arch/arm/boot/dts/tegra20-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra20-colibri.dtsi
-@@ -541,7 +541,7 @@
- 
- 	sound {
- 		compatible = "nvidia,tegra-audio-wm9712-colibri_t20",
--			         "nvidia,tegra-audio-wm9712";
-+			     "nvidia,tegra-audio-wm9712";
- 		nvidia,model = "Colibri T20 AC97 Audio";
- 
- 		nvidia,audio-routing =
-diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
-index ef245291924f..7d8aef6ebd3a 100644
---- a/arch/arm/boot/dts/tegra20-paz00.dts
-+++ b/arch/arm/boot/dts/tegra20-paz00.dts
-@@ -303,7 +303,7 @@
- 		request-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
- 		slave-addr = <138>;
- 		clocks = <&tegra_car TEGRA20_CLK_I2C3>,
--		         <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;
-+			 <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;
- 		clock-names = "div-clk", "fast-clk";
- 		resets = <&tegra_car 67>;
- 		reset-names = "i2c";
-@@ -599,8 +599,8 @@
- 			GPIO_ACTIVE_HIGH>;
- 
- 		clocks = <&tegra_car TEGRA20_CLK_PLL_A>,
--		         <&tegra_car TEGRA20_CLK_PLL_A_OUT0>,
--		         <&tegra_car TEGRA20_CLK_CDEV1>;
-+			 <&tegra_car TEGRA20_CLK_PLL_A_OUT0>,
-+			 <&tegra_car TEGRA20_CLK_CDEV1>;
- 		clock-names = "pll_a", "pll_a_out0", "mclk";
- 	};
- };
--- 
-2.14.1
+-Scott
