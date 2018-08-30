@@ -1,74 +1,36 @@
-From: Philipp Rossak <embed3d@gmail.com>
-Subject: [PATCH v3 30/30] ARM: sun8i: a83t: full range OPP tables and CPUfreq
-Date: Thu, 30 Aug 2018 17:45:18 +0200
-Message-ID: <20180830154518.29507-31-embed3d@gmail.com>
-References: <20180830154518.29507-1-embed3d@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/9] of: add helper to lookup compatible child node
+Date: Thu, 30 Aug 2018 10:51:09 -0500
+Message-ID: <CAL_JsqLv8MBpFsictS9Ldm2y7L-v7RiSVJHFTNHSixFhzppaPA@mail.gmail.com>
+References: <20180827082153.22537-1-johan@kernel.org> <20180827082153.22537-2-johan@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830154518.29507-1-embed3d@gmail.com>
+In-Reply-To: <20180827082153.22537-2-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, linux@armlinux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, eugen.hristev@microchip.com, rdunlap@infradead.org, vilhelm.gray@gmail.com, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, geert+renesas@glider.be, lukas@wunner.de, icenowy@aosc.io, arnd@arndb.de, broonie@kernel.org, arnaud.pouliquen@st.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Since we have now thermal trotteling enabeled we can now add the full
-range of the OPP table.
+On Mon, Aug 27, 2018 at 3:22 AM Johan Hovold <johan@kernel.org> wrote:
+>
+> Add of_get_compatible_child() helper that can be used to lookup
+> compatible child nodes.
+>
+> Several drivers currently use of_find_compatible_node() to lookup child
+> nodes while failing to notice that the of_find_ functions search the
+> entire tree depth-first (from a given start node) and therefore can
+> match unrelated nodes. The fact that these functions also drop a
+> reference to the node they start searching from (e.g. the parent node)
+> is typically also overlooked, something which can lead to use-after-free
+> bugs.
+>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> ---
+>  drivers/of/base.c  | 25 +++++++++++++++++++++++++
+>  include/linux/of.h |  8 ++++++++
+>  2 files changed, 33 insertions(+)
 
-The operating points were found in Allwinner BSP and fex files.
+I've applied this one and plan to send to Linus tomorrow.
 
-Signed-off-by: Philipp Rossak <embed3d@gmail.com>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 78aa448e869f..ddcf404f9c80 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -250,6 +250,22 @@
- 			opp-microvolt = <840000>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
-+
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <920000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1800000000 { /* BOOT FREQ */
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <1000000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-2016000000 {
-+			opp-hz = /bits/ 64 <2016000000>;
-+			opp-microvolt = <1080000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
- 	};
- 
- 	cpu1_opp_table: opp_table1 {
-@@ -303,6 +319,22 @@
- 			opp-microvolt = <840000>;
- 			clock-latency-ns = <244144>; /* 8 32k periods */
- 		};
-+
-+		opp-1608000000 {
-+			opp-hz = /bits/ 64 <1608000000>;
-+			opp-microvolt = <920000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-1800000000 { /* BOOT FREQ */
-+			opp-hz = /bits/ 64 <1800000000>;
-+			opp-microvolt = <1000000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
-+		opp-2016000000 {
-+			opp-hz = /bits/ 64 <2016000000>;
-+			opp-microvolt = <1080000>;
-+			clock-latency-ns = <244144>; /* 8 32k periods */
-+		};
- 	};
- 
- 	soc {
--- 
-2.11.0
+Rob
