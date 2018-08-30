@@ -1,52 +1,86 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys GPIO via CREG
- bindings
-Date: Thu, 30 Aug 2018 18:16:06 +0000
-Message-ID: <1535652965.4465.84.camel@synopsys.com>
-References: <20180828112721.28178-1-Eugeniy.Paltsev@synopsys.com>
-         <20180828112721.28178-3-Eugeniy.Paltsev@synopsys.com>
-         <CACRpkdbQryY-R+14GvYAEkLH+7Tr4Pvb6YohWouTwug7qEGbDA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] of: add node name compare helper functions
+Date: Thu, 30 Aug 2018 13:52:16 -0500
+Message-ID: <20180830185216.20054-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbQryY-R+14GvYAEkLH+7Tr4Pvb6YohWouTwug7qEGbDA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <9B9760F1D93627448C72AA0FD8165E0F@internal.synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE4LTA4LTMwIGF0IDEwOjQzICswMjAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
-PiBPbiBUdWUsIEF1ZyAyOCwgMjAxOCBhdCAxOjI3IFBNIEV1Z2VuaXkgUGFsdHNldg0KPiA8RXVn
-ZW5peS5QYWx0c2V2QHN5bm9wc3lzLmNvbT4gd3JvdGU6DQo+IA0KPiA+ICsrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL3NucHMsY3JlZy1ncGlvLnR4dA0KPiA+IEBA
-IC0wLDAgKzEsNDkgQEANCj4gPiArR1BJTyB2aWEgQ1JFRyAoQ29udHJvbCBSRUdpc2VycykgZHJp
-dmVyDQpbc25pcF0NCg0KPiA+ICstIHNucHMsbmdwaW9zOiBOdW1iZXIgb2YgR1BJTyBwaW5zLg0K
-PiANCj4gVXNlIHRoZSBleGlzdGluZyBuZ3Bpb3MgYXR0cmlidXRlIGZvciB0aGlzLCBzZWUgZ3Bp
-by50eHQNCg0KT2sNCg0KPiA+ICstIHNucHMsYml0LXBlci1saW5lOiBOdW1iZXIgb2YgYml0cyBw
-ZXIgZWFjaCBncGlvIGxpbmUgKHNlZSBwaWN0dXJlKS4NCj4gPiArICBBcnJheSB0aGUgc2l6ZSBv
-ZiAic25wcyxuZ3Bpb3MiDQo+ID4gKy0gc25wcyxzaGlmdDogU2hpZnQgKGluIGJpdHMpIG9mIHRo
-ZSBlYWNoIEdQSU8gZmllbGQgZnJvbSB0aGUgcHJldmlvdXMgb25lIGluDQo+ID4gKyAgcmVnaXN0
-ZXIgKHNlZSBwaWN0dXJlKS4gQXJyYXkgdGhlIHNpemUgb2YgInNucHMsbmdwaW9zIg0KPiA+ICst
-IHNucHMsb24tdmFsOiBWYWx1ZSBzaG91bGQgYmUgc2V0IGluIGNvcnJlc3BvbmRpbmcgZmllbGQg
-dG8gc2V0DQo+ID4gKyAgb3V0cHV0IHRvICIxIiAoc2VlIHBpY3R1cmUpLiBBcnJheSB0aGUgc2l6
-ZSBvZiAic25wcyxuZ3Bpb3MiDQo+ID4gKy0gc25wcyxvZmYtdmFsOiBWYWx1ZSBzaG91bGQgYmUg
-c2V0IGluIGNvcnJlc3BvbmRpbmcgZmllbGQgdG8gc2V0DQo+ID4gKyAgb3V0cHV0IHRvICIwIiAo
-c2VlIHBpY3R1cmUpLiBBcnJheSB0aGUgc2l6ZSBvZiAic25wcyxuZ3Bpb3MiDQo+IA0KPiBNb3Zl
-IHRoaXMgaW50byBhIGxvb2t1cCB0YWJsZSBpbiB0aGUgZHJpdmVyIGluc3RlYWQsIGFuZCBtYXRj
-aA0KPiB0aGUgbG9va3VwIHRhYmxlIHRvIHRoZSBjb21wYXRpYmxlIHN0cmluZy4gVGhlIGZvcm1h
-dCBvZiB0aGUNCj4gcmVnaXN0ZXIgaXMga25vd24gZm9yIGEgY2VydGFpbiBjb21wYXRpYmxlLCBy
-aWdodD8NCg0KQWN0dWFsbHkgSSByZWFsbHkgZG9uJ3Qgd2FudCB0byBoYXJkY29kZSB0aGlzIHZh
-bHVlcyBpbnRvIGxvb2t1cCB0YWJsZSBhcyBJIGdvaW5nIHRvIHVzZQ0KdGhpcyBkcml2ZXIgb24g
-MyBhbHJlYWR5IHVwc3RyZWFtZWQgcGxhdGZvcm1zIGFuZCBhdCBsZWFzdCBvbmUgdXBjb21pbmcu
-DQoNClRoZXkgYWxsIGhhdmUgc3VjaCBDUkVHIHBzZXVkby0nR1BJT3MnIGRpZmZlcmVudGx5IG1h
-cHBlZCB3aXRoIGRpZmZlcmVudCBJTyBsaW5lcyBudW1iZXIsDQpkaWZmZXJlbnQgZW5hYmxlL2Rp
-c2FibGUgdmFsdWUsIGV0Yy4uLg0KDQpJcyBpdCByZWFsbHkgYSBwcm9ibGVtIHRvIGhhdmUgdGhp
-cyB2YWx1ZXMgY29uZmlndXJlZCB2aWEgZGV2aWNlIHRyZWU/DQpJZiB3ZSByZWFkIHRoZW0gZnJv
-bSBEVCB3ZSBhcmUgYWJsZSB0byB1c2UgdGhpcyBnZW5lcmljIGFuZCBjb25maWd1cmFibGUgZHJp
-dmVyIHRvIGhhbmRsZQ0KYm90aCBleGlzdGluZyBhbmQgdXBjb21pbmcgcGxhdGZvcm1zIHdpdGhv
-dXQgdGhlIG5lZWQgb2YgcGF0Y2hpbmcgdGhlIGRyaXZlciBvbiBldmVyeSBuZXcNCnBsYXRmb3Jt
-IHVwc3RyZWFtaW5nLg0KDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KLS0gDQogRXVn
-ZW5peSBQYWx0c2V2
+In preparation to remove device_node.name pointer, add helper functions
+for node name comparisons which are a common pattern throughout the kernel.
+
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/of/base.c  | 22 ++++++++++++++++++++++
+ include/linux/of.h | 13 +++++++++++++
+ 2 files changed, 35 insertions(+)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 466e3c8582f0..185bfe077d0a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -54,6 +54,28 @@ DEFINE_MUTEX(of_mutex);
+  */
+ DEFINE_RAW_SPINLOCK(devtree_lock);
+ 
++bool of_node_name_eq(const struct device_node *np, const char *name)
++{
++	const char *node_name;
++	size_t len;
++
++	if (!np)
++		return false;
++
++	node_name = kbasename(np->full_name);
++	len = strchrnul(node_name, '@') - node_name;
++
++	return (strlen(name) == len) && (strncmp(node_name, name, len) == 0);
++}
++
++bool of_node_name_prefix(const struct device_node *np, const char *prefix)
++{
++	if (!np)
++		return false;
++
++	return strncmp(kbasename(np->full_name), prefix, strlen(prefix)) == 0;
++}
++
+ int of_n_addr_cells(struct device_node *np)
+ {
+ 	u32 cells;
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4d25e4f952d9..a40f63a36afa 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -256,6 +256,9 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
+ #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
+ 
++extern bool of_node_name_eq(const struct device_node *np, const char *name);
++extern bool of_node_name_prefix(const struct device_node *np, const char *prefix);
++
+ static inline const char *of_node_full_name(const struct device_node *np)
+ {
+ 	return np ? np->full_name : "<no-node>";
+@@ -561,6 +564,16 @@ static inline struct device_node *to_of_node(const struct fwnode_handle *fwnode)
+ 	return NULL;
+ }
+ 
++static inline bool of_node_name_eq(const struct device_node *np, const char *name)
++{
++	return false;
++}
++
++static inline bool of_node_name_prefix(const struct device_node *np, const char *prefix)
++{
++	return false;
++}
++
+ static inline const char* of_node_full_name(const struct device_node *np)
+ {
+ 	return "<no-node>";
+-- 
+2.17.1
