@@ -1,79 +1,81 @@
-From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v3 09/30] iio: adc: Threat A33 as thermal
- sensor and remove non thermal sun4i channel
-Date: Thu, 30 Aug 2018 18:40:17 +0200
-Message-ID: <20180830164017.n7rcxcy2jj4mijpr@core>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-10-embed3d@gmail.com>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: net: cpsw: Document cpsw-phy-sel usage
+ but prefer phandle
+Date: Thu, 30 Aug 2018 12:04:49 -0500
+Message-ID: <69161960-259c-6911-67b5-546ccb433165@ti.com>
+References: <20180829150024.43210-1-tony@atomide.com>
+ <90e0f25f-45f5-b2c0-59d9-cdf25eb06c0c@ti.com>
+ <20180830004745.GU7523@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBB453UDOAKGQEFHZPMWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180830154518.29507-10-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180830004745.GU7523@atomide.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2018 at 05:44:57PM +0200, Philipp Rossak wrote:
-> We want to use this driver mostly as thermal sensor, that still supports
-> the adc for the older chips, thus we threat the A33 as thermal sensor.
-> We also remove the adc channel without thermal support.
 
-Threat -> treat (in the title and in the message body too)
 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 19 -------------------
->  1 file changed, 19 deletions(-)
+On 08/29/2018 07:47 PM, Tony Lindgren wrote:
+> * Grygorii Strashko <grygorii.strashko@ti.com> [180830 00:12]:
+>> Hi Tony,
+>>
+>> On 08/29/2018 10:00 AM, Tony Lindgren wrote:
+>>> The current cpsw usage for cpsw-phy-sel is undocumented but is used for
+>>> all the boards using cpsw. And cpsw-phy-sel is not really a child of
+>>> the cpsw device, it lives in the system control module instead.
+>>>
+>>> Let's document the existing usage, and improve it a bit where we prefer
+>>> to use a phandle instead of a child device for it. That way we can
+>>> properly describe the hardware in dts files for things like genpd.
+>>
+>> I'm ok with this series, but I really don't like cpsw-phy-sel in general.
 > 
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index ab474ce86fb6..658a7e3e3370 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -123,23 +123,6 @@ static const struct iio_chan_spec sun4i_gpadc_channels[] = {
->  	},
->  };
->  
-> -static const struct iio_chan_spec sun4i_gpadc_channels_no_temp[] = {
-> -	SUN4I_GPADC_ADC_CHANNEL(0, "adc_chan0"),
-> -	SUN4I_GPADC_ADC_CHANNEL(1, "adc_chan1"),
-> -	SUN4I_GPADC_ADC_CHANNEL(2, "adc_chan2"),
-> -	SUN4I_GPADC_ADC_CHANNEL(3, "adc_chan3"),
-> -};
-> -
-> -static const struct iio_chan_spec sun8i_a33_gpadc_channels[] = {
-> -	{
-> -		.type = IIO_TEMP,
-> -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> -				      BIT(IIO_CHAN_INFO_SCALE) |
-> -				      BIT(IIO_CHAN_INFO_OFFSET),
-> -		.datasheet_name = "temp_adc",
-> -	},
-> -};
-> -
->  static const struct regmap_config sun4i_gpadc_regmap_config = {
->  	.reg_bits = 32,
->  	.val_bits = 32,
-> @@ -444,8 +427,6 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
->  		return -ENODEV;
->  
->  	info->no_irq = true;
-> -	indio_dev->num_channels = ARRAY_SIZE(sun8i_a33_gpadc_channels);
-> -	indio_dev->channels = sun8i_a33_gpadc_channels;
->  
->  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	base = devm_ioremap_resource(&pdev->dev, mem);
-> -- 
-> 2.11.0
+> Yeah this binding predates any standards. This series
+> only fixes the nasty issue of cpsw claiming a module as a
+> child that's outside it's IO range.
 > 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+>> It was introduced long time back and now I'm thinking about possibility to replace it with
+>> one of current generic interfaces - for example mux-controller.
+>> Each port will control up to 3 muxes (port mode, idmode and rmii_ext_clk) and
+>> transform phy-mode => mux states.
+>> What do you think?
+> 
+> Sure a mux-controller here makes sense.
+> 
+>> Another option is to use phy, but it'd be complicated.
+> 
+> For the port muxes, how about a phy driver just using
+> a pinctrl driver?
+> 
+> In general, it seems cpsw is just an interconnect instance
+> (L4_FAST) with a control module (CPSW_WR) and a pile of
+> independent other modules. That's described nicely in
+> am437x TRM chapter "2.1.4 L4 Fast Peripheral Memory Map".
+> So from that point of view the binding reg entries right
+> now are all wrong :)
+
+TRM not consistent - for am5 it's one MMIO region.
+
+> 
+> In the long run cpsw should be really treated as an
+> interconnect instance with it's control module providing
+> standard Linux framework services such as clock /
+> regulator / phy / pinctrl / iio whatever for the other
+> modules.
+> 
+> Just my 2c based on looking at the interconnect, I'm
+> not too familiar with cpsw otherwise.
+
+It's not separate modules. this is composite module which have only one 
+fck/ick and most of blocks can't even function without each other.
+Above might be the case for Keystone 2, but not omap CPSW.
+Keystone 2 - has packet processor, security accelerator, queue manager 
+in addition to its basic switch block.
+
+-- 
+regards,
+-grygorii
