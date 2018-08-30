@@ -1,16 +1,16 @@
 From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH v3 30/30] ARM: sun8i: a83t: full range OPP
- tables and CPUfreq
-Date: Thu, 30 Aug 2018 18:38:33 +0200
-Message-ID: <20180830163833.v7zvmaz2vsxvzhur@core>
+Subject: Re: [PATCH v3 09/30] iio: adc: Threat A33 as thermal
+ sensor and remove non thermal sun4i channel
+Date: Thu, 30 Aug 2018 18:40:17 +0200
+Message-ID: <20180830164017.n7rcxcy2jj4mijpr@core>
 References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-31-embed3d@gmail.com>
+ <20180830154518.29507-10-embed3d@gmail.com>
 Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBC53UDOAKGQEGTEKUBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB453UDOAKGQEFHZPMWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180830154518.29507-31-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20180830154518.29507-10-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,81 +21,55 @@ To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Aug 30, 2018 at 05:44:57PM +0200, Philipp Rossak wrote:
+> We want to use this driver mostly as thermal sensor, that still supports
+> the adc for the older chips, thus we threat the A33 as thermal sensor.
+> We also remove the adc channel without thermal support.
 
-On Thu, Aug 30, 2018 at 05:45:18PM +0200, Philipp Rossak wrote:
-> Since we have now thermal trotteling enabeled we can now add the full
-> range of the OPP table.
+Threat -> treat (in the title and in the message body too)
 
-I'm not sure we can. I have a tablet with A83T SoC and it gets unstable
-at these frequencies even with thermal throttling on mainline kernel. (Though
-I have my own THS driver, but I doubt a different driver will change much.)
-
-There might be some other issue left in the cpufreq code. I'll let others
-test this on a better cooled boards though.
-
-Did you/someone test this?
-
-regards,
-  o.
-
-> The operating points were found in Allwinner BSP and fex files.
-> 
 > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 19 -------------------
+>  1 file changed, 19 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index 78aa448e869f..ddcf404f9c80 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -250,6 +250,22 @@
->  			opp-microvolt = <840000>;
->  			clock-latency-ns = <244144>; /* 8 32k periods */
->  		};
-> +
-> +		opp-1608000000 {
-> +			opp-hz = /bits/ 64 <1608000000>;
-> +			opp-microvolt = <920000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +		opp-1800000000 { /* BOOT FREQ */
-> +			opp-hz = /bits/ 64 <1800000000>;
-> +			opp-microvolt = <1000000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +		opp-2016000000 {
-> +			opp-hz = /bits/ 64 <2016000000>;
-> +			opp-microvolt = <1080000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
->  	};
+> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+> index ab474ce86fb6..658a7e3e3370 100644
+> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> @@ -123,23 +123,6 @@ static const struct iio_chan_spec sun4i_gpadc_channels[] = {
+>  	},
+>  };
 >  
->  	cpu1_opp_table: opp_table1 {
-> @@ -303,6 +319,22 @@
->  			opp-microvolt = <840000>;
->  			clock-latency-ns = <244144>; /* 8 32k periods */
->  		};
-> +
-> +		opp-1608000000 {
-> +			opp-hz = /bits/ 64 <1608000000>;
-> +			opp-microvolt = <920000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +		opp-1800000000 { /* BOOT FREQ */
-> +			opp-hz = /bits/ 64 <1800000000>;
-> +			opp-microvolt = <1000000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +		opp-2016000000 {
-> +			opp-hz = /bits/ 64 <2016000000>;
-> +			opp-microvolt = <1080000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
->  	};
+> -static const struct iio_chan_spec sun4i_gpadc_channels_no_temp[] = {
+> -	SUN4I_GPADC_ADC_CHANNEL(0, "adc_chan0"),
+> -	SUN4I_GPADC_ADC_CHANNEL(1, "adc_chan1"),
+> -	SUN4I_GPADC_ADC_CHANNEL(2, "adc_chan2"),
+> -	SUN4I_GPADC_ADC_CHANNEL(3, "adc_chan3"),
+> -};
+> -
+> -static const struct iio_chan_spec sun8i_a33_gpadc_channels[] = {
+> -	{
+> -		.type = IIO_TEMP,
+> -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> -				      BIT(IIO_CHAN_INFO_SCALE) |
+> -				      BIT(IIO_CHAN_INFO_OFFSET),
+> -		.datasheet_name = "temp_adc",
+> -	},
+> -};
+> -
+>  static const struct regmap_config sun4i_gpadc_regmap_config = {
+>  	.reg_bits = 32,
+>  	.val_bits = 32,
+> @@ -444,8 +427,6 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
+>  		return -ENODEV;
 >  
->  	soc {
+>  	info->no_irq = true;
+> -	indio_dev->num_channels = ARRAY_SIZE(sun8i_a33_gpadc_channels);
+> -	indio_dev->channels = sun8i_a33_gpadc_channels;
+>  
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	base = devm_ioremap_resource(&pdev->dev, mem);
 > -- 
 > 2.11.0
 > 
