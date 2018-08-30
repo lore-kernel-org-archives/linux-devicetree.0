@@ -1,52 +1,44 @@
-From: Aapo Vienamo <avienamo@nvidia.com>
-Subject: [PATCH v3 38/38] arm64: dts: tegra210: Assign clocks for sdmmc1 and sdmmc4
-Date: Thu, 30 Aug 2018 18:06:39 +0300
-Message-ID: <20180830150639.21048-39-avienamo@nvidia.com>
-References: <20180830150639.21048-1-avienamo@nvidia.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 2/3] iio: adc: Add Xilinx AMS driver
+Date: Thu, 30 Aug 2018 08:36:52 -0700
+Message-ID: <378c10f8-9760-b36a-431d-4ce4339d7345@infradead.org>
+References: <1535624539-7839-1-git-send-email-manish.narani@xilinx.com>
+ <1535624539-7839-3-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830150639.21048-1-avienamo@nvidia.com>
+In-Reply-To: <1535624539-7839-3-git-send-email-manish.narani@xilinx.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>
+To: Manish Narani <manish.narani@xilinx.com>, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, leoyang.li@nxp.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, broonie@kernel.org, arnaud.pouliquen@st.com, geert@linux-m68k.org, eugen.hristev@microchip.com, lukas@wunner.de, freeman.liu@spreadtrum.com, vilhelm.gray@gmail.com, tglx@linutronix.de, baolin.wang@linaro.org, gregkh@linuxfoundation.org
+Cc: sgoud@xilinx.com, anirudh@xilinx.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use assigned-clock properties to configure pllc4 as the parent clock
-for sdmmc4 on Tegra210. pllc4 offers better jitter perfomance than
-the default pllp and is required by HS200 and HS400 modes.
+On 08/30/2018 03:22 AM, Manish Narani wrote:
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 4a75492..405ea00 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -941,4 +941,14 @@ config XILINX_XADC
+>  	  The driver can also be build as a module. If so, the module will be called
+>  	  xilinx-xadc.
+>  
+> +config XILINX_AMS
+> +	tristate "Xilinx AMS driver"
+> +	depends on ARCH_ZYNQMP || COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	help
+> +	  Say yes here to have support for the Xilinx AMS.
+> +
+> +	  The driver can also be build as a module. If so, the module will be called
 
-Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+	                         built
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 0951acc69cc8..14da98ac65e8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1057,6 +1057,11 @@
- 		nvidia,pad-autocal-pull-down-offset-1v8 = <0x7b>;
- 		nvidia,default-tap = <0x2>;
- 		nvidia,default-trim = <0x4>;
-+		assigned-clocks = <&tegra_car TEGRA210_CLK_SDMMC4>,
-+				  <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>,
-+				  <&tegra_car TEGRA210_CLK_PLL_C4>;
-+		assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-+		assigned-clock-rates = <200000000>, <1000000000>, <1000000000>;
- 		status = "disabled";
- 	};
- 
-@@ -1107,6 +1112,9 @@
- 		nvidia,pad-autocal-pull-down-offset-1v8 = <0x05>;
- 		nvidia,default-tap = <0x8>;
- 		nvidia,default-trim = <0x0>;
-+		assigned-clocks = <&tegra_car TEGRA210_CLK_SDMMC4>,
-+				  <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-+		assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
- 		status = "disabled";
- 	};
- 
+> +	  xilinx-ams.
+> +
+>  endmenu
+
+
 -- 
-2.18.0
+~Randy
