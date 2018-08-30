@@ -1,226 +1,232 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Subject: Re: [PATCH v6 0/2] Input: Add Cypress Gen5 Touchscreen driver
-Date: Thu, 30 Aug 2018 09:12:35 +0200
-Message-ID: <20180830091235.6fff7b7d@dell-desktop.home>
+Date: Thu, 30 Aug 2018 09:24:00 +0200
+Message-ID: <CAO-hwJ+heBdp4cgaeB25di1LLPAJv4BFLWMmbn4v5AXap8zpQg@mail.gmail.com>
 References: <20180703094309.18514-1-mylene.josserand@bootlin.com>
-        <20180704162158.euiw2v3hyv3hzofn@penguin>
-        <20180724150046.7d70786c@dell-desktop.home>
-        <20180724174053.GA61165@dtor-ws>
-        <20180813172358.71912d55@dell-desktop.home>
-        <CAKdAkRQQ27TNmDSSg5x4kGvhhBjRbM9G2Bv_1WBxAhYWNUkz1w@mail.gmail.com>
+ <20180704162158.euiw2v3hyv3hzofn@penguin> <20180724150046.7d70786c@dell-desktop.home>
+ <20180724174053.GA61165@dtor-ws> <20180813172358.71912d55@dell-desktop.home>
+ <CAKdAkRQQ27TNmDSSg5x4kGvhhBjRbM9G2Bv_1WBxAhYWNUkz1w@mail.gmail.com> <20180830091235.6fff7b7d@dell-desktop.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKdAkRQQ27TNmDSSg5x4kGvhhBjRbM9G2Bv_1WBxAhYWNUkz1w@mail.gmail.com>
+In-Reply-To: <20180830091235.6fff7b7d@dell-desktop.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, lkml <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+To: mylene.josserand@bootlin.com
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com, lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Dmitry,
-
-On Mon, 13 Aug 2018 08:36:32 -0700
-Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-
-> Hi Mylène,
-> 
-> On Mon, Aug 13, 2018 at 8:24 AM Mylène Josserand
-> <mylene.josserand@bootlin.com> wrote:
+On Thu, Aug 30, 2018 at 9:12 AM Mylène Josserand
+<mylene.josserand@bootlin.com> wrote:
+>
+> Hello Dmitry,
+>
+> On Mon, 13 Aug 2018 08:36:32 -0700
+> Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+>
+> > Hi Mylène,
 > >
-> > Hi Dmitry,
-> >
-> > On Tue, 24 Jul 2018 10:40:53 -0700
-> > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> >  
-> > > Hi Mylène,
+> > On Mon, Aug 13, 2018 at 8:24 AM Mylène Josserand
+> > <mylene.josserand@bootlin.com> wrote:
 > > >
-> > > On Tue, Jul 24, 2018 at 03:00:46PM +0200, Mylène Josserand wrote:  
-> > > > Hello Dmitry,
+> > > Hi Dmitry,
+> > >
+> > > On Tue, 24 Jul 2018 10:40:53 -0700
+> > > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> > >
+> > > > Hi Mylène,
 > > > >
-> > > > On Wed, 4 Jul 2018 16:21:58 +0000
-> > > > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> > > >  
-> > > > > Hi Mylène,
+> > > > On Tue, Jul 24, 2018 at 03:00:46PM +0200, Mylène Josserand wrote:
+> > > > > Hello Dmitry,
 > > > > >
-> > > > > On Tue, Jul 03, 2018 at 11:43:07AM +0200, Mylène Josserand wrote:  
-> > > > > > Hello,
+> > > > > On Wed, 4 Jul 2018 16:21:58 +0000
+> > > > > Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> > > > >
+> > > > > > Hi Mylène,
 > > > > > >
-> > > > > > Here is a V6 series to add the driver of the touchscreen Cypress,
-> > > > > > TrueTouch Generation 5.
-> > > > > > Based on v4.18-rc3.
+> > > > > > On Tue, Jul 03, 2018 at 11:43:07AM +0200, Mylène Josserand wrote:
+> > > > > > > Hello,
+> > > > > > >
+> > > > > > > Here is a V6 series to add the driver of the touchscreen Cypress,
+> > > > > > > TrueTouch Generation 5.
+> > > > > > > Based on v4.18-rc3.
+> > > > > > >
+> > > > > > > This patch series has already been posted in several iterations:
+> > > > > > >     - v1: Sent on 2017/05/29
+> > > > > > >     - v2: Sent on 2017/08/18
+> > > > > > >     - v3: Sent on 2017/09/27
+> > > > > > >     - v4: Sent on 2017/12/01
+> > > > > > >     - v5: Sent on 2017/12/20
+> > > > > > >
+> > > > > > > I did not have any comments the last 4 versions.
+> > > > > > > And no reviews on my v5 during 6 months. Could I have any updates
+> > > > > > > or feedback on my series to know why it is not merged (to be able to
+> > > > > > > correct what is wrong)?
 > > > > > >
-> > > > > > This patch series has already been posted in several iterations:
-> > > > > >     - v1: Sent on 2017/05/29
-> > > > > >     - v2: Sent on 2017/08/18
-> > > > > >     - v3: Sent on 2017/09/27
-> > > > > >     - v4: Sent on 2017/12/01
-> > > > > >     - v5: Sent on 2017/12/20
+> > > > > > Sorry, I must have missed the v5, sorry about that.
 > > > > > >
-> > > > > > I did not have any comments the last 4 versions.
-> > > > > > And no reviews on my v5 during 6 months. Could I have any updates
-> > > > > > or feedback on my series to know why it is not merged (to be able to
-> > > > > > correct what is wrong)?  
+> > > > > > I probably asked this question before, but just to make sure - I see
+> > > > > > references to HID in the patch - the device is really not HID
+> > > > > > compatible? Is there any hope it could be made work with i2c-hid +
+> > > > > > hid-multitouch?
+> > > > > >
+> > > > > > Thanks.
+> > > > > >
 > > > > >
-> > > > > Sorry, I must have missed the v5, sorry about that.
+> > > > > I have checked and, for what I have seen, all the HID descriptor stuff
+> > > > > is HID compliant. We could definitely use i2c-hid and hid-multitouch
+> > > > > (there is the "hid-cypress" driver that exists also).
 > > > > >
-> > > > > I probably asked this question before, but just to make sure - I see
-> > > > > references to HID in the patch - the device is really not HID
-> > > > > compatible? Is there any hope it could be made work with i2c-hid +
-> > > > > hid-multitouch?
+> > > > > The only problem is that this touchscreen has two modes: a bootloader
+> > > > > mode and an application mode (which is the one where we can send
+> > > > > HID commands). After a power-on-reset, it is always in "bootloader"
+> > > > > mode so we need to send some commands (called "bootloader commands") to
+> > > > > switch to application mode.
+> > > >
+> > > > Is this a documented or observed behavior? In my practice devices (I am
+> > > > talking in general, not about Cypress) that have proper configuration
+> > > > loaded and that were brought up with appropriate power up sequence and
+> > > > timings automatically switch to application mode. They only end up in
+> > > > bootloader mode when proper power up sequence is not respected and they
+> > > > are unhappy.
+> > >
+> > > I have checked and indeed, if everything is correctly performed, the
+> > > bootloader has a timeout to switch to application mode.
+> > > The datasheet says that this timeout can be configured and the "0" value
+> > > means that the bootloader will never automatically switch to application
+> > > unless a bootloader command is sent.
+> > >
+> > > In our case, you were right, after a timeout, the touchscreen is
+> > > correctly switching to Application mode. Great news!
+> > >
+> > > >
+> > > > > These commands are not HID-compliant as the
+> > > > > datasheet indicates:
 > > > > >
-> > > > > Thanks.
-> > > > >  
+> > > > > "Bootloader commands are not HID-over-I2C compliant."
 > > > >
-> > > > I have checked and, for what I have seen, all the HID descriptor stuff
-> > > > is HID compliant. We could definitely use i2c-hid and hid-multitouch
-> > > > (there is the "hid-cypress" driver that exists also).
-> > > >
-> > > > The only problem is that this touchscreen has two modes: a bootloader
-> > > > mode and an application mode (which is the one where we can send
-> > > > HID commands). After a power-on-reset, it is always in "bootloader"
-> > > > mode so we need to send some commands (called "bootloader commands") to
-> > > > switch to application mode.  
+> > > > Any chance you could share the datasheet?
 > > >
-> > > Is this a documented or observed behavior? In my practice devices (I am
-> > > talking in general, not about Cypress) that have proper configuration
-> > > loaded and that were brought up with appropriate power up sequence and
-> > > timings automatically switch to application mode. They only end up in
-> > > bootloader mode when proper power up sequence is not respected and they
-> > > are unhappy.  
-> >
-> > I have checked and indeed, if everything is correctly performed, the
-> > bootloader has a timeout to switch to application mode.
-> > The datasheet says that this timeout can be configured and the "0" value
-> > means that the bootloader will never automatically switch to application
-> > unless a bootloader command is sent.
-> >
-> > In our case, you were right, after a timeout, the touchscreen is
-> > correctly switching to Application mode. Great news!
-> >  
-> > >  
-> > > > These commands are not HID-compliant as the
-> > > > datasheet indicates:
-> > > >
-> > > > "Bootloader commands are not HID-over-I2C compliant."  
+> > > Sorry, it is not possible, the datasheet is under NDA :(
 > > >
-> > > Any chance you could share the datasheet?  
-> >
-> > Sorry, it is not possible, the datasheet is under NDA :(
-> >  
-> > >  
 > > > >
-> > > > I think that if the touchscreen would start directly in "application"
-> > > > mode, we could directly use i2c-hid and hid-cypress drivers.
-> > > > Unfortunately, this is not the case.
+> > > > >
+> > > > > I think that if the touchscreen would start directly in "application"
+> > > > > mode, we could directly use i2c-hid and hid-cypress drivers.
+> > > > > Unfortunately, this is not the case.
+> > > > >
+> > > > > In bootloader mode, the ProductID is 0xc101 and in application mode, it
+> > > > > is 0xc001 (already available in hid-ids.h:
+> > > > > USB_DEVICE_ID_CYPRESS_TRUETOUCH but not handled)
+> > > > >
+> > > > > What would be the better approach here?
+> > > > > Should I add a new product ID to detect the bootloader mode in
+> > > > > hid-cypress driver and send non-HID commands to switch to
+> > > > > "application" mode in this driver?
+> > > > > Anyway, I guess that I will drop this cyttsp5 driver and update the
+> > > > > existing one, right?
 > > > >
-> > > > In bootloader mode, the ProductID is 0xc101 and in application mode, it
-> > > > is 0xc001 (already available in hid-ids.h:
-> > > > USB_DEVICE_ID_CYPRESS_TRUETOUCH but not handled)
+> > > > So it still accessible through HID, even when in bootloader mode? OK,
+> > > > then I guess there are 2 options:
 > > > >
-> > > > What would be the better approach here?
-> > > > Should I add a new product ID to detect the bootloader mode in
-> > > > hid-cypress driver and send non-HID commands to switch to
-> > > > "application" mode in this driver?
-> > > > Anyway, I guess that I will drop this cyttsp5 driver and update the
-> > > > existing one, right?  
+> > > > - if device is documented to always start in bootloader mode, you could
+> > > >   have a small stub driver that switches it into application mode in its
+> > > >   probe() code. The "bootloader" device will disappear and
+> > > >   "application" device will appear, and standard driver (hid-multitouch)
+> > > >   will bind to it.
 > > >
-> > > So it still accessible through HID, even when in bootloader mode? OK,
-> > > then I guess there are 2 options:
+> > > Okay, I see. In our case, we do not have the timeout to 0 as after a
+> > > moment, the application mode is automatically switched.
 > > >
-> > > - if device is documented to always start in bootloader mode, you could
-> > >   have a small stub driver that switches it into application mode in its
-> > >   probe() code. The "bootloader" device will disappear and
-> > >   "application" device will appear, and standard driver (hid-multitouch)
-> > >   will bind to it.  
-> >
-> > Okay, I see. In our case, we do not have the timeout to 0 as after a
-> > moment, the application mode is automatically switched.
-> >  
+> > > >
+> > > > - if device supposed to come up in application mode unless configuration
+> > > >   is damaged: I'd recommend doing what we do on Chrome OS and have some
+> > > >   userspace software that runs on boot (or whenever device is
+> > > >   discovered) and check if it has the latest firmware/configuration, and
+> > > >   repair device if needed.
 > > >
-> > > - if device supposed to come up in application mode unless configuration
-> > >   is damaged: I'd recommend doing what we do on Chrome OS and have some
-> > >   userspace software that runs on boot (or whenever device is
-> > >   discovered) and check if it has the latest firmware/configuration, and
-> > >   repair device if needed.  
+> > > I see.
+> > >
+> > > I tried to make the i2d-hid & hid-cypress working. This is not
+> > > successful for the moment because I can not retrieve the correct
+> > > bcdVersion. While debugging, I have noticed that the HID descriptors
+> > > don't seem to be exactly the same:
+> > >
+> > > under i2c-hid.c:
+> > >
+> > > struct i2c_hid_desc {
+> > >         __le16 wHIDDescLength;
+> > >         __le16 bcdVersion;
+> > >         __le16 wReportDescLength;
+> > >         __le16 wReportDescRegister;
+> > >         __le16 wInputRegister;
+> > >         __le16 wMaxInputLength;
+> > >         __le16 wOutputRegister;
+> > >         __le16 wMaxOutputLength;
+> > >         __le16 wCommandRegister;
+> > >         __le16 wDataRegister;
+> > >         __le16 wVendorID;
+> > >         __le16 wProductID;
+> > >         __le16 wVersionID;
+> > >         __le32 reserved;
+> > > } __packed;
+> > >
+> > > whereas in my driver, I have:
+> > >
+> > > struct cyttsp5_hid_desc {
+> > >         __le16 hid_desc_len;
+> > >         u8 packet_id;       <-- Different
+> > >         u8 reserved_byte;   <-- Different
+> > >         __le16 bcd_version;
+> > >         __le16 report_desc_len;
+> > >         __le16 report_desc_register;
+> > >         __le16 input_register;
+> > >         __le16 max_input_len;
+> > >         __le16 output_register;
+> > >         __le16 max_output_len;
+> > >         __le16 command_register;
+> > >         __le16 data_register;
+> > >         __le16 vendor_id;
+> > >         __le16 product_id;
+> > >         __le16 version_id;
+> > >         u8 reserved[4];
+> > > } __packed;
+> > >
+> > > Have you already seen devices that are "HID compatible" with a different
+> > > HID descriptor's content like this?
 > >
-> > I see.
+> > That seems like a violation of Microsoft I2C HID protocol:
+> > https://docs.microsoft.com/en-us/previous-versions/windows/hardware/design/dn642101(v=vs.85)
+> > How do Cypress devices work in Windows? Might they have a compatible
+> > firmware?
+>
+> I do not know how it works on Windows, actually.
+> The datasheet indicates that it is based on HID specification. I guess
+> it is not "HID compliant" as I was thinking while reading it.
+>
+> "Packet Interface Protocol (PIP) is a command and response-based
+> communication protocol used to communicate with the
+> TrueTouch device over the physical communication interface. PIP is
+> modeled after Microsoft’s HID over I2C protocol specification, version
+> 1.00. However, PIP extends the functionality of HID over I2C protocol
+> to support both I2C and SPI physical communication interfaces, raw
+> data extraction, self-tests, bootloading, and configuration data
+> programming."
+>
 > >
-> > I tried to make the i2d-hid & hid-cypress working. This is not
-> > successful for the moment because I can not retrieve the correct
-> > bcdVersion. While debugging, I have noticed that the HID descriptors
-> > don't seem to be exactly the same:
-> >
-> > under i2c-hid.c:
-> >
-> > struct i2c_hid_desc {
-> >         __le16 wHIDDescLength;
-> >         __le16 bcdVersion;
-> >         __le16 wReportDescLength;
-> >         __le16 wReportDescRegister;
-> >         __le16 wInputRegister;
-> >         __le16 wMaxInputLength;
-> >         __le16 wOutputRegister;
-> >         __le16 wMaxOutputLength;
-> >         __le16 wCommandRegister;
-> >         __le16 wDataRegister;
-> >         __le16 wVendorID;
-> >         __le16 wProductID;
-> >         __le16 wVersionID;
-> >         __le32 reserved;
-> > } __packed;
-> >
-> > whereas in my driver, I have:
-> >
-> > struct cyttsp5_hid_desc {
-> >         __le16 hid_desc_len;
-> >         u8 packet_id;       <-- Different
-> >         u8 reserved_byte;   <-- Different
-> >         __le16 bcd_version;
-> >         __le16 report_desc_len;
-> >         __le16 report_desc_register;
-> >         __le16 input_register;
-> >         __le16 max_input_len;
-> >         __le16 output_register;
-> >         __le16 max_output_len;
-> >         __le16 command_register;
-> >         __le16 data_register;
-> >         __le16 vendor_id;
-> >         __le16 product_id;
-> >         __le16 version_id;
-> >         u8 reserved[4];
-> > } __packed;
-> >
-> > Have you already seen devices that are "HID compatible" with a different
-> > HID descriptor's content like this?  
-> 
-> That seems like a violation of Microsoft I2C HID protocol:
-> https://docs.microsoft.com/en-us/previous-versions/windows/hardware/design/dn642101(v=vs.85)
-> How do Cypress devices work in Windows? Might they have a compatible
-> firmware?
+> > In any case, for all I2C HID things Benjamin (CCed) is your guy.
+>
+> Okay, thanks.
+> I am not so sure it is possible to use HID's drivers, now.
 
-I do not know how it works on Windows, actually.
-The datasheet indicates that it is based on HID specification. I guess
-it is not "HID compliant" as I was thinking while reading it.
+Well, we *could* detect this particular model if the `packet_id` and
+the `reserved_byte` fields in place of the `bcd_version` differ from
+what we normally expect on a HID descriptor.
 
-"Packet Interface Protocol (PIP) is a command and response-based
-communication protocol used to communicate with the
-TrueTouch device over the physical communication interface. PIP is
-modeled after Microsoft’s HID over I2C protocol specification, version
-1.00. However, PIP extends the functionality of HID over I2C protocol
-to support both I2C and SPI physical communication interfaces, raw
-data extraction, self-tests, bootloading, and configuration data
-programming."
+I can imagine that we check on the bcd_version, if it's not 0x0100, we
+can add a special case for this Cypress device by shifting the
+descriptor, making sure we are dealing with this particular device,
+and hopefully getting something we can handle now.
 
-> 
-> In any case, for all I2C HID things Benjamin (CCed) is your guy.
-
-Okay, thanks.
-I am not so sure it is possible to use HID's drivers, now.
-
-Best regards,
-
--- 
-Mylène Josserand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Cheers,
+Benjamin
