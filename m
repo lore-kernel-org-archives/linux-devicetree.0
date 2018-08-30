@@ -1,66 +1,61 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 0/7] ARM32/64: DT overlay build support
-Date: Thu, 30 Aug 2018 13:32:28 -0700
-Message-ID: <a137359f-f836-c8eb-61b4-9d1d4907ad93@gmail.com>
-References: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
- <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
- <183d979a-3849-7199-417f-3572b00dca5b@ti.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 21/30] iio: adc: sun4i-gpadc-iio: add
+ support for H3 thermal sensor
+Date: Thu, 30 Aug 2018 22:46:58 +0200
+Message-ID: <858dbcce-027a-5f48-ce66-06c79b6eeadd@gmail.com>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+ <20180830154518.29507-22-embed3d@gmail.com>
+ <20180830162734.uq65l6ox6uwrmulo@core>
+ <e919cbdd-a874-4b46-a505-9412d093f54a@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <183d979a-3849-7199-417f-3572b00dca5b@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD257DPK24NRBRVPUHOAKGQEQXDINUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <e919cbdd-a874-4b46-a505-9412d093f54a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGVybywKCihSZWFsbHkgYWRkaW5nIE1hcmsgYXMgYSBjYzogdGhpcyB0aW1lLiAgTGFzdCB0
-aW1lIEkgYWRkZWQgaGltIGFzCmEgYmNjOiBieSBtaXN0YWtlLikKCgpPbiAwOC8zMC8xOCAxMDox
-MiwgVGVybyBLcmlzdG8gd3JvdGU6Cj4gT24gMjkvMDgvMTggMjE6NDAsIEZyYW5rIFJvd2FuZCB3
-cm90ZToKPj4gKyBNYXJrIFJ1dGxhbmQsIGp1c3QgaW4gY2FzZSBoZSBpcyBpbnRlcmVzdGVkCj4+
-Cj4+IE9uIDA4LzI4LzE4IDA1OjMyLCBUZXJvIEtyaXN0byB3cm90ZToKPj4+IEhpLAo+Pj4KPj4+
-IFRoaXMgc2VyaWVzIGludHJvZHVjZXMgZGV2aWNldHJlZSBvdmVybGF5IGJ1aWxkaW5nIHN1cHBv
-cnQgZm9yIEFSTQo+Pj4gcGxhdGZvcm1zLiBUaGUgLmR0Ym8gdGFyZ2V0IGlzIGludHJvZHVjZWQg
-Z2xvYmFsbHksIHRoZW4gbWFrZWZpbGUKPj4+IGNoYW5nZXMgZm9yIGJvdGggYXJtMzIvNjQgZm9y
-IHN1cHBvcnRpbmcgdGhlIC5kdGJvIHRhcmdldCwgY2hhbmdlcwo+Pj4gdG8gc3VwcG9ydCBzdWIt
-ZGlyIG1ha2VmaWxlIGZsYWdzLCBhbmQgZmluYWxseSBhZGRpbmcgdGhlIERUQyBmbGFncwo+Pj4g
-b3ZlcnJpZGUgZm9yIFRJIHBsYXRmb3JtcywgYXMgdGhhdCBpcyB3aGVyZSB3ZSB3YW50IHRvIGlu
-dHJvZHVjZQo+Pj4gdGhlIERUIG92ZXJsYXkgc3VwcG9ydCBpbml0aWFsbHkuCj4+Pgo+Pj4gVGhl
-IEFSTSBtYWtlZmlsZSBjaGFuZ2VzIGZvciBzdXBwb3J0aW5nIERUUyBzdWItbWFrZWZpbGVzIGRv
-bid0IGxvb2sKPj4+IHRvbyBjbGVhbiwgYnV0IHRoYXQgd2FzIHRoZSBvbmx5IHdheSBJIGNvdWxk
-IGZpZ3VyZSBvdXQgaG93IHRvCj4+PiBnZXQgaXQgZG9uZS4KPj4+Cj4+PiAtVGVybwo+Pj4KPj4+
-IC0tIAo+Pj4KPj4KPj4gVGhpcyBzZXJpZXMgZG9lcyB0aHJlZSB1bnJlbGF0ZWQgdGhpbmdzOgo+
-IAo+IFdlbGwsIEkgd2FzIGtpbmQgb2YgdHJ5aW5nIHRvIHNob3cgdGhlIHdob2xlIHNvbHV0aW9u
-IGhlcmUgYnV0Li4uCgpUaGF0IGFjdHVhbGx5IG1ha2VzIHNlbnNlLCBhbmQgbm9ybWFsbHkgSSB3
-b3VsZG4ndCBoYXZlIGFza2VkIGZvciB0aGUKc3BsaXQuICBJdCBtaWdodCBiZSB0aGUgY2FzZSB0
-aGF0IEkgYW0gYmVpbmcgdG9vIGNhdXRpb3VzLCBhbmQgbWF5YmUKdGhlcmUgd29uJ3QgYmUgbXVj
-aCBkaXNjdXNzaW9uIGF0IGFsbC4gIEkgd2FzIGp1c3QgY29uY2VybmVkIHRoYXQgaW4KdGhpcyBj
-YXNlIHNvbWUgb2YgdGhlIGNvbmNlcHRzIG1pZ2h0IGdldCBvdmVybG9va2VkIGR1ZSB0byBkaXNj
-dXNzaW9uCm9mIG90aGVyIGNvbmNlcHRzLiAgSSdtIGFsc28gZXhwZWN0aW5nIGRpZmZlcmVudCBw
-ZW9wbGUgdG8gY2FyZQphYm91dCBlYWNoIG9mIHRoZSBjb25jZXB0cy4KCj4gCj4+ICgxKSBjcmVh
-dGUgYSB0aSBzcGVjaWZpYyBkdHMgc3ViZGlyZWN0b3J5IGFyY2gvYXJtL2Jvb3QvZHRzL3RpLwo+
-Pgo+PiAoMikgY3JlYXRlIGEgcnVsZSBmb3IgY3JlYXRpbmcgYSAuZHRibyBmcm9tIGEgLmR0c28K
-Pj4KPj4gKDMpIGFkZCBhIGR0YyBjb21waWxlIGZsYWcgdG8gYWRkIHBoYW5kbGUgc3ltYm9sIGlu
-Zm9ybWF0aW9uIHRvCj4+IMKgwqDCoMKgIGFsbCAuZHRiIGZpbGVzIGNyZWF0ZWQgZnJvbSBhcmNo
-L2FybS9ib290L2R0cy90aS8gYW5kCj4+IMKgwqDCoMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkv
-Cj4+Cj4+IFBsZWFzZSBzcGxpdCB0aGUgcGF0Y2hlcyBpbnRvIHRocmVlIGluZGVwZW5kZW50IHNl
-cmllcyBzbyB0aGF0Cj4+IGVhY2ggb2YgdGhlIHRocmVlIGNvbmNlcHRzIGNhbiBiZSBkaXNjdXNz
-ZWQgc2VwYXJhdGVseS4gCj4gCj4gT2sgd2lsbCBkbyB0aGF0LCBob3BlZnVsbHkgdG9tb3Jyb3cu
-IERpZG4ndCBtYW5hZ2UgdG8gc3F1ZWV6ZSBpbiB0aW1lIHRvIGRvIGl0IHRvZGF5LgoKVGhhbmtz
-LCBJIGFwcHJlY2lhdGUgeW91ciBmbGV4aWJpbGl0eS4KCi1GcmFuawoKPiAKPiAtVGVybwo+IC0t
-IAo+IFRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgw
-IEhlbHNpbmtpLiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0Rv
-bWljaWxlOiBIZWxzaW5raQo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+On 30.08.2018 22:00, Philipp Rossak wrote:
+> On 30.08.2018 18:27, Ond=C5=99ej Jirman wrote:
+>>> +static int sun8i_h3_calibrate(struct sun4i_gpadc_iio *info)
+>>> +{
+>>> +//=C2=A0=C2=A0=C2=A0 regmap_write(info->regmap, SUNXI_THS_CDATA_0_1,
+>>> +//=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
+nfo->calibration_data[0]);
+>>> +//=C2=A0=C2=A0=C2=A0 regmap_write(info->regmap, SUNXI_THS_CDATA_2_3,
+>>> +//=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
+nfo->calibration_data[1]);
+>> This should probably be implemented, or left out completely.
+>>
+>> regards,
+>> =C2=A0=C2=A0 o.
+>>
+> Thanks you are right!
+> This should be implemented! I will fix this in the next version!
+>=20
+> Thanks,
+> Philipp
+
+I just realized this function need to check if calibration datas are=20
+available. Writing zeros to the calibration data regs "breaks" the=20
+thermal sensor.
+
+Philipp
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
