@@ -1,57 +1,82 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/3] of/fdt: avoid re-parsing '#{address,size}-cells' in of_fdt_limit_memory
-Date: Thu, 30 Aug 2018 14:05:22 -0500
-Message-ID: <20180830190523.31474-3-robh@kernel.org>
+Subject: [PATCH 3/3] of: make default address and size cells sizes private
+Date: Thu, 30 Aug 2018 14:05:23 -0500
+Message-ID: <20180830190523.31474-4-robh@kernel.org>
 References: <20180830190523.31474-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180830190523.31474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we initialize dt_root_addr_cells and dt_root_size_cells earlier,
-use them and simplify of_fdt_limit_memory.
+Only some old OpenFirmware implementations rely on default sizes. Any
+FDT and modern implementation should have explicit properties. Make the
+OF_ROOT_NODE_*_CELLS_DEFAULT defines private so we don't get any outside
+users.
 
+This also gets us one step closer to removing the asm/prom.h dependency on
+Sparc.
+
+Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: sparclinux@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/fdt.c | 23 +----------------------
- 1 file changed, 1 insertion(+), 22 deletions(-)
+ arch/sparc/include/asm/prom.h | 3 ---
+ drivers/of/of_private.h       | 8 ++++++++
+ include/linux/of.h            | 6 ------
+ 3 files changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 49abe18f1bde..fef4b2c8a171 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -44,28 +44,7 @@ void of_fdt_limit_memory(int limit)
- 	int memory;
- 	int len;
- 	const void *val;
--	int nr_address_cells = OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
--	int nr_size_cells = OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
--	const __be32 *addr_prop;
--	const __be32 *size_prop;
--	int root_offset;
--	int cell_size;
--
--	root_offset = fdt_path_offset(initial_boot_params, "/");
--	if (root_offset < 0)
--		return;
--
--	addr_prop = fdt_getprop(initial_boot_params, root_offset,
--				"#address-cells", NULL);
--	if (addr_prop)
--		nr_address_cells = fdt32_to_cpu(*addr_prop);
--
--	size_prop = fdt_getprop(initial_boot_params, root_offset,
--				"#size-cells", NULL);
--	if (size_prop)
--		nr_size_cells = fdt32_to_cpu(*size_prop);
--
--	cell_size = sizeof(uint32_t)*(nr_address_cells + nr_size_cells);
-+	int cell_size = sizeof(uint32_t)*(dt_root_addr_cells + dt_root_size_cells);
+diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
+index d955c8df62d6..1902db27ff4b 100644
+--- a/arch/sparc/include/asm/prom.h
++++ b/arch/sparc/include/asm/prom.h
+@@ -24,9 +24,6 @@
+ #include <linux/atomic.h>
+ #include <linux/irqdomain.h>
  
- 	memory = fdt_path_offset(initial_boot_params, "/memory");
- 	if (memory > 0) {
+-#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT	2
+-#define OF_ROOT_NODE_SIZE_CELLS_DEFAULT	1
+-
+ #define of_compat_cmp(s1, s2, l)	strncmp((s1), (s2), (l))
+ #define of_prop_cmp(s1, s2)		strcasecmp((s1), (s2))
+ #define of_node_cmp(s1, s2)		strcmp((s1), (s2))
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 216175d11d3d..5d1567025358 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -27,6 +27,14 @@ struct alias_prop {
+ 	char stem[0];
+ };
+ 
++#if defined(CONFIG_SPARC)
++#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT 2
++#else
++#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT 1
++#endif
++
++#define OF_ROOT_NODE_SIZE_CELLS_DEFAULT 1
++
+ extern struct mutex of_mutex;
+ extern struct list_head aliases_lookup;
+ extern struct kset *of_kset;
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 506beca9588d..49d85f670c75 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -247,12 +247,6 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ #include <asm/prom.h>
+ #endif
+ 
+-/* Default #address and #size cells.  Allow arch asm/prom.h to override */
+-#if !defined(OF_ROOT_NODE_ADDR_CELLS_DEFAULT)
+-#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT 1
+-#define OF_ROOT_NODE_SIZE_CELLS_DEFAULT 1
+-#endif
+-
+ #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
+ #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
+ 
 -- 
 2.17.1
