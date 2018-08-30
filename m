@@ -1,13 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 07/30] iio: adc: remove mfd_probe &
- sunwi_irq_init function
-Date: Thu, 30 Aug 2018 17:44:55 +0200
-Message-ID: <20180830154518.29507-8-embed3d@gmail.com>
+Subject: [PATCH v3 12/30] mfd: Remove old mfd driver & Move
+ sun4i-gpadc.h to iio/adc/
+Date: Thu, 30 Aug 2018 17:45:00 +0200
+Message-ID: <20180830154518.29507-13-embed3d@gmail.com>
 References: <20180830154518.29507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBF5CUDOAKGQEWKPHMSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBHFCUDOAKGQEQHF6GPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,157 +20,221 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In the previous commit we removed the function call, now we remove the
-unused functions.
+Since we reworked the sun4i-gpadc iio driver we can now remove the mfd
+driver and move it's header to include/linux/iio/adc.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 126 --------------------------------------
- 1 file changed, 126 deletions(-)
+ drivers/iio/adc/sun4i-gpadc-iio.c            |   2 +-
+ drivers/mfd/sun4i-gpadc.c                    | 181 ---------------------------
+ include/linux/{mfd => iio/adc}/sun4i-gpadc.h |   0
+ 3 files changed, 1 insertion(+), 182 deletions(-)
+ delete mode 100644 drivers/mfd/sun4i-gpadc.c
+ rename include/linux/{mfd => iio/adc}/sun4i-gpadc.h (100%)
 
 diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index d6f00d3b802d..f787442a9e5f 100644
+index 79b8efdab803..e1fe5e8e9dc0 100644
 --- a/drivers/iio/adc/sun4i-gpadc-iio.c
 +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -431,55 +431,6 @@ static const struct dev_pm_ops sun4i_gpadc_pm_ops = {
- 	.runtime_resume = &sun4i_gpadc_runtime_resume,
- };
+@@ -37,7 +37,7 @@
+ #include <linux/iio/iio.h>
+ #include <linux/iio/driver.h>
+ #include <linux/iio/machine.h>
+-#include <linux/mfd/sun4i-gpadc.h>
++#include <linux/iio/adc/sun4i-gpadc.h>
  
--static int sun4i_irq_init(struct platform_device *pdev, const char *name,
--			  irq_handler_t handler, const char *devname,
--			  unsigned int *irq, atomic_t *atomic)
--{
--	int ret;
--	struct sun4i_gpadc_dev *mfd_dev = dev_get_drvdata(pdev->dev.parent);
--	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(&pdev->dev));
--
--	/*
--	 * Once the interrupt is activated, the IP continuously performs
--	 * conversions thus throws interrupts. The interrupt is activated right
--	 * after being requested but we want to control when these interrupts
--	 * occur thus we disable it right after being requested. However, an
--	 * interrupt might occur between these two instructions and we have to
--	 * make sure that does not happen, by using atomic flags. We set the
--	 * flag before requesting the interrupt and unset it right after
--	 * disabling the interrupt. When an interrupt occurs between these two
--	 * instructions, reading the atomic flag will tell us to ignore the
--	 * interrupt.
--	 */
--	atomic_set(atomic, 1);
--
--	ret = platform_get_irq_byname(pdev, name);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "no %s interrupt registered\n", name);
--		return ret;
--	}
--
--	ret = regmap_irq_get_virq(mfd_dev->regmap_irqc, ret);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "failed to get virq for irq %s\n", name);
--		return ret;
--	}
--
--	*irq = ret;
--	ret = devm_request_any_context_irq(&pdev->dev, *irq, handler, 0,
--					   devname, info);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "could not request %s interrupt: %d\n",
--			name, ret);
--		return ret;
--	}
--
--	disable_irq(*irq);
--	atomic_set(atomic, 0);
--
--	return 0;
--}
--
- static const struct of_device_id sun4i_gpadc_of_id[] = {
- 	{
- 		.compatible = "allwinner,sun8i-a33-ths",
-@@ -523,83 +474,6 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
- 	return 0;
- }
- 
--static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
--				 struct iio_dev *indio_dev)
--{
--	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
--	struct sun4i_gpadc_dev *sun4i_gpadc_dev =
--		dev_get_drvdata(pdev->dev.parent);
--	int ret;
--
--	info->no_irq = false;
--	info->regmap = sun4i_gpadc_dev->regmap;
--
--	indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
--	indio_dev->channels = sun4i_gpadc_channels;
--
--	info->data = (struct gpadc_data *)platform_get_device_id(pdev)->driver_data;
--
--	/*
--	 * Since the controller needs to be in touchscreen mode for its thermal
--	 * sensor to operate properly, and that switching between the two modes
--	 * needs a delay, always registering in the thermal framework will
--	 * significantly slow down the conversion rate of the ADCs.
--	 *
--	 * Therefore, instead of depending on THERMAL_OF in Kconfig, we only
--	 * register the sensor if that option is enabled, eventually leaving
--	 * that choice to the user.
--	 */
--
--	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
--		/*
--		 * This driver is a child of an MFD which has a node in the DT
--		 * but not its children, because of DT backward compatibility
--		 * for A10, A13 and A31 SoCs. Therefore, the resulting devices
--		 * of this driver do not have an of_node variable.
--		 * However, its parent (the MFD driver) has an of_node variable
--		 * and since devm_thermal_zone_of_sensor_register uses its first
--		 * argument to match the phandle defined in the node of the
--		 * thermal driver with the of_node of the device passed as first
--		 * argument and the third argument to call ops from
--		 * thermal_zone_of_device_ops, the solution is to use the parent
--		 * device as first argument to match the phandle with its
--		 * of_node, and the device from this driver as third argument to
--		 * return the temperature.
--		 */
--		info->sensor_device = pdev->dev.parent;
--	} else {
--		indio_dev->num_channels =
--			ARRAY_SIZE(sun4i_gpadc_channels_no_temp);
--		indio_dev->channels = sun4i_gpadc_channels_no_temp;
--	}
--
--	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
--		ret = sun4i_irq_init(pdev, "TEMP_DATA_PENDING",
--				     sun4i_gpadc_temp_data_irq_handler,
--				     "temp_data", &info->temp_data_irq,
--				     &info->ignore_temp_data_irq);
--		if (ret < 0)
--			return ret;
--	}
--
--	ret = sun4i_irq_init(pdev, "FIFO_DATA_PENDING",
--			     sun4i_gpadc_fifo_data_irq_handler, "fifo_data",
--			     &info->fifo_data_irq, &info->ignore_fifo_data_irq);
--	if (ret < 0)
--		return ret;
--
--	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
--		ret = iio_map_array_register(indio_dev, sun4i_gpadc_hwmon_maps);
--		if (ret < 0) {
--			dev_err(&pdev->dev,
--				"failed to register iio map array\n");
--			return ret;
--		}
--	}
--
--	return 0;
--}
--
- static int sun4i_gpadc_probe(struct platform_device *pdev)
+ static unsigned int sun4i_gpadc_chan_select(unsigned int chan)
  {
- 	struct sun4i_gpadc_iio *info;
+diff --git a/drivers/mfd/sun4i-gpadc.c b/drivers/mfd/sun4i-gpadc.c
+deleted file mode 100644
+index 9cfc88134d03..000000000000
+--- a/drivers/mfd/sun4i-gpadc.c
++++ /dev/null
+@@ -1,181 +0,0 @@
+-/* ADC MFD core driver for sunxi platforms
+- *
+- * Copyright (c) 2016 Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 2 as published by
+- * the Free Software Foundation.
+- */
+-
+-#include <linux/interrupt.h>
+-#include <linux/kernel.h>
+-#include <linux/mfd/core.h>
+-#include <linux/module.h>
+-#include <linux/of_device.h>
+-#include <linux/of_irq.h>
+-#include <linux/regmap.h>
+-
+-#include <linux/mfd/sun4i-gpadc.h>
+-
+-#define ARCH_SUN4I_A10 0
+-#define ARCH_SUN5I_A13 1
+-#define ARCH_SUN6I_A31 2
+-
+-static struct resource adc_resources[] = {
+-	DEFINE_RES_IRQ_NAMED(SUN4I_GPADC_IRQ_FIFO_DATA, "FIFO_DATA_PENDING"),
+-	DEFINE_RES_IRQ_NAMED(SUN4I_GPADC_IRQ_TEMP_DATA, "TEMP_DATA_PENDING"),
+-};
+-
+-static const struct regmap_irq sun4i_gpadc_regmap_irq[] = {
+-	REGMAP_IRQ_REG(SUN4I_GPADC_IRQ_FIFO_DATA, 0,
+-		       SUN4I_GPADC_INT_FIFOC_TP_DATA_IRQ_EN),
+-	REGMAP_IRQ_REG(SUN4I_GPADC_IRQ_TEMP_DATA, 0,
+-		       SUN4I_GPADC_INT_FIFOC_TEMP_IRQ_EN),
+-};
+-
+-static const struct regmap_irq_chip sun4i_gpadc_regmap_irq_chip = {
+-	.name = "sun4i_gpadc_irq_chip",
+-	.status_base = SUN4I_GPADC_INT_FIFOS,
+-	.ack_base = SUN4I_GPADC_INT_FIFOS,
+-	.mask_base = SUN4I_GPADC_INT_FIFOC,
+-	.init_ack_masked = true,
+-	.mask_invert = true,
+-	.irqs = sun4i_gpadc_regmap_irq,
+-	.num_irqs = ARRAY_SIZE(sun4i_gpadc_regmap_irq),
+-	.num_regs = 1,
+-};
+-
+-static struct mfd_cell sun4i_gpadc_cells[] = {
+-	{
+-		.name	= "sun4i-a10-gpadc-iio",
+-		.resources = adc_resources,
+-		.num_resources = ARRAY_SIZE(adc_resources),
+-	},
+-	{ .name = "iio_hwmon" }
+-};
+-
+-static struct mfd_cell sun5i_gpadc_cells[] = {
+-	{
+-		.name	= "sun5i-a13-gpadc-iio",
+-		.resources = adc_resources,
+-		.num_resources = ARRAY_SIZE(adc_resources),
+-	},
+-	{ .name = "iio_hwmon" },
+-};
+-
+-static struct mfd_cell sun6i_gpadc_cells[] = {
+-	{
+-		.name	= "sun6i-a31-gpadc-iio",
+-		.resources = adc_resources,
+-		.num_resources = ARRAY_SIZE(adc_resources),
+-	},
+-	{ .name = "iio_hwmon" },
+-};
+-
+-static const struct regmap_config sun4i_gpadc_regmap_config = {
+-	.reg_bits = 32,
+-	.val_bits = 32,
+-	.reg_stride = 4,
+-	.fast_io = true,
+-};
+-
+-static const struct of_device_id sun4i_gpadc_of_match[] = {
+-	{
+-		.compatible = "allwinner,sun4i-a10-ts",
+-		.data = (void *)ARCH_SUN4I_A10,
+-	}, {
+-		.compatible = "allwinner,sun5i-a13-ts",
+-		.data = (void *)ARCH_SUN5I_A13,
+-	}, {
+-		.compatible = "allwinner,sun6i-a31-ts",
+-		.data = (void *)ARCH_SUN6I_A31,
+-	}, { /* sentinel */ }
+-};
+-
+-MODULE_DEVICE_TABLE(of, sun4i_gpadc_of_match);
+-
+-static int sun4i_gpadc_probe(struct platform_device *pdev)
+-{
+-	struct sun4i_gpadc_dev *dev;
+-	struct resource *mem;
+-	const struct of_device_id *of_id;
+-	const struct mfd_cell *cells;
+-	unsigned int irq, size;
+-	int ret;
+-
+-	of_id = of_match_node(sun4i_gpadc_of_match, pdev->dev.of_node);
+-	if (!of_id)
+-		return -EINVAL;
+-
+-	switch ((long)of_id->data) {
+-	case ARCH_SUN4I_A10:
+-		cells = sun4i_gpadc_cells;
+-		size = ARRAY_SIZE(sun4i_gpadc_cells);
+-		break;
+-	case ARCH_SUN5I_A13:
+-		cells = sun5i_gpadc_cells;
+-		size = ARRAY_SIZE(sun5i_gpadc_cells);
+-		break;
+-	case ARCH_SUN6I_A31:
+-		cells = sun6i_gpadc_cells;
+-		size = ARRAY_SIZE(sun6i_gpadc_cells);
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+-	if (!dev)
+-		return -ENOMEM;
+-
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dev->base = devm_ioremap_resource(&pdev->dev, mem);
+-	if (IS_ERR(dev->base))
+-		return PTR_ERR(dev->base);
+-
+-	dev->dev = &pdev->dev;
+-	dev_set_drvdata(dev->dev, dev);
+-
+-	dev->regmap = devm_regmap_init_mmio(dev->dev, dev->base,
+-					    &sun4i_gpadc_regmap_config);
+-	if (IS_ERR(dev->regmap)) {
+-		ret = PTR_ERR(dev->regmap);
+-		dev_err(&pdev->dev, "failed to init regmap: %d\n", ret);
+-		return ret;
+-	}
+-
+-	/* Disable all interrupts */
+-	regmap_write(dev->regmap, SUN4I_GPADC_INT_FIFOC, 0);
+-
+-	irq = platform_get_irq(pdev, 0);
+-	ret = devm_regmap_add_irq_chip(&pdev->dev, dev->regmap, irq,
+-				       IRQF_ONESHOT, 0,
+-				       &sun4i_gpadc_regmap_irq_chip,
+-				       &dev->regmap_irqc);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to add irq chip: %d\n", ret);
+-		return ret;
+-	}
+-
+-	ret = devm_mfd_add_devices(dev->dev, 0, cells, size, NULL, 0, NULL);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to add MFD devices: %d\n", ret);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static struct platform_driver sun4i_gpadc_driver = {
+-	.driver = {
+-		.name = "sun4i-gpadc",
+-		.of_match_table = of_match_ptr(sun4i_gpadc_of_match),
+-	},
+-	.probe = sun4i_gpadc_probe,
+-};
+-
+-module_platform_driver(sun4i_gpadc_driver);
+-
+-MODULE_DESCRIPTION("Allwinner sunxi platforms' GPADC MFD core driver");
+-MODULE_AUTHOR("Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+-MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/iio/adc/sun4i-gpadc.h
+similarity index 100%
+rename from include/linux/mfd/sun4i-gpadc.h
+rename to include/linux/iio/adc/sun4i-gpadc.h
 -- 
 2.11.0
