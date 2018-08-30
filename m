@@ -1,13 +1,12 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 16/30] iio: adc: sun4i-gpadc-iio: rework:
- readout temp_data
-Date: Thu, 30 Aug 2018 17:45:04 +0200
-Message-ID: <20180830154518.29507-17-embed3d@gmail.com>
+Subject: [PATCH v3 26/30] ARM: dts: sun8i: h3: enable H3 sid controller
+Date: Thu, 30 Aug 2018 17:45:14 +0200
+Message-ID: <20180830154518.29507-27-embed3d@gmail.com>
 References: <20180830154518.29507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBIFCUDOAKGQEYSZ6YWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBLFCUDOAKGQEFSZMOCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,85 +19,31 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For adding newer sensor some basic rework of the code is necessary.
-
-This commit reworks the code and uses regmap field to read out
-temp_data.
+This patch enables the the sid controller in the H3. It can be used
+for thermal calibration data.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index d48f338af563..c278e165e161 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -63,6 +63,7 @@ struct gpadc_data {
- 	int		(*ths_suspend)(struct sun4i_gpadc_iio *info);
- 	int		(*ths_resume)(struct sun4i_gpadc_iio *info);
- 	bool		support_irq;
-+	u32		temp_data_base;
- };
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 954848d5df50..1866aec69ec1 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -104,6 +104,13 @@
+ 		};
+ 	};
  
- static irqreturn_t sun4i_gpadc_data_irq_handler(int irq, void *dev_id);
-@@ -77,6 +78,7 @@ static const struct gpadc_data sun4i_gpadc_data = {
- 	.adc_channel = true,
- 	.ths_irq_thread = sun4i_gpadc_data_irq_handler,
- 	.support_irq = true,
-+	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
- };
- 
- static const struct gpadc_data sun5i_gpadc_data = {
-@@ -89,6 +91,7 @@ static const struct gpadc_data sun5i_gpadc_data = {
- 	.adc_channel = true,
- 	.ths_irq_thread = sun4i_gpadc_data_irq_handler,
- 	.support_irq = true,
-+	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
- };
- 
- static const struct gpadc_data sun6i_gpadc_data = {
-@@ -101,12 +104,14 @@ static const struct gpadc_data sun6i_gpadc_data = {
- 	.adc_channel = true,
- 	.ths_irq_thread = sun4i_gpadc_data_irq_handler,
- 	.support_irq = true,
-+	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
- };
- 
- static const struct gpadc_data sun8i_a33_gpadc_data = {
- 	.temp_offset = -1662,
- 	.temp_scale = 162,
- 	.tp_mode_en = SUN8I_A33_GPADC_CTRL1_CHOP_TEMP_EN,
-+	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
- };
- 
- struct sun4i_gpadc_iio {
-@@ -271,18 +276,18 @@ static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val)
- {
- 	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
- 
--	if (!info->data->support_irq) {
--		pm_runtime_get_sync(indio_dev->dev.parent);
-+	if (info->data->adc_channel)
-+		return sun4i_gpadc_read(indio_dev, 0, val,
-+				SUN4I_GPADC_IRQ_TEMP_DATA);
- 
--		regmap_read(info->regmap, SUN4I_GPADC_TEMP_DATA, val);
-+	pm_runtime_get_sync(indio_dev->dev.parent);
- 
--		pm_runtime_mark_last_busy(indio_dev->dev.parent);
--		pm_runtime_put_autosuspend(indio_dev->dev.parent);
-+	regmap_read(info->regmap, info->data->temp_data_base, val);
- 
--		return 0;
--	}
-+	pm_runtime_mark_last_busy(indio_dev->dev.parent);
-+	pm_runtime_put_autosuspend(indio_dev->dev.parent);
- 
--	return sun4i_gpadc_read(indio_dev, 0, val, SUN4I_GPADC_IRQ_TEMP_DATA);
-+	return 0;
- }
- 
- static int sun4i_gpadc_temp_offset(struct iio_dev *indio_dev, int *val)
++	soc {
++		sid: eeprom@1c14000 {
++			compatible = "allwinner,sun8i-h3-sid";
++			reg = <0x01c14000 0x400>;
++		};
++	};
++
+ 	thermal-zones {
+ 		cpu-thermal {
+ 			/* milliseconds */
 -- 
 2.11.0
