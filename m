@@ -1,68 +1,49 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 0/7] ARM32/64: DT overlay build support
-Date: Thu, 30 Aug 2018 20:12:50 +0300
-Message-ID: <183d979a-3849-7199-417f-3572b00dca5b@ti.com>
-References: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
- <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Rowand <frowand.list@gmail.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 0/6] crypto: vf-crc - Add new driver (and required clk, DTS...)
+Date: Thu, 30 Aug 2018 19:15:33 +0200
+Message-ID: <20180830171539.20008-1-krzk@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/18 21:40, Frank Rowand wrote:
-> + Mark Rutland, just in case he is interested
-> 
-> On 08/28/18 05:32, Tero Kristo wrote:
->> Hi,
->>
->> This series introduces devicetree overlay building support for ARM
->> platforms. The .dtbo target is introduced globally, then makefile
->> changes for both arm32/64 for supporting the .dtbo target, changes
->> to support sub-dir makefile flags, and finally adding the DTC flags
->> override for TI platforms, as that is where we want to introduce
->> the DT overlay support initially.
->>
->> The ARM makefile changes for supporting DTS sub-makefiles don't look
->> too clean, but that was the only way I could figure out how to
->> get it done.
->>
->> -Tero
->>
->> --
->>
-> 
-> This series does three unrelated things:
+Hi,
 
-Well, I was kind of trying to show the whole solution here but...
+Add new driver for Freescale/NXP Vybrid CRC HW accelerator along with
+prerequisities:
+1. Clock,
+2. Bindings,
+3. CRC16 test tables for testing.
 
-> (1) create a ti specific dts subdirectory arch/arm/boot/dts/ti/
-> 
-> (2) create a rule for creating a .dtbo from a .dtso
-> 
-> (3) add a dtc compile flag to add phandle symbol information to
->      all .dtb files created from arch/arm/boot/dts/ti/ and
->      arch/arm64/boot/dts/ti/
-> 
-> Please split the patches into three independent series so that
-> each of the three concepts can be discussed separately. 
+Patch 3/6 (ARM: dts: vfxxx: Add node for CRC hardware block) depends on patch
+2/6 (clk) so it should go in following cycle (after clk change hits mainline).
 
-Ok will do that, hopefully tomorrow. Didn't manage to squeeze in time to 
-do it today.
+Best regards,
+Krzysztof
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+Krzysztof Kozlowski (6):
+  dt-bindings: crypto: Add Freescale Vybrid CRC
+  clk: imx: vf610: Add CRC clock
+  ARM: dts: vfxxx: Add node for CRC hardware block
+  crypto: testmgr - Add CRC16 test tables
+  crypto - Group Freescale/NXP ARM architecture Kconfig entires together
+  crypto: vf-crc - Add new driver for Freescale Vybrid CRC
+
+ .../devicetree/bindings/crypto/fsl-vf610-crc.txt   |  16 +
+ MAINTAINERS                                        |   7 +
+ arch/arm/boot/dts/vfxxx.dtsi                       |   7 +
+ crypto/testmgr.c                                   |   6 +
+ crypto/testmgr.h                                   | 386 ++++++++++++++++++++
+ drivers/clk/imx/clk-vf610.c                        |   1 +
+ drivers/crypto/Kconfig                             |  42 ++-
+ drivers/crypto/Makefile                            |   1 +
+ drivers/crypto/vf-crc.c                            | 387 +++++++++++++++++++++
+ include/dt-bindings/clock/vf610-clock.h            |   3 +-
+ include/linux/crc32poly.h                          |   7 +
+ 11 files changed, 846 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/crypto/fsl-vf610-crc.txt
+ create mode 100644 drivers/crypto/vf-crc.c
+
+-- 
+2.14.1
