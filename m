@@ -1,98 +1,55 @@
-From: Hanjie Lin <hanjie.lin@amlogic.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
- Amlogic Meson PCIe controller
-Date: Thu, 30 Aug 2018 15:37:30 +0800
-Message-ID: <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
-References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
- <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
- <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
- <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com>
- <20180829004122.GA25928@bogus>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v5 04/14] irqchip/irq-mvebu-icu: clarify the reset operation
+ of configured interrupts
+Date: Thu, 30 Aug 2018 09:35:25 +0200
+Message-ID: <20180830073535.10710-5-miquel.raynal@bootlin.com>
+References: <20180830073535.10710-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180829004122.GA25928@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180830073535.10710-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Rewrite a small section to clarify the reset operation of interrupts
+already configured by ATF that we want to handle in the driver. This
+will simplify the introduction of System Error Interrupts support.
 
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+---
+ drivers/irqchip/irq-mvebu-icu.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-On 2018/8/29 8:41, Rob Herring wrote:
-> On Mon, Aug 27, 2018 at 04:55:20PM +0800, Hanjie Lin wrote:
->>
->>
->> On 2018/8/24 16:22, Jerome Brunet wrote:
->>> On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
->>>> From: Yue Wang <yue.wang@amlogic.com>
->>>>
->>>> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
->>>> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
->>>> controller.
->>>>
->>>> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
->>>> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
->>>> ---
->>>>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
->>>>  1 file changed, 63 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->>>> new file mode 100644
->>>> index 0000000..8a831d1
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->>>> @@ -0,0 +1,63 @@
->>>> +Amlogic Meson AXG DWC PCIE SoC controller
->>>> +
->>>> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
->>>> +It shares common functions with the PCIe DesignWare core driver and
->>>> +inherits common properties defined in
->>>> +Documentation/devicetree/bindings/pci/designware-pci.txt.
->>>> +
->>>> +Additional properties are described here:
->>>> +
->>>> +Required properties:
->>>> +- compatible:
->>>> +	should contain "amlogic,axg-pcie" to identify the core.
->>>> +- reg:
->>>> +	Should contain the configuration address space.
->>>> +- reg-names: Must be
->>>> +	- "elbi"	External local bus interface registers
->>>> +	- "cfg"		Meson specific registers
->>>> +	- "config"	PCIe configuration space
->>>> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
->>>> +- clocks: Must contain an entry for each entry in clock-names.
->>>> +- clock-names: Must include the following entries:
->>>> +	- "pclk"       PCIe GEN 100M PLL clock
->>>> +	- "port"       PCIe_x(A or B) RC clock gate
->>>> +	- "general"    PCIe Phy clock
->>>> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate
->>>> +- resets: phandle to the reset lines.
->>>> +- reset-names: must contain "phy" and "peripheral"
->>>> +       - "port" Port A or B reset
->>>> +       - "apb" APB reset
->>>
->>> The above description is not coherent (phy <=> port)
->>>
->>
->> Yes, this should be port and apb here.
->> We'll integrate phy driver into ctrl driver, and move phy reset to here also.
-> 
-> Why? That's the wrong thing to do if they are separate h/w blocks. You 
-> can do whatever you like in the drivers, but the DT should reflect the 
-> h/w.
-> 
-> Rob
-> 
-> .
-> 
-
-We have the dedicated phy driver which only process reset job,
-and we consider that it's too overkill to do just these things .
-So we will integrate phy reset job into the controller driver int the next version.  
-
-thanks. 
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index a2a3acd74491..0f2655d7f19e 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -258,8 +258,12 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+ 	 * avoid unpredictable SPI assignments done by firmware.
+ 	 */
+ 	for (i = 0 ; i < ICU_MAX_IRQS ; i++) {
+-		u32 icu_int = readl_relaxed(icu->base + ICU_INT_CFG(i));
+-		if ((icu_int >> ICU_GROUP_SHIFT) == ICU_GRP_NSR)
++		u32 icu_int, icu_grp;
++
++		icu_int = readl_relaxed(icu->base + ICU_INT_CFG(i));
++		icu_grp = icu_int >> ICU_GROUP_SHIFT;
++
++		if (icu_grp == ICU_GRP_NSR)
+ 			writel_relaxed(0x0, icu->base + ICU_INT_CFG(i));
+ 	}
+ 
+-- 
+2.17.1
