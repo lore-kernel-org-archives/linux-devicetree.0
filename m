@@ -1,61 +1,65 @@
-Return-Path: <SRS0=J9uu=LN=retiisi.org.uk=sakari.ailus@kernel.org>
-Date: Thu, 30 Aug 2018 13:55:32 +0300
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 1/2] dt-bindings: dw9714, dw9807-vcm: Add files to
- MAINTAINERS, rename files
-Message-ID: <20180830105531.53o3afx5k3cank5z@valkosipuli.retiisi.org.uk>
-References: <20180723105039.20110-1-sakari.ailus@linux.intel.com>
- <20180723105039.20110-2-sakari.ailus@linux.intel.com>
+Return-Path: <SRS0=CDzY=LN=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180723105039.20110-2-sakari.ailus@linux.intel.com>
-To: robh@kernel.org
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, alanx.chiang@intel.com, andy.yeh@intel.com
+References: <20180827162139.76196-1-chris.brandt@renesas.com>
+ <20180829005228.GA5407@bogus> <CAMuHMdWcvWDeSpewRDG=vAV+zsTO48a6kXTCL+34H_+Rnt0ung@mail.gmail.com>
+ <CAL_JsqLF76sX=uhvBDOGTHRgZoqXWyUrnPGNmL6heUJmQBF8dA@mail.gmail.com>
+In-Reply-To: <CAL_JsqLF76sX=uhvBDOGTHRgZoqXWyUrnPGNmL6heUJmQBF8dA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 Aug 2018 16:49:55 +0200
+Message-ID: <CAMuHMdUP=-EDJEk3wN9uVQHjRkimfwxvayV82gDT-XchYzrUNg@mail.gmail.com>
+Subject: Re: [PATCH v2] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Rob Herring <robh@kernel.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-Ping?
+Hi Rob,
 
-On Mon, Jul 23, 2018 at 01:50:38PM +0300, Sakari Ailus wrote:
-> Add the DT binding documentation for dw9714 and dw9807-vcm to the
-> MAINTAINERS file. The dw9807-vcm binding documentation file is renamed to
-> match the dw9807's VCM bit's compatible string.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  .../bindings/media/i2c/{dongwoon,dw9807.txt => dongwoon,dw9807-vcm.txt} | 0
->  MAINTAINERS                                                             | 2 ++
->  2 files changed, 2 insertions(+)
->  rename Documentation/devicetree/bindings/media/i2c/{dongwoon,dw9807.txt => dongwoon,dw9807-vcm.txt} (100%)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-> rename to Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bbd9b9b3d74f..44e917de2c8c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4410,6 +4410,7 @@ L:	linux-media@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Maintained
->  F:	drivers/media/i2c/dw9714.c
-> +F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
->  
->  DONGWOON DW9807 LENS VOICE COIL DRIVER
->  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-> @@ -4417,6 +4418,7 @@ L:	linux-media@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Maintained
->  F:	drivers/media/i2c/dw9807.c
-> +F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
->  
->  DOUBLETALK DRIVER
->  M:	"James R. Van Zandt" <jrv@vanzandt.mv.com>
-> -- 
-> 2.11.0
-> 
+On Thu, Aug 30, 2018 at 3:49 PM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Aug 30, 2018 at 3:05 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Wed, Aug 29, 2018 at 2:52 AM Rob Herring <robh@kernel.org> wrote:
+> > > On Mon, Aug 27, 2018 at 11:21:39AM -0500, Chris Brandt wrote:
+> > > > Add support for the R7S9210 (RZ/A2) Clock Pulse Generator and Module
+> > > > Standby.
+> > > >
+> > > > The Module Standby HW in the RZ/A series is very close to R-Car HW, except
+> > > > for how the registers are laid out.
+> > > > The MSTP registers are only 8-bits wide, there is no status registers
+> > > > (MSTPST), and the register offsets are a little different. Since the RZ/A
+> > > > hardware manuals refer to these registers as the Standby Control Registers,
+> > > > we'll use that name to distinguish the RZ/A type for the R-Car type.
+> > > >
+> > > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> > > > ---
+> > >
+> > > > +++ b/drivers/clk/renesas/r7s9210-cpg-mssr.c
+> > > > @@ -0,0 +1,192 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0+
+> > > > +/*
+> > >
+> > >
+> > > > +++ b/include/dt-bindings/clock/r7s9210-cpg-mssr.h
+> > > > @@ -0,0 +1,21 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0+
+> > >
+> > > The proper identifier is GPL-2.0-or-later
+> >
+> > Documentation/process/license-rules.rst disagrees.
+>
+> Indeed, but: https://spdx.org/licenses/GPL-2.0+.html
+>
+> I think this changed about the time the kernel adopted SPDX. I guess
+> it is fine as-is until we change the documentation.
+
+Unlikely to happen, cfr.
+https://lore.kernel.org/lkml/20180822194613.GB3457@kroah.com/
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
