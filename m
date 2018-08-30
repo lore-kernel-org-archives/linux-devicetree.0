@@ -1,12 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 08/30] iio: adc: remove hwmon structure
-Date: Thu, 30 Aug 2018 17:44:56 +0200
-Message-ID: <20180830154518.29507-9-embed3d@gmail.com>
+Subject: [PATCH v3 05/30] iio: adc: move SUN4I_GPADC_CHANNEL
+ define to header file
+Date: Thu, 30 Aug 2018 17:44:53 +0200
+Message-ID: <20180830154518.29507-6-embed3d@gmail.com>
 References: <20180830154518.29507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBGFCUDOAKGQEO6FO64Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBFNCUDOAKGQEP3PAVZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,31 +20,53 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We remove the hwmon structure that was requiered for the mfd driver.
+We are moving the SUN4I_GPADC_CHANNEL define to the header file.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 8 --------
- 1 file changed, 8 deletions(-)
+ drivers/iio/adc/sun4i-gpadc-iio.c | 9 ---------
+ include/linux/mfd/sun4i-gpadc.h   | 9 +++++++++
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index f787442a9e5f..ab474ce86fb6 100644
+index d95dd0fde2a6..666329940e1e 100644
 --- a/drivers/iio/adc/sun4i-gpadc-iio.c
 +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -109,14 +109,6 @@ struct sun4i_gpadc_iio {
+@@ -109,15 +109,6 @@ struct sun4i_gpadc_iio {
  	struct device			*sensor_device;
  };
  
--static struct iio_map sun4i_gpadc_hwmon_maps[] = {
--	{
--		.adc_channel_label = "temp_adc",
--		.consumer_dev_name = "iio_hwmon.0",
--	},
--	{ /* sentinel */ },
--};
+-#define SUN4I_GPADC_ADC_CHANNEL(_channel, _name) {		\
+-	.type = IIO_VOLTAGE,					\
+-	.indexed = 1,						\
+-	.channel = _channel,					\
+-	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+-	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+-	.datasheet_name = _name,				\
+-}
 -
- static const struct iio_chan_spec sun4i_gpadc_channels[] = {
- 	SUN4I_GPADC_ADC_CHANNEL(0, "adc_chan0"),
- 	SUN4I_GPADC_ADC_CHANNEL(1, "adc_chan1"),
+ static struct iio_map sun4i_gpadc_hwmon_maps[] = {
+ 	{
+ 		.adc_channel_label = "temp_adc",
+diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+index 139872c2e0fe..54c7c9375c1b 100644
+--- a/include/linux/mfd/sun4i-gpadc.h
++++ b/include/linux/mfd/sun4i-gpadc.h
+@@ -90,6 +90,15 @@
+ /* 10s delay before suspending the IP */
+ #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
+ 
++#define SUN4I_GPADC_ADC_CHANNEL(_channel, _name) {		\
++	.type = IIO_VOLTAGE,					\
++	.indexed = 1,						\
++	.channel = _channel,					\
++	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
++	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++	.datasheet_name = _name,				\
++}
++
+ struct sun4i_gpadc_dev {
+ 	struct device			*dev;
+ 	struct regmap			*regmap;
 -- 
 2.11.0
