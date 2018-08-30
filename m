@@ -1,58 +1,64 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 03/14] irqchip/irq-mvebu-icu: fix wrong private data
- retrieval
-Date: Thu, 30 Aug 2018 09:35:24 +0200
-Message-ID: <20180830073535.10710-4-miquel.raynal@bootlin.com>
-References: <20180830073535.10710-1-miquel.raynal@bootlin.com>
+From: Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: RE: [PATCH 3/5] drivers: clk-qoriq: Add clockgen support for lx2160a
+Date: Thu, 30 Aug 2018 07:36:48 +0000
+Message-ID: <VI1PR04MB4800E8B1E8541FCA9221A1CFF3080@VI1PR04MB4800.eurprd04.prod.outlook.com>
+References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
+         <1534747636-20064-4-git-send-email-vabhav.sharma@nxp.com>
+ <4a9ea6b451683ec98c92e86a5ae6b91213a6afcf.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180830073535.10710-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Haim Boot <hayim@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Hanna Hawa <hannah@marvell.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4a9ea6b451683ec98c92e86a5ae6b91213a6afcf.camel@buserror.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>, catal
+Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Andy Tang <andy.tang@nxp.com>, Udit Kumar <udit.kumar@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Varun Sethi <V.Sethi@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The irq_domain structure has an host_data pointer that just stores
-private data. It is meant to not be touched by the IRQ core. However,
-when it comes to MSI, the MSI layer adds its own private data there
-with a structure that also has a host_data pointer.
-
-Because this IRQ domain is an MSI domain, to access private data we
-should do a d->host_data->host_data, also wrapped as
-'platform_msi_get_host_data()'.
-
-This bug was lying there silently because the 'icu' structure retrieved
-this way was just called by dev_err(), only producing a
-'(NULL device *):' output on the console.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
----
- drivers/irqchip/irq-mvebu-icu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
-index 13063339b416..a2a3acd74491 100644
---- a/drivers/irqchip/irq-mvebu-icu.c
-+++ b/drivers/irqchip/irq-mvebu-icu.c
-@@ -105,7 +105,7 @@ static int
- mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
- 			       unsigned long *hwirq, unsigned int *type)
- {
--	struct mvebu_icu *icu = d->host_data;
-+	struct mvebu_icu *icu = platform_msi_get_host_data(d);
- 	unsigned int icu_group;
- 
- 	/* Check the count of the parameters in dt */
--- 
-2.17.1
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgta2VybmVsLW93
+bmVyQHZnZXIua2VybmVsLm9yZyA8bGludXgta2VybmVsLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5v
+cmc+IE9uIEJlaGFsZiBPZiBTY290dCBXb29kDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXVndXN0IDI5
+LCAyMDE4IDU6NDkgQU0NCj4gVG86IFZhYmhhdiBTaGFybWEgPHZhYmhhdi5zaGFybWFAbnhwLmNv
+bT47IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGlu
+dXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc7IG10dXJxdWV0dGVAYmF5bGlicmUuY29tOyBzYm95ZEBrZXJuZWwub3JnOw0K
+PiByandAcmp3eXNvY2tpLm5ldDsgdmlyZXNoLmt1bWFyQGxpbmFyby5vcmc7IGxpbnV4LWNsa0B2
+Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LXBtQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
+LW93bmVyQHZnZXIua2VybmVsLm9yZzsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwu
+ZGVhY29uQGFybS5jb207DQo+IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBhcm5kQGFybmRi
+LmRlOw0KPiBrc3Rld2FydEBsaW51eGZvdW5kYXRpb24ub3JnOyB5YW1hZGEubWFzYWhpcm9Ac29j
+aW9uZXh0LmNvbQ0KPiBDYzogWW9nZXNoIE5hcmF5YW4gR2F1ciA8eW9nZXNobmFyYXlhbi5nYXVy
+QG54cC5jb20+OyBBbmR5IFRhbmcNCj4gPGFuZHkudGFuZ0BueHAuY29tPjsgVWRpdCBLdW1hciA8
+dWRpdC5rdW1hckBueHAuY29tPjsNCj4gbGludXhAYXJtbGludXgub3JnLnVrOyBWYXJ1biBTZXRo
+aSA8Vi5TZXRoaUBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMvNV0gZHJpdmVyczog
+Y2xrLXFvcmlxOiBBZGQgY2xvY2tnZW4gc3VwcG9ydCBmb3IgbHgyMTYwYQ0KPiANCj4gT24gTW9u
+LCAyMDE4LTA4LTIwIGF0IDEyOjE3ICswNTMwLCBWYWJoYXYgU2hhcm1hIHdyb3RlOg0KPiA+IEZy
+b206IFlvZ2VzaCBHYXVyIDx5b2dlc2huYXJheWFuLmdhdXJAbnhwLmNvbT4NCj4gPg0KPiA+IEFk
+ZCBjbG9ja2dlbiBzdXBwb3J0IGZvciBseDIxNjBhLg0KPiA+IEFkZGVkIGVudHJ5IGZvciBjb21w
+YXQgJ2ZzbCxseDIxNjBhLWNsb2NrZ2VuJy4NCj4gPiBBcyBMWDIxNjBBIGlzIDE2IGNvcmUsIHNv
+IG1vZGlmaWVkIHZhbHVlIGZvciBOVU1fQ01VWA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogVGFu
+ZyBZdWFudGlhbiA8YW5keS50YW5nQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9nZXNo
+IEdhdXIgPHlvZ2VzaG5hcmF5YW4uZ2F1ckBueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFZh
+YmhhdiBTaGFybWEgPHZhYmhhdi5zaGFybWFAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVy
+cy9jbGsvY2xrLXFvcmlxLmMgICAgICAgICB8IDE0ICsrKysrKysrKysrKystDQo+ID4gIGRyaXZl
+cnMvY3B1ZnJlcS9xb3JpcS1jcHVmcmVxLmMgfCAgMSArDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwg
+MTQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvY2xrL2Nsay1xb3JpcS5jIGIvZHJpdmVycy9jbGsvY2xrLXFvcmlxLmMgaW5kZXgNCj4g
+PiAzYTE4MTJmLi5mYzZlMzA4IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvY2xrL2Nsay1xb3Jp
+cS5jDQo+ID4gKysrIGIvZHJpdmVycy9jbGsvY2xrLXFvcmlxLmMNCj4gPiBAQCAtNjAsNyArNjAs
+NyBAQCBzdHJ1Y3QgY2xvY2tnZW5fbXV4aW5mbyB7ICB9Ow0KPiA+DQo+ID4gICNkZWZpbmUgTlVN
+X0hXQUNDRUwJNQ0KPiA+IC0jZGVmaW5lIE5VTV9DTVVYCTgNCj4gPiArI2RlZmluZSBOVU1fQ01V
+WAkxNg0KPiA+DQo+ID4gIHN0cnVjdCBjbG9ja2dlbjsNCj4gPg0KPiA+IEBAIC01NzAsNiArNTcw
+LDE3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgY2xvY2tnZW5fY2hpcGluZm8gY2hpcGluZm9bXSA9
+IHsNCj4gPiAgCQkuZmxhZ3MgPSBDR19WRVIzIHwgQ0dfTElUVExFX0VORElBTiwNCj4gPiAgCX0s
+DQo+ID4gIAl7DQo+ID4gKwkJLmNvbXBhdCA9ICJmc2wsbHgyMTYwYS1jbG9ja2dlbiIsDQo+ID4g
+KwkJLmNtdXhfZ3JvdXBzID0gew0KPiA+ICsJCQkmY2xvY2tnZW4yX2NtdXhfY2dhMTIsICZjbG9j
+a2dlbjJfY211eF9jZ2INCj4gPiArCQl9LA0KPiA+ICsJCS5jbXV4X3RvX2dyb3VwID0gew0KPiA+
+ICsJCQkwLCAwLCAwLCAwLCAxLCAxLCAxLCAxLCAtMQ0KPiA+ICsJCX0sDQo+ID4gKwkJLnBsbF9t
+YXNrID0gMHgzNywNCj4gPiArCQkuZmxhZ3MgPSBDR19WRVIzIHwgQ0dfTElUVExFX0VORElBTiwN
+Cj4gPiArCX0sDQo+IA0KPiBXaHkgYXJlIHlvdSBpbmNyZWFzaW5nIE5VTV9DTVVYIGJleW9uZCA4
+IGZvciBhIGNoaXAgdGhhdCBvbmx5IGhhcyA4DQo+IGVudHJpZXMgaW4gY211eF90b19ncm91cD8N
+CkNvbmZpZ3VyYXRpb24gaXMgMTYgY29yZXMsOCBjbHVzdGVyIHdpdGggMiBjb3JlcyBpbiBlYWNo
+IGNsdXN0ZXINCj4gDQo+IC1TY290dA0KDQo=
