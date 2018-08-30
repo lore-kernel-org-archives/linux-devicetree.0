@@ -1,98 +1,128 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3] spi: spi-geni-qcom: Add SPI driver support for GENI
- based QUP
-Date: Wed, 29 Aug 2018 19:30:59 -0500
-Message-ID: <CAL_JsqL+prmJDKfXGdcB6mQBzA93PjfTqnpk3_07fmOt4=fx7w@mail.gmail.com>
-References: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
- <20180829002535.GA4224@bogus> <d751bc90ab1cfce84d6f419400790566@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [Patch v15 4/5] dt-bindings: arm-smmu: Add bindings
+ for qcom, smmu-v2
+Date: Wed, 29 Aug 2018 19:43:30 -0500
+Message-ID: <CAL_JsqKGHC9wCy583CTvAz8-A_M6zyrAX69yN5RUjv7Kbs1wFQ@mail.gmail.com>
+References: <20180827105551.16346-1-vivek.gautam@codeaurora.org>
+ <20180827105551.16346-5-vivek.gautam@codeaurora.org>
+ <20180828203418.GA18366@bogus>
+ <a1e31d1e-aaa4-5951-2261-3169033c636a@codeaurora.org>
+ <CAFp+6iGHus-kZv+Zr5aiYRLct07NCFBL3k44bX=c4eW7J24kZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d751bc90ab1cfce84d6f419400790566@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dilip Kota <dkota@codeaurora.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, Mark Brown <broonie@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Doug Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAFp+6iGHus-kZv+Zr5aiYRLct07NCFBL3k44bX=c4eW7J24kZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 6:19 AM <dkota@codeaurora.org> wrote:
->
-> On 2018-08-29 05:55, Rob Herring wrote:
-> > On Fri, Aug 24, 2018 at 04:12:15PM +0530, Dilip Kota wrote:
-> >> From: Girish Mahadevan <girishm@codeaurora.org>
-> >>
-> >> This driver supports GENI based SPI Controller in the Qualcomm SOCs.
-> >> The
-> >> Qualcomm Generic Interface (GENI) is a programmable module supporting
-> >> a
-> >> wide range of serial interfaces including SPI. This driver supports
-> >> SPI
-> >> operations using FIFO mode of transfer.
-> >>
-> >> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
-> >> Signed-off-by: Dilip Kota <dkota@codeaurora.org>
-> >> ---
-> >> Addressing all the reviewer commets given in Patchset1.
-> >> Summerizing all the comments below:
-> >>
-> >>      MAKEFILE: Arrange SPI-GENI driver in alphabetical order
-> >>      Kconfig: Mark SPI_GENI driver dependent on QCOM_GENI_SE
-> >>      Enable SPI core auto runtime pm, and remove runtime pm calls.
-> >>      Remove spi_geni_unprepare_message(),
-> >> spi_geni_unprepare_transfer_hardware()
-> >>      Remove likely/unlikely keywords.
-> >>      Remove get_spi_master() and use dev_get_drvdata()
-> >>      Move request_irq to probe()
-> >>      Mark bus number assignment to -1 as SPI core framework will assign
-> >> dynamically
-> >>      Use devm_spi_register_master()
-> >>      Include platform_device.h instead of of_platform.h
-> >>      Removing macros which are used only once:
-> >>              #define SPI_NUM_CHIPSELECT     4
-> >>              #define SPI_XFER_TIMEOUT_MS    250
-> >>      Place Register field definitions next to respective Register
-> >> definitions.
-> >>      Replace int and u32 declerations to unsigned int.
-> >>      Remove Hex numbers in debug prints.
-> >>      Declare mode as u16 in spi_setup_word_len()
-> >>      Remove the labels: setup_fifo_params_exit:
-> >> exit_prepare_transfer_hardware:
-> >>      Declaring struct spi_master as spi everywhere in the file.
-> >>      Calling spi_finalize_current_transfer() for end of transfer.
-> >>      Hard code the SPI controller max frequency instead of reading from
-> >> DTSI node.
-> >>      Spinlock not required, removed it.
-> >>      Removed unrequired error prints.
-> >>      Fix KASAN error in geni_spi_isr().
-> >>      Remove spi-geni-qcom.h
-> >>      Remove inter words delay and CS to Clock toggle delay logic in the
-> >> driver, as of now no clients are using it.
-> >>      Will submit this logic in the next patchset.
-> >>      Use major, minor and step macros to read from hardware version
-> >> register.
-> >>
-> >>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |   2 -
-> >
-> > Please split to a separate patch and explain why you are removing
-> > spi-max-frequency?
->
-> Hi Rob Herring,
->
-> In this patch, added changes for Driver not to read the SPI controller
-> Maximum frequency from the device tree. Accordingly I removed it in the
-> device tree documentation file. As both the files need to updated so did
-> in the same patch.
-
-Just because the Linux driver doesn't use it isn't a reason. What if
-there is another OS driver for it? The binding is the h/w description,
-not what the driver uses currently.
-
-> Could you please let me know the reason for making a separate patch.
-
-- Step 1 of Documentation/devicetree/bindings/submitting-patches.txt says so
-- I only review the binding generally, so my ack or reviewed by only
-applies to it.
-- It makes the commit history of the DT only tree[1] more logical.
-
- Rob
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+T24gV2VkLCBBdWcgMjksIDIwMTggYXQgNjoyMyBBTSBWaXZlayBHYXV0YW0KPHZpdmVrLmdhdXRh
+bUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPiBPbiBXZWQsIEF1ZyAyOSwgMjAxOCBhdCAyOjA1
+IFBNIFZpdmVrIEdhdXRhbQo+IDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+
+ID4KPiA+IEhpIFJvYiwKPiA+Cj4gPgo+ID4gT24gOC8yOS8yMDE4IDI6MDQgQU0sIFJvYiBIZXJy
+aW5nIHdyb3RlOgo+ID4gPiBPbiBNb24sIEF1ZyAyNywgMjAxOCBhdCAwNDoyNTo1MFBNICswNTMw
+LCBWaXZlayBHYXV0YW0gd3JvdGU6Cj4gPiA+PiBBZGQgYmluZGluZ3MgZG9jIGZvciBRY29tJ3Mg
+c21tdS12MiBpbXBsZW1lbnRhdGlvbi4KPiA+ID4+Cj4gPiA+PiBTaWduZWQtb2ZmLWJ5OiBWaXZl
+ayBHYXV0YW0gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPiA+ID4+IFJldmlld2VkLWJ5
+OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPgo+ID4gPj4gVGVzdGVkLWJ5OiBTcmlu
+aXZhcyBLYW5kYWdhdGxhIDxzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmc+Cj4gPiA+PiAt
+LS0KPiA+ID4+Cj4gPiA+PiBDaGFuZ2VzIHNpbmNlIHYxNDoKPiA+ID4+ICAgLSBUaGlzIGlzIGEg
+bmV3IHBhdGNoIGFkZGVkIGluIHYxNSBhZnRlciBub3RpY2luZyB0aGUgbmV3Cj4gPiA+PiAgICAg
+Y2hlY2twYXRjaCB3YXJuaW5nIGZvciBzZXBhcmF0ZSBkdC1iaW5kaW5ncyBkb2MuCj4gPiA+PiAg
+IC0gVGhpcyBwYXRjaCBhbHNvIGFkZHJlc3NlcyBjb21tZW50cyBnaXZlbiBieSBSb2IgYW5kIFJv
+YmluIHRvIGFkZAo+ID4gPj4gICAgIGEgbGlzdCBvZiB2YWxpZCB2YWx1ZXMgb2YgJzxzb2M+JyBp
+biAicWNvbSw8c29jPi1zbW11LXYyIgo+ID4gPj4gICAgIGNvbXBhdGlibGUgc3RyaW5nLgo+ID4g
+Pj4KPiA+ID4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUudHh0ICAg
+ICAgICAgfCA0NyArKysrKysrKysrKysrKysrKysrKysrCj4gPiA+PiAgIDEgZmlsZSBjaGFuZ2Vk
+LCA0NyBpbnNlcnRpb25zKCspCj4gPiA+Pgo+ID4gPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUudHh0Cj4gPiA+PiBpbmRleCA4YTZm
+ZmNlMTJhZjUuLjUyMTk4YTUzOTYwNiAxMDA2NDQKPiA+ID4+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQKPiA+ID4+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQKPiA+ID4+IEBA
+IC0xNywxMCArMTcsMjQgQEAgY29uZGl0aW9ucy4KPiA+ID4+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgImFybSxtbXUtNDAxIgo+ID4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAiYXJt
+LG1tdS01MDAiCj4gPiA+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICJjYXZpdW0sc21tdS12
+MiIKPiA+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAicWNvbSw8c29jPi1zbW11LXYyIiwg
+InFjb20sc21tdS12MiIKPiA+ID4gVGhlIHYyIGluIHRoZSBjb21wYXRpYmxlIHN0cmluZyBpcyBr
+aW5kIG9mIHJlZHVuZGFudCB1bmxlc3MgdGhlIFNvQyBoYXMKPiA+ID4gb3RoZXIgU01NVSB0eXBl
+cy4KPiA+Cj4gPiBzZG04NDUgaGFzIHNtbXUtdjIsIGFuZCBzbW11LTUwMCBbMV0uCj4gPgo+ID4g
+Pj4KPiA+ID4+ICAgICAgICAgICAgICAgICAgICAgZGVwZW5kaW5nIG9uIHRoZSBwYXJ0aWN1bGFy
+IGltcGxlbWVudGF0aW9uIGFuZC9vciB0aGUKPiA+ID4+ICAgICAgICAgICAgICAgICAgICAgdmVy
+c2lvbiBvZiB0aGUgYXJjaGl0ZWN0dXJlIGltcGxlbWVudGVkLgo+ID4gPj4KPiA+ID4+ICsgICAg
+ICAgICAgICAgICAgICBBIG51bWJlciBvZiBRY29tIFNvQ3MgdXNlIHFjb20sc21tdS12MiB2ZXJz
+aW9uIG9mIHRoZSBJUC4KPiA+ID4+ICsgICAgICAgICAgICAgICAgICAicWNvbSw8c29jPi1zbW11
+LXYyIiByZXByZXNlbnRzIGEgc29jIHNwZWNpZmljIGNvbXBhdGlibGUKPiA+ID4+ICsgICAgICAg
+ICAgICAgICAgICBzdHJpbmcgdGhhdCBzaG91bGQgYmUgcHJlc2VudCBhbG9uZyB3aXRoIHRoZSAi
+cWNvbSxzbW11LXYyIgo+ID4gPj4gKyAgICAgICAgICAgICAgICAgIHRvIGZhY2lsaXRhdGUgU29D
+IHNwZWNpZmljIGNsb2Nrcy9wb3dlciBjb25uZWN0aW9ucyBhbmQgdG8KPiA+ID4+ICsgICAgICAg
+ICAgICAgICAgICBhZGRyZXNzIHNwZWNpZmljIGJ1ZyBmaXhlcy4KPiA+ID4+ICsgICAgICAgICAg
+ICAgICAgICAnPHNvYz4nIHN0cmluZyBpbiAicWNvbSw8c29jPi1zbW11LXYyIiBzaG91bGQgYmUg
+b25lIG9mIHRoZQo+ID4gPj4gKyAgICAgICAgICAgICAgICAgIGZvbGxvd2luZzoKPiA+ID4+ICsg
+ICAgICAgICAgICAgICAgICBtc204OTk2IC0gZm9yIG1zbTg5OTYgUWNvbSBTb0MuCj4gPiA+PiAr
+ICAgICAgICAgICAgICAgICAgc2RtODQ1IC0gZm9yIHNkbTg0NSBRY29tIFNvYy4KPiA+ID4gUmF0
+aGVyIHRoYW4gYWxsIHRoaXMgcHJvc2UsIGl0IHdvdWxkIGJlIHNpbXBsZXIgdG8ganVzdCBhZGQg
+MiBsaW5lcyB3aXRoCj4gPiA+IHRoZSBmdWxsIGNvbXBhdGlibGVzIHJhdGhlciB0aGFuIDxzb2M+
+LiBUaGUgPHNvYz4gdGhpbmcgaXMgbm90IGdvaW5nIHRvCj4gPiA+IHdvcmsgd2hlbi9pZiB3ZSBt
+b3ZlIGJpbmRpbmdzIHRvIGpzb24tc2NoZW1hIGFsc28uCj4gPgo+ID4gdGhlbiB3ZSBrZWVwIGFk
+ZGluZwo+ID4gICAgICAgICAgICJxY29tLG1zbTg5OTYtc21tdS12MiIsICJxY29tLHNtbXUtdjIi
+Cj4gPiAgICAgICAgICAgInFjb20sbXNtODk5OC1zbW11LXYyIiwgInFjb20sc21tdS12MiIKPiA+
+ICAgICAgICAgICAicWNvbSxzZG04NDUtc21tdS12MiIsICJxY29tLHNtbXUtdjIiLAo+ID4gYW5k
+IGZyb20gWzFdCj4gPiAgICAgICAgICAgInFjb20sc2RtODQ1LXNtbXUtNTAwIiwgImFybSxtbXUt
+NTAwIiwgZXRjLgo+ID4gZm9yIGVhY2ggU29Dcz8KPgo+IEhvdyBhYm91dCBmb2xsb3dpbmcgZGlm
+ZiBvbiB0b3Agb2YgdGhpcyBwYXRjaD8KPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUudHh0Cj4gaW5kZXggNTIxOThhNTM5NjA2
+Li41ZTZjMDQ4NzY1MzMgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2lvbW11L2FybSxzbW11LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQKPiBAQCAtMTcsMjMgKzE3LDE4IEBAIGNvbmRp
+dGlvbnMuCj4gICAgICAgICAgICAgICAgICAgICAgICAgICJhcm0sbW11LTQwMSIKPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgImFybSxtbXUtNTAwIgo+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAiY2F2aXVtLHNtbXUtdjIiCj4gLSAgICAgICAgICAgICAgICAgICAgICAgICJxY29tLDxzb2M+
+LXNtbXUtdjIiLCAicWNvbSxzbW11LXYyIgo+ICsgICAgICAgICAgICAgICAgICAgICAgICAicWNv
+bSxzbW11LXYyIgo+Cj4gICAgICAgICAgICAgICAgICAgIGRlcGVuZGluZyBvbiB0aGUgcGFydGlj
+dWxhciBpbXBsZW1lbnRhdGlvbiBhbmQvb3IgdGhlCj4gICAgICAgICAgICAgICAgICAgIHZlcnNp
+b24gb2YgdGhlIGFyY2hpdGVjdHVyZSBpbXBsZW1lbnRlZC4KPgo+IC0gICAgICAgICAgICAgICAg
+ICBBIG51bWJlciBvZiBRY29tIFNvQ3MgdXNlIHFjb20sc21tdS12MiB2ZXJzaW9uIG9mIHRoZSBJ
+UC4KPiAtICAgICAgICAgICAgICAgICAgInFjb20sPHNvYz4tc21tdS12MiIgcmVwcmVzZW50cyBh
+IHNvYyBzcGVjaWZpYyBjb21wYXRpYmxlCj4gLSAgICAgICAgICAgICAgICAgIHN0cmluZyB0aGF0
+IHNob3VsZCBiZSBwcmVzZW50IGFsb25nIHdpdGggdGhlICJxY29tLHNtbXUtdjIiCj4gLSAgICAg
+ICAgICAgICAgICAgIHRvIGZhY2lsaXRhdGUgU29DIHNwZWNpZmljIGNsb2Nrcy9wb3dlciBjb25u
+ZWN0aW9ucyBhbmQgdG8KPiAtICAgICAgICAgICAgICAgICAgYWRkcmVzcyBzcGVjaWZpYyBidWcg
+Zml4ZXMuCj4gLSAgICAgICAgICAgICAgICAgICc8c29jPicgc3RyaW5nIGluICJxY29tLDxzb2M+
+LXNtbXUtdjIiIHNob3VsZCBiZSBvbmUgb2YgdGhlCj4gLSAgICAgICAgICAgICAgICAgIGZvbGxv
+d2luZzoKPiAtICAgICAgICAgICAgICAgICAgbXNtODk5NiAtIGZvciBtc204OTk2IFFjb20gU29D
+Lgo+IC0gICAgICAgICAgICAgICAgICBzZG04NDUgLSBmb3Igc2RtODQ1IFFjb20gU29jLgo+IC0K
+PiAtICAgICAgICAgICAgICAgICAgQW4gZXhhbXBsZSBzdHJpbmcgd291bGQgYmUgLQo+IC0gICAg
+ICAgICAgICAgICAgICAicWNvbSxtc204OTk2LXNtbXUtdjIiLCAicWNvbSxzbW11LXYyIi4KPiAr
+ICAgICAgICAgICAgICAgICAgUWNvbSBTb0NzIHVzaW5nIHFjb20sc21tdS12MiBtdXN0IGhhdmUg
+c29jIHNwZWNpZmljCj4gKyAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgc3RyaW5nIGF0dGFj
+aGVkIHRvICJxY29tLHNtbXUtdjIiIHRvIHRha2UgY2FyZQo+ICsgICAgICAgICAgICAgICAgICBv
+ZiBTb0Mgc3BlY2lmaWMgY2xvY2tzL3Bvd2VyIGNvbm5lY3Rpb25zIGFuZCB0byBhZGRyZXNzCj4g
+KyAgICAgICAgICAgICAgICAgIHNwZWNpZmljIGJ1ZyBmaXhlcy4KPiArICAgICAgICAgICAgICAg
+ICAgUHJlY2lzZWx5LCBpdCBzaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmc6Cj4gKyAgICAg
+ICAgICAgICAgICAgICJxY29tLG1zbTg5OTYtc21tdS12MiIsICJxY29tLHNtbXUtdjIiLAo+ICsg
+ICAgICAgICAgICAgICAgICAicWNvbSxzZG04NDUtc21tdS12MiIsICJxY29tLHNtbXUtdjIiLgoK
+V2UgZG9uJ3QgbmVlZCBhbiBleHBsYW5hdGlvbiBvZiB3aHkgd2UgbmVlZCBzcGVjaWZpYyBjb21w
+YXRpYmxlcyBpbgplYWNoIGJpbmRpbmcgZG9jdW1lbnQgKHRob3VnaCBtYXliZSB3ZSBuZWVkIGEg
+YmV0dGVyIGV4cGxhbmF0aW9uCnNvbWV3aGVyZSkuIFdlIGp1c3QgbmVlZCB0byBrbm93IHdoYXQg
+YXJlIHZhbGlkIHZhbHVlcyBmb3IgY29tcGF0aWJsZXMKYW5kIHRoaXMgaW5jbHVkZXMgYW55IGNv
+bWJpbmF0aW9ucy4gR2VuZXJhbGx5LCB0aGlzIGlzIGp1c3QgYSBsaXN0IG9mCmNvbWJpbmF0aW9u
+cy4KClRoZSBSZW5lc2FzIGZvbGtzIGhhdmUgZmlndXJlZCBvdXQgaG93IHRvIGRvIHRoaXMgYW5k
+IHRoZXkgaGF2ZSBsb3RzCm9mIFNvQ3MuIFllcywgaXQgbWFrZXMgZm9yIGEgbG90IG9mIHBhdGNo
+ZXMsIGJ1dCB0aGV5IGFyZSBhbGwgbW9zdGx5IDEKbGluZXJzIGFuZCBhcmUgZGVhZCBzaW1wbGUg
+dG8gcmV2aWV3LiBXaXRoIFFDb20sIEknbSB0aXJlZCBvZiBoYXZpbmcKdGhlIHNhbWUgZGFtbiBk
+aXNjdXNzaW9uIHdpdGggZXZlcnkgbmV3IGJpbmRpbmcuCgpSb2IKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVl
+ZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
