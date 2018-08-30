@@ -1,82 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 3/3] of: make default address and size cells sizes private
-Date: Thu, 30 Aug 2018 14:05:23 -0500
-Message-ID: <20180830190523.31474-4-robh@kernel.org>
-References: <20180830190523.31474-1-robh@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v1 0/5] CPUFREQ OPP's and Tegra30 support by tegra20-cpufreq driver
+Date: Thu, 30 Aug 2018 22:43:51 +0300
+Message-ID: <20180830194356.14059-1-digetx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830190523.31474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Only some old OpenFirmware implementations rely on default sizes. Any
-FDT and modern implementation should have explicit properties. Make the
-OF_ROOT_NODE_*_CELLS_DEFAULT defines private so we don't get any outside
-users.
+Hello,
 
-This also gets us one step closer to removing the asm/prom.h dependency on
-Sparc.
+This series adds support for CPU frequency scaling on Tegra30 and device
+tree support that allows to implement thermal throttling and customize
+available CPU frequencies per-board. The tegra20-cpufreq driver has been
+re-worked to support that all.
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: sparclinux@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/sparc/include/asm/prom.h | 3 ---
- drivers/of/of_private.h       | 8 ++++++++
- include/linux/of.h            | 6 ------
- 3 files changed, 8 insertions(+), 9 deletions(-)
+Note that Tegra30 support not strictly depends on the clock patches that
+are under review now, CPUFREQ driver will fail to probe until CCLKG clock
+will get exposed by the clock driver. Hence this series can be applied
+independently of the clock patches, CPUFREQ will start to work on Tegra30
+once both patchsets will be applied.
 
-diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
-index d955c8df62d6..1902db27ff4b 100644
---- a/arch/sparc/include/asm/prom.h
-+++ b/arch/sparc/include/asm/prom.h
-@@ -24,9 +24,6 @@
- #include <linux/atomic.h>
- #include <linux/irqdomain.h>
- 
--#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT	2
--#define OF_ROOT_NODE_SIZE_CELLS_DEFAULT	1
--
- #define of_compat_cmp(s1, s2, l)	strncmp((s1), (s2), (l))
- #define of_prop_cmp(s1, s2)		strcasecmp((s1), (s2))
- #define of_node_cmp(s1, s2)		strcmp((s1), (s2))
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 216175d11d3d..5d1567025358 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -27,6 +27,14 @@ struct alias_prop {
- 	char stem[0];
- };
- 
-+#if defined(CONFIG_SPARC)
-+#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT 2
-+#else
-+#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT 1
-+#endif
-+
-+#define OF_ROOT_NODE_SIZE_CELLS_DEFAULT 1
-+
- extern struct mutex of_mutex;
- extern struct list_head aliases_lookup;
- extern struct kset *of_kset;
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 506beca9588d..49d85f670c75 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -247,12 +247,6 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
- #include <asm/prom.h>
- #endif
- 
--/* Default #address and #size cells.  Allow arch asm/prom.h to override */
--#if !defined(OF_ROOT_NODE_ADDR_CELLS_DEFAULT)
--#define OF_ROOT_NODE_ADDR_CELLS_DEFAULT 1
--#define OF_ROOT_NODE_SIZE_CELLS_DEFAULT 1
--#endif
--
- #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
- #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
- 
+Dmitry Osipenko (5):
+  dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
+  cpufreq: tegra20: Support OPP, thermal cooling and Tegra30
+  ARM: tegra: Create tegra20-cpufreq device on Tegra30
+  ARM: dts: tegra20: Add CPU Operating Performance Points
+  ARM: dts: tegra30: Add CPU Operating Performance Points
+
+ .../cpufreq/nvidia,tegra20-cpufreq.txt        |  38 ++
+ arch/arm/boot/dts/tegra20.dtsi                |  58 +++
+ arch/arm/boot/dts/tegra30.dtsi                |  65 ++++
+ arch/arm/mach-tegra/tegra.c                   |   4 +
+ drivers/cpufreq/Kconfig.arm                   |   2 +
+ drivers/cpufreq/cpufreq-dt-platdev.c          |   2 +
+ drivers/cpufreq/tegra20-cpufreq.c             | 334 +++++++++++++-----
+ 7 files changed, 422 insertions(+), 81 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+
 -- 
-2.17.1
+2.18.0
