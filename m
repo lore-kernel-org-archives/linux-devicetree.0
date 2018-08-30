@@ -1,495 +1,173 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH v2] remoteproc: qcom: Introduce Non-PAS ADSP PIL driver
-Date: Thu, 30 Aug 2018 19:46:18 +0530
-Message-ID: <47e4e6f6-212d-124d-66b7-eaf3b579261c@codeaurora.org>
-References: <1530264053-8394-1-git-send-email-rohitkr@codeaurora.org>
- <20180828060943.GI5090@builder>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v16 0/5] iommu/arm-smmu: Add runtime pm/sleep
+ support
+Date: Thu, 30 Aug 2018 20:15:36 +0530
+Message-ID: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828060943.GI5090@builder>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, sbpata@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Bjorn for reviewing the patch.
-
-
-On 8/28/2018 11:39 AM, Bjorn Andersson wrote:
-> On Fri 29 Jun 02:20 PDT 2018, Rohit kumar wrote:
->
->> This adds APSS based ADSP PIL driver for QCOM SoCs.
->> Added initial support for SDM845 with ADSP bootup and
->> shutdown operation handled from Application Processor
->> SubSystem(APSS).
->>
-> Hi Rohit,
->
-> I've submitted a patch that renames the PAS based adsp driver, please
-> rebase your patch upon this.
-
-Sure.
->> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->> ---
->> Changes since v1:
->> - Used APIs from qcom_q6v5.c
->> - Use clock, reset and regmap driver APIs instead of
->>    directly writing into the LPASS registers.
->> - Created new file for non PAS ADSP PIL instead of extending
->>    existing ADSP PIL driver.
->> - cleanups as suggested by Bjorn and Rob.
->>
->>   .../bindings/remoteproc/qcom,non-pas-adsp.txt      | 138 +++++
->>   drivers/remoteproc/Kconfig                         |  18 +
->>   drivers/remoteproc/Makefile                        |   1 +
->>   drivers/remoteproc/qcom_nonpas_adsp_pil.c          | 667 +++++++++++++++++++++
->>   4 files changed, 824 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
->>   create mode 100644 drivers/remoteproc/qcom_nonpas_adsp_pil.c
->>
->> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
->> new file mode 100644
->> index 0000000..0581aaa
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,non-pas-adsp.txt
-> qcom,adsp-pil.txt
->
->> @@ -0,0 +1,138 @@
->> +Qualcomm Technology Inc. Non PAS ADSP Peripheral Image Loader
->> +
->> +This document defines the binding for a component that loads and boots firmware
->> +on the Qualcomm Technology Inc. ADSP Hexagon core.
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <string>
->> +	Definition: must be one of:
->> +		    "qcom,sdm845-apss-adsp-pil"
-> "qcom,sdm845-adsp-pil"
-
-ok
->> +
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: must specify the base address and size of the qdsp6ss
->> +
->> +- reg-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "qdsp6ss"
-> No need for reg-names when we have a single reg.
-
-ok
->> +
->> +- interrupts-extended:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: must list the watchdog, fatal IRQs ready, handover and
->> +		    stop-ack IRQs
->> +
-> [..]
->> +
->> += EXAMPLE
->> +The following example describes the resources needed to boot control the
->> +ADSP, as it is found on SDM845 boards.
->> +	adsp-pil {
->> +		compatible = "qcom,sdm845-apss-adsp-pil";
->> +
->> +		reg = <0x17300000 0x40c>;
->> +		reg-names = "qdsp6ss";
->> +
->> +		interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
->> +			<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
->> +			<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
->> +			<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
->> +			<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
->> +		interrupt-names = "wdog", "fatal", "ready",
->> +			"handover", "stop-ack";
->> +
->> +		clocks = <&clock_rpmh RPMH_CXO_CLK>,
->> +			<&lpasscc GCC_LPASS_SWAY_CLK>,
->> +			<&lpasscc LPASS_AUDIO_WRAPPER_AON_CLK>,
->> +			<&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
->> +			<&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
->> +			<&lpasscc LPASS_QDSP6SS_XO_CLK>,
->> +			<&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
->> +			<&lpasscc LPASS_QDSP6SS_CORE_CLK>;
->> +		clock-names = "xo", "sway_cbcr", "lpass_aon",
->> +			"lpass_ahbs_aon_cbcr",
->> +			"lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
->> +			"qdsp6ss_sleep", "qdsp6ss_core";
->> +
->> +		cx-supply = <&pm8998_s9_level>;
-> If this is a corner you should use the power-domain reference to the
-> appropriate rpmhpd resource.
-
-ok, will update it in next patchset
->> +
->> +		resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
->> +			 <&aoss_reset AOSS_CC_LPASS_RESTART>;
->> +		reset-names = "pdc_sync", "cc_lpass";
->> +
->> +		qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
->> +
->> +		memory-region = <&pil_adsp_mem>;
->> +
->> +		qcom,smem-states = <&adsp_smp2p_out 0>;
->> +		qcom,smem-state-names = "stop";
->> +	};
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index 0dde375..9de0a53 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -100,6 +100,24 @@ config QCOM_ADSP_PIL
->>   	  Say y here to support the TrustZone based Peripherial Image Loader
->>   	  for the Qualcomm ADSP remote processors.
->>   
->> +config QCOM_NON_PAS_ADSP_PIL
-> QCOM_ADSP_PIL
-
-ok
->
-> [..]
->> diff --git a/drivers/remoteproc/qcom_nonpas_adsp_pil.c b/drivers/remoteproc/qcom_nonpas_adsp_pil.c
->> new file mode 100644
->> index 0000000..826d3d4
->> --- /dev/null
->> +++ b/drivers/remoteproc/qcom_nonpas_adsp_pil.c
-> Now qcom_adsp_pil.c
-
-Yup
-> [..]
->> +struct qcom_adsp {
-> [..]
->> +
->> +	struct qcom_rproc_glink glink_subdev;
->> +	struct qcom_rproc_subdev smd_subdev;
-> We don't use smd on sdm845, so omit this until we have a user.
-
-sure
->> +	struct qcom_rproc_ssr ssr_subdev;
->> +	struct qcom_sysmon *sysmon;
->> +};
->> +
->> +static int adsp_clk_enable(struct qcom_adsp *adsp)
->> +{
->> +	int ret;
->> +
->> +	/* Enable SWAY clock */
->> +	ret = clk_prepare_enable(adsp->gcc_sway_cbcr);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Enable LPASS AHB AON Bus */
->> +	ret = clk_prepare_enable(adsp->lpass_audio_aon_clk);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Enable the QDSP6SS AHBM and AHBS clocks */
->> +	ret = clk_prepare_enable(adsp->lpass_ahbs_aon_cbcr);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = clk_prepare_enable(adsp->lpass_ahbm_aon_cbcr);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Turn on the XO clock, required to boot FSM */
->> +	ret = clk_prepare_enable(adsp->qdsp6ss_xo_cbcr);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Enable the QDSP6SS sleep clock for the QDSP6 watchdog enablement */
->> +	ret = clk_prepare_enable(adsp->qdsp6ss_sleep_cbcr);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Configure QDSP6 core CBC to enable clock */
->> +	ret = clk_prepare_enable(adsp->qdsp6ss_core_cbcr);
->> +	if (ret)
->> +		return ret;
-> Can we use the clk_bulk interface instead of using this expanded form?
-
-Yup, will update in next spin.
->> +
->> +	return ret;
->> +}
->> +
->> +static int adsp_reset(struct qcom_adsp *adsp)
->> +{
->> +	unsigned int val;
->> +	int ret = 0;
-> No need to initialize ret.
-
-ok
->> +
->> +	/* De-assert QDSP6 stop core. QDSP6 will execute after out of reset */
->> +	writel(0x1, adsp->qdsp6ss_base + CORE_START_REG);
->> +
->> +	/* Trigger boot FSM to start QDSP6 */
->> +	writel(0x1, adsp->qdsp6ss_base + BOOT_CMD_REG);
->> +
->> +	/* Wait for core to come out of reset */
->> +	ret = readl_poll_timeout(adsp->qdsp6ss_base + BOOT_STATUS_REG,
->> +			val, (val & BIT(0)) != 0, 10, BOOT_FSM_TIMEOUT);
->> +	if (ret)
->> +		dev_err(adsp->dev, "Boot FSM failed to complete.\n");
->> +
->> +	return ret;
->> +}
->> +
->> +static int qcom_adsp_start(struct qcom_adsp *adsp)
-> I don't see the reason why adsp_reset() is split out from this function,
-> or why qcom_adsp_start() is split out from adsp_start.
-
-Will combine them in next spin
->> +{
->> +	int ret;
->> +
->> +	ret = adsp_clk_enable(adsp);
->> +	if (ret) {
->> +		dev_err(adsp->dev, "adsp clk_enable failed\n");
->> +		return ret;
->> +	}
->> +
->> +	/* Program boot address */
->> +	writel(adsp->mem_phys >> 4, adsp->qdsp6ss_base + RST_EVB_REG);
->> +
->> +	ret = adsp_reset(adsp);
->> +	if (ret)
->> +		dev_err(adsp->dev, "De-assert QDSP6 out of reset failed\n");
->> +
->> +	return ret;
->> +}
->> +
->> +static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
->> +{
->> +	unsigned long timeout;
->> +	unsigned int val;
->> +	int ret;
->> +
->> +	/* Reset the retention logic */
->> +	val = readl(adsp->qdsp6ss_base + RET_CFG_REG);
->> +	val |= 0x1;
->> +	writel(val, adsp->qdsp6ss_base + RET_CFG_REG);
->> +
->> +	/* Disable QDSP6 core CBCR clock */
->> +	clk_disable_unprepare(adsp->qdsp6ss_core_cbcr);
->> +
->> +	/* Disable the QDSP6SS sleep clock */
->> +	clk_disable_unprepare(adsp->qdsp6ss_sleep_cbcr);
->> +
->> +	/* Turn off the XO clock */
->> +	clk_disable_unprepare(adsp->qdsp6ss_xo_cbcr);
->> +
->> +	/* Disable the QDSP6SS AHBM and AHBS clocks */
->> +	clk_disable_unprepare(adsp->lpass_ahbs_aon_cbcr);
->> +
->> +	clk_disable_unprepare(adsp->lpass_ahbm_aon_cbcr);
->> +
->> +	/* Disable LPASS AHB AON Bus */
->> +	clk_disable_unprepare(adsp->lpass_audio_aon_clk);
->> +
->> +	/* Disable the slave way clock to LPASS */
->> +	clk_disable_unprepare(adsp->gcc_sway_cbcr);
->> +
->> +	/* QDSP6 master port needs to be explicitly halted */
->> +	ret = regmap_read(adsp->halt_map,
->> +			adsp->halt_lpass + LPASS_PWR_ON_REG, &val);
->> +	if (ret || !val)
->> +		goto reset;
->> +
->> +	ret = regmap_read(adsp->halt_map,
->> +			adsp->halt_lpass + LPASS_MASTER_IDLE_REG,
->> +			&val);
->> +	if (ret || val)
->> +		goto reset;
->> +
->> +	regmap_write(adsp->halt_map,
->> +			adsp->halt_lpass + LPASS_HALTREQ_REG, 1);
->> +
->> +	/*  Wait for halt ACK from QDSP6 */
->> +	timeout = jiffies + msecs_to_jiffies(ACK_TIMEOUT);
->> +	for (;;) {
->> +		ret = regmap_read(adsp->halt_map,
->> +			adsp->halt_lpass + LPASS_HALTACK_REG, &val);
->> +		if (ret || val || time_after(jiffies, timeout))
->> +			break;
->> +
->> +		udelay(1000);
->> +	}
->> +
->> +	ret = regmap_read(adsp->halt_map,
->> +			adsp->halt_lpass + LPASS_MASTER_IDLE_REG, &val);
->> +	if (ret || !val)
->> +		dev_err(adsp->dev, "port failed halt\n");
->> +
->> +reset:
->> +	/* Assert the LPASS PDC Reset */
->> +	reset_control_assert(adsp->pdc_sync_reset);
->> +	/* Place the LPASS processor into reset */
->> +	reset_control_assert(adsp->cc_lpass_restart);
->> +	/* wait after asserting subsystem restart from AOSS */
->> +	udelay(200);
->> +
->> +	/* Clear the halt request for the AXIM and AHBM for Q6 */
->> +	regmap_write(adsp->halt_map, adsp->halt_lpass + LPASS_HALTREQ_REG, 0);
->> +
->> +	/* De-assert the LPASS PDC Reset */
->> +	reset_control_deassert(adsp->pdc_sync_reset);
->> +	/* Remove the LPASS reset */
->> +	reset_control_deassert(adsp->cc_lpass_restart);
->> +	/* wait after de-asserting subsystem restart from AOSS */
->> +	udelay(200);
-> Is the core halted at this point?
-
-Core is halted when we request for it by writing 1 to LPASS_HALTREQ_REG. 
-After halt, we need to cleanup for next start.
->> +
->> +	return 0;
->> +}
->> +
->> +static int adsp_load(struct rproc *rproc, const struct firmware *fw)
->> +{
->> +	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
->> +
->> +	return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
->> +			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
->> +			     &adsp->mem_reloc);
->> +}
->> +
->> +static int adsp_start(struct rproc *rproc)
->> +{
->> +	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
->> +	int ret;
->> +
->> +	qcom_q6v5_prepare(&adsp->q6v5);
->> +
->> +	ret = clk_prepare_enable(adsp->xo);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = clk_prepare_enable(adsp->aggre2_clk);
->> +	if (ret)
->> +		goto disable_xo_clk;
-> Just skip aggre2_clk for now, unless there's going to be some other
-> subsystem added soon that uses it.
-
-Ok
->> +
->> +	ret = regulator_enable(adsp->cx_supply);
->> +	if (ret)
->> +		goto disable_aggre2_clk;
->> +
->> +	ret = regulator_enable(adsp->px_supply);
->> +	if (ret)
->> +		goto disable_cx_supply;
-> Skip px_supply for now.
-
-ok
->> +
->> +	ret = qcom_adsp_start(adsp);
->> +	if (ret) {
->> +		dev_err(adsp->dev,
->> +			"failed to bootup adsp\n");
->> +		goto disable_px_supply;
->> +	}
->> +
->> +	ret = qcom_q6v5_wait_for_start(&adsp->q6v5, msecs_to_jiffies(5000));
-> Use 5 * HZ
-
-sure
->> +	if (ret == -ETIMEDOUT) {
->> +		dev_err(adsp->dev, "start timed out\n");
->> +		qcom_adsp_shutdown(adsp);
->> +		goto disable_px_supply;
->> +	}
->> +
->> +	return 0;
->> +
->> +disable_px_supply:
->> +	regulator_disable(adsp->px_supply);
->> +disable_cx_supply:
->> +	regulator_disable(adsp->cx_supply);
->> +disable_aggre2_clk:
->> +	clk_disable_unprepare(adsp->aggre2_clk);
->> +disable_xo_clk:
->> +	clk_disable_unprepare(adsp->xo);
->> +
->> +	return ret;
->> +}
->> +
->> +static void qcom_adsp_pil_handover(struct qcom_q6v5 *q6v5)
->> +{
->> +	struct qcom_adsp *adsp = container_of(q6v5, struct qcom_adsp, q6v5);
->> +
->> +	regulator_disable(adsp->px_supply);
->> +	regulator_disable(adsp->cx_supply);
->> +	clk_disable_unprepare(adsp->aggre2_clk);
->> +	clk_disable_unprepare(adsp->xo);
-> Omit px_supply and aggre2_clk for now.
-
-ok
->> +}
-> [..]
->> +static int adsp_init_clock(struct qcom_adsp *adsp)
->> +{
->> +	int ret;
->> +
->> +	adsp->xo = devm_clk_get(adsp->dev, "xo");
->> +	if (IS_ERR(adsp->xo)) {
->> +		ret = PTR_ERR(adsp->xo);
->> +		if (ret != -EPROBE_DEFER)
->> +			dev_err(adsp->dev, "failed to get xo clock");
->> +		return ret;
->> +	}
->> +
->> +	if (adsp->has_aggre2_clk) {
-> Omit this for now.
-
-ok
->> +		adsp->aggre2_clk = devm_clk_get(adsp->dev, "aggre2");
->> +		if (IS_ERR(adsp->aggre2_clk)) {
->> +			ret = PTR_ERR(adsp->aggre2_clk);
->> +			if (ret != -EPROBE_DEFER)
->> +				dev_err(adsp->dev,
->> +						"failed to get aggre2 clock");
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	adsp->gcc_sway_cbcr = devm_clk_get(adsp->dev, "sway_cbcr");
-> Use the clk_bulk api to acquire the rest of these clocks.
-okay
->> +	if (IS_ERR(adsp->gcc_sway_cbcr)) {
->> +		ret = PTR_ERR(adsp->xo);
->> +		if (ret != -EPROBE_DEFER)
->> +			dev_err(adsp->dev, "failed to get gcc_sway clock\n");
->> +		return PTR_ERR(adsp->gcc_sway_cbcr);
->> +	}
->> +
-> [..]
->> +
->> +static const struct non_pas_adsp_data adsp_resource_init = {
->> +		.crash_reason_smem = 423,
->> +		.firmware_name = "adsp.mdt",
->> +		.has_aggre2_clk = false,
->> +		.ssr_name = "lpass",
->> +		.sysmon_name = "adsp",
->> +		.ssctl_id = 0x14,
-> Please don't inherit the broken indentation.
-Yup, will update in next spin.
->> +};
-> Regards,
-> Bjorn
-
-Thanks,
-Rohit
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, 
-Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+VGhpcyBzZXJpZXMgcHJvdmlkZXMgdGhlIHN1cHBvcnQgZm9yIHR1cm5pbmcgb24gdGhlIGFybS1z
+bW11J3MKY2xvY2tzL3Bvd2VyIGRvbWFpbnMgdXNpbmcgcnVudGltZSBwbS4gVGhpcyBpcyBkb25l
+IHVzaW5nCmRldmljZSBsaW5rcyBiZXR3ZWVuIHNtbXUgYW5kIGNsaWVudCBkZXZpY2VzLiBUaGUg
+ZGV2aWNlIGxpbmsKZnJhbWV3b3JrIGtlZXBzIHRoZSB0d28gZGV2aWNlcyBpbiBjb3JyZWN0IG9y
+ZGVyIGZvciBwb3dlci1jeWNsaW5nCmFjcm9zcyBydW50aW1lIFBNIG9yIGFjcm9zcyBzeXN0ZW0t
+d2lkZSBQTS4KCldpdGggYWRkaXRpb24gb2YgYSBuZXcgZGV2aWNlIGxpbmsgZmxhZyBETF9GTEFH
+X0FVVE9SRU1PVkVfU1VQUExJRVIgWzddLAp0aGUgZGV2aWNlIGxpbmtzIGNyZWF0ZWQgYmV0d2Vl
+biBhcm0tc21tdSBhbmQgaXRzIGNsaWVudHMgd2lsbCBiZQphdXRvbWF0aWNhbGx5IHB1cmdlZCB3
+aGVuIGFybS1zbW11IGRyaXZlciB1bmJpbmRzIGZyb20gaXRzIGRldmljZS4KCkFzIG5vdCBhbGwg
+aW1wbGVtZW50YXRpb25zIHN1cHBvcnQgY2xvY2svcG93ZXIgZ2F0aW5nLCB3ZSBhcmUgY2hlY2tp
+bmcKZm9yIGEgdmFsaWQgJ3NtbXUtPmRldidzIHBtX2RvbWFpbicgdG8gY29uZGl0aW9uYWxseSBl
+bmFibGUgdGhlIHJ1bnRpbWUKcG93ZXIgbWFuYWdlbWVudCBmb3Igc3VjaCBzbW11IGltcGxlbWVu
+dGF0aW9ucyB0aGF0IGNhbiBzdXBwb3J0IGl0LgpPdGhlcndpc2UsIHRoZSBjbG9ja3MgYXJlIHR1
+cm5lZCB0byBiZSBhbHdheXMgb24gaW4gLnByb2JlIHVudGlsIC5yZW1vdmUuCldpdGggY29uZGl0
+aW9uYWwgcnVudGltZSBwbSBub3csIHdlIGF2b2lkIHRvdWNoaW5nIGRldi0+cG93ZXIubG9jawpp
+biBmYXN0cGF0aHMgZm9yIHNtbXUgaW1wbGVtZW50YXRpb25zIHRoYXQgZG9uJ3QgbmVlZCB0byBk
+byBhbnl0aGluZwp1c2VmdWwgd2l0aCBwbV9ydW50aW1lLgpUaGlzIGxldHMgdXMgdG8gdXNlIHRo
+ZSBtdWNoLWFyZ3VlZCBwbV9ydW50aW1lX2dldF9zeW5jL3B1dF9zeW5jKCkKY2FsbHMgaW4gbWFw
+L3VubWFwIGNhbGxiYWNrcyBzbyB0aGF0IHRoZSBjbGllbnRzIGRvIG5vdCBoYXZlIHRvCndvcnJ5
+IGFib3V0IGhhbmRsaW5nIGFueSBvZiB0aGUgYXJtLXNtbXUncyBwb3dlci4KClRoaXMgc2VyaWVz
+IGFsc28gYWRkcyBzdXBwb3J0IGZvciBRY29tJ3MgYXJtLXNtbXUtdjIgdmFyaWFudCB0aGF0Cmhh
+cyBkaWZmZXJlbnQgY2xvY2tzIGFuZCBwb3dlciByZXF1aXJlbWVudHMuCgpQcmV2aW91cyB2ZXJz
+aW9uIG9mIHRoaXMgcGF0Y2ggc2VyaWVzIGlzIEAgWzFdLgoKQnVpbGQgdGVzdGVkIHRoZSBzZXJp
+ZXMgYmFzZWQgb24gNC4xOS1yYzEuCgpbdjE2XSAKICAgKiBBZGRyZXNzZWQgcmV2aWV3IGNvbW1l
+bnRzIGZyb20gUm9iIGFib3V0IHNvYyBzcGVjaWZpYyBjb21wYXRpYmxlcy4KICAgKiBSZW1vdmVk
+IHBtX3J1bnRpbWVfZ2V0L3B1dCBjYWxscyBmcm9tIGFybV9zbW11X2RldmljZV9wcm9iZSgpLCBh
+cwogICAgIGRvaW5nIGEgcnVudGltZV9nZXQoKSBldmVudHVhbGx5IGNhbGxzIGFybV9zbW11X2Rl
+dmljZV9yZXNldCgpLgogICAgIGFybV9zbW11X2RldmljZV9yZXNldCgpIHNob3VsZCBiZSBjYWxs
+ZWQgb25seSBhZnRlcgogICAgIGFybV9zbW11X2RldmljZV9jZmdfcHJvYmUoKS4KICAgICBFbmFi
+bGluZyB0aGUgY2xvY2tzIGJ5IGRlZmF1bHQgaW4gdGhlIHByb2JlLCBhbmQgdXNpbmcKICAgICBw
+bV9ydW50aW1lX3NldF9hY3RpdmUoKSBhcyBzdWdnZXN0ZWQgYnkgVG9tYXN6IHRvIGRpc2FibGUg
+dGhlCiAgICAgY2xvY2tzIHdoZW4gcG1fcnVudGltZSBpcyBlbmFibGVkLgoKW3YxNV0KICAgKiBB
+ZGRlZCBhIGxpc3Qgb2YgdmFsaWQgdmFsdWVzIG9mICc8c29jPicgaW4gInFjb20sPHNvYz4tc21t
+dS12MiIKICAgICBjb21wYXRpYmxlIHN0cmluZyBhcyBwb2ludGVkIG91dCBieSBSb2JpbiwgYW5k
+IFJvYiBpbiB0aGUgdGhyZWFkIFs4XToKICAgKiBBZGRlZCBTcmluaSdzIFRlc3RlZC1ieS4KICAg
+KiBTZXBhcmF0ZWQgb3V0IHRoZSBkdC1iaW5kaW5ncyBjaGFuZ2UgZnJvbSBkcml2ZXIgY2hhbmdl
+IGludG8gYSBuZXcKICAgICBwYXRjaCBhcyBzdWdnZXN0ZWQgYnkgbmV3IGNoZWNrcGF0Y2ggd2Fy
+bmluZy4KCiAgICAgUm9iLCBJIHRvb2sgdGhlIGxpYmVydHkgb2YgcmVtb3ZpbmcgeW91ciBSZXZp
+ZXdlZC1ieSAoZm9yIHlvdXIKICAgICBjb21tZW50IG9uICc8c29jPicpIGZvciB0aGUgbmV3IGR0
+LWJpbmRpbmdzIHBhdGNoIDQvNS4KICAgICBQbGVhc2UgZmVlbCBmcmVlIHRvIHJldmlldyBpdCBh
+Z2Fpbi4gVGhhbmtzIQoKW3YxNF0KICAgKiBNb3ZlZCBhcm1fc21tdV9kZXZpY2VfcmVzZXQoKSBm
+cm9tIGFybV9zbW11X3BtX3Jlc3VtZSgpIHRvCiAgICAgYXJtX3NtbXVfcnVudGltZV9yZXN1bWUo
+KSBzbyB0aGF0IHRoZSBwbV9yZXN1bWUgY2FsbGJhY2sgY2FsbHMKICAgICBvbmx5IHJ1bnRpbWVf
+cmVzdW1lIHRvIHJlc3VtZSB0aGUgZGV2aWNlLgogICAgIFRoaXMgc2hvdWxkIHRha2UgY2FyZSBv
+ZiByZXN0b3JpbmcgdGhlIHN0YXRlIG9mIHNtbXUgaW4gc3lzdGVtcwogICAgIGluIHdoaWNoIHNt
+bXUgbG9zZSByZWdpc3RlciBzdGF0ZSBvbiBwb3dlci1kb21haW4gY29sbGFwc2UuCgpbdjEzXQog
+ICBBZGRyZXNzaW5nIFJhZmFlbCdzIGNvbW1lbnRzOgogICAqIEFkZGVkIC5zdXNwZW5kIHBtIGNh
+bGxiYWNrIHRvIGRpc2FibGUgdGhlIGNsb2NrcyBpbiBzeXN0ZW0gd2lkZSBzdXNwZW5kLgogICAq
+IEFkZGVkIGNvcnJlc3BvbmRpbmcgY2xvY2sgZW5hYmxlIGluIC5yZXN1bWUgcG0gY2FsbGJhY2su
+CiAgICogRXhwbGljaXRseSBlbmFibGluZy9kaXNhYmxpbmcgdGhlIGNsb2NrcyBub3cgd2hlbiBy
+dW50aW1lIFBNIGlzIGRpc2FibGVkLgogICAqIGRldmljZV9saW5rX2FkZCgpIGRvZXNuJ3QgZGVw
+ZW5kIG9uIHBtX3J1bnRpbWVfZW5hYmxlZCgpIGFzIHdlIGNhbgogICAgIHVzZSBkZXZpY2UgbGlu
+a3MgYWNyb3NzIHN5c3RlbSBzdXNwZW5kL3Jlc3VtZSB0b28uCgogICBBZGRyZXNzaW5nIFJvYmlu
+J3MgY29tbWVudHM6CiAgICogTWFraW5nIGRldmljZV9saW5rX2FkZCBmYWlsdXJlcyBhcyBub24t
+ZmF0YWwuCgogICAqIFJlbW92ZWQgSU9NTVVfT0ZfREVDTEFSRSgpIGRlY2xhcmF0aW9uIGFzIHdl
+IGRvbid0IG5lZWQgdGhpcyBhZnRlciBSb2IncwogICAgIHBhdGNoIHRoYXQgcmVtb3ZlZCBhbGwg
+b2YgdGhlc2UgZGVjbGFyYXRpb25zLgoKW3YxMl0KICAgKiBVc2UgbmV3IGRldmljZSBsaW5rJ3Mg
+ZmxhZyBpbnRyb2R1Y2VkIGluIFs3XSAtCiAgICAgRExfRkxBR19BVVRPUkVNT1ZFX1NVUFBMSUVS
+LiBXaXRoIHRoaXMgZGV2aWNlcyBsaW5rcyBhcmUgYXV0b21hdGljYWxseQogICAgIHB1cmdlZCB3
+aGVuIGFybS1zbW11IGRyaXZlciB1bmJpbmRzLgogICAqIFVzaW5nIHBtX3J1bnRpbWVfZm9yY2Vf
+c3VzcGVuZCgpIGluc3RlYWQgb2YgcG1fcnVudGltZV9kaXNhYmxlKCkgdG8KICAgICBhdm9pZCBm
+b2xsb3dpbmcgd2FybmluZyBmcm9tIGFybV9zbW11X2RldmljZV9yZW1vdmUoKQoKICAgICBbMjk1
+NzExLjUzNzUwN10gLS0tLS0tLS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tCiAgICAgWzI5
+NTcxMS41NDQyMjZdIFVucHJlcGFyaW5nIGVuYWJsZWQgc21tdV9tZHBfYWhiX2NsawogICAgIFsy
+OTU3MTEuNTQ5MDk5XSBXQVJOSU5HOiBDUFU6IDAgUElEOiAxIGF0IC4uL2RyaXZlcnMvY2xrL2Ns
+ay5jOjY5NwogICAgICAgICAgICAgICAgICAgICBjbGtfY29yZV91bnByZXBhcmUrMHhkOC8weGUw
+CiAgICAgLi4uCiAgICAgWzI5NTcxMS42NzQwNzNdIENhbGwgdHJhY2U6CiAgICAgWzI5NTcxMS42
+Nzk0NTRdICBjbGtfY29yZV91bnByZXBhcmUrMHhkOC8weGUwCiAgICAgWzI5NTcxMS42ODIwNTld
+ICBjbGtfdW5wcmVwYXJlKzB4MjgvMHg0MAogICAgIFsyOTU3MTEuNjg1OTY0XSAgY2xrX2J1bGtf
+dW5wcmVwYXJlKzB4MjgvMHg0MAogICAgIFsyOTU3MTEuNjg5NzAxXSAgYXJtX3NtbXVfZGV2aWNl
+X3JlbW92ZSsweDg4LzB4ZDgKICAgICBbMjk1NzExLjY5MzY5Ml0gIGFybV9zbW11X2RldmljZV9z
+aHV0ZG93bisweGMvMHgxOAogICAgIFsyOTU3MTEuNjk4MTIwXSAgcGxhdGZvcm1fZHJ2X3NodXRk
+b3duKzB4MjAvMHgzMAoKW3YxMV0KICAgKiBTb21lIG1vcmUgY2xlYW51cHMgZm9yIGRldmljZSBs
+aW5rLiBXZSBkb24ndCBuZWVkIGFuIGV4cGxpY2l0CiAgICAgZGVsZXRlIGZvciBkZXZpY2UgbGlu
+ayBmcm9tIHRoZSBkcml2ZXIsIGJ1dCBqdXN0IHNldCB0aGUgZmxhZwogICAgIERMX0ZMQUdfQVVU
+T1JFTU9WRS4KICAgICBkZXZpY2VfbGlua19hZGQoKSBBUEkgZGVzY3JpcHRpb24gc2F5cyAtCiAg
+ICAgIklmIHRoZSBETF9GTEFHX0FVVE9SRU1PVkUgaXMgc2V0LCB0aGUgbGluayB3aWxsIGJlIHJl
+bW92ZWQKICAgICBhdXRvbWF0aWNhbGx5IHdoZW4gdGhlIGNvbnN1bWVyIGRldmljZSBkcml2ZXIg
+dW5iaW5kcy4iCiAgICogQWRkcmVzc2VkIHRoZSBjb21tZW50cyBmb3IgJ3NtbXUnIGluIGFybV9z
+bW11X21hcC91bm1hcCgpLgogICAqIERyb3BwZWQgdGhlIHBhdGNoIFs2XSB0aGF0IGludHJvZHVj
+ZWQgZGV2aWNlX2xpbmtfZGVsX2RldigpIEFQSS4gCgpbdjEwXQogICAqIEludHJvZHVjZSBkZXZp
+Y2VfbGlua19kZWxfZGV2KCkgQVBJIHRvIGRlbGV0ZSB0aGUgbGluayBiZXR3ZWVuCiAgICAgZ2l2
+ZW4gY29uc3VtZXIgYW5kIHN1cHBsaWVyIGRldmljZXMuIFRoZSB1c2VycyBvZiBkZXZpY2UgbGlu
+awogICAgIGRvIG5vdCBuZWVkIHRvIHN0b3JlIGxpbmsgcG9pbnRlciB0byBkZWxldGUgdGhlIGxp
+bmsgbGF0ZXIuCiAgICAgVGhleSBjYW4gc3RyYWlnaHRhd2F5IHVzZSB0aGlzIEFQSSBieSBwYXNz
+aW5nIGNvbnN1bWVyIGFuZAogICAgIHN1cHBsaWVyIGRldmljZXMuCiAgICogTWFkZSBjb3JyZXNw
+b25kaW5nIGNoYW5nZXMgdG8gYXJtLXNtbXUgZHJpdmVyIHBhdGNoIGhhbmRsaW5nIHRoZQogICAg
+IGRldmljZSBsaW5rcy4KICAgKiBEcm9wcGVkIHRoZSBwYXRjaCBbNV0gdGhhdCB3YXMgYWRkaW5n
+IGRldmljZV9saW5rX2ZpbmQoKSBBUEkgdG8KICAgICBkZXZpY2UgY29yZSBsYXllci4gZGV2aWNl
+X2xpbmtfZGVsX2RldigpIHNlcnZlcyB0aGUgcHVycG9zZSB0bwogICAgIGRpcmVjdGx5IGRlbGV0
+ZSB0aGUgbGluayBiZXR3ZWVuIHR3byBnaXZlbiBkZXZpY2VzLgoKW3Y5XQogICAqIFJlbW92ZWQg
+J3JwbV9zdXBwb3J0ZWQnIGZsYWcsIGluc3RlYWQgY2hlY2tpbmcgb24gcG1fZG9tYWluCiAgICAg
+dG8gZW5hYmxlIHJ1bnRpbWUgcG0uCiAgICogQ3JlYXRpbmcgZGV2aWNlIGxpbmsgb25seSB3aGVu
+IHRoZSBydW50aW1lIHBtIGlzIGVuYWJsZWQsIGFzIHdlCiAgICAgZG9uJ3QgbmVlZCBhIGRldmlj
+ZSBsaW5rIGJlc2lkZXMgbWFuYWdpbmcgdGhlIHBvd2VyIGRlcGVuZGVuY3kKICAgICBiZXR3ZWVu
+IHN1cHBsaWVyIGFuZCBjb25zdW1lciBkZXZpY2VzLgogICAqIEludHJvZHVjaW5nIGEgcGF0Y2gg
+dG8gYWRkIGRldmljZV9saW5rX2ZpbmQoKSBBUEkgdGhhdCBmaW5kcwogICAgIGFuZCBleGlzdGlu
+ZyBsaW5rIGJldHdlZW4gc3VwcGxpZXIgYW5kIGNvbnN1bWVyIGRldmljZXMuCiAgICAgQWxzbywg
+bWFkZSBuZWNlc3NhcnkgY2hhbmdlIHRvIGRldmljZV9saW5rX2FkZCgpIHRvIHVzZSB0aGlzIEFQ
+SS4KICAgKiBhcm1fc21tdV9yZW1vdmVfZGV2aWNlKCkgbm93IHVzZXMgdGhpcyBkZXZpY2VfbGlu
+a19maW5kKCkgdG8gZmluZAogICAgIHRoZSBkZXZpY2UgbGluayBiZXR3ZWVuIHNtbXUgZGV2aWNl
+IGFuZCB0aGUgbWFzdGVyIGRldmljZSwgYW5kIHRoZW4KICAgICBkZWxldGUgdGhpcyBsaW5rLgog
+ICAqIERyb3BwZWQgdGhlIGRlc3Ryb3lfZG9tYWluX2NvbnRleHQoKSBmaXggWzRdIGFzIGl0IHdh
+cyByYXRoZXIsCiAgICAgaW50cm9kdWNpbmcgY2F0YXN0cm9waGljYWxseSBiYWQgcHJvYmxlbSBi
+eSBkZXN0cm95aW5nCiAgICAgJ2dvb2QgZGV2J3MgZG9tYWluIGNvbnRleHQuCiAgICogQWRkZWQg
+J1Jldml3ZWQtYnknIHRhZyBmb3IgVG9tYXN6J3MgcmV2aWV3LgoKW3Y4XQogICAqIE1ham9yIGNo
+YW5nZSAtCiAgICAgLSBBZGRlZCBhIGZsYWcgJ3JwbV9zdXBwb3J0ZWQnIHdoaWNoIGVhY2ggcGxh
+dGZvcm0gdGhhdCBzdXBwb3J0cwogICAgICAgcnVudGltZSBwbSwgY2FuIGVuYWJsZSwgYW5kIHdl
+IGVuYWJsZSBydW50aW1lX3BtIG92ZXIgYXJtLXNtbXUKICAgICAgIG9ubHkgd2hlbiB0aGlzIGZs
+YWcgaXMgc2V0LgogICAgIC0gQWRkaW5nIHRoZSBjb25kaXRpb25hbCBwbV9ydW50aW1lX2dldC9w
+dXQoKSBjYWxscyB0byAubWFwLCAudW5tYXAKICAgICAgIGFuZCAuYXR0YWNoX2RldiBvcHMuCiAg
+ICAgLSBEcm9wcGVkIHRoZSBwYXRjaCBbMl0gdGhhdCBleHBvcnRlZCBwbV9ydW50aW1fZ2V0L3B1
+dF9zdXVwbGllcnMoKSwKICAgICAgIGFuZCBhbHNvIGRyb3BwZWQgdGhlIHVzZXIgZHJpdmVyIHBh
+dGNoIFszXSBmb3IgdGhlc2UgQVBJcy4KCiAgICogQ2xvY2sgY29kZSBmdXJ0aGVyIGNsZWFudXAK
+ICAgICAtIGRvaW5nIG9ubHkgY2xrX2J1bGtfZW5hYmxlKCkgYW5kIGNsa19idWxrX2Rpc2FibGUo
+KSBpbiBydW50aW1lIHBtCiAgICAgICBjYWxsYmFja3MuIFdlIHNob3VsZG4ndCBiZSB0YWtpbmcg
+YSBzbG93IHBhdGggKGNsa19wcmVwYXJlL3VucHJlcGFyZSgpKQogICAgICAgZnJvbSB0aGVzZSBy
+dW50aW1lIHBtIGNhbGxiYWNrcy4gVGhlcmVieSwgbW92ZWQgY2xrX2J1bGtfcHJlcGFyZSgpIHRv
+CiAgICAgICBhcm1fc21tdV9kZXZpY2VfcHJvYmUoKSwgYW5kIGNsa19idWxrX3VucHJlcGFyZSgp
+IHRvCiAgICAgICBhcm1fc21tdV9kZXZpY2VfcmVtb3ZlKCkuCiAgICAgLSBjbGsgZGF0YSBmaWxs
+aW5nIHRvIGEgY29tbW9uIG1ldGhvZCBhcm1fc21tdV9maWxsX2Nsa19kYXRhKCkgdGhhdAogICAg
+ICAgZmlsbHMgdGhlIGNsb2NrIGlkcyBhbmQgbnVtYmVyIG9mIGNsb2Nrcy4KCiAgICogQWRkcmVz
+c2VkIG90aGVyIG5pdHMgYW5kIGNvbW1lbnRzCiAgICAgLSBkZXZpY2VfbGlua19hZGQoKSBlcnJv
+ciBwYXRoIGZpeGVkLgogICAgIC0gRml4IGZvciBjaGVja2luZyBuZWdhdGl2ZSBlcnJvciB2YWx1
+ZSBmcm9tIHBtX3J1bnRpbWVfZ2V0X3N5bmMoKS4KICAgICAtIERvY3VtZW50YXRpb24gcmVkby4K
+CiAgICogQWRkZWQgYW5vdGhlciBwYXRjaCBmaXhpbmcgdGhlIGVycm9yIHBhdGggaW4gYXJtX3Nt
+bXVfYXR0YWNoX2RldigpCiAgICAgdG8gZGVzdHJveSBhbGxvY2F0ZWQgZG9tYWluIGNvbnRleHQu
+CgoqKiBDaGFuZ2UgbG9ncyBmb3IgcHJldmlvdXMgdmVyc2lvbnMgaXMgYXZhaWxhYmxlIGluIHBy
+ZXZpb3VzIHNlcmllcyBbOV0uCgpbMV0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9jb3Zl
+ci8xMDU3NjkyMS8KWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyMDQ5
+NDUvClszXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMjA0OTI1LwpbNF0g
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDI1NDEwNS8KWzVdIGh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyNzc5NzUvCls2XSBodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzEwMjgxNjEzLwpbN10gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC8xMDQ5MTQ4MS8KWzhdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29y
+ay9wYXRjaC85NzQxMTYvCls5XSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOC83LzgvMTI0CgpT
+cmljaGFyYW4gUiAoMyk6CiAgaW9tbXUvYXJtLXNtbXU6IEFkZCBwbV9ydW50aW1lL3NsZWVwIG9w
+cwogIGlvbW11L2FybS1zbW11OiBJbnZva2UgcG1fcnVudGltZSBkdXJpbmcgcHJvYmUsIGFkZC9y
+ZW1vdmUgZGV2aWNlCiAgaW9tbXUvYXJtLXNtbXU6IEFkZCB0aGUgZGV2aWNlX2xpbmsgYmV0d2Vl
+biBtYXN0ZXJzIGFuZCBzbW11CgpWaXZlayBHYXV0YW0gKDIpOgogIGR0LWJpbmRpbmdzOiBhcm0t
+c21tdTogQWRkIGJpbmRpbmdzIGZvciBxY29tLHNtbXUtdjIKICBpb21tdS9hcm0tc21tdTogQWRk
+IHN1cHBvcnQgZm9yIHFjb20sc21tdS12MiB2YXJpYW50CgogLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvaW9tbXUvYXJtLHNtbXUudHh0ICAgICAgICAgfCAgMzkgKysrKysKIGRyaXZlcnMvaW9tbXUv
+YXJtLXNtbXUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTgwICsrKysrKysrKysrKysr
+KysrKystLQogMiBmaWxlcyBjaGFuZ2VkLCAyMDkgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25z
+KC0pCgotLSAKUVVBTENPTU0gSU5ESUEsIG9uIGJlaGFsZiBvZiBRdWFsY29tbSBJbm5vdmF0aW9u
+IENlbnRlciwgSW5jLiBpcyBhIG1lbWJlcgpvZiBDb2RlIEF1cm9yYSBGb3J1bSwgaG9zdGVkIGJ5
+IFRoZSBMaW51eCBGb3VuZGF0aW9uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9mcmVlZHJlbm8K
