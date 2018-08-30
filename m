@@ -1,49 +1,28 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v3] usb: core: phy: fix return value checking about devm_of_phy_get_by_index()
-Date: Thu, 30 Aug 2018 09:16:40 +0800
-Message-ID: <626cea85395e3a1f002ef0a241bb508d770a33c0.1535536218.git.chunfeng.yun@mediatek.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/2] dt-bindings: net: cpsw: Document cpsw-phy-sel usage
+ but prefer phandle
+Date: Thu, 30 Aug 2018 03:18:49 +0200
+Message-ID: <20180830011849.GA16896@lunn.ch>
+References: <20180829150024.43210-1-tony@atomide.com>
+ <90e0f25f-45f5-b2c0-59d9-cdf25eb06c0c@ti.com>
+ <20180830004745.GU7523@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Johan Hovold <johan@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180830004745.GU7523@atomide.com>
+Sender: netdev-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, David Miller <davem@davemloft.net>, netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Use IS_ERR() instead of IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
-never return NULL value;
-But still need ignore the error of -ENODEV, for more information, please
-refer to:
-[0] https://lkml.org/lkml/2018/4/19/88
-[1] https://patchwork.kernel.org/patch/10160181/
+> In the long run cpsw should be really treated as an
+> interconnect instance with it's control module providing
+> standard Linux framework services such as clock /
+> regulator / phy / pinctrl / iio whatever for the other
+> modules.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-V3: abandon the ternary operator suggested by Johan
+Some of us have been applying pressure for a new driver. This sounds
+like another argument for such a re-write.
 
-V2: keep the -ENODEV check
----
- drivers/usb/core/phy.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-index 9879767..38b2c77 100644
---- a/drivers/usb/core/phy.c
-+++ b/drivers/usb/core/phy.c
-@@ -23,10 +23,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
- 				   struct list_head *list)
- {
- 	struct usb_phy_roothub *roothub_entry;
--	struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-+	struct phy *phy;
- 
--	if (IS_ERR_OR_NULL(phy)) {
--		if (!phy || PTR_ERR(phy) == -ENODEV)
-+	phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-+	if (IS_ERR(phy)) {
-+		if (PTR_ERR(phy) == -ENODEV)
- 			return 0;
- 		else
- 			return PTR_ERR(phy);
--- 
-1.9.1
+	   Andrew
