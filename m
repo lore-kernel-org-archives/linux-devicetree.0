@@ -1,89 +1,52 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3] dt-bindings: arm: Explicitly mark Samsung Exynos SoC as unstable
-Date: Thu, 30 Aug 2018 20:02:05 +0200
-Message-ID: <20180830180205.18121-1-krzk@kernel.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys GPIO via CREG
+ bindings
+Date: Thu, 30 Aug 2018 18:16:06 +0000
+Message-ID: <1535652965.4465.84.camel@synopsys.com>
+References: <20180828112721.28178-1-Eugeniy.Paltsev@synopsys.com>
+         <20180828112721.28178-3-Eugeniy.Paltsev@synopsys.com>
+         <CACRpkdbQryY-R+14GvYAEkLH+7Tr4Pvb6YohWouTwug7qEGbDA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbQryY-R+14GvYAEkLH+7Tr4Pvb6YohWouTwug7qEGbDA@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <9B9760F1D93627448C72AA0FD8165E0F@internal.synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+To: "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Samsung Exynos SoCs and boards related bindings evolved since the initial
-introduction, but initially the bindings were minimal and a bit incomplete
-(they never described all the hardware modules available in the SoCs).
-Since then some significant (not fully compatible) changes have been
-already committed a few times (like gpio replaced by pinctrl, display ddc,
-mfc reserved memory, some core clocks added to various hardware modules,
-added more required nodes).
-
-On the other side there are no boards which have device tree embedded in
-the bootloader. Device tree blob is always compiled from the kernel tree
-and updated together with the kernel image.
-
-Thus to avoid further adding a bunch of workarounds for old/missing
-bindings, make development of new platforms easier and allow to make
-cleanup of the existing code and device tree files, lets mark some
-Samsung Exynos SoC platform bindings as unstable. This means that
-bindings can may change at any time and users should use the dtb file
-compiled from the same kernel source tree as the kernel image.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-[krzk: Explicitly list unstable bindings instead of marking entire
-Exynos]
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
----
-
-Changes since v2:
-1. Add tags.
-
-Changes since v1:
-1. Rebase
-2. Add specific compatibles to mark unstable.
-
-v1 is here:
-https://patchwork.kernel.org/patch/9477963/
-
-Previous tags (not applying due to change in contents):
-Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- .../devicetree/bindings/arm/samsung/exynos.txt     | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/samsung/exynos.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos.txt b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
-new file mode 100644
-index 000000000000..7410cb79e4b2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos.txt
-@@ -0,0 +1,26 @@
-+Samsung Exynos SoC Family Device Tree Bindings
-+---------------------------------------------------------------
-+
-+Work in progress statement:
-+
-+Following Device Tree files and bindings applying to Samsung Exynos SoCs and
-+boards are considered "unstable":
-+
-+ - samsung,exynos5433* (all compatibles related to Exynos5433)
-+ - samsung,exynos7* (all compatibles related to Exynos7)
-+ - samsung,tm2-audio
-+ - samsung,mfc-v10
-+ - samsung,exynos*-mipi-dsi
-+ - samsung,exynos5-dp
-+ - samsung,exynos*-hdmi
-+ - samsung,exynos*-hdmiddc
-+ - samsung,exynos*-hdmiphy
-+ - samsung,exynos*-mixer
-+ - samsung,exynos*-fimd
-+
-+Any Samsung Exynos device tree binding mentioned may change at any time. Be
-+sure to use a device tree binary and a kernel image generated from the same
-+source tree.
-+
-+Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
-+stable binding/ABI.
--- 
-2.14.1
+T24gVGh1LCAyMDE4LTA4LTMwIGF0IDEwOjQzICswMjAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
+PiBPbiBUdWUsIEF1ZyAyOCwgMjAxOCBhdCAxOjI3IFBNIEV1Z2VuaXkgUGFsdHNldg0KPiA8RXVn
+ZW5peS5QYWx0c2V2QHN5bm9wc3lzLmNvbT4gd3JvdGU6DQo+IA0KPiA+ICsrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL3NucHMsY3JlZy1ncGlvLnR4dA0KPiA+IEBA
+IC0wLDAgKzEsNDkgQEANCj4gPiArR1BJTyB2aWEgQ1JFRyAoQ29udHJvbCBSRUdpc2VycykgZHJp
+dmVyDQpbc25pcF0NCg0KPiA+ICstIHNucHMsbmdwaW9zOiBOdW1iZXIgb2YgR1BJTyBwaW5zLg0K
+PiANCj4gVXNlIHRoZSBleGlzdGluZyBuZ3Bpb3MgYXR0cmlidXRlIGZvciB0aGlzLCBzZWUgZ3Bp
+by50eHQNCg0KT2sNCg0KPiA+ICstIHNucHMsYml0LXBlci1saW5lOiBOdW1iZXIgb2YgYml0cyBw
+ZXIgZWFjaCBncGlvIGxpbmUgKHNlZSBwaWN0dXJlKS4NCj4gPiArICBBcnJheSB0aGUgc2l6ZSBv
+ZiAic25wcyxuZ3Bpb3MiDQo+ID4gKy0gc25wcyxzaGlmdDogU2hpZnQgKGluIGJpdHMpIG9mIHRo
+ZSBlYWNoIEdQSU8gZmllbGQgZnJvbSB0aGUgcHJldmlvdXMgb25lIGluDQo+ID4gKyAgcmVnaXN0
+ZXIgKHNlZSBwaWN0dXJlKS4gQXJyYXkgdGhlIHNpemUgb2YgInNucHMsbmdwaW9zIg0KPiA+ICst
+IHNucHMsb24tdmFsOiBWYWx1ZSBzaG91bGQgYmUgc2V0IGluIGNvcnJlc3BvbmRpbmcgZmllbGQg
+dG8gc2V0DQo+ID4gKyAgb3V0cHV0IHRvICIxIiAoc2VlIHBpY3R1cmUpLiBBcnJheSB0aGUgc2l6
+ZSBvZiAic25wcyxuZ3Bpb3MiDQo+ID4gKy0gc25wcyxvZmYtdmFsOiBWYWx1ZSBzaG91bGQgYmUg
+c2V0IGluIGNvcnJlc3BvbmRpbmcgZmllbGQgdG8gc2V0DQo+ID4gKyAgb3V0cHV0IHRvICIwIiAo
+c2VlIHBpY3R1cmUpLiBBcnJheSB0aGUgc2l6ZSBvZiAic25wcyxuZ3Bpb3MiDQo+IA0KPiBNb3Zl
+IHRoaXMgaW50byBhIGxvb2t1cCB0YWJsZSBpbiB0aGUgZHJpdmVyIGluc3RlYWQsIGFuZCBtYXRj
+aA0KPiB0aGUgbG9va3VwIHRhYmxlIHRvIHRoZSBjb21wYXRpYmxlIHN0cmluZy4gVGhlIGZvcm1h
+dCBvZiB0aGUNCj4gcmVnaXN0ZXIgaXMga25vd24gZm9yIGEgY2VydGFpbiBjb21wYXRpYmxlLCBy
+aWdodD8NCg0KQWN0dWFsbHkgSSByZWFsbHkgZG9uJ3Qgd2FudCB0byBoYXJkY29kZSB0aGlzIHZh
+bHVlcyBpbnRvIGxvb2t1cCB0YWJsZSBhcyBJIGdvaW5nIHRvIHVzZQ0KdGhpcyBkcml2ZXIgb24g
+MyBhbHJlYWR5IHVwc3RyZWFtZWQgcGxhdGZvcm1zIGFuZCBhdCBsZWFzdCBvbmUgdXBjb21pbmcu
+DQoNClRoZXkgYWxsIGhhdmUgc3VjaCBDUkVHIHBzZXVkby0nR1BJT3MnIGRpZmZlcmVudGx5IG1h
+cHBlZCB3aXRoIGRpZmZlcmVudCBJTyBsaW5lcyBudW1iZXIsDQpkaWZmZXJlbnQgZW5hYmxlL2Rp
+c2FibGUgdmFsdWUsIGV0Yy4uLg0KDQpJcyBpdCByZWFsbHkgYSBwcm9ibGVtIHRvIGhhdmUgdGhp
+cyB2YWx1ZXMgY29uZmlndXJlZCB2aWEgZGV2aWNlIHRyZWU/DQpJZiB3ZSByZWFkIHRoZW0gZnJv
+bSBEVCB3ZSBhcmUgYWJsZSB0byB1c2UgdGhpcyBnZW5lcmljIGFuZCBjb25maWd1cmFibGUgZHJp
+dmVyIHRvIGhhbmRsZQ0KYm90aCBleGlzdGluZyBhbmQgdXBjb21pbmcgcGxhdGZvcm1zIHdpdGhv
+dXQgdGhlIG5lZWQgb2YgcGF0Y2hpbmcgdGhlIGRyaXZlciBvbiBldmVyeSBuZXcNCnBsYXRmb3Jt
+IHVwc3RyZWFtaW5nLg0KDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KLS0gDQogRXVn
+ZW5peSBQYWx0c2V2
