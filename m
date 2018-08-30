@@ -1,51 +1,78 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [RESEND PATCH 3/4] arm64: dts: marvell: add macro to make distinction
- between node names
-Date: Thu, 30 Aug 2018 10:15:00 +0200
-Message-ID: <20180830081501.11569-3-miquel.raynal@bootlin.com>
-References: <20180830081501.11569-1-miquel.raynal@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys GPIO via CREG bindings
+Date: Thu, 30 Aug 2018 10:43:42 +0200
+Message-ID: <CACRpkdbQryY-R+14GvYAEkLH+7Tr4Pvb6YohWouTwug7qEGbDA@mail.gmail.com>
+References: <20180828112721.28178-1-Eugeniy.Paltsev@synopsys.com> <20180828112721.28178-3-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180830081501.11569-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180828112721.28178-3-Eugeniy.Paltsev@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugeniy.Paltsev@synopsys.com
+Cc: "open list:SYNOPSYS ARC ARCHITECTURE" <linux-snps-arc@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Because the label is different between CPs, the full path of a node is
-unique. However, when referring to the end of the path only (the node
-name), this name is not unique anymore.
+On Tue, Aug 28, 2018 at 1:27 PM Eugeniy Paltsev
+<Eugeniy.Paltsev@synopsys.com> wrote:
 
-The *thermal_zone_of_sensor_register() functions of the thermal core
-present this limitation and prevent having a thermal-zone per CP.
+> +++ b/Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
+> @@ -0,0 +1,49 @@
+> +GPIO via CREG (Control REGisers) driver
 
-Add a macro to make the distinction between node names to solve this
-situation.
+Speling
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-common.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Also should be "Synopsys GPIO via CREG" as this is likely just
+for Synopsys and not general purpose.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-common.dtsi b/arch/arm64/boot/dts/marvell/armada-common.dtsi
-index d5e8aedec188..b29c6405d214 100644
---- a/arch/arm64/boot/dts/marvell/armada-common.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-common.dtsi
-@@ -7,4 +7,5 @@
- #define PASTER(x, y) x ## y
- #define EVALUATOR(x, y) PASTER(x, y)
- #define CP110_LABEL(name) EVALUATOR(CP110_NAME, EVALUATOR(_, name))
-+#define CP110_NODE_NAME(name) EVALUATOR(CP110_NAME, EVALUATOR(-, name))
- #define ADDRESSIFY(addr) EVALUATOR(0x, addr)
--- 
-2.17.1
+> +This is is single-register MMIO GPIO driver to control such strangely mapped
+> +outputs:
+> +
+> +31            11        8         7        5         0   < bit number
+> +|              |        |         |        |         |
+> +[   not used   | gpio-1 | shift-1 | gpio-0 | shift-0 ]   < 32 bit MMIO register
+> +                   ^                  ^
+> +                   |                  |
+> +                   |           write 0x2 == set output to "1" (on)
+> +                   |           write 0x3 == set output to "0" (off)
+> +                   |
+> +            write 0x1 == set output to "1" (on)
+> +            write 0x4 == set output to "0" (off)
+
+Move this documentation into the driver instead.
+
+> +Required properties:
+> +- compatible : "snps,creg-gpio"
+> +- reg : Exactly one register range with length 0x4.
+> +- #gpio-cells : Should be one - the pin number.
+> +- gpio-controller : Marks the device node as a GPIO controller.
+
+OK
+
+> +- snps,ngpios: Number of GPIO pins.
+
+Use the existing ngpios attribute for this, see gpio.txt
+
+> +- snps,bit-per-line: Number of bits per each gpio line (see picture).
+> +  Array the size of "snps,ngpios"
+> +- snps,shift: Shift (in bits) of the each GPIO field from the previous one in
+> +  register (see picture). Array the size of "snps,ngpios"
+> +- snps,on-val: Value should be set in corresponding field to set
+> +  output to "1" (see picture). Array the size of "snps,ngpios"
+> +- snps,off-val: Value should be set in corresponding field to set
+> +  output to "0" (see picture). Array the size of "snps,ngpios"
+
+Move this into a lookup table in the driver instead, and match
+the lookup table to the compatible string. The format of the
+register is known for a certain compatible, right?
+
+> +Optional properties:
+> +- snps,default-val: default output field values. Array the size of "snps,ngpios"
+
+Default values for different lines can be achieved by hogs
+if it's OK to tie them up perpetually, else work on creating generic
+inialization values in gpio.txt and implement that in
+gpiolib-of.c for everyone. This discussion comes up from time
+to time.
+
+Yours,
+Linus Walleij
