@@ -1,33 +1,28 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH 1/6] usb: xhci-mtk: resume USB3 roothub first
-Date: Thu, 30 Aug 2018 09:09:52 +0800
-Message-ID: <1535591392.32173.30.camel@mhfsdcap03>
-References: <3bcc220aa54bfebc39cea54cd736388ad37ee0c5.1535510898.git.chunfeng.yun@mediatek.com>
-         <f144173b-6131-21cf-1ead-60d938ac289a@cogentembedded.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2] sh_eth: Add R7S9210 support
+Date: Wed, 29 Aug 2018 18:10:40 -0700 (PDT)
+Message-ID: <20180829.181040.651557151634587416.davem@davemloft.net>
+References: <20180827174202.80750-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f144173b-6131-21cf-1ead-60d938ac289a@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180827174202.80750-1-chris.brandt@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: chris.brandt@renesas.com
+Cc: sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Wed, 2018-08-29 at 12:13 +0300, Sergei Shtylyov wrote:
-> On 8/29/2018 5:55 AM, Chunfeng Yun wrote:
-> 
-> > Give USB3 devices a better chance to enumerate at USB3 speeds if
-> > they are connected to a suspended host.
-> > Porting from "671ffdf xhci: resume USB 3 roothub first"
-> 
->     From commit 671ffdff5b13 ("xhci: resume USB 3 roothub first").
+From: Chris Brandt <chris.brandt@renesas.com>
+Date: Mon, 27 Aug 2018 12:42:02 -0500
 
-Ok, Thanks
+> Add support for the R7S9210 which is part of the RZ/A2 series.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+> v2:
+>  * Use sh_eth_offset_fast_sh4 instead of sh_eth_offset_fast_rza2
+>  * Use sh_eth_set_rate_rcar instead of sh_eth_set_rate_r7s9210()
+>  * Removed enum SH_ETH_REG_FAST_RZA2
 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> [...]
-> 
-> MBR, Sergei
-> 
+Applied.
