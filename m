@@ -1,31 +1,67 @@
-Return-Path: <SRS0=ReDA=KQ=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1532936891-25034-1-git-send-email-biju.das@bp.renesas.com> <1532936891-25034-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1532936891-25034-2-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 1 Aug 2018 10:01:02 +0200
-Message-ID: <CAMuHMdW_R0Nt_u62fHneYjJc+-W-VqUhfwCt7MmiHjR_BiqntA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dt-bindings: power: Add r8a774a1 SYSC power domain definitions
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Return-Path: <SRS0=QYpu=LN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:47012 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726727AbeHaA50 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 30 Aug 2018 20:57:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a108-v6so9236743wrc.13
+        for <devicetree@vger.kernel.org>; Thu, 30 Aug 2018 13:53:25 -0700 (PDT)
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Subject: [PATCH 3/5] iio: imu: st_lsm6dsx: add addr/max_word_len to st_lsm6dsx_read_block()
+Date: Thu, 30 Aug 2018 22:52:57 +0200
+Message-Id: <20180830205259.7029-4-lorenzo.bianconi@redhat.com>
+Sender: devicetree-owner@vger.kernel.org
+To: jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 30, 2018 at 9:54 AM Biju Das <biju.das@bp.renesas.com> wrote:
-> This patch adds power domain indices for RZ/G2M.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+Add reg addr and max_word_len parameters to st_lsm6dsx_read_block
+since LSM6DSO will use a different register address to read samples
+from the FIFO and a different sample len
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+---
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+index 7e02935a4250..2002ba4a1abd 100644
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+@@ -255,18 +255,18 @@ static int st_lsm6dsx_reset_hw_ts(struct st_lsm6dsx_hw *hw)
+  * Set max bulk read to ST_LSM6DSX_MAX_WORD_LEN in order to avoid
+  * a kmalloc for each bus access
+  */
+-static inline int st_lsm6dsx_read_block(struct st_lsm6dsx_hw *hw, u8 *data,
+-					unsigned int data_len)
++static inline int st_lsm6dsx_read_block(struct st_lsm6dsx_hw *hw, u8 addr,
++					u8 *data, unsigned int data_len,
++					unsigned int max_word_len)
+ {
+ 	unsigned int word_len, read_len = 0;
+ 	int err;
+ 
+ 	while (read_len < data_len) {
+ 		word_len = min_t(unsigned int, data_len - read_len,
+-				 ST_LSM6DSX_MAX_WORD_LEN);
+-		err = regmap_bulk_read(hw->regmap,
+-				       ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
+-				       data + read_len, word_len);
++				 max_word_len);
++		err = regmap_bulk_read(hw->regmap, addr, data + read_len,
++				       word_len);
+ 		if (err < 0)
+ 			return err;
+ 		read_len += word_len;
+@@ -316,7 +316,9 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
+ 	gyro_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
+ 
+ 	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
+-		err = st_lsm6dsx_read_block(hw, hw->buff, pattern_len);
++		err = st_lsm6dsx_read_block(hw, ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
++					    hw->buff, pattern_len,
++					    ST_LSM6DSX_MAX_WORD_LEN);
+ 		if (err < 0) {
+ 			dev_err(hw->dev,
+ 				"failed to read pattern from fifo (err=%d)\n",
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.18.0
