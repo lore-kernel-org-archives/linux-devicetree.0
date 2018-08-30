@@ -1,74 +1,107 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH] ARM: dts: imx6ull: fix pinmux input_val for uart5 rx pin
-Date: Thu, 30 Aug 2018 15:46:04 +0200
-Message-ID: <1d81ae5d-7d55-c059-1e1a-d3efb3588c37@denx.de>
-References: <20180830124702.12572-1-hs@denx.de>
- <218369fa-8ec1-fd3c-dd2e-b4821e11cb62@armadeus.com>
-Reply-To: hs@denx.de
+From: vitor <Vitor.Soares@synopsys.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 30 Aug 2018 14:57:36 +0100
+Message-ID: <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <20180719152930.3715-2-boris.brezillon@bootlin.com>
+ <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
+ <20180824143934.6d6b6487@bbrezillon>
+ <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
+ <20180824201600.7d80bca9@bbrezillon>
+ <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
+ <20180828140209.29155d00@bbrezillon>
+ <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <218369fa-8ec1-fd3c-dd2e-b4821e11cb62@armadeus.com>
+In-Reply-To: <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Przemyslaw Gaj <pgaj@cadence.com>, Boris Brezillon <boris.brezillon@bootlin.com>, vitor <Vitor.Soares@synopsys.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sébastien,
+Hi Przemyslaw
 
-Am 30.08.2018 um 15:25 schrieb Sébastien Szymanski:
-> Hi,
-> 
-> On 08/30/2018 02:47 PM, Heiko Schocher wrote:
->> on the imx6ull the input_val for uart5 rx function
->> of pin MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX
->> is 7 and not 5 as on the imx6ul. With this
->> patch, console on an imx6ull based board works
->> with uart5.
->>
->> Signed-off-by: Heiko Schocher <hs@denx.de>
-> 
-> This is already fixed on v4.19-rc1 and also on a few others PADs that
-> have similar issue.
-> Moreover signals common for both i.MX6UL and i.MX6ULL should have
-> IMX6UL_ as prefix:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/commit/?h=for-next&id=387301d5b88e2fe91de9baf4ca25f771cc633f70
 
-My patch was based on current HEAD ...Ah, got it, this patch is in
-"for-next"
+On 28-08-2018 13:55, Przemyslaw Gaj wrote:
+> Hi Vitor,
+>
+> I have already implemented Mastership request/handover but we are waiting for Boris’s patch to be accepted and merged. Anyway, my comments below.
+>
+> ﻿On 8/28/18, 2:02 PM, "Boris Brezillon" <boris.brezillon@bootlin.com> wrote:
+>
+>      EXTERNAL MAIL
+>      
+>      
+>      Hi Vitor,
+>      
+>      On Tue, 28 Aug 2018 12:50:12 +0100
+>      vitor <Vitor.Soares@synopsys.com> wrote:
+>      
+>      > Hi Boris,
+>      >
+>      > The DT Bindings say "The node describing an I3C bus should be named
+>      > i3c-master.". Do you have a field for secondary master?
+>
+> I think we don’t need separate field for secondary master. Main and secondary masters
+> support similar functionalities. It’s enough to have this state internally and do mastership it it's needed.
 
-Thanks! And sorry for the noise.
+Yes, you are right.
 
-bye,
-Heiko
-> 
+>
+>      >
+>      > On 24-08-2018 19:16, Boris Brezillon wrote:
+>      > > Well, before even considering supporting secondary master registration,
+>      > > we need to handle mastership handover. As for the DAA operation, it's
+>      > > likely to be host specific, so we'll have to add a new hook to the
+>      > > i3c_master_controller_ops struct.
+>      > Do you mean when master try to delegate the bus ownership through
+>      > GETACCMST? or to get the bus ownership with IBI-MR?
+>      
+>      I think we need to support both.
+>
+> I agree.
+
+That's ok to me.
+
+>      
+>      >
+>      > I think that could be useful to pass the ibi type on request_ibi(),
+>      > there is some case where the master doesn't support IBI-MR.
+>      
+>      Actually, I was planning on making it completely separate from
+>      regular slave IBIs. That is, the master controller driver would demux
+>      the slave, MR and Hot Join IBIs, and if there's an MR request, queue a
+>      mastership handover work to the workqueue (pretty much what we do for
+>      Hot-Join already). Mastership handover is anyway likely to be IP
+>      specific, so I don't think there's a need to make it look like a
+>      regular IBI.
+>
+> I think it's better to have separate function to do mastership request.
+>      
+>      Regarding whether IBI-MR support should be exposed to the I3C framework
+>      or not depends on how much will be automated on the framework side. I
+>      don't the answer yet, but that's probably something will figure out
+>      along the road.
+>
+> My current implementation is: when request_mastership field
+> of i3c_master_controller_ops structure is set, master driver supports mastership requests.
+> That's how I check if this is supported or not.
+>      
+>      Regards,
+>      
+>      Boris
+>      
 > Regards,
-> 
->>
->> ---
->>
->>   arch/arm/boot/dts/imx6ull-pinfunc.h | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/imx6ull-pinfunc.h b/arch/arm/boot/dts/imx6ull-pinfunc.h
->> index fdc46bb09cc1a..d835aeae5485b 100644
->> --- a/arch/arm/boot/dts/imx6ull-pinfunc.h
->> +++ b/arch/arm/boot/dts/imx6ull-pinfunc.h
->> @@ -61,5 +61,6 @@
->>   #define MX6ULL_PAD_CSI_DATA05__ESAI_TX_CLK                        0x01F8 0x0484 0x0000 0x9 0x0
->>   #define MX6ULL_PAD_CSI_DATA06__ESAI_TX5_RX0                       0x01FC 0x0488 0x0000 0x9 0x0
->>   #define MX6ULL_PAD_CSI_DATA07__ESAI_T0                            0x0200 0x048C 0x0000 0x9 0x0
->> +#define MX6ULL_PAD_UART5_RX_DATA__UART5_DCE_RX		0x00C0 0x034C 0x0644 0 7
->>   
->>   #endif /* __DTS_IMX6ULL_PINFUNC_H */
->>
-> 
-> 
+> Przemek
+>
+when you say request_mastership, do you mean the current master do the 
+mastership hand-off or the secondary master request to be current master?
 
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-52   Fax: +49-8142-66989-80   Email: hs@denx.de
+So, per my understanding since the Main master support the hand-off of 
+the bus you accept all incoming MR, right? Or do you check all devices BCR?
+
+Best regards,
+Vitor Soares
