@@ -1,78 +1,79 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys GPIO via CREG bindings
-Date: Thu, 30 Aug 2018 10:43:42 +0200
-Message-ID: <CACRpkdbQryY-R+14GvYAEkLH+7Tr4Pvb6YohWouTwug7qEGbDA@mail.gmail.com>
-References: <20180828112721.28178-1-Eugeniy.Paltsev@synopsys.com> <20180828112721.28178-3-Eugeniy.Paltsev@synopsys.com>
+From: Punit Agrawal <punit.agrawal@arm.com>
+Subject: Re: [PATCH v2] dt-binding: arm/cpus.txt: fix dynamic-power-coefficient unit
+Date: Thu, 30 Aug 2018 09:46:18 +0100
+Message-ID: <87y3co8co5.fsf@e105922-lin.cambridge.arm.com>
+References: <1535526518-29022-1-git-send-email-vincent.guittot@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180828112721.28178-3-Eugeniy.Paltsev@synopsys.com>
+In-Reply-To: <1535526518-29022-1-git-send-email-vincent.guittot@linaro.org>
+        (Vincent Guittot's message of "Wed, 29 Aug 2018 09:08:38 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy.Paltsev@synopsys.com
-Cc: "open list:SYNOPSYS ARC ARCHITECTURE" <linux-snps-arc@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, edubezval@gmail.com, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2018 at 1:27 PM Eugeniy Paltsev
-<Eugeniy.Paltsev@synopsys.com> wrote:
+Hi Vincent,
 
-> +++ b/Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
-> @@ -0,0 +1,49 @@
-> +GPIO via CREG (Control REGisers) driver
+Vincent Guittot <vincent.guittot@linaro.org> writes:
 
-Speling
+> The unit of dynamic-power-coefficient is described as mW/MHz/uV^2 whereas
+> its usage in the code assumes that unit is uW/MHz/V^2
+>
+> In drivers/thermal/cpu_cooling.c, the code is :
+>
+> power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
+> do_div(power, 1000000000);
+>
+> which can be summarized as :
+> power (mW) = capacitance * freq_mhz/1000 * (voltage_mv/1000)^2
+> or
+> power (mW) = (capacitance * freq_mhz * (voltage_mv/1000)^2) / 1000
+> then
+> power (mW) = power (uW) / 1000
+> so
+> power (uW) = capacitance * freq_mhz * (voltage_mv/1000)^2
+>
+> Furthermore, if we test basic values like :
+> voltage_mv = 1000mV = 1V
+> freq_mhz = 1000Mhz
+>
+> The minimum possible power, when dynamic-power-coefficient equals 1, will
+> be with current unit:
+> min power = 1 * 1000  * (1000000)^2 = 10^15 mW
+> which is not realistic
+>
+> With the unit used by the code, the min power is
+> min power =  1 * 1000 * 1^2 = 1000uW = 1mW which is far more realistic
+>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Also should be "Synopsys GPIO via CREG" as this is likely just
-for Synopsys and not general purpose.
+Acked-by: Punit Agrawal <punit.agrawal@arm.com>
 
-> +This is is single-register MMIO GPIO driver to control such strangely mapped
-> +outputs:
-> +
-> +31            11        8         7        5         0   < bit number
-> +|              |        |         |        |         |
-> +[   not used   | gpio-1 | shift-1 | gpio-0 | shift-0 ]   < 32 bit MMIO register
-> +                   ^                  ^
-> +                   |                  |
-> +                   |           write 0x2 == set output to "1" (on)
-> +                   |           write 0x3 == set output to "0" (off)
-> +                   |
-> +            write 0x1 == set output to "1" (on)
-> +            write 0x4 == set output to "0" (off)
+Thanks for fixing the mismatch.
 
-Move this documentation into the driver instead.
-
-> +Required properties:
-> +- compatible : "snps,creg-gpio"
-> +- reg : Exactly one register range with length 0x4.
-> +- #gpio-cells : Should be one - the pin number.
-> +- gpio-controller : Marks the device node as a GPIO controller.
-
-OK
-
-> +- snps,ngpios: Number of GPIO pins.
-
-Use the existing ngpios attribute for this, see gpio.txt
-
-> +- snps,bit-per-line: Number of bits per each gpio line (see picture).
-> +  Array the size of "snps,ngpios"
-> +- snps,shift: Shift (in bits) of the each GPIO field from the previous one in
-> +  register (see picture). Array the size of "snps,ngpios"
-> +- snps,on-val: Value should be set in corresponding field to set
-> +  output to "1" (see picture). Array the size of "snps,ngpios"
-> +- snps,off-val: Value should be set in corresponding field to set
-> +  output to "0" (see picture). Array the size of "snps,ngpios"
-
-Move this into a lookup table in the driver instead, and match
-the lookup table to the compatible string. The format of the
-register is known for a certain compatible, right?
-
-> +Optional properties:
-> +- snps,default-val: default output field values. Array the size of "snps,ngpios"
-
-Default values for different lines can be achieved by hogs
-if it's OK to tie them up perpetually, else work on creating generic
-inialization values in gpio.txt and implement that in
-gpiolib-of.c for everyone. This discussion comes up from time
-to time.
-
-Yours,
-Linus Walleij
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 29e1dc5..71d8cd0 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -274,7 +274,7 @@ described below.
+>  		Usage: optional
+>  		Value type: <prop-encoded-array>
+>  		Definition: A u32 value that represents the running time dynamic
+> -			    power coefficient in units of mW/MHz/uV^2. The
+> +			    power coefficient in units of uW/MHz/V^2. The
+>  			    coefficient can either be calculated from power
+>  			    measurements or derived by analysis.
+>  
+> @@ -285,7 +285,7 @@ described below.
+>  
+>  			    Pdyn = dynamic-power-coefficient * V^2 * f
+>  
+> -			    where voltage is in uV, frequency is in MHz.
+> +			    where voltage is in V, frequency is in MHz.
+>  
+>  Example 1 (dual-cluster big.LITTLE system 32-bit):
