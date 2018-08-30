@@ -1,12 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 03/30] iio: adc: Remove ID table
-Date: Thu, 30 Aug 2018 17:44:51 +0200
-Message-ID: <20180830154518.29507-4-embed3d@gmail.com>
+Subject: [PATCH v3 04/30] iio: adc: Kconfig: Update Kconfig to
+ new build options
+Date: Thu, 30 Aug 2018 17:44:52 +0200
+Message-ID: <20180830154518.29507-5-embed3d@gmail.com>
 References: <20180830154518.29507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBE5CUDOAKGQEQA54W5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBFFCUDOAKGQE77PXA7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,38 +20,38 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To disable the driver we are removing the compatibles.
+Since we are merging the mfd driver into the iio adc driver we need to
+update the Kconfig build options.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/iio/adc/Kconfig | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index 04d7147e0110..d95dd0fde2a6 100644
---- a/drivers/iio/adc/sun4i-gpadc-iio.c
-+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -698,21 +698,12 @@ static int sun4i_gpadc_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 9da79070357c..5d0cffd6d2e4 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -713,13 +713,16 @@ config STX104
+ 	  array module parameter.
  
--static const struct platform_device_id sun4i_gpadc_id[] = {
--	{ "sun4i-a10-gpadc-iio", (kernel_ulong_t)&sun4i_gpadc_data },
--	{ "sun5i-a13-gpadc-iio", (kernel_ulong_t)&sun5i_gpadc_data },
--	{ "sun6i-a31-gpadc-iio", (kernel_ulong_t)&sun6i_gpadc_data },
--	{ /* sentinel */ },
--};
--MODULE_DEVICE_TABLE(platform, sun4i_gpadc_id);
--
- static struct platform_driver sun4i_gpadc_driver = {
- 	.driver = {
- 		.name = "sun4i-gpadc-iio",
- 		.of_match_table = sun4i_gpadc_of_id,
- 		.pm = &sun4i_gpadc_pm_ops,
- 	},
--	.id_table = sun4i_gpadc_id,
- 	.probe = sun4i_gpadc_probe,
- 	.remove = sun4i_gpadc_remove,
- };
+ config SUN4I_GPADC
+-	tristate "Support for the Allwinner SoCs GPADC"
++	tristate "Allwinner sunxi platforms' GPADC/Thermal driver"
++	select REGMAP_MMIO
++	select REGMAP_IRQ
+ 	depends on IIO
+-	depends on MFD_SUN4I_GPADC || MACH_SUN8I
+-	depends on THERMAL || !THERMAL_OF
++	depends on ARCH_SUNXI || MACH_SUN8I
++	depends on THERMAL && THERMAL_OF
+ 	help
+ 	  Say yes here to build support for Allwinner (A10, A13 and A31) SoCs
+-	  GPADC. This ADC provides 4 channels which can be used as an ADC or as
++	  GPADC or newer SOCs (A33, H3, A83T, ...) Thermal sensor driver.
++	  This ADC provides 4 channels which can be used as an ADC or as
+ 	  a touchscreen input and one channel for thermal sensor.
+ 
+ 	  The thermal sensor slows down ADC readings and can be disabled by
 -- 
 2.11.0
