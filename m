@@ -1,59 +1,59 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 0/6] Document r8a774a1 USB bindings
-Date: Thu, 30 Aug 2018 03:01:15 +0000
-Message-ID: <OSBPR01MB22938FC34C6AD58FF8A5B285D8080@OSBPR01MB2293.jpnprd01.prod.outlook.com>
-References: <1535097375-5561-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: power: Add Spreadtrum SC2731 charger documentation
+Date: Thu, 30 Aug 2018 11:03:10 +0800
+Message-ID: <CAMz4kuL8cSkBRb1C779u4gi93TwJ1M0aNV_nkRQoX16=7HK5wA@mail.gmail.com>
+References: <5fcd93bbbcd55a5c23f1c75effdc3670ce7a811b.1535446321.git.baolin.wang@linaro.org>
+ <CAJKOXPd9-aLYFLBHwUyNecneHA6X+VbnZSK4paXsMcmvobnGhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535097375-5561-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: ja-JP
+In-Reply-To: <CAJKOXPd9-aLYFLBHwUyNecneHA6X+VbnZSK4paXsMcmvobnGhA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>, Biju Das <biju.das@bp.renesas.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio-san,
+Hi Krzysztof,
 
-> From: Fabrizio Castro, Sent: Friday, August 24, 2018 4:56 PM
-> To: Vinod Koul <vkoul@kernel.org>; Rob Herring <robh+dt@kernel.org>; Mark=
- Rutland <mark.rutland@arm.com>
-> Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Greg Kroah-Hartman =
-<gregkh@linuxfoundation.org>; Kishon Vijay
-> Abraham I <kishon@ti.com>; Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesa=
-s.com>; Biju Das <biju.das@bp.renesas.com>;
-> dmaengine@vger.kernel.org; devicetree@vger.kernel.org; linux-usb@vger.ker=
-nel.org; Simon Horman <horms@verge.net.au>;
-> Geert Uytterhoeven <geert+renesas@glider.be>; Chris Paterson <Chris.Pater=
-son2@renesas.com>;
-> linux-renesas-soc@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 0/6] Document r8a774a1 USB bindings
->=20
-> Dear All,
->=20
-> this series aims at documenting USB related dt-bindings for the
-> r8a774a1.
->=20
-> Applies on next-20180823.
->=20
-> Thanks,
-> Fab
->=20
-> Biju Das (1):
->   dt-bindings: dmaengine: usb-dmac: Add binding for r8a774a1
->=20
-> Fabrizio Castro (5):
->   dt-bindings: rcar-gen3-phy-usb2: Add r8a774a1 support
->   dt-bindings: rcar-gen3-phy-usb3: Add r8a774a1 support
->   dt-bindings: usb-xhci: Add r8a774a1 support
->   dt-bindings: usb: renesas_usbhs: Add r8a774a1 support
->   usb: gadget: udc: renesas_usb3: Add r8a774a1 support
+On 29 August 2018 at 22:08, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Tue, 28 Aug 2018 at 11:04, Baolin Wang <baolin.wang@linaro.org> wrote:
+>>
+>> This patch adds the binding documentation for Spreadtrum SC2731 charger
+>> device.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>>  .../bindings/power/supply/sc2731_charger.txt       |   14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt b/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
+>> new file mode 100644
+>> index 0000000..02b616c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
+>> @@ -0,0 +1,14 @@
+>> +Spreadtrum SC2731 PMIC battery charger binding
+>> +
+>> +Required properties:
+>> + - compatible: Should be "sprd,sc2731-charger".
+>> + - reg: Address offset of charger register.
+>> + - phys: Contains a phandle to the USB phy.
+>> +
+>> +Example:
+>> +
+>> +       charger@0 {
+>> +               compatible = "sprd,sc2731-charger";
+>> +               reg = <0x0>;
+>
+> Can you include also few lines of parent node? You use this "reg"
+> later as a base address so probably your parent node requires address
+> mapping. It would be nice to see it in example.
+>
 
-Thank you for the patch.
-For this series:
+Sorry that I forgot adding the parent node, and will add it in next
+version. Thanks.
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Best regards,
-Yoshihiro Shimoda
+-- 
+Baolin Wang
+Best Regards
