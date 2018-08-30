@@ -1,74 +1,43 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH 4/4] media: platform: Add Aspeed Video Engine driver
-Date: Thu, 30 Aug 2018 10:40:21 -0500
-Message-ID: <7cb0c2f0-cc12-81a6-a858-40776ec5904c@linux.vnet.ibm.com>
-References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1535576973-8067-5-git-send-email-eajames@linux.vnet.ibm.com>
- <CAAEAJfBpmFPLTMAr+Azc-53JXHPkCU4bjtwqE6nDWUvm=J_x-A@mail.gmail.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 01/30] mfd: Makefile: Remove build option for MFD:sun4i-gpadc
+Date: Thu, 30 Aug 2018 17:44:49 +0200
+Message-ID: <20180830154518.29507-2-embed3d@gmail.com>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAEAJfBpmFPLTMAr+Azc-53JXHPkCU4bjtwqE6nDWUvm=J_x-A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, andrew@aj.id.au, Mauro Carvalho Chehab <mchehab@kernel.org>, joel@jms.id.au, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD257DPK24NRBENCUDOAKGQEW36AAHA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Since we are merging the mfd driver into the sun4i-gpadc driver we need
+to remove the build options for the sun4i-gpadc driver.
 
+Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mfd/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-On 08/29/2018 07:52 PM, Ezequiel Garcia wrote:
-> Hi Eddie,
->
-> On 29 August 2018 at 18:09, Eddie James <eajames@linux.vnet.ibm.com> wrote:
->> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
->> can capture and compress video data from digital or analog sources. With
->> the Aspeed chip acting a service processor, the Video Engine can capture
->> the host processor graphics output.
->>
->> Add a V4L2 driver to capture video data and compress it to JPEG images,
->> making the data available through a standard read interface.
->>
->> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
->> ---
->>   drivers/media/platform/Kconfig        |    8 +
->>   drivers/media/platform/Makefile       |    1 +
->>   drivers/media/platform/aspeed-video.c | 1307 +++++++++++++++++++++++++++++++++
->>   3 files changed, 1316 insertions(+)
->>   create mode 100644 drivers/media/platform/aspeed-video.c
->>
->> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
->> index 94c1fe0..e599245 100644
->> --- a/drivers/media/platform/Kconfig
->> +++ b/drivers/media/platform/Kconfig
->> @@ -32,6 +32,14 @@ source "drivers/media/platform/davinci/Kconfig"
->>
->>   source "drivers/media/platform/omap/Kconfig"
->>
->> +config VIDEO_ASPEED
->> +       tristate "Aspeed AST2400 and AST2500 Video Engine driver"
->> +       depends on VIDEO_V4L2
-> It seems you are not using videobuf2. I think it should simplify the read
-> I/O part and at the same time expose the other capture methods.
-
-Hi,
-
-Well I'm not sure it would simplify the read interface; it's quite 
-simple as it is, both in the driver and to set up in user-space.
-
-I did get streaming I/O working but found the performance significantly 
-worse than simple read calls, and therefore not worth the additional 
-complexity.
-
-Is it required that I support streaming?
-
-Thanks,
-Eddie
-
->
-> There are plenty of examples to follow.
->
-> Regards,
-> Eze
->
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index e9fd20dba18d..c680994db988 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -220,7 +220,6 @@ obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
+ obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
+ 
+ obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
+-obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
+ 
+ obj-$(CONFIG_MFD_STM32_LPTIMER)	+= stm32-lptimer.o
+ obj-$(CONFIG_MFD_STM32_TIMERS) 	+= stm32-timers.o
+-- 
+2.11.0
