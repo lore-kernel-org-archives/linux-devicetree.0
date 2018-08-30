@@ -1,13 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 15/30] iio: adc: sun4i-gpadc-iio: rename
- A33-specified registers to contain A33
-Date: Thu, 30 Aug 2018 17:45:03 +0200
-Message-ID: <20180830154518.29507-16-embed3d@gmail.com>
+Subject: [PATCH v3 20/30] iio: adc: sun4i-gpadc-iio: rework:
+ device specific suspend & resume
+Date: Thu, 30 Aug 2018 17:45:08 +0200
+Message-ID: <20180830154518.29507-21-embed3d@gmail.com>
 References: <20180830154518.29507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBH5CUDOAKGQEKAVTGUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBJNCUDOAKGQEQLYBLZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,55 +20,90 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Different sensors will have different suspend and resume functions. So
+we are modularize the suspend and resume functions.
 
-As the H3 SoC, which is also in sun8i line, has totally different
-register map for the thermal sensor (a cut down version of GPADC), we
-should rename A23/A33-specified registers to contain A33, in order to
-prevent obfuscation with H3 registers. Currently these registers are
-only prefixed "SUN8I", not "SUN8I_A33".
+The resume function configures and initializes the thermal sensor and
+the suspend function disables the sensors.
 
-Add "_A33" after "SUN8I" on the register names.
-
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Jonathan Cameron <jonathan.cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c   | 2 +-
- include/linux/iio/adc/sun4i-gpadc.h | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/adc/sun4i-gpadc-iio.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index e1fe5e8e9dc0..d48f338af563 100644
+index 2fd73d143815..c7b46c82e3e5 100644
 --- a/drivers/iio/adc/sun4i-gpadc-iio.c
 +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -106,7 +106,7 @@ static const struct gpadc_data sun6i_gpadc_data = {
- static const struct gpadc_data sun8i_a33_gpadc_data = {
- 	.temp_offset = -1662,
- 	.temp_scale = 162,
--	.tp_mode_en = SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
-+	.tp_mode_en = SUN8I_A33_GPADC_CTRL1_CHOP_TEMP_EN,
+@@ -76,6 +76,9 @@ struct gpadc_data {
+ 
+ static irqreturn_t sun4i_gpadc_data_irq_handler(int irq, void *dev_id);
+ 
++static int sun4i_ths_resume(struct sun4i_gpadc_iio *info);
++static int sun4i_ths_suspend(struct sun4i_gpadc_iio *info);
++
+ static const struct gpadc_data sun4i_gpadc_data = {
+ 	.temp_offset = -1932,
+ 	.temp_scale = 133,
+@@ -87,6 +90,8 @@ static const struct gpadc_data sun4i_gpadc_data = {
+ 	.ths_irq_thread = sun4i_gpadc_data_irq_handler,
+ 	.support_irq = true,
+ 	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
++	.ths_resume = sun4i_ths_resume,
++	.ths_suspend = sun4i_ths_suspend,
+ 	.sensor_count = 1,
  };
  
- struct sun4i_gpadc_iio {
-diff --git a/include/linux/iio/adc/sun4i-gpadc.h b/include/linux/iio/adc/sun4i-gpadc.h
-index ca59336f246b..d6850f39dcfb 100644
---- a/include/linux/iio/adc/sun4i-gpadc.h
-+++ b/include/linux/iio/adc/sun4i-gpadc.h
-@@ -38,9 +38,9 @@
- #define SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(x)		(GENMASK(3, 0) & BIT(x))
- #define SUN6I_GPADC_CTRL1_ADC_CHAN_MASK			GENMASK(3, 0)
+@@ -101,6 +106,8 @@ static const struct gpadc_data sun5i_gpadc_data = {
+ 	.ths_irq_thread = sun4i_gpadc_data_irq_handler,
+ 	.support_irq = true,
+ 	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
++	.ths_resume = sun4i_ths_resume,
++	.ths_suspend = sun4i_ths_suspend,
+ 	.sensor_count = 1,
+ };
  
--/* TP_CTRL1 bits for sun8i SoCs */
--#define SUN8I_GPADC_CTRL1_CHOP_TEMP_EN			BIT(8)
--#define SUN8I_GPADC_CTRL1_GPADC_CALI_EN			BIT(7)
-+/* TP_CTRL1 bits for A33 */
-+#define SUN8I_A33_GPADC_CTRL1_CHOP_TEMP_EN		BIT(8)
-+#define SUN8I_A33_GPADC_CTRL1_GPADC_CALI_EN		BIT(7)
+@@ -115,6 +122,8 @@ static const struct gpadc_data sun6i_gpadc_data = {
+ 	.ths_irq_thread = sun4i_gpadc_data_irq_handler,
+ 	.support_irq = true,
+ 	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
++	.ths_resume = sun4i_ths_resume,
++	.ths_suspend = sun4i_ths_suspend,
+ 	.sensor_count = 1,
+ };
  
- #define SUN4I_GPADC_CTRL2				0x08
+@@ -123,6 +132,8 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
+ 	.temp_scale = 162,
+ 	.tp_mode_en = SUN8I_A33_GPADC_CTRL1_CHOP_TEMP_EN,
+ 	.temp_data_base = SUN4I_GPADC_TEMP_DATA,
++	.ths_resume = sun4i_ths_resume,
++	.ths_suspend = sun4i_ths_suspend,
+ 	.sensor_count = 1,
+ };
  
+@@ -401,6 +412,11 @@ static irqreturn_t sun4i_gpadc_data_irq_handler(int irq, void *dev_id)
+ static int sun4i_gpadc_runtime_suspend(struct device *dev)
+ {
+ 	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
++	return info->data->ths_suspend(info);
++}
++
++static int sun4i_ths_suspend(struct sun4i_gpadc_iio *info)
++{
+ 
+ 	/* Disable the ADC on IP */
+ 	regmap_write(info->regmap, SUN4I_GPADC_CTRL1, 0);
+@@ -415,7 +431,11 @@ static int sun4i_gpadc_runtime_suspend(struct device *dev)
+ static int sun4i_gpadc_runtime_resume(struct device *dev)
+ {
+ 	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
++	return info->data->ths_resume(info);
++}
+ 
++static int sun4i_ths_resume(struct sun4i_gpadc_iio *info)
++{
+ 	/* clkin = 6MHz */
+ 	regmap_write(info->regmap, SUN4I_GPADC_CTRL0,
+ 		     SUN4I_GPADC_CTRL0_ADC_CLK_DIVIDER(2) |
 -- 
 2.11.0
