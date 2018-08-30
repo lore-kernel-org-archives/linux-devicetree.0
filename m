@@ -1,67 +1,52 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] dt-bindings: net: cpsw: Document cpsw-phy-sel usage
- but prefer phandle
-Date: Wed, 29 Aug 2018 17:47:45 -0700
-Message-ID: <20180830004745.GU7523@atomide.com>
-References: <20180829150024.43210-1-tony@atomide.com>
- <90e0f25f-45f5-b2c0-59d9-cdf25eb06c0c@ti.com>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH 4/4] media: platform: Add Aspeed Video Engine driver
+Date: Wed, 29 Aug 2018 21:52:57 -0300
+Message-ID: <CAAEAJfBpmFPLTMAr+Azc-53JXHPkCU4bjtwqE6nDWUvm=J_x-A@mail.gmail.com>
+References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com> <1535576973-8067-5-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <90e0f25f-45f5-b2c0-59d9-cdf25eb06c0c@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: David Miller <davem@davemloft.net>, netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535576973-8067-5-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, andrew@aj.id.au, Mauro Carvalho Chehab <mchehab@kernel.org>, joel@jms.id.au, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [180830 00:12]:
-> Hi Tony,
-> 
-> On 08/29/2018 10:00 AM, Tony Lindgren wrote:
-> > The current cpsw usage for cpsw-phy-sel is undocumented but is used for
-> > all the boards using cpsw. And cpsw-phy-sel is not really a child of
-> > the cpsw device, it lives in the system control module instead.
-> > 
-> > Let's document the existing usage, and improve it a bit where we prefer
-> > to use a phandle instead of a child device for it. That way we can
-> > properly describe the hardware in dts files for things like genpd.
-> 
-> I'm ok with this series, but I really don't like cpsw-phy-sel in general.
+Hi Eddie,
 
-Yeah this binding predates any standards. This series
-only fixes the nasty issue of cpsw claiming a module as a
-child that's outside it's IO range.
+On 29 August 2018 at 18:09, Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+> can capture and compress video data from digital or analog sources. With
+> the Aspeed chip acting a service processor, the Video Engine can capture
+> the host processor graphics output.
+>
+> Add a V4L2 driver to capture video data and compress it to JPEG images,
+> making the data available through a standard read interface.
+>
+> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+> ---
+>  drivers/media/platform/Kconfig        |    8 +
+>  drivers/media/platform/Makefile       |    1 +
+>  drivers/media/platform/aspeed-video.c | 1307 +++++++++++++++++++++++++++++++++
+>  3 files changed, 1316 insertions(+)
+>  create mode 100644 drivers/media/platform/aspeed-video.c
+>
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index 94c1fe0..e599245 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -32,6 +32,14 @@ source "drivers/media/platform/davinci/Kconfig"
+>
+>  source "drivers/media/platform/omap/Kconfig"
+>
+> +config VIDEO_ASPEED
+> +       tristate "Aspeed AST2400 and AST2500 Video Engine driver"
+> +       depends on VIDEO_V4L2
 
-> It was introduced long time back and now I'm thinking about possibility to replace it with
-> one of current generic interfaces - for example mux-controller. 
-> Each port will control up to 3 muxes (port mode, idmode and rmii_ext_clk) and  
-> transform phy-mode => mux states.
-> What do you think?
+It seems you are not using videobuf2. I think it should simplify the read
+I/O part and at the same time expose the other capture methods.
 
-Sure a mux-controller here makes sense.
-
-> Another option is to use phy, but it'd be complicated.
-
-For the port muxes, how about a phy driver just using
-a pinctrl driver?
-
-In general, it seems cpsw is just an interconnect instance
-(L4_FAST) with a control module (CPSW_WR) and a pile of
-independent other modules. That's described nicely in
-am437x TRM chapter "2.1.4 L4 Fast Peripheral Memory Map".
-So from that point of view the binding reg entries right
-now are all wrong :)
-
-In the long run cpsw should be really treated as an
-interconnect instance with it's control module providing
-standard Linux framework services such as clock /
-regulator / phy / pinctrl / iio whatever for the other
-modules.
-
-Just my 2c based on looking at the interconnect, I'm
-not too familiar with cpsw otherwise.
+There are plenty of examples to follow.
 
 Regards,
-
-Tony
+Eze
