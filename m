@@ -1,62 +1,89 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v16 5/5] iommu/arm-smmu: Add support for qcom,
- smmu-v2 variant
-Date: Thu, 30 Aug 2018 20:15:41 +0530
-Message-ID: <20180830144541.17740-6-vivek.gautam@codeaurora.org>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/3] arm64: dts: renesas: r8a774a1: Add USB2.0 phy and
+ host(EHCI/OHCI) device nodes
+Date: Thu, 30 Aug 2018 16:50:23 +0200
+Message-ID: <20180830145023.lkroiqsgdt33qprc@verge.net.au>
+References: <1535107429-5458-1-git-send-email-biju.das@bp.renesas.com>
+ <1535107429-5458-2-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVWE7F84BdbiqLBfKZLwb9QNg8chsUgWsKtPdikGWeXJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180830144541.17740-1-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVWE7F84BdbiqLBfKZLwb9QNg8chsUgWsKtPdikGWeXJA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-cWNvbSxzbW11LXYyIGlzIGFuIGFybSxzbW11LXYyIGltcGxlbWVudGF0aW9uIHdpdGggc3BlY2lm
-aWMKY2xvY2sgYW5kIHBvd2VyIHJlcXVpcmVtZW50cy4KT24gbXNtODk5NiwgbXVsdGlwbGUgY29y
-ZXMsIHZpei4gbWRzcywgdmlkZW8sIGV0Yy4gdXNlIHRoaXMKc21tdS4gT24gc2RtODQ1LCB0aGlz
-IHNtbXUgaXMgdXNlZCB3aXRoIGdwdS4KQWRkIGJpbmRpbmdzIGZvciB0aGUgc2FtZS4KClNpZ25l
-ZC1vZmYtYnk6IFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPgpSZXZp
-ZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KUmV2aWV3ZWQtYnk6IFRvbWFz
-eiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+ClRlc3RlZC1ieTogU3Jpbml2YXMgS2FuZGFnYXRs
-YSA8c3Jpbml2YXMua2FuZGFnYXRsYUBsaW5hcm8ub3JnPgotLS0KIGRyaXZlcnMvaW9tbXUvYXJt
-LXNtbXUuYyB8IDEzICsrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25z
-KCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jIGIvZHJpdmVycy9pb21t
-dS9hcm0tc21tdS5jCmluZGV4IDE2NmM4YzZkYTI0Zi4uNDExZTVhYzU3YzY0IDEwMDY0NAotLS0g
-YS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKKysrIGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS5j
-CkBAIC0xMTksNiArMTE5LDcgQEAgZW51bSBhcm1fc21tdV9pbXBsZW1lbnRhdGlvbiB7CiAJR0VO
-RVJJQ19TTU1VLAogCUFSTV9NTVU1MDAsCiAJQ0FWSVVNX1NNTVVWMiwKKwlRQ09NX1NNTVVWMiwK
-IH07CiAKIHN0cnVjdCBhcm1fc21tdV9zMmNyIHsKQEAgLTE5NzAsNiArMTk3MSwxNyBAQCBBUk1f
-U01NVV9NQVRDSF9EQVRBKGFybV9tbXU0MDEsIEFSTV9TTU1VX1YxXzY0SywgR0VORVJJQ19TTU1V
-KTsKIEFSTV9TTU1VX01BVENIX0RBVEEoYXJtX21tdTUwMCwgQVJNX1NNTVVfVjIsIEFSTV9NTVU1
-MDApOwogQVJNX1NNTVVfTUFUQ0hfREFUQShjYXZpdW1fc21tdXYyLCBBUk1fU01NVV9WMiwgQ0FW
-SVVNX1NNTVVWMik7CiAKK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgcWNvbV9zbW11djJfY2xr
-c1tdID0geworCSJidXMiLCAiaWZhY2UiLAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBhcm1f
-c21tdV9tYXRjaF9kYXRhIHFjb21fc21tdXYyID0geworCS52ZXJzaW9uID0gQVJNX1NNTVVfVjIs
-CisJLm1vZGVsID0gUUNPTV9TTU1VVjIsCisJLmNsa3MgPSBxY29tX3NtbXV2Ml9jbGtzLAorCS5u
-dW1fY2xrcyA9IEFSUkFZX1NJWkUocWNvbV9zbW11djJfY2xrcyksCit9OworCiBzdGF0aWMgY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCBhcm1fc21tdV9vZl9tYXRjaFtdID0gewogCXsgLmNvbXBh
-dGlibGUgPSAiYXJtLHNtbXUtdjEiLCAuZGF0YSA9ICZzbW11X2dlbmVyaWNfdjEgfSwKIAl7IC5j
-b21wYXRpYmxlID0gImFybSxzbW11LXYyIiwgLmRhdGEgPSAmc21tdV9nZW5lcmljX3YyIH0sCkBA
-IC0xOTc3LDYgKzE5ODksNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBhcm1f
-c21tdV9vZl9tYXRjaFtdID0gewogCXsgLmNvbXBhdGlibGUgPSAiYXJtLG1tdS00MDEiLCAuZGF0
-YSA9ICZhcm1fbW11NDAxIH0sCiAJeyAuY29tcGF0aWJsZSA9ICJhcm0sbW11LTUwMCIsIC5kYXRh
-ID0gJmFybV9tbXU1MDAgfSwKIAl7IC5jb21wYXRpYmxlID0gImNhdml1bSxzbW11LXYyIiwgLmRh
-dGEgPSAmY2F2aXVtX3NtbXV2MiB9LAorCXsgLmNvbXBhdGlibGUgPSAicWNvbSxzbW11LXYyIiwg
-LmRhdGEgPSAmcWNvbV9zbW11djIgfSwKIAl7IH0sCiB9OwogTU9EVUxFX0RFVklDRV9UQUJMRShv
-ZiwgYXJtX3NtbXVfb2ZfbWF0Y2gpOwotLSAKUVVBTENPTU0gSU5ESUEsIG9uIGJlaGFsZiBvZiBR
-dWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlcgpvZiBDb2RlIEF1cm9y
-YSBGb3J1bSwgaG9zdGVkIGJ5IFRoZSBMaW51eCBGb3VuZGF0aW9uCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
-ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Thu, Aug 30, 2018 at 02:29:02PM +0200, Geert Uytterhoeven wrote:
+> On Fri, Aug 24, 2018 at 12:50 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> > Add USB2.0 phy and host (EHCI/OHCI) device nodes on RZ/G2M SoC dtsi.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > ---
+> >  arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 73 +++++++++++++++++++++++++++++++
+> >  1 file changed, 73 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > index cd204f5..a794089 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> 
+> > +               ehci0: usb@ee080100 {
+> > +                       compatible = "generic-ehci";
+> > +                       reg = <0 0xee080100 0 0x100>;
+> > +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&cpg CPG_MOD 703>;
+> > +                       phys = <&usb2_phy0>;
+> > +                       phy-names = "usb";
+> > +                       companion= <&ohci0>;
+> 
+> Please insert a space before the "=".
+
+I fixed that by adding the update to your fixup patch for many similar
+problems. Let me know if pain persists after I've pushed the devel branch.
+
+> 
+> > +                       power-domains = <&sysc 32>;
+> > +                       resets = <&cpg 703>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               ehci1: usb@ee0a0100 {
+> > +                       compatible = "generic-ehci";
+> > +                       reg = <0 0xee0a0100 0 0x100>;
+> > +                       interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&cpg CPG_MOD 702>;
+> > +                       phys = <&usb2_phy1>;
+> > +                       phy-names = "usb";
+> > +                       companion= <&ohci1>;
+> 
+> Likewise.
+> 
+> > +                       power-domains = <&sysc 32>;
+> > +                       resets = <&cpg 702>;
+> > +                       status = "disabled";
+> > +               };
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
