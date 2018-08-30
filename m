@@ -1,13 +1,15 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 00/30] IIO-based thermal sensor driver for
- Allwinner H3 and A83T SoC
-Date: Thu, 30 Aug 2018 17:44:48 +0200
-Message-ID: <20180830154518.29507-1-embed3d@gmail.com>
+Subject: [PATCH v3 02/30] mfd: Kconfig: Remove MFD_SUN4I_GPADC
+ config option
+Date: Thu, 30 Aug 2018 17:44:50 +0200
+Message-ID: <20180830154518.29507-3-embed3d@gmail.com>
+References: <20180830154518.29507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBEFCUDOAKGQETQNG6IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBEVCUDOAKGQEUZFLTAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,88 +20,42 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allwiner H3 and A83T SoCs have a thermal sensor, which is a large refactored
-version of the old Allwinner "GPADC" (although it have already only
-thermal part left in A33).
+We are merging the mfd:sun4i-gpadc driver into the
+iio/adc/sun4i-gpadc driver. So we need to remove the MFD_SUN4I_GPADC
+config option.
 
-This patch tried to add support for the sensor in H3 and A83T based on
+Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/mfd/Kconfig | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
-This Patchtseries was in the beginning based on Icenowy Zengs v4 patchseries [1]. Since we decided to merge the mfd driver into the GPADC this changed. So only one patch could be reused.
-
-Patches that adds support for H5, A64, A80 and H6 SoCs are allready prepared,
-and will be upstreamed if this patchseries is applied and the testing is done.
-
-Sorry for delaying this.
-
-Regards,
-Philipp 
-
-changes since v2:
-	* mfd driver is now merged into the gpadc driver
-	* complete rework
-
-changes since v1:
-	* collecting all acks 
-	* rewording commits/fix typos
-	* move code in place where it is used
-	* fix naming conventions of defines
-	* clarify commits
-	* update documentation to cover the new nvmem calibraion
-	* change nvmem calibration
-
-
-
-Icenowy Zheng (1):
-  iio: adc: sun4i-gpadc-iio: rename A33-specified registers to contain
-    A33
-
-Philipp Rossak (29):
-  mfd: Makefile: Remove build option for MFD:sun4i-gpadc
-  mfd: Kconfig: Remove MFD_SUN4I_GPADC config option
-  iio: adc: Remove ID table
-  iio: adc: Kconfig: Update Kconfig to new build options
-  iio: adc: move SUN4I_GPADC_CHANNEL define to header file
-  iio: adc: remove ofnode options
-  iio: adc: remove mfd_probe & sunwi_irq_init function
-  iio: adc: remove hwmon structure
-  iio: adc: Threat A33 as thermal sensor and remove non thermal sun4i
-    channel
-  iio: adc: rework irq and adc_channel handling
-  iio: adc: add new compatibles
-  mfd: Remove old mfd driver & Move sun4i-gpadc.h to iio/adc/
-  arm: config: Enable SUN4I_GPADC in defconfig
-  dt-bindings: update the Allwinner GPADC device tree binding for H3 &
-    A83T
-  iio: adc: sun4i-gpadc-iio: rework: readout temp_data
-  iio: adc: sun4i-gpadc-iio: rework: support clocks and reset
-  iio: adc: sun4i-gpadc-iio: rework: support multiple sensors
-  iio: adc: sun4i-gpadc-iio: rework: support nvmem calibration data
-  iio: adc: sun4i-gpadc-iio: rework: device specific suspend & resume
-  iio: adc: sun4i-gpadc-iio: add support for H3 thermal sensor
-  iio: adc: sun4i-gpadc-iio: add support for A83T thermal sensor
-  ARM: dts: sunxi-h3-h5: add support for the thermal sensor in H3 and H5
-  ARM: dts: sun8i: h3: add support for the thermal sensor in H3
-  ARM: dts: sun8i: h3: add thermal zone to H3
-  ARM: dts: sun8i: h3: enable H3 sid controller
-  ARM: dts: sun8i: h3: use calibration for ths
-  ARM: dts: sun8i: a83t: add support for the thermal sensor in A83T
-  ARM: dts: sun8i: a83t: add thermal zone to A83T
-  ARM: sun8i: a83t: full range OPP tables and CPUfreq
-
- .../devicetree/bindings/iio/adc/sun4i-gpadc.txt    |  41 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi                  | 143 +++++
- arch/arm/boot/dts/sun8i-h3.dtsi                    |  52 ++
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  10 +
- arch/arm/configs/sunxi_defconfig                   |   1 +
- drivers/iio/adc/Kconfig                            |  11 +-
- drivers/iio/adc/sun4i-gpadc-iio.c                  | 617 +++++++++++++--------
- drivers/mfd/Kconfig                                |  17 -
- drivers/mfd/Makefile                               |   1 -
- drivers/mfd/sun4i-gpadc.c                          | 181 ------
- include/linux/{mfd => iio/adc}/sun4i-gpadc.h       |  47 +-
- 11 files changed, 681 insertions(+), 440 deletions(-)
- delete mode 100644 drivers/mfd/sun4i-gpadc.c
- rename include/linux/{mfd => iio/adc}/sun4i-gpadc.h (72%)
-
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index b860eb5aa194..c7ab57d65610 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -40,23 +40,6 @@ config MFD_ACT8945A
+ 	  linear regulators, along with a complete ActivePath battery
+ 	  charger.
+ 
+-config MFD_SUN4I_GPADC
+-	tristate "Allwinner sunxi platforms' GPADC MFD driver"
+-	select MFD_CORE
+-	select REGMAP_MMIO
+-	select REGMAP_IRQ
+-	depends on ARCH_SUNXI || COMPILE_TEST
+-	depends on !TOUCHSCREEN_SUN4I
+-	help
+-	  Select this to get support for Allwinner SoCs (A10, A13 and A31) ADC.
+-	  This driver will only map the hardware interrupt and registers, you
+-	  have to select individual drivers based on this MFD to be able to use
+-	  the ADC or the thermal sensor. This will try to probe the ADC driver
+-	  sun4i-gpadc-iio and the hwmon driver iio_hwmon.
+-
+-	  To compile this driver as a module, choose M here: the module will be
+-	  called sun4i-gpadc.
+-
+ config MFD_AS3711
+ 	bool "AMS AS3711"
+ 	select MFD_CORE
 -- 
 2.11.0
