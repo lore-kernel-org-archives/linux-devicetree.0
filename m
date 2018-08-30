@@ -1,99 +1,72 @@
-From: Przemyslaw Gaj <pgaj@cadence.com>
-Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 30 Aug 2018 19:00:39 +0000
-Message-ID: <3D2681D9-1ACC-42FF-9FAB-D86B3C689003@cadence.com>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
- <20180719152930.3715-2-boris.brezillon@bootlin.com>
- <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
- <20180824143934.6d6b6487@bbrezillon>
- <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
- <20180824201600.7d80bca9@bbrezillon>
- <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
- <20180828140209.29155d00@bbrezillon>
- <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
- <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 00/13] ata: ahci_platform: support allwinner
+ R40 AHCI
+Date: Thu, 30 Aug 2018 21:01:07 +0200
+Message-ID: <20180830190120.722-1-clabbe.montjoie@gmail.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
-Content-Language: en-US
-Content-ID: <709EFCE5C7083243B8CC2CE09EBDB8DB@namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vitor <Vitor.Soares@synopsys.com>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBCP6UDOAKGQEODPDBUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVml0b3IsDQoNCu+7v09uIDgvMzAvMTgsIDM6NTcgUE0sICJ2aXRvciIgPFZpdG9yLlNvYXJl
-c0BzeW5vcHN5cy5jb20+IHdyb3RlOg0KDQogICAgRVhURVJOQUwgTUFJTA0KICAgIA0KICAgIA0K
-ICAgIEhpIFByemVteXNsYXcNCiAgICANCkp1c3QgUHJ6ZW1layA6KQ0KICAgIA0KICAgIE9uIDI4
-LTA4LTIwMTggMTM6NTUsIFByemVteXNsYXcgR2FqIHdyb3RlOg0KICAgID4gSGkgVml0b3IsDQog
-ICAgPg0KICAgID4gSSBoYXZlIGFscmVhZHkgaW1wbGVtZW50ZWQgTWFzdGVyc2hpcCByZXF1ZXN0
-L2hhbmRvdmVyIGJ1dCB3ZSBhcmUgd2FpdGluZyBmb3IgQm9yaXPigJlzIHBhdGNoIHRvIGJlIGFj
-Y2VwdGVkIGFuZCBtZXJnZWQuIEFueXdheSwgbXkgY29tbWVudHMgYmVsb3cuDQogICAgPg0KICAg
-ID4gT24gOC8yOC8xOCwgMjowMiBQTSwgIkJvcmlzIEJyZXppbGxvbiIgPGJvcmlzLmJyZXppbGxv
-bkBib290bGluLmNvbT4gd3JvdGU6DQogICAgPg0KICAgID4gICAgICBFWFRFUk5BTCBNQUlMDQog
-ICAgPiAgICAgIA0KICAgID4gICAgICANCiAgICA+ICAgICAgSGkgVml0b3IsDQogICAgPiAgICAg
-IA0KICAgID4gICAgICBPbiBUdWUsIDI4IEF1ZyAyMDE4IDEyOjUwOjEyICswMTAwDQogICAgPiAg
-ICAgIHZpdG9yIDxWaXRvci5Tb2FyZXNAc3lub3BzeXMuY29tPiB3cm90ZToNCiAgICA+ICAgICAg
-DQogICAgPiAgICAgID4gSGkgQm9yaXMsDQogICAgPiAgICAgID4NCiAgICA+ICAgICAgPiBUaGUg
-RFQgQmluZGluZ3Mgc2F5ICJUaGUgbm9kZSBkZXNjcmliaW5nIGFuIEkzQyBidXMgc2hvdWxkIGJl
-IG5hbWVkDQogICAgPiAgICAgID4gaTNjLW1hc3Rlci4iLiBEbyB5b3UgaGF2ZSBhIGZpZWxkIGZv
-ciBzZWNvbmRhcnkgbWFzdGVyPw0KICAgID4NCiAgICA+IEkgdGhpbmsgd2UgZG9u4oCZdCBuZWVk
-IHNlcGFyYXRlIGZpZWxkIGZvciBzZWNvbmRhcnkgbWFzdGVyLiBNYWluIGFuZCBzZWNvbmRhcnkg
-bWFzdGVycw0KICAgID4gc3VwcG9ydCBzaW1pbGFyIGZ1bmN0aW9uYWxpdGllcy4gSXTigJlzIGVu
-b3VnaCB0byBoYXZlIHRoaXMgc3RhdGUgaW50ZXJuYWxseSBhbmQgZG8gbWFzdGVyc2hpcCBpdCBp
-dCdzIG5lZWRlZC4NCiAgICANCiAgICBZZXMsIHlvdSBhcmUgcmlnaHQuDQogICAgDQogICAgPg0K
-ICAgID4gICAgICA+DQogICAgPiAgICAgID4gT24gMjQtMDgtMjAxOCAxOToxNiwgQm9yaXMgQnJl
-emlsbG9uIHdyb3RlOg0KICAgID4gICAgICA+ID4gV2VsbCwgYmVmb3JlIGV2ZW4gY29uc2lkZXJp
-bmcgc3VwcG9ydGluZyBzZWNvbmRhcnkgbWFzdGVyIHJlZ2lzdHJhdGlvbiwNCiAgICA+ICAgICAg
-PiA+IHdlIG5lZWQgdG8gaGFuZGxlIG1hc3RlcnNoaXAgaGFuZG92ZXIuIEFzIGZvciB0aGUgREFB
-IG9wZXJhdGlvbiwgaXQncw0KICAgID4gICAgICA+ID4gbGlrZWx5IHRvIGJlIGhvc3Qgc3BlY2lm
-aWMsIHNvIHdlJ2xsIGhhdmUgdG8gYWRkIGEgbmV3IGhvb2sgdG8gdGhlDQogICAgPiAgICAgID4g
-PiBpM2NfbWFzdGVyX2NvbnRyb2xsZXJfb3BzIHN0cnVjdC4NCiAgICA+ICAgICAgPiBEbyB5b3Ug
-bWVhbiB3aGVuIG1hc3RlciB0cnkgdG8gZGVsZWdhdGUgdGhlIGJ1cyBvd25lcnNoaXAgdGhyb3Vn
-aA0KICAgID4gICAgICA+IEdFVEFDQ01TVD8gb3IgdG8gZ2V0IHRoZSBidXMgb3duZXJzaGlwIHdp
-dGggSUJJLU1SPw0KICAgID4gICAgICANCiAgICA+ICAgICAgSSB0aGluayB3ZSBuZWVkIHRvIHN1
-cHBvcnQgYm90aC4NCiAgICA+DQogICAgPiBJIGFncmVlLg0KICAgIA0KICAgIFRoYXQncyBvayB0
-byBtZS4NCiAgICANCiAgICA+ICAgICAgDQogICAgPiAgICAgID4NCiAgICA+ICAgICAgPiBJIHRo
-aW5rIHRoYXQgY291bGQgYmUgdXNlZnVsIHRvIHBhc3MgdGhlIGliaSB0eXBlIG9uIHJlcXVlc3Rf
-aWJpKCksDQogICAgPiAgICAgID4gdGhlcmUgaXMgc29tZSBjYXNlIHdoZXJlIHRoZSBtYXN0ZXIg
-ZG9lc24ndCBzdXBwb3J0IElCSS1NUi4NCiAgICA+ICAgICAgDQogICAgPiAgICAgIEFjdHVhbGx5
-LCBJIHdhcyBwbGFubmluZyBvbiBtYWtpbmcgaXQgY29tcGxldGVseSBzZXBhcmF0ZSBmcm9tDQog
-ICAgPiAgICAgIHJlZ3VsYXIgc2xhdmUgSUJJcy4gVGhhdCBpcywgdGhlIG1hc3RlciBjb250cm9s
-bGVyIGRyaXZlciB3b3VsZCBkZW11eA0KICAgID4gICAgICB0aGUgc2xhdmUsIE1SIGFuZCBIb3Qg
-Sm9pbiBJQklzLCBhbmQgaWYgdGhlcmUncyBhbiBNUiByZXF1ZXN0LCBxdWV1ZSBhDQogICAgPiAg
-ICAgIG1hc3RlcnNoaXAgaGFuZG92ZXIgd29yayB0byB0aGUgd29ya3F1ZXVlIChwcmV0dHkgbXVj
-aCB3aGF0IHdlIGRvIGZvcg0KICAgID4gICAgICBIb3QtSm9pbiBhbHJlYWR5KS4gTWFzdGVyc2hp
-cCBoYW5kb3ZlciBpcyBhbnl3YXkgbGlrZWx5IHRvIGJlIElQDQogICAgPiAgICAgIHNwZWNpZmlj
-LCBzbyBJIGRvbid0IHRoaW5rIHRoZXJlJ3MgYSBuZWVkIHRvIG1ha2UgaXQgbG9vayBsaWtlIGEN
-CiAgICA+ICAgICAgcmVndWxhciBJQkkuDQogICAgPg0KICAgID4gSSB0aGluayBpdCdzIGJldHRl
-ciB0byBoYXZlIHNlcGFyYXRlIGZ1bmN0aW9uIHRvIGRvIG1hc3RlcnNoaXAgcmVxdWVzdC4NCiAg
-ICA+ICAgICAgDQogICAgPiAgICAgIFJlZ2FyZGluZyB3aGV0aGVyIElCSS1NUiBzdXBwb3J0IHNo
-b3VsZCBiZSBleHBvc2VkIHRvIHRoZSBJM0MgZnJhbWV3b3JrDQogICAgPiAgICAgIG9yIG5vdCBk
-ZXBlbmRzIG9uIGhvdyBtdWNoIHdpbGwgYmUgYXV0b21hdGVkIG9uIHRoZSBmcmFtZXdvcmsgc2lk
-ZS4gSQ0KICAgID4gICAgICBkb24ndCB0aGUgYW5zd2VyIHlldCwgYnV0IHRoYXQncyBwcm9iYWJs
-eSBzb21ldGhpbmcgd2lsbCBmaWd1cmUgb3V0DQogICAgPiAgICAgIGFsb25nIHRoZSByb2FkLg0K
-ICAgID4NCiAgICA+IE15IGN1cnJlbnQgaW1wbGVtZW50YXRpb24gaXM6IHdoZW4gcmVxdWVzdF9t
-YXN0ZXJzaGlwIGZpZWxkDQogICAgPiBvZiBpM2NfbWFzdGVyX2NvbnRyb2xsZXJfb3BzIHN0cnVj
-dHVyZSBpcyBzZXQsIG1hc3RlciBkcml2ZXIgc3VwcG9ydHMgbWFzdGVyc2hpcCByZXF1ZXN0cy4N
-CiAgICA+IFRoYXQncyBob3cgSSBjaGVjayBpZiB0aGlzIGlzIHN1cHBvcnRlZCBvciBub3QuDQog
-ICAgPiAgICAgIA0KICAgID4gICAgICBSZWdhcmRzLA0KICAgID4gICAgICANCiAgICA+ICAgICAg
-Qm9yaXMNCiAgICA+ICAgICAgDQogICAgPiBSZWdhcmRzLA0KICAgID4gUHJ6ZW1law0KICAgID4N
-CiAgICB3aGVuIHlvdSBzYXkgcmVxdWVzdF9tYXN0ZXJzaGlwLCBkbyB5b3UgbWVhbiB0aGUgY3Vy
-cmVudCBtYXN0ZXIgZG8gdGhlIA0KICAgIG1hc3RlcnNoaXAgaGFuZC1vZmYgb3IgdGhlIHNlY29u
-ZGFyeSBtYXN0ZXIgcmVxdWVzdCB0byBiZSBjdXJyZW50IG1hc3Rlcj8NCg0KSSBtZWFuIHNlY29u
-ZGFyeSBtYXN0ZXIgcmVxdWVzdHMgdG8gYmUgY3VycmVudCBtYXN0ZXIuIEN1cnJlbnQgbWFzdGVy
-IGRvIHRoZSBtYXN0ZXJzaGlwDQpoYW5kLW9mZiB1c2luZyBHRVRBQ0NNU1QgY29tbWFuZC4NCiAg
-ICANCiAgICBTbywgcGVyIG15IHVuZGVyc3RhbmRpbmcgc2luY2UgdGhlIE1haW4gbWFzdGVyIHN1
-cHBvcnQgdGhlIGhhbmQtb2ZmIG9mIA0KICAgIHRoZSBidXMgeW91IGFjY2VwdCBhbGwgaW5jb21p
-bmcgTVIsIHJpZ2h0PyBPciBkbyB5b3UgY2hlY2sgYWxsIGRldmljZXMgQkNSPw0KDQpJJ20gbm90
-IHN1cmUgd2hhdCBkbyB5b3UgbWVhbiBoZXJlLiBNYXN0ZXJzaGlwIHJlcXVlc3QoTVIpIGlzIGZy
-b20gc2Vjb25kYXJ5IG1hc3Rlcg0KdG8gY3VycmVudCBtYXN0ZXIuIEN1cnJlbnQgbWFzdGVyIGNh
-biBOQUNLIHRoaXMgcmVxdWVzdCBpZiBmb3IgZXhhbXBsZSBpdCBjb21lcyBmcm9tIA0Kd3Jvbmcg
-ZGV2aWNlLiBJZiBpdCdzIG9rLCBjdXJyZW50IG1hc3RlciBzZW5kcyBHRVRBQ0NNU1QgY29tbWFu
-ZCBhbmQgc2Vjb25kYXJ5IG1hc3RlciANCm1heSBBQ0sgb3IgTkFDSyB0aGlzIGNvbW1hbmQuIEl0
-IGl0J3MgYWNrZWQsIHNlY29uZGFyeSBtYXN0ZXIgYmVjb21lcyBjdXJyZW50IG1hc3Rlci4NCiAg
-ICANCiAgICBCZXN0IHJlZ2FyZHMsDQogICAgVml0b3IgU29hcmVzDQoNClBsZWFzZSBsZXQgbWUg
-a25vdyBpZiBzb21ldGhpbmcgaXMgdW5jbGVhci4NCg0KUmVnYXJkcywNClByemVtZWsNCiAgICAN
-Cg0K
+Hello
+
+This patchset add support for allwinner R40 AHCI controller.
+
+The whole patchset is tested on sun8i-r40-bananapi-m2-ultra and
+on sun7i-a20-cubieboard2 which doesnt have any of the ressources added
+by this serie, so no regression should come with it.
+
+The last patch(ata: ahci_sunxi: remove PHY code) should not be merged,
+but will be resent for inclustion when all patchs will have hit linus
+tree.
+
+Changes since v3:
+- Moved PHY code to a new sun4i-a10-phy-sata driver
+- Removed reset code since ahci_platform support now reset controller.
+
+Changes since V2
+- Moved all ressources management to ahci_platform
+
+Corentin Labbe (13):
+  dt-bindings: ata: ahci-platform: fix indentation of target-supply
+  ata: ahci_platform: add support for AHCI controller regulator
+  dt-bindings: ata: ahci-platform: document ahci-supply
+  phy: Add sun4i-a10-phy-sata driver
+  dt-bindings: phy: document sun4i-a10-sata-phy
+  dt-bindings: ata: update ahci_sunxi bindings
+  ata: ahci_sunxi: Bypass PHY init when using the new binding
+  ata: ahci_sunxi: add support for r40
+  ARM: dts: sun8i: r40: add sata node
+  ARM: dts: sun8i: sun8i-r40-bananapi-m2-ultra: enable AHCI
+  ARM: dts: sun7i: a20: add sata-port/sata-phy nodes
+  ARM: dts: sun4i: a10: add sata-port/sata-phy nodes
+  ata: ahci_sunxi: remove PHY code
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |  11 +-
+ .../devicetree/bindings/phy/sun4i-sata-phy.txt     |  20 ++
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |  13 ++
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |  13 ++
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |  21 +++
+ arch/arm/boot/dts/sun8i-r40.dtsi                   |  23 +++
+ drivers/ata/ahci.h                                 |   1 +
+ drivers/ata/ahci_sunxi.c                           |  87 +--------
+ drivers/ata/libahci_platform.c                     |  26 ++-
+ drivers/phy/allwinner/Kconfig                      |   7 +
+ drivers/phy/allwinner/Makefile                     |   1 +
+ drivers/phy/allwinner/phy-sun4i-sata.c             | 208 +++++++++++++++++++++
+ 12 files changed, 343 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/sun4i-sata-phy.txt
+ create mode 100644 drivers/phy/allwinner/phy-sun4i-sata.c
+
+-- 
+2.16.4
