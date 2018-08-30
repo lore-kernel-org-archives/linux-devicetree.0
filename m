@@ -1,38 +1,45 @@
-Return-Path: <SRS0=s5iF=LL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38807 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbeH1Qkh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 28 Aug 2018 12:40:37 -0400
-Received: by mail-pl1-f194.google.com with SMTP id u11-v6so687203plq.5
-        for <devicetree@vger.kernel.org>; Tue, 28 Aug 2018 05:49:06 -0700 (PDT)
-From: sim manseop <semtax33@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: fix document typo
-Date: Tue, 28 Aug 2018 12:48:58 +0000
-Message-Id: <20180828124858.2183-1-semtax33@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: sim manseop <semtax33@gmail.com>
+Return-Path: <SRS0=CDzY=LN=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1534760202-20114-1-git-send-email-jacopo+renesas@jmondi.org> <1534760202-20114-8-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1534760202-20114-8-git-send-email-jacopo+renesas@jmondi.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 Aug 2018 17:18:38 +0200
+Message-ID: <CAMuHMdXU_0n0n+9FavatBJth8iiEBp+dPSwpGbBp01j0g3vPVQ@mail.gmail.com>
+Subject: Re: [RFT 7/8] arm64: dts: r8a77990: Add I2C device nodes
+Content-Type: text/plain; charset="UTF-8"
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Magnus Damm <damm+renesas@opensource.se>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Fix Documentation typo : (SMbus -> SMBus)
+Hi Jacopo,
 
-Signed-off-by: manseop sim <semtax33@gmail.com>
----
- Documentation/devicetree/bindings/i2c/i2c.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for your patch!
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index 11263982470e..44efafdfd7f5 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -84,7 +84,7 @@ Binding may contain optional "interrupts" property, describing interrupts
- used by the device. I2C core will assign "irq" interrupt (or the very first
- interrupt if not using interrupt names) as primary interrupt for the slave.
- 
--Alternatively, devices supporting SMbus Host Notify, and connected to
-+Alternatively, devices supporting SMBus Host Notify, and connected to
- adapters that support this feature, may use "host-notify" property. I2C
- core will create a virtual interrupt for Host Notify and assign it as
- primary interrupt for the slave.
+On Mon, Aug 20, 2018 at 12:17 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>
+> Add device nodes for I2C ch{0,1,2,3,4,5,6,7} to R-Car E3 R8A77990 device tree.
+
+ch[0-7]?
+
+>
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Buses 0 and 3 are the only buses hosting devices on Ebisu, and i2cdetect
+sees them, so:
+
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
