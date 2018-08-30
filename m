@@ -1,39 +1,42 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v1] arm64: dts: sdm845: enable tsens thermal zones
-Date: Thu, 30 Aug 2018 10:55:17 +0530
-Message-ID: <CAP245DX7tBdOBfB-gZ8+MvdF3bsnNVWys4bjaDf0zObWJV38+Q@mail.gmail.com>
-References: <cover.1531899325.git.amit.kucheria@linaro.org>
- <b3c25cedfa3a9b8a4b481e714992afe62b84ca3b.1531899325.git.amit.kucheria@linaro.org>
- <f416d38c-b91f-f58e-8cde-d4ad09a0a726@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v8 0/5] Support for Qualcomm UFS QMP PHY on SDM845
+Date: Wed, 29 Aug 2018 23:16:04 -0700
+Message-ID: <20180830061604.GM2523@minitux>
+References: <20180731100914.19856-1-cang@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f416d38c-b91f-f58e-8cde-d4ad09a0a726@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20180731100914.19856-1-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Doug Anderson <dianders@chromium.org>, mka@chromium.org, Eduardo Valentin <edubezval@gmail.com>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Lists LAKML <linux-arm-kernel@lists.infradead.org>
+To: Can Guo <cang@codeaurora.org>
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, mgautam@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 3:09 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 18/07/2018 09:49, Amit Kucheria wrote:
-> > One thermal zone per cpu is defined
->
-> The thermal zones are very close, especially when the CPUs belong to the
-> same 'cluster'. Very likely the temperature will propagate from one core
-> to another core, so when one core reaches the trip0, there is good
-> chance the other cores will be close and cross the trip0 threshold too.
+On Tue 31 Jul 03:09 PDT 2018, Can Guo wrote:
 
-Agreed. Once we have all the thermal and cpufreq bits in place, I'd
-like to examine optimisations such as a virtual sensor, using the
-coefficients to add weights, etc.
+> This patch series adds support for UFS QMP PHY on SDM845 and the
+> compatible string for it. This patch series depends on the current
+> proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
+> the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
+> rebased on updated pipe_clk initialization sequence [3]. This series
+> can only be merged once the dependent patches do.
+> [1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
+> [2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
+> [3] https://patchwork.kernel.org/patch/10376551/
+> 
 
-> Having multiple thermal zones, one per CPU, may trigger an interrupts
-> storm with the passive polling timer delay.
+Hi Can,
 
-I'm working on irq support for tsens that should alleviate that.
+We still have the issue that the older non-QMP phy driver takes a direct
+call to ufs_qcom_phy_set_tx_lane_enable(), which means that pointing
+UFSHCD to this phy implementation results in a kernel panic.
 
-> Does this board have a cooling device per CPU also ?
+I do however think this series is good in itself and would like to see
+it merged. As any fix for this problem would be done on top of the
+patches in this series.
 
-As Matthias mentioned, DVFS is per cluster (4 cpus to a cluster).
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
