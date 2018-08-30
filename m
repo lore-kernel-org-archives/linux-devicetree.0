@@ -1,14 +1,15 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH][v2] arm64: dts: remove big-endian filed from IFC
- controller
-Date: Thu, 30 Aug 2018 12:09:30 -0500
-Message-ID: <CADRPPNTPrEuE46UwGo=RrDYvxanY0mGo4EowMJNty==58HzKAw@mail.gmail.com>
-References: <20180829032749.9309-1-prabhakar.kushwaha@nxp.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 0/7] ARM32/64: DT overlay build support
+Date: Thu, 30 Aug 2018 20:12:50 +0300
+Message-ID: <183d979a-3849-7199-417f-3572b00dca5b@ti.com>
+References: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
+ <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180829032749.9309-1-prabhakar.kushwaha@nxp.com>
+In-Reply-To: <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,70 +19,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>
+To: Frank Rowand <frowand.list@gmail.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2018 at 10:28 PM Prabhakar Kushwaha
-<prabhakar.kushwaha@nxp.com> wrote:
->
-> As per IFC binding, Absence of "little-endian" field causes registers
-> access in big-endian mode.
-> So no need to set explicit big-endian field IFC node for LS1043A and
-> LS1046A.
->
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+On 29/08/18 21:40, Frank Rowand wrote:
+> + Mark Rutland, just in case he is interested
+> 
+> On 08/28/18 05:32, Tero Kristo wrote:
+>> Hi,
+>>
+>> This series introduces devicetree overlay building support for ARM
+>> platforms. The .dtbo target is introduced globally, then makefile
+>> changes for both arm32/64 for supporting the .dtbo target, changes
+>> to support sub-dir makefile flags, and finally adding the DTC flags
+>> override for TI platforms, as that is where we want to introduce
+>> the DT overlay support initially.
+>>
+>> The ARM makefile changes for supporting DTS sub-makefiles don't look
+>> too clean, but that was the only way I could figure out how to
+>> get it done.
+>>
+>> -Tero
+>>
+>> --
+>>
+> 
+> This series does three unrelated things:
 
-Acked-by: Li Yang <leoyang.li@nxp.com>
+Well, I was kind of trying to show the whole solution here but...
 
-> ---
-> Changes for v2: Incorporated Leo's comments
->         - Remove new line between copyrights
->
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 2 +-
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index b9f5d2ff4ff2..68af84a8ade8 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -3,6 +3,7 @@
->   * Device Tree Include file for Freescale Layerscape-1043A family SoC.
->   *
->   * Copyright 2014-2015 Freescale Semiconductor, Inc.
-> + * Copyright 2018 NXP
->   *
->   * Mingkai Hu <Mingkai.hu@freescale.com>
->   */
-> @@ -280,7 +281,6 @@
->                 ifc: ifc@1530000 {
->                         compatible = "fsl,ifc", "simple-bus";
->                         reg = <0x0 0x1530000 0x0 0x10000>;
-> -                       big-endian;
->                         interrupts = <0 43 0x4>;
->                 };
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index 65ce1c3cb568..ae4ca865131b 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -3,6 +3,7 @@
->   * Device Tree Include file for Freescale Layerscape-1046A family SoC.
->   *
->   * Copyright 2016 Freescale Semiconductor, Inc.
-> + * Copyright 2018 NXP
->   *
->   * Mingkai Hu <mingkai.hu@nxp.com>
->   */
-> @@ -198,7 +199,6 @@
->                 ifc: ifc@1530000 {
->                         compatible = "fsl,ifc", "simple-bus";
->                         reg = <0x0 0x1530000 0x0 0x10000>;
-> -                       big-endian;
->                         interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
->                 };
->
-> --
-> 2.14.1
->
+> (1) create a ti specific dts subdirectory arch/arm/boot/dts/ti/
+> 
+> (2) create a rule for creating a .dtbo from a .dtso
+> 
+> (3) add a dtc compile flag to add phandle symbol information to
+>      all .dtb files created from arch/arm/boot/dts/ti/ and
+>      arch/arm64/boot/dts/ti/
+> 
+> Please split the patches into three independent series so that
+> each of the three concepts can be discussed separately. 
+
+Ok will do that, hopefully tomorrow. Didn't manage to squeeze in time to 
+do it today.
+
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
