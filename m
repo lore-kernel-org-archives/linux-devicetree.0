@@ -1,43 +1,36 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/9] arm64: dts: renesas: r8a774a1: Add I2C and IIC-DVFS
- support
-Date: Thu, 30 Aug 2018 14:19:52 +0200
-Message-ID: <20180830121952.sr3hjtx6focfidrf@verge.net.au>
-References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1535031788-19907-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180827085135.bjzbiws7tdtig5kd@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180827085135.bjzbiws7tdtig5kd@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH] ARM: dts: imx6ull: fix pinmux input_val for uart5 rx pin
+Date: Thu, 30 Aug 2018 14:47:02 +0200
+Message-ID: <20180830124702.12572-1-hs@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Heiko Schocher <hs@denx.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Peter Chen <peter.chen@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 10:51:35AM +0200, Simon Horman wrote:
-> On Thu, Aug 23, 2018 at 02:43:01PM +0100, Fabrizio Castro wrote:
-> > From: Biju Das <biju.das@bp.renesas.com>
-> > 
-> > Add the I2C[0-6] and IIC Bus Interface for DVFS (IIC for DVFS)
-> > devices nodes to the r8a774a1 device tree.
-> > 
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
-> Thanks,
-> 
-> This looks fine to me but I will wait to see if there are other reviews
-> before applying.
+on the imx6ull the input_val for uart5 rx function
+of pin MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX
+is 7 and not 5 as on the imx6ul. With this
+patch, console on an imx6ull based board works
+with uart5.
 
-Thanks again, applied for v4.20.
+Signed-off-by: Heiko Schocher <hs@denx.de>
+
+---
+
+ arch/arm/boot/dts/imx6ull-pinfunc.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/imx6ull-pinfunc.h b/arch/arm/boot/dts/imx6ull-pinfunc.h
+index fdc46bb09cc1a..d835aeae5485b 100644
+--- a/arch/arm/boot/dts/imx6ull-pinfunc.h
++++ b/arch/arm/boot/dts/imx6ull-pinfunc.h
+@@ -61,5 +61,6 @@
+ #define MX6ULL_PAD_CSI_DATA05__ESAI_TX_CLK                        0x01F8 0x0484 0x0000 0x9 0x0
+ #define MX6ULL_PAD_CSI_DATA06__ESAI_TX5_RX0                       0x01FC 0x0488 0x0000 0x9 0x0
+ #define MX6ULL_PAD_CSI_DATA07__ESAI_T0                            0x0200 0x048C 0x0000 0x9 0x0
++#define MX6ULL_PAD_UART5_RX_DATA__UART5_DCE_RX		0x00C0 0x034C 0x0644 0 7
+ 
+ #endif /* __DTS_IMX6ULL_PINFUNC_H */
+-- 
+2.14.4
