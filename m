@@ -1,12 +1,12 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 06/30] iio: adc: remove ofnode options
-Date: Thu, 30 Aug 2018 17:44:54 +0200
-Message-ID: <20180830154518.29507-7-embed3d@gmail.com>
+Subject: [PATCH v3 08/30] iio: adc: remove hwmon structure
+Date: Thu, 30 Aug 2018 17:44:56 +0200
+Message-ID: <20180830154518.29507-9-embed3d@gmail.com>
 References: <20180830154518.29507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBFVCUDOAKGQEBYLY65Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBGFCUDOAKGQEO6FO64Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180830154518.29507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,29 +19,31 @@ To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Since we are merging the mfd dirver into the adc driver we don't need
-two different probing functions. Thus we remove the ofnode options
+We remove the hwmon structure that was requiered for the mfd driver.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/adc/sun4i-gpadc-iio.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/iio/adc/sun4i-gpadc-iio.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-index 666329940e1e..d6f00d3b802d 100644
+index f787442a9e5f..ab474ce86fb6 100644
 --- a/drivers/iio/adc/sun4i-gpadc-iio.c
 +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-@@ -622,10 +622,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
- 	indio_dev->info = &sun4i_gpadc_iio_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
+@@ -109,14 +109,6 @@ struct sun4i_gpadc_iio {
+ 	struct device			*sensor_device;
+ };
  
--	if (pdev->dev.of_node)
--		ret = sun4i_gpadc_probe_dt(pdev, indio_dev);
--	else
--		ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
-+	ret = sun4i_gpadc_probe_dt(pdev, indio_dev);
- 
- 	if (ret)
- 		return ret;
+-static struct iio_map sun4i_gpadc_hwmon_maps[] = {
+-	{
+-		.adc_channel_label = "temp_adc",
+-		.consumer_dev_name = "iio_hwmon.0",
+-	},
+-	{ /* sentinel */ },
+-};
+-
+ static const struct iio_chan_spec sun4i_gpadc_channels[] = {
+ 	SUN4I_GPADC_ADC_CHANNEL(0, "adc_chan0"),
+ 	SUN4I_GPADC_ADC_CHANNEL(1, "adc_chan1"),
 -- 
 2.11.0
