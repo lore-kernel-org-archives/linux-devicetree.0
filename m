@@ -1,28 +1,80 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH] ARM: dts: pxa: change serial node names
-Date: Thu, 30 Aug 2018 21:52:23 +0200
-Message-ID: <87k1o77hu0.fsf@belgarion.home>
-References: <20180715202153.7233-1-robert.jarzmik@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain
+Subject: [PATCH] ARM: dts: pxa: add pincontrol helpers
+Date: Thu, 30 Aug 2018 21:59:12 +0200
+Message-ID: <20180830195912.6025-1-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180715202153.7233-1-robert.jarzmik@free.fr> (Robert Jarzmik's
-        message of "Sun, 15 Jul 2018 22:21:53 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Robert Jarzmik <robert.jarzmik@free.fr> writes:
+Add 3 helpers so that pincontrol definitions for pxa25x and pxa27x are
+easier, and can be easily converted from old mfp mach-pxa code to
+devicetree.
 
-> Change from xxuart to serial to normalize the devicetree pxa serial
-> support.
->
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> ---
->  arch/arm/boot/dts/pxa2xx.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-Queued to pxa/dt.
+An example of such conversion would be :
+static unsigned long mioa701_pin_config[] = {
+	GPIO32_MMC_CLK,
+	GPIO92_MMC_DAT_0,
+	GPIO109_MMC_DAT_1,
+	GPIO110_MMC_DAT_2,
+	GPIO111_MMC_DAT_3,
+	GPIO112_MMC_CMD,
+	MIO_CFG_IN(GPIO78_SDIO_RO, AF0),
+	MIO_CFG_IN(GPIO15_SDIO_INSERT, AF0),
+	MIO_CFG_OUT(GPIO91_SDIO_EN, AF0, DRIVE_LOW),
+};
+into:
+	pinctrl_mmc_default: mmc-default {
+		PMMUX(sd-insert, 15, gpio_in);
+		PMMUX(mmclk, 32, MMCLK);
+		PMMUX(sd-ro, 78, gpio_in);
+		PMMUX_LPM_LOW(sd-enable, 91, gpio_out);
+		PMMUX(mmdat0, 92, MMDAT<0>);
+		PMMUX(mmdat1, 109, MMDAT<1>);
+		PMMUX(mmdat2, 110, MMDAT<2>);
+		PMMUX(mmdat3, 111, MMDAT<3>);
+		PMMUX(mmcmd, 112, MMCMD);
+	};
 
---
-Robert
+The third column of PMMUX*() helpers can be found in pincontrol muxing
+functions, either in pinctrl-pxa27x.c (or pinctrl-pxa25x.c), or by
+inspecting the pincontrol once booted in debugfs.
+
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ arch/arm/boot/dts/pxa2xx.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
+index a520b4c14ea9..81312a9813f6 100644
+--- a/arch/arm/boot/dts/pxa2xx.dtsi
++++ b/arch/arm/boot/dts/pxa2xx.dtsi
+@@ -9,6 +9,25 @@
+ #include "skeleton.dtsi"
+ #include "dt-bindings/clock/pxa-clock.h"
+ 
++#define PMGROUP(pin) #pin
++#define PMMUX(func, pin, af)			\
++	mux- ## func {				\
++		groups = PMGROUP(P ## pin);	\
++		function = #af;			\
++	}
++#define PMMUX_LPM_LOW(func, pin, af)		\
++	mux- ## func {				\
++		groups = PMGROUP(P ## pin);	\
++		function = #af;			\
++		low-power-disable;		\
++	}
++#define PMMUX_LPM_HIGH(func, pin, af)		\
++	mux- ## func {				\
++		groups = PMGROUP(P ## pin);	\
++		function = #af;			\
++		low-power-enable;		\
++	}
++
+ / {
+ 	model = "Marvell PXA2xx family SoC";
+ 	compatible = "marvell,pxa2xx";
+-- 
+2.11.0
