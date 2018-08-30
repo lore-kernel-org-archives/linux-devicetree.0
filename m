@@ -1,86 +1,171 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 2/2] power: supply: Add Spreadtrum SC2731 charger support
-Date: Thu, 30 Aug 2018 23:27:10 +0200
-Message-ID: <20180830212710.jhpxjdyuifjxr6t6@earth.universe>
-References: <5fcd93bbbcd55a5c23f1c75effdc3670ce7a811b.1535446321.git.baolin.wang@linaro.org>
- <e8a3aba289cd2505db4a8891256bf731f32072cd.1535446321.git.baolin.wang@linaro.org>
- <CAJKOXPd48mSp5srOzr4FkEgb2aS-nqkt+egxbuMi6qodtO1JYw@mail.gmail.com>
- <CAMz4kuJGbvKKVvXmGKaEMbu87bY1nQqB+Zvo5UTpv1gwCG41mQ@mail.gmail.com>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 2/9] Documentation: hwmon: Add OCC documentation
+Date: Thu, 30 Aug 2018 16:29:09 -0500
+Message-ID: <aa1d5818-6b64-2088-ec59-dbe09d6a3902@linux.vnet.ibm.com>
+References: <1531342898-15790-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1531342898-15790-3-git-send-email-eajames@linux.vnet.ibm.com>
+ <20180725163604.GA21332@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="257puiedckvm2awp"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuJGbvKKVvXmGKaEMbu87bY1nQqB+Zvo5UTpv1gwCG41mQ@mail.gmail.com>
+In-Reply-To: <20180725163604.GA21332@roeck-us.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
 
---257puiedckvm2awp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+
+On 07/25/2018 11:36 AM, Guenter Roeck wrote:
+> On Wed, Jul 11, 2018 at 04:01:31PM -0500, Eddie James wrote:
+>> Document the hwmon interface for the OCC.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+>> ---
+>>   Documentation/hwmon/occ | 73 +++++++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 73 insertions(+)
+>>   create mode 100644 Documentation/hwmon/occ
+>>
+>> diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
+>> new file mode 100644
+>> index 0000000..465fa1a
+>> --- /dev/null
+>> +++ b/Documentation/hwmon/occ
+>> @@ -0,0 +1,73 @@
+>> +Kernel driver occ-hwmon
+>> +=======================
+>> +
+>> +Supported chips:
+>> +  * POWER8
+>> +  * POWER9
+>> +
+>> +Author: Eddie James <eajames@linux.vnet.ibm.com>
+>> +
+>> +Description
+>> +-----------
+>> +
+>> +This driver supports hardware monitoring for the On-Chip Controller (OCC)
+>> +embedded on POWER processors. The OCC is a device that collects and aggregates
+>> +sensor data from the processor and the system. The OCC can provide the raw
+>> +sensor data as well as perform thermal and power management on the system.
+>> +
+>> +The P8 version of this driver is a client driver of I2C. It may be probed
+>> +manually if an "ibm,p8-occ-hwmon" compatible device is found under the
+>> +appropriate I2C bus node in the device-tree.
+>> +
+>> +The P9 version of this driver is a client driver of the FSI-based OCC driver.
+>> +It will be probed automatically by the FSI-based OCC driver.
+>> +
+>> +Sysfs entries
+>> +-------------
+>> +
+>> +The following attributes are supported. All attributes are read-only unless
+>> +specified.
+>> +
+>> +temp[1-n]_label		OCC sensor id.
+>> +temp[1-n]_input		Measured temperature in millidegrees C.
+>> +[with temperature sensor version 2+]
+>> +    temp[1-n]_fru_type		Given FRU (Field Replaceable Unit) type.
+> What is this ? An integer ? A string ?
+>
+>> +    temp[1-n]_fault		Temperature sensor fault.
+>> +
+>> +freq[1-n]_label		OCC sensor id.
+>> +freq[1-n]_input		Measured frequency.
+> What does that have to do with hardware monitoring, and what exactly does it
+> measure ? AC voltage frequency ? Frequency of rainstorms in the surrounding
+> area ?
+>
+>> +
+>> +power[1-n]_label	OCC sensor id.
+>> +power[1-n]_input	Measured power in microwatts.
+>> +power[1-n]_update_tag	Number of 250us samples represented in accumulator.
+> update_tag to represent number of samples ? Odd choice for
+> an attribute name. Why not "_samples" ? Also, if each sample
+> represents a specific amount of time, why not report a time ?
+>
+>> +power[1-n]_accumulator	Accumulation of 250us power readings.
+> There is no explanation of "accumulation". Is this the energy ?
+> If so, why not use energy attributes ? And what is the unit of
+> this measurement ?
+>
+>> +[with power sensor version 2+]
+>> +    power[1-n]_function_id	Identifies what the power reading is for.
+> String ? Number ? Slot index ?  Bitmap ? And why isn't that reported
+> in the label ? After all, that is what the label is supposed to be
+> used for.
+>
+>> +    power[1-n]_apss_channel	Indicates APSS channel.
+>> +
+> Does that provide any value to the user ?
+>
+>> +[power version 0xa0 only]
+>> +power1_id			OCC sensor id.
+> This is inconsistent with the other attributes and even with itself.
+>
+>> +power[1-n]_label		Sensor type, "system", "proc", "vdd", or "vdn".
+>> +power[1-n]_input		Most recent power reading in microwatts.
+> Overall I am left with no idea what
+> 	_id
+> 	_label
+> 	_function_id
+> 	_apps_channel
+> are and how they relate to each other, except that it all looks quite
+> inconsistent. You might want to consider merging all those attributes into
+> the label in some consistent way.
+>
+>> +power[1-n]_update_tag		Number of samples in the accumulator.
+>> +power[1-n]_accumulator		Accumulation of power readings.
+> Same as above.
+>
+>> +[with sensor type "system" and "proc" only]
+>> +    power[1-n]_update_time	Time in us that the power value is read.
+>> +
+>> +caps1_current		Current OCC power cap in watts.
+>> +caps1_reading		Current system output power in watts.
+>> +caps1_norm		Power cap without redundant power.
+>> +caps1_max		Maximum power cap.
+> Why do those have to be non-standard attributes ? Please explain why you can not
+> use power[1-n]_cap attributes.
+>
+>> +[caps version 1 and 2 only]
+>> +    caps1_min		Minimum power cap.
+>> +[caps version 3+]
+>> +    caps1_min_hard		Hard minimum cap that can be set and held.
+>> +    caps1_min_soft		Soft minimum cap below hard, not guaranteed.
+>> +caps1_user		The powercap specified by the user. Will be 0 if no
+>> +			user powercap exists. This attribute is read-write.
+>> +[caps version 1+]
+>> +    caps1_user_source	Indicates how the user power limit was set.
+>> +
+>> +extn[1-n]_label		ASCII id or sensor id.
+>> +extn[1-n]_flags		Indicates type of label attribute.
+>> +extn[1-n]_input		Data.
+> Great non-explanation.
+>
+> Not reviewing the series further. I am sure I asked that each non-standard
+> attribute is explained. There is neither an explanation why the attributes
+> are needed nor, in many cases, why non-standard attributes were chosen
+> instead of standard ones. On top of that, the non-standard attributes are
+> not even documented properly, leaving the reader wondering not only why
+> they are needed, but what they are used for in the first place.
 
 Hi,
 
-On Thu, Aug 30, 2018 at 11:08:59AM +0800, Baolin Wang wrote:
-> >> +static int sc2731_charger_hw_init(struct sc2731_charger_info *info)
-> >> +{
-> >> +       int ret;
-> >> +
-> >> +       /* Enable charger module */
-> >> +       ret =3D regmap_update_bits(info->regmap, SC2731_MODULE_EN1,
-> >> +                                SC2731_CHARGE_EN, SC2731_CHARGE_EN);
-> >> +       if (ret)
-> >> +               return ret;
-> >> +
-> >> +       /* Set default charge termination current to 120 mA */
-> >> +       ret =3D regmap_update_bits(info->regmap, info->base + SC2731_C=
-HG_CFG2,
-> >> +                                SC2731_TERMINATION_CUR_MASK, 0x2);
-> >
-> > Looks like DeviceTree property.
->=20
-> OK.
->=20
-> >
-> >> +       if (ret)
-> >> +               goto error;
-> >> +
-> >> +       /* Set default charge termination voltage to 4.35V */
-> >
-> > Looks like DeviceTree property.
->=20
-> OK. Thanks for your comments.
+Thanks for the feedback Guenter. I am about to put up a new patch set 
+with fixes for many of the issues you indicated and better descriptions. 
+Now all the attributes except two should conform to standard hwmon 
+attributes. The exceptions are for the user power cap and user power cap 
+source. These are needed in order to make decisions about power 
+management while controlling the system. Please look at their 
+documentation to see if they're acceptable.
 
-I did not review this in detail, but had quick look at this.
-Please make sure to derive battery specific DT values using
-this:
+Let me know what you think!
+Thanks,
+Eddie
 
-Documentation/devicetree/bindings/power/supply/battery.txt
-
--- Sebastian
-
---257puiedckvm2awp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAluIYSsACgkQ2O7X88g7
-+prmbw//VIFs3zlPNH/DpBgYUcd+so+q2u6CvWTnNflbK85M3ywIFczku1VaM6+s
-M2Tm2+tl7FXKU+gVA+F+OT+TNnsHfa11VAwLTZhDdRX+MMq9rBb2Gk+cCMOF2h9E
-V+63QURkEnT7tOoTXZtAic51F0nRfxH6igVz7WKccfMzXNf8sDGST3ZCvr6bgH6d
-VykPh5+TTtVfKnzS3YGbujr34q2VpCjoeZ6J5aK4rY2E40YG4c5cFsnyyEsd54Qa
-CliCkkTHU3h56sH68/LSmwMdCcIFU5i7GRBqIOrJV0wtnPos+9obPn5C2bxlNho5
-5D8c1WI5u1dVWc5VNOLCuS4d/WJdGu4bm46yHuG+nGiVbKXwwPhgzdjdo8mBw+3V
-PvX5eWyX1HODZ7CIrdU96khzW6HEKNfctD6utNfh1tqK4iMoj9hSU76iyGUVQwrQ
-YcTdE5cEwsBY+dDylE0ws47s3MqWYMnuK+zcra016W5I6x8dTvIk2JgIdfTXj96H
-nMiVqa2TSFDJiQQrttlif7ILc56odKsKlC4qmx48FZd6Q37kSgULNF2mA20JU9Tk
-TlMY8f5vJWxAqHfhEZo7YiqHcaipCCpbADob0iqMgBw+3QAl1wjZWEh/hqwxNtSh
-BLK0l61DZb1O5zaEdEorF/i7iQoOJm8Q+6s3dEleLJ5eg3TFI4Y=
-=dCm9
------END PGP SIGNATURE-----
-
---257puiedckvm2awp--
+>
+> Guenter
+>
