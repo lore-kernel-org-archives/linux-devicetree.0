@@ -1,107 +1,100 @@
-From: vitor <Vitor.Soares@synopsys.com>
-Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 30 Aug 2018 14:57:36 +0100
-Message-ID: <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
- <20180719152930.3715-2-boris.brezillon@bootlin.com>
- <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
- <20180824143934.6d6b6487@bbrezillon>
- <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
- <20180824201600.7d80bca9@bbrezillon>
- <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
- <20180828140209.29155d00@bbrezillon>
- <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
+ Amlogic Meson PCIe controller
+Date: Thu, 30 Aug 2018 08:59:19 -0500
+Message-ID: <CAL_JsqJPzfp1OimYXa26tEqTexyiuKMeKszveobHN3rKP8+RYQ@mail.gmail.com>
+References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
+ <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
+ <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
+ <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com> <20180829004122.GA25928@bogus>
+ <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
-Content-Language: en-US
+In-Reply-To: <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Przemyslaw Gaj <pgaj@cadence.com>, Boris Brezillon <boris.brezillon@bootlin.com>, vitor <Vitor.Soares@synopsys.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@>
+To: Hanjie Lin <hanjie.lin@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Przemyslaw
+On Thu, Aug 30, 2018 at 2:37 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+>
+>
+>
+> On 2018/8/29 8:41, Rob Herring wrote:
+> > On Mon, Aug 27, 2018 at 04:55:20PM +0800, Hanjie Lin wrote:
+> >>
+> >>
+> >> On 2018/8/24 16:22, Jerome Brunet wrote:
+> >>> On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
+> >>>> From: Yue Wang <yue.wang@amlogic.com>
+> >>>>
+> >>>> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+> >>>> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
+> >>>> controller.
+> >>>>
+> >>>> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+> >>>> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+> >>>> ---
+> >>>>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
+> >>>>  1 file changed, 63 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..8a831d1
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> >>>> @@ -0,0 +1,63 @@
+> >>>> +Amlogic Meson AXG DWC PCIE SoC controller
+> >>>> +
+> >>>> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
+> >>>> +It shares common functions with the PCIe DesignWare core driver and
+> >>>> +inherits common properties defined in
+> >>>> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+> >>>> +
+> >>>> +Additional properties are described here:
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- compatible:
+> >>>> +  should contain "amlogic,axg-pcie" to identify the core.
+> >>>> +- reg:
+> >>>> +  Should contain the configuration address space.
+> >>>> +- reg-names: Must be
+> >>>> +  - "elbi"        External local bus interface registers
+> >>>> +  - "cfg"         Meson specific registers
+> >>>> +  - "config"      PCIe configuration space
+> >>>> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+> >>>> +- clocks: Must contain an entry for each entry in clock-names.
+> >>>> +- clock-names: Must include the following entries:
+> >>>> +  - "pclk"       PCIe GEN 100M PLL clock
+> >>>> +  - "port"       PCIe_x(A or B) RC clock gate
+> >>>> +  - "general"    PCIe Phy clock
+> >>>> +  - "mipi"       PCIe_x(A or B) 100M ref clock gate
+> >>>> +- resets: phandle to the reset lines.
+> >>>> +- reset-names: must contain "phy" and "peripheral"
+> >>>> +       - "port" Port A or B reset
+> >>>> +       - "apb" APB reset
+> >>>
+> >>> The above description is not coherent (phy <=> port)
+> >>>
+> >>
+> >> Yes, this should be port and apb here.
+> >> We'll integrate phy driver into ctrl driver, and move phy reset to here also.
+> >
+> > Why? That's the wrong thing to do if they are separate h/w blocks. You
+> > can do whatever you like in the drivers, but the DT should reflect the
+> > h/w.
+> >
+> > Rob
+> >
+> > .
+> >
+>
+> We have the dedicated phy driver which only process reset job,
+> and we consider that it's too overkill to do just these things .
+> So we will integrate phy reset job into the controller driver int the next version.
 
+What's in the separate register space you had for the phy?
 
-On 28-08-2018 13:55, Przemyslaw Gaj wrote:
-> Hi Vitor,
->
-> I have already implemented Mastership request/handover but we are waiting for Boris’s patch to be accepted and merged. Anyway, my comments below.
->
-> ﻿On 8/28/18, 2:02 PM, "Boris Brezillon" <boris.brezillon@bootlin.com> wrote:
->
->      EXTERNAL MAIL
->      
->      
->      Hi Vitor,
->      
->      On Tue, 28 Aug 2018 12:50:12 +0100
->      vitor <Vitor.Soares@synopsys.com> wrote:
->      
->      > Hi Boris,
->      >
->      > The DT Bindings say "The node describing an I3C bus should be named
->      > i3c-master.". Do you have a field for secondary master?
->
-> I think we don’t need separate field for secondary master. Main and secondary masters
-> support similar functionalities. It’s enough to have this state internally and do mastership it it's needed.
-
-Yes, you are right.
-
->
->      >
->      > On 24-08-2018 19:16, Boris Brezillon wrote:
->      > > Well, before even considering supporting secondary master registration,
->      > > we need to handle mastership handover. As for the DAA operation, it's
->      > > likely to be host specific, so we'll have to add a new hook to the
->      > > i3c_master_controller_ops struct.
->      > Do you mean when master try to delegate the bus ownership through
->      > GETACCMST? or to get the bus ownership with IBI-MR?
->      
->      I think we need to support both.
->
-> I agree.
-
-That's ok to me.
-
->      
->      >
->      > I think that could be useful to pass the ibi type on request_ibi(),
->      > there is some case where the master doesn't support IBI-MR.
->      
->      Actually, I was planning on making it completely separate from
->      regular slave IBIs. That is, the master controller driver would demux
->      the slave, MR and Hot Join IBIs, and if there's an MR request, queue a
->      mastership handover work to the workqueue (pretty much what we do for
->      Hot-Join already). Mastership handover is anyway likely to be IP
->      specific, so I don't think there's a need to make it look like a
->      regular IBI.
->
-> I think it's better to have separate function to do mastership request.
->      
->      Regarding whether IBI-MR support should be exposed to the I3C framework
->      or not depends on how much will be automated on the framework side. I
->      don't the answer yet, but that's probably something will figure out
->      along the road.
->
-> My current implementation is: when request_mastership field
-> of i3c_master_controller_ops structure is set, master driver supports mastership requests.
-> That's how I check if this is supported or not.
->      
->      Regards,
->      
->      Boris
->      
-> Regards,
-> Przemek
->
-when you say request_mastership, do you mean the current master do the 
-mastership hand-off or the secondary master request to be current master?
-
-So, per my understanding since the Main master support the hand-off of 
-the bus you accept all incoming MR, right? Or do you check all devices BCR?
-
-Best regards,
-Vitor Soares
+Rob
