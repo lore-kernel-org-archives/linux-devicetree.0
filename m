@@ -1,36 +1,33 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: v4.17 regression: PowerMac G3 won't boot, was Re: [PATCH v5 1/3]
- of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
-Date: Wed, 29 Aug 2018 20:05:47 -0500
-Message-ID: <CAL_JsqLJ9QMHCMqGKpCouP1rTEO+cMGA1es94qAH+ukLsR31jg@mail.gmail.com>
-References: <1520208889-3908-1-git-send-email-frowand.list@gmail.com>
- <1520208889-3908-2-git-send-email-frowand.list@gmail.com> <alpine.LNX.2.21.1808301025480.73@nippy.intranet>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 1/6] usb: xhci-mtk: resume USB3 roothub first
+Date: Thu, 30 Aug 2018 09:09:52 +0800
+Message-ID: <1535591392.32173.30.camel@mhfsdcap03>
+References: <3bcc220aa54bfebc39cea54cd736388ad37ee0c5.1535510898.git.chunfeng.yun@mediatek.com>
+         <f144173b-6131-21cf-1ead-60d938ac289a@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.LNX.2.21.1808301025480.73@nippy.intranet>
+In-Reply-To: <f144173b-6131-21cf-1ead-60d938ac289a@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: fthain@telegraphics.com.au
-Cc: Frank Rowand <frank.rowand@sony.com>, userm57@yahoo.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Chintan Pandya <cpandya@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 7:44 PM Finn Thain <fthain@telegraphics.com.au> wrote:
->
-> Hi Frank,
->
-> Linux v4.17 and later will no longer boot on a G3 PowerMac. The boot hangs
-> very early, before any video driver loads.
->
-> Stan and I were able to bisect the regression between v4.16 and v4.17 and
-> arrived at commit 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of
-> of_find_node_by_phandle()").
->
-> I don't see any obvious bug in 0b3ce78e90fc or b9952b5218ad. But if you
-> revert these from v4.18 (which is also affected) that certainly resolves
-> the issue.
+Hi,
+On Wed, 2018-08-29 at 12:13 +0300, Sergei Shtylyov wrote:
+> On 8/29/2018 5:55 AM, Chunfeng Yun wrote:
+> 
+> > Give USB3 devices a better chance to enumerate at USB3 speeds if
+> > they are connected to a suspended host.
+> > Porting from "671ffdf xhci: resume USB 3 roothub first"
+> 
+>     From commit 671ffdff5b13 ("xhci: resume USB 3 roothub first").
 
-Perhaps a bad assumption on phandle values causing a problem. Can you
-provide a dump of all the phandle or linux,phandle values from
-/proc/device-tree.
+Ok, Thanks
 
-Rob
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> [...]
+> 
+> MBR, Sergei
+> 
