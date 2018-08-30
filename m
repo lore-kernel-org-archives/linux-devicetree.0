@@ -1,61 +1,40 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 21/30] iio: adc: sun4i-gpadc-iio: add
- support for H3 thermal sensor
-Date: Thu, 30 Aug 2018 22:46:58 +0200
-Message-ID: <858dbcce-027a-5f48-ce66-06c79b6eeadd@gmail.com>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-22-embed3d@gmail.com>
- <20180830162734.uq65l6ox6uwrmulo@core>
- <e919cbdd-a874-4b46-a505-9412d093f54a@gmail.com>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD257DPK24NRBRVPUHOAKGQEQXDINUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <e919cbdd-a874-4b46-a505-9412d093f54a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Afonso Bordado <afonsobordado@az8.co>
+Subject: [PATCH v2 4/4] MAINTAINERS: add entry for fxas21002c gyro driver
+Date: Thu, 30 Aug 2018 22:18:25 +0100
+Message-ID: <20180830211825.12202-4-afonsobordado@az8.co>
+References: <20180830211825.12202-1-afonsobordado@az8.co>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180830211825.12202-1-afonsobordado@az8.co>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add entry for fxas21002c gyroscope driver and add myself as
+maintainer of this driver.
 
+Signed-off-by: Afonso Bordado <afonsobordado@az8.co>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On 30.08.2018 22:00, Philipp Rossak wrote:
-> On 30.08.2018 18:27, Ond=C5=99ej Jirman wrote:
->>> +static int sun8i_h3_calibrate(struct sun4i_gpadc_iio *info)
->>> +{
->>> +//=C2=A0=C2=A0=C2=A0 regmap_write(info->regmap, SUNXI_THS_CDATA_0_1,
->>> +//=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-nfo->calibration_data[0]);
->>> +//=C2=A0=C2=A0=C2=A0 regmap_write(info->regmap, SUNXI_THS_CDATA_2_3,
->>> +//=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-nfo->calibration_data[1]);
->> This should probably be implemented, or left out completely.
->>
->> regards,
->> =C2=A0=C2=A0 o.
->>
-> Thanks you are right!
-> This should be implemented! I will fix this in the next version!
->=20
-> Thanks,
-> Philipp
-
-I just realized this function need to check if calibration datas are=20
-available. Writing zeros to the calibration data regs "breaks" the=20
-thermal sensor.
-
-Philipp
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2b7b24b145f0..faf5f41b1465 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5838,6 +5838,13 @@ L:	linuxppc-dev@lists.ozlabs.org
+ S:	Maintained
+ F:	drivers/usb/gadget/udc/fsl*
+ 
++FREESCALE FXAS21002C
++M:	Afonso Bordado <afonsobordado@az8.co>
++L:	linux-iio@vger.kernel.org
++S:	Maintained
++F:	drivers/iio/gyro/fxas21002.c
++F:	Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
++
+ FREEVXFS FILESYSTEM
+ M:	Christoph Hellwig <hch@infradead.org>
+ W:	ftp://ftp.openlinux.org/pub/people/hch/vxfs
+-- 
+2.18.0
