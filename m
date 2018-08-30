@@ -1,102 +1,100 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [Patch v15 2/5] iommu/arm-smmu: Invoke pm_runtime during probe,
- add/remove device
-Date: Thu, 30 Aug 2018 19:29:46 +0530
-Message-ID: <CAFp+6iGgePK14WGOdrE2cHLMpZ0JbS6qUvVoP-0mW55xh5haHg@mail.gmail.com>
-References: <20180827105551.16346-1-vivek.gautam@codeaurora.org>
- <20180827105551.16346-3-vivek.gautam@codeaurora.org> <CAFp+6iGbfHZQjG5oEVKhQ=4rOaaU=5ePykEuwMqYbPTryX6DnA@mail.gmail.com>
- <CAAFQd5BrJppNSo8ETT6ywjuLEULk4nAvWDQEuNiMCvdddeUq1A@mail.gmail.com>
+From: Richard Gong <richard.gong@linux.intel.com>
+Subject: Re: [PATCHv8 7/9] defconfig: enable fpga and service layer
+Date: Thu, 30 Aug 2018 09:05:55 -0500
+Message-ID: <18b2948c-07dc-dc23-6a36-04e8295705f3@linux.intel.com>
+References: <1535464245-11638-1-git-send-email-richard.gong@linux.intel.com>
+ <1535464245-11638-8-git-send-email-richard.gong@linux.intel.com>
+ <54ccf9d5-1cf4-edf6-47c6-be7cc5badb3e@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAFQd5BrJppNSo8ETT6ywjuLEULk4nAvWDQEuNiMCvdddeUq1A@mail.gmail.com>
+In-Reply-To: <54ccf9d5-1cf4-edf6-47c6-be7cc5badb3e@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, alex.williamson@redhat.com, Linux PM <linux-pm@vger.kernel.org>, sboyd@kernel.org, freedreno <freedreno@lists.freedesktop.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, robh+dt <robh+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Robin Murphy <robin.murphy@arm.com>
+To: Dinh Nguyen <dinguyen@kernel.org>, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, corbet@lwn.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2018 at 3:04 PM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> On Thu, Aug 30, 2018 at 6:22 PM Vivek Gautam
-> <vivek.gautam@codeaurora.org> wrote:
-> >
-> > On Mon, Aug 27, 2018 at 4:27 PM Vivek Gautam
-> > <vivek.gautam@codeaurora.org> wrote:
-> > >
-> > > From: Sricharan R <sricharan@codeaurora.org>
-> > >
-> > > The smmu device probe/remove and add/remove master device callbacks
-> > > gets called when the smmu is not linked to its master, that is without
-> > > the context of the master device. So calling runtime apis in those places
-> > > separately.
-> > >
-> > > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> > > [vivek: Cleanup pm runtime calls]
-> > > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > > Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-> > > Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > ---
-> > >
-> > > Changes since v14:
-> > >  - none.
-> > >
-> > >  drivers/iommu/arm-smmu.c | 101 +++++++++++++++++++++++++++++++++++++++++++----
-> > >  1 file changed, 93 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> > > index a81224bc6637..23b4a60149b6 100644
-> > > --- a/drivers/iommu/arm-smmu.c
-> > > +++ b/drivers/iommu/arm-smmu.c
-> >
-> > [snip]
-> >
-> > > @@ -2131,6 +2188,26 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
-> > >         if (err)
-> > >                 return err;
-> > >
-> > > +       /*
-> > > +        * We want to avoid touching dev->power.lock in fastpaths unless
-> > > +        * it's really going to do something useful - pm_runtime_enabled()
-> > > +        * can serve as an ideal proxy for that decision. So, conditionally
-> > > +        * enable pm_runtime.
-> > > +        */
-> > > +       if (dev->pm_domain)
-> > > +               pm_runtime_enable(dev);
-> > > +
-> > > +       err = arm_smmu_rpm_get(smmu);
-> >
-> > We shouldn't be doing a runtime_get() yet, as this eventually calls
-> > arm_smmu_device_reset().
-> > arm_smmu_device_reset() should be called only after arm_smmu_device_cfg_probe().
-> > So, I plan to replace the pm_runtime_get/put() calls in probe() with
-> > simple clk_bulk_enable()
-> > to let the driver initialize smmu, and at the end of the probe we can
-> > disable the clocks and
-> > enable runtime pm over the device to let it take care of the device further-on.
-> >
->
-> We can avoid the explicit clock disable by just calling
-> pm_runtime_set_active() before pm_runtime_enable(), assuming that what
-> probe does is symmetrical with the suspend callback, which would be
-> called after the latter.
-
-Sure, that sounds reasonable. Will use pm_runtime_set_active() instead
-of explicitly disabling the clocks.Thanks.
-
-Best regards
-Vivek
-
->
-> Best regards,
-> Tomasz
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
 
+On 08/28/2018 09:11 AM, Dinh Nguyen wrote:
+> 
+> 
+> On 08/28/2018 08:50 AM, richard.gong@linux.intel.com wrote:
+>> From: Richard Gong <richard.gong@intel.com>
+>>
+>> Enable fpga framework, Stratix 10 SoC FPGA manager and Stratix10
+>> Service Layer
+>>
+> 
+> Please update your commit header be "arm64: defconfig: enable fpga and
+> service layer"
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Ok, I will make update in the next submission.
+
+> 
+> 
+>> Signed-off-by: Richard Gong <richard.gong@intel.com>
+>> Signed-off-by: Alan Tull <atull@kernel.org>
+>> ---
+>> v2: this patch is added in patch set version 2
+>> v3: no change
+>> v4: s/CONFIG_INTEL_SERVICE/CONFIG_STRATIX10_SERVICE/
+>>      add CONFIG_OF_FPGA_REGION=y
+>>      s/Intel/Stratix10/ in subject line
+>> v5: no change
+>> v6: no change
+>> v7: no change
+>> v8: no change
+>> ---
+>>   arch/arm64/configs/defconfig | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index f67e8d5..2ad50a5 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -185,6 +185,7 @@ CONFIG_BLK_DEV_LOOP=y
+>>   CONFIG_BLK_DEV_NBD=m
+>>   CONFIG_VIRTIO_BLK=y
+>>   CONFIG_BLK_DEV_NVME=m
+>> +CONFIG_STRATIX10_SERVICE=y
+> 
+> Can this be a module?
+
+No, Service layer driver need be compiled as part of kernel image.
+
+Service layer driver provides services for service clients, it must be 
+loaded & initialized before service clients (FPGA manager and remote 
+status update drivers).
+
+> 
+>>   CONFIG_SRAM=y
+>>   CONFIG_EEPROM_AT25=m
+>>   # CONFIG_SCSI_PROC_FS is not set
+>> @@ -642,6 +643,12 @@ CONFIG_PHY_TEGRA_XUSB=y
+>>   CONFIG_HISI_PMU=y
+>>   CONFIG_QCOM_L2_PMU=y
+>>   CONFIG_QCOM_L3_PMU=y
+>> +CONFIG_MESON_EFUSE=m
+> 
+> What does this change have to do with this patch?
+
+My mistake, I will fix in the next submission.
+
+> 
+>> +CONFIG_FPGA=y
+>> +CONFIG_FPGA_MGR_STRATIX10_SOC=y
+>> +CONFIG_FPGA_REGION=y
+>> +CONFIG_FPGA_BRIDGE=y
+>> +CONFIG_OF_FPGA_REGION=y
+> 
+> Can these be modules?
+
+CONFIG_FPGA_MGR_STRATIX10_SOC could be module, but the remaining 
+components need be compiled as part of kernel image.
+
+> 
+> Dinh
+> 
