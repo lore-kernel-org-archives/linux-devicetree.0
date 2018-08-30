@@ -1,86 +1,44 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v4 0/6] Add power domain driver for corners on
- msm8996/sdm845
-Date: Thu, 30 Aug 2018 12:05:14 +0530
-Message-ID: <91ece266-025b-0b70-6563-5041b70f84b8@codeaurora.org>
-References: <20180627045234.27403-1-rnayak@codeaurora.org>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sx-sdb: enable gpio buttons as wakeup source
+Date: Thu, 30 Aug 2018 14:59:39 +0800
+Message-ID: <1535612379-8793-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180627045234.27403-1-rnayak@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: viresh.kumar@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+This patch enables i.MX6SX SDB board's below GPIO buttons
+as wakeup sources:
 
+SW4(FUNC1): KEY_VOLUMEUP
+SW5(FUNC2): KEY_VOLUMEDOWN
 
-On 6/27/2018 10:22 AM, Rajendra Nayak wrote:
-> Changes in v4:
-> * Included the patch to add qcom-opp bindings (dropped accidentally in v3)
-> * merged the patches to add bindings for rpm and rpmh, added consumer binding example
-> * Made the drivers built in, removed .remove
-> * Added better description in changelog for PATCH 6/6
-> * Updated rpmhpd_aggregate_corner() based on Davids feedback
-> * rpmhpd_set_performance_state() returns max corner, in cases where its called
-> with an INT_MAX
-> * Dropped the patch to max vote on all corners at init, the patch did not
-> work anyway, and it shouldn't be needed now
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sx-sdb.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-These patches have been out on the list for a while (8 weeks).
-I haven't seen any further comments from anyone, except on PATCH 2/6
-by Rob. I requested Rob to provide his Ack if he is fine with the bindings.
-
-Can we plan to pull these in for 4.20?
-
-> 
-> Changes in v3:
-> * Bindings split into seperate patches
-> * Bindings updated to remove duplicate OPP table phandles
-> * DT headers defining macros for Power domain indexes and OPP levels
-> * Optimisations to use rpmh_write_async() whereever applicable
-> * Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
-> * Fixed the vlvl to hlvl conversions in set_performance
-> * Other minor fixes based on review of v2
-> * TODO: This series does not handle the case where all VDD_MX votes
-> should be higher than VDD_CX from APPs, as pointed out
-> by David Collins in v2. This needs support at genpd to propogate performance
-> state up the parents, if we model these as Parent/Child to handle the
-> interdependency.
-> 
-> Changes in v2:
-> * added a power domain driver for sdm845 which supports communicating to RPMh
-> * dropped the changes to sdhc driver to move over to using OPP
-> as there is active discussion on using OPP as the interface vs
-> handling all of it in clock drivers
-> * Other minor binding updates based on review of v1
-> 
-> With performance state support for genpd/OPP merged, this is an effort
-> to model a power domain driver to communicate corner/level
-> values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
-> 
-> Rajendra Nayak (6):
->    dt-bindings: opp: Introduce qcom-opp bindings
->    dt-bindings: power: Add qcom rpm power domain driver bindings
->    soc: qcom: rpmpd: Add a Power domain driver to model corners
->    soc: qcom: rpmpd: Add support for get/set performance state
->    arm64: dts: msm8996: Add rpmpd device node
->    soc: qcom: rpmhpd: Add RPMh Power domain driver
-> 
->   .../devicetree/bindings/opp/qcom-opp.txt      |  25 ++
->   .../devicetree/bindings/power/qcom,rpmpd.txt  | 146 +++++++
->   arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
->   drivers/soc/qcom/Kconfig                      |  18 +
->   drivers/soc/qcom/Makefile                     |   2 +
->   drivers/soc/qcom/rpmhpd.c                     | 406 ++++++++++++++++++
->   drivers/soc/qcom/rpmpd.c                      | 340 +++++++++++++++
->   include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
->   8 files changed, 1010 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/opp/qcom-opp.txt
->   create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->   create mode 100644 drivers/soc/qcom/rpmhpd.c
->   create mode 100644 drivers/soc/qcom/rpmpd.c
->   create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
-> 
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+index f8f3187..53b3408 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -40,12 +40,14 @@
+ 			label = "Volume Up";
+ 			gpios = <&gpio1 18 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_VOLUMEUP>;
++			wakeup-source;
+ 		};
+ 
+ 		volume-down {
+ 			label = "Volume Down";
+ 			gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_VOLUMEDOWN>;
++			wakeup-source;
+ 		};
+ 	};
+ 
+-- 
+2.7.4
