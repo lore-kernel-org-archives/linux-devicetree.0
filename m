@@ -1,36 +1,223 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/9] of: add helper to lookup compatible child node
-Date: Thu, 30 Aug 2018 10:51:09 -0500
-Message-ID: <CAL_JsqLv8MBpFsictS9Ldm2y7L-v7RiSVJHFTNHSixFhzppaPA@mail.gmail.com>
-References: <20180827082153.22537-1-johan@kernel.org> <20180827082153.22537-2-johan@kernel.org>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v3 21/30] iio: adc: sun4i-gpadc-iio: add
+ support for H3 thermal sensor
+Date: Thu, 30 Aug 2018 18:27:34 +0200
+Message-ID: <20180830162734.uq65l6ox6uwrmulo@core>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+ <20180830154518.29507-22-embed3d@gmail.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180827082153.22537-2-johan@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDXLF6FR5INBB6FVUDOAKGQEZUVT35Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180830154518.29507-22-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 3:22 AM Johan Hovold <johan@kernel.org> wrote:
->
-> Add of_get_compatible_child() helper that can be used to lookup
-> compatible child nodes.
->
-> Several drivers currently use of_find_compatible_node() to lookup child
-> nodes while failing to notice that the of_find_ functions search the
-> entire tree depth-first (from a given start node) and therefore can
-> match unrelated nodes. The fact that these functions also drop a
-> reference to the node they start searching from (e.g. the parent node)
-> is typically also overlooked, something which can lead to use-after-free
-> bugs.
->
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+Hello,
+
+On Thu, Aug 30, 2018 at 05:45:09PM +0200, Philipp Rossak wrote:
+> This patch adds support for the H3 ths sensor.
+> 
+> The H3 supports interrupts. The interrupt is configured to update the
+> the sensor values every second. The calibration data is writen at the
+> begin of the init process.
+> 
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/of/base.c  | 25 +++++++++++++++++++++++++
->  include/linux/of.h |  8 ++++++++
->  2 files changed, 33 insertions(+)
+>  drivers/iio/adc/sun4i-gpadc-iio.c   | 91 +++++++++++++++++++++++++++++++++++++
+>  include/linux/iio/adc/sun4i-gpadc.h | 18 ++++++++
+>  2 files changed, 109 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+> index c7b46c82e3e5..d5c7971b2558 100644
+> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> @@ -72,6 +72,7 @@ struct gpadc_data {
+>  	u32		temp_data_base;
+>  	int		sensor_count;
+>  	bool		supports_nvmem;
+> +	u32		ths_irq_clear;
+>  };
+>  
+>  static irqreturn_t sun4i_gpadc_data_irq_handler(int irq, void *dev_id);
+> @@ -79,6 +80,10 @@ static irqreturn_t sun4i_gpadc_data_irq_handler(int irq, void *dev_id);
+>  static int sun4i_ths_resume(struct sun4i_gpadc_iio *info);
+>  static int sun4i_ths_suspend(struct sun4i_gpadc_iio *info);
+>  
+> +static int sun8i_h3_ths_resume(struct sun4i_gpadc_iio *info);
+> +static int sun8i_h3_ths_suspend(struct sun4i_gpadc_iio *info);
+> +static irqreturn_t sunx8i_h3_irq_thread(int irq, void *data);
+> +
+>  static const struct gpadc_data sun4i_gpadc_data = {
+>  	.temp_offset = -1932,
+>  	.temp_scale = 133,
+> @@ -137,6 +142,22 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
+>  	.sensor_count = 1,
+>  };
+>  
+> +static const struct gpadc_data sun8i_h3_ths_data = {
+> +	.temp_offset = -1791,
+> +	.temp_scale = -121,
+> +	.temp_data_base = SUN8I_H3_THS_TDATA0,
+> +	.ths_irq_thread = sunx8i_h3_irq_thread,
+> +	.support_irq = true,
+> +	.has_bus_clk = true,
+> +	.has_bus_rst = true,
+> +	.has_mod_clk = true,
+> +	.sensor_count = 1,
+> +	.supports_nvmem = true,
+> +	.ths_resume = sun8i_h3_ths_resume,
+> +	.ths_suspend = sun8i_h3_ths_suspend,
+> +	.ths_irq_clear = SUN8I_H3_THS_INTS_TDATA_IRQ_0,
+> +};
+> +
+>  struct sun4i_sensor_tzd {
+>  	struct sun4i_gpadc_iio		*info;
+>  	struct thermal_zone_device	*tzd;
+> @@ -409,6 +430,31 @@ static irqreturn_t sun4i_gpadc_data_irq_handler(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static irqreturn_t sunx8i_h3_irq_thread(int irq, void *data)
+> +{
+> +	struct sun4i_gpadc_iio *info = data;
+> +	int i;
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_STAT,
+> +			info->data->ths_irq_clear);
+> +
+> +	for (i = 0; i < info->data->sensor_count; i++)
+> +		thermal_zone_device_update(info->tzds[i].tzd,
+> +						THERMAL_EVENT_TEMP_SAMPLE);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int sun8i_h3_calibrate(struct sun4i_gpadc_iio *info)
+> +{
+> +//	regmap_write(info->regmap, SUNXI_THS_CDATA_0_1,
+> +//			info->calibration_data[0]);
+> +//	regmap_write(info->regmap, SUNXI_THS_CDATA_2_3,
+> +//			info->calibration_data[1]);
 
-I've applied this one and plan to send to Linus tomorrow.
+This should probably be implemented, or left out completely.
 
-Rob
+regards,
+  o.
+
+> +	return 0;
+> +}
+> +
+>  static int sun4i_gpadc_runtime_suspend(struct device *dev)
+>  {
+>  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
+> @@ -428,6 +474,16 @@ static int sun4i_ths_suspend(struct sun4i_gpadc_iio *info)
+>  	return 0;
+>  }
+>  
+> +static int sun8i_h3_ths_suspend(struct sun4i_gpadc_iio *info)
+> +{
+> +	/* Disable ths interrupt */
+> +	regmap_write(info->regmap, SUN8I_H3_THS_INTC, 0x0);
+> +	/* Disable temperature sensor */
+> +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2, 0x0);
+> +
+> +	return 0;
+> +}
+> +
+>  static int sun4i_gpadc_runtime_resume(struct device *dev)
+>  {
+>  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
+> @@ -454,6 +510,37 @@ static int sun4i_ths_resume(struct sun4i_gpadc_iio *info)
+>  	return 0;
+>  }
+>  
+> +static int sun8i_h3_ths_resume(struct sun4i_gpadc_iio *info)
+> +{
+> +	u32 value;
+> +
+> +	sun8i_h3_calibrate(info);
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL0,
+> +			SUN4I_GPADC_CTRL0_T_ACQ(0xff));
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2,
+> +			SUN8I_H3_THS_ACQ1(0x3f));
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_STAT,
+> +			SUN8I_H3_THS_INTS_TDATA_IRQ_0);
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_FILTER,
+> +			SUN4I_GPADC_CTRL3_FILTER_EN |
+> +			SUN4I_GPADC_CTRL3_FILTER_TYPE(0x2));
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_INTC,
+> +			SUN8I_H3_THS_INTC_TDATA_IRQ_EN0 |
+> +			SUN8I_H3_THS_TEMP_PERIOD(0x55));
+> +
+> +	regmap_read(info->regmap, SUN8I_H3_THS_CTRL2, &value);
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2,
+> +			SUN8I_H3_THS_TEMP_SENSE_EN0 | value);
+> +
+> +	return 0;
+> +}
+> +
+>  static int sun4i_gpadc_get_temp(void *data, int *temp)
+>  {
+>  	struct sun4i_sensor_tzd *tzd = data;
+> @@ -497,6 +584,10 @@ static const struct of_device_id sun4i_gpadc_of_id[] = {
+>  		.compatible = "allwinner,sun6i-a31-gpadc",
+>  		.data = &sun6i_gpadc_data
+>  	},
+> +	{
+> +		.compatible = "allwinner,sun8i-h3-ths",
+> +		.data = &sun8i_h3_ths_data,
+> +	},
+>  	{ /* sentinel */ }
+>  };
+>  
+> diff --git a/include/linux/iio/adc/sun4i-gpadc.h b/include/linux/iio/adc/sun4i-gpadc.h
+> index 99feeba28105..169b4de9a34d 100644
+> --- a/include/linux/iio/adc/sun4i-gpadc.h
+> +++ b/include/linux/iio/adc/sun4i-gpadc.h
+> @@ -100,6 +100,24 @@
+>  }
+>  
+>  /* SUNXI_THS COMMON REGISTERS + DEFINES */
+> +#define SUN8I_H3_THS_CTRL0				0x00
+> +
+> +#define SUN8I_H3_THS_CTRL2				0x40
+> +#define SUN8I_H3_THS_ACQ1(x)			(GENMASK(31, 16) & ((x) << 16))
+> +#define SUN8I_H3_THS_TEMP_SENSE_EN0			BIT(0)
+> +
+> +#define SUN8I_H3_THS_INTC				0x44
+> +#define SUN8I_H3_THS_TEMP_PERIOD(x)		(GENMASK(31, 12) & ((x) << 12))
+> +#define SUN8I_H3_THS_INTC_TDATA_IRQ_EN0			BIT(8)
+> +
+> +#define SUN8I_H3_THS_STAT				0x48
+> +#define SUN8I_H3_THS_INTS_TDATA_IRQ_0			BIT(8)
+> +
+> +#define SUN8I_H3_THS_FILTER				0x70
+> +#define SUNXI_THS_CDATA_0_1				0x74
+> +#define SUNXI_THS_CDATA_2_3				0x78
+> +#define SUN8I_H3_THS_TDATA0				0x80
+> +
+>  #define MAX_SENSOR_COUNT				4
+>  
+>  #endif
+> -- 
+> 2.11.0
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
