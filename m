@@ -1,103 +1,53 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
- Amlogic Meson PCIe controller
-Date: Thu, 30 Aug 2018 10:52:12 +0200
-Message-ID: <186a782b20053c42ca8311c421925617d83ffa07.camel@baylibre.com>
-References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
-         <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
-         <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
-         <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com>
-         <20180829004122.GA25928@bogus>
-         <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Kurt Kanzenbach <kurt@linutronix.de>
+Subject: [PATCH] arm64: dts: ls208xa: add second duart
+Date: Thu, 30 Aug 2018 11:00:38 +0200
+Message-ID: <20180830090038.6956-1-kurt@linutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hanjie Lin <hanjie.lin@amlogic.com>, Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kurt Kanzenbach <kurt@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-08-30 at 15:37 +0800, Hanjie Lin wrote:
-> 
-> On 2018/8/29 8:41, Rob Herring wrote:
-> > On Mon, Aug 27, 2018 at 04:55:20PM +0800, Hanjie Lin wrote:
-> > > 
-> > > 
-> > > On 2018/8/24 16:22, Jerome Brunet wrote:
-> > > > On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
-> > > > > From: Yue Wang <yue.wang@amlogic.com>
-> > > > > 
-> > > > > The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-> > > > > PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-> > > > > controller.
-> > > > > 
-> > > > > Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> > > > > Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-> > > > > ---
-> > > > >  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
-> > > > >  1 file changed, 63 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> > > > > new file mode 100644
-> > > > > index 0000000..8a831d1
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> > > > > @@ -0,0 +1,63 @@
-> > > > > +Amlogic Meson AXG DWC PCIE SoC controller
-> > > > > +
-> > > > > +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-> > > > > +It shares common functions with the PCIe DesignWare core driver and
-> > > > > +inherits common properties defined in
-> > > > > +Documentation/devicetree/bindings/pci/designware-pci.txt.
-> > > > > +
-> > > > > +Additional properties are described here:
-> > > > > +
-> > > > > +Required properties:
-> > > > > +- compatible:
-> > > > > +	should contain "amlogic,axg-pcie" to identify the core.
-> > > > > +- reg:
-> > > > > +	Should contain the configuration address space.
-> > > > > +- reg-names: Must be
-> > > > > +	- "elbi"	External local bus interface registers
-> > > > > +	- "cfg"		Meson specific registers
-> > > > > +	- "config"	PCIe configuration space
-> > > > > +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
-> > > > > +- clocks: Must contain an entry for each entry in clock-names.
-> > > > > +- clock-names: Must include the following entries:
-> > > > > +	- "pclk"       PCIe GEN 100M PLL clock
-> > > > > +	- "port"       PCIe_x(A or B) RC clock gate
-> > > > > +	- "general"    PCIe Phy clock
-> > > > > +	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-> > > > > +- resets: phandle to the reset lines.
-> > > > > +- reset-names: must contain "phy" and "peripheral"
-> > > > > +       - "port" Port A or B reset
-> > > > > +       - "apb" APB reset
-> > > > 
-> > > > The above description is not coherent (phy <=> port)
-> > > > 
-> > > 
-> > > Yes, this should be port and apb here.
-> > > We'll integrate phy driver into ctrl driver, and move phy reset to here also.
-> > 
-> > Why? That's the wrong thing to do if they are separate h/w blocks. You 
-> > can do whatever you like in the drivers, but the DT should reflect the 
-> > h/w.
-> > 
-> > Rob
-> > 
-> > .
-> > 
-> 
-> We have the dedicated phy driver which only process reset job,
-> and we consider that it's too overkill to do just these things .
-> So we will integrate phy reset job into the controller driver int the next version.
+The NXP LS208xA SoCs have two dual uarts. Thus, add the second one.
 
-Rob has a point there. Even if overkill, it does model the HW as it is.
-+ I spotted in your v2 that there is also a register access, so not only the
-reset
+Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-> 
-> thanks. 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 8cb78dd99672..547a86ec7cd2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -22,6 +22,8 @@
+ 		crypto = &crypto;
+ 		serial0 = &serial0;
+ 		serial1 = &serial1;
++		serial2 = &serial2;
++		serial3 = &serial3;
+ 	};
+ 
+ 	cpu: cpus {
+@@ -221,6 +223,20 @@
+ 			interrupts = <0 32 0x4>; /* Level high type */
+ 		};
+ 
++		serial2: serial@21d0500 {
++			compatible = "fsl,ns16550", "ns16550a";
++			reg = <0x0 0x21d0500 0x0 0x100>;
++			clocks = <&clockgen 4 3>;
++			interrupts = <0 33 0x4>; /* Level high type */
++		};
++
++		serial3: serial@21d0600 {
++			compatible = "fsl,ns16550", "ns16550a";
++			reg = <0x0 0x21d0600 0x0 0x100>;
++			clocks = <&clockgen 4 3>;
++			interrupts = <0 33 0x4>; /* Level high type */
++		};
++
+ 		cluster1_core0_watchdog: wdt@c000000 {
+ 			compatible = "arm,sp805-wdt", "arm,primecell";
+ 			reg = <0x0 0xc000000 0x0 0x1000>;
+-- 
+2.11.0
