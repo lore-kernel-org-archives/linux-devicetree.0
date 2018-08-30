@@ -1,48 +1,34 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: sun8i: h3: bpi-m2-plus: Fix
- address for external RGMII Ethernet PHY
-Date: Thu, 30 Aug 2018 16:09:24 +0800
-Message-ID: <20180830080926.15027-2-wens@csie.org>
-References: <20180830080926.15027-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] dt-bindings: reset: imx7: update the compatible string
+Date: Thu, 30 Aug 2018 16:05:25 +0800
+Message-ID: <1535616325-17445-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBRGMT3OAKGQERJZNLOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180830080926.15027-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-The external RTL8211E RGMII Ethernet PHY is configured via external
-resistors to use the address 0x1. The 0x0 address is a broadcast address
-for this family of PHYs, and should not be used explicitly.
+The i.MX7 SRC's compatible string should be "fsl,imx7d-src".
 
-Fixes: 8c7ba536e709 ("ARM: sun8i: bananapi-m2-plus: Enable dwmac-sun8i")
-Fixes: 4904337fe34f ("ARM: dts: sunxi: Restore EMAC changes (boards)")
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 2 +-
+ Documentation/devicetree/bindings/reset/fsl,imx7-src.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-index 30540dc8e0c5..bdda0d99128e 100644
---- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-@@ -140,7 +140,7 @@
- &external_mdio {
- 	ext_rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
--		reg = <0>;
-+		reg = <1>;
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+index 5e1afc3..1ab1d10 100644
+--- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
++++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+@@ -5,7 +5,7 @@ Please also refer to reset.txt in this directory for common reset
+ controller binding usage.
  
+ Required properties:
+-- compatible: Should be "fsl,imx7-src", "syscon"
++- compatible: Should be "fsl,imx7d-src", "syscon"
+ - reg: should be register base and length as documented in the
+   datasheet
+ - interrupts: Should contain SRC interrupt
 -- 
-2.18.0
+2.7.4
