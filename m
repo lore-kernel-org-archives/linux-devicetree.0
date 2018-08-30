@@ -1,43 +1,23 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v5 01/10] dt-bindings: fsi: Add P9 OCC device documentation
-Date: Thu, 30 Aug 2018 16:32:32 -0500
-Message-ID: <1535664761-86018-2-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1535664761-86018-1-git-send-email-eajames@linux.vnet.ibm.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/6] clk: imx: vf610: Add CRC clock
+Date: Thu, 30 Aug 2018 14:42:55 -0700
+Message-ID: <153566537518.129321.12109490238775167072@swboyd.mtv.corp.google.com>
+References: <20180830171539.20008-1-krzk@kernel.org>
+ <20180830171539.20008-3-krzk@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535664761-86018-1-git-send-email-eajames@linux.vnet.ibm.com>
+In-Reply-To: <20180830171539.20008-3-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux@roeck-us.net, joel@jms.id.au, benh@kernel.crashing.org, Eddie James <eajames@linux.vnet.ibm.com>
+To: "David S. Miller" <davem@davemloft.net>, Fabio Estevam <fabio.estevam@nxp.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings for the FSI-attached POWER9 On-Chip Controller.
+Quoting Krzysztof Kozlowski (2018-08-30 10:15:35)
+> Add the clock for CRC block allowing it to be enabled by HW CRC driver.
+> =
 
-Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
----
- Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-new file mode 100644
-index 0000000..46372f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-@@ -0,0 +1,15 @@
-+Device-tree bindings for FSI-attached POWER9 On-Chip Controller (OCC)
-+---------------------------------------------------------------------
-+
-+This is the binding for the P9 On-Chip Controller accessed over FSI from a
-+service processor. See fsi.txt for details on bindings for FSI slave and CFAM
-+nodes.
-+
-+Required properties:
-+ - compatible = "ibm,p9-occ"
-+
-+Examples:
-+
-+    occ {
-+        compatible = "ibm,p9-occ";
-+    };
--- 
-1.8.3.1
+Acked-by: Stephen Boyd <sboyd@kernel.org>
