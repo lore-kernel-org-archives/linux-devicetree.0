@@ -1,15 +1,15 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a774a1: Add GPIO device nodes
-Date: Thu, 30 Aug 2018 14:19:00 +0200
-Message-ID: <20180830121900.tzvmqqmdwqio257x@verge.net.au>
-References: <1535033898-23610-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180827080019.ry5pbwm24qlmnk7k@verge.net.au>
+Subject: Re: [PATCH 1/9] arm64: dts: renesas: r8a774a1: Add SDHI nodes
+Date: Thu, 30 Aug 2018 14:21:03 +0200
+Message-ID: <20180830122103.jvbbooqop2qtyeqp@verge.net.au>
+References: <1535031788-19907-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1535031788-19907-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180827080019.ry5pbwm24qlmnk7k@verge.net.au>
+In-Reply-To: <1535031788-19907-2-git-send-email-fabrizio.castro@bp.renesas.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,20 +23,10 @@ To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 10:00:20AM +0200, Simon Horman wrote:
-> On Thu, Aug 23, 2018 at 03:18:18PM +0100, Fabrizio Castro wrote:
-> > Add GPIO device nodes to the DT of the r8a774a1 SoC.
-> > 
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> > ---
-> > 
-> > This patch depends on:
-> > https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg30549.html
+On Thu, Aug 23, 2018 at 02:43:00PM +0100, Fabrizio Castro wrote:
+> Add SDHI nodes to the DT of the r8a774a1 SoC.
 > 
-> Thanks,
-> 
-> This looks fine to me but I will wait to see if there are other reviews
-> before applying.
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
 Thanks again, applied for v4.20.
