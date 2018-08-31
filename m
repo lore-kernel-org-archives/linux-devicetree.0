@@ -1,89 +1,91 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 8/8] dt-binding: mtd: Document gpio-addr-flash
-Date: Fri, 31 Aug 2018 08:17:51 -0400
-Message-ID: <20180831121751.GA22256@bogus>
-References: <20180821143152.32293-1-ricardo.ribalda@gmail.com>
- <20180821143152.32293-9-ricardo.ribalda@gmail.com>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM
+ output between PWM and GPIO
+Date: Fri, 31 Aug 2018 08:18:09 -0400
+Message-ID: <20180831121809.GA22507@bogus>
+References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
+ <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180821143152.32293-9-ricardo.ribalda@gmail.com>
+In-Reply-To: <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 21, 2018 at 04:31:52PM +0200, Ricardo Ribalda Delgado wrote:
-> Add documentation for gpio-addr-flash. This binding allow creating
-> flash devices that are paged using GPIOs.
+On Tue, Aug 21, 2018 at 04:38:52PM +0200, Michal Vokáč wrote:
+> Output of the PWM block of i.MX SoCs is always zero volts when the block
+> is disabled. This can caue issues when inverted PWM polarity is needed.
+> With inverted polarity a duty cycle = 0% corresponds to solid high level
+> on the output. If the PWM is dissabled its output instantly goes to solid
+> zero which corresponds to duty cycle = 100%.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> To have a trully inverted PWM output configure the PWM pad as a GPIO
+> with pull-up. Then switch the pad to PWM output whenever non-zero
+> duty cycle is needed.
+> 
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 > ---
->  .../bindings/mtd/gpio-addr-flash.txt          | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+>  Documentation/devicetree/bindings/pwm/imx-pwm.txt | 44 +++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
-> new file mode 100644
-> index 000000000000..4279e8cad09b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
-> @@ -0,0 +1,46 @@
-> +Memory Mapped flash with some address lines addressed using GPIOs
-
-That's ugly...
-
+> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> index c61bdf8..3b1bc4c 100644
+> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+> @@ -14,6 +14,12 @@ See the clock consumer binding,
+>  	Documentation/devicetree/bindings/clock/clock-bindings.txt
+>  - interrupts: The interrupt for the pwm controller
+>  
+> +Optional properties:
+> +- pinctrl: For i.MX27 and newer SoCs. Add extra pinctrl to configure the PWM
+> +  pin to gpio function.  It allows control over the pin output level when the
+> +  PWM block is disabled. This is meant to be used if inverted polarity of the
+> +  PWM signal is required. See "Inverted PWM output" section bellow.
 > +
-> +Handle the case where a flash device is mostly addressed using physical
-> +line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
-> +to a 2MiB memory range and use the GPIOs to select a particular range.
+>  Example:
+>  
+>  pwm1: pwm@53fb4000 {
+> @@ -25,3 +31,41 @@ pwm1: pwm@53fb4000 {
+>  	clock-names = "ipg", "per";
+>  	interrupts = <61>;
+>  };
 > +
-> + - compatible : "cfi-gpio-addr-flash"
-
-Why a new compatible? Shouldn't just adding some address gpios to an 
-existing flash device binding be sufficient?
-
-> + - reg : Address range of the mtd chip that is memory mapped, this is,
-> +   on the previous example 2MiB.
-> + - bank-width : Width (in bytes) of the bank.  Equal to the
-> +   device width times the number of interleaved chips.
-> + - probe-type : (optional) "cfi_probe", "jedec_probe". How the mtd chip
-> +   is going to be probed. If omitted, assumed to be equal to "cfi_probe".
-> + - #address-cells, #size-cells : Must be present if the device has
-> +   sub-nodes representing partitions (see below).  In this case
-> +   both #address-cells and #size-cells must be equal to 1.
+> +Inverted PWM output
+> +-------------------
 > +
-> +The device tree may optionally contain sub-nodes describing partitions of the
-> +address space. See partition.txt for more detail.
+> +The i.MX SoC has such limitation that whenever a pad is configured as a PWM
+> +output, the output level is always zero volts when the PWM block is disabled.
+> +The zero output level is actively driven by the output stage of the PWM block
+> +and can not be overridden by pull-up. It also does not matter what PWM polarity
+> +a PWM client (e.g. backlight) requested.
+> +
+> +To gain control of the PWM output level in disabled state two pinctrl states
+> +can be used. The "default" state and the "pwm" state. In the default state the
+> +PWM output is configured as a GPIO with pull-up. In the "pwm" state the output
+> +is configured as a PWM output. This setup assures that the PWM output is at
+> +the required level that corresponds to duty cycle = 0 when PWM is disabled.
+> +E.g. at boot.
 > +
 > +Example:
 > +
-> +	cfi_flash_0: cfi_flash {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "cfi-gpio-addr-flash";
-> +		bank-width = <2>;
-> +		reg = < 0x00300000 0x00200000 >;
-> +		gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
-> +		partition@0 {
-> +			reg = < 0x0 0x200000 >;
-> +			label = "Golden Bitstream";
-> +		};
-> +		partition@200000 {
-> +			reg = < 0x200000 0x200000 >;
-> +			label = "User Bitstream";
-> +		};
-> +		partition@400000 {
-> +			reg = < 0x400000 0x200000 >;
-> +			label = "V4L Controls";
-> +		};
-> +		partition@600000 {
-> +			reg = < 0x600000 0x200000 >;
-> +			label = "Production Data";
-> +		};
-> +	} ;
-> -- 
-> 2.18.0
-> 
+> +&pwm1 {
+> +	pinctrl-names = "default", "pwm";
+> +	pinctrl-0 = <&pinctrl_backlight_gpio>;
+> +	pinctrl-1 = <&pinctrl_backlight_pwm>;
+> +}
+> +
+> +pinctrl_backlight_gpio: pwm1grp-gpio {
+> +	fsl,pins = <
+> +		/* GPIO with 22kOhm pull-up */
+> +		MX6QDL_PAD_GPIO_9__GPIO1_IO09	0xF008
+
+There's a slight problem here if I remember the i.MX pin muxing. In GPIO 
+mode, doesn't the GPIO block control the direction and level if an 
+output. I guess as long as unused GPIOs are all initialized to inputs it 
+will be okay.
+
+Rob
