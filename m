@@ -1,71 +1,56 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 09/13] ARM: dts: sun8i: r40: add sata node
-Date: Fri, 31 Aug 2018 09:56:31 +0200
-Message-ID: <20180831075631.GB16301@Red>
-References: <20180830190120.722-1-clabbe.montjoie@gmail.com>
- <20180830190120.722-10-clabbe.montjoie@gmail.com>
- <20180831073500.zubqpvar4yhjqrge@flea>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 0/7] Add i.MX6 SoCs mmdc ipg clocks management
+Date: Fri, 31 Aug 2018 15:53:11 +0800
+Message-ID: <1535701998-20443-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBMXJUPOAKGQEBIYLSFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180831073500.zubqpvar4yhjqrge@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, colin.didier@devialet.com, clement.peron@devialet.com, ping.bai@nxp.com, aisheng.dong@nxp.com, shengjiu.wang@nxp.com, matteo.lisi@engicam.com, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 09:35:00AM +0200, Maxime Ripard wrote:
-> On Thu, Aug 30, 2018 at 09:01:16PM +0200, Corentin Labbe wrote:
-> > R40 have a sata controller which is the same as A20.
-> > This patch adds a DT node for it.
-> > 
-> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/sun8i-r40.dtsi | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > index 852c2ccc3268..d6b5820da850 100644
-> > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> > @@ -550,6 +550,29 @@
-> >  			#size-cells = <0>;
-> >  		};
-> >  
-> > +		ahci: sata@1c18000 {
-> > +			compatible = "allwinner,sun8i-r40-ahci";
-> > +			reg = <0x01c18000 0x1000>;
-> > +			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> > +			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
-> > +			resets = <&ccu RST_BUS_SATA>;
-> > +			resets-name = "ahci";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			status = "disabled";
-> > +
-> > +			sata_port: sata-port@0 {
-> > +				reg = <0>;
-> > +				phys = <&sata_phy>;
-> > +			};
-> > +		};
-> > +
-> > +		sata_phy: sata-phy@1c180c0  {
-> > +			compatible = "allwinner,sun8i-r40-sata-phy";
-> > +			reg = <0x1c180c0 0x200>;
-> 
-> Overlapping devices in the DTS is not ok.
-> 
+i.MX6 SoCs have MMDC driver which will access MMDC registers, and the
+register access need to have MMDC IPG clocks enabled, current MMDC
+driver does NOT handle the MMDC IPG clocks at all, most of the i.MX6
+SoCs clock tree have MMDC0 IPG clock registered and have flag
+CLK_IS_CRITICAL set, but some i.MX6 SoCs does NOT register the MMDC IPG
+clock at all, it depends on default HW status which is NOT reliable.
 
-I do the same than arch/arm/boot/dts/berlin2.dtsi (sata@e90000 phy@e900a0)
-But since it is not a good justification, it seems that regmap is my only solution ?
+To make it more formal, this patch set add all available MMDC IPG clocks
+into clock tree, and add optional clocks enable operation in MMDC driver
+to make sure IPG clock is enabled before accessing registers, and passing
+MMDC IPG clock info from device tree MMDC node.
 
-Regards
+In order to NOT break old device tree, this patch set does NOT remove
+the CLK_IS_CRITIAL flag for MMDC0 IPG clock.
+
+Anson Huang (7):
+  ARM: imx: add mmdc ipg clock operation for mmdc
+  clk: imx6ul: add mmdc1 ipg clock
+  clk: imx6sx: add mmdc1 ipg clock
+  clk: imx6sll: add mmdc1 ipg clock
+  clk: imx6sl: add mmdc ipg clocks
+  clk: imx6q: add mmdc0 ipg clock
+  ARM: dts: imx6: add mmdc ipg clock
+
+ arch/arm/boot/dts/imx6qdl.dtsi            |  1 +
+ arch/arm/boot/dts/imx6sl.dtsi             |  1 +
+ arch/arm/boot/dts/imx6sll.dtsi            |  1 +
+ arch/arm/boot/dts/imx6sx.dtsi             |  1 +
+ arch/arm/boot/dts/imx6ul.dtsi             |  1 +
+ arch/arm/mach-imx/mmdc.c                  | 14 ++++++++++++++
+ drivers/clk/imx/clk-imx6q.c               |  1 +
+ drivers/clk/imx/clk-imx6sl.c              |  2 ++
+ drivers/clk/imx/clk-imx6sll.c             |  1 +
+ drivers/clk/imx/clk-imx6sx.c              |  1 +
+ drivers/clk/imx/clk-imx6ul.c              |  1 +
+ include/dt-bindings/clock/imx6qdl-clock.h |  3 ++-
+ include/dt-bindings/clock/imx6sl-clock.h  |  4 +++-
+ include/dt-bindings/clock/imx6sll-clock.h |  3 ++-
+ include/dt-bindings/clock/imx6sx-clock.h  |  3 ++-
+ include/dt-bindings/clock/imx6ul-clock.h  |  3 ++-
+ 16 files changed, 36 insertions(+), 5 deletions(-)
+
+-- 
+2.7.4
