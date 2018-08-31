@@ -1,54 +1,45 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v8 0/5] Support for Qualcomm UFS QMP PHY on SDM845
-Date: Thu, 30 Aug 2018 18:10:33 -0700
-Message-ID: <20180831011033.GN2523@minitux>
-References: <20180731100914.19856-1-cang@codeaurora.org>
- <20180830061604.GM2523@minitux>
- <CAFp+6iGDvt9UX8y7HCwC+QdTdyCLxuj5pNWbbttJAHGEPW+tyw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] firmware: qcom: scm: Improve clock handling
+Date: Thu, 30 Aug 2018 18:17:41 -0700
+Message-ID: <20180831011741.GO2523@minitux>
+References: <20180829231505.22660-1-bjorn.andersson@linaro.org>
+ <153567767852.93865.5427679731919930718@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAFp+6iGDvt9UX8y7HCwC+QdTdyCLxuj5pNWbbttJAHGEPW+tyw@mail.gmail.com>
+In-Reply-To: <153567767852.93865.5427679731919930718@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Can Guo <cang@codeaurora.org>, Subhash Jadavani <subhashj@codeaurora.org>, asutoshd@codeaurora.org, Manu Gautam <mgautam@codeaurora.org>, kishon <kishon@ti.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Sricharan R <sricharan@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Craig Tatlor <ctatlor97@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 30 Aug 03:44 PDT 2018, Vivek Gautam wrote:
+On Thu 30 Aug 18:07 PDT 2018, Stephen Boyd wrote:
 
-> On Thu, Aug 30, 2018 at 11:46 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Tue 31 Jul 03:09 PDT 2018, Can Guo wrote:
-> >
-> > > This patch series adds support for UFS QMP PHY on SDM845 and the
-> > > compatible string for it. This patch series depends on the current
-> > > proposed QMP V3 USB3 UNI PHY support for sdm845 driver [1], on
-> > > the DT bindings for the QMP V3 USB3 PHYs based dirver [2], and also
-> > > rebased on updated pipe_clk initialization sequence [3]. This series
-> > > can only be merged once the dependent patches do.
-> > > [1] http://lists-archives.com/linux-kernel/29071659-dt-bindings-phy-qcom-qmp-update-bindings-for-sdm845.html
-> > > [2] http://lists-archives.com/linux-kernel/29071660-phy-qcom-qmp-add-qmp-v3-usb3-uni-phy-support-for-sdm845.html
-> > > [3] https://patchwork.kernel.org/patch/10376551/
-> > >
-> >
-> > Hi Can,
-> >
-> > We still have the issue that the older non-QMP phy driver takes a direct
-> > call to ufs_qcom_phy_set_tx_lane_enable(), which means that pointing
-> > UFSHCD to this phy implementation results in a kernel panic.
+> Quoting Bjorn Andersson (2018-08-29 16:15:02)
+> > We're currently facing the issue that every new platform requires the addition
+> > of a compatible to the DT binding as well as the driver.
+> > 
+> > The DT binding patch to allow us to use qcom,scm for all these new platforms
+> > that doesn't require any clocks and the driver is reworked to make the qcom,scm
+> > still pick up specified clocks in this case but won't require them.
+> > 
+> > This makes it possible to add new platforms by simply add the new compatible to
+> > the list in the DT binding, but no changes needs to be done in the driver.
+> > Which is what is done in patch 3.
+> > 
 > 
-> Hi Bjorn,
-> 
-> I have a series that removes couple of these function calls -
-> ufs_qcom_phy_set_tx_lane_enable(), and
-> ufs_qcom_phy_save_controller_version() from ufs-qcom, and
-> make phy-qcom-ufs-qmp-20nm as broken.
-> I can post it out if that sounds okay.
+> I still think it may be even simpler to move to the "get all the clks"
+> API and then stop caring completely. Any reason to not do that?
 > 
 
-That sounds really good, please do sent that out.
+I love working with drivers that tells me things like "hey you forgot to
+add the 'core' clock", rather than having to spend hours bisecting which
+register access it is that's causing that reboot and then try to drill
+that down to a particular clock.
+
+Apart from that, the "get-all-the-clocks" would work fine as well. Does
+this API exist yet?
 
 Regards,
 Bjorn
