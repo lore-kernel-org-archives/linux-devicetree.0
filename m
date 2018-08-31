@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH] usb: core: phy: clean up return value check about devm_of_phy_get_by_index()
-Date: Fri, 31 Aug 2018 17:55:09 +0800
-Message-ID: <258d57f5c8559c5fd3ba6d1ac1dcc5463737da2e.1535709096.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH v5] usb: core: phy: clean up return value check about devm_of_phy_get_by_index()
+Date: Fri, 31 Aug 2018 18:01:54 +0800
+Message-ID: <18d8d311a32497abce39c796b353a878a13b09b6.1535709565.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -18,7 +18,9 @@ refer to:
 [1] https://patchwork.kernel.org/patch/10160181/
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Reviewed-by: Johan Hovold <johan@kernel.org>
 ---
+V5: add Reviewed-by: Johan Hovold <johan@kernel.org>
 V4: modify the patch subject suggested by Johan
 V3: abandon the ternary operator suggested by Johan
 V2: keep the -ENODEV check
