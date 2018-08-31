@@ -1,8 +1,10 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 0/3] ARM: NSP updates to support switch interrupts/SFP
-Date: Fri, 31 Aug 2018 12:20:36 -0700
-Message-ID: <20180831192039.11842-1-f.fainelli@gmail.com>
+Subject: [PATCH v3 1/3] ARM: dts: NSP: Enable SFP on bcm958625hr
+Date: Fri, 31 Aug 2018 12:20:37 -0700
+Message-ID: <20180831192039.11842-2-f.fainelli@gmail.com>
+References: <20180831192039.11842-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180831192039.11842-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM
@@ -10,39 +12,62 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, andrew@lunn.ch, rmk+kernel@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Enable the SFP connected to port 5 of the switch and wire up all GPIOs
+to the SFP cage. Because of a hardware limitation of the i2c controller
+on the iProc SoCs which prevents large i2c (> 63 bytes) transactions to
+work, we use the i2c-gpio interface instead, which does not have that
+limitation. This allows us to read the SFP module EEPROM, which would
+not be possible otherwise since it exceeds that size during a single
+read transfer.
 
-This patch series updates the ARM NSP DTS and BCM958625HR in order to
-support the SFP connected to port 5 on these reference boards.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/boot/dts/bcm958625hr.dts | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-I will be submitting the functional changes to drivers/net/dsa/b53 once
-net-next opens back up, but this is largely independent from getting
-these 3 patches out.
-
-Thank you
-
-Changes in v3:
-
-- changes i2c controller node name from i2c to i2c (Ray)
-- updated binding patch to have bulleted reg-names and interrupt-names
-  (Rob)
-
-
-Changes in v2:
-
-- added missing managed = "in-band-status" property
-- reworded the commit message to explain the limitation of i2c-proc
-  is of 63 bytes per transfer, not 256 bytes
-
-Florian Fainelli (3):
-  ARM: dts: NSP: Enable SFP on bcm958625hr
-  dt-bindings: net: dsa: Document B53 SRAB interrupts and registers
-  ARM: dts: NSP: Wire up switch interrupts
-
- .../devicetree/bindings/net/dsa/b53.txt       | 36 +++++++++++++++++++
- arch/arm/boot/dts/bcm-nsp.dtsi                | 31 +++++++++++++++-
- arch/arm/boot/dts/bcm958625hr.dts             | 26 ++++++++++++++
- 3 files changed, 92 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index ea3fc194f8f3..a53a2f629d74 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -58,6 +58,24 @@
+ 		open-source;
+ 		priority = <200>;
+ 	};
++
++	/* Hardware I2C block cannot do more than 63 bytes per transfer,
++	 * which would prevent reading from a SFP's EEPROM (256 byte).
++	 */
++	i2c1: i2c {
++		compatible = "i2c-gpio";
++		sda-gpios = <&gpioa 5 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&gpioa 4 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++	};
++
++	sfp: sfp {
++		compatible = "sff,sfp";
++		i2c-bus = <&i2c1>;
++		mod-def0-gpios = <&gpioa 28 GPIO_ACTIVE_LOW>;
++		los-gpios = <&gpioa 24 GPIO_ACTIVE_HIGH>;
++		tx-fault-gpios = <&gpioa 30 GPIO_ACTIVE_HIGH>;
++		tx-disable-gpios = <&gpioa 26 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &amac0 {
+@@ -210,6 +228,14 @@
+ 			reg = <4>;
+ 		};
+ 
++		port@5 {
++			label = "sfp";
++			phy-mode = "sgmii";
++			reg = <5>;
++			sfp = <&sfp>;
++			managed = "in-band-status";
++		};
++
+ 		port@8 {
+ 			ethernet = <&amac2>;
+ 			label = "cpu";
 -- 
 2.17.1
