@@ -1,113 +1,36 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 2/3] ARM: dts: am335x: add support for Moxa UC-2101 open
- platform
-Date: Thu, 30 Aug 2018 18:46:44 -0500
-Message-ID: <47ebc8e6-b1cb-e040-8533-06eec05b4edd@ti.com>
-References: <20180830040929.23357-1-sz.lin@moxa.com>
- <20180830040929.23357-3-sz.lin@moxa.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 6/9] net: bcmgenet: fix OF child-node lookup
+Date: Thu, 30 Aug 2018 17:47:33 -0700
+Message-ID: <683bdf11-a662-d17e-8bc5-b3cfd238e463@gmail.com>
+References: <20180827082153.22537-1-johan@kernel.org>
+ <20180827082153.22537-7-johan@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830040929.23357-3-sz.lin@moxa.com>
+In-Reply-To: <20180827082153.22537-7-johan@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?U1ogTGluICjmnpfkuIrmmbop?= <sz.lin@moxa.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Wes Huang <wes.huang@moxa.com>, Fero JD Zhou <FeroJD.Zhou@moxa.com>
+To: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/29/2018 11:09 PM, SZ Lin (林上智) wrote:
-> Add support for Moxa UC-2101 open platform
+On 08/27/2018 01:21 AM, Johan Hovold wrote:
+> Use the new of_get_compatible_child() helper to lookup the mdio child
+> node instead of using of_find_compatible_node(), which searches the
+> entire tree from a given start node and thus can return an unrelated
+> (i.e. non-child) node.
 > 
-> The UC-2101 computing platform is designed for industrial embedded
-> data acquisition and processing applications.
+> This also addresses a potential use-after-free (e.g. after probe
+> deferral) as the tree-wide helper drops a reference to its first
+> argument (i.e. the node of the device being probed).
 > 
-> The features of UC-2101 are:
-> * eMMC
-> * SPI flash
-> * 1x LAN
-> * 1x RS-232/422/485 ports, software-selectable
-> * EEPROM
-> * TPM 2.0
-> * Watchdog
-> * RTC
-> * User gpio-keys
-> * User LEDs
-> * User button
-> 
-> Signed-off-by: Wes Huang (黃淵河) <wes.huang@moxa.com>
-> Signed-off-by: Fero JD Zhou (周俊達) <FeroJD.Zhou@moxa.com>
-> Signed-off-by: SZ Lin (林上智) <sz.lin@moxa.com>
-> ---
->   .../devicetree/bindings/arm/omap/omap.txt     |  3 +
->   arch/arm/boot/dts/Makefile                    |  1 +
->   arch/arm/boot/dts/am335x-moxa-uc-2101.dts     | 63 +++++++++++++++++++
->   3 files changed, 67 insertions(+)
->   create mode 100644 arch/arm/boot/dts/am335x-moxa-uc-2101.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> index 2ecc712bf707..c5ca3d6a8099 100644
-> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> @@ -157,6 +157,9 @@ Boards:
->   - AM335X phyCORE-AM335x: Development kit
->     compatible = "phytec,am335x-pcm-953", "phytec,am335x-phycore-som", "ti,am33xx"
->   
-> +- AM335X UC-2100: Wireless-enabled palm-sized industrial computing platform
-> +  compatible = "moxa,uc-2101", "ti,am33xx"
-> +
->   - AM335X UC-8100-ME-T: Communication-centric industrial computing platform
->     compatible = "moxa,uc-8100-me-t", "ti,am33xx";
->   
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b5bd3de87c33..6167c068601c 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -706,6 +706,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
->   	am335x-evmsk.dtb \
->   	am335x-icev2.dtb \
->   	am335x-lxm.dtb \
-> +	am335x-moxa-uc-2101.dtb \
->   	am335x-moxa-uc-8100-me-t.dtb \
->   	am335x-nano.dtb \
->   	am335x-pdu001.dtb \
-> diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2101.dts b/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
-> new file mode 100644
-> index 000000000000..d0c1eea4a6c9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 MOXA Inc. - https://www.moxa.com/
-> + *
-> + * Authors: SZ Lin (林上智) <sz.lin@moxa.com>
-> + *          Wes Huang (黃淵河) <wes.huang@moxa.com>
-> + *          Fero JD Zhou (周俊達) <FeroJD.Zhou@moxa.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "am335x-moxa-uc-2100-common.dtsi"
-> +
+> Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
+> Cc: stable <stable@vger.kernel.org>     # 3.15
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
 
-> +
-> +&cpsw_emac0 {
-> +	status = "okay";
-> +	phy_id = <&davinci_mdio>, <0x4>;
-
-Pls, use phy-handle instead of phy_id here and in the next patch.
-
-> +	phy-mode = "rmii";
-> +};
-> +
-> +&cpsw_emac1 {
-> +	status = "disable";
-> +};
-> 
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-regards,
--grygorii
+Florian
