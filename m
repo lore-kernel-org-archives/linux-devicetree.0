@@ -1,56 +1,106 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] spi: dw-mmio: avoid hardcoded field mask
-Date: Fri, 31 Aug 2018 14:54:57 +0300
-Message-ID: <20180831115457.GX11447@smile.fi.intel.com>
-References: <20180831114046.27094-1-alexandre.belloni@bootlin.com>
+From: Nipun Gupta <nipun.gupta@nxp.com>
+Subject: RE: [PATCH 0/7 v6] Support for fsl-mc bus and its devices in SMMU
+Date: Fri, 31 Aug 2018 11:57:48 +0000
+Message-ID: <VI1PR04MB4480D192810E7DEB38895F0AE60F0@VI1PR04MB4480.eurprd04.prod.outlook.com>
+References: <1531135103-10699-1-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180831114046.27094-1-alexandre.belloni@bootlin.com>
+In-Reply-To: <1531135103-10699-1-git-send-email-nipun.gupta@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microchip.com>
+To: "robin.murphy@arm.com" <robin.murphy@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Laurentiu Tudor <laurentiu.tudor@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "hch@lst.de" <hch@lst.de>
+Cc: "joro@8bytes.org" <joro@8bytes.org>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bharat Bhushan <bharat.bhushan@nxp.com>, "stuyoder@gmail.com" <stuyoder@gmail.com>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 01:40:46PM +0200, Alexandre Belloni wrote:
-> Define a mask for the IF_SI_OWNER field.
-> 
+Hi Joerg/Robin,
 
-Thanks!
+Can you please let me know when these patches will be applied onto the tree=
+.
+Is there anything else pending from my side.
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks,
+Nipun
 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/spi/spi-dw-mmio.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-> index 351f49976161..a768461614a0 100644
-> --- a/drivers/spi/spi-dw-mmio.c
-> +++ b/drivers/spi/spi-dw-mmio.c
-> @@ -36,6 +36,7 @@ struct dw_spi_mmio {
->  #define MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL	0x24
->  #define OCELOT_IF_SI_OWNER_OFFSET		4
->  #define JAGUAR2_IF_SI_OWNER_OFFSET		6
-> +#define MSCC_IF_SI_OWNER_MASK			GENMASK(1, 0)
->  #define MSCC_IF_SI_OWNER_SISL			0
->  #define MSCC_IF_SI_OWNER_SIBM			1
->  #define MSCC_IF_SI_OWNER_SIMC			2
-> @@ -102,7 +103,7 @@ static int dw_spi_mscc_init(struct platform_device *pdev,
->  
->  	/* Select the owner of the SI interface */
->  	regmap_update_bits(dwsmscc->syscon, MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL,
-> -			   0x3 << if_si_owner_offset,
-> +			   MSCC_IF_SI_OWNER_MASK << if_si_owner_offset,
->  			   MSCC_IF_SI_OWNER_SIMC << if_si_owner_offset);
->  
->  	dwsmmio->dws.set_cs = dw_spi_mscc_set_cs;
-> -- 
-> 2.19.0.rc1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
+> -----Original Message-----
+> From: Nipun Gupta
+> Sent: Monday, July 9, 2018 4:48 PM
+> To: robin.murphy@arm.com; will.deacon@arm.com; robh+dt@kernel.org;
+> robh@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
+> gregkh@linuxfoundation.org; Laurentiu Tudor <laurentiu.tudor@nxp.com>;
+> bhelgaas@google.com; hch@lst.de
+> Cc: joro@8bytes.org; m.szyprowski@samsung.com; shawnguo@kernel.org;
+> frowand.list@gmail.com; iommu@lists.linux-foundation.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org; linux-
+> pci@vger.kernel.org; Bharat Bhushan <bharat.bhushan@nxp.com>;
+> stuyoder@gmail.com; Leo Li <leoyang.li@nxp.com>; Nipun Gupta
+> <nipun.gupta@nxp.com>
+> Subject: [PATCH 0/7 v6] Support for fsl-mc bus and its devices in SMMU
+>=20
+> This patchset defines IOMMU DT binding for fsl-mc bus and adds
+> support in SMMU for fsl-mc bus.
+>=20
+> The patch series is based on top of dma-mapping tree (for-next branch):
+> http://git.infradead.org/users/hch/dma-mapping.git
+>=20
+> These patches
+>   - Define property 'iommu-map' for fsl-mc bus (patch 1)
+>   - Integrates the fsl-mc bus with the SMMU using this
+>     IOMMU binding (patch 2,3,4)
+>   - Adds the dma configuration support for fsl-mc bus (patch 5, 6)
+>   - Updates the fsl-mc device node with iommu/dma related changes (patch =
+7)
+>=20
+> Changes in v2:
+>   - use iommu-map property for fsl-mc bus
+>   - rebase over patchset https://patchwork.kernel.org/patch/10317337/
+>     and make corresponding changes for dma configuration of devices on
+>     fsl-mc bus
+>=20
+> Changes in v3:
+>   - move of_map_rid in drivers/of/address.c
+>=20
+> Changes in v4:
+>   - move of_map_rid in drivers/of/base.c
+>=20
+> Changes in v5:
+>   - break patch 5 in two separate patches (now patch 5/7 and patch 6/7)
+>   - add changelog text in patch 3/7 and patch 5/7
+>   - typo fix
+>=20
+> Changes in v6:
+>   - Updated fsl_mc_device_group() API to be more rational
+>   - Added dma-coherent property in the LS2 smmu device node
+>   - Minor fixes in the device-tree documentation
+>=20
+> Nipun Gupta (7):
+>   Documentation: fsl-mc: add iommu-map device-tree binding for fsl-mc
+>     bus
+>   iommu/of: make of_pci_map_rid() available for other devices too
+>   iommu/of: support iommu configuration for fsl-mc devices
+>   iommu/arm-smmu: Add support for the fsl-mc bus
+>   bus: fsl-mc: support dma configure for devices on fsl-mc bus
+>   bus: fsl-mc: set coherent dma mask for devices on fsl-mc bus
+>   arm64: dts: ls208xa: comply with the iommu map binding for fsl_mc
+>=20
+>  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |  39 ++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |   7 +-
+>  drivers/bus/fsl-mc/fsl-mc-bus.c                    |  16 +++-
+>  drivers/iommu/arm-smmu.c                           |   7 ++
+>  drivers/iommu/iommu.c                              |  13 +++
+>  drivers/iommu/of_iommu.c                           |  25 ++++-
+>  drivers/of/base.c                                  | 102 +++++++++++++++=
+++++++
+>  drivers/of/irq.c                                   |   5 +-
+>  drivers/pci/of.c                                   | 101 ---------------=
+-----
+>  include/linux/fsl/mc.h                             |   8 ++
+>  include/linux/iommu.h                              |   2 +
+>  include/linux/of.h                                 |  11 +++
+>  include/linux/of_pci.h                             |  10 --
+>  13 files changed, 224 insertions(+), 122 deletions(-)
+>=20
+> --
+> 1.9.1
