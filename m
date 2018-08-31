@@ -1,64 +1,32 @@
-From: Patrick Venture <venture@google.com>
-Subject: [PATCH v2 1/2] ARM: dts: aspeed: quanta-q71l: add aliases for i2c
-Date: Fri, 31 Aug 2018 13:58:39 -0700
-Message-ID: <20180831205839.241666-1-venture@google.com>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH 1/3] MIPS: jz4780: Allow access to jz4740-i2s
+Date: Fri, 31 Aug 2018 13:58:57 -0700
+Message-ID: <20180831205857.nb3ij3rzhfs2fu42@pburton-laptop>
+References: <20180606193811.16007-1-malat@debian.org>
+ <20180724204757.qrgjttepzcfdzxlv@pburton-laptop>
+ <20180831203752.37rsceiwotcmeses@pburton-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: venture@google.com, joel@jms.id.au, robh+dt@kernel.org, andrew@aj.id.au, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180831203752.37rsceiwotcmeses@pburton-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>
+Cc: James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Provide aliases to each i2c bus per labels added for
-each PCIe slot, etc, that are downstream beyond a mux.
+On Fri, Aug 31, 2018 at 01:37:52PM -0700, Paul Burton wrote:
+> Further to that, this series doesn't seem to work for me. With
+> v4.19-rc1, with the patch from [1] & then this series applied I see the
+> following when booting a ci20_defconfig kernel:
+> 
+>   [    0.846684] ALSA device list:
+>   [    0.849642]   No soundcards found.
 
-Signed-off-by: Patrick Venture <venture@google.com>
----
-Changes for v2:
- - No changes.
----
- arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+D'oh! Apparently I haven't drunk enough coffee today - missing link can
+be found below:
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-index 76aa6ea1f988..586050e1c0e6 100644
---- a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
-@@ -7,6 +7,25 @@
- 	model = "Quanta Q71L BMC";
- 	compatible = "quanta,q71l-bmc", "aspeed,ast2400";
- 
-+	aliases {
-+		i2c14 = &i2c_pcie2;
-+		i2c15 = &i2c_pcie3;
-+		i2c16 = &i2c_pcie6;
-+		i2c17 = &i2c_pcie7;
-+		i2c18 = &i2c_pcie1;
-+		i2c19 = &i2c_pcie4;
-+		i2c20 = &i2c_pcie5;
-+		i2c21 = &i2c_pcie8;
-+		i2c22 = &i2c_pcie9;
-+		i2c23 = &i2c_pcie10;
-+		i2c24 = &i2c_ssd1;
-+		i2c25 = &i2c_ssd2;
-+		i2c26 = &i2c_psu4;
-+		i2c27 = &i2c_psu1;
-+		i2c28 = &i2c_psu3;
-+		i2c29 = &i2c_psu2;
-+	};
-+
- 	chosen {
- 		stdout-path = &uart5;
- 		bootargs = "console=ttyS4,115200 earlyprintk";
--- 
-2.18.0.1017.ga543ac7ca45-goog
+[1] https://www.spinics.net/lists/linux-gpio/msg31965.html
+
+Thanks,
+    Paul
