@@ -1,10 +1,10 @@
 Return-Path: <>
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 2/3] dt-bindings: usb: renesas_usbhs: add clock-names property
-Date: Fri, 31 Aug 2018 19:32:58 +0900
-Message-Id: <1535711579-15169-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1535711579-15169-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1535711579-15169-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/3] dt-bindings: usb: renesas_usbhs: add clock-names property
+Date: Fri, 31 Aug 2018 15:48:38 +0900
+Message-Id: <1535698119-10132-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1535698119-10132-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1535698119-10132-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
