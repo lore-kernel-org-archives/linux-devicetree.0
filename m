@@ -1,29 +1,103 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/6] dt-bindings: dmaengine: usb-dmac: Add binding for
- r8a774a1
-Date: Fri, 31 Aug 2018 08:20:15 -0400
-Message-ID: <20180831122015.GA25885@bogus>
-References: <1535097375-5561-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1535097375-5561-5-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH 8/8] dt-binding: mtd: Document gpio-addr-flash
+Date: Fri, 31 Aug 2018 14:20:00 +0200
+Message-ID: <CAPybu_2cqyLXiQ9pdLBDbz8zFPM1u6B4jnKJqLXWzW+gXHbwRA@mail.gmail.com>
+References: <20180821143152.32293-1-ricardo.ribalda@gmail.com>
+ <20180821143152.32293-9-ricardo.ribalda@gmail.com> <20180831121751.GA22256@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1535097375-5561-5-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20180831121751.GA22256@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Aug 2018 08:56:13 +0100, Fabrizio Castro wrote:
-> From: Biju Das <biju.das@bp.renesas.com>
-> 
-> This patch adds binding for r8a774a1 (RZ/G2M).
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+ aHi Robb
+On Fri, Aug 31, 2018 at 2:17 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Aug 21, 2018 at 04:31:52PM +0200, Ricardo Ribalda Delgado wrote:
+> > Add documentation for gpio-addr-flash. This binding allow creating
+> > flash devices that are paged using GPIOs.
+> >
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> > ---
+> >  .../bindings/mtd/gpio-addr-flash.txt          | 46 +++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+> > new file mode 100644
+> > index 000000000000..4279e8cad09b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+> > @@ -0,0 +1,46 @@
+> > +Memory Mapped flash with some address lines addressed using GPIOs
+>
+> That's ugly...
+>
+If hw was perfect there would be no firmware engineers in the world :P
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> > +
+> > +Handle the case where a flash device is mostly addressed using physical
+> > +line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
+> > +to a 2MiB memory range and use the GPIOs to select a particular range.
+> > +
+> > + - compatible : "cfi-gpio-addr-flash"
+>
+> Why a new compatible? Shouldn't just adding some address gpios to an
+> existing flash device binding be sufficient?
+
+Because today there are handled by two different drivers
+
+Thanks!
+
+>
+> > + - reg : Address range of the mtd chip that is memory mapped, this is,
+> > +   on the previous example 2MiB.
+> > + - bank-width : Width (in bytes) of the bank.  Equal to the
+> > +   device width times the number of interleaved chips.
+> > + - probe-type : (optional) "cfi_probe", "jedec_probe". How the mtd chip
+> > +   is going to be probed. If omitted, assumed to be equal to "cfi_probe".
+> > + - #address-cells, #size-cells : Must be present if the device has
+> > +   sub-nodes representing partitions (see below).  In this case
+> > +   both #address-cells and #size-cells must be equal to 1.
+> > +
+> > +The device tree may optionally contain sub-nodes describing partitions of the
+> > +address space. See partition.txt for more detail.
+> > +
+> > +Example:
+> > +
+> > +     cfi_flash_0: cfi_flash {
+> > +             #address-cells = <1>;
+> > +             #size-cells = <1>;
+> > +             compatible = "cfi-gpio-addr-flash";
+> > +             bank-width = <2>;
+> > +             reg = < 0x00300000 0x00200000 >;
+> > +             gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
+> > +             partition@0 {
+> > +                     reg = < 0x0 0x200000 >;
+> > +                     label = "Golden Bitstream";
+> > +             };
+> > +             partition@200000 {
+> > +                     reg = < 0x200000 0x200000 >;
+> > +                     label = "User Bitstream";
+> > +             };
+> > +             partition@400000 {
+> > +                     reg = < 0x400000 0x200000 >;
+> > +                     label = "V4L Controls";
+> > +             };
+> > +             partition@600000 {
+> > +                     reg = < 0x600000 0x200000 >;
+> > +                     label = "Production Data";
+> > +             };
+> > +     } ;
+> > --
+> > 2.18.0
+> >
+
+
+
+-- 
+Ricardo Ribalda
