@@ -1,56 +1,63 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH] usb: core: phy: clean up return value check about
- devm_of_phy_get_by_index()
-Date: Fri, 31 Aug 2018 18:05:35 +0800
-Message-ID: <1535709935.32173.35.camel@mhfsdcap03>
-References: <258d57f5c8559c5fd3ba6d1ac1dcc5463737da2e.1535709096.git.chunfeng.yun@mediatek.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm64: dts: allwinner: h5: Add device
+ tree for Bananapi M2 Plus H5
+Date: Fri, 31 Aug 2018 12:17:42 +0200
+Message-ID: <20180831101742.3ybvf6d3refft454@flea>
+References: <20180830080926.15027-1-wens@csie.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <258d57f5c8559c5fd3ba6d1ac1dcc5463737da2e.1535709096.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Johan Hovold <johan@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ksm7qmedlgyr56ax"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSFLUTOAKGQE53WXPKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180830080926.15027-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-hi,
-Sorry, please ignore the patch, forgot version number
 
-On Fri, 2018-08-31 at 17:55 +0800, Chunfeng Yun wrote:
-> Use IS_ERR() instead of IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
-> never return NULL value;
-> But still need ignore the error of -ENODEV, for more information, please
-> refer to:
-> [0] https://lkml.org/lkml/2018/4/19/88
-> [1] https://patchwork.kernel.org/patch/10160181/
+--ksm7qmedlgyr56ax
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Thu, Aug 30, 2018 at 04:09:23PM +0800, Chen-Yu Tsai wrote:
+> Hi,
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
-> V4: modify the patch subject suggested by Johan
-> V3: abandon the ternary operator suggested by Johan
-> V2: keep the -ENODEV check
-> ---
+> Allwinner's H5 SoC is pin compatible with the H3 SoC. As such, some
+> vendors produce H3 and H5 variants for the same device. Such is the
+> case with Libre Computer's ALL-H3-CC, and the Bananapi M2 Plus.
 > 
->  drivers/usb/core/phy.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> This series follows that of the ALL-H3-CC, splitting out a common
+> board dtsi, and then two SoC-specific dts files that include the
+> SoC level and common board dtsi's, as well as putting in the board
+> name. The first patch is a minor fix that I think should be done
+> before the migration.
 > 
-> diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-> index 9879767..38b2c77 100644
-> --- a/drivers/usb/core/phy.c
-> +++ b/drivers/usb/core/phy.c
-> @@ -23,10 +23,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
->  				   struct list_head *list)
->  {
->  	struct usb_phy_roothub *roothub_entry;
-> -	struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-> +	struct phy *phy;
->  
-> -	if (IS_ERR_OR_NULL(phy)) {
-> -		if (!phy || PTR_ERR(phy) == -ENODEV)
-> +	phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
-> +	if (IS_ERR(phy)) {
-> +		if (PTR_ERR(phy) == -ENODEV)
->  			return 0;
->  		else
->  			return PTR_ERR(phy);
+> Please have a look.
+
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+
+> Also, on a related matter, Bananapi recently released revision v1.2
+> of the M2 Plus. The original commercially available version was v1.1.
+> v1.2 adds a GPIO control that can change the CPU cores' supply voltage
+> between 1.1V and 1.3V. Do we want two extra dts files for this? Put
+> them in the existing dts files regardless? Or let people handle this
+> via overlays?
+
+If that the sole change, I'd be inclined to merge it as a separate DT
+for that particular version. Is there any way to detect it at runtime?
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--ksm7qmedlgyr56ax--
