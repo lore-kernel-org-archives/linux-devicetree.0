@@ -1,68 +1,116 @@
-From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v4 3/6] arm64: dts: rockchip: add VPU device node for RK3399
-Date: Fri, 31 Aug 2018 12:41:10 -0300
-Message-ID: <20180831154113.18872-4-ezequiel@collabora.com>
-References: <20180831154113.18872-1-ezequiel@collabora.com>
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: Re: [PATCH v2 2/4] iio: gyro: add device tree support for fxas21002c
+Date: Fri, 31 Aug 2018 17:41:25 +0200
+Message-ID: <20180831154124.GB2679@arch>
+References: <20180830211825.12202-1-afonsobordado@az8.co>
+ <20180830211825.12202-2-afonsobordado@az8.co>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180831154113.18872-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180830211825.12202-2-afonsobordado@az8.co>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Afonso Bordado <afonsobordado@az8.co>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the Video Processing Unit node for the RK3399 SoC.
+On Thu, Aug 30, 2018 at 10:18:23PM +0100, Afonso Bordado wrote:
+> This patch adds device tree support for the fxas21002c driver, including
+> bindings.
+>
+> Signed-off-by: Afonso Bordado <afonsobordado@az8.co>
+> ---
+>  .../bindings/iio/gyroscope/fsl,fxas21002c.txt | 35 +++++++++++++++++++
+>  drivers/iio/gyro/fxas21002c.c                 | 13 ++++++-
+>  2 files changed, 47 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
+>
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
+> new file mode 100644
+> index 000000000000..2feda6da5566
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
+> @@ -0,0 +1,35 @@
+> +* Freescale FXAS21002C Digital Angular Rate Gyroscope
+> +
+> +Required properties:
+> +
+> +  - compatible: must be "fsl,fxas21002c"
+> +  - reg : the I2C address of the sensor
+> +
+> +Optional properties:
+> +
+> +  - interrupt-parent	: phandle to the parent interrupt controller.
+> +			  see interrupt-controller/interrupts.txt
+> +  - interrupts		: The first interrupt listed must be the one
+> +			  connected to the INT1 pin, the second interrupt
+> +			  listed must be the one connected to the INT2 pin.
+> +			  The interrupts can be triggered on rising or falling
+> +			  edges alike.
+> +			  see interrupt-controller/interrupts.txt
+> +  - vdd-supply		: The main voltage regulator
+> +  - iovdd-supply	: The IO voltage regulator
+> +			  see regulator/regulator.txt
+> +  - reset-gpios	: GPIO used to reset the device.
+> +			  see gpio/gpio.txt.
+> +  - mount-matrix	: see iio/mount-matrix.txt
+> +
+> +Example:
+> +gyroscope@0 {
 
-Also, fix the VPU IOMMU node, which was disabled and lacking
-its power domain property.
+By convention if node has a reg value then the address should be
+reflected in the node name as well. So i suggest renaming node to
+gyroscope@20.
 
-Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 6ba438427515..5dd840b3deb1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1231,6 +1231,18 @@
- 		status = "disabled";
- 	};
- 
-+	vpu: video-codec@ff650000 {
-+		compatible = "rockchip,rk3399-vpu";
-+		reg = <0x0 0xff650000 0x0 0x800>;
-+		interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "vepu", "vdpu";
-+		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
-+		clock-names = "aclk", "hclk";
-+		power-domains = <&power RK3399_PD_VCODEC>;
-+		iommus = <&vpu_mmu>;
-+	};
-+
- 	vpu_mmu: iommu@ff650800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff650800 0x0 0x40>;
-@@ -1238,8 +1250,8 @@
- 		interrupt-names = "vpu_mmu";
- 		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
- 		clock-names = "aclk", "iface";
-+		power-domains = <&power RK3399_PD_VCODEC>;
- 		#iommu-cells = <0>;
--		status = "disabled";
- 	};
- 
- 	vdec_mmu: iommu@ff660480 {
--- 
-2.18.0
+> +	compatible = "fsl,fxas21002c";
+> +	reg = <0x20>;
+> +	reset-gpios = <&gpio0 2 0>;
+> +	vdd-supply = <&vref>;
+> +	iovdd-supply = <&vref2>;
+> +	interrupt-parent = <&foo>;
+> +	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
+> +		     <1 (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING)>;
+> +};
+> diff --git a/drivers/iio/gyro/fxas21002c.c b/drivers/iio/gyro/fxas21002c.c
+> index 261b73629544..7471e9b80010 100644
+> --- a/drivers/iio/gyro/fxas21002c.c
+> +++ b/drivers/iio/gyro/fxas21002c.c
+> @@ -8,8 +8,10 @@
+>   * Datasheet: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
+>   * TODO:
+>   *        ODR / Scale Support
+> - *        Devicetree
+>   *        Power management
+> + *        GPIO Reset
+> + *        Power supplies
+> + *        Mount Matrix
+>   *        LowPass/HighPass Filters
+>   *        Buffers
+>   *        Interrupts
+> @@ -345,6 +347,14 @@ static int fxas21002c_probe(struct i2c_client *client,
+>  	return ret;
+>  }
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id fxas21002c_of_ids[] = {
+> +	{.compatible = "fsl,fxas21002c"},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, fxas21002c_of_ids);
+> +#endif
+> +
+>  static const struct i2c_device_id fxas21002c_id[] = {
+>  	{"fxas21002c", ID_FXAS21002C},
+>  	{}
+> @@ -355,6 +365,7 @@ MODULE_DEVICE_TABLE(i2c, fxas21002c_id);
+>  static struct i2c_driver fxas21002c_driver = {
+>  	.driver = {
+>  		.name = FXAS21002C_DRV_NAME,
+> +		.of_match_table = of_match_ptr(fxas21002c_of_ids),
+>  	},
+>  	.probe		= fxas21002c_probe,
+>  	.id_table	= fxas21002c_id,
+> --
+> 2.18.0
+>
+>
