@@ -1,32 +1,82 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 1/3] MIPS: jz4780: Allow access to jz4740-i2s
-Date: Fri, 31 Aug 2018 13:58:57 -0700
-Message-ID: <20180831205857.nb3ij3rzhfs2fu42@pburton-laptop>
-References: <20180606193811.16007-1-malat@debian.org>
- <20180724204757.qrgjttepzcfdzxlv@pburton-laptop>
- <20180831203752.37rsceiwotcmeses@pburton-laptop>
+From: Patrick Venture <venture@google.com>
+Subject: [PATCH v2 2/2] ARM: dts: aspeed: quanta-q71l: Add four PSUs
+Date: Fri, 31 Aug 2018 13:58:55 -0700
+Message-ID: <20180831205855.242061-1-venture@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180831203752.37rsceiwotcmeses@pburton-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>
-Cc: James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: venture@google.com, joel@jms.id.au, robh+dt@kernel.org, andrew@aj.id.au, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 01:37:52PM -0700, Paul Burton wrote:
-> Further to that, this series doesn't seem to work for me. With
-> v4.19-rc1, with the patch from [1] & then this series applied I see the
-> following when booting a ci20_defconfig kernel:
-> 
->   [    0.846684] ALSA device list:
->   [    0.849642]   No soundcards found.
+Enable the four PSUs via generic PMBUS.
 
-D'oh! Apparently I haven't drunk enough coffee today - missing link can
-be found below:
+Signed-off-by: Patrick Venture <venture@google.com>
+---
+Changes for v2:
+ - Fixed the commit header typo s/q7l1/q71l/
+---
+ arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-[1] https://www.spinics.net/lists/linux-gpio/msg31965.html
-
-Thanks,
-    Paul
+diff --git a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
+index 586050e1c0e6..c655564e6c6d 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
+@@ -318,24 +318,44 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
++
++			psu@59 {
++				compatible = "pmbus";
++				reg = <0x59>;
++			};
+ 		};
+ 
+ 		i2c_psu1: i2c@1 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
++
++			psu@58 {
++				compatible = "pmbus";
++				reg = <0x58>;
++			};
+ 		};
+ 
+ 		i2c_psu3: i2c@2 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <2>;
++
++			psu@58 {
++				compatible = "pmbus";
++				reg = <0x58>;
++			};
+ 		};
+ 
+ 		i2c_psu2: i2c@3 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <3>;
++
++			psu@59 {
++				compatible = "pmbus";
++				reg = <0x59>;
++			};
+ 		};
+ 	};
+ 
+-- 
+2.19.0.rc1.350.ge57e33dbd1-goog
