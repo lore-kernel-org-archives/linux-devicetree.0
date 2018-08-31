@@ -1,81 +1,76 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 12/13] ARM: dts: sun4i: a10: add
- sata-port/sata-phy nodes
-Date: Fri, 31 Aug 2018 12:21:10 +0200
-Message-ID: <20180831102110.pskz6jy47elwxguw@flea>
-References: <20180830190120.722-1-clabbe.montjoie@gmail.com>
- <20180830190120.722-13-clabbe.montjoie@gmail.com>
- <20180831073724.kuw5tb6yypb4pmkp@flea>
- <20180831075350.GA16301@Red>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH 0/7] spi: spi-mem: Add a driver for NXP FlexSPI controller
+Date: Fri, 31 Aug 2018 15:59:57 +0530
+Message-ID: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lbw4hb77urw3z3wt"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF5NUTOAKGQENCIVMIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180831075350.GA16301@Red>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+- Add a driver for NXP FlexSPI host controller
 
---lbw4hb77urw3z3wt
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+ FlexSPI is a flexsible SPI host controller [1], Chapter 30 page 1475,
+ which supports two SPI channels and up to 4 external devices.
+ Each channel supports Single/Dual/Quad/Octal mode data transfer (1/2/4/8 bidirectional data lines)
+ i.e. FlexSPI acts as an interface to external devices, maximum 4, each with up to 8
+ bidirectional data lines.
 
-On Fri, Aug 31, 2018 at 09:53:50AM +0200, Corentin Labbe wrote:
-> On Fri, Aug 31, 2018 at 09:37:24AM +0200, Maxime Ripard wrote:
-> > On Thu, Aug 30, 2018 at 09:01:19PM +0200, Corentin Labbe wrote:
-> > > This patch convert sun4i-a10 sata to the new binding which use a sata
-> > > phy node.
-> > > 
-> > > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  arch/arm/boot/dts/sun4i-a10.dtsi | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-> > > index 3d62a8950720..52d5c2e79499 100644
-> > > --- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> > > +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> > > @@ -556,7 +556,20 @@
-> > >  			reg = <0x01c18000 0x1000>;
-> > >  			interrupts = <56>;
-> > >  			clocks = <&ccu CLK_AHB_SATA>, <&ccu CLK_SATA>;
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <0>;
-> > >  			status = "disabled";
-> > > +
-> > > +			sata_port: sata-port@0 {
-> > > +				reg = <0>;
-> > > +				phys = <&sata_phy>;
-> > > +			};
-> > > +		};
-> > > +
-> > > +		sata_phy: sata_phy@1c180c0 {
-> > > +			compatible = "allwinner,sun4i-a10-sata-phy";
-> > > +			reg = <0x01c180c0 0x200>;
-> > > +			#phy-cells = <0>;
-> > >  		};
-> > 
-> > This patch, together with the following one, breaks the DT ABI, this
-> > isn't something we can do anymore.
-> 
-> So what can I do ?
+ FlexSPI controller is similar to the existing Freescale/NXP QuadSPI
+ controller with advanced features.
 
-Well, you always have the option of not doing anything.
+- Tested this driver with mtd_debug(Erase/Write/Read) utility and JFFS2
+ filesystem mounting and booting on NXP LX2160ARDB[2] and LX2160AQDS targets.
+ LX2160ARDB is having two NOR slave device connected on single bus A
+ i.e. A0 and A1 (CS0 and CS1).
+ LX2160AQDS is having two NOR slave device connected on separate buses
+ one flash on A0 and second on B1 i.e. (CS0 and CS3).
+ Verified this driver on following SPI NOR flashes:
+    Micron, mt35xu512aba[3], [Read - 1 bit mode]
+    Cypress, s25fl512s, [Read - 1/2/4 bit mode]
 
-Maxime
+Patch 1 adds variable size in spi_device struct, to save the
+size of connected slave device.
+Patch 2 adds flags for octal I/O data transfer.
+Support for octal flash commands and other framework changes would going to be done in different
+patch set.
+Patch 3 adds a driver for the NXP FlexSPI controller, driver is based on
+new spi-mem framework.
+Patch 4 add binding file for this driver.
+Patch 5 add device node property for FlexSPI driver for lx2160 SoC.
+Patch 6 enables the config option.
+Patch 7 add MAINTAINERS file.
+
+[1] https://www.nxp.com/docs/en/reference-manual/IMXRT1050RM.pdf
+[2] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=9721
+[3] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=63445
+
+This series adds below patches:
+Yogesh Gaur (7):
+  spi: add slave device size in spi_device struct
+  spi: add flags for octal I/O data transfer
+  spi: spi-mem: Add a driver for NXP FlexSPI controller
+  dt-bindings: spi: add binding file for NXP FlexSPI driver
+  arm64: dts: lx2160a: add fspi node property
+  arm64: defconfig: enable NXP FlexSPI driver
+  MAINTAINERS: add maintainers for the NXP FlexSPI driver
+
+ .../devicetree/bindings/spi/spi-nxp-fspi.txt       |   42 +
+ MAINTAINERS                                        |    6 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts  |   21 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |   12 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/mtd/devices/m25p80.c                       |    6 +
+ drivers/mtd/spi-nor/spi-nor.c                      |    2 +
+ drivers/spi/Kconfig                                |   10 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-nxp-fspi.c                         | 1242 ++++++++++++++++++++
+ include/linux/spi/spi.h                            |    4 +
+ 11 files changed, 1347 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+ create mode 100644 drivers/spi/spi-nxp-fspi.c
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---lbw4hb77urw3z3wt--
+2.7.4
