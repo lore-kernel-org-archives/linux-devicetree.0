@@ -1,86 +1,148 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 25/30] ARM: dts: sun8i: h3: add thermal
- zone to H3
-Date: Fri, 31 Aug 2018 11:14:05 +0200
-Message-ID: <20180831091405.qr5daepgmx3otq7m@flea>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-26-embed3d@gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 RESEND 2/2] phy: add Rockchip Innosilicon hdmi phy
+Date: Fri, 31 Aug 2018 11:26:01 +0200
+Message-ID: <21954745.lUUHsRAzaY@diego>
+References: <20180710134949.25203-1-heiko@sntech.de>
+ <a0a84907-c51f-b484-33fa-592a23c756f9@ti.com> <4194245.uYZyAYm7Hd@phil>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dnpyaz3qnlascrvt"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXUNUTOAKGQEAJAWRQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180830154518.29507-26-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4194245.uYZyAYm7Hd@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-
---dnpyaz3qnlascrvt
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Thu, Aug 30, 2018 at 05:45:13PM +0200, Philipp Rossak wrote:
-> This patch adds the thermal zones to the H3. We have only one sensor and
-> that is placed in the cpu.
+Am Dienstag, 14. August 2018, 14:52:00 CEST schrieb Heiko Stuebner:
+> Hi Kishon,
 > 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi    | 31 +++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/sunxi-h3-h5.dtsi |  1 +
->  2 files changed, 32 insertions(+)
+> thanks for your review.
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index 5b7994cb1471..954848d5df50 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -78,6 +78,8 @@
->  			clock-names = "cpu";
->  			operating-points-v2 = <&cpu0_opp_table>;
->  			#cooling-cells = <2>;
-> +			cooling-min-level = <0>;
-> +			cooling-max-level = <15>;
->  		};
->  
->  		cpu@1 {
-> @@ -102,6 +104,35 @@
->  		};
->  	};
->  
-> +	thermal-zones {
-> +		cpu-thermal {
-> +			/* milliseconds */
-> +			polling-delay-passive = <250>;
-> +			polling-delay = <1000>;
-> +			thermal-sensors = <&ths>;
-> +
-> +			trips {
-> +				cpu_hot_trip: cpu-warm {
-> +					temperature = <65000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +				cpu_very_hot_trip: cpu-very-hot {
-> +					temperature = <90000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
+> Am Freitag, 3. August 2018, 11:24:06 CEST schrieb Kishon Vijay Abraham I:
+> > On Tuesday 10 July 2018 07:19 PM, Heiko Stuebner wrote:
+> > > +config PHY_ROCKCHIP_INNO_HDMI
+> > > +	tristate "Rockchip INNO HDMI PHY Driver"
+> > > +	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
+> > 
+> > depends on COMMON_CLK since the phy registers a clock provider?
+> 
+> ok
+> 
+> > > +static const struct phy_config rk3228_phy_cfg[] = {
+> > > +	{	165000000, {
+> > > +			0xaa, 0x00, 0x44, 0x44, 0x00, 0x00, 0x00, 0x00, 0x00,
+> > > +			0x00, 0x00, 0x00, 0x00, 0x00,
+> > 
+> > If these register configurations are not a tuning value or dividers (which
+> > can have absolute values), then we should have macros for each of these
+> > configurations.
+> That might get difficult.
+> 
+> That phy register set is completely undocumented even in the vendor TRMs
+> of the 2 socs. I pieced together most existing macros from code comments
+> and such from the vendor kernel. And Innosilicon is not known to willingly
+> share much of their register documentation it seems.
+> 
+> > > +static unsigned long inno_hdmi_phy_get_tmdsclk(struct inno_hdmi_phy
+> > > *inno,
+> > > +					       unsigned long rate)
+> > > +{
+> > > +	int bus_width = phy_get_bus_width(inno->phy);
+> > 
+> > hmm, the bus_width could be a member of struct inno_hdmi_phy. PHY API's
+> > don't have to be used for getting data within the PHY driver itself.
+> > Looking at the phy_get_bus_width() implementation, we should have
+> > protected
+> > bus-width set and get with mutex. With that there might be a deadlock
+> > here.
+> 
+> ok, so just read phy->attrs.bus_width directly here?
+> 
+> I don't see how this can be part of struct inno_hdmi_phy, as the bus-width
+> depends on the color-depth used on the hdmi-controller side, so
+> depending on that it will want to adapt the phy's bus_width.
+> 
+> Right now our dw_hdmi in mainline only supports one output format
+> requiring a bus_width of 8, but the vendor kernel shows [0] how this
+> wants to be used with multiple output formats.
+> 
+> [0]
+> https://github.com/rockchip-linux/kernel/blob/release-4.4/drivers/gpu/drm/r
+> ockchip/dw_hdmi-rockchip.c#L817
+> > > +static irqreturn_t inno_hdmi_phy_rk3328_irq(int irq, void *dev_id)
+> > > +{
+> > > +	struct inno_hdmi_phy *inno = dev_id;
+> > > +
+> > > +	inno_update_bits(inno, 0x02, RK3328_PDATA_EN, 0);
+> > > +	usleep_range(9, 10);
+> > 
+> > This range looks very narrow. 10 to 20 should be okay?
+> 
+> ok
+> 
+> > > +static void inno_hdmi_phy_action(void *data)
+> > > +{
+> > > +	struct inno_hdmi_phy *inno = data;
+> > > +
+> > > +	clk_disable_unprepare(inno->refpclk);
+> > > +	clk_disable_unprepare(inno->sysclk);
+> > > +}
+> > > +
+> > > +static int inno_hdmi_phy_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct inno_hdmi_phy *inno;
+> > > +	const struct of_device_id *match;
+> > > +	struct phy_provider *phy_provider;
+> > > +	struct resource *res;
+> > > +	void __iomem *regs;
+> > > +	int ret;
+> > > +
+> 
+> [...]
+> 
+> > > +	/*
+> > > +	 * Refpclk needs to be on, on at least the rk3328 for still
+> > > +	 * unknown reasons.
+> > > +	 */
+> > > +	ret = clk_prepare_enable(inno->refpclk);
+> > > +	if (ret) {
+> > > +		dev_err(inno->dev, "failed to enable refpclk\n");
+> > > +		clk_disable_unprepare(inno->sysclk);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = devm_add_action_or_reset(inno->dev, inno_hdmi_phy_action,
+> > > +				       inno);
+> > > +	if (ret) {
+> > > +		clk_disable_unprepare(inno->refpclk);
+> > > +		clk_disable_unprepare(inno->sysclk);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	inno->regmap = devm_regmap_init_mmio(inno->dev, regs,
+> > > +					     &inno_hdmi_phy_regmap_config);
+> > > +	if (IS_ERR(inno->regmap))
+> > 
+> > here too clk_disable_unprepare and all error handling below?
+> > It's better if we just handle error handling at the bottom of the
+> > function.
+> 
+> Nope ;-) ... I.e. the goal of registering the devm_action above is to have
+> the clocks get disabled in the correct order when devm undoes the other
+> things in sequence.
+> 
+> Manual error handling for the clocks would also break devm, as then
+> the clocks would get disabled before the devm cleanup kicks in.
 
-Where are those trip points coming from?
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---dnpyaz3qnlascrvt--
+but I just realized, that I don't need the initial disable_unprepare calls
+anymore as well, as devm_add_action_or_reset will call that itself
+in the error case.
