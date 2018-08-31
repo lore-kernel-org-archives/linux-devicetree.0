@@ -1,156 +1,351 @@
-Return-Path: <SRS0=wqls=LK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:54440 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726872AbeH0NPy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 27 Aug 2018 09:15:54 -0400
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2 00/23] V4L2 fwnode rework; support for default configuration
-Date: Mon, 27 Aug 2018 12:29:37 +0300
-Message-Id: <20180827093000.29165-1-sakari.ailus@linux.intel.com>
+Return-Path: <SRS0=WyUm=LO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51444 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727303AbeHaTXm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 31 Aug 2018 15:23:42 -0400
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH 1/3] ARM: dts: am33xx: convert to use new clkctrl layout
+Date: Fri, 31 Aug 2018 18:14:49 +0300
+Message-ID: <1535728491-25321-2-git-send-email-t-kristo@ti.com>
+In-Reply-To: <1535728491-25321-1-git-send-email-t-kristo@ti.com>
+References: <1535728491-25321-1-git-send-email-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, jacopo@jmondi.org
+To: tony@atomide.com, linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hello everyone,
+Convert AM33xx to use the new clockdomain based layout. Previously the
+clkctrl split was based on CM instance boundaries. The new layout
+helps with introducing the interconnect driver instances.
 
-I've long thought the V4L2 fwnode framework requires some work (it's buggy
-and it does not adequately serve common needs). This set should address in
-particular these matters:
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi   |   2 +-
+ arch/arm/boot/dts/am335x-boneblue.dts       |   2 +-
+ arch/arm/boot/dts/am335x-evm.dts            |   2 +-
+ arch/arm/boot/dts/am335x-evmsk.dts          |   2 +-
+ arch/arm/boot/dts/am335x-osd3358-sm-red.dts |   2 +-
+ arch/arm/boot/dts/am33xx-clocks.dtsi        | 110 +++++++++++++++++++++-------
+ arch/arm/boot/dts/am33xx.dtsi               |   2 +-
+ 7 files changed, 88 insertions(+), 34 deletions(-)
 
-- Most devices support a particular media bus type but the V4L2 fwnode
-  framework was not able to use such information, but instead tried to
-  guess the bus type with varying levels of success while drivers
-  generally ignored the results. This patchset makes that possible ---
-  setting a bus type enables parsing configuration for only that bus.
-  Failing that check results in returning -ENXIO to be returned.
-
-- Support specifying default configuration. If the endpoint has no
-  configuration, the defaults set by the driver (as documented in DT
-  bindings) will prevail. Any available configuration will still be read
-  from the endpoint as one could expect. A common use case for this is
-  e.g. the number of CSI-2 lanes. Few devices support lane mapping, and
-  default 1:1 mapping is provided in absence of a valid default or
-  configuration read OF.
-
-- Debugging information is greatly improved.
-
-- Recognition of the differences between CSI-2 D-PHY and C-PHY. All
-  currently supported hardware (or at least drivers) is D-PHY only, so
-  this change is still easy.
-
-The smiapp driver is converted to use the new functionality. This patchset
-does not address remaining issues such as supporting setting defaults for
-e.g. bridge drivers with multiple ports, but with Steve Longerbeam's
-patchset we're much closer to that goal. I've rebased this set on top of
-Steve's. Albeit the two deal with the same files, there were only a few
-trivial conflicts.
-
-Note that I've only tested parsing endpoints for the CSI-2 bus (no
-parallel IF hardware). Jacopo has tested an earlier version of the set
-with a few changes to the parallel bus handling compared to this one.
-
-Comments are welcome.
-
-I've pushed the patches (including Steve's) here:
-
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-fwnode-next>
-
-since v1:
-
-- Rebase it all on current media tree master --- there was a conflict in
-  drivers/media/platform/qcom/camss/camss.c in Steve's patch "media:
-  platform: Switch to v4l2_async_notifier_add_subdev"; I hope the
-  resolution was fine.
-
-- Default to Bt.656 bus in guessing the bus type if no properties
-  suggesting otherwise are set. In v1 and error was returned, which would
-  have been troublesome for the existing drivers.
-
-- Set the bus_type field to zero (i.e. guess) for existing callers of
-  v4l2_fwnode_endpoint_(alloc_)parse.
-
-- Improved documentation for v4l2_fwnode_endpoint_parse and
-  v4l2_fwnode_endpoint_alloc_parse.
-
-Sakari Ailus (23):
-  v4l: fwnode: Add debug prints for V4L2 endpoint property parsing
-  v4l: fwnode: Use fwnode_graph_for_each_endpoint
-  v4l: fwnode: The CSI-2 clock is continuous if it's not non-continuous
-  dt-bindings: media: Specify bus type for MIPI D-PHY, others,
-    explicitly
-  v4l: fwnode: Add definitions for CSI-2 D-PHY, parallel and Bt.656
-    busses
-  v4l: mediabus: Recognise CSI-2 D-PHY and C-PHY
-  v4l: fwnode: Let the caller provide V4L2 fwnode endpoint
-  v4l: fwnode: Detect bus type correctly
-  v4l: fwnode: Make use of newly specified bus types
-  v4l: fwnode: Read lane inversion information despite lane numbering
-  v4l: fwnode: Only assign configuration if there is no error
-  v4l: fwnode: Support driver-defined lane mapping defaults
-  v4l: fwnode: Support default CSI-2 lane mapping for drivers
-  v4l: fwnode: Parse the graph endpoint as last
-  v4l: fwnode: Use default parallel flags
-  v4l: fwnode: Initialise the V4L2 fwnode endpoints to zero
-  v4l: fwnode: Only zero the struct if bus type is set to
-    V4L2_MBUS_UNKNOWN
-  v4l: fwnode: Use media bus type for bus parser selection
-  v4l: fwnode: Print bus type
-  v4l: fwnode: Use V4L2 fwnode endpoint media bus type if set
-  v4l: fwnode: Support parsing of CSI-2 C-PHY endpoints
-  v4l: fwnode: Update V4L2 fwnode endpoint parsing documentation
-  smiapp: Query the V4L2 endpoint for a specific bus type
-
- .../devicetree/bindings/media/video-interfaces.txt |   4 +-
- drivers/gpu/ipu-v3/ipu-csi.c                       |   2 +-
- drivers/media/i2c/adv7180.c                        |   2 +-
- drivers/media/i2c/adv7604.c                        |   2 +-
- drivers/media/i2c/mt9v032.c                        |   2 +-
- drivers/media/i2c/ov2659.c                         |  14 +-
- drivers/media/i2c/ov5640.c                         |   4 +-
- drivers/media/i2c/ov5645.c                         |   2 +-
- drivers/media/i2c/ov5647.c                         |   2 +-
- drivers/media/i2c/ov7251.c                         |   4 +-
- drivers/media/i2c/ov7670.c                         |   2 +-
- drivers/media/i2c/s5c73m3/s5c73m3-core.c           |   4 +-
- drivers/media/i2c/s5k5baf.c                        |   6 +-
- drivers/media/i2c/s5k6aa.c                         |   2 +-
- drivers/media/i2c/smiapp/smiapp-core.c             |  34 +-
- drivers/media/i2c/soc_camera/ov5642.c              |   2 +-
- drivers/media/i2c/tc358743.c                       |  28 +-
- drivers/media/i2c/tda1997x.c                       |   2 +-
- drivers/media/i2c/tvp514x.c                        |   2 +-
- drivers/media/i2c/tvp5150.c                        |   2 +-
- drivers/media/i2c/tvp7002.c                        |   2 +-
- drivers/media/pci/intel/ipu3/ipu3-cio2.c           |   2 +-
- drivers/media/platform/am437x/am437x-vpfe.c        |   2 +-
- drivers/media/platform/atmel/atmel-isc.c           |   3 +-
- drivers/media/platform/atmel/atmel-isi.c           |   2 +-
- drivers/media/platform/cadence/cdns-csi2rx.c       |   4 +-
- drivers/media/platform/cadence/cdns-csi2tx.c       |   4 +-
- drivers/media/platform/davinci/vpif_capture.c      |   2 +-
- drivers/media/platform/exynos4-is/media-dev.c      |   2 +-
- drivers/media/platform/exynos4-is/mipi-csis.c      |   2 +-
- drivers/media/platform/marvell-ccic/mcam-core.c    |   4 +-
- drivers/media/platform/marvell-ccic/mmp-driver.c   |   2 +-
- drivers/media/platform/omap3isp/isp.c              |   2 +-
- drivers/media/platform/pxa_camera.c                |   4 +-
- drivers/media/platform/rcar-vin/rcar-csi2.c        |   4 +-
- drivers/media/platform/renesas-ceu.c               |   3 +-
- drivers/media/platform/soc_camera/soc_mediabus.c   |   2 +-
- drivers/media/platform/stm32/stm32-dcmi.c          |   4 +-
- drivers/media/platform/ti-vpe/cal.c                |   2 +-
- drivers/media/v4l2-core/v4l2-fwnode.c              | 508 ++++++++++++++++-----
- drivers/staging/media/imx/imx-media-csi.c          |   2 +-
- drivers/staging/media/imx/imx6-mipi-csi2.c         |   2 +-
- drivers/staging/media/imx074/imx074.c              |   2 +-
- include/media/v4l2-fwnode.h                        |  60 ++-
- include/media/v4l2-mediabus.h                      |   8 +-
- 45 files changed, 536 insertions(+), 220 deletions(-)
-
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 73b514d..2a9fb3d 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -415,6 +415,6 @@
+ };
+ 
+ &rtc {
+-	clocks = <&clk_32768_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 	clock-names = "ext-clk", "int-clk";
+ };
+diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
+index 7bcd726..ccb147e 100644
+--- a/arch/arm/boot/dts/am335x-boneblue.dts
++++ b/arch/arm/boot/dts/am335x-boneblue.dts
+@@ -515,7 +515,7 @@
+ 
+ &rtc {
+ 	system-power-controller;
+-	clocks = <&clk_32768_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 	clock-names = "ext-clk", "int-clk";
+ };
+ 
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index c87d012..b1ff868 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -797,6 +797,6 @@
+ };
+ 
+ &rtc {
+-	clocks = <&clk_32768_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 	clock-names = "ext-clk", "int-clk";
+ };
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index bf1a40e..012db5a 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -730,6 +730,6 @@
+ };
+ 
+ &rtc {
+-	clocks = <&clk_32768_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 	clock-names = "ext-clk", "int-clk";
+ };
+diff --git a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
+index 4d96901..427e9ca 100755
+--- a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
++++ b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
+@@ -452,6 +452,6 @@
+ };
+ 
+ &rtc {
+-	clocks = <&clk_32768_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++	clocks = <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 	clock-names = "ext-clk", "int-clk";
+ };
+diff --git a/arch/arm/boot/dts/am33xx-clocks.dtsi b/arch/arm/boot/dts/am33xx-clocks.dtsi
+index 95d5c9d..9221824 100644
+--- a/arch/arm/boot/dts/am33xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am33xx-clocks.dtsi
+@@ -334,49 +334,49 @@
+ 	timer1_fck: timer1_fck@528 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>, <&tclkin_ck>, <&clk_rc32k_ck>, <&clk_32768_ck>;
++		clocks = <&sys_clkin_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>, <&tclkin_ck>, <&clk_rc32k_ck>, <&clk_32768_ck>;
+ 		reg = <0x0528>;
+ 	};
+ 
+ 	timer2_fck: timer2_fck@508 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 		reg = <0x0508>;
+ 	};
+ 
+ 	timer3_fck: timer3_fck@50c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 		reg = <0x050c>;
+ 	};
+ 
+ 	timer4_fck: timer4_fck@510 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 		reg = <0x0510>;
+ 	};
+ 
+ 	timer5_fck: timer5_fck@518 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 		reg = <0x0518>;
+ 	};
+ 
+ 	timer6_fck: timer6_fck@51c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 		reg = <0x051c>;
+ 	};
+ 
+ 	timer7_fck: timer7_fck@504 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++		clocks = <&tclkin_ck>, <&sys_clkin_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 		reg = <0x0504>;
+ 	};
+ 
+@@ -407,7 +407,7 @@
+ 	wdt1_fck: wdt1_fck@538 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&clk_rc32k_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++		clocks = <&clk_rc32k_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 		reg = <0x0538>;
+ 	};
+ 
+@@ -477,7 +477,7 @@
+ 	gpio0_dbclk_mux_ck: gpio0_dbclk_mux_ck@53c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
+-		clocks = <&clk_rc32k_ck>, <&clk_32768_ck>, <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++		clocks = <&clk_rc32k_ck>, <&clk_32768_ck>, <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 		reg = <0x053c>;
+ 	};
+ 
+@@ -539,86 +539,140 @@
+ };
+ 
+ &prcm {
+-	l4_per_cm: l4_per_cm@0 {
++	per_cm: per-cm@0 {
+ 		compatible = "ti,omap4-cm";
+-		reg = <0x0 0x200>;
++		reg = <0x0 0x400>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		ranges = <0 0x0 0x200>;
++		ranges = <0 0x0 0x400>;
+ 
+-		l4_per_clkctrl: clk@14 {
++		l4ls_clkctrl: l4ls-clkctrl@38 {
+ 			compatible = "ti,clkctrl";
+-			reg = <0x14 0x13c>;
++			reg = <0x38 0x2c>, <0x6c 0x28>, <0xac 0xc>, <0xc0 0x1c>, <0xec 0xc>, <0x10c 0x8>, <0x130 0x4>;
++			#clock-cells = <2>;
++		};
++
++		l3s_clkctrl: l3s-clkctrl@1c {
++			compatible = "ti,clkctrl";
++			reg = <0x1c 0x4>, <0x30 0x8>, <0x68 0x4>, <0xf8 0x4>;
++			#clock-cells = <2>;
++		};
++
++		l3_clkctrl: l3-clkctrl@24 {
++			compatible = "ti,clkctrl";
++			reg = <0x24 0xc>, <0x94 0x10>, <0xbc 0x4>, <0xdc 0x8>, <0xfc 0x8>;
++			#clock-cells = <2>;
++		};
++
++		l4hs_clkctrl: l4hs-clkctrl@120 {
++			compatible = "ti,clkctrl";
++			reg = <0x120 0x4>;
++			#clock-cells = <2>;
++		};
++
++		pruss_ocp_clkctrl: pruss-ocp-clkctrl@e8 {
++			compatible = "ti,clkctrl";
++			reg = <0xe8 0x4>;
++			#clock-cells = <2>;
++		};
++
++		cpsw_125mhz_clkctrl: cpsw-125mhz-clkctrl@0 {
++			compatible = "ti,clkctrl";
++			reg = <0x0 0x18>;
++			#clock-cells = <2>;
++		};
++
++		lcdc_clkctrl: lcdc-clkctrl@18 {
++			compatible = "ti,clkctrl";
++			reg = <0x18 0x4>;
++			#clock-cells = <2>;
++		};
++
++		clk_24mhz_clkctrl: clk-24mhz-clkctrl@14c {
++			compatible = "ti,clkctrl";
++			reg = <0x14c 0x4>;
+ 			#clock-cells = <2>;
+ 		};
+ 	};
+ 
+-	l4_wkup_cm: l4_wkup_cm@400 {
++	wkup_cm: wkup-cm@400 {
+ 		compatible = "ti,omap4-cm";
+ 		reg = <0x400 0x100>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0x400 0x100>;
+ 
+-		l4_wkup_clkctrl: clk@4 {
++		l4_wkup_clkctrl: l4-wkup-clkctrl@0 {
++			compatible = "ti,clkctrl";
++			reg = <0x0 0x10>, <0xb4 0x24>;
++			#clock-cells = <2>;
++		};
++
++		l3_aon_clkctrl: l3-aon-clkctrl@14 {
++			compatible = "ti,clkctrl";
++			reg = <0x14 0x4>;
++			#clock-cells = <2>;
++		};
++
++		l4_wkup_aon_clkctrl: l4-wkup-aon-clkctrl@b0 {
+ 			compatible = "ti,clkctrl";
+-			reg = <0x4 0xd4>;
++			reg = <0xb0 0x4>;
+ 			#clock-cells = <2>;
+ 		};
+ 	};
+ 
+-	mpu_cm: mpu_cm@600 {
++	mpu_cm: mpu-cm@600 {
+ 		compatible = "ti,omap4-cm";
+ 		reg = <0x600 0x100>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0x600 0x100>;
+ 
+-		mpu_clkctrl: clk@4 {
++		mpu_clkctrl: mpu-clkctrl@0 {
+ 			compatible = "ti,clkctrl";
+-			reg = <0x4 0x4>;
++			reg = <0x0 0x8>;
+ 			#clock-cells = <2>;
+ 		};
+ 	};
+ 
+-	l4_rtc_cm: l4_rtc_cm@800 {
++	l4_rtc_cm: l4-rtc-cm@800 {
+ 		compatible = "ti,omap4-cm";
+ 		reg = <0x800 0x100>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0x800 0x100>;
+ 
+-		l4_rtc_clkctrl: clk@0 {
++		l4_rtc_clkctrl: l4-rtc-clkctrl@0 {
+ 			compatible = "ti,clkctrl";
+ 			reg = <0x0 0x4>;
+ 			#clock-cells = <2>;
+ 		};
+ 	};
+ 
+-	gfx_l3_cm: gfx_l3_cm@900 {
++	gfx_l3_cm: gfx-l3-cm@900 {
+ 		compatible = "ti,omap4-cm";
+ 		reg = <0x900 0x100>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0x900 0x100>;
+ 
+-		gfx_l3_clkctrl: clk@4 {
++		gfx_l3_clkctrl: gfx-l3-clkctrl@0 {
+ 			compatible = "ti,clkctrl";
+-			reg = <0x4 0x4>;
++			reg = <0x0 0x8>;
+ 			#clock-cells = <2>;
+ 		};
+ 	};
+ 
+-	l4_cefuse_cm: l4_cefuse_cm@a00 {
++	l4_cefuse_cm: l4-cefuse-cm@a00 {
+ 		compatible = "ti,omap4-cm";
+ 		reg = <0xa00 0x100>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0xa00 0x100>;
+ 
+-		l4_cefuse_clkctrl: clk@20 {
++		l4_cefuse_clkctrl: l4-cefuse-clkctrl@0 {
+ 			compatible = "ti,clkctrl";
+-			reg = <0x20 0x4>;
++			reg = <0x0 0x24>;
+ 			#clock-cells = <2>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index d3dd6a1..44240c7 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -581,7 +581,7 @@
+ 			interrupts = <75
+ 				      76>;
+ 			ti,hwmods = "rtc";
+-			clocks = <&l4_per_clkctrl AM3_CLKDIV32K_CLKCTRL 0>;
++			clocks = <&clk_24mhz_clkctrl AM3_CLK_24MHZ_CLKDIV32K_CLKCTRL 0>;
+ 			clock-names = "int-clk";
+ 		};
+ 
 -- 
-2.11.0
+1.9.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
