@@ -1,18 +1,17 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 07/30] iio: adc: remove mfd_probe &
- sunwi_irq_init function
-Date: Fri, 31 Aug 2018 10:34:00 +0200
-Message-ID: <20180831083400.fobo2c7w22fspyf4@flea>
+Subject: Re: [PATCH v3 08/30] iio: adc: remove hwmon structure
+Date: Fri, 31 Aug 2018 10:34:36 +0200
+Message-ID: <20180831083436.prcidrdli7gdtb45@flea>
 References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-8-embed3d@gmail.com>
+ <20180830154518.29507-9-embed3d@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zsi43eonrbj3zyck"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBA73UPOAKGQETXH6ZZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="hrgudpzhyfwmlswe"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJ73UPOAKGQEDKGYMAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180830154518.29507-8-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20180830154518.29507-9-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,18 +23,17 @@ Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 List-Id: devicetree@vger.kernel.org
 
 
---zsi43eonrbj3zyck
+--hrgudpzhyfwmlswe
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Thu, Aug 30, 2018 at 05:44:55PM +0200, Philipp Rossak wrote:
-> In the previous commit we removed the function call, now we remove the
-> unused functions.
+On Thu, Aug 30, 2018 at 05:44:56PM +0200, Philipp Rossak wrote:
+> We remove the hwmon structure that was requiered for the mfd driver.
 > 
 > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-This will create a warning between the two commits, it should be
-merged in the previous patch.
+Same thing here, you should merge that in the commit that removes the
+probe_mfd call.
 
 Maxime
 
@@ -43,4 +41,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---zsi43eonrbj3zyck--
+--hrgudpzhyfwmlswe--
