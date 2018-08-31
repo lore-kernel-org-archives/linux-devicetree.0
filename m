@@ -1,43 +1,37 @@
-Return-Path: <SRS0=RcEj=LO=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: imx-lpi2c: Remove mx8dv compatible entry
-Date: Fri, 31 Aug 2018 10:24:14 -0300
-Message-Id: <1535721855-5595-1-git-send-email-festevam@gmail.com>
-To: wsa@the-dreams.de
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-imx@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 2/3] dt-bindings: usb: renesas_usbhs: add clock-names property
+Date: Fri, 31 Aug 2018 19:32:58 +0900
+Message-Id: <1535711579-15169-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1535711579-15169-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1535711579-15169-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+R-Car Gen3 needs to enable clocks of both host and peripheral.
+Otherwise, other side device cannot work correctly. So, this patch
+adds a property of clock-names for R-Car Gen3 as an optional.
 
-mx8dv never entered into production and there is no other place
-in the kernel referring to this SoC, so remove it from the
-dt bindings documentation.
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
-index 00e4365..091c8df 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
-@@ -3,7 +3,6 @@
- Required properties:
- - compatible :
-   - "fsl,imx7ulp-lpi2c" for LPI2C compatible with the one integrated on i.MX7ULP soc
--  - "fsl,imx8dv-lpi2c" for LPI2C compatible with the one integrated on i.MX8DV soc
- - reg : address and length of the lpi2c master registers
- - interrupts : lpi2c interrupt
- - clocks : lpi2c clock specifier
-@@ -11,7 +10,7 @@ Required properties:
- Examples:
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index 087140a..a8fa3ec 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -37,6 +37,8 @@ Optional properties:
+   - dmas: Must contain a list of references to DMA specifiers.
+   - dma-names : named "ch%d", where %d is the channel number ranging from zero
+                 to the number of channels (DnFIFOs) minus one.
++  - clock-names: For a "renesas,rcar-gen3-usbhs" compatible device,
++		 "hsusb" and "ehci/ohci" can be set.
  
- lpi2c7: lpi2c7@40a50000 {
--	compatible = "fsl,imx8dv-lpi2c";
-+	compatible = "fsl,imx7ulp-lpi2c";
- 	reg = <0x40A50000 0x10000>;
- 	interrupt-parent = <&intc>;
- 	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+ Example:
+ 	usbhs: usb@e6590000 {
 -- 
-2.7.4
+1.9.1
