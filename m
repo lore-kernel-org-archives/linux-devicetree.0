@@ -1,68 +1,55 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 3/3] ARM: dts: NSP: Wire up switch interrupts
-Date: Fri, 31 Aug 2018 12:20:39 -0700
-Message-ID: <20180831192039.11842-4-f.fainelli@gmail.com>
-References: <20180831192039.11842-1-f.fainelli@gmail.com>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/4] media: platform: Add Aspeed Video Engine driver
+Date: Fri, 31 Aug 2018 14:30:02 -0500
+Message-ID: <a959a032-6817-dcb4-2c5f-b4bd17fc1c8b@linux.vnet.ibm.com>
+References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <153573819126.93865.1884182656081956202@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831192039.11842-1-f.fainelli@gmail.com>
+In-Reply-To: <153573819126.93865.1884182656081956202@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM
-        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, andrew@lunn.ch, rmk+kernel@armlinux.org.uk
+To: Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, andrew@aj.id.au, mchehab@kernel.org, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Switch Register Access Block (SRAB) has one interrupt for link state
-change on each ports (0-5, 7-8) a PHY interrupt, timestamping interrupt
-and sleep timer interrupts for each management ports (5,7,8). Wire those
-up so we can utilize them to speed up link resolution.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 09ba85046322..ec869a80f9ba 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -377,7 +377,36 @@
- 
- 		srab: srab@36000 {
- 			compatible = "brcm,nsp-srab";
--			reg = <0x36000 0x1000>;
-+			reg = <0x36000 0x1000>,
-+			      <0x3f308 0x8>,
-+			      <0x3f410 0xc>;
-+			reg-names = "srab", "mux_config", "sgmii";
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "link_state_p0",
-+					  "link_state_p1",
-+					  "link_state_p2",
-+					  "link_state_p3",
-+					  "link_state_p4",
-+					  "link_state_p5",
-+					  "link_state_p7",
-+					  "link_state_p8",
-+					  "phy",
-+					  "ts",
-+					  "imp_sleep_timer_p5",
-+					  "imp_sleep_timer_p7",
-+					  "imp_sleep_timer_p8";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 
--- 
-2.17.1
+On 08/31/2018 12:56 PM, Stephen Boyd wrote:
+> Quoting Eddie James (2018-08-29 14:09:29)
+>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+>> can capture and compress video data from digital or analog sources. With
+>> the Aspeed chip acting as a service processor, the Video Engine can
+>> capture the host processor graphics output.
+>>
+>> This series adds a V4L2 driver for the VE, providing a read() interface
+>> only. The driver triggers the hardware to capture the host graphics output
+>> and compress it to JPEG format.
+>>
+>> Testing on an AST2500 determined that the videobuf/streaming/mmap interface
+>> was significantly slower than the simple read() interface, so I have not
+>> included the streaming part.
+>>
+>> It's also possible to use an automatic mode for the VE such that
+>> re-triggering the HW every frame isn't necessary. However this wasn't
+>> reliable on the AST2400, and probably used more CPU anyway due to excessive
+>> interrupts. It was approximately 15% faster.
+>>
+>> The series also adds the necessary parent clock definitions to the Aspeed
+>> clock driver, with both a mux and clock divider.
+> Please let me know your merge strategy here. I can ack the clk patches
+> because they look fine from high-level clk driver perspective (maybe
+> Joel can take a closer look) or I can merge the patches into clk-next
+> and get them into next release while the video driver gets reviewed.
+
+Thanks for taking a look! Probably preferable to get the clk patches 
+into clk-next first (though Joel reviewing would be great). I just put 
+everything in the same set for the sake of explaining the necessity of 
+the clk changes.
+
+Thanks,
+Eddie
+
+>
