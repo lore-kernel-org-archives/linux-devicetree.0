@@ -1,44 +1,78 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 09/30] iio: adc: Threat A33 as thermal
- sensor and remove non thermal sun4i channel
-Date: Fri, 31 Aug 2018 10:35:29 +0200
-Message-ID: <20180831083529.tdbgwlkchrr3j6py@flea>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-10-embed3d@gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 1/3] spi: Introduce one new field to set word delay
+Date: Fri, 31 Aug 2018 16:38:56 +0800
+Message-ID: <CAMz4kuJp=tBPubM1cWJLLMq4vRvK=-xcsH3GC5io6heQh4RG6w@mail.gmail.com>
+References: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
+ <01c9b188-5b67-40c0-b08d-99a0543ddf54@cesnet.cz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ccfulje7flqq36pl"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXX3UPOAKGQEGJNJ5KY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180830154518.29507-10-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <01c9b188-5b67-40c0-b08d-99a0543ddf54@cesnet.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Lanqing Liu <lanqing.liu@spreadtrum.com>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 29 August 2018 at 19:33, Jan Kundr=C3=A1t <jan.kundrat@cesnet.cz> wrote:
+> On =C4=8Dtvrtek 16. srpna 2018 14:54:49 CEST, Baolin Wang wrote:
+>>
+>> + * @word_delay: clock cycles to inter word delay after each word size
+>> + *     (set by bits_per_word) transmission.
+>
+>
+> I need a similar functionality for talking to a SPI device from userspace
+> -- see my attempt for implementing this in spi-orion.c at [1]. The device=
+'s
+> datasheet says that I should wait, e.g., 3=C2=B5s between each two words.=
+ I
+> therefore like this patch :).
+>
+> The description can be improved because it left me wondering what "clock
+> this is about. I suppose it's about the SPI clock cycles and not CPU cloc=
+k
+> cycles, right? I'll be hapy to patch this once Baolin confirms that that =
+is
+> the intended meaning.
 
---ccfulje7flqq36pl
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Sorry for confusing. Since our SPI word delay unit is clock cycle of
+the SPI clock, so my intention of the word_delay's unit is SPI clock
+cycles according to our previous discussion.
 
-On Thu, Aug 30, 2018 at 05:44:57PM +0200, Philipp Rossak wrote:
-> We want to use this driver mostly as thermal sensor, that still supports
-> the adc for the older chips, thus we threat the A33 as thermal sensor.
-> We also remove the adc channel without thermal support.
+>
+> It seems that this is only implemented in one newly added driver. I'm
+> interested in supporting this in spi-orion.c, but that sounds like
+> driver-specific work for something which is pretty generic. How should th=
+is
+> be implemented? Given that drivers for SPI masters can implement a functi=
+on
+> which transfers several words at once, there are not that many better
+> possibilities than adding udelay()s, though. Thoughts?
+>
+> What is your plan to do with drivers which do not implement this (yet)? I=
+f a
+> spi_transfer gets queued which asks for a word_delay delay, it is silentl=
+y
+> ignored now, AFAIU.
+>
+> What about userspace support, spidev and spi_ioc_transfer (that's my targ=
+et,
+> actually)? Is it OK to s/pad/word_delay/ in the spidev code and pass that=
+ to
+> the generated struct spi_transfer? In my opinion, once we support specify=
+ing
+> this from userspace, one has to definitely check that the SPI controller =
+is
+> ready to honor this request. Do we want a new bit in spi_controller.flags
+> for this?
+>
+> With kind regards,
+> Jan
+>
+> [1] https://patchwork.kernel.org/patch/10221397/
 
-The A33 can definitely be used as an ADC, so we need to keep that support.
 
-Maxime
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---ccfulje7flqq36pl--
+--=20
+Baolin Wang
+Best Regards
