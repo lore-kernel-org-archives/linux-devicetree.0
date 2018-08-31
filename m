@@ -1,24 +1,44 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/4] clock: aspeed: Setup video engine clocking
-Date: Fri, 31 Aug 2018 10:56:39 -0700
-Message-ID: <153573819934.93865.9948361566635476864@swboyd.mtv.corp.google.com>
-References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1535576973-8067-3-git-send-email-eajames@linux.vnet.ibm.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v2 26/34] dt-bindings: add broadcom (formerly plx
+ technology) vendor prefix
+Date: Fri, 31 Aug 2018 20:01:01 +0200
+Message-ID: <ed2ffc72-68d6-476a-d589-6738fcbf1d7c@suse.de>
+References: <20180831163817.23970-1-marcel@ziswiler.com>
+ <20180831163817.23970-27-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535576973-8067-3-git-send-email-eajames@linux.vnet.ibm.com>
+In-Reply-To: <20180831163817.23970-27-marcel@ziswiler.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-media@vger.kernel.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, andrew@aj.id.au, mchehab@kernel.org, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org, Eddie James <eajames@linux.vnet.ibm.com>
+To: Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Johan Hovold <johan@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Eddie James (2018-08-29 14:09:31)
-> Add the video engine reset bit. Add eclk mux and clock divider table.
-> =
+Am 31.08.2018 um 18:38 schrieb Marcel Ziswiler:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> PLX Technology meanwhile got bought by Broadcom Corporation but the
+> vendor prefix plx is still used in 8 current device trees. This silences
+> the following checkpatch.pl warning:
+> 
+> WARNING: DT compatible string vendor "plx" appears un-documented
+>  -- check ./Documentation/devicetree/bindings/vendor-prefixes.txt
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
-> ---
+Sounds sensible,
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Andreas Färber <afaerber@suse.de>
+
+You may want to tweak the subject though, it is slightly confusing as
+Broadcom already has a vendor prefix.
+
+Cheers,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
