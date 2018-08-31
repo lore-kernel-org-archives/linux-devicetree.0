@@ -1,17 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 11/30] iio: adc: add new compatibles
-Date: Fri, 31 Aug 2018 10:46:23 +0200
-Message-ID: <20180831084623.lgapvr3hqlf7kvhx@flea>
+Subject: Re: [PATCH v3 14/30] dt-bindings: update the Allwinner
+ GPADC device tree binding for H3 & A83T
+Date: Fri, 31 Aug 2018 10:48:54 +0200
+Message-ID: <20180831084854.q2uh63pw5vprqlzt@flea>
 References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-12-embed3d@gmail.com>
+ <20180830154518.29507-15-embed3d@gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h5bmuym7lwelgk43"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYEAUTOAKGQE6GUSF5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="7p3qpoccm5swps5w"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB54BUTOAKGQEOM6IPXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180830154518.29507-12-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20180830154518.29507-15-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,42 +24,25 @@ Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 List-Id: devicetree@vger.kernel.org
 
 
---h5bmuym7lwelgk43
+--7p3qpoccm5swps5w
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Thu, Aug 30, 2018 at 05:44:59PM +0200, Philipp Rossak wrote:
-> We are now adding the new compatibles.
+On Thu, Aug 30, 2018 at 05:45:02PM +0200, Philipp Rossak wrote:
+> Allwinner H3 features a thermal sensor like the one in A33, but has its
+> register re-arranged, the clock divider moved to CCU (originally the
+> clock divider is in ADC) and added a pair of bus clock and reset.
+> 
+> Allwinner A83T features a thermal sensor similar to the H3, the ths clock,
+> the bus clock and the reset was removed from the CCU. The THS in A83T
+> has a clock that is directly connected and runs with 24 MHz.
+> 
+> Update the binding document to cover H3 and A83T.
 > 
 > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index a2027614ee0c..79b8efdab803 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -435,6 +435,18 @@ static const struct of_device_id sun4i_gpadc_of_id[] = {
->  		.compatible = "allwinner,sun8i-a33-ths",
->  		.data = &sun8i_a33_gpadc_data,
->  	},
-> +	{
-> +		.compatible = "allwinner,sun4i-a10-gpadc",
-> +		.data = &sun4i_gpadc_data
-> +	},
-> +	{
-> +		.compatible = "allwinner,sun5i-a13-gpadc",
-> +		.data = &sun5i_gpadc_data
-> +	},
-> +	{
-> +		.compatible = "allwinner,sun6i-a31-gpadc",
-> +		.data = &sun6i_gpadc_data
-> +	},
 
-Usually the bindings come before the code that use them, and the
-commit log is also lacking to explain how we should use them, that
-they won't be used at the moment, why, etc.
+You probably want to have a look at:
+https://www.spinics.net/lists/arm-kernel/msg670167.html
 
 Maxime
 
@@ -66,4 +50,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---h5bmuym7lwelgk43--
+--7p3qpoccm5swps5w--
