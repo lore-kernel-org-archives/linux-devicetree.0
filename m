@@ -1,96 +1,39 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v8 2/2] hwmon: ina3221: Read channel input source info
- from DT
-Date: Sun, 30 Sep 2018 13:55:18 -0700
-Message-ID: <ab3a36dc-fa5a-4669-2f99-aa55a4083db2@roeck-us.net>
-References: <20180929013937.29289-1-nicoleotsuka@gmail.com>
- <20180929013937.29289-3-nicoleotsuka@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180929013937.29289-3-nicoleotsuka@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
-Cc: afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=936g=LP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from youkutv.net ([167.88.5.121]:53909 "EHLO etennisonline.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726044AbeIAI23 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 1 Sep 2018 04:28:29 -0400
+Subject: Adding path
+Message-ID: <eba9940def249b189c74e5248b226a00@cosstores.com>
+Date: Fri, 31 Aug 2018 16:52:05 +0200
+From: "Jimmy Wilson" <keffdeilarssata@email.jp>
+Reply-To: heztermine@sina.com
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-Hi Nicolin,
+Hi,
 
-On 09/28/2018 06:39 PM, Nicolin Chen wrote:
-> An ina3221 chip has three input ports. Each port is used
-> to measure the voltage and current of its input source.
-> 
-> The DT binding now has defined bindings for their input
-> sources, so the driver should read these information and
-> handle accordingly.
-> 
-> This patch adds a new structure of input source specific
-> information including input source label, shunt resistor
-> value and its connection status. It exposes these labels
-> via in[123]_label sysfs nodes upon available, and also
-> disables those channels where there are no input source
-> being connected. Meanwhile, it also adds in[123]_enable
-> sysfs nodes for users to get control of three channels,
-> and returns -ENODATA code for any sensor read according
-> to hwmon ABI.
-> 
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Have you received my email from last week?
 
-[ ... ]
+I would like to speak with the person who manage your photos for your
+company?
 
-> +
-> +static ssize_t ina3221_set_enable(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
-> +	struct ina3221_data *ina = dev_get_drvdata(dev);
-> +	unsigned int channel = sd_attr->index;
-> +	u16 config = ina->reg_config;
-> +	bool enable;
-> +	int ret;
-> +
-> +	ret = kstrtobool(buf, &enable);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (enable)
-> +		config |= INA3221_CONFIG_CHx_EN(channel);
-> +	else
-> +		config &= ~INA3221_CONFIG_CHx_EN(channel);
-> +
-> +	ret = regmap_write(ina->regmap, INA3221_CONFIG, config);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ina->reg_config = config;
-> +
+We are here to provide you all kinds of imaging editing.
 
-Sorry it too me so long to realize this: The code above is racy.
-There could be multiple threads enabling and disabling a channel.
-Without a mutex, there is no guarantee that the final value of
-reg_config matches the value written into the chip.
+What we can provide you:
+Cutting out for photos
+Clipping path for photos
+Masking for photos
+Retouching for your photos
+Retouching for the Beauty Model and Portraits.
 
-You'll have to introduce a mutex and implement something like
+We have 20 staffs in house and daily basis 1000 images can be processed.
 
-	...
-	ret = kstrtobool(buf, &enable);
-	if (ret)
-		return ret;
+We give testing for your photos.
 
-	mutex_lock(&ina->update_lock);
-	config = ina->reg_config;
-	...
-	ret = regmap_write(ina->regmap, INA3221_CONFIG, config);
-	if (ret) {
-		count = ret;
-		goto error;
-	}
-	ina->reg_config = config;
-error:
-	mutex_unlock(&ina->update_lock);
-	return count;
-
-Guenter
+Thanks,
+Jimmy Wilson
