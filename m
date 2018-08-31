@@ -1,207 +1,171 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 0/4] Add Amlogic video decoder driver
-Date: Fri, 31 Aug 2018 11:00:34 +0200
-Message-ID: <386d4bc2-96a7-826f-392f-e54d3367e217@xs4all.nl>
-References: <20180831085205.14760-1-mjourdan@baylibre.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 17/30] iio: adc: sun4i-gpadc-iio: rework:
+ support clocks and reset
+Date: Fri, 31 Aug 2018 11:03:07 +0200
+Message-ID: <20180831090307.v3bp445sgugquh6f@flea>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+ <20180830154518.29507-18-embed3d@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831085205.14760-1-mjourdan@baylibre.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Jourdan <mjourdan@baylibre.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="o4ox2v23labjh637"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTMIUTOAKGQE7SMC4GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180830154518.29507-18-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2018 10:52 AM, Maxime Jourdan wrote:
-> Hi everyone,
-> 
-> This patch series adds support for the Amlogic video decoder,
-> as well as the corresponding dt bindings for GXBB/GXL/GXM chips.
-> 
-> It features decoding for the following formats:
-> - MPEG 1
-> - MPEG 2
-> 
-> The following formats will be added in future patches:
-> - MJPEG
-> - MPEG 4 (incl. Xvid, H.263)
-> - H.264
-> - HEVC (incl. 10-bit)
-> 
-> The following formats' development has still not started, but they are
-> supported by the hardware:
-> - VC1
-> - VP9
-> 
-> The code was made in such a way to allow easy inclusion of those formats
-> in the future.
-> 
-> The decoder is single instance.
-> 
-> Files:
->  - vdec.c handles the V4L2 M2M logic
->  - esparser.c manages the hardware bitstream parser
->  - vdec_helpers.c provides helpers to DONE the dst buffers as well as
->  various common code used by the codecs
->  - vdec_1.c manages the VDEC_1 block of the vdec IP
->  - codec_mpeg12.c enables decoding for MPEG 1/2.
->  - vdec_platform.c links codec units with vdec units
->  (e.g vdec_1 with codec_mpeg12) and lists all the available
->  src/dst formats and requirements (max width/height, etc.),
->  per compatible chip.
-> 
-> Firmwares are necessary to run the vdec. They can currently be found at:
-> https://github.com/chewitt/meson-firmware
-> 
-> It was tested primarily with ffmpeg's v4l2-m2m implementation. For instance:
-> $ ffmpeg -c:v mpeg2_v4l2m2m -i sample_mpeg2.mkv -f null -
-> 
-> Note: This patch series depends on
-> "[PATCH v3 0/3] soc: amlogic: add meson-canvas"
-> https://patchwork.kernel.org/cover/10573763/
-> 
-> The v4l2-compliance results are available below the patch diff.
-> 
-> Maxime Jourdan (4):
->   dt-bindings: media: add Amlogic Video Decoder Bindings
->   media: meson: add v4l2 m2m video decoder driver
->   ARM64: dts: meson-gx: add vdec entry
->   ARM64: dts: meson: add vdec entries
-> 
->  .../bindings/media/amlogic,vdec.txt           |  63 ++
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |  13 +
->  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   |  11 +
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  11 +
->  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi    |   4 +
->  drivers/media/platform/Kconfig                |  10 +
->  drivers/media/platform/meson/Makefile         |   1 +
->  drivers/media/platform/meson/vdec/Makefile    |   8 +
->  .../media/platform/meson/vdec/codec_mpeg12.c  | 169 +++
->  .../media/platform/meson/vdec/codec_mpeg12.h  |  13 +
->  drivers/media/platform/meson/vdec/dos_regs.h  |  97 ++
->  drivers/media/platform/meson/vdec/esparser.c  | 367 +++++++
->  drivers/media/platform/meson/vdec/esparser.h  |  27 +
->  drivers/media/platform/meson/vdec/vdec.c      | 987 ++++++++++++++++++
->  drivers/media/platform/meson/vdec/vdec.h      | 233 +++++
->  drivers/media/platform/meson/vdec/vdec_1.c    | 227 ++++
->  drivers/media/platform/meson/vdec/vdec_1.h    |  13 +
->  .../media/platform/meson/vdec/vdec_helpers.c  | 353 +++++++
->  .../media/platform/meson/vdec/vdec_helpers.h  |  44 +
->  .../media/platform/meson/vdec/vdec_platform.c | 100 ++
->  .../media/platform/meson/vdec/vdec_platform.h |  29 +
->  21 files changed, 2780 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
->  create mode 100644 drivers/media/platform/meson/vdec/Makefile
->  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.c
->  create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.h
->  create mode 100644 drivers/media/platform/meson/vdec/dos_regs.h
->  create mode 100644 drivers/media/platform/meson/vdec/esparser.c
->  create mode 100644 drivers/media/platform/meson/vdec/esparser.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_1.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_1.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.h
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.c
->  create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.h
-> 
-> root@libretech-cc:~/v4l-utils# v4l2-compliance -d /dev/video0 
-> v4l2-compliance SHA: not available, 64 bits
 
-I see that there is no SHA, so you probably didn't compile this from a
-checked-out git repo. Please do so, since without a SHA I don't know
-whether or not you used the latest v4l2-compliance version.
+--o4ox2v23labjh637
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Regards,
+On Thu, Aug 30, 2018 at 05:45:05PM +0200, Philipp Rossak wrote:
+> For adding newer sensor some basic rework of the code is necessary.
+> 
+> The SoCs after H3 has newer thermal sensor ADCs, which have two clock
+> inputs (bus clock and sampling clock) and a reset. The registers are
+> also re-arranged.
+> 
+> This commit reworks the code, adds the process of the clocks and resets.
+> 
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 72 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 70 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+> index c278e165e161..c12de48c4e86 100644
+> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> @@ -22,6 +22,7 @@
+>   * shutdown for not being used.
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/completion.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> @@ -31,6 +32,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/regmap.h>
+> +#include <linux/reset.h>
+>  #include <linux/thermal.h>
+>  #include <linux/delay.h>
+>  
+> @@ -63,6 +65,9 @@ struct gpadc_data {
+>  	int		(*ths_suspend)(struct sun4i_gpadc_iio *info);
+>  	int		(*ths_resume)(struct sun4i_gpadc_iio *info);
+>  	bool		support_irq;
+> +	bool		has_bus_clk;
+> +	bool		has_bus_rst;
+> +	bool		has_mod_clk;
+>  	u32		temp_data_base;
+>  };
+>  
+> @@ -127,6 +132,9 @@ struct sun4i_gpadc_iio {
+>  	struct mutex			mutex;
+>  	struct thermal_zone_device	*tzd;
+>  	struct device			*sensor_device;
+> +	struct clk			*bus_clk;
+> +	struct clk			*mod_clk;
+> +	struct reset_control		*reset;
+>  };
+>  
+>  static const struct iio_chan_spec sun4i_gpadc_channels[] = {
+> @@ -472,8 +480,13 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+>  
+> -	info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+> -					     &sun4i_gpadc_regmap_config);
+> +	if (info->data->has_bus_clk)
+> +		info->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "bus",
+> +				base, &sun4i_gpadc_regmap_config);
+> +	else
+> +		info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+> +				&sun4i_gpadc_regmap_config);
+> +
+>  	if (IS_ERR(info->regmap)) {
+>  		ret = PTR_ERR(info->regmap);
+>  		dev_err(&pdev->dev, "failed to init regmap: %d\n", ret);
+> @@ -498,9 +511,58 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
+>  		}
+>  	}
+>  
+> +	if (info->data->has_bus_rst) {
+> +		info->reset = devm_reset_control_get(&pdev->dev, NULL);
+> +		if (IS_ERR(info->reset)) {
+> +			ret = PTR_ERR(info->reset);
+> +			return ret;
+> +		}
+> +
+> +		ret = reset_control_deassert(info->reset);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (info->data->has_bus_clk) {
+> +		info->bus_clk = devm_clk_get(&pdev->dev, "bus");
+> +		if (IS_ERR(info->bus_clk)) {
+> +			ret = PTR_ERR(info->bus_clk);
+> +			goto assert_reset;
+> +		}
+> +
+> +		ret = clk_prepare_enable(info->bus_clk);
+> +		if (ret)
+> +			goto assert_reset;
 
-	Hans
+That should be done in the runtime_resume hook
 
-> 
-> Compliance test for device /dev/video0:
-> 
-> Driver Info:
-> 	Driver name      : meson-vdec
-> 	Card type        : Amlogic Video Decoder
-> 	Bus info         : platform:meson-vdec
-> 	Driver version   : 4.18.0
-> 	Capabilities     : 0x84204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 		Device Capabilities
-> 	Device Caps      : 0x04204000
-> 		Video Memory-to-Memory Multiplanar
-> 		Streaming
-> 		Extended Pix Format
-> 
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second /dev/video0 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls:
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-> 	test VIDIOC_QUERYCTRL: OK (Not Supported)
-> 	test VIDIOC_G/S_CTRL: OK (Not Supported)
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 0 Private Controls: 0
-> 
-> Format ioctls:
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK (Not Supported)
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 	test Cropping: OK (Not Supported)
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK
-> 
-> Codec ioctls:
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK
-> 
-> Buffer ioctls:
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
-> 
-> Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
-> 
+> +	}
+> +
+> +	if (info->data->has_mod_clk) {
+> +		info->mod_clk = devm_clk_get(&pdev->dev, "mod");
+> +		if (IS_ERR(info->mod_clk)) {
+> +			ret = PTR_ERR(info->mod_clk);
+> +			goto disable_bus_clk;
+> +		}
+> +
+> +		/* Running at 4MHz */
+> +		ret = clk_set_rate(info->mod_clk, 4000000);
+> +		if (ret)
+> +			goto disable_bus_clk;
+
+Why?
+
+> +		ret = clk_prepare_enable(info->mod_clk);
+> +		if (ret)
+> +			goto disable_bus_clk;
+> +	}
+> +
+>  	info->sensor_device = &pdev->dev;
+>  
+>  	return 0;
+> +
+> +disable_bus_clk:
+> +	clk_disable_unprepare(info->bus_clk);
+> +
+> +assert_reset:
+> +	reset_control_assert(info->reset);
+
+You should check for the variables here before calling those
+functions, if you end up here with your variable not set, you'll have
+improper refcounting.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--o4ox2v23labjh637--
