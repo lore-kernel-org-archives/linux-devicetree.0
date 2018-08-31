@@ -1,123 +1,55 @@
-From: Hanjie Lin <hanjie.lin@amlogic.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
- Amlogic Meson PCIe controller
-Date: Fri, 31 Aug 2018 09:47:09 +0800
-Message-ID: <12ce60a8-accc-3c8f-4d38-9bf31346b775@amlogic.com>
-References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
- <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
- <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
- <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com>
- <20180829004122.GA25928@bogus>
- <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
- <CAL_JsqJPzfp1OimYXa26tEqTexyiuKMeKszveobHN3rKP8+RYQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 00/13] ata: ahci_platform: support
+ allwinner R40 AHCI
+Date: Fri, 31 Aug 2018 10:32:53 +0800
+Message-ID: <CAGb2v67miUjqeKeDh_E_XPee_0Hq1C6YrfXxsOp_=NtQY+LLmQ@mail.gmail.com>
+References: <20180830190120.722-1-clabbe.montjoie@gmail.com> <f5838eae-fa6c-8699-14a4-95d0daa8a960@kernel.dk>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJPzfp1OimYXa26tEqTexyiuKMeKszveobHN3rKP8+RYQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBZGRULOAKGQESOG7FCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <f5838eae-fa6c-8699-14a4-95d0daa8a960-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org, LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Fri, Aug 31, 2018 at 4:31 AM Jens Axboe <axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org> wrote:
+>
+> On 8/30/18 1:01 PM, Corentin Labbe wrote:
+> > Hello
+> >
+> > This patchset add support for allwinner R40 AHCI controller.
+> >
+> > The whole patchset is tested on sun8i-r40-bananapi-m2-ultra and
+> > on sun7i-a20-cubieboard2 which doesnt have any of the ressources added
+> > by this serie, so no regression should come with it.
+> >
+> > The last patch(ata: ahci_sunxi: remove PHY code) should not be merged,
+> > but will be resent for inclustion when all patchs will have hit linus
+> > tree.
+>
+> Applied 1-12 with Hans's blessing, thanks Corentin.
 
-On 2018/8/30 21:59, Rob Herring wrote:
-> On Thu, Aug 30, 2018 at 2:37 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
->>
->>
->>
->> On 2018/8/29 8:41, Rob Herring wrote:
->>> On Mon, Aug 27, 2018 at 04:55:20PM +0800, Hanjie Lin wrote:
->>>>
->>>>
->>>> On 2018/8/24 16:22, Jerome Brunet wrote:
->>>>> On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
->>>>>> From: Yue Wang <yue.wang@amlogic.com>
->>>>>>
->>>>>> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
->>>>>> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
->>>>>> controller.
->>>>>>
->>>>>> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
->>>>>> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
->>>>>> ---
->>>>>>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
->>>>>>  1 file changed, 63 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..8a831d1
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->>>>>> @@ -0,0 +1,63 @@
->>>>>> +Amlogic Meson AXG DWC PCIE SoC controller
->>>>>> +
->>>>>> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
->>>>>> +It shares common functions with the PCIe DesignWare core driver and
->>>>>> +inherits common properties defined in
->>>>>> +Documentation/devicetree/bindings/pci/designware-pci.txt.
->>>>>> +
->>>>>> +Additional properties are described here:
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible:
->>>>>> +  should contain "amlogic,axg-pcie" to identify the core.
->>>>>> +- reg:
->>>>>> +  Should contain the configuration address space.
->>>>>> +- reg-names: Must be
->>>>>> +  - "elbi"        External local bus interface registers
->>>>>> +  - "cfg"         Meson specific registers
->>>>>> +  - "config"      PCIe configuration space
->>>>>> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
->>>>>> +- clocks: Must contain an entry for each entry in clock-names.
->>>>>> +- clock-names: Must include the following entries:
->>>>>> +  - "pclk"       PCIe GEN 100M PLL clock
->>>>>> +  - "port"       PCIe_x(A or B) RC clock gate
->>>>>> +  - "general"    PCIe Phy clock
->>>>>> +  - "mipi"       PCIe_x(A or B) 100M ref clock gate
->>>>>> +- resets: phandle to the reset lines.
->>>>>> +- reset-names: must contain "phy" and "peripheral"
->>>>>> +       - "port" Port A or B reset
->>>>>> +       - "apb" APB reset
->>>>>
->>>>> The above description is not coherent (phy <=> port)
->>>>>
->>>>
->>>> Yes, this should be port and apb here.
->>>> We'll integrate phy driver into ctrl driver, and move phy reset to here also.
->>>
->>> Why? That's the wrong thing to do if they are separate h/w blocks. You
->>> can do whatever you like in the drivers, but the DT should reflect the
->>> h/w.
->>>
->>> Rob
->>>
->>> .
->>>
->>
->> We have the dedicated phy driver which only process reset job,
->> and we consider that it's too overkill to do just these things .
->> So we will integrate phy reset job into the controller driver int the next version.
-> 
-> What's in the separate register space you had for the phy?
-> 
-> Rob
-> 
-> .
-> 
+Please don't merge device tree ("dts") patches, i.e. patches 9-12. We will
+merge them through the sunxi / armsoc tree. Having them in separate trees
+introduces conflicts when we have other stuff going through our tree.
 
-As described with 'phy' reg in ctrl patch v3 thread [0]
+Corentin, it's best to lay out the plan to get patches merges in the cover
+letter, specifically which maintainer should take which patches, or if an
+immutable tag/branch is preferred, when things can't be separated cleanly.
+This helps other subsystem maintainers that don't routinely deal with armsoc.
 
-- reg-names: Must be
-	- "elbi"	External local bus interface registers
-	- "cfg"		Meson specific registers
-	- "phy"		Meson PCIE PHY registers
-	- "config"	PCIe configuration space
+Also, we probably can't merge the last patch that removes the PHY code,
+since we have to support old device trees.
 
-When each controller driver probe, we powerup phy by write phy register like below: 
-writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
-
-[0] https://lkml.kernel.org/r/1535616829-167936-1-git-send-email-hanjie.lin@amlogic.com
+Thanks
+ChenYu
