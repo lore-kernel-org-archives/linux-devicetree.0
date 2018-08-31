@@ -1,96 +1,123 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [RFC PATCH v1 0/3] device property: Support MAC address in VPD
-Date: Thu, 30 Aug 2018 18:26:57 -0700
-Message-ID: <20180831012656.GB67271@ban.mtv.corp.google.com>
-References: <20180814223758.117433-1-briannorris@chromium.org>
- <a240b3f9-d41b-30d7-ef11-5dcd1a981c0f@gmail.com>
- <20180815002204.GA258561@ban.mtv.corp.google.com>
- <bb1b2b7d-2c47-a6b3-7618-063351f379b2@gmail.com>
- <20180815014436.GA17200@ban.mtv.corp.google.com>
- <20180815221601.GB24830@rob-hp-laptop>
+From: Hanjie Lin <hanjie.lin@amlogic.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: meson: add DT bindings for
+ Amlogic Meson PCIe controller
+Date: Fri, 31 Aug 2018 09:47:09 +0800
+Message-ID: <12ce60a8-accc-3c8f-4d38-9bf31346b775@amlogic.com>
+References: <1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com>
+ <1535096165-45827-2-git-send-email-hanjie.lin@amlogic.com>
+ <8c48964151d24758298ba935da336c0829e2b287.camel@baylibre.com>
+ <11d7547b-feb4-6ecb-cef3-db46ce8ee2ef@amlogic.com>
+ <20180829004122.GA25928@bogus>
+ <84d5399c-67d4-f8a4-3613-00d91f21292f@amlogic.com>
+ <CAL_JsqJPzfp1OimYXa26tEqTexyiuKMeKszveobHN3rKP8+RYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180815221601.GB24830@rob-hp-laptop>
+In-Reply-To: <CAL_JsqJPzfp1OimYXa26tEqTexyiuKMeKszveobHN3rKP8+RYQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, sorry for the delay, and thanks for the response.
 
-I'm still not sure whether I'll pursue this series further, but I'd like
-to at least narrow down what it'd look like.
 
-On Wed, Aug 15, 2018 at 04:16:01PM -0600, Rob Herring wrote:
-> On Tue, Aug 14, 2018 at 06:44:36PM -0700, Brian Norris wrote:
-> > On Tue, Aug 14, 2018 at 05:52:49PM -0700, Florian Fainelli wrote:
-> > > On 08/14/2018 05:22 PM, Brian Norris wrote:
-> > > >> Also, aliases in DT are meant to provide some stability.
-> > > > 
-> > > > How, specifically? I don't see any relevant binding description for
-> > > > aliases under Documentation/devicetree/bindings/net/.
-> > > 
-> > > Indeed they are not, likewise, we should probably update devicetree-spec
-> > > to come up with standard names that of_alias_get_id() already consumes.
-> > 
-> > A quick grep shows we already have divergence: both "eth" and "ethernet"
-> > are in use.
+On 2018/8/30 21:59, Rob Herring wrote:
+> On Thu, Aug 30, 2018 at 2:37 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+>>
+>>
+>>
+>> On 2018/8/29 8:41, Rob Herring wrote:
+>>> On Mon, Aug 27, 2018 at 04:55:20PM +0800, Hanjie Lin wrote:
+>>>>
+>>>>
+>>>> On 2018/8/24 16:22, Jerome Brunet wrote:
+>>>>> On Fri, 2018-08-24 at 15:36 +0800, Hanjie Lin wrote:
+>>>>>> From: Yue Wang <yue.wang@amlogic.com>
+>>>>>>
+>>>>>> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+>>>>>> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
+>>>>>> controller.
+>>>>>>
+>>>>>> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+>>>>>> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 63 ++++++++++++++++++++++
+>>>>>>  1 file changed, 63 insertions(+)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..8a831d1
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+>>>>>> @@ -0,0 +1,63 @@
+>>>>>> +Amlogic Meson AXG DWC PCIE SoC controller
+>>>>>> +
+>>>>>> +Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
+>>>>>> +It shares common functions with the PCIe DesignWare core driver and
+>>>>>> +inherits common properties defined in
+>>>>>> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+>>>>>> +
+>>>>>> +Additional properties are described here:
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible:
+>>>>>> +  should contain "amlogic,axg-pcie" to identify the core.
+>>>>>> +- reg:
+>>>>>> +  Should contain the configuration address space.
+>>>>>> +- reg-names: Must be
+>>>>>> +  - "elbi"        External local bus interface registers
+>>>>>> +  - "cfg"         Meson specific registers
+>>>>>> +  - "config"      PCIe configuration space
+>>>>>> +- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+>>>>>> +- clocks: Must contain an entry for each entry in clock-names.
+>>>>>> +- clock-names: Must include the following entries:
+>>>>>> +  - "pclk"       PCIe GEN 100M PLL clock
+>>>>>> +  - "port"       PCIe_x(A or B) RC clock gate
+>>>>>> +  - "general"    PCIe Phy clock
+>>>>>> +  - "mipi"       PCIe_x(A or B) 100M ref clock gate
+>>>>>> +- resets: phandle to the reset lines.
+>>>>>> +- reset-names: must contain "phy" and "peripheral"
+>>>>>> +       - "port" Port A or B reset
+>>>>>> +       - "apb" APB reset
+>>>>>
+>>>>> The above description is not coherent (phy <=> port)
+>>>>>
+>>>>
+>>>> Yes, this should be port and apb here.
+>>>> We'll integrate phy driver into ctrl driver, and move phy reset to here also.
+>>>
+>>> Why? That's the wrong thing to do if they are separate h/w blocks. You
+>>> can do whatever you like in the drivers, but the DT should reflect the
+>>> h/w.
+>>>
+>>> Rob
+>>>
+>>> .
+>>>
+>>
+>> We have the dedicated phy driver which only process reset job,
+>> and we consider that it's too overkill to do just these things .
+>> So we will integrate phy reset job into the controller driver int the next version.
 > 
-> Uggg, it would be nice to clean that up. 
-
-Is it fair to just change them, since they were never documented? Of
-course, only after documenting the "right" way.
-
-> There's several aliases I'd like to get rid of (some platforms went a 
-> little crazy with them) and I'd like to start requiring alias names to 
-> be documented. I created an issue for the spec. Patches welcomeTM. :)
-
-So e.g., new text in Documentation/devicetree/bindings/net/ethernet.txt
-and Documentation/devicetree/bindings/net/wireless/ieee80211.txt about
-'aliases' entries? I can do that, especially if I give up on a new
-binding like in this series.
-
-> > But anyway, would the idea be that you just put 'ethernet{0,1,...}' and
-> > 'wifi{0,1,...}' aliases in the /chosen node, then require boot firmware
-> > to insert any {ethernet,wifi}_mac{0,1,...} into the paths represented by
-> > the corresponding aliases?
+> What's in the separate register space you had for the phy?
 > 
-> In the /aliases node, but yes.
-
-Oops, yes.
-
-> Seems to me that nvmem needs to be extended to allow providers to 
-> retrieve and interpret data. Not everything is at some fixed offset and 
-> size. Something like this is valid dts:
+> Rob
 > 
-> nvmem = <&phandle> "a-string";
+> .
 > 
-> But that's pretty uncommon (I can't think of a binding that actually 
-> uses that). Perhaps the provider has an array of keys defined and the 
-> consumer just provides the index.
 
-In the case of VPD, all keys are 0-terminated strings (there's also a
-length field, but the key is still 0-terminated), so that scheme could
-work. (I'm not sure an indexed provider is extremely relevant right now,
-although it probably could be supported if I expand the of_nvmem
-retrieval to support a generic of_xlate() override anyway.) The
-information represented is almost the same as in my proposal, except that:
-(a) now I have to give the VPD a phandle -- so far, I've avoided that,
-    as it's just an auto-enumerated device underneath the
-    /firmware/coreboot device (see drivers/firmware/google/vpd.c)
-(b) this is no longer directly useful to ACPI systems -- I'm not
-    actually sure how (if at all) nvmem provider/consumer is supposed to
-    work there
+As described with 'phy' reg in ctrl patch v3 thread [0]
 
-But maybe this isn't really that useful to ACPI, and it's sufficient to
-just have fwnode_get_mac_address() call of_get_nvmem_mac_address() when
-we're using DT.
+- reg-names: Must be
+	- "elbi"	External local bus interface registers
+	- "cfg"		Meson specific registers
+	- "phy"		Meson PCIE PHY registers
+	- "config"	PCIe configuration space
 
-> Or we could do '<key>-nvmem = <&phandle>', but parsing that is a bit 
-> more complicated.
+When each controller driver probe, we powerup phy by write phy register like below: 
+writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
 
-That doesn't seem to have much advantage to me.
-
-Brian
+[0] https://lkml.kernel.org/r/1535616829-167936-1-git-send-email-hanjie.lin@amlogic.com
