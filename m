@@ -1,67 +1,58 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv2 1/2] ARM: dts: ti: add support for building Texas
- Instruments specific overlays
-Date: Fri, 31 Aug 2018 16:28:26 +0300
-Message-ID: <1535722107-13767-2-git-send-email-t-kristo@ti.com>
-References: <1535722107-13767-1-git-send-email-t-kristo@ti.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 13/40] vfio: Add support for Shared Virtual Addressing
+Date: Fri, 31 Aug 2018 14:34:52 +0100
+Message-ID: <1d5b6529-4e5a-723c-3f1b-dd5a9adb490c@arm.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-14-jean-philippe.brucker@arm.com>
+	<5B83B11E.7010807@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1535722107-13767-1-git-send-email-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tony@atomide.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5B83B11E.7010807-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Xu Zaibo <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
+Cc: xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, liguozhu <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, fanghao11 <fanghao11-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, =?UTF-8?B?57Gz57Gz?= <kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for TI specific DT subdir, along with support for building
-DT overlays. Right now, no DT files are specified in this directory,
-those are to be added later.
+Hi Zaibo,
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm/boot/dts/Makefile    | 1 +
- arch/arm/boot/dts/ti/Makefile | 9 +++++++++
- 2 files changed, 10 insertions(+)
- create mode 100644 arch/arm/boot/dts/ti/Makefile
+On 27/08/18 09:06, Xu Zaibo wrote:
+>> +struct vfio_iommu_type1_bind_process {
+>> +=A0=A0=A0 __u32=A0=A0=A0 flags;
+>> +#define VFIO_IOMMU_BIND_PID=A0=A0=A0=A0=A0=A0=A0 (1 << 0)
+>> +=A0=A0=A0 __u32=A0=A0=A0 pasid;
+> As I am doing some works on the SVA patch set. I just consider why the
+> user space need this pasid.
+> Maybe, is it much more reasonable to set the pasid into all devices
+> under the vfio container by
+> a call back function from 'vfio_devices'=A0 while
+> 'VFIO_IOMMU_BIND_PROCESS' CMD is executed
+> in kernel land? I am not sure because there exists no suitable call back
+> in 'vfio_device' at present.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b5bd3de..59a4b63 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -755,6 +755,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
- 	dra72-evm-revc.dtb \
- 	dra71-evm.dtb \
- 	dra76-evm.dtb
-+subdir-$(CONFIG_SOC_DRA7XX) += ti
- dtb-$(CONFIG_ARCH_ORION5X) += \
- 	orion5x-kuroboxpro.dtb \
- 	orion5x-lacie-d2-network.dtb \
-diff --git a/arch/arm/boot/dts/ti/Makefile b/arch/arm/boot/dts/ti/Makefile
-new file mode 100644
-index 0000000..e0203ba
---- /dev/null
-+++ b/arch/arm/boot/dts/ti/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Make file to build device tree binaries for boards based on
-+# Texas Instruments Inc processors
-+#
-+# Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+#
-+
-+DTC_FLAGS += -@
--- 
-1.9.1
+When using vfio-pci, the kernel doesn't know how to program the PASID
+into the device because the only kernel driver for the device is the
+generic vfio-pci module. The PCI specification doesn't describe a way of
+setting up the PASID, it's vendor-specific. Only the userspace
+application owning the device (and calling VFIO_IOMMU_BIND) knows how to
+do it, so we return the allocated PASID.
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Note that unlike vfio-mdev where applications share slices of a
+function, with vfio-pci one application owns the whole function so it's
+safe to let userspace set the PASID in hardware. With vfio-mdev it's the
+kernel driver that should be in charge of setting the PASID as you
+described, and we wouldn't have a reason to return the PASID in the
+vfio_iommu_type1_bind_process structure.
+
+Thanks,
+Jean
