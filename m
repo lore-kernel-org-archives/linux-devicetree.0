@@ -1,44 +1,73 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 26/34] dt-bindings: add broadcom (formerly plx
- technology) vendor prefix
-Date: Fri, 31 Aug 2018 20:01:01 +0200
-Message-ID: <ed2ffc72-68d6-476a-d589-6738fcbf1d7c@suse.de>
-References: <20180831163817.23970-1-marcel@ziswiler.com>
- <20180831163817.23970-27-marcel@ziswiler.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH] ASoC: tlv320aic31xx: Add MICBIAS off setting
+Date: Fri, 31 Aug 2018 13:05:07 -0500
+Message-ID: <20180831180507.28867-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831163817.23970-27-marcel@ziswiler.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Johan Hovold <johan@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 31.08.2018 um 18:38 schrieb Marcel Ziswiler:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> PLX Technology meanwhile got bought by Broadcom Corporation but the
-> vendor prefix plx is still used in 8 current device trees. This silences
-> the following checkpatch.pl warning:
-> 
-> WARNING: DT compatible string vendor "plx" appears un-documented
->  -- check ./Documentation/devicetree/bindings/vendor-prefixes.txt
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Leaving microphone bias off is a valid setting and even used in the DT
+binding document example. Add this setting here and document the same.
+Although it may not make much sense to enable a microphone here without
+any bias, it is a valid setting that can be chosen by DT and may be
+needed for some boards.
 
-Sounds sensible,
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/tlv320aic31xx.txt | 1 +
+ include/dt-bindings/sound/tlv320aic31xx-micbias.h         | 1 +
+ sound/soc/codecs/tlv320aic31xx.c                          | 1 +
+ 3 files changed, 3 insertions(+)
 
-Reviewed-by: Andreas Färber <afaerber@suse.de>
-
-You may want to tweak the subject though, it is slightly confusing as
-Broadcom already has a vendor prefix.
-
-Cheers,
-Andreas
-
+diff --git a/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt b/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
+index 5b3c33bb99e5..411cc46a2c58 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
++++ b/Documentation/devicetree/bindings/sound/tlv320aic31xx.txt
+@@ -24,6 +24,7 @@ Optional properties:
+ 
+ - reset-gpios - GPIO specification for the active low RESET input.
+ - ai31xx-micbias-vg - MicBias Voltage setting
++        0 or MICBIAS_OFF - MICBIAS output is powered off
+         1 or MICBIAS_2_0V - MICBIAS output is powered to 2.0V
+         2 or MICBIAS_2_5V - MICBIAS output is powered to 2.5V
+         3 or MICBIAS_AVDD - MICBIAS output is connected to AVDD
+diff --git a/include/dt-bindings/sound/tlv320aic31xx-micbias.h b/include/dt-bindings/sound/tlv320aic31xx-micbias.h
+index c6895a18a455..069484070fcf 100644
+--- a/include/dt-bindings/sound/tlv320aic31xx-micbias.h
++++ b/include/dt-bindings/sound/tlv320aic31xx-micbias.h
+@@ -2,6 +2,7 @@
+ #ifndef __DT_TLV320AIC31XX_MICBIAS_H
+ #define __DT_TLV320AIC31XX_MICBIAS_H
+ 
++#define MICBIAS_OFF		0
+ #define MICBIAS_2_0V		1
+ #define MICBIAS_2_5V		2
+ #define MICBIAS_AVDDV		3
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index bf92d36b8f8a..7d87df518fed 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -1421,6 +1421,7 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+ 	fwnode_property_read_u32(aic31xx->dev->fwnode, "ai31xx-micbias-vg",
+ 				 &micbias_value);
+ 	switch (micbias_value) {
++	case MICBIAS_OFF:
+ 	case MICBIAS_2_0V:
+ 	case MICBIAS_2_5V:
+ 	case MICBIAS_AVDDV:
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+2.18.0
