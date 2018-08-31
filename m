@@ -1,64 +1,47 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 00/16] clk: at91: Rework DT bindings
-Date: Fri, 31 Aug 2018 10:45:30 -0700
-Message-ID: <153573753043.93865.2420370848457480370@swboyd.mtv.corp.google.com>
-References: <20180717222757.10253-1-alexandre.belloni@bootlin.com>
- <153271100280.48062.2538655794734424353@swboyd.mtv.corp.google.com>
- <20180816114755.GH21707@piout.net>
+Subject: Re: [PATCH 0/4] media: platform: Add Aspeed Video Engine driver
+Date: Fri, 31 Aug 2018 10:56:31 -0700
+Message-ID: <153573819126.93865.1884182656081956202@swboyd.mtv.corp.google.com>
+References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180816114755.GH21707@piout.net>
+In-Reply-To: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, andrew@aj.id.au, mchehab@kernel.org, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Alexandre Belloni (2018-08-16 04:47:55)
-> On 27/07/2018 10:03:22-0700, Stephen Boyd wrote:
-> > Quoting Alexandre Belloni (2018-07-17 15:27:41)
-> > > This is the promised rework of the at91 PMC clocks driver. It is main=
-ly
-> > > necessary to remove the DTC warnings but it also complies with the CCF
-> > > rule that there should be one node per controller instead of one node
-> > > per clock.
-> > > =
-
-> > > This only handles the PMC, I'm planning to also rework the SCKC bindi=
-ngs
-> > > later (without breaking the DT ABI).
-> > > =
-
-> > > The series is based on top of clk-next plus at91-dt so I don't think =
-it
-> > > is convenient to have it this cycle. However, I would really like to
-> > > ensure we agree on the new bindings this cycle before converting all =
-the
-> > > other platforms as this is a bit tedious.
-> > > =
-
-> > > The first two patches are actually fixes and may be considered for th=
-is
-> > > cycle.
-> > > =
-
-> > > One nice note:
-> > > at91-sama5d2_xplained.dtb goes from 29351 bytes to 22082 bytes
-> > =
-
-> > Patches look mostly good. Rob is happy with the bindings and so am I.
-> > =
-
-> > One general question is why the drivers can't be moved to real platform
-> > drivers instead of using OF_CLK_DECLARE?
-> > =
-
+Quoting Eddie James (2018-08-29 14:09:29)
+> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+> can capture and compress video data from digital or analog sources. With
+> the Aspeed chip acting as a service processor, the Video Engine can
+> capture the host processor graphics output.
 > =
 
-> I tried, this makes the clocksource drivers fail with -EPROBE_DEFER and
-> so the kernel just stops there.
+> This series adds a V4L2 driver for the VE, providing a read() interface
+> only. The driver triggers the hardware to capture the host graphics output
+> and compress it to JPEG format.
 > =
 
+> Testing on an AST2500 determined that the videobuf/streaming/mmap interfa=
+ce
+> was significantly slower than the simple read() interface, so I have not
+> included the streaming part.
+> =
 
-Ok. We have CLK_OF_DECLARE_DRIVER for that. Can you use that?
+> It's also possible to use an automatic mode for the VE such that
+> re-triggering the HW every frame isn't necessary. However this wasn't
+> reliable on the AST2400, and probably used more CPU anyway due to excessi=
+ve
+> interrupts. It was approximately 15% faster.
+> =
+
+> The series also adds the necessary parent clock definitions to the Aspeed
+> clock driver, with both a mux and clock divider.
+
+Please let me know your merge strategy here. I can ack the clk patches
+because they look fine from high-level clk driver perspective (maybe
+Joel can take a closer look) or I can merge the patches into clk-next
+and get them into next release while the video driver gets reviewed.
