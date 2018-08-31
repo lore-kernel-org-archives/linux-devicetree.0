@@ -1,31 +1,48 @@
-From: Trilok Soni <tsoni@codeaurora.org>
-Subject: Re: [PATCH v1 0/2] Add Embedded USB Debugger (EUD) driver
-Date: Fri, 31 Aug 2018 09:03:42 -0700
-Message-ID: <51874c59-46d0-363d-bb53-af9450207194@codeaurora.org>
-References: <1534464348-8227-1-git-send-email-pheragu@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH v2 04/34] ARM: tegra: apalis_t30: reorder pcie properties
+Date: Fri, 31 Aug 2018 18:37:46 +0200
+Message-ID: <20180831163817.23970-5-marcel@ziswiler.com>
+References: <20180831163817.23970-1-marcel@ziswiler.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534464348-8227-1-git-send-email-pheragu@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20180831163817.23970-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prakruthi Deepak Heragu <pheragu@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, rnayak@codeaurora.org
+To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/16/2018 5:05 PM, Prakruthi Deepak Heragu wrote:
-> This is a series of patches that implements a driver for the control
-> peripheral, EUD (Embedded USB Debugger). The EUD is a mini-USB hub
-> implemented on chip to support the USB-based debug and trace capabilities.
-> Apart from debug capabilities, EUD has a control peripheral. Control
-> Peripheral is on when EUD is on and gets signals like USB attach, pet EUD,
-> charge phone etc. EUD driver listens to events like USB attach or detach
-> and charger enable or disable and then notifies the USB driver or PMIC
-> driver respectively about these events via EXTCON. At regular intervals,
-> the EUD driver receives an interrupt to pet the driver indicating that
-> the software is functional.
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-Any other review comments on this patch series?
+Reorder PCIe properties.
 
----Trilok Soni
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+
+---
+
+Changes in v2: None
+
+ arch/arm/boot/dts/tegra30-apalis.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
+index f13df31b5e25..fc279a073ac5 100644
+--- a/arch/arm/boot/dts/tegra30-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
+@@ -16,13 +16,13 @@
+ 
+ 	pcie@3000 {
+ 		avdd-pexa-supply = <&vdd2_reg>;
+-		vdd-pexa-supply = <&vdd2_reg>;
+ 		avdd-pexb-supply = <&vdd2_reg>;
+-		vdd-pexb-supply = <&vdd2_reg>;
+ 		avdd-pex-pll-supply = <&vdd2_reg>;
+ 		avdd-plle-supply = <&ldo6_reg>;
+-		vddio-pex-ctl-supply = <&sys_3v3_reg>;
+ 		hvdd-pex-supply = <&sys_3v3_reg>;
++		vddio-pex-ctl-supply = <&sys_3v3_reg>;
++		vdd-pexa-supply = <&vdd2_reg>;
++		vdd-pexb-supply = <&vdd2_reg>;
+ 
+ 		pci@1,0 {
+ 			nvidia,num-lanes = <4>;
+-- 
+2.14.4
