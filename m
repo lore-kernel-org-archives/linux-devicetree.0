@@ -1,37 +1,40 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/3] dt-bindings: usb: renesas_usbhs: add clock-names property
-Date: Fri, 31 Aug 2018 15:48:38 +0900
-Message-Id: <1535698119-10132-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1535698119-10132-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1535698119-10132-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=dj/7=LO=oracle.com=dan.carpenter@kernel.org>
+Date: Fri, 31 Aug 2018 20:39:28 +0300
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [bug report] of/unittest: remove use of node name pointer in overlay
+ high level test
+Message-ID: <20180831173928.bbt6a5ttrtgzbabk@kili.mountain>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+To: robh@kernel.org
+Cc: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-R-Car Gen3 needs to enable clocks of both host and peripheral.
-Otherwise, other side device cannot work correctly. So, this patch
-adds a property of clock-names for R-Car Gen3 as an optional.
+Hello Rob Herring,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
- 1 file changed, 2 insertions(+)
+The patch 4785d169abd5: "of/unittest: remove use of node name pointer
+in overlay high level test" from Aug 27, 2018, leads to the following
+static checker warning:
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 087140a..a8fa3ec 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -37,6 +37,8 @@ Optional properties:
-   - dmas: Must contain a list of references to DMA specifiers.
-   - dma-names : named "ch%d", where %d is the channel number ranging from zero
-                 to the number of channels (DnFIFOs) minus one.
-+  - clock-names: For a "renesas,rcar-gen3-usbhs" compatible device,
-+		 "hsusb" and "ehci/ohci" can be set.
- 
- Example:
- 	usbhs: usb@e6590000 {
--- 
-1.9.1
+	drivers/of/unittest.c:2356 of_unittest_overlay_high_level()
+	info: ignoring unreachable code.
+
+drivers/of/unittest.c
+  2354          for_each_child_of_node(overlay_base_root, np) {
+  2355                  struct device_node *base_child;
+  2356                  for_each_child_of_node(of_root, base_child) {
+  2357                          if (!strcmp(np->full_name, base_child->full_name))
+  2358                                  unittest(0, "illegal node name in overlay_base %pOFn",
+  2359                                          np);
+  2360                          return;
+
+You wanted to only return on error probably?  Smatch is complaining
+that we don't iterate through the inside loop more than once.
+
+  2361                  }
+  2362          }
+  2363  
+
+regards,
+dan carpenter
