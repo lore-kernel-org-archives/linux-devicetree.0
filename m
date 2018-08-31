@@ -1,134 +1,99 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 2/4] clock: aspeed: Setup video engine clocking
-Date: Fri, 31 Aug 2018 14:33:22 -0700
-Message-ID: <CACPK8Xe+aSgFvysXFJaGdSMjG4CsEL6-iy5d79ou1+VFTV_aQw@mail.gmail.com>
-References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com> <1535576973-8067-3-git-send-email-eajames@linux.vnet.ibm.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v3] rpmsg: qcom_smd: Access APCS through mailbox framework
+Date: Fri, 31 Aug 2018 14:34:22 -0700
+Message-ID: <d6bdaad6-05cb-6af8-b1d5-c454949628d3@gmail.com>
+References: <20180420011757.22389-1-bjorn.andersson@linaro.org>
+ <c6e2e87c-e2fd-c0ea-dbb9-5246b8694272@gmail.com>
+ <20180831040701.GR2523@minitux>
+ <e7af3589-dce5-2ea8-3ce0-258ced4a2302@gmail.com>
+ <20180831205519.GS2523@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535576973-8067-3-git-send-email-eajames@linux.vnet.ibm.com>
+In-Reply-To: <20180831205519.GS2523@minitux>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: eajames <eajames@linux.vnet.ibm.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org, linux-aspeed@lists.ozlabs.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, mchehab@kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Aug 2018 at 14:09, Eddie James <eajames@linux.vnet.ibm.com> wrote:
->
-> Add the video engine reset bit. Add eclk mux and clock divider table.
->
-> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+On 08/31/18 13:55, Bjorn Andersson wrote:
+> On Fri 31 Aug 13:41 PDT 2018, Frank Rowand wrote:
+> 
+>> On 08/30/18 21:07, Bjorn Andersson wrote:
+>>> On Thu 30 Aug 20:57 PDT 2018, Frank Rowand wrote:
+>>>
+>>>> Hi Bjorn,
+>>>>
+>>>>
+>>>> On 04/19/18 18:17, Bjorn Andersson wrote:
+>>>>> Attempt to acquire the APCS IPC through the mailbox framework and fall
+>>>>> back to the old syscon based approach, to allow us to move away from
+>>>>> using the syscon.
+>>>>>
+>>>>> Reviewed-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+>>>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>>>> ---
+>>>>>
+>>>>> Changes since v2:
+>>>>> - Added comment about mbox_send_message() return value.
+>>>>>
+>>>>>  .../devicetree/bindings/soc/qcom/qcom,smd.txt      |  8 ++-
+>>>>>  drivers/rpmsg/Kconfig                              |  1 +
+>>>>>  drivers/rpmsg/qcom_smd.c                           | 67 ++++++++++++++++------
+>>>>>  3 files changed, 56 insertions(+), 20 deletions(-)
+>>>>
+>>>> This patch in the mainline Linux kernel as commit ab460a2e72dabecfdabd45eb7e3ee2d73fc876d4
+>>>> causes a problem with the APQ8074 Dragonboard.  The mmc device is not set up
+>>>> with the patch applied, thus I do not have the block device my root file system
+>>>> is located on.
+>>>>
+>>>> Testing on v4.18, if I revert this commit the mmc device is available.
+>>>>
+>>>> I'll reply to this email with the console messages for 4.18 and for 4.18 with
+>>>> this commit reverted.
+>>>>
+>>>
+>>> The mmc device would fail to come up if the regulators didn't come up,
+>>> which would be the result of smd not working. But it should fallback to
+>>> the old mechanism if no mailbox is specified.
+>>>
+>>> Can you double check that CONFIG_RPMSG_QCOM_SMD is still set in your
+>>> .config after applying and building with this commit included? And if
+>>> not, try to enable CONFIG_MAILBOX.
+>>
+>> Thank you!
+>>
+>> That is indeed the cause.  ab460a2e72da added a "depends on MAILBOX" to
+>> CONFIG_RPMSG_QCOM_SMD, so CONFIG_RPMSG_QCOM_SMD becomes unset since
+>> CONFIG_MAILBOX is not enabled in qcom_defconfig and is not otherwise
+>> selected for the dragonboard.
+>>
+> 
+> Thanks for verifying this!
+> 
+>> Is there a config variable that should be selecting MAILBOX for a class
+>> of systems that would include the APQ8074 Dragonboard?  For my testing
+>> I added the "select MAILBOX" to CONFIG_ARCH_MSM8974, but I do not know
+>> what systems that includes, and whether it is appropriate to do the
+>> select for all of them.
+>>
+> 
+> We typically don't use the CONFIG_ARCH_* to enable user selectable
+> config options, even if they serve a critical role in the system.
+> 
+> So minimum change would be to add CONFIG_MAILBOX to the qcom_defconfig
+> (and multi_v7_defconfig I presume). The fuller solution would be to add
+> qcom,msm8974-apcs-kpss-global (.data is 8) to the qcom-apcs-ipc-mailbox
+> list of compatibles and replace the syscon currently used, and then
+> enable these in the defconfigs.
 
-I'm travelling this week, so I'll be able to take a closer look next week.
+I would be happy with either solution.  Can I twist your arm to create
+the patch?
 
-At a glance it looks okay.
 
-Cheers,
-
-Joel
-
-> ---
->  drivers/clk/clk-aspeed.c | 41 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 39 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
-> index 5961367..f16ce7d 100644
-> --- a/drivers/clk/clk-aspeed.c
-> +++ b/drivers/clk/clk-aspeed.c
-> @@ -87,7 +87,7 @@ struct aspeed_clk_gate {
->  /* TODO: ask Aspeed about the actual parent data */
->  static const struct aspeed_gate_data aspeed_gates[] = {
->         /*                               clk rst   name                 parent  flags */
-> -       [ASPEED_CLK_GATE_ECLK] =        {  0, -1, "eclk-gate",          "eclk", 0 }, /* Video Engine */
-> +       [ASPEED_CLK_GATE_ECLK] =        {  0,  6, "eclk-gate",          "eclk", 0 }, /* Video Engine */
->         [ASPEED_CLK_GATE_GCLK] =        {  1,  7, "gclk-gate",          NULL,   0 }, /* 2D engine */
->         [ASPEED_CLK_GATE_MCLK] =        {  2, -1, "mclk-gate",          "mpll", CLK_IS_CRITICAL }, /* SDRAM */
->         [ASPEED_CLK_GATE_VCLK] =        {  3,  6, "vclk-gate",          NULL,   0 }, /* Video Capture */
-> @@ -113,6 +113,24 @@ struct aspeed_clk_gate {
->         [ASPEED_CLK_GATE_LHCCLK] =      { 28, -1, "lhclk-gate",         "lhclk", 0 }, /* LPC master/LPC+ */
->  };
->
-> +static const char * const eclk_parent_names[] = {
-> +       "mpll",
-> +       "hpll",
-> +       "dpll",
-> +};
-> +
-> +static const struct clk_div_table ast2500_eclk_div_table[] = {
-> +       { 0x0, 2 },
-> +       { 0x1, 2 },
-> +       { 0x2, 3 },
-> +       { 0x3, 4 },
-> +       { 0x4, 5 },
-> +       { 0x5, 6 },
-> +       { 0x6, 7 },
-> +       { 0x7, 8 },
-> +       { 0 }
-> +};
-> +
->  static const struct clk_div_table ast2500_mac_div_table[] = {
->         { 0x0, 4 }, /* Yep, really. Aspeed confirmed this is correct */
->         { 0x1, 4 },
-> @@ -192,18 +210,21 @@ static struct clk_hw *aspeed_ast2500_calc_pll(const char *name, u32 val)
->
->  struct aspeed_clk_soc_data {
->         const struct clk_div_table *div_table;
-> +       const struct clk_div_table *eclk_div_table;
->         const struct clk_div_table *mac_div_table;
->         struct clk_hw *(*calc_pll)(const char *name, u32 val);
->  };
->
->  static const struct aspeed_clk_soc_data ast2500_data = {
->         .div_table = ast2500_div_table,
-> +       .eclk_div_table = ast2500_eclk_div_table,
->         .mac_div_table = ast2500_mac_div_table,
->         .calc_pll = aspeed_ast2500_calc_pll,
->  };
->
->  static const struct aspeed_clk_soc_data ast2400_data = {
->         .div_table = ast2400_div_table,
-> +       .eclk_div_table = ast2400_div_table,
->         .mac_div_table = ast2400_div_table,
->         .calc_pll = aspeed_ast2400_calc_pll,
->  };
-> @@ -317,6 +338,7 @@ struct aspeed_reset {
->         [ASPEED_RESET_PECI]     = 10,
->         [ASPEED_RESET_I2C]      =  2,
->         [ASPEED_RESET_AHB]      =  1,
-> +       [ASPEED_RESET_VIDEO]    =  6,
->
->         /*
->          * SCUD4 resets start at an offset to separate them from
-> @@ -522,6 +544,22 @@ static int aspeed_clk_probe(struct platform_device *pdev)
->                 return PTR_ERR(hw);
->         aspeed_clk_data->hws[ASPEED_CLK_24M] = hw;
->
-> +       hw = clk_hw_register_mux(dev, "eclk-mux", eclk_parent_names,
-> +                                ARRAY_SIZE(eclk_parent_names), 0,
-> +                                scu_base + ASPEED_CLK_SELECTION, 2, 0x3, 0,
-> +                                &aspeed_clk_lock);
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +       aspeed_clk_data->hws[ASPEED_CLK_ECLK_MUX] = hw;
-> +
-> +       hw = clk_hw_register_divider_table(dev, "eclk", "eclk-mux", 0,
-> +                                          scu_base + ASPEED_CLK_SELECTION, 28,
-> +                                          3, 0, soc_data->eclk_div_table,
-> +                                          &aspeed_clk_lock);
-> +       if (IS_ERR(hw))
-> +               return PTR_ERR(hw);
-> +       aspeed_clk_data->hws[ASPEED_CLK_ECLK] = hw;
-> +
->         /*
->          * TODO: There are a number of clocks that not included in this driver
->          * as more information is required:
-> @@ -531,7 +569,6 @@ static int aspeed_clk_probe(struct platform_device *pdev)
->          *   RGMII
->          *   RMII
->          *   UART[1..5] clock source mux
-> -        *   Video Engine (ECLK) mux and clock divider
->          */
->
->         for (i = 0; i < ARRAY_SIZE(aspeed_gates); i++) {
-> --
-> 1.8.3.1
->
+> 
+> Regards,
+> Bjorn
+> 
