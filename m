@@ -1,235 +1,76 @@
-From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v4 0/6] Add Rockchip VPU JPEG encoder
-Date: Fri, 31 Aug 2018 12:41:07 -0300
-Message-ID: <20180831154113.18872-1-ezequiel@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: dw-mmio: avoid hardcoded field mask" to the spi tree
+Date: Fri, 31 Aug 2018 16:43:12 +0100 (BST)
+Message-ID: <20180831154312.183C911226FE@debutante.sirena.org.uk>
+References: <20180831114046.27094-1-alexandre.belloni@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180831114046.27094-1-alexandre.belloni@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microchip.com>linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for JPEG encoding via the VPU block
-present in Rockchip platforms. Currently, support for RK3288
-and RK3399 is included.
+The patch
 
-This v4 patchset changes quantization luma and chroma array controls,
-and instead introduces a compound control, V4L2_CID_JPEG_QUANTIZATION
-for userspace to specify the luma and chroma quantization tables,
-via a struct.
+   spi: dw-mmio: avoid hardcoded field mask
 
-Rest of the changes are the same as v3.
+has been applied to the spi tree at
 
-This series does not depend on the Request API, since there are
-some encoder uses that doesn't require it. So, if there are no
-more comments, I'd like to merge this sooner than later.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-Compliance
-==========
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-(Same results as v3)
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-v4l2-compliance SHA: d0f4ea7ddab6d0244c4fe1e960bb2aaeefb911b9, 64 bits
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Compliance test for device /dev/video0:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Driver Info:
-	Driver name      : rockchip-vpu
-	Card type        : rockchip,rk3399-vpu-enc
-	Bus info         : platform: rockchip-vpu
-	Driver version   : 4.18.0
-	Capabilities     : 0x84204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-Media Driver Info:
-	Driver name      : rockchip-vpu
-	Model            : rockchip-vpu
-	Serial           : 
-	Bus info         : 
-	Media version    : 4.18.0
-	Hardware revision: 0x00000000 (0)
-	Driver version   : 4.18.0
-Interface Info:
-	ID               : 0x0300000c
-	Type             : V4L Video
-Entity Info:
-	ID               : 0x00000001 (1)
-	Name             : rockchip,rk3399-vpu-enc-source
-	Function         : V4L2 I/O
-	Pad 0x01000002   : Source
-	  Link 0x02000008: to remote pad 0x1000005 of entity 'rockchip,rk3399-vpu-enc-proc': Data, Enabled, Immutable
+Thanks,
+Mark
 
-Required ioctls:
-	test MC information (see 'Media Driver Info' above): OK
-	test VIDIOC_QUERYCAP: OK
+>From c1d8b0825d50e1eb6b6ea2cb9e450637dba9b4e2 Mon Sep 17 00:00:00 2001
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Date: Fri, 31 Aug 2018 13:40:46 +0200
+Subject: [PATCH] spi: dw-mmio: avoid hardcoded field mask
 
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
+Define a mask for the IF_SI_OWNER field.
 
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-dw-mmio.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 2 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK (Not Supported)
-	test blocking wait: OK
-	test MMAP: OK                                     
-	test USERPTR: OK (Not Supported)
-	test DMABUF: Cannot test, specify --expbuf-device
-
-Total: 48, Succeeded: 48, Failed: 0, Warnings: 0
-
-v4:
-  - Change luma and chroma array controls, with a compound
-    control, as suggested by Paul.
-v3:
-  - Refactor driver to allow a more elegant integration with
-    other codec modes (h264 decoding, jpeg decoding, etc).
-    Each variant can now be encoders, decoders or both.
-  - Register driver in the media controller framework,
-    in preparation for the Request API.
-  - Set values for JPEG quantization controls in the core, as suggested
-    by Tomasz and Hans.
-  - Move pm_runtime_get/put to run/done, reducing power consumption.
-    This was possible thanks to Miouyouyou, who pointed out the power
-    domains missing [1].
-  - Use bulk clock API for simpler code.
-v2:
-  - Add devicetree binding documentation and devicetree changes
-  - Add documentation to added pixel format and controls
-  - Address Hans' review comments
-  - Get rid of unused running_ctx field
-  - Fix wrong planar pixel format depths
-  - Other minor changes for v4l2-compliance
-  - Drop .crop support, we will add support for the
-    selector API later, if needed.
-
-[1] https://github.com/Miouyouyou/RockMyy/blob/master/patches/kernel/v4.18/DTS/0026-ARM-DTSI-rk3288-Set-the-VPU-MMU-power-domains.patch
-
-
-Ezequiel Garcia (4):
-  dt-bindings: Document the Rockchip VPU bindings
-  ARM: dts: rockchip: add VPU device node for RK3288
-  arm64: dts: rockchip: add VPU device node for RK3399
-  media: add Rockchip VPU JPEG encoder driver
-
-Shunqian Zheng (2):
-  media: Add JPEG_RAW format
-  media: Add controls for JPEG quantization tables
-
- .../bindings/media/rockchip-vpu.txt           |  30 +
- .../media/uapi/v4l/extended-controls.rst      |  23 +
- .../media/uapi/v4l/pixfmt-compressed.rst      |   9 +
- .../media/videodev2.h.rst.exceptions          |   1 +
- MAINTAINERS                                   |   7 +
- arch/arm/boot/dts/rk3288.dtsi                 |  14 +-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi      |  14 +-
- drivers/media/platform/Kconfig                |  13 +
- drivers/media/platform/Makefile               |   1 +
- drivers/media/platform/rockchip/vpu/Makefile  |   9 +
- .../platform/rockchip/vpu/rk3288_vpu_hw.c     | 123 ++++
- .../rockchip/vpu/rk3288_vpu_hw_jpege.c        | 126 ++++
- .../platform/rockchip/vpu/rk3288_vpu_regs.h   | 442 +++++++++++++
- .../platform/rockchip/vpu/rk3399_vpu_hw.c     | 124 ++++
- .../rockchip/vpu/rk3399_vpu_hw_jpege.c        | 154 +++++
- .../platform/rockchip/vpu/rk3399_vpu_regs.h   | 601 +++++++++++++++++
- .../platform/rockchip/vpu/rockchip_vpu.h      | 362 +++++++++++
- .../rockchip/vpu/rockchip_vpu_common.h        |  37 ++
- .../platform/rockchip/vpu/rockchip_vpu_drv.c  | 545 ++++++++++++++++
- .../platform/rockchip/vpu/rockchip_vpu_enc.c  | 607 ++++++++++++++++++
- .../platform/rockchip/vpu/rockchip_vpu_hw.h   |  65 ++
- drivers/media/v4l2-core/v4l2-ctrls.c          |  10 +
- drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
- include/uapi/linux/v4l2-controls.h            |   5 +
- include/uapi/linux/videodev2.h                |   2 +
- 25 files changed, 3323 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
- create mode 100644 drivers/media/platform/rockchip/vpu/Makefile
- create mode 100644 drivers/media/platform/rockchip/vpu/rk3288_vpu_hw.c
- create mode 100644 drivers/media/platform/rockchip/vpu/rk3288_vpu_hw_jpege.c
- create mode 100644 drivers/media/platform/rockchip/vpu/rk3288_vpu_regs.h
- create mode 100644 drivers/media/platform/rockchip/vpu/rk3399_vpu_hw.c
- create mode 100644 drivers/media/platform/rockchip/vpu/rk3399_vpu_hw_jpege.c
- create mode 100644 drivers/media/platform/rockchip/vpu/rk3399_vpu_regs.h
- create mode 100644 drivers/media/platform/rockchip/vpu/rockchip_vpu.h
- create mode 100644 drivers/media/platform/rockchip/vpu/rockchip_vpu_common.h
- create mode 100644 drivers/media/platform/rockchip/vpu/rockchip_vpu_drv.c
- create mode 100644 drivers/media/platform/rockchip/vpu/rockchip_vpu_enc.c
- create mode 100644 drivers/media/platform/rockchip/vpu/rockchip_vpu_hw.h
-
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index 351f49976161..a768461614a0 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -36,6 +36,7 @@ struct dw_spi_mmio {
+ #define MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL	0x24
+ #define OCELOT_IF_SI_OWNER_OFFSET		4
+ #define JAGUAR2_IF_SI_OWNER_OFFSET		6
++#define MSCC_IF_SI_OWNER_MASK			GENMASK(1, 0)
+ #define MSCC_IF_SI_OWNER_SISL			0
+ #define MSCC_IF_SI_OWNER_SIBM			1
+ #define MSCC_IF_SI_OWNER_SIMC			2
+@@ -102,7 +103,7 @@ static int dw_spi_mscc_init(struct platform_device *pdev,
+ 
+ 	/* Select the owner of the SI interface */
+ 	regmap_update_bits(dwsmscc->syscon, MSCC_CPU_SYSTEM_CTRL_GENERAL_CTRL,
+-			   0x3 << if_si_owner_offset,
++			   MSCC_IF_SI_OWNER_MASK << if_si_owner_offset,
+ 			   MSCC_IF_SI_OWNER_SIMC << if_si_owner_offset);
+ 
+ 	dwsmmio->dws.set_cs = dw_spi_mscc_set_cs;
 -- 
-2.18.0
+2.19.0.rc1
