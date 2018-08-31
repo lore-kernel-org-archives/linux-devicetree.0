@@ -1,58 +1,86 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] arm64: dts: allwinner: h5: Add device
- tree for Bananapi M2 Plus H5
-Date: Fri, 31 Aug 2018 12:17:42 +0200
-Message-ID: <20180831101742.3ybvf6d3refft454@flea>
-References: <20180830080926.15027-1-wens@csie.org>
+From: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Subject: Re: [PATCH v4 09/13] ARM: dts: sun8i: r40: add sata node
+Date: Fri, 31 Aug 2018 12:20:21 +0200
+Message-ID: <20180831102021.idz42sfgldihpkrp@flea>
+References: <20180830190120.722-1-clabbe.montjoie@gmail.com>
+ <20180830190120.722-10-clabbe.montjoie@gmail.com>
+ <20180831073500.zubqpvar4yhjqrge@flea>
+ <20180831075631.GB16301@Red>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ksm7qmedlgyr56ax"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSFLUTOAKGQE53WXPKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="iuyup6akl4fzegyw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZ5MUTOAKGQEH3UXHDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180830080926.15027-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20180831075631.GB16301@Red>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ksm7qmedlgyr56ax
+--iuyup6akl4fzegyw
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Thu, Aug 30, 2018 at 04:09:23PM +0800, Chen-Yu Tsai wrote:
-> Hi,
+On Fri, Aug 31, 2018 at 09:56:31AM +0200, Corentin Labbe wrote:
+> On Fri, Aug 31, 2018 at 09:35:00AM +0200, Maxime Ripard wrote:
+> > On Thu, Aug 30, 2018 at 09:01:16PM +0200, Corentin Labbe wrote:
+> > > R40 have a sata controller which is the same as A20.
+> > > This patch adds a DT node for it.
+> > > 
+> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/sun8i-r40.dtsi | 23 +++++++++++++++++++++++
+> > >  1 file changed, 23 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> > > index 852c2ccc3268..d6b5820da850 100644
+> > > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> > > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> > > @@ -550,6 +550,29 @@
+> > >  			#size-cells = <0>;
+> > >  		};
+> > >  
+> > > +		ahci: sata@1c18000 {
+> > > +			compatible = "allwinner,sun8i-r40-ahci";
+> > > +			reg = <0x01c18000 0x1000>;
+> > > +			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> > > +			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
+> > > +			resets = <&ccu RST_BUS_SATA>;
+> > > +			resets-name = "ahci";
+> > > +			#address-cells = <1>;
+> > > +			#size-cells = <0>;
+> > > +			status = "disabled";
+> > > +
+> > > +			sata_port: sata-port@0 {
+> > > +				reg = <0>;
+> > > +				phys = <&sata_phy>;
+> > > +			};
+> > > +		};
+> > > +
+> > > +		sata_phy: sata-phy@1c180c0  {
+> > > +			compatible = "allwinner,sun8i-r40-sata-phy";
+> > > +			reg = <0x1c180c0 0x200>;
+> > 
+> > Overlapping devices in the DTS is not ok.
+> > 
 > 
-> Allwinner's H5 SoC is pin compatible with the H3 SoC. As such, some
-> vendors produce H3 and H5 variants for the same device. Such is the
-> case with Libre Computer's ALL-H3-CC, and the Bananapi M2 Plus.
-> 
-> This series follows that of the ALL-H3-CC, splitting out a common
-> board dtsi, and then two SoC-specific dts files that include the
-> SoC level and common board dtsi's, as well as putting in the board
-> name. The first patch is a minor fix that I think should be done
-> before the migration.
-> 
-> Please have a look.
+> I do the same than arch/arm/boot/dts/berlin2.dtsi (sata@e90000
+> phy@e900a0)
+>
+> But since it is not a good justification, it seems that regmap is my
+> only solution ?
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-
-> Also, on a related matter, Bananapi recently released revision v1.2
-> of the M2 Plus. The original commercially available version was v1.1.
-> v1.2 adds a GPIO control that can change the CPU cores' supply voltage
-> between 1.1V and 1.3V. Do we want two extra dts files for this? Put
-> them in the existing dts files regardless? Or let people handle this
-> via overlays?
-
-If that the sole change, I'd be inclined to merge it as a separate DT
-for that particular version. Is there any way to detect it at runtime?
+I'm not even sure why you are moving the phy out of its original node
+(and driver).
 
 Maxime
 
@@ -60,4 +88,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---ksm7qmedlgyr56ax--
+--iuyup6akl4fzegyw--
