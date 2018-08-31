@@ -1,86 +1,55 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v5 03/10] Documentation: hwmon: Add OCC documentation
-Date: Fri, 31 Aug 2018 16:01:10 -0700
-Message-ID: <4f4ff98e-f2a6-c8b1-2ad1-b16bf4305fdd@infradead.org>
-References: <1535664761-86018-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1535664761-86018-4-git-send-email-eajames@linux.vnet.ibm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/3] ARM: dts: qcom: Add SPMI PMIC Arbiter nodes for
+ APQ8084 and MSM8974
+Date: Fri, 31 Aug 2018 16:01:25 -0700
+Message-ID: <20180831230125.GU2523@minitux>
+References: <1422965880-11047-1-git-send-email-iivanov@mm-sol.com>
+ <1422965880-11047-2-git-send-email-iivanov@mm-sol.com>
+ <550311ad-8f93-3e80-9706-1321482b8c19@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535664761-86018-4-git-send-email-eajames@linux.vnet.ibm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <550311ad-8f93-3e80-9706-1321482b8c19@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux@roeck-us.net, joel@jms.id.au, benh@kernel.crashing.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2018 02:32 PM, Eddie James wrote:
-> Document the hwmon interface for the OCC.
+On Fri 31 Aug 15:46 PDT 2018, Frank Rowand wrote:
+> > +		spmi_bus: spmi@fc4cf000 {
+> > +			compatible = "qcom,spmi-pmic-arb";
+> > +			reg-names = "core", "intr", "cnfg";
+> > +			reg = <0xfc4cf000 0x1000>,
+> > +			      <0xfc4cb000 0x1000>,
+> > +			      <0xfc4ca000 0x1000>;
+> > +			interrupt-names = "periph_irq";
 > 
-> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
-
-Hi,
-Please see comments below.
-
-> ---
->  Documentation/hwmon/occ | 112 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 Documentation/hwmon/occ
+> > +			interrupts = <0 190 0>;
 > 
-> diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-> new file mode 100644
-> index 0000000..adc2fa4
-> --- /dev/null
-> +++ b/Documentation/hwmon/occ
-> @@ -0,0 +1,112 @@
-> +Kernel driver occ-hwmon
-> +=======================
-> +
-> +Supported chips:
-> +  * POWER8
-> +  * POWER9
-> +
-> +Author: Eddie James <eajames@linux.vnet.ibm.com>
-> +
-> +Description
-> +-----------
-> +
-> +This driver supports hardware monitoring for the On-Chip Controller (OCC)
-> +embedded on POWER processors. The OCC is a device that collects and aggregates
-> +sensor data from the processor and the system. The OCC can provide the raw
-> +sensor data as well as perform thermal and power management on the system.
-> +
-> +The P8 version of this driver is a client driver of I2C. It may be probed
-> +manually if an "ibm,p8-occ-hwmon" compatible device is found under the
-> +appropriate I2C bus node in the device-tree.
-> +
-> +The P9 version of this driver is a client driver of the FSI-based OCC driver.
-> +It will be probed automatically by the FSI-based OCC driver.
-> +
-> +Sysfs entries
-> +-------------
-> +
-> +The following attributes are supported. All attributes are read-only unless
-> +specified.
-> +
-> +The OCC sensor ID is an integer that represents the unique identififer of the
+> The final value in this interrupts property means IRQ_TYPE_NONE.
+> 
+> A WARN_ON() was added early this year to complain about use of
+> IRQ_TYPE_NONE: 83a86fbb5b56 "irqchip/gic: Loudly complain about
+> the use of IRQ_TYPE_NONE", resulting in many warnings spewing
+> forth when I boot an APQ8074 Dragonboard.  I am trying to
+> determine whether the warning is overly aggressive, or whether
+> the IRQ TYPE is incorrectly specified for the spmi node.
+> 
+> The interrupt-parent for the spmi node is intc: interrupt-controller@f9000000,
+> which has compatible = "qcom,msm-qgic2".  I do not know the architecture
+> or implementation of this interrupt controller.  Is an IRQ_TYPE_NONE
+> valid in this case, or should a specific type be provided?
+> 
 
-                                                              identifier
+No, IRQ_TYPE_NONE isn't valid and the WARN_ON() is reasonable.
 
-> +sensor with respect to the OCC. For example, a temperature sensor for the 3rd
-
-prefer s/3rd/third/
-
-> +DIMM slot in the system may have a sensor ID of 7. This mapping is unavailable
-> +to the device driver, which must therefore export the sensor ID as-is.
-> +
-> +Some entries are only present with certain OCC sensor versions or only on
-> +certain OCCs in the system. The version number is not exported to the user
-> +but can be inferred.
-
-[snip]
+Please change it to IRQ_TYPE_LEVEL_HIGH. And while you're at it, replace
+the first 0 with GIC_SPI.
 
 
--- 
-~Randy
+If you have more of these warnings you can most likely look at e.g.
+msm8916 (arm64) to find the right flags.
+
+Regards,
+Bjorn
