@@ -1,135 +1,77 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v3 00/38] Tegra SDHCI add support for HS200 and UHS
- signaling
-Date: Fri, 31 Aug 2018 10:20:34 +0300
-Message-ID: <c0b484dc-bfb1-244b-f40e-e6511b8888ba@intel.com>
-References: <20180830150639.21048-1-avienamo@nvidia.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 09/13] ARM: dts: sun8i: r40: add sata node
+Date: Fri, 31 Aug 2018 09:35:00 +0200
+Message-ID: <20180831073500.zubqpvar4yhjqrge@flea>
+References: <20180830190120.722-1-clabbe.montjoie@gmail.com>
+ <20180830190120.722-10-clabbe.montjoie@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830150639.21048-1-avienamo@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Aapo Vienamo <avienamo@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mikko Perttunen <mperttunen@nvidia.com>, Stefan Agner <stefan@agner.ch>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gns7kcfnkcvtbpqy"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBJW7UPOAKGQEABZ7WCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180830190120.722-10-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/08/18 18:06, Aapo Vienamo wrote:
-> Hi all,
-> 
-> This series implements support for faster signaling modes on Tegra
-> SDHCI controllers. This series consist of several parts: changes
-> required for 1.8 V signaling and pad control, pad calibration, and
-> tuning. Following earlies patch sets have been merged into this
-> larger set: "Tegra PMC pinctrl pad configuration", "Tegra SDHCI enable
-> 1.8 V signaling on Tegar210 and Tegra186", "Tegra SDHCI update the
-> padautocal procedure". Also the patches for enabling SDHCI tuning
-> are added.
 
-For sdhci-related patches 11 thru' 27
+--gns7kcfnkcvtbpqy
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On Thu, Aug 30, 2018 at 09:01:16PM +0200, Corentin Labbe wrote:
+> R40 have a sata controller which is the same as A20.
+> This patch adds a DT node for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-r40.dtsi | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> index 852c2ccc3268..d6b5820da850 100644
+> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> @@ -550,6 +550,29 @@
+>  			#size-cells = <0>;
+>  		};
+>  
+> +		ahci: sata@1c18000 {
+> +			compatible = "allwinner,sun8i-r40-ahci";
+> +			reg = <0x01c18000 0x1000>;
+> +			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
+> +			resets = <&ccu RST_BUS_SATA>;
+> +			resets-name = "ahci";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +
+> +			sata_port: sata-port@0 {
+> +				reg = <0>;
+> +				phys = <&sata_phy>;
+> +			};
+> +		};
+> +
+> +		sata_phy: sata-phy@1c180c0  {
+> +			compatible = "allwinner,sun8i-r40-sata-phy";
+> +			reg = <0x1c180c0 0x200>;
 
+Overlapping devices in the DTS is not ok.
 
-> 
-> Changelog:
-> v3:
-> 	- Remove tegra_sdhci_writew() from tegra210_sdhci_ops to prevent
-> 	  incorrect access to SDHCI_TRANSFER_MODE on Tegra210.
-> 	- Drop "mmc: sdhci: Add a quirk to skip clearing the transfer
-> 	  mode register on tuning". This is no longer needed since it
-> 	  was effectively a workaround to the behavior caused by
-> 	  tegra_sdhci_writew() on Tegra210.
-> 	- Implement disabling of the card clock during issuing of the
-> 	  tuning command in tegra210_sdhci_writew().
-> 	- Drop "mmc: sdhci: Add a quirk to disable card clock during
-> 	  tuning". This is now implemented in the sdhci-tegra driver.
-> 	
-> v2:
-> 	- Fix grammar in PMC device tree bindings docs
-> 	- Remove a stray line from tegra sdhci bindings
-> 	- Cosmetic changes to PMC pinctrl driver
-> 	- Fix a typo in "soc/tegra: pmc: Implement
-> 	  tegra_io_pad_is_powered()" commit message
-> 	- Declare mask and value on the same line in
-> 	  tegra_io_pad_is_powered()
-> 	- Move the call to tegra_sdhci_is_pad_and_regulator_valid() to
-> 	  inside the if condition in tegra_sdhci_reset()
-> 	- Use usleep_range() in tegra_sdhci_configure_cal_pad()
-> 	- Move sdhci_writel() out of the enable if-else body in
-> 	  tegra_sdhci_configure_cal_pad()
-> 	- Add a delay before starting polling in
-> 	  tegra_sdhci_pad_autocalib()
-> 	- Use usleep_range() in tegra_sdhci_set_tap()
-> 	- Rename orig_enabled to status in
-> 	  tegra_sdhci_configure_card_clk()
-> 	- Fix if condition wrapping alignment in tegra_sdhci_set_tap()
-> 
-> v1:
-> 	- Probe the regulator voltage capabilities to determine whether pinctrl
-> 	  is needed in tegra_sdhci_r eset
-> 	- Don't remove tegra_sdhci_voltage_switch()
-> 	- Use dev_warn() in tegra_sdhci_init_pinctrl_info()
-> 	- Don't change start_signal_voltage_switch callback if pinctrl info
-> 	  invalid
-> 	- Only call udelay(1) on enable in tegra_sdhci_configure_cal_pad()
-> 	- Add nvidia, prefix to pad autocal offset dt props in the example
-> 
-> See the original patch sets for earlier changelogs.
-> 
-> 
-> Aapo Vienamo (38):
->   dt-bindings: Add Tegra PMC pad configuration bindings
->   dt-bindings: mmc: tegra: Add pad voltage control properties
->   dt-bindings: Add Tegra SDHCI pad pdpu offset bindings
->   dt-bindings: mmc: Add Tegra SDHCI sampling trimmer values
->   soc/tegra: pmc: Fix pad voltage configuration for Tegra186
->   soc/tegra: pmc: Factor out DPD register bit calculation
->   soc/tegra: pmc: Implement tegra_io_pad_is_powered()
->   soc/tegra: pmc: Use X macro to generate IO pad tables
->   soc/tegra: pmc: Remove public pad voltage APIs
->   soc/tegra: pmc: Implement pad configuration via pinctrl
->   mmc: tegra: Reconfigure pad voltages during voltage switching
->   mmc: tegra: Poll for calibration completion
->   mmc: tegra: Set calibration pad voltage reference
->   mmc: tegra: Power on the calibration pad
->   mmc: tegra: Disable card clock during pad calibration
->   mmc: tegra: Program pad autocal offsets from dt
->   mmc: tegra: Perform pad calibration after voltage switch
->   mmc: tegra: Enable pad calibration on Tegra210 and Tegra186
->   mmc: tegra: Add a workaround for tap value change glitch
->   mmc: tegra: Parse default trim and tap from dt
->   mmc: tegra: Configure default tap values
->   mmc: tegra: Configure default trim value on reset
->   mmc: tegra: Use standard SDHCI tuning on Tegra210 and Tegra186
->   mmc: tegra: Remove tegra_sdhci_writew() from tegra210_sdhci_ops
->   mmc: tegra: Disable card clock during tuning cmd on Tegra210
->   mmc: tegra: Enable UHS and HS200 modes for Tegra210
->   mmc: tegra: Enable UHS and HS200 modes for Tegra186
->   arm64: dts: Add Tegra210 sdmmc pinctrl voltage states
->   arm64: dts: Add Tegra186 sdmmc pinctrl voltage states
->   arm64: dts: tegra210-p2180: Allow ldo2 to go down to 1.8 V
->   arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
->   arm64: dts: tegra210-p2597: Remove no-1-8-v from sdmmc1
->   arm64: dts: tegra186: Add sdmmc pad auto calibration offsets
->   arm64: dts: tegra210: Add sdmmc pad auto calibration offsets
->   arm64: dts: tegra210: Add SDHCI tap and trim values
->   arm64: dts: tegra186: Add SDHCI tap and trim values
->   arm64: dts: tegra186: Assign clocks for sdmmc1 and sdmmc4
->   arm64: dts: tegra210: Assign clocks for sdmmc1 and sdmmc4
-> 
->  .../arm/tegra/nvidia,tegra186-pmc.txt         |  93 +++
->  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt | 103 ++++
->  .../bindings/mmc/nvidia,tegra20-sdhci.txt     |  68 ++
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi      |  74 +++
->  .../arm64/boot/dts/nvidia/tegra210-p2180.dtsi |  12 +-
->  .../arm64/boot/dts/nvidia/tegra210-p2597.dtsi |   1 -
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi      |  55 ++
->  drivers/mmc/host/sdhci-tegra.c                | 583 ++++++++++++++++--
->  drivers/soc/tegra/pmc.c                       | 511 +++++++++++----
->  .../pinctrl/pinctrl-tegra-io-pad.h            |  18 +
->  include/soc/tegra/pmc.h                       |  20 +-
->  11 files changed, 1328 insertions(+), 210 deletions(-)
->  create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-io-pad.h
-> 
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--gns7kcfnkcvtbpqy--
