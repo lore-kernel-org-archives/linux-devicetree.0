@@ -1,210 +1,50 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH v3 21/30] iio: adc: sun4i-gpadc-iio: add support for H3
- thermal sensor
-Date: Fri, 31 Aug 2018 17:51:41 +0800
-Message-ID: <f01ec2f202c7e2e5a7e0c822b2f9a8f0c55a9ea4.camel@aosc.io>
-References: <20180830154518.29507-1-embed3d@gmail.com>
-         <20180830154518.29507-22-embed3d@gmail.com>
-         <20180831091137.wkbbipssyd6mqfbt@flea>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH] usb: core: phy: clean up return value check about devm_of_phy_get_by_index()
+Date: Fri, 31 Aug 2018 17:55:09 +0800
+Message-ID: <258d57f5c8559c5fd3ba6d1ac1dcc5463737da2e.1535709096.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831091137.wkbbipssyd6mqfbt@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Philipp Rossak <embed3d@gmail.com>
-Cc: mark.rutland@arm.com, geert+renesas@glider.be, linux-iio@vger.kernel.org, robh+dt@kernel.org, linux-sunxi@googlegroups.com, clabbe.montjoie@gmail.com, pmeerw@pmeerw.net, lee.jones@linaro.org, lars@metafoo.de, quentin.schulz@bootlin.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, arnd@arndb.de, vilhelm.gray@gmail.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, rdunlap@infradead.org, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, lukas@wunner.de, knaack.h@gmx.de, eugen.hristev@microchip.com, jic23@kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Johan Hovold <johan@kernel.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-在 2018-08-31五的 11:11 +0200，Maxime Ripard写道：
-> On Thu, Aug 30, 2018 at 05:45:09PM +0200, Philipp Rossak wrote:
-> > This patch adds support for the H3 ths sensor.
-> > 
-> > The H3 supports interrupts. The interrupt is configured to update
-> > the
-> > the sensor values every second. The calibration data is writen at
-> > the
-> > begin of the init process.
-> > 
-> > Signed-off-by: Philipp Rossak <embed3d@gmail.com>
-> > ---
-> >  drivers/iio/adc/sun4i-gpadc-iio.c   | 91
-> > +++++++++++++++++++++++++++++++++++++
-> >  include/linux/iio/adc/sun4i-gpadc.h | 18 ++++++++
-> >  2 files changed, 109 insertions(+)
-> > 
-> > diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c
-> > b/drivers/iio/adc/sun4i-gpadc-iio.c
-> > index c7b46c82e3e5..d5c7971b2558 100644
-> > --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> > +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> > @@ -72,6 +72,7 @@ struct gpadc_data {
-> >  	u32		temp_data_base;
-> >  	int		sensor_count;
-> >  	bool		supports_nvmem;
-> > +	u32		ths_irq_clear;
-> >  };
-> >  
-> >  static irqreturn_t sun4i_gpadc_data_irq_handler(int irq, void
-> > *dev_id);
-> > @@ -79,6 +80,10 @@ static irqreturn_t
-> > sun4i_gpadc_data_irq_handler(int irq, void *dev_id);
-> >  static int sun4i_ths_resume(struct sun4i_gpadc_iio *info);
-> >  static int sun4i_ths_suspend(struct sun4i_gpadc_iio *info);
-> >  
-> > +static int sun8i_h3_ths_resume(struct sun4i_gpadc_iio *info);
-> > +static int sun8i_h3_ths_suspend(struct sun4i_gpadc_iio *info);
-> > +static irqreturn_t sunx8i_h3_irq_thread(int irq, void *data);
-> > +
-> >  static const struct gpadc_data sun4i_gpadc_data = {
-> >  	.temp_offset = -1932,
-> >  	.temp_scale = 133,
-> > @@ -137,6 +142,22 @@ static const struct gpadc_data
-> > sun8i_a33_gpadc_data = {
-> >  	.sensor_count = 1,
-> >  };
-> >  
-> > +static const struct gpadc_data sun8i_h3_ths_data = {
-> > +	.temp_offset = -1791,
-> > +	.temp_scale = -121,
-> > +	.temp_data_base = SUN8I_H3_THS_TDATA0,
-> > +	.ths_irq_thread = sunx8i_h3_irq_thread,
-> > +	.support_irq = true,
-> > +	.has_bus_clk = true,
-> > +	.has_bus_rst = true,
-> > +	.has_mod_clk = true,
-> > +	.sensor_count = 1,
-> > +	.supports_nvmem = true,
-> > +	.ths_resume = sun8i_h3_ths_resume,
-> > +	.ths_suspend = sun8i_h3_ths_suspend,
-> > +	.ths_irq_clear = SUN8I_H3_THS_INTS_TDATA_IRQ_0,
-> > +};
-> > +
-> >  struct sun4i_sensor_tzd {
-> >  	struct sun4i_gpadc_iio		*info;
-> >  	struct thermal_zone_device	*tzd;
-> > @@ -409,6 +430,31 @@ static irqreturn_t
-> > sun4i_gpadc_data_irq_handler(int irq, void *dev_id)
-> >  	return IRQ_HANDLED;
-> >  }
-> >  
-> > +static irqreturn_t sunx8i_h3_irq_thread(int irq, void *data)
-> > +{
-> > +	struct sun4i_gpadc_iio *info = data;
-> > +	int i;
-> > +
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_STAT,
-> > +			info->data->ths_irq_clear);
-> > +
-> > +	for (i = 0; i < info->data->sensor_count; i++)
-> > +		thermal_zone_device_update(info->tzds[i].tzd,
-> > +						THERMAL_EVENT_TEMP_SAMP
-> > LE);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int sun8i_h3_calibrate(struct sun4i_gpadc_iio *info)
-> > +{
-> > +//	regmap_write(info->regmap, SUNXI_THS_CDATA_0_1,
-> > +//			info->calibration_data[0]);
-> > +//	regmap_write(info->regmap, SUNXI_THS_CDATA_2_3,
-> > +//			info->calibration_data[1]);
-> 
-> Don't put commented code.
+Use IS_ERR() instead of IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
+never return NULL value;
+But still need ignore the error of -ENODEV, for more information, please
+refer to:
+[0] https://lkml.org/lkml/2018/4/19/88
+[1] https://patchwork.kernel.org/patch/10160181/
 
-Personally I suggest to leave out all SID or calibration related
-patches here.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+V4: modify the patch subject suggested by Johan
+V3: abandon the ternary operator suggested by Johan
+V2: keep the -ENODEV check
+---
 
-Currently we seems to be wrongly converting SID to big endian, however,
-the orgnization of the THS calibration data on H6 shows that it's
-surely little endian:
+ drivers/usb/core/phy.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-It consists a temperature value in 1/10 celsuis as unit, and some
-thermal register readout values, which are the values read out at the
-given temperature, and every value here (the temperature and the
-readout) are all half word length.
-
-Let the temperature value be AABB, the two readout values be XXYY and
-ZZWW, the oragnization is:
-BB AA YY XX WW ZZ ** ** .
-
-When converting the SID to big endian, it becomes:
-XX YY AA BB ** ** ZZ WW ,
-which is non-sense, and not able to do sub-word cell addressing.
-
-Maxime, should I drop the LE2BE conversion in SID driver? (I doubt
-whether it will break compatibility.)
-
-Philipp, could you delay to send any code that uses SID?
-
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int sun4i_gpadc_runtime_suspend(struct device *dev)
-> >  {
-> >  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
-> > @@ -428,6 +474,16 @@ static int sun4i_ths_suspend(struct
-> > sun4i_gpadc_iio *info)
-> >  	return 0;
-> >  }
-> >  
-> > +static int sun8i_h3_ths_suspend(struct sun4i_gpadc_iio *info)
-> > +{
-> > +	/* Disable ths interrupt */
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_INTC, 0x0);
-> > +	/* Disable temperature sensor */
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2, 0x0);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int sun4i_gpadc_runtime_resume(struct device *dev)
-> >  {
-> >  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
-> > @@ -454,6 +510,37 @@ static int sun4i_ths_resume(struct
-> > sun4i_gpadc_iio *info)
-> >  	return 0;
-> >  }
-> >  
-> > +static int sun8i_h3_ths_resume(struct sun4i_gpadc_iio *info)
-> > +{
-> > +	u32 value;
-> > +
-> > +	sun8i_h3_calibrate(info);
-> > +
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL0,
-> > +			SUN4I_GPADC_CTRL0_T_ACQ(0xff));
-> > +
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2,
-> > +			SUN8I_H3_THS_ACQ1(0x3f));
-> > +
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_STAT,
-> > +			SUN8I_H3_THS_INTS_TDATA_IRQ_0);
-> > +
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_FILTER,
-> > +			SUN4I_GPADC_CTRL3_FILTER_EN |
-> > +			SUN4I_GPADC_CTRL3_FILTER_TYPE(0x2));
-> > +
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_INTC,
-> > +			SUN8I_H3_THS_INTC_TDATA_IRQ_EN0 |
-> > +			SUN8I_H3_THS_TEMP_PERIOD(0x55));
-> > +
-> > +	regmap_read(info->regmap, SUN8I_H3_THS_CTRL2, &value);
-> > +
-> > +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2,
-> > +			SUN8I_H3_THS_TEMP_SENSE_EN0 | value);
-> 
-> Ideally, all these values should have a comment explaining what they
-> are.
-> 
-> And we really start to have a lot of registers defines. We'd be
-> better
-> off using regmap_fields.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+index 9879767..38b2c77 100644
+--- a/drivers/usb/core/phy.c
++++ b/drivers/usb/core/phy.c
+@@ -23,10 +23,11 @@ static int usb_phy_roothub_add_phy(struct device *dev, int index,
+ 				   struct list_head *list)
+ {
+ 	struct usb_phy_roothub *roothub_entry;
+-	struct phy *phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
++	struct phy *phy;
+ 
+-	if (IS_ERR_OR_NULL(phy)) {
+-		if (!phy || PTR_ERR(phy) == -ENODEV)
++	phy = devm_of_phy_get_by_index(dev, dev->of_node, index);
++	if (IS_ERR(phy)) {
++		if (PTR_ERR(phy) == -ENODEV)
+ 			return 0;
+ 		else
+ 			return PTR_ERR(phy);
+-- 
+1.9.1
