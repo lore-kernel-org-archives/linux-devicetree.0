@@ -1,88 +1,47 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 7/7] ARM: dts: imx6: add mmdc ipg clock
-Date: Fri, 31 Aug 2018 15:53:18 +0800
-Message-ID: <1535701998-20443-8-git-send-email-Anson.Huang@nxp.com>
-References: <1535701998-20443-1-git-send-email-Anson.Huang@nxp.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/7] clk: rockchip: improve rk3288 pll rates for better
+ hdmi output
+Date: Fri, 31 Aug 2018 10:05:31 +0200
+Message-ID: <4726810.oPXn6dVjrD@diego>
+References: <20180828185513.13216-1-urjaman@gmail.com>
+ <20180828185513.13216-2-urjaman@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535701998-20443-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, colin.didier@devialet.com, clement.peron@devialet.com, ping.bai@nxp.com, aisheng.dong@nxp.com, shengjiu.wang@nxp.com, matteo.lisi@engicam.com, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180828185513.13216-2-urjaman@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Urja Rannikko <urjaman@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-i.MX6 SoCs has MMDC clock gates in CCM CCGR, add
-clock property for MMDC driver's clock operation.
+Am Dienstag, 28. August 2018, 20:55:07 CEST schrieb Urja Rannikko:
+> Add and correct PLL rates for better hdmi output.
+> 
+> This includes minimizing jitter on 213 MHz for better 71 MHz,
+> 250.5 MHz for better 83.5 MHz, 428 MHz for better 25.175 Mhz,
+> low jitter 273 MHz for better 68.25 mhz, 356 MHz for better 118.68 Mhz
+> and 300MHz.
+> 
+> Increase the used Fvco for 308, 324 MHz, 292.5 MHz, 273.6 MHz,
+> 238 MHz and 216 MHz.
+> 
+> And add some additional rates allowing to reach better hdmi-related
+> rates in general.
+> 
+> These match the rates used by ChromeOS, so have been quite widely tested.
+> 
+> Signed-off-by: Urja Rannikko <urjaman@gmail.com>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 1 +
- arch/arm/boot/dts/imx6sl.dtsi  | 1 +
- arch/arm/boot/dts/imx6sll.dtsi | 1 +
- arch/arm/boot/dts/imx6sx.dtsi  | 1 +
- arch/arm/boot/dts/imx6ul.dtsi  | 1 +
- 5 files changed, 5 insertions(+)
+applied for 4.20
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 61d2d26..5d33729 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1115,6 +1115,7 @@
- 			mmdc0: mmdc@21b0000 { /* MMDC0 */
- 				compatible = "fsl,imx6q-mmdc";
- 				reg = <0x021b0000 0x4000>;
-+				clocks = <&clks IMX6QDL_CLK_MMDC_P0_IPG>;
- 			};
- 
- 			mmdc1: mmdc@21b4000 { /* MMDC1 */
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 7a4f5da..63a18e1 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -921,6 +921,7 @@
- 			mmdc: mmdc@21b0000 {
- 				compatible = "fsl,imx6sl-mmdc", "fsl,imx6q-mmdc";
- 				reg = <0x021b0000 0x4000>;
-+				clocks = <&clks IMX6SL_CLK_MMDC_P0_IPG>;
- 			};
- 
- 			rngb: rngb@21b4000 {
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index ed9a980..e462f76 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -770,6 +770,7 @@
- 			mmdc: memory-controller@21b0000 {
- 				compatible = "fsl,imx6sll-mmdc", "fsl,imx6q-mmdc";
- 				reg = <0x021b0000 0x4000>;
-+				clocks = <&clks IMX6SLL_CLK_MMDC_P0_IPG>;
- 			};
- 
- 			ocotp: ocotp-ctrl@21bc000 {
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 844caa3..ba4ab79 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -1002,6 +1002,7 @@
- 			mmdc: mmdc@21b0000 {
- 				compatible = "fsl,imx6sx-mmdc", "fsl,imx6q-mmdc";
- 				reg = <0x021b0000 0x4000>;
-+				clocks = <&clks IMX6SX_CLK_MMDC_P0_IPG>;
- 			};
- 
- 			fec2: ethernet@21b4000 {
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 448d765..2019ad5 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -916,6 +916,7 @@
- 			mmdc: mmdc@21b0000 {
- 				compatible = "fsl,imx6ul-mmdc", "fsl,imx6q-mmdc";
- 				reg = <0x021b0000 0x4000>;
-+				clocks = <&clks IMX6UL_CLK_MMDC_P0_IPG>;
- 			};
- 
- 			weim: weim@21b8000 {
--- 
-2.7.4
+Thanks
+Heiko
