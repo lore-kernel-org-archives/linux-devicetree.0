@@ -1,114 +1,198 @@
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM output
- between PWM and GPIO
-Date: Fri, 31 Aug 2018 15:17:10 +0200
-Message-ID: <64b731c7-aa24-7738-0076-8520f6b9a495@ysoft.com>
-References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
- <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
- <20180831121809.GA22507@bogus> <20180831144548.26b1204d@ipc1.ka-ro>
+From: Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v5 1/4] edac: synps: Add platform specific structures for ddrc controller
+Date: Fri, 31 Aug 2018 18:57:47 +0530
+Message-ID: <1535722070-10394-2-git-send-email-manish.narani@xilinx.com>
+References: <1535722070-10394-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831144548.26b1204d@ipc1.ka-ro>
-Content-Language: en-US
+In-Reply-To: <1535722070-10394-1-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <LW@KARO-electronics.de>, Rob Herring <robh@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, manish.narani@xilinx.com, leoyang.li@nxp.com, amit.kucheria@linaro.org, olof@lixom.net
+Cc: sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 31.8.2018 14:45, Lothar Waßmann wrote:
-> Rob Herring <robh@kernel.org> wrote:
-> 
->> On Tue, Aug 21, 2018 at 04:38:52PM +0200, Michal Vokáč wrote:
->>> Output of the PWM block of i.MX SoCs is always zero volts when the block
->>> is disabled. This can caue issues when inverted PWM polarity is needed.
->>> With inverted polarity a duty cycle = 0% corresponds to solid high level
->>> on the output. If the PWM is dissabled its output instantly goes to solid
->>> zero which corresponds to duty cycle = 100%.
->>>
->>> To have a trully inverted PWM output configure the PWM pad as a GPIO
->>> with pull-up. Then switch the pad to PWM output whenever non-zero
->>> duty cycle is needed.
->>>
->>> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
->>> ---
->>>   Documentation/devicetree/bindings/pwm/imx-pwm.txt | 44 +++++++++++++++++++++++
->>>   1 file changed, 44 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
->>> index c61bdf8..3b1bc4c 100644
->>> --- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
->>> +++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
->>> @@ -14,6 +14,12 @@ See the clock consumer binding,
->>>   	Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>   - interrupts: The interrupt for the pwm controller
->>>   
->>> +Optional properties:
->>> +- pinctrl: For i.MX27 and newer SoCs. Add extra pinctrl to configure the PWM
->>> +  pin to gpio function.  It allows control over the pin output level when the
->>> +  PWM block is disabled. This is meant to be used if inverted polarity of the
->>> +  PWM signal is required. See "Inverted PWM output" section bellow.
->>> +
->>>   Example:
->>>   
->>>   pwm1: pwm@53fb4000 {
->>> @@ -25,3 +31,41 @@ pwm1: pwm@53fb4000 {
->>>   	clock-names = "ipg", "per";
->>>   	interrupts = <61>;
->>>   };
->>> +
->>> +Inverted PWM output
->>> +-------------------
->>> +
->>> +The i.MX SoC has such limitation that whenever a pad is configured as a PWM
->>> +output, the output level is always zero volts when the PWM block is disabled.
->>> +The zero output level is actively driven by the output stage of the PWM block
->>> +and can not be overridden by pull-up. It also does not matter what PWM polarity
->>> +a PWM client (e.g. backlight) requested.
->>> +
->>> +To gain control of the PWM output level in disabled state two pinctrl states
->>> +can be used. The "default" state and the "pwm" state. In the default state the
->>> +PWM output is configured as a GPIO with pull-up. In the "pwm" state the output
->>> +is configured as a PWM output. This setup assures that the PWM output is at
->>> +the required level that corresponds to duty cycle = 0 when PWM is disabled.
->>> +E.g. at boot.
->>> +
->>> +Example:
->>> +
->>> +&pwm1 {
->>> +	pinctrl-names = "default", "pwm";
->>> +	pinctrl-0 = <&pinctrl_backlight_gpio>;
->>> +	pinctrl-1 = <&pinctrl_backlight_pwm>;
->>> +}
->>> +
->>> +pinctrl_backlight_gpio: pwm1grp-gpio {
->>> +	fsl,pins = <
->>> +		/* GPIO with 22kOhm pull-up */
->>> +		MX6QDL_PAD_GPIO_9__GPIO1_IO09	0xF008
->>
->> There's a slight problem here if I remember the i.MX pin muxing. In GPIO
->> mode, doesn't the GPIO block control the direction and level if an
->> output. I guess as long as unused GPIOs are all initialized to inputs it
->> will be okay.
+Add platform specific structures, so that we can add different IP
+support later using quirks.
 
-I am not sure if I understand you correctly. Did you mean: "..doesn't the
-GPIO block control the PULL-UP/DOWN and level if an output."? Yes, that is
-true. And as you said, all GPIOs are configured as inputs after reset.
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+---
+ drivers/edac/synopsys_edac.c | 78 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 59 insertions(+), 19 deletions(-)
 
-> One could set the pad_ctl DSE value to 0, so that the pin cannot be
-> driven even if configured as output:
-> 		MX6QDL_PAD_GPIO_9__GPIO1_IO09	0xF000
-
-Yes, it will make no harm to set the pin to high-Z if configured as
-output. Though I am not sure that this makes sense.
-
-In case we choose the pull-up to keep the level high the pin needs to stay
-configured as input. And as the GPIO is reserved for us there is actually
-no one else who could re-configure it.
-
-In case we choose to actively drive the pin instead of relying on the
-internal pull-up we need to use gpiod lib and configure the pin as output.
-In that case DSE must be set non-zero.
-
-Michal
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 0c9c59e..2470d35 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -22,6 +22,8 @@
+ #include <linux/edac.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #include "edac_module.h"
+ 
+@@ -130,6 +132,7 @@ struct synps_ecc_status {
+  * @baseaddr:	Base address of the DDR controller
+  * @message:	Buffer for framing the event specific info
+  * @stat:	ECC status information
++ * @p_data:	Pointer to platform data
+  * @ce_cnt:	Correctable Error count
+  * @ue_cnt:	Uncorrectable Error count
+  */
+@@ -137,24 +140,47 @@ struct synps_edac_priv {
+ 	void __iomem *baseaddr;
+ 	char message[SYNPS_EDAC_MSG_SIZE];
+ 	struct synps_ecc_status stat;
++	const struct synps_platform_data *p_data;
+ 	u32 ce_cnt;
+ 	u32 ue_cnt;
+ };
+ 
+ /**
++ * struct synps_platform_data -  synps platform data structure
++ * @edac_geterror_info:	function pointer to synps edac error info
++ * @edac_get_mtype:	function pointer to synps edac mtype
++ * @edac_get_dtype:	function pointer to synps edac dtype
++ * @edac_get_eccstate:	function pointer to synps edac eccstate
++ * @quirks:		to differentiate IPs
++ */
++struct synps_platform_data {
++	int (*edac_geterror_info)(struct synps_edac_priv *priv);
++	enum mem_type (*edac_get_mtype)(const void __iomem *base);
++	enum dev_type (*edac_get_dtype)(const void __iomem *base);
++	bool (*edac_get_eccstate)(void __iomem *base);
++	int quirks;
++};
++
++/**
+  * synps_edac_geterror_info - Get the current ecc error info
+- * @base:	Pointer to the base address of the ddr memory controller
+- * @p:		Pointer to the synopsys ecc status structure
++ * @priv:	Pointer to DDR memory controller private instance data
+  *
+  * Determines there is any ecc error or not
+  *
+  * Return: one if there is no error otherwise returns zero
+  */
+-static int synps_edac_geterror_info(void __iomem *base,
+-				    struct synps_ecc_status *p)
++static int synps_edac_geterror_info(struct synps_edac_priv *priv)
+ {
++	void __iomem *base;
++	struct synps_ecc_status *p;
+ 	u32 regval, clearval = 0;
+ 
++	if (!priv)
++		return 1;
++
++	base = priv->baseaddr;
++	p = &priv->stat;
++
+ 	regval = readl(base + STAT_OFST);
+ 	if (!regval)
+ 		return 1;
+@@ -240,9 +266,10 @@ static void synps_edac_handle_error(struct mem_ctl_info *mci,
+ static void synps_edac_check(struct mem_ctl_info *mci)
+ {
+ 	struct synps_edac_priv *priv = mci->pvt_info;
++	const struct synps_platform_data *p_data = priv->p_data;
+ 	int status;
+ 
+-	status = synps_edac_geterror_info(priv->baseaddr, &priv->stat);
++	status = p_data->edac_geterror_info(priv);
+ 	if (status)
+ 		return;
+ 
+@@ -362,6 +389,7 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
+ 	struct csrow_info *csi;
+ 	struct dimm_info *dimm;
+ 	struct synps_edac_priv *priv = mci->pvt_info;
++	const struct synps_platform_data *p_data = priv->p_data;
+ 	u32 size;
+ 	int row, j;
+ 
+@@ -370,12 +398,12 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
+ 		size = synps_edac_get_memsize();
+ 
+ 		for (j = 0; j < csi->nr_channels; j++) {
+-			dimm            = csi->channels[j]->dimm;
+-			dimm->edac_mode = EDAC_FLAG_SECDED;
+-			dimm->mtype     = synps_edac_get_mtype(priv->baseaddr);
+-			dimm->nr_pages  = (size >> PAGE_SHIFT) / csi->nr_channels;
+-			dimm->grain     = SYNPS_EDAC_ERR_GRAIN;
+-			dimm->dtype     = synps_edac_get_dtype(priv->baseaddr);
++			dimm		= csi->channels[j]->dimm;
++			dimm->edac_mode	= EDAC_FLAG_SECDED;
++			dimm->mtype	= p_data->edac_get_mtype(priv->baseaddr);
++			dimm->nr_pages	= (size >> PAGE_SHIFT) / csi->nr_channels;
++			dimm->grain	= SYNPS_EDAC_ERR_GRAIN;
++			dimm->dtype	= p_data->edac_get_dtype(priv->baseaddr);
+ 		}
+ 	}
+ 
+@@ -423,6 +451,21 @@ static int synps_edac_mc_init(struct mem_ctl_info *mci,
+ 	return status;
+ }
+ 
++static const struct synps_platform_data zynq_edac_def = {
++	.edac_geterror_info	= synps_edac_geterror_info,
++	.edac_get_mtype		= synps_edac_get_mtype,
++	.edac_get_dtype		= synps_edac_get_dtype,
++	.edac_get_eccstate	= synps_edac_get_eccstate,
++	.quirks			= 0,
++};
++
++static const struct of_device_id synps_edac_match[] = {
++	{ .compatible = "xlnx,zynq-ddrc-a05", .data = (void *)&zynq_edac_def },
++	{ /* end of table */ }
++};
++
++MODULE_DEVICE_TABLE(of, synps_edac_match);
++
+ /**
+  * synps_edac_mc_probe - Check controller and bind driver
+  * @pdev:	Pointer to the platform_device struct
+@@ -440,13 +483,15 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+ 	int rc;
+ 	struct resource *res;
+ 	void __iomem *baseaddr;
++	const struct synps_platform_data *p_data;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	baseaddr = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(baseaddr))
+ 		return PTR_ERR(baseaddr);
+ 
+-	if (!synps_edac_get_eccstate(baseaddr)) {
++	p_data = of_device_get_match_data(&pdev->dev);
++	if (!(p_data->edac_get_eccstate(baseaddr))) {
+ 		edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
+ 		return -ENXIO;
+ 	}
+@@ -468,6 +513,8 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+ 
+ 	priv = mci->pvt_info;
+ 	priv->baseaddr = baseaddr;
++	priv->p_data = p_data;
++
+ 	rc = synps_edac_mc_init(mci, pdev);
+ 	if (rc) {
+ 		edac_printk(KERN_ERR, EDAC_MC,
+@@ -511,13 +558,6 @@ static int synps_edac_mc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id synps_edac_match[] = {
+-	{ .compatible = "xlnx,zynq-ddrc-a05", },
+-	{ /* end of table */ }
+-};
+-
+-MODULE_DEVICE_TABLE(of, synps_edac_match);
+-
+ static struct platform_driver synps_edac_mc_driver = {
+ 	.driver = {
+ 		   .name = "synopsys-edac",
+-- 
+2.1.1
