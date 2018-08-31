@@ -1,78 +1,76 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 1/3] spi: Introduce one new field to set word delay
-Date: Fri, 31 Aug 2018 16:38:56 +0800
-Message-ID: <CAMz4kuJp=tBPubM1cWJLLMq4vRvK=-xcsH3GC5io6heQh4RG6w@mail.gmail.com>
-References: <a77a6bb8b3abf1c127014c78f71533c24afacd93.1534423916.git.baolin.wang@linaro.org>
- <01c9b188-5b67-40c0-b08d-99a0543ddf54@cesnet.cz>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [RFC PATCH v1 0/3] device property: Support MAC address in VPD
+Date: Fri, 31 Aug 2018 09:43:30 +0100
+Message-ID: <44c7fc7a-9c1c-e894-f27f-5320c061aafc@linaro.org>
+References: <20180814223758.117433-1-briannorris@chromium.org>
+ <a240b3f9-d41b-30d7-ef11-5dcd1a981c0f@gmail.com>
+ <20180815002204.GA258561@ban.mtv.corp.google.com>
+ <bb1b2b7d-2c47-a6b3-7618-063351f379b2@gmail.com>
+ <20180815014436.GA17200@ban.mtv.corp.google.com>
+ <20180815221601.GB24830@rob-hp-laptop>
+ <20180831012656.GB67271@ban.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <01c9b188-5b67-40c0-b08d-99a0543ddf54@cesnet.cz>
+In-Reply-To: <20180831012656.GB67271@ban.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Lanqing Liu <lanqing.liu@spreadtrum.com>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Brian Norris <briannorris@chromium.org>, Rob Herring <robh@kernel.org>
+Cc: Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julius Werner <jwerner@chromium.org>, Stephen Boyd <swboyd@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29 August 2018 at 19:33, Jan Kundr=C3=A1t <jan.kundrat@cesnet.cz> wrote:
-> On =C4=8Dtvrtek 16. srpna 2018 14:54:49 CEST, Baolin Wang wrote:
+Sorry for the delay!! For some reason I missed this email thread totally!
+
+On 31/08/18 02:26, Brian Norris wrote:
+>> Seems to me that nvmem needs to be extended to allow providers to
+>> retrieve and interpret data. Not everything is at some fixed offset and
+>> size. Something like this is valid dts:
 >>
->> + * @word_delay: clock cycles to inter word delay after each word size
->> + *     (set by bits_per_word) transmission.
->
->
-> I need a similar functionality for talking to a SPI device from userspace
-> -- see my attempt for implementing this in spi-orion.c at [1]. The device=
-'s
-> datasheet says that I should wait, e.g., 3=C2=B5s between each two words.=
- I
-> therefore like this patch :).
->
-> The description can be improved because it left me wondering what "clock
-> this is about. I suppose it's about the SPI clock cycles and not CPU cloc=
-k
-> cycles, right? I'll be hapy to patch this once Baolin confirms that that =
-is
-> the intended meaning.
+>> nvmem = <&phandle> "a-string";
+>>
 
-Sorry for confusing. Since our SPI word delay unit is clock cycle of
-the SPI clock, so my intention of the word_delay's unit is SPI clock
-cycles according to our previous discussion.
+There has been some discussion on extending nvmem support to MTD and 
+non-DT users in https://patchwork.kernel.org/cover/10562365/
 
->
-> It seems that this is only implemented in one newly added driver. I'm
-> interested in supporting this in spi-orion.c, but that sounds like
-> driver-specific work for something which is pretty generic. How should th=
-is
-> be implemented? Given that drivers for SPI masters can implement a functi=
-on
-> which transfers several words at once, there are not that many better
-> possibilities than adding udelay()s, though. Thoughts?
->
-> What is your plan to do with drivers which do not implement this (yet)? I=
-f a
-> spi_transfer gets queued which asks for a word_delay delay, it is silentl=
-y
-> ignored now, AFAIU.
->
-> What about userspace support, spidev and spi_ioc_transfer (that's my targ=
-et,
-> actually)? Is it OK to s/pad/word_delay/ in the spidev code and pass that=
- to
-> the generated struct spi_transfer? In my opinion, once we support specify=
-ing
-> this from userspace, one has to definitely check that the SPI controller =
-is
-> ready to honor this request. Do we want a new bit in spi_controller.flags
-> for this?
->
-> With kind regards,
-> Jan
->
-> [1] https://patchwork.kernel.org/patch/10221397/
+One of the thing which we discussed in this thread is adding compatible 
+strings to cells mainly to
+1> Differentiate between actual cells and partitions for MTD case.
+
+2> Allow provider specific bindings for each cell, in VPD instance key 
+string & value length could be one them.
+
+This means that we would endup adding xlate callback support to the 
+nvmem_config.
+
+AFAIU, From consumer side old bindings should still work!
+
+ From non-dt or ACPI side these cells can be parsed by the provider 
+driver and add it to the nvmem_config.
+
+Does this make sense? Or Did I miss anything obvious ?
 
 
-
---=20
-Baolin Wang
-Best Regards
+>> But that's pretty uncommon (I can't think of a binding that actually
+>> uses that). Perhaps the provider has an array of keys defined and the
+>> consumer just provides the index.
+> In the case of VPD, all keys are 0-terminated strings (there's also a
+> length field, but the key is still 0-terminated), so that scheme could
+> work. (I'm not sure an indexed provider is extremely relevant right now,
+> although it probably could be supported if I expand the of_nvmem
+> retrieval to support a generic of_xlate() override anyway.) The
+> information represented is almost the same as in my proposal, except that:
+> (a) now I have to give the VPD a phandle -- so far, I've avoided that,
+>      as it's just an auto-enumerated device underneath the
+>      /firmware/coreboot device (see drivers/firmware/google/vpd.c)
+> (b) this is no longer directly useful to ACPI systems -- I'm not
+>      actually sure how (if at all) nvmem provider/consumer is supposed to
+>      work there
+> 
+> But maybe this isn't really that useful to ACPI, and it's sufficient to
+> just have fwnode_get_mac_address() call of_get_nvmem_mac_address() when
+> we're using DT.
+> 
+>> Or we could do '<key>-nvmem = <&phandle>', but parsing that is a bit
+>> more complicated.
+> That doesn't seem to have much advantage to me.
