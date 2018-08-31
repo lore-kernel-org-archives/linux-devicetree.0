@@ -1,59 +1,67 @@
-From: Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v4 00/13] ata: ahci_platform: support allwinner R40 AHCI
-Date: Fri, 31 Aug 2018 08:35:23 -0600
-Message-ID: <39f89b9d-f5bf-7c4a-8e68-252bfc0b91a4@kernel.dk>
-References: <20180830190120.722-1-clabbe.montjoie@gmail.com>
- <f5838eae-fa6c-8699-14a4-95d0daa8a960@kernel.dk>
- <CAGb2v67miUjqeKeDh_E_XPee_0Hq1C6YrfXxsOp_=NtQY+LLmQ@mail.gmail.com>
- <8fa866c5-6800-505f-53bc-5c1b27582ca6@kernel.dk>
- <20180831074024.w7yicj5y4imy57e2@flea>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a774a1: Add CAN nodes
+Date: Fri, 31 Aug 2018 16:52:46 +0200
+Message-ID: <20180831145241.7ahp77jrlpievtmw@verge.net.au>
+References: <1535034166-24798-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdUL0Ck=6er8rvx_kCSi7KR9kjBqjNRiLOL41nxeJXQG-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831074024.w7yicj5y4imy57e2@flea>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-ide@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUL0Ck=6er8rvx_kCSi7KR9kjBqjNRiLOL41nxeJXQG-w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Chris Paterson <chris.paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/31/18 1:40 AM, Maxime Ripard wrote:
-> Hi Jens,
+On Fri, Aug 31, 2018 at 10:44:10AM +0200, Geert Uytterhoeven wrote:
+> Hi Fabrizio,
 > 
-> On Thu, Aug 30, 2018 at 08:52:52PM -0600, Jens Axboe wrote:
->> On 8/30/18 8:32 PM, Chen-Yu Tsai wrote:
->>> Hi,
->>>
->>> On Fri, Aug 31, 2018 at 4:31 AM Jens Axboe <axboe@kernel.dk> wrote:
->>>>
->>>> On 8/30/18 1:01 PM, Corentin Labbe wrote:
->>>>> Hello
->>>>>
->>>>> This patchset add support for allwinner R40 AHCI controller.
->>>>>
->>>>> The whole patchset is tested on sun8i-r40-bananapi-m2-ultra and
->>>>> on sun7i-a20-cubieboard2 which doesnt have any of the ressources added
->>>>> by this serie, so no regression should come with it.
->>>>>
->>>>> The last patch(ata: ahci_sunxi: remove PHY code) should not be merged,
->>>>> but will be resent for inclustion when all patchs will have hit linus
->>>>> tree.
->>>>
->>>> Applied 1-12 with Hans's blessing, thanks Corentin.
->>>
->>> Please don't merge device tree ("dts") patches, i.e. patches 9-12. We will
->>> merge them through the sunxi / armsoc tree. Having them in separate trees
->>> introduces conflicts when we have other stuff going through our tree.
->>
->> OK, fair enough, I can drop those.
+> On Thu, Aug 23, 2018 at 4:22 PM Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com> wrote:
+> > From: Chris Paterson <chris.paterson2@renesas.com>
+> >
+> > Add the device nodes for both RZ/G2M CAN channels.
+> >
+> > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >
+> > This patch depends on:
+> > https://lkml.org/lkml/2018/8/23/1049
+> > https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg30550.html
+> >
+> >
+> >  arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > index 5d0109a..cd204f5 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > @@ -816,6 +816,30 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               can0: can@e6c30000 {
+> > +                       compatible = "renesas,can-r8a774a1",
+> > +                                    "renesas,rzg-gen2-can";
 > 
-> And the DT bits actually have some issues that would need to change
-> the code significantly.
-> 
-> Can you drop all of them please?
+> Please don't introduce "renesas,rzg-gen2-can", cfr. my comments in
+> https://lore.kernel.org/lkml/CAMuHMdWPuqfXOgh_-qp8q6wATU3Lj_WpX0bAOxPBX76SKvyXCQ@mail.gmail.com/
 
-OK, can do. Corentin, please resend when everybody is happy with it.
+Thanks Geert,
 
--- 
-Jens Axboe
+I was ok with the compat string but it was unwise to pick up this patch
+before that discussion had concluded. I have dropped this patch accordingly.
+
+Fabrizio, please post a v2 once the binding is agreed on.
