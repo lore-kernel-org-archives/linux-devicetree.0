@@ -1,7 +1,7 @@
 From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [PATCH v2 net-next 2/7] MIPS: lantiq: Do not enable IRQs in dma open
-Date: Sat,  1 Sep 2018 13:45:30 +0200
-Message-ID: <20180901114535.9070-3-hauke@hauke-m.de>
+Subject: [PATCH v2 net-next 1/7] MIPS: lantiq: dma: add dev pointer
+Date: Sat,  1 Sep 2018 13:45:29 +0200
+Message-ID: <20180901114535.9070-2-hauke@hauke-m.de>
 References: <20180901114535.9070-1-hauke@hauke-m.de>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20180901114535.9070-1-hauke@hauke-m.de>
@@ -10,41 +10,64 @@ To: davem@davemloft.net
 Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-When a DMA channel is opened the IRQ should not get activated
-automatically, this allows it to pull data out manually without the help
-of interrupts. This is needed for a workaround in the vrx200 Ethernet
-driver.
+dma_zalloc_coherent() now crashes if no dev pointer is given.
+Add a dev pointer to the ltq_dma_channel structure and fill it in the
+driver using it.
+
+This fixes a bug introduced in kernel 4.19.
 
 Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Acked-by: Paul Burton <paul.burton@mips.com>
 ---
- arch/mips/lantiq/xway/dma.c        | 1 -
- drivers/net/ethernet/lantiq_etop.c | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/include/asm/mach-lantiq/xway/xway_dma.h | 1 +
+ arch/mips/lantiq/xway/dma.c                       | 4 ++--
+ drivers/net/ethernet/lantiq_etop.c                | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/arch/mips/include/asm/mach-lantiq/xway/xway_dma.h b/arch/mips/include/asm/mach-lantiq/xway/xway_dma.h
+index 4901833498f7..8441b2698e64 100644
+--- a/arch/mips/include/asm/mach-lantiq/xway/xway_dma.h
++++ b/arch/mips/include/asm/mach-lantiq/xway/xway_dma.h
+@@ -40,6 +40,7 @@ struct ltq_dma_channel {
+ 	int desc;			/* the current descriptor */
+ 	struct ltq_dma_desc *desc_base; /* the descriptor base */
+ 	int phys;			/* physical addr */
++	struct device *dev;
+ };
+ 
+ enum {
 diff --git a/arch/mips/lantiq/xway/dma.c b/arch/mips/lantiq/xway/dma.c
-index 664f2f7f55c1..982859f2b2a3 100644
+index 4b9fbb6744ad..664f2f7f55c1 100644
 --- a/arch/mips/lantiq/xway/dma.c
 +++ b/arch/mips/lantiq/xway/dma.c
-@@ -106,7 +106,6 @@ ltq_dma_open(struct ltq_dma_channel *ch)
- 	spin_lock_irqsave(&ltq_dma_lock, flag);
- 	ltq_dma_w32(ch->nr, LTQ_DMA_CS);
- 	ltq_dma_w32_mask(0, DMA_CHAN_ON, LTQ_DMA_CCTRL);
--	ltq_dma_w32_mask(0, 1 << ch->nr, LTQ_DMA_IRNEN);
- 	spin_unlock_irqrestore(&ltq_dma_lock, flag);
+@@ -130,7 +130,7 @@ ltq_dma_alloc(struct ltq_dma_channel *ch)
+ 	unsigned long flags;
+ 
+ 	ch->desc = 0;
+-	ch->desc_base = dma_zalloc_coherent(NULL,
++	ch->desc_base = dma_zalloc_coherent(ch->dev,
+ 				LTQ_DESC_NUM * LTQ_DESC_SIZE,
+ 				&ch->phys, GFP_ATOMIC);
+ 
+@@ -182,7 +182,7 @@ ltq_dma_free(struct ltq_dma_channel *ch)
+ 	if (!ch->desc_base)
+ 		return;
+ 	ltq_dma_close(ch);
+-	dma_free_coherent(NULL, LTQ_DESC_NUM * LTQ_DESC_SIZE,
++	dma_free_coherent(ch->dev, LTQ_DESC_NUM * LTQ_DESC_SIZE,
+ 		ch->desc_base, ch->phys);
  }
- EXPORT_SYMBOL_GPL(ltq_dma_open);
+ EXPORT_SYMBOL_GPL(ltq_dma_free);
 diff --git a/drivers/net/ethernet/lantiq_etop.c b/drivers/net/ethernet/lantiq_etop.c
-index e08301d833e2..379db19a303c 100644
+index 7a637b51c7d2..e08301d833e2 100644
 --- a/drivers/net/ethernet/lantiq_etop.c
 +++ b/drivers/net/ethernet/lantiq_etop.c
-@@ -439,6 +439,7 @@ ltq_etop_open(struct net_device *dev)
- 		if (!IS_TX(i) && (!IS_RX(i)))
- 			continue;
- 		ltq_dma_open(&ch->dma);
-+		ltq_dma_enable_irq(&ch->dma);
- 		napi_enable(&ch->napi);
- 	}
- 	phy_start(dev->phydev);
+@@ -274,6 +274,7 @@ ltq_etop_hw_init(struct net_device *dev)
+ 		struct ltq_etop_chan *ch = &priv->ch[i];
+ 
+ 		ch->idx = ch->dma.nr = i;
++		ch->dma.dev = &priv->pdev->dev;
+ 
+ 		if (IS_TX(i)) {
+ 			ltq_dma_alloc_tx(&ch->dma);
 -- 
 2.11.0
