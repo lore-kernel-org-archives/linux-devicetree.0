@@ -1,73 +1,76 @@
 From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [PATCH v2 net-next 1/7] MIPS: lantiq: dma: add dev pointer
-Date: Sat,  1 Sep 2018 13:45:29 +0200
-Message-ID: <20180901114535.9070-2-hauke@hauke-m.de>
-References: <20180901114535.9070-1-hauke@hauke-m.de>
+Subject: [PATCH v2 net-next 0/7] Add support for Lantiq / Intel vrx200 network
+Date: Sat,  1 Sep 2018 13:45:28 +0200
+Message-ID: <20180901114535.9070-1-hauke@hauke-m.de>
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180901114535.9070-1-hauke@hauke-m.de>
 Sender: netdev-owner@vger.kernel.org
 To: davem@davemloft.net
 Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-dma_zalloc_coherent() now crashes if no dev pointer is given.
-Add a dev pointer to the ltq_dma_channel structure and fill it in the
-driver using it.
+This adds basic support for the GSWIP (Gigabit Switch) found in the
+VRX200 SoC.
+There are different versions of this IP core used in different SoCs, but
+this driver was currently only tested on the VRX200 SoC line, for other
+SoCs this driver probably need some adoptions to work.
 
-This fixes a bug introduced in kernel 4.19.
+I also plan to add Layer 2 offloading to the DSA driver and later also
+layer 3 offloading which is supported by the PPE HW block.
 
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
----
- arch/mips/include/asm/mach-lantiq/xway/xway_dma.h | 1 +
- arch/mips/lantiq/xway/dma.c                       | 4 ++--
- drivers/net/ethernet/lantiq_etop.c                | 1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
+All these patches should go through the net-next tree.
 
-diff --git a/arch/mips/include/asm/mach-lantiq/xway/xway_dma.h b/arch/mips/include/asm/mach-lantiq/xway/xway_dma.h
-index 4901833498f7..8441b2698e64 100644
---- a/arch/mips/include/asm/mach-lantiq/xway/xway_dma.h
-+++ b/arch/mips/include/asm/mach-lantiq/xway/xway_dma.h
-@@ -40,6 +40,7 @@ struct ltq_dma_channel {
- 	int desc;			/* the current descriptor */
- 	struct ltq_dma_desc *desc_base; /* the descriptor base */
- 	int phys;			/* physical addr */
-+	struct device *dev;
- };
- 
- enum {
-diff --git a/arch/mips/lantiq/xway/dma.c b/arch/mips/lantiq/xway/dma.c
-index 4b9fbb6744ad..664f2f7f55c1 100644
---- a/arch/mips/lantiq/xway/dma.c
-+++ b/arch/mips/lantiq/xway/dma.c
-@@ -130,7 +130,7 @@ ltq_dma_alloc(struct ltq_dma_channel *ch)
- 	unsigned long flags;
- 
- 	ch->desc = 0;
--	ch->desc_base = dma_zalloc_coherent(NULL,
-+	ch->desc_base = dma_zalloc_coherent(ch->dev,
- 				LTQ_DESC_NUM * LTQ_DESC_SIZE,
- 				&ch->phys, GFP_ATOMIC);
- 
-@@ -182,7 +182,7 @@ ltq_dma_free(struct ltq_dma_channel *ch)
- 	if (!ch->desc_base)
- 		return;
- 	ltq_dma_close(ch);
--	dma_free_coherent(NULL, LTQ_DESC_NUM * LTQ_DESC_SIZE,
-+	dma_free_coherent(ch->dev, LTQ_DESC_NUM * LTQ_DESC_SIZE,
- 		ch->desc_base, ch->phys);
- }
- EXPORT_SYMBOL_GPL(ltq_dma_free);
-diff --git a/drivers/net/ethernet/lantiq_etop.c b/drivers/net/ethernet/lantiq_etop.c
-index 7a637b51c7d2..e08301d833e2 100644
---- a/drivers/net/ethernet/lantiq_etop.c
-+++ b/drivers/net/ethernet/lantiq_etop.c
-@@ -274,6 +274,7 @@ ltq_etop_hw_init(struct net_device *dev)
- 		struct ltq_etop_chan *ch = &priv->ch[i];
- 
- 		ch->idx = ch->dma.nr = i;
-+		ch->dma.dev = &priv->pdev->dev;
- 
- 		if (IS_TX(i)) {
- 			ltq_dma_alloc_tx(&ch->dma);
+"MIPS: lantiq: dma: add dev pointer" fixes a problem introduces with
+4.19-rc1 and this should also go into 4.19, but it changes the API and I
+need this API change in this new driver added in these patches.
+
+Changes since:
+v1:
+ * Add "MIPS: lantiq: dma: add dev pointer"
+ * checkpatch fixes a all patches
+ * Added binding documentation
+ * use readx_poll_timeout function and ETIMEOUT error code
+ * integrate GPHY firmware loading into DSA driver
+ * renamed to NET_DSA_LANTIQ_GSWIP
+ * removed some needed casts
+ * added of_device_id.data information about the detected switch
+ * fixed John's email address
+
+Hauke Mehrtens (7):
+  MIPS: lantiq: dma: add dev pointer
+  MIPS: lantiq: Do not enable IRQs in dma open
+  net: dsa: Add Lantiq / Intel GSWIP tag support
+  dt-bindings: net: Add lantiq,xrx200-net DT bindings
+  net: lantiq: Add Lantiq / Intel VRX200 Ethernet driver
+  dt-bindings: net: dsa: Add lantiq,xrx200-gswip DT bindings
+  net: dsa: Add Lantiq / Intel DSA driver for vrx200
+
+ .../devicetree/bindings/net/dsa/lantiq-gswip.txt   |  141 +++
+ .../devicetree/bindings/net/lantiq,xrx200-net.txt  |   21 +
+ MAINTAINERS                                        |    9 +
+ arch/mips/include/asm/mach-lantiq/xway/xway_dma.h  |    1 +
+ arch/mips/lantiq/xway/dma.c                        |    5 +-
+ arch/mips/lantiq/xway/sysctrl.c                    |   14 +-
+ drivers/net/dsa/Kconfig                            |    8 +
+ drivers/net/dsa/Makefile                           |    1 +
+ drivers/net/dsa/lantiq_gswip.c                     | 1018 ++++++++++++++++++++
+ drivers/net/dsa/lantiq_pce.h                       |  153 +++
+ drivers/net/ethernet/Kconfig                       |    7 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/lantiq_etop.c                 |    2 +
+ drivers/net/ethernet/lantiq_xrx200.c               |  591 ++++++++++++
+ include/net/dsa.h                                  |    1 +
+ net/dsa/Kconfig                                    |    3 +
+ net/dsa/Makefile                                   |    1 +
+ net/dsa/dsa.c                                      |    3 +
+ net/dsa/dsa_priv.h                                 |    3 +
+ net/dsa/tag_gswip.c                                |  107 ++
+ 20 files changed, 2080 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq-gswip.txt
+ create mode 100644 Documentation/devicetree/bindings/net/lantiq,xrx200-net.txt
+ create mode 100644 drivers/net/dsa/lantiq_gswip.c
+ create mode 100644 drivers/net/dsa/lantiq_pce.h
+ create mode 100644 drivers/net/ethernet/lantiq_xrx200.c
+ create mode 100644 net/dsa/tag_gswip.c
+
 -- 
 2.11.0
