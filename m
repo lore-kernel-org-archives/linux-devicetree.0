@@ -1,49 +1,56 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 5/7] i2c: designware: add MSCC Ocelot support
-Date: Sat, 1 Sep 2018 14:44:16 +0200
-Message-ID: <20180901124416.GC1196@kunai>
-References: <20180831151114.25739-1-alexandre.belloni@bootlin.com>
- <20180831151114.25739-6-alexandre.belloni@bootlin.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WfZ7S8PLGjBY9Voh"
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH v2 00/19] ARM: dts: tegra: apalis-tk1: minor revamp
+Date: Sat,  1 Sep 2018 15:04:45 +0200
+Message-ID: <20180901130504.14318-1-marcel@ziswiler.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180831151114.25739-6-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>, Paul Burton <paul.burton@mips.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microchip.com>
+To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marcel Ziswiler <marcel@ziswiler.com>, Thierry Reding <thierry.reding@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+This series is a minor overhaul for the Toradex Apalis TK1 system on
+module.
 
---WfZ7S8PLGjBY9Voh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes in v2:
+- Add Rob's reviewed-by.
+- New patch as suggested by Rob.
+- New patch.
+- Get rid of fake clocks simple bus as suggested by Rob.
+- Change cover-letter subject to indicate minor revamp.
+- Drop "[PATCH 02/15] ARM: tegra: apalis-tk1: reorder pcie properties"
+  as requested by Stefan.
+- Drop "[PATCH 13/15] ARM: tegra: apalis-tk1: fix pcie switch vendor
+  compatible" in favour of the new "[PATCH v2 26/34] dt-bindings: add
+  broadcom (formerly plx technology) vendor prefix" posted earlier as
+  part of the apalis_t30 revamp v2 as suggested by Stefan.
 
+Marcel Ziswiler (19):
+  ARM: tegra: apalis-tk1: add local-mac-address property
+  ARM: tegra: apalis-tk1: reorder host1x/hdmi properties
+  ARM: tegra: apalis-tk1: reorder padctl properties
+  ARM: tegra: apalis-tk1: regulator clean-up
+  ARM: tegra: apalis-tk1: add missing regulators
+  ARM: tegra: apalis-tk1: drop unused pinmux label
+  ARM: tegra: apalis-tk1: white-space clean-up
+  ARM: tegra: apalis-tk1: reorder backlight properties
+  ARM: tegra: apalis-tk1: add proper emmc vmmc and vqmmc supplies
+  ARM: tegra: apalis-tk1: enable emmc ddr52 mode
+  ARM: tegra: apalis-tk1: add toradex,apalis-tk1-v1.2 compatible
+  ARM: tegra: apalis-tk1: reorder cpu dfll clock properties
+  ARM: tegra: apalis-tk1: reorder SD card properties
+  ARM: tegra: apalis-tk1: drop module level model and compatible
+  ARM: tegra: apalis-tk1: drop obsolete spidev nodes
+  ARM: tegra: apalis-tk1: replace underscores in node names with dashes
+  ARM: tegra: apalis-tk1: get rid of fake clocks simple bus
+  ARM: tegra: apalis-tk1: shorten temperature-sensor node
+  ARM: tegra: apalis-tk1: drop unused hdmi_ddc label
 
-> +int dw_i2c_of_configure(struct platform_device *pdev)
+ Documentation/devicetree/bindings/arm/tegra.txt |   2 +
+ arch/arm/boot/dts/tegra124-apalis-eval.dts      |  40 ++-
+ arch/arm/boot/dts/tegra124-apalis-v1.2-eval.dts |  43 ++-
+ arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi     | 452 ++++++++++++------------
+ arch/arm/boot/dts/tegra124-apalis.dtsi          | 451 +++++++++++------------
+ 5 files changed, 508 insertions(+), 480 deletions(-)
 
-I made this 'static' as well.
-
-
---WfZ7S8PLGjBY9Voh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAluKiaAACgkQFA3kzBSg
-KbYlpQ/8Dpz1rwpriPCRczKfGEpM49wx/FAypJOs0rSQQEjDcMgpYjRhUGZOHdL/
-o/chajkvs1hyXilHjudAb99SuEqZyHk9cOJIoSurborwizJfsVRnZ0NIdb3BuWVb
-XN8+eZ7CrEbWCOwv/PPC3glB9hkysLMOSU1xk4QPhTtAn1jv7LKd0ZN2HcALb6Ux
-gTqjOxw26USwhuxswSP2LPO53SfHvdu83skDAtJSIcyDFRbDoXJELJBUzLvDS+LH
-WuVNBSfUVKRGPK0GH/wB3ZQly5te0GDrMO6k1NQeJ8swGasTapDU9seEKAfcN0JO
-NRsDDY0eJ/XcFMS2ew2+EH7B59rEhLuvNuZm6KvCf1xMcVeH01qGapOt17pQFkL7
-1Aswcr/R512cI37O+HtwZY941lHX4f2/8nJ0LXnerxxJFZT1AnmBtoIuJRfCN+HV
-EqezURSkVhHH6XhUxmsPPcG0L5IcHbu0RHbPaHa1AAVREk0anYXFyIY1JogrUHqs
-XXowZch8YpIGsqLcussrU+noU49VCMuyllLr7K8pQHBvggTsuE3XFhGK9zTG5EFP
-a0H3rHKDCCMH46F9s11MhvlCvRbjKd6vDKzzHCV/yU7qVP4h4sGcGEmjk2p8+pGq
-n9MCZAfkMuoMpAwoACOP2TzGQonf0ZDMIzuPqux/+zMBE3foM0M=
-=0MVY
------END PGP SIGNATURE-----
-
---WfZ7S8PLGjBY9Voh--
+-- 
+2.14.4
