@@ -1,76 +1,232 @@
 From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [PATCH v2 net-next 0/7] Add support for Lantiq / Intel vrx200 network
-Date: Sat,  1 Sep 2018 13:45:28 +0200
-Message-ID: <20180901114535.9070-1-hauke@hauke-m.de>
+Subject: [PATCH v2 net-next 3/7] net: dsa: Add Lantiq / Intel GSWIP tag support
+Date: Sat,  1 Sep 2018 14:03:32 +0200
+Message-ID: <20180901120332.9792-1-hauke@hauke-m.de>
+References: <20180901114535.9070-1-hauke@hauke-m.de>
 Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180901114535.9070-1-hauke@hauke-m.de>
 Sender: netdev-owner@vger.kernel.org
 To: davem@davemloft.net
-Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
+Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds basic support for the GSWIP (Gigabit Switch) found in the
-VRX200 SoC.
-There are different versions of this IP core used in different SoCs, but
-this driver was currently only tested on the VRX200 SoC line, for other
-SoCs this driver probably need some adoptions to work.
+This handles the tag added by the PMAC on the VRX200 SoC line.
 
-I also plan to add Layer 2 offloading to the DSA driver and later also
-layer 3 offloading which is supported by the PPE HW block.
+The GSWIP uses internally a GSWIP special tag which is located after the
+Ethernet header. The PMAC which connects the GSWIP to the CPU converts
+this special tag used by the GSWIP into the PMAC special tag which is
+added in front of the Ethernet header.
 
-All these patches should go through the net-next tree.
+This was tested with GSWIP 2.1 found in the VRX200 SoCs, other GSWIP
+versions use slightly different PMAC special tags.
 
-"MIPS: lantiq: dma: add dev pointer" fixes a problem introduces with
-4.19-rc1 and this should also go into 4.19, but it changes the API and I
-need this API change in this new driver added in these patches.
-
-Changes since:
-v1:
- * Add "MIPS: lantiq: dma: add dev pointer"
- * checkpatch fixes a all patches
- * Added binding documentation
- * use readx_poll_timeout function and ETIMEOUT error code
- * integrate GPHY firmware loading into DSA driver
- * renamed to NET_DSA_LANTIQ_GSWIP
- * removed some needed casts
- * added of_device_id.data information about the detected switch
- * fixed John's email address
-
-Hauke Mehrtens (7):
-  MIPS: lantiq: dma: add dev pointer
-  MIPS: lantiq: Do not enable IRQs in dma open
-  net: dsa: Add Lantiq / Intel GSWIP tag support
-  dt-bindings: net: Add lantiq,xrx200-net DT bindings
-  net: lantiq: Add Lantiq / Intel VRX200 Ethernet driver
-  dt-bindings: net: dsa: Add lantiq,xrx200-gswip DT bindings
-  net: dsa: Add Lantiq / Intel DSA driver for vrx200
-
- .../devicetree/bindings/net/dsa/lantiq-gswip.txt   |  141 +++
- .../devicetree/bindings/net/lantiq,xrx200-net.txt  |   21 +
- MAINTAINERS                                        |    9 +
- arch/mips/include/asm/mach-lantiq/xway/xway_dma.h  |    1 +
- arch/mips/lantiq/xway/dma.c                        |    5 +-
- arch/mips/lantiq/xway/sysctrl.c                    |   14 +-
- drivers/net/dsa/Kconfig                            |    8 +
- drivers/net/dsa/Makefile                           |    1 +
- drivers/net/dsa/lantiq_gswip.c                     | 1018 ++++++++++++++++++++
- drivers/net/dsa/lantiq_pce.h                       |  153 +++
- drivers/net/ethernet/Kconfig                       |    7 +
- drivers/net/ethernet/Makefile                      |    1 +
- drivers/net/ethernet/lantiq_etop.c                 |    2 +
- drivers/net/ethernet/lantiq_xrx200.c               |  591 ++++++++++++
- include/net/dsa.h                                  |    1 +
- net/dsa/Kconfig                                    |    3 +
- net/dsa/Makefile                                   |    1 +
- net/dsa/dsa.c                                      |    3 +
- net/dsa/dsa_priv.h                                 |    3 +
- net/dsa/tag_gswip.c                                |  107 ++
- 20 files changed, 2080 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq-gswip.txt
- create mode 100644 Documentation/devicetree/bindings/net/lantiq,xrx200-net.txt
- create mode 100644 drivers/net/dsa/lantiq_gswip.c
- create mode 100644 drivers/net/dsa/lantiq_pce.h
- create mode 100644 drivers/net/ethernet/lantiq_xrx200.c
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+---
+ MAINTAINERS         |   6 +++
+ include/net/dsa.h   |   1 +
+ net/dsa/Kconfig     |   3 ++
+ net/dsa/Makefile    |   1 +
+ net/dsa/dsa.c       |   3 ++
+ net/dsa/dsa_priv.h  |   3 ++
+ net/dsa/tag_gswip.c | 107 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 124 insertions(+)
  create mode 100644 net/dsa/tag_gswip.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a5b256b25905..4b2ee65f6086 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8166,6 +8166,12 @@ S:	Maintained
+ F:	net/l3mdev
+ F:	include/net/l3mdev.h
+ 
++LANTIQ / INTEL Ethernet drivers
++M:	Hauke Mehrtens <hauke@hauke-m.de>
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	net/dsa/tag_gswip.c
++
+ LANTIQ MIPS ARCHITECTURE
+ M:	John Crispin <john@phrozen.org>
+ L:	linux-mips@linux-mips.org
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 461e8a7661b7..23690c44e167 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -35,6 +35,7 @@ enum dsa_tag_protocol {
+ 	DSA_TAG_PROTO_BRCM_PREPEND,
+ 	DSA_TAG_PROTO_DSA,
+ 	DSA_TAG_PROTO_EDSA,
++	DSA_TAG_PROTO_GSWIP,
+ 	DSA_TAG_PROTO_KSZ,
+ 	DSA_TAG_PROTO_LAN9303,
+ 	DSA_TAG_PROTO_MTK,
+diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
+index 4183e4ba27a5..48c41918fb35 100644
+--- a/net/dsa/Kconfig
++++ b/net/dsa/Kconfig
+@@ -38,6 +38,9 @@ config NET_DSA_TAG_DSA
+ config NET_DSA_TAG_EDSA
+ 	bool
+ 
++config NET_DSA_TAG_GSWIP
++	bool
++
+ config NET_DSA_TAG_KSZ
+ 	bool
+ 
+diff --git a/net/dsa/Makefile b/net/dsa/Makefile
+index 9e4d3536f977..6e721f7a2947 100644
+--- a/net/dsa/Makefile
++++ b/net/dsa/Makefile
+@@ -9,6 +9,7 @@ dsa_core-$(CONFIG_NET_DSA_TAG_BRCM) += tag_brcm.o
+ dsa_core-$(CONFIG_NET_DSA_TAG_BRCM_PREPEND) += tag_brcm.o
+ dsa_core-$(CONFIG_NET_DSA_TAG_DSA) += tag_dsa.o
+ dsa_core-$(CONFIG_NET_DSA_TAG_EDSA) += tag_edsa.o
++dsa_core-$(CONFIG_NET_DSA_TAG_GSWIP) += tag_gswip.o
+ dsa_core-$(CONFIG_NET_DSA_TAG_KSZ) += tag_ksz.o
+ dsa_core-$(CONFIG_NET_DSA_TAG_LAN9303) += tag_lan9303.o
+ dsa_core-$(CONFIG_NET_DSA_TAG_MTK) += tag_mtk.o
+diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
+index e63c554e0623..81212109c507 100644
+--- a/net/dsa/dsa.c
++++ b/net/dsa/dsa.c
+@@ -54,6 +54,9 @@ const struct dsa_device_ops *dsa_device_ops[DSA_TAG_LAST] = {
+ #ifdef CONFIG_NET_DSA_TAG_EDSA
+ 	[DSA_TAG_PROTO_EDSA] = &edsa_netdev_ops,
+ #endif
++#ifdef CONFIG_NET_DSA_TAG_GSWIP
++	[DSA_TAG_PROTO_GSWIP] = &gswip_netdev_ops,
++#endif
+ #ifdef CONFIG_NET_DSA_TAG_KSZ
+ 	[DSA_TAG_PROTO_KSZ] = &ksz_netdev_ops,
+ #endif
+diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
+index 3964c6f7a7c0..824ca07a30aa 100644
+--- a/net/dsa/dsa_priv.h
++++ b/net/dsa/dsa_priv.h
+@@ -205,6 +205,9 @@ extern const struct dsa_device_ops dsa_netdev_ops;
+ /* tag_edsa.c */
+ extern const struct dsa_device_ops edsa_netdev_ops;
+ 
++/* tag_gswip.c */
++extern const struct dsa_device_ops gswip_netdev_ops;
++
+ /* tag_ksz.c */
+ extern const struct dsa_device_ops ksz_netdev_ops;
+ 
+diff --git a/net/dsa/tag_gswip.c b/net/dsa/tag_gswip.c
+new file mode 100644
+index 000000000000..50c115fc924a
+--- /dev/null
++++ b/net/dsa/tag_gswip.c
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel / Lantiq GSWIP V2.0 PMAC tag support
++ *
++ * Copyright (C) 2017 - 2018 Hauke Mehrtens <hauke@hauke-m.de>
++ */
++
++#include <linux/bitops.h>
++#include <linux/etherdevice.h>
++#include <linux/skbuff.h>
++#include <net/dsa.h>
++
++#include "dsa_priv.h"
++
++#define GSWIP_TX_HEADER_LEN		4
++
++/* special tag in TX path header */
++/* Byte 0 */
++#define GSWIP_TX_SLPID_SHIFT		0	/* source port ID */
++#define  GSWIP_TX_SLPID_CPU		2
++#define  GSWIP_TX_SLPID_APP1		3
++#define  GSWIP_TX_SLPID_APP2		4
++#define  GSWIP_TX_SLPID_APP3		5
++#define  GSWIP_TX_SLPID_APP4		6
++#define  GSWIP_TX_SLPID_APP5		7
++
++/* Byte 1 */
++#define GSWIP_TX_CRCGEN_DIS		BIT(7)
++#define GSWIP_TX_DPID_SHIFT		0	/* destination group ID */
++#define  GSWIP_TX_DPID_ELAN		0
++#define  GSWIP_TX_DPID_EWAN		1
++#define  GSWIP_TX_DPID_CPU		2
++#define  GSWIP_TX_DPID_APP1		3
++#define  GSWIP_TX_DPID_APP2		4
++#define  GSWIP_TX_DPID_APP3		5
++#define  GSWIP_TX_DPID_APP4		6
++#define  GSWIP_TX_DPID_APP5		7
++
++/* Byte 2 */
++#define GSWIP_TX_PORT_MAP_EN		BIT(7)
++#define GSWIP_TX_PORT_MAP_SEL		BIT(6)
++#define GSWIP_TX_LRN_DIS		BIT(5)
++#define GSWIP_TX_CLASS_EN		BIT(4)
++#define GSWIP_TX_CLASS_SHIFT		0
++#define GSWIP_TX_CLASS_MASK		GENMASK(3, 0)
++
++/* Byte 3 */
++#define GSWIP_TX_DPID_EN		BIT(0)
++#define GSWIP_TX_PORT_MAP_SHIFT		1
++#define GSWIP_TX_PORT_MAP_MASK		GENMASK(6, 1)
++
++#define GSWIP_RX_HEADER_LEN	8
++
++/* special tag in RX path header */
++/* Byte 7 */
++#define GSWIP_RX_SPPID_SHIFT		4
++#define GSWIP_RX_SPPID_MASK		GENMASK(6, 4)
++
++static struct sk_buff *gswip_tag_xmit(struct sk_buff *skb,
++				      struct net_device *dev)
++{
++	struct dsa_port *dp = dsa_slave_to_port(dev);
++	int err;
++	u8 *gswip_tag;
++
++	err = skb_cow_head(skb, GSWIP_TX_HEADER_LEN);
++	if (err)
++		return NULL;
++
++	skb_push(skb, GSWIP_TX_HEADER_LEN);
++
++	gswip_tag = skb->data;
++	gswip_tag[0] = GSWIP_TX_SLPID_CPU;
++	gswip_tag[1] = GSWIP_TX_DPID_ELAN;
++	gswip_tag[2] = GSWIP_TX_PORT_MAP_EN | GSWIP_TX_PORT_MAP_SEL;
++	gswip_tag[3] = BIT(dp->index + GSWIP_TX_PORT_MAP_SHIFT) & GSWIP_TX_PORT_MAP_MASK;
++	gswip_tag[3] |= GSWIP_TX_DPID_EN;
++
++	return skb;
++}
++
++static struct sk_buff *gswip_tag_rcv(struct sk_buff *skb,
++				     struct net_device *dev,
++				     struct packet_type *pt)
++{
++	int port;
++	u8 *gswip_tag;
++
++	if (unlikely(!pskb_may_pull(skb, GSWIP_RX_HEADER_LEN)))
++		return NULL;
++
++	gswip_tag = skb->data - ETH_HLEN;
++	skb_pull_rcsum(skb, GSWIP_RX_HEADER_LEN);
++
++	/* Get source port information */
++	port = (gswip_tag[7] & GSWIP_RX_SPPID_MASK) >> GSWIP_RX_SPPID_SHIFT;
++	skb->dev = dsa_master_find_slave(dev, 0, port);
++	if (!skb->dev)
++		return NULL;
++
++	return skb;
++}
++
++const struct dsa_device_ops gswip_netdev_ops = {
++	.xmit = gswip_tag_xmit,
++	.rcv = gswip_tag_rcv,
++};
 -- 
 2.11.0
