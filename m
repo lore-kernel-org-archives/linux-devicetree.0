@@ -1,87 +1,54 @@
-Return-Path: <SRS0=6DmN=LR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from andre.telenet-ops.be ([195.130.132.53]:58036 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730406AbeICVvM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Sep 2018 17:51:12 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] arm64: dts: renesas: r8a77990: Add all MSIOF nodes
-Date: Mon,  3 Sep 2018 19:30:00 +0200
-Message-Id: <20180903173000.6877-1-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Ulrich Hecht <uli+renesas@fpond.eu>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=CDSW=LP=the-dreams.de=wsa@kernel.org>
+Date: Sat, 1 Sep 2018 14:53:44 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] dt-bindings: imx-lpi2c: Remove mx8dv compatible entry
+Message-ID: <20180901125344.GF1196@kunai>
+References: <1535721855-5595-1-git-send-email-festevam@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oFbHfjnMgUMsrGjO"
+Content-Disposition: inline
+In-Reply-To: <1535721855-5595-1-git-send-email-festevam@gmail.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-imx@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the device nodes for all MSIOF SPI controllers, incl. clocks, power
-domains, and resets properties.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm64/boot/dts/renesas/r8a77990.dtsi | 52 +++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+--oFbHfjnMgUMsrGjO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-index aa101a85fd73d513..6677a74ebeaecc37 100644
---- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-@@ -552,6 +552,58 @@
- 			status = "disabled";
- 		};
- 
-+		msiof0: spi@e6e90000 {
-+			compatible = "renesas,msiof-r8a77990",
-+				     "renesas,rcar-gen3-msiof";
-+			reg = <0 0xe6e90000 0 0x0064>;
-+			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 211>;
-+			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-+			resets = <&cpg 211>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		msiof1: spi@e6ea0000 {
-+			compatible = "renesas,msiof-r8a77990",
-+				     "renesas,rcar-gen3-msiof";
-+			reg = <0 0xe6ea0000 0 0x0064>;
-+			interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 210>;
-+			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-+			resets = <&cpg 210>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		msiof2: spi@e6c00000 {
-+			compatible = "renesas,msiof-r8a77990",
-+				     "renesas,rcar-gen3-msiof";
-+			reg = <0 0xe6c00000 0 0x0064>;
-+			interrupts = <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 209>;
-+			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-+			resets = <&cpg 209>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		msiof3: spi@e6c10000 {
-+			compatible = "renesas,msiof-r8a77990",
-+				     "renesas,rcar-gen3-msiof";
-+			reg = <0 0xe6c10000 0 0x0064>;
-+			interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 208>;
-+			power-domains = <&sysc R8A77990_PD_ALWAYS_ON>;
-+			resets = <&cpg 208>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		xhci0: usb@ee000000 {
- 			compatible = "renesas,xhci-r8a77990",
- 				     "renesas,rcar-gen3-xhci";
--- 
-2.17.1
+On Fri, Aug 31, 2018 at 10:24:14AM -0300, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam@nxp.com>
+>=20
+> mx8dv never entered into production and there is no other place
+> in the kernel referring to this SoC, so remove it from the
+> dt bindings documentation.
+>=20
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+
+Applied to for-current, thanks!
+
+
+--oFbHfjnMgUMsrGjO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAluKi9gACgkQFA3kzBSg
+KbaqTRAAo14BZJJVUsSzW7uWutTAaV9+QmrLF4xvEiaTSkHBdAenCugo4wfl+OtK
+X12m5ttYTYG7YBpI5dAsY0uKMoWtzMP0EDkjTKk18h8svLowxbm8UwjjKHUB46hz
+4KzQviRr5Wp8b1gABMN4+FrmClHyYGROCq+xCYgUSGzBxvn0LlFMO15gnvGcLlLd
+hzTSZd7VjuBgYn9c10AwHux5u0F3XIrj16qtt+Bn6e7ByU2I9+tKEibrK0X/bp9f
+ObbhUfwlo0a2Q/FRJClVhT4SfQ+Hwm+Px1PBHQ244/nTVDRpnl4osA1oM8bF3vg+
++/Z43qiDEyqKExkDaTYSJD6ivVgLtQwcYSRxDmiIuiW2hee03TahSI55Yw0IIYx7
+nLfwJdzEh1HKyA4N6E9VLkonk5JVddtR3mUDjsYXUew8+2oG0AJ60Om6oJMeMUMi
+yX5I6kaXEusrtaqvqHc91NdgwhGnv1WEqLt4459veTEWNGldHYmi1pfECRxSOkMc
+Eh8wtAEmeSlvzvgKBATtNJWLITwaDWr05zyuQCGTbF/ds6tsB38ZOelEM4m80IdL
+XwWzXqsYPxtnXTQkl3rVjoQ9ofu1yYd0A8/ZixQBd+PMZniyLCTrZPMH355Y5WrE
+cTPOgy0vjGeKplC/Z4NOjHeATwKYwxhLGexf2hWU2F9IZWb7bLw=
+=eT68
+-----END PGP SIGNATURE-----
+
+--oFbHfjnMgUMsrGjO--
