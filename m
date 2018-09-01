@@ -1,41 +1,71 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 0/4] media: platform: Add Aspeed Video Engine driver
-Date: Fri, 31 Aug 2018 19:46:54 -0700
-Message-ID: <153577001451.19113.16924655760277630355@swboyd.mtv.corp.google.com>
-References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
- <153573819126.93865.1884182656081956202@swboyd.mtv.corp.google.com>
- <a959a032-6817-dcb4-2c5f-b4bd17fc1c8b@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: [PATCH v2 00/34] ARM: dts: tegra: colibri_t30: major revamp
+Date: Sat,  1 Sep 2018 10:12:14 +0200
+Message-ID: <20180901081248.22639-1-marcel@ziswiler.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a959a032-6817-dcb4-2c5f-b4bd17fc1c8b@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
-Cc: linux-media@vger.kernel.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, andrew@aj.id.au, mchehab@kernel.org, joel@jms.id.au, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marcel Ziswiler <marcel@ziswiler.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Eddie James (2018-08-31 12:30:02)
-> =
+This series is a major overhaul for the Toradex Colibri T30 system on
+module.
 
-> =
+Changes in v2:
+- Also move serial UART "nvidia,tegra30-hsuart" compatible to module
+  level device trees.
+- Also replace underscores in node names with dashes.
+- Also replace underscores in UART annotations with dashes.
+- When running some more tests I realized that the reg-addr should
+  really be 0x3f. Fix this.
+- Get rid of fake clocks simple bus as suggested by Rob.
+- Drop "[PATCH 01/26] ARM: tegra: colibri_t30: enable broken-hpi on
+  emmc" which should already be handled by the broken-hpi quirk as
+  pointed out by Dmitry. If I would find more eMMC parts which exhibit
+  the issue I will add them to the quirk as a separate patch.
+- New patch as suggested by Rob.
+- New patch.
 
-> On 08/31/2018 12:56 PM, Stephen Boyd wrote:
-> > Quoting Eddie James (2018-08-29 14:09:29)
-> > Please let me know your merge strategy here. I can ack the clk patches
-> > because they look fine from high-level clk driver perspective (maybe
-> > Joel can take a closer look) or I can merge the patches into clk-next
-> > and get them into next release while the video driver gets reviewed.
-> =
+Marcel Ziswiler (34):
+  ARM: tegra: colibri_t30: add local-mac-address property
+  ARM: tegra: colibri_t30: reorder host1x/hdmi properties
+  ARM: tegra: colibri_t30: regulator clean-up
+  ARM: tegra: colibri_t30: add missing regulators
+  ARM: tegra: colibri_t30: annotate uarts and move compatible to board
+  ARM: tegra: colibri_t30: white-space clean-up
+  ARM: tegra: colibri_t30: move dr_mode property from phy to controller
+  ARM: tegra: colibri_t30: reorder backlight properties
+  ARM: tegra: colibri_t30: drop pwmleds
+  ARM: tegra: colibri_t30: pinmux clean-up
+  ARM: tegra: colibri_t30: add missing pinmux
+  ARM: tegra: colibri_t30: use proper irq-gpio for stmpe811
+  ARM: tegra: colibri_t30: further lm95245 temperature sensor annotation
+  ARM: tegra: colibri_t30: add i2c-thermtrip
+  ARM: tegra: colibri_t30: add proper emmc vmmc and vqmmc supplies
+  ARM: tegra: colibri_t30: enable emmc ddr52 mode
+  ARM: tegra: colibri_t30: get rid of fake clocks simple bus
+  ARM: tegra: colibri_t30: line break long compatible property line
+  ARM: tegra: colibri_t30: move input include to carrier board
+  ARM: tegra: colibri_t30: remove unused nvidia,is-wired property
+  ARM: tegra: colibri_t30: add gpio hog to unreset usb ethernet chip
+  ARM: tegra: colibri_t30: enable hda over hdmi
+  ARM: tegra: colibri_t30: annotate sd card detect
+  ARM: tegra: colibri_t30: annotate ehci instance 1
+  ARM: tegra: colibri_t30: update compatibility comment
+  ARM: tegra: colibri_t30: drop module level model and compatible
+  ARM: tegra: colibri_t30: drop obsolete spidev node
+  ARM: tegra: colibri_t30: rename hdmiddc to hdmi_ddc
+  ARM: tegra: colibri_t30: rename tps65911@2d, stmpe811@41 and
+    tps62362@60
+  ARM: tegra: colibri_t30: fix mcp2515 can controller interrupt polarity
+  ARM: tegra: colibri_t30: remove unused mcp2515 can0 label
+  ARM: tegra: colibri_t30: add mcp2515 vdd and xceiver supplies
+  ARM: tegra: colibri_t30: annotate unused i2c busses
+  ARM: tegra: colibri_t30: annotate power I2C being on-module
 
-> Thanks for taking a look! Probably preferable to get the clk patches =
+ arch/arm/boot/dts/tegra30-colibri-eval-v3.dts | 130 ++---
+ arch/arm/boot/dts/tegra30-colibri.dtsi        | 780 +++++++++++++++++++++-----
+ 2 files changed, 706 insertions(+), 204 deletions(-)
 
-> into clk-next first (though Joel reviewing would be great). I just put =
-
-> everything in the same set for the sake of explaining the necessity of =
-
-> the clk changes.
-> =
-
-
-Ok. If Joel is able to review then I can easily merge it into clk-next.
+-- 
+2.14.4
