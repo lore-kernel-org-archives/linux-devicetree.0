@@ -1,67 +1,55 @@
-Return-Path: <SRS0=Q2N/=LS=baylibre.com=jbrunet@kernel.org>
-Message-ID: <31463c95ba928534c8329c4665f92f6153b1840b.camel@baylibre.com>
-Subject: Re: [PATCH 1/3] dt-bindings: clock: meson8b: use the registers from
- the HHI syscon
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Tue, 04 Sep 2018 14:08:53 +0200
-In-Reply-To: <153573714081.93865.1632567834341845994@swboyd.mtv.corp.google.com>
-References: <20180721192846.18811-1-martin.blumenstingl@googlemail.com>
-	 <20180721192846.18811-2-martin.blumenstingl@googlemail.com>
-	 <20180725200755.GA24555@rob-hp-laptop>
-	 <CAFBinCAdsC-VisufKu9jm0vZER6JjFq4O5WAfsMoXdQfzNFcfg@mail.gmail.com>
-	 <18543f2e-0162-9201-571c-73ce8d707e50@baylibre.com>
-	 <CAFBinCDLWqXCcB3b3SAOxxkq+EbQazGmMVLbVLyTjWCD4wTarA@mail.gmail.com>
-	 <153573714081.93865.1632567834341845994@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-To: Stephen Boyd <sboyd@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, robh@kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, mturquette@baylibre.com, carlo@caione.org, khilman@baylibre.com, linux-clk@vger.kernel.org
+Return-Path: <SRS0=CDSW=LP=the-dreams.de=wsa@kernel.org>
+Date: Sat, 1 Sep 2018 14:53:50 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 2/2] i2c: imx-lpi2c: Remove mx8dv compatible entry
+Message-ID: <20180901125350.GG1196@kunai>
+References: <1535721855-5595-1-git-send-email-festevam@gmail.com>
+ <1535721855-5595-2-git-send-email-festevam@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oOB74oR0WcNeq9Zb"
+Content-Disposition: inline
+In-Reply-To: <1535721855-5595-2-git-send-email-festevam@gmail.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-imx@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 2018-08-31 at 10:39 -0700, Stephen Boyd wrote:
-> > > The clock controller node was badly represented from the beginning, the
-> > > HHI register zone *is* a "system control" zone with a lot of different
-> > > registers controller the system, including all the EE clocks, *some* HDMI
-> > > PHY settings, *some* Video DAC settings, *some* memory power control...
-> > > 
-> > > Thus, the clock controller *is* entirely in the HHI registers space, but
-> > > the HHI register space should be used by other nodes for control some
-> > > part of the SoCs. This is why we decided to model the HHI zone as a
-> > > "syscon" to permit other node to have access to these registers and
-> > > "simple-mfd" to expose the *big* feature of the HHI : the clock controller.
-> > 
-> > does our (Neil's and mine) explanation make sense to you?
-> > I understand your point that a DT node can provide multiple "things".
-> > this is the case on the Meson HHI region, but in addition to that the
-> > HHI region contains additional bits for other IP blocks. so my
-> > understanding is that using a syscon here is fine
-> > 
-> 
-> I'm dropping this from my review queue because nobody has replied in
-> many weeks. I think Rob wants people to move away from syscon so if you
-> can't do that then we need good reasons. I recommend putting those
-> reasons in the commit text and resending this series.
 
-Doubling down on what Neil and Martin already reported:
+--oOB74oR0WcNeq9Zb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When this clock controller what initially added, It was thought that the HHI
-register space only contained clocks and resets, which we know how to handle in
-a single driver and does not mandate a 'syscon'
+On Fri, Aug 31, 2018 at 10:24:15AM -0300, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam@nxp.com>
+>=20
+> mx8dv never entered into production and there is no other place
+> in the kernel referring to this SoC, so remove it from the
+> driver's compatible entry.
+>=20
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 
-Since then, we learn that HHI has more than just clocks and reset. This is the
-case on every amlogic platform, which is why we already moved gxbb/gxl to
-syscon. axg arrived later and used this model directly. Meson8 did not mandate
-the change so far. We tried to avoid this mess as long as it was not absolutely
-necessary.
+Applied to for-current, thanks!
 
-This particular platform (meson8) has an ADC block with is own registers space.
-The ADC comes with temperature sensor which has a few compensation values. 4 of
-these compensation values are in the ADC register space, the 5th is apparently
-in the HHI... HW is what it is ...
 
-Bottom line is, HHI is a typical system controller which need to be access by
-several devices. We are not particularly fond of syscon either but there are
-still some situations were this is cleanest solution, AFAIK.
+--oOB74oR0WcNeq9Zb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Jerome
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAluKi94ACgkQFA3kzBSg
+KbZoORAAglIPKYcO4hIeeTRbUIbioPqcUorxm24/4kVZsU/o+xaLyTZ2YjVKCCRw
+3s3INfm4dFo9JHqe9/PDX0AHBSRqS+Ny8O8t/lhAZ+504PtsaBqW6n2+j5oSo0Rz
+KRy6TVqRUIb4Luym3gqZRAHjcKcMUZbqasNbpnTs4nkgiuupShUyylLcVpxbgqKI
+O0oUUc5YTzJHI15P2P97aPVi160a8Oh+MUhCVSK/J7VXJTZTn27F1jVpFYFCOnsg
+dGa+AxrYDMAqANX4SYXzZ55Y9Q7XFhkvsOfykX4Jsx1rWYWXDUkUuvKJ52mLn/r+
+ahhazayY9vTpP2tooMUBBf79XYxAg1J5Fi9LCoXrn1A+EnVkqEATr5Ndy1ksQEkW
+HzxnWx7gZ9XwDQ4vlcGlfEGA59S13QaQFDxJ9vyHRTaV0a1y7KhAYgoGXIBJX37n
+tCSM8HwBIbxVFs9jQUlRFRLupGm7fGgcwWJn58SyJ0Ypw3+xTTY5Ha26ybGuaLrQ
+/3qKQq8V84KW0hDHeOUDaWZVBsG/44ctzWd+LQBzDX1qnoremFZNnTEVZtTeIfme
+UXy4Xc+lbU34HInp+66VldohxOhPi5JNIdQajXiM5Vv/UblWuCfHLkPjHz7uzviQ
+H5YnMUwb+QmlLrzWpNrdBt9kntOcEvbD2i/SA1kYz76EBFShD2I=
+=Pr9f
+-----END PGP SIGNATURE-----
+
+--oOB74oR0WcNeq9Zb--
