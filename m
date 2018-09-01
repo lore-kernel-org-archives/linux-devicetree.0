@@ -1,46 +1,50 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH v2 01/34] ARM: tegra: colibri_t30: add local-mac-address property
-Date: Sat,  1 Sep 2018 10:12:15 +0200
-Message-ID: <20180901081248.22639-2-marcel@ziswiler.com>
-References: <20180901081248.22639-1-marcel@ziswiler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180901081248.22639-1-marcel@ziswiler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Subject: [PATCH v2 net-next 2/7] MIPS: lantiq: Do not enable IRQs in dma open
+Date: Sat,  1 Sep 2018 13:45:30 +0200
+Message-ID: <20180901114535.9070-3-hauke@hauke-m.de>
+References: <20180901114535.9070-1-hauke@hauke-m.de>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180901114535.9070-1-hauke@hauke-m.de>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net
+Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+When a DMA channel is opened the IRQ should not get activated
+automatically, this allows it to pull data out manually without the help
+of interrupts. This is needed for a workaround in the vrx200 Ethernet
+driver.
 
-Add empty local-mac-address property to be filled in by boot loader
-(e.g. U-Boot).
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
+Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Acked-by: Paul Burton <paul.burton@mips.com>
 ---
+ arch/mips/lantiq/xway/dma.c        | 1 -
+ drivers/net/ethernet/lantiq_etop.c | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v2: None
-
- arch/arm/boot/dts/tegra30-colibri.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index 526ed71cf7a3..a392b65a0b64 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -437,6 +437,13 @@
- 	/* EHCI instance 1: USB2_DP/N -> AX88772B */
- 	usb@7d004000 {
- 		status = "okay";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		asix@1 {
-+			reg = <1>;
-+			local-mac-address = [00 00 00 00 00 00];
-+		};
- 	};
- 
- 	usb-phy@7d004000 {
+diff --git a/arch/mips/lantiq/xway/dma.c b/arch/mips/lantiq/xway/dma.c
+index 664f2f7f55c1..982859f2b2a3 100644
+--- a/arch/mips/lantiq/xway/dma.c
++++ b/arch/mips/lantiq/xway/dma.c
+@@ -106,7 +106,6 @@ ltq_dma_open(struct ltq_dma_channel *ch)
+ 	spin_lock_irqsave(&ltq_dma_lock, flag);
+ 	ltq_dma_w32(ch->nr, LTQ_DMA_CS);
+ 	ltq_dma_w32_mask(0, DMA_CHAN_ON, LTQ_DMA_CCTRL);
+-	ltq_dma_w32_mask(0, 1 << ch->nr, LTQ_DMA_IRNEN);
+ 	spin_unlock_irqrestore(&ltq_dma_lock, flag);
+ }
+ EXPORT_SYMBOL_GPL(ltq_dma_open);
+diff --git a/drivers/net/ethernet/lantiq_etop.c b/drivers/net/ethernet/lantiq_etop.c
+index e08301d833e2..379db19a303c 100644
+--- a/drivers/net/ethernet/lantiq_etop.c
++++ b/drivers/net/ethernet/lantiq_etop.c
+@@ -439,6 +439,7 @@ ltq_etop_open(struct net_device *dev)
+ 		if (!IS_TX(i) && (!IS_RX(i)))
+ 			continue;
+ 		ltq_dma_open(&ch->dma);
++		ltq_dma_enable_irq(&ch->dma);
+ 		napi_enable(&ch->napi);
+ 	}
+ 	phy_start(dev->phydev);
 -- 
-2.14.4
+2.11.0
