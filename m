@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 01/27] dt-bindings: sunxi-sram: add binding for
- Allwinner H6 SRAM C
-Date: Sun,  2 Sep 2018 09:26:17 +0200
-Message-ID: <20180902072643.4917-2-jernej.skrabec@siol.net>
+Subject: [PATCH 02/27] arm64: allwinner: h6: add system
+ controller device tree node
+Date: Sun,  2 Sep 2018 09:26:18 +0200
+Message-ID: <20180902072643.4917-3-jernej.skrabec@siol.net>
 References: <20180902072643.4917-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBRVBV3OAKGQE2DW7WYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBSNBV3OAKGQE3GHX5EA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180902072643.4917-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,41 +22,49 @@ List-Id: devicetree@vger.kernel.org
 
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-The Allwinner H6 SoC's DE3 needs the SRAM C section being claimed in the
-system controller to work, like A64 DE2.
-
-As H6 and A64 system controller are quite similar, code is reused now,
-and the A64 fallback compatible string is added after the H6 compatible
-string.
+As we have already binding for the H6 system controller, add its node
+to the device tree.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-[fixed typo in compatible string]
+[fixed compatible string]
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- Documentation/devicetree/bindings/sram/sunxi-sram.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 23 ++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sram/sunxi-sram.txt b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-index c51ade86578c..62dd0748f0ef 100644
---- a/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-+++ b/Documentation/devicetree/bindings/sram/sunxi-sram.txt
-@@ -18,6 +18,7 @@ Required properties:
-     - "allwinner,sun8i-h3-system-control"
-     - "allwinner,sun50i-a64-sram-controller" (deprecated)
-     - "allwinner,sun50i-a64-system-control"
-+    - "allwinner,sun50i-h6-system-control", "allwinner,sun50i-a64-system-control"
- - reg : sram controller register offset + length
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index cfa5fffcf62b..040828d2e2c0 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -92,6 +92,29 @@
+ 		#size-cells = <1>;
+ 		ranges;
  
- SRAM nodes
-@@ -54,6 +55,9 @@ The valid sections compatible for H3 are:
- The valid sections compatible for A64 are:
-     - allwinner,sun50i-a64-sram-c
- 
-+The valid sections compatible for H6 are:
-+    - allwinner,sun50i-h6-sram-c, allwinner,sun50i-a64-sram-c
++		syscon: syscon@3000000 {
++			compatible = "allwinner,sun50i-h6-system-control",
++				     "allwinner,sun50i-a64-system-control";
++			reg = <0x03000000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
 +
- Devices using SRAM sections
- ---------------------------
- 
++			sram_c: sram@28000 {
++				compatible = "mmio-sram";
++				reg = <0x00028000 0x1e000>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0 0x00028000 0x1e000>;
++
++				de2_sram: sram-section@0 {
++					compatible = "allwinner,sun50i-h6-sram-c",
++						     "allwinner,sun50i-a64-sram-c";
++					reg = <0x0000 0x1e000>;
++				};
++			};
++		};
++
+ 		ccu: clock@3001000 {
+ 			compatible = "allwinner,sun50i-h6-ccu";
+ 			reg = <0x03001000 0x1000>;
 -- 
 2.18.0
