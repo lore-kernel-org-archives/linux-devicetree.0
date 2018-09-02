@@ -1,91 +1,130 @@
-Return-Path: <SRS0=6RZ7=L4=linux.intel.com=sakari.ailus@kernel.org>
-Date: Fri, 14 Sep 2018 16:31:57 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 1/7] [media] tvp5150: add input source selection
- of_graph support
-Message-ID: <20180914133157.wppvzfvbssmm2zer@paasikivi.fi.intel.com>
-References: <20180813092508.1334-1-m.felsch@pengutronix.de>
- <20180813092508.1334-2-m.felsch@pengutronix.de>
+Return-Path: <SRS0=aBeZ=LQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:33666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726978AbeICApc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Sep 2018 20:45:32 -0400
+Date: Sun, 2 Sep 2018 21:28:30 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/5] iio: imu: st_lsm6dsx: add read_fifo callback to
+ fifo_ops
+Message-ID: <20180902212830.41869adc@archlinux>
+In-Reply-To: <20180830205259.7029-2-lorenzo.bianconi@redhat.com>
+References: <20180830205259.7029-2-lorenzo.bianconi@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180813092508.1334-2-m.felsch@pengutronix.de>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Marco,
+On Thu, 30 Aug 2018 22:52:55 +0200
+Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
 
-On Mon, Aug 13, 2018 at 11:25:02AM +0200, Marco Felsch wrote:
-...
-> +static void tvp5150_dt_cleanup(struct tvp5150 *decoder)
-> +{
-> +	unsigned int i;
+> Remove static qualifier from st_lsm6dsx_read_fifo definition and
+> introduce read_fifo function pointer in fifo_ops data structure
+> in order to run the proper read_fifo routine since other compliant
+> devices will use a different FIFO queueing scheme.
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        | 5 +++++
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 6 +++---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   | 3 +++
+>  3 files changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> index edcd838037cd..a0a6c07aad62 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -41,13 +41,17 @@ struct st_lsm6dsx_reg {
+>  	u8 mask;
+>  };
+>  
+> +struct st_lsm6dsx_hw;
 > +
-> +	for (i = 0; i < TVP5150_NUM_PADS; i++)
-> +		of_node_put(decoder->endpoints[i]);
-> +}
-> +
->  static const char * const tvp5150_test_patterns[2] = {
->  	"Disabled",
->  	"Black screen"
-> @@ -1586,7 +1996,7 @@ static int tvp5150_probe(struct i2c_client *c,
->  		res = tvp5150_parse_dt(core, np);
->  		if (res) {
->  			dev_err(sd->dev, "DT parsing error: %d\n", res);
-> -			return res;
-> +			goto err_cleanup_dt;
->  		}
->  	} else {
->  		/* Default to BT.656 embedded sync */
-> @@ -1594,25 +2004,16 @@ static int tvp5150_probe(struct i2c_client *c,
->  	}
+>  /**
+>   * struct st_lsm6dsx_fifo_ops - ST IMU FIFO settings
+> + * @read_fifo: Read FIFO callback.
+>   * @fifo_th: FIFO threshold register info (addr + mask).
+>   * @fifo_diff: FIFO diff status register info (addr + mask).
+>   * @th_wl: FIFO threshold word length.
+>   */
+>  struct st_lsm6dsx_fifo_ops {
+> +	int (*read_fifo)(struct st_lsm6dsx_hw *hw);
+>  	struct {
+>  		u8 addr;
+>  		u16 mask;
+> @@ -175,5 +179,6 @@ int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor,
+>  int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
+>  int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
+>  			     enum st_lsm6dsx_fifo_mode fifo_mode);
+> +int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw);
 >  
->  	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
-> +	sd->internal_ops = &tvp5150_internal_ops;
->  	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+>  #endif /* ST_LSM6DSX_H */
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> index 2b49d928f4c0..7e02935a4250 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> @@ -284,7 +284,7 @@ static inline int st_lsm6dsx_read_block(struct st_lsm6dsx_hw *hw, u8 *data,
+>   *
+>   * Return: Number of bytes read from the FIFO
+>   */
+> -static int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
+> +int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
+>  {
+>  	u16 fifo_len, pattern_len = hw->sip * ST_LSM6DSX_SAMPLE_SIZE;
+>  	u16 fifo_diff_mask = hw->settings->fifo_ops.fifo_diff.mask;
+> @@ -408,7 +408,7 @@ int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw)
 >  
-> -#if defined(CONFIG_MEDIA_CONTROLLER)
-> -	core->pads[TVP5150_PAD_IF_INPUT].flags = MEDIA_PAD_FL_SINK;
-> -	core->pads[TVP5150_PAD_IF_INPUT].sig_type = PAD_SIGNAL_ANALOG;
-> -	core->pads[TVP5150_PAD_VID_OUT].flags = MEDIA_PAD_FL_SOURCE;
-> -	core->pads[TVP5150_PAD_VID_OUT].sig_type = PAD_SIGNAL_DV;
-> -
-> -	sd->entity.function = MEDIA_ENT_F_ATV_DECODER;
-> -
-> -	res = media_entity_pads_init(&sd->entity, TVP5150_NUM_PADS, core->pads);
-> -	if (res < 0)
-> -		return res;
-> -
-> -#endif
-> +	res = tvp5150_mc_init(sd);
-> +	if (res)
-> +		goto err_cleanup_dt;
+>  	mutex_lock(&hw->fifo_lock);
 >  
->  	res = tvp5150_detect_version(core);
->  	if (res < 0)
-> -		return res;
-> +		goto err_cleanup_dt;
+> -	st_lsm6dsx_read_fifo(hw);
+> +	hw->settings->fifo_ops.read_fifo(hw);
+>  	err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_BYPASS);
 >  
->  	core->norm = V4L2_STD_ALL;	/* Default is autodetect */
->  	core->detected_norm = V4L2_STD_UNKNOWN;
-> @@ -1664,6 +2065,9 @@ static int tvp5150_probe(struct i2c_client *c,
->  err:
-
-Now that you have more error labels, you could rename this one.
-
->  	v4l2_ctrl_handler_free(&core->hdl);
->  	return res;
-
-Is the above line intended to be kept?
-
-> +err_cleanup_dt:
-> +	tvp5150_dt_cleanup(core);
-> +	return res;
->  }
+>  	mutex_unlock(&hw->fifo_lock);
+> @@ -480,7 +480,7 @@ static irqreturn_t st_lsm6dsx_handler_thread(int irq, void *private)
+>  	int count;
 >  
->  static int tvp5150_remove(struct i2c_client *c)
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+>  	mutex_lock(&hw->fifo_lock);
+> -	count = st_lsm6dsx_read_fifo(hw);
+> +	count = hw->settings->fifo_ops.read_fifo(hw);
+>  	mutex_unlock(&hw->fifo_lock);
+>  
+>  	return !count ? IRQ_NONE : IRQ_HANDLED;
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index aebbe0ddd8d8..394bcd3719e0 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -171,6 +171,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+>  			},
+>  		},
+>  		.fifo_ops = {
+> +			.read_fifo = st_lsm6dsx_read_fifo,
+>  			.fifo_th = {
+>  				.addr = 0x06,
+>  				.mask = GENMASK(11, 0),
+> @@ -217,6 +218,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+>  			},
+>  		},
+>  		.fifo_ops = {
+> +			.read_fifo = st_lsm6dsx_read_fifo,
+>  			.fifo_th = {
+>  				.addr = 0x06,
+>  				.mask = GENMASK(11, 0),
+> @@ -265,6 +267,7 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+>  			},
+>  		},
+>  		.fifo_ops = {
+> +			.read_fifo = st_lsm6dsx_read_fifo,
+>  			.fifo_th = {
+>  				.addr = 0x06,
+>  				.mask = GENMASK(10, 0),
