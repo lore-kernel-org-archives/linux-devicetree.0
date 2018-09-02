@@ -1,46 +1,60 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFC 0/2] hwmon: Add RPi PoE HAT fan driver
-Date: Sun,  2 Sep 2018 13:20:49 +0200
-Message-ID: <1535887251-29515-1-git-send-email-stefan.wahren@i2se.com>
+From: Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: [PATCH AUTOSEL 4.18 129/131] MIPS: mscc: ocelot: fix length of memory
+ address space for MIIM
+Date: Sun, 2 Sep 2018 13:05:45 +0000
+Message-ID: <20180902064601.183036-129-alexander.levin@microsoft.com>
+References: <20180902064601.183036-1-alexander.levin@microsoft.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180902064601.183036-1-alexander.levin@microsoft.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Quentin Schulz <quentin.schulz@bootlin.com>, Paul Burton <paul.burton@mips.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "jhogan@kernel.org" <jhogan@kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>, Sasha Levin <Alexander.Levin@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
-This series is an early stage of the hwmon driver for the fan on the
-Raspberry Pi Power over Ethernet HAT [1]. At the end this should use a
-Device Tree Overlay.
+From: Quentin Schulz <quentin.schulz@bootlin.com>
 
-Changes by Stefan based on [2]:
-- reformat the downstream patches for submission
-- drop reboot notification
-- fix remaining checkpatch issues
-- add COMPILE_TEST to Kconfig
+[ Upstream commit 49e5bb13adc11fe6e2e40f65c04f3a461aea1fec ]
 
-The driver is mostly copy & paste from pwm-fan, which isn't good. Personally
-i see two options:
+The length of memory address space for MIIM0 is from 0x7107009c to
+0x710700bf included which is 36 bytes long in decimal, or 0x24 bytes in
+hexadecimal and not 0x36.
 
-1) integrate the driver function into the pwm-fan driver (new compatible)
-2) implement the core function as a PWM driver and use the pwm-fan driver on top
+Fixes: 49b031690abe ("MIPS: mscc: Add switch to ocelot")
 
-[1] - https://www.raspberrypi.org/products/poe-hat/
-[2] - https://github.com/raspberrypi/linux/commit/0f937c8dc3201ebffa6c617c616fd7c65db65959
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20013/
+Cc: robh+dt@kernel.org
+Cc: mark.rutland@arm.com
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: thomas.petazzoni@bootlin.com
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+---
+ arch/mips/boot/dts/mscc/ocelot.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Serge Schneider (2):
-  dt-bindings: hwmon: Add RPi PoE HAT documentation
-  hwmon: Add RPi PoE HAT fan driver
-
- .../devicetree/bindings/hwmon/rpi-poe-fan.txt      |  55 +++
- Documentation/hwmon/rpi-poe-fan                    |  15 +
- drivers/hwmon/Kconfig                              |  11 +
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/rpi-poe-fan.c                        | 414 +++++++++++++++++++++
- include/soc/bcm2835/raspberrypi-firmware.h         |   2 +
- 6 files changed, 498 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/rpi-poe-fan.txt
- create mode 100644 Documentation/hwmon/rpi-poe-fan
- create mode 100644 drivers/hwmon/rpi-poe-fan.c
-
--- 
-2.7.4
+diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/=
+ocelot.dtsi
+index 4f33dbc67348..7096915f26e0 100644
+--- a/arch/mips/boot/dts/mscc/ocelot.dtsi
++++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+@@ -184,7 +184,7 @@
+ 			#address-cells =3D <1>;
+ 			#size-cells =3D <0>;
+ 			compatible =3D "mscc,ocelot-miim";
+-			reg =3D <0x107009c 0x36>, <0x10700f0 0x8>;
++			reg =3D <0x107009c 0x24>, <0x10700f0 0x8>;
+ 			interrupts =3D <14>;
+ 			status =3D "disabled";
+=20
+--=20
+2.17.1
