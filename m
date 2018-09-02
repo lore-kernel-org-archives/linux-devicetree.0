@@ -1,12 +1,12 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 20/27] drm/sun4i: Add support for Synopsys HDMI PHY
-Date: Sun,  2 Sep 2018 09:26:36 +0200
-Message-ID: <20180902072643.4917-21-jernej.skrabec@siol.net>
+Subject: [PATCH 23/27] drm: sun4i: add quirks for TCON TOP
+Date: Sun,  2 Sep 2018 09:26:39 +0200
+Message-ID: <20180902072643.4917-24-jernej.skrabec@siol.net>
 References: <20180902072643.4917-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB6VBV3OAKGQE2A3NQRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBANCV3OAKGQEV3MLPIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180902072643.4917-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -16,117 +16,109 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently sun8i-hdmi-phy driver supports only custom PHYs connected to
-DW HDMI controller. Since newest Allwinner SoCs have unmodified Synopsys
-PHY, driver has to be reorganized to support them.
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
-Variant structure is expanded to allow differentiation between custom
-and Sysnopsys PHYs and to hold Synopsys PHY settings.
+Some SoCs, such as H6, doesn't have a full-featured TCON TOP.
 
-Since DW HDMI bridge platform data has different fields for custom and
-Sysnopsys PHY, function sun8i_hdmi_phy_get_ops() is replaced with
-sun8i_hdmi_phy_set_ops().
+Add quirks support for TCON TOP.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Currently the presence of TCON_TV1 and DSI is controlled via the quirks
+structure.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c  |  4 +---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h  |  7 ++++++-
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 18 ++++++++++++++++--
- 3 files changed, 23 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 43 ++++++++++++++++++++------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 44143c9f20d0..bf35975dd100 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -172,9 +172,7 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	sun8i_hdmi_phy_init(hdmi->phy);
+diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+index 37158548b447..ed13233cad88 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
++++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+@@ -9,11 +9,17 @@
+ #include <linux/component.h>
+ #include <linux/device.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/of_graph.h>
+ #include <linux/platform_device.h>
  
- 	plat_data->mode_valid = hdmi->quirks->mode_valid;
--	plat_data->phy_ops = sun8i_hdmi_phy_get_ops();
--	plat_data->phy_name = "sun8i_dw_hdmi_phy";
--	plat_data->phy_data = hdmi->phy;
-+	sun8i_hdmi_phy_set_ops(hdmi->phy, plat_data);
+ #include "sun8i_tcon_top.h"
  
- 	platform_set_drvdata(pdev, hdmi);
- 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 94cf13d09abe..e48cd9b3cce3 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -149,6 +149,10 @@ struct sun8i_hdmi_phy;
- struct sun8i_hdmi_phy_variant {
- 	bool has_phy_clk;
- 	bool has_second_pll;
-+	bool is_custom_phy;
-+	const struct dw_hdmi_curr_ctrl *cur_ctr;
-+	const struct dw_hdmi_mpll_config *mpll_cfg;
-+	const struct dw_hdmi_phy_config *phy_cfg;
- 	void (*phy_init)(struct sun8i_hdmi_phy *phy);
- 	void (*phy_disable)(struct dw_hdmi *hdmi,
- 			    struct sun8i_hdmi_phy *phy);
-@@ -196,7 +200,8 @@ int sun8i_hdmi_phy_probe(struct sun8i_dw_hdmi *hdmi, struct device_node *node);
- void sun8i_hdmi_phy_remove(struct sun8i_dw_hdmi *hdmi);
- 
- void sun8i_hdmi_phy_init(struct sun8i_hdmi_phy *phy);
--const struct dw_hdmi_phy_ops *sun8i_hdmi_phy_get_ops(void);
-+void sun8i_hdmi_phy_set_ops(struct sun8i_hdmi_phy *phy,
-+			    struct dw_hdmi_plat_data *plat_data);
- 
- int sun8i_phy_clk_create(struct sun8i_hdmi_phy *phy, struct device *dev,
- 			 bool second_parent);
-diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-index ad4ba1cc83b4..ee2bf61cd4d2 100644
---- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-@@ -390,9 +390,20 @@ void sun8i_hdmi_phy_init(struct sun8i_hdmi_phy *phy)
- 	phy->variant->phy_init(phy);
- }
- 
--const struct dw_hdmi_phy_ops *sun8i_hdmi_phy_get_ops(void)
-+void sun8i_hdmi_phy_set_ops(struct sun8i_hdmi_phy *phy,
-+			    struct dw_hdmi_plat_data *plat_data)
- {
--	return &sun8i_hdmi_phy_ops;
-+	struct sun8i_hdmi_phy_variant *variant = phy->variant;
++struct sun8i_tcon_top_quirks {
++	bool has_tcon_tv1;
++	bool has_dsi;
++};
 +
-+	if (variant->is_custom_phy) {
-+		plat_data->phy_ops = &sun8i_hdmi_phy_ops;
-+		plat_data->phy_name = "sun8i_dw_hdmi_phy";
-+		plat_data->phy_data = phy;
+ static bool sun8i_tcon_top_node_is_tcon_top(struct device_node *node)
+ {
+ 	return !!of_match_node(sun8i_tcon_top_of_table, node);
+@@ -121,10 +127,13 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct clk_hw_onecell_data *clk_data;
+ 	struct sun8i_tcon_top *tcon_top;
++	const struct sun8i_tcon_top_quirks *quirks;
+ 	struct resource *res;
+ 	void __iomem *regs;
+ 	int ret, i;
+ 
++	quirks = of_device_get_match_data(&pdev->dev);
++
+ 	tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
+ 	if (!tcon_top)
+ 		return -ENOMEM;
+@@ -187,15 +196,23 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+ 					     &tcon_top->reg_lock,
+ 					     TCON_TOP_TCON_TV0_GATE, 0);
+ 
+-	clk_data->hws[CLK_TCON_TOP_TV1] =
+-		sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
+-					     &tcon_top->reg_lock,
+-					     TCON_TOP_TCON_TV1_GATE, 1);
++	if (quirks->has_tcon_tv1) {
++		clk_data->hws[CLK_TCON_TOP_TV1] =
++			sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
++						     &tcon_top->reg_lock,
++						     TCON_TOP_TCON_TV1_GATE, 1);
 +	} else {
-+		plat_data->mpll_cfg = variant->mpll_cfg;
-+		plat_data->cur_ctr = variant->cur_ctr;
-+		plat_data->phy_config = variant->phy_cfg;
++		clk_data->hws[CLK_TCON_TOP_TV1] = NULL;
 +	}
+ 
+-	clk_data->hws[CLK_TCON_TOP_DSI] =
+-		sun8i_tcon_top_register_gate(dev, "dsi", regs,
+-					     &tcon_top->reg_lock,
+-					     TCON_TOP_TCON_DSI_GATE, 2);
++	if (quirks->has_dsi) {
++		clk_data->hws[CLK_TCON_TOP_DSI] =
++			sun8i_tcon_top_register_gate(dev, "dsi", regs,
++						     &tcon_top->reg_lock,
++						     TCON_TOP_TCON_DSI_GATE, 2);
++	} else {
++		clk_data->hws[CLK_TCON_TOP_DSI] = NULL;
++	}
+ 
+ 	for (i = 0; i < CLK_NUM; i++)
+ 		if (IS_ERR(clk_data->hws[i])) {
+@@ -257,9 +274,17 @@ static int sun8i_tcon_top_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
- static struct regmap_config sun8i_hdmi_phy_regmap_config = {
-@@ -405,6 +416,7 @@ static struct regmap_config sun8i_hdmi_phy_regmap_config = {
- 
- static const struct sun8i_hdmi_phy_variant sun50i_a64_hdmi_phy = {
- 	.has_phy_clk = true,
-+	.is_custom_phy = true,
- 	.has_second_pll = true,
- 	.phy_init = &sun8i_hdmi_phy_init_h3,
- 	.phy_disable = &sun8i_hdmi_phy_disable_h3,
-@@ -412,6 +424,7 @@ static const struct sun8i_hdmi_phy_variant sun50i_a64_hdmi_phy = {
++const struct sun8i_tcon_top_quirks sun8i_r40_tcon_top_quirks = {
++	.has_tcon_tv1	= true,
++	.has_dsi	= true,
++};
++
+ /* sun4i_drv uses this list to check if a device node is a TCON TOP */
+ const struct of_device_id sun8i_tcon_top_of_table[] = {
+-	{ .compatible = "allwinner,sun8i-r40-tcon-top" },
++	{
++		.compatible = "allwinner,sun8i-r40-tcon-top",
++		.data = &sun8i_r40_tcon_top_quirks
++	},
+ 	{ /* sentinel */ }
  };
- 
- static const struct sun8i_hdmi_phy_variant sun8i_a83t_hdmi_phy = {
-+	.is_custom_phy = true,
- 	.phy_init = &sun8i_hdmi_phy_init_a83t,
- 	.phy_disable = &sun8i_hdmi_phy_disable_a83t,
- 	.phy_config = &sun8i_hdmi_phy_config_a83t,
-@@ -419,6 +432,7 @@ static const struct sun8i_hdmi_phy_variant sun8i_a83t_hdmi_phy = {
- 
- static const struct sun8i_hdmi_phy_variant sun8i_h3_hdmi_phy = {
- 	.has_phy_clk = true,
-+	.is_custom_phy = true,
- 	.phy_init = &sun8i_hdmi_phy_init_h3,
- 	.phy_disable = &sun8i_hdmi_phy_disable_h3,
- 	.phy_config = &sun8i_hdmi_phy_config_h3,
+ MODULE_DEVICE_TABLE(of, sun8i_tcon_top_of_table);
 -- 
 2.18.0
