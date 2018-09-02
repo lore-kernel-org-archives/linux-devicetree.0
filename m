@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 16/27] drm/sun4i: dw-hdmi: Make mode_valid
- function configurable
-Date: Sun,  2 Sep 2018 09:26:32 +0200
-Message-ID: <20180902072643.4917-17-jernej.skrabec@siol.net>
+Subject: [PATCH 18/27] dt-bindings: display: sunxi: add DT
+ binding for Allwinner H6 DW HDMI
+Date: Sun,  2 Sep 2018 09:26:34 +0200
+Message-ID: <20180902072643.4917-19-jernej.skrabec@siol.net>
 References: <20180902072643.4917-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB3NBV3OAKGQEDMF6MEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB5FBV3OAKGQE3O4PQRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180902072643.4917-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,101 +17,60 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since it is not possible to access sun8i-dw-hdmi driver private data
-inside mode_valid function, make it configurable. That way different
-versions of HDMI controllers can set different function, depending on
-it's limitations.
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
+The Allwinner H6 SoC uses a v2.12a DesignWare HDMI controller, with
+dedicated CEC and HDCP clocks added; the PHY connected is a standard
+DesignWare HDMI PHY.
+
+Add binding for it.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+[added HDCP clock and reset]
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 18 ++++++++++++++----
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  6 ++++++
- 2 files changed, 20 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/display/sunxi/sun4i-drm.txt   | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 31875b636434..a5020fe8bd69 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -5,6 +5,7 @@
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index dec2f8a6da9c..278410e43940 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -78,6 +78,7 @@ Required properties:
  
- #include <linux/component.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
+   - compatible: value must be one of:
+     * "allwinner,sun8i-a83t-dw-hdmi"
++    * "allwinner,sun50i-h6-dw-hdmi"
+   - reg: base address and size of memory-mapped region
+   - reg-io-width: See dw_hdmi.txt. Shall be 1.
+   - interrupts: HDMI interrupt number
+@@ -85,9 +86,14 @@ Required properties:
+     * iahb: the HDMI bus clock
+     * isfr: the HDMI register clock
+     * tmds: TMDS clock
++    * cec: HDMI CEC clock (H6 only)
++    * hdcp: HDCP clock (H6 only)
++    * hdcp-bus: HDCP bus clock (H6 only)
+   - clock-names: the clock names mentioned above
+-  - resets: phandle to the reset controller
+-  - reset-names: must be "ctrl"
++  - resets:
++    * ctrl: HDMI controller reset
++    * hdcp: HDCP reset (H6 only)
++  - reset-names: reset names mentioned above
+   - phys: phandle to the DWC HDMI PHY
+   - phy-names: must be "phy"
  
- #include <drm/drm_of.h>
-@@ -33,8 +34,8 @@ static const struct drm_encoder_funcs sun8i_dw_hdmi_encoder_funcs = {
- };
- 
- static enum drm_mode_status
--sun8i_dw_hdmi_mode_valid(struct drm_connector *connector,
--			 const struct drm_display_mode *mode)
-+sun8i_dw_hdmi_mode_valid_a83t(struct drm_connector *connector,
-+			      const struct drm_display_mode *mode)
- {
- 	if (mode->clock > 297000)
- 		return MODE_CLOCK_HIGH;
-@@ -102,6 +103,8 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	hdmi->dev = &pdev->dev;
- 	encoder = &hdmi->encoder;
- 
-+	hdmi->quirks = of_device_get_match_data(dev);
-+
- 	encoder->possible_crtcs =
- 		sun8i_dw_hdmi_find_possible_crtcs(drm, dev->of_node);
- 	/*
-@@ -156,7 +159,7 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 
- 	sun8i_hdmi_phy_init(hdmi->phy);
- 
--	plat_data->mode_valid = &sun8i_dw_hdmi_mode_valid;
-+	plat_data->mode_valid = hdmi->quirks->mode_valid;
- 	plat_data->phy_ops = sun8i_hdmi_phy_get_ops();
- 	plat_data->phy_name = "sun8i_dw_hdmi_phy";
- 	plat_data->phy_data = hdmi->phy;
-@@ -215,8 +218,15 @@ static int sun8i_dw_hdmi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct sun8i_dw_hdmi_quirks sun8i_a83t_quirks = {
-+	.mode_valid = sun8i_dw_hdmi_mode_valid_a83t,
-+};
-+
- static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
--	{ .compatible = "allwinner,sun8i-a83t-dw-hdmi" },
-+	{
-+		.compatible = "allwinner,sun8i-a83t-dw-hdmi",
-+		.data = &sun8i_a83t_quirks,
-+	},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, sun8i_dw_hdmi_dt_ids);
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index aadbe0a10b0c..b718c47e00be 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -169,6 +169,11 @@ struct sun8i_hdmi_phy {
- 	struct sun8i_hdmi_phy_variant	*variant;
- };
- 
-+struct sun8i_dw_hdmi_quirks {
-+	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
-+					   const struct drm_display_mode *mode);
-+};
-+
- struct sun8i_dw_hdmi {
- 	struct clk			*clk_tmds;
- 	struct device			*dev;
-@@ -176,6 +181,7 @@ struct sun8i_dw_hdmi {
- 	struct drm_encoder		encoder;
- 	struct sun8i_hdmi_phy		*phy;
- 	struct dw_hdmi_plat_data	plat_data;
-+	const struct sun8i_dw_hdmi_quirks *quirks;
- 	struct reset_control		*rst_ctrl;
- };
- 
+@@ -104,6 +110,7 @@ Required properties:
+     * allwinner,sun8i-a83t-hdmi-phy
+     * allwinner,sun8i-h3-hdmi-phy
+     * allwinner,sun50i-a64-hdmi-phy
++    * allwinner,sun50i-h6-hdmi-phy
+   - reg: base address and size of memory-mapped region
+   - clocks: phandles to the clocks feeding the HDMI PHY
+     * bus: the HDMI PHY interface clock
 -- 
 2.18.0
