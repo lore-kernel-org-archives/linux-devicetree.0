@@ -1,108 +1,142 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 0/2] hwmon: Add RPi PoE HAT fan driver
-Date: Sun, 2 Sep 2018 19:13:35 +0200 (CEST)
-Message-ID: <829194253.51526.1535908415057@email.1und1.de>
-References: <1535887251-29515-1-git-send-email-stefan.wahren@i2se.com>
- <99ca4f6d-d2b2-36e7-9f27-189df379cfaf@roeck-us.net>
- <67224834.51159.1535905604770@email.1und1.de>
- <e8d4e69c-2668-2794-6474-79749bf8b577@roeck-us.net>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: dac: ad5758: Add support for hard reset
+Date: Sun, 2 Sep 2018 19:02:14 +0100
+Message-ID: <20180902190214.116f2160@archlinux>
+References: <1535554722-1094-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e8d4e69c-2668-2794-6474-79749bf8b577@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Florian Fainelli <f.fainelli@gmail.com>, Phil Elwell <phil@raspberrypi.org>, serge@raspberrypi.org, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535554722-1094-1-git-send-email-stefan.popa@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On Wed, 29 Aug 2018 17:58:42 +0300
+Stefan Popa <stefan.popa@analog.com> wrote:
 
-> Guenter Roeck <linux@roeck-us.net> hat am 2. September 2018 um 18:49 geschrieben:
+> The ad5758 has a hardware reset active low input pin. This patch adds a
+> devicetree entry for a reset GPIO and a new ad5758_reset() function.
+> During
+> initialization, it is checked if the reset property is specified and the
+> the GPIO is being asserted, therefore the device will become active.
 > 
+> When the reset function is called, if the gpio_reset var is set, then
+> the
+> GPIO will be toggled, otherwise a software reset is performed.
 > 
-> On 09/02/2018 09:26 AM, Stefan Wahren wrote:
-> > Hi Guenter,
-> > 
-> >> Guenter Roeck <linux@roeck-us.net> hat am 2. September 2018 um 16:23 geschrieben:
-> >>
-> >>
-> >> On 09/02/2018 04:20 AM, Stefan Wahren wrote:
-> >>> This series is an early stage of the hwmon driver for the fan on the
-> >>> Raspberry Pi Power over Ethernet HAT [1]. At the end this should use a
-> >>> Device Tree Overlay.
-> >>>
-> >>> Changes by Stefan based on [2]:
-> >>> - reformat the downstream patches for submission
-> >>> - drop reboot notification
-> >>> - fix remaining checkpatch issues
-> >>> - add COMPILE_TEST to Kconfig
-> >>>
-> >>> The driver is mostly copy & paste from pwm-fan, which isn't good. Personally
-> >>> i see two options:
-> >>>
-> >>> 1) integrate the driver function into the pwm-fan driver (new compatible)
-> >>> 2) implement the core function as a PWM driver and use the pwm-fan driver on top
-> >>>
-> >>
-> >> I don't really see the point of thise driver. Why not implement either of those ?
-> > 
-> > i'm not sure about your question. Since the fan is placed over the SoC, the fan should takes care of the SoC temperature. AFAIK the firmware should have exclusive access to the I2C. So why we need this mailbox interface instead of a I2C driver.
-> > 
-> 
-> The driver sets pwm values. The pwm-fan driver sets pwm values. A pwm driver
-> sets pwm values. The pwm-fan driver uses a pwm driver to set pwm values.
-> You appear to be arguing that the pwm-fan driver for Rpi is different than
-> a pwm-fan driver for all other hardware and should _not_ use a pwm driver
-> to set pwm values.
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 
-thanks for your explanation. Now i think i understand and sorry for the confusion. We need a driver which translate the pwm values into the mailbox properties. "My" RFC series is only a starting point (not intended for merge and not an option) for a discussion and i'm perfectly fine with 2).
-Both options would be feasible in general. I only wanted to know your opinion before i start to implement one of them.
+Two minors inline. I'll tidy it up whilst applying.
 
-Stefan
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
+I'm taking the view that the binding addition is very straight forward
+but happy to have input from the DT maintainers if they wish to give
+it!
+
+Thanks,
+
+Jonathan
+> ---
+>  .../devicetree/bindings/iio/dac/ad5758.txt         |  5 ++++
+>  drivers/iio/dac/ad5758.c                           | 27 ++++++++++++++++++++--
+>  2 files changed, 30 insertions(+), 2 deletions(-)
 > 
-> As you don't understand my question, I don't understand your rationale either.
-> I will require detailed explanations why 2) is not feasible, and why 1) is not
-> feasible either. Until then, NACK.
-> 
-> Guenter
-> 
-> >> 2) sounds like a perfect fit to me.
-> >>
-> >> Guenter
-> >>
-> >>> [1] - https://www.raspberrypi.org/products/poe-hat/
-> >>> [2] - https://github.com/raspberrypi/linux/commit/0f937c8dc3201ebffa6c617c616fd7c65db65959
-> >>>
-> >>> Serge Schneider (2):
-> >>>     dt-bindings: hwmon: Add RPi PoE HAT documentation
-> >>>     hwmon: Add RPi PoE HAT fan driver
-> >>>
-> >>>    .../devicetree/bindings/hwmon/rpi-poe-fan.txt      |  55 +++
-> >>>    Documentation/hwmon/rpi-poe-fan                    |  15 +
-> >>>    drivers/hwmon/Kconfig                              |  11 +
-> >>>    drivers/hwmon/Makefile                             |   1 +
-> >>>    drivers/hwmon/rpi-poe-fan.c                        | 414 +++++++++++++++++++++
-> >>>    include/soc/bcm2835/raspberrypi-firmware.h         |   2 +
-> >>>    6 files changed, 498 insertions(+)
-> >>>    create mode 100644 Documentation/devicetree/bindings/hwmon/rpi-poe-fan.txt
-> >>>    create mode 100644 Documentation/hwmon/rpi-poe-fan
-> >>>    create mode 100644 drivers/hwmon/rpi-poe-fan.c
-> >>>
-> >>
-> > 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5758.txt b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+> index bba01a5..bbcd789 100644
+> --- a/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+> +++ b/Documentation/devicetree/bindings/iio/dac/ad5758.txt
+> @@ -50,6 +50,9 @@ Required properties:
+>  
+>  Optional properties:
+>  
+> + - reset-gpios : GPIO spec for the RESET pin. If specified, it will be
+> + 		 asserted during driver probe.
+There is a space at the start of the line above that shouldn't be there.
+
+Fixed up.
+
+> +
+>   - adi,dc-dc-ilim-microamp: The dc-to-dc converter current limit
+>  		   The following values are currently supported [uA]:
+>  			* 150000
+> @@ -71,6 +74,8 @@ AD5758 Example:
+>  		spi-max-frequency = <1000000>;
+>  		spi-cpha;
+>  
+> +		reset-gpios = <&gpio 22 0>;
+> +
+>  		adi,dc-dc-mode = <2>;
+>  		adi,range-microvolt = <0 10000000>;
+>  		adi,dc-dc-ilim-microamp = <200000>;
+> diff --git a/drivers/iio/dac/ad5758.c b/drivers/iio/dac/ad5758.c
+> index bd36333..b5cc5bd 100644
+> --- a/drivers/iio/dac/ad5758.c
+> +++ b/drivers/iio/dac/ad5758.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/module.h>
+>  #include <linux/property.h>
+>  #include <linux/spi/spi.h>
+> +#include <linux/gpio/consumer.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> @@ -108,6 +109,7 @@ struct ad5758_range {
+>  struct ad5758_state {
+>  	struct spi_device *spi;
+>  	struct mutex lock;
+> +	struct gpio_desc *gpio_reset;
+>  	struct ad5758_range out_range;
+>  	unsigned int dc_dc_mode;
+>  	unsigned int dc_dc_ilim;
+> @@ -474,6 +476,22 @@ static int ad5758_internal_buffers_en(struct ad5758_state *st, bool enable)
+>  					     AD5758_CAL_MEM_UNREFRESHED_MSK);
+>  }
+>  
+> +static int ad5758_reset(struct ad5758_state *st)
+> +{
+> +	if (st->gpio_reset) {
+> +		gpiod_set_value(st->gpio_reset, 0);
+> +		usleep_range(100, 1000);
+> +		gpiod_set_value(st->gpio_reset, 1);
+
+This feels like an odd construct.  I would bring the usleep_range
+and final return into this if block.
+
+> +	} else {
+> +		/* Perform a software reset */
+> +		return ad5758_soft_reset(st);
+> +	}
+> +
+> +	usleep_range(100, 1000);
+> +
+> +	return 0;
+> +}
+> +
+>  static int ad5758_reg_access(struct iio_dev *indio_dev,
+>  			     unsigned int reg,
+>  			     unsigned int writeval,
+> @@ -768,13 +786,18 @@ static int ad5758_init(struct ad5758_state *st)
+>  {
+>  	int regval, ret;
+>  
+> +	st->gpio_reset = devm_gpiod_get_optional(&st->spi->dev, "reset",
+> +						 GPIOD_OUT_HIGH);
+> +	if (IS_ERR(st->gpio_reset))
+> +		return PTR_ERR(st->gpio_reset);
+> +
+>  	/* Disable CRC checks */
+>  	ret = ad5758_crc_disable(st);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	/* Perform a software reset */
+> -	ret = ad5758_soft_reset(st);
+> +	/* Perform a reset */
+> +	ret = ad5758_reset(st);
+>  	if (ret < 0)
+>  		return ret;
+>  
