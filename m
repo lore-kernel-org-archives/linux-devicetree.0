@@ -1,43 +1,34 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 2/2] net: ethernet: cpsw-phy-sel: prefer phandle for
- phy sel
-Date: Sun, 02 Sep 2018 13:52:51 -0700 (PDT)
-Message-ID: <20180902.135251.1636829495138774363.davem@davemloft.net>
-References: <20180829150024.43210-1-tony@atomide.com>
-        <20180829150024.43210-2-tony@atomide.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2][RESEND] ARM: dts: Add big-endian in nor node for
+ ls1021a
+Date: Mon, 3 Sep 2018 07:58:14 +0800
+Message-ID: <20180902235812.GS3850@dragon>
+References: <20180828065936.8040-1-prabhakar.kushwaha@nxp.com>
+ <20180828065936.8040-2-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180829150024.43210-2-tony@atomide.com>
-Sender: netdev-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: netdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch, grygorii.strashko@ti.com, ivan.khoronzhuk@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180828065936.8040-2-prabhakar.kushwaha@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
-Date: Wed, 29 Aug 2018 08:00:24 -0700
+On Tue, Aug 28, 2018 at 12:29:35PM +0530, Prabhakar Kushwaha wrote:
+> NOR and IFC controller connectivity is big-endian.
+> So add big-endian field in nor device tree node allowing
+> IFC controller to read/write data from/to the flash correctly.
+> 
+> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
 
-> The cpsw-phy-sel device is not a child of the cpsw interconnect target
-> module. It lives in the system control module.
-> 
-> Let's fix this issue by trying to use cpsw-phy-sel phandle first if it
-> exists and if not fall back to current usage of trying to find the
-> cpsw-phy-sel child. That way the phy sel driver can be a child of the
-> system control module where it belongs in the device tree.
-> 
-> Without this fix, we cannot have a proper interconnect target module
-> hierarchy in device tree for things like genpd.
-> 
-> Note that deferred probe is mostly not supported by cpsw and this patch
-> does not attempt to fix that. In case deferred probe support is needed,
-> this could be added to cpsw_slave_open() and phy_connect() so they start
-> handling and returning errors.
-> 
-> For documenting it, looks like the cpsw-phy-sel is used for all cpsw device
-> tree nodes. It's missing the related binding documentation, so let's also
-> update the binding documentation accordingly.
-> 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-
-Applied.
+Applied both, thanks.
