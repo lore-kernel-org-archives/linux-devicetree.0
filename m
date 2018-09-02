@@ -1,90 +1,123 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/4] iio: gyro: add support for fxas21002c
-Date: Sun, 2 Sep 2018 10:18:00 +0100
-Message-ID: <20180902101800.4165005f@archlinux>
-References: <20180825211910.22929-1-afonsobordado@az8.co>
-        <20180827180805.7d4b9f4e@archlinux>
-        <d6c71f8699a0ee8eb09417381e301246b864e69e.camel@az8.co>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 00/27] Allwinner H6 DE3 and HDMI support
+Date: Sun, 2 Sep 2018 17:31:50 +0800
+Message-ID: <CAGb2v66coQW2vNgEkcLeN0VuV4r18baqYVrgqspLA5FvRfgcEg@mail.gmail.com>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d6c71f8699a0ee8eb09417381e301246b864e69e.camel@az8.co>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Afonso Bordado <afonsobordado@az8.co>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBFG4V3OAKGQECMA6W3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180902072643.4917-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Aug 2018 07:43:48 +0100
-Afonso Bordado <afonsobordado@az8.co> wrote:
+On Sun, Sep 2, 2018 at 3:27 PM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+>
+> This series adds support for Display Engine 3.0 and HDMI 2.0a, which
+> can be found on H6 SoC.
+>
+> Display Engine 3.0 in comparison to 2.0 mostly adds features needed for
+> displaying and processing 10-bit and AFBC formats, which are not yet
+> supported by this series.
+>
+> This series is based on linux-next at next-20180828, which has working
+> R40 display pipeline support. I'll rebase series on later linux-next, if
+> needed, once R40 display pipeline support is reintroduced.
+>
+> I suggest all patches go through allwinner tree, except DRM patches,
+> which should go through drm-misc tree.
+>
+> Last detail, PineH64 model A schematic has DDC_EN signal, which enables
+> DDC voltage level shifter. TL Lim, PINE64 founder, said that this
+> signal is not actually present on PineH64 model A board. It is, however
+> present on PineH64 model B engineering samples, but it will be removed
+> in production version. Because of that, I didn't include any code for
+> it.
+>
+> Please take a look.
+>
+> Best regards,
+> Jernej
+>
+> Icenowy Zheng (7):
+>   dt-bindings: sunxi-sram: add binding for Allwinner H6 SRAM C
+>   arm64: allwinner: h6: add system controller device tree node
 
-> On Mon, 2018-08-27 at 18:08 +0100, Jonathan Cameron wrote:
-> > On Sat, 25 Aug 2018 22:19:07 +0100
-> > Afonso Bordado <afonsobordado@az8.co> wrote:
-> >   
-> > > FXAS21002C is a 3 axis gyroscope with integrated temperature sensor
-> > > 
-> > > Signed-off-by: Afonso Bordado <afonsobordado@az8.co>  
-> > 
-> > Hi,
-> > 
-> > Driver is pretty clean so only a few minor comments inline.
-> > If we were late in a cycle I'd probably just have taken it and fixed
-> > up
-> > but as we have lots of time and I'm inherently lazy I'll let you do a
-> > v2 :)
-> > 
-> > Good job, thanks!
-> > 
-> > Jonathan  
-> 
-> Great!
-> 
-> 
-> > > +
-> > > +static const struct regmap_access_table fxas21002c_volatile_table
-> > > = {
-> > > +	.yes_ranges = fxas21002c_volatile_ranges,
-> > > +	.n_yes_ranges = ARRAY_SIZE(fxas21002c_volatile_ranges),
-> > > +};
-> > > +
-> > > +const struct regmap_config fxas21002c_regmap_config = {
-> > > +	.reg_bits = 8,
-> > > +	.val_bits = 8,
-> > > +
-> > > +	.max_register = FXAS21002C_REG_CTRL_REG3,
-> > > +	// We don't specify a .rd_table because everything is readable  
-> > 
-> > /* ... */
-> > 
-> > Please run checkpatch as IIRC it complains about this.  
-> 
-> I've replaced all instances of C99 comments with ANSI comments.
-> However, has Joe Perches mentioned. Checkpatch did not warn me about
-> this.
-> 
-Yup, thanks to Joe for clarifying this I had missed the change.
-> 
-> > > +
-> > > +static int fxas21002c_remove(struct i2c_client *client)
-> > > +{
-> > > +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> > > +	struct fxas21002c_data *data = iio_priv(indio_dev);
-> > > +
-> > > +	iio_device_unregister(indio_dev);
-> > > +
-> > > +	fxas21002c_set_operating_mode(data, FXAS21002C_OM_STANDBY);  
-> > 
-> > You could have used the devm_add_action to allow the managed cleanup
-> > to handle
-> > this and hence gotten rid of the remove function.
-> > 
-> > (minor suggestion and somewhat a matter of personal taste).  
-> 
-> I didn't know this existed! Changed in v2.
+Prefix should be "arm64: dts: allwinner: h6: ".
 
-Nor me until someone used it in a driver a few months back ;)
-One of the advantages of doing a lot of review is that you get to see
-any new stuff other people use.
+>   dt-bindings: bus: add H6 DE3 bus binding
+>   dt-bindings: display: sunxi: add DT binding for Allwinner H6 DW HDMI
+>   drm: sun4i: add quirks for TCON TOP
+>   dt-bindings: display: sun4i-drm: document H6 TCON TOP
+>   drm: sun4i: add support for H6 TCON TOP
+>
+> Jernej Skrabec (20):
+>   clk: sunxi-ng: Adjust MP clock parent rate when allowed
+>   clk: sunxi-ng: Use u64 for calculation of NM rate
+>   clk: sunxi-ng: h6: Set video PLLs limits
+>   dt-bindings: clock: sun8i-de2: Add H6 DE3 clock description
+>   clk: sunxi-ng: Add support for H6 DE3 clocks
+>   dt-bindings: display: sun4i-drm: Add H6 display engine compatibles
+>   drm/sun4i: Add compatible for H6 display engine
+>   drm/sun4i: Rework DE2 register defines
+>   drm/sun4i: Add basic support for DE3
+>   drm/sun4i: Add support for H6 DE3 mixer 0
+>   drm/bridge/synopsys: dw-hdmi: Enable workaround for v2.12a
+>   drm/sun4i: Not all DW HDMI controllers has scrambled addresses
+>   drm/sun4i: dw-hdmi: Make mode_valid function configurable
+>   drm/sun4i: dw-hdmi: Add quirk for setting TMDS clock
+>   drm/sun4i: Add support for H6 DW HDMI controller
+>   drm/sun4i: Add support for Synopsys HDMI PHY
+>   drm/sun4i: Add support for H6 HDMI PHY
+>   drm/sun4i: Initialize registers in tcon-top driver
+>   arm64: dts: sun50i: h6: Add HDMI pipeline
+>   arm64: dts: sun50i: h6: Enable HDMI output on Pine H64 board
 
-Jonathan
+Same here.
+
+ChenYu
+
+>
+>  .../bindings/bus/sun50i-de2-bus.txt           |   9 +-
+>  .../devicetree/bindings/clock/sun8i-de2.txt   |   5 +-
+>  .../bindings/display/sunxi/sun4i-drm.txt      |  30 ++-
+>  .../devicetree/bindings/sram/sunxi-sram.txt   |   4 +
+>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  25 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 224 ++++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun50i-h6.c          |   4 +
+>  drivers/clk/sunxi-ng/ccu-sun8i-de2.c          |  65 +++++
+>  drivers/clk/sunxi-ng/ccu-sun8i-de2.h          |   1 +
+>  drivers/clk/sunxi-ng/ccu_mp.c                 |  64 ++++-
+>  drivers/clk/sunxi-ng/ccu_nm.c                 |  18 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c     |   1 +
+>  drivers/gpu/drm/sun4i/sun4i_drv.c             |   1 +
+>  drivers/gpu/drm/sun4i/sun8i_csc.c             |  96 +++++++-
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         |  45 +++-
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  14 +-
+>  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c        | 178 +++++++++++++-
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c           |  44 +++-
+>  drivers/gpu/drm/sun4i/sun8i_mixer.h           |  61 +++--
+>  drivers/gpu/drm/sun4i/sun8i_tcon_top.c        |  58 ++++-
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.c        |  47 ++--
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.h        |  37 +--
+>  drivers/gpu/drm/sun4i/sun8i_ui_scaler.c       |  45 ++--
+>  drivers/gpu/drm/sun4i/sun8i_ui_scaler.h       |  28 +--
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c        |  55 +++--
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.h        |  25 +-
+>  drivers/gpu/drm/sun4i/sun8i_vi_scaler.c       |  85 +++++--
+>  drivers/gpu/drm/sun4i/sun8i_vi_scaler.h       |  68 ++++--
+>  include/dt-bindings/clock/sun8i-de2.h         |   3 +
+>  include/dt-bindings/reset/sun8i-de2.h         |   1 +
+>  30 files changed, 1127 insertions(+), 214 deletions(-)
+>
+> --
+> 2.18.0
+>
