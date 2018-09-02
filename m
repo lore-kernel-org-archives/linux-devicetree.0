@@ -1,22 +1,73 @@
-Return-Path: <SRS0=SOkh=LV=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 0/2] Add support for RZ/A2 wdt
-Date: Thu,  6 Sep 2018 20:22:41 -0500
-Message-Id: <20180907012243.86603-1-chris.brandt@renesas.com>
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=aBeZ=LQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726978AbeICAqj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 2 Sep 2018 20:46:39 -0400
+Date: Sun, 2 Sep 2018 21:29:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 3/5] iio: imu: st_lsm6dsx: add addr/max_word_len to
+ st_lsm6dsx_read_block()
+Message-ID: <20180902212937.0a9d1624@archlinux>
+In-Reply-To: <20180830205259.7029-4-lorenzo.bianconi@redhat.com>
+References: <20180830205259.7029-4-lorenzo.bianconi@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Slightly modify the rza_wdt.c driver and update the binding docs.
+On Thu, 30 Aug 2018 22:52:57 +0200
+Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
 
-
-Chris Brandt (2):
-  watchdog: rza_wdt: Support longer timeouts
-  dt-bindings: watchdog: renesas-wdt: Add support for R7S9210
-
- .../devicetree/bindings/watchdog/renesas-wdt.txt   |  1 +
- drivers/watchdog/rza_wdt.c                         | 81 +++++++++++++++++-----
- 2 files changed, 64 insertions(+), 18 deletions(-)
-
--- 
-2.16.1
+> Add reg addr and max_word_len parameters to st_lsm6dsx_read_block
+> since LSM6DSO will use a different register address to read samples
+> from the FIFO and a different sample len
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Applied.  Thanks
+> ---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> index 7e02935a4250..2002ba4a1abd 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> @@ -255,18 +255,18 @@ static int st_lsm6dsx_reset_hw_ts(struct st_lsm6dsx_hw *hw)
+>   * Set max bulk read to ST_LSM6DSX_MAX_WORD_LEN in order to avoid
+>   * a kmalloc for each bus access
+>   */
+> -static inline int st_lsm6dsx_read_block(struct st_lsm6dsx_hw *hw, u8 *data,
+> -					unsigned int data_len)
+> +static inline int st_lsm6dsx_read_block(struct st_lsm6dsx_hw *hw, u8 addr,
+> +					u8 *data, unsigned int data_len,
+> +					unsigned int max_word_len)
+>  {
+>  	unsigned int word_len, read_len = 0;
+>  	int err;
+>  
+>  	while (read_len < data_len) {
+>  		word_len = min_t(unsigned int, data_len - read_len,
+> -				 ST_LSM6DSX_MAX_WORD_LEN);
+> -		err = regmap_bulk_read(hw->regmap,
+> -				       ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
+> -				       data + read_len, word_len);
+> +				 max_word_len);
+> +		err = regmap_bulk_read(hw->regmap, addr, data + read_len,
+> +				       word_len);
+>  		if (err < 0)
+>  			return err;
+>  		read_len += word_len;
+> @@ -316,7 +316,9 @@ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw)
+>  	gyro_sensor = iio_priv(hw->iio_devs[ST_LSM6DSX_ID_GYRO]);
+>  
+>  	for (read_len = 0; read_len < fifo_len; read_len += pattern_len) {
+> -		err = st_lsm6dsx_read_block(hw, hw->buff, pattern_len);
+> +		err = st_lsm6dsx_read_block(hw, ST_LSM6DSX_REG_FIFO_OUTL_ADDR,
+> +					    hw->buff, pattern_len,
+> +					    ST_LSM6DSX_MAX_WORD_LEN);
+>  		if (err < 0) {
+>  			dev_err(hw->dev,
+>  				"failed to read pattern from fifo (err=%d)\n",
