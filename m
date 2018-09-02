@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 15/27] drm/sun4i: Not all DW HDMI controllers
- has scrambled addresses
-Date: Sun,  2 Sep 2018 09:26:31 +0200
-Message-ID: <20180902072643.4917-16-jernej.skrabec@siol.net>
+Subject: [PATCH 17/27] drm/sun4i: dw-hdmi: Add quirk for setting
+ TMDS clock
+Date: Sun,  2 Sep 2018 09:26:33 +0200
+Message-ID: <20180902072643.4917-18-jernej.skrabec@siol.net>
 References: <20180902072643.4917-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB25BV3OAKGQEXEEG6UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB35BV3OAKGQEWAXMNQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180902072643.4917-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,67 +20,52 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-LDxbnhwyfcJBD
 Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently supported Allwinner SoCs with DW HDMI controller have
-scrambled addresses and read lock. However, that is not true in general.
-For example, A80 and H6 have normal addresses and normal read access.
+It turns out that H6 HDMI BSP kernel driver doesn't change TMDS rate at
+all. At this point it is not clear whether it is just not necessary or
+it would cause some kind of issues.
 
-Move code for unscrambling addresses and unlocking read access to it's
-own function and call it from init function.
+Add a quirk for it.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 5 ++++-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h | 1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-index 82502b351aec..ad4ba1cc83b4 100644
---- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-@@ -279,8 +279,21 @@ static const struct dw_hdmi_phy_ops sun8i_hdmi_phy_ops = {
- 	.setup_hpd = &dw_hdmi_phy_setup_hpd,
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+index a5020fe8bd69..16a0c7a88ea8 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+@@ -153,7 +153,9 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+ 		goto err_disable_clk_tmds;
+ 	}
+ 
+-	drm_encoder_helper_add(encoder, &sun8i_dw_hdmi_encoder_helper_funcs);
++	if (hdmi->quirks->set_rate)
++		drm_encoder_helper_add(encoder,
++				       &sun8i_dw_hdmi_encoder_helper_funcs);
+ 	drm_encoder_init(drm, encoder, &sun8i_dw_hdmi_encoder_funcs,
+ 			 DRM_MODE_ENCODER_TMDS, NULL);
+ 
+@@ -220,6 +222,7 @@ static int sun8i_dw_hdmi_remove(struct platform_device *pdev)
+ 
+ static const struct sun8i_dw_hdmi_quirks sun8i_a83t_quirks = {
+ 	.mode_valid = sun8i_dw_hdmi_mode_valid_a83t,
++	.set_rate = true,
  };
  
-+static void sun8i_hdmi_phy_unlock(struct sun8i_hdmi_phy *phy)
-+{
-+	/* enable read access to HDMI controller */
-+	regmap_write(phy->regs, SUN8I_HDMI_PHY_READ_EN_REG,
-+		     SUN8I_HDMI_PHY_READ_EN_MAGIC);
-+
-+	/* unscramble register offsets */
-+	regmap_write(phy->regs, SUN8I_HDMI_PHY_UNSCRAMBLE_REG,
-+		     SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC);
-+}
-+
- static void sun8i_hdmi_phy_init_a83t(struct sun8i_hdmi_phy *phy)
- {
-+	sun8i_hdmi_phy_unlock(phy);
-+
- 	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_DBG_CTRL_REG,
- 			   SUN8I_HDMI_PHY_DBG_CTRL_PX_LOCK,
- 			   SUN8I_HDMI_PHY_DBG_CTRL_PX_LOCK);
-@@ -298,6 +311,8 @@ static void sun8i_hdmi_phy_init_h3(struct sun8i_hdmi_phy *phy)
- {
- 	unsigned int val;
+ static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+index b718c47e00be..94cf13d09abe 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+@@ -172,6 +172,7 @@ struct sun8i_hdmi_phy {
+ struct sun8i_dw_hdmi_quirks {
+ 	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
+ 					   const struct drm_display_mode *mode);
++	bool set_rate;
+ };
  
-+	sun8i_hdmi_phy_unlock(phy);
-+
- 	regmap_write(phy->regs, SUN8I_HDMI_PHY_ANA_CFG1_REG, 0);
- 	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_ANA_CFG1_REG,
- 			   SUN8I_HDMI_PHY_ANA_CFG1_ENBI,
-@@ -372,14 +387,6 @@ static void sun8i_hdmi_phy_init_h3(struct sun8i_hdmi_phy *phy)
- 
- void sun8i_hdmi_phy_init(struct sun8i_hdmi_phy *phy)
- {
--	/* enable read access to HDMI controller */
--	regmap_write(phy->regs, SUN8I_HDMI_PHY_READ_EN_REG,
--		     SUN8I_HDMI_PHY_READ_EN_MAGIC);
--
--	/* unscramble register offsets */
--	regmap_write(phy->regs, SUN8I_HDMI_PHY_UNSCRAMBLE_REG,
--		     SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC);
--
- 	phy->variant->phy_init(phy);
- }
- 
+ struct sun8i_dw_hdmi {
 -- 
 2.18.0
