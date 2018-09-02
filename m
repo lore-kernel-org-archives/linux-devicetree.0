@@ -1,65 +1,203 @@
-From: Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH 19/27] drm/sun4i: Add support for H6 DW HDMI controller
-Date: Sun,  2 Sep 2018 09:26:35 +0200
-Message-ID: <20180902072643.4917-20-jernej.skrabec@siol.net>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH 21/27] drm/sun4i: Add support for H6 HDMI PHY
+Date: Sun,  2 Sep 2018 09:26:37 +0200
+Message-ID: <20180902072643.4917-22-jernej.skrabec@siol.net>
 References: <20180902072643.4917-1-jernej.skrabec@siol.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180902072643.4917-1-jernej.skrabec@siol.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, maxime.ripard@bootlin.com, wens@csie.org
-Cc: mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, airlied@linux.ie, architt@codeaurora.org, a.hajda@samsung.com, jernej.skrabec@siol.net, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB7NBV3OAKGQETE6UGVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180902072643.4917-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-H6 has DW HDMI 2.0 controller v2.12a.
+H6 has Synopsys DWC HDMI 2.0 TX PHY.
 
-It supports 4K at 60 Hz and HDCP 2.2.
+mpll settings were calculated from specifications of similar Synopsys
+HDMI PHY found in i.MX6. Other PHY settings were derived from BSP PHY
+driver code.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 137 +++++++++++++++++++++++++
+ 1 file changed, 137 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 16a0c7a88ea8..44143c9f20d0 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -43,6 +43,16 @@ sun8i_dw_hdmi_mode_valid_a83t(struct drm_connector *connector,
- 	return MODE_OK;
- }
+diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+index ee2bf61cd4d2..2f5499bd35ec 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
++++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+@@ -14,6 +14,122 @@
+  */
+ #define I2C_ADDR	0x69
  
-+static enum drm_mode_status
-+sun8i_dw_hdmi_mode_valid_h6(struct drm_connector *connector,
-+			    const struct drm_display_mode *mode)
-+{
-+	if (mode->clock > 600000)
-+		return MODE_CLOCK_HIGH;
-+
-+	return MODE_OK;
-+}
-+
- static bool sun8i_dw_hdmi_node_is_tcon_top(struct device_node *node)
- {
- 	return IS_ENABLED(CONFIG_DRM_SUN8I_TCON_TOP) &&
-@@ -220,12 +230,20 @@ static int sun8i_dw_hdmi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct sun8i_dw_hdmi_quirks sun50i_h6_quirks = {
-+	.mode_valid = sun8i_dw_hdmi_mode_valid_h6,
++static const struct dw_hdmi_mpll_config sun50i_h6_mpll_cfg[] = {
++	{
++		30666000, {
++			{ 0x00b3, 0x0000 },
++			{ 0x2153, 0x0000 },
++			{ 0x40f3, 0x0000 },
++		},
++	},  {
++		36800000, {
++			{ 0x00b3, 0x0000 },
++			{ 0x2153, 0x0000 },
++			{ 0x40a2, 0x0001 },
++		},
++	},  {
++		46000000, {
++			{ 0x00b3, 0x0000 },
++			{ 0x2142, 0x0001 },
++			{ 0x40a2, 0x0001 },
++		},
++	},  {
++		61333000, {
++			{ 0x0072, 0x0001 },
++			{ 0x2142, 0x0001 },
++			{ 0x40a2, 0x0001 },
++		},
++	},  {
++		73600000, {
++			{ 0x0072, 0x0001 },
++			{ 0x2142, 0x0001 },
++			{ 0x4061, 0x0002 },
++		},
++	},  {
++		92000000, {
++			{ 0x0072, 0x0001 },
++			{ 0x2145, 0x0002 },
++			{ 0x4061, 0x0002 },
++		},
++	},  {
++		122666000, {
++			{ 0x0051, 0x0002 },
++			{ 0x2145, 0x0002 },
++			{ 0x4061, 0x0002 },
++		},
++	},  {
++		147200000, {
++			{ 0x0051, 0x0002 },
++			{ 0x2145, 0x0002 },
++			{ 0x4064, 0x0003 },
++		},
++	},  {
++		184000000, {
++			{ 0x0051, 0x0002 },
++			{ 0x214c, 0x0003 },
++			{ 0x4064, 0x0003 },
++		},
++	},  {
++		226666000, {
++			{ 0x0040, 0x0003 },
++			{ 0x214c, 0x0003 },
++			{ 0x4064, 0x0003 },
++		},
++	},  {
++		272000000, {
++			{ 0x0040, 0x0003 },
++			{ 0x214c, 0x0003 },
++			{ 0x5a64, 0x0003 },
++		},
++	},  {
++		340000000, {
++			{ 0x0040, 0x0003 },
++			{ 0x3b4c, 0x0003 },
++			{ 0x5a64, 0x0003 },
++		},
++	},  {
++		600000000, {
++			{ 0x1a40, 0x0003 },
++			{ 0x3b4c, 0x0003 },
++			{ 0x5a64, 0x0003 },
++		},
++	}, {
++		~0UL, {
++			{ 0x0000, 0x0000 },
++			{ 0x0000, 0x0000 },
++			{ 0x0000, 0x0000 },
++		},
++	}
 +};
 +
- static const struct sun8i_dw_hdmi_quirks sun8i_a83t_quirks = {
- 	.mode_valid = sun8i_dw_hdmi_mode_valid_a83t,
- 	.set_rate = true,
++static const struct dw_hdmi_curr_ctrl sun50i_h6_cur_ctr[] = {
++	/* pixelclk    bpp8    bpp10   bpp12 */
++	{ 25175000,  { 0x0000, 0x0000, 0x0000 }, },
++	{ 27000000,  { 0x0012, 0x0000, 0x0000 }, },
++	{ 59400000,  { 0x0008, 0x0008, 0x0008 }, },
++	{ 72000000,  { 0x0008, 0x0008, 0x001b }, },
++	{ 74250000,  { 0x0013, 0x0013, 0x0013 }, },
++	{ 90000000,  { 0x0008, 0x001a, 0x001b }, },
++	{ 118800000, { 0x001b, 0x001a, 0x001b }, },
++	{ 144000000, { 0x001b, 0x001a, 0x0034 }, },
++	{ 180000000, { 0x001b, 0x0033, 0x0034 }, },
++	{ 216000000, { 0x0036, 0x0033, 0x0034 }, },
++	{ 237600000, { 0x0036, 0x0033, 0x001b }, },
++	{ 288000000, { 0x0036, 0x001b, 0x001b }, },
++	{ 297000000, { 0x0019, 0x001b, 0x0019 }, },
++	{ 330000000, { 0x0036, 0x001b, 0x001b }, },
++	{ 600000000, { 0x003f, 0x001b, 0x001b }, },
++	{ ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
++};
++
++static const struct dw_hdmi_phy_config sun50i_h6_phy_config[] = {
++	/*pixelclk   symbol   term   vlev*/
++	{ 74250000,  0x8009, 0x0004, 0x0232},
++	{ 148500000, 0x8029, 0x0004, 0x0273},
++	{ 600000000, 0x8039, 0x0004, 0x014a},
++	{ ~0UL,	     0x0000, 0x0000, 0x0000}
++};
++
+ static int sun8i_hdmi_phy_config_a83t(struct dw_hdmi *hdmi,
+ 				      struct sun8i_hdmi_phy *phy,
+ 				      unsigned int clk_rate)
+@@ -290,6 +406,16 @@ static void sun8i_hdmi_phy_unlock(struct sun8i_hdmi_phy *phy)
+ 		     SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC);
+ }
+ 
++static void sun50i_hdmi_phy_init_h6(struct sun8i_hdmi_phy *phy)
++{
++	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
++			   SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN,
++			   SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN);
++
++	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
++			   0xffff0000, 0x80c00000);
++}
++
+ static void sun8i_hdmi_phy_init_a83t(struct sun8i_hdmi_phy *phy)
+ {
+ 	sun8i_hdmi_phy_unlock(phy);
+@@ -423,6 +549,13 @@ static const struct sun8i_hdmi_phy_variant sun50i_a64_hdmi_phy = {
+ 	.phy_config = &sun8i_hdmi_phy_config_h3,
  };
  
- static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
++static const struct sun8i_hdmi_phy_variant sun50i_h6_hdmi_phy = {
++	.cur_ctr  = sun50i_h6_cur_ctr,
++	.mpll_cfg = sun50i_h6_mpll_cfg,
++	.phy_cfg  = sun50i_h6_phy_config,
++	.phy_init = &sun50i_hdmi_phy_init_h6,
++};
++
+ static const struct sun8i_hdmi_phy_variant sun8i_a83t_hdmi_phy = {
+ 	.is_custom_phy = true,
+ 	.phy_init = &sun8i_hdmi_phy_init_a83t,
+@@ -443,6 +576,10 @@ static const struct of_device_id sun8i_hdmi_phy_of_table[] = {
+ 		.compatible = "allwinner,sun50i-a64-hdmi-phy",
+ 		.data = &sun50i_a64_hdmi_phy,
+ 	},
 +	{
-+		.compatible = "allwinner,sun50i-h6-dw-hdmi",
-+		.data = &sun50i_h6_quirks,
++		.compatible = "allwinner,sun50i-h6-hdmi-phy",
++		.data = &sun50i_h6_hdmi_phy,
 +	},
  	{
- 		.compatible = "allwinner,sun8i-a83t-dw-hdmi",
- 		.data = &sun8i_a83t_quirks,
+ 		.compatible = "allwinner,sun8i-a83t-hdmi-phy",
+ 		.data = &sun8i_a83t_hdmi_phy,
 -- 
 2.18.0
