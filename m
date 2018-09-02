@@ -1,74 +1,154 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 27/27] arm64: dts: sun50i: h6: Enable HDMI
- output on Pine H64 board
-Date: Sun,  2 Sep 2018 09:26:43 +0200
-Message-ID: <20180902072643.4917-28-jernej.skrabec@siol.net>
-References: <20180902072643.4917-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/2] iio: adc: sc27xx: Add raw data support
+Date: Sun, 2 Sep 2018 09:51:40 +0100
+Message-ID: <20180902095140.70b6fd5e@archlinux>
+References: <0adef2f9eafa913eb9f4bc1ed3dc643d09bf02a2.1535434262.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBDFCV3OAKGQEB5LRL7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180902072643.4917-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0adef2f9eafa913eb9f4bc1ed3dc643d09bf02a2.1535434262.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, broonie@kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pine H64 board has HDMI type A connector.
+On Wed, 29 Aug 2018 14:04:04 +0800
+Baolin Wang <baolin.wang@linaro.org> wrote:
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+> The headset device will use channel 20 of ADC controller to detect events,
+> but it needs the raw ADC data to do conversion according to its own formula.
+> 
+> Thus we should configure the channel mask separately and configure channel
+> 20 as IIO_CHAN_INFO_RAW, as well as adding raw data read support.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+I'm still a little unclear on whether there is fundamentally something different
+about this channel or whether this is just a policy decision for particular
+(possibly all) board.  For now we'll go with this change, but if anyone screams
+we will have to then go the nasty route of supporting both processed and raw
+for channel 20.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 48daec7f78ba..36db21314996 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -21,6 +21,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -41,6 +52,20 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
--- 
-2.18.0
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+
+> ---
+> Changes from v1:
+>  - None.
+> 
+> ---
+>  drivers/iio/adc/sc27xx_adc.c |   80 ++++++++++++++++++++++++------------------
+>  1 file changed, 45 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/sc27xx_adc.c b/drivers/iio/adc/sc27xx_adc.c
+> index 2b60efe..153c311 100644
+> --- a/drivers/iio/adc/sc27xx_adc.c
+> +++ b/drivers/iio/adc/sc27xx_adc.c
+> @@ -273,6 +273,17 @@ static int sc27xx_adc_read_raw(struct iio_dev *indio_dev,
+>  	int ret, tmp;
+>  
+>  	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		mutex_lock(&indio_dev->mlock);
+> +		ret = sc27xx_adc_read(data, chan->channel, scale, &tmp);
+> +		mutex_unlock(&indio_dev->mlock);
+> +
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = tmp;
+> +		return IIO_VAL_INT;
+> +
+>  	case IIO_CHAN_INFO_PROCESSED:
+>  		mutex_lock(&indio_dev->mlock);
+>  		ret = sc27xx_adc_read_processed(data, chan->channel, scale,
+> @@ -315,48 +326,47 @@ static int sc27xx_adc_write_raw(struct iio_dev *indio_dev,
+>  	.write_raw = &sc27xx_adc_write_raw,
+>  };
+>  
+> -#define SC27XX_ADC_CHANNEL(index) {				\
+> +#define SC27XX_ADC_CHANNEL(index, mask) {			\
+>  	.type = IIO_VOLTAGE,					\
+>  	.channel = index,					\
+> -	.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |	\
+> -			      BIT(IIO_CHAN_INFO_SCALE),		\
+> +	.info_mask_separate = mask | BIT(IIO_CHAN_INFO_SCALE),	\
+>  	.datasheet_name = "CH##index",				\
+>  	.indexed = 1,						\
+>  }
+>  
+>  static const struct iio_chan_spec sc27xx_channels[] = {
+> -	SC27XX_ADC_CHANNEL(0),
+> -	SC27XX_ADC_CHANNEL(1),
+> -	SC27XX_ADC_CHANNEL(2),
+> -	SC27XX_ADC_CHANNEL(3),
+> -	SC27XX_ADC_CHANNEL(4),
+> -	SC27XX_ADC_CHANNEL(5),
+> -	SC27XX_ADC_CHANNEL(6),
+> -	SC27XX_ADC_CHANNEL(7),
+> -	SC27XX_ADC_CHANNEL(8),
+> -	SC27XX_ADC_CHANNEL(9),
+> -	SC27XX_ADC_CHANNEL(10),
+> -	SC27XX_ADC_CHANNEL(11),
+> -	SC27XX_ADC_CHANNEL(12),
+> -	SC27XX_ADC_CHANNEL(13),
+> -	SC27XX_ADC_CHANNEL(14),
+> -	SC27XX_ADC_CHANNEL(15),
+> -	SC27XX_ADC_CHANNEL(16),
+> -	SC27XX_ADC_CHANNEL(17),
+> -	SC27XX_ADC_CHANNEL(18),
+> -	SC27XX_ADC_CHANNEL(19),
+> -	SC27XX_ADC_CHANNEL(20),
+> -	SC27XX_ADC_CHANNEL(21),
+> -	SC27XX_ADC_CHANNEL(22),
+> -	SC27XX_ADC_CHANNEL(23),
+> -	SC27XX_ADC_CHANNEL(24),
+> -	SC27XX_ADC_CHANNEL(25),
+> -	SC27XX_ADC_CHANNEL(26),
+> -	SC27XX_ADC_CHANNEL(27),
+> -	SC27XX_ADC_CHANNEL(28),
+> -	SC27XX_ADC_CHANNEL(29),
+> -	SC27XX_ADC_CHANNEL(30),
+> -	SC27XX_ADC_CHANNEL(31),
+> +	SC27XX_ADC_CHANNEL(0, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(1, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(2, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(3, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(4, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(5, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(6, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(7, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(8, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(9, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(10, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(11, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(12, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(13, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(14, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(15, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(16, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(17, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(18, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(19, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(20, BIT(IIO_CHAN_INFO_RAW)),
+> +	SC27XX_ADC_CHANNEL(21, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(22, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(23, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(24, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(25, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(26, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(27, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(28, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(29, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(30, BIT(IIO_CHAN_INFO_PROCESSED)),
+> +	SC27XX_ADC_CHANNEL(31, BIT(IIO_CHAN_INFO_PROCESSED)),
+>  };
+>  
+>  static int sc27xx_adc_enable(struct sc27xx_adc_data *data)
+> -- 
+> 1.7.9.5
+> 
