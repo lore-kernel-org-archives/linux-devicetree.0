@@ -1,58 +1,98 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH v2 01/37] ARM: tegra: colibri_t20: move aliases from module to carrier board
-Date: Sun,  2 Sep 2018 12:08:30 +0200
-Message-ID: <20180902100906.25792-2-marcel@ziswiler.com>
-References: <20180902100906.25792-1-marcel@ziswiler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180902100906.25792-1-marcel@ziswiler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC 1/2] dt-bindings: hwmon: Add RPi PoE HAT documentation
+Date: Sun,  2 Sep 2018 13:20:50 +0200
+Message-ID: <1535887251-29515-2-git-send-email-stefan.wahren@i2se.com>
+References: <1535887251-29515-1-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1535887251-29515-1-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Serge Schneider <serge@raspberrypi.org>, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Serge Schneider <serge@raspberrypi.org>
 
-Move RTC aliases from module to carrier board to be more in-line with
-all our other device trees.
+This patch adds the binding for the fan on the Raspberry Pi Power over
+Ethernet HAT.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
+Signed-off-by: Serge Schneider <serge@raspberrypi.org>
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
+ .../devicetree/bindings/hwmon/rpi-poe-fan.txt      | 55 ++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/rpi-poe-fan.txt
 
-Changes in v2: None
-
- arch/arm/boot/dts/tegra20-colibri-iris.dts | 2 ++
- arch/arm/boot/dts/tegra20-colibri.dtsi     | 5 -----
- 2 files changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/tegra20-colibri-iris.dts b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-index 57f16c0e9917..496b96e229d2 100644
---- a/arch/arm/boot/dts/tegra20-colibri-iris.dts
-+++ b/arch/arm/boot/dts/tegra20-colibri-iris.dts
-@@ -8,6 +8,8 @@
- 	compatible = "toradex,iris", "toradex,colibri_t20-512", "nvidia,tegra20";
- 
- 	aliases {
-+		rtc0 = "/i2c@7000d000/tps6586x@34";
-+		rtc1 = "/rtc@7000e000";
- 		serial0 = &uarta;
- 		serial1 = &uartd;
- 	};
-diff --git a/arch/arm/boot/dts/tegra20-colibri.dtsi b/arch/arm/boot/dts/tegra20-colibri.dtsi
-index fa1af2dc276c..e34ab4a76158 100644
---- a/arch/arm/boot/dts/tegra20-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra20-colibri.dtsi
-@@ -5,11 +5,6 @@
- 	model = "Toradex Colibri T20 256/512 MB";
- 	compatible = "toradex,colibri_t20-512", "nvidia,tegra20";
- 
--	aliases {
--		rtc0 = "/i2c@7000d000/tps6586x@34";
--		rtc1 = "/rtc@7000e000";
--	};
--
- 	memory@0 {
- 		/*
- 		 * Set memory to 256 MB to be safe as this could be used on
+diff --git a/Documentation/devicetree/bindings/hwmon/rpi-poe-fan.txt b/Documentation/devicetree/bindings/hwmon/rpi-poe-fan.txt
+new file mode 100644
+index 0000000..c71f856
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/rpi-poe-fan.txt
+@@ -0,0 +1,55 @@
++Bindings for the Raspberry Pi PoE HAT fan
++
++Required properties:
++- compatible	: "raspberrypi,rpi-poe-fan"
++- firmware	: Reference to the RPi firmware device node
++- pwms		: the PWM that is used to control the PWM fan
++- cooling-levels      : PWM duty cycle values in a range from 0 to 255
++			which correspond to thermal cooling states
++
++Example:
++	fan0: rpi-poe-fan@0 {
++		compatible = "raspberrypi,rpi-poe-fan";
++		firmware = <&firmware>;
++		cooling-min-state = <0>;
++		cooling-max-state = <3>;
++		#cooling-cells = <2>;
++		cooling-levels = <0 50 150 255>;
++		status = "okay";
++	};
++
++	thermal-zones {
++		cpu_thermal: cpu-thermal {
++			trips {
++				threshold: trip-point@0 {
++					temperature = <45000>;
++					hysteresis = <5000>;
++					type = "active";
++				};
++				target: trip-point@1 {
++					temperature = <50000>;
++					hysteresis = <2000>;
++					type = "active";
++				};
++				cpu_hot: cpu_hot@0 {
++					temperature = <55000>;
++					hysteresis = <2000>;
++					type = "active";
++				};
++			};
++			cooling-maps {
++				map0 {
++					trip = <&threshold>;
++					cooling-device = <&fan0 0 1>;
++				};
++				map1 {
++					trip = <&target>;
++					cooling-device = <&fan0 1 2>;
++				};
++				map2 {
++					trip = <&cpu_hot>;
++					cooling-device = <&fan0 2 3>;
++				};
++			};
++		};
++	};
 -- 
-2.14.4
+2.7.4
