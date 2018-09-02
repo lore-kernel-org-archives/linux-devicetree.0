@@ -1,50 +1,57 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] Devicetree update for 4.19-rc2
-Date: Sun, 2 Sep 2018 09:04:58 -0400
-Message-ID: <CAL_JsqLtOfYc9i-K+RGz9Aacq_YKEpbyjG_dv6sRX7wLLw5qVA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH RFC 0/2] hwmon: Add RPi PoE HAT fan driver
+Date: Sun, 2 Sep 2018 07:23:41 -0700
+Message-ID: <99ca4f6d-d2b2-36e7-9f27-189df379cfaf@roeck-us.net>
+References: <1535887251-29515-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535887251-29515-1-git-send-email-stefan.wahren@i2se.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Johan Hovold <johan@kernel.org>
+To: Stefan Wahren <stefan.wahren@i2se.com>, Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+On 09/02/2018 04:20 AM, Stefan Wahren wrote:
+> This series is an early stage of the hwmon driver for the fan on the
+> Raspberry Pi Power over Ethernet HAT [1]. At the end this should use a
+> Device Tree Overlay.
+> 
+> Changes by Stefan based on [2]:
+> - reformat the downstream patches for submission
+> - drop reboot notification
+> - fix remaining checkpatch issues
+> - add COMPILE_TEST to Kconfig
+> 
+> The driver is mostly copy & paste from pwm-fan, which isn't good. Personally
+> i see two options:
+> 
+> 1) integrate the driver function into the pwm-fan driver (new compatible)
+> 2) implement the core function as a PWM driver and use the pwm-fan driver on top
+> 
 
-Please consider pulling this DT update for rc2. I'm sending these new
-helpers now for rc2 in order to simplify the dependencies on
-subsequent cleanups across the tree in 4.20.
+I don't really see the point of thise driver. Why not implement either of those ?
+2) sounds like a perfect fit to me.
 
-Rob
+Guenter
 
-The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
-
-  Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.19
-
-for you to fetch changes up to 0413bedabc886c3a56804d1c80a58e99077b1d91:
-
-  of: Add device_type access helper functions (2018-08-31 08:30:42 -0400)
-
-----------------------------------------------------------------
-Devicetree updates for 4.19-rc2:
-
-A couple of new helper functions in preparation for some tree wide
-clean-ups.
-
-----------------------------------------------------------------
-Johan Hovold (1):
-      of: add helper to lookup compatible child node
-
-Rob Herring (2):
-      of: add node name compare helper functions
-      of: Add device_type access helper functions
-
- drivers/of/base.c  | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of.h | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 80 insertions(+)
+> [1] - https://www.raspberrypi.org/products/poe-hat/
+> [2] - https://github.com/raspberrypi/linux/commit/0f937c8dc3201ebffa6c617c616fd7c65db65959
+> 
+> Serge Schneider (2):
+>    dt-bindings: hwmon: Add RPi PoE HAT documentation
+>    hwmon: Add RPi PoE HAT fan driver
+> 
+>   .../devicetree/bindings/hwmon/rpi-poe-fan.txt      |  55 +++
+>   Documentation/hwmon/rpi-poe-fan                    |  15 +
+>   drivers/hwmon/Kconfig                              |  11 +
+>   drivers/hwmon/Makefile                             |   1 +
+>   drivers/hwmon/rpi-poe-fan.c                        | 414 +++++++++++++++++++++
+>   include/soc/bcm2835/raspberrypi-firmware.h         |   2 +
+>   6 files changed, 498 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/rpi-poe-fan.txt
+>   create mode 100644 Documentation/hwmon/rpi-poe-fan
+>   create mode 100644 drivers/hwmon/rpi-poe-fan.c
+> 
