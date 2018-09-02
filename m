@@ -1,60 +1,50 @@
-From: Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: [PATCH AUTOSEL 4.18 129/131] MIPS: mscc: ocelot: fix length of memory
- address space for MIIM
-Date: Sun, 2 Sep 2018 13:05:45 +0000
-Message-ID: <20180902064601.183036-129-alexander.levin@microsoft.com>
-References: <20180902064601.183036-1-alexander.levin@microsoft.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [GIT PULL] Devicetree update for 4.19-rc2
+Date: Sun, 2 Sep 2018 09:04:58 -0400
+Message-ID: <CAL_JsqLtOfYc9i-K+RGz9Aacq_YKEpbyjG_dv6sRX7wLLw5qVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180902064601.183036-1-alexander.levin@microsoft.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Quentin Schulz <quentin.schulz@bootlin.com>, Paul Burton <paul.burton@mips.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "jhogan@kernel.org" <jhogan@kernel.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>, Sasha Levin <Alexander.Levin@microsoft.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
+Linus,
 
-[ Upstream commit 49e5bb13adc11fe6e2e40f65c04f3a461aea1fec ]
+Please consider pulling this DT update for rc2. I'm sending these new
+helpers now for rc2 in order to simplify the dependencies on
+subsequent cleanups across the tree in 4.20.
 
-The length of memory address space for MIIM0 is from 0x7107009c to
-0x710700bf included which is 36 bytes long in decimal, or 0x24 bytes in
-hexadecimal and not 0x36.
+Rob
 
-Fixes: 49b031690abe ("MIPS: mscc: Add switch to ocelot")
+The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20013/
-Cc: robh+dt@kernel.org
-Cc: mark.rutland@arm.com
-Cc: ralf@linux-mips.org
-Cc: jhogan@kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: thomas.petazzoni@bootlin.com
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
----
- arch/mips/boot/dts/mscc/ocelot.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
 
-diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/=
-ocelot.dtsi
-index 4f33dbc67348..7096915f26e0 100644
---- a/arch/mips/boot/dts/mscc/ocelot.dtsi
-+++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
-@@ -184,7 +184,7 @@
- 			#address-cells =3D <1>;
- 			#size-cells =3D <0>;
- 			compatible =3D "mscc,ocelot-miim";
--			reg =3D <0x107009c 0x36>, <0x10700f0 0x8>;
-+			reg =3D <0x107009c 0x24>, <0x10700f0 0x8>;
- 			interrupts =3D <14>;
- 			status =3D "disabled";
-=20
---=20
-2.17.1
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.19
+
+for you to fetch changes up to 0413bedabc886c3a56804d1c80a58e99077b1d91:
+
+  of: Add device_type access helper functions (2018-08-31 08:30:42 -0400)
+
+----------------------------------------------------------------
+Devicetree updates for 4.19-rc2:
+
+A couple of new helper functions in preparation for some tree wide
+clean-ups.
+
+----------------------------------------------------------------
+Johan Hovold (1):
+      of: add helper to lookup compatible child node
+
+Rob Herring (2):
+      of: add node name compare helper functions
+      of: Add device_type access helper functions
+
+ drivers/of/base.c  | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
