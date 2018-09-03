@@ -1,7 +1,7 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH v2 09/11] dt-bindings: add constants for Microsemi Ocelot SerDes driver
-Date: Mon,  3 Sep 2018 11:33:06 +0200
-Message-ID: <20180903093308.24366-10-quentin.schulz@bootlin.com>
+Subject: [PATCH v2 07/11] dt-bindings: phy: add DT binding for Microsemi Ocelot SerDes muxing
+Date: Mon,  3 Sep 2018 11:33:04 +0200
+Message-ID: <20180903093308.24366-8-quentin.schulz@bootlin.com>
 References: <20180903093308.24366-1-quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903093308.24366-1-quentin.schulz@bootlin.com>
@@ -10,41 +10,57 @@ To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jh
 Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The Microsemi Ocelot has multiple SerDes and requires that the SerDes be
-muxed accordingly to the hardware representation.
-
-Let's add a constant for each SerDes available in the Microsemi Ocelot.
-
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- include/dt-bindings/phy/phy-ocelot-serdes.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 include/dt-bindings/phy/phy-ocelot-serdes.h
+ .../bindings/phy/phy-ocelot-serdes.txt        | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
 
-diff --git a/include/dt-bindings/phy/phy-ocelot-serdes.h b/include/dt-bindings/phy/phy-ocelot-serdes.h
+diff --git a/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
 new file mode 100644
-index 000000000000..cf111baa87c8
+index 000000000000..2a88cc346162
 --- /dev/null
-+++ b/include/dt-bindings/phy/phy-ocelot-serdes.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+/* Copyright (c) 2018 Microsemi Corporation */
-+#ifndef __PHY_OCELOT_SERDES_H__
-+#define __PHY_OCELOT_SERDES_H__
++++ b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
+@@ -0,0 +1,40 @@
++Microsemi Ocelot SerDes muxing driver
++-------------------------------------
 +
-+#define SERDES1G_0	0
-+#define SERDES1G_1	1
-+#define SERDES1G_2	2
-+#define SERDES1G_3	3
-+#define SERDES1G_4	4
-+#define SERDES1G_5	5
-+#define SERDES1G_MAX	6
-+#define SERDES6G_0	SERDES1G_MAX
-+#define SERDES6G_1	(SERDES1G_MAX + 1)
-+#define SERDES6G_2	(SERDES1G_MAX + 2)
-+#define SERDES6G_MAX	(SERDES1G_MAX + 3)
-+#define SERDES_MAX	(SERDES1G_MAX + SERDES6G_MAX)
++On Microsemi Ocelot, there is a handful of registers in HSIO address
++space for setting up the SerDes to switch port muxing.
 +
-+#endif
++A SerDes X can be "muxed" to work with switch port Y or Z for example.
++One specific SerDes can also be used as a PCIe interface.
++
++Hence, a SerDes represents an interface, be it an Ethernet or a PCIe one.
++
++There are two kinds of SerDes: SERDES1G supports 10/100Mbps in
++half/full-duplex and 1000Mbps in full-duplex mode while SERDES6G supports
++10/100Mbps in half/full-duplex and 1000/2500Mbps in full-duplex mode.
++
++Also, SERDES6G number (aka "macro") 0 is the only interface supporting
++QSGMII.
++
++Required properties:
++
++- compatible: should be "mscc,vsc7514-serdes"
++- #phy-cells : from the generic phy bindings, must be 2.
++	       The first number defines the input port to use for a given
++	       SerDes macro. The second defines the macro to use. They are
++	       defined in dt-bindings/phy/phy-ocelot-serdes.h
++
++Example:
++
++	serdes: serdes {
++		compatible = "mscc,vsc7514-serdes";
++		#phy-cells = <2>;
++	};
++
++	ethernet {
++		port1 {
++			phy-handle = <&phy_foo>;
++			/* Link SERDES1G_5 to port1 */
++			phys = <&serdes 1 SERDES1G_5>;
++		};
++	};
 -- 
 2.17.1
