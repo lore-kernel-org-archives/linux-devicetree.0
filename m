@@ -1,62 +1,57 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 0/3] arm64: dts: allwinner: h5: Add device
- tree for Bananapi M2 Plus H5
-Date: Mon, 3 Sep 2018 11:08:50 +0800
-Message-ID: <CAGb2v65s19NEc5QFdS6udAg7wm3sys3UcoCxFuyjVVzxyKF4_w@mail.gmail.com>
-References: <20180830080926.15027-1-wens@csie.org> <20180831101742.3ybvf6d3refft454@flea>
- <CAGb2v65+p-m90wj9MP9SP7x8xGUT2YLwJ-aiDgo9CW85YFSySg@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH 1/7] spi: add slave device size in spi_device struct
+Date: Mon, 3 Sep 2018 04:47:25 +0000
+Message-ID: <VI1PR04MB103801BA8203421C517199BB990C0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1535711404-29528-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <20180831135807.22255bce@karo-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUWLWLOAKGQEVIIN7IQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v65+p-m90wj9MP9SP7x8xGUT2YLwJ-aiDgo9CW85YFSySg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180831135807.22255bce@karo-electronics.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 3, 2018 at 11:05 AM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> On Fri, Aug 31, 2018 at 6:17 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Thu, Aug 30, 2018 at 04:09:23PM +0800, Chen-Yu Tsai wrote:
-> > > Hi,
-> > >
-> > > Allwinner's H5 SoC is pin compatible with the H3 SoC. As such, some
-> > > vendors produce H3 and H5 variants for the same device. Such is the
-> > > case with Libre Computer's ALL-H3-CC, and the Bananapi M2 Plus.
-> > >
-> > > This series follows that of the ALL-H3-CC, splitting out a common
-> > > board dtsi, and then two SoC-specific dts files that include the
-> > > SoC level and common board dtsi's, as well as putting in the board
-> > > name. The first patch is a minor fix that I think should be done
-> > > before the migration.
-> > >
-> > > Please have a look.
-> >
-> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-
-Applied.
-
-> > > Also, on a related matter, Bananapi recently released revision v1.2
-> > > of the M2 Plus. The original commercially available version was v1.1.
-> > > v1.2 adds a GPIO control that can change the CPU cores' supply voltage
-> > > between 1.1V and 1.3V. Do we want two extra dts files for this? Put
-> > > them in the existing dts files regardless? Or let people handle this
-> > > via overlays?
-> >
-> > If that the sole change, I'd be inclined to merge it as a separate DT
-> > for that particular version. Is there any way to detect it at runtime?
->
-> It seems there isn't. The pin in both new and old revisions have an
-> external pull-up with the same value, so it isn't possible to detect
-> whether the pin is used or not. And there are no other changes between
-> the two.
->
-> ChenYu
+SGkgTG90aGFyLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IExvdGhh
+ciBXYcOfbWFubiBbbWFpbHRvOkxXQEtBUk8tZWxlY3Ryb25pY3MuZGVdDQo+IFNlbnQ6IEZyaWRh
+eSwgQXVndXN0IDMxLCAyMDE4IDU6MjggUE0NCj4gVG86IFlvZ2VzaCBOYXJheWFuIEdhdXIgPHlv
+Z2VzaG5hcmF5YW4uZ2F1ckBueHAuY29tPg0KPiBDYzogbGludXgtbXRkQGxpc3RzLmluZnJhZGVh
+ZC5vcmc7IGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbTsNCj4gbWFyZWsudmFzdXRAZ21haWwu
+Y29tOyBsaW51eC1zcGlAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHJvYmhAa2VybmVsLm9yZzsgbGludXgtDQo+IGtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGZyaWVkZXIuc2NocmVtcGZAZXhjZWV0LmRlOw0KPiBjb21w
+dXRlcnNmb3JwZWFjZUBnbWFpbC5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7IGxpbnV4LWFybS0N
+Cj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzdd
+IHNwaTogYWRkIHNsYXZlIGRldmljZSBzaXplIGluIHNwaV9kZXZpY2Ugc3RydWN0DQo+IA0KPiBI
+aSwNCj4gDQo+IE9uIEZyaSwgMzEgQXVnIDIwMTggMTU6NTk6NTggKzA1MzAgWW9nZXNoIEdhdXIg
+d3JvdGU6DQo+ID4gQWRkICdzaXplJyBkYXRhIHZhcmlhYmxlIGluIHNwaV9kZXZpY2Ugc3RydWN0
+Lg0KPiA+IFRoaXMgaXMgdG8gc2F2ZSB0aGUgc2l6ZSBvZiB0aGUgY29ubmVjdGVkIHNsYXZlIGRl
+dmljZS4NCj4gPg0KPiA+IEFmdGVyIHNsYXZlIGRldmljZSBzY2FuLCBzcGlfbm9yX3NjYW4sIHNp
+emUgYmVpbmcgYXNzaWduZWQgdG8gdGhpcw0KPiA+IGZyb20gTVREIGxheWVyLg0KPiA+DQo+ID4g
+U0ZEUCByZWFkIGlzIGJlaW5nIHJlcXVlc3RlZCBiZWZvcmUgY29tcGxldGlvbiBvZiBzcGlfbm9y
+X3NjYW4oKQ0KPiA+IHJvdXRpbmUsIHRodXMgcG9wdWxhdGUgZGV2aWNlIHNpemUgYmVmb3JlIG1h
+a2luZyByZWFkIHJlcXVlc3QgdG8gdGhlDQo+ID4gU1BJIGNvbnRyb2xsZXIuDQo+ID4NCj4gPiBT
+aWduZWQtb2ZmLWJ5OiBZb2dlc2ggR2F1ciA8eW9nZXNobmFyYXlhbi5nYXVyQG54cC5jb20+DQo+
+ID4gLS0tDQo+ID4gIGRyaXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMgIHwgNiArKysrKysNCj4g
+PiBkcml2ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyB8IDIgKysNCj4gPiAgaW5jbHVkZS9saW51
+eC9zcGkvc3BpLmggICAgICAgfCAyICsrDQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMTAgaW5zZXJ0
+aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL2RldmljZXMvbTI1cDgw
+LmMNCj4gPiBiL2RyaXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMgaW5kZXggZmUyNjBjYy4uNmM3
+YWQ4NiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL210ZC9kZXZpY2VzL20yNXA4MC5jDQo+ID4g
+KysrIGIvZHJpdmVycy9tdGQvZGV2aWNlcy9tMjVwODAuYw0KPiA+IEBAIC0xMjQsNiArMTI0LDEw
+IEBAIHN0YXRpYyBzc2l6ZV90IG0yNXA4MF9yZWFkKHN0cnVjdCBzcGlfbm9yICpub3IsDQo+IGxv
+ZmZfdCBmcm9tLCBzaXplX3QgbGVuLA0KPiA+ICAJLyogY29udmVydCB0aGUgZHVtbXkgY3ljbGVz
+IHRvIHRoZSBudW1iZXIgb2YgYnl0ZXMgKi8NCj4gPiAgCW9wLmR1bW15Lm5ieXRlcyA9IChub3It
+PnJlYWRfZHVtbXkgKiBvcC5kdW1teS5idXN3aWR0aCkgLyA4Ow0KPiA+DQo+ID4gKwkvKiBmb3Ig
+Y2FzZSBvZiBTRkRQIGhlYWRlciByZWFkIGNvbW1hbmRzLCBwb3B1bGF0ZSBzcGkgZGV2aWNlIHNp
+emUgKi8NCj4gPiArCWlmIChmbGFzaC0+c3BpbWVtLT5zcGktPnNpemUgPT0gMCkNCj4gPiArCQlm
+bGFzaC0+c3BpbWVtLT5zcGktPnNpemUgPSBub3ItPm10ZC5zaXplOw0KPiA+ICsNCj4gSWYgdGhl
+ICdzaXplJyBpcyBhbiBzcGltZW0gc3BlY2lmaWMgdmFyaWFibGUgaXQgc2hvdWxkIGJlIGFkZGVk
+IHRvIHRoZSBzcGlfbWVtDQo+IHN0cnVjdCByYXRoZXIgdGhhbiB0aGUgc3BpX2RldmljZSBzdHJ1
+Y3QuDQoNClN1cmUsIHdvdWxkIG1vdmUgJ3NpemUnIGZyb20gc3RydWN0IHNwaV9kZXZpY2UgdG8g
+dGhlIHN0cnVjdCBzcGlfbWVtLg0KDQotLQ0KUmVnYXJkcw0KWW9nZXNoIEdhdXIuDQoNCj4gDQo+
+IExvdGhhciBXYcOfbWFubg0K
