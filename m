@@ -1,32 +1,44 @@
-Return-Path: <SRS0=4SCW=MD=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: gpio: rcar: Add r8a7744 (RZ/G1N) support
-Date: Fri, 21 Sep 2018 16:34:04 +0100
-Message-Id: <1537544044-57906-1-git-send-email-biju.das@bp.renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=8Gze=LR=linux-m68k.org=geert@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] spi: sh-msiof: Document R-Car D3 and E3 support
+Date: Mon,  3 Sep 2018 19:25:10 +0200
+Message-Id: <20180903172512.6242-1-geert+renesas@glider.be>
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulrich Hecht <uli+renesas@fpond.eu>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-Renesas RZ/G1N (R8A7744) SoC GPIO blocks are identical to the R-Car Gen2
-family. Add support for its GPIO controllers.
+	Hi Mark,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-index 4018ee5..5968ccf 100644
---- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-@@ -4,6 +4,7 @@ Required Properties:
+This patch series documents support for the MSIOF module in the Renesas
+R-Car D3 (r8a77995) and E3 (r8a77990) SoCs.  No driver update is needed.
  
-   - compatible: should contain one or more of the following:
-     - "renesas,gpio-r8a7743": for R8A7743 (RZ/G1M) compatible GPIO controller.
-+    - "renesas,gpio-r8a7744": for R8A7744 (RZ/G1N) compatible GPIO controller.
-     - "renesas,gpio-r8a7745": for R8A7745 (RZ/G1E) compatible GPIO controller.
-     - "renesas,gpio-r8a77470": for R8A77470 (RZ/G1C) compatible GPIO controller.
-     - "renesas,gpio-r8a7778": for R8A7778 (R-Car M1) compatible GPIO controller.
+R-Car D3 support was tested by Ulrich on the Draak development board.
+R-Car E3 support was tested by me on the Ebisu development board.
+
+As my patch for E3 depends on Ulrich's (not yet applied) patch for D3, I
+took the libert to include it.
+
+Thanks!
+
+Geert Uytterhoeven (1):
+  spi: sh-msiof: Document R-Car E3 support
+
+Ulrich Hecht (1):
+  spi: sh-msiof: Document R-Car D3 support
+
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
 -- 
-2.7.4
+2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
