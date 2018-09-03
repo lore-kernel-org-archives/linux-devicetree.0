@@ -1,35 +1,51 @@
-From: Mathieu Malaterre <malat@debian.org>
-Subject: Re: [PATCH 1/3] MIPS: jz4780: Allow access to jz4740-i2s
-Date: Mon, 3 Sep 2018 08:15:14 +0200
-Message-ID: <CA+7wUswC1SfC3G0RRH7OV4C6nQsp59R62FN_NiDSyCpxRDf__Q@mail.gmail.com>
-References: <20180606193811.16007-1-malat@debian.org> <20180724204757.qrgjttepzcfdzxlv@pburton-laptop>
- <20180831203752.37rsceiwotcmeses@pburton-laptop> <20180831205857.nb3ij3rzhfs2fu42@pburton-laptop>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: spear: fix stmpe811 interrupt properties
+Date: Mon, 3 Sep 2018 11:54:15 +0530
+Message-ID: <20180903062415.xlzipo3mvpcorkk4@vireshk-i7>
+References: <20180814073949.27392-1-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831205857.nb3ij3rzhfs2fu42@pburton-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180814073949.27392-1-marcel@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Burton <paul.burton@mips.com>
-Cc: James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, LKML <linux-kernel@vger.kernel.org>, alsa-devel@alsa-project.org
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 10:59 PM Paul Burton <paul.burton@mips.com> wrote:
->
-> On Fri, Aug 31, 2018 at 01:37:52PM -0700, Paul Burton wrote:
-> > Further to that, this series doesn't seem to work for me. With
-> > v4.19-rc1, with the patch from [1] & then this series applied I see the
-> > following when booting a ci20_defconfig kernel:
-> >
-> >   [    0.846684] ALSA device list:
-> >   [    0.849642]   No soundcards found.
->
-> D'oh! Apparently I haven't drunk enough coffee today - missing link can
-> be found below:
->
-> [1] https://www.spinics.net/lists/linux-gpio/msg31965.html
+On 14-08-18, 09:39, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> The property "irq-over-gpio" simply does not exist (this is nowadays
+> actually auto detected) and the property "irq-gpios" is actually called
+> "irq-gpio".
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - Fix commit message as pointed out by Viresh.
+> 
+>  arch/arm/boot/dts/spear320-hmi.dts | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
+> index 0d0da1f65f0e..d2d1fe944407 100644
+> --- a/arch/arm/boot/dts/spear320-hmi.dts
+> +++ b/arch/arm/boot/dts/spear320-hmi.dts
+> @@ -241,8 +241,7 @@
+>  					#address-cells = <1>;
+>  					#size-cells = <0>;
+>  					reg = <0x41>;
+> -					irq-over-gpio;
+> -					irq-gpios = <&gpiopinctrl 29 0x4>;
+> +					irq-gpio = <&gpiopinctrl 29 0x4>;
+>  					id = <0>;
+>  					blocks = <0x5>;
+>  					irq-trigger = <0x1>;
 
-Awesome, thanks for testing. I'll return to this series once I receive
-replacement for my laptop hard drive.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-thanks,
--M
+-- 
+viresh
