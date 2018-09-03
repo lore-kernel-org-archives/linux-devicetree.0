@@ -1,57 +1,55 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v2 15/34] ARM: tegra: apalis_t30: reorder backlight
- properties
-Date: Mon, 3 Sep 2018 10:22:28 +0100
-Message-ID: <20180903092228.7k46uf6qehgou5wx@holly.lan>
-References: <20180831163817.23970-1-marcel@ziswiler.com>
- <20180831163817.23970-16-marcel@ziswiler.com>
+From: vitor <Vitor.Soares@synopsys.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Mon, 3 Sep 2018 10:33:11 +0100
+Message-ID: <9584757a-e7e2-5bfe-fc2c-e9bc14ad65a8@synopsys.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <20180719152930.3715-2-boris.brezillon@bootlin.com>
+ <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
+ <20180824143934.6d6b6487@bbrezillon>
+ <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
+ <20180824201600.7d80bca9@bbrezillon>
+ <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
+ <20180828140209.29155d00@bbrezillon>
+ <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
+ <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
+ <3D2681D9-1ACC-42FF-9FAB-D86B3C689003@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180831163817.23970-16-marcel@ziswiler.com>
+In-Reply-To: <3D2681D9-1ACC-42FF-9FAB-D86B3C689003@cadence.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Przemyslaw Gaj <pgaj@cadence.com>, vitor <Vitor.Soares@synopsys.com>, Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 06:37:57PM +0200, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> Reorder backlight properties.
-
-This is a bit terse. Should the header explain why too?
+Hi Przemek,
 
 
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
-> 
-> Changes in v2: None
-> 
->  arch/arm/boot/dts/tegra30-apalis-eval.dts | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra30-apalis-eval.dts b/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> index 9f2392a05532..300ce726ff4d 100644
-> --- a/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> +++ b/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> @@ -185,13 +185,12 @@
->  
->  	backlight: backlight {
->  		compatible = "pwm-backlight";
-> -		/* PWM_BKL1 */
-> -		pwms = <&pwm 0 5000000>;
->  		brightness-levels = <255 231 223 207 191 159 127 0>;
->  		default-brightness-level = <6>;
->  		/* BKL1_ON */
->  		enable-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
->  		power-supply = <&reg_3v3>;
-> +		pwms = <&pwm 0 5000000>; /* BKL1_PWM */
->  	};
->  
->  	gpio-keys {
-> -- 
-> 2.14.4
-> 
+On 30-08-2018 20:00, Przemyslaw Gaj wrote:
+>      So, per my understanding since the Main master support the hand-off of
+>      the bus you accept all incoming MR, right? Or do you check all devices BCR?
+>
+> I'm not sure what do you mean here. Mastership request(MR) is from secondary master
+> to current master. Current master can NACK this request if for example it comes from
+> wrong device. If it's ok, current master sends GETACCMST command and secondary master
+> may ACK or NACK this command. It it's acked, secondary master becomes current master.
+>      
+>      Best regards,
+>      Vitor Soares
+>
+> Please let me know if something is unclear.
+>
+> Regards,
+> Przemek
+>      
+
+Sorry, it s not clear yet.
+
+For instances there is a bus with several secondary master. If each of 
+them request the bus mastership (one at a time), will you accept all by 
+default? Because you can only accept only some of them.
+
+Regards,
+Vitor Soares
