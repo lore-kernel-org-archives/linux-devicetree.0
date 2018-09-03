@@ -1,82 +1,103 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 1/7] spi: add slave device size in spi_device struct
-Date: Mon, 3 Sep 2018 10:36:00 +0200
-Message-ID: <20180903103600.3efabbac@bbrezillon>
-References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1535711404-29528-2-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <20180831135807.22255bce@karo-electronics.de>
-        <VI1PR04MB103801BA8203421C517199BB990C0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+From: Andrea Merello <andrea.merello@gmail.com>
+Subject: Re: [PATCH v4 2/7] dmaengine: xilinx_dma: in axidma slave_sg and
+ dma_cylic mode align split descriptors
+Date: Mon, 3 Sep 2018 10:46:34 +0200
+Message-ID: <CAN8YU5NpOsY-J9yNA6vAmmLTVrtknwxNP7pjhLJDm=-WQ0+Fuw@mail.gmail.com>
+References: <20180802141012.19970-1-andrea.merello@gmail.com>
+ <20180802141012.19970-2-andrea.merello@gmail.com> <20180827053002.GT2388@vkoul-mobl>
+ <CAN8YU5MOdz_sW06B8yc_kewjsxP0DP5pgB2bSu=vkNG-ezvMpQ@mail.gmail.com>
+ <CAN8YU5M0tJmsU4Xp+0xDwQYtqeB8tPP_4FyBC_ctUOSV=HZNmA@mail.gmail.com> <20180830132745.GC2322@vkoul-mobl>
+Reply-To: andrea.merello@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB103801BA8203421C517199BB990C0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+In-Reply-To: <20180830132745.GC2322@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Vinod <vkoul@kernel.org>
+Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yogesh,
-
-On Mon, 3 Sep 2018 04:47:25 +0000
-Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
-
-> Hi Lothar,
-> 
-> > -----Original Message-----
-> > From: Lothar Waßmann [mailto:LW@KARO-electronics.de]
-> > Sent: Friday, August 31, 2018 5:28 PM
-> > To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-> > Cc: linux-mtd@lists.infradead.org; boris.brezillon@bootlin.com;
-> > marek.vasut@gmail.com; linux-spi@vger.kernel.org;
-> > devicetree@vger.kernel.org; mark.rutland@arm.com; robh@kernel.org; linux-
-> > kernel@vger.kernel.org; frieder.schrempf@exceet.de;
-> > computersforpeace@gmail.com; shawnguo@kernel.org; linux-arm-
-> > kernel@lists.infradead.org
-> > Subject: Re: [PATCH 1/7] spi: add slave device size in spi_device struct
-> > 
-> > Hi,
-> > 
-> > On Fri, 31 Aug 2018 15:59:58 +0530 Yogesh Gaur wrote:  
-> > > Add 'size' data variable in spi_device struct.
-> > > This is to save the size of the connected slave device.
+On Thu, Aug 30, 2018 at 3:27 PM Vinod <vkoul@kernel.org> wrote:
+>
+> On 30-08-18, 10:11, Andrea Merello wrote:
+> > On Wed, Aug 29, 2018 at 10:12 AM Andrea Merello
+> > <andrea.merello@gmail.com> wrote:
 > > >
-> > > After slave device scan, spi_nor_scan, size being assigned to this
-> > > from MTD layer.
+> > > On Mon, Aug 27, 2018 at 7:30 AM Vinod <vkoul@kernel.org> wrote:
+> > > >
+> > > > On 02-08-18, 16:10, Andrea Merello wrote:
+> > > >
+> > > > s/cylic/cyclic in patch title
 > > >
-> > > SFDP read is being requested before completion of spi_nor_scan()
-> > > routine, thus populate device size before making read request to the
-> > > SPI controller.
+> > > OK
 > > >
-> > > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-> > > ---
-> > >  drivers/mtd/devices/m25p80.c  | 6 ++++++
-> > > drivers/mtd/spi-nor/spi-nor.c | 2 ++
-> > >  include/linux/spi/spi.h       | 2 ++
-> > >  3 files changed, 10 insertions(+)
+> > > > > Whenever a single or cyclic transaction is prepared, the driver
+> > > > > could eventually split it over several SG descriptors in order
+> > > > > to deal with the HW maximum transfer length.
+> > > > >
+> > > > > This could end up in DMA operations starting from a misaligned
+> > > > > address. This seems fatal for the HW if DRE is not enabled.
+> > > >
+> > > > DRE?
 > > >
-> > > diff --git a/drivers/mtd/devices/m25p80.c
-> > > b/drivers/mtd/devices/m25p80.c index fe260cc..6c7ad86 100644
-> > > --- a/drivers/mtd/devices/m25p80.c
-> > > +++ b/drivers/mtd/devices/m25p80.c
-> > > @@ -124,6 +124,10 @@ static ssize_t m25p80_read(struct spi_nor *nor,  
-> > loff_t from, size_t len,  
-> > >  	/* convert the dummy cycles to the number of bytes */
-> > >  	op.dummy.nbytes = (nor->read_dummy * op.dummy.buswidth) / 8;
+> > > Stands for "Data Realignment Engine". I will add this string nearby
+> > > the acronym..
 > > >
-> > > +	/* for case of SFDP header read commands, populate spi device size */
-> > > +	if (flash->spimem->spi->size == 0)
-> > > +		flash->spimem->spi->size = nor->mtd.size;
-> > > +  
-> > If the 'size' is an spimem specific variable it should be added to the spi_mem
-> > struct rather than the spi_device struct.  
-> 
-> Sure, would move 'size' from struct spi_device to the struct spi_mem.
+> > > > >
+> > > > > This patch eventually adjusts the transfer size in order to make sure
+> > > > > all operations start from an aligned address.
+> > > > >
+> > > > > Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> > > > > Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+> > > > > Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> > > > > ---
+> > > > > Changes in v2:
+> > > > >         - don't introduce copy_mask field, rather rely on already-esistent
+> > > > >           copy_align field. Suggested by Radhey Shyam Pandey
+> > > > >         - reword title
+> > > > > Changes in v3:
+> > > > >       - fix bug introduced in v2: wrong copy size when DRE is enabled
+> > > > >       - use implementation suggested by Radhey Shyam Pandey
+> > > > > Changes in v4:
+> > > > >       - rework on the top of 1/6
+> > > > > ---
+> > > > >  drivers/dma/xilinx/xilinx_dma.c | 22 ++++++++++++++++++----
+> > > > >  1 file changed, 18 insertions(+), 4 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> > > > > index a3aaa0e34cc7..aaa6de8a70e4 100644
+> > > > > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > > > > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > > > > @@ -954,15 +954,28 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
+> > > > >
+> > > > >  /**
+> > > > >   * xilinx_dma_calc_copysize - Calculate the amount of data to copy
+> > > > > + * @chan: Driver specific DMA channel
+> > > > >   * @size: Total data that needs to be copied
+> > > > >   * @done: Amount of data that has been already copied
+> > > > >   *
+> > > > >   * Return: Amount of data that has to be copied
+> > > > >   */
+> > > > > -static int xilinx_dma_calc_copysize(int size, int done)
+> > > > > +static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
+> > > > > +                                 int size, int done)
+> > > >
+> > > > please align with opening brace
+> > >
+> > > OK
+> >
+> > Sorry for getting back on this.
+> > I've checked it, but it seems already aligned with opening brace in
+> > the original e-mail text I've sent. (4 tabs + 4 spaces).
+>
+> Okay, please see that code looks fine, I will check after I apply
 
-Before you send a new version doing that, I'd like to understand why
-you need this information. Can you wait a bit so I have some time to
-review the driver?
+Yes, I confirm that here the code does look fine: the 2nd line is
+aligned with opening brace indeed.
 
-Thanks,
+Do you want I produce now a v5 with all the other fixes you asked for
+(basically commit message fixes), or you are going to apply/check this
+one and should I wait for that?
 
-Boris
+> --
+> ~Vinod
