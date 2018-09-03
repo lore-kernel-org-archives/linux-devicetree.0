@@ -1,324 +1,377 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v2 05/11] net: mscc: ocelot: simplify register access for PLL5 configuration
-Date: Mon,  3 Sep 2018 11:33:02 +0200
-Message-ID: <20180903093308.24366-6-quentin.schulz@bootlin.com>
+Subject: [PATCH v2 10/11] phy: add driver for Microsemi Ocelot SerDes muxing
+Date: Mon,  3 Sep 2018 11:33:07 +0200
+Message-ID: <20180903093308.24366-11-quentin.schulz@bootlin.com>
 References: <20180903093308.24366-1-quentin.schulz@bootlin.com>
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903093308.24366-1-quentin.schulz@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com
 Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Since HSIO address space can be accessed by different drivers, let's
-simplify the register address definitions so that it can be easily used
-by all drivers and put the register address definition in the
-include/soc/mscc/ocelot_hsio.h header file.
+The Microsemi Ocelot can mux SerDes lanes (aka macros) to different
+switch ports or even make it act as a PCIe interface.
 
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+This adds support for the muxing of the SerDes.
+
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- drivers/net/ethernet/mscc/ocelot.h      | 73 --------------------
- drivers/net/ethernet/mscc/ocelot_regs.c | 92 +++----------------------
- include/soc/mscc/ocelot_hsio.h          | 74 ++++++++++++++++++++
- 3 files changed, 83 insertions(+), 156 deletions(-)
+ drivers/phy/Kconfig                  |   1 +
+ drivers/phy/Makefile                 |   1 +
+ drivers/phy/mscc/Kconfig             |  11 +
+ drivers/phy/mscc/Makefile            |   5 +
+ drivers/phy/mscc/phy-ocelot-serdes.c | 288 +++++++++++++++++++++++++++
+ 5 files changed, 306 insertions(+)
+ create mode 100644 drivers/phy/mscc/Kconfig
+ create mode 100644 drivers/phy/mscc/Makefile
+ create mode 100644 drivers/phy/mscc/phy-ocelot-serdes.c
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
-index 2da20a352120..3720e519cdd7 100644
---- a/drivers/net/ethernet/mscc/ocelot.h
-+++ b/drivers/net/ethernet/mscc/ocelot.h
-@@ -332,79 +332,6 @@ enum ocelot_reg {
- 	SYS_CM_DATA_RD,
- 	SYS_CM_OP,
- 	SYS_CM_DATA,
--	HSIO_PLL5G_CFG0 = HSIO << TARGET_OFFSET,
--	HSIO_PLL5G_CFG1,
--	HSIO_PLL5G_CFG2,
--	HSIO_PLL5G_CFG3,
--	HSIO_PLL5G_CFG4,
--	HSIO_PLL5G_CFG5,
--	HSIO_PLL5G_CFG6,
--	HSIO_PLL5G_STATUS0,
--	HSIO_PLL5G_STATUS1,
--	HSIO_PLL5G_BIST_CFG0,
--	HSIO_PLL5G_BIST_CFG1,
--	HSIO_PLL5G_BIST_CFG2,
--	HSIO_PLL5G_BIST_STAT0,
--	HSIO_PLL5G_BIST_STAT1,
--	HSIO_RCOMP_CFG0,
--	HSIO_RCOMP_STATUS,
--	HSIO_SYNC_ETH_CFG,
--	HSIO_SYNC_ETH_PLL_CFG,
--	HSIO_S1G_DES_CFG,
--	HSIO_S1G_IB_CFG,
--	HSIO_S1G_OB_CFG,
--	HSIO_S1G_SER_CFG,
--	HSIO_S1G_COMMON_CFG,
--	HSIO_S1G_PLL_CFG,
--	HSIO_S1G_PLL_STATUS,
--	HSIO_S1G_DFT_CFG0,
--	HSIO_S1G_DFT_CFG1,
--	HSIO_S1G_DFT_CFG2,
--	HSIO_S1G_TP_CFG,
--	HSIO_S1G_RC_PLL_BIST_CFG,
--	HSIO_S1G_MISC_CFG,
--	HSIO_S1G_DFT_STATUS,
--	HSIO_S1G_MISC_STATUS,
--	HSIO_MCB_S1G_ADDR_CFG,
--	HSIO_S6G_DIG_CFG,
--	HSIO_S6G_DFT_CFG0,
--	HSIO_S6G_DFT_CFG1,
--	HSIO_S6G_DFT_CFG2,
--	HSIO_S6G_TP_CFG0,
--	HSIO_S6G_TP_CFG1,
--	HSIO_S6G_RC_PLL_BIST_CFG,
--	HSIO_S6G_MISC_CFG,
--	HSIO_S6G_OB_ANEG_CFG,
--	HSIO_S6G_DFT_STATUS,
--	HSIO_S6G_ERR_CNT,
--	HSIO_S6G_MISC_STATUS,
--	HSIO_S6G_DES_CFG,
--	HSIO_S6G_IB_CFG,
--	HSIO_S6G_IB_CFG1,
--	HSIO_S6G_IB_CFG2,
--	HSIO_S6G_IB_CFG3,
--	HSIO_S6G_IB_CFG4,
--	HSIO_S6G_IB_CFG5,
--	HSIO_S6G_OB_CFG,
--	HSIO_S6G_OB_CFG1,
--	HSIO_S6G_SER_CFG,
--	HSIO_S6G_COMMON_CFG,
--	HSIO_S6G_PLL_CFG,
--	HSIO_S6G_ACJTAG_CFG,
--	HSIO_S6G_GP_CFG,
--	HSIO_S6G_IB_STATUS0,
--	HSIO_S6G_IB_STATUS1,
--	HSIO_S6G_ACJTAG_STATUS,
--	HSIO_S6G_PLL_STATUS,
--	HSIO_S6G_REVID,
--	HSIO_MCB_S6G_ADDR_CFG,
--	HSIO_HW_CFG,
--	HSIO_HW_QSGMII_CFG,
--	HSIO_HW_QSGMII_STAT,
--	HSIO_CLK_CFG,
--	HSIO_TEMP_SENSOR_CTRL,
--	HSIO_TEMP_SENSOR_CFG,
--	HSIO_TEMP_SENSOR_STAT,
- };
- 
- enum ocelot_regfield {
-diff --git a/drivers/net/ethernet/mscc/ocelot_regs.c b/drivers/net/ethernet/mscc/ocelot_regs.c
-index bf0c609caea5..9271af18b93b 100644
---- a/drivers/net/ethernet/mscc/ocelot_regs.c
-+++ b/drivers/net/ethernet/mscc/ocelot_regs.c
-@@ -103,82 +103,6 @@ static const u32 ocelot_qs_regmap[] = {
- 	REG(QS_INH_DBG,                    0x000048),
- };
- 
--static const u32 ocelot_hsio_regmap[] = {
--	REG(HSIO_PLL5G_CFG0,               0x000000),
--	REG(HSIO_PLL5G_CFG1,               0x000004),
--	REG(HSIO_PLL5G_CFG2,               0x000008),
--	REG(HSIO_PLL5G_CFG3,               0x00000c),
--	REG(HSIO_PLL5G_CFG4,               0x000010),
--	REG(HSIO_PLL5G_CFG5,               0x000014),
--	REG(HSIO_PLL5G_CFG6,               0x000018),
--	REG(HSIO_PLL5G_STATUS0,            0x00001c),
--	REG(HSIO_PLL5G_STATUS1,            0x000020),
--	REG(HSIO_PLL5G_BIST_CFG0,          0x000024),
--	REG(HSIO_PLL5G_BIST_CFG1,          0x000028),
--	REG(HSIO_PLL5G_BIST_CFG2,          0x00002c),
--	REG(HSIO_PLL5G_BIST_STAT0,         0x000030),
--	REG(HSIO_PLL5G_BIST_STAT1,         0x000034),
--	REG(HSIO_RCOMP_CFG0,               0x000038),
--	REG(HSIO_RCOMP_STATUS,             0x00003c),
--	REG(HSIO_SYNC_ETH_CFG,             0x000040),
--	REG(HSIO_SYNC_ETH_PLL_CFG,         0x000048),
--	REG(HSIO_S1G_DES_CFG,              0x00004c),
--	REG(HSIO_S1G_IB_CFG,               0x000050),
--	REG(HSIO_S1G_OB_CFG,               0x000054),
--	REG(HSIO_S1G_SER_CFG,              0x000058),
--	REG(HSIO_S1G_COMMON_CFG,           0x00005c),
--	REG(HSIO_S1G_PLL_CFG,              0x000060),
--	REG(HSIO_S1G_PLL_STATUS,           0x000064),
--	REG(HSIO_S1G_DFT_CFG0,             0x000068),
--	REG(HSIO_S1G_DFT_CFG1,             0x00006c),
--	REG(HSIO_S1G_DFT_CFG2,             0x000070),
--	REG(HSIO_S1G_TP_CFG,               0x000074),
--	REG(HSIO_S1G_RC_PLL_BIST_CFG,      0x000078),
--	REG(HSIO_S1G_MISC_CFG,             0x00007c),
--	REG(HSIO_S1G_DFT_STATUS,           0x000080),
--	REG(HSIO_S1G_MISC_STATUS,          0x000084),
--	REG(HSIO_MCB_S1G_ADDR_CFG,         0x000088),
--	REG(HSIO_S6G_DIG_CFG,              0x00008c),
--	REG(HSIO_S6G_DFT_CFG0,             0x000090),
--	REG(HSIO_S6G_DFT_CFG1,             0x000094),
--	REG(HSIO_S6G_DFT_CFG2,             0x000098),
--	REG(HSIO_S6G_TP_CFG0,              0x00009c),
--	REG(HSIO_S6G_TP_CFG1,              0x0000a0),
--	REG(HSIO_S6G_RC_PLL_BIST_CFG,      0x0000a4),
--	REG(HSIO_S6G_MISC_CFG,             0x0000a8),
--	REG(HSIO_S6G_OB_ANEG_CFG,          0x0000ac),
--	REG(HSIO_S6G_DFT_STATUS,           0x0000b0),
--	REG(HSIO_S6G_ERR_CNT,              0x0000b4),
--	REG(HSIO_S6G_MISC_STATUS,          0x0000b8),
--	REG(HSIO_S6G_DES_CFG,              0x0000bc),
--	REG(HSIO_S6G_IB_CFG,               0x0000c0),
--	REG(HSIO_S6G_IB_CFG1,              0x0000c4),
--	REG(HSIO_S6G_IB_CFG2,              0x0000c8),
--	REG(HSIO_S6G_IB_CFG3,              0x0000cc),
--	REG(HSIO_S6G_IB_CFG4,              0x0000d0),
--	REG(HSIO_S6G_IB_CFG5,              0x0000d4),
--	REG(HSIO_S6G_OB_CFG,               0x0000d8),
--	REG(HSIO_S6G_OB_CFG1,              0x0000dc),
--	REG(HSIO_S6G_SER_CFG,              0x0000e0),
--	REG(HSIO_S6G_COMMON_CFG,           0x0000e4),
--	REG(HSIO_S6G_PLL_CFG,              0x0000e8),
--	REG(HSIO_S6G_ACJTAG_CFG,           0x0000ec),
--	REG(HSIO_S6G_GP_CFG,               0x0000f0),
--	REG(HSIO_S6G_IB_STATUS0,           0x0000f4),
--	REG(HSIO_S6G_IB_STATUS1,           0x0000f8),
--	REG(HSIO_S6G_ACJTAG_STATUS,        0x0000fc),
--	REG(HSIO_S6G_PLL_STATUS,           0x000100),
--	REG(HSIO_S6G_REVID,                0x000104),
--	REG(HSIO_MCB_S6G_ADDR_CFG,         0x000108),
--	REG(HSIO_HW_CFG,                   0x00010c),
--	REG(HSIO_HW_QSGMII_CFG,            0x000110),
--	REG(HSIO_HW_QSGMII_STAT,           0x000114),
--	REG(HSIO_CLK_CFG,                  0x000118),
--	REG(HSIO_TEMP_SENSOR_CTRL,         0x00011c),
--	REG(HSIO_TEMP_SENSOR_CFG,          0x000120),
--	REG(HSIO_TEMP_SENSOR_STAT,         0x000124),
--};
--
- static const u32 ocelot_qsys_regmap[] = {
- 	REG(QSYS_PORT_MODE,                0x011200),
- 	REG(QSYS_SWITCH_PORT_MODE,         0x011234),
-@@ -303,7 +227,6 @@ static const u32 ocelot_sys_regmap[] = {
- static const u32 *ocelot_regmap[] = {
- 	[ANA] = ocelot_ana_regmap,
- 	[QS] = ocelot_qs_regmap,
--	[HSIO] = ocelot_hsio_regmap,
- 	[QSYS] = ocelot_qsys_regmap,
- 	[REW] = ocelot_rew_regmap,
- 	[SYS] = ocelot_sys_regmap,
-@@ -454,9 +377,11 @@ static void ocelot_pll5_init(struct ocelot *ocelot)
- 	/* Configure PLL5. This will need a proper CCF driver
- 	 * The values are coming from the VTSS API for Ocelot
- 	 */
--	ocelot_write(ocelot, HSIO_PLL5G_CFG4_IB_CTRL(0x7600) |
--		     HSIO_PLL5G_CFG4_IB_BIAS_CTRL(0x8), HSIO_PLL5G_CFG4);
--	ocelot_write(ocelot, HSIO_PLL5G_CFG0_CORE_CLK_DIV(0x11) |
-+	regmap_write(ocelot->targets[HSIO], HSIO_PLL5G_CFG4,
-+		     HSIO_PLL5G_CFG4_IB_CTRL(0x7600) |
-+		     HSIO_PLL5G_CFG4_IB_BIAS_CTRL(0x8));
-+	regmap_write(ocelot->targets[HSIO], HSIO_PLL5G_CFG0,
-+		     HSIO_PLL5G_CFG0_CORE_CLK_DIV(0x11) |
- 		     HSIO_PLL5G_CFG0_CPU_CLK_DIV(2) |
- 		     HSIO_PLL5G_CFG0_ENA_BIAS |
- 		     HSIO_PLL5G_CFG0_ENA_VCO_BUF |
-@@ -466,13 +391,14 @@ static void ocelot_pll5_init(struct ocelot *ocelot)
- 		     HSIO_PLL5G_CFG0_SELBGV820(4) |
- 		     HSIO_PLL5G_CFG0_DIV4 |
- 		     HSIO_PLL5G_CFG0_ENA_CLKTREE |
--		     HSIO_PLL5G_CFG0_ENA_LANE, HSIO_PLL5G_CFG0);
--	ocelot_write(ocelot, HSIO_PLL5G_CFG2_EN_RESET_FRQ_DET |
-+		     HSIO_PLL5G_CFG0_ENA_LANE);
-+	regmap_write(ocelot->targets[HSIO], HSIO_PLL5G_CFG2,
-+		     HSIO_PLL5G_CFG2_EN_RESET_FRQ_DET |
- 		     HSIO_PLL5G_CFG2_EN_RESET_OVERRUN |
- 		     HSIO_PLL5G_CFG2_GAIN_TEST(0x8) |
- 		     HSIO_PLL5G_CFG2_ENA_AMPCTRL |
- 		     HSIO_PLL5G_CFG2_PWD_AMPCTRL_N |
--		     HSIO_PLL5G_CFG2_AMPC_SEL(0x10), HSIO_PLL5G_CFG2);
-+		     HSIO_PLL5G_CFG2_AMPC_SEL(0x10));
- }
- 
- int ocelot_chip_init(struct ocelot *ocelot)
-diff --git a/include/soc/mscc/ocelot_hsio.h b/include/soc/mscc/ocelot_hsio.h
-index d93ddec3931b..43112dd7313a 100644
---- a/include/soc/mscc/ocelot_hsio.h
-+++ b/include/soc/mscc/ocelot_hsio.h
-@@ -8,6 +8,80 @@
- #ifndef _MSCC_OCELOT_HSIO_H_
- #define _MSCC_OCELOT_HSIO_H_
- 
-+#define HSIO_PLL5G_CFG0			0x0000
-+#define HSIO_PLL5G_CFG1			0x0004
-+#define HSIO_PLL5G_CFG2			0x0008
-+#define HSIO_PLL5G_CFG3			0x000c
-+#define HSIO_PLL5G_CFG4			0x0010
-+#define HSIO_PLL5G_CFG5			0x0014
-+#define HSIO_PLL5G_CFG6			0x0018
-+#define HSIO_PLL5G_STATUS0		0x001c
-+#define HSIO_PLL5G_STATUS1		0x0020
-+#define HSIO_PLL5G_BIST_CFG0		0x0024
-+#define HSIO_PLL5G_BIST_CFG1		0x0028
-+#define HSIO_PLL5G_BIST_CFG2		0x002c
-+#define HSIO_PLL5G_BIST_STAT0		0x0030
-+#define HSIO_PLL5G_BIST_STAT1		0x0034
-+#define HSIO_RCOMP_CFG0			0x0038
-+#define HSIO_RCOMP_STATUS		0x003c
-+#define HSIO_SYNC_ETH_CFG		0x0040
-+#define HSIO_SYNC_ETH_PLL_CFG		0x0048
-+#define HSIO_S1G_DES_CFG		0x004c
-+#define HSIO_S1G_IB_CFG			0x0050
-+#define HSIO_S1G_OB_CFG			0x0054
-+#define HSIO_S1G_SER_CFG		0x0058
-+#define HSIO_S1G_COMMON_CFG		0x005c
-+#define HSIO_S1G_PLL_CFG		0x0060
-+#define HSIO_S1G_PLL_STATUS		0x0064
-+#define HSIO_S1G_DFT_CFG0		0x0068
-+#define HSIO_S1G_DFT_CFG1		0x006c
-+#define HSIO_S1G_DFT_CFG2		0x0070
-+#define HSIO_S1G_TP_CFG			0x0074
-+#define HSIO_S1G_RC_PLL_BIST_CFG	0x0078
-+#define HSIO_S1G_MISC_CFG		0x007c
-+#define HSIO_S1G_DFT_STATUS		0x0080
-+#define HSIO_S1G_MISC_STATUS		0x0084
-+#define HSIO_MCB_S1G_ADDR_CFG		0x0088
-+#define HSIO_S6G_DIG_CFG		0x008c
-+#define HSIO_S6G_DFT_CFG0		0x0090
-+#define HSIO_S6G_DFT_CFG1		0x0094
-+#define HSIO_S6G_DFT_CFG2		0x0098
-+#define HSIO_S6G_TP_CFG0		0x009c
-+#define HSIO_S6G_TP_CFG1		0x00a0
-+#define HSIO_S6G_RC_PLL_BIST_CFG	0x00a4
-+#define HSIO_S6G_MISC_CFG		0x00a8
-+#define HSIO_S6G_OB_ANEG_CFG		0x00ac
-+#define HSIO_S6G_DFT_STATUS		0x00b0
-+#define HSIO_S6G_ERR_CNT		0x00b4
-+#define HSIO_S6G_MISC_STATUS		0x00b8
-+#define HSIO_S6G_DES_CFG		0x00bc
-+#define HSIO_S6G_IB_CFG			0x00c0
-+#define HSIO_S6G_IB_CFG1		0x00c4
-+#define HSIO_S6G_IB_CFG2		0x00c8
-+#define HSIO_S6G_IB_CFG3		0x00cc
-+#define HSIO_S6G_IB_CFG4		0x00d0
-+#define HSIO_S6G_IB_CFG5		0x00d4
-+#define HSIO_S6G_OB_CFG			0x00d8
-+#define HSIO_S6G_OB_CFG1		0x00dc
-+#define HSIO_S6G_SER_CFG		0x00e0
-+#define HSIO_S6G_COMMON_CFG		0x00e4
-+#define HSIO_S6G_PLL_CFG		0x00e8
-+#define HSIO_S6G_ACJTAG_CFG		0x00ec
-+#define HSIO_S6G_GP_CFG			0x00f0
-+#define HSIO_S6G_IB_STATUS0		0x00f4
-+#define HSIO_S6G_IB_STATUS1		0x00f8
-+#define HSIO_S6G_ACJTAG_STATUS		0x00fc
-+#define HSIO_S6G_PLL_STATUS		0x0100
-+#define HSIO_S6G_REVID			0x0104
-+#define HSIO_MCB_S6G_ADDR_CFG		0x0108
-+#define HSIO_HW_CFG			0x010c
-+#define HSIO_HW_QSGMII_CFG		0x0110
-+#define HSIO_HW_QSGMII_STAT		0x0114
-+#define HSIO_CLK_CFG			0x0118
-+#define HSIO_TEMP_SENSOR_CTRL		0x011c
-+#define HSIO_TEMP_SENSOR_CFG		0x0120
-+#define HSIO_TEMP_SENSOR_STAT		0x0124
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 5c8d452e35e2..c89d3effd99d 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -48,6 +48,7 @@ source "drivers/phy/lantiq/Kconfig"
+ source "drivers/phy/marvell/Kconfig"
+ source "drivers/phy/mediatek/Kconfig"
+ source "drivers/phy/motorola/Kconfig"
++source "drivers/phy/mscc/Kconfig"
+ source "drivers/phy/qualcomm/Kconfig"
+ source "drivers/phy/ralink/Kconfig"
+ source "drivers/phy/renesas/Kconfig"
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 84e3bd9c5665..ce8339ff0022 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -18,6 +18,7 @@ obj-y					+= broadcom/	\
+ 					   hisilicon/	\
+ 					   marvell/	\
+ 					   motorola/	\
++					   mscc/	\
+ 					   qualcomm/	\
+ 					   ralink/	\
+ 					   samsung/	\
+diff --git a/drivers/phy/mscc/Kconfig b/drivers/phy/mscc/Kconfig
+new file mode 100644
+index 000000000000..2e2a466efd66
+--- /dev/null
++++ b/drivers/phy/mscc/Kconfig
+@@ -0,0 +1,11 @@
++#
++# Phy drivers for Microsemi devices
++#
 +
- #define HSIO_PLL5G_CFG0_ENA_ROT                           BIT(31)
- #define HSIO_PLL5G_CFG0_ENA_LANE                          BIT(30)
- #define HSIO_PLL5G_CFG0_ENA_CLKTREE                       BIT(29)
++config PHY_OCELOT_SERDES
++	tristate "SerDes PHY driver for Microsemi Ocelot"
++	select GENERIC_PHY
++	depends on OF
++	depends on MFD_SYSCON
++	help
++	  Enable this for supporting SerDes muxing with Microsemi Ocelot.
+diff --git a/drivers/phy/mscc/Makefile b/drivers/phy/mscc/Makefile
+new file mode 100644
+index 000000000000..e14749170fc9
+--- /dev/null
++++ b/drivers/phy/mscc/Makefile
+@@ -0,0 +1,5 @@
++#
++# Makefile for the Microsemi phy drivers.
++#
++
++obj-$(CONFIG_PHY_OCELOT_SERDES) := phy-ocelot-serdes.o
+diff --git a/drivers/phy/mscc/phy-ocelot-serdes.c b/drivers/phy/mscc/phy-ocelot-serdes.c
+new file mode 100644
+index 000000000000..c2d34cb85956
+--- /dev/null
++++ b/drivers/phy/mscc/phy-ocelot-serdes.c
+@@ -0,0 +1,288 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * SerDes PHY driver for Microsemi Ocelot
++ *
++ * Copyright (c) 2018 Microsemi
++ *
++ */
++
++#include <linux/err.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <soc/mscc/ocelot_hsio.h>
++#include <dt-bindings/phy/phy-ocelot-serdes.h>
++
++struct serdes_ctrl {
++	struct regmap		*regs;
++	struct device		*dev;
++	struct phy		*phys[SERDES_MAX];
++};
++
++struct serdes_macro {
++	u8			idx;
++	/* Not used when in QSGMII or PCIe mode */
++	int			port;
++	struct serdes_ctrl	*ctrl;
++};
++
++#define MCB_S1G_CFG_TIMEOUT     50
++
++static int __serdes_write_mcb_s1g(struct regmap *regmap, u8 macro, u32 op)
++{
++	unsigned int regval;
++
++	regmap_write(regmap, HSIO_MCB_S1G_ADDR_CFG, op |
++		     HSIO_MCB_S1G_ADDR_CFG_SERDES1G_ADDR(BIT(macro)));
++
++	return regmap_read_poll_timeout(regmap, HSIO_MCB_S1G_ADDR_CFG, regval,
++					(regval & op) != op, 100,
++					MCB_S1G_CFG_TIMEOUT * 1000);
++}
++
++static int serdes_commit_mcb_s1g(struct regmap *regmap, u8 macro)
++{
++	return __serdes_write_mcb_s1g(regmap, macro,
++		HSIO_MCB_S1G_ADDR_CFG_SERDES1G_WR_ONE_SHOT);
++}
++
++static int serdes_update_mcb_s1g(struct regmap *regmap, u8 macro)
++{
++	return __serdes_write_mcb_s1g(regmap, macro,
++		HSIO_MCB_S1G_ADDR_CFG_SERDES1G_RD_ONE_SHOT);
++}
++
++static int serdes_init_s1g(struct regmap *regmap, u8 serdes)
++{
++	int ret;
++
++	ret = serdes_update_mcb_s1g(regmap, serdes);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(regmap, HSIO_S1G_COMMON_CFG,
++			   HSIO_S1G_COMMON_CFG_SYS_RST |
++			   HSIO_S1G_COMMON_CFG_ENA_LANE |
++			   HSIO_S1G_COMMON_CFG_ENA_ELOOP |
++			   HSIO_S1G_COMMON_CFG_ENA_FLOOP,
++			   HSIO_S1G_COMMON_CFG_ENA_LANE);
++
++	regmap_update_bits(regmap, HSIO_S1G_PLL_CFG,
++			   HSIO_S1G_PLL_CFG_PLL_FSM_ENA |
++			   HSIO_S1G_PLL_CFG_PLL_FSM_CTRL_DATA_M,
++			   HSIO_S1G_PLL_CFG_PLL_FSM_CTRL_DATA(200) |
++			   HSIO_S1G_PLL_CFG_PLL_FSM_ENA);
++
++	regmap_update_bits(regmap, HSIO_S1G_MISC_CFG,
++			   HSIO_S1G_MISC_CFG_DES_100FX_CPMD_ENA |
++			   HSIO_S1G_MISC_CFG_LANE_RST,
++			   HSIO_S1G_MISC_CFG_LANE_RST);
++
++	ret = serdes_commit_mcb_s1g(regmap, serdes);
++	if (ret)
++		return ret;
++
++	regmap_update_bits(regmap, HSIO_S1G_COMMON_CFG,
++			   HSIO_S1G_COMMON_CFG_SYS_RST,
++			   HSIO_S1G_COMMON_CFG_SYS_RST);
++
++	regmap_update_bits(regmap, HSIO_S1G_MISC_CFG,
++			   HSIO_S1G_MISC_CFG_LANE_RST, 0);
++
++	ret = serdes_commit_mcb_s1g(regmap, serdes);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++struct serdes_mux {
++	u8			idx;
++	u8			port;
++	enum phy_mode		mode;
++	u32			mask;
++	u32			mux;
++};
++
++#define SERDES_MUX(_idx, _port, _mode, _mask, _mux) {	\
++	.idx = _idx,						\
++	.port = _port,						\
++	.mode = _mode,						\
++	.mask = _mask,						\
++	.mux = _mux,						\
++}
++
++static const struct serdes_mux ocelot_serdes_muxes[] = {
++	SERDES_MUX(SERDES1G_0, 0, PHY_MODE_SGMII, 0, 0),
++	SERDES_MUX(SERDES1G_1, 1, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_5_MODE, 0),
++	SERDES_MUX(SERDES1G_1, 5, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
++		   HSIO_HW_CFG_DEV1G_5_MODE, HSIO_HW_CFG_DEV1G_5_MODE),
++	SERDES_MUX(SERDES1G_2, 2, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_4_MODE, 0),
++	SERDES_MUX(SERDES1G_2, 4, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
++		   HSIO_HW_CFG_DEV1G_4_MODE, HSIO_HW_CFG_DEV1G_4_MODE),
++	SERDES_MUX(SERDES1G_3, 3, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_6_MODE, 0),
++	SERDES_MUX(SERDES1G_3, 6, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
++		   HSIO_HW_CFG_DEV1G_6_MODE, HSIO_HW_CFG_DEV1G_6_MODE),
++	SERDES_MUX(SERDES1G_4, 4, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
++		   HSIO_HW_CFG_DEV1G_4_MODE | HSIO_HW_CFG_DEV1G_9_MODE, 0),
++	SERDES_MUX(SERDES1G_4, 9, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_4_MODE |
++		   HSIO_HW_CFG_DEV1G_9_MODE, HSIO_HW_CFG_DEV1G_4_MODE |
++		   HSIO_HW_CFG_DEV1G_9_MODE),
++	SERDES_MUX(SERDES1G_5, 5, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
++		   HSIO_HW_CFG_DEV1G_5_MODE | HSIO_HW_CFG_DEV2G5_10_MODE, 0),
++	SERDES_MUX(SERDES1G_5, 10, PHY_MODE_SGMII, HSIO_HW_CFG_PCIE_ENA |
++		   HSIO_HW_CFG_DEV1G_5_MODE | HSIO_HW_CFG_DEV2G5_10_MODE,
++		   HSIO_HW_CFG_DEV1G_5_MODE | HSIO_HW_CFG_DEV2G5_10_MODE),
++	SERDES_MUX(SERDES6G_0, 4, PHY_MODE_QSGMII, HSIO_HW_CFG_QSGMII_ENA,
++		   HSIO_HW_CFG_QSGMII_ENA),
++	SERDES_MUX(SERDES6G_0, 5, PHY_MODE_QSGMII, HSIO_HW_CFG_QSGMII_ENA,
++		   HSIO_HW_CFG_QSGMII_ENA),
++	SERDES_MUX(SERDES6G_0, 6, PHY_MODE_QSGMII, HSIO_HW_CFG_QSGMII_ENA,
++		   HSIO_HW_CFG_QSGMII_ENA),
++	SERDES_MUX(SERDES6G_0, 7, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA, 0),
++	SERDES_MUX(SERDES6G_0, 7, PHY_MODE_QSGMII, HSIO_HW_CFG_QSGMII_ENA,
++		   HSIO_HW_CFG_QSGMII_ENA),
++	SERDES_MUX(SERDES6G_1, 8, PHY_MODE_SGMII, 0, 0),
++	SERDES_MUX(SERDES6G_2, 10, PHY_MODE_SGMII, HSIO_HW_CFG_PCIE_ENA |
++		   HSIO_HW_CFG_DEV2G5_10_MODE, 0),
++	SERDES_MUX(SERDES6G_2, 10, PHY_MODE_PCIE, HSIO_HW_CFG_PCIE_ENA,
++		   HSIO_HW_CFG_PCIE_ENA),
++};
++
++static int serdes_set_mode(struct phy *phy, enum phy_mode mode)
++{
++	struct serdes_macro *macro = phy_get_drvdata(phy);
++	int ret, i;
++
++	for (i = 0; i < ARRAY_SIZE(ocelot_serdes_muxes); i++) {
++		if (macro->idx != ocelot_serdes_muxes[i].idx ||
++		    mode != ocelot_serdes_muxes[i].mode)
++			continue;
++
++		if (mode != PHY_MODE_QSGMII &&
++		    macro->port != ocelot_serdes_muxes[i].port)
++			continue;
++
++		ret = regmap_update_bits(macro->ctrl->regs, HSIO_HW_CFG,
++					 ocelot_serdes_muxes[i].mask,
++					 ocelot_serdes_muxes[i].mux);
++		if (ret)
++			return ret;
++
++		if (macro->idx < SERDES1G_MAX)
++			return serdes_init_s1g(macro->ctrl->regs, macro->idx);
++
++		/* SERDES6G and PCIe not supported yet */
++		return 0;
++	}
++
++	return -EINVAL;
++}
++
++static const struct phy_ops serdes_ops = {
++	.set_mode	= serdes_set_mode,
++	.owner		= THIS_MODULE,
++};
++
++static struct phy *serdes_simple_xlate(struct device *dev,
++				       struct of_phandle_args *args)
++{
++	struct serdes_ctrl *ctrl = dev_get_drvdata(dev);
++	int port, idx, i;
++
++	if (args->args_count != 2)
++		return ERR_PTR(-EINVAL);
++
++	port = args->args[0];
++	idx = args->args[1];
++
++	for (i = 0; i < SERDES_MAX; i++) {
++		struct serdes_macro *macro = phy_get_drvdata(ctrl->phys[i]);
++
++		if (idx != macro->idx)
++			continue;
++
++		/* SERDES6G_0 is the only SerDes capable of QSGMII */
++		if (idx != SERDES6G_0 && macro->port >= 0)
++			return ERR_PTR(-EBUSY);
++
++		macro->port = port;
++		return ctrl->phys[i];
++	}
++
++	return ERR_PTR(-ENODEV);
++}
++
++static int serdes_phy_create(struct serdes_ctrl *ctrl, u8 idx, struct phy **phy)
++{
++	struct serdes_macro *macro;
++
++	*phy = devm_phy_create(ctrl->dev, NULL, &serdes_ops);
++	if (IS_ERR(*phy))
++		return PTR_ERR(*phy);
++
++	macro = devm_kzalloc(ctrl->dev, sizeof(*macro), GFP_KERNEL);
++	if (!macro)
++		return -ENOMEM;
++
++	macro->idx = idx;
++	macro->ctrl = ctrl;
++	macro->port = -1;
++
++	phy_set_drvdata(*phy, macro);
++
++	return 0;
++}
++
++static int serdes_probe(struct platform_device *pdev)
++{
++	struct phy_provider *provider;
++	struct serdes_ctrl *ctrl;
++	int i, ret;
++
++	ctrl = devm_kzalloc(&pdev->dev, sizeof(*ctrl), GFP_KERNEL);
++	if (!ctrl)
++		return -ENOMEM;
++
++	ctrl->dev = &pdev->dev;
++	ctrl->regs = syscon_node_to_regmap(pdev->dev.parent->of_node);
++	if (!ctrl->regs)
++		return -ENODEV;
++
++	for (i = 0; i <= SERDES_MAX; i++) {
++		ret = serdes_phy_create(ctrl, i, &ctrl->phys[i]);
++		if (ret)
++			return ret;
++	}
++
++	dev_set_drvdata(&pdev->dev, ctrl);
++
++	provider = devm_of_phy_provider_register(ctrl->dev,
++						 serdes_simple_xlate);
++
++	return PTR_ERR_OR_ZERO(provider);
++}
++
++static const struct of_device_id serdes_ids[] = {
++	{ .compatible = "mscc,vsc7514-serdes", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, serdes_ids);
++
++static struct platform_driver mscc_ocelot_serdes = {
++	.probe		= serdes_probe,
++	.driver		= {
++		.name	= "mscc,ocelot-serdes",
++		.of_match_table = of_match_ptr(serdes_ids),
++	},
++};
++
++module_platform_driver(mscc_ocelot_serdes);
++
++MODULE_AUTHOR("Quentin Schulz <quentin.schulz@bootlin.com>");
++MODULE_DESCRIPTION("SerDes driver for Microsemi Ocelot");
++MODULE_LICENSE("Dual MIT/GPL");
 -- 
 2.17.1
