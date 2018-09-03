@@ -1,169 +1,141 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] media: Add controls for JPEG quantization tables
-Date: Mon, 3 Sep 2018 11:50:22 +0200
-Message-ID: <ec1dab04-1890-5555-44cf-2cdadc79c1a6@xs4all.nl>
-References: <20180831155245.19235-1-ezequiel@collabora.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2] arm64: dts: ti: k3-am65: Change #address-cells and
+ #size-cells of interconnect to 2
+Date: Mon, 3 Sep 2018 15:22:35 +0530
+Message-ID: <20180903095235.13853-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180831155245.19235-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh R <vigneshr@ti.com>, nsekhar@ti.com, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2018 05:52 PM, Ezequiel Garcia wrote:
-> From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Add V4L2_CID_JPEG_QUANTIZATION compound control to allow userspace
-> configure the JPEG quantization tables.
-> 
-> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  .../media/uapi/v4l/extended-controls.rst      | 23 +++++++++++++++++++
->  .../media/videodev2.h.rst.exceptions          |  1 +
->  drivers/media/v4l2-core/v4l2-ctrls.c          | 10 ++++++++
->  include/uapi/linux/v4l2-controls.h            |  5 ++++
->  include/uapi/linux/videodev2.h                |  1 +
->  5 files changed, 40 insertions(+)
-> 
-> diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
-> index 9f7312bf3365..e0dd03e452de 100644
-> --- a/Documentation/media/uapi/v4l/extended-controls.rst
-> +++ b/Documentation/media/uapi/v4l/extended-controls.rst
-> @@ -3354,7 +3354,30 @@ JPEG Control IDs
->      Specify which JPEG markers are included in compressed stream. This
->      control is valid only for encoders.
->  
-> +.. _jpeg-quant-tables-control:
->  
-> +``V4L2_CID_JPEG_QUANTIZATION (struct)``
-> +    Specifies the luma and chroma quantization matrices for encoding
-> +    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. The two matrices
-> +    must be set in JPEG zigzag order, as per the JPEG specification.
+AM65 has two PCIe controllers and each PCIe controller has '2' address
+spaces one within the 4GB address space of the SoC and the other above
+the 4GB address space of the SoC (cbass_main) in addition to the
+register space. The size of the address space above the 4GB SoC address
+space is 4GB. These address ranges will be used by CPU/DMA to access
+the PCIe address space. In order to represent the address space above
+the 4GB SoC address space and to represent the size of this address
+space as 4GB, change address-cells and size-cells of interconnect to 2.
 
-Can you change "JPEG specification" to a reference to the JPEG spec entry
-in bibio.rst?
+Since OSPI has similar need in MCU Domain Memory Map, change
+address-cells and size-cells of cbass_mcu interconnect also to 2.
 
-> +
-> +
-> +.. c:type:: struct v4l2_ctrl_jpeg_quantization
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table:: struct v4l2_ctrl_jpeg_quantization
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - __u8
-> +      - ``luma_quantization_matrix[64]``
-> +      - Sets the luma quantization table.
-> +
-> +    * - __u8
-> +      - ``chroma_quantization_matrix[64]``
-> +      - Sets the chroma quantization table.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+Changes from v1:
+Changed address-cells and size-cells of cbass_mcu to "2" since OSPI has
+a region of size 4GB above the 4GB space.
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 10 +++---
+ arch/arm64/boot/dts/ti/k3-am65.dtsi      | 44 ++++++++++++------------
+ 2 files changed, 27 insertions(+), 27 deletions(-)
 
-Just checking: the JPEG standard specifies this as unsigned 8-bit values as well?
-
->  
->  .. flat-table::
->      :header-rows:  0
-> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
-> index ca9f0edc579e..a0a38e92bf38 100644
-> --- a/Documentation/media/videodev2.h.rst.exceptions
-> +++ b/Documentation/media/videodev2.h.rst.exceptions
-> @@ -129,6 +129,7 @@ replace symbol V4L2_CTRL_TYPE_STRING :c:type:`v4l2_ctrl_type`
->  replace symbol V4L2_CTRL_TYPE_U16 :c:type:`v4l2_ctrl_type`
->  replace symbol V4L2_CTRL_TYPE_U32 :c:type:`v4l2_ctrl_type`
->  replace symbol V4L2_CTRL_TYPE_U8 :c:type:`v4l2_ctrl_type`
-> +replace symbol V4L2_CTRL_TYPE_JPEG_QUANTIZATION :c:type:`v4l2_ctrl_type`
->  
->  # V4L2 capability defines
->  replace define V4L2_CAP_VIDEO_CAPTURE device-capabilities
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 599c1cbff3b9..305bd7a9b7f1 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -999,6 +999,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_JPEG_RESTART_INTERVAL:	return "Restart Interval";
->  	case V4L2_CID_JPEG_COMPRESSION_QUALITY:	return "Compression Quality";
->  	case V4L2_CID_JPEG_ACTIVE_MARKER:	return "Active Markers";
-> +	case V4L2_CID_JPEG_QUANTIZATION:	return "JPEG Quantization Tables";
->  
->  	/* Image source controls */
->  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> @@ -1286,6 +1287,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_DETECT_MD_REGION_GRID:
->  		*type = V4L2_CTRL_TYPE_U8;
->  		break;
-> +	case V4L2_CID_JPEG_QUANTIZATION:
-> +		*type = V4L2_CTRL_TYPE_JPEG_QUANTIZATION;
-> +		break;
->  	case V4L2_CID_DETECT_MD_THRESHOLD_GRID:
->  		*type = V4L2_CTRL_TYPE_U16;
->  		break;
-> @@ -1612,6 +1616,9 @@ static int std_validate(const struct v4l2_ctrl *ctrl, u32 idx,
->  			return -ERANGE;
->  		return 0;
->  
-> +	case V4L2_CTRL_TYPE_JPEG_QUANTIZATION:
-> +		return 0;
-> +
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -2133,6 +2140,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
->  	case V4L2_CTRL_TYPE_U32:
->  		elem_size = sizeof(u32);
->  		break;
-> +	case V4L2_CTRL_TYPE_JPEG_QUANTIZATION:
-> +		elem_size = sizeof(struct v4l2_ctrl_jpeg_quantization);
-> +		break;
->  	default:
->  		if (type < V4L2_CTRL_COMPOUND_TYPES)
->  			elem_size = sizeof(s32);
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index e4ee10ee917d..fcb288bb05c7 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -987,6 +987,11 @@ enum v4l2_jpeg_chroma_subsampling {
->  #define	V4L2_JPEG_ACTIVE_MARKER_DQT		(1 << 17)
->  #define	V4L2_JPEG_ACTIVE_MARKER_DHT		(1 << 18)
->  
-> +#define V4L2_CID_JPEG_QUANTIZATION		(V4L2_CID_JPEG_CLASS_BASE + 5)
-> +struct v4l2_ctrl_jpeg_quantization {
-> +	__u8	luma_quantization_matrix[64];
-> +	__u8	chroma_quantization_matrix[64];
-> +};
->  
->  /* Image source controls */
->  #define V4L2_CID_IMAGE_SOURCE_CLASS_BASE	(V4L2_CTRL_CLASS_IMAGE_SOURCE | 0x900)
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index f271048c89c4..e998d07464cb 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -1630,6 +1630,7 @@ enum v4l2_ctrl_type {
->  	V4L2_CTRL_TYPE_U8	     = 0x0100,
->  	V4L2_CTRL_TYPE_U16	     = 0x0101,
->  	V4L2_CTRL_TYPE_U32	     = 0x0102,
-> +	V4L2_CTRL_TYPE_JPEG_QUANTIZATION = 0x0103,
->  };
->  
->  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
-> 
-
-Regards,
-
-	Hans
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 2409344df4fa..faace3805c01 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -8,13 +8,13 @@
+ &cbass_main {
+ 	gic500: interrupt-controller@1800000 {
+ 		compatible = "arm,gic-v3";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
++		#address-cells = <2>;
++		#size-cells = <2>;
+ 		ranges;
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+-		reg = <0x01800000 0x10000>,	/* GICD */
+-		      <0x01880000 0x90000>;	/* GICR */
++		reg = <0x00 0x01800000 0x00 0x10000>,	/* GICD */
++		      <0x00 0x01880000 0x00 0x90000>;	/* GICR */
+ 		/*
+ 		 * vcpumntirq:
+ 		 * virtual CPU interface maintenance interrupt
+@@ -23,7 +23,7 @@
+ 
+ 		gic_its: gic-its@18200000 {
+ 			compatible = "arm,gic-v3-its";
+-			reg = <0x01820000 0x10000>;
++			reg = <0x00 0x01820000 0x00 0x10000>;
+ 			msi-controller;
+ 			#msi-cells = <1>;
+ 		};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+index cede1fa0983c..ded364d20835 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+@@ -46,38 +46,38 @@
+ 
+ 	cbass_main: interconnect@100000 {
+ 		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0x00100000 0x00 0x00100000 0x00020000>, /* ctrl mmr */
+-			 <0x00600000 0x00 0x00600000 0x00001100>, /* GPIO */
+-			 <0x00900000 0x00 0x00900000 0x00012000>, /* serdes */
+-			 <0x01000000 0x00 0x01000000 0x0af02400>, /* Most peripherals */
+-			 <0x30800000 0x00 0x30800000 0x0bc00000>, /* MAIN NAVSS */
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
++			 <0x00 0x00600000 0x00 0x00600000 0x00 0x00001100>, /* GPIO */
++			 <0x00 0x00900000 0x00 0x00900000 0x00 0x00012000>, /* serdes */
++			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0af02400>, /* Most peripherals */
++			 <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>, /* MAIN NAVSS */
+ 			 /* MCUSS Range */
+-			 <0x28380000 0x00 0x28380000 0x03880000>,
+-			 <0x40200000 0x00 0x40200000 0x00900100>,
+-			 <0x42040000 0x00 0x42040000 0x03ac2400>,
+-			 <0x45100000 0x00 0x45100000 0x00c24000>,
+-			 <0x46000000 0x00 0x46000000 0x00200000>,
+-			 <0x47000000 0x00 0x47000000 0x00068400>;
++			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
++			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
++			 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>,
++			 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>,
++			 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>,
++			 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>;
+ 
+ 		cbass_mcu: interconnect@28380000 {
+ 			compatible = "simple-bus";
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-			ranges = <0x28380000 0x28380000 0x03880000>, /* MCU NAVSS*/
+-				 <0x40200000 0x40200000 0x00900100>, /* First peripheral window */
+-				 <0x42040000 0x42040000 0x03ac2400>, /* WKUP */
+-				 <0x45100000 0x45100000 0x00c24000>, /* MMRs, remaining NAVSS */
+-				 <0x46000000 0x46000000 0x00200000>, /* CPSW */
+-				 <0x47000000 0x47000000 0x00068400>; /* OSPI space 1 */
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>, /* MCU NAVSS*/
++				 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>, /* First peripheral window */
++				 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>, /* WKUP */
++				 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>, /* MMRs, remaining NAVSS */
++				 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>, /* CPSW */
++				 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>; /* OSPI space 1 */
+ 
+ 			cbass_wakeup: interconnect@42040000 {
+ 				compatible = "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 				/* WKUP  Basic peripherals */
+-				ranges = <0x42040000 0x42040000 0x03ac2400>;
++				ranges = <0x42040000 0x00 0x42040000 0x03ac2400>;
+ 			};
+ 		};
+ 	};
+-- 
+2.17.1
