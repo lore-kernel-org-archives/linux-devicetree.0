@@ -1,83 +1,56 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v2 02/11] dt-bindings: net: ocelot: remove hsio from the list of register address spaces
-Date: Mon,  3 Sep 2018 11:32:59 +0200
-Message-ID: <20180903093308.24366-3-quentin.schulz@bootlin.com>
-References: <20180903093308.24366-1-quentin.schulz@bootlin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180903093308.24366-1-quentin.schulz@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 20/30] iio: adc: sun4i-gpadc-iio: rework:
+ device specific suspend & resume
+Date: Mon, 3 Sep 2018 11:44:04 +0200
+Message-ID: <20180903094404.ih2fsqsetz6oo7ie@flea>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+ <20180830154518.29507-21-embed3d@gmail.com>
+ <20180831090915.agbldint76ngj5jf@flea>
+ <ddd06c43-026e-2801-dc36-053d469e43f3@gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2x2tyzi3ftzmnojb"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB34EWTOAKGQED2KDIYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <ddd06c43-026e-2801-dc36-053d469e43f3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-HSIO register address space should be handled outside of the MAC
-controller as there are some registers for PLL5 configuring,
-SerDes/switch port muxing and a thermal sensor IP, so let's remove it.
 
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
----
- Documentation/devicetree/bindings/mips/mscc.txt  | 16 ++++++++++++++++
- .../devicetree/bindings/net/mscc-ocelot.txt      |  9 +++------
- 2 files changed, 19 insertions(+), 6 deletions(-)
+--2x2tyzi3ftzmnojb
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/mips/mscc.txt b/Documentation/devicetree/bindings/mips/mscc.txt
-index ae15ec333542..bc817e984628 100644
---- a/Documentation/devicetree/bindings/mips/mscc.txt
-+++ b/Documentation/devicetree/bindings/mips/mscc.txt
-@@ -41,3 +41,19 @@ Example:
- 		compatible = "mscc,ocelot-cpu-syscon", "syscon";
- 		reg = <0x70000000 0x2c>;
- 	};
-+
-+o HSIO regs:
-+
-+The SoC has a few registers (HSIO) handling miscellaneous functionalities:
-+configuration and status of PLL5, RCOMP, SyncE, SerDes configurations and
-+status, SerDes muxing and a thermal sensor.
-+
-+Required properties:
-+- compatible: Should be "mscc,ocelot-hsio", "syscon", "simple-mfd"
-+- reg : Should contain registers location and length
-+
-+Example:
-+	syscon@10d0000 {
-+		compatible = "mscc,ocelot-hsio", "syscon", "simple-mfd";
-+		reg = <0x10d0000 0x10000>;
-+	};
-diff --git a/Documentation/devicetree/bindings/net/mscc-ocelot.txt b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-index 0a84711abece..9e5c17d426ce 100644
---- a/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-@@ -12,7 +12,6 @@ Required properties:
-   - "sys"
-   - "rew"
-   - "qs"
--  - "hsio"
-   - "qsys"
-   - "ana"
-   - "portX" with X from 0 to the number of last port index available on that
-@@ -45,7 +44,6 @@ Example:
- 		reg = <0x1010000 0x10000>,
- 		      <0x1030000 0x10000>,
- 		      <0x1080000 0x100>,
--		      <0x10d0000 0x10000>,
- 		      <0x11e0000 0x100>,
- 		      <0x11f0000 0x100>,
- 		      <0x1200000 0x100>,
-@@ -59,10 +57,9 @@ Example:
- 		      <0x1280000 0x100>,
- 		      <0x1800000 0x80000>,
- 		      <0x1880000 0x10000>;
--		reg-names = "sys", "rew", "qs", "hsio", "port0",
--			    "port1", "port2", "port3", "port4", "port5",
--			    "port6", "port7", "port8", "port9", "port10",
--			    "qsys", "ana";
-+		reg-names = "sys", "rew", "qs", "port0", "port1", "port2",
-+			    "port3", "port4", "port5", "port6", "port7",
-+			    "port8", "port9", "port10", "qsys", "ana";
- 		interrupts = <21 22>;
- 		interrupt-names = "xtr", "inj";
- 
+On Fri, Aug 31, 2018 at 02:05:59PM +0200, Philipp Rossak wrote:
+> 
+> 
+> On 31.08.2018 11:09, Maxime Ripard wrote:
+> > > +static int sun4i_ths_suspend(struct sun4i_gpadc_iio *info)
+> > suspend is already a hook in the kernel, which hasn't the same meaning
+> > than runtime_suspend (and the same applies to resume), so we'd rather
+> > pick a better name. And all the functions (and the driver) use gpadc,
+> > please continue to use that prefix.
+> 
+> I agree.
+> For the newer sensors (from H3) the Sensor is referenced in the datasheets
+> as Thermal Sensor short THS. So I would like to use for the newer sensors
+> that prefix. Is that ok?
+
+Not really. The consistency within the driver is more important.
+
+Maxiem
+
 -- 
-2.17.1
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--2x2tyzi3ftzmnojb--
