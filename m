@@ -1,53 +1,98 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 2/5] regulator: rk808: add RK809 and RK817 support.
-Date: Mon, 3 Sep 2018 14:41:01 +0100
-Message-ID: <20180903134101.GK10302@sirena.org.uk>
-References: <1535968829-19418-1-git-send-email-tony.xie@rock-chips.com>
- <1535968829-19418-3-git-send-email-tony.xie@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LQ77YLfPrO/qF/pM"
+Subject: Applied "ASoC: mikroe-proto: dt-bindings: add DT bindings for PROTO board" to the asoc tree
+Date: Mon,  3 Sep 2018 14:44:37 +0100 (BST)
+Message-ID: <20180903134437.7057911227AE@debutante.sirena.org.uk>
+References: <20180831171436.13360-3-codrin.ciubotariu@microchip.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1535968829-19418-3-git-send-email-tony.xie@rock-chips.com>
+In-Reply-To: <20180831171436.13360-3-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Xie <tony.xie@rock-chips.com>
-Cc: heiko@sntech.de, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
+To: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.orgbroonie@kernel.org, robh+dt@kernel.org, alexandre.belloni@bootlin.com, nicolas.ferre@microchip.com, cristian.birsan@microchip.com, florian.meier@koalo.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---LQ77YLfPrO/qF/pM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   ASoC: mikroe-proto: dt-bindings: add DT bindings for PROTO board
 
-On Mon, Sep 03, 2018 at 06:00:26PM +0800, Tony Xie wrote:
+has been applied to the asoc tree at
 
->     Add support for the rk809 and rk817 regulator driver.
->     Their specifications are as follows=EF=BC=9A
->     1. The RK809 and RK809 consist of 5 DCDCs, 9 LDOs
->        and have the same registers for these components except dcdc5.
->     2. The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
->     3. The RK817 has one switch but The Rk809 has two.
->=20
->     The output voltages are configurable and are meant to supply power
->     to the main processor and other components.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-Acked-by: Mark Brown <broonie@kernel.org>
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---LQ77YLfPrO/qF/pM
-Content-Type: application/pgp-signature; name="signature.asc"
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
------BEGIN PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluNOewACgkQJNaLcl1U
-h9ADqAf/ZUW93wVRWWiEtL3ZAFgbG3LHT8YSwyDBGPd7zduqbrKn2VqLjdPMXVy/
-aYXWD9347vawBVYwgds0Gu9/tHUNjZSfcyGDc0PVffN8Qy2iXFJmw8jK7skkchwx
-KbgUcTUz0fD1489R6VPhsUvFxLIdayLi+Qcvy8w0Tthf+8BGoM90QRirGGoLq9Tv
-z23z31c4TtsIrn9dMKRi8boRrTYRR+XXJqY+nNxg/Ft/Jr6aUUrjDKb8zT6G/wt5
-gzoCGbQHitXeTLubD9X+9FSFG+6/i2skIt6Wlo6TS7KDRGhwU4woQYjsmEJVtCtV
-R9ioVbUHtpfsp0dAS97EDfhC1uttig==
-=xh3s
------END PGP SIGNATURE-----
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---LQ77YLfPrO/qF/pM--
+Thanks,
+Mark
+
+>From 85e16fdd2f25ef6b08b4275acd5f60fdccfe0973 Mon Sep 17 00:00:00 2001
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Date: Fri, 31 Aug 2018 20:14:36 +0300
+Subject: [PATCH] ASoC: mikroe-proto: dt-bindings: add DT bindings for PROTO
+ board
+
+DT binding documentation for this new ASoC driver.
+
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/mikroe,mikroe-proto.txt    | 23 +++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+ 2 files changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/mikroe,mikroe-proto.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/mikroe,mikroe-proto.txt b/Documentation/devicetree/bindings/sound/mikroe,mikroe-proto.txt
+new file mode 100644
+index 000000000000..912f8fae11c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/mikroe,mikroe-proto.txt
+@@ -0,0 +1,23 @@
++Mikroe-PROTO audio board
++
++Required properties:
++  - compatible: "mikroe,mikroe-proto"
++  - dai-format: Must be "i2s".
++  - i2s-controller: The phandle of the I2S controller.
++  - audio-codec: The phandle of the WM8731 audio codec.
++Optional properties:
++  - model: The user-visible name of this sound complex.
++  - bitclock-master: Indicates dai-link bit clock master; for details see simple-card.txt (1).
++  - frame-master: Indicates dai-link frame master; for details see simple-card.txt (1).
++
++(1) : There must be the same master for both bit and frame clocks.
++
++Example:
++	sound {
++		compatible = "mikroe,mikroe-proto";
++		model = "wm8731 @ sama5d2_xplained";
++		i2s-controller = <&i2s0>;
++		audio-codec = <&wm8731>;
++		dai-format = "i2s";
++        };
++};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2c3fc512e746..f26bf667e530 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -235,6 +235,7 @@ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
+ microcrystal	Micro Crystal AG
+ micron	Micron Technology Inc.
++mikroe		MikroElektronika d.o.o.
+ minix	MINIX Technology Ltd.
+ miramems	MiraMEMS Sensing Technology Co., Ltd.
+ mitsubishi	Mitsubishi Electric Corporation
+-- 
+2.19.0.rc1
