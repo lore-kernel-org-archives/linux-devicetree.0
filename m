@@ -1,39 +1,70 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH][v2] arm64: dts: remove big-endian filed from IFC
- controller
-Date: Mon, 3 Sep 2018 09:01:59 +0800
-Message-ID: <20180903010157.GX3850@dragon>
-References: <20180829032749.9309-1-prabhakar.kushwaha@nxp.com>
+Subject: Re: [PATCH v2] arm64: dts: ls1043a: Add configure-gfladj property to
+ USB3 node
+Date: Mon, 3 Sep 2018 09:05:18 +0800
+Message-ID: <20180903010517.GY3850@dragon>
+References: <20180829033055.22245-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180829032749.9309-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, leoyang.li@nxp.com, linux-arm-kernel@lists.infradead.org, robh@kernel.org
+In-Reply-To: <20180829033055.22245-1-yinbo.zhu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ran Wang <ran.wang_1@nxp.com>, linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com, Minghuan Lian <Minghuan.Lian@nxp.com>, Yuantian Tang <andy.tang@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Changming Huang <jerry.huang@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajesh Bhagat <rajesh.bhagat@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 08:57:49AM +0530, Prabhakar Kushwaha wrote:
-> As per IFC binding, Absence of "little-endian" field causes registers
-> access in big-endian mode.
-> So no need to set explicit big-endian field IFC node for LS1043A and
-> LS1046A.
+On Wed, Aug 29, 2018 at 11:30:55AM +0800, Yinbo Zhu wrote:
+> From: Rajesh Bhagat <rajesh.bhagat@freescale.com>
 > 
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+> Add "configure-gfladj" boolean property to USB3 node. This property
 
-s/filed/flied in subject, and having 'fsl' in subject prefix might be
-better, so that it's clear this is a fsl specific changes.
-
-I fixed them up and applied the patch.
+I do not see where this property is documented as bindings and how
+driver is using it.
 
 Shawn
+
+> is used to determine whether frame length adjustment is required or
+> not
+> 
+> Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> ---
+> Change in v2:
+> 		Modified some word misspellings in commit information
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index 7881e3d..ed3fa79 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -609,6 +609,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			configure-gfladj;
+>  		};
+>  
+>  		usb1: usb3@3000000 {
+> @@ -618,6 +619,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			configure-gfladj;
+>  		};
+>  
+>  		usb2: usb3@3100000 {
+> @@ -627,6 +629,7 @@
+>  			dr_mode = "host";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+> +			configure-gfladj;
+>  		};
+>  
+>  		sata: sata@3200000 {
+> -- 
+> 1.7.1
+> 
