@@ -1,7 +1,7 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH v2 08/11] MIPS: mscc: ocelot: add SerDes mux DT node
-Date: Mon,  3 Sep 2018 11:33:05 +0200
-Message-ID: <20180903093308.24366-9-quentin.schulz@bootlin.com>
+Subject: [PATCH v2 06/11] phy: add QSGMII and PCIE modes
+Date: Mon,  3 Sep 2018 11:33:03 +0200
+Message-ID: <20180903093308.24366-7-quentin.schulz@bootlin.com>
 References: <20180903093308.24366-1-quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903093308.24366-1-quentin.schulz@bootlin.com>
@@ -10,30 +10,28 @@ To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jh
 Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The Microsemi Ocelot has a set of register for SerDes/switch port muxing
-as well as PCIe muxing for a specific SerDes, so let's add the device
-and all SerDes in the Device Tree.
+Prepare for upcoming phys that'll handle QSGMII or PCIe.
 
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- arch/mips/boot/dts/mscc/ocelot.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/phy/phy.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
-index 149b1a7e7091..8ce317c5b9ed 100644
---- a/arch/mips/boot/dts/mscc/ocelot.dtsi
-+++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
-@@ -234,6 +234,11 @@
- 		hsio: syscon@10d0000 {
- 			compatible = "mscc,ocelot-hsio", "syscon", "simple-mfd";
- 			reg = <0x10d0000 0x10000>;
-+
-+			serdes: serdes {
-+				compatible = "mscc,vsc7514-serdes";
-+				#phy-cells = <2>;
-+			};
- 		};
- 	};
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 9713aebdd348..03b319f89a34 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -37,9 +37,11 @@ enum phy_mode {
+ 	PHY_MODE_USB_OTG,
+ 	PHY_MODE_SGMII,
+ 	PHY_MODE_2500SGMII,
++	PHY_MODE_QSGMII,
+ 	PHY_MODE_10GKR,
+ 	PHY_MODE_UFS_HS_A,
+ 	PHY_MODE_UFS_HS_B,
++	PHY_MODE_PCIE,
  };
+ 
+ /**
 -- 
 2.17.1
