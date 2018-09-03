@@ -1,71 +1,53 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH net-next v2 4/7] net: phy: mscc: read
- 'vsc8531,edge-slowdown' as an u32
-Date: Mon, 3 Sep 2018 15:37:46 +0200
-Message-ID: <20180903133746.wsvezy3rbdivnjfs@qschulz>
-References: <20180903084853.18092-1-quentin.schulz@bootlin.com>
- <20180903084853.18092-4-quentin.schulz@bootlin.com>
- <20180903132756.GD4445@lunn.ch>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 2/5] regulator: rk808: add RK809 and RK817 support.
+Date: Mon, 3 Sep 2018 14:41:01 +0100
+Message-ID: <20180903134101.GK10302@sirena.org.uk>
+References: <1535968829-19418-1-git-send-email-tony.xie@rock-chips.com>
+ <1535968829-19418-3-git-send-email-tony.xie@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tr2jro5eutuoly2l"
+        protocol="application/pgp-signature"; boundary="LQ77YLfPrO/qF/pM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180903132756.GD4445@lunn.ch>
+In-Reply-To: <1535968829-19418-3-git-send-email-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, allan.nielsen@microchip.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com
+To: Tony Xie <tony.xie@rock-chips.com>
+Cc: heiko@sntech.de, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
 
---tr2jro5eutuoly2l
-Content-Type: text/plain; charset=us-ascii
+--LQ77YLfPrO/qF/pM
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+On Mon, Sep 03, 2018 at 06:00:26PM +0800, Tony Xie wrote:
 
-On Mon, Sep 03, 2018 at 03:27:56PM +0200, Andrew Lunn wrote:
-> On Mon, Sep 03, 2018 at 10:48:50AM +0200, Quentin Schulz wrote:
-> > In the DT binding, it is specified nowhere that 'vsc8531,edge-slowdown'
-> > is an u8, even though it's read as an u8 in the driver.
+>     Add support for the rk809 and rk817 regulator driver.
+>     Their specifications are as follows=EF=BC=9A
+>     1. The RK809 and RK809 consist of 5 DCDCs, 9 LDOs
+>        and have the same registers for these components except dcdc5.
+>     2. The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
+>     3. The RK817 has one switch but The Rk809 has two.
 >=20
-> Hi Quentin
->=20
-> of_property_read_u8() will perform bounds checking. Is that important
-> here?
->=20
+>     The output voltages are configurable and are meant to supply power
+>     to the main processor and other components.
 
-Just to be sure, we're talking here about making sure the value stored
-in the DT is not bigger than the specified value (here an u8)? If so,
-that isn't the reason why I'm suggesting those two patches.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Without /bits 8/ in the DT property, whatever were the values I put in
-the property, I'd always get a 0. So I need to fix it either in the DT
-(but Rob does not really like it) or in the driver.
-
-Hope that makes sense.
-
-Quentin
-
---tr2jro5eutuoly2l
+--LQ77YLfPrO/qF/pM
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAluNOSoACgkQhLiadT7g
-8aOyag//a1U+y+KF2So2bcVsTaIpWQsHf0DDy5nyfT5rTMisuhtc/pu9i2/jyb9Z
-Y8P9cO5pA7oWnAWTc1eXM/OkBcVusSxKvFxBjf//BtxElzlo+vGge1kYCcPmYn9e
-idkiE88lwv4o1OijOlNe03Knoo/dkjVfC2ADVMnCRc19/N6z6Tl6SSmkh5WQH8EN
-DU6ZCF9Ncyjocsks5oMNve+SXXyze1kitsz85BwVSUSByGqPp/pbStuOL+veq/VD
-o0CqtKkchvF9PiszTWYc9QE3M/l+PlWgtfGvgx+Pb1/yEfYiMxlRrMaPBaVXo6RG
-38noj0XsAxUOoIhbb4NfcOHJMmshv6A4wT4/1B9OZ/OFwwLqIThueQlYmVsCzZhY
-1fLxnjaRjpwyvEVWKuDbcLLIRj4qSrCuIR2VtV8T9KYk9Ccqfimh4JuAuMEcaNwK
-MI0ylfoKvaJTHPdBlGp9THeVC0mDGOgxLrmImMhfic2rveFxPQ+/unMPOP4uo3CP
-1iKdNK7kZYq+2JgWeIcJsi18+AN9n3au8jYrE1eQYsYu/aQCNqpq7WNpnkZqGGkl
-wdk3okc4rZJPIXH7wUvwghcrFRBiNE//Xa5Q29DwJZQUafoZIOEm5uvBqiw7zx/4
-jmeBOXnnePz7mGHBTKcXAMqEJVE/JV+EkgjRB0++rcXOX+Al0ag=
-=0XK8
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluNOewACgkQJNaLcl1U
+h9ADqAf/ZUW93wVRWWiEtL3ZAFgbG3LHT8YSwyDBGPd7zduqbrKn2VqLjdPMXVy/
+aYXWD9347vawBVYwgds0Gu9/tHUNjZSfcyGDc0PVffN8Qy2iXFJmw8jK7skkchwx
+KbgUcTUz0fD1489R6VPhsUvFxLIdayLi+Qcvy8w0Tthf+8BGoM90QRirGGoLq9Tv
+z23z31c4TtsIrn9dMKRi8boRrTYRR+XXJqY+nNxg/Ft/Jr6aUUrjDKb8zT6G/wt5
+gzoCGbQHitXeTLubD9X+9FSFG+6/i2skIt6Wlo6TS7KDRGhwU4woQYjsmEJVtCtV
+R9ioVbUHtpfsp0dAS97EDfhC1uttig==
+=xh3s
 -----END PGP SIGNATURE-----
 
---tr2jro5eutuoly2l--
+--LQ77YLfPrO/qF/pM--
