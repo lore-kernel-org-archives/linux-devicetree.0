@@ -1,55 +1,42 @@
-Return-Path: <SRS0=CDSW=LP=the-dreams.de=wsa@kernel.org>
-Date: Sat, 1 Sep 2018 14:53:50 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/2] i2c: imx-lpi2c: Remove mx8dv compatible entry
-Message-ID: <20180901125350.GG1196@kunai>
-References: <1535721855-5595-1-git-send-email-festevam@gmail.com>
- <1535721855-5595-2-git-send-email-festevam@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oOB74oR0WcNeq9Zb"
-Content-Disposition: inline
-In-Reply-To: <1535721855-5595-2-git-send-email-festevam@gmail.com>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-imx@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <SRS0=8Gze=LR=linux-m68k.org=geert@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] spi: sh-msiof: Document R-Car D3 support
+Date: Mon,  3 Sep 2018 19:25:11 +0200
+Message-Id: <20180903172512.6242-2-geert+renesas@glider.be>
+In-Reply-To: <20180903172512.6242-1-geert+renesas@glider.be>
+References: <20180903172512.6242-1-geert+renesas@glider.be>
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulrich Hecht <uli+renesas@fpond.eu>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
+From: Ulrich Hecht <uli+renesas@fpond.eu>
 
---oOB74oR0WcNeq9Zb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Document support for the MSIOF module in the Renesas R-Car D3 (r8a77995)
+SoC.
 
-On Fri, Aug 31, 2018 at 10:24:15AM -0300, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam@nxp.com>
->=20
-> mx8dv never entered into production and there is no other place
-> in the kernel referring to this SoC, so remove it from the
-> driver's compatible entry.
->=20
-> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+No driver update is needed.
 
-Applied to for-current, thanks!
+Signed-off-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+As per SPI subsystem policy, the "spi: sh-msiof:" prefix is used.
 
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
---oOB74oR0WcNeq9Zb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAluKi94ACgkQFA3kzBSg
-KbZoORAAglIPKYcO4hIeeTRbUIbioPqcUorxm24/4kVZsU/o+xaLyTZ2YjVKCCRw
-3s3INfm4dFo9JHqe9/PDX0AHBSRqS+Ny8O8t/lhAZ+504PtsaBqW6n2+j5oSo0Rz
-KRy6TVqRUIb4Luym3gqZRAHjcKcMUZbqasNbpnTs4nkgiuupShUyylLcVpxbgqKI
-O0oUUc5YTzJHI15P2P97aPVi160a8Oh+MUhCVSK/J7VXJTZTn27F1jVpFYFCOnsg
-dGa+AxrYDMAqANX4SYXzZ55Y9Q7XFhkvsOfykX4Jsx1rWYWXDUkUuvKJ52mLn/r+
-ahhazayY9vTpP2tooMUBBf79XYxAg1J5Fi9LCoXrn1A+EnVkqEATr5Ndy1ksQEkW
-HzxnWx7gZ9XwDQ4vlcGlfEGA59S13QaQFDxJ9vyHRTaV0a1y7KhAYgoGXIBJX37n
-tCSM8HwBIbxVFs9jQUlRFRLupGm7fGgcwWJn58SyJ0Ypw3+xTTY5Ha26ybGuaLrQ
-/3qKQq8V84KW0hDHeOUDaWZVBsG/44ctzWd+LQBzDX1qnoremFZNnTEVZtTeIfme
-UXy4Xc+lbU34HInp+66VldohxOhPi5JNIdQajXiM5Vv/UblWuCfHLkPjHz7uzviQ
-H5YnMUwb+QmlLrzWpNrdBt9kntOcEvbD2i/SA1kYz76EBFShD2I=
-=Pr9f
------END PGP SIGNATURE-----
-
---oOB74oR0WcNeq9Zb--
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index bfbc2035fb6bfaf6..fd157155f219bb17 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 			 "renesas,msiof-r8a7795" (R-Car H3)
+ 			 "renesas,msiof-r8a7796" (R-Car M3-W)
+ 			 "renesas,msiof-r8a77965" (R-Car M3-N)
++			 "renesas,msiof-r8a77995" (R-Car D3)
+ 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+ 			 "renesas,sh-mobile-msiof" (generic SH-Mobile compatibile device)
+ 			 "renesas,rcar-gen2-msiof" (generic R-Car Gen2 and RZ/G1 compatible device)
+-- 
+2.17.1
