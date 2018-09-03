@@ -1,141 +1,65 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2] arm64: dts: ti: k3-am65: Change #address-cells and
- #size-cells of interconnect to 2
-Date: Mon, 3 Sep 2018 15:22:35 +0530
-Message-ID: <20180903095235.13853-1-kishon@ti.com>
+From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Subject: RE: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI
+ driver
+Date: Mon, 3 Sep 2018 09:54:08 +0000
+Message-ID: <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
+References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1535711404-29528-5-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vignesh R <vigneshr@ti.com>, nsekhar@ti.com, Santosh Shilimkar <ssantosh@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535711404-29528-5-git-send-email-yogeshnarayan.gaur@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-AM65 has two PCIe controllers and each PCIe controller has '2' address
-spaces one within the 4GB address space of the SoC and the other above
-the 4GB address space of the SoC (cbass_main) in addition to the
-register space. The size of the address space above the 4GB SoC address
-space is 4GB. These address ranges will be used by CPU/DMA to access
-the PCIe address space. In order to represent the address space above
-the 4GB SoC address space and to represent the size of this address
-space as 4GB, change address-cells and size-cells of interconnect to 2.
+Dear Yogesh,
 
-Since OSPI has similar need in MCU Domain Memory Map, change
-address-cells and size-cells of cbass_mcu interconnect also to 2.
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> owner@vger.kernel.org> On Behalf Of Yogesh Gaur
+> Sent: Friday, August 31, 2018 4:00 PM
+> To: linux-mtd@lists.infradead.org; boris.brezillon@bootlin.com;
+> marek.vasut@gmail.com; linux-spi@vger.kernel.org;
+> devicetree@vger.kernel.org
+> Cc: robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; linux-
+> arm-kernel@lists.infradead.org; computersforpeace@gmail.com;
+> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org; Yogesh
+> Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> Subject: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI d=
+river
+>=20
+> Add binding file for NXP FlexSPI driver.
+>=20
+> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> ---
+>  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 42
+> ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-
+> fspi.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> new file mode 100644
+> index 0000000..9f07116
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> @@ -0,0 +1,42 @@
+> +* NXP Flex Serial Peripheral Interface (FSPI)
+> +
+> +Required properties:
+> +  - compatible : Should be "nxp,lx2160a-fspi"
+> +  - reg :        First contains the register location and length,
+> +                 Second contains the memory mapping address and length
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
-Changes from v1:
-Changed address-cells and size-cells of cbass_mcu to "2" since OSPI has
-a region of size 4GB above the 4GB space.
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 10 +++---
- arch/arm64/boot/dts/ti/k3-am65.dtsi      | 44 ++++++++++++------------
- 2 files changed, 27 insertions(+), 27 deletions(-)
+Why are we overriding reg property.  Is there any special requirement.=20
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 2409344df4fa..faace3805c01 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -8,13 +8,13 @@
- &cbass_main {
- 	gic500: interrupt-controller@1800000 {
- 		compatible = "arm,gic-v3";
--		#address-cells = <1>;
--		#size-cells = <1>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
- 		ranges;
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
--		reg = <0x01800000 0x10000>,	/* GICD */
--		      <0x01880000 0x90000>;	/* GICR */
-+		reg = <0x00 0x01800000 0x00 0x10000>,	/* GICD */
-+		      <0x00 0x01880000 0x00 0x90000>;	/* GICR */
- 		/*
- 		 * vcpumntirq:
- 		 * virtual CPU interface maintenance interrupt
-@@ -23,7 +23,7 @@
- 
- 		gic_its: gic-its@18200000 {
- 			compatible = "arm,gic-v3-its";
--			reg = <0x01820000 0x10000>;
-+			reg = <0x00 0x01820000 0x00 0x10000>;
- 			msi-controller;
- 			#msi-cells = <1>;
- 		};
-diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-index cede1fa0983c..ded364d20835 100644
---- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-@@ -46,38 +46,38 @@
- 
- 	cbass_main: interconnect@100000 {
- 		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0x00100000 0x00 0x00100000 0x00020000>, /* ctrl mmr */
--			 <0x00600000 0x00 0x00600000 0x00001100>, /* GPIO */
--			 <0x00900000 0x00 0x00900000 0x00012000>, /* serdes */
--			 <0x01000000 0x00 0x01000000 0x0af02400>, /* Most peripherals */
--			 <0x30800000 0x00 0x30800000 0x0bc00000>, /* MAIN NAVSS */
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0x00 0x00100000 0x00 0x00100000 0x00 0x00020000>, /* ctrl mmr */
-+			 <0x00 0x00600000 0x00 0x00600000 0x00 0x00001100>, /* GPIO */
-+			 <0x00 0x00900000 0x00 0x00900000 0x00 0x00012000>, /* serdes */
-+			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0af02400>, /* Most peripherals */
-+			 <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>, /* MAIN NAVSS */
- 			 /* MCUSS Range */
--			 <0x28380000 0x00 0x28380000 0x03880000>,
--			 <0x40200000 0x00 0x40200000 0x00900100>,
--			 <0x42040000 0x00 0x42040000 0x03ac2400>,
--			 <0x45100000 0x00 0x45100000 0x00c24000>,
--			 <0x46000000 0x00 0x46000000 0x00200000>,
--			 <0x47000000 0x00 0x47000000 0x00068400>;
-+			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
-+			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
-+			 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>,
-+			 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>,
-+			 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>,
-+			 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>;
- 
- 		cbass_mcu: interconnect@28380000 {
- 			compatible = "simple-bus";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges = <0x28380000 0x28380000 0x03880000>, /* MCU NAVSS*/
--				 <0x40200000 0x40200000 0x00900100>, /* First peripheral window */
--				 <0x42040000 0x42040000 0x03ac2400>, /* WKUP */
--				 <0x45100000 0x45100000 0x00c24000>, /* MMRs, remaining NAVSS */
--				 <0x46000000 0x46000000 0x00200000>, /* CPSW */
--				 <0x47000000 0x47000000 0x00068400>; /* OSPI space 1 */
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>, /* MCU NAVSS*/
-+				 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>, /* First peripheral window */
-+				 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>, /* WKUP */
-+				 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>, /* MMRs, remaining NAVSS */
-+				 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>, /* CPSW */
-+				 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>; /* OSPI space 1 */
- 
- 			cbass_wakeup: interconnect@42040000 {
- 				compatible = "simple-bus";
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 				/* WKUP  Basic peripherals */
--				ranges = <0x42040000 0x42040000 0x03ac2400>;
-+				ranges = <0x42040000 0x00 0x42040000 0x03ac2400>;
- 			};
- 		};
- 	};
--- 
-2.17.1
+Can we use "reg" and "ranges" property in device tree.
+Here "reg" represents controller registers and "ranges" represent the memor=
+y address of flash.
+
+--pk
