@@ -1,103 +1,72 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 10/27] drm/sun4i: Add compatible for H6 display engine
-Date: Mon, 3 Sep 2018 14:18:45 +0200
-Message-ID: <20180903121845.znqhufx24ihcpmkn@flea>
-References: <20180902072643.4917-1-jernej.skrabec@siol.net>
- <20180902072643.4917-11-jernej.skrabec@siol.net>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1325164617=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180902072643.4917-11-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, wens@csie.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 1/3] ASoC: q6asm-dai: dt-bindings: Add support to compress dais
+Date: Mon,  3 Sep 2018 13:34:53 +0100
+Message-ID: <20180903123455.9290-2-srinivas.kandagatla@linaro.org>
+References: <20180903123455.9290-1-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180903123455.9290-1-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, vkoul@kernel.org, bgoswami@codeaurora.org, rohitkr@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, mark.rutland@arm.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds board specific bindings required for dais, In particular
+for compressed dais and dai direction.
 
---===============1325164617==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="77ysc5vzzbqkmyxl"
-Content-Disposition: inline
+Board specific setup involves setting up some of dais as compressed dais
+and also specify direction of any dai. Some of the dais might only
+support capture/playback depending on the board level wiring.
 
+These two new dt properties will allow such flexibilty at board level dts.
 
---77ysc5vzzbqkmyxl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ .../devicetree/bindings/sound/qcom,q6asm.txt  | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-hi,
-
-On Sun, Sep 02, 2018 at 09:26:26AM +0200, Jernej Skrabec wrote:
-> H6 is first Allwinner SoC which supports 10 bit colors, HDR and AFBC.
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_drv.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/su=
-n4i_drv.c
-> index dd19d674055c..e5731d092e1a 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> @@ -410,6 +410,7 @@ static int sun4i_drv_remove(struct platform_device *p=
-dev)
-> =20
->  static const struct of_device_id sun4i_drv_of_table[] =3D {
->  	{ .compatible =3D "allwinner,sun4i-a10-display-engine" },
-> +	{ .compatible =3D "allwinner,sun50i-h6-display-engine" },
->  	{ .compatible =3D "allwinner,sun5i-a10s-display-engine" },
->  	{ .compatible =3D "allwinner,sun5i-a13-display-engine" },
->  	{ .compatible =3D "allwinner,sun6i-a31-display-engine" },
-
-While it makes sens from an alphabetical point of view, we usually
-follow the number order here (so after sun9i).
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---77ysc5vzzbqkmyxl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluNJqQACgkQ0rTAlCFN
-r3TU3g/7BeCLrG4kOHLUDVaR380EbyM6CDNX1B8+Dbpq53AyM+um4m0GRb6bAaIo
-V2USXEkIu+NBPjpOEvPTsm2SkApe7ghTLBGnypaw+QCZTDbBnK8vIpwxO22Jt9Uw
-WNBAEne8Rx6O9MPUkuzZHrPch6VAWceB/FBAIgMATtYSskLKQP+WjwN8LFQHLxWd
-qjRA+K2msn4PVbBmzmmBgKnnV/5wlGDjNpBgcv7MvwxXBLdbW99U54604A9JZKRh
-KFf7ZF2wuBbXUM1jkLVuFYPLsxJXFB8AnVLRutBYa7uwlwPL1/n8/RcIRHzc9Cb0
-M/vi3wq5NLWxuzs7SFUIGkgBHDcLtBaRDOknfci2c8cDj+kisbfzvpkL4ZiVN9if
-FjIIZaOkB2xAdr7Eqau7MO3P9SnQgBPzG2eu8F1NgFlZi1+l1jEuDSUdqni3txAP
-6u0MEmq6S0g027ffWy8M0tw9fIJWT3bPnWKJCzX0b2KQ/1wJqVnkBu0L6Jl0hSOc
-zw7WSgUvzt0h72PYotCXmC9nEK4hlmJ+rJb+yfB5sSqrFRSJ3hTIDFbnYg+aste+
-Rv9OboR8gPWAM5hH1+vovz3DG9X8qkLIXTiGGvNXQY4n0K5qCRJhvqCkWgHh+YtH
-rBSMeAo4bqj5Os3BQSVALbWVxPQO8fYCNuqaHqhRAF7eCTlyfME=
-=WKT1
------END PGP SIGNATURE-----
-
---77ysc5vzzbqkmyxl--
-
---===============1325164617==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1325164617==--
+diff --git a/Documentation/devicetree/bindings/sound/qcom,q6asm.txt b/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+index f9c7bd8c1bc0..9f5378c51686 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+@@ -27,6 +27,28 @@ used by the apr service device.
+ 	Value type: <u32>
+ 	Definition: Must be 1
+ 
++== ASM DAI is subnode of "dais" and represent a dai, it includes board specific
++configuration of each dai. Must contain the following properties.
++
++- reg
++	Usage: required
++	Value type: <u32>
++	Definition: Must be dai id
++
++- direction:
++	Usage: Required for Compress offload dais
++	Value type: <u32>
++	Definition: Specifies the direction of the dai stream
++			0 for both tx and rx
++			1 for only tx (Capture/Encode)
++			2 for only rx (Playback/Decode)
++
++- is-compress-dai:
++	Usage: Required for Compress offload dais
++	Value type: <boolean>
++	Definition: present for Compress offload dais
++
++
+ = EXAMPLE
+ 
+ q6asm@7 {
+@@ -35,5 +57,10 @@ q6asm@7 {
+ 	q6asmdai: dais {
+ 		compatible = "qcom,q6asm-dais";
+ 		#sound-dai-cells = <1>;
++		mm@0 {
++			reg = <0>;
++			direction = <2>;
++			is-compress-dai;
++		};
+ 	};
+ };
+-- 
+2.18.0
