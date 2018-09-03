@@ -1,264 +1,109 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 00/17] Rockchip ISP1 Driver
-Date: Mon, 3 Sep 2018 15:07:03 +0200
-Message-ID: <6761c936-82c7-e36a-de21-c0e827b68a3e@xs4all.nl>
-References: <20180308094807.9443-1-jacob-chen@iotwrt.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 1/2] of: base: Introduce of_alias_check_id() to check alias IDs
+Date: Mon,  3 Sep 2018 15:14:29 +0200
+Message-ID: <0ee4683a7d3927c2ef20b1e106720e6154811cd7.1535980468.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180308094807.9443-1-jacob-chen@iotwrt.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacob,
+The function travers the lookup table to check if the request alias
+id is compatible with the device driver match structure.
+This function will be used by serial drivers to check if requested alias
+is allocated or free to use.
 
-What is the status of this patch series? I haven't seen any updates for quite
-some time now, and I thought that it was getting close.
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-It would be nice to see this go in.
+Based on discussion with Rob
+https://lkml.org/lkml/2018/4/27/397
+nbits is passed to the function not to limit only to 32/64bit fields.
 
-Regards,
+---
+ drivers/of/base.c  | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h |  3 +++
+ 2 files changed, 51 insertions(+)
 
-	Hans
-
-On 03/08/2018 10:47 AM, Jacob Chen wrote:
-> From: Jacob Chen <jacob2.chen@rock-chips.com>
-> 
-> changes in V6:
->   - add mipi txrx phy support
->   - remove bool and enum from uapi header
->   - add buf_prepare op
->   - correct some spelling problems
->   - return all queued buffers when starting stream failed
-> 
-> changes in V5: Sync with local changes,
->   - fix the SP height limit
->   - speed up the second stream capture
->   - the second stream can't force sync for rsz when start/stop streaming
->   - add frame id to param vb2 buf
->   - enable luminance maximum threshold
-> 
-> changes in V4:
->   - fix some bugs during development
->   - move quantization settings to rkisp1 subdev
->   - correct some spelling problems
->   - describe ports in dt-binding documents
-> 
-> changes in V3:
->   - add some comments
->   - fix wrong use of v4l2_async_subdev_notifier_register
->   - optimize two paths capture at a time
->   - remove compose
->   - re-struct headers
->   - add a tmp wiki page: http://opensource.rock-chips.com/wiki_Rockchip-isp1
-> 
-> changes in V2:
->   mipi-phy:
->     - use async probing
->     - make it be a child device of the GRF
->   isp:
->     - add dummy buffer
->     - change the way to get bus configuration, which make it possible to
->             add parallel sensor support in the future(without mipi-phy driver).
-> 
-> This patch series add a ISP(Camera) v4l2 driver for rockchip rk3288/rk3399 SoC.
-> 
-> Wiki Pages:
-> http://opensource.rock-chips.com/wiki_Rockchip-isp1
-> 
-> The deprecated g_mbus_config op is not dropped in  V6 because i am waiting tomasz's patches.
-> 
-> v4l2-compliance for V6(isp params/stats nodes are passed):
-> 
->     v4l2-compliance SHA   : 93dc5f20727fede5097d67f8b9adabe4b8046d5b
-> 
->     Compliance test for device /dev/video0:
-> 
->     Driver Info:
->             Driver name      : rkisp1
->             Card type        : rkisp1
->             Bus info         : platform:ff910000.isp
->             Driver version   : 4.16.0
->             Capabilities     : 0x84201000
->                     Video Capture Multiplanar
->                     Streaming
->                     Extended Pix Format
->                     Device Capabilities
->             Device Caps      : 0x04201000
->                     Video Capture Multiplanar
->                     Streaming
->                     Extended Pix Format
->     Media Driver Info:
->             Driver name      : rkisp1
->             Model            : rkisp1
->             Serial           : 
->             Bus info         : 
->             Media version    : 4.16.0
->             Hardware revision: 0x00000000 (0)
->             Driver version   : 4.16.0
->     Interface Info:
->             ID               : 0x03000007
->             Type             : V4L Video
->     Entity Info:
->             ID               : 0x00000006 (6)
->             Name             : rkisp1_selfpath
->             Function         : V4L2 I/O
->             Pad 0x01000009   : Sink
->               Link 0x02000021: from remote pad 0x1000004 of entity 'rkisp1-isp-subdev': Data, Enabled
-> 
->     Required ioctls:
->             test MC information (see 'Media Driver Info' above): OK
->             test VIDIOC_QUERYCAP: OK
-> 
->     Allow for multiple opens:
->             test second /dev/video0 open: OK
->             test VIDIOC_QUERYCAP: OK
->             test VIDIOC_G/S_PRIORITY: OK
->             test for unlimited opens: OK
-> 
->     Debug ioctls:
->             test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->             test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
->     Input ioctls:
->             test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->             test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->             test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->             test VIDIOC_ENUMAUDIO: OK (Not Supported)
->             test VIDIOC_G/S/ENUMINPUT: OK
->             test VIDIOC_G/S_AUDIO: OK (Not Supported)
->             Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
->     Output ioctls:
->             test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->             test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->             test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->             test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->             test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->             Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
->     Input/Output configuration ioctls:
->             test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->             test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->             test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->             test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
->     Control ioctls (Input 0):
->             test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->             test VIDIOC_QUERYCTRL: OK
->             test VIDIOC_G/S_CTRL: OK
->             test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->             test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->             test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->             Standard Controls: 9 Private Controls: 0
-> 
->     Format ioctls (Input 0):
->             test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->             test VIDIOC_G/S_PARM: OK (Not Supported)
->             test VIDIOC_G_FBUF: OK (Not Supported)
->                     fail: v4l2-test-formats.cpp(330): !colorspace
->                     fail: v4l2-test-formats.cpp(454): testColorspace(pix_mp.pixelformat, pix_mp.colorspace, pix_mp.ycbcr_enc, pix_m
->     p.quantization)
->             test VIDIOC_G_FMT: FAIL
->             test VIDIOC_TRY_FMT: OK (Not Supported)
->             test VIDIOC_S_FMT: OK (Not Supported)
->             test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                     fail: v4l2-test-formats.cpp(1288): doioctl(node, VIDIOC_G_SELECTION, &sel) != EINVAL
->             test Cropping: FAIL
->             test Composing: OK (Not Supported)
->             test Scaling: OK
-> 
->     Codec ioctls (Input 0):
->             test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->             test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->             test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
->     Buffer ioctls (Input 0):
->             test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                     fail: v4l2-test-buffers.cpp(525): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing, prob
->     ably due to earlier failing format tests.
->             test VIDIOC_EXPBUF: OK (Not Supported)
-> 
->     Total: 44, Succeeded: 42, Failed: 2, Warnings: 0
-> 
-> Jacob Chen (12):
->   media: doc: add document for rkisp1 meta buffer format
->   media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
->   media: rkisp1: add Rockchip ISP1 subdev driver
->   media: rkisp1: add ISP1 statistics driver
->   media: rkisp1: add ISP1 params driver
->   media: rkisp1: add capture device driver
->   media: rkisp1: add rockchip isp1 core driver
->   dt-bindings: Document the Rockchip ISP1 bindings
->   dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
->   ARM: dts: rockchip: add isp node for rk3288
->   ARM: dts: rockchip: add rx0 mipi-phy for rk3288
->   MAINTAINERS: add entry for Rockchip ISP1 driver
-> 
-> Jeffy Chen (1):
->   media: rkisp1: Add user space ABI definitions
-> 
-> Shunqian Zheng (3):
->   media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
->   arm64: dts: rockchip: add isp0 node for rk3399
->   arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-> 
-> Wen Nuan (1):
->   ARM: dts: rockchip: Add dts mipi-dphy TXRX1 node for rk3288
-> 
->  .../devicetree/bindings/media/rockchip-isp1.txt    |   69 +
->  .../bindings/media/rockchip-mipi-dphy.txt          |   90 +
->  Documentation/media/uapi/v4l/meta-formats.rst      |    2 +
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-params.rst   |   20 +
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst     |   18 +
->  MAINTAINERS                                        |   10 +
->  arch/arm/boot/dts/rk3288.dtsi                      |   33 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   25 +
->  drivers/media/platform/Kconfig                     |   10 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/rockchip/isp1/Makefile      |    8 +
->  drivers/media/platform/rockchip/isp1/capture.c     | 1751 ++++++++++++++++++++
->  drivers/media/platform/rockchip/isp1/capture.h     |  167 ++
->  drivers/media/platform/rockchip/isp1/common.h      |  110 ++
->  drivers/media/platform/rockchip/isp1/dev.c         |  626 +++++++
->  drivers/media/platform/rockchip/isp1/dev.h         |   93 ++
->  drivers/media/platform/rockchip/isp1/isp_params.c  | 1539 +++++++++++++++++
->  drivers/media/platform/rockchip/isp1/isp_params.h  |   49 +
->  drivers/media/platform/rockchip/isp1/isp_stats.c   |  508 ++++++
->  drivers/media/platform/rockchip/isp1/isp_stats.h   |   58 +
->  .../media/platform/rockchip/isp1/mipi_dphy_sy.c    |  868 ++++++++++
->  .../media/platform/rockchip/isp1/mipi_dphy_sy.h    |   15 +
->  drivers/media/platform/rockchip/isp1/regs.c        |  239 +++
->  drivers/media/platform/rockchip/isp1/regs.h        | 1550 +++++++++++++++++
->  drivers/media/platform/rockchip/isp1/rkisp1.c      | 1177 +++++++++++++
->  drivers/media/platform/rockchip/isp1/rkisp1.h      |  105 ++
->  drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +
->  include/uapi/linux/rkisp1-config.h                 |  798 +++++++++
->  include/uapi/linux/videodev2.h                     |    4 +
->  29 files changed, 9945 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
->  create mode 100644 drivers/media/platform/rockchip/isp1/Makefile
->  create mode 100644 drivers/media/platform/rockchip/isp1/capture.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/capture.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/common.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/dev.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/dev.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/regs.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/regs.h
->  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
->  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
->  create mode 100644 include/uapi/linux/rkisp1-config.h
-> 
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 466e3c8582f0..236a85d69957 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -16,6 +16,7 @@
+ 
+ #define pr_fmt(fmt)	"OF: " fmt
+ 
++#include <linux/bitmap.h>
+ #include <linux/console.h>
+ #include <linux/ctype.h>
+ #include <linux/cpu.h>
+@@ -1893,6 +1894,53 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+ EXPORT_SYMBOL_GPL(of_alias_get_id);
+ 
+ /**
++ * of_alias_get_alias_list - Get alias list for the given device driver
++ * @matches:	Array of OF device match structures to search in
++ * @stem:	Alias stem of the given device_node
++ * @bitmap:	Bitmap field pointer
++ * @nbits:	Maximum number of alias ID which can be recorded it bitmap
++ *
++ * The function travels the lookup table to record alias ids for the given
++ * device match structures and alias stem.
++ */
++void of_alias_get_alias_list(const struct of_device_id *matches,
++			     const char *stem, unsigned long *bitmap,
++			     unsigned int nbits)
++{
++	struct alias_prop *app;
++
++	/* Zero bitmap field to make sure that all the time it is clean */
++	bitmap_zero(bitmap, nbits);
++
++	mutex_lock(&of_mutex);
++	pr_debug("%s: Looking for stem: %s\n", __func__, stem);
++	list_for_each_entry(app, &aliases_lookup, link) {
++		pr_debug("%s: stem: %s, id: %d\n",
++			 __func__, app->stem, app->id);
++
++		if (strcmp(app->stem, stem) != 0) {
++			pr_debug("%s: stem comparison doesn't passed %s\n",
++				 __func__, app->stem);
++			continue;
++		}
++
++		if (app->id >= nbits) {
++			pr_debug("%s: ID %d greater then bitmap field %d\n",
++				__func__, app->id, nbits);
++			continue;
++		}
++
++		if (of_match_node(matches, app->np)) {
++			pr_debug("%s: Allocated ID %d\n", __func__, app->id);
++			set_bit(app->id, bitmap);
++		}
++		/* Alias exist but it not compatible with matches */
++	}
++	mutex_unlock(&of_mutex);
++}
++EXPORT_SYMBOL_GPL(of_alias_get_alias_list);
++
++/**
+  * of_alias_get_highest_id - Get highest alias id for the given stem
+  * @stem:	Alias stem to be examined
+  *
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4d25e4f952d9..e474710e3930 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -387,6 +387,9 @@ extern int of_phandle_iterator_args(struct of_phandle_iterator *it,
+ extern void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align));
+ extern int of_alias_get_id(struct device_node *np, const char *stem);
+ extern int of_alias_get_highest_id(const char *stem);
++extern void of_alias_get_alias_list(const struct of_device_id *matches,
++				    const char *stem, unsigned long *bitmap,
++				    unsigned int nbits);
+ 
+ extern int of_machine_is_compatible(const char *compat);
+ 
+-- 
+1.9.1
