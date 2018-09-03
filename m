@@ -1,78 +1,104 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 0/7] ARM32/64: DT overlay build support
-Date: Mon, 3 Sep 2018 10:26:21 -0700
-Message-ID: <a6db14b8-66df-ee47-e76b-8a03cb4dce17@gmail.com>
-References: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
- <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
- <183d979a-3849-7199-417f-3572b00dca5b@ti.com>
- <a137359f-f836-c8eb-61b4-9d1d4907ad93@gmail.com>
- <76ff8aa9-129b-403d-8ef0-fb000f697097@ti.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 05/30] iio: adc: move SUN4I_GPADC_CHANNEL define to
+ header file
+Date: Mon, 3 Sep 2018 18:28:40 +0100
+Message-ID: <20180903182840.77231c8b@archlinux>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+        <20180830154518.29507-6-embed3d@gmail.com>
+        <20180902210109.7bd4a567@archlinux>
+        <882cb5f9-867b-d120-5ef5-80a8bee2d628@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <76ff8aa9-129b-403d-8ef0-fb000f697097@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <882cb5f9-867b-d120-5ef5-80a8bee2d628@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, linux@armlinux.org.uk, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, eugen.hristev@microchip.com, rdunlap@infradead.org, vilhelm.gray@gmail.com, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, geert+renesas@glider.be, lukas@wunner.de, icenowy@aosc.io, arnd@arndb.de, broonie@kernel.org, arnaud.pouliquen@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGVybywKCk9uIDA5LzAzLzE4IDAyOjAzLCBUZXJvIEtyaXN0byB3cm90ZToKPiBPbiAzMC8w
-OC8xOCAyMzozMiwgRnJhbmsgUm93YW5kIHdyb3RlOgo+PiBIaSBUZXJvLAo+Pgo+PiAoUmVhbGx5
-IGFkZGluZyBNYXJrIGFzIGEgY2M6IHRoaXMgdGltZS7CoCBMYXN0IHRpbWUgSSBhZGRlZCBoaW0g
-YXMKPj4gYSBiY2M6IGJ5IG1pc3Rha2UuKQo+Pgo+Pgo+PiBPbiAwOC8zMC8xOCAxMDoxMiwgVGVy
-byBLcmlzdG8gd3JvdGU6Cj4+PiBPbiAyOS8wOC8xOCAyMTo0MCwgRnJhbmsgUm93YW5kIHdyb3Rl
-Ogo+Pj4+ICsgTWFyayBSdXRsYW5kLCBqdXN0IGluIGNhc2UgaGUgaXMgaW50ZXJlc3RlZAo+Pj4+
-Cj4+Pj4gT24gMDgvMjgvMTggMDU6MzIsIFRlcm8gS3Jpc3RvIHdyb3RlOgo+Pj4+PiBIaSwKPj4+
-Pj4KPj4+Pj4gVGhpcyBzZXJpZXMgaW50cm9kdWNlcyBkZXZpY2V0cmVlIG92ZXJsYXkgYnVpbGRp
-bmcgc3VwcG9ydCBmb3IgQVJNCj4+Pj4+IHBsYXRmb3Jtcy4gVGhlIC5kdGJvIHRhcmdldCBpcyBp
-bnRyb2R1Y2VkIGdsb2JhbGx5LCB0aGVuIG1ha2VmaWxlCj4+Pj4+IGNoYW5nZXMgZm9yIGJvdGgg
-YXJtMzIvNjQgZm9yIHN1cHBvcnRpbmcgdGhlIC5kdGJvIHRhcmdldCwgY2hhbmdlcwo+Pj4+PiB0
-byBzdXBwb3J0IHN1Yi1kaXIgbWFrZWZpbGUgZmxhZ3MsIGFuZCBmaW5hbGx5IGFkZGluZyB0aGUg
-RFRDIGZsYWdzCj4+Pj4+IG92ZXJyaWRlIGZvciBUSSBwbGF0Zm9ybXMsIGFzIHRoYXQgaXMgd2hl
-cmUgd2Ugd2FudCB0byBpbnRyb2R1Y2UKPj4+Pj4gdGhlIERUIG92ZXJsYXkgc3VwcG9ydCBpbml0
-aWFsbHkuCj4+Pj4+Cj4+Pj4+IFRoZSBBUk0gbWFrZWZpbGUgY2hhbmdlcyBmb3Igc3VwcG9ydGlu
-ZyBEVFMgc3ViLW1ha2VmaWxlcyBkb24ndCBsb29rCj4+Pj4+IHRvbyBjbGVhbiwgYnV0IHRoYXQg
-d2FzIHRoZSBvbmx5IHdheSBJIGNvdWxkIGZpZ3VyZSBvdXQgaG93IHRvCj4+Pj4+IGdldCBpdCBk
-b25lLgo+Pj4+Pgo+Pj4+PiAtVGVybwo+Pj4+Pgo+Pj4+PiAtLcKgCj4+Pj4+Cj4+Pj4KPj4+PiBU
-aGlzIHNlcmllcyBkb2VzIHRocmVlIHVucmVsYXRlZCB0aGluZ3M6Cj4+Pgo+Pj4gV2VsbCwgSSB3
-YXMga2luZCBvZiB0cnlpbmcgdG8gc2hvdyB0aGUgd2hvbGUgc29sdXRpb24gaGVyZSBidXQuLi4K
-Pj4KPj4gVGhhdCBhY3R1YWxseSBtYWtlcyBzZW5zZSwgYW5kIG5vcm1hbGx5IEkgd291bGRuJ3Qg
-aGF2ZSBhc2tlZCBmb3IgdGhlCj4+IHNwbGl0LsKgIEl0IG1pZ2h0IGJlIHRoZSBjYXNlIHRoYXQg
-SSBhbSBiZWluZyB0b28gY2F1dGlvdXMsIGFuZCBtYXliZQo+PiB0aGVyZSB3b24ndCBiZSBtdWNo
-IGRpc2N1c3Npb24gYXQgYWxsLsKgIEkgd2FzIGp1c3QgY29uY2VybmVkIHRoYXQgaW4KPj4gdGhp
-cyBjYXNlIHNvbWUgb2YgdGhlIGNvbmNlcHRzIG1pZ2h0IGdldCBvdmVybG9va2VkIGR1ZSB0byBk
-aXNjdXNzaW9uCj4+IG9mIG90aGVyIGNvbmNlcHRzLsKgIEknbSBhbHNvIGV4cGVjdGluZyBkaWZm
-ZXJlbnQgcGVvcGxlIHRvIGNhcmUKPj4gYWJvdXQgZWFjaCBvZiB0aGUgY29uY2VwdHMuCj4+Cj4+
-Pgo+Pj4+ICgxKSBjcmVhdGUgYSB0aSBzcGVjaWZpYyBkdHMgc3ViZGlyZWN0b3J5IGFyY2gvYXJt
-L2Jvb3QvZHRzL3RpLwo+Pj4+Cj4+Pj4gKDIpIGNyZWF0ZSBhIHJ1bGUgZm9yIGNyZWF0aW5nIGEg
-LmR0Ym8gZnJvbSBhIC5kdHNvCj4+Pj4KPj4+PiAoMykgYWRkIGEgZHRjIGNvbXBpbGUgZmxhZyB0
-byBhZGQgcGhhbmRsZSBzeW1ib2wgaW5mb3JtYXRpb24gdG8KPj4+PiDCoMKgwqDCoMKgIGFsbCAu
-ZHRiIGZpbGVzIGNyZWF0ZWQgZnJvbSBhcmNoL2FybS9ib290L2R0cy90aS8gYW5kCj4+Pj4gwqDC
-oMKgwqDCoCBhcmNoL2FybTY0L2Jvb3QvZHRzL3RpLwo+Pj4+Cj4+Pj4gUGxlYXNlIHNwbGl0IHRo
-ZSBwYXRjaGVzIGludG8gdGhyZWUgaW5kZXBlbmRlbnQgc2VyaWVzIHNvIHRoYXQKPj4+PiBlYWNo
-IG9mIHRoZSB0aHJlZSBjb25jZXB0cyBjYW4gYmUgZGlzY3Vzc2VkIHNlcGFyYXRlbHkuCj4+Pgo+
-Pj4gT2sgd2lsbCBkbyB0aGF0LCBob3BlZnVsbHkgdG9tb3Jyb3cuIERpZG4ndCBtYW5hZ2UgdG8g
-c3F1ZWV6ZSBpbiB0aW1lIHRvIGRvIGl0IHRvZGF5Lgo+Pgo+PiBUaGFua3MsIEkgYXBwcmVjaWF0
-ZSB5b3VyIGZsZXhpYmlsaXR5Lgo+IAo+IEhpIEZyYW5rLAo+IAo+IEkgZGlkIHBvc3QgdjIgYXMg
-YSBzcGxpdCBzZXJpZXMgb24gRnJpZGF5LCBidXQgc2VlbXMgSSBtaXNzZWQgYWRkaW5nCj4geW91
-IGluIHRoZSBkZWxpdmVyeSBmb3IgdGhvc2UgYnkgYWNjaWRlbnQuLi4gc29ycnkgYWJvdXQgdGhh
-dC4gRG8geW91Cj4gd2FudCBtZSB0byByZXBvc3Qgb3IgY2FuIHlvdSBwaWNrIHRob3NlIGZyb20g
-dGhlIGRldmljZXRyZWUgbGlzdD8KClllcywgcGxlYXNlIHJlcG9zdCB0byBiZSBzdXJlIEkgc2Vl
-IGFsbCB0aGUgcmVwbHlzLgoKVGhhbmtzLAoKRnJhbmsKCgo+IC1UZXJvCj4gCj4+Cj4+IC1GcmFu
-awo+Pgo+Pj4KPj4+IC1UZXJvCj4+PiAtLcKgCj4+Pgo+Pgo+IAo+IC0tIAo+IFRleGFzIEluc3Ry
-dW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLiBZLXR1
-bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5r
-aQo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Mon, 3 Sep 2018 16:24:32 +0200
+Philipp Rossak <embed3d@gmail.com> wrote:
+
+> On 02.09.2018 22:01, Jonathan Cameron wrote:
+> > On Thu, 30 Aug 2018 17:44:53 +0200
+> > Philipp Rossak <embed3d@gmail.com> wrote:
+> >   
+> >> We are moving the SUN4I_GPADC_CHANNEL define to the header file.  
+> > Maxime has raised this point in other patches...
+> > 
+> > Why?  Obvious what but I have no idea why you are doing this.
+> > 
+> > Thanks,
+> > 
+> > Jonathan  
+> There are two reasons:
+> 1. Personal taste: I like to have the #define stuff in the header file.
+> 2. When I started the rework I had to get some better overview, so I 
+> moved it...
+> 
+> Since those two reasons are no good reasons to submit a patch I will 
+> drop it and keep it in the *.c file.
+Don't move it.
+
+For a 'utility' type define like this that is just about cutting
+down on code repetition it is nice to be able to see what it does near
+to where it is used.
+
+Also, as a general rule kernel style is to not put things in a header
+unless they are needed in multiple files.  There are exceptions, but
+it is generally felt keeping things local to where they are used
+leads to easier to review code.
+
+Jonathan
+> 
+> Philipp
+> 
+> >>
+> >> Signed-off-by: Philipp Rossak <embed3d@gmail.com>
+> >> ---
+> >>   drivers/iio/adc/sun4i-gpadc-iio.c | 9 ---------
+> >>   include/linux/mfd/sun4i-gpadc.h   | 9 +++++++++
+> >>   2 files changed, 9 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+> >> index d95dd0fde2a6..666329940e1e 100644
+> >> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> >> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> >> @@ -109,15 +109,6 @@ struct sun4i_gpadc_iio {
+> >>   	struct device			*sensor_device;
+> >>   };
+> >>   
+> >> -#define SUN4I_GPADC_ADC_CHANNEL(_channel, _name) {		\
+> >> -	.type = IIO_VOLTAGE,					\
+> >> -	.indexed = 1,						\
+> >> -	.channel = _channel,					\
+> >> -	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> >> -	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> >> -	.datasheet_name = _name,				\
+> >> -}
+> >> -
+> >>   static struct iio_map sun4i_gpadc_hwmon_maps[] = {
+> >>   	{
+> >>   		.adc_channel_label = "temp_adc",
+> >> diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+> >> index 139872c2e0fe..54c7c9375c1b 100644
+> >> --- a/include/linux/mfd/sun4i-gpadc.h
+> >> +++ b/include/linux/mfd/sun4i-gpadc.h
+> >> @@ -90,6 +90,15 @@
+> >>   /* 10s delay before suspending the IP */
+> >>   #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
+> >>   
+> >> +#define SUN4I_GPADC_ADC_CHANNEL(_channel, _name) {		\
+> >> +	.type = IIO_VOLTAGE,					\
+> >> +	.indexed = 1,						\
+> >> +	.channel = _channel,					\
+> >> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> >> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> >> +	.datasheet_name = _name,				\
+> >> +}
+> >> +
+> >>   struct sun4i_gpadc_dev {
+> >>   	struct device			*dev;
+> >>   	struct regmap			*regmap;  
+> >   
