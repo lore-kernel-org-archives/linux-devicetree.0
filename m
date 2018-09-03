@@ -1,93 +1,117 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 net-next 7/7] net: dsa: Add Lantiq / Intel DSA driver
- for vrx200
-Date: Mon, 3 Sep 2018 12:54:32 -0700
-Message-ID: <eb5c0815-e80c-7fd7-a14a-ccc3f28a7c93@gmail.com>
-References: <20180901114535.9070-1-hauke@hauke-m.de>
- <20180901120511.10112-1-hauke@hauke-m.de>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 01/11] arm/arm64: dts: msm8974/msm8916: thermal: Split
+ address space into two
+Date: Mon, 3 Sep 2018 13:02:55 -0700
+Message-ID: <20180903200255.GL3456@tuxbook-pro>
+References: <cover.1535462942.git.amit.kucheria@linaro.org>
+ <882739b10bd0a3b655baef9b7ee1958680aa0b04.1535462942.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180901120511.10112-1-hauke@hauke-m.de>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>, davem@davemloft.net
-Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <882739b10bd0a3b655baef9b7ee1958680aa0b04.1535462942.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, edubezval@gmail.com, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue 28 Aug 06:38 PDT 2018, Amit Kucheria wrote:
 
+> We've earlier added support to split the register address space into TM
+> and SROT regions.
+> 
+> Split up the regmap address space into two for the remaining platforms
+> that have a similar register layout and make corresponding changes to
+> the get_temp_common() function used by these platforms.
+> 
+> Since tsens-common.c/init_common() currently only registers one address
+> space, the order is important (TM before SROT).  This is OK since the
+> code doesn't really use the SROT functionality yet.
+> 
 
-On 9/1/2018 5:05 AM, Hauke Mehrtens wrote:
-> This adds the DSA driver for the GSWIP Switch found in the VRX200 SoC.
-> This switch is integrated in the DSL SoC, this SoC uses a GSWIP version
-> 2.1, there are other SoCs using different versions of this IP block, but
-> this driver was only tested with the version found in the VRX200.
-> Currently only the basic features are implemented which will forward all
-> packages to the CPU and let the CPU do the forwarding. The hardware also
-> support Layer 2 offloading which is not yet implemented in this driver.
-> 
-> The GPHY FW loaded is now done by this driver and not any more by the
-> separate driver in drivers/soc/lantiq/gphy.c, I will remove this driver
-> is a separate patch. to make use of the GPHY this switch driver is
-> needed anyway. Other SoCs have more embedded GPHYs so this driver should
-> support a variable number of GPHYs. After the firmware was loaded the
-> GPHY can be probed on the MDIO bus and it behaves like an external GPHY,
-> without the firmware it can not be probed on the MDIO bus.
-> 
-> Currently this depends on SOC_TYPE_XWAY because the SoC revision
-> detection function ltq_soc_type() is used to load the correct GPHY
-> firmware on the VRX200 SoCs.
-> 
-> The clock names in the sysctrl.c file have to be changed because the
-> clocks are now used by a different driver. This should be cleaned up and
-> a real common clock driver should provide the clocks instead.
-> 
-> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+Having a single patch touching both code and dts will cause merge issues
+as this patch travel upstream. Even more arm-soc expects arm and arm64
+dts changes to come in different pull requests.
+
+Please split it so that the three pieces can be picked up by respective
+maintainer.
+
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
+>  arch/arm/boot/dts/qcom-msm8974.dtsi   | 5 +++--
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 5 +++--
+>  drivers/thermal/qcom/tsens-common.c   | 5 +++--
+>  3 files changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index d9019a49b292..56dbbf788d15 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -427,9 +427,10 @@
+>  			};
+>  		};
+>  
+> -		tsens: thermal-sensor@fc4a8000 {
+> +		tsens: thermal-sensor@fc4a9000 {
+>  			compatible = "qcom,msm8974-tsens";
+> -			reg = <0xfc4a8000 0x2000>;
+> +			reg = <0xfc4a9000 0x1000>, /* TM */
+> +			      <0xfc4a8000 0x1000>; /* SROT */
+>  			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+>  			nvmem-cell-names = "calib", "calib_backup";
+>  			#thermal-sensor-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 7b32b8990d62..6a277fce3333 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -761,9 +761,10 @@
+>  			};
+>  		};
+>  
+> -		tsens: thermal-sensor@4a8000 {
+> +		tsens: thermal-sensor@4a9000 {
+>  			compatible = "qcom,msm8916-tsens";
+> -			reg = <0x4a8000 0x2000>;
+> +			reg = <0x4a9000 0x1000>, /* TM */
+> +			      <0x4a8000 0x1000>; /* SROT */
+>  			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+>  			nvmem-cell-names = "calib", "calib_sel";
+>  			#thermal-sensor-cells = <1>;
+> diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
+> index 6207d8d92351..478739543bbc 100644
+> --- a/drivers/thermal/qcom/tsens-common.c
+> +++ b/drivers/thermal/qcom/tsens-common.c
+> @@ -21,7 +21,7 @@
+>  #include <linux/regmap.h>
+>  #include "tsens.h"
+>  
+> -#define S0_ST_ADDR		0x1030
+> +#define STATUS_OFFSET		0x30
+>  #define SN_ADDR_OFFSET		0x4
+>  #define SN_ST_TEMP_MASK		0x3ff
+>  #define CAL_DEGC_PT1		30
+> @@ -107,8 +107,9 @@ int get_temp_common(struct tsens_device *tmdev, int id, int *temp)
+>  	unsigned int status_reg;
+>  	int last_temp = 0, ret;
+>  
+> -	status_reg = S0_ST_ADDR + s->hw_id * SN_ADDR_OFFSET;
+> +	status_reg = tmdev->tm_offset + STATUS_OFFSET + s->hw_id * SN_ADDR_OFFSET;
 
-Looks great, just a few suggestions below
+Wasn't this change part of the previous set that introduced the
+tm_offset? If not how did we handle the fact that tmdev->map is already
+indented 0x1000 bytes?
 
-[snip]
+Both changes looks good, but I'm worries about the order of things.
 
-> +static void gswip_adjust_link(struct dsa_switch *ds, int port,
-> +			      struct phy_device *phydev)
-> +{
-> +	struct gswip_priv *priv = ds->priv;
-> +	u16 macconf = phydev->mdio.addr & GSWIP_MDIO_PHY_ADDR_MASK;
-> +	u16 miirate = 0;
-> +	u16 miimode;
-> +	u16 lcl_adv = 0, rmt_adv = 0;
-> +	u8 flowctrl;
+Regards,
+Bjorn
+
+>  	ret = regmap_read(tmdev->map, status_reg, &code);
 > +
-> +	/* do not run this for the CPU port */
-> +	if (dsa_is_cpu_port(ds, port))
-> +		return;
-
-Typically we expect the adjust_link callback to run for fixed link 
-ports, that is inter-switch links (between switches) or between the CPU 
-port and the Ethernet MAC attached to the switch. Here you are running 
-this for the user facing ports (IIRC), which should really not be 
-necessary, most Ethernet switches will be able to look at their built-in 
-PHY's state and configure the switch's port automatically. Maybe this is 
-not possible here because you had to disable polling?
-
-Can you consider implementing PHYLINK operations which would make the 
-driver more future proof, should you consider newer generations of 
-switches that support 10G PHY, SGMII, SFP/SFF and so on?
-
-[snip]
-
-> +	if (priv->ds->dst->cpu_dp->index != priv->hw_info->cpu_port) {
-> +		dev_err(dev, "wrong CPU port defined, HW only supports port: %i",
-> +			priv->hw_info->cpu_port);
-> +		err = -EINVAL;
-> +		goto mdio_bus;
-> +	}
-
-There are a number of switches (b53, qca8k, mt7530) that have this 
-requirement, we should probably be moving this check down into the core 
-DSA layer and allow either to continue but disable switch tagging, if it 
-was requested. Andrew what do you think?
--- 
-Florian
+>  	if (ret)
+>  		return ret;
+>  	last_temp = code & SN_ST_TEMP_MASK;
+> -- 
+> 2.17.1
+> 
