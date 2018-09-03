@@ -1,80 +1,71 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v2 2/7] net: phy: mscc: factorize function for getting LED mode from DT
-Date: Mon,  3 Sep 2018 10:48:48 +0200
-Message-ID: <20180903084853.18092-2-quentin.schulz@bootlin.com>
-References: <20180903084853.18092-1-quentin.schulz@bootlin.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180903084853.18092-1-quentin.schulz@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: allan.nielsen@microchip.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v2 1/2] dt-bindings: power: Add Spreadtrum SC2731 charger documentation
+Date: Mon,  3 Sep 2018 16:55:45 +0800
+Message-ID: <a582871f84c4dd588ae1651d1d9192cc80e2b272.1535964281.git.baolin.wang@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, krzk@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Microsemi PHYs support different LED modes depending on the variant, so
-let's factorize the code so we just have to give the supported modes
-while the logic behind getting the mode remains identical.
+This patch adds the binding documentation for Spreadtrum SC2731 charger
+device.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
+Changes from v1:
+ - Add parent node.
+ - Add some battery standard properties.
+---
+ .../bindings/power/supply/sc2731_charger.txt       |   40 ++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
 
-added in v2
-
- drivers/net/phy/mscc.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index af433f226ef4..aa37e8547cd0 100644
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -104,8 +104,24 @@ enum rgmii_rx_clock_delay {
- #define DOWNSHIFT_COUNT_MAX		  5
- 
- #define MAX_LEDS			  4
-+#define VSC85XX_SUPP_LED_MODES (BIT(VSC8531_LINK_ACTIVITY) | \
-+				BIT(VSC8531_LINK_1000_ACTIVITY) | \
-+				BIT(VSC8531_LINK_100_ACTIVITY) | \
-+				BIT(VSC8531_LINK_10_ACTIVITY) | \
-+				BIT(VSC8531_LINK_100_1000_ACTIVITY) | \
-+				BIT(VSC8531_LINK_10_1000_ACTIVITY) | \
-+				BIT(VSC8531_LINK_10_100_ACTIVITY) | \
-+				BIT(VSC8531_DUPLEX_COLLISION) | \
-+				BIT(VSC8531_COLLISION) | \
-+				BIT(VSC8531_ACTIVITY) | \
-+				BIT(VSC8531_AUTONEG_FAULT) | \
-+				BIT(VSC8531_SERIAL_MODE) | \
-+				BIT(VSC8531_FORCE_LED_OFF) | \
-+				BIT(VSC8531_FORCE_LED_ON))
+diff --git a/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt b/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
+new file mode 100644
+index 0000000..5266fab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
+@@ -0,0 +1,40 @@
++Spreadtrum SC2731 PMIC battery charger binding
 +
- struct vsc8531_private {
- 	int rate_magic;
-+	u16 supp_led_modes;
- 	u8 leds_mode[MAX_LEDS];
- 	u8 nleds;
- };
-@@ -401,6 +417,7 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
- 				   char *led,
- 				   u8 default_mode)
- {
-+	struct vsc8531_private *priv = phydev->priv;
- 	struct device *dev = &phydev->mdio.dev;
- 	struct device_node *of_node = dev->of_node;
- 	u8 led_mode;
-@@ -411,7 +428,7 @@ static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
- 
- 	led_mode = default_mode;
- 	err = of_property_read_u8(of_node, led, &led_mode);
--	if (!err && (led_mode > 15 || led_mode == 7 || led_mode == 11)) {
-+	if (!err && !(BIT(led_mode) & priv->supp_led_modes)) {
- 		phydev_err(phydev, "DT %s invalid\n", led);
- 		return -EINVAL;
- 	}
-@@ -655,6 +672,7 @@ static int vsc85xx_probe(struct phy_device *phydev)
- 
- 	vsc8531->rate_magic = rate_magic;
- 	vsc8531->nleds = 2;
-+	vsc8531->supp_led_modes = VSC85XX_SUPP_LED_MODES;
- 
- 	return vsc85xx_dt_led_modes_get(phydev, default_mode);
- }
++Required properties:
++ - compatible: Should be "sprd,sc2731-charger".
++ - reg: Address offset of charger register.
++ - phys: Contains a phandle to the USB phy.
++
++Optional Properties:
++- monitored-battery: phandle of battery characteristics devicetree node.
++  The charger uses the following battery properties:
++- charge-term-current-microamp: current for charge termination phase.
++- constant-charge-voltage-max-microvolt: maximum constant input voltage.
++  See Documentation/devicetree/bindings/power/supply/battery.txt
++
++Example:
++
++	bat: battery {
++		compatible = "simple-battery";
++		charge-term-current-microamp = <120000>;
++		constant-charge-voltage-max-microvolt = <4350000>;
++		......
++	};
++
++	sc2731_pmic: pmic@0 {
++		compatible = "sprd,sc2731";
++		reg = <0>;
++		spi-max-frequency = <26000000>;
++		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		charger@0 {
++			compatible = "sprd,sc2731-charger";
++			reg = <0x0>;
++			phys = <&ssphy>;
++			monitored-battery = <&bat>;
++		};
++	};
 -- 
-2.17.1
+1.7.9.5
