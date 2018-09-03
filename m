@@ -1,53 +1,31 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 18/30] iio: adc: sun4i-gpadc-iio: rework:
- support multiple sensors
-Date: Mon, 3 Sep 2018 15:58:30 +0200
-Message-ID: <3722842b-1aa3-ea46-c0ec-7a01bc8a723e@gmail.com>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-19-embed3d@gmail.com>
- <20180902211125.0098c808@archlinux>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v6 00/17] Rockchip ISP1 Driver
+Date: Mon, 03 Sep 2018 16:15:18 +0200
+Message-ID: <8351204.OBedv8CUKg@phil>
+References: <20180308094807.9443-1-jacob-chen@iotwrt.com> <6761c936-82c7-e36a-de21-c0e827b68a3e@xs4all.nl> <CAAFQd5An=Dc5je_pedo+u8USMwtHMSfSBztaSA4G6Abn3xgbsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBD257DPK24NRBCP4WTOAKGQEIC4BZOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180902211125.0098c808@archlinux>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAFQd5An=Dc5je_pedo+u8USMwtHMSfSBztaSA4G6Abn3xgbsQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, william.hu@rock-chips.com, Jacob Chen <jacob-chen@iotwrt.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?utf-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Chen Jacob <jacob2.chen@rock-chips.com>, ezequiel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-On 02.09.2018 22:11, Jonathan Cameron wrote:
-> This feels like a good place to factor out the code into a utility
-> function that just does one of them.  That should hopefully
-> reduce the indenting etc enough to make the code easier to read.
+Am Montag, 3. September 2018, 15:50:20 CEST schrieb Tomasz Figa:
+> Hi Hans,
 > 
->> +		info->tzds[i].info = info;
->> +		info->tzds[i].sensor_id = i;
->> +
->> +		info->tzds[i].tzd = thermal_zone_of_sensor_register(
->> +				info->sensor_device,
->> +				i, &info->tzds[i], &sun4i_ts_tz_ops);
->> +		/*
->> +		 * Do not fail driver probing when failing to register in
->> +		 * thermal because no thermal DT node is found.
->> +		 */
->> +		if (IS_ERR(info->tzds[i].tzd) && \
->> +				PTR_ERR(info->tzds[i].tzd) != -ENODEV) {
->> +			dev_err(&pdev->dev,
->> +				"could not register thermal sensor: %ld\n",
->> +				PTR_ERR(info->tzds[i].tzd));
->> +			return PTR_ERR(info->tzds[i].tzd);
->> +		}
+> On Mon, Sep 3, 2018 at 10:07 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> >
+> > Hi Jacob,
+> >
+> > What is the status of this patch series? I haven't seen any updates for quite
+> > some time now, and I thought that it was getting close.
+> >
+> > It would be nice to see this go in.
+> 
+> AFAIK, Jacob has left the project. +william.hu@rock-chips.com , who
+> has been working on addressing the remaining comments for a while.
 
-So this code above should be placed in a separate function and called by 
-the for loop?
-Did I understand that right?
-
-Philipp
+also I think Ezequiel has spent time on the vpu driver.
