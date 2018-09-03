@@ -1,26 +1,64 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6sx-sdb: enable gpio buttons as wakeup
- source
-Date: Mon, 3 Sep 2018 10:27:45 +0800
-Message-ID: <20180903022743.GF3850@dragon>
-References: <1535612379-8793-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH] arm64: dts: ls208xa: add second duart
+Date: Mon, 3 Sep 2018 10:31:22 +0800
+Message-ID: <20180903023120.GG3850@dragon>
+References: <20180830090038.6956-1-kurt@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1535612379-8793-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180830090038.6956-1-kurt@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+To: Kurt Kanzenbach <kurt@linutronix.de>
+Cc: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2018 at 02:59:39PM +0800, Anson Huang wrote:
-> This patch enables i.MX6SX SDB board's below GPIO buttons
-> as wakeup sources:
-> 
-> SW4(FUNC1): KEY_VOLUMEUP
-> SW5(FUNC2): KEY_VOLUMEDOWN
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+It looks good to me.  @Leo, are you okay with it?
 
-Applied, thanks.
+Shawn
+
+On Thu, Aug 30, 2018 at 11:00:38AM +0200, Kurt Kanzenbach wrote:
+> The NXP LS208xA SoCs have two dual uarts. Thus, add the second one.
+> 
+> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> index 8cb78dd99672..547a86ec7cd2 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> @@ -22,6 +22,8 @@
+>  		crypto = &crypto;
+>  		serial0 = &serial0;
+>  		serial1 = &serial1;
+> +		serial2 = &serial2;
+> +		serial3 = &serial3;
+>  	};
+>  
+>  	cpu: cpus {
+> @@ -221,6 +223,20 @@
+>  			interrupts = <0 32 0x4>; /* Level high type */
+>  		};
+>  
+> +		serial2: serial@21d0500 {
+> +			compatible = "fsl,ns16550", "ns16550a";
+> +			reg = <0x0 0x21d0500 0x0 0x100>;
+> +			clocks = <&clockgen 4 3>;
+> +			interrupts = <0 33 0x4>; /* Level high type */
+> +		};
+> +
+> +		serial3: serial@21d0600 {
+> +			compatible = "fsl,ns16550", "ns16550a";
+> +			reg = <0x0 0x21d0600 0x0 0x100>;
+> +			clocks = <&clockgen 4 3>;
+> +			interrupts = <0 33 0x4>; /* Level high type */
+> +		};
+> +
+>  		cluster1_core0_watchdog: wdt@c000000 {
+>  			compatible = "arm,sp805-wdt", "arm,primecell";
+>  			reg = <0x0 0xc000000 0x0 0x1000>;
+> -- 
+> 2.11.0
+> 
