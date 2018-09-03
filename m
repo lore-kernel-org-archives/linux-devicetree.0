@@ -1,56 +1,169 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 20/30] iio: adc: sun4i-gpadc-iio: rework:
- device specific suspend & resume
-Date: Mon, 3 Sep 2018 11:44:04 +0200
-Message-ID: <20180903094404.ih2fsqsetz6oo7ie@flea>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-21-embed3d@gmail.com>
- <20180831090915.agbldint76ngj5jf@flea>
- <ddd06c43-026e-2801-dc36-053d469e43f3@gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] media: Add controls for JPEG quantization tables
+Date: Mon, 3 Sep 2018 11:50:22 +0200
+Message-ID: <ec1dab04-1890-5555-44cf-2cdadc79c1a6@xs4all.nl>
+References: <20180831155245.19235-1-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2x2tyzi3ftzmnojb"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB34EWTOAKGQED2KDIYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <ddd06c43-026e-2801-dc36-053d469e43f3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180831155245.19235-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---2x2tyzi3ftzmnojb
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Fri, Aug 31, 2018 at 02:05:59PM +0200, Philipp Rossak wrote:
+On 08/31/2018 05:52 PM, Ezequiel Garcia wrote:
+> From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
+> Add V4L2_CID_JPEG_QUANTIZATION compound control to allow userspace
+> configure the JPEG quantization tables.
 > 
-> On 31.08.2018 11:09, Maxime Ripard wrote:
-> > > +static int sun4i_ths_suspend(struct sun4i_gpadc_iio *info)
-> > suspend is already a hook in the kernel, which hasn't the same meaning
-> > than runtime_suspend (and the same applies to resume), so we'd rather
-> > pick a better name. And all the functions (and the driver) use gpadc,
-> > please continue to use that prefix.
+> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+>  .../media/uapi/v4l/extended-controls.rst      | 23 +++++++++++++++++++
+>  .../media/videodev2.h.rst.exceptions          |  1 +
+>  drivers/media/v4l2-core/v4l2-ctrls.c          | 10 ++++++++
+>  include/uapi/linux/v4l2-controls.h            |  5 ++++
+>  include/uapi/linux/videodev2.h                |  1 +
+>  5 files changed, 40 insertions(+)
 > 
-> I agree.
-> For the newer sensors (from H3) the Sensor is referenced in the datasheets
-> as Thermal Sensor short THS. So I would like to use for the newer sensors
-> that prefix. Is that ok?
+> diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
+> index 9f7312bf3365..e0dd03e452de 100644
+> --- a/Documentation/media/uapi/v4l/extended-controls.rst
+> +++ b/Documentation/media/uapi/v4l/extended-controls.rst
+> @@ -3354,7 +3354,30 @@ JPEG Control IDs
+>      Specify which JPEG markers are included in compressed stream. This
+>      control is valid only for encoders.
+>  
+> +.. _jpeg-quant-tables-control:
+>  
+> +``V4L2_CID_JPEG_QUANTIZATION (struct)``
+> +    Specifies the luma and chroma quantization matrices for encoding
+> +    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. The two matrices
+> +    must be set in JPEG zigzag order, as per the JPEG specification.
 
-Not really. The consistency within the driver is more important.
+Can you change "JPEG specification" to a reference to the JPEG spec entry
+in bibio.rst?
 
-Maxiem
+> +
+> +
+> +.. c:type:: struct v4l2_ctrl_jpeg_quantization
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table:: struct v4l2_ctrl_jpeg_quantization
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - __u8
+> +      - ``luma_quantization_matrix[64]``
+> +      - Sets the luma quantization table.
+> +
+> +    * - __u8
+> +      - ``chroma_quantization_matrix[64]``
+> +      - Sets the chroma quantization table.
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---2x2tyzi3ftzmnojb--
+Just checking: the JPEG standard specifies this as unsigned 8-bit values as well?
+
+>  
+>  .. flat-table::
+>      :header-rows:  0
+> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+> index ca9f0edc579e..a0a38e92bf38 100644
+> --- a/Documentation/media/videodev2.h.rst.exceptions
+> +++ b/Documentation/media/videodev2.h.rst.exceptions
+> @@ -129,6 +129,7 @@ replace symbol V4L2_CTRL_TYPE_STRING :c:type:`v4l2_ctrl_type`
+>  replace symbol V4L2_CTRL_TYPE_U16 :c:type:`v4l2_ctrl_type`
+>  replace symbol V4L2_CTRL_TYPE_U32 :c:type:`v4l2_ctrl_type`
+>  replace symbol V4L2_CTRL_TYPE_U8 :c:type:`v4l2_ctrl_type`
+> +replace symbol V4L2_CTRL_TYPE_JPEG_QUANTIZATION :c:type:`v4l2_ctrl_type`
+>  
+>  # V4L2 capability defines
+>  replace define V4L2_CAP_VIDEO_CAPTURE device-capabilities
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 599c1cbff3b9..305bd7a9b7f1 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -999,6 +999,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_JPEG_RESTART_INTERVAL:	return "Restart Interval";
+>  	case V4L2_CID_JPEG_COMPRESSION_QUALITY:	return "Compression Quality";
+>  	case V4L2_CID_JPEG_ACTIVE_MARKER:	return "Active Markers";
+> +	case V4L2_CID_JPEG_QUANTIZATION:	return "JPEG Quantization Tables";
+>  
+>  	/* Image source controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> @@ -1286,6 +1287,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_DETECT_MD_REGION_GRID:
+>  		*type = V4L2_CTRL_TYPE_U8;
+>  		break;
+> +	case V4L2_CID_JPEG_QUANTIZATION:
+> +		*type = V4L2_CTRL_TYPE_JPEG_QUANTIZATION;
+> +		break;
+>  	case V4L2_CID_DETECT_MD_THRESHOLD_GRID:
+>  		*type = V4L2_CTRL_TYPE_U16;
+>  		break;
+> @@ -1612,6 +1616,9 @@ static int std_validate(const struct v4l2_ctrl *ctrl, u32 idx,
+>  			return -ERANGE;
+>  		return 0;
+>  
+> +	case V4L2_CTRL_TYPE_JPEG_QUANTIZATION:
+> +		return 0;
+> +
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -2133,6 +2140,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  	case V4L2_CTRL_TYPE_U32:
+>  		elem_size = sizeof(u32);
+>  		break;
+> +	case V4L2_CTRL_TYPE_JPEG_QUANTIZATION:
+> +		elem_size = sizeof(struct v4l2_ctrl_jpeg_quantization);
+> +		break;
+>  	default:
+>  		if (type < V4L2_CTRL_COMPOUND_TYPES)
+>  			elem_size = sizeof(s32);
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index e4ee10ee917d..fcb288bb05c7 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -987,6 +987,11 @@ enum v4l2_jpeg_chroma_subsampling {
+>  #define	V4L2_JPEG_ACTIVE_MARKER_DQT		(1 << 17)
+>  #define	V4L2_JPEG_ACTIVE_MARKER_DHT		(1 << 18)
+>  
+> +#define V4L2_CID_JPEG_QUANTIZATION		(V4L2_CID_JPEG_CLASS_BASE + 5)
+> +struct v4l2_ctrl_jpeg_quantization {
+> +	__u8	luma_quantization_matrix[64];
+> +	__u8	chroma_quantization_matrix[64];
+> +};
+>  
+>  /* Image source controls */
+>  #define V4L2_CID_IMAGE_SOURCE_CLASS_BASE	(V4L2_CTRL_CLASS_IMAGE_SOURCE | 0x900)
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index f271048c89c4..e998d07464cb 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -1630,6 +1630,7 @@ enum v4l2_ctrl_type {
+>  	V4L2_CTRL_TYPE_U8	     = 0x0100,
+>  	V4L2_CTRL_TYPE_U16	     = 0x0101,
+>  	V4L2_CTRL_TYPE_U32	     = 0x0102,
+> +	V4L2_CTRL_TYPE_JPEG_QUANTIZATION = 0x0103,
+>  };
+>  
+>  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+> 
+
+Regards,
+
+	Hans
