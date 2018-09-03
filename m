@@ -1,81 +1,59 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 2/3] arm64: dts: meson-axg: s400: add dmic codec
-Date: Mon, 03 Sep 2018 11:57:25 +0200
-Message-ID: <b0efc5cf9cf4f7e05097fcd0ea6fd61ba8ff3476.camel@baylibre.com>
-References: <20180831150218.8307-1-jbrunet@baylibre.com>
-         <20180831150218.8307-3-jbrunet@baylibre.com>
-         <CAOMZO5BOMOB6LaRs1fnmm-Ghu7pMkXW=sH_NOEWK3pqHAbUMCg@mail.gmail.com>
+From: Tony Xie <tony.xie@rock-chips.com>
+Subject: [PATCH v4 0/5] support a new type of PMIC,including two chips(rk817 and rk809)
+Date: Mon,  3 Sep 2018 18:00:24 +0800
+Message-ID: <1535968829-19418-1-git-send-email-tony.xie@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5BOMOB6LaRs1fnmm-Ghu7pMkXW=sH_NOEWK3pqHAbUMCg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree <devicetree@vger.kernel.org>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: heiko@sntech.de
+Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2018-09-01 at 18:24 -0300, Fabio Estevam wrote:
-> Hi Jerome,
-> 
-> On Fri, Aug 31, 2018 at 12:02 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > There are 7 digital mics on the MIC daughter board attached
-> > to the s400 board, so add the digital microphone codec to
-> > its DTS
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > index ff64c429d432..f3e16cbbc61e 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> > @@ -86,6 +86,15 @@
-> >                 sound-name-prefix = "DIT";
-> >         };
-> > 
-> > +       dmics: audio-codec@3 {
-> 
-> You pass @3 without a corresponding reg = <3>, which causes dtc
-> warnings with W=1.
+Most of functions and registers of the rk817 and rk808 are the same,
+so they can share allmost all codes.
 
-Hi Fabio,
+Their specifications are as follows：
+  1) The RK809 and RK809 consist of 5 DCDCs, 9 LDOs and have the same registers
+     for these components except dcdc5.
+  2) The dcdc5 is a boost dcdc for RK817 and is a buck for RK809.
+  3) The RK817 has one switch but The Rk809 has two.
 
-Thanks for pointing this out.
-Martin also raised concerns about this but, unfortunately, we did not get to the
-bottom of it:
+Changes in V2:
+1. initialize the pm_pwroff_fn to NULL. 
+2. use EXPORT_SYMBOL_GPL to export pm_power_off_prepare.
+3. change patch 2/3/4/5 subjects. 
 
-https://lkml.kernel.org/r/
-90780f5a6b974ee9a4f9f9f2580fc83ef6bdd805.camel@baylibre.com
+Changes in V3：
+1. change patch 4 subjects
+2. replace pr_ with dev_ for printing in patch 2
+3. modify switch1 and switch2 configs in patch 2
+4. explain gpio information for rk809 and rk817 in patch 4
 
-In a nutshell, I numbered nodes (w/o a reg prop) to keep generic names as
-suggested in the DT spec.
+Changes in V4：
+1. modify some codes for patch 2 and patch 5 according to comments 
+2. add reviewer mail lists for patch 3 and 4
 
-The idea came after working on sound cards, if you check
-Documentation/devicetree/bindings/sound/simple-card.txt, you'll see this kind of
-numbering is even in documentation examples.
+Tony Xie (5):
+  mfd: rk808: Add RK817 and RK809 support
+  regulator: rk808: add RK809 and RK817 support.
+  dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
+  rtc: rk808: add RK809 and RK817 support.
+  clk: RK808: add RK809 and RK817 support.
 
-This is used by arch/arm/boot/dts/armada-370-db.dts. This is just an example I
-picked randomly, I'm not trying to single out the marvell folks here (or ASoC
-simple card). I'm actually doing exactly the same kind of multi link stuff on
-the amlogic cards.
+ Documentation/devicetree/bindings/mfd/rk808.txt |  56 ++
+ drivers/clk/Kconfig                             |   9 +-
+ drivers/clk/clk-rk808.c                         |  64 ++-
+ drivers/mfd/Kconfig                             |   6 +-
+ drivers/mfd/rk808.c                             | 218 +++++++-
+ drivers/regulator/Kconfig                       |   4 +-
+ drivers/regulator/rk808-regulator.c             | 657 +++++++++++++++++++++++-
+ drivers/rtc/Kconfig                             |   4 +-
+ drivers/rtc/rtc-rk808.c                         |  68 ++-
+ include/linux/mfd/rk808.h                       | 175 +++++++
+ kernel/reboot.c                                 |   1 +
+ 11 files changed, 1204 insertions(+), 58 deletions(-)
 
-This looks to be a wide spread practice. Running `make dtbs W=1` on ARM and
-ARM64 arch, I've seen dozen of 'node has a unit name, but no reg property'
-examples, on things like clocks, buttons, leds, pinctrl, etc ...
-
-that being said, section 2.2.1 of the DT specs says:
-
-" If the node has no reg property, the @unit-address must be omitted and the
-node-name alone differentiates the node from other nodes at the same level in
-the tree "
-
-So apparently, this is used but not ok ?
-Maybe we should simply replace the '@' with a '-' everywhere this occurs ?
-
-If possible, I'd like to get the opinion of the DT gurus about this issue.
-Cheers
-
-Jerome
+-- 
+1.9.1
