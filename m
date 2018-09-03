@@ -1,52 +1,32 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 18/30] iio: adc: sun4i-gpadc-iio: rework: support
- multiple sensors
-Date: Mon, 3 Sep 2018 18:29:27 +0100
-Message-ID: <20180903182927.344858c4@archlinux>
-References: <20180830154518.29507-1-embed3d@gmail.com>
-        <20180830154518.29507-19-embed3d@gmail.com>
-        <20180902211125.0098c808@archlinux>
-        <3722842b-1aa3-ea46-c0ec-7a01bc8a723e@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v5] usb: core: phy: clean up return value check about devm_of_phy_get_by_index()
+Date: Mon, 3 Sep 2018 20:09:31 +0200
+Message-ID: <CAFBinCB8J1TP_xsg8cprHBzQrNwUVg7TxbRBw3GamyWUe8yH7g@mail.gmail.com>
+References: <18d8d311a32497abce39c796b353a878a13b09b6.1535709565.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3722842b-1aa3-ea46-c0ec-7a01bc8a723e@gmail.com>
+In-Reply-To: <18d8d311a32497abce39c796b353a878a13b09b6.1535709565.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Rossak <embed3d@gmail.com>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, linux@armlinux.org.uk, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, eugen.hristev@microchip.com, rdunlap@infradead.org, vilhelm.gray@gmail.com, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, geert+renesas@glider.be, lukas@wunner.de, icenowy@aosc.io, arnd@arndb.de, broonie@kernel.org, arnaud.pouliquen@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: chunfeng.yun@mediatek.com
+Cc: gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com, matthias.bgg@gmail.com, johan@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 3 Sep 2018 15:58:30 +0200
-Philipp Rossak <embed3d@gmail.com> wrote:
+On Fri, Aug 31, 2018 at 12:02 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+>
+> Use IS_ERR() instead of IS_ERR_OR_NULL() because devm_of_phy_get_by_index()
+> never return NULL value;
+> But still need ignore the error of -ENODEV, for more information, please
+> refer to:
+> [0] https://lkml.org/lkml/2018/4/19/88
+> [1] https://patchwork.kernel.org/patch/10160181/
+>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Reviewed-by: Johan Hovold <johan@kernel.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-> On 02.09.2018 22:11, Jonathan Cameron wrote:
-> > This feels like a good place to factor out the code into a utility
-> > function that just does one of them.  That should hopefully
-> > reduce the indenting etc enough to make the code easier to read.
-> >   
-> >> +		info->tzds[i].info = info;
-> >> +		info->tzds[i].sensor_id = i;
-> >> +
-> >> +		info->tzds[i].tzd = thermal_zone_of_sensor_register(
-> >> +				info->sensor_device,
-> >> +				i, &info->tzds[i], &sun4i_ts_tz_ops);
-> >> +		/*
-> >> +		 * Do not fail driver probing when failing to register in
-> >> +		 * thermal because no thermal DT node is found.
-> >> +		 */
-> >> +		if (IS_ERR(info->tzds[i].tzd) && \
-> >> +				PTR_ERR(info->tzds[i].tzd) != -ENODEV) {
-> >> +			dev_err(&pdev->dev,
-> >> +				"could not register thermal sensor: %ld\n",
-> >> +				PTR_ERR(info->tzds[i].tzd));
-> >> +			return PTR_ERR(info->tzds[i].tzd);
-> >> +		}  
-> 
-> So this code above should be placed in a separate function and called by 
-> the for loop?
-> Did I understand that right?
-Yes - exactly.
+thanks to both of you for fixing my code!
 
-> 
-> Philipp
+
+Regards
+Martin
