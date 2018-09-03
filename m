@@ -1,122 +1,33 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: enable display on stm32mp157c-ev1 board
-Date: Mon, 3 Sep 2018 12:03:43 +0200
-Message-ID: <2369d88e-b5d4-dfb2-ef1a-7d8d194b8e45@st.com>
-References: <1534856316-30346-1-git-send-email-yannick.fertre@st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: Add Spreadtrum SC2731 charger documentation
+Date: Mon, 3 Sep 2018 12:14:56 +0200
+Message-ID: <CAJKOXPcx1AC-xp4TPLQrzbwrPmKWK0tB2F+=e+Nb8afviABPHQ@mail.gmail.com>
+References: <a582871f84c4dd588ae1651d1d9192cc80e2b272.1535964281.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534856316-30346-1-git-send-email-yannick.fertre@st.com>
-Content-Language: en-US
+In-Reply-To: <a582871f84c4dd588ae1651d1d9192cc80e2b272.1535964281.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Gaignard <benjamin.gaignard@st.com>, Patrice Chotard <patrice.chotard@st.com>, Philippe Cornu <philippe.cornu@st.com>
+To: baolin.wang@linaro.org
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yannick,
-
-On 08/21/2018 02:58 PM, Yannick Fertré wrote:
-> Enable panel raydium RM68200, DSI bridge & display controller.
-> 
-> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+On Mon, 3 Sep 2018 at 10:56, Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+> This patch adds the binding documentation for Spreadtrum SC2731 charger
+> device.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
->   arch/arm/boot/dts/stm32mp157c-ev1.dts | 60 +++++++++++++++++++++++++++++++++++
->   1 file changed, 60 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> index 372bc2e..cd9062a 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> @@ -6,6 +6,7 @@
->   /dts-v1/;
->   
->   #include "stm32mp157c-ed1.dts"
-> +#include <dt-bindings/gpio/gpio.h>
->   
->   / {
->   	model = "STMicroelectronics STM32MP157C eval daughter on eval mother";
-> @@ -19,6 +20,12 @@
->   		serial0 = &uart4;
->   		ethernet0 = &ethernet0;
->   	};
-> +	panel_backlight: panel-backlight {
-> +		compatible = "gpio-backlight";
-> +		gpios = <&gpiod 13 GPIO_ACTIVE_LOW>;
-> +		default-on;
-> +		status = "okay";
-> +	};
->   };
->   
->   &ethernet0 {
-> @@ -46,6 +53,45 @@
->   	status = "okay";
->   };
->   
-> +&dsi {
+> Changes from v1:
+>  - Add parent node.
+>  - Add some battery standard properties.
+> ---
+>  .../bindings/power/supply/sc2731_charger.txt       |   40 ++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/sc2731_charger.txt
 
-Can you check ordering please ?
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +			dsi_in: endpoint {
-> +				remote-endpoint = <&ltdc_ep0_out>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			dsi_out: endpoint {
-> +				remote-endpoint = <&dsi_panel_in>;
-> +			};
-> +		};
-> +	};
-> +
-> +	panel-dsi@0 {
-> +		compatible = "raydium,rm68200";
-> +		reg = <0>;
-> +		reset-gpios = <&gpiof 15 GPIO_ACTIVE_LOW>;
-> +		backlight = <&panel_backlight>;
-> +		status = "okay";
-> +
-> +		port {
-> +			dsi_panel_in: endpoint {
-> +				remote-endpoint = <&dsi_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
->   &i2c2 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&i2c2_pins_a>;
-> @@ -62,6 +108,20 @@
->   	status = "okay";
->   };
->   
-> +&ltdc {
-> +	status = "okay";
-> +
-> +	port {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ltdc_ep0_out: endpoint@0 {
-> +			reg = <0>;
-> +			remote-endpoint = <&dsi_in>;
-> +		};
-> +	};
-> +};
-> +
->   &m_can1 {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&m_can1_pins_a>;
-> 
+Best regards,
+Krzysztof
