@@ -1,58 +1,95 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 net-next 3/7] net: dsa: Add Lantiq / Intel GSWIP tag
- support
-Date: Mon, 3 Sep 2018 11:52:44 -0700
-Message-ID: <b13de4db-f115-e7d5-9efd-0af18f947978@gmail.com>
-References: <20180901114535.9070-1-hauke@hauke-m.de>
- <20180901120332.9792-1-hauke@hauke-m.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 0/2] hwmon: Add RPi PoE HAT fan driver
+Date: Mon, 3 Sep 2018 20:55:06 +0200 (CEST)
+Message-ID: <698422655.399555.1536000906069@email.1und1.de>
+References: <1535887251-29515-1-git-send-email-stefan.wahren@i2se.com>
+ <99ca4f6d-d2b2-36e7-9f27-189df379cfaf@roeck-us.net>
+ <67224834.51159.1535905604770@email.1und1.de>
+ <e8d4e69c-2668-2794-6474-79749bf8b577@roeck-us.net>
+ <829194253.51526.1535908415057@email.1und1.de>
+ <642d46f3-7c1d-2b97-5d49-8772c75be530@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180901120332.9792-1-hauke@hauke-m.de>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>, davem@davemloft.net
-Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <642d46f3-7c1d-2b97-5d49-8772c75be530@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, Phil Elwell <phil@raspberrypi.org>, serge@raspberrypi.org, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 9/1/2018 5:03 AM, Hauke Mehrtens wrote:
-> This handles the tag added by the PMAC on the VRX200 SoC line.
+> Florian Fainelli <f.fainelli@gmail.com> hat am 3. September 2018 um 20:31 geschrieben:
 > 
-> The GSWIP uses internally a GSWIP special tag which is located after the
-> Ethernet header. The PMAC which connects the GSWIP to the CPU converts
-> this special tag used by the GSWIP into the PMAC special tag which is
-> added in front of the Ethernet header.
 > 
-> This was tested with GSWIP 2.1 found in the VRX200 SoCs, other GSWIP
-> versions use slightly different PMAC special tags.
 > 
-> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+> 
+> On 9/2/2018 10:13 AM, Stefan Wahren wrote:
+> > Hi Guenter,
+> > 
+> >> Guenter Roeck <linux@roeck-us.net> hat am 2. September 2018 um 18:49 geschrieben:
+> >>
+> >>
+> >> On 09/02/2018 09:26 AM, Stefan Wahren wrote:
+> >>> Hi Guenter,
+> >>>
+> >>>> Guenter Roeck <linux@roeck-us.net> hat am 2. September 2018 um 16:23 geschrieben:
+> >>>>
+> >>>>
+> >>>> On 09/02/2018 04:20 AM, Stefan Wahren wrote:
+> >>>>> This series is an early stage of the hwmon driver for the fan on the
+> >>>>> Raspberry Pi Power over Ethernet HAT [1]. At the end this should use a
+> >>>>> Device Tree Overlay.
+> >>>>>
+> >>>>> Changes by Stefan based on [2]:
+> >>>>> - reformat the downstream patches for submission
+> >>>>> - drop reboot notification
+> >>>>> - fix remaining checkpatch issues
+> >>>>> - add COMPILE_TEST to Kconfig
+> >>>>>
+> >>>>> The driver is mostly copy & paste from pwm-fan, which isn't good. Personally
+> >>>>> i see two options:
+> >>>>>
+> >>>>> 1) integrate the driver function into the pwm-fan driver (new compatible)
+> >>>>> 2) implement the core function as a PWM driver and use the pwm-fan driver on top
+> >>>>>
+> >>>>
+> >>>> I don't really see the point of thise driver. Why not implement either of those ?
+> >>>
+> >>> i'm not sure about your question. Since the fan is placed over the SoC, the fan should takes care of the SoC temperature. AFAIK the firmware should have exclusive access to the I2C. So why we need this mailbox interface instead of a I2C driver.
+> >>>
+> >>
+> >> The driver sets pwm values. The pwm-fan driver sets pwm values. A pwm driver
+> >> sets pwm values. The pwm-fan driver uses a pwm driver to set pwm values.
+> >> You appear to be arguing that the pwm-fan driver for Rpi is different than
+> >> a pwm-fan driver for all other hardware and should _not_ use a pwm driver
+> >> to set pwm values.
+> > 
+> > thanks for your explanation. Now i think i understand and sorry for the confusion. We need a driver which translate the pwm values into the mailbox properties. "My" RFC series is only a starting point (not intended for merge and not an option) for a discussion and i'm perfectly fine with 2).
+> > Both options would be feasible in general. I only wanted to know your opinion before i start to implement one of them.
+> 
+> Is not there a way to expose the PWM pins directly to the kernel instead 
+> of going through the firmware to do that for us? I am just asking 
+> because sometimes this appears to be possible, guess not in this case?
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+According to this blog entry (no schematics available so far) [1], this is my understanding of the fan control:
 
-Just one suggestion below, if you need to resubmit this:
+| Raspberry Pi 3B+               | PoE HAT               |         
+ARM core -Mailbox-> VideoCore4 -I2C-> Atmel MCU -PWM-> FAN
 
-[snip]
+The only chance would be to bypass VC4 and talk to the Atmel microcontroller directly. But this would require a specification of the I2C protocol or some time of reverse engineering.
 
-> +static struct sk_buff *gswip_tag_rcv(struct sk_buff *skb,
-> +				     struct net_device *dev,
-> +				     struct packet_type *pt)
-> +{
-> +	int port;
-> +	u8 *gswip_tag;
-> +
-> +	if (unlikely(!pskb_may_pull(skb, GSWIP_RX_HEADER_LEN)))
-> +		return NULL;
-> +
-> +	gswip_tag = skb->data - ETH_HLEN;
-> +	skb_pull_rcsum(skb, GSWIP_RX_HEADER_LEN);
+Maybe the foundation guys can say something about that?
 
-I would be moving this after the port lookup was successful, that way if 
-you are discarding a frame, you can do this as quickly as possible, this 
-should not have a functional impact since you return a skb with the 
-checksum updated past the return of that function.
--- 
-Florian
+[1] - https://www.raspberrypi.org/blog/introducing-power-over-ethernet-poe-hat/
+
+> -- 
+> Florian
