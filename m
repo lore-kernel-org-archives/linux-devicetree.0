@@ -1,47 +1,72 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v1] arm64: dts: dwc3: Add description of
- 'configure-gfladj'
-Date: Mon, 3 Sep 2018 09:19:33 +0800
-Message-ID: <20180903011931.GB3850@dragon>
-References: <20180829073324.36866-1-yinbo.zhu@nxp.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2] ARM: dts: imx7s: enable cpuidle driver
+Date: Mon,  3 Sep 2018 09:45:41 +0800
+Message-ID: <1535939141-14338-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180829073324.36866-1-yinbo.zhu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, xiaobo.xie@nxp.com, Ran Wang <ran.wang_1@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, festevam@gmail.com
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 03:33:24PM +0800, Yinbo Zhu wrote:
-> This patch is to add description of 'configure-gfladj' to binding
-> so that configuring devicetree
-> 
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Enable cpuidle for i.MX7S/D using generic ARM cpuidle
+driver, below 2 idle states enabled:
 
-Ah, okay.  You just started documenting the binding.  So please send me
-dts patch only after the corresponding bindings and driver code are
-accepted.
+1. ARM WFI;
+2. SoC WAIT mode.
 
-Shawn
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+changes since V1:
+	replace uppercase with lowercase.
+ arch/arm/boot/dts/imx7d.dtsi |  1 +
+ arch/arm/boot/dts/imx7s.dtsi | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 3e4c38b..40c6568 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -101,6 +101,7 @@ Optional properties:
->  			When just one value, which means INCRX burst mode enabled. When
->  			more than one value, which means undefined length INCR burst type
->  			enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
-> + - configure-gfladj: determine whether frame length adjustment is required or not.
->  
->   - in addition all properties from usb-xhci.txt from the current directory are
->     supported as well
-> -- 
-> 1.7.1
-> 
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 7cbc2ff..53eb371 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -20,6 +20,7 @@
+ 			reg = <1>;
+ 			clock-frequency = <996000000>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
++			cpu-idle-states = <&cpu_sleep_wait>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 93884ce..d3f6488 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -54,6 +54,19 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		idle-states {
++			entry-method = "psci";
++
++			cpu_sleep_wait: cpu-sleep-wait {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x0010000>;
++				local-timer-stop;
++				entry-latency-us = <100>;
++				exit-latency-us = <50>;
++				min-residency-us = <1000>;
++			};
++		};
++
+ 		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+@@ -61,6 +74,7 @@
+ 			clock-frequency = <792000000>;
+ 			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clks IMX7D_CLK_ARM>;
++			cpu-idle-states = <&cpu_sleep_wait>;
+ 		};
+ 	};
+ 
+-- 
+2.7.4
