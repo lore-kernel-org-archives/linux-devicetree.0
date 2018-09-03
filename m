@@ -1,72 +1,73 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [RFC PATCH 1/2] ARM: dt: fpga: Added binding docs for Xilinx
- zynqmp FPGA manager
-Date: Mon, 3 Sep 2018 08:59:37 +0000
-Message-ID: <BYAPR02MB471047F38899D78151AC1805C20C0@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <20180801100457.25614-1-nava.manne@xilinx.com>
- <20180814161917.GA26926@rob-hp-laptop>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 0/7] ARM32/64: DT overlay build support
+Date: Mon, 3 Sep 2018 12:03:31 +0300
+Message-ID: <76ff8aa9-129b-403d-8ef0-fb000f697097@ti.com>
+References: <1535459532-17211-1-git-send-email-t-kristo@ti.com>
+ <f9562e36-ef04-fb14-74a1-6a67feaa97a8@gmail.com>
+ <183d979a-3849-7199-417f-3572b00dca5b@ti.com>
+ <a137359f-f836-c8eb-61b4-9d1d4907ad93@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180814161917.GA26926@rob-hp-laptop>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a137359f-f836-c8eb-61b4-9d1d4907ad93@gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "chinnikishore369@gmail.com" <chinnikishore369@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Rowand <frowand.list@gmail.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the providing the comments...
-Please find my response inline...
-
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Tuesday, August 14, 2018 9:49 PM
-> To: Nava kishore Manne <navam@xilinx.com>
-> Cc: mark.rutland@arm.com; Michal Simek <michals@xilinx.com>; Soren
-> Brinkmann <sorenb@xilinx.com>; atull@opensource.altera.com;
-> moritz.fischer@ettus.com; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Appana Durga
-> Kedareswara Rao <appanad@xilinx.com>; chinnikishore369@gmail.com; Nava
-> kishore Manne <navam@xilinx.com>
-> Subject: Re: [RFC PATCH 1/2] ARM: dt: fpga: Added binding docs for Xilinx
-> zynqmp FPGA manager
->=20
-> On Wed, Aug 01, 2018 at 03:34:56PM +0530, Nava kishore Manne wrote:
-> > New bindings document for zynqmp fpga manager.
-> >
-> > Signed-off-by: Nava kishore Manne <navam@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> > b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> > new file mode 100644
-> > index 000000000000..0eac747747f5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
-> > @@ -0,0 +1,9 @@
-> > +Xilinx Zynqmp FPGA Manager
-> > +
-> > +Required properties:
-> > +- compatible:		should contain "xlnx,zynqmp-pcap-fpga"
-> > +
-> > +Example:
-> > +	pcap: pcap@00 {
-> > +		compatible =3D "xlnx,zynqmp-pcap-fpga";
->=20
-> How is this accessed? Via firmware interface? If so, need to define it is=
- a child of
-> the firmware node.
-
-Yes, it's uses firmware interface...
-Will fix it in the next version.
-
-Regards,
-Navakishore.
+T24gMzAvMDgvMTggMjM6MzIsIEZyYW5rIFJvd2FuZCB3cm90ZToKPiBIaSBUZXJvLAo+IAo+IChS
+ZWFsbHkgYWRkaW5nIE1hcmsgYXMgYSBjYzogdGhpcyB0aW1lLiAgTGFzdCB0aW1lIEkgYWRkZWQg
+aGltIGFzCj4gYSBiY2M6IGJ5IG1pc3Rha2UuKQo+IAo+IAo+IE9uIDA4LzMwLzE4IDEwOjEyLCBU
+ZXJvIEtyaXN0byB3cm90ZToKPj4gT24gMjkvMDgvMTggMjE6NDAsIEZyYW5rIFJvd2FuZCB3cm90
+ZToKPj4+ICsgTWFyayBSdXRsYW5kLCBqdXN0IGluIGNhc2UgaGUgaXMgaW50ZXJlc3RlZAo+Pj4K
+Pj4+IE9uIDA4LzI4LzE4IDA1OjMyLCBUZXJvIEtyaXN0byB3cm90ZToKPj4+PiBIaSwKPj4+Pgo+
+Pj4+IFRoaXMgc2VyaWVzIGludHJvZHVjZXMgZGV2aWNldHJlZSBvdmVybGF5IGJ1aWxkaW5nIHN1
+cHBvcnQgZm9yIEFSTQo+Pj4+IHBsYXRmb3Jtcy4gVGhlIC5kdGJvIHRhcmdldCBpcyBpbnRyb2R1
+Y2VkIGdsb2JhbGx5LCB0aGVuIG1ha2VmaWxlCj4+Pj4gY2hhbmdlcyBmb3IgYm90aCBhcm0zMi82
+NCBmb3Igc3VwcG9ydGluZyB0aGUgLmR0Ym8gdGFyZ2V0LCBjaGFuZ2VzCj4+Pj4gdG8gc3VwcG9y
+dCBzdWItZGlyIG1ha2VmaWxlIGZsYWdzLCBhbmQgZmluYWxseSBhZGRpbmcgdGhlIERUQyBmbGFn
+cwo+Pj4+IG92ZXJyaWRlIGZvciBUSSBwbGF0Zm9ybXMsIGFzIHRoYXQgaXMgd2hlcmUgd2Ugd2Fu
+dCB0byBpbnRyb2R1Y2UKPj4+PiB0aGUgRFQgb3ZlcmxheSBzdXBwb3J0IGluaXRpYWxseS4KPj4+
+Pgo+Pj4+IFRoZSBBUk0gbWFrZWZpbGUgY2hhbmdlcyBmb3Igc3VwcG9ydGluZyBEVFMgc3ViLW1h
+a2VmaWxlcyBkb24ndCBsb29rCj4+Pj4gdG9vIGNsZWFuLCBidXQgdGhhdCB3YXMgdGhlIG9ubHkg
+d2F5IEkgY291bGQgZmlndXJlIG91dCBob3cgdG8KPj4+PiBnZXQgaXQgZG9uZS4KPj4+Pgo+Pj4+
+IC1UZXJvCj4+Pj4KPj4+PiAtLSAKPj4+Pgo+Pj4KPj4+IFRoaXMgc2VyaWVzIGRvZXMgdGhyZWUg
+dW5yZWxhdGVkIHRoaW5nczoKPj4KPj4gV2VsbCwgSSB3YXMga2luZCBvZiB0cnlpbmcgdG8gc2hv
+dyB0aGUgd2hvbGUgc29sdXRpb24gaGVyZSBidXQuLi4KPiAKPiBUaGF0IGFjdHVhbGx5IG1ha2Vz
+IHNlbnNlLCBhbmQgbm9ybWFsbHkgSSB3b3VsZG4ndCBoYXZlIGFza2VkIGZvciB0aGUKPiBzcGxp
+dC4gIEl0IG1pZ2h0IGJlIHRoZSBjYXNlIHRoYXQgSSBhbSBiZWluZyB0b28gY2F1dGlvdXMsIGFu
+ZCBtYXliZQo+IHRoZXJlIHdvbid0IGJlIG11Y2ggZGlzY3Vzc2lvbiBhdCBhbGwuICBJIHdhcyBq
+dXN0IGNvbmNlcm5lZCB0aGF0IGluCj4gdGhpcyBjYXNlIHNvbWUgb2YgdGhlIGNvbmNlcHRzIG1p
+Z2h0IGdldCBvdmVybG9va2VkIGR1ZSB0byBkaXNjdXNzaW9uCj4gb2Ygb3RoZXIgY29uY2VwdHMu
+ICBJJ20gYWxzbyBleHBlY3RpbmcgZGlmZmVyZW50IHBlb3BsZSB0byBjYXJlCj4gYWJvdXQgZWFj
+aCBvZiB0aGUgY29uY2VwdHMuCj4gCj4+Cj4+PiAoMSkgY3JlYXRlIGEgdGkgc3BlY2lmaWMgZHRz
+IHN1YmRpcmVjdG9yeSBhcmNoL2FybS9ib290L2R0cy90aS8KPj4+Cj4+PiAoMikgY3JlYXRlIGEg
+cnVsZSBmb3IgY3JlYXRpbmcgYSAuZHRibyBmcm9tIGEgLmR0c28KPj4+Cj4+PiAoMykgYWRkIGEg
+ZHRjIGNvbXBpbGUgZmxhZyB0byBhZGQgcGhhbmRsZSBzeW1ib2wgaW5mb3JtYXRpb24gdG8KPj4+
+ICDCoMKgwqDCoCBhbGwgLmR0YiBmaWxlcyBjcmVhdGVkIGZyb20gYXJjaC9hcm0vYm9vdC9kdHMv
+dGkvIGFuZAo+Pj4gIMKgwqDCoMKgIGFyY2gvYXJtNjQvYm9vdC9kdHMvdGkvCj4+Pgo+Pj4gUGxl
+YXNlIHNwbGl0IHRoZSBwYXRjaGVzIGludG8gdGhyZWUgaW5kZXBlbmRlbnQgc2VyaWVzIHNvIHRo
+YXQKPj4+IGVhY2ggb2YgdGhlIHRocmVlIGNvbmNlcHRzIGNhbiBiZSBkaXNjdXNzZWQgc2VwYXJh
+dGVseS4KPj4KPj4gT2sgd2lsbCBkbyB0aGF0LCBob3BlZnVsbHkgdG9tb3Jyb3cuIERpZG4ndCBt
+YW5hZ2UgdG8gc3F1ZWV6ZSBpbiB0aW1lIHRvIGRvIGl0IHRvZGF5Lgo+IAo+IFRoYW5rcywgSSBh
+cHByZWNpYXRlIHlvdXIgZmxleGliaWxpdHkuCgpIaSBGcmFuaywKCkkgZGlkIHBvc3QgdjIgYXMg
+YSBzcGxpdCBzZXJpZXMgb24gRnJpZGF5LCBidXQgc2VlbXMgSSBtaXNzZWQgYWRkaW5nIHlvdSAK
+aW4gdGhlIGRlbGl2ZXJ5IGZvciB0aG9zZSBieSBhY2NpZGVudC4uLiBzb3JyeSBhYm91dCB0aGF0
+LiBEbyB5b3Ugd2FudCAKbWUgdG8gcmVwb3N0IG9yIGNhbiB5b3UgcGljayB0aG9zZSBmcm9tIHRo
+ZSBkZXZpY2V0cmVlIGxpc3Q/CgotVGVybwoKPiAKPiAtRnJhbmsKPiAKPj4KPj4gLVRlcm8KPj4g
+LS0gCj4+Cj4gCgotLQpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1
+IDIyLCAwMDE4MCBIZWxzaW5raS4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290
+aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
