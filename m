@@ -1,52 +1,58 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Subject: [PATCH v2 0/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy core
-Date: Mon, 3 Sep 2018 17:44:02 +0530
-Message-ID: <1535976844-12494-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 02/14] mmc: mmci: internalize dma map/unmap into mmci dma functions
+Date: Mon, 3 Sep 2018 14:14:55 +0200
+Message-ID: <CAPDyKFpmjVK8P8p-KkKMVYpEMkDW64F_i7-WMexsne1qgSQoxQ@mail.gmail.com>
+References: <1533116221-380-1-git-send-email-ludovic.Barre@st.com> <1533116221-380-3-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533116221-380-3-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, vivek.gautam@codeaurora.org
-Cc: v.anuragkumar@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-ZynqMP serial input output unit (SIOU) is a high-speed serial interface block
-that acts as a phy interface for the PCIe, USB 3.0, DisplayPort, SATA, and
-Ethernet controllers. These controllers use any one among the available four
-multigigabit transceivers for high-speed communication with their link partners
-outside the SOC
+On 1 August 2018 at 11:36, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch internalizes the management of dma map/unmap into
+> mmci dma interfaces. This allows to simplify and prepare the next dma
+> callbacks for mmci host ops.
+> mmci_dma_unmap was called in mmci_data_irq & mmci_cmd_irq functions
+> and can be integrated in mmci_dma_data_error.
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 44 +++++++++++++++++++-------------------------
+>  1 file changed, 19 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 1841d250..d8fa178 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -482,17 +482,7 @@ static inline void mmci_dma_release(struct mmci_host *host)
+>         host->dma_rx_channel = host->dma_tx_channel = NULL;
+>  }
+>
+> -static void mmci_dma_data_error(struct mmci_host *host)
+> -{
+> -       dev_err(mmc_dev(host->mmc), "error during DMA transfer!\n");
+> -       dmaengine_terminate_all(host->dma_current);
+> -       host->dma_in_progress = false;
+> -       host->dma_current = NULL;
+> -       host->dma_desc_current = NULL;
+> -       host->data->host_cookie = 0;
+> -}
+> -
+> -static void mmci_dma_unmap(struct mmci_host *host, struct mmc_data *data)
+> +static void __mmci_dma_unmap(struct mmci_host *host, struct mmc_data *data)
 
-ZynqMP SIOU supports multiple protocols working at different reference clock
-frequencies to operate simultaneously. Each of the four lanes will be having
-a dedicated PLL associated which generates the desired frequency required by
-the protocol configured based on the reference clock input given. Using this
-driver, user can select the desired reference clock frequency for each of
-lane 0, lane 1, lane 2, and lane 3 respectively. Each lane can be programmed
-to have its own reference clock or can share reference clock from its
-neighboring lane, this is called as "Clock Sharing". This driver supports
-clock sharing aswell.
+The renaming of the function seems irrelevant to this change. Can you
+please keep the existing name?
 
-These set of patches add support SIOU support by adding zynqmp-phy driver to
-linux.
+[...]
 
-Changes in v2:
-	1. Fixed the compilation error when compiled phy-zynqmp.c as a module
-	2. Added CONFIG_PM macro in phy-zynqmp.c driver
+Besides the minor thing above, this looks good to me!
 
-Anurag Kumar Vulisha (2):
-  phy: zynqmp: Add phy driver for xilinx zynqmp phy core
-  phy: zynqmp: Add dt bindings for ZynqMP phy
-
- .../devicetree/bindings/phy/phy-zynqmp.txt         |  104 ++
- drivers/phy/Kconfig                                |    8 +
- drivers/phy/Makefile                               |    1 +
- drivers/phy/phy-zynqmp.c                           | 1579 ++++++++++++++++++++
- include/dt-bindings/phy/phy.h                      |    2 +
- include/linux/phy/phy-zynqmp.h                     |   52 +
- 6 files changed, 1746 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
- create mode 100644 drivers/phy/phy-zynqmp.c
- create mode 100644 include/linux/phy/phy-zynqmp.h
-
--- 
-2.1.1
+Kind regards
+Uffe
