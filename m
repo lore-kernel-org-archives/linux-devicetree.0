@@ -1,70 +1,227 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v3 09/19] memory: tegra: Adapt to Tegra20 device-tree
- binding changes
-Date: Mon, 3 Sep 2018 21:06:01 +0000
-Message-ID: <1536008759.25080.2.camel@toradex.com>
-References: <20180818155430.5586-1-digetx@gmail.com>
-         <20180818155430.5586-10-digetx@gmail.com>
+From: Ian Arkver <ian.arkver.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] media: Add controls for JPEG quantization tables
+Date: Mon, 3 Sep 2018 22:09:26 +0100
+Message-ID: <98c7a72e-f94b-ab41-5137-9a382413437b@gmail.com>
+References: <20180831155245.19235-1-ezequiel@collabora.com>
+ <ec1dab04-1890-5555-44cf-2cdadc79c1a6@xs4all.nl>
+ <b5715198-eff0-30d2-6f84-cd1441d3f7ba@gmail.com>
+ <8d9cb4b73c4dc4af66ace5205bd6af5fc193d72a.camel@collabora.com>
+ <0beecc48-6974-c12f-00a2-3823690108c0@xs4all.nl>
+ <1d0c0685-7d91-b422-7e34-b6472a090eb2@gmail.com>
+ <f7f1249779d660a06b902bdaf3166cda910e48e1.camel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180818155430.5586-10-digetx@gmail.com>
-Content-Language: en-US
-Content-ID: <3E996DE64F62884590CB2AD3355722AE@eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>, "digetx@gmail.com" <digetx@gmail.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <f7f1249779d660a06b902bdaf3166cda910e48e1.camel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Language: en-US-large
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCAyMDE4LTA4LTE4IGF0IDE4OjU0ICswMzAwLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6
-DQo+IFRoZSB0ZWdyYTIwLW1jIERUIGJpbmRpbmcgaGFzIGJlZW4gY2hhbmdlZCwgR0FSVCBoYXMg
-YmVlbiBzcXVhc2hlZA0KPiBpbnRvIE1lbW9yeSBDb250cm9sbGVyIGFuZCBub3cgdGhlIGNsb2Nr
-IHByb3BlcnR5IGlzIG1hbmRhdG9yeSBmb3INCj4gVGVncmEyMC4gQWRhcHQgZHJpdmVyIHRoZSB0
-byBEVCBjaGFuZ2VzLg0KDQpNaW5vciBuaXRwaWNrIGNvbmNlcm5pbmcgdGhlIGNvbW1pdCBtZXNz
-YWdlOg0KDQpBZGFwdCBkcml2ZXIgdG8gdGhlIERUIGNoYW5nZXMuDQoNCj4gU2lnbmVkLW9mZi1i
-eTogRG1pdHJ5IE9zaXBlbmtvIDxkaWdldHhAZ21haWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMv
-bWVtb3J5L3RlZ3JhL21jLmMgfCAxOSArKysrKysrLS0tLS0tLS0tLS0tDQo+ICBkcml2ZXJzL21l
-bW9yeS90ZWdyYS9tYy5oIHwgIDYgLS0tLS0tDQo+ICBpbmNsdWRlL3NvYy90ZWdyYS9tYy5oICAg
-IHwgIDIgKy0NCj4gIDMgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlv
-bnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS90ZWdyYS9tYy5jIGIvZHJp
-dmVycy9tZW1vcnkvdGVncmEvbWMuYw0KPiBpbmRleCBlNTY4NjI0OTVmMzYuLjNiZjMxMzg3Njlm
-NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZW1vcnkvdGVncmEvbWMuYw0KPiArKysgYi9kcml2
-ZXJzL21lbW9yeS90ZWdyYS9tYy5jDQo+IEBAIC02MzgsMjQgKzYzOCwxOSBAQCBzdGF0aWMgaW50
-IHRlZ3JhX21jX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJaWYg
-KElTX0VSUihtYy0+cmVncykpDQo+ICAJCXJldHVybiBQVFJfRVJSKG1jLT5yZWdzKTsNCj4gIA0K
-PiArCW1jLT5jbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgIm1jIik7DQo+ICsJaWYgKElT
-X0VSUihtYy0+Y2xrKSkgew0KPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZ2V0
-IE1DIGNsb2NrOiAlbGRcbiIsDQo+ICsJCQlQVFJfRVJSKG1jLT5jbGspKTsNCj4gKwkJcmV0dXJu
-IFBUUl9FUlIobWMtPmNsayk7DQo+ICsJfQ0KPiArDQo+ICAjaWZkZWYgQ09ORklHX0FSQ0hfVEVH
-UkFfMnhfU09DDQo+ICAJaWYgKG1jLT5zb2MgPT0gJnRlZ3JhMjBfbWNfc29jKSB7DQo+IC0JCXJl
-cyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwNCj4gMSk7DQo+
-IC0JCW1jLT5yZWdzMiA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOw0K
-PiAtCQlpZiAoSVNfRVJSKG1jLT5yZWdzMikpDQo+IC0JCQlyZXR1cm4gUFRSX0VSUihtYy0+cmVn
-czIpOw0KPiAtDQo+ICAJCWlzciA9IHRlZ3JhMjBfbWNfaXJxOw0KPiAgCX0gZWxzZQ0KPiAgI2Vu
-ZGlmDQo+ICAJew0KPiAtCQltYy0+Y2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJtYyIp
-Ow0KPiAtCQlpZiAoSVNfRVJSKG1jLT5jbGspKSB7DQo+IC0JCQlkZXZfZXJyKCZwZGV2LT5kZXYs
-ICJmYWlsZWQgdG8gZ2V0IE1DIGNsb2NrOg0KPiAlbGRcbiIsDQo+IC0JCQkJUFRSX0VSUihtYy0+
-Y2xrKSk7DQo+IC0JCQlyZXR1cm4gUFRSX0VSUihtYy0+Y2xrKTsNCj4gLQkJfQ0KPiAtDQo+ICAJ
-CWVyciA9IHRlZ3JhX21jX3NldHVwX2xhdGVuY3lfYWxsb3dhbmNlKG1jKTsNCj4gIAkJaWYgKGVy
-ciA8IDApIHsNCj4gIAkJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBzZXR1cCBsYXRl
-bmN5DQo+IGFsbG93YW5jZTogJWRcbiIsDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lbW9yeS90
-ZWdyYS9tYy5oIGIvZHJpdmVycy9tZW1vcnkvdGVncmEvbWMuaA0KPiBpbmRleCAwMTA2NWYxMmVi
-ZWIuLjk4NTZmMDg1ZTQ4NyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZW1vcnkvdGVncmEvbWMu
-aA0KPiArKysgYi9kcml2ZXJzL21lbW9yeS90ZWdyYS9tYy5oDQo+IEBAIC0yNiwxOCArMjYsMTIg
-QEANCj4gIA0KPiAgc3RhdGljIGlubGluZSB1MzIgbWNfcmVhZGwoc3RydWN0IHRlZ3JhX21jICpt
-YywgdW5zaWduZWQgbG9uZw0KPiBvZmZzZXQpDQo+ICB7DQo+IC0JaWYgKG1jLT5yZWdzMiAmJiBv
-ZmZzZXQgPj0gMHgyNCkNCj4gLQkJcmV0dXJuIHJlYWRsKG1jLT5yZWdzMiArIG9mZnNldCAtIDB4
-M2MpOw0KPiAtDQo+ICAJcmV0dXJuIHJlYWRsKG1jLT5yZWdzICsgb2Zmc2V0KTsNCj4gIH0NCj4g
-IA0KPiAgc3RhdGljIGlubGluZSB2b2lkIG1jX3dyaXRlbChzdHJ1Y3QgdGVncmFfbWMgKm1jLCB1
-MzIgdmFsdWUsDQo+ICAJCQkgICAgIHVuc2lnbmVkIGxvbmcgb2Zmc2V0KQ0KPiAgew0KPiAtCWlm
-IChtYy0+cmVnczIgJiYgb2Zmc2V0ID49IDB4MjQpDQo+IC0JCXJldHVybiB3cml0ZWwodmFsdWUs
-IG1jLT5yZWdzMiArIG9mZnNldCAtIDB4M2MpOw0KPiAtDQo+ICAJd3JpdGVsKHZhbHVlLCBtYy0+
-cmVncyArIG9mZnNldCk7DQo+ICB9DQo+ICANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvc29jL3Rl
-Z3JhL21jLmggYi9pbmNsdWRlL3NvYy90ZWdyYS9tYy5oDQo+IGluZGV4IGI0M2YzN2ZlYTA5Ni4u
-ZGI1YmZkZjU4OWI0IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL3NvYy90ZWdyYS9tYy5oDQo+ICsr
-KyBiL2luY2x1ZGUvc29jL3RlZ3JhL21jLmgNCj4gQEAgLTE0NCw3ICsxNDQsNyBAQCBzdHJ1Y3Qg
-dGVncmFfbWNfc29jIHsNCj4gIHN0cnVjdCB0ZWdyYV9tYyB7DQo+ICAJc3RydWN0IGRldmljZSAq
-ZGV2Ow0KPiAgCXN0cnVjdCB0ZWdyYV9zbW11ICpzbW11Ow0KPiAtCXZvaWQgX19pb21lbSAqcmVn
-cywgKnJlZ3MyOw0KPiArCXZvaWQgX19pb21lbSAqcmVnczsNCj4gIAlzdHJ1Y3QgY2xrICpjbGs7
-DQo+ICAJaW50IGlycTs=
+Hi Ezequiel,
+
+On 03/09/2018 18:15, Ezequiel Garcia wrote:
+> On Mon, 2018-09-03 at 16:51 +0100, Ian Arkver wrote:
+>> Hi Hans, Ezequiel,
+>>
+>> On 03/09/2018 16:33, Hans Verkuil wrote:
+>>> On 09/03/2018 05:27 PM, Ezequiel Garcia wrote:
+>>>> Hi Ian, Hans:
+>>>>
+>>>> On Mon, 2018-09-03 at 14:29 +0100, Ian Arkver wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 03/09/2018 10:50, Hans Verkuil wrote:
+>>>>>> On 08/31/2018 05:52 PM, Ezequiel Garcia wrote:
+>>>>>>> From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>>>>
+>>>>>>> Add V4L2_CID_JPEG_QUANTIZATION compound control to allow userspace
+>>>>>>> configure the JPEG quantization tables.
+>>>>>>>
+>>>>>>> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>>>> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>>>>>> ---
+>>>>>>>     .../media/uapi/v4l/extended-controls.rst      | 23 +++++++++++++++++++
+>>>>>>>     .../media/videodev2.h.rst.exceptions          |  1 +
+>>>>>>>     drivers/media/v4l2-core/v4l2-ctrls.c          | 10 ++++++++
+>>>>>>>     include/uapi/linux/v4l2-controls.h            |  5 ++++
+>>>>>>>     include/uapi/linux/videodev2.h                |  1 +
+>>>>>>>     5 files changed, 40 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
+>>>>>>> index 9f7312bf3365..e0dd03e452de 100644
+>>>>>>> --- a/Documentation/media/uapi/v4l/extended-controls.rst
+>>>>>>> +++ b/Documentation/media/uapi/v4l/extended-controls.rst
+>>>>>>> @@ -3354,7 +3354,30 @@ JPEG Control IDs
+>>>>>>>         Specify which JPEG markers are included in compressed stream. This
+>>>>>>>         control is valid only for encoders.
+>>>>>>>     
+>>>>>>> +.. _jpeg-quant-tables-control:
+>>>>>>>     
+>>>>>>> +``V4L2_CID_JPEG_QUANTIZATION (struct)``
+>>>>>>> +    Specifies the luma and chroma quantization matrices for encoding
+>>>>>>> +    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. The two matrices
+>>>>>>> +    must be set in JPEG zigzag order, as per the JPEG specification.
+>>>>>>
+>>>>>> Can you change "JPEG specification" to a reference to the JPEG spec entry
+>>>>>> in bibio.rst?
+>>>>>>
+>>>>>>> +
+>>>>>>> +
+>>>>>>> +.. c:type:: struct v4l2_ctrl_jpeg_quantization
+>>>>>>> +
+>>>>>>> +.. cssclass:: longtable
+>>>>>>> +
+>>>>>>> +.. flat-table:: struct v4l2_ctrl_jpeg_quantization
+>>>>>>> +    :header-rows:  0
+>>>>>>> +    :stub-columns: 0
+>>>>>>> +    :widths:       1 1 2
+>>>>>>> +
+>>>>>>> +    * - __u8
+>>>>>>> +      - ``luma_quantization_matrix[64]``
+>>>>>>> +      - Sets the luma quantization table.
+>>>>>>> +
+>>>>>>> +    * - __u8
+>>>>>>> +      - ``chroma_quantization_matrix[64]``
+>>>>>>> +      - Sets the chroma quantization table.
+>>>>>>
+>>>>>> Just checking: the JPEG standard specifies this as unsigned 8-bit values as well?
+>>>>
+>>>> I thought this was already discussed, but I think the only thing I've added
+>>>> is this comment in one of the driver's headers:
+>>>>
+>>>>    JPEG encoder
+>>>>    ------------
+>>>>    The VPU JPEG encoder produces JPEG baseline sequential format.
+>>>>    The quantization coefficients are 8-bit values, complying with
+>>>>    the baseline specification. Therefore, it requires application-defined
+>>>>    luma and chroma quantization tables. The hardware does entrophy
+>>>>    encoding using internal Huffman tables, as specified in the JPEG
+>>>>    specification.
+>>>>
+>>>> Certainly controls should be specified better.
+>>>>
+>>>>> As far as I can see ISO/IEC 10918-1 does not specify the precision or
+>>>>> signedness of the quantisation value Qvu. The default tables for 8-bit
+>>>>> baseline JPEG all fit into __u8 though.
+>>>>>
+>>>>
+>>>> Paragraph 4.7 of that spec, indicates the "sample" precision:
+>>>> 8-bit for baseline; 8-bit or 12-bit for extended.
+>>>>
+>>>> For the quantization coefficients, the DQT segment contains a bit
+>>>> that indicates if the quantization coefficients are 8-bit or 16-bit.
+>>>> See B.2.4.1 for details.
+>>
+>> See below (and Tq which follows the Pq field)
+>>
+>>>>
+>>>>> However there can be four sets of tables in non-baseline JPEG and it's
+>>>>
+>>>> You lost me here, which four sets of tables are you refering to?
+>>>>
+>>>>> not clear (to me) whether 12-bit JPEG would need more precision (I'd
+>>>>> guess it would).
+>>>>
+>>>> It seems it would. From B.2.4.1:
+>>>>
+>>>> "An 8-bit DCT-based process shall not use a 16-bit precision quantization table."
+>>>>
+>>>>> Since this patch is defining UAPI I think it might be
+>>>>> good to build in some additional information, eg. number of tables,
+>>>>> element size. Maybe this can all be inferred from the selected pixel
+>>>>> format? If so then it would need documented that the above structure
+>>>>> only applies to baseline.
+>>>>>
+>>>>
+>>>> For quantization coefficients, I can only see two tables: one for luma
+>>>> one for chroma. Huffman coefficients are a different story and we are
+>>>> not really adding them here.
+>>
+>> I was looking at the definition of Tqi in the frame header in B.2.2
+>> which seems to allow up to four (sets of?) quantization tables.
+>> Rereading it, it seems these are per component. Table B.2 implies that
+>> this applies to Baseline Sequential too. In the DQT marker description
+>> there's a Tq field to specify the destination for the new table. I think
+>> this means that an encoder can use up to four (sets of) tables and a
+>> decoder should be able to store four from the stream.
+>>
+>> This may well not be relevant to the encoder under discussion, but if
+>> it's not allowed for in UAPI it's almost a given that it'll need to be
+>> added later.
+>>
+> 
+> Hm, I think it's not really relevant for us, either on the encoding
+> or decoding side. Let me explain how I read the spec.
+> 
+> First of all, keep in mind it seems to be written with streams
+> in mind, which explains different start-of-image and start-of-frames
+> segments (SOI and SOF).
+> 
+> The way I read the four tables thing, the decoder expects to be first
+> transmitted a set of quantization tables, via DQT segments. Each DQT
+> segment contains a 4-bit index (0-3), allowing up to four quantization
+> tables to be defined.
+> 
+> Then, each frame is transmitted in a SOF segment. The SOF header
+> contains an 8-bit field (Tq_i) indicating which quantization table has
+> to be used for this frame.
+> 
+> In Video4Linux, we are frame-based, and the JPEG segments have no meaning,
+> because these controls are meant to be used with the JPEG RAW format,
+> as specified.
+> 
+> For the decoder side, the application is expected to parse all the segments,
+> and set quantization tables and compressed bitstream, via legacy or
+> request APIs (probably the latter).
+> 
+> Same goes for encoding, the user will set a quantization table for the
+> encoding process and then take care of the JPEG segments creation.
+
+I hadn't got my head round only one table being in use at a time for 
+this frame based API, nor had I appreciated that all the DQT 
+parsing/creation etc was handled in userspace.
+
+So, yeah, I agree that this JPEG control only needs a single luma and 
+chroma pair of tables for this usage scenario.
+
+Thanks for the explanation.
+Ian.
+
+> 
+>> BTW, my copy of the spec is dated 1993(E). Maybe it's out of date?
+>>
+> 
+> My copy is also 1992, so even more dated :-)
+> 
+>>>
+>>> Since (if I understand this correctly) we would need u16 for extended precision
+>>> JPEG, shouldn't we use u16 instead of u8? That makes the control more generic.
+>>
+>> This seems like a safer option to me.
+>>
+> 
+> Yes, I agree too.
+> 
+>>
+>>>
+>>> BTW, are the coefficients always unsigned? I think so, but I never read the
+>>> JPEG spec.
+>>>
+> 
+> I don't think signed quantization coefficients make sense, so perhaps
+> this is not explicitly specified?
+> 
+> Regards,
+> Eze
+> 
