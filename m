@@ -1,71 +1,77 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH RFC 0/2] hwmon: Add RPi PoE HAT fan driver
-Date: Mon, 3 Sep 2018 11:31:48 -0700
-Message-ID: <642d46f3-7c1d-2b97-5d49-8772c75be530@gmail.com>
-References: <1535887251-29515-1-git-send-email-stefan.wahren@i2se.com>
- <99ca4f6d-d2b2-36e7-9f27-189df379cfaf@roeck-us.net>
- <67224834.51159.1535905604770@email.1und1.de>
- <e8d4e69c-2668-2794-6474-79749bf8b577@roeck-us.net>
- <829194253.51526.1535908415057@email.1und1.de>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V4 3/8] backlight: qcom-wled: Add new properties for
+ PMI8998
+Date: Mon, 3 Sep 2018 11:55:10 -0700
+Message-ID: <20180903185510.GB3153@tuxbook-pro>
+References: <1531131741-19971-1-git-send-email-kgunda@codeaurora.org>
+ <1531131741-19971-4-git-send-email-kgunda@codeaurora.org>
+ <20180807052355.GA23866@tuxbook-pro>
+ <897ab82c450bff71658c1fa32e7e6021@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <829194253.51526.1535908415057@email.1und1.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <897ab82c450bff71658c1fa32e7e6021@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, serge@raspberrypi.org, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Phil Elwell <phil@raspberrypi.org>, linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, linux-arm-kernel@lists.infradead.org
+To: kgunda@codeaurora.org
+Cc: jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed 15 Aug 22:23 PDT 2018, kgunda@codeaurora.org wrote:
 
-
-On 9/2/2018 10:13 AM, Stefan Wahren wrote:
-> Hi Guenter,
+> On 2018-08-07 10:53, Bjorn Andersson wrote:
+> > On Mon 09 Jul 03:22 PDT 2018, Kiran Gunda wrote:
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> > > b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> > [..]
+> > >  - qcom,num-strings
+> > >  	Usage:        optional
+> > >  	Value type:   <u32>
+> > >  	Definition:   #; number of led strings attached;
+> > > -		      value from 1 to 3. default: 2
+> > > -		      This property is supported only for PM8941.
+> > > +		      value: For PM8941 from 1 to 3.
+> > > +			     For PMI8998 from 1 to 4.
+> > [..]
+> > > +- qcom,enabled-strings
+> > > +	Usage:        optional
+> > > +	Value tyoe:   <u32 array>
+> > > +	Definition:   Array of the WLED strings numbered from 0 to 3. Each
+> > > +		      string of leds are operated individually. Specify the
+> > > +		      list of strings used by the device. Any combination of
+> > > +		      led strings can be used.
+> > [..]
+> > > 
+> > >  Example:
+> > > 
+> > > @@ -99,4 +146,5 @@ pm8941-wled@d800 {
+> > >  	qcom,switching-freq = <1600>;
+> > >  	qcom,ovp = <29>;
+> > >  	qcom,num-strings = <2>;
+> > > +	qcom,enabled-strings = <0x00 0x01>;
+> > 
+> > Nit. I would assume that specifying qcom,num-strings = <2> implies that
+> > the first 2 strings are used, so one would not also specify
+> > qcom,enabled-strings.
+> > 
+> Thanks Bjorn for reviewing the series !
 > 
->> Guenter Roeck <linux@roeck-us.net> hat am 2. September 2018 um 18:49 geschrieben:
->>
->>
->> On 09/02/2018 09:26 AM, Stefan Wahren wrote:
->>> Hi Guenter,
->>>
->>>> Guenter Roeck <linux@roeck-us.net> hat am 2. September 2018 um 16:23 geschrieben:
->>>>
->>>>
->>>> On 09/02/2018 04:20 AM, Stefan Wahren wrote:
->>>>> This series is an early stage of the hwmon driver for the fan on the
->>>>> Raspberry Pi Power over Ethernet HAT [1]. At the end this should use a
->>>>> Device Tree Overlay.
->>>>>
->>>>> Changes by Stefan based on [2]:
->>>>> - reformat the downstream patches for submission
->>>>> - drop reboot notification
->>>>> - fix remaining checkpatch issues
->>>>> - add COMPILE_TEST to Kconfig
->>>>>
->>>>> The driver is mostly copy & paste from pwm-fan, which isn't good. Personally
->>>>> i see two options:
->>>>>
->>>>> 1) integrate the driver function into the pwm-fan driver (new compatible)
->>>>> 2) implement the core function as a PWM driver and use the pwm-fan driver on top
->>>>>
->>>>
->>>> I don't really see the point of thise driver. Why not implement either of those ?
->>>
->>> i'm not sure about your question. Since the fan is placed over the SoC, the fan should takes care of the SoC temperature. AFAIK the firmware should have exclusive access to the I2C. So why we need this mailbox interface instead of a I2C driver.
->>>
->>
->> The driver sets pwm values. The pwm-fan driver sets pwm values. A pwm driver
->> sets pwm values. The pwm-fan driver uses a pwm driver to set pwm values.
->> You appear to be arguing that the pwm-fan driver for Rpi is different than
->> a pwm-fan driver for all other hardware and should _not_ use a pwm driver
->> to set pwm values.
+> "qcom,enabled-strings" need be specified along with the "qcom,num-strings".
+> Because the enabled-strings can be <0, 2> or <0, 3 > also. The driver picks
+> the string
+> configuration from the enabled-strings array and enable only those
+> current-sinks.
 > 
-> thanks for your explanation. Now i think i understand and sorry for the confusion. We need a driver which translate the pwm values into the mailbox properties. "My" RFC series is only a starting point (not intended for merge and not an option) for a discussion and i'm perfectly fine with 2).
-> Both options would be feasible in general. I only wanted to know your opinion before i start to implement one of them.
 
-Is not there a way to expose the PWM pins directly to the kernel instead 
-of going through the firmware to do that for us? I am just asking 
-because sometimes this appears to be possible, guess not in this case?
--- 
-Florian
+The original binding described qcom,num-strings to mean "the first N
+strings", requiring qcom,enabled-strings now would break backwards
+compatibility with this binding.
+
+In the case that qcom,enabled-strings is specified we can easily derive
+num-strings from the listed entires. So I would suggest that you look
+for enabled-strings and if not found fall back to checking for
+num-strings.
+
+Regards,
+Bjorn
