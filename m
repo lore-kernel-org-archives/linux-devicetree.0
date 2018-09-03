@@ -1,51 +1,59 @@
-From: "Zhu, Yi Xin" <yixin.zhu@linux.intel.com>
-Subject: Re: [PATCH v2 02/18] clk: intel: Add clock driver for Intel MIPS SoCs
-Date: Mon, 3 Sep 2018 18:52:21 +0800
-Message-ID: <3fcc4615-eea8-8cb7-987f-c58ab9683e0c@linux.intel.com>
-References: <20180803030237.3366-1-songjun.wu@linux.intel.com>
- <20180803030237.3366-3-songjun.wu@linux.intel.com>
- <153370742214.220756.2039365625963765922@swboyd.mtv.corp.google.com>
- <571d2d40-8728-fa7c-5d89-73d2a7b6293b@linux.intel.com>
- <153539697928.129321.2605078315090527674@swboyd.mtv.corp.google.com>
- <65a8518b-8fd8-847b-f952-0370be3d786a@linux.intel.com>
- <153573558557.93865.3835503209987304514@swboyd.mtv.corp.google.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [linux-sunxi] Re: [PATCH v3 21/30] iio: adc: sun4i-gpadc-iio: add support for H3 thermal sensor
+Date: Mon, 03 Sep 2018 19:01:47 +0800
+Message-ID: <AFDFF5AB-8BF6-4461-A5C2-D628A2F22E2E@aosc.io>
+References: <20180830154518.29507-1-embed3d@gmail.com> <20180830154518.29507-22-embed3d@gmail.com> <20180831091137.wkbbipssyd6mqfbt@flea> <f01ec2f202c7e2e5a7e0c822b2f9a8f0c55a9ea4.camel@aosc.io> <20180903102022.fkxfkxadkt4vpbmb@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153573558557.93865.3835503209987304514@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <20180903102022.fkxfkxadkt4vpbmb@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Songjun Wu <songjun.wu@linux.intel.com>, chuanhua.lei@linux.intel.com, hua.ma@linux.intel.com, qi-ming.wu@intel.com
-Cc: linux-mips@linux-mips.org, linux-clk@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: maxime.ripard@bootlin.comMaxime Ripard <maxime.ripard@bootlin.com>
+Cc: Philipp Rossak <embed3d@gmail.com>, mark.rutland@arm.com, geert+renesas@glider.be, linux-iio@vger.kernel.org, robh+dt@kernel.org, linux-sunxi@googlegroups.com, clabbe.montjoie@gmail.com, pmeerw@pmeerw.net, lee.jones@linaro.org, lars@metafoo.de, quentin.schulz@bootlin.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, arnd@arndb.de, vilhelm.gray@gmail.com, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, rdunlap@infradead.org, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, lukas@wunner.de, knaack.h@gmx.de, eugen.hristev@microchip.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 9/1/2018 1:13 AM, Stephen Boyd wrote:
-> Quoting Zhu, Yi Xin (2018-08-29 03:34:26)
->>>>>> +}
->>>>>> +
->>>>>> +CLK_OF_DECLARE(intel_grx500_cgu, "intel,grx500-cgu", grx500_clk_init);
->>>>> Any reason a platform driver can't be used instead of CLK_OF_DECLARE()?
->>>> It provides CPU clock which is used in early boot stage.
->>>>
->>> Ok. What is the CPU clock doing in early boot stage? Some sort of timer
->>> frequency? If the driver can be split into two pieces, one to handle the
->>> really early stuff that must be in place to get timers up and running
->>> and the other to register the rest of the clks that aren't critical from
->>> a regular platform driver it would be good. That's preferred model if
->>> something is super critical.
->>>
->> Just to make sure my approach is same as you think.
->>
->> In the driver, there's two clock registrations.
->>
->> - One through CLK_OF_DECLARE for early stage clocks.
->>
->> - The other via platform driver for the non-critical clocks.
-> You can use the same DT node for both parts, no need to split the node
-> into two and use syscon here.
->
-Thank you.
 
-Will use CLK_OF_DECLARE_DRIVER to use the same DT node.
+于 2018年9月3日 GMT+08:00 下午6:20:22, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
+>On Fri, Aug 31, 2018 at 05:51:41PM +0800, Icenowy Zheng wrote:
+>> Personally I suggest to leave out all SID or calibration related
+>> patches here.
+>> 
+>> Currently we seems to be wrongly converting SID to big endian,
+>however,
+>> the orgnization of the THS calibration data on H6 shows that it's
+>> surely little endian:
+>> 
+>> It consists a temperature value in 1/10 celsuis as unit, and some
+>> thermal register readout values, which are the values read out at the
+>> given temperature, and every value here (the temperature and the
+>> readout) are all half word length.
+>> 
+>> Let the temperature value be AABB, the two readout values be XXYY and
+>> ZZWW, the oragnization is:
+>> BB AA YY XX WW ZZ ** ** .
+>> 
+>> When converting the SID to big endian, it becomes:
+>> XX YY AA BB ** ** ZZ WW ,
+>> which is non-sense, and not able to do sub-word cell addressing.
+>> 
+>> Maxime, should I drop the LE2BE conversion in SID driver? (I doubt
+>> whether it will break compatibility.)
+>
+>This is exposed to the userspace, so no.
+
+Please note the LE2BE totally breaks the SID addressing.
+
+Without it dropped all cells must be referenced with
+4 byte word as unit, and half word addressing of
+SID is thus not possible. The driver will also need then to split
+the half words if needed.
+
+I think this is kind of hardware misbehavior, and not a simple
+UAPI change, so the UAPI stability shouldn't affect this change.
+
+>
+>Maxime
+>> 
