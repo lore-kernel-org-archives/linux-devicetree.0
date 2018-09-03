@@ -1,47 +1,39 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v2 15/34] ARM: tegra: apalis_t30: reorder backlight
- properties
-Date: Mon, 3 Sep 2018 11:50:23 +0000
-Message-ID: <1535975421.14464.2.camel@toradex.com>
-References: <20180831163817.23970-1-marcel@ziswiler.com>
-         <20180831163817.23970-16-marcel@ziswiler.com>
-         <20180903092228.7k46uf6qehgou5wx@holly.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v3 0/2] Add ADSP PIL driver for SDM845
+Date: Mon,  3 Sep 2018 17:22:38 +0530
+Message-ID: <1535975560-8200-1-git-send-email-rohitkr@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180903092228.7k46uf6qehgou5wx@holly.lan>
-Content-Language: en-US
-Content-ID: <D7D3751328FC16458C5888D171360193@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org
+Cc: Rohit kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE4LTA5LTAzIGF0IDEwOjIyICswMTAwLCBEYW5pZWwgVGhvbXBzb24gd3JvdGU6
-DQo+IE9uIEZyaSwgQXVnIDMxLCAyMDE4IGF0IDA2OjM3OjU3UE0gKzAyMDAsIE1hcmNlbCBaaXN3
-aWxlciB3cm90ZToNCj4gPiBGcm9tOiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0
-b3JhZGV4LmNvbT4NCj4gPiANCj4gPiBSZW9yZGVyIGJhY2tsaWdodCBwcm9wZXJ0aWVzLg0KPiAN
-Cj4gVGhpcyBpcyBhIGJpdCB0ZXJzZS4gU2hvdWxkIHRoZSBoZWFkZXIgZXhwbGFpbiB3aHkgdG9v
-Pw0KDQpJIGFncmVlLiBJIGd1ZXNzIEkgbWlzc2VkIG1lbnRpb25pbmcgaXQgaGVyZSBleHBsaWNp
-dGx5LiBBdCBvdGhlcg0KcGxhY2VzIEkgZGlkIHVzdWFsbHkgbWVudGlvbmVkIHRoYXQgaXQgaW1w
-cm92ZXMgdGhlIHNpdHVhdGlvbiBpbg0KcmVnYXJkcyB0byBhbGwgb3VyIG90aGVyIGRldmljZSB0
-cmVlcy4gSXQncyBqdXN0IGEgcGFpbiB0byBsb29rIGF0DQp2YXJpb3VzIGRldmljZSB0cmVlcyBp
-ZiBzdHVmZiBpcyByYW5kb21seSBvcmRlcmVkLg0KDQo+ID4gU2lnbmVkLW9mZi1ieTogTWFyY2Vs
-IFppc3dpbGVyIDxtYXJjZWwuemlzd2lsZXJAdG9yYWRleC5jb20+DQo+ID4gDQo+ID4gLS0tDQo+
-ID4gDQo+ID4gQ2hhbmdlcyBpbiB2MjogTm9uZQ0KPiA+IA0KPiA+ICBhcmNoL2FybS9ib290L2R0
-cy90ZWdyYTMwLWFwYWxpcy1ldmFsLmR0cyB8IDMgKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAx
-IGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvdGVncmEzMC1hcGFsaXMtZXZhbC5kdHMNCj4gPiBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL3RlZ3JhMzAtYXBhbGlzLWV2YWwuZHRzDQo+ID4gaW5kZXggOWYyMzkyYTA1NTMyLi4z
-MDBjZTcyNmZmNGQgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1h
-cGFsaXMtZXZhbC5kdHMNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWFwYWxp
-cy1ldmFsLmR0cw0KPiA+IEBAIC0xODUsMTMgKzE4NSwxMiBAQA0KPiA+ICANCj4gPiAgCWJhY2ts
-aWdodDogYmFja2xpZ2h0IHsNCj4gPiAgCQljb21wYXRpYmxlID0gInB3bS1iYWNrbGlnaHQiOw0K
-PiA+IC0JCS8qIFBXTV9CS0wxICovDQo+ID4gLQkJcHdtcyA9IDwmcHdtIDAgNTAwMDAwMD47DQo+
-ID4gIAkJYnJpZ2h0bmVzcy1sZXZlbHMgPSA8MjU1IDIzMSAyMjMgMjA3IDE5MSAxNTkgMTI3DQo+
-ID4gMD47DQo+ID4gIAkJZGVmYXVsdC1icmlnaHRuZXNzLWxldmVsID0gPDY+Ow0KPiA+ICAJCS8q
-IEJLTDFfT04gKi8NCj4gPiAgCQllbmFibGUtZ3Bpb3MgPSA8JmdwaW8gVEVHUkFfR1BJTyhWLCAy
-KQ0KPiA+IEdQSU9fQUNUSVZFX0hJR0g+Ow0KPiA+ICAJCXBvd2VyLXN1cHBseSA9IDwmcmVnXzN2
-Mz47DQo+ID4gKwkJcHdtcyA9IDwmcHdtIDAgNTAwMDAwMD47IC8qIEJLTDFfUFdNICovDQo+ID4g
-IAl9Ow0KPiA+ICANCj4gPiAgCWdwaW8ta2V5cyB7DQo+ID4gLS0gDQo+ID4gMi4xNC40
+This provides initial patchset for ADSP PIL driver for SDM845.
+
+Changes since v2:
+	Separated dt-bindings documentation into separate patch.
+	Used clk_bulk APIs for adsp clocks.
+	Used power domain API and use reference to rpmhd resource.
+	Renamed qcom_nonpas_adsp_pil.c to qcom_adsp_pil.c
+	Removed smd as sdm845 does not support smd.
+	Removed px_supply and aggre2_clk for sdm845 as they are not required.
+	Removed reg-names as there is only one register.
+
+This patch is dependent on the rpmh powerdomain driver https://lkml.org/lkml/2018/6/27/7
+and renaming of Hexagon v5 PAS driver https://lkml.org/lkml/2018/8/28/129 .
+
+Rohit kumar (2):
+  dt-binding: remoteproc: Add QTI ADSP PIL bindings
+  remoteproc: qcom: Introduce Non-PAS ADSP PIL driver
+
+ .../bindings/remoteproc/qcom,adsp-pil.txt          | 123 +++++
+ drivers/remoteproc/Kconfig                         |  14 +
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/qcom_adsp_pil.c                 | 500 +++++++++++++++++++++
+ 4 files changed, 638 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
+ create mode 100644 drivers/remoteproc/qcom_adsp_pil.c
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
