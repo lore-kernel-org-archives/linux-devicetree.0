@@ -1,7 +1,7 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH v2 07/11] dt-bindings: phy: add DT binding for Microsemi Ocelot SerDes muxing
-Date: Mon,  3 Sep 2018 11:33:04 +0200
-Message-ID: <20180903093308.24366-8-quentin.schulz@bootlin.com>
+Subject: [PATCH net-next v2 04/11] net: mscc: ocelot: move the HSIO header to include/soc
+Date: Mon,  3 Sep 2018 11:33:01 +0200
+Message-ID: <20180903093308.24366-5-quentin.schulz@bootlin.com>
 References: <20180903093308.24366-1-quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903093308.24366-1-quentin.schulz@bootlin.com>
@@ -10,57 +10,46 @@ To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jh
 Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
+Since HSIO address space can be used by different drivers (PLL, SerDes
+muxing, temperature sensor), let's move it somewhere it can be included
+by all drivers.
+
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- .../bindings/phy/phy-ocelot-serdes.txt        | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
+ drivers/net/ethernet/mscc/ocelot.h                       | 1 -
+ drivers/net/ethernet/mscc/ocelot_regs.c                  | 1 +
+ {drivers/net/ethernet => include/soc}/mscc/ocelot_hsio.h | 0
+ 3 files changed, 1 insertion(+), 1 deletion(-)
+ rename {drivers/net/ethernet => include/soc}/mscc/ocelot_hsio.h (100%)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
-new file mode 100644
-index 000000000000..2a88cc346162
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
-@@ -0,0 +1,40 @@
-+Microsemi Ocelot SerDes muxing driver
-+-------------------------------------
-+
-+On Microsemi Ocelot, there is a handful of registers in HSIO address
-+space for setting up the SerDes to switch port muxing.
-+
-+A SerDes X can be "muxed" to work with switch port Y or Z for example.
-+One specific SerDes can also be used as a PCIe interface.
-+
-+Hence, a SerDes represents an interface, be it an Ethernet or a PCIe one.
-+
-+There are two kinds of SerDes: SERDES1G supports 10/100Mbps in
-+half/full-duplex and 1000Mbps in full-duplex mode while SERDES6G supports
-+10/100Mbps in half/full-duplex and 1000/2500Mbps in full-duplex mode.
-+
-+Also, SERDES6G number (aka "macro") 0 is the only interface supporting
-+QSGMII.
-+
-+Required properties:
-+
-+- compatible: should be "mscc,vsc7514-serdes"
-+- #phy-cells : from the generic phy bindings, must be 2.
-+	       The first number defines the input port to use for a given
-+	       SerDes macro. The second defines the macro to use. They are
-+	       defined in dt-bindings/phy/phy-ocelot-serdes.h
-+
-+Example:
-+
-+	serdes: serdes {
-+		compatible = "mscc,vsc7514-serdes";
-+		#phy-cells = <2>;
-+	};
-+
-+	ethernet {
-+		port1 {
-+			phy-handle = <&phy_foo>;
-+			/* Link SERDES1G_5 to port1 */
-+			phys = <&serdes 1 SERDES1G_5>;
-+		};
-+	};
+diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
+index 616bec30dfa3..2da20a352120 100644
+--- a/drivers/net/ethernet/mscc/ocelot.h
++++ b/drivers/net/ethernet/mscc/ocelot.h
+@@ -16,7 +16,6 @@
+ 
+ #include "ocelot_ana.h"
+ #include "ocelot_dev.h"
+-#include "ocelot_hsio.h"
+ #include "ocelot_qsys.h"
+ #include "ocelot_rew.h"
+ #include "ocelot_sys.h"
+diff --git a/drivers/net/ethernet/mscc/ocelot_regs.c b/drivers/net/ethernet/mscc/ocelot_regs.c
+index e334b406c40c..bf0c609caea5 100644
+--- a/drivers/net/ethernet/mscc/ocelot_regs.c
++++ b/drivers/net/ethernet/mscc/ocelot_regs.c
+@@ -5,6 +5,7 @@
+  * Copyright (c) 2017 Microsemi Corporation
+  */
+ #include "ocelot.h"
++#include <soc/mscc/ocelot_hsio.h>
+ 
+ static const u32 ocelot_ana_regmap[] = {
+ 	REG(ANA_ADVLEARN,                  0x009000),
+diff --git a/drivers/net/ethernet/mscc/ocelot_hsio.h b/include/soc/mscc/ocelot_hsio.h
+similarity index 100%
+rename from drivers/net/ethernet/mscc/ocelot_hsio.h
+rename to include/soc/mscc/ocelot_hsio.h
 -- 
 2.17.1
