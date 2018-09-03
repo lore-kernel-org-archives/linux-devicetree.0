@@ -1,39 +1,52 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v2 6/7] dt-bindings: net: phy: mscc: vsc8531: remove compatible from required properties
-Date: Mon,  3 Sep 2018 10:48:52 +0200
-Message-ID: <20180903084853.18092-6-quentin.schulz@bootlin.com>
+Subject: [PATCH net-next v2 7/7] dt-bindings: net: phy: mscc: vsc8531: factorize vsc8531,led-N-mode
+Date: Mon,  3 Sep 2018 10:48:53 +0200
+Message-ID: <20180903084853.18092-7-quentin.schulz@bootlin.com>
 References: <20180903084853.18092-1-quentin.schulz@bootlin.com>
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180903084853.18092-1-quentin.schulz@bootlin.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com
 Cc: allan.nielsen@microchip.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Compatible isn't a required property for PHYs so let's remove it from
-the binding DT of the VSC8531 PHYs.
+VSC8584 supports 4 LEDs while VSC8531 only supports 2. Let's factorize
+the documentation for LED mode properties and give the 4 default values
+(the first two being shared between VSC8531 and VSC8584).
 
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 5 -----
- 1 file changed, 5 deletions(-)
+ .../devicetree/bindings/net/mscc-phy-vsc8531.txt | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 0eedabe22cc3..664d9d0543fc 100644
+index 664d9d0543fc..5ff37c68c941 100644
 --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
 +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -1,10 +1,5 @@
- * Microsemi - vsc8531 Giga bit ethernet phy
+@@ -22,14 +22,16 @@ Optional properties:
+ 			  'vddmac'.
+ 			  Default value is 0%.
+ 			  Ref: Table:1 - Edge rate change (below).
+-- vsc8531,led-0-mode	: LED mode. Specify how the LED[0] should behave.
+-			  Allowed values are define in
++- vsc8531,led-[N]-mode	: LED mode. Specify how the LED[N] should behave.
++			  N depends on the number of LEDs supported by a
++			  PHY.
++			  Allowed values are defined in
+ 			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
+-			  Default value is VSC8531_LINK_1000_ACTIVITY (1).
+-- vsc8531,led-1-mode	: LED mode. Specify how the LED[1] should behave.
+-			  Allowed values are define in
+-			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
+-			  Default value is VSC8531_LINK_100_ACTIVITY (2).
++			  Default values are VSC8531_LINK_1000_ACTIVITY (1),
++			  VSC8531_LINK_100_ACTIVITY (2),
++			  VSC8531_LINK_ACTIVITY (0) and
++			  VSC8531_DUPLEX_COLLISION (8).
++
  
--Required properties:
--- compatible	: Should contain phy id as "ethernet-phy-idAAAA.BBBB"
--		  The PHY device uses the binding described in
--		  Documentation/devicetree/bindings/net/phy.txt
--
- Optional properties:
- - vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
- 			  in the first row of Table 1 (below).
+ Table: 1 - Edge rate change
+ ----------------------------------------------------------------|
 -- 
 2.17.1
