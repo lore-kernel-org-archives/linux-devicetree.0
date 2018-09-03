@@ -1,50 +1,42 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 03/11] dt-bindings: thermal: Fix a typo in
- documentation
-Date: Mon, 3 Sep 2018 13:04:02 -0700
-Message-ID: <20180903200402.GN3456@tuxbook-pro>
-References: <cover.1535462942.git.amit.kucheria@linaro.org>
- <8480b996596184a478fe74dfdb97ead7dba6fb11.1535462942.git.amit.kucheria@linaro.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next v2 4/7] net: phy: mscc: read
+ 'vsc8531,edge-slowdown' as an u32
+Date: Mon, 3 Sep 2018 22:05:54 +0200
+Message-ID: <20180903200554.GJ4445@lunn.ch>
+References: <20180903084853.18092-1-quentin.schulz@bootlin.com>
+ <20180903084853.18092-4-quentin.schulz@bootlin.com>
+ <20180903132756.GD4445@lunn.ch>
+ <20180903133746.wsvezy3rbdivnjfs@qschulz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8480b996596184a478fe74dfdb97ead7dba6fb11.1535462942.git.amit.kucheria@linaro.org>
+In-Reply-To: <20180903133746.wsvezy3rbdivnjfs@qschulz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, edubezval@gmail.com, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, allan.nielsen@microchip.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 28 Aug 06:38 PDT 2018, Amit Kucheria wrote:
-
-> c(1) + x(1) was actually meant to be c(1) * x(1).
+> Just to be sure, we're talking here about making sure the value stored
+> in the DT is not bigger than the specified value (here an u8)? If so,
+> that isn't the reason why I'm suggesting those two patches.
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Without /bits 8/ in the DT property, whatever were the values I put in
+> the property, I'd always get a 0. So I need to fix it either in the DT
+> (but Rob does not really like it) or in the driver.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hi Quentin
 
-Regards,
-Bjorn
+Ah, you are fixing endian issues. That was not clear to me from the
+commit message.
 
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index eb7ee91556a5..ca14ba959e0d 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -152,7 +152,7 @@ Optional property:
->    Elem size: one cell	the sensors listed in the thermal-sensors property.
->    Elem type: signed	Coefficients defaults to 1, in case this property
->  			is not specified. A simple linear polynomial is used:
-> -			Z = c0 * x0 + c1 + x1 + ... + c(n-1) * x(n-1) + cn.
-> +			Z = c0 * x0 + c1 * x1 + ... + c(n-1) * x(n-1) + cn.
->  
->  			The coefficients are ordered and they match with sensors
->  			by means of sensor ID. Additional coefficients are
-> -- 
-> 2.17.1
-> 
+I don't know enough about how DT stores values in the blob. Is there
+type info? Can the DT core tell if a value in the blob is a u8 or a
+u32?  It would be nice if it warned about reading a u8 from a u32
+blob.
+
+Anyway, this change still removes some bounds checking. Are they
+important? Do they need to be added back?
+
+Thanks
+	Andrew
