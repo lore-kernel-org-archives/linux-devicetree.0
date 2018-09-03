@@ -1,65 +1,81 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: RE: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI
- driver
-Date: Mon, 3 Sep 2018 09:54:08 +0000
-Message-ID: <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
-References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <1535711404-29528-5-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/3] arm64: dts: meson-axg: s400: add dmic codec
+Date: Mon, 03 Sep 2018 11:57:25 +0200
+Message-ID: <b0efc5cf9cf4f7e05097fcd0ea6fd61ba8ff3476.camel@baylibre.com>
+References: <20180831150218.8307-1-jbrunet@baylibre.com>
+         <20180831150218.8307-3-jbrunet@baylibre.com>
+         <CAOMZO5BOMOB6LaRs1fnmm-Ghu7pMkXW=sH_NOEWK3pqHAbUMCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535711404-29528-5-git-send-email-yogeshnarayan.gaur@nxp.com>
-Content-Language: en-US
+In-Reply-To: <CAOMZO5BOMOB6LaRs1fnmm-Ghu7pMkXW=sH_NOEWK3pqHAbUMCg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+To: Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree <devicetree@vger.kernel.org>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Yogesh,
+On Sat, 2018-09-01 at 18:24 -0300, Fabio Estevam wrote:
+> Hi Jerome,
+> 
+> On Fri, Aug 31, 2018 at 12:02 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > There are 7 digital mics on the MIC daughter board attached
+> > to the s400 board, so add the digital microphone codec to
+> > its DTS
+> > 
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> > index ff64c429d432..f3e16cbbc61e 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> > @@ -86,6 +86,15 @@
+> >                 sound-name-prefix = "DIT";
+> >         };
+> > 
+> > +       dmics: audio-codec@3 {
+> 
+> You pass @3 without a corresponding reg = <3>, which causes dtc
+> warnings with W=1.
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> owner@vger.kernel.org> On Behalf Of Yogesh Gaur
-> Sent: Friday, August 31, 2018 4:00 PM
-> To: linux-mtd@lists.infradead.org; boris.brezillon@bootlin.com;
-> marek.vasut@gmail.com; linux-spi@vger.kernel.org;
-> devicetree@vger.kernel.org
-> Cc: robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; linux-
-> arm-kernel@lists.infradead.org; computersforpeace@gmail.com;
-> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org; Yogesh
-> Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-> Subject: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI d=
-river
->=20
-> Add binding file for NXP FlexSPI driver.
->=20
-> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-> ---
->  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 42
-> ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-
-> fspi.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> new file mode 100644
-> index 0000000..9f07116
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> @@ -0,0 +1,42 @@
-> +* NXP Flex Serial Peripheral Interface (FSPI)
-> +
-> +Required properties:
-> +  - compatible : Should be "nxp,lx2160a-fspi"
-> +  - reg :        First contains the register location and length,
-> +                 Second contains the memory mapping address and length
+Hi Fabio,
 
-Why are we overriding reg property.  Is there any special requirement.=20
+Thanks for pointing this out.
+Martin also raised concerns about this but, unfortunately, we did not get to the
+bottom of it:
 
-Can we use "reg" and "ranges" property in device tree.
-Here "reg" represents controller registers and "ranges" represent the memor=
-y address of flash.
+https://lkml.kernel.org/r/
+90780f5a6b974ee9a4f9f9f2580fc83ef6bdd805.camel@baylibre.com
 
---pk
+In a nutshell, I numbered nodes (w/o a reg prop) to keep generic names as
+suggested in the DT spec.
+
+The idea came after working on sound cards, if you check
+Documentation/devicetree/bindings/sound/simple-card.txt, you'll see this kind of
+numbering is even in documentation examples.
+
+This is used by arch/arm/boot/dts/armada-370-db.dts. This is just an example I
+picked randomly, I'm not trying to single out the marvell folks here (or ASoC
+simple card). I'm actually doing exactly the same kind of multi link stuff on
+the amlogic cards.
+
+This looks to be a wide spread practice. Running `make dtbs W=1` on ARM and
+ARM64 arch, I've seen dozen of 'node has a unit name, but no reg property'
+examples, on things like clocks, buttons, leds, pinctrl, etc ...
+
+that being said, section 2.2.1 of the DT specs says:
+
+" If the node has no reg property, the @unit-address must be omitted and the
+node-name alone differentiates the node from other nodes at the same level in
+the tree "
+
+So apparently, this is used but not ok ?
+Maybe we should simply replace the '@' with a '-' everywhere this occurs ?
+
+If possible, I'd like to get the opinion of the DT gurus about this issue.
+Cheers
+
+Jerome
