@@ -1,66 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: tlv320aic31xx: Add MICBIAS off setting
-Date: Tue, 4 Sep 2018 17:21:01 +0100
-Message-ID: <20180904162101.GK12993@sirena.org.uk>
-References: <20180831180507.28867-1-afd@ti.com>
- <20180903112656.GF10302@sirena.org.uk>
- <701a066c-33e1-4476-7403-fdb9a3c366d8@ti.com>
- <20180904144159.GC12993@sirena.org.uk>
- <7163381a-ae09-ad3b-064d-990c98f13ccb@ti.com>
- <20180904145503.GD12993@sirena.org.uk>
- <85973bf4-1acb-1731-d93e-29c8141a3c53@ti.com>
- <20180904155655.GJ12993@sirena.org.uk>
- <5e7fdb87-651d-6056-9323-7a29573b6300@ti.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v4 1/4] clk: sunxi-ng: Enable DE2_CCU for SUN8I
+ and SUN50I
+Date: Tue,  4 Sep 2018 22:06:06 +0530
+Message-ID: <20180904163609.10171-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uuKVzAmB+c+zQlhu"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5e7fdb87-651d-6056-9323-7a29573b6300@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBCHJXLOAKGQEPIIBV5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Allwinner SoC like SUN8I and SUN50I has DE2 CCU so enable them
+as default.
 
---uuKVzAmB+c+zQlhu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v4, v3:
+- none
+Changes for v2:
+- Enable for MACH_SUN8I
 
-On Tue, Sep 04, 2018 at 11:02:14AM -0500, Andrew F. Davis wrote:
-> On 09/04/2018 10:56 AM, Mark Brown wrote:
+ drivers/clk/sunxi-ng/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > I'm really having a lot of trouble seeing MICBIAS_OFF as a useful
-> > voltage to specify in DT in the first place.
-
-> I don't see the usefulness in specifying any bias voltage in DT at all,
-> it is a configuration and can be made at runtime, it has no place in DT.
-> But it is already here, so lets allow all available voltages a board may
-> need and the CODEC can supply, even 0.
-
-It is very rare for it to be useful to select the bias voltage at
-runtime - it's usually something that's decided by the electrical
-engineering at system design time and linked to selection of passive
-components rather than something that a user could usefully vary.  I
-suspect in the situations where it is useful to vary it you'd want a
-layer of indirection mapping it onto some user observable behaviour (or
-the system should just do this autonomously as with the various low
-power mic detect solutions out there).  What situations are you aware of
-where runtime configuration is useful?
-
---uuKVzAmB+c+zQlhu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluOsOwACgkQJNaLcl1U
-h9DYmAf+LCT+vhBXxyGDhabEyFRP6oDBpr/gdW0VYGmGA6gmmSyRJ/FpyQptNoaq
-yIpEeS137gVaflEf50GOe4ir99A2BEm/9bDM/GfWiqVXxVEj7DJJErUbDD/U5GVc
-tmTZRprqQE7mtLDXcabHWZ36NvJDPYSsW4nWY/lECWM/n7WhF6Uj8doy/aB7M4um
-9+IoV+5K72uid4PEJXQW2I4aqJGnGIx8OKe7+0028gC4Rz+P9zpM+e7R/Z7jEpzO
-4ERfDasO9WhLSu+4dqCqSu0eA3yAAkgDaZqbhRmRzgMozN9jHdkEB3aQdL2qf52V
-5NHHRm6HOcIHW2PXOwC7Lwbl9Aad4w==
-=rGwn
------END PGP SIGNATURE-----
-
---uuKVzAmB+c+zQlhu--
+diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
+index 826674d090fd..e20182aa9748 100644
+--- a/drivers/clk/sunxi-ng/Kconfig
++++ b/drivers/clk/sunxi-ng/Kconfig
+@@ -63,6 +63,8 @@ config SUN8I_V3S_CCU
+ 
+ config SUN8I_DE2_CCU
+ 	bool "Support for the Allwinner SoCs DE2 CCU"
++	default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
++	depends on DRM_SUN4I && (MACH_SUN8I || (ARM64 && ARCH_SUNXI))
+ 
+ config SUN8I_R40_CCU
+ 	bool "Support for the Allwinner R40 CCU"
+-- 
+2.18.0.321.gffc6fa0e3
