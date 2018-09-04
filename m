@@ -1,47 +1,37 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 02/16] dt-bindings: display: renesas: lvds: Document r8a77990
- bindings
-Date: Tue,  4 Sep 2018 15:10:13 +0300
-Message-ID: <20180904121027.24031-3-laurent.pinchart+renesas@ideasonboard.com>
-References: <20180904121027.24031-1-laurent.pinchart+renesas@ideasonboard.com>
+From: Argus Lin <argus.lin@mediatek.com>
+Subject: [PATCH 0/3] Pwrap: Mediatek pwrap driver for mt6765
+Date: Tue, 4 Sep 2018 20:31:51 +0800
+Message-ID: <1536064314-31967-1-git-send-email-argus.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180904121027.24031-1-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, argus.lin@mediatek.com, wsd_upstream@mediatek.com, Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, flora.fu@mediatek.com, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Chen Zhong <chen.zhong@mediatek.com>, "shailendra.v" <shailendra.v@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEUzIChyOGE3Nzk5MCkgc3VwcG9ydHMgdHdvIExWRFMgY2hhbm5lbHMuIEV4dGVuZCB0aGUg
-YmluZGluZyB0bwpzdXBwb3J0IHRoZW0uCgpTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0
-IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KLS0tCiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4
-dCB8IDEgKwogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZk
-cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-cmVuZXNhcyxsdmRzLnR4dAppbmRleCA1YTRlMzc5YmI0MTQuLjEzYWY3ZTJhYzdlOCAxMDA2NDQK
-LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3Jl
-bmVzYXMsbHZkcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKQEAgLTE1LDYgKzE1LDcgQEAgUmVxdWlyZWQg
-cHJvcGVydGllczoKICAgLSAicmVuZXNhcyxyOGE3Nzk2LWx2ZHMiIGZvciBSOEE3Nzk2IChSLUNh
-ciBNMy1XKSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMKICAgLSAicmVuZXNhcyxyOGE3Nzk3MC1s
-dmRzIiBmb3IgUjhBNzc5NzAgKFItQ2FyIFYzTSkgY29tcGF0aWJsZSBMVkRTIGVuY29kZXJzCiAg
-IC0gInJlbmVzYXMscjhhNzc5ODAtbHZkcyIgZm9yIFI4QTc3OTgwIChSLUNhciBWM0gpIGNvbXBh
-dGlibGUgTFZEUyBlbmNvZGVycworICAtICJyZW5lc2FzLHI4YTc3OTkwLWx2ZHMiIGZvciBSOEE3
-Nzk5MCAoUi1DYXIgRTMpIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycwogICAtICJyZW5lc2FzLHI4
-YTc3OTk1LWx2ZHMiIGZvciBSOEE3Nzk5NSAoUi1DYXIgRDMpIGNvbXBhdGlibGUgTFZEUyBlbmNv
-ZGVycwogCiAtIHJlZzogQmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggZm9yIHRoZSBtZW1vcnktbWFw
-cGVkIHJlZ2lzdGVycwotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Here's version 1 of the patch series, include 3 patches:
+1.Modify dt-bindings document/pwrap.txt to add mt6765 SoCs.
+2.Add pwrap driver for mt6765 SoCs.
+3.Add mt6357 driver for mt6765 SoCs.
+
+Argus Lin (3):
+  dt-bindings: pwrap: mediatek: add pwrap support for MT6765
+  soc: mediatek: pwrap: add pwrap driver for mt6765 SoCs
+  soc: mediatek: pwrap: add mt6357 driver for mt6765 SoCs
+
+ .../devicetree/bindings/soc/mediatek/pwrap.txt     |  1 +
+ drivers/soc/mediatek/mtk-pmic-wrap.c               | 84 +++++++++++++++++++++-
+ 2 files changed, 82 insertions(+), 3 deletions(-)
+
+-- 
+1.8.1.1.dirty
