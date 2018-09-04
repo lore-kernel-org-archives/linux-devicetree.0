@@ -1,115 +1,42 @@
 From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [RFC PATCH v2 1/3] firmware: xilinx: Add fpga API's
-Date: Tue, 4 Sep 2018 07:23:28 +0000 (UTC)
-Message-ID: <20180905072448.12488-2-nava.manne@xilinx.com>
-References: <20180905072448.12488-1-nava.manne@xilinx.com>
+Subject: [RFC PATCH v2 0/3] Add Bitstream configuration support for ZynqMP
+Date: Tue, 4 Sep 2018 07:23:31 +0000 (UTC)
+Message-ID: <20180905072448.12488-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Date: Wed, 5 Sep 2018 12:54:46 +0530
-In-Reply-To: <20180905072448.12488-1-nava.manne@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Date: Wed, 5 Sep 2018 12:54:45 +0530
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, atull@kernel.org, mdf@kernel.org, jollys@xilinx.com, sboyd@kernel.org, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, chinnikishore369@gmail.com
 Cc: Nava kishore Manne <nava.manne@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-This Patch Adds fpga API's to support the Bitstream loading
-by using firmware interface.
+This series of patches are created On top of the
+below series of patches.
+https://lkml.org/lkml/2018/8/3/687 
 
-Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
----
-Changes for v2:
-                -New Patch.
+Nava kishore Manne (3):
+  firmware: xilinx: Add fpga API's
+  dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+  fpga manager: Adding FPGA Manager support for Xilinx zynqmp
 
- drivers/firmware/xilinx/zynqmp.c     | 46 ++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h |  4 +++
- 2 files changed, 50 insertions(+)
+ .../firmware/xilinx/xlnx,zynqmp-firmware.txt  |  13 ++
+ drivers/firmware/xilinx/zynqmp.c              |  46 +++++
+ drivers/fpga/Kconfig                          |   9 +
+ drivers/fpga/Makefile                         |   1 +
+ drivers/fpga/zynqmp-fpga.c                    | 159 ++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h          |   4 +
+ 6 files changed, 232 insertions(+)
+ create mode 100644 drivers/fpga/zynqmp-fpga.c
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 7ccedf083926..9b3a59512dd7 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -447,6 +447,50 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
- 	return ret;
- }
- 
-+/**
-+ * zynqmp_pm_fpga_load - Perform the fpga load
-+ * @address:	Address to write to
-+ * @size:	pl bitstream size
-+ * @flags:
-+ *	BIT(0) - Bit-stream type.
-+ *		 0 - Full Bit-stream.
-+ *		 1 - Partial Bit-stream.
-+ *
-+ * This function provides access to pmufw. To transfer
-+ * the required bitstream into PL.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_fpga_load(const u64 address, const u32 size,
-+			       const u32 flags)
-+{
-+	return zynqmp_pm_invoke_fn(PM_FPGA_LOAD, lower_32_bits(address),
-+				   upper_32_bits(address), size, flags, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_fpga_get_status - Read value from PCAP status register
-+ * @value: Value to read
-+ *
-+ * This function provides access to the xilfpga library to get
-+ * the PCAP status
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_fpga_get_status(u32 *value)
-+{
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+	int ret;
-+
-+	if (!value)
-+		return -EINVAL;
-+
-+	ret = zynqmp_pm_invoke_fn(PM_FPGA_GET_STATUS, 0, 0, 0, 0, ret_payload);
-+	*value = ret_payload[1];
-+
-+	return ret;
-+}
-+
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.ioctl = zynqmp_pm_ioctl,
-@@ -460,6 +504,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.clock_getrate = zynqmp_pm_clock_getrate,
- 	.clock_setparent = zynqmp_pm_clock_setparent,
- 	.clock_getparent = zynqmp_pm_clock_getparent,
-+	.fpga_load = zynqmp_pm_fpga_load,
-+	.fpga_get_status = zynqmp_pm_fpga_get_status,
- };
- 
- /**
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 58a74781b51d..5a6bd5e58ea4 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -34,6 +34,8 @@
- 
- enum pm_api_id {
- 	PM_GET_API_VERSION = 1,
-+	PM_FPGA_LOAD = 22,
-+	PM_FPGA_GET_STATUS,
- 	PM_IOCTL = 34,
- 	PM_QUERY_DATA,
- 	PM_CLOCK_ENABLE,
-@@ -90,6 +92,8 @@ struct zynqmp_pm_query_data {
- 
- struct zynqmp_eemi_ops {
- 	int (*get_api_version)(u32 *version);
-+	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
-+	int (*fpga_get_status)(u32 *value);
- 	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
- 	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
- 	int (*clock_enable)(u32 clock_id);
 -- 
 2.18.0
