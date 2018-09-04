@@ -1,13 +1,14 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v4 1/4] clk: sunxi-ng: Enable DE2_CCU for SUN8I
- and SUN50I
-Date: Tue,  4 Sep 2018 22:06:06 +0530
-Message-ID: <20180904163609.10171-1-jagan@amarulasolutions.com>
+Subject: [PATCH v4 2/4] arm64: defconfig: Enable CONFIG_DRM_SUN4I
+Date: Tue,  4 Sep 2018 22:06:07 +0530
+Message-ID: <20180904163609.10171-2-jagan@amarulasolutions.com>
+References: <20180904163609.10171-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBCHJXLOAKGQEPIIBV5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBDPJXLOAKGQED465X4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180904163609.10171-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,31 +19,27 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner SoC like SUN8I and SUN50I has DE2 CCU so enable them
-as default.
+Enable DRM Support for Allwinner Display Engine, built as a module.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
-Changes for v4, v3:
+Changes for v4, v3, v2:
 - none
-Changes for v2:
-- Enable for MACH_SUN8I
 
- drivers/clk/sunxi-ng/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
-index 826674d090fd..e20182aa9748 100644
---- a/drivers/clk/sunxi-ng/Kconfig
-+++ b/drivers/clk/sunxi-ng/Kconfig
-@@ -63,6 +63,8 @@ config SUN8I_V3S_CCU
- 
- config SUN8I_DE2_CCU
- 	bool "Support for the Allwinner SoCs DE2 CCU"
-+	default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
-+	depends on DRM_SUN4I && (MACH_SUN8I || (ARM64 && ARCH_SUNXI))
- 
- config SUN8I_R40_CCU
- 	bool "Support for the Allwinner R40 CCU"
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index f67e8d5e93ad..4919e4577548 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -433,6 +433,7 @@ CONFIG_DRM_EXYNOS_DSI=y
+ CONFIG_DRM_EXYNOS_HDMI=y
+ CONFIG_DRM_EXYNOS_MIC=y
+ CONFIG_DRM_ROCKCHIP=m
++CONFIG_DRM_SUN4I=m
+ CONFIG_ROCKCHIP_ANALOGIX_DP=y
+ CONFIG_ROCKCHIP_CDN_DP=y
+ CONFIG_ROCKCHIP_DW_HDMI=y
 -- 
 2.18.0.321.gffc6fa0e3
