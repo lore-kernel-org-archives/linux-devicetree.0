@@ -1,113 +1,92 @@
-From: Argus Lin <argus.lin@mediatek.com>
-Subject: [PATCH 3/3] soc: mediatek: pwrap: add mt6357 driver for mt6765 SoCs
-Date: Tue, 4 Sep 2018 20:31:54 +0800
-Message-ID: <1536064314-31967-4-git-send-email-argus.lin@mediatek.com>
-References: <1536064314-31967-1-git-send-email-argus.lin@mediatek.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 0/7] spi: spi-mem: Add a driver for NXP FlexSPI
+ controller
+Date: Tue, 4 Sep 2018 14:43:29 +0200
+Message-ID: <20180904144329.35cf27de@bbrezillon>
+References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1536064314-31967-1-git-send-email-argus.lin@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, argus.lin@mediatek.com, wsd_upstream@mediatek.com, Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, flora.fu@mediatek.com, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Chen Zhong <chen.zhong@mediatek.com>, "shailendra.v" <shailendra.v@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: linux-mtd@lists.infradead.org, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-MT6357 is a new power management IC and it is used for mt6765 SoCs.
-To define mt6357_regs for pmic register mapping and pmic_mt6357
-for accessing register.
+Hi Yogesh,
 
-Signed-off-by: Argus Lin <argus.lin@mediatek.com>
----
- drivers/soc/mediatek/mtk-pmic-wrap.c | 35 ++++++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
+On Fri, 31 Aug 2018 15:59:57 +0530
+Yogesh Gaur <yogeshnarayan.gaur@nxp.com> wrote:
 
-diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index ddaeace..2b2cee1 100644
---- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-+++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -161,6 +161,21 @@ enum dew_regs {
- 	[PWRAP_DEW_RDDMY_NO] =		0x030C,
- };
- 
-+static const u32 mt6357_regs[] = {
-+	[PWRAP_DEW_DIO_EN] =		0x040A,
-+	[PWRAP_DEW_READ_TEST] =		0x040C,
-+	[PWRAP_DEW_WRITE_TEST] =	0x040E,
-+	[PWRAP_DEW_CRC_EN] =		0x0412,
-+	[PWRAP_DEW_CRC_VAL] =		0x0414,
-+	[PWRAP_DEW_CIPHER_KEY_SEL] =	0x0418,
-+	[PWRAP_DEW_CIPHER_IV_SEL] =	0x041A,
-+	[PWRAP_DEW_CIPHER_EN] =		0x041C,
-+	[PWRAP_DEW_CIPHER_RDY] =	0x041E,
-+	[PWRAP_DEW_CIPHER_MODE] =	0x0420,
-+	[PWRAP_DEW_CIPHER_SWRST] =	0x0422,
-+	[PWRAP_DEW_RDDMY_NO] =		0x0424,
-+};
-+
- enum pwrap_regs {
- 	PWRAP_MUX_SEL,
- 	PWRAP_WRAP_EN,
-@@ -716,6 +731,7 @@ enum pwrap_regs {
- enum pmic_type {
- 	PMIC_MT6323,
- 	PMIC_MT6351,
-+	PMIC_MT6357,
- 	PMIC_MT6380,
- 	PMIC_MT6397,
- };
-@@ -1175,6 +1191,7 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
- 		break;
- 	case PMIC_MT6323:
- 	case PMIC_MT6351:
-+	case PMIC_MT6357:
- 		pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_EN],
- 			    0x1);
- 		break;
-@@ -1460,11 +1477,26 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
- 	.pwrap_write = pwrap_write16,
- };
- 
-+static const struct pwrap_slv_type pmic_mt6357 = {
-+	.dew_regs = mt6357_regs,
-+	.type = PMIC_MT6357,
-+	.regmap = &pwrap_regmap_config16,
-+	.caps = 0,
-+	.pwrap_read = pwrap_read16,
-+	.pwrap_write = pwrap_write16,
-+};
-+
- static const struct of_device_id of_slave_match_tbl[] = {
- 	{
- 		.compatible = "mediatek,mt6323",
- 		.data = &pmic_mt6323,
- 	}, {
-+		.compatible = "mediatek,mt6351",
-+		.data = &pmic_mt6351,
-+	}, {
-+		.compatible = "mediatek,mt6357",
-+		.data = &pmic_mt6357,
-+	}, {
- 		/* The MT6380 PMIC only implements a regulator, so we bind it
- 		 * directly instead of using a MFD.
- 		 */
-@@ -1474,9 +1506,6 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
- 		.compatible = "mediatek,mt6397",
- 		.data = &pmic_mt6397,
- 	}, {
--		.compatible = "mediatek,mt6351",
--		.data = &pmic_mt6351,
--	}, {
- 		/* sentinel */
- 	}
- };
--- 
-1.8.1.1.dirty
+> - Add a driver for NXP FlexSPI host controller
+> 
+>  FlexSPI is a flexsible SPI host controller [1], Chapter 30 page 1475,
+>  which supports two SPI channels and up to 4 external devices.
+>  Each channel supports Single/Dual/Quad/Octal mode data transfer (1/2/4/8 bidirectional data lines)
+>  i.e. FlexSPI acts as an interface to external devices, maximum 4, each with up to 8
+>  bidirectional data lines.
+> 
+>  FlexSPI controller is similar to the existing Freescale/NXP QuadSPI
+>  controller with advanced features.
+> 
+> - Tested this driver with mtd_debug(Erase/Write/Read) utility and JFFS2
+>  filesystem mounting and booting on NXP LX2160ARDB[2] and LX2160AQDS targets.
+>  LX2160ARDB is having two NOR slave device connected on single bus A
+>  i.e. A0 and A1 (CS0 and CS1).
+>  LX2160AQDS is having two NOR slave device connected on separate buses
+>  one flash on A0 and second on B1 i.e. (CS0 and CS3).
+>  Verified this driver on following SPI NOR flashes:
+>     Micron, mt35xu512aba[3], [Read - 1 bit mode]
+>     Cypress, s25fl512s, [Read - 1/2/4 bit mode]
+> 
+> Patch 1 adds variable size in spi_device struct, to save the
+> size of connected slave device.
+> Patch 2 adds flags for octal I/O data transfer.
+> Support for octal flash commands and other framework changes would going to be done in different
+> patch set.
+> Patch 3 adds a driver for the NXP FlexSPI controller, driver is based on
+> new spi-mem framework.
+
+Can we please omit octa mode support for now and focus on
+single/dual/quad SPI support? That is, drop patch 2, and do not set the
+OCTAL flags in patch 3.
+
+Regards,
+
+Boris
+
+> Patch 4 add binding file for this driver.
+> Patch 5 add device node property for FlexSPI driver for lx2160 SoC.
+> Patch 6 enables the config option.
+> Patch 7 add MAINTAINERS file.
+> 
+> [1] https://www.nxp.com/docs/en/reference-manual/IMXRT1050RM.pdf
+> [2] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=9721
+> [3] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=63445
+> 
+> This series adds below patches:
+> Yogesh Gaur (7):
+>   spi: add slave device size in spi_device struct
+>   spi: add flags for octal I/O data transfer
+>   spi: spi-mem: Add a driver for NXP FlexSPI controller
+>   dt-bindings: spi: add binding file for NXP FlexSPI driver
+>   arm64: dts: lx2160a: add fspi node property
+>   arm64: defconfig: enable NXP FlexSPI driver
+>   MAINTAINERS: add maintainers for the NXP FlexSPI driver
+> 
+>  .../devicetree/bindings/spi/spi-nxp-fspi.txt       |   42 +
+>  MAINTAINERS                                        |    6 +
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts  |   21 +
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |   12 +
+>  arch/arm64/configs/defconfig                       |    1 +
+>  drivers/mtd/devices/m25p80.c                       |    6 +
+>  drivers/mtd/spi-nor/spi-nor.c                      |    2 +
+>  drivers/spi/Kconfig                                |   10 +
+>  drivers/spi/Makefile                               |    1 +
+>  drivers/spi/spi-nxp-fspi.c                         | 1242 ++++++++++++++++++++
+>  include/linux/spi/spi.h                            |    4 +
+>  11 files changed, 1347 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+>  create mode 100644 drivers/spi/spi-nxp-fspi.c
+> 
