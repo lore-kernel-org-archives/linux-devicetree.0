@@ -1,54 +1,79 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v4 4/4] drm/sun4i: Enable DesignWare HDMI for SUN50I
-Date: Tue,  4 Sep 2018 22:06:09 +0530
-Message-ID: <20180904163609.10171-4-jagan@amarulasolutions.com>
-References: <20180904163609.10171-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Emmanuel Vadot <manu@bidouilliste.com>
+Subject: Re: [PATCH v3 27/30] ARM: dts: sun8i: h3: use calibration for ths
+Date: Tue, 4 Sep 2018 18:46:23 +0200
+Message-ID: <20180904184623.e4386b8e6b657b1b25e90c09@bidouilliste.com>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+        <20180830154518.29507-28-embed3d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBF7JXLOAKGQE2NAJ3UA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180904163609.10171-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180830154518.29507-28-embed3d@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, linux@armlinux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, eugen.hristev@microchip.com, rdunlap@infradead.org, vilhelm.gray@gmail.com, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, geert+renesas@glider.be, lukas@wunner.de, icenowy@aosc.io, arnd@arndb.de, broonie@kernel.org, arnaud.pouliquen@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Allwinner SUN50I are now using DesignWare HDMI so enable
-them as default. This can build DRM_SUN8I_DW_HDMI as module
-since DRM in arm64 has module.
 
-Making this as defult to SUN8I, may cause an issue while
-loading since arm32 DRM built as static.
+ Hi Philipp,
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v4:
-- none
-Changes for v3:
-- skip SUN8I enablement, since it built statically for arm32
-Changes for v2:
-- Enable for SUN8I
+On Thu, 30 Aug 2018 17:45:15 +0200
+Philipp Rossak <embed3d@gmail.com> wrote:
 
- drivers/gpu/drm/sun4i/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+> The H3 SID is supported by the kernel so we can add a NVMEM Data cell,
+> that contains the calibration data.
+> 
+> On the H3 the eFuses are located at the offset 0x200. The thermal data
+> itself has an offset of 0x34 from the eFuse base. So we end on an offset
+> of 0x234.
+> 
+> Signed-off-by: Philipp Rossak <embed3d@gmail.com>
+> ---
+>  arch/arm/boot/dts/sun8i-h3.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+> index 1866aec69ec1..0fc447f0c02a 100644
+> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> @@ -106,8 +106,15 @@
+>  
+>  	soc {
+>  		sid: eeprom@1c14000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+>  			compatible = "allwinner,sun8i-h3-sid";
+>  			reg = <0x01c14000 0x400>;
+> +
+> +			/* Data cells */
+> +			thermal_calibration: calib@234 {
+> +				reg = <0x234 0x8>;
+> +			};
 
-diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
-index cfa8b96273fb..5d0c450db148 100644
---- a/drivers/gpu/drm/sun4i/Kconfig
-+++ b/drivers/gpu/drm/sun4i/Kconfig
-@@ -52,6 +52,7 @@ config DRM_SUN6I_DSI
- 
- config DRM_SUN8I_DW_HDMI
- 	tristate "Support for Allwinner version of DesignWare HDMI"
-+	default ARM64 && ARCH_SUNXI
- 	depends on DRM_SUN4I
- 	select DRM_DW_HDMI
- 	help
+ You are declaring 8 bytes of calibration data but to my knowledge it's
+only 2 bytes per sensor, so 2 bytes for H3.
+ Am I missing something ?
+
+ Thanks,
+>  		};
+>  	};
+>  
+> @@ -227,4 +234,6 @@
+>  &ths {
+>  	compatible = "allwinner,sun8i-h3-ths";
+>  	#thermal-sensor-cells = <0>;
+> +	nvmem-cells = <&thermal_calibration>;
+> +	nvmem-cell-names = "calibration";
+>  };
+> -- 
+> 2.11.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
 -- 
-2.18.0.321.gffc6fa0e3
+Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
