@@ -1,110 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: media: add Amlogic Video Decoder Bindings
-Date: Mon, 3 Sep 2018 20:30:01 -0500
-Message-ID: <20180904012958.GA14387@bogus>
-References: <20180831085205.14760-1-mjourdan@baylibre.com>
- <20180831085205.14760-2-mjourdan@baylibre.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH] ASoC: tlv320aic31xx: Add MICBIAS off
+	setting
+Date: Tue, 4 Sep 2018 08:55:06 -0500
+Message-ID: <701a066c-33e1-4476-7403-fdb9a3c366d8@ti.com>
+References: <20180831180507.28867-1-afd@ti.com>
+ <20180903112656.GF10302@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180831085205.14760-2-mjourdan@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Jourdan <mjourdan@baylibre.com>
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, linux-amlogic@lists.infradead.org, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180903112656.GF10302@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 10:52:02AM +0200, Maxime Jourdan wrote:
-> Add documentation for the meson vdec dts node.
+On 09/03/2018 06:26 AM, Mark Brown wrote:
+> On Fri, Aug 31, 2018 at 01:05:07PM -0500, Andrew F. Davis wrote:
+>> Leaving microphone bias off is a valid setting and even used in the DT
+>> binding document example. Add this setting here and document the same.
+>> Although it may not make much sense to enable a microphone here without
+>> any bias, it is a valid setting that can be chosen by DT and may be
+>> needed for some boards.
 > 
-> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
-> ---
->  .../bindings/media/amlogic,vdec.txt           | 63 +++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
+> If we really want to pay attention to something setting this up we'd
+> need to completely remove the widget - what the code is doing at the
+> minute is setting the voltage that the bias will go to when enabled,
+> there's still a widget for turning it on and off.  There's some chance
+> that this will break existing boards.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-> new file mode 100644
-> index 000000000000..c6450f2e7f28
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
-> @@ -0,0 +1,63 @@
-> +Amlogic Video Decoder
-> +================================
-> +
-> +The VDEC IP is composed of the following blocks :
-> +
-> +- ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
-> +then feed from this VIFIFO.
-> +- VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, H.263, H.264.
-> +- VDEC_2 is used as a helper for corner cases like H.264 4K on older SoCs.
-> +It is not handled by this driver.
 
-Bindings should be complete, not a reflection of what a particular 
-driver supports.
-
-> +- VDEC_HCODEC is the H.264 encoding block. It is not handled by this driver.
-> +- VDEC_HEVC can decode HEVC and VP9.
-> +
-> +Device Tree Bindings:
-> +---------------------
-> +
-> +VDEC: Video Decoder
-> +--------------------------
-> +
-> +Required properties:
-> +- compatible: value should be different for each SoC family as :
-> +	- GXBB (S905) : "amlogic,gxbb-vdec"
-> +	- GXL (S905X, S905D) : "amlogic,gxl-vdec"
-> +	- GXM (S912) : "amlogic,gxm-vdec"
-> +- reg: base address and size of he following memory-mapped regions :
-> +	- dos
-> +	- esparser
-> +- reg-names: should contain the names of the previous memory regions
-> +- interrupts: should contain the vdec and esparser IRQs.
-> +- amlogic,ao-sysctrl: should point to the AOBUS sysctrl node
-> +- amlogic,canvas: should point to a canvas provider node
-> +- clocks: should contain the following clocks :
-> +	- dos_parser
-> +	- dos
-> +	- vdec_1
-> +	- vdec_hevc
-> +- clock-names: should contain the names of the previous clocks
-> +- resets: should contain the parser reset.
-> +- reset-names: should be "esparser".
-> +
-> +Example:
-> +
-> +vdec: video-decoder@c8820000 {
-> +	compatible = "amlogic,gxbb-vdec";
-> +	reg = <0x0 0xc8820000 0x0 0x10000>,
-> +	      <0x0 0xc110a580 0x0 0xe4>;
-> +	reg-names = "dos", "esparser";
-> +
-> +	interrupts = <GIC_SPI 44 IRQ_TYPE_EDGE_RISING>,
-> +		     <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-> +
-> +	amlogic,ao-sysctrl = <&sysctrl_AO>;
-> +	amlogic,canvas = <&canvas>;
-> +
-> +	clocks = <&clkc CLKID_DOS_PARSER>,
-> +		 <&clkc CLKID_DOS>,
-> +		 <&clkc CLKID_VDEC_1>,
-> +		 <&clkc CLKID_VDEC_HEVC>;
-> +	clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
-> +
-> +	resets = <&reset RESET_PARSER>;
-> +	reset-names = "esparser";
-> +};
-> -- 
-> 2.18.0
-> 
+Turning on bias is controlled separately, automatically in user-space in
+many cases, not based on the board. The DT needs to have a way to state
+that 0v is the needed bias on this board, without this you can not set
+0v bias and 2v is chosen by default (which is IMHO should be 0v but that
+would change existing behavior so I won't touch that).
