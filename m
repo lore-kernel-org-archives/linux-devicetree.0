@@ -1,35 +1,78 @@
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH 1/6] usb: xhci-mtk: resume USB3 roothub first
-Date: Tue, 4 Sep 2018 17:44:23 +0300
-Message-ID: <93e36b7b-f0d0-4f5e-69b7-4195c25628f4@linux.intel.com>
-References: <3bcc220aa54bfebc39cea54cd736388ad37ee0c5.1535510898.git.chunfeng.yun@mediatek.com>
- <f144173b-6131-21cf-1ead-60d938ac289a@cogentembedded.com>
- <1535591392.32173.30.camel@mhfsdcap03>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: tlv320aic31xx: Add MICBIAS off
+	setting
+Date: Tue, 4 Sep 2018 15:41:59 +0100
+Message-ID: <20180904144159.GC12993@sirena.org.uk>
+References: <20180831180507.28867-1-afd@ti.com>
+ <20180903112656.GF10302@sirena.org.uk>
+ <701a066c-33e1-4476-7403-fdb9a3c366d8@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535591392.32173.30.camel@mhfsdcap03>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============3479877297299373407=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <701a066c-33e1-4476-7403-fdb9a3c366d8@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30.08.2018 04:09, Chunfeng Yun wrote:
-> Hi,
-> On Wed, 2018-08-29 at 12:13 +0300, Sergei Shtylyov wrote:
->> On 8/29/2018 5:55 AM, Chunfeng Yun wrote:
->>
->>> Give USB3 devices a better chance to enumerate at USB3 speeds if
->>> they are connected to a suspended host.
->>> Porting from "671ffdf xhci: resume USB 3 roothub first"
->>
->>      From commit 671ffdff5b13 ("xhci: resume USB 3 roothub first").
-> 
-> Ok, Thanks
-> 
 
-adding to queue (I'll fix that commit ID)
+--===============3479877297299373407==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m51xatjYGsM+13rf"
+Content-Disposition: inline
 
--Mathias
+
+--m51xatjYGsM+13rf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Sep 04, 2018 at 08:55:06AM -0500, Andrew F. Davis wrote:
+> On 09/03/2018 06:26 AM, Mark Brown wrote:
+
+> > If we really want to pay attention to something setting this up we'd
+> > need to completely remove the widget - what the code is doing at the
+> > minute is setting the voltage that the bias will go to when enabled,
+> > there's still a widget for turning it on and off.  There's some chance
+> > that this will break existing boards.
+
+> Turning on bias is controlled separately, automatically in user-space in
+> many cases, not based on the board. The DT needs to have a way to state
+> that 0v is the needed bias on this board, without this you can not set
+> 0v bias and 2v is chosen by default (which is IMHO should be 0v but that
+> would change existing behavior so I won't touch that).
+
+Surely turning on MICBIAS at 0V is equivalent to leaving the bias off?
+
+--m51xatjYGsM+13rf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluOmbcACgkQJNaLcl1U
+h9BlLQf9Hx/u2QF/ksuOmtcn83rVcnqhADne0vQ++eSoUjlL7mIhKFrPJUuZd6Mp
+J1GvAuP1MThcX+k+fZ9JzYNdzoq3fkciPR+IiLqIBwhHQN4kBqHrFtn+4DyBwijt
+Z3HTRwCptBOXoP8Sok8IJfbQPSv4eA7LwjNR+KPyu9nNCcyl4xfg/3xC9+sIdWTi
+FbVOlWYANa2cInTE7TVX7X6gAC019dGxPt2n42ssnWFmGH9iViWweWsaLzgdD/eS
+MPCfLi5wIZjf5zdKq4IM0mYdwlnaOx6SjUz2iXOY/u6P6E53BUCdE4GEPZnWQK33
+BZlSGaInys8bVfeFeeqBUIYeQfQ74A==
+=/xOH
+-----END PGP SIGNATURE-----
+
+--m51xatjYGsM+13rf--
+
+--===============3479877297299373407==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3479877297299373407==--
