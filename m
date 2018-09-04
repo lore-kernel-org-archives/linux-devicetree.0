@@ -1,60 +1,119 @@
-From: Xu Zaibo <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 13/40] vfio: Add support for Shared Virtual Addressing
-Date: Tue, 4 Sep 2018 10:12:37 +0800
-Message-ID: <5B8DEA15.7020404@huawei.com>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-14-jean-philippe.brucker@arm.com>
-	<5B83B11E.7010807@huawei.com>
-	<1d5b6529-4e5a-723c-3f1b-dd5a9adb490c@arm.com>
-	<5B89F818.7060300@huawei.com>
-	<3a961aff-e830-64bb-b6a9-14e08de1abf5@arm.com>
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH 3/5] drivers: clk-qoriq: Add clockgen support for lx2160a
+Date: Tue, 4 Sep 2018 03:08:57 +0000
+Message-ID: <DB5PR0401MB221372E7A7DA3ED53BA721B2F3030@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+References: <1534747636-20064-1-git-send-email-vabhav.sharma@nxp.com>
+ <1534747636-20064-4-git-send-email-vabhav.sharma@nxp.com>
+ <4a9ea6b451683ec98c92e86a5ae6b91213a6afcf.camel@buserror.net>
+ <VI1PR04MB4800E8B1E8541FCA9221A1CFF3080@VI1PR04MB4800.eurprd04.prod.outlook.com>
+ <d2cfd49eb33a3ce74f0e78f2b53d3954d2cb3e76.camel@buserror.net>
+ <b31ae8e788fb93971167faa9b55b497e838532c4.camel@buserror.net>
+ <DB5PR0401MB22130C025AA4CCAD0221781DF30F0@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+ <f6707cb54c3e6da1b50f45f915c996dfccfeacda.camel@buserror.net>
+ <DB5PR0401MB221332A5ED14C8E14C8D18A1F30C0@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+ <3a4274af2200923875ff05f945888a34d6dccee3.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <3a961aff-e830-64bb-b6a9-14e08de1abf5-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>
-Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, fanghao11 <fanghao11-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?57Gz57Gz?= <kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3a4274af2200923875ff05f945888a34d6dccee3.camel@buserror.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, Vabhav Sharma <vabhav.sharma@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Varun Sethi <V.Sethi@nxp.com>, Udit Kumar <udit.kumar@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2018/9/3 18:34, Jean-Philippe Brucker wrote:
-> On 01/09/18 03:23, Xu Zaibo wrote:
->> As one application takes a whole function while using VFIO-PCI, why do
->> the application and the
->> function need to enable PASID capability? (Since just one I/O page table
->> is enough for them.)
-> At the moment the series doesn't provide support for SVA without PASID
-> (on the I/O page fault path, 08/40). In addition the BIND ioctl could be
-> used by the owner application to bind other processes (slaves) and
-> perform sub-assignment. But that feature is incomplete because we don't
-> send stop_pasid notification to the owner when a slave dies.
->
-So, Could I understand like this?
-
-     1. While the series are finished well, VFIO-PCI device can be held 
-by only one process
-         through binding IOCTL command without PASID (without PASID 
-being exposed user space).
-
-     2. While using VFIO-PCI device to support multiple processes with 
-SVA series, a primary
-         process with multiple secondary processes must be deployed just 
-like DPDK(https://www.dpdk.org/).
-         And, the PASID still has to be exposed to user land.
-
-
-Thanks,
-Zaibo
-
-.
+SGkgU2NvdHQsDQoNClBsZWFzZSBzZWUgbXkgcmVwbGF5IGlubGluZS4NCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1hcm0ta2VybmVsIDxsaW51eC1hcm0ta2Vy
+bmVsLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9yZz4NCj4gT24gQmVoYWxmIE9mIFNjb3R0IFdv
+b2QNCj4gU2VudDogMjAxOOW5tDnmnIg05pelIDQ6MzQNCj4gVG86IEFuZHkgVGFuZyA8YW5keS50
+YW5nQG54cC5jb20+OyBWYWJoYXYgU2hhcm1hDQo+IDx2YWJoYXYuc2hhcm1hQG54cC5jb20+OyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+Zzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXhwcGMt
+ZGV2QGxpc3RzLm96bGFicy5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZzsgbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207DQo+IHNib3lkQGtlcm5lbC5vcmc7IHJqd0By
+and5c29ja2kubmV0OyB2aXJlc2gua3VtYXJAbGluYXJvLm9yZzsNCj4gbGludXgtY2xrQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWwtb3du
+ZXJAdmdlci5rZXJuZWwub3JnOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsNCj4gd2lsbC5kZWFj
+b25AYXJtLmNvbTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGFybmRAYXJuZGIuZGU7DQo+
+IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7IHlhbWFkYS5tYXNhaGlyb0Bzb2Npb25leHQu
+Y29tDQo+IENjOiBZb2dlc2ggTmFyYXlhbiBHYXVyIDx5b2dlc2huYXJheWFuLmdhdXJAbnhwLmNv
+bT47DQo+IGxpbnV4QGFybWxpbnV4Lm9yZy51azsgVmFydW4gU2V0aGkgPFYuU2V0aGlAbnhwLmNv
+bT47IFVkaXQgS3VtYXINCj4gPHVkaXQua3VtYXJAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCAzLzVdIGRyaXZlcnM6IGNsay1xb3JpcTogQWRkIGNsb2NrZ2VuIHN1cHBvcnQgZm9yDQo+
+IGx4MjE2MGENCj4gDQo+IE9uIE1vbiwgMjAxOC0wOS0wMyBhdCAwMToxNyArMDAwMCwgQW5keSBU
+YW5nIHdyb3RlOg0KPiA+IEhpIFNjb3R0LA0KPiA+DQo+ID4gUGxlYXNlIHNlZSBteSByZXBsYXkg
+aW4gbGluZS4NCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZy
+b206IExpbnV4cHBjLWRldg0KPiA+ID4gPGxpbnV4cHBjLWRldi1ib3VuY2VzK2IyOTk4Mz1mcmVl
+c2NhbGUuY29tQGxpc3RzLm96bGFicy5vcmc+IE9uDQo+ID4gPiBCZWhhbGYgT2YgU2NvdHQgV29v
+ZA0KPiA+ID4gU2VudDogMjAxOOW5tDnmnIgx5pelIDQ6MjkNCj4gPiA+IFRvOiBBbmR5IFRhbmcg
+PGFuZHkudGFuZ0BueHAuY29tPjsgVmFiaGF2IFNoYXJtYQ0KPiA+ID4gPHZhYmhhdi5zaGFybWFA
+bnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiA+ID4gbWFyay5ydXRsYW5k
+QGFybS5jb207IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOw0KPiA+ID4gbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4g
+PiA+IHNib3lkQGtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyB2aXJlc2gua3VtYXJAbGlu
+YXJvLm9yZzsNCj4gPiA+IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBtQHZnZXIu
+a2VybmVsLm9yZzsNCj4gPiA+IGxpbnV4LWtlcm5lbC1vd25lckB2Z2VyLmtlcm5lbC5vcmc7IGNh
+dGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiA+ID4gd2lsbC5kZWFjb25AYXJtLmNvbTsgZ3JlZ2to
+QGxpbnV4Zm91bmRhdGlvbi5vcmc7IGFybmRAYXJuZGIuZGU7DQo+ID4gPiBrc3Rld2FydEBsaW51
+eGZvdW5kYXRpb24ub3JnOyB5YW1hZGEubWFzYWhpcm9Ac29jaW9uZXh0LmNvbQ0KPiA+ID4gQ2M6
+IFlvZ2VzaCBOYXJheWFuIEdhdXIgPHlvZ2VzaG5hcmF5YW4uZ2F1ckBueHAuY29tPjsNCj4gPiA+
+IGxpbnV4QGFybWxpbnV4Lm9yZy51azsgVWRpdCBLdW1hciA8dWRpdC5rdW1hckBueHAuY29tPjsg
+VmFydW4NCj4gU2V0aGkNCj4gPiA+IDxWLlNldGhpQG54cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIDMvNV0gZHJpdmVyczogY2xrLXFvcmlxOiBBZGQgY2xvY2tnZW4gc3VwcG9ydA0K
+PiA+ID4gZm9yIGx4MjE2MGENCj4gPiA+DQo+ID4gPiBPbiBGcmksIDIwMTgtMDgtMzEgYXQgMDY6
+MTIgKzAwMDAsIEFuZHkgVGFuZyB3cm90ZToNCj4gPiA+ID4gV2UgZG9uJ3Qgd2FudCB0byBpbmNy
+ZWFzZSBOVU1fQ01VWCBlYWNoIHRpbWUgbmV3IHNvYyB3aXRoDQo+IG1vcmUNCj4gPiA+DQo+ID4g
+PiBjbXV4ZXMgYWRkZWQuDQo+ID4gPg0KPiA+ID4gWW91IGRvbid0IHdhbnQgdG8gaGF2ZSB0byBt
+YWtlIGEgdHJpdmlhbCBjaGFuZ2UgZWFjaCB0aW1lIHlvdSBleGNlZWQNCj4gPiA+IGEgbGltaXQg
+dGhhdCBoYXMgeWV0IHRvIGJlIGV4Y2VlZGVkIG9uY2Ugc2luY2UgTlVNX0NNVVggd2FzIGFkZGVk
+Pw0KPiA+ID4gVGhpcyBpc24ndCBBQkkgb3IgaW4gYW55IG90aGVyIHdheSBoYXJkIHRvIGNoYW5n
+ZS4gIEl0J3MgcmlnaHQgaW4NCj4gPiA+IHRoZSBzYW1lIGZpbGUgYXMgdGhlIGNoaXAgZGVzY3Jp
+cHRpb24geW91J2QgYmUgYWRkaW5nLg0KPiA+ID4NCj4gPiA+IEFuZCBldmVuIGlmIGEgY2hpcCBk
+aWQgY29tZSBhbG9uZyB3aXRoIDE2IGNtdXhlcywgeW91J2QgdGhlbiBuZWVkIHRvDQo+ID4gPiBp
+bmNyZWFzZSB0aGUgYXJyYXkgdG8gMTcgdG8gaG9sZCB0aGUgLTEgaWYgeW91IGRvbid0IHdhbnQg
+dG8gbGVhdmUgYQ0KPiA+ID4gc2l0dWF0aW9uIGxpa2UgdGhlDQo+ID4gPiBwNDA4MCBpcyBpbiBu
+b3csIHdoZXJlIGEgY2hpcCdzIGNtdXggYXJyYXkgY291bGQgYmUgYnJva2VuIGJ5DQo+ID4gPiBp
+bmNyZWFzaW5nIE5VTV9DTVVYIGZ1cnRoZXIuDQo+ID4gPg0KPiA+DQo+ID4gW0FuZHldIEFkZGlu
+ZyBidWZmZXIgdG8gYSBsaW1pdGF0aW9uIG51bWJlciBpcyBhbHdheXMgYSBnb29kIGhhYml0DQo+
+ID4gd2hlbiBjb2RpbmcuIFdlIG9mdGVuIGZvcmdldCB0byBpbmNyZWFzZSB0aGlzIHZhbHVlIHdo
+ZW4gYSBuZXcgY2hpcA0KPiA+IHdpdGggbW9yZSBjbXV4ZXMgYWRkZWQuDQo+IA0KPiAib2Z0ZW4i
+PyAgVGhlcmUgaGFzIG5ldmVyIGJlZW4gYSBuZXcgY2hpcCBhZGRlZCB3aXRoIG1vcmUgY211eGVz
+DQo+IHRoYW4gcDQwODAncyA4LCBhbmQgaWYgb25lIGRvZXMgY29tZSBhbG9uZyBhbmQgeW91IGZv
+cmdldCwgdGhlIGNvbXBpbGVyDQo+IHNob3VsZCBjb21wbGFpbiBhYm91dCBleGNlZWRpbmcgdGhl
+IGFycmF5IGxlbmd0aCB3aXRoIGEgc3RhdGljIGluaXRpYWxpemVyLg0KPiBUaGlzIGlzbid0IGxp
+a2UgYW4gYXJyYXkgdGhhdCBpcyBmaWxsZWQgd2l0aCBhIHJ1bnRpbWUtZGV0ZXJtaW5lZCBsZW5n
+dGguDQo+IA0KPiA+IExpa2UgdGhpcyBwYXRjaCwgd2UgZGlkbid0IGluY3JlYXNlIHRoaXMgdmFs
+dWUgYXQgZmlyc3QuIFdlIHNwZW50IGENCj4gPiBsb3Qgb2YgdGltZSBmaW5kaW5nIG91dCB0aGF0
+IE5VTV9DTVVYIG5lZWRzIHRvIGJlIGluY3JlYXNlZCB0b28uDQo+IA0KPiBBcmUgeW91IHRhbGtp
+bmcgYWJvdXQgc29tZSBvdGhlciBjaGlwIHRoYXQgeW91IGhhdmVuJ3Qgc2VudCBhIHBhdGNoIGZv
+cg0KPiB5ZXQ/DQo+IE9yIGlzIHRoZSBjbXV4IGFycmF5IGZvciB0aGlzIGNoaXAgd3Jvbmc/ICBX
+aGF0IHNwZWNpZmljYWxseSBkaWQgeW91IHNlZQ0KPiBoYXBwZW4gImF0IGZpcnN0Ij8NCj4gDQpb
+QW5keV0gU29ycnksICJPZnRlbiIgaXMgbm90IGEgcmlnaHQgd29yZC4gSSBtZWFudCB3ZSB0ZW5k
+IHRvIGFkZCBuZXcgc29jIHdpdGhvdXQgdXBkYXRpbmcgTlVNX0NNVVguDQogDQo+ID4gSXQgaXMg
+YSBwZXJzb25hbCBwcmVmZXJlbmNlIGhvdyB0byBzZXQgdGhpcyB2YWx1ZS4gSSB0aGluayBpdCBp
+cw0KPiA+IGJldHRlciB0byBpbmNyZWFzZSBpdCB0byAxNiwgbm90IE5VTV9DTVVYKzEgYXMgbG9u
+ZyBhcyB3ZSBmaXggdGhlDQo+ID4gUDQwODAgaXNzdWUgZXZlbiB0aG91Z2ggaXQgaXMgYSB0cml2
+aWFsIGNoYW5nZS4gQW5kIEkgYWdyZWUgdGhlDQo+ID4gZGVzY3JpcHRpb24gbmVlZHMgdG8gYmUg
+dXBkYXRlZC4NCj4gDQo+IEknbSBub3QgdGhlIGNsb2NrIG1haW50YWluZXIsIHNvIGl0J3Mgbm90
+IHVwIHRvIG1lLCBidXQgSSBkb24ndCBzZWUgdGhlIHBvaW50DQo+IGluIHNldHRpbmcgaXQgdG8g
+YW4gYXJiaXRyYXJ5IG51bWJlciwgYW5kIEkgZG8gbm90IGFncmVlIHRoYXQgaW5jcmVhc2luZw0K
+PiBOVU1fQ01VWCBpcyBhIHN1aXRhYmxlIHJlcGxhY2VtZW50IGZvciBOVU1fQ01VWCsxIGluDQo+
+IGNtdXhfdG9fZ3JvdXBbXSwgYXMgdGhhdCBhcnJheSBzaG91bGQgYmUgb25lIGxhcmdlciB0aGFu
+IGNtdXhbXSBpbiBvcmRlcg0KPiB0byBhbGxvdyBldmVyeSBjaGlwIHRvIGhhdmUgYQ0KPiAtMSB0
+ZXJtaW5hdG9yLiAgSW4gYW55IGNhc2UsIGFueSBjaGFuZ2UgdG8gTlVNX0NNVVggc2hvdWxkIGJl
+IGENCj4gc2VwYXJhdGUgcGF0Y2ggYmVjYXVzZSBpdCdzIG5vdCByZXF1aXJlZCBmb3IgbHgyMTYw
+YSBzdXBwb3J0IChhc3N1bWluZw0KPiBseDIxNjBhIHdhcyBjb3JyZWN0bHkgZGVzY3JpYmVkIGJ5
+IHRoaXMgcGF0Y2gpLg0KW0FuZHldIEkgZG9uJ3Qgc2VlIGFueSBpbXByb3ByaWF0ZSBhYm91dCB5
+b3VyIHN1Z2dlc3Rpb24uIHNvIHdlIGFyZSBnb2luZyB0byBkbyBpbiB5b3VyIHdheS4NCg0KVGhh
+bmtzLA0KQW5keQ0KPiANCj4gLVNjb3R0DQo+IA0KPiANCj4gDQo+IF9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
+ZyBsaXN0DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwczov
+L2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYl
+MkZsaXN0DQo+IHMuaW5mcmFkZWFkLm9yZyUyRm1haWxtYW4lMkZsaXN0aW5mbyUyRmxpbnV4LWFy
+bS1rZXJuZWwmYW1wO2RhdGE9MDINCj4gJTdDMDElN0NhbmR5LnRhbmclNDBueHAuY29tJTdDZGJj
+ODI0ZmMzOTY3NDcxMTMxNjIwOGQ2MTFkY2YNCj4gNjFiJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNk
+OTljNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjcxNjAzDQo+IDgwNjA3OTcxMTMmYW1wO3NkYXRhPWlD
+TEtHTUV6UlgyZHBINSUyQmY0TldJaVBEYzVMNU5wVGNwWjdYDQo+IHVzZWhkSXclM0QmYW1wO3Jl
+c2VydmVkPTANCg==
