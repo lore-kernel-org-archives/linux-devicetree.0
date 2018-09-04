@@ -1,81 +1,233 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH] ASoC: tlv320aic31xx: Add MICBIAS off
-	setting
-Date: Tue, 4 Sep 2018 10:10:24 -0500
-Message-ID: <85973bf4-1acb-1731-d93e-29c8141a3c53@ti.com>
-References: <20180831180507.28867-1-afd@ti.com>
- <20180903112656.GF10302@sirena.org.uk>
- <701a066c-33e1-4476-7403-fdb9a3c366d8@ti.com>
- <20180904144159.GC12993@sirena.org.uk>
- <7163381a-ae09-ad3b-064d-990c98f13ccb@ti.com>
- <20180904145503.GD12993@sirena.org.uk>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH] arm64: allwinner: h6: Add OrangePi One
+ Plus initial support
+Date: Tue, 4 Sep 2018 23:10:37 +0800
+Message-ID: <CAGb2v66zT++sakwB5WEmhXJad3CH9Fr4P06TRnM7g_etqsvRug@mail.gmail.com>
+References: <20180728182615.20845-1-jagan@amarulasolutions.com>
+ <20180730090048.gl7fkduztjkxacqq@flea> <CAGb2v67wKFp2Fntm2O0xGXZjbyTZ_3YjRrD6b612jer1DDXxZw@mail.gmail.com>
+ <CAMty3ZBNM7mdtkBSq5BGuGoa5jKdSuuSVxkOoqPhDJZ-NM2THQ@mail.gmail.com>
+ <CAGb2v66Br9-KB-AD+N9mqRQ7rhrzYqUAQDkiepf2+3=FOgWKLg@mail.gmail.com>
+ <CAGb2v670WNu8tz+e0DqO5eiSvi8EEfhCrz3ksaAzvyxQvCGkgQ@mail.gmail.com> <3f31bff7-689a-3cf6-8e55-cfd98a19ad50@openedev.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180904145503.GD12993@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB66AXLOAKGQEJOD65OI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <3f31bff7-689a-3cf6-8e55-cfd98a19ad50-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2018 09:55 AM, Mark Brown wrote:
-> On Tue, Sep 04, 2018 at 09:43:03AM -0500, Andrew F. Davis wrote:
->> On 09/04/2018 09:41 AM, Mark Brown wrote:
-> 
->>>>> If we really want to pay attention to something setting this up we'd
->>>>> need to completely remove the widget - what the code is doing at the
->>>>> minute is setting the voltage that the bias will go to when enabled,
->>>>> there's still a widget for turning it on and off.  There's some chance
->>>>> that this will break existing boards.
-> 
->>>> Turning on bias is controlled separately, automatically in user-space in
->>>> many cases, not based on the board. The DT needs to have a way to state
->>>> that 0v is the needed bias on this board, without this you can not set
->>>> 0v bias and 2v is chosen by default (which is IMHO should be 0v but that
->>>> would change existing behavior so I won't touch that).
-> 
->>> Surely turning on MICBIAS at 0V is equivalent to leaving the bias off?
-> 
->> It is, but DT doesn't control when or why MICBIAS is turned on or off,
->> only what voltage on should be.
-> 
-> The DT controls this in so far as it will arrange for the bias to be
-> connected to something, if it's not connected to anything then it will
-> only be turned on if the machine driver explicitly forces it on which is
-> a potential source of problems but seems comfortably in "you broke it,
-> you get to keep the pieces" territory.  If we really want to have a way
-> of explicitly specifying that some widgets should never be turned on
-> then it feels like rather than have something device and widget specific
-> like this we should instead have a higher level way of doing that which
-> can be applied to any widget, that is something that could be useful
-> especially with things like speaker drivers where there's real potential
-> for physical damage to the system.
-> 
+On Tue, Sep 4, 2018 at 10:31 PM Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org> wrote:
+>
+> On Monday 03 September 2018 11:05 AM, Chen-Yu Tsai wrote:
+> > On Tue, Jul 31, 2018 at 9:42 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> >>
+> >> On Tue, Jul 31, 2018 at 9:41 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> >>> On Mon, Jul 30, 2018 at 2:47 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> >>>> On Mon, Jul 30, 2018 at 5:00 PM, Maxime Ripard
+> >>>> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> On Sat, Jul 28, 2018 at 11:56:15PM +0530, Jagan Teki wrote:
+> >>>>>> OrangePi One Plus is Allwinner H6 based open-source SBC,
+> >>>>>> which support:
+> >>>>>> - Allwinner H6 Quad-core 64-bit ARM Cortex-A53
+> >>>>>> - GPU Mali-T720
+> >>>>>> - 1GB LPDDR3 RAM
+> >>>>>> - AXP805 PMIC
+> >>>>>> - 1Gbps GMAC via RTL8211
+> >>>>>> - USB 2.0 Host, OTG
+> >>>>>> - HDMI port
+> >>>>>> - 5V/2A DC power supply
+> >>>>>>
+> >>>>>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> >>>>>> ---
+> >>>>>>   arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+> >>>>>>   .../allwinner/sun50i-h6-orangepi-one-plus.dts | 150 ++++++++++++++++++
+> >>>>>>   2 files changed, 151 insertions(+)
+> >>>>>>   create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+> >>>>>>
+> >>>>>> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> >>>>>> index 9ffa7a038791..c38f326e7fec 100644
+> >>>>>> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> >>>>>> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> >>>>>> @@ -15,4 +15,5 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+> >>>>>>   dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
+> >>>>>>   dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus.dtb
+> >>>>>>   dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
+> >>>>>> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-orangepi-one-plus.dtb
+> >>>>>>   dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h6-pine-h64.dtb
+> >>>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+> >>>>>> new file mode 100644
+> >>>>>> index 000000000000..0612c19cd994
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dts
+> >>>>>> @@ -0,0 +1,150 @@
+> >>>>>> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
+> >>>>>> +/*
+> >>>>>> + * Copyright (C) 2018 Amarula Solutions
+> >>>>>> + * Author: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> >>>>>> + */
+> >>>>>> +
+> >>>>>> +/dts-v1/;
+> >>>>>> +
+> >>>>>> +#include "sun50i-h6.dtsi"
+> >>>>>> +
+> >>>>>> +#include <dt-bindings/gpio/gpio.h>
+> >>>>>> +
+> >>>>>> +/ {
+> >>>>>> +     model = "OrangePi One Plus";
+> >>>>>> +     compatible = "xunlong,orangepi-one-plus", "allwinner,sun50i-h6";
+> >>>>>> +
+> >>>>>> +     aliases {
+> >>>>>> +             serial0 = &uart0;
+> >>>>>> +     };
+> >>>>>> +
+> >>>>>> +     chosen {
+> >>>>>> +             stdout-path = "serial0:115200n8";
+> >>>>>> +     };
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +&mmc0 {
+> >>>>>> +     pinctrl-names = "default";
+> >>>>>> +     pinctrl-0 = <&mmc0_pins>;
+> >>>>>> +     vmmc-supply = <&reg_cldo1>;
+> >>>>>> +     cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
+> >>>>>> +     bus-width = <4>;
+> >>>>>> +     status = "okay";
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +&r_i2c {
+> >>>>>> +     status = "okay";
+> >>>>>> +
+> >>>>>> +     axp805: pmic@36 {
+> >>>>>> +             compatible = "x-powers,axp805", "x-powers,axp806";
+> >>>>>> +             reg = <0x36>;
+> >>>>>> +             interrupt-parent = <&r_intc>;
+> >>>>>> +             interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> >>>>>> +             interrupt-controller;
+> >>>>>> +             #interrupt-cells = <1>;
+> >>>>>> +             x-powers,self-working-mode;
+> >>>>>> +
+> >>>>>> +             regulators {
+> >>>>>> +                     reg_aldo1: aldo1 {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <3300000>;
+> >>>>>> +                             regulator-max-microvolt = <3300000>;
+> >>>>>> +                             regulator-name = "vcc-pl";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_aldo2: aldo2 {
+> >>>>>> +                             regulator-min-microvolt = <3300000>;
+> >>>>>> +                             regulator-max-microvolt = <3300000>;
+> >>>>>> +                             regulator-name = "vcc-ac200";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_aldo3: aldo3 {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <3300000>;
+> >>>>>> +                             regulator-max-microvolt = <3300000>;
+> >>>>>> +                             regulator-name = "vcc25-dram";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_bldo1: bldo1 {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <1800000>;
+> >>>>>> +                             regulator-max-microvolt = <1800000>;
+> >>>>>> +                             regulator-name = "vcc-bias-pll";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_bldo2: bldo2 {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <1800000>;
+> >>>>>> +                             regulator-max-microvolt = <1800000>;
+> >>>>>> +                             regulator-name = "vcc-efuse-pcie-hdmi-io";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_bldo3: bldo3 {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <1800000>;
+> >>>>>> +                             regulator-max-microvolt = <1800000>;
+> >>>>>> +                             regulator-name = "vcc-dcxoio";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     bldo4 {
+> >>>>>> +                             /* unused */
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_cldo1: cldo1 {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <3300000>;
+> >>>>>> +                             regulator-max-microvolt = <3300000>;
+> >>>>>> +                             regulator-name = "vcc-3v3";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_cldo2: cldo2 {
+> >>>>>> +                             regulator-min-microvolt = <3300000>;
+> >>>>>> +                             regulator-max-microvolt = <3300000>;
+> >>>>>> +                             regulator-name = "vcc-wifi-1";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_cldo3: cldo3 {
+> >>>>>> +                             regulator-min-microvolt = <3300000>;
+> >>>>>> +                             regulator-max-microvolt = <3300000>;
+> >>>>>> +                             regulator-name = "vcc-wifi-2";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_dcdca: dcdca {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <810000>;
+> >>>>>> +                             regulator-max-microvolt = <1080000>;
+> >>>>>> +                             regulator-name = "vdd-cpu";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_dcdcc: dcdcc {
+> >>>>>> +                             regulator-min-microvolt = <810000>;
+> >>>>>> +                             regulator-max-microvolt = <1080000>;
+> >>>>>> +                             regulator-name = "vdd-gpu";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_dcdcd: dcdcd {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <960000>;
+> >>>>>> +                             regulator-max-microvolt = <960000>;
+> >>>>>> +                             regulator-name = "vdd-sys";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     reg_dcdce: dcdce {
+> >>>>>> +                             regulator-always-on;
+> >>>>>> +                             regulator-min-microvolt = <1200000>;
+> >>>>>> +                             regulator-max-microvolt = <1200000>;
+> >>>>>> +                             regulator-name = "vcc-dram";
+> >>>>>> +                     };
+> >>>>>> +
+> >>>>>> +                     sw {
+> >>>>>> +                             /* unused */
+> >>>>>> +                     };
+> >>>>>
+> >>>>> Can't we have a DTSI for this PMIC too?
+> >>>>
+> >>>> Back when we started adding the regulators, Mark wasn't too happy with
+> >>>> all the placeholders we put in the dtsi. I think we got away with it
+> >>>> because we had other things in there as well. That's not true for this
+> >>>> particular PMIC.
+> >>>
+> >>> So we need separate dtsi for this PMIC as well?
+> >>
+> >> I don't think we do. We don't gain much.
+> >
+> > Merged with Maxime's ack, and the subject prefix fixed.
+> > Also squashed in the Ethernet patch for this board.
+>
+> H6 EMAC node changes still in ML.
 
+Oops. Dropped that part. Sorry about that.
 
-Not sure how that could even look, it would need to be in DT as only
-that layer knows the connections, but then the it would also have to
-have internal knowledge of the widgets used in the driver..
-
-
-> Like I said in my original reply I'm also worried that this will break
-> existing boards by causing them to change to a voltage of 0 when they
-> had managed to end up with the default of 2V which happened to work for
-> them.
-> 
-
-Then only time this could happen is if they specified MICBIAS_OFF in DT
-but got the default 2v instead. In which case, yes, the behavior would
-change, but it would also be changing to the correct behavior. We can't
-avoid fixing code on the off chance someone depended on the broken
-behavior, no progress could ever be made.
+ChenYu
