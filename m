@@ -1,121 +1,81 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 3/7] spi: spi-mem: Add a driver for NXP FlexSPI
- controller
-Date: Tue, 4 Sep 2018 16:58:42 +0200
-Message-ID: <20180904165842.774ed960@bbrezillon>
-References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1535711404-29528-4-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH] ASoC: tlv320aic31xx: Add MICBIAS off
+	setting
+Date: Tue, 4 Sep 2018 10:10:24 -0500
+Message-ID: <85973bf4-1acb-1731-d93e-29c8141a3c53@ti.com>
+References: <20180831180507.28867-1-afd@ti.com>
+ <20180903112656.GF10302@sirena.org.uk>
+ <701a066c-33e1-4476-7403-fdb9a3c366d8@ti.com>
+ <20180904144159.GC12993@sirena.org.uk>
+ <7163381a-ae09-ad3b-064d-990c98f13ccb@ti.com>
+ <20180904145503.GD12993@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535711404-29528-4-git-send-email-yogeshnarayan.gaur@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: linux-mtd@lists.infradead.org, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180904145503.GD12993@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yogesh,
-
-On Fri, 31 Aug 2018 16:00:00 +0530
-Yogesh Gaur <yogeshnarayan.gaur@nxp.com> wrote:
-
-> - Add a driver for NXP FlexSPI host controller
+On 09/04/2018 09:55 AM, Mark Brown wrote:
+> On Tue, Sep 04, 2018 at 09:43:03AM -0500, Andrew F. Davis wrote:
+>> On 09/04/2018 09:41 AM, Mark Brown wrote:
 > 
-> (0) What is the FlexSPI controller?
->  FlexSPI is a flexsible SPI host controller which supports two SPI
->  channels and up to 4 external devices.
->  Each channel supports Single/Dual/Quad/Octal mode data 
->  transfer (1/2/4/8 bidirectional data lines) 
->  i.e. FlexSPI acts as an interface to external devices,
->  maximum 4, each with up to 8 bidirectional data lines.
+>>>>> If we really want to pay attention to something setting this up we'd
+>>>>> need to completely remove the widget - what the code is doing at the
+>>>>> minute is setting the voltage that the bias will go to when enabled,
+>>>>> there's still a widget for turning it on and off.  There's some chance
+>>>>> that this will break existing boards.
 > 
->  It uses new SPI memory interface of the SPI framework to issue flash
->  memory operations to up to four connected flash chips (2 buses with
->  2 CS each).
->  Chipselect for each flash can be selected as per address assigned in
->  controller specific registers.
+>>>> Turning on bias is controlled separately, automatically in user-space in
+>>>> many cases, not based on the board. The DT needs to have a way to state
+>>>> that 0v is the needed bias on this board, without this you can not set
+>>>> 0v bias and 2v is chosen by default (which is IMHO should be 0v but that
+>>>> would change existing behavior so I won't touch that).
 > 
->  FlexSPI controller is similar to the existing Freescale/NXP QuadSPI
->  controller with advanced features.
-
-Yep, I had a quick look at the code and they really look similar. Why
-not extending the existing driver instead of creating a new one from
-scratch?
-
+>>> Surely turning on MICBIAS at 0V is equivalent to leaving the bias off?
 > 
-> (1) The FlexSPI controller is driven by the LUT(Look-up Table)
->  registers.
->  The LUT registers are a look-up-table for sequences of instructions.
->  A valid sequence consists of four LUT registers.
->  Maximum 32 LUT sequences can be programmed simultaneously.
+>> It is, but DT doesn't control when or why MICBIAS is turned on or off,
+>> only what voltage on should be.
 > 
-> (2) The definition of the LUT register shows below:
->  ---------------------------------------------------
->  | INSTR1 | PAD1 | OPRND1 | INSTR0 | PAD0 | OPRND0 |
->  ---------------------------------------------------
+> The DT controls this in so far as it will arrange for the bias to be
+> connected to something, if it's not connected to anything then it will
+> only be turned on if the machine driver explicitly forces it on which is
+> a potential source of problems but seems comfortably in "you broke it,
+> you get to keep the pieces" territory.  If we really want to have a way
+> of explicitly specifying that some widgets should never be turned on
+> then it feels like rather than have something device and widget specific
+> like this we should instead have a higher level way of doing that which
+> can be applied to any widget, that is something that could be useful
+> especially with things like speaker drivers where there's real potential
+> for physical damage to the system.
 > 
->  There are several types of INSTRx, such as:
->  CMD     : the SPI NOR command.
->  ADDR    : the address for the SPI NOR command.
->  DUMMY   : the dummy cycles needed by the SPI NOR command.
->  ....
+
+
+Not sure how that could even look, it would need to be in DT as only
+that layer knows the connections, but then the it would also have to
+have internal knowledge of the widgets used in the driver..
+
+
+> Like I said in my original reply I'm also worried that this will break
+> existing boards by causing them to change to a voltage of 0 when they
+> had managed to end up with the default of 2V which happened to work for
+> them.
 > 
->  There are several types of PADx, such as:
->  PAD1    : use a singe I/O line.
->  PAD2    : use two I/O lines.
->  PAD4    : use quad I/O lines.
->  PAD8    : use octal I/O lines.
->  ....
-> 
-> (3) LUTs are being created at run-time based on the commands passed
->  from the spi-mem framework. Thus, using single LUT index.
-> 
-> (4) Software triggered Flash read/write access by IP Bus.
-> 
-> (5) Memory mapped read access by AHB Bus.
 
-Do we really want to have this level of details in the commit message?
-I mean, this is something you can document in the driver, but not here.
-
-BTW, you might want to have a look at [1]. I think we can get rid of
-the ->size field you're adding if this driver implements the dirmap
-hooks.
-
-> 
-> (6) Tested this driver with the mtd_debug and JFFS2 filesystem utility
->  on NXP LX2160ARDB and LX2160AQDS targets.
->  LX2160ARDB is having two NOR slave device connected on single bus A
->  i.e. A0 and A1 (CS0 and CS1).
->  LX2160AQDS is having two NOR slave device connected on separate buses
->  one flash on A0 and second on B1 i.e. (CS0 and CS3).
->  Verified this driver on following SPI NOR flashes:
->     Micron, mt35xu512ab, [Read - 1 bit mode]
->     Cypress, s25fl512s, [Read - 1/2/4 bit mode]
-
-Ok, that's good to have in the commit message.
-
-> 
-> - Add config option entry in 'spi-nor/Kconfig' for FlexSPI driver.
-
-But this one is useless. If you add a new driver, you have no other
-choice but to add a new entry in the Kconfig file.
-
-> 
-> - Add entry in the 'spi-nor/Makefile'.
->
-
-Ditto.
-
-Before you re-send a new version, I'd like to understand why you think
-you need to create a new driver, and I want you to try to implement the
-dirmap hook and check if you can get rid of the ->size field when doing
-that.
-
-I also seem one extra benefit to having a single driver for both
-FlexSPI and QuadSPI IPs: you'll help Frieder debug the last remaining
-problems you reported on the new QuadSPI driver :-P.
-
-Thanks,
-
-Boris
+Then only time this could happen is if they specified MICBIAS_OFF in DT
+but got the default 2v instead. In which case, yes, the behavior would
+change, but it would also be changing to the correct behavior. We can't
+avoid fixing code on the off chance someone depended on the broken
+behavior, no progress could ever be made.
