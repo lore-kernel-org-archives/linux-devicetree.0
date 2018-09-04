@@ -1,89 +1,62 @@
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Subject: [PATCH v4 2/4] drivers: soc: Add support to register LLCC EDAC driver
-Date: Tue,  4 Sep 2018 16:22:23 -0700
-Message-ID: <1536103345-1919-3-git-send-email-vnkgutta@codeaurora.org>
-References: <1536103345-1919-1-git-send-email-vnkgutta@codeaurora.org>
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v9 0/8] Introduce on-chip interconnect API
+Date: Wed, 5 Sep 2018 09:36:20 +1000
+Message-ID: <20180905093620.6d9162ca@canb.auug.org.au>
+References: <20180831140151.13972-1-georgi.djakov@linaro.org>
+        <CAHLCerNd0hrLKgbni95_RSYOtsNufMCVtHbAKa4W+eo8H2cL2A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/=t3Ckflr7nTyHhTekgg8jUB"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536103345-1919-1-git-send-email-vnkgutta@codeaurora.org>
+In-Reply-To: <CAHLCerNd0hrLKgbni95_RSYOtsNufMCVtHbAKa4W+eo8H2cL2A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org
-Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, gregkh@linuxfoundation.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-a>
 List-Id: devicetree@vger.kernel.org
 
-Cache error reporting controller detects and reports single and
-double bit errors on Last Level Cache Controller (LLCC) cache.
-Add required support to register LLCC EDAC driver as platform driver,
-from LLCC driver.
+--Sig_/=t3Ckflr7nTyHhTekgg8jUB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
----
- drivers/soc/qcom/llcc-slice.c      | 18 ++++++++++++++++--
- include/linux/soc/qcom/llcc-qcom.h |  2 ++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+Hi all,
 
-diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
-index a63640d..09c8bb0 100644
---- a/drivers/soc/qcom/llcc-slice.c
-+++ b/drivers/soc/qcom/llcc-slice.c
-@@ -224,7 +224,7 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
- 	u32 attr0_val;
- 	u32 max_cap_cacheline;
- 	u32 sz;
--	int ret;
-+	int ret = 0;
- 	const struct llcc_slice_config *llcc_table;
- 	struct llcc_slice_desc desc;
- 
-@@ -282,6 +282,7 @@ int qcom_llcc_probe(struct platform_device *pdev,
- 	struct resource *llcc_banks_res, *llcc_bcast_res;
- 	void __iomem *llcc_banks_base, *llcc_bcast_base;
- 	int ret, i;
-+	struct platform_device *llcc_edac;
- 
- 	drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
- 	if (!drv_data)
-@@ -341,6 +342,19 @@ int qcom_llcc_probe(struct platform_device *pdev,
- 	mutex_init(&drv_data->lock);
- 	platform_set_drvdata(pdev, drv_data);
- 
--	return qcom_llcc_cfg_program(pdev);
-+	ret = qcom_llcc_cfg_program(pdev);
-+	if (ret)
-+		return ret;
-+
-+	drv_data->ecc_irq = platform_get_irq(pdev, 0);
-+	if (drv_data->ecc_irq >= 0) {
-+		llcc_edac = platform_device_register_data(&pdev->dev,
-+						"qcom_llcc_edac", -1, drv_data,
-+						sizeof(*drv_data));
-+		if (IS_ERR(llcc_edac))
-+			dev_err(dev, "Failed to register llcc edac driver\n");
-+	}
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(qcom_llcc_probe);
-diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
-index c681e79..2e4b34d 100644
---- a/include/linux/soc/qcom/llcc-qcom.h
-+++ b/include/linux/soc/qcom/llcc-qcom.h
-@@ -78,6 +78,7 @@ struct llcc_slice_config {
-  * @num_banks: Number of llcc banks
-  * @bitmap: Bit map to track the active slice ids
-  * @offsets: Pointer to the bank offsets array
-+ * @ecc_irq: interrupt for llcc cache error detection and reporting
-  */
- struct llcc_drv_data {
- 	struct regmap *regmap;
-@@ -89,6 +90,7 @@ struct llcc_drv_data {
- 	u32 num_banks;
- 	unsigned long *bitmap;
- 	u32 *offsets;
-+	int ecc_irq;
- };
- 
- #if IS_ENABLED(CONFIG_QCOM_LLCC)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Tue, 4 Sep 2018 15:54:27 +0530 Amit Kucheria <amit.kucheria@linaro.org> =
+wrote:
+>
+> I'm currently reviewing this patchset (long overdue), but considering
+> that we haven't added any major new features to the framework for the
+> last couple of revisions, can you get this patchset merged into
+> linux-next to see how things shake out there? We've had this merged
+> branch merged into a CI build on kernelci for a while now w/o any
+> major incident so we should increase its exposure.
+>=20
+> You could ask Stephen Rothwell if he'll accept the a branch directly
+> from you or he needs an upstream maintainer (GregKH?) to carry it.
+
+Since it appears to have been well reviewed and tested, I can take it
+if you send me a git URL and the names of contacts in case of issues
+with the branch.  Once Greg has merged it, I will try to drop it again
+(unless you think there will be an ongoing reason to keep it in
+linux-next separately), but a prompting email would also be nice in
+case I forget.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/=t3Ckflr7nTyHhTekgg8jUB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAluPFvQACgkQAVBC80lX
+0Gxn4ggAgxqb5TVFn2+jl3s9fpEEFIlsoN7E8DJBp0ITdp2Eew7vGhicleD6YMg+
+dBefTyw3AzyxamsW04KDqI/7z28vPNySy27SHYLB+wjfrW2QHhCTByl86kBRmNhA
+K+Vc3T9qnaoAXN0tHLJpEm56HWI7/hR2r7UOJYlhsW/6ztXN6ul2ZGp4UQgFsKwv
+1TaiRH1civVVuL6Po153iPiuJcoixSjwgpdRk1rM9aW0so4sXO1LF044HSECKu1q
+ygklVH2mXEgH5nhSxFXnxLaxvdQaPFWJBy7nzxJi4qoEhKglohpYXEHjS0v66+Jq
+I3EJyAvfSR49Z9jB3DFEXyAW6ZCvaQ==
+=X8VW
+-----END PGP SIGNATURE-----
+
+--Sig_/=t3Ckflr7nTyHhTekgg8jUB--
