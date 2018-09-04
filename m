@@ -1,52 +1,60 @@
-From: Andre Kalb <Andre.Kalb@sma.de>
-Subject: [PATCH v2] of: __of_update_property_sysfs only call
- __of_sysfs_remove_bin_file if of_node_is_attached
-Date: Tue, 4 Sep 2018 15:51:15 +0000
-Message-ID: <AM6PR04MB52394FDB1266388BCE1374E3FC030@AM6PR04MB5239.eurprd04.prod.outlook.com>
+From: Patrick Venture <venture@google.com>
+Subject: [PATCH] arm: dts: aspeed: quanta-q71l: Enable adc & ibt nodes
+Date: Tue,  4 Sep 2018 08:53:29 -0700
+Message-ID: <20180904155329.258447-1-venture@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: de-DE
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: venture@google.com, joel@jms.id.au, robh+dt@kernel.org, andrew@aj.id.au, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-To prevent warning "kernfs: can not remove '(null)', no directory" if an overlay isn't applied to the active devicetree.
+ADC node is disabled by default in 4.13 tree onward and
+needs to be enabled explicitly in separate device trees.
 
-Using of_remove_property and then of_add_property doesn't show the warning.
+ibt(ipmi-bt-host) node is disabled by default in 4.13 tree onward and
+needs to be enabled explicitly in separate device trees.
 
-Signed-off-by: Andre Kalb <Andre.Kalb@sma.de>
+Signed-off-by: Patrick Venture <venture@google.com>
 ---
-Changes in v2:
-  - Fix typo
+ arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- drivers/of/kobj.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c index 7a0a18980b98..962b660e8ad1 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -104,7 +104,7 @@ void __of_update_property_sysfs(struct device_node *np, struct property *newprop
-                struct property *oldprop)
- {
-        /* At early boot, bail out and defer setup to of_init() */
--       if (!of_kset)
-+       if (!of_kset || !of_node_is_attached(np))
-                return;
-
-        if (oldprop)
---
-2.17.1
-
-
-___________________________________________________
-
-SMA Solar Technology AG
-Aufsichtsrat: Dr. Erik Ehrentraut (Vorsitzender)
-Vorstand: Ulrich Hadding, Dr.-Ing. Juergen Reinert, Pierre-Pascal Urbon
-Handelsregister: Amtsgericht Kassel HRB 3972
-Sitz der Gesellschaft: 34266 Niestetal
-USt-ID-Nr. DE 113 08 59 54
-WEEE-Reg.-Nr. DE 95881150
-___________________________________________________
+diff --git a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
+index c655564e6c6d..385c0f4b69ee 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-quanta-q71l.dts
+@@ -112,6 +112,10 @@
+ 			&pinctrl_ddcclk_default &pinctrl_ddcdat_default>;
+ };
+ 
++&ibt {
++	status = "okay";
++};
++
+ &lpc_snoop {
+ 	status = "okay";
+ 	snoop-ports = <0x80>;
+@@ -384,6 +388,10 @@
+ 	status = "okay";
+ };
+ 
++&adc {
++	status = "okay";
++};
++
+ &pwm_tacho {
+ 	status = "okay";
+ 
+-- 
+2.19.0.rc1.350.ge57e33dbd1-goog
