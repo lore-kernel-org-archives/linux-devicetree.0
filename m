@@ -1,72 +1,83 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 00/14] mmc: mmci: prepare dma callbacks with mmci_host_ops
-Date: Tue, 4 Sep 2018 12:00:35 +0200
-Message-ID: <CAPDyKFqArwShaUZAit4fHa7F6UNC_z7Yc1GMpBuQcrkkwrB84g@mail.gmail.com>
-References: <1533116221-380-1-git-send-email-ludovic.Barre@st.com>
+From: Pramod Kumar <pramod.kumar_1@nxp.com>
+Subject: [PATCH v1] arm64: dts: ls1012a: Add FRWY-LS1012A board support
+Date: Tue,  4 Sep 2018 15:53:45 +0530
+Message-ID: <20180904102345.1264-1-pramod.kumar_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533116221-380-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, shawnguo@kernel.org
+Cc: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>, Pramod Kumar <pramod.kumar_1@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 August 2018 at 11:36, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> This patch series prepares and adds callbacks for dma transfert at
-> mmci_host_ops. This series is composed of 3 parts:
-> -Internalize specific needs of legacy dmaengine.
-> -Create and setup dma_priv pointer
-> -Create generic callbacks  which share some features
-> (like cookie...) and call specific needs
+From: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
 
-I have now reviewed part of this series and provided you with some
-comments, but will stop at this point.
+FRWY-LS1012A is a different design from LS1012A-FRDM,
+but has some common SoC features. Key feature on this
+board is Micro SD, USB 3.0, DDR, UART.
 
-Overall, the comments are about renaming and picking better function
-names. Those comments should be easy to address in a new version.
+Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
+---
+ changes in v1:
+ 1. fix license identifier
+ 2. remove pcie node
 
-However, the other more important point is the number of variant
-callbacks you are adding. It's of course a balance to pick the right
-level, to get both flexibility but also to avoid open coding. In the
-end we don't want to get too many callbacks, but then it's better to
-share common mmci code for variants, through mmci.h.
+ arch/arm64/boot/dts/freescale/Makefile        |  1 +
+ .../boot/dts/freescale/fsl-ls1012a-frwy.dts   | 26 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
 
-Finally, I would like to see a patch on top adding the support for the
-new ST variant, so I can see how the callbacks and changes really are
-being used. Can you please add that?
-
->
-> This patch series must be applied on top of
-> "mmc: mmci: Add and implement a ->dma_setup() callback for qcom dml"
->
-> Ludovic Barre (14):
->   mmc: mmci: fix qcom dma issue during mmci init with new dma_setup
->     callback
->   mmc: mmci: internalize dma map/unmap into mmci dma functions
->   mmc: mmci: internalize dma_inprogress into mmci dma functions
->   mmc: mmci: introduce dma_priv pointer to mmci_host
->   mmc: mmci: move mmci next cookie to mci host
->   mmc: mmci: merge prepare data functions
->   mmc: mmci: add prepare/unprepare_data callbacks
->   mmc: mmci: add get_next_data callback
->   mmc: mmci: modify dma_setup callback
->   mmc: mmci: add dma_release callback
->   mmc: mmci: add dma_start callback
->   mmc: mmci: add dma_finalize callback
->   mmc: mmci: add dma_error callback
->   mmc: mmci: add validate_data callback
->
->  drivers/mmc/host/mmci.c          | 458 ++++++++++++++++++++++++---------------
->  drivers/mmc/host/mmci.h          |  45 ++--
->  drivers/mmc/host/mmci_qcom_dml.c |  15 +-
->  3 files changed, 322 insertions(+), 196 deletions(-)
->
-> --
-> 2.7.4
->
-
-Kind regards
-Uffe
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 86e18adb695a..d1161442ff2f 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frwy.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frdm.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+new file mode 100644
+index 000000000000..e75a8dc0dda5
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for Freescale LS1012A FRWY Board.
++ *
++ * Copyright 2018 NXP
++ *
++ * Pramod Kumar <pramod.kumar_1@nxp.com>
++ *
++ */
++/dts-v1/;
++
++#include "fsl-ls1012a.dtsi"
++
++/ {
++	model = "LS1012A FRWY Board";
++	compatible = "fsl,frwy-ls1012a", "fsl,ls1012a";
++
++};
++
++&duart0 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++};
+-- 
+2.17.1
