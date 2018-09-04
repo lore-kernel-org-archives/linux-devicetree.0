@@ -1,76 +1,106 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 06/27] clk: sunxi-ng: h6: Set video PLLs limits
-Date: Tue, 4 Sep 2018 23:49:09 +0800
-Message-ID: <20180904154909.GR17047@intel.com>
-References: <20180902072643.4917-7-jernej.skrabec@siol.net>
+From: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+Subject: [PATCH v2 01/03] dt-bindings: clock: Add Clock Management Unit for
+ Actions Semi S500 SoC
+Date: Tue, 4 Sep 2018 12:36:36 -0300
+Message-ID: <CADHB5bBkyE90LVrWjt0ziU+oe=4sc8G_513VGECc++6xQ2ACdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180902072643.4917-7-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: mark.rutland@arm.com, airlied@linux.ie, maxime.ripard@bootlin.com, mturquette@baylibre.com, linux-sunxi@googlegroups.com, jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, kbuild-all@01.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, linux@armlinux.org.uk, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Guilherme_G=2E_Sim=C3=B5es?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com, Laisa Costa - LSI-TEC <laisa.costa@lsitec.org.br>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmVybmVqLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2ghIFBlcmhhcHMgc29tZXRoaW5nIHRv
-IGltcHJvdmU6CgpbYXV0byBidWlsZCB0ZXN0IFdBUk5JTkcgb24gc3VueGkvc3VueGkvZm9yLW5l
-eHRdClthbHNvIGJ1aWxkIHRlc3QgV0FSTklORyBvbiB2NC4xOS1yYzIgbmV4dC0yMDE4MDgzMV0K
-W2lmIHlvdXIgcGF0Y2ggaXMgYXBwbGllZCB0byB0aGUgd3JvbmcgZ2l0IHRyZWUsIHBsZWFzZSBk
-cm9wIHVzIGEgbm90ZSB0byBoZWxwIGltcHJvdmUgdGhlIHN5c3RlbV0KCnVybDogICAgaHR0cHM6
-Ly9naXRodWIuY29tLzBkYXktY2kvbGludXgvY29tbWl0cy9KZXJuZWotU2tyYWJlYy9BbGx3aW5u
-ZXItSDYtREUzLWFuZC1IRE1JLXN1cHBvcnQvMjAxODA5MDMtMDgyNTQzCmJhc2U6ICAgaHR0cHM6
-Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvc3VueGkvbGludXguZ2l0
-IHN1bnhpL2Zvci1uZXh0CnJlcHJvZHVjZToKICAgICAgICAjIGFwdC1nZXQgaW5zdGFsbCBzcGFy
-c2UKICAgICAgICBtYWtlIEFSQ0g9eDg2XzY0IGFsbG1vZGNvbmZpZwogICAgICAgIG1ha2UgQz0x
-IENGPS1EX19DSEVDS19FTkRJQU5fXwo6Ojo6OjogYnJhbmNoIGRhdGU6IDYgaG91cnMgYWdvCjo6
-Ojo6OiBjb21taXQgZGF0ZTogNiBob3VycyBhZ28KCj4+IGRyaXZlcnMvY2xrL3N1bnhpLW5nL2Nj
-dS1zdW41MGktaDYuYzoxMjQ6Mjc6IHNwYXJzZTogY29uc3RhbnQgMjQwMDAwMDAwMCBpcyBzbyBi
-aWcgaXQgaXMgbG9uZwogICBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuNTBpLWg2LmM6MTQy
-OjI3OiBzcGFyc2U6IGNvbnN0YW50IDI0MDAwMDAwMDAgaXMgc28gYmlnIGl0IGlzIGxvbmcKCiMg
-aHR0cHM6Ly9naXRodWIuY29tLzBkYXktY2kvbGludXgvY29tbWl0Lzc1MmE4ODUxMGYwYmNhZGE2
-OTc1M2ZjY2IzMWFkYjE4N2Y4MGYyOWEKZ2l0IHJlbW90ZSBhZGQgbGludXgtcmV2aWV3IGh0dHBz
-Oi8vZ2l0aHViLmNvbS8wZGF5LWNpL2xpbnV4CmdpdCByZW1vdGUgdXBkYXRlIGxpbnV4LXJldmll
-dwpnaXQgY2hlY2tvdXQgNzUyYTg4NTEwZjBiY2FkYTY5NzUzZmNjYjMxYWRiMTg3ZjgwZjI5YQp2
-aW0gKzEyNCBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuNTBpLWg2LmMKCjUyNDM1M2VhNCBJ
-Y2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMTEgIAo1MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAg
-MjAxOC0wMy0xNiAgMTEyICAvKgo1MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAgMjAxOC0wMy0xNiAg
-MTEzICAgKiBGb3IgVmlkZW8gUExMcywgdGhlIG91dHB1dCBkaXZpZGVyIGlzIGRlc2NyaWJlZCBh
-cyAidXNlZCBmb3IgdGVzdGluZyIKNTI0MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMtMTYg
-IDExNCAgICogaW4gdGhlIHVzZXIgbWFudWFsLiBTbyBpdCdzIG5vdCBtb2RlbGxlZCBhbmQgZm9y
-Y2VkIHRvIDAuCjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMTUgICAqLwo1
-MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAgMjAxOC0wMy0xNiAgMTE2ICAjZGVmaW5lIFNVTjUwSV9I
-Nl9QTExfVklERU8wX1JFRwkweDA0MAo1MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAgMjAxOC0wMy0x
-NiAgMTE3ICBzdGF0aWMgc3RydWN0IGNjdV9ubSBwbGxfdmlkZW8wX2NsayA9IHsKNTI0MzUzZWE0
-IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMtMTYgIDExOCAgCS5lbmFibGUJCT0gQklUKDMxKSwKNTI0
-MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMtMTYgIDExOSAgCS5sb2NrCQk9IEJJVCgyOCks
-CjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMjAgIAkubgkJPSBfU1VOWElf
-Q0NVX01VTFRfTUlOKDgsIDgsIDEyKSwKNTI0MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMt
-MTYgIDEyMSAgCS5tCQk9IF9TVU5YSV9DQ1VfRElWKDEsIDEpLCAvKiBpbnB1dCBkaXZpZGVyICov
-CjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMjIgIAkuZml4ZWRfcG9zdF9k
-aXYJPSA0LAo3NTJhODg1MTAgSmVybmVqIFNrcmFiZWMgMjAxOC0wOS0wMiAgMTIzICAJLm1pbl9y
-YXRlCT0gMjg4MDAwMDAwLAo3NTJhODg1MTAgSmVybmVqIFNrcmFiZWMgMjAxOC0wOS0wMiBAMTI0
-ICAJLm1heF9yYXRlCT0gMjQwMDAwMDAwMCwKNTI0MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgt
-MDMtMTYgIDEyNSAgCS5jb21tb24JCT0gewo1MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAgMjAxOC0w
-My0xNiAgMTI2ICAJCS5yZWcJCT0gMHgwNDAsCjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4
-LTAzLTE2ICAxMjcgIAkJLmZlYXR1cmVzCT0gQ0NVX0ZFQVRVUkVfRklYRURfUE9TVERJViwKNTI0
-MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMtMTYgIDEyOCAgCQkuaHcuaW5pdAk9IENMS19I
-V19JTklUKCJwbGwtdmlkZW8wIiwgIm9zYzI0TSIsCjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAy
-MDE4LTAzLTE2ICAxMjkgIAkJCQkJICAgICAgJmNjdV9ubV9vcHMsCjUyNDM1M2VhNCBJY2Vub3d5
-IFpoZW5nICAyMDE4LTAzLTE2ICAxMzAgIAkJCQkJICAgICAgQ0xLX1NFVF9SQVRFX1VOR0FURSks
-CjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMzEgIAl9LAo1MjQzNTNlYTQg
-SWNlbm93eSBaaGVuZyAgMjAxOC0wMy0xNiAgMTMyICB9Owo1MjQzNTNlYTQgSWNlbm93eSBaaGVu
-ZyAgMjAxOC0wMy0xNiAgMTMzICAKCi0tLQowLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0cnVjdHVy
-ZSAgICAgICAgICAgICAgICBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcgpodHRwczovL2xp
-c3RzLjAxLm9yZy9waXBlcm1haWwva2J1aWxkLWFsbCAgICAgICAgICAgICAgICAgICBJbnRlbCBD
-b3Jwb3JhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Add Clock Management Unit for Actions Semi S500 SoC. Dt-Bindings
+constants added.
+Tested on a Lemaker Guitar board.
+
+Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+
+diff --git a/include/dt-bindings/clock/actions,s500-cmu.h
+b/include/dt-bindings/clock/actions,s500-cmu.h
+new file mode 100644
+index 000000000000..34e5849ffcf1
+--- /dev/null
++++ b/include/dt-bindings/clock/actions,s500-cmu.h
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Device Tree binding constants for Actions Semi S500 Clock Management Unit
++//
++// Copyright (c) 2014 Actions Semi Inc.
++// Copyright (c) 2018 Linaro Ltd.
++// Copyright (c) 2018 LSI-TEC - Caninos Loucos
++
++#ifndef __DT_BINDINGS_CLOCK_S500_CMU_H
++#define __DT_BINDINGS_CLOCK_S500_CMU_H
++
++#define CLK_NONE            0
++
++/* fixed rate clocks */
++#define CLK_LOSC            1
++#define CLK_HOSC            2
++
++/* pll clocks */
++#define CLK_CORE_PLL        3
++#define CLK_DEV_PLL            4
++#define CLK_DDR_PLL            5
++#define CLK_NAND_PLL        6
++#define CLK_DISPLAY_PLL        7
++#define CLK_ETHERNET_PLL    8
++#define CLK_AUDIO_PLL        9
++
++/* system clock */
++#define CLK_DEV                10
++#define CLK_H                11
++#define CLK_AHBPREDIV        12
++#define CLK_AHB                13
++#define CLK_DE                14
++#define CLK_BISP            15
++#define CLK_VCE                16
++#define CLK_VDE                17
++
++/* peripheral device clock */
++#define CLK_TIMER            18
++#define CLK_I2C0            19
++#define CLK_I2C1            20
++#define CLK_I2C2            21
++#define CLK_I2C3            22
++#define CLK_PWM0            23
++#define CLK_PWM1            24
++#define CLK_PWM2            25
++#define CLK_PWM3            26
++#define CLK_PWM4            27
++#define CLK_PWM5            28
++#define CLK_SD0                29
++#define CLK_SD1                30
++#define CLK_SD2                31
++#define CLK_SENSOR0            32
++#define CLK_SENSOR1            33
++#define CLK_SPI0            34
++#define CLK_SPI1            35
++#define CLK_SPI2            36
++#define CLK_SPI3            37
++#define CLK_UART0            38
++#define CLK_UART1            39
++#define CLK_UART2            40
++#define CLK_UART3            41
++#define CLK_UART4            42
++#define CLK_UART5            43
++#define CLK_UART6            44
++#define CLK_DE1                45
++#define CLK_DE2                46
++#define CLK_I2SRX            47
++#define CLK_I2STX            48
++#define CLK_HDMI_AUDIO        49
++#define CLK_HDMI            50
++#define CLK_SPDIF            51
++#define CLK_NAND            52
++#define CLK_ECC                53
++#define CLK_RMII_REF        54
++
++#define CLK_NR_CLKS            (CLK_RMII_REF + 1)
++
++#endif /* __DT_BINDINGS_CLOCK_S500_CMU_H */
+-- 
+2.11.0
