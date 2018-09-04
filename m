@@ -1,66 +1,57 @@
-Return-Path: <SRS0=6DmN=LR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from sauhun.de ([88.99.104.3]:50718 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbeICNrj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 3 Sep 2018 09:47:39 -0400
-Date: Mon, 3 Sep 2018 11:28:19 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RESEND PATCH] spi: sh-msiof: Document R-Car D3 support
-Message-ID: <20180903092819.2d2sh6dvusmwwey3@ninjato>
-References: <1535101951-11221-1-git-send-email-uli+renesas@fpond.eu>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5b8e8a7d.1c69fb81.f8a73.b384@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC 2/6] dt-bindings: introduce System PM bindings for
+ Qualcomm SoCs
+References: <1535141188-29731-1-git-send-email-rplsssn@codeaurora.org>
+ <1535141188-29731-3-git-send-email-rplsssn@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jmn7syzf5f6nso37"
-Content-Disposition: inline
-In-Reply-To: <1535101951-11221-1-git-send-email-uli+renesas@fpond.eu>
-Sender: devicetree-owner@vger.kernel.org
-To: Ulrich Hecht <uli+renesas@fpond.eu>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org, linux-spi@vger.kernel.org
-List-ID: <devicetree@vger.kernel.org>
-
-
---jmn7syzf5f6nso37
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1535141188-29731-3-git-send-email-rplsssn@codeaurora.org>
+Date: Tue, 4 Sep 2018 08:14:16 -0500
+To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, rafael@kernel.org, drake@endlessm.com, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Aug 24, 2018 at 11:12:31AM +0200, Ulrich Hecht wrote:
-> Document support for the MSIOF module in the Renesas D3 (r8a77995) SoC.
->=20
-> No driver update is needed.
->=20
-> Signed-off-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
+On Sat, Aug 25, 2018 at 01:36:24AM +0530, Raju P.L.S.S.S.N wrote:
+> Add device binding documentation for Qualcomm Technology Inc's System PM
+> driver. The driver is used for managing system sleep activities that are
+> required when application processor is going to deepest low power mode.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
 > ---
-> This patch fell by the wayside, probably because I forgot to cc devicetre=
-e.
+>  .../devicetree/bindings/soc/qcom/system_pm.txt     | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/system_pm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/system_pm.txt b/Documentation/devicetree/bindings/soc/qcom/system_pm.txt
+> new file mode 100644
+> index 0000000..0915760
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/system_pm.txt
+> @@ -0,0 +1,28 @@
+> +System PM
+> +---------
+> +
+> +System PM device handles the tasks that need to be performed during application
+> +processor deeper low power mode entry for QCOM SoCs which have hardened IP blocks
+> +combinedly called as RPMH (Resource Power Manager Hardened) for shared resource
+> +management. System PM is a client of APPS_RSC. Flushing the buffered requests to
+> +TCSs in RSC and programming the wakeup timer in PDC for timer based wakeup are
+> +handled by this device.
+> +
+> +The bindings for System PM is specified in the RSC section in devicetree.
+> +
+> +Properties:
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "qcom,system-pm".
 
-Yeah, this is good practice. Yet, I'd think this goes upstream via the
-SPI tree? Ccing Mark, he prefers to be Cced explicitly.
+h/w devices have some sort of resources and this has nothing. Looks like 
+you are just using DT to instantiate some sort of virtual driver. Don't 
+do that.
 
-
---jmn7syzf5f6nso37
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAluM/q8ACgkQFA3kzBSg
-Kba4rQ/+McZwLif0qPygg1zMfUKg8bvZC2w7hf4jBnWM0pIXUp7rGfV5id2y9CSq
-najz/yRDD0t+T0u7Bfs73/gULoD3/0PG+JLygFPfYUplBRUcPbnxyTf9sf/8w4ZH
-oRJGNKxW9fb0FzI1ygtiUfTQKmkZV8bkTCL4UwpZOV5ROKXYm6AX2zZBAeg1GrM+
-X2xEViMV3zZJvSQu2/FT76gWJkmlHg0i+nZGvHSeKZwT6ALc8wqa6S2LopchGrs+
-b2NXIhHOOoMFUeu54f2g1cBvD6lFb1JPhwat7bGpJSfxDms0Dzl3vMPmjZIlnqXL
-JJVviWjuo16DCGT3qD92OO9A5xYxfUhRAOLndAdl+z8rIjfy+yI5V6+X0Uah0/kX
-bu19x+7MGwFAo4qvrfGknxYHGBN9diokfF+TWnusKDpsx6cJoho68z5A/ktgZIM3
-EAbhEanZgPKYT9z9NKy6WdSOeLDFo6JAsJHKRxKOCvvfxSRGUESsr0l06+SKLZRK
-j4VTwGJw6SpIoL2WmwnSQEEG3w8GcK4ZYgqtJzzxh0LZ7HOuA8j6qhRHHhNNe7hZ
-WWv0vqpm8iwCV0rkKM/Nj3ckCqeuwEY8BinMW3w7qaR4pedEtQ8Tq+XPjjqfhUmK
-fZqeKNF2KJEklCMGIhfHUOQyKceLrIy9TLw9ny9gvzfjPO49ENk=
-=sn3O
------END PGP SIGNATURE-----
-
---jmn7syzf5f6nso37--
+Rob
