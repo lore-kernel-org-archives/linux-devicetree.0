@@ -1,97 +1,245 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v2 00/11] mscc: ocelot: add support for SerDes muxing
- configuration
-Date: Tue, 4 Sep 2018 16:03:51 -0700
-Message-ID: <20180904230351.vwlq2s7joulvqw2i@pburton-laptop>
-References: <20180903093308.24366-1-quentin.schulz@bootlin.com>
- <20180903133415.GF4445@lunn.ch>
- <20180903134522.GC13888@piout.net>
- <20180903.220910.899357653888940454.davem@davemloft.net>
- <20180904151653.GI13888@piout.net>
- <20180904161028.nh5ejrtj22r5az5e@pburton-laptop>
- <20180904180006.d5th3jrbhr4vtahi@qschulz>
+From: vnkgutta@codeaurora.org
+Subject: Re: [PATCH v3 3/4] drivers: edac: Add EDAC driver support for QCOM
+ SoCs
+Date: Tue, 04 Sep 2018 16:19:26 -0700
+Message-ID: <ed22b1a9b894cd0ec323c7596dac27d6@codeaurora.org>
+References: <1535503347-20507-1-git-send-email-vnkgutta@codeaurora.org>
+ <1535503347-20507-4-git-send-email-vnkgutta@codeaurora.org>
+ <20180830121137.GD20005@nazgul.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180904180006.d5th3jrbhr4vtahi@qschulz>
+In-Reply-To: <20180830121137.GD20005@nazgul.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, David Miller <davem@davemloft.net>, andrew@lunn.ch, ralf@linux-mips.org, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com
+To: Borislav Petkov <bp@alien8.de>
+Cc: evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Quentin,
-
-On Tue, Sep 04, 2018 at 08:00:06PM +0200, Quentin Schulz wrote:
-> On Tue, Sep 04, 2018 at 09:10:28AM -0700, Paul Burton wrote:
-> > Hi Alexandre, Quentin, all,
-> > 
-> > On Tue, Sep 04, 2018 at 05:16:53PM +0200, Alexandre Belloni wrote:
-> > > On 03/09/2018 22:09:10-0700, David Miller wrote:
-> > > > From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > > > Date: Mon, 3 Sep 2018 15:45:22 +0200
-> > > > 
-> > > > > On 03/09/2018 15:34:15+0200, Andrew Lunn wrote:
-> > > > >> > I suggest patches 1 and 8 go through MIPS tree, 2 to 5 and 11 go through
-> > > > >> > net while the others (6, 7, 9 and 10) go through the generic PHY subsystem.
-> > > > >> 
-> > > > >> Hi Quentin
-> > > > >> 
-> > > > >> Are you expecting merge conflicts? If not, it might be simpler to gets
-> > > > >> ACKs from each maintainer, and then merge it though one tree.
-> > > > > 
-> > > > > There are some other DT changes for this cycle so those should probably
-> > > > > go through MIPS.
-> > > > 
-> > > > No objection for this going through the MIPS tree, and from me:
-> > > >
-> > > > Acked-by: David S. Miller <davem@davemloft.net>
-> > > 
-> > > What I meant was that 1/11 and 8/11 should go through MIPS because of
-> > > the potential conflicts. The other patches can go through net-next as
-> > > that will make more sense. Maybe Quentin can split the series in two,
-> > > one for MIPS and one for net if that makes it easier for you to apply.
-> > 
-> > I'd be happy to take the .dts changes through the MIPS tree, though
-> > looking at them won't patch 1 break bisection?
-> > 
-> > Since you remove the hsio reg entry it looks to me like
-> > mscc_ocelot_probe() will fail with -EINVAL (which comes from
-> > devm_ioremap_resource() with res=NULL) until patch 3.
-> > 
+On 2018-08-30 05:11, Borislav Petkov wrote:
+> On Tue, Aug 28, 2018 at 05:42:26PM -0700, Venkata Narendra Kumar Gutta 
+> wrote:
+>> From: Channagoud Kadabi <ckadabi@codeaurora.org>
+>> 
+>> Add error reporting driver for Single Bit Errors (SBEs) and Double Bit
+>> Errors (DBEs). As of now, this driver supports error reporting for
+>> Last Level Cache Controller (LLCC) of Tag RAM and Data RAM. Interrupts
+>> are triggered when the errors happen in the cache, the driver handles
+>> those interrupts and dumps the syndrome registers.
+>> 
+>> Signed-off-by: Channagoud Kadabi <ckadabi@codeaurora.org>
+>> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+>> Co-developed-by: Venkata Narendra Kumar Gutta 
+>> <vnkgutta@codeaurora.org>
+>> ---
+>>  MAINTAINERS                        |   8 +
+>>  drivers/edac/Kconfig               |  22 ++
+>>  drivers/edac/Makefile              |   1 +
+>>  drivers/edac/qcom_edac.c           | 421 
+>> +++++++++++++++++++++++++++++++++++++
+>>  include/linux/soc/qcom/llcc-qcom.h |  24 +++
+>>  5 files changed, 476 insertions(+)
+>>  create mode 100644 drivers/edac/qcom_edac.c
 > 
-> That's correct.
+> We'd also need an agreement who picks up the whole pile?
+
+Andy should take care of it.
+(Andy Gross <andy.gross@linaro.org> (maintainer:ARM/QUALCOMM SUPPORT))
+
 > 
-> > I'd feel more comfortable merging this piecemeal if it doesn't result in
-> > us breaking bisection for however long it takes for both the trees
-> > involved to be merged.
-> > 
+> Those guys:
 > 
-> How do you want to proceed then?
+> Andy Gross <andy.gross@linaro.org> (maintainer:ARM/QUALCOMM SUPPORT)
+> David Brown <david.brown@linaro.org> (maintainer:ARM/QUALCOMM SUPPORT)
+> 
+> and I ACK the EDAC driver or I do and they ACK the soc pieces.
+> 
+> I have a hunch the prior would be easier...
 
-Well, it sounded like David is OK with this all going through the MIPS
-tree, though we'd need an ack for the PHY parts.
+You can ACK the EDAC driver, rest should be taken care by
+Andy or Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Alternatively I'd be happy for the DT changes to go through the net-next
-tree, which may make more sense given that the .dts changes are pretty
-trivial in comparison with the driver changes. If David wants to do that
-then for patches 1 & 8:
 
-    Acked-by: Paul Burton <paul.burton@mips.com>
+> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 0a23427..0bff713 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -5227,6 +5227,14 @@ L:	linux-edac@vger.kernel.org
+>>  S:	Maintained
+>>  F:	drivers/edac/ti_edac.c
+>> 
+>> +EDAC-QUALCOMM
+>> +M:	Channagoud Kadabi <ckadabi@codeaurora.org>
+>> +M:	Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+>> +L:	linux-arm-msm@vger.kernel.org
+>> +L:	linux-edac@vger.kernel.org
+>> +S:	Maintained
+>> +F:	drivers/edac/qcom_edac.c
+>> +
+>>  EDIROL UA-101/UA-1000 DRIVER
+>>  M:	Clemens Ladisch <clemens@ladisch.de>
+>>  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+>> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+>> index 57304b2..df58957 100644
+>> --- a/drivers/edac/Kconfig
+>> +++ b/drivers/edac/Kconfig
+>> @@ -460,4 +460,26 @@ config EDAC_TI
+>>  	  Support for error detection and correction on the
+>>            TI SoCs.
+>> 
+>> +config EDAC_QCOM
+>> +	tristate "QCOM EDAC Controller"
+>> +	depends on EDAC
+>> +	help
+>> +	  Support for error detection and correction on the
+>> +	  QCOM SoCs.
+>> +
+>> +	  This driver reports Single Bit Errors (SBEs) and Double Bit Errors 
+>> (DBEs).
+>> +	  As of now, it supports error reporting for Last Level Cache 
+>> Controller (LLCC)
+>> +	  of Tag RAM and Data RAM.
+>> +
+>> +config EDAC_QCOM_LLCC
+>> +	tristate "QCOM EDAC Controller for LLCC Cache"
+>> +	depends on EDAC_QCOM && QCOM_LLCC
+> 
+> This is just silly: two EDAC config options for a single driver and 
+> this
+> second one only does:
+> 
+> #ifdef EDAC_QCOM_LLCC
+>         { .compatible = "qcom,llcc-edac" },
+> #endif
+> 
+> What for?!
+> 
+> You do this:
+> 
+> config EDAC_QCOM
+> 	depends on <architecture which this driver runs on> && QCOM_LLCC
+> 
+> and that's it.
+> 
 
-Either way there may be conflicts for ocelot.dtsi when it comes to
-merging to master, but they should be simple to resolve. It seems
-Wolfram already took your DT changes for I2C so there's probably going
-to be multiple trees updating that file this cycle already anyway.
+Done, I'll update it the next patch set.
 
-Ideally I'd say "don't break bisection" but that's sort of a separate
-issue here since even if you restructure your series to do that it would
-still need to go through one tree. For example you could adjust
-mscc_ocelot_probe() to handle either the reg property or the syscon,
-then adjust the DT to use the syscon, then remove the code dealing with
-the reg property, and I'd consider that a good idea anyway but it would
-still probably all need to go through one tree to make sure things get
-merged in the right order & avoid breaking bisection.
+> ...
+> 
+>> +/* Dump Syndrome registers data for Tag RAM, Data RAM bit errors*/
+>> +static int
+>> +dump_syn_reg_values(struct llcc_drv_data *drv, u32 bank, int 
+>> err_type)
+>> +{
+>> +	struct llcc_edac_reg_data reg_data = edac_reg_data[err_type];
+>> +	int err_cnt, err_ways, ret, i;
+>> +	u32 synd_reg, synd_val;
+>> +
+>> +	for (i = 0; i < reg_data.reg_cnt; i++) {
+>> +		synd_reg = reg_data.synd_reg + (i * 4);
+>> +		ret = regmap_read(drv->regmap, drv->offsets[bank] + synd_reg,
+>> +				  &synd_val);
+>> +		if (ret)
+>> +			goto clear;
+> 
+> <----- newline here.
 
-Thanks,
-    Paul
+OK
+
+> 
+>> +		edac_printk(KERN_CRIT, EDAC_LLCC, "%s: ECC_SYN%d: 0x%8x\n",
+>> +			    reg_data.name, i, synd_val);
+>> +	}
+>> +
+>> +	ret = regmap_read(drv->regmap,
+>> +			  drv->offsets[bank] + reg_data.count_status_reg,
+>> +			  &err_cnt);
+>> +	if (ret)
+>> +		goto clear;
+>> +
+>> +	err_cnt &= reg_data.count_mask;
+>> +	err_cnt >>= reg_data.count_shift;
+>> +	edac_printk(KERN_CRIT, EDAC_LLCC, "%s: error count: 0x%4x\n",
+>> +		    reg_data.name, err_cnt);
+>> +
+>> +	ret = regmap_read(drv->regmap,
+>> +			  drv->offsets[bank] + reg_data.ways_status_reg,
+>> +			  &err_ways);
+>> +	if (ret)
+>> +		goto clear;
+>> +
+>> +	err_ways &= reg_data.ways_mask;
+>> +	err_ways >>= reg_data.ways_shift;
+>> +
+>> +	edac_printk(KERN_CRIT, EDAC_LLCC, "%s: error ways: 0x%4x\n",
+>> +		    reg_data.name, err_ways);
+>> +
+>> +clear:
+>> +	return qcom_llcc_clear_error_status(err_type, drv);
+>> +}
+>> +
+>> +static int
+>> +dump_syn_reg(struct edac_device_ctl_info *edev_ctl, int err_type, u32 
+>> bank)
+>> +{
+>> +	struct llcc_drv_data *drv = edev_ctl->pvt_info;
+>> +	int ret;
+>> +
+>> +	ret = dump_syn_reg_values(drv, bank, err_type);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	switch (err_type) {
+>> +	case LLCC_DRAM_CE:
+>> +		edac_device_handle_ce(edev_ctl, 0, bank,
+>> +				      "LLCC Data RAM correctable Error");
+>> +		break;
+>> +	case LLCC_DRAM_UE:
+>> +		edac_device_handle_ue(edev_ctl, 0, bank,
+>> +				      "LLCC Data RAM uncorrectable Error");
+>> +		break;
+>> +	case LLCC_TRAM_CE:
+>> +		edac_device_handle_ce(edev_ctl, 0, bank,
+>> +				      "LLCC Tag RAM correctable Error");
+>> +		break;
+>> +	case LLCC_TRAM_UE:
+>> +		edac_device_handle_ue(edev_ctl, 0, bank,
+>> +				      "LLCC Tag RAM uncorrectable Error");
+>> +		break;
+>> +	default:
+>> +		ret = -EINVAL;
+>> +		edac_printk(KERN_CRIT, EDAC_LLCC, "Unexpected error type: %d\n",
+>> +			    err_type);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static irqreturn_t
+>> +llcc_ecc_irq_handler(int irq, void *edev_ctl)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev_ctl = edev_ctl;
+>> +	struct llcc_drv_data *drv = edac_dev_ctl->pvt_info;
+>> +	irqreturn_t irq_rc = IRQ_NONE;
+>> +	u32 drp_error, trp_error, i;
+>> +	bool irq_handled;
+>> +	int ret;
+>> +
+>> +	/* Iterate over the banks and look for Tag RAM or Data RAM errors */
+>> +	for (i = 0; i < drv->num_banks; i++) {
+>> +		ret = regmap_read(drv->regmap,
+>> +				  drv->offsets[i] + DRP_INTERRUPT_STATUS,
+>> +				  &drp_error);
+>> +
+>> +		if (!ret && (drp_error & SB_ECC_ERROR)) {
+>> +			edac_printk(KERN_CRIT, EDAC_LLCC,
+>> +				    "Single Bit Error detected in Data Ram\n");
+> 
+> "RAM" not "Ram". You have a couple of those wrong spellings.
+
+I'll correct that in the next patchset.
+
+> 
+> Otherwise it is starting to look real nice, good!
