@@ -1,51 +1,42 @@
-From: Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
-Date: Tue, 4 Sep 2018 09:45:47 -0600
-Message-ID: <cab5289c-7c53-28a8-b9b2-0c55c9f8d968@kernel.dk>
-References: <1536012923-16275-1-git-send-email-henrik@austad.us>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH RESEND v1 2/5] drivers: pinctrl: msm: enable PDC interrupt only
+ during suspend
+Date: Tue, 04 Sep 2018 15:00:36 -0700
+Message-ID: <153609843656.119890.7258329648640765778@swboyd.mtv.corp.google.com>
+References: <20180817191026.32245-1-ilina@codeaurora.org>
+ <20180817191026.32245-3-ilina@codeaurora.org>
+ <153509896098.28926.3622217918056498792@swboyd.mtv.corp.google.com>
+ <20180824171432.GM5081@codeaurora.org>
+ <153540005334.129321.18196967002233663397@swboyd.mtv.corp.google.com>
+ <20180904210934.GA23990@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1536012923-16275-1-git-send-email-henrik@austad.us>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Henrik Austad <henrik@austad.us>, linux-doc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, Jan Kandziora <jjj@gmx.de>, kvm@vger.kernel.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, linux-s390@vger.kernel.org, Ian Kent <raven@themaw.net>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Jonathan Corbet <corbet@lwn.net>, Helge Deller <deller@gmx.de>, x86@kernel.org, "James E.J. Bottomley" <jejb@parisc-linux.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180904210934.GA23990@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, evgreen@chromium.org, linus.walleij@linaro.org, marc.zyngier@arm.com, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/3/18 4:15 PM, Henrik Austad wrote:
-> This is a respin with a wider audience (all that get_maintainer returned)
-> and I know this spams a *lot* of people. Not sure what would be the correct
-> way, so my apologies for ruining your inbox.
-> 
-> The 00-INDEX files are supposed to give a summary of all files present
-> in a directory, but these files are horribly out of date and their
-> usefulness is brought into question. Often a simple "ls" would reveal
-> the same information as the filenames are generally quite descriptive as
-> a short introduction to what the file covers (it should not surprise
-> anyone what Documentation/sched/sched-design-CFS.txt covers)
-> 
-> A few years back it was mentioned that these files were no longer really
-> needed, and they have since then grown further out of date, so perhaps
-> it is time to just throw them out.
-> 
-> A short status yields the following _outdated_ 00-INDEX files, first
-> counter is files listed in 00-INDEX but missing in the directory, last
-> is files present but not listed in 00-INDEX.
+Quoting Lina Iyer (2018-09-04 14:09:34)
+> On Mon, Aug 27 2018 at 14:01 -0600, Stephen Boyd wrote:
+> >
+> >Can't we just configure a different chained IRQ handler with
+> >irq_set_chained_handler_and_data() for each of the GPIO IRQs that are
+> >handled by PDC to be the interrupts provide by the PDC irq controller
+> >that match the GPIOs? And then set their parent irq with
+> >irq_set_parent() for completeness? And also move those GPIOs from the
+> >existing msm_gpio irqchip to a different PDC gpio irqchip that does
+> >nothing besides push irqchip calls up to the PDC irqchip? Then we don't
+> >even have to think about resending anything and we can rely on PDC to do
+> >all the interrupt sensing all the time but still provide the irqs from
+> >the GPIO controller.
+> >
+> Seems like the irqchips need to be in hierarchy for this to work, which
+> is not the case with TLMM and the PDC, currently.
+> =
 
-For the block related bits:
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
-
--- 
-Jens Axboe
+Why? Does something mandate that the chained irq is also the
+hierarchical parent irqchip?
