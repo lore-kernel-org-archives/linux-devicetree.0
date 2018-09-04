@@ -1,96 +1,61 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 07/27] dt-bindings: clock: sun8i-de2: Add H6
- DE3 clock description
-Date: Tue, 4 Sep 2018 17:05:16 +0800
-Message-ID: <CAGb2v67udJ1_668Q4MFb3MbEQXzukNBKtEu3FYHsw+QyVA9J2Q@mail.gmail.com>
-References: <20180902072643.4917-1-jernej.skrabec@siol.net>
- <20180902072643.4917-8-jernej.skrabec@siol.net> <CAGb2v65AsKzEH3AgmQi+RRvVa6AO-cpAckGnNkvWwONsCCsoxw@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 3/3] media: imx-pxp: add i.MX Pixel Pipeline driver
+Date: Tue, 04 Sep 2018 11:12:25 +0200
+Message-ID: <1536052345.3468.1.camel@pengutronix.de>
+References: <20180810151822.18650-1-p.zabel@pengutronix.de>
+ <20180810151822.18650-4-p.zabel@pengutronix.de>
+ <20180904080408.GJ20333@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBXEVXHOAKGQEVRH2PKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v65AsKzEH3AgmQi+RRvVa6AO-cpAckGnNkvWwONsCCsoxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180904080408.GJ20333@w540>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Mauro Carvalho Chehab <mchehab@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 4, 2018 at 4:59 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->
-> Hi,
->
-> On Sun, Sep 2, 2018 at 3:27 PM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> >
-> > This commit adds necessary description and dt includes for H6 DE3 clock.
-> > It is very similar to others, but memory region has some additional
-> > registers not found in DE2.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/clock/sun8i-de2.txt | 5 +++--
-> >  include/dt-bindings/clock/sun8i-de2.h                 | 3 +++
-> >  include/dt-bindings/reset/sun8i-de2.h                 | 1 +
-> >  3 files changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/sun8i-de2.txt b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
-> > index e94582e8b8a9..41a52c2acffd 100644
-> > --- a/Documentation/devicetree/bindings/clock/sun8i-de2.txt
-> > +++ b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
-> > @@ -1,5 +1,5 @@
-> > -Allwinner Display Engine 2.0 Clock Control Binding
-> > ---------------------------------------------------
-> > +Allwinner Display Engine 2.0/3.0 Clock Control Binding
-> > +------------------------------------------------------
-> >
-> >  Required properties :
-> >  - compatible: must contain one of the following compatibles:
-> > @@ -8,6 +8,7 @@ Required properties :
-> >                 - "allwinner,sun8i-v3s-de2-clk"
-> >                 - "allwinner,sun50i-a64-de2-clk"
-> >                 - "allwinner,sun50i-h5-de2-clk"
-> > +               - "allwinner,sun50i-h6-de3-clk"
-> >
-> >  - reg: Must contain the registers base address and length
-> >  - clocks: phandle to the clocks feeding the display engine subsystem.
-> > diff --git a/include/dt-bindings/clock/sun8i-de2.h b/include/dt-bindings/clock/sun8i-de2.h
-> > index 3bed63b524aa..7768f73b051e 100644
-> > --- a/include/dt-bindings/clock/sun8i-de2.h
-> > +++ b/include/dt-bindings/clock/sun8i-de2.h
-> > @@ -15,4 +15,7 @@
-> >  #define CLK_MIXER1             7
-> >  #define CLK_WB                 8
-> >
-> > +#define CLK_BUS_ROT            9
-> > +#define CLK_ROT                        10
-> > +
-> >  #endif /* _DT_BINDINGS_CLOCK_SUN8I_DE2_H_ */
-> > diff --git a/include/dt-bindings/reset/sun8i-de2.h b/include/dt-bindings/reset/sun8i-de2.h
-> > index 9526017432f0..1c36a6ac86d6 100644
-> > --- a/include/dt-bindings/reset/sun8i-de2.h
-> > +++ b/include/dt-bindings/reset/sun8i-de2.h
-> > @@ -10,5 +10,6 @@
-> >  #define RST_MIXER0     0
-> >  #define RST_MIXER1     1
-> >  #define RST_WB         2
-> > +#define RST_ROT                3
->
-> Looking at the DE 2.0 register guide, the "Rotate" related fields are also
-> found on the A83T. So this is not DE 3.0 specific. And you could also have
-> the H6 DE3 compatible fall back to the A83T for the common parts.
-
-I take that back. The A83T has a different clock tree structure because it
-lacks the DE mod clock, so it's not compatible.
-
-> ChenYu
->
-> >
-> >  #endif /* _DT_BINDINGS_RESET_SUN8I_DE2_H_ */
-> > --
-> > 2.18.0
-> >
+SGkgSmFjb3BvLAoKdGhhbmsgeW91IGZvciB0aGUgcmV2aWV3IQoKT24gVHVlLCAyMDE4LTA5LTA0
+IGF0IDEwOjA0ICswMjAwLCBqYWNvcG8gbW9uZGkgd3JvdGU6Cj4gSGkgUGhpbGlwcCwKPiAKPiBP
+biBGcmksIEF1ZyAxMCwgMjAxOCBhdCAwNToxODoyMlBNICswMjAwLCBQaGlsaXBwIFphYmVsIHdy
+b3RlOgpbLi4uXQo+ID4gK3N0YXRpYyBzdHJ1Y3QgcHhwX2ZtdCBmb3JtYXRzW10gPSB7Cj4gPiAr
+CXsKPiA+ICsJCS5mb3VyY2MJPSBWNEwyX1BJWF9GTVRfWEJHUjMyLAo+ID4gKwkJLmRlcHRoCT0g
+MzIsCj4gPiArCQkvKiBCb3RoIGNhcHR1cmUgYW5kIG91dHB1dCBmb3JtYXQgKi8KPiA+ICsJCS50
+eXBlcwk9IE1FTTJNRU1fQ0FQVFVSRSB8IE1FTTJNRU1fT1VUUFVULApbLi4uXQo+ID4gKwl9LCB7
+Cj4gPiArCQkuZm91cmNjID0gVjRMMl9QSVhfRk1UX1lVVjMyLAo+ID4gKwkJLmRlcHRoCT0gMTYs
+Cj4gCj4gQWNjb3JkaW5nIHRvOgo+IGh0dHBzOi8vd3d3LmxpbnV4dHYub3JnL2Rvd25sb2Fkcy92
+NGwtZHZiLWFwaXMtb2xkL3BhY2tlZC15dXYuaHRtbAo+IHNob3VsZG4ndCB0aGlzIGJlIDMyPwoK
+WWVzLCBJJ2xsIGNoYW5nZSBkZXB0aCB0byAzMi4KClsuLi5dCj4gPiArfQo+ID4gKwo+IAo+IE11
+bHRpcGxlIGJsYW5rIGxpbmVzIChpbiBhIGZldyBvdGhlciBwbGFjZXMgdG9vKQo+IAo+ID4gKwoK
+Rm91bmQgdGhlbSwgd2lsbCBmaXggdGhlbS4KClsuLi5dCj4gPiArCS8qIEVuYWJsZSBjbG9ja3Mg
+YW5kIGR1bXAgcmVnaXN0ZXJzICovCj4gPiArCWNsa19wcmVwYXJlX2VuYWJsZShkZXYtPmNsayk7
+Cj4gPiArCXB4cF9zb2Z0X3Jlc2V0KGRldik7Cj4gPiArCj4gPiArCXNwaW5fbG9ja19pbml0KCZk
+ZXYtPmlycWxvY2spOwo+ID4gKwo+ID4gKwlyZXQgPSB2NGwyX2RldmljZV9yZWdpc3RlcigmcGRl
+di0+ZGV2LCAmZGV2LT52NGwyX2Rldik7Cj4gPiArCWlmIChyZXQpCj4gPiArCQlyZXR1cm4gcmV0
+Owo+ID4gKwo+ID4gKwlhdG9taWNfc2V0KCZkZXYtPm51bV9pbnN0LCAwKTsKPiA+ICsJbXV0ZXhf
+aW5pdCgmZGV2LT5kZXZfbXV0ZXgpOwo+ID4gKwo+ID4gKwlkZXYtPnZmZCA9IHB4cF92aWRlb2Rl
+djsKPiAKPiBUaGUgbmFtZSBvZiB0aGUgdmlkZW8gZGV2aWNlIGlzIHRoZSBzYW1lIGZvciBhbGwg
+aW5zdGFuY2VzIG9mIHRoaXMKPiBkcml2ZXIuIElzIHRoaXMgb2s/CgpJIGV4cGVjdCB0aGF0IHRo
+ZXJlIGlzIG9ubHkgZXZlciBnb2luZyB0byBiZSBvbmUgaW5zdGFuY2Ugb24gdGhlIFNvQy4KClsu
+Li5dCj4gPiArCXY0bDJfZGV2aWNlX3VucmVnaXN0ZXIoJmRldi0+djRsMl9kZXYpOwo+IAo+IERp
+c2FibGUgY2xvY2s/CgpZZXMsIEknbGwgZml4IHRoZSBjbG9jayBoYW5kbGluZy4KClsuLi5dCj4g
+PiArTU9EVUxFX0RFU0NSSVBUSU9OKCJpLk1YIFBYUCBtZW0ybWVtIHNjYWxlci9DU0Mvcm90YXRv
+ciIpOwo+ID4gK01PRFVMRV9BVVRIT1IoIlBoaWxpcHAgWmFiZWwgPGtlcm5lbEBwZW5ndXRyb25p
+eC5kZT4iKTsKPiA+ICtNT0RVTEVfTElDRU5TRSgiR1BMIik7Cj4gCj4gU1BEWCBoZWFkZXIgc2F5
+cyBHUEwyLjArCgpTZWUgaW5jbHVkZS9saW51eC9tb2R1bGUuaDoKCi8qCsKgKiBUaGUgZm9sbG93
+aW5nIGxpY2Vuc2UgaWRlbnRzIGFyZSBjdXJyZW50bHkgYWNjZXB0ZWQgYXMgaW5kaWNhdGluZyBm
+cmVlCsKgKiBzb2Z0d2FyZSBtb2R1bGVzCsKgKgrCoCrCoMKgwqDCoMKgwqAiR1BMIsKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFtHTlUgUHVibGlj
+IExpY2Vuc2UgdjIgb3IgbGF0ZXJdCiAqIFsuLi5dCiAqLwoKVGhpcyBhbHJlYWR5IHNlZW1zIHRv
+IGJlIHRoZSByaWdodCBjaG9pY2UuCgpyZWdhcmRzClBoaWxpcHAKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
