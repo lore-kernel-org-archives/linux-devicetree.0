@@ -1,14 +1,14 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/7] clk: imx6sx: add mmdc1 ipg clock
-Date: Tue, 04 Sep 2018 08:36:51 -0500
-Message-ID: <5b8e8a74.1c69fb81.f383.6bc1@mx.google.com>
+Subject: Re: [PATCH 2/7] clk: imx6ul: add mmdc1 ipg clock
+Date: Tue, 04 Sep 2018 08:36:50 -0500
+Message-ID: <5b8e8a73.1c69fb81.971e7.0954@mx.google.com>
 References: <1535701998-20443-1-git-send-email-Anson.Huang@nxp.com>
- <1535701998-20443-4-git-send-email-Anson.Huang@nxp.com>
+ <1535701998-20443-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1535701998-20443-4-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1535701998-20443-3-git-send-email-Anson.Huang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,14 +22,14 @@ To: Anson Huang <Anson.Huang@nxp.com>
 Cc: mark.rutland@arm.com, aisheng.dong@nxp.com, shengjiu.wang@nxp.com, ping.bai@nxp.com, devicetree@vger.kernel.org, sboyd@kernel.org, s.hauer@pengutronix.de, linux-clk@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, colin.didier@devialet.com, robh+dt@kernel.org, clement.peron@devialet.com, Linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, michael@amarulasolutions.com, shawnguo@kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org, matteo.lisi@engicam.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 31 Aug 2018 15:53:14 +0800, Anson Huang wrote:
-> i.MX6SX has MMDC1 ipg clock in CCM CCGR, add it into
+On Fri, 31 Aug 2018 15:53:13 +0800, Anson Huang wrote:
+> i.MX6UL has MMDC1 ipg clock in CCM CCGR, add it into
 > clock tree for clock management.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  drivers/clk/imx/clk-imx6sx.c             | 1 +
->  include/dt-bindings/clock/imx6sx-clock.h | 3 ++-
+>  drivers/clk/imx/clk-imx6ul.c             | 1 +
+>  include/dt-bindings/clock/imx6ul-clock.h | 3 ++-
 >  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
 
