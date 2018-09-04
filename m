@@ -1,28 +1,90 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v3 09/19] memory: tegra: Adapt to Tegra20 device-tree binding changes
-Date: Tue, 4 Sep 2018 11:56:22 +0300
-Message-ID: <201809041156.22715.digetx@gmail.com>
-References: <20180818155430.5586-1-digetx@gmail.com> <20180818155430.5586-10-digetx@gmail.com> <1536008759.25080.2.camel@toradex.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 07/27] dt-bindings: clock: sun8i-de2: Add H6
+ DE3 clock description
+Date: Tue, 4 Sep 2018 16:59:02 +0800
+Message-ID: <CAGb2v65AsKzEH3AgmQi+RRvVa6AO-cpAckGnNkvWwONsCCsoxw@mail.gmail.com>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net> <20180902072643.4917-8-jernej.skrabec@siol.net>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536008759.25080.2.camel@toradex.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Cc: "robin.murphy@arm.com" <robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ4SXHOAKGQEG7CAPTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180902072643.4917-8-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 04 September 2018 00:06:01 Marcel Ziswiler wrote:
-> On Sat, 2018-08-18 at 18:54 +0300, Dmitry Osipenko wrote:
-> > The tegra20-mc DT binding has been changed, GART has been squashed
-> > into Memory Controller and now the clock property is mandatory for
-> > Tegra20. Adapt driver the to DT changes.
->
-> Minor nitpick concerning the commit message:
->
-> Adapt driver to the DT changes.
+Hi,
 
-Yes, thank you.
+On Sun, Sep 2, 2018 at 3:27 PM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+>
+> This commit adds necessary description and dt includes for H6 DE3 clock.
+> It is very similar to others, but memory region has some additional
+> registers not found in DE2.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/sun8i-de2.txt | 5 +++--
+>  include/dt-bindings/clock/sun8i-de2.h                 | 3 +++
+>  include/dt-bindings/reset/sun8i-de2.h                 | 1 +
+>  3 files changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/sun8i-de2.txt b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
+> index e94582e8b8a9..41a52c2acffd 100644
+> --- a/Documentation/devicetree/bindings/clock/sun8i-de2.txt
+> +++ b/Documentation/devicetree/bindings/clock/sun8i-de2.txt
+> @@ -1,5 +1,5 @@
+> -Allwinner Display Engine 2.0 Clock Control Binding
+> ---------------------------------------------------
+> +Allwinner Display Engine 2.0/3.0 Clock Control Binding
+> +------------------------------------------------------
+>
+>  Required properties :
+>  - compatible: must contain one of the following compatibles:
+> @@ -8,6 +8,7 @@ Required properties :
+>                 - "allwinner,sun8i-v3s-de2-clk"
+>                 - "allwinner,sun50i-a64-de2-clk"
+>                 - "allwinner,sun50i-h5-de2-clk"
+> +               - "allwinner,sun50i-h6-de3-clk"
+>
+>  - reg: Must contain the registers base address and length
+>  - clocks: phandle to the clocks feeding the display engine subsystem.
+> diff --git a/include/dt-bindings/clock/sun8i-de2.h b/include/dt-bindings/clock/sun8i-de2.h
+> index 3bed63b524aa..7768f73b051e 100644
+> --- a/include/dt-bindings/clock/sun8i-de2.h
+> +++ b/include/dt-bindings/clock/sun8i-de2.h
+> @@ -15,4 +15,7 @@
+>  #define CLK_MIXER1             7
+>  #define CLK_WB                 8
+>
+> +#define CLK_BUS_ROT            9
+> +#define CLK_ROT                        10
+> +
+>  #endif /* _DT_BINDINGS_CLOCK_SUN8I_DE2_H_ */
+> diff --git a/include/dt-bindings/reset/sun8i-de2.h b/include/dt-bindings/reset/sun8i-de2.h
+> index 9526017432f0..1c36a6ac86d6 100644
+> --- a/include/dt-bindings/reset/sun8i-de2.h
+> +++ b/include/dt-bindings/reset/sun8i-de2.h
+> @@ -10,5 +10,6 @@
+>  #define RST_MIXER0     0
+>  #define RST_MIXER1     1
+>  #define RST_WB         2
+> +#define RST_ROT                3
+
+Looking at the DE 2.0 register guide, the "Rotate" related fields are also
+found on the A83T. So this is not DE 3.0 specific. And you could also have
+the H6 DE3 compatible fall back to the A83T for the common parts.
+
+ChenYu
+
+>
+>  #endif /* _DT_BINDINGS_RESET_SUN8I_DE2_H_ */
+> --
+> 2.18.0
+>
