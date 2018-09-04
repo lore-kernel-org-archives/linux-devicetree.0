@@ -1,70 +1,47 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI
- driver
-Date: Tue, 4 Sep 2018 14:46:27 +0200
-Message-ID: <20180904144627.1de264b6@bbrezillon>
-References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1535711404-29528-5-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
+Date: Tue, 4 Sep 2018 14:54:02 +0200
+Message-ID: <20180904125402.GR28861@localhost>
+References: <20180827082153.22537-1-johan@kernel.org>
+ <20180827082153.22537-5-johan@kernel.org>
+ <CAPDyKFot-Nx=R83vxS=WQp2kSFmMiQ7wfOK4m6hbPt0MB3Z25A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFot-Nx=R83vxS=WQp2kSFmMiQ7wfOK4m6hbPt0MB3Z25A@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 3 Sep 2018 09:54:08 +0000
-Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
-
-> Dear Yogesh,
+On Mon, Aug 27, 2018 at 04:44:44PM +0200, Ulf Hansson wrote:
+> On 27 August 2018 at 10:21, Johan Hovold <johan@kernel.org> wrote:
+> > Use the new of_get_compatible_child() helper to lookup the slot child
+> > node instead of using of_find_compatible_node(), which searches the
+> > entire tree from a given start node and thus can return an unrelated
+> > (i.e. non-child) node.
+> >
+> > This also addresses a potential use-after-free (e.g. after probe
+> > deferral) as the tree-wide helper drops a reference to its first
+> > argument (i.e. the node of the device being probed).
+> >
+> > While at it, also fix up the related slot-node reference leak.
+> >
+> > Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+> > Cc: stable <stable@vger.kernel.org>     # 4.15
+> > Cc: Carlo Caione <carlo@endlessm.com>
+> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > Signed-off-by: Johan Hovold <johan@kernel.org>
 > 
-> > -----Original Message-----
-> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-  
-> > owner@vger.kernel.org> On Behalf Of Yogesh Gaur  
-> > Sent: Friday, August 31, 2018 4:00 PM
-> > To: linux-mtd@lists.infradead.org; boris.brezillon@bootlin.com;
-> > marek.vasut@gmail.com; linux-spi@vger.kernel.org;
-> > devicetree@vger.kernel.org
-> > Cc: robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; linux-
-> > arm-kernel@lists.infradead.org; computersforpeace@gmail.com;
-> > frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org; Yogesh
-> > Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-> > Subject: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI driver
-> > 
-> > Add binding file for NXP FlexSPI driver.
-> > 
-> > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-> > ---
-> >  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 42
-> > ++++++++++++++++++++++
-> >  1 file changed, 42 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-
-> > fspi.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > new file mode 100644
-> > index 0000000..9f07116
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > @@ -0,0 +1,42 @@
-> > +* NXP Flex Serial Peripheral Interface (FSPI)
-> > +
-> > +Required properties:
-> > +  - compatible : Should be "nxp,lx2160a-fspi"
-> > +  - reg :        First contains the register location and length,
-> > +                 Second contains the memory mapping address and length  
-> 
-> Why are we overriding reg property.  Is there any special requirement. 
-> 
-> Can we use "reg" and "ranges" property in device tree.
-> Here "reg" represents controller registers and "ranges" represent the memory address of flash.
+> Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-No, ranges is not used for that. It's used when you need to convert
-from one address space to another, which is not what you're describing
-here. Check section 2.38 of this document [1] for more details.
+Thanks for the ack. Rob's gotten the helper into -rc2, so feel free to
+pick this one up directly to whichever mmc branch you prefer. I've been
+able to trigger crashes after probe deferrals due to the use-after-free,
+but this seems unlikely to be exploitable.
 
-[1]https://elinux.org/images/c/cf/Power_ePAPR_APPROVED_v1.1.pdf
+Thanks,
+Johan
