@@ -1,171 +1,71 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v2 1/5] drivers: pinctrl: qcom: add wakeup capability to
- GPIO
-Date: Tue, 4 Sep 2018 11:51:02 -0600
-Message-ID: <20180904175102.GB3622@codeaurora.org>
-References: <20180824200157.9993-1-ilina@codeaurora.org>
- <20180824200157.9993-2-ilina@codeaurora.org>
- <20180827223502.GV160295@google.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH net-next v2 1/7] net: phy: mscc: factorize code for LEDs
+ mode
+Date: Tue, 4 Sep 2018 19:56:26 +0200
+Message-ID: <20180904175626.4xagnrkjtmtovxsr@qschulz>
+References: <20180903084853.18092-1-quentin.schulz@bootlin.com>
+ <20180904.104827.447303663667237271.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xvphf3rb6p6p2tuv"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180827223502.GV160295@google.com>
+In-Reply-To: <20180904.104827.447303663667237271.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: David Miller <davem@davemloft.net>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27 2018 at 16:35 -0600, Matthias Kaehlcke wrote:
->Hi Lina,
->
->On Fri, Aug 24, 2018 at 02:01:53PM -0600, Lina Iyer wrote:
->> QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
->> domain can wakeup the SoC, when interrupts and GPIOs are routed to the
->> its interrupt controller. Only select GPIOs that are deemed wakeup
->
->wording nit: "are routed to the|its interrupt controller"
->
-Okay.
 
->> capable are routed to specific PDC pins. During low power state, the
->> pinmux interrupt controller may be non-functional but the PDC would be.
->> The PDC can detect the wakeup GPIO is triggered and bring the TLMM to an
->> operational state.
->>
->> Interrupts that are level triggered will be detected at the TLMM when
->> the controller becomes operational. Edge interrupts however need to be
->> replayed again.
->>
->> Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
->> but keep it disabled. During suspend, we can enable the PDC IRQ instead
->> of the GPIO IRQ, which may or not be detected.
->>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->> Changes in v2:
->> 	- Remove IRQF_NO_SUSPEND and IRQF_ONE_SHOT from PDC IRQ
->> Changes in v1:
->> 	- Trigger GPIO in h/w from PDC IRQ handler
->> 	- Avoid big tables for GPIO-PDC map, pick from DT instead
->> 	- Use handler_data
->> ---
->>  drivers/pinctrl/qcom/pinctrl-msm.c | 96 ++++++++++++++++++++++++++++++
->>  1 file changed, 96 insertions(+)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
->> index 0e22f52b2a19..b675ea56a4ff 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
->> @@ -687,11 +687,15 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->>  	const struct msm_pingroup *g;
->>  	unsigned long flags;
->>  	u32 val;
->> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->>
->>  	g = &pctrl->soc->groups[d->hwirq];
->>
->>  	raw_spin_lock_irqsave(&pctrl->lock, flags);
->>
->> +	if (pdc_irqd)
->> +		irq_set_irq_type(pdc_irqd->irq, type);
->> +
->>  	/*
->>  	 * For hw without possibility of detecting both edges
->>  	 */
->> @@ -779,9 +783,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
->>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->>  	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->>  	unsigned long flags;
->> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->>
->>  	raw_spin_lock_irqsave(&pctrl->lock, flags);
->>
->> +	if (pdc_irqd)
->> +		irq_set_irq_wake(pdc_irqd->irq, on);
->> +
->>  	irq_set_irq_wake(pctrl->irq, on);
->>
->>  	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->> @@ -863,6 +871,92 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
->>  	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
->>  }
->>
->> +static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
->> +{
->> +	struct irq_data *irqd = data;
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
->> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->> +	const struct msm_pingroup *g;
->> +	unsigned long flags;
->> +	u32 val;
->> +
->> +	if (!irqd_is_level_type(irqd)) {
->> +		g = &pctrl->soc->groups[irqd->hwirq];
->> +		raw_spin_lock_irqsave(&pctrl->lock, flags);
->> +		val = BIT(g->intr_status_bit);
->> +		writel(val, pctrl->regs + g->intr_status_reg);
->> +		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->> +	}
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int msm_gpio_pdc_pin_request(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->> +	struct platform_device *pdev = to_platform_device(pctrl->dev);
->> +	const char *pin_name;
->> +	int irq;
->> +	int ret;
->> +
->> +	pin_name = kasprintf(GFP_KERNEL, "gpio%lu", d->hwirq);
->> +	if (!pin_name)
->> +		return -ENOMEM;
->> +
->> +	irq = platform_get_irq_byname(pdev, pin_name);
->> +	if (irq < 0) {
->> +		kfree(pin_name);
->> +		return 0;
->
->Do I understand correctly that this is the case where the pin isn't
->routed to the PDC?
->
-Yes, correct.
+--xvphf3rb6p6p2tuv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +	}
->> +
->> +	ret = request_irq(irq, wake_irq_gpio_handler, irqd_get_trigger_type(d),
->> +			  pin_name, d);
->> +	if (ret) {
->> +		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
->
->'\n' is missing
->
-ok.
->> +		kfree(pin_name);
->> +		return ret;
->> +	}
->> +
->> +	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
->> +	disable_irq(irq);
->> +
->> +	return 0;
->> +}
->> +
->> +static int msm_gpio_pdc_pin_release(struct irq_data *d)
->> +{
->> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->> +
->> +	if (pdc_irqd) {
->> +		irq_set_handler_data(d->irq, NULL);
->> +		free_irq(pdc_irqd->irq, d);
->
->You need to free 'pin_name' allocated in msm_gpio_pdc_pin_request().
->IIUC it should be available in irq_desc->action->name.
->
-Yes, I didn't realize that free_irq returns the name when I posted this
-series (noted in the cover letter). Will fix.
+Hi David,
 
--- Lina
+On Tue, Sep 04, 2018 at 10:48:27AM -0700, David Miller wrote:
+> From: Quentin Schulz <quentin.schulz@bootlin.com>
+> Date: Mon,  3 Sep 2018 10:48:47 +0200
+>=20
+> > LEDs modes are set the same way, except they are offset by 4 times the
+> > index of the LED.
+> >=20
+> > Let's factorize all the code so that it's easier to add support for the
+> > 4 LEDs of the VSC8584 PHY.
+> >=20
+> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+>=20
+> Entire series applied to net-next.
+>=20
+
+Thanks!
+
+> Please provide a proper "0/N ..." cover letter next time.
+>=20
+
+Sure, will do.
+
+Quentin
+
+--xvphf3rb6p6p2tuv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAluOx0kACgkQhLiadT7g
+8aOHFw//bLoKQWrointP4ck4O7wPLZHJZ3RO1Np6mhWiNgR+FjviVlmJEsOPSz7o
+EjFNeXtQ9n2VgHWGErpln72ucO8aON5MM107XTuOrGN6wr6HORrHxSfhEoQ8kVJ1
+1j/uPXVWvZHw7k200wWI1qisu9KZI934USBxWS17Ietayzn+TZPMm7cBibog0GuQ
+GDfEZblvT1bhZS91sQKx+TMRsIfA1Wf51XphrP8uwzxwU5xFT5RNb+2o1FIp7ZwD
+VC+dHdpeRV4RpWnH8wVR8FBmrulYCqU0tN90b2ap+K6lcQ8b0wZUY2aCvMezy8Bh
+eBg5o/2B+NFL3Umc+Z+RM+X5b/QICVdx/RDFIKVIN0yKEFA0kr7sh7lNTDksBLS5
+S6jVjHRPtvu59mrRzscsVtyPI8cMv/Twqu1IfwYvdLfWDk/3vBu8z9DYRwneQTwB
+ig5aCaLVTJpkvQaG6+sYS2KXsGFd5arTa5CrgRi8xWV9MYIaD8h+x5sZhl6XX4eZ
+I5msnimRJl4CoOLqxQzAh+LtueVWlszfm25IzQlZvwNuSMKrFSx/N+Nau9VH8qed
+/8dy0eeq6SoFjgaPeHVrIeZwN9iUJbsGHwVIvkeCN1+qxETqwuvSybXNglSVrnDB
+LHWu7iFZHkNe5u81oMG+SD/RjwimcLEVodZ1b82rwE7qLgqJitg=
+=Pz88
+-----END PGP SIGNATURE-----
+
+--xvphf3rb6p6p2tuv--
