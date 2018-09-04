@@ -1,98 +1,40 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3 1/3] usb: renesas_usbhs: Add reset_control
-Date: Thu,  6 Sep 2018 14:50:12 +0900
-Message-Id: <1536213014-1325-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1536213014-1325-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1536213014-1325-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Date: Tue, 4 Sep 2018 10:01:46 -0500
+References: <20180831173928.bbt6a5ttrtgzbabk@kili.mountain>
+In-Reply-To: <20180831173928.bbt6a5ttrtgzbabk@kili.mountain>
+Message-ID: <CAL_JsqJ2E_xe82Ez0wDCbgtsbP9sUw1=-qr9RCLL2zsQ_5t+LQ@mail.gmail.com>
+Subject: Re: [bug report] of/unittest: remove use of node name pointer in
+ overlay high level test
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-R-Car Gen3 needs to deassert resets of both host and peripheral.
-Since [eo]hci-platform is possible to assert the reset(s) when
-the probing failed, renesas_usbhs driver doesn't work correctly
-regardless of finished probing. To fix this issue, this patch adds
-reset_control on this renesas_usbhs driver.
+On Fri, Aug 31, 2018 at 12:39 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> Hello Rob Herring,
+>
+> The patch 4785d169abd5: "of/unittest: remove use of node name pointer
+> in overlay high level test" from Aug 27, 2018, leads to the following
+> static checker warning:
+>
+>         drivers/of/unittest.c:2356 of_unittest_overlay_high_level()
+>         info: ignoring unreachable code.
+>
+> drivers/of/unittest.c
+>   2354          for_each_child_of_node(overlay_base_root, np) {
+>   2355                  struct device_node *base_child;
+>   2356                  for_each_child_of_node(of_root, base_child) {
+>   2357                          if (!strcmp(np->full_name, base_child->full_name))
+>   2358                                  unittest(0, "illegal node name in overlay_base %pOFn",
+>   2359                                          np);
+>   2360                          return;
+>
+> You wanted to only return on error probably?  Smatch is complaining
+> that we don't iterate through the inside loop more than once.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/usb/renesas_usbhs/common.c | 12 ++++++++++++
- drivers/usb/renesas_usbhs/common.h |  2 ++
- 2 files changed, 14 insertions(+)
+Indeed. Fixed.
 
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 4310df4..1d355d5 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -12,6 +12,7 @@
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include "common.h"
-@@ -574,6 +575,10 @@ static int usbhs_probe(struct platform_device *pdev)
- 			return PTR_ERR(priv->edev);
- 	}
- 
-+	priv->rsts = devm_reset_control_array_get_optional_shared(&pdev->dev);
-+	if (IS_ERR(priv->rsts))
-+		return PTR_ERR(priv->rsts);
-+
- 	/*
- 	 * care platform info
- 	 */
-@@ -658,6 +663,10 @@ static int usbhs_probe(struct platform_device *pdev)
- 	/* dev_set_drvdata should be called after usbhs_mod_init */
- 	platform_set_drvdata(pdev, priv);
- 
-+	ret = reset_control_deassert(priv->rsts);
-+	if (ret)
-+		goto probe_fail_rst;
-+
- 	/*
- 	 * deviece reset here because
- 	 * USB device might be used in boot loader.
-@@ -711,6 +720,8 @@ static int usbhs_probe(struct platform_device *pdev)
- 	return ret;
- 
- probe_end_mod_exit:
-+	reset_control_assert(priv->rsts);
-+probe_fail_rst:
- 	usbhs_mod_remove(priv);
- probe_end_fifo_exit:
- 	usbhs_fifo_remove(priv);
-@@ -739,6 +750,7 @@ static int usbhs_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 
- 	usbhs_platform_call(priv, hardware_exit, pdev);
-+	reset_control_assert(priv->rsts);
- 	usbhs_mod_remove(priv);
- 	usbhs_fifo_remove(priv);
- 	usbhs_pipe_remove(priv);
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index 6137f79..bce7d35 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -10,6 +10,7 @@
- 
- #include <linux/extcon.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- #include <linux/usb/renesas_usbhs.h>
- 
- struct usbhs_priv;
-@@ -277,6 +278,7 @@ struct usbhs_priv {
- 	struct usbhs_fifo_info fifo_info;
- 
- 	struct phy *phy;
-+	struct reset_control *rsts;
- };
- 
- /*
--- 
-1.9.1
+Thanks,
+Rob
